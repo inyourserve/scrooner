@@ -1,2 +1,44 @@
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Node / Next.js / Astro
 node_modules/
+.next/
+.astro/
+dist/
+build/
+out/
+.turbo/
+.vercel/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python / data pipeline
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Logs
+*.log
+
+# Claude Code agent worktrees (local, ephemeral checkouts -- not project content)
+.claude/worktrees/

@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.session_id' | { read -r sid; marker=\"/tmp/.claude_claudemd_reminder_${sid:-unknown}\"; if [ -f \"$marker\" ]; then exit 0; fi; touch \"$marker\"; printf '%s' '{\"decision\":\"block\",\"reason\":\"Before stopping: review this session for anything durable and project-wide worth capturing in CLAUDE.md at the repo root (architecture decisions, conventions, build/test/lint commands, gotchas). Create CLAUDE.md if it does not exist yet. Keep entries terse and only add what will still be true and useful in future sessions. If nothing durable came up, say so briefly and stop normally.\"}'; }",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,248 @@
+---
+// /stock/{ticker}/ -- "the crown jewel" (DOCUMENTATION.md sec 1, sec 3.2).
+// Structure grounded in doc 17's real analysis of Screener.in's own page,
+// mapped honestly against what Scrooner's pipeline actually has verified.
+// Reads Postgres directly (doc 04/17) -- no apps/backend dependency.
+
+import {
+  getCompanyByTicker,
+  getLatestMetrics,
+  getStatement,
+  getRecentFilings,
+  getRecentInsiderTransactions,
+  getRecentBeneficialOwnership,
+  getTopInstitutionalHolders,
+} from "../../lib/db";
+import { buildChecklist } from "../../lib/prosCons";
+
+const { ticker } = Astro.params;
+const company = ticker ? await getCompanyByTicker(ticker) : null;
+
+if (!company) {
+  return new Response("Company not found", { status: 404 });
+}
+
+const metrics = await getLatestMetrics(company.id);
+const checklist = await buildChecklist(company.id, metrics);
+const quarterlyResults = await getStatement(company.id, "income_statement", "quarterly");
+const incomeStatement = await getStatement(company.id, "income_statement");
+const balanceSheet = await getStatement(company.id, "balance_sheet");
+const cashFlow = await getStatement(company.id, "cash_flow");
+const filings = await getRecentFilings(company.id);
+const insiderTransactions = await getRecentInsiderTransactions(company.id);
+const beneficialOwnership = await getRecentBeneficialOwnership(company.id);
+const institutionalHolders = await getTopInstitutionalHolders(company.id);
+
+// doc 17 Sec 3: price-dependent metrics stay honestly null -- doc 02's
+// vendor decision is still open (doc 13). Never fabricated here.
+const topRatios: { label: string; row: (typeof metrics)[string] | undefined; suffix?: string; blocked?: boolean }[] = [
+  { label: "Market Cap", row: undefined, blocked: true },
+  { label: "Current Price", row: undefined, blocked: true },
+  { label: "Stock P/E", row: undefined, blocked: true },
+  { label: "Book Value (Equity)", row: undefined, blocked: false },
+  { label: "Dividend Yield", row: undefined, blocked: true },
+  { label: "ROE", row: metrics["roe"], suffix: "%" },
+  { label: "ROIC", row: metrics["roic"], suffix: "%" },
+];
+
+function fmtPct(value: string | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return (Number(value) * 100).toFixed(1) + "%";
+}
+
+function fmtNum(value: string | null): string {
+  if (value === null) return "—";
+  const n = Number(value);
+  if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(2) + "B";
+  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + "M";
+  return n.toFixed(2);
+}
+
+// Share counts are whole numbers (Form 4 shares/shares_owned_following) --
+// a separate formatter from fmtNum so the statement tables' dollar-figure
+// 2-decimal formatting (already verified, doc 17) isn't touched.
+function fmtShares(value: string | null): string {
+  if (value === null) return "—";
+  const n = Number(value);
+  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + "M";
+  return n.toLocaleString("en-US");
+}
+---
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{company.company_name} ({company.ticker}) — Scrooner</title>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; max-width: 1000px; margin: 0 auto; padding: 24px; color: #1a1a1a; }
+    h1 { margin-bottom: 4px; }
+    .sub { color: #666; margin-bottom: 24px; }
+    .card { border: 1px solid #e2e2e2; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; }
+    .ratio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .ratio { display: flex; flex-direction: column; }
+    .ratio .label { font-size: 12px; color: #777; }
+    .ratio .value { font-size: 18px; font-weight: 600; }
+    .ratio .value.blocked { color: #aaa; font-weight: 400; font-size: 14px; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th, td { text-align: right; padding: 6px 10px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; }
+    .pros-cons { display: flex; gap: 24px; flex-wrap: wrap; }
+    .pros, .cons { flex: 1; min-width: 260px; }
+    .pros h3 { color: #1a7f37; } .cons h3 { color: #b91c1c; }
+    ul { padding-left: 18px; margin: 8px 0; }
+    .note { font-size: 12px; color: #888; margin-top: 8px; }
+    .statement-scroll { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>{company.company_name}</h1>
+  <p class="sub">{company.ticker} · {company.sic_description ?? "Sector unclassified"} · {company.status}</p>
+
+  <section class="card">
+    <div class="ratio-grid">
+      {topRatios.map((r) => (
+        <div class="ratio">
+          <span class="label">{r.label}</span>
+          {r.blocked ? (
+            <span class="value blocked" title="Blocked on doc 02's still-open market-price vendor decision">—</span>
+          ) : (
+            <span class="value">{fmtPct(r.row?.value)}</span>
+          )}
+        </div>
+      ))}
+    </div>
+    <p class="note">Price-dependent figures (Market Cap, Current Price, Stock P/E, Dividend Yield) are blocked on a market-price vendor decision (doc 02) — shown honestly null, never estimated.</p>
+  </section>
+
+  <section class="card">
+    <h2>Analysis</h2>
+    <div class="pros-cons">
+      <div class="pros">
+        <h3>Pros</h3>
+        <ul>
+          {checklist.filter((c) => c.kind === "pro").map((c) => <li>{c.text}</li>)}
+          {checklist.filter((c) => c.kind === "pro").length === 0 && <li><em>None triggered by the current checklist.</em></li>}
+        </ul>
+      </div>
+      <div class="cons">
+        <h3>Cons</h3>
+        <ul>
+          {checklist.filter((c) => c.kind === "con").map((c) => <li>{c.text}</li>)}
+          {checklist.filter((c) => c.kind === "con").length === 0 && <li><em>None triggered by the current checklist.</em></li>}
+        </ul>
+      </div>
+    </div>
+    <p class="note">Pros/cons are machine generated from a fixed checklist against verified metrics — never AI-generated prose. See doc 17.</p>
+  </section>
+
+  {[
+    { title: "Quarterly Results", data: quarterlyResults },
+    { title: "Profit & Loss (Annual)", data: incomeStatement },
+    { title: "Balance Sheet (Annual)", data: balanceSheet },
+    { title: "Cash Flow (Annual)", data: cashFlow },
+  ].map(({ title, data }) => (
+    <section class="card">
+      <h2>{title}</h2>
+      <div class="statement-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              {data.periods.slice(-8).map((p) => <th>{p.fiscal_period} {p.fiscal_year}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {data.lines.map((line) => (
+              <tr>
+                <td>{line.label}</td>
+                {line.values.slice(-8).map((v) => <td>{fmtNum(v)}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
+
+  <section class="card">
+    <h2>Insider Activity</h2>
+    <div class="statement-scroll">
+      <table>
+        <thead>
+          <tr><th style="text-align:left">Insider</th><th style="text-align:left">Title</th><th>Date</th><th>Type</th><th>Shares</th><th>Price</th><th>Owned After</th></tr>
+        </thead>
+        <tbody>
+          {insiderTransactions.map((t) => (
+            <tr>
+              <td style="text-align:left">{t.reporting_owner_name}</td>
+              <td style="text-align:left">{t.officer_title ?? (t.is_director ? "Director" : t.is_ten_percent_owner ? "10%+ Owner" : "—")}</td>
+              <td>{t.transaction_date}</td>
+              <td>{t.acquired_disposed_code === "A" ? "Buy" : t.acquired_disposed_code === "D" ? "Sell" : t.transaction_code}</td>
+              <td>{fmtShares(t.shares)}</td>
+              <td>{t.price_per_share ? "$" + Number(t.price_per_share).toFixed(2) : "—"}</td>
+              <td>{fmtShares(t.shares_owned_following)}</td>
+            </tr>
+          ))}
+          {insiderTransactions.length === 0 && <tr><td colspan="7" style="text-align:left"><em>No Form 4 activity on record.</em></td></tr>}
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Every open-market buy/sell/tax-withholding transaction disclosed by officers, directors, and 10%+ owners on Form 4, traced to its own accession number. See doc 19.</p>
+  </section>
+
+  <section class="card">
+    <h2>Institutional Ownership</h2>
+    <div class="statement-scroll">
+      <table>
+        <thead>
+          <tr><th style="text-align:left">Manager</th><th>Shares</th><th>Value</th><th>As of</th></tr>
+        </thead>
+        <tbody>
+          {institutionalHolders.map((h) => (
+            <tr>
+              <td style="text-align:left">{h.filer_name}</td>
+              <td>{fmtShares(h.shares)}</td>
+              <td>{h.value_usd ? "$" + fmtNum(h.value_usd) : "—"}</td>
+              <td>{h.filing_date}</td>
+            </tr>
+          ))}
+          {institutionalHolders.length === 0 && <tr><td colspan="4" style="text-align:left"><em>No Form 13F holdings on record.</em></td></tr>}
+        </tbody>
+      </table>
+    </div>
+    <p class="note">The largest reported holders from SEC's bulk Form 13F institutional-manager data set, matched by CUSIP (not filed by {company.ticker} itself) — a single recent filing window, not a historical trend. See doc 19 Stage 4.</p>
+  </section>
+
+  <section class="card">
+    <h2>Major Shareholders (&gt;5% stakes)</h2>
+    <div class="statement-scroll">
+      <table>
+        <thead>
+          <tr><th style="text-align:left">Filer</th><th>Schedule</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          {beneficialOwnership.map((o) => (
+            <tr>
+              <td style="text-align:left">{o.filer_name}</td>
+              <td>{o.schedule_type}{o.is_amendment ? "/A" : ""}</td>
+              <td>{o.filing_date}</td>
+            </tr>
+          ))}
+          {beneficialOwnership.length === 0 && <tr><td colspan="3" style="text-align:left"><em>No Schedule 13D/13G disclosures on record.</em></td></tr>}
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Schedule 13D (activist intent) / 13G (passive) disclosures where {company.ticker} is confirmed as the actual subject company, not the filer — see doc 19's issuer-vs-filer finding. Ownership percentage/share count aren't extracted yet (free-text, not yet parsed); filer identity and filing date are.</p>
+  </section>
+
+  <section class="card">
+    <h2>Recent Filings</h2>
+    <ul>
+      {filings.map((f) => (
+        <li>{f.form} — {f.filing_date} <span class="note">({f.accession_number})</span></li>
+      ))}
+    </ul>
+  </section>
+</body>
+</html>

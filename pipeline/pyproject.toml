@@ -1,0 +1,43 @@
+[project]
+name = "scrooner-pipeline"
+version = "0.1.0"
+description = "Scrooner data pipeline: Collector -> Normalizer -> Mapper/Metrics. Collector done; Normalizer in progress — see ../doc/09_Scrooner_Normalizer_Execution_Plan.md."
+requires-python = "==3.12.*"
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "tenacity>=8.3",
+    "psycopg[binary]>=3.1",
+    "typer>=0.12",
+    "structlog>=24.1",
+    "polars>=1.0",
+]
+
+[project.scripts]
+scrooner-bootstrap = "scrooner_pipeline.jobs.bootstrap:app"
+scrooner-incremental = "scrooner_pipeline.jobs.incremental:app"
+scrooner-report = "scrooner_pipeline.jobs.report:app"
+scrooner-normalize = "scrooner_pipeline.jobs.normalize:app"
+scrooner-map = "scrooner_pipeline.jobs.map:app"
+scrooner-company-master = "scrooner_pipeline.jobs.company_master:app"
+scrooner-screen = "scrooner_pipeline.jobs.screen:app"
+scrooner-ask = "scrooner_pipeline.jobs.ask:app"
+scrooner-ownership = "scrooner_pipeline.jobs.ownership:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    # Verification/tooling only -- see ../doc/12_Scrooner_Edgar_Python_Plugin_Usage.md.
+    # Never a production/ingestion-path dependency: an independent cross-check
+    # against our own Mapper output, run ad hoc or in CI, not something the
+    # pipeline itself imports at runtime.
+    "edgartools==5.49.0",  # pinned per doc 12 sec. 5 -- review changelog before bumping
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scrooner_pipeline"]

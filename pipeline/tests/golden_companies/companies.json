@@ -1,0 +1,62 @@
+[
+  {
+    "cik": "0000320193",
+    "ticker": "AAPL",
+    "name": "Apple Inc.",
+    "why": "Baseline large-cap 10-K filer, happy path. Also non-calendar fiscal year end (late September)."
+  },
+  {
+    "cik": "0000789019",
+    "ticker": "MSFT",
+    "name": "Microsoft Corp",
+    "why": "Second baseline large-cap 10-K filer. Non-calendar fiscal year end (June 30)."
+  },
+  {
+    "cik": "0000019617",
+    "ticker": "JPM",
+    "name": "JPMorgan Chase & Co",
+    "why": "Baseline large-cap, calendar fiscal year end. Also stresses submissions pagination: verified live 2026-08-14 to have 69 continuation files (CIK0000019617-submissions-NNN.json) beyond the base submissions file."
+  },
+  {
+    "cik": "0001652044",
+    "ticker": "GOOGL",
+    "name": "Alphabet Inc.",
+    "why": "One CIK, multiple simultaneous tickers (GOOGL/GOOG/GOOGM/GOOGN per doc 08's Day 2 finding) -- CIK-is-the-permanent-identity edge case."
+  },
+  {
+    "cik": "0001512673",
+    "ticker": "XYZ",
+    "name": "Block, Inc.",
+    "why": "Ticker changed (SQ -> XYZ, December 2021) -- ticker is a mutable nickname, not a stable identity."
+  },
+  {
+    "cik": "0001713445",
+    "ticker": "RDDT",
+    "name": "Reddit, Inc.",
+    "why": "Recently IPO'd (March 2024). Short/incomplete filing history; verified live 2026-08-14 to have no submissions continuation pages, unlike the older large filers in this set."
+  },
+  {
+    "cik": "0001046179",
+    "ticker": "TSM",
+    "name": "Taiwan Semiconductor Manufacturing Co Ltd",
+    "why": "Foreign private issuer, 20-F filer. Verified live 2026-08-14: reports under the ifrs-full taxonomy, not us-gaap -- the Collector must store this as-is without assuming a us-gaap shape."
+  },
+  {
+    "cik": "0000895728",
+    "ticker": "ENB",
+    "name": "Enbridge Inc",
+    "why": "Canadian MJDS filer, 40-F. Non-10-K/10-Q form-type handling."
+  },
+  {
+    "cik": "0001287750",
+    "ticker": "ARCC",
+    "name": "Ares Capital Corp",
+    "why": "Has a 10-K/A amendment on file (found via EDGAR full-text search, filed 2026-03-23) -- amendment handling."
+  },
+  {
+    "cik": "0000320187",
+    "ticker": "NKE",
+    "name": "Nike, Inc.",
+    "why": "Second non-calendar fiscal year end example (May 31), independent of the AAPL/MSFT pair."
+  }
+]
