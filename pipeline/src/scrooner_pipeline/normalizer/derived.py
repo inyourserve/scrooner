@@ -42,6 +42,13 @@ import structlog
 
 logger = structlog.get_logger()
 
+# Same day-length bands periods.py itself uses to classify a duration
+# span (see that module's own comment) -- reused here, not
+# re-guessed, so "half-year" and "three-quarter" mean exactly the same
+# thing in both places.
+HALF_YEAR_MIN_DAYS, HALF_YEAR_MAX_DAYS = 170, 200
+THREE_QUARTER_MIN_DAYS, THREE_QUARTER_MAX_DAYS = 260, 290
+
 
 def _load_quarterly_candidates(conn: psycopg.Connection, company_id: int) -> list[tuple]:
     with conn.cursor() as cur:
@@ -204,4 +211,179 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals[k] += stats[k]
 
     logger.info("derived.q4.done", **totals)
+    return totals
+
+
+# --- Interim-quarter derivation (Stage 2g follow-on, doc 24/25 --
+# closing a real gap found live 2026-08-17 while building
+# mapper/price_metrics.py's FCF Yield: several companies' quarterly
+# cash-flow-statement facts are tagged cumulative-year-to-date (a normal
+# GAAP presentation choice, most common on cash-flow lines -- income-
+# statement lines are usually reported discretely per quarter instead),
+# which classify_period() above correctly leaves unclassified rather
+# than mislabel as a single quarter. Confirmed live against AAPL's real
+# CFO facts before writing this: Q1 $29.935B (discrete), a 6-month span
+# $53.887B, a 9-month span $81.754B, FY $111.482B -- every one of these
+# was already sitting in core.fact, just never decomposed into discrete
+# quarters. Implied Q2 = $23.952B, Q3 = $27.867B, Q4 = $29.728B, all
+# positive and reasonable, summing back to the real FY figure exactly by
+# construction.
+#
+# Purely additive: does not modify derive_q4_for_company above. Derives
+# Q2/Q3 as new is_derived=true/is_authoritative=true facts; derive_q4
+# (already-existing logic, unchanged) then picks them up automatically
+# on its own next run, the same way it already would for any other
+# authoritative Q1-Q3 set -- no code path in derive_q4_for_company knows
+# or needs to know these particular Q2/Q3 facts were derived rather than
+# directly reported.
+def _load_all_duration_facts(conn: psycopg.Connection, company_id: int) -> list[tuple]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select f.id, f.concept_id, f.unit_id, f.value, f.filing_id, f.raw_object_id,
+                   p.fiscal_year, p.fiscal_period, p.start_date, p.end_date
+            from core.fact f
+            join core.period p on p.id = f.period_id
+            where f.company_id = %s
+              and f.is_authoritative
+              and p.period_type = 'duration'
+            """,
+            (company_id,),
+        )
+        return cur.fetchall()
+
+
+def derive_interim_quarters_for_company(conn: psycopg.Connection, company_id: int) -> dict:
+    rows = _load_all_duration_facts(conn, company_id)
+    groups: dict[tuple, dict] = {}
+    for fact_id, concept_id, unit_id, value, filing_id, raw_object_id, fiscal_year, fiscal_period, start_date, end_date in rows:
+        if fiscal_year is None:
+            continue
+        key = (concept_id, unit_id, fiscal_year)
+        entry = {
+            "fact_id": fact_id, "value": value, "filing_id": filing_id, "raw_object_id": raw_object_id,
+            "start_date": start_date, "end_date": end_date,
+        }
+        duration_days = (end_date - start_date).days
+        if fiscal_period == "Q1":
+            groups.setdefault(key, {})["Q1"] = entry
+        elif fiscal_period == "FY":
+            groups.setdefault(key, {})["FY"] = entry
+        elif fiscal_period is None and HALF_YEAR_MIN_DAYS <= duration_days <= HALF_YEAR_MAX_DAYS:
+            groups.setdefault(key, {})["HALF"] = entry
+        elif fiscal_period is None and THREE_QUARTER_MIN_DAYS <= duration_days <= THREE_QUARTER_MAX_DAYS:
+            groups.setdefault(key, {})["THREE_Q"] = entry
+        # Q2/Q3/Q4/other non-standard spans: not this derivation's
+        # concern -- Q2/Q3 already discrete means nothing to derive;
+        # anything else falls outside the clean day-length bands and is
+        # correctly left alone rather than forced.
+
+    existing_periods = _load_existing_periods(conn, company_id)
+    reported_keys = _load_reported_duration_keys(conn, company_id)
+
+    stats = {"candidate_groups": len(groups), "q2_derived": 0, "q3_derived": 0, "already_reported": 0, "incomplete_or_inconsistent": 0}
+    new_periods: dict[tuple, dict] = {}  # (start, end) -> {"fiscal_year": ..., "fiscal_period": "Q2"|"Q3"}
+    to_derive: list[dict] = []
+
+    for (concept_id, unit_id, fiscal_year), by_span in groups.items():
+        q1, half, three_q = by_span.get("Q1"), by_span.get("HALF"), by_span.get("THREE_Q")
+
+        # Q2 = HALF - Q1, only when both share the same start (the true
+        # fiscal-year start) -- never subtract spans that don't actually
+        # nest inside one another.
+        if q1 is not None and half is not None and q1["start_date"] == half["start_date"]:
+            q2_start, q2_end = q1["end_date"] + timedelta(days=1), half["end_date"]
+            if (concept_id, unit_id, q2_start, q2_end) not in reported_keys:
+                if (q2_start, q2_end) not in existing_periods:
+                    new_periods[(q2_start, q2_end)] = {"fiscal_year": fiscal_year, "fiscal_period": "Q2"}
+                to_derive.append({
+                    "concept_id": concept_id, "unit_id": unit_id, "start": q2_start, "end": q2_end,
+                    "value": half["value"] - q1["value"], "filing_id": half["filing_id"], "raw_object_id": half["raw_object_id"],
+                    "metric": "q2_derived",
+                })
+            else:
+                stats["already_reported"] += 1
+        else:
+            stats["incomplete_or_inconsistent"] += 1
+
+        # Q3 = THREE_Q - HALF, same nesting requirement.
+        if half is not None and three_q is not None and half["start_date"] == three_q["start_date"]:
+            q3_start, q3_end = half["end_date"] + timedelta(days=1), three_q["end_date"]
+            if (concept_id, unit_id, q3_start, q3_end) not in reported_keys:
+                if (q3_start, q3_end) not in existing_periods:
+                    new_periods[(q3_start, q3_end)] = {"fiscal_year": fiscal_year, "fiscal_period": "Q3"}
+                to_derive.append({
+                    "concept_id": concept_id, "unit_id": unit_id, "start": q3_start, "end": q3_end,
+                    "value": three_q["value"] - half["value"], "filing_id": three_q["filing_id"], "raw_object_id": three_q["raw_object_id"],
+                    "metric": "q3_derived",
+                })
+            else:
+                stats["already_reported"] += 1
+        else:
+            stats["incomplete_or_inconsistent"] += 1
+
+    if new_periods:
+        with conn.cursor() as cur:
+            cur.executemany(
+                """
+                insert into core.period (company_id, start_date, end_date, period_type, fiscal_year, fiscal_period)
+                values (%(company_id)s, %(start)s, %(end)s, 'duration', %(fiscal_year)s, %(fiscal_period)s)
+                on conflict (company_id, start_date, end_date, period_type) do update
+                    set fiscal_period = excluded.fiscal_period
+                """,
+                [
+                    {"company_id": company_id, "start": s, "end": e, **info}
+                    for (s, e), info in new_periods.items()
+                ],
+            )
+        conn.commit()
+        existing_periods = _load_existing_periods(conn, company_id)
+
+    if to_derive:
+        rows_to_insert = [
+            {
+                "company_id": company_id, "concept_id": d["concept_id"], "unit_id": d["unit_id"],
+                "period_id": existing_periods[(d["start"], d["end"])], "filing_id": d["filing_id"],
+                "value": d["value"], "raw_object_id": d["raw_object_id"],
+            }
+            for d in to_derive
+        ]
+        with conn.cursor() as cur:
+            cur.executemany(
+                """
+                insert into core.fact
+                    (company_id, concept_id, unit_id, period_id, filing_id, value, is_derived, is_authoritative, raw_object_id)
+                values
+                    (%(company_id)s, %(concept_id)s, %(unit_id)s, %(period_id)s, %(filing_id)s, %(value)s, true, true, %(raw_object_id)s)
+                on conflict (company_id, concept_id, unit_id, period_id, filing_id) do update
+                    set value = excluded.value, is_derived = true
+                """,
+                rows_to_insert,
+            )
+        conn.commit()
+        for d in to_derive:
+            stats[d["metric"]] += 1
+
+    logger.info("derived.interim_quarters_resolved", company_id=company_id, **stats)
+    return stats
+
+
+def derive_interim_quarters(conn: psycopg.Connection, ciks: set[str]) -> dict:
+    with conn.cursor() as cur:
+        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        company_id_by_cik = dict(cur.fetchall())
+
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "candidate_groups": 0, "q2_derived": 0, "q3_derived": 0, "already_reported": 0, "incomplete_or_inconsistent": 0}
+    for cik in sorted(ciks):
+        totals["considered"] += 1
+        company_id = company_id_by_cik.get(cik)
+        if company_id is None:
+            totals["no_company"] += 1
+            continue
+        stats = derive_interim_quarters_for_company(conn, company_id)
+        totals["ok"] += 1
+        for k in ("candidate_groups", "q2_derived", "q3_derived", "already_reported", "incomplete_or_inconsistent"):
+            totals[k] += stats[k]
+
+    logger.info("derived.interim_quarters.done", **totals)
     return totals

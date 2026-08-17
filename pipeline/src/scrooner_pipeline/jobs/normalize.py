@@ -10,7 +10,7 @@ import typer
 
 from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.normalizer.dedupe import conflict_summary, resolve_authoritative
-from scrooner_pipeline.normalizer.derived import derive_q4
+from scrooner_pipeline.normalizer.derived import derive_interim_quarters, derive_q4
 from scrooner_pipeline.normalizer.facts import FACT_EXTRACTION_EXCLUDED_CIKS, normalize_facts
 from scrooner_pipeline.normalizer.identity import normalize_identity
 from scrooner_pipeline.normalizer.periods import normalize_periods
@@ -128,6 +128,21 @@ def restatements(
     typer.echo(f"restatements: {stats}")
 
 
+@app.command("derive-interim-quarters")
+def derive_interim_quarters_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Stage 2g follow-on (doc 24/25): derive discrete Q2/Q3 from
+    cumulative half-year/three-quarter YTD spans (common on cash-flow
+    lines) via successive subtraction. Run BEFORE derive-q4 -- once Q2/Q3
+    exist as authoritative facts, derive-q4's own existing logic picks
+    them up automatically, no code change needed there."""
+    target_ciks = _parse_ciks(ciks) or _load_golden_ciks()
+    with get_connection() as conn:
+        stats = derive_interim_quarters(conn, target_ciks)
+    typer.echo(f"derive-interim-quarters: {stats}")
+
+
 @app.command("derive-q4")
 def derive_q4_cmd(
     ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
@@ -162,6 +177,8 @@ def golden() -> None:
         typer.echo(f"dedupe: {dedupe_stats}")
         restatement_stats = resolve_restatements(conn, golden_ciks)
         typer.echo(f"restatements: {restatement_stats}")
+        interim_stats = derive_interim_quarters(conn, golden_ciks)
+        typer.echo(f"derive-interim-quarters: {interim_stats}")
         q4_stats = derive_q4(conn, golden_ciks)
         typer.echo(f"derive-q4: {q4_stats}")
 
