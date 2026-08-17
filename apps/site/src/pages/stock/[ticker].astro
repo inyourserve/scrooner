@@ -78,6 +78,26 @@ const topRatios: { label: string; row: (typeof metrics)[string] | undefined; kin
   { label: "ROIC", row: metrics["roic"], kind: "pct" },
 ];
 
+// doc 18 Tier A / doc 26 (2026-08-18): the 12 metrics built to raise data-
+// point coverage past the original doc-02 18. Same generic getLatestMetrics
+// read, same honest-null discipline as topRatios -- just a second grid so
+// the original locked 18-metric set stays visually distinct from these
+// additive extensions.
+const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw" }[] = [
+  { label: "ROA", row: metrics["roa"], kind: "pct" },
+  { label: "Quick Ratio", row: metrics["quick_ratio"], kind: "multiple" },
+  { label: "EBITDA", row: metrics["ebitda"], kind: "dollar" },
+  { label: "Net Debt / EBITDA", row: metrics["net_debt_ebitda"], kind: "multiple" },
+  { label: "EV / EBITDA", row: metrics["ev_ebitda"], kind: "multiple" },
+  { label: "EV / Sales", row: metrics["ev_sales"], kind: "multiple" },
+  { label: "PEG Ratio", row: metrics["peg_ratio"], kind: "multiple" },
+  { label: "SBC % of Revenue", row: metrics["sbc_pct_revenue"], kind: "pct" },
+  { label: "Buyback Yield", row: metrics["buyback_yield"], kind: "pct" },
+  { label: "Total Shareholder Yield", row: metrics["total_shareholder_yield"], kind: "pct" },
+  { label: "Share Count Dilution (YoY)", row: metrics["share_dilution_trend"], kind: "pct" },
+  { label: "Institutional Ownership", row: metrics["institutional_ownership_pct"], kind: "pct" },
+];
+
 // SEC's own standardized 8-K item codes (doc 21/24 Phase 1) -- a small,
 // curated map, not exhaustive, same "curated not fuzzy" discipline as
 // ai_query/aliases.py. Unmapped codes fall back to showing the raw code.
@@ -174,6 +194,33 @@ function fmtShares(value: string | null): string {
         <strong>Public Float</strong> (not Market Cap — value of shares held by non-affiliates only, as of {publicFloat.period_end}, per the 10-K cover page): {fmtNum(publicFloat.value)}
       </p>
     )}
+  </section>
+
+  <section class="card">
+    <h2>Additional Ratios</h2>
+    <div class="ratio-grid">
+      {moreRatios.map((r) => {
+        const isNull = r.row?.value == null;
+        const nullTitle = r.row?.is_null_reason
+          ? `Not computed: ${r.row.is_null_reason} -- see mapper/expanded_metrics.py`
+          : "Not yet resolved for this company";
+        return (
+          <div class="ratio">
+            <span class="label">{r.label}</span>
+            {isNull ? (
+              <span class="value blocked" title={nullTitle}>—</span>
+            ) : r.kind === "dollar" ? (
+              <span class="value">${fmtNum(r.row?.value ?? null)}</span>
+            ) : r.kind === "multiple" ? (
+              <span class="value">{fmtMultiple(r.row?.value)}</span>
+            ) : (
+              <span class="value">{fmtPct(r.row?.value)}</span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+    <p class="note">Doc 18 Tier A / doc 26 extensions, built to raise data-point coverage past doc 02's original locked 18 — same honest-null discipline (hover a "—" for the specific reason). Institutional Ownership is Form-13F-reported holdings only (a single recent filing window, not exhaustive of all beneficial owners) — see doc 19 Stage 4.</p>
   </section>
 
   <section class="card">

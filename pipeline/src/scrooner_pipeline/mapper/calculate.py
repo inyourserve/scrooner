@@ -59,6 +59,16 @@ logger = structlog.get_logger()
 # metrics are excluded via metric_definition.requires_price, not this list.
 DEFERRED_TO_STAGE_3E = {"revenue_growth_yoy", "revenue_growth_3y_cagr", "eps_growth_yoy", "eps_growth_3y_cagr"}
 
+# net_debt_ebitda is requires_price=false (it genuinely doesn't need
+# price) but its denominator (ebitda) lives in analytics.metric_value,
+# not canonical_fact -- this engine can't reach it, so it's computed in
+# mapper/expanded_metrics.py instead. Found live 2026-08-18: without this
+# exclusion, _load_target_metrics picks it up (matches the
+# requires_price=false filter) and crashes with KeyError on
+# FORMULA_SHAPES[metric_name] for every company, since it deliberately
+# has no shape entry and zero metric_definition_input rows.
+DEFERRED_TO_EXPANDED_METRICS = {"net_debt_ebitda", "institutional_ownership_pct"}
+
 FY_ONLY_METRICS = {"roic", "roe"}
 
 FORMULA_SHAPES = {
@@ -72,6 +82,20 @@ FORMULA_SHAPES = {
     "current_ratio": "ratio",
     "interest_coverage_ratio": "ratio",
     "roic": "roic",
+    # Additive widening, 2026-08-18 (doc 26's coverage push) -- new
+    # entries only, doc 02's locked 18 above are untouched. Verified
+    # zero regression: rerunning calculate() for the full golden-10
+    # reproduced byte-identical values for all 10 original metrics
+    # before this addition was trusted.
+    "roa": "ratio",
+    "quick_ratio": "sum_diff_ratio",
+    "sbc_pct_revenue": "ratio",
+    "ebitda": "additive",
+    # net_debt_ebitda is NOT here -- its denominator (ebitda) lives in
+    # analytics.metric_value, not canonical_fact, so this engine's
+    # per-concept-role model can't express it. Computed separately in
+    # mapper/expanded_metrics.py instead, alongside the price-dependent
+    # EBITDA-based ratios that need the same TTM EBITDA reconstruction.
 }
 
 
@@ -82,7 +106,7 @@ def _load_target_metrics(conn: psycopg.Connection) -> list[dict]:
         targets = []
         with conn.cursor() as cur2:
             for metric_id, metric_name in rows:
-                if metric_name in DEFERRED_TO_STAGE_3E:
+                if metric_name in DEFERRED_TO_STAGE_3E or metric_name in DEFERRED_TO_EXPANDED_METRICS:
                     continue
                 cur2.execute(
                     """
@@ -138,6 +162,18 @@ def _compute(shape: str, values_by_role: dict[str, list[Decimal]]) -> tuple[Deci
         if denom_sum == 0:
             return None, "zero_denominator"
         return sum(num) / denom_sum, None
+
+    if shape == "additive":
+        # All "add"-role inputs, summed -- no subtraction, unlike
+        # sum_diff. New 2026-08-18 for ebitda (operating_income +
+        # depreciation_and_amortization): these are two genuinely
+        # different concepts being added, not alternates for the same
+        # thing (that's what depreciation_and_amortization's own
+        # first_match resolution already handles, one layer down).
+        add = values_by_role.get("add")
+        if add is None:
+            return None, "missing:add"
+        return sum(add), None
 
     if shape == "sum_diff":
         add = values_by_role.get("add")

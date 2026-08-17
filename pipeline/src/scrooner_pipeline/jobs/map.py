@@ -8,13 +8,16 @@ import typer
 
 from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.mapper.calculate import calculate
-from scrooner_pipeline.mapper.concepts import coverage_report, seed
+from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
 from scrooner_pipeline.statements.classify import seed as seed_statements
 from scrooner_pipeline.mapper.price_metrics import calculate_price_metrics
+from scrooner_pipeline.mapper import expanded_concepts
+from scrooner_pipeline.mapper import expanded_definitions
+from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -49,6 +52,25 @@ def coverage_cmd(
     typer.echo(f"{len(rows)} (company, concept) pairs checked; {len(unresolved)} unresolved")
     to_print = unresolved if show_unresolved_only else rows
     for r in to_print:
+        typer.echo(f"  {r}")
+
+
+@app.command("unmapped-tags")
+def unmapped_tags_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: every company with facts, not just golden)."),
+    limit: int = typer.Option(50, help="Max tags to print."),
+) -> None:
+    """Coverage-gap discovery (doc 11's proposed, never-built Frames-API
+    workflow's SQL half): core.concept tags with real fact volume that have
+    NO analytics.concept_mapping row at all -- ranked by fact-row-count, so
+    the highest-leverage unmapped tags surface first for curation into
+    mapper/concepts.py's CONCEPT_MAPPINGS. Read-only, no writes -- discovery
+    only, never auto-maps."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else None
+    with get_connection() as conn:
+        rows = unmapped_tag_report(conn, target_ciks, limit)
+    typer.echo(f"{len(rows)} unmapped tag(s) with real fact volume (top {limit} by fact_count)")
+    for r in rows:
         typer.echo(f"  {r}")
 
 
@@ -128,6 +150,41 @@ def calculate_price_metrics_cmd(
     with get_connection() as conn:
         stats = calculate_price_metrics(conn, target_ciks)
     typer.echo(f"calculate-price-metrics: {stats}")
+
+
+@app.command("seed-expanded-concepts")
+def seed_expanded_concepts_cmd() -> None:
+    """Doc 18 Tier A / doc 26 (2026-08-18): seed inventory/sbc/
+    depreciation_and_amortization additively, alongside Mapper's frozen
+    17 and doc 17's statement concepts. Run resolve-facts after this."""
+    with get_connection() as conn:
+        stats = expanded_concepts.seed(conn)
+    typer.echo(f"seed-expanded-concepts: {stats}")
+
+
+@app.command("seed-expanded-definitions")
+def seed_expanded_definitions_cmd() -> None:
+    """Doc 18 Tier A / doc 26 (2026-08-18): seed roa/quick_ratio/
+    sbc_pct_revenue/ebitda (real calculate.py-engine inputs) plus
+    documentation-only rows for the 6 EBITDA/price-based ratios computed
+    in expanded_metrics.py. Run calculate after this."""
+    with get_connection() as conn:
+        stats = expanded_definitions.seed(conn)
+    typer.echo(f"seed-expanded-definitions: {stats}")
+
+
+@app.command("calculate-expanded-metrics")
+def calculate_expanded_metrics_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 18 Tier A / doc 26 (2026-08-18): Net Debt/EBITDA, EV/EBITDA,
+    EV/Sales, PEG, Buyback Yield, Total Shareholder Yield. Requires
+    calculate (for ebitda) and calculate-price-metrics (for market_cap/
+    trailing_pe/dividend_yield) to have already run."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_expanded_metrics(conn, target_ciks)
+    typer.echo(f"calculate-expanded-metrics: {stats}")
 
 
 @app.command()
