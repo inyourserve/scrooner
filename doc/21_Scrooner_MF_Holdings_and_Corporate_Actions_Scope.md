@@ -1,0 +1,45 @@
+# 21 — Scrooner: Mutual Fund Holdings & Corporate Actions Scope
+
+Prompted directly, after Ownership Stage 4 (Form 13F) shipped: "do we have any data related to mf holding? corporate action related?" then "scope mf holding and full corporate holding." This doc is that scoping pass — real, live-checked evidence for both, following the same "evidence before expansion" discipline (doc 05) as doc 18/19 before them. **Nothing in this doc is built.** It's the investigation and proposed shape, for confirmation before implementation — same rhythm as doc 19 before Stage 4 was built.
+
+> **Status:** Draft (2026-08-17) — a scoping proposal, not a build plan. **Owner:** Founder / Product · **Review:** before either section below is built.
+
+---
+
+## 1. Mutual fund holdings
+
+**What we have today (built, Stage 4):** `core.institutional_ownership`, sourced from SEC's Form 13F bulk data set — 58,095 real holdings across the golden-10. Form 13F is filed by *any* institutional investment manager with >$100M AUM: mutual fund complexes (Vanguard, Fidelity/FMR, T. Rowe Price) are in there, but so are hedge funds, banks, insurers, and pension funds, all mixed together with no SEC-provided field distinguishing the type. AAPL's top holder, "Vanguard Capital Management LLC," is real — but there's no way to say "X% of AAPL is held by mutual funds specifically" from this table alone.
+
+**What would answer that cleanly: Form N-PORT.** Checked live, not assumed:
+
+- SEC publishes a free, bulk, quarterly N-PORT data set — same DERA flat-file family as Form 13F's own data sets (`https://www.sec.gov/data-research/sec-markets-data/form-n-port-data-sets`, confirmed live, most recent file `2026q2_nport.zip`, 420MB compressed).
+- Form N-PORT is filed by **registered investment companies and ETFs specifically** (mutual funds, ETFs, closed-end funds) — a genuinely narrower, purer "fund" universe than 13F's broad "institutional manager" definition. In scope since October 2019.
+- Fetched and read SEC's own official field-layout PDF (`nport_readme.pdf`) directly, not a summary: of its 30 tables, only 3 matter for this use case — `SUBMISSION`/`REGISTRANT` (fund identity, including the registrant's own CIK) and `FUND_REPORTED_HOLDING` (one row per security a fund holds, with `ISSUER_NAME`, `ISSUER_CUSIP`, `BALANCE` (shares), `CURRENCY_VALUE` (dollar value), and percent-of-fund-net-assets). The other 27 tables are derivatives/securities-lending/interest-rate-risk detail this project has no use for.
+- **The CUSIP matching mechanism is identical to Stage 4's, already built and proven**: `FUND_REPORTED_HOLDING.ISSUER_CUSIP` matches directly against the golden companies' own CUSIPs already captured in `core.beneficial_ownership.cusip` (doc 19 Stage 3/4). No new crosswalk problem — this is the same solved problem, applied to a second bulk dataset.
+
+**Real difference from Stage 4, worth flagging before committing to build**: the N-PORT zip is ~4x larger than 13F's (420MB vs ~100MB) because it carries full derivative/lending detail this project would filter out immediately — the *download* cost is bigger even though the *useful* row count (issuer holdings) is a similar shape. Matching Stage 4's own scoping discipline (single most-recent window, not a multi-quarter trend, golden-company-CUSIP-matched rows only, not the full universe) keeps this inside the Supabase free-tier budget the same way Stage 4 did.
+
+**Proposed build shape** (not yet built): a new `ownership/mutual_fund.py`, structurally a near-copy of `ownership/institutional.py` — download+cache the N-PORT bulk zip, load `REGISTRANT`+`SUBMISSION` lookups into memory, stream `FUND_REPORTED_HOLDING` matching by `ISSUER_CUSIP`, write into a new `core.fund_ownership` table (same shape as `core.institutional_ownership`, plus `pct_of_fund_net_assets` since N-PORT reports that directly, something 13F doesn't). Company page gets a new "Mutual Fund Ownership" section, or `core.institutional_ownership`/`core.fund_ownership` could be labeled and shown together with a `holder_type` distinction — that's a product-layer choice, not a data one, worth deciding at build time rather than pre-deciding here.
+
+---
+
+## 2. Corporate actions
+
+Checked live what's real vs. missing, item by item, rather than a blanket "not built":
+
+| Corporate action | Status | Evidence |
+|---|---|---|
+| **Dividends paid, share buybacks** | ✅ **Already real and on the company page** | `dividends_paid` (377 facts, 6 companies) and `share_buybacks` (377 facts, 8 companies) are already-mapped `analytics.canonical_concept` rows from doc 17's statement-classification work, already rendering as Cash Flow statement lines. Checked live 2026-08-17. |
+| **8-K classification (earnings, M&A, officer changes, bylaw amendments, shareholder votes, etc.)** | 🟢 **Real, free, zero new fetches — just not captured yet** | `raw.sec_submissions` (already fetched for every golden company since the original Collector build) has an `items` field per 8-K filing that this project has never read. Checked live against AAPL: 46 filings tagged item `2.02` (earnings results), 17 tagged `5.02` (officer/director changes), 6 tagged `5.03` (bylaw/charter amendments — where stock splits typically get announced), 11 tagged `5.07` (shareholder votes), 25 tagged `8.01` (other events — where dividend declarations/buyback authorizations often appear). This is SEC's own standardized classification, not free-text parsing — no NLP or regex needed, just a new column on `core.filing` and a small extension to the identity-normalization step. **The single highest-leverage, lowest-cost item in this whole doc.** |
+| **Stock splits** | 🟡 Raw data exists, unmapped | `StockholdersEquityNoteStockSplitConversionRatio` (and a `1`-suffixed variant) already sit in `core.fact` as captured-but-unmapped XBRL tags — the Normalizer stores every tag a company reports, not just the 26 concepts Mapper/statements curated so far. Turning this into a real "Stock Split" line needs the same curation pass Mapper/statements already do for other concepts (checking the tag actually means what it looks like it means, across the golden-10) — not a new fetch, a new mapping. |
+| **M&A (acquisitions/dispositions)** | 🟡 Raw data exists, unmapped, plus the 8-K Item 2.01 signal above | `BusinessAcquisitionCostOfAcquiredEntityCashPaid`, `BusinessAcquisitionProFormaRevenue`, and related tags already sit in `core.fact`, same unmapped state as stock splits. Combined with 8-K Item `2.01` (Completion of Acquisition or Disposition of Assets) and Item `1.01` (Entry into a Material Definitive Agreement), a real "M&A activity" feed is buildable from data already in hand — no new fetch for the *signal* that something happened, only for confirming amounts via the raw fact tags. |
+| **Dividend declaration dates / record dates / payment dates** (not just amounts) | 🔴 Not present anywhere yet | XBRL facts give period-level *amounts paid*, not the specific declared/record/payment date sequence a "corporate actions calendar" would need. Would need real 8-K/press-release text parsing (doc 19 Stage 5's territory) or a market-data vendor — not free from EDGAR structured data alone. |
+| **Spin-offs, rights offerings, name/ticker changes** | 🟡 Partially covered elsewhere | Ticker/name changes are already handled by Company Master 4a (`core.company_name_history`, `core.listing`). Spin-offs/rights offerings would need the same 8-K Item + raw-fact-tag treatment as M&A above — not separately investigated this pass. |
+
+**Recommended sequencing within this section, if built**: capture `items` on `core.filing` first — it's free (already-fetched data), small (one column + a parse step), and immediately unlocks a real, SEC-verified "what kind of corporate event happened and when" feed for every 8-K in the golden-10's history, which is more product value per hour of work than anything else in this doc. Mapping the stock-split/M&A raw tags into real concepts is the natural next step, reusing Mapper's existing curation pattern exactly. Declaration/record/payment-date granularity and deep 8-K text stay exactly as deferred as doc 19 Stage 5 already had them.
+
+---
+
+## 3. What this doc does not do
+
+Per doc 05/doc 02's own discipline (also followed by doc 18/19 before this): this is investigation and a proposed shape, not a decision to build. Neither `core.fund_ownership` nor the 8-K `items` column nor any new mapped concept exists yet. Building any of it is a normal next step, not a silent scope expansion, once confirmed.
