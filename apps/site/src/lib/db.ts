@@ -88,6 +88,24 @@ export async function getLatestPublicFloat(companyId: number): Promise<PublicFlo
   return rows[0] ?? null;
 }
 
+// Generic latest-value-of-a-canonical-concept reader, most recent period
+// only -- same query shape as getLatestPublicFloat, factored out so
+// Book Value (stockholders_equity) doesn't need its own near-duplicate
+// function. Not for price-dependent metrics (those are in
+// analytics.metric_value via getLatestMetrics, not here).
+export async function getLatestConceptValue(companyId: number, conceptName: string): Promise<string | null> {
+  const rows = await sql<{ value: string }[]>`
+    select cf.value::text
+    from analytics.canonical_fact cf
+    join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+    join core.period p on p.id = cf.period_id
+    where cf.company_id = ${companyId} and cc.name = ${conceptName}
+    order by p.end_date desc
+    limit 1
+  `;
+  return rows[0]?.value ?? null;
+}
+
 export interface LatestPriceRow {
   price: string;
   symbol: string;

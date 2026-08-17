@@ -14,6 +14,7 @@ from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
 from scrooner_pipeline.statements.classify import seed as seed_statements
+from scrooner_pipeline.mapper.price_metrics import calculate_price_metrics
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -113,6 +114,20 @@ def seed_statements_cmd() -> None:
     with get_connection() as conn:
         stats = seed_statements(conn)
     typer.echo(f"seed-statements: {stats}")
+
+
+@app.command("calculate-price-metrics")
+def calculate_price_metrics_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Stage 3h (doc 25 follow-on): compute the 6 price-dependent metrics
+    (Market Cap, Trailing P/E, Price/Sales, Price/Book, Dividend Yield,
+    FCF Yield) from core.market_price_alpaca's real price + TTM
+    fundamentals. Requires update-market-price to have run first."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_price_metrics(conn, target_ciks)
+    typer.echo(f"calculate-price-metrics: {stats}")
 
 
 @app.command("validate")
