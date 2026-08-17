@@ -184,6 +184,27 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
         net_debt = total_debt_hit[0] - cash_hit[0]
         rows.append(_row("net_debt_ebitda", net_debt / ebitda_ttm, None))
 
+    # Cash Conversion Cycle = Debtor Days + Inventory Days - Payables
+    # Days -- combines three ALREADY-COMPUTED metric outputs (each its
+    # own FY-only "days" shape row in calculate.py), not raw concepts,
+    # same "combines other metrics' output" pattern as net_debt_ebitda.
+    # Uses each metric's own most-recent-FY value independently (same
+    # _latest_metric_value helper as everywhere else in this module) --
+    # not guaranteed to be the exact same fiscal year across all three
+    # if one input is missing for the latest year but present for an
+    # earlier one; is_null_reason below flags exactly which is missing.
+    debtor_days = _latest_metric_value(conn, company_id, metric_ids["debtor_days"]) if "debtor_days" in metric_ids else None
+    inventory_days = _latest_metric_value(conn, company_id, metric_ids["inventory_days"]) if "inventory_days" in metric_ids else None
+    payables_days = _latest_metric_value(conn, company_id, metric_ids["payables_days"]) if "payables_days" in metric_ids else None
+    if debtor_days is None:
+        rows.append(_row("cash_conversion_cycle", None, "missing:debtor_days"))
+    elif inventory_days is None:
+        rows.append(_row("cash_conversion_cycle", None, "missing:inventory_days"))
+    elif payables_days is None:
+        rows.append(_row("cash_conversion_cycle", None, "missing:payables_days"))
+    else:
+        rows.append(_row("cash_conversion_cycle", debtor_days + inventory_days - payables_days, None))
+
     # Institutional Ownership % -- price-independent, needs shares_outstanding
     # (same instant-fact + cover-page-fallback resolution price_metrics.py
     # already uses for shares_outstanding elsewhere in this module).
@@ -312,7 +333,8 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
 
 def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict:
     metric_names = ["net_debt_ebitda", "ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield", "total_shareholder_yield",
-                     "institutional_ownership_pct", "share_dilution_trend",
+                     "institutional_ownership_pct", "share_dilution_trend", "cash_conversion_cycle",
+                     "debtor_days", "inventory_days", "payables_days",
                      "ebitda", "market_cap", "trailing_pe", "eps_growth_yoy", "dividend_yield"]
     with conn.cursor() as cur:
         cur.execute("select metric_name, id from analytics.metric_definition where metric_name = any(%s)", (metric_names,))
@@ -327,7 +349,8 @@ def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict
 
     output_metric_ids = {k: v for k, v in metric_ids.items()
                           if k in ("net_debt_ebitda", "ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield",
-                                   "total_shareholder_yield", "institutional_ownership_pct", "share_dilution_trend")}
+                                   "total_shareholder_yield", "institutional_ownership_pct", "share_dilution_trend",
+                                   "cash_conversion_cycle")}
 
     totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
     for cik in sorted(ciks):

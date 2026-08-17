@@ -67,9 +67,15 @@ DEFERRED_TO_STAGE_3E = {"revenue_growth_yoy", "revenue_growth_3y_cagr", "eps_gro
 # requires_price=false filter) and crashes with KeyError on
 # FORMULA_SHAPES[metric_name] for every company, since it deliberately
 # has no shape entry and zero metric_definition_input rows.
-DEFERRED_TO_EXPANDED_METRICS = {"net_debt_ebitda", "institutional_ownership_pct"}
+DEFERRED_TO_EXPANDED_METRICS = {"net_debt_ebitda", "institutional_ownership_pct", "cash_conversion_cycle", "share_dilution_trend"}
 
-FY_ONLY_METRICS = {"roic", "roe"}
+# debtor_days/inventory_days/payables_days added to FY_ONLY_METRICS
+# 2026-08-18 for the same reason roic/roe are: a "days" formula
+# multiplies by 365, so a quarterly denominator (roughly 1/4 of an
+# annual one) would inflate every quarterly row ~4x for the same
+# balance -- the exact same annualization trap already documented above
+# for ROIC, not a new one.
+FY_ONLY_METRICS = {"roic", "roe", "debtor_days", "inventory_days", "payables_days"}
 
 FORMULA_SHAPES = {
     "gross_margin": "ratio",
@@ -96,6 +102,15 @@ FORMULA_SHAPES = {
     # per-concept-role model can't express it. Computed separately in
     # mapper/expanded_metrics.py instead, alongside the price-dependent
     # EBITDA-based ratios that need the same TTM EBITDA reconstruction.
+    # debtor_days/inventory_days/payables_days added 2026-08-18 -- new
+    # "days" shape, FY-only (see FY_ONLY_METRICS comment above).
+    # cash_conversion_cycle is NOT here -- it combines these three
+    # METRICS' own outputs (debtor + inventory - payables), not raw
+    # concepts, so it's computed in mapper/expanded_metrics.py instead,
+    # same "combines other metrics' output" pattern as net_debt_ebitda.
+    "debtor_days": "days",
+    "inventory_days": "days",
+    "payables_days": "days",
 }
 
 
@@ -174,6 +189,22 @@ def _compute(shape: str, values_by_role: dict[str, list[Decimal]]) -> tuple[Deci
         if add is None:
             return None, "missing:add"
         return sum(add), None
+
+    if shape == "days":
+        # (numerator / denominator) x 365 -- Debtor/Inventory/Payables
+        # Days. FY-only (see FY_ONLY_METRICS), same annualization
+        # reasoning as roic/roe: a quarterly denominator would inflate
+        # the day-count ~4x for the same balance-sheet snapshot.
+        num = values_by_role.get("numerator")
+        denom = values_by_role.get("denominator")
+        if num is None:
+            return None, "missing:numerator"
+        if denom is None:
+            return None, "missing:denominator"
+        denom_sum = sum(denom)
+        if denom_sum == 0:
+            return None, "zero_denominator"
+        return (sum(num) / denom_sum) * 365, None
 
     if shape == "sum_diff":
         add = values_by_role.get("add")

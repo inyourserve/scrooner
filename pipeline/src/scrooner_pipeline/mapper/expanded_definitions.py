@@ -50,6 +50,15 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
      "Same dilution figure already folded into total_shareholder_yield, exposed here as its own visible data point "
      "-- e.g. a buyback-yield-positive company can still be net-diluting via SBC issuance, which total_shareholder_yield "
      "alone hides. Does NOT require price -- computed in expanded_metrics.py.", False, []),
+    ("debtor_days", "(Accounts Receivable / Revenue) x 365, FY only", False,
+     [("accounts_receivable", "numerator"), ("revenue", "denominator")]),
+    ("inventory_days", "(Inventory / Cost of Revenue) x 365, FY only", False,
+     [("inventory", "numerator"), ("cost_of_revenue", "denominator")]),
+    ("payables_days", "(Accounts Payable / Cost of Revenue) x 365, FY only", False,
+     [("accounts_payable", "numerator"), ("cost_of_revenue", "denominator")]),
+    ("cash_conversion_cycle", "Debtor Days + Inventory Days - Payables Days, most recent FY each. Computed in "
+     "expanded_metrics.py -- combines three METRIC outputs, not raw concepts, same pattern as net_debt_ebitda.",
+     False, []),
 ]
 
 

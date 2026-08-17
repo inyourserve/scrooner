@@ -16,6 +16,12 @@ inventory and sbc (ShareBasedCompensation) are both single-tag,
 first_match by convention (room for a real alternate if one turns up,
 same as every other concept here) -- not checked for overlap since only
 one tag was found for either across the golden-10's concept list.
+
+accounts_receivable/accounts_payable added 2026-08-18 (doc 26's coverage
+push, feeding Debtor/Payables Days + Cash Conversion Cycle) -- checked
+live first: AccountsReceivableNetCurrent (305 facts/6 companies) and
+AccountsPayableCurrent (293 facts/6 companies) are both real, raw,
+single-tag, unmapped instant balances across the golden-10.
 """
 
 import psycopg
@@ -34,6 +40,8 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
         "different tags for the same period; first_match (not sum) avoids double-counting. "
         "Feeds ebitda.",
     ),
+    ("accounts_receivable", "balance_sheet", "first_match", "Accounts receivable, net -- needed for Debtor Days"),
+    ("accounts_payable", "balance_sheet", "first_match", "Accounts payable -- needed for Payables Days"),
 ]
 
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
@@ -43,6 +51,8 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
      "Priority 1 -- confirmed live this is the tag AAPL's FY2015 filing itself treats as authoritative when both appear."),
     ("depreciation_and_amortization", "us-gaap", "DepreciationDepletionAndAmortization", 2, "approved",
      "Alternate, not summand -- see module docstring's AAPL FY2015 overlap finding."),
+    ("accounts_receivable", "us-gaap", "AccountsReceivableNetCurrent", 1, "approved", ""),
+    ("accounts_payable", "us-gaap", "AccountsPayableCurrent", 1, "approved", ""),
 ]
 
 

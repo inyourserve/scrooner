@@ -48,6 +48,22 @@ logger = structlog.get_logger()
 # document parsing) IS the whole signal doc 23 scoped -- a real,
 # evidenced `delisted` status (Form 15/15F) and a tender-offer-target
 # flag (SC 14D9), zero new fetches either way.
+#
+# DEF 14A family added 2026-08-18 (doc 26's coverage push) -- same
+# purely-additive widening. Checked live against the full golden-10 first
+# (not assumed): the real form-type variety present is {DEF 14A, DEFA14A,
+# DEFM14A, DEFR14A, DFAN14A, PRE 14A, PREM14A, PX14A6G, PX14A6N}. Only the
+# company's own DEFINITIVE proxy disclosure and its amendment/revision
+# variants are included here (DEF 14A itself, plus DEFA14A "additional
+# soliciting materials", DEFM14A "merger-related", DEFR14A "revised") --
+# deliberately excluding PRE 14A/PREM14A (preliminary, not yet final, by
+# definition superseded by the DEF that follows) and DFAN14A/PX14A6G/
+# PX14A6N (third-party/activist/non-management exempt solicitations, not
+# the company's own disclosure), same curated-not-exhaustive discipline
+# as ITEM_LABELS/aliases.py elsewhere in this project. Only the filing's
+# presence in core.filing is captured here -- Stage 5's actual document
+# parsing (exec comp, insider holdings from the proxy's own tables)
+# remains explicitly deferred, per doc 19.
 FORM_ALLOWLIST = {
     "10-K", "10-K/A",
     "10-Q", "10-Q/A",
@@ -57,6 +73,7 @@ FORM_ALLOWLIST = {
     "15-12G", "15-12G/A", "15-15D", "15-15D/A",
     "15F-12B", "15F-12B/A", "15F-12G", "15F-12G/A",
     "SC 14D9", "SC 14D9/A",
+    "DEF 14A", "DEFA14A", "DEFM14A", "DEFR14A",
 }
 
 

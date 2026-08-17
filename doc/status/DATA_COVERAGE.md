@@ -161,7 +161,7 @@ Doc 10 itself: "not available on EDGAR, requires a third-party vendor" for this 
 | Annual Profit & Loss (10yr) | 🟡 | Built, but real depth is whatever the golden company's XBRL history covers, not a guaranteed 10 years for every company |
 | Balance Sheet (10yr) | 🟡 | Same caveat |
 | Cash Flow Statement (10yr) | 🟡 | Same caveat — now more complete per-quarter thanks to doc 25 §10's interim-quarter derivation |
-| Standard Ratios table (Debtor Days, Inventory Days, Payables, Cash Conversion Cycle, ROCE/ROIC) | 🟡 | ROIC ✅ built; Debtor/Inventory/Payables Days and Cash Conversion Cycle ⬜ not built (need AR/Inventory/AP concepts — likely raw-tag-available, unmapped, same shape as every other gap above) |
+| Standard Ratios table (Debtor Days, Inventory Days, Payables, Cash Conversion Cycle, ROCE/ROIC) | ✅ | ROIC ✅; Debtor/Inventory/Payables Days ✅ (new `accounts_receivable`/`accounts_payable` concepts + `calculate.py`'s new FY-only `"days"` shape) and Cash Conversion Cycle ✅ (`expanded_metrics.py`, combines the three days metrics) — all built 2026-08-18, AAPL's real -71.1 day CCC (34.9 Debtor + 9.4 Inventory − 115.4 Payables) matches AAPL's well-documented real negative cash conversion cycle |
 
 ## 12. Peer / Sector Comparison
 
@@ -178,21 +178,22 @@ Doc 10 itself: "not available on EDGAR, requires a third-party vendor" for this 
 | 10-K / 10-Q filing links | P0 | ✅ | Recent Filings section, `apps/site` |
 | 8-K material event filings | P1 | ✅ | Built, **now with real SEC item-code classification** (doc 21/24 Phase 1) rendered as plain-English labels — exceeds doc 10's own ask (which only wanted the filing link, not the event type) |
 | Earnings Call Transcripts + AI Summary | P0 | 🚫 | Not on EDGAR — doc 10 flags itself |
-| Proxy Statement (DEF 14A) | P2 | 🟡 | The filing **exists and is discoverable** in already-fetched `raw.sec_submissions` (confirmed real counts per golden company, doc 19 §1's table) but is **not yet in `core.filing`'s `FORM_ALLOWLIST`** — confirmed live, not currently there. Exec-comp/insider-holdings extraction from it is doc 19 Stage 5, explicitly deferred. |
+| Proxy Statement (DEF 14A) | P2 | ✅ | **DEF 14A family now in `core.filing`'s `FORM_ALLOWLIST`** (2026-08-18) — DEF 14A, DEFA14A, DEFM14A, DEFR14A (the company's own definitive proxy + amendments; preliminary/third-party-exempt-solicitation variants deliberately excluded). 472 real filings captured across the golden-10, zero regression to any pre-existing form type, rendering in Recent Filings with no frontend change needed. Exec-comp/insider-holdings extraction *from* the document is still doc 19 Stage 5, explicitly deferred — this is filing-presence only, same scope as 8-K/Form 15/SC 14D9 before it. |
 | Credit Ratings (S&P/Moody's/Fitch) | P1 | 🚫 | Needs a ratings-agency feed |
 
 ---
 
 ## What actually moves the needle next (updated 2026-08-18 after this pass)
 
-Done this pass (all 12 landed in `mapper/expanded_metrics.py`/`expanded_concepts.py`/`expanded_definitions.py`, verified live against the golden-10, wired into `apps/site`'s new "Additional Ratios" card): ROA, Quick Ratio, SBC%Revenue, EBITDA, Net Debt/EBITDA, EV/EBITDA, EV/Sales, PEG Ratio, Buyback Yield, Total Shareholder Yield, Institutional Ownership %, Share Count Dilution Trend.
+Done this pass:
+1. All 12 doc 18 Tier A / doc 26 §2-3 metrics landed in `mapper/expanded_metrics.py`/`expanded_concepts.py`/`expanded_definitions.py`, verified live against the golden-10, wired into `apps/site`'s new "Additional Ratios" card: ROA, Quick Ratio, SBC%Revenue, EBITDA, Net Debt/EBITDA, EV/EBITDA, EV/Sales, PEG Ratio, Buyback Yield, Total Shareholder Yield, Institutional Ownership %, Share Count Dilution Trend.
+2. **DEF 14A family into `core.filing`'s `FORM_ALLOWLIST`** — 472 real filings across the golden-10, zero regression, same purely-additive widening pattern as 8-K/Form 15/SC 14D9.
+3. **Debtor Days / Inventory Days / Payables Days / Cash Conversion Cycle** — new `accounts_receivable`/`accounts_payable` concepts, `calculate.py`'s new FY-only `"days"` shape, and Cash Conversion Cycle combining the three in `expanded_metrics.py`. AAPL's real -71.1 day CCC matches its well-documented actual negative cash conversion cycle.
 
 Ranked by real coverage gained per unit of effort, all EDGAR-only (no vendor, no new decision):
 
-1. **DEF 14A into `FORM_ALLOWLIST`** — same purely-additive widening pattern already used for 8-K/Form 15/SC 14D9 (doc 19 Stage 1, doc 23), makes the filing itself visible even before any Stage-5-style parsing of its contents.
-2. **Debtor Days / Inventory Days / Payables Days / Cash Conversion Cycle** (Section 11's Standard Ratios table) — AR, Inventory (now mapped, this pass), AP concepts are the same "curate a raw tag, wire into `calculate.py`'s `ratio` shape" pattern as everything just built.
-3. **Quality boolean flags + Piotroski F-Score** (doc 26 §2) — highest per-item count for the effort, all inputs already resolved.
-4. **Day Change %** (needs a prior-close snapshot, not just the latest) and **5Y/10Y revenue/EPS CAGR** (needs longer XBRL history reconstruction, same shape as the existing 3Y CAGR) — both real, both bounded, no new data source.
-5. **Sector bucket mapping (SIC → readable sector)** — SIC code is already captured (Company Master 4a); this is a small curated lookup table, same discipline as the ITEM_LABELS map already used for 8-K codes.
+1. **Quality boolean flags + Piotroski F-Score** (doc 26 §2) — highest per-item count for the effort, all inputs already resolved.
+2. **Day Change %** (needs a prior-close snapshot, not just the latest) and **5Y/10Y revenue/EPS CAGR** (needs longer XBRL history reconstruction, same shape as the existing 3Y CAGR) — both real, both bounded, no new data source.
+3. **Sector bucket mapping (SIC → readable sector)** — SIC code is already captured (Company Master 4a); this is a small curated lookup table, same discipline as the ITEM_LABELS map already used for 8-K codes.
 
 Everything past that point is either genuinely vendor-blocked (Section 9 in full, short interest, 52-week/beta/historical-price-dependent items), structurally blocked (segment/geography revenue — confirmed dimensional-XBRL API limitation, doc 22), or a real open product decision (universe width for peer comparison) — not a "just build it" gap.
