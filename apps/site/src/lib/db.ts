@@ -88,6 +88,31 @@ export async function getLatestPublicFloat(companyId: number): Promise<PublicFlo
   return rows[0] ?? null;
 }
 
+export interface LatestPriceRow {
+  price: string;
+  symbol: string;
+  bar_timestamp: string;
+  feed: string;
+}
+
+// doc 25 -- real Alpaca price (delayed_sip, ~15min delay). RAW ingested
+// price only, not a calculated metric -- Market Cap/P/E/Dividend
+// Yield/etc. still need the separate, not-yet-built Mapper follow-on
+// (doc 13's locked boundary: Company Master ingests price, Mapper
+// calculates price-dependent metrics). Most recent price_date only --
+// core.market_price_alpaca is a small daily snapshot table, not a full
+// history.
+export async function getLatestPrice(companyId: number): Promise<LatestPriceRow | null> {
+  const rows = await sql<LatestPriceRow[]>`
+    select price::text, symbol, bar_timestamp::text, feed
+    from core.market_price_alpaca
+    where company_id = ${companyId}
+    order by price_date desc
+    limit 1
+  `;
+  return rows[0] ?? null;
+}
+
 export interface StatementPeriod {
   fiscal_year: number;
   fiscal_period: string;

@@ -13,6 +13,7 @@ import {
   getRecentBeneficialOwnership,
   getTopInstitutionalHolders,
   getLatestPublicFloat,
+  getLatestPrice,
 } from "../../lib/db";
 import { buildChecklist } from "../../lib/prosCons";
 
@@ -34,12 +35,17 @@ const insiderTransactions = await getRecentInsiderTransactions(company.id);
 const beneficialOwnership = await getRecentBeneficialOwnership(company.id);
 const institutionalHolders = await getTopInstitutionalHolders(company.id);
 const publicFloat = await getLatestPublicFloat(company.id);
+const latestPrice = await getLatestPrice(company.id);
 
-// doc 17 Sec 3: price-dependent metrics stay honestly null -- doc 02's
-// vendor decision is still open (doc 13). Never fabricated here.
-const topRatios: { label: string; row: (typeof metrics)[string] | undefined; suffix?: string; blocked?: boolean }[] = [
+// doc 17 Sec 3 / doc 25: Market Cap, P/E, Dividend Yield still stay
+// honestly null -- they're CALCULATED price-dependent metrics, and
+// computing them from the now-real price is a separate, not-yet-built
+// Mapper follow-on (doc 13's locked boundary). Current Price itself is
+// different -- it's the RAW ingested value from core.market_price_alpaca
+// (doc 25), not a calculation, so it's shown directly once available.
+const topRatios: { label: string; row: (typeof metrics)[string] | undefined; suffix?: string; blocked?: boolean; raw?: string }[] = [
   { label: "Market Cap", row: undefined, blocked: true },
-  { label: "Current Price", row: undefined, blocked: true },
+  { label: "Current Price", row: undefined, blocked: !latestPrice, raw: latestPrice ? "$" + Number(latestPrice.price).toFixed(2) : undefined },
   { label: "Stock P/E", row: undefined, blocked: true },
   { label: "Book Value (Equity)", row: undefined, blocked: false },
   { label: "Dividend Yield", row: undefined, blocked: true },
@@ -129,14 +135,16 @@ function fmtShares(value: string | null): string {
         <div class="ratio">
           <span class="label">{r.label}</span>
           {r.blocked ? (
-            <span class="value blocked" title="Blocked on doc 02's still-open market-price vendor decision">—</span>
+            <span class="value blocked" title="Not yet computed -- needs the Mapper follow-on that combines real price with shares outstanding/EPS/etc. (doc 13)">—</span>
+          ) : r.raw ? (
+            <span class="value" title={`${latestPrice?.feed} feed, bar time ${latestPrice?.bar_timestamp} -- see doc 25`}>{r.raw}</span>
           ) : (
             <span class="value">{fmtPct(r.row?.value)}</span>
           )}
         </div>
       ))}
     </div>
-    <p class="note">Price-dependent figures (Market Cap, Current Price, Stock P/E, Dividend Yield) are blocked on a market-price vendor decision (doc 02) — shown honestly null, never estimated.</p>
+    <p class="note">Market Cap, Stock P/E, and Dividend Yield are still null — they're calculated from price (Mapper's job, not yet built), not just the price itself. Current Price is real (Alpaca, {latestPrice?.feed ?? "delayed_sip"} feed, ~15min delay — see doc 25).</p>
     {publicFloat && (
       <p class="note">
         <strong>Public Float</strong> (not Market Cap — value of shares held by non-affiliates only, as of {publicFloat.period_end}, per the 10-K cover page): {fmtNum(publicFloat.value)}
