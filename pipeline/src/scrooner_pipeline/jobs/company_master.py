@@ -10,6 +10,7 @@ from scrooner_pipeline.company_master.identity import update_identity
 from scrooner_pipeline.company_master.history import update_history
 from scrooner_pipeline.company_master.status import update_status
 from scrooner_pipeline.company_master.market_price import load_mock_prices
+from scrooner_pipeline.company_master.market_price_alpaca import update_market_price
 from scrooner_pipeline.db.connection import get_connection
 
 app = typer.Typer()
@@ -21,6 +22,11 @@ GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_
 def _load_golden_ciks() -> set[str]:
     companies = json.loads(GOLDEN_COMPANIES_PATH.read_text())
     return {c["cik"] for c in companies}
+
+
+def _load_golden_tickers() -> dict[str, str]:
+    companies = json.loads(GOLDEN_COMPANIES_PATH.read_text())
+    return {c["cik"]: c["ticker"] for c in companies}
 
 
 @app.command("update-identity")
@@ -73,6 +79,23 @@ def load_mock_prices_cmd(
     with get_connection() as conn:
         stats = load_mock_prices(conn, target_ciks)
     typer.echo(f"load-mock-prices: {stats}")
+
+
+@app.command("update-market-price")
+def update_market_price_cmd() -> None:
+    """Stage 4b real-data follow-on (doc 25): fetch REAL current prices
+    from Alpaca (delayed_sip feed, ~15min delay, full consolidated tape)
+    into core.market_price_alpaca -- a table separate from
+    core.market_price's mock data, by explicit design. Run once daily or
+    on demand (no scheduler wired up yet -- see doc 25's open cadence
+    question, answered as 'daily/on-demand for now' during dev). No
+    --ciks override, unlike the other commands here -- ticker resolution
+    currently depends on golden_companies.json's own curated primary
+    ticker (see market_price_alpaca.py's module docstring for why), so
+    this is golden-10-only until a real "primary listing" design exists."""
+    with get_connection() as conn:
+        stats = update_market_price(conn, _load_golden_tickers())
+    typer.echo(f"update-market-price: {stats}")
 
 
 if __name__ == "__main__":

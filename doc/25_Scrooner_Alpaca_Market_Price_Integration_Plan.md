@@ -2,7 +2,7 @@
 
 Doc 02's market-price vendor decision resolved 2026-08-17: Alpaca Markets, free/Basic tier for now. This is the execution plan for Company Master 4b's real-data follow-on — the piece doc 13 deliberately left as a stub pending this exact decision. Built against the two endpoints requested for review, read directly (not from memory) and then live-tested against the real Alpaca account before this plan was written, same discipline as every prior vendor/API evaluation in this project.
 
-> **Status:** Draft (2026-08-17) — a plan, not yet built. **Owner:** Founder / Product · **Review:** before implementation starts.
+> **Status:** Built and verified against the golden-10 (2026-08-17). Original plan below is unchanged except where marked — three explicit user refinements (delayed_sip feed instead of iex, a genuinely separate table instead of `core.market_price`'s `is_mock` flag, daily/on-demand cadence for now) were incorporated during the build, and one real bug was found and fixed during verification (see §7). **Owner:** Founder / Product.
 
 ---
 
@@ -53,3 +53,16 @@ Checked against doc 02's V1 metric list: **all 6 price-dependent metrics (Market
 ## 6. Open question for the user, not assumed here
 
 **Refresh cadence isn't decided.** Given the rate-limit headroom (200 req/min, 1 call covers the whole golden-10), this could run once a day, on every company-page request, or on some other cadence — a product/cost trade-off (more frequent = closer to "live" but more calls against the free-tier limit as the universe grows), not a technical constraint. Worth a explicit decision before building, not defaulted here.
+
+**Resolved by explicit user direction, same day**: `feed=delayed_sip` (not the free-tier default `iex`) — confirmed live before building: real ~15-16 minute delay (bar timestamp vs. request time), and full consolidated-tape trade counts (10-70x higher than IEX in a live side-by-side check), a better fit for a fundamental screener than real-time-but-single-exchange data. **Separate table** (`core.market_price_alpaca`, not `core.market_price` with `is_mock=false`) — mock and real data can never coexist in the same table at all now, a stronger guarantee than a boolean flag. **Cadence: once daily or on-demand, for now, during dev** — no scheduler built (Part 14/Infra's hosting decision is still open); the CLI command (`scrooner-company-master update-market-price`) is runnable both ways today.
+
+## 7. Built shape (as implemented, not just proposed)
+
+- `db/migrations/0012_market_price_alpaca.sql` — `core.market_price_alpaca`, one row per `(company_id, price_date)`, includes the bar's own `bar_timestamp` (not just `fetched_at`) so real data recency is always checkable, not just claimed.
+- `common/alpaca_client.py` — thin client, `feed=delayed_sip` hard-coded (not left to account-tier default).
+- `company_master/market_price_alpaca.py` — the loader. Ingests price only, same locked boundary as doc 13 (never computes Market Cap/P/E/etc.).
+- CLI: `scrooner-company-master update-market-price`.
+
+**One real bug found and fixed during verification, not before**: the first version resolved each company's ticker via a generic `core.listing` query, building a `{cik: ticker}` dict — but `core.listing` holds *every* listing a company has ever had, not just its primary common stock. JPM alone has 9 rows (5 preferred-share classes plus several structured notes/ETNs it issues under its own CIK — the same "one CIK, many securities" pattern doc 23 already found for Form 15/Chase Capital), ENB has 14 (OTC pink-sheet variants). The dict comprehension silently kept whichever row Postgres returned last, so the first live run queried Alpaca for things like "VYLD" (a JPM-issued ETN) instead of "JPM" itself — 3 of 10 companies got no bar back at all, and the 7 that did included wrong tickers for JPM and Alphabet. Fixed by sourcing the primary ticker from `golden_companies.json`'s own already-curated `ticker` field instead of querying `core.listing` generically — correct for all 10 on rerun. `core.listing` has no "is primary" flag to solve this for a wider universe yet; correctly left as a known, named gap rather than guessed at, same discipline as everywhere else in this project.
+
+**Verified real values, golden-10, 2026-08-17 ~16:20 UTC**: AAPL $303.69, MSFT $483.37, JPM $365.04, GOOGL $344.34, TSM $435.40 — all plausible, all with a real `bar_timestamp` roughly 15-20 minutes behind the request, confirming the delayed_sip feed is working as designed, not silently falling back to something else.
