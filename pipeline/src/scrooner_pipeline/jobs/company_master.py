@@ -11,6 +11,7 @@ from scrooner_pipeline.company_master.history import update_history
 from scrooner_pipeline.company_master.status import update_status
 from scrooner_pipeline.company_master.market_price import load_mock_prices
 from scrooner_pipeline.company_master.market_price_alpaca import update_market_price
+from scrooner_pipeline.company_master.security_type import resolve_primary_tickers, update_security_types
 from scrooner_pipeline.db.connection import get_connection
 
 app = typer.Typer()
@@ -81,6 +82,20 @@ def load_mock_prices_cmd(
     typer.echo(f"load-mock-prices: {stats}")
 
 
+@app.command("update-security-types")
+def update_security_types_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Classifies each current listing's real security type via OpenFIGI
+    (free, NOT Alpaca -- see security_type.py's module docstring) --
+    replaces the golden_companies.json ticker stopgap update-market-price
+    originally used to find a company's primary common-stock/ADR ticker."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = update_security_types(conn, target_ciks)
+    typer.echo(f"update-security-types: {stats}")
+
+
 @app.command("update-market-price")
 def update_market_price_cmd() -> None:
     """Stage 4b real-data follow-on (doc 25): fetch REAL current prices
@@ -88,13 +103,18 @@ def update_market_price_cmd() -> None:
     into core.market_price_alpaca -- a table separate from
     core.market_price's mock data, by explicit design. Run once daily or
     on demand (no scheduler wired up yet -- see doc 25's open cadence
-    question, answered as 'daily/on-demand for now' during dev). No
-    --ciks override, unlike the other commands here -- ticker resolution
-    currently depends on golden_companies.json's own curated primary
-    ticker (see market_price_alpaca.py's module docstring for why), so
-    this is golden-10-only until a real "primary listing" design exists."""
+    question, answered as 'daily/on-demand for now' during dev).
+    Primary ticker per company comes from real OpenFIGI-sourced
+    classification (run update-security-types first) -- see
+    security_type.py's resolve_primary_tickers(), NOT Alpaca itself, kept
+    deliberately separate from the price vendor. golden_companies.json's
+    curated ticker is only the tie-break for a company with more than one
+    legitimately valid Common-Stock/ADR listing (e.g. Alphabet's two
+    share classes), not the primary source of truth anymore."""
+    golden_ciks = _load_golden_ciks()
     with get_connection() as conn:
-        stats = update_market_price(conn, _load_golden_tickers())
+        ticker_by_cik = resolve_primary_tickers(conn, golden_ciks, fallback_ticker_by_cik=_load_golden_tickers())
+        stats = update_market_price(conn, ticker_by_cik)
     typer.echo(f"update-market-price: {stats}")
 
 

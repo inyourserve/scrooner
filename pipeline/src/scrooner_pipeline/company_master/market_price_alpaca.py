@@ -12,21 +12,20 @@ or any other price-dependent metric. That stays the Mapper's job even
 once real prices are available (doc 13's own locked boundary rule,
 unchanged by which vendor supplies the price).
 
-Primary ticker source: the caller passes an explicit {cik: ticker} map
-(the golden_companies.json file's own curated "ticker" field), NOT a
-generic core.listing query -- found live, the hard way, that core.listing
+Primary ticker source: the caller passes an explicit {cik: ticker} map,
+now built by company_master.security_type.resolve_primary_tickers()
+(real OpenFIGI-sourced classification -- NOT Alpaca, kept deliberately
+separate from the price vendor) rather than a bare core.listing query.
+Found live, the hard way, why a generic query isn't enough: core.listing
 holds every listing a company has ever had, not just its primary common
-stock: JPM alone has 9 rows (5 preferred-share classes plus several
-structured-note tickers it issues under its own CIK, same "one CIK, many
+stock -- JPM alone has 9 rows (5 preferred-share classes plus 2
+structured notes/ETNs it issues under its own CIK, same "one CIK, many
 securities" pattern doc 23 already found for Form 15), ENB has 14 (OTC
 pink-sheet variants of the same Canadian listing). A naive
 {cik: ticker for ...} dict comprehension over that silently kept
-whichever row postgres happened to return last -- wrong tickers (a JPM
-ETN called "VYLD", not JPM's own common stock) got queried instead of
-the real one. core.listing has no "is primary" flag to resolve this
-generically yet -- a real design gap for any future wider universe, not
-solved here, correctly scoped to the golden-10's already-known-correct
-tickers for now.
+whichever row postgres happened to return last. See
+security_type.py's own module docstring for the real fix and the TSM
+ADR-vs-Common-Stock nuance that surfaced while building it.
 """
 
 from datetime import date, datetime
