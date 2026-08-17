@@ -2,7 +2,7 @@
 
 Prompted directly: after doc 19 (Ownership & Insider Activity), "plan all the remaining thing end to end." This doc is the single inventory of everything not yet done across all 14 of doc 06's parts, as of this pass — cross-checked against `doc/PROGRESS.md` (not re-derived from memory), with a concrete sequencing recommendation and, for each item, whether it's a **build task** (this project can just do it) or a **decision** (needs the user, doc 02's guardrail against silent scope expansion applies).
 
-> **Status:** Canonical (2026-08-17) — a planning doc, not a build log. Supersedes nothing; consolidates doc 02's still-open decisions, doc 18's proposed metric tiers, and doc 19's deferred stages into one place instead of three. **Owner:** Founder / Product · **Review:** after each item below is closed, update `doc/PROGRESS.md` first, then re-derive this doc's "what's left" list from it — never let this doc drift into being its own source of truth.
+> **Status:** Superseded for sequencing by [doc 24](24_Scrooner_Final_Build_Backlog.md) (2026-08-17) — doc 24 consolidates this doc plus docs 21-23 into one final ordered backlog. This doc's §3 (open decisions table) is still accurate and worth reading; its §8 sequencing recommendation is not — read doc 24 instead. **Owner:** Founder / Product.
 
 ---
 
