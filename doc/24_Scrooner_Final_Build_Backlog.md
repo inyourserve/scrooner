@@ -14,15 +14,17 @@ Three decisions remain genuinely open and are **not** resolved by this doc (doc 
 
 ---
 
-## Phase 1 — EDGAR signal batch (cheap, fully scoped, zero open decisions)
+## Phase 1 — EDGAR signal batch (cheap, fully scoped, zero open decisions) — ✅ COMPLETE, verified 2026-08-17
 
 Every item here is small, needs no new SEC fetch, mirrors a pattern already proven elsewhere in this codebase, and was checked live in doc 23. Batchable into one build session.
 
-1. **Form 4 `aff10b5One`** (doc 23 Stage A) — new `is_10b5_1_plan` column on `core.insider_transaction`, parsed from the document Stage 2 already fetches.
-2. **Form 15 → real `delisted` status** (doc 23 Stage C) — extend `company_master/status.py` to check for `15-12G`/`15-15D`/`15F-12B`/`15F-12G` in a company's own filing history, already sitting in `raw.sec_submissions`.
-3. **8-K `items` capture** (doc 21) — new column on `core.filing`, sourced from the `items` field `raw.sec_submissions` already has for every 8-K.
-4. **SC 14D9 presence signal** (doc 23 Stage D) — same "form-type presence is the signal" pattern as #2, added alongside it.
-5. **`dei:EntityPublicFloat`** (doc 23 Stage B) — new `public_float` canonical concept, explicitly labeled and shown separately from the still-blocked Market Cap field, never substituted for it.
+1. **Form 4 `aff10b5One`** (doc 23 Stage A) — `is_10b5_1_plan` on `core.insider_transaction`. Backfilled across the full golden-10 (55,109 transactions, exact match to the pre-existing total — zero data loss). Real, internally-consistent result: RDDT (IPO'd March 2024, entirely post-rule) shows zero nulls and a real, plausible 86% pre-arranged-plan rate; older companies show the expected null/populated split around the 2023-04-01 effective date. Verified rendering live on the company page (RDDT CEO's real recent sale correctly tagged "10b5-1").
+2. **Form 15 → real `delisted` status** (doc 23 Stage C) — extend `company_master/status.py`. **Caught and fixed a real false-positive during verification**: JPM's own CIK has 4 Form 15/15D filings, but all four are subsidiary financing trusts ("Chase Capital I", capital securities) deregistering debt instruments, not JPM's common stock — fixed by fetching each filing's own cover page and requiring it actually say "common stock" before trusting the signal. All 10 golden companies correctly remain `active`.
+3. **8-K `items` capture** (doc 21) — new column on `core.filing`. Verified rendering live with real SEC item codes translated to plain English (e.g. "Earnings Results", "Officer/Director Change").
+4. **SC 14D9 presence signal** (doc 23 Stage D) — form-type recognized; no golden-10 example exists to visually verify (matches doc 23's own noted gap), same as Form 15 before JPM's real (if initially misread) example turned up.
+5. **`dei:EntityPublicFloat`** (doc 23 Stage B) — new `public_float` canonical concept, resolved for 8 of 10 companies (ENB/TSM excluded, the same known foreign-filer taxonomy gap every other Mapper concept already has). Real, plausible values (AAPL $3.25T as of 2025-03-28); rendered on the company page, explicitly labeled apart from the still-blocked Market Cap field.
+
+**Also built this pass, beyond the original Phase 1 scope, per direct follow-up instruction**: doc 02's market-price vendor decision resolved (Alpaca, free tier) and integrated (doc 25) — real prices for all 10 golden companies via the `delayed_sip` feed into a new `core.market_price_alpaca` table. A real ticker-resolution bug was found and fixed twice during this: first via a `golden_companies.json` stopgap, then replaced with a general, non-Alpaca mechanism (`company_master/security_type.py`, sourced from OpenFIGI) after explicit direction not to lean on the price vendor for identity classification.
 
 **Not in this phase**: dimensional/segment XBRL (doc 23 Stage E — deliberately undesigned, needs its own pass) and Form N-PORT (Phase 2 — bigger, standalone).
 
