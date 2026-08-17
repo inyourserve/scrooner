@@ -42,6 +42,8 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import log_error
+
 logger = structlog.get_logger()
 
 
@@ -108,7 +110,7 @@ def resolve_authoritative_for_company(conn: psycopg.Connection, company_id: int)
 
 
 def resolve_authoritative(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "duplicate_groups": 0, "agreed_duplicate_groups": 0, "conflict_groups": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "duplicate_groups": 0, "agreed_duplicate_groups": 0, "conflict_groups": 0}
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
@@ -119,7 +121,12 @@ def resolve_authoritative(conn: psycopg.Connection, ciks: set[str]) -> dict:
         if company_id is None:
             totals["no_company"] += 1
             continue
-        stats = resolve_authoritative_for_company(conn, company_id)
+        try:
+            stats = resolve_authoritative_for_company(conn, company_id)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "core.normalizer_error", cik, "dedupe", exc)
+            continue
         totals["ok"] += 1
         for k in ("duplicate_groups", "agreed_duplicate_groups", "conflict_groups"):
             totals[k] += stats[k]

@@ -28,6 +28,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
 
@@ -225,11 +226,15 @@ def normalize_periods_for_cik(storage: SupabaseStorageClient, conn: psycopg.Conn
 
 
 def normalize_periods(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    stats = {"considered": 0, "ok": 0, "no_company": 0, "no_companyfacts": 0}
+    stats = {"considered": 0, "ok": 0, "no_company": 0, "no_companyfacts": 0, "errored": 0}
     with SupabaseStorageClient() as storage:
         for cik in sorted(ciks):
             stats["considered"] += 1
-            result = normalize_periods_for_cik(storage, conn, cik)
-            stats[result["status"]] += 1
+            try:
+                result = normalize_periods_for_cik(storage, conn, cik)
+                stats[result["status"]] += 1
+            except Exception as exc:
+                stats["errored"] += 1
+                log_error(conn, "core.normalizer_error", cik, "periods", exc)
     logger.info("periods.normalize.done", **stats)
     return stats

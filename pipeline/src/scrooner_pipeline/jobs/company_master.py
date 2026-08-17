@@ -12,6 +12,7 @@ from scrooner_pipeline.company_master.status import update_status
 from scrooner_pipeline.company_master.market_price import load_mock_prices
 from scrooner_pipeline.company_master.market_price_alpaca import update_market_price
 from scrooner_pipeline.company_master.security_type import resolve_primary_tickers, update_security_types
+from scrooner_pipeline.company_master.shares_outstanding_fallback import update_shares_outstanding_fallback
 from scrooner_pipeline.db.connection import get_connection
 
 app = typer.Typer()
@@ -94,6 +95,22 @@ def update_security_types_cmd(
     with get_connection() as conn:
         stats = update_security_types(conn, target_ciks)
     typer.echo(f"update-security-types: {stats}")
+
+
+@app.command("update-shares-outstanding-fallback")
+def update_shares_outstanding_fallback_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Real fallback for multi-class share-structure companies (Block,
+    Reddit) whose shares outstanding is dimensionally XBRL-tagged and
+    stripped by the standard Company Facts API -- parses the 10-K cover
+    page instead. See shares_outstanding_fallback.py's module docstring.
+    Only fill this gap where the primary XBRL path genuinely has
+    nothing; never a replacement for it."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = update_shares_outstanding_fallback(conn, target_ciks)
+    typer.echo(f"update-shares-outstanding-fallback: {stats}")
 
 
 @app.command("update-market-price")

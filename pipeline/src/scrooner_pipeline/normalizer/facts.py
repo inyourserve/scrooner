@@ -37,6 +37,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.common.errors import log_error
 from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST
 from scrooner_pipeline.normalizer.units import canonicalize_unit
 
@@ -255,14 +256,20 @@ def normalize_facts(conn: psycopg.Connection, ciks: set[str]) -> dict:
         "skipped_unmapped_unit": 0,
         "skipped_period_not_found": 0,
     }
+    errored: list[str] = []
     per_cik = {}
     with SupabaseStorageClient() as storage:
         for cik in sorted(target_ciks):
-            result = normalize_facts_for_cik(storage, conn, cik)
+            try:
+                result = normalize_facts_for_cik(storage, conn, cik)
+            except Exception as exc:
+                errored.append(cik)
+                log_error(conn, "core.normalizer_error", cik, "facts", exc)
+                continue
             per_cik[cik] = result
             if result["status"] == "ok":
                 for k in totals:
                     totals[k] += result[k]
 
-    logger.info("facts.normalize.done", excluded=sorted(excluded_requested), **totals)
-    return {"excluded": sorted(excluded_requested), "totals": totals, "per_cik": per_cik}
+    logger.info("facts.normalize.done", excluded=sorted(excluded_requested), errored=errored, **totals)
+    return {"excluded": sorted(excluded_requested), "errored": errored, "totals": totals, "per_cik": per_cik}

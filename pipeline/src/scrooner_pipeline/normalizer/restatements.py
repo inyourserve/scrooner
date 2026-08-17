@@ -32,6 +32,8 @@ actually touches, leaving everything else 2e resolved untouched.
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import log_error
+
 logger = structlog.get_logger()
 
 
@@ -120,15 +122,20 @@ def resolve_restatements(conn: psycopg.Connection, ciks: set[str]) -> dict:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "linked": 0, "unmatched": 0, "superseded_pairs": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "linked": 0, "unmatched": 0, "superseded_pairs": 0}
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
         if company_id is None:
             totals["no_company"] += 1
             continue
-        link_stats = link_amendments_for_company(conn, company_id)
-        supersede_stats = supersede_facts_for_company(conn, company_id)
+        try:
+            link_stats = link_amendments_for_company(conn, company_id)
+            supersede_stats = supersede_facts_for_company(conn, company_id)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "core.normalizer_error", cik, "restatements", exc)
+            continue
         totals["ok"] += 1
         totals["linked"] += link_stats["linked"]
         totals["unmatched"] += link_stats["unmatched"]

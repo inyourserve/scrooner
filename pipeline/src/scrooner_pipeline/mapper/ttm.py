@@ -32,6 +32,8 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import log_error
+
 logger = structlog.get_logger()
 
 GROWTH_METRICS = {
@@ -84,20 +86,7 @@ def _load_company_facts(conn: psycopg.Connection, company_id: int, concept_id: i
         return {(fy, fp): (val, fids, start, end) for fy, fp, val, fids, start, end in cur.fetchall()}
 
 
-def compute_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    metric_ids = _load_metric_ids(conn)
-    with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
-        company_id_by_cik = dict(cur.fetchall())
-
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "computed": 0, "null": 0}
-    for cik in sorted(ciks):
-        totals["considered"] += 1
-        company_id = company_id_by_cik.get(cik)
-        if company_id is None:
-            totals["no_company"] += 1
-            continue
-
+def _compute_growth_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int]) -> dict:
         rows: list[dict] = []
         for metric_name, (concept_name, lag_years) in GROWTH_METRICS.items():
             concept_id = _load_concept_id(conn, concept_name)
@@ -160,10 +149,35 @@ def compute_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
                     rows,
                 )
             conn.commit()
+        return {
+            "computed": sum(1 for r in rows if r["value"] is not None),
+            "null": sum(1 for r in rows if r["value"] is None),
+        }
+
+
+def compute_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
+    metric_ids = _load_metric_ids(conn)
+    with conn.cursor() as cur:
+        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        company_id_by_cik = dict(cur.fetchall())
+
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    for cik in sorted(ciks):
+        totals["considered"] += 1
+        company_id = company_id_by_cik.get(cik)
+        if company_id is None:
+            totals["no_company"] += 1
+            continue
+        try:
+            stats = _compute_growth_for_company(conn, company_id, metric_ids)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "analytics.mapper_error", cik, "growth", exc)
+            continue
         totals["ok"] += 1
-        totals["computed"] += sum(1 for r in rows if r["value"] is not None)
-        totals["null"] += sum(1 for r in rows if r["value"] is None)
-        logger.info("ttm.growth_done", cik=cik, computed=sum(1 for r in rows if r["value"] is not None), null=sum(1 for r in rows if r["value"] is None))
+        totals["computed"] += stats["computed"]
+        totals["null"] += stats["null"]
+        logger.info("ttm.growth_done", cik=cik, computed=stats["computed"], null=stats["null"])
 
     logger.info("ttm.growth.done", **totals)
     return totals
@@ -194,25 +208,7 @@ def _ttm_sum(by_period: dict, fiscal_year: int, fiscal_period: str) -> tuple[Dec
     return total, fact_ids
 
 
-def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    metric_ids = _load_metric_ids(conn)
-    concept_ids = {
-        name: _load_concept_id(conn, name)
-        for name in ("operating_income", "income_tax_expense", "income_before_tax", "net_income",
-                      "total_debt", "stockholders_equity", "cash_and_equivalents")
-    }
-    with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
-        company_id_by_cik = dict(cur.fetchall())
-
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "computed": 0, "null": 0}
-    for cik in sorted(ciks):
-        totals["considered"] += 1
-        company_id = company_id_by_cik.get(cik)
-        if company_id is None:
-            totals["no_company"] += 1
-            continue
-
+def _compute_ttm_returns_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:
         by_concept = {name: _load_company_facts(conn, company_id, cid) for name, cid in concept_ids.items()}
         # Instant facts indexed by end_date for matching against a quarter's own balance-sheet date.
         instant_by_end_date = {}
@@ -305,10 +301,40 @@ def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
                     rows,
                 )
             conn.commit()
+        return {
+            "computed": sum(1 for r in rows if r["value"] is not None),
+            "null": sum(1 for r in rows if r["value"] is None),
+        }
+
+
+def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
+    metric_ids = _load_metric_ids(conn)
+    concept_ids = {
+        name: _load_concept_id(conn, name)
+        for name in ("operating_income", "income_tax_expense", "income_before_tax", "net_income",
+                      "total_debt", "stockholders_equity", "cash_and_equivalents")
+    }
+    with conn.cursor() as cur:
+        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        company_id_by_cik = dict(cur.fetchall())
+
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    for cik in sorted(ciks):
+        totals["considered"] += 1
+        company_id = company_id_by_cik.get(cik)
+        if company_id is None:
+            totals["no_company"] += 1
+            continue
+        try:
+            stats = _compute_ttm_returns_for_company(conn, company_id, metric_ids, concept_ids)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "analytics.mapper_error", cik, "ttm_returns", exc)
+            continue
         totals["ok"] += 1
-        totals["computed"] += sum(1 for r in rows if r["value"] is not None)
-        totals["null"] += sum(1 for r in rows if r["value"] is None)
-        logger.info("ttm.returns_done", cik=cik, computed=sum(1 for r in rows if r["value"] is not None), null=sum(1 for r in rows if r["value"] is None))
+        totals["computed"] += stats["computed"]
+        totals["null"] += stats["null"]
+        logger.info("ttm.returns_done", cik=cik, computed=stats["computed"], null=stats["null"])
 
     logger.info("ttm.returns.done", **totals)
     return totals

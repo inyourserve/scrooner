@@ -128,6 +128,36 @@ def restatements(
     typer.echo(f"restatements: {stats}")
 
 
+@app.command()
+def errors(
+    stage: str = typer.Option(None, help="Restrict to one stage (identity, periods, units, facts, dedupe, restatements, derive_interim_quarters, derive_q4)."),
+    unresolved_only: bool = typer.Option(True, help="Only print rows with resolved=false."),
+    limit: int = typer.Option(50, help="Max rows to print."),
+) -> None:
+    """Dead-letter report over core.normalizer_error (Phase 1 scaling
+    foundation) -- read-only, no writes. One row per company whose
+    normalization failed with an unhandled exception; the batch itself
+    keeps going past a single company's failure."""
+    conditions, params = [], []
+    if stage:
+        conditions.append("stage = %s")
+        params.append(stage)
+    if unresolved_only:
+        conditions.append("not resolved")
+    where = f"where {' and '.join(conditions)}" if conditions else ""
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                f"select id, cik, stage, error_type, message, occurred_at, resolved "
+                f"from core.normalizer_error {where} order by occurred_at desc limit %s",
+                (*params, limit),
+            )
+            rows = cur.fetchall()
+    typer.echo(f"{len(rows)} row(s)")
+    for row in rows:
+        typer.echo(f"  {row}")
+
+
 @app.command("derive-interim-quarters")
 def derive_interim_quarters_cmd(
     ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),

@@ -36,6 +36,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import log_error
 from scrooner_pipeline.mapper.ttm import _trailing_quarters
 
 logger = structlog.get_logger()
@@ -114,6 +115,22 @@ def _load_latest_price(conn: psycopg.Connection, company_id: int) -> tuple[Decim
         return (row[0], row[1]) if row else None
 
 
+def _load_shares_outstanding_fallback(conn: psycopg.Connection, company_id: int) -> tuple[Decimal, list[int]] | None:
+    """Real fallback for multi-class share-structure companies (Block,
+    Reddit) whose shares outstanding is dimensionally XBRL-tagged and
+    stripped by the standard Company Facts API -- see
+    company_master/shares_outstanding_fallback.py's module docstring.
+    Only consulted when the primary canonical_fact lookup (real XBRL
+    data) has nothing; never overrides a working value. No source_fact_ids
+    (this isn't sourced from core.fact at all) -- lineage instead is the
+    row's own accession_number, inspectable directly in
+    core.shares_outstanding_fallback."""
+    with conn.cursor() as cur:
+        cur.execute("select shares from core.shares_outstanding_fallback where company_id = %s", (company_id,))
+        row = cur.fetchone()
+        return (row[0], []) if row else None
+
+
 def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:
     stats = {"computed": 0, "null": 0}
     price_hit = _load_latest_price(conn, company_id)
@@ -138,6 +155,10 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
             ttm[name] = _ttm_sum(by_quarter, fy, fp)
 
     shares_hit = _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"]) if "shares_outstanding" in concept_ids else None
+    if shares_hit is None:
+        shares_fallback = _load_shares_outstanding_fallback(conn, company_id)
+        if shares_fallback is not None:
+            shares_hit = (shares_fallback[0], shares_fallback[1], None)
     equity_hit = _latest_instant_fact(conn, company_id, concept_ids["stockholders_equity"]) if "stockholders_equity" in concept_ids else None
 
     def _row(metric_name: str, value: Decimal | None, reason: str | None, fact_ids: list[int]) -> dict:
@@ -260,14 +281,19 @@ def calculate_price_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "computed": 0, "null": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
         if company_id is None:
             totals["no_company"] += 1
             continue
-        stats = calculate_price_metrics_for_company(conn, company_id, metric_ids, concept_ids)
+        try:
+            stats = calculate_price_metrics_for_company(conn, company_id, metric_ids, concept_ids)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "analytics.mapper_error", cik, "price_metrics", exc)
+            continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]
         totals["null"] += stats["null"]

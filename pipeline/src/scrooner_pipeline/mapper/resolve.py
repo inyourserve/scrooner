@@ -28,6 +28,8 @@ already paid the cost of a stage that didn't (doc 04, CLAUDE.md).
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import log_error
+
 logger = structlog.get_logger()
 
 
@@ -165,14 +167,19 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "resolved": 0, "unresolved_concepts": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "resolved": 0, "unresolved_concepts": 0}
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
         if company_id is None:
             totals["no_company"] += 1
             continue
-        stats = resolve_for_company(conn, company_id, mapping_index)
+        try:
+            stats = resolve_for_company(conn, company_id, mapping_index)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "analytics.mapper_error", cik, "resolve", exc)
+            continue
         totals["ok"] += 1
         totals["resolved"] += stats["resolved"]
         totals["unresolved_concepts"] += stats["unresolved_concepts"]

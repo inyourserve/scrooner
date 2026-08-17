@@ -40,6 +40,8 @@ from datetime import timedelta
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import log_error
+
 logger = structlog.get_logger()
 
 # Same day-length bands periods.py itself uses to classify a duration
@@ -198,14 +200,19 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "candidate_groups": 0, "derived": 0, "already_reported": 0, "incomplete": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "candidate_groups": 0, "derived": 0, "already_reported": 0, "incomplete": 0}
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
         if company_id is None:
             totals["no_company"] += 1
             continue
-        stats = derive_q4_for_company(conn, company_id)
+        try:
+            stats = derive_q4_for_company(conn, company_id)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "core.normalizer_error", cik, "derive_q4", exc)
+            continue
         totals["ok"] += 1
         for k in ("candidate_groups", "derived", "already_reported", "incomplete"):
             totals[k] += stats[k]
@@ -373,14 +380,19 @@ def derive_interim_quarters(conn: psycopg.Connection, ciks: set[str]) -> dict:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "candidate_groups": 0, "q2_derived": 0, "q3_derived": 0, "already_reported": 0, "incomplete_or_inconsistent": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "candidate_groups": 0, "q2_derived": 0, "q3_derived": 0, "already_reported": 0, "incomplete_or_inconsistent": 0}
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
         if company_id is None:
             totals["no_company"] += 1
             continue
-        stats = derive_interim_quarters_for_company(conn, company_id)
+        try:
+            stats = derive_interim_quarters_for_company(conn, company_id)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "core.normalizer_error", cik, "derive_interim_quarters", exc)
+            continue
         totals["ok"] += 1
         for k in ("candidate_groups", "q2_derived", "q3_derived", "already_reported", "incomplete_or_inconsistent"):
             totals[k] += stats[k]

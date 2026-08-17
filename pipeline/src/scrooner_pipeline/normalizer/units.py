@@ -32,6 +32,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
 
@@ -95,13 +96,18 @@ def normalize_units(conn: psycopg.Connection, ciks: set[str]) -> dict:
     """Unlike identity/periods, this accumulates ONE shared set of canonical
     unit names across every requested company before writing -- core.unit
     is a global lookup, so there's no per-company upsert step."""
-    stats = {"considered": 0, "ok": 0, "no_companyfacts": 0}
+    stats = {"considered": 0, "ok": 0, "no_companyfacts": 0, "errored": 0}
     all_canonical: set[str] = set()
     raw_to_canonical: dict[str, set[str]] = {}
     with SupabaseStorageClient() as storage:
         for cik in sorted(ciks):
             stats["considered"] += 1
-            result = normalize_units_for_cik(storage, conn, cik)
+            try:
+                result = normalize_units_for_cik(storage, conn, cik)
+            except Exception as exc:
+                stats["errored"] += 1
+                log_error(conn, "core.normalizer_error", cik, "units", exc)
+                continue
             stats[result["status"]] += 1
             for raw_unit in result["raw_units"]:
                 canonical = canonicalize_unit(raw_unit)

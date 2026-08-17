@@ -21,6 +21,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
 
@@ -275,11 +276,15 @@ def normalize_identity_for_cik(storage: SupabaseStorageClient, conn: psycopg.Con
 
 
 def normalize_identity(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    stats = {"considered": 0, "ok": 0, "no_data": 0}
+    stats = {"considered": 0, "ok": 0, "no_data": 0, "errored": 0}
     with SupabaseStorageClient() as storage:
         for cik in sorted(ciks):
             stats["considered"] += 1
-            result = normalize_identity_for_cik(storage, conn, cik)
-            stats[result["status"]] += 1
+            try:
+                result = normalize_identity_for_cik(storage, conn, cik)
+                stats[result["status"]] += 1
+            except Exception as exc:
+                stats["errored"] += 1
+                log_error(conn, "core.normalizer_error", cik, "identity", exc)
     logger.info("identity.normalize.done", **stats)
     return stats
