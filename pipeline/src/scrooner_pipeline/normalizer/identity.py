@@ -40,12 +40,22 @@ logger = structlog.get_logger()
 # normalization after this change reproduced identical row counts for
 # every pre-existing form type, only 8-K rows were new. See
 # doc/learnings/ownership-and-8k-discovery.md.
+#
+# Form 15 family and SC 14D9 added 2026-08-17 (doc 23 Stages C/D) -- same
+# purely-additive widening, same justification: both share this table's
+# exact shape, and their mere presence in core.filing (form-type only, no
+# document parsing) IS the whole signal doc 23 scoped -- a real,
+# evidenced `delisted` status (Form 15/15F) and a tender-offer-target
+# flag (SC 14D9), zero new fetches either way.
 FORM_ALLOWLIST = {
     "10-K", "10-K/A",
     "10-Q", "10-Q/A",
     "20-F", "20-F/A",
     "40-F", "40-F/A",
     "8-K", "8-K/A",
+    "15-12G", "15-12G/A", "15-15D", "15-15D/A",
+    "15F-12B", "15F-12B/A", "15F-12G", "15F-12G/A",
+    "SC 14D9", "SC 14D9/A",
 }
 
 
@@ -90,11 +100,13 @@ def _parse_filings_block(block: dict) -> list[dict]:
     forms = block.get("form", [])
     filing_dates = block.get("filingDate", [])
     report_dates = block.get("reportDate", [])
+    items = block.get("items", [])
     rows = []
     for i, accession_number in enumerate(accession_numbers):
         form = forms[i] if i < len(forms) else None
         if not accession_number or form not in FORM_ALLOWLIST:
             continue
+        item_value = items[i] if i < len(items) else ""
         rows.append(
             {
                 "accession_number": accession_number,
@@ -102,6 +114,7 @@ def _parse_filings_block(block: dict) -> list[dict]:
                 "filing_date": _parse_date(filing_dates[i] if i < len(filing_dates) else None),
                 "period_of_report": _parse_date(report_dates[i] if i < len(report_dates) else None),
                 "is_amendment": form.endswith("/A"),
+                "items": item_value or None,
             }
         )
     return rows
@@ -210,6 +223,7 @@ def upsert_filings(
             "filing_date": f["filing_date"],
             "period_of_report": f["period_of_report"],
             "is_amendment": f["is_amendment"],
+            "items": f["items"],
             "raw_submission_id": raw_id_by_accession[f["accession_number"]],
         }
         for f in filings
@@ -219,14 +233,15 @@ def upsert_filings(
             """
             insert into core.filing
                 (company_id, accession_number, form, filing_date, period_of_report,
-                 is_amendment, raw_submission_id)
+                 is_amendment, items, raw_submission_id)
             values
                 (%(company_id)s, %(accession_number)s, %(form)s, %(filing_date)s, %(period_of_report)s,
-                 %(is_amendment)s, %(raw_submission_id)s)
+                 %(is_amendment)s, %(items)s, %(raw_submission_id)s)
             on conflict (accession_number) do update
                 set filing_date      = excluded.filing_date,
                     period_of_report = excluded.period_of_report,
-                    is_amendment     = excluded.is_amendment
+                    is_amendment     = excluded.is_amendment,
+                    items            = excluded.items
             """,
             rows,
         )

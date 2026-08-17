@@ -34,6 +34,16 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
     ("cash_flow_financing", "cash_flow", "first_match", "Net cash used in/provided by financing activities"),
     ("dividends_paid", "cash_flow", "first_match", "Total dividends paid (dollar amount, not per-share)"),
     ("share_buybacks", "cash_flow", "first_match", "Cash paid for common stock repurchases"),
+    (
+        "public_float",
+        "balance_sheet",
+        "first_match",
+        "NOT Market Cap -- aggregate market value of shares held by non-affiliates, "
+        "as of the last business day of the filer's 2nd fiscal quarter (10-K cover-page "
+        "disclosure, dei:EntityPublicFloat). Annual, excludes insider-held shares, real "
+        "lag. See doc 23 Stage B: shown as a distinctly labeled proxy, never substituted "
+        "for the still price-vendor-blocked Market Cap metric.",
+    ),
 ]
 
 # (canonical_concept_name, taxonomy, tag, priority, confidence, notes)
@@ -50,6 +60,8 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
     ("dividends_paid", "us-gaap", "PaymentsOfDividends", 1, "approved", ""),
     ("dividends_paid", "us-gaap", "PaymentsOfDividendsCommonStock", 2, "provisional", "Narrower variant, not yet cross-checked as strictly an alternate"),
     ("share_buybacks", "us-gaap", "PaymentsForRepurchaseOfCommonStock", 1, "approved", ""),
+    ("public_float", "dei", "EntityPublicFloat", 1, "approved",
+     "Confirmed live 2026-08-17 against real AAPL values ($3.253T as of 2025-03-28) -- see doc 23 Stage B."),
 ]
 
 # (statement, display_order, display_label, canonical_concept_name) --

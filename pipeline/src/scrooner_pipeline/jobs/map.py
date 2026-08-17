@@ -13,6 +13,7 @@ from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
+from scrooner_pipeline.statements.classify import seed as seed_statements
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -102,6 +103,16 @@ def ttm_returns_cmd(
     with get_connection() as conn:
         stats = compute_ttm_returns(conn, target_ciks)
     typer.echo(f"ttm-returns: {stats}")
+
+
+@app.command("seed-statements")
+def seed_statements_cmd() -> None:
+    """Doc 17 Sec 4 / doc 23 Stage B: seed statement-display-only canonical
+    concepts (cost_of_revenue, public_float, etc.) additively, alongside
+    Mapper's frozen 17. Run resolve-facts after this to populate values."""
+    with get_connection() as conn:
+        stats = seed_statements(conn)
+    typer.echo(f"seed-statements: {stats}")
 
 
 @app.command("validate")

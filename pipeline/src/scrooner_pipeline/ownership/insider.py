@@ -30,6 +30,20 @@ Form 3/5 deliberately out of this pass -- Form 4 is doc 10's own named
 "core insider-activity feed"; 3/5 are lower-priority supporting context
 (doc 19 Sec 1), and Form 3's holding-only structure needs its own
 verification pass before being trusted, not assumed from Form 4's shape.
+
+is_10b5_1_plan (doc 23 Stage A, doc 24 Phase 1) is captured from
+aff10b5One -- SEC's 2023 Rule 10b5-1(c) trading-plan disclosure,
+confirmed live in this exact XML across a real AAPL filing and four real
+MSFT filings (including two open-market sales) before writing this.
+Document-level, not per-transaction (one <aff10b5One> per filing, before
+the transaction tables) -- every transaction in a multi-transaction
+Form 4 shares the same flag, a real limitation, not something this
+parser can resolve more finely than the source document does. Two real
+boolean lexical forms seen in practice ("true"/"false" and "1"/"0") --
+handled explicitly, not assumed to be one or the other. NULL (not
+False) for any filing that lacks the field entirely -- true for every
+Form 4 filed before the rule's 2023-04-01 effective date, same
+never-guess discipline as the issuer_cik check above.
 """
 
 import json
@@ -63,6 +77,20 @@ def _decimal(value: str | None) -> Decimal | None:
         return Decimal(value)
     except InvalidOperation:
         return None
+
+
+def _bool(value: str | None) -> bool | None:
+    """aff10b5One uses two real lexical forms in practice -- "true"/"false"
+    (seen live, AAPL) and "1"/"0" (seen live, MSFT) -- both handled
+    explicitly, not assumed to be one or the other."""
+    if value is None:
+        return None
+    normalized = value.strip().lower()
+    if normalized in ("true", "1"):
+        return True
+    if normalized in ("false", "0"):
+        return False
+    return None
 
 
 def _latest_submission_files(conn: psycopg.Connection, cik: str) -> list[str]:
@@ -130,6 +158,7 @@ def _parse_form4(xml_bytes: bytes) -> dict | None:
         "is_officer": (_text(rel, "isOfficer") or "").lower() in ("true", "1"),
         "is_ten_percent_owner": (_text(rel, "isTenPercentOwner") or "").lower() in ("true", "1"),
         "officer_title": _text(rel, "officerTitle"),
+        "is_10b5_1_plan": _bool(_text(root, "aff10b5One")),
         "transactions": transactions,
     }
 
@@ -184,6 +213,7 @@ def update_insider_transactions_for_company(
                     "is_officer": parsed["is_officer"],
                     "is_ten_percent_owner": parsed["is_ten_percent_owner"],
                     "officer_title": parsed["officer_title"],
+                    "is_10b5_1_plan": parsed["is_10b5_1_plan"],
                     "security_title": tx["security_title"],
                     "transaction_date": tx["transaction_date"],
                     "transaction_code": tx["transaction_code"],
@@ -204,12 +234,12 @@ def update_insider_transactions_for_company(
                 insert into core.insider_transaction
                     (company_id, accession_number, transaction_index, form, reporting_owner_name,
                      reporting_owner_cik, is_director, is_officer, is_ten_percent_owner, officer_title,
-                     security_title, transaction_date, transaction_code, shares, price_per_share,
+                     is_10b5_1_plan, security_title, transaction_date, transaction_code, shares, price_per_share,
                      acquired_disposed_code, shares_owned_following, filing_date)
                 values
                     (%(company_id)s, %(accession_number)s, %(transaction_index)s, %(form)s, %(reporting_owner_name)s,
                      %(reporting_owner_cik)s, %(is_director)s, %(is_officer)s, %(is_ten_percent_owner)s, %(officer_title)s,
-                     %(security_title)s, %(transaction_date)s, %(transaction_code)s, %(shares)s, %(price_per_share)s,
+                     %(is_10b5_1_plan)s, %(security_title)s, %(transaction_date)s, %(transaction_code)s, %(shares)s, %(price_per_share)s,
                      %(acquired_disposed_code)s, %(shares_owned_following)s, %(filing_date)s)
                 """,
                 rows,

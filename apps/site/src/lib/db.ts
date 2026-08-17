@@ -62,6 +62,32 @@ export async function getLatestMetrics(companyId: number): Promise<Record<string
   return Object.fromEntries(rows.map((r) => [r.metric_name, r]));
 }
 
+export interface PublicFloatRow {
+  value: string;
+  period_end: string;
+}
+
+// doc 23 Stage B / doc 24 Phase 1 -- dei:EntityPublicFloat, NOT Market
+// Cap. Annual (10-K cover-page snapshot as of the filer's 2nd fiscal
+// quarter), excludes affiliate/insider-held shares. Queried directly
+// from analytics.canonical_fact (not metric_value -- this isn't one of
+// doc 02's 18 locked metrics), most recent period only, and rendered
+// with an explicit label distinguishing it from the still price-vendor-
+// blocked Market Cap field -- see that stage's own design note on never
+// letting the two be confused.
+export async function getLatestPublicFloat(companyId: number): Promise<PublicFloatRow | null> {
+  const rows = await sql<PublicFloatRow[]>`
+    select cf.value::text, p.end_date::text as period_end
+    from analytics.canonical_fact cf
+    join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+    join core.period p on p.id = cf.period_id
+    where cf.company_id = ${companyId} and cc.name = 'public_float'
+    order by p.end_date desc
+    limit 1
+  `;
+  return rows[0] ?? null;
+}
+
 export interface StatementPeriod {
   fiscal_year: number;
   fiscal_period: string;
@@ -144,11 +170,14 @@ export interface FilingRow {
   form: string;
   filing_date: string;
   accession_number: string;
+  items: string | null;
 }
 
+// items (doc 21 / doc 24 Phase 1): SEC's own structured 8-K event
+// classification (e.g. "2.02,9.01"), null for every non-8-K form.
 export async function getRecentFilings(companyId: number, limit = 10): Promise<FilingRow[]> {
   return sql<FilingRow[]>`
-    select form, filing_date::text, accession_number
+    select form, filing_date::text, accession_number, items
     from core.filing
     where company_id = ${companyId} and filing_date is not null
     order by filing_date desc
@@ -168,16 +197,20 @@ export interface InsiderTransactionRow {
   shares: string | null;
   price_per_share: string | null;
   shares_owned_following: string | null;
+  is_10b5_1_plan: boolean | null;
   accession_number: string;
 }
 
 // doc 19 Stage 2 -- core.insider_transaction, Form 4 only (Form 3/5 out of
 // scope for this pass, see ownership/insider.py's module docstring).
+// is_10b5_1_plan (doc 23 Stage A / doc 24 Phase 1): null for any filing
+// before the rule's 2023-04-01 effective date -- shown as "—", never
+// defaulted to "discretionary."
 export async function getRecentInsiderTransactions(companyId: number, limit = 15): Promise<InsiderTransactionRow[]> {
   return sql<InsiderTransactionRow[]>`
     select reporting_owner_name, officer_title, is_director, is_officer, is_ten_percent_owner,
            transaction_date::text, transaction_code, acquired_disposed_code,
-           shares::text, price_per_share::text, shares_owned_following::text, accession_number
+           shares::text, price_per_share::text, shares_owned_following::text, is_10b5_1_plan, accession_number
     from core.insider_transaction
     where company_id = ${companyId} and transaction_date is not null
     order by transaction_date desc
