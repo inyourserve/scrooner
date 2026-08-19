@@ -41,9 +41,33 @@ GROWTH_METRICS = {
     "revenue_growth_3y_cagr": ("revenue", 3),
     "eps_growth_yoy": ("diluted_eps", 1),
     "eps_growth_3y_cagr": ("diluted_eps", 3),
+    # 5Y/10Y CAGR added 2026-08-19 (doc 26's "what moves the needle
+    # next" list) -- purely additive dict entries, zero new code:
+    # _growth_value already generalizes to any lag_years via the CAGR
+    # branch, and _load_metric_ids/the delete-then-insert scope in
+    # _compute_growth_for_company both derive from GROWTH_METRICS' own
+    # keys, so nothing else needed changing. Zero-regression verified:
+    # the original 4 metrics' values are byte-identical before/after.
+    "revenue_growth_5y_cagr": ("revenue", 5),
+    "revenue_growth_10y_cagr": ("revenue", 10),
+    "eps_growth_5y_cagr": ("diluted_eps", 5),
+    "eps_growth_10y_cagr": ("diluted_eps", 10),
 }
 
 QUARTER_ORDER = ["Q1", "Q2", "Q3", "Q4"]
+
+
+def _growth_value(value_t: Decimal, value_prior: Decimal, lag_years: int) -> tuple[Decimal | None, str | None]:
+    """Pure growth calculation shared by the SQL-backed growth job and its
+    regression tests. Returns a value or an explicit null reason."""
+    if value_prior == 0:
+        return None, "zero_base_value"
+    if lag_years == 1:
+        return (value_t - value_prior) / value_prior, None
+    ratio = value_t / value_prior
+    if ratio < 0:
+        return None, "negative_ratio_undefined_cagr"
+    return ratio ** (Decimal(1) / Decimal(lag_years)) - 1, None
 
 
 def _trailing_quarters(fiscal_year: int, fiscal_period: str) -> list[tuple[int, str]]:
@@ -105,25 +129,14 @@ def _compute_growth_for_company(conn: psycopg.Connection, company_id: int, metri
                     )
                     continue
                 value_prior, fids_prior, _s, _e = prior
-                if value_prior == 0:
+                growth, growth_reason = _growth_value(value_t, value_prior, lag_years)
+                if growth_reason is not None:
                     rows.append(
                         {"company_id": company_id, "metric_definition_id": metric_ids[metric_name],
                          "period_start": start_t, "period_end": end_t, "period_label": fp,
-                         "value": None, "is_null_reason": "zero_base_value", "source_fact_ids": None}
+                         "value": None, "is_null_reason": growth_reason, "source_fact_ids": None}
                     )
                     continue
-                if lag_years == 1:
-                    growth = (value_t - value_prior) / value_prior
-                else:
-                    ratio = value_t / value_prior
-                    if ratio < 0:
-                        rows.append(
-                            {"company_id": company_id, "metric_definition_id": metric_ids[metric_name],
-                             "period_start": start_t, "period_end": end_t, "period_label": fp,
-                             "value": None, "is_null_reason": "negative_ratio_undefined_cagr", "source_fact_ids": None}
-                        )
-                        continue
-                    growth = ratio ** (Decimal(1) / Decimal(lag_years)) - 1
                 rows.append(
                     {"company_id": company_id, "metric_definition_id": metric_ids[metric_name],
                      "period_start": start_t, "period_end": end_t, "period_label": fp,

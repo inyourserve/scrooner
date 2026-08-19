@@ -74,6 +74,14 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
     ("margin_expanding_3yr", "1 if gross margin strictly increased across the 3 most recent CONSECUTIVE FY years, "
      "else 0; null if fewer than 3 consecutive years of data exist. Computed in mapper/quality_flags.py, one "
      "value as of the latest FY only.", False, []),
+    ("revenue_growth_5y_cagr", "(Revenue[t] / Revenue[t-5]) ^ (1/5) - 1, same fiscal_period. Computed in "
+     "mapper/ttm.py -- a purely additive GROWTH_METRICS entry, same mechanism as the locked 3Y CAGR.", False, []),
+    ("revenue_growth_10y_cagr", "(Revenue[t] / Revenue[t-10]) ^ (1/10) - 1, same fiscal_period. Computed in "
+     "mapper/ttm.py.", False, []),
+    ("eps_growth_5y_cagr", "(Diluted EPS[t] / Diluted EPS[t-5]) ^ (1/5) - 1, same fiscal_period. Computed in "
+     "mapper/ttm.py.", False, []),
+    ("eps_growth_10y_cagr", "(Diluted EPS[t] / Diluted EPS[t-10]) ^ (1/10) - 1, same fiscal_period. Computed in "
+     "mapper/ttm.py.", False, []),
 ]
 
 

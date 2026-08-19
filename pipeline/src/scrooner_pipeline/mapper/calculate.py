@@ -57,7 +57,12 @@ logger = structlog.get_logger()
 
 # Growth metrics are TTM/multi-period -- Stage 3e's job. Price-dependent
 # metrics are excluded via metric_definition.requires_price, not this list.
-DEFERRED_TO_STAGE_3E = {"revenue_growth_yoy", "revenue_growth_3y_cagr", "eps_growth_yoy", "eps_growth_3y_cagr"}
+DEFERRED_TO_STAGE_3E = {
+    "revenue_growth_yoy", "revenue_growth_3y_cagr", "eps_growth_yoy", "eps_growth_3y_cagr",
+    # 5Y/10Y CAGR added 2026-08-19 -- same Stage 3e (ttm.py) computation
+    # path as the original 4, just wider GROWTH_METRICS lag_years.
+    "revenue_growth_5y_cagr", "revenue_growth_10y_cagr", "eps_growth_5y_cagr", "eps_growth_10y_cagr",
+}
 
 # net_debt_ebitda is requires_price=false (it genuinely doesn't need
 # price) but its denominator (ebitda) lives in analytics.metric_value,
