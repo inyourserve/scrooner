@@ -3,19 +3,17 @@ to raise data-point coverage). Same additive pattern as
 expanded_concepts.py -- new rows only, doc 02's locked 18-metric list
 (mapper/definitions.py) is not touched or reordered.
 
-Four of these (roa, quick_ratio, sbc_pct_revenue, ebitda) are real inputs
-for calculate.py's generic per-role engine (FORMULA_SHAPES widened
-additively there too). The other five (net_debt_ebitda, ev_ebitda,
-ev_sales, peg_ratio, buyback_yield, total_shareholder_yield) are
-documentation-only rows here -- their actual computation lives in
-mapper/expanded_metrics.py, the same "hardcoded Python, not the generic
-engine" pattern price_metrics.py's own doc-02 price metrics already use,
-because their inputs mix canonical_fact AND analytics.metric_value
-(ebitda, market_cap) in ways the concept-only engine can't express.
+Seven definitions (roa, quick_ratio, sbc_pct_revenue, ebitda, debtor_days,
+inventory_days, and payables_days) provide inputs to calculate.py's generic
+per-role engine (FORMULA_SHAPES is widened additively there too). Definitions
+with no inputs are composite or externally sourced metrics whose calculation
+lives in mapper/expanded_metrics.py or mapper/quality_score.py; their inputs
+cannot be represented by the generic engine's single-period canonical-concept
+model.
 
 net_debt_ebitda does NOT require price (Net Debt and EBITDA are both
 price-independent) -- doc 18 already named this distinction; don't
-conflate it with the 6 metrics that genuinely need price.
+conflate it with the metrics that genuinely need price.
 """
 
 import psycopg
@@ -24,8 +22,9 @@ import structlog
 logger = structlog.get_logger()
 
 # (metric_name, formula_description, requires_price, inputs)
-# inputs only matter for the 4 calculate.py-engine metrics; the other 6
-# get an empty list (documentation-only row, real logic in expanded_metrics.py).
+# Non-empty inputs identify definitions handled by calculate.py's generic
+# engine. Empty inputs identify composite or externally sourced definitions
+# whose implementation lives in a dedicated mapper.
 METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
     ("roa", "Net Income / Total Assets", False,
      [("net_income", "numerator"), ("total_assets", "denominator")]),
@@ -64,6 +63,17 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
      "this engine's single-period per-role model. Null for financial institutions by design (Piotroski's own "
      "methodology needs a classified current/non-current balance sheet + gross margin, which banks don't report).",
      False, []),
+    ("fcf_gt_net_income", "1 if (CFO - CapEx) > Net Income for the fiscal year, else 0. Computed in "
+     "mapper/quality_flags.py, per FY year.", False, []),
+    ("zero_debt", "1 if total_debt == 0 for the fiscal year, else 0; null (not 0) if total_debt wasn't reported "
+     "at all that year -- absence is not evidence of debt-free status. Computed in mapper/quality_flags.py, per FY year.",
+     False, []),
+    ("profitable_streak_years", "Consecutive most-recent FY years with positive net income, counted backward "
+     "from the latest year until a non-positive or missing year breaks the streak. Computed in "
+     "mapper/quality_flags.py, one value as of the latest FY only (not a per-year series).", False, []),
+    ("margin_expanding_3yr", "1 if gross margin strictly increased across the 3 most recent CONSECUTIVE FY years, "
+     "else 0; null if fewer than 3 consecutive years of data exist. Computed in mapper/quality_flags.py, one "
+     "value as of the latest FY only.", False, []),
 ]
 
 

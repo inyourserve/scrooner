@@ -75,6 +75,17 @@ function fmtScore(value: string | null | undefined): string {
   return Number(value).toFixed(0) + "/9";
 }
 
+function fmtBool(value: string | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return Number(value) === 1 ? "Yes" : "No";
+}
+
+function fmtYears(value: string | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  const n = Number(value);
+  return n.toFixed(0) + (n === 1 ? " yr" : " yrs");
+}
+
 const topRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw"; raw?: string; nullTitle?: string }[] = [
   { label: "Market Cap", row: metrics["market_cap"], kind: "dollar" },
   { label: "Current Price", row: undefined, kind: "raw", raw: latestPrice ? "$" + Number(latestPrice.price).toFixed(2) : undefined, nullTitle: "No real price on record for this company (Alpaca coverage gap) -- see doc 25" },
@@ -93,7 +104,7 @@ const topRatios: { label: string; row: (typeof metrics)[string] | undefined; kin
 // read, same honest-null discipline as topRatios -- just a second grid so
 // the original locked 18-metric set stays visually distinct from these
 // additive extensions.
-const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw" | "days" | "score" }[] = [
+const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw" | "days" | "score" | "bool" | "years" }[] = [
   { label: "ROA", row: metrics["roa"], kind: "pct" },
   { label: "Quick Ratio", row: metrics["quick_ratio"], kind: "multiple" },
   { label: "EBITDA", row: metrics["ebitda"], kind: "dollar" },
@@ -107,6 +118,10 @@ const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; ki
   { label: "Payables Days", row: metrics["payables_days"], kind: "days" },
   { label: "Cash Conversion Cycle", row: metrics["cash_conversion_cycle"], kind: "days" },
   { label: "Piotroski F-Score", row: metrics["piotroski_f_score"], kind: "score" },
+  { label: "FCF > Net Income", row: metrics["fcf_gt_net_income"], kind: "bool" },
+  { label: "Debt-Free", row: metrics["zero_debt"], kind: "bool" },
+  { label: "Profitable Streak", row: metrics["profitable_streak_years"], kind: "years" },
+  { label: "Margin Expanding (3yr)", row: metrics["margin_expanding_3yr"], kind: "bool" },
   { label: "Buyback Yield", row: metrics["buyback_yield"], kind: "pct" },
   { label: "Total Shareholder Yield", row: metrics["total_shareholder_yield"], kind: "pct" },
   { label: "Share Count Dilution (YoY)", row: metrics["share_dilution_trend"], kind: "pct" },
@@ -232,6 +247,10 @@ function fmtShares(value: string | null): string {
               <span class="value">{fmtDays(r.row?.value)}</span>
             ) : r.kind === "score" ? (
               <span class="value">{fmtScore(r.row?.value)}</span>
+            ) : r.kind === "bool" ? (
+              <span class="value">{fmtBool(r.row?.value)}</span>
+            ) : r.kind === "years" ? (
+              <span class="value">{fmtYears(r.row?.value)}</span>
             ) : (
               <span class="value">{fmtPct(r.row?.value)}</span>
             )}

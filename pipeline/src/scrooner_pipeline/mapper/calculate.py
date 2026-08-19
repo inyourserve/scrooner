@@ -67,7 +67,10 @@ DEFERRED_TO_STAGE_3E = {"revenue_growth_yoy", "revenue_growth_3y_cagr", "eps_gro
 # requires_price=false filter) and crashes with KeyError on
 # FORMULA_SHAPES[metric_name] for every company, since it deliberately
 # has no shape entry and zero metric_definition_input rows.
-DEFERRED_TO_EXPANDED_METRICS = {"net_debt_ebitda", "institutional_ownership_pct", "cash_conversion_cycle", "share_dilution_trend", "piotroski_f_score"}
+DEFERRED_TO_EXPANDED_METRICS = {
+    "net_debt_ebitda", "institutional_ownership_pct", "cash_conversion_cycle", "share_dilution_trend",
+    "piotroski_f_score", "fcf_gt_net_income", "zero_debt", "profitable_streak_years", "margin_expanding_3yr",
+}
 
 # debtor_days/inventory_days/payables_days added to FY_ONLY_METRICS
 # 2026-08-18 for the same reason roic/roe are: a "days" formula

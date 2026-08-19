@@ -19,6 +19,7 @@ from scrooner_pipeline.mapper import expanded_concepts
 from scrooner_pipeline.mapper import expanded_definitions
 from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
 from scrooner_pipeline.mapper.quality_score import calculate_piotroski
+from scrooner_pipeline.mapper.quality_flags import calculate_quality_flags
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -201,6 +202,19 @@ def calculate_piotroski_cmd(
     with get_connection() as conn:
         stats = calculate_piotroski(conn, target_ciks)
     typer.echo(f"calculate-piotroski: {stats}")
+
+
+@app.command("calculate-quality-flags")
+def calculate_quality_flags_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 26 Sec 2.9 (2026-08-19): fcf_gt_net_income, zero_debt,
+    profitable_streak_years, margin_expanding_3yr. Requires
+    seed-expanded-definitions and resolve-facts to have already run."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_quality_flags(conn, target_ciks)
+    typer.echo(f"calculate-quality-flags: {stats}")
 
 
 @app.command()
