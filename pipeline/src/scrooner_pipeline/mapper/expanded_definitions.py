@@ -59,6 +59,11 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
     ("cash_conversion_cycle", "Debtor Days + Inventory Days - Payables Days, most recent FY each. Computed in "
      "expanded_metrics.py -- combines three METRIC outputs, not raw concepts, same pattern as net_debt_ebitda.",
      False, []),
+    ("piotroski_f_score", "Standard 9-test Piotroski F-Score (0-9), FY vs prior FY. Computed in "
+     "mapper/quality_score.py -- a composite requiring 9 raw concepts across 2 fiscal years each, doesn't fit "
+     "this engine's single-period per-role model. Null for financial institutions by design (Piotroski's own "
+     "methodology needs a classified current/non-current balance sheet + gross margin, which banks don't report).",
+     False, []),
 ]
 
 

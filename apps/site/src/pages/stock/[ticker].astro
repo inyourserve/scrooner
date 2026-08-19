@@ -70,6 +70,11 @@ function fmtDays(value: string | null | undefined): string {
   return Number(value).toFixed(1) + "d";
 }
 
+function fmtScore(value: string | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return Number(value).toFixed(0) + "/9";
+}
+
 const topRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw"; raw?: string; nullTitle?: string }[] = [
   { label: "Market Cap", row: metrics["market_cap"], kind: "dollar" },
   { label: "Current Price", row: undefined, kind: "raw", raw: latestPrice ? "$" + Number(latestPrice.price).toFixed(2) : undefined, nullTitle: "No real price on record for this company (Alpaca coverage gap) -- see doc 25" },
@@ -88,7 +93,7 @@ const topRatios: { label: string; row: (typeof metrics)[string] | undefined; kin
 // read, same honest-null discipline as topRatios -- just a second grid so
 // the original locked 18-metric set stays visually distinct from these
 // additive extensions.
-const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw" | "days" }[] = [
+const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw" | "days" | "score" }[] = [
   { label: "ROA", row: metrics["roa"], kind: "pct" },
   { label: "Quick Ratio", row: metrics["quick_ratio"], kind: "multiple" },
   { label: "EBITDA", row: metrics["ebitda"], kind: "dollar" },
@@ -101,6 +106,7 @@ const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; ki
   { label: "Inventory Days", row: metrics["inventory_days"], kind: "days" },
   { label: "Payables Days", row: metrics["payables_days"], kind: "days" },
   { label: "Cash Conversion Cycle", row: metrics["cash_conversion_cycle"], kind: "days" },
+  { label: "Piotroski F-Score", row: metrics["piotroski_f_score"], kind: "score" },
   { label: "Buyback Yield", row: metrics["buyback_yield"], kind: "pct" },
   { label: "Total Shareholder Yield", row: metrics["total_shareholder_yield"], kind: "pct" },
   { label: "Share Count Dilution (YoY)", row: metrics["share_dilution_trend"], kind: "pct" },
@@ -211,7 +217,7 @@ function fmtShares(value: string | null): string {
       {moreRatios.map((r) => {
         const isNull = r.row?.value == null;
         const nullTitle = r.row?.is_null_reason
-          ? `Not computed: ${r.row.is_null_reason} -- see mapper/expanded_metrics.py`
+          ? `Not computed: ${r.row.is_null_reason} -- see mapper/calculate.py, expanded_metrics.py, or quality_score.py`
           : "Not yet resolved for this company";
         return (
           <div class="ratio">
@@ -224,6 +230,8 @@ function fmtShares(value: string | null): string {
               <span class="value">{fmtMultiple(r.row?.value)}</span>
             ) : r.kind === "days" ? (
               <span class="value">{fmtDays(r.row?.value)}</span>
+            ) : r.kind === "score" ? (
+              <span class="value">{fmtScore(r.row?.value)}</span>
             ) : (
               <span class="value">{fmtPct(r.row?.value)}</span>
             )}

@@ -18,6 +18,7 @@ from scrooner_pipeline.mapper.price_metrics import calculate_price_metrics
 from scrooner_pipeline.mapper import expanded_concepts
 from scrooner_pipeline.mapper import expanded_definitions
 from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
+from scrooner_pipeline.mapper.quality_score import calculate_piotroski
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -185,6 +186,21 @@ def calculate_expanded_metrics_cmd(
     with get_connection() as conn:
         stats = calculate_expanded_metrics(conn, target_ciks)
     typer.echo(f"calculate-expanded-metrics: {stats}")
+
+
+@app.command("calculate-piotroski")
+def calculate_piotroski_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 26 Sec 2 (2026-08-19): standard 9-test Piotroski F-Score (0-9),
+    FY vs prior FY. Requires seed-expanded-definitions (for the metric_
+    definition row) and resolve-facts (for the 9 raw concepts) to have
+    already run. Correctly null for financial institutions -- see
+    mapper/quality_score.py's module docstring."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_piotroski(conn, target_ciks)
+    typer.echo(f"calculate-piotroski: {stats}")
 
 
 @app.command()
