@@ -1,0 +1,35 @@
+{
+  "scope": "First 100 distinct CIKs by CIK among latest already-stored raw.sec_companyfacts objects; read-only convenience batch, not an eligible or stratified pilot sample.",
+  "companies": 100,
+  "taxonomy_company_counts": {
+    "cef": 1,
+    "dei": 95,
+    "ecd": 31,
+    "ffd": 39,
+    "ifrs-full": 3,
+    "invest": 20,
+    "srt": 43,
+    "us-gaap": 95
+  },
+  "concepts": {
+    "capex": {"present": 77, "missing": 23, "presence_rate": "0.7700"},
+    "cash_and_equivalents": {"present": 93, "missing": 7, "presence_rate": "0.9300"},
+    "cfo": {"present": 93, "missing": 7, "presence_rate": "0.9300"},
+    "current_assets": {"present": 76, "missing": 24, "presence_rate": "0.7600"},
+    "current_liabilities": {"present": 76, "missing": 24, "presence_rate": "0.7600"},
+    "diluted_eps": {"present": 89, "missing": 11, "presence_rate": "0.8900"},
+    "dividends_per_share": {"present": 79, "missing": 21, "presence_rate": "0.7900"},
+    "gross_profit": {"present": 60, "missing": 40, "presence_rate": "0.6000"},
+    "income_before_tax": {"present": 90, "missing": 10, "presence_rate": "0.9000"},
+    "income_tax_expense": {"present": 92, "missing": 8, "presence_rate": "0.9200"},
+    "interest_expense": {"present": 84, "missing": 16, "presence_rate": "0.8400"},
+    "net_income": {"present": 93, "missing": 7, "presence_rate": "0.9300"},
+    "operating_income": {"present": 79, "missing": 21, "presence_rate": "0.7900"},
+    "revenue": {"present": 91, "missing": 9, "presence_rate": "0.9100"},
+    "shares_outstanding": {"present": 93, "missing": 7, "presence_rate": "0.9300"},
+    "stockholders_equity": {"present": 93, "missing": 7, "presence_rate": "0.9300"},
+    "total_debt": {"present": 87, "missing": 13, "presence_rate": "0.8700"}
+  },
+  "requested": 100,
+  "download_failures": []
+}

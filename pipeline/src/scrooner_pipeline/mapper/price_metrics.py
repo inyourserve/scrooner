@@ -31,6 +31,7 @@ never silently defaulted to 0 -- this project can't reliably distinguish
 guess.
 """
 
+from datetime import date
 from decimal import Decimal
 
 import psycopg
@@ -140,15 +141,29 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
         # silently skipped (a company page reading these rows should see
         # WHY, not just absence).
         price, price_date = None, None
+        price_reason = "missing:real_price"
     else:
         price, price_date = price_hit
+        if price <= 0:
+            # A non-positive equity price is not economically valid for
+            # these ratios and makes Dividend Yield divide by zero. Treat a
+            # malformed stored/vendor value as unusable input so one bad bar
+            # cannot abort all six metrics for the company.
+            price = None
+            price_reason = "invalid:non_positive_price"
+        else:
+            price_reason = None
 
     quarterly = {name: _load_quarterly_facts(conn, company_id, concept_ids[name]) for name in TTM_CONCEPTS if name in concept_ids}
     diluted_eps_q = quarterly.get("diluted_eps", {})
     anchor = _latest_quarter(diluted_eps_q) or _latest_quarter(quarterly.get("revenue", {}))
 
     ttm: dict[str, tuple[Decimal | None, list[int]]] = {name: (None, []) for name in TTM_CONCEPTS}
-    period_end = price_date
+    # metric_value requires non-null period dates even for an honest null.
+    # A company with no vendor bar still needs six inspectable null rows, so
+    # anchor them to the calculation date rather than attempting to insert
+    # NULL dates (a path the all-priced golden set never exercised).
+    period_end = price_date or date.today()
     if anchor is not None:
         fy, fp = anchor
         for name, by_quarter in quarterly.items():
@@ -177,7 +192,7 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
 
     if price is None:
         for m in ("market_cap", "trailing_pe", "price_to_sales", "price_to_book", "dividend_yield", "fcf_yield"):
-            rows.append(_row(m, None, "missing:real_price", []))
+            rows.append(_row(m, None, price_reason, []))
     else:
         # Market Cap = Shares Outstanding x Price
         if shares_hit is None:

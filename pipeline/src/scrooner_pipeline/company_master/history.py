@@ -111,7 +111,17 @@ def build_ticker_dating(
         tickers = set(payload.get("tickers") or [])
         ticker_sets.append((fetched_at, tickers))
 
-    result: dict[str, dict] = {t: {"effective_from": None, "effective_to": None, "source": "unknown"} for t in current_tickers}
+    # Include every observed ticker, not only the current array. Otherwise a
+    # ticker that disappeared between snapshots could never receive the
+    # effective_to date discovered below and historical universe snapshots
+    # would incorrectly keep it open forever.
+    observed_tickers = set(current_tickers)
+    for _fetched_at, tickers in ticker_sets:
+        observed_tickers.update(tickers)
+    result: dict[str, dict] = {
+        t: {"effective_from": None, "effective_to": None, "source": "unknown"}
+        for t in observed_tickers
+    }
 
     # Forward detection: walk consecutive snapshot pairs. A ticker newly
     # appearing gets effective_from = the newer snapshot's fetched_at date;
@@ -126,7 +136,7 @@ def build_ticker_dating(
                 result[t]["effective_from"] = cur_fetched_at.date()
                 result[t]["source"] = "submissions_snapshot"
         for t in newly_gone:
-            if t in result and result[t]["effective_to"] is None:
+            if result[t]["effective_to"] is None:
                 result[t]["effective_to"] = cur_fetched_at.date()
                 result[t]["source"] = "submissions_snapshot"
 

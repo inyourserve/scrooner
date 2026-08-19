@@ -1,6 +1,7 @@
 """Typer CLI for Company Master (doc 13). Day 1: `update-identity` (Stage 4a-1)."""
 
 import json
+from datetime import date
 from pathlib import Path
 
 import structlog
@@ -13,6 +14,7 @@ from scrooner_pipeline.company_master.market_price import load_mock_prices
 from scrooner_pipeline.company_master.market_price_alpaca import update_market_price
 from scrooner_pipeline.company_master.security_type import resolve_primary_tickers, update_security_types
 from scrooner_pipeline.company_master.shares_outstanding_fallback import update_shares_outstanding_fallback
+from scrooner_pipeline.company_master.universe import build_current_universe
 from scrooner_pipeline.db.connection import get_connection
 
 app = typer.Typer()
@@ -133,6 +135,24 @@ def update_market_price_cmd() -> None:
         ticker_by_cik = resolve_primary_tickers(conn, golden_ciks, fallback_ticker_by_cik=_load_golden_tickers())
         stats = update_market_price(conn, ticker_by_cik)
     typer.echo(f"update-market-price: {stats}")
+
+
+@app.command("build-universe")
+def build_universe_cmd(
+    as_of: str = typer.Option(
+        None,
+        help="Snapshot date in YYYY-MM-DD form; must be today (default: today).",
+    ),
+) -> None:
+    """Build the deterministic, reason-coded production-universe snapshot."""
+    snapshot_date = date.fromisoformat(as_of) if as_of else date.today()
+    if snapshot_date != date.today():
+        raise typer.BadParameter(
+            "retroactive builds would use future-known identity data; choose today's date"
+        )
+    with get_connection() as conn:
+        stats = build_current_universe(conn, snapshot_date)
+    typer.echo(f"build-universe: {stats}")
 
 
 if __name__ == "__main__":

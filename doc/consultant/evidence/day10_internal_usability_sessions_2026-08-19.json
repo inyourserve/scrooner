@@ -1,0 +1,19 @@
+{
+  "method": "internally scripted automated browser-component sessions",
+  "external_users": 0,
+  "sessions": [
+    {"id": 1, "task": "Build and run a structured fundamental screen", "result": "pass", "evidence": "selected values, periods, company links, and partial coverage render"},
+    {"id": 2, "task": "Interpret supported English, review it, edit criteria, and execute deliberately", "result": "pass", "evidence": "interpretation does not execute; structured handoff precedes run"},
+    {"id": 3, "task": "Resolve an ambiguous growth phrase safely", "result": "pass", "evidence": "no execution before the selected meaning is reinterpreted"},
+    {"id": 4, "task": "Handle partial and fully unsupported language", "result": "pass", "evidence": "recognized clauses are explanatory only and cannot become a runnable query"},
+    {"id": 5, "task": "Distinguish zero results, partial coverage, loading, and API failure", "result": "pass", "evidence": "states are separately named and criteria survive failure"}
+  ],
+  "observed_confusion_risks": [
+    "The bounded parser needs visible supported examples.",
+    "Interpretation and execution are intentionally separate and require concise explanation.",
+    "Partial metric coverage must remain visible beside results.",
+    "Saved-screen and authentication UI are not yet available.",
+    "External representative-user behavior remains unmeasured."
+  ],
+  "external_validation_status": "missing_beta_blocker"
+}

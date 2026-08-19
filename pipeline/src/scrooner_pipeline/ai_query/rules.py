@@ -152,7 +152,7 @@ def interpret(text: str) -> InterpretationResult:
         predicate = MetricPredicate(metric_name=metric_name, operator="between", value_range=(low, high))
         query = ScreenQuery(metric_predicates=[predicate])
         explanation = f"Filtering for: {metric_name} between {low} and {high}."
-        return InterpretationResult(query=query, explanation=explanation)
+        return InterpretationResult(query=query, explanation=explanation, recognized_query=query)
 
     clauses = [c.strip() for c in re.split(r"\s+and\s+", text, flags=re.IGNORECASE) if c.strip()]
     metric_predicates: list[MetricPredicate] = []
@@ -177,7 +177,19 @@ def interpret(text: str) -> InterpretationResult:
             parts.append(f"could not understand: {', '.join(unrecognized)}")
         if ambiguous:
             parts.append("; ".join(f"'{a.phrase}' could mean: {', '.join(a.candidates)}" for a in ambiguous))
-        return InterpretationResult(query=None, explanation="; ".join(parts), unrecognized=unrecognized, ambiguous=ambiguous)
+        recognized_query = None
+        if metric_predicates or categorical_predicates:
+            recognized_query = ScreenQuery(
+                metric_predicates=metric_predicates,
+                categorical_predicates=categorical_predicates,
+            )
+        return InterpretationResult(
+            query=None,
+            explanation="; ".join(parts),
+            unrecognized=unrecognized,
+            ambiguous=ambiguous,
+            recognized_query=recognized_query,
+        )
 
     if not metric_predicates and not categorical_predicates:
         return InterpretationResult(query=None, explanation="Nothing recognized in this query.", unrecognized=[text])
@@ -186,4 +198,4 @@ def interpret(text: str) -> InterpretationResult:
     explanation_parts = [f"{p.metric_name} {p.operator} {p.value if p.value is not None else p.n}" for p in metric_predicates]
     explanation_parts += [f"{p.field} = {p.value}" for p in categorical_predicates]
     explanation = "Filtering for: " + "; ".join(explanation_parts) + "."
-    return InterpretationResult(query=query, explanation=explanation)
+    return InterpretationResult(query=query, explanation=explanation, recognized_query=query)

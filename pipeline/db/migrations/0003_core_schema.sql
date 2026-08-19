@@ -1,4 +1,4 @@
--- Core schema for the Normalizer. See scrooner/doc/09_Scrooner_Normalizer_Execution_Plan.md
+-- Core schema for the Normalizer. See scrooner/doc/execution-plans/09_Scrooner_Normalizer_Execution_Plan.md
 -- for the design rationale. The Normalizer reads `raw` (never writes it) and
 -- writes only to `core`.
 --

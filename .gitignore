@@ -42,3 +42,6 @@ venv/
 
 # Claude Code agent worktrees (local, ephemeral checkouts -- not project content)
 .claude/worktrees/
+
+# Supplied design-reference PDFs (large binaries, not project content)
+doc/design/*.pdf

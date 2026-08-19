@@ -1,6 +1,6 @@
 # ADR NNNN — Title
 
-> Per doc 05 (Documentation methodology): use an ADR for a consequential technical change — one that would be expensive to reverse or that a future session might otherwise silently relitigate. Link back to the [Decision Register](../02_Scrooner_Decision_Register.md) and update it if this ADR changes a locked decision there.
+> Per doc 05 (Documentation methodology): use an ADR for a consequential technical change — one that would be expensive to reverse or that a future session might otherwise silently relitigate. Link back to the [Decision Register](../foundational/02_Scrooner_Decision_Register.md) and update it if this ADR changes a locked decision there.
 
 **Status:** Proposed | Accepted | Superseded by ADR NNNN
 **Date:** YYYY-MM-DD

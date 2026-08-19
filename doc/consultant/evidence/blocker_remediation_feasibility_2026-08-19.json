@@ -1,0 +1,101 @@
+{
+  "date": "2026-08-19",
+  "mode": "live_read_only_plus_isolated_postgres",
+  "configured_database_mutated": false,
+  "overall_verdict": "feasible_in_staged_sequence_not_ready_for_single_live_execution",
+  "dead_letters": {
+    "collector": {
+      "rows": 4,
+      "distinct_ciks": 2,
+      "official_companyfacts_status": {
+        "0000018748": 404,
+        "0000023426": 404
+      },
+      "official_submissions_status": {
+        "0000018748": 200,
+        "0000023426": 200
+      },
+      "verdict": "expected_source_absence_reconcilable"
+    },
+    "mapper": {
+      "rows": 34,
+      "historical_calculate_keyerrors": 20,
+      "historical_expanded_metric_period_errors": 10,
+      "historical_quality_flag_period_errors": 4,
+      "generic_calculate_dry_run": {
+        "considered": 10,
+        "ok": 10,
+        "errored": 0,
+        "computed": 3890,
+        "null": 1672
+      },
+      "expanded_metrics_dry_run": {
+        "considered": 10,
+        "ok": 10,
+        "errored": 0,
+        "computed": 21,
+        "null": 69,
+        "captured_rows": 90,
+        "rows_with_missing_period_dates": 0
+      },
+      "quality_flag_affected_ciks_dry_run": {
+        "considered": 4,
+        "ok": 4,
+        "errored": 0,
+        "computed": 49,
+        "null": 41,
+        "captured_rows": 90,
+        "rows_with_missing_period_dates": 0
+      },
+      "verdict": "rerun_feasible_reconciliation_command_missing"
+    }
+  },
+  "freshness": {
+    "most_recent_sec_index_date": "2026-08-18",
+    "index_rows": 5551,
+    "golden_cik_matches": 152,
+    "parser_result": "pass",
+    "production_ingestion_schedule_present": false,
+    "verdict": "collector_path_ready_scheduler_and_alerting_missing"
+  },
+  "universe_migration": {
+    "isolated_runs": 2,
+    "companies": 2,
+    "filers": 2,
+    "listings": 3,
+    "securities": 3,
+    "linked_listings": 3,
+    "snapshot_tables": 2,
+    "idempotence": "pass",
+    "current_data_policy_simulation": {
+      "listing_candidates": 38,
+      "eligible": 9,
+      "excluded": 19,
+      "uncertain": 10,
+      "eligible_primary_companies": 7
+    },
+    "verdict": "schema_deployable_current_data_insufficient_for_pilot"
+  },
+  "capacity": {
+    "current_database_bytes": 157576339,
+    "projected_100_company_database_bytes": 1133382803,
+    "current_raw_object_storage_bytes": 693126357,
+    "current_companyfacts_storage_bytes": 629493753,
+    "current_submissions_storage_bytes": 63632604,
+    "estimated_storage_after_90_more_submission_ciks_bytes": 1265819793,
+    "current_sec_submissions_archive_bytes": 1558873846,
+    "free_plan_fit": false,
+    "supabase_pro_included_database_disk_gb": 8,
+    "supabase_pro_included_object_storage_gb": 100,
+    "supabase_pro_starting_monthly_usd": 25,
+    "pro_plan_fit": true
+  },
+  "pilot": {
+    "companyfacts_ciks": 174,
+    "submissions_ciks": 10,
+    "eligible_primary_companies": 0,
+    "representative_mapping_coverage": null,
+    "current_preflight_ready": false,
+    "verdict": "conditionally_feasible_after_capacity_data_universe_and_mapping_gates"
+  }
+}

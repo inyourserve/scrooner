@@ -1,0 +1,166 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python tests and correctness lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            pipeline/uv.lock
+            apps/backend/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked pipeline dependencies
+        run: uv sync --project pipeline --locked --dev
+      - name: Install locked backend dependencies
+        run: uv sync --project apps/backend --locked --dev
+      - name: Pipeline tests
+        run: uv run --project pipeline pytest pipeline/tests
+      - name: Backend tests
+        working-directory: apps/backend
+        run: uv run pytest tests
+      - name: Compile Python sources
+        run: uv run --project pipeline python -m compileall -q pipeline/src apps/backend
+      - name: Required correctness lint
+        run: uvx ruff check --select E9,F63,F7,F82 pipeline/src apps/backend
+
+  site:
+    name: Astro production build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/site/package-lock.json
+      - name: Install locked dependencies
+        working-directory: apps/site
+        run: npm ci
+      - name: Build
+        working-directory: apps/site
+        run: npm run build
+
+  app:
+    name: Screener app tests and production build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/app/package-lock.json
+      - name: Install locked dependencies
+        working-directory: apps/app
+        run: npm ci
+      - name: Lint
+        working-directory: apps/app
+        run: npm run lint
+      - name: Test
+        working-directory: apps/app
+        run: npm test
+      - name: Build
+        working-directory: apps/app
+        run: npm run build
+
+  repository-integrity:
+    name: Migrations, documentation, and secrets
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: scrooner_test
+          POSTGRES_PASSWORD: scrooner_test
+          POSTGRES_DB: scrooner_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U scrooner_test -d scrooner_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: scrooner_test
+      PGPASSWORD: scrooner_test
+      PGDATABASE: scrooner_test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check migration sequence
+        run: python scripts/check_migrations.py
+      - name: Bootstrap Supabase-owned objects
+        run: psql --set ON_ERROR_STOP=1 --file scripts/ci/bootstrap_supabase.sql
+      - name: Apply every migration to clean PostgreSQL
+        run: |
+          set -euo pipefail
+          for migration in pipeline/db/migrations/*.sql; do
+            psql --set ON_ERROR_STOP=1 --file "$migration"
+          done
+      - name: Exercise backup and restore round trip
+        env:
+          SCROONER_ALLOW_EPHEMERAL_RESTORE: "1"
+        run: bash scripts/verify_backup_restore.sh
+      - name: Check local documentation links
+        run: python scripts/check_docs.py
+      - name: Check common secret patterns
+        run: python scripts/check_secrets.py
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  advisory-quality:
+    name: Advisory formatting, typing, and dependency audits
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            apps/site/package-lock.json
+            apps/app/package-lock.json
+      - name: Ruff formatting debt
+        run: uvx ruff format --check pipeline/src apps/backend
+      - name: Python type analysis
+        run: uvx mypy --ignore-missing-imports --follow-imports=skip pipeline/src apps/backend
+      - name: Export and audit pipeline dependencies
+        run: |
+          uv export --project pipeline --locked --no-dev --format requirements-txt --output-file /tmp/pipeline-requirements.txt
+          uvx pip-audit --requirement /tmp/pipeline-requirements.txt
+      - name: Audit Node dependencies
+        working-directory: apps/site
+        run: npm audit --omit=dev
+      - name: Audit Screener app dependencies
+        working-directory: apps/app
+        run: npm audit --omit=dev

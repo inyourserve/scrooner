@@ -1,4 +1,4 @@
--- Day 4: checkpoint/resume support. See doc/08_Scrooner_Collector_Execution_Plan.md
+-- Day 4: checkpoint/resume support. See doc/execution-plans/08_Scrooner_Collector_Execution_Plan.md
 -- Day 4 row and doc/learnings/day-04-retry-and-resume.md for the full design
 -- rationale. Additive only -- every new column is nullable, nothing here
 -- changes the meaning of an existing row.

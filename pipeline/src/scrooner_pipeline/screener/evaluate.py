@@ -48,6 +48,12 @@ def rank_top_bottom(candidates: list[tuple[str, Decimal | None]], operator: str,
     unranked, same principle as every comparison operator above. Returns
     the top/bottom n ciks, in rank order."""
     non_null = [(cik, v) for cik, v in candidates if v is not None]
-    reverse = operator == "top_n"
-    ranked = sorted(non_null, key=lambda cv: cv[1], reverse=reverse)
+    # Value is primary; CIK ascending is the stable tiebreaker for both
+    # directions. Database row order is not a deterministic ordering rule.
+    if operator == "top_n":
+        ranked = sorted(non_null, key=lambda cv: (-cv[1], cv[0]))
+    elif operator == "bottom_n":
+        ranked = sorted(non_null, key=lambda cv: (cv[1], cv[0]))
+    else:
+        raise ValueError(f"not a ranked operator: {operator!r}")
     return [cik for cik, _ in ranked[:n]]

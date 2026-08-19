@@ -1,0 +1,34 @@
+{
+  "cik": 320193,
+  "entityName": "Apple Inc.",
+  "facts": {
+    "us-gaap": {
+      "RevenueFromContractWithCustomerExcludingAssessedTax": {
+        "label": "Revenue",
+        "description": "Revenue from contracts with customers.",
+        "units": {
+          "USD": [
+            {
+              "start": "2024-09-29",
+              "end": "2025-09-27",
+              "val": 416161000000,
+              "accn": "0000320193-25-000079",
+              "fy": 2025,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2025-10-31"
+            }
+          ]
+        }
+      },
+      "NumberOfReportableSegments": {
+        "label": "Number of Reportable Segments",
+        "description": "Number of reportable segments.",
+        "units": {
+          "Segment": [],
+          "segment": []
+        }
+      }
+    }
+  }
+}

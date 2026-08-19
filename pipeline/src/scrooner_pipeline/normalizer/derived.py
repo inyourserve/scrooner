@@ -124,6 +124,23 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             continue
 
         fy, q1, q2, q3 = by_period["FY"], by_period["Q1"], by_period["Q2"], by_period["Q3"]
+
+        # Labels alone are not sufficient evidence that subtraction is
+        # valid. A malformed or unusually tagged filing can place a Q1/Q2/Q3
+        # label on spans with gaps, overlaps, or dates outside the matching
+        # fiscal year. Only derive when the four duration contexts form one
+        # contiguous, nested fiscal-year partition. Unit comparability is
+        # already enforced by the grouping key above.
+        contexts_are_comparable = (
+            q1["start_date"] == fy["start_date"]
+            and q2["start_date"] == q1["end_date"] + timedelta(days=1)
+            and q3["start_date"] == q2["end_date"] + timedelta(days=1)
+            and q3["end_date"] < fy["end_date"]
+        )
+        if not contexts_are_comparable:
+            stats["incomplete"] += 1
+            continue
+
         q4_start = q3["end_date"] + timedelta(days=1)
         q4_end = fy["end_date"]
 

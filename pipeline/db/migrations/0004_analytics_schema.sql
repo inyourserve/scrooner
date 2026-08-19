@@ -1,5 +1,5 @@
 -- Analytics schema for the Mapper & Metrics Engine. See
--- scrooner/doc/11_Scrooner_Mapper_Metrics_Execution_Plan.md for the design
+-- scrooner/doc/execution-plans/11_Scrooner_Mapper_Metrics_Execution_Plan.md for the design
 -- rationale. The Mapper reads `core` (never writes it) and writes only to
 -- `analytics` -- same one-writer-per-schema discipline as raw (Collector)
 -- and core (Normalizer).

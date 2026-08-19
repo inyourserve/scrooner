@@ -25,3 +25,12 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+markers = [
+    "unit: fast, deterministic tests with no network or database access",
+    "integration: tests that use an explicitly isolated test database",
+    "live: opt-in verification against live external services",
+]

@@ -143,16 +143,29 @@ def run_query(conn: psycopg.Connection, query: ScreenQuery) -> dict:
 
     if query.sort_by:
         sort_metric_id = catalog[query.sort_by]
-
-        def _sort_key(m):
-            row = resolved.get((m["company_id"], sort_metric_id))
-            value = row["value"] if row else None
-            return (value is None, value if value is not None else 0)
-
-        matched.sort(key=_sort_key, reverse=query.sort_desc)
-        # nulls always last regardless of direction -- undo the reverse's
-        # effect on the "is None" component specifically
-        matched.sort(key=lambda m: resolved.get((m["company_id"], sort_metric_id), {}).get("value") is None)
+        present = [m for m in matched if resolved.get((m["company_id"], sort_metric_id), {}).get("value") is not None]
+        missing = [m for m in matched if resolved.get((m["company_id"], sort_metric_id), {}).get("value") is None]
+        # Stable two-pass ordering: CIK ascending breaks equal-value ties;
+        # value then determines the requested direction. Nulls remain last.
+        present.sort(key=lambda m: m["cik"])
+        present.sort(
+            key=lambda m: resolved[(m["company_id"], sort_metric_id)]["value"],
+            reverse=query.sort_desc,
+        )
+        missing.sort(key=lambda m: m["cik"])
+        matched = present + missing
+    elif ranked:
+        pred = ranked[0]
+        metric_id = catalog[pred.metric_name]
+        matched.sort(key=lambda m: m["cik"])
+        matched.sort(
+            key=lambda m: resolved[(m["company_id"], metric_id)]["value"],
+            reverse=pred.operator == "top_n",
+        )
+    else:
+        # SQL without ORDER BY has no stable order. A deterministic default
+        # keeps identical queries byte-equivalent even without sort_by.
+        matched.sort(key=lambda m: m["cik"])
 
     if query.limit is not None:
         matched = matched[: query.limit]

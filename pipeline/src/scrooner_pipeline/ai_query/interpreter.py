@@ -24,6 +24,10 @@ class InterpretationResult:
     explanation: str
     unrecognized: list[str] = field(default_factory=list)
     ambiguous: list[AmbiguityNote] = field(default_factory=list)
+    # Recognized clauses may be shown to a user while unresolved clauses are
+    # repaired. This field is never executable by itself; `query` remains the
+    # sole confidence gate and stays None for partial interpretations.
+    recognized_query: ScreenQuery | None = None
 
     @property
     def is_confident(self) -> bool:

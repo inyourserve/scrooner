@@ -1,0 +1,25 @@
+{
+  "inventory": {
+    "universe_schema_present": false,
+    "eligible_primary_count": 0,
+    "raw_companyfacts_ciks": 174,
+    "raw_submissions_ciks": 10,
+    "normalized_company_count": 8,
+    "unresolved_normalizer_errors": 0,
+    "unresolved_mapper_errors": 20,
+    "database_size_bytes": 157117587,
+    "scalable_table_bytes": 84467712,
+    "mapping_coverage": null
+  },
+  "ready": false,
+  "blockers": [
+    "day6_universe_migration_not_deployed",
+    "insufficient_eligible_primary_companies:0/100",
+    "insufficient_submissions_payloads:10/100",
+    "unresolved_mapper_errors:20",
+    "representative_mapping_coverage_not_measured",
+    "projected_database_capacity_exceeded:1128496275/524288000"
+  ],
+  "projected_database_size_bytes": 1128496275,
+  "database_limit_bytes": 524288000
+}

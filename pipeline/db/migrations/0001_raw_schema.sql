@@ -1,4 +1,4 @@
--- Raw schema for the Collector. See scrooner/doc/08_Scrooner_Collector_Execution_Plan.md
+-- Raw schema for the Collector. See scrooner/doc/execution-plans/08_Scrooner_Collector_Execution_Plan.md
 -- for the design rationale. The Collector writes ONLY to this schema.
 
 create schema if not exists raw;

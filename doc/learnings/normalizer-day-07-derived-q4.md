@@ -22,4 +22,4 @@ An inconsistency in a new module's own design (not following a pattern already p
 
 ## Definition of Done — full evidence, not re-assertion
 
-See `doc/09b_Normalizer_Definition_of_Done_Evidence.md` for doc 09's complete Definition of Done mapped item-by-item to real evidence from Days 1–7, mirroring how `doc/08b` closed out the Collector.
+See `doc/execution-plans/09b_Normalizer_Definition_of_Done_Evidence.md` for doc 09's complete Definition of Done mapped item-by-item to real evidence from Days 1–7, mirroring how `doc/08b` closed out the Collector.

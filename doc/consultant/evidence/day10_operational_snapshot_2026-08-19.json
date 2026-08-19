@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-08-19T08:07:21.727406+00:00",
+  "status": "alert",
+  "alerts": [
+    "freshness_stale:filing_index",
+    "unresolved_dead_letters:collector:4",
+    "unresolved_dead_letters:mapper:34"
+  ],
+  "freshness": [
+    {"source": "sec_companyfacts", "state": "fresh", "latest_at": "2026-08-14T07:43:18.730619+00:00", "age_hours": 120.4, "target_hours": 168.0, "row_count": 186},
+    {"source": "sec_submissions", "state": "fresh", "latest_at": "2026-08-13T21:11:48.612877+00:00", "age_hours": 130.93, "target_hours": 168.0, "row_count": 178},
+    {"source": "filing_index", "state": "stale", "latest_at": "2026-08-14T08:29:29.215245+00:00", "age_hours": 119.63, "target_hours": 72.0, "row_count": 559},
+    {"source": "market_prices", "state": "fresh", "latest_at": "2026-08-17T16:36:00+00:00", "age_hours": 39.52, "target_hours": 96.0, "row_count": 10},
+    {"source": "derived_metrics", "state": "fresh", "latest_at": "2026-08-19T08:03:29.760939+00:00", "age_hours": 0.06, "target_hours": 168.0, "row_count": 8622}
+  ],
+  "dead_letters": {
+    "collector": {"count": 4, "classification": "companyfacts/NotInBulkArchive"},
+    "normalizer": {"count": 0},
+    "mapper": {
+      "count": 34,
+      "breakdown": [
+        {"stage": "calculate", "error_type": "KeyError", "count": 20},
+        {"stage": "expanded_metrics", "error_type": "NotNullViolation", "count": 10},
+        {"stage": "quality_flags", "error_type": "NotNullViolation", "count": 4}
+      ]
+    }
+  }
+}

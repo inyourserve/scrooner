@@ -1,0 +1,98 @@
+from decimal import Decimal, getcontext
+
+import pytest
+
+from scrooner_pipeline.mapper.calculate import FORMULA_SHAPES, _compute
+from scrooner_pipeline.mapper.definitions import METRIC_DEFINITIONS as V1_DEFINITIONS
+from scrooner_pipeline.mapper.expanded_definitions import METRIC_DEFINITIONS as EXPANDED_DEFINITIONS
+
+
+FORMULA_CASES = {
+    "gross_margin": ("ratio", {"numerator": [Decimal("40")], "denominator": [Decimal("100")]}, Decimal("0.4")),
+    "operating_margin": ("ratio", {"numerator": [Decimal("30")], "denominator": [Decimal("100")]}, Decimal("0.3")),
+    "net_margin": ("ratio", {"numerator": [Decimal("20")], "denominator": [Decimal("100")]}, Decimal("0.2")),
+    "roe": ("ratio", {"numerator": [Decimal("20")], "denominator": [Decimal("80")]}, Decimal("0.25")),
+    "fcf": ("sum_diff", {"add": [Decimal("35")], "subtract": [Decimal("10")]}, Decimal("25")),
+    "fcf_margin": ("sum_diff_ratio", {"add": [Decimal("35")], "subtract": [Decimal("10")], "denominator": [Decimal("100")]}, Decimal("0.25")),
+    "debt_to_equity": ("ratio", {"numerator": [Decimal("30")], "denominator": [Decimal("60")]}, Decimal("0.5")),
+    "current_ratio": ("ratio", {"numerator": [Decimal("50")], "denominator": [Decimal("25")]}, Decimal("2")),
+    "interest_coverage_ratio": ("ratio", {"numerator": [Decimal("30")], "denominator": [Decimal("5")]}, Decimal("6")),
+    "roa": ("ratio", {"numerator": [Decimal("20")], "denominator": [Decimal("200")]}, Decimal("0.1")),
+    "quick_ratio": ("sum_diff_ratio", {"add": [Decimal("50")], "subtract": [Decimal("10")], "denominator": [Decimal("25")]}, Decimal("1.6")),
+    "sbc_pct_revenue": ("ratio", {"numerator": [Decimal("3")], "denominator": [Decimal("100")]}, Decimal("0.03")),
+    "ebitda": ("additive", {"add": [Decimal("30"), Decimal("7")]}, Decimal("37")),
+    "debtor_days": ("days", {"numerator": [Decimal("50")], "denominator": [Decimal("500")]}, Decimal("36.5")),
+    "inventory_days": ("days", {"numerator": [Decimal("100")], "denominator": [Decimal("400")]}, Decimal("91.25")),
+    "payables_days": ("days", {"numerator": [Decimal("80")], "denominator": [Decimal("400")]}, Decimal("73")),
+}
+
+EXPECTED_EXPANDED_DEFINITIONS = {
+    "roa", "quick_ratio", "sbc_pct_revenue", "ebitda", "net_debt_ebitda",
+    "ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield",
+    "total_shareholder_yield", "institutional_ownership_pct",
+    "share_dilution_trend", "debtor_days", "inventory_days", "payables_days",
+    "cash_conversion_cycle", "piotroski_f_score",
+    "fcf_gt_net_income", "zero_debt", "profitable_streak_years", "margin_expanding_3yr",
+    "revenue_growth_5y_cagr", "revenue_growth_10y_cagr", "eps_growth_5y_cagr", "eps_growth_10y_cagr",
+}
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("metric_name", FORMULA_CASES)
+def test_generic_metric_formula_positive_cases(metric_name):
+    shape, inputs, expected = FORMULA_CASES[metric_name]
+    value, reason = _compute(shape, inputs)
+
+    assert FORMULA_SHAPES[metric_name] == shape
+    assert value == expected
+    assert reason is None
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("shape,inputs,reason", [
+    ("ratio", {"numerator": [Decimal("1")], "denominator": [Decimal("0")]}, "zero_denominator"),
+    ("sum_diff", {"add": [Decimal("1")]}, "missing:subtract"),
+    ("sum_diff_ratio", {"add": [Decimal("1")], "subtract": [Decimal("1")]}, "missing:denominator"),
+    ("additive", {}, "missing:add"),
+    ("days", {"numerator": [Decimal("1")], "denominator": [Decimal("0")]}, "zero_denominator"),
+    ("roic", {
+        "nopat_base": [Decimal("10")], "tax_rate_numerator": [Decimal("1")],
+        "tax_rate_denominator": [Decimal("0")], "invested_capital_add": [Decimal("10")],
+        "invested_capital_subtract": [Decimal("1")],
+    }, "zero_pretax_income"),
+])
+def test_formula_edge_cases_return_explicit_null_reason(shape, inputs, reason):
+    assert _compute(shape, inputs) == (None, reason)
+
+
+@pytest.mark.unit
+def test_roic_formula_and_decimal_precision_are_exact():
+    getcontext().prec = 28
+    value, reason = _compute(
+        "roic",
+        {
+            "nopat_base": [Decimal("20")],
+            "tax_rate_numerator": [Decimal("5")],
+            "tax_rate_denominator": [Decimal("25")],
+            "invested_capital_add": [Decimal("30"), Decimal("40")],
+            "invested_capital_subtract": [Decimal("10")],
+        },
+    )
+
+    assert value == Decimal(4) / Decimal(15)
+    assert reason is None
+    assert isinstance(value, Decimal)
+
+
+@pytest.mark.unit
+def test_all_seeded_definitions_are_unique_and_generic_shapes_are_covered():
+    v1_names = [row[0] for row in V1_DEFINITIONS]
+    expanded_names = [row[0] for row in EXPANDED_DEFINITIONS]
+    generic_expanded_names = {row[0] for row in EXPANDED_DEFINITIONS if row[3]}
+
+    assert len(v1_names) == 20
+    assert set(expanded_names) == EXPECTED_EXPANDED_DEFINITIONS
+    assert len(expanded_names) == len(EXPECTED_EXPANDED_DEFINITIONS)
+    assert set(v1_names).isdisjoint(expanded_names)
+    assert generic_expanded_names <= set(FORMULA_CASES)
+    assert set(FORMULA_CASES) <= set(FORMULA_SHAPES)

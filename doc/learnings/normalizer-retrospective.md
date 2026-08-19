@@ -1,6 +1,6 @@
 # Normalizer Retrospective — Gaps Found on Re-Read
 
-Not a day entry (there is no Day 8 — the Normalizer finished at Day 7, see `doc/09b_Normalizer_Definition_of_Done_Evidence.md`). This is a look back across all 7 day files for patterns that were real, validated, and worth keeping — but that only ever got written into one day's narrative instead of being promoted to a project-level rule the way Days 1–6's findings were (doc 05's build method, doc 04's correctness controls, CLAUDE.md's Mapper notes). Two gaps found; both fixed as part of this entry.
+Not a day entry (there is no Day 8 — the Normalizer finished at Day 7, see `doc/execution-plans/09b_Normalizer_Definition_of_Done_Evidence.md`). This is a look back across all 7 day files for patterns that were real, validated, and worth keeping — but that only ever got written into one day's narrative instead of being promoted to a project-level rule the way Days 1–6's findings were (doc 05's build method, doc 04's correctness controls, CLAUDE.md's Mapper notes). Two gaps found; both fixed as part of this entry.
 
 ## Gap 1: "load everything, batch the writes" was never promoted, despite causing a real production-relevant bug
 

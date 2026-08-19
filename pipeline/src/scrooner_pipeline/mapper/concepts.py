@@ -193,6 +193,44 @@ def seed(conn: psycopg.Connection) -> dict:
     return {"canonical_concepts": len(canonical_id_by_name), **mapping_stats}
 
 
+def unmapped_tag_report(conn: psycopg.Connection, ciks: set[str] | None = None, limit: int = 50) -> list[dict]:
+    """Doc 11's proposed-but-never-built coverage-gap report (lines 200-207):
+    every core.concept tag with real authoritative fact volume that has ZERO
+    row in analytics.concept_mapping at all -- the silent-exclusion case
+    resolve.py's own `_load_facts()` comment names (unmapped concepts "never
+    enter the picture at all"). Ranked by fact-row-count descending, so the
+    highest-leverage unmapped tags surface first for a human to curate into
+    CONCEPT_MAPPINGS above -- this function only discovers/ranks, it never
+    adds a mapping itself, same discipline as every entry above being
+    manually verified before being marked approved/provisional/rejected.
+
+    ciks=None scans every company that has any core.fact row at all (the
+    point of this report is to look PAST the golden set); pass a CIK set to
+    scope it, e.g. for a "next N companies" wave."""
+    with conn.cursor() as cur:
+        cik_filter = "and c.cik = any(%s)" if ciks else ""
+        params: tuple = (sorted(ciks),) if ciks else ()
+        cur.execute(
+            f"""
+            select con.taxonomy, con.tag,
+                   count(f.id) as fact_count,
+                   count(distinct f.company_id) as company_count
+            from core.concept con
+            join core.fact f on f.concept_id = con.id and f.is_authoritative
+            join core.company c on c.id = f.company_id
+            left join analytics.concept_mapping cm on cm.concept_id = con.id
+            where cm.id is null
+            {cik_filter}
+            group by con.taxonomy, con.tag
+            order by fact_count desc
+            limit %s
+            """,
+            (*params, limit),
+        )
+        cols = [d.name for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+
 def coverage_report(conn: psycopg.Connection, ciks: set[str]) -> list[dict]:
     """For every (company, canonical_concept), does at least one approved/
     provisional mapped tag have authoritative fact data? Stage 3a's actual

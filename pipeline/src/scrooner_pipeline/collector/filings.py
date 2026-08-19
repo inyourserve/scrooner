@@ -48,6 +48,7 @@ from scrooner_pipeline.common.sec_client import SECClient
 logger = structlog.get_logger()
 
 ARCHIVES_BASE = "https://www.sec.gov/Archives/"
+INSERT_BATCH_SIZE = 250
 
 
 def daily_index_url(for_date: date) -> str:
@@ -145,46 +146,88 @@ def collect_daily_filings(
         return stats
 
     stats["index_rows"] = len(rows)
+    considered_rows = [
+        row for row in rows if only_ciks is None or row["cik"] in only_ciks
+    ]
+    stats["considered"] = len(considered_rows)
     heartbeat = HeartbeatTicker(conn, run_id)
 
     with conn.cursor() as cur:
-        for row in rows:
-            if only_ciks is not None and row["cik"] not in only_ciks:
-                continue
-            stats["considered"] += 1
+        for offset in range(0, len(considered_rows), INSERT_BATCH_SIZE):
+            batch = considered_rows[offset : offset + INSERT_BATCH_SIZE]
             try:
                 cur.execute(
                     """
                     insert into raw.sec_filing_documents
-                        (cik, accession_number, form, filing_date, source_url, download_status, collected_at)
-                    values (%s, %s, %s, %s, %s, 'indexed', now())
+                        (cik, accession_number, form, filing_date, source_url,
+                         download_status, collected_at)
+                    select cik, accession_number, form, filing_date, source_url,
+                           'indexed', now()
+                    from unnest(%s::text[], %s::text[], %s::text[], %s::date[], %s::text[])
+                         as filing(cik, accession_number, form, filing_date, source_url)
                     on conflict (cik, accession_number) do nothing
                     returning cik
                     """,
-                    (row["cik"], row["accession_number"], row["form"], row["filing_date"], row["source_url"]),
+                    (
+                        [row["cik"] for row in batch],
+                        [row["accession_number"] for row in batch],
+                        [row["form"] for row in batch],
+                        [row["filing_date"] for row in batch],
+                        [row["source_url"] for row in batch],
+                    ),
                 )
-                inserted = cur.fetchone() is not None
+                inserted = len(cur.fetchall())
                 conn.commit()
-                if inserted:
-                    stats["new"] += 1
-                else:
-                    stats["already_known"] += 1
-                heartbeat.tick()
-            except Exception as exc:
+                stats["new"] += inserted
+                stats["already_known"] += len(batch) - inserted
+                heartbeat.flush()
+            except Exception:
+                # Preserve the original per-row isolation and dead-letter
+                # evidence if one malformed row makes a whole chunk fail.
                 conn.rollback()
-                stats["errors"] += 1
-                logger.exception(
-                    "filings.store_failed", cik=row["cik"], accession_number=row["accession_number"]
+                logger.warning(
+                    "filings.batch_failed_falling_back",
+                    batch_offset=offset,
+                    batch_size=len(batch),
+                    exc_info=True,
                 )
-                cur.execute(
-                    """
-                    insert into raw.collector_errors
-                        (run_id, cik, source, error_type, message)
-                    values (%s, %s, %s, %s, %s)
-                    """,
-                    (run_id, row["cik"], "filings", type(exc).__name__, str(exc)[:2000]),
-                )
-                conn.commit()
+                for row in batch:
+                    try:
+                        cur.execute(
+                            """
+                            insert into raw.sec_filing_documents
+                                (cik, accession_number, form, filing_date, source_url,
+                                 download_status, collected_at)
+                            values (%s, %s, %s, %s, %s, 'indexed', now())
+                            on conflict (cik, accession_number) do nothing
+                            returning cik
+                            """,
+                            (
+                                row["cik"], row["accession_number"], row["form"],
+                                row["filing_date"], row["source_url"],
+                            ),
+                        )
+                        inserted = cur.fetchone() is not None
+                        conn.commit()
+                        stats["new" if inserted else "already_known"] += 1
+                        heartbeat.tick()
+                    except Exception as exc:
+                        conn.rollback()
+                        stats["errors"] += 1
+                        logger.exception(
+                            "filings.store_failed",
+                            cik=row["cik"],
+                            accession_number=row["accession_number"],
+                        )
+                        cur.execute(
+                            """
+                            insert into raw.collector_errors
+                                (run_id, cik, source, error_type, message)
+                            values (%s, %s, %s, %s, %s)
+                            """,
+                            (run_id, row["cik"], "filings", type(exc).__name__, str(exc)[:2000]),
+                        )
+                        conn.commit()
     heartbeat.flush()
     logger.info("filings.daily.done", date=for_date.isoformat(), **stats)
     return stats

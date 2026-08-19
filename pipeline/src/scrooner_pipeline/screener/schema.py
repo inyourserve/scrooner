@@ -18,7 +18,7 @@ the database to validate itself).
 from decimal import Decimal
 from typing import Literal
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 COMPARISON_OPERATORS = {">", "<", ">=", "<=", "=", "!="}
 RANKED_OPERATORS = {"top_n", "bottom_n"}
@@ -37,14 +37,20 @@ class MetricPredicate(BaseModel):
         if self.operator in COMPARISON_OPERATORS:
             if self.value is None:
                 raise ValueError(f"operator {self.operator!r} requires 'value'")
+            if self.value_range is not None or self.n is not None:
+                raise ValueError(f"operator {self.operator!r} does not accept 'value_range' or 'n'")
         elif self.operator == "between":
             if self.value_range is None:
                 raise ValueError("operator 'between' requires 'value_range'")
             if self.value_range[0] >= self.value_range[1]:
                 raise ValueError("value_range must be (low, high) with low < high")
+            if self.value is not None or self.n is not None:
+                raise ValueError("operator 'between' does not accept 'value' or 'n'")
         elif self.operator in RANKED_OPERATORS:
             if self.n is None or self.n < 1:
                 raise ValueError(f"operator {self.operator!r} requires a positive 'n'")
+            if self.value is not None or self.value_range is not None:
+                raise ValueError(f"operator {self.operator!r} does not accept 'value' or 'value_range'")
         return self
 
 
@@ -60,7 +66,7 @@ class ScreenQuery(BaseModel):
     include_inactive: bool = False
     sort_by: str | None = None
     sort_desc: bool = True
-    limit: int | None = None
+    limit: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def _check_at_most_one_ranked_predicate(self) -> "ScreenQuery":

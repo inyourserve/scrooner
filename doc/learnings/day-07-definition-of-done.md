@@ -17,7 +17,7 @@ Ran two fresh, real measurements against the production `SECClient`/`_RateLimite
 
 Also ran a fresh (not just cited-from-Day-6) exhaustive integrity reconciliation (`uv run scrooner-report reconcile`) live today: 364/364 stored objects (186 companyfacts + 178 submissions) still exist and still hash to their recorded SHA-256, zero unexplained deltas, exit code 0. Numbers are unchanged from Day 6's own pass because no new bootstrap/incremental run has added objects since — the point of rerunning wasn't to find something new, it was to not simply cite an old number as if it were still verified.
 
-All 8 of doc 06's Definition-of-Done items, plus a fresh live re-check of doc 08's condensed 5-clause Day 7 text via the `verify-collector-day` skill, came back PASS with real, citable evidence — compiled into `doc/08b_Collector_Definition_of_Done_Evidence.md`.
+All 8 of doc 06's Definition-of-Done items, plus a fresh live re-check of doc 08's condensed 5-clause Day 7 text via the `verify-collector-day` skill, came back PASS with real, citable evidence — compiled into `doc/execution-plans/08b_Collector_Definition_of_Done_Evidence.md`.
 
 ## Why it matters going forward
 
@@ -25,4 +25,4 @@ All 8 of doc 06's Definition-of-Done items, plus a fresh live re-check of doc 08
 
 ## Collector build status
 
-All 7 days of doc 08's plan are now complete with live evidence: Day 1 (scaffold/client), Day 2 (company universe), Day 3 (companyfacts/submissions), Day 4 (retry/checkpoint/resume), Day 5 (incremental updates), Day 6 (logs/integrity), Day 7 (end-to-end Definition-of-Done proof, this entry). Per doc 06: "Then — and only then — the team moves to the Normalizer." `doc/PROGRESS.md`'s Data Collector row is updated to ✅ accordingly. No Normalizer work was started as part of this day.
+All 7 days of doc 08's plan are now complete with live evidence: Day 1 (scaffold/client), Day 2 (company universe), Day 3 (companyfacts/submissions), Day 4 (retry/checkpoint/resume), Day 5 (incremental updates), Day 6 (logs/integrity), Day 7 (end-to-end Definition-of-Done proof, this entry). Per doc 06: "Then — and only then — the team moves to the Normalizer." `doc/status/PROGRESS.md`'s Data Collector row is updated to ✅ accordingly. No Normalizer work was started as part of this day.

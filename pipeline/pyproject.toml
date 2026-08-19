@@ -1,7 +1,7 @@
 [project]
 name = "scrooner-pipeline"
 version = "0.1.0"
-description = "Scrooner data pipeline: Collector -> Normalizer -> Mapper/Metrics. Collector done; Normalizer in progress — see ../doc/09_Scrooner_Normalizer_Execution_Plan.md."
+description = "Scrooner data pipeline: Collector -> Normalizer -> Mapper/Metrics. Collector done; Normalizer in progress — see ../doc/execution-plans/09_Scrooner_Normalizer_Execution_Plan.md."
 requires-python = "==3.12.*"
 dependencies = [
     "httpx>=0.27",
@@ -24,11 +24,14 @@ scrooner-company-master = "scrooner_pipeline.jobs.company_master:app"
 scrooner-screen = "scrooner_pipeline.jobs.screen:app"
 scrooner-ask = "scrooner_pipeline.jobs.ask:app"
 scrooner-ownership = "scrooner_pipeline.jobs.ownership:app"
+scrooner-pilot = "scrooner_pipeline.jobs.pilot:app"
+scrooner-operations = "scrooner_pipeline.jobs.operations:app"
+scrooner-reconcile = "scrooner_pipeline.jobs.reconcile:app"
 
 [dependency-groups]
 dev = [
     "pytest>=8.2",
-    # Verification/tooling only -- see ../doc/12_Scrooner_Edgar_Python_Plugin_Usage.md.
+    # Verification/tooling only -- see ../doc/foundational/12_Scrooner_Edgar_Python_Plugin_Usage.md.
     # Never a production/ingestion-path dependency: an independent cross-check
     # against our own Mapper output, run ad hoc or in CI, not something the
     # pipeline itself imports at runtime.
@@ -41,3 +44,12 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/scrooner_pipeline"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers -m 'not live'"
+testpaths = ["tests"]
+markers = [
+    "unit: fast, deterministic tests with no network or database access",
+    "integration: tests that use an explicitly isolated test database",
+    "live: opt-in verification against live external services",
+]
