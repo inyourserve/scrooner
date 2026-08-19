@@ -1,9 +1,31 @@
 ---
 // /stock/{ticker}/ -- "the crown jewel" (DOCUMENTATION.md sec 1, sec 3.2).
 // Structure grounded in doc 17's real analysis of Screener.in's own page,
-// mapped honestly against what Scrooner's pipeline actually has verified.
-// Reads Postgres directly (doc 04/17) -- no apps/backend dependency.
-
+// then re-aligned with doc/design/10_Scrooner_Product_Design_Framework.md
+// (Sec 8.4/12/13/14/17) once that framework existed. Reads Postgres
+// directly (doc 04/17) -- no apps/backend dependency.
+//
+// Redesign notes (2026-08-19), so a future edit doesn't re-litigate why:
+// - Design framework Sec 12.2 found this page rendering 39 metrics in two
+//   flat, uncurated grids -- worse, 8 of the ORIGINAL doc 02 locked
+//   metrics (gross/operating/net margin, current ratio, debt/equity,
+//   interest coverage, fcf, fcf margin) were never wired in at all,
+//   despite being computed since Mapper Stage 3d. Fixed here: all 45
+//   metrics now render, split into a curated 8-item "Key metrics" set
+//   (framework Sec 12.2's own recommended list, using this project's real
+//   metric names) plus 7 named categories (framework Sec 10.2's investor-
+//   language grouping) under progressive disclosure -- <details>, no
+//   client JS needed for an Astro-server-rendered page.
+// - Null states now carry an aria-label, not just a hover `title` --
+//   framework Sec 17.2: "a dash must not be the only accessible label for
+//   a missing value." See components/MetricGrid.astro.
+// - Current Price moved into the company header (framework Sec 12.1's own
+//   worked example puts price beside identity, not inside a metrics
+//   grid); Book Value moved into the Valuation category.
+// - Design tokens below match apps/app/app/globals.css's real values
+//   exactly (the one other place these tokens are implemented) --
+//   including positive-700/info-700, which that file is missing; kept
+//   here for internal consistency rather than omitted to match the gap.
 import {
   getCompanyByTicker,
   getLatestMetrics,
@@ -15,8 +37,11 @@ import {
   getLatestPublicFloat,
   getLatestPrice,
   getLatestConceptValue,
+  type MetricRow,
 } from "../../lib/db";
 import { buildChecklist } from "../../lib/prosCons";
+import { fmtNum, fmtShares } from "../../lib/format";
+import MetricGrid, { type MetricItem } from "../../components/MetricGrid.astro";
 
 const { ticker } = Astro.params;
 const company = ticker ? await getCompanyByTicker(ticker) : null;
@@ -39,101 +64,112 @@ const publicFloat = await getLatestPublicFloat(company.id);
 const latestPrice = await getLatestPrice(company.id);
 const bookValue = await getLatestConceptValue(company.id, "stockholders_equity");
 
-// doc 25 follow-on (mapper/price_metrics.py): the 6 price-dependent
-// metrics doc 02 locked from day one are now real, computed values in
-// analytics.metric_value (TTM-labeled, same table getLatestMetrics
-// already reads generically) -- no query change needed here, just
-// wiring the display. `blocked` now only fires when this specific
-// company's row is genuinely null (e.g. ENB/TSM's known foreign-filer
-// taxonomy gap, or a real missing-input reason) -- never a blanket
-// "not built yet" the way it was before this stage existed.
-function fmtPct(value: string | null | undefined): string {
-  if (value === null || value === undefined) return "—";
-  return (Number(value) * 100).toFixed(1) + "%";
+function m(name: string): MetricRow | undefined {
+  return metrics[name];
 }
 
-function fmtNum(value: string | null): string {
-  if (value === null) return "—";
-  const n = Number(value);
-  if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(2) + "B";
-  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + "M";
-  return n.toFixed(2);
-}
-
-function fmtMultiple(value: string | null | undefined): string {
-  if (value === null || value === undefined) return "—";
-  return Number(value).toFixed(2) + "x";
-}
-
-function fmtDays(value: string | null | undefined): string {
-  if (value === null || value === undefined) return "—";
-  return Number(value).toFixed(1) + "d";
-}
-
-function fmtScore(value: string | null | undefined): string {
-  if (value === null || value === undefined) return "—";
-  return Number(value).toFixed(0) + "/9";
-}
-
-function fmtBool(value: string | null | undefined): string {
-  if (value === null || value === undefined) return "—";
-  return Number(value) === 1 ? "Yes" : "No";
-}
-
-function fmtYears(value: string | null | undefined): string {
-  if (value === null || value === undefined) return "—";
-  const n = Number(value);
-  return n.toFixed(0) + (n === 1 ? " yr" : " yrs");
-}
-
-const topRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw"; raw?: string; nullTitle?: string }[] = [
-  { label: "Market Cap", row: metrics["market_cap"], kind: "dollar" },
-  { label: "Current Price", row: undefined, kind: "raw", raw: latestPrice ? "$" + Number(latestPrice.price).toFixed(2) : undefined, nullTitle: "No real price on record for this company (Alpaca coverage gap) -- see doc 25" },
-  { label: "Stock P/E", row: metrics["trailing_pe"], kind: "multiple" },
-  { label: "Price/Sales", row: metrics["price_to_sales"], kind: "multiple" },
-  { label: "Price/Book", row: metrics["price_to_book"], kind: "multiple" },
-  { label: "Book Value (Equity)", row: undefined, kind: "raw", raw: bookValue ? "$" + fmtNum(bookValue) : undefined, nullTitle: "No stockholders' equity fact resolved for this company" },
-  { label: "Dividend Yield", row: metrics["dividend_yield"], kind: "pct" },
-  { label: "FCF Yield", row: metrics["fcf_yield"], kind: "pct" },
-  { label: "ROE", row: metrics["roe"], kind: "pct" },
-  { label: "ROIC", row: metrics["roic"], kind: "pct" },
+// Curated primary set -- design framework Sec 12.2's own recommended
+// list (Market cap, P/E, Revenue growth, Operating margin, ROIC, FCF
+// yield, Debt/equity, Share-count dilution/buyback trend), mapped to
+// this project's real metric names. 3Y CAGR chosen over YoY for the
+// headline growth figure -- less noisy period-to-period, same choice
+// prosCons.ts already makes for its own revenue-growth rule.
+const keyMetrics: MetricItem[] = [
+  { label: "Market Cap", row: m("market_cap"), kind: "dollar" },
+  { label: "Stock P/E", row: m("trailing_pe"), kind: "multiple" },
+  { label: "Revenue Growth (3Y CAGR)", row: m("revenue_growth_3y_cagr"), kind: "pct" },
+  { label: "Operating Margin", row: m("operating_margin"), kind: "pct" },
+  { label: "ROIC", row: m("roic"), kind: "pct" },
+  { label: "FCF Yield", row: m("fcf_yield"), kind: "pct" },
+  { label: "Debt / Equity", row: m("debt_to_equity"), kind: "multiple" },
+  { label: "Share Count Dilution (YoY)", row: m("share_dilution_trend"), kind: "pct" },
 ];
 
-// doc 18 Tier A / doc 26 (2026-08-18): the 12 metrics built to raise data-
-// point coverage past the original doc-02 18. Same generic getLatestMetrics
-// read, same honest-null discipline as topRatios -- just a second grid so
-// the original locked 18-metric set stays visually distinct from these
-// additive extensions.
-const moreRatios: { label: string; row: (typeof metrics)[string] | undefined; kind: "pct" | "dollar" | "multiple" | "raw" | "days" | "score" | "bool" | "years" }[] = [
-  { label: "ROA", row: metrics["roa"], kind: "pct" },
-  { label: "Quick Ratio", row: metrics["quick_ratio"], kind: "multiple" },
-  { label: "EBITDA", row: metrics["ebitda"], kind: "dollar" },
-  { label: "Net Debt / EBITDA", row: metrics["net_debt_ebitda"], kind: "multiple" },
-  { label: "EV / EBITDA", row: metrics["ev_ebitda"], kind: "multiple" },
-  { label: "EV / Sales", row: metrics["ev_sales"], kind: "multiple" },
-  { label: "PEG Ratio", row: metrics["peg_ratio"], kind: "multiple" },
-  { label: "SBC % of Revenue", row: metrics["sbc_pct_revenue"], kind: "pct" },
-  { label: "Debtor Days", row: metrics["debtor_days"], kind: "days" },
-  { label: "Inventory Days", row: metrics["inventory_days"], kind: "days" },
-  { label: "Payables Days", row: metrics["payables_days"], kind: "days" },
-  { label: "Cash Conversion Cycle", row: metrics["cash_conversion_cycle"], kind: "days" },
-  { label: "Piotroski F-Score", row: metrics["piotroski_f_score"], kind: "score" },
-  { label: "FCF > Net Income", row: metrics["fcf_gt_net_income"], kind: "bool" },
-  { label: "Debt-Free", row: metrics["zero_debt"], kind: "bool" },
-  { label: "Profitable Streak", row: metrics["profitable_streak_years"], kind: "years" },
-  { label: "Margin Expanding (3yr)", row: metrics["margin_expanding_3yr"], kind: "bool" },
-  { label: "Revenue Growth (YoY)", row: metrics["revenue_growth_yoy"], kind: "pct" },
-  { label: "Revenue Growth (3Y CAGR)", row: metrics["revenue_growth_3y_cagr"], kind: "pct" },
-  { label: "Revenue Growth (5Y CAGR)", row: metrics["revenue_growth_5y_cagr"], kind: "pct" },
-  { label: "Revenue Growth (10Y CAGR)", row: metrics["revenue_growth_10y_cagr"], kind: "pct" },
-  { label: "EPS Growth (YoY)", row: metrics["eps_growth_yoy"], kind: "pct" },
-  { label: "EPS Growth (3Y CAGR)", row: metrics["eps_growth_3y_cagr"], kind: "pct" },
-  { label: "EPS Growth (5Y CAGR)", row: metrics["eps_growth_5y_cagr"], kind: "pct" },
-  { label: "EPS Growth (10Y CAGR)", row: metrics["eps_growth_10y_cagr"], kind: "pct" },
-  { label: "Buyback Yield", row: metrics["buyback_yield"], kind: "pct" },
-  { label: "Total Shareholder Yield", row: metrics["total_shareholder_yield"], kind: "pct" },
-  { label: "Share Count Dilution (YoY)", row: metrics["share_dilution_trend"], kind: "pct" },
-  { label: "Institutional Ownership", row: metrics["institutional_ownership_pct"], kind: "pct" },
+// All 45 metric_definition rows, none silently dropped -- grouped using
+// the same investor-language categories the design framework's filter
+// builder (Sec 10.2) uses, so the vocabulary matches across the whole
+// product rather than this page inventing its own taxonomy.
+const categories: { id: string; title: string; items: MetricItem[] }[] = [
+  {
+    id: "valuation",
+    title: "Valuation",
+    items: [
+      { label: "Price / Sales", row: m("price_to_sales"), kind: "multiple" },
+      { label: "Price / Book", row: m("price_to_book"), kind: "multiple" },
+      { label: "Book Value (Equity)", kind: "raw", raw: bookValue ? "$" + fmtNum(bookValue) : undefined, nullReason: "No stockholders' equity fact resolved for this company" },
+      { label: "Dividend Yield", row: m("dividend_yield"), kind: "pct" },
+      { label: "PEG Ratio", row: m("peg_ratio"), kind: "multiple" },
+      { label: "EV / EBITDA", row: m("ev_ebitda"), kind: "multiple" },
+      { label: "EV / Sales", row: m("ev_sales"), kind: "multiple" },
+    ],
+  },
+  {
+    id: "growth",
+    title: "Growth",
+    items: [
+      { label: "Revenue Growth (YoY)", row: m("revenue_growth_yoy"), kind: "pct" },
+      { label: "Revenue Growth (5Y CAGR)", row: m("revenue_growth_5y_cagr"), kind: "pct" },
+      { label: "Revenue Growth (10Y CAGR)", row: m("revenue_growth_10y_cagr"), kind: "pct" },
+      { label: "EPS Growth (YoY)", row: m("eps_growth_yoy"), kind: "pct" },
+      { label: "EPS Growth (3Y CAGR)", row: m("eps_growth_3y_cagr"), kind: "pct" },
+      { label: "EPS Growth (5Y CAGR)", row: m("eps_growth_5y_cagr"), kind: "pct" },
+      { label: "EPS Growth (10Y CAGR)", row: m("eps_growth_10y_cagr"), kind: "pct" },
+    ],
+  },
+  {
+    id: "profitability",
+    title: "Profitability",
+    items: [
+      { label: "Gross Margin", row: m("gross_margin"), kind: "pct" },
+      { label: "Net Margin", row: m("net_margin"), kind: "pct" },
+      { label: "ROE", row: m("roe"), kind: "pct" },
+      { label: "ROA", row: m("roa"), kind: "pct" },
+      { label: "SBC % of Revenue", row: m("sbc_pct_revenue"), kind: "pct" },
+    ],
+  },
+  {
+    id: "cash-flow",
+    title: "Cash Flow & Efficiency",
+    items: [
+      { label: "Free Cash Flow", row: m("fcf"), kind: "dollar" },
+      { label: "FCF Margin", row: m("fcf_margin"), kind: "pct" },
+      { label: "Cash Conversion Cycle", row: m("cash_conversion_cycle"), kind: "days" },
+      { label: "Debtor Days", row: m("debtor_days"), kind: "days" },
+      { label: "Inventory Days", row: m("inventory_days"), kind: "days" },
+      { label: "Payables Days", row: m("payables_days"), kind: "days" },
+    ],
+  },
+  {
+    id: "financial-strength",
+    title: "Financial Strength",
+    items: [
+      { label: "Current Ratio", row: m("current_ratio"), kind: "multiple" },
+      { label: "Quick Ratio", row: m("quick_ratio"), kind: "multiple" },
+      { label: "Interest Coverage", row: m("interest_coverage_ratio"), kind: "multiple" },
+      { label: "EBITDA", row: m("ebitda"), kind: "dollar" },
+      { label: "Net Debt / EBITDA", row: m("net_debt_ebitda"), kind: "multiple" },
+      { label: "Debt-Free", row: m("zero_debt"), kind: "bool" },
+      { label: "Piotroski F-Score", row: m("piotroski_f_score"), kind: "score" },
+    ],
+  },
+  {
+    id: "capital-allocation",
+    title: "Capital Allocation & Quality",
+    items: [
+      { label: "Buyback Yield", row: m("buyback_yield"), kind: "pct" },
+      { label: "Total Shareholder Yield", row: m("total_shareholder_yield"), kind: "pct" },
+      { label: "FCF > Net Income", row: m("fcf_gt_net_income"), kind: "bool" },
+      { label: "Profitable Streak", row: m("profitable_streak_years"), kind: "years" },
+      { label: "Margin Expanding (3yr)", row: m("margin_expanding_3yr"), kind: "bool" },
+    ],
+  },
+  {
+    id: "ownership-metrics",
+    title: "Ownership",
+    items: [
+      { label: "Institutional Ownership", row: m("institutional_ownership_pct"), kind: "pct" },
+    ],
+  },
 ];
 
 // SEC's own standardized 8-K item codes (doc 21/24 Phase 1) -- a small,
@@ -158,15 +194,14 @@ const ITEM_LABELS: Record<string, string> = {
   "9.01": "Financial Statements/Exhibits",
 };
 
-// Share counts are whole numbers (Form 4 shares/shares_owned_following) --
-// a separate formatter from fmtNum so the statement tables' dollar-figure
-// 2-decimal formatting (already verified, doc 17) isn't touched.
-function fmtShares(value: string | null): string {
-  if (value === null) return "—";
-  const n = Number(value);
-  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + "M";
-  return n.toLocaleString("en-US");
-}
+const sections = [
+  { id: "overview", label: "Overview" },
+  { id: "analysis", label: "Strengths & Risks" },
+  { id: "metrics", label: "All Metrics" },
+  { id: "financials", label: "Financials" },
+  { id: "ownership", label: "Ownership" },
+  { id: "filings", label: "Filings" },
+];
 ---
 
 <html lang="en">
@@ -175,235 +210,389 @@ function fmtShares(value: string | null): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{company.company_name} ({company.ticker}) — Scrooner</title>
   <style>
-    body { font-family: -apple-system, system-ui, sans-serif; max-width: 1000px; margin: 0 auto; padding: 24px; color: #1a1a1a; }
-    h1 { margin-bottom: 4px; }
-    .sub { color: #666; margin-bottom: 24px; }
-    .card { border: 1px solid #e2e2e2; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; }
-    .ratio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-    .ratio { display: flex; flex-direction: column; }
-    .ratio .label { font-size: 12px; color: #777; }
-    .ratio .value { font-size: 18px; font-weight: 600; }
-    .ratio .value.blocked { color: #aaa; font-weight: 400; font-size: 14px; }
+    /* Design tokens -- design framework Sec 13.3/13.4/13.5/13.6, values
+       matched to apps/app/app/globals.css for cross-frontend consistency.
+       positive-700/info-700 are defined here even though that file is
+       currently missing them (see file-level comment). */
+    :root {
+      --surface-canvas: #f6f8f6;
+      --surface-primary: #ffffff;
+      --surface-subtle: #eef3ef;
+      --text-primary: #17211b;
+      --text-secondary: #526158;
+      --text-muted: #68776e;
+      --border-default: #d8e0da;
+      --border-strong: #aab8ae;
+      --brand-700: #176b4d;
+      --brand-800: #10533b;
+      --link-700: #175f9e;
+      --positive-700: #177245;
+      --negative-700: #b42318;
+      --warning-700: #8a4b08;
+      --info-700: #175cd3;
+      --focus: #2e7cc0;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 24px; --space-6: 32px; --space-8: 48px; --space-10: 64px;
+      --radius: 6px; --radius-lg: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--surface-canvas);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text-primary);
+      max-width: 1240px;
+      margin-inline: auto;
+      padding: 0 var(--space-5) var(--space-10);
+    }
+
+    a { color: var(--link-700); }
+    a:focus-visible, button:focus-visible, summary:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgb(46 124 192 / 25%);
+      border-radius: 3px;
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+
+    /* Sticky compact section nav -- design framework Sec 8.4 ("compact
+       sticky section navigation") -- pure CSS + anchor links, no client
+       JS, matching Sec 5.6's "avoid client JavaScript where it does not
+       add interaction value" for a server-rendered public page. */
+    .section-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      gap: var(--space-5);
+      overflow-x: auto;
+      padding: var(--space-3) 0;
+      margin: 0 calc(-1 * var(--space-5)) var(--space-6);
+      padding-inline: var(--space-5);
+      background: color-mix(in srgb, var(--surface-canvas) 92%, transparent);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .section-nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 550;
+      white-space: nowrap;
+      padding: var(--space-1) 0;
+      border-bottom: 2px solid transparent;
+    }
+    .section-nav a:hover { color: var(--text-primary); }
+
+    h1 { font-size: 32px; line-height: 40px; font-weight: 700; margin: var(--space-6) 0 var(--space-1); }
+    h2 { font-size: 24px; line-height: 32px; font-weight: 650; margin: 0 0 var(--space-2); scroll-margin-top: 64px; }
+    h3 { font-size: 18px; line-height: 26px; font-weight: 600; margin: 0 0 var(--space-2); }
+
+    .company-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-5);
+      flex-wrap: wrap;
+      padding-bottom: var(--space-5);
+      border-bottom: 1px solid var(--border-default);
+      margin-bottom: var(--space-6);
+    }
+    .company-identity .sub {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin: 0 0 var(--space-1);
+    }
+    .status-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 550;
+      padding: 2px var(--space-2);
+      border-radius: 999px;
+      background: var(--surface-subtle);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-default);
+    }
+    .price-block { text-align: right; min-width: 160px; }
+    .price-value {
+      font-size: 22px;
+      line-height: 28px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      display: block;
+    }
+    .price-value.blocked { color: var(--text-muted); font-weight: 400; font-size: 15px; }
+    .price-freshness { font-size: 12px; color: var(--text-muted); }
+
+    section.page-section { margin-bottom: var(--space-8); }
+    .card {
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--surface-primary);
+      padding: var(--space-5);
+      margin-bottom: var(--space-5);
+    }
+
+    .note { font-size: 13px; color: var(--text-secondary); margin: var(--space-3) 0 0; line-height: 1.5; }
+    .note strong { color: var(--text-primary); }
+
+    /* Category disclosure (framework Sec 5.3 progressive disclosure /
+       Sec 12.2's category-grouping fix) -- native <details>, zero JS. */
+    .category { border: 1px solid var(--border-default); border-radius: var(--radius-lg); background: var(--surface-primary); margin-bottom: var(--space-3); }
+    .category summary {
+      cursor: pointer;
+      list-style: none;
+      padding: var(--space-4) var(--space-5);
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .category summary::-webkit-details-marker { display: none; }
+    .category summary::after {
+      content: "+";
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 18px;
+    }
+    .category[open] summary::after { content: "–"; }
+    .category summary:hover { background: var(--surface-subtle); }
+    .category .category-body { padding: 0 var(--space-5) var(--space-5); }
+
     table { border-collapse: collapse; width: 100%; font-size: 13px; }
-    th, td { text-align: right; padding: 6px 10px; border-bottom: 1px solid #eee; white-space: nowrap; }
-    th:first-child, td:first-child { text-align: left; }
-    .pros-cons { display: flex; gap: 24px; flex-wrap: wrap; }
+    caption { text-align: left; font-size: 12px; color: var(--text-muted); padding-bottom: var(--space-2); }
+    th, td { text-align: right; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--surface-subtle); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    th { color: var(--text-secondary); font-weight: 550; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; }
+    th:first-child, td:first-child { text-align: left; font-variant-numeric: normal; }
+    tbody tr:hover { background: var(--surface-subtle); }
+
+    .pros-cons { display: flex; gap: var(--space-6); flex-wrap: wrap; }
     .pros, .cons { flex: 1; min-width: 260px; }
-    .pros h3 { color: #1a7f37; } .cons h3 { color: #b91c1c; }
-    ul { padding-left: 18px; margin: 8px 0; }
-    .note { font-size: 12px; color: #888; margin-top: 8px; }
+    .pros h3 { color: var(--positive-700); } .cons h3 { color: var(--negative-700); }
+    ul { padding-left: 18px; margin: var(--space-2) 0; }
+    li { margin-bottom: var(--space-1); line-height: 1.5; }
+
     .statement-scroll { overflow-x: auto; }
+    .statement-scroll:focus-visible { box-shadow: 0 0 0 3px rgb(46 124 192 / 25%); }
+
+    @media (max-width: 640px) {
+      body { padding: 0 var(--space-4) var(--space-8); }
+      .company-header { flex-direction: column; }
+      .price-block { text-align: left; }
+      h1 { font-size: 26px; line-height: 32px; }
+    }
   </style>
 </head>
 <body>
-  <h1>{company.company_name}</h1>
-  <p class="sub">{company.ticker} · {company.sic_description ?? "Sector unclassified"} · {company.status}</p>
+  <nav class="section-nav" aria-label="Company page sections">
+    {sections.map((s) => <a href={`#${s.id}`}>{s.label}</a>)}
+  </nav>
 
-  <section class="card">
-    <div class="ratio-grid">
-      {topRatios.map((r) => {
-        const isNull = r.kind === "raw" ? !r.raw : r.row?.value == null;
-        const nullTitle = r.kind === "raw"
-          ? (r.nullTitle ?? "Not available for this company")
-          : r.row?.is_null_reason
-            ? `Not computed: ${r.row.is_null_reason} -- see mapper/price_metrics.py`
-            : "Not yet resolved for this company";
-        return (
-          <div class="ratio">
-            <span class="label">{r.label}</span>
-            {isNull ? (
-              <span class="value blocked" title={nullTitle}>—</span>
-            ) : r.kind === "raw" ? (
-              <span class="value" title={`${latestPrice?.feed} feed, bar time ${latestPrice?.bar_timestamp} -- see doc 25`}>{r.raw}</span>
-            ) : r.kind === "dollar" ? (
-              <span class="value">${fmtNum(r.row?.value ?? null)}</span>
-            ) : r.kind === "multiple" ? (
-              <span class="value">{fmtMultiple(r.row?.value)}</span>
-            ) : (
-              <span class="value">{fmtPct(r.row?.value)}</span>
-            )}
-          </div>
-        );
-      })}
+  <header class="company-header">
+    <div class="company-identity">
+      <h1>{company.company_name}</h1>
+      <p class="sub">{company.ticker} · {company.sic_description ?? "Sector unclassified"}</p>
+      <span class="status-badge">{company.status}</span>
     </div>
-    <p class="note">Price-dependent figures are computed from a real price (Alpaca, {latestPrice?.feed ?? "delayed_sip"} feed, ~15min delay) combined with trailing-twelve-month fundamentals — see doc 25. A "—" here always has a specific, traceable reason (hover to see it) — never a guess.</p>
-    {publicFloat && (
-      <p class="note">
-        <strong>Public Float</strong> (not Market Cap — value of shares held by non-affiliates only, as of {publicFloat.period_end}, per the 10-K cover page): {fmtNum(publicFloat.value)}
-      </p>
-    )}
+    <div class="price-block">
+      {latestPrice ? (
+        <>
+          <span class="price-value" title={`${latestPrice.feed} feed, bar time ${latestPrice.bar_timestamp} -- see doc 25`}>${Number(latestPrice.price).toFixed(2)}</span>
+          <span class="price-freshness">Delayed · {latestPrice.feed}</span>
+        </>
+      ) : (
+        <span class="price-value blocked" aria-label="Current price not available. No real price on record for this company." title="No real price on record for this company (Alpaca coverage gap) -- see doc 25">— No price on record</span>
+      )}
+    </div>
+  </header>
+
+  <section class="page-section" id="overview">
+    <h2>Key Metrics</h2>
+    <div class="card">
+      <MetricGrid items={keyMetrics} />
+      <p class="note">Every value here is computed from company filings for a specific period, never estimated — a "—" always has a specific, traceable reason (hover or focus the value to see it). See "All Metrics" below for the remaining 37 metrics Scrooner tracks for this company.</p>
+      {publicFloat && (
+        <p class="note">
+          <strong>Public Float</strong> (not Market Cap — value of shares held by non-affiliates only, as of {publicFloat.period_end}, per the 10-K cover page): {fmtNum(publicFloat.value)}
+        </p>
+      )}
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Additional Ratios</h2>
-    <div class="ratio-grid">
-      {moreRatios.map((r) => {
-        const isNull = r.row?.value == null;
-        const nullTitle = r.row?.is_null_reason
-          ? `Not computed: ${r.row.is_null_reason} -- see mapper/calculate.py, expanded_metrics.py, or quality_score.py`
-          : "Not yet resolved for this company";
-        return (
-          <div class="ratio">
-            <span class="label">{r.label}</span>
-            {isNull ? (
-              <span class="value blocked" title={nullTitle}>—</span>
-            ) : r.kind === "dollar" ? (
-              <span class="value">${fmtNum(r.row?.value ?? null)}</span>
-            ) : r.kind === "multiple" ? (
-              <span class="value">{fmtMultiple(r.row?.value)}</span>
-            ) : r.kind === "days" ? (
-              <span class="value">{fmtDays(r.row?.value)}</span>
-            ) : r.kind === "score" ? (
-              <span class="value">{fmtScore(r.row?.value)}</span>
-            ) : r.kind === "bool" ? (
-              <span class="value">{fmtBool(r.row?.value)}</span>
-            ) : r.kind === "years" ? (
-              <span class="value">{fmtYears(r.row?.value)}</span>
-            ) : (
-              <span class="value">{fmtPct(r.row?.value)}</span>
-            )}
-          </div>
-        );
-      })}
-    </div>
-    <p class="note">Doc 18 Tier A / doc 26 extensions, built to raise data-point coverage past doc 02's original locked 18 — same honest-null discipline (hover a "—" for the specific reason). Institutional Ownership is Form-13F-reported holdings only (a single recent filing window, not exhaustive of all beneficial owners) — see doc 19 Stage 4.</p>
-  </section>
-
-  <section class="card">
-    <h2>Analysis</h2>
-    <div class="pros-cons">
-      <div class="pros">
-        <h3>Pros</h3>
-        <ul>
-          {checklist.filter((c) => c.kind === "pro").map((c) => <li>{c.text}</li>)}
-          {checklist.filter((c) => c.kind === "pro").length === 0 && <li><em>None triggered by the current checklist.</em></li>}
-        </ul>
-      </div>
-      <div class="cons">
-        <h3>Cons</h3>
-        <ul>
-          {checklist.filter((c) => c.kind === "con").map((c) => <li>{c.text}</li>)}
-          {checklist.filter((c) => c.kind === "con").length === 0 && <li><em>None triggered by the current checklist.</em></li>}
-        </ul>
+  <section class="page-section" id="analysis">
+    <h2>Strengths &amp; Risks</h2>
+    <div class="card">
+      <p class="note" style="margin-top:0">Generated from a fixed, published checklist against verified metrics — not an AI opinion.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h3>Strengths</h3>
+          <ul>
+            {checklist.filter((c) => c.kind === "pro").map((c) => <li>{c.text}</li>)}
+            {checklist.filter((c) => c.kind === "pro").length === 0 && <li><em>No current checklist rule was triggered.</em></li>}
+          </ul>
+        </div>
+        <div class="cons">
+          <h3>Risks</h3>
+          <ul>
+            {checklist.filter((c) => c.kind === "con").map((c) => <li>{c.text}</li>)}
+            {checklist.filter((c) => c.kind === "con").length === 0 && <li><em>No current checklist rule was triggered.</em></li>}
+          </ul>
+        </div>
       </div>
     </div>
-    <p class="note">Pros/cons are machine generated from a fixed checklist against verified metrics — never AI-generated prose. See doc 17.</p>
   </section>
 
-  {[
-    { title: "Quarterly Results", data: quarterlyResults },
-    { title: "Profit & Loss (Annual)", data: incomeStatement },
-    { title: "Balance Sheet (Annual)", data: balanceSheet },
-    { title: "Cash Flow (Annual)", data: cashFlow },
-  ].map(({ title, data }) => (
-    <section class="card">
-      <h2>{title}</h2>
-      <div class="statement-scroll">
+  <section class="page-section" id="metrics">
+    <h2>All Metrics</h2>
+    <p class="note" style="margin-top:0; margin-bottom: var(--space-4)">Every metric Scrooner computes for {company.ticker}, grouped by category. Collapsed by default — expand a category to inspect it.</p>
+    {categories.map((category) => (
+      <details class="category" id={category.id}>
+        <summary>{category.title} <span class="sr-only">— {category.items.length} metrics, click to expand</span></summary>
+        <div class="category-body">
+          <MetricGrid items={category.items} dense />
+        </div>
+      </details>
+    ))}
+  </section>
+
+  <section class="page-section" id="financials">
+    <h2>Financials</h2>
+    {[
+      { title: "Quarterly Results", data: quarterlyResults },
+      { title: "Profit & Loss (Annual)", data: incomeStatement },
+      { title: "Balance Sheet (Annual)", data: balanceSheet },
+      { title: "Cash Flow (Annual)", data: cashFlow },
+    ].map(({ title, data }) => (
+      <div class="card">
+        <h3>{title}</h3>
+        <div class="statement-scroll" tabindex="0" role="group" aria-label={`${title}, scroll horizontally for earlier periods`}>
+          <table>
+            <caption class="sr-only">{title} for {company.company_name}, most recent periods last.</caption>
+            <thead>
+              <tr>
+                <th scope="col"><span class="sr-only">Line item</span></th>
+                {data.periods.slice(-8).map((p) => <th scope="col">{p.fiscal_period} {p.fiscal_year}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {data.lines.map((line) => (
+                <tr>
+                  <th scope="row" style="text-align:left; font-weight: 450;">{line.label}</th>
+                  {line.values.slice(-8).map((v) => <td>{fmtNum(v)}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <section class="page-section" id="ownership">
+    <h2>Ownership</h2>
+
+    <div class="card">
+      <h3>Insider Activity</h3>
+      <div class="statement-scroll" tabindex="0" role="group" aria-label="Insider activity, scroll horizontally for all columns">
         <table>
+          <caption class="sr-only">Form 4 insider transactions for {company.company_name}.</caption>
           <thead>
             <tr>
-              <th>&nbsp;</th>
-              {data.periods.slice(-8).map((p) => <th>{p.fiscal_period} {p.fiscal_year}</th>)}
+              <th scope="col" style="text-align:left">Insider</th><th scope="col" style="text-align:left">Title</th><th scope="col">Date</th><th scope="col">Type</th><th scope="col">Shares</th><th scope="col">Price</th><th scope="col">Owned After</th><th scope="col">Plan</th>
             </tr>
           </thead>
           <tbody>
-            {data.lines.map((line) => (
+            {insiderTransactions.map((t) => (
               <tr>
-                <td>{line.label}</td>
-                {line.values.slice(-8).map((v) => <td>{fmtNum(v)}</td>)}
+                <td style="text-align:left">{t.reporting_owner_name}</td>
+                <td style="text-align:left">{t.officer_title ?? (t.is_director ? "Director" : t.is_ten_percent_owner ? "10%+ Owner" : "—")}</td>
+                <td>{t.transaction_date}</td>
+                <td>{t.acquired_disposed_code === "A" ? "Buy" : t.acquired_disposed_code === "D" ? "Sell" : t.transaction_code}</td>
+                <td>{fmtShares(t.shares)}</td>
+                <td>{t.price_per_share ? "$" + Number(t.price_per_share).toFixed(2) : "—"}</td>
+                <td>{fmtShares(t.shares_owned_following)}</td>
+                <td title={t.is_10b5_1_plan === null ? "Filed before the 2023-04-01 Rule 10b5-1(c) disclosure requirement" : t.is_10b5_1_plan ? "Pre-arranged Rule 10b5-1(c) trading plan" : "Discretionary transaction, not a disclosed 10b5-1 plan"}>
+                  {t.is_10b5_1_plan === null ? "—" : t.is_10b5_1_plan ? "10b5-1" : "Discretionary"}
+                </td>
               </tr>
             ))}
+            {insiderTransactions.length === 0 && <tr><td colspan="8" style="text-align:left"><em>No Form 4 activity on record.</em></td></tr>}
           </tbody>
         </table>
       </div>
-    </section>
-  ))}
-
-  <section class="card">
-    <h2>Insider Activity</h2>
-    <div class="statement-scroll">
-      <table>
-        <thead>
-          <tr><th style="text-align:left">Insider</th><th style="text-align:left">Title</th><th>Date</th><th>Type</th><th>Shares</th><th>Price</th><th>Owned After</th><th>Plan</th></tr>
-        </thead>
-        <tbody>
-          {insiderTransactions.map((t) => (
-            <tr>
-              <td style="text-align:left">{t.reporting_owner_name}</td>
-              <td style="text-align:left">{t.officer_title ?? (t.is_director ? "Director" : t.is_ten_percent_owner ? "10%+ Owner" : "—")}</td>
-              <td>{t.transaction_date}</td>
-              <td>{t.acquired_disposed_code === "A" ? "Buy" : t.acquired_disposed_code === "D" ? "Sell" : t.transaction_code}</td>
-              <td>{fmtShares(t.shares)}</td>
-              <td>{t.price_per_share ? "$" + Number(t.price_per_share).toFixed(2) : "—"}</td>
-              <td>{fmtShares(t.shares_owned_following)}</td>
-              <td title={t.is_10b5_1_plan === null ? "Filed before the 2023-04-01 Rule 10b5-1(c) disclosure requirement" : t.is_10b5_1_plan ? "Pre-arranged Rule 10b5-1(c) trading plan" : "Discretionary transaction, not a disclosed 10b5-1 plan"}>
-                {t.is_10b5_1_plan === null ? "—" : t.is_10b5_1_plan ? "10b5-1" : "Discretionary"}
-              </td>
-            </tr>
-          ))}
-          {insiderTransactions.length === 0 && <tr><td colspan="8" style="text-align:left"><em>No Form 4 activity on record.</em></td></tr>}
-        </tbody>
-      </table>
+      <p class="note">Every open-market buy/sell/tax-withholding transaction disclosed by officers, directors, and 10%+ owners on Form 4, traced to its own accession number. "Plan" distinguishes a pre-arranged Rule 10b5-1(c) trading plan from a discretionary transaction (SEC disclosure required since 2023-04-01; "—" means the filing predates that requirement, not that no plan exists).</p>
     </div>
-    <p class="note">Every open-market buy/sell/tax-withholding transaction disclosed by officers, directors, and 10%+ owners on Form 4, traced to its own accession number. See doc 19. "Plan" distinguishes a pre-arranged Rule 10b5-1(c) trading plan from a discretionary transaction (SEC disclosure required since 2023-04-01; "—" means the filing predates that requirement, not that no plan exists) — see doc 23 Stage A.</p>
+
+    <div class="card">
+      <h3>Institutional Ownership</h3>
+      <div class="statement-scroll" tabindex="0" role="group" aria-label="Institutional holders, scroll horizontally for all columns">
+        <table>
+          <caption class="sr-only">Institutional holders of {company.company_name} reported on Form 13F.</caption>
+          <thead>
+            <tr><th scope="col" style="text-align:left">Manager</th><th scope="col">Shares</th><th scope="col">Value</th><th scope="col">As of</th></tr>
+          </thead>
+          <tbody>
+            {institutionalHolders.map((h) => (
+              <tr>
+                <td style="text-align:left">{h.filer_name}</td>
+                <td>{fmtShares(h.shares)}</td>
+                <td>{h.value_usd ? "$" + fmtNum(h.value_usd) : "—"}</td>
+                <td>{h.filing_date}</td>
+              </tr>
+            ))}
+            {institutionalHolders.length === 0 && <tr><td colspan="4" style="text-align:left"><em>No Form 13F holdings on record.</em></td></tr>}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">The largest reported holders from SEC's bulk Form 13F institutional-manager data set, matched by CUSIP (not filed by {company.ticker} itself) — a single recent filing window, not a historical trend.</p>
+    </div>
+
+    <div class="card">
+      <h3>Major Shareholders (&gt;5% stakes)</h3>
+      <div class="statement-scroll" tabindex="0" role="group" aria-label="Major shareholders, scroll horizontally for all columns">
+        <table>
+          <caption class="sr-only">Schedule 13D/13G filers for {company.company_name}.</caption>
+          <thead>
+            <tr><th scope="col" style="text-align:left">Filer</th><th scope="col">Schedule</th><th scope="col">Date</th></tr>
+          </thead>
+          <tbody>
+            {beneficialOwnership.map((o) => (
+              <tr>
+                <td style="text-align:left">{o.filer_name}</td>
+                <td>{o.schedule_type}{o.is_amendment ? "/A" : ""}</td>
+                <td>{o.filing_date}</td>
+              </tr>
+            ))}
+            {beneficialOwnership.length === 0 && <tr><td colspan="3" style="text-align:left"><em>No Schedule 13D/13G disclosures on record.</em></td></tr>}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Schedule 13D (activist intent) / 13G (passive) disclosures where {company.ticker} is confirmed as the actual subject company, not the filer. Ownership percentage/share count aren't extracted yet (free-text, not yet parsed); filer identity and filing date are.</p>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>Institutional Ownership</h2>
-    <div class="statement-scroll">
-      <table>
-        <thead>
-          <tr><th style="text-align:left">Manager</th><th>Shares</th><th>Value</th><th>As of</th></tr>
-        </thead>
-        <tbody>
-          {institutionalHolders.map((h) => (
-            <tr>
-              <td style="text-align:left">{h.filer_name}</td>
-              <td>{fmtShares(h.shares)}</td>
-              <td>{h.value_usd ? "$" + fmtNum(h.value_usd) : "—"}</td>
-              <td>{h.filing_date}</td>
-            </tr>
-          ))}
-          {institutionalHolders.length === 0 && <tr><td colspan="4" style="text-align:left"><em>No Form 13F holdings on record.</em></td></tr>}
-        </tbody>
-      </table>
-    </div>
-    <p class="note">The largest reported holders from SEC's bulk Form 13F institutional-manager data set, matched by CUSIP (not filed by {company.ticker} itself) — a single recent filing window, not a historical trend. See doc 19 Stage 4.</p>
-  </section>
-
-  <section class="card">
-    <h2>Major Shareholders (&gt;5% stakes)</h2>
-    <div class="statement-scroll">
-      <table>
-        <thead>
-          <tr><th style="text-align:left">Filer</th><th>Schedule</th><th>Date</th></tr>
-        </thead>
-        <tbody>
-          {beneficialOwnership.map((o) => (
-            <tr>
-              <td style="text-align:left">{o.filer_name}</td>
-              <td>{o.schedule_type}{o.is_amendment ? "/A" : ""}</td>
-              <td>{o.filing_date}</td>
-            </tr>
-          ))}
-          {beneficialOwnership.length === 0 && <tr><td colspan="3" style="text-align:left"><em>No Schedule 13D/13G disclosures on record.</em></td></tr>}
-        </tbody>
-      </table>
-    </div>
-    <p class="note">Schedule 13D (activist intent) / 13G (passive) disclosures where {company.ticker} is confirmed as the actual subject company, not the filer — see doc 19's issuer-vs-filer finding. Ownership percentage/share count aren't extracted yet (free-text, not yet parsed); filer identity and filing date are.</p>
-  </section>
-
-  <section class="card">
+  <section class="page-section" id="filings">
     <h2>Recent Filings</h2>
-    <ul>
-      {filings.map((f) => (
-        <li>
-          {f.form} — {f.filing_date} <span class="note">({f.accession_number})</span>
-          {f.items && <span class="note"> — {f.items.split(",").map((i) => ITEM_LABELS[i.trim()] ?? i.trim()).join("; ")}</span>}
-        </li>
-      ))}
-    </ul>
-    <p class="note">8-K entries show SEC's own structured event classification where available — see doc 21/24.</p>
+    <div class="card">
+      <ul style="padding-left: 0; list-style: none;">
+        {filings.map((f) => (
+          <li style="margin-bottom: var(--space-3);">
+            <strong>{f.form}</strong> — {f.filing_date} <span class="note" style="display:inline; margin:0;">({f.accession_number})</span>
+            {f.items && <span class="note" style="display:inline; margin:0;"> — {f.items.split(",").map((i) => ITEM_LABELS[i.trim()] ?? i.trim()).join("; ")}</span>}
+          </li>
+        ))}
+      </ul>
+      <p class="note">8-K entries show SEC's own structured event classification where available.</p>
+    </div>
   </section>
 </body>
 </html>
