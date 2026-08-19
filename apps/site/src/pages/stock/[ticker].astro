@@ -13,9 +13,9 @@
 //   despite being computed since Mapper Stage 3d. Fixed here: all 45
 //   metrics now render, split into a curated 8-item "Key metrics" set
 //   (framework Sec 12.2's own recommended list, using this project's real
-//   metric names) plus 7 named categories (framework Sec 10.2's investor-
-//   language grouping) under progressive disclosure -- <details>, no
-//   client JS needed for an Astro-server-rendered page.
+//   metric names) plus 7 named, always-visible categories (framework Sec
+//   10.2's investor-language grouping) -- all shown at once by explicit
+//   request, not collapsed behind a click.
 // - Null states now carry an aria-label, not just a hover `title` --
 //   framework Sec 17.2: "a dash must not be the only accessible label for
 //   a missing value." See components/MetricGrid.astro.
@@ -344,29 +344,13 @@ const sections = [
     .note { font-size: 13px; color: var(--text-secondary); margin: var(--space-3) 0 0; line-height: 1.5; }
     .note strong { color: var(--text-primary); }
 
-    /* Category disclosure (framework Sec 5.3 progressive disclosure /
-       Sec 12.2's category-grouping fix) -- native <details>, zero JS. */
-    .category { border: 1px solid var(--border-default); border-radius: var(--radius-lg); background: var(--surface-primary); margin-bottom: var(--space-3); }
-    .category summary {
-      cursor: pointer;
-      list-style: none;
-      padding: var(--space-4) var(--space-5);
-      font-size: 15px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .category summary::-webkit-details-marker { display: none; }
-    .category summary::after {
-      content: "+";
-      color: var(--text-muted);
-      font-weight: 400;
-      font-size: 18px;
-    }
-    .category[open] summary::after { content: "–"; }
-    .category summary:hover { background: var(--surface-subtle); }
-    .category .category-body { padding: 0 var(--space-5) var(--space-5); }
+    /* Category groups (framework Sec 12.2's category-grouping fix) --
+       always visible; the metric TABLE itself is the progressive-
+       disclosure layer (Scan/Inspect via visible value + hover/focus
+       detail), not whether the category is shown at all. */
+    .category { border: 1px solid var(--border-default); border-radius: var(--radius-lg); background: var(--surface-primary); margin-bottom: var(--space-3); padding: var(--space-4) var(--space-5) var(--space-5); }
+    .category-title { font-size: 15px; font-weight: 600; margin: 0 0 var(--space-4); }
+    .category .category-body { padding: 0; }
 
     table { border-collapse: collapse; width: 100%; font-size: 13px; }
     caption { text-align: left; font-size: 12px; color: var(--text-muted); padding-bottom: var(--space-2); }
@@ -453,14 +437,14 @@ const sections = [
 
   <section class="page-section" id="metrics">
     <h2>All Metrics</h2>
-    <p class="note" style="margin-top:0; margin-bottom: var(--space-4)">Every metric Scrooner computes for {company.ticker}, grouped by category. Collapsed by default — expand a category to inspect it.</p>
+    <p class="note" style="margin-top:0; margin-bottom: var(--space-4)">Every metric Scrooner computes for {company.ticker}, grouped by category.</p>
     {categories.map((category) => (
-      <details class="category" id={category.id}>
-        <summary>{category.title} <span class="sr-only">— {category.items.length} metrics, click to expand</span></summary>
+      <div class="category" id={category.id}>
+        <h3 class="category-title">{category.title}</h3>
         <div class="category-body">
           <MetricGrid items={category.items} dense />
         </div>
-      </details>
+      </div>
     ))}
   </section>
 
