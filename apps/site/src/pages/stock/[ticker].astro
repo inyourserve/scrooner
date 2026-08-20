@@ -384,12 +384,22 @@ const sections = [
     tbody tr:last-child td { border-bottom: none; }
     tbody tr:hover { background: var(--surface-canvas); }
     td.dash { color: var(--text-muted); }
+    td.hl { font-weight: 650; background: var(--surface-canvas); }
+    th.hl { background: var(--surface-subtle); }
 
-    .pros-cons { display: flex; gap: var(--space-6); flex-wrap: wrap; }
-    .pros, .cons { flex: 1; min-width: 260px; }
-    .pros h3 { color: var(--positive-700); } .cons h3 { color: var(--negative-700); }
-    ul { padding-left: 18px; margin: var(--space-2) 0; }
-    li { margin-bottom: var(--space-1); line-height: 1.55; }
+    /* Checklist rows -- design guideline's own check-item pattern, not a
+       two-column bullet list. Risk uses warning amber, not negative red:
+       a triggered checklist rule is a flagged consideration, not an
+       error -- same distinction the guideline's badge system already
+       draws between "negative" (a failure state) and "warning"
+       (something to note). */
+    .check-list { display: flex; flex-direction: column; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+    .check-item { display: flex; gap: 12px; padding: 14px 16px; background: var(--surface-primary); font-size: 13.5px; line-height: 1.55; border-left: 3px solid var(--positive-700); border-bottom: 1px solid var(--border-default); }
+    .check-item:last-child { border-bottom: none; }
+    .check-item.risk { border-left-color: var(--warning-700); }
+    .check-item .ci-mark { font-family: var(--mono); font-weight: 700; flex: none; width: 14px; }
+    .check-item.strength .ci-mark { color: var(--positive-700); }
+    .check-item.risk .ci-mark { color: var(--warning-700); }
 
     .statement-scroll { overflow-x: auto; }
     .statement-scroll:focus-visible { box-shadow: 0 0 0 3px rgb(29 78 137 / 25%); }
@@ -417,7 +427,7 @@ const sections = [
       {latestPrice ? (
         <>
           <span class="price-value" title={`${latestPrice.feed} feed, bar time ${latestPrice.bar_timestamp} -- see doc 25`}>${Number(latestPrice.price).toFixed(2)}</span>
-          <span class="price-freshness">Delayed · {latestPrice.feed}</span>
+          <span class="price-freshness">Delayed · {new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date(latestPrice.bar_timestamp))} ET</span>
         </>
       ) : (
         <span class="price-value blocked" aria-label="Current price not available. No real price on record for this company." title="No real price on record for this company (Alpaca coverage gap) -- see doc 25">— No price on record</span>
@@ -442,22 +452,18 @@ const sections = [
     <h2>Strengths &amp; Risks</h2>
     <div class="card">
       <p class="note" style="margin-top:0">Generated from a fixed, published checklist against verified metrics — not an AI opinion.</p>
-      <div class="pros-cons">
-        <div class="pros">
-          <h3>Strengths</h3>
-          <ul>
-            {checklist.filter((c) => c.kind === "pro").map((c) => <li>{c.text}</li>)}
-            {checklist.filter((c) => c.kind === "pro").length === 0 && <li><em>No current checklist rule was triggered.</em></li>}
-          </ul>
+      {checklist.length === 0 ? (
+        <p class="note">No current checklist rule was triggered.</p>
+      ) : (
+        <div class="check-list">
+          {checklist.map((c) => (
+            <div class={`check-item ${c.kind === "pro" ? "strength" : "risk"}`}>
+              <span class="ci-mark">{c.kind === "pro" ? "+" : "!"}</span>
+              <span class="ci-body">{c.text}</span>
+            </div>
+          ))}
         </div>
-        <div class="cons">
-          <h3>Risks</h3>
-          <ul>
-            {checklist.filter((c) => c.kind === "con").map((c) => <li>{c.text}</li>)}
-            {checklist.filter((c) => c.kind === "con").length === 0 && <li><em>No current checklist rule was triggered.</em></li>}
-          </ul>
-        </div>
-      </div>
+      )}
     </div>
   </section>
 
@@ -490,14 +496,14 @@ const sections = [
             <thead>
               <tr>
                 <th scope="col"><span class="sr-only">Line item</span></th>
-                {data.periods.slice(-8).map((p) => <th scope="col">{p.fiscal_period} {p.fiscal_year}</th>)}
+                {data.periods.slice(-8).map((p, i, arr) => <th scope="col" class={i === arr.length - 1 ? "hl" : undefined}>{p.fiscal_period} {p.fiscal_year}</th>)}
               </tr>
             </thead>
             <tbody>
               {data.lines.map((line) => (
                 <tr>
                   <th scope="row" style="text-align:left; font-weight: 450;">{line.label}</th>
-                  {line.values.slice(-8).map((v) => <td>{fmtNum(v)}</td>)}
+                  {line.values.slice(-8).map((v, i, arr) => <td class={i === arr.length - 1 ? "hl" : undefined}>{fmtNum(v)}</td>)}
                 </tr>
               ))}
             </tbody>
