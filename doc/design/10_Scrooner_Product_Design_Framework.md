@@ -249,8 +249,8 @@ Scrooner.
 
 ### 4.3 Source references
 
-- [`The UI/UX Playbook`](805328183-The-UI-UX-Playbook-Tips-Tricks-for-Exceptional-Design.pdf) (uxpeak, 144 pages): visual hierarchy, proximity, clarity, alignment, contrast, simplicity, whitespace, layout, consistency, depth, color, typography, interaction cost, and state guidance. Confirmed by direct page sampling for this revision, not assumed from the filename.
-- [`How to Design Better UI Components 3.0`](How+to+design+better+UI+Components+3.0+-+full+ebook.pdf) (Adrian Kuleszo/@uiadrian, 197 pages): Figma grid/spacing setup, colors, terminology, buttons, forms, pricing, dropdowns, navigation, search, modals, hero sections, cards, and style guides — confirmed against the book's actual table of contents.
+- `805328183-The-UI-UX-Playbook-Tips-Tricks-for-Exceptional-Design.pdf` (local-only source; uxpeak, 144 pages): visual hierarchy, proximity, clarity, alignment, contrast, simplicity, whitespace, layout, consistency, depth, color, typography, interaction cost, and state guidance. Confirmed by direct page sampling for this revision, not assumed from the filename.
+- `How+to+design+better+UI+Components+3.0+-+full+ebook.pdf` (local-only source; Adrian Kuleszo/@uiadrian, 197 pages): Figma grid/spacing setup, colors, terminology, buttons, forms, pricing, dropdowns, navigation, search, modals, hero sections, cards, and style guides — confirmed against the book's actual table of contents.
 
 **Neither book has a dedicated chapter on dense data or financial
 tables** — the closest topic in either is "UI Cards." Scrooner's primary

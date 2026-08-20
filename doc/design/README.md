@@ -11,8 +11,8 @@ live in this folder.
 
 ## Source material
 
-- [`The UI/UX Playbook`](805328183-The-UI-UX-Playbook-Tips-Tricks-for-Exceptional-Design.pdf) — supplied reference for hierarchy, clarity, layout, typography, interaction cost, and interface states.
-- [`How to Design Better UI Components 3.0`](How+to+design+better+UI+Components+3.0+-+full+ebook.pdf) — supplied reference for responsive foundations, components, accessibility, and design-system practices.
+- `805328183-The-UI-UX-Playbook-Tips-Tricks-for-Exceptional-Design.pdf` (local-only, intentionally not tracked in Git) — supplied reference for hierarchy, clarity, layout, typography, interaction cost, and interface states.
+- `How+to+design+better+UI+Components+3.0+-+full+ebook.pdf` (local-only, intentionally not tracked in Git) — supplied reference for responsive foundations, components, accessibility, and design-system practices.
 
 These documents guide UI execution. Canonical product scope and locked
 decisions remain in [`../foundational/`](../foundational/).
