@@ -320,3 +320,46 @@ export async function getTopInstitutionalHolders(companyId: number, limit = 15):
     limit ${limit}
   `;
 }
+
+export interface ExampleScreenRow {
+  ticker: string;
+  company_name: string;
+  roic: string;
+  revenue_growth_3y_cagr: string | null;
+}
+
+// Homepage specimen figure (design framework Sec 8.1: "a real, small
+// result-table preview"). Real golden-10 data, never fabricated company
+// names/values -- same "most recent, TTM-preferred" resolution rule as
+// getLatestMetrics, restricted to companies with an active listing so a
+// visitor who clicks through always lands on a real page. This is
+// illustrative of what a screen looks like, not a recommendation --
+// see doc 05's "research, not recommendation" voice rule.
+export async function getExampleScreenResults(minRoic = 0.15, limit = 4): Promise<ExampleScreenRow[]> {
+  return sql<ExampleScreenRow[]>`
+    with ranked as (
+      select c.id as company_id, mv.value,
+             row_number() over (
+               partition by mv.company_id
+               order by (mv.period_label = 'TTM') desc, mv.period_end desc
+             ) as rn
+      from analytics.metric_value mv
+      join analytics.metric_definition md on md.id = mv.metric_definition_id
+      join core.company c on c.id = mv.company_id
+      where md.metric_name = 'roic' and c.status = 'active'
+    )
+    select l.ticker, c.company_name, r.value::text as roic,
+           (
+             select mv2.value::text from analytics.metric_value mv2
+             join analytics.metric_definition md2 on md2.id = mv2.metric_definition_id
+             where mv2.company_id = c.id and md2.metric_name = 'revenue_growth_3y_cagr' and mv2.period_label = 'FY'
+             order by mv2.period_end desc limit 1
+           ) as revenue_growth_3y_cagr
+    from ranked r
+    join core.company c on c.id = r.company_id
+    join core.listing l on l.company_id = c.id and l.effective_to is null
+    where r.rn = 1 and r.value is not null and r.value > ${minRoic}
+    order by r.value desc
+    limit ${limit}
+  `;
+}

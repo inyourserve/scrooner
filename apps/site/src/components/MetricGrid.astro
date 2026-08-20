@@ -80,28 +80,42 @@ function formatValue(item: MetricItem): string {
 </div>
 
 <style>
+  /* "Metric ledger" pattern -- design guideline Sec 11: a grid of
+     hairline-divided cells, not a shelf of shadowed widgets. The 1px
+     gap-as-border-color trick (background on the grid, cells opaque)
+     draws the dividing hairlines without doubling borders at shared
+     edges. Value leads in mono; label recedes in small caps. */
   .metric-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-    gap: var(--space-5, 24px) var(--space-4, 16px);
+    gap: 1px;
+    background: var(--border-default, #e7e2d6);
+    border: 1px solid var(--border-strong, #c9c2ac);
   }
   .metric-grid-dense {
     grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
-    gap: var(--space-4, 16px) var(--space-3, 12px);
   }
   .metric-cell {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     min-width: 0;
+    background: var(--surface-primary, #fff);
+    padding: 16px 18px;
+  }
+  .metric-grid-dense .metric-cell {
+    padding: 13px 16px;
   }
   .metric-label {
-    font-size: 12px;
-    font-weight: 550;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--text-secondary);
     line-height: 1.35;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
   .metric-value {
+    font-family: var(--mono, ui-monospace, monospace);
     font-size: 20px;
     font-weight: 600;
     color: var(--text-primary);
@@ -114,11 +128,13 @@ function formatValue(item: MetricItem): string {
   .metric-value.metric-blocked {
     color: var(--text-muted);
     font-weight: 400;
-    font-size: 15px;
+    font-size: 14px;
+    font-family: var(--sans, sans-serif);
     cursor: help;
   }
   .metric-period {
-    font-size: 11px;
+    font-family: var(--mono, ui-monospace, monospace);
+    font-size: 10.5px;
     color: var(--text-muted);
   }
 </style>

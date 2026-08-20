@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scrooner — Screen US companies in plain English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,340;0,440;0,540;0,600;1,440&family=Inter:wght@400;450;500;550;600;650&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FAF8F3;
+    --paper:#FFFFFF;
+    --ink:#17140F;
+    --ink-2:#5B5648;
+    --ink-3:#726C5B;
+    --hairline:#E7E2D6;
+    --hairline-strong:#C9C2AC;
+    --brand:#1B4332;
+    --brand-hover:#123024;
+    --brand-tint:#E8EFE9;
+    --link:#1D4E89;
+    --link-tint:#E7EEF5;
+    --positive:#1B6B44;
+    --positive-tint:#E7F1EA;
+    --negative:#9F3327;
+    --negative-tint:#F7E9E6;
+    --warning:#92600C;
+    --warning-tint:#F6EEDD;
+    --radius-sm:6px;
+    --radius-md:8px;
+    --radius-lg:14px;
+    --shadow-hair:0 1px 2px rgba(23,20,15,.05);
+    --shadow-pop:0 10px 28px rgba(23,20,15,.14), 0 2px 8px rgba(23,20,15,.06);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--sans);background:var(--canvas);color:var(--ink);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  a{color:var(--link);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  button{font-family:var(--sans);}
+  .page{display:none;}
+  .page.active{display:block;}
+  .wrap{max-width:1220px;margin:0 auto;padding:0 32px;}
+  .col{max-width:640px;}
+  @media (max-width:768px){.wrap{padding:0 18px;}}
+
+  /* ===== Header ===== */
+  header.gh{position:sticky;top:0;z-index:40;background:var(--canvas);border-bottom:1px solid var(--hairline-strong);transition:box-shadow .2s ease;}
+  header.gh.scrolled{box-shadow:var(--shadow-hair);background:rgba(250,248,243,.96);backdrop-filter:blur(6px);}
+  header.gh .bar{display:flex;align-items:center;gap:30px;height:60px;}
+  .wordmark{display:flex;align-items:baseline;gap:2px;font-family:var(--serif);font-weight:540;font-size:18px;cursor:pointer;flex:none;color:var(--ink);}
+  .wordmark b{color:var(--brand);font-family:var(--mono);font-weight:500;}
+  .gnav{display:flex;align-items:center;gap:24px;flex:1;}
+  .gnav a{font-size:13.5px;font-weight:550;color:var(--ink-2);}
+  .gnav a.active{color:var(--brand);}
+  .gnav a.sec{color:var(--ink-3);}
+  .gsearch{flex:1;max-width:320px;}
+  .gsearch input{width:100%;padding:8px 12px;font-size:13px;font-family:var(--sans);border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);background:var(--paper);color:var(--ink);}
+  .gsearch input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-tint);}
+  .gright{display:flex;align-items:center;gap:16px;flex:none;}
+  .gright a{font-size:13.5px;font-weight:550;color:var(--ink-2);}
+  .btn{appearance:none;border:1px solid transparent;cursor:pointer;font-size:13.5px;font-weight:600;border-radius:var(--radius-sm);padding:10px 16px;display:inline-flex;align-items:center;gap:7px;transition:background .12s ease,border-color .12s ease;}
+  .btn-primary{background:var(--brand);color:#fff;}
+  .btn-primary:hover{background:var(--brand-hover);}
+  .btn-secondary{background:var(--paper);color:var(--ink);border-color:var(--hairline-strong);}
+  .btn-secondary:hover{border-color:var(--ink-2);}
+  .btn-tertiary{background:transparent;color:var(--link);padding:8px 2px;border:none;}
+  .btn-sm{padding:7px 12px;font-size:12.5px;}
+  .btn:focus-visible{outline:2px solid var(--link);outline-offset:2px;}
+
+  @media (max-width:900px){ .gsearch{display:none;} .gnav a.sec{display:none;} }
+
+  /* ================= HOMEPAGE ================= */
+  .hp-hero{padding:64px 0 8px;}
+  .hp-hero .kicker{font-family:var(--mono);font-size:11.5px;color:var(--brand);text-transform:uppercase;letter-spacing:.08em;margin:0 0 18px;}
+  .hp-hero h1{font-family:var(--serif);font-weight:540;font-size:52px;line-height:1.08;letter-spacing:-0.015em;margin:0 0 20px;max-width:760px;}
+  .hp-hero p.lead{font-size:17px;line-height:27px;color:var(--ink-2);max-width:560px;margin:0 0 34px;}
+
+  .query-console{border:1.5px solid var(--ink);border-radius:var(--radius-md);background:var(--paper);max-width:720px;}
+  .query-console .qc-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--hairline);}
+  .query-console .qc-bar span{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;}
+  .query-console textarea{width:100%;border:none;resize:none;font-family:var(--sans);font-size:15px;color:var(--ink);outline:none;min-height:80px;line-height:1.55;display:block;padding:16px;background:transparent;}
+  .query-console .qc-actions{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--hairline);}
+
+  .trust-line{margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);max-width:560px;text-transform:uppercase;letter-spacing:.03em;}
+  .examples{display:flex;gap:0;flex-wrap:wrap;margin-top:26px;align-items:center;}
+  .example-link{font-size:13px;font-weight:550;color:var(--ink);padding:6px 14px 6px 0;border-right:1px solid var(--hairline-strong);margin-right:14px;cursor:pointer;}
+  .example-link:last-child{border-right:none;}
+  .example-link:hover{color:var(--brand);text-decoration:underline;}
+  .example-link .arr{color:var(--brand);margin-right:6px;font-family:var(--mono);}
+
+  /* Figure specimen panel */
+  .specimen{margin-top:64px;border:1px solid var(--hairline-strong);border-radius:var(--radius-md);background:var(--paper);overflow:hidden;}
+  .specimen .sp-head{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--hairline);background:var(--canvas);}
+  .specimen .sp-head span.lbl{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);}
+  .specimen .sp-head span.status{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--positive);display:inline-flex;align-items:center;gap:6px;}
+  .specimen .sp-head span.status::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--positive);}
+  .specimen .sp-body{padding:22px 24px;display:grid;grid-template-columns:1fr 1.3fr;gap:32px;}
+  .sp-criteria .crit-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--hairline);font-size:13px;}
+  .sp-criteria .crit-row .k{color:var(--ink-2);}
+  .sp-criteria .crit-row .v{font-family:var(--mono);font-weight:600;}
+  .sp-results table{width:100%;border-collapse:collapse;font-size:13px;}
+  .sp-results th{text-align:left;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-3);padding:0 0 8px;font-weight:500;}
+  .sp-results th.num,.sp-results td.num{text-align:right;}
+  .sp-results td{padding:8px 0;border-top:1px solid var(--hairline);}
+  .sp-results td.num{font-family:var(--mono);font-weight:600;color:var(--brand);}
+  figcaption.sp-caption{font-family:var(--mono);font-size:11px;color:var(--ink-3);padding:14px 24px 18px;border-top:1px solid var(--hairline);text-transform:uppercase;letter-spacing:.02em;}
+  @media (max-width:768px){ .specimen .sp-body{grid-template-columns:1fr;} .hp-hero h1{font-size:36px;} }
+
+  .hiw{display:flex;gap:0;margin:88px 0;border-top:1px solid var(--hairline-strong);}
+  .hiw .step{flex:1;padding:28px 28px 0 0;border-right:1px solid var(--hairline);}
+  .hiw .step:last-child{border-right:none;padding-right:0;}
+  .hiw .step .n{font-family:var(--mono);font-size:26px;color:var(--hairline-strong);font-weight:600;display:block;margin-bottom:10px;}
+  .hiw .step h4{margin:0 0 8px;font-size:16.5px;font-weight:650;}
+  .hiw .step p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.6;}
+  @media (max-width:900px){ .hiw{flex-direction:column;} .hiw .step{border-right:none;border-bottom:1px solid var(--hairline);padding:24px 0;} .hiw .step:last-child{border-bottom:none;} }
+
+  .preview-card{border:1px solid var(--hairline-strong);border-radius:var(--radius-md);background:#fff;overflow:hidden;margin-bottom:72px;}
+  .preview-card .pc-head{padding:16px 22px;border-bottom:1px solid var(--hairline);display:flex;justify-content:space-between;align-items:center;}
+  .preview-card .pc-head h3{margin:0;font-family:var(--serif);font-weight:540;font-size:17px;}
+  .preview-card .pc-head span{font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+
+  .methodology-cta{display:flex;align-items:center;justify-content:space-between;padding:24px 0;border-top:1px solid var(--hairline-strong);margin-bottom:72px;font-size:13.5px;color:var(--ink-2);}
+
+  /* ================= SCREENER ================= */
+  .sc-toolbar{display:flex;align-items:center;justify-content:space-between;padding:32px 0 18px;}
+  .sc-toolbar h2{margin:0;font-family:var(--serif);font-weight:540;font-size:24px;}
+  .mode-tabs{display:inline-flex;border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);overflow:hidden;}
+  .mode-tabs button{border:none;background:#fff;padding:8px 15px;font-size:12.5px;font-weight:600;color:var(--ink-2);cursor:pointer;font-family:var(--sans);}
+  .mode-tabs button.active{background:var(--brand);color:#fff;}
+
+  .builder{background:#fff;border:1px solid var(--hairline-strong);border-radius:var(--radius-md);padding:22px;margin-bottom:24px;}
+  .builder textarea{width:100%;min-height:52px;border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);padding:13px 15px;font-family:var(--sans);font-size:14.5px;color:var(--ink);resize:none;}
+  .builder .b-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:12px;}
+
+  .interp{margin-top:20px;padding-top:18px;border-top:1px solid var(--hairline);}
+  .interp .interp-head{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-2);margin-bottom:12px;}
+  .interp .interp-head .dot{width:7px;height:7px;border-radius:50%;background:var(--positive);}
+  table.criteria{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.criteria th{text-align:left;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-3);font-weight:500;padding:7px 10px;border-bottom:1px solid var(--hairline-strong);}
+  table.criteria td{padding:10px;border-bottom:1px solid var(--hairline);}
+  table.criteria td.op{color:var(--ink-2);}
+  table.criteria td.val{font-family:var(--mono);font-weight:600;}
+  .view-json{margin-top:12px;font-size:12.5px;}
+  .view-json summary{cursor:pointer;color:var(--link);font-weight:550;}
+  .view-json pre{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--radius-sm);padding:14px;font-size:11.5px;font-family:var(--mono);overflow:auto;margin-top:8px;}
+
+  .results-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 0;}
+  .results-head .rh-left{font-size:14px;}
+  .results-head .rh-left b{font-family:var(--mono);font-size:15px;}
+  .coverage-note{font-size:12.5px;color:var(--ink-2);margin-top:3px;}
+  .coverage-note a{font-weight:550;}
+  .rh-actions{display:flex;gap:10px;align-items:center;}
+
+  .results-table-wrap{background:#fff;border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);overflow:auto;margin-bottom:64px;}
+  table.results{width:100%;border-collapse:collapse;font-size:13.5px;min-width:760px;}
+  table.results thead th{position:sticky;top:0;background:var(--canvas);text-align:left;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-2);font-weight:500;padding:11px 15px;border-bottom:1px solid var(--hairline-strong);white-space:nowrap;}
+  table.results thead th.num{text-align:right;}
+  table.results td{padding:13px 15px;border-bottom:1px solid var(--hairline);white-space:nowrap;}
+  table.results tbody tr:last-child td{border-bottom:none;}
+  table.results td.num{text-align:right;font-family:var(--mono);font-weight:500;}
+  table.results tbody tr{cursor:pointer;}
+  table.results tbody tr:hover{background:var(--canvas);}
+  table.results td.company{position:sticky;left:0;background:inherit;}
+  table.results thead th:first-child{position:sticky;left:0;z-index:2;}
+  .co-name{font-weight:600;}
+  .co-ticker{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:6px;}
+  .why-link{font-size:12.5px;font-weight:600;}
+
+  /* ================= COMPANY PAGE ================= */
+  .back-link{display:inline-block;margin:22px 0 16px;font-size:13px;font-weight:600;}
+  .match-banner{display:flex;align-items:center;gap:10px;background:var(--positive-tint);border:1px solid #C9E2D2;border-left:3px solid var(--positive);color:#154A2F;padding:12px 18px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:550;margin-bottom:24px;}
+  .co-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--hairline-strong);}
+  .co-header h1{margin:0 0 6px;font-family:var(--serif);font-weight:540;font-size:32px;letter-spacing:-0.01em;}
+  .co-header .sub{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);}
+  .co-header .badge-active{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--positive);margin-top:8px;}
+  .co-header .badge-active::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--positive);}
+  .price-block{text-align:right;}
+  .price-block .price{font-family:var(--mono);font-size:26px;font-weight:600;}
+  .price-block .asof{font-family:var(--mono);font-size:11px;color:var(--warning);font-weight:500;margin-top:5px;text-transform:uppercase;letter-spacing:.02em;}
+
+  .sec-nav{display:flex;gap:24px;padding:14px 0;border-bottom:1px solid var(--hairline-strong);position:sticky;top:60px;background:var(--canvas);z-index:10;overflow-x:auto;}
+  .sec-nav a{font-size:13px;font-weight:600;color:var(--ink-2);white-space:nowrap;}
+  .sec-nav a:hover{color:var(--brand);}
+
+  .co-section{padding:36px 0;border-bottom:1px solid var(--hairline);}
+  .co-section h2{font-family:var(--serif);font-weight:540;font-size:22px;margin:0 0 6px;}
+  .co-section .section-sub{font-size:12.5px;color:var(--ink-3);margin:0 0 18px;}
+
+  .metric-ledger{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--hairline-strong);background:var(--hairline);gap:1px;}
+  .metric-cell{background:#fff;padding:17px 19px;}
+  .metric-cell .m-label{font-size:11px;color:var(--ink-2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;font-weight:600;}
+  .metric-cell .m-value{font-family:var(--mono);font-size:21px;font-weight:600;}
+  .metric-cell .m-period{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-top:5px;}
+  .show-all{margin-top:16px;}
+
+  .checklist-note{font-size:11.5px;color:var(--ink-3);margin-bottom:16px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.02em;}
+  .check-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);overflow:hidden;}
+  .check-item{display:flex;gap:12px;padding:14px 16px;background:#fff;font-size:13.5px;border-left:3px solid var(--positive);border-bottom:1px solid var(--hairline);}
+  .check-item:last-child{border-bottom:none;}
+  .check-item.risk{border-left-color:var(--warning);}
+  .check-item .ci-mark{font-family:var(--mono);font-weight:700;flex:none;width:16px;}
+  .check-item.strength .ci-mark{color:var(--positive);}
+  .check-item.risk .ci-mark{color:var(--warning);}
+  .check-item .ci-body b{display:block;margin-bottom:3px;font-weight:600;}
+  .check-item .ci-body span{color:var(--ink-2);font-size:12.5px;font-family:var(--mono);}
+
+  .stmt-tabs{display:flex;gap:0;border-bottom:1px solid var(--hairline-strong);margin-bottom:0;overflow-x:auto;}
+  .stmt-tabs button{border:none;background:transparent;padding:10px 2px;margin-right:24px;font-size:13.5px;font-weight:600;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;font-family:var(--sans);}
+  .stmt-tabs button.active{color:var(--ink);border-color:var(--brand);}
+  .stmt-controls{display:flex;justify-content:flex-end;gap:10px;padding:12px 0;font-size:12px;color:var(--ink-2);}
+  .stmt-controls select{font-family:var(--mono);font-size:11.5px;border:1px solid var(--hairline-strong);border-radius:4px;padding:5px 8px;}
+  .stmt-table-wrap{background:#fff;border:1px solid var(--hairline-strong);overflow:auto;}
+  table.stmt{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px;}
+  table.stmt th{position:sticky;top:0;background:var(--canvas);text-align:right;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink-2);padding:11px 15px;border-bottom:1px solid var(--hairline-strong);white-space:nowrap;}
+  table.stmt th:first-child{text-align:left;position:sticky;left:0;z-index:3;font-family:var(--sans);font-weight:650;}
+  table.stmt td{padding:11px 15px;border-bottom:1px solid var(--hairline);text-align:right;font-family:var(--mono);white-space:nowrap;}
+  table.stmt tbody tr:last-child td{border-bottom:none;}
+  table.stmt td:first-child{text-align:left;font-weight:500;position:sticky;left:0;background:#fff;font-family:var(--sans);}
+  table.stmt td.hl{font-weight:650;background:var(--canvas);}
+  table.stmt th.hl{background:#EFEAE0;}
+  table.stmt td.dash{color:var(--ink-3);}
+
+  .owner-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;}
+  .owner-card{background:#fff;border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);padding:18px;}
+  .owner-card h4{margin:0 0 4px;font-size:13.5px;font-weight:650;}
+  .owner-card .note{font-size:11.5px;color:var(--ink-3);margin-bottom:12px;}
+  table.owner{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.owner th{text-align:left;font-family:var(--mono);font-weight:500;color:var(--ink-3);padding:6px 8px;border-bottom:1px solid var(--hairline-strong);font-size:10px;text-transform:uppercase;}
+  table.owner td{padding:8px 8px;border-bottom:1px solid var(--hairline);}
+  table.owner tr:last-child td{border-bottom:none;}
+  .holder-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--hairline);font-size:13px;}
+  .holder-row:last-child{border-bottom:none;}
+  .holder-row .pct{font-family:var(--mono);font-weight:600;}
+
+  .filing-list{background:#fff;border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);padding:2px 18px;}
+  .filing-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--hairline);gap:12px;}
+  .filing-row:last-child{border-bottom:none;}
+  .filing-row .fr-label{font-size:13.5px;font-weight:600;}
+  .filing-row .fr-meta{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:3px;}
+  .filing-row .fr-form{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-tint);padding:3px 9px;border-radius:3px;}
+
+  .method-box{background:#fff;border:1px solid var(--hairline-strong);border-left:3px solid var(--ink-3);padding:20px 22px;font-size:13px;color:var(--ink-2);line-height:1.7;}
+
+  @media (max-width:900px){
+    .metric-ledger{grid-template-columns:repeat(2,1fr);}
+    .owner-grid{grid-template-columns:1fr;}
+    .co-header{flex-direction:column;}
+    .price-block{text-align:left;}
+  }
+
+  footer.site-footer{padding:44px 0 68px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);border-top:1px solid var(--hairline-strong);margin-top:20px;text-transform:uppercase;letter-spacing:.02em;}
+</style>
+</head>
+<body>
+
+<header class="gh" id="gh">
+  <div class="wrap bar">
+    <div class="wordmark" onclick="showPage('home')"><b>[</b>&nbsp;Scrooner&nbsp;<b>]</b></div>
+    <nav class="gnav">
+      <a href="#" data-nav="screener" onclick="showPage('screener');return false;">Screener</a>
+      <a href="#" data-nav="companies" onclick="showPage('screener');return false;">Companies</a>
+      <a href="#" class="sec" onclick="return false;">Methodology</a>
+      <a href="#" class="sec" onclick="return false;">Pricing</a>
+    </nav>
+    <div class="gsearch"><input type="text" placeholder="Search company or ticker" aria-label="Search company or ticker"></div>
+    <div class="gright">
+      <a href="#" onclick="return false;">Saved screens</a>
+      <button class="btn btn-secondary btn-sm">Sign in</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HOMEPAGE ============ -->
+<div class="page active" id="page-home">
+  <div class="wrap">
+    <div class="hp-hero">
+      <p class="kicker">Fundamental screener · United States</p>
+      <h1>Screen US companies<br>in plain English.</h1>
+      <p class="lead">Build advanced fundamental screens without learning a query language. Every result is deterministic and traceable to company filings.</p>
+
+      <div class="query-console">
+        <div class="qc-bar"><span>Plain-English query</span><span>Cmd + Enter to interpret</span></div>
+        <textarea readonly>Companies below $20B market cap with revenue growing more than 15% for five years, average ROIC above 15%, and positive free cash flow every year.</textarea>
+        <div class="qc-actions">
+          <button class="btn btn-primary" onclick="showPage('screener')">Interpret query</button>
+          <button class="btn btn-secondary" onclick="showPage('screener')">Build with filters</button>
+        </div>
+      </div>
+      <p class="trust-line">SEC filings — Defined formulas — Visible periods — No generated stock opinions</p>
+
+      <div class="examples">
+        <div class="example-link" onclick="showPage('screener')"><span class="arr">→</span>Quality compounders under $20B</div>
+        <div class="example-link" onclick="showPage('screener')"><span class="arr">→</span>Debt-free cash generators</div>
+        <div class="example-link" onclick="showPage('screener')"><span class="arr">→</span>Consistent 5-year revenue growers</div>
+      </div>
+    </div>
+
+    <figure class="specimen">
+      <div class="sp-head"><span class="lbl">Fig. 1 — a screen, interpreted</span><span class="status">Ready</span></div>
+      <div class="sp-body">
+        <div class="sp-criteria">
+          <div class="crit-row"><span class="k">Market cap</span><span class="v">&lt; $20B</span></div>
+          <div class="crit-row"><span class="k">Revenue · 5Y CAGR</span><span class="v">&gt; 15%</span></div>
+          <div class="crit-row"><span class="k">ROIC · TTM</span><span class="v">&gt; 15%</span></div>
+          <div class="crit-row"><span class="k">Free cash flow</span><span class="v">&gt; $0, 5 yrs</span></div>
+        </div>
+        <div class="sp-results">
+          <table>
+            <thead><tr><th>Company</th><th class="num">Mkt cap</th><th class="num">ROIC</th></tr></thead>
+            <tbody>
+              <tr><td>Brightline Analytics <span class="co-ticker">BRTL</span></td><td class="num">$8.4B</td><td class="num">19.8%</td></tr>
+              <tr><td>Cedarwood Robotics <span class="co-ticker">CDWD</span></td><td class="num">$14.1B</td><td class="num">17.4%</td></tr>
+              <tr><td>Solace Biotech <span class="co-ticker">SLCB</span></td><td class="num">$5.7B</td><td class="num">16.1%</td></tr>
+              <tr><td>Fenwick Materials <span class="co-ticker">FNWK</span></td><td class="num">$11.9B</td><td class="num">15.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <figcaption class="sp-caption">6 companies matched · Return on invested capital, descending · Interpreted from the plain-English query above, then run deterministically against SEC-derived data.</figcaption>
+    </figure>
+
+    <div class="hiw">
+      <div class="step"><span class="n">01</span><h4>Ask</h4><p>Type a fundamental thesis in plain English — no proprietary syntax to learn.</p></div>
+      <div class="step"><span class="n">02</span><h4>Check the interpretation</h4><p>Every clause becomes a readable, editable filter before anything executes.</p></div>
+      <div class="step"><span class="n">03</span><h4>Verify the result</h4><p>Inspect the period, formula, and SEC filing behind every matched value.</p></div>
+    </div>
+
+    <div class="methodology-cta">
+      <span>Every figure on this page traces to an SEC filing and a versioned formula.</span>
+      <a href="#" onclick="return false;">Read our methodology →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREENER ============ -->
+<div class="page" id="page-screener">
+  <div class="wrap">
+    <div class="sc-toolbar">
+      <h2>New screen</h2>
+      <div class="mode-tabs">
+        <button class="active">Plain English</button>
+        <button>Structured filters</button>
+      </div>
+    </div>
+
+    <div class="builder">
+      <textarea>Companies below $20B market cap with revenue growing more than 15% for five years, average ROIC above 15%, and positive free cash flow every year.</textarea>
+      <div class="b-actions">
+        <button class="btn btn-secondary btn-sm">Reset</button>
+        <button class="btn btn-primary btn-sm">Interpret query</button>
+      </div>
+
+      <div class="interp">
+        <div class="interp-head"><span class="dot"></span> Ready — matches your query. Correct any row before running.</div>
+        <table class="criteria">
+          <thead><tr><th>Metric</th><th>Operator</th><th>Value</th><th>Period</th></tr></thead>
+          <tbody>
+            <tr><td>Market cap</td><td class="op">less than</td><td class="val">$20B</td><td>Latest</td></tr>
+            <tr><td>Revenue</td><td class="op">5Y CAGR above</td><td class="val">15%</td><td>5 years</td></tr>
+            <tr><td>Return on invested capital</td><td class="op">greater than</td><td class="val">15%</td><td>Latest / TTM</td></tr>
+            <tr><td>Free cash flow</td><td class="op">greater than</td><td class="val">$0</td><td>Each of last 5 FY</td></tr>
+          </tbody>
+        </table>
+        <details class="view-json"><summary>View exact query</summary><pre>{
+  "logic": "AND",
+  "filters": [
+    { "metric": "market_cap", "op": "lt", "value": 20000000000 },
+    { "metric": "revenue_cagr_5y", "op": "gt", "value": 0.15 },
+    { "metric": "roic_ttm", "op": "gt", "value": 0.15 },
+    { "metric": "free_cash_flow", "op": "gt", "value": 0, "period": "each_of_last_5_fy" }
+  ]
+}</pre></details>
+      </div>
+    </div>
+
+    <div class="results-head">
+      <div class="rh-left">
+        <b>6</b> companies matched · Return on invested capital, descending
+        <div class="coverage-note">2 otherwise eligible companies lacked at least one required metric. <a href="#" onclick="return false;">View coverage details</a></div>
+      </div>
+      <div class="rh-actions">
+        <button class="btn btn-secondary btn-sm">Edit filters</button>
+        <button class="btn btn-secondary btn-sm">Columns</button>
+        <button class="btn btn-primary btn-sm">Save screen</button>
+      </div>
+    </div>
+
+    <div class="results-table-wrap">
+      <table class="results">
+        <thead>
+          <tr>
+            <th>Company</th><th>Industry</th><th class="num">Market cap</th>
+            <th class="num">Revenue 5Y CAGR</th><th class="num sort-active">ROIC</th><th class="num">FCF (TTM)</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="showPage('company')">
+            <td class="company"><span class="co-name">Brightline Analytics</span><span class="co-ticker">BRTL</span></td>
+            <td>Application software</td><td class="num">$8.4B</td><td class="num">18.6%</td><td class="num">19.8%</td><td class="num">$322M</td>
+            <td><a class="why-link" href="#" onclick="event.stopPropagation();return false;">Why matched</a></td>
+          </tr>
+          <tr onclick="showPage('company')">
+            <td class="company"><span class="co-name">Cedarwood Robotics</span><span class="co-ticker">CDWD</span></td>
+            <td>Industrial automation</td><td class="num">$14.1B</td><td class="num">16.2%</td><td class="num">17.4%</td><td class="num">$486M</td>
+            <td><a class="why-link" href="#" onclick="event.stopPropagation();return false;">Why matched</a></td>
+          </tr>
+          <tr onclick="showPage('company')">
+            <td class="company"><span class="co-name">Solace Biotech</span><span class="co-ticker">SLCB</span></td>
+            <td>Life sciences</td><td class="num">$5.7B</td><td class="num">21.0%</td><td class="num">16.1%</td><td class="num">$141M</td>
+            <td><a class="why-link" href="#" onclick="event.stopPropagation();return false;">Why matched</a></td>
+          </tr>
+          <tr onclick="showPage('company')">
+            <td class="company"><span class="co-name">Fenwick Materials</span><span class="co-ticker">FNWK</span></td>
+            <td>Specialty chemicals</td><td class="num">$11.9B</td><td class="num">15.4%</td><td class="num">15.9%</td><td class="num">$267M</td>
+            <td><a class="why-link" href="#" onclick="event.stopPropagation();return false;">Why matched</a></td>
+          </tr>
+          <tr onclick="showPage('company')">
+            <td class="company"><span class="co-name">Harbor Point Software</span><span class="co-ticker">HRBP</span></td>
+            <td>Application software</td><td class="num">$3.2B</td><td class="num">22.8%</td><td class="num">15.7%</td><td class="num">$89M</td>
+            <td><a class="why-link" href="#" onclick="event.stopPropagation();return false;">Why matched</a></td>
+          </tr>
+          <tr onclick="showPage('company')">
+            <td class="company"><span class="co-name">Kestrel Diagnostics</span><span class="co-ticker">KSTR</span></td>
+            <td>Medical devices</td><td class="num">$2.6B</td><td class="num">17.1%</td><td class="num">15.2%</td><td class="num">$54M</td>
+            <td><a class="why-link" href="#" onclick="event.stopPropagation();return false;">Why matched</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COMPANY PAGE ============ -->
+<div class="page" id="page-company">
+  <div class="wrap">
+    <a class="back-link" href="#" onclick="showPage('screener');return false;">← Back to results</a>
+
+    <div class="match-banner">Passed 4 of 4 screen criteria — market cap, revenue growth, ROIC, and free cash flow all matched.</div>
+
+    <div class="co-header">
+      <div>
+        <h1>Brightline Analytics, Inc.</h1>
+        <div class="sub">BRTL · NASDAQ · APPLICATION SOFTWARE</div>
+        <div class="badge-active">Active</div>
+      </div>
+      <div class="price-block">
+        <div class="price">$142.18</div>
+        <div class="asof">Delayed · 15:45 ET</div>
+      </div>
+    </div>
+
+    <nav class="sec-nav">
+      <a href="#m-metrics">Overview</a>
+      <a href="#m-checklist">Strengths &amp; risks</a>
+      <a href="#m-financials">Financials</a>
+      <a href="#m-ownership">Ownership</a>
+      <a href="#m-filings">Filings</a>
+      <a href="#m-method">Methodology</a>
+    </nav>
+
+    <section class="co-section" id="m-metrics">
+      <h2>Key metrics</h2>
+      <p class="section-sub">Curated by decision value. Formula version and source available on every cell.</p>
+      <div class="metric-ledger">
+        <div class="metric-cell"><div class="m-label">Market cap</div><div class="m-value">$8.4B</div><div class="m-period">Latest</div></div>
+        <div class="metric-cell"><div class="m-label">P/E</div><div class="m-value">28.3x</div><div class="m-period">TTM</div></div>
+        <div class="metric-cell"><div class="m-label">Revenue growth</div><div class="m-value">18.6%</div><div class="m-period">5Y CAGR</div></div>
+        <div class="metric-cell"><div class="m-label">Operating margin</div><div class="m-value">22.7%</div><div class="m-period">FY2025</div></div>
+        <div class="metric-cell"><div class="m-label">ROIC</div><div class="m-value">19.8%</div><div class="m-period">TTM</div></div>
+        <div class="metric-cell"><div class="m-label">Free cash flow yield</div><div class="m-value">3.8%</div><div class="m-period">TTM</div></div>
+        <div class="metric-cell"><div class="m-label">Debt / equity</div><div class="m-value">0.32x</div><div class="m-period">FY2025</div></div>
+        <div class="metric-cell"><div class="m-label">Share dilution</div><div class="m-value">−1.1%</div><div class="m-period">YoY</div></div>
+      </div>
+      <div class="show-all"><a href="#" onclick="return false;">Show all 45 metrics →</a></div>
+    </section>
+
+    <section class="co-section" id="m-checklist">
+      <h2>Strengths &amp; risks</h2>
+      <p class="checklist-note">Generated from fixed, published rules — not an AI opinion</p>
+      <div class="check-list">
+        <div class="check-item strength"><span class="ci-mark">+</span><div class="ci-body"><b>ROIC exceeded 15% in each of the last 5 fiscal years</b><span>19.8% TTM · formula v1</span></div></div>
+        <div class="check-item strength"><span class="ci-mark">+</span><div class="ci-body"><b>Free cash flow positive in every year of the last 5 fiscal years</b><span>$322M TTM · formula v1</span></div></div>
+        <div class="check-item strength"><span class="ci-mark">+</span><div class="ci-body"><b>Operating margin above sector median</b><span>22.7% vs 14.9% sector median · FY2025</span></div></div>
+        <div class="check-item risk"><span class="ci-mark">!</span><div class="ci-body"><b>Revenue growth decelerated versus its 5-year average</b><span>18.6% 3Y CAGR vs 21.4% 5Y CAGR</span></div></div>
+      </div>
+    </section>
+
+    <section class="co-section" id="m-financials">
+      <h2>Financial statements</h2>
+      <div class="stmt-tabs">
+        <button class="active">Profit &amp; Loss</button>
+        <button>Balance Sheet</button>
+        <button>Cash Flow</button>
+        <button>Quarterly</button>
+      </div>
+      <div class="stmt-controls">
+        <span>Units</span>
+        <select><option>$ Millions</option><option>$ Thousands</option><option>$ Actual</option></select>
+        <select><option>Annual</option><option>Quarterly</option></select>
+      </div>
+      <div class="stmt-table-wrap">
+        <table class="stmt">
+          <thead>
+            <tr><th>($M)</th><th>FY2021</th><th>FY2022</th><th>FY2023</th><th>FY2024</th><th class="hl">FY2025</th><th class="hl">TTM</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Revenue</td><td>412.0</td><td>489.6</td><td>612.4</td><td>701.8</td><td class="hl">824.1</td><td class="hl">847.6</td></tr>
+            <tr><td>Operating profit</td><td>68.4</td><td>82.1</td><td>111.5</td><td>144.6</td><td class="hl">187.1</td><td class="hl">193.5</td></tr>
+            <tr><td>Operating margin</td><td>16.6%</td><td>16.8%</td><td>18.2%</td><td>20.6%</td><td class="hl">22.7%</td><td class="hl">22.8%</td></tr>
+            <tr><td>Net profit</td><td>41.2</td><td>52.7</td><td>74.3</td><td>96.0</td><td class="hl">118.9</td><td class="hl">122.4</td></tr>
+            <tr><td>EPS (diluted)</td><td>0.71</td><td>0.90</td><td class="dash" title="Restated with FY2024 filing">—</td><td>1.62</td><td class="hl">1.99</td><td class="hl">2.05</td></tr>
+            <tr><td>Free cash flow</td><td>38.6</td><td class="dash" title="Not reported for this period">—</td><td>61.9</td><td>61.4</td><td class="hl">88.2</td><td class="hl">92.1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="co-section" id="m-ownership">
+      <h2>Ownership &amp; insider activity</h2>
+      <p class="section-sub">Form 13F is reported by institutional managers and is not a complete real-time shareholder register.</p>
+      <div class="owner-grid">
+        <div class="owner-card">
+          <h4>Recent insider activity</h4>
+          <div class="note">10b5-1 plan status shown when disclosed; not assumed.</div>
+          <table class="owner">
+            <thead><tr><th>Owner</th><th>Type</th><th>Shares</th><th>Plan</th></tr></thead>
+            <tbody>
+              <tr><td>M. Alvarez, CFO</td><td>Sell</td><td class="mono">12,400</td><td>Pre-arranged 10b5-1</td></tr>
+              <tr><td>J. Okafor, Director</td><td>Buy</td><td class="mono">4,000</td><td>Discretionary</td></tr>
+              <tr><td>R. Chen, CEO</td><td>Sell</td><td class="mono">31,200</td><td>Pre-arranged 10b5-1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="owner-card">
+          <h4>Major holders (13F, last filing window)</h4>
+          <div class="holder-row"><span>Vantage Capital Management</span><span class="pct">8.2%</span></div>
+          <div class="holder-row"><span>Meridian Index Advisors</span><span class="pct">6.7%</span></div>
+          <div class="holder-row"><span>Cobalt Asset Partners</span><span class="pct">4.1%</span></div>
+          <div class="holder-row"><span>Founders &amp; insiders (aggregate)</span><span class="pct">11.4%</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="co-section" id="m-filings">
+      <h2>Events &amp; filings</h2>
+      <div class="filing-list">
+        <div class="filing-row">
+          <div><div class="fr-label">Q3 FY2026 results announced</div><div class="fr-meta">FILED 2026-08-14 · ACCESSION 0001045810-26-000142 · <a href="#" onclick="return false;">SEC EDGAR ↗</a></div></div>
+          <span class="fr-form">10-Q</span>
+        </div>
+        <div class="filing-row">
+          <div><div class="fr-label">Director share sale under 10b5-1 plan</div><div class="fr-meta">FILED 2026-08-05 · <a href="#" onclick="return false;">SEC EDGAR ↗</a></div></div>
+          <span class="fr-form">FORM 4</span>
+        </div>
+        <div class="filing-row">
+          <div><div class="fr-label">Institutional holdings update</div><div class="fr-meta">FILED 2026-07-30 · <a href="#" onclick="return false;">SEC EDGAR ↗</a></div></div>
+          <span class="fr-form">13F-HR</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="co-section" id="m-method" style="border-bottom:none">
+      <h2>Methodology &amp; data status</h2>
+      <div class="method-box">
+        Data sourced from SEC EDGAR filings, normalized and mapped to versioned canonical metrics (formula v1). Prices delayed approximately 15 minutes via a licensed market-data feed. Coverage, restatement handling, and known gaps are documented on the <a href="#" onclick="return false;">methodology page</a>. This page is a research tool, not investment advice.
+      </div>
+    </section>
+  </div>
+  <footer class="site-footer wrap">Scrooner · Research tool, not investment advice · Data from SEC EDGAR · Prices delayed ~15 min</footer>
+</div>
+
+<script>
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.gnav a').forEach(function(a){ a.classList.remove('active'); });
+    if(id === 'screener'){
+      document.querySelector('.gnav a[data-nav="screener"]').classList.add('active');
+    }
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+  var gh = document.getElementById('gh');
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 4){ gh.classList.add('scrolled'); } else { gh.classList.remove('scrolled'); }
+  });
+</script>
+</body>
+</html>

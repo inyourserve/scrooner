@@ -1,24 +1,40 @@
 @import "tailwindcss";
 
+/* Tokens aligned to doc/design/11_Scrooner_Design_Guideline.html (v3,
+   "editorial ledger" system) -- same values as apps/site's
+   stock/[ticker].astro and index.astro, so the two frontends read as one
+   product. Two fixes made in this pass, both previously flagged in
+   doc/design/10_Scrooner_Product_Design_Framework.md's implementation
+   audit (Sec 13.4/13.6) and left unresolved until now:
+   1. --positive-700/--info-700 were missing entirely -- added.
+   2. `body`'s radial-gradient directly violated Sec 4.2's own explicit
+      rule ("Gradients... are not default patterns for Scrooner") --
+      removed, flat canvas per the guideline's own "no gradient anywhere"
+      review-checklist line. Component-level typography (serif headings,
+      mono numerals) is NOT changed in this pass -- that touches every
+      component file, not just tokens, and deserves its own dedicated
+      change rather than a token-file side effect. */
 :root {
-  --surface-canvas: #f6f8f6;
+  --surface-canvas: #faf8f3;
   --surface-primary: #ffffff;
-  --surface-subtle: #eef3ef;
-  --surface-brand-subtle: #e8f3ed;
-  --surface-error: #fff3f2;
-  --surface-warning: #fff8eb;
-  --text-primary: #17211b;
-  --text-secondary: #526158;
-  --text-muted: #68776e;
-  --border-default: #d8e0da;
-  --border-strong: #aab8ae;
-  --brand-700: #176b4d;
-  --brand-800: #10533b;
-  --link-700: #175f9e;
-  --negative-700: #b42318;
-  --warning-700: #8a4b08;
-  --focus: #2e7cc0;
-  --shadow-popover: 0 12px 32px rgb(23 33 27 / 10%);
+  --surface-subtle: #f2eee2;
+  --surface-brand-subtle: #e8efe9;
+  --surface-error: #f7e9e6;
+  --surface-warning: #f6eedd;
+  --text-primary: #17140f;
+  --text-secondary: #5b5648;
+  --text-muted: #726c5b;
+  --border-default: #e7e2d6;
+  --border-strong: #c9c2ac;
+  --brand-700: #1b4332;
+  --brand-800: #123024;
+  --link-700: #1d4e89;
+  --positive-700: #1b6b44;
+  --negative-700: #9f3327;
+  --warning-700: #92600c;
+  --info-700: #1d4e89;
+  --focus: #1d4e89;
+  --shadow-popover: 0 12px 32px rgb(23 20 15 / 10%);
 }
 
 * {
@@ -35,9 +51,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background:
-    radial-gradient(circle at 85% -8%, rgb(23 107 77 / 7%), transparent 28rem),
-    var(--surface-canvas);
+  background: var(--surface-canvas);
 }
 
 button,

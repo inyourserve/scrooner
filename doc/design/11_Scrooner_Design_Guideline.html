@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scrooner — Design Guideline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,340;0,440;0,560;0,650;1,440&family=Inter:wght@400;450;500;550;600;650&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FAF8F3;
+    --paper:#FFFFFF;
+    --ink:#17140F;
+    --ink-2:#5B5648;
+    --ink-3:#726C5B;
+    --hairline:#E7E2D6;
+    --hairline-strong:#C9C2AC;
+    --brand:#1B4332;
+    --brand-hover:#123024;
+    --brand-tint:#E8EFE9;
+    --link:#1D4E89;
+    --link-tint:#E7EEF5;
+    --positive:#1B6B44;
+    --positive-tint:#E7F1EA;
+    --negative:#9F3327;
+    --negative-tint:#F7E9E6;
+    --warning:#92600C;
+    --warning-tint:#F6EEDD;
+    --radius-sm:6px;
+    --radius-md:8px;
+    --radius-lg:14px;
+    --shadow-hair:0 1px 2px rgba(23,20,15,.05);
+    --shadow-pop:0 10px 28px rgba(23,20,15,.14), 0 2px 8px rgba(23,20,15,.06);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--sans);background:var(--canvas);color:var(--ink);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--link);}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  .serif{font-family:var(--serif);}
+
+  .shell{display:grid;grid-template-columns:256px 1fr;max-width:1360px;margin:0 auto;}
+  .side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;border-right:1px solid var(--hairline);padding:36px 22px;}
+  .side .brand{font-family:var(--serif);font-size:18px;margin-bottom:2px;}
+  .side .brand b{color:var(--brand);font-family:var(--mono);font-weight:500;}
+  .side .tagline{font-size:11.5px;color:var(--ink-3);margin:0 0 30px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;}
+  .side nav a{display:block;padding:5px 8px;margin:0;font-size:13px;font-weight:500;color:var(--ink-2);text-decoration:none;border-left:2px solid transparent;padding-left:10px;}
+  .side nav a:hover{color:var(--ink);border-left-color:var(--hairline-strong);}
+  .side nav .grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin:20px 0 4px;padding:0 8px;font-weight:600;font-family:var(--mono);}
+  .side nav .grp:first-of-type{margin-top:4px;}
+
+  main{padding:56px 64px 140px;min-width:0;max-width:1000px;}
+  .hero .kicker{font-family:var(--mono);font-size:11.5px;color:var(--brand);text-transform:uppercase;letter-spacing:.08em;margin:0 0 14px;}
+  .hero h1{font-family:var(--serif);font-weight:560;font-size:44px;line-height:1.08;margin:0 0 16px;letter-spacing:-0.01em;}
+  .hero p.lead{font-size:16.5px;line-height:27px;color:var(--ink-2);max-width:640px;margin:0 0 22px;}
+
+  section.doc{margin-top:64px;padding-top:36px;border-top:1px solid var(--hairline);}
+  section.doc:first-of-type{border-top:none;margin-top:48px;padding-top:0;}
+  .sec-num{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin:0 0 6px;}
+  section.doc h2{font-family:var(--serif);font-weight:540;font-size:27px;margin:0 0 8px;letter-spacing:-0.005em;}
+  section.doc p.desc{font-size:14.5px;color:var(--ink-2);max-width:680px;margin:0 0 26px;line-height:1.65;}
+  h3.sub{font-size:14px;font-weight:650;margin:30px 0 14px;color:var(--ink);text-transform:uppercase;letter-spacing:.03em;}
+
+  .panel{background:var(--paper);border:1px solid var(--hairline);border-radius:var(--radius-md);padding:24px;}
+  .frame{border:1px solid var(--hairline-strong);border-radius:var(--radius-md);padding:24px;background:var(--paper);}
+  figcaption{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:10px;text-transform:uppercase;letter-spacing:.03em;}
+
+  /* reject-list */
+  .reject{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--hairline);border-radius:var(--radius-md);overflow:hidden;}
+  .reject > div{padding:20px 22px;}
+  .reject .no{background:#FBF3F1;border-right:1px solid var(--hairline);}
+  .reject .yes{background:var(--brand-tint);}
+  .reject .tag{font-family:var(--mono);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:10px;}
+  .reject .no .tag{color:var(--negative);}
+  .reject .yes .tag{color:var(--brand);}
+  .reject ul{margin:0;padding-left:16px;font-size:13.5px;line-height:1.7;color:var(--ink-2);}
+  @media (max-width:760px){.reject{grid-template-columns:1fr;} .reject .no{border-right:none;border-bottom:1px solid var(--hairline);}}
+
+  /* color swatches */
+  .swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1px;background:var(--hairline);border:1px solid var(--hairline);}
+  .swatch{background:var(--paper);}
+  .swatch .chip{height:60px;}
+  .swatch .meta{padding:10px 13px;}
+  .swatch .role{font-size:12.5px;font-weight:600;}
+  .swatch .token{font-size:11px;color:var(--ink-3);font-family:var(--mono);margin-top:2px;}
+  .swatch .hex{font-size:11px;color:var(--ink-2);font-family:var(--mono);}
+
+  .ratio-bar{display:flex;height:38px;border:1px solid var(--hairline-strong);}
+  .ratio-bar .seg{display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:600;font-family:var(--mono);}
+  .ratio-bar .neutral{background:var(--canvas);color:var(--ink-2);border-right:1px solid var(--hairline-strong);}
+  .ratio-bar .structure{background:#EFEAE0;color:var(--ink-2);border-right:1px solid var(--hairline-strong);}
+  .ratio-bar .accent{background:var(--brand);color:#fff;}
+  .ratio-legend{display:flex;gap:24px;margin-top:12px;font-size:12.5px;color:var(--ink-2);flex-wrap:wrap;}
+  .ratio-legend b{color:var(--ink);}
+
+  /* type scale */
+  .type-row{display:grid;grid-template-columns:130px 1fr 200px;align-items:baseline;gap:16px;padding:18px 0;border-bottom:1px solid var(--hairline);}
+  .type-row:last-child{border-bottom:none;}
+  .type-row .label{font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;font-family:var(--mono);}
+  .type-row .spec{font-size:11.5px;color:var(--ink-3);font-family:var(--mono);text-align:right;}
+  .t-display{font-family:var(--serif);font-size:44px;line-height:1.08;font-weight:560;letter-spacing:-0.01em;}
+  .t-h1{font-family:var(--serif);font-size:30px;line-height:1.15;font-weight:540;}
+  .t-h2{font-family:var(--serif);font-size:23px;line-height:1.25;font-weight:540;}
+  .t-h3{font-size:16px;line-height:1.4;font-weight:650;}
+  .t-body{font-size:16px;line-height:1.6;font-weight:400;}
+  .t-body-sm{font-size:13.5px;line-height:1.55;font-weight:400;}
+  .t-label{font-size:12px;line-height:1.4;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-2);}
+  .t-caption{font-family:var(--mono);font-size:11.5px;line-height:1.5;font-weight:400;color:var(--ink-3);}
+  .t-data-lg{font-family:var(--mono);font-size:22px;line-height:1.3;font-weight:600;}
+  .t-data-tbl{font-family:var(--mono);font-size:13px;line-height:1.4;font-weight:500;}
+
+  /* spacing */
+  .space-row{display:flex;align-items:center;gap:16px;padding:9px 0;}
+  .space-row .bar{background:var(--brand);height:10px;}
+  .space-row .name{width:100px;font-size:12px;font-family:var(--mono);color:var(--ink-2);}
+  .space-row .use{font-size:12.5px;color:var(--ink-3);}
+
+  /* buttons */
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .btn{appearance:none;border:1px solid transparent;font-family:var(--sans);cursor:pointer;font-size:13.5px;font-weight:600;border-radius:var(--radius-sm);padding:10px 16px;display:inline-flex;align-items:center;gap:7px;transition:background .12s ease,border-color .12s ease;}
+  .btn-primary{background:var(--brand);color:#fff;}
+  .btn-primary:hover{background:var(--brand-hover);}
+  .btn-secondary{background:var(--paper);color:var(--ink);border-color:var(--hairline-strong);}
+  .btn-secondary:hover{border-color:var(--ink-2);}
+  .btn-tertiary{background:transparent;color:var(--link);padding:10px 2px;border:none;}
+  .btn-tertiary:hover{text-decoration:underline;}
+  .btn-destructive{background:var(--paper);color:var(--negative);border-color:var(--negative);}
+  .btn-destructive:hover{background:var(--negative-tint);}
+  .btn-sm{padding:7px 12px;font-size:12.5px;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btn:focus-visible{outline:2px solid var(--link);outline-offset:2px;}
+
+  /* forms */
+  .field{display:flex;flex-direction:column;gap:6px;max-width:320px;}
+  .field label{font-size:12px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.03em;}
+  .field input,.field select{font-family:var(--sans);font-size:14px;padding:9px 12px;border:1px solid var(--hairline-strong);border-radius:var(--radius-sm);background:var(--paper);color:var(--ink);}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-tint);}
+  .field .help{font-size:11.5px;color:var(--ink-3);}
+  .field.error input{border-color:var(--negative);}
+  .field.error .help{color:var(--negative);}
+
+  /* badges */
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:3px;font-size:11px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.02em;border:1px solid transparent;}
+  .badge-positive{background:var(--positive-tint);color:var(--positive);border-color:#C9E2D2;}
+  .badge-negative{background:var(--negative-tint);color:var(--negative);border-color:#EACAC4;}
+  .badge-warning{background:var(--warning-tint);color:var(--warning);border-color:#E7D3A8;}
+  .badge-info{background:var(--link-tint);color:var(--link);border-color:#C6D7EC;}
+  .badge-neutral{background:var(--canvas);color:var(--ink-2);border-color:var(--hairline-strong);}
+
+  /* tabs */
+  .tabs{display:flex;gap:0;border-bottom:1px solid var(--hairline-strong);}
+  .tab{padding:9px 2px;margin-right:26px;font-size:13.5px;font-weight:600;color:var(--ink-3);border-bottom:2px solid transparent;cursor:pointer;}
+  .tab.active{color:var(--ink);border-color:var(--brand);}
+
+  /* tables */
+  table.data{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--paper);border:1px solid var(--hairline-strong);}
+  table.data thead th{text-align:left;font-size:11px;font-weight:650;color:var(--ink-2);text-transform:uppercase;letter-spacing:.03em;padding:10px 14px;border-bottom:1px solid var(--hairline-strong);font-family:var(--mono);}
+  table.data thead th.num{text-align:right;}
+  table.data tbody td{padding:10px 14px;border-bottom:1px solid var(--hairline);color:var(--ink);}
+  table.data tbody td.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  table.data tbody tr:last-child td{border-bottom:none;}
+  table.data tbody tr:hover{background:var(--canvas);}
+  table.data tbody td.dash{color:var(--ink-3);}
+  .sort-active{color:var(--brand);}
+
+  /* metric ledger */
+  .metric-ledger{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--hairline-strong);background:var(--hairline);gap:1px;}
+  .metric-cell{background:var(--paper);padding:16px 18px;}
+  .metric-cell .m-label{font-size:11px;color:var(--ink-2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;font-weight:600;}
+  .metric-cell .m-value{font-family:var(--mono);font-size:20px;font-weight:600;}
+  .metric-cell .m-period{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-top:5px;}
+
+  /* alerts */
+  .alert{display:flex;gap:12px;padding:13px 15px;border-radius:var(--radius-sm);border:1px solid;font-size:13px;}
+  .alert .a-mark{font-family:var(--mono);font-weight:700;flex:none;}
+  .alert-info{background:var(--link-tint);border-color:#C6D7EC;color:#173A5E;}
+  .alert-warning{background:var(--warning-tint);border-color:#E7D3A8;color:#5C3E06;}
+  .alert-negative{background:var(--negative-tint);border-color:#EACAC4;color:#6B2019;}
+
+  .empty{border:1px dashed var(--hairline-strong);border-radius:var(--radius-md);padding:30px;text-align:center;color:var(--ink-2);background:var(--paper);}
+  .empty h4{margin:0 0 6px;color:var(--ink);font-size:15px;font-family:var(--serif);font-weight:560;}
+  .empty p{margin:0 0 14px;font-size:13.5px;}
+
+  .copy-cols{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hairline);border:1px solid var(--hairline);}
+  .copy-block{background:var(--paper);padding:18px 20px;font-size:13.5px;}
+  .copy-block .tag{font-family:var(--mono);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:10px;}
+  .copy-good .tag{color:var(--brand);}
+  .copy-bad .tag{color:var(--negative);}
+  .copy-block ul{margin:0;padding-left:16px;line-height:1.7;color:var(--ink-2);}
+
+  ul.checklist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;}
+  ul.checklist li{font-size:13.5px;color:var(--ink-2);padding-left:20px;position:relative;}
+  ul.checklist li::before{content:"—";position:absolute;left:0;color:var(--brand);font-weight:700;font-family:var(--mono);}
+
+  code.pill{background:var(--canvas);border:1px solid var(--hairline-strong);padding:2px 6px;border-radius:4px;font-size:12px;font-family:var(--mono);}
+
+  .source-cite{background:var(--paper);border:1px solid var(--hairline);border-left:3px solid var(--brand);padding:18px 20px;font-size:13px;color:var(--ink-2);line-height:1.7;}
+  .source-cite b{color:var(--ink);}
+
+  footer.doc-footer{margin-top:70px;padding-top:26px;border-top:1px solid var(--hairline);font-size:12px;color:var(--ink-3);font-family:var(--mono);line-height:1.7;}
+
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr;}
+    .side{position:static;height:auto;}
+    main{padding:36px 20px 90px;}
+    .metric-ledger{grid-template-columns:repeat(2,1fr);}
+    .copy-cols,.reject{grid-template-columns:1fr;}
+    ul.checklist{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="side">
+    <div class="brand"><b>[</b> Scrooner <b>]</b></div>
+    <p class="tagline">Design Guideline · v3</p>
+    <nav>
+      <div class="grp">Foundations</div>
+      <a href="#posture">Posture &amp; anti-patterns</a>
+      <a href="#color">Color</a>
+      <a href="#typography">Typography</a>
+      <a href="#elevation">Elevation &amp; radius</a>
+      <a href="#spacing">Spacing &amp; grid</a>
+      <div class="grp">Components</div>
+      <a href="#buttons">Buttons</a>
+      <a href="#forms">Form controls</a>
+      <a href="#badges">Badges &amp; status</a>
+      <a href="#tabs">Tabs</a>
+      <a href="#tables">Tables</a>
+      <a href="#metrics">Metric ledger</a>
+      <div class="grp">States &amp; content</div>
+      <a href="#states">States &amp; alerts</a>
+      <a href="#voice">Voice &amp; copy</a>
+      <a href="#a11y">Accessibility</a>
+      <a href="#review">Review checklist</a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <p class="kicker">Design guideline · v3</p>
+      <h1>An editorial ledger, not a SaaS template.</h1>
+      <p class="lead">Serif for editorial authority. Monospace for every number, because a research tool should look like it computes rather than decorates. A warm paper canvas instead of cool SaaS gray-mint. Shadows and gradients used almost nowhere — restraint is the premium signal, not decoration.</p>
+    </div>
+
+    <section class="doc" id="posture">
+      <p class="sec-num">01</p>
+      <h2>Posture &amp; anti-patterns</h2>
+      <p class="desc">v1 was flat and under-considered. v2 over-corrected by throwing soft shadows and a gradient blob at everything — which is its own cliché: it's the default look of AI-generated SaaS templates (Framer/v0/Lovable output), instantly recognizable and not premium. v3 starts from a different question: what does a 20-year designer reach for when shadows-and-gradients aren't the answer? Typography, material honesty, and restraint.</p>
+
+      <div class="reject">
+        <div class="no">
+          <span class="tag">Rejected — generic AI-SaaS tells</span>
+          <ul>
+            <li>Headline-left / floating-gradient-blob-card-right hero</li>
+            <li>Colorful pill buttons for every example or tag</li>
+            <li>Soft shadow on every card, table, and button</li>
+            <li>Gradient fills on primary buttons</li>
+            <li>Mint-green-on-cool-gray palette</li>
+            <li>Bootstrap-style bordered feature-card grid for "how it works"</li>
+            <li>Uniform 12–20px rounded corners on everything</li>
+          </ul>
+        </div>
+        <div class="yes">
+          <span class="tag">Scrooner's actual identity</span>
+          <ul>
+            <li>Full-width editorial masthead, figure/caption convention for product proof</li>
+            <li>Text links and hairline-divided lists over pill soup</li>
+            <li>Flat surfaces with hairline borders; shadow reserved for truly floating UI</li>
+            <li>Solid ink-green buttons, no gradient</li>
+            <li>Warm paper canvas, near-black ink, deep forest accent</li>
+            <li>Numbered editorial sequence (01 / 02 / 03), not a card grid</li>
+            <li>Sharper, mixed radii — ledger tables near-square, panels lightly rounded</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc" id="color">
+      <p class="sec-num">02</p>
+      <h2>Color</h2>
+      <p class="desc">Warm paper instead of cool SaaS gray. Deep forest green instead of SaaS mint — it reads as a ledger stamp, not a startup logo. Brand color means action or selection, never "this company is good."</p>
+
+      <h3 class="sub">Canvas &amp; ink</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#FAF8F3"></div><div class="meta"><div class="role">Canvas</div><div class="token">canvas</div><div class="hex">#FAF8F3</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#FFFFFF;box-shadow:inset 0 -1px 0 var(--hairline)"></div><div class="meta"><div class="role">Paper (surfaces)</div><div class="token">paper</div><div class="hex">#FFFFFF</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#17140F"></div><div class="meta"><div class="role">Ink</div><div class="token">ink</div><div class="hex">#17140F</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#5B5648"></div><div class="meta"><div class="role">Ink secondary</div><div class="token">ink-2</div><div class="hex">#5B5648</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#726C5B"></div><div class="meta"><div class="role">Ink muted</div><div class="token">ink-3</div><div class="hex">#726C5B</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#E7E2D6"></div><div class="meta"><div class="role">Hairline</div><div class="token">hairline</div><div class="hex">#E7E2D6</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#C9C2AC"></div><div class="meta"><div class="role">Hairline strong</div><div class="token">hairline-strong</div><div class="hex">#C9C2AC</div></div></div>
+      </div>
+
+      <h3 class="sub">Brand &amp; semantic</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="chip" style="background:#1B4332"></div><div class="meta"><div class="role">Brand</div><div class="token">brand</div><div class="hex">#1B4332</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#1D4E89"></div><div class="meta"><div class="role">Link</div><div class="token">link</div><div class="hex">#1D4E89</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#1B6B44"></div><div class="meta"><div class="role">Positive</div><div class="token">positive</div><div class="hex">#1B6B44</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#9F3327"></div><div class="meta"><div class="role">Negative</div><div class="token">negative</div><div class="hex">#9F3327</div></div></div>
+        <div class="swatch"><div class="chip" style="background:#92600C"></div><div class="meta"><div class="role">Warning</div><div class="token">warning</div><div class="hex">#92600C</div></div></div>
+      </div>
+
+      <h3 class="sub">60 – 30 – 10 balance</h3>
+      <div class="panel">
+        <div class="ratio-bar">
+          <div class="seg neutral" style="width:60%">60% canvas / paper</div>
+          <div class="seg structure" style="width:30%">30% structure</div>
+          <div class="seg accent" style="width:10%">≤10% brand</div>
+        </div>
+        <div class="ratio-legend">
+          <span><b>60% —</b> canvas, tables, inputs, reading surface</span>
+          <span><b>30% —</b> nav, hairlines, metadata, secondary ink</span>
+          <span><b>≤10% —</b> primary actions, links, semantic status</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc" id="typography">
+      <p class="sec-num">03</p>
+      <h2>Typography — the actual signature</h2>
+      <p class="desc">Three typefaces, each with one job. <b style="color:var(--ink)">Fraunces</b> (serif) carries editorial weight — headlines, section titles, company names. <b style="color:var(--ink)">Inter</b> (sans) carries the interface — body copy, labels, controls. <b style="color:var(--ink)">IBM Plex Mono</b> carries every number, ticker, date, and formula reference — a research tool should look like it computes, not like it's narrating.</p>
+      <div class="frame">
+        <div class="type-row"><div class="label">Display / serif</div><div class="t-display">Screen US companies</div><div class="spec">44/48 · 560</div></div>
+        <div class="type-row"><div class="label">H1 / serif</div><div class="t-h1">Brightline Analytics</div><div class="spec">30/35 · 540</div></div>
+        <div class="type-row"><div class="label">H2 / serif</div><div class="t-h2">Financial statements</div><div class="spec">23/29 · 540</div></div>
+        <div class="type-row"><div class="label">H3 / sans</div><div class="t-h3">Key metrics</div><div class="spec">16/22 · 650</div></div>
+        <div class="type-row"><div class="label">Body / sans</div><div class="t-body">Every result is deterministic and traceable to company filings.</div><div class="spec">16/26 · 400</div></div>
+        <div class="type-row"><div class="label">Body sm / sans</div><div class="t-body-sm">Price delayed approximately 15 minutes.</div><div class="spec">13.5/21 · 400</div></div>
+        <div class="type-row"><div class="label">Label / sans</div><div class="t-label">Return on equity</div><div class="spec">12/17 · 600</div></div>
+        <div class="type-row"><div class="label">Caption / mono</div><div class="t-caption">FILED 2026-08-14 · ACCESSION 0001045810-26-000142</div><div class="spec">11.5/17 · 400</div></div>
+        <div class="type-row"><div class="label">Data lg / mono</div><div class="t-data-lg">29.4%</div><div class="spec">22/29 · 600</div></div>
+        <div class="type-row"><div class="label">Data table / mono</div><div class="t-data-tbl">8,412.30</div><div class="spec">13/18 · 500</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="elevation">
+      <p class="sec-num">04</p>
+      <h2>Elevation &amp; radius — used sparingly</h2>
+      <p class="desc">Shadow is reserved for surfaces that are genuinely floating above the page: a dropdown, a popover, a modal, or the sticky header after scroll. A resting card, a table, a button — none of these float, so none of them get a shadow. This restraint is what separates a considered interface from a decorated one.</p>
+      <h3 class="sub">Radius</h3>
+      <div class="row">
+        <code class="pill">6px — buttons, inputs, badges</code>
+        <code class="pill">8px — panels, metric cells</code>
+        <code class="pill">14px — dialogs only</code>
+        <code class="pill">0–1px — ledger tables (near-square)</code>
+      </div>
+    </section>
+
+    <section class="doc" id="spacing">
+      <p class="sec-num">05</p>
+      <h2>Spacing &amp; grid</h2>
+      <p class="desc">4px base, 8px primary rhythm. Editorial pages contract to a reading column for prose and expand full-width for tables and figures — the contrast is deliberate, not accidental.</p>
+      <div class="frame">
+        <div class="space-row"><div class="name">space-1 · 4px</div><div class="bar" style="width:4px"></div><div class="use">icon/text micro-gap</div></div>
+        <div class="space-row"><div class="name">space-2 · 8px</div><div class="bar" style="width:8px"></div><div class="use">related inline elements</div></div>
+        <div class="space-row"><div class="name">space-3 · 12px</div><div class="bar" style="width:12px"></div><div class="use">compact control gaps</div></div>
+        <div class="space-row"><div class="name">space-4 · 16px</div><div class="bar" style="width:16px"></div><div class="use">panel padding</div></div>
+        <div class="space-row"><div class="name">space-5 · 24px</div><div class="bar" style="width:24px"></div><div class="use">related groups</div></div>
+        <div class="space-row"><div class="name">space-6 · 32px</div><div class="bar" style="width:32px"></div><div class="use">section subgroups</div></div>
+        <div class="space-row"><div class="name">space-8 · 48px</div><div class="bar" style="width:48px"></div><div class="use">major section separation</div></div>
+        <div class="space-row"><div class="name">space-10 · 64px</div><div class="bar" style="width:64px"></div><div class="use">editorial section breaks</div></div>
+      </div>
+      <h3 class="sub">Reading column</h3>
+      <p style="font-size:13.5px;color:var(--ink-2)">Prose and hero copy sit in a ~640px column. Tables and figures break out full-width. This contraction/expansion rhythm is a classic editorial layout device — it is what makes a page feel composed rather than stacked.</p>
+    </section>
+
+    <section class="doc" id="buttons">
+      <p class="sec-num">06</p>
+      <h2>Buttons</h2>
+      <p class="desc">Flat, solid, no gradient. One primary action per state. Labels are verbs.</p>
+      <div class="frame row">
+        <button class="btn btn-primary">Run screen</button>
+        <button class="btn btn-secondary">Build with filters</button>
+        <button class="btn btn-tertiary">View source</button>
+        <button class="btn btn-destructive">Delete screen</button>
+        <button class="btn btn-primary" disabled>Interpret query</button>
+        <button class="btn btn-primary btn-sm">Save screen</button>
+      </div>
+    </section>
+
+    <section class="doc" id="forms">
+      <p class="sec-num">07</p>
+      <h2>Form controls</h2>
+      <div class="frame row" style="align-items:flex-start">
+        <div class="field">
+          <label for="g-metric">Metric</label>
+          <input id="g-metric" type="text" value="Return on invested capital">
+          <span class="help">Search recognizes aliases like ROIC.</span>
+        </div>
+        <div class="field">
+          <label for="g-op">Operator</label>
+          <select id="g-op"><option>greater than</option><option>at least</option><option>between</option></select>
+        </div>
+        <div class="field error">
+          <label for="g-val">Value</label>
+          <input id="g-val" type="text" value="">
+          <span class="help">Enter a value to complete this filter.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc" id="badges">
+      <p class="sec-num">08</p>
+      <h2>Badges &amp; status</h2>
+      <p class="desc">Set in mono, uppercase, small — read as data labels, not decoration. Color never carries meaning alone.</p>
+      <div class="frame row">
+        <span class="badge badge-positive">Passed 4/4</span>
+        <span class="badge badge-negative">Excluded</span>
+        <span class="badge badge-warning">Delayed</span>
+        <span class="badge badge-info">Rule-based</span>
+        <span class="badge badge-neutral">Inactive</span>
+      </div>
+    </section>
+
+    <section class="doc" id="tabs">
+      <p class="sec-num">09</p>
+      <h2>Tabs</h2>
+      <div class="frame">
+        <div class="tabs">
+          <div class="tab active">Profit &amp; Loss</div>
+          <div class="tab">Balance Sheet</div>
+          <div class="tab">Cash Flow</div>
+          <div class="tab">Quarterly</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc" id="tables">
+      <p class="sec-num">10</p>
+      <h2>Tables — the ledger</h2>
+      <p class="desc">Near-square, hairline-bordered, mono numerals, right-aligned. This is the single most important surface in the product — it should look like a printed statement, not a dashboard widget.</p>
+      <figure style="margin:0">
+        <table class="data">
+          <thead>
+            <tr><th>Metric</th><th class="num">FY2023</th><th class="num">FY2024</th><th class="num sort-active">FY2025</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Revenue ($M)</td><td class="num">612.4</td><td class="num">701.8</td><td class="num">824.1</td></tr>
+            <tr><td>Operating margin</td><td class="num">18.2%</td><td class="num">20.6%</td><td class="num">22.7%</td></tr>
+            <tr><td>Net profit ($M)</td><td class="num">74.3</td><td class="num">96.0</td><td class="num">118.9</td></tr>
+            <tr><td>Free cash flow ($M)</td><td class="num dash" title="Not reported for this period">—</td><td class="num">61.4</td><td class="num">88.2</td></tr>
+          </tbody>
+        </table>
+        <figcaption>Fig. — sample financial table, figures illustrative</figcaption>
+      </figure>
+    </section>
+
+    <section class="doc" id="metrics">
+      <p class="sec-num">11</p>
+      <h2>Metric ledger</h2>
+      <p class="desc">A grid of hairline-divided cells, not a shelf of shadowed widgets. Value in mono leads; label recedes in small caps.</p>
+      <div class="metric-ledger">
+        <div class="metric-cell"><div class="m-label">ROIC</div><div class="m-value">19.8%</div><div class="m-period">TTM</div></div>
+        <div class="metric-cell"><div class="m-label">Debt / equity</div><div class="m-value">0.32x</div><div class="m-period">FY2025</div></div>
+        <div class="metric-cell"><div class="m-label">FCF yield</div><div class="m-value">3.8%</div><div class="m-period">TTM</div></div>
+        <div class="metric-cell"><div class="m-label">Revenue growth</div><div class="m-value">18.6%</div><div class="m-period">5Y CAGR</div></div>
+      </div>
+    </section>
+
+    <section class="doc" id="states">
+      <p class="sec-num">12</p>
+      <h2>States &amp; alerts</h2>
+      <div class="frame" style="display:flex;flex-direction:column;gap:10px">
+        <div class="alert alert-info"><span class="a-mark">i</span><div>27 companies matched. Result order is set by the backend and preserved on load.</div></div>
+        <div class="alert alert-warning"><span class="a-mark">!</span><div>Price delayed approximately 15 minutes · as of 15:45 ET.</div></div>
+        <div class="alert alert-negative"><span class="a-mark">✕</span><div>We couldn't run this screen. Your query and filters were preserved — retry, or switch to structured mode.</div></div>
+      </div>
+      <h3 class="sub">Empty state</h3>
+      <div class="empty">
+        <h4>No companies matched all 4 criteria</h4>
+        <p>The screen ran successfully. Try reducing the minimum ROIC or removing one condition.</p>
+        <button class="btn btn-secondary btn-sm">Edit criteria</button>
+      </div>
+    </section>
+
+    <section class="doc" id="voice">
+      <p class="sec-num">13</p>
+      <h2>Voice &amp; copy</h2>
+      <p class="desc">Direct, calm, specific, transparent about limits. Never promotional at the expense of truth.</p>
+      <div class="copy-cols">
+        <div class="copy-block copy-good">
+          <span class="tag">Use</span>
+          <ul>
+            <li>"Calculated from company filings using formula version 1."</li>
+            <li>"Excluded because ROIC was unavailable for the selected period."</li>
+            <li>"Rule-based checklist; not an investment recommendation."</li>
+            <li>"Passed 4 of 4 selected criteria."</li>
+          </ul>
+        </div>
+        <div class="copy-block copy-bad">
+          <span class="tag">Avoid</span>
+          <ul>
+            <li>"AI found the best stocks."</li>
+            <li>"Real time" for delayed data.</li>
+            <li>"No data" when a precise reason is known.</li>
+            <li>"Safe," "guaranteed," "undervalued" without a disclosed rule.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc" id="a11y">
+      <p class="sec-num">14</p>
+      <h2>Accessibility — WCAG 2.2 AA</h2>
+      <ul class="checklist">
+        <li>Text contrast ≥ 4.5:1 (3:1 for large text) — verify serif/mono at small sizes too</li>
+        <li>Visible focus on every interactive element</li>
+        <li>Full keyboard operation, including filters and drawers</li>
+        <li>No information conveyed by color alone</li>
+        <li>Target size ≥ 44×44px where practicable</li>
+        <li>Reflow at 320px without 2D scrolling (tables excepted)</li>
+        <li>Negative values announced as negative, not just colored</li>
+        <li>Sort state exposed via <code class="pill">aria-sort</code></li>
+      </ul>
+    </section>
+
+    <section class="doc" id="review">
+      <p class="sec-num">15</p>
+      <h2>Design review checklist</h2>
+      <ul class="checklist">
+        <li>No shadow on a surface that isn't actually floating</li>
+        <li>No gradient anywhere</li>
+        <li>Every number is set in mono with tabular figures</li>
+        <li>Every value has a unit, a period, and a source</li>
+        <li>Accent color stays at or below the 10% ceiling</li>
+        <li>Reading column contracts for prose, expands for tables</li>
+        <li>No unsupported claim of AI understanding or complete coverage</li>
+        <li>Works by keyboard, at 320px, and at 200% zoom</li>
+      </ul>
+    </section>
+
+    <section class="doc" id="sources">
+      <p class="sec-num">16</p>
+      <h2>Sources &amp; rationale</h2>
+      <div class="source-cite">
+        Grounded in a full page-by-page read of <b>The UI/UX Playbook</b> (144 pp.) and <b>How to Design Better UI Components 3.0</b> (197 pp.), plus <code class="pill">doc/design/10_Scrooner_Product_Design_Framework.md</code> and screener.in's structural patterns. v2 applied those books' elevation chapters too literally — shadow and gradient as the primary lever — and read as generic. v3 keeps the underlying craft (material honesty, real hierarchy, considered depth) but expresses it through typography, color, and editorial layout instead, which is what those same books' hierarchy and consistency chapters actually argue for once shadow/gradient stop being the default answer.
+      </div>
+    </section>
+
+    <footer class="doc-footer">
+      SCROONER DESIGN GUIDELINE V3 · EDITORIAL LEDGER SYSTEM · COMPANION TO 12_SCROONER_END_TO_END_MOCKUP.HTML, WHICH IMPLEMENTS EVERY TOKEN AND COMPONENT DEFINED HERE.
+    </footer>
+  </main>
+</div>
+</body>
+</html>
