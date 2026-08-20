@@ -178,11 +178,27 @@ def evaluate_alerts(snapshot: OperationalSnapshot) -> list[str]:
 
     recent_failure_cutoff = now - timedelta(hours=24)
     stale_heartbeat_cutoff = now - timedelta(hours=2)
+    latest_success_by_scope: dict[tuple[str | None, str | None], datetime] = {}
+    for run in snapshot.recent_runs:
+        if run.status != "succeeded":
+            continue
+        completed_at = run.finished_at or run.started_at
+        completed_at = completed_at if completed_at.tzinfo else completed_at.replace(tzinfo=timezone.utc)
+        key = (run.job, run.params_key)
+        latest_success_by_scope[key] = max(completed_at, latest_success_by_scope.get(key, completed_at))
+
     for run in snapshot.recent_runs:
         started_at = run.started_at if run.started_at.tzinfo else run.started_at.replace(tzinfo=timezone.utc)
+        failed_at = run.finished_at or run.started_at
+        failed_at = failed_at if failed_at.tzinfo else failed_at.replace(tzinfo=timezone.utc)
         heartbeat = run.heartbeat_at or run.started_at
         heartbeat = heartbeat if heartbeat.tzinfo else heartbeat.replace(tzinfo=timezone.utc)
-        if run.status == "failed" and started_at >= recent_failure_cutoff:
+        recovered_at = latest_success_by_scope.get((run.job, run.params_key))
+        if (
+            run.status == "failed"
+            and started_at >= recent_failure_cutoff
+            and (recovered_at is None or recovered_at <= failed_at)
+        ):
             alerts.append(f"recent_failed_run:{run.id}:{run.job or 'unknown'}")
         if run.status == "running" and heartbeat < stale_heartbeat_cutoff:
             alerts.append(f"stuck_run:{run.id}:{run.job or 'unknown'}")

@@ -21,6 +21,7 @@ def run(
     *,
     status: str = "succeeded",
     started_at: datetime = NOW - timedelta(hours=1),
+    finished_at: datetime | None = None,
     heartbeat_at: datetime | None = NOW - timedelta(minutes=5),
     stats: dict | None = None,
     job: str = "incremental",
@@ -33,7 +34,7 @@ def run(
         params_key=params_key,
         status=status,
         started_at=started_at,
-        finished_at=NOW if status != "running" else None,
+        finished_at=(finished_at or NOW) if status != "running" else None,
         heartbeat_at=heartbeat_at,
         stats=stats or {},
     )
@@ -95,3 +96,46 @@ def test_row_count_anomaly_compares_only_same_successful_job_and_scope() -> None
     assert row_count_anomalies(runs) == [
         "row_count_anomaly:incremental:ciks=ALL|limit=None:filings_inserted:100->20"
     ]
+
+
+def test_later_success_for_identical_job_and_scope_closes_failure_alert() -> None:
+    snapshot = OperationalSnapshot(
+        generated_at=NOW,
+        freshness=healthy_snapshot().freshness,
+        dead_letters={"collector": 0, "normalizer": 0, "mapper": 0},
+        recent_runs=(
+            run(13, started_at=NOW - timedelta(minutes=5), finished_at=NOW - timedelta(minutes=4)),
+            run(
+                12,
+                status="failed",
+                started_at=NOW - timedelta(minutes=20),
+                finished_at=NOW - timedelta(minutes=15),
+            ),
+        ),
+    )
+
+    assert evaluate_alerts(snapshot) == []
+
+
+def test_success_for_different_scope_does_not_hide_failure() -> None:
+    snapshot = OperationalSnapshot(
+        generated_at=NOW,
+        freshness=healthy_snapshot().freshness,
+        dead_letters={"collector": 0, "normalizer": 0, "mapper": 0},
+        recent_runs=(
+            run(
+                13,
+                started_at=NOW - timedelta(minutes=5),
+                finished_at=NOW - timedelta(minutes=4),
+                params_key="different",
+            ),
+            run(
+                12,
+                status="failed",
+                started_at=NOW - timedelta(minutes=20),
+                finished_at=NOW - timedelta(minutes=15),
+            ),
+        ),
+    )
+
+    assert evaluate_alerts(snapshot) == ["recent_failed_run:12:incremental"]

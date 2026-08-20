@@ -1,0 +1,124 @@
+{
+  "date": "2026-08-19",
+  "overall_status": "remediation_phase_complete_operational_gate_green",
+  "private_beta_verdict": "no_go_pending_capacity_and_valid_100_company_pilot",
+  "migrations": {
+    "isolated_all_migrations_passed": 17,
+    "isolated_0016_0017_second_application": "pass",
+    "configured_database_applied": [16, 17],
+    "filers": 10,
+    "securities": 38,
+    "linked_listings": 38,
+    "audit_columns": 6,
+    "audit_constraints": 3
+  },
+  "snapshots": {
+    "errors": {
+      "records": 38,
+      "sha256": "151e0d3926c724ef0a417b0f27fd2704371508cacef21c8374fbc7b82ffbbd09"
+    },
+    "golden_metrics_before": {
+      "records": 10424,
+      "sha256": "610ccda08d58397392db9c075d3a5af455cbb96e5f6f52b51446f7b8c62d64b3"
+    },
+    "golden_metrics_after": {
+      "records": 10424,
+      "sha256": "615646f3a9b1f5c0d9912eb67eb0c428e2cf9245b68081508faf958bc8d8a491"
+    },
+    "companies": {
+      "records": 10,
+      "sha256": "540578b9b139a7c1d5823d2e0424b2883fd992e23c356d92c54feffabec8fa4f"
+    },
+    "listings": {
+      "records": 38,
+      "sha256": "c39e86a6c1bfbb82cb49abd600b4596df1a2ac045192da3624e35a0a264460b3"
+    }
+  },
+  "universe": {
+    "snapshot_id": 1,
+    "as_of": "2026-08-19",
+    "policy_version": "2026-08-18.v1",
+    "candidates": 38,
+    "eligible_listings": 9,
+    "excluded": 19,
+    "uncertain": 10,
+    "eligible_primary_companies": 7
+  },
+  "mapper_reruns": {
+    "calculate": {"considered": 10, "ok": 10, "errored": 0, "computed": 3890, "null": 1672},
+    "expanded_metrics": {"considered": 10, "ok": 10, "errored": 0, "computed": 21, "null": 69},
+    "quality_flags": {"considered": 10, "ok": 10, "errored": 0, "computed": 150, "null": 86},
+    "validation_clean": true,
+    "new_mapper_errors": 0,
+    "missing_period_dates": 0,
+    "stable_keys_unchanged": 10334,
+    "expected_daily_snapshot_rekeys": 90
+  },
+  "dead_letters": {
+    "audited_resolved": 38,
+    "collector_unresolved": 0,
+    "normalizer_unresolved": 0,
+    "mapper_unresolved": 0
+  },
+  "filing_refresh": {
+    "run_id": 13,
+    "index_date": "2026-08-18",
+    "duration_seconds": 21.175916,
+    "index_rows": 5551,
+    "considered": 2539,
+    "new": 2131,
+    "already_known": 408,
+    "errors": 0,
+    "batch_size": 250
+  },
+  "scheduler": {
+    "workflow_path": ".github/workflows/pipeline-refresh.yml",
+    "cron_utc": "23 12 * * *",
+    "definition_prepared": true,
+    "active": false,
+    "activation_dependencies": [
+      "commit_and_push_to_default_branch",
+      "DATABASE_URL_secret",
+      "SUPABASE_URL_secret",
+      "SUPABASE_SERVICE_ROLE_KEY_secret",
+      "SEC_USER_AGENT_secret"
+    ]
+  },
+  "final_operational_gate": {
+    "generated_at": "2026-08-19T08:58:55.885267+00:00",
+    "status": "ok",
+    "alerts": [],
+    "database_bytes": 159222931,
+    "companyfacts_rows": 186,
+    "companyfacts_ciks": 174,
+    "submissions_rows": 178,
+    "submissions_ciks": 10,
+    "filing_rows": 3098,
+    "metric_rows": 10424
+  },
+  "verification": {
+    "pipeline_tests_passed": 146,
+    "pipeline_live_tests_deselected": 1,
+    "backend_tests_passed": 22,
+    "frontend_tests_passed": 13,
+    "frontend_lint": "pass",
+    "frontend_production_build": "pass",
+    "site_production_build": "pass",
+    "migration_check": "17_contiguous_pass",
+    "documentation_links_checked": 237,
+    "secret_scan_files_checked": 298,
+    "python_compile": "pass",
+    "workflow_yaml_parse": "pass",
+    "git_diff_check": "pass",
+    "local_ruff": "not_installed_ci_required"
+  },
+  "remaining_blockers": [
+    "paid_database_and_object_storage_capacity_not_provisioned",
+    "scheduler_not_activated_or_proven_for_two_cycles",
+    "bulk_freshness_schedule_waiting_for_capacity",
+    "submissions_available_for_only_10_distinct_ciks",
+    "only_7_eligible_primary_companies",
+    "representative_mapping_coverage_not_measured",
+    "valid_100_company_pilot_not_run"
+  ]
+}

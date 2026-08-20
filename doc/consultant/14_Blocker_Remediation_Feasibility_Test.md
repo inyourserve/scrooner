@@ -4,6 +4,8 @@
 > **Date:** 2026-08-19  
 > **Safety boundary:** Live database and storage were queried read-only. All database writes were intercepted in memory or executed in an isolated PostgreSQL cluster under `/tmp`. No configured database row, migration, dead-letter state, filing record, metric, or storage object was changed.
 
+> **Execution update:** The authorized first remediation phase was subsequently executed. See [`15_Blocker_Remediation_Execution_Evidence.md`](15_Blocker_Remediation_Execution_Evidence.md). This document remains the pre-write feasibility baseline.
+
 ## Executive verdict
 
 The remediation program is **feasible**, but it is not one operation and should not be authorized as “run the 100-company pilot now.”
