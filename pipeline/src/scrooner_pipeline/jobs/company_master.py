@@ -8,6 +8,7 @@ import structlog
 import typer
 
 from scrooner_pipeline.company_master.identity import update_identity
+from scrooner_pipeline.company_master.sector_bucket import update_sector
 from scrooner_pipeline.company_master.history import update_history
 from scrooner_pipeline.company_master.status import update_status
 from scrooner_pipeline.company_master.market_price import load_mock_prices
@@ -68,6 +69,19 @@ def update_status_cmd(
     with get_connection() as conn:
         stats = update_status(conn, target_ciks)
     typer.echo(f"update-status: {stats}")
+
+
+@app.command("update-sector")
+def update_sector_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 10 Sec 12 / doc 26 Sec 2.8 / doc 28 (2026-08-21): derive
+    core.company.sector from the already-captured sic_code via a curated
+    SIC-range mapping (company_master/sector_bucket.py) -- zero new fetch."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = update_sector(conn, target_ciks)
+    typer.echo(f"update-sector: {stats}")
 
 
 @app.command("load-mock-prices")

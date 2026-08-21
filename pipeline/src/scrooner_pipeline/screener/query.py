@@ -22,7 +22,7 @@ def _load_candidate_companies(conn: psycopg.Connection, include_inactive: bool) 
     with conn.cursor() as cur:
         cur.execute(
             """
-            select c.id, c.cik, c.company_name, c.sic_code, c.sic_description, c.status,
+            select c.id, c.cik, c.company_name, c.sic_code, c.sic_description, c.sector, c.status,
                    (select l.ticker from core.listing l where l.company_id = c.id
                     and l.effective_to is null order by l.id limit 1) as ticker
             from core.company c
@@ -30,7 +30,7 @@ def _load_candidate_companies(conn: psycopg.Connection, include_inactive: bool) 
         )
         rows = cur.fetchall()
     companies = {}
-    for company_id, cik, name, sic_code, sic_description, status, ticker in rows:
+    for company_id, cik, name, sic_code, sic_description, sector, status, ticker in rows:
         if not include_inactive and status != "active":
             continue
         companies[company_id] = {
@@ -38,6 +38,7 @@ def _load_candidate_companies(conn: psycopg.Connection, include_inactive: bool) 
             "company_name": name,
             "sic_code": sic_code,
             "sic_description": sic_description,
+            "sector": sector,
             "status": status,
             "ticker": ticker,
         }

@@ -29,6 +29,7 @@ from scrooner_pipeline.ai_query.aliases import (
     METRIC_ALIASES,
     OPERATOR_ALIASES,
     SECTOR_ALIASES,
+    SECTOR_BUCKET_ALIASES,
 )
 from scrooner_pipeline.ai_query.interpreter import AmbiguityNote, InterpretationResult
 from scrooner_pipeline.screener.schema import CategoricalPredicate, MetricPredicate, ScreenQuery
@@ -69,11 +70,25 @@ def _lookup_metric(phrase: str) -> tuple[str | None, list[str] | None]:
     return None, None
 
 
-def _lookup_sector(phrase: str) -> str | None:
+def _lookup_sector(phrase: str) -> tuple[str, str] | None:
+    """Returns (field, value) -- field is "sic_code" for an exact
+    SECTOR_ALIASES match (checked first, so existing behavior for
+    already-covered phrases like "software companies" never changes),
+    or "sector" for a SECTOR_BUCKET_ALIASES match (doc 28, broader
+    phrases with no prior exact-SIC coverage)."""
     normalized = phrase.strip().lower()
     normalized = re.sub(r"^companies in\s+", "", normalized)
     normalized = re.sub(r"\s+companies$", "", normalized)
-    return SECTOR_ALIASES.get(normalized) or SECTOR_ALIASES.get(normalized + " companies")
+
+    sic_hit = SECTOR_ALIASES.get(normalized) or SECTOR_ALIASES.get(normalized + " companies")
+    if sic_hit:
+        return "sic_code", sic_hit
+
+    bucket_hit = SECTOR_BUCKET_ALIASES.get(normalized) or SECTOR_BUCKET_ALIASES.get(normalized + " companies")
+    if bucket_hit:
+        return "sector", bucket_hit
+
+    return None
 
 
 def _find_operator(clause: str) -> tuple[str, str, str] | None:
@@ -109,9 +124,10 @@ def _parse_clause(clause: str) -> tuple[MetricPredicate | None, CategoricalPredi
         op = "top_n" if direction.lower() == "top" else "bottom_n"
         return MetricPredicate(metric_name=metric_name, operator=op, n=int(n)), None, None, None
 
-    sector_code = _lookup_sector(clause)
-    if sector_code:
-        return None, CategoricalPredicate(field="sic_code", operator="=", value=sector_code), None, None
+    sector_hit = _lookup_sector(clause)
+    if sector_hit:
+        field, value = sector_hit
+        return None, CategoricalPredicate(field=field, operator="=", value=value), None, None
 
     found_op = _find_operator(clause)
     if found_op:

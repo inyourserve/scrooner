@@ -20,6 +20,16 @@ SECTOR_ALIASES: phrase -> exact sic_code. A small, illustrative list
 matching the golden-10's actual observed SIC diversity, not a general
 sector taxonomy -- doc 14 already documented SIC's coarseness limitation;
 this inherits it rather than pretending to fix it.
+
+SECTOR_BUCKET_ALIASES: phrase -> exact core.company.sector value (doc 10
+Sec 12/doc 26 Sec 2.8/doc 28, 2026-08-21) -- the curated SIC-range bucket
+built in company_master/sector_bucket.py, e.g. "tech companies" ->
+"Technology". Added additively, checked AFTER SECTOR_ALIASES in
+rules.py's `_lookup_sector` -- any phrase already in SECTOR_ALIASES
+(like "software companies" -> sic_code 7372) keeps its existing, more
+precise exact-SIC behavior unchanged; this table only covers NEW,
+broader phrases that had no match before, so doc 15's already-verified
+test queries can't regress.
 """
 
 METRIC_ALIASES: dict[str, str] = {
@@ -72,6 +82,34 @@ SECTOR_ALIASES: dict[str, str] = {
     "footwear": "3021",
     "pipelines": "4610",
     "computer hardware": "3571",
+}
+
+SECTOR_BUCKET_ALIASES: dict[str, str] = {
+    "tech": "Technology",
+    "tech companies": "Technology",
+    "technology": "Technology",
+    "technology companies": "Technology",
+    "financial": "Financials",
+    "financials": "Financials",
+    "financial companies": "Financials",
+    "healthcare": "Healthcare",
+    "healthcare companies": "Healthcare",
+    "health care companies": "Healthcare",
+    "energy": "Energy",
+    "energy companies": "Energy",
+    "utility": "Utilities",
+    "utilities": "Utilities",
+    "utility companies": "Utilities",
+    "industrial": "Industrials",
+    "industrials": "Industrials",
+    "industrial companies": "Industrials",
+    "real estate": "Real Estate",
+    "real estate companies": "Real Estate",
+    "reits": "Real Estate",
+    "consumer staples": "Consumer Staples",
+    "consumer discretionary": "Consumer Discretionary",
+    "materials companies": "Materials",
+    "communication services": "Communication Services",
 }
 
 OPERATOR_ALIASES: dict[str, str] = {

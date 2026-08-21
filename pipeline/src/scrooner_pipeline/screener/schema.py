@@ -55,7 +55,12 @@ class MetricPredicate(BaseModel):
 
 
 class CategoricalPredicate(BaseModel):
-    field: Literal["sic_code", "sic_description"]
+    # "sector" added 2026-08-21 (doc 10 Sec 12/doc 26 Sec 2.8/doc 28) --
+    # core.company.sector, a curated SIC-range bucket
+    # (company_master/sector_bucket.py), coarser than sic_code/
+    # sic_description but the field an investor actually means by "tech
+    # companies"/"financial companies" rather than an exact SIC match.
+    field: Literal["sic_code", "sic_description", "sector"]
     operator: Literal["="]
     value: str
 

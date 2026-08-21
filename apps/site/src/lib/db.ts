@@ -22,13 +22,18 @@ export interface CompanyIdentity {
   company_name: string;
   sic_code: string | null;
   sic_description: string | null;
+  // doc 10 Sec 12/doc 26 Sec 2.8/doc 28 (2026-08-21) -- a curated,
+  // investor-friendly bucket derived from sic_code (company_master/
+  // sector_bucket.py), coarser but more readable than the raw SIC
+  // description. Not GICS (licensed taxonomy, already ruled out).
+  sector: string | null;
   status: string;
   ticker: string | null;
 }
 
 export async function getCompanyByTicker(ticker: string): Promise<CompanyIdentity | null> {
   const rows = await sql<CompanyIdentity[]>`
-    select c.id, c.cik, c.company_name, c.sic_code, c.sic_description, c.status, l.ticker
+    select c.id, c.cik, c.company_name, c.sic_code, c.sic_description, c.sector, c.status, l.ticker
     from core.company c
     join core.listing l on l.company_id = c.id
     where lower(l.ticker) = lower(${ticker})
