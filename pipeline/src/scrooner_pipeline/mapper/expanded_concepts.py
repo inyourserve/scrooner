@@ -22,6 +22,36 @@ push, feeding Debtor/Payables Days + Cash Conversion Cycle) -- checked
 live first: AccountsReceivableNetCurrent (305 facts/6 companies) and
 AccountsPayableCurrent (293 facts/6 companies) are both real, raw,
 single-tag, unmapped instant balances across the golden-10.
+
+goodwill and basic_eps added 2026-08-21, acting on
+doc/learnings/core-fact-utilization-study.md's #1 and #4 ranked
+recommendations. Both single-tag, first_match by convention, no overlap
+risk checked (only one tag found for either across the golden-10).
+
+cf_ar_change/cf_inventory_change/cf_ap_change added 2026-08-21, acting on
+the study's #2 recommendation -- these are CASH-FLOW-STATEMENT period
+CHANGES (IncreaseDecreaseInAccountsReceivable etc.), a genuinely
+different concept from the balance-sheet instant snapshots
+(accounts_receivable/inventory/accounts_payable) already mapped above.
+statement='cash_flow' (duration), not 'balance_sheet'. Feed
+mapper/reconciliation.py's cross-check metrics, not calculate.py's
+generic engine directly.
+
+total_debt's alternate set was NOT widened, reversing the study's #3
+recommendation -- checked live before implementing (not assumed safe
+just because the study called it "cheap, already-proven"): company_id=2
+has multiple real periods where BOTH LongTermDebt (currently mapped,
+priority 1) and LongTermDebtNoncurrent (the proposed alternate) are
+tagged SIMULTANEOUS for the SAME period (e.g. $3,478,000,000 vs
+$3,472,000,000) -- summing both under total_debt's existing `sum` mode
+would nearly double-count debt for any company reporting both
+conventions in the same period. mapper/concepts.py's own original
+LongTermDebt mapping note already warned of exactly this risk for a
+different pair of tags; this confirms the same trap applies here too.
+No safe drop-in fix exists at the concept_mapping level -- widening
+`sum`-mode alternates is only safe when tags are mutually exclusive
+per (company, period), which was checked and failed here. Left as a
+named, deferred gap, not implemented unsafely.
 """
 
 import psycopg
@@ -42,6 +72,16 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
     ),
     ("accounts_receivable", "balance_sheet", "first_match", "Accounts receivable, net -- needed for Debtor Days"),
     ("accounts_payable", "balance_sheet", "first_match", "Accounts payable -- needed for Payables Days"),
+    ("goodwill", "balance_sheet", "first_match", "Balance-sheet goodwill -- closes doc 26's named Goodwill/Intangibles gap"),
+    ("basic_eps", "income_statement", "first_match", "Basic EPS -- standalone from diluted EPS, feeds eps_dilution_spread"),
+    ("cf_ar_change", "cash_flow", "first_match",
+     "Cash-flow-statement period change in accounts receivable (indirect-method CFO adjustment) -- "
+     "a different concept from the balance-sheet instant accounts_receivable above. Feeds the AR "
+     "reconciliation-gap cross-check in mapper/reconciliation.py."),
+    ("cf_inventory_change", "cash_flow", "first_match",
+     "Cash-flow-statement period change in inventory. Feeds mapper/reconciliation.py."),
+    ("cf_ap_change", "cash_flow", "first_match",
+     "Cash-flow-statement period change in accounts payable. Feeds mapper/reconciliation.py."),
 ]
 
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
@@ -53,6 +93,11 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
      "Alternate, not summand -- see module docstring's AAPL FY2015 overlap finding."),
     ("accounts_receivable", "us-gaap", "AccountsReceivableNetCurrent", 1, "approved", ""),
     ("accounts_payable", "us-gaap", "AccountsPayableCurrent", 1, "approved", ""),
+    ("goodwill", "us-gaap", "Goodwill", 1, "approved", ""),
+    ("basic_eps", "us-gaap", "EarningsPerShareBasic", 1, "approved", ""),
+    ("cf_ar_change", "us-gaap", "IncreaseDecreaseInAccountsReceivable", 1, "approved", ""),
+    ("cf_inventory_change", "us-gaap", "IncreaseDecreaseInInventories", 1, "approved", ""),
+    ("cf_ap_change", "us-gaap", "IncreaseDecreaseInAccountsPayable", 1, "approved", ""),
 ]
 
 

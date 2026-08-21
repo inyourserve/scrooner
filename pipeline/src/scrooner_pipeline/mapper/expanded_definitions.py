@@ -14,6 +14,31 @@ model.
 net_debt_ebitda does NOT require price (Net Debt and EBITDA are both
 price-independent) -- doc 18 already named this distinction; don't
 conflate it with the metrics that genuinely need price.
+
+Five more definitions added 2026-08-21, acting on
+doc/learnings/core-fact-utilization-study.md's ranked recommendations
+(expanded_concepts.py's own docstring has the full concept-level detail,
+including why total_debt's alternate widening was reversed rather than
+implemented):
+
+- goodwill_pct_assets: real calculate.py-engine input (ratio shape),
+  same as roa/quick_ratio.
+- eps_dilution_spread: (basic_eps - diluted_eps) / basic_eps, a real
+  calculate.py-engine input too -- basic_eps appears TWICE in its own
+  inputs list, once as "add" and once as "denominator". Checked before
+  relying on this: analytics.metric_definition_input has no unique
+  constraint beyond its own surrogate primary key (verified live against
+  pg_constraint), and calculate.py's per-period loop iterates each
+  (concept, role) input row independently rather than deduping by
+  concept_id -- so one concept feeding two different roles for the same
+  metric is already safe with zero engine changes, not a new capability
+  being assumed.
+- ar_change_reconciliation_gap / inventory_change_reconciliation_gap /
+  ap_change_reconciliation_gap: documentation-only, computed in the new
+  mapper/reconciliation.py (FY-vs-prior-FY balance-sheet delta compared
+  against the company's own reported cash-flow-statement change) --
+  doesn't fit this engine's single-period model, same reasoning as
+  cash_conversion_cycle needing expanded_metrics.py instead.
 """
 
 import psycopg
@@ -82,6 +107,21 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
      "mapper/ttm.py.", False, []),
     ("eps_growth_10y_cagr", "(Diluted EPS[t] / Diluted EPS[t-10]) ^ (1/10) - 1, same fiscal_period. Computed in "
      "mapper/ttm.py.", False, []),
+    ("goodwill_pct_assets", "Goodwill / Total Assets", False,
+     [("goodwill", "numerator"), ("total_assets", "denominator")]),
+    ("eps_dilution_spread", "(Basic EPS - Diluted EPS) / Basic EPS -- a dilution-quality signal distinct from "
+     "share_dilution_trend (which tracks share-COUNT change, not the basic-vs-diluted EPS gap itself)", False,
+     [("basic_eps", "add"), ("diluted_eps", "subtract"), ("basic_eps", "denominator")]),
+    ("ar_change_reconciliation_gap", "(Accounts Receivable[FY] - Accounts Receivable[FY-1]) - the company's own "
+     "reported cash-flow-statement IncreaseDecreaseInAccountsReceivable[FY]. A quality-of-earnings cross-check, "
+     "not a locked ratio -- a large gap flags AR movement the cash-flow statement's own adjustment doesn't "
+     "explain (e.g. an acquisition/divestiture, reclassification), not necessarily an error. Computed in "
+     "mapper/reconciliation.py -- needs a prior-FY balance-sheet lookup this engine's single-period model can't "
+     "express.", False, []),
+    ("inventory_change_reconciliation_gap", "Same cross-check as ar_change_reconciliation_gap, for Inventory. "
+     "Computed in mapper/reconciliation.py.", False, []),
+    ("ap_change_reconciliation_gap", "Same cross-check as ar_change_reconciliation_gap, for Accounts Payable. "
+     "Computed in mapper/reconciliation.py.", False, []),
 ]
 
 

@@ -75,6 +75,15 @@ DEFERRED_TO_STAGE_3E = {
 DEFERRED_TO_EXPANDED_METRICS = {
     "net_debt_ebitda", "institutional_ownership_pct", "cash_conversion_cycle", "share_dilution_trend",
     "piotroski_f_score", "fcf_gt_net_income", "zero_debt", "profitable_streak_years", "margin_expanding_3yr",
+    # These 3 are actually computed in mapper/reconciliation.py, not
+    # expanded_metrics.py -- grouped into this same set anyway since its
+    # real meaning is "not handled by this engine's FORMULA_SHAPES", not
+    # literally "lives in expanded_metrics.py". Added 2026-08-21 in the
+    # SAME edit as their metric_definition rows (expanded_definitions.py)
+    # -- this project has hit the "forgot to defer, next calculate() run
+    # crashes with a bare KeyError" bug twice already (net_debt_ebitda,
+    # share_dilution_trend), see pipeline/CLAUDE.md.
+    "ar_change_reconciliation_gap", "inventory_change_reconciliation_gap", "ap_change_reconciliation_gap",
 }
 
 # debtor_days/inventory_days/payables_days added to FY_ONLY_METRICS
@@ -119,6 +128,13 @@ FORMULA_SHAPES = {
     "debtor_days": "days",
     "inventory_days": "days",
     "payables_days": "days",
+    # Added 2026-08-21 (core-fact-utilization-study.md #1/#4). Both reuse
+    # existing shapes unchanged -- eps_dilution_spread's basic_eps
+    # appearing in two roles (add + denominator) needed zero engine
+    # changes, see expanded_definitions.py's module docstring for why
+    # that's safe.
+    "goodwill_pct_assets": "ratio",
+    "eps_dilution_spread": "sum_diff_ratio",
 }
 
 

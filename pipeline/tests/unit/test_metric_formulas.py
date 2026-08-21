@@ -24,6 +24,8 @@ FORMULA_CASES = {
     "debtor_days": ("days", {"numerator": [Decimal("50")], "denominator": [Decimal("500")]}, Decimal("36.5")),
     "inventory_days": ("days", {"numerator": [Decimal("100")], "denominator": [Decimal("400")]}, Decimal("91.25")),
     "payables_days": ("days", {"numerator": [Decimal("80")], "denominator": [Decimal("400")]}, Decimal("73")),
+    "goodwill_pct_assets": ("ratio", {"numerator": [Decimal("15")], "denominator": [Decimal("100")]}, Decimal("0.15")),
+    "eps_dilution_spread": ("sum_diff_ratio", {"add": [Decimal("5")], "subtract": [Decimal("4.5")], "denominator": [Decimal("5")]}, Decimal("0.1")),
 }
 
 EXPECTED_EXPANDED_DEFINITIONS = {
@@ -34,6 +36,8 @@ EXPECTED_EXPANDED_DEFINITIONS = {
     "cash_conversion_cycle", "piotroski_f_score",
     "fcf_gt_net_income", "zero_debt", "profitable_streak_years", "margin_expanding_3yr",
     "revenue_growth_5y_cagr", "revenue_growth_10y_cagr", "eps_growth_5y_cagr", "eps_growth_10y_cagr",
+    "goodwill_pct_assets", "eps_dilution_spread",
+    "ar_change_reconciliation_gap", "inventory_change_reconciliation_gap", "ap_change_reconciliation_gap",
 }
 
 

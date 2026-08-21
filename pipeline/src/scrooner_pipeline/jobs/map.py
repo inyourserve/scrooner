@@ -20,6 +20,7 @@ from scrooner_pipeline.mapper import expanded_definitions
 from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
 from scrooner_pipeline.mapper.quality_score import calculate_piotroski
 from scrooner_pipeline.mapper.quality_flags import calculate_quality_flags
+from scrooner_pipeline.mapper.reconciliation import calculate_reconciliation
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -215,6 +216,20 @@ def calculate_quality_flags_cmd(
     with get_connection() as conn:
         stats = calculate_quality_flags(conn, target_ciks)
     typer.echo(f"calculate-quality-flags: {stats}")
+
+
+@app.command("calculate-reconciliation")
+def calculate_reconciliation_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Core-fact-utilization-study.md #2 (2026-08-21): AR/Inventory/AP
+    cash-flow-vs-balance-sheet reconciliation gaps, a quality-of-earnings
+    cross-check, FY-only. Requires seed-expanded-concepts,
+    seed-expanded-definitions, and resolve-facts to have already run."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_reconciliation(conn, target_ciks)
+    typer.echo(f"calculate-reconciliation: {stats}")
 
 
 @app.command()
