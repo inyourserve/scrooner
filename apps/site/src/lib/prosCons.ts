@@ -21,13 +21,22 @@ function avg(values: (string | null)[]): number | null {
 export async function buildChecklist(companyId: number, latest: Record<string, MetricRow>): Promise<ChecklistItem[]> {
   const items: ChecklistItem[] = [];
 
-  const roe3y = avg(await getMetricHistory(companyId, "roe", 3));
+  // These 3 are independent reads -- run concurrently rather than
+  // sequentially awaited (each is a separate DB round-trip; see the
+  // stock page's own parallelization for the same reasoning).
+  const [roe3yRaw, roic3yRaw, fcfHistory] = await Promise.all([
+    getMetricHistory(companyId, "roe", 3),
+    getMetricHistory(companyId, "roic", 3),
+    getMetricHistory(companyId, "fcf", 3),
+  ]);
+  const roe3y = avg(roe3yRaw);
+  const roic3y = avg(roic3yRaw);
+
   if (roe3y !== null) {
     if (roe3y > 0.2) items.push({ text: `Company has a high return on equity of ${(roe3y * 100).toFixed(1)}% over the last 3 years.`, kind: "pro" });
     if (roe3y < 0.1) items.push({ text: `Company has a low return on equity of ${(roe3y * 100).toFixed(1)}% over the last 3 years.`, kind: "con" });
   }
 
-  const roic3y = avg(await getMetricHistory(companyId, "roic", 3));
   if (roic3y !== null && roic3y > 0.15) {
     items.push({ text: `Company has a strong return on invested capital of ${(roic3y * 100).toFixed(1)}% over the last 3 years.`, kind: "pro" });
   }
@@ -39,7 +48,6 @@ export async function buildChecklist(companyId: number, latest: Record<string, M
     if (v < 0) items.push({ text: `Revenue has declined over the last 3 years (CAGR ${(v * 100).toFixed(1)}%).`, kind: "con" });
   }
 
-  const fcfHistory = await getMetricHistory(companyId, "fcf", 3);
   if (fcfHistory.length === 3 && fcfHistory.every((v) => v !== null && Number(v) > 0)) {
     items.push({ text: "Company has generated positive free cash flow in each of the last 3 years.", kind: "pro" });
   }

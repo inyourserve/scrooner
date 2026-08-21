@@ -8,7 +8,13 @@
 
 import postgres from "postgres";
 
-const sql = postgres(import.meta.env.DATABASE_URL, { max: 5 });
+// max=8: the stock page now fires up to 12 concurrent queries per
+// request (see [ticker].astro's Promise.all) -- 5 was a real bottleneck,
+// forcing queueing. Checked live before picking 8: the Supabase pooler
+// (session mode) caps clients at 15 total for this connection string,
+// shared with any other idle sessions -- max=15 itself hit
+// EMAXCONNSESSION, so 8 leaves real headroom rather than maxing it out.
+const sql = postgres(import.meta.env.DATABASE_URL, { max: 8 });
 
 export interface CompanyIdentity {
   id: number;

@@ -50,19 +50,41 @@ if (!company) {
   return new Response("Company not found", { status: 404 });
 }
 
-const metrics = await getLatestMetrics(company.id);
+// Perf: these 12 reads are all independent of each other (only
+// `checklist` depends on `metrics`' resolved value) -- previously each
+// was awaited one at a time, paying a full DB round-trip serially per
+// query on every page load. Running them concurrently turns ~12
+// sequential round-trips into ~1 round-trip's worth of wall-clock time.
+const [
+  metrics,
+  quarterlyResults,
+  incomeStatement,
+  balanceSheet,
+  cashFlow,
+  filings,
+  insiderTransactions,
+  beneficialOwnership,
+  institutionalHolders,
+  publicFloat,
+  latestPrice,
+  bookValue,
+] = await Promise.all([
+  getLatestMetrics(company.id),
+  getStatement(company.id, "income_statement", "quarterly"),
+  getStatement(company.id, "income_statement"),
+  getStatement(company.id, "balance_sheet"),
+  getStatement(company.id, "cash_flow"),
+  getRecentFilings(company.id),
+  getRecentInsiderTransactions(company.id),
+  getRecentBeneficialOwnership(company.id),
+  getTopInstitutionalHolders(company.id),
+  getLatestPublicFloat(company.id),
+  getLatestPrice(company.id),
+  getLatestConceptValue(company.id, "stockholders_equity"),
+]);
 const checklist = await buildChecklist(company.id, metrics);
-const quarterlyResults = await getStatement(company.id, "income_statement", "quarterly");
-const incomeStatement = await getStatement(company.id, "income_statement");
-const balanceSheet = await getStatement(company.id, "balance_sheet");
-const cashFlow = await getStatement(company.id, "cash_flow");
-const filings = await getRecentFilings(company.id);
-const insiderTransactions = await getRecentInsiderTransactions(company.id);
-const beneficialOwnership = await getRecentBeneficialOwnership(company.id);
-const institutionalHolders = await getTopInstitutionalHolders(company.id);
-const publicFloat = await getLatestPublicFloat(company.id);
-const latestPrice = await getLatestPrice(company.id);
-const bookValue = await getLatestConceptValue(company.id, "stockholders_equity");
+const appUrl = (import.meta.env.PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+const screenerUrl = `${appUrl}/screener`;
 
 function m(name: string): MetricRow | undefined {
   return metrics[name];
