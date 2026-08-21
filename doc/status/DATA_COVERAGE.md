@@ -1,6 +1,6 @@
 # Scrooner — Data Point & Feature Coverage Tracker
 
-Living tracker requested 2026-08-18. Cross-references every individual data point named in [`doc/requirements/10_scrooner_required_data_points.md`](../requirements/10_scrooner_required_data_points.md) (the master P0/P1/P2 inventory, "Finalized v1.0") plus the additions [`doc/18`](../requirements/18_Scrooner_Expanded_Metric_Scope_for_Premium.md) and [`doc/26`](../requirements/26_Scrooner_Screener_Data_Points_Gap_Analysis.md) proposed on top of it, against what's **actually built and verified**, checked live against the real database — not recalled from memory. Same rows, same order as doc 10, so the two docs can be read side by side.
+Living tracker requested 2026-08-18. Cross-references every individual data point named in [`doc/requirements/10_scrooner_required_data_points.md`](../requirements/10_scrooner_required_data_points.md) (the master P0/P1/P2 inventory, "Finalized v1.0") plus the additions [`doc/18`](../requirements/18_Scrooner_Expanded_Metric_Scope_for_Premium.md), [`doc/26`](../requirements/26_Scrooner_Screener_Data_Points_Gap_Analysis.md), and [`doc/28`](../scoping/28_Scrooner_Trendlyne_Data_Point_Gap_Analysis.md) proposed on top of it, against what's **actually built and verified**, checked live against the real database — not recalled from memory. Same rows, same order as doc 10, so the two docs can be read side by side; doc 28's items (not in doc 10's original inventory) are added as extra rows tagged "doc 28" instead of a P0/P1/P2 priority, and don't change doc 10's own P0 coverage denominators below.
 
 **Status legend**: ✅ Built & verified · 🟡 Partial (raw data exists, not yet exposed/computed as this exact data point) · 📋 Scoped (a doc proposes it with real evidence, not built) · ⬜ Not started · 🚫 Blocked (needs a vendor or open decision, not a build task)
 
@@ -9,6 +9,8 @@ Living tracker requested 2026-08-18. Cross-references every individual data poin
 ---
 
 ## Coverage summary
+
+**Updated 2026-08-21**: the 5Y/10Y Revenue/EPS CAGR rows (Section 6) were fixed from 🟡 partial to ✅ — they were actually completed 2026-08-19 (`mapper/ttm.py`) but this file's row-level status was never updated to match, an inconsistency caught while doing this pass, not a new build. Also added 5 new doc 28-sourced rows (Goodwill % of Assets, Basic EPS/Dilution Spread, R&D Intensity, Net Interest Income, AR/Inventory/AP Reconciliation Gaps) — see the per-row notes and the new "Done this pass" entry below. None of doc 10's original P0 denominators below change, since every doc 28 item sits outside doc 10's original inventory.
 
 **Updated 2026-08-18** after building all 12 doc 18 Tier A / doc 26 §2-3 metrics (ROA, Quick Ratio, SBC%Revenue, EBITDA, Net Debt/EBITDA, EV/EBITDA, EV/Sales, PEG Ratio, Buyback Yield, Total Shareholder Yield, Institutional Ownership %, Share Count Dilution Trend) — `mapper/expanded_metrics.py` + `expanded_concepts.py` + `expanded_definitions.py`, verified live against the golden-10 and wired into the company page's new "Additional Ratios" card.
 
@@ -45,6 +47,7 @@ Living tracker requested 2026-08-18. Cross-references every individual data poin
 | PEG Ratio | P0 | ✅ | `mapper/expanded_metrics.py` — Trailing P/E ÷ EPS growth (YoY %); null (not a nonsensical ratio) when growth ≤ 0, e.g. AAPL 1.22x real |
 | EPS (TTM) | P0 | ✅ | `diluted_eps` TTM already used in Trailing P/E |
 | EPS (Forward) | P0 | 🚫 | Needs vendor |
+| Basic EPS + Basic-vs-Diluted Dilution Spread | doc 28 | ✅ | New `basic_eps` concept + `eps_dilution_spread` metric (2026-08-21, doc 28 #4) — a real, standalone dilution-quality signal distinct from `share_dilution_trend` (tracks the EPS gap itself, not just share-count change). Not in doc 10's original inventory. |
 | Book Value / Price-to-Book | P0 | ✅ | Both built — Book Value tile + Price/Book metric |
 | Dividend Yield | P0 | ✅ | `mapper/price_metrics.py` |
 | Beta (5Y monthly) | P0 | 🚫 | Needs historical price, doc 10 flags itself |
@@ -73,6 +76,7 @@ Living tracker requested 2026-08-18. Cross-references every individual data poin
 | ROIC | P0 | ✅ | Locked metric, pinned formula (doc 11), TTM + FY |
 | Return on Assets (ROA) | P1 | ✅ | `mapper/calculate.py`'s generic engine, `ratio` shape — AAPL 7.8% real |
 | Margin trend direction flag | P1 | ✅ | `margin_expanding_3yr` (`mapper/quality_flags.py`, 2026-08-19) — AAPL correctly TRUE (44.1%→46.2%→46.9% gross margin, FY2023-2025, hand-verified) |
+| R&D Intensity (R&D / Revenue) | doc 28 | ✅ | New `research_and_development` concept + `rnd_intensity` metric (2026-08-21, doc 28 #1) — `us-gaap:ResearchAndDevelopmentExpense` resolves for 5 companies/427 facts. Not in doc 10's original inventory. |
 
 ## 4. Cash Flow
 
@@ -85,6 +89,8 @@ Living tracker requested 2026-08-18. Cross-references every individual data poin
 | CapEx (% of revenue) | P1 | 🟡 | CapEx itself ✅ mapped/used; "% of revenue" not separately exposed |
 | FCF vs. Net Income divergence flag | P1 | 📋 | Named doc 18 Tier A, not built |
 | SBC as % of revenue | P1 | ✅ | New `sbc` canonical concept + `sbc_pct_revenue` metric (`mapper/expanded_concepts.py`/`calculate.py`) — AAPL 3.1% real |
+| Net Interest Income | doc 28 | ✅ | New `interest_income` concept + `net_interest_income` metric (2026-08-21, doc 28 #4) — `us-gaap:InvestmentIncomeInterest` resolves for 7 companies/372 facts, separate from the existing `interest_expense`. Not in doc 10's original inventory. |
+| Cash-Flow AR/Inventory/AP Reconciliation Gaps | doc 28 | ✅ | New `mapper/reconciliation.py` (2026-08-21, doc 28 #2) — compares each year's balance-sheet-implied AR/Inventory/AP change against the company's own reported cash-flow-statement adjustment, a quality-of-earnings cross-check (a signed dollar gap, not a locked ratio). AAPL FY2025 AR gap: -$315M, reproduces the manual balance-sheet-vs-cash-flow check exactly. Not in doc 10's original inventory. |
 
 ## 5. Balance Sheet Health
 
@@ -97,14 +103,14 @@ Living tracker requested 2026-08-18. Cross-references every individual data poin
 | Current Ratio | P0 | ✅ | Locked metric |
 | Quick Ratio | P1 | ✅ | New `inventory` concept + `sum_diff_ratio` shape — AAPL 0.93x real |
 | Cash & Equivalents | P0 | ✅ | Mapped concept, used in ROIC/FCF Yield |
-| Goodwill & Intangibles (% of assets) | P2 | ⬜ | Not scoped anywhere yet |
+| Goodwill & Intangibles (% of assets) | P2 | ✅ | New `goodwill` concept + `goodwill_pct_assets` metric (`mapper/expanded_concepts.py`/`calculate.py`, 2026-08-21, doc 28 #1) — 315 real computed values across 8 companies (e.g. MSFT 15.8% of assets), honest null where Goodwill isn't tagged (AAPL stops reporting it separately after ~FY2017) |
 
 ## 6. Growth Metrics
 
 | Data point | Priority | Status | Notes |
 |---|---|---|---|
-| Revenue Growth (YoY, 3Y/5Y/10Y CAGR) | P0 | 🟡 | YoY + 3Y CAGR ✅ built (Mapper Stage 3e); 5Y/10Y horizons not built |
-| EPS Growth (YoY, 3Y/5Y/10Y CAGR) | P0 | 🟡 | Same — YoY + 3Y built, 5Y/10Y not built |
+| Revenue Growth (YoY, 3Y/5Y/10Y CAGR) | P0 | ✅ | All 4 horizons built (`mapper/ttm.py` `GROWTH_METRICS`, 2026-08-19) — AAPL's 10Y CAGR (5.94%) hand-verified against real FY2015/FY2025 revenue |
+| EPS Growth (YoY, 3Y/5Y/10Y CAGR) | P0 | ✅ | Same module, same date — all 4 horizons built |
 | FCF Growth (3Y/5Y CAGR) | P1 | 📋 | Named doc 18 Tier A, not built |
 | Forward Revenue Growth Estimate | P0 | 🚫 | Needs vendor, doc 10 flags itself |
 | Forward EPS Growth Estimate | P0 | 🚫 | Needs vendor |
@@ -197,6 +203,8 @@ Done this pass:
 **`total_debt`'s FY-period sparsity, investigated and resolved as a non-issue**: root-caused live (2026-08-19), not just surfaced. AAPL's FY-period `LongTermDebt` facts exist in `core.fact` but are correctly marked `is_authoritative=false` by Normalizer Stage 2e (`dedupe.py`) — the FY2023 balance, for example, is reported as $105,103M in the FY2023 10-K itself, but as $105,100M (a ~0.003% difference) in three subsequent 10-Qs' comparative-period columns. This is a genuine, tiny source-data disagreement, and Stage 2e's already-documented, deliberate design ("picking any single value here — even 'most recent' — would be a guess the Mapper shouldn't inherit as settled fact") correctly refuses to pick a winner rather than silently guessing. 12 such conflict groups exist across 5 of the golden-10 companies, all at FY periods for debt tags specifically. **Conclusion: this is the pipeline working exactly as designed, not a gap to fix** — the earlier framing ("worth a root-cause pass") was itself the thing that needed correcting, not the code.
 
 7. **A real display gap, found and fixed 2026-08-19, not a pipeline gap**: `apps/site`'s company page rendered only 37 of 45 real `analytics.metric_definition` rows. Eight of doc 02's *original* locked metrics — `gross_margin`, `operating_margin`, `net_margin`, `current_ratio`, `debt_to_equity`, `interest_coverage_ratio`, `fcf`, `fcf_margin` — had been computed since Mapper Stage 3d (2026-08-16) but were never wired into the page's display arrays at all, an oversight that predates every metric added this session. Fixed by rebuilding the company page around all 45 metrics: a curated 8-item "Key Metrics" set (design framework §12.2's own recommendation, e.g. Operating Margin and Debt/Equity are now both visible for the first time) plus the remaining 37 grouped into 7 named, collapsible categories (Valuation, Growth, Profitability, Cash Flow & Efficiency, Financial Strength, Capital Allocation & Quality, Ownership) — zero metrics hidden, none duplicated. New shared `apps/site/src/components/MetricGrid.astro` and `lib/format.ts` so this null-state/accessibility contract lives in one place. Null states now carry an `aria-label` (not just a hover `title`), per design framework §17.2.
+
+8. **Doc 28's 4 ranked recommendations, built 2026-08-21 — one reversed on deeper verification, not implemented as originally proposed.** Goodwill (`goodwill` concept + `goodwill_pct_assets`), Basic EPS (`basic_eps` concept + `eps_dilution_spread`), and new `mapper/reconciliation.py` (AR/Inventory/AP cash-flow-vs-balance-sheet reconciliation gaps) all landed and are verified against the golden-10 with real, sane values (see per-row notes above). The 4th recommendation from the original study (widening `total_debt`'s alternate set with `LongTermDebtNoncurrent`) was **reversed, not built**, after checking live whether `LongTermDebt` and `LongTermDebtNoncurrent` are ever tagged simultaneously for the same company/period — they are (company_id=2, $3.478B vs $3.472B for the same period), so summing both would double-count debt. In its place, doc 28 (a real Trendlyne stock page comparison) surfaced two cheap zero-new-fetch replacements built the same pass: R&D Expense (`research_and_development`/`rnd_intensity`) and Interest Income (`interest_income`/`net_interest_income`). Pipeline test count grew from 145 → 148 (Goodwill/Basic EPS/reconciliation) → 150 (R&D/Interest Income), all passing at each step, zero regression to any existing metric.
 
 Ranked by real coverage gained per unit of effort, all EDGAR-only (no vendor, no new decision):
 
