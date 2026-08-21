@@ -39,6 +39,12 @@ implemented):
   against the company's own reported cash-flow-statement change) --
   doesn't fit this engine's single-period model, same reasoning as
   cash_conversion_cycle needing expanded_metrics.py instead.
+
+Two more added same day, acting on doc 28 (Trendlyne gap analysis)
+items #1/#4:
+- rnd_intensity: R&D / Revenue, real calculate.py-engine input (ratio shape).
+- net_interest_income: Interest Income - Interest Expense, real
+  calculate.py-engine input (sum_diff shape) -- same shape fcf already uses.
 """
 
 import psycopg
@@ -122,6 +128,10 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
      "Computed in mapper/reconciliation.py.", False, []),
     ("ap_change_reconciliation_gap", "Same cross-check as ar_change_reconciliation_gap, for Accounts Payable. "
      "Computed in mapper/reconciliation.py.", False, []),
+    ("rnd_intensity", "R&D Expense / Revenue", False,
+     [("research_and_development", "numerator"), ("revenue", "denominator")]),
+    ("net_interest_income", "Interest Income - Interest Expense", False,
+     [("interest_income", "add"), ("interest_expense", "subtract")]),
 ]
 
 

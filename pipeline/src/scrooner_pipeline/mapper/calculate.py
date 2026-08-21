@@ -135,6 +135,9 @@ FORMULA_SHAPES = {
     # that's safe.
     "goodwill_pct_assets": "ratio",
     "eps_dilution_spread": "sum_diff_ratio",
+    # Added 2026-08-21 (doc 28, Trendlyne gap analysis #1/#4).
+    "rnd_intensity": "ratio",
+    "net_interest_income": "sum_diff",
 }
 
 

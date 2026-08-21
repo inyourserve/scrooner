@@ -52,6 +52,16 @@ No safe drop-in fix exists at the concept_mapping level -- widening
 `sum`-mode alternates is only safe when tags are mutually exclusive
 per (company, period), which was checked and failed here. Left as a
 named, deferred gap, not implemented unsafely.
+
+research_and_development and interest_income added 2026-08-21, acting on
+doc/scoping/28_Scrooner_Trendlyne_Data_Point_Gap_Analysis.md (items #1/#4
+-- a real Trendlyne stock page named both as data points this project
+doesn't have yet). Checked live before adding: `us-gaap:
+ResearchAndDevelopmentExpense` resolves for 5 companies/427 facts;
+`us-gaap:InvestmentIncomeInterest` resolves for 7 companies/372 facts
+(a cleaner match than two other interest-income tag variants checked,
+which covered only 1-2 companies each). Both single-tag, first_match by
+convention, no overlap risk checked (only one tag used for either).
 """
 
 import psycopg
@@ -82,6 +92,9 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
      "Cash-flow-statement period change in inventory. Feeds mapper/reconciliation.py."),
     ("cf_ap_change", "cash_flow", "first_match",
      "Cash-flow-statement period change in accounts payable. Feeds mapper/reconciliation.py."),
+    ("research_and_development", "income_statement", "first_match", "R&D expense -- feeds rnd_intensity"),
+    ("interest_income", "income_statement", "first_match", "Interest income -- feeds net_interest_income, "
+     "separate from interest_expense (feeds interest_coverage_ratio already)"),
 ]
 
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
@@ -98,6 +111,8 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
     ("cf_ar_change", "us-gaap", "IncreaseDecreaseInAccountsReceivable", 1, "approved", ""),
     ("cf_inventory_change", "us-gaap", "IncreaseDecreaseInInventories", 1, "approved", ""),
     ("cf_ap_change", "us-gaap", "IncreaseDecreaseInAccountsPayable", 1, "approved", ""),
+    ("research_and_development", "us-gaap", "ResearchAndDevelopmentExpense", 1, "approved", ""),
+    ("interest_income", "us-gaap", "InvestmentIncomeInterest", 1, "approved", ""),
 ]
 
 
