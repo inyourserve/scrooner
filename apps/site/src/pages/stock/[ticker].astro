@@ -50,6 +50,18 @@ if (!company) {
   return new Response("Company not found", { status: 404 });
 }
 
+// Perf: this page's data only changes when the pipeline reruns (hours/
+// days apart), never per-request -- a CDN/edge layer can serve repeat
+// visits straight from cache with zero DB round-trip. s-maxage=1hr,
+// stale-while-revalidate=24hr: a cache miss serves stale content
+// instantly while refreshing in the background, rather than blocking
+// the visitor on a fresh render. `public` is safe only because this
+// page is currently identical for every visitor -- once doc 29's
+// logged-in Key Metrics personalization lands, this needs revisiting
+// (a personalized response must not be cached and served to a
+// different user).
+Astro.response.headers.set("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
+
 // Perf: these 12 reads are all independent of each other (only
 // `checklist` depends on `metrics`' resolved value) -- previously each
 // was awaited one at a time, paying a full DB round-trip serially per
