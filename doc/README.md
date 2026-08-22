@@ -66,6 +66,7 @@ Each pair: the plan, then the Definition-of-Done evidence proving it was actuall
 - [`23_Scrooner_EDGAR_Signal_Enhancements_Execution_Plan.md`](scoping/23_Scrooner_EDGAR_Signal_Enhancements_Execution_Plan.md) — scopes doc 22's ranked items (mostly now built, see doc 24 Phase 1)
 - [`27_Scrooner_Decision_Dataset_Study_Gap_Analysis.md`](scoping/27_Scrooner_Decision_Dataset_Study_Gap_Analysis.md) — cross-references `perplexity-decision-dataset-study.md` against build state; UX ideas for doc 24 Phase 3
 - [`28_Scrooner_Trendlyne_Data_Point_Gap_Analysis.md`](scoping/28_Scrooner_Trendlyne_Data_Point_Gap_Analysis.md) — cross-references a live Trendlyne stock page against build state; ranks new candidates (R&D Expense, Interest Income, ownership-by-category, ownership trend, Beta, Congressional trading disclosures)
+- [`29_Scrooner_Personalized_Key_Metrics_Plan.md`](scoping/29_Scrooner_Personalized_Key_Metrics_Plan.md) — a concrete plan for letting a logged-in user customize the company page's Key Metrics bar; gated on Part 9 (User System) existing first
 
 ## Planning / backlog (sequencing across everything above)
 
@@ -79,7 +80,7 @@ Each pair: the plan, then the Definition-of-Done evidence proving it was actuall
 
 ## Subdirectories
 
-- [`learnings/`](learnings/) — 31 entries covering product, design, architecture, and engineering: what broke or was clarified, how it was actually found, and the generalizable lesson. Not a decision doc — read to avoid rediscovering a solved problem.
+- [`learnings/`](learnings/) — 38 entries covering product, design, architecture, and engineering: what broke or was clarified, how it was actually found, and the generalizable lesson. Not a decision doc — read to avoid rediscovering a solved problem.
 - [`adr/`](adr/) — Architecture Decision Records for consequential, hard-to-reverse technical calls. Currently just the template; none written yet (no call has needed one).
 - [`html/`](html/) — reference source material (e.g. `screener.html`, the real Screener.in page doc 17's analysis was grounded in; `trendlyne-apple.html`, doc 28's grounding), not documentation itself.
 - [`consultant/`](consultant/) — independent recommendations and opportunity assessments; these advise but do not override canonical decisions or status.
