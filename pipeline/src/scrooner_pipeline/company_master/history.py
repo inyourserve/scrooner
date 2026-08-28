@@ -195,6 +195,23 @@ def upsert_name_history(conn: psycopg.Connection, company_id: int, rows: list[di
     already proven in Mapper's resolve.py/calculate.py -- delete-then-
     reinsert per company sidesteps composite-key-with-nullable-column
     upsert entirely rather than working around it with a NULL sentinel."""
+    deduped: dict[tuple, dict] = {}
+    for r in rows:
+        key = (r["company_name"], r["effective_from"])
+        existing = deduped.get(key)
+        # Found live 2026-08-23 (AgenTus Therapeutics, company_id 2752):
+        # two distinct source snapshots can independently derive the same
+        # (company_name, effective_from) pair, violating this table's own
+        # unique constraint on executemany. Keep whichever copy has the
+        # later effective_to (None = still-open/current, always wins) --
+        # same-key rows are the same historical fact, not real data loss.
+        if existing is None or (
+            r["effective_to"] is None
+            or (existing["effective_to"] is not None and r["effective_to"] > existing["effective_to"])
+        ):
+            deduped[key] = r
+    rows = list(deduped.values())
+
     with conn.cursor() as cur:
         cur.execute("delete from core.company_name_history where company_id = %s", (company_id,))
         if rows:

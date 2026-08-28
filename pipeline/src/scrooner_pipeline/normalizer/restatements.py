@@ -38,6 +38,17 @@ logger = structlog.get_logger()
 
 
 def link_amendments_for_company(conn: psycopg.Connection, company_id: int) -> dict:
+    """Batched (2026-08-26): the original version issued one correlated
+    SELECT plus one UPDATE PER amendment -- found live to be the real
+    remaining cost driver for heavy companies (company_id=2864, 43
+    amendments, ~10+ minutes; a same-day peer with FAR more superseded fact
+    pairs but only 6 amendments finished in under a minute once
+    supersede_facts_for_company was batched, isolating amendment COUNT, not
+    pair count, as the actual bottleneck here). Same matching rule (most
+    recent prior filing, same base form family, same period_of_report),
+    now evaluated for every amendment in one query via DISTINCT ON, applied
+    with one bulk UPDATE.
+    """
     with conn.cursor() as cur:
         cur.execute(
             "select id, accession_number, form, period_of_report, filing_date "
@@ -46,41 +57,78 @@ def link_amendments_for_company(conn: psycopg.Connection, company_id: int) -> di
         )
         amendments = cur.fetchall()
 
+    if not amendments:
+        return {"linked": 0, "unmatched": 0}
+
+    amend_ids = [a[0] for a in amendments]
+    base_forms = [a[2].replace("/A", "") for a in amendments]
+    alt_forms = [f"{bf}/A" for bf in base_forms]
+    periods = [a[3] for a in amendments]
+    filing_dates = [a[4] for a in amendments]
+
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select distinct on (a.amend_id) a.amend_id, f.id
+            from unnest(%s::bigint[], %s::text[], %s::text[], %s::date[], %s::date[])
+                as a(amend_id, base_form, alt_form, period_of_report, filing_date)
+            join core.filing f
+                on f.company_id = %s
+               and f.form in (a.base_form, a.alt_form)
+               and f.period_of_report = a.period_of_report
+               and f.filing_date < a.filing_date
+            order by a.amend_id, f.filing_date desc
+            """,
+            (amend_ids, base_forms, alt_forms, periods, filing_dates, company_id),
+        )
+        matches = dict(cur.fetchall())
+
     linked = 0
     unmatched = 0
-    with conn.cursor() as cur:
-        for amend_id, accession_number, form, period_of_report, filing_date in amendments:
-            base_form = form.replace("/A", "")
+    matched_amend_ids = []
+    matched_original_ids = []
+    for amend_id, accession_number, form, period_of_report, _filing_date in amendments:
+        original_id = matches.get(amend_id)
+        if original_id is None:
+            unmatched += 1
+            logger.warning(
+                "restatements.amendment_unmatched",
+                company_id=company_id,
+                accession_number=accession_number,
+                form=form,
+                period_of_report=period_of_report,
+            )
+            continue
+        matched_amend_ids.append(amend_id)
+        matched_original_ids.append(original_id)
+        linked += 1
+
+    if matched_amend_ids:
+        with conn.cursor() as cur:
             cur.execute(
                 """
-                select id from core.filing
-                where company_id = %s
-                  and form in (%s, %s)
-                  and period_of_report = %s
-                  and filing_date < %s
-                order by filing_date desc
-                limit 1
+                update core.filing set amends_filing_id = v.original_id
+                from unnest(%s::bigint[], %s::bigint[]) as v(amend_id, original_id)
+                where core.filing.id = v.amend_id
                 """,
-                (company_id, base_form, f"{base_form}/A", period_of_report, filing_date),
+                (matched_amend_ids, matched_original_ids),
             )
-            row = cur.fetchone()
-            if row is None:
-                unmatched += 1
-                logger.warning(
-                    "restatements.amendment_unmatched",
-                    company_id=company_id,
-                    accession_number=accession_number,
-                    form=form,
-                    period_of_report=period_of_report,
-                )
-                continue
-            cur.execute("update core.filing set amends_filing_id = %s where id = %s", (row[0], amend_id))
-            linked += 1
     conn.commit()
     return {"linked": linked, "unmatched": unmatched}
 
 
 def supersede_facts_for_company(conn: psycopg.Connection, company_id: int) -> dict:
+    """Batched (2026-08-26): the original version issued one SELECT plus two
+    round-trip UPDATEs PER superseded fact pair -- fine for most companies,
+    but a real bug for the ones with hundreds/thousands of pairs (found
+    live: company_id=2864, 1,088 pairs, ~11 minutes every single run,
+    purely from network round-trip count, not query cost -- the exact
+    N+1-in-a-loop shape this project's own pipeline/CLAUDE.md already
+    documents as forbidden). Same semantics, same per-pair join condition,
+    now evaluated for ALL of a company's amendment/original filing pairs in
+    one query (via unnest over the filing-id pairs), then applied with
+    exactly two bulk UPDATEs regardless of how many pairs matched.
+    """
     with conn.cursor() as cur:
         cur.execute(
             "select id, amends_filing_id from core.filing where company_id = %s and amends_filing_id is not null",
@@ -88,33 +136,51 @@ def supersede_facts_for_company(conn: psycopg.Connection, company_id: int) -> di
         )
         pairs = cur.fetchall()
 
-    superseded_pairs = 0
+    if not pairs:
+        return {"superseded_pairs": 0}
+
+    amend_filing_ids = [p[0] for p in pairs]
+    original_filing_ids = [p[1] for p in pairs]
+
     with conn.cursor() as cur:
-        for amend_filing_id, original_filing_id in pairs:
-            cur.execute(
-                """
-                select af.id, of.id
-                from core.fact af
-                join core.fact "of"
-                    on of.company_id = af.company_id
-                   and of.concept_id = af.concept_id
-                   and of.unit_id   = af.unit_id
-                   and of.period_id = af.period_id
-                   and of.filing_id = %s
-                where af.filing_id = %s
-                """,
-                (original_filing_id, amend_filing_id),
-            )
-            matches = cur.fetchall()
-            for amend_fact_id, orig_fact_id in matches:
-                cur.execute(
-                    "update core.fact set is_authoritative = true, supersedes_fact_id = %s where id = %s",
-                    (orig_fact_id, amend_fact_id),
-                )
-                cur.execute("update core.fact set is_authoritative = false where id = %s", (orig_fact_id,))
-                superseded_pairs += 1
+        cur.execute(
+            """
+            select af.id, of.id
+            from unnest(%s::bigint[], %s::bigint[]) as pair(amend_filing_id, original_filing_id)
+            join core.fact af on af.filing_id = pair.amend_filing_id
+            join core.fact "of"
+                on of.filing_id = pair.original_filing_id
+               and of.company_id = af.company_id
+               and of.concept_id = af.concept_id
+               and of.unit_id   = af.unit_id
+               and of.period_id = af.period_id
+            """,
+            (amend_filing_ids, original_filing_ids),
+        )
+        matches = cur.fetchall()
+
+    if not matches:
+        conn.commit()
+        return {"superseded_pairs": 0}
+
+    amend_fact_ids = [m[0] for m in matches]
+    orig_fact_ids = [m[1] for m in matches]
+
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            update core.fact set is_authoritative = true, supersedes_fact_id = v.orig_id
+            from unnest(%s::bigint[], %s::bigint[]) as v(fact_id, orig_id)
+            where core.fact.id = v.fact_id
+            """,
+            (amend_fact_ids, orig_fact_ids),
+        )
+        cur.execute(
+            "update core.fact set is_authoritative = false where id = any(%s::bigint[])",
+            (orig_fact_ids,),
+        )
     conn.commit()
-    return {"superseded_pairs": superseded_pairs}
+    return {"superseded_pairs": len(matches)}
 
 
 def resolve_restatements(conn: psycopg.Connection, ciks: set[str]) -> dict:

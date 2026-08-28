@@ -28,20 +28,28 @@ class RestatementCursor:
                 for f in self.conn.filings
                 if f["company_id"] == company_id and f["is_amendment"]
             ]
-        elif normalized.startswith("select id from core.filing"):
-            company_id, base_form, amendment_form, period, before = params
-            candidates = [
-                f for f in self.conn.filings
-                if f["company_id"] == company_id
-                and f["form"] in (base_form, amendment_form)
-                and f["period"] == period
-                and f["filing_date"] < before
-            ]
-            candidates.sort(key=lambda f: f["filing_date"], reverse=True)
-            self._rows = [(candidates[0]["id"],)] if candidates else []
-        elif normalized.startswith("update core.filing set amends_filing_id"):
-            original_id, amendment_id = params
-            self._filing(amendment_id)["amends_filing_id"] = original_id
+        elif normalized.startswith("select distinct on (a.amend_id)"):
+            amend_ids, base_forms, alt_forms, periods, filing_dates, company_id = params
+            out = []
+            for amend_id, base_form, alt_form, period, filing_date in zip(
+                amend_ids, base_forms, alt_forms, periods, filing_dates
+            ):
+                candidates = [
+                    f for f in self.conn.filings
+                    if f["company_id"] == company_id
+                    and f["form"] in (base_form, alt_form)
+                    and f["period"] == period
+                    and f["filing_date"] < filing_date
+                ]
+                if not candidates:
+                    continue
+                candidates.sort(key=lambda f: f["filing_date"], reverse=True)
+                out.append((amend_id, candidates[0]["id"]))
+            self._rows = out
+        elif normalized.startswith("update core.filing set amends_filing_id = v.original_id"):
+            amend_ids, original_ids = params
+            for amend_id, original_id in zip(amend_ids, original_ids):
+                self._filing(amend_id)["amends_filing_id"] = original_id
             self._rows = []
         elif "amends_filing_id is not null" in normalized:
             company_id = params[0]
@@ -51,26 +59,30 @@ class RestatementCursor:
                 if f["company_id"] == company_id and f["amends_filing_id"] is not None
             ]
         elif normalized.startswith("select af.id, of.id"):
-            original_filing_id, amendment_filing_id = params
+            amend_filing_ids, original_filing_ids = params
             matches = []
-            for amended in self.conn.facts:
-                if amended["filing_id"] != amendment_filing_id:
-                    continue
-                for original in self.conn.facts:
-                    if original["filing_id"] != original_filing_id:
+            for amendment_filing_id, original_filing_id in zip(amend_filing_ids, original_filing_ids):
+                for amended in self.conn.facts:
+                    if amended["filing_id"] != amendment_filing_id:
                         continue
-                    keys = ("company_id", "concept_id", "unit_id", "period_id")
-                    if all(amended[k] == original[k] for k in keys):
-                        matches.append((amended["id"], original["id"]))
+                    for original in self.conn.facts:
+                        if original["filing_id"] != original_filing_id:
+                            continue
+                        keys = ("company_id", "concept_id", "unit_id", "period_id")
+                        if all(amended[k] == original[k] for k in keys):
+                            matches.append((amended["id"], original["id"]))
             self._rows = matches
-        elif "set is_authoritative = true, supersedes_fact_id" in normalized:
-            original_fact_id, amended_fact_id = params
-            fact = self._fact(amended_fact_id)
-            fact["is_authoritative"] = True
-            fact["supersedes_fact_id"] = original_fact_id
+        elif normalized.startswith("update core.fact set is_authoritative = true, supersedes_fact_id = v.orig_id"):
+            amend_fact_ids, orig_fact_ids = params
+            for amend_fact_id, orig_fact_id in zip(amend_fact_ids, orig_fact_ids):
+                fact = self._fact(amend_fact_id)
+                fact["is_authoritative"] = True
+                fact["supersedes_fact_id"] = orig_fact_id
             self._rows = []
-        elif "set is_authoritative = false" in normalized:
-            self._fact(params[0])["is_authoritative"] = False
+        elif normalized.startswith("update core.fact set is_authoritative = false where id = any"):
+            (orig_fact_ids,) = params
+            for orig_fact_id in orig_fact_ids:
+                self._fact(orig_fact_id)["is_authoritative"] = False
             self._rows = []
         else:
             raise AssertionError(f"Unexpected SQL in restatement test: {normalized}")

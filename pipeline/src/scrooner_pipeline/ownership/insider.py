@@ -229,6 +229,15 @@ def update_insider_transactions_for_company(
     with conn.cursor() as cur:
         cur.execute("delete from core.insider_transaction where company_id = %s", (company_id,))
         if rows:
+            # ON CONFLICT DO NOTHING (added 2026-08-27): the unique key is
+            # (accession_number, transaction_index) *without* company_id, so
+            # the per-company delete above doesn't protect against a genuine
+            # duplicate row -- found live crashing the whole chunk (a real
+            # company's Form 4 history produced the same accession number
+            # twice, e.g. via a continuation-page overlap in
+            # _load_form4_filings). A silent skip is correct here: an exact
+            # duplicate key means the row's content is identical, not a
+            # conflicting value needing resolution.
             cur.executemany(
                 """
                 insert into core.insider_transaction
@@ -241,6 +250,7 @@ def update_insider_transactions_for_company(
                      %(reporting_owner_cik)s, %(is_director)s, %(is_officer)s, %(is_ten_percent_owner)s, %(officer_title)s,
                      %(is_10b5_1_plan)s, %(security_title)s, %(transaction_date)s, %(transaction_code)s, %(shares)s, %(price_per_share)s,
                      %(acquired_disposed_code)s, %(shares_owned_following)s, %(filing_date)s)
+                on conflict (accession_number, transaction_index) do nothing
                 """,
                 rows,
             )
@@ -249,12 +259,51 @@ def update_insider_transactions_for_company(
     return stats
 
 
+PER_COMPANY_TIMEOUT_SECONDS = 300
+
+
+def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> dict:
+    """Runs one company's processing on its OWN connection, inside a worker
+    thread with a hard wall-clock cap. Added 2026-08-28: found live that a
+    single company (43 amendments' worth of decades-old Form 4 filings) can
+    stall a whole chunk for 22+ hours despite every individual HTTP call
+    already being bounded (sec_client.py: 5 attempts x up to 30s + backoff,
+    a few minutes worst case) -- the retry math doesn't explain a stall that
+    long, meaning something blocks in a way those bounds don't cover. Rather
+    than chase the exact stuck line, this bounds the DAMAGE: if one company
+    exceeds PER_COMPANY_TIMEOUT_SECONDS, we give up waiting and move on. The
+    company gets its own fresh connection (not the caller's) specifically so
+    an abandoned, still-running thread -- Python can't forcibly kill a
+    thread -- never touches the connection the main loop keeps using for
+    every other company."""
+    import concurrent.futures
+
+    from scrooner_pipeline.db.connection import get_connection
+
+    def _work() -> dict:
+        with get_connection() as company_conn:
+            return update_insider_transactions_for_company(company_conn, sec, company_id, cik)
+
+    # Deliberately NOT a `with` block: ThreadPoolExecutor.__exit__ calls
+    # shutdown(wait=True), which blocks until the submitted task actually
+    # finishes -- exactly the unbounded wait this whole function exists to
+    # avoid. found live 2026-08-28: the timeout never fired because of this
+    # exact bug, still stuck past the 300s cap. A pool is created fresh per
+    # call and deliberately abandoned (never shut down) on timeout -- the
+    # orphaned thread keeps running against its own dedicated connection,
+    # harmless to everything else, and disappears whenever this whole CLI
+    # process is eventually restarted between chunk retries.
+    pool = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    future = pool.submit(_work)
+    return future.result(timeout=PER_COMPANY_TIMEOUT_SECONDS)
+
+
 def update_insider_transactions(conn: psycopg.Connection, ciks: set[str]) -> dict:
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "transactions": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "timed_out": 0, "transactions": 0}
     with SECClient() as sec:
         for cik in sorted(ciks):
             totals["considered"] += 1
@@ -262,7 +311,27 @@ def update_insider_transactions(conn: psycopg.Connection, ciks: set[str]) -> dic
             if company_id is None:
                 totals["no_company"] += 1
                 continue
-            stats = update_insider_transactions_for_company(conn, sec, company_id, cik)
+            try:
+                stats = _run_company_with_timeout(sec, company_id, cik)
+            except TimeoutError:
+                logger.warning("insider.company_timed_out", cik=cik, timeout_seconds=PER_COMPANY_TIMEOUT_SECONDS)
+                totals["timed_out"] += 1
+                continue
+            except Exception:
+                # Added 2026-08-27: one company's unhandled error (e.g. the
+                # accession/transaction_index duplicate this same commit
+                # adds an ON CONFLICT guard for) used to crash the entire
+                # CLI invocation -- with no per-company boundary, that meant
+                # every OTHER company in the same chunk had to be
+                # reprocessed on every retry too, and a genuinely
+                # deterministic bug (not a transient one) made the whole
+                # chunk permanently unable to succeed. Same lesson as
+                # restatements.py: one company's failure must not cost every
+                # other company in the batch its own progress.
+                conn.rollback()
+                logger.exception("insider.company_failed", cik=cik)
+                totals["errored"] += 1
+                continue
             totals["ok"] += 1
             totals["transactions"] += stats["transactions"]
     logger.info("insider.done", **totals)

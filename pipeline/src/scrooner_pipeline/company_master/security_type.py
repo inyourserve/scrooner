@@ -122,7 +122,20 @@ def resolve_primary_tickers(
     company with zero classified listings yet (OpenFIGI coverage gap, or
     update-security-types hasn't run for it) also falls back, so this
     never just silently drops a company the caller expected a ticker
-    for."""
+    for.
+
+    Full-population extension (2026-08-24, doc data-moat plan): OpenFIGI
+    classification was deliberately not run for the full 5,258-company
+    universe (SEC's own submissions.json has no security-type field --
+    OpenFIGI was only ever a disambiguation aid for companies with
+    MULTIPLE listings, never a requirement for the 83% with exactly one).
+    Checked live before adding this: 4,364 of 5,258 companies (83%) have
+    exactly one active core.listing row -- for those, no classification
+    is needed at all, since there is nothing to disambiguate. Only the
+    remaining 894 (17%, genuinely multiple listings) still need
+    security_type or a curated fallback; those correctly resolve to
+    nothing here if unclassified, per the "never guess" principle --
+    this is honest exclusion, not a bug."""
     fallback_ticker_by_cik = fallback_ticker_by_cik or {}
     with conn.cursor() as cur:
         cur.execute(
@@ -137,6 +150,18 @@ def resolve_primary_tickers(
         for cik, ticker in cur.fetchall():
             candidates_by_cik.setdefault(cik, []).append(ticker)
 
+        cur.execute(
+            """
+            select c.cik, l.ticker
+            from core.listing l join core.company c on c.id = l.company_id
+            where c.cik = any(%s) and l.effective_to is null
+            """,
+            (sorted(ciks),),
+        )
+        all_active_by_cik: dict[str, list[str]] = {}
+        for cik, ticker in cur.fetchall():
+            all_active_by_cik.setdefault(cik, []).append(ticker)
+
     resolved: dict[str, str] = {}
     for cik in ciks:
         candidates = candidates_by_cik.get(cik, [])
@@ -147,4 +172,8 @@ def resolve_primary_tickers(
             resolved[cik] = fallback
         elif candidates:
             resolved[cik] = sorted(candidates)[0]
+        else:
+            all_active = all_active_by_cik.get(cik, [])
+            if len(all_active) == 1:
+                resolved[cik] = all_active[0]
     return resolved

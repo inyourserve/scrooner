@@ -132,7 +132,20 @@ class SECClient:
         logger.info("bulk_zip.cache_miss", url=url, cache_path=str(cache_path))
         self.download_to_file(url, tmp_path)
         tmp_path.rename(cache_path)  # atomic on the same filesystem -- no torn/partial cache entries
+        self._prune_stale_cache(cache_dir, cache_name, keep=cache_path)
         return cache_path
+
+    def _prune_stale_cache(self, cache_dir: Path, cache_name: str, keep: Path) -> None:
+        """Delete previous days' copies of this same bulk file. Each one is
+        1-1.5GB and otherwise accumulates forever (found live 2026-08-23: a
+        multi-day session filled a 228GB disk down to 206MB free, taking
+        every shard of a running job down with `OSError: No space left on
+        device`). Safe to delete unconditionally -- these are pure bandwidth
+        cache, re-fetchable from SEC any time, never a source of truth."""
+        for stale in cache_dir.glob(f"{cache_name}-*.zip"):
+            if stale != keep:
+                stale.unlink()
+                logger.info("bulk_zip.pruned_stale", path=str(stale))
 
     def close(self) -> None:
         self._client.close()

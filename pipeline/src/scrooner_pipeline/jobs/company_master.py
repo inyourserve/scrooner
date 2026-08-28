@@ -130,23 +130,26 @@ def update_shares_outstanding_fallback_cmd(
 
 
 @app.command("update-market-price")
-def update_market_price_cmd() -> None:
+def update_market_price_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
     """Stage 4b real-data follow-on (doc 25): fetch REAL current prices
     from Alpaca (delayed_sip feed, ~15min delay, full consolidated tape)
     into core.market_price_alpaca -- a table separate from
     core.market_price's mock data, by explicit design. Run once daily or
     on demand (no scheduler wired up yet -- see doc 25's open cadence
     question, answered as 'daily/on-demand for now' during dev).
-    Primary ticker per company comes from real OpenFIGI-sourced
-    classification (run update-security-types first) -- see
-    security_type.py's resolve_primary_tickers(), NOT Alpaca itself, kept
-    deliberately separate from the price vendor. golden_companies.json's
-    curated ticker is only the tie-break for a company with more than one
-    legitimately valid Common-Stock/ADR listing (e.g. Alphabet's two
-    share classes), not the primary source of truth anymore."""
-    golden_ciks = _load_golden_ciks()
+    Primary ticker per company comes from resolve_primary_tickers() --
+    security_type.py's OpenFIGI classification where available, plus
+    (2026-08-24, full-population extension) an unclassified single-
+    active-listing fallback for the 83% of the full universe OpenFIGI
+    was never run for. golden_companies.json's curated ticker is only
+    the tie-break for a company with more than one legitimately valid
+    Common-Stock/ADR listing (e.g. Alphabet's two share classes), not
+    the primary source of truth."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
     with get_connection() as conn:
-        ticker_by_cik = resolve_primary_tickers(conn, golden_ciks, fallback_ticker_by_cik=_load_golden_tickers())
+        ticker_by_cik = resolve_primary_tickers(conn, target_ciks, fallback_ticker_by_cik=_load_golden_tickers())
         stats = update_market_price(conn, ticker_by_cik)
     typer.echo(f"update-market-price: {stats}")
 
