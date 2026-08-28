@@ -23,13 +23,38 @@ create table if not exists core.fund_ownership (
     company_id              bigint not null references core.company (id),
     accession_number        text not null,
     holding_id              bigint not null,
+    -- The specific named fund (N-PORT's FUND_REPORTED_INFO.SERIES_NAME),
+    -- NOT the umbrella trust registrant -- found live 2026-08-28: a
+    -- registrant filer (REGISTRANT.REGISTRANT_NAME, e.g. "MFS SERIES
+    -- TRUST X") is the legal entity that files, but the actual fund an
+    -- investor would recognize (e.g. "MFS International Growth Fund") is
+    -- one of potentially several *series* under that trust, named only in
+    -- FUND_REPORTED_INFO. Falls back to registrant_name on the rare
+    -- filing with no series row rather than leaving it null.
     fund_name               text not null,
     fund_cik                text,
     series_id               text,
     shares                  numeric,
+    -- Raw as-reported value in the fund's own reporting currency --
+    -- CURRENCY_VALUE is USD for the large majority of matched rows but
+    -- NOT always (found live: ~2% of real golden-10 matches report in
+    -- CAD/TWD for foreign-domiciled holdings, e.g. TSMC's Taiwan-listed
+    -- ordinary shares). Keep the raw figure so nothing is lost even when
+    -- value_usd below is null.
+    currency_code           text not null,
+    currency_value          numeric,
+    -- Populated ONLY when currency_code = 'USD' (a direct passthrough,
+    -- never a computed conversion) -- same "leave null, never guess"
+    -- discipline as everywhere else in this project (see
+    -- pipeline/CLAUDE.md's Form 13F VALUE-field $242T incident). An
+    -- EXCHANGE_RATE field exists on non-USD rows but its multiply-vs-
+    -- divide convention was not confirmed against a second independent
+    -- source before this was built, so no conversion is attempted here.
     value_usd               numeric,
-    -- N-PORT reports this directly (PCTVAL on FUND_REPORTED_HOLDING) --
-    -- Form 13F has no equivalent field, so this column doesn't exist on
+    -- N-PORT reports this directly (FUND_REPORTED_HOLDING.PERCENTAGE,
+    -- "percentage value compared to net assets of the Fund", per SEC's
+    -- own nport_readme.htm field-layout table) -- Form 13F has no
+    -- equivalent field, so this column doesn't exist on
     -- core.institutional_ownership.
     pct_of_fund_net_assets  numeric,
     report_period           date,

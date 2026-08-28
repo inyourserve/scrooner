@@ -10,6 +10,7 @@ from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.ownership.insider import update_insider_transactions
 from scrooner_pipeline.ownership.beneficial_ownership import update_beneficial_ownership
 from scrooner_pipeline.ownership.institutional import update_institutional_ownership
+from scrooner_pipeline.ownership.mutual_fund import update_mutual_fund_ownership
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -56,6 +57,19 @@ def update_institutional_ownership_cmd() -> None:
     with get_connection() as conn:
         stats = update_institutional_ownership(conn)
     typer.echo(f"update-institutional-ownership: {stats}")
+
+
+@app.command("update-mutual-fund-ownership")
+def update_mutual_fund_ownership_cmd() -> None:
+    """doc 21 Sec 1: download SEC's bulk Form N-PORT data set (all
+    registered funds/ETFs), match FUND_REPORTED_HOLDING rows by CUSIP
+    against golden companies' own CUSIPs (captured by Stage 3), write
+    into core.fund_ownership. Not restricted by --ciks, same reasoning as
+    update-institutional-ownership -- matching is CUSIP-driven against
+    whatever golden companies already have a CUSIP on file."""
+    with get_connection() as conn:
+        stats = update_mutual_fund_ownership(conn)
+    typer.echo(f"update-mutual-fund-ownership: {stats}")
 
 
 if __name__ == "__main__":
