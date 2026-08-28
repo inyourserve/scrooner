@@ -3,24 +3,49 @@
 The product, UX, interface, content, and implementation framework for a
 simple, trustworthy US fundamental screener.
 
-> **Status:** Consultant recommendation for execution  
+> **Status:** Implemented living framework; remaining gaps are marked inline
 > **Prepared:** 2026-08-18  
-> **Scope:** Product design direction before Day 8 UI implementation  
+> **Scope:** Product design direction plus implementation audit through 2026-08-22
 > **Authority:** Advisory. Canonical product and architecture decisions remain in `doc/foundational/`.
 >
-> **Sharpened 2026-08-19 — this document is now partially retrospective, not purely forward-looking.**
+> **Implementation reconciliation 2026-08-22 — this document is now substantially retrospective, not purely forward-looking.**
 > Day 8 (structured screener) and Day 9 (plain-English query) of
 > `doc/consultant/02_Ten_Day_Product_Readiness_Plan.md` have already been
 > built against this framework, in a new `apps/app` Next.js application,
 > with passing automated tests — see
 > [`doc/consultant/10_Day_08_Screener_UI_Evidence.md`](../consultant/10_Day_08_Screener_UI_Evidence.md)
 > and [`11_Day_09_Explainable_Query_UI_Evidence.md`](../consultant/11_Day_09_Explainable_Query_UI_Evidence.md).
-> **That application is currently entirely uncommitted (`git status` shows
-> `apps/app/` as untracked) — protecting it is more urgent than any further
-> design work.** Sections 3, 9.4, 12.2, 19.1, and 22 below have been
+> The application is tracked and its frontend foundation was consolidated
+> into the cross-application design system on 2026-08-21. The public homepage,
+> company-research workspace, results-first screener, responsive render
+> contract, and structural accessibility pass are implemented. Sections 3,
+> 7-9, 12, 17, 19, and 22 below have been
 > corrected against the real, running implementation rather than left as
 > untested assumptions; corrections are marked inline. Treat this document
 > as a living spec to audit new work against, not a one-time brief.
+
+> **Visual direction addendum — 2026-08-21:** the user-supplied
+> `homepage.html` establishes the preferred product surface for new design
+> work: a cool-gray canvas, white task surfaces, ink typography, restrained
+> teal-green actions, Inter for interface copy, Newsreader for editorial copy,
+> a lowercase Scrooner wordmark with a research-aperture mark, compact
+> navigation, and one dominant task per page. This supersedes the earlier
+> bracket wordmark and warm-paper/Fraunces treatment as a visual direction;
+> the product, evidence, accessibility, and public/app boundary principles in
+> this framework remain unchanged. The Astro homepage is the first implemented
+> reference. Public company pages adopted the same shared header, footer,
+> identity, tokens, typography, and surface grammar on 2026-08-21 while
+> preserving their denser research workflow. The application surface now
+> consumes the same semantic token and brand contract through the
+> framework-neutral package documented in
+> [`13_Scrooner_Scalable_Design_System.md`](13_Scrooner_Scalable_Design_System.md).
+
+> **Brand-mark correction — 2026-08-28:** the three rising bars were removed
+> because they read as a generic stock-screener/chart logo and made Scrooner
+> less distinguishable from the category. The replacement uses two offset
+> focus brackets, a scan line, and one evidence point. It represents scrutiny
+> and verifiability rather than upward price movement; it must not be redrawn
+> as bars, a candlestick chart, or a generic magnifying glass.
 
 ---
 
@@ -37,7 +62,7 @@ combination of:
 
 1. plain-English access to serious multi-condition screens;
 2. deterministic calculations rather than generated financial opinions;
-3. visible interpretation before execution;
+3. visible interpretation with every executed result;
 4. metric-level periods, definitions, and source lineage; and
 5. unusually useful SEC-native signals, including filings, insider
    activity, institutional ownership, and capital allocation.
@@ -76,7 +101,7 @@ This proposition has three proof pillars:
 
 | Pillar | User meaning | Product proof |
 |---|---|---|
-| Simple to ask | “I do not need to learn a query language.” | Plain-English query with relevant examples and autocomplete. |
+| Simple to ask | “I do not need to learn a query language.” | Plain-English query with runnable examples today; broader metric aliases and global autocomplete remain open. |
 | Exact to compute | “The answer is repeatable, not an AI opinion.” | Visible structured interpretation and deterministic execution. |
 | Easy to verify | “I can inspect the evidence before trusting it.” | Values, periods, formula versions, null reasons, and filing links. |
 
@@ -119,13 +144,14 @@ Representative task:
 Scrooner already has more than a UI concept behind it. The repository
 contains working product primitives:
 
-- a normalized SEC-derived data model, now covering **39 metrics** on the
-  company page (10 in the original locked set's visible grid, 29 more in
-  an uncurated second grid — see 3.3 and 12.2);
+- a normalized SEC-derived data model with **45 company-page metrics** grouped
+  into a curated key set and seven investor-language categories, plus a fully
+  curated **47-metric structured-screen catalog** (see 12.2 and 19.1);
 - versioned canonical concepts and calculated metrics;
 - deterministic structured screening with validated operators;
 - a bounded plain-English interpreter that rejects ambiguity rather than
-  guessing — **but its vocabulary covers only 14 of those 39 metrics**
+  guessing — **but its metric vocabulary covers only 14 of the 47 active
+  screenable metrics**
   (`pipeline/src/scrooner_pipeline/ai_query/aliases.py`'s `METRIC_ALIASES`
   is unchanged since 2026-08-17); every metric added after that date is
   screenable through the structured builder but not yet reachable in
@@ -133,20 +159,20 @@ contains working product primitives:
 - public screen and ask API endpoints, **and, as of Day 8/9 (2026-08-18/19),
   a real working `apps/app` Next.js frontend** exercising both — a
   structured filter builder and a plain-English interpretation panel with
-  interpret-before-run separation, four verified reference screens, and
+  explicit one-request execution, ambiguity blocking, four verified reference screens, and
   passing Vitest/ESLint/production-build/pytest gates (see
   `doc/consultant/10_Day_08_Screener_UI_Evidence.md` and `11_...`). This
   is not a scaffold; it already implements a large share of this
-  document's Section 9-11 recommendations. **It is currently untracked in
-  git** (`git status apps/app/` → `??`) — this is the single highest-risk
-  item connected to this document right now, independent of any design
-  question;
-- authenticated saved-screen CRUD and an entitlement endpoint — real, and
-  confirmed backend-only: `apps/app` has no auth, saved-screen, or account
-  UI anywhere yet (`grep -rn "auth|saved.screen|supabase" apps/app` finds
-  nothing outside `apps/backend`);
-- a functioning company page with ratios, statements, checklist analysis,
-  insider activity, institutional ownership, major holders, and filings;
+  document's Section 9-11 recommendations. The latest workflow interprets and
+  runs a valid query through one explicit **Show matches** action; ambiguity or
+  unsupported language still blocks execution;
+- authenticated saved-screen CRUD and an entitlement endpoint exist in the
+  backend, but auth, saved-screen, and account frontend experiences are not
+  accepted as complete by this framework yet;
+- a functioning Astro company-research workspace with curated ratios,
+  keyboard-operable statement tabs, checklist analysis, insider activity,
+  institutional ownership, major holders, direct SEC filing actions, and the
+  complete metric catalog intentionally placed after the primary research flow;
 - real delayed market-price integration and price-dependent metrics; and
 - explicit null reasons (`analytics.metric_value.is_null_reason`) and
   source lineage (`source_fact_ids`) *stored* in the underlying schema —
@@ -160,34 +186,41 @@ obscure it.
 
 ### 3.2 What the current interface communicates
 
-The current public homepage is still the default Astro placeholder
-(confirmed unchanged: `apps/site/src/pages/index.astro` is still the
-17-line Astro starter template). The company page is a valuable
-functional prototype, but its presentation is primarily one long
-server-rendered document with local CSS, repeated cards, small tables,
-limited navigation, and important trust details placed in long notes.
+The public homepage is now a real Astro product entrance with the shared public
+shell, company/ticker search, covered-company shortcuts, and a direct path to
+the Next.js screener. The company page uses the same identity and shell while
+adopting a denser research hierarchy: company context and key metrics first,
+then financials, strengths/risks, ownership, filings, and finally the exhaustive
+metric catalog. It is no longer a starter page or an unstructured card stack.
 
-This means the product currently proves data availability, not the final
-experience. The design work should preserve its honest-data discipline
-while substantially improving prioritization, scanning, navigation,
-responsive behavior, state handling, and explanation.
+The Next.js screener expresses the differentiating loop directly. A user can
+run a typed request or an example in one explicit action, receive the answer and
+readable criteria together, inspect why a company matched, and reopen wording
+or exact filters without losing the result. The default semantic order is
+creator → results → optional structured editor.
 
-### 3.3 A second, faster-moving gap: metric coverage is outrunning every downstream layer
+Both surfaces consume the same framework-neutral tokens and primitives. Shared
+skip links, landmarks, labelled controls, live states, table captions/scopes,
+keyboard statement tabs, visible focus, reduced-motion/high-contrast/
+forced-colors foundations, and local horizontal table containment establish a
+strong structural WCAG 2.2 AA baseline. This is implementation evidence, not a
+claim that an independent accessibility audit or user study is complete.
 
-Between this document's authorship (2026-08-18) and this revision
-(2026-08-19), the pipeline added roughly 25 new metrics (Piotroski
-F-Score, quality flags, EV/EBITDA-family ratios, 5Y/10Y CAGR, Debtor/
-Inventory/Payables Days, Cash Conversion Cycle) on top of the original
-14-18. Each new pipeline metric currently lands on the company page
-immediately (it is added to a flat array) but reaches neither the
-plain-English parser's vocabulary nor any curated "key metrics" set. If
-this pace continues, "sharpening" this document once is not enough — it
-needs an explicit decision rule for what happens automatically when a
-new metric ships (nothing, by default) versus what requires deliberate
-design work (parser vocabulary, key-metric curation, category grouping).
-Sections 9.4 and 12.2 below restate this at the point it bites hardest.
+### 3.3 Metric coverage still outruns plain-English coverage
 
-### 3.3 Strategic diagnosis
+Pipeline expansion no longer drops new metrics into a flat visual bucket. The
+company page now curates all 45 displayed metrics and the API presentation
+catalog explicitly defines all 47 active screenable metrics; the render gate
+rejects generic category or definition fallbacks. The remaining downstream gap
+is language reach: the deterministic parser still has only 14 metric aliases.
+
+Every new metric therefore needs three explicit product decisions: whether it
+enters the structured catalog, where it appears in company research, and
+whether it earns a curated plain-English alias. Display/catalog coverage is now
+enforced; alias coverage remains open and must not be implied by UI copy or a
+generic autocomplete claim.
+
+### 3.4 Strategic diagnosis
 
 The product's strongest competitive advantage is currently beneath the
 surface. A generic “financial dashboard” design would reduce Scrooner to
@@ -198,11 +231,11 @@ The experience must instead make the following sequence obvious:
 ```text
 Investment idea
     ↓
-Visible interpretation
+Explicit “Show matches” request
     ↓
 Deterministic screen
     ↓
-Scannable matches
+Visible interpretation + scannable matches
     ↓
 Why it matched
     ↓
@@ -280,8 +313,10 @@ Put the useful answer at the top of the experience:
 
 ### 5.2 Show the machine's interpretation
 
-Plain English must never become an invisible black box. Before execution,
-show the structured meaning as readable filter rows or chips:
+Plain English must never become an invisible black box. Show the structured
+meaning as readable filter rows or chips with every executed result. A separate
+pre-run review gate is required only when the wording is ambiguous, unsupported,
+or otherwise needs a user decision:
 
 ```text
 ROIC        greater than    15%       Latest / TTM
@@ -337,8 +372,8 @@ metadata impossible to reach.
 
 Examples:
 
-- Draft query: **Interpret query**.
-- Valid interpretation: **Run screen**.
+- Draft query: **Show matches**.
+- Valid submitted query: show results and the interpreted criteria together.
 - Results: **Save screen**.
 - Ambiguity: **Choose meaning**.
 - Empty results: **Edit filters**.
@@ -377,7 +412,7 @@ scrooner.com — public discovery and company research
 └── Later: curated screens, guides, glossary
 
 app.scrooner.com — interactive and authenticated work
-├── New screen
+├── Find companies
 │   ├── Plain English
 │   └── Structured builder
 ├── Screen results
@@ -421,6 +456,13 @@ Autocomplete rows show:
 Keyboard behavior: `/` focuses global search, arrows move through
 results, Enter opens, Escape closes.
 
+**Implementation boundary, 2026-08-22:** the Astro homepage currently ships a
+labelled native company/ticker search backed by the covered-company directory,
+clear validation, and deterministic navigation. The richer global autocomplete
+contract above — including `/`, custom arrow-key selection, recent searches,
+and an app-wide header instance — remains open. Do not describe the native
+`datalist` implementation as completion of this full contract.
+
 **Gap versus the cited source, worth closing:** `How to Design Better UI
 Components 3.0`'s Search chapter specifically recommends surfacing recent
 searches in the empty/focused state — "reduces cognitive load... users
@@ -431,6 +473,13 @@ recent-searches list (most-recent-first, capped, clearable) to the empty
 state of this component — it's a small addition and the one concrete
 pattern from that chapter this section currently omits.
 
+**Implemented 2026-08-22:** the Astro public shell now uses one shared,
+accessible company combobox on the homepage and company pages. Results come
+from a debounced, capped, CDN-cacheable endpoint only after interaction; empty
+focus shows up to five clearable local recents. This preserves the public
+company page's single consolidated database read and avoids embedding the
+covered universe in every HTML response.
+
 ---
 
 ## 7. Core user journeys
@@ -439,19 +488,23 @@ pattern from that chapter this section currently omits.
 
 1. User sees a query field immediately.
 2. User enters or selects an example query.
-3. Scrooner interprets but does not silently run it.
-4. The interface shows recognized filters in readable structured form.
+3. User explicitly chooses **Show matches**; Scrooner interprets and runs the
+   valid query in one request.
+4. Results and the readable interpreted criteria appear together.
 5. Ambiguous and unsupported clauses appear separately and prevent execution.
-6. User corrects the query or chooses an offered meaning.
-7. User explicitly runs the valid screen.
-8. Results show match count, coverage context, sort, selected values, and periods.
+6. User corrects the query or chooses an offered meaning; a meaning choice
+   continues the explicitly requested run without a second run click.
+7. Results show match count, coverage context, sort, selected values, and periods.
+8. User edits the wording or opens exact filters on the same page when needed.
 9. User opens “Why matched” or a company page.
-10. Authenticated user saves and names the screen.
+10. Later, an authenticated user saves and names the screen; that frontend flow
+    is not yet accepted as complete.
 
 ### 7.2 Journey B — structured screen
 
 1. User opens the structured builder or switches from the English mode.
-2. User selects a metric using searchable autocomplete.
+2. User selects a metric from the categorized metric control. Searchable
+   metric autocomplete remains an enhancement, not a shipped claim.
 3. Supported operators update based on the selected metric.
 4. Value control and units adapt to percentage, currency, multiple, count,
    or categorical data.
@@ -477,6 +530,9 @@ pattern from that chapter this section currently omits.
 4. The interface states that saved screens store criteria, not frozen results.
 5. User can rename or delete; deletion requires a clear confirmation.
 
+**Status:** Journey D is a target workflow. Backend saved-screen operations
+exist, but the authenticated frontend experience is not complete.
+
 ---
 
 ## 8. Page framework
@@ -498,7 +554,7 @@ The homepage is a working product entrance, not a brochure.
    > Every result is deterministic and traceable to company filings.
 
 4. Prominent query input with a concrete example.
-5. Primary action: **Interpret query**.
+5. Primary action: **Show matches**.
 6. Secondary action: **Build with filters**.
 7. Quiet proof line:
 
@@ -507,13 +563,20 @@ The homepage is a working product entrance, not a brochure.
 #### Directly below
 
 - Three useful example screens, not abstract feature cards.
-- A compact “How it works” sequence: Ask → Check interpretation → Verify results.
+- A compact “How it works” sequence: Ask → Show matches → Verify filters and results.
 - A real, small result-table preview.
 - A methodology/data-coverage link.
 - Pricing only after free/premium limits are explicitly locked.
 
 Avoid fake logos, unverified customer counts, manufactured testimonials,
 or unsupported claims of complete market coverage.
+
+**Implemented boundary, 2026-08-22:** the shipped Astro homepage fulfills the
+public entrance, shared shell, proposition, SEC-derived trust copy,
+company/ticker discovery, and clear screener handoff. The plain-English query
+itself stays on `app.scrooner.com/screener`; the homepage does not duplicate the
+dynamic workflow. Methodology, pricing, and richer educational/preview sections
+remain separate work.
 
 ### 8.2 Screener workspace
 
@@ -523,22 +586,21 @@ Recommended desktop layout:
 ┌──────────────────────────────────────────────────────────────┐
 │ Header / company search / account                            │
 ├──────────────────────────────────────────────────────────────┤
-│ New screen                                      Save screen  │
-│ [ Plain English ] [ Structured filters ]                     │
-│                                                              │
-│ Query or filter-builder workspace                            │
-│                                                              │
-│ Interpretation / validation                                  │
-│                                      [Reset] [Run screen]    │
+│ Find companies                                  Save screen  │
+│ Plain-language request                    [Show matches]     │
+│ Current criteria · Edit wording · Edit filters               │
 ├──────────────────────────────────────────────────────────────┤
 │ 27 matches · 92% criterion coverage     Columns · Export*    │
 │ Results table                                                │
+├──────────────────────────────────────────────────────────────┤
+│ Build with filters ↓  (optional exact editor)                │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-The builder should occupy the top portion of the same page as the
-results. Once results exist, the builder can collapse to a one-line
-criteria summary and reopen without losing state.
+Before a run, plain language is the visually dominant builder and exact filters
+are a compact optional disclosure. Once results exist, the creator collapses to
+a one-line request and criteria summary, results move ahead of the exact editor,
+and either editor can reopen without losing state.
 
 ### 8.3 Saved screens
 
@@ -632,7 +694,8 @@ This page is both product support and a conversion asset for serious users.
 - Default example must be genuinely supported by the current parser.
 - Show 3–5 selectable examples beneath the empty input.
 - Preserve the user's original text after interpretation.
-- `Cmd/Ctrl + Enter` interprets; it must not bypass an unresolved ambiguity.
+- `Cmd/Ctrl + Enter` submits the same explicit **Show matches** action; an
+  unresolved ambiguity still prevents execution.
 - Do not imitate a chat conversation. The product is a query workspace.
 
 ### 9.2 Interpretation states
@@ -640,8 +703,8 @@ This page is both product support and a conversion asset for serious users.
 | State | Presentation | Allowed action |
 |---|---|---|
 | Empty | Example queries and concise instructions. | Enter or select query. |
-| Interpreting | Small progress indicator with “Checking your criteria…” | Cancel only if needed. |
-| Ready | Structured criteria with human labels. | Run, edit, reset. |
+| Running | Small progress indicator with “Finding matching companies…” | Wait; cancel only if needed. |
+| Complete | Compact request, readable criteria, and results. | Inspect, edit wording, edit filters, save later. |
 | Ambiguous | Highlight phrase and offer explicit candidate meanings. | Choose meaning or edit. |
 | Unsupported | Quote the unrecognized phrase and explain supported patterns. | Edit; do not run. |
 | Partially recognized | Show recognized and unresolved clauses separately. | Resolve every clause; do not run. |
@@ -682,15 +745,16 @@ the user to choose YoY or 3-year CAGR.
 **This list is not a stable subset — it is currently the *entire*
 supported vocabulary.** `pipeline/src/scrooner_pipeline/ai_query/aliases.py`'s
 `METRIC_ALIASES` contains exactly 14 metric names, unchanged since
-2026-08-17 (its own docstring says so). None of the ~25 metrics added
+2026-08-17 (its own docstring says so). Most metrics added
 since then — Piotroski F-Score, EV/EBITDA, PEG, buyback yield, 5Y/10Y
 CAGR, Debtor/Inventory/Payables Days, Cash Conversion Cycle, or any
-quality flag — has an alias entry. A user who has just seen 39 metrics on
+quality flag — have no alias entry. A user who has just seen the expanded metric set on
 a company page and reasonably tries “companies with a Piotroski score
 above 7” will get an honest “unsupported phrase” state, which is
 correct behavior, but the *product* gap (not a UI gap) is real: the
 plain-English surface — the thing Section 1 calls the core
-differentiator — currently covers 36% of the visible metric catalog and
+differentiator — currently covers only 14 of 47 active screenable metrics
+(approximately 30%) and
 that share is shrinking with every pipeline commit. This is a
 prioritization decision for engineering (extend `aliases.py`, which is a
 small, additive, already-proven pattern — see `pipeline/CLAUDE.md`'s own
@@ -883,17 +947,13 @@ identity.
 
 ### 12.2 Key-metric hierarchy
 
-**Current state, verified 2026-08-19 (not "needs adjustment" — currently
-unimplemented):** `apps/site/src/pages/stock/[ticker].astro` renders 39
-metrics across two flat CSS-grid blocks — a 10-item `topRatios` array and
-a 29-item `moreRatios` array appended to in build order as each pipeline
-stage shipped. There is no priority weighting inside either grid, and the
-split between them is not decision-value curation: `topRatios` includes
-Current Price, Price/Sales, Price/Book, Book Value, and Dividend Yield
-(none of which this section recommends as primary), while Revenue
-Growth, Operating Margin, Debt/Equity, and Share-Count Dilution — four of
-this section's eight recommended metrics — are all currently in the
-29-item "additional" grid, not the primary one.
+**Implemented state, verified 2026-08-22:**
+`apps/site/src/pages/stock/[ticker].astro` renders all 45 company-page metrics
+without reverting to build-order presentation. Eight decision-useful metrics
+lead in the company summary; the remainder are grouped into seven named
+investor-language categories behind a compact **All Metrics** disclosure area.
+Current Price lives with company identity, and every missing metric has an
+accessible explanation rather than a hover-only dash.
 
 Default visible metrics should be curated by decision value, not simply
 by build order. Recommended first set:
@@ -907,19 +967,14 @@ by build order. Recommended first set:
 - Debt/equity
 - Share-count dilution/buyback trend
 
-Other ratios can remain available under “All metrics.” Industry-specific
-defaults can be considered only after the base experience is validated.
+Other ratios remain available under **All Metrics**. Industry-specific defaults
+can be considered only after the base experience is validated.
 
-Implementing this is now a two-step migration, not a fresh design
-choice: (1) reorder/regroup the existing 39-item array into this
-recommended primary set plus a small number of category groups (reusing
-10.2's investor-language categories — Valuation, Growth, Profitability,
-Returns, Cash flow, Financial strength, Capital allocation, Ownership —
-rather than the current undifferentiated "more" bucket), and (2) decide,
-the same day, whether the plain-English parser's vocabulary (9.4) is
-extended to match — a curated key-metric grid that highlights a metric
-the parser cannot yet screen on would quietly reintroduce the exact
-gap between "visible" and "actionable" this document exists to close.
+The visual curation migration is complete; the actionable-language migration
+is not. Several prominently displayed metrics still have no plain-English
+alias. Any change to the primary set must therefore include an explicit parser
+coverage decision rather than silently suggesting that every visible metric is
+reachable in natural language.
 
 ### 12.3 Deterministic strengths and risks
 
@@ -1158,33 +1213,13 @@ still passes contrast requirements.
 - Avoid full card nesting. A card inside a card is a warning that the
   information architecture should be reconsidered.
 
-**Implementation audit, 2026-08-19 (`apps/app/app/globals.css`,
-1,577 lines, the only real token implementation that exists today):**
-
-1. `:root` defines `--surface-canvas`, `--surface-primary`,
-   `--surface-subtle`, `--brand-700/800`, `--link-700`, `--negative-700`,
-   `--warning-700`, and `--focus` — all matching §13.4's hex values
-   exactly. It does **not** define `--positive-700` or `--info-700`, two
-   of the six semantic roles this document specifies. Either the
-   implementation needs those two tokens before any positive-status or
-   informational UI ships, or this document's palette should drop them
-   until a real use case needs them — right now the two disagree.
-2. `body` sets `background: radial-gradient(circle at 85% -8%,
-   rgb(23 107 77 / 7%), transparent 28rem), var(--surface-canvas)` — a
-   subtle brand-tinted radial gradient. §4.2 states plainly: "Gradients
-   ... are not default patterns for Scrooner." At 7% opacity this reads
-   as a deliberate, restrained texture rather than a decorative effect,
-   and is arguably fine — but it is a literal violation of an explicit
-   written rule in the same document family, shipped the same week the
-   rule was written. Resolve by either amending §4.2 to permit
-   near-invisible brand-tint gradients specifically, or removing it from
-   the CSS. Don't leave the contradiction standing silently.
-3. Observed radii in the shipped CSS include 7px, 8px, 10px, and 999px
-   (pills) — never the documented 6px default. This may be intentional
-   per-component judgment rather than drift, but it means "Default
-   radius: 6px" is not yet true of any real component; either update the
-   documented default to match what's actually shipping, or treat this
-   as a punch-list item before calling the primitive layer done.
+**Implementation update, 2026-08-21:** the earlier token drift audit is
+superseded. `packages/design-system/src/tokens.css` now owns the shared cool-gray,
+teal, semantic status, typography, spacing, radius, elevation, layout, and
+interaction contracts. Astro and Next.js both import that package. Positive and
+information roles exist; the undocumented application gradient is gone; radii
+are explicit tokens rather than scattered implementation values. The complete
+implemented contract and migration policy live in design doc 13.
 
 ### 13.7 Iconography
 
@@ -1392,6 +1427,21 @@ Desktop should use space efficiently:
 
 Target WCAG 2.2 AA for the MVP.
 
+**Implemented structural baseline, 2026-08-22:** both application shells expose
+skip links and `main` landmarks; public pages use labelled navigation and
+search; financial/result tables provide captions, header scopes, and contained
+keyboard-focusable overflow; statement tabs implement arrow/Home/End keyboard
+behavior; form errors are associated with controls; async/error states use
+appropriate live or alert semantics; successful screen runs move focus to the
+result heading; external filing links announce new-tab behavior; and the shared
+foundation covers visible focus, reduced motion, increased contrast, and forced
+colors. Exact 390px rendered checks show no document-level overflow.
+
+This does not close the whole section. A formal screen-reader audit, 200% zoom
+task pass, automated accessibility scanner, and task-based usability sessions
+remain release work. Auth, saved-screen, dialogs/drawers, sorting, and global
+autocomplete must satisfy the requirements below when their frontends ship.
+
 ### 17.1 Required standards
 
 - Text contrast at least 4.5:1 for normal text and 3:1 for large text.
@@ -1505,7 +1555,7 @@ layer short of the API.** Reframing each item by its real status:
 
 | Item | Real status |
 |---|---|
-| Stable metric definitions endpoint | **Already live.** `GET /v1/metrics` (`apps/backend/routers/screen.py`) joins `analytics.metric_definition` with a curated presentation layer (`apps/backend/metric_catalog.py`) for display name, definition, category, value type, formula version, operators. Scoped to `requires_price=false and status='active'`; only ~21 of the ~47 metric rows currently have a presentation entry — extend the curation, don't design a new endpoint. |
+| Stable metric definitions endpoint | **Live and fully curated as of 2026-08-22.** `GET /v1/metrics` (`apps/backend/routers/screen.py`) joins `analytics.metric_definition` with `apps/backend/metric_catalog.py` for display name, definition, category, value type, formula version, and operators. All 47 currently screenable active metrics have explicit presentation metadata; the live render contract rejects future generic `Other`/placeholder fallbacks. |
 | Source/lineage retrieval | **Column exists, populated, not selected.** `analytics.metric_value.source_fact_ids bigint[]` is written by every Mapper stage. `screener/resolve.py` doesn't select it and `screener/query.py`'s response builder doesn't forward it. This is a two-line pipeline fix, not new schema. |
 | Explicit data freshness/dataset version | **Column exists, populated, not selected.** `analytics.metric_value.data_as_of timestamptz not null default now()` — same gap as above. |
 | Structured null-reason taxonomy | **Text column exists and is populated; no enum exists.** `is_null_reason` holds real, specific strings today (`"zero_denominator"`, `"missing:total_debt(2025)"`, `"negative_ratio_undefined_cagr"`, etc.) but with no fixed vocabulary or check constraint — a UI mapping these to friendly copy needs either a maintained string→copy dictionary or a real enum migration. Exposing the raw string via the API (same fix as above) is a prerequisite either way. |
@@ -1625,21 +1675,21 @@ Review whether raw query text is needed before collecting it.
 This framework changes the sequence slightly by placing shared design
 foundations before page styling.
 
-> **Status, 2026-08-19: Phases 0-2 are substantially built, not just
-> planned.** `apps/app` (Next.js, untracked in git — see the note at the
-> top of this document) already implements the structured filter builder,
+> **Status, updated 2026-08-22: the core Astro, Next.js, and shared-system
+> phases are implemented and verified.** `apps/app` (Next.js) implements the structured filter builder,
 > validated query construction, loading/zero/missing-coverage/validation/
 > service-error states, company links, plain-English interpretation with
-> ambiguity/unsupported resolution, the interpreted-to-structured
+> ambiguity/unsupported resolution, one explicit interpret-and-run action, the interpreted-to-structured
 > conversion, and a "Why matched" detail — verified with passing Vitest,
 > ESLint, and production-build gates plus backend pytest coverage (see
 > `doc/consultant/10_Day_08_Screener_UI_Evidence.md` and `11_...`).
-> Foundation tokens (Phase 0) are implemented in `apps/app/app/globals.css`
-> but have already drifted from this document in three specific,
-> checkable ways — see the note at the end of §13.4/§13.6 below. Treat
-> Phases 0-2 as **"audit against the real implementation," not "build"** —
+> Foundation tokens and primitives (Phase 0) are implemented once in
+> `packages/design-system` and consumed by both frontend applications; see
+> design doc 13 for the verified contract. Treat
+> Phases 0-4 as **"audit against the real implementation," not "build"** —
 > re-reading them as a fresh build brief risks duplicating working,
-> tested code. Phases 3-5 remain accurate as forward-looking work.
+> tested code. Phase 5 is partially implemented; its remaining validation
+> boundaries are listed below.
 
 ### Phase 0 — Foundation contract
 
@@ -1663,42 +1713,66 @@ foundations before page styling.
 - Query composer.
 - Interpretation view.
 - Ambiguous and unsupported resolution.
-- Explicit run step.
+- One explicit **Show matches** interpret-and-run action for valid language.
 - Conversion between interpreted criteria and editable structured filters.
 - “Why matched” detail.
 
-**Not yet covered by either phase, confirmed 2026-08-19:** the parser's
-vocabulary (§9.4) and the company page's metric curation (§12.2) have
-each continued to diverge from the pipeline's growing metric catalog
-since Day 9 shipped. Neither gap is a Phase 3+ item by original scope,
-but both now block "the plain-English differentiator" from actually
-covering the product it fronts — worth pulling forward.
+**Updated boundary, 2026-08-22:** company-page and structured-catalog curation
+are complete and guarded by the rendered contract. Parser vocabulary (§9.4)
+still trails the catalog and remains a product gap. Global/searchable
+autocomplete is also not complete.
 
-### Phase 3 — Company-page redesign
+### Phase 3 — Company-page redesign ✅ core presentation built
 
 - Shared public header and company search.
 - Company identity/price hierarchy.
 - Consolidated metric system.
 - Tabbed financial statements.
 - Ownership and filing presentation.
-- Metric source drawer and accessible null reasons.
+- Accessible null reasons. Metric-level source lineage remains open because the
+  result/API contract does not expose all stored provenance yet.
 
-### Phase 4 — Homepage and trust pages
+### Phase 4 — Homepage and trust pages 🟨 public entrance built
 
-- Product-first homepage.
-- Methodology/data coverage.
-- Pricing when limits are locked.
-- Saved-screen experience.
+- Product-first Astro homepage and shared public shell. ✅
+- Methodology/data coverage. Open.
+- Pricing when limits are locked. Open.
+- Saved-screen and auth experience. Open.
 
-### Phase 5 — Validation and refinement
+### Phase 5 — Validation and refinement 🟨 engineering pass built
 
-- Five task-based usability sessions.
-- Keyboard and screen-reader review.
-- Automated accessibility checks.
-- Responsive QA with real long names, nulls, negative numbers, and wide tables.
-- Performance measurement and visual regression coverage.
+- Structural keyboard/semantic/accessibility implementation pass. ✅
+- Responsive QA over homepage, catalog, AAPL, and screener at 1440px and exact
+  390px, including nulls and wide local table overflow. ✅
+- Both production builds, frontend tests, design-system governance, docs, and
+  dependency-free rendered contract. ✅
+- Five task-based usability sessions and formal screen-reader review. Open.
+- Automated accessibility scanning and 200% zoom task validation. Open.
+- Performance budgets and pixel baselines against frozen fixtures. Open.
 
 ---
+
+### Company-page compact research-workspace addendum (2026-08-21)
+
+The public homepage and public company page share one visual identity, header,
+footer, and token system, but they intentionally use different density:
+
+- the homepage remains a calm, explanatory marketing surface;
+- the company page is a compact research workspace;
+- the first company surface combines identity, delayed-price context, key
+  ratios, and a short factual profile;
+- strengths and risks are compared together;
+- financials, ownership, and filings precede the exhaustive metric catalogue;
+  and
+- complete metric groups use collapsed disclosure by default.
+
+This supersedes any interpretation of Phase 3 that turns every company-page
+section into a large standalone card. The competitive reference establishes a
+scan pattern, not feature scope: unsupported charts, peers, recommendations,
+follow actions, exports, or premium prompts must not be simulated.
+
+Implementation and render evidence are recorded in
+`doc/learnings/screener-reference-density-and-research-flow.md`.
 
 ## 23. Definition of design-ready
 
@@ -1778,7 +1852,7 @@ Before merging any major UI:
 Do not begin with a visual redesign of every page. Build the product's
 distinctive loop first:
 
-> **Ask → verify interpretation → run → understand why → inspect source.**
+> **Ask → show matches → verify interpretation → understand why → inspect source.**
 
 That loop is the Scrooner product. A familiar Screener.in-like density
 and simplicity should make the loop feel effortless, while Scrooner's

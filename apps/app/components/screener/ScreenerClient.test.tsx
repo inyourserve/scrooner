@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ScreenerClient } from "./ScreenerClient";
+import { NATURAL_QUERY_EXAMPLES } from "@/lib/screener/interpretation";
 import type { AskResponse, MetricDefinition, ScreenQueryPayload, ScreenResult } from "@/lib/screener/types";
 
 const metric: MetricDefinition = {
@@ -48,6 +49,7 @@ function readyInterpretation(query = roeQuery): AskResponse {
     recognized_query: query,
     unrecognized: [],
     ambiguous: [],
+    result: emptyResult,
   };
 }
 
@@ -59,6 +61,11 @@ const emptyResult: ScreenResult = {
 
 function response(payload: unknown, ok = true, status = ok ? 200 : 500) {
   return { ok, status, json: async () => payload } as Response;
+}
+
+async function openFilterBuilder() {
+  fireEvent.click(await screen.findByRole("button", { name: /Build with filters/ }));
+  return screen.findByRole("button", { name: "Run screen" });
 }
 
 describe("ScreenerClient", () => {
@@ -102,16 +109,31 @@ describe("ScreenerClient", () => {
 
   it("blocks an empty screen before making a screen request", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    await screen.findByRole("button", { name: "Run screen" });
+    await openFilterBuilder();
     fireEvent.click(screen.getByRole("button", { name: "Remove condition 1" }));
     fireEvent.click(screen.getByRole("button", { name: "Run screen" }));
 
     expect(await screen.findByText("Add at least one metric or company classification.")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText("Add at least one metric or company classification.").parentElement).toHaveFocus());
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not create an abort rejection when route cleanup happens during catalog loading", () => {
+    let metricRequest: RequestInit | undefined;
+    vi.mocked(fetch).mockImplementationOnce((_input, init) => {
+      metricRequest = init;
+      return new Promise<Response>(() => undefined);
+    });
+
+    const { unmount } = render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    unmount();
+
+    expect(metricRequest?.signal).toBeUndefined();
   });
 
   it("distinguishes a successful zero-result screen from an error", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    await openFilterBuilder();
     fireEvent.click(await screen.findByRole("button", { name: "Run screen" }));
 
     expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
@@ -139,6 +161,7 @@ describe("ScreenerClient", () => {
     };
     screenPayload = result;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    await openFilterBuilder();
     fireEvent.click(await screen.findByRole("button", { name: "Run screen" }));
 
     expect(await screen.findByText("AAPL")).toBeInTheDocument();
@@ -158,6 +181,7 @@ describe("ScreenerClient", () => {
     screenOk = false;
     screenStatus = 502;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    await openFilterBuilder();
     fireEvent.click(await screen.findByRole("button", { name: "Run screen" }));
 
     expect(await screen.findByText("The screen did not run")).toBeInTheDocument();
@@ -169,6 +193,7 @@ describe("ScreenerClient", () => {
     let resolveRequest: (value: Response) => void = () => undefined;
     screenRequest = new Promise<Response>((resolve) => { resolveRequest = resolve; });
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    await openFilterBuilder();
     fireEvent.click(await screen.findByRole("button", { name: "Run screen" }));
 
     expect(await screen.findByText("Running your screen")).toBeInTheDocument();
@@ -176,30 +201,45 @@ describe("ScreenerClient", () => {
     await waitFor(() => expect(screen.getByText("No companies matched every criterion")).toBeInTheDocument());
   });
 
-  it("interprets supported language without executing and transfers it for deliberate review", async () => {
+  it("turns supported language into verified results with one click", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Screening request" });
+    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
     fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
-    fireEvent.click(screen.getByRole("button", { name: "Interpret query" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
-    expect(await screen.findByText("Ready for your review")).toBeInTheDocument();
-    expect(screen.getByText(/Nothing has been executed\./)).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "companies with ROE above 30%" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Criteria used")).toHaveTextContent("Return on equity (ROE) greater than 30%");
+    expect(screen.queryByRole("textbox", { name: "Describe your screen" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Run screen" })).not.toBeInTheDocument();
+    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(0);
+
+    const resultsHeading = screen.getByRole("heading", { name: "Matching companies" });
+    const builderDisclosure = screen.getByRole("button", { name: /Build with filters/ });
+    expect(resultsHeading.compareDocumentPosition(builderDisclosure) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+    expect(resultsHeading).toHaveFocus();
+
+    fireEvent.click(screen.getByText("Verify how Scrooner understood this"));
     const interpretedCriteria = screen.getByRole("table", { name: "Interpreted criteria" });
     expect(within(interpretedCriteria).getByText("Greater than")).toBeInTheDocument();
     expect(within(interpretedCriteria).getByText("30%")).toBeInTheDocument();
-    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(0);
-
-    fireEvent.click(screen.getByRole("button", { name: "Review and edit criteria" }));
-    expect(await screen.findByText("Interpreted criteria are ready to review")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("30")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "Run screen" }));
-    expect(await screen.findByText("No companies matched every criterion")).toBeInTheDocument();
     const askCall = vi.mocked(fetch).mock.calls.find(([path]) => String(path) === "/api/ask");
-    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: "companies with ROE above 30%", run: false });
+    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: "companies with ROE above 30%", run: true });
   });
 
-  it("shows ambiguity choices and never executes before the choice is reinterpreted", async () => {
+  it("opens the exact filter editor only when requested after results", async () => {
+    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
+
+    fireEvent.click(await screen.findByRole("button", { name: "Edit filters" }));
+    expect(await screen.findByText("Your words are now editable filters")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("30")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Run screen" })).toBeInTheDocument();
+  });
+
+  it("blocks ambiguity and runs automatically after the user chooses a meaning", async () => {
     const ambiguous: AskResponse = {
       explanation: "Ambiguous revenue growth horizon.",
       query: null,
@@ -213,16 +253,23 @@ describe("ScreenerClient", () => {
     };
     askHandler = (body) => body.text.includes("yoy") ? readyInterpretation(resolvedQuery) : ambiguous;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Screening request" });
+    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
     fireEvent.change(input, { target: { value: "revenue growth above 10%" } });
-    fireEvent.click(screen.getByRole("button", { name: "Interpret query" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
-    expect(await screen.findByText("Resolve the language before running")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Review and edit criteria" })).not.toBeInTheDocument();
+    expect(await screen.findByText("Clarify this screen")).toBeInTheDocument();
+    expect(screen.getByText(/Nothing ran because/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Revenue growth (YoY)" }));
-    expect(await screen.findByText("Ready for your review")).toBeInTheDocument();
-    expect(input).toHaveValue("revenue growth yoy above 10%");
+    expect(await screen.findByRole("heading", { name: "revenue growth yoy above 10%" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
     expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(0);
+    const askBodies = vi.mocked(fetch).mock.calls
+      .filter(([path]) => String(path) === "/api/ask")
+      .map(([, init]) => JSON.parse(String(init?.body)));
+    expect(askBodies).toEqual([
+      { text: "revenue growth above 10%", run: true },
+      { text: "revenue growth yoy above 10%", run: true },
+    ]);
   });
 
   it("separates recognized clauses from unsupported language without creating a runnable query", async () => {
@@ -234,13 +281,12 @@ describe("ScreenerClient", () => {
       ambiguous: [],
     } satisfies AskResponse;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Screening request" });
+    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
     fireEvent.change(input, { target: { value: "roe above 20% and magic number below 5" } });
-    fireEvent.click(screen.getByRole("button", { name: "Interpret query" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
-    expect(await screen.findByRole("heading", { name: "Recognized criteria" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "What we understood" })).toBeInTheDocument();
     expect(screen.getByText("“magic number below 5”")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Review and edit criteria" })).not.toBeInTheDocument();
     expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(0);
   });
 
@@ -253,12 +299,76 @@ describe("ScreenerClient", () => {
       ambiguous: [],
     } satisfies AskResponse;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Screening request" });
+    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
     fireEvent.change(input, { target: { value: "companies with a magic number over 5" } });
-    fireEvent.click(screen.getByRole("button", { name: "Interpret query" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
     expect(await screen.findByText("“companies with a magic number over 5”")).toBeInTheDocument();
     expect(input).toHaveValue("companies with a magic number over 5");
-    expect(screen.queryByRole("button", { name: "Review and edit criteria" })).not.toBeInTheDocument();
+  });
+
+  it("runs a plain-language example in one click", async () => {
+    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+
+    const examples = await screen.findAllByRole("button", { name: /Run example:/ });
+    fireEvent.click(examples[0]);
+
+    expect(await screen.findByRole("heading", { name: NATURAL_QUERY_EXAMPLES[0] })).toBeInTheDocument();
+    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/ask")).toHaveLength(1);
+  });
+
+  it("supports the documented command-enter shortcut without a second click", async () => {
+    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
+
+    expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
+    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/ask")).toHaveLength(1);
+  });
+
+  it("keeps a late response from replacing a newer plain-language screen", async () => {
+    let resolveFirstAsk: (value: Response) => void = () => undefined;
+    const firstAsk = new Promise<Response>((resolve) => { resolveFirstAsk = resolve; });
+    let askCount = 0;
+    vi.mocked(fetch).mockImplementation((input) => {
+      const path = String(input);
+      if (path === "/api/metrics") return Promise.resolve(response(metrics));
+      if (path === "/api/ask") {
+        askCount += 1;
+        return askCount === 1 ? firstAsk : Promise.resolve(response(readyInterpretation()));
+      }
+      return Promise.reject(new Error(`Unexpected request: ${path}`));
+    });
+
+    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    fireEvent.change(input, { target: { value: "first slow screen" } });
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
+    fireEvent.change(input, { target: { value: "second current screen" } });
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
+
+    expect(await screen.findByRole("heading", { name: "second current screen" })).toBeInTheDocument();
+    resolveFirstAsk(response(readyInterpretation()));
+    await waitFor(() => expect(screen.queryByRole("heading", { name: "first slow screen" })).not.toBeInTheDocument());
+    expect(screen.getByRole("heading", { name: "second current screen" })).toBeInTheDocument();
+  });
+
+  it("offers an in-place retry after a structured screen request fails", async () => {
+    screenPayload = { detail: "Screening service unavailable." };
+    screenOk = false;
+    screenStatus = 502;
+    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    await openFilterBuilder();
+    fireEvent.click(screen.getByRole("button", { name: "Run screen" }));
+
+    const retry = await screen.findByRole("button", { name: "Try again" });
+    screenPayload = emptyResult;
+    screenOk = true;
+    screenStatus = 200;
+    fireEvent.click(retry);
+
+    expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
+    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(2);
   });
 });

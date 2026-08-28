@@ -1,194 +1,97 @@
 ---
-// Public homepage (design framework Sec 8.1) -- "a working product
-// entrance, not a brochure." Replaces the default Astro placeholder.
-// Visual system: doc/design/11_Scrooner_Design_Guideline.html /
-// 12_Scrooner_End_to_End_Mockup.html's "editorial ledger" (v3), same
-// tokens as stock/[ticker].astro.
-//
-// Honesty constraint (design framework Sec 24: "is there any unsupported
-// promise?"): the mockup this is built from shows a full global nav
-// (Screener / Companies / Methodology / Pricing / Saved screens / Sign
-// in). Only "Screener" (apps/app, real, tested Day 8/9) and individual
-// company pages exist today -- a global company search, methodology
-// page, pricing page, and auth are all unbuilt. Rendering those as live
-// nav items would be exactly the kind of dead-link promise the framework
-// warns against, so this page only links to what's real. Add the rest
-// back as each one ships.
-import { getExampleScreenResults } from "../lib/db";
-import { fmtPct } from "../lib/format";
+// Public product entrance. Visual direction supplied by the user in
+// homepage.html: calm cool-gray canvas, compact navigation, oversized
+// lowercase identity, one centered company-search task, and restrained teal.
+// Demo-only links and fake account actions from that reference are deliberately
+// excluded. Every company option below resolves to a real public research page.
+import { getCompaniesByTickers } from "../lib/db";
+import PublicHeader from "../components/PublicHeader.astro";
+import PublicFooter from "../components/PublicFooter.astro";
+import BrandMark from "../components/BrandMark.astro";
+import CompanySearch from "../components/CompanySearch.astro";
+import "../styles/public-theme.css";
+import "../styles/home.css";
 
 const appUrl = (import.meta.env.PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
 const screenerUrl = `${appUrl}/screener`;
-
-// Real golden-10 data, not fabricated companies -- see getExampleScreenResults's
-// own doc comment. If the golden-10 ever has fewer than 2 companies above
-// this threshold (shouldn't happen given AAPL/MSFT/NKE's real ROIC), the
-// figure is simply omitted rather than padded with anything invented.
-const exampleCompanies = await getExampleScreenResults(0.15, 4);
+const preferredNames: Record<string, string> = {
+  AAPL: "Apple",
+  MSFT: "Microsoft",
+  NVDA: "Nvidia",
+  AMZN: "Amazon",
+  GOOGL: "Alphabet",
+  "BRK.B": "Berkshire",
+  COST: "Costco",
+  V: "Visa",
+  JPM: "JPMorgan",
+  LLY: "Eli Lilly",
+  KO: "Coca-Cola",
+};
+const preferredTickers = Object.keys(preferredNames);
+const companies = await getCompaniesByTickers(preferredTickers);
+const byTicker = new Map(companies.map((company) => [company.ticker.toUpperCase(), company]));
+const preferredCompanies = preferredTickers.flatMap((ticker) => {
+  const company = byTicker.get(ticker);
+  return company ? [{ ...company, display_name: preferredNames[ticker] }] : [];
+});
+const quickPicks = preferredCompanies.slice(0, 8);
+const companyResearchHref = quickPicks[0] ? `/stock/${quickPicks[0].ticker.toLowerCase()}/` : "/";
 ---
 
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Screen US companies in plain English. Every result is deterministic and traceable to SEC filings — no generated stock opinions." />
-  <title>Scrooner — Screen US companies in plain English</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,440;0,540;0,600;1,440&family=Inter:wght@400;450;500;550;600;650&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --surface-canvas: #faf8f3;
-      --surface-primary: #ffffff;
-      --surface-subtle: #f2eee2;
-      --text-primary: #17140f;
-      --text-secondary: #5b5648;
-      --text-muted: #726c5b;
-      --border-default: #e7e2d6;
-      --border-strong: #c9c2ac;
-      --brand-700: #1b4332;
-      --brand-800: #123024;
-      --brand-tint: #e8efe9;
-      --link-700: #1d4e89;
-      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
-      --space-5: 24px; --space-6: 32px; --space-8: 48px; --space-10: 64px;
-      --radius-sm: 6px; --radius-md: 8px;
-      --serif: 'Fraunces', Georgia, serif;
-      --sans: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
-      --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-    * { box-sizing: border-box; }
-    html { background: var(--surface-canvas); font-family: var(--sans); }
-    body { margin: 0; color: var(--text-primary); line-height: 1.55; }
-    a { color: var(--link-700); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    a:focus-visible, button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgb(29 78 137 / 25%); border-radius: 3px; }
-    .wrap { max-width: 1220px; margin: 0 auto; padding: 0 32px; }
-    @media (max-width: 768px) { .wrap { padding: 0 18px; } }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Screen US companies in plain English and inspect SEC-derived company financials, ratios, ownership, and filings."
+    />
+    <title>Scrooner — Verifiable US company research</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <PublicHeader
+      screenerUrl={screenerUrl}
+      current="home"
+      companyHref="#company-search"
+      skipHref="#main-content"
+      skipLabel="Skip to company search"
+    />
 
-    header.gh { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--surface-canvas) 92%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--border-strong); }
-    header.gh .bar { display: flex; align-items: center; gap: 24px; height: 60px; }
-    .wordmark { font-family: var(--serif); font-weight: 540; font-size: 18px; color: var(--text-primary); }
-    .wordmark b { color: var(--brand-700); font-family: var(--mono); font-weight: 500; }
-    .gnav { flex: 1; display: flex; gap: 24px; align-items: center; }
-    .gnav a { font-size: 13.5px; font-weight: 600; color: var(--text-secondary); }
-    .gnav a:hover { color: var(--brand-700); }
-    /* Not-yet-built destinations: shown for layout continuity with the
-       design mockup, but not styled or behaving as if they work --
-       muted, no href, not underlined on hover. A page that doesn't exist
-       yet shouldn't pretend to via an active-looking link (design
-       framework Sec 24: "is there any unsupported promise?"). */
-    .gnav .soon { font-size: 13.5px; font-weight: 550; color: var(--text-muted); cursor: default; }
-    .gright { display: flex; align-items: center; gap: 16px; }
-    .gright .soon { font-size: 13.5px; font-weight: 550; color: var(--text-muted); cursor: default; }
-    .btn { appearance: none; border: 1px solid transparent; cursor: pointer; font-family: var(--sans); font-size: 13.5px; font-weight: 600; border-radius: var(--radius-sm); padding: 10px 16px; display: inline-flex; align-items: center; gap: 7px; text-decoration: none !important; }
-    .btn-primary { background: var(--brand-700); color: #fff; }
-    .btn-primary:hover { background: var(--brand-800); }
-    .btn-secondary { background: var(--surface-primary); color: var(--text-primary); border-color: var(--border-strong); }
-    .btn-secondary:hover { border-color: var(--text-secondary); }
-
-    .hero { padding: 64px 0 8px; }
-    .hero .kicker { font-family: var(--mono); font-size: 11.5px; color: var(--brand-700); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 18px; }
-    .hero h1 { font-family: var(--serif); font-weight: 540; font-size: 48px; line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 20px; max-width: 760px; }
-    .hero p.lead { font-size: 17px; line-height: 27px; color: var(--text-secondary); max-width: 560px; margin: 0 0 32px; }
-    @media (max-width: 640px) { .hero h1 { font-size: 34px; } }
-
-    .query-console { border: 1.5px solid var(--text-primary); border-radius: var(--radius-md); background: var(--surface-primary); max-width: 720px; }
-    .query-console .qc-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border-default); }
-    .query-console .qc-bar span { font-family: var(--mono); font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-    .query-console p.qc-text { margin: 0; padding: 16px; font-size: 15px; color: var(--text-primary); line-height: 1.55; }
-    .query-console .qc-actions { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-top: 1px solid var(--border-default); }
-    .trust-line { font-family: var(--mono); font-size: 11.5px; color: var(--text-muted); max-width: 560px; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 16px; }
-
-    .specimen { margin-top: 64px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--surface-primary); overflow: hidden; }
-    .specimen .sp-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 22px; border-bottom: 1px solid var(--border-default); background: var(--surface-canvas); }
-    .specimen .sp-head span.lbl { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
-    table.sp { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-    table.sp th { text-align: left; font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted); padding: 14px 22px 8px; font-weight: 500; }
-    table.sp th.num, table.sp td.num { text-align: right; }
-    table.sp td { padding: 10px 22px; border-top: 1px solid var(--border-default); }
-    table.sp td.num { font-family: var(--mono); font-weight: 600; color: var(--brand-700); }
-    table.sp tr:last-child td { padding-bottom: 16px; }
-    figcaption.sp-caption { font-family: var(--mono); font-size: 11px; color: var(--text-muted); padding: 14px 22px 18px; border-top: 1px solid var(--border-default); text-transform: uppercase; letter-spacing: 0.02em; }
-
-    .hiw { display: flex; gap: 0; margin: 88px 0; border-top: 1px solid var(--border-strong); }
-    .hiw .step { flex: 1; padding: 28px 28px 0 0; border-right: 1px solid var(--border-default); }
-    .hiw .step:last-child { border-right: none; padding-right: 0; }
-    .hiw .step .n { font-family: var(--mono); font-size: 26px; color: var(--border-strong); font-weight: 600; display: block; margin-bottom: 10px; }
-    .hiw .step h4 { margin: 0 0 8px; font-family: var(--serif); font-size: 17px; font-weight: 540; }
-    .hiw .step p { margin: 0; font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
-    @media (max-width: 900px) { .hiw { flex-direction: column; } .hiw .step { border-right: none; border-bottom: 1px solid var(--border-default); padding: 24px 0; } .hiw .step:last-child { border-bottom: none; } }
-
-    .trust-strip { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; border-top: 1px solid var(--border-strong); margin-bottom: 72px; font-size: 13.5px; color: var(--text-secondary); flex-wrap: wrap; gap: 12px; }
-
-    footer.site-footer { padding: 32px 0 56px; font-family: var(--mono); font-size: 11.5px; color: var(--text-muted); border-top: 1px solid var(--border-strong); text-transform: uppercase; letter-spacing: 0.02em; }
-  </style>
-</head>
-<body>
-  <header class="gh">
-    <div class="wrap bar">
-      <span class="wordmark"><b>[</b>&nbsp;Scrooner&nbsp;<b>]</b></span>
-      <nav class="gnav" aria-label="Primary">
-        <a href={screenerUrl}>Screener</a>
-        <span class="soon" title="Not built yet">Companies</span>
-        <span class="soon" title="Not built yet">Methodology</span>
-        <span class="soon" title="Not built yet">Pricing</span>
-      </nav>
-      <div class="gright">
-        <span class="soon" title="Not built yet">Saved screens</span>
-        <a class="btn btn-secondary" href={screenerUrl}>Open Screener</a>
+    <main class="home-main" id="main-content">
+      <div class="hero-wordmark" aria-label="Scrooner">
+        <span class="name">scrooner</span>
+        <BrandMark size="large" class="hero-research-mark" />
       </div>
-    </div>
-  </header>
 
-  <div class="wrap">
-    <div class="hero">
-      <p class="kicker">Fundamental screener · United States</p>
-      <h1>Screen US companies<br />in plain English.</h1>
-      <p class="lead">Build advanced fundamental screens without learning a query language. Every result is deterministic and traceable to company filings.</p>
-      <div class="query-console">
-        <div class="qc-bar"><span>Plain-English query</span><span>A real, currently-supported example</span></div>
-        <p class="qc-text">companies with ROE above 30%</p>
-        <div class="qc-actions">
-          <a class="btn btn-primary" href={screenerUrl}>Interpret query</a>
-          <a class="btn btn-secondary" href={screenerUrl}>Build with filters</a>
-        </div>
+      <h1 class="tagline">Screen US companies in plain English—with results you can verify.</h1>
+      <p class="subtag">Explore SEC-derived financials, ratios, ownership, and filings for every company in Scrooner's covered universe.</p>
+
+      <div id="company-search">
+        <CompanySearch id="home-company-query" variant="hero" />
       </div>
-      <p class="trust-line">SEC filings — Defined formulas — Visible periods — No generated stock opinions</p>
-    </div>
 
-    {exampleCompanies.length >= 2 && (
-      <figure class="specimen">
-        <div class="sp-head">
-          <span class="lbl">Fig. 1 — companies with ROIC above 15%</span>
+      {quickPicks.length > 0 && (
+        <div class="quick-picks" aria-label="Popular company pages">
+          <span class="label">Or analyse:</span>
+          {quickPicks.map((company) => (
+            <a class="ds-chip company-chip" href={`/stock/${company.ticker.toLowerCase()}/`}>
+              {company.display_name}
+              <span class="ticker">{company.ticker}</span>
+            </a>
+          ))}
         </div>
-        <table class="sp">
-          <thead><tr><th>Company</th><th class="num">ROIC (TTM)</th><th class="num">Revenue growth (3Y CAGR)</th></tr></thead>
-          <tbody>
-            {exampleCompanies.map((r) => (
-              <tr>
-                <td><a href={`/stock/${r.ticker.toLowerCase()}/`}>{r.company_name}</a> <span style="font-family:var(--mono);font-size:11px;color:var(--text-muted)">{r.ticker}</span></td>
-                <td class="num">{fmtPct(r.roic)}</td>
-                <td class="num">{fmtPct(r.revenue_growth_3y_cagr)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <figcaption class="sp-caption">Real values from SEC filings, not an example with invented figures. Not a recommendation — an illustration of what a screen returns. Open the Screener to run your own.</figcaption>
-      </figure>
-    )}
+      )}
 
-    <div class="hiw">
-      <div class="step"><span class="n">01</span><h4>Ask</h4><p>Type a fundamental thesis in plain English — no proprietary syntax to learn.</p></div>
-      <div class="step"><span class="n">02</span><h4>Check the interpretation</h4><p>Every clause becomes a readable, editable filter before anything executes.</p></div>
-      <div class="step"><span class="n">03</span><h4>Verify the result</h4><p>Inspect the period, formula, and SEC filing behind every matched value.</p></div>
-    </div>
+      <p class="screener-path">Have an investment thesis? <a href={screenerUrl}>Build a fundamental screen →</a></p>
+    </main>
 
-    <div class="trust-strip">
-      <span>Every figure on this page traces to an SEC filing and a versioned formula.</span>
-    </div>
-  </div>
-
-  <footer class="site-footer wrap">Scrooner · Research tool, not investment advice · Data from SEC EDGAR</footer>
-</body>
+    <PublicFooter screenerUrl={screenerUrl} companyHref={companyResearchHref} />
+  </body>
 </html>

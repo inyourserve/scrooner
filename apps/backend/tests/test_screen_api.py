@@ -5,6 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
+from metric_catalog import METRIC_PRESENTATION, presentation_for
 from routers import screen
 
 
@@ -86,6 +87,15 @@ def test_metric_catalog_exposes_formula_and_ui_contract(monkeypatch):
 
 
 @pytest.mark.unit
+def test_current_presentation_catalog_has_no_generic_fallbacks():
+    assert len(METRIC_PRESENTATION) == 47
+    for metric_name in METRIC_PRESENTATION:
+        presentation = presentation_for(metric_name)
+        assert presentation.category != "Other"
+        assert presentation.short_definition != "Defined Scrooner metric."
+
+
+@pytest.mark.unit
 def test_ask_contract_shows_interpretation_and_does_not_run_by_default(monkeypatch):
     monkeypatch.setattr(screen, "_log_usage", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(screen, "run_query", lambda *_args: pytest.fail("run_query should not run"))
@@ -104,6 +114,36 @@ def test_ask_contract_shows_interpretation_and_does_not_run_by_default(monkeypat
     assert "result" not in body
     assert body["unrecognized"] == []
     assert body["recognized_query"] == body["query"]
+
+
+@pytest.mark.unit
+def test_ask_can_interpret_and_run_a_valid_screen_in_one_request(monkeypatch):
+    expected_result = {
+        "matched": [],
+        "excluded_missing_data": [],
+        "excluded_inactive": [],
+    }
+    executed = []
+
+    def run_once(_conn, query):
+        executed.append(query)
+        return expected_result
+
+    monkeypatch.setattr(screen, "get_connection", unused_connection)
+    monkeypatch.setattr(screen, "run_query", run_once)
+    monkeypatch.setattr(screen, "_log_usage", lambda *_args, **_kwargs: None)
+
+    response = TestClient(app).post(
+        "/v1/ask",
+        json={"text": "companies with ROE above 30%", "run": True},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert len(executed) == 1
+    assert executed[0].metric_predicates[0].metric_name == "roe"
+    assert body["query"] == body["recognized_query"]
+    assert body["result"] == expected_result
 
 
 @pytest.mark.unit

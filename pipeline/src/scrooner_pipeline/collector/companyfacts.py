@@ -25,6 +25,7 @@ just `cik`) is the right idempotency key given the append-only design.
 import hashlib
 import re
 import zipfile
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from typing import Iterator
@@ -41,9 +42,19 @@ logger = structlog.get_logger()
 BULK_URL = "https://www.sec.gov/Archives/edgar/daily-index/xbrl/companyfacts.zip"
 _MEMBER_RE = re.compile(r"^CIK(\d{10})\.json$")
 
+# Same batched-concurrent-upload fix as submissions.py -- see that
+# module's own comment for the measured before/after.
+UPLOAD_BATCH_SIZE = 20
+UPLOAD_WORKERS = 10
 
-def _iter_members(zip_path: Path) -> Iterator[tuple[str, bytes]]:
-    """Yields (cik, raw_bytes) for every company in the bulk archive."""
+
+def _iter_members(zip_path: Path, only_ciks: set[str] | None = None) -> Iterator[tuple[str, bytes]]:
+    """Yields (cik, raw_bytes) for every company in the bulk archive.
+
+    `only_ciks`, when given, is checked BEFORE `zf.read()` -- same fix as
+    submissions.py's own _iter_members, found live 2026-08-22 (a small
+    CIK-subset request was decompressing all ~987K archive members
+    regardless of the filter, previously applied only by the caller)."""
     with zipfile.ZipFile(zip_path) as zf:
         for name in zf.namelist():
             m = _MEMBER_RE.match(name)
@@ -54,7 +65,10 @@ def _iter_members(zip_path: Path) -> Iterator[tuple[str, bytes]]:
                 # should be visible, not quietly drop companies.
                 logger.warning("companyfacts.unrecognized_member", name=name)
                 continue
-            yield m.group(1), zf.read(name)
+            cik = m.group(1)
+            if only_ciks is not None and cik not in only_ciks:
+                continue
+            yield cik, zf.read(name)
 
 
 def bootstrap_companyfacts(
@@ -92,21 +106,22 @@ def bootstrap_companyfacts(
     fetched_at_iso = fetched_at.isoformat()
     heartbeat = HeartbeatTicker(conn, run_id)
 
-    with SupabaseStorageClient() as storage, conn.cursor() as cur:
-        for cik, payload in _iter_members(zip_path):
-            if only_ciks is not None and cik not in only_ciks:
-                continue
-            seen_ciks.add(cik)
-            stats["considered"] += 1
-            if limit is not None and stats["stored"] >= limit:
-                break
-            if cik in already_done:
-                stats["skipped"] += 1
-                continue
-            try:
-                sha256 = hashlib.sha256(payload).hexdigest()
-                object_path = f"sec/companyfacts/{cik}/{fetched_at_iso}.json"
-                storage_path = storage.upload(object_path, payload)
+    def _upload_one(storage: SupabaseStorageClient, item: tuple[str, str, bytes]) -> tuple[str, str, str, Exception | None]:
+        cik, object_path, payload = item
+        try:
+            storage_path = storage.upload(object_path, payload)
+            sha256 = hashlib.sha256(payload).hexdigest()
+            return cik, storage_path, sha256, None
+        except Exception as exc:  # noqa: BLE001 -- reported per-item below, not raised
+            return cik, f"raw/{object_path}", "", exc
+
+    def _flush_batch(storage: SupabaseStorageClient, cur, batch: list[tuple[str, str, bytes]]) -> None:
+        if not batch:
+            return
+        with ThreadPoolExecutor(max_workers=UPLOAD_WORKERS) as pool:
+            results = list(pool.map(lambda item: _upload_one(storage, item), batch))
+        for cik, storage_path, sha256, exc in results:
+            if exc is None:
                 cur.execute(
                     """
                     insert into raw.sec_companyfacts
@@ -119,10 +134,10 @@ def bootstrap_companyfacts(
                 conn.commit()
                 stats["stored"] += 1
                 heartbeat.tick()
-            except Exception as exc:
+            else:
                 conn.rollback()
                 stats["errors"] += 1
-                logger.exception("companyfacts.store_failed", cik=cik)
+                logger.error("companyfacts.store_failed", cik=cik, error_type=type(exc).__name__, error=str(exc)[:500])
                 cur.execute(
                     """
                     insert into raw.collector_errors
@@ -132,6 +147,23 @@ def bootstrap_companyfacts(
                     (run_id, cik, "companyfacts", type(exc).__name__, str(exc)[:2000]),
                 )
                 conn.commit()
+
+    with SupabaseStorageClient() as storage, conn.cursor() as cur:
+        batch: list[tuple[str, str, bytes]] = []
+        for cik, payload in _iter_members(zip_path, only_ciks):
+            seen_ciks.add(cik)
+            stats["considered"] += 1
+            if limit is not None and stats["stored"] >= limit:
+                break
+            if cik in already_done:
+                stats["skipped"] += 1
+                continue
+            object_path = f"sec/companyfacts/{cik}/{fetched_at_iso}.json"
+            batch.append((cik, object_path, payload))
+            if len(batch) >= UPLOAD_BATCH_SIZE:
+                _flush_batch(storage, cur, batch)
+                batch = []
+        _flush_batch(storage, cur, batch)
 
         # A requested CIK that never appeared in the archive at all must
         # not be silently invisible -- doc 08 Day 4's "zero lost

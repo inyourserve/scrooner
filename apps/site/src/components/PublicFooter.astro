@@ -1,0 +1,51 @@
+---
+interface Props {
+  screenerUrl: string;
+  companyHref?: string;
+}
+
+const { screenerUrl, companyHref = "/stock/aapl/" } = Astro.props;
+import BrandMark from "./BrandMark.astro";
+---
+
+<footer class="public-footer">
+  <div class="footer-brand">
+    <BrandMark size="small" />
+    scrooner
+  </div>
+  <div class="footer-links">
+    <a href={screenerUrl}>Screener</a>
+    <a href={companyHref}>Company research</a>
+    <a href="/methodology/">Methodology</a>
+    <a href="/data-sources/">Data sources</a>
+    <a href="/about/">About</a>
+    <a href="/pricing/">Access</a>
+    <a href="/privacy/">Privacy</a>
+    <a href="/terms/">Terms</a>
+    <a href="https://www.sec.gov/edgar/search/" target="_blank" rel="noreferrer">SEC EDGAR <span aria-hidden="true">↗</span><span class="ds-sr-only"> (opens in a new tab)</span></a>
+  </div>
+  <p class="footer-note">Financial data sourced from SEC EDGAR filings. For research and educational purposes only—not investment advice.</p>
+</footer>
+
+<style>
+  .public-footer {
+    flex: none;
+    padding: 22px clamp(16px, 5vw, 48px);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px 28px;
+    border-top: 1px solid var(--ds-color-border-subtle);
+  }
+  .footer-brand { display: flex; align-items: center; gap: var(--ds-space-2); color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-14); }
+  .footer-links { justify-self: end; display: flex; flex-wrap: wrap; gap: 22px; }
+  .footer-links a { color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-13); text-decoration: none; }
+  .footer-links a:hover { color: var(--ds-color-text-primary); }
+  .footer-note { grid-column: 1 / -1; max-width: 720px; margin: 0; color: var(--ds-color-text-muted); font-size: var(--ds-font-size-12); }
+
+  @media (max-width: 640px) {
+    .public-footer { grid-template-columns: 1fr; }
+    .footer-links { justify-self: start; }
+    .footer-note { grid-column: auto; }
+  }
+</style>

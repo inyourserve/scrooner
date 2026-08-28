@@ -1,0 +1,106 @@
+---
+import BrandMark from "../components/BrandMark.astro";
+import PublicFooter from "../components/PublicFooter.astro";
+import PublicHeader from "../components/PublicHeader.astro";
+import "../styles/public-theme.css";
+import "../styles/design-system-catalog.css";
+
+export const prerender = true;
+
+const appUrl = (import.meta.env.PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+const screenerUrl = `${appUrl}/screener`;
+
+const colors = [
+  ["Canvas", "swatch--canvas"],
+  ["Surface", "swatch--surface"],
+  ["Subtle", "swatch--subtle"],
+  ["Action", "swatch--action"],
+  ["Positive", "swatch--positive"],
+  ["Negative", "swatch--negative"],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Scrooner design system catalog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <PublicHeader screenerUrl={screenerUrl} current="design-system" companyHref="/#company-search" skipHref="#catalog" skipLabel="Skip to component catalog" />
+    <main class="catalog-main" id="catalog">
+      <header class="catalog-hero">
+        <p class="catalog-kicker">Design system · implemented contract</p>
+        <h1>One visual language for every Scrooner surface.</h1>
+        <p>This no-index catalog exercises the real framework-neutral primitives consumed by both the Astro public site and Next.js application.</p>
+      </header>
+
+      <section class="catalog-section" aria-labelledby="brand-title">
+        <div class="catalog-heading"><h2 id="brand-title">Brand and color</h2><p>The research aperture focuses on one verified data point. Cool neutrals carry the information; teal is reserved for action and meaning.</p></div>
+        <div class="catalog-row catalog-brand ds-surface ds-surface--padded">
+          <BrandMark size="large" />
+          <strong class="catalog-wordmark">scrooner</strong>
+        </div>
+        <div class="catalog-grid">
+          {colors.map(([label, className]) => <div class:list={["swatch", className]}><span>{label}</span></div>)}
+        </div>
+      </section>
+
+      <section class="catalog-section" aria-labelledby="type-title">
+        <div class="catalog-heading"><h2 id="type-title">Typography</h2><p>Editorial hierarchy, quiet interface copy, and inspectable financial data each have a specific voice.</p></div>
+        <div class="catalog-grid">
+          <div class="ds-surface type-specimen"><p class="type-editorial">Research with evidence.</p><span class="ds-badge">Newsreader</span></div>
+          <div class="ds-surface type-specimen"><p class="type-interface">Build exact criteria and verify every matching period.</p><span class="ds-badge">Inter</span></div>
+          <div class="ds-surface type-specimen"><p class="type-data">$303.97 · 34.90x</p><span class="ds-badge">IBM Plex Mono</span></div>
+        </div>
+      </section>
+
+      <section class="catalog-section" aria-labelledby="actions-title">
+        <div class="catalog-heading"><h2 id="actions-title">Actions and states</h2><p>One primary decision, clear alternatives, and semantic feedback without decorative status color.</p></div>
+        <div class="catalog-state-stack ds-stack">
+          <div class="catalog-row ds-surface ds-surface--padded">
+            <button class="ds-button ds-button--primary">Run screen</button>
+            <button class="ds-button ds-button--secondary">Review criteria</button>
+            <button class="ds-button ds-button--ghost">Reset</button>
+            <button class="ds-button ds-button--destructive">Delete screen</button>
+            <button class="ds-button ds-button--primary" disabled>Running…</button>
+          </div>
+          <div class="catalog-row ds-surface ds-surface--padded">
+            <span class="ds-badge">Delayed</span>
+            <span class="ds-badge ds-badge--positive">Active</span>
+            <span class="ds-badge ds-badge--warning">Partial coverage</span>
+            <span class="ds-badge ds-badge--negative">Unavailable</span>
+          </div>
+          <div class="ds-alert"><span class="ds-alert__mark" aria-hidden="true">i</span><div><strong>Neutral</strong><p>Values retain their filing period.</p></div></div>
+          <div class="ds-alert ds-alert--positive"><span class="ds-alert__mark ds-alert__mark--positive" aria-hidden="true">✓</span><div><strong>Ready</strong><p>Every phrase was recognized.</p></div></div>
+          <div class="ds-alert ds-alert--warning"><span class="ds-alert__mark ds-alert__mark--warning" aria-hidden="true">!</span><div><strong>Attention</strong><p>Resolve ambiguous language before running.</p></div></div>
+          <div class="ds-alert ds-alert--negative"><span class="ds-alert__mark ds-alert__mark--negative" aria-hidden="true">!</span><div><strong>Error</strong><p>The service is unavailable; criteria remain preserved.</p></div></div>
+        </div>
+      </section>
+
+      <section class="catalog-section" aria-labelledby="form-title">
+        <div class="catalog-heading"><h2 id="form-title">Form contract</h2><p>Labels, help, errors, target sizes, and focus are part of the component—not later polish.</p></div>
+        <form class="catalog-form ds-surface ds-surface--padded ds-stack">
+          <div><label class="ds-label" for="query-example">Screening request</label><textarea class="ds-control" id="query-example">companies with ROE above 30%</textarea><span class="ds-help">Precise supported language is translated into exact criteria.</span></div>
+          <div><label class="ds-label" for="metric-example">Metric</label><select class="ds-control" id="metric-example"><option>Return on equity (ROE)</option><option>Operating margin</option></select></div>
+          <div><label class="ds-label" for="invalid-example">Invalid value</label><input class="ds-control" id="invalid-example" aria-invalid="true" aria-describedby="invalid-help" value="abc" /><span class="ds-error" id="invalid-help">Enter a numeric value.</span></div>
+        </form>
+      </section>
+
+      <section class="catalog-section" aria-labelledby="data-title">
+        <div class="catalog-heading"><h2 id="data-title">Financial data</h2><p>Comparable numbers use tabular figures; exact period and provenance remain adjacent.</p></div>
+        <div class="ds-surface ds-table-scroll" tabindex="0" role="group" aria-label="Financial table specimen, scroll horizontally">
+          <table class="catalog-table"><caption class="ds-sr-only">Example quarterly financial values.</caption><thead><tr><th>Line item</th><th>Q1 2026</th><th>Q2 2026</th><th>Q3 2026</th></tr></thead><tbody><tr><td>Revenue</td><td>143.76B</td><td>111.18B</td><td>109.42B</td></tr><tr><td>Operating margin</td><td>34.1%</td><td>31.6%</td><td>32.6%</td></tr><tr><td>Free cash flow</td><td>38.20B</td><td>24.01B</td><td>26.84B</td></tr></tbody></table>
+        </div>
+      </section>
+
+      <p class="catalog-note">This route is excluded from indexing. Source contract: packages/design-system/src/.</p>
+    </main>
+    <PublicFooter screenerUrl={screenerUrl} />
+  </body>
+</html>

@@ -53,6 +53,12 @@ jobs:
       - name: Install locked dependencies
         working-directory: apps/site
         run: npm ci
+      - name: Test
+        working-directory: apps/site
+        run: npm test
+      - name: Type check
+        working-directory: apps/site
+        run: npm run check
       - name: Build
         working-directory: apps/site
         run: npm run build

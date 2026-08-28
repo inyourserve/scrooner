@@ -21,6 +21,9 @@ from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
 from scrooner_pipeline.mapper.quality_score import calculate_piotroski
 from scrooner_pipeline.mapper.quality_flags import calculate_quality_flags
 from scrooner_pipeline.mapper.reconciliation import calculate_reconciliation
+from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
+from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
+from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -230,6 +233,44 @@ def calculate_reconciliation_cmd(
     with get_connection() as conn:
         stats = calculate_reconciliation(conn, target_ciks)
     typer.echo(f"calculate-reconciliation: {stats}")
+
+
+@app.command("calculate-tax-reconciliation")
+def calculate_tax_reconciliation_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Utilization-study ranked #5 (2026-08-22): effective_tax_rate_gap,
+    a cross-check between the reported effective tax rate and ROIC's own
+    internally-derived rate. Requires seed-expanded-concepts,
+    seed-expanded-definitions, and resolve-facts to have already run."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_tax_reconciliation(conn, target_ciks)
+    typer.echo(f"calculate-tax-reconciliation: {stats}")
+
+
+@app.command("calculate-fcf-growth")
+def calculate_fcf_growth_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 18 Tier A (2026-08-22): fcf_growth_3y_cagr/5y_cagr. Requires
+    calculate (for fcf) to have already run."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_fcf_growth(conn, target_ciks)
+    typer.echo(f"calculate-fcf-growth: {stats}")
+
+
+@app.command("calculate-dividend-streak")
+def calculate_dividend_streak_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 26 (2026-08-22): dividend_growth_streak_years. Requires
+    seed-expanded-definitions and resolve-facts to have already run."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = calculate_dividend_streak(conn, target_ciks)
+    typer.echo(f"calculate-dividend-streak: {stats}")
 
 
 @app.command()

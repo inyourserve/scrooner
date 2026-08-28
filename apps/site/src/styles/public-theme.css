@@ -1,0 +1,47 @@
+@import "@scrooner/design-system";
+
+/* Temporary compatibility aliases for existing public components. New work
+   consumes --ds-* tokens directly; these keep migration incremental and safe. */
+:root {
+  --paper: var(--ds-color-bg-canvas);
+  --surface: var(--ds-color-bg-surface);
+  --ink: var(--ds-color-text-primary);
+  --muted: var(--ds-color-text-secondary);
+  --faint: var(--ds-color-text-muted);
+  --line: var(--ds-color-border-default);
+  --line-soft: var(--ds-color-border-subtle);
+  --accent: var(--ds-color-action);
+  --accent-soft: var(--ds-color-action-subtle);
+  --accent-dark: var(--ds-color-action-hover);
+  --danger: var(--ds-color-negative);
+  --public-shadow: var(--ds-shadow-surface);
+  --public-sans: var(--ds-font-family-sans);
+  --public-serif: var(--ds-font-family-editorial);
+
+  /* Research-page compatibility aliases. */
+  --surface-canvas: var(--ds-color-bg-canvas);
+  --surface-primary: var(--ds-color-bg-surface);
+  --surface-subtle: var(--ds-color-bg-subtle);
+  --text-primary: var(--ds-color-text-primary);
+  --text-secondary: var(--ds-color-text-secondary);
+  --text-muted: var(--ds-color-text-muted);
+  --border-default: var(--ds-color-border-default);
+  --border-strong: var(--ds-color-border-strong);
+  --brand-700: var(--ds-color-action);
+  --brand-800: var(--ds-color-action-hover);
+  --brand-tint: var(--ds-color-action-subtle);
+  --link-700: var(--ds-color-link);
+  --positive-700: var(--ds-color-positive);
+  --positive-tint: var(--ds-color-positive-subtle);
+  --negative-700: var(--ds-color-negative);
+  --negative-tint: var(--ds-color-negative-subtle);
+  --warning-700: var(--ds-color-warning);
+  --warning-tint: var(--ds-color-warning-subtle);
+  --info-700: var(--ds-color-info);
+  --focus: var(--ds-color-focus);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}

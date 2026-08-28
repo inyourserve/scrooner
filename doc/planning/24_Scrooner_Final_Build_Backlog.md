@@ -4,6 +4,12 @@ One consolidated, ordered backlog before building starts — synthesizes doc 18 
 
 > **Status:** Canonical (2026-08-17) — this is the plan being executed, not a survey. **Owner:** Founder / Product · **Review:** after each phase closes, update `doc/status/PROGRESS.md` first, same discipline doc 20 already established.
 
+> **Performance addendum (2026-08-28):** Phases 3 and 4 now exist. The next
+> frontend-critical work is the serving-path performance sprint below. This
+> addendum supersedes this document's older statements that `apps/app`, auth,
+> and saved screens do not exist; the historical phase descriptions remain for
+> traceability.
+
 ---
 
 ## Where things stand (from `doc/status/PROGRESS.md`)
@@ -56,6 +62,72 @@ Needed before "saved screens" or entitlements mean anything to a real user. Supa
 ## Decisions this backlog doesn't make
 
 Market-price vendor, LLM vendor (6c), usage limits/pricing tiers, legal/licensing review — exactly as open as doc 20 already left them. None of Phases 1-4 are blocked on any of them.
+
+## Performance sprint — added 2026-08-28
+
+The measured bottleneck is connection and request orchestration, not Astro
+rendering or Postgres calculation. Local measurements showed a fresh database
+connection taking 1.70–1.85s and a following trivial query taking another
+0.53–0.58s, while the consolidated company query averages about 138ms in
+`pg_stat_statements`. The public company page is already one SQL request and
+has production CDN directives, but FastAPI still opens a new `psycopg`
+connection per operation. Saved screens also perform a client-side auth/API
+waterfall before useful content appears.
+
+Execute in this order:
+
+1. **P0 — Pool backend database connections.** Add one bounded FastAPI
+   `psycopg_pool.ConnectionPool` with lifecycle startup/shutdown. Reuse the
+   request connection for `/screen` and its usage write. Select direct/session
+   pooling for a persistent backend, or Supabase transaction pooling with
+   prepared statements disabled for a serverless backend.
+2. **P0 — Cache stable backend metadata.** Cache the `/v1/metrics` catalog in
+   process with an hours-long or version-based lifetime.
+3. **P1 — Add one company-page read API.** Expose a versioned endpoint such as
+   `GET /v1/companies/{ticker}` returning the complete read model. Move the
+   existing consolidated query behind it; do not split the page into many API
+   calls. Keep Astro's full-page CDN cache as the first and fastest layer.
+4. **P1 — Remove the saved-screen browser waterfall.** Resolve the session on
+   the server and fetch saved-screen data during the initial render. Preserve
+   RLS and user-scoped authorization; do not cache authentication decisions.
+5. **P1 — Scope auth middleware.** Exclude genuinely public pages and APIs from
+   global claims checks. Keep protected routes explicit and fail closed.
+6. **P2 — Add Redis only after pooled-origin measurement.** Use cache-aside for
+   company JSON (15–60 minutes), metric catalog (hours or versioned), company
+   search (5–60 minutes), and repeated identical screener results (30–120
+   seconds). Keep Redis close to the API/database. Do not initially cache saved
+   screens: they are private and mutation-sensitive.
+7. **P2 — Finish frontend delivery work.** Prerender static Astro pages,
+   self-host/subset fonts, remove unused Sharp/libvips if confirmed safe, and
+   reduce the roughly 200KB-gzip initial Next.js bundles through splitting.
+
+Use TTL plus targeted invalidation after successful pipeline updates, with
+versioned keys such as `company-page:{ticker}:{data_as_of}` and the existing
+ticker-specific HTML cache tag/path.
+
+| Path | Target |
+|---|---:|
+| Public company page, CDN hit | 20–100ms typical; <200ms p95 |
+| Company API, shared-cache hit | 20–80ms when region-local |
+| Company API, pooled database miss | <500ms p95 |
+| Saved-screens initial useful response | <300ms p95 when region-local |
+| Metric catalog | <50ms p95 |
+
+Record p50/p95, cache status, connection acquisition, database execution,
+render time, and total response time. Redis is approved only when measurements
+show repeated cross-instance reads remaining after pooling and CDN/API caching.
+
+**Execution update — 2026-08-28:** the frontend-owned first batch is complete.
+Next's auth proxy is now scoped to account, saved-screen, and saved-screen API
+paths instead of every request; the stable metric catalog uses a one-hour Next
+data/CDN lifetime with 24-hour stale-while-revalidate; and eight static Astro
+information routes are prerendered instead of invoking the Vercel function.
+Regression tests cover the proxy scope and catalog cache contract. Both
+production builds, all 40 Next tests, and Astro's 25-file static check pass.
+
+Still open from this sprint: server-first saved-screen loading, self-hosted
+font assets, measured Next bundle splitting, and all backend-owned work
+(connection pooling, the company read API, and any shared Redis layer).
 
 ---
 

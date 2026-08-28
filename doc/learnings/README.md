@@ -1,14 +1,34 @@
-# Data pipeline build — day-by-day learnings
+# Scrooner build learnings
 
-Not a decision doc (no status line, not part of the canonical 01-10 set) — this is a running engineering journal: what actually went wrong, how it was actually found, and what changed as a result. The canonical docs say what's decided; this says how we found out we were wrong about something, so the next session (human or agent) doesn't have to rediscover it from scratch.
+Not a decision doc — this is the running product, design, architecture, and
+engineering journal: what was unclear or wrong, how it was actually found, and
+what changed as a result. Canonical docs say what is decided; these entries say
+how a decision was applied or how the project learned something, so the next
+session does not have to rediscover it.
 
-Covers both the Collector (`day-NN-*.md`, doc 08, frozen/complete) and the Normalizer (`normalizer-day-NN-*.md`, doc 09, in progress) — separate filename prefixes since both phases number their own days starting at 1.
+Covers the data pipeline, backend, product UI, public site, and cross-cutting
+architecture. Phase/day entries retain their existing filename conventions;
+cross-cutting entries use a descriptive name such as
+[`public-app-domain-boundary.md`](public-app-domain-boundary.md).
 
-**One file per day**, written as part of closing out that day (the `run-collector-day` skill writes Collector entries automatically; Normalizer entries are written manually for now, same discipline). Structure per entry:
+Write an entry when a task produces a material, reusable learning. Use this
+structure:
 
-- **Problem** — what broke, or what was wrong, stated plainly.
+- **Problem or clarification** — what broke, was wrong, or was easy to
+  misunderstand, stated plainly.
 - **How it was found** — the specific check that surfaced it. If the answer is "I just thought about it," that's worth noting too — most of these were found by verifying against live data/state, not by reasoning from memory.
 - **Fix / decision** — what actually changed, and where (file, doc, schema).
 - **Why it matters going forward** — the generalizable lesson, not just the one-off fix. This is the part that's actually meant to prevent a repeat.
 
 Read the relevant day's entry (or skim recent ones) before starting related work — that's the whole point of this folder existing.
+
+For work spanning both frontends, start with
+[`multi-surface-frontend-completion-is-a-contract.md`](multi-surface-frontend-completion-is-a-contract.md):
+it defines completion across shared foundations, native adapters, product
+journeys, accessibility structure, production gates, rendered geometry, and
+explicitly open boundaries.
+
+For page-speed, API-layer, connection-pooling, and Redis decisions, start with
+[`company-page-latency-is-round-trips-not-calculation.md`](company-page-latency-is-round-trips-not-calculation.md).
+It records the measured distinction between database execution, connection
+cost, frontend waterfalls, CDN caching, and conditional shared caching.

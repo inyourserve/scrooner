@@ -84,6 +84,11 @@ DEFERRED_TO_EXPANDED_METRICS = {
     # crashes with a bare KeyError" bug twice already (net_debt_ebitda,
     # share_dilution_trend), see pipeline/CLAUDE.md.
     "ar_change_reconciliation_gap", "inventory_change_reconciliation_gap", "ap_change_reconciliation_gap",
+    # Added 2026-08-22 (P0/coverage execution pass) -- computed in
+    # mapper/tax_reconciliation.py, mapper/fcf_growth.py, and
+    # mapper/dividend_streak.py respectively, same "same-edit as the
+    # metric_definition row" rule as above.
+    "effective_tax_rate_gap", "fcf_growth_3y_cagr", "fcf_growth_5y_cagr", "dividend_growth_streak_years",
 }
 
 # debtor_days/inventory_days/payables_days added to FY_ONLY_METRICS
@@ -138,6 +143,9 @@ FORMULA_SHAPES = {
     # Added 2026-08-21 (doc 28, Trendlyne gap analysis #1/#4).
     "rnd_intensity": "ratio",
     "net_interest_income": "sum_diff",
+    # Added 2026-08-22 (P0/coverage execution pass).
+    "capex_pct_revenue": "ratio",
+    "sga_pct_revenue": "ratio",
 }
 
 

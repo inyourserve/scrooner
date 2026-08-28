@@ -80,7 +80,7 @@ Each pair: the plan, then the Definition-of-Done evidence proving it was actuall
 
 ## Subdirectories
 
-- [`learnings/`](learnings/) — 38 entries covering product, design, architecture, and engineering: what broke or was clarified, how it was actually found, and the generalizable lesson. Not a decision doc — read to avoid rediscovering a solved problem.
+- [`learnings/`](learnings/) — 43 entries covering product, design, architecture, and engineering: what broke or was clarified, how it was actually found, and the generalizable lesson. Not a decision doc — read to avoid rediscovering a solved problem.
 - [`adr/`](adr/) — Architecture Decision Records for consequential, hard-to-reverse technical calls. Currently just the template; none written yet (no call has needed one).
 - [`html/`](html/) — reference source material (e.g. `screener.html`, the real Screener.in page doc 17's analysis was grounded in; `trendlyne-apple.html`, doc 28's grounding), not documentation itself.
 - [`consultant/`](consultant/) — independent recommendations and opportunity assessments; these advise but do not override canonical decisions or status.

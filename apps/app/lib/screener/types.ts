@@ -95,4 +95,5 @@ export interface AskResponse {
   recognized_query: ScreenQueryPayload | null;
   unrecognized: string[];
   ambiguous: AmbiguityNote[];
+  result?: ScreenResult;
 }

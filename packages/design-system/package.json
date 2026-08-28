@@ -1,0 +1,18 @@
+{
+  "name": "@scrooner/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "style": "./src/index.css",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "style": "./src/index.css",
+      "default": "./src/index.css"
+    },
+    "./tokens": "./src/tokens.css",
+    "./foundation": "./src/foundation.css",
+    "./primitives": "./src/primitives.css"
+  }
+}

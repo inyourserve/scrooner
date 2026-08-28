@@ -1,12 +1,17 @@
 import { backendUrl, proxyBackend } from "@/lib/backend";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function GET() {
-  return proxyBackend(
+  const response = await proxyBackend(
     fetch(backendUrl("/v1/metrics"), {
-      cache: "no-store",
+      next: { revalidate: 3600 },
       headers: { accept: "application/json" },
     }),
   );
+  response.headers.set(
+    "Cache-Control",
+    "public, s-maxage=3600, stale-while-revalidate=86400",
+  );
+  return response;
 }

@@ -259,7 +259,13 @@ def update_insider_transactions_for_company(
     return stats
 
 
-PER_COMPANY_TIMEOUT_SECONDS = 300
+PER_COMPANY_TIMEOUT_SECONDS = 1800  # 30 min -- raised 2026-08-28: chunks are
+# now cost-bin-packed by expected Form 4 filing count (see
+# scratchpad/build_cost_based_chunks.py), so a heavy company (some have
+# 900+ filings in just the recent window) gets its own solo chunk instead
+# of blocking 19 others -- a longer, more generous cap here just lets a
+# genuinely-working heavy company actually finish instead of being cut off
+# every retry with zero progress saved.
 
 
 def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> dict:

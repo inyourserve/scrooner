@@ -28,9 +28,10 @@ export interface MetricItem {
 interface Props {
   items: MetricItem[];
   dense?: boolean;
+  compact?: boolean;
 }
 
-const { items, dense = false } = Astro.props;
+const { items, dense = false, compact = false } = Astro.props;
 
 function formatValue(item: MetricItem): string {
   const value = item.kind === "raw" ? item.raw : item.row?.value;
@@ -55,7 +56,7 @@ function formatValue(item: MetricItem): string {
 }
 ---
 
-<div class={`metric-grid${dense ? " metric-grid-dense" : ""}`}>
+<div class={`metric-grid${dense ? " metric-grid-dense" : ""}${compact ? " metric-grid-compact" : ""}`}>
   {items.map((item) => {
     const isNull = item.kind === "raw" ? !item.raw : item.row?.value == null;
     const reason = item.kind === "raw"
@@ -65,6 +66,7 @@ function formatValue(item: MetricItem): string {
         : "Not yet resolved for this company";
     const period = item.kind !== "raw" && item.row && !isNull ? `${item.row.period_label} · ${item.row.period_end}` : null;
     const valueTitle = item.kind === "raw" ? item.rawTitle : period ?? undefined;
+    const compactContext = isNull ? "Not available" : period;
     return (
       <div class="metric-cell">
         <span class="metric-label">{item.label}</span>
@@ -74,6 +76,7 @@ function formatValue(item: MetricItem): string {
           <span class="metric-value" title={valueTitle} aria-label={period ? `${item.label}: ${formatValue(item)}, ${period}` : undefined}>{formatValue(item)}</span>
         )}
         {!dense && period && <span class="metric-period">{period}</span>}
+        {compact && !period && <span class="metric-period" title={isNull ? reason : valueTitle}>{compactContext}</span>}
       </div>
     );
   })}
@@ -97,28 +100,58 @@ function formatValue(item: MetricItem): string {
   .metric-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--border-strong, #c9c2ac);
-    border-left: 1px solid var(--border-strong, #c9c2ac);
+    overflow: hidden;
+    border: 1px solid var(--ds-color-border-default);
+    border-radius: var(--radius-sm, 8px);
   }
   .metric-cell {
     display: flex;
     flex-direction: column;
     gap: 3px;
     min-width: 0;
-    background: var(--surface-primary, #fff);
+    background: var(--ds-color-bg-surface);
     padding: 16px 18px;
-    border-right: 1px solid var(--border-default, #e7e2d6);
-    border-bottom: 1px solid var(--border-default, #e7e2d6);
+    border-right: 1px solid var(--ds-color-border-default);
+    border-bottom: 1px solid var(--ds-color-border-default);
   }
   .metric-grid-dense .metric-cell {
     padding: 13px 16px;
   }
+  .metric-grid-compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .metric-grid-compact .metric-cell {
+    min-height: 48px;
+    padding: 11px 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+  }
+  .metric-grid-compact .metric-cell:nth-child(even) {
+    background: var(--ds-color-bg-subtle);
+  }
+  .metric-grid-compact .metric-label {
+    font-size: 12.5px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .metric-grid-compact .metric-value {
+    font-size: 15.5px;
+    text-align: right;
+  }
+  .metric-grid-compact .metric-period {
+    grid-column: 1 / -1;
+    margin-top: -5px;
+  }
   @media (max-width: 640px) {
     .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .metric-grid-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   .metric-label {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-secondary);
     line-height: 1.35;
     text-transform: uppercase;
@@ -127,7 +160,7 @@ function formatValue(item: MetricItem): string {
   .metric-value {
     font-family: var(--mono, ui-monospace, monospace);
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
     font-variant-numeric: tabular-nums;
     line-height: 1.3;

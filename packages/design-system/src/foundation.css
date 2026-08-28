@@ -1,0 +1,107 @@
+/* Framework-neutral baseline. Product styles should build on this contract. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
+  font-family: var(--ds-font-family-sans);
+  font-synthesis: none;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
+  font-family: var(--ds-font-family-sans);
+  line-height: var(--ds-line-height-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+a {
+  color: var(--ds-color-link);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex="0"]):focus-visible {
+  outline: none;
+  box-shadow: var(--ds-focus-ring);
+}
+
+::selection {
+  background: var(--ds-color-action-subtle);
+  color: var(--ds-color-text-primary);
+}
+
+.ds-sr-only,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --ds-color-border-default: var(--ds-color-slate-500);
+    --ds-color-border-strong: var(--ds-color-slate-900);
+    --ds-focus-ring: 0 0 0 3px var(--ds-color-action-hover);
+  }
+}
+
+@media (forced-colors: active) {
+  :where(a, button, input, select, textarea, summary, [tabindex="0"]):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+
+  .ds-button,
+  .ds-badge,
+  .ds-alert,
+  .ds-chip,
+  .ds-control,
+  .ds-surface {
+    border-color: CanvasText;
+  }
+
+  .ds-brand-mark { color: CanvasText; }
+  .ds-brand-mark__point { fill: CanvasText; }
+}

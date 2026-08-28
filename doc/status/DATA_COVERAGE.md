@@ -87,7 +87,7 @@ Living tracker requested 2026-08-18. Cross-references every individual data poin
 | FCF Yield | P0 | ✅ | `mapper/price_metrics.py` |
 | Cash from Operations | P0 | ✅ | Mapped concept, shown on Cash Flow statement, TTM-reconstructable (doc 25 §10's interim-quarter derivation) |
 | CapEx (% of revenue) | P1 | 🟡 | CapEx itself ✅ mapped/used; "% of revenue" not separately exposed |
-| FCF vs. Net Income divergence flag | P1 | 📋 | Named doc 18 Tier A, not built |
+| FCF vs. Net Income divergence flag | P1 | ✅ | Already built as `fcf_gt_net_income` (`mapper/quality_flags.py`, 2026-08-19) -- this row was simply never cross-referenced to that build at the time, a stale-row fix caught 2026-08-22, not a new build. |
 | SBC as % of revenue | P1 | ✅ | New `sbc` canonical concept + `sbc_pct_revenue` metric (`mapper/expanded_concepts.py`/`calculate.py`) — AAPL 3.1% real |
 | Net Interest Income | doc 28 | ✅ | New `interest_income` concept + `net_interest_income` metric (2026-08-21, doc 28 #4) — `us-gaap:InvestmentIncomeInterest` resolves for 7 companies/372 facts, separate from the existing `interest_expense`. Not in doc 10's original inventory. |
 | Cash-Flow AR/Inventory/AP Reconciliation Gaps | doc 28 | ✅ | New `mapper/reconciliation.py` (2026-08-21, doc 28 #2) — compares each year's balance-sheet-implied AR/Inventory/AP change against the company's own reported cash-flow-statement adjustment, a quality-of-earnings cross-check (a signed dollar gap, not a locked ratio). AAPL FY2025 AR gap: -$315M, reproduces the manual balance-sheet-vs-cash-flow check exactly. Not in doc 10's original inventory. |

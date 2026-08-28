@@ -1,0 +1,11 @@
+---
+import PublicPageLayout from "../components/PublicPageLayout.astro";
+export const prerender = true;
+---
+<PublicPageLayout title="Page not found" description="That address does not match a public Scrooner page." noindex>
+  <section class="public-callout">
+    <h2>Keep researching</h2>
+    <p>Check the address, return to the homepage, or search for a covered company.</p>
+    <p><a class="ds-button ds-button--primary" href="/">Go to homepage</a></p>
+  </section>
+</PublicPageLayout>

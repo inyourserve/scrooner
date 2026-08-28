@@ -1,0 +1,24 @@
+---
+import PublicPageLayout from "../components/PublicPageLayout.astro";
+export const prerender = true;
+---
+<PublicPageLayout current="methodology" eyebrow="How Scrooner works" title="Methodology" description="A transparent view of how Scrooner turns public company filings into comparable research—not a black-box score or investment recommendation.">
+  <section>
+    <h2>From filing to research view</h2>
+    <ol>
+      <li>We identify covered US public companies and retrieve their public filings.</li>
+      <li>Reported facts are mapped into consistent financial concepts while retaining their filing context.</li>
+      <li>Comparable periods are selected, restatements are handled, and derived metrics are calculated from the normalized facts.</li>
+      <li>The company and screener views present those metrics alongside source and period context where available.</li>
+    </ol>
+  </section>
+  <section>
+    <h2>Comparability has limits</h2>
+    <p>Company reporting differs by industry, accounting choices, fiscal calendar, and filing structure. A missing value does not necessarily mean zero, and a mathematically comparable ratio may not be economically comparable across sectors.</p>
+    <p>Scrooner is designed to support investigation. Important conclusions should be checked against the underlying filing and the company’s own disclosures.</p>
+  </section>
+  <section class="public-callout">
+    <h2>What we do not do</h2>
+    <p>We do not provide personalized recommendations, price targets, or a promise that any screen will produce an investment outcome. Screens narrow a research universe; they do not replace judgment.</p>
+  </section>
+</PublicPageLayout>

@@ -1,0 +1,146 @@
+/*
+ * Scrooner design tokens
+ *
+ * This is the only source of truth for visual values shared by scrooner.com
+ * and app.scrooner.com. Components consume semantic tokens, never palette
+ * primitives directly. Raw palette values remain available for future themes.
+ */
+:root {
+  color-scheme: light;
+
+  /* Palette primitives */
+  --ds-color-white: #ffffff;
+  --ds-color-slate-25: #fbfcfd;
+  --ds-color-slate-50: #f5f6f8;
+  --ds-color-slate-100: #edf0f3;
+  --ds-color-slate-200: #e4e7ec;
+  --ds-color-slate-300: #d6dbe2;
+  --ds-color-slate-500: #778394;
+  --ds-color-slate-550: #606d7c;
+  --ds-color-slate-600: #5a6675;
+  --ds-color-slate-900: #16202c;
+  --ds-color-teal-50: #e6f1ee;
+  --ds-color-teal-100: #cce7e0;
+  --ds-color-teal-500: #0e7c66;
+  --ds-color-teal-700: #0b5f4e;
+  --ds-color-teal-800: #084b3e;
+  --ds-color-red-50: #f7e9e6;
+  --ds-color-red-200: #e8b7ae;
+  --ds-color-red-700: #9f3327;
+  --ds-color-red-800: #7f281f;
+  --ds-color-amber-50: #f6eedd;
+  --ds-color-amber-200: #ead6ae;
+  --ds-color-amber-700: #92600c;
+  --ds-color-blue-50: #eaf1f8;
+  --ds-color-blue-700: #1d4e89;
+
+  /* Semantic color contract */
+  --ds-color-bg-canvas: var(--ds-color-slate-50);
+  --ds-color-bg-surface: var(--ds-color-white);
+  --ds-color-bg-subtle: var(--ds-color-slate-100);
+  --ds-color-bg-raised: var(--ds-color-white);
+  --ds-color-bg-hover: var(--ds-color-slate-25);
+  --ds-color-text-primary: var(--ds-color-slate-900);
+  --ds-color-text-secondary: var(--ds-color-slate-600);
+  --ds-color-text-muted: var(--ds-color-slate-550);
+  --ds-color-text-inverse: var(--ds-color-white);
+  --ds-color-border-subtle: var(--ds-color-slate-100);
+  --ds-color-border-default: var(--ds-color-slate-200);
+  --ds-color-border-strong: var(--ds-color-slate-300);
+  --ds-color-border-positive: var(--ds-color-teal-100);
+  --ds-color-border-negative: var(--ds-color-red-200);
+  --ds-color-border-warning: var(--ds-color-amber-200);
+  --ds-color-action: var(--ds-color-teal-500);
+  --ds-color-action-hover: var(--ds-color-teal-700);
+  --ds-color-action-active: var(--ds-color-teal-800);
+  --ds-color-action-subtle: var(--ds-color-teal-50);
+  --ds-color-link: var(--ds-color-teal-700);
+  --ds-color-positive: var(--ds-color-teal-500);
+  --ds-color-positive-subtle: var(--ds-color-teal-50);
+  --ds-color-negative: var(--ds-color-red-700);
+  --ds-color-negative-subtle: var(--ds-color-red-50);
+  --ds-color-warning: var(--ds-color-amber-700);
+  --ds-color-warning-subtle: var(--ds-color-amber-50);
+  --ds-color-info: var(--ds-color-blue-700);
+  --ds-color-info-subtle: var(--ds-color-blue-50);
+  --ds-color-focus: var(--ds-color-teal-500);
+  --ds-color-overlay: rgb(22 32 44 / 52%);
+  --ds-color-header-glass: rgb(245 246 248 / 94%);
+  --ds-color-inverse-border: rgb(255 255 255 / 45%);
+  --ds-color-code-bg: #16201a;
+  --ds-color-code-text: #e8f0eb;
+
+  /* Typography */
+  --ds-font-family-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ds-font-family-editorial: "Newsreader", Georgia, serif;
+  --ds-font-family-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --ds-font-size-11: 0.6875rem;
+  --ds-font-size-12: 0.75rem;
+  --ds-font-size-13: 0.8125rem;
+  --ds-font-size-14: 0.875rem;
+  --ds-font-size-16: 1rem;
+  --ds-font-size-18: 1.125rem;
+  --ds-font-size-20: 1.25rem;
+  --ds-font-size-24: 1.5rem;
+  --ds-font-size-30: 1.875rem;
+  --ds-font-size-36: 2.25rem;
+  --ds-font-size-48: 3rem;
+  --ds-font-size-64: 4rem;
+  --ds-font-size-88: 5.5rem;
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-line-height-tight: 1.1;
+  --ds-line-height-heading: 1.25;
+  --ds-line-height-body: 1.55;
+  --ds-line-height-relaxed: 1.7;
+  --ds-letter-spacing-tight: -0.025em;
+  --ds-letter-spacing-label: 0.06em;
+
+  /* Spacing: 4px base with two compact exceptions */
+  --ds-space-0: 0;
+  --ds-space-0-5: 2px;
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+  --ds-space-10: 40px;
+  --ds-space-12: 48px;
+  --ds-space-16: 64px;
+  --ds-space-20: 80px;
+
+  /* Shape and elevation */
+  --ds-radius-xs: 4px;
+  --ds-radius-sm: 6px;
+  --ds-radius-md: 8px;
+  --ds-radius-lg: 10px;
+  --ds-radius-xl: 14px;
+  --ds-radius-card: 12px;
+  --ds-radius-feature: 14px;
+  --ds-radius-round: 999px;
+  --ds-shadow-hairline: 0 1px 2px rgb(22 32 44 / 4%);
+  --ds-shadow-subtle: 0 1px 2px rgb(22 32 44 / 3%);
+  --ds-shadow-surface: 0 1px 2px rgb(22 32 44 / 4%), 0 8px 24px rgb(22 32 44 / 6%);
+  --ds-shadow-popover: 0 16px 40px rgb(22 32 44 / 14%);
+
+  /* Layout and interaction */
+  --ds-container-reading: 720px;
+  --ds-container-content: 960px;
+  --ds-container-app: 1220px;
+  --ds-container-research: 1296px;
+  --ds-control-height-sm: 36px;
+  --ds-control-height-md: 42px;
+  --ds-control-height-lg: 48px;
+  --ds-target-min: 44px;
+  --ds-z-sticky: 20;
+  --ds-z-overlay: 40;
+  --ds-z-toast: 60;
+  --ds-z-skip-link: 100;
+  --ds-duration-fast: 120ms;
+  --ds-duration-base: 180ms;
+  --ds-ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ds-focus-ring: 0 0 0 3px rgb(14 124 102 / 25%);
+}

@@ -24,6 +24,7 @@ skipping the 51st that wasn't, see collector/retry.py.
 import hashlib
 import re
 import zipfile
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from typing import Iterator
@@ -40,17 +41,40 @@ logger = structlog.get_logger()
 BULK_URL = "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip"
 _MEMBER_RE = re.compile(r"^CIK(\d{10})(-submissions-\d+)?\.json$")
 
+# Storage uploads are network round-trips (httpx.Client, one connection per
+# in-flight request) and were the real bottleneck once _iter_members' own
+# decompression cost was fixed above -- found live 2026-08-22: 200
+# companies (446 files) took ~14 minutes uploaded one at a time. Batched so
+# memory use stays bounded regardless of how large a run is (a full-universe
+# run has far more files than fit comfortably in memory at once); DB
+# inserts stay sequential in the main thread -- psycopg cursors aren't
+# thread-safe, and inserts were never the slow part anyway.
+UPLOAD_BATCH_SIZE = 20
+UPLOAD_WORKERS = 10
 
-def _iter_members(zip_path: Path) -> Iterator[tuple[str, str, bytes]]:
+
+def _iter_members(zip_path: Path, only_ciks: set[str] | None = None) -> Iterator[tuple[str, str, bytes]]:
     """Yields (cik, filename, raw_bytes) for every submissions file in the
-    bulk archive — base file and every numbered continuation page."""
+    bulk archive — base file and every numbered continuation page.
+
+    `only_ciks`, when given, is checked BEFORE `zf.read()` -- found live
+    2026-08-22: a 200-CIK request was taking 15+ minutes because the CIK
+    filter was previously applied by the caller, after this generator had
+    already decompressed every one of the archive's ~987K members
+    regardless of whether it matched. Filtering here means a small
+    `only_ciks` request only ever decompresses the entries it actually
+    needs -- `zf.namelist()` (just member names, no decompression) is
+    still read in full, which is cheap."""
     with zipfile.ZipFile(zip_path) as zf:
         for name in zf.namelist():
             m = _MEMBER_RE.match(name)
             if not m:
                 logger.warning("submissions.unrecognized_member", name=name)
                 continue
-            yield m.group(1), name, zf.read(name)
+            cik = m.group(1)
+            if only_ciks is not None and cik not in only_ciks:
+                continue
+            yield cik, name, zf.read(name)
 
 
 def bootstrap_submissions(
@@ -98,10 +122,52 @@ def bootstrap_submissions(
     heartbeat = HeartbeatTicker(conn, run_id)
     seen_ciks: set[str] = set()
 
+    def _upload_one(storage: SupabaseStorageClient, item: tuple[str, str, str, bytes]) -> tuple[str, str, str, str, Exception | None]:
+        cik, filename, object_path, payload = item
+        try:
+            storage_path = storage.upload(object_path, payload)
+            sha256 = hashlib.sha256(payload).hexdigest()
+            return cik, filename, storage_path, sha256, None
+        except Exception as exc:  # noqa: BLE001 -- reported per-item below, not raised
+            return cik, filename, f"raw/{object_path}", "", exc
+
+    def _flush_batch(storage: SupabaseStorageClient, cur, batch: list[tuple[str, str, str, bytes]]) -> None:
+        if not batch:
+            return
+        with ThreadPoolExecutor(max_workers=UPLOAD_WORKERS) as pool:
+            results = list(pool.map(lambda item: _upload_one(storage, item), batch))
+        for cik, filename, storage_path, sha256, exc in results:
+            if exc is None:
+                cur.execute(
+                    """
+                    insert into raw.sec_submissions
+                        (cik, fetched_at, source_url, sha256, storage_path, http_status, run_id)
+                    values (%s, %s, %s, %s, %s, %s, %s)
+                    on conflict (storage_path) do nothing
+                    """,
+                    (cik, fetched_at, BULK_URL, sha256, storage_path, 200, run_id),
+                )
+                conn.commit()
+                stats["stored"] += 1
+                stored_ciks.add(cik)
+                heartbeat.tick()
+            else:
+                conn.rollback()
+                stats["errors"] += 1
+                logger.error("submissions.store_failed", cik=cik, filename=filename, error_type=type(exc).__name__, error=str(exc)[:500])
+                cur.execute(
+                    """
+                    insert into raw.collector_errors
+                        (run_id, cik, source, error_type, message)
+                    values (%s, %s, %s, %s, %s)
+                    """,
+                    (run_id, cik, "submissions", type(exc).__name__, f"{filename}: {str(exc)[:2000]}"),
+                )
+                conn.commit()
+
     with SupabaseStorageClient() as storage, conn.cursor() as cur:
-        for cik, filename, payload in _iter_members(zip_path):
-            if only_ciks is not None and cik not in only_ciks:
-                continue
+        batch: list[tuple[str, str, str, bytes]] = []
+        for cik, filename, payload in _iter_members(zip_path, only_ciks):
             seen_ciks.add(cik)
             if limit is not None and len(stored_ciks) >= limit and cik not in stored_ciks:
                 continue
@@ -116,41 +182,11 @@ def bootstrap_submissions(
             if storage_path in already_done_paths:
                 stats["skipped"] += 1
                 continue
-            try:
-                sha256 = hashlib.sha256(payload).hexdigest()
-                storage_path = storage.upload(object_path, payload)
-                cur.execute(
-                    """
-                    insert into raw.sec_submissions
-                        (cik, fetched_at, source_url, sha256, storage_path, http_status, run_id)
-                    values (%s, %s, %s, %s, %s, %s, %s)
-                    on conflict (storage_path) do nothing
-                    """,
-                    (cik, fetched_at, BULK_URL, sha256, storage_path, 200, run_id),
-                )
-                conn.commit()
-                stats["stored"] += 1
-                stored_ciks.add(cik)
-                heartbeat.tick()
-            except Exception as exc:
-                conn.rollback()
-                stats["errors"] += 1
-                logger.exception("submissions.store_failed", cik=cik, filename=filename)
-                cur.execute(
-                    """
-                    insert into raw.collector_errors
-                        (run_id, cik, source, error_type, message)
-                    values (%s, %s, %s, %s, %s)
-                    """,
-                    (
-                        run_id,
-                        cik,
-                        "submissions",
-                        type(exc).__name__,
-                        f"{filename}: {str(exc)[:2000]}",
-                    ),
-                )
-                conn.commit()
+            batch.append((cik, filename, object_path, payload))
+            if len(batch) >= UPLOAD_BATCH_SIZE:
+                _flush_batch(storage, cur, batch)
+                batch = []
+        _flush_batch(storage, cur, batch)
 
         # Same rationale as companyfacts.py: a requested CIK with no
         # file at all in submissions.zip must be recorded, not silently

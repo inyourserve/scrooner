@@ -1,0 +1,54 @@
+---
+import PublicFooter from "./PublicFooter.astro";
+import PublicHeader from "./PublicHeader.astro";
+import "../styles/public-theme.css";
+import "../styles/public-content.css";
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow?: string;
+  current?: "methodology" | "data-sources" | "about" | "pricing" | "privacy" | "terms";
+  noindex?: boolean;
+}
+
+const { title, description, eyebrow, current, noindex = false } = Astro.props;
+const appUrl = (import.meta.env.PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+const screenerUrl = `${appUrl}/screener`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? "noindex,follow" : "index,follow"} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} — Scrooner`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <title>{title} — Scrooner</title>
+  </head>
+  <body>
+    <PublicHeader
+      {screenerUrl}
+      {current}
+      skipHref="#main-content"
+      skipLabel="Skip to main content"
+    />
+    <main class="public-content" id="main-content" tabindex="-1">
+      <header class="public-content-hero">
+        {eyebrow && <p class="public-eyebrow">{eyebrow}</p>}
+        <h1>{title}</h1>
+        <p class="public-lede">{description}</p>
+      </header>
+      <div class="public-prose">
+        <slot />
+      </div>
+    </main>
+    <PublicFooter {screenerUrl} />
+  </body>
+</html>

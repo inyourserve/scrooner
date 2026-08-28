@@ -45,6 +45,28 @@ items #1/#4:
 - rnd_intensity: R&D / Revenue, real calculate.py-engine input (ratio shape).
 - net_interest_income: Interest Income - Interest Expense, real
   calculate.py-engine input (sum_diff shape) -- same shape fcf already uses.
+
+Six more added 2026-08-22 (a P0/coverage execution pass, doc 18 Tier A's
+2 still-unbuilt items plus 4 new ones from the utilization-study
+backlog):
+- capex_pct_revenue, sga_pct_revenue: both real calculate.py-engine
+  ratio inputs, zero new logic.
+- effective_tax_rate_gap: documentation-only -- compares the company's
+  own reported effective_tax_rate_reported against the rate ROIC
+  already derives internally (income_tax_expense/income_before_tax), a
+  cross-validation signal (doc 18's own #5 ranked idea). Computed in the
+  new mapper/tax_reconciliation.py -- needs a metric's own separate
+  per-period division that doesn't fit a single canonical-concept role.
+- fcf_growth_3y_cagr, fcf_growth_5y_cagr: documentation-only -- FCF is
+  itself a computed metric_value (sum_diff of cfo-capex), not a raw
+  canonical_fact, so ttm.py's GROWTH_METRICS (which reads canonical_fact
+  by concept) can't reach it directly. Computed in the new
+  mapper/fcf_growth.py, reusing ttm.py's own _growth_value() function
+  unchanged.
+- dividend_growth_streak_years: documentation-only -- consecutive most-
+  recent FY years with dividends_per_share strictly increasing, same
+  "as of latest FY" single-value shape as profitable_streak_years.
+  Computed in the new mapper/dividend_streak.py.
 """
 
 import psycopg
@@ -132,6 +154,23 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
      [("research_and_development", "numerator"), ("revenue", "denominator")]),
     ("net_interest_income", "Interest Income - Interest Expense", False,
      [("interest_income", "add"), ("interest_expense", "subtract")]),
+    ("capex_pct_revenue", "CapEx / Revenue", False,
+     [("capex", "numerator"), ("revenue", "denominator")]),
+    ("sga_pct_revenue", "SG&A Expense / Revenue", False,
+     [("sga_expense", "numerator"), ("revenue", "denominator")]),
+    ("effective_tax_rate_gap", "Reported Effective Tax Rate - (Income Tax Expense / Income Before Tax). A "
+     "cross-validation signal for ROIC's own internally-derived tax rate -- a large gap flags a company "
+     "with material discrete tax items (one-time credits/charges) that year, not necessarily an error in "
+     "either figure. Computed in mapper/tax_reconciliation.py.", False, []),
+    ("fcf_growth_3y_cagr", "(FCF[t] / FCF[t-3]) ^ (1/3) - 1, FY only. Computed in mapper/fcf_growth.py -- "
+     "FCF is a computed metric_value, not a raw canonical_fact, so ttm.py's generic growth engine can't "
+     "reach it directly.", False, []),
+    ("fcf_growth_5y_cagr", "Same as fcf_growth_3y_cagr, 5-year lag. Computed in mapper/fcf_growth.py.",
+     False, []),
+    ("dividend_growth_streak_years", "Consecutive most-recent FY years with dividends_per_share strictly "
+     "increasing, counted backward from the latest year until a flat/decreasing year breaks the streak. "
+     "Null (not 0) for a company with no dividend history at all. Computed in mapper/dividend_streak.py, "
+     "one value as of the latest FY only.", False, []),
 ]
 
 

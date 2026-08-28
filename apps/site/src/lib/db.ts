@@ -8,13 +8,16 @@
 
 import postgres from "postgres";
 
-// max=8: the stock page now fires up to 12 concurrent queries per
-// request (see [ticker].astro's Promise.all) -- 5 was a real bottleneck,
-// forcing queueing. Checked live before picking 8: the Supabase pooler
-// (session mode) caps clients at 15 total for this connection string,
-// shared with any other idle sessions -- max=15 itself hit
-// EMAXCONNSESSION, so 8 leaves real headroom rather than maxing it out.
-const sql = postgres(import.meta.env.DATABASE_URL, { max: 8 });
+// Company pages use one consolidated request, so each server instance needs a
+// very small pool. `prepare: false` keeps this client compatible with
+// Supabase's transaction pooler when the Vercel DATABASE_URL is moved to port
+// 6543; it is also safe with the current session-pooler URL.
+const sql = postgres(import.meta.env.DATABASE_URL, {
+  max: 2,
+  idle_timeout: 20,
+  connect_timeout: 10,
+  prepare: false,
+});
 
 export interface CompanyIdentity {
   id: number;
@@ -303,6 +306,349 @@ export interface InstitutionalHolderRow {
   filing_date: string | null;
 }
 
+interface RawStatementRow {
+  statement: string;
+  display_order: number;
+  display_label: string;
+  fiscal_year: number | null;
+  fiscal_period: string | null;
+  period_end: string | null;
+  value: string | null;
+}
+
+interface MetricHistoryRow {
+  metric_name: string;
+  value: string | null;
+  period_end: string;
+}
+
+interface CompanyPageQueryRow {
+  company: CompanyIdentity;
+  metrics: MetricRow[];
+  statements: RawStatementRow[];
+  filings: FilingRow[];
+  insider_transactions: InsiderTransactionRow[];
+  beneficial_ownership: BeneficialOwnershipRow[];
+  institutional_holders: InstitutionalHolderRow[];
+  public_float: PublicFloatRow | null;
+  latest_price: LatestPriceRow | null;
+  book_value: string | null;
+  metric_history: MetricHistoryRow[];
+}
+
+export interface CompanyPageData {
+  company: CompanyIdentity;
+  metrics: Record<string, MetricRow>;
+  quarterlyResults: Statement;
+  incomeStatement: Statement;
+  balanceSheet: Statement;
+  cashFlow: Statement;
+  filings: FilingRow[];
+  insiderTransactions: InsiderTransactionRow[];
+  beneficialOwnership: BeneficialOwnershipRow[];
+  institutionalHolders: InstitutionalHolderRow[];
+  publicFloat: PublicFloatRow | null;
+  latestPrice: LatestPriceRow | null;
+  bookValue: string | null;
+  metricHistory: Record<string, (string | null)[]>;
+}
+
+function assembleStatement(
+  rows: RawStatementRow[],
+  statement: string,
+  frequency: "annual" | "quarterly",
+): Statement {
+  const matchingRows = rows.filter((row) => {
+    if (row.statement !== statement) return false;
+    if (row.fiscal_period === null) return true;
+    return frequency === "annual"
+      ? row.fiscal_period === "FY"
+      : ["Q1", "Q2", "Q3", "Q4"].includes(row.fiscal_period);
+  });
+  const periodKey = (fy: number, fp: string, pe: string) => `${fy}|${fp}|${pe}`;
+  const periodMap = new Map<string, StatementPeriod>();
+  const lineMap = new Map<number, { label: string; values: Map<string, string | null> }>();
+
+  for (const row of matchingRows) {
+    if (!lineMap.has(row.display_order)) {
+      lineMap.set(row.display_order, { label: row.display_label, values: new Map() });
+    }
+    if (row.period_end && row.fiscal_year && row.fiscal_period) {
+      const key = periodKey(row.fiscal_year, row.fiscal_period, row.period_end);
+      periodMap.set(key, {
+        fiscal_year: row.fiscal_year,
+        fiscal_period: row.fiscal_period,
+        period_end: row.period_end,
+      });
+      lineMap.get(row.display_order)!.values.set(key, row.value);
+    }
+  }
+
+  const periods = [...periodMap.entries()].sort((a, b) => a[1].period_end.localeCompare(b[1].period_end));
+  return {
+    periods: periods.map(([, period]) => period),
+    lines: [...lineMap.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([, line]) => ({
+        label: line.label,
+        values: periods.map(([key]) => line.values.get(key) ?? null),
+      })),
+  };
+}
+
+/**
+ * Fetch every public company-page section in one parameterized SQL request.
+ *
+ * PostgreSQL still executes the individual subqueries, but the visitor pays
+ * for one connection acquisition and one network round trip instead of 16.
+ * Numeric financial values are cast to text before JSON construction so this
+ * keeps the project's Decimal-as-string boundary intact.
+ */
+export async function getCompanyPageData(ticker: string): Promise<CompanyPageData | null> {
+  const rows = await sql<CompanyPageQueryRow[]>`
+    with selected_company as (
+      select c.id, c.cik, c.company_name, c.sic_code, c.sic_description,
+             c.sector, c.status, l.ticker
+      from core.company c
+      join core.listing l on l.company_id = c.id
+      where lower(l.ticker) = lower(${ticker})
+      order by (l.effective_to is null) desc
+      limit 1
+    ),
+    ranked_metrics as (
+      select md.metric_name, mv.value::text as value, mv.period_label,
+             mv.period_end::text as period_end, mv.is_null_reason,
+             row_number() over (
+               partition by md.metric_name
+               order by (mv.period_label = 'TTM') desc, mv.period_end desc
+             ) as rank
+      from analytics.metric_value mv
+      join analytics.metric_definition md on md.id = mv.metric_definition_id
+      join selected_company company on company.id = mv.company_id
+    ),
+    annual_periods as (
+      select distinct period.id, period.end_date
+      from analytics.canonical_fact fact
+      join core.period period on period.id = fact.period_id
+      join selected_company company on company.id = fact.company_id
+      where period.fiscal_period = 'FY'
+      order by period.end_date desc
+      limit 8
+    ),
+    quarterly_periods as (
+      select distinct period.id, period.end_date
+      from analytics.canonical_fact fact
+      join core.period period on period.id = fact.period_id
+      join selected_company company on company.id = fact.company_id
+      where period.fiscal_period in ('Q1', 'Q2', 'Q3', 'Q4')
+      order by period.end_date desc
+      limit 8
+    ),
+    displayed_periods as (
+      select id from annual_periods
+      union
+      select id from quarterly_periods
+    ),
+    statement_rows as (
+      select sl.statement, sl.display_order, sl.display_label,
+             p.fiscal_year, p.fiscal_period, p.end_date::text as period_end,
+             cf.value::text as value
+      from analytics.statement_line sl
+      cross join selected_company company
+      left join analytics.canonical_fact cf
+        on cf.canonical_concept_id = sl.canonical_concept_id
+       and cf.company_id = company.id
+      left join core.period p on p.id = cf.period_id
+      where sl.statement in ('income_statement', 'balance_sheet', 'cash_flow')
+        and (p.id in (select id from displayed_periods) or p.id is null)
+    ),
+    metric_history_rows as (
+      select md.metric_name, mv.value::text as value,
+             mv.period_end::text as period_end,
+             row_number() over (
+               partition by md.metric_name order by mv.period_end desc
+             ) as rank
+      from analytics.metric_value mv
+      join analytics.metric_definition md on md.id = mv.metric_definition_id
+      join selected_company company on company.id = mv.company_id
+      where md.metric_name in ('roe', 'roic', 'fcf')
+        and mv.period_label = 'FY'
+    )
+    select
+      jsonb_build_object(
+        'id', company.id,
+        'cik', company.cik,
+        'company_name', company.company_name,
+        'sic_code', company.sic_code,
+        'sic_description', company.sic_description,
+        'sector', company.sector,
+        'status', company.status,
+        'ticker', company.ticker
+      ) as company,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'metric_name', metric_name,
+          'value', value,
+          'period_label', period_label,
+          'period_end', period_end,
+          'is_null_reason', is_null_reason
+        ) order by metric_name)
+        from ranked_metrics where rank = 1
+      ), '[]'::jsonb) as metrics,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'statement', statement,
+          'display_order', display_order,
+          'display_label', display_label,
+          'fiscal_year', fiscal_year,
+          'fiscal_period', fiscal_period,
+          'period_end', period_end,
+          'value', value
+        ) order by statement, display_order, period_end)
+        from statement_rows
+      ), '[]'::jsonb) as statements,
+      coalesce((
+        select jsonb_agg(to_jsonb(recent) order by recent.filing_date desc)
+        from (
+          select f.form, f.filing_date::text as filing_date,
+                 f.accession_number, f.items
+          from core.filing f
+          where f.company_id = company.id and f.filing_date is not null
+          order by f.filing_date desc
+          limit 10
+        ) recent
+      ), '[]'::jsonb) as filings,
+      coalesce((
+        select jsonb_agg(to_jsonb(recent) order by recent.transaction_date desc)
+        from (
+          select it.reporting_owner_name, it.officer_title,
+                 it.is_director, it.is_officer,
+                 it.is_ten_percent_owner,
+                 it.transaction_date::text as transaction_date,
+                 it.transaction_code, it.acquired_disposed_code,
+                 it.shares::text as shares,
+                 it.price_per_share::text as price_per_share,
+                 it.shares_owned_following::text as shares_owned_following,
+                 it.is_10b5_1_plan, it.accession_number
+          from core.insider_transaction it
+          where it.company_id = company.id
+            and it.transaction_date is not null
+          order by it.transaction_date desc
+          limit 15
+        ) recent
+      ), '[]'::jsonb) as insider_transactions,
+      coalesce((
+        select jsonb_agg(to_jsonb(recent) order by recent.filing_date desc nulls last)
+        from (
+          select ownership.filer_name, ownership.schedule_type,
+                 ownership.is_amendment,
+                 ownership.filing_date::text as filing_date,
+                 ownership.accession_number
+          from core.beneficial_ownership ownership
+          where ownership.company_id = company.id
+          order by ownership.filing_date desc nulls last
+          limit 15
+        ) recent
+      ), '[]'::jsonb) as beneficial_ownership,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'filer_name', holder.filer_name,
+          'shares', holder.shares,
+          'value_usd', holder.value_usd,
+          'filing_date', holder.filing_date
+        ) order by holder.sort_shares desc nulls last)
+        from (
+          select dedup.filer_name, dedup.shares::text as shares,
+                 dedup.value_usd::text as value_usd,
+                 dedup.filing_date::text as filing_date,
+                 dedup.shares as sort_shares
+          from (
+            select distinct on (ownership.filer_name)
+                   ownership.filer_name, ownership.shares,
+                   ownership.value_usd, ownership.filing_date,
+                   ownership.is_amendment
+            from core.institutional_ownership ownership
+            where ownership.company_id = company.id
+            order by ownership.filer_name, ownership.is_amendment desc,
+                     ownership.filing_date desc nulls last
+          ) dedup
+          order by dedup.shares desc nulls last
+          limit 15
+        ) holder
+      ), '[]'::jsonb) as institutional_holders,
+      (
+        select jsonb_build_object(
+          'value', fact.value::text,
+          'period_end', period.end_date::text
+        )
+        from analytics.canonical_fact fact
+        join analytics.canonical_concept concept
+          on concept.id = fact.canonical_concept_id
+        join core.period period on period.id = fact.period_id
+        where fact.company_id = company.id and concept.name = 'public_float'
+        order by period.end_date desc
+        limit 1
+      ) as public_float,
+      (
+        select jsonb_build_object(
+          'price', price.price::text,
+          'symbol', price.symbol,
+          'bar_timestamp', price.bar_timestamp::text,
+          'feed', price.feed
+        )
+        from core.market_price_alpaca price
+        where price.company_id = company.id
+        order by price.price_date desc
+        limit 1
+      ) as latest_price,
+      (
+        select fact.value::text
+        from analytics.canonical_fact fact
+        join analytics.canonical_concept concept
+          on concept.id = fact.canonical_concept_id
+        join core.period period on period.id = fact.period_id
+        where fact.company_id = company.id
+          and concept.name = 'stockholders_equity'
+        order by period.end_date desc
+        limit 1
+      ) as book_value,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'metric_name', metric_name,
+          'value', value,
+          'period_end', period_end
+        ) order by metric_name, period_end desc)
+        from metric_history_rows where rank <= 3
+      ), '[]'::jsonb) as metric_history
+    from selected_company company
+  `;
+
+  const row = rows[0];
+  if (!row) return null;
+
+  const metricHistory: Record<string, (string | null)[]> = {};
+  for (const historyRow of row.metric_history) {
+    (metricHistory[historyRow.metric_name] ??= []).push(historyRow.value);
+  }
+
+  return {
+    company: row.company,
+    metrics: Object.fromEntries(row.metrics.map((metric) => [metric.metric_name, metric])),
+    quarterlyResults: assembleStatement(row.statements, "income_statement", "quarterly"),
+    incomeStatement: assembleStatement(row.statements, "income_statement", "annual"),
+    balanceSheet: assembleStatement(row.statements, "balance_sheet", "annual"),
+    cashFlow: assembleStatement(row.statements, "cash_flow", "annual"),
+    filings: row.filings,
+    insiderTransactions: row.insider_transactions,
+    beneficialOwnership: row.beneficial_ownership,
+    institutionalHolders: row.institutional_holders,
+    publicFloat: row.public_float,
+    latestPrice: row.latest_price,
+    bookValue: row.book_value,
+    metricHistory,
+  };
+}
+
 // doc 19 Stage 4 -- core.institutional_ownership, matched by CUSIP against
 // SEC's bulk Form 13F data set (a single recent filing window, not a
 // multi-quarter trend -- see ownership/institutional.py's module
@@ -337,6 +683,71 @@ export interface ExampleScreenRow {
   company_name: string;
   roic: string;
   revenue_growth_3y_cagr: string | null;
+}
+
+export interface CompanyDirectoryRow {
+  ticker: string;
+  company_name: string;
+  exchange: string | null;
+  sector: string | null;
+}
+
+// Public company autocomplete. Only current listings for active companies are
+// exposed, so every suggestion resolves to a real `/stock/{ticker}/` page.
+// The browser calls the dedicated cached endpoint only after interaction; this
+// query is never part of the consolidated company-page request.
+export async function searchCompanyDirectory(query: string, limit = 8): Promise<CompanyDirectoryRow[]> {
+  const normalized = query.trim().replace(/\s+/g, " ").toLowerCase().slice(0, 64);
+  if (!normalized) return [];
+
+  return sql<CompanyDirectoryRow[]>`
+    with candidates as (
+      select distinct on (lower(l.ticker))
+        l.ticker,
+        c.company_name,
+        l.exchange,
+        c.sector
+      from core.company c
+      join core.listing l on l.company_id = c.id
+      where c.status = 'active'
+        and l.effective_to is null
+        and l.ticker is not null
+        and (
+          starts_with(lower(l.ticker), ${normalized})
+          or starts_with(lower(c.company_name), ${normalized})
+        )
+      order by lower(l.ticker), c.company_name
+    )
+    select ticker, company_name, exchange, sector
+    from candidates
+    order by
+      case
+        when lower(ticker) = ${normalized} then 0
+        when lower(company_name) = ${normalized} then 1
+        when starts_with(lower(ticker), ${normalized}) then 2
+        else 3
+      end,
+      length(ticker),
+      ticker
+    limit ${limit}
+  `;
+}
+
+// Homepage shortcuts stay honest without loading the whole company directory.
+// This is a small homepage-only query and never runs on company research pages.
+export async function getCompaniesByTickers(tickers: string[]): Promise<CompanyDirectoryRow[]> {
+  if (tickers.length === 0) return [];
+  const normalized = tickers.map((ticker) => ticker.toUpperCase());
+  return sql<CompanyDirectoryRow[]>`
+    select distinct on (upper(l.ticker))
+      l.ticker, c.company_name, l.exchange, c.sector
+    from core.company c
+    join core.listing l on l.company_id = c.id
+    where c.status = 'active'
+      and l.effective_to is null
+      and upper(l.ticker) in ${sql(normalized)}
+    order by upper(l.ticker), c.company_name
+  `;
 }
 
 // Homepage specimen figure (design framework Sec 8.1: "a real, small

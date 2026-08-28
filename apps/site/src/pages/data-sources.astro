@@ -1,0 +1,25 @@
+---
+import PublicPageLayout from "../components/PublicPageLayout.astro";
+export const prerender = true;
+---
+<PublicPageLayout current="data-sources" eyebrow="Traceable by design" title="Data sources" description="Scrooner prioritizes primary, public sources and keeps the path back to original disclosures visible wherever practical.">
+  <section>
+    <h2>Primary source</h2>
+    <h3>SEC EDGAR</h3>
+    <p>Company financial facts, filing history, and related disclosure data originate from filings and structured data made available through the US Securities and Exchange Commission’s EDGAR system.</p>
+    <p><a href="https://www.sec.gov/edgar/search/" target="_blank" rel="noreferrer">Search SEC EDGAR <span aria-hidden="true">↗</span><span class="ds-sr-only"> (opens in a new tab)</span></a></p>
+  </section>
+  <section>
+    <h2>How to read the data</h2>
+    <ul>
+      <li>Periods and filing dates matter: the latest filing may include restated prior periods.</li>
+      <li>Not every company reports every concept in the same form.</li>
+      <li>Derived ratios depend on the availability and consistency of their input facts.</li>
+      <li>Market and ownership data can have different update schedules from financial statements.</li>
+    </ul>
+  </section>
+  <section class="public-callout">
+    <h2>Source questions</h2>
+    <p>When a value looks surprising, use the company page’s filing context and compare it with the original filing. Scrooner’s purpose is to make that verification easier, not to obscure it.</p>
+  </section>
+</PublicPageLayout>

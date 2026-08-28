@@ -95,6 +95,24 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
     ("research_and_development", "income_statement", "first_match", "R&D expense -- feeds rnd_intensity"),
     ("interest_income", "income_statement", "first_match", "Interest income -- feeds net_interest_income, "
      "separate from interest_expense (feeds interest_coverage_ratio already)"),
+    ("sga_expense", "income_statement", "first_match",
+     "SG&A expense -- checked live before choosing the tag: SellingGeneralAndAdministrativeExpense "
+     "(60 companies) is far more common than the standalone GeneralAndAdministrativeExpense (31 "
+     "companies) across the 174-company pool. first_match (not sum) -- unlike a composite concept, "
+     "overlap between these two tags for the same company/period isn't a double-counting risk here "
+     "regardless, since first_match only ever takes one value; priority 1/2 just decides which alternate "
+     "wins if both happen to resolve."),
+    ("comprehensive_income", "income_statement", "first_match",
+     "Comprehensive income (net income + other comprehensive income/loss) -- a real, distinct P&L-adjacent "
+     "figure, not previously captured. 92 companies/13,574 facts across the 174-pool."),
+    ("amortization_of_intangibles", "income_statement", "first_match",
+     "Amortization of intangible assets -- a D&A sub-component, distinct from the already-mapped "
+     "combined depreciation_and_amortization concept. 78 companies/7,077 facts."),
+    ("effective_tax_rate_reported", "income_statement", "first_match",
+     "The company's own reported effective tax rate (EffectiveIncomeTaxRateContinuingOperations), a "
+     "'pure' decimal-fraction ratio (e.g. 0.156 = 15.6%), same scale as the internally-derived "
+     "income_tax_expense/income_before_tax rate ROIC already computes -- feeds "
+     "effective_tax_rate_gap as a cross-check, not a replacement. 93 companies/7,113 facts."),
 ]
 
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
@@ -113,6 +131,13 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
     ("cf_ap_change", "us-gaap", "IncreaseDecreaseInAccountsPayable", 1, "approved", ""),
     ("research_and_development", "us-gaap", "ResearchAndDevelopmentExpense", 1, "approved", ""),
     ("interest_income", "us-gaap", "InvestmentIncomeInterest", 1, "approved", ""),
+    ("sga_expense", "us-gaap", "SellingGeneralAndAdministrativeExpense", 1, "approved",
+     "Priority 1 -- more common than the standalone G&A tag across the 174-pool (60 vs 31 companies)."),
+    ("sga_expense", "us-gaap", "GeneralAndAdministrativeExpense", 2, "approved",
+     "Alternate for companies that report G&A alone rather than a combined SG&A line."),
+    ("comprehensive_income", "us-gaap", "ComprehensiveIncomeNetOfTax", 1, "approved", ""),
+    ("amortization_of_intangibles", "us-gaap", "AmortizationOfIntangibleAssets", 1, "approved", ""),
+    ("effective_tax_rate_reported", "us-gaap", "EffectiveIncomeTaxRateContinuingOperations", 1, "approved", ""),
 ]
 
 

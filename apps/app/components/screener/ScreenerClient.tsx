@@ -21,6 +21,11 @@ import type {
   ScreenResult,
 } from "@/lib/screener/types";
 import { NaturalQueryPanel } from "./NaturalQueryPanel";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { StatusPanel } from "@/components/ui/StatusPanel";
+import { SaveScreenButton } from "@/components/saved-screens/SaveScreenButton";
+import { SAVED_QUERY_KEY } from "@/lib/saved-screens/client";
 
 const DEFAULT_ROW: FilterRow = {
   id: "filter-1",
@@ -54,9 +59,9 @@ function errorDetail(payload: unknown, fallback: string) {
   return fallback;
 }
 
-async function requestMetricCatalog(signal?: AbortSignal): Promise<MetricDefinition[]> {
-  const response = await fetch("/api/metrics", { headers: { accept: "application/json" }, signal });
-  const payload: unknown = await response.json();
+async function requestMetricCatalog(): Promise<MetricDefinition[]> {
+  const response = await fetch("/api/metrics", { headers: { accept: "application/json" } });
+  const payload: unknown = await response.json().catch(() => null);
   if (!response.ok) throw new Error(errorDetail(payload, "Metric definitions could not be loaded."));
   if (!Array.isArray(payload) || payload.length === 0) throw new Error("No screenable metrics are currently available.");
   return payload as MetricDefinition[];
@@ -102,6 +107,9 @@ function MatchReasons({
 
 export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   const nextId = useRef(2);
+  const builderSectionRef = useRef<HTMLElement>(null);
+  const resultsTitleRef = useRef<HTMLHeadingElement>(null);
+  const screenRequestVersion = useRef(0);
   const [metrics, setMetrics] = useState<MetricDefinition[]>([]);
   const [catalogState, setCatalogState] = useState<RequestState>("loading");
   const [catalogError, setCatalogError] = useState("");
@@ -117,21 +125,42 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   const [result, setResult] = useState<ScreenResult | null>(null);
   const [lastQuery, setLastQuery] = useState<ScreenQueryPayload | null>(null);
   const [interpretedFrom, setInterpretedFrom] = useState("");
+  const [builderOpen, setBuilderOpen] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
-    void requestMetricCatalog(controller.signal)
+    let active = true;
+    void requestMetricCatalog()
       .then((catalog) => {
+        if (!active) return;
         setMetrics(catalog);
         setCatalogState("success");
       })
       .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (!active) return;
         setCatalogState("error");
         setCatalogError(error instanceof Error ? error.message : "Metric definitions could not be loaded.");
       });
-    return () => controller.abort();
+    return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    if (catalogState !== "success") return;
+    const stored = window.sessionStorage.getItem(SAVED_QUERY_KEY);
+    if (!stored) return;
+    window.sessionStorage.removeItem(SAVED_QUERY_KEY);
+    try {
+      const query = JSON.parse(stored) as ScreenQueryPayload;
+      if (applyInterpretedQuery(query, "Saved screen")) void executeScreen(query);
+    } catch { /* Ignore malformed browser state. */ }
+  // apply once after the catalog makes query-to-builder mapping possible
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalogState]);
+
+  useEffect(() => {
+    if (requestState === "success" || requestState === "error") {
+      resultsTitleRef.current?.focus({ preventScroll: true });
+    }
+  }, [requestState]);
 
   function retryCatalog() {
     setCatalogState("loading");
@@ -193,6 +222,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   }
 
   function applyReference(screen: ReferenceScreen) {
+    screenRequestVersion.current += 1;
     setRows(screen.rows.map((row) => createRow(row)));
     setCategory({ ...screen.category });
     setSortBy(screen.sortBy);
@@ -205,6 +235,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
     setResult(null);
     setLastQuery(null);
     setInterpretedFrom("");
+    setBuilderOpen(true);
   }
 
   function applyInterpretedQuery(query: ScreenQueryPayload, sourceText: string): boolean {
@@ -218,14 +249,34 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
     setIncludeInactive(state.includeInactive);
     setErrors({});
     setRequestError("");
-    setRequestState("idle");
-    setResult(null);
-    setLastQuery(null);
     setInterpretedFrom(sourceText);
+    setBuilderOpen(true);
+    window.setTimeout(() => builderSectionRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" }), 0);
+    return true;
+  }
+
+  function acceptInterpretedResult(query: ScreenQueryPayload, nextResult: ScreenResult, sourceText: string): boolean {
+    const state = queryToBuilderState(query, metrics, () => `filter-${nextId.current++}`);
+    if (!state) return false;
+    screenRequestVersion.current += 1;
+    setRows(state.rows);
+    setCategory(state.category);
+    setSortBy(state.sortBy);
+    setSortDesc(state.sortDesc);
+    setLimit(state.limit);
+    setIncludeInactive(state.includeInactive);
+    setErrors({});
+    setRequestError("");
+    setInterpretedFrom(sourceText);
+    setLastQuery(query);
+    setResult(nextResult);
+    setRequestState("success");
+    setBuilderOpen(false);
     return true;
   }
 
   function resetScreen() {
+    screenRequestVersion.current += 1;
     setRows([{ ...DEFAULT_ROW, id: createRow().id }]);
     setCategory({ ...EMPTY_CATEGORY });
     setSortBy("roe");
@@ -240,114 +291,241 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
     setInterpretedFrom("");
   }
 
-  async function runScreen(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const built = buildScreenQuery({ rows, category, sortBy, sortDesc, limit, includeInactive, metrics });
-    setErrors(built.errors);
+  async function executeScreen(query: ScreenQueryPayload) {
+    const version = ++screenRequestVersion.current;
     setRequestError("");
-    if (!built.query) {
-      setRequestState("idle");
-      return;
-    }
-
     setRequestState("loading");
-    setLastQuery(built.query);
+    setLastQuery(query);
     try {
       const response = await fetch("/api/screen", {
         method: "POST",
         headers: { "content-type": "application/json", accept: "application/json" },
-        body: JSON.stringify(built.query),
+        body: JSON.stringify(query),
       });
-      const payload: unknown = await response.json();
+      const payload: unknown = await response.json().catch(() => null);
+      if (version !== screenRequestVersion.current) return;
       if (!response.ok) throw new Error(errorDetail(payload, "The screen could not be completed."));
+      if (!payload || typeof payload !== "object") throw new Error("The screening service returned an invalid response. Please try again.");
       setResult(payload as ScreenResult);
       setRequestState("success");
     } catch (error) {
+      if (version !== screenRequestVersion.current) return;
       setResult(null);
       setRequestState("error");
       setRequestError(error instanceof Error ? error.message : "The screen could not be completed.");
     }
   }
 
-  return (
-    <div className="app-shell">
-      <header className="site-header">
-        <div className="header-inner">
-          <a className="wordmark" href={siteUrl} aria-label="Scrooner home">
-            <span className="wordmark-mark" aria-hidden="true">S</span>
-            <span>Scrooner</span>
-          </a>
-          <nav aria-label="Primary navigation">
-            <a className="nav-link active" href="/screener" aria-current="page">Screener</a>
-            <span className="nav-status">US fundamentals</span>
-          </nav>
-        </div>
-      </header>
+  async function runScreen(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (requestState === "loading") return;
+    const built = buildScreenQuery({ rows, category, sortBy, sortDesc, limit, includeInactive, metrics });
+    setErrors(built.errors);
+    setRequestError("");
+    if (!built.query) {
+      setRequestState("idle");
+      window.setTimeout(() => {
+        const target = builderSectionRef.current?.querySelector<HTMLElement>('[aria-invalid="true"], .validation-summary');
+        target?.focus();
+      }, 0);
+      return;
+    }
+    await executeScreen(built.query);
+  }
 
-      <main className="main-content">
-        <section className="page-intro" aria-labelledby="page-title">
-          <p className="eyebrow">Deterministic fundamental screening</p>
-          <div className="intro-row">
-            <div>
-              <h1 id="page-title">Build a screen</h1>
-              <p className="intro-copy">Choose exact criteria, run them against normalized company filings, and inspect the period behind every match.</p>
-            </div>
-            <div className="trust-line" aria-label="Data principles">
-              <span>SEC-derived</span><span>Defined formulas</span><span>Visible periods</span>
-            </div>
-          </div>
-        </section>
+  return (
+    <main className="main-content screener-content" id="main-content">
+        <PageHeader
+          eyebrow="Stock screener"
+          title="Find companies"
+          description="Describe the companies you want in plain language and see matching results in one step."
+        />
 
         {catalogState === "loading" && (
-          <section className="state-panel neutral" aria-live="polite" aria-busy="true">
-            <span className="spinner" aria-hidden="true" />
-            <div><strong>Loading metric definitions</strong><p>Checking the Screener&apos;s current validated catalog.</p></div>
-          </section>
+          <StatusPanel className="state-panel" title="Loading metric definitions" busy>
+            <p>Checking the Screener&apos;s current validated catalog.</p>
+          </StatusPanel>
         )}
 
         {catalogState === "error" && (
-          <section className="state-panel error" role="alert">
-            <span className="state-icon" aria-hidden="true">!</span>
-            <div><strong>Metric definitions are unavailable</strong><p>{catalogError}</p><button type="button" className="text-button" onClick={retryCatalog}>Try again</button></div>
-          </section>
+          <StatusPanel
+            className="state-panel"
+            tone="negative"
+            title="Metric definitions are unavailable"
+            action={<button type="button" className="text-button" onClick={retryCatalog}>Try again</button>}
+          >
+            <p>{catalogError}</p>
+          </StatusPanel>
         )}
 
         {catalogState === "success" && (
           <>
-          <NaturalQueryPanel metrics={metrics} onApply={applyInterpretedQuery} />
+          <NaturalQueryPanel metrics={metrics} onResult={acceptInterpretedResult} onEdit={applyInterpretedQuery} />
 
-          <section className="reference-section" aria-labelledby="reference-title">
-            <div className="section-heading compact">
+          {requestState !== "idle" && <section className="results-section" aria-labelledby="results-title" aria-busy={requestState === "loading"}>
+            <div className="results-heading">
               <div>
-                <h2 id="reference-title">Or start with structured criteria</h2>
-                <p>Load a verified reference screen, then adjust it in the editor.</p>
+                <p className="step-label">Screen results</p>
+                <h2 ref={resultsTitleRef} id="results-title" tabIndex={-1}>Matching companies</h2>
               </div>
+              {requestState === "success" && result && <p className="match-count"><strong>{result.matched.length}</strong> {result.matched.length === 1 ? "company" : "companies"} matched</p>}
+              {requestState === "success" && lastQuery && <SaveScreenButton query={lastQuery} />}
             </div>
-            <div className="reference-list">
-              {REFERENCE_SCREENS.map((screen) => (
-                <button key={screen.id} type="button" className="reference-button" onClick={() => applyReference(screen)}>
-                  <strong>{screen.label}</strong>
-                  <span>{screen.description}</span>
-                </button>
-              ))}
-            </div>
-          </section>
 
-          {interpretedFrom && (
-            <div className="interpretation-applied" role="status">
-              <span aria-hidden="true">✓</span>
-              <p><strong>Interpreted criteria are ready to review</strong><small>From: “{interpretedFrom}” · Edit anything below, then deliberately run the screen.</small></p>
-            </div>
-          )}
+            {requestState === "loading" && (
+              <StatusPanel className="state-panel" title="Running your screen" busy>
+                <p>Evaluating every condition against available company metrics.</p>
+              </StatusPanel>
+            )}
 
-          <form id="structured-builder" className="builder" onSubmit={runScreen} noValidate>
+            {requestState === "error" && (
+              <StatusPanel
+                className="state-panel"
+                tone="negative"
+                title="The screen did not run"
+                action={lastQuery ? <button type="button" className="text-button" onClick={() => void executeScreen(lastQuery)}>Try again</button> : undefined}
+              >
+                <p>{requestError}</p><p>Your criteria are preserved below.</p>
+              </StatusPanel>
+            )}
+
+            {requestState === "success" && result && result.matched.length === 0 && (
+              <div className="empty-results zero-results">
+                <span className="empty-mark" aria-hidden="true">0</span>
+                <h3>No companies matched every criterion</h3>
+                <p>The screen ran successfully. Edit or remove a condition to widen the result.</p>
+                <Button type="button" variant="secondary" className="secondary-button" onClick={() => lastQuery && applyInterpretedQuery(lastQuery, interpretedFrom)}>Edit criteria</Button>
+              </div>
+            )}
+
+            {requestState === "success" && result && result.excluded_missing_data.length > 0 && (
+              <details className="coverage-panel">
+                <summary>
+                  <span className="coverage-icon" aria-hidden="true">i</span>
+                  <span><strong>{result.excluded_missing_data.length} {result.excluded_missing_data.length === 1 ? "company was" : "companies were"} excluded for missing data</strong><small>Missing data is not treated as a failed financial criterion.</small></span>
+                </summary>
+                <div className="coverage-detail">
+                  {result.excluded_missing_data.map((company) => (
+                    <p key={company.cik}><strong>{company.company_name}</strong><span>{company.missing_metrics.map((name) => metricByName(metrics, name)?.display_name ?? name).join(", ")}</span></p>
+                  ))}
+                </div>
+              </details>
+            )}
+
+            {requestState === "success" && result && result.matched.length > 0 && (
+              <div className="results-table-wrap" tabIndex={0} aria-label="Screen results. Scroll horizontally to view all metrics.">
+                <table className="results-table">
+                  <caption className="sr-only">Companies matching the current screen, in backend-determined order.</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Company</th>
+                      <th scope="col">Classification</th>
+                      {resultMetricNames.map((metricName) => <th scope="col" key={metricName}><a className="metric-heading-link" href={`#definition-${metricName}`}>{metricByName(metrics, metricName)?.display_name ?? metricName}</a></th>)}
+                      <th scope="col"><span className="sr-only">Actions</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.matched.map((company) => (
+                      <tr key={company.cik}>
+                        <th scope="row">
+                          {company.ticker ? <a className="company-link" aria-label={`${company.ticker} ${company.company_name}`} href={`${siteUrl}/stock/${company.ticker.toLowerCase()}/`}><strong>{company.ticker}</strong><span>{company.company_name}</span></a> : <span className="company-link"><strong>—</strong><span>{company.company_name}</span></span>}
+                          {lastQuery && <MatchReasons company={company} query={lastQuery} metrics={metrics} siteUrl={siteUrl} />}
+                        </th>
+                        <td><span className="classification">{company.sic_description || "Unclassified"}</span>{company.sic_code && <small>SIC {company.sic_code}</small>}</td>
+                        {resultMetricNames.map((metricName) => {
+                          const value = company.metrics[metricName];
+                          const definition = metricByName(metrics, metricName);
+                          return (
+                            <td key={metricName}>
+                              {value ? <><span className="metric-value" title={`Exact value: ${value.value}`}>{formatMetricValue(value.value, definition)}</span><small>{metricPeriod(value)} · v{value.formula_version}</small></> : <><span className="metric-value missing" aria-label="Not available">—</span><small>Not available</small></>}
+                            </td>
+                          );
+                        })}
+                        <td>{company.ticker && <a className="row-action" href={`${siteUrl}/stock/${company.ticker.toLowerCase()}/`}>View company<span aria-hidden="true"> →</span></a>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {requestState === "success" && result && resultMetricNames.length > 0 && (
+              <section className="result-definitions" aria-labelledby="result-definitions-title">
+                <h3 id="result-definitions-title">Metric definitions used</h3>
+                <p>These definitions describe the current calculation contract. Each result cell shows the formula version actually used.</p>
+                <div>
+                  {resultMetricNames.map((metricName) => {
+                    const definition = metricByName(metrics, metricName);
+                    return (
+                      <details id={`definition-${metricName}`} key={metricName}>
+                        <summary>{definition?.display_name ?? metricName}</summary>
+                        <p>{definition?.short_definition ?? "Defined Scrooner metric."}</p>
+                        <dl>
+                          <div><dt>Formula</dt><dd>{definition?.formula_description ?? "See current metric catalog."}</dd></div>
+                          <div><dt>Current version</dt><dd>v{definition?.formula_version ?? "—"}</dd></div>
+                        </dl>
+                      </details>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {lastQuery && (
+              <details className="query-contract">
+                <summary>View exact query sent to the Screener</summary>
+                <pre>{JSON.stringify(lastQuery, null, 2)}</pre>
+              </details>
+            )}
+          </section>}
+
+          <section ref={builderSectionRef} className="advanced-builder" aria-labelledby="advanced-builder-title">
+            <button
+              type="button"
+              className="builder-disclosure"
+              aria-expanded={builderOpen}
+              aria-controls="advanced-builder-content"
+              onClick={() => setBuilderOpen((open) => !open)}
+            >
+              <span className="builder-disclosure-icon" aria-hidden="true">⌁</span>
+              <span><strong id="advanced-builder-title">Build with filters</strong><small>Choose financial metrics, comparisons, and sorting yourself.</small></span>
+              <span className="builder-disclosure-action">{builderOpen ? "Hide" : "Open"}<span aria-hidden="true"> {builderOpen ? "↑" : "↓"}</span></span>
+            </button>
+
+            {builderOpen && (
+            <div id="advanced-builder-content" className="advanced-builder-content">
+              <section className="reference-section" aria-labelledby="reference-title">
+                <div className="section-heading compact">
+                  <div>
+                    <h2 id="reference-title">Start from an example</h2>
+                    <p>Load a ready-made screen, then change any filter.</p>
+                  </div>
+                </div>
+                <div className="reference-list">
+                  {REFERENCE_SCREENS.map((screen) => (
+                    <button key={screen.id} type="button" className="reference-button" onClick={() => applyReference(screen)}>
+                      <strong>{screen.label}</strong>
+                      <span>{screen.description}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              {interpretedFrom && (
+                <div className="interpretation-applied" role="status">
+                  <span aria-hidden="true">✓</span>
+                  <p><strong>Your words are now editable filters</strong><small>From: “{interpretedFrom}” · Change anything below, then run the screen.</small></p>
+                </div>
+              )}
+
+              <form id="structured-builder" className="builder" onSubmit={runScreen} noValidate>
             <div className="builder-header">
               <div>
                 <p className="step-label">Step 1</p>
                 <h2>Define your criteria</h2>
                 <p>All conditions are combined with AND. Missing values never pass a condition.</p>
               </div>
-              <button type="button" className="tertiary-button" onClick={resetScreen}>Reset</button>
+              <Button type="button" variant="ghost" className="tertiary-button" onClick={resetScreen}>Reset</Button>
             </div>
 
             <fieldset className="criteria-fieldset">
@@ -398,7 +576,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                           <span className="range-separator">to</span>
                           <label className="sr-only" htmlFor={`${row.id}-high-value`}>Upper value for condition {index + 1}</label>
                           <div className="input-with-unit">
-                            <input id={`${row.id}-high-value`} inputMode="decimal" value={row.highValue} onChange={(event) => updateRow(row.id, { highValue: event.target.value })} aria-invalid={Boolean(errors[row.id])} placeholder="1" />
+                            <input id={`${row.id}-high-value`} inputMode="decimal" value={row.highValue} onChange={(event) => updateRow(row.id, { highValue: event.target.value })} aria-invalid={Boolean(errors[row.id])} aria-describedby={errors[row.id] ? `${row.id}-error` : undefined} placeholder="1" />
                             {unitLabel(metric) && <span className="unit">{unitLabel(metric)}</span>}
                           </div>
                         </>
@@ -463,135 +641,22 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
               </label>
             </div>
 
-            {errors.form && <div className="validation-summary" role="alert"><strong>Review the screen</strong><span>{errors.form}</span></div>}
-            {errors.sort && <div className="validation-summary" role="alert"><strong>Review sorting</strong><span>{errors.sort}</span></div>}
+            {errors.form && <div className="validation-summary" role="alert" tabIndex={-1}><strong>Review the screen</strong><span>{errors.form}</span></div>}
+            {errors.sort && <div className="validation-summary" role="alert" tabIndex={-1}><strong>Review sorting</strong><span>{errors.sort}</span></div>}
 
             <div className="builder-actions">
               <p><strong>{rows.length + (category.enabled ? 1 : 0)}</strong> active {rows.length + (category.enabled ? 1 : 0) === 1 ? "criterion" : "criteria"}</p>
-              <button className="primary-button" type="submit" disabled={requestState === "loading"}>
+              <Button className="primary-button" type="submit" disabled={requestState === "loading"}>
                 {requestState === "loading" ? <><span className="spinner light" aria-hidden="true" /> Running screen…</> : "Run screen"}
-              </button>
+              </Button>
             </div>
-          </form>
+              </form>
+            </div>
+            )}
+          </section>
           </>
         )}
 
-        <section className="results-section" aria-labelledby="results-title" aria-busy={requestState === "loading"}>
-          <div className="results-heading">
-            <div>
-              <p className="step-label">Step 2</p>
-              <h2 id="results-title">Review matches</h2>
-            </div>
-            {requestState === "success" && result && <p className="match-count"><strong>{result.matched.length}</strong> {result.matched.length === 1 ? "company" : "companies"} matched</p>}
-          </div>
-
-          {requestState === "idle" && (
-            <div className="empty-results">
-              <span className="empty-mark" aria-hidden="true">↳</span>
-              <h3>Your results will appear here</h3>
-              <p>Run a reference screen or define criteria above. The result will show the exact values and periods used.</p>
-            </div>
-          )}
-
-          {requestState === "loading" && (
-            <div className="state-panel neutral" aria-live="polite"><span className="spinner" aria-hidden="true" /><div><strong>Running your screen</strong><p>Evaluating every condition against available company metrics.</p></div></div>
-          )}
-
-          {requestState === "error" && (
-            <div className="state-panel error" role="alert"><span className="state-icon" aria-hidden="true">!</span><div><strong>The screen did not run</strong><p>{requestError}</p><p>Your criteria are preserved above.</p></div></div>
-          )}
-
-          {requestState === "success" && result && result.matched.length === 0 && (
-            <div className="empty-results zero-results">
-              <span className="empty-mark" aria-hidden="true">0</span>
-              <h3>No companies matched every criterion</h3>
-              <p>The screen ran successfully. Edit or remove a condition to widen the result.</p>
-              <button type="button" className="secondary-button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Edit criteria</button>
-            </div>
-          )}
-
-          {requestState === "success" && result && result.excluded_missing_data.length > 0 && (
-            <details className="coverage-panel">
-              <summary>
-                <span className="coverage-icon" aria-hidden="true">i</span>
-                <span><strong>{result.excluded_missing_data.length} {result.excluded_missing_data.length === 1 ? "company was" : "companies were"} excluded for missing data</strong><small>Missing data is not treated as a failed financial criterion.</small></span>
-              </summary>
-              <div className="coverage-detail">
-                {result.excluded_missing_data.map((company) => (
-                  <p key={company.cik}><strong>{company.company_name}</strong><span>{company.missing_metrics.map((name) => metricByName(metrics, name)?.display_name ?? name).join(", ")}</span></p>
-                ))}
-              </div>
-            </details>
-          )}
-
-          {requestState === "success" && result && result.matched.length > 0 && (
-            <div className="results-table-wrap" tabIndex={0} aria-label="Screen results. Scroll horizontally to view all metrics.">
-              <table className="results-table">
-                <caption className="sr-only">Companies matching the current screen, in backend-determined order.</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Company</th>
-                    <th scope="col">Classification</th>
-                    {resultMetricNames.map((metricName) => <th scope="col" key={metricName}><a className="metric-heading-link" href={`#definition-${metricName}`}>{metricByName(metrics, metricName)?.display_name ?? metricName}</a></th>)}
-                    <th scope="col"><span className="sr-only">Actions</span></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.matched.map((company) => (
-                    <tr key={company.cik}>
-                      <th scope="row">
-                        {company.ticker ? <a className="company-link" aria-label={`${company.ticker} ${company.company_name}`} href={`${siteUrl}/stock/${company.ticker.toLowerCase()}/`}><strong>{company.ticker}</strong><span>{company.company_name}</span></a> : <span className="company-link"><strong>—</strong><span>{company.company_name}</span></span>}
-                        {lastQuery && <MatchReasons company={company} query={lastQuery} metrics={metrics} siteUrl={siteUrl} />}
-                      </th>
-                      <td><span className="classification">{company.sic_description || "Unclassified"}</span>{company.sic_code && <small>SIC {company.sic_code}</small>}</td>
-                      {resultMetricNames.map((metricName) => {
-                        const value = company.metrics[metricName];
-                        const definition = metricByName(metrics, metricName);
-                        return (
-                          <td key={metricName}>
-                            {value ? <><span className="metric-value" title={`Exact value: ${value.value}`}>{formatMetricValue(value.value, definition)}</span><small>{metricPeriod(value)} · v{value.formula_version}</small></> : <><span className="metric-value missing" aria-label="Not available">—</span><small>Not available</small></>}
-                          </td>
-                        );
-                      })}
-                      <td>{company.ticker && <a className="row-action" href={`${siteUrl}/stock/${company.ticker.toLowerCase()}/`}>View company<span aria-hidden="true"> →</span></a>}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {requestState === "success" && result && resultMetricNames.length > 0 && (
-            <section className="result-definitions" aria-labelledby="result-definitions-title">
-              <h3 id="result-definitions-title">Metric definitions used</h3>
-              <p>These definitions describe the current calculation contract. Each result cell shows the formula version actually used.</p>
-              <div>
-                {resultMetricNames.map((metricName) => {
-                  const definition = metricByName(metrics, metricName);
-                  return (
-                    <details id={`definition-${metricName}`} key={metricName}>
-                      <summary>{definition?.display_name ?? metricName}</summary>
-                      <p>{definition?.short_definition ?? "Defined Scrooner metric."}</p>
-                      <dl>
-                        <div><dt>Formula</dt><dd>{definition?.formula_description ?? "See current metric catalog."}</dd></div>
-                        <div><dt>Current version</dt><dd>v{definition?.formula_version ?? "—"}</dd></div>
-                      </dl>
-                    </details>
-                  );
-                })}
-              </div>
-            </section>
-          )}
-
-          {lastQuery && (
-            <details className="query-contract">
-              <summary>View exact query sent to the Screener</summary>
-              <pre>{JSON.stringify(lastQuery, null, 2)}</pre>
-            </details>
-          )}
-        </section>
-      </main>
-      <footer className="app-footer"><p>Research tool, not investment advice. Values may be delayed or unavailable.</p></footer>
-    </div>
+    </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent, type KeyboardEvent } from "react";
+import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { metricByName } from "@/lib/screener/catalog";
 import {
   NATURAL_QUERY_EXAMPLES,
@@ -8,9 +8,11 @@ import {
   parserPhraseForMetric,
   predicateSummary,
 } from "@/lib/screener/interpretation";
-import type { AskResponse, MetricDefinition, ScreenQueryPayload } from "@/lib/screener/types";
+import type { AskResponse, MetricDefinition, ScreenQueryPayload, ScreenResult } from "@/lib/screener/types";
+import { Button } from "@/components/ui/Button";
+import { StatusPanel } from "@/components/ui/StatusPanel";
 
-type InterpretState = "idle" | "loading" | "ready" | "attention" | "error";
+type InterpretState = "idle" | "loading" | "complete" | "attention" | "error";
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -57,31 +59,35 @@ function responseError(payload: unknown): string {
   if (payload && typeof payload === "object" && "detail" in payload && typeof payload.detail === "string") {
     return payload.detail;
   }
-  return "The query could not be interpreted. Try again or use the structured editor.";
+  return "The screen could not be completed. Try again or use the filter editor.";
 }
 
 export function NaturalQueryPanel({
   metrics,
-  onApply,
+  onResult,
+  onEdit,
 }: {
   metrics: MetricDefinition[];
-  onApply: (query: ScreenQueryPayload, sourceText: string) => boolean;
+  onResult: (query: ScreenQueryPayload, result: ScreenResult, sourceText: string) => boolean;
+  onEdit: (query: ScreenQueryPayload, sourceText: string) => boolean;
 }) {
   const [text, setText] = useState("");
   const [state, setState] = useState<InterpretState>("idle");
   const [interpretation, setInterpretation] = useState<AskResponse | null>(null);
   const [error, setError] = useState("");
-  const [applied, setApplied] = useState(false);
+  const [filtersOpened, setFiltersOpened] = useState(false);
+  const requestVersion = useRef(0);
 
   function changeText(next: string) {
+    requestVersion.current += 1;
     setText(next);
     setInterpretation(null);
     setState("idle");
     setError("");
-    setApplied(false);
+    setFiltersOpened(false);
   }
 
-  async function interpretQuery(nextText = text) {
+  async function runQuery(nextText = text) {
     const normalized = nextText.trim();
     if (!normalized) {
       setState("attention");
@@ -95,143 +101,170 @@ export function NaturalQueryPanel({
       return;
     }
 
+    const version = ++requestVersion.current;
     setState("loading");
     setError("");
-    setApplied(false);
+    setFiltersOpened(false);
     try {
       const response = await fetch("/api/ask", {
         method: "POST",
         headers: { "content-type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ text: normalized, run: false }),
+        body: JSON.stringify({ text: normalized, run: true }),
       });
-      const payload: unknown = await response.json();
+      const payload: unknown = await response.json().catch(() => null);
+      if (version !== requestVersion.current) return;
       if (!response.ok) throw new Error(responseError(payload));
-      const result = payload as AskResponse;
-      setInterpretation(result);
-      setState(result.query && result.unrecognized.length === 0 && result.ambiguous.length === 0 ? "ready" : "attention");
+      const next = payload as AskResponse;
+      setInterpretation(next);
+
+      if (!next.query || next.unrecognized.length > 0 || next.ambiguous.length > 0) {
+        setState("attention");
+        return;
+      }
+      if (!next.result) throw new Error("The screen service returned no results. Please try again.");
+      if (!onResult(next.query, next.result, normalized)) {
+        throw new Error("This screen contains more classification filters than the editor can represent.");
+      }
+      setState("complete");
     } catch (requestError) {
+      if (version !== requestVersion.current) return;
       setState("error");
       setInterpretation(null);
-      setError(requestError instanceof Error ? requestError.message : "The query could not be interpreted.");
+      setError(requestError instanceof Error ? requestError.message : "The screen could not be completed.");
     }
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    void interpretQuery();
+    if (state !== "loading") void runQuery();
   }
 
   function keyboardSubmit(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+    if ((event.metaKey || event.ctrlKey) && (event.key === "Enter" || event.key === "NumpadEnter")) {
       event.preventDefault();
-      void interpretQuery();
+      if (state !== "loading") void runQuery();
     }
+  }
+
+  function runExample(example: string) {
+    setText(example);
+    void runQuery(example);
   }
 
   function chooseMeaning(phrase: string, metricName: string) {
     const replacement = parserPhraseForMetric(metricName);
     const resolved = text.replace(new RegExp(escapeRegExp(phrase), "i"), replacement);
     setText(resolved);
-    void interpretQuery(resolved);
+    void runQuery(resolved);
   }
 
-  function applyInterpretation() {
+  function editFilters() {
     if (!interpretation?.query) return;
-    const accepted = onApply(interpretation.query, text.trim());
-    if (accepted) {
-      setApplied(true);
-    } else {
-      setState("error");
-      setError("This interpretation contains more classification filters than the structured editor can represent. Edit the language and interpret again.");
+    if (onEdit(interpretation.query, text.trim())) {
+      setFiltersOpened(true);
+      return;
     }
+    setState("error");
+    setError("This screen contains more classification filters than the editor can represent. Edit the wording and try again.");
   }
+
+  const completedQuery = state === "complete" ? interpretation?.query : null;
 
   return (
-    <section className="natural-query" aria-labelledby="natural-query-title">
-      <div className="natural-query-heading">
-        <div>
-          <p className="step-label">Start with plain English</p>
-          <h2 id="natural-query-title">Describe the companies you want</h2>
-          <p>The interpreter translates supported language into exact criteria. It does not calculate or invent financial data.</p>
-        </div>
-        <span className="bounded-badge">Bounded parser</span>
-      </div>
-
-      <form onSubmit={submit} className="natural-query-form">
-        <label htmlFor="natural-query-input">Screening request</label>
-        <textarea
-          id="natural-query-input"
-          value={text}
-          onChange={(event) => changeText(event.target.value)}
-          onKeyDown={keyboardSubmit}
-          placeholder="e.g. companies with ROE above 30%"
-          rows={3}
-          aria-describedby="natural-query-help"
-        />
-        <div className="natural-query-actions">
-          <p id="natural-query-help">Use a supported example or write a precise request. Press Ctrl/⌘ + Enter to interpret.</p>
-          <button type="submit" className="primary-button" disabled={state === "loading"}>
-            {state === "loading" ? <><span className="spinner light" aria-hidden="true" /> Checking criteria…</> : "Interpret query"}
-          </button>
-        </div>
-      </form>
-
-      {state === "idle" && (
-        <div className="query-examples" aria-label="Supported query examples">
-          <span>Try a supported example:</span>
-          <div>
-            {NATURAL_QUERY_EXAMPLES.map((example) => (
-              <button key={example} type="button" onClick={() => changeText(example)}>{example}</button>
-            ))}
+    <section className={`natural-query ${completedQuery ? "complete" : ""}`} aria-labelledby="natural-query-title">
+      {completedQuery ? (
+        <div className="screen-summary" aria-live="polite">
+          <div className="screen-summary-main">
+            <p className="step-label">Current screen</p>
+            <h2 id="natural-query-title">{text}</h2>
+            <div className="criteria-chips" aria-label="Criteria used">
+              {completedQuery.metric_predicates.map((predicate, index) => {
+                const summary = predicateSummary(predicate, metrics);
+                return <span key={`${predicate.metric_name}-${index}`}><strong>{summary.metric}</strong> {summary.operator.toLowerCase()} {summary.value}</span>;
+              })}
+              {categorySummary(completedQuery).map((label) => <span key={label}><strong>{label}</strong></span>)}
+            </div>
           </div>
+          <div className="screen-summary-actions">
+            <Button type="button" variant="ghost" className="tertiary-button" onClick={() => setState("idle")}>Edit wording</Button>
+            <Button type="button" variant="secondary" className="secondary-button" onClick={editFilters}>
+              {filtersOpened ? "Filters opened ✓" : "Edit filters"}
+            </Button>
+          </div>
+          <details className="verify-screen">
+            <summary>Verify how Scrooner understood this</summary>
+            <InterpretationTable query={completedQuery} metrics={metrics} />
+          </details>
         </div>
+      ) : (
+        <>
+          <div className="natural-query-heading">
+            <div>
+              <p className="step-label">Start in your own words</p>
+              <h2 id="natural-query-title">What companies are you looking for?</h2>
+              <p>Describe the companies you want. One click turns your words into exact filters and shows the matches.</p>
+            </div>
+          </div>
+
+          <div className="natural-query-workspace">
+            <form onSubmit={submit} className="natural-query-form" aria-busy={state === "loading"}>
+              <label htmlFor="natural-query-input">Describe your screen</label>
+              <textarea
+                id="natural-query-input"
+                value={text}
+                onChange={(event) => changeText(event.target.value)}
+                onKeyDown={keyboardSubmit}
+                placeholder="Companies with ROE above 20% and debt to equity below 1"
+                rows={5}
+                aria-invalid={state === "attention" || state === "error"}
+                aria-describedby={`natural-query-help${state === "attention" ? " natural-query-attention" : ""}${state === "error" ? " natural-query-error" : ""}`}
+              />
+              <div className="natural-query-actions">
+                <p id="natural-query-help">If a phrase has more than one meaning, we will ask before running it.</p>
+                <Button type="submit" className="primary-button" disabled={state === "loading"}>
+                  {state === "loading" ? <><span className="spinner light" aria-hidden="true" /> Finding matches…</> : "Show matches"}
+                </Button>
+              </div>
+            </form>
+
+            <aside className="query-guide" aria-label="Plain-language examples">
+              <p className="query-guide-label">Run an example</p>
+              <div className="query-examples">
+                {NATURAL_QUERY_EXAMPLES.slice(0, 3).map((example) => (
+                  <button key={example} type="button" aria-label={`Run example: ${example}`} disabled={state === "loading"} onClick={() => runExample(example)}>{example}</button>
+                ))}
+              </div>
+              <p className="query-guide-note"><span aria-hidden="true">✓</span> Click an example to see its matches immediately.</p>
+            </aside>
+          </div>
+        </>
       )}
 
       {state === "loading" && (
-        <div className="interpretation-state" aria-live="polite" aria-busy="true">
-          <span className="spinner" aria-hidden="true" />
-          <div><strong>Checking your criteria</strong><p>No screen will run during interpretation.</p></div>
-        </div>
-      )}
-
-      {state === "ready" && interpretation?.query && (
-        <div className="interpretation-ready" aria-live="polite">
-          <div className="interpretation-title">
-            <span className="status-mark success" aria-hidden="true">✓</span>
-            <div><strong>Ready for your review</strong><p>Every phrase was recognized. Nothing has been executed.</p></div>
-          </div>
-          <InterpretationTable query={interpretation.query} metrics={metrics} />
-          <div className="interpretation-actions">
-            <details>
-              <summary>View exact interpreted query</summary>
-              <pre>{JSON.stringify(interpretation.query, null, 2)}</pre>
-            </details>
-            <button type="button" className="secondary-button" onClick={applyInterpretation}>
-              {applied ? "Criteria added below ✓" : "Review and edit criteria"}
-            </button>
-          </div>
-        </div>
+        <StatusPanel className="interpretation-state" title="Finding matching companies" busy>
+          <p>Interpreting your words and applying the verified filters.</p>
+        </StatusPanel>
       )}
 
       {state === "attention" && interpretation && (
-        <div className="interpretation-attention" aria-live="polite">
+        <div id="natural-query-attention" className="interpretation-attention" role="status" aria-live="polite">
           <div className="interpretation-title">
             <span className="status-mark warning" aria-hidden="true">!</span>
-            <div><strong>Resolve the language before running</strong><p>No executable query was created.</p></div>
+            <div><strong>Clarify this screen</strong><p>Nothing ran because part of the request needs your input.</p></div>
           </div>
 
           {interpretation.recognized_query && (
             <div className="recognized-partial">
-              <h3>Recognized criteria</h3>
+              <h3>What we understood</h3>
               <InterpretationTable query={interpretation.recognized_query} metrics={metrics} partial />
             </div>
           )}
 
           {interpretation.ambiguous.map((ambiguity) => (
             <div className="unresolved-clause" key={ambiguity.phrase}>
-              <span>Ambiguous phrase</span>
+              <span>Choose one meaning</span>
               <strong>“{ambiguity.phrase}”</strong>
-              <p>Choose the metric you intended:</p>
+              <p>Which metric did you mean?</p>
               <div className="candidate-list">
                 {ambiguity.candidates.map((candidate) => (
                   <button type="button" key={candidate} onClick={() => chooseMeaning(ambiguity.phrase, candidate)}>
@@ -244,18 +277,24 @@ export function NaturalQueryPanel({
 
           {interpretation.unrecognized.map((phrase) => (
             <div className="unresolved-clause" key={phrase}>
-              <span>Unsupported phrase</span>
+              <span>Change this wording</span>
               <strong>“{phrase}”</strong>
-              <p>Edit the request using a supported metric, comparison, range, ranking, or listed classification.</p>
+              <p>Use a supported financial metric, comparison, range, ranking, or company classification.</p>
             </div>
           ))}
         </div>
       )}
 
       {state === "error" && (
-        <div className="interpretation-state error" role="alert">
-          <span className="state-icon" aria-hidden="true">!</span>
-          <div><strong>Interpretation service unavailable</strong><p>{error}</p><button type="button" className="text-button" onClick={() => void interpretQuery()}>Try again</button></div>
+        <div id="natural-query-error">
+          <StatusPanel
+            className="interpretation-state"
+            tone="negative"
+            title="The screen did not run"
+            action={<button type="button" className="text-button" onClick={() => void runQuery()}>Try again</button>}
+          >
+            <p>{error}</p>
+          </StatusPanel>
         </div>
       )}
     </section>

@@ -1,0 +1,19 @@
+---
+import PublicPageLayout from "../components/PublicPageLayout.astro";
+export const prerender = true;
+---
+<PublicPageLayout current="about" eyebrow="About Scrooner" title="Research with fewer leaps of faith" description="Scrooner helps people screen US companies in plain language and inspect the public evidence behind the result.">
+  <section>
+    <h2>Why it exists</h2>
+    <p>Fundamental research often starts with a simple question and quickly turns into a hunt across screeners, spreadsheets, and filings. Scrooner brings the first steps together: express a thesis, narrow the universe, inspect a company, and return to the source.</p>
+  </section>
+  <section>
+    <h2>Product principles</h2>
+    <ul>
+      <li>Plain language should make powerful research tools easier to approach.</li>
+      <li>Every important number should be explainable and, where practical, traceable.</li>
+      <li>Uncertainty and missing data should be shown honestly.</li>
+      <li>Research software should support decisions without pretending to make them.</li>
+    </ul>
+  </section>
+</PublicPageLayout>

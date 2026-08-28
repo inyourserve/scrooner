@@ -5,7 +5,7 @@
 // required metric is null produces no bullet, never a guessed one -- same
 // "null over guess" discipline as everywhere else in this project.
 
-import { getLatestMetrics, getMetricHistory, type MetricRow } from "./db";
+import type { MetricRow } from "./db";
 
 export interface ChecklistItem {
   text: string;
@@ -18,17 +18,18 @@ function avg(values: (string | null)[]): number | null {
   return nums.reduce((a, b) => a + b, 0) / nums.length;
 }
 
-export async function buildChecklist(companyId: number, latest: Record<string, MetricRow>): Promise<ChecklistItem[]> {
+export function buildChecklist(
+  latest: Record<string, MetricRow>,
+  history: Record<string, (string | null)[]>,
+): ChecklistItem[] {
   const items: ChecklistItem[] = [];
 
-  // These 3 are independent reads -- run concurrently rather than
-  // sequentially awaited (each is a separate DB round-trip; see the
-  // stock page's own parallelization for the same reasoning).
-  const [roe3yRaw, roic3yRaw, fcfHistory] = await Promise.all([
-    getMetricHistory(companyId, "roe", 3),
-    getMetricHistory(companyId, "roic", 3),
-    getMetricHistory(companyId, "fcf", 3),
-  ]);
+  // History arrives with the consolidated company-page read. Checklist
+  // evaluation is pure presentation logic and never opens another database
+  // connection during a page render.
+  const roe3yRaw = history.roe ?? [];
+  const roic3yRaw = history.roic ?? [];
+  const fcfHistory = history.fcf ?? [];
   const roe3y = avg(roe3yRaw);
   const roic3y = avg(roic3yRaw);
 
