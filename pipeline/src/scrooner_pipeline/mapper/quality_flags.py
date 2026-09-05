@@ -37,7 +37,7 @@ from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
 
-REQUIRED_CONCEPTS = ["net_income", "cfo", "capex", "total_debt", "gross_profit", "revenue"]
+REQUIRED_CONCEPTS = ["net_income", "cfo", "capex", "total_debt_resolved", "gross_profit", "revenue"]
 
 
 def _load_concept_ids(conn: psycopg.Connection) -> dict[str, int]:
@@ -110,7 +110,7 @@ def calculate_quality_flags_for_company(
         if period is None:
             # No net_income period anchor for this year -- try total_debt's
             # own anchor instead, since zero_debt doesn't need net_income.
-            period = _fy_period_dates(conn, company_id, concept_ids["total_debt"], fy)
+            period = _fy_period_dates(conn, company_id, concept_ids["total_debt_resolved"], fy)
         if period is None:
             continue
         start, end = period
@@ -125,11 +125,11 @@ def calculate_quality_flags_for_company(
                                   Decimal(1) if fcf > facts["net_income"][fy] else Decimal(0), None))
 
         if "zero_debt" in metric_ids:
-            if fy not in facts["total_debt"]:
+            if fy not in facts["total_debt_resolved"]:
                 rows.append(_row(company_id, metric_ids["zero_debt"], start, end, None, f"missing:total_debt({fy})"))
             else:
                 rows.append(_row(company_id, metric_ids["zero_debt"], start, end,
-                                  Decimal(1) if facts["total_debt"][fy] == 0 else Decimal(0), None))
+                                  Decimal(1) if facts["total_debt_resolved"][fy] == 0 else Decimal(0), None))
 
     # --- profitable_streak_years: single "as of latest FY" value ---
     if "profitable_streak_years" in metric_ids and all_years:

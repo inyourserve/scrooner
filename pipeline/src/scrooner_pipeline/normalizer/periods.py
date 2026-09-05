@@ -21,6 +21,7 @@ the table's identity. Every downstream stage must key off
 start_date/end_date/period_type, never these two.
 """
 
+import calendar
 import json
 from datetime import date, datetime
 
@@ -90,19 +91,77 @@ def extract_distinct_periods(payload: dict) -> set[tuple[str, str | None]]:
     return periods
 
 
-def build_fye_anchors(periods: set[tuple[str, str | None]]) -> list[date]:
+def extract_fy_tagged_spans(payload: dict) -> set[tuple[str, str]]:
+    """(start, end) pairs where SEC's own per-fact `fp` field says this
+    span IS the company's fiscal year ('FY') -- a peer signal to `end`/
+    `start` themselves (SEC-computed from the filer's own
+    dei:DocumentFiscalPeriodFocus, not a guessed/wobbly company-level
+    default), used to confirm a genuine annual span rather than one that
+    merely happens to be ~365 days long. See build_fye_anchors' own
+    docstring for why this distinction matters."""
+    fy_spans: set[tuple[str, str]] = set()
+    for _taxonomy, concepts in payload.get("facts", {}).items():
+        for _concept, cdata in concepts.items():
+            for _unit, entries in cdata.get("units", {}).items():
+                for e in entries:
+                    end, start = e.get("end"), e.get("start")
+                    if end and start and e.get("fp") == "FY":
+                        fy_spans.add((start, end))
+    return fy_spans
+
+
+def build_fye_anchors(periods: set[tuple[str, str | None]], fy_tagged_spans: set[tuple[str, str]] | None = None) -> list[date]:
     """Every distinct end_date belonging to a full-year-length duration --
     empirically this company's OWN real fiscal-year-end dates. No MMDD
     guessing: verified live that AAPL's actual FYE wobbles day-to-day
     against its nominal '0926' (2016-09-24, 2017-09-30, 2018-09-29, ...),
-    so only observed data is trustworthy here. Sorted ascending."""
-    anchors = set()
+    so only observed data is trustworthy here. Sorted ascending.
+
+    Found live 2026-09-05 (Amazon): duration length alone is NOT a
+    sufficient signal. Amazon's 2008-2013-era 10-Qs additionally disclose
+    a real, legitimate "trailing twelve months ended <quarter-end>" cash-
+    flow-statement comparative -- a genuine GAAP figure, but not the
+    company's fiscal year -- that also spans 350-380 days. Its end dates
+    land on ordinary quarter-ends (2008-06-30, 2008-09-30, ...), so the
+    old duration-only heuristic treated EVERY quarter as a phantom
+    fiscal-year-end, collapsing the anchor spacing from ~365 days to
+    ~91 days and making every subsequent classify_period() call compute
+    idx~0-1 regardless of the real quarter -- every period in the company's
+    history was mislabeled 'Q1'. Confirmed the TTM entries are explicitly
+    tagged fp='Q2'/form='10-Q' by SEC itself, while real annual entries for
+    the same company are consistently fp='FY'/form='10-K' -- a reliable,
+    already-present per-fact signal, not a new guess. When fy_tagged_spans
+    is available and non-empty for this company, only those (start, end)
+    pairs count as anchors; falls back to the original duration-only
+    heuristic when a company has no fp='FY' evidence at all (better than
+    zero anchors, and preserves prior behavior for that rare case)."""
+    duration_anchors, fy_anchors = set(), set()
     for end, start in periods:
         if start is None:
             continue
         if FULL_YEAR_MIN_DAYS <= (_parse_date(end) - _parse_date(start)).days <= FULL_YEAR_MAX_DAYS:
-            anchors.add(_parse_date(end))
-    return sorted(anchors)
+            duration_anchors.add(_parse_date(end))
+            if fy_tagged_spans and (start, end) in fy_tagged_spans:
+                fy_anchors.add(_parse_date(end))
+    if fy_anchors:
+        return sorted(fy_anchors)
+    return sorted(duration_anchors)
+
+
+def _step_year(d: date, delta: int) -> date:
+    """date(year+delta, month, day), except Feb 29 rolls to Feb 28 in a
+    non-leap target year instead of raising ValueError -- found live
+    2026-09-03 (MannKind, CIK 0000899460): a company with an observed Feb
+    29 fiscal-year-end anchor crashed _bracket_fye's plain
+    date(candidate.year +/- 1, ...) the moment it stepped into a non-leap
+    year, which is most years. Rolling to Feb 28 is the same convention
+    already implicit in FULL_YEAR_MIN_DAYS/MAX_DAYS treating adjacent
+    Feb-28/Feb-29 fiscal years as the same ~365-day cadence."""
+    year = d.year + delta
+    month, day = d.month, d.day
+    if month == 2 and day == 29 and not calendar.isleap(year):
+        day = 28
+    return date(year, month, day)
 
 
 def _bracket_fye(
@@ -122,14 +181,14 @@ def _bracket_fye(
         if base is not None:
             candidate = base
             while candidate < target:
-                candidate = date(candidate.year + 1, candidate.month, candidate.day)
+                candidate = _step_year(candidate, 1)
             next_fye = candidate
     if prior_fye is None:
         base = anchors[0] if anchors else next_fye
         if base is not None:
             candidate = base
             while candidate >= target:
-                candidate = date(candidate.year - 1, candidate.month, candidate.day)
+                candidate = _step_year(candidate, -1)
             prior_fye = candidate
     return next_fye, prior_fye
 
@@ -152,13 +211,23 @@ def classify_period(
     fiscal_period = None
 
     if period_type == "duration":
-        if FULL_YEAR_MIN_DAYS <= duration_days <= FULL_YEAR_MAX_DAYS:
+        # Found live 2026-09-05 (Amazon): duration length alone is NOT
+        # sufficient for "FY" -- a real, legitimate "trailing twelve
+        # months ended <quarter-end>" cash-flow-statement comparative
+        # (Amazon's 2008-2013-era 10-Qs) also spans 350-380 days but ends
+        # on an ordinary quarter-end, not the company's real fiscal-year-
+        # end. The instant branch below already requires end_date ==
+        # next_fye for its own FY case; this now matches that same
+        # anchor-confirmed check, rather than trusting length alone.
+        if FULL_YEAR_MIN_DAYS <= duration_days <= FULL_YEAR_MAX_DAYS and end_date == next_fye:
             fiscal_period = "FY"
         elif QUARTER_MIN_DAYS <= duration_days <= QUARTER_MAX_DAYS and prior_fye is not None:
             idx = round((end_date - prior_fye).days / NOMINAL_QUARTER_DAYS)
             fiscal_period = f"Q{min(max(idx, 1), 4)}"
         # else: non-standard duration (half-year/three-quarter YTD spans,
-        # irregular stub periods) -- left unclassified rather than mislabeled.
+        # irregular stub periods, or a full-year-length span whose end
+        # date isn't a confirmed anchor -- e.g. a TTM comparative) --
+        # left unclassified rather than mislabeled.
     elif prior_fye is not None:
         idx = round((end_date - prior_fye).days / NOMINAL_QUARTER_DAYS)
         if idx >= 4:
@@ -208,7 +277,8 @@ def normalize_periods_for_cik(storage: SupabaseStorageClient, conn: psycopg.Conn
     payload = _load_json(storage, storage_path)
 
     distinct_periods = extract_distinct_periods(payload)
-    anchors = build_fye_anchors(distinct_periods)
+    fy_tagged_spans = extract_fy_tagged_spans(payload)
+    anchors = build_fye_anchors(distinct_periods, fy_tagged_spans)
     nominal_month_day = _parse_fiscal_year_end(fiscal_year_end)
 
     rows = [classify_period(end, start, anchors, nominal_month_day) for end, start in distinct_periods]

@@ -7,7 +7,7 @@ directly with real-shaped payload fragments -- no fake cursor needed."""
 
 import pytest
 
-from scrooner_pipeline.normalizer.identity import _parse_filings_block
+from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST, _parse_filings_block
 
 
 @pytest.mark.unit
@@ -103,3 +103,24 @@ def test_non_allowlisted_form_dropped_regardless_of_items_value():
     rows = _parse_filings_block(block)
 
     assert rows == []
+
+
+@pytest.mark.unit
+def test_144_424b5_fwp_added_2026_08_29_are_allowlisted():
+    """Zero-new-fetch coverage pass: 144 (restricted-stock resale notices),
+    424B5 (prospectus supplements), and FWP (free-writing prospectuses)
+    confirmed live across the full golden-10 before being added here (942 /
+    182 / 23,042 real filings respectively) -- same purely-additive
+    widening pattern as every prior FORM_ALLOWLIST addition."""
+    assert {"144", "424B5", "FWP"} <= FORM_ALLOWLIST
+
+    block = {
+        "accessionNumber": ["acc-1", "acc-2", "acc-3"],
+        "form": ["144", "424B5", "FWP"],
+        "filingDate": ["2024-01-01", "2024-02-01", "2024-03-01"],
+        "reportDate": [None, None, None],
+    }
+
+    rows = _parse_filings_block(block)
+
+    assert [r["form"] for r in rows] == ["144", "424B5", "FWP"]

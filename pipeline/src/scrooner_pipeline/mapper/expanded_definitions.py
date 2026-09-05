@@ -67,6 +67,28 @@ backlog):
   recent FY years with dividends_per_share strictly increasing, same
   "as of latest FY" single-value shape as profitable_streak_years.
   Computed in the new mapper/dividend_streak.py.
+
+Six more added 2026-08-29 (zero-new-fetch coverage pass -- payout ratio,
+pretax margin, net cash, dividend growth):
+- payout_ratio: Dividends per Share / Diluted EPS, real calculate.py-engine
+  ratio input. dividends_per_share and diluted_eps are both already
+  canonical concepts (concepts.py, Stage 3a) -- no new concept curation.
+- pretax_margin: Income Before Tax / Revenue, real ratio input.
+  income_before_tax was already a canonical concept but only ever
+  consumed as ROIC's tax_rate_denominator role -- reused here unchanged,
+  not recreated.
+- net_cash / net_cash_per_share: cash_and_equivalents - total_debt, and
+  that same figure / shares_outstanding. All three inputs are already
+  canonical concepts, all balance_sheet (instant) -- fits the EXISTING
+  sum_diff / sum_diff_ratio shapes exactly (same shapes current_ratio's
+  sibling metrics quick_ratio/fcf_margin already use for all-instant or
+  mixed instant inputs), so no new formula shape and no expanded_metrics.py
+  hardcoded function needed -- checked before assuming either was required.
+- dps_growth_yoy / dps_growth_3y_cagr: documentation-only -- computed in
+  mapper/ttm.py's GROWTH_METRICS, same purely-additive dict-entry pattern
+  as the 5Y/10Y revenue/EPS CAGR additions (2026-08-19). "dps" abbreviation
+  matches this file's existing "eps" convention (eps_growth_yoy uses
+  concept diluted_eps but is named eps_*, not diluted_eps_*).
 """
 
 import psycopg
@@ -171,6 +193,78 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
      "increasing, counted backward from the latest year until a flat/decreasing year breaks the streak. "
      "Null (not 0) for a company with no dividend history at all. Computed in mapper/dividend_streak.py, "
      "one value as of the latest FY only.", False, []),
+    ("payout_ratio", "Dividends per Share / Diluted EPS", False,
+     [("dividends_per_share", "numerator"), ("diluted_eps", "denominator")]),
+    ("pretax_margin", "Income Before Tax / Revenue", False,
+     [("income_before_tax", "numerator"), ("revenue", "denominator")]),
+    # total_debt_resolved, not total_debt, per doc 40 (2026-09-02) -- see
+    # that doc / mapper/concept_fallback.py for why.
+    ("net_cash", "Cash & Equivalents - Total Debt", False,
+     [("cash_and_equivalents", "add"), ("total_debt_resolved", "subtract")]),
+    ("net_cash_per_share", "(Cash & Equivalents - Total Debt) / Shares Outstanding", False,
+     [("cash_and_equivalents", "add"), ("total_debt_resolved", "subtract"), ("shares_outstanding", "denominator")]),
+    ("dps_growth_yoy", "(Dividends per Share[t] - Dividends per Share[t-1]) / Dividends per Share[t-1], same "
+     "fiscal_period year over year. Computed in mapper/ttm.py -- a purely additive GROWTH_METRICS entry, same "
+     "mechanism as the locked revenue/EPS growth metrics.", False, []),
+    ("dps_growth_3y_cagr", "(Dividends per Share[t] / Dividends per Share[t-3]) ^ (1/3) - 1, FY periods. "
+     "Computed in mapper/ttm.py.", False, []),
+    # Added 2026-09-05, doc/Frontend/financials/scrooner-financials-display-spec-final.md's
+    # Financial Overview/Balance Sheet/Cash Flow Investor View rows -- all reuse
+    # calculate.py's existing generic-engine shapes, zero new formula logic.
+    ("book_value_per_share", "Stockholders' Equity / Shares Outstanding", False,
+     [("stockholders_equity", "numerator"), ("shares_outstanding", "denominator")]),
+    ("working_capital", "Current Assets - Current Liabilities", False,
+     [("current_assets", "add"), ("current_liabilities", "subtract")]),
+    ("net_change_in_cash", "Cash from Operations + Cash from Investing + Cash from Financing -- the period's "
+     "own bottom-line cash movement, distinct from net_cash (a balance-sheet POSITION: Cash - Total Debt).", False,
+     [("cfo", "add"), ("cash_flow_investing", "add"), ("cash_flow_financing", "add")]),
+    ("ocf_to_net_income", "Cash from Operations / Net Income -- an earnings-quality signal (a real, cash-backed "
+     "profit should track CFO closely; a large or growing gap flags aggressive accrual accounting).", False,
+     [("cfo", "numerator"), ("net_income", "denominator")]),
+    ("cash_returned_to_shareholders", "Dividends Paid + Share Buybacks -- the total cash actually distributed "
+     "to shareholders in the period, before relating it to Market Cap (that ratio is total_shareholder_yield's "
+     "job) or to Free Cash Flow (see share_repurchases_pct_fcf/dividends_pct_fcf, computed in expanded_metrics.py).",
+     False, [("dividends_paid", "add"), ("share_buybacks", "add")]),
+    # ebitda_margin/debt_to_ebitda/fcf_per_share/share_repurchases_pct_fcf/
+    # dividends_pct_fcf all need ebitda or fcf as an input -- both live in
+    # analytics.metric_value, not canonical_fact, so this engine's
+    # single-period per-role model can't reach them (the exact same reason
+    # net_debt_ebitda/cash_conversion_cycle are documentation-only here).
+    # Computed in expanded_metrics.py instead.
+    ("ebitda_margin", "EBITDA (TTM) / Revenue (TTM). Computed in expanded_metrics.py.", False, []),
+    ("debt_to_ebitda", "Total Debt / EBITDA (TTM) -- gross leverage, distinct from net_debt_ebitda (which "
+     "nets out Cash & Equivalents first). Computed in expanded_metrics.py.", False, []),
+    ("fcf_per_share", "Free Cash Flow (TTM) / Shares Outstanding. Computed in expanded_metrics.py.", False, []),
+    ("share_repurchases_pct_fcf", "Share Buybacks (TTM) / Free Cash Flow (TTM) -- what fraction of real cash "
+     "generation went to buybacks, distinct from buyback_yield (which relates buybacks to Market Cap, not FCF). "
+     "Computed in expanded_metrics.py.", False, []),
+    ("dividends_pct_fcf", "Dividends Paid (TTM) / Free Cash Flow (TTM) -- a cash-based payout coverage check, "
+     "distinct from payout_ratio (Dividends per Share / Diluted EPS, an earnings-based payout ratio -- the two "
+     "can diverge meaningfully whenever CFO and Net Income diverge). Computed in expanded_metrics.py.", False, []),
+    # Growth/CAGR extensions to ttm.py's existing GROWTH_METRICS mechanism
+    # (revenue/EPS/DPS already use this unchanged engine) -- net_income and
+    # diluted_shares_outstanding are both real canonical_fact concepts, so
+    # these need zero new logic, only new GROWTH_METRICS dict entries.
+    ("net_income_growth_yoy", "(Net Income[t] - Net Income[t-1]) / Net Income[t-1], same fiscal_period year "
+     "over year. Computed in mapper/ttm.py.", False, []),
+    ("net_income_growth_3y_cagr", "(Net Income[t] / Net Income[t-3]) ^ (1/3) - 1, same fiscal_period. Computed "
+     "in mapper/ttm.py.", False, []),
+    ("net_income_growth_5y_cagr", "(Net Income[t] / Net Income[t-5]) ^ (1/5) - 1, same fiscal_period. Computed "
+     "in mapper/ttm.py.", False, []),
+    ("net_income_growth_10y_cagr", "(Net Income[t] / Net Income[t-10]) ^ (1/10) - 1, same fiscal_period. "
+     "Computed in mapper/ttm.py.", False, []),
+    ("diluted_shares_growth_yoy", "(Shares Outstanding[t] - Shares Outstanding[t-1]) / Shares Outstanding[t-1]. "
+     "Uses the same shares_outstanding concept as share_dilution_trend (this project has no separate "
+     "diluted-weighted-average-shares concept yet -- see doc/learnings/2026-09-05-financials-spec-gap-plan.md); "
+     "unlike share_dilution_trend (a rolling ~1yr comparison anchored on 'today'), this is a real FY-vs-prior-FY "
+     "series. Computed in mapper/ttm.py.", False, []),
+    ("diluted_shares_growth_3y_cagr", "(Shares Outstanding[t] / Shares Outstanding[t-3]) ^ (1/3) - 1, same "
+     "fiscal_period. Computed in mapper/ttm.py.", False, []),
+    ("diluted_shares_growth_5y_cagr", "(Shares Outstanding[t] / Shares Outstanding[t-5]) ^ (1/5) - 1, same "
+     "fiscal_period. Computed in mapper/ttm.py.", False, []),
+    ("fcf_growth_yoy", "(FCF[t] - FCF[t-1]) / FCF[t-1], FY only. Computed in mapper/fcf_growth.py -- same "
+     "reasoning as fcf_growth_3y_cagr/5y_cagr (FCF is a computed metric_value, not a raw canonical_fact).",
+     False, []),
 ]
 
 

@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
 }
 
@@ -18,7 +18,7 @@
 
 .hero-wordmark .name {
   color: var(--ds-color-text-primary);
-  font-size: clamp(var(--ds-font-size-48), 9vw, var(--ds-font-size-88));
+  font-size: clamp(var(--ds-font-size-48), 7vw, 76px);
   font-weight: var(--ds-font-weight-semibold);
   letter-spacing: -0.045em;
   line-height: 0.9;
@@ -32,10 +32,10 @@
 
 .tagline {
   max-width: 34ch;
-  margin: 27px 0 0;
+  margin: 24px 0 0;
   color: var(--ds-color-text-primary);
   font-family: var(--ds-font-family-editorial);
-  font-size: clamp(var(--ds-font-size-20), 2.5vw, 25px);
+  font-size: clamp(var(--ds-font-size-20), 2.1vw, 27px);
   font-weight: var(--ds-font-weight-regular);
   line-height: var(--ds-line-height-heading);
   animation: home-rise 500ms 80ms var(--ds-ease-standard) both;
@@ -43,32 +43,46 @@
 
 .subtag {
   max-width: 58ch;
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   color: var(--ds-color-text-secondary);
-  font-size: var(--ds-font-size-14);
+  font-size: var(--ds-font-size-16);
+  line-height: 1.55;
   animation: home-rise 500ms 140ms var(--ds-ease-standard) both;
 }
 
 .home-main #company-search {
-  width: min(680px, 100%);
-  margin-top: 38px;
+  width: min(720px, 100%);
+  margin-top: 34px;
   animation: home-rise 500ms 200ms var(--ds-ease-standard) both;
 }
 
 .quick-picks {
-  width: min(var(--ds-container-reading), 100%);
-  margin: 7px auto 0;
+  width: min(720px, 100%);
+  margin: 14px auto 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   animation: home-rise 500ms 260ms var(--ds-ease-standard) both;
 }
 
-.quick-picks .label { margin-right: var(--ds-space-0-5); color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-14); }
-.company-chip { align-items: baseline; font-size: 13.5px; }
-.company-chip .ticker { color: var(--ds-color-text-muted); font-size: var(--ds-font-size-11); font-weight: var(--ds-font-weight-medium); letter-spacing: 0.02em; }
+.quick-picks .label { margin-right: 4px; color: var(--ds-color-text-muted); font-size: var(--ds-font-size-12); font-weight: var(--ds-font-weight-medium); }
+.company-chip {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-round);
+  gap: 6px;
+  background: var(--ds-color-bg-surface);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-13);
+  box-shadow: var(--ds-shadow-hairline);
+  transition: background-color var(--ds-duration-fast) var(--ds-ease-standard), border-color var(--ds-duration-fast) var(--ds-ease-standard), color var(--ds-duration-fast) var(--ds-ease-standard), transform var(--ds-duration-fast) var(--ds-ease-standard);
+}
+.company-chip:hover { border-color: var(--ds-color-action); background: var(--ds-color-action-subtle); color: var(--ds-color-action-hover); text-decoration: none; }
+.company-chip:active { transform: translateY(1px); }
+.company-chip .ticker { color: var(--ds-color-text-muted); font-family: var(--ds-font-family-mono); font-size: 10px; font-weight: var(--ds-font-weight-medium); letter-spacing: 0.02em; }
 .company-chip:hover .ticker { color: var(--ds-color-action); }
 .screener-path { margin: 25px 0 0; color: var(--ds-color-text-secondary); font-size: 13.5px; }
 .screener-path a { color: var(--ds-color-action-hover); font-weight: var(--ds-font-weight-semibold); text-decoration: none; }
@@ -80,6 +94,14 @@
 @media (max-width: 640px) {
   .home-main { justify-content: flex-start; padding-top: clamp(56px, 10vh, 84px); }
   .hero-wordmark { gap: 10px; }
+  .hero-research-mark { --ds-brand-mark-size: 40px; }
   .tagline { max-width: 28ch; }
   .quick-picks { gap: var(--ds-space-2); }
+}
+
+@media (max-width: 380px) {
+  .hero-wordmark .name { font-size: 44px; }
+  .hero-research-mark { --ds-brand-mark-size: 34px; }
+  .home-main #company-search { margin-top: var(--ds-space-8); }
+  .quick-picks .label { width: 100%; margin-right: 0; }
 }

@@ -11,6 +11,7 @@ from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
+from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks
 from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
 from scrooner_pipeline.statements.classify import seed as seed_statements
@@ -21,9 +22,13 @@ from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
 from scrooner_pipeline.mapper.quality_score import calculate_piotroski
 from scrooner_pipeline.mapper.quality_flags import calculate_quality_flags
 from scrooner_pipeline.mapper.reconciliation import calculate_reconciliation
+from scrooner_pipeline.mapper.coverage_matrix import build_registry, build_coverage
 from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
+from scrooner_pipeline.mapper.coverage_snapshot import write_snapshot
+from scrooner_pipeline.parsers.main_parser import run_parser, registry_summary, PARSER_REGISTRY
+from scrooner_pipeline.mapper.main_calculator import METRIC_CALCULATOR_REGISTRY, unregistered_metrics
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -90,6 +95,21 @@ def resolve_facts_cmd(
     with get_connection() as conn:
         stats = resolve(conn, target_ciks)
     typer.echo(f"resolve-facts: {stats}")
+
+
+@app.command("resolve-concept-fallbacks")
+def resolve_concept_fallbacks_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 40: prefer-A-else-B merge for concepts needing a safe fallback
+    resolve.py's sum/first_match modes can't express (today: total_debt,
+    see mapper/concept_fallback.py's own module docstring). Run AFTER
+    resolve-facts (reads its output), BEFORE calculate/calculate-piotroski
+    (they should consume the *_resolved concept, not the original)."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = resolve_fallbacks(conn, target_ciks)
+    typer.echo(f"resolve-concept-fallbacks: {stats}")
 
 
 @app.command("seed-definitions")
@@ -273,6 +293,18 @@ def calculate_dividend_streak_cmd(
     typer.echo(f"calculate-dividend-streak: {stats}")
 
 
+@app.command("snapshot-coverage")
+def snapshot_coverage_cmd() -> None:
+    """Doc 41 (2026-09-02): compute and persist today's data-point
+    coverage (per canonical_concept, per active metric_definition, plus
+    the two aggregate avg_*_coverage_score rows) to
+    analytics.coverage_snapshot. Whole-population, no --ciks scoping --
+    run once per day after the day's calculate-family stages finish."""
+    with get_connection() as conn:
+        stats = write_snapshot(conn)
+    typer.echo(f"snapshot-coverage: {stats}")
+
+
 @app.command()
 def errors(
     stage: str = typer.Option(None, help="Restrict to one stage (resolve, calculate, growth, ttm_returns, price_metrics)."),
@@ -313,6 +345,63 @@ def validate_cmd() -> None:
     typer.echo(f"validate: {result}")
     if not result["clean"]:
         raise typer.Exit(1)
+
+
+@app.command("run-parser")
+def run_parser_cmd(
+    concept_name: str = typer.Argument(..., help=f"Registered: {sorted(PARSER_REGISTRY)}"),
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: full gap population)."),
+) -> None:
+    """Doc 42 Parser 3 architecture: run the dedicated rendered-report
+    parser registered for one canonical concept (see parsers/main_parser.py's
+    own module docstring for the 3-tier resolution order this fits into).
+    Automatically skips companies already resolved via XBRL tag matching
+    and companies this parser has already attempted before (see
+    analytics.concept_parser_attempt) -- safe and efficient to rerun."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else None
+    with get_connection() as conn:
+        result = run_parser(conn, concept_name, target_ciks)
+    typer.echo(f"run-parser {concept_name}: {result['stats']}")
+
+
+@app.command("parser-registry-summary")
+def parser_registry_summary_cmd() -> None:
+    """Read-only: for every (concept, parser) pair ever attempted, real
+    counts of matched/no_report/no_row_matched/errored -- the 'which
+    parser resolved this' view doc 42's routing table exists for."""
+    with get_connection() as conn:
+        rows = registry_summary(conn)
+    for row in rows:
+        typer.echo(f"  {row}")
+
+
+@app.command("build-coverage-matrix")
+def build_coverage_matrix_cmd() -> None:
+    """2026-09-05: the two-table coverage system (registry + per-company
+    yes/no). Rebuilds both from scratch each run -- never hand-edited,
+    can't drift from concept_mapping/metric_definition_input/
+    canonical_fact/metric_value/the ownership tables."""
+    with get_connection() as conn:
+        registry_stats = build_registry(conn)
+        coverage_stats = build_coverage(conn)
+    typer.echo(f"registry: {registry_stats}")
+    typer.echo(f"coverage: {coverage_stats}")
+
+
+@app.command("calculator-registry")
+def calculator_registry_cmd() -> None:
+    """Doc 42: for every real metric_definition, which module computes
+    it and via which CLI command. Also flags any metric this registry
+    doesn't yet know about (should be empty -- a non-empty result means
+    a new metric was seeded without updating mapper/main_calculator.py
+    in the same pass)."""
+    with get_connection() as conn:
+        missing = unregistered_metrics(conn)
+    for name in sorted(METRIC_CALCULATOR_REGISTRY):
+        entry = METRIC_CALCULATOR_REGISTRY[name]
+        typer.echo(f"  {name:<38} -> {entry['module']:<38} ({entry['cli_command']})")
+    if missing:
+        typer.echo(f"\nUNREGISTERED (fix main_calculator.py): {missing}")
 
 
 if __name__ == "__main__":

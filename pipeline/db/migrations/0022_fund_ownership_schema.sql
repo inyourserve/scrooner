@@ -57,6 +57,13 @@ create table if not exists core.fund_ownership (
     -- equivalent field, so this column doesn't exist on
     -- core.institutional_ownership.
     pct_of_fund_net_assets  numeric,
+    -- Sourced from SUBMISSION.REPORT_DATE ("Date as of which information
+    -- is reported", Item A.3.b) -- deliberately NOT REPORT_ENDING_PERIOD
+    -- ("Date of fiscal year-end", Item A.3.a per SEC's own
+    -- nport_readme.htm), a real bug this module's first version had
+    -- (see ownership/mutual_fund.py's _load_submission_lookup docstring)
+    -- that put a fund's recurring annual anchor date here instead of its
+    -- actual holdings snapshot date.
     report_period           date,
     filing_date             date,
     is_amendment            boolean not null default false,

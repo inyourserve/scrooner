@@ -30,12 +30,12 @@ import CompanySearch from "./CompanySearch.astro";
       {current === "company" ? <span aria-current="page">Company research</span> : <a href={companyHref}>Company research</a>}
       {current === "methodology" ? <span aria-current="page">Methodology</span> : <a href="/methodology/">Methodology</a>}
       {current === "data-sources" ? <span aria-current="page">Data sources</span> : <a href="/data-sources/">Data sources</a>}
-      <a href={screenerUrl}>Screener</a>
     </div>
     <CompanySearch id="global-company-search" variant="header" />
-    <a class="ds-button ds-button--primary ds-button--small open-screener" href={screenerUrl}>Open screener</a>
+    <a class="ds-button ds-button--primary ds-button--small open-screener" href={screenerUrl}>Sign in to screen</a>
   </nav>
 </header>
+<div class="public-header-spacer" aria-hidden="true"></div>
 
 <style>
   .public-skip-link {
@@ -52,7 +52,21 @@ import CompanySearch from "./CompanySearch.astro";
     transform: translateY(-160%);
   }
   .public-skip-link:focus { transform: translateY(0); }
-  .public-header { flex: none; }
+  .public-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 60;
+    flex: none;
+    border-bottom: 1px solid var(--ds-color-border-default);
+    background: color-mix(in srgb, var(--ds-color-bg-surface) 96%, transparent);
+    backdrop-filter: blur(10px);
+  }
+  .public-header-spacer {
+    flex: none;
+    height: var(--public-header-height, 72px);
+  }
   .public-nav {
     min-height: 72px;
     padding: 16px clamp(16px, 5vw, 48px);
@@ -94,4 +108,20 @@ import CompanySearch from "./CompanySearch.astro";
     .public-brand { margin-right: 0; }
     .open-screener { min-height: 38px; margin-left: auto; }
   }
+  @media (max-width: 420px) {
+    .public-nav { column-gap: 6px; }
+    .brand-name { font-size: 18px; }
+    .open-screener { padding-inline: 10px; }
+  }
 </style>
+
+<script>
+  const publicHeader = document.querySelector<HTMLElement>(".public-header");
+  if (publicHeader) {
+    const syncHeaderHeight = () => {
+      document.documentElement.style.setProperty("--public-header-height", `${publicHeader.offsetHeight}px`);
+    };
+    new ResizeObserver(syncHeaderHeight).observe(publicHeader);
+    syncHeaderHeight();
+  }
+</script>

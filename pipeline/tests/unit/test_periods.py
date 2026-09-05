@@ -58,3 +58,22 @@ def test_full_year_anchor_uses_observed_dates_not_nominal_month_day():
 
     assert build_fye_anchors(periods) == [date(2023, 6, 30), date(2024, 6, 30)]
 
+
+@pytest.mark.unit
+def test_feb_29_fye_anchor_extrapolates_without_crashing():
+    """Found live 2026-09-03 (MannKind, CIK 0000899460): a company with an
+    observed Feb 29 fiscal-year-end anchor crashed _bracket_fye's plain
+    date(candidate.year +/- 1, ...) step the moment it needed to
+    extrapolate into a non-leap year (nearly every year). Feb 29 rolls to
+    Feb 28 in a non-leap target year instead of raising ValueError."""
+    anchors = [date(2020, 2, 29)]
+
+    # Extrapolate forward past the single observed leap-year anchor --
+    # 2021/2022/2023 are all non-leap, only 2024 has a real Feb 29.
+    forward = classify_period("2023-05-15", "2023-02-16", anchors, (2, 29))
+    assert forward["period_type"] == "duration"
+
+    # Extrapolate backward the same way.
+    backward = classify_period("2019-05-15", "2019-02-16", anchors, (2, 29))
+    assert backward["period_type"] == "duration"
+

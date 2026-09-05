@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { BrandMark } from "@/components/ui/BrandMark";
-import { logout } from "@/app/auth/actions";
 import { getAuthEnvironmentStatus } from "@/lib/auth/config";
 import { createClient } from "@/lib/supabase/server";
+import { AppNavigation } from "@/components/layout/AppNavigation";
 
 export async function AppShell({ children, siteUrl }: { children: ReactNode; siteUrl: string }) {
   let signedIn = false;
@@ -16,16 +16,11 @@ export async function AppShell({ children, siteUrl }: { children: ReactNode; sit
       <a className="app-shell__skip-link" href="#main-content">Skip to main content</a>
       <header className="app-shell__header">
         <div className="app-shell__header-inner">
-          <a className="app-shell__brand" href="/screener" aria-label="Scrooner app home">
+          <a className="app-shell__brand" href={signedIn ? "/screener" : "/login"} aria-label="Scrooner app home">
             <BrandMark />
             <span>scrooner</span>
           </a>
-          <nav className="app-shell__nav" aria-label="Primary navigation">
-            <a className="app-shell__nav-link app-shell__nav-link--active" href="/screener" aria-current="page">Screener</a>
-            <a className="app-shell__nav-link" href="/saved-screens">Saved screens</a>
-            <a className="app-shell__nav-link app-shell__public-link" href={siteUrl}>Company research<span aria-hidden="true"> ↗</span></a>
-            {signedIn ? <><a className="app-shell__nav-link" href="/account">Account</a><form action={logout}><button className="app-shell__nav-action" type="submit">Sign out</button></form></> : <a className="app-shell__nav-link" href="/login">Sign in</a>}
-          </nav>
+          <AppNavigation signedIn={signedIn} siteUrl={siteUrl} />
         </div>
       </header>
       <div className="app-shell__content">{children}</div>

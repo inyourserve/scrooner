@@ -19,6 +19,30 @@ const sql = postgres(import.meta.env.DATABASE_URL, {
   prepare: false,
 });
 
+// History-depth decision (2026-08-29), mirrored from pipeline/screener/
+// resolve.py's own MIN_PERIOD_END: display/resolution boundary only, never
+// deletes anything from core/analytics. XBRL tagging predating ~2011 is
+// sparse/unreliable (27% of all core.period FY rows are pre-2015, mostly
+// pre-mandatory-XBRL era, live-checked before choosing this floor), and it
+// also guards the "most recent value" queries below against ever
+// resolving a stale or malformed period (one real bad row found live: a
+// FY period end-dated 2104-12-31) as if it were current.
+const HISTORY_FLOOR = "2015-01-01";
+
+// Upper-bound companion to HISTORY_FLOOR, added 2026-08-29 the same day
+// after finding the floor alone doesn't catch a FUTURE-dated malformed
+// period -- a real one exists (a SPAR Group, Inc. fact end-dated
+// 2104-12-31, a genuine filer XBRL context typo in their own 2016 10-K,
+// not a Scrooner bug) and 134 core.period rows total are dated more than
+// a year past today (worst: 6016-06-30). Any "most recent" query sorted
+// by period_end desc would let a future-dated row incorrectly win over
+// real current data. +30 days (not exactly today) tolerates ordinary
+// clock/timezone skew between this server and whatever wrote the row.
+// Written directly as `current_date + interval '30 days'` in each query
+// below (a fixed, non-parameterized SQL expression, not user input) --
+// the `postgres` tagged-template client would otherwise bind a JS string
+// constant as a literal VALUE, not evaluate it as SQL.
+
 export interface CompanyIdentity {
   id: number;
   cik: string;
@@ -32,6 +56,20 @@ export interface CompanyIdentity {
   sector: string | null;
   status: string;
   ticker: string | null;
+  // doc 39 (2026-08-30) -- about_text is regex-extracted from the latest
+  // 10-K's Item 1 Business section (single fetch, no history, per doc
+  // 38's case-1 reasoning); the contact fields are from company_master/
+  // contact_details.py's zero-new-fetch submissions.json parse, now at
+  // 100% active-company coverage. Both null for a company not yet
+  // covered by either pass -- honest null, not an error.
+  about_text: string | null;
+  ein: string | null;
+  business_address_line1: string | null;
+  business_address_city: string | null;
+  business_address_state: string | null;
+  business_address_zip: string | null;
+  business_phone: string | null;
+  website: string | null;
 }
 
 export async function getCompanyByTicker(ticker: string): Promise<CompanyIdentity | null> {
@@ -68,7 +106,7 @@ export async function getLatestMetrics(companyId: number): Promise<Record<string
              ) as rn
       from analytics.metric_value mv
       join analytics.metric_definition md on md.id = mv.metric_definition_id
-      where mv.company_id = ${companyId}
+      where mv.company_id = ${companyId} and mv.period_end >= ${HISTORY_FLOOR} and mv.period_end <= current_date + interval '30 days'
     )
     select metric_name, value, period_label, period_end::text, is_null_reason
     from ranked where rn = 1
@@ -95,7 +133,7 @@ export async function getLatestPublicFloat(companyId: number): Promise<PublicFlo
     from analytics.canonical_fact cf
     join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
     join core.period p on p.id = cf.period_id
-    where cf.company_id = ${companyId} and cc.name = 'public_float'
+    where cf.company_id = ${companyId} and cc.name = 'public_float' and p.end_date >= ${HISTORY_FLOOR} and p.end_date <= current_date + interval '30 days'
     order by p.end_date desc
     limit 1
   `;
@@ -113,7 +151,7 @@ export async function getLatestConceptValue(companyId: number, conceptName: stri
     from analytics.canonical_fact cf
     join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
     join core.period p on p.id = cf.period_id
-    where cf.company_id = ${companyId} and cc.name = ${conceptName}
+    where cf.company_id = ${companyId} and cc.name = ${conceptName} and p.end_date >= ${HISTORY_FLOOR} and p.end_date <= current_date + interval '30 days'
     order by p.end_date desc
     limit 1
   `;
@@ -125,6 +163,11 @@ export interface LatestPriceRow {
   symbol: string;
   bar_timestamp: string;
   feed: string;
+}
+
+export interface PriceHistoryPoint {
+  date: string;
+  price: string;
 }
 
 // doc 25 -- real Alpaca price (delayed_sip, ~15min delay). RAW ingested
@@ -184,6 +227,7 @@ export async function getStatement(companyId: number, statement: string, frequen
       on cf.canonical_concept_id = sl.canonical_concept_id and cf.company_id = ${companyId}
     left join core.period p on p.id = cf.period_id
     where sl.statement = ${statement} and (${periodFilter} or p.id is null)
+      and (p.end_date is null or (p.end_date >= ${HISTORY_FLOOR} and p.end_date <= current_date + interval '30 days'))
     order by sl.display_order, p.end_date
   `;
 
@@ -217,6 +261,7 @@ export async function getMetricHistory(companyId: number, metricName: string, ye
     from analytics.metric_value mv
     join analytics.metric_definition md on md.id = mv.metric_definition_id
     where mv.company_id = ${companyId} and md.metric_name = ${metricName} and mv.period_label = 'FY'
+      and mv.period_end >= ${HISTORY_FLOOR} and mv.period_end <= current_date + interval '30 days'
     order by mv.period_end desc
     limit ${years}
   `;
@@ -242,6 +287,34 @@ export async function getRecentFilings(companyId: number, limit = 10): Promise<F
   `;
 }
 
+// doc 39 (2026-08-30) -- core.employee_headcount_disclosure, regex-
+// extracted from the 4 most recent 10-Ks (this disclosure is confirmed
+// annual-only, not repeated in 10-Qs). Deliberately NOT sourced from
+// core.fact/analytics.canonical_fact: only ~3.5% of companies tag
+// dei:EntityNumberOfEmployees as structured XBRL (checked live -- not
+// even Apple/Microsoft/Costco do), so this table is the real coverage
+// path. is_approximate reflects the filing's own "approximately" wording
+// -- never silently dropped, since a layoff/growth reading should carry
+// that same uncertainty forward, not present a rounded figure as exact.
+export interface EmployeeHeadcountRow {
+  filing_date: string;
+  headcount: number;
+  is_approximate: boolean;
+}
+
+// doc 37 (2026-08-31) -- core.segment_revenue, parsed from each
+// company's latest 10-Q/10-K "Details" report (the standard Company
+// Facts API strips dimensional/segment XBRL entirely -- doc 22). Only
+// covers a handful of golden-set companies so far, not full population
+// -- an empty array is expected and renders nothing, same honest-gap
+// pattern as every other not-yet-scaled section on this page.
+export interface SegmentRevenueRow {
+  segment_name: string;
+  period_type: string;
+  period_end: string;
+  value: string;
+}
+
 export interface InsiderTransactionRow {
   reporting_owner_name: string;
   officer_title: string | null;
@@ -263,13 +336,17 @@ export interface InsiderTransactionRow {
 // is_10b5_1_plan (doc 23 Stage A / doc 24 Phase 1): null for any filing
 // before the rule's 2023-04-01 effective date -- shown as "—", never
 // defaulted to "discretionary."
+// MVP decision 2026-08-28: collect and display 12 months only -- mirrors
+// insider.py's MIN_FILING_DATE bound, no deep-history backfill for now.
 export async function getRecentInsiderTransactions(companyId: number, limit = 15): Promise<InsiderTransactionRow[]> {
   return sql<InsiderTransactionRow[]>`
     select reporting_owner_name, officer_title, is_director, is_officer, is_ten_percent_owner,
            transaction_date::text, transaction_code, acquired_disposed_code,
            shares::text, price_per_share::text, shares_owned_following::text, is_10b5_1_plan, accession_number
     from core.insider_transaction
-    where company_id = ${companyId} and transaction_date is not null
+    where company_id = ${companyId}
+      and transaction_date is not null
+      and transaction_date >= (current_date - interval '12 months')
     order by transaction_date desc
     limit ${limit}
   `;
@@ -306,6 +383,109 @@ export interface InstitutionalHolderRow {
   filing_date: string | null;
 }
 
+// insider_info.md Overview + Insider Ownership subsections --
+// core.insider_ownership_summary/insider_window_summary
+// (ownership/insider_summary.py). Full-population build was still in
+// progress at the time this was wired in (see doc/audit/2026-08-29's
+// display-rule addendum to insider_info.md) -- ownershipSummary is
+// legitimately `null` for a company not yet processed, same honest-null
+// discipline as every other not-yet-computed field on this page, not an
+// error state.
+export interface InsiderOwnershipSummaryRow {
+  ownership_pct: string | null;
+  shares_owned_by_insiders: string | null;
+  distinct_insiders_count: number;
+  is_null_reason: string | null;
+}
+
+export interface InsiderWindowSummaryRow {
+  window_months: number;
+  shares_bought: string;
+  shares_sold: string;
+  buy_dollar_volume: string;
+  sell_dollar_volume: string;
+  insiders_buying_count: number;
+  insiders_selling_count: number;
+  largest_purchase_owner_name: string | null;
+  largest_purchase_date: string | null;
+  largest_purchase_shares: string | null;
+  largest_purchase_price: string | null;
+  largest_purchase_value: string | null;
+  largest_sale_owner_name: string | null;
+  largest_sale_date: string | null;
+  largest_sale_shares: string | null;
+  largest_sale_price: string | null;
+  largest_sale_value: string | null;
+}
+
+// insider_info.md Institutional Ownership subsection --
+// core.institutional_ownership_summary (ownership/institutional_summary.py,
+// 2-consecutive-quarter comparison). Golden-10 only as of 2026-08-29 --
+// null for every other company, same honest-null contract as above;
+// [ticker].astro falls back to the older single-window
+// getTopInstitutionalHolders list when this is null so every company
+// still shows something.
+export interface InstitutionalTopHolderRow {
+  filer_name: string;
+  filer_cik: string;
+  shares: string;
+  value_usd: string | null;
+  ownership_pct: string | null;
+  share_change: string | null;
+  pct_change: string | null;
+  status: string;
+  report_period: string;
+}
+
+export interface InstitutionalOwnershipSummaryRow {
+  report_period_latest: string;
+  report_period_prior: string;
+  total_institutional_pct: string | null;
+  total_institutional_pct_prior: string | null;
+  qoq_change_pct: string | null;
+  total_holders: number;
+  holders_increased: number;
+  holders_decreased: number;
+  new_positions: number;
+  exited_positions: number;
+  top_holders: InstitutionalTopHolderRow[];
+}
+
+// insider_info.md Mutual Fund Ownership subsection --
+// core.fund_ownership_summary (ownership/mutual_fund_summary.py,
+// 2-consecutive-period comparison). Golden-10 only as of 2026-08-29;
+// portfolio_weight_pct/fund_family are individually honest-null per
+// holder when Form N-PORT didn't report them (doc's own "when
+// available" scoping for portfolio weight), not just at the summary
+// level.
+export interface FundTopHolderRow {
+  fund_name: string;
+  fund_cik: string;
+  fund_family: string | null;
+  shares: string;
+  value_usd: string | null;
+  ownership_pct: string | null;
+  portfolio_weight_pct: string | null;
+  share_change: string | null;
+  pct_change: string | null;
+  status: string;
+  report_period: string;
+}
+
+export interface FundOwnershipSummaryRow {
+  report_period_latest: string;
+  report_period_prior: string;
+  total_fund_ownership_pct: string | null;
+  total_fund_ownership_pct_prior: string | null;
+  change_in_pct: string | null;
+  total_funds_holding: number;
+  funds_increasing: number;
+  funds_decreasing: number;
+  new_positions: number;
+  exited_positions: number;
+  top_holders: FundTopHolderRow[];
+}
+
 interface RawStatementRow {
   statement: string;
   display_order: number;
@@ -316,10 +496,13 @@ interface RawStatementRow {
   value: string | null;
 }
 
-interface MetricHistoryRow {
-  metric_name: string;
+export interface MetricHistoryPoint {
   value: string | null;
   period_end: string;
+}
+
+interface MetricHistoryRow extends MetricHistoryPoint {
+  metric_name: string;
 }
 
 interface CompanyPageQueryRow {
@@ -332,8 +515,16 @@ interface CompanyPageQueryRow {
   institutional_holders: InstitutionalHolderRow[];
   public_float: PublicFloatRow | null;
   latest_price: LatestPriceRow | null;
+  price_history: PriceHistoryPoint[];
   book_value: string | null;
   metric_history: MetricHistoryRow[];
+  peer_companies: PeerCompanyRow[];
+  insider_ownership_summary: InsiderOwnershipSummaryRow | null;
+  insider_window_summary: InsiderWindowSummaryRow[];
+  institutional_ownership_summary: InstitutionalOwnershipSummaryRow | null;
+  fund_ownership_summary: FundOwnershipSummaryRow | null;
+  employee_headcount_history: EmployeeHeadcountRow[];
+  segment_revenue: SegmentRevenueRow[];
 }
 
 export interface CompanyPageData {
@@ -349,8 +540,17 @@ export interface CompanyPageData {
   institutionalHolders: InstitutionalHolderRow[];
   publicFloat: PublicFloatRow | null;
   latestPrice: LatestPriceRow | null;
+  priceHistory: PriceHistoryPoint[];
   bookValue: string | null;
   metricHistory: Record<string, (string | null)[]>;
+  metricTrendHistory: Record<string, MetricHistoryPoint[]>;
+  peerCompanies: PeerCompanyRow[];
+  insiderOwnershipSummary: InsiderOwnershipSummaryRow | null;
+  insiderWindowSummary: InsiderWindowSummaryRow[];
+  institutionalSummary: InstitutionalOwnershipSummaryRow | null;
+  fundSummary: FundOwnershipSummaryRow | null;
+  employeeHeadcountHistory: EmployeeHeadcountRow[];
+  segmentRevenue: SegmentRevenueRow[];
 }
 
 function assembleStatement(
@@ -408,12 +608,80 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
   const rows = await sql<CompanyPageQueryRow[]>`
     with selected_company as (
       select c.id, c.cik, c.company_name, c.sic_code, c.sic_description,
-             c.sector, c.status, l.ticker
+             c.sector, c.status, l.ticker,
+             c.about_text, c.ein, c.business_address_line1,
+             c.business_address_city, c.business_address_state,
+             c.business_address_zip, c.business_phone, c.website
       from core.company c
       join core.listing l on l.company_id = c.id
       where lower(l.ticker) = lower(${ticker})
       order by (l.effective_to is null) desc
       limit 1
+    ),
+    peer_companies_sic as (
+      -- PRIMARY peer group: exact SIC-code match -- this is the SEC's own
+      -- actual 4-digit industry classification (e.g. 3571 = "Electronic
+      -- Computers"), not the 11-bucket sector field. Real bug found live
+      -- 2026-08-30, reported directly by the user: ranking by sector
+      -- alone put Apple (SIC 3571, a hardware maker) next to a
+      -- semiconductor company, a satellite-communications company, and
+      -- prepackaged-software firms -- all correctly "Technology" sector,
+      -- none a real business-model peer. Exact SIC gives Apple 6 real
+      -- peers instead (Dell Technologies, Super Micro Computer among
+      -- them) -- checked live before switching: 276 of 388 distinct
+      -- active-company SIC codes have 3+ companies, so exact-match alone
+      -- works for most companies; distinct on company for the same
+      -- multi-listing reason as before.
+      select distinct on (c.id) c.id, l.ticker, c.company_name
+      from core.company c
+      join core.listing l on l.company_id = c.id
+      join selected_company company on company.sic_code is not null and c.sic_code = company.sic_code
+      where c.status = 'active'
+        and c.id != company.id
+        and l.effective_to is null
+        and l.ticker is not null
+      order by c.id, (l.security_type = 'Common Stock') desc nulls last
+    ),
+    peer_companies_sector as (
+      -- FALLBACK peer group: the coarser 11-bucket sector, used ONLY when
+      -- exact-SIC gives fewer than 3 peers (112 of 388 SIC codes, checked
+      -- live) -- broader-but-real beats an empty or 1-2-row table.
+      select distinct on (c.id) c.id, l.ticker, c.company_name
+      from core.company c
+      join core.listing l on l.company_id = c.id
+      join selected_company company on company.sector is not null and c.sector = company.sector
+      where c.status = 'active'
+        and c.id != company.id
+        and l.effective_to is null
+        and l.ticker is not null
+      order by c.id, (l.security_type = 'Common Stock') desc nulls last
+    ),
+    peer_companies as (
+      select id, ticker, company_name, 'industry'::text as match_basis from peer_companies_sic
+      union all
+      select id, ticker, company_name, 'sector'::text as match_basis from peer_companies_sector
+      where (select count(*) from peer_companies_sic) < 3
+        and id not in (select id from peer_companies_sic)
+    ),
+    peer_metrics as (
+      select mv.company_id, md.metric_name, mv.value,
+             row_number() over (
+               partition by mv.company_id, md.metric_name
+               order by (mv.period_label = 'TTM') desc, mv.period_end desc
+             ) as rn
+      from analytics.metric_value mv
+      join analytics.metric_definition md on md.id = mv.metric_definition_id
+      join peer_companies p on p.id = mv.company_id
+      where md.metric_name in ('roe', 'roic', 'revenue_growth_3y_cagr', 'net_margin')
+        and mv.value is not null
+        -- Real bug found live 2026-08-29: ranking peers by raw ROIC
+        -- surfaced values like 9107% and net margins like -53,774% --
+        -- the well-known ROE/ROIC/margin degeneracy for a company with
+        -- near-zero invested capital or revenue, not real outperformance.
+        -- Bounding to +/-200% excludes the formula-degenerate cases
+        -- without needing Market Cap (still 0 population-wide, blocked
+        -- on the price vendor) to filter by company size instead.
+        and (md.metric_name = 'revenue_growth_3y_cagr' or (mv.value >= -2.0 and mv.value <= 2.0))
     ),
     ranked_metrics as (
       select md.metric_name, mv.value::text as value, mv.period_label,
@@ -425,24 +693,66 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
       from analytics.metric_value mv
       join analytics.metric_definition md on md.id = mv.metric_definition_id
       join selected_company company on company.id = mv.company_id
+      where mv.period_end >= ${HISTORY_FLOOR} and mv.period_end <= current_date + interval '30 days'
+    ),
+    -- Real reporting periods (fiscal_year, fiscal_period), NOT raw
+    -- core.period rows -- found live 2026-09-05, a real bug: a single
+    -- real quarter/year routinely has 2+ distinct core.period rows
+    -- sharing (or nearly sharing) the same end_date, one 'instant'
+    -- (balance-sheet "as of") and one 'duration' (income/cash-flow
+    -- "for the period"), sometimes a third stray instant row (e.g. a
+    -- shares-outstanding-as-of-filing-date fact, dated days after the
+    -- real quarter-end). The previous 'limit 8' on 'distinct period.id'
+    -- silently counted these as separate "periods", so 8 raw-row slots
+    -- covered only ~2-4 REAL quarters -- confirmed live for AAPL,
+    -- whose real Q3 2026 has 3 separate period.id rows (631/714/784)
+    -- for what a user experiences as one quarter. This CTE now picks 8
+    -- (quarterly) / 7 (annual, matching this project's own already-
+    -- decided public-page depth policy) DISTINCT REAL periods first,
+    -- then annual_periods/quarterly_periods below pull in every
+    -- period.id belonging to those chosen periods (both instant and
+    -- duration), so assembleStatement's own per-statement-type
+    -- filtering always has a complete period to draw from.
+    annual_fiscal_periods as (
+      select distinct fact.company_id, period.fiscal_year, period.fiscal_period
+      from analytics.canonical_fact fact
+      join core.period period on period.id = fact.period_id
+      join selected_company company on company.id = fact.company_id
+      where period.fiscal_period = 'FY' and period.end_date >= ${HISTORY_FLOOR} and period.end_date <= current_date + interval '30 days'
+      order by period.fiscal_year desc
+      limit 7
+    ),
+    quarterly_fiscal_periods_distinct as (
+      select distinct fact.company_id, period.fiscal_year, period.fiscal_period
+      from analytics.canonical_fact fact
+      join core.period period on period.id = fact.period_id
+      join selected_company company on company.id = fact.company_id
+      where period.fiscal_period in ('Q1', 'Q2', 'Q3', 'Q4') and period.end_date >= ${HISTORY_FLOOR} and period.end_date <= current_date + interval '30 days'
+    ),
+    -- row_number() computed over the ALREADY-distinct set above --
+    -- computing it directly alongside 'select distinct' would number
+    -- every raw joined row (which legitimately repeats per real quarter
+    -- once per underlying instant/duration period.id), making every row
+    -- "distinct" by its own unique rn and defeating the dedup entirely.
+    quarterly_fiscal_periods as (
+      select *, row_number() over (order by fiscal_year desc, fiscal_period desc) as rn
+      from quarterly_fiscal_periods_distinct
     ),
     annual_periods as (
       select distinct period.id, period.end_date
-      from analytics.canonical_fact fact
-      join core.period period on period.id = fact.period_id
-      join selected_company company on company.id = fact.company_id
-      where period.fiscal_period = 'FY'
-      order by period.end_date desc
-      limit 8
+      from core.period period
+      join annual_fiscal_periods afp
+        on afp.company_id = period.company_id
+       and afp.fiscal_year = period.fiscal_year
+       and afp.fiscal_period = period.fiscal_period
     ),
     quarterly_periods as (
       select distinct period.id, period.end_date
-      from analytics.canonical_fact fact
-      join core.period period on period.id = fact.period_id
-      join selected_company company on company.id = fact.company_id
-      where period.fiscal_period in ('Q1', 'Q2', 'Q3', 'Q4')
-      order by period.end_date desc
-      limit 8
+      from core.period period
+      join (select * from quarterly_fiscal_periods order by rn limit 8) qfp
+        on qfp.company_id = period.company_id
+       and qfp.fiscal_year = period.fiscal_year
+       and qfp.fiscal_period = period.fiscal_period
     ),
     displayed_periods as (
       select id from annual_periods
@@ -471,8 +781,13 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
       from analytics.metric_value mv
       join analytics.metric_definition md on md.id = mv.metric_definition_id
       join selected_company company on company.id = mv.company_id
-      where md.metric_name in ('roe', 'roic', 'fcf')
+      where md.metric_name in (
+        'roe', 'roic', 'fcf', 'fcf_margin', 'revenue_growth_yoy',
+        'operating_margin', 'net_margin', 'debt_to_equity',
+        'net_debt_ebitda', 'share_dilution_trend'
+      )
         and mv.period_label = 'FY'
+        and mv.period_end >= ${HISTORY_FLOOR} and mv.period_end <= current_date + interval '30 days'
     )
     select
       jsonb_build_object(
@@ -483,7 +798,15 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
         'sic_description', company.sic_description,
         'sector', company.sector,
         'status', company.status,
-        'ticker', company.ticker
+        'ticker', company.ticker,
+        'about_text', company.about_text,
+        'ein', company.ein,
+        'business_address_line1', company.business_address_line1,
+        'business_address_city', company.business_address_city,
+        'business_address_state', company.business_address_state,
+        'business_address_zip', company.business_address_zip,
+        'business_phone', company.business_phone,
+        'website', company.website
       ) as company,
       coalesce((
         select jsonb_agg(jsonb_build_object(
@@ -533,6 +856,7 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
           from core.insider_transaction it
           where it.company_id = company.id
             and it.transaction_date is not null
+            and it.transaction_date >= (current_date - interval '12 months')
           order by it.transaction_date desc
           limit 15
         ) recent
@@ -585,7 +909,7 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
         join analytics.canonical_concept concept
           on concept.id = fact.canonical_concept_id
         join core.period period on period.id = fact.period_id
-        where fact.company_id = company.id and concept.name = 'public_float'
+        where fact.company_id = company.id and concept.name = 'public_float' and period.end_date >= ${HISTORY_FLOOR} and period.end_date <= current_date + interval '30 days'
         order by period.end_date desc
         limit 1
       ) as public_float,
@@ -601,6 +925,19 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
         order by price.price_date desc
         limit 1
       ) as latest_price,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'date', history.price_date::text,
+          'price', history.price::text
+        ) order by history.price_date)
+        from (
+          select price_date, price
+          from core.market_price_alpaca
+          where company_id = company.id
+          order by price_date desc
+          limit 3650
+        ) history
+      ), '[]'::jsonb) as price_history,
       (
         select fact.value::text
         from analytics.canonical_fact fact
@@ -609,6 +946,7 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
         join core.period period on period.id = fact.period_id
         where fact.company_id = company.id
           and concept.name = 'stockholders_equity'
+          and period.end_date >= ${HISTORY_FLOOR} and period.end_date <= current_date + interval '30 days'
         order by period.end_date desc
         limit 1
       ) as book_value,
@@ -619,7 +957,114 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
           'period_end', period_end
         ) order by metric_name, period_end desc)
         from metric_history_rows where rank <= 3
-      ), '[]'::jsonb) as metric_history
+      ), '[]'::jsonb) as metric_history,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'ticker', peer.ticker,
+          'company_name', peer.company_name,
+          'match_basis', peer.match_basis,
+          'roe', (select value::text from peer_metrics where company_id = peer.id and metric_name = 'roe' and rn = 1),
+          'roic', (select value::text from peer_metrics where company_id = peer.id and metric_name = 'roic' and rn = 1),
+          'revenue_growth_3y_cagr', (select value::text from peer_metrics where company_id = peer.id and metric_name = 'revenue_growth_3y_cagr' and rn = 1),
+          'net_margin', (select value::text from peer_metrics where company_id = peer.id and metric_name = 'net_margin' and rn = 1)
+        ) order by peer.sort_roic desc)
+        from (
+          select p.id, p.ticker, p.company_name, p.match_basis,
+                 (select value from peer_metrics where company_id = p.id and metric_name = 'roic' and rn = 1) as sort_roic
+          from peer_companies p
+          where exists (select 1 from peer_metrics where company_id = p.id and metric_name = 'roic' and rn = 1)
+          order by (select value from peer_metrics where company_id = p.id and metric_name = 'roic' and rn = 1) desc
+          limit 8
+        ) peer
+      ), '[]'::jsonb) as peer_companies,
+      (
+        select jsonb_build_object(
+          'ownership_pct', s.ownership_pct::text,
+          'shares_owned_by_insiders', s.shares_owned_by_insiders::text,
+          'distinct_insiders_count', s.distinct_insiders_count,
+          'is_null_reason', s.is_null_reason
+        )
+        from core.insider_ownership_summary s
+        where s.company_id = company.id
+      ) as insider_ownership_summary,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'window_months', w.window_months,
+          'shares_bought', w.shares_bought::text,
+          'shares_sold', w.shares_sold::text,
+          'buy_dollar_volume', w.buy_dollar_volume::text,
+          'sell_dollar_volume', w.sell_dollar_volume::text,
+          'insiders_buying_count', w.insiders_buying_count,
+          'insiders_selling_count', w.insiders_selling_count,
+          'largest_purchase_owner_name', w.largest_purchase_owner_name,
+          'largest_purchase_date', w.largest_purchase_date::text,
+          'largest_purchase_shares', w.largest_purchase_shares::text,
+          'largest_purchase_price', w.largest_purchase_price::text,
+          'largest_purchase_value', w.largest_purchase_value::text,
+          'largest_sale_owner_name', w.largest_sale_owner_name,
+          'largest_sale_date', w.largest_sale_date::text,
+          'largest_sale_shares', w.largest_sale_shares::text,
+          'largest_sale_price', w.largest_sale_price::text,
+          'largest_sale_value', w.largest_sale_value::text
+        ) order by w.window_months)
+        from core.insider_window_summary w
+        where w.company_id = company.id
+      ), '[]'::jsonb) as insider_window_summary,
+      (
+        select jsonb_build_object(
+          'report_period_latest', ios.report_period_latest::text,
+          'report_period_prior', ios.report_period_prior::text,
+          'total_institutional_pct', ios.total_institutional_pct::text,
+          'total_institutional_pct_prior', ios.total_institutional_pct_prior::text,
+          'qoq_change_pct', ios.qoq_change_pct::text,
+          'total_holders', ios.total_holders,
+          'holders_increased', ios.holders_increased,
+          'holders_decreased', ios.holders_decreased,
+          'new_positions', ios.new_positions,
+          'exited_positions', ios.exited_positions,
+          'top_holders', ios.top_holders
+        )
+        from core.institutional_ownership_summary ios
+        where ios.company_id = company.id
+      ) as institutional_ownership_summary,
+      (
+        select jsonb_build_object(
+          'report_period_latest', fos.report_period_latest::text,
+          'report_period_prior', fos.report_period_prior::text,
+          'total_fund_ownership_pct', fos.total_fund_ownership_pct::text,
+          'total_fund_ownership_pct_prior', fos.total_fund_ownership_pct_prior::text,
+          'change_in_pct', fos.change_in_pct::text,
+          'total_funds_holding', fos.total_funds_holding,
+          'funds_increasing', fos.funds_increasing,
+          'funds_decreasing', fos.funds_decreasing,
+          'new_positions', fos.new_positions,
+          'exited_positions', fos.exited_positions,
+          'top_holders', fos.top_holders
+        )
+        from core.fund_ownership_summary fos
+        where fos.company_id = company.id
+      ) as fund_ownership_summary,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'filing_date', h.filing_date::text,
+          'headcount', h.headcount,
+          'is_approximate', h.is_approximate
+        ) order by h.filing_date desc)
+        from core.employee_headcount_disclosure h
+        where h.company_id = company.id
+        limit 4
+      ), '[]'::jsonb) as employee_headcount_history,
+      coalesce((
+        select jsonb_agg(jsonb_build_object(
+          'segment_name', sr.segment_name,
+          'period_type', sr.period_type,
+          'period_end', sr.period_end,
+          'value', sr.value::text
+        ) order by sr.segment_name, sr.period_type)
+        from core.segment_revenue sr
+        where sr.company_id = company.id
+        limit 60
+      ), '[]'::jsonb) as segment_revenue
     from selected_company company
   `;
 
@@ -627,8 +1072,13 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
   if (!row) return null;
 
   const metricHistory: Record<string, (string | null)[]> = {};
+  const metricTrendHistory: Record<string, MetricHistoryPoint[]> = {};
   for (const historyRow of row.metric_history) {
     (metricHistory[historyRow.metric_name] ??= []).push(historyRow.value);
+    (metricTrendHistory[historyRow.metric_name] ??= []).push({
+      value: historyRow.value,
+      period_end: historyRow.period_end,
+    });
   }
 
   return {
@@ -644,18 +1094,40 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
     institutionalHolders: row.institutional_holders,
     publicFloat: row.public_float,
     latestPrice: row.latest_price,
+    priceHistory: row.price_history,
     bookValue: row.book_value,
     metricHistory,
+    metricTrendHistory,
+    peerCompanies: row.peer_companies,
+    insiderOwnershipSummary: row.insider_ownership_summary,
+    insiderWindowSummary: row.insider_window_summary,
+    institutionalSummary: row.institutional_ownership_summary,
+    fundSummary: row.fund_ownership_summary,
+    employeeHeadcountHistory: row.employee_headcount_history,
+    segmentRevenue: row.segment_revenue,
   };
 }
 
 // doc 19 Stage 4 -- core.institutional_ownership, matched by CUSIP against
-// SEC's bulk Form 13F data set (a single recent filing window, not a
-// multi-quarter trend -- see ownership/institutional.py's module
-// docstring). Deduplicated per filer (preferring an amendment over its
-// original, then the latest filing_date) so a manager that filed both an
-// original and an amendment in this window doesn't count its position
-// twice -- see doc/learnings/form-13f-cusip-crosswalk.md.
+// SEC's bulk Form 13F data set. Now 2 stored reporting windows per company
+// (doc 19's later upgrade) -- scoped here to whichever window has the most
+// recent filing_date, the single most-recent snapshot, not a blended
+// multi-quarter total. Deduplicated per FILER (filer_cik, not filer_name
+// text) and per FILING (accession_number, preferring an amendment over its
+// original), then SUMS every row within that one chosen filing.
+//
+// Fixed 2026-09-05, a real, serious undercounting bug: the original query
+// deduped with `distinct on (filer_name)` and kept only ONE raw row per
+// filer. A single Form 13F filing can legitimately report the SAME
+// security across multiple separate INFOTABLE rows for one filer
+// (different investment-discretion/managed-account categories) --
+// confirmed live for AAPL, "BlackRock, Inc." reports 25 separate rows, all
+// under one accession_number, all is_amendment=false, summing to ~$1.1B;
+// the old query kept only the single largest ($423.9M) and silently
+// discarded the other 24. See pipeline's mapper/expanded_metrics.py
+// (_institutional_ownership_shares) and ownership/institutional_summary.py
+// (_period_holders) for the same fix applied the same day, and
+// doc/learnings/form-13f-cusip-crosswalk.md for the original build.
 export async function getTopInstitutionalHolders(companyId: number, limit = 15): Promise<InstitutionalHolderRow[]> {
   // dedup.shares is explicitly qualified in the ORDER BY below -- an
   // earlier, unqualified `order by shares desc` silently bound to this
@@ -666,16 +1138,42 @@ export async function getTopInstitutionalHolders(companyId: number, limit = 15):
   // AAPL's real top holder (Vanguard, ~950M shares) was appearing below
   // filers holding under 10,000 shares.
   return sql<InstitutionalHolderRow[]>`
-    select filer_name, shares::text, value_usd::text, filing_date::text
-    from (
-      select distinct on (filer_name) filer_name, shares, value_usd, filing_date, is_amendment
+    select max(filer_name) as filer_name, sum(shares)::text as shares, sum(value_usd)::text as value_usd, max(filing_date)::text as filing_date
+    from core.institutional_ownership io
+    join (
+      select distinct on (filer_cik) filer_cik, accession_number
       from core.institutional_ownership
       where company_id = ${companyId}
-      order by filer_name, is_amendment desc, filing_date desc nulls last
-    ) dedup
-    order by dedup.shares desc nulls last
+        and source_zip = (
+          select source_zip from core.institutional_ownership
+          where company_id = ${companyId}
+          group by source_zip
+          order by max(filing_date) desc nulls last
+          limit 1
+        )
+      order by filer_cik, is_amendment desc, filing_date desc nulls last
+    ) chosen_filing
+      on chosen_filing.filer_cik = io.filer_cik
+     and chosen_filing.accession_number = io.accession_number
+    where io.company_id = ${companyId}
+    group by io.filer_cik
+    order by sum(shares) desc nulls last
     limit ${limit}
   `;
+}
+
+export interface PeerCompanyRow {
+  ticker: string;
+  company_name: string;
+  // "industry" = exact SIC-code match (the SEC's own real 4-digit
+  // classification, a genuine business-model peer); "sector" = the
+  // coarser 11-bucket fallback, only used when the company's exact SIC
+  // code has fewer than 3 other active companies.
+  match_basis: "industry" | "sector";
+  roe: string | null;
+  roic: string | null;
+  revenue_growth_3y_cagr: string | null;
+  net_margin: string | null;
 }
 
 export interface ExampleScreenRow {

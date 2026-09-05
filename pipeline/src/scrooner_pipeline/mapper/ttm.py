@@ -52,6 +52,27 @@ GROWTH_METRICS = {
     "revenue_growth_10y_cagr": ("revenue", 10),
     "eps_growth_5y_cagr": ("diluted_eps", 5),
     "eps_growth_10y_cagr": ("diluted_eps", 10),
+    # dps_growth_yoy/3y_cagr added 2026-08-29 -- same purely-additive
+    # dict-entry pattern as the 5Y/10Y CAGR additions above; "dps" matches
+    # this dict's existing "eps" abbreviation convention.
+    "dps_growth_yoy": ("dividends_per_share", 1),
+    "dps_growth_3y_cagr": ("dividends_per_share", 3),
+    # net_income_growth_*/diluted_shares_growth_* added 2026-09-05
+    # (financials display spec) -- same purely-additive dict-entry
+    # pattern as every prior GROWTH_METRICS addition. diluted_shares_
+    # growth_* uses shares_outstanding (this project has no separate
+    # diluted-weighted-average-shares concept yet, see
+    # doc/learnings/2026-09-05-financials-spec-gap-plan.md) -- the same
+    # concept share_dilution_trend already uses for its own rolling
+    # dilution figure, just as a real FY-vs-prior-FY series here instead
+    # of a ~1yr-ago comparison anchored on "today."
+    "net_income_growth_yoy": ("net_income", 1),
+    "net_income_growth_3y_cagr": ("net_income", 3),
+    "net_income_growth_5y_cagr": ("net_income", 5),
+    "net_income_growth_10y_cagr": ("net_income", 10),
+    "diluted_shares_growth_yoy": ("shares_outstanding", 1),
+    "diluted_shares_growth_3y_cagr": ("shares_outstanding", 3),
+    "diluted_shares_growth_5y_cagr": ("shares_outstanding", 5),
 }
 
 QUARTER_ORDER = ["Q1", "Q2", "Q3", "Q4"]
@@ -204,7 +225,7 @@ ROIC_CONCEPTS = {
     "income_before_tax": "tax_rate_denominator",
 }
 ROE_CONCEPTS = {"net_income": "numerator"}
-INSTANT_CONCEPTS = {"total_debt": "invested_capital_add", "stockholders_equity": ("invested_capital_add", "denominator"), "cash_and_equivalents": "invested_capital_subtract"}
+INSTANT_CONCEPTS = {"total_debt_resolved": "invested_capital_add", "stockholders_equity": ("invested_capital_add", "denominator"), "cash_and_equivalents": "invested_capital_subtract"}
 
 
 def _ttm_sum(by_period: dict, fiscal_year: int, fiscal_period: str) -> tuple[Decimal | None, list[int]]:
@@ -225,7 +246,7 @@ def _compute_ttm_returns_for_company(conn: psycopg.Connection, company_id: int, 
         by_concept = {name: _load_company_facts(conn, company_id, cid) for name, cid in concept_ids.items()}
         # Instant facts indexed by end_date for matching against a quarter's own balance-sheet date.
         instant_by_end_date = {}
-        for name in ("total_debt", "stockholders_equity", "cash_and_equivalents"):
+        for name in ("total_debt_resolved", "stockholders_equity", "cash_and_equivalents"):
             instant_by_end_date[name] = {end: (val, fids) for (_fy, _fp), (val, fids, _s, end) in by_concept[name].items()}
 
         # Every (fiscal_year, Q1-4) this company has ANY operating_income or net_income for.
@@ -241,7 +262,7 @@ def _compute_ttm_returns_for_company(conn: psycopg.Connection, company_id: int, 
             ttm_op_income, fids_op = _ttm_sum(by_concept["operating_income"], fy, fp)
             ttm_tax_num, fids_tax_num = _ttm_sum(by_concept["income_tax_expense"], fy, fp)
             ttm_tax_denom, fids_tax_denom = _ttm_sum(by_concept["income_before_tax"], fy, fp)
-            debt_hit = instant_by_end_date["total_debt"].get(end_date)
+            debt_hit = instant_by_end_date["total_debt_resolved"].get(end_date)
             equity_hit = instant_by_end_date["stockholders_equity"].get(end_date)
             cash_hit = instant_by_end_date["cash_and_equivalents"].get(end_date)
 
@@ -250,7 +271,7 @@ def _compute_ttm_returns_for_company(conn: psycopg.Connection, company_id: int, 
                 if ttm_op_income is None: missing.append("ttm_operating_income")
                 if ttm_tax_num is None: missing.append("ttm_income_tax_expense")
                 if ttm_tax_denom is None: missing.append("ttm_income_before_tax")
-                if debt_hit is None: missing.append("total_debt")
+                if debt_hit is None: missing.append("total_debt_resolved")
                 if equity_hit is None: missing.append("stockholders_equity")
                 if cash_hit is None: missing.append("cash_and_equivalents")
                 roic_value, roic_reason, roic_fids = None, f"incomplete:{','.join(missing)}", None
@@ -325,7 +346,7 @@ def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
     concept_ids = {
         name: _load_concept_id(conn, name)
         for name in ("operating_income", "income_tax_expense", "income_before_tax", "net_income",
-                      "total_debt", "stockholders_equity", "cash_and_equivalents")
+                      "total_debt_resolved", "stockholders_equity", "cash_and_equivalents")
     }
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))

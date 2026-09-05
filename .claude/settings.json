@@ -1,4 +1,9 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(uv run pytest *)"
+    ]
+  },
   "hooks": {
     "Stop": [
       {

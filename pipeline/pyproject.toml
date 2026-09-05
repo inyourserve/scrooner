@@ -27,6 +27,7 @@ scrooner-ownership = "scrooner_pipeline.jobs.ownership:app"
 scrooner-pilot = "scrooner_pipeline.jobs.pilot:app"
 scrooner-operations = "scrooner_pipeline.jobs.operations:app"
 scrooner-reconcile = "scrooner_pipeline.jobs.reconcile:app"
+scrooner-segments = "scrooner_pipeline.jobs.segments:app"
 
 [dependency-groups]
 dev = [

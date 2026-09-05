@@ -38,14 +38,14 @@ import BrandMark from "./BrandMark.astro";
     border-top: 1px solid var(--ds-color-border-subtle);
   }
   .footer-brand { display: flex; align-items: center; gap: var(--ds-space-2); color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-14); }
-  .footer-links { justify-self: end; display: flex; flex-wrap: wrap; gap: 22px; }
+  .footer-links { min-width: 0; justify-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px 22px; }
   .footer-links a { color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-13); text-decoration: none; }
   .footer-links a:hover { color: var(--ds-color-text-primary); }
   .footer-note { grid-column: 1 / -1; max-width: 720px; margin: 0; color: var(--ds-color-text-muted); font-size: var(--ds-font-size-12); }
 
   @media (max-width: 640px) {
     .public-footer { grid-template-columns: 1fr; }
-    .footer-links { justify-self: start; }
+    .footer-links { justify-self: stretch; justify-content: flex-start; gap: 10px 16px; }
     .footer-note { grid-column: auto; }
   }
 </style>

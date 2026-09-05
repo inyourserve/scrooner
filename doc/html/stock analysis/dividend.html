@@ -17,13 +17,6 @@
 		<link rel="apple-touch-icon" href="https://stockanalysis.com/apple-touch-icon.png" sizes="180x180" />
 		<link rel="manifest" href="/manifest.webmanifest" />
 		<meta name="apple-itunes-app" content="app-id=6751272467" />
-		<!--
-			Polyfills for older browsers that still visit the site:
-			- structuredClone (missing in Safari < 15.4 / Chrome < 98): @supabase/auth-js calls it
-			  when saving the session, so its absence broke Google login/signup entirely.
-			- Array.prototype.at (missing in Safari < 15.4 / Chrome < 92): crashed the price chart
-			  and historical data table (".at is not a function").
-		-->
 		<script>
 			if (typeof structuredClone === 'undefined') {
 				window.structuredClone = function (value) {

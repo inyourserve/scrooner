@@ -30,7 +30,7 @@ from scrooner_pipeline.mapper.ttm import _growth_value
 
 logger = structlog.get_logger()
 
-LAG_YEARS = {"fcf_growth_3y_cagr": 3, "fcf_growth_5y_cagr": 5}
+LAG_YEARS = {"fcf_growth_yoy": 1, "fcf_growth_3y_cagr": 3, "fcf_growth_5y_cagr": 5}
 
 
 def _load_fcf_fy_history(conn: psycopg.Connection, company_id: int, fcf_metric_id: int) -> dict[int, Decimal]:
@@ -119,7 +119,7 @@ def calculate_fcf_growth_for_company(conn: psycopg.Connection, company_id: int, 
 
 
 def calculate_fcf_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    metric_names = ["fcf", "fcf_growth_3y_cagr", "fcf_growth_5y_cagr"]
+    metric_names = ["fcf", "fcf_growth_yoy", "fcf_growth_3y_cagr", "fcf_growth_5y_cagr"]
     with conn.cursor() as cur:
         cur.execute("select metric_name, id from analytics.metric_definition where metric_name = any(%s)", (metric_names,))
         metric_ids = dict(cur.fetchall())

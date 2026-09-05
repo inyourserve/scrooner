@@ -1,3 +1,5 @@
+import fcntl
+import tempfile
 import time
 import threading
 from datetime import date
@@ -12,24 +14,69 @@ from scrooner_pipeline.common.config import settings
 
 logger = structlog.get_logger()
 
+DEFAULT_RATE_LIMITER_LOCK_PATH = Path(tempfile.gettempdir()) / "scrooner_sec_rate_limiter.lock"
+
 
 class _RateLimiter:
-    """Simple min-interval limiter. A solo sequential Collector doesn't need
-    a real token bucket — doc 07 just requires not exceeding a request rate,
-    and spacing requests evenly is the simplest thing that guarantees that."""
+    """Cross-process min-interval limiter via an flock-protected shared
+    state file.
 
-    def __init__(self, max_per_second: float):
+    Real bug found live 2026-08-29: the original in-memory implementation
+    (a `threading.Lock` + an instance attribute) only enforces "aggregate
+    rate <= max_per_second" within ONE process. `ownership/beneficial_ownership.py`'s
+    full-population scale-out runs as up to 10 separate OS processes
+    (`scrooner-ownership update-beneficial-ownership --ciks <chunk>`,
+    each its own `uv run` invocation), each constructing its own
+    `SECClient()` with its own independent limiter -- the true aggregate
+    rate across all of them could reach N x max_per_second (observed: 10
+    processes x 8 req/s = up to ~80 req/s, 8x over SEC's own 10 req/s
+    ceiling doc 07 documents, and 10x over this project's own
+    self-imposed "aggregate <= 8 req/s" buffer). The docstring this
+    replaces ("a solo sequential Collector doesn't need a real token
+    bucket") was true when written but stopped being true the moment any
+    caller started running multiple processes in parallel -- not
+    revisited until this fix.
+
+    `flock` (not a Postgres row or Redis) keeps this dependency-free per
+    doc 02's "no Redis/Celery for MVP" lock -- every worker process runs
+    on the same machine, so a local advisory file lock is sufficient
+    cross-process coordination, no new infrastructure needed.
+    `time.monotonic()` (via `CLOCK_MONOTONIC`) is safe to compare across
+    processes on the same machine (it's a system-wide clock, not
+    per-process) -- the one edge case (a stale timestamp from before a
+    reboot) only ever fails in the direction of under-throttling for a
+    single request, never over-throttling or crashing.
+    """
+
+    def __init__(self, max_per_second: float, lock_path: Path | None = None):
         self._min_interval = 1.0 / max_per_second
-        self._lock = threading.Lock()
-        self._last_request = 0.0
+        self._lock_path = lock_path or DEFAULT_RATE_LIMITER_LOCK_PATH
+        self._lock_path.touch(exist_ok=True)
+        # A same-process fast path still helps (avoids a syscall-heavy
+        # flock round trip for the common single-process case) but is no
+        # longer what makes this correct -- the file lock is.
+        self._local_lock = threading.Lock()
 
     def wait(self) -> None:
-        with self._lock:
-            now = time.monotonic()
-            elapsed = now - self._last_request
-            if elapsed < self._min_interval:
-                time.sleep(self._min_interval - elapsed)
-            self._last_request = time.monotonic()
+        with self._local_lock:
+            with open(self._lock_path, "r+") as f:
+                fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+                try:
+                    content = f.read().strip()
+                    try:
+                        last_request = float(content) if content else 0.0
+                    except ValueError:
+                        last_request = 0.0
+                    now = time.monotonic()
+                    elapsed = now - last_request
+                    if elapsed < self._min_interval:
+                        time.sleep(self._min_interval - elapsed)
+                    f.seek(0)
+                    f.truncate()
+                    f.write(str(time.monotonic()))
+                    f.flush()
+                finally:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
 
 class SECClient:

@@ -52,6 +52,28 @@ def _load_concept_mappings(conn: psycopg.Connection) -> dict[int, dict]:
     return result
 
 
+def _load_managed_concept_ids(conn: psycopg.Connection) -> set[int]:
+    """Every canonical_concept_id that has EVER had a concept_mapping row,
+    rejected or not -- the set resolve() is allowed to delete-then-reinsert
+    for. A concept with zero concept_mapping rows (e.g. total_debt_resolved,
+    populated only by mapper/concept_fallback.py) is deliberately excluded.
+
+    Found live 2026-09-02: resolve_for_company()'s delete was scoped only by
+    company_id, so every resolve-facts run silently wiped total_debt_resolved
+    for the whole population (it has zero mappings, so resolve() never
+    reinserted it) -- concept_fallback.py's own docstring already warned
+    "must run after resolve-facts" for exactly this reason, but nothing
+    enforced it, and two later reruns this session omitted that step,
+    losing real coverage for debt_to_equity/roic/net_cash/net_cash_per_share
+    silently until the next coverage snapshot caught it. Scoping the delete
+    to only concepts resolve() actually manages makes this structurally
+    impossible to repeat for this or any future zero-mapping concept,
+    rather than relying on operators remembering the right run order."""
+    with conn.cursor() as cur:
+        cur.execute("select distinct canonical_concept_id from analytics.concept_mapping")
+        return {row[0] for row in cur.fetchall()}
+
+
 def _load_facts(conn: psycopg.Connection, company_id: int, mapped_concept_ids: set[int]) -> list[tuple]:
     """(concept_id, period_id, value, fact_id) for every authoritative fact
     this company has under a mapped concept -- unmapped concepts never
@@ -68,7 +90,7 @@ def _load_facts(conn: psycopg.Connection, company_id: int, mapped_concept_ids: s
         return cur.fetchall()
 
 
-def resolve_for_company(conn: psycopg.Connection, company_id: int, mapping_index: dict[int, dict]) -> dict:
+def resolve_for_company(conn: psycopg.Connection, company_id: int, mapping_index: dict[int, dict], managed_concept_ids: set[int]) -> dict:
     mapped_concept_ids = {concept_id for cc in mapping_index.values() for concept_id, _priority in cc["mappings"]}
     facts = _load_facts(conn, company_id, mapped_concept_ids)
 
@@ -144,7 +166,10 @@ def resolve_for_company(conn: psycopg.Connection, company_id: int, mapping_index
     # from a clean slate for that company, same truncate-and-reload
     # discipline the Collector already applies to raw.company_universe.
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.canonical_fact where company_id = %s", (company_id,))
+        cur.execute(
+            "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = any(%s)",
+            (company_id, list(managed_concept_ids)),
+        )
         if rows:
             cur.executemany(
                 """
@@ -163,6 +188,7 @@ def resolve_for_company(conn: psycopg.Connection, company_id: int, mapping_index
 
 def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
     mapping_index = _load_concept_mappings(conn)
+    managed_concept_ids = _load_managed_concept_ids(conn)
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
@@ -175,7 +201,7 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = resolve_for_company(conn, company_id, mapping_index)
+            stats = resolve_for_company(conn, company_id, mapping_index, managed_concept_ids)
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "resolve", exc)

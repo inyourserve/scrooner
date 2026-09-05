@@ -66,9 +66,15 @@ const colors = [
           <div class="catalog-row ds-surface ds-surface--padded">
             <button class="ds-button ds-button--primary">Run screen</button>
             <button class="ds-button ds-button--secondary">Review criteria</button>
-            <button class="ds-button ds-button--ghost">Reset</button>
+            <button class="ds-button ds-button--ghost">Reset filters</button>
             <button class="ds-button ds-button--destructive">Delete screen</button>
-            <button class="ds-button ds-button--primary" disabled>Running…</button>
+          </div>
+          <div class="catalog-row ds-surface ds-surface--padded" aria-label="Button size and disabled states">
+            <button class="ds-button ds-button--primary ds-button--small">Small action</button>
+            <button class="ds-button ds-button--primary">Default action</button>
+            <button class="ds-button ds-button--primary ds-button--large">Large action</button>
+            <button class="ds-button ds-button--primary" aria-busy="true">Saving…</button>
+            <button class="ds-button ds-button--primary" disabled>Unavailable</button>
           </div>
           <div class="catalog-row ds-surface ds-surface--padded">
             <span class="ds-badge">Delayed</span>

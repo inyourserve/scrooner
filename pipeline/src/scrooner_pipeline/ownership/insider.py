@@ -47,6 +47,8 @@ never-guess discipline as the issuer_cik check above.
 """
 
 import json
+import re
+from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 from xml.etree import ElementTree as ET
 
@@ -77,6 +79,24 @@ def _decimal(value: str | None) -> Decimal | None:
         return Decimal(value)
     except InvalidOperation:
         return None
+
+
+_DATE_PREFIX = re.compile(r"^\d{4}-\d{2}-\d{2}")
+
+
+def _date(value: str | None) -> str | None:
+    """transactionDate/value is supposed to be a plain YYYY-MM-DD per the
+    Form 4 XML schema, but found live 2026-08-29: a real minority of
+    filers' own XBRL tooling appends a spurious UTC-offset suffix (e.g.
+    "2026-05-21-05:00") to what should be a bare date -- Postgres's `date`
+    column rejects that outright (InvalidDatetimeFormat), and it's
+    deterministic, not transient, so retrying the same filing never helps.
+    Keep only the leading YYYY-MM-DD; a value that doesn't even start with
+    that shape is truly malformed and left NULL rather than guessed."""
+    if value is None:
+        return None
+    match = _DATE_PREFIX.match(value.strip())
+    return match.group(0) if match else None
 
 
 def _bool(value: str | None) -> bool | None:
@@ -112,13 +132,27 @@ def _latest_submission_files(conn: psycopg.Connection, cik: str) -> list[str]:
         return [row[0] for row in cur.fetchall()]
 
 
+MIN_FILING_DATE = (date.today() - timedelta(days=365)).isoformat()  # explicit
+# MVP decision 2026-08-28: collect and display 12 months of insider activity
+# only -- deliberately NOT backfilling years of history; the dataset grows
+# naturally forward from here as this job reruns on a schedule. Superseded
+# an earlier 8-quarter/2015 bound, both looser than what's actually needed:
+# `apps/site`'s "Insider Activity" table shows only the 15 most recent
+# transactions per company (`db.ts`, `ORDER BY transaction_date DESC LIMIT
+# 15`) -- even 12 months is generous headroom over that display need, not a
+# tight fit. Computed dynamically (not a hardcoded string) so a rerun months
+# from now stays a genuine trailing 12-month window. `filing_date` is a
+# plain ISO string ("YYYY-MM-DD"), so a lexical compare is correct and
+# avoids a date-parsing dependency.
+
+
 def _load_form4_filings(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> list[dict]:
     filings: list[dict] = []
     for storage_path in _latest_submission_files(conn, cik):
         payload = json.loads(storage.download(strip_bucket_prefix(storage_path)))
         block = payload["filings"]["recent"] if "filings" in payload else payload
         for i, form in enumerate(block.get("form", [])):
-            if form in FORMS:
+            if form in FORMS and block["filingDate"][i] >= MIN_FILING_DATE:
                 filings.append(
                     {
                         "form": form,
@@ -142,7 +176,7 @@ def _parse_form4(xml_bytes: bytes) -> dict | None:
         transactions.append(
             {
                 "security_title": _text(tx, "securityTitle/value"),
-                "transaction_date": _text(tx, "transactionDate/value"),
+                "transaction_date": _date(_text(tx, "transactionDate/value")),
                 "transaction_code": _text(tx, "transactionCoding/transactionCode"),
                 "shares": _decimal(_text(tx, "transactionAmounts/transactionShares/value")),
                 "price_per_share": _decimal(_text(tx, "transactionAmounts/transactionPricePerShare/value")),
@@ -281,27 +315,43 @@ def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> di
     company gets its own fresh connection (not the caller's) specifically so
     an abandoned, still-running thread -- Python can't forcibly kill a
     thread -- never touches the connection the main loop keeps using for
-    every other company."""
-    import concurrent.futures
+    every other company.
+
+    Uses a raw `threading.Thread(daemon=True)`, NOT
+    `concurrent.futures.ThreadPoolExecutor` -- found live 2026-08-28 that
+    the timeout logic fired correctly (logged "company_timed_out" right on
+    schedule) but the CLI *process* still didn't exit for another 10+
+    minutes. Cause: ThreadPoolExecutor's worker threads are non-daemon by
+    default, and Python's interpreter will not exit while any non-daemon
+    thread is still alive -- so an abandoned, still-blocked worker thread
+    silently kept the whole process (and the orchestrator's
+    `subprocess.run()` waiting on it) alive well past the logical timeout,
+    for a SOLO chunk where that was the only company left to process. A
+    daemon thread doesn't have this problem -- the interpreter can exit
+    immediately after the timeout fires, abandoned thread or not."""
+    import queue
+    import threading
 
     from scrooner_pipeline.db.connection import get_connection
 
-    def _work() -> dict:
-        with get_connection() as company_conn:
-            return update_insider_transactions_for_company(company_conn, sec, company_id, cik)
+    result_queue: queue.Queue = queue.Queue(maxsize=1)
 
-    # Deliberately NOT a `with` block: ThreadPoolExecutor.__exit__ calls
-    # shutdown(wait=True), which blocks until the submitted task actually
-    # finishes -- exactly the unbounded wait this whole function exists to
-    # avoid. found live 2026-08-28: the timeout never fired because of this
-    # exact bug, still stuck past the 300s cap. A pool is created fresh per
-    # call and deliberately abandoned (never shut down) on timeout -- the
-    # orphaned thread keeps running against its own dedicated connection,
-    # harmless to everything else, and disappears whenever this whole CLI
-    # process is eventually restarted between chunk retries.
-    pool = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-    future = pool.submit(_work)
-    return future.result(timeout=PER_COMPANY_TIMEOUT_SECONDS)
+    def _work() -> None:
+        try:
+            with get_connection() as company_conn:
+                result_queue.put(("ok", update_insider_transactions_for_company(company_conn, sec, company_id, cik)))
+        except Exception as exc:  # noqa: BLE001 -- re-raised on the caller's side below
+            result_queue.put(("error", exc))
+
+    thread = threading.Thread(target=_work, daemon=True)
+    thread.start()
+    thread.join(timeout=PER_COMPANY_TIMEOUT_SECONDS)
+    if thread.is_alive():
+        raise TimeoutError(f"company {cik} exceeded {PER_COMPANY_TIMEOUT_SECONDS}s")
+    status, payload = result_queue.get_nowait()
+    if status == "error":
+        raise payload
+    return payload
 
 
 def update_insider_transactions(conn: psycopg.Connection, ciks: set[str]) -> dict:

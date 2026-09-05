@@ -45,6 +45,7 @@ def test_resolution_honors_tag_priority_sum_mode_and_source_lineage(monkeypatch)
         100: {"combination_mode": "first_match", "mappings": [(1, 1), (2, 2)]},
         200: {"combination_mode": "sum", "mappings": [(3, 1), (4, 2)]},
     }
+    managed_concept_ids = {100, 200}
     facts = [
         (1, 10, Decimal("10"), 101),
         (2, 10, Decimal("99"), 102),
@@ -55,7 +56,7 @@ def test_resolution_honors_tag_priority_sum_mode_and_source_lineage(monkeypatch)
     monkeypatch.setattr(resolve, "_load_facts", lambda _conn, _company, _mapped: facts)
     conn = WriteConnection()
 
-    stats = resolve.resolve_for_company(conn, 7, mapping_index)
+    stats = resolve.resolve_for_company(conn, 7, mapping_index, managed_concept_ids)
     rows = {(r["canonical_concept_id"], r["period_id"]): r for r in conn.inserted_rows}
 
     assert stats == {"resolved": 3, "unresolved_concepts": 0}
@@ -65,6 +66,30 @@ def test_resolution_honors_tag_priority_sum_mode_and_source_lineage(monkeypatch)
     assert rows[(200, 10)]["value"] == Decimal("7")
     assert rows[(200, 10)]["source_fact_ids"] == [104, 105]
     delete_sql, params = conn.executed[0]
-    assert delete_sql == "delete from analytics.canonical_fact where company_id = %s"
-    assert params == (7,)
+    assert delete_sql == "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = any(%s)"
+    assert params[0] == 7
+    assert set(params[1]) == managed_concept_ids
+
+
+@pytest.mark.unit
+def test_delete_never_touches_a_zero_mapping_concept(monkeypatch):
+    """The real 2026-09-02 bug: total_debt_resolved has zero concept_mapping
+    rows by design (populated only by mapper/concept_fallback.py, never by
+    resolve()) -- a resolve-facts run must never delete its rows, even
+    though it appears in mapping_index with an empty mappings list (every
+    canonical_concept does, mapped or not)."""
+    mapping_index = {
+        100: {"combination_mode": "first_match", "mappings": [(1, 1)]},
+        999: {"combination_mode": "first_match", "mappings": []},  # total_debt_resolved-shaped: zero mappings
+    }
+    managed_concept_ids = {100}  # 999 deliberately excluded -- it has no concept_mapping rows at all
+    monkeypatch.setattr(resolve, "_load_facts", lambda _conn, _company, _mapped: [(1, 10, Decimal("5"), 101)])
+    conn = WriteConnection()
+
+    resolve.resolve_for_company(conn, 7, mapping_index, managed_concept_ids)
+
+    delete_sql, params = conn.executed[0]
+    assert "canonical_concept_id = any(%s)" in delete_sql
+    assert 999 not in params[1]
+    assert set(params[1]) == {100}
 

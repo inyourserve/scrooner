@@ -30,6 +30,7 @@
 - [`06_Scrooner_Project_Breakdown_and_Execution_Plan.md`](foundational/06_Scrooner_Project_Breakdown_and_Execution_Plan.md) — the 14 parts, module breakdown
 - [`07_SEC_EDGAR_Rules_and_Data_Guide.md`](foundational/07_SEC_EDGAR_Rules_and_Data_Guide.md) — every EDGAR API/bulk URL, access rules, form types
 - [`12_Scrooner_Edgar_Python_Plugin_Usage.md`](foundational/12_Scrooner_Edgar_Python_Plugin_Usage.md) — `edgartools` verification-layer usage
+- [`38_Scrooner_History_Depth_Gate.md`](foundational/38_Scrooner_History_Depth_Gate.md) — **mandatory gate, check before writing any new fetch or widening an existing one's date range.** A 5-case decision tree keyed on the source's real refiling cadence (mandatory-every-period / per-transaction / only-if-changed / already-self-comparing), not one blanket rule; hard ceiling of 2015-01-01 either way. Written after `beneficial_ownership.py` was found with no history bound at all, needing a 90% (193,751-row) DB cleanup once fixed
 
 ## Requirements / domain reference
 
@@ -56,7 +57,7 @@ Each pair: the plan, then the Definition-of-Done evidence proving it was actuall
 | AI Query Engine | [`15`](execution-plans/15_Scrooner_AI_Query_Engine_Execution_Plan.md) | [`15b`](execution-plans/15b_AI_Query_Engine_Definition_of_Done_Evidence.md) |
 | Backend API | [`16`](execution-plans/16_Scrooner_Backend_API_Execution_Plan.md) | [`16b`](execution-plans/16b_Backend_API_Definition_of_Done_Evidence.md) |
 | Company Page | [`17`](execution-plans/17_Scrooner_Company_Page_Reference_and_MVP_Plan.md) | (evidence inline in doc 17 + `learnings/company-page-mvp.md`) |
-| Ownership & Insider Activity | [`19`](execution-plans/19_Scrooner_Ownership_and_Insider_Activity_Plan.md) | (evidence inline + `learnings/ownership-and-8k-discovery.md`, `learnings/form-13f-cusip-crosswalk.md`) |
+| Ownership & Insider Activity | [`19`](execution-plans/19_Scrooner_Ownership_and_Insider_Activity_Plan.md) | (evidence inline + `learnings/ownership-and-8k-discovery.md`, `learnings/form-13f-cusip-crosswalk.md`; full-population insider scale-out + institutional/mutual-fund 2-window builds evidenced in `learnings/2026-08-29-ownership-scale-out-and-zero-fetch-metrics.md`) |
 | Alpaca Market Price + price metrics | [`25`](execution-plans/25_Scrooner_Alpaca_Market_Price_Integration_Plan.md) | (evidence inline, §7-11) |
 
 ## Scoping / evaluation docs (proposals — check status line for what's actually built)
@@ -67,19 +68,27 @@ Each pair: the plan, then the Definition-of-Done evidence proving it was actuall
 - [`27_Scrooner_Decision_Dataset_Study_Gap_Analysis.md`](scoping/27_Scrooner_Decision_Dataset_Study_Gap_Analysis.md) — cross-references `perplexity-decision-dataset-study.md` against build state; UX ideas for doc 24 Phase 3
 - [`28_Scrooner_Trendlyne_Data_Point_Gap_Analysis.md`](scoping/28_Scrooner_Trendlyne_Data_Point_Gap_Analysis.md) — cross-references a live Trendlyne stock page against build state; ranks new candidates (R&D Expense, Interest Income, ownership-by-category, ownership trend, Beta, Congressional trading disclosures)
 - [`29_Scrooner_Personalized_Key_Metrics_Plan.md`](scoping/29_Scrooner_Personalized_Key_Metrics_Plan.md) — a concrete plan for letting a logged-in user customize the company page's Key Metrics bar; gated on Part 9 (User System) existing first
+- [`insider_info.md`](scoping/insider_info.md) — user-supplied product spec, **Locked (2026-08-25)**, for the Ownership page section's full MVP scope (Insider/Institutional 13F/Mutual Fund N-PORT subsections + Overview + disclosure requirement); kept under its original filename rather than renumbered since other docs already cite it by name. Underlying data for all three subsections is built (2026-08-29); the unified frontend page section is not
+- [`37_Scrooner_Segment_Revenue_Scoping.md`](scoping/37_Scrooner_Segment_Revenue_Scoping.md) — revenue-by-business-segment for the top 100 companies by revenue (Market Cap unusable for universe selection — still 0 population-wide; a real `dei:EntityPublicFloat` data-quality bug found live rules that out too). Grounded in a real inspection of Apple's actual 10-K filing structure: the R.htm auto-rendered disclosure tables (not raw XBRL dimensional parsing) are the practical path. Scope only, nothing built
+- [`39_Scrooner_Employee_Headcount_Full_Coverage_Plan.md`](scoping/39_Scrooner_Employee_Headcount_Full_Coverage_Plan.md) — closing the gap from the XBRL-only `dei:EntityNumberOfEmployees` tag covering only ~3.5% of active companies (even Apple/Microsoft/Costco don't tag it). Grounded in real 10-K text pulled live for all three — confirms the data exists as prose in each company's "Human Capital" section, plus a real hazard found in the same pass (a naive parse matches garbage from hidden inline-XBRL metadata unless properly stripped first). Proposes a two-tier regex-now/LLM-later extractor (mirrors doc 15's AI Query Engine precedent) and a new `core.employee_headcount_disclosure` table, kept separate from `core.fact` rather than blended with authoritative XBRL data. Scope only, nothing built
 
 ## Planning / backlog (sequencing across everything above)
 
 - [`20_Scrooner_Remaining_Work_End_to_End_Plan.md`](planning/20_Scrooner_Remaining_Work_End_to_End_Plan.md) — superseded by doc 24 for sequencing; §3's open-decisions table still accurate
 - [`24_Scrooner_Final_Build_Backlog.md`](planning/24_Scrooner_Final_Build_Backlog.md) — **current**, supersedes doc 20
+- [`41_Scrooner_Coverage_Improvement_Plan.md`](planning/41_Scrooner_Coverage_Improvement_Plan.md) — **living, started 2026-09-02**. The tactical score-and-tag-list doc: defines `avg_metric_coverage_score`/`avg_concept_coverage_score` (`analytics.coverage_snapshot`, `scrooner-map snapshot-coverage`), the day-by-day trend (79.41%→56.85% as of 2026-09-03, corrected for bugs found along the way), and a ranked, tag-by-tag candidate-verification table (what's shipped, what's correctly rejected with evidence).
+- [`42_Scrooner_Multi_Parser_Coverage_Architecture_Plan.md`](planning/42_Scrooner_Multi_Parser_Coverage_Architecture_Plan.md) — **living, started 2026-09-03**. The strategic study doc: root-causes every "should be near-100%" mandatory GAAP concept by sampling its real missing companies (finding `current_assets`/`operating_income`'s real ~80-85% ceiling is structural — banks/insurers/REITs use an unclassified statement format, not a tag-mapping gap), designs a 4-parser architecture (XBRL tags, cover-page text, rendered-report tables, sector-specific concept profiles) instead of relying on one extraction method, and formalizes the measure→sample→root-cause→verify→ship loop this week's real work already validated three times.
 
 ## Reference (non-canonical, kept for detail doc 01-26 don't repeat)
 
+- [`36_Scrooner_SEC_Filing_Types_Reference.md`](reference/36_Scrooner_SEC_Filing_Types_Reference.md) — one section per SEC filing type (10-K through S-1): what it legally covers, exactly what Scrooner's real code extracts from it, why it matters. Found N-PORT built but still described as "not built" in docs 21/22/root CLAUDE.md.
+- [`40_Scrooner_XBRL_Tag_Coverage_Library.md`](reference/40_Scrooner_XBRL_Tag_Coverage_Library.md) — a real, live-generated inventory of what XBRL tags companies actually use per canonical concept (`pipeline/scripts/build_tag_coverage_library.py` → `pipeline/reference/xbrl_tag_coverage_library.json`), built after a real `total_debt` double-counting risk was found and fixed via a new `concept_fallback.py` fallback-resolver pattern. Key finding: keyword-matched candidate tags are frequently semantically wrong (R&D candidate was a deferred-tax-asset tag, goodwill candidate explicitly excludes goodwill) — every candidate still needs live spot-check verification before use, most of the 44 concepts' candidates remain unverified.
 - [`DOCUMENTATION.md`](reference/DOCUMENTATION.md) — URL structure, repo layout, implementation detail. Where it conflicts with 01-26 on a *decision*, 01-26 wins (see root `CLAUDE.md`'s "known conflicts" note).
 - [`claude-code-guide.md`](reference/claude-code-guide.md) — how to build a skill/subagent/slash-command, for whoever needs one next
 
 ## Subdirectories
 
+- [`audit/`](audit/) — dated, point-in-time inspections of an existing built feature (data-point/investor-value quality, frontend component-system quality), not a build plan or a status tracker. Filename is `YYYY-MM-DD_topic.md`, not numbered.
 - [`learnings/`](learnings/) — 43 entries covering product, design, architecture, and engineering: what broke or was clarified, how it was actually found, and the generalizable lesson. Not a decision doc — read to avoid rediscovering a solved problem.
 - [`adr/`](adr/) — Architecture Decision Records for consequential, hard-to-reverse technical calls. Currently just the template; none written yet (no call has needed one).
 - [`html/`](html/) — reference source material (e.g. `screener.html`, the real Screener.in page doc 17's analysis was grounded in; `trendlyne-apple.html`, doc 28's grounding), not documentation itself.
@@ -91,13 +100,14 @@ Each pair: the plan, then the Definition-of-Done evidence proving it was actuall
 ```
 doc/
 ├── README.md                 this index — stays at the root
-├── foundational/             01,02,03,04,05,06,07,12 — rarely change
+├── foundational/             01,02,03,04,05,06,07,12,38 — rarely change
 ├── requirements/              10,18,26 + screener-criteria-study.md
 ├── execution-plans/           08,08b,09,09b,11,11b,13,13b,14,14b,15,15b,16,16b,17,19,25
-├── scoping/                    21,22,23 — proposals, not builds
+├── scoping/                    21,22,23,27,28,29,37 + insider_info.md — proposals, not builds
 ├── planning/                   20,24 — sequencing/backlog
-├── reference/                  DOCUMENTATION.md, claude-code-guide.md
+├── reference/                  36, DOCUMENTATION.md, claude-code-guide.md
 ├── status/                     PROGRESS.md, DATA_COVERAGE.md, SCORECARD.md — living trackers
+├── audit/                      dated point-in-time feature inspections (YYYY-MM-DD_topic.md)
 ├── learnings/                  unchanged — day-by-day journal
 ├── adr/                        unchanged — Architecture Decision Records
 ├── html/                       unchanged — reference source material
@@ -109,4 +119,4 @@ doc/
 
 ## Numbering convention (for the next doc)
 
-Docs are numbered in the order they were written, not by topic — there's no gap-filling. The next new doc is `27_Scrooner_<Name>.md`, placed directly in whichever topic folder above fits it (an execution plan goes in `execution-plans/`, a scoping proposal in `scoping/`, etc.) — the number is a write-order identity, the folder is just where it physically lives. A `b`-suffixed doc (`NNb_`) is always a Definition-of-Done evidence report paired with plan `NN`, filed alongside it in the same folder. Living/reference docs (`PROGRESS.md`, `SCORECARD.md`, `DATA_COVERAGE.md`, `DOCUMENTATION.md`, `claude-code-guide.md`) stay unnumbered and live in `status/` or `reference/` per the table above.
+Docs are numbered in the order they were written, not by topic — there's no gap-filling. The next new doc is `43_Scrooner_<Name>.md` (highest so far: doc 42) — check this file's own tables above for the current highest number before assuming one, since this line itself has gone stale before. Place it directly in whichever topic folder above fits it (an execution plan goes in `execution-plans/`, a scoping proposal in `scoping/`, etc.) — the number is a write-order identity, the folder is just where it physically lives. A `b`-suffixed doc (`NNb_`) is always a Definition-of-Done evidence report paired with plan `NN`, filed alongside it in the same folder. Living/reference docs (`PROGRESS.md`, `SCORECARD.md`, `DATA_COVERAGE.md`, `DOCUMENTATION.md`, `claude-code-guide.md`) stay unnumbered and live in `status/` or `reference/` per the table above.

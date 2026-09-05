@@ -62,6 +62,27 @@ ResearchAndDevelopmentExpense` resolves for 5 companies/427 facts;
 (a cleaner match than two other interest-income tag variants checked,
 which covered only 1-2 companies each). Both single-tag, first_match by
 convention, no overlap risk checked (only one tag used for either).
+
+employee_count added 2026-08-29, acting on doc/execution-plans/
+30_Data_Moat_Full_Population_Strengthening_Plan.md Track 6 #1 (a real
+Finviz AAPL page comparison): dei:EntityNumberOfEmployees is a real,
+unmapped, already-fetched cover-page tag -- checked live before adding
+(not just trusted the doc's earlier count, which predates the
+full-population expansion): 1,941 real fact rows across 178 companies
+as of 2026-08-29, values sanity-checked plausible (Leidos 50,000,
+Cleveland-Cliffs 25,000). statement='balance_sheet' by the same
+practical-bucket convention public_float already uses -- neither is
+really a balance-sheet line item, but canonical_concept.statement only
+has 3 values and this project doesn't yet have a 4th bucket for dei
+cover-page facts. A small real data-quality note, not acted on: ~2.5%
+of raw fact rows (48/1,941) are tagged with a non-employee-count unit
+(usd, shares) -- almost certainly genuine filer tagging errors in a
+small number of real filings, not a bug in this mapping. Left
+unfiltered, matching this project's existing precedent (no other
+single-tag concept unit-filters either) -- the Normalizer's own
+dedupe/is_authoritative logic is the layer that already handles a
+conflicting value for the same company/period, not the Mapper's
+concept_mapping layer.
 """
 
 import psycopg
@@ -113,6 +134,25 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
      "'pure' decimal-fraction ratio (e.g. 0.156 = 15.6%), same scale as the internally-derived "
      "income_tax_expense/income_before_tax rate ROIC already computes -- feeds "
      "effective_tax_rate_gap as a cross-check, not a replacement. 93 companies/7,113 facts."),
+    ("employee_count", "balance_sheet", "first_match",
+     "dei:EntityNumberOfEmployees, a cover-page fact -- 178 companies/1,941 facts as of 2026-08-29. "
+     "statement bucket follows public_float's own precedent (neither is really a balance-sheet line item)."),
+    ("bdc_total_investment_income", "income_statement", "first_match",
+     "A Business Development Company / closed-end fund's real top-line figure -- checked live "
+     "2026-09-04: 44 real active companies (Ares Capital, Main Street Capital, Prospect Capital, "
+     "Goldman Sachs BDC, etc.) surfaced entirely without a `sic_description` (a real classification "
+     "gap this project's own data inherited from SEC, not fixed here) and with zero `revenue` "
+     "coverage -- because a BDC's income statement genuinely has no revenue line at all, it starts "
+     "from 'Total investment income' (interest/dividend/fee income from its portfolio). Deliberately "
+     "a SEPARATE concept, never added as a `revenue` fallback tag -- doc 42 Part 4's own reasoning "
+     "for banks/insurers/REITs applies identically here: blending a lending business's investment "
+     "income into `revenue` would silently corrupt gross_margin/revenue_growth and every other ratio "
+     "that assumes a product company's cost structure. 118 real companies use this tag "
+     "population-wide (broader than the original 44-BDC sample -- other closed-end funds too), "
+     "verified via real values (ARCC $768.0M for the quarter ended 2026-06-30, matching its own "
+     "rendered 'Total investment income' statement line exactly). No downstream metric_definition "
+     "wired to this concept yet -- this pass only closes the raw-data gap (traceable, screenable via "
+     "a future dedicated metric), same 'data layer first' sequencing as segment_revenue.py."),
 ]
 
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
@@ -138,6 +178,14 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
     ("comprehensive_income", "us-gaap", "ComprehensiveIncomeNetOfTax", 1, "approved", ""),
     ("amortization_of_intangibles", "us-gaap", "AmortizationOfIntangibleAssets", 1, "approved", ""),
     ("effective_tax_rate_reported", "us-gaap", "EffectiveIncomeTaxRateContinuingOperations", 1, "approved", ""),
+    ("employee_count", "dei", "EntityNumberOfEmployees", 1, "approved", ""),
+    ("bdc_total_investment_income", "us-gaap", "GrossInvestmentIncomeOperating", 1, "approved",
+     "Verified 2026-09-04 against 118 real active companies (35 of the original 44 hand-sampled "
+     "BDCs, plus other closed-end funds) -- values sanity-checked plausible and correctly scaled "
+     "(ARCC's own rendered statement line 'Total investment income' = $768.0M, exact match). "
+     "9 of the original 44 BDCs use no gross tag at all, only NetInvestmentIncome (post-expense) "
+     "or per-share/ratio variants -- deliberately NOT added as a fallback here, since substituting "
+     "a net figure for a gross concept would be silently wrong, not just incomplete."),
 ]
 
 

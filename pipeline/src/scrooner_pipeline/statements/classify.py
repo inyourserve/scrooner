@@ -84,7 +84,7 @@ STATEMENT_LINES: list[tuple[str, int, str, str]] = [
     ("balance_sheet", 3, "Property, Plant & Equipment", "ppe_net"),
     ("balance_sheet", 4, "Total Assets", "total_assets"),
     ("balance_sheet", 5, "Current Liabilities", "current_liabilities"),
-    ("balance_sheet", 6, "Total Debt", "total_debt"),
+    ("balance_sheet", 6, "Total Debt", "total_debt_resolved"),  # doc 40, 2026-09-02 -- prefers combined tag, falls back to split-tag sum
     ("balance_sheet", 7, "Total Liabilities", "total_liabilities"),
     ("balance_sheet", 8, "Stockholders' Equity", "stockholders_equity"),
     ("cash_flow", 1, "Cash from Operations", "cfo"),

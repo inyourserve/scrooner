@@ -8,6 +8,8 @@ import structlog
 import typer
 
 from scrooner_pipeline.company_master.identity import update_identity
+from scrooner_pipeline.company_master.contact_details import update_contact_details
+from scrooner_pipeline.company_master.employee_headcount import process_companies as process_employee_headcount
 from scrooner_pipeline.company_master.sector_bucket import update_sector
 from scrooner_pipeline.company_master.history import update_history
 from scrooner_pipeline.company_master.status import update_status
@@ -45,6 +47,35 @@ def update_identity_cmd(
     with get_connection() as conn:
         stats = update_identity(conn, target_ciks)
     typer.echo(f"update-identity: {stats}")
+
+
+@app.command("update-contact-details")
+def update_contact_details_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Zero-new-fetch coverage pass (2026-08-29): parse ein/business address/
+    phone out of each company's already-stored raw.sec_submissions payload
+    into core.company -- NOT from XBRL/core.fact, which was checked live and
+    confirmed to not carry these unitless dei text fields at all."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = update_contact_details(conn, target_ciks)
+    typer.echo(f"update-contact-details: {stats}")
+
+
+@app.command("update-employee-headcount")
+def update_employee_headcount_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """Doc 39: fetch the 4 most recent 10-Ks per company (annual-only
+    disclosure -- confirmed no 10-Q repeats it), extract employee
+    headcount via regex over cleaned visible text, store latest 10-K's
+    About text. Genuinely new fetch (10-K primary document bodies aren't
+    currently stored anywhere) -- NOT zero-fetch like update-contact-details."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = process_employee_headcount(conn, target_ciks)
+    typer.echo(f"update-employee-headcount: {stats}")
 
 
 @app.command("update-history")

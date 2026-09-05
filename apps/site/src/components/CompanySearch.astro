@@ -65,6 +65,7 @@ const messageId = `${id}-message`;
   } from "../lib/companySearch";
 
   const RECENT_STORAGE_KEY = "scrooner.recent-companies.v1";
+  const MAX_CACHED_SEARCHES = 30;
   const requestCache = new Map<string, Promise<SearchCompany[]>>();
 
   function loadRecentCompanies(): SearchCompany[] {
@@ -107,6 +108,10 @@ const messageId = `${id}-message`;
         throw error;
       });
     requestCache.set(normalized, request);
+    if (requestCache.size > MAX_CACHED_SEARCHES) {
+      const oldest = requestCache.keys().next().value;
+      if (oldest) requestCache.delete(oldest);
+    }
     return request;
   }
 
@@ -363,11 +368,11 @@ const messageId = `${id}-message`;
   .company-finder--header .company-finder-control { min-height: 40px; padding: 4px 12px; border-radius: var(--ds-radius-md); }
   .company-finder--header .company-finder-icon { width: 17px; height: 17px; }
   .company-finder--header input { font-size: var(--ds-font-size-13); }
-  .company-finder--hero { width: min(680px, 100%); }
-  .company-finder--hero .company-finder-control { min-height: 72px; padding: 14px 20px; gap: var(--ds-space-3); border-width: 1.5px; border-radius: var(--ds-radius-feature); box-shadow: var(--ds-shadow-surface); }
+  .company-finder--hero { width: min(720px, 100%); }
+  .company-finder--hero .company-finder-control { min-height: 60px; padding: 10px 18px; gap: var(--ds-space-3); border-width: 1px; border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-surface); }
   .company-finder--hero .company-finder-control:focus-within { box-shadow: 0 0 0 4px var(--ds-color-action-subtle), var(--ds-shadow-surface); }
   .company-finder--hero .company-finder-icon { width: 22px; height: 22px; }
-  .company-finder--hero input { font-size: 17px; }
+  .company-finder--hero input { font-size: var(--ds-font-size-16); }
   .company-finder-panel {
     position: absolute;
     z-index: 60;

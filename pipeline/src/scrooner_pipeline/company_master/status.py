@@ -42,7 +42,14 @@ Four states, deliberately not three:
   common stock (checked live via SEC fetch, not inferred from form type
   alone) -- checked BEFORE the recency logic below, since a deregistered
   company's 10-K/10-Q history is expected to just stop, which recency
-  alone would otherwise misreport as merely "stale."
+  alone would otherwise misreport as merely "stale." AND (found live
+  2026-09-02) no qualifying 10-K/10-Q was filed after that Form 15's own
+  date -- 222 real active companies (AMD, Intel, HP, Caterpillar, US
+  Bancorp among them) had a "common stock" Form 15 confirmed correctly by
+  the cover-page check above, yet 192 of them kept filing real 10-Ks/10-Qs
+  for years or decades afterward. A cover-page match alone isn't proof the
+  company itself went dark -- see `_load_latest_form15_dates`'s own
+  docstring for the fix.
 - active: a 10-K or 10-Q filed within STALE_THRESHOLD_DAYS
 - stale: no qualifying filing within that window, reason unconfirmed --
   NEVER 'delisted' unless the real, confirmed common-stock signal above
@@ -116,6 +123,32 @@ def _load_latest_filing_dates(conn: psycopg.Connection, company_ids: list[int]) 
         return dict(cur.fetchall())
 
 
+def _load_latest_form15_dates(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, date | None]:
+    """Newest Form 15/15F filing_date per company -- used to sanity-check a
+    confirmed common-stock deregistration signal against filing recency
+    (see module docstring, 2026-09-02 finding: AMD/Intel/HP/Caterpillar/US
+    Bancorp and 188 others all had a decades-old Form 15-12G on record, each
+    followed by continuous real 10-K/10-Q filings for years or decades
+    after -- almost certainly a historical Section 12(g)-to-12(b) exchange
+    up-listing or a specific security-class deregistration under a shared
+    CIK, not the company going private. A confirmed 'common stock' cover-
+    page match is not sufficient on its own once a qualifying filing exists
+    after it."""
+    if not company_ids:
+        return {}
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select company_id, max(filing_date)
+            from core.filing
+            where company_id = any(%s) and form = any(%s) and filing_date is not null
+            group by company_id
+            """,
+            (company_ids, sorted(DEREGISTRATION_FORMS)),
+        )
+        return dict(cur.fetchall())
+
+
 def _load_candidate_deregistrations(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, list[tuple[str, str]]]:
     """company_id -> [(cik, accession_number), ...] for every Form 15/15F
     filing on record -- candidates only, NOT yet confirmed as a real
@@ -163,6 +196,12 @@ def compute_status(latest_filing_date: date | None, as_of: date, is_deregistered
     return "stale", f"no_filing_since:{latest_filing_date.isoformat()}"
 
 
+def _deregistration_overridden_by_later_filing(latest_filing_date: date | None, form15_date: date | None) -> bool:
+    """True when a real qualifying 10-K/10-Q was filed after the newest
+    Form 15/15F on record -- see module docstring's 2026-09-02 finding."""
+    return latest_filing_date is not None and form15_date is not None and latest_filing_date > form15_date
+
+
 def update_status(conn: psycopg.Connection, ciks: set[str], as_of: date | None = None) -> dict:
     as_of = as_of or date.today()
     with conn.cursor() as cur:
@@ -171,12 +210,13 @@ def update_status(conn: psycopg.Connection, ciks: set[str], as_of: date | None =
 
     company_ids = list(company_id_by_cik.values())
     latest_by_company = _load_latest_filing_dates(conn, company_ids)
+    form15_by_company = _load_latest_form15_dates(conn, company_ids)
     candidates = _load_candidate_deregistrations(conn, company_ids)
     with SECClient() as sec:
         deregistered_company_ids = _confirm_deregistered_company_ids(sec, candidates)
 
     rows = []
-    stats = {"considered": 0, "active": 0, "stale": 0, "unknown": 0, "delisted": 0, "no_company": 0}
+    stats = {"considered": 0, "active": 0, "stale": 0, "unknown": 0, "delisted": 0, "no_company": 0, "delisting_signal_overridden_by_later_filing": 0}
     for cik in sorted(ciks):
         stats["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -184,7 +224,11 @@ def update_status(conn: psycopg.Connection, ciks: set[str], as_of: date | None =
             stats["no_company"] += 1
             continue
         latest = latest_by_company.get(company_id)
-        status, reason = compute_status(latest, as_of, company_id in deregistered_company_ids)
+        is_deregistered = company_id in deregistered_company_ids
+        if is_deregistered and _deregistration_overridden_by_later_filing(latest, form15_by_company.get(company_id)):
+            is_deregistered = False
+            stats["delisting_signal_overridden_by_later_filing"] += 1
+        status, reason = compute_status(latest, as_of, is_deregistered)
         stats[status] += 1
         rows.append({"company_id": company_id, "status": status, "status_as_of": as_of, "status_reason": reason})
 

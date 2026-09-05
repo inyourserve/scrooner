@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 import { logout } from "@/app/auth/actions";
 import { getAuthEnvironmentStatus } from "@/lib/auth/config";
 import { createClient } from "@/lib/supabase/server";
@@ -25,7 +27,7 @@ export default async function AccountPage() {
       <section className="account-panel" aria-labelledby="account-details">
         <h2 id="account-details">Sign-in details</h2>
         <dl><div><dt>Email</dt><dd>{data.user.email || "Not available"}</dd></div><div><dt>Email status</dt><dd>{data.user.email_confirmed_at ? "Verified" : "Confirmation pending"}</dd></div></dl>
-        <div className="account-panel__actions"><a className="secondary-button account-link-button" href="/account/update-password">Change password</a><form action={logout}><button className="tertiary-button" type="submit">Sign out</button></form></div>
+        <div className="account-panel__actions"><Link className="ds-button ds-button--secondary account-link-button" href="/account/update-password">Change password</Link><form action={logout}><Button variant="ghost" type="submit">Sign out</Button></form></div>
       </section>
     </main>
   );

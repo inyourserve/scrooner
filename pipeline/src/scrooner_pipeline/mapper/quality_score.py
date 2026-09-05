@@ -24,6 +24,17 @@ shares_outstanding) are already-mapped canonical concepts -- zero new
 fetches, zero new concept curation, confirmed live before writing this
 (doc 26 Sec 2's own finding).
 
+`gross_profit` is derived from `revenue - cost_of_revenue` for any
+fiscal year where the raw `gross_profit` tag itself is missing but both
+of those ARE present (added 2026-09-05) -- the same derivation
+`calculate.py` already uses for the `gross_margin` metric itself
+(checked live before adding: `gross_profit`'s raw concept coverage is
+only ~48%, the single dominant bottleneck across ALL 9 required
+concepts for the ~4,282 companies missing a Piotroski score; `revenue`+
+`cost_of_revenue` together cover a real, if modest, additional 654 of
+those). Purely additive -- never overrides a real reported
+`gross_profit` value when one exists.
+
 Deliberately requires ALL 9 inputs present for BOTH the current and
 prior fiscal year -- no partial/scaled score; a Piotroski score computed
 from 6 of 9 tests is a different, less meaningful number, not a fuzzy
@@ -51,13 +62,21 @@ logger = structlog.get_logger()
 
 REQUIRED_CONCEPTS = [
     "net_income", "cfo", "total_assets", "current_assets", "current_liabilities",
-    "revenue", "gross_profit", "total_debt", "shares_outstanding",
+    "revenue", "gross_profit", "total_debt_resolved", "shares_outstanding",
 ]
+
+# Fallback-only input for deriving gross_profit -- deliberately NOT in
+# REQUIRED_CONCEPTS (a company missing this too just falls back to
+# "no derivation possible", not an additional hard requirement).
+_GROSS_PROFIT_FALLBACK_CONCEPTS = ["cost_of_revenue"]
 
 
 def _load_concept_ids(conn: psycopg.Connection) -> dict[str, int]:
     with conn.cursor() as cur:
-        cur.execute("select name, id from analytics.canonical_concept where name = any(%s)", (REQUIRED_CONCEPTS,))
+        cur.execute(
+            "select name, id from analytics.canonical_concept where name = any(%s)",
+            (REQUIRED_CONCEPTS + _GROSS_PROFIT_FALLBACK_CONCEPTS,),
+        )
         return dict(cur.fetchall())
 
 
@@ -87,11 +106,11 @@ def _score_year(vals_t: dict[str, Decimal], vals_p: dict[str, Decimal]) -> tuple
     (checked by the caller) before this is called."""
     net_income_t, cfo_t, assets_t, ca_t, cl_t, rev_t, gp_t, debt_t, shares_t = (
         vals_t["net_income"], vals_t["cfo"], vals_t["total_assets"], vals_t["current_assets"],
-        vals_t["current_liabilities"], vals_t["revenue"], vals_t["gross_profit"], vals_t["total_debt"], vals_t["shares_outstanding"],
+        vals_t["current_liabilities"], vals_t["revenue"], vals_t["gross_profit"], vals_t["total_debt_resolved"], vals_t["shares_outstanding"],
     )
     net_income_p, cfo_p, assets_p, ca_p, cl_p, rev_p, gp_p, debt_p, shares_p = (
         vals_p["net_income"], vals_p["cfo"], vals_p["total_assets"], vals_p["current_assets"],
-        vals_p["current_liabilities"], vals_p["revenue"], vals_p["gross_profit"], vals_p["total_debt"], vals_p["shares_outstanding"],
+        vals_p["current_liabilities"], vals_p["revenue"], vals_p["gross_profit"], vals_p["total_debt_resolved"], vals_p["shares_outstanding"],
     )
     if assets_t == 0 or assets_p == 0 or rev_t == 0 or rev_p == 0 or cl_t == 0 or cl_p == 0:
         return None, "zero_denominator"
@@ -120,11 +139,29 @@ def _score_year(vals_t: dict[str, Decimal], vals_p: dict[str, Decimal]) -> tuple
     return score, None
 
 
+def _derive_missing_gross_profit(fy_facts: dict[str, dict[int, Decimal]]) -> None:
+    """Mutates fy_facts["gross_profit"] in place: for any fiscal year
+    where the raw gross_profit tag is missing but both revenue and
+    cost_of_revenue exist, fills it with revenue - cost_of_revenue.
+    Never overrides a real reported gross_profit value."""
+    revenue_by_year = fy_facts.get("revenue", {})
+    cost_of_revenue_by_year = fy_facts.get("cost_of_revenue", {})
+    gross_profit_by_year = fy_facts.setdefault("gross_profit", {})
+    for fy, revenue in revenue_by_year.items():
+        if fy in gross_profit_by_year:
+            continue
+        cost_of_revenue = cost_of_revenue_by_year.get(fy)
+        if cost_of_revenue is None:
+            continue
+        gross_profit_by_year[fy] = revenue - cost_of_revenue
+
+
 def calculate_piotroski_for_company(conn: psycopg.Connection, company_id: int, metric_id: int, concept_ids: dict[str, int]) -> dict:
     fy_facts = _load_fy_facts(conn, company_id, concept_ids)
+    _derive_missing_gross_profit(fy_facts)
     all_years: set[int] = set()
-    for by_year in fy_facts.values():
-        all_years.update(by_year.keys())
+    for name in REQUIRED_CONCEPTS:
+        all_years.update(fy_facts[name].keys())
 
     rows: list[dict] = []
     for fy in sorted(all_years):

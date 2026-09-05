@@ -62,6 +62,14 @@ DEFERRED_TO_STAGE_3E = {
     # 5Y/10Y CAGR added 2026-08-19 -- same Stage 3e (ttm.py) computation
     # path as the original 4, just wider GROWTH_METRICS lag_years.
     "revenue_growth_5y_cagr", "revenue_growth_10y_cagr", "eps_growth_5y_cagr", "eps_growth_10y_cagr",
+    # dps_growth_yoy/3y_cagr added 2026-08-29 -- same ttm.py GROWTH_METRICS mechanism.
+    "dps_growth_yoy", "dps_growth_3y_cagr",
+    # net_income_growth_*/diluted_shares_growth_* added 2026-09-05
+    # (financials display spec) -- same ttm.py GROWTH_METRICS mechanism,
+    # net_income and shares_outstanding are both real canonical_fact
+    # concepts so this needed zero new logic, only new dict entries.
+    "net_income_growth_yoy", "net_income_growth_3y_cagr", "net_income_growth_5y_cagr", "net_income_growth_10y_cagr",
+    "diluted_shares_growth_yoy", "diluted_shares_growth_3y_cagr", "diluted_shares_growth_5y_cagr",
 }
 
 # net_debt_ebitda is requires_price=false (it genuinely doesn't need
@@ -89,6 +97,15 @@ DEFERRED_TO_EXPANDED_METRICS = {
     # mapper/dividend_streak.py respectively, same "same-edit as the
     # metric_definition row" rule as above.
     "effective_tax_rate_gap", "fcf_growth_3y_cagr", "fcf_growth_5y_cagr", "dividend_growth_streak_years",
+    # Added 2026-09-05 (financials display spec gap-fill), same edit as
+    # their metric_definition rows. ebitda_margin/debt_to_ebitda/
+    # fcf_per_share/share_repurchases_pct_fcf/dividends_pct_fcf all need
+    # ebitda or fcf as an input, which live in metric_value not
+    # canonical_fact -- computed in expanded_metrics.py. fcf_growth_yoy
+    # is computed in mapper/fcf_growth.py (same reasoning as
+    # fcf_growth_3y_cagr/5y_cagr above).
+    "ebitda_margin", "debt_to_ebitda", "fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf",
+    "fcf_growth_yoy",
 }
 
 # debtor_days/inventory_days/payables_days added to FY_ONLY_METRICS
@@ -99,8 +116,21 @@ DEFERRED_TO_EXPANDED_METRICS = {
 # for ROIC, not a new one.
 FY_ONLY_METRICS = {"roic", "roe", "debtor_days", "inventory_days", "payables_days"}
 
+# gross_margin switched from "ratio" (a direct GrossProfit tag) to
+# "sum_diff_ratio" (Revenue - CostOfRevenue, 2026-09-01) -- checked live
+# first: the direct `gross_profit` canonical_fact covered only 2,525 of
+# 5,024 companies, while `revenue` (4,500) and `cost_of_revenue` (3,025)
+# are each individually more widely tagged -- many filers report
+# revenue and COGS separately without ever tagging a standalone
+# GrossProfit fact. Verified the derivation is exact, not approximate,
+# against a real company across 3 periods (Apple: Revenue - CostOfRevenue
+# equals its own reported GrossProfit to the dollar in every period
+# checked) before switching, not assumed to generalize. doc 02's own
+# locked formula ("Gross Profit / Revenue") is unchanged -- only how
+# Gross Profit itself is sourced changed, from a single required tag to
+# a derived value from two more commonly-tagged inputs.
 FORMULA_SHAPES = {
-    "gross_margin": "ratio",
+    "gross_margin": "sum_diff_ratio",
     "operating_margin": "ratio",
     "net_margin": "ratio",
     "roe": "ratio",
@@ -146,6 +176,24 @@ FORMULA_SHAPES = {
     # Added 2026-08-22 (P0/coverage execution pass).
     "capex_pct_revenue": "ratio",
     "sga_pct_revenue": "ratio",
+    # Added 2026-08-29 (zero-new-fetch coverage pass). payout_ratio/
+    # pretax_margin reuse dividends_per_share/diluted_eps/income_before_tax/
+    # revenue, all already canonical concepts. net_cash/net_cash_per_share
+    # combine cash_and_equivalents/total_debt/shares_outstanding -- all
+    # balance_sheet (instant) -- fitting the EXISTING sum_diff/
+    # sum_diff_ratio shapes exactly, no new shape needed.
+    "payout_ratio": "ratio",
+    "pretax_margin": "ratio",
+    "net_cash": "sum_diff",
+    "net_cash_per_share": "sum_diff_ratio",
+    # Added 2026-09-05 (financials display spec gap-fill). All reuse
+    # existing shapes unchanged -- see expanded_definitions.py's own
+    # entries for the exact formula each represents.
+    "book_value_per_share": "ratio",
+    "working_capital": "sum_diff",
+    "net_change_in_cash": "additive",
+    "ocf_to_net_income": "ratio",
+    "cash_returned_to_shareholders": "additive",
 }
 
 

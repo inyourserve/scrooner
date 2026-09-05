@@ -1,0 +1,3602 @@
+{
+  "0000001800": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Sales and Earnings (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Depreciation and Assets (Details)"
+      },
+      {
+        "html_file": "R64.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Reconciliation of Assets (Details)"
+      }
+    ],
+    "company_name": "ABBOTT LABORATORIES",
+    "source_filing": {
+      "accession_number": "0001628280-26-050134",
+      "filing_date": "2026-07-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "ABT"
+  },
+  "0000006201": {
+    "candidate_reports": [
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "Revenue Recognition - Passenger Revenue by Geographic Region (Details)"
+      }
+    ],
+    "company_name": "American Airlines Group Inc.",
+    "source_filing": {
+      "accession_number": "0000006201-26-000052",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "AAL"
+  },
+  "0000012927": {
+    "candidate_reports": [
+      {
+        "html_file": "R10.htm",
+        "likely_tabular": false,
+        "title": "Summary of Business Segment Data"
+      },
+      {
+        "html_file": "R29.htm",
+        "likely_tabular": false,
+        "title": "Segment and Revenue Information"
+      },
+      {
+        "html_file": "R47.htm",
+        "likely_tabular": true,
+        "title": "Summary of Business Segment Data - Schedule of Segment Reporting Information, by Segment (Details)"
+      },
+      {
+        "html_file": "R88.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R89.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Reconciliation of Revenue from Segments to Consolidated (Details)"
+      },
+      {
+        "html_file": "R90.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Schedule of Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R91.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Schedule of Segment, Reconciliation of Other Items from Segments to Consolidated (Details)"
+      },
+      {
+        "html_file": "R92.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Components of Financial Accounting Standards and Cost Accounting Standards Adjustment (Details)"
+      },
+      {
+        "html_file": "R93.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Reconciliation of Assets from Segment to Consolidated (Details)"
+      },
+      {
+        "html_file": "R94.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Schedule of Capital Expenditures by Segment (Details)"
+      },
+      {
+        "html_file": "R95.htm",
+        "likely_tabular": true,
+        "title": "Segment and Revenue Information - Schedule of Depreciation and Amortization Expense by Segment (Details)"
+      }
+    ],
+    "company_name": "BOEING CO",
+    "source_filing": {
+      "accession_number": "0001628280-26-050038",
+      "filing_date": "2026-07-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "BA"
+  },
+  "0000014272": {
+    "candidate_reports": [
+      {
+        "html_file": "R44.htm",
+        "likely_tabular": true,
+        "title": "REVENUE - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "REVENUE - Disaggregation of Revenue by Product and Region (Details)"
+      }
+    ],
+    "company_name": "BRISTOL MYERS SQUIBB CO",
+    "source_filing": {
+      "accession_number": "0000014272-26-000020",
+      "filing_date": "2026-07-30",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "BMY"
+  },
+  "0000018230": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R77.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      },
+      {
+        "html_file": "R78.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Revenue By Geographic Region (Details)"
+      },
+      {
+        "html_file": "R79.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - External Sales By End User Application (Details)"
+      },
+      {
+        "html_file": "R80.htm",
+        "likely_tabular": true,
+        "title": "Segment information - Reconciliation of Profit from Reportable Segments (Details)"
+      },
+      {
+        "html_file": "R81.htm",
+        "likely_tabular": true,
+        "title": "Segment information - Reconciliations of Consolidated Profit Before Taxes (Details)"
+      },
+      {
+        "html_file": "R82.htm",
+        "likely_tabular": true,
+        "title": "Segment information - Reconciliation of Assets (Details)"
+      },
+      {
+        "html_file": "R83.htm",
+        "likely_tabular": true,
+        "title": "Segment information - Reconciliations of Depreciation and Amortization (Details)"
+      },
+      {
+        "html_file": "R84.htm",
+        "likely_tabular": true,
+        "title": "Segment information - Reconciliations of Capital Expenditures (Details)"
+      }
+    ],
+    "company_name": "CATERPILLAR INC",
+    "source_filing": {
+      "accession_number": "0000018230-26-000046",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CAT"
+  },
+  "0000019617": {
+    "candidate_reports": [
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": false,
+        "title": "Business Segments &amp; Corporate"
+      },
+      {
+        "html_file": "R103.htm",
+        "likely_tabular": true,
+        "title": "Loans - By Portfolio Segment (Details)"
+      },
+      {
+        "html_file": "R138.htm",
+        "likely_tabular": true,
+        "title": "Goodwill and Mortgage Servicing Rights - Goodwill by Business Segment and Corporate (Details)"
+      },
+      {
+        "html_file": "R165.htm",
+        "likely_tabular": true,
+        "title": "Business Segments &amp; Corporate (Details)"
+      }
+    ],
+    "company_name": "JPMORGAN CHASE & CO",
+    "source_filing": {
+      "accession_number": "0001628280-26-054343",
+      "filing_date": "2026-08-06",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "AMJB"
+  },
+  "0000021344": {
+    "candidate_reports": [
+      {
+        "html_file": "R22.htm",
+        "likely_tabular": false,
+        "title": "OPERATING SEGMENTS"
+      },
+      {
+        "html_file": "R69.htm",
+        "likely_tabular": true,
+        "title": "OPERATING SEGMENTS - Information about Operating Segments (Details)"
+      }
+    ],
+    "company_name": "COCA COLA CO",
+    "source_filing": {
+      "accession_number": "0001628280-26-050503",
+      "filing_date": "2026-07-29",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "KO"
+  },
+  "0000027419": {
+    "candidate_reports": [
+      {
+        "html_file": "R21.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R50.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Details)"
+      }
+    ],
+    "company_name": "TARGET CORP",
+    "source_filing": {
+      "accession_number": "0000027419-26-000042",
+      "filing_date": "2026-08-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "TGT"
+  },
+  "0000027904": {
+    "candidate_reports": [
+      {
+        "html_file": "R16.htm",
+        "likely_tabular": false,
+        "title": "SEGMENTS"
+      },
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": true,
+        "title": "REVENUE RECOGNITION - Revenue by Geographic Region (Details)"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": true,
+        "title": "SEGMENTS - Narrative (Details)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "SEGMENTS - Segment Reporting (Details)"
+      }
+    ],
+    "company_name": "DELTA AIR LINES, INC.",
+    "source_filing": {
+      "accession_number": "0000027904-26-000031",
+      "filing_date": "2026-07-10",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "DAL"
+  },
+  "0000029534": {
+    "candidate_reports": [
+      {
+        "html_file": "R16.htm",
+        "likely_tabular": false,
+        "title": "Segment reporting"
+      },
+      {
+        "html_file": "R32.htm",
+        "likely_tabular": true,
+        "title": "Segment reporting (Details)"
+      },
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": true,
+        "title": "Segment reporting - reconciliation (Details)"
+      }
+    ],
+    "company_name": "DOLLAR GENERAL CORP",
+    "source_filing": {
+      "accession_number": "0001104659-26-101932",
+      "filing_date": "2026-08-27",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "DG"
+  },
+  "0000037996": {
+    "candidate_reports": [
+      {
+        "html_file": "R26.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R43.htm",
+        "likely_tabular": true,
+        "title": "REVENUE - Schedule of Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R73.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION (Details)"
+      }
+    ],
+    "company_name": "FORD MOTOR CO",
+    "source_filing": {
+      "accession_number": "0000037996-26-000156",
+      "filing_date": "2026-07-29",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "F"
+  },
+  "0000040533": {
+    "candidate_reports": [
+      {
+        "html_file": "R18.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R43.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Revenue by Products and Services (Details)"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Additional Information (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Summary of Financial Information (Details)"
+      }
+    ],
+    "company_name": "GENERAL DYNAMICS CORP",
+    "source_filing": {
+      "accession_number": "0000040533-26-000032",
+      "filing_date": "2026-07-29",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "GD"
+  },
+  "0000040545": {
+    "candidate_reports": [
+      {
+        "html_file": "R30.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION &amp; REMAINING PERFORMANCE OBLIGATION"
+      },
+      {
+        "html_file": "R101.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION &amp; REMAINING PERFORMANCE OBLIGATION - Narrative (Details)"
+      },
+      {
+        "html_file": "R102.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION &amp; REMAINING PERFORMANCE OBLIGATION - Schedule of Equipment and Services Revenues (Details)"
+      },
+      {
+        "html_file": "R103.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION &amp; REMAINING PERFORMANCE OBLIGATION - Schedule of Expenses, Profit and Income (Details)"
+      }
+    ],
+    "company_name": "GENERAL ELECTRIC CO",
+    "source_filing": {
+      "accession_number": "0000040545-26-000049",
+      "filing_date": "2026-07-16",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "GE"
+  },
+  "0000047217": {
+    "candidate_reports": [
+      {
+        "html_file": "R11.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R36.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Reconciliation of Segment Operating Results to HP Consolidated Results (Details)"
+      },
+      {
+        "html_file": "R51.htm",
+        "likely_tabular": true,
+        "title": "Supplementary Financial Information - Schedule of Net Revenue by Region (Details)"
+      }
+    ],
+    "company_name": "HP INC",
+    "source_filing": {
+      "accession_number": "0000047217-26-000051",
+      "filing_date": "2026-08-27",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "HPQ"
+  },
+  "0000049071": {
+    "candidate_reports": [
+      {
+        "html_file": "R21.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": true,
+        "title": "GOODWILL AND OTHER INTANGIBLE ASSETS - Schedule of Changes in Carrying Amount of Goodwill By Reportable Segments (Details)"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Narrative (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Schedule of Segment Results (Details)"
+      }
+    ],
+    "company_name": "HUMANA INC",
+    "source_filing": {
+      "accession_number": "0000049071-26-000050",
+      "filing_date": "2026-07-29",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "HUM"
+  },
+  "0000049938": {
+    "candidate_reports": [
+      {
+        "html_file": "R11.htm",
+        "likely_tabular": false,
+        "title": "Business segments"
+      },
+      {
+        "html_file": "R32.htm",
+        "likely_tabular": false,
+        "title": "Business segments (Detail)"
+      },
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": false,
+        "title": "Business segments - Table Narrative (Detail)"
+      }
+    ],
+    "company_name": "IMPERIAL OIL LTD",
+    "source_filing": {
+      "accession_number": "0000049938-26-000040",
+      "filing_date": "2026-08-03",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "IMO"
+  },
+  "0000050863": {
+    "candidate_reports": [
+      {
+        "html_file": "R11.htm",
+        "likely_tabular": false,
+        "title": "Operating Segments"
+      },
+      {
+        "html_file": "R34.htm",
+        "likely_tabular": true,
+        "title": "Operating Segments - Narrative (Details)"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "Operating Segments - Financial Information by Segment (Details)"
+      },
+      {
+        "html_file": "R36.htm",
+        "likely_tabular": true,
+        "title": "Operating Segments - Corporate Unallocated Expenses (Details)"
+      }
+    ],
+    "company_name": "INTEL CORP",
+    "source_filing": {
+      "accession_number": "0000050863-26-000157",
+      "filing_date": "2026-07-24",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "INTC"
+  },
+  "0000051143": {
+    "candidate_reports": [
+      {
+        "html_file": "R13.htm",
+        "likely_tabular": false,
+        "title": "Segments"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": true,
+        "title": "Revenue Recognition - Disaggregation of Revenue by Major Products and Service Offerings (Details)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "Revenue Recognition - Disaggregation of Revenue by Geography (Details)"
+      },
+      {
+        "html_file": "R50.htm",
+        "likely_tabular": true,
+        "title": "Segments - Results of Continuing Operations (Details)"
+      },
+      {
+        "html_file": "R51.htm",
+        "likely_tabular": true,
+        "title": "Segments - Revenue Reconciliation (Details)"
+      },
+      {
+        "html_file": "R52.htm",
+        "likely_tabular": true,
+        "title": "Segments - Pre-Tax Income Reconciliation (Details)"
+      },
+      {
+        "html_file": "R53.htm",
+        "likely_tabular": true,
+        "title": "Segments - Other Reportable Segment Items (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "Financing Receivables - By Portfolio Segment (Details)"
+      },
+      {
+        "html_file": "R72.htm",
+        "likely_tabular": true,
+        "title": "Intangible Assets Including Goodwill - Goodwill by Segment (Details)"
+      }
+    ],
+    "company_name": "INTERNATIONAL BUSINESS MACHINES CORP",
+    "source_filing": {
+      "accession_number": "0000051143-26-000078",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "IBM"
+  },
+  "0000056873": {
+    "candidate_reports": [
+      {
+        "html_file": "R16.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT REPORTING"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT REPORTING (Details)"
+      },
+      {
+        "html_file": "R36.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT REPORTING - RETAIL OPERATIONS SEGMENT (Details)"
+      }
+    ],
+    "company_name": "KROGER CO",
+    "source_filing": {
+      "accession_number": "0001104659-26-078236",
+      "filing_date": "2026-06-26",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "KR"
+  },
+  "0000059478": {
+    "candidate_reports": [
+      {
+        "html_file": "R17.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R29.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Schedule of Disaggregation of Revenue by Product (Details)"
+      },
+      {
+        "html_file": "R30.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Schedule of Disaggregation of Revenue by Geographical Area (Details)"
+      },
+      {
+        "html_file": "R50.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      }
+    ],
+    "company_name": "ELI LILLY & Co",
+    "source_filing": {
+      "accession_number": "0000059478-26-000081",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "LLY"
+  },
+  "0000060667": {
+    "candidate_reports": [
+      {
+        "html_file": "R21.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R41.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R56.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      },
+      {
+        "html_file": "R57.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Reconciliation to Consolidated (Details)"
+      }
+    ],
+    "company_name": "LOWES COMPANIES INC",
+    "source_filing": {
+      "accession_number": "0000060667-26-000117",
+      "filing_date": "2026-08-27",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "LOW"
+  },
+  "0000064803": {
+    "candidate_reports": [
+      {
+        "html_file": "R17.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R31.htm",
+        "likely_tabular": true,
+        "title": "Significant Accounting Policies - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R49.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Narrative (Details)"
+      },
+      {
+        "html_file": "R50.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Reconciliation of Financial Measures of Segments to Consolidated Totals (Details)"
+      }
+    ],
+    "company_name": "CVS HEALTH Corp",
+    "source_filing": {
+      "accession_number": "0000064803-26-000098",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CVS"
+  },
+  "0000070858": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "Business Segment Information"
+      },
+      {
+        "html_file": "R75.htm",
+        "likely_tabular": true,
+        "title": "Outstanding Loans and Leases and Allowance for Credit Losses - Allowance by Portfolio Segment (Details)"
+      },
+      {
+        "html_file": "R112.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R113.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Results of Business Segments and All Other (Details)"
+      },
+      {
+        "html_file": "R114.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Noninterest Income by Business Segment and All Other (Details)"
+      }
+    ],
+    "company_name": "BANK OF AMERICA CORP /DE/",
+    "source_filing": {
+      "accession_number": "0000070858-26-000394",
+      "filing_date": "2026-07-31",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "BAC"
+  },
+  "0000072971": {
+    "candidate_reports": [
+      {
+        "html_file": "R23.htm",
+        "likely_tabular": false,
+        "title": "Operating Segments"
+      },
+      {
+        "html_file": "R61.htm",
+        "likely_tabular": true,
+        "title": "Loans and Related Allowance for Credit Losses, Allowance for Credit Losses for Loans Activity by Portfolio Segment (Details)"
+      },
+      {
+        "html_file": "R121.htm",
+        "likely_tabular": true,
+        "title": "Operating Segments (Details)"
+      },
+      {
+        "html_file": "R122.htm",
+        "likely_tabular": true,
+        "title": "Revenue and Expenses, Revenue by Operating Segment (Details)"
+      }
+    ],
+    "company_name": "WELLS FARGO & COMPANY/MN",
+    "source_filing": {
+      "accession_number": "0000072971-26-000302",
+      "filing_date": "2026-07-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "WFC"
+  },
+  "0000077476": {
+    "candidate_reports": [
+      {
+        "html_file": "R36.htm",
+        "likely_tabular": true,
+        "title": "Basis of Presentation and Our Divisions - Net Revenue, Significant Expenses and Operating Profit by Segment (Details)"
+      },
+      {
+        "html_file": "R37.htm",
+        "likely_tabular": true,
+        "title": "Basis of Presentation and Our Divisions - Segment Reporting Information by % of Disaggregated Net Revenue (Details)"
+      },
+      {
+        "html_file": "R38.htm",
+        "likely_tabular": true,
+        "title": "Basis of Presentation and Our Divisions - Other Segment Information (Details)"
+      }
+    ],
+    "company_name": "PEPSICO INC",
+    "source_filing": {
+      "accession_number": "0000077476-26-000035",
+      "filing_date": "2026-07-09",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "PEP"
+  },
+  "0000078003": {
+    "candidate_reports": [
+      {
+        "html_file": "R21.htm",
+        "likely_tabular": false,
+        "title": "Segment, Geographic and Other Revenue Information"
+      },
+      {
+        "html_file": "R75.htm",
+        "likely_tabular": false,
+        "title": "Segment, Geographic and Other Revenue Information - Narrative (Detail)"
+      },
+      {
+        "html_file": "R76.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Other Revenue Information - Schedule of Segment Reporting Information by Segment (Details)"
+      },
+      {
+        "html_file": "R77.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Other Revenue Information - Schedule of Segment Reporting Information by Segment - Footnotes (Details)"
+      },
+      {
+        "html_file": "R78.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Other Revenue Information - Schedule of Significant Biopharma Segment Expenses (Details)"
+      },
+      {
+        "html_file": "R79.htm",
+        "likely_tabular": false,
+        "title": "Segment, Geographic and Other Revenue Information - Revenues by Geographic Area (Detail)"
+      },
+      {
+        "html_file": "R80.htm",
+        "likely_tabular": false,
+        "title": "Segment, Geographic and Other Revenue Information - Revenues by Products (Detail)"
+      }
+    ],
+    "company_name": "PFIZER INC",
+    "source_filing": {
+      "accession_number": "0000078003-26-000095",
+      "filing_date": "2026-08-04",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "PFE"
+  },
+  "0000080424": {
+    "candidate_reports": [
+      {
+        "html_file": "R12.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R44.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Additional Information (Details)"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Percent Of Sales By Business Unit (Details)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - US And International Sales And Assets (Details)"
+      },
+      {
+        "html_file": "R47.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Segment Results (Details)"
+      }
+    ],
+    "company_name": "PROCTER & GAMBLE Co",
+    "source_filing": {
+      "accession_number": "0000080424-26-000103",
+      "filing_date": "2026-08-04",
+      "form": "10-K"
+    },
+    "status": "found",
+    "ticker": "PG"
+  },
+  "0000080661": {
+    "candidate_reports": [
+      {
+        "html_file": "R14.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R48.htm",
+        "likely_tabular": false,
+        "title": "Segment Information - Operating Results (Detail)"
+      },
+      {
+        "html_file": "R49.htm",
+        "likely_tabular": false,
+        "title": "Segment Information - Underwriting Margins and Combined Ratios for our Underwriting Operations (Detail)"
+      },
+      {
+        "html_file": "R50.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Additional Information (Details)"
+      }
+    ],
+    "company_name": "PROGRESSIVE CORP/OH/",
+    "source_filing": {
+      "accession_number": "0000080661-26-000308",
+      "filing_date": "2026-08-03",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "PGR"
+  },
+  "0000086312": {
+    "candidate_reports": [
+      {
+        "html_file": "R9.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      },
+      {
+        "html_file": "R41.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details) - Prior Year Development and Catastrophes"
+      },
+      {
+        "html_file": "R42.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details) - Amortization and Depreciation"
+      },
+      {
+        "html_file": "R43.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details) - Assets by Segment"
+      }
+    ],
+    "company_name": "TRAVELERS COMPANIES, INC.",
+    "source_filing": {
+      "accession_number": "0000086312-26-000145",
+      "filing_date": "2026-07-17",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "TRV"
+  },
+  "0000093410": {
+    "candidate_reports": [
+      {
+        "html_file": "R15.htm",
+        "likely_tabular": false,
+        "title": "Operating Segments and Geographic Data"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "Operating Segments and Geographic Data - Narrative (Details)"
+      },
+      {
+        "html_file": "R47.htm",
+        "likely_tabular": true,
+        "title": "Operating Segments and Geographic Data - Schedule of Segment Sales and Other Operating Revenues (Details)"
+      },
+      {
+        "html_file": "R48.htm",
+        "likely_tabular": true,
+        "title": "Operating Segments and Geographic Data - Schedule of Segment Assets (Details)"
+      }
+    ],
+    "company_name": "CHEVRON CORP",
+    "source_filing": {
+      "accession_number": "0000093410-26-000167",
+      "filing_date": "2026-08-06",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CVX"
+  },
+  "0000096021": {
+    "candidate_reports": [
+      {
+        "html_file": "R31.htm",
+        "likely_tabular": false,
+        "title": "BUSINESS SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R67.htm",
+        "likely_tabular": true,
+        "title": "GOODWILL AND OTHER INTANGIBLES - Goodwill Roll Forward Table by Reporting Segments (Details)"
+      },
+      {
+        "html_file": "R125.htm",
+        "likely_tabular": true,
+        "title": "BUSINESS SEGMENT INFORMATION - Financial Information of Business Segments (Details)"
+      },
+      {
+        "html_file": "R126.htm",
+        "likely_tabular": true,
+        "title": "BUSINESS SEGMENT INFORMATION - Geographic Area Revenue and Long-Lived Assets (Details)"
+      }
+    ],
+    "company_name": "SYSCO CORP",
+    "source_filing": {
+      "accession_number": "0000096021-26-000033",
+      "filing_date": "2026-08-21",
+      "form": "10-K"
+    },
+    "status": "found",
+    "ticker": "SYY"
+  },
+  "0000097745": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Business Segment Information"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": true,
+        "title": "Supplemental Income Statement Information - Scheduleof Disaggregated Revenues (Details)"
+      },
+      {
+        "html_file": "R47.htm",
+        "likely_tabular": true,
+        "title": "Supplemental Income Statement Information - Schedule of Restructuring and Other Costs by Segment (Details)"
+      },
+      {
+        "html_file": "R59.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R60.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Schedule of Business Segment Information (Details)"
+      }
+    ],
+    "company_name": "THERMO FISHER SCIENTIFIC INC.",
+    "source_filing": {
+      "accession_number": "0000097745-26-000144",
+      "filing_date": "2026-07-31",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "TMO"
+  },
+  "0000100493": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R61.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Segment Reporting Information, By Segment) (Details)"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting Disaggregation of Revenue (By Segment and Distribution Channel) (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Narrative) (Details)"
+      }
+    ],
+    "company_name": "TYSON FOODS, INC.",
+    "source_filing": {
+      "accession_number": "0000100493-26-000058",
+      "filing_date": "2026-08-03",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "TSN"
+  },
+  "0000100517": {
+    "candidate_reports": [
+      {
+        "html_file": "R37.htm",
+        "likely_tabular": true,
+        "title": "REVENUE RECOGNITION - Schedule of Operating Revenue by Geographic Region (Details)"
+      }
+    ],
+    "company_name": "United Airlines Holdings, Inc.",
+    "source_filing": {
+      "accession_number": "0000100517-26-000139",
+      "filing_date": "2026-07-16",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "UAL"
+  },
+  "0000101829": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "Segment Financial Data"
+      },
+      {
+        "html_file": "R72.htm",
+        "likely_tabular": true,
+        "title": "Segment Financial Data (Segment Operating Performance) (Details)"
+      },
+      {
+        "html_file": "R73.htm",
+        "likely_tabular": true,
+        "title": "Segment Financial Data (Capital Expenditures and Depreciation &amp; Amortization) (Details)"
+      },
+      {
+        "html_file": "R74.htm",
+        "likely_tabular": true,
+        "title": "Segment Financial Data (Assets) (Details)"
+      },
+      {
+        "html_file": "R75.htm",
+        "likely_tabular": true,
+        "title": "Segment Financial Data (Disaggregation of Revenue) (Details)"
+      }
+    ],
+    "company_name": "RTX Corp",
+    "source_filing": {
+      "accession_number": "0000101829-26-000027",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "RTX"
+  },
+  "0000104169": {
+    "candidate_reports": [
+      {
+        "html_file": "R13.htm",
+        "likely_tabular": false,
+        "title": "Segments and Disaggregated Revenue"
+      },
+      {
+        "html_file": "R31.htm",
+        "likely_tabular": true,
+        "title": "Segments and Disaggregated Revenue - Narrative (Details)"
+      },
+      {
+        "html_file": "R32.htm",
+        "likely_tabular": true,
+        "title": "Segments and Disaggregated Revenue - Schedule of Segment Reporting Information by Segment (Details)"
+      },
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": true,
+        "title": "Segments and Disaggregated Revenue - Revenue from Contract with Customer Excluding Assessed Tax Walmart U.S (Details)"
+      },
+      {
+        "html_file": "R34.htm",
+        "likely_tabular": true,
+        "title": "Segments and Disaggregated Revenue - Revenue from Contract with Customer Excluding Assessed Tax, International (Details)"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "Segments and Disaggregated Revenue - Revenue from Contract with Customer Excluding Assessed Tax, Sam's Club (Details)"
+      }
+    ],
+    "company_name": "Walmart Inc.",
+    "source_filing": {
+      "accession_number": "0000104169-26-000154",
+      "filing_date": "2026-08-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "WMT"
+  },
+  "0000200406": {
+    "candidate_reports": [
+      {
+        "html_file": "R18.htm",
+        "likely_tabular": false,
+        "title": "Segments of business and geographic areas"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "Intangible assets and goodwill - Goodwill By Segment (Details)"
+      },
+      {
+        "html_file": "R53.htm",
+        "likely_tabular": true,
+        "title": "Segments of business and geographic areas - Narrative (Details)"
+      },
+      {
+        "html_file": "R54.htm",
+        "likely_tabular": true,
+        "title": "Segments of business and geographic areas - Sales By Segment Of Business (Details)"
+      },
+      {
+        "html_file": "R55.htm",
+        "likely_tabular": true,
+        "title": "Segments of business and geographic areas - Operating Profit by Segment of Business (Details)"
+      },
+      {
+        "html_file": "R56.htm",
+        "likely_tabular": true,
+        "title": "Segments of business and geographic areas - Identifiable Assets (Details)"
+      },
+      {
+        "html_file": "R57.htm",
+        "likely_tabular": true,
+        "title": "Segments of business and geographic areas - Additions to Property, Plan &amp; Equipment and Depreciation and Amortization (Details)"
+      },
+      {
+        "html_file": "R58.htm",
+        "likely_tabular": true,
+        "title": "Segments of business and geographic areas - Schedule of Revenue from External Customers and Long-Lived Assets, by Geographical Areas (Details)"
+      }
+    ],
+    "company_name": "JOHNSON & JOHNSON",
+    "source_filing": {
+      "accession_number": "0000200406-26-000153",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "JNJ"
+  },
+  "0000310158": {
+    "candidate_reports": [
+      {
+        "html_file": "R22.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R73.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Narrative (Details)"
+      },
+      {
+        "html_file": "R74.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Schedule of Sales from Products (Details)"
+      },
+      {
+        "html_file": "R75.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Schedule of Consolidated Sales by Geographic Area (Details)"
+      },
+      {
+        "html_file": "R76.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Schedule of Reconciliation of Segment Profits to Income before Taxes (Details)"
+      },
+      {
+        "html_file": "R77.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Schedule of Equity Income from Affiliates and Depreciation Included in Segment Profits (Details)"
+      },
+      {
+        "html_file": "R78.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Schedule of Property, Plant and Equipment, Net by Geographic Area (Details)"
+      }
+    ],
+    "company_name": "Merck & Co., Inc.",
+    "source_filing": {
+      "accession_number": "0000310158-26-000212",
+      "filing_date": "2026-08-07",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "MRK"
+  },
+  "0000310522": {
+    "candidate_reports": [
+      {
+        "html_file": "R17.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R64.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Narrative (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Schedule of Assets by Segment (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Schedule of Segment Reporting (Details)"
+      }
+    ],
+    "company_name": "FEDERAL NATIONAL MORTGAGE ASSOCIATION FANNIE MAE",
+    "source_filing": {
+      "accession_number": "0000310522-26-000064",
+      "filing_date": "2026-07-29",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "FNMA"
+  },
+  "0000315189": {
+    "candidate_reports": [
+      {
+        "html_file": "R15.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT DATA"
+      },
+      {
+        "html_file": "R56.htm",
+        "likely_tabular": true,
+        "title": "REVENUE RECOGNITION - Primary Geographic Market, Major Product Line, and Timing (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT DATA - Number of Business Segments (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT DATA - Operations by Operating Segment (Details)"
+      },
+      {
+        "html_file": "R67.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT DATA - Reconciliation of Net Sales and Revenues and Net Income (Details)"
+      },
+      {
+        "html_file": "R68.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT DATA - Additional Operating Segment Information (Details)"
+      }
+    ],
+    "company_name": "DEERE & CO",
+    "source_filing": {
+      "accession_number": "0001104659-26-102213",
+      "filing_date": "2026-08-27",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "DE"
+  },
+  "0000320187": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R74.htm",
+        "likely_tabular": true,
+        "title": "REVENUES - Schedule of Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R76.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Information by Operating Segments (Details)"
+      },
+      {
+        "html_file": "R77.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Additional Information (Details)"
+      },
+      {
+        "html_file": "R78.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION- Long-lived Assets by Geographic Areas (Details)"
+      }
+    ],
+    "company_name": "NIKE, Inc.",
+    "source_filing": {
+      "accession_number": "0000320187-26-000088",
+      "filing_date": "2026-07-15",
+      "form": "10-K"
+    },
+    "status": "found",
+    "ticker": "NKE"
+  },
+  "0000320193": {
+    "candidate_reports": [
+      {
+        "html_file": "R17.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R28.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Disaggregated Net Sales and Portion of Net Sales That Was Previously Deferred (Details)"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Additional Information (Details)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Information by Reportable Segment (Details)"
+      }
+    ],
+    "company_name": "Apple Inc.",
+    "source_filing": {
+      "accession_number": "0000320193-26-000020",
+      "filing_date": "2026-07-31",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "AAPL"
+  },
+  "0000354950": {
+    "candidate_reports": [
+      {
+        "html_file": "R9.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT REPORTING AND NET SALES"
+      },
+      {
+        "html_file": "R29.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT REPORTING AND NET SALES - Narrative (Details)"
+      },
+      {
+        "html_file": "R30.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT REPORTING AND NET SALES - Schedule of Net Sales, Significant Expense and Operating Income (Details)"
+      },
+      {
+        "html_file": "R31.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT REPORTING AND NET SALES - Schedule of Segment, Reconciliation of Other Items from Segments to Consolidated (Details)"
+      },
+      {
+        "html_file": "R32.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT REPORTING AND NET SALES - Schedule of Net Sales (Details)"
+      }
+    ],
+    "company_name": "HOME DEPOT, INC.",
+    "source_filing": {
+      "accession_number": "0001628280-26-058715",
+      "filing_date": "2026-08-25",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "HD"
+  },
+  "0000721371": {
+    "candidate_reports": [
+      {
+        "html_file": "R19.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R57.htm",
+        "likely_tabular": true,
+        "title": "Goodwill and Other Intangible Assets (Schedule of Goodwill by Reportable Segment) (Details)"
+      },
+      {
+        "html_file": "R95.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Narrative) (Details)"
+      },
+      {
+        "html_file": "R96.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Revenue by Reportable Segment) (Details)"
+      },
+      {
+        "html_file": "R97.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Segment Profit by Reportable Segment) (Details)"
+      },
+      {
+        "html_file": "R98.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Assets by Reportable Segment) (Details)"
+      },
+      {
+        "html_file": "R99.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Depreciation and Amortization and Additions to Property and Equipment by Reportable Segment) (Details)"
+      },
+      {
+        "html_file": "R100.htm",
+        "likely_tabular": true,
+        "title": "Segment Information Property and Equipment, net by Geographic Area) (Details)"
+      }
+    ],
+    "company_name": "CARDINAL HEALTH INC",
+    "source_filing": {
+      "accession_number": "0000721371-26-000038",
+      "filing_date": "2026-08-11",
+      "form": "10-K"
+    },
+    "status": "found",
+    "ticker": "CAH"
+  },
+  "0000731766": {
+    "candidate_reports": [
+      {
+        "html_file": "R15.htm",
+        "likely_tabular": false,
+        "title": "Segment Financial Information (Notes)"
+      },
+      {
+        "html_file": "R39.htm",
+        "likely_tabular": true,
+        "title": "Segment Financial Information (Narrative) (Details)"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Segment Financial Information (Details)"
+      }
+    ],
+    "company_name": "UNITEDHEALTH GROUP INC",
+    "source_filing": {
+      "accession_number": "0000731766-26-000197",
+      "filing_date": "2026-08-10",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "UNH"
+  },
+  "0000732712": {
+    "candidate_reports": [
+      {
+        "html_file": "R17.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R74.htm",
+        "likely_tabular": false,
+        "title": "Segment Information - Additional Information (Detail)"
+      },
+      {
+        "html_file": "R75.htm",
+        "likely_tabular": false,
+        "title": "Segment Information - Operating Financial Information (Detail)"
+      },
+      {
+        "html_file": "R76.htm",
+        "likely_tabular": false,
+        "title": "Segment Information - Reconciliation of Operating Revenues (Detail)"
+      },
+      {
+        "html_file": "R77.htm",
+        "likely_tabular": false,
+        "title": "Segment Information - Reconciliation of Segments Operating Income to Consolidated Income (Detail)"
+      }
+    ],
+    "company_name": "VERIZON COMMUNICATIONS INC",
+    "source_filing": {
+      "accession_number": "0000732712-26-000046",
+      "filing_date": "2026-07-31",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "VZ"
+  },
+  "0000732717": {
+    "candidate_reports": [
+      {
+        "html_file": "R13.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R37.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Summary Of Operating Revenues And Expenses) (Narrative) (Details)"
+      },
+      {
+        "html_file": "R38.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Summary of Operating Revenues and Expenses) (Details)"
+      }
+    ],
+    "company_name": "AT&T INC.",
+    "source_filing": {
+      "accession_number": "0000732717-26-000297",
+      "filing_date": "2026-07-22",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "T"
+  },
+  "0000789019": {
+    "candidate_reports": [
+      {
+        "html_file": "R28.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION AND GEOGRAPHIC DATA"
+      },
+      {
+        "html_file": "R85.htm",
+        "likely_tabular": false,
+        "title": "Unearned Revenue by Segment (Detail)"
+      },
+      {
+        "html_file": "R107.htm",
+        "likely_tabular": false,
+        "title": "Segment Revenue, Cost of Revenue, Operating Expenses and Operating Income (Detail)"
+      },
+      {
+        "html_file": "R108.htm",
+        "likely_tabular": false,
+        "title": "Segment Information and Geographic Data - Additional Information (Detail)"
+      },
+      {
+        "html_file": "R109.htm",
+        "likely_tabular": false,
+        "title": "Revenue Classified by Major Geographic Areas (Detail)"
+      }
+    ],
+    "company_name": "MICROSOFT CORP",
+    "source_filing": {
+      "accession_number": "0001193125-26-323660",
+      "filing_date": "2026-07-29",
+      "form": "10-K"
+    },
+    "status": "found",
+    "ticker": "MSFT"
+  },
+  "0000804328": {
+    "candidate_reports": [
+      {
+        "html_file": "R12.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R36.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      }
+    ],
+    "company_name": "QUALCOMM INC/DE",
+    "source_filing": {
+      "accession_number": "0000804328-26-000086",
+      "filing_date": "2026-07-29",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "QCOM"
+  },
+  "0000831001": {
+    "candidate_reports": [
+      {
+        "html_file": "R11.htm",
+        "likely_tabular": false,
+        "title": "REPORTABLE BUSINESS SEGMENTS AND ALL OTHER"
+      },
+      {
+        "html_file": "R61.htm",
+        "likely_tabular": true,
+        "title": "REPORTABLE BUSINESS SEGMENTS AND ALL OTHER - Operations by Segment (Details)"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "REPORTABLE BUSINESS SEGMENTS AND ALL OTHER - Reconciliation (Details)"
+      },
+      {
+        "html_file": "R99.htm",
+        "likely_tabular": true,
+        "title": "ALLOWANCE FOR CREDIT LOSSES - Allowance for Credit Losses Roll Forward by Segment (Details)"
+      }
+    ],
+    "company_name": "CITIGROUP INC",
+    "source_filing": {
+      "accession_number": "0000831001-26-000045",
+      "filing_date": "2026-08-06",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "C"
+  },
+  "0000858877": {
+    "candidate_reports": [
+      {
+        "html_file": "R28.htm",
+        "likely_tabular": false,
+        "title": "Segment Information and Major Customers"
+      },
+      {
+        "html_file": "R52.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R58.htm",
+        "likely_tabular": true,
+        "title": "Goodwill and Purchased Intangible Assets - Schedule of Goodwill by Reportable Segments (Details)"
+      },
+      {
+        "html_file": "R110.htm",
+        "likely_tabular": true,
+        "title": "Segment Information and Major Customers - Additional Information (Details)"
+      },
+      {
+        "html_file": "R111.htm",
+        "likely_tabular": true,
+        "title": "Segment Information and Major Customers - Summary of Reportable Segments (Details)"
+      },
+      {
+        "html_file": "R112.htm",
+        "likely_tabular": true,
+        "title": "Segment Information and Major Customers - Summary of Net Revenue for Groups of Similar Products and Services (Details)"
+      }
+    ],
+    "company_name": "CISCO SYSTEMS, INC.",
+    "source_filing": {
+      "accession_number": "0000858877-26-000078",
+      "filing_date": "2026-05-19",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CSCO"
+  },
+  "0000860730": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment and Geographic Information"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": false,
+        "title": "Segment and Geographic Information - Additional Information (Detail)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": false,
+        "title": "Segment and Geographic Information - Schedule of Geographic Distributions of Revenues, Equity in Earnings or Losses of Affiliates, Adjusted Segment EBITDA, Depreciation and Amortization (Detail)"
+      }
+    ],
+    "company_name": "HCA Healthcare, Inc.",
+    "source_filing": {
+      "accession_number": "0001193125-26-321077",
+      "filing_date": "2026-07-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "HCA"
+  },
+  "0000886982": {
+    "candidate_reports": [
+      {
+        "html_file": "R32.htm",
+        "likely_tabular": false,
+        "title": "Business Segments"
+      },
+      {
+        "html_file": "R175.htm",
+        "likely_tabular": false,
+        "title": "Business Segments - Segment Operating Results (Detail)"
+      },
+      {
+        "html_file": "R176.htm",
+        "likely_tabular": false,
+        "title": "Business Segments - Depreciation and Amortization (Detail)"
+      },
+      {
+        "html_file": "R177.htm",
+        "likely_tabular": false,
+        "title": "Business Segments - Assets by Segment (Detail)"
+      },
+      {
+        "html_file": "R178.htm",
+        "likely_tabular": false,
+        "title": "Business Segments - Total Net Revenues and Pre-Tax Earnings By Geographic Region (Detail)"
+      }
+    ],
+    "company_name": "GOLDMAN SACHS GROUP INC",
+    "source_filing": {
+      "accession_number": "0000886982-26-000297",
+      "filing_date": "2026-08-03",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "GS"
+  },
+  "0000895421": {
+    "candidate_reports": [
+      {
+        "html_file": "R26.htm",
+        "likely_tabular": false,
+        "title": "Segment, Geographic and Revenue Information"
+      },
+      {
+        "html_file": "R127.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Selected Financial Information by Business Segment (Details)"
+      },
+      {
+        "html_file": "R128.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Institutional Securities - Investment Banking Revenues (Details)"
+      },
+      {
+        "html_file": "R129.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Trading Revenues by Product Type (Details)"
+      },
+      {
+        "html_file": "R130.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Investment Management Investments Revenues - Net Unrealized Carried Interest (Details)"
+      },
+      {
+        "html_file": "R131.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Investment Management Asset Management Revenues - Reduction of Fees due to Fee Waivers (Details)"
+      },
+      {
+        "html_file": "R132.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Other Expenses - Transaction Taxes (Details)"
+      },
+      {
+        "html_file": "R133.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Net Revenues by Region (Details)"
+      },
+      {
+        "html_file": "R134.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Revenue Recognized from Prior Services (Details)"
+      },
+      {
+        "html_file": "R135.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Receivables from Contracts with Customers (Details)"
+      },
+      {
+        "html_file": "R136.htm",
+        "likely_tabular": true,
+        "title": "Segment, Geographic and Revenue Information - Assets by Business Segment (Details)"
+      }
+    ],
+    "company_name": "MORGAN STANLEY",
+    "source_filing": {
+      "accession_number": "0000895421-26-000212",
+      "filing_date": "2026-08-04",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "MS"
+  },
+  "0000896159": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "Segment information"
+      },
+      {
+        "html_file": "R59.htm",
+        "likely_tabular": true,
+        "title": "Goodwill (Roll-forward of Goodwill by Business Segment) (Details)"
+      },
+      {
+        "html_file": "R90.htm",
+        "likely_tabular": true,
+        "title": "Segment information (Details)"
+      }
+    ],
+    "company_name": "Chubb Ltd",
+    "source_filing": {
+      "accession_number": "0000896159-26-000017",
+      "filing_date": "2026-07-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CB"
+  },
+  "0000899051": {
+    "candidate_reports": [
+      {
+        "html_file": "R11.htm",
+        "likely_tabular": false,
+        "title": "Reportable Segments"
+      },
+      {
+        "html_file": "R38.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Narrative (Details)"
+      },
+      {
+        "html_file": "R39.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Schedule of Reportable Segments Financial Performance (Details)"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Schedule of Reportable Segments Revenue Information (Details)"
+      },
+      {
+        "html_file": "R41.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Schedule of Reportable Segments Expense Information Used in Measure for Segment Profit or Loss (Details)"
+      },
+      {
+        "html_file": "R42.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Schedule of Additional Significant Financial Performance Data (Details)"
+      },
+      {
+        "html_file": "R43.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Schedule of Reportable Segments Total Assets, Investments and Deferred Policy Acquisition Costs (Details)"
+      }
+    ],
+    "company_name": "ALLSTATE CORP",
+    "source_filing": {
+      "accession_number": "0000899051-26-000118",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "ALL"
+  },
+  "0000909832": {
+    "candidate_reports": [
+      {
+        "html_file": "R16.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Narrative (Details)"
+      },
+      {
+        "html_file": "R41.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting Information by Segment (Detail)"
+      },
+      {
+        "html_file": "R42.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting Information by Segment (Details)"
+      },
+      {
+        "html_file": "R43.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting Asset Information by Segment (Details)"
+      },
+      {
+        "html_file": "R44.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting Segment Reporting Information by Item Category (Details)"
+      }
+    ],
+    "company_name": "COSTCO WHOLESALE CORP /NEW",
+    "source_filing": {
+      "accession_number": "0000909832-26-000051",
+      "filing_date": "2026-06-03",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "COST"
+  },
+  "0000913760": {
+    "candidate_reports": [
+      {
+        "html_file": "R26.htm",
+        "likely_tabular": false,
+        "title": "Segment Analysis"
+      },
+      {
+        "html_file": "R59.htm",
+        "likely_tabular": true,
+        "title": "Goodwill - Schedule of Goodwill Allocated to Operating Segments (Details)"
+      },
+      {
+        "html_file": "R82.htm",
+        "likely_tabular": true,
+        "title": "Segment Analysis - Narrative (Details)"
+      },
+      {
+        "html_file": "R83.htm",
+        "likely_tabular": true,
+        "title": "Segment Analysis - Schedule of Segment Reporting Information Examples (Details)"
+      }
+    ],
+    "company_name": "StoneX Group Inc.",
+    "source_filing": {
+      "accession_number": "0000913760-26-000038",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "SNEX"
+  },
+  "0000927653": {
+    "candidate_reports": [
+      {
+        "html_file": "R21.htm",
+        "likely_tabular": false,
+        "title": "Segments of Business"
+      },
+      {
+        "html_file": "R67.htm",
+        "likely_tabular": true,
+        "title": "Segments of Business - Narrative (Details)"
+      },
+      {
+        "html_file": "R68.htm",
+        "likely_tabular": true,
+        "title": "Segments of Business - Schedule of Segment Information (Details)"
+      },
+      {
+        "html_file": "R69.htm",
+        "likely_tabular": true,
+        "title": "Segments of Business - Schedule of Long-lived Assets By Geographic Areas (Details)"
+      }
+    ],
+    "company_name": "MCKESSON CORP",
+    "source_filing": {
+      "accession_number": "0000927653-26-000234",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "MCK"
+  },
+  "0000936468": {
+    "candidate_reports": [
+      {
+        "html_file": "R12.htm",
+        "likely_tabular": false,
+        "title": "INFORMATION ON BUSINESS SEGMENTS"
+      },
+      {
+        "html_file": "R34.htm",
+        "likely_tabular": true,
+        "title": "INFORMATION ON BUSINESS SEGMENTS - Narrative (Details)"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "INFORMATION ON BUSINESS SEGMENTS - Schedule of Financial Information for Each Business Segment (Details)"
+      },
+      {
+        "html_file": "R36.htm",
+        "likely_tabular": true,
+        "title": "INFORMATION ON BUSINESS SEGMENTS - Schedule of FAS/CAS Pension Adjustment (Details)"
+      },
+      {
+        "html_file": "R37.htm",
+        "likely_tabular": true,
+        "title": "INFORMATION ON BUSINESS SEGMENTS - Schedule of Income Statement Information For Each Segment (Details)"
+      },
+      {
+        "html_file": "R38.htm",
+        "likely_tabular": true,
+        "title": "INFORMATION ON BUSINESS SEGMENTS - Schedule of Total Assets and Customer Advances and Amounts In Excess Of Costs Incurred For Each Business Segment (Details)"
+      }
+    ],
+    "company_name": "LOCKHEED MARTIN CORP",
+    "source_filing": {
+      "accession_number": "0001628280-26-049411",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "LMT"
+  },
+  "0001018724": {
+    "candidate_reports": [
+      {
+        "html_file": "R15.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R54.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Reportable Segments and Reconciliation to Consolidated Net Income (Details)"
+      },
+      {
+        "html_file": "R55.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R56.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Reconciliation of Assets from Segment to Consolidated (Details)"
+      },
+      {
+        "html_file": "R57.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Reconciliation of Property and Equipment from Segments to Consolidated (Details)"
+      },
+      {
+        "html_file": "R58.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Reconciliation of Property and Equipment Additions from Segments to Consolidated (Details)"
+      },
+      {
+        "html_file": "R59.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Depreciation and Amortization Expense, by Segment (Details)"
+      }
+    ],
+    "company_name": "AMAZON COM INC",
+    "source_filing": {
+      "accession_number": "0001018724-26-000026",
+      "filing_date": "2026-07-31",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "AMZN"
+  },
+  "0001026214": {
+    "candidate_reports": [
+      {
+        "html_file": "R18.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R78.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Details)"
+      },
+      {
+        "html_file": "R79.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Segment Earnings and Reconciliation to GAAP Condensed Consolidated Statements of Comprehensive Income (Details)"
+      },
+      {
+        "html_file": "R80.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Segment Assets (Details)"
+      }
+    ],
+    "company_name": "FEDERAL HOME LOAN MORTGAGE CORP",
+    "source_filing": {
+      "accession_number": "0001026214-26-000046",
+      "filing_date": "2026-07-30",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "FMCC"
+  },
+  "0001045810": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Reportable Segments (Details)"
+      },
+      {
+        "html_file": "R64.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Reconciling Items (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Revenue by Geographic Regions (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Concentration Risk (Details)"
+      },
+      {
+        "html_file": "R67.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Revenue by Market Platform (Details)"
+      }
+    ],
+    "company_name": "NVIDIA CORP",
+    "source_filing": {
+      "accession_number": "0001045810-26-000075",
+      "filing_date": "2026-08-26",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "NVDA"
+  },
+  "0001048911": {
+    "candidate_reports": [
+      {
+        "html_file": "R11.htm",
+        "likely_tabular": false,
+        "title": "DESCRIPTION OF BUSINESS SEGMENTS AND SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES"
+      },
+      {
+        "html_file": "R23.htm",
+        "likely_tabular": false,
+        "title": "BUSINESS SEGMENTS AND DISAGGREGATED REVENUE"
+      },
+      {
+        "html_file": "R53.htm",
+        "likely_tabular": true,
+        "title": "DESCRIPTION OF BUSINESS SEGMENTS AND SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES - Additional Information (Details)"
+      },
+      {
+        "html_file": "R54.htm",
+        "likely_tabular": true,
+        "title": "DESCRIPTION OF BUSINESS SEGMENTS AND SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES - Schedule of Depreciable Lives and Net Book Value of Property and Equipment (Details)"
+      },
+      {
+        "html_file": "R55.htm",
+        "likely_tabular": true,
+        "title": "DESCRIPTION OF BUSINESS SEGMENTS AND SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES - Schedule of Obligation Confirmed and Paid (Details)"
+      },
+      {
+        "html_file": "R56.htm",
+        "likely_tabular": true,
+        "title": "DESCRIPTION OF BUSINESS SEGMENTS AND SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES - Changes to Amounts Accrued with Business and Optimization Costs (Details)"
+      },
+      {
+        "html_file": "R57.htm",
+        "likely_tabular": true,
+        "title": "DESCRIPTION OF BUSINESS SEGMENTS AND SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES - Changes to Amounts Accrued with Separation And Other Costs (Details)"
+      },
+      {
+        "html_file": "R100.htm",
+        "likely_tabular": true,
+        "title": "BUSINESS SEGMENTS AND DISAGGREGATED REVENUE - Additional Information (Details)"
+      },
+      {
+        "html_file": "R101.htm",
+        "likely_tabular": true,
+        "title": "BUSINESS SEGMENTS AND DISAGGREGATED REVENUE - Schedule of Segment Information (Details)"
+      },
+      {
+        "html_file": "R102.htm",
+        "likely_tabular": true,
+        "title": "BUSINESS SEGMENTS AND DISAGGREGATED REVENUE - Schedule of Revenue by Service Type (Details)"
+      },
+      {
+        "html_file": "R103.htm",
+        "likely_tabular": true,
+        "title": "BUSINESS SEGMENTS AND DISAGGREGATED REVENUE - Schedule of Geographical Information (Details)"
+      }
+    ],
+    "company_name": "FEDEX CORP",
+    "source_filing": {
+      "accession_number": "0001048911-26-000105",
+      "filing_date": "2026-07-20",
+      "form": "10-K"
+    },
+    "status": "found",
+    "ticker": "FDX"
+  },
+  "0001061219": {
+    "candidate_reports": [
+      {
+        "html_file": "R17.htm",
+        "likely_tabular": false,
+        "title": "Business Segments and Related Information"
+      },
+      {
+        "html_file": "R51.htm",
+        "likely_tabular": true,
+        "title": "Investments in Unconsolidated Affiliates - Schedule of Investments in Unconsolidated Affiliates by Business Segment (Details)"
+      },
+      {
+        "html_file": "R52.htm",
+        "likely_tabular": true,
+        "title": "Investments in Unconsolidated Affiliates - Schedule of Equity in Income of Unconsolidated Affiliates by Business Segment (Details)"
+      },
+      {
+        "html_file": "R53.htm",
+        "likely_tabular": true,
+        "title": "Intangible Assets and Goodwill - Schedule of Intangible Assets by Business Segment (Details)"
+      },
+      {
+        "html_file": "R54.htm",
+        "likely_tabular": true,
+        "title": "Intangible Assets and Goodwill - Schedule of Amortization Expense of our Intangible Assets by Business Segment (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "Revenues - Schedule of Revenues by Business Segment (Details)"
+      },
+      {
+        "html_file": "R67.htm",
+        "likely_tabular": true,
+        "title": "Business Segments and Related Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R68.htm",
+        "likely_tabular": true,
+        "title": "Business Segments and Related Information - Schedule of Total Segment Gross Operating Margin to Income Before Income Taxes (Details)"
+      },
+      {
+        "html_file": "R69.htm",
+        "likely_tabular": true,
+        "title": "Business Segments and Related Information - Schedule of Segment Financial Information (Details)"
+      },
+      {
+        "html_file": "R70.htm",
+        "likely_tabular": true,
+        "title": "Business Segments and Related Information - Schedule of Total Segment Revenues as Reported in the Preceding Tables (Details)"
+      },
+      {
+        "html_file": "R71.htm",
+        "likely_tabular": true,
+        "title": "Business Segments and Related Information - Schedule of Segment Assets Reconciliation to our Consolidated Total Assets (Details)"
+      },
+      {
+        "html_file": "R72.htm",
+        "likely_tabular": true,
+        "title": "Business Segments and Related Information - Schedule of Revenues and Costs and Expenses Information (Details)"
+      }
+    ],
+    "company_name": "ENTERPRISE PRODUCTS PARTNERS L.P.",
+    "source_filing": {
+      "accession_number": "0001061219-26-000021",
+      "filing_date": "2026-08-07",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "EPD"
+  },
+  "0001065280": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment and Geographic Information"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "Revenue Recognition - Schedule of Revenue by Region (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "Segment and Geographic Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "Segment and Geographic Information - Schedule of Segment Reporting Financial Information, by Segment (Details)"
+      },
+      {
+        "html_file": "R67.htm",
+        "likely_tabular": true,
+        "title": "Segment and Geographic Information - Schedule of Long-lived Assets by Geographic Areas (Details)"
+      }
+    ],
+    "company_name": "NETFLIX INC",
+    "source_filing": {
+      "accession_number": "0001065280-26-000212",
+      "filing_date": "2026-07-17",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "NFLX"
+  },
+  "0001067983": {
+    "candidate_reports": [
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": false,
+        "title": "Business segment data"
+      },
+      {
+        "html_file": "R104.htm",
+        "likely_tabular": false,
+        "title": "Revenue from contracts with customers disaggregated by reportable segment and source of revenue (Detail)"
+      },
+      {
+        "html_file": "R107.htm",
+        "likely_tabular": false,
+        "title": "Business segment data - Narrative (Detail)"
+      },
+      {
+        "html_file": "R108.htm",
+        "likely_tabular": false,
+        "title": "Business segment data - Earnings data (Detail)"
+      },
+      {
+        "html_file": "R109.htm",
+        "likely_tabular": false,
+        "title": "Business segment data - Reconciliations of Revenues and Earnings before income taxes (Detail)"
+      },
+      {
+        "html_file": "R110.htm",
+        "likely_tabular": false,
+        "title": "Business segment data - Additional tabular disclosures (Detail)"
+      }
+    ],
+    "company_name": "BERKSHIRE HATHAWAY INC",
+    "source_filing": {
+      "accession_number": "0001193125-26-341032",
+      "filing_date": "2026-08-10",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "BRK-A"
+  },
+  "0001070423": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R37.htm",
+        "likely_tabular": true,
+        "title": "Revenues and Accounts Receivable - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R38.htm",
+        "likely_tabular": true,
+        "title": "Revenues and Accounts Receivable - Segment Revenue (Details)"
+      },
+      {
+        "html_file": "R64.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Segment Financial Data (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Segment Adjusted EBITDA Reconciliation (Details)"
+      }
+    ],
+    "company_name": "PLAINS ALL AMERICAN PIPELINE LP",
+    "source_filing": {
+      "accession_number": "0001070423-26-000031",
+      "filing_date": "2026-08-10",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "PAA"
+  },
+  "0001071739": {
+    "candidate_reports": [
+      {
+        "html_file": "R18.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R47.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      }
+    ],
+    "company_name": "CENTENE CORP",
+    "source_filing": {
+      "accession_number": "0001071739-26-000153",
+      "filing_date": "2026-07-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CNC"
+  },
+  "0001090727": {
+    "candidate_reports": [
+      {
+        "html_file": "R18.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "REVENUE RECOGNITION - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R48.htm",
+        "likely_tabular": true,
+        "title": "GOODWILL AND INTANGIBLE ASSETS - Allocation of Goodwill by Reportable Segment (Details)"
+      },
+      {
+        "html_file": "R60.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Narrative (Details)"
+      },
+      {
+        "html_file": "R61.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Results of Operations (Details)"
+      }
+    ],
+    "company_name": "UNITED PARCEL SERVICE INC",
+    "source_filing": {
+      "accession_number": "0001628280-26-053249",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "UPS"
+  },
+  "0001091667": {
+    "candidate_reports": [
+      {
+        "html_file": "R16.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting (Notes)"
+      },
+      {
+        "html_file": "R39.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Details)"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Operating Costs and Expenses (Details)"
+      },
+      {
+        "html_file": "R41.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Other Operating (Income) Expense, Net (Details)"
+      },
+      {
+        "html_file": "R42.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Other Income (Expense), Net (Details)"
+      }
+    ],
+    "company_name": "CHARTER COMMUNICATIONS, INC. /MO/",
+    "source_filing": {
+      "accession_number": "0001091667-26-000052",
+      "filing_date": "2026-07-24",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CHTR"
+  },
+  "0001133421": {
+    "candidate_reports": [
+      {
+        "html_file": "R16.htm",
+        "likely_tabular": false,
+        "title": "Segment Information (Unaudited)"
+      },
+      {
+        "html_file": "R43.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting (Basis Disclosures)"
+      },
+      {
+        "html_file": "R44.htm",
+        "likely_tabular": false,
+        "title": "Segment Information (Unaudited) Reconciliation to Consolidated Operating Income (Details 1)"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": false,
+        "title": "Segment Information (Unaudited) Sales by Customer Type (Details 2)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": false,
+        "title": "Segment Information (Unaudited) Sales by Contract Type (Details 3)"
+      },
+      {
+        "html_file": "R47.htm",
+        "likely_tabular": false,
+        "title": "Segment Information (Unaudited) Sales by Geographic Location (Details 4)"
+      },
+      {
+        "html_file": "R48.htm",
+        "likely_tabular": false,
+        "title": "Segment Information (Unaudited) Capital Expenditures and Depreciation and Amortization (Details 5)"
+      }
+    ],
+    "company_name": "NORTHROP GRUMMAN CORP /DE/",
+    "source_filing": {
+      "accession_number": "0001133421-26-000034",
+      "filing_date": "2026-07-21",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "NOC"
+  },
+  "0001137774": {
+    "candidate_reports": [
+      {
+        "html_file": "R27.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R129.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Reconciliation of Adjusted Operating Income and Net Income (Loss)) (Details)"
+      },
+      {
+        "html_file": "R130.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Reconciliation of Select Financial Information) (Details)"
+      },
+      {
+        "html_file": "R131.htm",
+        "likely_tabular": true,
+        "title": "Segment Information Segment Information (Asset Management and Service Fees) (Details)"
+      }
+    ],
+    "company_name": "PRUDENTIAL FINANCIAL INC",
+    "source_filing": {
+      "accession_number": "0001137774-26-000176",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "PFH"
+  },
+  "0001140859": {
+    "candidate_reports": [
+      {
+        "html_file": "R21.htm",
+        "likely_tabular": false,
+        "title": "Business Segment Information"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Goodwill and Other Intangible Assets - Schedule of Change in the Carrying Value of Goodwill by Reportable Segment (Details)"
+      },
+      {
+        "html_file": "R52.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Additional Information (Details)"
+      },
+      {
+        "html_file": "R53.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Schedule Reportable and Operating Segment Disaggregated Revenue (Details)"
+      },
+      {
+        "html_file": "R54.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Schedule of Reportable Segment Operating Income (Details)"
+      },
+      {
+        "html_file": "R55.htm",
+        "likely_tabular": true,
+        "title": "Business Segment Information - Schedule of Reconciliation of Total Segment Operating Income to Income Before Income Taxes (Details)"
+      }
+    ],
+    "company_name": "Cencora, Inc.",
+    "source_filing": {
+      "accession_number": "0001140859-26-000034",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "COR"
+  },
+  "0001156039": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R60.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R61.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Financial Data by Reportable Segment (Details)"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Reconciliation of Reportable Segments Operating Revenues to Total Revenues Reported in the Consolidated Statements of Income (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Reconciliation of Income Before Income Tax Expense to Reportable Segments Operating Gain Included in the Consolidated Statements of Income (Details)"
+      }
+    ],
+    "company_name": "Elevance Health, Inc.",
+    "source_filing": {
+      "accession_number": "0001156039-26-000060",
+      "filing_date": "2026-07-15",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "ELV"
+  },
+  "0001163165": {
+    "candidate_reports": [
+      {
+        "html_file": "R25.htm",
+        "likely_tabular": false,
+        "title": "Segment Disclosures and Related Information"
+      },
+      {
+        "html_file": "R70.htm",
+        "likely_tabular": true,
+        "title": "Segment Disclosures and Related Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R71.htm",
+        "likely_tabular": true,
+        "title": "Segment Disclosures and Related Information - Summary of Segment Level Net Income (Loss) (Details)"
+      },
+      {
+        "html_file": "R72.htm",
+        "likely_tabular": true,
+        "title": "Segment Disclosures and Related Information - Other Segment Disclosure (Details)"
+      },
+      {
+        "html_file": "R73.htm",
+        "likely_tabular": true,
+        "title": "Segment Disclosures and Related Information - Sales and Other Operating Revenues by Product (Details)"
+      },
+      {
+        "html_file": "R74.htm",
+        "likely_tabular": true,
+        "title": "Segment Disclosures and Related Information - Geographic Information (Details)"
+      }
+    ],
+    "company_name": "CONOCOPHILLIPS",
+    "source_filing": {
+      "accession_number": "0001163165-26-000032",
+      "filing_date": "2026-08-06",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "COP"
+  },
+  "0001166691": {
+    "candidate_reports": [
+      {
+        "html_file": "R11.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R31.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R32.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Segment Information (Details)"
+      },
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Schedule of Disaggregation of Revenue (Details)"
+      }
+    ],
+    "company_name": "COMCAST CORP",
+    "source_filing": {
+      "accession_number": "0001628280-26-049360",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CCZ"
+  },
+  "0001177394": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R64.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Schedule of Segment Reporting Information, by Segment (Details)"
+      }
+    ],
+    "company_name": "TD SYNNEX CORP",
+    "source_filing": {
+      "accession_number": "0001628280-26-046858",
+      "filing_date": "2026-07-02",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "SNX"
+  },
+  "0001179929": {
+    "candidate_reports": [
+      {
+        "html_file": "R15.htm",
+        "likely_tabular": false,
+        "title": "Segments"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Segments - Narrative (Details)"
+      },
+      {
+        "html_file": "R41.htm",
+        "likely_tabular": true,
+        "title": "Segments - Reconciliation of Gross Margin to Consolidated Income (Details)"
+      }
+    ],
+    "company_name": "MOLINA HEALTHCARE, INC.",
+    "source_filing": {
+      "accession_number": "0001179929-26-000039",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "MOH"
+  },
+  "0001276187": {
+    "candidate_reports": [
+      {
+        "html_file": "R19.htm",
+        "likely_tabular": false,
+        "title": "Reportable Segments"
+      },
+      {
+        "html_file": "R59.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Information by Segment (Details)"
+      },
+      {
+        "html_file": "R60.htm",
+        "likely_tabular": true,
+        "title": "Reportable Segments - Reconciliation of Net Income to Adjusted EBITDA (Details)"
+      }
+    ],
+    "company_name": "Energy Transfer LP",
+    "source_filing": {
+      "accession_number": "0001276187-26-000038",
+      "filing_date": "2026-08-06",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "ET"
+  },
+  "0001283699": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R69.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Details)"
+      }
+    ],
+    "company_name": "T-Mobile US, Inc.",
+    "source_filing": {
+      "accession_number": "0001283699-26-000101",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "TMUS"
+  },
+  "0001318605": {
+    "candidate_reports": [
+      {
+        "html_file": "R22.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting and Information about Geographic Areas"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "Summary of Significant Accounting Policies - Schedule of Disaggregation of Revenue by Major Source (Details)"
+      },
+      {
+        "html_file": "R62.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting and Information about Geographic Areas - Additional Information (Details)"
+      },
+      {
+        "html_file": "R63.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting and Information about Geographic Areas - Schedule of Total Revenues and Gross Profit by Reportable Segment (Details)"
+      },
+      {
+        "html_file": "R64.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting and Information about Geographic Areas - Schedule of Revenues by Geographic Area (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting and Information about Geographic Areas - Schedule of Long-Lived Assets by Geographic Area (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting and Information about Geographic Areas - Schedule of inventory and accounts receivable by reportable segment (Details)"
+      }
+    ],
+    "company_name": "Tesla, Inc.",
+    "source_filing": {
+      "accession_number": "0001628280-26-049270",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "TSLA"
+  },
+  "0001326801": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R33.htm",
+        "likely_tabular": true,
+        "title": "Revenue - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R58.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R59.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Segment Information of Revenue and Income (Details)"
+      }
+    ],
+    "company_name": "Meta Platforms, Inc.",
+    "source_filing": {
+      "accession_number": "0001628280-26-050705",
+      "filing_date": "2026-07-30",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "META"
+  },
+  "0001341439": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R85.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION Narrative (Details)"
+      },
+      {
+        "html_file": "R86.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION (Details)"
+      },
+      {
+        "html_file": "R87.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION RECONCILIATION (Details)"
+      },
+      {
+        "html_file": "R88.htm",
+        "likely_tabular": true,
+        "title": "SUMMARY OF TOTAL REVENUES BY GEOGRAPHIC REGION (Details)"
+      }
+    ],
+    "company_name": "ORACLE CORP",
+    "source_filing": {
+      "accession_number": "0001193125-26-277521",
+      "filing_date": "2026-06-22",
+      "form": "10-K"
+    },
+    "status": "found",
+    "ticker": "ORCL"
+  },
+  "0001467373": {
+    "candidate_reports": [
+      {
+        "html_file": "R19.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R53.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Additional Information (Details)"
+      },
+      {
+        "html_file": "R54.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Reportable Operating Segments (Details)"
+      },
+      {
+        "html_file": "R55.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting - Revenues by Industry Group and Type of Work (Details)"
+      }
+    ],
+    "company_name": "Accenture plc",
+    "source_filing": {
+      "accession_number": "0001467373-26-000032",
+      "filing_date": "2026-06-18",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "ACN"
+  },
+  "0001467858": {
+    "candidate_reports": [
+      {
+        "html_file": "R25.htm",
+        "likely_tabular": false,
+        "title": "Segment Reporting"
+      },
+      {
+        "html_file": "R72.htm",
+        "likely_tabular": true,
+        "title": "Segment Reporting (Details)"
+      }
+    ],
+    "company_name": "General Motors Co",
+    "source_filing": {
+      "accession_number": "0001467858-26-000051",
+      "filing_date": "2026-07-21",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "GM"
+  },
+  "0001510295": {
+    "candidate_reports": [
+      {
+        "html_file": "R21.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R73.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Additional Information) (Details)"
+      },
+      {
+        "html_file": "R74.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Segment Adjusted EBITDA to Income (Loss) from Operations before Income Taxes) (Details)"
+      },
+      {
+        "html_file": "R75.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Reconciliation of Segment Revenues To Sales and Other Operating Revenues) (Details)"
+      },
+      {
+        "html_file": "R76.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Income from Equity Method Investments) (Details)"
+      },
+      {
+        "html_file": "R77.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Segment Expenses) (Details)"
+      },
+      {
+        "html_file": "R78.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Depreciation and Amortization) (Details)"
+      },
+      {
+        "html_file": "R79.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Capital Expenditures) (Details)"
+      },
+      {
+        "html_file": "R95.htm",
+        "likely_tabular": true,
+        "title": "Revenue (Disaggregated by Product Line) (Details)"
+      }
+    ],
+    "company_name": "Marathon Petroleum Corp",
+    "source_filing": {
+      "accession_number": "0001510295-26-000061",
+      "filing_date": "2026-08-04",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "MPC"
+  },
+  "0001534701": {
+    "candidate_reports": [
+      {
+        "html_file": "R27.htm",
+        "likely_tabular": false,
+        "title": "Segment Disclosures and Related Information"
+      },
+      {
+        "html_file": "R29.htm",
+        "likely_tabular": false,
+        "title": "DCP Midstream Class A Segment"
+      },
+      {
+        "html_file": "R48.htm",
+        "likely_tabular": true,
+        "title": "Sales and Other Operating Revenues - Schedule of Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R77.htm",
+        "likely_tabular": true,
+        "title": "Segment Disclosures and Related Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R78.htm",
+        "likely_tabular": true,
+        "title": "Segment Disclosures and Related Information - Schedule of Analysis by Segment (Details)"
+      },
+      {
+        "html_file": "R80.htm",
+        "likely_tabular": true,
+        "title": "DCP Midstream Class A Segment - Schedule of Assets and Liabilities (Details)"
+      }
+    ],
+    "company_name": "Phillips 66",
+    "source_filing": {
+      "accession_number": "0001534701-26-000032",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "PSX"
+  },
+  "0001543151": {
+    "candidate_reports": [
+      {
+        "html_file": "R17.htm",
+        "likely_tabular": false,
+        "title": "Segment Information and Geographic Information"
+      },
+      {
+        "html_file": "R47.htm",
+        "likely_tabular": true,
+        "title": "Goodwill and Intangible Assets - Schedule of Changes in the Carrying Value of Goodwill by Segment (Details)"
+      },
+      {
+        "html_file": "R70.htm",
+        "likely_tabular": true,
+        "title": "Segment Information and Geographic Information - Schedule of Segment Reporting Information, by Segment (Details)"
+      },
+      {
+        "html_file": "R71.htm",
+        "likely_tabular": true,
+        "title": "Segment Information and Geographic Information - Schedule of Geographic Information (Details)"
+      }
+    ],
+    "company_name": "Uber Technologies, Inc",
+    "source_filing": {
+      "accession_number": "0001543151-26-000032",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "UBER"
+  },
+  "0001551152": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R56.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Additional Information (Details)"
+      },
+      {
+        "html_file": "R57.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Disaggregation of Revenue (Details)"
+      }
+    ],
+    "company_name": "AbbVie Inc.",
+    "source_filing": {
+      "accession_number": "0001551152-26-000026",
+      "filing_date": "2026-08-03",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "ABBV"
+  },
+  "0001571996": {
+    "candidate_reports": [
+      {
+        "html_file": "R25.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R51.htm",
+        "likely_tabular": true,
+        "title": "FINANCIAL SERVICES - Schedule of Components of Financing Receivables Segregated by Portfolio Segment (Details)"
+      },
+      {
+        "html_file": "R91.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Narrative (Details)"
+      },
+      {
+        "html_file": "R92.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Schedule of Reconciliation of Revenue by Reportable Segments to Consolidated Net Revenue (Details)"
+      },
+      {
+        "html_file": "R93.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Schedule of Significant Expense Categories by Reportable Segment (Details)"
+      },
+      {
+        "html_file": "R94.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Schedule of Disaggregation of Net Revenue (Details)"
+      }
+    ],
+    "company_name": "Dell Technologies Inc.",
+    "source_filing": {
+      "accession_number": "0001571996-26-000030",
+      "filing_date": "2026-06-09",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "DELL"
+  },
+  "0001581990": {
+    "candidate_reports": [
+      {
+        "html_file": "R20.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R37.htm",
+        "likely_tabular": true,
+        "title": "Revenues and Accounts Receivable - Disaggregation of Revenue (Details)"
+      },
+      {
+        "html_file": "R38.htm",
+        "likely_tabular": true,
+        "title": "Revenues and Accounts Receivable - Segment Revenue (Details)"
+      },
+      {
+        "html_file": "R64.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Narrative (Details)"
+      },
+      {
+        "html_file": "R65.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Segment Financial Data (Details)"
+      },
+      {
+        "html_file": "R66.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Segment Adjusted EBITDA Reconciliation (Details)"
+      }
+    ],
+    "company_name": "PLAINS GP HOLDINGS LP",
+    "source_filing": {
+      "accession_number": "0001581990-26-000025",
+      "filing_date": "2026-08-10",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "PAGP"
+  },
+  "0001646972": {
+    "candidate_reports": [
+      {
+        "html_file": "R14.htm",
+        "likely_tabular": false,
+        "title": "SEGMENT INFORMATION"
+      },
+      {
+        "html_file": "R35.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Narrative (Details)"
+      },
+      {
+        "html_file": "R36.htm",
+        "likely_tabular": true,
+        "title": "SEGMENT INFORMATION - Schedule of Segment Reporting Information, by Segment (Details)"
+      }
+    ],
+    "company_name": "Albertsons Companies, Inc.",
+    "source_filing": {
+      "accession_number": "0001646972-26-000046",
+      "filing_date": "2026-07-28",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "ACI"
+  },
+  "0001652044": {
+    "candidate_reports": [
+      {
+        "html_file": "R24.htm",
+        "likely_tabular": false,
+        "title": "Information about Segments and Geographic Areas"
+      },
+      {
+        "html_file": "R39.htm",
+        "likely_tabular": true,
+        "title": "Revenues - Revenue by Segment (Details)"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Revenues - Revenue by Geographic Location (Details)"
+      },
+      {
+        "html_file": "R83.htm",
+        "likely_tabular": true,
+        "title": "Information about Segments and Geographic Areas - Revenue and Operating Income/Loss by Segment (Details)"
+      },
+      {
+        "html_file": "R84.htm",
+        "likely_tabular": true,
+        "title": "Information about Segments and Geographic Areas - Long-Lived Assets by Geographic Area (Details)"
+      }
+    ],
+    "company_name": "Alphabet Inc.",
+    "source_filing": {
+      "accession_number": "0001652044-26-000071",
+      "filing_date": "2026-07-23",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "GOOG"
+  },
+  "0001730168": {
+    "candidate_reports": [
+      {
+        "html_file": "R16.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R51.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      }
+    ],
+    "company_name": "Broadcom Inc.",
+    "source_filing": {
+      "accession_number": "0001730168-26-000054",
+      "filing_date": "2026-06-09",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "AVGO"
+  },
+  "0001739940": {
+    "candidate_reports": [
+      {
+        "html_file": "R23.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R42.htm",
+        "likely_tabular": true,
+        "title": "Description of Business - Segment Information (Details)"
+      },
+      {
+        "html_file": "R84.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Special Item Charges (Benefits) (Details)"
+      },
+      {
+        "html_file": "R85.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Summarized Segment Financial Information (Details)"
+      },
+      {
+        "html_file": "R86.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Revenue from External Customers (Details)"
+      },
+      {
+        "html_file": "R87.htm",
+        "likely_tabular": true,
+        "title": "Segment Information - Financial and Performance Guarantees (Details)"
+      }
+    ],
+    "company_name": "Cigna Group",
+    "source_filing": {
+      "accession_number": "0001739940-26-000065",
+      "filing_date": "2026-07-30",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "CI"
+  },
+  "0001744489": {
+    "candidate_reports": [
+      {
+        "html_file": "R9.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R39.htm",
+        "likely_tabular": true,
+        "title": "Financial Information by Operating Segments (Details)"
+      },
+      {
+        "html_file": "R40.htm",
+        "likely_tabular": true,
+        "title": "Equity in the Income of Investees included in Segment Operating Results (Details)"
+      },
+      {
+        "html_file": "R41.htm",
+        "likely_tabular": true,
+        "title": "Supplemental Information About Segment Expenses (Details)"
+      },
+      {
+        "html_file": "R42.htm",
+        "likely_tabular": true,
+        "title": "Reconciliation of Segment Operating Income to Income before Income Taxes (Details)"
+      },
+      {
+        "html_file": "R44.htm",
+        "likely_tabular": true,
+        "title": "Description of Business and Segment Information - Additional Information (Details)"
+      },
+      {
+        "html_file": "R45.htm",
+        "likely_tabular": true,
+        "title": "Disaggregation of Revenue by Major Source (Details)"
+      },
+      {
+        "html_file": "R46.htm",
+        "likely_tabular": true,
+        "title": "Disaggregation of Revenue by Geographical Markets (Details)"
+      }
+    ],
+    "company_name": "Walt Disney Co",
+    "source_filing": {
+      "accession_number": "0001744489-26-000057",
+      "filing_date": "2026-08-05",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "DIS"
+  },
+  "0001855447": {
+    "candidate_reports": [
+      {
+        "html_file": "R43.htm",
+        "likely_tabular": true,
+        "title": "Revenue Recognition - Summary of Net Revenue by Major Geographic Region (Details)"
+      },
+      {
+        "html_file": "R44.htm",
+        "likely_tabular": true,
+        "title": "Revenue Recognition - Summary of Net Revenue by Major Geographic Region (Parenthetical) (Details)"
+      }
+    ],
+    "company_name": "TIGO ENERGY, INC.",
+    "source_filing": {
+      "accession_number": "0001855447-26-000007",
+      "filing_date": "2026-08-04",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "TYGO"
+  },
+  "0001859392": {
+    "candidate_reports": [
+      {
+        "html_file": "R26.htm",
+        "likely_tabular": false,
+        "title": "REPORTABLE SEGMENTS"
+      },
+      {
+        "html_file": "R102.htm",
+        "likely_tabular": true,
+        "title": "REPORTABLE SEGMENTS - Narrative (Details)"
+      },
+      {
+        "html_file": "R103.htm",
+        "likely_tabular": true,
+        "title": "REPORTABLE SEGMENTS - Schedule of Assets and Liabilities by Reportable Segment (Details)"
+      },
+      {
+        "html_file": "R104.htm",
+        "likely_tabular": true,
+        "title": "REPORTABLE SEGMENTS - Schedule Income and Expenses by Reportable Segment (Details)"
+      },
+      {
+        "html_file": "R105.htm",
+        "likely_tabular": true,
+        "title": "REPORTABLE SEGMENTS - Schedule of Company Contract Liabilities (Details)"
+      }
+    ],
+    "company_name": "Galaxy Digital Inc.",
+    "source_filing": {
+      "accession_number": "0001859392-26-000091",
+      "filing_date": "2026-08-10",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "GLXY"
+  },
+  "0001897762": {
+    "candidate_reports": [
+      {
+        "html_file": "R18.htm",
+        "likely_tabular": false,
+        "title": "Segment Information"
+      },
+      {
+        "html_file": "R51.htm",
+        "likely_tabular": true,
+        "title": "Segment Information (Details)"
+      }
+    ],
+    "company_name": "Ingram Micro Holding Corp",
+    "source_filing": {
+      "accession_number": "0001628280-26-051053",
+      "filing_date": "2026-07-30",
+      "form": "10-Q"
+    },
+    "status": "found",
+    "ticker": "INGM"
+  }
+}

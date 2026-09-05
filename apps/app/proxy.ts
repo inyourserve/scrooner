@@ -6,7 +6,14 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Session refresh belongs only on authenticated journeys. Public screener,
-  // auth, and catalog requests must not pay for a duplicate claims lookup.
-  matcher: ["/account/:path*", "/saved-screens/:path*", "/api/screens/:path*"],
+  matcher: [
+    "/",
+    "/screener/:path*",
+    "/saved-screens/:path*",
+    "/account/:path*",
+    "/api/ask/:path*",
+    "/api/screen/:path*",
+    "/api/screens/:path*",
+    "/api/metrics/:path*",
+  ],
 };

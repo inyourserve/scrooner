@@ -39,7 +39,7 @@ alphanumeric token, rather than anchoring to one exact label phrase.
 
 import json
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import psycopg
 import structlog
@@ -50,6 +50,28 @@ from scrooner_pipeline.common.sec_client import SECClient
 logger = structlog.get_logger()
 
 FORMS = {"SC 13D", "SC 13D/A", "SC 13G", "SC 13G/A"}
+
+MIN_FILING_DATE = (date.today() - timedelta(days=365 * 3)).isoformat()  # explicit
+# History-depth decision (2026-08-30), prompted directly: this module had NO
+# recency bound at all, unlike insider.py's own 12-month MIN_FILING_DATE --
+# checked live before picking a number: for every (company, filer)
+# relationship in core.beneficial_ownership, 73% (38,861 of 53,067) have
+# their MOST RECENT filing more than 3 years old -- almost certainly
+# genuinely closed positions (the filer sold below 5%, nothing left to
+# report), not stale-but-still-current ones. A 1-year bound (Form 4's own
+# rule) was considered and rejected: unlike Form 4 (every transaction gets
+# a filing) or Form 13F (mandatory every quarter regardless of change),
+# Schedule 13G does NOT require an annual refile if nothing changed -- a
+# genuinely stable, still-active >5% holder can legitimately go more than a
+# year without a new filing. Only 1 of 53,067 relationships had a most-
+# recent filing within the last year, which would make a 1-year bound
+# actively wrong here, not just conservative. 3 years balances both real
+# purposes this data serves: the CUSIP crosswalk only ever needs ONE valid
+# CUSIP (stable for a company's life, any filing in the window works), and
+# the >5%-holder disclosure itself wants "who currently holds this," which
+# a 3-year window captures far more completely than 1 year would while
+# still excluding the clear historical majority. Computed dynamically (not
+# a hardcoded string), same reasoning as insider.py's own bound.
 
 _SUBJECT_BLOCK_RE = re.compile(r"SUBJECT COMPANY:(.*?)FILED BY:", re.DOTALL)
 _FILED_BY_BLOCK_RE = re.compile(r"FILED BY:(.*?)(?:FILED BY:|<DOCUMENT>|</(?:SEC|IMS)-HEADER>)", re.DOTALL)
@@ -132,7 +154,7 @@ def _load_schedule_filings(storage: SupabaseStorageClient, conn: psycopg.Connect
         payload = json.loads(storage.download(strip_bucket_prefix(storage_path)))
         block = payload["filings"]["recent"] if "filings" in payload else payload
         for i, form in enumerate(block.get("form", [])):
-            if form in FORMS:
+            if form in FORMS and block["filingDate"][i] >= MIN_FILING_DATE:
                 filings.append(
                     {
                         "form": form,
@@ -196,6 +218,12 @@ def update_beneficial_ownership_for_company(
     with conn.cursor() as cur:
         cur.execute("delete from core.beneficial_ownership where company_id = %s", (company_id,))
         if rows:
+            # ON CONFLICT DO NOTHING (added 2026-08-28, same fix as
+            # insider.py's identical issue): accession_number carries a
+            # global `unique` constraint, but the per-company delete above
+            # only protects against a duplicate within THIS company's own
+            # rows -- a genuine cross-run duplicate would otherwise crash
+            # the whole chunk with an uncaught UniqueViolation.
             cur.executemany(
                 """
                 insert into core.beneficial_ownership
@@ -204,6 +232,7 @@ def update_beneficial_ownership_for_company(
                 values
                     (%(company_id)s, %(accession_number)s, %(schedule_type)s, %(is_amendment)s, %(filer_name)s,
                      %(filer_cik)s, %(percent_of_class)s, %(shares_owned)s, %(cusip)s, %(filing_date)s)
+                on conflict (accession_number) do nothing
                 """,
                 rows,
             )
@@ -212,12 +241,53 @@ def update_beneficial_ownership_for_company(
     return stats
 
 
+PER_COMPANY_TIMEOUT_SECONDS = 1800  # same rationale and same value as
+# insider.py's identical constant -- a company with a very large filing
+# history can legitimately take a long time under SEC's rate limit; this
+# only bounds the worst case so one company can't stall a chunk forever.
+
+
+def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> dict:
+    """Same pattern as insider.py's identical helper, including the same
+    fix (2026-08-28): a raw `threading.Thread(daemon=True)`, NOT
+    `concurrent.futures.ThreadPoolExecutor` -- found live that
+    ThreadPoolExecutor's worker threads are non-daemon by default, so
+    Python won't let the process exit while an abandoned, still-blocked
+    worker thread is alive, even though the logical timeout already fired
+    and moved on. A daemon thread lets the interpreter exit immediately
+    once the timeout elapses, regardless of what the abandoned thread is
+    still doing."""
+    import queue
+    import threading
+
+    from scrooner_pipeline.db.connection import get_connection
+
+    result_queue: queue.Queue = queue.Queue(maxsize=1)
+
+    def _work() -> None:
+        try:
+            with get_connection() as company_conn:
+                result_queue.put(("ok", update_beneficial_ownership_for_company(company_conn, sec, company_id, cik)))
+        except Exception as exc:  # noqa: BLE001
+            result_queue.put(("error", exc))
+
+    thread = threading.Thread(target=_work, daemon=True)
+    thread.start()
+    thread.join(timeout=PER_COMPANY_TIMEOUT_SECONDS)
+    if thread.is_alive():
+        raise TimeoutError(f"company {cik} exceeded {PER_COMPANY_TIMEOUT_SECONDS}s")
+    status, payload = result_queue.get_nowait()
+    if status == "error":
+        raise payload
+    return payload
+
+
 def update_beneficial_ownership(conn: psycopg.Connection, ciks: set[str]) -> dict:
     with conn.cursor() as cur:
         cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "stakes": 0}
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "timed_out": 0, "stakes": 0}
     with SECClient() as sec:
         for cik in sorted(ciks):
             totals["considered"] += 1
@@ -225,7 +295,20 @@ def update_beneficial_ownership(conn: psycopg.Connection, ciks: set[str]) -> dic
             if company_id is None:
                 totals["no_company"] += 1
                 continue
-            stats = update_beneficial_ownership_for_company(conn, sec, company_id, cik)
+            try:
+                stats = _run_company_with_timeout(sec, company_id, cik)
+            except TimeoutError:
+                logger.warning("beneficial_ownership.company_timed_out", cik=cik, timeout_seconds=PER_COMPANY_TIMEOUT_SECONDS)
+                totals["timed_out"] += 1
+                continue
+            except Exception:
+                # Same lesson as insider.py: one company's failure must not
+                # crash the whole chunk and cost every other company in it
+                # their own progress on every retry.
+                conn.rollback()
+                logger.exception("beneficial_ownership.company_failed", cik=cik)
+                totals["errored"] += 1
+                continue
             totals["ok"] += 1
             totals["stakes"] += stats["filings_parsed"]
     logger.info("beneficial_ownership.done", **totals)

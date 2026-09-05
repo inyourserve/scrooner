@@ -54,13 +54,43 @@ several real details:
    pre-emptively rather than after a wrong number ships.
 5. N-PORT is disseminated quarterly but each individual filing reports
    ONE fund's holdings as of ONE month-end (Form N-PORT is a monthly
-   report); REPORT_ENDING_PERIOD in the real data spans well outside any
-   single calendar quarter for exactly this reason. A fund can
-   legitimately appear more than once in a single quarterly bulk file
-   (different months). This is not deduplicated here -- each
-   (accession_number, holding_id) row is kept and traces to its own
-   filing, same "never silently collapse, let the consumer choose"
-   precedent institutional.py already sets for amendments.
+   report); REPORT_DATE (the real "as of" snapshot field -- see
+   _load_submission_lookup's own docstring for why this is REPORT_DATE
+   and NOT REPORT_ENDING_PERIOD, a real bug this module first shipped
+   with) in the real data spans well outside any single calendar quarter
+   for exactly this reason. A fund can legitimately appear more than once
+   in a single quarterly bulk file (different months). This is not
+   deduplicated here -- each (accession_number, holding_id) row is kept
+   and traces to its own filing, same "never silently collapse, let the
+   consumer choose" precedent institutional.py already sets for
+   amendments.
+
+6. Doc `insider_info.md`'s Mutual Fund Ownership MVP needs a two-period
+   comparison (funds increasing/reducing/entering/exiting), not a single
+   snapshot -- so this module fetches BOTH the current bulk window
+   (2026q2) AND the prior one (2026q1, confirmed live 2026-08-29 as a
+   real, downloadable window at the exact URL below) in the same run.
+   `source_zip` is set per-row at match time (not uniformly at write
+   time, unlike a single-window design) so both windows' rows can be
+   written in ONE delete-then-reinsert pass without one window's write
+   clobbering the other's -- see `_write_matched_rows`'s own docstring
+   for why a naive per-window delete-then-reinsert would have been a
+   real shared-write-scoping bug (pipeline/CLAUDE.md's own documented
+   lesson: scope a shared-table delete on every dimension another write
+   in the same job keys on, here "which window" as well as
+   "which company"). Checked live 2026-08-29 against the real matched
+   golden-10 data (fund_cik='0001100663', 77 distinct series_id AND 77
+   distinct fund_name across 318 rows in the 2026q2 window alone)
+   before picking a per-fund grain for the summary comparison in
+   mutual_fund_summary.py: fund_cik ALONE is not a safe match key --
+   one registrant CIK can legitimately be the umbrella for dozens of
+   genuinely different named funds/series, exactly the point 2 finding
+   above generalized to comparing periods, not just naming one snapshot.
+   series_id is populated on ~97% of real matched rows (428 null of
+   13,871 in the 2026q2 window) -- the fallback for the null ~3% is
+   fund_name (which itself already falls back to registrant_name when
+   there's no series row at all, per point 2), not a second attempt at
+   series_id.
 """
 
 import csv
@@ -77,15 +107,27 @@ from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
 
-# Verified live 2026-08-28 against
-# https://www.sec.gov/data-research/sec-markets-data/form-n-port-data-sets
-# -- this is the latest quarterly window published as of that date (doc 21
-# found the same file, 2026-08-17; it had not rolled to a newer quarter in
-# the 11 days since). Update by hand when a newer window is published,
-# same "not yet a recurring job" note as institutional.py's own
-# BULK_ZIP_URL.
-BULK_ZIP_URL = "https://www.sec.gov/files/dera/data/form-n-port-data-sets/2026q2_nport.zip"
-BULK_ZIP_WINDOW_LABEL = "2026q2"
+# Two most-recent consecutive quarterly windows -- doc `insider_info.md`'s
+# MVP needs a period-over-period comparison, not a single snapshot. Both
+# verified live and downloadable as of 2026-08-29 (2026q2: same file doc 21
+# found 2026-08-17 and this module first used 2026-08-28, still the latest
+# published quarter; 2026q1: confirmed HTTP 200, content-length ~463MB, via
+# this project's own SECClient so the declared User-Agent is sent). Update
+# by hand when a newer window is published, same "not yet a recurring job"
+# note as institutional.py's own BULK_ZIP_URL -- when that happens, drop
+# the oldest entry and add the new one so this always stays exactly the
+# two most-recent windows, not an ever-growing list.
+BULK_ZIP_WINDOWS = [
+    ("2026q2", "https://www.sec.gov/files/dera/data/form-n-port-data-sets/2026q2_nport.zip"),
+    ("2026q1", "https://www.sec.gov/files/dera/data/form-n-port-data-sets/2026q1_nport.zip"),
+]
+
+# Found live 2026-08-31: an unbatched executemany over a full-population
+# matched set drops the pooled connection mid-write. Same fix and same
+# value as institutional.py's own INSERT_BATCH_SIZE -- kept as its own
+# module-local constant rather than a shared import, matching this
+# project's existing small-duplication-over-premature-sharing pattern.
+INSERT_BATCH_SIZE = 5000
 
 # Equity-Common, long positions only -- excludes debt, derivatives (the
 # "DE" asset category, always carrying a populated DERIVATIVE_CAT in the
@@ -130,11 +172,37 @@ def _load_submission_lookup(zf: zipfile.ZipFile) -> dict[str, dict]:
     Loaded fully into memory up front (SUBMISSION.tsv is ~1MB) -- same
     "load lookups up front, never scan per candidate row" discipline as
     institutional.py and every other batch job in this pipeline. No CIK
-    here -- see module docstring point 1; that lives on REGISTRANT.tsv."""
+    here -- see module docstring point 1; that lives on REGISTRANT.tsv.
+
+    report_period is sourced from REPORT_DATE, NOT REPORT_ENDING_PERIOD --
+    a real bug in this module's own first version, found live 2026-08-29
+    while building the two-window comparison (mutual_fund_summary.py):
+    checked SEC's own nport_readme.htm field-layout table directly (Sec
+    5.1, SUBMISSION) before trusting either field's name. REPORT_ENDING_
+    PERIOD is documented there as "Date of fiscal year-end" (Item A.3.a)
+    -- a fund's recurring annual anchor date, which can legitimately fall
+    AFTER the filing date within the same fiscal year (e.g. a fund with a
+    January 31 fiscal year-end still carries that same FYE even on an
+    April filing). REPORT_DATE is "Date as of which information is
+    reported" (Item A.3.b) -- the actual holdings-snapshot date this
+    project needs and the only one of the two that always precedes
+    filing_date by a real, bounded, ~60-day regulatory filing window.
+    Confirmed live: two real rows this bug produced (report_period
+    2027-01-31, filing_date 2026-06-26/29) actually carry REPORT_DATE
+    30-APR-2026 -- a normal, sensible snapshot date. Using the wrong
+    field didn't just mislabel a date; for AAPL/MSFT it made the "latest
+    2 reporting periods" selection pick two of these fiscal-year-end
+    outlier values (1 and 38 real rows respectively) instead of the two
+    periods with hundreds of real rows each, corrupting the entire
+    period-over-period comparison silently -- caught only because the
+    computed summary's own numbers (an entire ~39-fund portfolio
+    "exiting" in one month) were implausible enough to check by hand
+    before trusting them, same discipline as everywhere else in this
+    project."""
     lookup: dict[str, dict] = {}
     for row in _load_tsv_dict(zf, "SUBMISSION.tsv"):
         lookup[row["ACCESSION_NUMBER"]] = {
-            "report_period": _parse_sec_date(row["REPORT_ENDING_PERIOD"]),
+            "report_period": _parse_sec_date(row["REPORT_DATE"]),
             "filing_date": _parse_sec_date(row["FILING_DATE"]),
             "is_amendment": row["SUB_TYPE"].endswith("/A"),
         }
@@ -184,6 +252,7 @@ def _match_holdings(
     submission_lookup: dict[str, dict],
     registrant_lookup: dict[str, dict],
     series_lookup: dict[str, dict],
+    window_label: str,
 ) -> tuple[list[dict], int]:
     """Streams FUND_REPORTED_HOLDING.tsv (~910MB uncompressed) row by row
     rather than loading it wholesale -- only rows whose CUSIP matches a
@@ -226,6 +295,7 @@ def _match_holdings(
                 "report_period": submission.get("report_period"),
                 "filing_date": submission.get("filing_date"),
                 "is_amendment": submission.get("is_amendment", False),
+                "source_zip": window_label,
             }
         )
     return matched, total_rows
@@ -236,9 +306,22 @@ def _write_matched_rows(conn: psycopg.Connection, matched_rows: list[dict]) -> l
     pattern as institutional.py (and Mapper's resolve.py/calculate.py
     before it) -- a plain `on conflict do nothing` upsert alone would
     leave stale rows behind for a company whose holdings shrank between
-    runs. Split out from update_mutual_fund_ownership so this write
-    behavior is unit-testable against a fake cursor without touching the
-    network/zip-parsing path above."""
+    runs. Scoped by company_id ONLY, not by window -- deliberately, now
+    that this module fetches multiple windows per run (see module
+    docstring point 6): matched_rows here is expected to already be the
+    UNION of every window's matches for this run, each row already
+    carrying its own real source_zip (set per-row in _match_holdings, not
+    injected uniformly here as a single earlier version of this function
+    did). A delete scoped by (company_id, source_zip) called separately
+    per window would have been the actual bug -- each window's own write
+    would silently wipe the OTHER window's already-written rows for any
+    company matched in both, since both share the same company_id.
+    Calling this once with both windows' rows already merged sidesteps
+    that shared-write-scoping trap entirely rather than adding a second
+    scoping dimension to guard against it. Split out from
+    update_mutual_fund_ownership so this write behavior is unit-testable
+    against a fake cursor without touching the network/zip-parsing path
+    above."""
     company_ids = sorted({r["company_id"] for r in matched_rows})
     with conn.cursor() as cur:
         if company_ids:
@@ -247,20 +330,27 @@ def _write_matched_rows(conn: psycopg.Connection, matched_rows: list[dict]) -> l
                 (company_ids,),
             )
         if matched_rows:
-            cur.executemany(
-                """
-                insert into core.fund_ownership
-                    (company_id, accession_number, holding_id, fund_name, fund_cik, series_id,
-                     shares, currency_code, currency_value, value_usd, pct_of_fund_net_assets,
-                     report_period, filing_date, is_amendment, source_zip)
-                values
-                    (%(company_id)s, %(accession_number)s, %(holding_id)s, %(fund_name)s, %(fund_cik)s, %(series_id)s,
-                     %(shares)s, %(currency_code)s, %(currency_value)s, %(value_usd)s, %(pct_of_fund_net_assets)s,
-                     %(report_period)s, %(filing_date)s, %(is_amendment)s, %(source_zip)s)
-                on conflict (accession_number, holding_id) do nothing
-                """,
-                [{**r, "source_zip": BULK_ZIP_WINDOW_LABEL} for r in matched_rows],
-            )
+            # Batched, not one executemany over the whole set: found live
+            # 2026-08-31 (same bug as institutional.py, same day) that a
+            # single executemany over the full-population matched set
+            # (~1.9M rows combined across both windows) drops the pooled
+            # connection mid-write. See institutional.py's INSERT_BATCH_SIZE
+            # comment for the full explanation.
+            for i in range(0, len(matched_rows), INSERT_BATCH_SIZE):
+                cur.executemany(
+                    """
+                    insert into core.fund_ownership
+                        (company_id, accession_number, holding_id, fund_name, fund_cik, series_id,
+                         shares, currency_code, currency_value, value_usd, pct_of_fund_net_assets,
+                         report_period, filing_date, is_amendment, source_zip)
+                    values
+                        (%(company_id)s, %(accession_number)s, %(holding_id)s, %(fund_name)s, %(fund_cik)s, %(series_id)s,
+                         %(shares)s, %(currency_code)s, %(currency_value)s, %(value_usd)s, %(pct_of_fund_net_assets)s,
+                         %(report_period)s, %(filing_date)s, %(is_amendment)s, %(source_zip)s)
+                    on conflict (accession_number, holding_id) do nothing
+                    """,
+                    matched_rows[i : i + INSERT_BATCH_SIZE],
+                )
     return company_ids
 
 
@@ -268,43 +358,61 @@ def update_mutual_fund_ownership(conn: psycopg.Connection) -> dict:
     cusip_to_company = _load_golden_cusips(conn)
     if not cusip_to_company:
         logger.warning("mutual_fund_ownership.no_cusips")
-        return {"matched_rows": 0, "companies": 0, "holding_row_count": 0}
+        return {"matched_rows": 0, "companies": 0, "windows": {}}
 
-    with SECClient() as sec:
-        zip_path = sec.get_cached_bulk_zip(BULK_ZIP_URL, f"nport-{BULK_ZIP_WINDOW_LABEL}")
+    all_matched_rows: list[dict] = []
+    window_fetch_stats: list[tuple[str, str, str, int, int]] = []
 
-    sha256 = hashlib.sha256(zip_path.read_bytes()).hexdigest()
+    for window_label, url in BULK_ZIP_WINDOWS:
+        with SECClient() as sec:
+            zip_path = sec.get_cached_bulk_zip(url, f"nport-{window_label}")
 
-    with zipfile.ZipFile(zip_path) as zf:
-        submission_lookup = _load_submission_lookup(zf)
-        registrant_lookup = _load_registrant_lookup(zf)
-        series_lookup = _load_fund_series_lookup(zf)
-        matched_rows, holding_row_count = _match_holdings(
-            zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup
+        sha256 = hashlib.sha256(zip_path.read_bytes()).hexdigest()
+
+        with zipfile.ZipFile(zip_path) as zf:
+            submission_lookup = _load_submission_lookup(zf)
+            registrant_lookup = _load_registrant_lookup(zf)
+            series_lookup = _load_fund_series_lookup(zf)
+            matched_rows, holding_row_count = _match_holdings(
+                zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, window_label
+            )
+
+        all_matched_rows.extend(matched_rows)
+        window_fetch_stats.append((window_label, url, sha256, holding_row_count, len(matched_rows)))
+        logger.info(
+            "mutual_fund_ownership.window_done",
+            window_label=window_label, holding_row_count=holding_row_count, matched_rows=len(matched_rows),
         )
 
-    company_ids = _write_matched_rows(conn, matched_rows)
+    # Single delete-then-reinsert pass covering BOTH windows' rows -- see
+    # _write_matched_rows's own docstring for why this must be one call,
+    # not one call per window.
+    company_ids = _write_matched_rows(conn, all_matched_rows)
+
     with conn.cursor() as cur:
-        cur.execute(
-            """
-            insert into raw.sec_nport_bulk_fetch
-                (source_url, window_label, sha256, holding_row_count, matched_row_count)
-            values (%s, %s, %s, %s, %s)
-            on conflict (window_label) do update set
-                sha256 = excluded.sha256,
-                holding_row_count = excluded.holding_row_count,
-                matched_row_count = excluded.matched_row_count,
-                fetched_at = now()
-            """,
-            (BULK_ZIP_URL, BULK_ZIP_WINDOW_LABEL, sha256, holding_row_count, len(matched_rows)),
-        )
+        for window_label, url, sha256, holding_row_count, matched_count in window_fetch_stats:
+            cur.execute(
+                """
+                insert into raw.sec_nport_bulk_fetch
+                    (source_url, window_label, sha256, holding_row_count, matched_row_count)
+                values (%s, %s, %s, %s, %s)
+                on conflict (window_label) do update set
+                    sha256 = excluded.sha256,
+                    holding_row_count = excluded.holding_row_count,
+                    matched_row_count = excluded.matched_row_count,
+                    fetched_at = now()
+                """,
+                (url, window_label, sha256, holding_row_count, matched_count),
+            )
         conn.commit()
 
     stats = {
-        "matched_rows": len(matched_rows),
+        "matched_rows": len(all_matched_rows),
         "companies": len(company_ids),
-        "holding_row_count": holding_row_count,
-        "window_label": BULK_ZIP_WINDOW_LABEL,
+        "windows": {
+            window_label: {"holding_row_count": holding_row_count, "matched_row_count": matched_count}
+            for window_label, _url, _sha256, holding_row_count, matched_count in window_fetch_stats
+        },
     }
     logger.info("mutual_fund_ownership.done", **stats)
     return stats

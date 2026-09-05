@@ -9,6 +9,8 @@ import {
   updatePassword,
 } from "@/app/auth/actions";
 import { INITIAL_AUTH_STATE, type AuthActionState } from "@/lib/auth/state";
+import { Button } from "@/components/ui/Button";
+import { Field } from "@/components/ui/Field";
 
 type Mode = "login" | "signup" | "recovery" | "update";
 
@@ -45,30 +47,22 @@ export function AuthForm({ mode, redirectUrl = "/screener" }: { mode: Mode; redi
       <form action={action} className="auth-form" noValidate>
         <input type="hidden" name="redirectUrl" value={redirectUrl} />
         {needsEmail && (
-          <div className="auth-field">
-            <label htmlFor={`${mode}-email`}>Email address</label>
-            <input id={`${mode}-email`} name="email" type="email" autoComplete="email" required aria-invalid={Boolean(state.errors?.email)} aria-describedby={state.errors?.email ? `${mode}-email-error` : undefined} />
-            {state.errors?.email && <p className="auth-field__error" id={`${mode}-email-error`}>{state.errors.email}</p>}
-          </div>
+          <Field className="auth-field" htmlFor={`${mode}-email`} label="Email address" error={state.errors?.email} errorId={`${mode}-email-error`}>
+            <input className="ds-control" id={`${mode}-email`} name="email" type="email" autoComplete="email" required aria-invalid={Boolean(state.errors?.email)} aria-describedby={state.errors?.email ? `${mode}-email-error` : undefined} />
+          </Field>
         )}
         {needsPassword && (
-          <div className="auth-field">
-            <label htmlFor={`${mode}-password`}>{mode === "update" ? "New password" : "Password"}</label>
-            <input id={`${mode}-password`} name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} minLength={8} required aria-invalid={Boolean(state.errors?.password)} aria-describedby={state.errors?.password ? `${mode}-password-error` : undefined} />
-          </div>
+          <Field className="auth-field" htmlFor={`${mode}-password`} label={mode === "update" ? "New password" : "Password"} error={state.errors?.password} errorId={`${mode}-password-error`}>
+            <input className="ds-control" id={`${mode}-password`} name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} minLength={8} required aria-invalid={Boolean(state.errors?.password)} aria-describedby={state.errors?.password ? `${mode}-password-error` : undefined} />
+          </Field>
         )}
         {(mode === "signup" || mode === "update") && (
-          <div className="auth-field">
-            <label htmlFor={`${mode}-confirm-password`}>Confirm password</label>
-            <input id={`${mode}-confirm-password`} name="confirmPassword" type="password" autoComplete="new-password" minLength={8} required aria-invalid={Boolean(state.errors?.password)} aria-describedby={state.errors?.password ? `${mode}-password-error` : undefined} />
-            {state.errors?.password && <p className="auth-field__error" id={`${mode}-password-error`}>{state.errors.password}</p>}
-          </div>
+          <Field className="auth-field" htmlFor={`${mode}-confirm-password`} label="Confirm password">
+            <input className="ds-control" id={`${mode}-confirm-password`} name="confirmPassword" type="password" autoComplete="new-password" minLength={8} required aria-invalid={Boolean(state.errors?.password)} aria-describedby={state.errors?.password ? `${mode}-password-error` : undefined} />
+          </Field>
         )}
-        {mode === "login" && state.errors?.password && <p className="auth-field__error" id="login-password-error">{state.errors.password}</p>}
         {state.message && <p className={`auth-message auth-message--${state.status}`} role={state.status === "error" ? "alert" : "status"}>{state.message}</p>}
-        <button className="primary-button auth-submit" type="submit" disabled={pending} aria-disabled={pending}>
-          {pending ? "Please wait…" : COPY[mode].submit}
-        </button>
+        <Button className="auth-submit" type="submit" loading={pending} loadingLabel="Please wait…">{COPY[mode].submit}</Button>
       </form>
 
       <div className="auth-card__links">

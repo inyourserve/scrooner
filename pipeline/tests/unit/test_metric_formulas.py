@@ -8,7 +8,11 @@ from scrooner_pipeline.mapper.expanded_definitions import METRIC_DEFINITIONS as 
 
 
 FORMULA_CASES = {
-    "gross_margin": ("ratio", {"numerator": [Decimal("40")], "denominator": [Decimal("100")]}, Decimal("0.4")),
+    # sum_diff_ratio (Revenue - Cost of Revenue) / Revenue, not a direct
+    # "ratio" over a standalone GrossProfit tag, since 2026-09-02 -- see
+    # calculate.py's own FORMULA_SHAPES comment for the real coverage
+    # evidence behind this switch.
+    "gross_margin": ("sum_diff_ratio", {"add": [Decimal("100")], "subtract": [Decimal("60")], "denominator": [Decimal("100")]}, Decimal("0.4")),
     "operating_margin": ("ratio", {"numerator": [Decimal("30")], "denominator": [Decimal("100")]}, Decimal("0.3")),
     "net_margin": ("ratio", {"numerator": [Decimal("20")], "denominator": [Decimal("100")]}, Decimal("0.2")),
     "roe": ("ratio", {"numerator": [Decimal("20")], "denominator": [Decimal("80")]}, Decimal("0.25")),
@@ -30,6 +34,16 @@ FORMULA_CASES = {
     "sga_pct_revenue": ("ratio", {"numerator": [Decimal("20")], "denominator": [Decimal("100")]}, Decimal("0.2")),
     "rnd_intensity": ("ratio", {"numerator": [Decimal("8")], "denominator": [Decimal("100")]}, Decimal("0.08")),
     "net_interest_income": ("sum_diff", {"add": [Decimal("12")], "subtract": [Decimal("5")]}, Decimal("7")),
+    "payout_ratio": ("ratio", {"numerator": [Decimal("2")], "denominator": [Decimal("4")]}, Decimal("0.5")),
+    "pretax_margin": ("ratio", {"numerator": [Decimal("25")], "denominator": [Decimal("100")]}, Decimal("0.25")),
+    "net_cash": ("sum_diff", {"add": [Decimal("50")], "subtract": [Decimal("20")]}, Decimal("30")),
+    "net_cash_per_share": ("sum_diff_ratio", {"add": [Decimal("50")], "subtract": [Decimal("20")], "denominator": [Decimal("10")]}, Decimal("3")),
+    # Added 2026-09-05 (financials display spec gap-fill).
+    "book_value_per_share": ("ratio", {"numerator": [Decimal("80")], "denominator": [Decimal("10")]}, Decimal("8")),
+    "working_capital": ("sum_diff", {"add": [Decimal("50")], "subtract": [Decimal("25")]}, Decimal("25")),
+    "net_change_in_cash": ("additive", {"add": [Decimal("35"), Decimal("-10"), Decimal("-5")]}, Decimal("20")),
+    "ocf_to_net_income": ("ratio", {"numerator": [Decimal("35")], "denominator": [Decimal("20")]}, Decimal("1.75")),
+    "cash_returned_to_shareholders": ("additive", {"add": [Decimal("4"), Decimal("6")]}, Decimal("10")),
 }
 
 EXPECTED_EXPANDED_DEFINITIONS = {
@@ -45,6 +59,15 @@ EXPECTED_EXPANDED_DEFINITIONS = {
     "rnd_intensity", "net_interest_income",
     "capex_pct_revenue", "sga_pct_revenue", "effective_tax_rate_gap",
     "fcf_growth_3y_cagr", "fcf_growth_5y_cagr", "dividend_growth_streak_years",
+    "payout_ratio", "pretax_margin", "net_cash", "net_cash_per_share",
+    "dps_growth_yoy", "dps_growth_3y_cagr",
+    # Added 2026-09-05 (financials display spec gap-fill).
+    "book_value_per_share", "working_capital", "net_change_in_cash", "ocf_to_net_income",
+    "cash_returned_to_shareholders", "ebitda_margin", "debt_to_ebitda", "fcf_per_share",
+    "share_repurchases_pct_fcf", "dividends_pct_fcf",
+    "net_income_growth_yoy", "net_income_growth_3y_cagr", "net_income_growth_5y_cagr", "net_income_growth_10y_cagr",
+    "diluted_shares_growth_yoy", "diluted_shares_growth_3y_cagr", "diluted_shares_growth_5y_cagr",
+    "fcf_growth_yoy",
 }
 
 

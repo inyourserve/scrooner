@@ -74,6 +74,16 @@ FORM_ALLOWLIST = {
     "15F-12B", "15F-12B/A", "15F-12G", "15F-12G/A",
     "SC 14D9", "SC 14D9/A",
     "DEF 14A", "DEFA14A", "DEFM14A", "DEFR14A",
+    # 144/424B5/FWP added 2026-08-29 (zero-new-fetch coverage pass) --
+    # same purely-additive widening as everything else in this history.
+    # Checked live against the full golden-10 first, not assumed: 144
+    # (942 filings, 8/10 companies -- insider restricted-stock resale
+    # notices, a Form-4-adjacent signal), 424B5 (182 filings, 6/10 --
+    # prospectus supplements), FWP (23,042 filings, 10/10 -- free-writing
+    # prospectuses, heavily dominated by JPM's structured-note/ETN
+    # issuance program, the same "one CIK, many securities" pattern
+    # pipeline/CLAUDE.md already documents for JPM's listings).
+    "144", "424B5", "FWP",
 }
 
 

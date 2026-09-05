@@ -22,6 +22,7 @@ import type {
 } from "@/lib/screener/types";
 import { NaturalQueryPanel } from "./NaturalQueryPanel";
 import { Button } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { SaveScreenButton } from "@/components/saved-screens/SaveScreenButton";
@@ -338,7 +339,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
         <PageHeader
           eyebrow="Stock screener"
           title="Find companies"
-          description="Describe the companies you want in plain language and see matching results in one step."
+          description="Enter your criteria, review the matches, and save the useful screens."
         />
 
         {catalogState === "loading" && (
@@ -352,7 +353,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
             className="state-panel"
             tone="negative"
             title="Metric definitions are unavailable"
-            action={<button type="button" className="text-button" onClick={retryCatalog}>Try again</button>}
+            action={<Button type="button" variant="ghost" size="small" onClick={retryCatalog}>Try again</Button>}
           >
             <p>{catalogError}</p>
           </StatusPanel>
@@ -383,7 +384,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                 className="state-panel"
                 tone="negative"
                 title="The screen did not run"
-                action={lastQuery ? <button type="button" className="text-button" onClick={() => void executeScreen(lastQuery)}>Try again</button> : undefined}
+                action={lastQuery ? <Button type="button" variant="ghost" size="small" onClick={() => void executeScreen(lastQuery)}>Try again</Button> : undefined}
               >
                 <p>{requestError}</p><p>Your criteria are preserved below.</p>
               </StatusPanel>
@@ -394,7 +395,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                 <span className="empty-mark" aria-hidden="true">0</span>
                 <h3>No companies matched every criterion</h3>
                 <p>The screen ran successfully. Edit or remove a condition to widen the result.</p>
-                <Button type="button" variant="secondary" className="secondary-button" onClick={() => lastQuery && applyInterpretedQuery(lastQuery, interpretedFrom)}>Edit criteria</Button>
+                <Button type="button" variant="secondary" onClick={() => lastQuery && applyInterpretedQuery(lastQuery, interpretedFrom)}>Edit criteria</Button>
               </div>
             )}
 
@@ -488,7 +489,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
               onClick={() => setBuilderOpen((open) => !open)}
             >
               <span className="builder-disclosure-icon" aria-hidden="true">⌁</span>
-              <span><strong id="advanced-builder-title">Build with filters</strong><small>Choose financial metrics, comparisons, and sorting yourself.</small></span>
+              <span><strong id="advanced-builder-title">Exact filters</strong><small>Use metrics and comparisons directly.</small></span>
               <span className="builder-disclosure-action">{builderOpen ? "Hide" : "Open"}<span aria-hidden="true"> {builderOpen ? "↑" : "↓"}</span></span>
             </button>
 
@@ -525,7 +526,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                 <h2>Define your criteria</h2>
                 <p>All conditions are combined with AND. Missing values never pass a condition.</p>
               </div>
-              <Button type="button" variant="ghost" className="tertiary-button" onClick={resetScreen}>Reset</Button>
+              <Button type="button" variant="ghost" onClick={resetScreen}>Reset</Button>
             </div>
 
             <fieldset className="criteria-fieldset">
@@ -542,7 +543,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                     <div className="filter-index" aria-hidden="true">{index + 1}</div>
                     <div className="filter-control metric-control">
                       <label className="sr-only" htmlFor={`${row.id}-metric`}>Metric for condition {index + 1}</label>
-                      <select id={`${row.id}-metric`} value={row.metricName} onChange={(event) => changeMetric(row, event.target.value)}>
+                      <select className="ds-control" id={`${row.id}-metric`} value={row.metricName} onChange={(event) => changeMetric(row, event.target.value)}>
                         {categories.map(([categoryName, definitions]) => (
                           <optgroup label={categoryName} key={categoryName}>
                             {definitions.map((definition) => <option key={definition.metric_name} value={definition.metric_name}>{definition.display_name}</option>)}
@@ -553,14 +554,14 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                     </div>
                     <div className="filter-control">
                       <label className="sr-only" htmlFor={`${row.id}-operator`}>Operator for condition {index + 1}</label>
-                      <select id={`${row.id}-operator`} value={row.operator} onChange={(event) => updateRow(row.id, { operator: event.target.value as MetricOperator, value: "", highValue: "" })}>
+                      <select className="ds-control" id={`${row.id}-operator`} value={row.operator} onChange={(event) => updateRow(row.id, { operator: event.target.value as MetricOperator, value: "", highValue: "" })}>
                         {metric?.operators.map((operator) => <option value={operator} key={operator}>{OPERATOR_LABELS[operator]}</option>)}
                       </select>
                     </div>
                     <div className={`filter-control value-control ${between ? "range" : ""}`}>
                       <label className="sr-only" htmlFor={`${row.id}-value`}>{ranked ? "Number of companies" : "Value"} for condition {index + 1}</label>
                       <div className="input-with-unit">
-                        <input
+                        <input className="ds-control"
                           id={`${row.id}-value`}
                           inputMode={ranked ? "numeric" : "decimal"}
                           value={row.value}
@@ -576,33 +577,31 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                           <span className="range-separator">to</span>
                           <label className="sr-only" htmlFor={`${row.id}-high-value`}>Upper value for condition {index + 1}</label>
                           <div className="input-with-unit">
-                            <input id={`${row.id}-high-value`} inputMode="decimal" value={row.highValue} onChange={(event) => updateRow(row.id, { highValue: event.target.value })} aria-invalid={Boolean(errors[row.id])} aria-describedby={errors[row.id] ? `${row.id}-error` : undefined} placeholder="1" />
+                            <input className="ds-control" id={`${row.id}-high-value`} inputMode="decimal" value={row.highValue} onChange={(event) => updateRow(row.id, { highValue: event.target.value })} aria-invalid={Boolean(errors[row.id])} aria-describedby={errors[row.id] ? `${row.id}-error` : undefined} placeholder="1" />
                             {unitLabel(metric) && <span className="unit">{unitLabel(metric)}</span>}
                           </div>
                         </>
                       )}
                     </div>
-                    <button type="button" className="icon-button" aria-label={`Remove condition ${index + 1}`} onClick={() => setRows((current) => current.filter((candidate) => candidate.id !== row.id))}>
-                      <span aria-hidden="true">×</span>
-                    </button>
+                    <IconButton tone="destructive" label={`Remove condition ${index + 1}`} icon={<span aria-hidden="true">×</span>} onClick={() => setRows((current) => current.filter((candidate) => candidate.id !== row.id))} />
                     {errors[row.id] && <p className="field-error" id={`${row.id}-error`}>{errors[row.id]}</p>}
                   </div>
                 );
               })}
-              <button type="button" className="add-condition" onClick={() => setRows((current) => [...current, createRow()])}>
+              <Button type="button" variant="secondary" size="small" className="add-condition" onClick={() => setRows((current) => [...current, createRow()])}>
                 <span aria-hidden="true">+</span> Add condition
-              </button>
+              </Button>
             </fieldset>
 
             <div className="classification-row">
               <label className="check-label">
-                <input type="checkbox" checked={category.enabled} onChange={(event) => setCategory((current) => ({ ...current, enabled: event.target.checked }))} />
+                <input className="ds-checkbox" type="checkbox" checked={category.enabled} onChange={(event) => setCategory((current) => ({ ...current, enabled: event.target.checked }))} />
                 <span>Filter by company classification</span>
               </label>
               {category.enabled && (
                 <div className="inline-field">
                   <label htmlFor="classification">Classification</label>
-                  <select id="classification" value={category.value} onChange={(event) => { setCategory((current) => ({ ...current, value: event.target.value })); setErrors((current) => ({ ...current, category: "" })); }} aria-invalid={Boolean(errors.category)} aria-describedby={errors.category ? "category-error" : undefined}>
+                  <select className="ds-control" id="classification" value={category.value} onChange={(event) => { setCategory((current) => ({ ...current, value: event.target.value })); setErrors((current) => ({ ...current, category: "" })); }} aria-invalid={Boolean(errors.category)} aria-describedby={errors.category ? "category-error" : undefined}>
                     <option value="">Choose classification</option>
                     {SIC_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label} · SIC {option.value}</option>)}
                   </select>
@@ -614,7 +613,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
             <div className="run-settings">
               <div className="setting-field sort-field">
                 <label htmlFor="sort-by">Sort results by</label>
-                <select id="sort-by" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                <select className="ds-control" id="sort-by" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
                   <option value="">Default deterministic order</option>
                   {categories.map(([categoryName, definitions]) => (
                     <optgroup label={categoryName} key={categoryName}>
@@ -625,18 +624,18 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
               </div>
               <div className="setting-field direction-field">
                 <label htmlFor="sort-direction">Direction</label>
-                <select id="sort-direction" value={sortDesc ? "desc" : "asc"} onChange={(event) => setSortDesc(event.target.value === "desc")} disabled={!sortBy}>
+                <select className="ds-control" id="sort-direction" value={sortDesc ? "desc" : "asc"} onChange={(event) => setSortDesc(event.target.value === "desc")} disabled={!sortBy}>
                   <option value="desc">Highest first</option>
                   <option value="asc">Lowest first</option>
                 </select>
               </div>
               <div className="setting-field limit-field">
                 <label htmlFor="result-limit">Result limit</label>
-                <input id="result-limit" inputMode="numeric" value={limit} onChange={(event) => { setLimit(event.target.value); setErrors((current) => ({ ...current, limit: "" })); }} aria-invalid={Boolean(errors.limit)} aria-describedby={errors.limit ? "limit-error" : undefined} />
+                <input className="ds-control" id="result-limit" inputMode="numeric" value={limit} onChange={(event) => { setLimit(event.target.value); setErrors((current) => ({ ...current, limit: "" })); }} aria-invalid={Boolean(errors.limit)} aria-describedby={errors.limit ? "limit-error" : undefined} />
                 {errors.limit && <p className="field-error" id="limit-error">{errors.limit}</p>}
               </div>
               <label className="check-label inactive-check">
-                <input type="checkbox" checked={includeInactive} onChange={(event) => setIncludeInactive(event.target.checked)} />
+                <input className="ds-checkbox" type="checkbox" checked={includeInactive} onChange={(event) => setIncludeInactive(event.target.checked)} />
                 <span>Include inactive companies</span>
               </label>
             </div>
@@ -646,7 +645,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
 
             <div className="builder-actions">
               <p><strong>{rows.length + (category.enabled ? 1 : 0)}</strong> active {rows.length + (category.enabled ? 1 : 0) === 1 ? "criterion" : "criteria"}</p>
-              <Button className="primary-button" type="submit" disabled={requestState === "loading"}>
+              <Button type="submit" disabled={requestState === "loading"} aria-busy={requestState === "loading"}>
                 {requestState === "loading" ? <><span className="spinner light" aria-hidden="true" /> Running screen…</> : "Run screen"}
               </Button>
             </div>

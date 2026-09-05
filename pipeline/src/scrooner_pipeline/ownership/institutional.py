@@ -19,17 +19,21 @@ has CUSIP + NAMEOFISSUER but never an issuer CIK, and SUBMISSION.CIK is
 explicitly the *filer* (manager), not the issuer -- matching happens by
 CUSIP equality, nothing else.
 
-Scoped to a single, most-recent bulk window (a snapshot, not a
-multi-quarter trend) and to golden-company CUSIP matches only, not the
-full ~6M-row SEC universe -- storing that would blow the Supabase
-free-tier budget the same way an unscoped Normalizer/Mapper backfill
-would have (doc 09's live-measured capacity check). A multi-quarter
-ownership trend is a real future follow-on, not this pass.
+Scoped to the two most-recent bulk windows (doc `insider_info.md`'s
+Institutional Ownership spec needs a QoQ comparison, not just a single
+snapshot -- see ownership/institutional_summary.py, which computes that
+comparison from the two report_periods this module now stores) and to
+golden-company CUSIP matches only, not the full ~6M-row SEC universe --
+storing that would blow the Supabase free-tier budget the same way an
+unscoped Normalizer/Mapper backfill would have (doc 09's live-measured
+capacity check). A wider multi-quarter trend (3+ windows) is a real
+future follow-on, not this pass.
 """
 
 import csv
 import hashlib
 import io
+import re
 import zipfile
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
@@ -41,14 +45,70 @@ from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
 
+# Name-based fallback matching (added 2026-09-05). 1,461 of 5,216 active
+# companies have never had a Schedule 13D/13G filed against them, so the
+# CUSIP crosswalk below never learns their CUSIP and can never match
+# their real Form 13F holdings -- even though those holdings exist in the
+# bulk data under the company's true CUSIP. INFOTABLE.tsv's own
+# NAMEOFISSUER field (read below, previously discarded) gives a second,
+# independent way in. Piloted live before building: normalizing both
+# sides (uppercase, strip legal-entity suffixes/punctuation) and matching
+# only when a normalized name maps to exactly one company (never a
+# fuzzy/best-guess match) produced ZERO collisions across all 1,461
+# uncovered companies and matched 814 of them from a single bulk window
+# see doc/learnings/2026-09-05-institutional-ownership-name-fallback.md.
+# Deliberately curated, not exhaustive -- same "curated over fuzzy"
+# discipline as ai_query/aliases.py.
+_NAME_SUFFIX_RE = re.compile(
+    r"\b(INCORPORATED|INC|CORPORATION|CORP|COMPANY|CO|LIMITED|LTD|LLC|LP|L P|PLC|"
+    r"HOLDINGS?|GROUP|TRUST|CLASS [A-Z]|CL [A-Z]|COMMON STOCK|COMMON SHARES|"
+    r"COM NEW|COM NPV|SHARES?|STOCK|DEL|NEW)\b"
+)
+_NAME_PUNCT_RE = re.compile(r"[.,\-'&/]")
+
+
+def normalize_issuer_name(name: str) -> str:
+    """Uppercase, strip punctuation and common legal-entity/share-class
+    suffixes, collapse whitespace -- deliberately conservative (only
+    removes tokens that add no identifying signal), not a general fuzzy
+    matcher. Used on BOTH core.company.company_name and Form 13F's
+    NAMEOFISSUER so the same transformation applies to both sides."""
+    n = name.upper()
+    n = _NAME_PUNCT_RE.sub(" ", n)
+    n = _NAME_SUFFIX_RE.sub(" ", n)
+    return re.sub(r"\s+", " ", n).strip()
+
 # SEC publishes Form 13F bulk data sets on a rolling ~3-month-window basis
 # (verified live 2026-08-17 against
 # https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets --
-# this is the latest window published as of that date). Update by hand
-# when a newer window is published, until this becomes a recurring job
-# (Part 14/Infra -- not built yet, see doc 20).
-BULK_ZIP_URL = "https://www.sec.gov/files/structureddata/data/form-13f-data-sets/01mar2026-31may2026_form13f.zip"
-BULK_ZIP_WINDOW_LABEL = "01mar2026-31may2026"
+# this is the latest window published as of that date; the prior window's
+# URL was independently confirmed live/downloadable 2026-08-25 before
+# adding it here). Update by hand when a newer window is published, until
+# this becomes a recurring job (Part 14/Infra -- not built yet, see doc
+# 20). Ordered latest-first; institutional_summary.py's "two most recent
+# report_periods actually present for a company" logic doesn't depend on
+# this list's order, but keeping it latest-first here matches how it
+# reads.
+# Found live 2026-08-31: an unbatched executemany over a full-population
+# matched set (2.35M+ rows) drops the pooled connection mid-write. 5,000
+# is a conservative round-trip size, not tuned against a real failure
+# threshold -- safe headroom over "works," not the maximum that would.
+INSERT_BATCH_SIZE = 5000
+# Deletes scan more of the table per company_id than a plain insert
+# round-trip does -- a smaller batch keeps each one comfortably inside
+# the connection's statement_timeout even under concurrent load.
+DELETE_BATCH_SIZE = 500
+
+BULK_ZIP_WINDOWS: list[tuple[str, str]] = [
+    (
+        "https://www.sec.gov/files/structureddata/data/form-13f-data-sets/01mar2026-31may2026_form13f.zip",
+        "01mar2026-31may2026",
+    ),
+    (
+        "https://www.sec.gov/files/structureddata/data/form-13f-data-sets/01dec2025-28feb2026_form13f.zip",
+        "01dec2025-28feb2026",
+    ),
+]
 
 
 def _parse_sec_date(value: str) -> date | None:
@@ -78,6 +138,36 @@ def _load_golden_cusips(conn: psycopg.Connection) -> dict[str, int]:
     with conn.cursor() as cur:
         cur.execute("select distinct cusip, company_id from core.beneficial_ownership where cusip is not null")
         return dict(cur.fetchall())
+
+
+def _load_company_name_lookup(conn: psycopg.Connection, covered_company_ids: set[int]) -> dict[str, int]:
+    """normalize_issuer_name(company_name) -> company_id, restricted to
+    active companies NOT already covered by a CUSIP (the fallback only
+    ever fills a gap CUSIP matching left open, never competes with it)
+    and to normalized names that map to exactly ONE company -- a
+    collision (two companies normalizing to the same name) means the
+    fallback can't disambiguate, so BOTH are dropped from the lookup
+    entirely rather than guessing. Verified live 2026-09-05: zero
+    collisions across all 1,461 uncovered companies, but this still
+    checks live rather than assuming that holds forever as new companies
+    are added."""
+    with conn.cursor() as cur:
+        cur.execute("select id, company_name from core.company where status = 'active'")
+        rows = cur.fetchall()
+
+    name_to_ids: dict[str, list[int]] = {}
+    for company_id, company_name in rows:
+        if company_id in covered_company_ids:
+            continue
+        norm = normalize_issuer_name(company_name)
+        if not norm:
+            continue
+        name_to_ids.setdefault(norm, []).append(company_id)
+
+    collisions = {name: ids for name, ids in name_to_ids.items() if len(ids) > 1}
+    if collisions:
+        logger.warning("institutional_ownership.name_lookup_collisions", count=len(collisions))
+    return {name: ids[0] for name, ids in name_to_ids.items() if len(ids) == 1}
 
 
 def _load_tsv_dict(zf: zipfile.ZipFile, name: str) -> csv.DictReader:
@@ -120,14 +210,17 @@ def _match_infotable(
     cusip_to_company: dict[str, int],
     submission_lookup: dict[str, dict],
     filer_name_lookup: dict[str, str],
+    name_to_company: dict[str, int] | None = None,
 ) -> tuple[list[dict], int]:
     """Streams INFOTABLE.tsv (~396MB uncompressed) row by row rather than
-    loading it wholesale -- only rows whose CUSIP matches a golden
-    company are ever held in memory. PUTCALL rows are excluded (a
-    derivative position on the security, not an actual share holding);
-    SSHPRNAMTTYPE is required to be 'SH' (shares), not 'PRN' (principal
-    amount, for debt-like instruments) -- both checked live against a
-    real sample before writing this filter, not assumed.
+    loading it wholesale -- only rows whose CUSIP (or, failing that, a
+    normalized NAMEOFISSUER match -- see normalize_issuer_name's own
+    docstring) matches a tracked company are ever held in memory. PUTCALL
+    rows are excluded (a derivative position on the security, not an
+    actual share holding); SSHPRNAMTTYPE is required to be 'SH' (shares),
+    not 'PRN' (principal amount, for debt-like instruments) -- both
+    checked live against a real sample before writing this filter, not
+    assumed.
 
     VALUE is actual dollars, not thousands -- despite the field's name and
     the field-layout spec PDF's "(x$1000)" description, SEC's own bundled
@@ -137,10 +230,15 @@ def _match_infotable(
     core.institutional_ownership.value_usd's column comment."""
     matched: list[dict] = []
     total_rows = 0
+    name_to_company = name_to_company or {}
     for row in _load_tsv_dict(zf, "INFOTABLE.tsv"):
         total_rows += 1
         cusip = row["CUSIP"].strip()
         company_id = cusip_to_company.get(cusip)
+        match_method = "cusip"
+        if company_id is None and name_to_company:
+            company_id = name_to_company.get(normalize_issuer_name(row["NAMEOFISSUER"]))
+            match_method = "name"
         if company_id is None:
             continue
         if row.get("PUTCALL", "").strip():
@@ -161,47 +259,81 @@ def _match_infotable(
                 "report_period": submission.get("report_period"),
                 "filing_date": submission.get("filing_date"),
                 "is_amendment": submission.get("is_amendment", False),
+                "match_method": match_method,
             }
         )
     return matched, total_rows
 
 
-def update_institutional_ownership(conn: psycopg.Connection) -> dict:
-    cusip_to_company = _load_golden_cusips(conn)
-    if not cusip_to_company:
-        logger.warning("institutional_ownership.no_cusips")
-        return {"matched_rows": 0, "companies": 0, "infotable_row_count": 0}
-
-    with SECClient() as sec:
-        zip_path = sec.get_cached_bulk_zip(BULK_ZIP_URL, f"form13f-{BULK_ZIP_WINDOW_LABEL}")
-
+def _process_window(
+    conn: psycopg.Connection,
+    sec: SECClient,
+    cusip_to_company: dict[str, int],
+    url: str,
+    label: str,
+    name_to_company: dict[str, int] | None = None,
+) -> dict:
+    """Fetch + match one bulk window and write its rows, scoped so this
+    window's rerun can never clobber another window's already-written
+    rows for the same company -- the delete below is scoped by BOTH
+    company_id AND source_zip, not company_id alone, the exact
+    shared-table dimension-scoping trap pipeline/CLAUDE.md documents from
+    Mapper Day 6 (there: roic/roe sharing a metric_definition_id; here:
+    two windows sharing a company_id)."""
+    zip_path = sec.get_cached_bulk_zip(url, f"form13f-{label}")
     sha256 = hashlib.sha256(zip_path.read_bytes()).hexdigest()
 
     with zipfile.ZipFile(zip_path) as zf:
         submission_lookup = _load_submission_lookup(zf)
         filer_name_lookup = _load_filer_name_lookup(zf)
-        matched_rows, infotable_row_count = _match_infotable(zf, cusip_to_company, submission_lookup, filer_name_lookup)
+        matched_rows, infotable_row_count = _match_infotable(
+            zf, cusip_to_company, submission_lookup, filer_name_lookup, name_to_company
+        )
 
     company_ids = sorted({r["company_id"] for r in matched_rows})
     with conn.cursor() as cur:
-        if company_ids:
+        # Batched, not one delete over the whole company_ids array: the
+        # name-based fallback above widens this from a CUSIP-only set
+        # (~2,500 companies) to potentially the full active population,
+        # and a single unbounded delete hit the connection's 2-minute
+        # statement_timeout live 2026-09-05. Same "bounded round-trips,
+        # not one unbounded one" fix already applied to the INSERT below
+        # for the same reason (2026-08-31) -- this table grows past the
+        # point a single unindexed-in-practice-at-this-width delete can
+        # finish in one shot.
+        for i in range(0, len(company_ids), DELETE_BATCH_SIZE):
+            batch = company_ids[i : i + DELETE_BATCH_SIZE]
             cur.execute(
-                "delete from core.institutional_ownership where company_id = any(%s)",
-                (company_ids,),
+                "delete from core.institutional_ownership where company_id = any(%s) and source_zip = %s",
+                (batch, label),
             )
         if matched_rows:
-            cur.executemany(
-                """
-                insert into core.institutional_ownership
-                    (company_id, accession_number, infotable_sk, filer_name, filer_cik,
-                     shares, value_usd, report_period, filing_date, is_amendment, source_zip)
-                values
-                    (%(company_id)s, %(accession_number)s, %(infotable_sk)s, %(filer_name)s, %(filer_cik)s,
-                     %(shares)s, %(value_usd)s, %(report_period)s, %(filing_date)s, %(is_amendment)s, %(source_zip)s)
-                on conflict (accession_number, infotable_sk) do nothing
-                """,
-                [{**r, "source_zip": BULK_ZIP_WINDOW_LABEL} for r in matched_rows],
-            )
+            # Batched, not one executemany over the whole set: found live
+            # 2026-08-31 that a single executemany over the full
+            # full-population matched set (2.35M rows for just this one
+            # window, up from golden-10's few thousand) drops the pooled
+            # connection mid-write ("SSL connection has been closed
+            # unexpectedly") -- Supabase's session pooler doesn't sustain
+            # one unbounded network round-trip at that size. Chunking
+            # keeps this a single delete-then-reinsert PASS (same cursor,
+            # same transaction, same correctness property the module
+            # docstring requires) while keeping each individual
+            # round-trip small enough to actually complete.
+            rows_with_zip = [{**r, "source_zip": label} for r in matched_rows]
+            for i in range(0, len(rows_with_zip), INSERT_BATCH_SIZE):
+                cur.executemany(
+                    """
+                    insert into core.institutional_ownership
+                        (company_id, accession_number, infotable_sk, filer_name, filer_cik,
+                         shares, value_usd, report_period, filing_date, is_amendment, source_zip, match_method)
+                    values
+                        (%(company_id)s, %(accession_number)s, %(infotable_sk)s, %(filer_name)s, %(filer_cik)s,
+                         %(shares)s, %(value_usd)s, %(report_period)s, %(filing_date)s, %(is_amendment)s, %(source_zip)s,
+                         %(match_method)s)
+                    on conflict (accession_number, infotable_sk) do nothing
+                    """,
+                    rows_with_zip[i : i + INSERT_BATCH_SIZE],
+                )
         cur.execute(
             """
             insert into raw.sec_13f_bulk_fetch
@@ -213,15 +345,50 @@ def update_institutional_ownership(conn: psycopg.Connection) -> dict:
                 matched_row_count = excluded.matched_row_count,
                 fetched_at = now()
             """,
-            (BULK_ZIP_URL, BULK_ZIP_WINDOW_LABEL, sha256, infotable_row_count, len(matched_rows)),
+            (url, label, sha256, infotable_row_count, len(matched_rows)),
         )
         conn.commit()
 
-    stats = {
+    return {
         "matched_rows": len(matched_rows),
         "companies": len(company_ids),
         "infotable_row_count": infotable_row_count,
-        "window_label": BULK_ZIP_WINDOW_LABEL,
     }
-    logger.info("institutional_ownership.done", **stats)
+
+
+def update_institutional_ownership(conn: psycopg.Connection) -> dict:
+    cusip_to_company = _load_golden_cusips(conn)
+    if not cusip_to_company:
+        logger.warning("institutional_ownership.no_cusips")
+        return {"matched_rows": 0, "companies": 0, "infotable_row_count": 0, "windows": {}}
+
+    # Name-based fallback (2026-09-05) -- fills the gap for companies with
+    # no Schedule 13D/13G on file at all, so the CUSIP crosswalk above
+    # never learns their CUSIP. Restricted to companies not already
+    # covered by a CUSIP; see _load_company_name_lookup's own docstring.
+    name_to_company = _load_company_name_lookup(conn, covered_company_ids=set(cusip_to_company.values()))
+    logger.info("institutional_ownership.name_fallback_lookup", unambiguous_names=len(name_to_company))
+
+    window_stats: dict[str, dict] = {}
+    with SECClient() as sec:
+        for url, label in BULK_ZIP_WINDOWS:
+            window_stats[label] = _process_window(conn, sec, cusip_to_company, url, label, name_to_company)
+            logger.info("institutional_ownership.window_done", window_label=label, **window_stats[label])
+
+    # "companies" means "distinct companies matched in ANY window" --
+    # queried straight from what's actually stored rather than unioned
+    # from each window's own company_ids, so this number can never drift
+    # from the real table contents.
+    with conn.cursor() as cur:
+        cur.execute("select count(distinct company_id) from core.institutional_ownership")
+        companies = cur.fetchone()[0]
+
+    stats = {
+        "matched_rows": sum(w["matched_rows"] for w in window_stats.values()),
+        "companies": companies,
+        "infotable_row_count": sum(w["infotable_row_count"] for w in window_stats.values()),
+        "windows": window_stats,
+        "window_labels": [label for _url, label in BULK_ZIP_WINDOWS],
+    }
+    logger.info("institutional_ownership.done", **{k: v for k, v in stats.items() if k != "windows"})
     return stats

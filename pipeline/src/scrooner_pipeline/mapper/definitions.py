@@ -55,7 +55,8 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, bool, list[tuple[str, str]]]] = [
      "with real evidence -- see module docstring.",
      False, True,
      [("operating_income", "nopat_base"), ("income_tax_expense", "tax_rate_numerator"),
-      ("income_before_tax", "tax_rate_denominator"), ("total_debt", "invested_capital_add"),
+      # total_debt_resolved, not total_debt, per doc 40 (2026-09-02).
+      ("income_before_tax", "tax_rate_denominator"), ("total_debt_resolved", "invested_capital_add"),
       ("stockholders_equity", "invested_capital_add"), ("cash_and_equivalents", "invested_capital_subtract")]),
     ("revenue_growth_yoy", "(Revenue[t] - Revenue[t-1]) / Revenue[t-1], same fiscal_period year over year", False, False,
      [("revenue", "base")]),
@@ -69,8 +70,9 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, bool, list[tuple[str, str]]]] = [
      [("cfo", "add"), ("capex", "subtract")]),
     ("fcf_margin", "(Cash from Operations - CapEx) / Revenue", False, False,
      [("cfo", "add"), ("capex", "subtract"), ("revenue", "denominator")]),
+    # total_debt_resolved, not total_debt, per doc 40 (2026-09-02).
     ("debt_to_equity", "Total Debt / Stockholders' Equity", False, False,
-     [("total_debt", "numerator"), ("stockholders_equity", "denominator")]),
+     [("total_debt_resolved", "numerator"), ("stockholders_equity", "denominator")]),
     ("current_ratio", "Current Assets / Current Liabilities", False, False,
      [("current_assets", "numerator"), ("current_liabilities", "denominator")]),
     ("interest_coverage_ratio", "Operating Income / Interest Expense", False, False,

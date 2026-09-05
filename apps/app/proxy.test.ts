@@ -2,11 +2,16 @@ import { describe, expect, it } from "vitest";
 import { config } from "./proxy";
 
 describe("auth proxy scope", () => {
-  it("limits session refresh to authenticated journeys", () => {
+  it("protects every screening page and endpoint", () => {
     expect(config.matcher).toEqual([
-      "/account/:path*",
+      "/",
+      "/screener/:path*",
       "/saved-screens/:path*",
+      "/account/:path*",
+      "/api/ask/:path*",
+      "/api/screen/:path*",
       "/api/screens/:path*",
+      "/api/metrics/:path*",
     ]);
   });
 

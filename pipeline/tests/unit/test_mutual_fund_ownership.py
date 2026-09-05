@@ -82,7 +82,7 @@ def test_match_holdings_keeps_real_equity_long_position():
     zf = _make_nport_zip(
         submission_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "FILING_DATE": "24-APR-2026",
-            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-MAY-2026",
+            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-JAN-2027", "REPORT_DATE": "31-MAY-2026",
         }],
         registrant_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "CIK": "0000783740",
@@ -99,7 +99,7 @@ def test_match_holdings_keeps_real_equity_long_position():
     series_lookup = _load_fund_series_lookup(zf)
     cusip_to_company = {"037833100": 1}
 
-    matched, total_rows = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup)
+    matched, total_rows = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, "2026q2")
 
     assert total_rows == 1
     assert len(matched) == 1
@@ -115,6 +115,7 @@ def test_match_holdings_keeps_real_equity_long_position():
     assert row["report_period"] == date(2026, 5, 31)
     assert row["filing_date"] == date(2026, 4, 24)
     assert row["is_amendment"] is False
+    assert row["source_zip"] == "2026q2"  # tagged per-row from the window arg, not injected at write time
 
 
 @pytest.mark.unit
@@ -145,7 +146,7 @@ def test_match_holdings_excludes_derivative_and_short_and_non_matching_cusip():
     zf = _make_nport_zip(
         submission_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "FILING_DATE": "24-APR-2026",
-            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-MAY-2026",
+            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-JAN-2027", "REPORT_DATE": "31-MAY-2026",
         }],
         registrant_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "CIK": "0000783740",
@@ -159,7 +160,7 @@ def test_match_holdings_excludes_derivative_and_short_and_non_matching_cusip():
     series_lookup = _load_fund_series_lookup(zf)
     cusip_to_company = {"037833100": 1}
 
-    matched, total_rows = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup)
+    matched, total_rows = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, "2026q2")
 
     assert total_rows == 4
     assert len(matched) == 1
@@ -174,7 +175,7 @@ def test_match_holdings_falls_back_to_registrant_name_without_series_row():
     zf = _make_nport_zip(
         submission_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "FILING_DATE": "24-APR-2026",
-            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-MAY-2026",
+            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-JAN-2027", "REPORT_DATE": "31-MAY-2026",
         }],
         registrant_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "CIK": "0000783740",
@@ -188,7 +189,7 @@ def test_match_holdings_falls_back_to_registrant_name_without_series_row():
     series_lookup = _load_fund_series_lookup(zf)
     cusip_to_company = {"037833100": 1}
 
-    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup)
+    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, "2026q2")
 
     assert matched[0]["fund_name"] == "MFS SERIES TRUST X"
 
@@ -205,7 +206,7 @@ def test_match_holdings_treats_literal_na_series_name_as_missing():
     zf = _make_nport_zip(
         submission_rows=[{
             "ACCESSION_NUMBER": "0001410368-26-055357", "FILING_DATE": "24-APR-2026",
-            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-MAY-2026",
+            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-JAN-2027", "REPORT_DATE": "31-MAY-2026",
         }],
         registrant_rows=[{
             "ACCESSION_NUMBER": "0001410368-26-055357", "CIK": "0000884394",
@@ -221,7 +222,7 @@ def test_match_holdings_treats_literal_na_series_name_as_missing():
     series_lookup = _load_fund_series_lookup(zf)
     cusip_to_company = {"037833100": 1}
 
-    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup)
+    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, "2026q2")
 
     assert matched[0]["fund_name"] == "State Street(R) SPDR(R) S&P 500(R) ETF Trust"
     assert matched[0]["series_id"] is None
@@ -249,7 +250,7 @@ def test_match_holdings_leaves_value_usd_null_for_non_usd_currency():
     zf = _make_nport_zip(
         submission_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "FILING_DATE": "24-APR-2026",
-            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-MAY-2026",
+            "SUB_TYPE": "NPORT-P", "REPORT_ENDING_PERIOD": "31-JAN-2027", "REPORT_DATE": "31-MAY-2026",
         }],
         registrant_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "CIK": "0000783740",
@@ -263,7 +264,7 @@ def test_match_holdings_leaves_value_usd_null_for_non_usd_currency():
     series_lookup = _load_fund_series_lookup(zf)
     cusip_to_company = {"Y84629107": 6}
 
-    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup)
+    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, "2026q2")
 
     row = matched[0]
     assert row["currency_code"] == "TWD"
@@ -280,7 +281,7 @@ def test_match_holdings_flags_amendment_without_dropping_it():
     zf = _make_nport_zip(
         submission_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "FILING_DATE": "24-APR-2026",
-            "SUB_TYPE": "NPORT-P/A", "REPORT_ENDING_PERIOD": "31-MAY-2026",
+            "SUB_TYPE": "NPORT-P/A", "REPORT_ENDING_PERIOD": "31-JAN-2027", "REPORT_DATE": "31-MAY-2026",
         }],
         registrant_rows=[{
             "ACCESSION_NUMBER": "0000894189-26-020707", "CIK": "0000783740",
@@ -294,7 +295,7 @@ def test_match_holdings_flags_amendment_without_dropping_it():
     series_lookup = _load_fund_series_lookup(zf)
     cusip_to_company = {"037833100": 1}
 
-    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup)
+    matched, _ = _match_holdings(zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, "2026q2")
 
     assert matched[0]["is_amendment"] is True
 
@@ -361,7 +362,7 @@ def test_write_matched_rows_replaces_stale_rows_for_touched_companies_only():
             "fund_cik": "1", "series_id": None, "shares": Decimal("100"), "currency_code": "USD",
             "currency_value": Decimal("1000"), "value_usd": Decimal("1000"),
             "pct_of_fund_net_assets": Decimal("1.5"), "report_period": date(2026, 5, 31),
-            "filing_date": date(2026, 4, 24), "is_amendment": False,
+            "filing_date": date(2026, 4, 24), "is_amendment": False, "source_zip": "2026q2",
         },
     ]
 
@@ -387,9 +388,44 @@ def test_write_matched_rows_on_conflict_do_nothing_for_same_accession_and_holdin
         "fund_cik": "1", "series_id": None, "shares": Decimal("100"), "currency_code": "USD",
         "currency_value": Decimal("1000"), "value_usd": Decimal("1000"),
         "pct_of_fund_net_assets": Decimal("1.5"), "report_period": date(2026, 5, 31),
-        "filing_date": date(2026, 4, 24), "is_amendment": False,
+        "filing_date": date(2026, 4, 24), "is_amendment": False, "source_zip": "2026q2",
     }
 
     _write_matched_rows(conn, [row, dict(row)])
 
     assert len(conn.rows) == 1
+
+
+@pytest.mark.unit
+def test_write_matched_rows_merges_both_windows_in_one_pass_without_clobbering():
+    """The real bug this design avoids: if _write_matched_rows were called
+    once per window (delete-then-reinsert scoped by company_id only, no
+    window dimension), the second window's write would silently delete
+    the first window's already-written rows for any company matched in
+    both -- both share the same company_id, and a company_id-only delete
+    has no way to tell them apart. update_mutual_fund_ownership avoids
+    this by merging both windows' matched_rows into ONE list before ever
+    calling _write_matched_rows -- proven here directly: one call with
+    rows from two different report_periods/source_zips for the same
+    company must leave both intact."""
+    conn = FundOwnershipConnection(rows=[])
+    q2_row = {
+        "company_id": 1, "accession_number": "ACC-Q2", "holding_id": 1, "fund_name": "Fund A",
+        "fund_cik": "1", "series_id": "S1", "shares": Decimal("100"), "currency_code": "USD",
+        "currency_value": Decimal("1000"), "value_usd": Decimal("1000"),
+        "pct_of_fund_net_assets": Decimal("1.5"), "report_period": date(2026, 5, 31),
+        "filing_date": date(2026, 4, 24), "is_amendment": False, "source_zip": "2026q2",
+    }
+    q1_row = {
+        **q2_row,
+        "accession_number": "ACC-Q1", "shares": Decimal("90"),
+        "report_period": date(2026, 2, 28), "filing_date": date(2026, 1, 24),
+        "source_zip": "2026q1",
+    }
+
+    company_ids = _write_matched_rows(conn, [q2_row, q1_row])
+
+    assert company_ids == [1]
+    windows_present = {r["source_zip"] for r in conn.rows if r["company_id"] == 1}
+    assert windows_present == {"2026q2", "2026q1"}
+    assert len(conn.rows) == 2

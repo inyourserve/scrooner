@@ -7,7 +7,13 @@ export async function updateSession(request: NextRequest) {
   const status = getAuthEnvironmentStatus();
   let response = NextResponse.next({ request });
 
+  const pathname = request.nextUrl.pathname;
+  const isProtectedPage = pathname === "/" || pathname.startsWith("/screener") || pathname.startsWith("/saved-screens") || pathname.startsWith("/account");
+  const isProtectedApi = pathname.startsWith("/api/ask") || pathname.startsWith("/api/screen") || pathname.startsWith("/api/screens") || pathname.startsWith("/api/metrics");
+
   if (!status.enabled) {
+    if (isProtectedApi) return Response.json({ detail: "Sign in to use the Scrooner screening tools." }, { status: 401 });
+    if (isProtectedPage) return NextResponse.redirect(new URL(buildLoginHref(`${pathname}${request.nextUrl.search}`), request.url));
     return response;
   }
 
@@ -36,9 +42,8 @@ export async function updateSession(request: NextRequest) {
   );
 
   const { data } = await supabase.auth.getClaims();
-  const isProtected = request.nextUrl.pathname.startsWith("/account");
-
-  if (isProtected && !data?.claims) {
+  if ((isProtectedPage || isProtectedApi) && !data?.claims) {
+    if (isProtectedApi) return Response.json({ detail: "Sign in to use the Scrooner screening tools." }, { status: 401 });
     const destination = `${request.nextUrl.pathname}${request.nextUrl.search}`;
     return NextResponse.redirect(
       new URL(buildLoginHref(destination), request.url),

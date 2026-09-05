@@ -46,3 +46,6 @@ jobs:
       - name: Enforce freshness and dead-letter health
         if: always()
         run: uv run --project pipeline scrooner-operations --fail-on-alert
+      - name: Record daily coverage snapshot
+        if: always()
+        run: uv run --project pipeline scrooner-map snapshot-coverage

@@ -11,48 +11,12 @@ import {
 import type { AskResponse, MetricDefinition, ScreenQueryPayload, ScreenResult } from "@/lib/screener/types";
 import { Button } from "@/components/ui/Button";
 import { StatusPanel } from "@/components/ui/StatusPanel";
+import { InterpretationTable } from "./InterpretationTable";
 
 type InterpretState = "idle" | "loading" | "complete" | "attention" | "error";
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function InterpretationTable({ query, metrics, partial = false }: {
-  query: ScreenQueryPayload;
-  metrics: MetricDefinition[];
-  partial?: boolean;
-}) {
-  const categories = categorySummary(query);
-  return (
-    <div className={`interpretation-table ${partial ? "partial" : ""}`} role="table" aria-label={partial ? "Recognized partial criteria" : "Interpreted criteria"}>
-      <div className="interpretation-table-head" role="row">
-        <span role="columnheader">Metric or classification</span><span role="columnheader">Operator</span><span role="columnheader">Value</span><span role="columnheader">Period</span>
-      </div>
-      {query.metric_predicates.map((predicate, index) => {
-        const summary = predicateSummary(predicate, metrics);
-        return (
-          <div className="interpretation-row" role="row" key={`${predicate.metric_name}-${index}`}>
-            <strong role="cell">{summary.metric}</strong>
-            <span role="cell">{summary.operator}</span>
-            <span role="cell">{summary.value}</span>
-            <span role="cell">Latest available</span>
-          </div>
-        );
-      })}
-      {categories.map((label) => (
-        <div className="interpretation-row" role="row" key={label}>
-          <strong role="cell">{label}</strong><span role="cell">Equal to</span><span role="cell">Selected class</span><span role="cell">Current company status</span>
-        </div>
-      ))}
-      <div className="interpretation-settings" role="row">
-        <span role="cell"><strong>Sort</strong> {query.sort_by ? metricByName(metrics, query.sort_by)?.display_name ?? query.sort_by : "Deterministic default"}</span>
-        <span role="cell"><strong>Direction</strong> {query.sort_desc ? "Highest first" : "Lowest first"}</span>
-        <span role="cell"><strong>Limit</strong> {query.limit ?? "No explicit limit"}</span>
-        <span role="cell"><strong>Universe</strong> {query.include_inactive ? "Active and inactive" : "Active companies"}</span>
-      </div>
-    </div>
-  );
 }
 
 function responseError(payload: unknown): string {
@@ -186,8 +150,8 @@ export function NaturalQueryPanel({
             </div>
           </div>
           <div className="screen-summary-actions">
-            <Button type="button" variant="ghost" className="tertiary-button" onClick={() => setState("idle")}>Edit wording</Button>
-            <Button type="button" variant="secondary" className="secondary-button" onClick={editFilters}>
+            <Button type="button" variant="ghost" onClick={() => setState("idle")}>Edit wording</Button>
+            <Button type="button" variant="secondary" onClick={editFilters}>
               {filtersOpened ? "Filters opened ✓" : "Edit filters"}
             </Button>
           </div>
@@ -200,16 +164,17 @@ export function NaturalQueryPanel({
         <>
           <div className="natural-query-heading">
             <div>
-              <p className="step-label">Start in your own words</p>
-              <h2 id="natural-query-title">What companies are you looking for?</h2>
-              <p>Describe the companies you want. One click turns your words into exact filters and shows the matches.</p>
+              <p className="step-label">Company search</p>
+              <h2 id="natural-query-title">Describe the companies you want</h2>
+              <p>Use plain English. Scrooner will show the exact filters before you save anything.</p>
             </div>
           </div>
 
           <div className="natural-query-workspace">
             <form onSubmit={submit} className="natural-query-form" aria-busy={state === "loading"}>
-              <label htmlFor="natural-query-input">Describe your screen</label>
+              <label htmlFor="natural-query-input">Your criteria</label>
               <textarea
+                className="ds-control query-composer"
                 id="natural-query-input"
                 value={text}
                 onChange={(event) => changeText(event.target.value)}
@@ -220,21 +185,18 @@ export function NaturalQueryPanel({
                 aria-describedby={`natural-query-help${state === "attention" ? " natural-query-attention" : ""}${state === "error" ? " natural-query-error" : ""}`}
               />
               <div className="natural-query-actions">
-                <p id="natural-query-help">If a phrase has more than one meaning, we will ask before running it.</p>
-                <Button type="submit" className="primary-button" disabled={state === "loading"}>
-                  {state === "loading" ? <><span className="spinner light" aria-hidden="true" /> Finding matches…</> : "Show matches"}
-                </Button>
+                <p id="natural-query-help">We will ask if anything is unclear.</p>
+                <Button type="submit" loading={state === "loading"} loadingLabel="Finding matches…">Show matches</Button>
               </div>
             </form>
 
             <aside className="query-guide" aria-label="Plain-language examples">
-              <p className="query-guide-label">Run an example</p>
+              <p className="query-guide-label">Try an example</p>
               <div className="query-examples">
                 {NATURAL_QUERY_EXAMPLES.slice(0, 3).map((example) => (
-                  <button key={example} type="button" aria-label={`Run example: ${example}`} disabled={state === "loading"} onClick={() => runExample(example)}>{example}</button>
+                  <button className="query-example" key={example} type="button" aria-label={`Run example: ${example}`} disabled={state === "loading"} onClick={() => runExample(example)}>{example}</button>
                 ))}
               </div>
-              <p className="query-guide-note"><span aria-hidden="true">✓</span> Click an example to see its matches immediately.</p>
             </aside>
           </div>
         </>
@@ -267,7 +229,7 @@ export function NaturalQueryPanel({
               <p>Which metric did you mean?</p>
               <div className="candidate-list">
                 {ambiguity.candidates.map((candidate) => (
-                  <button type="button" key={candidate} onClick={() => chooseMeaning(ambiguity.phrase, candidate)}>
+                  <button className="choice-button" type="button" key={candidate} onClick={() => chooseMeaning(ambiguity.phrase, candidate)}>
                     {metricByName(metrics, candidate)?.display_name ?? candidate.replaceAll("_", " ")}
                   </button>
                 ))}
@@ -291,7 +253,7 @@ export function NaturalQueryPanel({
             className="interpretation-state"
             tone="negative"
             title="The screen did not run"
-            action={<button type="button" className="text-button" onClick={() => void runQuery()}>Try again</button>}
+            action={<Button type="button" variant="ghost" size="small" onClick={() => void runQuery()}>Try again</Button>}
           >
             <p>{error}</p>
           </StatusPanel>
