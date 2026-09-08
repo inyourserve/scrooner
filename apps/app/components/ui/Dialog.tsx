@@ -36,7 +36,7 @@ export function Dialog({
   const descriptionId = description ? `${generatedId}-description` : undefined;
   const panelRef = useRef<HTMLElement>(null);
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
   useEffect(() => {
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
