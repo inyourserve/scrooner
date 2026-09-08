@@ -1,0 +1,31 @@
+-- Form 13F filer-side "value in thousands" convention, still present in
+-- real 2026 bulk data despite SEC's 2023-01-03 rule requiring actual
+-- dollars (2026-09-06).
+--
+-- ownership/institutional.py's own module docstring asserted VALUE is
+-- unambiguously actual dollars for any bulk window postdating the 2023
+-- change, sourced from SEC's own bundled FORM13F_readme.htm. That's true
+-- of what SEC's systems accept, but not of what every filer actually
+-- submits: found live comparing each filer's own reported value_usd/shares
+-- ratio against the peer median for the same (company, source_zip) --
+-- T. Rowe Price's own filed <value>45514867</value> for 179,340,662 AAPL
+-- shares implies ~$0.25/share where every other filer in the same window
+-- implies the real ~$253.79/share, an exact ~1000x gap confirmed straight
+-- from the raw XML (pipeline never touched the number in between). Not a
+-- one-filer fluke: 423 distinct filers across 3,678 companies (223,979 of
+-- 4.63M valid rows) show the identical clean ~1000x-too-low pattern --
+-- large, well-known managers included (Bessemer, T. Rowe Price, several
+-- state pension systems, BNP Paribas, Acadian, Van Eck). See
+-- doc/learnings/2026-09-06-institutional-ownership-value-scale-bug.md.
+--
+-- This does NOT change core.institutional_ownership_summary's
+-- total_institutional_pct (share-count-based, confirmed unaffected) --
+-- only the $ Value shown for individual holders, both the raw per-holder
+-- table and each golden company's cached Top 10 holders JSON.
+--
+-- value_scale_corrected traces which rows were multiplied by 1000 by
+-- ownership/institutional.py's correct_value_scale_anomalies(), same
+-- "flag, don't hide" discipline as match_method/is_amendment -- lets a
+-- future audit tell a genuinely-small real position apart from a
+-- corrected one without re-deriving the peer-median check.
+alter table core.institutional_ownership add column if not exists value_scale_corrected boolean not null default false;

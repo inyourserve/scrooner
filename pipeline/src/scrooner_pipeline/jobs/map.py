@@ -11,7 +11,7 @@ from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
-from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks
+from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks, resolve_all_arithmetic_fallbacks
 from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
 from scrooner_pipeline.statements.classify import seed as seed_statements
@@ -23,6 +23,7 @@ from scrooner_pipeline.mapper.quality_score import calculate_piotroski
 from scrooner_pipeline.mapper.quality_flags import calculate_quality_flags
 from scrooner_pipeline.mapper.reconciliation import calculate_reconciliation
 from scrooner_pipeline.mapper.coverage_matrix import build_registry, build_coverage
+from scrooner_pipeline.mapper.tag_candidates import build_tag_candidates, report_status
 from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
@@ -110,6 +111,23 @@ def resolve_concept_fallbacks_cmd(
     with get_connection() as conn:
         stats = resolve_fallbacks(conn, target_ciks)
     typer.echo(f"resolve-concept-fallbacks: {stats}")
+
+
+@app.command("resolve-statement-fallbacks")
+def resolve_statement_fallbacks_cmd() -> None:
+    """Migration 0047 / 2026-09-07: gross_profit_resolved,
+    cost_of_revenue_resolved, operating_expenses_resolved -- derives a
+    missing Income Statement line from two other already-resolved concepts
+    (e.g. Revenue - Cost of Revenue) when the primary tag is absent. Always
+    population-wide (set-based SQL, no per-CIK scoping -- see
+    concept_fallback.py's resolve_arithmetic_fallback docstring for why a
+    loop-per-company shape was deliberately avoided). Run AFTER
+    resolve-facts, BEFORE seed-statements' consumers render the company
+    page (statements/classify.py's STATEMENT_LINES already points at the
+    *_resolved concepts)."""
+    with get_connection() as conn:
+        stats = resolve_all_arithmetic_fallbacks(conn)
+    typer.echo(f"resolve-statement-fallbacks: {stats}")
 
 
 @app.command("seed-definitions")
@@ -386,6 +404,33 @@ def build_coverage_matrix_cmd() -> None:
         coverage_stats = build_coverage(conn)
     typer.echo(f"registry: {registry_stats}")
     typer.echo(f"coverage: {coverage_stats}")
+
+
+@app.command("build-tag-candidates")
+def build_tag_candidates_cmd() -> None:
+    """2026-09-08: retires reference/xbrl_tag_coverage_library.json
+    (doc 40) into analytics.concept_tag_candidate -- the DB-native
+    record of candidate UNMAPPED XBRL tags per canonical concept, ranked
+    by real company count. The one thing the JSON library had that the
+    coverage matrix didn't; now the single DB source of truth for both.
+    Every candidate is still a LEAD to investigate, never an approval --
+    see tag_candidates.py's module docstring."""
+    with get_connection() as conn:
+        stats = build_tag_candidates(conn)
+    typer.echo(f"tag-candidates: {stats}")
+
+
+@app.command("tag-candidate-report")
+def tag_candidate_report_cmd() -> None:
+    """Reads back the current concept-by-concept status
+    (well_covered / gap_safe_candidate_found / gap_needs_fallback_resolver
+    / gap_no_safe_candidate) computed live from analytics.canonical_fact
+    coverage + analytics.concept_tag_candidate -- read-only, safe any time."""
+    with get_connection() as conn:
+        rows = report_status(conn)
+    for row in rows:
+        top = f"{row['top_candidate'][0]} ({row['top_candidate'][1]} cos)" if row["top_candidate"] else "-"
+        typer.echo(f"{row['concept']:<32} {row['coverage_pct']:>5}%  {row['status']:<28} top candidate: {top}")
 
 
 @app.command("calculator-registry")

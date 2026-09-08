@@ -137,6 +137,22 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
     ("employee_count", "balance_sheet", "first_match",
      "dei:EntityNumberOfEmployees, a cover-page fact -- 178 companies/1,941 facts as of 2026-08-29. "
      "statement bucket follows public_float's own precedent (neither is really a balance-sheet line item)."),
+    ("other_income_expense_net", "income_statement", "first_match",
+     "Added 2026-09-08, direct user report ('why are financial table rows empty'): 45% of the "
+     "active population (2,368 companies) shows a company that used to report a plain "
+     "InterestExpense line and stopped -- checked live before assuming a bug: 1,618 of those "
+     "(68%) genuinely switched to a NETTED tag (Apple's NonoperatingIncomeExpense: +$269M net "
+     "income FY2024, -$321M net expense FY2025; Freeport-McMoRan's InterestIncomeExpenseNet: "
+     "-$560M to -$602M across FY2020-2022), not a data gap. Deliberately a SEPARATE concept from "
+     "interest_expense, never a fallback merged into it under the same label -- coexistence-"
+     "checked live (company_id=649/Freeport-McMoRan): when both tags are filed for the same "
+     "period, NonoperatingIncomeExpense sometimes MATCHES InterestIncomeExpenseNet exactly, but "
+     "often diverges, even in SIGN (one real period showed +5,592 vs. -6,778) -- confirming this "
+     "is genuinely a broader 'other non-operating items' bucket (can include FX, equity-method "
+     "earnings, investment gains/losses), not purely interest. Labeled and displayed as its own "
+     "'Other Income (Expense), Net' row for exactly this reason -- merging it into interest_expense "
+     "would silently flip sign/meaning for some companies in some years, the same 'same vocabulary, "
+     "different concept' trap this project has hit before (doc 40)."),
     ("bdc_total_investment_income", "income_statement", "first_match",
      "A Business Development Company / closed-end fund's real top-line figure -- checked live "
      "2026-09-04: 44 real active companies (Ares Capital, Main Street Capital, Prospect Capital, "
@@ -179,6 +195,13 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
     ("amortization_of_intangibles", "us-gaap", "AmortizationOfIntangibleAssets", 1, "approved", ""),
     ("effective_tax_rate_reported", "us-gaap", "EffectiveIncomeTaxRateContinuingOperations", 1, "approved", ""),
     ("employee_count", "dei", "EntityNumberOfEmployees", 1, "approved", ""),
+    ("other_income_expense_net", "us-gaap", "NonoperatingIncomeExpense", 1, "approved",
+     "Priority 1 -- most common by far, real population count checked live (2,767 companies)."),
+    ("other_income_expense_net", "us-gaap", "InterestIncomeExpenseNet", 2, "approved",
+     "Alternate -- 1,593 companies, checked live to sometimes diverge from priority-1 for the "
+     "same company/period (a real, different, narrower-scoped figure), not a duplicate tag."),
+    ("other_income_expense_net", "us-gaap", "InterestIncomeExpenseNonoperatingNet", 3, "approved",
+     "Alternate -- 1,047 companies, real population count checked live."),
     ("bdc_total_investment_income", "us-gaap", "GrossInvestmentIncomeOperating", 1, "approved",
      "Verified 2026-09-04 against 118 real active companies (35 of the original 44 hand-sampled "
      "BDCs, plus other closed-end funds) -- values sanity-checked plausible and correctly scaled "

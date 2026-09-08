@@ -1,0 +1,51 @@
+name: Data sanity layer (yfinance cross-check)
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Max companies to check this run (rotates coldest-checked-first)."
+        required: false
+        default: "750"
+  schedule:
+    # Offset from pipeline-refresh.yml's 12:23 UTC cron so the two never
+    # compete for the same Supabase pooler connections at once.
+    - cron: "17 15 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: data-sanity-layer-production
+  cancel-in-progress: false
+
+jobs:
+  yfinance-cross-check:
+    name: yfinance cross-check and report
+    runs-on: ubuntu-latest
+    # ~750 companies * 1.2s pace + occasional 60s rate-limit retries --
+    # generous headroom over the ~20min baseline case.
+    timeout-minutes: 60
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Require production configuration
+        run: test -n "$DATABASE_URL"
+      - name: Install locked dependencies
+        run: uv sync --project pipeline --locked
+      - name: Run sanity checks (rotating batch)
+        run: uv run --project pipeline scrooner-sanity run --limit "${{ github.event.inputs.limit || '750' }}"
+      - name: Investigate and auto-fix reconcilable findings
+        if: always()
+        run: uv run --project pipeline scrooner-sanity investigate
+      - name: Report findings
+        if: always()
+        run: uv run --project pipeline scrooner-sanity report --github-summary --fail-on-findings

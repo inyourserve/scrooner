@@ -84,10 +84,29 @@ SECTOR_RANGES: list[tuple[int, int, str]] = [
     (6100, 6299, "Financials"),  # Credit, brokers
     (6300, 6499, "Financials"),  # Insurance
     (6500, 6599, "Real Estate"),
+    (6770, 6770, "Other"),  # Blank Checks -- carved out of the surrounding 6700-6799
+    # "Real Estate" range: this code is a legacy pre-merger SPAC/shell classification,
+    # not a real-estate holding company, and SEC never requires a post-merger operating
+    # company to update it. Real evidence checked live 2026-09-06 before carving out:
+    # 848 of ~6,900 active companies (12%) carry this code, and a random sample was
+    # dominated by still-unmerged SPAC shells (SPACSphere, Jackson Acquisition, FIGX
+    # Capital, GigCapital8, Columbus Acquisition, ...) with zero real-estate business in
+    # common -- the same "carve out the real exception, don't force it into a
+    # convenient-looking range" pattern as the Nike/3021 footwear carve-out below.
     (6700, 6799, "Real Estate"),  # Holding/investment offices, REITs
     (7000, 7099, "Consumer Discretionary"),  # Hotels
     (7200, 7369, "Industrials"),  # Business/personal services
     (7370, 7379, "Technology"),  # Computer programming, data processing, software
+    (7389, 7389, "Other"),  # Business Services, NEC -- carved out of the surrounding
+    # 7380-7799 "Industrials" range. Real evidence checked live 2026-09-06 (cross-checked
+    # against yfinance's own sector/industry field, dev-tool use per
+    # doc/planning/y-finance.md sec. 3.4/4, never a production dependency): a 25-company
+    # random sample of this single code included Uber (mobility), MercadoLibre
+    # (e-commerce), FIS/Shift4/Repay/Payoneer (payments/fintech), TriNet/Resources
+    # Connection (HR/staffing), Maximus/ExlService (BPO), comScore (media analytics),
+    # Xometry (manufacturing marketplace) -- no coherent sector, real or "Industrials,"
+    # covers more than a small minority of it. Honest "Other" beats a confident-looking
+    # wrong bucket, same discipline as the null-sector default below.
     (7380, 7799, "Industrials"),  # Other business services, auto repair/rental
     (7800, 7999, "Communication Services"),  # Motion pictures, amusement & recreation
     (8000, 8099, "Healthcare"),  # Health services
@@ -98,10 +117,39 @@ SECTOR_RANGES: list[tuple[int, int, str]] = [
 
 OTHER = "Other"
 
+# Curated per-company override, CIKs only (zero-padded to 10 digits, matching
+# core.company.cik) -- SIC 7389 ("Business Services, NEC," carved out to "Other"
+# above) has no coherent sector as a whole, but this one sub-cluster is a real,
+# well-known exception: card networks and financial-data/credit companies. Found
+# live 2026-09-06 by fetching yfinance's own sector/industry field for the full
+# 112-company SIC 7389 population -- a bounded, one-time reference-data lookup,
+# dev-tool use only, never a production dependency (doc/planning/y-finance.md sec.
+# 3.4/4) -- then hand-reviewing which ones classify as "Credit Services" /
+# "Financial Data & Stock Exchanges" / "Capital Markets" under Yahoo's own
+# "Financial Services" sector. This project writes its own sector name
+# ("Financials," not Yahoo's), same "inspired by, not reproducing" discipline as
+# the whole SECTOR_RANGES table -- Yahoo's classification is a reference used to
+# inform the decision, never copied or stored as a fact. Small, reviewed allowlist,
+# same "automate detection, keep acceptance human" discipline as Company Master
+# 4a's ticker-change-date confirmations.
+SIC_7389_FINANCIALS_OVERRIDE_CIKS: set[str] = {
+    "0000849145",  # Heritage Global Inc. (HGBL)
+    "0001141391",  # Mastercard Inc (MA)
+    "0001408198",  # MSCI Inc. (MSCI)
+    "0001633917",  # PayPal Holdings, Inc. (PYPL)
+    "0001101433",  # QuoteMedia Inc (QMCI)
+    "0001662991",  # Sezzle Inc. (SEZL)
+    "0001192323",  # Superstar Platforms Inc. (SPST)
+    "0001403161",  # Visa Inc. (V)
+    "0001365135",  # Western Union Co (WU)
+}
 
-def classify_sector(sic_code: str | None) -> tuple[str, str]:
+
+def classify_sector(sic_code: str | None, cik: str | None = None) -> tuple[str, str]:
     """Returns (sector, reason). reason is always a real, traceable
     explanation -- either the matched range or why it fell through."""
+    if cik is not None and cik in SIC_7389_FINANCIALS_OVERRIDE_CIKS:
+        return "Financials", "sic_7389_financials_override"
     if sic_code is None or not sic_code.strip():
         return OTHER, "no_sic_code"
     try:
@@ -130,7 +178,7 @@ def update_sector(conn: psycopg.Connection, ciks: set[str]) -> dict:
             stats["no_company"] += 1
             continue
         company_id, sic_code = hit
-        sector, reason = classify_sector(sic_code)
+        sector, reason = classify_sector(sic_code, cik=cik)
         stats[sector] = stats.get(sector, 0) + 1
         updates.append({"company_id": company_id, "sector": sector, "sector_reason": reason})
 

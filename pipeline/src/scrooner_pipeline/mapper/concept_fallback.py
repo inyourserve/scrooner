@@ -42,6 +42,38 @@ FALLBACK_PAIRS: list[tuple[str, str, str]] = [
     ("total_debt", "total_debt_split", "total_debt_resolved"),
 ]
 
+# Arithmetic fallback (migration 0047, 2026-09-07): unlike FALLBACK_PAIRS'
+# simple "concept B fills where concept A is null" coalesce, this derives a
+# missing value from TWO OTHER concepts (minuend - subtrahend) when the
+# primary tag itself is absent. (resolved_name, primary_name, minuend_name,
+# subtrahend_name, guard_min_value) -- guard_min_value, when not None,
+# requires the minuend's own value to be strictly greater than it before
+# trusting the derivation.
+#
+# The guard exists because of a real bug found live 2026-09-07: resolve.py's
+# `first_match` can silently fall through to a lower-priority revenue tag
+# reporting an authoritative-but-spurious $0 when the priority-1 tag's real,
+# near-consensus value got marked non-authoritative over a trivial (<1%)
+# cross-filing rounding difference (Stage 2e's own documented, correct-by-
+# design conflict policy -- see pipeline/CLAUDE.md's 2026-08-19 total_debt
+# entry for the identical mechanism on a different concept). Flowserve Corp
+# (all 7 of its FY revenue rows resolve to exactly $0 despite being a real
+# multi-billion-dollar company) is the clearest confirmed instance. Requiring
+# `revenue > 0` before deriving gross_profit/cost_of_revenue means this bug
+# structurally can't corrupt these derived values -- the affected periods
+# just stay an honest blank cell instead of a wrong negative-billions figure.
+# NOT fixed here -- that's a frozen resolve.py/dedupe.py boundary issue, see
+# doc/learnings/2026-09-07-statement-table-coverage-and-revenue-zero-bug.md.
+#
+# Order matters: operating_expenses_resolved's minuend is
+# gross_profit_resolved itself (for maximum coverage), so it must run AFTER
+# gross_profit_resolved is populated -- this list's order is that order.
+ARITHMETIC_FALLBACKS: list[tuple[str, str, str, str, int | None]] = [
+    ("gross_profit_resolved", "gross_profit", "revenue", "cost_of_revenue", 0),
+    ("cost_of_revenue_resolved", "cost_of_revenue", "revenue", "gross_profit", 0),
+    ("operating_expenses_resolved", "operating_expenses", "gross_profit_resolved", "operating_income", None),
+]
+
 
 def _concept_id(conn: psycopg.Connection, name: str) -> int:
     with conn.cursor() as cur:
@@ -115,4 +147,70 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
                 conn.rollback()
 
     logger.info("concept_fallback.done", **stats)
+    return stats
+
+
+def resolve_arithmetic_fallback(
+    conn: psycopg.Connection,
+    resolved_id: int,
+    primary_id: int,
+    minuend_id: int,
+    subtrahend_id: int,
+    guard_min_value: int | None,
+) -> int:
+    """Set-based (not per-company-loop) by design -- this project's own
+    established rule against a query-per-row-in-a-loop batch job (see
+    pipeline/CLAUDE.md's restatements.py N+1 entry). One DELETE + one
+    INSERT...SELECT covers the whole population regardless of company
+    count. Idempotent: safe to rerun any time an upstream concept's own
+    resolve-facts output changes."""
+    params: dict = {
+        "resolved_id": resolved_id,
+        "primary_id": primary_id,
+        "minuend_id": minuend_id,
+        "subtrahend_id": subtrahend_id,
+    }
+    guard_clause = ""
+    if guard_min_value is not None:
+        guard_clause = "and m.value > %(guard_value)s"
+        params["guard_value"] = guard_min_value
+
+    with conn.cursor() as cur:
+        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", params)
+        cur.execute(
+            f"""
+            insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+            select company_id, %(resolved_id)s, period_id, value, source_fact_ids
+            from analytics.canonical_fact
+            where canonical_concept_id = %(primary_id)s
+            union all
+            select m.company_id, %(resolved_id)s, m.period_id, (m.value - s.value), m.source_fact_ids || s.source_fact_ids
+            from analytics.canonical_fact m
+            join analytics.canonical_fact s
+                on s.company_id = m.company_id and s.period_id = m.period_id and s.canonical_concept_id = %(subtrahend_id)s
+            where m.canonical_concept_id = %(minuend_id)s
+                {guard_clause}
+                and not exists (
+                    select 1 from analytics.canonical_fact p
+                    where p.company_id = m.company_id and p.period_id = m.period_id and p.canonical_concept_id = %(primary_id)s
+                )
+            """,
+            params,
+        )
+        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", params)
+        count = cur.fetchone()[0]
+    conn.commit()
+    return count
+
+
+def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
+    stats = {"considered": len(ARITHMETIC_FALLBACKS), "rows_written": {}}
+    for resolved_name, primary_name, minuend_name, subtrahend_name, guard in ARITHMETIC_FALLBACKS:
+        resolved_id = _concept_id(conn, resolved_name)
+        primary_id = _concept_id(conn, primary_name)
+        minuend_id = _concept_id(conn, minuend_name)
+        subtrahend_id = _concept_id(conn, subtrahend_name)
+        count = resolve_arithmetic_fallback(conn, resolved_id, primary_id, minuend_id, subtrahend_id, guard)
+        stats["rows_written"][resolved_name] = count
+        logger.info("concept_fallback.arithmetic_done", concept=resolved_name, rows=count)
     return stats

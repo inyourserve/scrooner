@@ -9,6 +9,7 @@ import typer
 
 from scrooner_pipeline.company_master.identity import update_identity
 from scrooner_pipeline.company_master.contact_details import update_contact_details
+from scrooner_pipeline.company_master.display_name import update_display_names
 from scrooner_pipeline.company_master.employee_headcount import process_companies as process_employee_headcount
 from scrooner_pipeline.company_master.sector_bucket import update_sector
 from scrooner_pipeline.company_master.history import update_history
@@ -18,6 +19,7 @@ from scrooner_pipeline.company_master.market_price_alpaca import update_market_p
 from scrooner_pipeline.company_master.security_type import resolve_primary_tickers, update_security_types
 from scrooner_pipeline.company_master.shares_outstanding_fallback import update_shares_outstanding_fallback
 from scrooner_pipeline.company_master.universe import build_current_universe
+from scrooner_pipeline.company_master.yfinance_industry import update_yfinance_industry
 from scrooner_pipeline.db.connection import get_connection
 
 app = typer.Typer()
@@ -115,6 +117,80 @@ def update_sector_cmd(
     typer.echo(f"update-sector: {stats}")
 
 
+@app.command("update-yfinance-industry")
+def update_yfinance_industry_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    all_active: bool = typer.Option(
+        False, "--all-active", help="Target every active company, not just --ciks/golden set."
+    ),
+    force: bool = typer.Option(
+        False, "--force", help="Re-fetch companies already resolved ok/no_data, not just error/unattempted."
+    ),
+    no_pacing: bool = typer.Option(
+        False,
+        "--no-pacing",
+        help="Skip the shared rate limiter and retry-on-rate-limit entirely -- an explicit "
+        "'try fast first' pass. Always follow with a plain (paced) rerun to clean up "
+        "whatever landed in STATUS_ERROR from being rate-limited.",
+    ),
+) -> None:
+    """Explicit user direction 2026-09-06 (see CLAUDE.md, doc 02): backfill
+    core.company.y_sector/y_industry from yfinance. Default mode is paced
+    and resumable, safe to run as several parallel `--ciks <shard>`
+    processes -- they coordinate through one shared cross-process rate
+    limiter (common/rate_limiter.py) rather than each pacing independently,
+    which would multiply Yahoo's own aggregate rate the same way the SEC
+    in-process limiter broke under multiprocessing (see pipeline/CLAUDE.md).
+    --no-pacing drops that limiter entirely for a fast first pass, by
+    explicit user direction -- run it, then run again without --no-pacing
+    (still resumable: only STATUS_ERROR/unattempted rows get retried) to
+    safely clean up whatever the fast pass got rate-limited on."""
+    with get_connection() as conn:
+        if all_active:
+            with conn.cursor() as cur:
+                cur.execute("select cik from core.company where status = 'active'")
+                target_ciks = {row[0] for row in cur.fetchall()}
+        else:
+            target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+        stats = update_yfinance_industry(conn, target_ciks, force=force, paced=not no_pacing)
+    typer.echo(f"update-yfinance-industry: {stats}")
+
+
+@app.command("update-display-names")
+def update_display_names_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    edgar_suffix_only: bool = typer.Option(
+        True,
+        "--edgar-suffix-only/--all",
+        help="Only target companies whose company_name matches the EDGAR /XX/ suffix pattern "
+        "(the default, and the actual reported problem). --all targets every given CIK.",
+    ),
+    no_pacing: bool = typer.Option(
+        False, "--no-pacing", help="Skip yfinance's shared rate limiter for a fast first pass."
+    ),
+    force: bool = typer.Option(False, "--force", help="Re-resolve companies that already have a display_name."),
+) -> None:
+    """Explicit user direction 2026-09-07: clean up company_name's raw EDGAR
+    disambiguation suffix (e.g. 'COSTCO WHOLESALE CORP /NEW', 'TUCOWS INC
+    /PA/') into core.company.display_name -- yfinance longName/shortName
+    first, OpenFIGI name second, a deterministic suffix-strip always as the
+    guaranteed fallback. Never overwrites company_name itself."""
+    with get_connection() as conn:
+        if ciks:
+            target_ciks = {c.strip().zfill(10) for c in ciks.split(",")}
+        elif edgar_suffix_only:
+            with conn.cursor() as cur:
+                cur.execute(
+                    r"select cik from core.company where status = 'active' "
+                    r"and company_name ~ '/[A-Za-z]{2,4}/?\s*$'"
+                )
+                target_ciks = {row[0] for row in cur.fetchall()}
+        else:
+            target_ciks = _load_golden_ciks()
+        stats = update_display_names(conn, target_ciks, paced=not no_pacing, force=force)
+    typer.echo(f"update-display-names: {stats}")
+
+
 @app.command("load-mock-prices")
 def load_mock_prices_cmd(
     ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
@@ -133,14 +209,19 @@ def load_mock_prices_cmd(
 @app.command("update-security-types")
 def update_security_types_cmd(
     ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    force: bool = typer.Option(
+        False, "--force", help="Re-classify listings that already have a security_type, not just null ones."
+    ),
 ) -> None:
     """Classifies each current listing's real security type via OpenFIGI
     (free, NOT Alpaca -- see security_type.py's module docstring) --
     replaces the golden_companies.json ticker stopgap update-market-price
-    originally used to find a company's primary common-stock/ADR ticker."""
+    originally used to find a company's primary common-stock/ADR ticker.
+    Resumable: skips already-classified listings and commits incrementally
+    unless --force."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
     with get_connection() as conn:
-        stats = update_security_types(conn, target_ciks)
+        stats = update_security_types(conn, target_ciks, force=force)
     typer.echo(f"update-security-types: {stats}")
 
 
@@ -163,6 +244,9 @@ def update_shares_outstanding_fallback_cmd(
 @app.command("update-market-price")
 def update_market_price_cmd(
     ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    all_active: bool = typer.Option(
+        False, "--all-active", help="Target every active company, not just --ciks/golden set."
+    ),
 ) -> None:
     """Stage 4b real-data follow-on (doc 25): fetch REAL current prices
     from Alpaca (delayed_sip feed, ~15min delay, full consolidated tape)
@@ -178,8 +262,13 @@ def update_market_price_cmd(
     the tie-break for a company with more than one legitimately valid
     Common-Stock/ADR listing (e.g. Alphabet's two share classes), not
     the primary source of truth."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
     with get_connection() as conn:
+        if all_active:
+            with conn.cursor() as cur:
+                cur.execute("select cik from core.company where status = 'active'")
+                target_ciks = {row[0] for row in cur.fetchall()}
+        else:
+            target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
         ticker_by_cik = resolve_primary_tickers(conn, target_ciks, fallback_ticker_by_cik=_load_golden_tickers())
         stats = update_market_price(conn, ticker_by_cik)
     typer.echo(f"update-market-price: {stats}")

@@ -68,6 +68,19 @@ OUTPUT_METRIC_NAMES = frozenset({
     "cash_conversion_cycle",
     # Added 2026-09-05 (financials display spec gap-fill).
     "ebitda_margin", "debt_to_ebitda", "fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf",
+    # Added 2026-09-08 (Data Sanity Layer finding): a TTM `ebitda` row,
+    # NOT a new dependency conflict with the comment above -- `ebitda`'s
+    # Q1-Q4/FY rows (calculate.py's own output) are untouched, since the
+    # delete below is scoped to period_label='TTM' only, which no other
+    # writer has ever produced for this metric_definition_id. Real bug
+    # found live: yfinance's ebitda ($168.0B for AAPL) matched
+    # _ebitda_ttm()'s own already-correct sum of 4 quarters ($167.96B)
+    # almost exactly, but that sum was never persisted anywhere reachable
+    # -- every other consumer (and the sanity layer's "most recent
+    # period" query) could only see a single quarter's ebitda ($39.0B),
+    # a ~4x understatement that looked like a data bug but was actually
+    # a missing row. See doc/learnings/2026-09-08-data-sanity-layer.md.
+    "ebitda",
 })
 
 
@@ -272,6 +285,12 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     cash_hit = _latest_instant_fact(conn, company_id, concept_ids["cash_and_equivalents"]) if "cash_and_equivalents" in concept_ids else None
     ebitda_ttm = _ebitda_ttm(conn, company_id, metric_ids["ebitda"])
     market_cap = _latest_metric_value(conn, company_id, metric_ids["market_cap"])
+
+    # Persist the TTM sum itself (2026-09-08) -- previously computed fresh
+    # every call but never stored, so any OTHER reader (the Data Sanity
+    # Layer, a future feature, a human debugging) could only see a single
+    # quarter's ebitda via metric_value's own "most recent period" rule.
+    rows.append(_row("ebitda", ebitda_ttm, None if ebitda_ttm is not None else "missing:4_consecutive_quarters"))
 
     # Net Debt / EBITDA -- price-independent
     if total_debt_hit is None or cash_hit is None:
@@ -497,11 +516,18 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
         # computed dividend_yield/buyback_yield metric_value rows) so a
         # missing one can default to $0 without disturbing those metrics'
         # own, still-conservative, independent null behavior.
-        dividend_contribution = (dividends_ttm / market_cap) if dividends_ttm is not None else Decimal("0")
-        buyback_contribution = (buybacks_ttm / market_cap) if buybacks_ttm is not None else Decimal("0")
-        if dilution is None:
+        # Found live 2026-09-05 (real DivisionByZero crash, CIK 0001800227):
+        # market_cap can be exactly Decimal("0") even when not None (a
+        # genuine degenerate case, e.g. zero shares_outstanding captured).
+        # buyback_yield above already guards this with market_cap == 0 --
+        # this direct division needs the same guard, not just a None check.
+        if market_cap == 0:
+            rows.append(_row("total_shareholder_yield", None, "zero_denominator"))
+        elif dilution is None:
             rows.append(_row("total_shareholder_yield", None, "missing:share_count_1y_ago"))
         else:
+            dividend_contribution = (dividends_ttm / market_cap) if dividends_ttm is not None else Decimal("0")
+            buyback_contribution = (buybacks_ttm / market_cap) if buybacks_ttm is not None else Decimal("0")
             rows.append(_row("total_shareholder_yield", dividend_contribution + buyback_contribution - dilution, None))
 
     with conn.cursor() as cur:

@@ -87,6 +87,13 @@ def build_registry(conn: psycopg.Connection) -> dict:
     )
 
     with conn.cursor() as cur:
+        # Found live 2026-09-06: company_data_point_coverage has a FK to
+        # data_point_name, so clearing the registry alone violates it the
+        # moment any coverage rows still reference the old registry rows
+        # (true on every rerun after the first). build_coverage() always
+        # fully rebuilds the coverage table from scratch anyway, so
+        # clearing it here first is correct, not just a workaround.
+        cur.execute("delete from analytics.company_data_point_coverage")
         cur.execute("delete from analytics.data_point_registry")
         cur.executemany(
             """
@@ -109,6 +116,16 @@ def build_coverage(conn: psycopg.Connection) -> dict:
     timeout at ~600K rows, same batching discipline as every other
     full-population write this session."""
     with conn.cursor() as cur:
+        # Found live 2026-09-06: the metric insert below (~428K company x
+        # metric combinations, each running its own correlated gap_reason
+        # subquery) exceeded the connection's default 2-minute
+        # statement_timeout. This is a rare, admin-triggered rebuild, not
+        # a per-company loop on any hot path, so a longer timeout for
+        # just this connection is the right fix, not a query rewrite --
+        # the existing idx_metric_value_company_metric index already
+        # supports each subquery invocation efficiently, the cost is
+        # purely the sheer combination count.
+        cur.execute("set statement_timeout = '10min'")
         cur.execute("delete from analytics.company_data_point_coverage")
         conn.commit()
 

@@ -18,12 +18,14 @@ jobs:
   filing-index:
     name: SEC filing index and operational gate
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_API_SECRET: ${{ secrets.ALPACA_API_SECRET }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -43,9 +45,44 @@ jobs:
         run: uv sync --project pipeline --locked
       - name: Index latest finalized SEC filing day
         run: uv run --project pipeline scrooner-incremental
+      - name: Refresh real market prices (Alpaca)
+        # Added 2026-09-08 -- doc 25's own docstring had flagged this as
+        # "no scheduler wired up yet" since 2026-08-17. core.market_price_
+        # alpaca had NEVER been refreshed by any automated process, which
+        # is why the freshness gate below alerted on it every single day
+        # with no way to ever clear. AlpacaClient.latest_bars() chunked
+        # (300 symbols/request) same day, tested live against 478 real
+        # tickers first -- the original single-request version was only
+        # ever verified at golden-10 scale and would likely have hit a
+        # URL-length failure at the full ~5,000-ticker population.
+        if: always()
+        run: uv run --project pipeline scrooner-company-master update-market-price --all-active
       - name: Enforce freshness and dead-letter health
         if: always()
         run: uv run --project pipeline scrooner-operations --fail-on-alert
+      - name: Rebuild company/metric/tag coverage matrix
+        # The source of truth for "does company X have data point Y, and
+        # why not" (analytics.data_point_registry + company_data_point_
+        # coverage, doc 41) -- added to the daily cron 2026-09-08, direct
+        # user request ("continuously build it... this will be our source
+        # of truth for fetching"). Previously only ever rebuilt manually
+        # (last real run 2026-09-06), so every concept_mapping/resolve()
+        # change since then was invisible to it. Runs BEFORE the aggregate
+        # snapshot below since the snapshot's own coverage-percentage
+        # queries read the same underlying resolve()/canonical_fact state
+        # this matrix also reflects -- keeping them in the same daily
+        # pass avoids the two ever silently disagreeing about "as of when".
+        if: always()
+        run: uv run --project pipeline scrooner-map build-coverage-matrix
+      - name: Rebuild XBRL tag-candidate library
+        # Retires reference/xbrl_tag_coverage_library.json (2026-09-08,
+        # direct user instruction: "retire json, make everything into db
+        # as source of truth") -- was a manually-triggered research file,
+        # last built 2026-09-02, silently stale ever since. Now
+        # analytics.concept_tag_candidate, rebuilt in the same daily pass
+        # as the coverage matrix above.
+        if: always()
+        run: uv run --project pipeline scrooner-map build-tag-candidates
       - name: Record daily coverage snapshot
         if: always()
         run: uv run --project pipeline scrooner-map snapshot-coverage

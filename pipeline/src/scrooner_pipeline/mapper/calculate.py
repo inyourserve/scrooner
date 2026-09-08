@@ -114,7 +114,17 @@ DEFERRED_TO_EXPANDED_METRICS = {
 # annual one) would inflate every quarterly row ~4x for the same
 # balance -- the exact same annualization trap already documented above
 # for ROIC, not a new one.
-FY_ONLY_METRICS = {"roic", "roe", "debtor_days", "inventory_days", "payables_days"}
+# roa added 2026-09-08, Data Sanity Layer finding: the exact same
+# annualization trap as roic/roe above, just never given the same
+# protection. AAPL's own quarterly roa rows (Net Income / Total Assets,
+# one quarter's income over a full balance-sheet snapshot) sat at 7-11%
+# while its FY row -- using a real full year's net income -- correctly
+# landed at 31.2%, close to yfinance's independently-reported 27.1%. A
+# quarterly denominator understates roa ~4x for the same reason it
+# inflates a "days" metric ~4x: the numerator is a period FLOW, the
+# denominator a point-in-time STOCK, and only an annual flow is the right
+# scale to divide by an annual-scale balance.
+FY_ONLY_METRICS = {"roic", "roe", "roa", "debtor_days", "inventory_days", "payables_days"}
 
 # gross_margin switched from "ratio" (a direct GrossProfit tag) to
 # "sum_diff_ratio" (Revenue - CostOfRevenue, 2026-09-01) -- checked live

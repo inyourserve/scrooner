@@ -13,9 +13,18 @@ OUTPUT_NAMES = (
     "buyback_yield", "total_shareholder_yield",
     # Added 2026-09-05 (financials display spec gap-fill).
     "ebitda_margin", "debt_to_ebitda", "fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf",
+    # Added 2026-09-08 (Data Sanity Layer finding): a TTM `ebitda` row --
+    # "ebitda" moved here from DEPENDENCY_NAMES below. NOT a contradiction
+    # of the delete-scope safety this test file exists to enforce: the
+    # module still only ever reads ebitda's Q1-Q4/FY rows (still written
+    # exclusively by calculate.py, untouched), and only ever WRITES/DELETES
+    # a period_label='TTM' row for it -- a label calculate.py never uses
+    # for this metric. See expanded_metrics.py's own OUTPUT_METRIC_NAMES
+    # comment for the full reasoning.
+    "ebitda",
 )
 DEPENDENCY_NAMES = (
-    "ebitda", "market_cap", "trailing_pe", "eps_growth_yoy", "dividend_yield",
+    "market_cap", "trailing_pe", "eps_growth_yoy", "dividend_yield",
     "debtor_days", "inventory_days", "payables_days",
     "fcf",
 )
@@ -60,7 +69,8 @@ def test_all_expanded_composite_metrics_compute_with_expected_semantics(monkeypa
     stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
     rows = {name: next(r for r in conn.rows if r["metric_definition_id"] == METRIC_IDS[name]) for name in OUTPUT_NAMES}
 
-    assert stats == {"computed": 14, "null": 0}
+    assert stats == {"computed": 15, "null": 0}
+    assert rows["ebitda"]["value"] == Decimal("20")  # the persisted TTM sum itself, mocked via _ebitda_ttm
     assert rows["net_debt_ebitda"]["value"] == Decimal("1.5")
     assert rows["institutional_ownership_pct"]["value"] == Decimal("0.6")
     assert rows["share_dilution_trend"]["value"] == Decimal("0.25")
@@ -88,11 +98,16 @@ def test_all_expanded_composite_metrics_compute_with_expected_semantics(monkeypa
 def test_delete_scope_excludes_dependency_metric_ids(monkeypatch):
     """The real 2026-09-03 bug: metric_ids passed in includes both this
     module's real outputs AND the dependency metrics it only reads
-    (market_cap, trailing_pe, dividend_yield, ebitda, fcf, debtor_days,
+    (market_cap, trailing_pe, dividend_yield, fcf, debtor_days,
     inventory_days, payables_days) -- the delete must never touch the
     dependency IDs, since this module has no code path that recomputes
     them, and doing so silently and permanently wipes another module's
-    already-correct data on every rerun."""
+    already-correct data on every rerun. `ebitda` moved to OUTPUT_NAMES
+    2026-09-08 -- it's now genuinely both (a dependency for its Q1-Q4/FY
+    rows, an output for its TTM row), but this metric_definition_id-level
+    assertion can't distinguish periods; the real safety is the period_
+    label='TTM' filter in the actual SQL, not tested by this fake
+    connection's recorded params."""
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
@@ -116,6 +131,32 @@ def test_delete_scope_excludes_dependency_metric_ids(monkeypatch):
 
 
 @pytest.mark.unit
+def test_total_shareholder_yield_null_not_crash_when_market_cap_is_zero(monkeypatch):
+    """Real crash found live 2026-09-05 (CIK 0001800227, full-population
+    rerun): market_cap can be exactly Decimal("0") (not None -- a genuine
+    degenerate case, e.g. zero captured shares_outstanding), and the
+    direct dividends_ttm/market_cap, buybacks_ttm/market_cap division
+    added for the AND-gate fix crashed with decimal.DivisionByZero
+    instead of nulling like buyback_yield's own market_cap==0 guard
+    right above it already does."""
+    monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda _conn, _company, metric: Decimal("0") if metric == METRIC_IDS["market_cap"] else None)
+    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (Decimal("100"), Decimal("80")))
+    monkeypatch.setattr(expanded_metrics, "_load_quarterly_facts", lambda _conn, _company, concept: {103: {}, 104: {}, 106: {}}[concept])
+    conn = PriceConnection()
+
+    stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    rows = {r["metric_definition_id"]: r for r in conn.rows}
+
+    assert rows[METRIC_IDS["total_shareholder_yield"]]["value"] is None
+    assert rows[METRIC_IDS["total_shareholder_yield"]]["is_null_reason"] == "zero_denominator"
+
+
+@pytest.mark.unit
 def test_expanded_price_metrics_null_when_market_cap_is_missing(monkeypatch):
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
@@ -130,7 +171,8 @@ def test_expanded_price_metrics_null_when_market_cap_is_missing(monkeypatch):
     stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
     rows = {r["metric_definition_id"]: r for r in conn.rows}
 
-    assert stats == {"computed": 0, "null": 14}
+    assert stats == {"computed": 0, "null": 15}
+    assert rows[METRIC_IDS["ebitda"]]["is_null_reason"] == "missing:4_consecutive_quarters"
     assert rows[METRIC_IDS["cash_conversion_cycle"]]["is_null_reason"] == "missing:debtor_days"
     for name in ("ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield", "total_shareholder_yield"):
         assert rows[METRIC_IDS[name]]["is_null_reason"] == "missing:market_cap"

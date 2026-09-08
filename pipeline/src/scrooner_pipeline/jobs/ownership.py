@@ -10,7 +10,7 @@ from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.ownership.insider import update_insider_transactions
 from scrooner_pipeline.ownership.insider_summary import update_insider_summary
 from scrooner_pipeline.ownership.beneficial_ownership import update_beneficial_ownership
-from scrooner_pipeline.ownership.institutional import update_institutional_ownership
+from scrooner_pipeline.ownership.institutional import correct_value_scale_anomalies, update_institutional_ownership
 from scrooner_pipeline.ownership.institutional_summary import compute_institutional_ownership_summary
 from scrooner_pipeline.ownership.mutual_fund import update_mutual_fund_ownership
 from scrooner_pipeline.ownership.mutual_fund_summary import compute_mutual_fund_ownership_summary
@@ -76,6 +76,19 @@ def update_institutional_ownership_cmd() -> None:
     with get_connection() as conn:
         stats = update_institutional_ownership(conn)
     typer.echo(f"update-institutional-ownership: {stats}")
+
+
+@app.command("correct-institutional-value-scale")
+def correct_institutional_value_scale_cmd() -> None:
+    """Standalone re-run of the value-scale correction update-institutional-ownership
+    now runs automatically after every fetch (found 2026-09-06: some Form 13F
+    filers -- T. Rowe Price among them -- still submit VALUE in thousands
+    despite SEC's 2023 actual-dollars rule; see this module's own doc and
+    migration 0043). Use this to apply the fix to already-stored data
+    immediately, without re-downloading and re-matching the ~400MB bulk zips."""
+    with get_connection() as conn:
+        stats = correct_value_scale_anomalies(conn)
+    typer.echo(f"correct-institutional-value-scale: {stats}")
 
 
 @app.command("compute-institutional-ownership-summary")

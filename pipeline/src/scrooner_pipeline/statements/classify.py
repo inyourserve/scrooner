@@ -69,10 +69,10 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
 # statement line (revenue, gross_profit, operating_income, etc.) rather
 # than re-mapping them.
 STATEMENT_LINES: list[tuple[str, int, str, str]] = [
-    ("income_statement", 1, "Revenue", "revenue"),
-    ("income_statement", 2, "Cost of Revenue", "cost_of_revenue"),
-    ("income_statement", 3, "Gross Profit", "gross_profit"),
-    ("income_statement", 4, "Operating Expenses", "operating_expenses"),
+    ("income_statement", 1, "Revenue", "revenue_sanity_resolved"),  # migration 0049, 2026-09-08 -- raw revenue, except a (company, period) the Data Sanity Layer verified and overrode against yfinance
+    ("income_statement", 2, "Cost of Revenue", "cost_of_revenue_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Gross Profit
+    ("income_statement", 3, "Gross Profit", "gross_profit_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Cost of Revenue
+    ("income_statement", 4, "Operating Expenses", "operating_expenses_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Gross Profit - Operating Income
     ("income_statement", 5, "Operating Income", "operating_income"),
     ("income_statement", 6, "Interest Expense", "interest_expense"),
     ("income_statement", 7, "Income Before Tax", "income_before_tax"),

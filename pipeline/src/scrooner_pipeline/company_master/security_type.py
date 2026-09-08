@@ -34,13 +34,44 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 logger = structlog.get_logger()
 
 OPENFIGI_URL = "https://api.openfigi.com/v3/mapping"
-PRIMARY_SECURITY_TYPES = {"Common Stock", "ADR"}
+# "REIT" and "MLP" added 2026-09-06, same "verify live, then widen" discipline
+# as the original ADR addition: chasing why 782 of 928 companies missing
+# yfinance sector/industry data had NO ticker resolved at all (root cause:
+# multiple listings, none OpenFIGI-classified, so resolve_primary_tickers()
+# had nothing to pick from) surfaced that real, well-known operating
+# companies -- Global Net Lease, Public Storage, Hudson Pacific Properties,
+# Enterprise Products Partners -- classify as "REIT"/"MLP" under OpenFIGI,
+# never "Common Stock", even though Yahoo (and every other market-data
+# source) tracks them as ordinary tradeable primary securities. An 80-company
+# live sample of this same population: 58 Common Stock, 7 ETP (real
+# funds/ETFs, correctly NOT added here), 6 REIT, 1 Equity WRT (a warrant,
+# correctly NOT added here) -- REIT/MLP were the only two real gaps.
+#
+# "Tracking Stk" and "Ltd Part" added 2026-09-06, same discipline, chasing
+# the *next* layer of the same root cause: Liberty Media Corp (FWONA/FWONK)
+# has NO separate common-stock ticker at all -- its tracking stocks (each
+# tracking a specific business, e.g. Formula One) ARE its only class of
+# stock, same for Liberty Broadband; Empire State Realty OP, L.P. and
+# Restaurant Brands International Limited Partnership are real, large
+# operating businesses trading as LP units, not passive investment vehicles.
+# Confirmed live before adding: unlike ETP/Equity WRT/Right/Unit (correctly
+# still excluded -- funds and SPAC-merger-artifact securities with no real
+# underlying business), both of these types are a company's genuine primary
+# tradeable equity, not a derivative/secondary instrument.
+PRIMARY_SECURITY_TYPES = {"Common Stock", "ADR", "REIT", "MLP", "Tracking Stk", "Ltd Part"}
 
 # Confirmed live 2026-08-17: unauthenticated OpenFIGI's real per-minute
 # burst limit is much tighter than the ~5,000/day headline figure
-# suggests -- a 0.3s pace (200/min) hit real HTTP 429s. ~1 req/1.5s
-# stays comfortably under it; retry below handles any residual burst.
-REQUEST_INTERVAL_SECONDS = 1.5
+# suggests -- a 0.3s pace (200/min) hit real HTTP 429s; 1.5s (40/min) was
+# believed safe at golden-10 scale but silently wasn't. Corrected 2026-09-06,
+# with real evidence this time instead of an empirical guess: a live 429
+# response's own headers give the exact policy -- `ratelimit-policy: 25;w=60`
+# (25 requests per 60 seconds). 1.5s pace is 40 req/min, 60% over that real
+# ceiling -- explains why a ~2,300-listing run stalled for minutes with zero
+# progress (burning the retry budget on sustained 429s, not a hang). Fixed to
+# 2.5s (24 req/min), just under the published limit.
+REQUEST_INTERVAL_SECONDS = 2.5
+COMMIT_EVERY = 25
 
 
 @retry(
@@ -56,9 +87,7 @@ def _post_with_retry(client: httpx.Client, ticker: str) -> httpx.Response:
     return response
 
 
-def _classify_ticker(client: httpx.Client, ticker: str) -> tuple[str | None, str | None]:
-    """Returns (security_type, name) or (None, None) if OpenFIGI has no
-    match under a plain US exchCode query -- inconclusive, not negative."""
+def _try_classify(client: httpx.Client, ticker: str) -> tuple[str | None, str | None]:
     try:
         response = _post_with_retry(client, ticker)
     except httpx.HTTPError:
@@ -71,11 +100,38 @@ def _classify_ticker(client: httpx.Client, ticker: str) -> tuple[str | None, str
     return data[0].get("securityType"), data[0].get("name")
 
 
-def update_security_types(conn: psycopg.Connection, ciks: set[str]) -> dict:
+def _classify_ticker(client: httpx.Client, ticker: str) -> tuple[str | None, str | None]:
+    """Returns (security_type, name) or (None, None) if OpenFIGI has no
+    match under a plain US exchCode query -- inconclusive, not negative.
+
+    Slash fallback added 2026-09-06: OpenFIGI doesn't recognize the SEC/
+    EDGAR hyphenated share-class ticker format at all (confirmed live --
+    "BRK-A" is NO_MATCH, "BRK/A" is a real "Common Stock" hit). This is a
+    real, common pattern for dual/multi-class common stock (Berkshire
+    Hathaway's BRK-A/BRK-B among them), not just preferred shares -- and it
+    was the reason `resolve_primary_tickers()` returned nothing for
+    Berkshire at all despite both listings existing. Confirmed live this
+    can't produce a false positive: genuine preferred/unit/warrant tickers
+    (e.g. "GNL-PE") still correctly return NO_MATCH under the slash form
+    too, so trying it only ever helps, never wrongly classifies something
+    that was correctly inconclusive."""
+    security_type, name = _try_classify(client, ticker)
+    if security_type is None and "-" in ticker:
+        time.sleep(REQUEST_INTERVAL_SECONDS)  # the fallback call itself also spends rate-limit budget
+        security_type, name = _try_classify(client, ticker.replace("-", "/"))
+    return security_type, name
+
+
+def update_security_types(conn: psycopg.Connection, ciks: set[str], force: bool = False) -> dict:
+    """Resumable as of 2026-09-06 (previously a single end-of-run commit with
+    no skip logic -- fine at golden-10 scale, a real risk at the ~1,000-listing
+    scale this now runs at: killing the job partway lost everything). Skips
+    listings that already have a security_type unless force=True, and commits
+    every COMMIT_EVERY listings so a rerun only pays for what's left."""
     with conn.cursor() as cur:
         cur.execute(
             """
-            select l.id, l.ticker
+            select l.id, l.ticker, l.security_type
             from core.listing l join core.company c on c.id = l.company_id
             where c.cik = any(%s) and l.effective_to is null
             """,
@@ -83,26 +139,36 @@ def update_security_types(conn: psycopg.Connection, ciks: set[str]) -> dict:
         )
         listings = cur.fetchall()
 
-    stats = {"considered": len(listings), "classified": 0, "no_match": 0}
-    rows = []
+    target = [(lid, ticker) for lid, ticker, sec_type in listings if force or sec_type is None]
+    stats = {
+        "considered": len(listings),
+        "skipped_already_classified": len(listings) - len(target),
+        "classified": 0,
+        "no_match": 0,
+    }
+
+    pending: list[dict] = []
     with httpx.Client(timeout=15.0) as client:
-        for listing_id, ticker in listings:
+        for i, (listing_id, ticker) in enumerate(target):
             security_type, _name = _classify_ticker(client, ticker)
             if security_type is None:
                 stats["no_match"] += 1
             else:
-                rows.append({"listing_id": listing_id, "security_type": security_type})
+                pending.append({"listing_id": listing_id, "security_type": security_type})
                 stats["classified"] += 1
             time.sleep(REQUEST_INTERVAL_SECONDS)  # every request consumes rate-limit budget, matched or not
 
-    if rows:
-        with conn.cursor() as cur:
-            cur.executemany(
-                "update core.listing set security_type = %(security_type)s, security_type_source = 'openfigi' "
-                "where id = %(listing_id)s",
-                rows,
-            )
-        conn.commit()
+            if len(pending) >= COMMIT_EVERY or i == len(target) - 1:
+                if pending:
+                    with conn.cursor() as cur:
+                        cur.executemany(
+                            "update core.listing set security_type = %(security_type)s, "
+                            "security_type_source = 'openfigi' where id = %(listing_id)s",
+                            pending,
+                        )
+                    conn.commit()
+                    pending = []
+                logger.info("security_type.progress", done=i + 1, total=len(target))
 
     logger.info("security_type.done", **stats)
     return stats

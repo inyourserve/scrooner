@@ -1,6 +1,8 @@
 # 40 — XBRL Tag Coverage Library
 
-> **Status:** Reference, living (built 2026-09-02) — a real, queryable inventory of what XBRL tags companies actually use for each of Scrooner's 44 canonical concepts, generated from live data (`pipeline/scripts/build_tag_coverage_library.py`, output `pipeline/reference/xbrl_tag_coverage_library.json`), not recalled from memory. **Owner:** Founder/Product · **Review:** rerun the script whenever coverage numbers are needed for a new decision — it's a ~3-minute live query against the real database, not a stale snapshot to trust indefinitely.
+> **Superseded 2026-09-08** — the JSON file this doc describes (`pipeline/reference/xbrl_tag_coverage_library.json`) and its generating script (`pipeline/scripts/build_tag_coverage_library.py`) are **retired and deleted**, per direct instruction ("retire json, make everything into db as source of truth"). The JSON was manually-triggered only and had gone stale (last built 2026-09-02, missing everything since — including this same day's `other_income_expense_net` addition and the `CostsAndExpenses` rejection). Its function now lives in `analytics.concept_tag_candidate` (`pipeline/src/scrooner_pipeline/mapper/tag_candidates.py`), rebuilt every day in the same cron pass as the coverage matrix (`doc/data-moat/SYSTEMS.md`) — `scrooner-map build-tag-candidates` to rebuild on demand, `scrooner-map tag-candidate-report` to read the current concept-by-concept status. The findings and reasoning below (the keyword-matching caveats, the `total_debt` double-counting risk) are unchanged and still the operative discipline — only the storage mechanism moved.
+>
+> **Original status (historical, kept for context):** Reference, living (built 2026-09-02) — a real, queryable inventory of what XBRL tags companies actually use for each of Scrooner's 44 canonical concepts, generated from live data. **Owner:** Founder/Product.
 
 ## Why this exists
 

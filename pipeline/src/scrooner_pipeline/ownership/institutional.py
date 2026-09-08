@@ -356,6 +356,87 @@ def _process_window(
     }
 
 
+# Found live 2026-09-06, checking a display-layer bug report against real
+# data: this module's own earlier claim that VALUE is unambiguously actual
+# dollars for any bulk window postdating SEC's 2023-01-03 rule change is
+# true of what SEC's systems accept, not of what every filer actually
+# submits. T. Rowe Price's own filed <value>45514867</value> for
+# 179,340,662 AAPL shares implies ~$0.25/share against every other
+# filer's ~$253.79/share in the same window -- confirmed straight from
+# the raw XML, not a Scrooner parsing artifact. 423 distinct filers
+# across 3,678 companies show the identical clean ~1000x-too-low pattern.
+# See doc/learnings/2026-09-06-institutional-ownership-value-scale-bug.md
+# and migration 0043.
+#
+# Detection/correction is peer-relative, not a fixed assumption: for each
+# (company_id, source_zip) group with enough independent filers to trust
+# a median, a row within this band of its peer group's median
+# value-per-share is almost certainly the filer's own thousands-not-
+# dollars mistake, not a real, legitimately cheap position -- the band is
+# centered on exactly 1000x with generous slack on both sides so it only
+# ever catches the clean systematic pattern, never the separate, much
+# messier small-share-count filer-typo noise this same live check also
+# surfaced (a handful of filers reporting an implausible value against 1-11
+# shares, unrelated to this scale bug and NOT corrected here -- no
+# reliable "right answer" exists for those without guessing).
+_LEGACY_SCALE_RATIO_LOW = Decimal("0.0005")
+_LEGACY_SCALE_RATIO_HIGH = Decimal("0.002")
+_LEGACY_SCALE_MIN_PEER_FILERS = 5
+
+
+def correct_value_scale_anomalies(conn: psycopg.Connection) -> dict:
+    """Multiplies value_usd by 1000 for rows whose implied price-per-share
+    is a clean ~1000x below their own (company_id, source_zip) peer
+    group's median -- see module-level comment above. Idempotent: a
+    corrected row's ratio moves to ~1.0, so a rerun never double-corrects
+    it (still guarded explicitly via value_scale_corrected = false, not
+    relied on implicitly). One set-based UPDATE, not a per-row loop, per
+    this file's own batching discipline."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            with peer_median as (
+                select company_id, source_zip,
+                       percentile_cont(0.5) within group (
+                           order by (value_usd::numeric / nullif(shares, 0))
+                       ) as median_price_per_share
+                from core.institutional_ownership
+                where shares > 0 and value_usd is not null
+                group by company_id, source_zip
+                having count(*) >= %(min_peers)s
+            )
+            update core.institutional_ownership io
+            set value_usd = io.value_usd * 1000,
+                value_scale_corrected = true
+            from peer_median m
+            where io.company_id = m.company_id
+              and io.source_zip = m.source_zip
+              and io.shares > 0
+              and io.value_usd is not null
+              and not io.value_scale_corrected
+              and m.median_price_per_share > 0
+              and (io.value_usd::numeric / io.shares) / m.median_price_per_share
+                  between %(low)s and %(high)s
+            """,
+            {
+                "min_peers": _LEGACY_SCALE_MIN_PEER_FILERS,
+                "low": _LEGACY_SCALE_RATIO_LOW,
+                "high": _LEGACY_SCALE_RATIO_HIGH,
+            },
+        )
+        corrected_rows = cur.rowcount
+        cur.execute(
+            "select count(distinct company_id), count(distinct filer_name) "
+            "from core.institutional_ownership where value_scale_corrected"
+        )
+        companies, filers = cur.fetchone()
+        conn.commit()
+
+    stats = {"corrected_rows": corrected_rows, "companies_ever_corrected": companies, "filers_ever_corrected": filers}
+    logger.info("institutional_ownership.value_scale_corrected", **stats)
+    return stats
+
+
 def update_institutional_ownership(conn: psycopg.Connection) -> dict:
     cusip_to_company = _load_golden_cusips(conn)
     if not cusip_to_company:
@@ -375,6 +456,13 @@ def update_institutional_ownership(conn: psycopg.Connection) -> dict:
             window_stats[label] = _process_window(conn, sec, cusip_to_company, url, label, name_to_company)
             logger.info("institutional_ownership.window_done", window_label=label, **window_stats[label])
 
+    # _process_window deletes-then-reinserts every matched company's rows
+    # for its window on every run, so a corrected row's
+    # value_scale_corrected flag does NOT survive a rerun on its own --
+    # this must run every time, not just once by hand, or a later
+    # incremental refresh silently un-fixes T. Rowe Price and friends.
+    value_scale_stats = correct_value_scale_anomalies(conn)
+
     # "companies" means "distinct companies matched in ANY window" --
     # queried straight from what's actually stored rather than unioned
     # from each window's own company_ids, so this number can never drift
@@ -389,6 +477,7 @@ def update_institutional_ownership(conn: psycopg.Connection) -> dict:
         "infotable_row_count": sum(w["infotable_row_count"] for w in window_stats.values()),
         "windows": window_stats,
         "window_labels": [label for _url, label in BULK_ZIP_WINDOWS],
+        "value_scale_correction": value_scale_stats,
     }
     logger.info("institutional_ownership.done", **{k: v for k, v in stats.items() if k != "windows"})
     return stats

@@ -12,6 +12,12 @@ dependencies = [
     "typer>=0.12",
     "structlog>=24.1",
     "polars>=1.0",
+    # Real production dependency as of 2026-09-06, by explicit user direction --
+    # a deliberate reversal of the original "dev-tool only" stance in
+    # ../doc/planning/y-finance.md sec. 4, see doc 02's decision register. Used
+    # only by company_master/yfinance_industry.py's own offline backfill job,
+    # never by any code path that serves a live user request.
+    "yfinance==0.2.66",
 ]
 
 [project.scripts]
@@ -28,6 +34,10 @@ scrooner-pilot = "scrooner_pipeline.jobs.pilot:app"
 scrooner-operations = "scrooner_pipeline.jobs.operations:app"
 scrooner-reconcile = "scrooner_pipeline.jobs.reconcile:app"
 scrooner-segments = "scrooner_pipeline.jobs.segments:app"
+scrooner-sanity = "scrooner_pipeline.jobs.sanity:app"
+scrooner-yfinance-financials = "scrooner_pipeline.jobs.yfinance_financials:app"
+scrooner-frames-check = "scrooner_pipeline.jobs.frames_check:app"
+scrooner-incidents = "scrooner_pipeline.jobs.incidents:app"
 
 [dependency-groups]
 dev = [

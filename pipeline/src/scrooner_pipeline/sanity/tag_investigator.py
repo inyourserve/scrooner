@@ -1,0 +1,416 @@
+"""Sanity-triggered investigation and per-company fix (2026-09-08, explicit
+user request): when the Data Sanity Layer (yfinance_check.py) flags a
+critical/major finding, trace the "fetcher tree" for that ONE company --
+every raw core.fact row under every tag currently mapped to the relevant
+canonical concept, INCLUDING rows resolve.py marked is_authoritative=false
+-- and check whether any of them actually reconciles against the
+independent (yfinance) figure that triggered the finding.
+
+Deliberately does NOT touch analytics.concept_mapping. resolve.py includes
+every confidence tier except 'rejected' (checked directly), so a new
+concept_mapping row -- even 'provisional' -- would change resolve()'s
+output for EVERY company reporting that tag, not just the one this
+investigation verified. A single company's tag reconciling against
+yfinance is real evidence for THAT company; it is not evidence a global
+tag-priority change is safe, the exact lesson doc 40's tag-coverage-library
+work already learned the hard way. See migration 0049's own comment for
+the full reasoning.
+
+**Updated 2026-09-08, same day, explicit user direction: "for every data
+fill or fix, use only SEC EDGAR, yfinance for sanity and matching only --
+we have to store the sec tag wrt metric, company and fetch from sec
+only."** The fix is now a per-(company, concept) TAG PREFERENCE
+(analytics.company_tag_preference, migration 0051), not a per-(company,
+concept, period) value snapshot (migration 0049's
+canonical_fact_sanity_override, still present but no longer written to).
+Once a specific SEC tag is confirmed to reconcile for a company, that
+preference applies to EVERY period the company has data under that tag --
+not just the one period the sanity check happened to flag -- since the
+underlying reason resolve()'s normal tag priority is untrustworthy for
+this company (a real, live example: Flowserve's own trivial cross-filing
+rounding disagreements recur across 7 different fiscal years, not just
+one). yfinance's role stops at "this is the tag that reconciles" -- the
+VALUE that actually gets stored always comes from core.fact (a real SEC
+filing), never from yfinance itself. resolve_company_tag_preferences()
+below merges a company's preferred-tag facts into a THIRD, resolve()-
+untouched concept (e.g. revenue_sanity_resolved) -- the same "new resolved
+concept, zero concept_mapping rows" idiom already established by
+total_debt_resolved (migration 0033) and gross_profit_resolved (migration
+0047), just sourced from a per-company tag preference instead of a global
+tag or an arithmetic derivation.
+
+Currently wired for ONE concept: revenue (the resolve()-authoritative-$0
+bug found 2026-09-07 is the only currently-understood failure mode with a
+real, demonstrated fix path -- an alternate mapped tag's own non-
+authoritative rows reconciling against an independent source).
+shares_outstanding mismatches (Alphabet/Nike, see
+doc/learnings/2026-09-08-data-sanity-layer.md) are investigated too, but
+are expected to usually resolve to 'no_match_found' -- the standard
+Company Facts API strips dimensional/per-share-class XBRL data entirely
+(doc 22's finding), so the tag that would actually reconcile often isn't
+in core.fact at all. That's an honest, correctly-reported outcome, not a
+bug in the investigator."""
+
+from decimal import Decimal
+
+import psycopg
+import structlog
+
+logger = structlog.get_logger()
+
+# concept_name -> resolved_concept_name for concepts wired up with a
+# fix-application path. A concept absent from this dict still gets
+# investigated and recorded in data_sanity_investigation -- it just never
+# reaches outcome='auto_fixed', since there's nowhere safe to write the
+# fix without a matching *_sanity_resolved concept already seeded.
+FIXABLE_CONCEPTS: dict[str, str] = {
+    "revenue": "revenue_sanity_resolved",
+}
+
+# How close a candidate tag's own value must land to the external
+# (yfinance) figure before being trusted as the fix, not just a lead.
+# Wider than the sanity check's own market_cap/trailing_pe thresholds --
+# revenue's real reporting period doesn't line up exactly with yfinance's
+# trailing-twelve-month window, so some genuine drift is expected even for
+# a correct match.
+AUTO_FIX_TOLERANCE_PCT = Decimal(20)
+
+
+def _concept_id(conn: psycopg.Connection, name: str) -> int:
+    with conn.cursor() as cur:
+        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        row = cur.fetchone()
+        if row is None:
+            raise ValueError(f"canonical_concept {name!r} does not exist")
+        return row[0]
+
+
+def _latest_period_id(conn: psycopg.Connection, company_id: int, concept_name: str) -> int | None:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select cf.period_id
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            join core.period p on p.id = cf.period_id
+            where cf.company_id = %s and cc.name = %s
+            order by p.end_date desc
+            limit 1
+            """,
+            (company_id, concept_name),
+        )
+        row = cur.fetchone()
+        return row[0] if row else None
+
+
+def find_candidate_tags(conn: psycopg.Connection, company_id: int, concept_name: str, period_id: int) -> list[dict]:
+    """Every raw core.fact row this company has, at this exact period, for
+    any tag currently mapped to concept_name -- including
+    is_authoritative=false rows, which is the whole point: the bug this
+    exists to catch is specifically resolve() correctly-by-design refusing
+    to pick between several near-consensus values, then first_match
+    falling through to a worse tag's own authoritative-but-wrong one."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select co.taxonomy, co.tag, f.value, f.is_authoritative, f.id
+            from core.fact f
+            join core.concept co on co.id = f.concept_id
+            join analytics.concept_mapping cm on cm.concept_id = f.concept_id
+            join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
+            where f.company_id = %s and cc.name = %s and f.period_id = %s
+            order by co.taxonomy, co.tag, f.is_authoritative desc
+            """,
+            (company_id, concept_name, period_id),
+        )
+        return [
+            {"taxonomy": r[0], "tag": r[1], "value": r[2], "is_authoritative": r[3], "fact_id": r[4]}
+            for r in cur.fetchall()
+        ]
+
+
+def _pct_diff(candidate: Decimal, external: Decimal) -> Decimal:
+    denom = abs(external) if external != 0 else Decimal(1)
+    return abs(candidate - external) / denom * Decimal(100)
+
+
+def investigate(
+    conn: psycopg.Connection, company_id: int, concept_name: str, external_value: Decimal,
+    data_sanity_check_id: int | None = None, period_id: int | None = None,
+) -> dict:
+    """Investigates one (company, concept) sanity finding against
+    `external_value` (the independent figure, e.g. yfinance's totalRevenue).
+    `period_id`, when given, investigates that EXACT period instead of the
+    concept's latest one -- lets a caller checking every quarter (not just
+    "most recent", e.g. the yfinance full-statement comparison system)
+    reuse this same fix pipeline for whichever period it flagged, rather
+    than duplicating the tag-tracing/reconciliation logic. Always writes
+    exactly one analytics.data_sanity_investigation row (upserted, so a
+    rerun updates rather than duplicates) -- 'no candidate tags at all'
+    and 'candidates exist but none reconcile' are both recorded outcomes,
+    not silence. Returns the outcome dict."""
+    if period_id is None:
+        period_id = _latest_period_id(conn, company_id, concept_name)
+    if period_id is None:
+        outcome = {"outcome": "no_match_found", "note": "no canonical_fact period for this concept at all", "candidate": None}
+        _write_investigation(conn, data_sanity_check_id, company_id, concept_name, None, external_value, outcome)
+        return outcome
+
+    candidates = find_candidate_tags(conn, company_id, concept_name, period_id)
+    if not candidates:
+        outcome = {"outcome": "no_match_found", "note": "no raw core.fact rows under any currently-mapped tag for this period", "candidate": None}
+        _write_investigation(conn, data_sanity_check_id, company_id, concept_name, period_id, external_value, outcome)
+        return outcome
+
+    outcome = _score_and_decide(candidates, external_value, concept_name)
+    if outcome["outcome"] == "auto_fixed":
+        _write_tag_preference(conn, company_id, concept_name, outcome["candidate"], external_value, outcome["pct_diff"])
+
+    _write_investigation(conn, data_sanity_check_id, company_id, concept_name, period_id, external_value, outcome)
+    return outcome
+
+
+def _score_and_decide(candidates: list[dict], external_value: Decimal, concept_name: str) -> dict:
+    """Pure decision logic, no DB access -- scores every candidate tag's
+    value against the external figure, picks the closest, and decides
+    whether it's close enough to trust (and, if so, whether this concept
+    even has a *_sanity_resolved concept wired up to apply the fix into).
+    Split out from investigate() specifically so this decision can be
+    unit-tested without a database."""
+    scored = [(c, _pct_diff(Decimal(str(c["value"])), external_value)) for c in candidates]
+    scored.sort(key=lambda pair: pair[1])
+    best_candidate, best_pct_diff = scored[0]
+
+    if best_pct_diff <= AUTO_FIX_TOLERANCE_PCT:
+        resolved_concept_name = FIXABLE_CONCEPTS.get(concept_name)
+        if resolved_concept_name is not None:
+            return {
+                "outcome": "auto_fixed", "candidate": best_candidate, "pct_diff": best_pct_diff,
+                "note": f"{best_candidate['taxonomy']}:{best_candidate['tag']} reconciles within {best_pct_diff:.1f}% -- applied as override",
+            }
+        return {
+            "outcome": "needs_review", "candidate": best_candidate, "pct_diff": best_pct_diff,
+            "note": f"{best_candidate['taxonomy']}:{best_candidate['tag']} reconciles within {best_pct_diff:.1f}%, "
+                    f"but {concept_name!r} has no *_sanity_resolved concept wired up yet -- recorded as a lead, not applied",
+        }
+    return {
+        "outcome": "no_match_found", "candidate": best_candidate, "pct_diff": best_pct_diff,
+        "note": f"closest candidate ({best_candidate['taxonomy']}:{best_candidate['tag']}) still off by {best_pct_diff:.1f}%, "
+                f"over the {AUTO_FIX_TOLERANCE_PCT}% tolerance -- likely a real structural difference (e.g. multi-share-class, "
+                f"TTM-vs-period timing), not a resolvable tag mixup",
+    }
+
+
+def _write_investigation(
+    conn: psycopg.Connection, data_sanity_check_id: int | None, company_id: int, concept_name: str,
+    period_id: int | None, external_value: Decimal, outcome: dict,
+) -> None:
+    candidate = outcome.get("candidate")
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            insert into analytics.data_sanity_investigation
+                (data_sanity_check_id, company_id, concept_name, period_id, candidate_taxonomy, candidate_tag,
+                 candidate_value, external_value, pct_diff_vs_external, outcome, note)
+            values (%(check_id)s, %(company_id)s, %(concept_name)s, %(period_id)s, %(taxonomy)s, %(tag)s,
+                    %(value)s, %(external_value)s, %(pct_diff)s, %(outcome)s, %(note)s)
+            on conflict (company_id, concept_name, period_id) do update
+                set data_sanity_check_id = excluded.data_sanity_check_id, candidate_taxonomy = excluded.candidate_taxonomy,
+                    candidate_tag = excluded.candidate_tag, candidate_value = excluded.candidate_value,
+                    external_value = excluded.external_value, pct_diff_vs_external = excluded.pct_diff_vs_external,
+                    outcome = excluded.outcome, note = excluded.note, investigated_at = now()
+            """,
+            {
+                "check_id": data_sanity_check_id, "company_id": company_id, "concept_name": concept_name,
+                "period_id": period_id, "taxonomy": candidate["taxonomy"] if candidate else None,
+                "tag": candidate["tag"] if candidate else None, "value": candidate["value"] if candidate else None,
+                "external_value": external_value, "pct_diff": outcome.get("pct_diff"),
+                "outcome": outcome["outcome"], "note": outcome["note"],
+            },
+        )
+    conn.commit()
+
+
+def _write_tag_preference(
+    conn: psycopg.Connection, company_id: int, concept_name: str, candidate: dict,
+    external_value: Decimal, pct_diff: Decimal,
+) -> None:
+    concept_id = _concept_id(conn, concept_name)
+    evidence = (
+        f"Sanity investigation 2026-09-08: raw tag {candidate['taxonomy']}:{candidate['tag']} "
+        f"(is_authoritative={candidate['is_authoritative']}) = {candidate['value']}, "
+        f"yfinance (detection/matching only, never the stored value) = {external_value}, {pct_diff:.1f}% apart."
+    )
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            insert into analytics.company_tag_preference
+                (company_id, canonical_concept_id, taxonomy, tag, confidence, evidence)
+            values (%(company_id)s, %(concept_id)s, %(taxonomy)s, %(tag)s, 'provisional', %(evidence)s)
+            on conflict (company_id, canonical_concept_id) do update
+                set taxonomy = excluded.taxonomy, tag = excluded.tag,
+                    evidence = excluded.evidence, discovered_at = now()
+            """,
+            {
+                "company_id": company_id, "concept_id": concept_id,
+                "taxonomy": candidate["taxonomy"], "tag": candidate["tag"], "evidence": evidence,
+            },
+        )
+    conn.commit()
+
+
+def _reconcile_by_mode(rows: list[tuple[int, object, int]]) -> dict[int, tuple[object, int]]:
+    """rows: (period_id, value, fact_id) tuples, possibly several per
+    period (the exact "3 filings, trivially disagreeing" shape this whole
+    system exists to handle -- see Flowserve/doc/learnings/2026-09-07).
+    Picks the most-common value per period (a real, if small, majority
+    vote across independent filings of the same fact), tie-broken by the
+    highest fact_id (the most recently-inserted row) -- deterministic,
+    no guessing between two equally-supported values."""
+    from collections import Counter, defaultdict
+
+    by_period: dict[int, list[tuple[object, int]]] = defaultdict(list)
+    for period_id, value, fact_id in rows:
+        by_period[period_id].append((value, fact_id))
+
+    result: dict[int, tuple[object, int]] = {}
+    for period_id, pairs in by_period.items():
+        counts = Counter(value for value, _fact_id in pairs)
+        max_count = max(counts.values())
+        most_common_values = [value for value, count in counts.items() if count == max_count]
+        # Deterministic tie-break: among equally-supported values, prefer
+        # the one attached to the highest fact_id.
+        best_value = max(
+            most_common_values,
+            key=lambda v: max(fact_id for value, fact_id in pairs if value == v),
+        )
+        best_fact_id = max(fact_id for value, fact_id in pairs if value == best_value)
+        result[period_id] = (best_value, best_fact_id)
+    return result
+
+
+def _load_all_facts_for_tag(conn: psycopg.Connection, company_id: int, taxonomy: str, tag: str) -> list[tuple[int, object, int]]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select f.period_id, f.value, f.id
+            from core.fact f
+            join core.concept co on co.id = f.concept_id
+            where f.company_id = %s and co.taxonomy = %s and co.tag = %s
+            """,
+            (company_id, taxonomy, tag),
+        )
+        return cur.fetchall()
+
+
+def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str, resolved_concept_name: str) -> int:
+    """The resolved concept is the primary concept's own value for every
+    company WITHOUT a preference (set-based, bulk -- the common case,
+    ~5,200 of ~5,216 companies), EXCEPT for the small number of companies
+    WITH a company_tag_preference row, where their preferred tag's own
+    (mode-reconciled) values win for EVERY period it covers -- not just
+    one flagged period -- since the preference exists specifically
+    because the primary concept's resolution is untrustworthy for that
+    company. The per-company loop below is intentionally NOT a batch-job
+    N+1 concern (see pipeline/CLAUDE.md's restatements.py lesson) --
+    preference rows are rare, investigation-driven, and this is exactly
+    the shape doc 40 already established (`resolve_fallback_for_company`)
+    for a genuinely small per-company set. Safe to rerun; idempotent."""
+    primary_id = _concept_id(conn, concept_name)
+    resolved_id = _concept_id(conn, resolved_concept_name)
+
+    with conn.cursor() as cur:
+        cur.execute(
+            "select company_id, taxonomy, tag from analytics.company_tag_preference where canonical_concept_id = %s",
+            (primary_id,),
+        )
+        preferences = cur.fetchall()
+    preferred_company_ids = [company_id for company_id, _t, _g in preferences]
+
+    with conn.cursor() as cur:
+        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %s", (resolved_id,))
+        cur.execute(
+            """
+            insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+            select company_id, %(resolved_id)s, period_id, value, source_fact_ids
+            from analytics.canonical_fact
+            where canonical_concept_id = %(primary_id)s
+              and company_id != all(%(preferred_ids)s)
+            """,
+            {"resolved_id": resolved_id, "primary_id": primary_id, "preferred_ids": preferred_company_ids or [-1]},
+        )
+
+        for company_id, taxonomy, tag in preferences:
+            facts = _load_all_facts_for_tag(conn, company_id, taxonomy, tag)
+            reconciled = _reconcile_by_mode(facts)
+            if reconciled:
+                cur.executemany(
+                    """
+                    insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+                    values (%(company_id)s, %(resolved_id)s, %(period_id)s, %(value)s, %(source_fact_ids)s)
+                    """,
+                    [
+                        {
+                            "company_id": company_id, "resolved_id": resolved_id, "period_id": period_id,
+                            "value": value, "source_fact_ids": [fact_id],
+                        }
+                        for period_id, (value, fact_id) in reconciled.items()
+                    ],
+                )
+
+        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %s", (resolved_id,))
+        count = cur.fetchone()[0]
+    conn.commit()
+    return count
+
+
+def investigate_open_findings(
+    conn: psycopg.Connection, severities: tuple[str, ...] = ("critical", "major"), company_id: int | None = None
+) -> dict:
+    """Entry point for `scrooner-sanity investigate`: pulls every current
+    critical/major analytics.data_sanity_check row, investigates each,
+    then re-merges every concept in FIXABLE_CONCEPTS so any newly-applied
+    override takes effect immediately.
+
+    `company_id` optionally scopes to one company -- added 2026-09-08
+    for incidents/verifier.py, which needs to verify a single company's
+    fix without reprocessing every other company's open findings (the
+    daily cron's own `sanity investigate` call still omits it, covering
+    the whole population as before)."""
+    stats = {"considered": 0, "auto_fixed": 0, "needs_review": 0, "no_match_found": 0}
+    with conn.cursor() as cur:
+        if company_id is None:
+            cur.execute(
+                "select id, company_id, metric_name, external_value from analytics.data_sanity_check where severity = any(%s)",
+                (list(severities),),
+            )
+        else:
+            cur.execute(
+                "select id, company_id, metric_name, external_value from analytics.data_sanity_check where severity = any(%s) and company_id = %s",
+                (list(severities), company_id),
+            )
+        rows = cur.fetchall()
+
+    # revenue_zero_check's own "concept" for investigation purposes is
+    # 'revenue' (the metric_name and the canonical_concept diverge by
+    # design -- the check is named for what it tests, not 1:1 with a
+    # concept). market_cap/trailing_pe/shares_outstanding map more
+    # directly, but shares_outstanding is the only OTHER one with a real
+    # underlying concept to trace -- market_cap/trailing_pe are computed
+    # metrics, not raw tags, so there is no "fetcher tree" to trace for them.
+    CONCEPT_FOR_METRIC = {"revenue_zero_check": "revenue", "shares_outstanding": "shares_outstanding"}
+
+    for check_id, company_id, metric_name, external_value in rows:
+        concept_name = CONCEPT_FOR_METRIC.get(metric_name)
+        if concept_name is None or external_value is None:
+            continue
+        stats["considered"] += 1
+        outcome = investigate(conn, company_id, concept_name, Decimal(external_value), data_sanity_check_id=check_id)
+        stats[outcome["outcome"]] += 1
+
+    for concept_name, resolved_name in FIXABLE_CONCEPTS.items():
+        written = resolve_company_tag_preferences(conn, concept_name, resolved_name)
+        logger.info("sanity.tag_investigator.merged", concept=resolved_name, rows=written)
+
+    logger.info("sanity.tag_investigator.done", **stats)
+    return stats
