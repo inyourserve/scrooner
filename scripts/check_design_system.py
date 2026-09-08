@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate invariants that keep both frontends on one design system."""
+"""Validate the single Next.js frontend's design-system invariants."""
 
 from __future__ import annotations
 
@@ -10,14 +10,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TOKENS = ROOT / "packages/design-system/src/tokens.css"
-PUBLIC_ENTRY = ROOT / "apps/site/src/styles/public-theme.css"
 APP_ENTRY = ROOT / "apps/app/app/globals.css"
 PACKAGE_MANIFEST = ROOT / "packages/design-system/package.json"
 
 REQUIRED_IMPLEMENTATION = (
-    ROOT / "apps/site/src/pages/design-system.astro",
-    ROOT / "apps/site/src/styles/home.css",
-    ROOT / "apps/site/src/styles/company-research.css",
+    ROOT / "apps/app/app/design-system/page.tsx",
+    ROOT / "apps/app/app/home.css",
+    ROOT / "apps/app/app/company-research.css",
     ROOT / "apps/app/components/layout/AppShell.tsx",
     ROOT / "apps/app/components/layout/PageHeader.tsx",
     ROOT / "apps/app/components/ui/Badge.tsx",
@@ -27,14 +26,20 @@ REQUIRED_IMPLEMENTATION = (
 )
 
 APPLICATION_SOURCE_ROOTS = (
-    ROOT / "apps/site/src",
     ROOT / "apps/app/app",
     ROOT / "apps/app/components",
     ROOT / "packages/design-system/src",
 )
 
-SOURCE_SUFFIXES = {".astro", ".css", ".tsx"}
-RAW_COLOR = re.compile(r"(?:#[0-9a-f]{3,8}\b|rgba?\()", re.IGNORECASE)
+SOURCE_SUFFIXES = {".css", ".tsx"}
+RAW_COLOR = re.compile(r"(?:(?<!&)#[0-9a-f]{3,8}\b|rgba?\()", re.IGNORECASE)
+# A brand icon's own official colors (e.g. Google's four-color "G") are a
+# real, standard exemption -- these render inside an inline SVG via the
+# `fill` attribute, a fundamentally different mechanism from a CSS color
+# declaration, and no design token would be correct here even in
+# principle: the icon's colors are mandated by the brand, not by this
+# product's own palette.
+SVG_FILL_ATTR = re.compile(r'\bfill\s*=\s*["\']#[0-9a-f]{3,8}\b', re.IGNORECASE)
 INLINE_PAGE_STYLE = re.compile(r"<style(?:\s|>)", re.IGNORECASE)
 # References with an explicit CSS fallback are allowed to be component-level
 # extension points. Bare references must resolve somewhere in the shared or
@@ -149,7 +154,7 @@ for background_token in (
             f"{background_token}; received {ratio:.2f}:1"
         )
 
-for path in (PUBLIC_ENTRY, APP_ENTRY):
+for path in (APP_ENTRY,):
     if '@import "@scrooner/design-system"' not in path.read_text():
         fail(f"{path.relative_to(ROOT)} does not import the shared entry point")
 
@@ -161,7 +166,7 @@ for source_root in APPLICATION_SOURCE_ROOTS:
             continue
         application_sources.append(path)
         for line_number, line in enumerate(path.read_text().splitlines(), start=1):
-            if RAW_COLOR.search(line):
+            if RAW_COLOR.search(line) and not SVG_FILL_ATTR.search(line):
                 raw_color_violations.append(f"{path.relative_to(ROOT)}:{line_number}")
 
 if raw_color_violations:
@@ -180,9 +185,9 @@ if undefined_references:
     fail("undefined design-token references: " + ", ".join(undefined_references))
 
 inline_page_styles: list[str] = []
-for pages_root in (ROOT / "apps/site/src/pages", ROOT / "apps/app/app"):
+for pages_root in (ROOT / "apps/app/app",):
     for path in pages_root.rglob("*"):
-        if path.suffix not in {".astro", ".tsx"}:
+        if path.suffix != ".tsx":
             continue
         if INLINE_PAGE_STYLE.search(path.read_text()):
             inline_page_styles.append(str(path.relative_to(ROOT)))
@@ -198,6 +203,6 @@ if not default_button or "min-height: var(--ds-target-min)" not in default_butto
 print(
     f"design-system contract: {len(definitions)} tokens; "
     f"{len(REQUIRED_IMPLEMENTATION)} implementation contracts; "
-    "Astro and Next.js entry points connected; AA muted text and 44px default targets; "
+    "Next.js entry point connected; AA muted text and 44px default targets; "
     "no raw or undefined application tokens"
 )

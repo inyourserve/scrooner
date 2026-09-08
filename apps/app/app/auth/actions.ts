@@ -59,7 +59,7 @@ export async function signup(
   const { email, password, errors } = credentials(formData, { confirm: true });
   if (Object.keys(errors).length) return { status: "error", errors };
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_SCROONER_URL || "http://localhost:3000";
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -68,7 +68,7 @@ export async function signup(
   });
 
   if (error) return { status: "error", message: error.message };
-  if (data.session) redirect("/account");
+  if (data.session) redirect("/app/account");
 
   return {
     status: "success",
@@ -88,10 +88,10 @@ export async function requestPasswordReset(
     return { status: "error", errors: { email: "Enter a valid email address." } };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_SCROONER_URL || "http://localhost:3000";
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${appUrl.replace(/\/$/, "")}/auth/callback?next=/account/update-password`,
+    redirectTo: `${appUrl.replace(/\/$/, "")}/auth/callback?next=/app/account/update-password`,
   });
 
   if (error) return { status: "error", message: "We could not send the reset email. Try again shortly." };

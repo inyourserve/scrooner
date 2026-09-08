@@ -1,0 +1,31 @@
+.pricing-included { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-space-4) var(--ds-space-8); max-width: 780px; margin: 0 0 var(--ds-space-6); padding: 0; list-style: none; }
+.pricing-included li { display: flex; align-items: flex-start; gap: var(--ds-space-3); color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-16); line-height: 1.5; }
+.pricing-included li svg { flex: none; margin-top: 3px; color: var(--ds-color-action); }
+
+.pricing-plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-space-5); max-width: 860px; }
+.pricing-plan { padding: clamp(24px, 3vw, 32px); border: 1px solid var(--ds-color-border-default); border-radius: var(--ds-radius-feature); background: var(--ds-color-bg-surface); }
+.pricing-plan--highlight { border-color: var(--ds-color-border-strong); box-shadow: var(--ds-shadow-surface); }
+.pricing-plan__name { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-3); font-size: var(--ds-font-size-18); font-weight: var(--ds-font-weight-semibold); }
+.pricing-plan__price { display: flex; align-items: baseline; gap: 6px; margin: var(--ds-space-5) 0 var(--ds-space-4); font-family: var(--ds-font-family-mono); }
+.pricing-plan__price strong { font-size: 40px; font-weight: 600; letter-spacing: -0.02em; }
+.pricing-plan__price span { color: var(--ds-color-text-muted); font-size: var(--ds-font-size-13); }
+.pricing-plan__desc { color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-14) !important; line-height: 1.55; margin-bottom: var(--ds-space-5) !important; }
+.pricing-plan__list { display: grid; gap: var(--ds-space-2); margin: 0 0 var(--ds-space-6); padding: 0; list-style: none; }
+.pricing-plan__list li { display: flex; gap: var(--ds-space-2); color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-14); }
+.pricing-plan__list li svg { flex: none; margin-top: 2px; }
+.pricing-plan--highlight .pricing-plan__list li svg { color: var(--ds-color-positive-strong); }
+.pricing-plan:not(.pricing-plan--highlight) .pricing-plan__list li svg { color: var(--ds-color-action); }
+.pricing-plan .ds-button { width: 100%; }
+.pricing-plan__note { margin: 0 !important; color: var(--ds-color-text-muted) !important; font-size: var(--ds-font-size-12) !important; text-align: center; }
+
+.pricing-principles { display: grid; gap: var(--ds-space-5); max-width: 760px; }
+.pricing-principles > div { display: grid; grid-template-columns: 22px 1fr; gap: var(--ds-space-3); }
+.pricing-principles svg { margin-top: 2px; color: var(--ds-color-action); }
+.pricing-principles strong { display: block; margin-bottom: 2px; color: var(--ds-color-text-primary); }
+.pricing-principles p { margin: 0 !important; }
+
+.pricing-cta { display: flex; flex-wrap: wrap; gap: var(--ds-space-3); }
+
+@media (max-width: 640px) {
+  .pricing-included, .pricing-plans { grid-template-columns: 1fr; }
+}

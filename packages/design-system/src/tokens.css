@@ -2,7 +2,7 @@
  * Scrooner design tokens
  *
  * This is the only source of truth for visual values shared by scrooner.com
- * and app.scrooner.com. Components consume semantic tokens, never palette
+ * and authenticated `/app` routes. Components consume semantic tokens, never palette
  * primitives directly. Raw palette values remain available for future themes.
  */
 :root {
@@ -24,6 +24,16 @@
   --ds-color-teal-500: #0e7c66;
   --ds-color-teal-700: #0b5f4e;
   --ds-color-teal-800: #084b3e;
+  /* Brand/action hue -- deliberately NOT green. Financial green is reserved
+     for positive-value semantics (gains, increases); reusing it as the brand
+     color would make every primary button/link/focus-ring visually claim
+     "this went up," which is exactly the ambiguity doc/design/shadcn-system.md
+     section 7 warns against. Navy reads as institutional/precise rather than
+     "colorful SaaS," matching the Screener.in/Linear direction. */
+  --ds-color-navy-50: #eef1f7;
+  --ds-color-navy-500: #35507f;
+  --ds-color-navy-700: #1f3157;
+  --ds-color-navy-800: #16233f;
   --ds-color-red-50: #f7e9e6;
   --ds-color-red-200: #e8b7ae;
   --ds-color-red-700: #9f3327;
@@ -40,6 +50,11 @@
   --ds-color-bg-subtle: var(--ds-color-slate-100);
   --ds-color-bg-raised: var(--ds-color-white);
   --ds-color-bg-hover: var(--ds-color-slate-25);
+  /* A dedicated semantic surface for a deliberate dark section (e.g. the
+     onboarding brand panel) -- kept distinct from --ds-color-action-hover
+     even though they share navy-800 today, so retuning button hover color
+     later can never silently repaint an unrelated page section. */
+  --ds-color-bg-inverse: var(--ds-color-navy-800);
   --ds-color-text-primary: var(--ds-color-slate-900);
   --ds-color-text-secondary: var(--ds-color-slate-600);
   --ds-color-text-muted: var(--ds-color-slate-550);
@@ -50,23 +65,30 @@
   --ds-color-border-positive: var(--ds-color-teal-100);
   --ds-color-border-negative: var(--ds-color-red-200);
   --ds-color-border-warning: var(--ds-color-amber-200);
-  --ds-color-action: var(--ds-color-teal-500);
-  --ds-color-action-hover: var(--ds-color-teal-700);
-  --ds-color-action-active: var(--ds-color-teal-800);
-  --ds-color-action-subtle: var(--ds-color-teal-50);
-  --ds-color-link: var(--ds-color-teal-700);
+  --ds-color-action: var(--ds-color-navy-700);
+  --ds-color-action-hover: var(--ds-color-navy-800);
+  --ds-color-action-active: var(--ds-color-navy-800);
+  --ds-color-action-subtle: var(--ds-color-navy-50);
+  --ds-color-link: var(--ds-color-navy-700);
   --ds-color-positive: var(--ds-color-teal-500);
   --ds-color-positive-subtle: var(--ds-color-teal-50);
+  /* Darker than --ds-color-positive -- meant for text set directly on a
+     --ds-color-positive-subtle background (badges, success banners), where
+     teal-500 alone doesn't carry enough contrast. Mirrors --ds-color-negative
+     and --ds-color-warning, which are already their family's darker shade. */
+  --ds-color-positive-strong: var(--ds-color-teal-700);
   --ds-color-negative: var(--ds-color-red-700);
   --ds-color-negative-subtle: var(--ds-color-red-50);
   --ds-color-warning: var(--ds-color-amber-700);
   --ds-color-warning-subtle: var(--ds-color-amber-50);
   --ds-color-info: var(--ds-color-blue-700);
   --ds-color-info-subtle: var(--ds-color-blue-50);
-  --ds-color-focus: var(--ds-color-teal-500);
+  --ds-color-focus: var(--ds-color-navy-500);
   --ds-color-overlay: rgb(22 32 44 / 52%);
   --ds-color-header-glass: rgb(245 246 248 / 94%);
   --ds-color-inverse-border: rgb(255 255 255 / 45%);
+  --ds-color-inverse-text-muted: rgb(255 255 255 / 78%);
+  --ds-color-inverse-icon-muted: rgb(255 255 255 / 55%);
   --ds-color-code-bg: #16201a;
   --ds-color-code-text: #e8f0eb;
 
@@ -78,6 +100,7 @@
   --ds-font-size-12: 0.75rem;
   --ds-font-size-13: 0.8125rem;
   --ds-font-size-14: 0.875rem;
+  --ds-font-size-15: 0.9375rem;
   --ds-font-size-16: 1rem;
   --ds-font-size-18: 1.125rem;
   --ds-font-size-20: 1.25rem;
@@ -106,6 +129,7 @@
   --ds-space-4: 16px;
   --ds-space-5: 20px;
   --ds-space-6: 24px;
+  --ds-space-7: 28px;
   --ds-space-8: 32px;
   --ds-space-10: 40px;
   --ds-space-12: 48px;
@@ -142,5 +166,27 @@
   --ds-duration-fast: 120ms;
   --ds-duration-base: 180ms;
   --ds-ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --ds-focus-ring: 0 0 0 3px rgb(14 124 102 / 25%);
+  --ds-focus-ring: 0 0 0 3px rgb(53 80 127 / 30%);
+
+  /* shadcn semantic contract. Public and authenticated Next.js surfaces
+     inherit the same product theme instead of maintaining parallel palettes. */
+  --background: var(--ds-color-bg-canvas);
+  --foreground: var(--ds-color-text-primary);
+  --card: var(--ds-color-bg-surface);
+  --card-foreground: var(--ds-color-text-primary);
+  --popover: var(--ds-color-bg-raised);
+  --popover-foreground: var(--ds-color-text-primary);
+  --primary: var(--ds-color-action);
+  --primary-foreground: var(--ds-color-text-inverse);
+  --secondary: var(--ds-color-bg-subtle);
+  --secondary-foreground: var(--ds-color-text-primary);
+  --muted: var(--ds-color-bg-subtle);
+  --muted-foreground: var(--ds-color-text-secondary);
+  --accent: var(--ds-color-action-subtle);
+  --accent-foreground: var(--ds-color-action-hover);
+  --destructive: var(--ds-color-negative);
+  --border: var(--ds-color-border-default);
+  --input: var(--ds-color-border-strong);
+  --ring: var(--ds-color-focus);
+  --radius: var(--ds-radius-md);
 }

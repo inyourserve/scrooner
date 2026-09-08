@@ -2,30 +2,43 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowUpRight, Bell, LayoutDashboard, ListFilter, LogOut, SearchCode, Settings, Star } from "lucide-react";
 import { logout } from "@/app/auth/actions";
 
-function active(pathname: string, href: string) {
-  return pathname === href || pathname.startsWith(`${href}/`);
+const workspaceLinks = [
+  { href: "/app", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/app/screener", label: "Create screen", icon: SearchCode },
+  { href: "/app/watchlists", label: "Watchlists", icon: ListFilter },
+  { href: "/app/saved-screens", label: "Saved screens", icon: Star },
+  { href: "/app/alerts", label: "Alerts", icon: Bell },
+] as const;
+
+function isActive(pathname: string, href: string) {
+  return href === "/app" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function AppNavigation({ signedIn, siteUrl }: { signedIn: boolean; siteUrl: string }) {
+export function AppNavigation({ siteUrl }: { siteUrl: string }) {
   const pathname = usePathname();
-  const linkClass = (href: string) => [
-    "app-shell__nav-link",
-    active(pathname, href) ? "app-shell__nav-link--active" : "",
-  ].filter(Boolean).join(" ");
 
   return (
-    <nav className="app-shell__nav" aria-label="Primary navigation">
-      {signedIn && <Link className={linkClass("/screener")} href="/screener" aria-current={active(pathname, "/screener") ? "page" : undefined}>Screener</Link>}
-      {signedIn && <Link className={linkClass("/saved-screens")} href="/saved-screens" aria-current={active(pathname, "/saved-screens") ? "page" : undefined}>Saved screens</Link>}
-      <a className="app-shell__nav-link app-shell__public-link" href={siteUrl}>Company research<span aria-hidden="true"> ↗</span></a>
-      {signedIn ? (
-        <>
-          <Link className={linkClass("/account")} href="/account" aria-current={active(pathname, "/account") ? "page" : undefined}>Account</Link>
-          <form action={logout}><button className="app-shell__nav-action" type="submit">Sign out</button></form>
-        </>
-      ) : <><Link className={linkClass("/login")} href="/login" aria-current={active(pathname, "/login") ? "page" : undefined}>Sign in</Link><Link className="ds-button ds-button--primary ds-button--small" href="/signup">Create account</Link></>}
+    <nav className="app-shell__nav" aria-label="Workspace navigation">
+      <div className="app-shell__nav-group">
+        <p className="app-shell__nav-label">Workspace</p>
+        <div className="app-shell__nav-list">
+          {workspaceLinks.map(({ href, label, icon: Icon }) => {
+            const current = isActive(pathname, href);
+            return <Link key={href} className={`app-shell__nav-link${current ? " app-shell__nav-link--active" : ""}`} href={href} aria-current={current ? "page" : undefined}><Icon aria-hidden="true" size={17} strokeWidth={1.8} /><span>{label}</span></Link>;
+          })}
+        </div>
+      </div>
+      <div className="app-shell__nav-group app-shell__nav-group--account">
+        <p className="app-shell__nav-label">Account</p>
+        <div className="app-shell__nav-list">
+          <a className="app-shell__nav-link" href={siteUrl}><ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.8} /><span>Company research</span></a>
+          <Link className={`app-shell__nav-link${isActive(pathname, "/app/account") ? " app-shell__nav-link--active" : ""}`} href="/app/account" aria-current={isActive(pathname, "/app/account") ? "page" : undefined}><Settings aria-hidden="true" size={17} strokeWidth={1.8} /><span>Account settings</span></Link>
+          <form action={logout}><button className="app-shell__nav-link app-shell__nav-action" type="submit"><LogOut aria-hidden="true" size={17} strokeWidth={1.8} /><span>Sign out</span></button></form>
+        </div>
+      </div>
     </nav>
   );
 }

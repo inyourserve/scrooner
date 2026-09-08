@@ -1,5 +1,5 @@
-import { AuthForm } from "@/components/auth/AuthForm";
+import { redirect } from "next/navigation";
 
 export default function UpdatePasswordPage() {
-  return <main id="main-content" className="auth-page"><AuthForm mode="update" /></main>;
+  redirect("/app/account/update-password");
 }

@@ -1,11 +1,24 @@
-import type { Metadata } from "next";
-import { AppShell } from "@/components/layout/AppShell";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "@/components/layout/app-shell.css";
+import "./public-theme.css";
+import "./home.css";
+import "./public-content.css";
+import "./company-research.css";
+import "./pricing.css";
 
 export const metadata: Metadata = {
   title: "Scrooner — Fundamental stock screening",
   description: "Build deterministic US fundamental screens and verify every result.",
+};
+
+// Missing entirely until now -- every mobile browser was rendering this
+// site at a desktop-width virtual viewport (~980px) and shrinking it to
+// fit, since nothing told it the page is actually responsive. That's
+// exactly what "everything is misaligned" looks like on a real phone.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -21,9 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           rel="stylesheet"
         />
       </head>
-      <body>
-        <AppShell siteUrl={(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:4321").replace(/\/$/, "")}>{children}</AppShell>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

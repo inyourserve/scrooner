@@ -4,8 +4,7 @@
  * Dependency-free rendered frontend contract for local QA.
  *
  * Prerequisites:
- *   - Astro site running (default http://127.0.0.1:4321)
- *   - Next.js app running (default http://127.0.0.1:3000)
+ *   - Next.js frontend running (default http://127.0.0.1:3000)
  *   - Product backend running for the screener happy path
  *   - Chrome/Chromium, or CHROME_PATH set explicitly
  */
@@ -20,7 +19,6 @@ for (let index = 2; index < process.argv.length; index += 2) {
   cli.set(process.argv[index], process.argv[index + 1]);
 }
 
-const siteUrl = (cli.get("--site-url") ?? "http://127.0.0.1:4321").replace(/\/$/, "");
 const appUrl = (cli.get("--app-url") ?? "http://127.0.0.1:3000").replace(/\/$/, "");
 const outputDirectory = resolve(cli.get("--output") ?? join(tmpdir(), "scrooner-render-contract"));
 const chromeCandidates = [
@@ -42,22 +40,22 @@ mkdirSync(outputDirectory, { recursive: true });
 const surfaces = [
   {
     name: "homepage",
-    url: `${siteUrl}/`,
+    url: `${appUrl}/`,
     expected: ["Screen US companies in plain English", "Explore SEC-derived financials"],
   },
   {
     name: "catalog",
-    url: `${siteUrl}/design-system/`,
+    url: `${appUrl}/design-system/`,
     expected: ["One visual language for every Scrooner surface", "Brand and color"],
   },
   {
     name: "company-aapl",
-    url: `${siteUrl}/stock/aapl/`,
-    expected: ["Apple Inc.", "Key points", "Financial performance", "Recent filings", "Financial statements"],
+    url: `${appUrl}/stock/aapl/`,
+    expected: ["Apple Inc.", "Key metrics", "Quarterly results", "ownership", "documents"],
   },
   {
     name: "screener",
-    url: `${appUrl}/screener`,
+    url: `${appUrl}/app/screener`,
     expected: ["Find companies", "What companies are you looking for?", "Show matches", "Build with filters"],
     forbidden: ["Metric definitions are unavailable"],
   },

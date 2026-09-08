@@ -3,18 +3,20 @@ type BrandMarkProps = {
   className?: string;
 };
 
+// The one canonical Scrooner mark (an upward trend line with an arrowhead
+// corner) -- every surface (public site, app shell, auth pages) renders
+// this exact component so the brand can never silently diverge again.
 export function BrandMark({ size = "medium", className = "" }: BrandMarkProps) {
   const sizeClass = size === "medium" ? "" : `ds-brand-mark--${size}`;
   return (
     <svg
       className={["ds-brand-mark", sizeClass, className].filter(Boolean).join(" ")}
-      viewBox="0 0 32 32"
+      viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
     >
-      <path className="ds-brand-mark__frame" d="M13 4H10a6 6 0 0 0-6 6v5m15-11h3a6 6 0 0 1 6 6v5M4 19v3a6 6 0 0 0 6 6h3m15-9v3a6 6 0 0 1-6 6h-3" />
-      <path className="ds-brand-mark__scan" d="M9 16h14" />
-      <circle className="ds-brand-mark__point" cx="16" cy="16" r="3.25" />
+      <path className="ds-brand-mark__line" d="M4 17.5 9.2 12l3.2 3.1L20 7" />
+      <path className="ds-brand-mark__arrow" d="M16 7h4v4" />
     </svg>
   );
 }

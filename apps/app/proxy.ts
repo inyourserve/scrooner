@@ -7,10 +7,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/",
-    "/screener/:path*",
-    "/saved-screens/:path*",
-    "/account/:path*",
+    "/app/:path*",
     "/api/ask/:path*",
     "/api/screen/:path*",
     "/api/screens/:path*",

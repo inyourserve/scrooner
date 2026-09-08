@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildLoginHref, getSafeRedirectPath } from "./redirect";
 
 const options = {
-  allowedOrigins: ["https://app.scrooner.com", "http://localhost:3000"],
+  allowedOrigins: ["https://scrooner.com", "http://localhost:3000"],
 };
 
 describe("getSafeRedirectPath", () => {
@@ -15,7 +15,7 @@ describe("getSafeRedirectPath", () => {
   it("converts an allowed absolute URL to a local path", () => {
     expect(
       getSafeRedirectPath(
-        "https://app.scrooner.com/watchlist?add=AAPL",
+        "https://scrooner.com/watchlist?add=AAPL",
         options,
       ),
     ).toBe("/watchlist?add=AAPL");
@@ -25,10 +25,10 @@ describe("getSafeRedirectPath", () => {
     "https://evil.example/collect",
     "//evil.example/collect",
     "/\\evil.example/collect",
-    "https://user:password@app.scrooner.com/account",
+    "https://user:password@scrooner.com/account",
     "/screener%0d%0aSet-Cookie:bad=1",
   ])("rejects unsafe destination %s", (destination) => {
-    expect(getSafeRedirectPath(destination, options)).toBe("/screener");
+    expect(getSafeRedirectPath(destination, options)).toBe("/app");
   });
 
   it("supports an explicit safe fallback", () => {

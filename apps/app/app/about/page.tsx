@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import { PublicPage } from "@/components/public/PublicPage";
+export const metadata: Metadata = { title: "About Scrooner", description: "Screen US companies in plain language and inspect the SEC data behind each result." };
+export default function Page() { return <PublicPage current="about" title="About Scrooner" description={metadata.description!}><section><h2>Why it exists</h2><p>Scrooner brings screening, company analysis, and source filings into one research workflow.</p></section><section><h2>Product principles</h2><ul><li>Plain language should make powerful research tools easier to approach.</li><li>Every important number should be explainable and, where practical, traceable.</li><li>Uncertainty and missing data should be shown honestly.</li><li>Research software should support decisions without pretending to make them.</li></ul></section></PublicPage>; }

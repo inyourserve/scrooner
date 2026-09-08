@@ -8,7 +8,7 @@ export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const pathname = request.nextUrl.pathname;
-  const isProtectedPage = pathname === "/" || pathname.startsWith("/screener") || pathname.startsWith("/saved-screens") || pathname.startsWith("/account");
+  const isProtectedPage = pathname === "/app" || pathname.startsWith("/app/");
   const isProtectedApi = pathname.startsWith("/api/ask") || pathname.startsWith("/api/screen") || pathname.startsWith("/api/screens") || pathname.startsWith("/api/metrics");
 
   if (!status.enabled) {

@@ -4,10 +4,7 @@ import { config } from "./proxy";
 describe("auth proxy scope", () => {
   it("protects every screening page and endpoint", () => {
     expect(config.matcher).toEqual([
-      "/",
-      "/screener/:path*",
-      "/saved-screens/:path*",
-      "/account/:path*",
+      "/app/:path*",
       "/api/ask/:path*",
       "/api/screen/:path*",
       "/api/screens/:path*",

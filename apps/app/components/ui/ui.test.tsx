@@ -13,14 +13,13 @@ import { IconButton } from "./IconButton";
 afterEach(cleanup);
 
 describe("design-system React adapters", () => {
-  it("renders the Scrooner research-aperture mark instead of a chart glyph", () => {
+  it("renders the one canonical Scrooner upward-trend mark", () => {
     const { container } = render(<BrandMark size="large" />);
     const mark = container.querySelector("svg.ds-brand-mark");
 
     expect(mark).toHaveClass("ds-brand-mark--large");
-    expect(mark?.querySelector(".ds-brand-mark__frame")).toBeInTheDocument();
-    expect(mark?.querySelector(".ds-brand-mark__point")).toBeInTheDocument();
-    expect(mark?.querySelectorAll("rect, [class*='bar']")).toHaveLength(0);
+    expect(mark?.querySelector(".ds-brand-mark__line")).toBeInTheDocument();
+    expect(mark?.querySelector(".ds-brand-mark__arrow")).toBeInTheDocument();
   });
 
   it("gives dialogs a complete keyboard dismissal and initial-focus contract", () => {

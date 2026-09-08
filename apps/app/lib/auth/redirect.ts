@@ -1,4 +1,4 @@
-const DEFAULT_REDIRECT = "/screener";
+const DEFAULT_REDIRECT = "/app";
 const ENCODED_CONTROL_CHARACTER = /%(?:0[0-9a-f]|1[0-9a-f]|7f)/i;
 const RAW_CONTROL_CHARACTER = /[\u0000-\u001f\u007f]/;
 

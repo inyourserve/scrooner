@@ -11,9 +11,6 @@ python3 scripts/check_migrations.py
 python3 scripts/check_docs.py
 python3 scripts/check_secrets.py
 python3 scripts/check_design_system.py
-(cd apps/site && npm test)
-(cd apps/site && npm run check)
-(cd apps/site && npm run build)
 (cd apps/app && npm run lint)
 (cd apps/app && npm test)
 (cd apps/app && npm run build)

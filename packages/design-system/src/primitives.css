@@ -133,7 +133,7 @@
   text-transform: uppercase;
 }
 
-.ds-badge--positive { border-color: var(--ds-color-border-positive); background: var(--ds-color-positive-subtle); color: var(--ds-color-action-hover); }
+.ds-badge--positive { border-color: var(--ds-color-border-positive); background: var(--ds-color-positive-subtle); color: var(--ds-color-positive-strong); }
 .ds-badge--warning { border-color: var(--ds-color-border-warning); background: var(--ds-color-warning-subtle); color: var(--ds-color-warning); }
 .ds-badge--negative { border-color: var(--ds-color-border-negative); background: var(--ds-color-negative-subtle); color: var(--ds-color-negative); }
 
@@ -294,7 +294,36 @@ textarea.ds-control { padding: var(--ds-space-3); resize: vertical; }
 }
 
 .ds-empty-state > div { max-width: 520px; }
-.ds-empty-state p { color: var(--ds-color-text-secondary); }
+.ds-empty-state h3 { margin: 0 0 var(--ds-space-1); font-size: var(--ds-font-size-14); }
+.ds-empty-state p { margin: 0; color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-14); line-height: 1.55; }
+.ds-empty-state .ds-button { margin-top: var(--ds-space-5); }
+
+/* Standalone contexts (a statement table, a chart, a page section) need
+   their own visual boundary; a result set already sitting inside a
+   bordered container (e.g. the screener's results-section) doesn't. */
+.ds-empty-state--bordered {
+  min-height: 160px;
+  border: 1px solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-color-bg-subtle);
+}
+
+.ds-empty-state__mark {
+  width: 42px;
+  height: 42px;
+  margin: 0 auto var(--ds-space-3);
+  border-radius: var(--ds-radius-xs);
+  display: grid;
+  place-items: center;
+  background: var(--ds-color-bg-subtle);
+  color: var(--ds-color-action);
+  font-family: var(--ds-font-family-mono);
+  font-size: var(--ds-font-size-18);
+  font-weight: var(--ds-font-weight-semibold);
+}
+/* The bordered box's own background is already --bg-subtle -- the mark
+   needs the lighter surface tone to read as a distinct element on it. */
+.ds-empty-state--bordered .ds-empty-state__mark { background: var(--ds-color-bg-surface); }
 
 .ds-disclosure > summary {
   min-height: var(--ds-target-min);
@@ -319,6 +348,58 @@ textarea.ds-control { padding: var(--ds-space-3); resize: vertical; }
   height: 1px;
   border: 0;
   background: var(--ds-color-border-default);
+}
+
+/* A single reusable up/down indicator so every screen (price header, chart
+   toolbar, metric tables) renders change the same way instead of each page
+   inventing its own colored span. */
+.ds-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 1;
+}
+.ds-delta svg { flex: none; }
+.ds-delta[data-size="sm"] { font-size: var(--ds-font-size-12); }
+.ds-delta[data-size="md"] { font-size: var(--ds-font-size-14); }
+.ds-delta--positive { color: var(--ds-color-positive-strong); }
+.ds-delta--negative { color: var(--ds-color-negative); }
+.ds-delta--neutral { color: var(--ds-color-text-muted); font-weight: var(--ds-font-weight-regular); }
+
+.ds-ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding: 2px var(--ds-space-2);
+  border: 1px solid var(--ds-color-border-strong);
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-bg-subtle);
+  color: var(--ds-color-text-primary);
+  font-family: var(--ds-font-family-mono);
+  font-size: var(--ds-font-size-13);
+  font-weight: var(--ds-font-weight-semibold);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.ds-ticker-badge[data-size="sm"] { padding: 1px 6px; font-size: var(--ds-font-size-11); }
+.ds-ticker-badge__exchange { color: var(--ds-color-text-muted); font-weight: var(--ds-font-weight-regular); }
+
+.ds-kbd {
+  min-width: 20px;
+  padding: 1px 5px;
+  border: 1px solid var(--ds-color-border-strong);
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-color-bg-surface);
+  box-shadow: 0 1px 0 var(--ds-color-border-strong);
+  color: var(--ds-color-text-secondary);
+  font-family: var(--ds-font-family-mono);
+  font-size: var(--ds-font-size-11);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: 1.5;
+  text-align: center;
 }
 
 .ds-dialog-backdrop {
@@ -394,6 +475,15 @@ textarea.ds-control { padding: var(--ds-space-3); resize: vertical; }
   animation: ds-shimmer 1.4s ease infinite;
 }
 
+/* A single line of placeholder text -- for skeleton table rows/lists where
+   the real content is a short label or value, not a whole block. Position
+   comes from the parent's own text-align (left for a label, right for a
+   right-aligned numeric cell), not from the bar itself. */
+.ds-skeleton--text { display: block; height: 12px; }
+.ds-skeleton--text + .ds-skeleton--sub { margin-top: 5px; }
+.ds-skeleton--sub { height: 9px; }
+.ds-skeleton--value { display: inline-block; height: 13px; }
+
 .ds-brand-mark {
   width: var(--ds-brand-mark-size, 22px);
   height: var(--ds-brand-mark-size, 22px);
@@ -403,17 +493,15 @@ textarea.ds-control { padding: var(--ds-space-3); resize: vertical; }
   color: var(--ds-color-action);
 }
 
-.ds-brand-mark__frame,
-.ds-brand-mark__scan {
+.ds-brand-mark__line,
+.ds-brand-mark__arrow {
   fill: none;
   stroke: currentColor;
+  stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.ds-brand-mark__frame { stroke-width: 2.4; }
-.ds-brand-mark__scan { stroke-width: 1.5; opacity: 0.58; }
-.ds-brand-mark__point { fill: var(--ds-color-action-hover); }
 .ds-brand-mark--small { --ds-brand-mark-size: 17px; }
 .ds-brand-mark--large { --ds-brand-mark-size: 48px; }
 
