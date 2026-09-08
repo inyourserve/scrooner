@@ -49,14 +49,20 @@ def impact_cmd(concept: str = typer.Argument(..., help="canonical_concept name, 
 
 
 @app.command("verify")
-def verify_cmd(company_id: int = typer.Argument(..., help="core.company.id to verify.")) -> None:
-    """Snapshots analytics.data_incident for one company, reruns the
-    two checks that are safe/cheap to rerun on demand (tag_investigator
-    resolution + the timeseries self-consistency check), snapshots
-    again, and reports what actually resolved/regressed/stayed open.
-    Use this right after applying a company_tag_preference fix to
-    confirm it actually closed the incident, not just that the write
-    succeeded."""
+def verify_cmd(
+    company_id: int = typer.Argument(..., help="core.company.id to verify."),
+    no_yfinance: bool = typer.Option(False, "--no-yfinance", help="Skip the single-company yfinance Financials re-fetch."),
+) -> None:
+    """Snapshots analytics.data_incident for one company, reruns every
+    check that's safe/cheap to rerun on demand for one company
+    (tag_investigator resolution, the timeseries self-consistency
+    check, and -- since 2026-09-08 -- a single-company yfinance
+    Financials re-fetch+compare), snapshots again, and reports what
+    actually resolved/regressed/stayed open. Use this right after
+    applying a company_tag_preference fix to confirm it actually closed
+    the incident, not just that the write succeeded. SEC Frames is
+    never included -- it has no per-company mode, see verifier.py's
+    module docstring."""
     with get_connection() as conn:
-        result = verify_company(conn, company_id)
+        result = verify_company(conn, company_id, include_yfinance=not no_yfinance)
     typer.echo(render_verify(result))

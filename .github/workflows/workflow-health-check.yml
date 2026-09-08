@@ -1,0 +1,77 @@
+name: Workflow health check
+
+# Added 2026-09-08, directly closing today's own root cause: this
+# repo's daily cron (pipeline-refresh.yml) had been failing silently
+# for 10+ days, and a second cron (pipeline-sanity.yml) had been
+# written but never committed, so it never ran even once -- both went
+# unnoticed because nothing ever looked at GitHub's own run history.
+#
+# Honest limitation, stated rather than glossed over: this check can
+# only ever see workflows that are actually committed and scheduled --
+# an uncommitted file (today's pipeline-sanity.yml problem) is
+# invisible to ANY in-repo automation by definition, since CI only
+# runs against what's actually pushed. What this DOES catch is the
+# other real failure mode from today: a committed, scheduled workflow
+# whose runs are silently failing. That's the one class of "nobody's
+# watching the red X" problem an automated check can actually solve.
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly -- this is a meta-check on the other crons, not something
+    # that needs daily granularity.
+    - cron: "30 6 * * 1"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  check-scheduled-workflow-health:
+    name: Check recent run history of every scheduled workflow
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: List scheduled workflows and their last 5 runs each
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          failed_any=0
+          for wf_file in .github/workflows/*.yml; do
+            wf_name=$(basename "$wf_file")
+            # Only check workflows that declare a schedule: trigger --
+            # workflow_dispatch-only workflows have no expectation of
+            # running unattended, so a quiet run history there is normal.
+            if ! grep -q "^\s*schedule:" "$wf_file"; then
+              continue
+            fi
+            echo "=== $wf_name ==="
+            runs_json=$(gh run list --workflow="$wf_name" --limit 5 --json conclusion,createdAt,event 2>/dev/null || echo "[]")
+            echo "$runs_json" | python3 -c "
+import json, sys
+runs = json.load(sys.stdin)
+scheduled = [r for r in runs if r.get('event') == 'schedule']
+if not scheduled:
+    print('  no scheduled runs found yet (new workflow, or not committed long enough to have run) -- not flagging')
+    sys.exit(0)
+failures = [r for r in scheduled if r.get('conclusion') not in ('success', None)]
+for r in scheduled:
+    print(f\"  {r.get('createdAt')}: {r.get('conclusion')}\")
+if len(failures) == len(scheduled):
+    print('  ALL recent scheduled runs failed')
+    sys.exit(1)
+elif len(failures) >= 3:
+    print(f'  {len(failures)}/{len(scheduled)} recent scheduled runs failed')
+    sys.exit(1)
+"
+            if [ $? -ne 0 ]; then
+              failed_any=1
+            fi
+          done
+          if [ "$failed_any" -eq 1 ]; then
+            echo ""
+            echo "One or more scheduled workflows have a real failure pattern in their recent run history -- investigate before assuming everything is fine just because nothing paged anyone."
+            exit 1
+          fi

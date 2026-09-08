@@ -4,6 +4,8 @@ fundamentally different check than the yfinance-based ones: both sides
 read the SAME SEC filing, so a mismatch is direct evidence of a bug in
 our OWN pipeline, not a third-party disagreement."""
 
+from datetime import date
+
 import typer
 
 from scrooner_pipeline.db.connection import get_connection
@@ -12,6 +14,21 @@ from scrooner_pipeline.frames.fetch import fetch_frame
 from scrooner_pipeline.frames.compare import compare_frame
 
 app = typer.Typer()
+
+
+def _default_year_quarter() -> tuple[int, int]:
+    """Added 2026-09-08 for the cron -- `run` previously REQUIRED
+    --year/--quarter, so it could only ever run manually. Defaults to
+    the most recently COMPLETED calendar quarter, not the current
+    in-progress one: SEC's own Frames data for a quarter fills in as
+    companies file THROUGHOUT the following quarter or two, so checking
+    the just-finished quarter (not today's) is the earliest point
+    where the data is meaningfully complete rather than mostly empty."""
+    today = date.today()
+    current_quarter = (today.month - 1) // 3 + 1
+    if current_quarter == 1:
+        return today.year - 1, 4
+    return today.year, current_quarter - 1
 
 # (canonical_concept_name, taxonomy, tag, is_instant) -- the highest-value
 # concepts first: doc 02's locked V1 metrics' own underlying facts.
@@ -37,14 +54,17 @@ def _canonical_concept_id(conn, name: str) -> int:
 
 @app.command("run")
 def run_cmd(
-    year: int = typer.Option(..., help="Calendar year, e.g. 2026"),
-    quarter: int = typer.Option(..., help="Calendar quarter, 1-4"),
+    year: int = typer.Option(None, help="Calendar year, e.g. 2026. Default: most recently completed quarter."),
+    quarter: int = typer.Option(None, help="Calendar quarter, 1-4. Default: most recently completed quarter."),
 ) -> None:
     """Fetches SEC's own bulk Frames data for CONCEPTS_TO_CHECK at the
     given (year, quarter) and compares it against our own core.fact for
     every matched company. One SEC request per concept (not per company)
     -- 7 requests total for the current list, covering the whole active
     population in each."""
+    if year is None or quarter is None:
+        year, quarter = _default_year_quarter()
+    typer.echo(f"target: {year} Q{quarter}")
     client = SECClient()
     totals = {"considered": 0, "matched_company": 0, "ok": 0, "mismatch": 0, "missing_ours": 0}
     with get_connection() as conn:

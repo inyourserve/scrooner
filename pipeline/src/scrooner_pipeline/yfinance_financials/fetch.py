@@ -95,6 +95,33 @@ def _fetch_all_statements(ticker: str, paced: bool = True) -> dict[str, pd.DataF
     return {statement_type: _fetch_one_statement(t, attr, paced) for statement_type, attr in STATEMENT_ATTR.items()}
 
 
+def pick_rotation_batch(conn: psycopg.Connection, limit: int) -> list[int]:
+    """Coldest-checked-first rotation (2026-09-08, added for the daily
+    cron -- fetch_and_store_statements() had no rotation of its own, so
+    the only way to run it against the full population was an explicit
+    --company-ids list built by hand). Mirrors sanity/yfinance_check.py's
+    pick_rotation_batch() exactly -- same rationale, different table
+    (yfinance_statement_line.fetched_at instead of data_sanity_check.
+    checked_at) since this system tracks its own recency independently."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select c.id
+            from core.company c
+            left join (
+                select company_id, max(fetched_at) as last_fetched
+                from analytics.yfinance_statement_line
+                group by company_id
+            ) y on y.company_id = c.id
+            where c.status = 'active'
+            order by y.last_fetched asc nulls first, c.id
+            limit %s
+            """,
+            (limit,),
+        )
+        return [row[0] for row in cur.fetchall()]
+
+
 def _flatten(df: pd.DataFrame) -> list[tuple[str, date, float | None]]:
     """One (line_item, period_end, value) tuple per real cell -- skips
     NaN cells (yfinance leaves a line item blank for a period it doesn't

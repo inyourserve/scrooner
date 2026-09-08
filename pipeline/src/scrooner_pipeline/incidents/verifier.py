@@ -26,12 +26,18 @@ data_sanity_check rows just to verify one company's fix. Fixed at the
 source (both functions gained the company_id param above) rather than
 working around it here.
 
-Does NOT auto-trigger a fresh yfinance or SEC Frames fetch for one
-company -- those checks only update on their own scheduled/batch run.
-Verifying a fix that depends on one of those means waiting for its
-next scheduled run, then calling capture_state() again -- this module
-still gives the before/after diff, it just doesn't force those two
-checkers to refetch on demand."""
+Extended 2026-09-08 to ALSO re-fetch+compare yfinance Full Financial
+Statements for the one company being verified (opt-out via
+include_yfinance=False) -- a single-company yfinance call is cheap and
+carries no meaningful rate-limit risk, unlike a full rotation batch.
+Still does NOT trigger SEC Frames: Frames has no per-company mode at
+all -- fetching one concept's Frame means downloading that whole
+quarter's population-wide data regardless of how many companies you
+actually want, so there's no cheap single-company path to add here.
+Verifying a fix that depends on Frames means waiting for its own
+weekly cron, then calling capture_state() again -- this module still
+gives the before/after diff, it just doesn't force that one to refetch
+on demand."""
 
 from collections import defaultdict
 
@@ -40,6 +46,8 @@ import structlog
 
 from scrooner_pipeline.sanity.tag_investigator import investigate_open_findings
 from scrooner_pipeline.sanity.timeseries_check import CONCEPTS_TO_CHECK, run_concept
+from scrooner_pipeline.yfinance_financials.fetch import fetch_and_store_statements
+from scrooner_pipeline.yfinance_financials.compare import compare_statements
 
 logger = structlog.get_logger()
 
@@ -105,12 +113,13 @@ def diff_state(before: list[dict], after: list[dict]) -> dict:
     }
 
 
-def verify_company(conn: psycopg.Connection, company_id: int) -> dict:
-    """The real end-to-end verifier: snapshot -> rerun the two cheap,
-    safe-to-rerun checkers -> snapshot again -> diff. This is what
-    actually 'closes the loop' after applying a company_tag_preference
-    fix (sanity/tag_investigator.py) -- confirms the fix cleared the
-    incident rather than trusting the write succeeded."""
+def verify_company(conn: psycopg.Connection, company_id: int, include_yfinance: bool = True) -> dict:
+    """The real end-to-end verifier: snapshot -> rerun the checks that
+    are safe to rerun on demand for one company -> snapshot again ->
+    diff. This is what actually 'closes the loop' after applying a
+    company_tag_preference fix (sanity/tag_investigator.py) -- confirms
+    the fix cleared the incident rather than trusting the write
+    succeeded."""
     before = capture_state(conn, company_id)
 
     investigate_stats = investigate_open_findings(conn, company_id=company_id)
@@ -120,6 +129,11 @@ def verify_company(conn: psycopg.Connection, company_id: int) -> dict:
         stats = run_concept(conn, concept_name, min_ratio, max_ratio, floor, never_negative, company_id=company_id)
         for k, v in stats.items():
             timeseries_stats[k] += v
+
+    yfinance_stats = None
+    if include_yfinance:
+        fetch_and_store_statements(conn, [company_id], paced=True)
+        yfinance_stats = compare_statements(conn, [company_id])
 
     after = capture_state(conn, company_id)
     diff = diff_state(before, after)
@@ -135,6 +149,7 @@ def verify_company(conn: psycopg.Connection, company_id: int) -> dict:
         "company_id": company_id,
         "investigate_stats": investigate_stats,
         "timeseries_stats": dict(timeseries_stats),
+        "yfinance_stats": yfinance_stats,
         **diff,
     }
 

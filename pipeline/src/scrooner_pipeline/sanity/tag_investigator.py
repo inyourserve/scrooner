@@ -65,6 +65,22 @@ logger = structlog.get_logger()
 # fix without a matching *_sanity_resolved concept already seeded.
 FIXABLE_CONCEPTS: dict[str, str] = {
     "revenue": "revenue_sanity_resolved",
+    # Added 2026-09-08 -- yfinance_financials/compare.py's own
+    # investigate_major_findings() was ALREADY calling investigate() for
+    # major findings on these 4 concepts (it hands off whatever
+    # canonical_concept a finding is against, unconditionally), but
+    # every one landed at best in needs_review since none of them were
+    # fixable -- a real, silent gap between "we already investigate
+    # this" and "we can actually act on what we find". Each of these
+    # already has a *_resolved concept from mapper/concept_fallback.py
+    # (arithmetic-derivation fallback) as its merge target -- safe to
+    # share because resolve_company_tag_preferences() (above) now only
+    # ever touches preferred companies' own rows in that target, never
+    # the arithmetic-fallback baseline the other writer owns.
+    "cost_of_revenue": "cost_of_revenue_resolved",
+    "gross_profit": "gross_profit_resolved",
+    "operating_expenses": "operating_expenses_resolved",
+    "total_debt": "total_debt_resolved",
 }
 
 # How close a candidate tag's own value must land to the external
@@ -315,7 +331,24 @@ def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str,
     N+1 concern (see pipeline/CLAUDE.md's restatements.py lesson) --
     preference rows are rare, investigation-driven, and this is exactly
     the shape doc 40 already established (`resolve_fallback_for_company`)
-    for a genuinely small per-company set. Safe to rerun; idempotent."""
+    for a genuinely small per-company set. Safe to rerun; idempotent.
+
+    Scoping fixed 2026-09-08, widening FIXABLE_CONCEPTS past `revenue`:
+    the baseline used to be a blanket DELETE of the whole resolved
+    concept, then a bulk re-INSERT sourced ONLY from the primary
+    concept's own canonical_fact -- fine when this was the resolved
+    concept's only writer (revenue_sanity_resolved), but for a concept
+    ALSO populated by mapper/concept_fallback.py's arithmetic fallback
+    (operating_expenses_resolved etc.), that blanket delete would have
+    silently wiped every arithmetic-derived row (companies with no
+    primary tag at all) on every run -- the same shared-table
+    "must scope on every dimension another writer keys on" trap this
+    project has hit and documented multiple times already. Fixed by
+    never touching a non-preferred company's existing row at all: the
+    baseline INSERT now only fills rows that don't already exist
+    (whatever wrote them first -- resolve() or concept_fallback.py --
+    stays authoritative), and the DELETE is scoped to preferred
+    companies only, never the whole concept."""
     primary_id = _concept_id(conn, concept_name)
     resolved_id = _concept_id(conn, resolved_concept_name)
 
@@ -328,7 +361,10 @@ def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str,
     preferred_company_ids = [company_id for company_id, _t, _g in preferences]
 
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %s", (resolved_id,))
+        cur.execute(
+            "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s and company_id = any(%(preferred_ids)s)",
+            {"resolved_id": resolved_id, "preferred_ids": preferred_company_ids or [-1]},
+        )
         cur.execute(
             """
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
@@ -336,6 +372,7 @@ def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str,
             from analytics.canonical_fact
             where canonical_concept_id = %(primary_id)s
               and company_id != all(%(preferred_ids)s)
+            on conflict (company_id, canonical_concept_id, period_id) do nothing
             """,
             {"resolved_id": resolved_id, "primary_id": primary_id, "preferred_ids": preferred_company_ids or [-1]},
         )

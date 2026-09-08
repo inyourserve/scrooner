@@ -23,9 +23,11 @@ jobs:
   yfinance-cross-check:
     name: yfinance cross-check and report
     runs-on: ubuntu-latest
-    # ~750 companies * 1.2s pace + occasional 60s rate-limit retries --
-    # generous headroom over the ~20min baseline case.
-    timeout-minutes: 60
+    # ~750 companies * 1.2s pace + the new yfinance-financials rotation
+    # (200 companies, 3x request cost each) + a full-population
+    # time-series pass (~20min, pure SQL, no external calls) -- bumped
+    # from 60 to 90min 2026-09-08 when those two were added.
+    timeout-minutes: 90
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
@@ -46,6 +48,29 @@ jobs:
       - name: Investigate and auto-fix reconcilable findings
         if: always()
         run: uv run --project pipeline scrooner-sanity investigate
+      - name: Time-series self-consistency check (full population)
+        # Added 2026-09-08 -- zero external calls (pure SQL against our
+        # own history), so unlike everything else in this job it isn't
+        # rate-limit-bound and can cover the whole population every day,
+        # not a rotating batch. Was built 2026-09-08 but never wired
+        # into any cron until now -- see doc/data-moat/SYSTEMS.md.
+        if: always()
+        run: uv run --project pipeline scrooner-sanity timeseries
+      - name: yfinance full financial statements (rotating batch)
+        # Added 2026-09-08 -- deeper than the ratio check above (every
+        # quarter's actual line items, not just latest-period ratios),
+        # but 3x the yfinance request cost per company, so a smaller
+        # daily rotation (200, vs the ratio check's 750) sharing the
+        # same rate-limiter budget. Was built 2026-09-08 but had no
+        # rotation of its own and no cron wiring until now.
+        if: always()
+        run: |
+          uv run --project pipeline scrooner-yfinance-financials seed-line-item-mapping
+          uv run --project pipeline scrooner-yfinance-financials daily-rotation --limit 200
+          uv run --project pipeline scrooner-yfinance-financials investigate
+      - name: Report yfinance-financials findings
+        if: always()
+        run: uv run --project pipeline scrooner-yfinance-financials report
       - name: Report findings
         if: always()
         run: uv run --project pipeline scrooner-sanity report --github-summary --fail-on-findings

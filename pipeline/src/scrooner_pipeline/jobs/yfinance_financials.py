@@ -12,7 +12,7 @@ from pathlib import Path
 import typer
 
 from scrooner_pipeline.db.connection import get_connection
-from scrooner_pipeline.yfinance_financials.fetch import fetch_and_store_statements
+from scrooner_pipeline.yfinance_financials.fetch import fetch_and_store_statements, pick_rotation_batch
 from scrooner_pipeline.yfinance_financials.line_item_map import seed_line_item_mapping
 from scrooner_pipeline.yfinance_financials.compare import compare_statements, investigate_major_findings
 from scrooner_pipeline.yfinance_financials.report import summarize, render_markdown
@@ -71,6 +71,30 @@ def compare_cmd(
         target_ids = [int(c.strip()) for c in company_ids.split(",")] if company_ids else _load_golden_company_ids(conn)
         stats = compare_statements(conn, target_ids)
     typer.echo(f"compare: {stats}")
+
+
+@app.command("daily-rotation")
+def daily_rotation_cmd(
+    limit: int = typer.Option(200, help="Companies to fetch+compare this run (rotates coldest-fetched-first)."),
+) -> None:
+    """Added 2026-09-08 for the daily cron -- fetch-statements/compare
+    previously had no rotation of their own (only an explicit
+    --company-ids list or the golden-10 default), so this system could
+    never actually run against the full population unattended. Picks a
+    coldest-fetched-first batch (pick_rotation_batch(), mirroring
+    sanity/yfinance_check.py's own rotation), fetches it (paced -- this
+    is a shared daily cron slot, not a one-off fast pass), then compares
+    that SAME batch immediately so a run's findings are never stale
+    relative to its own fetch. limit=200 (vs the ratio checker's 750) --
+    3 yfinance requests/company here vs 1 there, same shared rate
+    budget, kept lower so this doesn't starve the ratio checker's own
+    daily rotation of the budget both share."""
+    with get_connection() as conn:
+        target_ids = pick_rotation_batch(conn, limit)
+        fetch_stats = fetch_and_store_statements(conn, target_ids, paced=True)
+        compare_stats = compare_statements(conn, target_ids)
+    typer.echo(f"fetch: {fetch_stats}")
+    typer.echo(f"compare: {compare_stats}")
 
 
 @app.command("investigate")

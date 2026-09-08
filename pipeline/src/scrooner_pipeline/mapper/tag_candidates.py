@@ -95,6 +95,22 @@ def _load_current_mapped_tags(conn: psycopg.Connection, canonical_concept_id: in
         return {r[0] for r in cur.fetchall()}
 
 
+def _load_canonical_concept_coverage(conn: psycopg.Connection) -> dict[int, int]:
+    """Per-canonical_concept company coverage (distinct from
+    _load_concept_id_coverage below, which is per raw XBRL tag) -- one
+    grouped pass over canonical_fact, used to decide which concepts are
+    already well_covered and can skip the candidate search entirely."""
+    with conn.cursor() as cur:
+        cur.execute("select canonical_concept_id, count(distinct company_id) from analytics.canonical_fact group by canonical_concept_id")
+        return dict(cur.fetchall())
+
+
+def _total_active_companies(conn: psycopg.Connection) -> int:
+    with conn.cursor() as cur:
+        cur.execute("select count(*) from core.company where status = 'active'")
+        return cur.fetchone()[0]
+
+
 def _load_concept_id_coverage(conn: psycopg.Connection) -> dict[int, int]:
     """One global aggregation over core.fact, done once, reused for
     every concept's candidate search -- see module docstring."""
@@ -139,9 +155,25 @@ _UPSERT_SQL = """
 def build_tag_candidates(conn: psycopg.Connection) -> dict:
     concepts = _load_concepts(conn)
     coverage_by_concept_id = _load_concept_id_coverage(conn)
-    stats = {"considered": len(concepts), "candidates_written": 0}
+    canonical_coverage = _load_canonical_concept_coverage(conn)
+    total_companies = _total_active_companies(conn)
+    stats = {"considered": len(concepts), "skipped_well_covered": 0, "candidates_written": 0}
 
     for concept in concepts:
+        # Added 2026-09-08 (part of the "prioritize by coverage" ask):
+        # a concept already >=85% covered has nowhere meaningful left
+        # to gain from a candidate-tag search -- skip it so the report
+        # (and whoever reads it) spends zero attention on concepts that
+        # don't need any, same 85% threshold report_status() already
+        # uses to call something "well_covered".
+        coverage = canonical_coverage.get(concept["id"], 0)
+        if total_companies and coverage >= 0.85 * total_companies:
+            with conn.cursor() as cur:
+                cur.execute("delete from analytics.concept_tag_candidate where canonical_concept_id = %s", (concept["id"],))
+            conn.commit()
+            stats["skipped_well_covered"] += 1
+            continue
+
         keywords = CONCEPT_SEARCH_KEYWORDS.get(concept["name"], [])
         already_mapped = _load_current_mapped_tags(conn, concept["id"])
         candidates = _candidate_tags(conn, keywords, already_mapped, coverage_by_concept_id)
@@ -217,4 +249,8 @@ def report_status(conn: psycopg.Connection) -> list[dict]:
                 "top_candidate": candidates[0] if candidates else None,
             }
         )
+    # Worst-covered first (2026-09-08, "prioritize by coverage" ask) --
+    # a report meant to drive what to work on next shouldn't spend the
+    # reader's attention on well_covered concepts before the real gaps.
+    rows.sort(key=lambda r: r["coverage_pct"])
     return rows
