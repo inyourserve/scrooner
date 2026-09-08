@@ -26,6 +26,8 @@ import { IconButton } from "@/components/ui/IconButton";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { SaveScreenButton } from "@/components/saved-screens/SaveScreenButton";
+import { EmptyState } from "@/components/scrooner/EmptyState";
+import { TableSkeleton } from "@/components/scrooner/TableSkeleton";
 import { SAVED_QUERY_KEY } from "@/lib/saved-screens/client";
 
 const DEFAULT_ROW: FilterRow = {
@@ -101,7 +103,7 @@ function MatchReasons({
           </li>
         ))}
       </ul>
-      {company.ticker && <a href={`${siteUrl}/stock/${company.ticker.toLowerCase()}/`}>Open company filings and source context<span aria-hidden="true"> →</span></a>}
+      {company.ticker && <a href={`${siteUrl}/stocks/${company.ticker.toLowerCase()}/`}>Open company filings and source context<span aria-hidden="true"> →</span></a>}
     </details>
   );
 }
@@ -337,14 +339,13 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   return (
     <main className="main-content screener-content" id="main-content">
         <PageHeader
-          eyebrow="Stock screener"
           title="Find companies"
-          description="Enter your criteria, review the matches, and save the useful screens."
+          description="Screen US companies using reported fundamentals."
         />
 
         {catalogState === "loading" && (
           <StatusPanel className="state-panel" title="Loading metric definitions" busy>
-            <p>Checking the Screener&apos;s current validated catalog.</p>
+            <p>Loading metrics.</p>
           </StatusPanel>
         )}
 
@@ -366,7 +367,6 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
           {requestState !== "idle" && <section className="results-section" aria-labelledby="results-title" aria-busy={requestState === "loading"}>
             <div className="results-heading">
               <div>
-                <p className="step-label">Screen results</p>
                 <h2 ref={resultsTitleRef} id="results-title" tabIndex={-1}>Matching companies</h2>
               </div>
               {requestState === "success" && result && <p className="match-count"><strong>{result.matched.length}</strong> {result.matched.length === 1 ? "company" : "companies"} matched</p>}
@@ -374,9 +374,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
             </div>
 
             {requestState === "loading" && (
-              <StatusPanel className="state-panel" title="Running your screen" busy>
-                <p>Evaluating every condition against available company metrics.</p>
-              </StatusPanel>
+              <TableSkeleton columnLabels={resultMetricNames.map((name) => metricByName(metrics, name)?.display_name ?? name)} />
             )}
 
             {requestState === "error" && (
@@ -386,17 +384,18 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                 title="The screen did not run"
                 action={lastQuery ? <Button type="button" variant="ghost" size="small" onClick={() => void executeScreen(lastQuery)}>Try again</Button> : undefined}
               >
-                <p>{requestError}</p><p>Your criteria are preserved below.</p>
+                <p>{requestError}</p>
               </StatusPanel>
             )}
 
             {requestState === "success" && result && result.matched.length === 0 && (
-              <div className="empty-results zero-results">
-                <span className="empty-mark" aria-hidden="true">0</span>
-                <h3>No companies matched every criterion</h3>
-                <p>The screen ran successfully. Edit or remove a condition to widen the result.</p>
-                <Button type="button" variant="secondary" onClick={() => lastQuery && applyInterpretedQuery(lastQuery, interpretedFrom)}>Edit criteria</Button>
-              </div>
+              <EmptyState
+                bordered={false}
+                icon="0"
+                title="No companies matched every criterion"
+                description="Remove or loosen a condition."
+                action={<Button type="button" variant="secondary" onClick={() => lastQuery && applyInterpretedQuery(lastQuery, interpretedFrom)}>Edit criteria</Button>}
+              />
             )}
 
             {requestState === "success" && result && result.excluded_missing_data.length > 0 && (
@@ -429,7 +428,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                     {result.matched.map((company) => (
                       <tr key={company.cik}>
                         <th scope="row">
-                          {company.ticker ? <a className="company-link" aria-label={`${company.ticker} ${company.company_name}`} href={`${siteUrl}/stock/${company.ticker.toLowerCase()}/`}><strong>{company.ticker}</strong><span>{company.company_name}</span></a> : <span className="company-link"><strong>—</strong><span>{company.company_name}</span></span>}
+                          {company.ticker ? <a className="company-link" aria-label={`${company.ticker} ${company.company_name}`} href={`${siteUrl}/stocks/${company.ticker.toLowerCase()}/`}><strong>{company.ticker}</strong><span>{company.company_name}</span></a> : <span className="company-link"><strong>—</strong><span>{company.company_name}</span></span>}
                           {lastQuery && <MatchReasons company={company} query={lastQuery} metrics={metrics} siteUrl={siteUrl} />}
                         </th>
                         <td><span className="classification">{company.sic_description || "Unclassified"}</span>{company.sic_code && <small>SIC {company.sic_code}</small>}</td>
@@ -442,7 +441,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                             </td>
                           );
                         })}
-                        <td>{company.ticker && <a className="row-action" href={`${siteUrl}/stock/${company.ticker.toLowerCase()}/`}>View company<span aria-hidden="true"> →</span></a>}</td>
+                        <td>{company.ticker && <a className="row-action" href={`${siteUrl}/stocks/${company.ticker.toLowerCase()}/`}>View company<span aria-hidden="true"> →</span></a>}</td>
                       </tr>
                     ))}
                   </tbody>

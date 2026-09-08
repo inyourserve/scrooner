@@ -164,9 +164,8 @@ export function NaturalQueryPanel({
         <>
           <div className="natural-query-heading">
             <div>
-              <p className="step-label">Company search</p>
               <h2 id="natural-query-title">Describe the companies you want</h2>
-              <p>Use plain English. Scrooner will show the exact filters before you save anything.</p>
+              <p>Use plain English or open exact filters.</p>
             </div>
           </div>
 
@@ -185,7 +184,7 @@ export function NaturalQueryPanel({
                 aria-describedby={`natural-query-help${state === "attention" ? " natural-query-attention" : ""}${state === "error" ? " natural-query-error" : ""}`}
               />
               <div className="natural-query-actions">
-                <p id="natural-query-help">We will ask if anything is unclear.</p>
+                <p id="natural-query-help">Press ⌘ Enter to run.</p>
                 <Button type="submit" loading={state === "loading"} loadingLabel="Finding matches…">Show matches</Button>
               </div>
             </form>
@@ -204,7 +203,7 @@ export function NaturalQueryPanel({
 
       {state === "loading" && (
         <StatusPanel className="interpretation-state" title="Finding matching companies" busy>
-          <p>Interpreting your words and applying the verified filters.</p>
+          <p>Applying filters.</p>
         </StatusPanel>
       )}
 
@@ -212,7 +211,7 @@ export function NaturalQueryPanel({
         <div id="natural-query-attention" className="interpretation-attention" role="status" aria-live="polite">
           <div className="interpretation-title">
             <span className="status-mark warning" aria-hidden="true">!</span>
-            <div><strong>Clarify this screen</strong><p>Nothing ran because part of the request needs your input.</p></div>
+            <div><strong>Clarify this screen</strong><p>Choose a meaning to continue.</p></div>
           </div>
 
           {interpretation.recognized_query && (
@@ -226,7 +225,6 @@ export function NaturalQueryPanel({
             <div className="unresolved-clause" key={ambiguity.phrase}>
               <span>Choose one meaning</span>
               <strong>“{ambiguity.phrase}”</strong>
-              <p>Which metric did you mean?</p>
               <div className="candidate-list">
                 {ambiguity.candidates.map((candidate) => (
                   <button className="choice-button" type="button" key={candidate} onClick={() => chooseMeaning(ambiguity.phrase, candidate)}>

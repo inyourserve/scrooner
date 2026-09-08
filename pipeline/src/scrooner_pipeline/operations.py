@@ -41,7 +41,19 @@ FRESHNESS_TARGETS = (
     ),
     FreshnessTarget(
         "filing_index",
-        "select max(collected_at) from raw.sec_filing_documents",
+        # Fixed 2026-09-08 -- this used to be max(collected_at) from
+        # raw.sec_filing_documents itself, which only advances when a
+        # genuinely NEW filing is inserted (collector/filings.py's own
+        # ON CONFLICT DO NOTHING design -- unlike sec_companyfacts/
+        # sec_submissions below, which DO UPDATE every scoped CIK's row
+        # on every run, so their own fetched_at always advances
+        # regardless of whether the content changed). A real day with
+        # zero genuinely-new filings (confirmed live: 2026-09-07/08 both
+        # showed considered=1666, new=0) is a normal, correct outcome,
+        # not staleness -- but the old measurement couldn't tell that
+        # apart from the job never having run at all. Tracking the last
+        # SUCCESSFUL run instead of the last NEW row fixes that.
+        "select max(finished_at) from raw.collector_runs where job = 'incremental' and status = 'succeeded'",
         "select count(*) from raw.sec_filing_documents",
         timedelta(hours=72),
     ),

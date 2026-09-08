@@ -64,7 +64,7 @@ function response(payload: unknown, ok = true, status = ok ? 200 : 500) {
 }
 
 async function openFilterBuilder() {
-  fireEvent.click(await screen.findByRole("button", { name: /Build with filters/ }));
+  fireEvent.click(await screen.findByRole("button", { name: /Exact filters/ }));
   return screen.findByRole("button", { name: "Run screen" });
 }
 
@@ -167,13 +167,13 @@ describe("ScreenerClient", () => {
     expect(await screen.findByText("AAPL")).toBeInTheDocument();
     expect(screen.getByText("42.3%")).toHaveAttribute("title", "Exact value: 0.4234567890123456789012345678");
     expect(screen.getByText("TTM · 2026-06-30 · v1")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /AAPL Apple Inc\./ })).toHaveAttribute("href", "https://scrooner.example/stock/aapl/");
+    expect(screen.getByRole("link", { name: /AAPL Apple Inc\./ })).toHaveAttribute("href", "https://scrooner.example/stocks/aapl/");
     expect(screen.getByRole("link", { name: "Return on equity (ROE)" })).toHaveAttribute("href", "#definition-roe");
     expect(screen.getByRole("heading", { name: "Metric definitions used" })).toBeInTheDocument();
     expect(screen.getByText(/1 company was excluded for missing data/)).toBeInTheDocument();
     fireEvent.click(screen.getByText("Why matched"));
     expect(screen.getByText(/Matched at 42.3% · TTM · 2026-06-30 · formula v1/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open company filings and source context/ })).toHaveAttribute("href", "https://scrooner.example/stock/aapl/");
+    expect(screen.getByRole("link", { name: /Open company filings and source context/ })).toHaveAttribute("href", "https://scrooner.example/stocks/aapl/");
   });
 
   it("preserves criteria and presents an API failure separately", async () => {
@@ -189,33 +189,34 @@ describe("ScreenerClient", () => {
     expect(screen.getByDisplayValue("30")).toBeInTheDocument();
   });
 
-  it("shows a named loading state while a screen is running", async () => {
+  it("shows a table skeleton while a screen is running", async () => {
     let resolveRequest: (value: Response) => void = () => undefined;
     screenRequest = new Promise<Response>((resolve) => { resolveRequest = resolve; });
-    render(<ScreenerClient siteUrl="https://scrooner.example" />);
+    const { container } = render(<ScreenerClient siteUrl="https://scrooner.example" />);
     await openFilterBuilder();
     fireEvent.click(await screen.findByRole("button", { name: "Run screen" }));
 
-    expect(await screen.findByText("Running your screen")).toBeInTheDocument();
+    await waitFor(() => expect(container.querySelector(".results-section")).toHaveAttribute("aria-busy", "true"));
+    expect(container.querySelector(".ds-table-skeleton")).toBeInTheDocument();
     resolveRequest(response(emptyResult));
     await waitFor(() => expect(screen.getByText("No companies matched every criterion")).toBeInTheDocument());
   });
 
   it("turns supported language into verified results with one click", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
     expect(await screen.findByRole("heading", { name: "companies with ROE above 30%" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
     expect(screen.getByLabelText("Criteria used")).toHaveTextContent("Return on equity (ROE) greater than 30%");
-    expect(screen.queryByRole("textbox", { name: "Describe your screen" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Your criteria" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Run screen" })).not.toBeInTheDocument();
     expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(0);
 
     const resultsHeading = screen.getByRole("heading", { name: "Matching companies" });
-    const builderDisclosure = screen.getByRole("button", { name: /Build with filters/ });
+    const builderDisclosure = screen.getByRole("button", { name: /Exact filters/ });
     expect(resultsHeading.compareDocumentPosition(builderDisclosure) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
     expect(resultsHeading).toHaveFocus();
 
@@ -229,7 +230,7 @@ describe("ScreenerClient", () => {
 
   it("opens the exact filter editor only when requested after results", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
@@ -253,12 +254,12 @@ describe("ScreenerClient", () => {
     };
     askHandler = (body) => body.text.includes("yoy") ? readyInterpretation(resolvedQuery) : ambiguous;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "revenue growth above 10%" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
     expect(await screen.findByText("Clarify this screen")).toBeInTheDocument();
-    expect(screen.getByText(/Nothing ran because/)).toBeInTheDocument();
+    expect(screen.getByText("Choose a meaning to continue.")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Revenue growth (YoY)" }));
     expect(await screen.findByRole("heading", { name: "revenue growth yoy above 10%" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
@@ -281,7 +282,7 @@ describe("ScreenerClient", () => {
       ambiguous: [],
     } satisfies AskResponse;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "roe above 20% and magic number below 5" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
@@ -299,7 +300,7 @@ describe("ScreenerClient", () => {
       ambiguous: [],
     } satisfies AskResponse;
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "companies with a magic number over 5" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
@@ -319,7 +320,7 @@ describe("ScreenerClient", () => {
 
   it("supports the documented command-enter shortcut without a second click", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
     fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
 
@@ -342,7 +343,7 @@ describe("ScreenerClient", () => {
     });
 
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
-    const input = await screen.findByRole("textbox", { name: "Describe your screen" });
+    const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "first slow screen" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
     fireEvent.change(input, { target: { value: "second current screen" } });
