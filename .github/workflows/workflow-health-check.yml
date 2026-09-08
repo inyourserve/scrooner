@@ -37,7 +37,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -e
           failed_any=0
           for wf_file in .github/workflows/*.yml; do
             wf_name=$(basename "$wf_file")
@@ -48,27 +47,7 @@ jobs:
               continue
             fi
             echo "=== $wf_name ==="
-            runs_json=$(gh run list --workflow="$wf_name" --limit 5 --json conclusion,createdAt,event 2>/dev/null || echo "[]")
-            echo "$runs_json" | python3 -c "
-import json, sys
-runs = json.load(sys.stdin)
-scheduled = [r for r in runs if r.get('event') == 'schedule']
-if not scheduled:
-    print('  no scheduled runs found yet (new workflow, or not committed long enough to have run) -- not flagging')
-    sys.exit(0)
-failures = [r for r in scheduled if r.get('conclusion') not in ('success', None)]
-for r in scheduled:
-    print(f\"  {r.get('createdAt')}: {r.get('conclusion')}\")
-if len(failures) == len(scheduled):
-    print('  ALL recent scheduled runs failed')
-    sys.exit(1)
-elif len(failures) >= 3:
-    print(f'  {len(failures)}/{len(scheduled)} recent scheduled runs failed')
-    sys.exit(1)
-"
-            if [ $? -ne 0 ]; then
-              failed_any=1
-            fi
+            python3 .github/scripts/check_workflow_health.py "$wf_name" || failed_any=1
           done
           if [ "$failed_any" -eq 1 ]; then
             echo ""
