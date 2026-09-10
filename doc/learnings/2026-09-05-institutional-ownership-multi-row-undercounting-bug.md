@@ -1,5 +1,7 @@
 # 2026-09-05 — Institutional ownership was severely undercounted: a `distinct on (filer_name)` dedup silently discarded most of every large manager's real position
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 ## What happened
 
 Directly asked to check whether `institutional_ownership_pct` was correct. AAPL's stored value was 36.45% (`institutional_ownership_summary` separately showed a similarly low 36.06%) — both far below AAPL's real, publicly-known institutional ownership of roughly 60-65%.

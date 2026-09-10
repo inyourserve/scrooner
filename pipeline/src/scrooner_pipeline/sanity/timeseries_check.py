@@ -35,6 +35,8 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.yfinance_financials.line_item_map import CONCEPT_FOR_COMPARISON
+
 logger = structlog.get_logger()
 
 SEVERITY_OK = "ok"
@@ -156,9 +158,27 @@ def run_concept(
     MUST be scoped identically to the load, or a single-company rerun
     would wipe every other company's rows for this concept (the exact
     shared-table-write trap pipeline/CLAUDE.md already documents
-    elsewhere in this project)."""
+    elsewhere in this project).
+
+    Checks the *_resolved concept where one exists (CONCEPT_FOR_
+    COMPARISON, same mapping yfinance_financials/compare.py already
+    uses) -- found live 2026-09-09 investigating a real sign_violation
+    (Mohawk Industries, Plexus Corp: both had a spurious negative value
+    under the raw us-gaap:Revenues tag while their real revenue sat
+    correctly under a different, already-mapped tag). The FIX (a
+    company_tag_preference merged into revenue_sanity_resolved) was
+    real and correct, but this checker was still reading the raw,
+    never-fixed `revenue` concept -- meaning a real, applied fix could
+    never clear its own alert, for any of the 5 concepts with a
+    _resolved variant (revenue, gross_profit, cost_of_revenue,
+    operating_expenses, total_debt). Checking the resolved concept
+    instead means canonical_concept_id in timeseries_outlier_check (and
+    therefore analytics.data_incident's metric_or_concept) now reads
+    e.g. 'revenue_sanity_resolved' rather than 'revenue' for these 5 --
+    more transparent about what was actually checked, not a
+    regression."""
     stats = {"considered": 0, SEVERITY_OK: 0, SEVERITY_OUTLIER: 0, SEVERITY_SIGN_VIOLATION: 0}
-    concept_id = _canonical_concept_id(conn, concept_name)
+    concept_id = _canonical_concept_id(conn, CONCEPT_FOR_COMPARISON.get(concept_name, concept_name))
     pairs = _load_yoy_pairs(conn, concept_id, company_id)
     stats["considered"] = len(pairs)
 

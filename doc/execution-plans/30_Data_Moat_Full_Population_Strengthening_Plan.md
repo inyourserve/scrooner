@@ -1,6 +1,6 @@
 # 30 — Data Moat: Full-Population Strengthening Plan
 
-**Status:** Active, execution started 2026-08-24. **Owner:** Founder/Product, executed by pipeline agent.
+**Status:** Effectively complete — status line corrected 2026-09-06 (found stale during a doc-consolidation audit; this had said "Active" since 2026-08-24). All 5 tracks below were subsequently completed via later, more specific work: Ownership & Insider Activity full-population scale-out (2026-08-29, see `doc/learnings/2026-08-29-ownership-scale-out-and-zero-fetch-metrics.md`) and the price-metrics full-population rollout (2026-09-02/03, see root `CLAUDE.md`'s narrative). Treat this doc as historical scoping context, not a live plan. **Owner:** Founder/Product, executed by pipeline agent.
 
 Prompted directly, following the full-project inspection (`doc/audit/2026-08-24_full_project_inspection.md`): "pick the point which is related to data, because data is moat... whatever is required do the needful." Doc 01 names the data moat first, ahead of trust/distribution/UX — this doc scopes and executes closing the data gaps the inspection found, specifically the ones created or exposed by tonight's 174→5,258-company full-population expansion.
 

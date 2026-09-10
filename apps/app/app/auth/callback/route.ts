@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getAuthEnvironmentStatus } from "@/lib/auth/config";
+import { getAppOrigin, getAuthEnvironmentStatus } from "@/lib/auth/config";
 import { getSafeRedirectPath } from "@/lib/auth/redirect";
 import { createClient } from "@/lib/supabase/server";
 
@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
       code,
       flowId ? { flowId } : undefined,
     );
-    if (!error) return NextResponse.redirect(new URL(next, request.url));
+    if (!error) return NextResponse.redirect(new URL(next, getAppOrigin()));
   }
 
-  return NextResponse.redirect(new URL("/login?error=callback", request.url));
+  return NextResponse.redirect(new URL("/login?error=callback", getAppOrigin()));
 }

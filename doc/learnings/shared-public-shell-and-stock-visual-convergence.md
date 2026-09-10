@@ -1,5 +1,7 @@
 # Shared Public Shell and Stock-Page Visual Convergence
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 ## Problem or clarification
 
 After the new homepage shipped, public stock pages still looked like another
@@ -52,4 +54,3 @@ shell structure, spacing, identity, and responsive behavior stay shared.
 
 Shared components prevent brand drift. Shared screenshots and exact viewport
 measurements prove that reuse still works in the rendered product.
-

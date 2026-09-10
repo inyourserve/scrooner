@@ -1,5 +1,7 @@
 # 19 — Scrooner: Ownership, Insider Activity, and Other EDGAR-Native Data Points
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 Doc 18 named ownership/insider data as *the* real differentiator toward a $100/year product. This doc scopes it as a full, buildable execution plan — not a rough survey — after a real, live investigation that corrected its own first draft twice before anything got built. See §1 for that correction story in full; it's kept in, not cleaned up, because the user explicitly asked for "how and when we figured this out."
 
 > **Status:** Canonical for Stages 1-4 (2026-08-17) — built and verified against the full golden-10, not a sample. Stage 5 (DEF 14A / deep 8-K text parsing) remains explicitly deferred, gated on its own unsolved problem (unstructured text, P2 per doc 10). Stage 4's design blocker (CUSIP↔CIK crosswalk) was resolved and then built the same day — see §5 and `doc/learnings/form-13f-cusip-crosswalk.md` for the full investigation plus two real bugs found and fixed during verification. **Owner:** Founder / Product · **Review:** When Stage 5 is picked up, or when a core decision changes.

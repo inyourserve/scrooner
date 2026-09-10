@@ -1,8 +1,10 @@
 # 20 — Scrooner: Remaining Work, End to End
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 Prompted directly: after doc 19 (Ownership & Insider Activity), "plan all the remaining thing end to end." This doc is the single inventory of everything not yet done across all 14 of doc 06's parts, as of this pass — cross-checked against `doc/status/PROGRESS.md` (not re-derived from memory), with a concrete sequencing recommendation and, for each item, whether it's a **build task** (this project can just do it) or a **decision** (needs the user, doc 02's guardrail against silent scope expansion applies).
 
-> **Status:** Superseded for sequencing by [doc 24](24_Scrooner_Final_Build_Backlog.md) (2026-08-17) — doc 24 consolidates this doc plus docs 21-23 into one final ordered backlog. This doc's §3 (open decisions table) is still accurate and worth reading; its §8 sequencing recommendation is not — read doc 24 instead. **Owner:** Founder / Product.
+> **Status: Fully archived (2026-09-06 doc-consolidation audit).** Superseded for sequencing by [doc 24](24_Scrooner_Final_Build_Backlog.md) since 2026-08-17. This doc's §3 (open decisions table) was previously flagged as "still accurate" — that was wrong by 2026-09-06 (it listed the market-price vendor as open; doc 02 resolved that 2026-08-17). §3's genuinely-still-open items are now folded into doc 24's own "Where things stand" and "Decisions this backlog doesn't make" sections, kept current there. **Read doc 24 and doc 02 instead of this file** — kept here only as historical scoping context, not a live reference. **Owner:** Founder / Product.
 
 ---
 

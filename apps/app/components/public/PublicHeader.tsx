@@ -12,7 +12,7 @@ export function PublicHeader({ current, companyHref = "/#company-search", skipHr
       <Link href="/" className="public-brand" aria-label="Scrooner home"><BrandMark /><span className="brand-name">scrooner</span></Link>
       <div className="public-links">
         {item(companyHref, "Company research", current === "home" || current === "company")}
-        {item("/app/screener", "Create screen", false)}
+        {item("/app/screens/new", "Create screen", false)}
         {item("/methodology", "Methodology", current === "methodology")}
         {item("/data-sources", "Data sources", current === "data-sources")}
       </div>

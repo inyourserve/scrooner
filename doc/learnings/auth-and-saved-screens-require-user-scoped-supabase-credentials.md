@@ -1,5 +1,7 @@
 # Authentication and saved screens require user-scoped Supabase credentials
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Frontend activation blocked safely on 2026-08-22  
 > **Scope:** `apps/app` Supabase Auth, shared cookies, and saved-screen CRUD
 

@@ -1,5 +1,7 @@
 # Rendered Design Review — 2026-08-21
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 ## Problem or clarification
 
 The current public site, company page, and application shell follow the approved
@@ -73,4 +75,3 @@ Future design reviews must include real desktop and exact-width mobile renders,
 content-order evaluation, and browser geometry checks. The product should be
 judged by how quickly a user can form and verify a research view—not by how many
 approved components appear on the page.
-

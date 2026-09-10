@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { getAuthEnvironmentStatus } from "@/lib/auth/config";
+import { getAppOrigin, getAuthEnvironmentStatus } from "@/lib/auth/config";
 import { buildLoginHref } from "@/lib/auth/redirect";
 
 export async function updateSession(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function updateSession(request: NextRequest) {
 
   if (!status.enabled) {
     if (isProtectedApi) return Response.json({ detail: "Sign in to use the Scrooner screening tools." }, { status: 401 });
-    if (isProtectedPage) return NextResponse.redirect(new URL(buildLoginHref(`${pathname}${request.nextUrl.search}`), request.url));
+    if (isProtectedPage) return NextResponse.redirect(new URL(buildLoginHref(`${pathname}${request.nextUrl.search}`), getAppOrigin()));
     return response;
   }
 
@@ -46,7 +46,7 @@ export async function updateSession(request: NextRequest) {
     if (isProtectedApi) return Response.json({ detail: "Sign in to use the Scrooner screening tools." }, { status: 401 });
     const destination = `${request.nextUrl.pathname}${request.nextUrl.search}`;
     return NextResponse.redirect(
-      new URL(buildLoginHref(destination), request.url),
+      new URL(buildLoginHref(destination), getAppOrigin()),
     );
   }
 

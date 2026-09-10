@@ -73,26 +73,26 @@ STATEMENT_LINES: list[tuple[str, int, str, str]] = [
     ("income_statement", 2, "Cost of Revenue", "cost_of_revenue_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Gross Profit
     ("income_statement", 3, "Gross Profit", "gross_profit_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Cost of Revenue
     ("income_statement", 4, "Operating Expenses", "operating_expenses_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Gross Profit - Operating Income
-    ("income_statement", 5, "Operating Income", "operating_income"),
-    ("income_statement", 6, "Interest Expense", "interest_expense"),
-    ("income_statement", 7, "Income Before Tax", "income_before_tax"),
-    ("income_statement", 8, "Income Tax Expense", "income_tax_expense"),
-    ("income_statement", 9, "Net Income", "net_income"),
-    ("income_statement", 10, "Diluted EPS", "diluted_eps"),
-    ("balance_sheet", 1, "Cash and Equivalents", "cash_and_equivalents"),
-    ("balance_sheet", 2, "Current Assets", "current_assets"),
-    ("balance_sheet", 3, "Property, Plant & Equipment", "ppe_net"),
-    ("balance_sheet", 4, "Total Assets", "total_assets"),
-    ("balance_sheet", 5, "Current Liabilities", "current_liabilities"),
+    ("income_statement", 5, "Operating Income", "operating_income_resolved"),  # migration 0059, 2026-09-09 -- adds conflict-fill (see conflict_resolution.py)
+    ("income_statement", 6, "Interest Expense", "interest_expense_resolved"),  # migration 0059, 2026-09-09
+    ("income_statement", 7, "Income Before Tax", "income_before_tax_resolved"),  # migration 0059, 2026-09-09
+    ("income_statement", 8, "Income Tax Expense", "income_tax_expense_resolved"),  # migration 0059, 2026-09-09
+    ("income_statement", 9, "Net Income", "net_income_resolved"),  # migration 0059, 2026-09-09
+    ("income_statement", 10, "Diluted EPS", "diluted_eps_resolved"),  # migration 0059, 2026-09-09
+    ("balance_sheet", 1, "Cash and Equivalents", "cash_and_equivalents_resolved"),  # migration 0059, 2026-09-09
+    ("balance_sheet", 2, "Current Assets", "current_assets_resolved"),  # migration 0059, 2026-09-09
+    ("balance_sheet", 3, "Property, Plant & Equipment", "ppe_net_resolved"),  # migration 0059, 2026-09-09
+    ("balance_sheet", 4, "Total Assets", "total_assets_resolved"),  # migration 0059, 2026-09-09
+    ("balance_sheet", 5, "Current Liabilities", "current_liabilities_resolved"),  # migration 0059, 2026-09-09
     ("balance_sheet", 6, "Total Debt", "total_debt_resolved"),  # doc 40, 2026-09-02 -- prefers combined tag, falls back to split-tag sum
-    ("balance_sheet", 7, "Total Liabilities", "total_liabilities"),
-    ("balance_sheet", 8, "Stockholders' Equity", "stockholders_equity"),
-    ("cash_flow", 1, "Cash from Operations", "cfo"),
-    ("cash_flow", 2, "Capital Expenditures", "capex"),
-    ("cash_flow", 3, "Cash from Investing", "cash_flow_investing"),
-    ("cash_flow", 4, "Cash from Financing", "cash_flow_financing"),
-    ("cash_flow", 5, "Dividends Paid", "dividends_paid"),
-    ("cash_flow", 6, "Share Buybacks", "share_buybacks"),
+    ("balance_sheet", 7, "Total Liabilities", "total_liabilities_resolved"),  # migration 0059, 2026-09-09
+    ("balance_sheet", 8, "Stockholders' Equity", "stockholders_equity_resolved"),  # migration 0059, 2026-09-09
+    ("cash_flow", 1, "Cash from Operations", "cfo_resolved"),  # migration 0059, 2026-09-09
+    ("cash_flow", 2, "Capital Expenditures", "capex_resolved"),  # migration 0059, 2026-09-09
+    ("cash_flow", 3, "Cash from Investing", "cash_flow_investing_resolved"),  # migration 0059, 2026-09-09
+    ("cash_flow", 4, "Cash from Financing", "cash_flow_financing_resolved"),  # migration 0059, 2026-09-09
+    ("cash_flow", 5, "Dividends Paid", "dividends_paid_resolved"),  # migration 0059, 2026-09-09
+    ("cash_flow", 6, "Share Buybacks", "share_buybacks_resolved"),  # migration 0059, 2026-09-09
 ]
 
 

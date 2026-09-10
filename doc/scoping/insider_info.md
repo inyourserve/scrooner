@@ -1,5 +1,7 @@
 # Scrooner: Ownership Page-Section MVP Scope
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Locked (2026-08-25) — a user-supplied product spec, not an execution plan. **Owner:** Founder/Product · **Review:** when the Ownership page section's scope changes. Uploaded directly by the user rather than written as a numbered `NN_Scrooner_...md` doc — left under its original filename rather than renamed/renumbered, since it's a source input other docs (doc 19, doc 21, `doc/reference/36_Scrooner_SEC_Filing_Types_Reference.md`) now cite by this name; renumbering it would break those references for no real benefit. Treat it the same as any other locked scoping doc despite the non-standard filename.
 >
 > **Build status (2026-08-29):** all three subsections' underlying data are built and verified against the golden-10 — Insider (full population, `ownership/insider.py` + `ownership/insider_summary.py`), Institutional Form 13F (two-quarter comparison, `ownership/institutional.py` + `ownership/institutional_summary.py`), Mutual Fund Form N-PORT (two-period comparison, `ownership/mutual_fund.py` + `ownership/mutual_fund_summary.py`).

@@ -1,5 +1,7 @@
 # Form 13F's CUSIP↔CIK crosswalk — the design question doc 19 Stage 4 left open, resolved
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 Doc 19 §5 deferred Stage 4 (Form 13F institutional ownership) behind an explicit unsolved question: "does a usable CUSIP↔CIK crosswalk exist for free?" — because Form 13F's `INFOTABLE` lists holdings by CUSIP, a security identifier this pipeline had never needed before (CIK/ticker only, everywhere else). This was investigated live, not reasoned from memory, prompted by the user asking about screener.in-style shareholding-pattern data before green-lighting more frontend work.
 
 ## What was checked live

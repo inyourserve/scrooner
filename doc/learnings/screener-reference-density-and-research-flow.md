@@ -1,5 +1,7 @@
 # Screener reference: density and company-research flow
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 ## Problem or clarification
 
 The first stock-page redesign matched the homepage's colors, typography, and

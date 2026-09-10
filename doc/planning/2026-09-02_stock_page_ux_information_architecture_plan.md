@@ -1,5 +1,7 @@
 # Stock page UX and information-architecture plan — 2026-09-02
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Planning only. No frontend implementation is authorized by this
 > document itself.
 >
@@ -904,4 +906,3 @@ Do not begin with CSS. Begin with Phase 0 screenshots and a server-rendered
 semantic prototype of the new DOM order. Review the information sequence using
 real AAPL, JPM, NKE, and sparse-company data. Only after the hierarchy works in
 plain HTML should visual styling and responsive refinement begin.
-

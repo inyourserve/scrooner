@@ -35,11 +35,31 @@ from scrooner_pipeline.ai_query.interpreter import AmbiguityNote, Interpretation
 from scrooner_pipeline.screener.schema import CategoricalPredicate, MetricPredicate, ScreenQuery
 
 TOP_BOTTOM_RE = re.compile(r"^(top|bottom)\s+(\d+)\s+(?:by\s+)?(.+)$", re.IGNORECASE)
-BETWEEN_RE = re.compile(r"^(.*?)\s+between\s+([\d.]+)(%)?\s+and\s+([\d.]+)(%)?$", re.IGNORECASE)
+
+# Magnitude suffixes -- added 2026-09-10 alongside widening the Screener's
+# catalog to price-dependent metrics (market_cap, ev_ebitda, ...): every
+# one of those is naturally a huge number, and no real investor types
+# "market cap over 500000000000" -- they type "500 billion" or "500B".
+# Longest-first so alternation tries "billion" before the single-letter
+# "b" would otherwise match first and leave "illion" dangling. Values not
+# in this grammar (e.g. a bare percentage-metric threshold) are
+# unaffected -- the suffix group is optional.
+_MAGNITUDE_SUFFIXES: dict[str, int] = {
+    "thousand": 1_000, "k": 1_000,
+    "million": 1_000_000, "mn": 1_000_000, "m": 1_000_000,
+    "billion": 1_000_000_000, "bn": 1_000_000_000, "b": 1_000_000_000,
+    "trillion": 1_000_000_000_000, "tn": 1_000_000_000_000, "t": 1_000_000_000_000,
+}
+_MAGNITUDE_PATTERN = "|".join(sorted(_MAGNITUDE_SUFFIXES, key=len, reverse=True))
+NUMBER_RE = rf"\$?([\d,]*\.?\d+)\s*({_MAGNITUDE_PATTERN})?"
+VALUE_RE = re.compile(rf"^{NUMBER_RE}(%)?$", re.IGNORECASE)
+BETWEEN_RE = re.compile(rf"^(.*?)\s+between\s+{NUMBER_RE}(%)?\s+and\s+{NUMBER_RE}(%)?$", re.IGNORECASE)
 
 
-def _parse_value(number_str: str, has_percent: bool) -> Decimal:
-    value = Decimal(number_str)
+def _parse_value(number_str: str, magnitude: str | None, has_percent: bool) -> Decimal:
+    value = Decimal(number_str.replace(",", ""))
+    if magnitude:
+        value *= _MAGNITUDE_SUFFIXES[magnitude.lower()]
     return value / Decimal(100) if has_percent else value
 
 
@@ -137,10 +157,10 @@ def _parse_clause(clause: str) -> tuple[MetricPredicate | None, CategoricalPredi
             return None, None, None, AmbiguityNote(metric_phrase, candidates)
         if metric_name is None:
             return None, None, clause, None
-        m = re.match(r"^([\d.]+)(%)?$", value_phrase)
+        m = VALUE_RE.match(value_phrase)
         if not m:
             return None, None, clause, None
-        value = _parse_value(m.group(1), bool(m.group(2)))
+        value = _parse_value(m.group(1), m.group(2), bool(m.group(3)))
         return MetricPredicate(metric_name=metric_name, operator=op, value=value), None, None, None
 
     return None, None, clause, None
@@ -153,7 +173,7 @@ def interpret(text: str) -> InterpretationResult:
 
     between_match = BETWEEN_RE.match(text)
     if between_match:
-        metric_phrase, low_str, low_pct, high_str, high_pct = between_match.groups()
+        metric_phrase, low_str, low_mag, low_pct, high_str, high_mag, high_pct = between_match.groups()
         metric_name, candidates = _lookup_metric(metric_phrase)
         if candidates:
             return InterpretationResult(
@@ -163,8 +183,8 @@ def interpret(text: str) -> InterpretationResult:
             )
         if metric_name is None:
             return InterpretationResult(query=None, explanation="Could not recognize the metric.", unrecognized=[metric_phrase.strip()])
-        low = _parse_value(low_str, bool(low_pct))
-        high = _parse_value(high_str, bool(high_pct))
+        low = _parse_value(low_str, low_mag, bool(low_pct))
+        high = _parse_value(high_str, high_mag, bool(high_pct))
         predicate = MetricPredicate(metric_name=metric_name, operator="between", value_range=(low, high))
         query = ScreenQuery(metric_predicates=[predicate])
         explanation = f"Filtering for: {metric_name} between {low} and {high}."

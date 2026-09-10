@@ -1,5 +1,7 @@
 # 16 — Results-first, simple-language screener
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Implemented and interaction-tested · **Date:** 2026-08-22  
 > **Reference inputs:** `doc/html/new-screen.html`, `doc/html/after-screener.html`  
 > **Product surface:** `app.scrooner.com/screener` (Next.js)

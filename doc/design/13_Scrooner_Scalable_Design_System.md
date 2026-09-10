@@ -1,5 +1,7 @@
 # 13 — Scrooner scalable design system
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Implemented foundation · **Date:** 2026-08-21  
 > **Applies to:** `scrooner.com` (Astro) and `app.scrooner.com` (Next.js)  
 > **Source of truth:** `packages/design-system/src/`  

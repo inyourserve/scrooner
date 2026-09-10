@@ -13,6 +13,7 @@ import typer
 from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.screener.query import run_query
 from scrooner_pipeline.screener.schema import ScreenQuery
+from scrooner_pipeline.screener.snapshot import build_snapshot
 
 app = typer.Typer()
 logger = structlog.get_logger()
@@ -31,6 +32,19 @@ def run_cmd(query_json: str = typer.Argument(..., help="ScreenQuery as a JSON st
     with get_connection() as conn:
         result = run_query(conn, query)
     typer.echo(json.dumps(result, default=_default, indent=2))
+
+
+@app.command("build-snapshot")
+def build_snapshot_cmd() -> None:
+    """Rebuild analytics.company_screening_snapshot from metric_value.
+
+    Run after any full or incremental Mapper pass -- the Screener never
+    reads metric_value directly once this exists, so a stale snapshot is
+    the only way screen results could lag reality.
+    """
+    with get_connection() as conn:
+        result = build_snapshot(conn)
+    typer.echo(json.dumps(result, indent=2))
 
 
 if __name__ == "__main__":

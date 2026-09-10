@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Pencil, Play, Trash2 } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { ArrowRight, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { Dialog } from "@/components/ui/Dialog";
 import { Field } from "@/components/ui/Field";
 import { EmptyState } from "@/components/scrooner/EmptyState";
-import { SAVED_QUERY_KEY, savedScreensApi } from "@/lib/saved-screens/client";
+import { savedScreensApi } from "@/lib/saved-screens/client";
 import type { SavedScreen } from "@/lib/saved-screens/types";
 import styles from "./saved-screens.module.css";
 
@@ -21,10 +20,9 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short", year: "numeric" }).format(new Date(value));
 }
 
-export function SavedScreensClient() {
-  const router = useRouter();
-  const [screens, setScreens] = useState<SavedScreen[]>([]);
-  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+export function SavedScreensClient({ initialScreens }: { initialScreens: SavedScreen[] }) {
+  const [screens, setScreens] = useState<SavedScreen[]>(initialScreens);
+  const [state, setState] = useState<"loading" | "ready" | "error">("ready");
   const [message, setMessage] = useState("");
   const [renaming, setRenaming] = useState<SavedScreen | null>(null);
   const [name, setName] = useState("");
@@ -41,25 +39,6 @@ export function SavedScreensClient() {
       setState("error");
       setMessage(error instanceof Error ? error.message : "Saved screens could not be loaded.");
     }
-  }
-
-  useEffect(() => {
-    let active = true;
-    void savedScreensApi.list().then((items) => {
-      if (!active) return;
-      setScreens(items);
-      setState("ready");
-    }).catch((error: unknown) => {
-      if (!active) return;
-      setState("error");
-      setMessage(error instanceof Error ? error.message : "Saved screens could not be loaded.");
-    });
-    return () => { active = false; };
-  }, []);
-
-  function run(screen: SavedScreen) {
-    window.sessionStorage.setItem(SAVED_QUERY_KEY, JSON.stringify(screen.query));
-    router.push("/app/screener?saved=1");
   }
 
   async function rename(event: FormEvent) {
@@ -101,26 +80,25 @@ export function SavedScreensClient() {
     <>
       {message && <p className={styles.status} role="status">{message}</p>}
       {screens.length === 0 ? (
-        <EmptyState title="No saved screens yet" description="Build a screen and save its criteria to create your research library." action={<Button asChild size="small" variant="secondary"><Link href="/app/screener">Build a screen</Link></Button>} />
+        <EmptyState title="No saved screens yet" description="Build a screen and save its criteria to create your research library." action={<Button asChild size="small" variant="secondary"><Link href="/app/screens/new">Build a screen</Link></Button>} />
       ) : (
         <section className={styles.library} aria-labelledby="screen-library-title">
           <header className={styles.libraryHeader}>
             <div><h2 id="screen-library-title">Your library</h2><p>{screens.length} saved {screens.length === 1 ? "screen" : "screens"}</p></div>
-            <span className={styles.freshness}>Runs on latest data</span>
+            <span className={styles.freshness}>Saved results</span>
           </header>
           <ul className={styles.list}>
             {screens.map((screen) => {
               const count = criterionCount(screen);
               return (
                 <li className={styles.item} key={screen.id}>
-                  <button className={styles.primaryAction} type="button" onClick={() => run(screen)} aria-label={`Run ${screen.name}`}>
-                    <span className={styles.playMark} aria-hidden="true"><Play size={15} fill="currentColor" /></span>
+                  <Link className={styles.primaryAction} href={`/app/screens/${screen.slug}`} aria-label={`Open ${screen.name}`}>
                     <span className={styles.screenIdentity}>
                       <strong>{screen.name}</strong>
                       <span>{count} {count === 1 ? "criterion" : "criteria"}{screen.query.sort_by ? <> · Sort: <code>{screen.query.sort_by}</code></> : null}</span>
                     </span>
-                    <span className={styles.runLabel}>Run <ArrowRight size={14} aria-hidden="true" /></span>
-                  </button>
+                    <span className={styles.runLabel}>Open <ArrowRight size={14} aria-hidden="true" /></span>
+                  </Link>
                   <time className={styles.updated} dateTime={screen.updated_at}>Updated {formatDate(screen.updated_at)}</time>
                   <div className={styles.actions}>
                     <Button size="small" variant="ghost" leadingIcon={<Pencil size={14} aria-hidden="true" />} onClick={() => { setRenaming(screen); setName(screen.name); }}>Rename</Button>

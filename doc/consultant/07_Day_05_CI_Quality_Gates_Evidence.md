@@ -1,5 +1,7 @@
 # Day 5 — CI and Repository Quality-Gate Evidence
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Implementation complete; local gates verified. The first hosted GitHub Actions run remains pending until these changes are pushed.  
 > **Date:** 2026-08-18  
 > **Plan:** `02_Ten_Day_Product_Readiness_Plan.md`, Day 5

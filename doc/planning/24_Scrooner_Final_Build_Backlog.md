@@ -1,5 +1,7 @@
 # 24 — Scrooner: Final Build Backlog
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 One consolidated, ordered backlog before building starts — synthesizes doc 18 (metric tiers), doc 19 (ownership), doc 20 (remaining work), doc 21 (MF holdings/corporate actions), doc 22 (EDGAR evaluation), and doc 23 (signal enhancements) into a single sequence instead of six scattered ones. **Supersedes doc 20 as the "what's left, in what order" reference** — doc 20 predates docs 21-23 and is now stale for that purpose; it stays in place for its own historical record (§2's decision table is still accurate) but this doc is what to read for sequencing going forward.
 
 > **Status:** Canonical (2026-08-17) — this is the plan being executed, not a survey. **Owner:** Founder / Product · **Review:** after each phase closes, update `doc/status/PROGRESS.md` first, same discipline doc 20 already established.
@@ -16,7 +18,7 @@ One consolidated, ordered backlog before building starts — synthesizes doc 18 
 
 Parts 1-7 (Collector → Backend API) are complete. Part 8 (Frontend) has only the company-page MVP — no Screener UI, AI Query UI, auth, or saved-screens UI exists yet; `apps/app` isn't scaffolded. Ownership Stages 1-4 are complete (Form 4, Schedule 13D/13G, Form 13F). Parts 9-14 (User System, Billing, Admin, SEO, Analytics, Infra) haven't started.
 
-Three decisions remain genuinely open and are **not** resolved by this doc (doc 02's guardrail): market-price vendor, LLM vendor for AI Query 6c, free/paid usage limits + pricing tiers. Each has a working stopgap already in place (mock prices, rule-based parser, entitlement schema with no enforced numbers) so nothing below is blocked waiting on them except the items that explicitly say so.
+**Corrected 2026-09-06** (found stale during a doc-consolidation audit — this line still listed the market-price vendor as open, contradicting both doc 02's own register and this doc's own line 35 below): per doc 02's live decision register, the market-price vendor (Alpaca) and the 20-F/40-F scope question are both **resolved**. What's genuinely still open (doc 02's guardrail — not resolved by this doc): LLM vendor for AI Query 6c, free/paid usage limits + final pricing tiers, hosting for recurring Python jobs, public saved-screen indexing rules, legal disclaimers/data licensing review, and which investing decision (compounders / undervalued cash-generative / fast-growing) the first Screener UI should optimize for (doc 27). Each has a working stopgap already in place (rule-based parser, entitlement schema with no enforced numbers, local/manual job execution, saved screens staying auth-only) so nothing below is blocked waiting on them except the items that explicitly say so.
 
 ---
 
@@ -61,7 +63,7 @@ Needed before "saved screens" or entitlements mean anything to a real user. Supa
 
 ## Decisions this backlog doesn't make
 
-Market-price vendor, LLM vendor (6c), usage limits/pricing tiers, legal/licensing review — exactly as open as doc 20 already left them. None of Phases 1-4 are blocked on any of them.
+**Corrected 2026-09-06** (this line was stale — see the note in "Where things stand" above for what changed). Per doc 02's live register, the genuinely open items this backlog doesn't resolve are: LLM vendor (6c), usage limits/pricing tiers, hosting for recurring Python jobs, public saved-screen indexing rules, legal/licensing review, and which investing decision the first Screener UI (Phase 3) should optimize for. None of Phases 1-4 are blocked on any of them. This folds in doc 20's §3 — see that doc's own note pointing back here.
 
 ## Performance sprint — added 2026-08-28
 

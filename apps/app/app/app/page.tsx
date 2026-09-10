@@ -5,8 +5,8 @@ import { Bell, Bookmark, ChevronRight, Search, Telescope } from "lucide-react";
 export const metadata: Metadata = { title: "Research workspace — Scrooner" };
 
 const actions = [
-  { href: "/app/screener", icon: Search, title: "Run a screen", copy: "Find companies using reported fundamentals." },
-  { href: "/app/saved-screens", icon: Bookmark, title: "Saved screens", copy: "Return to criteria you use repeatedly." },
+  { href: "/app/screens/new", icon: Search, title: "Run a screen", copy: "Find companies using reported fundamentals." },
+  { href: "/app/screens", icon: Bookmark, title: "Saved screens", copy: "Return to criteria you use repeatedly." },
   { href: "/app/watchlists", icon: Telescope, title: "Watchlists", copy: "Organize companies you want to follow." },
   { href: "/app/alerts", icon: Bell, title: "Alerts", copy: "Review the monitoring workspace." },
 ];
@@ -17,7 +17,7 @@ export default function AppHome() {
       <p className="workspace-eyebrow">Research workspace</p>
       <h1>Overview</h1>
       <p>Screen the market, keep useful criteria, and organize companies for deeper review.</p>
-      <Link className="ds-button ds-button--primary" href="/app/screener">Start a screen <ChevronRight size={15} aria-hidden="true" /></Link>
+      <Link className="ds-button ds-button--primary" href="/app/screens/new">Start a screen <ChevronRight size={15} aria-hidden="true" /></Link>
     </header>
     <section className="workspace-section" aria-labelledby="workspace-actions-title">
       <div className="workspace-section__heading"><div><p className="workspace-eyebrow">Workspace</p><h2 id="workspace-actions-title">Continue your research</h2></div></div>

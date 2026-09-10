@@ -16,7 +16,7 @@ the database to validate itself).
 """
 
 from decimal import Decimal
-from typing import Literal
+from typing import Literal, Union
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -54,6 +54,34 @@ class MetricPredicate(BaseModel):
         return self
 
 
+class PredicateGroup(BaseModel):
+    """A boolean-tree filter node (doc/faster-loading/fast.md, 2026-09-10 --
+    supersedes doc 14's original "AND-of-predicates only" boundary, see
+    doc/adr/0001-screener-redis-cache-and-boolean-logic.md). Optional and
+    additive: a ScreenQuery with no `where` behaves exactly as before
+    (metric_predicates/categorical_predicates combined with AND), so every
+    existing caller (ai_query, saved screens, doc 14b's golden-set tests)
+    is unaffected.
+
+    Ranked operators (top_n/bottom_n) do not belong inside a boolean tree
+    -- they select a fixed-size slice of whatever the tree already
+    filtered to, not a per-company true/false test -- so they stay in
+    ScreenQuery.metric_predicates only; a leaf here rejects them.
+    """
+
+    op: Literal["and", "or", "not"]
+    predicates: list[Union["MetricPredicate", "CategoricalPredicate", "PredicateGroup"]] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _check_shape(self) -> "PredicateGroup":
+        if self.op == "not" and len(self.predicates) != 1:
+            raise ValueError("'not' takes exactly one child predicate")
+        for p in self.predicates:
+            if isinstance(p, MetricPredicate) and p.operator in RANKED_OPERATORS:
+                raise ValueError(f"operator {p.operator!r} is not valid inside a boolean-tree 'where' clause")
+        return self
+
+
 class CategoricalPredicate(BaseModel):
     # "sector" added 2026-08-21 (doc 10 Sec 12/doc 26 Sec 2.8/doc 28) --
     # core.company.sector, a curated SIC-range bucket
@@ -68,6 +96,15 @@ class CategoricalPredicate(BaseModel):
 class ScreenQuery(BaseModel):
     metric_predicates: list[MetricPredicate] = []
     categorical_predicates: list[CategoricalPredicate] = []
+    # Boolean-tree filter, additive alongside the two flat lists above
+    # (2026-09-10, doc/adr/0001). When set, `where` is the ONLY thing that
+    # determines which companies pass -- metric_predicates/
+    # categorical_predicates are ignored for filtering in that case (a
+    # non-ranked entry in metric_predicates alongside `where` would be
+    # ambiguous: is it AND'd in, or dropped? Reject rather than guess --
+    # see the validator below). Ranked ops (top_n/bottom_n) still work
+    # alongside `where`: they rank whatever the tree already filtered to.
+    where: PredicateGroup | None = None
     include_inactive: bool = False
     sort_by: str | None = None
     sort_desc: bool = True
@@ -82,3 +119,18 @@ class ScreenQuery(BaseModel):
         if len(ranked) > 1:
             raise ValueError("at most one top_n/bottom_n predicate is supported per query")
         return self
+
+    @model_validator(mode="after")
+    def _check_where_not_mixed_with_flat_filters(self) -> "ScreenQuery":
+        if self.where is not None:
+            non_ranked = [p for p in self.metric_predicates if p.operator not in RANKED_OPERATORS]
+            if non_ranked or self.categorical_predicates:
+                raise ValueError(
+                    "cannot combine 'where' with non-ranked metric_predicates or "
+                    "categorical_predicates -- put every filter condition inside 'where' "
+                    "(top_n/bottom_n predicates are still allowed alongside it)"
+                )
+        return self
+
+
+PredicateGroup.model_rebuild()

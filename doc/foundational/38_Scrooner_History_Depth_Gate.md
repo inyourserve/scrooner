@@ -20,7 +20,7 @@ Prompted directly (2026-08-30) after a real, expensive pattern repeated three ti
 
 | Source | Real refiling cadence (checked live) | Window chosen | Evidence |
 |---|---|---|---|
-| Form 4 (insider transactions) | Per-transaction, no fixed cadence | 12 months rolling | Matches `apps/site`'s own display (15 most recent transactions shown) — even 12 months is generous headroom, not tight |
+| Form 4 (insider transactions) | Per-transaction, no fixed cadence | 12 months rolling | Matches `apps/app`'s own display (15 most recent transactions shown) — even 12 months is generous headroom, not tight |
 | Form 13F (institutional ownership) | Mandatory every quarter, every manager, no exceptions | 2 consecutive quarters | `insider_info.md`'s own locked MVP spec; mandatory cadence guarantees freshness at that interval |
 | Form N-PORT (mutual fund ownership) | Mandatory every reporting period, every fund | 2 consecutive periods | Same reasoning as Form 13F |
 | Schedule 13D/13G (beneficial ownership, >5% holders) | **No mandatory refiling if unchanged** | 3 years | Found live 2026-08-30: 73% of all (company, filer) relationships in the *unbounded* live table had their most-recent filing >3 years old — almost certainly genuinely-closed positions, not stale-but-current ones. A 1-year bound was tested against the same data and found wrong: only 1 of 53,067 relationships had a most-recent filing within the last year, which would make a 1-year window actively harmful, not just conservative, given 13G's own no-change exemption |

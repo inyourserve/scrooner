@@ -1,5 +1,7 @@
 # 14 — Top 10 design execution evidence
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Complete · **Date:** 2026-08-22  
 > **Scope:** `scrooner.com` Astro surfaces and `app.scrooner.com` Next.js product surfaces  
 > **System contract:** [`13_Scrooner_Scalable_Design_System.md`](13_Scrooner_Scalable_Design_System.md)

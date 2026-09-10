@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { BrandMark } from "@/components/ui/BrandMark";
 import { CompanySearch } from "@/components/public/CompanySearch";
 import { PublicFooter } from "@/components/public/PublicFooter";
@@ -29,7 +30,16 @@ async function getQuickPicks() {
   }
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ code?: string; next?: string }> }) {
+  const params = await searchParams;
+  // Supabase falls back to the configured Site URL when a local callback URL
+  // is not yet allow-listed. Recover that response instead of showing the
+  // homepage with an OAuth code in its address bar.
+  if (params.code) {
+    const callbackParams = new URLSearchParams({ code: params.code });
+    if (params.next) callbackParams.set("next", params.next);
+    redirect(`/auth/callback?${callbackParams}`);
+  }
   const quickPicks = await getQuickPicks();
   return <div className="public-site"><PublicHeader current="home" skipHref="#company-search" /><main className="home-main" id="main-content">
     <div className="hero-wordmark" aria-label="Scrooner"><span className="name">scrooner</span><BrandMark className="hero-research-mark" /></div>
@@ -37,6 +47,6 @@ export default async function Home() {
     <p className="subtag">Explore SEC-derived financials, ratios, ownership, and filings—or use the US stock screener to find companies that match your criteria.</p>
     <div id="company-search"><CompanySearch variant="hero" /></div>
     {quickPicks.length > 0 && <div className="quick-picks" aria-label="Popular company pages"><span className="label">Or analyse:</span>{quickPicks.map((company) => <Link className="ds-chip company-chip" key={company.ticker} href={`/stocks/${company.ticker.toLowerCase()}`}>{names[company.ticker.toUpperCase()] ?? company.company_name}<span className="ticker">{company.ticker}</span></Link>)}</div>}
-    <p className="screener-path">Have an investment thesis? <Link href="/app/screener">Create a stock screen →</Link></p>
+    <p className="screener-path">Have an investment thesis? <Link href="/app/screens/new">Create a stock screen →</Link></p>
   </main><PublicFooter companyHref={quickPicks[0] ? `/stocks/${quickPicks[0].ticker.toLowerCase()}` : "/"} /></div>;
 }

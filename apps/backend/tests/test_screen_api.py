@@ -17,11 +17,14 @@ def unused_connection():
 @pytest.mark.unit
 def test_screen_endpoint_preserves_full_decimal_precision(monkeypatch):
     precise = Decimal("0.1234567890123456789012345678")
-    monkeypatch.setattr(screen, "get_connection", unused_connection)
+    monkeypatch.setattr(screen, "get_pooled_connection", unused_connection)
+    monkeypatch.setattr(screen, "get_cached_dataset_version", lambda _conn: 1)
+    monkeypatch.setattr(screen, "get_cached_result", lambda _hash: None)
+    monkeypatch.setattr(screen, "set_cached_result", lambda _hash, _result: None)
     monkeypatch.setattr(
         screen,
         "run_query",
-        lambda _conn, _query: {
+        lambda _conn, _query, dataset_version=None: {
             "matched": [{"cik": "0001", "metrics": {"roe": {"value": precise}}}],
             "excluded_missing_data": [],
             "excluded_inactive": [],
@@ -88,7 +91,12 @@ def test_metric_catalog_exposes_formula_and_ui_contract(monkeypatch):
 
 @pytest.mark.unit
 def test_current_presentation_catalog_has_no_generic_fallbacks():
-    assert len(METRIC_PRESENTATION) == 47
+    # 82 as of 2026-09-10: widened from 47 the same day the Screener's
+    # catalog stopped excluding price-dependent metrics (market_cap,
+    # trailing_pe, etc.) -- this number is a change-detector, not a
+    # magic constant; bump it deliberately when a new metric_definition
+    # is added, same as before.
+    assert len(METRIC_PRESENTATION) == 82
     for metric_name in METRIC_PRESENTATION:
         presentation = presentation_for(metric_name)
         assert presentation.category != "Other"
@@ -125,11 +133,14 @@ def test_ask_can_interpret_and_run_a_valid_screen_in_one_request(monkeypatch):
     }
     executed = []
 
-    def run_once(_conn, query):
+    def run_once(_conn, query, dataset_version=None):
         executed.append(query)
         return expected_result
 
-    monkeypatch.setattr(screen, "get_connection", unused_connection)
+    monkeypatch.setattr(screen, "get_pooled_connection", unused_connection)
+    monkeypatch.setattr(screen, "get_cached_dataset_version", lambda _conn: 1)
+    monkeypatch.setattr(screen, "get_cached_result", lambda _hash: None)
+    monkeypatch.setattr(screen, "set_cached_result", lambda _hash, _result: None)
     monkeypatch.setattr(screen, "run_query", run_once)
     monkeypatch.setattr(screen, "_log_usage", lambda *_args, **_kwargs: None)
 
@@ -143,7 +154,7 @@ def test_ask_can_interpret_and_run_a_valid_screen_in_one_request(monkeypatch):
     assert len(executed) == 1
     assert executed[0].metric_predicates[0].metric_name == "roe"
     assert body["query"] == body["recognized_query"]
-    assert body["result"] == expected_result
+    assert body["result"] == {**expected_result, "cache_hit": False}
 
 
 @pytest.mark.unit

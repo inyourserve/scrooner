@@ -118,8 +118,9 @@ def test_query_output_is_deterministic_includes_sort_lineage_and_keeps_nulls_las
         (4, 10): resolved_row(None, 4),
     }
     monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roe": 10})
+    monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: 1)
     monkeypatch.setattr(query_module, "_load_candidate_companies", lambda _conn, _include: dict(companies))
-    monkeypatch.setattr(query_module, "resolve_most_recent_values", lambda _conn, _ids: resolved)
+    monkeypatch.setattr(query_module, "_load_snapshot_values", lambda _conn, _ids, _version: resolved)
     query = ScreenQuery(sort_by="roe", sort_desc=True)
 
     first = query_module.run_query(InactiveConnection(), query)
@@ -144,8 +145,9 @@ def test_ranked_query_returns_rank_order_not_database_order(monkeypatch):
         (3, 10): resolved_row(Decimal("2"), 3),
     }
     monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roe": 10})
+    monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: 1)
     monkeypatch.setattr(query_module, "_load_candidate_companies", lambda _conn, _include: dict(companies))
-    monkeypatch.setattr(query_module, "resolve_most_recent_values", lambda _conn, _ids: resolved)
+    monkeypatch.setattr(query_module, "_load_snapshot_values", lambda _conn, _ids, _version: resolved)
     query = ScreenQuery(metric_predicates=[MetricPredicate(metric_name="roe", operator="top_n", n=2)])
 
     result = query_module.run_query(InactiveConnection(), query)

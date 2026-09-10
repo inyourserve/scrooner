@@ -24,7 +24,7 @@ it means predictable, understandable and dependable.
 | One source of truth              | Each decision, metric definition and interface contract has one canonical home.     |
 | Vertical slices                  | Finish usable data-to-interface paths instead of half-building every layer.         |
 | Evidence before expansion        | Add features, dependencies and markets only after observed demand.                  |
-| Static/public; dynamic/private   | Use Astro for crawlable content and Next.js for authenticated interaction.          |
+| Server-first public and private | Use Next.js Server Components by default; add client code only for real interaction. |
 | Manual verification is a feature | Inspect filings and edge cases before trusting automation.                          |
 | Low operational burden           | Prefer managed, conventional components a solo founder can run.                     |
 | Kill scope aggressively          | Anything not needed to validate the core job goes to Later or Never.                |

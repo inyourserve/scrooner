@@ -1,8 +1,12 @@
 # Scrooner Design
 
+> **Frontend architecture note (2026-09-05):** Docs 10/13-16 below contain historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 Product-design, UX, interface-system, and implementation-handoff documents
 live in this folder.
 
+- [`frontend-guardrails.md`](frontend-guardrails.md) — **living document, read this first.** The single, current source of truth for frontend conventions (token architecture, color semantics, shared components, icon sizing, button-variant discipline, testing) plus a running postmortem log of real bugs found and their generalizable lesson. Supersedes anything below when they conflict.
+- [`shadcn-system.md`](shadcn-system.md) — the original external design-direction doc (shadcn/Radix primitives, Scrooner-specific component layer, "premium via precision not decoration") that the current implementation is built against. `frontend-guardrails.md` tracks what's actually been done against this doc's recommendations.
 - [`10_Scrooner_Product_Design_Framework.md`](10_Scrooner_Product_Design_Framework.md) — Scrooner's core proposition, experience principles, information architecture, page and journey frameworks, visual system, components, states, accessibility requirements, data/UI contracts, validation plan, and execution sequence. **Reconciled 2026-08-22** against the implemented Astro homepage/company research, Next.js results-first screener, shared design system, responsive render contract, and structural accessibility pass. Remaining auth/saved-screen, global-autocomplete, parser-coverage, lineage, and formal-validation boundaries are marked rather than implied complete.
 - [`13_Scrooner_Scalable_Design_System.md`](13_Scrooner_Scalable_Design_System.md) — implemented cross-application system: package boundaries, token model, primitives, framework adapters, component layering, accessibility/responsive/state contracts, governance, versioning, migration status, and quality gates.
 - [`14_Top_10_Design_Execution_Evidence.md`](14_Top_10_Design_Execution_Evidence.md) — the ranked ten-task hardening pass: executable catalog, expanded primitives and adapters, reusable page/state patterns, extracted public-page styles, accessibility modes, and automated anti-drift gates.

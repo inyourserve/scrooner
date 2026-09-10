@@ -1,5 +1,7 @@
 # 17 — Scrooner Company Page: Screener.in Reference and MVP Plan
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 Backend API is done. This doc does two things: (1) a structural analysis of Screener.in's actual company page (`doc/html/screener.html`, a real saved page for Reliance Industries — not a description from memory, the real markup), section by section, and (2) an honest mapping of each section against what Scrooner's pipeline already has, can build now, or genuinely can't (yet, or ever, for a US-listed company). This is the reference `/stock/{ticker}/` (doc DOCUMENTATION.md §3.2, "the crown jewel") gets built against.
 
 > **Status:** Canonical (2026-08-17) — reference analysis complete; MVP built and verified against real AAPL/JPM/NKE/Block data, including two real edge cases (Block's ticker-change history, NKE's known missing operating income). Live at `/stock/{ticker}/` in `apps/site`. **Owner:** Founder / Product · **Review:** When Screener.in materially changes its own page, or when a mapped section's data readiness changes.

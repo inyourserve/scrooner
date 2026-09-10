@@ -95,19 +95,28 @@ def test_all_expanded_composite_metrics_compute_with_expected_semantics(monkeypa
 
 
 @pytest.mark.unit
-def test_delete_scope_excludes_dependency_metric_ids(monkeypatch):
+def test_upsert_scope_excludes_dependency_metric_ids(monkeypatch):
     """The real 2026-09-03 bug: metric_ids passed in includes both this
     module's real outputs AND the dependency metrics it only reads
     (market_cap, trailing_pe, dividend_yield, fcf, debtor_days,
-    inventory_days, payables_days) -- the delete must never touch the
+    inventory_days, payables_days) -- the write must never touch the
     dependency IDs, since this module has no code path that recomputes
     them, and doing so silently and permanently wipes another module's
     already-correct data on every rerun. `ebitda` moved to OUTPUT_NAMES
     2026-09-08 -- it's now genuinely both (a dependency for its Q1-Q4/FY
     rows, an output for its TTM row), but this metric_definition_id-level
     assertion can't distinguish periods; the real safety is the period_
-    label='TTM' filter in the actual SQL, not tested by this fake
-    connection's recorded params."""
+    label='TTM' scoping in the actual SQL (now via a WHERE-free upsert
+    that only ever inserts rows this function itself built -- see the
+    upsert-vs-delete-then-insert test below for why it's an upsert at
+    all), not tested by this fake connection's recorded params.
+
+    Rewritten 2026-09-10 for the delete-then-insert -> upsert change (a
+    real UniqueViolation race found live: two concurrent invocations for
+    the same company on the same calendar day, since these rows are all
+    anchored on period_start=period_end=date.today()) -- the dependency-
+    isolation property itself is unchanged, just verified against the
+    upserted rows instead of a DELETE's params."""
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
@@ -120,14 +129,42 @@ def test_delete_scope_excludes_dependency_metric_ids(monkeypatch):
 
     expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
 
-    delete_calls = [(sql, params) for sql, params in conn.executed if sql.strip().startswith("delete")]
-    assert len(delete_calls) == 1
-    _sql, params = delete_calls[0]
-    deleted_ids = set(params[1])
+    delete_calls = [(sql, params) for sql, params in conn.executed if sql.strip().lower().startswith("delete")]
+    assert delete_calls == []  # no separate delete step anymore -- upsert is atomic per row
+
+    written_ids = {row["metric_definition_id"] for row in conn.rows}
     dependency_ids = {METRIC_IDS[name] for name in DEPENDENCY_NAMES}
     output_ids = {METRIC_IDS[name] for name in OUTPUT_NAMES}
-    assert deleted_ids == output_ids
-    assert deleted_ids.isdisjoint(dependency_ids)
+    assert written_ids == output_ids
+    assert written_ids.isdisjoint(dependency_ids)
+
+
+@pytest.mark.unit
+def test_write_uses_upsert_not_delete_then_insert(monkeypatch):
+    """Real race found live 2026-09-09/10: this module's rows are anchored
+    on period_start=period_end=date.today(), so two concurrent invocations
+    for the same company on the same day target the identical primary key
+    -- delete-then-insert has a window where one process's INSERT can land
+    between another's DELETE and its own INSERT, raising a real
+    UniqueViolation (confirmed live: 6 companies hit exactly this in one
+    ~16-minute window). An atomic upsert (INSERT ... ON CONFLICT DO
+    UPDATE) closes that window entirely."""
+    monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (None, None))
+    monkeypatch.setattr(expanded_metrics, "_load_quarterly_facts", lambda *_args: {})
+    conn = PriceConnection()
+
+    expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+
+    insert_sqls = [sql for sql, _rows in conn.executemany_calls]
+    assert len(insert_sqls) == 1
+    assert "on conflict" in insert_sqls[0].lower()
+    assert "do update" in insert_sqls[0].lower()
 
 
 @pytest.mark.unit

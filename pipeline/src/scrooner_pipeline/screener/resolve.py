@@ -49,11 +49,23 @@ FUTURE_DATE_GRACE_DAYS = 30  # small buffer, not zero -- avoids excluding a real
 
 
 def load_screenable_metric_catalog(conn: psycopg.Connection) -> dict[str, int]:
-    """metric_name -> metric_definition_id, for the EDGAR-only (non-price)
-    metrics -- doc 14 Sec 5 scopes the screenable catalog to these until
-    the price-dependent metrics have real computed values."""
+    """metric_name -> metric_definition_id, for every active metric --
+    price-dependent ones (Market Cap, P/E, P/S, P/B, Dividend Yield, FCF
+    Yield, EV/EBITDA, EV/Sales, PEG, Buyback Yield, Total Shareholder
+    Yield) included as of 2026-09-10.
+
+    Doc 14 Sec 5 originally scoped this to EDGAR-only metrics "until the
+    price-dependent metrics have real computed values" -- pipeline/
+    CLAUDE.md's own note already anticipated this exact widening ("no
+    screener/ code change needed when that changes"). That's now true:
+    checked live, market_cap has real values for 4,410/5,216 active
+    companies (84.5%), trailing_pe for 3,270 (62.7%) -- real, usable
+    coverage, not a token handful. No code below this function needed to
+    change: the snapshot table, boolean-tree compiler, and citation
+    logic in query.py already treat every metric_definition_id
+    uniformly, price-dependent or not."""
     with conn.cursor() as cur:
-        cur.execute("select metric_name, id from analytics.metric_definition where requires_price = false")
+        cur.execute("select metric_name, id from analytics.metric_definition where status = 'active'")
         return dict(cur.fetchall())
 
 

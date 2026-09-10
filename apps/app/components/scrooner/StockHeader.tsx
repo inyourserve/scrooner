@@ -56,7 +56,7 @@ export function StockHeader({ ticker, companyName, sector, status, price, dayCha
         )}
       </div>
       <div className="stock-hero__actions">
-        <Button asChild size="small"><Link href="/app/screener">Compare in screener</Link></Button>
+        <Button asChild size="small"><Link href="/app/screens/new">Compare in screener</Link></Button>
         {website && (
           <Button asChild size="small" variant="secondary" trailingIcon={<ExternalLink size={16} aria-hidden="true" />}>
             <a href={`https://${website}`} target="_blank" rel="nofollow noopener">Official website</a>

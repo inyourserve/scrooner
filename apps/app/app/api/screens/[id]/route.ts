@@ -5,6 +5,23 @@ export const dynamic = "force-dynamic";
 
 type Context = { params: Promise<{ id: string }> };
 
+export async function GET(request: Request, context: Context) {
+  const unauthorized = await requireApiUser();
+  if (unauthorized) return unauthorized;
+  const { id } = await context.params;
+  const incoming = new URL(request.url);
+  const search = new URLSearchParams();
+  for (const key of ["cursor", "page_size"]) {
+    const value = incoming.searchParams.get(key);
+    if (value) search.set(key, value);
+  }
+  const authorization = request.headers.get("authorization");
+  return proxyBackend(fetch(backendUrl(`/v1/screens/${encodeURIComponent(id)}?${search}`), {
+    cache: "no-store",
+    headers: { accept: "application/json", ...(authorization ? { authorization } : {}) },
+  }));
+}
+
 async function target(request: Request, context: Context, method: "PATCH" | "DELETE") {
   const unauthorized = await requireApiUser();
   if (unauthorized) return unauthorized;

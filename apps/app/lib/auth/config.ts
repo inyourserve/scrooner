@@ -11,6 +11,17 @@ export type AuthEnvironmentStatus = {
   cookieDomain: string | null;
 };
 
+export function getAppOrigin(
+  environment: AuthEnvironment = process.env,
+): string {
+  const configured = environment.NEXT_PUBLIC_SCROONER_URL?.trim();
+  try {
+    return new URL(configured || "http://localhost:3000").origin;
+  } catch {
+    return "http://localhost:3000";
+  }
+}
+
 /**
  * Reports whether the public, user-scoped Supabase Auth configuration exists.
  *

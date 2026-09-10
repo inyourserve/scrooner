@@ -6,8 +6,10 @@ import { savedScreensApi } from "@/lib/saved-screens/client";
 import type { ScreenQueryPayload } from "@/lib/screener/types";
 import { Field } from "@/components/ui/Field";
 import { Popover } from "@/components/ui/Popover";
+import { useRouter } from "next/navigation";
 
-export function SaveScreenButton({ query }: { query: ScreenQueryPayload }) {
+export function SaveScreenButton({ query, runId }: { query: ScreenQueryPayload; runId?: string }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
@@ -19,8 +21,8 @@ export function SaveScreenButton({ query }: { query: ScreenQueryPayload }) {
     if (!clean) { setState("error"); setMessage("Enter a name for this screen."); return; }
     setState("saving");
     try {
-      await savedScreensApi.create(clean, query);
-      setState("saved"); setMessage(`“${clean}” was saved.`); setName(""); setOpen(false);
+      const saved = await savedScreensApi.create(clean, query, runId);
+      router.push(`/app/screens/${saved.slug}`);
     } catch (error) {
       setState("error"); setMessage(error instanceof Error ? error.message : "The screen could not be saved.");
     }

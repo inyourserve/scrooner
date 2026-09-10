@@ -1,5 +1,7 @@
 # 25 — Scrooner: Real Market-Price Integration (Alpaca) Execution Plan
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 Doc 02's market-price vendor decision resolved 2026-08-17: Alpaca Markets, free/Basic tier for now. This is the execution plan for Company Master 4b's real-data follow-on — the piece doc 13 deliberately left as a stub pending this exact decision. Built against the two endpoints requested for review, read directly (not from memory) and then live-tested against the real Alpaca account before this plan was written, same discipline as every prior vendor/API evaluation in this project.
 
 > **Status:** Built and verified against the golden-10 (2026-08-17). Original plan below is unchanged except where marked — three explicit user refinements (delayed_sip feed instead of iex, a genuinely separate table instead of `core.market_price`'s `is_mock` flag, daily/on-demand cadence for now) were incorporated during the build, and one real bug was found and fixed during verification (see §7). **Owner:** Founder / Product.

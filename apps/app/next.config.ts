@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/stock/:ticker", destination: "/stocks/:ticker", permanent: true },
+      { source: "/app/screener", destination: "/app/screens/new", permanent: true },
+      { source: "/app/saved-screens", destination: "/app/screens", permanent: true },
+      { source: "/saved-screens", destination: "/app/screens", permanent: true },
     ];
   },
 };

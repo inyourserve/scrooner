@@ -1,5 +1,7 @@
 # Company-page latency is round trips, not metric calculation
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 **Problem or clarification**
 
 The company page felt slow enough to suggest that every metric might be

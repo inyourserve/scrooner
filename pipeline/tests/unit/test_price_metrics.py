@@ -20,13 +20,16 @@ class PriceCursor:
         self.conn.executed.append((" ".join(sql.split()), params))
 
     def executemany(self, sql, rows):
-        self.conn.rows.extend(dict(row) for row in rows)
+        rows = [dict(row) for row in rows]
+        self.conn.rows.extend(rows)
+        self.conn.executemany_calls.append((" ".join(sql.split()), rows))
 
 
 class PriceConnection:
     def __init__(self):
         self.executed = []
         self.rows = []
+        self.executemany_calls = []
 
     def cursor(self):
         return PriceCursor(self)

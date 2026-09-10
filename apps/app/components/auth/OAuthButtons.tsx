@@ -1,7 +1,5 @@
-"use client";
-
-import { useState, type ReactNode } from "react";
-import { createClient } from "@/lib/supabase/client";
+import type { ReactNode } from "react";
+import { loginWithOAuth } from "@/app/auth/actions";
 import { Button } from "@/components/ui/Button";
 
 type Provider = "google" | "apple";
@@ -29,58 +27,20 @@ function AppleIcon() {
 
 const ICON: Record<Provider, () => ReactNode> = { google: GoogleIcon, apple: AppleIcon };
 
-// SSO is the code half of the feature -- Google and Apple both still need
-// to be turned on in the Supabase project (Authentication > Providers)
-// with real OAuth client credentials from Google Cloud Console / Apple
-// Developer before this actually completes a sign-in. Until then, clicking
-// a button here fails gracefully with a visible error instead of a silent
-// redirect loop.
+// Providers must also be enabled in Supabase with their OAuth credentials.
 export function OAuthButtons({ redirectUrl = "/app" }: { redirectUrl?: string }) {
-  const [pending, setPending] = useState<Provider | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function signInWith(provider: Provider) {
-    setError(null);
-    setPending(provider);
-    try {
-      const supabase = createClient();
-      const { error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectUrl)}` },
-      });
-      if (oauthError) {
-        setError(`${LABEL[provider]} sign-in isn't available right now.`);
-        setPending(null);
-      }
-      // On success the browser is already navigating to the provider --
-      // there's nothing further to render here.
-    } catch {
-      setError("Something went wrong starting sign-in. Try again.");
-      setPending(null);
-    }
-  }
-
   return (
     <div className="auth-oauth">
       {(["google", "apple"] as const).map((provider) => {
         const Icon = ICON[provider];
         return (
-          <Button
-            key={provider}
-            type="button"
-            variant="secondary"
-            fullWidth
-            leadingIcon={<Icon />}
-            loading={pending === provider}
-            loadingLabel="Redirecting…"
-            disabled={pending !== null && pending !== provider}
-            onClick={() => signInWith(provider)}
-          >
-            Continue with {LABEL[provider]}
-          </Button>
+          <form action={loginWithOAuth.bind(null, provider, redirectUrl)} key={provider}>
+            <Button type="submit" variant="secondary" fullWidth leadingIcon={<Icon />}>
+              Continue with {LABEL[provider]}
+            </Button>
+          </form>
         );
       })}
-      {error && <p className="auth-message auth-message--error" role="alert">{error}</p>}
       <div className="auth-divider"><span>or continue with email</span></div>
     </div>
   );

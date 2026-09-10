@@ -55,15 +55,15 @@ Pages fall into two clearly different jobs, so the frontend is split accordingly
 
 | Surface | Pages | Framework | Why |
 |---|---|---|---|
-| **Static / SEO** | Company pages, saved/shared screens, marketing pages | **Astro** | Zero JS by default, islands only where needed. These are the pages Google indexes and the pages the SEO growth engine depends on — Astro gives them the lowest possible weight and the highest realistic Core Web Vitals ceiling. |
+| **Static / SEO** | Company pages, saved/shared screens, marketing pages | **Next.js** | Zero JS by default, islands only where needed. These are the pages Google indexes and the pages the SEO growth engine depends on — Next.js gives them the lowest possible weight and the highest realistic Core Web Vitals ceiling. |
 | **Dynamic / logged-in** | Screener tool, screen builder, account, billing | **Next.js (App Router)** | Genuinely stateful, interactive, behind auth. Next's app ecosystem (routing, server actions, mature Supabase/Stripe integrations) fits an application, not a content page. |
 
-Split across **two subdomains**: `scrooner.com` (Astro) and `app.scrooner.com` (Next.js) — see 3.1 for why this is safe for SEO here specifically, and how login carries across both.
+Split across **two subdomains**: `scrooner.com` (Next.js) and `scrooner.com/app` (Next.js) — see 3.1 for why this is safe for SEO here specifically, and how login carries across both.
 
 | Layer | Choice | Why |
 |---|---|---|
-| Shared UI | **Tailwind CSS + a shared component package** | React components in `packages/ui` render as Next.js components directly and as Astro islands (`client:load`/`client:visible`) where interactivity is needed — one design system, two runtimes. |
-| Charts | **Recharts / visx** | Lightweight, good enough for 10-year financial charts without a heavy charting license; used as an island in Astro, a normal component in Next. |
+| Shared UI | **Tailwind CSS + a shared component package** | React components in `packages/ui` render as Next.js components directly and as Next.js islands (`client:load`/`client:visible`) where interactivity is needed — one design system, two runtimes. |
+| Charts | **Recharts / visx** | Lightweight, good enough for 10-year financial charts without a heavy charting license; used as an island in Next.js, a normal component in Next. |
 | Hosting | **Vercel** (both projects) | Native support for both frameworks; one platform, one team to learn, edge routing handles the domain split (3.1). |
 
 ### Backend / data layer
@@ -72,7 +72,7 @@ Split across **two subdomains**: `scrooner.com` (Astro) and `app.scrooner.com` (
 |---|---|---|
 | Primary database | **PostgreSQL on Supabase** | Relational fits financial statement data well (companies → filings → line items → ratios); strong indexing for screener filters. Committing to Supabase specifically (over Neon) so the database and auth sit on one platform instead of two. |
 | Data pipeline | **Python** (pandas, `sec-edgar-downloader` / direct EDGAR XBRL API) | EDGAR filings are XBRL; Python has the mature tooling for parsing, normalizing, and validating financial statements. Runs as scheduled batch jobs, not request-time code. |
-| App-facing API | **Next.js route handlers / tRPC**, consumed by both the Astro site (build-time/ISR fetches) and the Next app (runtime) | One API surface, two consumers — avoids duplicating data-access logic. |
+| App-facing API | **Next.js route handlers / tRPC**, consumed by both the Next.js site (build-time/ISR fetches) and the Next app (runtime) | One API surface, two consumers — avoids duplicating data-access logic. |
 | Public Data API (Phase 3) | **FastAPI (Python)**, separate service | Split out once external developers consume it — needs its own auth, rate limiting, and versioning independent of the website. |
 | Caching | **Redis** (Upstash) | Hot company pages and common screener queries; keeps Postgres load down as traffic grows. |
 | Search (tickers/companies) | **Postgres full-text search** initially; **Meilisearch/Typesense** if it outgrows that | Avoid an early dependency on Elasticsearch-class infra. |
@@ -89,9 +89,9 @@ Split across **two subdomains**: `scrooner.com` (Astro) and `app.scrooner.com` (
 
 ### Trade-off, stated plainly
 
-Splitting Astro/Next buys the lowest realistic weight on the pages Google ranks, at the cost of two frontend codebases, two build systems, and a shared-session/shared-design-system setup to maintain instead of one. That cost is worth paying here because the static pages *are* the growth engine — but it's a deliberate choice, not the default, and it puts more discipline on `packages/ui` (design system) and the shared cookie config (3.1) to keep the two feeling like one product.
+Splitting Next.js/Next buys the lowest realistic weight on the pages Google ranks, at the cost of two frontend codebases, two build systems, and a shared-session/shared-design-system setup to maintain instead of one. That cost is worth paying here because the static pages *are* the growth engine — but it's a deliberate choice, not the default, and it puts more discipline on `packages/ui` (design system) and the shared cookie config (3.1) to keep the two feeling like one product.
 
-**Why `app.scrooner.com` as a subdomain, not a subfolder:** the usual worry with subdomains is splitting SEO/domain authority across two properties. That worry applies when content you want ranked lives on the subdomain. Here it doesn't — every URL in 3.2 that's meant to rank (`/stock/`, `/screens/`, `/learn/`, `/sector/`, `/guides/`, `/blog/`, `/help/`) lives on the Astro site at the root domain regardless. `app.scrooner.com` only ever serves pages that are either behind login (`/account`, `/watchlist`) or not realistic ranking targets on their own (`/screener` — 14k/mo search volume but dominated by Finviz/TradingView/brokers; it earns traffic from internal links off company pages and screens, not by ranking itself). So the subdomain split costs nothing on SEO in this specific case, while removing the edge-routing/rewrite layer entirely — two independent Vercel projects, two independent deploys, no shared-domain proxy config to maintain. That's a meaningful simplification for a small team, so it's the better call than the single-domain rewrite approach.
+**Why `scrooner.com/app` as a subdomain, not a subfolder:** the usual worry with subdomains is splitting SEO/domain authority across two properties. That worry applies when content you want ranked lives on the subdomain. Here it doesn't — every URL in 3.2 that's meant to rank (`/stock/`, `/screens/`, `/learn/`, `/sector/`, `/guides/`, `/blog/`, `/help/`) lives on the Next.js site at the root domain regardless. `scrooner.com/app` only ever serves pages that are either behind login (`/account`, `/watchlist`) or not realistic ranking targets on their own (`/screener` — 14k/mo search volume but dominated by Finviz/TradingView/brokers; it earns traffic from internal links off company pages and screens, not by ranking itself). So the subdomain split costs nothing on SEO in this specific case, while removing the edge-routing/rewrite layer entirely — two independent Vercel projects, two independent deploys, no shared-domain proxy config to maintain. That's a meaningful simplification for a small team, so it's the better call than the single-domain rewrite approach.
 
 ---
 
@@ -124,7 +124,7 @@ Splitting Astro/Next buys the lowest realistic weight on the pages Google ranks,
                             │       │
                             ▼       ▼
               ┌───────────────┐   ┌───────────────┐
-              │  Astro site    │   │  Next.js app   │
+              │  Next.js site    │   │  Next.js app   │
               │  (static/SEO)  │   │  (dynamic)     │
               │  scrooner.com  │   │  app.scrooner. │
               │  - company pgs │   │    com         │
@@ -145,7 +145,7 @@ Splitting Astro/Next buys the lowest realistic weight on the pages Google ranks,
                    │  @supabase/ssr)        │
                    │  readable by both      │
                    │  scrooner.com and      │
-                   │  app.scrooner.com      │
+                   │  scrooner.com/app      │
                    └─────────────────────┘
                                │
                       ┌────────┴────────┐
@@ -154,9 +154,9 @@ Splitting Astro/Next buys the lowest realistic weight on the pages Google ranks,
                       └───────────────────┘
 ```
 
-Single source of truth: EDGAR is parsed **once** into Postgres; every surface (Astro pages, Next app, later the data API) reads from that same asset rather than re-deriving numbers.
+Single source of truth: EDGAR is parsed **once** into Postgres; every surface (Next.js pages, Next app, later the data API) reads from that same asset rather than re-deriving numbers.
 
-**Two subdomains, not one domain with rewrites:** `scrooner.com` (Astro) and `app.scrooner.com` (Next.js) deploy as two independent Vercel projects — no edge-routing/rewrite layer to maintain. This is safe for SEO here specifically because every page meant to rank lives on `scrooner.com` (see 3.2's "why subdomain" note); `app.scrooner.com` only ever serves logged-in or tool pages that were never realistic ranking targets anyway. Login carries across both because the auth cookie is explicitly set with `Domain=.scrooner.com` in the `@supabase/ssr` cookie config — Supabase doesn't hand you cross-subdomain sharing automatically the way Clerk's "satellite domain" feature does, so this one line of config is the thing to get right and test early, but it's a standard, documented option, not a workaround. The one cross-domain flow to wire up deliberately: saving a screen in the builder on `app.scrooner.com/screens/new` triggers a build hook / on-demand revalidation call that publishes the static page at `scrooner.com/screens/{slug}/` on the Astro side.
+**Two subdomains, not one domain with rewrites:** `scrooner.com` (Next.js) and `scrooner.com/app` (Next.js) deploy as two independent Vercel projects — no edge-routing/rewrite layer to maintain. This is safe for SEO here specifically because every page meant to rank lives on `scrooner.com` (see 3.2's "why subdomain" note); `scrooner.com/app` only ever serves logged-in or tool pages that were never realistic ranking targets anyway. Login carries across both because the auth cookie is explicitly set with `Domain=.scrooner.com` in the `@supabase/ssr` cookie config — Supabase doesn't hand you cross-subdomain sharing automatically the way Clerk's "satellite domain" feature does, so this one line of config is the thing to get right and test early, but it's a standard, documented option, not a workaround. The one cross-domain flow to wire up deliberately: saving a screen in the builder on `scrooner.com/app/screens/new` triggers a build hook / on-demand revalidation call that publishes the static page at `scrooner.com/screens/{slug}/` on the Next.js side.
 
 ### 3.2 URL structure
 
@@ -194,37 +194,37 @@ Auth (`/login/`, `/register/`) and account/premium pages sit on the same domain 
 
 | URL | Surface | Notes |
 |---|---|---|
-| `/` | Astro | Homepage |
-| `/stock/{ticker}/` | Astro | Company page — the crown jewel, one page per ticker (lowercase in the URL, e.g. `/stock/aapl/`; uppercase shown on-page). Uses `stock` rather than Screener.in's `company` because US search behavior centers on `AAPL stock`, not `AAPL company`. No `/consolidated/` split — not a US GAAP concept. |
-| `/screens/` | Astro | Directory of public screens |
-| `/screens/{slug}/` | Astro | An individual saved/shared screen (e.g. `/screens/highest-dividend-yield-stocks/`) — publishes automatically once built in the Next.js screen builder |
-| `/sector/{sector}/`, `/sector/{sector}/{industry}/` | Astro | Sector/industry drill-down, mirrors Screener.in's `/market/` hierarchy at lower priority |
-| `/learn/{term}/` | Astro | Financial glossary — the gap Screener.in leaves open; highest ROI new page type versus their model |
-| `/guides/{slug}/`, `/about/`, `/privacy/`, `/terms/` | Astro | Static marketing/legal pages |
-| `/blog/{slug}/` | Astro | Changelog-as-blog, same role as Screener.in's `/docs/changelog/` |
-| `/help/{slug}/` | Astro | Help/FAQ content, kept on the main domain (not a separate subdomain like Screener.in's `support.screener.in`) to keep all SEO equity on one root domain |
+| `/` | Next.js | Homepage |
+| `/stock/{ticker}/` | Next.js | Company page — the crown jewel, one page per ticker (lowercase in the URL, e.g. `/stock/aapl/`; uppercase shown on-page). Uses `stock` rather than Screener.in's `company` because US search behavior centers on `AAPL stock`, not `AAPL company`. No `/consolidated/` split — not a US GAAP concept. |
+| `/screens/` | Next.js | Directory of public screens |
+| `/screens/{slug}/` | Next.js | An individual saved/shared screen (e.g. `/screens/highest-dividend-yield-stocks/`) — publishes automatically once built in the Next.js screen builder |
+| `/sector/{sector}/`, `/sector/{sector}/{industry}/` | Next.js | Sector/industry drill-down, mirrors Screener.in's `/market/` hierarchy at lower priority |
+| `/learn/{term}/` | Next.js | Financial glossary — the gap Screener.in leaves open; highest ROI new page type versus their model |
+| `/guides/{slug}/`, `/about/`, `/privacy/`, `/terms/` | Next.js | Static marketing/legal pages |
+| `/blog/{slug}/` | Next.js | Changelog-as-blog, same role as Screener.in's `/docs/changelog/` |
+| `/help/{slug}/` | Next.js | Help/FAQ content, kept on the main domain (not a separate subdomain like Screener.in's `support.screener.in`) to keep all SEO equity on one root domain |
 | `/screener` | Next.js | The interactive filter tool |
-| `/screens/new`, `/screens/{id}/edit` | Next.js | Screen builder — publishes out to the static `/screens/{slug}/` Astro page on save |
+| `/screens/new`, `/screens/{id}/edit` | Next.js | Screen builder — publishes out to the static `/screens/{slug}/` Next.js page on save |
 | `/compare` (tool, not indexed pages) | Next.js | Ticker-vs-ticker comparison as an interactive feature only — no static URLs, since search demand doesn't justify them |
 | `/watchlist` | Next.js | Saved companies, behind login |
 | `/account`, `/billing`, `/login`, `/register` | Next.js | Auth and subscription |
 
-Everything in the Astro column lives on `scrooner.com`; everything in the Next.js column lives on `app.scrooner.com` (3.1). This directly informs the `apps/site` vs `apps/app` route layout in 3.3.
+Everything in the Next.js column lives on `scrooner.com`; everything in the Next.js column lives on `scrooner.com/app` (3.1). This directly informs the `apps/app` vs `apps/app` route layout in 3.3.
 
 #### Auth: logged-in vs logged-out pages
 
-No third-party identity provider — auth runs on **Supabase Auth**, the same platform as the database, using `@supabase/ssr` on both the Next.js app and the Astro site. `app.scrooner.com` does the actual sign-in/sign-up work and owns session refresh; `scrooner.com` only ever *reads* the session (server-side, from the shared cookie) to decide things like whether the nav shows "Sign in" or an account menu — it never handles credentials itself.
+No third-party identity provider — auth runs on **Supabase Auth**, the same platform as the database, using `@supabase/ssr` on both the Next.js app and the Next.js site. `scrooner.com/app` does the actual sign-in/sign-up work and owns session refresh; `scrooner.com` only ever *reads* the session (server-side, from the shared cookie) to decide things like whether the nav shows "Sign in" or an account menu — it never handles credentials itself.
 
 The piece that has to be built deliberately (Supabase doesn't give this for free the way Clerk's satellite-domain feature does): the session cookie must be set with `Domain=.scrooner.com` in the `@supabase/ssr` cookie options on the Next.js app, so it's readable on both subdomains. Get this one setting wrong and the two apps silently stop sharing a session — worth a dedicated integration test.
 
-| Route (`app.scrooner.com`) | Purpose |
+| Route (`scrooner.com/app`) | Purpose |
 |---|---|
 | `/login` | Sign in |
 | `/register` | Sign up |
 | `/forgot-password` | Password reset request (Supabase's built-in email flow) |
 | `/logout` | Not a rendered page — calls `supabase.auth.signOut()`, clears the shared cookie, and redirects to `scrooner.com` (back to the public site, not a dead end) |
 
-Redirect-back convention: every path into `/login` carries a `redirect_url` query param that the app reads after `signInWithPassword`/OAuth completes and manually redirects to. Example: clicking "Save to watchlist" on `scrooner.com/stock/aapl/` while logged out sends the user to `app.scrooner.com/login?redirect_url=https://app.scrooner.com/watchlist?add=AAPL`. Unlike Clerk, this redirect has to be handled explicitly in app code rather than configured declaratively — a small but real bit of extra plumbing that comes with dropping the third-party vendor.
+Redirect-back convention: every path into `/login` carries a `redirect_url` query param that the app reads after `signInWithPassword`/OAuth completes and manually redirects to. Example: clicking "Save to watchlist" on `scrooner.com/stock/aapl/` while logged out sends the user to `scrooner.com/app/login?redirect_url=https://scrooner.com/app/watchlist?add=AAPL`. Unlike Clerk, this redirect has to be handled explicitly in app code rather than configured declaratively — a small but real bit of extra plumbing that comes with dropping the third-party vendor.
 
 **Deliberately not gating the whole app** — only the personalized actions require login, to keep the free-forever, low-friction positioning from the original pitch intact:
 
@@ -243,21 +243,21 @@ Monorepo, so the pipeline, both frontends, and shared data/design contracts evol
 ```
 scrooner/
 ├── apps/
-│   ├── site/                  # Astro — static/SEO surface
+│   ├── site/                  # Next.js — static/SEO surface
 │   │   ├── src/
 │   │   │   ├── pages/
-│   │   │   │   ├── stock/[ticker].astro
-│   │   │   │   ├── screens/index.astro
-│   │   │   │   ├── screens/[slug].astro
-│   │   │   │   ├── sector/[sector]/[[industry]].astro
-│   │   │   │   ├── learn/[term].astro
-│   │   │   │   ├── guides/[slug].astro
-│   │   │   │   ├── blog/[slug].astro
-│   │   │   │   ├── help/[slug].astro
-│   │   │   │   └── index.astro
-│   │   │   ├── components/     # Astro components + React islands
+│   │   │   │   ├── stock/[ticker].tsx
+│   │   │   │   ├── screens/index.tsx
+│   │   │   │   ├── screens/[slug].tsx
+│   │   │   │   ├── sector/[sector]/[[industry]].tsx
+│   │   │   │   ├── learn/[term].tsx
+│   │   │   │   ├── guides/[slug].tsx
+│   │   │   │   ├── blog/[slug].tsx
+│   │   │   │   ├── help/[slug].tsx
+│   │   │   │   └── index.tsx
+│   │   │   ├── components/     # Next.js components + React islands
 │   │   │   └── layouts/
-│   │   └── astro.config.mjs
+│   │   └── Next.js.config.mjs
 │   │
 │   ├── app/                    # Next.js — dynamic/logged-in surface
 │   │   ├── app/                 # App Router routes
@@ -288,12 +288,12 @@ scrooner/
 │   ├── db/                       # Postgres schema, migrations, shared queries
 │   ├── types/                    # shared TypeScript/Python type contracts
 │   └── ui/                        # shared design-system components
-│                                    # (consumed as-is in Next, as islands in Astro)
+│                                    # (consumed as-is in Next, as islands in Next.js)
 │
 ├── infra/
 │   ├── ci/                       # GitHub Actions workflows
 │   ├── auth/                      # shared @supabase/ssr cookie-domain config (Domain=.scrooner.com)
-│   └── env/                       # environment configs per stage, incl. DNS for scrooner.com / app.scrooner.com
+│   └── env/                       # environment configs per stage, incl. DNS for scrooner.com / scrooner.com/app
 │
 └── docs/
     ├── DOCUMENTATION.md           # this file
@@ -306,12 +306,12 @@ scrooner/
 - `filings` — source EDGAR filing references per company/period
 - `financial_line_items` — normalized statement data (income statement, balance sheet, cash flow)
 - `ratios` — derived metrics computed from line items
-- `screens` — saved/shareable user screener queries (rendered statically by Astro once saved; built/edited in Next)
-- `users` / `subscriptions` — auth and billing state (owned by Next, read by Astro only via the shared session cookie for "is this user logged in / premium" checks)
+- `screens` — saved/shareable user screener queries (rendered statically by Next.js once saved; built/edited in Next)
+- `users` / `subscriptions` — auth and billing state (owned by Next, read by Next.js only via the shared session cookie for "is this user logged in / premium" checks)
 
 ### 3.5 Build phases
 
-1. **Phase 1 — Core asset:** ingest pipeline + Astro company pages (the crown jewel; proves data quality and SEO).
-2. **Phase 2 — Screener:** Next.js screener + screen builder on top of the same data; saved screens publish back out as static Astro pages.
+1. **Phase 1 — Core asset:** ingest pipeline + Next.js company pages (the crown jewel; proves data quality and SEO).
+2. **Phase 2 — Screener:** Next.js screener + screen builder on top of the same data; saved screens publish back out as static Next.js pages.
 3. **Phase 3 — Data API:** split out `apps/data-api` once external demand justifies it.
-4. **Monetization layered in throughout:** ads on high-traffic Astro pages early, subscriptions once the Next screener/saved-screens exist, affiliate links on company pages from day one.
+4. **Monetization layered in throughout:** ads on high-traffic Next.js pages early, subscriptions once the Next screener/saved-screens exist, affiliate links on company pages from day one.

@@ -29,6 +29,8 @@ jobs:
     timeout-minutes: 30
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
     steps:
       - uses: actions/checkout@v4
@@ -42,6 +44,8 @@ jobs:
       - name: Require production configuration
         run: |
           test -n "$DATABASE_URL"
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_SERVICE_ROLE_KEY"
           test -n "$SEC_USER_AGENT"
       - name: Install locked dependencies
         run: uv sync --project pipeline --locked

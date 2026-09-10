@@ -1,5 +1,7 @@
 # Scrooner — 10-Day Product Readiness Plan
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Consultant recommendation  
 > **Date:** 2026-08-18  
 > **Duration:** Ten focused working days; each day is an outcome gate, not a promise about elapsed calendar time.  

@@ -1,5 +1,7 @@
 # 15 — Rendered frontend contract and metric-catalog curation
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** Complete · **Date:** 2026-08-22  
 > **Applies to:** Astro public surfaces, Next.js screener, and the local product API  
 > **Executable contract:** `scripts/check_frontend_render.mjs`

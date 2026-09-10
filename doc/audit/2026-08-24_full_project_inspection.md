@@ -1,5 +1,7 @@
 # Full project inspection — gaps, staleness, and what's not achieved
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 **Method:** an initial pass read the project's own living-status docs (`doc/status/PROGRESS.md`, `DATA_COVERAGE.md`, `SCORECARD.md`), the decision register (`doc/foundational/02`), the consolidated remaining-work plan (`doc/planning/20`), and the full `doc/learnings/` index (48 entries), cross-checked against real, live database state as of tonight's (2026-08-23→24) full-population expansion. That pass was then deepened by 13 parallel agents, each independently investigating one part of doc 06's 14-part breakdown (Billing excluded, per explicit direction), reading real code and checking real live state rather than restating documentation. **Section 0 below corrects two things the first pass got wrong** — found only because the deeper agents checked rather than trusted the same assumption. Everywhere else, findings are additive.
 
 ---

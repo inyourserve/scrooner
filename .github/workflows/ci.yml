@@ -40,31 +40,8 @@ jobs:
       - name: Required correctness lint
         run: uvx ruff check --select E9,F63,F7,F82 pipeline/src apps/backend
 
-  site:
-    name: Astro production build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-          cache-dependency-path: apps/site/package-lock.json
-      - name: Install locked dependencies
-        working-directory: apps/site
-        run: npm ci
-      - name: Test
-        working-directory: apps/site
-        run: npm test
-      - name: Type check
-        working-directory: apps/site
-        run: npm run check
-      - name: Build
-        working-directory: apps/site
-        run: npm run build
-
   app:
-    name: Screener app tests and production build
+    name: Next.js frontend tests and production build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -153,9 +130,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: |
-            apps/site/package-lock.json
-            apps/app/package-lock.json
+          cache-dependency-path: apps/app/package-lock.json
       - name: Ruff formatting debt
         run: uvx ruff format --check pipeline/src apps/backend
       - name: Python type analysis
@@ -164,9 +139,6 @@ jobs:
         run: |
           uv export --project pipeline --locked --no-dev --format requirements-txt --output-file /tmp/pipeline-requirements.txt
           uvx pip-audit --requirement /tmp/pipeline-requirements.txt
-      - name: Audit Node dependencies
-        working-directory: apps/site
-        run: npm audit --omit=dev
-      - name: Audit Screener app dependencies
+      - name: Audit frontend dependencies
         working-directory: apps/app
         run: npm audit --omit=dev

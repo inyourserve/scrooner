@@ -1,5 +1,7 @@
 # Live render contract and metric-catalog drift
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 ## Problem or clarification
 
 Builds and component tests could prove compilation and state behavior, but not

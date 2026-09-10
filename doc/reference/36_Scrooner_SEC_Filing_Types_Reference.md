@@ -1,5 +1,7 @@
 # 36 — Scrooner: SEC Filing Types Reference
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 **Status:** Reference · Owner: Founder/Product · Review: when a new filing type is added to scope
 
 A single consolidated reference, one section per SEC EDGAR filing type Scrooner recognizes or could recognize: what the filing legally covers, exactly what Scrooner's real code currently extracts from it (module + table, or "existence only," or "not used"), and why it matters for the product. [`doc/foundational/07_SEC_EDGAR_Rules_and_Data_Guide.md`](../foundational/07_SEC_EDGAR_Rules_and_Data_Guide.md) §8 remains canonical for EDGAR access mechanics and the original form-type inventory; this doc goes deeper on one column that doc 07 mostly leaves blank — what Scrooner actually *does* with each form, grounded in the current codebase, not intent.

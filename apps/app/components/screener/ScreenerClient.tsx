@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   OPERATOR_LABELS,
   REFERENCE_SCREENS,
@@ -23,12 +24,12 @@ import type {
 import { NaturalQueryPanel } from "./NaturalQueryPanel";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { SaveScreenButton } from "@/components/saved-screens/SaveScreenButton";
 import { EmptyState } from "@/components/scrooner/EmptyState";
 import { TableSkeleton } from "@/components/scrooner/TableSkeleton";
-import { SAVED_QUERY_KEY } from "@/lib/saved-screens/client";
+import { savedScreensApi } from "@/lib/saved-screens/client";
+import type { ScreenRunPage } from "@/lib/saved-screens/types";
 
 const DEFAULT_ROW: FilterRow = {
   id: "filter-1",
@@ -109,10 +110,19 @@ function MatchReasons({
 }
 
 export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const nextId = useRef(2);
   const builderSectionRef = useRef<HTMLElement>(null);
   const resultsTitleRef = useRef<HTMLHeadingElement>(null);
   const screenRequestVersion = useRef(0);
+  // The one thing that identifies "which run is currently on screen" -- a
+  // run_id + cursor pair, always kept in sync with the URL's own `run`/
+  // `cursor` params (never a second, independently-tracked copy) so a
+  // fresh NL-query submission, a page reload, and browser back/forward all
+  // go through the exact same load path below instead of three different
+  // ones that could disagree with each other.
+  const loadedRunKey = useRef<string | null>(null);
   const [metrics, setMetrics] = useState<MetricDefinition[]>([]);
   const [catalogState, setCatalogState] = useState<RequestState>("loading");
   const [catalogError, setCatalogError] = useState("");
@@ -129,6 +139,8 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   const [lastQuery, setLastQuery] = useState<ScreenQueryPayload | null>(null);
   const [interpretedFrom, setInterpretedFrom] = useState("");
   const [builderOpen, setBuilderOpen] = useState(false);
+  const [runPage, setRunPage] = useState<ScreenRunPage | null>(null);
+  const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
     let active = true;
@@ -146,18 +158,54 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
     return () => { active = false; };
   }, []);
 
+  // The one place a ScreenRunPage (however it was obtained) turns into
+  // displayed state. Never gated on whether the advanced filter builder
+  // can represent the query as editable rows -- that's a display nicety
+  // for the builder panel, not a precondition for showing real results
+  // that already came straight from the Screener.
+  const applyRunPage = useCallback((page: ScreenRunPage, pageNumber: number) => {
+    const state = queryToBuilderState(page.normalized_query, metrics, () => `filter-${nextId.current++}`);
+    if (state) {
+      setRows(state.rows);
+      setCategory(state.category);
+      setSortBy(state.sortBy);
+      setSortDesc(state.sortDesc);
+      setLimit(state.limit);
+      setIncludeInactive(state.includeInactive);
+      setErrors({});
+    }
+    setInterpretedFrom(page.query_text);
+    setLastQuery(page.normalized_query);
+    setResult({ matched: page.items, excluded_missing_data: page.excluded_missing_data, excluded_inactive: page.excluded_inactive });
+    setRunPage(page);
+    setPageNumber(pageNumber);
+    setRequestState("success");
+    setBuilderOpen(false);
+  }, [metrics]);
+
+  // The one place a `run_id` (from the URL) turns into displayed state --
+  // a fresh NL-query submission (handleRunCreated), pagination
+  // (loadRunPage), a page reload, and browser back/forward all end up
+  // here, because all of them change `searchParams.run`/`cursor` and
+  // nothing else independently sets result/lastQuery/runPage for a
+  // persisted run. `useSearchParams()` (reactive) is used instead of a
+  // one-time `window.location.search` read specifically so this re-runs
+  // on client-side navigation, not just on first mount.
   useEffect(() => {
     if (catalogState !== "success") return;
-    const stored = window.sessionStorage.getItem(SAVED_QUERY_KEY);
-    if (!stored) return;
-    window.sessionStorage.removeItem(SAVED_QUERY_KEY);
-    try {
-      const query = JSON.parse(stored) as ScreenQueryPayload;
-      if (applyInterpretedQuery(query, "Saved screen")) void executeScreen(query);
-    } catch { /* Ignore malformed browser state. */ }
-  // apply once after the catalog makes query-to-builder mapping possible
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalogState]);
+    const runId = searchParams.get("run");
+    if (!runId) return;
+    const cursor = searchParams.get("cursor") || undefined;
+    const key = `${runId}:${cursor ?? ""}`;
+    if (loadedRunKey.current === key) return;
+    loadedRunKey.current = key;
+    void savedScreensApi.getRun(runId, cursor).then((page) => {
+      applyRunPage(page, Math.max(1, Number(searchParams.get("page")) || 1));
+    }).catch((error: unknown) => {
+      setRequestError(error instanceof Error ? error.message : "Saved results could not be loaded.");
+      setRequestState("error");
+    });
+  }, [catalogState, searchParams, applyRunPage]);
 
   useEffect(() => {
     if (requestState === "success" || requestState === "error") {
@@ -258,24 +306,34 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
     return true;
   }
 
-  function acceptInterpretedResult(query: ScreenQueryPayload, nextResult: ScreenResult, sourceText: string): boolean {
-    const state = queryToBuilderState(query, metrics, () => `filter-${nextId.current++}`);
-    if (!state) return false;
+  // NaturalQueryPanel already has the full ScreenRunPage from creating the
+  // run -- no second fetch here. Navigating (a real Next.js route change,
+  // not a raw history.pushState) puts `run` in the URL, which is what the
+  // effect above treats as the single source of truth for "what's on
+  // screen"; setting loadedRunKey first stops that effect from re-fetching
+  // a run this function just handed it directly.
+  function handleRunCreated(run: ScreenRunPage) {
     screenRequestVersion.current += 1;
-    setRows(state.rows);
-    setCategory(state.category);
-    setSortBy(state.sortBy);
-    setSortDesc(state.sortDesc);
-    setLimit(state.limit);
-    setIncludeInactive(state.includeInactive);
-    setErrors({});
-    setRequestError("");
-    setInterpretedFrom(sourceText);
-    setLastQuery(query);
-    setResult(nextResult);
-    setRequestState("success");
-    setBuilderOpen(false);
-    return true;
+    loadedRunKey.current = `${run.run_id}:`;
+    applyRunPage(run, 1);
+    const params = new URLSearchParams({ query: run.query_text, run: run.run_id, page: "1" });
+    router.push(`/app/screens/new?${params}`);
+  }
+
+  async function loadRunPage(cursor: string | null, nextPage: number) {
+    if (!runPage) return;
+    setRequestState("loading");
+    try {
+      const page = await savedScreensApi.getRun(runPage.run_id, cursor || undefined);
+      loadedRunKey.current = `${page.run_id}:${cursor ?? ""}`;
+      applyRunPage(page, nextPage);
+      const params = new URLSearchParams({ query: page.query_text, run: page.run_id, page: String(nextPage) });
+      if (cursor) params.set("cursor", cursor);
+      router.replace(`/app/screens/new?${params}`);
+    } catch (error) {
+      setRequestError(error instanceof Error ? error.message : "The next page could not be loaded.");
+      setRequestState("error");
+    }
   }
 
   function resetScreen() {
@@ -337,12 +395,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   }
 
   return (
-    <main className="main-content screener-content" id="main-content">
-        <PageHeader
-          title="Find companies"
-          description="Screen US companies using reported fundamentals."
-        />
-
+    <main className="workspace-page screener-content" id="main-content">
         {catalogState === "loading" && (
           <StatusPanel className="state-panel" title="Loading metric definitions" busy>
             <p>Loading metrics.</p>
@@ -362,15 +415,16 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
 
         {catalogState === "success" && (
           <>
-          <NaturalQueryPanel metrics={metrics} onResult={acceptInterpretedResult} onEdit={applyInterpretedQuery} />
+          <NaturalQueryPanel metrics={metrics} initialText={searchParams.get("query") ?? ""} onRunCreated={handleRunCreated} />
 
           {requestState !== "idle" && <section className="results-section" aria-labelledby="results-title" aria-busy={requestState === "loading"}>
             <div className="results-heading">
               <div>
                 <h2 ref={resultsTitleRef} id="results-title" tabIndex={-1}>Matching companies</h2>
+                {interpretedFrom && <p className="results-source-query">From “{interpretedFrom}”</p>}
               </div>
-              {requestState === "success" && result && <p className="match-count"><strong>{result.matched.length}</strong> {result.matched.length === 1 ? "company" : "companies"} matched</p>}
-              {requestState === "success" && lastQuery && <SaveScreenButton query={lastQuery} />}
+              {requestState === "success" && result && <p className="match-count"><strong>{runPage?.total_count ?? result.matched.length}</strong> {(runPage?.total_count ?? result.matched.length) === 1 ? "company" : "companies"} matched</p>}
+              {requestState === "success" && lastQuery && <SaveScreenButton query={lastQuery} runId={runPage?.run_id} />}
             </div>
 
             {requestState === "loading" && (
@@ -413,6 +467,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
             )}
 
             {requestState === "success" && result && result.matched.length > 0 && (
+              <>
               <div className="results-table-wrap" tabIndex={0} aria-label="Screen results. Scroll horizontally to view all metrics.">
                 <table className="results-table">
                   <caption className="sr-only">Companies matching the current screen, in backend-determined order.</caption>
@@ -447,6 +502,20 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                   </tbody>
                 </table>
               </div>
+              {runPage && <nav className="screen-pagination" aria-label="Screen result pages">
+                <span>{(pageNumber - 1) * 50 + 1}–{Math.min(pageNumber * 50, runPage.total_count)} of {runPage.total_count}</span>
+                <div>
+                  <Button type="button" variant="secondary" size="small" disabled={pageNumber === 1} onClick={() => {
+                    const previousPage = pageNumber - 1;
+                    void loadRunPage(runPage.previous_cursor ?? null, previousPage);
+                  }}>Previous</Button>
+                  <Button type="button" variant="secondary" size="small" disabled={!runPage.next_cursor} onClick={() => {
+                    if (!runPage.next_cursor) return;
+                    void loadRunPage(runPage.next_cursor, pageNumber + 1);
+                  }}>Next</Button>
+                </div>
+              </nav>}
+              </>
             )}
 
             {requestState === "success" && result && resultMetricNames.length > 0 && (
@@ -483,13 +552,14 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
             <button
               type="button"
               className="builder-disclosure"
+              aria-label="Exact filters"
               aria-expanded={builderOpen}
               aria-controls="advanced-builder-content"
               onClick={() => setBuilderOpen((open) => !open)}
             >
               <span className="builder-disclosure-icon" aria-hidden="true">⌁</span>
-              <span><strong id="advanced-builder-title">Exact filters</strong><small>Use metrics and comparisons directly.</small></span>
-              <span className="builder-disclosure-action">{builderOpen ? "Hide" : "Open"}<span aria-hidden="true"> {builderOpen ? "↑" : "↓"}</span></span>
+              <span><strong id="advanced-builder-title">All filters</strong></span>
+              <span className="builder-disclosure-action">{builderOpen ? "Hide" : "Show"}</span>
             </button>
 
             {builderOpen && (
@@ -497,8 +567,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
               <section className="reference-section" aria-labelledby="reference-title">
                 <div className="section-heading compact">
                   <div>
-                    <h2 id="reference-title">Start from an example</h2>
-                    <p>Load a ready-made screen, then change any filter.</p>
+                    <h2 id="reference-title">Templates</h2>
                   </div>
                 </div>
                 <div className="reference-list">
@@ -521,9 +590,9 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
               <form id="structured-builder" className="builder" onSubmit={runScreen} noValidate>
             <div className="builder-header">
               <div>
-                <p className="step-label">Step 1</p>
-                <h2>Define your criteria</h2>
-                <p>All conditions are combined with AND. Missing values never pass a condition.</p>
+                <p className="step-label">Criteria</p>
+                <h2>Filter companies</h2>
+                <p>Companies must meet every condition. Missing values are excluded.</p>
               </div>
               <Button type="button" variant="ghost" onClick={resetScreen}>Reset</Button>
             </div>

@@ -12,6 +12,7 @@ from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_ta
 from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks, resolve_all_arithmetic_fallbacks
+from scrooner_pipeline.mapper.conflict_resolution import resolve_all_conflict_fills
 from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
 from scrooner_pipeline.statements.classify import seed as seed_statements
@@ -128,6 +129,23 @@ def resolve_statement_fallbacks_cmd() -> None:
     with get_connection() as conn:
         stats = resolve_all_arithmetic_fallbacks(conn)
     typer.echo(f"resolve-statement-fallbacks: {stats}")
+
+
+@app.command("resolve-conflict-fills")
+def resolve_conflict_fills_cmd() -> None:
+    """Migration 0059 / 2026-09-09: fills a statement-table cell that's
+    null specifically because dedupe.py correctly flagged 2+ disagreeing
+    filings as an unresolved conflict (never guessed at before now),
+    for all 24 statement-table concepts. Purely additive (INSERT ... ON
+    CONFLICT DO NOTHING, never a delete) -- run AFTER resolve-facts and
+    resolve-statement-fallbacks (this fills gaps those leave, and being
+    additive-only it can't be undone by anything that runs after it,
+    only by something that runs after it and re-DELETEs its own resolved
+    concept, which none of the 24 targets' other writers do at this
+    point in the pipeline). Always population-wide, set-based SQL."""
+    with get_connection() as conn:
+        stats = resolve_all_conflict_fills(conn)
+    typer.echo(f"resolve-conflict-fills: {stats}")
 
 
 @app.command("seed-definitions")

@@ -1,5 +1,7 @@
 # 2026-09-05 — Quarterly Results / Profit & Loss showed too few periods, because "8 period rows" isn't "8 real quarters"
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 ## What happened
 
 Reported directly: the Quarterly Results and Profit & Loss tables on the company page looked wrong, and both needed to show more history. Loading a real page (AAPL) confirmed the Quarterly Results table rendered only **2 quarters** (Q2 2026, Q3 2026) and the annual Profit & Loss/Balance Sheet/Cash Flow tables showed only **4 years** — despite the underlying SQL intending 8 quarters / 8 years.

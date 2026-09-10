@@ -7,7 +7,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const redirectUrl = getSafeRedirectPath(params.redirect_url);
   return (
     <AuthShell>
-      {params.error && <p className="auth-page__notice" role="alert">The sign-in link is invalid or has expired. Please try again.</p>}
+      {params.error && <p className="auth-page__notice" role="alert">We couldn’t complete sign in. Please try again.</p>}
       <AuthForm mode="login" redirectUrl={redirectUrl} />
     </AuthShell>
   );

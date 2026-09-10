@@ -1,5 +1,7 @@
 # Ownership & Insider Activity data-point audit — 2026-08-29
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Scope:** the three Ownership page-section subsections locked by [`doc/scoping/insider_info.md`](../scoping/insider_info.md) — Insider Ownership & Transactions, Institutional Ownership (Form 13F), Mutual Fund Ownership (Form N-PORT) — evaluated for investor decision-value, not build status. Build status is already tracked in `DATA_COVERAGE.md` §8 and root `CLAUDE.md`'s Ownership paragraph; this audit asks a different question: **if a common, self-directed investor opened this section, how much of it actually helps them decide, and what's missing to make it a real differentiator rather than a data dump.** Grounded in the real `insider_info.md` spec text, the real transaction-code classification (`pipeline/src/scrooner_pipeline/ownership/transaction_codes.py`), and the real current frontend (`apps/site/src/pages/stock/[ticker].astro`), not recalled from memory.
 
 ## Executive finding

@@ -9,17 +9,15 @@ constraints.
 
 ## Architecture summary
 
-Scrooner is divided into three concerns: a separate data pipeline that
-creates trusted financial data; a public SEO website; and an
-authenticated interactive application. They share governed data, but
-each has a narrow responsibility.
+Scrooner is divided into two deployment concerns: a separate data pipeline
+that creates trusted financial data, and one Next.js frontend that serves both
+public research and authenticated workflows from `scrooner.com`.
 
 ## System topology
 
 | **Layer**         | **Primary technology**                       | **Responsibility**                                                                        |
 |-------------------|----------------------------------------------|-------------------------------------------------------------------------------------------|
-| Public web        | Astro + Tailwind                             | Marketing, guides, glossary, indexable company and curated screen pages on scrooner.com.  |
-| Application       | Next.js App Router + Tailwind/shared UI      | Prompt/screener interaction, auth, saved screens, limits and billing on app.scrooner.com. |
+| Frontend          | Next.js App Router + shadcn/Tailwind         | Public research, SEO, screening, auth, saved screens and accounts on scrooner.com.        |
 | Data platform     | Python 3.12 + Polars + Postgres              | Collect, normalize, map, validate and calculate financial data.                           |
 | Operational admin | Django + Django Admin                        | Inspect jobs, mappings, companies, freshness, exceptions and controlled corrections.      |
 | Shared platform   | Supabase Postgres, Auth and Storage          | Structured data, authentication and immutable raw objects.                                |
@@ -29,11 +27,11 @@ each has a narrow responsibility.
 
 ## Domains and routing
 
-| **Domain**       | **Owns**                                                                                        | **Must not own**                                            |
-|------------------|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| scrooner.com     | SEO pages, education, public company data, curated/public screens, product and pricing content. | Authenticated app workflows or heavy client-side screening. |
-| app.scrooner.com | Interactive screener, prompt parsing UI, accounts, saved screens, entitlements and billing.     | Large programmatic SEO surface.                             |
-| Internal admin   | Restricted operational interface.                                                               | Public product experience.                                  |
+| **Route boundary** | **Owns**                                                                                         | **Must not own**                                       |
+|--------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| Public routes      | Homepage, SSR company research, methodology, sources, pricing and legal pages.                     | User-private data or authenticated mutations.          |
+| `/app/*`           | Screener, saved screens, account, entitlements and future authenticated workflows.               | Indexable company or marketing content.                |
+| Internal admin     | Restricted operational interface.                                                                | Public product experience.                             |
 
 ## Data flow
 
@@ -62,8 +60,8 @@ each has a narrow responsibility.
 8.  AI query layer translates user language into the supported query
     schema; validation rejects unknown metrics or ambiguous clauses.
 
-9.  Astro and Next.js read approved serving views; user state and
-    entitlements remain in the app schema.
+9.  Next.js Server Components and Route Handlers read approved serving views;
+    user state and entitlements remain in the app schema.
 
 ## Data boundaries
 
@@ -106,8 +104,8 @@ each has a narrow responsibility.
 ## API strategy
 
 Do not introduce FastAPI merely because the system has multiple parts.
-Astro/Next.js may use direct server-side access to restricted database
-functions/views and internal Next.js routes for app workflows. Introduce
+Next.js may use direct server-side access to restricted database
+functions/views and Route Handlers for product workflows. Introduce
 a dedicated API only when consumers, security boundaries, scaling or a
 B2B product make the contract valuable.
 
@@ -140,6 +138,6 @@ B2B product make the contract valuable.
 ## Deployment principle
 
 Optimize for a solo bootstrapper: managed database/auth/storage,
-static-first public delivery, a separate scheduled Python worker and
+server-rendered and cached public delivery, a separate scheduled Python worker and
 minimal always-on infrastructure. Scale components only after
 measurements show a real constraint.

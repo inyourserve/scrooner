@@ -1,5 +1,11 @@
 # Public Site and Application Domain Boundary
 
+> **Superseded 2026-09-05:** The founder explicitly replaced this two-domain,
+> Astro/Next.js boundary with one Next.js application on `scrooner.com` and
+> authenticated routes under `/app`. This document remains historical context.
+> The active decision is in the Decision Register and the migration contract is
+> [doc 43](../planning/43_Single_Nextjs_Shared_Domain_and_Shadcn_Migration_Plan.md).
+
 ## What needed clarification
 
 Scrooner has two product surfaces that must share one brand while retaining

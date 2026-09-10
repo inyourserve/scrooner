@@ -1,5 +1,7 @@
 # 16 — Company-page performance and cache architecture
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 > **Status:** P0 implemented and locally verified; production deployment/cache-hit verification pending  
 > **Date:** 2026-08-22  
 > **Scope:** Public Astro `/stock/{ticker}/` pages, Supabase Postgres, and the

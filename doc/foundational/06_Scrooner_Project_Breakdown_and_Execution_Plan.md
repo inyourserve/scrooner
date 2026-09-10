@@ -243,9 +243,8 @@ scrooner/                  # this repo — was "scrooner-web" in the original pl
 │   ├── jobs/
 │   ├── tests/
 │   └── scripts/
-├── apps/site/                # Astro
-├── apps/app/                  # Next.js
-└── packages/                   # shared UI etc.
+├── apps/app/                  # Next.js frontend: public routes + authenticated /app
+└── packages/                   # shared design tokens and libraries
 ```
 
 Admin (Django) can live in `pipeline/` alongside the data side if that stays operationally simpler, per the original note below — still true, just folder- rather than repo-scoped now.

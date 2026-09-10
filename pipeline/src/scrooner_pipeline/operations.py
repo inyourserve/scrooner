@@ -58,6 +58,36 @@ FRESHNESS_TARGETS = (
         timedelta(hours=72),
     ),
     FreshnessTarget(
+        # Added 2026-09-09 -- catches the exact class of bug found live via
+        # a real user report (Etsy showing blank quarterly revenue): raw.
+        # sec_filing_documents kept advancing daily via scrooner-incremental,
+        # but nothing reran the Normalizer's identity stage that turns a raw
+        # filing into a core.filing row, so core.filing silently lagged raw
+        # by over a week with zero alert. This target is a direct proxy for
+        # "is the Normalizer keeping pace with new SEC filings" -- if
+        # core.filing's newest row is more than a few days old, either SEC
+        # published nothing (rare, checked against raw below) or the
+        # Normalizer isn't running. 4 days (not 72h like filing_index) gives
+        # slack for a real weekend + Monday SEC processing lag.
+        "normalizer_backlog",
+        "select max(filing_date)::timestamptz from core.filing",
+        "select count(*) from core.filing",
+        timedelta(days=4),
+    ),
+    FreshnessTarget(
+        # Same shape, one stage further downstream -- catches the case
+        # where core.filing itself is current (identity ran) but
+        # resolve-facts/calculate never got rerun for the new filings, so
+        # canonical_fact's own newest resolution timestamp lags. This is
+        # the actual missing link the Etsy bug traced to (derive-q4/
+        # derive-interim-quarters + resolve-facts hadn't run population-wide
+        # since 2026-08-25, 2+ weeks stale, with zero alert until now).
+        "mapper_backlog",
+        "select max(resolved_at) from analytics.canonical_fact",
+        "select count(*) from analytics.canonical_fact",
+        timedelta(days=4),
+    ),
+    FreshnessTarget(
         "market_prices",
         "select max(bar_timestamp) from core.market_price_alpaca",
         "select count(*) from core.market_price_alpaca",

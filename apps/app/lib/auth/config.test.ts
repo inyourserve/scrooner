@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getAuthEnvironmentStatus } from "./config";
+import { getAppOrigin, getAuthEnvironmentStatus } from "./config";
 
 describe("getAuthEnvironmentStatus", () => {
   it("requires a public URL and publishable key", () => {
@@ -34,5 +34,16 @@ describe("getAuthEnvironmentStatus", () => {
         SUPABASE_SERVICE_ROLE_KEY: "must-stay-on-the-backend",
       }).enabled,
     ).toBe(false);
+  });
+});
+
+describe("getAppOrigin", () => {
+  it("uses localhost when no canonical URL is configured", () => {
+    expect(getAppOrigin({})).toBe("http://localhost:3000");
+  });
+
+  it("returns only the configured canonical origin", () => {
+    expect(getAppOrigin({ NEXT_PUBLIC_SCROONER_URL: "https://scrooner.com/app" }))
+      .toBe("https://scrooner.com");
   });
 });

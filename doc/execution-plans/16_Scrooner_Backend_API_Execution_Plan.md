@@ -1,5 +1,7 @@
 # 16 — Scrooner Backend API: Execution Plan
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 AI Query Engine (6a/6b) is done. This is the concrete build plan for Part 7 (Backend / Product API) — scoped, by explicit user direction, to **Scrooner's own internal product use only**: letting `app.scrooner.com` (Next.js) call the already-verified Screener and AI Query Engine, check a user's paid/free status, and manage saved screens. It does **not** cover the public/B2B data API — see "What this phase does not decide" for why that's a different thing entirely, not a later increment of this one. It does not relitigate anything already locked in doc 02/03/04/06 — it operationalizes them, the same way docs 08/09/11/13/14/15 did for the earlier phases.
 
 > **Status:** Canonical (2026-08-17) — all 4 stages built and verified against real HTTP requests, two real Supabase Auth users, and the golden-10; `/v1/screen`/`/v1/ask` reproduce doc 14b/15b's results exactly. Evidence: [doc 16b](16b_Backend_API_Definition_of_Done_Evidence.md). **Owner:** Founder / Product · **Review:** When a core decision changes, or when Frontend (Part 8) needs an endpoint this doc didn't anticipate.

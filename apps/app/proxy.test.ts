@@ -7,6 +7,7 @@ describe("auth proxy scope", () => {
       "/app/:path*",
       "/api/ask/:path*",
       "/api/screen/:path*",
+      "/api/screen-runs/:path*",
       "/api/screens/:path*",
       "/api/metrics/:path*",
     ]);

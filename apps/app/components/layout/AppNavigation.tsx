@@ -7,13 +7,17 @@ import { logout } from "@/app/auth/actions";
 
 const workspaceLinks = [
   { href: "/app", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/app/screener", label: "Create screen", icon: SearchCode },
+  { href: "/app/screens/new", label: "Create screen", icon: SearchCode },
   { href: "/app/watchlists", label: "Watchlists", icon: ListFilter },
-  { href: "/app/saved-screens", label: "Saved screens", icon: Star },
+  { href: "/app/screens", label: "Saved screens", icon: Star },
   { href: "/app/alerts", label: "Alerts", icon: Bell },
 ] as const;
 
 function isActive(pathname: string, href: string) {
+  if (href === "/app/screens/new") return pathname === href;
+  if (href === "/app/screens") {
+    return pathname === href || (pathname.startsWith(`${href}/`) && pathname !== "/app/screens/new");
+  }
   return href === "/app" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 }
 

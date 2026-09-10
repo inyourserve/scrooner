@@ -1,5 +1,7 @@
 # 2026-09-03 — A 4.9-hour worker stall, and a duplicate-watchdog lesson
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 ## What happened
 
 While investigating Priority 3/4 (period-alignment re-check, dividends deprioritization) alongside a running `accounts_receivable` full-population rollout, 8 `resolve-facts` workers went silently unresponsive for **~4.9 hours** (17,556+ seconds) — far longer than any hang previously documented this session (the worst prior case was ~16 minutes). Two independent watchdog Monitor instances (one intentionally armed this session, one left running from an earlier, forgotten `TaskStop` omission several hours before) both fired simultaneously and killed the same stuck PIDs, confirming a duplicate-watchdog situation had existed unnoticed for hours.

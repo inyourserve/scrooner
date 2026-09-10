@@ -1,8 +1,13 @@
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ScreenerClient } from "./ScreenerClient";
 import { NATURAL_QUERY_EXAMPLES } from "@/lib/screener/interpretation";
 import type { AskResponse, MetricDefinition, ScreenQueryPayload, ScreenResult } from "@/lib/screener/types";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 const metric: MetricDefinition = {
   metric_name: "roe",
@@ -53,6 +58,23 @@ function readyInterpretation(query = roeQuery): AskResponse {
   };
 }
 
+function persistedRun(text: string, interpreted: unknown) {
+  const value = interpreted as AskResponse;
+  if (!value.query || !value.result) return interpreted;
+  return {
+    run_id: "11111111-1111-1111-1111-111111111111",
+    query_text: text,
+    normalized_query: value.query,
+    total_count: value.result.matched.length,
+    items: value.result.matched,
+    excluded_missing_data: value.result.excluded_missing_data,
+    excluded_inactive: value.result.excluded_inactive,
+    cursor: null,
+    next_cursor: null,
+    ran_at: "2026-09-09T00:00:00Z",
+  };
+}
+
 const emptyResult: ScreenResult = {
   matched: [],
   excluded_missing_data: [],
@@ -90,9 +112,10 @@ describe("ScreenerClient", () => {
     vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       const path = String(input);
       if (path === "/api/metrics") return Promise.resolve(response(metrics));
-      if (path === "/api/ask") {
-        const body = JSON.parse(String(init?.body)) as { text: string; run: boolean };
-        return Promise.resolve(response(askHandler ? askHandler(body) : askPayload, askOk, askStatus));
+      if (path === "/api/screen-runs") {
+        const body = JSON.parse(String(init?.body)) as { text: string; page_size: number };
+        const interpreted = askHandler ? askHandler({ text: body.text, run: true }) : askPayload;
+        return Promise.resolve(response(persistedRun(body.text, interpreted), askOk, askStatus));
       }
       if (path === "/api/screen") {
         return screenRequest ?? Promise.resolve(response(screenPayload, screenOk, screenStatus));
@@ -208,36 +231,37 @@ describe("ScreenerClient", () => {
     fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
-    expect(await screen.findByRole("heading", { name: "companies with ROE above 30%" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Criteria used")).toHaveTextContent("Return on equity (ROE) greater than 30%");
-    expect(screen.queryByRole("textbox", { name: "Your criteria" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Run screen" })).not.toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
     expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(0);
+
+    // The query box stays put and ready for the next screen -- there is no
+    // separate "editor" view to return to, and no second, independent copy
+    // of the query/result rendered by the query panel itself; the results
+    // section below (driven by the same run the panel just created) is the
+    // one place that reflects what's currently on screen.
+    expect(screen.getByRole("textbox", { name: "Your criteria" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Run screen" })).not.toBeInTheDocument();
 
     const resultsHeading = screen.getByRole("heading", { name: "Matching companies" });
     const builderDisclosure = screen.getByRole("button", { name: /Exact filters/ });
     expect(resultsHeading.compareDocumentPosition(builderDisclosure) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
     expect(resultsHeading).toHaveFocus();
 
-    fireEvent.click(screen.getByText("Verify how Scrooner understood this"));
-    const interpretedCriteria = screen.getByRole("table", { name: "Interpreted criteria" });
-    expect(within(interpretedCriteria).getByText("Greater than")).toBeInTheDocument();
-    expect(within(interpretedCriteria).getByText("30%")).toBeInTheDocument();
-    const askCall = vi.mocked(fetch).mock.calls.find(([path]) => String(path) === "/api/ask");
-    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: "companies with ROE above 30%", run: true });
+    fireEvent.click(screen.getByText("View exact query sent to the Screener"));
+    expect(screen.getByText(/"metric_name": "roe"/)).toBeInTheDocument();
+    const askCall = vi.mocked(fetch).mock.calls.find(([path]) => String(path) === "/api/screen-runs");
+    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: "companies with ROE above 30%", page_size: 50 });
   });
 
-  it("opens the exact filter editor only when requested after results", async () => {
+  it("keeps the query box ready for a second screen immediately after results", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
     const input = await screen.findByRole("textbox", { name: "Your criteria" });
     fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
-    fireEvent.click(await screen.findByRole("button", { name: "Edit filters" }));
-    expect(await screen.findByText("Your words are now editable filters")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("30")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Run screen" })).toBeInTheDocument();
+    await screen.findByRole("heading", { name: "No companies matched every criterion" });
+    expect(screen.getByRole("textbox", { name: "Your criteria" })).toHaveValue("companies with ROE above 30%");
+    expect(screen.getByRole("button", { name: "Show matches" })).toBeInTheDocument();
   });
 
   it("blocks ambiguity and runs automatically after the user chooses a meaning", async () => {
@@ -261,15 +285,14 @@ describe("ScreenerClient", () => {
     expect(await screen.findByText("Clarify this screen")).toBeInTheDocument();
     expect(screen.getByText("Choose a meaning to continue.")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Revenue growth (YoY)" }));
-    expect(await screen.findByRole("heading", { name: "revenue growth yoy above 10%" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
     expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen")).toHaveLength(0);
     const askBodies = vi.mocked(fetch).mock.calls
-      .filter(([path]) => String(path) === "/api/ask")
+      .filter(([path]) => String(path) === "/api/screen-runs")
       .map(([, init]) => JSON.parse(String(init?.body)));
     expect(askBodies).toEqual([
-      { text: "revenue growth above 10%", run: true },
-      { text: "revenue growth yoy above 10%", run: true },
+      { text: "revenue growth above 10%", page_size: 50 },
+      { text: "revenue growth yoy above 10%", page_size: 50 },
     ]);
   });
 
@@ -314,8 +337,9 @@ describe("ScreenerClient", () => {
     const examples = await screen.findAllByRole("button", { name: /Run example:/ });
     fireEvent.click(examples[0]);
 
-    expect(await screen.findByRole("heading", { name: NATURAL_QUERY_EXAMPLES[0] })).toBeInTheDocument();
-    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/ask")).toHaveLength(1);
+    expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
+    const askCall = vi.mocked(fetch).mock.calls.find(([path]) => String(path) === "/api/screen-runs");
+    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: NATURAL_QUERY_EXAMPLES[0], page_size: 50 });
   });
 
   it("supports the documented command-enter shortcut without a second click", async () => {
@@ -325,7 +349,7 @@ describe("ScreenerClient", () => {
     fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
 
     expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
-    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/ask")).toHaveLength(1);
+    expect(vi.mocked(fetch).mock.calls.filter(([path]) => String(path) === "/api/screen-runs")).toHaveLength(1);
   });
 
   it("keeps a late response from replacing a newer plain-language screen", async () => {
@@ -335,9 +359,9 @@ describe("ScreenerClient", () => {
     vi.mocked(fetch).mockImplementation((input) => {
       const path = String(input);
       if (path === "/api/metrics") return Promise.resolve(response(metrics));
-      if (path === "/api/ask") {
+      if (path === "/api/screen-runs") {
         askCount += 1;
-        return askCount === 1 ? firstAsk : Promise.resolve(response(readyInterpretation()));
+        return askCount === 1 ? firstAsk : Promise.resolve(response(persistedRun("second current screen", readyInterpretation())));
       }
       return Promise.reject(new Error(`Unexpected request: ${path}`));
     });
@@ -349,10 +373,10 @@ describe("ScreenerClient", () => {
     fireEvent.change(input, { target: { value: "second current screen" } });
     fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
 
-    expect(await screen.findByRole("heading", { name: "second current screen" })).toBeInTheDocument();
+    expect(await screen.findByText("From “second current screen”")).toBeInTheDocument();
     resolveFirstAsk(response(readyInterpretation()));
-    await waitFor(() => expect(screen.queryByRole("heading", { name: "first slow screen" })).not.toBeInTheDocument());
-    expect(screen.getByRole("heading", { name: "second current screen" })).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText("From “first slow screen”")).not.toBeInTheDocument());
+    expect(screen.getByText("From “second current screen”")).toBeInTheDocument();
   });
 
   it("offers an in-place retry after a structured screen request fails", async () => {

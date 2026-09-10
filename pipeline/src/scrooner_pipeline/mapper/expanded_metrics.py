@@ -531,11 +531,23 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
             rows.append(_row("total_shareholder_yield", dividend_contribution + buyback_contribution - dilution, None))
 
     with conn.cursor() as cur:
-        target_ids = [mid for name, mid in metric_ids.items() if name in OUTPUT_METRIC_NAMES]
-        cur.execute(
-            "delete from analytics.metric_value where company_id = %s and metric_definition_id = any(%s) and period_label = 'TTM'",
-            (company_id, target_ids),
-        )
+        # Upsert, not delete-then-insert -- found live 2026-09-09/10: this
+        # module's rows are all anchored on period_start=period_end=
+        # date.today() (an "as of now" composite), so two concurrent
+        # invocations for the SAME company on the SAME calendar day (e.g.
+        # a manual run overlapping the daily cron, or two dev sessions on
+        # this shared environment) target the identical primary key and
+        # can race -- one process's INSERT landing between another's
+        # DELETE and its own INSERT raises a real UniqueViolation
+        # (metric_value_company_id_metric_definition_id_period_start_p_key),
+        # confirmed live: 6 real companies hit exactly this in one ~16-
+        # minute window. Safe to upsert instead of delete-first here
+        # specifically because `rows` always contains a full entry for
+        # every OUTPUT_METRIC_NAMES metric on every call (never a partial
+        # subset short-circuited early) -- so there's no "stale row from a
+        # metric this run didn't recompute" case an upsert would leave
+        # behind. ON CONFLICT is atomic per row, so it can't race with
+        # itself the way delete-then-insert could.
         cur.executemany(
             """
             insert into analytics.metric_value
@@ -544,6 +556,11 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
             values
                 (%(company_id)s, %(metric_definition_id)s, %(period_start)s, %(period_end)s, %(period_label)s,
                  %(value)s, %(is_null_reason)s, %(source_fact_ids)s)
+            on conflict (company_id, metric_definition_id, period_start, period_end, period_label)
+            do update set
+                value = excluded.value,
+                is_null_reason = excluded.is_null_reason,
+                source_fact_ids = excluded.source_fact_ids
             """,
             rows,
         )

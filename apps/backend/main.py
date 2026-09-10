@@ -4,12 +4,24 @@ already-verified screener/ai_query -- no logic lives here beyond routing,
 auth, and entitlement/usage-log bookkeeping.
 """
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
+from db_pool import close_pool, open_pool
 from observability import api_request_metrics, observe_http_request
-from routers import entitlement, saved_screens, screen
+from routers import entitlement, saved_screens, screen, screen_runs
 
-app = FastAPI(title="Scrooner Backend API")
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    open_pool()
+    try:
+        yield
+    finally:
+        close_pool()
+
+
+app = FastAPI(title="Scrooner Backend API", lifespan=lifespan)
 app.middleware("http")(observe_http_request)
 
 
@@ -27,3 +39,4 @@ def health_metrics() -> dict:
 app.include_router(screen.router)
 app.include_router(entitlement.router)
 app.include_router(saved_screens.router)
+app.include_router(screen_runs.router)

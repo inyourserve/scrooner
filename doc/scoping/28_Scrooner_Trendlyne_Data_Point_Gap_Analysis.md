@@ -1,5 +1,7 @@
 # Doc 28 — Trendlyne Data Point Gap Analysis
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 **Status: Draft (2026-08-21) — a scoping proposal, not a build plan.** Prompted by a real reference page the user added at `doc/html/trendlyne-apple.html` (Trendlyne's live Apple stock page, captured 2026-08-20) and the instruction to sharpen the data moat by learning what a comparable product surfaces that Scrooner doesn't. Cross-references that page's actual content — extracted and read in full, not recalled from memory — against doc 10's master P0/P1/P2 inventory, doc 26's Screener gap analysis, `DATA_COVERAGE.md`, and today's own utilization-study build (doc `core-fact-utilization-study.md`). Every "new, feasible" candidate below was checked live against the real database before being recommended; every "already covered" or "already excluded" item was confirmed against an existing doc rather than assumed.
 
 ## What Trendlyne shows that Scrooner already has (no gap)

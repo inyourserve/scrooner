@@ -1,10 +1,36 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getAuthEnvironmentStatus } from "@/lib/auth/config";
+import { getAppOrigin, getAuthEnvironmentStatus } from "@/lib/auth/config";
 import { getSafeRedirectPath } from "@/lib/auth/redirect";
 import type { AuthActionState } from "@/lib/auth/state";
 import { createClient } from "@/lib/supabase/server";
+
+type OAuthProvider = "google" | "apple";
+
+export async function loginWithOAuth(
+  provider: OAuthProvider,
+  requestedRedirect: string,
+) {
+  const disabled = unavailable();
+  if (disabled) redirect("/login?error=unavailable");
+
+  const destination = getSafeRedirectPath(requestedRedirect);
+  const callbackUrl = new URL("/auth/callback", getAppOrigin());
+  callbackUrl.searchParams.set("next", destination);
+
+  // Start PKCE on the server so the verifier is written through Next's cookie
+  // store. This avoids browser/WebView crypto limitations leaving the callback
+  // with a code it cannot exchange.
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: callbackUrl.toString() },
+  });
+
+  if (error || !data.url) redirect("/login?error=oauth");
+  redirect(data.url);
+}
 
 function unavailable(): AuthActionState | null {
   return getAuthEnvironmentStatus().enabled
@@ -59,12 +85,12 @@ export async function signup(
   const { email, password, errors } = credentials(formData, { confirm: true });
   if (Object.keys(errors).length) return { status: "error", errors };
 
-  const appUrl = process.env.NEXT_PUBLIC_SCROONER_URL || "http://localhost:3000";
+  const appUrl = getAppOrigin();
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { emailRedirectTo: `${appUrl.replace(/\/$/, "")}/auth/callback` },
+    options: { emailRedirectTo: `${appUrl}/auth/callback` },
   });
 
   if (error) return { status: "error", message: error.message };
@@ -88,10 +114,10 @@ export async function requestPasswordReset(
     return { status: "error", errors: { email: "Enter a valid email address." } };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_SCROONER_URL || "http://localhost:3000";
+  const appUrl = getAppOrigin();
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${appUrl.replace(/\/$/, "")}/auth/callback?next=/app/account/update-password`,
+    redirectTo: `${appUrl}/auth/callback?next=/app/account/update-password`,
   });
 
   if (error) return { status: "error", message: "We could not send the reset email. Try again shortly." };

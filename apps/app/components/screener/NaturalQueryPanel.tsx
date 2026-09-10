@@ -2,44 +2,39 @@
 
 import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { metricByName } from "@/lib/screener/catalog";
-import {
-  NATURAL_QUERY_EXAMPLES,
-  categorySummary,
-  parserPhraseForMetric,
-  predicateSummary,
-} from "@/lib/screener/interpretation";
-import type { AskResponse, MetricDefinition, ScreenQueryPayload, ScreenResult } from "@/lib/screener/types";
+import { NATURAL_QUERY_EXAMPLES, parserPhraseForMetric } from "@/lib/screener/interpretation";
+import type { AskResponse, MetricDefinition } from "@/lib/screener/types";
 import { Button } from "@/components/ui/Button";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { InterpretationTable } from "./InterpretationTable";
+import { savedScreensApi } from "@/lib/saved-screens/client";
+import type { ScreenRunPage } from "@/lib/saved-screens/types";
 
-type InterpretState = "idle" | "loading" | "complete" | "attention" | "error";
+type InterpretState = "idle" | "loading" | "attention" | "error";
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function responseError(payload: unknown): string {
-  if (payload && typeof payload === "object" && "detail" in payload && typeof payload.detail === "string") {
-    return payload.detail;
-  }
-  return "The screen could not be completed. Try again or use the filter editor.";
-}
-
+// This panel's only job once a run exists is to hand it off -- the run
+// itself (query_text, normalized_query, results) is the single source of
+// truth from here on, and ScreenerClient's URL-driven state is the only
+// place that turns it into a displayed screen. Rendering a second,
+// independent "here's your screen" summary here (as an earlier version of
+// this component did) meant two places could show a query and disagree.
 export function NaturalQueryPanel({
   metrics,
-  onResult,
-  onEdit,
+  initialText = "",
+  onRunCreated,
 }: {
   metrics: MetricDefinition[];
-  onResult: (query: ScreenQueryPayload, result: ScreenResult, sourceText: string) => boolean;
-  onEdit: (query: ScreenQueryPayload, sourceText: string) => boolean;
+  initialText?: string;
+  onRunCreated: (run: ScreenRunPage) => void;
 }) {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initialText);
   const [state, setState] = useState<InterpretState>("idle");
   const [interpretation, setInterpretation] = useState<AskResponse | null>(null);
   const [error, setError] = useState("");
-  const [filtersOpened, setFiltersOpened] = useState(false);
   const requestVersion = useRef(0);
 
   function changeText(next: string) {
@@ -48,7 +43,6 @@ export function NaturalQueryPanel({
     setInterpretation(null);
     setState("idle");
     setError("");
-    setFiltersOpened(false);
   }
 
   async function runQuery(nextText = text) {
@@ -68,16 +62,20 @@ export function NaturalQueryPanel({
     const version = ++requestVersion.current;
     setState("loading");
     setError("");
-    setFiltersOpened(false);
     try {
-      const response = await fetch("/api/ask", {
-        method: "POST",
-        headers: { "content-type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ text: normalized, run: true }),
-      });
-      const payload: unknown = await response.json().catch(() => null);
+      const payload: unknown = await savedScreensApi.createRun(normalized);
       if (version !== requestVersion.current) return;
-      if (!response.ok) throw new Error(responseError(payload));
+      if (payload && typeof payload === "object" && "run_id" in payload) {
+        // Hand the run straight to ScreenerClient (the single source of
+        // truth for "what's on screen" from here) and reset this panel to
+        // its ready state -- no local copy of the query/result is kept
+        // here, so there's nothing that could drift out of sync with what
+        // the results section below actually shows.
+        onRunCreated(payload as ScreenRunPage);
+        setState("idle");
+        setInterpretation(null);
+        return;
+      }
       const next = payload as AskResponse;
       setInterpretation(next);
 
@@ -85,11 +83,7 @@ export function NaturalQueryPanel({
         setState("attention");
         return;
       }
-      if (!next.result) throw new Error("The screen service returned no results. Please try again.");
-      if (!onResult(next.query, next.result, normalized)) {
-        throw new Error("This screen contains more classification filters than the editor can represent.");
-      }
-      setState("complete");
+      setState("attention");
     } catch (requestError) {
       if (version !== requestVersion.current) return;
       setState("error");
@@ -122,84 +116,43 @@ export function NaturalQueryPanel({
     void runQuery(resolved);
   }
 
-  function editFilters() {
-    if (!interpretation?.query) return;
-    if (onEdit(interpretation.query, text.trim())) {
-      setFiltersOpened(true);
-      return;
-    }
-    setState("error");
-    setError("This screen contains more classification filters than the editor can represent. Edit the wording and try again.");
-  }
-
-  const completedQuery = state === "complete" ? interpretation?.query : null;
-
   return (
-    <section className={`natural-query ${completedQuery ? "complete" : ""}`} aria-labelledby="natural-query-title">
-      {completedQuery ? (
-        <div className="screen-summary" aria-live="polite">
-          <div className="screen-summary-main">
-            <p className="step-label">Current screen</p>
-            <h2 id="natural-query-title">{text}</h2>
-            <div className="criteria-chips" aria-label="Criteria used">
-              {completedQuery.metric_predicates.map((predicate, index) => {
-                const summary = predicateSummary(predicate, metrics);
-                return <span key={`${predicate.metric_name}-${index}`}><strong>{summary.metric}</strong> {summary.operator.toLowerCase()} {summary.value}</span>;
-              })}
-              {categorySummary(completedQuery).map((label) => <span key={label}><strong>{label}</strong></span>)}
-            </div>
-          </div>
-          <div className="screen-summary-actions">
-            <Button type="button" variant="ghost" onClick={() => setState("idle")}>Edit wording</Button>
-            <Button type="button" variant="secondary" onClick={editFilters}>
-              {filtersOpened ? "Filters opened ✓" : "Edit filters"}
-            </Button>
-          </div>
-          <details className="verify-screen">
-            <summary>Verify how Scrooner understood this</summary>
-            <InterpretationTable query={completedQuery} metrics={metrics} />
-          </details>
+    <section className="natural-query" aria-labelledby="natural-query-title">
+      <div className="natural-query-heading">
+        <div>
+          <h1 id="natural-query-title">Create a screen</h1>
         </div>
-      ) : (
-        <>
-          <div className="natural-query-heading">
-            <div>
-              <h2 id="natural-query-title">Describe the companies you want</h2>
-              <p>Use plain English or open exact filters.</p>
-            </div>
-          </div>
+      </div>
 
-          <div className="natural-query-workspace">
-            <form onSubmit={submit} className="natural-query-form" aria-busy={state === "loading"}>
-              <label htmlFor="natural-query-input">Your criteria</label>
-              <textarea
-                className="ds-control query-composer"
-                id="natural-query-input"
-                value={text}
-                onChange={(event) => changeText(event.target.value)}
-                onKeyDown={keyboardSubmit}
-                placeholder="Companies with ROE above 20% and debt to equity below 1"
-                rows={5}
-                aria-invalid={state === "attention" || state === "error"}
-                aria-describedby={`natural-query-help${state === "attention" ? " natural-query-attention" : ""}${state === "error" ? " natural-query-error" : ""}`}
-              />
-              <div className="natural-query-actions">
-                <p id="natural-query-help">Press ⌘ Enter to run.</p>
-                <Button type="submit" loading={state === "loading"} loadingLabel="Finding matches…">Show matches</Button>
-              </div>
-            </form>
-
-            <aside className="query-guide" aria-label="Plain-language examples">
-              <p className="query-guide-label">Try an example</p>
-              <div className="query-examples">
-                {NATURAL_QUERY_EXAMPLES.slice(0, 3).map((example) => (
-                  <button className="query-example" key={example} type="button" aria-label={`Run example: ${example}`} disabled={state === "loading"} onClick={() => runExample(example)}>{example}</button>
-                ))}
-              </div>
-            </aside>
+      <div className="natural-query-workspace">
+        <form onSubmit={submit} className="natural-query-form" aria-busy={state === "loading"}>
+          <label htmlFor="natural-query-input"><span aria-hidden="true">Query</span><span className="sr-only">Your criteria</span></label>
+          <textarea
+            className="ds-control query-composer"
+            id="natural-query-input"
+            value={text}
+            onChange={(event) => changeText(event.target.value)}
+            onKeyDown={keyboardSubmit}
+            placeholder={"ROE above 20% AND\nDebt to equity below 1"}
+            rows={7}
+            aria-invalid={state === "attention" || state === "error"}
+            aria-describedby={`natural-query-help${state === "attention" ? " natural-query-attention" : ""}${state === "error" ? " natural-query-error" : ""}`}
+          />
+          <div className="natural-query-actions">
+            <span id="natural-query-help" />
+            <Button type="submit" loading={state === "loading"} loadingLabel="Finding matches…">Show matches</Button>
           </div>
-        </>
-      )}
+        </form>
+
+        <aside className="query-guide" aria-label="Plain-language examples">
+          <p className="query-guide-label">Examples</p>
+          <div className="query-examples">
+            {NATURAL_QUERY_EXAMPLES.slice(0, 3).map((example) => (
+              <button className="query-example" key={example} type="button" aria-label={`Run example: ${example}`} disabled={state === "loading"} onClick={() => runExample(example)}>{example}</button>
+            ))}
+          </div>
+        </aside>
+      </div>
 
       {state === "loading" && (
         <StatusPanel className="interpretation-state" title="Finding matching companies" busy>

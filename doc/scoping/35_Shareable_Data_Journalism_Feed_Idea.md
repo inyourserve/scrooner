@@ -1,5 +1,7 @@
 # Doc 35 — Idea: A Shareable "Data Journalism" Feed for Reporters/Analysts
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 **Status:** Idea capture (2026-08-28), not scoped or built. Owner: Founder/Product.
 
 ---

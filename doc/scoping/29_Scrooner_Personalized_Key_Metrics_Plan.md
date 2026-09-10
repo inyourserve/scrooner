@@ -1,5 +1,7 @@
 # Doc 29 — Personalized Key Metrics (Company Page) — Execution Plan
 
+> **Frontend architecture note (2026-09-05):** This document contains historical implementation evidence from the retired frontend. Current implementation guidance is one Next.js App Router application in `apps/app` on `scrooner.com`, with authenticated workflows under `/app`.
+
 **Status: Draft (2026-08-22) — a concrete plan, not yet built.** Scoped narrowly to one feature: letting a logged-in user choose which metrics appear in the company page's "Key Metrics" bar (`apps/site`'s `keyMetrics` array, currently a single hardcoded 8-item set for every user — design framework §12.2's own recommended list). Explicitly does **not** cover custom peer sets or any other personalization idea raised alongside it — those are named as future, separate features (see "Why this generalizes" below), not designed or built here.
 
 **Hard dependency, not yet built:** this entire feature requires Part 9 (User System / auth) to exist. `apps/site` currently has zero auth awareness — no session read, no login state, nothing. Nothing in this plan can start until Part 9 lands; this doc exists so the shape is decided ahead of time, not so it can jump the queue.

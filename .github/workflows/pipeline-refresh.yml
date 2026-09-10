@@ -45,6 +45,20 @@ jobs:
         run: uv sync --project pipeline --locked
       - name: Index latest finalized SEC filing day
         run: uv run --project pipeline scrooner-incremental
+      - name: Reprocess Normalizer + Mapper for recently-filed companies
+        # Added 2026-09-09 -- closes a real, confirmed gap: scrooner-incremental
+        # above only ever wrote new filing metadata/companyfacts/submissions
+        # into `raw`. Nothing downstream ever reran the Normalizer's
+        # derive-interim-quarters/derive-q4 or the Mapper's resolve/calculate
+        # chain for those companies, so a company's core/analytics data could
+        # go stale forever after its first full-population pass -- found live
+        # from a real user report (Etsy showing blank quarterly revenue;
+        # traced to the last full-population derive/resolve/calculate run
+        # being 2+ weeks stale). Scoped to companies with a raw filing in the
+        # last 10 days (see the script's own docstring for why raw, not
+        # core.filing) -- cheap daily, not a full-population rerun.
+        if: always()
+        run: pipeline/scripts/reprocess_recent_filers.sh
       - name: Refresh real market prices (Alpaca)
         # Added 2026-09-08 -- doc 25's own docstring had flagged this as
         # "no scheduler wired up yet" since 2026-08-17. core.market_price_

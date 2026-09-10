@@ -41,7 +41,7 @@ export default function Page() {
         <ul className="pricing-included">{included.map((item) => <li key={item}><Check size={18} aria-hidden="true" />{item}</li>)}</ul>
         <div className="pricing-cta">
           <Button asChild size="large"><Link href="/signup">Create a free account</Link></Button>
-          <Button asChild size="large" variant="ghost"><Link href="/app/screener">Explore the screener</Link></Button>
+          <Button asChild size="large" variant="ghost"><Link href="/app/screens/new">Explore the screener</Link></Button>
         </div>
       </section>
 

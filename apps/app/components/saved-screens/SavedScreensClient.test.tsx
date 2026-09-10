@@ -12,12 +12,11 @@ afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 describe("SavedScreensClient", () => {
   it("loads, renames, and confirms before deleting a saved screen", async () => {
     const fetchMock = vi.fn()
-      .mockResolvedValueOnce(new Response(JSON.stringify([{ id: 7, name: "Quality", query: { metric_predicates: [{ metric_name: "roe", operator: ">", value: "20" }], categorical_predicates: [], include_inactive: false, sort_by: "roe", sort_desc: true, limit: 50 }, created_at: "2026-08-01", updated_at: "2026-08-02" }]), { status: 200 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({ id: 7, name: "High quality" }), { status: 200 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({ deleted: 7 }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
-    render(<SavedScreensClient />);
-    expect(await screen.findByText("Quality")).toBeInTheDocument();
+    render(<SavedScreensClient initialScreens={[{ id: 7, name: "Quality", slug: "quality", query: { metric_predicates: [{ metric_name: "roe", operator: ">", value: "20" }], categorical_predicates: [], include_inactive: false, sort_by: "roe", sort_desc: true, limit: 50 }, created_at: "2026-08-01", updated_at: "2026-08-02" }]} />);
+    expect(screen.getByText("Quality")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Rename" }));
     fireEvent.change(screen.getByLabelText("Screen name"), { target: { value: "High quality" } });
     fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Rename" }));

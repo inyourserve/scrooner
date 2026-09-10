@@ -25,10 +25,10 @@ class ScreenCursor:
 
     def execute(self, sql, params=()):
         normalized = " ".join(sql.split())
-        if normalized.startswith("select id, name, query"):
+        if normalized.startswith("select id, name, slug, query"):
             user_id = params[0]
             self._rows = [
-                (screen_id, screen["name"], screen["query"], screen["created_at"], screen["updated_at"])
+                (screen_id, screen["name"], screen["slug"], screen["query"], screen["created_at"], screen["updated_at"])
                 for screen_id, screen in sorted(self.conn.screens.items())
                 if str(screen["user_id"]) == user_id
             ]
@@ -56,6 +56,7 @@ class ScreenConnection:
             1: {
                 "user_id": UUID(OWNER),
                 "name": "Original",
+                "slug": "original",
                 "query": {"metric_predicates": []},
                 "created_at": "2026-08-18T00:00:00Z",
                 "updated_at": "2026-08-18T00:00:00Z",
@@ -69,6 +70,15 @@ class ScreenConnection:
     def commit(self):
         self.commits += 1
 
+    @contextmanager
+    def transaction(self):
+        # A real psycopg3 Connection.transaction() rolls back and
+        # re-raises on any exception in its block, same as a plain
+        # try/finally with nothing suppressed -- this fake matches that
+        # exact hands-off behavior, since rename/delete's 404 path relies
+        # on the HTTPException still propagating out.
+        yield
+
 
 @pytest.mark.unit
 def test_saved_screen_owner_can_mutate_and_other_user_cannot(monkeypatch):
@@ -78,7 +88,7 @@ def test_saved_screen_owner_can_mutate_and_other_user_cannot(monkeypatch):
     def connection():
         yield conn
 
-    monkeypatch.setattr(saved_screens, "get_connection", connection)
+    monkeypatch.setattr(saved_screens, "get_pooled_connection", connection)
 
     assert [row["id"] for row in saved_screens.list_screens(OWNER)] == [1]
     assert saved_screens.list_screens(OTHER) == []
