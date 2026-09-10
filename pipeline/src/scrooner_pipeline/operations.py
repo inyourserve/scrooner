@@ -9,7 +9,7 @@ without ad-hoc SQL and can exit non-zero for an external scheduler/alert.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from numbers import Number
 
@@ -72,9 +72,31 @@ FRESHNESS_TARGETS = (
 )
 
 DEAD_LETTER_QUERIES = {
-    "collector": "select count(*) from raw.collector_errors where not resolved",
+    # "collector" excludes NotInBulkArchive -- found live 2026-09-10: it's
+    # the ONLY error_type raw.collector_errors has ever recorded (97/97
+    # historical rows), a benign, expected condition (a CIK genuinely
+    # absent from that day's companyfacts.zip snapshot -- new registrants,
+    # edge-of-index-rebuild timing), not a pipeline bug. Someone had
+    # already been manually resolving these (82/97 resolved as of this
+    # finding) but gaps in that manual triage left the daily
+    # "Enforce freshness and dead-letter health" gate alert-failing for
+    # 8+ CONSECUTIVE days (2026-09-02 through 2026-09-09) on pure noise,
+    # even though the actual pipeline work underneath mostly kept
+    # succeeding -- classic alert fatigue, see EXPECTED_MISS_QUERIES below
+    # for where this count still surfaces (visibility, never alerting).
+    "collector": "select count(*) from raw.collector_errors where not resolved and error_type != 'NotInBulkArchive'",
     "normalizer": "select count(*) from core.normalizer_error where not resolved",
     "mapper": "select count(*) from analytics.mapper_error where not resolved",
+}
+
+# Known-benign dead-letter categories, tracked for visibility but
+# deliberately excluded from DEAD_LETTER_QUERIES/evaluate_alerts -- any
+# OTHER collector error_type (something new, never seen before) still
+# alerts with zero tolerance via DEAD_LETTER_QUERIES above.
+EXPECTED_MISS_QUERIES = {
+    "collector_not_in_bulk_archive": (
+        "select count(*) from raw.collector_errors where not resolved and error_type = 'NotInBulkArchive'"
+    ),
 }
 
 
@@ -106,6 +128,10 @@ class OperationalSnapshot:
     freshness: tuple[FreshnessReading, ...]
     dead_letters: dict[str, int]
     recent_runs: tuple[RunRecord, ...]
+    # Visibility-only counterpart to dead_letters -- see EXPECTED_MISS_QUERIES.
+    # Never fed into evaluate_alerts(); defaulted so existing callers/tests
+    # that don't care about this don't need to pass it.
+    expected_misses: dict[str, int] = field(default_factory=dict)
 
 
 def _scalar(conn: psycopg.Connection, sql: str):
@@ -131,11 +157,13 @@ def load_operational_snapshot(
         for target in FRESHNESS_TARGETS
     )
     dead_letters = {layer: int(_scalar(conn, sql) or 0) for layer, sql in DEAD_LETTER_QUERIES.items()}
+    expected_misses = {layer: int(_scalar(conn, sql) or 0) for layer, sql in EXPECTED_MISS_QUERIES.items()}
     return OperationalSnapshot(
         generated_at=generated_at,
         freshness=freshness,
         dead_letters=dead_letters,
         recent_runs=tuple(get_recent_runs(conn, limit=run_limit)),
+        expected_misses=expected_misses,
     )
 
 
@@ -239,6 +267,7 @@ def snapshot_as_dict(snapshot: OperationalSnapshot) -> dict:
             for reading in snapshot.freshness
         ],
         "dead_letters": snapshot.dead_letters,
+        "expected_misses": snapshot.expected_misses,
         "recent_runs": [
             {
                 "run_id": run.id,

@@ -4,6 +4,8 @@ import pytest
 
 from scrooner_pipeline.collector.logs import RunRecord
 from scrooner_pipeline.operations import (
+    DEAD_LETTER_QUERIES,
+    EXPECTED_MISS_QUERIES,
     FreshnessReading,
     OperationalSnapshot,
     evaluate_alerts,
@@ -83,6 +85,45 @@ def test_missing_stale_dead_letter_failed_and_stuck_states_are_visible() -> None
         "recent_failed_run:2:incremental",
         "stuck_run:3:incremental",
     ]
+
+
+def test_collector_dead_letter_query_excludes_not_in_bulk_archive() -> None:
+    # Found live 2026-09-10: NotInBulkArchive is the ONLY error_type
+    # raw.collector_errors has ever recorded (97/97 historical rows) -- a
+    # benign, expected condition, not a pipeline bug -- but the old
+    # unfiltered query treated it as zero-tolerance, alert-failing the
+    # daily "Enforce freshness and dead-letter health" gate for 8+
+    # consecutive days on pure noise. Any OTHER collector error_type must
+    # still alert with zero tolerance.
+    query = DEAD_LETTER_QUERIES["collector"]
+    assert "error_type != 'NotInBulkArchive'" in query
+    assert "not resolved" in query
+
+
+def test_expected_misses_never_reach_evaluate_alerts() -> None:
+    # expected_misses is visibility-only -- a healthy snapshot with real
+    # NotInBulkArchive counts in expected_misses must still report zero
+    # alerts and status "ok".
+    snapshot = OperationalSnapshot(
+        generated_at=NOW,
+        freshness=(FreshnessReading("filing_index", NOW - timedelta(hours=1), 100, timedelta(hours=72)),),
+        dead_letters={"collector": 0, "normalizer": 0, "mapper": 0},
+        recent_runs=(run(1),),
+        expected_misses={"collector_not_in_bulk_archive": 15},
+    )
+
+    report = snapshot_as_dict(snapshot)
+
+    assert report["status"] == "ok"
+    assert report["alerts"] == []
+    assert report["expected_misses"] == {"collector_not_in_bulk_archive": 15}
+
+
+def test_expected_miss_queries_target_the_same_table_with_the_opposite_filter() -> None:
+    query = EXPECTED_MISS_QUERIES["collector_not_in_bulk_archive"]
+    assert "raw.collector_errors" in query
+    assert "error_type = 'NotInBulkArchive'" in query
+    assert "not resolved" in query
 
 
 def test_row_count_anomaly_compares_only_same_successful_job_and_scope() -> None:
