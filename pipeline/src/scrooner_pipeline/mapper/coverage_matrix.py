@@ -239,6 +239,136 @@ def classify_concept_gaps(conn: psycopg.Connection) -> dict:
     return {"rows": classified}
 
 
+# The corrected-coverage-denominator methodology (2026-09-12, see
+# doc/data-moat/learnings/2026-09-12-corrected-coverage-denominator-methodology.md),
+# generalized from revenue/dividends to the whole registry. Every coverage
+# number before this measured against ALL active companies -- wrong for
+# any data point that structurally doesn't apply to every company. Each
+# named population here is a real, evidence-checked company set, not a
+# guess:
+#   real_operating_company (~4,816): status='active' MINUS the
+#     non-operating gap_reasons already classified above (SPAC,
+#     passthrough_trust, passthrough_commodity_trust) -- the corrected
+#     replacement for "all active companies" as the DEFAULT population
+#     for anything that should apply to a genuine operating business.
+#   dividend_payer (~1,954): real, nonzero dividends_paid_resolved OR
+#     dividends_per_share in the company's own most recent reported FY
+#     (current status, not "ever paid one 10 years ago").
+#   buyback_company (~2,449): same shape, for share_buybacks_resolved.
+#   capital_return_company: union of the two above -- for metrics that
+#     combine dividends AND buybacks (cash_returned_to_shareholders,
+#     total_shareholder_yield), which only need EITHER activity to be
+#     a real, applicable case.
+#   bdc_company (118): has a real bdc_total_investment_income value --
+#     the already-established sector-isolated BDC population.
+POPULATION_QUERIES = {
+    "real_operating_company": """
+        select c.id from core.company c
+        where c.status = 'active'
+          and not exists (
+              select 1 from analytics.company_data_point_coverage cov
+              where cov.company_id = c.id and cov.data_point_name = 'revenue_sanity_resolved'
+                and cov.gap_reason in ('pre_revenue_spac', 'passthrough_trust', 'passthrough_commodity_trust')
+          )
+    """,
+    "dividend_payer": """
+        with latest_paid as (
+            select cf.company_id, cf.value,
+                row_number() over (partition by cf.company_id order by p.fiscal_year desc) as rn
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            join core.period p on p.id = cf.period_id
+            where cc.name = 'dividends_paid_resolved' and p.fiscal_period = 'FY'
+        ),
+        latest_dps as (
+            select cf.company_id, cf.value,
+                row_number() over (partition by cf.company_id order by p.fiscal_year desc) as rn
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            join core.period p on p.id = cf.period_id
+            where cc.name = 'dividends_per_share' and p.fiscal_period = 'FY'
+        )
+        select distinct c.id from core.company c
+        where c.status = 'active' and (
+            c.id in (select company_id from latest_paid where rn = 1 and value != 0)
+            or c.id in (select company_id from latest_dps where rn = 1 and value > 0)
+        )
+    """,
+    "buyback_company": """
+        with latest_bb as (
+            select cf.company_id, cf.value,
+                row_number() over (partition by cf.company_id order by p.fiscal_year desc) as rn
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            join core.period p on p.id = cf.period_id
+            where cc.name = 'share_buybacks_resolved' and p.fiscal_period = 'FY'
+        )
+        select distinct c.id from core.company c
+        where c.status = 'active' and c.id in (select company_id from latest_bb where rn = 1 and value != 0)
+    """,
+    "bdc_company": """
+        select distinct cf.company_id from analytics.canonical_fact cf
+        join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+        where cc.name = 'bdc_total_investment_income'
+    """,
+}
+
+# capital_return_company is a union of two other named populations rather
+# than its own standalone query -- computed separately in
+# classify_company_populations() below.
+
+# Data points that only apply to a real subset of even the real-operating-
+# company population -- everything else in the registry defaults to
+# real_operating_company (set in build_registry()). Curated, not guessed:
+# each family here was checked the same way revenue/dividends were.
+DIVIDEND_FAMILY_DATA_POINTS = (
+    "dividends_paid", "dividends_paid_resolved", "dividends_per_share",
+    "dividend_growth_streak_years", "dividend_yield", "dps_growth_yoy",
+    "dps_growth_3y_cagr", "payout_ratio", "dividends_pct_fcf",
+)
+BUYBACK_FAMILY_DATA_POINTS = (
+    "share_buybacks", "share_buybacks_resolved", "buyback_yield", "share_repurchases_pct_fcf",
+)
+CAPITAL_RETURN_FAMILY_DATA_POINTS = (
+    "cash_returned_to_shareholders", "total_shareholder_yield",
+)
+BDC_FAMILY_DATA_POINTS = ("bdc_total_investment_income",)
+
+
+def classify_company_populations(conn: psycopg.Connection) -> dict:
+    """Rebuilds analytics.company_population from scratch -- one row per
+    (company, named population) the company genuinely belongs to. A
+    company can belong to several (e.g. a real operating company that
+    also currently pays a dividend is in both real_operating_company and
+    dividend_payer)."""
+    with conn.cursor() as cur:
+        cur.execute("delete from analytics.company_population")
+        total = 0
+        for population_name, query in POPULATION_QUERIES.items():
+            # select *, not a named column -- POPULATION_QUERIES' own
+            # SELECT lists use different column names (id, company_id),
+            # and the wrapper shouldn't care which.
+            cur.execute(
+                f"insert into analytics.company_population (company_id, population_name) select *, %s from ({query}) q",
+                (population_name,),
+            )
+            total += cur.rowcount
+        # capital_return_company: union of dividend_payer and buyback_company
+        cur.execute(
+            """
+            insert into analytics.company_population (company_id, population_name)
+            select distinct company_id, 'capital_return_company'
+            from analytics.company_population
+            where population_name in ('dividend_payer', 'buyback_company')
+            """
+        )
+        total += cur.rowcount
+        conn.commit()
+
+    logger.info("coverage_matrix.company_populations_classified", rows=total)
+    return {"rows": total}
+
+
 def build_registry(conn: psycopg.Connection) -> dict:
     """Rebuilds analytics.data_point_registry from concept_mapping and
     metric_definition_input -- always a fresh derivation, never edited
@@ -298,6 +428,23 @@ def build_registry(conn: psycopg.Connection) -> dict:
         ]
     )
 
+    # Assign each data point's applicable_population -- defaults to
+    # real_operating_company (set on every row below); the narrower
+    # families above override it for the specific data points that only
+    # apply to a real subset of that population. See this module's own
+    # comment above POPULATION_QUERIES for how each family was verified.
+    population_overrides: dict[str, str] = {}
+    for name in DIVIDEND_FAMILY_DATA_POINTS:
+        population_overrides[name] = "dividend_payer"
+    for name in BUYBACK_FAMILY_DATA_POINTS:
+        population_overrides[name] = "buyback_company"
+    for name in CAPITAL_RETURN_FAMILY_DATA_POINTS:
+        population_overrides[name] = "capital_return_company"
+    for name in BDC_FAMILY_DATA_POINTS:
+        population_overrides[name] = "bdc_company"
+    for row in rows:
+        row["applicable_population"] = population_overrides.get(row["data_point_name"], "real_operating_company")
+
     with conn.cursor() as cur:
         # Found live 2026-09-06: company_data_point_coverage has a FK to
         # data_point_name, so clearing the registry alone violates it the
@@ -309,8 +456,8 @@ def build_registry(conn: psycopg.Connection) -> dict:
         cur.execute("delete from analytics.data_point_registry")
         cur.executemany(
             """
-            insert into analytics.data_point_registry (data_point_name, data_point_type, required_tags, source_module)
-            values (%(data_point_name)s, %(data_point_type)s, %(required_tags)s, %(source_module)s)
+            insert into analytics.data_point_registry (data_point_name, data_point_type, required_tags, source_module, applicable_population)
+            values (%(data_point_name)s, %(data_point_type)s, %(required_tags)s, %(source_module)s, %(applicable_population)s)
             """,
             rows,
         )
@@ -414,7 +561,51 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         cur.execute("select count(*), count(*) filter (where has_value) from analytics.company_data_point_coverage")
         total, has_value = cur.fetchone()
 
+    # Order matters: classify_concept_gaps() must run first -- it sets the
+    # revenue_sanity_resolved gap_reason values (pre_revenue_spac etc.)
+    # that POPULATION_QUERIES['real_operating_company'] reads directly.
     gap_stats = classify_concept_gaps(conn)
+    population_stats = classify_company_populations(conn)
 
-    logger.info("coverage_matrix.coverage_built", total_rows=total, has_value=has_value, concept_gaps_classified=gap_stats["rows"])
-    return {"total_rows": total, "has_value": has_value, "concept_gaps_classified": gap_stats["rows"]}
+    logger.info(
+        "coverage_matrix.coverage_built",
+        total_rows=total,
+        has_value=has_value,
+        concept_gaps_classified=gap_stats["rows"],
+        company_populations_classified=population_stats["rows"],
+    )
+    return {
+        "total_rows": total,
+        "has_value": has_value,
+        "concept_gaps_classified": gap_stats["rows"],
+        "company_populations_classified": population_stats["rows"],
+    }
+
+
+def corrected_coverage_report(conn: psycopg.Connection) -> list[dict]:
+    """The actual point of this whole module extension: coverage measured
+    against each data point's real applicable_population (from the
+    registry), not against every active company by default. Returns one
+    row per data point: has_value count, population size, and the
+    corrected percentage -- the number that should be reported/trusted,
+    not the raw has_value/5216 figure this project used everywhere before
+    2026-09-12."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select
+                r.data_point_name,
+                r.data_point_type,
+                r.applicable_population,
+                count(*) filter (where cov.has_value) as has_value,
+                count(*) as population_size
+            from analytics.data_point_registry r
+            join analytics.company_population cp on cp.population_name = r.applicable_population
+            join analytics.company_data_point_coverage cov
+                on cov.company_id = cp.company_id and cov.data_point_name = r.data_point_name
+            group by r.data_point_name, r.data_point_type, r.applicable_population
+            order by r.data_point_type, r.data_point_name
+            """
+        )
+        columns = ("data_point_name", "data_point_type", "applicable_population", "has_value", "population_size")
+        return [dict(zip(columns, row)) for row in cur.fetchall()]

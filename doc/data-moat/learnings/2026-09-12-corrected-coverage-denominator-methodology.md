@@ -79,8 +79,64 @@ Coverage against 1,954, not 5,216:
 
 `dividend_yield`/`buyback_yield` stay correctly lower than the others for a genuinely different, already-documented reason: they also require real `market_cap`/price data on top of dividend data, so they inherit that separate coverage ceiling too.
 
+## Generalized to the whole registry (same day, direct follow-up)
+
+The user's direct instruction: *"no for every coverage, follow this same methodology now."* Rather than repeat the revenue/dividends investigation by hand for each of the other 150+ data points, built it as a real, persisted, reusable mechanism.
+
+**Schema** (migration `0062`): `analytics.data_point_registry` gained `applicable_population` (a text label, defaults to `real_operating_company`); a new table `analytics.company_population` (`company_id`, `population_name`) records which named population(s) each company genuinely belongs to — a company can be in several at once (e.g. a real operating company that also currently pays dividends is in both `real_operating_company` and `dividend_payer`).
+
+**Populations, each built from a real, evidence-checked query** (`mapper/coverage_matrix.py`'s `POPULATION_QUERIES` + `classify_company_populations()`):
+
+| Population | Size | Definition |
+|---|---|---|
+| `real_operating_company` | 4,817 | `status='active'` minus the non-operating `gap_reason`s already classified (SPAC, passthrough trust, commodity ETF trust) — the corrected default, replacing "all active companies" |
+| `dividend_payer` | 1,954 | Real, nonzero `dividends_paid_resolved` or `dividends_per_share` in the company's own most recent FY |
+| `buyback_company` | 2,449 | Same shape, for `share_buybacks_resolved` |
+| `capital_return_company` | 3,009 | Union of the two above — for metrics needing *either* dividend or buyback activity to be a real, applicable case (`cash_returned_to_shareholders`, `total_shareholder_yield`) |
+| `bdc_company` | 118 | Has a real `bdc_total_investment_income` value — the already-established sector-isolated BDC population |
+
+`build_registry()` assigns each of the 156 registry rows its `applicable_population`: the dividend/buyback/capital-return/BDC families (curated lists, e.g. `DIVIDEND_FAMILY_DATA_POINTS`) get their narrower population; everything else defaults to `real_operating_company`. New CLI: `scrooner-map corrected-coverage-report` — computes and prints every data point's coverage against its real population directly, joining `company_population` × `company_data_point_coverage`. This is the actual point of the exercise: "why is this number low" is now a query against a durable table, not a from-scratch investigation each time.
+
+### Full-registry result
+
+Averaged across the whole registry, corrected vs. the old ÷5,216-for-everything numbers:
+
+- **Concept average: 75.0% → 82.9%** (+7.9pp)
+- **Metric average: 62.2% → 70.7%** (+8.5pp)
+
+Biggest single corrections (every one of these was previously being penalized for the majority of companies that simply don't do the underlying activity):
+
+| Data point | Old (÷5,216) | Corrected | Real population |
+|---|---|---|---|
+| `bdc_total_investment_income` | 2.3% | 100.0% | bdc_company |
+| `dividends_paid_resolved` | 41.2% | 96.9% | dividend_payer |
+| `dividends_per_share` | 37.7% | 89.4% | dividend_payer |
+| `dps_growth_yoy` | 32.7% | 83.5% | dividend_payer |
+| `payout_ratio` | 34.9% | 85.2% | dividend_payer |
+| `dividend_growth_streak_years` | 34.0% | 84.1% | dividend_payer |
+| `dps_growth_3y_cagr` | 29.7% | 76.3% | dividend_payer |
+| `dividends_pct_fcf` | 26.2% | 66.7% | dividend_payer |
+| `share_buybacks_resolved` | 63.6% | 100.0% | buyback_company |
+| `share_buybacks` | 63.6% | 100.0% | buyback_company |
+| `dividend_yield` | 21.8% | 57.0% | dividend_payer |
+| `buyback_yield` | 36.5% | 65.7% | buyback_company |
+| `share_repurchases_pct_fcf` | 34.2% | 61.7% | buyback_company |
+| `cash_returned_to_shareholders` | 33.3% | 55.9% | capital_return_company |
+
+### What stays genuinely low even after correction — a different, honest finding
+
+Not every low number is a denominator problem. These are all measured against the correct `real_operating_company` population already, and stay low for a real, already-documented reason:
+
+- `mutual_fund_ownership` (0.2%) — golden-10-only scaling status, a known, not-yet-closed gap (see root `CLAUDE.md`'s ownership entries).
+- `employee_count` (3.7%) — `dei:EntityNumberOfEmployees` genuinely covers only ~3.5% of companies as structured XBRL.
+- `piotroski_f_score` (27.3%) — deliberately needs all 9 raw inputs simultaneously for two consecutive FY years; a demanding, already-documented, working-as-intended bar, not a bug.
+- `net_interest_income` / `cash_conversion_cycle` / `inventory_days` / `rnd_intensity` (35-45%) — each needs multiple simultaneous inputs (interest income AND expense both; three separate working-capital concepts; R&D itself is optional under GAAP for many industries) — a real data-completeness ceiling, not a population mismatch.
+
+The distinction matters: a "doesn't apply to this population" gap and a "applies, but the data genuinely isn't complete enough" gap look identical as a bare percentage, but call for completely different responses — the first needs a corrected denominator (done here), the second needs either accepting the honest ceiling or a real, separate data-completeness investigation (not done here, correctly left as its own future work).
+
 ## What this changes going forward
 
-- Any future "coverage is X%" claim for a data point that doesn't structurally apply to every company needs its own real denominator, established the same way: pick the actual applicable population, cross-verify it isn't an artifact of one query, then measure against it.
+- Any future "coverage is X%" claim for a data point that doesn't structurally apply to every company needs its own real denominator, established the same way: pick the actual applicable population, cross-verify it isn't an artifact of one query, then measure against it. As of this pass, this is no longer a manual step for the 156 data points already in the registry — `scrooner-map corrected-coverage-report` computes it directly from `analytics.data_point_registry.applicable_population` × `analytics.company_population`.
 - `mapper/coverage_matrix.py`'s `gap_reason` is now the queryable source for "why is this missing" for the revenue family — no more from-scratch manual SIC-clustering needed for that specific question. Extending the same `gap_reason` mechanism to other structurally-uneven data points (dividends, buybacks, segment-specific concepts) is the natural next step, not yet built.
+- `POPULATION_QUERIES`/`classify_company_populations()` is deliberately a small, curated set of 4 named populations (plus the `capital_return_company` union), not a combinatorial explosion of one population per data point — new populations should only be added the same way these were: a real, checked business-model reason a whole family of data points shares, not a one-off per metric.
 - A same-day regression was found and fixed while investigating this: MannKind Corp (the exact company from the 2026-09-03 leap-year-FYE fix) had silently dropped back to zero `core.fact` rows sometime after that fix landed. Rebuilt live (19,112 facts restored, full normalizer+mapper chain rerun, zero errors) — root cause of the regression itself not yet chased; worth watching for recurrence on the next full-population rerun.

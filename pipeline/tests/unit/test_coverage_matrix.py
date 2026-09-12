@@ -1,4 +1,12 @@
-from scrooner_pipeline.mapper.coverage_matrix import REVENUE_FAMILY_CONCEPTS, SIC_GAP_REASONS
+from scrooner_pipeline.mapper.coverage_matrix import (
+    BDC_FAMILY_DATA_POINTS,
+    BUYBACK_FAMILY_DATA_POINTS,
+    CAPITAL_RETURN_FAMILY_DATA_POINTS,
+    DIVIDEND_FAMILY_DATA_POINTS,
+    POPULATION_QUERIES,
+    REVENUE_FAMILY_CONCEPTS,
+    SIC_GAP_REASONS,
+)
 
 
 def test_revenue_family_concepts_includes_resolved_and_raw_pairs() -> None:
@@ -47,3 +55,31 @@ def test_sic_gap_reasons_cover_every_verified_bucket() -> None:
     assert len(set(SIC_GAP_REASONS.values())) >= 5
     for reason in SIC_GAP_REASONS.values():
         assert reason and reason == reason.lower()
+
+
+def test_population_queries_cover_every_named_population_a_data_point_can_reference() -> None:
+    # capital_return_company is deliberately NOT in POPULATION_QUERIES --
+    # classify_company_populations() builds it as a union of
+    # dividend_payer/buyback_company instead of its own query (see that
+    # function's own comment) -- so every OTHER family's target
+    # population must have a real query to build it from.
+    referenced_populations = {"real_operating_company", "dividend_payer", "buyback_company", "bdc_company"}
+    assert referenced_populations <= set(POPULATION_QUERIES.keys())
+
+
+def test_family_data_point_lists_are_disjoint() -> None:
+    # Each data point gets exactly one applicable_population override in
+    # build_registry() -- a name appearing in two families would mean
+    # whichever dict-population wins last silently shadows the other,
+    # not a deliberate choice.
+    all_families = [
+        DIVIDEND_FAMILY_DATA_POINTS,
+        BUYBACK_FAMILY_DATA_POINTS,
+        CAPITAL_RETURN_FAMILY_DATA_POINTS,
+        BDC_FAMILY_DATA_POINTS,
+    ]
+    seen: set[str] = set()
+    for family in all_families:
+        overlap = seen & set(family)
+        assert not overlap, f"data point(s) {overlap} appear in more than one population family"
+        seen |= set(family)

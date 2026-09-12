@@ -23,7 +23,7 @@ from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
 from scrooner_pipeline.mapper.quality_score import calculate_piotroski
 from scrooner_pipeline.mapper.quality_flags import calculate_quality_flags
 from scrooner_pipeline.mapper.reconciliation import calculate_reconciliation
-from scrooner_pipeline.mapper.coverage_matrix import build_registry, build_coverage
+from scrooner_pipeline.mapper.coverage_matrix import build_registry, build_coverage, corrected_coverage_report
 from scrooner_pipeline.mapper.tag_candidates import build_tag_candidates, report_status
 from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
@@ -422,6 +422,24 @@ def build_coverage_matrix_cmd() -> None:
         coverage_stats = build_coverage(conn)
     typer.echo(f"registry: {registry_stats}")
     typer.echo(f"coverage: {coverage_stats}")
+
+
+@app.command("corrected-coverage-report")
+def corrected_coverage_report_cmd() -> None:
+    """2026-09-12: reports every registry data point's coverage against
+    its real applicable_population (real_operating_company/dividend_payer/
+    buyback_company/capital_return_company/bdc_company), not against all
+    active companies -- see coverage_matrix.py's own module comment and
+    doc/data-moat/learnings/2026-09-12-corrected-coverage-denominator-methodology.md.
+    Run build-coverage-matrix first."""
+    with get_connection() as conn:
+        rows = corrected_coverage_report(conn)
+    for row in rows:
+        pct = 100 * row["has_value"] / row["population_size"] if row["population_size"] else 0.0
+        typer.echo(
+            f"{row['data_point_type']:8s} {row['data_point_name']:40s} "
+            f"{row['has_value']:>5}/{row['population_size']:<5} ({pct:5.1f}%)  pop={row['applicable_population']}"
+        )
 
 
 @app.command("build-tag-candidates")
