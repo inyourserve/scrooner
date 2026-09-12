@@ -1,6 +1,9 @@
+from datetime import date
+from unittest.mock import MagicMock
+
 import pytest
 
-from scrooner_pipeline.mapper.concept_fallback import resolve_fallback_for_company
+from scrooner_pipeline.mapper.concept_fallback import _find_or_create_instant_period, resolve_fallback_for_company
 
 
 class _FakeCursor:
@@ -87,3 +90,45 @@ class TestResolveFallbackForCompany:
         assert count == 2
         periods = {row["period_id"] for row in conn.inserted}
         assert periods == {1, 2}
+
+
+@pytest.mark.unit
+class TestFindOrCreateInstantPeriod:
+    def test_returns_existing_period_id_without_inserting(self):
+        conn = MagicMock()
+        cur = conn.cursor.return_value.__enter__.return_value
+        cur.fetchone.return_value = (42,)
+
+        result = _find_or_create_instant_period(conn, company_id=1, as_of=date(2025, 12, 31))
+
+        assert result == 42
+        # Only the initial select ran -- no insert attempted once a real
+        # period already exists for this company/date.
+        assert cur.execute.call_count == 1
+
+    def test_creates_a_new_period_when_none_exists(self):
+        conn = MagicMock()
+        cur = conn.cursor.return_value.__enter__.return_value
+        # First select: no existing row. Insert...returning: new id 99.
+        cur.fetchone.side_effect = [None, (99,)]
+
+        result = _find_or_create_instant_period(conn, company_id=2, as_of=date(2025, 6, 30))
+
+        assert result == 99
+        assert cur.execute.call_count == 2
+        insert_sql, insert_params = cur.execute.call_args_list[1].args
+        assert "insert into core.period" in insert_sql
+        assert insert_params == (2, date(2025, 6, 30), date(2025, 6, 30), 2025)
+
+    def test_reselects_on_a_lost_insert_race(self):
+        # A concurrent insert for the same company/date won the race --
+        # ON CONFLICT DO NOTHING means our own insert returns no row, so
+        # this must re-select rather than crash on an empty fetchone().
+        conn = MagicMock()
+        cur = conn.cursor.return_value.__enter__.return_value
+        cur.fetchone.side_effect = [None, None, (7,)]
+
+        result = _find_or_create_instant_period(conn, company_id=3, as_of=date(2024, 1, 1))
+
+        assert result == 7
+        assert cur.execute.call_count == 3

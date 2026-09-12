@@ -11,7 +11,7 @@ from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
-from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks, resolve_all_arithmetic_fallbacks
+from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks, resolve_all_arithmetic_fallbacks, resolve_employee_count_fallback
 from scrooner_pipeline.mapper.conflict_resolution import resolve_all_conflict_fills
 from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
@@ -129,6 +129,22 @@ def resolve_statement_fallbacks_cmd() -> None:
     with get_connection() as conn:
         stats = resolve_all_arithmetic_fallbacks(conn)
     typer.echo(f"resolve-statement-fallbacks: {stats}")
+
+
+@app.command("resolve-employee-count-fallback")
+def resolve_employee_count_fallback_cmd(
+    ciks: str = typer.Option(..., help="Comma-separated CIKs to restrict to -- no default, always explicit."),
+) -> None:
+    """2026-09-12: employee_count_resolved -- prefers XBRL
+    dei:EntityNumberOfEmployees, else core.employee_headcount_disclosure
+    (10-K prose extraction), else core.company.y_employee_count
+    (yfinance). See concept_fallback.py's own comment above this
+    function for why this is company-level, not period-level, unlike
+    every other fallback in that module."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")}
+    with get_connection() as conn:
+        stats = resolve_employee_count_fallback(conn, target_ciks)
+    typer.echo(f"resolve-employee-count-fallback: {stats}")
 
 
 @app.command("resolve-conflict-fills")

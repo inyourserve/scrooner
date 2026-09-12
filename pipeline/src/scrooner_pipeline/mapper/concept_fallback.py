@@ -31,6 +31,9 @@ Deliberately generalized (not hardcoded to total_debt's two concept
 names) so a future `sum`-mode concept needing the same fallback reuses
 this directly."""
 
+from datetime import date
+from decimal import Decimal
+
 import psycopg
 import structlog
 
@@ -213,4 +216,122 @@ def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
         count = resolve_arithmetic_fallback(conn, resolved_id, primary_id, minuend_id, subtrahend_id, guard)
         stats["rows_written"][resolved_name] = count
         logger.info("concept_fallback.arithmetic_done", concept=resolved_name, rows=count)
+    return stats
+
+
+# employee_count_resolved (2026-09-12): a third, differently-shaped
+# fallback, distinct from both FALLBACK_PAIRS (concept-vs-concept) and
+# ARITHMETIC_FALLBACKS (concept-vs-arithmetic-derivation) above -- this
+# one falls back to two EXTERNAL tables, neither of which is a
+# canonical_concept: core.employee_headcount_disclosure (10-K prose
+# extraction, built 2026-08-31/09-01, already covering 2,951 companies
+# with zero new fetches -- it just never got wired into the concept the
+# registry/coverage system actually tracks) and core.company.y_employee_count
+# (yfinance's fullTimeEmployees, same y_-prefixed-column idiom as
+# y_sector/y_industry/y_about_text/y_website). Company-level, not
+# period-level: prose/yfinance each give one point-in-time count, not a
+# real historical series the way XBRL facts do, so they fill a company's
+# gap only when XBRL has NOTHING for that company at all -- never
+# overriding a real XBRL period, and never invented as a fake series of
+# identical values across multiple periods.
+def _find_or_create_instant_period(conn: psycopg.Connection, company_id: int, as_of: date) -> int:
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id from core.period where company_id = %s and start_date = %s and end_date = %s and period_type = 'instant'",
+            (company_id, as_of, as_of),
+        )
+        row = cur.fetchone()
+        if row:
+            return row[0]
+        cur.execute(
+            """
+            insert into core.period (company_id, start_date, end_date, period_type, fiscal_year, fiscal_period)
+            values (%s, %s, %s, 'instant', %s, 'FY')
+            on conflict (company_id, start_date, end_date, period_type) do nothing
+            returning id
+            """,
+            (company_id, as_of, as_of, as_of.year),
+        )
+        row = cur.fetchone()
+        if row:
+            return row[0]
+        # Lost the on-conflict race (a concurrent insert for the same
+        # company/date) -- the row now exists, just re-select it.
+        cur.execute(
+            "select id from core.period where company_id = %s and start_date = %s and end_date = %s and period_type = 'instant'",
+            (company_id, as_of, as_of),
+        )
+        return cur.fetchone()[0]
+
+
+def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) -> dict:
+    primary_id = _concept_id(conn, "employee_count")
+    resolved_id = _concept_id(conn, "employee_count_resolved")
+
+    with conn.cursor() as cur:
+        cur.execute("select id, cik from core.company where cik = any(%s)", (list(ciks),))
+        companies = cur.fetchall()
+
+    stats = {"considered": 0, "from_xbrl": 0, "from_prose": 0, "from_yfinance": 0, "still_null": 0, "errored": 0}
+    for company_id, cik in companies:
+        stats["considered"] += 1
+        try:
+            merged: dict[int, tuple] = dict(_load_facts(conn, company_id, primary_id))
+            if merged:
+                stats["from_xbrl"] += 1
+
+            if not merged:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "select report_date, headcount from core.employee_headcount_disclosure where company_id = %s order by report_date desc limit 1",
+                        (company_id,),
+                    )
+                    prose_row = cur.fetchone()
+                if prose_row:
+                    report_date, headcount = prose_row
+                    period_id = _find_or_create_instant_period(conn, company_id, report_date)
+                    merged[period_id] = (Decimal(headcount), [])
+                    stats["from_prose"] += 1
+
+            if not merged:
+                with conn.cursor() as cur:
+                    cur.execute("select y_employee_count from core.company where id = %s", (company_id,))
+                    y_row = cur.fetchone()
+                if y_row and y_row[0]:
+                    period_id = _find_or_create_instant_period(conn, company_id, date.today())
+                    merged[period_id] = (Decimal(y_row[0]), [])
+                    stats["from_yfinance"] += 1
+
+            if not merged:
+                stats["still_null"] += 1
+
+            with conn.cursor() as cur:
+                cur.execute(
+                    "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s",
+                    (company_id, resolved_id),
+                )
+                if merged:
+                    cur.executemany(
+                        """
+                        insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+                        values (%(company_id)s, %(canonical_concept_id)s, %(period_id)s, %(value)s, %(source_fact_ids)s)
+                        """,
+                        [
+                            {
+                                "company_id": company_id,
+                                "canonical_concept_id": resolved_id,
+                                "period_id": period_id,
+                                "value": value,
+                                "source_fact_ids": source_fact_ids,
+                            }
+                            for period_id, (value, source_fact_ids) in merged.items()
+                        ],
+                    )
+            conn.commit()
+        except Exception:
+            logger.warning("concept_fallback.employee_count_company_failed", cik=cik, exc_info=True)
+            stats["errored"] += 1
+            conn.rollback()
+
+    logger.info("concept_fallback.employee_count_resolved_done", **stats)
     return stats

@@ -24,7 +24,7 @@ def test_ok_when_sector_and_industry_present():
         "scrooner_pipeline.company_master.yfinance_industry._fetch_info",
         return_value={"quoteType": "EQUITY", "sector": "Technology", "industry": "Consumer Electronics"},
     ):
-        assert _classify("AAPL") == ("Technology", "Consumer Electronics", None, None, STATUS_OK)
+        assert _classify("AAPL") == ("Technology", "Consumer Electronics", None, None, None, STATUS_OK)
 
 
 def test_ok_captures_about_text_and_website_from_the_same_fetch():
@@ -41,29 +41,43 @@ def test_ok_captures_about_text_and_website_from_the_same_fetch():
         assert _classify("AAPL") == (
             "Technology", "Consumer Electronics",
             "Apple Inc. designs, manufactures, and markets smartphones.", "https://www.apple.com",
-            STATUS_OK,
+            None, STATUS_OK,
         )
+
+
+def test_ok_captures_employees_from_the_same_fetch():
+    # Added 2026-09-12 -- fullTimeEmployees rides along on the SAME
+    # get_info() payload too, feeding employee_count_resolved's third
+    # fallback tier (see concept_fallback.py) with zero new Yahoo requests.
+    with patch(
+        "scrooner_pipeline.company_master.yfinance_industry._fetch_info",
+        return_value={
+            "quoteType": "EQUITY", "sector": "Technology", "industry": "Consumer Electronics",
+            "fullTimeEmployees": 164000,
+        },
+    ):
+        assert _classify("AAPL") == ("Technology", "Consumer Electronics", None, None, 164000, STATUS_OK)
 
 
 def test_not_found_when_no_quote_type():
     # Real yfinance behavior for an invalid ticker: no exception, a near-empty
     # dict with quoteType absent (checked live 2026-09-06).
     with patch("scrooner_pipeline.company_master.yfinance_industry._fetch_info", return_value={"trailingPegRatio": None}):
-        assert _classify("ZZZZZZINVALID") == (None, None, None, None, STATUS_NOT_FOUND)
+        assert _classify("ZZZZZZINVALID") == (None, None, None, None, None, STATUS_NOT_FOUND)
 
 
 def test_not_found_when_info_empty():
     with patch("scrooner_pipeline.company_master.yfinance_industry._fetch_info", return_value={}):
-        assert _classify("ZZZZZZINVALID") == (None, None, None, None, STATUS_NOT_FOUND)
+        assert _classify("ZZZZZZINVALID") == (None, None, None, None, None, STATUS_NOT_FOUND)
 
 
 def test_no_data_when_real_quote_but_no_classification():
-    # e.g. some funds/ETFs/instruments have a real Yahoo quote but no sector/industry/about/website.
+    # e.g. some funds/ETFs/instruments have a real Yahoo quote but no sector/industry/about/website/employees.
     with patch(
         "scrooner_pipeline.company_master.yfinance_industry._fetch_info",
         return_value={"quoteType": "ETF", "sector": None, "industry": None},
     ):
-        assert _classify("SPY") == (None, None, None, None, STATUS_NO_DATA)
+        assert _classify("SPY") == (None, None, None, None, None, STATUS_NO_DATA)
 
 
 def test_error_on_rate_limit_after_retries_exhausted():
@@ -71,7 +85,7 @@ def test_error_on_rate_limit_after_retries_exhausted():
         "scrooner_pipeline.company_master.yfinance_industry._fetch_info",
         side_effect=YFRateLimitError(),
     ):
-        assert _classify("AAPL") == (None, None, None, None, STATUS_ERROR)
+        assert _classify("AAPL") == (None, None, None, None, None, STATUS_ERROR)
 
 
 def test_error_on_unexpected_exception():
@@ -79,7 +93,7 @@ def test_error_on_unexpected_exception():
         "scrooner_pipeline.company_master.yfinance_industry._fetch_info",
         side_effect=RuntimeError("boom"),
     ):
-        assert _classify("AAPL") == (None, None, None, None, STATUS_ERROR)
+        assert _classify("AAPL") == (None, None, None, None, None, STATUS_ERROR)
 
 
 def test_unpaced_skips_rate_limiter_wait():
@@ -107,11 +121,14 @@ def test_unpaced_rate_limit_fails_fast_without_retry():
         "scrooner_pipeline.company_master.yfinance_industry._fetch_info_once",
         side_effect=YFRateLimitError(),
     ) as mock_fetch_once:
-        assert _classify("AAPL", paced=False) == (None, None, None, None, STATUS_ERROR)
+        assert _classify("AAPL", paced=False) == (None, None, None, None, None, STATUS_ERROR)
         mock_fetch_once.assert_called_once()  # exactly one attempt, no retry sleep
 
 
-_ROW = {"company_id": 1, "sector": "Technology", "industry": "X", "about_text": "About X", "website": "https://x.com", "status": STATUS_OK}
+_ROW = {
+    "company_id": 1, "sector": "Technology", "industry": "X", "about_text": "About X",
+    "website": "https://x.com", "employees": 42, "status": STATUS_OK,
+}
 
 
 def test_write_batch_returns_same_connection_on_success():

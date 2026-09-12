@@ -109,38 +109,41 @@ def _fetch_info(ticker: str, paced: bool = True) -> dict:
     return _fetch_info_once(ticker, paced=False)
 
 
-def _classify(ticker: str, paced: bool = True) -> tuple[str | None, str | None, str | None, str | None, str]:
-    """Returns (sector, industry, about_text, website, status). paced=False
-    skips the shared rate limiter AND the rate-limit retry entirely -- an
-    explicit, user-directed "try fast first" pass: run unthrottled, let
-    whatever gets rate-limited land in STATUS_ERROR immediately, then
-    resume with paced=True (the default, safe path) to clean up only the
-    stragglers. Never use paced=False for a from-scratch full-population
-    run without an intended paced cleanup pass after it.
+def _classify(ticker: str, paced: bool = True) -> tuple[str | None, str | None, str | None, str | None, int | None, str]:
+    """Returns (sector, industry, about_text, website, employees, status).
+    paced=False skips the shared rate limiter AND the rate-limit retry
+    entirely -- an explicit, user-directed "try fast first" pass: run
+    unthrottled, let whatever gets rate-limited land in STATUS_ERROR
+    immediately, then resume with paced=True (the default, safe path) to
+    clean up only the stragglers. Never use paced=False for a from-scratch
+    full-population run without an intended paced cleanup pass after it.
 
-    about_text/website (2026-09-06, explicit user direction) are read from
-    the SAME get_info() payload as sector/industry -- longBusinessSummary
-    and website are already present in it, so this adds zero new requests
-    against Yahoo's own tightly-rate-limited endpoint."""
+    about_text/website (2026-09-06) and employees (2026-09-12, for
+    employee_count_resolved's third fallback tier -- see
+    concept_fallback.py) are all read from the SAME get_info() payload as
+    sector/industry -- fullTimeEmployees is already present in it, so this
+    adds zero new requests against Yahoo's own tightly-rate-limited
+    endpoint."""
     try:
         info = _fetch_info(ticker, paced=paced)
     except YFRateLimitError:
         logger.warning("yfinance_industry.rate_limited", ticker=ticker)
-        return None, None, None, None, STATUS_ERROR
+        return None, None, None, None, None, STATUS_ERROR
     except Exception as e:  # yfinance's own network/parsing failures are not typed consistently
         logger.warning("yfinance_industry.fetch_failed", ticker=ticker, error=str(e))
-        return None, None, None, None, STATUS_ERROR
+        return None, None, None, None, None, STATUS_ERROR
 
     if not info or info.get("quoteType") is None:
-        return None, None, None, None, STATUS_NOT_FOUND
+        return None, None, None, None, None, STATUS_NOT_FOUND
 
     sector = info.get("sector")
     industry = info.get("industry")
     about_text = info.get("longBusinessSummary")
     website = info.get("website")
-    if sector is None and industry is None and about_text is None and website is None:
-        return None, None, None, None, STATUS_NO_DATA
-    return sector, industry, about_text, website, STATUS_OK
+    employees = info.get("fullTimeEmployees")
+    if sector is None and industry is None and about_text is None and website is None and employees is None:
+        return None, None, None, None, None, STATUS_NO_DATA
+    return sector, industry, about_text, website, employees, STATUS_OK
 
 
 def update_yfinance_industry(
@@ -184,16 +187,16 @@ def update_yfinance_industry(
             pending.append(
                 {
                     "company_id": company_id, "sector": None, "industry": None,
-                    "about_text": None, "website": None, "status": STATUS_NOT_FOUND,
+                    "about_text": None, "website": None, "employees": None, "status": STATUS_NOT_FOUND,
                 }
             )
         else:
-            sector, industry, about_text, website, status = _classify(ticker, paced=paced)
+            sector, industry, about_text, website, employees, status = _classify(ticker, paced=paced)
             stats[status] += 1
             pending.append(
                 {
                     "company_id": company_id, "sector": sector, "industry": industry,
-                    "about_text": about_text, "website": website, "status": status,
+                    "about_text": about_text, "website": website, "employees": employees, "status": status,
                 }
             )
 
@@ -221,6 +224,9 @@ _UPDATE_SQL = """
         y_industry = %(industry)s,
         y_about_text = %(about_text)s,
         y_website = %(website)s,
+        y_employee_count = %(employees)s,
+        y_employee_count_status = %(status)s,
+        y_employee_count_updated_at = %(updated_at)s,
         y_industry_status = %(status)s,
         y_industry_updated_at = %(updated_at)s
     where id = %(company_id)s
