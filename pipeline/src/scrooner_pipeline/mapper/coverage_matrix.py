@@ -22,9 +22,126 @@ import structlog
 
 logger = structlog.get_logger()
 
+# Scoped to revenue-family concepts only -- verified live 2026-09-11
+# investigating why `revenue` coverage sits at 87.4% (693 of 5,216 active
+# companies). Every SIC bucket below was spot-checked against real
+# companies in that gap population (not assumed from the label alone):
+# "Commodity Contracts Brokers & Dealers" turned out to be commodity
+# ETF/trusts (SPDR Gold Trust, Grayscale Bitcoin Trust) paying sponsor
+# fees, not earning revenue; "Real Estate Investment Trusts" in this gap
+# population is exclusively mortgage REITs (AGNC, Annaly, Chimera) earning
+# net interest income. Deliberately NOT applied to balance-sheet/cash-flow
+# concepts (total_assets, cfo, etc.) -- those weren't checked and a
+# company having no "revenue" says nothing about whether it has real
+# assets or cash flow.
+REVENUE_FAMILY_CONCEPTS = (
+    "revenue",
+    "revenue_sanity_resolved",
+    "cost_of_revenue",
+    "cost_of_revenue_resolved",
+    "gross_profit",
+    "gross_profit_resolved",
+    "operating_income",
+    "operating_income_resolved",
+    "operating_expenses",
+    "operating_expenses_resolved",
+)
+
+SIC_GAP_REASONS = {
+    "Blank Checks": "pre_revenue_spac",
+    "Pharmaceutical Preparations": "pre_revenue_biotech_pharma",
+    "Biological Products, (No Diagnostic Substances)": "pre_revenue_biotech_pharma",
+    "Commodity Contracts Brokers & Dealers": "passthrough_commodity_trust",
+    "Asset-Backed Securities": "passthrough_trust",
+    "Real Estate Investment Trusts": "reit_net_interest_income_not_revenue",
+    "State Commercial Banks": "bank_interest_income_not_revenue",
+    "National Commercial Banks": "bank_interest_income_not_revenue",
+    "Savings Institution, Federally Chartered": "bank_interest_income_not_revenue",
+}
+
 
 def _tag_str(taxonomy: str, tag: str) -> str:
     return f"{taxonomy}:{tag}"
+
+
+# Evidence-based, not a SIC guess: a company reporting real facts under
+# any of these interest/investment-income tags but nothing under any of
+# revenue's own mapped tags is a financial institution/lender presenting
+# its income statement the GAAP-standard way for that industry (net
+# interest income + noninterest income, not a single "Revenue" line) --
+# NOT a candidate for adding these tags to revenue's own concept_mapping
+# (would repeat the exact "different concept sharing vocabulary" trap
+# already documented elsewhere in this file for CostsAndExpenses/
+# LongTermDebtNoncurrent, and would blur the same bank/BDC/REIT
+# sector-isolation this project deliberately keeps elsewhere). Verified
+# live 2026-09-11 on Synchrony Financial (SIC "Finance Services", not
+# caught by SIC_GAP_REASONS' bank-specific codes) before trusting this
+# as a general rule, not just that one company.
+_FINANCIAL_INCOME_TAGS = (
+    "InterestIncomeOperating",
+    "InterestAndDividendIncomeOperating",
+    "NoninterestIncome",
+    "GrossInvestmentIncomeOperating",
+    "InterestAndFeeIncomeLoansAndLeases",
+)
+
+
+def classify_concept_gaps(conn: psycopg.Connection) -> dict:
+    """Fills `gap_reason` for revenue-family concept rows where has_value
+    is false, using the SIC-based structural patterns verified live
+    2026-09-11 (see REVENUE_FAMILY_CONCEPTS/SIC_GAP_REASONS above), plus
+    an evidence-based financial-institution rule for companies that fall
+    outside those specific SIC codes. Concept rows never got a
+    gap_reason before this -- only metric rows did (see build_coverage()'s
+    own comment) -- so every prior "why is revenue missing" question
+    needed a from-scratch manual SIC-clustering pass. Additive: only ever
+    sets a reason where a real pattern matches; leaves every other row
+    (including the genuinely uninvestigated tail) at NULL rather than
+    guessing."""
+    sic_list = list(SIC_GAP_REASONS.keys())
+    reason_list = list(SIC_GAP_REASONS.values())
+
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            with sic_reason as (
+                select * from unnest(%(sics)s::text[], %(reasons)s::text[]) as t(sic_description, reason)
+            )
+            update analytics.company_data_point_coverage cov
+            set gap_reason = coalesce(
+                sr.reason,
+                case
+                    when comp.sic_description is null and exists (
+                        select 1 from analytics.canonical_fact cf2
+                        join analytics.canonical_concept cc2 on cc2.id = cf2.canonical_concept_id
+                        where cc2.name = 'bdc_total_investment_income' and cf2.company_id = comp.id
+                    ) then 'bdc_reports_investment_income_not_revenue'
+                    when exists (
+                        select 1 from core.fact fa2
+                        join core.concept co2 on co2.id = fa2.concept_id
+                        where fa2.company_id = comp.id and co2.tag = any(%(financial_income_tags)s)
+                    ) then 'financial_institution_interest_income_not_revenue'
+                end
+            )
+            from core.company comp
+            left join sic_reason sr on sr.sic_description = comp.sic_description
+            where cov.company_id = comp.id
+              and cov.has_value = false
+              and cov.data_point_name = any(%(concepts)s)
+              and cov.gap_reason is null
+            """,
+            {
+                "sics": sic_list,
+                "reasons": reason_list,
+                "concepts": list(REVENUE_FAMILY_CONCEPTS),
+                "financial_income_tags": list(_FINANCIAL_INCOME_TAGS),
+            },
+        )
+        classified = cur.rowcount
+        conn.commit()
+
+    logger.info("coverage_matrix.concept_gaps_classified", rows=classified)
+    return {"rows": classified}
 
 
 def build_registry(conn: psycopg.Connection) -> dict:
@@ -147,8 +264,10 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         # several metric_value rows across periods, each with a
         # potentially different reason; the latest period is the one a
         # "why is this missing" lookup actually cares about). Left NULL
-        # when has_value is true, and always NULL for concept/ownership
-        # rows above/below -- neither tracks a per-row null reason today.
+        # when has_value is true. Concept rows get their own gap_reason
+        # pass below (classify_concept_gaps()) for the revenue-family
+        # subset with a known structural cause; ownership rows still have
+        # no null-reason mechanism.
         cur.execute(
             """
             insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value, gap_reason)
@@ -200,5 +319,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         cur.execute("select count(*), count(*) filter (where has_value) from analytics.company_data_point_coverage")
         total, has_value = cur.fetchone()
 
-    logger.info("coverage_matrix.coverage_built", total_rows=total, has_value=has_value)
-    return {"total_rows": total, "has_value": has_value}
+    gap_stats = classify_concept_gaps(conn)
+
+    logger.info("coverage_matrix.coverage_built", total_rows=total, has_value=has_value, concept_gaps_classified=gap_stats["rows"])
+    return {"total_rows": total, "has_value": has_value, "concept_gaps_classified": gap_stats["rows"]}
