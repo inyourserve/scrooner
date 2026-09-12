@@ -36,6 +36,8 @@ def test_sic_gap_reasons_cover_every_verified_bucket() -> None:
         "State Commercial Banks",
         "National Commercial Banks",
         "Savings Institution, Federally Chartered",
+        "Metal Mining",
+        "Gold and Silver Ores",
     }
     assert set(SIC_GAP_REASONS.keys()) == expected_sics
     # Every reason is a non-empty, snake_case-ish string -- not blank,

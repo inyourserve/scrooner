@@ -57,6 +57,14 @@ SIC_GAP_REASONS = {
     "State Commercial Banks": "bank_interest_income_not_revenue",
     "National Commercial Banks": "bank_interest_income_not_revenue",
     "Savings Institution, Federally Chartered": "bank_interest_income_not_revenue",
+    # Verified live 2026-09-12: every remaining company under these two
+    # SIC codes missing revenue is a real, named, pre-production
+    # exploration/development-stage miner (Lithium Americas, Trilogy
+    # Metals, Perpetua Resources, Dakota Gold, etc.) -- same structural
+    # "genuinely $0, not a data gap" pattern as pre-revenue biotech, just
+    # a different sector never previously named for it.
+    "Metal Mining": "pre_revenue_mining_exploration",
+    "Gold and Silver Ores": "pre_revenue_mining_exploration",
 }
 
 
@@ -83,6 +91,77 @@ _FINANCIAL_INCOME_TAGS = (
     "NoninterestIncome",
     "GrossInvestmentIncomeOperating",
     "InterestAndFeeIncomeLoansAndLeases",
+)
+
+# Confirmed live 2026-09-12 via each company's actual filing history --
+# these file 20-F/40-F (foreign private issuer forms), already excluded
+# from V1 scope per doc 02/root CLAUDE.md's closed FPI decision (untested
+# IFRS-vs-GAAP concept-mapping risk). Not a coverage bug -- a scope
+# boundary already decided elsewhere, this just labels it instead of
+# leaving it looking like an unexplained gap.
+_FPI_COMPANY_IDS = (
+    1950,  # Bank of Montreal
+    5,     # Enbridge Inc
+    239,   # Canadian National Railway Co
+    6,     # Taiwan Semiconductor Manufacturing Co Ltd
+    3389,  # Sify Technologies Ltd
+    5689,  # JBS N.V.
+)
+
+# Confirmed live 2026-09-12 by fetching each company's OWN live SEC
+# companyfacts payload directly (data.sec.gov/api/xbrl/companyfacts) --
+# every one returns zero or near-zero real us-gaap facts under its own
+# CIK (Ameren Illinois/Georgia Power/Consumers Energy: only `ffd`
+# registration-fee tags from unrelated S-3/424B filings; Public Service
+# Co of New Mexico: a completely empty facts payload). All four are
+# wholly-owned utility subsidiaries that co-file combined 10-Ks with
+# their parent holding company -- the real income-statement data exists
+# in that filing, but SEC's Company Facts API aggregates by CIK from the
+# XBRL's own entity-identifier contexts, and these subsidiaries' own
+# context carries almost nothing. A genuine SEC/EDGAR-side data-
+# availability limit for this specific filer pattern, not a Scrooner
+# tag-mapping bug -- there is no tag to map, the API has nothing to give.
+# Two sibling utility subsidiaries in this same remaining-gap population
+# (NSTAR Electric, MGE Energy) were investigated the same day and found
+# to have real revenue-shaped tags (`ElectricUtilityRevenue`,
+# `RegulatedAndUnregulatedOperatingRevenue`) -- NOT added here because a
+# full-population coexistence check found both tags mix a genuine
+# company-wide total with dimensional/segment-only values under the same
+# bare tag for OTHER companies (Alliant Energy Corp: same tag, $35M vs a
+# real $1.03B total for the same period) -- adding either to `revenue`'s
+# concept_mapping would have been the exact "different concept sharing
+# vocabulary" trap this file already warns against twice elsewhere,
+# just discovered one coexistence-check-scale later than usual (a first,
+# too-small sample of 5 rows looked consistent; the full check on all
+# ~4,800 coexisting pairs was 62% disagreeing). No safe automated fix
+# exists for NSTAR/MGE without dimensional-XBRL-aware extraction (doc 23:
+# already scoped and confirmed genuinely harder, not yet designed) -- so
+# unlike the four below, they're deliberately left in the unexplained
+# tail rather than force-classified.
+_COREGISTRANT_SUBSIDIARY_COMPANY_IDS = (
+    257,   # Ameren Illinois Co
+    613,   # Georgia Power Co
+    1044,  # Public Service Co of New Mexico
+    1165,  # Consumers Energy Co
+)
+
+# Confirmed live 2026-09-12 by name -- an explicit, curated list (not a
+# regex on "Trust" in company_name, which would also match a real
+# operating bank/trust company) of royalty/pass-through trusts found in
+# the remaining unexplained gap population: oil & gas royalty trusts
+# (Cross Timbers, Hugoton, Marine Petroleum, Mesa, Permian Basin, Sabine,
+# San Juan Basin, ECA Marcellus, Gulf Coast Ultra Deep, Permianville,
+# PermRock, VOC Energy), a mineral royalty trader (Scully Royalty), a
+# music-royalty trust (Mills Music Trust), and two real-estate wind-down
+# pass-through trusts (Copper Property CTL, Woodbridge Liquidation) --
+# same structural absence as `passthrough_trust` above, just not caught
+# by SIC_GAP_REASONS since these span several different SIC codes.
+_ROYALTY_AND_PASSTHROUGH_TRUST_COMPANY_IDS = (
+    1731, 1659, 676, 1189, 1214, 1271, 1215,  # oil/gas royalty trusts
+    2105, 3006, 2502, 5043, 2322,  # more oil/gas royalty trusts
+    237,  # Scully Royalty Ltd
+    698,  # Mills Music Trust
+    2715, 5633,  # real estate pass-through/liquidation trusts
 )
 
 
@@ -121,6 +200,19 @@ def classify_concept_gaps(conn: psycopg.Connection) -> dict:
                         join core.concept co2 on co2.id = fa2.concept_id
                         where fa2.company_id = comp.id and co2.tag = any(%(financial_income_tags)s)
                     ) then 'financial_institution_interest_income_not_revenue'
+                    -- yfinance's own industry classification is more complete
+                    -- than our SIC-code rule alone -- checked live 2026-09-12:
+                    -- 26 real SPACs (post-Blank-Checks-SIC, e.g. reclassified
+                    -- after a name change but before a real merger) caught
+                    -- here that SIC_GAP_REASONS missed. Excludes the 31
+                    -- companies yfinance still labels "Shell Companies" but
+                    -- that already have real revenue data (a completed SPAC
+                    -- merger yfinance's own industry tag hasn't caught up to
+                    -- yet -- confirmed via canonical_fact, not assumed).
+                    when comp.y_industry = 'Shell Companies' then 'pre_revenue_spac'
+                    when comp.id = any(%(fpi_ids)s) then 'foreign_private_issuer_sparse_xbrl'
+                    when comp.id = any(%(coregistrant_ids)s) then 'coregistrant_subsidiary_sparse_sec_xbrl'
+                    when comp.id = any(%(trust_ids)s) then 'passthrough_trust'
                 end
             )
             from core.company comp
@@ -135,6 +227,9 @@ def classify_concept_gaps(conn: psycopg.Connection) -> dict:
                 "reasons": reason_list,
                 "concepts": list(REVENUE_FAMILY_CONCEPTS),
                 "financial_income_tags": list(_FINANCIAL_INCOME_TAGS),
+                "fpi_ids": list(_FPI_COMPANY_IDS),
+                "coregistrant_ids": list(_COREGISTRANT_SUBSIDIARY_COMPANY_IDS),
+                "trust_ids": list(_ROYALTY_AND_PASSTHROUGH_TRUST_COMPANY_IDS),
             },
         )
         classified = cur.rowcount
