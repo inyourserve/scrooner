@@ -142,17 +142,27 @@ def seed_new_concept_mappings(conn: psycopg.Connection, canonical_id_by_name: di
 
 
 def seed_statement_lines(conn: psycopg.Connection, canonical_id_by_name: dict[str, int]) -> int:
+    """Delete-then-reinsert the WHOLE table, not an upsert keyed on
+    (statement, display_order) -- found live 2026-09-13: an upsert never
+    removes a row whose key no longer appears in the current
+    STATEMENT_LINES list, so a prior edit that moved "Diluted EPS" from
+    display_order 11 (pointing at the raw `diluted_eps` concept) to
+    display_order 10 (`diluted_eps_resolved`) left the old order-11 row
+    sitting orphaned forever -- a real, duplicate, stale-data row on
+    every company's income statement. This table is small (a couple
+    dozen rows) and rebuilt from a single hardcoded Python list, so a
+    full rebuild is cheap and correct by construction -- no risk of a
+    "missing key" gap the way a scoped delete would carry."""
     rows = [
         {"statement": s, "display_order": o, "display_label": label, "canonical_concept_id": canonical_id_by_name[concept_name]}
         for s, o, label, concept_name in STATEMENT_LINES
     ]
     with conn.cursor() as cur:
+        cur.execute("delete from analytics.statement_line")
         cur.executemany(
             """
             insert into analytics.statement_line (statement, display_order, display_label, canonical_concept_id)
             values (%(statement)s, %(display_order)s, %(display_label)s, %(canonical_concept_id)s)
-            on conflict (statement, display_order) do update
-                set display_label = excluded.display_label, canonical_concept_id = excluded.canonical_concept_id
             """,
             rows,
         )
