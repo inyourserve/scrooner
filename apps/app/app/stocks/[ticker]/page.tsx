@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { cache, Fragment } from "react";
+import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { FinancialTable } from "@/components/company/FinancialTable";
 import { MetricGrid, type MetricItem } from "@/components/company/MetricGrid";
@@ -17,9 +18,32 @@ import { getCompanyPageData, type FilingRow, type MetricRow, type SegmentRevenue
 import { fmtNum, fmtPct, fmtShares } from "@/lib/company/format";
 import { buildChecklist } from "@/lib/company/pros-cons";
 
-export const dynamic = "force-dynamic";
+// Not force-dynamic (2026-09-15). Measured live: getCompanyPageData's single
+// consolidated query (lib/company/db.ts) executes server-side in ~200ms
+// (EXPLAIN ANALYZE, warm buffers), but force-dynamic paid the FULL request
+// cost -- this dev machine's Supabase (us-east-1) round trip, ~1.5s warm /
+// 7s+ on a fresh connection, the same class of latency ADR 0001 (the
+// screener's Redis cache) already measured and fixed for /v1/screen -- on
+// EVERY request, for EVERY ticker, forever, because raw `postgres` package
+// calls carry none of Next's own fetch-based caching signals.
+//
+// `revalidate` alone does NOT fix this: confirmed live (build + `next
+// start`, repeated curl timings) that a plain revalidate export has no
+// effect on a route with no generateStaticParams once its data comes from a
+// non-fetch source -- every request still re-ran the query. Wrapping the
+// data fetch itself in `unstable_cache` is what actually caches it (Next's
+// own built-in cache, keyed on the wrapped function + its arguments, i.e.
+// ticker); `cache()` still sits on top to dedupe the generateMetadata vs.
+// page-render call within one request, same as before. The page has no
+// per-user state (PublicHeader never reads cookies/auth; confirmed before
+// relying on this) and no request-specific input beyond the ticker route
+// param, so it's safe to cache. 900s keeps worst-case staleness in the same
+// order of magnitude as Alpaca's own ~15min delayed price feed (doc 25) --
+// a cache hit now costs ~0, a cache miss still pays the same real query.
 type Props = { params: Promise<{ ticker: string }> };
-const getStock = cache(getCompanyPageData);
+const getStock = cache(
+  unstable_cache(getCompanyPageData, ["company-page-data"], { revalidate: 900, tags: ["company-page"] }),
+);
 
 const metricGroups: { title: string; metrics: [string, string, MetricItem["kind"]][] }[] = [
   { title: "Valuation", metrics: [["trailing_pe", "P/E", "multiple"], ["price_to_sales", "Price / Sales", "multiple"], ["price_to_book", "Price / Book", "multiple"], ["dividend_yield", "Dividend yield", "pct"], ["peg_ratio", "PEG", "multiple"], ["ev_ebitda", "EV / EBITDA", "multiple"]] },

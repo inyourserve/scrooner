@@ -12,9 +12,18 @@ import postgres from "postgres";
 // very small pool. `prepare: false` keeps this client compatible with
 // Supabase's transaction pooler when the Vercel DATABASE_URL is moved to port
 // 6543; it is also safe with the current session-pooler URL.
+//
+// idle_timeout raised 20 -> 90 (2026-09-15): the stock page now has an ISR
+// cache in front of it (revalidate=900 in app/stocks/[ticker]/page.tsx), so
+// most traffic never reaches this pool at all -- but a cache-miss still pays
+// a full TCP+TLS+auth handshake (measured live, this dev machine to Supabase
+// us-east-1: ~1.7s+) if the pool's one connection was already closed. 90s
+// keeps it alive across the gaps between regenerations without holding a
+// connection open indefinitely -- still well under Supabase pooler's ~15
+// total-connection ceiling shared across every service (root CLAUDE.md).
 const sql = postgres(process.env.DATABASE_URL ?? "postgres://invalid:invalid@127.0.0.1:5432/scrooner", {
   max: 2,
-  idle_timeout: 20,
+  idle_timeout: 90,
   connect_timeout: 10,
   prepare: false,
 });
