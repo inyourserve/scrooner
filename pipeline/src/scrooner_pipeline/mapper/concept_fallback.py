@@ -37,6 +37,8 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.config import settings
+
 logger = structlog.get_logger()
 
 # (primary concept name, fallback concept name, resolved concept name,
@@ -193,7 +195,25 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
             except Exception:
                 logger.warning("concept_fallback.company_failed", cik=cik, pair=resolved_name, exc_info=True)
                 stats["errored"] += 1
-                conn.rollback()
+                # Found live 2026-09-15, all 4 parallel workers of a
+                # full-population rollout crashed identically: when the
+                # ORIGINAL exception is a dead connection (a real,
+                # documented, recurring Supabase pooler drop), calling
+                # conn.rollback() on that same dead connection raises a
+                # SECOND, uncaught OperationalError, which propagates out
+                # of this function and kills the entire remaining batch --
+                # the exact bug class already found and fixed once in
+                # common/errors.py's log_error() (2026-09-03): a contract
+                # ("one company's failure never aborts the batch") that
+                # was never actually tested against its own failure path.
+                # Reconnect instead of trusting rollback() to succeed on
+                # a connection that may already be gone -- same idiom as
+                # yfinance_industry.py's _write_batch().
+                try:
+                    conn.rollback()
+                except psycopg.OperationalError:
+                    logger.warning("concept_fallback.connection_dropped_reconnecting", cik=cik)
+                    conn = psycopg.connect(settings.database_url)
 
     logger.info("concept_fallback.done", **stats)
     return stats

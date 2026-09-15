@@ -45,6 +45,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
@@ -320,9 +321,19 @@ def update_beneficial_ownership(conn: psycopg.Connection, ciks: set[str]) -> dic
             except Exception:
                 # Same lesson as insider.py: one company's failure must not
                 # crash the whole chunk and cost every other company in it
-                # their own progress on every retry.
-                conn.rollback()
+                # their own progress on every retry. Found live 2026-09-15
+                # (same root cause as concept_fallback.py's identical fix):
+                # when the ORIGINAL exception is a dead connection (a real,
+                # recurring Supabase pooler drop), conn.rollback() on that
+                # same dead connection raises a SECOND, uncaught
+                # OperationalError, which crashes this whole chunk instead
+                # of just skipping the one company that failed.
                 logger.exception("beneficial_ownership.company_failed", cik=cik)
+                try:
+                    conn.rollback()
+                except psycopg.OperationalError:
+                    logger.warning("beneficial_ownership.connection_dropped_reconnecting", cik=cik)
+                    conn = psycopg.connect(settings.database_url)
                 totals["errored"] += 1
                 continue
             totals["ok"] += 1
