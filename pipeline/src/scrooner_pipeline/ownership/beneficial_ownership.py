@@ -82,6 +82,15 @@ _FILED_DATE_RE = re.compile(r"FILED AS OF DATE:\s*(\d{8})")
 _TAG_RE = re.compile(r"<[^>]+>")
 _CUSIP_LABEL_RE = re.compile(r"CUSIP", re.IGNORECASE)
 _CUSIP_TOKEN_RE = re.compile(r"\b[0-9A-Z]{9}\b")
+# A real, recurring alternate format, found live 2026-09-15 investigating
+# why real companies (ADT Inc./Apollo, Global Business Travel Group,
+# among others) had a matched 13G filing but no extractable CUSIP: some
+# filer templates typeset the CUSIP's own 6+2+1 character grouping with
+# whitespace between the groups instead of writing it contiguously
+# ("CUSIP No. 00090Q 10 3", "CUSIP No. 37890B 10 0") -- checked against
+# two unrelated companies before trusting this as a real, common pattern
+# rather than a one-off.
+_CUSIP_SPACED_RE = re.compile(r"\b([0-9A-Z]{6})\s+([0-9A-Z]{2})\s+([0-9A-Z])\b")
 
 
 def _extract_cusip(full_text: str) -> str | None:
@@ -91,7 +100,9 @@ def _extract_cusip(full_text: str) -> str | None:
     put the number before OR after the label, with varying separators
     (see module docstring for the three real formats this was checked
     against). Requires at least one digit in the candidate token so a
-    stray 9-letter English word near "CUSIP" can't false-positive."""
+    stray 9-letter English word near "CUSIP" can't false-positive. Falls
+    back to the spaced 6+2+1 grouping (_CUSIP_SPACED_RE) when no
+    contiguous 9-character token is found in the same window."""
     clean = _TAG_RE.sub(" ", full_text)
     clean = re.sub(r"\s+", " ", clean)
     label_match = _CUSIP_LABEL_RE.search(clean)
@@ -101,6 +112,11 @@ def _extract_cusip(full_text: str) -> str | None:
     for token in _CUSIP_TOKEN_RE.findall(window):
         if any(ch.isdigit() for ch in token):
             return token
+    spaced_match = _CUSIP_SPACED_RE.search(window)
+    if spaced_match:
+        candidate = "".join(spaced_match.groups())
+        if any(ch.isdigit() for ch in candidate):
+            return candidate
     return None
 
 
