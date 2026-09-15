@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { cache, Fragment } from "react";
-import { unstable_cache } from "next/cache";
 import { notFound, permanentRedirect } from "next/navigation";
 import { FinancialTable } from "@/components/company/FinancialTable";
 import { MetricGrid, type MetricItem } from "@/components/company/MetricGrid";
@@ -14,6 +13,7 @@ import { PublicHeader } from "@/components/public/PublicHeader";
 import { Delta } from "@/components/scrooner/Delta";
 import { EmptyState } from "@/components/scrooner/EmptyState";
 import { StockHeader } from "@/components/scrooner/StockHeader";
+import { getCachedCompanyPage, setCachedCompanyPage } from "@/lib/company/cache";
 import { getCompanyPageData, type FilingRow, type MetricRow, type SegmentRevenueRow, type Statement } from "@/lib/company/db";
 import { fmtNum, fmtPct, fmtShares } from "@/lib/company/format";
 import { buildChecklist } from "@/lib/company/pros-cons";
@@ -27,23 +27,39 @@ import { buildChecklist } from "@/lib/company/pros-cons";
 // EVERY request, for EVERY ticker, forever, because raw `postgres` package
 // calls carry none of Next's own fetch-based caching signals.
 //
-// `revalidate` alone does NOT fix this: confirmed live (build + `next
-// start`, repeated curl timings) that a plain revalidate export has no
-// effect on a route with no generateStaticParams once its data comes from a
-// non-fetch source -- every request still re-ran the query. Wrapping the
-// data fetch itself in `unstable_cache` is what actually caches it (Next's
-// own built-in cache, keyed on the wrapped function + its arguments, i.e.
-// ticker); `cache()` still sits on top to dedupe the generateMetadata vs.
-// page-render call within one request, same as before. The page has no
-// per-user state (PublicHeader never reads cookies/auth; confirmed before
-// relying on this) and no request-specific input beyond the ticker route
-// param, so it's safe to cache. 900s keeps worst-case staleness in the same
-// order of magnitude as Alpaca's own ~15min delayed price feed (doc 25) --
-// a cache hit now costs ~0, a cache miss still pays the same real query.
+// Two things tried before this, both real, both superseded:
+// 1. A plain `revalidate` export did NOTHING -- confirmed live (build +
+//    `next start`, repeated curl timings). Next 16 only applies
+//    `revalidate` to fetch()-based caching signals; this page never calls
+//    fetch().
+// 2. `unstable_cache` (Next's own non-fetch cache) DID work when measured
+//    on a single dev server (~1.5s -> ~0.03s) -- but its default cache
+//    handler is per server PROCESS, not shared, so under any real
+//    horizontally-scaled deployment every instance would independently
+//    pay the full query cost on its own first hit per ticker.
+// Replaced with lib/company/cache.ts -- a Redis-backed cache, same fail-
+// open contract as apps/backend/cache.py (ADR 0001: Redis is already a
+// real production dependency of this monorepo for exactly this problem),
+// shared across every server instance. `cache()` still sits on top to
+// dedupe the generateMetadata vs. page-render call within one request. The
+// page has no per-user state (PublicHeader never reads cookies/auth;
+// confirmed before relying on this) and no request-specific input beyond
+// the ticker route param, so it's safe to cache. 15min TTL (cache.ts) keeps
+// worst-case staleness in the same order of magnitude as Alpaca's own
+// ~15min delayed price feed (doc 25) -- a cache hit now costs one Redis
+// round trip, a cache miss still pays the same real query.
 type Props = { params: Promise<{ ticker: string }> };
-const getStock = cache(
-  unstable_cache(getCompanyPageData, ["company-page-data"], { revalidate: 900, tags: ["company-page"] }),
-);
+type CompanyPageDataReturn = Awaited<ReturnType<typeof getCompanyPageData>>;
+
+async function getCompanyPageDataCached(ticker: string): Promise<CompanyPageDataReturn> {
+  const cached = await getCachedCompanyPage(ticker);
+  if (cached !== undefined) return cached;
+  const data = await getCompanyPageData(ticker);
+  await setCachedCompanyPage(ticker, data);
+  return data;
+}
+
+const getStock = cache(getCompanyPageDataCached);
 
 const metricGroups: { title: string; metrics: [string, string, MetricItem["kind"]][] }[] = [
   { title: "Valuation", metrics: [["trailing_pe", "P/E", "multiple"], ["price_to_sales", "Price / Sales", "multiple"], ["price_to_book", "Price / Book", "multiple"], ["dividend_yield", "Dividend yield", "pct"], ["peg_ratio", "PEG", "multiple"], ["ev_ebitda", "EV / EBITDA", "multiple"]] },

@@ -29,11 +29,27 @@ Verified live, real production build (`next build --webpack && next start`):
 
 Confirmed the cache is genuinely per-ticker (not a single shared/incorrect entry) by diffing real rendered content — AAPL and MSFT pages differ, each served from its own cached entry.
 
-## Why 900s, why not Redis
+## Why 900s
 
-`revalidate: 900` (15 min) was chosen, not the 3600s other `apps/app` API routes use, to keep worst-case staleness in the same order of magnitude as Alpaca's own ~15-minute delayed price feed (doc 25) — the page was never going to be fresher than that anyway.
+15 min was chosen, not the 3600s other `apps/app` API routes use, to keep worst-case staleness in the same order of magnitude as Alpaca's own ~15-minute delayed price feed (doc 25) — the page was never going to be fresher than that anyway.
 
-Did **not** reach for Redis here the way `apps/backend`/ADR 0001 did. `unstable_cache` is Next's own built-in mechanism, requires zero new infrastructure, and is the documented tool for exactly this shape of problem (cache a non-fetch async function, keyed on its arguments). Redis was justified for the Screener because the input space (arbitrary query strings/trees) isn't enumerable ahead of time and the backend already needed Redis for other reasons (auth-verification cache, dataset-versioned invalidation). The company page's key space is a bounded set of ticker routes — `unstable_cache` fits without reopening doc 02's Redis question a second time for a case that doesn't need it.
+## Addendum, same day: `unstable_cache` replaced with Redis
+
+Initially deliberately avoided Redis here — `unstable_cache` needed zero new infrastructure and is Next's documented tool for exactly this shape of problem. Directly asked afterward ("why we need to run query everytime, when opening company?"), which prompted re-checking that reasoning: `unstable_cache`'s default cache handler (no `incrementalCacheHandlerPath`/`cacheHandlers` configured in `next.config.ts`) is **per server process, not shared**. That's invisible on a single dev server (which is all that had been tested) but means under any real horizontally-scaled deployment, every Next.js instance independently pays the full ~1.5-7s query cost on its own first hit for every ticker — the win only fully materializes with exactly one running instance.
+
+Replaced with `lib/company/cache.ts`, a Redis-backed cache with the same fail-open contract as `apps/backend/cache.py` (get/set wrapped in try/catch, any Redis failure falls straight through to Postgres, never blocks the page). Justified reopening the Redis question a second time because Redis is already a real, accepted production dependency of this monorepo for exactly this problem (ADR 0001) — this isn't a new category of infrastructure, just a second, separately-keyed (`company-page:*` vs. the backend's `screen:*`/`auth-user:*`) use of the same instance.
+
+Verified live, three scenarios via real `next build && next start`:
+
+| Scenario | Result |
+|---|---|
+| Cold ticker, first hit | ~10s (unchanged — real query + Redis write) |
+| Same process, repeat hit | ~0.04s |
+| **Brand-new process** (killed and restarted on a different port), ticker another process already cached | **~0.27s** (Redis hit from a fresh process — proves cross-instance sharing) |
+| Fresh process, steady state | ~0.04s |
+| Fresh process, different (uncached) ticker | ~9.7s (correctly still a real miss — proves per-ticker correctness, not a blanket cache) |
+
+The ~0.27s "fresh process, first request" number (vs. ~0.04s in steady state) is Node/Next cold-start overhead, not cache overhead — expected and irrelevant to the point being tested (cross-instance sharing).
 
 ## Secondary fix: pool idle_timeout
 
