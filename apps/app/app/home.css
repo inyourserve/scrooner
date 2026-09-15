@@ -57,6 +57,18 @@
 .home-main #company-search {
   width: min(720px, 100%);
   margin-top: 34px;
+  /* position+z-index (not just the animation's own opacity/transform) are
+     required here: an element with a CSS animation on opacity/transform
+     forms its own stacking context for the life of the rule, regardless of
+     its current computed values. .quick-picks below does the same (same
+     home-rise animation) and comes later in the DOM, so without an
+     explicit z-index it would paint OVER this entire subtree -- including
+     .company-search-results' own z-index:70, which only has authority
+     inside #company-search's local stacking context, not against a
+     sibling one. Found live 2026-09-12: the search dropdown's first two
+     rows rendered visibly interleaved with the "Or analyse" chips. */
+  position: relative;
+  z-index: 1;
   animation: home-rise 500ms 200ms var(--ds-ease-standard) both;
 }
 

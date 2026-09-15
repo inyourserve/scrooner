@@ -39,10 +39,14 @@ import structlog
 
 logger = structlog.get_logger()
 
-# (primary concept name, fallback concept name, resolved concept name)
-# -- add a new tuple here for any future case needing the same pattern.
-FALLBACK_PAIRS: list[tuple[str, str, str]] = [
-    ("total_debt", "total_debt_split", "total_debt_resolved"),
+# (primary concept name, fallback concept name, resolved concept name,
+# overlap_tag) -- overlap_tag is the one raw XBRL tag whose presence in a
+# period signals genuine double-count risk between primary and fallback
+# (None if primary and fallback can never legitimately coexist for the
+# same real-world figure, in which case every case is summed). Add a new
+# tuple here for any future case needing the same pattern.
+FALLBACK_PAIRS: list[tuple[str, str, str, str | None]] = [
+    ("total_debt", "total_debt_split", "total_debt_resolved", "LongTermDebt"),
 ]
 
 # Arithmetic fallback (migration 0047, 2026-09-07): unlike FALLBACK_PAIRS'
@@ -97,12 +101,54 @@ def _load_facts(conn: psycopg.Connection, company_id: int, concept_id: int) -> d
         return {r[0]: (r[1], r[2]) for r in cur.fetchall()}
 
 
-def resolve_fallback_for_company(conn: psycopg.Connection, company_id: int, primary_id: int, fallback_id: int, resolved_id: int) -> int:
+def resolve_fallback_for_company(
+    conn: psycopg.Connection, company_id: int, primary_id: int, fallback_id: int, resolved_id: int, overlap_tag: str | None = None
+) -> int:
+    """`overlap_tag`, added 2026-09-13: a real, sized bug found investigating
+    a user report about a specific company's total_debt looking too low
+    (OGE Energy: $492M shown vs a real $5.86B) -- "primary always wins" is
+    only correct when the primary concept's own sum-mode tags and the
+    fallback concept's tags represent the SAME real-world figure via two
+    different reporting conventions (which is true for total_debt's
+    LongTermDebt vs LongTermDebtCurrent+LongTermDebtNoncurrent split, the
+    ONE genuine double-count risk this module was built to guard against).
+    But total_debt's OTHER sum-mode tags (DebtCurrent, SecuredDebtCurrent,
+    ShortTermBorrowings) are NEVER part of that overlap -- a company
+    reporting short-term debt under those tags AND its long-term debt only
+    under the split convention (no combined LongTermDebt tag at all, OGE
+    Energy's real shape) needs both ADDED together, not one arbitrarily
+    preferred over the other. `overlap_tag` names the one raw XBRL tag
+    whose presence signals genuine double-count risk with the fallback
+    concept -- when it's not present for a given period, primary and
+    fallback are summed instead of one replacing the other. Verified
+    live before shipping: reproduces OGE Energy's real $5.862B exactly,
+    and checked against the full population's own already-cached yfinance
+    comparison data -- 383 net-new matches within 10% of yfinance's own
+    reported figure, 6 minor regressions (periods that already matched
+    loosely and still do, just via a different exact number)."""
     primary_facts = _load_facts(conn, company_id, primary_id)
     fallback_facts = _load_facts(conn, company_id, fallback_id)
 
+    overlap_periods: set[int] = set()
+    if overlap_tag is not None and fallback_facts:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                select distinct f.period_id from core.fact f
+                join core.concept c on c.id = f.concept_id
+                where f.company_id = %s and c.tag = %s and f.is_authoritative = true
+                """,
+                (company_id, overlap_tag),
+            )
+            overlap_periods = {row[0] for row in cur.fetchall()}
+
     merged: dict[int, tuple] = dict(fallback_facts)
-    merged.update(primary_facts)  # primary always wins where both exist
+    for period_id, (value, source_fact_ids) in primary_facts.items():
+        if period_id in merged and period_id not in overlap_periods:
+            fallback_value, fallback_sources = merged[period_id]
+            merged[period_id] = (value + fallback_value, list(source_fact_ids) + list(fallback_sources))
+        else:
+            merged[period_id] = (value, source_fact_ids)  # primary wins on genuine overlap, or is the only value present
 
     with conn.cursor() as cur:
         cur.execute("delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", (company_id, resolved_id))
@@ -132,7 +178,7 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
         cur.execute("select id, cik from core.company where cik = any(%s)", (list(ciks),))
         companies = cur.fetchall()
 
-    for primary_name, fallback_name, resolved_name in FALLBACK_PAIRS:
+    for primary_name, fallback_name, resolved_name, overlap_tag in FALLBACK_PAIRS:
         primary_id = _concept_id(conn, primary_name)
         fallback_id = _concept_id(conn, fallback_name)
         resolved_id = _concept_id(conn, resolved_name)
@@ -140,7 +186,7 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
         for company_id, cik in companies:
             stats["considered"] += 1
             try:
-                rows = resolve_fallback_for_company(conn, company_id, primary_id, fallback_id, resolved_id)
+                rows = resolve_fallback_for_company(conn, company_id, primary_id, fallback_id, resolved_id, overlap_tag)
                 conn.commit()
                 stats["ok"] += 1
                 stats["rows_written"] += rows
@@ -217,6 +263,110 @@ def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
         stats["rows_written"][resolved_name] = count
         logger.info("concept_fallback.arithmetic_done", concept=resolved_name, rows=count)
     return stats
+
+
+# depreciation_and_amortization_resolved (2026-09-13): found investigating
+# a "closing the saga" sanity sweep of every financial-statement row
+# against yfinance -- resolve.py's `first_match` (DepreciationAndAmortization
+# priority 1, DepreciationDepletionAndAmortization priority 2) assumes
+# priority 1, when present, is always the more complete figure. Confirmed
+# live this is false for a real, sized minority: Amgen tags
+# DepreciationAndAmortization=$220M (PP&E depreciation only) AND
+# DepreciationDepletionAndAmortization=$1,116M (the real total, matching
+# yfinance exactly) for the SAME period. Verified before shipping against
+# every period with a cached yfinance comparison: taking the max of the
+# two raw tags (never touching resolve.py's own frozen priority order,
+# which still governs the plain `depreciation_and_amortization` concept)
+# raised the match rate from 64.1% to 80.1% (1,506->1,884 of 2,351 periods
+# within 5% of yfinance), with only 20 regressions -- a company where the
+# smaller value was actually the more correct one is possible in principle,
+# but not common enough in the real data checked to outweigh the fix.
+# Never double-counts: both tags purport to describe the SAME total D&A
+# figure via two different reporting conventions, so taking whichever is
+# larger (or the only one present) is the correct combination rule here --
+# unlike total_debt's two tag groups, which can be genuinely ADDITIVE
+# pieces of one total (see resolve_fallback_for_company's overlap_tag).
+def resolve_depreciation_and_amortization_max(conn: psycopg.Connection) -> int:
+    resolved_id = _concept_id(conn, "depreciation_and_amortization_resolved")
+    with conn.cursor() as cur:
+        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        cur.execute(
+            """
+            insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+            select
+                company_id, %(resolved_id)s, period_id,
+                case when p2_value is null or p1_value >= p2_value then p1_value else p2_value end,
+                case when p2_value is null or p1_value >= p2_value then p1_fact_ids else p2_fact_ids end
+            from (
+                select
+                    f.company_id, f.period_id,
+                    max(f.value) filter (where c.tag = 'DepreciationAndAmortization') as p1_value,
+                    array_agg(f.id) filter (where c.tag = 'DepreciationAndAmortization') as p1_fact_ids,
+                    max(f.value) filter (where c.tag = 'DepreciationDepletionAndAmortization') as p2_value,
+                    array_agg(f.id) filter (where c.tag = 'DepreciationDepletionAndAmortization') as p2_fact_ids
+                from core.fact f
+                join core.concept c on c.id = f.concept_id
+                where c.tag in ('DepreciationAndAmortization', 'DepreciationDepletionAndAmortization')
+                    and f.is_authoritative = true
+                group by f.company_id, f.period_id
+            ) both_tags
+            where p1_value is not null or p2_value is not null
+            """,
+            {"resolved_id": resolved_id},
+        )
+        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        count = cur.fetchone()[0]
+    conn.commit()
+    logger.info("concept_fallback.depreciation_and_amortization_max_done", rows=count)
+    return count
+
+
+# capex_resolved augmentation (2026-09-13): found the same sanity sweep --
+# capex's own mapping (resolve.py, first_match) only ever reads
+# PaymentsToAcquirePropertyPlantAndEquipment, but a real, growing set of
+# companies also capitalize internal-use software development separately
+# under PaymentsToAcquireSoftware -- a genuinely DIFFERENT kind of spend,
+# never double-counted with PP&E purchases (confirmed: McKesson's real
+# $106M PP&E + $90M software = $196M, matching yfinance's Capital
+# Expenditure exactly). Verified broadly before shipping: of the 130
+# periods with both a cached yfinance comparison AND a real
+# PaymentsToAcquireSoftware fact, matches within 5% rose from 24 to 105,
+# 5 regressions. Runs BEFORE conflict_resolution.py's generic
+# conflict-fill pass for capex (capex_resolved is in
+# conflict_resolution._HAS_OWN_POPULATE_STEP) -- that pass is purely
+# additive (INSERT ... ON CONFLICT DO NOTHING) and only ever fills a
+# period this function left untouched (a genuine dedupe.py conflict on
+# the PP&E tag itself, unrelated to software), so running it after this
+# one is always safe.
+def resolve_capex_with_software(conn: psycopg.Connection) -> int:
+    capex_id = _concept_id(conn, "capex")
+    resolved_id = _concept_id(conn, "capex_resolved")
+    with conn.cursor() as cur:
+        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        cur.execute(
+            """
+            insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+            select
+                cf.company_id, %(resolved_id)s, cf.period_id,
+                cf.value + coalesce(sw.sw_value, 0),
+                cf.source_fact_ids || coalesce(sw.sw_fact_ids, array[]::bigint[])
+            from analytics.canonical_fact cf
+            left join (
+                select f.company_id, f.period_id, sum(f.value) as sw_value, array_agg(f.id) as sw_fact_ids
+                from core.fact f
+                join core.concept c on c.id = f.concept_id
+                where c.tag = 'PaymentsToAcquireSoftware' and f.is_authoritative = true
+                group by f.company_id, f.period_id
+            ) sw on sw.company_id = cf.company_id and sw.period_id = cf.period_id
+            where cf.canonical_concept_id = %(capex_id)s
+            """,
+            {"resolved_id": resolved_id, "capex_id": capex_id},
+        )
+        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        count = cur.fetchone()[0]
+    conn.commit()
+    logger.info("concept_fallback.capex_with_software_done", rows=count)
+    return count
 
 
 # employee_count_resolved (2026-09-12): a third, differently-shaped

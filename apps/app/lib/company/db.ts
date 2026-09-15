@@ -1319,6 +1319,30 @@ export async function searchCompanyDirectory(query: string, limit = 8): Promise<
   `;
 }
 
+// The full active-company directory (~6k rows, ~250KB), for the homepage
+// search box to fetch once and match client-side with zero per-keystroke
+// network/DB round trip -- the fastest a real-time search box can be,
+// since the universe here is small and stable enough (changes at most
+// once/day via the pipeline cron) to ship whole rather than query per
+// character. Same filters/shape as searchCompanyDirectory, just without
+// the prefix predicate.
+export async function loadFullCompanyDirectory(): Promise<CompanyDirectoryRow[]> {
+  return sql<CompanyDirectoryRow[]>`
+    select distinct on (lower(l.ticker))
+      l.ticker,
+      coalesce(c.display_name, c.company_name) as company_name,
+      l.exchange,
+      c.sector
+    from core.company c
+    join core.listing l on l.company_id = c.id
+    where c.status = 'active'
+      and l.effective_to is null
+      and l.ticker is not null
+      and ${EQUITY_ONLY_SQL}
+    order by lower(l.ticker), c.company_name
+  `;
+}
+
 // Homepage shortcuts stay honest without loading the whole company directory.
 // This is a small homepage-only query and never runs on company research pages.
 export async function getCompaniesByTickers(tickers: string[]): Promise<CompanyDirectoryRow[]> {

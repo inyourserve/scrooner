@@ -66,7 +66,25 @@ export function queryToBuilderState(
   metrics: MetricDefinition[],
   idFactory: () => string,
 ): BuilderState | null {
+  // The flat "Exact filters" builder can only ever represent an AND-of-
+  // predicates -- an AND/OR/NOT query (from the NL parser) has no honest
+  // row-by-row representation, so this returns null rather than a
+  // builder state seeded from the (near-empty) flat lists, which would
+  // silently show 0-1 rows and imply that's the whole query. Real
+  // results still render regardless -- ScreenerClient.applyRunPage only
+  // uses this for the optional, editable-filters panel, never to gate
+  // whether a match is displayed.
+  if (query.where) return null;
   if (query.categorical_predicates.length > 1) return null;
+  // The builder's own classification dropdown only ever offers SIC
+  // codes/descriptions (SIC_OPTIONS) -- it has no UI for a sector-bucket
+  // predicate (`field: "sector"`, doc 28's broader "healthcare
+  // companies"-style phrases), even though the NL parser and backend
+  // have supported that field since 2026-08-21. Surfaced by widening
+  // CategoricalPredicatePayload's type to match the backend accurately
+  // (2026-09-11) -- this case existed before that, just silently,
+  // because the old narrower type let TypeScript wave it through.
+  if (query.categorical_predicates.some((p) => p.field === "sector")) return null;
 
   const rows = query.metric_predicates.map((predicate) => {
     const metric = metricByName(metrics, predicate.metric_name);
@@ -94,7 +112,12 @@ export function queryToBuilderState(
     };
   });
 
-  const categoryPredicate = query.categorical_predicates[0];
+  // The guard above already ruled out "sector" -- only sic_code/
+  // sic_description can reach here, but a .some() check upstream doesn't
+  // narrow this array access for TypeScript.
+  const categoryPredicate = query.categorical_predicates[0] as
+    | { field: "sic_code" | "sic_description"; value: string }
+    | undefined;
   return {
     rows,
     category: categoryPredicate

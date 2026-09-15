@@ -13,7 +13,7 @@ from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks, resolve_all_arithmetic_fallbacks, resolve_employee_count_fallback
 from scrooner_pipeline.mapper.conflict_resolution import resolve_all_conflict_fills
-from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_returns
+from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_margins, compute_ttm_returns
 from scrooner_pipeline.mapper import validate as validate_module
 from scrooner_pipeline.statements.classify import seed as seed_statements
 from scrooner_pipeline.mapper.price_metrics import calculate_price_metrics
@@ -204,6 +204,24 @@ def ttm_returns_cmd(
     with get_connection() as conn:
         stats = compute_ttm_returns(conn, target_ciks)
     typer.echo(f"ttm-returns: {stats}")
+
+
+@app.command("ttm-margins")
+def ttm_margins_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+) -> None:
+    """2026-09-13: compute TTM gross/operating/net margin for quarterly
+    periods -- found live that these 3 locked V1 metrics were never
+    computed as TTM at all (only a raw single-quarter ratio), the same bug
+    class already fixed once for roic/roe (see ttm-returns above), just
+    never applied here. Screener/resolve.py's own TTM-preferred rule picks
+    these up automatically once they exist, no screener code change
+    needed. See mapper/ttm.py's MARGIN_CONCEPTS docstring for the full
+    finding and verification."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    with get_connection() as conn:
+        stats = compute_ttm_margins(conn, target_ciks)
+    typer.echo(f"ttm-margins: {stats}")
 
 
 @app.command("seed-statements")

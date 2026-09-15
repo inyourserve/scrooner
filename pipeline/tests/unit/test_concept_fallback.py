@@ -7,10 +7,12 @@ from scrooner_pipeline.mapper.concept_fallback import _find_or_create_instant_pe
 
 
 class _FakeCursor:
-    def __init__(self, facts_by_concept, inserted):
+    def __init__(self, facts_by_concept, overlap_periods, inserted):
         self._facts_by_concept = facts_by_concept
+        self._overlap_periods = overlap_periods
         self._inserted = inserted
         self._last_select_concept_id = None
+        self._last_result = None
 
     def __enter__(self):
         return self
@@ -19,12 +21,20 @@ class _FakeCursor:
         return False
 
     def execute(self, sql, params=()):
-        if sql.strip().startswith("select period_id"):
+        sql = sql.strip()
+        if sql.startswith("select period_id"):
             self._last_select_concept_id = params[1]
-        elif sql.strip().startswith("delete"):
+            self._last_result = None
+        elif sql.startswith("select distinct f.period_id"):
+            # The overlap_tag guard query (core.fact/core.concept) -- real
+            # column names don't matter here, only which periods it returns.
+            self._last_result = [(pid,) for pid in self._overlap_periods]
+        elif sql.startswith("delete"):
             pass
 
     def fetchall(self):
+        if self._last_result is not None:
+            return self._last_result
         rows = self._facts_by_concept.get(self._last_select_concept_id, {})
         return [(period_id, value, fact_ids) for period_id, (value, fact_ids) in rows.items()]
 
@@ -33,32 +43,54 @@ class _FakeCursor:
 
 
 class _FakeConnection:
-    def __init__(self, facts_by_concept):
+    def __init__(self, facts_by_concept, overlap_periods=()):
         self._facts_by_concept = facts_by_concept
+        self._overlap_periods = overlap_periods
         self.inserted = []
 
     def cursor(self):
-        return _FakeCursor(self._facts_by_concept, self.inserted)
+        return _FakeCursor(self._facts_by_concept, self._overlap_periods, self.inserted)
 
 
 @pytest.mark.unit
 class TestResolveFallbackForCompany:
-    def test_prefers_primary_when_present(self):
+    def test_prefers_primary_on_genuine_overlap(self):
         """The exact 2,168-company case that made a naive sum-mode
         widening unsafe: a company reporting BOTH the combined tag and
-        the split tags must resolve to the PRIMARY value, not a sum of
-        both (which would double-count)."""
+        the split tags for the SAME period, with overlap_tag present for
+        that period, must resolve to the PRIMARY value alone, not a sum
+        of both (which would double-count)."""
         conn = _FakeConnection(
             {
                 10: {1: (5000, [100])},  # primary (total_debt): period 1 = 5000
-                20: {1: (2500, [101]), 2: (3000, [102])},  # fallback (total_debt_split): period 1 = 2500 (WRONG if used), period 2 = 3000
-            }
+                20: {1: (2500, [101]), 2: (3000, [102])},  # fallback (total_debt_split): period 1 = 2500 (WRONG if summed), period 2 = 3000
+            },
+            overlap_periods=[1],  # period 1's primary value is confirmed to include the overlap tag
         )
-        count = resolve_fallback_for_company(conn, company_id=1, primary_id=10, fallback_id=20, resolved_id=30)
+        count = resolve_fallback_for_company(conn, company_id=1, primary_id=10, fallback_id=20, resolved_id=30, overlap_tag="LongTermDebt")
         assert count == 2
         by_period = {row["period_id"]: row["value"] for row in conn.inserted}
-        assert by_period[1] == 5000  # primary wins, not summed with fallback's 2500
+        assert by_period[1] == 5000  # genuine overlap: primary wins, not summed with fallback's 2500
         assert by_period[2] == 3000  # only fallback has period 2, used as-is
+
+    def test_sums_primary_and_fallback_when_no_overlap_tag_present(self):
+        """The real bug found live 2026-09-13 (OGE Energy: $492M shown vs
+        a real $5.86B): a company can report SOME debt under total_debt's
+        own tags (e.g. ShortTermBorrowings) and ALL of its long-term debt
+        only under the split convention, with no combined LongTermDebt tag
+        at all -- in that case both values are real and distinct pieces of
+        the same total, and must be ADDED, not one preferred over the
+        other."""
+        conn = _FakeConnection(
+            {
+                10: {1: (492, [100])},  # primary: period 1 = 492 (short-term only, no LongTermDebt tag)
+                20: {1: (5370, [101])},  # fallback (split): period 1 = 5370 (the real long-term piece)
+            },
+            overlap_periods=[],  # LongTermDebt tag never present for this company/period
+        )
+        count = resolve_fallback_for_company(conn, company_id=1, primary_id=10, fallback_id=20, resolved_id=30, overlap_tag="LongTermDebt")
+        assert count == 1
+        assert conn.inserted[0]["value"] == 5862  # summed, not one or the other
 
     def test_falls_back_when_primary_absent(self):
         """The real 360-company case this module exists for: only the
@@ -90,6 +122,15 @@ class TestResolveFallbackForCompany:
         assert count == 2
         periods = {row["period_id"] for row in conn.inserted}
         assert periods == {1, 2}
+
+    def test_no_overlap_tag_configured_means_always_sum(self):
+        """overlap_tag=None (the default) means primary and fallback can
+        never legitimately represent the same real figure -- always sum
+        where both exist, no guard query needed at all."""
+        conn = _FakeConnection({10: {1: (100, [1])}, 20: {1: (200, [2])}})
+        count = resolve_fallback_for_company(conn, company_id=5, primary_id=10, fallback_id=20, resolved_id=30)
+        assert count == 1
+        assert conn.inserted[0]["value"] == 300
 
 
 @pytest.mark.unit

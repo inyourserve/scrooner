@@ -21,6 +21,7 @@ import type {
   ScreenQueryPayload,
   ScreenResult,
 } from "@/lib/screener/types";
+import { collectMetricNames } from "@/lib/screener/types";
 import { NaturalQueryPanel } from "./NaturalQueryPanel";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
@@ -28,7 +29,7 @@ import { StatusPanel } from "@/components/ui/StatusPanel";
 import { SaveScreenButton } from "@/components/saved-screens/SaveScreenButton";
 import { EmptyState } from "@/components/scrooner/EmptyState";
 import { TableSkeleton } from "@/components/scrooner/TableSkeleton";
-import { savedScreensApi } from "@/lib/saved-screens/client";
+import { cacheRunPageForNavigation, readNavigationRunPage, readPendingRun, savedScreensApi } from "@/lib/saved-screens/client";
 import type { ScreenRunPage } from "@/lib/saved-screens/types";
 
 const DEFAULT_ROW: FilterRow = {
@@ -82,22 +83,44 @@ function MatchReasons({
   metrics: MetricDefinition[];
   siteUrl: string;
 }) {
+  // A `where` (AND/OR/NOT) query has no single "you matched because X"
+  // story the way a flat AND list does -- a company excluded by one
+  // branch can still match via another, the same reason query.py's own
+  // `exclusion_detail` gives up on precise attribution for these. Rather
+  // than render nothing (query.metric_predicates/categorical_predicates
+  // are empty for a where-tree query, per the backend's own schema),
+  // show every metric the query actually referenced and this company's
+  // real value for it -- less precise than "matched at X > Y", but still
+  // real, traceable data, not silence.
+  const combined = Boolean(query.where);
   return (
     <details className="match-reasons">
       <summary>Why matched</summary>
       <ul>
-        {query.metric_predicates.map((predicate, index) => {
-          const definition = metricByName(metrics, predicate.metric_name);
-          const summary = predicateSummary(predicate, metrics);
-          const actual = company.metrics[predicate.metric_name];
-          return (
-            <li key={`${predicate.metric_name}-${index}`}>
-              <span><strong>{summary.metric}</strong> · {summary.operator} {summary.value}</span>
-              {actual && <small>Matched at {formatMetricValue(actual.value, definition)} · {metricPeriod(actual)} · formula v{actual.formula_version}</small>}
-            </li>
-          );
-        })}
-        {query.categorical_predicates.map((predicate, index) => (
+        {combined && <li className="match-reasons-note"><small>Matched a combined AND/OR/NOT filter -- showing this company&apos;s value for every metric the filter referenced.</small></li>}
+        {combined
+          ? collectMetricNames(query).map((metricName) => {
+              const definition = metricByName(metrics, metricName);
+              const actual = company.metrics[metricName];
+              return (
+                <li key={metricName}>
+                  <span><strong>{definition?.display_name ?? metricName}</strong></span>
+                  {actual && <small>Value: {formatMetricValue(actual.value, definition)} · {metricPeriod(actual)} · formula v{actual.formula_version}</small>}
+                </li>
+              );
+            })
+          : query.metric_predicates.map((predicate, index) => {
+              const definition = metricByName(metrics, predicate.metric_name);
+              const summary = predicateSummary(predicate, metrics);
+              const actual = company.metrics[predicate.metric_name];
+              return (
+                <li key={`${predicate.metric_name}-${index}`}>
+                  <span><strong>{summary.metric}</strong> · {summary.operator} {summary.value}</span>
+                  {actual && <small>Matched at {formatMetricValue(actual.value, definition)} · {metricPeriod(actual)} · formula v{actual.formula_version}</small>}
+                </li>
+              );
+            })}
+        {!combined && query.categorical_predicates.map((predicate, index) => (
           <li key={`${predicate.field}-${index}`}>
             <span><strong>Company classification</strong> · {predicate.field} = {predicate.value}</span>
             <small>Matched company SIC {company.sic_code ?? "not available"}</small>
@@ -109,7 +132,19 @@ function MatchReasons({
   );
 }
 
-export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
+export function ScreenerClient({
+  siteUrl,
+  initialMetrics = [],
+  autoRunInitialQuery = false,
+  routePath = "/app/screens/new",
+  resultsFirst = false,
+}: {
+  siteUrl: string;
+  initialMetrics?: MetricDefinition[];
+  autoRunInitialQuery?: boolean;
+  routePath?: string;
+  resultsFirst?: boolean;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextId = useRef(2);
@@ -123,8 +158,8 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   // go through the exact same load path below instead of three different
   // ones that could disagree with each other.
   const loadedRunKey = useRef<string | null>(null);
-  const [metrics, setMetrics] = useState<MetricDefinition[]>([]);
-  const [catalogState, setCatalogState] = useState<RequestState>("loading");
+  const [metrics, setMetrics] = useState<MetricDefinition[]>(initialMetrics);
+  const [catalogState, setCatalogState] = useState<RequestState>(initialMetrics.length > 0 ? "success" : "loading");
   const [catalogError, setCatalogError] = useState("");
   const [rows, setRows] = useState<FilterRow[]>([DEFAULT_ROW]);
   const [category, setCategory] = useState<CategoryFilter>(EMPTY_CATEGORY);
@@ -133,7 +168,9 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   const [limit, setLimit] = useState("50");
   const [includeInactive, setIncludeInactive] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [requestState, setRequestState] = useState<RequestState>("idle");
+  const [requestState, setRequestState] = useState<RequestState>(() =>
+    resultsFirst && (searchParams.has("query") || searchParams.has("run")) ? "loading" : "idle"
+  );
   const [requestError, setRequestError] = useState("");
   const [result, setResult] = useState<ScreenResult | null>(null);
   const [lastQuery, setLastQuery] = useState<ScreenQueryPayload | null>(null);
@@ -141,8 +178,15 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   const [builderOpen, setBuilderOpen] = useState(false);
   const [runPage, setRunPage] = useState<ScreenRunPage | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(() => {
+    const requested = Number(searchParams.get("limit"));
+    return requested === 10 || requested === 25 || requested === 50 ? requested : 10;
+  });
+  const [hiddenMetricNames, setHiddenMetricNames] = useState<string[]>([]);
+  const [showClassification, setShowClassification] = useState(true);
 
   useEffect(() => {
+    if (initialMetrics.length > 0) return;
     let active = true;
     void requestMetricCatalog()
       .then((catalog) => {
@@ -156,7 +200,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
         setCatalogError(error instanceof Error ? error.message : "Metric definitions could not be loaded.");
       });
     return () => { active = false; };
-  }, []);
+  }, [initialMetrics.length]);
 
   // The one place a ScreenRunPage (however it was obtained) turns into
   // displayed state. Never gated on whether the advanced filter builder
@@ -196,16 +240,40 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
     const runId = searchParams.get("run");
     if (!runId) return;
     const cursor = searchParams.get("cursor") || undefined;
-    const key = `${runId}:${cursor ?? ""}`;
+    const key = `${runId}:${pageSize}:${cursor ?? ""}`;
     if (loadedRunKey.current === key) return;
     loadedRunKey.current = key;
-    void savedScreensApi.getRun(runId, cursor).then((page) => {
+    const pending = readPendingRun(runId);
+    if (pending) {
+      void pending.then((page) => {
+        if (page && typeof page === "object" && "run_id" in page) {
+          applyRunPage(page as ScreenRunPage, 1);
+          cacheRunPageForNavigation(page as ScreenRunPage, pageSize);
+          return;
+        }
+        setRequestState("idle");
+      }).catch((error: unknown) => {
+        setRequestError(error instanceof Error ? error.message : "The screen could not be completed.");
+        setRequestState("error");
+      });
+      return;
+    }
+    if (!cursor) {
+      const prefetched = readNavigationRunPage(runId, pageSize);
+      if (prefetched) {
+        void Promise.resolve(prefetched).then((page) => {
+          applyRunPage(page, Math.max(1, Number(searchParams.get("page")) || 1));
+        });
+        return;
+      }
+    }
+    void savedScreensApi.getRun(runId, cursor, pageSize).then((page) => {
       applyRunPage(page, Math.max(1, Number(searchParams.get("page")) || 1));
     }).catch((error: unknown) => {
       setRequestError(error instanceof Error ? error.message : "Saved results could not be loaded.");
       setRequestState("error");
     });
-  }, [catalogState, searchParams, applyRunPage]);
+  }, [catalogState, searchParams, applyRunPage, pageSize]);
 
   useEffect(() => {
     if (requestState === "success" || requestState === "error") {
@@ -239,10 +307,35 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
 
   const resultMetricNames = useMemo(() => {
     if (!lastQuery) return [];
-    const names = lastQuery.metric_predicates.map((predicate) => predicate.metric_name);
+    // collectMetricNames walks query.where too -- an OR/NOT query (from
+    // the NL parser) has its real predicates there, not in the flat
+    // metric_predicates list, which only ever holds a ranked (top/bottom
+    // N) predicate alongside a `where` tree.
+    const names = collectMetricNames(lastQuery);
     if (lastQuery.sort_by) names.push(lastQuery.sort_by);
     return [...new Set(names)];
   }, [lastQuery]);
+  const visibleMetricNames = resultMetricNames.filter((name) => !hiddenMetricNames.includes(name));
+
+  function exportCurrentPage() {
+    if (!result) return;
+    const headings = ["S.No.", "Ticker", "Company", ...(showClassification ? ["Industry"] : []), ...visibleMetricNames.map((name) => metricByName(metrics, name)?.display_name ?? name)];
+    const escapeCsv = (value: string | number) => `"${String(value).replaceAll('"', '""')}"`;
+    const rows = result.matched.map((company, index) => [
+      (pageNumber - 1) * pageSize + index + 1,
+      company.ticker ?? "",
+      company.company_name,
+      ...(showClassification ? [company.sic_description ?? ""] : []),
+      ...visibleMetricNames.map((name) => company.metrics[name]?.value ?? ""),
+    ]);
+    const blob = new Blob([[headings, ...rows].map((row) => row.map(escapeCsv).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `screen-results-page-${pageNumber}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
 
   function createRow(seed?: Partial<FilterRow>): FilterRow {
     const firstMetric = metrics[0]?.metric_name ?? "roe";
@@ -314,25 +407,66 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
   // a run this function just handed it directly.
   function handleRunCreated(run: ScreenRunPage) {
     screenRequestVersion.current += 1;
-    loadedRunKey.current = `${run.run_id}:`;
+    loadedRunKey.current = `${run.run_id}:${pageSize}:`;
+    cacheRunPageForNavigation(run, pageSize);
     applyRunPage(run, 1);
-    const params = new URLSearchParams({ query: run.query_text, run: run.run_id, page: "1" });
-    router.push(`/app/screens/new?${params}`);
+    router.push(runUrl(run, 1, null, pageSize));
+  }
+
+  function runUrl(page: ScreenRunPage, number: number, cursor: string | null, size: number) {
+    const params = new URLSearchParams({
+      query: page.query_text,
+      run: page.run_id,
+      page: String(number),
+      limit: String(size),
+    });
+    if (page.normalized_query.sort_by) params.set("sort", page.normalized_query.sort_by);
+    if (page.normalized_query.sort_by) params.set("order", page.normalized_query.sort_desc ? "desc" : "asc");
+    if (cursor) params.set("cursor", cursor);
+    return `${routePath}?${params}`;
   }
 
   async function loadRunPage(cursor: string | null, nextPage: number) {
     if (!runPage) return;
     setRequestState("loading");
     try {
-      const page = await savedScreensApi.getRun(runPage.run_id, cursor || undefined);
-      loadedRunKey.current = `${page.run_id}:${cursor ?? ""}`;
+      const page = await savedScreensApi.getRun(runPage.run_id, cursor || undefined, pageSize);
+      loadedRunKey.current = `${page.run_id}:${pageSize}:${cursor ?? ""}`;
       applyRunPage(page, nextPage);
-      const params = new URLSearchParams({ query: page.query_text, run: page.run_id, page: String(nextPage) });
-      if (cursor) params.set("cursor", cursor);
-      router.replace(`/app/screens/new?${params}`);
+      router.replace(runUrl(page, nextPage, cursor, pageSize));
     } catch (error) {
       setRequestError(error instanceof Error ? error.message : "The next page could not be loaded.");
       setRequestState("error");
+    }
+  }
+
+  async function sortResults(metricName: string) {
+    if (!lastQuery || requestState === "loading") return;
+    const descending = lastQuery.sort_by === metricName ? !lastQuery.sort_desc : true;
+    const sortedQuery = { ...lastQuery, sort_by: metricName, sort_desc: descending };
+    setRequestState("loading");
+    setRequestError("");
+    try {
+      const page = await savedScreensApi.createRunFromQuery(interpretedFrom, sortedQuery, pageSize);
+      handleRunCreated(page);
+    } catch (error) {
+      setRequestState("error");
+      setRequestError(error instanceof Error ? error.message : "The results could not be sorted.");
+    }
+  }
+
+  async function changePageSize(size: number) {
+    if (!runPage || size === pageSize || requestState === "loading") return;
+    setRequestState("loading");
+    try {
+      const page = await savedScreensApi.getRun(runPage.run_id, undefined, size);
+      setPageSize(size);
+      loadedRunKey.current = `${page.run_id}:${size}:`;
+      applyRunPage(page, 1);
+      router.replace(runUrl(page, 1, null, size));
+    } catch (error) {
+      setRequestState("error");
+      setRequestError(error instanceof Error ? error.message : "The page size could not be changed.");
     }
   }
 
@@ -394,9 +528,23 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
     await executeScreen(built.query);
   }
 
+  const queryPanel = (
+    <NaturalQueryPanel
+      metrics={metrics}
+      initialText={searchParams.get("query") ?? ""}
+      onRunCreated={handleRunCreated}
+      autoRun={autoRunInitialQuery && !searchParams.get("run")}
+      pageSize={pageSize}
+      title={resultsFirst ? "Search query" : "Create a screen"}
+      submitPath={resultsFirst ? routePath : undefined}
+      hidden={resultsFirst && requestState === "loading"}
+      onBlocked={resultsFirst ? () => setRequestState("idle") : undefined}
+    />
+  );
+
   return (
-    <main className="workspace-page screener-content" id="main-content">
-        {catalogState === "loading" && (
+    <main className={`workspace-page screener-content${resultsFirst ? " raw-screen-page" : ""}`} id="main-content">
+        {catalogState === "loading" && !resultsFirst && (
           <StatusPanel className="state-panel" title="Loading metric definitions" busy>
             <p>Loading metrics.</p>
           </StatusPanel>
@@ -413,22 +561,36 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
           </StatusPanel>
         )}
 
-        {catalogState === "success" && (
+        {(catalogState === "success" || resultsFirst) && (
           <>
-          <NaturalQueryPanel metrics={metrics} initialText={searchParams.get("query") ?? ""} onRunCreated={handleRunCreated} />
+          {!resultsFirst && queryPanel}
 
-          {requestState !== "idle" && <section className="results-section" aria-labelledby="results-title" aria-busy={requestState === "loading"}>
+          {(requestState !== "idle" || resultsFirst) && <section className="results-section" aria-labelledby="results-title" aria-busy={requestState === "loading"}>
             <div className="results-heading">
               <div>
-                <h2 ref={resultsTitleRef} id="results-title" tabIndex={-1}>Matching companies</h2>
-                {interpretedFrom && <p className="results-source-query">From “{interpretedFrom}”</p>}
+                <h2 ref={resultsTitleRef} id="results-title" tabIndex={-1}>Query results</h2>
+                {requestState === "success" && result && <p className="results-source-query"><strong>{runPage?.total_count ?? result.matched.length}</strong> results found · Showing page {pageNumber} of {Math.max(1, Math.ceil((runPage?.total_count ?? result.matched.length) / pageSize))}{interpretedFrom && <span className="results-query-context">From “{interpretedFrom}”</span>}</p>}
               </div>
-              {requestState === "success" && result && <p className="match-count"><strong>{runPage?.total_count ?? result.matched.length}</strong> {(runPage?.total_count ?? result.matched.length) === 1 ? "company" : "companies"} matched</p>}
               {requestState === "success" && lastQuery && <SaveScreenButton query={lastQuery} runId={runPage?.run_id} />}
             </div>
 
+            {requestState === "success" && result && result.matched.length > 0 && <div className="results-toolbar" aria-label="Result tools">
+              <button type="button" className={showClassification ? "is-active" : ""} onClick={() => setShowClassification((shown) => !shown)}>Industry</button>
+              <button type="button" onClick={exportCurrentPage}>Export CSV</button>
+              <details className="column-picker">
+                <summary>Edit columns</summary>
+                <div>
+                  <strong>Metrics shown</strong>
+                  {resultMetricNames.map((name) => <label key={name}>
+                    <input type="checkbox" checked={!hiddenMetricNames.includes(name)} onChange={(event) => setHiddenMetricNames((hidden) => event.target.checked ? hidden.filter((item) => item !== name) : [...hidden, name])} />
+                    <span>{metricByName(metrics, name)?.display_name ?? name}</span>
+                  </label>)}
+                </div>
+              </details>
+            </div>}
+
             {requestState === "loading" && (
-              <TableSkeleton columnLabels={resultMetricNames.map((name) => metricByName(metrics, name)?.display_name ?? name)} />
+              <TableSkeleton columnLabels={visibleMetricNames.map((name) => metricByName(metrics, name)?.display_name ?? name)} />
             )}
 
             {requestState === "error" && (
@@ -473,21 +635,26 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                   <caption className="sr-only">Companies matching the current screen, in backend-determined order.</caption>
                   <thead>
                     <tr>
+                      <th scope="col">S.No.</th>
                       <th scope="col">Company</th>
-                      <th scope="col">Classification</th>
-                      {resultMetricNames.map((metricName) => <th scope="col" key={metricName}><a className="metric-heading-link" href={`#definition-${metricName}`}>{metricByName(metrics, metricName)?.display_name ?? metricName}</a></th>)}
+                      {showClassification && <th scope="col">Industry</th>}
+                      {visibleMetricNames.map((metricName) => {
+                        const active = lastQuery?.sort_by === metricName;
+                        return <th scope="col" key={metricName}><button className="metric-sort-button" type="button" onClick={() => void sortResults(metricName)} aria-label={`Sort by ${metricByName(metrics, metricName)?.display_name ?? metricName}, ${active && lastQuery?.sort_desc ? "ascending" : "descending"}`}>{metricByName(metrics, metricName)?.display_name ?? metricName}{active && <span aria-hidden="true"> {lastQuery?.sort_desc ? "↓" : "↑"}</span>}</button></th>;
+                      })}
                       <th scope="col"><span className="sr-only">Actions</span></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {result.matched.map((company) => (
+                    {result.matched.map((company, index) => (
                       <tr key={company.cik}>
+                        <td>{(pageNumber - 1) * pageSize + index + 1}</td>
                         <th scope="row">
                           {company.ticker ? <a className="company-link" aria-label={`${company.ticker} ${company.company_name}`} href={`${siteUrl}/stocks/${company.ticker.toLowerCase()}/`}><strong>{company.ticker}</strong><span>{company.company_name}</span></a> : <span className="company-link"><strong>—</strong><span>{company.company_name}</span></span>}
                           {lastQuery && <MatchReasons company={company} query={lastQuery} metrics={metrics} siteUrl={siteUrl} />}
                         </th>
-                        <td><span className="classification">{company.sic_description || "Unclassified"}</span>{company.sic_code && <small>SIC {company.sic_code}</small>}</td>
-                        {resultMetricNames.map((metricName) => {
+                        {showClassification && <td><span className="classification">{company.sic_description || "Unclassified"}</span>{company.sic_code && <small>SIC {company.sic_code}</small>}</td>}
+                        {visibleMetricNames.map((metricName) => {
                           const value = company.metrics[metricName];
                           const definition = metricByName(metrics, metricName);
                           return (
@@ -503,7 +670,7 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                 </table>
               </div>
               {runPage && <nav className="screen-pagination" aria-label="Screen result pages">
-                <span>{(pageNumber - 1) * 50 + 1}–{Math.min(pageNumber * 50, runPage.total_count)} of {runPage.total_count}</span>
+                <span>{(pageNumber - 1) * pageSize + 1}–{Math.min((pageNumber - 1) * pageSize + runPage.items.length, runPage.total_count)} of {runPage.total_count}</span>
                 <div>
                   <Button type="button" variant="secondary" size="small" disabled={pageNumber === 1} onClick={() => {
                     const previousPage = pageNumber - 1;
@@ -513,10 +680,14 @@ export function ScreenerClient({ siteUrl }: { siteUrl: string }) {
                     if (!runPage.next_cursor) return;
                     void loadRunPage(runPage.next_cursor, pageNumber + 1);
                   }}>Next</Button>
+                  <span className="page-size-label">Results per page</span>
+                  {[10, 25, 50].map((size) => <Button key={size} type="button" variant={pageSize === size ? "primary" : "secondary"} size="small" onClick={() => void changePageSize(size)}>{size}</Button>)}
                 </div>
               </nav>}
               </>
             )}
+
+            {resultsFirst && queryPanel}
 
             {requestState === "success" && result && resultMetricNames.length > 0 && (
               <section className="result-definitions" aria-labelledby="result-definitions-title">

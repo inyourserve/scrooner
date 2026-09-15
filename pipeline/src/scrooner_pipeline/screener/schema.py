@@ -109,6 +109,10 @@ class ScreenQuery(BaseModel):
     sort_by: str | None = None
     sort_desc: bool = True
     limit: int | None = Field(default=None, ge=1)
+    # Metrics returned for comparison but never used to decide whether a
+    # company matches. This keeps presentation concerns explicit without
+    # weakening or silently changing the user's filter.
+    display_metrics: list[str] = Field(default_factory=list, max_length=20)
 
     @model_validator(mode="after")
     def _check_at_most_one_ranked_predicate(self) -> "ScreenQuery":

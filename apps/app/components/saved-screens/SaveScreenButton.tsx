@@ -1,41 +1,24 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { savedScreensApi } from "@/lib/saved-screens/client";
 import type { ScreenQueryPayload } from "@/lib/screener/types";
-import { Field } from "@/components/ui/Field";
-import { Popover } from "@/components/ui/Popover";
-import { useRouter } from "next/navigation";
+
+export const SAVE_QUERY_SESSION_KEY = "scrooner.save-query";
 
 export function SaveScreenButton({ query, runId }: { query: ScreenQueryPayload; runId?: string }) {
+  const pathname = usePathname();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const searchParams = useSearchParams();
 
-  async function save(event: FormEvent) {
-    event.preventDefault();
-    const clean = name.trim();
-    if (!clean) { setState("error"); setMessage("Enter a name for this screen."); return; }
-    setState("saving");
-    try {
-      const saved = await savedScreensApi.create(clean, query, runId);
-      router.push(`/app/screens/${saved.slug}`);
-    } catch (error) {
-      setState("error"); setMessage(error instanceof Error ? error.message : "The screen could not be saved.");
-    }
+  function openSavePage() {
+    const key = runId || "draft";
+    window.sessionStorage.setItem(`${SAVE_QUERY_SESSION_KEY}:${key}`, JSON.stringify(query));
+    const params = new URLSearchParams(searchParams);
+    if (runId) params.set("run", runId);
+    params.set("from", `${pathname}?${searchParams}`);
+    router.push(`/app/screens/new/save?${params}`);
   }
 
-  return <div className="save-screen-control">
-    <Button type="button" variant="secondary" onClick={() => { setOpen(true); setState("idle"); setMessage(""); }}>Save screen</Button>
-    {open && <Popover label="Save screen" onClose={() => setOpen(false)} className="save-screen-form"><form onSubmit={save}>
-      <Field htmlFor="saved-screen-name" label="Screen name" error={state === "error" ? message : undefined} errorId="save-screen-message">
-        <input className="ds-control" id="saved-screen-name" data-popover-initial-focus maxLength={120} value={name} onChange={(event) => setName(event.target.value)} aria-invalid={state === "error"} aria-describedby={message ? "save-screen-message" : undefined} />
-      </Field>
-      <div className="save-screen-form__actions"><Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button><Button type="submit" loading={state === "saving"} loadingLabel="Saving…">Save</Button></div>
-    </form></Popover>}
-    {message && state !== "error" && <p id="save-screen-message" className="save-screen-message" role="status">{message}</p>}
-  </div>;
+  return <div className="save-screen-control"><Button type="button" variant="secondary" onClick={openSavePage}>Save screen</Button></div>;
 }

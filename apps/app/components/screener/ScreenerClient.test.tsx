@@ -5,8 +5,9 @@ import { NATURAL_QUERY_EXAMPLES } from "@/lib/screener/interpretation";
 import type { AskResponse, MetricDefinition, ScreenQueryPayload, ScreenResult } from "@/lib/screener/types";
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }),
   useSearchParams: () => new URLSearchParams(),
+  usePathname: () => "/app/screens/new/raw",
 }));
 
 const metric: MetricDefinition = {
@@ -130,6 +131,15 @@ describe("ScreenerClient", () => {
     vi.restoreAllMocks();
   });
 
+  it("keeps the raw-page query editor inside the results card", () => {
+    const { container } = render(
+      <ScreenerClient siteUrl="https://scrooner.example" initialMetrics={metrics} resultsFirst />,
+    );
+
+    const results = container.querySelector(".results-section");
+    expect(results).toContainElement(screen.getByRole("region", { name: "Search query" }));
+  });
+
   it("blocks an empty screen before making a screen request", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
     await openFilterBuilder();
@@ -191,7 +201,7 @@ describe("ScreenerClient", () => {
     expect(screen.getByText("42.3%")).toHaveAttribute("title", "Exact value: 0.4234567890123456789012345678");
     expect(screen.getByText("TTM · 2026-06-30 · v1")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /AAPL Apple Inc\./ })).toHaveAttribute("href", "https://scrooner.example/stocks/aapl/");
-    expect(screen.getByRole("link", { name: "Return on equity (ROE)" })).toHaveAttribute("href", "#definition-roe");
+    expect(screen.getByRole("button", { name: /Sort by Return on equity/ })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Metric definitions used" })).toBeInTheDocument();
     expect(screen.getByText(/1 company was excluded for missing data/)).toBeInTheDocument();
     fireEvent.click(screen.getByText("Why matched"));
@@ -242,7 +252,7 @@ describe("ScreenerClient", () => {
     expect(screen.getByRole("textbox", { name: "Your criteria" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Run screen" })).not.toBeInTheDocument();
 
-    const resultsHeading = screen.getByRole("heading", { name: "Matching companies" });
+    const resultsHeading = screen.getByRole("heading", { name: "Query results" });
     const builderDisclosure = screen.getByRole("button", { name: /Exact filters/ });
     expect(resultsHeading.compareDocumentPosition(builderDisclosure) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
     expect(resultsHeading).toHaveFocus();
@@ -250,7 +260,7 @@ describe("ScreenerClient", () => {
     fireEvent.click(screen.getByText("View exact query sent to the Screener"));
     expect(screen.getByText(/"metric_name": "roe"/)).toBeInTheDocument();
     const askCall = vi.mocked(fetch).mock.calls.find(([path]) => String(path) === "/api/screen-runs");
-    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: "companies with ROE above 30%", page_size: 50 });
+    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: "companies with ROE above 30%", page_size: 10 });
   });
 
   it("keeps the query box ready for a second screen immediately after results", async () => {
@@ -291,8 +301,8 @@ describe("ScreenerClient", () => {
       .filter(([path]) => String(path) === "/api/screen-runs")
       .map(([, init]) => JSON.parse(String(init?.body)));
     expect(askBodies).toEqual([
-      { text: "revenue growth above 10%", page_size: 50 },
-      { text: "revenue growth yoy above 10%", page_size: 50 },
+      { text: "revenue growth above 10%", page_size: 10 },
+      { text: "revenue growth yoy above 10%", page_size: 10 },
     ]);
   });
 
@@ -339,7 +349,7 @@ describe("ScreenerClient", () => {
 
     expect(await screen.findByRole("heading", { name: "No companies matched every criterion" })).toBeInTheDocument();
     const askCall = vi.mocked(fetch).mock.calls.find(([path]) => String(path) === "/api/screen-runs");
-    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: NATURAL_QUERY_EXAMPLES[0], page_size: 50 });
+    expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: NATURAL_QUERY_EXAMPLES[0], page_size: 10 });
   });
 
   it("supports the documented command-enter shortcut without a second click", async () => {

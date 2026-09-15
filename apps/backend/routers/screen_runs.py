@@ -3,13 +3,20 @@
 import base64
 import json
 from datetime import datetime, timezone
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from auth import get_current_user_id
-from cache import get_cached_result, set_cached_result
+from cache import (
+    get_cached_result,
+    get_cached_run_id,
+    get_cached_run_page,
+    set_cached_result,
+    set_cached_run_id,
+    set_cached_run_page,
+)
 from dataset_version_cache import get_cached_dataset_version
 from scrooner_pipeline.ai_query.rules import interpret
 from db_pool import get_pooled_connection
@@ -24,16 +31,30 @@ def _json_default(value):
     # -> 0.12345678901234568). Every reported financial value in this
     # codebase stays Decimal end to end and is serialized as an exact
     # string at the JSON boundary (doc 04's correctness controls) -- this
-    # is that boundary for screen_run/screen_run_result's stored JSONB.
+    # is that boundary for screen_result/screen_result_item's stored JSONB.
     return str(value)
 
 
 router = APIRouter(prefix="/v1", tags=["screen_runs"])
 
+DEFAULT_COMPARISON_METRICS = [
+    "market_cap",
+    "trailing_pe",
+    "roe",
+    "roic",
+    "revenue_growth_yoy",
+    "eps_growth_yoy",
+    "debt_to_equity",
+    "fcf_margin",
+    "dividend_yield",
+]
+
 
 class ScreenRunCreate(BaseModel):
     text: str = Field(min_length=1, max_length=2000)
     page_size: int = Field(default=50, ge=1, le=100)
+    query: ScreenQuery | None = None
+    run_id: UUID | None = None
 
 
 def _encode_cursor(position: int) -> str:
@@ -53,33 +74,73 @@ def _decode_cursor(cursor: str | None) -> int:
         raise HTTPException(status_code=400, detail="Invalid pagination cursor") from error
 
 
+def _apply_default_sort(query: ScreenQuery) -> ScreenQuery:
+    """Choose a useful deterministic order when the query did not specify one.
+
+    The final directional condition best reflects what the user emphasized:
+    minimum-quality constraints show strongest values first, while maximum-
+    valuation/debt constraints show lowest values first. Complex boolean and
+    non-directional conditions retain the engine's stable CIK order.
+    """
+    if query.sort_by is not None or query.where is not None:
+        return query
+    # A ratio used as a filter is often a poor default ranking. For example,
+    # ROE can become enormous when book equity is close to zero, placing
+    # blank-check and distressed companies above useful operating businesses.
+    # Market cap gives a stable, decision-friendly first view; users can still
+    # sort by any visible metric with one click.
+    return query.model_copy(
+        update={
+            "sort_by": "market_cap",
+            "sort_desc": True,
+        }
+    )
+
+
+def _apply_default_display_metrics(query: ScreenQuery) -> ScreenQuery:
+    requested = list(dict.fromkeys([*query.display_metrics, *DEFAULT_COMPARISON_METRICS]))
+    return query.model_copy(update={"display_metrics": requested[:20]})
+
+
 def _read_page(conn, run_id: str, user_id: str, page_size: int, cursor: str | None) -> dict:
+    cached = get_cached_run_page(user_id, run_id, page_size, cursor)
+    if cached is not None:
+        return cached
+
     start = _decode_cursor(cursor)
     with conn.cursor() as cur:
+        # `run_id` here is app.user_screen_run.id -- the per-user pointer,
+        # never app.screen_result.id directly. The `user_id` in the WHERE
+        # clause is the actual ownership check (a shared screen_result row
+        # has no owner of its own); joining to it is what makes "can this
+        # caller see this run_id" meaningful at all.
         cur.execute(
             """
-            select query_text, normalized_query, total_count, exclusions, created_at
-            from app.screen_run where id = %s and user_id = %s
+            select u.query_text, r.normalized_query, r.total_count, r.exclusions, u.ran_at, u.screen_result_id
+            from app.user_screen_run u
+            join app.screen_result r on r.id = u.screen_result_id
+            where u.id = %s and u.user_id = %s
             """,
             (run_id, user_id),
         )
         run = cur.fetchone()
         if run is None:
             raise HTTPException(status_code=404, detail="Screen run not found")
+        screen_result_id = run[5]
         cur.execute(
             """
-            select position, result from app.screen_run_result
-            where run_id = %s and position >= %s
+            select position, result from app.screen_result_item
+            where screen_result_id = %s and position >= %s
             order by position limit %s
             """,
-            (run_id, start, page_size + 1),
+            (screen_result_id, start, page_size + 1),
         )
         rows = cur.fetchall()
 
     visible = rows[:page_size]
     previous_cursor = _encode_cursor(max(0, start - page_size)) if start > 0 else None
     next_cursor = _encode_cursor(visible[-1][0] + 1) if len(rows) > page_size and visible else None
-    return {
+    page = {
         "run_id": str(run_id),
         "query_text": run[0],
         "normalized_query": run[1],
@@ -92,12 +153,31 @@ def _read_page(conn, run_id: str, user_id: str, page_size: int, cursor: str | No
         "previous_cursor": previous_cursor,
         "ran_at": str(run[4]),
     }
+    set_cached_run_page(user_id, run_id, page_size, cursor, page)
+    return page
 
 
-def create_run_from_query(text: str, query: ScreenQuery, user_id: str, page_size: int = 50) -> dict:
+def create_run_from_query(
+    text: str,
+    query: ScreenQuery,
+    user_id: str,
+    page_size: int = 50,
+    requested_run_id: UUID | None = None,
+) -> dict:
+    query = _apply_default_display_metrics(_apply_default_sort(query))
+    run_id_to_create = requested_run_id or uuid4()
     with get_pooled_connection() as conn:
         dataset_version = get_cached_dataset_version(conn)
         query_hash = compute_query_hash(query, dataset_version)
+        cached_run_id = get_cached_run_id(user_id, query_hash, text)
+        if requested_run_id is None and cached_run_id is not None:
+            try:
+                return _read_page(conn, cached_run_id, user_id, page_size, None)
+            except HTTPException as error:
+                if error.status_code != 404:
+                    raise
+                # A stale Redis pointer must not prevent a fresh run.
+
         result = get_cached_result(query_hash)
         if result is None:
             result = run_query(conn, query, dataset_version=dataset_version)
@@ -115,32 +195,65 @@ def create_run_from_query(text: str, query: ScreenQuery, user_id: str, page_size
         normalized_query = json.loads(query.model_dump_json())
         with conn.transaction():
             with conn.cursor() as cur:
+                # Deduplicated write (2026-09-12): a different user asking
+                # the identical query against the same dataset generation
+                # used to pay a full insert-then-executemany of a
+                # duplicate copy of an already-known result -- measured
+                # live at ~2.1s for a 25-row result, pure overhead since
+                # Redis had already skipped the actual recomputation.
+                # `on conflict ... do nothing returning id` is the
+                # race-safe "get or create" for the shared screen_result
+                # row; screen_result_item is only ever written once, by
+                # whichever request actually creates it.
                 cur.execute(
                     """
-                    insert into app.screen_run
-                        (user_id, query_text, normalized_query, total_count, exclusions, created_at)
-                    values (%s, %s, %s, %s, %s, %s) returning id
+                    insert into app.screen_result
+                        (query_hash, dataset_version, normalized_query, total_count, exclusions, computed_at)
+                    values (%s, %s, %s, %s, %s, %s)
+                    on conflict (query_hash, dataset_version) do nothing
+                    returning id
                     """,
                     (
-                        user_id,
-                        text,
+                        query_hash,
+                        dataset_version,
                         json.dumps(normalized_query),
                         len(matches),
                         json.dumps(exclusions, default=_json_default),
                         ran_at,
                     ),
                 )
-                run_id = cur.fetchone()[0]
-                cur.executemany(
+                inserted = cur.fetchone()
+                if inserted is not None:
+                    screen_result_id = inserted[0]
+                    cur.executemany(
+                        """
+                        insert into app.screen_result_item (screen_result_id, position, company_id, result)
+                        values (%s, %s, %s, %s)
+                        """,
+                        [
+                            (screen_result_id, position, company["company_id"], json.dumps(company, default=_json_default))
+                            for position, company in enumerate(matches)
+                        ],
+                    )
+                else:
+                    cur.execute(
+                        "select id from app.screen_result where query_hash = %s and dataset_version = %s",
+                        (query_hash, dataset_version),
+                    )
+                    screen_result_id = cur.fetchone()[0]
+
+                # Always written, even on a reused screen_result -- this is
+                # the thin per-user record "my saved screens"/rerun history
+                # actually needs, and the only thing this specific request
+                # is genuinely the first to create.
+                cur.execute(
                     """
-                    insert into app.screen_run_result (run_id, position, company_id, result)
-                    values (%s, %s, %s, %s)
+                    insert into app.user_screen_run (id, user_id, screen_result_id, query_text, ran_at)
+                    values (%s, %s, %s, %s, %s) returning id
                     """,
-                    [
-                        (run_id, position, company["company_id"], json.dumps(company, default=_json_default))
-                        for position, company in enumerate(matches)
-                    ],
+                    (run_id_to_create, user_id, screen_result_id, text, ran_at),
                 )
+                run_id = cur.fetchone()[0]
 
     # Build the first page directly from what was just computed/inserted --
     # `_read_page` re-SELECTing the exact rows this same request just wrote
@@ -152,7 +265,7 @@ def create_run_from_query(text: str, query: ScreenQuery, user_id: str, page_size
     # native Decimal object, on both the first response and every one after.
     visible = json.loads(json.dumps(matches[:page_size], default=_json_default))
     next_cursor = _encode_cursor(page_size) if len(matches) > page_size else None
-    return {
+    page = {
         "run_id": str(run_id),
         "query_text": text,
         "normalized_query": normalized_query,
@@ -165,10 +278,15 @@ def create_run_from_query(text: str, query: ScreenQuery, user_id: str, page_size
         "previous_cursor": None,
         "ran_at": str(ran_at),
     }
+    set_cached_run_id(user_id, query_hash, text, str(run_id))
+    set_cached_run_page(user_id, str(run_id), page_size, None, page)
+    return page
 
 
 @router.post("/screen-runs")
 def create_screen_run(body: ScreenRunCreate, user_id: str = Depends(get_current_user_id)) -> dict:
+    if body.query is not None:
+        return create_run_from_query(body.text.strip(), body.query, user_id, body.page_size, body.run_id)
     interpretation = interpret(body.text.strip())
     if interpretation.query is None or interpretation.unrecognized or interpretation.ambiguous:
         return {
@@ -181,7 +299,7 @@ def create_screen_run(body: ScreenRunCreate, user_id: str = Depends(get_current_
             ],
             "explanation": interpretation.explanation,
         }
-    return create_run_from_query(body.text.strip(), interpretation.query, user_id, body.page_size)
+    return create_run_from_query(body.text.strip(), interpretation.query, user_id, body.page_size, body.run_id)
 
 
 @router.get("/screen-runs/{run_id}")

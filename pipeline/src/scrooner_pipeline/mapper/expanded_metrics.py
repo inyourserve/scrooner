@@ -35,6 +35,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.errors import log_error
 from scrooner_pipeline.mapper.price_metrics import (
     _latest_instant_fact,
@@ -604,6 +605,25 @@ def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict
             continue
         try:
             stats = calculate_expanded_metrics_for_company(conn, company_id, {**metric_ids, **output_metric_ids}, concept_ids)
+        except psycopg.OperationalError as exc:
+            # Found live 2026-09-14/15: a Supabase pooler connection drop
+            # mid-loop (this project's own documented, recurring, still-
+            # unresolved pooler-reliability issue -- see pipeline/CLAUDE.md's
+            # "Connection reliability, Supabase side" note) left `conn`
+            # permanently dead for the REST of a 5,216-company run --
+            # every subsequent company, and every log_error() call for it,
+            # failed identically (5,183 of 5,216 in one real run), because
+            # nothing here ever replaced the connection object once it went
+            # bad. Reconnect and keep going, same proven pattern as
+            # company_master/yfinance_industry.py's _write_batch().
+            logger.warning("expanded_metrics.connection_dropped_reconnecting", cik=cik, exc_info=True)
+            conn = psycopg.connect(settings.database_url)
+            totals["errored"] += 1
+            try:
+                log_error(conn, "analytics.mapper_error", cik, "expanded_metrics", exc)
+            except Exception:
+                pass
+            continue
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "expanded_metrics", exc)

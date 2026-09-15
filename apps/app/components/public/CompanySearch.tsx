@@ -2,11 +2,15 @@
 
 import { FormEvent, useEffect, useId, useState } from "react";
 import { useRouter } from "next/navigation";
-import { addRecentCompany, normalizeRecentCompanies, type SearchCompany } from "@/lib/company/search";
+import { addRecentCompany, loadCompanyDirectory, normalizeRecentCompanies, rankCompanyMatches, type SearchCompany } from "@/lib/company/search";
 
 const RECENT_KEY = "scrooner:recent-companies";
 
-export function CompanySearch({ variant = "header" }: { variant?: "header" | "hero" }) {
+// "hero" is the only variant ever rendered (the homepage hero box) -- the
+// site's other search entry point, the sitewide command palette, is the
+// separate SearchCommand component. A previously-supported "header" variant
+// was dead code (never actually mounted anywhere) and was removed 2026-09-13.
+export function CompanySearch() {
   const router = useRouter();
   const id = useId();
   const [query, setQuery] = useState("");
@@ -16,9 +20,30 @@ export function CompanySearch({ variant = "header" }: { variant?: "header" | "he
     try { return normalizeRecentCompanies(JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]")); } catch { return []; }
   });
   const [open, setOpen] = useState(false);
+  const [directory, setDirectory] = useState<SearchCompany[] | null>(null);
+
+  // Loads the full ~6k-company directory once (module-level singleton, see
+  // lib/company/search.ts) so every keystroke after that matches entirely
+  // in the browser -- no network/DB round trip, no debounce needed.
+  useEffect(() => {
+    let cancelled = false;
+    loadCompanyDirectory()
+      .then((loaded) => { if (!cancelled) setDirectory(loaded); })
+      .catch(() => {}); // stays null; the effect below falls back to the server endpoint
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (query.trim().length < 1) return;
+
+    if (directory) {
+      setResults(rankCompanyMatches(directory, query, 8));
+      return;
+    }
+
+    // Directory not loaded yet (first paint, or the fetch failed) -- fall
+    // back to the original debounced server-side search so the box still
+    // works while/if the client-side path isn't available.
     const controller = new AbortController();
     const timeout = window.setTimeout(async () => {
       try {
@@ -30,7 +55,7 @@ export function CompanySearch({ variant = "header" }: { variant?: "header" | "he
       }
     }, 180);
     return () => { window.clearTimeout(timeout); controller.abort(); };
-  }, [query]);
+  }, [query, directory]);
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -48,7 +73,7 @@ export function CompanySearch({ variant = "header" }: { variant?: "header" | "he
   const visible = query.trim() ? results : recent;
 
   return (
-    <form className={`company-search company-search--${variant}`} role="search" onSubmit={submit}>
+    <form className="company-search company-search--hero" role="search" onSubmit={submit}>
       <label className="ds-sr-only" htmlFor={id}>Search companies</label>
       <input id={id} value={query} onChange={(event) => { const value = event.target.value; setQuery(value); if (!value.trim()) setResults([]); setOpen(true); }} onFocus={() => setOpen(true)} placeholder="Search company or ticker" autoComplete="off" />
       {open && visible.length > 0 && (

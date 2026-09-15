@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { useEffect, useState, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Dialog } from "@/components/ui/Dialog";
-import { addRecentCompany, normalizeRecentCompanies, type SearchCompany } from "@/lib/company/search";
+import { addRecentCompany, loadCompanyDirectory, normalizeRecentCompanies, rankCompanyMatches, type SearchCompany } from "@/lib/company/search";
 
 // The ⌘K "signature interaction" from doc/design/shadcn-system.md section 14.
 // Sits alongside CompanySearch (the large inline box on the homepage hero)
@@ -53,9 +53,30 @@ function SearchCommandPanel({ onClose }: { onClose: () => void }) {
   // Recomputed once per mount (the panel remounts fresh on every open), so
   // this never needs to be state -- it just reflects localStorage at open time.
   const [recent] = useState<SearchCompany[]>(readRecent);
+  const [directory, setDirectory] = useState<SearchCompany[] | null>(null);
+
+  // Same directory-based, zero-network-per-keystroke search as CompanySearch
+  // (see lib/company/search.ts) -- this is the site's higher-traffic search
+  // entry point (every page, not just the homepage), so it benefits even
+  // more from not paying a Postgres round trip per character. The module-
+  // level directory cache means a visit to the homepage first (or a prior
+  // ⌘K open) already has this ready.
+  useEffect(() => {
+    let cancelled = false;
+    loadCompanyDirectory()
+      .then((loaded) => { if (!cancelled) setDirectory(loaded); })
+      .catch(() => {}); // stays null; falls back to the server endpoint below
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!query.trim()) return;
+
+    if (directory) {
+      setResults(rankCompanyMatches(directory, query, 8));
+      return;
+    }
+
     const controller = new AbortController();
     const timeout = window.setTimeout(async () => {
       try {
@@ -66,7 +87,7 @@ function SearchCommandPanel({ onClose }: { onClose: () => void }) {
       }
     }, 180);
     return () => { window.clearTimeout(timeout); controller.abort(); };
-  }, [query]);
+  }, [query, directory]);
 
   const visible = query.trim() ? results : recent;
 

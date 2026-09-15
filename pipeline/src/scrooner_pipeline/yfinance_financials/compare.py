@@ -80,7 +80,7 @@ def _load_mapping(conn: psycopg.Connection) -> dict[tuple[str, str], dict]:
         }
 
 
-def _load_our_periods(conn: psycopg.Connection, company_id: int) -> list[tuple[int, object]]:
+def _load_our_periods(conn: psycopg.Connection, company_id: int) -> list[tuple[int, object, str]]:
     """QUARTERLY periods only -- matches yfinance's own `quarterly_*`
     statements' granularity (fetch.py fetches quarterly, not annual).
     Real bug found live 2026-09-08: a company's Q4 and FY periods can
@@ -91,19 +91,54 @@ def _load_our_periods(conn: psycopg.Connection, company_id: int) -> list[tuple[i
     the FY row while comparing against yfinance's QUARTERLY net income --
     a ~15x mismatch that looked like a real Scrooner bug (Nike's Q4 net
     income $211M vs. its FY net income $3,219M) but was actually this
-    comparison matching the wrong granularity, not a data error."""
+    comparison matching the wrong granularity, not a data error.
+
+    Now also returns period_type -- a SECOND, distinct instance of the
+    exact same "two period rows share an end_date" trap, found live
+    2026-09-13 verifying Robinhood (HOOD): a real fiscal quarter routinely
+    has BOTH a `duration` period (income statement/cash flow) and an
+    `instant` period (balance-sheet snapshot) at the identical end_date --
+    correct, standard XBRL modeling, not a bug in itself. Without
+    period_type, _closest_period's tie-break silently always picked
+    whichever row Postgres happened to return first for a tied distance,
+    which turned out to be the duration row essentially every time --
+    checked against the FULL population of every company this tool has
+    ever compared, not just HOOD: every balance-sheet concept
+    (cash/assets/liabilities/equity/AR/AP/PP&E/debt) was reporting
+    'missing_ours' 99.5-99.9% of the time, even where the real value was
+    sitting in analytics.canonical_fact under the correct (different)
+    period_id the whole time. Duration-type concepts (revenue, net_income,
+    cfo, etc.) were never affected -- they only ever needed to match
+    against other duration rows, which the pre-fix tie-break happened to
+    prefer anyway."""
     with conn.cursor() as cur:
         cur.execute(
-            "select id, end_date from core.period where company_id = %s and fiscal_period in ('Q1', 'Q2', 'Q3', 'Q4')",
+            "select id, end_date, period_type from core.period where company_id = %s and fiscal_period in ('Q1', 'Q2', 'Q3', 'Q4')",
             (company_id,),
         )
         return cur.fetchall()
 
 
-def _closest_period(periods: list[tuple[int, object]], target_end: object) -> tuple[int, object] | None:
+# yfinance's own statement_type -> the core.period.period_type its facts
+# are actually stored under. Balance-sheet lines are point-in-time
+# snapshots (instant); income-statement and cash-flow lines are spans
+# (duration) -- the same split resolve.py/statements/classify.py already
+# use everywhere else in this project.
+_PERIOD_TYPE_FOR_STATEMENT: dict[str, str] = {
+    "balance_sheet": "instant",
+    "income_statement": "duration",
+    "cash_flow": "duration",
+}
+
+
+def _closest_period(periods: list[tuple[int, object, str]], target_end: object, period_type: str) -> tuple[int, object] | None:
     from datetime import timedelta
 
-    candidates = [(pid, end) for pid, end in periods if abs((end - target_end)) <= timedelta(days=PERIOD_MATCH_TOLERANCE_DAYS)]
+    candidates = [
+        (pid, end)
+        for pid, end, ptype in periods
+        if ptype == period_type and abs((end - target_end)) <= timedelta(days=PERIOD_MATCH_TOLERANCE_DAYS)
+    ]
     if not candidates:
         return None
     return min(candidates, key=lambda pair: abs(pair[1] - target_end))
@@ -127,12 +162,40 @@ def _load_our_values(conn: psycopg.Connection, company_id: int, concept_names: s
         return {(name, period_id): value for name, period_id, value in cur.fetchall()}
 
 
+# yfinance's own "Net PPE" bundles operating lease right-of-use assets into
+# the same line, confirmed live 2026-09-13 across a 500-finding sample: our
+# `PropertyPlantAndEquipmentNet`-sourced ppe_net + the company's own
+# `OperatingLeaseRightOfUseAsset` fact for the SAME period matched
+# yfinance's reported "Net PPE" exactly for 82% of that sample (421/513) --
+# the real accounting-template difference behind what was, before this
+# fix, this comparison's single largest "major" finding bucket (5,897 of
+# 25,327). Our own `ppe_net` concept is NOT wrong -- PropertyPlantAndEquipmentNet
+# is exactly what it's reported as, and stays that way in
+# analytics.canonical_fact -- this is purely a comparison-basis adjustment,
+# never a change to stored data. A company with no ROU tag at all (real,
+# pre-ASC-842 filers or ones genuinely without material leases) is left
+# unadjusted and compared as before.
+def _load_operating_lease_rou(conn: psycopg.Connection, company_id: int) -> dict[int, Decimal]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select f.period_id, f.value
+            from core.fact f
+            join core.concept c on c.id = f.concept_id
+            where f.company_id = %s and c.tag = 'OperatingLeaseRightOfUseAsset'
+            """,
+            (company_id,),
+        )
+        return {period_id: value for period_id, value in cur.fetchall()}
+
+
 def compare_company(conn: psycopg.Connection, company_id: int, mapping: dict[tuple[str, str], dict]) -> dict:
     stats = {"ok": 0, "minor": 0, "major": 0, "missing_ours": 0}
     is_bank = _is_bank(conn, company_id)
     periods = _load_our_periods(conn, company_id)
     concept_names = {m["concept_name"] for m in mapping.values()}
     our_values = _load_our_values(conn, company_id, concept_names)
+    operating_lease_rou = _load_operating_lease_rou(conn, company_id) if "ppe_net" in concept_names else {}
 
     with conn.cursor() as cur:
         cur.execute(
@@ -147,7 +210,8 @@ def compare_company(conn: psycopg.Connection, company_id: int, mapping: dict[tup
         if mapped is None or external_value is None:
             continue
         concept_name = mapped["concept_name"]
-        closest = _closest_period(periods, period_end)
+        period_type = _PERIOD_TYPE_FOR_STATEMENT[statement_type]
+        closest = _closest_period(periods, period_end, period_type)
         if closest is None:
             continue
         period_id, _end = closest
@@ -161,6 +225,10 @@ def compare_company(conn: psycopg.Connection, company_id: int, mapping: dict[tup
         concept_id = mapped["concept_id"]
 
         note = mapped["notes"] if (is_bank and concept_name in BANK_INCOMPATIBLE_CONCEPTS) else None
+        rou_value = operating_lease_rou.get(period_id) if concept_name == "ppe_net" else None
+        if our_value is not None and rou_value is not None:
+            our_value = our_value + rou_value
+            note = "our_value includes OperatingLeaseRightOfUseAsset, matching yfinance's own Net PPE definition"
 
         if our_value is None:
             severity = SEVERITY_MISSING_OURS

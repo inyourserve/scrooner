@@ -52,3 +52,24 @@ At a few thousand to ~10K US tickers, the entire snapshot table fits comfortably
 5. Cursor pagination
 6. Same-region deployment
 7. Telemetry against the p95 budgets above
+
+## Screen-page loading strategy
+
+- `/app/screens/new` renders only the query composer. It does not wait for the
+  metric catalogue.
+- Submission navigates immediately to `/app/screens/new/raw?query=...`; that
+  page receives the cached metric catalogue during its server render and starts
+  the query automatically.
+- Canonical screen results are cached by normalized query plus dataset version,
+  so a data refresh invalidates them without relying on TTL expiry.
+- An exact repeated query by the same user reuses its existing immutable run
+  instead of inserting the same run and result rows again.
+- Persisted run pages are cached by user, run, page size, and cursor. Reloads,
+  browser history, and pagination avoid Postgres round trips when warm, while
+  Postgres remains the source of truth and the fallback for every cache miss.
+- Result state is URL-addressable (`sort`, `order`, `limit`, `page`, `cursor`)
+  and sorting is performed by the backend across the full result set, never
+  just the visible browser page. Missing values sort last and CIK is the stable
+  tie-breaker. Without an explicit sort, the final directional condition is the
+  default: minimum conditions (`>`/`>=`) show highest values first and maximum
+  conditions (`<`/`<=`) show lowest values first.

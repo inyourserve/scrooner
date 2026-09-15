@@ -32,14 +32,26 @@ class ScreenCursor:
                 for screen_id, screen in sorted(self.conn.screens.items())
                 if str(screen["user_id"]) == user_id
             ]
-        elif normalized.startswith("select user_id"):
-            screen = self.conn.screens.get(params[0])
-            self._row = (screen["user_id"],) if screen else None
         elif normalized.startswith("update app.saved_screen"):
-            name, screen_id = params
-            self.conn.screens[screen_id]["name"] = name
+            # Ownership is now checked in this same WHERE clause (2026-09-12
+            # -- folded a separate "select user_id" round trip into the
+            # write itself), so the fake must mirror that: only mutate and
+            # return a row when the id AND user_id both match.
+            name, screen_id, user_id = params
+            screen = self.conn.screens.get(screen_id)
+            if screen is not None and str(screen["user_id"]) == user_id:
+                screen["name"] = name
+                self._row = (screen_id,)
+            else:
+                self._row = None
         elif normalized.startswith("delete from app.saved_screen"):
-            self.conn.screens.pop(params[0], None)
+            screen_id, user_id = params
+            screen = self.conn.screens.get(screen_id)
+            if screen is not None and str(screen["user_id"]) == user_id:
+                self.conn.screens.pop(screen_id, None)
+                self._row = (screen_id,)
+            else:
+                self._row = None
         else:
             raise AssertionError(f"Unexpected saved-screen SQL: {normalized}")
 

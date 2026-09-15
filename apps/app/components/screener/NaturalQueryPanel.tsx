@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useRouter } from "next/navigation";
 import { metricByName } from "@/lib/screener/catalog";
 import { NATURAL_QUERY_EXAMPLES, parserPhraseForMetric } from "@/lib/screener/interpretation";
 import type { AskResponse, MetricDefinition } from "@/lib/screener/types";
 import { Button } from "@/components/ui/Button";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { InterpretationTable } from "./InterpretationTable";
-import { savedScreensApi } from "@/lib/saved-screens/client";
+import { cacheRunPageForNavigation, registerPendingRun, savedScreensApi } from "@/lib/saved-screens/client";
 import type { ScreenRunPage } from "@/lib/saved-screens/types";
 
 type InterpretState = "idle" | "loading" | "attention" | "error";
@@ -26,16 +27,30 @@ export function NaturalQueryPanel({
   metrics,
   initialText = "",
   onRunCreated,
+  submitPath,
+  autoRun = false,
+  pageSize = 50,
+  title = "Create a screen",
+  hidden = false,
+  onBlocked,
 }: {
   metrics: MetricDefinition[];
   initialText?: string;
-  onRunCreated: (run: ScreenRunPage) => void;
+  onRunCreated?: (run: ScreenRunPage) => void;
+  submitPath?: string;
+  autoRun?: boolean;
+  pageSize?: number;
+  title?: string;
+  hidden?: boolean;
+  onBlocked?: () => void;
 }) {
+  const router = useRouter();
   const [text, setText] = useState(initialText);
   const [state, setState] = useState<InterpretState>("idle");
   const [interpretation, setInterpretation] = useState<AskResponse | null>(null);
   const [error, setError] = useState("");
   const requestVersion = useRef(0);
+  const autoRunStarted = useRef(false);
 
   function changeText(next: string) {
     requestVersion.current += 1;
@@ -56,6 +71,7 @@ export function NaturalQueryPanel({
         unrecognized: ["Empty query"],
         ambiguous: [],
       });
+      onBlocked?.();
       return;
     }
 
@@ -63,7 +79,19 @@ export function NaturalQueryPanel({
     setState("loading");
     setError("");
     try {
-      const payload: unknown = await savedScreensApi.createRun(normalized);
+      const requestedRunId = submitPath ? crypto.randomUUID() : undefined;
+      const request = savedScreensApi.createRun(normalized, pageSize, requestedRunId);
+      if (submitPath && requestedRunId) {
+        registerPendingRun(requestedRunId, request);
+        const params = new URLSearchParams({
+          query: normalized,
+          run: requestedRunId,
+          page: "1",
+          limit: String(pageSize),
+        });
+        router.push(`${submitPath}?${params}`, { scroll: true });
+      }
+      const payload: unknown = await request;
       if (version !== requestVersion.current) return;
       if (payload && typeof payload === "object" && "run_id" in payload) {
         // Hand the run straight to ScreenerClient (the single source of
@@ -71,7 +99,23 @@ export function NaturalQueryPanel({
         // its ready state -- no local copy of the query/result is kept
         // here, so there's nothing that could drift out of sync with what
         // the results section below actually shows.
-        onRunCreated(payload as ScreenRunPage);
+        const run = payload as ScreenRunPage;
+        if (submitPath && !requestedRunId) {
+          cacheRunPageForNavigation(run, pageSize);
+          const params = new URLSearchParams({
+            query: run.query_text,
+            run: run.run_id,
+            page: "1",
+            limit: String(pageSize),
+          });
+          if (run.normalized_query.sort_by) {
+            params.set("sort", run.normalized_query.sort_by);
+            params.set("order", run.normalized_query.sort_desc ? "desc" : "asc");
+          }
+          router.push(`${submitPath}?${params}`, { scroll: true });
+        } else {
+          onRunCreated?.(run);
+        }
         setState("idle");
         setInterpretation(null);
         return;
@@ -81,16 +125,31 @@ export function NaturalQueryPanel({
 
       if (!next.query || next.unrecognized.length > 0 || next.ambiguous.length > 0) {
         setState("attention");
+        onBlocked?.();
         return;
       }
       setState("attention");
+      onBlocked?.();
     } catch (requestError) {
       if (version !== requestVersion.current) return;
       setState("error");
       setInterpretation(null);
       setError(requestError instanceof Error ? requestError.message : "The screen could not be completed.");
+      onBlocked?.();
     }
   }
+
+  useEffect(() => {
+    if (submitPath) router.prefetch(submitPath);
+  }, [router, submitPath]);
+
+  useEffect(() => {
+    if (!autoRun || autoRunStarted.current || !initialText.trim()) return;
+    autoRunStarted.current = true;
+    void runQuery(initialText);
+    // The initial URL query should run exactly once when this route mounts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -117,10 +176,10 @@ export function NaturalQueryPanel({
   }
 
   return (
-    <section className="natural-query" aria-labelledby="natural-query-title">
+    <section className="natural-query" aria-labelledby="natural-query-title" hidden={hidden}>
       <div className="natural-query-heading">
         <div>
-          <h1 id="natural-query-title">Create a screen</h1>
+          <h1 id="natural-query-title">{title}</h1>
         </div>
       </div>
 

@@ -225,6 +225,99 @@ def resolve_conflict_fill(conn: psycopg.Connection, primary_name: str, resolved_
     return stats
 
 
+# Per-share concepts ONLY -- a large ratio between disagreeing facts for a
+# per-share figure has one dominant real cause (a stock split retroactively
+# changing the share count, and every filing before the split keeps
+# reporting its own original, un-adjusted EPS forever, since GAAP doesn't
+# require re-filing old periods). Deliberately NOT applied to any dollar-
+# total concept (assets, debt, revenue, etc.) -- there, a 10x disagreement
+# is essentially always a real data problem (a unit-scale bug, a
+# reclassification), never a stock split, so the exact same ratio that's
+# safe evidence of "just a split" here would be dangerous evidence to
+# auto-resolve there.
+SPLIT_LIKE_CONCEPTS: tuple[str, ...] = ("diluted_eps",)
+MIN_SPLIT_RATIO = Decimal("1.5")
+MAX_SPLIT_RATIO = Decimal("20")
+
+
+def _split_safe_fill_value(values: list[Decimal], fact_ids: list[int]) -> tuple[Decimal, int] | None:
+    """Found live 2026-09-13 investigating a real yfinance mismatch on KLA
+    Corp: our diluted_eps showed $8.47 for a real quarter, yfinance showed
+    $0.847 -- exactly 10x. Traced to KLA's OWN data: its FY2025 comparative
+    EPS is reported as BOTH $30.37 (the original 10-K) and $3.04 (the
+    SAME period's comparative column in the FOLLOWING year's 10-K, filed
+    after a real 10-for-1 split) -- a genuine Stage 2e conflict our own
+    dedupe.py already correctly flags, just never resolved past `null`
+    because MAX_SAFE_RATIO=1.15 (above, for ordinary small cross-filing
+    revisions) correctly refuses a 10x gap. This is a DIFFERENT, equally
+    real case: not a data error, a real corporate action -- checked
+    broadly before trusting the ratio range: 7,982 of 217,224 real
+    diluted_eps conflict groups fall in the 1.5x-20x band, none of the
+    other 22 statement concepts get this treatment (see SPLIT_LIKE_CONCEPTS
+    above for why). Prefers the highest fact_id (most-recently-filed,
+    hence split-adjusted, value) -- the same tie-break `_safe_fill_value`
+    and tag_investigator.py's `_reconcile_by_mode` already use elsewhere.
+    Does NOT fix a quarter that has never yet been re-reported as a prior-
+    year comparative (KLA's own real Q1 2025 standalone quarter, only one
+    fact exists so there's no conflict to resolve) -- that needs a real,
+    not-yet-built corporate-actions system that detects a split from a
+    share-count jump and retroactively adjusts every affected historical
+    per-share figure, not just the periods that happen to already have a
+    second, later-filed value sitting in core.fact. Flagged, not built,
+    this session -- see doc/scoping/21's already-deferred corporate-
+    actions item."""
+    if any(v == 0 for v in values):
+        return None
+    worst_ratio = max(abs(v) for v in values) / min(abs(v) for v in values)
+    if not (MIN_SPLIT_RATIO <= worst_ratio <= MAX_SPLIT_RATIO):
+        return None
+    best_idx = max(range(len(fact_ids)), key=lambda i: fact_ids[i])
+    return values[best_idx], fact_ids[best_idx]
+
+
+def resolve_split_like_conflicts(conn: psycopg.Connection, primary_name: str, resolved_name: str) -> dict:
+    """Same shape as resolve_conflict_fill (reuses its own group-loading
+    and already-resolved checks) but with _split_safe_fill_value's wider,
+    per-share-specific ratio band instead of MAX_SAFE_RATIO -- run AFTER
+    resolve_conflict_fill for the same pair, so it only ever fills what
+    that stricter pass correctly declined, never competing with it."""
+    primary_id = _concept_id(conn, primary_name)
+    resolved_id = _concept_id(conn, resolved_name)
+    if primary_id is None or resolved_id is None:
+        return {"primary": primary_name, "skipped": "concept not found"}
+
+    groups = _load_conflict_groups(conn, primary_id)
+    already = _load_already_resolved(conn, resolved_id)
+
+    to_insert = []
+    for company_id, period_id, values, fact_ids in groups:
+        if (company_id, period_id) in already:
+            continue
+        filled = _split_safe_fill_value(list(values), list(fact_ids))
+        if filled is None:
+            continue
+        value, fact_id = filled
+        to_insert.append(
+            {"company_id": company_id, "resolved_id": resolved_id, "period_id": period_id, "value": value, "fact_id": fact_id}
+        )
+
+    if to_insert:
+        with conn.cursor() as cur:
+            cur.executemany(
+                """
+                insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+                values (%(company_id)s, %(resolved_id)s, %(period_id)s, %(value)s, array[%(fact_id)s]::bigint[])
+                on conflict (company_id, canonical_concept_id, period_id) do nothing
+                """,
+                to_insert,
+            )
+        conn.commit()
+
+    stats = {"conflict_groups": len(groups), "filled": len(to_insert)}
+    logger.info("conflict_resolution.split_like_done", primary=primary_name, resolved=resolved_name, **stats)
+    return stats
+
+
 # The 5 concepts with their own existing populate step (resolve_company_
 # tag_preferences / concept_fallback.py's arithmetic fallback) -- skip the
 # baseline passthrough for these, since running it here (this function is
@@ -232,21 +325,117 @@ def resolve_conflict_fill(conn: psycopg.Connection, primary_name: str, resolved_
 # out-of-order rerun of their real populate step's own delete-then-
 # reinsert. Conflict-fill itself is still safe and still runs for them
 # (it never deletes), same as any other target.
-_HAS_OWN_POPULATE_STEP = {"revenue_sanity_resolved", "cost_of_revenue_resolved", "gross_profit_resolved", "operating_expenses_resolved", "total_debt_resolved"}
+_HAS_OWN_POPULATE_STEP = {"revenue_sanity_resolved", "cost_of_revenue_resolved", "gross_profit_resolved", "operating_expenses_resolved", "total_debt_resolved", "capex_resolved"}
 
 
 def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
+    from scrooner_pipeline.mapper.concept_fallback import resolve_capex_with_software, resolve_depreciation_and_amortization_max
+
     totals = {"baseline_filled": 0, "filled": 0, "unsafe_skipped": 0}
     per_concept = {}
+    # Both run BEFORE the generic loop below: capex_resolved's baseline
+    # must exist (software-augmented) before resolve_conflict_fill's own
+    # additive pass for it runs later in the loop; D&A has no entry in
+    # CONFLICT_FILL_TARGETS at all (a standalone concept, not one of the
+    # 24 dedupe-conflict-shaped statement lines), so it's simplest run
+    # here rather than invented its own CLI step for one concept.
+    per_concept["capex_software"] = {"rows": resolve_capex_with_software(conn)}
+    per_concept["depreciation_and_amortization_max"] = {"rows": resolve_depreciation_and_amortization_max(conn)}
     for primary_name, resolved_name in CONFLICT_FILL_TARGETS:
         baseline_count = 0
         if resolved_name not in _HAS_OWN_POPULATE_STEP:
             baseline_count = resolve_baseline_passthrough(conn, primary_name, resolved_name)
         stats = resolve_conflict_fill(conn, primary_name, resolved_name)
         stats["baseline_filled"] = baseline_count
+        if primary_name in SPLIT_LIKE_CONCEPTS:
+            split_stats = resolve_split_like_conflicts(conn, primary_name, resolved_name)
+            stats["split_like_filled"] = split_stats["filled"]
+            totals["filled"] += split_stats["filled"]
         per_concept[primary_name] = stats
         totals["baseline_filled"] += baseline_count
         totals["filled"] += stats.get("filled", 0)
         totals["unsafe_skipped"] += stats.get("unsafe_skipped", 0)
+    oi_arithmetic = resolve_operating_income_arithmetic_fallback(conn)
+    per_concept["operating_income_arithmetic"] = oi_arithmetic
+    totals["operating_income_arithmetic_filled"] = oi_arithmetic.get("inserted", 0)
     logger.info("conflict_resolution.all_done", **totals)
     return {"totals": totals, "per_concept": per_concept}
+
+
+# Same three SIC prefixes as yfinance_financials/line_item_map.py's
+# BANK_SIC_PREFIXES, for the identical reason: a bank's own "revenue"
+# (already a known, separately-flagged imperfect interest-income proxy --
+# root CLAUDE.md's bank_interest_income_not_revenue) and its operating-
+# expense figure don't compose the way Revenue-minus-Expenses assumes --
+# verified live 2026-09-13 before excluding, not assumed: 583 real
+# (company, period) pairs across these 3 SIC prefixes would otherwise have
+# received a fabricated operating_income_resolved value.
+_OPERATING_INCOME_ARITHMETIC_EXCLUDED_SIC_PREFIXES = ("602", "603", "606")
+
+
+def resolve_operating_income_arithmetic_fallback(conn: psycopg.Connection) -> dict:
+    """Derives operating_income_resolved = Revenue - Operating Expenses -
+    Cost of Revenue (the last term only when a company separately reports
+    one) for every (company, period) where operating_income is missing
+    ENTIRELY -- a company that never tags OperatingIncomeLoss at all, not
+    a dedupe.py conflict (resolve_conflict_fill above already covers that
+    case). Found live 2026-09-13 verifying Robinhood (HOOD, a broker-
+    dealer, SIC 6211): yfinance's own "Operating Income" for HOOD matched
+    Revenue minus our stored operating_expenses EXACTLY across all 5
+    quarters checked -- HOOD reports one combined operating-expense total
+    with no separate Cost of Revenue line, so the formula simplifies to
+    Revenue - OpEx for that shape of company; a company that DOES
+    separately report Cost of Revenue gets the standard Gross Profit -
+    OpEx formula instead, via the same expression.
+
+    Verified against real data before shipping, not assumed correct by
+    analogy: checked this formula against every (company, period) that
+    ALREADY has a real, directly-tagged operating_income_resolved value
+    (a control group, not the target population) -- 90.3% land within 2%
+    of the real value when cost_of_revenue_resolved also exists (166,417
+    real periods), 85.5% within 2% when it doesn't (35,348 real periods).
+    Not perfect -- a real income statement can carry additional "other
+    operating income/expense" lines this simple subtraction can't see --
+    but purely additive (INSERT ... ON CONFLICT DO NOTHING, never
+    overrides a real tag) and only ever fills a cell that would otherwise
+    render blank, so an imperfect ~10-15% of fills still replace an empty
+    cell, not a better one. Banks/savings institutions excluded (see the
+    prefix list above)."""
+    revenue_id = _concept_id(conn, "revenue_sanity_resolved")
+    opex_id = _concept_id(conn, "operating_expenses_resolved")
+    cor_id = _concept_id(conn, "cost_of_revenue_resolved")
+    oi_id = _concept_id(conn, "operating_income_resolved")
+    if None in (revenue_id, opex_id, cor_id, oi_id):
+        return {"skipped": "concept not found"}
+
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+            select
+                rev.company_id, %(oi_id)s, rev.period_id,
+                rev.value - opex.value - coalesce(cor.value, 0),
+                rev.source_fact_ids || opex.source_fact_ids || coalesce(cor.source_fact_ids, array[]::bigint[])
+            from analytics.canonical_fact rev
+            join analytics.canonical_fact opex
+                on opex.company_id = rev.company_id and opex.period_id = rev.period_id and opex.canonical_concept_id = %(opex_id)s
+            left join analytics.canonical_fact cor
+                on cor.company_id = rev.company_id and cor.period_id = rev.period_id and cor.canonical_concept_id = %(cor_id)s
+            join core.company c on c.id = rev.company_id
+            where rev.canonical_concept_id = %(revenue_id)s
+              and not (c.sic_code is not null and left(c.sic_code, 3) = any(%(excluded_sics)s))
+              and not exists (
+                  select 1 from analytics.canonical_fact existing
+                  where existing.company_id = rev.company_id and existing.period_id = rev.period_id and existing.canonical_concept_id = %(oi_id)s
+              )
+            on conflict (company_id, canonical_concept_id, period_id) do nothing
+            """,
+            {
+                "oi_id": oi_id, "opex_id": opex_id, "cor_id": cor_id, "revenue_id": revenue_id,
+                "excluded_sics": list(_OPERATING_INCOME_ARITHMETIC_EXCLUDED_SIC_PREFIXES),
+            },
+        )
+        inserted = cur.rowcount
+    conn.commit()
+    logger.info("conflict_resolution.operating_income_arithmetic_done", inserted=inserted)
+    return {"inserted": inserted}

@@ -69,25 +69,33 @@ def list_screens(user_id: str = Depends(get_current_user_id)) -> list[dict]:
 
 @router.post("/screens")
 def create_screen(body: SavedScreenCreate, user_id: str = Depends(get_current_user_id)) -> dict:
+    # No conn.transaction() here -- measured live 2026-09-12: wrapping even
+    # a single write in an explicit transaction on this pool costs ~500ms
+    # of pure overhead (an explicit BEGIN + COMMIT round trip pair on top
+    # of autocommit=True, which already makes one statement atomic on its
+    # own). This function has exactly one write (the INSERT); the reads
+    # before it (_available_slug, the run_id ownership check) don't need
+    # transactional isolation with it for correctness -- a real race on
+    # the slug is still caught by (user_id, slug)'s own unique index at
+    # insert time, not silently corrupted.
     with get_pooled_connection() as conn:
-        with conn.transaction():
-            slug = _available_slug(conn, user_id, body.name)
-            with conn.cursor() as cur:
-                if body.run_id is not None:
-                    cur.execute("select 1 from app.screen_run where id = %s and user_id = %s", (body.run_id, user_id))
-                    if cur.fetchone() is None:
-                        raise HTTPException(status_code=404, detail="Screen run not found")
-                cur.execute(
-                    "insert into app.saved_screen (user_id, name, slug, query, last_run_id) values (%s, %s, %s, %s, %s) returning id",
-                    # model_dump_json(), not json.dumps(model_dump()) -- found live
-                    # 2026-08-17: raw json.dumps can't serialize Decimal (a
-                    # MetricPredicate.value), and bypasses the same
-                    # Decimal-as-string handling FastAPI's response encoder
-                    # already gets right automatically. Pydantic's own JSON
-                    # serializer handles it correctly, same guarantee, explicit.
-                    (user_id, body.name.strip(), slug, body.query.model_dump_json(), body.run_id),
-                )
-                new_id = cur.fetchone()[0]
+        slug = _available_slug(conn, user_id, body.name)
+        with conn.cursor() as cur:
+            if body.run_id is not None:
+                cur.execute("select 1 from app.user_screen_run where id = %s and user_id = %s", (body.run_id, user_id))
+                if cur.fetchone() is None:
+                    raise HTTPException(status_code=404, detail="Screen run not found")
+            cur.execute(
+                "insert into app.saved_screen (user_id, name, slug, query, last_run_id) values (%s, %s, %s, %s, %s) returning id",
+                # model_dump_json(), not json.dumps(model_dump()) -- found live
+                # 2026-08-17: raw json.dumps can't serialize Decimal (a
+                # MetricPredicate.value), and bypasses the same
+                # Decimal-as-string handling FastAPI's response encoder
+                # already gets right automatically. Pydantic's own JSON
+                # serializer handles it correctly, same guarantee, explicit.
+                (user_id, body.name.strip(), slug, body.query.model_dump_json(), body.run_id),
+            )
+            new_id = cur.fetchone()[0]
     return {"id": new_id, "name": body.name.strip(), "slug": slug}
 
 
@@ -124,7 +132,7 @@ def refresh_screen(slug: str, user_id: str = Depends(get_current_user_id)) -> di
                 """
                 select saved.query, coalesce(run.query_text, '')
                 from app.saved_screen saved
-                left join app.screen_run run on run.id = saved.last_run_id
+                left join app.user_screen_run run on run.id = saved.last_run_id
                 where saved.user_id = %s and saved.slug = %s
                 """,
                 (user_id, slug),
@@ -135,47 +143,44 @@ def refresh_screen(slug: str, user_id: str = Depends(get_current_user_id)) -> di
     query = ScreenQuery.model_validate(row[0])
     run = create_run_from_query(row[1], query, user_id)
     with get_pooled_connection() as conn:
-        with conn.transaction():
-            with conn.cursor() as cur:
-                cur.execute(
-                    "update app.saved_screen set last_run_id = %s, updated_at = now() where user_id = %s and slug = %s",
-                    (run["run_id"], user_id, slug),
-                )
+        with conn.cursor() as cur:
+            cur.execute(
+                "update app.saved_screen set last_run_id = %s, updated_at = now() where user_id = %s and slug = %s",
+                (run["run_id"], user_id, slug),
+            )
     return run
-
-
-def _get_owned_screen(conn, screen_id: int, user_id: str):
-    with conn.cursor() as cur:
-        cur.execute("select user_id from app.saved_screen where id = %s", (screen_id,))
-        row = cur.fetchone()
-    # str(row[0]), not row[0] -- found live 2026-08-17: psycopg returns a
-    # uuid.UUID object for a `uuid` column, never equal to the plain string
-    # user_id this app gets back from Supabase Auth, so this check failed
-    # closed for EVERY caller, including the rightful owner (a functional
-    # bug, not a security hole -- it never let an unauthorized delete
-    # through, it blocked authorized ones too).
-    if row is None or str(row[0]) != user_id:
-        raise HTTPException(status_code=404, detail="Screen not found")
 
 
 @router.patch("/screens/{screen_id}")
 def rename_screen(screen_id: int, body: SavedScreenRename, user_id: str = Depends(get_current_user_id)) -> dict:
+    # Folded the ownership check into the UPDATE's own WHERE clause instead
+    # of a separate SELECT first -- found live 2026-09-12 sanity-checking
+    # this endpoint's timing: two sequential round trips for what only
+    # needs to be one. Postgres handles the `user_id = %s` (uuid column vs.
+    # plain string parameter) comparison the same way every other query in
+    # this file already does -- this is a WHERE-clause comparison Postgres
+    # casts itself, a different thing from the 2026-08-17 bug (a psycopg-
+    # returned uuid.UUID compared to a string *in Python*), so it doesn't
+    # reintroduce that.
     with get_pooled_connection() as conn:
-        with conn.transaction():
-            _get_owned_screen(conn, screen_id, user_id)
-            with conn.cursor() as cur:
-                cur.execute(
-                    "update app.saved_screen set name = %s, updated_at = now() where id = %s",
-                    (body.name, screen_id),
-                )
+        with conn.cursor() as cur:
+            cur.execute(
+                "update app.saved_screen set name = %s, updated_at = now() where id = %s and user_id = %s returning id",
+                (body.name, screen_id, user_id),
+            )
+            if cur.fetchone() is None:
+                raise HTTPException(status_code=404, detail="Screen not found")
     return {"id": screen_id, "name": body.name}
 
 
 @router.delete("/screens/{screen_id}")
 def delete_screen(screen_id: int, user_id: str = Depends(get_current_user_id)) -> dict:
     with get_pooled_connection() as conn:
-        with conn.transaction():
-            _get_owned_screen(conn, screen_id, user_id)
-            with conn.cursor() as cur:
-                cur.execute("delete from app.saved_screen where id = %s", (screen_id,))
+        with conn.cursor() as cur:
+            cur.execute(
+                "delete from app.saved_screen where id = %s and user_id = %s returning id",
+                (screen_id, user_id),
+            )
+            if cur.fetchone() is None:
+                raise HTTPException(status_code=404, detail="Screen not found")
     return {"deleted": screen_id}

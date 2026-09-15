@@ -221,6 +221,7 @@ def run_query(conn: psycopg.Connection, query: ScreenQuery, dataset_version: int
     unknown = [p.metric_name for p in query.metric_predicates if p.metric_name not in catalog]
     if query.sort_by and query.sort_by not in catalog:
         unknown.append(query.sort_by)
+    unknown += [name for name in query.display_metrics if name not in catalog]
     if query.where is not None:
         unknown += [name for name in _collect_metric_names(query.where) if name not in catalog]
     if unknown:
@@ -238,7 +239,15 @@ def run_query(conn: psycopg.Connection, query: ScreenQuery, dataset_version: int
 
     if query.where is not None:
         surviving = _run_boolean_tree_query(conn, query, catalog, dataset_version)
-        metric_names_to_show = _collect_metric_names(query.where)
+        # `where` never contains a ranked predicate (schema.py rejects
+        # top_n/bottom_n inside a boolean tree) -- it lives in
+        # query.metric_predicates instead, same as the flat path, so its
+        # own name has to be unioned in here too or the ranking metric's
+        # value never reaches a matched company's citation. Found live
+        # 2026-09-11 testing "top 5 by roic excluding financials": every
+        # match correctly excluded Financials, but showed a null `roic`
+        # value despite being ranked by it.
+        metric_names_to_show = _collect_metric_names(query.where) | {p.metric_name for p in ranked} | set(query.display_metrics)
         exclusion_detail = (
             "per-predicate exclusion attribution is not available for boolean-tree "
             "('where') queries -- a company excluded by one branch may still match via "
@@ -249,7 +258,7 @@ def run_query(conn: psycopg.Connection, query: ScreenQuery, dataset_version: int
         companies = _apply_categorical_predicates(companies, query.categorical_predicates)
         non_ranked = [p for p in query.metric_predicates if p.operator not in RANKED_OPERATORS]
 
-        needed_metric_ids = [catalog[p.metric_name] for p in non_ranked] + [catalog[p.metric_name] for p in ranked]
+        needed_metric_ids = [catalog[p.metric_name] for p in non_ranked] + [catalog[p.metric_name] for p in ranked] + [catalog[name] for name in query.display_metrics]
         if query.sort_by:
             needed_metric_ids.append(catalog[query.sort_by])
         resolved_flat = (
@@ -276,7 +285,7 @@ def run_query(conn: psycopg.Connection, query: ScreenQuery, dataset_version: int
                 if ok:
                     next_surviving[company_id] = info
             surviving = next_surviving
-        metric_names_to_show = {p.metric_name for p in query.metric_predicates}
+        metric_names_to_show = {p.metric_name for p in query.metric_predicates} | set(query.display_metrics)
 
     if query.sort_by:
         metric_names_to_show.add(query.sort_by)

@@ -71,3 +71,50 @@ def test_success_response_without_user_id_fails_closed(monkeypatch):
 
     assert exc.value.status_code == 401
 
+
+@pytest.mark.unit
+def test_cache_hit_never_touches_the_network(monkeypatch):
+    # Found live 2026-09-12: this real network call cost ~370-710ms on
+    # EVERY authenticated request, often more than the endpoint's own
+    # work. A cached resolution must skip it entirely, not just skip
+    # re-verifying.
+    user_id = "22222222-2222-2222-2222-222222222222"
+    monkeypatch.setattr(auth, "get_cached_auth_user_id", lambda _token: user_id)
+
+    def fail_if_called():
+        raise AssertionError("a cache hit must never construct an httpx client")
+
+    monkeypatch.setattr(auth.httpx, "AsyncClient", fail_if_called)
+
+    assert asyncio.run(auth.get_current_user_id("Bearer cached-token")) == user_id
+
+
+@pytest.mark.unit
+def test_cache_miss_populates_the_cache_after_a_real_resolution(monkeypatch):
+    user_id = "33333333-3333-3333-3333-333333333333"
+    fake = FakeAsyncClient(FakeResponse(200, {"id": user_id}))
+    monkeypatch.setattr(auth.httpx, "AsyncClient", lambda: fake)
+    monkeypatch.setattr(auth, "get_cached_auth_user_id", lambda _token: None)
+    recorded = {}
+    monkeypatch.setattr(auth, "set_cached_auth_user_id", lambda token, uid: recorded.update(token=token, user_id=uid))
+
+    result = asyncio.run(auth.get_current_user_id("Bearer fresh-token"))
+
+    assert result == user_id
+    assert recorded == {"token": "fresh-token", "user_id": user_id}
+
+
+@pytest.mark.unit
+def test_an_invalid_token_is_never_cached(monkeypatch):
+    fake = FakeAsyncClient(FakeResponse(401, {"message": "invalid"}))
+    monkeypatch.setattr(auth.httpx, "AsyncClient", lambda: fake)
+    monkeypatch.setattr(auth, "get_cached_auth_user_id", lambda _token: None)
+
+    def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("a failed verification must never be cached as a resolved identity")
+
+    monkeypatch.setattr(auth, "set_cached_auth_user_id", fail_if_called)
+
+    with pytest.raises(HTTPException):
+        asyncio.run(auth.get_current_user_id("Bearer bad-token"))
+

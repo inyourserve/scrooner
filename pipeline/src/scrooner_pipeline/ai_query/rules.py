@@ -4,12 +4,25 @@ Sec 1: anything outside this grammar is reported as unrecognized, never
 guessed. Implements the NLInterpreter protocol so a real LLM (6c, not
 built here) can be swapped in later behind the same contract.
 
-Clause grammar (joined only by " and ", matching the Screener's own
-AND-only combination, doc 14):
+Clause grammar, joined by " and " OR " or " (never both in the same
+query -- see below), plus an optional trailing exclusion:
     "{metric} {operator_phrase} {value}[%]"        -- comparison
     "{metric} between {low}[%] and {high}[%]"       -- between
     "top {n} [by] {metric}" / "bottom {n} [by] {metric}"  -- ranked
     "{sector}" / "{sector} companies" / "companies in {sector}"  -- categorical
+    "... excluding|except|not in|not {sector}"      -- trailing NOT, categorical only
+
+As of 2026-09-11 (doc/adr/0001-screener-redis-cache-and-boolean-logic.md)
+the Screener itself supports arbitrary AND/OR/NOT trees via
+`ScreenQuery.where`, so this parser can finally emit one: an all-"or"
+query becomes `where=PredicateGroup(op="or", ...)`, and a trailing
+exclusion becomes `where=PredicateGroup(op="and", predicates=[..., NOT
+(sector)])`. Still deliberately bounded, not a real NL parser: "and" and
+"or" are never mixed in one query (ambiguous without parentheses --
+"A and B or C" could mean either grouping, and this grammar refuses to
+guess a precedence, same as everywhere else in this file), and NOT is
+scoped to categorical exclusion only ("not ROE above 20%" has no
+unambiguous meaning the way "not financials" does).
 
 Known limitation, documented rather than silently handled: a "between"
 clause is never combined with another AND-joined clause in the same
@@ -32,7 +45,7 @@ from scrooner_pipeline.ai_query.aliases import (
     SECTOR_BUCKET_ALIASES,
 )
 from scrooner_pipeline.ai_query.interpreter import AmbiguityNote, InterpretationResult
-from scrooner_pipeline.screener.schema import CategoricalPredicate, MetricPredicate, ScreenQuery
+from scrooner_pipeline.screener.schema import CategoricalPredicate, MetricPredicate, PredicateGroup, ScreenQuery, RANKED_OPERATORS
 
 TOP_BOTTOM_RE = re.compile(r"^(top|bottom)\s+(\d+)\s+(?:by\s+)?(.+)$", re.IGNORECASE)
 
@@ -54,6 +67,30 @@ _MAGNITUDE_PATTERN = "|".join(sorted(_MAGNITUDE_SUFFIXES, key=len, reverse=True)
 NUMBER_RE = rf"\$?([\d,]*\.?\d+)\s*({_MAGNITUDE_PATTERN})?"
 VALUE_RE = re.compile(rf"^{NUMBER_RE}(%)?$", re.IGNORECASE)
 BETWEEN_RE = re.compile(rf"^(.*?)\s+between\s+{NUMBER_RE}(%)?\s+and\s+{NUMBER_RE}(%)?$", re.IGNORECASE)
+
+# A trailing exclusion clause -- "... excluding financials" / "... except
+# banks" / "... not in the energy sector" -- added 2026-09-11 alongside
+# `ScreenQuery.where` (doc/adr/0001-screener-redis-cache-and-boolean-
+# logic.md) finally giving the Screener real AND/OR/NOT support.
+# Deliberately scoped to CATEGORICAL exclusion only, not an arbitrary
+# metric clause: "not" in front of a metric comparison ("not ROE above
+# 20%") has no natural, unambiguous meaning the way "not X" does for a
+# classification, and guessing one would violate doc 15's own "never
+# guess" rule. `_try_extract_exclusion` only commits to this reading when
+# the captured phrase actually resolves to a known sector -- otherwise
+# the text is returned untouched and falls through to the normal
+# unrecognized-clause path, rather than reporting a confusing error about
+# an exclusion target that was never really intended as one.
+NEGATION_RE = re.compile(r",?\s+(?:excluding|except|but\s+not|not\s+in|not)\s+(.+)$", re.IGNORECASE)
+
+# "or" support -- also 2026-09-11. Mixing "and" and "or" in the same
+# query is genuinely ambiguous without parentheses ("A and B or C" could
+# mean either grouping) -- doc 15's rule-based grammar refuses to guess,
+# same discipline as the between/"and" collision already documented
+# below, rather than picking a precedence a real LLM (6c) would still
+# need to ask the user about anyway.
+OR_SPLIT_RE = re.compile(r"\s+or\s+", re.IGNORECASE)
+AND_SPLIT_RE = re.compile(r"\s+and\s+", re.IGNORECASE)
 
 
 def _parse_value(number_str: str, magnitude: str | None, has_percent: bool) -> Decimal:
@@ -109,6 +146,21 @@ def _lookup_sector(phrase: str) -> tuple[str, str] | None:
         return "sector", bucket_hit
 
     return None
+
+
+def _try_extract_exclusion(text: str) -> tuple[str, CategoricalPredicate | None]:
+    """Strips a trailing "excluding/except/not in/not <sector>" clause and
+    returns it separately, only when the captured phrase actually
+    resolves to a known sector -- otherwise returns `text` unchanged with
+    `None`, so an unrelated "not" doesn't get silently swallowed."""
+    match = NEGATION_RE.search(text)
+    if not match:
+        return text, None
+    sector_hit = _lookup_sector(match.group(1).strip())
+    if sector_hit is None:
+        return text, None
+    field, value = sector_hit
+    return text[: match.start()].strip(), CategoricalPredicate(field=field, operator="=", value=value)
 
 
 def _find_operator(clause: str) -> tuple[str, str, str] | None:
@@ -190,7 +242,21 @@ def interpret(text: str) -> InterpretationResult:
         explanation = f"Filtering for: {metric_name} between {low} and {high}."
         return InterpretationResult(query=query, explanation=explanation, recognized_query=query)
 
-    clauses = [c.strip() for c in re.split(r"\s+and\s+", text, flags=re.IGNORECASE) if c.strip()]
+    text, excluded = _try_extract_exclusion(text)
+    if not text:
+        return InterpretationResult(query=None, explanation="Nothing recognized in this query.", unrecognized=[text])
+
+    has_and = AND_SPLIT_RE.search(text) is not None
+    has_or = OR_SPLIT_RE.search(text) is not None
+    if has_and and has_or:
+        return InterpretationResult(
+            query=None,
+            explanation="Mixing 'and' and 'or' in one query is ambiguous without parentheses -- rephrase using only one kind of combination.",
+            unrecognized=[text],
+        )
+    combine_op = "or" if has_or else "and"
+    clauses = [c.strip() for c in (OR_SPLIT_RE if has_or else AND_SPLIT_RE).split(text) if c.strip()]
+
     metric_predicates: list[MetricPredicate] = []
     categorical_predicates: list[CategoricalPredicate] = []
     unrecognized: list[str] = []
@@ -207,6 +273,14 @@ def interpret(text: str) -> InterpretationResult:
         elif unrec is not None:
             unrecognized.append(unrec)
 
+    ranked_predicates = [p for p in metric_predicates if p.operator in RANKED_OPERATORS]
+    if combine_op == "or" and ranked_predicates:
+        return InterpretationResult(
+            query=None,
+            explanation="A 'top N' / 'bottom N' ranking can't be combined with 'or' -- it ranks the whole result, not one branch of it.",
+            unrecognized=[text],
+        )
+
     if unrecognized or ambiguous:
         parts = []
         if unrecognized:
@@ -214,7 +288,11 @@ def interpret(text: str) -> InterpretationResult:
         if ambiguous:
             parts.append("; ".join(f"'{a.phrase}' could mean: {', '.join(a.candidates)}" for a in ambiguous))
         recognized_query = None
-        if metric_predicates or categorical_predicates:
+        if combine_op == "and" and (metric_predicates or categorical_predicates):
+            # Only ever built for the flat AND shape -- an OR-combined
+            # partial result has no honest flat-list representation
+            # (doc 15's own "no confident data, no confident guess" rule
+            # applies to lineage too, not just values).
             recognized_query = ScreenQuery(
                 metric_predicates=metric_predicates,
                 categorical_predicates=categorical_predicates,
@@ -230,8 +308,29 @@ def interpret(text: str) -> InterpretationResult:
     if not metric_predicates and not categorical_predicates:
         return InterpretationResult(query=None, explanation="Nothing recognized in this query.", unrecognized=[text])
 
-    query = ScreenQuery(metric_predicates=metric_predicates, categorical_predicates=categorical_predicates)
+    non_ranked_nodes: list[MetricPredicate | CategoricalPredicate] = [
+        p for p in metric_predicates if p.operator not in RANKED_OPERATORS
+    ] + categorical_predicates
+
+    if combine_op == "or":
+        # Every clause is non-ranked here (checked above) and there are
+        # at least 2 (an "or" split with only 1 non-empty piece would mean
+        # the word "or" appeared with nothing recognizable on one side,
+        # already caught as unrecognized text above).
+        where = PredicateGroup(op="or", predicates=non_ranked_nodes)
+        if excluded is not None:
+            where = PredicateGroup(op="and", predicates=[where, PredicateGroup(op="not", predicates=[excluded])])
+        query = ScreenQuery(where=where, metric_predicates=ranked_predicates)
+    elif excluded is not None:
+        where = PredicateGroup(op="and", predicates=[*non_ranked_nodes, PredicateGroup(op="not", predicates=[excluded])])
+        query = ScreenQuery(where=where, metric_predicates=ranked_predicates)
+    else:
+        query = ScreenQuery(metric_predicates=metric_predicates, categorical_predicates=categorical_predicates)
+
     explanation_parts = [f"{p.metric_name} {p.operator} {p.value if p.value is not None else p.n}" for p in metric_predicates]
     explanation_parts += [f"{p.field} = {p.value}" for p in categorical_predicates]
-    explanation = "Filtering for: " + "; ".join(explanation_parts) + "."
+    if excluded is not None:
+        explanation_parts.append(f"NOT {excluded.field} = {excluded.value}")
+    joiner = " OR " if combine_op == "or" else "; "
+    explanation = "Filtering for: " + joiner.join(explanation_parts) + "."
     return InterpretationResult(query=query, explanation=explanation, recognized_query=query)

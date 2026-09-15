@@ -72,6 +72,11 @@ def canonicalize(query: ScreenQuery) -> dict:
         "sort_by": query.sort_by,
         "sort_desc": query.sort_desc,
         "limit": query.limit,
+        # Display metrics change the stored result payload even though they
+        # do not change membership. They therefore belong in cache identity;
+        # omitting them reused legacy one-column result rows for expanded
+        # comparison tables.
+        "display_metrics": sorted(set(query.display_metrics)),
     }
 
 

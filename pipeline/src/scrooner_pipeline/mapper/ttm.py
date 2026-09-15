@@ -105,8 +105,15 @@ def _trailing_quarters(fiscal_year: int, fiscal_period: str) -> list[tuple[int, 
 
 
 def _load_metric_ids(conn: psycopg.Connection) -> dict[str, int]:
+    # Widened 2026-09-13 to include the 3 margin names too (MARGIN_CONCEPTS,
+    # defined further below) -- purely additive, existing callers
+    # (compute_growth/compute_ttm_returns) just get a couple of extra,
+    # unused keys in the returned dict.
     with conn.cursor() as cur:
-        cur.execute("select metric_name, id from analytics.metric_definition where metric_name = any(%s)", (list(GROWTH_METRICS) + ["roic", "roe"],))
+        cur.execute(
+            "select metric_name, id from analytics.metric_definition where metric_name = any(%s)",
+            (list(GROWTH_METRICS) + ["roic", "roe", "gross_margin", "operating_margin", "net_margin"],),
+        )
         return dict(cur.fetchall())
 
 
@@ -240,6 +247,156 @@ def _ttm_sum(by_period: dict, fiscal_year: int, fiscal_period: str) -> tuple[Dec
         total += value
         fact_ids.extend(fids)
     return total, fact_ids
+
+
+# --- TTM margins (2026-09-13) ---
+#
+# Found live doing a "close the saga" sanity sweep of the locked screener
+# metrics against yfinance: net_margin sat at a 20% match rate, debt_to_
+# equity-adjacent margins similarly poor -- not because net_income/revenue
+# were wrong (both independently verified correct earlier the same day),
+# but because net_margin/gross_margin/operating_margin were NEVER computed
+# as a rolling trailing-twelve-month figure at all, only as a raw single-
+# quarter ratio (calculate.py's generic engine, no FY_ONLY_METRICS entry).
+# yfinance's own margin fields are always TTM. Confirmed by hand before
+# building this: computing TTM net_income/revenue directly from our own
+# already-verified canonical_fact data and dividing reproduced yfinance's
+# reported margin almost exactly for several real companies (TOMI
+# Environmental, RELIABILITY INC, ADM TRONICS -- all matched to 4+ decimal
+# places), proving the underlying DATA was never the problem.
+#
+# Modeled directly on compute_ttm_returns (ROIC/ROE) above -- the identical
+# shape of bug, already fixed once for those two metrics. Deliberately
+# does NOT add net_margin/gross_margin/operating_margin to calculate.py's
+# FY_ONLY_METRICS (unlike ROIC/ROE, a single quarter's margin is still a
+# legitimate, real number worth showing on a quarterly-results trend --
+# ROIC/ROE's quarterly figures are the ones that are genuinely nonsensical,
+# an annualization-scale mismatch, not just "noisier than TTM"). Adding a
+# TTM row is sufficient on its own: screener/resolve.py's existing
+# TTM-preferred/latest-period_end rule already prefers it automatically
+# the moment it exists, without needing the quarterly rows removed.
+#
+# Uses the *_resolved concepts (revenue_sanity_resolved, gross_profit_
+# resolved, operating_income_resolved, net_income_resolved) -- the same
+# ones verified/improved earlier the same session -- for the widest safe
+# coverage, not the raw first_match/sum concepts calculate.py's own
+# quarterly margins read.
+MARGIN_CONCEPTS: dict[str, tuple[str, str]] = {
+    "gross_margin": ("gross_profit_resolved", "revenue_sanity_resolved"),
+    "operating_margin": ("operating_income_resolved", "revenue_sanity_resolved"),
+    "net_margin": ("net_income_resolved", "revenue_sanity_resolved"),
+}
+
+
+def _compute_ttm_margins_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:
+    by_concept = {name: _load_company_facts(conn, company_id, cid) for name, cid in concept_ids.items()}
+    revenue_by_period = by_concept["revenue_sanity_resolved"]
+
+    quarter_keys: set[tuple[int, str]] = set()
+    for numerator_name, _ in MARGIN_CONCEPTS.values():
+        quarter_keys |= {k for k in by_concept[numerator_name] if k[1] in QUARTER_ORDER}
+
+    rows: list[dict] = []
+    # Found live 2026-09-13/14, the first population run: a real, if rare,
+    # instance of the "two quarters share an end_date" trap this whole
+    # session has hit repeatedly elsewhere (Nike's FY/Q4, MSGS's
+    # overlapping durations) -- TRANSCAT INC has a genuine Q1 2012
+    # (2012-01-01 to 2012-03-31) AND a genuine Q4 2012 (2011-12-25 to
+    # 2012-03-31), both real, both ending 2012-03-31, from a fiscal-
+    # calendar realignment. metric_value's unique constraint is on
+    # (company_id, metric_definition_id, period_start, period_end,
+    # period_label), not fiscal_year/fiscal_period, so inserting a TTM row
+    # for both crashed with a duplicate-key violation and silently
+    # stranded the whole company (errored=1, zero margin rows) rather than
+    # writing anything. Iterate a sorted, deterministic key order and skip
+    # a (fy, fp) whose (metric_definition_id, period_end) was already
+    # claimed by an earlier key in this same pass -- the same "keep one,
+    # don't crash" idiom already used for metric_value's own historical
+    # duplicate-row cleanup (see pipeline/CLAUDE.md's 2026-08-31 entry).
+    claimed_period_ends: set[tuple[int, object]] = set()
+    for fy, fp in sorted(quarter_keys):
+        end_date = None
+        for numerator_name, _ in MARGIN_CONCEPTS.values():
+            hit = by_concept[numerator_name].get((fy, fp))
+            if hit is not None:
+                end_date = hit[3]
+                break
+        start_date = end_date
+
+        for metric_name, (numerator_name, _denominator_name) in MARGIN_CONCEPTS.items():
+            metric_id = metric_ids[metric_name]
+            claim_key = (metric_id, end_date)
+            if claim_key in claimed_period_ends:
+                continue
+            claimed_period_ends.add(claim_key)
+
+            ttm_numerator, fids_num = _ttm_sum(by_concept[numerator_name], fy, fp)
+            ttm_revenue, fids_rev = _ttm_sum(revenue_by_period, fy, fp)
+            if ttm_numerator is None or ttm_revenue is None:
+                missing = numerator_name if ttm_numerator is None else "revenue_sanity_resolved"
+                value, reason, fids = None, f"incomplete:{missing}", None
+            elif ttm_revenue == 0:
+                value, reason, fids = None, "zero_denominator", None
+            else:
+                value = ttm_numerator / ttm_revenue
+                reason, fids = None, fids_num + fids_rev
+            rows.append(
+                {"company_id": company_id, "metric_definition_id": metric_id,
+                 "period_start": start_date, "period_end": end_date, "period_label": "TTM",
+                 "value": value, "is_null_reason": reason, "source_fact_ids": fids}
+            )
+
+    with conn.cursor() as cur:
+        cur.execute(
+            "delete from analytics.metric_value where company_id = %s and metric_definition_id = any(%s) and period_label = 'TTM'",
+            (company_id, [metric_ids[m] for m in MARGIN_CONCEPTS]),
+        )
+        if rows:
+            cur.executemany(
+                """
+                insert into analytics.metric_value
+                    (company_id, metric_definition_id, period_start, period_end, period_label,
+                     value, is_null_reason, source_fact_ids)
+                values
+                    (%(company_id)s, %(metric_definition_id)s, %(period_start)s, %(period_end)s, %(period_label)s,
+                     %(value)s, %(is_null_reason)s, %(source_fact_ids)s)
+                """,
+                rows,
+            )
+        conn.commit()
+    return {
+        "computed": sum(1 for r in rows if r["value"] is not None),
+        "null": sum(1 for r in rows if r["value"] is None),
+    }
+
+
+def compute_ttm_margins(conn: psycopg.Connection, ciks: set[str]) -> dict:
+    metric_ids = _load_metric_ids(conn)
+    concept_names = {name for pair in MARGIN_CONCEPTS.values() for name in pair}
+    concept_ids = {name: _load_concept_id(conn, name) for name in concept_names}
+    with conn.cursor() as cur:
+        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        company_id_by_cik = dict(cur.fetchall())
+
+    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    for cik in sorted(ciks):
+        totals["considered"] += 1
+        company_id = company_id_by_cik.get(cik)
+        if company_id is None:
+            totals["no_company"] += 1
+            continue
+        try:
+            stats = _compute_ttm_margins_for_company(conn, company_id, metric_ids, concept_ids)
+        except Exception as exc:
+            totals["errored"] += 1
+            log_error(conn, "analytics.mapper_error", cik, "ttm_margins", exc)
+            continue
+        totals["ok"] += 1
+        totals["computed"] += stats["computed"]
+        totals["null"] += stats["null"]
+
+    logger.info("ttm.margins.done", **totals)
+    return totals
 
 
 def _compute_ttm_returns_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:

@@ -85,7 +85,9 @@ CONCEPT_FOR_COMPARISON: dict[str, str] = {
     "cost_of_revenue": "cost_of_revenue_resolved",
     "gross_profit": "gross_profit_resolved",
     "operating_expenses": "operating_expenses_resolved",
+    "operating_income": "operating_income_resolved",
     "total_debt": "total_debt_resolved",
+    "depreciation_and_amortization": "depreciation_and_amortization_resolved",
 }
 
 # Real, sector-wide finding (checked live against JPM, not guessed): banks

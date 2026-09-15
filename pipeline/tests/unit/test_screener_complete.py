@@ -6,7 +6,7 @@ from pydantic import ValidationError
 
 from scrooner_pipeline.screener import query as query_module
 from scrooner_pipeline.screener.evaluate import evaluate_between, evaluate_comparison, rank_top_bottom
-from scrooner_pipeline.screener.schema import MetricPredicate, ScreenQuery
+from scrooner_pipeline.screener.schema import MetricPredicate, PredicateGroup, ScreenQuery
 
 
 @pytest.mark.unit
@@ -153,3 +153,33 @@ def test_ranked_query_returns_rank_order_not_database_order(monkeypatch):
     result = query_module.run_query(InactiveConnection(), query)
 
     assert [row["cik"] for row in result["matched"]] == ["0002", "0003"]
+
+
+@pytest.mark.unit
+def test_boolean_tree_query_still_cites_a_ranked_predicates_own_value(monkeypatch):
+    # Found live 2026-09-11: "top 5 by roic excluding financials" correctly
+    # excluded Financials-sector companies, but every match showed a null
+    # roic value -- metric_names_to_show for the where-tree path only
+    # walked query.where (which never contains a ranked predicate, schema.py
+    # forbids it) and forgot to union in the ranked predicate's own name.
+    surviving = {
+        1: {"cik": "0001", "company_name": "A", "sic_code": "1", "sic_description": "X", "status": "active", "ticker": "A"},
+        2: {"cik": "0002", "company_name": "B", "sic_code": "1", "sic_description": "X", "status": "active", "ticker": "B"},
+    }
+    resolved = {
+        (1, 10): resolved_row(Decimal("0.30"), 1),
+        (2, 10): resolved_row(Decimal("0.20"), 2),
+    }
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roic": 10})
+    monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: 1)
+    monkeypatch.setattr(query_module, "_run_boolean_tree_query", lambda *_args: dict(surviving))
+    monkeypatch.setattr(query_module, "_load_snapshot_values", lambda _conn, _ids, _version: resolved)
+    query = ScreenQuery(
+        metric_predicates=[MetricPredicate(metric_name="roic", operator="top_n", n=2)],
+        where=PredicateGroup(op="not", predicates=[MetricPredicate(metric_name="roic", operator=">", value="999")]),
+    )
+
+    result = query_module.run_query(InactiveConnection(), query)
+
+    values = {row["cik"]: row["metrics"]["roic"]["value"] for row in result["matched"]}
+    assert values == {"0001": Decimal("0.30"), "0002": Decimal("0.20")}
