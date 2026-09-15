@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+import psycopg
 import structlog
 import typer
 
@@ -61,8 +62,23 @@ def update_beneficial_ownership_cmd(
     """Stage 3: download/parse each company's Schedule 13D/13G full-submission
     headers into core.beneficial_ownership, with the issuer-vs-filer check."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
-    with get_connection() as conn:
-        stats = update_beneficial_ownership(conn, target_ciks)
+    stats = None
+    try:
+        with get_connection() as conn:
+            stats = update_beneficial_ownership(conn, target_ciks)
+    except psycopg.OperationalError:
+        # Found live 2026-09-16: this outer conn is only touched at the
+        # very start (the company lookup) and, if a per-company error
+        # occurs, inside update_beneficial_ownership()'s own rollback/
+        # reconnect handler -- otherwise it sits idle for the entire
+        # multi-hour run. A dead Supabase pooler connection surfaces here
+        # when the `with` block exits and psycopg tries its own implicit
+        # commit/close on a socket that's already gone -- AFTER stats has
+        # already been set correctly and every company's own work already
+        # committed via its own per-company connection. Swallow it rather
+        # than let a fully-successful run exit non-zero with a scary
+        # traceback that looks like the whole batch failed.
+        logger.warning("update_beneficial_ownership_cmd.exit_commit_failed", stats=stats)
     typer.echo(f"update-beneficial-ownership: {stats}")
 
 

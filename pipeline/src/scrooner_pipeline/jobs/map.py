@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+import psycopg
 import structlog
 import typer
 
@@ -109,8 +110,19 @@ def resolve_concept_fallbacks_cmd(
     resolve-facts (reads its output), BEFORE calculate/calculate-piotroski
     (they should consume the *_resolved concept, not the original)."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
-    with get_connection() as conn:
-        stats = resolve_fallbacks(conn, target_ciks)
+    stats = None
+    try:
+        with get_connection() as conn:
+            stats = resolve_fallbacks(conn, target_ciks)
+    except psycopg.OperationalError:
+        # Same shape as ownership.py's update_beneficial_ownership_cmd fix
+        # (2026-09-16): the outer conn can sit idle long enough for the
+        # Supabase pooler to drop it, surfacing only when the `with` block
+        # exits and psycopg's implicit commit/close hits a dead socket --
+        # by which point stats is already correct and every company's own
+        # work already committed. Don't let that crash a fully-successful
+        # run.
+        logger.warning("resolve_concept_fallbacks_cmd.exit_commit_failed", stats=stats)
     typer.echo(f"resolve-concept-fallbacks: {stats}")
 
 
