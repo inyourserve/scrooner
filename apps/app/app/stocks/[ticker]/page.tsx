@@ -7,7 +7,8 @@ import { FinancialTable } from "@/components/company/FinancialTable";
 import { MetricGrid, type MetricItem } from "@/components/company/MetricGrid";
 import { PriceChart } from "@/components/company/PriceChart";
 import { ResearchSection } from "@/components/company/ResearchSection";
-import { StockSectionNav, type StockSectionLink } from "@/components/company/StockSectionNav";
+import { stockPageSections } from "@/components/company/stockPageSections";
+import { StockSectionNav } from "@/components/company/StockSectionNav";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { PublicHeader } from "@/components/public/PublicHeader";
 import { Delta } from "@/components/scrooner/Delta";
@@ -67,15 +68,6 @@ const metricGroups: { title: string; metrics: [string, string, MetricItem["kind"
   { title: "Profitability", metrics: [["gross_margin", "Gross margin", "pct"], ["operating_margin", "Operating margin", "pct"], ["net_margin", "Net margin", "pct"], ["roe", "ROE", "pct"], ["roic", "ROIC", "pct"], ["roa", "ROA", "pct"]] },
   { title: "Financial strength", metrics: [["current_ratio", "Current ratio", "multiple"], ["quick_ratio", "Quick ratio", "multiple"], ["debt_to_equity", "Debt / equity", "multiple"], ["interest_coverage_ratio", "Interest coverage", "multiple"], ["net_debt_ebitda", "Net debt / EBITDA", "multiple"], ["piotroski_f_score", "Piotroski F-Score", "score"]] },
   { title: "Cash flow and allocation", metrics: [["fcf", "Free cash flow", "dollar"], ["fcf_margin", "FCF margin", "pct"], ["buyback_yield", "Buyback yield", "pct"], ["total_shareholder_yield", "Shareholder yield", "pct"], ["share_dilution_trend", "Share dilution · YoY", "pct"]] },
-];
-
-const sections: StockSectionLink[] = [
-  { id: "overview", label: "Overview" }, { id: "analysis", label: "Analysis" },
-  { id: "chart", label: "Chart" }, { id: "quarterly-results", label: "Quarters" },
-  { id: "profit-loss", label: "Income" }, { id: "balance-sheet", label: "Balance sheet" },
-  { id: "cash-flow", label: "Cash flow" }, { id: "ratios", label: "Ratios" },
-  { id: "peers", label: "Peers" }, { id: "shareholding", label: "Ownership" },
-  { id: "documents", label: "Documents" },
 ];
 
 function secUrl(cik: string, accession: string) {
@@ -201,7 +193,7 @@ export default async function StockPage({ params }: Props) {
 
   return <div className="public-site stock-page">
     <PublicHeader current="company" companyHref={`/stocks/${ticker}`} skipHref="#company-content" />
-    <StockSectionNav sections={sections} />
+    <StockSectionNav sections={stockPageSections} />
 
     <main className="stock-page__main" id="company-content">
       <section className="stock-hero" id="overview" aria-labelledby="company-name">
