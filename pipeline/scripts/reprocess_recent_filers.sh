@@ -1,4 +1,14 @@
-#!/bin/zsh
+#!/usr/bin/env bash
+# bash, not zsh (fixed 2026-09-14) -- unlike pipeline/scripts/backfill_*.sh
+# (manual-only, dev-machine-only), THIS script is wired into
+# .github/workflows/pipeline-refresh.yml and runs on GitHub's Ubuntu
+# runners, which don't have zsh installed by default. `#!/bin/zsh`
+# silently broke every single scheduled run since this file landed on
+# main -- "cannot execute: required file not found" (exec() failing to
+# find the shebang interpreter) -- caught live 2026-09-14 via the exact
+# freshness alert this script exists to prevent (`normalizer_backlog`
+# going stale, because the thing meant to keep it fresh never actually
+# ran). No zsh-specific syntax is used below, so bash runs it unchanged.
 # Incremental Normalizer + Mapper reprocessing for recently-filed companies
 # (added 2026-09-09). Closes a real, confirmed gap: `scrooner-incremental`
 # only ever wrote NEW filing metadata + companyfacts/submissions into `raw`
