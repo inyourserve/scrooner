@@ -69,6 +69,25 @@ Verified live, before/after, `EXPLAIN (ANALYZE, BUFFERS)`:
 
 All three indexes are `create index if not exists` (idempotent) plus one `include`, applied directly against the live database and confirmed via a second run producing `NOTICE: ... already exists, skipping`. No application code changed — this was purely a schema-level fix, orthogonal to the Redis caching work above (a cache MISS is now itself fast, not just cache hits).
 
+## Third addendum, same day: "match the speed with screener speed" — applied to `apps/backend`'s saved-screens endpoints
+
+Directly asked to apply the same treatment to the screens/screener surface. Audited it the same way: checked `app.saved_screen`/`app.user_screen_run`/`app.screen_result`/`app.screen_result_item` for missing indexes (all already correctly indexed — this schema got the same audit during the 2026-09-10/12 screener performance work, `EXPLAIN ANALYZE` on the real queries confirmed sub-millisecond execution, `user_id`/`slug`/`(company_id, position)` all covered) and checked `apps/backend/db_pool.py`'s connection pool (already `min_size=1`/`autocommit=True`, opened once at FastAPI startup — no cold-connect penalty, unlike `apps/app`'s own pool before this session's `idle_timeout` fix).
+
+The real gap: `POST /v1/screen` and `/v1/screen-runs` already have thorough Redis caching (query results, run pointers, paginated pages, auth verification — all from the 2026-09-10/12 work), but `routers/saved_screens.py`'s `list_screens` (`GET /v1/screens`) and `get_screen` (`GET /v1/screens/{slug}`) had **none** — every call paid a real Postgres round trip even though the query itself is sub-millisecond, because the round trip (not execution) is the actual cost (same ~270ms/hop finding as the rest of this project's performance work).
+
+Added to `apps/backend/cache.py`: a 30s-TTL cache for the saved_screen row itself (`company-page`-style key, `screens-list:{user_id}` / `screen-detail:{user_id}:{slug}`), same fail-open contract as every other cache in that file. Deliberately does **not** cache the run's own paginated result data — that already has its own separate, correctness-sensitive caching (`get_cached_run_page`, keyed by run_id) and mixing the two would risk serving a stale run pointer past its own TTL. Every write in the router (`create_screen`, `rename_screen`, `delete_screen`, `refresh_screen`) now explicitly invalidates the relevant cache entries — TTL alone is a memory-hygiene backstop here, not the correctness mechanism, matching this file's own stated philosophy for the `/v1/screen` cache.
+
+One real wrinkle: `rename_screen`/`delete_screen` only ever took a numeric `screen_id`, not the row's `slug` — needed to invalidate the slug-keyed detail cache. Changed both `UPDATE`/`DELETE` statements' `RETURNING id` to `RETURNING slug` rather than adding a second lookup query.
+
+7 new unit tests (`tests/test_saved_screens_cache.py`, monkeypatching the cache functions directly — this project's REDIS_URL is deliberately unreachable in tests, so a real Redis is never required to exercise this logic), full backend suite 41→48 passing. Verified live against the real database and a real local Redis (not mocked), using real saved-screen data:
+
+| Endpoint | Cold (Redis miss) | Warm (Redis hit) |
+|---|---|---|
+| `GET /v1/screens` (list) | 297.7ms | **0.29ms** (1,027x) |
+| `GET /v1/screens/{slug}` (detail + run page) | 1,760.6ms | **2.14ms** (823x) |
+
+The `apps/app` frontend pages (`/app/screens`, `/app/screens/[slug]`) were deliberately left as `force-dynamic` with `cache: "no-store"` fetches — correct and unchanged, since this is per-user authenticated data that can never be shared across users the way the public company page can. The Redis cache added here lives entirely on the `apps/backend` side, the same place `/v1/screen`'s own cache already lives.
+
 ## Secondary fix: pool idle_timeout
 
 `lib/company/db.ts`'s `postgres()` pool had `idle_timeout: 20` — meaning a connection closes after 20s of no queries, so a cache-miss regeneration (now much rarer, but still real) could pay the full reconnect cost even between two regenerations minutes apart during low traffic. Raised to `90`. Still one connection well within Supabase's shared ~15-connection pooler ceiling (root `CLAUDE.md`); `max: 2` left unchanged.

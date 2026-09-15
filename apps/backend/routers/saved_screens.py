@@ -14,6 +14,14 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
 from auth import get_current_user_id
+from cache import (
+    get_cached_screen_detail,
+    get_cached_screens_list,
+    invalidate_screen_detail,
+    invalidate_screens_list,
+    set_cached_screen_detail,
+    set_cached_screens_list,
+)
 from db_pool import get_pooled_connection
 from scrooner_pipeline.screener.schema import ScreenQuery
 from routers.screen_runs import _read_page, create_run_from_query
@@ -54,6 +62,9 @@ def _available_slug(conn, user_id: str, name: str) -> str:
 
 @router.get("/screens")
 def list_screens(user_id: str = Depends(get_current_user_id)) -> list[dict]:
+    cached = get_cached_screens_list(user_id)
+    if cached is not None:
+        return cached
     with get_pooled_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -61,10 +72,12 @@ def list_screens(user_id: str = Depends(get_current_user_id)) -> list[dict]:
                 (user_id,),
             )
             rows = cur.fetchall()
-    return [
+    screens = [
         {"id": r[0], "name": r[1], "slug": r[2], "query": r[3], "created_at": str(r[4]), "updated_at": str(r[5])}
         for r in rows
     ]
+    set_cached_screens_list(user_id, screens)
+    return screens
 
 
 @router.post("/screens")
@@ -96,6 +109,7 @@ def create_screen(body: SavedScreenCreate, user_id: str = Depends(get_current_us
                 (user_id, body.name.strip(), slug, body.query.model_dump_json(), body.run_id),
             )
             new_id = cur.fetchone()[0]
+    invalidate_screens_list(user_id)
     return {"id": new_id, "name": body.name.strip(), "slug": slug}
 
 
@@ -106,22 +120,37 @@ def get_screen(
     page_size: int = Query(default=50, ge=1, le=100),
     user_id: str = Depends(get_current_user_id),
 ) -> dict:
-    with get_pooled_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "select id, name, slug, query, last_run_id, created_at, updated_at from app.saved_screen where user_id = %s and slug = %s",
-                (user_id, slug),
-            )
-            row = cur.fetchone()
-        if row is None:
-            raise HTTPException(status_code=404, detail="Screen not found")
-        payload = {
-            "id": row[0], "name": row[1], "slug": row[2], "query": row[3],
-            "created_at": str(row[5]), "updated_at": str(row[6]), "run": None,
-        }
-        if row[4] is not None:
-            payload["run"] = _read_page(conn, str(row[4]), user_id, page_size, cursor)
-        return payload
+    # Only the saved_screen row itself (metadata + last_run_id) is cached
+    # here -- the run's own paginated page data always goes through
+    # _read_page below, which has its own separate, already-correct
+    # caching (keyed by run_id, not by slug/cursor/page_size combined with
+    # this row's cache lifetime).
+    cached_meta = get_cached_screen_detail(user_id, slug)
+    if cached_meta is not None:
+        meta = cached_meta
+    else:
+        with get_pooled_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "select id, name, slug, query, last_run_id, created_at, updated_at from app.saved_screen where user_id = %s and slug = %s",
+                    (user_id, slug),
+                )
+                row = cur.fetchone()
+            if row is None:
+                raise HTTPException(status_code=404, detail="Screen not found")
+            meta = {
+                "id": row[0], "name": row[1], "slug": row[2], "query": row[3],
+                "last_run_id": str(row[4]) if row[4] is not None else None,
+                "created_at": str(row[5]), "updated_at": str(row[6]),
+            }
+        set_cached_screen_detail(user_id, slug, meta)
+
+    payload = {k: v for k, v in meta.items() if k != "last_run_id"}
+    payload["run"] = None
+    if meta["last_run_id"] is not None:
+        with get_pooled_connection() as conn:
+            payload["run"] = _read_page(conn, meta["last_run_id"], user_id, page_size, cursor)
+    return payload
 
 
 @router.post("/screens/{slug}/refresh")
@@ -148,6 +177,8 @@ def refresh_screen(slug: str, user_id: str = Depends(get_current_user_id)) -> di
                 "update app.saved_screen set last_run_id = %s, updated_at = now() where user_id = %s and slug = %s",
                 (run["run_id"], user_id, slug),
             )
+    invalidate_screen_detail(user_id, slug)
+    invalidate_screens_list(user_id)  # updated_at changed -- list order can shift
     return run
 
 
@@ -165,11 +196,14 @@ def rename_screen(screen_id: int, body: SavedScreenRename, user_id: str = Depend
     with get_pooled_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "update app.saved_screen set name = %s, updated_at = now() where id = %s and user_id = %s returning id",
+                "update app.saved_screen set name = %s, updated_at = now() where id = %s and user_id = %s returning slug",
                 (body.name, screen_id, user_id),
             )
-            if cur.fetchone() is None:
+            row = cur.fetchone()
+            if row is None:
                 raise HTTPException(status_code=404, detail="Screen not found")
+    invalidate_screen_detail(user_id, row[0])
+    invalidate_screens_list(user_id)
     return {"id": screen_id, "name": body.name}
 
 
@@ -178,9 +212,12 @@ def delete_screen(screen_id: int, user_id: str = Depends(get_current_user_id)) -
     with get_pooled_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "delete from app.saved_screen where id = %s and user_id = %s returning id",
+                "delete from app.saved_screen where id = %s and user_id = %s returning slug",
                 (screen_id, user_id),
             )
-            if cur.fetchone() is None:
+            row = cur.fetchone()
+            if row is None:
                 raise HTTPException(status_code=404, detail="Screen not found")
+    invalidate_screen_detail(user_id, row[0])
+    invalidate_screens_list(user_id)
     return {"deleted": screen_id}

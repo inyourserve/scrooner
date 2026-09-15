@@ -158,3 +158,88 @@ def set_cached_auth_user_id(token: str, user_id: str) -> None:
         _client.set(_auth_key(token), user_id, ex=AUTH_TTL_SECONDS)
     except RedisError:
         return
+
+
+# Saved-screens list/detail cache (2026-09-15) -- routers/saved_screens.py's
+# list_screens/get_screen were the one remaining piece of the screens/
+# screener surface with NO caching at all, found auditing this file for
+# "does every read here have the same treatment /v1/screen already got."
+# Their own Postgres queries are sub-millisecond (EXPLAIN ANALYZE, checked
+# live -- app.saved_screen/app.user_screen_run are tiny per-user tables,
+# already correctly indexed) -- the actual cost avoided here is the
+# Postgres round trip itself (this project's measured ~270ms/hop from a
+# non-co-located client, doc/learnings/2026-09-10-screener-performance.md),
+# not query execution. Short TTL (30s, matching AUTH_TTL_SECONDS's own
+# reasoning) plus explicit invalidation on every write in this router --
+# TTL alone is a memory-hygiene backstop, not the correctness mechanism, so
+# a rename/delete/refresh is never visible late to the user who just made
+# it. Caches ONLY the saved_screen row itself (id/name/slug/query/
+# last_run_id/timestamps) -- never the run's own paginated result data,
+# which already has its own, separate, correctness-sensitive caching via
+# get_cached_run_page/set_cached_run_page above (keyed by run_id, which
+# changes on every refresh, so it does not need this module's invalidation
+# at all).
+SCREENS_TTL_SECONDS = 30
+
+
+def _screens_list_key(user_id: str) -> str:
+    return f"screens-list:{user_id}"
+
+
+def get_cached_screens_list(user_id: str) -> list | None:
+    try:
+        raw = _client.get(_screens_list_key(user_id))
+    except RedisError:
+        return None
+    if raw is None:
+        return None
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return None
+
+
+def set_cached_screens_list(user_id: str, screens: list) -> None:
+    try:
+        _client.set(_screens_list_key(user_id), json.dumps(screens, default=_default), ex=SCREENS_TTL_SECONDS)
+    except RedisError:
+        return
+
+
+def invalidate_screens_list(user_id: str) -> None:
+    try:
+        _client.delete(_screens_list_key(user_id))
+    except RedisError:
+        return
+
+
+def _screen_detail_key(user_id: str, slug: str) -> str:
+    return f"screen-detail:{user_id}:{slug}"
+
+
+def get_cached_screen_detail(user_id: str, slug: str) -> dict | None:
+    try:
+        raw = _client.get(_screen_detail_key(user_id, slug))
+    except RedisError:
+        return None
+    if raw is None:
+        return None
+    try:
+        value = json.loads(raw)
+    except json.JSONDecodeError:
+        return None
+    return value if isinstance(value, dict) else None
+
+
+def set_cached_screen_detail(user_id: str, slug: str, screen: dict) -> None:
+    try:
+        _client.set(_screen_detail_key(user_id, slug), json.dumps(screen, default=_default), ex=SCREENS_TTL_SECONDS)
+    except RedisError:
+        return
+
+
+def invalidate_screen_detail(user_id: str, slug: str) -> None:
+    try:
+        _client.delete(_screen_detail_key(user_id, slug))
+    except RedisError:
+        return
