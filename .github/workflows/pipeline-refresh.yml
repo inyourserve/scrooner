@@ -59,6 +59,30 @@ jobs:
         # core.filing) -- cheap daily, not a full-population rerun.
         if: always()
         run: pipeline/scripts/reprocess_recent_filers.sh
+      - name: Classify newly-ambiguous multi-listing companies (OpenFIGI)
+        # Added 2026-09-20 -- closes a real, confirmed gap: core.listing.
+        # security_type classification (company_master/security_type.py,
+        # what resolve_primary_tickers() needs to pick a company's real
+        # ticker out of several listings) had NEVER been wired into any
+        # scheduled cron -- it only ran once, manually, on 2026-08-06.
+        # Found live investigating a direct report that "lots of
+        # companies don't have a ticker" in the daily sanity/yfinance-
+        # financials logs: real operating companies (Webster Financial,
+        # Athene Holding, Equitable Holdings, CHS Inc, Triton
+        # International, Liberty Broadband, Aspen Insurance among them)
+        # sat permanently unresolvable simply because they'd gained a
+        # second listing (a new preferred-share/warrant registration,
+        # a SPAC merger completing) since the one-time run and nothing
+        # ever reclassified them. Cheap and safe to run daily: scoped to
+        # only companies with NO currently-resolvable primary listing
+        # (~50, not the ~900 multi-listing companies overall -- see the
+        # script's own docstring for the earlier, over-broad version this
+        # replaced), ~8 minutes at OpenFIGI's real rate limit. First run
+        # cut the stuck population from 60 to 35 companies; the remaining
+        # ones are mostly SPAC shells OpenFIGI genuinely has no ticker
+        # for, not a mapping bug.
+        if: always()
+        run: pipeline/scripts/classify_multi_listing_companies.sh
       - name: Refresh real market prices (Alpaca)
         # Added 2026-09-08 -- doc 25's own docstring had flagged this as
         # "no scheduler wired up yet" since 2026-08-17. core.market_price_
