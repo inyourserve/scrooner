@@ -269,13 +269,29 @@ def _write_findings(conn: psycopg.Connection, company_id: int, findings: list[di
     conn.commit()
 
 
-def investigate_major_findings(conn: psycopg.Connection) -> dict:
-    """Hands every current 'major' finding WITHOUT an already-understood
-    note (i.e. not a known bank-incompatible mismatch) to sanity/
-    tag_investigator.py's investigate() -- the same fetcher-tree trace,
-    the same rule that a fix is only ever applied from a real core.fact/
-    SEC tag, yfinance used only to detect/match. Reuses that pipeline
-    instead of duplicating it; see this module's own docstring."""
+def investigate_major_findings(conn: psycopg.Connection, limit: int | None = None) -> dict:
+    """Hands 'major' findings WITHOUT an already-understood note (i.e. not
+    a known bank-incompatible mismatch) to sanity/tag_investigator.py's
+    investigate() -- the same fetcher-tree trace, the same rule that a fix
+    is only ever applied from a real core.fact/SEC tag, yfinance used only
+    to detect/match. Reuses that pipeline instead of duplicating it; see
+    this module's own docstring.
+
+    `limit` (added 2026-09-19, closing a real, confirmed hang) -- this
+    query used to have no bound at all, so it re-investigated the ENTIRE
+    accumulated backlog every single run. Found live: the backlog had
+    grown to 18,972 unresolved major findings, and investigate() (a real
+    per-finding fetcher-tree trace against core.fact, not a cheap lookup)
+    costs ~0.38s each (measured from the sibling sanity/tag_investigator
+    cron step's own considered=472-in-~3min log line) -- ~2 hours for the
+    full backlog, blowing the daily cron's 90-minute job timeout every
+    time and silently preventing "Report yfinance-financials findings"/
+    "Report findings" (the actual alerting gate) from ever running for 5+
+    consecutive days (2026-09-15 through 09-19). `order by f.id` (oldest
+    first, the same coldest/oldest-first rotation idiom already used by
+    pick_rotation_batch()/sanity/yfinance_check.py's own rotation) makes
+    steady, bounded daily progress against the backlog instead of an
+    unbounded all-or-nothing scan."""
     from scrooner_pipeline.sanity.tag_investigator import investigate
 
     stats = {"considered": 0, "auto_fixed": 0, "needs_review": 0, "no_match_found": 0}
@@ -286,7 +302,10 @@ def investigate_major_findings(conn: psycopg.Connection) -> dict:
             from analytics.statement_comparison_finding f
             join analytics.canonical_concept cc on cc.id = f.canonical_concept_id
             where f.severity = 'major' and f.note is null and f.period_id is not null
-            """
+            order by f.id
+            limit %s
+            """,
+            (limit,),
         )
         rows = cur.fetchall()
 

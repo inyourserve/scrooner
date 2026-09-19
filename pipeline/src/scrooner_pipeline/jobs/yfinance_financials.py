@@ -98,13 +98,21 @@ def daily_rotation_cmd(
 
 
 @app.command("investigate")
-def investigate_cmd() -> None:
-    """Hands every current 'major' finding without an already-understood
-    note to sanity/tag_investigator.py's investigate() -- reuses that
-    fix pipeline (real SEC tag only, yfinance for detection/matching
-    only) rather than duplicating it."""
+def investigate_cmd(
+    limit: int = typer.Option(
+        2000, help="Max findings to investigate this run, oldest first (unbounded blew the daily cron's "
+                    "timeout against an 18,972-finding backlog -- see investigate_major_findings()'s own "
+                    "docstring). Pass 0 for no limit (manual/local use only).",
+    ),
+) -> None:
+    """Hands 'major' findings without an already-understood note to
+    sanity/tag_investigator.py's investigate() -- reuses that fix pipeline
+    (real SEC tag only, yfinance for detection/matching only) rather than
+    duplicating it. Bounded and rotates oldest-first by default so the
+    daily cron makes steady progress without ever re-scanning the whole
+    backlog in one run."""
     with get_connection() as conn:
-        stats = investigate_major_findings(conn)
+        stats = investigate_major_findings(conn, limit=limit or None)
     typer.echo(f"investigate: {stats}")
 
 

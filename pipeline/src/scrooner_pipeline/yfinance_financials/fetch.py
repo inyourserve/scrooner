@@ -137,7 +137,24 @@ def _flatten(df: pd.DataFrame) -> list[tuple[str, date, float | None]]:
 
 
 def fetch_and_store_statements(conn: psycopg.Connection, company_ids: list[int], paced: bool = True) -> dict:
-    stats = {"considered": len(company_ids), "ok": 0, "no_ticker": 0, "fetch_failed": 0, "rows_written": 0}
+    # "ok_but_empty" -- added 2026-09-19, real finding not yet root-caused:
+    # the daily cron (GitHub Actions runner IPs) wrote ZERO new rows to
+    # analytics.yfinance_statement_line for 5 straight days (2026-09-15
+    # through 09-19), yet every fetch logged "ok" (no exception raised --
+    # yfinance/Yahoo evidently returns an empty-but-200 response rather
+    # than an error under whatever condition is triggering this). The
+    # SAME tickers (AAPL, MSFT, GOOGL, JPM, NKE, XOM, KO, PG, T, WMT)
+    # fetched real, non-empty quarterly statements when tested from a
+    # non-GitHub-Actions IP the same day -- consistent with Yahoo Finance's
+    # well-documented tendency to rate-limit/block datacenter IP ranges
+    # (including GitHub Actions') more aggressively on the fundamentals/
+    # quoteSummary endpoints than on `.info()` (which this cron's sibling
+    # sanity/yfinance_check.py step, on the same runner, continues to
+    # complete successfully every day). Not fixed here -- this counter
+    # exists so the failure is visible in fetch_done's own stats instead
+    # of silently blending into "ok" (indistinguishable from a real thin
+    # company reporting nothing), for whoever picks this up next.
+    stats = {"considered": len(company_ids), "ok": 0, "ok_but_empty": 0, "no_ticker": 0, "fetch_failed": 0, "rows_written": 0}
     with conn.cursor() as cur:
         cur.execute("select id, cik from core.company where id = any(%s)", (company_ids,))
         cik_by_company = dict(cur.fetchall())
@@ -171,6 +188,8 @@ def fetch_and_store_statements(conn: psycopg.Connection, company_ids: list[int],
                 )
         _write_batch(conn, rows)
         stats["ok"] += 1
+        if not rows:
+            stats["ok_but_empty"] += 1
         stats["rows_written"] += len(rows)
 
     logger.info("yfinance_financials.fetch_done", **stats)

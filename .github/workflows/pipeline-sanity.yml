@@ -70,6 +70,18 @@ jobs:
         # daily rotation (200, vs the ratio check's 750) sharing the
         # same rate-limiter budget. Was built 2026-09-08 but had no
         # rotation of its own and no cron wiring until now.
+        #
+        # `investigate` (below) gained a bounded --limit 2026-09-19 --
+        # found live: with no limit it re-scanned the ENTIRE accumulated
+        # "major, note is null" backlog every run (18,972 findings by
+        # 2026-09-19), ~0.38s/finding, ~2 hours total -- blowing this
+        # job's 90-minute timeout and silently preventing "Report
+        # yfinance-financials findings"/"Report findings" (the actual
+        # alerting gate) from running for 5 straight days (2026-09-15
+        # through 09-19). See investigate_major_findings()'s own
+        # docstring in yfinance_financials/compare.py for the full
+        # finding. Default limit (2000/day) clears the backlog over
+        # ~10 days instead of one unbounded, timeout-blowing scan.
         if: always()
         run: |
           uv run --project pipeline scrooner-yfinance-financials seed-line-item-mapping
