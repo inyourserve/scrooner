@@ -28,6 +28,20 @@ def test_different_dataset_version_changes_the_hash():
 
 
 @pytest.mark.unit
+def test_display_metrics_change_hash_because_the_stored_payload_changes():
+    compact = ScreenQuery(display_metrics=["roe"])
+    comparison = ScreenQuery(display_metrics=["roe", "market_cap", "trailing_pe"])
+    assert compute_query_hash(compact, dataset_version=1) != compute_query_hash(comparison, dataset_version=1)
+
+
+@pytest.mark.unit
+def test_display_metric_order_does_not_fragment_the_cache():
+    first = ScreenQuery(display_metrics=["roe", "market_cap"])
+    second = ScreenQuery(display_metrics=["market_cap", "roe"])
+    assert compute_query_hash(first, dataset_version=1) == compute_query_hash(second, dataset_version=1)
+
+
+@pytest.mark.unit
 def test_different_queries_hash_differently():
     q1 = ScreenQuery(metric_predicates=[A])
     q2 = ScreenQuery(metric_predicates=[B])

@@ -22,6 +22,12 @@ export interface ScreenRunPage {
   previous_cursor?: string | null;
   next_cursor: string | null;
   ran_at: string;
+  corrections?: Array<{
+    source_text: string;
+    corrected_text: string;
+    kind: string;
+    requires_confirmation: boolean;
+  }>;
 }
 
 export type AccessTokenProvider = () => Promise<string | null>;

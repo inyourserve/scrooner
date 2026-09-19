@@ -3,6 +3,18 @@ export type RankedOperator = "top_n" | "bottom_n";
 export type MetricOperator = ComparisonOperator | "between" | RankedOperator;
 export type MetricValueType = "percentage" | "currency" | "multiple" | "number";
 
+export const DEFAULT_COMPARISON_METRICS = [
+  "market_cap",
+  "trailing_pe",
+  "roe",
+  "roic",
+  "revenue_growth_yoy",
+  "eps_growth_yoy",
+  "debt_to_equity",
+  "fcf_margin",
+  "dividend_yield",
+] as const;
+
 export interface MetricDefinition {
   metric_name: string;
   display_name: string;

@@ -57,11 +57,8 @@ def test_repeat_query_reuses_existing_immutable_run(monkeypatch):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize(
-    "operator,descending",
-    [(">", True), (">=", True), ("<", False), ("<=", False)],
-)
-def test_default_sort_uses_last_directional_condition(operator, descending):
+@pytest.mark.parametrize("operator", [">", ">=", "<", "<="])
+def test_default_sort_uses_market_cap_for_a_stable_comparison_view(operator):
     query = ScreenQuery(
         metric_predicates=[
             {"metric_name": "market_cap", "operator": ">", "value": "500"},
@@ -71,8 +68,8 @@ def test_default_sort_uses_last_directional_condition(operator, descending):
 
     sorted_query = screen_runs._apply_default_sort(query)
 
-    assert sorted_query.sort_by == "roic"
-    assert sorted_query.sort_desc is descending
+    assert sorted_query.sort_by == "market_cap"
+    assert sorted_query.sort_desc is True
 
 
 @pytest.mark.unit

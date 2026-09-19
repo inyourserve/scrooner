@@ -5,6 +5,7 @@ No auth: matches doc 01's "free product for discovery" -- running a
 screen or an English query costs nothing to try.
 """
 
+from dataclasses import asdict
 from functools import lru_cache
 
 from fastapi import APIRouter, BackgroundTasks
@@ -126,6 +127,7 @@ def post_ask(body: AskRequest, background_tasks: BackgroundTasks) -> dict:
         "recognized_query": result.recognized_query.model_dump() if result.recognized_query else None,
         "unrecognized": result.unrecognized,
         "ambiguous": [{"phrase": a.phrase, "candidates": a.candidates} for a in result.ambiguous],
+        "corrections": [asdict(correction) for correction in result.corrections],
     }
     if body.run and result.query is not None:
         with get_pooled_connection() as conn:

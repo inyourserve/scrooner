@@ -45,6 +45,7 @@ from scrooner_pipeline.ai_query.aliases import (
     SECTOR_BUCKET_ALIASES,
 )
 from scrooner_pipeline.ai_query.interpreter import AmbiguityNote, InterpretationResult
+from scrooner_pipeline.ai_query.normalizer import normalize_query_text
 from scrooner_pipeline.screener.schema import CategoricalPredicate, MetricPredicate, PredicateGroup, ScreenQuery, RANKED_OPERATORS
 
 TOP_BOTTOM_RE = re.compile(r"^(top|bottom)\s+(\d+)\s+(?:by\s+)?(.+)$", re.IGNORECASE)
@@ -218,7 +219,84 @@ def _parse_clause(clause: str) -> tuple[MetricPredicate | None, CategoricalPredi
     return None, None, clause, None
 
 
+def _describe_predicate(p: MetricPredicate) -> str:
+    if p.operator == "between":
+        return f"{p.metric_name} between {p.value_range[0]} and {p.value_range[1]}"
+    return f"{p.metric_name} {p.operator} {p.value}"
+
+
+def _find_contradictory_group(metric_predicates: list[MetricPredicate]) -> list[MetricPredicate] | None:
+    """Detects an AND-combined set of comparison/between clauses on the SAME
+    metric whose intervals don't overlap -- e.g. "P/E below 10 and P/E above
+    20" (doc/scoping/46 Example D, CONTRADICTORY_FILTERS). Only ever called
+    for AND-combined predicates: an OR-combined "pe < 10 or pe > 20" is a
+    normal, satisfiable disjunction, never a contradiction, so this must
+    never run against an "or"-combined clause list.
+
+    Deliberately does not reason about "!=" -- excluding a single point from
+    an otherwise-open range has no natural "always empty" case, and doc 46's
+    own worked example only covers bounded comparisons/between. Leaving it
+    out means a real "roe != 0" style clause is never flagged, which is
+    correct (it's never actually contradictory on its own), not a gap.
+
+    Merges every clause for a metric into one running [lo, hi] interval
+    (inclusive flags tracked separately, since ">" and ">=" tighten
+    differently when their values happen to be equal) and reports the whole
+    group if the merged interval is empty -- lo > hi, or lo == hi with either
+    bound exclusive (an equal inclusive/inclusive bound, e.g. "roe >= 5 and
+    roe <= 5", is a real single-point range, not a contradiction)."""
+    by_metric: dict[str, list[MetricPredicate]] = {}
+    for p in metric_predicates:
+        if p.operator in ("=", "<", "<=", ">", ">=", "between"):
+            by_metric.setdefault(p.metric_name, []).append(p)
+
+    for group in by_metric.values():
+        if len(group) < 2:
+            continue
+        lo: Decimal | None = None
+        lo_inclusive = True
+        hi: Decimal | None = None
+        hi_inclusive = True
+        for p in group:
+            if p.operator == "between":
+                bounds = [(p.value_range[0], True, "lo"), (p.value_range[1], True, "hi")]
+            elif p.operator == "=":
+                bounds = [(p.value, True, "lo"), (p.value, True, "hi")]
+            elif p.operator in (">", ">="):
+                bounds = [(p.value, p.operator == ">=", "lo")]
+            else:
+                bounds = [(p.value, p.operator == "<=", "hi")]
+            for value, inclusive, bound in bounds:
+                if bound == "lo":
+                    if lo is None or value > lo:
+                        lo, lo_inclusive = value, inclusive
+                    elif value == lo:
+                        lo_inclusive = lo_inclusive and inclusive
+                else:
+                    if hi is None or value < hi:
+                        hi, hi_inclusive = value, inclusive
+                    elif value == hi:
+                        hi_inclusive = hi_inclusive and inclusive
+        if lo is not None and hi is not None:
+            if lo > hi or (lo == hi and not (lo_inclusive and hi_inclusive)):
+                return group
+    return None
+
+
 def interpret(text: str) -> InterpretationResult:
+    """Normalize safe spelling/forms, then use the bounded parser.
+
+    Keeping normalization outside `_interpret_normalized` makes every return
+    path carry the same correction provenance without weakening its existing
+    reject-on-ambiguity behavior.
+    """
+    normalized = normalize_query_text(text)
+    result = _interpret_normalized(normalized.text)
+    result.corrections.extend(normalized.corrections)
+    return result
+
+
+def _interpret_normalized(text: str) -> InterpretationResult:
     text = text.strip()
     if not text:
         return InterpretationResult(query=None, explanation="Empty query.", unrecognized=[""])
@@ -307,6 +385,16 @@ def interpret(text: str) -> InterpretationResult:
 
     if not metric_predicates and not categorical_predicates:
         return InterpretationResult(query=None, explanation="Nothing recognized in this query.", unrecognized=[text])
+
+    if combine_op == "and":
+        contradictory_group = _find_contradictory_group(metric_predicates)
+        if contradictory_group is not None:
+            described = " and ".join(_describe_predicate(p) for p in contradictory_group)
+            return InterpretationResult(
+                query=None,
+                explanation=f"Contradictory filter: no value can satisfy {described} at once.",
+                contradictions=[described],
+            )
 
     non_ranked_nodes: list[MetricPredicate | CategoricalPredicate] = [
         p for p in metric_predicates if p.operator not in RANKED_OPERATORS

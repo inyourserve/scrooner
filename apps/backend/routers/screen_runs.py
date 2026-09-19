@@ -2,6 +2,7 @@
 
 import base64
 import json
+from dataclasses import asdict
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
@@ -163,6 +164,7 @@ def create_run_from_query(
     user_id: str,
     page_size: int = 50,
     requested_run_id: UUID | None = None,
+    corrections: list[dict] | None = None,
 ) -> dict:
     query = _apply_default_display_metrics(_apply_default_sort(query))
     run_id_to_create = requested_run_id or uuid4()
@@ -172,7 +174,9 @@ def create_run_from_query(
         cached_run_id = get_cached_run_id(user_id, query_hash, text)
         if requested_run_id is None and cached_run_id is not None:
             try:
-                return _read_page(conn, cached_run_id, user_id, page_size, None)
+                cached_page = _read_page(conn, cached_run_id, user_id, page_size, None)
+                cached_page["corrections"] = corrections or []
+                return cached_page
             except HTTPException as error:
                 if error.status_code != 404:
                     raise
@@ -277,6 +281,7 @@ def create_run_from_query(
         "cursor": None,
         "previous_cursor": None,
         "ran_at": str(ran_at),
+        "corrections": corrections or [],
     }
     set_cached_run_id(user_id, query_hash, text, str(run_id))
     set_cached_run_page(user_id, str(run_id), page_size, None, page)
@@ -297,9 +302,17 @@ def create_screen_run(body: ScreenRunCreate, user_id: str = Depends(get_current_
                 {"phrase": item.phrase, "candidates": item.candidates}
                 for item in interpretation.ambiguous
             ],
+            "corrections": [asdict(correction) for correction in interpretation.corrections],
             "explanation": interpretation.explanation,
         }
-    return create_run_from_query(body.text.strip(), interpretation.query, user_id, body.page_size, body.run_id)
+    return create_run_from_query(
+        body.text.strip(),
+        interpretation.query,
+        user_id,
+        body.page_size,
+        body.run_id,
+        [asdict(correction) for correction in interpretation.corrections],
+    )
 
 
 @router.get("/screen-runs/{run_id}")
