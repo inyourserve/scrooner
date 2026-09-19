@@ -57,12 +57,31 @@ cur = conn.cursor()
 # script exists to catch up (confirmed live 2026-09-09: core.filing's own
 # max filing_date lagged raw's by ~1 week, and 2,660 active CIKs had a raw
 # filing in the last 10 days with zero core.filing awareness of it yet).
+#
+# form IN (10-K/10-K/A/10-Q/10-Q/A) -- added 2026-09-19, closing a real,
+# confirmed scoping bug: an unfiltered version pulled EVERY CIK with ANY
+# raw filing in the window (2,494 on 2026-09-18), but every stage this
+# script runs (Normalizer identity/periods/facts/derive-quarters, Mapper
+# resolve/calculate) only ever consumes companyfacts/XBRL data, which only
+# 10-K/10-Q filings carry -- Form 4/144/3/8-K (97% of that 2,494) file no
+# new XBRL fact at all and gained nothing from being reprocessed. Checked
+# live before narrowing: the same 10-day window has only 146 real 10-K/
+# 10-K/A/10-Q/10-Q/A filers, matching this script's own docstring
+# assumption ("usually a few hundred CIKs/day") that the unfiltered
+# version had silently broken.
+# Consequence of the unfiltered scope: "normalize identity" alone took 63
+# minutes for 2,494 CIKs, blowing the whole 90-minute job timeout before
+# ever reaching a Mapper stage -- meaning new quarterly filings had NOT
+# been reprocessed into core/analytics for 5+ consecutive days (2026-09-15
+# through 09-19, all "cancelled" on the job timeout annotation), which is
+# why the company page was showing recent quarters as blank cells.
 cur.execute('''
     select distinct d.cik
     from raw.sec_filing_documents d
     join core.company c on c.cik = d.cik
     where d.filing_date >= current_date - interval '${LOOKBACK_DAYS} days'
       and c.status = 'active'
+      and d.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
 ''')
 print(','.join(r[0] for r in cur.fetchall()))
 ")
