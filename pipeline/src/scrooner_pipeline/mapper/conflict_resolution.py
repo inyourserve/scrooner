@@ -82,6 +82,13 @@ CONFLICT_FILL_TARGETS: list[tuple[str, str]] = [
     ("cash_flow_financing", "cash_flow_financing_resolved"),
     ("dividends_paid", "dividends_paid_resolved"),
     ("share_buybacks", "share_buybacks_resolved"),
+    # Added 2026-09-15 alongside diluted_eps_resolved's split-aware
+    # handling below -- basic_eps and dividends_per_share are per-share
+    # figures subject to the identical stock-split conflict shape
+    # (a company's pre-split historical value legitimately disagrees with
+    # its own later, split-adjusted restatement of the same period).
+    ("basic_eps", "basic_eps_resolved"),
+    ("dividends_per_share", "dividends_per_share_resolved"),
 ]
 
 
@@ -235,7 +242,7 @@ def resolve_conflict_fill(conn: psycopg.Connection, primary_name: str, resolved_
 # reclassification), never a stock split, so the exact same ratio that's
 # safe evidence of "just a split" here would be dangerous evidence to
 # auto-resolve there.
-SPLIT_LIKE_CONCEPTS: tuple[str, ...] = ("diluted_eps",)
+SPLIT_LIKE_CONCEPTS: tuple[str, ...] = ("diluted_eps", "basic_eps", "dividends_per_share")
 MIN_SPLIT_RATIO = Decimal("1.5")
 MAX_SPLIT_RATIO = Decimal("20")
 
@@ -341,6 +348,33 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     # here rather than invented its own CLI step for one concept.
     per_concept["capex_software"] = {"rows": resolve_capex_with_software(conn)}
     per_concept["depreciation_and_amortization_max"] = {"rows": resolve_depreciation_and_amortization_max(conn)}
+
+    # Runs BEFORE the main loop, deliberately -- found live 2026-09-15
+    # verifying KLA Corp's own real, motivating case (its standalone Q1
+    # 2025 quarter, never restated in any later filing): running this
+    # AFTER resolve_baseline_passthrough (as an earlier version of this
+    # function did) meant baseline-passthrough had ALREADY copied every
+    # primary fact -- including the un-adjusted, pre-split original --
+    # into diluted_eps_resolved/basic_eps_resolved/dividends_per_share_
+    # resolved for every period lacking a resolved row, before this step
+    # ever ran. Its own `already_resolved` check then correctly (but
+    # unhelpfully) saw those periods as already resolved and skipped them
+    # -- a real bug, not a hypothetical: the first live run after building
+    # this returned adjusted=0 across all 3 concepts despite 1,120 real
+    # detected splits existing. Moving it here is safe in both directions:
+    # a period this step already resolved (this run or a prior one) is
+    # skipped by its own already_resolved check regardless of order; a
+    # period it can't adjust (no applicable split) is left for baseline-
+    # passthrough/conflict-fill/split-like-conflicts to handle exactly as
+    # before, via their own ON CONFLICT DO NOTHING.
+    from scrooner_pipeline.corporate_actions.stock_splits import detect_stock_splits, resolve_retroactive_split_adjustments
+
+    split_detect_stats = detect_stock_splits(conn)
+    per_concept["stock_splits_detected"] = split_detect_stats
+    retroactive_stats = resolve_retroactive_split_adjustments(conn)
+    per_concept["stock_splits_retroactive_adjustment"] = retroactive_stats
+    totals["retroactive_split_adjustments"] = retroactive_stats.get("adjusted", 0)
+
     for primary_name, resolved_name in CONFLICT_FILL_TARGETS:
         baseline_count = 0
         if resolved_name not in _HAS_OWN_POPULATE_STEP:
@@ -358,6 +392,7 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     oi_arithmetic = resolve_operating_income_arithmetic_fallback(conn)
     per_concept["operating_income_arithmetic"] = oi_arithmetic
     totals["operating_income_arithmetic_filled"] = oi_arithmetic.get("inserted", 0)
+
     logger.info("conflict_resolution.all_done", **totals)
     return {"totals": totals, "per_concept": per_concept}
 
