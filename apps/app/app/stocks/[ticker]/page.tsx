@@ -192,7 +192,7 @@ export default async function StockPage({ params }: Props) {
   const about = company.about_text?.replace(/^\s*company background\s*[:—-]?\s*/i, "").trim();
 
   return <div className="public-site stock-page">
-    <PublicHeader current="company" companyHref={`/stocks/${ticker}`} skipHref="#company-content" />
+    <PublicHeader current="company" skipHref="#company-content" />
     <StockSectionNav sections={stockPageSections} />
 
     <main className="stock-page__main" id="company-content">

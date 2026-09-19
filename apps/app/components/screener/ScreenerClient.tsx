@@ -21,7 +21,7 @@ import type {
   ScreenQueryPayload,
   ScreenResult,
 } from "@/lib/screener/types";
-import { collectMetricNames } from "@/lib/screener/types";
+import { collectMetricNames, DEFAULT_COMPARISON_METRICS } from "@/lib/screener/types";
 import { NaturalQueryPanel } from "./NaturalQueryPanel";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
@@ -158,6 +158,7 @@ export function ScreenerClient({
   // go through the exact same load path below instead of three different
   // ones that could disagree with each other.
   const loadedRunKey = useRef<string | null>(null);
+  const upgradedLegacyRuns = useRef(new Set<string>());
   const [metrics, setMetrics] = useState<MetricDefinition[]>(initialMetrics);
   const [catalogState, setCatalogState] = useState<RequestState>(initialMetrics.length > 0 ? "success" : "loading");
   const [catalogError, setCatalogError] = useState("");
@@ -413,6 +414,29 @@ export function ScreenerClient({
     router.push(runUrl(run, 1, null, pageSize));
   }
 
+  useEffect(() => {
+    if (!resultsFirst || !runPage || !interpretedFrom || requestState !== "success") return;
+    if ((runPage.normalized_query.display_metrics?.length ?? 0) > 1) return;
+    if (upgradedLegacyRuns.current.has(runPage.run_id)) return;
+    upgradedLegacyRuns.current.add(runPage.run_id);
+    const upgradedQuery: ScreenQueryPayload = {
+      ...runPage.normalized_query,
+      display_metrics: [...DEFAULT_COMPARISON_METRICS],
+      sort_by: "market_cap",
+      sort_desc: true,
+    };
+    setRequestState("loading");
+    void savedScreensApi.createRunFromQuery(interpretedFrom, upgradedQuery, pageSize)
+      .then(handleRunCreated)
+      .catch((error: unknown) => {
+        setRequestError(error instanceof Error ? error.message : "The comparison columns could not be loaded.");
+        setRequestState("error");
+      });
+    // handleRunCreated intentionally stays out: this compatibility upgrade is
+    // keyed by the immutable run id and must not restart on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultsFirst, runPage, interpretedFrom, requestState, pageSize]);
+
   function runUrl(page: ScreenRunPage, number: number, cursor: string | null, size: number) {
     const params = new URLSearchParams({
       query: page.query_text,
@@ -570,6 +594,7 @@ export function ScreenerClient({
               <div>
                 <h2 ref={resultsTitleRef} id="results-title" tabIndex={-1}>Query results</h2>
                 {requestState === "success" && result && <p className="results-source-query"><strong>{runPage?.total_count ?? result.matched.length}</strong> results found · Showing page {pageNumber} of {Math.max(1, Math.ceil((runPage?.total_count ?? result.matched.length) / pageSize))}{interpretedFrom && <span className="results-query-context">From “{interpretedFrom}”</span>}</p>}
+                {requestState === "success" && runPage?.corrections && runPage.corrections.length > 0 && <p className="query-corrections" role="status"><strong>Corrected:</strong> {runPage.corrections.map((correction) => `“${correction.source_text}” → “${correction.corrected_text}”`).join(" · ")}</p>}
               </div>
               {requestState === "success" && lastQuery && <SaveScreenButton query={lastQuery} runId={runPage?.run_id} />}
             </div>
@@ -640,9 +665,8 @@ export function ScreenerClient({
                       {showClassification && <th scope="col">Industry</th>}
                       {visibleMetricNames.map((metricName) => {
                         const active = lastQuery?.sort_by === metricName;
-                        return <th scope="col" key={metricName}><button className="metric-sort-button" type="button" onClick={() => void sortResults(metricName)} aria-label={`Sort by ${metricByName(metrics, metricName)?.display_name ?? metricName}, ${active && lastQuery?.sort_desc ? "ascending" : "descending"}`}>{metricByName(metrics, metricName)?.display_name ?? metricName}{active && <span aria-hidden="true"> {lastQuery?.sort_desc ? "↓" : "↑"}</span>}</button></th>;
+                        return <th className="results-metric-heading" scope="col" key={metricName} aria-sort={active ? (lastQuery?.sort_desc ? "descending" : "ascending") : undefined}><button className="metric-sort-button" type="button" onClick={() => void sortResults(metricName)} aria-label={`Sort by ${metricByName(metrics, metricName)?.display_name ?? metricName}`}>{metricByName(metrics, metricName)?.display_name ?? metricName}{active && <span aria-hidden="true"> {lastQuery?.sort_desc ? "↓" : "↑"}</span>}</button></th>;
                       })}
-                      <th scope="col"><span className="sr-only">Actions</span></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -658,12 +682,11 @@ export function ScreenerClient({
                           const value = company.metrics[metricName];
                           const definition = metricByName(metrics, metricName);
                           return (
-                            <td key={metricName}>
+                            <td className="results-metric-cell" key={metricName}>
                               {value ? <><span className="metric-value" title={`Exact value: ${value.value}`}>{formatMetricValue(value.value, definition)}</span><small>{metricPeriod(value)} · v{value.formula_version}</small></> : <><span className="metric-value missing" aria-label="Not available">—</span><small>Not available</small></>}
                             </td>
                           );
                         })}
-                        <td>{company.ticker && <a className="row-action" href={`${siteUrl}/stocks/${company.ticker.toLowerCase()}/`}>View company<span aria-hidden="true"> →</span></a>}</td>
                       </tr>
                     ))}
                   </tbody>

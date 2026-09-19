@@ -1435,7 +1435,7 @@ export async function getIndustryList(): Promise<IndustrySummaryRow[]> {
     select c.y_industry, count(distinct c.id)::text as company_count
     from core.company c
     join core.listing l on l.company_id = c.id and l.effective_to is null
-    where c.status = 'active' and c.y_industry is not null
+    where c.status = 'active' and c.y_industry is not null and c.y_industry != ''
     group by c.y_industry
     order by c.y_industry
   `;

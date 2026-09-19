@@ -166,7 +166,94 @@ exact latent bug; only one had actually failed visibly so far.
 
 ---
 
+## 10. Two valid authoring patterns, both token-driven — don't force a rewrite just to unify syntax
+
+Most pages compose semantic, BEM-ish classes (`.workspace-page`, `.public-nav`,
+`.saved-screen-detail__header`) that resolve entirely through `--ds-*`
+tokens — this is the original, dominant pattern (`app/company-research.css`,
+`app/public-theme.css`, every CSS module under `components/`). Tailwind
+utility classes directly in JSX plus the `Card`/`Button`/`Badge` primitives
+are the other valid option (used briefly by the dashboard on 2026-09-19,
+before it moved back to the BEM pattern the next day as part of #12's IA
+fix — not because Tailwind-in-JSX was wrong, the dashboard just needed
+different *content*, and it happened to get rewritten in the dominant
+pattern that pass) — both resolve through the exact same tokens via
+`globals.css`'s `@theme inline` block, so neither is "more correct" or "raw/
+un-tokenized." Don't treat a page's choice of BEM-class vs. Tailwind-utility
+authoring as a consistency bug on its own — the actual bar (semantic-token
+values, boring buttons, tabular numbers, border>shadow, restrained radius)
+is what `doc/design/shadcn-system.md` prescribes. New pages are free to use
+either pattern; match whichever the page they extend already uses rather
+than converting for its own sake.
+
+## 11. Verify mobile with real device-metrics emulation, not `--window-size` alone
+
+Confirmed again 2026-09-19: a plain `--headless --window-size=390,900`
+screenshot does NOT reflow the page at that width in this Chrome build — it
+renders desktop layout and crops/scales it, producing a false-positive
+"content is cut off past the right edge" bug that doesn't exist at a real
+390px viewport. Use CDP device-metrics emulation instead (open a target via
+`PUT /json/new?<url>` on a `--remote-debugging-port`, connect its
+`webSocketDebuggerUrl`, call `Emulation.setDeviceMetricsOverride({width,
+height, deviceScaleFactor: 2, mobile: true})` before `Page.captureScreenshot`)
+— see rule 8 above for the desktop screenshot command this supplements, not
+replaces.
+
+## 12. Every `/app` page has one job — don't reuse another page's component to fake progress on it
+
+Each authenticated page has a distinct, non-overlapping intent. Before adding
+content to one, name which of these it is — content that belongs to a
+different intent goes on that page, not copied onto this one:
+
+| Page | Intent | Must never contain |
+|---|---|---|
+| `/app` (Dashboard) | The signed-in visitor's home base: a way back to research they already saved, plus two doors to the other two tools. | A query composer. It is not a smaller Create Screen page. |
+| `/app/screens/new` (Create screen) | The one real interpret-and-run flow (`NaturalQueryPanel`). | A second, independent copy of this flow anywhere else — always prefill-and-redirect into this page (`?q=...&run=1`) instead of re-implementing the request. |
+| `/app/screens` (Saved screens) | Manage (rename/delete/rerun) screens already saved. | A creation flow — it lists and acts on existing screens only. |
+| `/explore` (public) | The entry point to *discovery*: popular screens, sectors, industries — "what could I look at" before you know what you want. | Personal/account data (saved screens, activity) — that's Dashboard's job, and this page is public/unauthenticated. |
+| `/stocks` (public) | The full A-Z company directory — "I know roughly what I want to find, let me scan for it." Distinct from `/explore`: a flat list, not a curated browse surface. | Curated/grouped content (popular screens, sector cards) — that's `/explore`'s job. |
+
+This table exists because the Dashboard was rebuilt 2026-09-20 to directly
+embed a shrunk copy of the Create Screen page's own search card (serif
+textarea, examples, the works) — it read as "the same feature wearing
+different clothes" rather than two different tools, and using the exact
+same visual language for two different intents will always read that way to
+a user, regardless of how clean either page is in isolation. Fixed by
+giving Dashboard its own distinct content (recent activity + two compact
+links out), and by splitting what used to be one page into two real ones:
+`/explore` (curated discovery — popular screens, sector/industry cards) and
+`/stocks` (the plain full directory, upgraded from a bare unstyled `<ul>` to
+a real A-Z-jump-nav'd list of all ~6,000 covered companies). Before adding a
+new authenticated or discovery-adjacent page, add a row to this table first
+— if its intent already matches an existing row, it probably shouldn't be a
+new page.
+
 ## Postmortems (append here, most recent first)
+
+### 2026-09-19 — Finished the app-shell top-nav migration, cleaned up the CSS it orphaned
+
+A prior pass this session had already converted `AppShell`/`AppNavigation`
+from a left-sidebar workspace layout to a horizontal top-nav (matching the
+public site's own header shape), added a real `Card` primitive
+(`components/ui/Card.tsx`), unified the public/app sign-in control into one
+`HeaderAuthAction`, and rewritten the dashboard (`app/app/page.tsx`) on
+Tailwind utilities + `Card`/`Button`/`Badge` — all uncommitted, mid-flight.
+Verified it end-to-end (`tsc`, full Vitest suite, `next build --webpack`,
+real screenshots at desktop and true mobile widths across home/pricing/
+login/stock/methodology/about/design-system) rather than assuming it still
+worked after a context reset. Found and removed the one real leftover: the
+dashboard rewrite orphaned six CSS rules in `app/app/workspace.css`
+(`.workspace-hero`, `.workspace-section`, `.workspace-section__heading`,
+`.workspace-action-grid`, `.workspace-action*`, `.workspace-note`) that no
+`.tsx` file referenced anymore — removed them and their mobile media-query
+overrides, keeping `.workspace-page`/`.workspace-eyebrow`/`.workspace-content`/
+`.workspace-empty`/`.workspace-loading`, which `app/app/error.tsx`,
+`app/app/loading.tsx`, and the watchlists/alerts placeholder pages still use.
+No visual regression found in the parts already migrated; see rule 10 above
+for why the rest of the app's different (but equally token-driven) CSS
+authoring style is not itself a bug to fix.
+
+
 
 ### 2026-09-06 — A generic `<a>` color rule silently hijacked `.ds-button`'s text color, making a primary button's text invisible
 
