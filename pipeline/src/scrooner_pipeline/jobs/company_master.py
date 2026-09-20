@@ -16,7 +16,7 @@ from scrooner_pipeline.company_master.history import update_history
 from scrooner_pipeline.company_master.status import update_status
 from scrooner_pipeline.company_master.market_price import load_mock_prices
 from scrooner_pipeline.company_master.market_price_alpaca import update_market_price
-from scrooner_pipeline.company_master.security_type import resolve_primary_tickers, update_security_types
+from scrooner_pipeline.company_master.security_type import persist_primary_tickers, resolve_primary_tickers, update_security_types
 from scrooner_pipeline.company_master.shares_outstanding_fallback import update_shares_outstanding_fallback
 from scrooner_pipeline.company_master.universe import build_current_universe
 from scrooner_pipeline.company_master.yfinance_industry import update_yfinance_industry
@@ -223,6 +223,33 @@ def update_security_types_cmd(
     with get_connection() as conn:
         stats = update_security_types(conn, target_ciks, force=force)
     typer.echo(f"update-security-types: {stats}")
+
+
+@app.command("update-primary-ticker")
+def update_primary_ticker_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    all_active: bool = typer.Option(
+        False, "--all-active", help="Target every active company, not just --ciks/golden set."
+    ),
+) -> None:
+    """Persists resolve_primary_tickers()'s output onto core.company
+    (migration 0069: primary_ticker/primary_ticker_status/
+    primary_ticker_updated_at) -- a real, queryable "does this company
+    have a ticker" marker instead of every consumer recomputing the same
+    core.listing query. Pure local computation (no external fetch), so
+    always run this AFTER update-security-types in the same pass -- a
+    stale run here just reflects yesterday's classification state, same
+    as concept_fallback.py's own "run right after resolve-facts"
+    ordering dependency."""
+    with get_connection() as conn:
+        if all_active:
+            with conn.cursor() as cur:
+                cur.execute("select cik from core.company where status = 'active'")
+                target_ciks = {row[0] for row in cur.fetchall()}
+        else:
+            target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+        stats = persist_primary_tickers(conn, target_ciks)
+    typer.echo(f"update-primary-ticker: {stats}")
 
 
 @app.command("update-shares-outstanding-fallback")

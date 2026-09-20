@@ -25,6 +25,7 @@ actually needs. `PRIMARY_SECURITY_TYPES` includes both.
 """
 
 import time
+from datetime import datetime, timezone
 
 import httpx
 import psycopg
@@ -243,3 +244,33 @@ def resolve_primary_tickers(
             if len(all_active) == 1:
                 resolved[cik] = all_active[0]
     return resolved
+
+
+def persist_primary_tickers(conn: psycopg.Connection, ciks: set[str]) -> dict:
+    """Writes resolve_primary_tickers()'s output directly onto
+    core.company (migration 0069), added 2026-09-20 by direct user
+    request: a persisted, queryable "does this company have a ticker"
+    marker, instead of every consumer (sanity/yfinance_check.py,
+    yfinance_financials/fetch.py, yfinance_industry.py) independently
+    recomputing the same core.listing query on every single run.
+    `primary_ticker IS NOT NULL` is the boolean the user asked for --
+    `primary_ticker_status` carries strictly more information (WHY a
+    company has none, mirroring y_industry_status's ok/not_found
+    convention) than a bare boolean would, so no separate column."""
+    resolved = resolve_primary_tickers(conn, ciks)
+    now = datetime.now(timezone.utc)
+    rows = [
+        {"cik": cik, "ticker": resolved.get(cik), "status": "resolved" if cik in resolved else "no_ticker", "now": now}
+        for cik in ciks
+    ]
+    with conn.cursor() as cur:
+        cur.executemany(
+            """
+            update core.company
+               set primary_ticker = %(ticker)s, primary_ticker_status = %(status)s, primary_ticker_updated_at = %(now)s
+             where cik = %(cik)s
+            """,
+            rows,
+        )
+    conn.commit()
+    return {"considered": len(ciks), "resolved": len(resolved), "no_ticker": len(ciks) - len(resolved)}

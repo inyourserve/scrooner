@@ -67,22 +67,40 @@ jobs:
         # scheduled cron -- it only ran once, manually, on 2026-08-06.
         # Found live investigating a direct report that "lots of
         # companies don't have a ticker" in the daily sanity/yfinance-
-        # financials logs: real operating companies (Webster Financial,
-        # Athene Holding, Equitable Holdings, CHS Inc, Triton
-        # International, Liberty Broadband, Aspen Insurance among them)
-        # sat permanently unresolvable simply because they'd gained a
-        # second listing (a new preferred-share/warrant registration,
-        # a SPAC merger completing) since the one-time run and nothing
-        # ever reclassified them. Cheap and safe to run daily: scoped to
-        # only companies with NO currently-resolvable primary listing
-        # (~50, not the ~900 multi-listing companies overall -- see the
-        # script's own docstring for the earlier, over-broad version this
-        # replaced), ~8 minutes at OpenFIGI's real rate limit. First run
-        # cut the stuck population from 60 to 35 companies; the remaining
-        # ones are mostly SPAC shells OpenFIGI genuinely has no ticker
-        # for, not a mapping bug.
+        # financials logs: real operating companies (Equitable Holdings,
+        # Triton International among them) sat permanently unresolvable
+        # simply because they'd gained a second listing (a new preferred-
+        # share/warrant registration, a SPAC merger completing) since the
+        # one-time run and nothing ever reclassified them. Cheap and safe
+        # to run daily: scoped to only companies with NO currently-
+        # resolvable primary listing (~50, not the ~900 multi-listing
+        # companies overall -- see the script's own docstring for the
+        # earlier, over-broad version this replaced), ~8 minutes at
+        # OpenFIGI's real rate limit. First run cut the stuck population
+        # from 60 to 35 companies; most of the remainder are SPAC shells/
+        # trusts/wholly-owned subsidiaries genuinely without a common
+        # stock ticker, plus a handful (Webster Financial, CHS Inc,
+        # Liberty Broadband, Aspen Insurance) where OpenFIGI's free-tier
+        # ticker search itself has no match under any US exchange code --
+        # confirmed live (AAPL resolves fine, WBS returns "No identifier
+        # found" under exchCode=US/UN/UQ/UA/UW/UD/UF/UV and micCode=XNYS
+        # alike) -- a real third-party data-coverage gap, not something
+        # rerunning this job fixes.
         if: always()
         run: pipeline/scripts/classify_multi_listing_companies.sh
+      - name: Persist primary_ticker onto core.company
+        # Added 2026-09-20, direct user request: a real, queryable
+        # "does this company have a ticker" marker on core.company itself
+        # (migration 0069: primary_ticker/primary_ticker_status), instead
+        # of every consumer (sanity/yfinance_check.py, yfinance_financials/
+        # fetch.py, yfinance_industry.py) independently recomputing the
+        # same core.listing query on every single run. Pure local
+        # computation (no external fetch, ~9s for the full active
+        # population) -- always runs right after the OpenFIGI
+        # classification step above so it reflects today's freshly-
+        # classified state, not yesterday's.
+        if: always()
+        run: uv run --project pipeline scrooner-company-master update-primary-ticker --all-active
       - name: Refresh real market prices (Alpaca)
         # Added 2026-09-08 -- doc 25's own docstring had flagged this as
         # "no scheduler wired up yet" since 2026-08-17. core.market_price_
