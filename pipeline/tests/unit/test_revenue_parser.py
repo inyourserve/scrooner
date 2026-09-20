@@ -1,6 +1,11 @@
 import pytest
 
-from scrooner_pipeline.parsers.revenue_parser import _extract_revenue_row, _parse_period_end
+from scrooner_pipeline.parsers.revenue_parser import (
+    INCOME_STATEMENT_TITLE_PATTERN,
+    _detect_scale,
+    _extract_revenue_row,
+    _parse_period_end,
+)
 
 # Real markup shape, trimmed to the essentials -- modeled on MSP
 # Recovery's actual rendered R4.htm (accession 0001193125-25-288180),
@@ -101,6 +106,59 @@ _LOANDEPOT_HTML = """
 <tr><td>Personnel expense</td><td>180,729</td><td>154,116</td></tr>
 </table>
 """
+
+
+# APA Corp-shaped, real (2026-09-20): "STATEMENT OF CONSOLIDATED
+# OPERATIONS" -- "consolidated" AFTER "of", the word-order variant that
+# originally made find_income_statement_report() return None for a real,
+# well-formed report. Top-line label is "Total revenues and other" (APA's
+# own presentation folds derivative gains/losses and divestiture gains
+# into the same total), and the title states "$ in Millions" -- a raw
+# cell value here is off by 1,000,000x unless scaled.
+_APA_CORP_HTML = """
+<table>
+<tr><td>STATEMENT OF CONSOLIDATED OPERATIONS (Unaudited) - USD ($) shares in Millions, $ in Millions</td><td>3 Months Ended</td><td>6 Months Ended</td></tr>
+<tr><td>Jun. 30, 2026</td><td>Jun. 30, 2025</td><td>Jun. 30, 2026</td><td>Jun. 30, 2025</td></tr>
+<tr><td>REVENUES AND OTHER:</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>Derivative instrument gains (losses), net</td><td>$ 8</td><td>$ 138</td><td>$ (105)</td><td>$ 110</td></tr>
+<tr><td>Gain (loss) on divestitures, net</td><td>(2)</td><td>282</td><td>4</td><td>282</td></tr>
+<tr><td>Other, net</td><td>20</td><td>14</td><td>36</td><td>28</td></tr>
+<tr><td>Total revenues and other</td><td>2,399</td><td>2,612</td><td>4,865</td><td>5,120</td></tr>
+<tr><td>OPERATING EXPENSES:</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+<tr><td>Lease operating expenses</td><td>353</td><td>367</td><td>701</td><td>734</td></tr>
+</table>
+"""
+
+
+@pytest.mark.unit
+def test_apa_corp_total_revenues_and_other_scaled_from_millions():
+    result = _extract_revenue_row(_APA_CORP_HTML)
+    assert result == {"value": "2399000000", "period_end": "2026-06-30"}
+
+
+@pytest.mark.unit
+def test_income_statement_title_pattern_matches_consolidated_after_of():
+    assert INCOME_STATEMENT_TITLE_PATTERN.search("STATEMENT OF CONSOLIDATED OPERATIONS (Unaudited)")
+    assert INCOME_STATEMENT_TITLE_PATTERN.search("Consolidated Statements of Operations")
+    # Must NOT match a different, real report that happens to share
+    # "consolidated" + "income" vocabulary -- comprehensive income is not
+    # the primary income statement.
+    assert not INCOME_STATEMENT_TITLE_PATTERN.search("STATEMENT OF CONSOLIDATED COMPREHENSIVE INCOME (Unaudited)")
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "title,expected",
+    [
+        ("... USD ($) $ in Millions", 1_000_000),
+        ("... USD ($) $ in Thousands", 1_000),
+        ("... USD ($) $ in Billions", 1_000_000_000),
+        ("Condensed Consolidated Statements of Operations", 1),
+        ("", 1),
+    ],
+)
+def test_detect_scale(title, expected):
+    assert _detect_scale(title) == expected
 
 
 @pytest.mark.unit

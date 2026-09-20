@@ -58,6 +58,7 @@ match, since by definition the target tag is unknown in advance)."""
 
 import re
 from datetime import datetime
+from decimal import Decimal
 
 import psycopg
 import structlog
@@ -78,8 +79,27 @@ logger = structlog.get_logger()
 # segment_revenue.py's own SEGMENT_TITLE_PATTERN, which targets the
 # segment-BREAKDOWN detail report, not the primary statement. Checked
 # live across 6 real companies before finalizing (see module docstring).
+#
+# The second `(consolidated\s+)?` (added 2026-09-20) matches a real,
+# different word order some filers use: APA Corp titles its real
+# primary income statement "STATEMENT OF CONSOLIDATED OPERATIONS" --
+# "consolidated" AFTER "of", not before "statement" -- which the
+# original pattern (only allowing "consolidated" in the first position)
+# never matched, so find_income_statement_report() silently returned
+# None for APA Corp despite a real, well-formed report existing. Found
+# live chasing a real critical Data Sanity Layer finding (APA Corp
+# showing $0 revenue vs. yfinance's real $8.57B) -- confirmed via SEC's
+# own companyfacts API that APA Corp's structured XBRL genuinely has no
+# usable plain-revenue tag at all (only 4 stray $0 facts under
+# RevenueFromContractWithCustomerIncludingAssessedTax and an unrelated
+# BusinessAcquisitionsProFormaRevenue disclosure), so this parser is the
+# only path that can find its real number. Checked before widening: does
+# NOT accidentally match "STATEMENT OF CONSOLIDATED COMPREHENSIVE
+# INCOME" (a real, different report APA Corp also has) -- the word
+# "comprehensive" sits between "consolidated" and "income", breaking
+# the \b(operations|income) requirement right after the optional group.
 INCOME_STATEMENT_TITLE_PATTERN = re.compile(
-    r"(condensed\s+)?(consolidated\s+)?statements?\s+of\s+(operations|income)\b",
+    r"(condensed\s+)?(consolidated\s+)?statements?\s+of\s+(consolidated\s+)?(operations|income)\b",
     re.IGNORECASE,
 )
 # A report titled "... (Parenthetical)" is a companion disclosure table
@@ -100,9 +120,19 @@ PARENTHETICAL_SUFFIX_PATTERN = re.compile(r"\(parenthetical\)\s*$", re.IGNORECAS
 # never this parser, so this pattern intentionally excludes the word
 # "investment" to avoid re-capturing that population here).
 REVENUE_LABEL_PATTERN = re.compile(
-    r"^(total\s+)?(net\s+)?(revenues?|sales|claims?\s+recover(y|ies)(\s+income)?)$",
+    r"^(total\s+)?(net\s+)?(revenues?|sales|claims?\s+recover(y|ies)(\s+income)?)(\s+and\s+other)?$",
     re.IGNORECASE,
 )
+# "(\s+and\s+other)?" added 2026-09-20 for APA Corp's real top-line label,
+# "Total revenues and other" -- its own chosen presentation folds a few
+# non-operating line items (derivative gains/losses, divestiture gains,
+# "Other, net") into the same top-line total alongside real revenue,
+# the same "accept the company's own designated top-line total" precedent
+# this pattern already applies to "Total Claims Recovery" (MSP Recovery)
+# and bank/BDC-style non-standard revenue presentations. Does not match
+# the section HEADER row "REVENUES AND OTHER:" (no "total"/"net" prefix
+# required, but the trailing colon breaks the `$` anchor -- confirmed
+# live against APA Corp's real rendered table).
 # A row containing "total" AND the revenue keyword is preferred over a
 # bare component row with the same keyword (MSP Recovery: "Total
 # Revenues" over "Claims recovery income" -- both match
@@ -141,6 +171,29 @@ NET_INCOME_PATTERN = re.compile(
     r"^net\s+(income|loss|earnings)(\s*\(loss\)|\s*\(income\))?(\s+before\s+(income\s+)?tax(es)?)?:?$",
     re.IGNORECASE,
 )
+
+# Unit-scale detection -- added 2026-09-20, closing a real, serious gap
+# found live building the APA Corp fix: this module (and segment_revenue.py,
+# whose _CELL/_ROW/_parse_value helpers it reuses) had NO scale handling
+# at all -- every rendered SEC report's own title row states its scale
+# explicitly ("... - USD ($) shares in Millions, $ in Millions" for APA
+# Corp's real report), and a raw, unscaled cell value ("2399") is off by
+# a factor of 1,000-1,000,000x from the real dollar figure it represents
+# ($2,399,000,000) if never multiplied by that stated scale. Caught here
+# before this parser's output ever reached anything user-facing --
+# analytics.concept_parser_result currently has zero readers, so no wrong
+# value had shipped -- but would have been a serious, silent correctness
+# bug the moment this module's results were wired into the display layer.
+_SCALE_PATTERN = re.compile(r"\$?\s*in\s+(thousands|millions|billions)", re.IGNORECASE)
+_SCALE_MULTIPLIERS = {"thousands": Decimal(1_000), "millions": Decimal(1_000_000), "billions": Decimal(1_000_000_000)}
+
+
+def _detect_scale(title_text: str) -> Decimal:
+    """Returns the dollar multiplier implied by a report's own title
+    text, or 1 (raw dollars) if no scale qualifier is present -- never
+    guesses a scale that isn't explicitly stated."""
+    match = _SCALE_PATTERN.search(title_text or "")
+    return _SCALE_MULTIPLIERS[match.group(1).lower()] if match else Decimal(1)
 
 
 def find_income_statement_report(client: SECClient, cik: str) -> dict | None:
@@ -194,6 +247,11 @@ def _extract_revenue_row(html: str) -> str | None:
     rows = _ROW.findall(html)
     if len(rows) < 2:
         return None
+    # Row 0's own first cell carries the report's title AND its stated
+    # dollar scale in the same text (e.g. "... $ in Millions") -- see
+    # _detect_scale()'s own docstring for why this is checked at all.
+    title_cells = _CELL.findall(rows[0][1])
+    scale = _detect_scale(_cell_text(title_cells[0])) if title_cells else Decimal(1)
     # Row 1 is the date-header row (row 0 groups by period TYPE, e.g.
     # "3 Months Ended" spanning N columns) -- same layout
     # segment_revenue.py's own parse_segment_report already established
@@ -255,7 +313,8 @@ def _extract_revenue_row(html: str) -> str | None:
 
     if best_value is None:
         return None
-    return {"value": best_value, "period_end": best_period_end}
+    scaled_value = str(Decimal(best_value) * scale)
+    return {"value": scaled_value, "period_end": best_period_end}
 
 
 def _parse_revenue_with_outcome(client: SECClient, cik: str) -> tuple[str, dict | None]:
@@ -299,11 +358,20 @@ CONCEPT_NAME = "revenue"
 
 def find_gap_companies(conn: psycopg.Connection, ciks: set[str] | None = None) -> list[tuple[int, str]]:
     """The real candidate population -- active companies genuinely
-    missing `revenue` in analytics.canonical_fact AND not already
-    attempted by this parser before (the efficiency this registry
-    exists for: a rerun only ever looks at companies this parser has
-    never tried, never re-fetches a filing it already read). Returns
-    (company_id, cik) pairs. Read-only."""
+    missing `revenue` in analytics.canonical_fact, OR flagged with an
+    open critical revenue_zero_check sanity finding (added 2026-09-20:
+    a company can already HAVE a canonical_fact row for `revenue` that's
+    still wrong -- APA Corp's real case, a stray authoritative $0 fact --
+    which the original "zero facts at all" condition alone silently
+    excluded from ever being retried, even though this parser is exactly
+    the mechanism that can find its real value). The critical-finding
+    condition is deliberately narrow: only companies an INDEPENDENT
+    yfinance cross-check has already flagged as materially wrong, never
+    a blanket "reparse everyone with a small value" rule. Also excludes
+    companies not already attempted by this parser before (the
+    efficiency this registry exists for: a rerun only ever looks at
+    companies this parser has never tried, never re-fetches a filing it
+    already read). Returns (company_id, cik) pairs. Read-only."""
     with conn.cursor() as cur:
         cik_filter = "and c.cik = any(%s)" if ciks else ""
         params: tuple = (sorted(ciks),) if ciks else ()
@@ -312,10 +380,16 @@ def find_gap_companies(conn: psycopg.Connection, ciks: set[str] | None = None) -
             select c.id, c.cik
             from core.company c
             where c.status = 'active'
-              and not exists (
-                  select 1 from analytics.canonical_fact cf
-                  join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
-                  where cf.company_id = c.id and cc.name = %s
+              and (
+                  not exists (
+                      select 1 from analytics.canonical_fact cf
+                      join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+                      where cf.company_id = c.id and cc.name = %s
+                  )
+                  or exists (
+                      select 1 from analytics.data_sanity_check dsc
+                      where dsc.company_id = c.id and dsc.metric_name = 'revenue_zero_check' and dsc.severity = 'critical'
+                  )
               )
               and not exists (
                   select 1 from analytics.concept_parser_attempt cpa

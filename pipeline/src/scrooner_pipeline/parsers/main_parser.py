@@ -44,6 +44,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.parsers import revenue_parser
+from scrooner_pipeline.sanity.tag_investigator import FIXABLE_CONCEPTS
 
 logger = structlog.get_logger()
 
@@ -87,3 +88,79 @@ def registry_summary(conn: psycopg.Connection) -> list[dict]:
         )
         columns = ["concept_name", "parser_name", "matched", "no_report", "no_row_matched", "errored", "total_attempted"]
         return [dict(zip(columns, row)) for row in cur.fetchall()]
+
+
+def resolve_parser_results(conn: psycopg.Connection, concept_name: str) -> dict:
+    """Merges analytics.concept_parser_result into the concept's own
+    `*_sanity_resolved` display concept (FIXABLE_CONCEPTS, the same
+    dict sanity/tag_investigator.py uses) -- added 2026-09-20, closing a
+    real gap found live: concept_parser_result had ZERO readers since
+    Parser 3 was built 2026-09-05, so a real value this parser found
+    (APA Corp's real revenue, once the title-pattern/label/scale fixes
+    landed) would have sat in that table forever, invisible to the
+    company page, screener, or any metric calculation. Only overwrites
+    the ONE period a parser result exists for -- never touches a
+    company's other periods, which still come from resolve()/
+    concept_fallback.py/tag preferences exactly as before.
+
+    Period matching: concept_parser_result stores only `period_end`
+    (the rendered report has no structured period_id to attach to), and
+    a real company can have SEVERAL duration periods sharing the same
+    end_date (a 10-Q's "3 Months Ended"/"6 Months Ended" columns both
+    ending the filing's quarter-end -- confirmed live, APA Corp has
+    both for 2026-06-30). The parser always extracts its value from the
+    report's FIRST data column, which is consistently the shortest/most
+    recent span in every real report checked -- so among duration
+    periods sharing that end_date, the one with the LATEST start_date
+    (shortest span) is the correct match, never the cumulative YTD one.
+
+    source_fact_ids is intentionally empty for these rows (no core.fact
+    row underlies a rendered-table extraction) -- full provenance
+    (source_form/accession/report) lives in concept_parser_result
+    itself, joinable by (company_id, canonical_concept_id)."""
+    if concept_name not in FIXABLE_CONCEPTS:
+        raise ValueError(f"{concept_name!r} has no *_sanity_resolved companion in FIXABLE_CONCEPTS")
+    resolved_concept_name = FIXABLE_CONCEPTS[concept_name]
+
+    with conn.cursor() as cur:
+        cur.execute("select id from analytics.canonical_concept where name = %s", (concept_name,))
+        primary_id = cur.fetchone()[0]
+        cur.execute("select id from analytics.canonical_concept where name = %s", (resolved_concept_name,))
+        resolved_id = cur.fetchone()[0]
+
+        cur.execute(
+            "select company_id, value, period_end from analytics.concept_parser_result where canonical_concept_id = %s",
+            (primary_id,),
+        )
+        parser_results = cur.fetchall()
+
+        stats = {"considered": len(parser_results), "applied": 0, "no_matching_period": 0}
+        for company_id, value, period_end in parser_results:
+            cur.execute(
+                """
+                select id from core.period
+                where company_id = %s and end_date = %s and period_type = 'duration'
+                order by start_date desc limit 1
+                """,
+                (company_id, period_end),
+            )
+            row = cur.fetchone()
+            if row is None:
+                stats["no_matching_period"] += 1
+                continue
+            period_id = row[0]
+            cur.execute(
+                "delete from analytics.canonical_fact where canonical_concept_id = %s and company_id = %s and period_id = %s",
+                (resolved_id, company_id, period_id),
+            )
+            cur.execute(
+                """
+                insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+                values (%s, %s, %s, %s, %s)
+                """,
+                (company_id, resolved_id, period_id, value, []),
+            )
+            stats["applied"] += 1
+    conn.commit()
+    logger.info("main_parser.resolve_parser_results.done", concept=concept_name, **stats)
+    return stats

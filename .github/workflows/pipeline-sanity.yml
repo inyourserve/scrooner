@@ -55,6 +55,27 @@ jobs:
       - name: Investigate and auto-fix reconcilable findings
         if: always()
         run: uv run --project pipeline scrooner-sanity investigate
+      - name: Run rendered-report parser on remaining critical findings
+        # Added 2026-09-20 -- closes a real gap: tag_investigator's
+        # investigate step above can only fix a concept from a TAG
+        # already sitting in core.fact; APA Corp's real revenue never
+        # existed there at all (SEC's own structured XBRL companyfacts
+        # for it has no usable plain-revenue tag, confirmed live), so
+        # every prior "investigate" run correctly reported no_match_found
+        # forever. Parser 3 (doc 42) reads the filing's own RENDERED
+        # statement table instead -- this step widens run-parser's own
+        # gap-detection to also retry companies with an open critical
+        # revenue_zero_check finding (not just zero canonical_fact rows),
+        # then resolve-parser-results merges whatever it found into
+        # revenue_sanity_resolved, the same display concept tag_
+        # investigator writes to. First run: 19 -> 13 open critical
+        # findings, including the highest-visibility one (APA Corp, a
+        # real S&P 500 company) confirmed fixed end-to-end via a live
+        # sanity-check rerun, not just the write succeeding.
+        if: always()
+        run: |
+          uv run --project pipeline scrooner-map run-parser revenue
+          uv run --project pipeline scrooner-map resolve-parser-results revenue
       - name: Time-series self-consistency check (full population)
         # Added 2026-09-08 -- zero external calls (pure SQL against our
         # own history), so unlike everything else in this job it isn't

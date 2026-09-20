@@ -30,7 +30,7 @@ from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconcilia
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
 from scrooner_pipeline.mapper.coverage_snapshot import write_snapshot
-from scrooner_pipeline.parsers.main_parser import run_parser, registry_summary, PARSER_REGISTRY
+from scrooner_pipeline.parsers.main_parser import run_parser, resolve_parser_results, registry_summary, PARSER_REGISTRY
 from scrooner_pipeline.mapper.main_calculator import METRIC_CALCULATOR_REGISTRY, unregistered_metrics
 
 app = typer.Typer()
@@ -444,6 +444,20 @@ def run_parser_cmd(
     with get_connection() as conn:
         result = run_parser(conn, concept_name, target_ciks)
     typer.echo(f"run-parser {concept_name}: {result['stats']}")
+
+
+@app.command("resolve-parser-results")
+def resolve_parser_results_cmd(
+    concept_name: str = typer.Argument(..., help="Concept whose analytics.concept_parser_result rows to merge."),
+) -> None:
+    """Merges run-parser's output into the concept's *_sanity_resolved
+    display concept (doc 42's Tier 3) -- run-parser alone only writes to
+    analytics.concept_parser_result, which nothing else reads; this is
+    the step that makes a parsed value actually reach the company page/
+    screener. Always run right after run-parser for the same concept."""
+    with get_connection() as conn:
+        stats = resolve_parser_results(conn, concept_name)
+    typer.echo(f"resolve-parser-results {concept_name}: {stats}")
 
 
 @app.command("parser-registry-summary")

@@ -299,13 +299,30 @@ def _load_our_values(conn: psycopg.Connection, company_ids: list[int]) -> dict[i
         # authoritative-$0 bug this check exists to catch. Without this
         # distinction, all three fired as false-positive "critical"
         # findings on the very first golden-10 test run.
+        # Reads revenue_sanity_resolved, NOT the raw `revenue` concept
+        # (fixed 2026-09-20) -- found live investigating why APA Corp's
+        # revenue_zero_check finding still showed critical/our_value=0
+        # right after a real fix (Parser 3 found its real $2.399B via the
+        # rendered statement and it was merged into revenue_sanity_
+        # resolved) had already landed: this check was reading the
+        # UNFIXED raw concept the whole time, so it would have kept
+        # reporting APA Corp -- and any other company ever fixed via a
+        # company_tag_preference, an arithmetic fallback, or this
+        # parser -- as still broken forever, a stale false alarm the
+        # daily "investigate" step could never actually clear. `revenue`
+        # is Mapper's own frozen resolve() output (doc 04/11 boundary);
+        # revenue_sanity_resolved is the ONE concept every fix path in
+        # this project (tag_investigator.py, concept_fallback.py, this
+        # parser) already writes into, and the one the company page
+        # itself reads (statements/classify.py) -- this check needs to
+        # agree with what a user actually sees, not an earlier layer.
         cur.execute(
             """
             select cf.company_id, cf.value
             from analytics.canonical_fact cf
             join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
             join core.period p on p.id = cf.period_id
-            where cf.company_id = any(%s) and cc.name = 'revenue'
+            where cf.company_id = any(%s) and cc.name = 'revenue_sanity_resolved'
             order by cf.company_id, p.end_date desc
             """,
             (company_ids,),
