@@ -298,7 +298,7 @@ def investigate_major_findings(conn: psycopg.Connection, limit: int | None = Non
     with conn.cursor() as cur:
         cur.execute(
             """
-            select f.company_id, cc.name, f.period_id, f.yfinance_value
+            select f.id, f.company_id, cc.name, f.period_id, f.yfinance_value
             from analytics.statement_comparison_finding f
             join analytics.canonical_concept cc on cc.id = f.canonical_concept_id
             where f.severity = 'major' and f.note is null and f.period_id is not null
@@ -309,10 +309,28 @@ def investigate_major_findings(conn: psycopg.Connection, limit: int | None = Non
         )
         rows = cur.fetchall()
 
-    for company_id, concept_name, period_id, yfinance_value in rows:
+    for finding_id, company_id, concept_name, period_id, yfinance_value in rows:
         stats["considered"] += 1
         outcome = investigate(conn, company_id, concept_name, Decimal(yfinance_value), period_id=period_id)
         stats[outcome["outcome"]] += 1
+        # Found live 2026-09-20: investigate() writes its own audit trail
+        # to analytics.data_sanity_investigation, NOT back onto the
+        # finding row this query's own "note is null" filter reads --
+        # so every run re-selected the SAME oldest `limit` rows forever,
+        # regardless of how many times they'd already been investigated,
+        # while genuinely-new findings piled up unexamined at the tail.
+        # Two full runs (2026-09-19) left the 18,972-row backlog
+        # effectively unchanged (18,979 the next day) despite processing
+        # 2,000 rows each time -- confirmed live, not assumed. This write
+        # is what makes "note is null" an honest, forward-progressing
+        # dedup signal, the same contract the query's own docstring
+        # already claimed but the code never delivered.
+        with conn.cursor() as cur:
+            cur.execute(
+                "update analytics.statement_comparison_finding set note = %s where id = %s",
+                (outcome["note"], finding_id),
+            )
+        conn.commit()
 
     logger.info("yfinance_financials.investigate_done", **stats)
     return stats
