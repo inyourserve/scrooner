@@ -174,6 +174,12 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
     ("inventory", "us-gaap", "InventoryNet", 1, "approved", ""),
     ("sbc", "us-gaap", "ShareBasedCompensation", 1, "approved", ""),
+    ("sbc", "us-gaap", "AllocatedShareBasedCompensationExpense", 2, "approved",
+     "Added 2026-09-21 -- real alternate tag, not a different concept sharing vocabulary: "
+     "verified via coexistence test against companies reporting BOTH tags for the same period "
+     "(122,531 real pairs, 85.7% agree within 5%) before trusting it, same discipline as every "
+     "other concept_mapping addition this project has made. 3,730 companies have this tag with "
+     "no ShareBasedCompensation row at all -- a real, sizeable gap this closes."),
     ("depreciation_and_amortization", "us-gaap", "DepreciationAndAmortization", 1, "approved",
      "Priority 1 -- confirmed live this is the tag AAPL's FY2015 filing itself treats as authoritative when both appear."),
     ("depreciation_and_amortization", "us-gaap", "DepreciationDepletionAndAmortization", 2, "approved",
