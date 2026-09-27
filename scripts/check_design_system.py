@@ -21,6 +21,8 @@ REQUIRED_IMPLEMENTATION = (
     ROOT / "apps/app/components/layout/PageHeader.tsx",
     ROOT / "apps/app/components/ui/Badge.tsx",
     ROOT / "apps/app/components/ui/Button.tsx",
+    ROOT / "apps/app/components/ui/Card.tsx",
+    ROOT / "apps/app/components/ui/Input.tsx",
     ROOT / "apps/app/components/ui/StatusPanel.tsx",
     ROOT / "apps/app/components/ui/Surface.tsx",
 )
@@ -41,6 +43,8 @@ RAW_COLOR = re.compile(r"(?:(?<!&)#[0-9a-f]{3,8}\b|rgba?\()", re.IGNORECASE)
 # product's own palette.
 SVG_FILL_ATTR = re.compile(r'\bfill\s*=\s*["\']#[0-9a-f]{3,8}\b', re.IGNORECASE)
 INLINE_PAGE_STYLE = re.compile(r"<style(?:\s|>)", re.IGNORECASE)
+RAW_FONT_WEIGHT = re.compile(r"font-weight\s*:\s*[1-9]00\b", re.IGNORECASE)
+RAW_FONT_SIZE = re.compile(r"font-size\s*:\s*(\d+(?:\.\d+)?)px\b", re.IGNORECASE)
 # References with an explicit CSS fallback are allowed to be component-level
 # extension points. Bare references must resolve somewhere in the shared or
 # application sources; otherwise the browser silently drops the declaration.
@@ -159,6 +163,7 @@ for path in (APP_ENTRY,):
         fail(f"{path.relative_to(ROOT)} does not import the shared entry point")
 
 raw_color_violations: list[str] = []
+raw_typography_violations: list[str] = []
 application_sources: list[Path] = []
 for source_root in APPLICATION_SOURCE_ROOTS:
     for path in source_root.rglob("*"):
@@ -168,9 +173,24 @@ for source_root in APPLICATION_SOURCE_ROOTS:
         for line_number, line in enumerate(path.read_text().splitlines(), start=1):
             if RAW_COLOR.search(line) and not SVG_FILL_ATTR.search(line):
                 raw_color_violations.append(f"{path.relative_to(ROOT)}:{line_number}")
+            if path.suffix == ".css" and RAW_FONT_WEIGHT.search(line):
+                raw_typography_violations.append(
+                    f"{path.relative_to(ROOT)}:{line_number} raw font weight"
+                )
+            size = RAW_FONT_SIZE.search(line) if path.suffix == ".css" else None
+            # The 9px/10px values are the explicitly documented dense-table
+            # exception in frontend-guardrails.md; all normal UI typography
+            # must consume the discrete --ds-font-size-* scale.
+            if size and float(size.group(1)) not in {9, 10}:
+                raw_typography_violations.append(
+                    f"{path.relative_to(ROOT)}:{line_number} raw font size"
+                )
 
 if raw_color_violations:
     fail("raw color values outside tokens.css: " + ", ".join(raw_color_violations))
+
+if raw_typography_violations:
+    fail("raw typography values outside tokens.css: " + ", ".join(raw_typography_violations))
 
 all_design_sources = [TOKENS, *application_sources]
 available_custom_properties: set[str] = set()
@@ -204,5 +224,5 @@ print(
     f"design-system contract: {len(definitions)} tokens; "
     f"{len(REQUIRED_IMPLEMENTATION)} implementation contracts; "
     "Next.js entry point connected; AA muted text and 44px default targets; "
-    "no raw or undefined application tokens"
+    "no raw colors, typography, or undefined application tokens"
 )

@@ -43,13 +43,15 @@ Usage:
 import psycopg
 import structlog
 
-from scrooner_pipeline.parsers import revenue_parser
+from scrooner_pipeline.common.errors import safe_rollback
+from scrooner_pipeline.parsers import cost_of_revenue_parser, revenue_parser
 from scrooner_pipeline.sanity.tag_investigator import FIXABLE_CONCEPTS
 
 logger = structlog.get_logger()
 
 PARSER_REGISTRY = {
     "revenue": revenue_parser,
+    "cost_of_revenue": cost_of_revenue_parser,
 }
 
 
@@ -117,7 +119,22 @@ def resolve_parser_results(conn: psycopg.Connection, concept_name: str) -> dict:
     source_fact_ids is intentionally empty for these rows (no core.fact
     row underlies a rendered-table extraction) -- full provenance
     (source_form/accession/report) lives in concept_parser_result
-    itself, joinable by (company_id, canonical_concept_id)."""
+    itself, joinable by (company_id, canonical_concept_id).
+
+    Commits per company, not once at the end -- found live 2026-09-21
+    running this against 52 companies at once (cost_of_revenue's own
+    initial full-population parser rollout): a single `conn.commit()`
+    after the whole loop meant one uncommitted transaction spanning
+    every company's own delete+insert+period-lookup round trip, fully
+    exposed to a real, reproducible Supabase pooler connection drop
+    partway through -- losing the ENTIRE batch's work, not just the one
+    company mid-flight, and forcing a full blind retry from scratch
+    every time (confirmed live: 4 consecutive attempts all failed with
+    an identical `OperationalError`/`SSL SYSCALL... Operation timed out`
+    partway through). A prior, smaller run (5 companies) never exposed
+    this, since it finished before any drop occurred. Committing after
+    each company's own write makes a mid-batch drop lose at most one
+    company's progress, and the function stays idempotent on rerun."""
     if concept_name not in FIXABLE_CONCEPTS:
         raise ValueError(f"{concept_name!r} has no *_sanity_resolved companion in FIXABLE_CONCEPTS")
     resolved_concept_name = FIXABLE_CONCEPTS[concept_name]
@@ -134,33 +151,40 @@ def resolve_parser_results(conn: psycopg.Connection, concept_name: str) -> dict:
         )
         parser_results = cur.fetchall()
 
-        stats = {"considered": len(parser_results), "applied": 0, "no_matching_period": 0}
-        for company_id, value, period_end in parser_results:
-            cur.execute(
-                """
-                select id from core.period
-                where company_id = %s and end_date = %s and period_type = 'duration'
-                order by start_date desc limit 1
-                """,
-                (company_id, period_end),
-            )
-            row = cur.fetchone()
-            if row is None:
-                stats["no_matching_period"] += 1
-                continue
-            period_id = row[0]
-            cur.execute(
-                "delete from analytics.canonical_fact where canonical_concept_id = %s and company_id = %s and period_id = %s",
-                (resolved_id, company_id, period_id),
-            )
-            cur.execute(
-                """
-                insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
-                values (%s, %s, %s, %s, %s)
-                """,
-                (company_id, resolved_id, period_id, value, []),
-            )
-            stats["applied"] += 1
-    conn.commit()
+    stats = {"considered": len(parser_results), "applied": 0, "no_matching_period": 0, "errored": 0}
+    for company_id, value, period_end in parser_results:
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    select id from core.period
+                    where company_id = %s and end_date = %s and period_type = 'duration'
+                    order by start_date desc limit 1
+                    """,
+                    (company_id, period_end),
+                )
+                row = cur.fetchone()
+                if row is None:
+                    stats["no_matching_period"] += 1
+                    conn.commit()
+                    continue
+                period_id = row[0]
+                cur.execute(
+                    "delete from analytics.canonical_fact where canonical_concept_id = %s and company_id = %s and period_id = %s",
+                    (resolved_id, company_id, period_id),
+                )
+                cur.execute(
+                    """
+                    insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+                    values (%s, %s, %s, %s, %s)
+                    """,
+                    (company_id, resolved_id, period_id, value, []),
+                )
+                stats["applied"] += 1
+            conn.commit()
+        except Exception:
+            logger.warning("main_parser.resolve_parser_results.company_failed", company_id=company_id, exc_info=True)
+            stats["errored"] += 1
+            conn = safe_rollback(conn, stage="resolve_parser_results")
     logger.info("main_parser.resolve_parser_results.done", concept=concept_name, **stats)
     return stats

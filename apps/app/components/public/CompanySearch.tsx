@@ -36,10 +36,7 @@ export function CompanySearch() {
   useEffect(() => {
     if (query.trim().length < 1) return;
 
-    if (directory) {
-      setResults(rankCompanyMatches(directory, query, 8));
-      return;
-    }
+    if (directory) return;
 
     // Directory not loaded yet (first paint, or the fetch failed) -- fall
     // back to the original debounced server-side search so the box still
@@ -70,7 +67,7 @@ export function CompanySearch() {
     router.push(`/stocks/${company.ticker.toLowerCase()}`);
   }
 
-  const visible = query.trim() ? results : recent;
+  const visible = query.trim() ? (directory ? rankCompanyMatches(directory, query, 8) : results) : recent;
 
   return (
     <form className="company-search company-search--hero" role="search" onSubmit={submit}>

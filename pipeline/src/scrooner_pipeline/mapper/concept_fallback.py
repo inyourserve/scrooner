@@ -37,7 +37,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.config import settings
+from scrooner_pipeline.common.errors import safe_rollback
 
 logger = structlog.get_logger()
 
@@ -78,7 +78,20 @@ FALLBACK_PAIRS: list[tuple[str, str, str, str | None]] = [
 # gross_profit_resolved itself (for maximum coverage), so it must run AFTER
 # gross_profit_resolved is populated -- this list's order is that order.
 ARITHMETIC_FALLBACKS: list[tuple[str, str, str, str, int | None]] = [
-    ("gross_profit_resolved", "gross_profit", "revenue", "cost_of_revenue", 0),
+    # subtrahend widened to cost_of_revenue_resolved (was raw
+    # cost_of_revenue), 2026-09-21: cost_of_revenue_resolved already
+    # strictly a superset of raw cost_of_revenue (its own baseline
+    # passthrough copies every raw row verbatim, see resolve_arithmetic_
+    # fallback's own first INSERT branch), plus it now also carries
+    # values `parsers/cost_of_revenue_parser.py` finds via rendered-
+    # report dimensional summation for companies with NO raw tag at all
+    # (Hyatt Hotels: real Cost of Revenue exists only as 3 separate
+    # per-segment XBRL facts the standard Company Facts API strips
+    # entirely -- doc 22's already-documented limitation, confirmed here
+    # for a new concept family). Reading the resolved concept instead of
+    # the raw one only ever WIDENS this derivation's own input coverage,
+    # never narrows it.
+    ("gross_profit_resolved", "gross_profit", "revenue", "cost_of_revenue_resolved", 0),
     ("cost_of_revenue_resolved", "cost_of_revenue", "revenue", "gross_profit", 0),
     ("operating_expenses_resolved", "operating_expenses", "gross_profit_resolved", "operating_income", None),
 ]
@@ -195,25 +208,14 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
             except Exception:
                 logger.warning("concept_fallback.company_failed", cik=cik, pair=resolved_name, exc_info=True)
                 stats["errored"] += 1
-                # Found live 2026-09-15, all 4 parallel workers of a
-                # full-population rollout crashed identically: when the
-                # ORIGINAL exception is a dead connection (a real,
-                # documented, recurring Supabase pooler drop), calling
-                # conn.rollback() on that same dead connection raises a
-                # SECOND, uncaught OperationalError, which propagates out
-                # of this function and kills the entire remaining batch --
-                # the exact bug class already found and fixed once in
-                # common/errors.py's log_error() (2026-09-03): a contract
-                # ("one company's failure never aborts the batch") that
-                # was never actually tested against its own failure path.
-                # Reconnect instead of trusting rollback() to succeed on
-                # a connection that may already be gone -- same idiom as
-                # yfinance_industry.py's _write_batch().
-                try:
-                    conn.rollback()
-                except psycopg.OperationalError:
-                    logger.warning("concept_fallback.connection_dropped_reconnecting", cik=cik)
-                    conn = psycopg.connect(settings.database_url)
+                # safe_rollback() tolerates a dead connection (a real,
+                # recurring Supabase pooler drop) instead of letting
+                # conn.rollback() itself raise a second, uncaught
+                # OperationalError that would kill the entire remaining
+                # batch -- found live 2026-09-15 across 4 parallel
+                # full-population workers; see common/errors.py's own
+                # docstring for the full history.
+                conn = safe_rollback(conn, stage="concept_fallback", cik=cik)
 
     logger.info("concept_fallback.done", **stats)
     return stats
@@ -232,7 +234,24 @@ def resolve_arithmetic_fallback(
     pipeline/CLAUDE.md's restatements.py N+1 entry). One DELETE + one
     INSERT...SELECT covers the whole population regardless of company
     count. Idempotent: safe to rerun any time an upstream concept's own
-    resolve-facts output changes."""
+    resolve-facts output changes.
+
+    Excludes companies with a `concept_parser_result` row for the
+    PRIMARY concept from both the delete and the insert -- found live
+    2026-09-21 (Hyatt Hotels): this function's blanket
+    `delete ... where canonical_concept_id = resolved_id` silently wiped
+    a value `parsers/cost_of_revenue_parser.py` had just written into
+    the SAME resolved concept via `resolve_parser_results()`, because
+    neither writer knew about the other -- the identical "shared-table
+    write needs scoping on every dimension another writer keys on" bug
+    class already hit and fixed for roic/roe (Mapper Day 6),
+    expanded_metrics.py's delete scope, and resolve.py's own
+    `_load_managed_concept_ids()`. Fixed the same way
+    resolve_company_tag_preferences() already protects
+    company_tag_preference-owned rows: a parser-owned company's row is
+    now permanently exempt from this function's write scope, so a
+    parser result persists through any later arithmetic-fallback rerun
+    without depending on call order."""
     params: dict = {
         "resolved_id": resolved_id,
         "primary_id": primary_id,
@@ -245,13 +264,28 @@ def resolve_arithmetic_fallback(
         params["guard_value"] = guard_min_value
 
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", params)
+        cur.execute(
+            """
+            delete from analytics.canonical_fact
+            where canonical_concept_id = %(resolved_id)s
+              and not exists (
+                  select 1 from analytics.concept_parser_result cpr
+                  where cpr.company_id = analytics.canonical_fact.company_id
+                    and cpr.canonical_concept_id = %(primary_id)s
+              )
+            """,
+            params,
+        )
         cur.execute(
             f"""
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
             select company_id, %(resolved_id)s, period_id, value, source_fact_ids
             from analytics.canonical_fact
             where canonical_concept_id = %(primary_id)s
+              and not exists (
+                  select 1 from analytics.concept_parser_result cpr
+                  where cpr.company_id = analytics.canonical_fact.company_id and cpr.canonical_concept_id = %(primary_id)s
+              )
             union all
             select m.company_id, %(resolved_id)s, m.period_id, (m.value - s.value), m.source_fact_ids || s.source_fact_ids
             from analytics.canonical_fact m
@@ -262,6 +296,10 @@ def resolve_arithmetic_fallback(
                 and not exists (
                     select 1 from analytics.canonical_fact p
                     where p.company_id = m.company_id and p.period_id = m.period_id and p.canonical_concept_id = %(primary_id)s
+                )
+                and not exists (
+                    select 1 from analytics.concept_parser_result cpr
+                    where cpr.company_id = m.company_id and cpr.canonical_concept_id = %(primary_id)s
                 )
             """,
             params,

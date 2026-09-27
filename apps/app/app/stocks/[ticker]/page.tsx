@@ -70,6 +70,18 @@ const metricGroups: { title: string; metrics: [string, string, MetricItem["kind"
   { title: "Cash flow and allocation", metrics: [["fcf", "Free cash flow", "dollar"], ["fcf_margin", "FCF margin", "pct"], ["buyback_yield", "Buyback yield", "pct"], ["total_shareholder_yield", "Shareholder yield", "pct"], ["share_dilution_trend", "Share dilution · YoY", "pct"]] },
 ];
 
+// Screener.in's own peer table computes its Median row over the peer set
+// only (never the current company) -- matches that convention so "Median"
+// reads as "the peer group's midpoint," not something the company itself
+// pulls toward.
+function medianOf(values: (string | null)[]): string | null {
+  const numbers = values.map((v) => (v == null ? null : Number(v))).filter((v): v is number => v != null && Number.isFinite(v)).sort((a, b) => a - b);
+  if (numbers.length === 0) return null;
+  const mid = Math.floor(numbers.length / 2);
+  const median = numbers.length % 2 === 0 ? (numbers[mid - 1] + numbers[mid]) / 2 : numbers[mid];
+  return String(median);
+}
+
 function secUrl(cik: string, accession: string) {
   return `https://www.sec.gov/Archives/edgar/data/${cik.replace(/^0+/, "") || "0"}/${accession.replaceAll("-", "")}/${accession}-index.html`;
 }
@@ -208,7 +220,7 @@ export default async function StockPage({ params }: Props) {
           website={company.website}
         />
 
-        <div className="stock-snapshot"><div className="stock-snapshot__metrics"><p className="overline">Investor snapshot</p><MetricGrid items={keyMetrics} dense /><a href="#ratios" className="quiet-link">View all ratios ↓</a></div><div className="stock-snapshot__about"><p className="overline">Business overview</p><p>{about || `${company.company_name} is an SEC registrant in the ${company.sector ?? "unclassified"} sector.`}</p><dl>{data.employeeHeadcountHistory[0] && <div><dt>Employees</dt><dd>{data.employeeHeadcountHistory[0].is_approximate ? "~" : ""}{data.employeeHeadcountHistory[0].headcount.toLocaleString("en-US")}</dd></div>}{data.segmentRevenue.length > 0 && <div><dt>Revenue segments</dt><dd>{new Set(data.segmentRevenue.map((item) => item.segment_name)).size}</dd></div>}{data.publicFloat && <div><dt>Public float</dt><dd>${fmtNum(data.publicFloat.value)}</dd></div>}<div><dt>Source</dt><dd>SEC EDGAR</dd></div></dl><details className="plain-disclosure"><summary>Company details</summary><p>CIK {company.cik}{company.business_address_city || company.business_address_state ? ` · ${[company.business_address_city, company.business_address_state].filter(Boolean).join(", ")}` : ""}</p></details></div></div>
+        <div className="stock-snapshot"><div className="stock-snapshot__metrics"><p className="section-label">Investor snapshot</p><MetricGrid items={keyMetrics} dense /><a href="#ratios" className="quiet-link">View all ratios ↓</a></div><div className="stock-snapshot__about"><p className="section-label">Business overview</p><p>{about || `${company.company_name} is an SEC registrant in the ${company.sector ?? "unclassified"} sector.`}</p><dl>{data.employeeHeadcountHistory[0] && <div><dt>Employees</dt><dd>{data.employeeHeadcountHistory[0].is_approximate ? "~" : ""}{data.employeeHeadcountHistory[0].headcount.toLocaleString("en-US")}</dd></div>}{data.segmentRevenue.length > 0 && <div><dt>Revenue segments</dt><dd>{new Set(data.segmentRevenue.map((item) => item.segment_name)).size}</dd></div>}{data.publicFloat && <div><dt>Public float</dt><dd>${fmtNum(data.publicFloat.value)}</dd></div>}<div><dt>Source</dt><dd>SEC EDGAR</dd></div></dl><details className="plain-disclosure"><summary>Company details</summary><p>CIK {company.cik}{company.business_address_city || company.business_address_state ? ` · ${[company.business_address_city, company.business_address_state].filter(Boolean).join(", ")}` : ""}</p></details></div></div>
       </section>
 
       <ResearchSection id="analysis" title={`${shortName} analysis`} description="Deterministic observations from reported results—not a recommendation." className="analysis-section">
@@ -226,8 +238,11 @@ export default async function StockPage({ params }: Props) {
         <div className="ratio-groups">{metricGroups.map((group, index) => <details className="ratio-group" key={group.title} open={index < 2}><summary><span>{group.title}</span><small>{group.metrics.length} metrics</small></summary><MetricGrid dense items={group.metrics.map(([name, label, kind]) => ({ label, kind, row: metric(name) }))} /></details>)}</div>
       </ResearchSection>
 
-      <ResearchSection id="peers" title="Peer comparison" description="Companies sharing the closest available SEC industry classification.">
-        {data.peerCompanies.length ? <><p className="inline-note">Peer classification is a starting point, not a claim that business models are identical.</p><div className="statement-scroll"><table className="research-table"><thead><tr><th>Company</th><th>ROIC</th><th>Revenue growth · 3Y</th><th>Net margin</th><th>ROE</th></tr></thead><tbody>{data.peerCompanies.map((peer) => <tr key={peer.ticker}><th scope="row"><Link href={`/stocks/${peer.ticker.toLowerCase()}`}>{peer.company_name}<small>{peer.ticker}</small></Link></th><td>{fmtPct(peer.roic)}</td><td>{fmtPct(peer.revenue_growth_3y_cagr)}</td><td>{fmtPct(peer.net_margin)}</td><td>{fmtPct(peer.roe)}</td></tr>)}</tbody></table></div></> : <EmptyState description="No sufficiently comparable companies are available yet." />}
+      <ResearchSection id="peers" title="Peer comparison" description={company.y_industry ? `Companies sharing the "${company.y_industry}" industry classification.` : "Companies sharing the closest available SEC industry classification."}>
+        {data.peerCompanies.length ? <><p className="inline-note">Peer classification is a starting point, not a claim that business models are identical.</p><div className="statement-scroll"><table className="research-table"><thead><tr><th>Company</th><th>ROIC</th><th>Revenue growth · 3Y</th><th>Net margin</th><th>ROE</th></tr></thead><tbody>
+          <tr className="research-table__self"><th scope="row">{shortName}<small>{company.ticker} · this company</small></th><td>{fmtPct(metric("roic")?.value)}</td><td>{fmtPct(metric("revenue_growth_3y_cagr")?.value)}</td><td>{fmtPct(metric("net_margin")?.value)}</td><td>{fmtPct(metric("roe")?.value)}</td></tr>
+          {data.peerCompanies.map((peer) => <tr key={peer.ticker}><th scope="row"><Link href={`/stocks/${peer.ticker.toLowerCase()}`}>{peer.company_name}<small>{peer.ticker}</small></Link></th><td>{fmtPct(peer.roic)}</td><td>{fmtPct(peer.revenue_growth_3y_cagr)}</td><td>{fmtPct(peer.net_margin)}</td><td>{fmtPct(peer.roe)}</td></tr>)}
+        </tbody><tfoot><tr><th scope="row">Median · {data.peerCompanies.length} peer{data.peerCompanies.length === 1 ? "" : "s"}</th><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.roic)))}</td><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.revenue_growth_3y_cagr)))}</td><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.net_margin)))}</td><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.roe)))}</td></tr></tfoot></table></div></> : <EmptyState description="No sufficiently comparable companies are available yet." />}
       </ResearchSection>
 
       <ResearchSection id="shareholding" title={`${company.company_name} ownership`} description="Reported regulatory positions—not live beneficial ownership.">
@@ -311,6 +326,6 @@ export default async function StockPage({ params }: Props) {
         ) : <EmptyState description="No recent SEC filings are available." />}
       </ResearchSection>
     </main>
-    <PublicFooter companyHref={`/stocks/${ticker}`} />
+    <PublicFooter />
   </div>;
 }

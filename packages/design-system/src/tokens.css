@@ -155,6 +155,10 @@
   --ds-container-content: 960px;
   --ds-container-app: 1220px;
   --ds-container-research: 1296px;
+  --ds-container-gutter: var(--ds-space-8);
+  --ds-container-gutter-compact: var(--ds-space-6);
+  --ds-grid-item-min: 15rem;
+  --ds-grid-item-min-wide: 18.75rem;
   --ds-control-height-sm: 36px;
   --ds-control-height-md: 42px;
   --ds-control-height-lg: 48px;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { IconButton } from "./IconButton";
 
 type DialogProps = {
@@ -80,7 +81,16 @@ export function Dialog({
     };
   }, []);
 
-  return (
+  // Portalled to document.body -- a dialog rendered in place inside a
+  // `position: sticky` ancestor (every page's header) got its own `position:
+  // fixed; inset: 0` backdrop laid out at only the header's own height
+  // (64px) instead of the full viewport, found live 2026-09-21 via a direct
+  // getBoundingClientRect() check on the ⌘K search dialog -- the panel
+  // rendered pinned to the top-right instead of centered, with no visible
+  // dimming below the header. A portal is the standard fix for this whole
+  // class of ancestor-context bug (containing blocks, overflow, stacking),
+  // not just a patch for this one sticky-header case.
+  return createPortal(
     <div className="ds-dialog-backdrop" onMouseDown={(event) => {
       if (event.target === event.currentTarget) onClose();
     }}>
@@ -101,6 +111,7 @@ export function Dialog({
         {children && <div className="ds-dialog__body">{children}</div>}
         {actions && <div className="ds-dialog__actions">{actions}</div>}
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

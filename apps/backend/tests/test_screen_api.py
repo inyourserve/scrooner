@@ -19,12 +19,13 @@ def test_screen_endpoint_preserves_full_decimal_precision(monkeypatch):
     precise = Decimal("0.1234567890123456789012345678")
     monkeypatch.setattr(screen, "get_pooled_connection", unused_connection)
     monkeypatch.setattr(screen, "get_cached_dataset_version", lambda _conn: 1)
+    monkeypatch.setattr(screen, "get_cached_metric_catalog", lambda _conn: {"roe": 1})
     monkeypatch.setattr(screen, "get_cached_result", lambda _hash: None)
     monkeypatch.setattr(screen, "set_cached_result", lambda _hash, _result: None)
     monkeypatch.setattr(
         screen,
         "run_query",
-        lambda _conn, _query, dataset_version=None: {
+        lambda _conn, _query, dataset_version=None, catalog=None: {
             "matched": [{"cik": "0001", "metrics": {"roe": {"value": precise}}}],
             "excluded_missing_data": [],
             "excluded_inactive": [],
@@ -133,12 +134,13 @@ def test_ask_can_interpret_and_run_a_valid_screen_in_one_request(monkeypatch):
     }
     executed = []
 
-    def run_once(_conn, query, dataset_version=None):
+    def run_once(_conn, query, dataset_version=None, catalog=None):
         executed.append(query)
         return expected_result
 
     monkeypatch.setattr(screen, "get_pooled_connection", unused_connection)
     monkeypatch.setattr(screen, "get_cached_dataset_version", lambda _conn: 1)
+    monkeypatch.setattr(screen, "get_cached_metric_catalog", lambda _conn: {"roe": 1})
     monkeypatch.setattr(screen, "get_cached_result", lambda _hash: None)
     monkeypatch.setattr(screen, "set_cached_result", lambda _hash, _result: None)
     monkeypatch.setattr(screen, "run_query", run_once)

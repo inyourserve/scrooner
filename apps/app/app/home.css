@@ -98,9 +98,9 @@
 }
 .company-chip:hover { border-color: var(--ds-color-action); background: var(--ds-color-action-subtle); color: var(--ds-color-action-hover); text-decoration: none; }
 .company-chip:active { transform: translateY(1px); }
-.company-chip .ticker { color: var(--ds-color-text-muted); font-family: var(--ds-font-family-mono); font-size: 10px; font-weight: var(--ds-font-weight-medium); letter-spacing: 0.02em; }
+.company-chip .ticker { color: var(--ds-color-text-muted); font-family: var(--ds-font-family-mono); font-size: var(--ds-font-size-11); font-weight: var(--ds-font-weight-medium); letter-spacing: 0.02em; }
 .company-chip:hover .ticker { color: var(--ds-color-action); }
-.screener-path { margin: 25px 0 0; color: var(--ds-color-text-secondary); font-size: 13.5px; }
+.screener-path { margin: 25px 0 0; color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-13); }
 .screener-path a:not(.ds-button) { color: var(--ds-color-action-hover); font-weight: var(--ds-font-weight-semibold); text-decoration: none; }
 .screener-path a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
@@ -116,7 +116,7 @@
 }
 
 @media (max-width: 380px) {
-  .hero-wordmark .name { font-size: 44px; }
+  .hero-wordmark .name { font-size: var(--ds-font-size-36); }
   .hero-research-mark { --ds-brand-mark-size: 34px; }
   .home-main #company-search { margin-top: var(--ds-space-8); }
   .quick-picks .label { width: 100%; margin-right: 0; }

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "pe_max",
+    "label": "P/E below",
+    "metric_name": "trailing_pe",
+    "operator": "<",
+    "value_type": "decimal",
+    "prewarm_values": ["10", "15", "20", "25"]
+  },
+  {
+    "id": "roe_min",
+    "label": "ROE above",
+    "metric_name": "roe",
+    "operator": ">",
+    "value_type": "percentage",
+    "prewarm_values": ["0.10", "0.15", "0.20", "0.25"]
+  },
+  {
+    "id": "roic_min",
+    "label": "ROIC above",
+    "metric_name": "roic",
+    "operator": ">",
+    "value_type": "percentage",
+    "prewarm_values": ["0.10", "0.15", "0.20", "0.25"]
+  },
+  {
+    "id": "market_cap_min",
+    "label": "Market cap above",
+    "metric_name": "market_cap",
+    "operator": ">",
+    "value_type": "currency",
+    "prewarm_values": ["1000000000", "5000000000", "10000000000"]
+  }
+]

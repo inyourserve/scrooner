@@ -39,12 +39,26 @@ _pool = ConnectionPool(
     # implicit BEGIN on first use plus a ROLLBACK round trip on every
     # checkout (measured live 2026-09-10: ~0.55s extra per request from
     # this dev machine alone) that psycopg3's default (autocommit=False)
-    # costs otherwise. The one caller that genuinely needs multi-statement
-    # atomicity on this pool (screen_runs.create_run_from_query's insert-
-    # then-executemany) gets it via `conn.transaction()`, psycopg3's own
-    # documented way to scope a real transaction inside an autocommit
-    # connection -- not by switching that one call to a different,
-    # non-pooled connection.
+    # costs otherwise. No caller here needs a multi-statement transaction
+    # any more (create_run_from_query is a single CTE statement since
+    # 2026-09-20); if one ever does, psycopg3's `conn.transaction()` scopes
+    # a real transaction inside an autocommit connection.
+    kwargs={"autocommit": True},
+)
+
+# Dedicated, tiny pool for fire-and-forget usage logging. It must NOT share
+# _pool: measured live 2026-09-10, background work on the shared pool
+# blocked the main response by ~260ms. It must also not open a fresh
+# connection per call (~1.7s connect each, unbounded under a burst of
+# concurrent requests) -- this project's pooler caps TOTAL client
+# connections at ~15 across every service, so a bounded pool here keeps
+# usage logging from ever starving request traffic. min_size=0: no
+# connection is held until the first log call.
+_usage_pool = ConnectionPool(
+    settings.database_url,
+    min_size=0,
+    max_size=2,
+    open=False,
     kwargs={"autocommit": True},
 )
 
@@ -52,14 +66,22 @@ _pool = ConnectionPool(
 def open_pool() -> None:
     """Open and validate the bounded pool during application startup."""
     _pool.open(wait=True)
+    _usage_pool.open(wait=False)
 
 
 def close_pool() -> None:
     """Return database resources during graceful application shutdown."""
     _pool.close()
+    _usage_pool.close()
 
 
 @contextmanager
 def get_pooled_connection() -> Iterator[psycopg.Connection]:
     with _pool.connection() as conn:
+        yield conn
+
+
+@contextmanager
+def get_usage_connection() -> Iterator[psycopg.Connection]:
+    with _usage_pool.connection() as conn:
         yield conn

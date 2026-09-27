@@ -7,7 +7,7 @@
 .pricing-plan--highlight { border-color: var(--ds-color-border-strong); box-shadow: var(--ds-shadow-surface); }
 .pricing-plan__name { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-3); font-size: var(--ds-font-size-18); font-weight: var(--ds-font-weight-semibold); }
 .pricing-plan__price { display: flex; align-items: baseline; gap: 6px; margin: var(--ds-space-5) 0 var(--ds-space-4); font-family: var(--ds-font-family-mono); }
-.pricing-plan__price strong { font-size: 40px; font-weight: 600; letter-spacing: -0.02em; }
+.pricing-plan__price strong { font-size: var(--ds-font-size-36); font-weight: var(--ds-font-weight-semibold); letter-spacing: -0.02em; }
 .pricing-plan__price span { color: var(--ds-color-text-muted); font-size: var(--ds-font-size-13); }
 .pricing-plan__desc { color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-14) !important; line-height: 1.55; margin-bottom: var(--ds-space-5) !important; }
 .pricing-plan__list { display: grid; gap: var(--ds-space-2); margin: 0 0 var(--ds-space-6); padding: 0; list-style: none; }

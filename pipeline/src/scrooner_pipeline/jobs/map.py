@@ -3,11 +3,9 @@
 import json
 from pathlib import Path
 
-import psycopg
-import structlog
 import typer
 
-from scrooner_pipeline.db.connection import get_connection
+from scrooner_pipeline.db.connection import get_connection, run_tolerating_exit_commit_failure
 from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
@@ -34,7 +32,6 @@ from scrooner_pipeline.parsers.main_parser import run_parser, resolve_parser_res
 from scrooner_pipeline.mapper.main_calculator import METRIC_CALCULATOR_REGISTRY, unregistered_metrics
 
 app = typer.Typer()
-logger = structlog.get_logger()
 
 GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
 
@@ -110,19 +107,16 @@ def resolve_concept_fallbacks_cmd(
     resolve-facts (reads its output), BEFORE calculate/calculate-piotroski
     (they should consume the *_resolved concept, not the original)."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
-    stats = None
-    try:
-        with get_connection() as conn:
-            stats = resolve_fallbacks(conn, target_ciks)
-    except psycopg.OperationalError:
-        # Same shape as ownership.py's update_beneficial_ownership_cmd fix
-        # (2026-09-16): the outer conn can sit idle long enough for the
-        # Supabase pooler to drop it, surfacing only when the `with` block
-        # exits and psycopg's implicit commit/close hits a dead socket --
-        # by which point stats is already correct and every company's own
-        # work already committed. Don't let that crash a fully-successful
-        # run.
-        logger.warning("resolve_concept_fallbacks_cmd.exit_commit_failed", stats=stats)
+    # run_tolerating_exit_commit_failure: same shape as ownership.py's
+    # update_beneficial_ownership_cmd fix (2026-09-16) -- the outer conn
+    # can sit idle long enough for the Supabase pooler to drop it,
+    # surfacing only when the `with` block exits and psycopg's implicit
+    # commit/close hits a dead socket, well after stats is already correct
+    # and every company's own work already committed. Don't let that
+    # crash a fully-successful run.
+    stats = run_tolerating_exit_commit_failure(
+        "resolve_concept_fallbacks_cmd", lambda conn: resolve_fallbacks(conn, target_ciks)
+    )
     typer.echo(f"resolve-concept-fallbacks: {stats}")
 
 

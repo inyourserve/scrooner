@@ -23,6 +23,13 @@ React components remain inside the Next.js application and consume this package
 as the common token foundation. Product-specific composition stays with the
 product feature.
 
+Page width, title, lede, section-heading, and directory-card patterns are also
+owned here through `ds-page*`, `ds-section-heading`, and `ds-directory*`.
+Applications compose those primitives instead of creating page-local visual
+systems. Raw colors and normal UI typography outside `tokens.css` are rejected
+by `scripts/check_design_system.py`; the only typography exception is the
+documented 9–10px dense-financial-table treatment.
+
 See `doc/design/13_Scrooner_Scalable_Design_System.md` for the architecture,
 component contracts, accessibility rules, contribution process, and migration
 policy.

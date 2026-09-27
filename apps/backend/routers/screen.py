@@ -12,11 +12,10 @@ from fastapi import APIRouter, BackgroundTasks
 from pydantic import BaseModel
 
 from cache import get_cached_result, set_cached_result
-from dataset_version_cache import get_cached_dataset_version
-from db_pool import get_pooled_connection
+from dataset_version_cache import get_cached_dataset_version, get_cached_metric_catalog
+from db_pool import get_pooled_connection, get_usage_connection
 from metric_catalog import OPERATOR_ORDER, presentation_for
 from scrooner_pipeline.ai_query.rules import interpret
-from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.screener.cache_key import compute_query_hash
 from scrooner_pipeline.screener.query import run_query
 from scrooner_pipeline.screener.schema import ScreenQuery
@@ -68,23 +67,14 @@ def _load_metric_catalog() -> list[dict]:
 
 
 def _log_usage(event_type: str, user_id: str | None = None) -> None:
-    # Deliberately its OWN one-off connection (scrooner_pipeline.db.
-    # connection.get_connection()), NOT db_pool's shared pool -- measured
-    # live 2026-09-10: running this via BackgroundTasks against the SHARED
-    # pool blocked the main request's own response for ~260ms (matching
-    # exactly one Supabase round trip), even though the background task
-    # runs after the response body is logically sent; a plain isolated
-    # connection here does not exhibit that, confirmed via a controlled
-    # side-by-side test. This function always runs after the response is
-    # already on the wire, so its own connection's setup cost is invisible
-    # to the caller regardless of how slow it is.
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "insert into app.usage_event (user_id, event_type) values (%s, %s)",
-                (user_id, event_type),
-            )
-        conn.commit()
+    # Dedicated bounded pool, NOT the request pool (which blocked the
+    # response ~260ms when shared, measured 2026-09-10) and NOT a fresh
+    # connection per call (unbounded under bursts) -- see db_pool.py.
+    with get_usage_connection() as conn:
+        conn.execute(
+            "insert into app.usage_event (user_id, event_type) values (%s, %s)",
+            (user_id, event_type),
+        )
 
 
 @router.post("/screen")
@@ -102,7 +92,7 @@ def post_screen(query: ScreenQuery, background_tasks: BackgroundTasks) -> dict:
         cached = get_cached_result(query_hash)
         if cached is not None:
             return {**cached, "cache_hit": True}
-        result = run_query(conn, query, dataset_version=dataset_version)
+        result = run_query(conn, query, dataset_version=dataset_version, catalog=get_cached_metric_catalog(conn))
     set_cached_result(query_hash, result)
     return {**result, "cache_hit": False}
 
@@ -137,7 +127,7 @@ def post_ask(body: AskRequest, background_tasks: BackgroundTasks) -> dict:
             if cached is not None:
                 response["result"] = {**cached, "cache_hit": True}
             else:
-                run_result = run_query(conn, result.query, dataset_version=dataset_version)
+                run_result = run_query(conn, result.query, dataset_version=dataset_version, catalog=get_cached_metric_catalog(conn))
                 set_cached_result(query_hash, run_result)
                 response["result"] = {**run_result, "cache_hit": False}
     return response

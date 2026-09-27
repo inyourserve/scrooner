@@ -54,6 +54,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.mapper.price_metrics import (
     _latest_instant_fact,
     _load_concept_ids,
@@ -313,8 +314,11 @@ def compute_institutional_ownership_summary(conn: psycopg.Connection, ciks: set[
             # dedicated dead-letter table for ownership/ (unlike
             # core.normalizer_error/analytics.mapper_error), so roll back
             # and count, matching that existing local convention.
-            conn.rollback()
+            # safe_rollback() additionally tolerates a dead connection
+            # (see common/errors.py) instead of a bare conn.rollback()
+            # crashing the whole remaining batch.
             logger.exception("institutional_ownership_summary.company_failed", cik=cik)
+            conn = safe_rollback(conn, stage="institutional_ownership_summary", cik=cik)
             totals["errored"] += 1
             continue
         if summary is None:

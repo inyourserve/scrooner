@@ -22,14 +22,14 @@ function exampleHref(example: string) {
 export default async function ExplorePage() {
   const [sectors, industries] = await Promise.all([getSectorList(), getIndustryList()]);
   return (
-    <PublicPage current="explore" title="Explore" description={metadata.description!}>
+    <PublicPage current="explore" title="Explore" description={metadata.description!} wide>
       <section aria-labelledby="explore-screens-title">
         <h2 id="explore-screens-title">Popular screens</h2>
         <p>Run a tested, plain-English screen with one click.</p>
-        <div className="explore-grid explore-grid--wide">
+        <div className="ds-directory">
           {NATURAL_QUERY_EXAMPLES.map((example) => (
-            <Link key={example} href={exampleHref(example)} className="explore-item">
-              <span>{example}</span>
+            <Link key={example} href={exampleHref(example)} className="ds-directory__item">
+              <span className="ds-directory__label">{example}</span>
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
           ))}
@@ -38,26 +38,26 @@ export default async function ExplorePage() {
 
       <section aria-labelledby="explore-sectors-title">
         <h2 id="explore-sectors-title">Browse by sector</h2>
-        <div className="explore-grid">
+        <div className="ds-directory ds-directory--compact">
           {sectors.map((row) => (
-            <Link key={row.slug} href={`/stocks/sector/${row.slug}`} className="explore-item">
-              <span>{row.sector}</span>
-              <small>{row.company_count}</small>
+            <Link key={row.slug} href={`/stocks/sector/${row.slug}`} className="ds-directory__item">
+              <span className="ds-directory__label">{row.sector}</span>
+              <small className="ds-directory__meta">{row.company_count}</small>
             </Link>
           ))}
         </div>
       </section>
 
       <section aria-labelledby="explore-industries-title">
-        <div className="explore-section-heading">
+        <div className="ds-section-heading">
           <h2 id="explore-industries-title">Browse by industry</h2>
           <Link href="/stocks/industry">All industries →</Link>
         </div>
-        <div className="explore-grid">
+        <div className="ds-directory ds-directory--compact">
           {industries.slice(0, 24).map((row) => (
-            <Link key={row.slug} href={`/stocks/industry/${row.slug}`} className="explore-item">
-              <span>{row.y_industry}</span>
-              <small>{row.company_count}</small>
+            <Link key={row.slug} href={`/stocks/industry/${row.slug}`} className="ds-directory__item">
+              <span className="ds-directory__label">{row.y_industry}</span>
+              <small className="ds-directory__meta">{row.company_count}</small>
             </Link>
           ))}
         </div>

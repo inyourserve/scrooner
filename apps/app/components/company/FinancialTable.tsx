@@ -4,12 +4,19 @@ import { useState } from "react";
 import { EmptyState } from "@/components/scrooner/EmptyState";
 import type { Statement } from "@/lib/company/db";
 
+// Scaling/precision here must match lib/company/format.ts's fmtNum() --
+// same page, same kind of number, and they used to disagree (2 decimals
+// for "T" but only 1 for "B"/"M" here, while fmtNum uses 2 throughout,
+// producing visibly different precision between this table and the
+// Investor Snapshot panel above it). Kept as a separate function rather
+// than switching to fmtNum directly because financial statements need the
+// parens-for-negative convention fmtNum doesn't have.
 function amount(value: string | null) {
   if (value === null) return "—";
   const number = Number(value);
   if (!Number.isFinite(number)) return "—";
   const absolute = Math.abs(number);
-  const scaled = absolute >= 1e12 ? `${(absolute / 1e12).toFixed(2)}T` : absolute >= 1e9 ? `${(absolute / 1e9).toFixed(1)}B` : absolute >= 1e6 ? `${(absolute / 1e6).toFixed(1)}M` : absolute.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  const scaled = absolute >= 1e12 ? `${(absolute / 1e12).toFixed(2)}T` : absolute >= 1e9 ? `${(absolute / 1e9).toFixed(2)}B` : absolute >= 1e6 ? `${(absolute / 1e6).toFixed(2)}M` : absolute.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return number < 0 ? `(${scaled})` : scaled;
 }
 

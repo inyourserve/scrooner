@@ -21,12 +21,12 @@ export default async function IndustryPage({ params }: Props) {
   const data = await getCompaniesByIndustrySlug(slug);
   if (!data) notFound();
   return (
-    <PublicPage title={`${data.industry} stocks`} description={`${data.companies.length} companies in the ${data.industry} industry.`}>
-      <p><Link href="/stocks/industry">All industries →</Link></p>
-      <ul>
+    <PublicPage title={`${data.industry} stocks`} description={`${data.companies.length} companies in the ${data.industry} industry.`} wide>
+      <p className="public-directory-back"><Link href="/stocks/industry">← All industries</Link></p>
+      <ul className="ds-directory">
         {data.companies.map((company) => (
-          <li key={company.ticker}>
-            <Link href={`/stocks/${company.ticker.toLowerCase()}`}>{company.company_name}<span className="public-meta"> {company.ticker}</span></Link>
+          <li key={company.ticker} className="ds-directory__item">
+            <Link className="ds-directory__link" href={`/stocks/${company.ticker.toLowerCase()}`}><span className="ds-directory__label">{company.company_name}</span><small className="ds-directory__meta">{company.ticker}</small></Link>
           </li>
         ))}
       </ul>

@@ -44,22 +44,22 @@ export default async function AllStocksPage({ searchParams }: Props) {
     .sort((a, b) => a.company_name.localeCompare(b.company_name));
 
   return (
-    <PublicPage current="company" title="All stocks" description={`${rows.length.toLocaleString()} US-listed companies covered by Scrooner, browsable A to Z.`}>
+    <PublicPage current="company" title="All stocks" description={`${rows.length.toLocaleString()} US-listed companies covered by Scrooner, browsable A to Z.`} wide>
       <nav className="stocks-directory-jump" aria-label="Jump to letter">
         {activeLetters.map((entry) => (
           <Link key={entry} href={`/stocks?letter=${entry}`} aria-current={entry === letter ? "page" : undefined}>{entry}</Link>
         ))}
       </nav>
       <section aria-labelledby="stocks-letter-title">
-        <div className="explore-section-heading">
+        <div className="ds-section-heading">
           <h2 id="stocks-letter-title">{letter}</h2>
           <span className="public-meta">{companies.length.toLocaleString()} companies</span>
         </div>
-        <div className="explore-grid">
+        <div className="ds-directory ds-directory--compact">
           {companies.map((row) => (
-            <Link key={row.ticker} href={`/stocks/${row.ticker.toLowerCase()}`} className="explore-item">
-              <span>{row.company_name}</span>
-              <small>{row.ticker}</small>
+            <Link key={row.ticker} href={`/stocks/${row.ticker.toLowerCase()}`} className="ds-directory__item">
+              <span className="ds-directory__label">{row.company_name}</span>
+              <small className="ds-directory__meta">{row.ticker}</small>
             </Link>
           ))}
         </div>

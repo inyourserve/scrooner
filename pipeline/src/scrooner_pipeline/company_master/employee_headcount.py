@@ -20,6 +20,7 @@ empty (indexed, never fetched)."""
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.sec_client import SECClient
 from scrooner_pipeline.company_master.business_text import (
     clean_visible_text,
@@ -143,7 +144,11 @@ def process_companies(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception:
             logger.warning("employee_headcount.company_failed", cik=cik, exc_info=True)
             totals["errored"] += 1
-            conn.rollback()
+            # safe_rollback() tolerates a dead connection (a real,
+            # recurring Supabase pooler drop) instead of a bare
+            # conn.rollback() itself raising and crashing the whole
+            # remaining batch -- see common/errors.py.
+            conn = safe_rollback(conn, stage="employee_headcount", cik=cik)
 
     logger.info("employee_headcount.done", **totals)
     return totals

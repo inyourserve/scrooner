@@ -37,6 +37,88 @@ component — the same day it's discovered, not as a follow-up.
   invent a local one-off in an app-level CSS file that happens to look
   right today.
 
+## 1a. Theming — one light theme today, and exactly where a second one would plug in
+
+**Current state: Scrooner ships a single, light theme. There is no dark
+mode, no theme toggle, and no per-user theme preference anywhere in
+`apps/app` today.** This is a fact to verify against the code before
+assuming otherwise, not a permanent constraint — but as of 2026-09-20
+nothing in this repo reads `prefers-color-scheme` or a `data-theme`
+attribute for `apps/app`'s own pages.
+
+The plumbing that *would* carry a second theme already exists in two
+layers, and understanding both is what "theming" means in this codebase:
+
+1. **`packages/design-system/src/tokens.css`** — every real value (color,
+   spacing, radius, shadow, type) is a `--ds-*` custom property on `:root`.
+   This is the ONLY place a color/size value is allowed to be defined. A
+   theme, if one is ever added, is a second block of `--ds-*`
+   redefinitions scoped to a selector (`[data-theme="dark"]` or a
+   `prefers-color-scheme: dark` media query) — never a second copy of
+   component CSS. Every component (`.ds-button`, `.stock-hero`, etc.)
+   already reads tokens, never a hardcoded value (rule 1), so a theme
+   switch only has to touch this one file to reach the whole app.
+2. **`apps/app/app/globals.css`'s `@theme inline` block + `:root`
+   "compatibility alias" block** — bridges Tailwind's utility classes
+   (`bg-muted`, `text-primary`, the shadcn-generated primitives) to the
+   real `--ds-*` tokens, and gives a handful of legacy short names
+   (`--surface-canvas`, `--text-primary`, `--brand-700`, etc.) still used
+   by some older app-level CSS. These are aliases, never a second source
+   of truth — a color's real value is set exactly once, in `tokens.css`;
+   this block only renames it for Tailwind/legacy call sites. See rule 1's
+   note on the two dead alias values that once diverged from the real
+   token (`--muted`/`--accent`) — that bug is exactly what happens when an
+   alias block is treated as a place to *set* a value instead of just
+   forward one.
+
+If dark mode (or any second theme) is ever built: add the redefinition
+block to `tokens.css` under the appropriate selector, leave every
+component and every app-level CSS file untouched, and toggle the
+selector/attribute from wherever the app reads the user's preference.
+Nothing in `apps/app`'s component or page CSS should need to change for
+that to work — if a component *does* need a change to support a new
+theme, that component was hardcoding a raw value somewhere and rule 1 was
+violated; fix the component to read a token instead of special-casing the
+new theme.
+
+## 1b. Scaffolding — where a new file goes
+
+`components/` is organized by **who else can use it**, not by page or
+feature name alone. Check this table before creating a new component file
+— putting a component in the wrong folder is how the duplicate-empty-state
+and duplicate-`BrandMark` bugs in rule 3 happened:
+
+| Folder | What belongs here | Example |
+|---|---|---|
+| `components/ui/` | Generic shadcn-derived primitives — no Scrooner-specific business logic, would make sense in any product | `Button`, `Badge`, `Card`, `Dialog`, `Popover`, `Field`, `IconButton`, `StatusPanel`, `Tooltip`, `Surface`, `BrandMark` |
+| `components/scrooner/` | Cross-page business/domain components — Scrooner-specific meaning, but reusable across more than one feature area | `Delta` (price/metric change), `TickerBadge`, `EmptyState`, `TableSkeleton`, `SearchCommand`, `StockHeader` |
+| `components/layout/` | Page shells and chrome — arrange other components, own no business data themselves | `AppShell`, `AppPageLayout`, `AppSidebar`, `PageHeader` |
+| `components/public/` | Public-site-specific components not used inside `/app` | `PublicHeader`, `PublicFooter`, `PublicPage`, `AccountMenu`, `CompanySearch`, `HeaderAuthAction`, `DashboardNavLink` |
+| `components/auth/` | Login/signup/OAuth screens | `AuthForm`, `AuthShell`, `OAuthButtons` |
+| `components/company/` | Stock/company-page-only components, not reused elsewhere | `FinancialTable`, `MetricGrid`, `PriceChart`, `ResearchSection`, `StockSectionNav` |
+| `components/screener/` | Screener/create-screen-only components | `NaturalQueryPanel`, `ScreenerClient`, `InterpretationTable` |
+| `components/saved-screens/` | Saved-screens feature only | `SaveScreenButton`, `SavedScreensClient`, `SavedScreenDetailClient` |
+
+The test for which folder a new component belongs in: **would a second,
+unrelated feature area plausibly import this?** If yes and it's a raw
+primitive with no Scrooner meaning → `ui/`. If yes and it carries Scrooner
+domain meaning (a price, a ticker, a research concept) → `scrooner/`. If
+no, it's specific to one page/feature → that feature's own folder, named
+after the feature, not the page route. Don't create a new top-level
+folder for a single component — every feature folder above started with
+one file and grew; a one-off component that doesn't fit an existing
+feature folder is a signal to check rule 3's table first (it may already
+exist), not to invent a new folder.
+
+CSS follows the same page-vs-shared split as components: shared visual
+rules live in `packages/design-system` (rule 1); page-specific layout
+rules live in a CSS file next to the page or route segment it styles
+(`app/company-research.css`, `app/app/workspace.css`, `app/pricing.css`,
+`app/home.css`) and are never imported by more than the pages that need
+them — a page-scoped stylesheet reaching into another page's classes
+(rather than a shared component) is exactly the class-name-collision shape
+rule 8's postmortems already document.
+
 ## 2. Color semantics — brand and financial meaning are never the same hue
 
 - `--ds-color-action` / `--ds-color-action-hover` / `--ds-color-link` /
@@ -227,6 +309,301 @@ a real A-Z-jump-nav'd list of all ~6,000 covered companies). Before adding a
 new authenticated or discovery-adjacent page, add a row to this table first
 — if its intent already matches an existing row, it probably shouldn't be a
 new page.
+
+## 13. `.main-content` + `AppPageLayout` is the one shell for every non-table `/app` page
+
+Every `/app` page that isn't a wide data table shares exactly one outer
+container (`.main-content`, 1040px) and, inside it, the exact same
+content+sidebar frame (`<AppPageLayout>`, `components/layout/AppPageLayout.tsx`)
+wrapping a shared `<AppSidebar>` (`components/layout/AppSidebar.tsx`).
+That's it — a page's actual content (a list, a single form, a card) sizes
+itself *within* that shared main column; it never resizes the page's own
+outer container to fit itself. Concretely:
+
+| Page | Uses `AppPageLayout`? |
+|---|---|
+| `/app` Dashboard | Yes |
+| `/app/account` | Yes |
+| `/app/account/update-password` | Yes — the form itself stays a narrow 460px card centered in the main column, the *page* is still 1040 |
+| `/app/screens/new/save` (save-screen confirmation) | Yes — same pattern, card capped at 620px |
+| `/app/screens` (Saved Screens) | Yes |
+| `/app/alerts`, `/app/watchlists` | Yes |
+| `/app/screens/new` (Create screen) | **No** — already has its own two-column composer+examples layout; adding a second, different sidebar would be a third competing layout, not a fix |
+| `/app/screens/new/raw` (results), `/app/screens/[slug]` (saved-screen detail) | **No** — wide data tables, plus a Premium/popular-screens promo next to the exact results a user is trying to read is the wrong moment for it |
+| Public pages (`/stocks/{ticker}`, `/explore`, etc.) | **No** — different nav/ownership entirely |
+
+This replaced an earlier, worse answer to the same problem (2026-09-20,
+same day): first the fix was "3 container-width tiers, no others" — better
+than 5 arbitrary widths, but still meant the single-form pages (password
+update, save-confirmation) rendered as an isolated narrow column with
+nothing else on the page. Correctly called out live: a real product doesn't
+strand a settings page by itself when it could be promoting Premium or a
+popular screen right next to it, the same way Dashboard already did. Fixed
+by extracting Dashboard's sidebar into `AppSidebar` (adds a Premium→
+`/pricing` promo card and 2-3 short example-screen links, on top of the nav
+links already there) and a thin `AppPageLayout` wrapper, then adopting both
+on every page in the "Yes" rows above — collapsing "3 width tiers" down to
+one shared shell, since the form-width cases turn out to just be a
+`max-width` on the *card*, not a different page container at all.
+
+Before giving a new `/app` page its own layout: if it's not a wide table
+and not Create Screen's own composer, it almost certainly wants
+`<AppPageLayout>`, not a bespoke width.
+
+## 13a. A "wide table" exemption from the layout rules is not an exemption from every other rule
+
+Found live 2026-09-20, on the results page specifically (excluded from
+`AppPageLayout` per §13, correctly): three controls that should have used
+shared components didn't, just because the page as a whole was treated as
+"the exception" and never got the same scrutiny as everything else:
+
+- The "Industry" toggle and "Export CSV" toolbar buttons were bare
+  `<button>` elements styled only via a page-scoped `.results-toolbar >
+  button` selector — not `<Button variant="ghost"/"secondary">`. They
+  happened to *look* like buttons because the CSS re-implemented padding/
+  border/hover from scratch, but they weren't the shared component, so a
+  future global button change (spacing, focus ring, disabled state) would
+  silently skip them.
+- "Edit columns" was a native `<details>/<summary>` dropdown, a different
+  interaction mechanism from every other floating menu in the app (Account
+  menu uses the controlled `Popover` component). Converted to
+  `Popover` + a `Button` trigger — now it gets the same Escape-to-close,
+  click-outside, and focus-restore behavior as the Account menu for free,
+  instead of whatever `<details>` happens to do.
+- `SaveScreenButton` passed `variant="secondary"` in its own source, then a
+  page-scoped CSS rule (`.save-screen-control .ds-button`) forced it to
+  render as if it were `variant="primary"` (navy fill) anyway. Fixed by
+  just passing `variant="primary"` and deleting the override — the same
+  visual result, but now truthful: reading the JSX tells you what the
+  button actually looks like.
+
+Generalizable check: a page being the documented exception to a *layout*
+rule (no sidebar, wider width) doesn't make it exempt from *component*
+rules. Grep for `<button ` and `<details` with no `Button`/`Popover`
+import nearby on any page that's been carved out as a special case —
+that's exactly where this kind of drift hides, because it stops getting
+compared against the pages that share a common wrapper.
+
+## 14. Reuse `PageHeader` and `EmptyState` — don't hand-roll either
+
+Every standard-width `/app` page's title block uses the shared `PageHeader`
+component (`components/layout/PageHeader.tsx`); every "nothing here yet"
+state uses the shared `EmptyState` component
+(`components/scrooner/EmptyState.tsx`, already documented in table form in
+§3 above). Found live 2026-09-20: Dashboard, Alerts, and Watchlists had each
+hand-rolled their own header markup and/or empty-state `<div>`/`<p>` instead
+of reusing either component — not because the components didn't exist, but
+because each page was built independently without checking first. Create
+Screen and Saved-screen-detail are legitimate exceptions for the header
+(a composer card title and a back-link+action-buttons bar are genuinely
+different shapes PageHeader doesn't support) — but a page hand-rolling its
+*empty* state has no equivalent excuse; `EmptyState`'s `bordered`/`icon`/
+`action` props already cover every case seen so far.
+
+## 15. Type scale is discrete — snap to it, `clamp()` fluid ranges excepted
+
+`--ds-font-size-*` defines exactly these steps: 11, 12, 13, 14, 15, 16, 18,
+20, 24, 30, 36, 48, 64, 88 (px-equivalent). A literal `font-size` value
+outside this list (`13.5px`, `10.5px`, `12.5px`, a bare `10px`/`9px` used as
+if it were a deliberate step) is drift, not a real design decision — nobody
+sits down and picks 13.5px on purpose. Found and fixed six instances live
+2026-09-20 (three introduced earlier the same day building the dashboard
+sidebar and `/explore`, three pre-existing on the homepage and the stock
+page's key-metrics grid) by snapping each to its nearest real step. The one
+legitimate exception: a `clamp(26px, 3.4vw, 34px)`-style fluid range for
+responsive headline sizing has continuous, computed endpoints by design —
+those aren't required to land on scale steps. A handful of pre-existing
+sub-11px sizes in the stock page's dense financial tables (9-10px table
+headers, chart axis labels) were checked and deliberately left alone — real
+data-density tables trading off legibility for column count is a considered
+exception this project has tuned carefully over many sessions, not
+accidental drift, and forcing them to 11px would visibly worsen those
+tables for no real consistency gain. Grep for the pattern before trusting a
+page looks consistent: `grep -rhoE "font-size:\s*[0-9]+(\.[0-9]+)?px" | sort
+-u` against the full token list surfaces every literal outside it in one
+pass.
+
+## 16. A descendant CSS selector meant for one child can silently size an unrelated nested component
+
+Found live 2026-09-20, on the stock page's price chart: `.price-chart svg
+{ width: 100%; height: 280px; }` was written to size the chart's own line
+graph, but `.price-chart svg` matches *any* `<svg>` anywhere inside
+`.price-chart` — including the tiny 11×11 `Delta` arrow icon rendered a few
+DOM levels up in the same card's toolbar (`$334.88 ↑ +10.17%`). That icon's
+own `width="11" height="11"` HTML attributes lost to the CSS rule, stretching
+a small Lucide arrow-up glyph to fill the entire chart area — a huge, bold,
+unmistakably-arrow-shaped icon sitting where a price line should be. Looked
+exactly like "a big arrow" because that's literally what it was: the real
+line-chart `<polyline>` was rendering correctly the whole time, just
+underneath/beside this oversized, mis-scoped icon.
+
+Root cause was purely a selector-scope mistake, not a rendering engine
+quirk — `document.querySelector('.price-chart svg')` in isolation looks
+fine (it exists, has the right viewBox), so the compiled-CSS-grep habit
+from rule #8 wasn't enough here; the bug only shows up once you check
+*which* elements a broad descendant selector actually matches, not just
+whether the rule you wrote exists. Fixed by scoping to `.price-chart__plot
+svg` (the wrapper that only ever contains the actual chart canvas) instead
+of `.price-chart svg` (the whole card, which also contains the toolbar's
+icon). General check: before writing `.card-class svg` or `.card-class
+button` to size/style "the one thing inside," ask whether any shared
+component (an icon, a `Delta`, a `Badge`) could also render inside that
+same card elsewhere — if yes, scope to the specific wrapper, not the whole
+card.
+
+## 17. Two independent number formatters for the same page will disagree on precision
+
+`lib/company/format.ts`'s `fmtNum()` is documented as *the* shared
+formatter so "the metric grid, statement tables, and any future page share
+one formatting contract" — but `FinancialTable.tsx` had its own separate
+`amount()` function instead, and the two disagreed: `fmtNum` used 2 decimal
+places for thousand/million/billion/trillion scaling uniformly, while
+`amount()` used 2 for trillion but only 1 for billion/million (inconsistent
+even with *itself*), and used `toLocaleString(..., { maximumFractionDigits:
+2 })` with no minimum for small values (per-share numbers like EPS) — which
+silently drops trailing zeros, so a real value of exactly 2.40 rendered as
+"2.4" while every other row in the same column showed 2 decimals. Both
+bugs were only visible by reading an actual rendered table row next to
+its neighbors ("2.4" among "0.97 / 1.65 / 1.57 / 1.84"), not from the code
+in isolation. Fixed by aligning `amount()`'s precision to match `fmtNum()`
+exactly (2 decimals throughout, `minimumFractionDigits` set) — kept as a
+separate function rather than switching call sites to `fmtNum()` directly,
+since financial statements need the parens-for-negative convention
+(`(29.6B)`) that `fmtNum()` doesn't have. When a page has more than one
+number formatter, their precision needs to match even if their other
+behavior legitimately differs — check by reading real adjacent output, not
+by comparing function signatures.
+
+## 18. Public pages inherit a global serif `h1`/`h2` default that `/app` explicitly opts out of — new public pages don't get that opt-out for free
+
+`globals.css` has a bare, unscoped `h1, h2 { font-family: var(--font-serif)
+}` — every heading site-wide is serif by default. `/app` pages look sans
+only because `.app-shell .page-intro h1, .app-shell .page-intro h2 { ... }`
+explicitly overrides it back to sans, scoped to `.app-shell`. The stock
+page (`.stock-hero h1`, `.research-section__header h2`) is a *public* page
+(outside `.app-shell`), so it never got an equivalent override and rendered
+large serif headings by the same default About/Methodology/Home use on
+purpose. Reported live 2026-09-20 as "why is the h1 so big, why isn't it
+standard" — correct call: the stock page is a data tool, not editorial
+content, and reads better matching `/app`'s own type voice. Fixed by giving
+`.stock-hero h1` and `.research-section__header h2` explicit sans overrides
+(matching Dashboard's own h1 size/weight, not just "smaller") rather than
+leaving the page half-migrated with a sans h1 sitting above serif h2
+section headers, which would have been a new, self-inflicted
+inconsistency. Home/About/Methodology/Pricing keep the serif default
+untouched — that split (editorial content vs. tool pages) is the
+correct, intentional half of this default, not the half that was wrong.
+
+## 19. "Snap to the scale" and "use the token, not the matching number" are two different fixes — both are needed
+
+Rule 15's original sweep (2026-09-20) fixed every literal `font-size` whose
+*value* didn't match a token step. That sweep's own grep pattern
+(`font-size:\s*[0-9]+(\.[0-9]+)?px`) missed some real drift because it was
+run before a few off-scale values existed yet in files touched later the
+same session, and a second, independent pass (also 2026-09-20, prompted
+directly by "core typography... use these only, no hardcoding") found six
+more: `.price-chart__toolbar strong` (19px), `.natural-query-heading h1`
+(22px — a genuine duplicate page-title style that should have matched
+`.page-intro h1`'s `clamp(28px, 4vw, 36px)` all along, not just landed on
+the nearest flat number), the global `h2`/`h3` element defaults (23px/18px
+in `globals.css`), `.stock-hero__price strong`'s mobile override (34px),
+`.pricing-plan__price strong` (40px), and `.hero-wordmark .name`'s
+narrowest mobile override (44px). Each was snapped to its nearest real step
+(preferring "one step down from the desktop/clamp value" over pure numeric
+distance when the literal was clearly a freehand mobile shrink, e.g.
+44px→36px and 40px→36px rather than a nearer-by-distance value that isn't
+actually one scale step away).
+
+Separately, and just as real a form of "hardcoding": dozens of *already
+on-scale* literals (`font-size: 13px`, `font-weight: 600`, etc.) were still
+spelled as bare numbers rather than `var(--ds-font-size-13)` /
+`var(--ds-font-weight-semibold)` — visually correct, but not actually
+wired to the token source, so a future token-scale change wouldn't reach
+them and a linter can't tell them apart from real drift. Converted every
+remaining bare literal that exactly matches a token value to its `var()`
+form, project-wide, via a value-preserving sed pass (`font-size: 600` and
+`font-weight: 600` are bijective with their token names, so this is a
+zero-visual-risk mechanical substitution, not a design decision — verified
+with a full rebuild + screenshot pass after, not assumed safe from the
+diff alone). After both passes: **zero** raw `font-weight` literals remain
+anywhere in `app`/`components`, and the only remaining raw `font-size`
+literals are the six pre-existing sub-11px dense-table values rule 15
+already named and deliberately excepted (9px/10px, no token exists that
+low). Re-run both greps after any future typography change:
+`grep -rhoE "font-(size|weight):\s*[0-9]" app components --include="*.css"
+| sort | uniq -c` — any row naming a value other than 9/10 (font-size) is
+new drift to fix, not a false positive to explain away.
+
+## 20. A row-level highlight class loses to a column-level sticky rule at higher specificity — scope the highlight to match
+
+Found live 2026-09-20 adding a highlighted "this is the current company" row
+to the stock page's peer-comparison table (`.research-table__self`,
+prompted by a Screener.in comparison — see
+`doc/learnings/2026-09-20-screener-in-stock-page-comparison.md`). The rule
+`.research-table th:first-child { position: sticky; left: 0; background:
+var(--ds-color-bg-surface); }` (needed so the company-name column stays
+visible while a wide table scrolls horizontally) has specificity `(0,2,1)`.
+A naive `.research-table__self th { background: ... }` is only `(0,1,1)` —
+lower, so it silently lost on exactly the one cell (the sticky name column)
+where the highlight mattered most, even though every other cell in the same
+row highlighted correctly. Caught by an actual rendered screenshot, not by
+reading the CSS (the two rules don't look like they conflict without knowing
+Chrome's specificity math) — same discipline as rule 8. Fixed with an
+explicit `.research-table__self th:first-child` rule at matching
+specificity `(0,2,1)`, so source order (mine comes later) decides the tie.
+**Generalizable check: before adding a row-level (or any partial-row)
+highlight class to a table that also has a sticky/pinned column, grep for
+that column's own rule's selector shape — if it's `.table th:first-child`
+or similar, the new class needs an explicit `:first-child` (or matching)
+companion rule, not just a bare `.new-class th`.** `FinancialTable`'s own
+`.hl` class was already safe here because it's applied per-`<td>`, not
+per-`<tr>`, so it never had to fight the sticky-column rule in the first
+place — the peer table's row-level approach is what exposed this.
+
+## 21. A `position: fixed; inset: 0` overlay rendered inside a sticky ancestor can silently lay out at the ancestor's own height, not the viewport's
+
+Found live 2026-09-21 auditing the shared `Dialog` component (used by the
+⌘K search command and by `SavedScreensClient`'s confirm dialogs) for a
+"make these shadcn components premium" pass. Reading `.ds-dialog-backdrop`'s
+CSS looked entirely correct (`position: fixed; inset: 0; display: grid;
+place-items: center`), and it would have been easy to conclude the component
+was fine from source alone. Only a direct `getBoundingClientRect()` check
+(via a real headless-Chrome CDP session — see the standing rule on verifying
+visual changes with a screenshot, extended here to "or a live DOM
+measurement when a screenshot alone doesn't explain what's wrong") showed
+the backdrop's actual rendered box was `1440×64` — exactly the sticky
+header's own height — instead of the full viewport. The dialog rendered
+pinned to the top-right corner with no visible dimming below the header,
+because `Dialog` renders in place inside the page's React tree, nested
+inside the sticky `<header>`, rather than escaping it.
+
+Root cause was not fully isolated (no ancestor had `transform`/`filter`/
+`will-change` — the usual textbook cause of a fixed-position element's
+containing block changing — and the only `overflow: hidden` in the chain
+was `<body>`, which `Dialog` itself deliberately sets while open to lock
+background scroll, a correct and unrelated pattern). Rather than chase the
+exact browser-engine interaction further, fixed it the way any full-viewport
+modal should be built regardless of cause: **`createPortal` it to
+`document.body`**, so it can never inherit a layout quirk from wherever it
+happens to be mounted in the component tree. This is the standard, textbook
+answer for "a fixed-position full-screen overlay behaves wrong depending on
+where it's rendered" — reach for it directly next time this class of bug
+shows up, rather than re-deriving the root cause from scratch. `Popover`
+does not have this problem and needs no portal: it's `position: absolute`,
+anchored to its own trigger's positioning context by design, never meant to
+fill the viewport.
+
+**Generalizable check: any component using `position: fixed; inset: 0` (a
+full-viewport overlay — dialogs, drawers, full-screen loading states) should
+be portaled to `document.body`, not rendered in place** — especially in this
+app, where every page has a `position: sticky` header. A `position: absolute`
+component anchored to its trigger (popovers, dropdowns, tooltips) does not
+need this and should stay in place, since portaling would break its
+anchor-relative math for no benefit.
+
+## 22. Never name a custom CSS class after a Tailwind utility
+
+Found live 2026-09-26: `.overline` (the small mono "INVESTOR SNAPSHOT" label on the stock page) rendered with a line drawn above the text, because Tailwind v4 is imported globally and ships a utility literally called `.overline` (`text-decoration: overline`). Our own rule never set `text-decoration`, so the utility silently applied — invisible in source review, obvious only in a rendered screenshot, then confirmed via `getComputedStyle().textDecoration`. Renamed to `.section-label`. **Before adding a bare class name, check it isn't a Tailwind utility** (`underline`, `overline`, `truncate`, `container`, `hidden`, `block`, `flex`, `grid`, `static`, `fixed`, `sticky`, `italic`, `border`, `shadow`, `ring`, `blur`, `visible`, `invisible`, `sr-only`...) — prefer BEM-style prefixed names (`.stock-hero__ticker`).
 
 ## Postmortems (append here, most recent first)
 

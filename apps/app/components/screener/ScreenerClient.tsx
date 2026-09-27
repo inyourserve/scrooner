@@ -25,6 +25,7 @@ import { collectMetricNames, DEFAULT_COMPARISON_METRICS } from "@/lib/screener/t
 import { NaturalQueryPanel } from "./NaturalQueryPanel";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
+import { Popover } from "@/components/ui/Popover";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { SaveScreenButton } from "@/components/saved-screens/SaveScreenButton";
 import { EmptyState } from "@/components/scrooner/EmptyState";
@@ -185,6 +186,7 @@ export function ScreenerClient({
   });
   const [hiddenMetricNames, setHiddenMetricNames] = useState<string[]>([]);
   const [showClassification, setShowClassification] = useState(true);
+  const [columnPickerOpen, setColumnPickerOpen] = useState(false);
 
   useEffect(() => {
     if (initialMetrics.length > 0) return;
@@ -600,18 +602,18 @@ export function ScreenerClient({
             </div>
 
             {requestState === "success" && result && result.matched.length > 0 && <div className="results-toolbar" aria-label="Result tools">
-              <button type="button" className={showClassification ? "is-active" : ""} onClick={() => setShowClassification((shown) => !shown)}>Industry</button>
-              <button type="button" onClick={exportCurrentPage}>Export CSV</button>
-              <details className="column-picker">
-                <summary>Edit columns</summary>
-                <div>
+              <Button type="button" variant={showClassification ? "secondary" : "ghost"} size="small" aria-pressed={showClassification} onClick={() => setShowClassification((shown) => !shown)}>Industry</Button>
+              <Button type="button" variant="ghost" size="small" onClick={exportCurrentPage}>Export CSV</Button>
+              <div className="column-picker">
+                <Button type="button" variant="ghost" size="small" aria-haspopup="menu" aria-expanded={columnPickerOpen} onClick={() => setColumnPickerOpen((open) => !open)}>Edit columns</Button>
+                {columnPickerOpen && <Popover label="Choose which metrics are shown" onClose={() => setColumnPickerOpen(false)} className="column-picker__popover">
                   <strong>Metrics shown</strong>
                   {resultMetricNames.map((name) => <label key={name}>
                     <input type="checkbox" checked={!hiddenMetricNames.includes(name)} onChange={(event) => setHiddenMetricNames((hidden) => event.target.checked ? hidden.filter((item) => item !== name) : [...hidden, name])} />
                     <span>{metricByName(metrics, name)?.display_name ?? name}</span>
                   </label>)}
-                </div>
-              </details>
+                </Popover>}
+              </div>
             </div>}
 
             {requestState === "loading" && (

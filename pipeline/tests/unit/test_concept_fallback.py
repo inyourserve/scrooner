@@ -3,7 +3,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from scrooner_pipeline.mapper.concept_fallback import _find_or_create_instant_period, resolve_fallback_for_company
+from scrooner_pipeline.mapper.concept_fallback import (
+    _find_or_create_instant_period,
+    resolve_arithmetic_fallback,
+    resolve_fallback_for_company,
+)
 
 
 class _FakeCursor:
@@ -173,3 +177,45 @@ class TestFindOrCreateInstantPeriod:
 
         assert result == 7
         assert cur.execute.call_count == 3
+
+
+@pytest.mark.unit
+class TestResolveArithmeticFallbackParserExclusion:
+    """Found live 2026-09-21 (Hyatt Hotels): resolve_arithmetic_fallback's
+    blanket delete-then-reinsert of a *_resolved concept silently wiped a
+    value parsers/cost_of_revenue_parser.py had just written into the
+    SAME resolved concept via resolve_parser_results() -- neither writer
+    knew about the other, the same shared-table scoping bug class already
+    hit for roic/roe (Mapper Day 6) and expanded_metrics.py's delete
+    scope. These tests assert the fix's actual mechanism (an explicit
+    concept_parser_result exclusion in both the DELETE and both INSERT
+    branches) stays in place, rather than re-verifying the whole SQL
+    round trip against a real database."""
+
+    def _run_and_capture_sql(self):
+        conn = MagicMock()
+        cur = conn.cursor.return_value.__enter__.return_value
+        cur.fetchone.return_value = (3,)
+        resolve_arithmetic_fallback(
+            conn, resolved_id=1, primary_id=2, minuend_id=3, subtrahend_id=4, guard_min_value=None,
+        )
+        return [call.args[0] for call in cur.execute.call_args_list]
+
+    def test_delete_excludes_parser_owned_companies(self):
+        statements = self._run_and_capture_sql()
+        delete_sql = statements[0]
+        assert "delete from analytics.canonical_fact" in delete_sql
+        assert "concept_parser_result" in delete_sql
+
+    def test_baseline_passthrough_insert_excludes_parser_owned_companies(self):
+        statements = self._run_and_capture_sql()
+        insert_sql = statements[1]
+        assert insert_sql.count("concept_parser_result") >= 2  # baseline branch + derived branch
+
+    def test_commits_after_write(self):
+        conn = MagicMock()
+        cur = conn.cursor.return_value.__enter__.return_value
+        cur.fetchone.return_value = (5,)
+        count = resolve_arithmetic_fallback(conn, resolved_id=1, primary_id=2, minuend_id=3, subtrahend_id=4, guard_min_value=0)
+        assert count == 5
+        conn.commit.assert_called_once()

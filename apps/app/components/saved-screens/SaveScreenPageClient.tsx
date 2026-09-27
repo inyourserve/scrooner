@@ -2,7 +2,9 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { AppPageLayout } from "@/components/layout/AppPageLayout";
 import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardDescription, CardHeader, CardHeading, CardTitle } from "@/components/ui/Card";
 import { Field } from "@/components/ui/Field";
 import { StatusPanel } from "@/components/ui/StatusPanel";
 import { savedScreensApi } from "@/lib/saved-screens/client";
@@ -89,23 +91,27 @@ export function SaveScreenPageClient() {
   }
 
   return (
-    <main className="workspace-page save-query-page" id="main-content">
-      <section className="save-query-card" aria-labelledby="save-query-title">
-        <h1 id="save-query-title">Save query</h1>
-        {state === "loading" && <StatusPanel title="Loading query" busy><p>Preparing the saved screen.</p></StatusPanel>}
-        {state === "error" && !query && <StatusPanel tone="negative" title="Query unavailable"><p>{error}</p></StatusPanel>}
-        {query && <form onSubmit={save}>
-          <Field htmlFor="saved-screen-name" label="Name" error={error || undefined} errorId="save-screen-error">
-            <input className="ds-control" id="saved-screen-name" maxLength={120} autoFocus value={name} onChange={(event) => { setName(event.target.value); setError(""); }} placeholder="e.g. Durable compounders" aria-invalid={Boolean(error)} aria-describedby={error ? "save-screen-error" : undefined} />
-          </Field>
-          <div className="save-query-preview"><strong>Query</strong><p>{queryText || "Structured fundamental screen"}</p></div>
-          <p className="save-query-privacy">Saved screens are private to your account.</p>
-          <div className="save-query-actions">
-            <Button type="button" variant="ghost" onClick={goBack}>← Go back</Button>
-            <Button type="submit" loading={state === "saving"} loadingLabel="Saving…">Save query</Button>
-          </div>
-        </form>}
-      </section>
+    <main className="main-content" id="main-content">
+      <AppPageLayout>
+        <Card className="save-query-card" aria-labelledby="save-query-title">
+          <CardHeader><CardHeading><CardTitle id="save-query-title">Save screen</CardTitle><CardDescription>Name this screen so you can run it again later.</CardDescription></CardHeading></CardHeader>
+          <CardContent>
+          {state === "loading" && <StatusPanel title="Loading query" busy><p>Preparing the saved screen.</p></StatusPanel>}
+          {state === "error" && !query && <StatusPanel tone="negative" title="Query unavailable"><p>{error}</p></StatusPanel>}
+          {query && <form onSubmit={save}>
+            <Field htmlFor="saved-screen-name" label="Name" error={error || undefined} errorId="save-screen-error">
+              <input className="ds-control" id="saved-screen-name" maxLength={120} autoFocus value={name} onChange={(event) => { setName(event.target.value); setError(""); }} placeholder="e.g. Durable compounders" aria-invalid={Boolean(error)} aria-describedby={error ? "save-screen-error" : undefined} />
+            </Field>
+            <div className="save-query-preview"><strong>Query</strong><p>{queryText || "Structured fundamental screen"}</p></div>
+            <p className="save-query-privacy">Saved screens are private to your account.</p>
+            <div className="save-query-actions">
+              <Button type="button" variant="ghost" onClick={goBack}>← Go back</Button>
+              <Button type="submit" loading={state === "saving"} loadingLabel="Saving…">Save screen</Button>
+            </div>
+          </form>}
+          </CardContent>
+        </Card>
+      </AppPageLayout>
     </main>
   );
 }

@@ -73,3 +73,22 @@ At a few thousand to ~10K US tickers, the entire snapshot table fits comfortably
   tie-breaker. Without an explicit sort, the final directional condition is the
   default: minimum conditions (`>`/`>=`) show highest values first and maximum
   conditions (`<`/`<=`) show lowest values first.
+
+## Stored natural-language templates and cache warming
+
+- Reviewed templates live in `pipeline/src/scrooner_pipeline/ai_query/screen_templates.json`.
+  A template describes the canonical metric/operator and approved popular
+  values; the template ID itself is never used as result-cache identity.
+- User-provided values still produce an ordinary validated `ScreenQuery`.
+  Equivalent wording therefore converges on the same canonical query and the
+  same dataset-versioned cache entry.
+- After a screening snapshot refresh, operations may warm the approved popular
+  variants through `apps/backend/template_cache_warmer.py`. Existing warm keys
+  are skipped, one failed template does not block the remainder, and every
+  result is written through the same cache functions used by live requests.
+  Run it from `apps/backend` with `python -m template_cache_warmer` after the
+  new dataset version is visible.
+- Cache identity remains `SHA256(canonical ScreenQuery + dataset_version)`.
+  For example, `P/E < 15` and `P/E < 25` never collide even though both came
+  from the `pe_max` template. A new dataset version automatically makes all old
+  entries unreachable.

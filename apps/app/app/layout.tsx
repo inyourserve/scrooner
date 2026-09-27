@@ -7,9 +7,39 @@ import "./public-content.css";
 import "./company-research.css";
 import "./pricing.css";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SCROONER_URL ?? "https://scrooner.com";
+const SITE_NAME = "Scrooner";
+const SITE_DESCRIPTION = "Build deterministic US fundamental screens and verify every result.";
+
+// `metadataBase` resolves every relative URL used in this file and in any
+// page's own `openGraph`/`twitter` metadata (e.g. a per-page `images: [...]`
+// entry) into an absolute one -- without it, Next.js falls back to
+// inferring from the request and warns at build time, and social-preview
+// images can silently break. `openGraph`/`twitter` here are just the
+// site-wide default a page inherits unless it sets its own.
+//
+// Deliberately a plain `title` string, not `{ default, template }` --
+// every page in this app that sets its own title (e.g. /stocks/[ticker]'s
+// generateMetadata) already builds the FULL string itself, including its
+// own " — Scrooner" suffix. A title template would apply on top of that
+// and double the suffix ("AAPL — Scrooner — Scrooner"); simpler and safer
+// to keep title composition fully in each page's own hands.
 export const metadata: Metadata = {
-  title: "Scrooner — Fundamental stock screening",
-  description: "Build deterministic US fundamental screens and verify every result.",
+  metadataBase: new URL(SITE_URL),
+  title: `${SITE_NAME} — Fundamental stock screening`,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Fundamental stock screening`,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary",
+    title: `${SITE_NAME} — Fundamental stock screening`,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 // Missing entirely until now -- every mobile browser was rendering this

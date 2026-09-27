@@ -125,6 +125,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.mapper.price_metrics import (
     _latest_instant_fact,
     _load_concept_ids,
@@ -388,8 +389,11 @@ def compute_mutual_fund_ownership_summary(conn: psycopg.Connection, ciks: set[st
             # Same "one company's failure must not crash the whole batch"
             # discipline as institutional_summary.py -- no dedicated
             # dead-letter table for ownership/, so roll back and count.
-            conn.rollback()
+            # safe_rollback() additionally tolerates a dead connection
+            # (see common/errors.py) instead of a bare conn.rollback()
+            # crashing the whole remaining batch.
             logger.exception("mutual_fund_ownership_summary.company_failed", cik=cik)
+            conn = safe_rollback(conn, stage="mutual_fund_ownership_summary", cik=cik)
             totals["errored"] += 1
             continue
         if summary is None:

@@ -1,6 +1,7 @@
+import psycopg
 import pytest
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 
 class _Cursor:
@@ -69,3 +70,42 @@ class TestLogError:
         conn = _Connection()
         with pytest.raises(AssertionError):
             log_error(conn, "not.a.real.table", "0000000001", "calculate", ValueError("boom"))
+
+
+class _OperationalErrorConnection(_Connection):
+    """Mirrors what a real dead Supabase pooler connection does: rollback()
+    raises psycopg's own OperationalError, not a generic RuntimeError --
+    safe_rollback() only reconnects for this specific exception, so it's
+    the one the real bug (2026-09-15/16) actually looked like."""
+
+    def rollback(self):
+        if self.fail_rollback:
+            raise psycopg.OperationalError("server closed the connection unexpectedly")
+        self.rolled_back = True
+
+
+@pytest.mark.unit
+class TestSafeRollback:
+    def test_healthy_connection_rolls_back_and_is_returned_unchanged(self):
+        conn = _OperationalErrorConnection()
+        result = safe_rollback(conn, stage="concept_fallback", cik="0000000001")
+        assert result is conn
+        assert conn.rolled_back is True
+
+    def test_dead_connection_returns_a_fresh_one_instead_of_raising(self, monkeypatch):
+        dead_conn = _OperationalErrorConnection(fail_rollback=True)
+        fresh_conn = _Connection()
+        monkeypatch.setattr(
+            "scrooner_pipeline.common.errors.psycopg.connect",
+            lambda _url: fresh_conn,
+        )
+        result = safe_rollback(dead_conn, stage="concept_fallback", cik="0000000001")  # must not raise
+        assert result is fresh_conn
+
+    def test_non_operational_error_still_propagates(self):
+        """A rollback failure that ISN'T a dead connection is a genuinely
+        new, unexpected bug -- safe_rollback deliberately only swallows
+        the one specific, documented failure mode, not every exception."""
+        conn = _Connection(fail_rollback=True)  # raises plain RuntimeError
+        with pytest.raises(RuntimeError):
+            safe_rollback(conn, stage="concept_fallback", cik="0000000001")

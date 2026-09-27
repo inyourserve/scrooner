@@ -22,6 +22,7 @@ import time
 
 import psycopg
 
+from scrooner_pipeline.screener.resolve import load_screenable_metric_catalog
 from scrooner_pipeline.screener.snapshot import get_dataset_version
 
 TTL_SECONDS = 30
@@ -38,3 +39,23 @@ def get_cached_dataset_version(conn: psycopg.Connection) -> int:
     _cached_version = get_dataset_version(conn)
     _expires_at = now + TTL_SECONDS
     return _cached_version
+
+
+# Same idea for the screenable metric catalog (metric_name -> id): it only
+# changes when a metric_definition is added, which also needs a snapshot
+# rebuild before it is screenable, so a short TTL is safe. Saves one
+# ~280ms round trip on every Redis-miss screen run (measured 2026-09-26).
+CATALOG_TTL_SECONDS = 300
+
+_cached_catalog: dict[str, int] | None = None
+_catalog_expires_at: float = 0.0
+
+
+def get_cached_metric_catalog(conn: psycopg.Connection) -> dict[str, int]:
+    global _cached_catalog, _catalog_expires_at
+    now = time.monotonic()
+    if _cached_catalog is not None and now < _catalog_expires_at:
+        return _cached_catalog
+    _cached_catalog = load_screenable_metric_catalog(conn)
+    _catalog_expires_at = now + CATALOG_TTL_SECONDS
+    return _cached_catalog

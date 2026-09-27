@@ -72,10 +72,7 @@ function SearchCommandPanel({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     if (!query.trim()) return;
 
-    if (directory) {
-      setResults(rankCompanyMatches(directory, query, 8));
-      return;
-    }
+    if (directory) return;
 
     const controller = new AbortController();
     const timeout = window.setTimeout(async () => {
@@ -89,7 +86,7 @@ function SearchCommandPanel({ onClose }: { onClose: () => void }) {
     return () => { window.clearTimeout(timeout); controller.abort(); };
   }, [query, directory]);
 
-  const visible = query.trim() ? results : recent;
+  const visible = query.trim() ? (directory ? rankCompanyMatches(directory, query, 8) : results) : recent;
 
   function select(company: SearchCompany) {
     const next = addRecentCompany(recent, company);

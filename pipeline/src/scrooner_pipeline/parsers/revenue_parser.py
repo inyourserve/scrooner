@@ -63,6 +63,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.sec_client import SECClient
 from scrooner_pipeline.segments.segment_revenue import (
     _CELL,
@@ -468,8 +469,11 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
                 # cursor.execute on this same connection would fail too
                 # without this rollback, cascading one bad row into the
                 # whole rest of the batch. Same lesson as common/
-                # errors.py's log_error() (mapper/CLAUDE.md).
-                conn.rollback()
+                # errors.py's log_error() (mapper/CLAUDE.md). safe_rollback()
+                # additionally tolerates the connection itself being dead
+                # (a real, recurring Supabase pooler drop) rather than a
+                # bare conn.rollback() raising a second, uncaught exception.
+                conn = safe_rollback(conn, stage="revenue_parser", cik=cik)
 
             with conn.cursor() as cur:
                 cur.execute(

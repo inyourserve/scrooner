@@ -83,6 +83,10 @@ export interface CompanyIdentity {
   // sector_bucket.py), coarser but more readable than the raw SIC
   // description. Not GICS (licensed taxonomy, already ruled out).
   sector: string | null;
+  // yfinance's own industry classification -- the exact field peer_companies
+  // (below) joins on. Exposed here only for display (e.g. "peers share this
+  // industry"), never as a lookup key from this interface.
+  y_industry: string | null;
   status: string;
   ticker: string | null;
   // doc 39 (2026-08-30) -- about_text is regex-extracted from the latest
@@ -886,6 +890,7 @@ export async function getCompanyPageData(ticker: string): Promise<CompanyPageDat
         'sic_code', company.sic_code,
         'sic_description', company.sic_description,
         'sector', company.sector,
+        'y_industry', company.y_industry,
         'status', company.status,
         'ticker', company.ticker,
         'about_text', coalesce(company.about_text, company.y_about_text),

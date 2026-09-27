@@ -49,6 +49,7 @@ import re
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
@@ -343,7 +344,11 @@ def update_segment_revenue(conn: psycopg.Connection, ciks: set[str]) -> dict:
             except Exception:
                 logger.warning("segment_revenue.company_failed", cik=cik, exc_info=True)
                 stats["errored"] += 1
-                conn.rollback()
+                # safe_rollback() tolerates a dead connection (a real,
+                # recurring Supabase pooler drop) instead of a bare
+                # conn.rollback() itself raising and crashing the whole
+                # remaining batch -- see common/errors.py.
+                conn = safe_rollback(conn, stage="segment_revenue", cik=cik)
 
     logger.info("segment_revenue.done", **stats)
     return stats

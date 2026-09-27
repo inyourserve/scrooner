@@ -1,0 +1,10 @@
+[
+  {
+    "id": "set_metric_value",
+    "pattern": "^(?:make|set|change)\\s+(?P<metric>.+?)\\s+(?:to\\s+)?(?P<value>\\$?[\\d,]*\\.?\\d+\\s*(?:thousand|million|billion|trillion|k|m|mn|b|bn|t|tn)?%?)$"
+  },
+  {
+    "id": "set_single_value_by_pronoun",
+    "pattern": "^(?:make|set|change)\\s+(?:it|that|the value)\\s+(?:to\\s+)?(?P<value>\\$?[\\d,]*\\.?\\d+\\s*(?:thousand|million|billion|trillion|k|m|mn|b|bn|t|tn)?%?)$"
+  }
+]

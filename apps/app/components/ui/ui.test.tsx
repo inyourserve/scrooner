@@ -9,6 +9,8 @@ import { Dialog } from "./Dialog";
 import { Field } from "./Field";
 import { Popover } from "./Popover";
 import { IconButton } from "./IconButton";
+import { Card, CardContent, CardDescription, CardHeader, CardHeading, CardTitle } from "./Card";
+import { Input, Textarea } from "./Input";
 
 afterEach(cleanup);
 
@@ -79,5 +81,25 @@ describe("design-system React adapters", () => {
     expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");
     rerender(<StatusPanel title="Running your screen" busy>Criteria are preserved.</StatusPanel>);
     expect(screen.getByRole("status")).toHaveAttribute("aria-busy", "true");
+  });
+
+  it("renders premium card variants through the shared system contract", () => {
+    render(
+      <Card variant="raised" interactive>
+        <CardHeader><CardHeading><CardTitle>Quality screen</CardTitle><CardDescription>Five durable filters</CardDescription></CardHeading></CardHeader>
+        <CardContent>Results</CardContent>
+      </Card>,
+    );
+
+    const card = screen.getByText("Results").closest("[data-slot='card']");
+    expect(card).toHaveClass("ds-card", "ds-card--raised", "ds-card--interactive");
+    expect(screen.getByRole("heading", { name: "Quality screen" })).toHaveClass("ds-card__title");
+  });
+
+  it("standardizes input and textarea density without page-owned classes", () => {
+    render(<><Input aria-label="Threshold" numeric size="large" /><Textarea aria-label="Screen description" /></>);
+
+    expect(screen.getByLabelText("Threshold")).toHaveClass("ds-control", "ds-control--large", "ds-control--mono");
+    expect(screen.getByLabelText("Screen description")).toHaveClass("ds-control");
   });
 });

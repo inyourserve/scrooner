@@ -3,11 +3,9 @@
 import json
 from pathlib import Path
 
-import psycopg
-import structlog
 import typer
 
-from scrooner_pipeline.db.connection import get_connection
+from scrooner_pipeline.db.connection import get_connection, run_tolerating_exit_commit_failure
 from scrooner_pipeline.ownership.insider import update_insider_transactions
 from scrooner_pipeline.ownership.insider_summary import update_insider_summary
 from scrooner_pipeline.ownership.beneficial_ownership import update_beneficial_ownership
@@ -17,7 +15,6 @@ from scrooner_pipeline.ownership.mutual_fund import update_mutual_fund_ownership
 from scrooner_pipeline.ownership.mutual_fund_summary import compute_mutual_fund_ownership_summary
 
 app = typer.Typer()
-logger = structlog.get_logger()
 
 GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
 
@@ -34,8 +31,13 @@ def update_insider_transactions_cmd(
     """Stage 2: download/parse each company's Form 4 filings (list already
     in raw.sec_submissions, bodies fetched here) into core.insider_transaction."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
-    with get_connection() as conn:
-        stats = update_insider_transactions(conn, target_ciks)
+    # run_tolerating_exit_commit_failure: this outer conn sits idle for the
+    # whole multi-hour run (each company commits via its OWN connection,
+    # see insider.py's _run_company_with_timeout) -- same exposure as
+    # update-beneficial-ownership below.
+    stats = run_tolerating_exit_commit_failure(
+        "update_insider_transactions_cmd", lambda conn: update_insider_transactions(conn, target_ciks)
+    )
     typer.echo(f"update-insider-transactions: {stats}")
 
 
@@ -62,23 +64,19 @@ def update_beneficial_ownership_cmd(
     """Stage 3: download/parse each company's Schedule 13D/13G full-submission
     headers into core.beneficial_ownership, with the issuer-vs-filer check."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
-    stats = None
-    try:
-        with get_connection() as conn:
-            stats = update_beneficial_ownership(conn, target_ciks)
-    except psycopg.OperationalError:
-        # Found live 2026-09-16: this outer conn is only touched at the
-        # very start (the company lookup) and, if a per-company error
-        # occurs, inside update_beneficial_ownership()'s own rollback/
-        # reconnect handler -- otherwise it sits idle for the entire
-        # multi-hour run. A dead Supabase pooler connection surfaces here
-        # when the `with` block exits and psycopg tries its own implicit
-        # commit/close on a socket that's already gone -- AFTER stats has
-        # already been set correctly and every company's own work already
-        # committed via its own per-company connection. Swallow it rather
-        # than let a fully-successful run exit non-zero with a scary
-        # traceback that looks like the whole batch failed.
-        logger.warning("update_beneficial_ownership_cmd.exit_commit_failed", stats=stats)
+    # run_tolerating_exit_commit_failure: found live 2026-09-16, this outer
+    # conn is only touched at the very start (the company lookup) and,
+    # if a per-company error occurs, inside update_beneficial_ownership()'s
+    # own rollback/reconnect handler -- otherwise it sits idle for the
+    # entire multi-hour run. Without this, a dead Supabase pooler
+    # connection surfaces when the `with` block exits and psycopg tries
+    # its own implicit commit/close on a socket that's already gone --
+    # AFTER stats has already been set correctly and every company's own
+    # work already committed via its own per-company connection, making a
+    # fully-successful run report as a crash.
+    stats = run_tolerating_exit_commit_failure(
+        "update_beneficial_ownership_cmd", lambda conn: update_beneficial_ownership(conn, target_ciks)
+    )
     typer.echo(f"update-beneficial-ownership: {stats}")
 
 

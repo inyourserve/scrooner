@@ -103,6 +103,25 @@ def resolved_row(value, row_id):
     }
 
 
+def snapshot_rows(companies, resolved, catalog, inactive_ciks=("inactive-cik",)):
+    """Shape run_query's single snapshot read returns (_select_snapshot_rows):
+    [(company_id, identity, {metric_name: citation})], non-null values only,
+    plus inactive companies riding along in the same read."""
+    id_to_name = {metric_id: name for name, metric_id in catalog.items()}
+    rows = []
+    for company_id, identity in companies.items():
+        metrics = {
+            id_to_name[metric_id]: {k: data[k] for k in ("value", "period_label", "period_end", "formula_version")}
+            for (cid, metric_id), data in resolved.items()
+            if cid == company_id and data["value"] is not None
+        }
+        rows.append((company_id, {"sector": None, **identity}, metrics))
+    for offset, cik in enumerate(inactive_ciks):
+        rows.append((1000 + offset, {"cik": cik, "company_name": cik, "sic_code": None, "sic_description": None,
+                                     "sector": None, "status": "inactive", "ticker": None}, {}))
+    return rows
+
+
 @pytest.mark.unit
 def test_query_output_is_deterministic_includes_sort_lineage_and_keeps_nulls_last(monkeypatch):
     companies = {
@@ -119,8 +138,8 @@ def test_query_output_is_deterministic_includes_sort_lineage_and_keeps_nulls_las
     }
     monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roe": 10})
     monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: 1)
-    monkeypatch.setattr(query_module, "_load_candidate_companies", lambda _conn, _include: dict(companies))
-    monkeypatch.setattr(query_module, "_load_snapshot_values", lambda _conn, _ids, _version: resolved)
+    rows = snapshot_rows(companies, resolved, {"roe": 10})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", lambda *_args: rows)
     query = ScreenQuery(sort_by="roe", sort_desc=True)
 
     first = query_module.run_query(InactiveConnection(), query)
@@ -146,8 +165,8 @@ def test_ranked_query_returns_rank_order_not_database_order(monkeypatch):
     }
     monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roe": 10})
     monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: 1)
-    monkeypatch.setattr(query_module, "_load_candidate_companies", lambda _conn, _include: dict(companies))
-    monkeypatch.setattr(query_module, "_load_snapshot_values", lambda _conn, _ids, _version: resolved)
+    rows = snapshot_rows(companies, resolved, {"roe": 10})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", lambda *_args: rows)
     query = ScreenQuery(metric_predicates=[MetricPredicate(metric_name="roe", operator="top_n", n=2)])
 
     result = query_module.run_query(InactiveConnection(), query)
@@ -172,8 +191,8 @@ def test_boolean_tree_query_still_cites_a_ranked_predicates_own_value(monkeypatc
     }
     monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roic": 10})
     monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: 1)
-    monkeypatch.setattr(query_module, "_run_boolean_tree_query", lambda *_args: dict(surviving))
-    monkeypatch.setattr(query_module, "_load_snapshot_values", lambda _conn, _ids, _version: resolved)
+    rows = snapshot_rows(surviving, resolved, {"roic": 10})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", lambda *_args: rows)
     query = ScreenQuery(
         metric_predicates=[MetricPredicate(metric_name="roic", operator="top_n", n=2)],
         where=PredicateGroup(op="not", predicates=[MetricPredicate(metric_name="roic", operator=">", value="999")]),
@@ -183,3 +202,69 @@ def test_boolean_tree_query_still_cites_a_ranked_predicates_own_value(monkeypatc
 
     values = {row["cik"]: row["metrics"]["roic"]["value"] for row in result["matched"]}
     assert values == {"0001": Decimal("0.30"), "0002": Decimal("0.20")}
+
+
+@pytest.mark.unit
+def test_boolean_tree_query_reads_the_snapshot_once_with_the_filter_and_citations(monkeypatch):
+    # 2026-09-26: the tree filter, citation columns and the inactive list
+    # come from ONE version-scoped read (was three round trips). Citation
+    # columns are fetched only for rows the SQL filter already kept
+    # (the 2026-09-20 "don't read the whole universe" fix still holds).
+    calls = []
+
+    def fake_select(_conn, dataset_version, metric_names, where_clause=None, params=None):
+        calls.append((dataset_version, metric_names, where_clause, params))
+        return []
+
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roe": 10})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", fake_select)
+    query = ScreenQuery(where=PredicateGroup(op="or", predicates=[MetricPredicate(metric_name="roe", operator=">", value="0.1")]))
+
+    query_module.run_query(InactiveConnection(), query, dataset_version=5)
+
+    assert len(calls) == 1
+    dataset_version, metric_names, where_clause, params = calls[0]
+    assert dataset_version == 5
+    assert metric_names == ["roe"]
+    assert where_clause is not None and params == [Decimal("0.1")]
+
+
+@pytest.mark.unit
+def test_passed_catalog_and_version_skip_their_round_trips(monkeypatch):
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: pytest.fail("catalog refetched"))
+    monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: pytest.fail("version refetched"))
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", lambda *_args: [])
+
+    result = query_module.run_query(InactiveConnection(), ScreenQuery(sort_by="roe"), dataset_version=3, catalog={"roe": 10})
+
+    assert result["dataset_version"] == 3
+
+
+@pytest.mark.unit
+def test_stored_run_page_rebuilds_in_stored_order_from_its_own_version(monkeypatch):
+    companies = {
+        1: {"cik": "0001", "company_name": "A", "sic_code": "1", "sic_description": "X", "status": "active", "ticker": "A"},
+        2: {"cik": "0002", "company_name": "B", "sic_code": "1", "sic_description": "X", "status": "active", "ticker": "B"},
+    }
+    resolved = {(1, 10): resolved_row(Decimal("0.1"), 1), (2, 10): resolved_row(Decimal("0.9"), 2)}
+    captured = {}
+
+    def fake_select(_conn, dataset_version, metric_names, where_clause=None, params=None):
+        captured.update(version=dataset_version, params=params)
+        return snapshot_rows(companies, resolved, {"roe": 10}, inactive_ciks=())
+
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", fake_select)
+
+    items = query_module.load_screen_result_page(object(), ScreenQuery(sort_by="roe", sort_desc=True), 4, [2, 1])
+
+    assert captured == {"version": 4, "params": [[2, 1]]}, "only the page's own companies, from the run's version"
+    assert [row["company_id"] for row in items] == [2, 1], "stored result order, not DB order"
+    assert items[0]["metrics"]["roe"]["value"] == Decimal("0.9")
+
+
+@pytest.mark.unit
+def test_stored_run_page_on_a_pruned_version_returns_none(monkeypatch):
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", lambda *_args: [])
+
+    assert query_module.load_screen_result_page(object(), ScreenQuery(sort_by="roe"), 1, [5]) is None
+    assert query_module.load_screen_result_page(object(), ScreenQuery(sort_by="roe"), 1, []) == []

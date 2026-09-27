@@ -4,6 +4,7 @@ import { BrandMark } from "@/components/ui/BrandMark";
 import { AccountMenu } from "@/components/public/AccountMenu";
 import { DashboardNavLink } from "@/components/public/DashboardNavLink";
 import { HeaderAuthAction } from "@/components/public/HeaderAuthAction";
+import { HeaderMenu } from "@/components/public/HeaderMenu";
 
 export type Current = "home" | "company" | "explore" | "methodology" | "data-sources" | "about" | "pricing" | "privacy" | "terms" | "dashboard";
 
@@ -37,9 +38,11 @@ export function PublicHeader({
       <div className="public-links">
         {item("/explore", "Explore", current === "explore")}
         {item("/app/screens/new", "Create screen", false)}
+        {authenticated && item("/app/screens", "Saved screens", false)}
         {authenticated ? item("/app", "Dashboard", current === "dashboard") : <DashboardNavLink active={current === "dashboard"} />}
       </div>
       <SearchCommand />
+      <HeaderMenu authenticated={authenticated} />
       {authenticated ? <AccountMenu email={userEmail} /> : <HeaderAuthAction />}
     </nav></header><div className="public-header-spacer" aria-hidden="true" />
   </>;

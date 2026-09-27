@@ -111,6 +111,31 @@ jobs:
       - name: Report yfinance-financials findings
         if: always()
         run: uv run --project pipeline scrooner-yfinance-financials report
+      - name: Cost of Revenue via rendered-report dimensional summation
+        # Added 2026-09-21, closes a real, sized gap (~570 companies,
+        # spread thin across dozens of unrelated sectors -- oil & gas,
+        # insurance, hospitality, airlines, software) found from a direct
+        # user report (Hyatt Hotels showing blank Cost of Revenue/Gross
+        # Profit/Operating Expenses/Operating Income). Confirmed live:
+        # a real, already-mapped tag (us-gaap:CostOfGoodsAndServicesSold)
+        # exists in the filing but ONLY as several dimensional facts (one
+        # per business segment), which the standard Company Facts API
+        # strips entirely (doc 22's already-documented limitation, now
+        # confirmed for a new concept family) -- concept_mapping could
+        # never find it no matter how many tags were added. This parser
+        # sums every occurrence of a cost-of-revenue-shaped label within
+        # the company's own rendered primary income-statement report and
+        # validates the sum against yfinance's own already-fetched figure
+        # (the step above) before trusting it -- yfinance is comparison/
+        # validation ONLY here, per explicit standing user direction; the
+        # stored value always traces back to real, summed SEC facts.
+        # Placed AFTER the yfinance fetch step above (not before, unlike
+        # revenue's own parser step) since this parser's own correctness
+        # depends on that data already existing for the company.
+        if: always()
+        run: |
+          uv run --project pipeline scrooner-map run-parser cost_of_revenue
+          uv run --project pipeline scrooner-map resolve-parser-results cost_of_revenue
       - name: Report findings
         if: always()
         run: uv run --project pipeline scrooner-sanity report --github-summary --fail-on-findings

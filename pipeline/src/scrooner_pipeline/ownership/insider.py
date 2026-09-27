@@ -56,6 +56,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
@@ -383,9 +384,14 @@ def update_insider_transactions(conn: psycopg.Connection, ciks: set[str]) -> dic
                 # deterministic bug (not a transient one) made the whole
                 # chunk permanently unable to succeed. Same lesson as
                 # restatements.py: one company's failure must not cost every
-                # other company in the batch its own progress.
-                conn.rollback()
+                # other company in the batch its own progress. safe_rollback()
+                # additionally tolerates this outer `conn` (idle for the
+                # whole run -- each company does its own work on a fresh
+                # connection via _run_company_with_timeout) having gone dead
+                # in the Supabase pooler, the same shape already fixed in
+                # beneficial_ownership.py.
                 logger.exception("insider.company_failed", cik=cik)
+                conn = safe_rollback(conn, stage="insider", cik=cik)
                 totals["errored"] += 1
                 continue
             totals["ok"] += 1

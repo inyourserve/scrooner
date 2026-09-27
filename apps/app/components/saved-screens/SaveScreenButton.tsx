@@ -20,5 +20,5 @@ export function SaveScreenButton({ query, runId }: { query: ScreenQueryPayload; 
     router.push(`/app/screens/new/save?${params}`);
   }
 
-  return <div className="save-screen-control"><Button type="button" variant="secondary" onClick={openSavePage}>Save screen</Button></div>;
+  return <div className="save-screen-control"><Button type="button" variant="primary" onClick={openSavePage}>Save screen</Button></div>;
 }

@@ -46,7 +46,7 @@ export default function StockPageLoading() {
 
           <div className="stock-snapshot">
             <div className="stock-snapshot__metrics">
-              <p className="overline">Investor snapshot</p>
+              <p className="section-label">Investor snapshot</p>
               <div className="metric-grid metric-grid-dense">
                 {Array.from({ length: 6 }).map((_, index) => (
                   <div className="metric-cell" key={index}>
@@ -57,7 +57,7 @@ export default function StockPageLoading() {
               </div>
             </div>
             <div className="stock-snapshot__about">
-              <p className="overline">Business overview</p>
+              <p className="section-label">Business overview</p>
               <span className="ds-skeleton ds-skeleton--text" style={{ width: "100%" }} />
               <span className="ds-skeleton ds-skeleton--text" style={{ width: "92%" }} />
               <span className="ds-skeleton ds-skeleton--text" style={{ width: "75%" }} />
