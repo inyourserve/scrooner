@@ -10,7 +10,12 @@ from scrooner_pipeline.segments.segment_revenue import update_segment_revenue
 
 app = typer.Typer()
 
-GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
+GOLDEN_COMPANIES_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tests"
+    / "golden_companies"
+    / "companies.json"
+)
 
 
 def _load_golden_ciks() -> set[str]:
@@ -20,13 +25,17 @@ def _load_golden_ciks() -> set[str]:
 
 @app.command("update-segment-revenue")
 def update_segment_revenue_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Fetch each company's latest 10-Q/10-K, find its segment/
     disaggregated-revenue "Details" report, parse it into
     core.segment_revenue. Genuinely new fetch (not zero-fetch) -- each
     company's report is parsed live, not read from any existing storage."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_segment_revenue(conn, target_ciks)
     typer.echo(f"update-segment-revenue: {stats}")

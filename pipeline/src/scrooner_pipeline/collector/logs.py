@@ -92,7 +92,9 @@ def _row_to_error(cur: psycopg.Cursor, row: tuple) -> ErrorRecord:
     return ErrorRecord(**dict(zip(cols, row)))
 
 
-def get_recent_runs(conn: psycopg.Connection, limit: int = 20, job: str | None = None) -> list[RunRecord]:
+def get_recent_runs(
+    conn: psycopg.Connection, limit: int = 20, job: str | None = None
+) -> list[RunRecord]:
     """Most recent runs first -- the default view for "what's been
     happening lately," e.g. after a scheduled job to confirm it actually
     ran and finished cleanly."""
@@ -103,13 +105,18 @@ def get_recent_runs(conn: psycopg.Connection, limit: int = 20, job: str | None =
                 (job, limit),
             )
         else:
-            cur.execute(f"select {_RUN_COLUMNS} from raw.collector_runs order by started_at desc limit %s", (limit,))
+            cur.execute(
+                f"select {_RUN_COLUMNS} from raw.collector_runs order by started_at desc limit %s",
+                (limit,),
+            )
         return [_row_to_run(cur, row) for row in cur.fetchall()]
 
 
 def get_run(conn: psycopg.Connection, run_id: int) -> RunRecord | None:
     with conn.cursor() as cur:
-        cur.execute(f"select {_RUN_COLUMNS} from raw.collector_runs where id = %s", (run_id,))
+        cur.execute(
+            f"select {_RUN_COLUMNS} from raw.collector_runs where id = %s", (run_id,)
+        )
         row = cur.fetchone()
         return _row_to_run(cur, row) if row is not None else None
 
@@ -117,7 +124,8 @@ def get_run(conn: psycopg.Connection, run_id: int) -> RunRecord | None:
 def get_errors_for_run(conn: psycopg.Connection, run_id: int) -> list[ErrorRecord]:
     with conn.cursor() as cur:
         cur.execute(
-            f"select {_ERROR_COLUMNS} from raw.collector_errors where run_id = %s order by occurred_at", (run_id,)
+            f"select {_ERROR_COLUMNS} from raw.collector_errors where run_id = %s order by occurred_at",
+            (run_id,),
         )
         return [_row_to_error(cur, row) for row in cur.fetchall()]
 
@@ -135,7 +143,9 @@ def format_recent_runs(runs: list[RunRecord]) -> str:
     header = f"{'id':>5}  {'job':<14} {'run_type':<12} {'status':<10} {'started_at':<26} {'duration_s':>10}  stats"
     lines = [header, "-" * len(header)]
     for r in runs:
-        duration = f"{r.duration_seconds:.1f}" if r.duration_seconds is not None else "-"
+        duration = (
+            f"{r.duration_seconds:.1f}" if r.duration_seconds is not None else "-"
+        )
         lines.append(
             f"{r.id:>5}  {(r.job or '-'):<14} {r.run_type:<12} {r.status:<10} "
             f"{r.started_at.isoformat():<26} {duration:>10}  {r.stats}"
@@ -145,7 +155,11 @@ def format_recent_runs(runs: list[RunRecord]) -> str:
 
 def format_run_detail(detail: RunDetail) -> str:
     r = detail.run
-    duration = f"{r.duration_seconds:.1f}s" if r.duration_seconds is not None else "still running / never finished"
+    duration = (
+        f"{r.duration_seconds:.1f}s"
+        if r.duration_seconds is not None
+        else "still running / never finished"
+    )
     lines = [
         f"run_id={r.id}  job={r.job}  run_type={r.run_type}  status={r.status}",
         f"params_key={r.params_key}",

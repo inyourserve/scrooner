@@ -78,7 +78,9 @@ GROWTH_METRICS = {
 QUARTER_ORDER = ["Q1", "Q2", "Q3", "Q4"]
 
 
-def _growth_value(value_t: Decimal, value_prior: Decimal, lag_years: int) -> tuple[Decimal | None, str | None]:
+def _growth_value(
+    value_t: Decimal, value_prior: Decimal, lag_years: int
+) -> tuple[Decimal | None, str | None]:
     """Pure growth calculation shared by the SQL-backed growth job and its
     regression tests. Returns a value or an explicit null reason."""
     if value_prior == 0:
@@ -112,18 +114,25 @@ def _load_metric_ids(conn: psycopg.Connection) -> dict[str, int]:
     with conn.cursor() as cur:
         cur.execute(
             "select metric_name, id from analytics.metric_definition where metric_name = any(%s)",
-            (list(GROWTH_METRICS) + ["roic", "roe", "gross_margin", "operating_margin", "net_margin"],),
+            (
+                list(GROWTH_METRICS)
+                + ["roic", "roe", "gross_margin", "operating_margin", "net_margin"],
+            ),
         )
         return dict(cur.fetchall())
 
 
 def _load_concept_id(conn: psycopg.Connection, name: str) -> int:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         return cur.fetchone()[0]
 
 
-def _load_company_facts(conn: psycopg.Connection, company_id: int, concept_id: int) -> dict:
+def _load_company_facts(
+    conn: psycopg.Connection, company_id: int, concept_id: int
+) -> dict:
     """(fiscal_year, fiscal_period) -> (value, fact_ids, period_start, period_end) for one concept."""
     with conn.cursor() as cur:
         cur.execute(
@@ -135,51 +144,74 @@ def _load_company_facts(conn: psycopg.Connection, company_id: int, concept_id: i
             """,
             (company_id, concept_id),
         )
-        return {(fy, fp): (val, fids, start, end) for fy, fp, val, fids, start, end in cur.fetchall()}
+        return {
+            (fy, fp): (val, fids, start, end)
+            for fy, fp, val, fids, start, end in cur.fetchall()
+        }
 
 
-def _compute_growth_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int]) -> dict:
-        rows: list[dict] = []
-        for metric_name, (concept_name, lag_years) in GROWTH_METRICS.items():
-            concept_id = _load_concept_id(conn, concept_name)
-            by_period = _load_company_facts(conn, company_id, concept_id)
-            for (fy, fp), (value_t, fids_t, start_t, end_t) in by_period.items():
-                prior_key = (fy - lag_years, fp)
-                prior = by_period.get(prior_key)
-                if prior is None:
-                    rows.append(
-                        {
-                            "company_id": company_id, "metric_definition_id": metric_ids[metric_name],
-                            "period_start": start_t, "period_end": end_t, "period_label": fp,
-                            "value": None, "is_null_reason": f"missing:prior_period({prior_key[0]}_{fp})",
-                            "source_fact_ids": None,
-                        }
-                    )
-                    continue
-                value_prior, fids_prior, _s, _e = prior
-                growth, growth_reason = _growth_value(value_t, value_prior, lag_years)
-                if growth_reason is not None:
-                    rows.append(
-                        {"company_id": company_id, "metric_definition_id": metric_ids[metric_name],
-                         "period_start": start_t, "period_end": end_t, "period_label": fp,
-                         "value": None, "is_null_reason": growth_reason, "source_fact_ids": None}
-                    )
-                    continue
+def _compute_growth_for_company(
+    conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int]
+) -> dict:
+    rows: list[dict] = []
+    for metric_name, (concept_name, lag_years) in GROWTH_METRICS.items():
+        concept_id = _load_concept_id(conn, concept_name)
+        by_period = _load_company_facts(conn, company_id, concept_id)
+        for (fy, fp), (value_t, fids_t, start_t, end_t) in by_period.items():
+            prior_key = (fy - lag_years, fp)
+            prior = by_period.get(prior_key)
+            if prior is None:
                 rows.append(
-                    {"company_id": company_id, "metric_definition_id": metric_ids[metric_name],
-                     "period_start": start_t, "period_end": end_t, "period_label": fp,
-                     "value": growth, "is_null_reason": None, "source_fact_ids": list(fids_t) + list(fids_prior)}
+                    {
+                        "company_id": company_id,
+                        "metric_definition_id": metric_ids[metric_name],
+                        "period_start": start_t,
+                        "period_end": end_t,
+                        "period_label": fp,
+                        "value": None,
+                        "is_null_reason": f"missing:prior_period({prior_key[0]}_{fp})",
+                        "source_fact_ids": None,
+                    }
                 )
-
-        with conn.cursor() as cur:
-            metric_id_list = [metric_ids[m] for m in GROWTH_METRICS]
-            cur.execute(
-                "delete from analytics.metric_value where company_id = %s and metric_definition_id = any(%s)",
-                (company_id, metric_id_list),
+                continue
+            value_prior, fids_prior, _s, _e = prior
+            growth, growth_reason = _growth_value(value_t, value_prior, lag_years)
+            if growth_reason is not None:
+                rows.append(
+                    {
+                        "company_id": company_id,
+                        "metric_definition_id": metric_ids[metric_name],
+                        "period_start": start_t,
+                        "period_end": end_t,
+                        "period_label": fp,
+                        "value": None,
+                        "is_null_reason": growth_reason,
+                        "source_fact_ids": None,
+                    }
+                )
+                continue
+            rows.append(
+                {
+                    "company_id": company_id,
+                    "metric_definition_id": metric_ids[metric_name],
+                    "period_start": start_t,
+                    "period_end": end_t,
+                    "period_label": fp,
+                    "value": growth,
+                    "is_null_reason": None,
+                    "source_fact_ids": list(fids_t) + list(fids_prior),
+                }
             )
-            if rows:
-                cur.executemany(
-                    """
+
+    with conn.cursor() as cur:
+        metric_id_list = [metric_ids[m] for m in GROWTH_METRICS]
+        cur.execute(
+            "delete from analytics.metric_value where company_id = %s and metric_definition_id = any(%s)",
+            (company_id, metric_id_list),
+        )
+        if rows:
+            cur.executemany(
+                """
                     insert into analytics.metric_value
                         (company_id, metric_definition_id, period_start, period_end, period_label,
                          value, is_null_reason, source_fact_ids)
@@ -187,22 +219,31 @@ def _compute_growth_for_company(conn: psycopg.Connection, company_id: int, metri
                         (%(company_id)s, %(metric_definition_id)s, %(period_start)s, %(period_end)s, %(period_label)s,
                          %(value)s, %(is_null_reason)s, %(source_fact_ids)s)
                     """,
-                    rows,
-                )
-            conn.commit()
-        return {
-            "computed": sum(1 for r in rows if r["value"] is not None),
-            "null": sum(1 for r in rows if r["value"] is None),
-        }
+                rows,
+            )
+        conn.commit()
+    return {
+        "computed": sum(1 for r in rows if r["value"] is not None),
+        "null": sum(1 for r in rows if r["value"] is None),
+    }
 
 
 def compute_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
     metric_ids = _load_metric_ids(conn)
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -218,7 +259,9 @@ def compute_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
         totals["ok"] += 1
         totals["computed"] += stats["computed"]
         totals["null"] += stats["null"]
-        logger.info("ttm.growth_done", cik=cik, computed=stats["computed"], null=stats["null"])
+        logger.info(
+            "ttm.growth_done", cik=cik, computed=stats["computed"], null=stats["null"]
+        )
 
     logger.info("ttm.growth.done", **totals)
     return totals
@@ -232,10 +275,16 @@ ROIC_CONCEPTS = {
     "income_before_tax": "tax_rate_denominator",
 }
 ROE_CONCEPTS = {"net_income": "numerator"}
-INSTANT_CONCEPTS = {"total_debt_resolved": "invested_capital_add", "stockholders_equity": ("invested_capital_add", "denominator"), "cash_and_equivalents": "invested_capital_subtract"}
+INSTANT_CONCEPTS = {
+    "total_debt_resolved": "invested_capital_add",
+    "stockholders_equity": ("invested_capital_add", "denominator"),
+    "cash_and_equivalents": "invested_capital_subtract",
+}
 
 
-def _ttm_sum(by_period: dict, fiscal_year: int, fiscal_period: str) -> tuple[Decimal | None, list[int]]:
+def _ttm_sum(
+    by_period: dict, fiscal_year: int, fiscal_period: str
+) -> tuple[Decimal | None, list[int]]:
     needed = _trailing_quarters(fiscal_year, fiscal_period)
     total = Decimal(0)
     fact_ids: list[int] = []
@@ -288,8 +337,16 @@ MARGIN_CONCEPTS: dict[str, tuple[str, str]] = {
 }
 
 
-def _compute_ttm_margins_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:
-    by_concept = {name: _load_company_facts(conn, company_id, cid) for name, cid in concept_ids.items()}
+def _compute_ttm_margins_for_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_ids: dict[str, int],
+    concept_ids: dict[str, int],
+) -> dict:
+    by_concept = {
+        name: _load_company_facts(conn, company_id, cid)
+        for name, cid in concept_ids.items()
+    }
     revenue_by_period = by_concept["revenue_sanity_resolved"]
 
     quarter_keys: set[tuple[int, str]] = set()
@@ -333,7 +390,11 @@ def _compute_ttm_margins_for_company(conn: psycopg.Connection, company_id: int, 
             ttm_numerator, fids_num = _ttm_sum(by_concept[numerator_name], fy, fp)
             ttm_revenue, fids_rev = _ttm_sum(revenue_by_period, fy, fp)
             if ttm_numerator is None or ttm_revenue is None:
-                missing = numerator_name if ttm_numerator is None else "revenue_sanity_resolved"
+                missing = (
+                    numerator_name
+                    if ttm_numerator is None
+                    else "revenue_sanity_resolved"
+                )
                 value, reason, fids = None, f"incomplete:{missing}", None
             elif ttm_revenue == 0:
                 value, reason, fids = None, "zero_denominator", None
@@ -341,9 +402,16 @@ def _compute_ttm_margins_for_company(conn: psycopg.Connection, company_id: int, 
                 value = ttm_numerator / ttm_revenue
                 reason, fids = None, fids_num + fids_rev
             rows.append(
-                {"company_id": company_id, "metric_definition_id": metric_id,
-                 "period_start": start_date, "period_end": end_date, "period_label": "TTM",
-                 "value": value, "is_null_reason": reason, "source_fact_ids": fids}
+                {
+                    "company_id": company_id,
+                    "metric_definition_id": metric_id,
+                    "period_start": start_date,
+                    "period_end": end_date,
+                    "period_label": "TTM",
+                    "value": value,
+                    "is_null_reason": reason,
+                    "source_fact_ids": fids,
+                }
             )
 
     with conn.cursor() as cur:
@@ -375,10 +443,19 @@ def compute_ttm_margins(conn: psycopg.Connection, ciks: set[str]) -> dict:
     concept_names = {name for pair in MARGIN_CONCEPTS.values() for name in pair}
     concept_ids = {name: _load_concept_id(conn, name) for name in concept_names}
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -386,7 +463,9 @@ def compute_ttm_margins(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = _compute_ttm_margins_for_company(conn, company_id, metric_ids, concept_ids)
+            stats = _compute_ttm_margins_for_company(
+                conn, company_id, metric_ids, concept_ids
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "ttm_margins", exc)
@@ -399,89 +478,149 @@ def compute_ttm_margins(conn: psycopg.Connection, ciks: set[str]) -> dict:
     return totals
 
 
-def _compute_ttm_returns_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:
-        by_concept = {name: _load_company_facts(conn, company_id, cid) for name, cid in concept_ids.items()}
-        # Instant facts indexed by end_date for matching against a quarter's own balance-sheet date.
-        instant_by_end_date = {}
-        for name in ("total_debt_resolved", "stockholders_equity", "cash_and_equivalents"):
-            instant_by_end_date[name] = {end: (val, fids) for (_fy, _fp), (val, fids, _s, end) in by_concept[name].items()}
+def _compute_ttm_returns_for_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_ids: dict[str, int],
+    concept_ids: dict[str, int],
+) -> dict:
+    by_concept = {
+        name: _load_company_facts(conn, company_id, cid)
+        for name, cid in concept_ids.items()
+    }
+    # Instant facts indexed by end_date for matching against a quarter's own balance-sheet date.
+    instant_by_end_date = {}
+    for name in ("total_debt_resolved", "stockholders_equity", "cash_and_equivalents"):
+        instant_by_end_date[name] = {
+            end: (val, fids)
+            for (_fy, _fp), (val, fids, _s, end) in by_concept[name].items()
+        }
 
-        # Every (fiscal_year, Q1-4) this company has ANY operating_income or net_income for.
-        quarter_keys = {k for k in by_concept["operating_income"] if k[1] in QUARTER_ORDER} | \
-                       {k for k in by_concept["net_income"] if k[1] in QUARTER_ORDER}
+    # Every (fiscal_year, Q1-4) this company has ANY operating_income or net_income for.
+    quarter_keys = {
+        k for k in by_concept["operating_income"] if k[1] in QUARTER_ORDER
+    } | {k for k in by_concept["net_income"] if k[1] in QUARTER_ORDER}
 
-        rows: list[dict] = []
-        for fy, fp in quarter_keys:
-            end_date = (by_concept["operating_income"].get((fy, fp)) or by_concept["net_income"].get((fy, fp)))[3]
-            start_date = end_date  # TTM window end; period_start intentionally same as end for a "TTM as of" marker
+    rows: list[dict] = []
+    for fy, fp in quarter_keys:
+        end_date = (
+            by_concept["operating_income"].get((fy, fp))
+            or by_concept["net_income"].get((fy, fp))
+        )[3]
+        start_date = end_date  # TTM window end; period_start intentionally same as end for a "TTM as of" marker
 
-            # ROIC (TTM)
-            ttm_op_income, fids_op = _ttm_sum(by_concept["operating_income"], fy, fp)
-            ttm_tax_num, fids_tax_num = _ttm_sum(by_concept["income_tax_expense"], fy, fp)
-            ttm_tax_denom, fids_tax_denom = _ttm_sum(by_concept["income_before_tax"], fy, fp)
-            debt_hit = instant_by_end_date["total_debt_resolved"].get(end_date)
-            equity_hit = instant_by_end_date["stockholders_equity"].get(end_date)
-            cash_hit = instant_by_end_date["cash_and_equivalents"].get(end_date)
+        # ROIC (TTM)
+        ttm_op_income, fids_op = _ttm_sum(by_concept["operating_income"], fy, fp)
+        ttm_tax_num, fids_tax_num = _ttm_sum(by_concept["income_tax_expense"], fy, fp)
+        ttm_tax_denom, fids_tax_denom = _ttm_sum(
+            by_concept["income_before_tax"], fy, fp
+        )
+        debt_hit = instant_by_end_date["total_debt_resolved"].get(end_date)
+        equity_hit = instant_by_end_date["stockholders_equity"].get(end_date)
+        cash_hit = instant_by_end_date["cash_and_equivalents"].get(end_date)
 
-            if None in (ttm_op_income, ttm_tax_num, ttm_tax_denom) or None in (debt_hit, equity_hit, cash_hit):
-                missing = []
-                if ttm_op_income is None: missing.append("ttm_operating_income")
-                if ttm_tax_num is None: missing.append("ttm_income_tax_expense")
-                if ttm_tax_denom is None: missing.append("ttm_income_before_tax")
-                if debt_hit is None: missing.append("total_debt_resolved")
-                if equity_hit is None: missing.append("stockholders_equity")
-                if cash_hit is None: missing.append("cash_and_equivalents")
-                roic_value, roic_reason, roic_fids = None, f"incomplete:{','.join(missing)}", None
+        if None in (ttm_op_income, ttm_tax_num, ttm_tax_denom) or None in (
+            debt_hit,
+            equity_hit,
+            cash_hit,
+        ):
+            missing = []
+            if ttm_op_income is None:
+                missing.append("ttm_operating_income")
+            if ttm_tax_num is None:
+                missing.append("ttm_income_tax_expense")
+            if ttm_tax_denom is None:
+                missing.append("ttm_income_before_tax")
+            if debt_hit is None:
+                missing.append("total_debt_resolved")
+            if equity_hit is None:
+                missing.append("stockholders_equity")
+            if cash_hit is None:
+                missing.append("cash_and_equivalents")
+            roic_value, roic_reason, roic_fids = (
+                None,
+                f"incomplete:{','.join(missing)}",
+                None,
+            )
+        else:
+            tax_rate = ttm_tax_num / ttm_tax_denom if ttm_tax_denom != 0 else None
+            if tax_rate is None:
+                roic_value, roic_reason, roic_fids = None, "zero_pretax_income", None
             else:
-                tax_rate = ttm_tax_num / ttm_tax_denom if ttm_tax_denom != 0 else None
-                if tax_rate is None:
-                    roic_value, roic_reason, roic_fids = None, "zero_pretax_income", None
+                nopat = ttm_op_income * (1 - tax_rate)
+                invested_capital = debt_hit[0] + equity_hit[0] - cash_hit[0]
+                if invested_capital == 0:
+                    roic_value, roic_reason, roic_fids = (
+                        None,
+                        "zero_invested_capital",
+                        None,
+                    )
                 else:
-                    nopat = ttm_op_income * (1 - tax_rate)
-                    invested_capital = debt_hit[0] + equity_hit[0] - cash_hit[0]
-                    if invested_capital == 0:
-                        roic_value, roic_reason, roic_fids = None, "zero_invested_capital", None
-                    else:
-                        roic_value = nopat / invested_capital
-                        roic_reason = None
-                        roic_fids = fids_op + fids_tax_num + fids_tax_denom + list(debt_hit[1]) + list(equity_hit[1]) + list(cash_hit[1])
+                    roic_value = nopat / invested_capital
+                    roic_reason = None
+                    roic_fids = (
+                        fids_op
+                        + fids_tax_num
+                        + fids_tax_denom
+                        + list(debt_hit[1])
+                        + list(equity_hit[1])
+                        + list(cash_hit[1])
+                    )
 
-            rows.append(
-                {"company_id": company_id, "metric_definition_id": metric_ids["roic"],
-                 "period_start": start_date, "period_end": end_date, "period_label": "TTM",
-                 "value": roic_value, "is_null_reason": roic_reason, "source_fact_ids": roic_fids}
+        rows.append(
+            {
+                "company_id": company_id,
+                "metric_definition_id": metric_ids["roic"],
+                "period_start": start_date,
+                "period_end": end_date,
+                "period_label": "TTM",
+                "value": roic_value,
+                "is_null_reason": roic_reason,
+                "source_fact_ids": roic_fids,
+            }
+        )
+
+        # ROE (TTM)
+        ttm_net_income, fids_ni = _ttm_sum(by_concept["net_income"], fy, fp)
+        if ttm_net_income is None or equity_hit is None:
+            roe_value = None
+            roe_reason = (
+                "incomplete:ttm_net_income"
+                if ttm_net_income is None
+                else "incomplete:stockholders_equity"
             )
+            roe_fids = None
+        elif equity_hit[0] == 0:
+            roe_value, roe_reason, roe_fids = None, "zero_denominator", None
+        else:
+            roe_value = ttm_net_income / equity_hit[0]
+            roe_reason = None
+            roe_fids = fids_ni + list(equity_hit[1])
 
-            # ROE (TTM)
-            ttm_net_income, fids_ni = _ttm_sum(by_concept["net_income"], fy, fp)
-            if ttm_net_income is None or equity_hit is None:
-                roe_value = None
-                roe_reason = "incomplete:ttm_net_income" if ttm_net_income is None else "incomplete:stockholders_equity"
-                roe_fids = None
-            elif equity_hit[0] == 0:
-                roe_value, roe_reason, roe_fids = None, "zero_denominator", None
-            else:
-                roe_value = ttm_net_income / equity_hit[0]
-                roe_reason = None
-                roe_fids = fids_ni + list(equity_hit[1])
+        rows.append(
+            {
+                "company_id": company_id,
+                "metric_definition_id": metric_ids["roe"],
+                "period_start": start_date,
+                "period_end": end_date,
+                "period_label": "TTM",
+                "value": roe_value,
+                "is_null_reason": roe_reason,
+                "source_fact_ids": roe_fids,
+            }
+        )
 
-            rows.append(
-                {"company_id": company_id, "metric_definition_id": metric_ids["roe"],
-                 "period_start": start_date, "period_end": end_date, "period_label": "TTM",
-                 "value": roe_value, "is_null_reason": roe_reason, "source_fact_ids": roe_fids}
-            )
-
-        with conn.cursor() as cur:
-            cur.execute(
-                """
+    with conn.cursor() as cur:
+        cur.execute(
+            """
                 delete from analytics.metric_value
                 where company_id = %s and metric_definition_id = any(%s) and period_label = 'TTM'
                 """,
-                (company_id, [metric_ids["roic"], metric_ids["roe"]]),
-            )
-            if rows:
-                cur.executemany(
-                    """
+            (company_id, [metric_ids["roic"], metric_ids["roe"]]),
+        )
+        if rows:
+            cur.executemany(
+                """
                     insert into analytics.metric_value
                         (company_id, metric_definition_id, period_start, period_end, period_label,
                          value, is_null_reason, source_fact_ids)
@@ -489,27 +628,43 @@ def _compute_ttm_returns_for_company(conn: psycopg.Connection, company_id: int, 
                         (%(company_id)s, %(metric_definition_id)s, %(period_start)s, %(period_end)s, %(period_label)s,
                          %(value)s, %(is_null_reason)s, %(source_fact_ids)s)
                     """,
-                    rows,
-                )
-            conn.commit()
-        return {
-            "computed": sum(1 for r in rows if r["value"] is not None),
-            "null": sum(1 for r in rows if r["value"] is None),
-        }
+                rows,
+            )
+        conn.commit()
+    return {
+        "computed": sum(1 for r in rows if r["value"] is not None),
+        "null": sum(1 for r in rows if r["value"] is None),
+    }
 
 
 def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
     metric_ids = _load_metric_ids(conn)
     concept_ids = {
         name: _load_concept_id(conn, name)
-        for name in ("operating_income", "income_tax_expense", "income_before_tax", "net_income",
-                      "total_debt_resolved", "stockholders_equity", "cash_and_equivalents")
+        for name in (
+            "operating_income",
+            "income_tax_expense",
+            "income_before_tax",
+            "net_income",
+            "total_debt_resolved",
+            "stockholders_equity",
+            "cash_and_equivalents",
+        )
     }
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -517,7 +672,9 @@ def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = _compute_ttm_returns_for_company(conn, company_id, metric_ids, concept_ids)
+            stats = _compute_ttm_returns_for_company(
+                conn, company_id, metric_ids, concept_ids
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "ttm_returns", exc)
@@ -525,7 +682,9 @@ def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
         totals["ok"] += 1
         totals["computed"] += stats["computed"]
         totals["null"] += stats["null"]
-        logger.info("ttm.returns_done", cik=cik, computed=stats["computed"], null=stats["null"])
+        logger.info(
+            "ttm.returns_done", cik=cik, computed=stats["computed"], null=stats["null"]
+        )
 
     logger.info("ttm.returns.done", **totals)
     return totals

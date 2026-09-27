@@ -16,7 +16,9 @@ app = typer.Typer()
 @app.command()
 def runs(
     limit: int = typer.Option(20, help="How many recent runs to show."),
-    job: str = typer.Option(None, help="Restrict to one job (e.g. 'companyfacts', 'incremental')."),
+    job: str = typer.Option(
+        None, help="Restrict to one job (e.g. 'companyfacts', 'incremental')."
+    ),
 ) -> None:
     """Human-readable summary of recent raw.collector_runs rows."""
     with get_connection() as conn:
@@ -49,7 +51,9 @@ def reconcile(
             "re-download impractical."
         ),
     ),
-    seed: int = typer.Option(None, help="Random seed for reproducible sampling (irrelevant at rate=1.0)."),
+    seed: int = typer.Option(
+        None, help="Random seed for reproducible sampling (irrelevant at rate=1.0)."
+    ),
     table: str = typer.Option(
         None,
         help="Restrict to one raw.* table (e.g. 'raw.sec_companyfacts'). Default: check all tables with a storage_path column.",
@@ -63,7 +67,9 @@ def reconcile(
     plumbing."""
     tables = [table] if table else None
     with get_connection() as conn:
-        report = integrity.reconcile(conn, hash_sample_rate=hash_sample_rate, seed=seed, tables=tables)
+        report = integrity.reconcile(
+            conn, hash_sample_rate=hash_sample_rate, seed=seed, tables=tables
+        )
     typer.echo(integrity.render_report(report))
     if not report.clean:
         raise typer.Exit(1)

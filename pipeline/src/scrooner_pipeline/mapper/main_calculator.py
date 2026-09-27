@@ -56,7 +56,9 @@ logger = structlog.get_logger()
 METRIC_CALCULATOR_REGISTRY: dict[str, dict[str, str]] = {}
 
 
-def _register(metric_names: list[str], module: str, cli_command: str, description: str) -> None:
+def _register(
+    metric_names: list[str], module: str, cli_command: str, description: str
+) -> None:
     for name in metric_names:
         METRIC_CALCULATOR_REGISTRY[name] = {
             "module": module,
@@ -67,13 +69,35 @@ def _register(metric_names: list[str], module: str, cli_command: str, descriptio
 
 _register(
     [
-        "gross_margin", "operating_margin", "net_margin", "fcf", "fcf_margin",
-        "debt_to_equity", "current_ratio", "interest_coverage_ratio", "roa",
-        "quick_ratio", "sbc_pct_revenue", "ebitda", "debtor_days", "inventory_days",
-        "payables_days", "goodwill_pct_assets", "rnd_intensity", "net_interest_income",
-        "capex_pct_revenue", "sga_pct_revenue", "payout_ratio", "pretax_margin", "net_cash",
-        "net_cash_per_share", "eps_dilution_spread",
-        "book_value_per_share", "working_capital", "net_change_in_cash", "ocf_to_net_income",
+        "gross_margin",
+        "operating_margin",
+        "net_margin",
+        "fcf",
+        "fcf_margin",
+        "debt_to_equity",
+        "current_ratio",
+        "interest_coverage_ratio",
+        "roa",
+        "quick_ratio",
+        "sbc_pct_revenue",
+        "ebitda",
+        "debtor_days",
+        "inventory_days",
+        "payables_days",
+        "goodwill_pct_assets",
+        "rnd_intensity",
+        "net_interest_income",
+        "capex_pct_revenue",
+        "sga_pct_revenue",
+        "payout_ratio",
+        "pretax_margin",
+        "net_cash",
+        "net_cash_per_share",
+        "eps_dilution_spread",
+        "book_value_per_share",
+        "working_capital",
+        "net_change_in_cash",
+        "ocf_to_net_income",
         "cash_returned_to_shareholders",
     ],
     module="mapper/calculate.py",
@@ -97,11 +121,23 @@ _register(
 
 _register(
     [
-        "revenue_growth_yoy", "revenue_growth_3y_cagr", "revenue_growth_5y_cagr", "revenue_growth_10y_cagr",
-        "eps_growth_yoy", "eps_growth_3y_cagr", "eps_growth_5y_cagr", "eps_growth_10y_cagr",
-        "dps_growth_yoy", "dps_growth_3y_cagr",
-        "net_income_growth_yoy", "net_income_growth_3y_cagr", "net_income_growth_5y_cagr", "net_income_growth_10y_cagr",
-        "diluted_shares_growth_yoy", "diluted_shares_growth_3y_cagr", "diluted_shares_growth_5y_cagr",
+        "revenue_growth_yoy",
+        "revenue_growth_3y_cagr",
+        "revenue_growth_5y_cagr",
+        "revenue_growth_10y_cagr",
+        "eps_growth_yoy",
+        "eps_growth_3y_cagr",
+        "eps_growth_5y_cagr",
+        "eps_growth_10y_cagr",
+        "dps_growth_yoy",
+        "dps_growth_3y_cagr",
+        "net_income_growth_yoy",
+        "net_income_growth_3y_cagr",
+        "net_income_growth_5y_cagr",
+        "net_income_growth_10y_cagr",
+        "diluted_shares_growth_yoy",
+        "diluted_shares_growth_3y_cagr",
+        "diluted_shares_growth_5y_cagr",
     ],
     module="mapper/ttm.py (compute_growth)",
     cli_command="scrooner-map growth",
@@ -110,7 +146,14 @@ _register(
 )
 
 _register(
-    ["market_cap", "trailing_pe", "price_to_sales", "price_to_book", "dividend_yield", "fcf_yield"],
+    [
+        "market_cap",
+        "trailing_pe",
+        "price_to_sales",
+        "price_to_book",
+        "dividend_yield",
+        "fcf_yield",
+    ],
     module="mapper/price_metrics.py",
     cli_command="scrooner-map calculate-price-metrics",
     description="The 6 price-dependent V1 metrics -- requires core.market_price_alpaca real price "
@@ -119,10 +162,20 @@ _register(
 
 _register(
     [
-        "net_debt_ebitda", "ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield",
-        "total_shareholder_yield", "institutional_ownership_pct", "share_dilution_trend",
+        "net_debt_ebitda",
+        "ev_ebitda",
+        "ev_sales",
+        "peg_ratio",
+        "buyback_yield",
+        "total_shareholder_yield",
+        "institutional_ownership_pct",
+        "share_dilution_trend",
         "cash_conversion_cycle",
-        "ebitda_margin", "debt_to_ebitda", "fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf",
+        "ebitda_margin",
+        "debt_to_ebitda",
+        "fcf_per_share",
+        "share_repurchases_pct_fcf",
+        "dividends_pct_fcf",
     ],
     module="mapper/expanded_metrics.py",
     cli_command="scrooner-map calculate-expanded-metrics",
@@ -141,7 +194,12 @@ _register(
 )
 
 _register(
-    ["fcf_gt_net_income", "zero_debt", "profitable_streak_years", "margin_expanding_3yr"],
+    [
+        "fcf_gt_net_income",
+        "zero_debt",
+        "profitable_streak_years",
+        "margin_expanding_3yr",
+    ],
     module="mapper/quality_flags.py",
     cli_command="scrooner-map calculate-quality-flags",
     description="4 boolean/count quality flags. zero_debt emits null (never a guessed 0) when no "
@@ -150,7 +208,11 @@ _register(
 )
 
 _register(
-    ["ar_change_reconciliation_gap", "inventory_change_reconciliation_gap", "ap_change_reconciliation_gap"],
+    [
+        "ar_change_reconciliation_gap",
+        "inventory_change_reconciliation_gap",
+        "ap_change_reconciliation_gap",
+    ],
     module="mapper/reconciliation.py",
     cli_command="scrooner-map calculate-reconciliation",
     description="Cash-flow-statement-vs-balance-sheet quality-of-earnings cross-checks, FY-only, "
@@ -187,7 +249,9 @@ def unregistered_metrics(conn: psycopg.Connection) -> list[str]:
     'add the deferral entry in the same edit, never a follow-up' lesson
     pipeline/CLAUDE.md already documents for DEFERRED_TO_EXPANDED_METRICS."""
     with conn.cursor() as cur:
-        cur.execute("select metric_name from analytics.metric_definition where status = 'active'")
+        cur.execute(
+            "select metric_name from analytics.metric_definition where status = 'active'"
+        )
         all_names = {r[0] for r in cur.fetchall()}
     return sorted(all_names - set(METRIC_CALCULATOR_REGISTRY))
 

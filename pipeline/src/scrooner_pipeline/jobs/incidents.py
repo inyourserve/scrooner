@@ -10,15 +10,28 @@ import os
 import typer
 
 from scrooner_pipeline.db.connection import get_connection
-from scrooner_pipeline.incidents.dashboard import summarize, render_markdown as render_dashboard
-from scrooner_pipeline.incidents.impact import impact_report, render_markdown as render_impact
-from scrooner_pipeline.incidents.verifier import verify_company, render_markdown as render_verify
+from scrooner_pipeline.incidents.dashboard import (
+    summarize,
+    render_markdown as render_dashboard,
+)
+from scrooner_pipeline.incidents.impact import (
+    impact_report,
+    render_markdown as render_impact,
+)
+from scrooner_pipeline.incidents.verifier import (
+    verify_company,
+    render_markdown as render_verify,
+)
 
 app = typer.Typer()
 
 
 @app.command("dashboard")
-def dashboard_cmd(github_summary: bool = typer.Option(False, help="Also append to $GITHUB_STEP_SUMMARY, if set.")) -> None:
+def dashboard_cmd(
+    github_summary: bool = typer.Option(
+        False, help="Also append to $GITHUB_STEP_SUMMARY, if set."
+    ),
+) -> None:
     """Reads analytics.data_incident (the live view over all 5 checker
     tables) and renders the open-incidents dashboard: totals by
     severity, by source system, worst metrics/concepts, and the top
@@ -36,7 +49,11 @@ def dashboard_cmd(github_summary: bool = typer.Option(False, help="Also append t
 
 
 @app.command("impact")
-def impact_cmd(concept: str = typer.Argument(..., help="canonical_concept name, e.g. 'revenue' or 'total_debt'.")) -> None:
+def impact_cmd(
+    concept: str = typer.Argument(
+        ..., help="canonical_concept name, e.g. 'revenue' or 'total_debt'."
+    ),
+) -> None:
     """Real blast-radius report for one canonical_concept: which
     metric_definitions read it as a formula input (via the actual
     metric_definition_input table calculate.py itself reads), which
@@ -51,7 +68,11 @@ def impact_cmd(concept: str = typer.Argument(..., help="canonical_concept name, 
 @app.command("verify")
 def verify_cmd(
     company_id: int = typer.Argument(..., help="core.company.id to verify."),
-    no_yfinance: bool = typer.Option(False, "--no-yfinance", help="Skip the single-company yfinance Financials re-fetch."),
+    no_yfinance: bool = typer.Option(
+        False,
+        "--no-yfinance",
+        help="Skip the single-company yfinance Financials re-fetch.",
+    ),
 ) -> None:
     """Snapshots analytics.data_incident for one company, reruns every
     check that's safe/cheap to rerun on demand for one company

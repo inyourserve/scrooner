@@ -51,7 +51,10 @@ import structlog
 
 logger = structlog.get_logger()
 
-SPLIT_RATIO_TAGS = ("StockholdersEquityNoteStockSplitConversionRatio", "StockholdersEquityNoteStockSplitConversionRatio1")
+SPLIT_RATIO_TAGS = (
+    "StockholdersEquityNoteStockSplitConversionRatio",
+    "StockholdersEquityNoteStockSplitConversionRatio1",
+)
 
 # A genuine split/reverse-split ratio, once correctly scaled, always lands
 # in this range -- verified against the real population distribution
@@ -116,7 +119,13 @@ def detect_stock_splits(conn: psycopg.Connection) -> dict:
         )
         rows = cur.fetchall()
 
-    stats = {"considered": len(rows), "detected": 0, "non_event": 0, "rejected": 0, "merged_redisclosures": 0}
+    stats = {
+        "considered": len(rows),
+        "detected": 0,
+        "non_event": 0,
+        "rejected": 0,
+        "merged_redisclosures": 0,
+    }
     candidates: dict[int, list[dict]] = {}
     for fact_id, company_id, raw_value, effective_date, tag in rows:
         classified = _classify(raw_value)
@@ -129,8 +138,13 @@ def detect_stock_splits(conn: psycopg.Connection) -> dict:
         ratio, scale = classified
         candidates.setdefault(company_id, []).append(
             {
-                "company_id": company_id, "effective_date": effective_date, "ratio": ratio,
-                "raw_value": raw_value, "scale_correction": scale, "source_fact_id": fact_id, "source_tag": tag,
+                "company_id": company_id,
+                "effective_date": effective_date,
+                "ratio": ratio,
+                "raw_value": raw_value,
+                "scale_correction": scale,
+                "source_fact_id": fact_id,
+                "source_tag": tag,
             }
         )
 
@@ -147,7 +161,10 @@ def detect_stock_splits(conn: psycopg.Connection) -> dict:
             for existing in kept:
                 if (
                     existing["ratio"] == candidate["ratio"]
-                    and abs((candidate["effective_date"] - existing["effective_date"]).days) <= _MERGE_WINDOW_DAYS
+                    and abs(
+                        (candidate["effective_date"] - existing["effective_date"]).days
+                    )
+                    <= _MERGE_WINDOW_DAYS
                 ):
                     merged_into = existing
                     break
@@ -199,7 +216,9 @@ RETROACTIVE_ADJUSTMENT_CONCEPTS: dict[str, str] = {
 
 def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         row = cur.fetchone()
         return row[0] if row else None
 
@@ -240,11 +259,15 @@ def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
     a period predating two later splits gets divided by the PRODUCT of
     both ratios, not just the nearer one."""
     with conn.cursor() as cur:
-        cur.execute("select company_id, effective_date, ratio, source_fact_id from analytics.company_stock_split")
+        cur.execute(
+            "select company_id, effective_date, ratio, source_fact_id from analytics.company_stock_split"
+        )
         split_rows = cur.fetchall()
     splits_by_company: dict[int, list[tuple]] = {}
     for company_id, effective_date, ratio, source_fact_id in split_rows:
-        splits_by_company.setdefault(company_id, []).append((effective_date, ratio, source_fact_id))
+        splits_by_company.setdefault(company_id, []).append(
+            (effective_date, ratio, source_fact_id)
+        )
 
     stats: dict = {"concepts": len(RETROACTIVE_ADJUSTMENT_CONCEPTS), "adjusted": 0}
     company_ids_with_splits = list(splits_by_company.keys())
@@ -279,7 +302,11 @@ def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
         for company_id, period_id, value, source_fact_ids, end_date in raw_facts:
             if (company_id, period_id) in already_resolved:
                 continue
-            applicable = [(eff, ratio, src) for eff, ratio, src in splits_by_company[company_id] if eff > end_date]
+            applicable = [
+                (eff, ratio, src)
+                for eff, ratio, src in splits_by_company[company_id]
+                if eff > end_date
+            ]
             if not applicable:
                 continue
             cumulative_ratio = Decimal(1)
@@ -291,7 +318,9 @@ def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
                 continue
             to_insert.append(
                 {
-                    "company_id": company_id, "resolved_id": resolved_id, "period_id": period_id,
+                    "company_id": company_id,
+                    "resolved_id": resolved_id,
+                    "period_id": period_id,
                     "value": value / cumulative_ratio,
                     "source_fact_ids": list(source_fact_ids or []) + split_source_ids,
                 }

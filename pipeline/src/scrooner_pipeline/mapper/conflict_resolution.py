@@ -94,7 +94,9 @@ CONFLICT_FILL_TARGETS: list[tuple[str, str]] = [
 
 def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         row = cur.fetchone()
         return row[0] if row else None
 
@@ -122,7 +124,9 @@ def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tup
         return cur.fetchall()
 
 
-def _load_already_resolved(conn: psycopg.Connection, resolved_id: int) -> set[tuple[int, int]]:
+def _load_already_resolved(
+    conn: psycopg.Connection, resolved_id: int
+) -> set[tuple[int, int]]:
     with conn.cursor() as cur:
         cur.execute(
             "select company_id, period_id from analytics.canonical_fact where canonical_concept_id = %s",
@@ -131,7 +135,9 @@ def _load_already_resolved(conn: psycopg.Connection, resolved_id: int) -> set[tu
         return {(row[0], row[1]) for row in cur.fetchall()}
 
 
-def _safe_fill_value(values: list[Decimal], fact_ids: list[int]) -> tuple[Decimal, int] | None:
+def _safe_fill_value(
+    values: list[Decimal], fact_ids: list[int]
+) -> tuple[Decimal, int] | None:
     """None if the worst-case disagreement exceeds MAX_SAFE_RATIO or any
     value is zero/negative (a ratio check needs a positive denominator to
     mean anything -- a sign flip or a zero is exactly the kind of larger,
@@ -149,7 +155,9 @@ def _safe_fill_value(values: list[Decimal], fact_ids: list[int]) -> tuple[Decima
     return values[best_idx], fact_ids[best_idx]
 
 
-def resolve_baseline_passthrough(conn: psycopg.Connection, primary_name: str, resolved_name: str) -> int:
+def resolve_baseline_passthrough(
+    conn: psycopg.Connection, primary_name: str, resolved_name: str
+) -> int:
     """Plain pass-through: copy the primary concept's own canonical_fact
     row into the resolved concept wherever the resolved concept doesn't
     already have one for that (company, period) -- set-based, ON CONFLICT
@@ -179,11 +187,18 @@ def resolve_baseline_passthrough(conn: psycopg.Connection, primary_name: str, re
         )
         inserted = cur.rowcount
     conn.commit()
-    logger.info("conflict_resolution.baseline_done", primary=primary_name, resolved=resolved_name, inserted=inserted)
+    logger.info(
+        "conflict_resolution.baseline_done",
+        primary=primary_name,
+        resolved=resolved_name,
+        inserted=inserted,
+    )
     return inserted
 
 
-def resolve_conflict_fill(conn: psycopg.Connection, primary_name: str, resolved_name: str) -> dict:
+def resolve_conflict_fill(
+    conn: psycopg.Connection, primary_name: str, resolved_name: str
+) -> dict:
     """Purely additive: INSERT ... ON CONFLICT DO NOTHING into
     `resolved_name` for every (company, period) that's (a) a genuine
     dedupe.py conflict on `primary_name`'s own tags, (b) not already
@@ -212,7 +227,13 @@ def resolve_conflict_fill(conn: psycopg.Connection, primary_name: str, resolved_
             continue
         value, fact_id = filled
         to_insert.append(
-            {"company_id": company_id, "resolved_id": resolved_id, "period_id": period_id, "value": value, "fact_id": fact_id}
+            {
+                "company_id": company_id,
+                "resolved_id": resolved_id,
+                "period_id": period_id,
+                "value": value,
+                "fact_id": fact_id,
+            }
         )
 
     if to_insert:
@@ -227,8 +248,18 @@ def resolve_conflict_fill(conn: psycopg.Connection, primary_name: str, resolved_
             )
         conn.commit()
 
-    stats = {"conflict_groups": len(groups), "already_resolved": len(groups) - len(to_insert) - unsafe, "filled": len(to_insert), "unsafe_skipped": unsafe}
-    logger.info("conflict_resolution.done", primary=primary_name, resolved=resolved_name, **stats)
+    stats = {
+        "conflict_groups": len(groups),
+        "already_resolved": len(groups) - len(to_insert) - unsafe,
+        "filled": len(to_insert),
+        "unsafe_skipped": unsafe,
+    }
+    logger.info(
+        "conflict_resolution.done",
+        primary=primary_name,
+        resolved=resolved_name,
+        **stats,
+    )
     return stats
 
 
@@ -242,12 +273,18 @@ def resolve_conflict_fill(conn: psycopg.Connection, primary_name: str, resolved_
 # reclassification), never a stock split, so the exact same ratio that's
 # safe evidence of "just a split" here would be dangerous evidence to
 # auto-resolve there.
-SPLIT_LIKE_CONCEPTS: tuple[str, ...] = ("diluted_eps", "basic_eps", "dividends_per_share")
+SPLIT_LIKE_CONCEPTS: tuple[str, ...] = (
+    "diluted_eps",
+    "basic_eps",
+    "dividends_per_share",
+)
 MIN_SPLIT_RATIO = Decimal("1.5")
 MAX_SPLIT_RATIO = Decimal("20")
 
 
-def _split_safe_fill_value(values: list[Decimal], fact_ids: list[int]) -> tuple[Decimal, int] | None:
+def _split_safe_fill_value(
+    values: list[Decimal], fact_ids: list[int]
+) -> tuple[Decimal, int] | None:
     """Found live 2026-09-13 investigating a real yfinance mismatch on KLA
     Corp: our diluted_eps showed $8.47 for a real quarter, yfinance showed
     $0.847 -- exactly 10x. Traced to KLA's OWN data: its FY2025 comparative
@@ -282,7 +319,9 @@ def _split_safe_fill_value(values: list[Decimal], fact_ids: list[int]) -> tuple[
     return values[best_idx], fact_ids[best_idx]
 
 
-def resolve_split_like_conflicts(conn: psycopg.Connection, primary_name: str, resolved_name: str) -> dict:
+def resolve_split_like_conflicts(
+    conn: psycopg.Connection, primary_name: str, resolved_name: str
+) -> dict:
     """Same shape as resolve_conflict_fill (reuses its own group-loading
     and already-resolved checks) but with _split_safe_fill_value's wider,
     per-share-specific ratio band instead of MAX_SAFE_RATIO -- run AFTER
@@ -305,7 +344,13 @@ def resolve_split_like_conflicts(conn: psycopg.Connection, primary_name: str, re
             continue
         value, fact_id = filled
         to_insert.append(
-            {"company_id": company_id, "resolved_id": resolved_id, "period_id": period_id, "value": value, "fact_id": fact_id}
+            {
+                "company_id": company_id,
+                "resolved_id": resolved_id,
+                "period_id": period_id,
+                "value": value,
+                "fact_id": fact_id,
+            }
         )
 
     if to_insert:
@@ -321,7 +366,12 @@ def resolve_split_like_conflicts(conn: psycopg.Connection, primary_name: str, re
         conn.commit()
 
     stats = {"conflict_groups": len(groups), "filled": len(to_insert)}
-    logger.info("conflict_resolution.split_like_done", primary=primary_name, resolved=resolved_name, **stats)
+    logger.info(
+        "conflict_resolution.split_like_done",
+        primary=primary_name,
+        resolved=resolved_name,
+        **stats,
+    )
     return stats
 
 
@@ -332,11 +382,21 @@ def resolve_split_like_conflicts(conn: psycopg.Connection, primary_name: str, re
 # out-of-order rerun of their real populate step's own delete-then-
 # reinsert. Conflict-fill itself is still safe and still runs for them
 # (it never deletes), same as any other target.
-_HAS_OWN_POPULATE_STEP = {"revenue_sanity_resolved", "cost_of_revenue_resolved", "gross_profit_resolved", "operating_expenses_resolved", "total_debt_resolved", "capex_resolved"}
+_HAS_OWN_POPULATE_STEP = {
+    "revenue_sanity_resolved",
+    "cost_of_revenue_resolved",
+    "gross_profit_resolved",
+    "operating_expenses_resolved",
+    "total_debt_resolved",
+    "capex_resolved",
+}
 
 
 def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
-    from scrooner_pipeline.mapper.concept_fallback import resolve_capex_with_software, resolve_depreciation_and_amortization_max
+    from scrooner_pipeline.mapper.concept_fallback import (
+        resolve_capex_with_software,
+        resolve_depreciation_and_amortization_max,
+    )
 
     totals = {"baseline_filled": 0, "filled": 0, "unsafe_skipped": 0}
     per_concept = {}
@@ -347,7 +407,9 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     # 24 dedupe-conflict-shaped statement lines), so it's simplest run
     # here rather than invented its own CLI step for one concept.
     per_concept["capex_software"] = {"rows": resolve_capex_with_software(conn)}
-    per_concept["depreciation_and_amortization_max"] = {"rows": resolve_depreciation_and_amortization_max(conn)}
+    per_concept["depreciation_and_amortization_max"] = {
+        "rows": resolve_depreciation_and_amortization_max(conn)
+    }
 
     # Runs BEFORE the main loop, deliberately -- found live 2026-09-15
     # verifying KLA Corp's own real, motivating case (its standalone Q1
@@ -367,7 +429,10 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     # period it can't adjust (no applicable split) is left for baseline-
     # passthrough/conflict-fill/split-like-conflicts to handle exactly as
     # before, via their own ON CONFLICT DO NOTHING.
-    from scrooner_pipeline.corporate_actions.stock_splits import detect_stock_splits, resolve_retroactive_split_adjustments
+    from scrooner_pipeline.corporate_actions.stock_splits import (
+        detect_stock_splits,
+        resolve_retroactive_split_adjustments,
+    )
 
     split_detect_stats = detect_stock_splits(conn)
     per_concept["stock_splits_detected"] = split_detect_stats
@@ -378,11 +443,15 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     for primary_name, resolved_name in CONFLICT_FILL_TARGETS:
         baseline_count = 0
         if resolved_name not in _HAS_OWN_POPULATE_STEP:
-            baseline_count = resolve_baseline_passthrough(conn, primary_name, resolved_name)
+            baseline_count = resolve_baseline_passthrough(
+                conn, primary_name, resolved_name
+            )
         stats = resolve_conflict_fill(conn, primary_name, resolved_name)
         stats["baseline_filled"] = baseline_count
         if primary_name in SPLIT_LIKE_CONCEPTS:
-            split_stats = resolve_split_like_conflicts(conn, primary_name, resolved_name)
+            split_stats = resolve_split_like_conflicts(
+                conn, primary_name, resolved_name
+            )
             stats["split_like_filled"] = split_stats["filled"]
             totals["filled"] += split_stats["filled"]
         per_concept[primary_name] = stats
@@ -466,11 +535,18 @@ def resolve_operating_income_arithmetic_fallback(conn: psycopg.Connection) -> di
             on conflict (company_id, canonical_concept_id, period_id) do nothing
             """,
             {
-                "oi_id": oi_id, "opex_id": opex_id, "cor_id": cor_id, "revenue_id": revenue_id,
-                "excluded_sics": list(_OPERATING_INCOME_ARITHMETIC_EXCLUDED_SIC_PREFIXES),
+                "oi_id": oi_id,
+                "opex_id": opex_id,
+                "cor_id": cor_id,
+                "revenue_id": revenue_id,
+                "excluded_sics": list(
+                    _OPERATING_INCOME_ARITHMETIC_EXCLUDED_SIC_PREFIXES
+                ),
             },
         )
         inserted = cur.rowcount
     conn.commit()
-    logger.info("conflict_resolution.operating_income_arithmetic_done", inserted=inserted)
+    logger.info(
+        "conflict_resolution.operating_income_arithmetic_done", inserted=inserted
+    )
     return {"inserted": inserted}

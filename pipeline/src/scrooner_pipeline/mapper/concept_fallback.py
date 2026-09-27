@@ -93,20 +93,30 @@ ARITHMETIC_FALLBACKS: list[tuple[str, str, str, str, int | None]] = [
     # never narrows it.
     ("gross_profit_resolved", "gross_profit", "revenue", "cost_of_revenue_resolved", 0),
     ("cost_of_revenue_resolved", "cost_of_revenue", "revenue", "gross_profit", 0),
-    ("operating_expenses_resolved", "operating_expenses", "gross_profit_resolved", "operating_income", None),
+    (
+        "operating_expenses_resolved",
+        "operating_expenses",
+        "gross_profit_resolved",
+        "operating_income",
+        None,
+    ),
 ]
 
 
 def _concept_id(conn: psycopg.Connection, name: str) -> int:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         row = cur.fetchone()
         if row is None:
             raise ValueError(f"canonical_concept {name!r} does not exist")
         return row[0]
 
 
-def _load_facts(conn: psycopg.Connection, company_id: int, concept_id: int) -> dict[int, tuple]:
+def _load_facts(
+    conn: psycopg.Connection, company_id: int, concept_id: int
+) -> dict[int, tuple]:
     """period_id -> (value, source_fact_ids)."""
     with conn.cursor() as cur:
         cur.execute(
@@ -117,7 +127,12 @@ def _load_facts(conn: psycopg.Connection, company_id: int, concept_id: int) -> d
 
 
 def resolve_fallback_for_company(
-    conn: psycopg.Connection, company_id: int, primary_id: int, fallback_id: int, resolved_id: int, overlap_tag: str | None = None
+    conn: psycopg.Connection,
+    company_id: int,
+    primary_id: int,
+    fallback_id: int,
+    resolved_id: int,
+    overlap_tag: str | None = None,
 ) -> int:
     """`overlap_tag`, added 2026-09-13: a real, sized bug found investigating
     a user report about a specific company's total_debt looking too low
@@ -161,12 +176,21 @@ def resolve_fallback_for_company(
     for period_id, (value, source_fact_ids) in primary_facts.items():
         if period_id in merged and period_id not in overlap_periods:
             fallback_value, fallback_sources = merged[period_id]
-            merged[period_id] = (value + fallback_value, list(source_fact_ids) + list(fallback_sources))
+            merged[period_id] = (
+                value + fallback_value,
+                list(source_fact_ids) + list(fallback_sources),
+            )
         else:
-            merged[period_id] = (value, source_fact_ids)  # primary wins on genuine overlap, or is the only value present
+            merged[period_id] = (
+                value,
+                source_fact_ids,
+            )  # primary wins on genuine overlap, or is the only value present
 
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s", (company_id, resolved_id))
+        cur.execute(
+            "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = %s",
+            (company_id, resolved_id),
+        )
         if merged:
             cur.executemany(
                 """
@@ -190,7 +214,9 @@ def resolve_fallback_for_company(
 def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
     stats = {"considered": 0, "ok": 0, "errored": 0, "rows_written": 0}
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where cik = any(%s)", (list(ciks),))
+        cur.execute(
+            "select id, cik from core.company where cik = any(%s)", (list(ciks),)
+        )
         companies = cur.fetchall()
 
     for primary_name, fallback_name, resolved_name, overlap_tag in FALLBACK_PAIRS:
@@ -201,12 +227,19 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
         for company_id, cik in companies:
             stats["considered"] += 1
             try:
-                rows = resolve_fallback_for_company(conn, company_id, primary_id, fallback_id, resolved_id, overlap_tag)
+                rows = resolve_fallback_for_company(
+                    conn, company_id, primary_id, fallback_id, resolved_id, overlap_tag
+                )
                 conn.commit()
                 stats["ok"] += 1
                 stats["rows_written"] += rows
             except Exception:
-                logger.warning("concept_fallback.company_failed", cik=cik, pair=resolved_name, exc_info=True)
+                logger.warning(
+                    "concept_fallback.company_failed",
+                    cik=cik,
+                    pair=resolved_name,
+                    exc_info=True,
+                )
                 stats["errored"] += 1
                 # safe_rollback() tolerates a dead connection (a real,
                 # recurring Supabase pooler drop) instead of letting
@@ -304,7 +337,10 @@ def resolve_arithmetic_fallback(
             """,
             params,
         )
-        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", params)
+        cur.execute(
+            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
+            params,
+        )
         count = cur.fetchone()[0]
     conn.commit()
     return count
@@ -312,14 +348,24 @@ def resolve_arithmetic_fallback(
 
 def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
     stats = {"considered": len(ARITHMETIC_FALLBACKS), "rows_written": {}}
-    for resolved_name, primary_name, minuend_name, subtrahend_name, guard in ARITHMETIC_FALLBACKS:
+    for (
+        resolved_name,
+        primary_name,
+        minuend_name,
+        subtrahend_name,
+        guard,
+    ) in ARITHMETIC_FALLBACKS:
         resolved_id = _concept_id(conn, resolved_name)
         primary_id = _concept_id(conn, primary_name)
         minuend_id = _concept_id(conn, minuend_name)
         subtrahend_id = _concept_id(conn, subtrahend_name)
-        count = resolve_arithmetic_fallback(conn, resolved_id, primary_id, minuend_id, subtrahend_id, guard)
+        count = resolve_arithmetic_fallback(
+            conn, resolved_id, primary_id, minuend_id, subtrahend_id, guard
+        )
         stats["rows_written"][resolved_name] = count
-        logger.info("concept_fallback.arithmetic_done", concept=resolved_name, rows=count)
+        logger.info(
+            "concept_fallback.arithmetic_done", concept=resolved_name, rows=count
+        )
     return stats
 
 
@@ -347,7 +393,10 @@ def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
 def resolve_depreciation_and_amortization_max(conn: psycopg.Connection) -> int:
     resolved_id = _concept_id(conn, "depreciation_and_amortization_resolved")
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        cur.execute(
+            "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
+            {"resolved_id": resolved_id},
+        )
         cur.execute(
             """
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
@@ -372,7 +421,10 @@ def resolve_depreciation_and_amortization_max(conn: psycopg.Connection) -> int:
             """,
             {"resolved_id": resolved_id},
         )
-        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        cur.execute(
+            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
+            {"resolved_id": resolved_id},
+        )
         count = cur.fetchone()[0]
     conn.commit()
     logger.info("concept_fallback.depreciation_and_amortization_max_done", rows=count)
@@ -400,7 +452,10 @@ def resolve_capex_with_software(conn: psycopg.Connection) -> int:
     capex_id = _concept_id(conn, "capex")
     resolved_id = _concept_id(conn, "capex_resolved")
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        cur.execute(
+            "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
+            {"resolved_id": resolved_id},
+        )
         cur.execute(
             """
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
@@ -420,7 +475,10 @@ def resolve_capex_with_software(conn: psycopg.Connection) -> int:
             """,
             {"resolved_id": resolved_id, "capex_id": capex_id},
         )
-        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s", {"resolved_id": resolved_id})
+        cur.execute(
+            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
+            {"resolved_id": resolved_id},
+        )
         count = cur.fetchone()[0]
     conn.commit()
     logger.info("concept_fallback.capex_with_software_done", rows=count)
@@ -442,7 +500,9 @@ def resolve_capex_with_software(conn: psycopg.Connection) -> int:
 # gap only when XBRL has NOTHING for that company at all -- never
 # overriding a real XBRL period, and never invented as a fake series of
 # identical values across multiple periods.
-def _find_or_create_instant_period(conn: psycopg.Connection, company_id: int, as_of: date) -> int:
+def _find_or_create_instant_period(
+    conn: psycopg.Connection, company_id: int, as_of: date
+) -> int:
     with conn.cursor() as cur:
         cur.execute(
             "select id from core.period where company_id = %s and start_date = %s and end_date = %s and period_type = 'instant'",
@@ -477,10 +537,19 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
     resolved_id = _concept_id(conn, "employee_count_resolved")
 
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where cik = any(%s)", (list(ciks),))
+        cur.execute(
+            "select id, cik from core.company where cik = any(%s)", (list(ciks),)
+        )
         companies = cur.fetchall()
 
-    stats = {"considered": 0, "from_xbrl": 0, "from_prose": 0, "from_yfinance": 0, "still_null": 0, "errored": 0}
+    stats = {
+        "considered": 0,
+        "from_xbrl": 0,
+        "from_prose": 0,
+        "from_yfinance": 0,
+        "still_null": 0,
+        "errored": 0,
+    }
     for company_id, cik in companies:
         stats["considered"] += 1
         try:
@@ -497,16 +566,23 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
                     prose_row = cur.fetchone()
                 if prose_row:
                     report_date, headcount = prose_row
-                    period_id = _find_or_create_instant_period(conn, company_id, report_date)
+                    period_id = _find_or_create_instant_period(
+                        conn, company_id, report_date
+                    )
                     merged[period_id] = (Decimal(headcount), [])
                     stats["from_prose"] += 1
 
             if not merged:
                 with conn.cursor() as cur:
-                    cur.execute("select y_employee_count from core.company where id = %s", (company_id,))
+                    cur.execute(
+                        "select y_employee_count from core.company where id = %s",
+                        (company_id,),
+                    )
                     y_row = cur.fetchone()
                 if y_row and y_row[0]:
-                    period_id = _find_or_create_instant_period(conn, company_id, date.today())
+                    period_id = _find_or_create_instant_period(
+                        conn, company_id, date.today()
+                    )
                     merged[period_id] = (Decimal(y_row[0]), [])
                     stats["from_yfinance"] += 1
 
@@ -537,7 +613,9 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
                     )
             conn.commit()
         except Exception:
-            logger.warning("concept_fallback.employee_count_company_failed", cik=cik, exc_info=True)
+            logger.warning(
+                "concept_fallback.employee_count_company_failed", cik=cik, exc_info=True
+            )
             stats["errored"] += 1
             conn.rollback()
 

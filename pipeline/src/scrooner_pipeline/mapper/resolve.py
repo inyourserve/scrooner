@@ -46,7 +46,10 @@ def _load_concept_mappings(conn: psycopg.Connection) -> dict[int, dict]:
             order by canonical_concept_id, priority, concept_id
             """
         )
-        result: dict[int, dict] = {cc_id: {"combination_mode": mode, "mappings": []} for cc_id, mode in modes.items()}
+        result: dict[int, dict] = {
+            cc_id: {"combination_mode": mode, "mappings": []}
+            for cc_id, mode in modes.items()
+        }
         for cc_id, concept_id, priority in cur.fetchall():
             result[cc_id]["mappings"].append((concept_id, priority))
     return result
@@ -70,11 +73,15 @@ def _load_managed_concept_ids(conn: psycopg.Connection) -> set[int]:
     impossible to repeat for this or any future zero-mapping concept,
     rather than relying on operators remembering the right run order."""
     with conn.cursor() as cur:
-        cur.execute("select distinct canonical_concept_id from analytics.concept_mapping")
+        cur.execute(
+            "select distinct canonical_concept_id from analytics.concept_mapping"
+        )
         return {row[0] for row in cur.fetchall()}
 
 
-def _load_facts(conn: psycopg.Connection, company_id: int, mapped_concept_ids: set[int]) -> list[tuple]:
+def _load_facts(
+    conn: psycopg.Connection, company_id: int, mapped_concept_ids: set[int]
+) -> list[tuple]:
     """(concept_id, period_id, value, fact_id) for every authoritative fact
     this company has under a mapped concept -- unmapped concepts never
     enter the picture at all."""
@@ -90,8 +97,17 @@ def _load_facts(conn: psycopg.Connection, company_id: int, mapped_concept_ids: s
         return cur.fetchall()
 
 
-def resolve_for_company(conn: psycopg.Connection, company_id: int, mapping_index: dict[int, dict], managed_concept_ids: set[int]) -> dict:
-    mapped_concept_ids = {concept_id for cc in mapping_index.values() for concept_id, _priority in cc["mappings"]}
+def resolve_for_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    mapping_index: dict[int, dict],
+    managed_concept_ids: set[int],
+) -> dict:
+    mapped_concept_ids = {
+        concept_id
+        for cc in mapping_index.values()
+        for concept_id, _priority in cc["mappings"]
+    }
     facts = _load_facts(conn, company_id, mapped_concept_ids)
 
     # concept_id -> period_id -> (value, fact_id)
@@ -190,10 +206,19 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
     mapping_index = _load_concept_mappings(conn)
     managed_concept_ids = _load_managed_concept_ids(conn)
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "resolved": 0, "unresolved_concepts": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "resolved": 0,
+        "unresolved_concepts": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -201,7 +226,9 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = resolve_for_company(conn, company_id, mapping_index, managed_concept_ids)
+            stats = resolve_for_company(
+                conn, company_id, mapping_index, managed_concept_ids
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "resolve", exc)

@@ -20,7 +20,11 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.yfinance_financials.fetch import PERIOD_MATCH_TOLERANCE_DAYS
-from scrooner_pipeline.yfinance_financials.line_item_map import BANK_INCOMPATIBLE_CONCEPTS, BANK_SIC_PREFIXES, CONCEPT_FOR_COMPARISON
+from scrooner_pipeline.yfinance_financials.line_item_map import (
+    BANK_INCOMPATIBLE_CONCEPTS,
+    BANK_SIC_PREFIXES,
+    CONCEPT_FOR_COMPARISON,
+)
 
 logger = structlog.get_logger()
 
@@ -75,12 +79,19 @@ def _load_mapping(conn: psycopg.Connection) -> dict[tuple[str, str], dict]:
             """
         )
         return {
-            (statement_type, line_item): {"concept_name": concept_name, "concept_id": concept_id, "sign_flip": sign_flip, "notes": notes}
+            (statement_type, line_item): {
+                "concept_name": concept_name,
+                "concept_id": concept_id,
+                "sign_flip": sign_flip,
+                "notes": notes,
+            }
             for statement_type, line_item, concept_name, concept_id, sign_flip, notes in cur.fetchall()
         }
 
 
-def _load_our_periods(conn: psycopg.Connection, company_id: int) -> list[tuple[int, object, str]]:
+def _load_our_periods(
+    conn: psycopg.Connection, company_id: int
+) -> list[tuple[int, object, str]]:
     """QUARTERLY periods only -- matches yfinance's own `quarterly_*`
     statements' granularity (fetch.py fetches quarterly, not annual).
     Real bug found live 2026-09-08: a company's Q4 and FY periods can
@@ -131,20 +142,25 @@ _PERIOD_TYPE_FOR_STATEMENT: dict[str, str] = {
 }
 
 
-def _closest_period(periods: list[tuple[int, object, str]], target_end: object, period_type: str) -> tuple[int, object] | None:
+def _closest_period(
+    periods: list[tuple[int, object, str]], target_end: object, period_type: str
+) -> tuple[int, object] | None:
     from datetime import timedelta
 
     candidates = [
         (pid, end)
         for pid, end, ptype in periods
-        if ptype == period_type and abs((end - target_end)) <= timedelta(days=PERIOD_MATCH_TOLERANCE_DAYS)
+        if ptype == period_type
+        and abs((end - target_end)) <= timedelta(days=PERIOD_MATCH_TOLERANCE_DAYS)
     ]
     if not candidates:
         return None
     return min(candidates, key=lambda pair: abs(pair[1] - target_end))
 
 
-def _load_our_values(conn: psycopg.Connection, company_id: int, concept_names: set[str]) -> dict[tuple[str, int], Decimal]:
+def _load_our_values(
+    conn: psycopg.Connection, company_id: int, concept_names: set[str]
+) -> dict[tuple[str, int], Decimal]:
     """One query for the whole company, every concept this comparison
     could ever need (raw + resolved names) -- see _load_mapping's own
     comment for the N+1 shape this replaces."""
@@ -175,7 +191,9 @@ def _load_our_values(conn: psycopg.Connection, company_id: int, concept_names: s
 # never a change to stored data. A company with no ROU tag at all (real,
 # pre-ASC-842 filers or ones genuinely without material leases) is left
 # unadjusted and compared as before.
-def _load_operating_lease_rou(conn: psycopg.Connection, company_id: int) -> dict[int, Decimal]:
+def _load_operating_lease_rou(
+    conn: psycopg.Connection, company_id: int
+) -> dict[int, Decimal]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -189,13 +207,19 @@ def _load_operating_lease_rou(conn: psycopg.Connection, company_id: int) -> dict
         return {period_id: value for period_id, value in cur.fetchall()}
 
 
-def compare_company(conn: psycopg.Connection, company_id: int, mapping: dict[tuple[str, str], dict]) -> dict:
+def compare_company(
+    conn: psycopg.Connection, company_id: int, mapping: dict[tuple[str, str], dict]
+) -> dict:
     stats = {"ok": 0, "minor": 0, "major": 0, "missing_ours": 0}
     is_bank = _is_bank(conn, company_id)
     periods = _load_our_periods(conn, company_id)
     concept_names = {m["concept_name"] for m in mapping.values()}
     our_values = _load_our_values(conn, company_id, concept_names)
-    operating_lease_rou = _load_operating_lease_rou(conn, company_id) if "ppe_net" in concept_names else {}
+    operating_lease_rou = (
+        _load_operating_lease_rou(conn, company_id)
+        if "ppe_net" in concept_names
+        else {}
+    )
 
     with conn.cursor() as cur:
         cur.execute(
@@ -224,8 +248,14 @@ def compare_company(conn: psycopg.Connection, company_id: int, mapping: dict[tup
         our_value = our_values.get((resolved_name, period_id))
         concept_id = mapped["concept_id"]
 
-        note = mapped["notes"] if (is_bank and concept_name in BANK_INCOMPATIBLE_CONCEPTS) else None
-        rou_value = operating_lease_rou.get(period_id) if concept_name == "ppe_net" else None
+        note = (
+            mapped["notes"]
+            if (is_bank and concept_name in BANK_INCOMPATIBLE_CONCEPTS)
+            else None
+        )
+        rou_value = (
+            operating_lease_rou.get(period_id) if concept_name == "ppe_net" else None
+        )
         if our_value is not None and rou_value is not None:
             our_value = our_value + rou_value
             note = "our_value includes OperatingLeaseRightOfUseAsset, matching yfinance's own Net PPE definition"
@@ -239,9 +269,16 @@ def compare_company(conn: psycopg.Connection, company_id: int, mapping: dict[tup
 
         findings.append(
             {
-                "company_id": company_id, "concept_id": concept_id, "period_id": period_id, "period_end": period_end,
-                "our_value": our_value, "yfinance_value": external_decimal, "yfinance_line_item": line_item,
-                "pct_diff": pct_diff, "severity": severity, "note": note,
+                "company_id": company_id,
+                "concept_id": concept_id,
+                "period_id": period_id,
+                "period_end": period_end,
+                "our_value": our_value,
+                "yfinance_value": external_decimal,
+                "yfinance_line_item": line_item,
+                "pct_diff": pct_diff,
+                "severity": severity,
+                "note": note,
             }
         )
         stats[severity] += 1
@@ -261,15 +298,22 @@ _UPSERT_SQL = """
 """
 
 
-def _write_findings(conn: psycopg.Connection, company_id: int, findings: list[dict]) -> None:
+def _write_findings(
+    conn: psycopg.Connection, company_id: int, findings: list[dict]
+) -> None:
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.statement_comparison_finding where company_id = %s", (company_id,))
+        cur.execute(
+            "delete from analytics.statement_comparison_finding where company_id = %s",
+            (company_id,),
+        )
         if findings:
             cur.executemany(_UPSERT_SQL, findings)
     conn.commit()
 
 
-def investigate_major_findings(conn: psycopg.Connection, limit: int | None = None) -> dict:
+def investigate_major_findings(
+    conn: psycopg.Connection, limit: int | None = None
+) -> dict:
     """Hands 'major' findings WITHOUT an already-understood note (i.e. not
     a known bank-incompatible mismatch) to sanity/tag_investigator.py's
     investigate() -- the same fetcher-tree trace, the same rule that a fix
@@ -311,7 +355,9 @@ def investigate_major_findings(conn: psycopg.Connection, limit: int | None = Non
 
     for finding_id, company_id, concept_name, period_id, yfinance_value in rows:
         stats["considered"] += 1
-        outcome = investigate(conn, company_id, concept_name, Decimal(yfinance_value), period_id=period_id)
+        outcome = investigate(
+            conn, company_id, concept_name, Decimal(yfinance_value), period_id=period_id
+        )
         stats[outcome["outcome"]] += 1
         # Found live 2026-09-20: investigate() writes its own audit trail
         # to analytics.data_sanity_investigation, NOT back onto the
@@ -338,7 +384,13 @@ def investigate_major_findings(conn: psycopg.Connection, limit: int | None = Non
 
 def compare_statements(conn: psycopg.Connection, company_ids: list[int]) -> dict:
     mapping = _load_mapping(conn)
-    totals = {"considered": len(company_ids), "ok": 0, "minor": 0, "major": 0, "missing_ours": 0}
+    totals = {
+        "considered": len(company_ids),
+        "ok": 0,
+        "minor": 0,
+        "major": 0,
+        "missing_ours": 0,
+    }
     for company_id in company_ids:
         result = compare_company(conn, company_id, mapping)
         for key, value in result.items():

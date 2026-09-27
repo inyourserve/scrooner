@@ -44,7 +44,10 @@ def _recent_10ks(client: SECClient, cik: str, limit: int = 2) -> list[dict]:
                     "accession_number": recent["accessionNumber"][i],
                     "primary_document": recent["primaryDocument"][i],
                     "filing_date": recent["filingDate"][i],
-                    "report_date": recent.get("reportDate", [None] * len(recent["form"]))[i] or None,
+                    "report_date": recent.get(
+                        "reportDate", [None] * len(recent["form"])
+                    )[i]
+                    or None,
                 }
             )
             if len(results) >= limit:
@@ -57,15 +60,24 @@ def _document_url(cik: str, accession_number: str, primary_document: str) -> str
     return f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{acc_no_dashes}/{primary_document}"
 
 
-def process_company(client: SECClient, conn: psycopg.Connection, company_id: int, cik: str) -> dict:
-    stats = {"headcount_found": 0, "headcount_skipped_duplicate": 0, "about_found": False, "website_found": False}
+def process_company(
+    client: SECClient, conn: psycopg.Connection, company_id: int, cik: str
+) -> dict:
+    stats = {
+        "headcount_found": 0,
+        "headcount_skipped_duplicate": 0,
+        "about_found": False,
+        "website_found": False,
+    }
     filings = _recent_10ks(client, cik, limit=4)
     if not filings:
         return stats
 
     with conn.cursor() as cur:
         for i, filing in enumerate(filings):
-            url = _document_url(cik, filing["accession_number"], filing["primary_document"])
+            url = _document_url(
+                cik, filing["accession_number"], filing["primary_document"]
+            )
             resp = client.get(url)
             plain = clean_visible_text(resp.text)
 
@@ -110,7 +122,10 @@ def process_company(client: SECClient, conn: psycopg.Connection, company_id: int
 
                 website = extract_website(plain)
                 if website is not None:
-                    cur.execute("update core.company set website = %s where id = %s", (website, company_id))
+                    cur.execute(
+                        "update core.company set website = %s where id = %s",
+                        (website, company_id),
+                    )
                     stats["website_found"] = True
     conn.commit()
     return stats
@@ -128,7 +143,9 @@ def process_companies(conn: psycopg.Connection, ciks: set[str]) -> dict:
     }
     client = SECClient()
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where cik = any(%s)", (list(ciks),))
+        cur.execute(
+            "select id, cik from core.company where cik = any(%s)", (list(ciks),)
+        )
         rows = cur.fetchall()
 
     for company_id, cik in rows:

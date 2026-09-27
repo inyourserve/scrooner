@@ -69,15 +69,31 @@ SIGN_FLIP_EXTRA_MULTIPLIER = 5
 
 
 def check_yoy(
-    company_id: int, canonical_concept_id: int, period_id: int, period_end, fiscal_year: int, fiscal_period: str,
-    current_value: Decimal, prior_value: Decimal | None,
-    min_ratio: float, max_ratio: float, materiality_floor: int, never_negative: bool,
+    company_id: int,
+    canonical_concept_id: int,
+    period_id: int,
+    period_end,
+    fiscal_year: int,
+    fiscal_period: str,
+    current_value: Decimal,
+    prior_value: Decimal | None,
+    min_ratio: float,
+    max_ratio: float,
+    materiality_floor: int,
+    never_negative: bool,
 ) -> dict:
     """Pure, no DB access -- unit-testable in isolation."""
     base = {
-        "company_id": company_id, "concept_id": canonical_concept_id, "period_id": period_id,
-        "period_end": period_end, "fiscal_year": fiscal_year, "fiscal_period": fiscal_period,
-        "current_value": current_value, "prior_value": prior_value, "prior_period_end": None, "yoy_ratio": None,
+        "company_id": company_id,
+        "concept_id": canonical_concept_id,
+        "period_id": period_id,
+        "period_end": period_end,
+        "fiscal_year": fiscal_year,
+        "fiscal_period": fiscal_period,
+        "current_value": current_value,
+        "prior_value": prior_value,
+        "prior_period_end": None,
+        "yoy_ratio": None,
     }
 
     if never_negative and current_value < 0:
@@ -88,27 +104,47 @@ def check_yoy(
         # small for a ratio to mean anything -- not flaggable either way.
         return {**base, "severity": SEVERITY_OK}
 
-    is_sign_flip = not never_negative and (prior_value < 0) != (current_value < 0) and prior_value != 0
+    is_sign_flip = (
+        not never_negative
+        and (prior_value < 0) != (current_value < 0)
+        and prior_value != 0
+    )
     if is_sign_flip:
         swing_ratio = abs(current_value) / abs(prior_value)
-        severity = SEVERITY_OUTLIER if swing_ratio > Decimal(max_ratio) * SIGN_FLIP_EXTRA_MULTIPLIER else SEVERITY_OK
-        return {**base, "yoy_ratio": swing_ratio if current_value >= 0 else -swing_ratio, "severity": severity}
+        severity = (
+            SEVERITY_OUTLIER
+            if swing_ratio > Decimal(max_ratio) * SIGN_FLIP_EXTRA_MULTIPLIER
+            else SEVERITY_OK
+        )
+        return {
+            **base,
+            "yoy_ratio": swing_ratio if current_value >= 0 else -swing_ratio,
+            "severity": severity,
+        }
 
     if prior_value == 0:
         return {**base, "severity": SEVERITY_OK}
 
     ratio = current_value / prior_value
-    severity = SEVERITY_OUTLIER if (ratio < Decimal(min_ratio) or ratio > Decimal(max_ratio)) else SEVERITY_OK
+    severity = (
+        SEVERITY_OUTLIER
+        if (ratio < Decimal(min_ratio) or ratio > Decimal(max_ratio))
+        else SEVERITY_OK
+    )
     return {**base, "yoy_ratio": ratio, "severity": severity}
 
 
 def _canonical_concept_id(conn: psycopg.Connection, name: str) -> int:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         return cur.fetchone()[0]
 
 
-def _load_yoy_pairs(conn: psycopg.Connection, concept_id: int, company_id: int | None = None) -> list[tuple]:
+def _load_yoy_pairs(
+    conn: psycopg.Connection, concept_id: int, company_id: int | None = None
+) -> list[tuple]:
     """One bulk query for the WHOLE population per concept (or, when
     `company_id` is given, just that one company -- added 2026-09-08
     for incidents/verifier.py, which needs to re-check a single
@@ -150,8 +186,13 @@ _UPSERT_SQL = """
 
 
 def run_concept(
-    conn: psycopg.Connection, concept_name: str, min_ratio: float, max_ratio: float, materiality_floor: int,
-    never_negative: bool, company_id: int | None = None,
+    conn: psycopg.Connection,
+    concept_name: str,
+    min_ratio: float,
+    max_ratio: float,
+    materiality_floor: int,
+    never_negative: bool,
+    company_id: int | None = None,
 ) -> dict:
     """`company_id` optionally scopes both the load AND the delete to
     one company (added 2026-09-08, incidents/verifier.py) -- the delete
@@ -177,16 +218,42 @@ def run_concept(
     e.g. 'revenue_sanity_resolved' rather than 'revenue' for these 5 --
     more transparent about what was actually checked, not a
     regression."""
-    stats = {"considered": 0, SEVERITY_OK: 0, SEVERITY_OUTLIER: 0, SEVERITY_SIGN_VIOLATION: 0}
-    concept_id = _canonical_concept_id(conn, CONCEPT_FOR_COMPARISON.get(concept_name, concept_name))
+    stats = {
+        "considered": 0,
+        SEVERITY_OK: 0,
+        SEVERITY_OUTLIER: 0,
+        SEVERITY_SIGN_VIOLATION: 0,
+    }
+    concept_id = _canonical_concept_id(
+        conn, CONCEPT_FOR_COMPARISON.get(concept_name, concept_name)
+    )
     pairs = _load_yoy_pairs(conn, concept_id, company_id)
     stats["considered"] = len(pairs)
 
     findings = []
-    for row_company_id, period_id, period_end, fiscal_year, fiscal_period, current_value, prior_value, prior_period_end in pairs:
+    for (
+        row_company_id,
+        period_id,
+        period_end,
+        fiscal_year,
+        fiscal_period,
+        current_value,
+        prior_value,
+        prior_period_end,
+    ) in pairs:
         row = check_yoy(
-            row_company_id, concept_id, period_id, period_end, fiscal_year, fiscal_period,
-            current_value, prior_value, min_ratio, max_ratio, materiality_floor, never_negative,
+            row_company_id,
+            concept_id,
+            period_id,
+            period_end,
+            fiscal_year,
+            fiscal_period,
+            current_value,
+            prior_value,
+            min_ratio,
+            max_ratio,
+            materiality_floor,
+            never_negative,
         )
         row["prior_period_end"] = prior_period_end
         stats[row["severity"]] += 1
@@ -194,7 +261,10 @@ def run_concept(
 
     with conn.cursor() as cur:
         if company_id is None:
-            cur.execute("delete from analytics.timeseries_outlier_check where canonical_concept_id = %s", (concept_id,))
+            cur.execute(
+                "delete from analytics.timeseries_outlier_check where canonical_concept_id = %s",
+                (concept_id,),
+            )
         else:
             cur.execute(
                 "delete from analytics.timeseries_outlier_check where canonical_concept_id = %s and company_id = %s",
@@ -204,14 +274,35 @@ def run_concept(
             cur.executemany(_UPSERT_SQL, findings)
     conn.commit()
 
-    logger.info("timeseries_check.done", concept=concept_name, company_id=company_id, **stats)
+    logger.info(
+        "timeseries_check.done", concept=concept_name, company_id=company_id, **stats
+    )
     return stats
 
 
 def run_all(conn: psycopg.Connection, company_id: int | None = None) -> dict:
-    totals = {"considered": 0, SEVERITY_OK: 0, SEVERITY_OUTLIER: 0, SEVERITY_SIGN_VIOLATION: 0}
-    for concept_name, min_ratio, max_ratio, materiality_floor, never_negative in CONCEPTS_TO_CHECK:
-        stats = run_concept(conn, concept_name, min_ratio, max_ratio, materiality_floor, never_negative, company_id)
+    totals = {
+        "considered": 0,
+        SEVERITY_OK: 0,
+        SEVERITY_OUTLIER: 0,
+        SEVERITY_SIGN_VIOLATION: 0,
+    }
+    for (
+        concept_name,
+        min_ratio,
+        max_ratio,
+        materiality_floor,
+        never_negative,
+    ) in CONCEPTS_TO_CHECK:
+        stats = run_concept(
+            conn,
+            concept_name,
+            min_ratio,
+            max_ratio,
+            materiality_floor,
+            never_negative,
+            company_id,
+        )
         for key in totals:
             totals[key] += stats.get(key, 0)
     logger.info("timeseries_check.all_done", company_id=company_id, **totals)

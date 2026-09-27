@@ -61,8 +61,15 @@ from scrooner_pipeline.common.errors import log_error
 logger = structlog.get_logger()
 
 REQUIRED_CONCEPTS = [
-    "net_income", "cfo", "total_assets", "current_assets", "current_liabilities",
-    "revenue", "gross_profit", "total_debt_resolved", "shares_outstanding",
+    "net_income",
+    "cfo",
+    "total_assets",
+    "current_assets",
+    "current_liabilities",
+    "revenue",
+    "gross_profit",
+    "total_debt_resolved",
+    "shares_outstanding",
 ]
 
 # Fallback-only input for deriving gross_profit -- deliberately NOT in
@@ -80,7 +87,9 @@ def _load_concept_ids(conn: psycopg.Connection) -> dict[str, int]:
         return dict(cur.fetchall())
 
 
-def _load_fy_facts(conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]) -> dict[str, dict[int, Decimal]]:
+def _load_fy_facts(
+    conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]
+) -> dict[str, dict[int, Decimal]]:
     """concept_name -> {fiscal_year: value}, FY periods only."""
     id_to_name = {v: k for k, v in concept_ids.items()}
     with conn.cursor() as cur:
@@ -100,19 +109,42 @@ def _load_fy_facts(conn: psycopg.Connection, company_id: int, concept_ids: dict[
     return result
 
 
-def _score_year(vals_t: dict[str, Decimal], vals_p: dict[str, Decimal]) -> tuple[int | None, str | None]:
+def _score_year(
+    vals_t: dict[str, Decimal], vals_p: dict[str, Decimal]
+) -> tuple[int | None, str | None]:
     """vals_t = current fiscal year's 9 values, vals_p = prior fiscal
     year's 9 values -- both dicts must already have all 9 keys present
     (checked by the caller) before this is called."""
     net_income_t, cfo_t, assets_t, ca_t, cl_t, rev_t, gp_t, debt_t, shares_t = (
-        vals_t["net_income"], vals_t["cfo"], vals_t["total_assets"], vals_t["current_assets"],
-        vals_t["current_liabilities"], vals_t["revenue"], vals_t["gross_profit"], vals_t["total_debt_resolved"], vals_t["shares_outstanding"],
+        vals_t["net_income"],
+        vals_t["cfo"],
+        vals_t["total_assets"],
+        vals_t["current_assets"],
+        vals_t["current_liabilities"],
+        vals_t["revenue"],
+        vals_t["gross_profit"],
+        vals_t["total_debt_resolved"],
+        vals_t["shares_outstanding"],
     )
     net_income_p, cfo_p, assets_p, ca_p, cl_p, rev_p, gp_p, debt_p, shares_p = (
-        vals_p["net_income"], vals_p["cfo"], vals_p["total_assets"], vals_p["current_assets"],
-        vals_p["current_liabilities"], vals_p["revenue"], vals_p["gross_profit"], vals_p["total_debt_resolved"], vals_p["shares_outstanding"],
+        vals_p["net_income"],
+        vals_p["cfo"],
+        vals_p["total_assets"],
+        vals_p["current_assets"],
+        vals_p["current_liabilities"],
+        vals_p["revenue"],
+        vals_p["gross_profit"],
+        vals_p["total_debt_resolved"],
+        vals_p["shares_outstanding"],
     )
-    if assets_t == 0 or assets_p == 0 or rev_t == 0 or rev_p == 0 or cl_t == 0 or cl_p == 0:
+    if (
+        assets_t == 0
+        or assets_p == 0
+        or rev_t == 0
+        or rev_p == 0
+        or cl_t == 0
+        or cl_p == 0
+    ):
         return None, "zero_denominator"
 
     roa_t = net_income_t / assets_t
@@ -156,7 +188,12 @@ def _derive_missing_gross_profit(fy_facts: dict[str, dict[int, Decimal]]) -> Non
         gross_profit_by_year[fy] = revenue - cost_of_revenue
 
 
-def calculate_piotroski_for_company(conn: psycopg.Connection, company_id: int, metric_id: int, concept_ids: dict[str, int]) -> dict:
+def calculate_piotroski_for_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_id: int,
+    concept_ids: dict[str, int],
+) -> dict:
     fy_facts = _load_fy_facts(conn, company_id, concept_ids)
     _derive_missing_gross_profit(fy_facts)
     all_years: set[int] = set()
@@ -203,21 +240,33 @@ def calculate_piotroski_for_company(conn: psycopg.Connection, company_id: int, m
             reason = "missing:" + ",".join(missing[:3])
             if len(missing) > 3:
                 reason += "..."
-            rows.append({
-                "company_id": company_id, "metric_definition_id": metric_id,
-                "period_start": start, "period_end": end, "period_label": "FY",
-                "value": None, "is_null_reason": reason,
-                "source_fact_ids": None,
-            })
+            rows.append(
+                {
+                    "company_id": company_id,
+                    "metric_definition_id": metric_id,
+                    "period_start": start,
+                    "period_end": end,
+                    "period_label": "FY",
+                    "value": None,
+                    "is_null_reason": reason,
+                    "source_fact_ids": None,
+                }
+            )
             continue
 
         score, reason = _score_year(vals_t, vals_p)
-        rows.append({
-            "company_id": company_id, "metric_definition_id": metric_id,
-            "period_start": start, "period_end": end, "period_label": "FY",
-            "value": Decimal(score) if score is not None else None, "is_null_reason": reason,
-            "source_fact_ids": None,
-        })
+        rows.append(
+            {
+                "company_id": company_id,
+                "metric_definition_id": metric_id,
+                "period_start": start,
+                "period_end": end,
+                "period_label": "FY",
+                "value": Decimal(score) if score is not None else None,
+                "is_null_reason": reason,
+                "source_fact_ids": None,
+            }
+        )
 
     with conn.cursor() as cur:
         cur.execute(
@@ -240,7 +289,12 @@ def calculate_piotroski_for_company(conn: psycopg.Connection, company_id: int, m
 
     computed = sum(1 for r in rows if r["value"] is not None)
     null = sum(1 for r in rows if r["value"] is None)
-    logger.info("quality_score.company_done", company_id=company_id, computed=computed, null=null)
+    logger.info(
+        "quality_score.company_done",
+        company_id=company_id,
+        computed=computed,
+        null=null,
+    )
     return {"computed": computed, "null": null}
 
 
@@ -248,20 +302,35 @@ def calculate_piotroski(conn: psycopg.Connection, ciks: set[str]) -> dict:
     concept_ids = _load_concept_ids(conn)
     missing_concepts = [c for c in REQUIRED_CONCEPTS if c not in concept_ids]
     if missing_concepts:
-        raise RuntimeError(f"quality_score: canonical concepts not seeded yet: {missing_concepts}")
+        raise RuntimeError(
+            f"quality_score: canonical concepts not seeded yet: {missing_concepts}"
+        )
 
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.metric_definition where metric_name = 'piotroski_f_score'")
+        cur.execute(
+            "select id from analytics.metric_definition where metric_name = 'piotroski_f_score'"
+        )
         row = cur.fetchone()
         if row is None:
-            raise RuntimeError("quality_score: piotroski_f_score metric_definition not seeded yet -- run seed-expanded-definitions first")
+            raise RuntimeError(
+                "quality_score: piotroski_f_score metric_definition not seeded yet -- run seed-expanded-definitions first"
+            )
         metric_id = row[0]
 
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -269,7 +338,9 @@ def calculate_piotroski(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = calculate_piotroski_for_company(conn, company_id, metric_id, concept_ids)
+            stats = calculate_piotroski_for_company(
+                conn, company_id, metric_id, concept_ids
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "quality_score", exc)

@@ -42,7 +42,8 @@ import re
 _IX_HEADER = re.compile(r"<ix:header>.*?</ix:header>", re.DOTALL | re.IGNORECASE)
 _SCRIPT_STYLE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.DOTALL | re.IGNORECASE)
 _DISPLAY_NONE = re.compile(
-    r'<[^>]+style="[^"]*display:\s*none[^"]*"[^>]*>.*?</[a-zA-Z0-9]+>', re.DOTALL | re.IGNORECASE
+    r'<[^>]+style="[^"]*display:\s*none[^"]*"[^>]*>.*?</[a-zA-Z0-9]+>',
+    re.DOTALL | re.IGNORECASE,
 )
 _TAG = re.compile(r"<[^>]+>")
 _NBSP = re.compile(r"&#160;")
@@ -51,8 +52,14 @@ _WHITESPACE = re.compile(r"\s+")
 _NUM = r"(?:approximately\s+)?([\d]{1,3}(?:,\d{3})*)"
 _NOUN = r"(?:employees|team members|associates|people|colleagues)"
 _HEADCOUNT_PATTERNS = [
-    re.compile(rf"\b(?:employed|had|has|with)\s+{_NUM}\s+(?:full-time\s+)?(?:equivalent\s+)?{_NOUN}", re.IGNORECASE),
-    re.compile(rf"{_NUM}\s+(?:full-time\s+)?(?:equivalent\s+)?{_NOUN}\s+(?:worldwide|globally|as of)", re.IGNORECASE),
+    re.compile(
+        rf"\b(?:employed|had|has|with)\s+{_NUM}\s+(?:full-time\s+)?(?:equivalent\s+)?{_NOUN}",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        rf"{_NUM}\s+(?:full-time\s+)?(?:equivalent\s+)?{_NOUN}\s+(?:worldwide|globally|as of)",
+        re.IGNORECASE,
+    ),
 ]
 _ITEM_1_BUSINESS = re.compile(r"Item\s+1\.\s*Business", re.IGNORECASE)
 _ITEM_1A = re.compile(r"Item\s+1A\.\s*Risk\s+Factors", re.IGNORECASE)
@@ -70,7 +77,10 @@ _ITEM_1A = re.compile(r"Item\s+1A\.\s*Risk\s+Factors", re.IGNORECASE)
 # prefix at all, so the search must not require one, and must not
 # accidentally prefer sec.gov instead).
 _AVAILABLE_INFORMATION = re.compile(r"available information", re.IGNORECASE)
-_WEBSITE_DOMAIN = re.compile(r"(?:https?://)?(?:www\.)?([a-zA-Z0-9][a-zA-Z0-9\-]*\.(?:com|net|org|io))\b", re.IGNORECASE)
+_WEBSITE_DOMAIN = re.compile(
+    r"(?:https?://)?(?:www\.)?([a-zA-Z0-9][a-zA-Z0-9\-]*\.(?:com|net|org|io))\b",
+    re.IGNORECASE,
+)
 
 # Real finding (2026-08-30, checked against a random sample after the
 # initial full-population run): many filings open Item 1 with a legal
@@ -82,7 +92,8 @@ _WEBSITE_DOMAIN = re.compile(r"(?:https?://)?(?:www\.)?([a-zA-Z0-9][a-zA-Z0-9\-]
 # phrases) when present, rather than storing the disclaimer as if it
 # were the company description.
 _BOILERPLATE_TRIGGER = re.compile(
-    r"unless (?:the context |otherwise )(?:otherwise )?(?:requires|indicated)", re.IGNORECASE
+    r"unless (?:the context |otherwise )(?:otherwise )?(?:requires|indicated)",
+    re.IGNORECASE,
 )
 
 
@@ -122,14 +133,20 @@ def extract_employee_headcount(plain_text: str) -> dict | None:
             headcount = int(raw_number.replace(",", ""))
             snippet = plain_text[max(0, match.start() - 80) : match.end() + 80]
             is_approximate = "approximately" in match.group(0).lower()
-            return {"headcount": headcount, "is_approximate": is_approximate, "snippet": snippet}
+            return {
+                "headcount": headcount,
+                "is_approximate": is_approximate,
+                "snippet": snippet,
+            }
     return None
 
 
 _SENTENCE_END = re.compile(r"[.!?](?=\s|$)")
 
 
-def extract_about_text(plain_text: str, max_sentences: int = 2, max_length: int = 500) -> str | None:
+def extract_about_text(
+    plain_text: str, max_sentences: int = 2, max_length: int = 500
+) -> str | None:
     """The Item 1 Business section's opening text -- the first real
     occurrence, not the table-of-contents listing (confirmed live on
     Apple's own 10-K: "Item 1. Business" appears twice, the TOC entry
@@ -148,7 +165,9 @@ def extract_about_text(plain_text: str, max_sentences: int = 2, max_length: int 
     end_match = _ITEM_1A.search(plain_text, pos=start)
     section_end = end_match.start() if end_match else len(plain_text)
 
-    boilerplate = _BOILERPLATE_TRIGGER.search(plain_text, pos=start, endpos=min(section_end, start + 200))
+    boilerplate = _BOILERPLATE_TRIGGER.search(
+        plain_text, pos=start, endpos=min(section_end, start + 200)
+    )
     if boilerplate is not None:
         sentence_end = plain_text.find(". ", boilerplate.end(), section_end)
         if sentence_end != -1:

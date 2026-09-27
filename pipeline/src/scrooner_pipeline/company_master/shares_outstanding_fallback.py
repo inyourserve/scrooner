@@ -56,9 +56,16 @@ import re
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.sec_client import SECClient
-from scrooner_pipeline.company_master.text_extraction import SubParser, looks_like_a_bare_year, run_head_parser
+from scrooner_pipeline.company_master.text_extraction import (
+    SubParser,
+    looks_like_a_bare_year,
+    run_head_parser,
+)
 
 logger = structlog.get_logger()
 
@@ -67,7 +74,9 @@ logger = structlog.get_logger()
 _CLASS_LABEL = r"(?:Class|Series)\s+[A-Z0-9](?:-\d+)?\b"
 _SECURITY_NOUN = r"(?:common stock|ordinary shares|common shares|Common Voting shares|ordinary common stock)"
 _NUM = r"([\d][\d,]*)"
-_HAS_CLASS_OR_SERIES = re.compile(r"\bClass\s+[A-Z]\b|\bSeries\s+[A-Z]\b", re.IGNORECASE)
+_HAS_CLASS_OR_SERIES = re.compile(
+    r"\bClass\s+[A-Z]\b|\bSeries\s+[A-Z]\b", re.IGNORECASE
+)
 
 
 def _sum_group1(matches: list[re.Match]) -> float:
@@ -131,7 +140,10 @@ _SUB_PARSERS = [
         # explicitly avoids the trap. E.g. Constellation Brands: "Class
         # A Common Stock, par value $.01 per share 172,172,544".
         name="table_format_par_value_per_share",
-        pattern=re.compile(rf"{_CLASS_LABEL}[^0-9]{{0,80}}?par value\s+\$[\d.]+\s+per\s+share\s+{_NUM}", re.IGNORECASE),
+        pattern=re.compile(
+            rf"{_CLASS_LABEL}[^0-9]{{0,80}}?par value\s+\$[\d.]+\s+per\s+share\s+{_NUM}",
+            re.IGNORECASE,
+        ),
         combine=_sum_group1,
     ),
     SubParser(
@@ -146,7 +158,10 @@ _SUB_PARSERS = [
         # real prose lists always do ("shares OF Class A"), so requiring
         # its absence is what actually distinguishes the two shapes.
         name="table_format_simple",
-        pattern=re.compile(rf"(?<!of\s){_CLASS_LABEL}\s+{_SECURITY_NOUN},\s*{_NUM}\s+shares", re.IGNORECASE),
+        pattern=re.compile(
+            rf"(?<!of\s){_CLASS_LABEL}\s+{_SECURITY_NOUN},\s*{_NUM}\s+shares",
+            re.IGNORECASE,
+        ),
         combine=_sum_group1,
     ),
     SubParser(
@@ -160,7 +175,10 @@ _SUB_PARSERS = [
         # table) and returned a 4-digit year as if it were a real share
         # count.
         name="table_format_shares_outstanding_as_of_date",
-        pattern=re.compile(rf"{_CLASS_LABEL}\s+{_SECURITY_NOUN},\s*\$[\d.]+\s+par value,\s*{_NUM}\s+Shares\s+Outstanding", re.IGNORECASE),
+        pattern=re.compile(
+            rf"{_CLASS_LABEL}\s+{_SECURITY_NOUN},\s*\$[\d.]+\s+par value,\s*{_NUM}\s+Shares\s+Outstanding",
+            re.IGNORECASE,
+        ),
         combine=_sum_group1,
     ),
     SubParser(
@@ -171,7 +189,10 @@ _SUB_PARSERS = [
         # repeated, sum. Broadened 2026-09-03: "Class"/"Series",
         # multi-character class suffixes ("Class B-1"), wider noun set.
         name="per_class_shares_of",
-        pattern=re.compile(rf"{_NUM}\s+shares?\s+of\s+(?:the registrant.s\s+)?{_CLASS_LABEL}\s+{_SECURITY_NOUN}", re.IGNORECASE),
+        pattern=re.compile(
+            rf"{_NUM}\s+shares?\s+of\s+(?:the registrant.s\s+)?{_CLASS_LABEL}\s+{_SECURITY_NOUN}",
+            re.IGNORECASE,
+        ),
         combine=_sum_group1_reject_bare_year,
         scale_hint_lookback_chars=100,
     ),
@@ -182,7 +203,9 @@ _SUB_PARSERS = [
         # bare-year is defense in depth against the same Beasley-shaped
         # trap the table pattern above already closes structurally.
         name="class_prefix",
-        pattern=re.compile(rf"{_NUM}\s+{_CLASS_LABEL}\s+{_SECURITY_NOUN}", re.IGNORECASE),
+        pattern=re.compile(
+            rf"{_NUM}\s+{_CLASS_LABEL}\s+{_SECURITY_NOUN}", re.IGNORECASE
+        ),
         combine=_sum_group1_reject_bare_year,
         scale_hint_lookback_chars=100,
     ),
@@ -210,7 +233,10 @@ _SUB_PARSERS = [
         # repeated as separate sentences (not a single comma-list) --
         # e.g. Alphabet-style disclosures.
         name="separate_sentences_per_class",
-        pattern=re.compile(rf"number of shares of[^.]{{0,80}}?{_CLASS_LABEL}[^.]{{0,80}}?outstanding[^.]{{0,80}}?was\s+{_NUM}", re.IGNORECASE),
+        pattern=re.compile(
+            rf"number of shares of[^.]{{0,80}}?{_CLASS_LABEL}[^.]{{0,80}}?outstanding[^.]{{0,80}}?was\s+{_NUM}",
+            re.IGNORECASE,
+        ),
         combine=_sum_group1,
     ),
     SubParser(
@@ -233,7 +259,10 @@ _SUB_PARSERS = [
         # and gated to only run when the page never mentions "Class"/
         # "Series" at all.
         name="single_class",
-        pattern=re.compile(rf"there were\s+{_NUM}\s+shares(?:\s+of\s+(?:the registrant.s\s+)?{_SECURITY_NOUN})?\s+outstanding", re.IGNORECASE),
+        pattern=re.compile(
+            rf"there were\s+{_NUM}\s+shares(?:\s+of\s+(?:the registrant.s\s+)?{_SECURITY_NOUN})?\s+outstanding",
+            re.IGNORECASE,
+        ),
         combine=lambda matches: float(int(matches[0].group(1).replace(",", ""))),
         gate=_no_class_or_series_on_page,
         scale_hint_lookback_chars=100,
@@ -269,7 +298,9 @@ def _extract_shares(cover_text: str) -> float | None:
     return result[0] if result is not None else None
 
 
-def _load_latest_10k(conn: psycopg.Connection, storage: SupabaseStorageClient, cik: str) -> dict | None:
+def _load_latest_10k(
+    conn: psycopg.Connection, storage: SupabaseStorageClient, cik: str
+) -> dict | None:
     """Most recent 10-K's accession_number/primaryDocument/filingDate,
     from the already-fetched raw.sec_submissions (zero new discovery
     fetch, same pattern as ownership/'s own filing-list loading)."""
@@ -305,12 +336,23 @@ def _load_latest_10k(conn: psycopg.Connection, storage: SupabaseStorageClient, c
     return best
 
 
-def update_shares_outstanding_fallback(conn: psycopg.Connection, ciks: set[str]) -> dict:
+def update_shares_outstanding_fallback(
+    conn: psycopg.Connection, ciks: set[str]
+) -> dict:
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    stats = {"considered": len(ciks), "no_company": 0, "no_10k": 0, "fetch_failed": 0, "no_pattern_match": 0, "extracted": 0}
+    stats = {
+        "considered": len(ciks),
+        "no_company": 0,
+        "no_10k": 0,
+        "fetch_failed": 0,
+        "no_pattern_match": 0,
+        "extracted": 0,
+    }
     rows = []
     with SupabaseStorageClient() as storage, SECClient() as sec:
         for cik in sorted(ciks):
@@ -328,12 +370,18 @@ def update_shares_outstanding_fallback(conn: psycopg.Connection, ciks: set[str])
             try:
                 resp = sec.get(url)
             except Exception:
-                logger.warning("shares_outstanding_fallback.fetch_failed", cik=cik, url=url)
+                logger.warning(
+                    "shares_outstanding_fallback.fetch_failed", cik=cik, url=url
+                )
                 stats["fetch_failed"] += 1
                 continue
             shares = _extract_shares(resp.text)
             if shares is None:
-                logger.warning("shares_outstanding_fallback.no_pattern_match", cik=cik, accession_number=latest["accession_number"])
+                logger.warning(
+                    "shares_outstanding_fallback.no_pattern_match",
+                    cik=cik,
+                    accession_number=latest["accession_number"],
+                )
                 stats["no_pattern_match"] += 1
                 continue
             rows.append(

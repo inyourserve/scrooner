@@ -135,7 +135,13 @@ def collect_daily_filings(
     asks for: running this same for_date twice must produce new=0 the
     second time.
     """
-    stats = {"index_rows": 0, "considered": 0, "new": 0, "already_known": 0, "errors": 0}
+    stats = {
+        "index_rows": 0,
+        "considered": 0,
+        "new": 0,
+        "already_known": 0,
+        "errors": 0,
+    }
 
     with SECClient() as sec:
         rows = fetch_daily_index(sec, for_date)
@@ -203,8 +209,11 @@ def collect_daily_filings(
                             returning cik
                             """,
                             (
-                                row["cik"], row["accession_number"], row["form"],
-                                row["filing_date"], row["source_url"],
+                                row["cik"],
+                                row["accession_number"],
+                                row["form"],
+                                row["filing_date"],
+                                row["source_url"],
                             ),
                         )
                         inserted = cur.fetchone() is not None
@@ -225,7 +234,13 @@ def collect_daily_filings(
                                 (run_id, cik, source, error_type, message)
                             values (%s, %s, %s, %s, %s)
                             """,
-                            (run_id, row["cik"], "filings", type(exc).__name__, str(exc)[:2000]),
+                            (
+                                run_id,
+                                row["cik"],
+                                "filings",
+                                type(exc).__name__,
+                                str(exc)[:2000],
+                            ),
                         )
                         conn.commit()
     heartbeat.flush()

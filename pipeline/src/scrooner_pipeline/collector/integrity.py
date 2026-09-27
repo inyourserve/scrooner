@@ -82,7 +82,10 @@ from datetime import datetime, timezone
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 
 logger = structlog.get_logger()
 
@@ -96,7 +99,11 @@ logger = structlog.get_logger()
 _CHECKED_TABLES: list[dict] = [
     {"table": "raw.sec_companyfacts", "key_cols": ["id"], "has_run_id": True},
     {"table": "raw.sec_submissions", "key_cols": ["id"], "has_run_id": True},
-    {"table": "raw.sec_filing_documents", "key_cols": ["cik", "accession_number"], "has_run_id": False},
+    {
+        "table": "raw.sec_filing_documents",
+        "key_cols": ["cik", "accession_number"],
+        "has_run_id": False,
+    },
 ]
 
 
@@ -251,7 +258,11 @@ def reconcile(
                             detail=str(exc),
                         )
                     )
-                    logger.error("integrity.bad_storage_path", table=cfg["table"], storage_path=storage_path)
+                    logger.error(
+                        "integrity.bad_storage_path",
+                        table=cfg["table"],
+                        storage_path=storage_path,
+                    )
                     continue
 
                 tc.existence_checked += 1
@@ -271,7 +282,10 @@ def reconcile(
                         )
                     )
                     logger.error(
-                        "integrity.head_failed", table=cfg["table"], storage_path=storage_path, error=repr(exc)
+                        "integrity.head_failed",
+                        table=cfg["table"],
+                        storage_path=storage_path,
+                        error=repr(exc),
                     )
                     continue
 
@@ -289,7 +303,10 @@ def reconcile(
                         )
                     )
                     logger.error(
-                        "integrity.missing_object", table=cfg["table"], cik=row.get("cik"), storage_path=storage_path
+                        "integrity.missing_object",
+                        table=cfg["table"],
+                        cik=row.get("cik"),
+                        storage_path=storage_path,
                     )
                     continue
 
@@ -317,7 +334,10 @@ def reconcile(
                         )
                     )
                     logger.error(
-                        "integrity.download_failed", table=cfg["table"], storage_path=storage_path, error=repr(exc)
+                        "integrity.download_failed",
+                        table=cfg["table"],
+                        storage_path=storage_path,
+                        error=repr(exc),
                     )
                     continue
 
@@ -365,7 +385,8 @@ def reconcile(
             storage.close()
 
     run_counts = sorted(
-        run_counts_map.values(), key=lambda rc: (rc.table, rc.run_id if rc.run_id is not None else -1)
+        run_counts_map.values(),
+        key=lambda rc: (rc.table, rc.run_id if rc.run_id is not None else -1),
     )
     report = ReconciliationReport(
         generated_at=datetime.now(timezone.utc),
@@ -392,9 +413,15 @@ def render_report(report: ReconciliationReport) -> str:
     doc 05's "manual verification is a feature" applied to the report
     format itself."""
     lines: list[str] = []
-    lines.append("=== Scrooner Collector -- Integrity Reconciliation Report (Module 11) ===")
+    lines.append(
+        "=== Scrooner Collector -- Integrity Reconciliation Report (Module 11) ==="
+    )
     lines.append(f"generated_at: {report.generated_at.isoformat()}")
-    mode = "EXHAUSTIVE" if report.hash_sample_rate >= 1.0 else f"SAMPLED (rate={report.hash_sample_rate}, seed={report.seed})"
+    mode = (
+        "EXHAUSTIVE"
+        if report.hash_sample_rate >= 1.0
+        else f"SAMPLED (rate={report.hash_sample_rate}, seed={report.seed})"
+    )
     lines.append(f"existence check: exhaustive (always)")
     lines.append(f"hash re-verification: {mode}")
     lines.append("")
@@ -448,7 +475,9 @@ def render_report(report: ReconciliationReport) -> str:
             )
             lines.append(f"      {issue.detail}")
         lines.append("")
-        lines.append("=== NOT CLEAN -- unexplained deltas above require investigation, not silent acceptance ===")
+        lines.append(
+            "=== NOT CLEAN -- unexplained deltas above require investigation, not silent acceptance ==="
+        )
     else:
         lines.append("")
         lines.append("=== CLEAN -- zero unexplained deltas ===")

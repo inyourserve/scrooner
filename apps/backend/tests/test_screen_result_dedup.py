@@ -51,7 +51,11 @@ class FakeConnection:
 
 
 def _query() -> ScreenQuery:
-    return ScreenQuery(metric_predicates=[MetricPredicate(metric_name="roe", operator=">", value=Decimal("0.2"))])
+    return ScreenQuery(
+        metric_predicates=[
+            MetricPredicate(metric_name="roe", operator=">", value=Decimal("0.2"))
+        ]
+    )
 
 
 def _patch_common(monkeypatch, conn: FakeConnection, matches=None):
@@ -61,8 +65,12 @@ def _patch_common(monkeypatch, conn: FakeConnection, matches=None):
 
     monkeypatch.setattr(screen_runs, "get_pooled_connection", pooled_connection)
     monkeypatch.setattr(screen_runs, "get_cached_dataset_version", lambda _conn: 1)
-    monkeypatch.setattr(screen_runs, "get_cached_metric_catalog", lambda _conn: {"roe": 1})
-    monkeypatch.setattr(screen_runs, "compute_query_hash", lambda _query, _version: "query-hash")
+    monkeypatch.setattr(
+        screen_runs, "get_cached_metric_catalog", lambda _conn: {"roe": 1}
+    )
+    monkeypatch.setattr(
+        screen_runs, "compute_query_hash", lambda _query, _version: "query-hash"
+    )
     monkeypatch.setattr(screen_runs, "get_cached_run_id", lambda *_a: None)
     monkeypatch.setattr(screen_runs, "get_cached_result", lambda _hash: None)
     monkeypatch.setattr(screen_runs, "set_cached_result", lambda *_a: None)
@@ -72,8 +80,16 @@ def _patch_common(monkeypatch, conn: FakeConnection, matches=None):
         screen_runs,
         "run_query",
         lambda *_a, **_k: {
-            "matched": matches if matches is not None else [{"company_id": 1, "cik": "0001", "metrics": {}}],
-            "excluded_missing_data": [{"cik": "0009", "company_name": "Nine", "missing_metrics": ["roe", "roic"]}],
+            "matched": matches
+            if matches is not None
+            else [{"company_id": 1, "cik": "0001", "metrics": {}}],
+            "excluded_missing_data": [
+                {
+                    "cik": "0009",
+                    "company_name": "Nine",
+                    "missing_metrics": ["roe", "roic"],
+                }
+            ],
             "excluded_inactive": [],
             "dataset_version": 1,
         },
@@ -88,16 +104,24 @@ def test_the_entire_write_is_a_single_statement(monkeypatch):
     screen_runs.create_run_from_query("roe above 20%", _query(), "user-a")
 
     cur = conn.cursor_obj
-    assert len(cur.executed) == 1, "screen_result and user_screen_run must land in one round trip"
+    assert len(cur.executed) == 1, (
+        "screen_result and user_screen_run must land in one round trip"
+    )
     sql, params = cur.executed[0]
     assert "insert into app.screen_result" in sql
     assert "insert into app.user_screen_run" in sql
-    assert "screen_result_item" not in sql, "per-company value copies are no longer stored (migration 0074)"
-    assert "on conflict" not in sql, "no dedup key -- every call gets its own fresh screen_result row"
+    assert "screen_result_item" not in sql, (
+        "per-company value copies are no longer stored (migration 0074)"
+    )
+    assert "on conflict" not in sql, (
+        "no dedup key -- every call gets its own fresh screen_result row"
+    )
 
 
 @pytest.mark.unit
-def test_two_callers_with_the_identical_query_each_still_get_their_own_write(monkeypatch):
+def test_two_callers_with_the_identical_query_each_still_get_their_own_write(
+    monkeypatch,
+):
     # No cross-user dedup any more: two independent calls each do their own
     # single-round-trip write, since there is no shared row to reuse.
     conn_a, conn_b = FakeConnection(), FakeConnection()
@@ -113,7 +137,10 @@ def test_two_callers_with_the_identical_query_each_still_get_their_own_write(mon
 @pytest.mark.unit
 def test_only_ids_and_compact_exclusions_are_uploaded(monkeypatch):
     conn = FakeConnection()
-    matches = [{"company_id": 7, "cik": "0007", "metrics": {"roe": {"value": Decimal("0.5")}}}, {"company_id": 3, "cik": "0003"}]
+    matches = [
+        {"company_id": 7, "cik": "0007", "metrics": {"roe": {"value": Decimal("0.5")}}},
+        {"company_id": 3, "cik": "0003"},
+    ]
     _patch_common(monkeypatch, conn, matches=matches)
 
     screen_runs.create_run_from_query("roe above 20%", _query(), "user-a")
@@ -122,7 +149,9 @@ def test_only_ids_and_compact_exclusions_are_uploaded(monkeypatch):
     assert params["company_ids"] == [7, 3], "IDs in result order"
     assert params["missing_ciks"] == ["0009"]
     assert params["missing_metrics"] == ["roe,roic"]
-    assert params["dataset_version"] == 1, "the version the result was computed on, so pages read it back"
-    assert not any(isinstance(value, str) and '"metrics"' in value for value in params.values()), (
-        "no per-company metric payload may be uploaded"
+    assert params["dataset_version"] == 1, (
+        "the version the result was computed on, so pages read it back"
     )
+    assert not any(
+        isinstance(value, str) and '"metrics"' in value for value in params.values()
+    ), "no per-company metric payload may be uploaded"

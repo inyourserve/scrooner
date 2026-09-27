@@ -73,7 +73,9 @@ def get_cached_result(query_hash: str) -> dict | None:
 
 def set_cached_result(query_hash: str, result: dict) -> None:
     try:
-        _client.set(_key(query_hash), json.dumps(result, default=_default), ex=TTL_SECONDS)
+        _client.set(
+            _key(query_hash), json.dumps(result, default=_default), ex=TTL_SECONDS
+        )
     except RedisError:
         # Best-effort write: the database result is still authoritative.
         return
@@ -87,14 +89,18 @@ def get_cached_run_id(user_id: str, query_hash: str, query_text: str) -> str | N
     return value or None
 
 
-def set_cached_run_id(user_id: str, query_hash: str, query_text: str, run_id: str) -> None:
+def set_cached_run_id(
+    user_id: str, query_hash: str, query_text: str, run_id: str
+) -> None:
     try:
         _client.set(_run_key(user_id, query_hash, query_text), run_id, ex=TTL_SECONDS)
     except RedisError:
         return
 
 
-def get_cached_run_page(user_id: str, run_id: str, page_size: int, cursor: str | None) -> dict | None:
+def get_cached_run_page(
+    user_id: str, run_id: str, page_size: int, cursor: str | None
+) -> dict | None:
     try:
         raw = _client.get(_run_page_key(user_id, run_id, page_size, cursor))
     except RedisError:
@@ -108,7 +114,9 @@ def get_cached_run_page(user_id: str, run_id: str, page_size: int, cursor: str |
     return value if isinstance(value, dict) else None
 
 
-def set_cached_run_page(user_id: str, run_id: str, page_size: int, cursor: str | None, page: dict) -> None:
+def set_cached_run_page(
+    user_id: str, run_id: str, page_size: int, cursor: str | None, page: dict
+) -> None:
     try:
         _client.set(
             _run_page_key(user_id, run_id, page_size, cursor),
@@ -201,7 +209,11 @@ def get_cached_screens_list(user_id: str) -> list | None:
 
 def set_cached_screens_list(user_id: str, screens: list) -> None:
     try:
-        _client.set(_screens_list_key(user_id), json.dumps(screens, default=_default), ex=SCREENS_TTL_SECONDS)
+        _client.set(
+            _screens_list_key(user_id),
+            json.dumps(screens, default=_default),
+            ex=SCREENS_TTL_SECONDS,
+        )
     except RedisError:
         return
 
@@ -233,7 +245,11 @@ def get_cached_screen_detail(user_id: str, slug: str) -> dict | None:
 
 def set_cached_screen_detail(user_id: str, slug: str, screen: dict) -> None:
     try:
-        _client.set(_screen_detail_key(user_id, slug), json.dumps(screen, default=_default), ex=SCREENS_TTL_SECONDS)
+        _client.set(
+            _screen_detail_key(user_id, slug),
+            json.dumps(screen, default=_default),
+            ex=SCREENS_TTL_SECONDS,
+        )
     except RedisError:
         return
 

@@ -12,16 +12,22 @@ from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
 
 logger = structlog.get_logger()
 
-DEFAULT_RATE_LIMITER_LOCK_PATH = Path(tempfile.gettempdir()) / "scrooner_sec_rate_limiter.lock"
+DEFAULT_RATE_LIMITER_LOCK_PATH = (
+    Path(tempfile.gettempdir()) / "scrooner_sec_rate_limiter.lock"
+)
 
 
-def _RateLimiter(max_per_second: float, lock_path: Path | None = None) -> CrossProcessRateLimiter:
+def _RateLimiter(
+    max_per_second: float, lock_path: Path | None = None
+) -> CrossProcessRateLimiter:
     """Thin factory kept for backward compatibility (existing callers/tests
     import `_RateLimiter` from this module). The real implementation moved
     to common/rate_limiter.py 2026-09-06, shared with
     company_master/yfinance_industry.py -- see that module's own docstring
     for the original 2026-08-29 bug this class fixes."""
-    return CrossProcessRateLimiter(max_per_second, lock_path or DEFAULT_RATE_LIMITER_LOCK_PATH)
+    return CrossProcessRateLimiter(
+        max_per_second, lock_path or DEFAULT_RATE_LIMITER_LOCK_PATH
+    )
 
 
 class SECClient:
@@ -67,7 +73,9 @@ class SECClient:
         before_sleep=lambda retry_state: logger.warning(
             "bulk_zip.download_retry",
             attempt=retry_state.attempt_number,
-            exception=repr(retry_state.outcome.exception()) if retry_state.outcome else None,
+            exception=repr(retry_state.outcome.exception())
+            if retry_state.outcome
+            else None,
             note="partial download discarded, retrying from byte 0 -- see download_to_file docstring",
         ),
     )
@@ -117,13 +125,19 @@ class SECClient:
         cache_path = cache_dir / f"{cache_name}-{date.today().isoformat()}.zip"
 
         if cache_path.exists():
-            logger.info("bulk_zip.cache_hit", path=str(cache_path), size_bytes=cache_path.stat().st_size)
+            logger.info(
+                "bulk_zip.cache_hit",
+                path=str(cache_path),
+                size_bytes=cache_path.stat().st_size,
+            )
             return cache_path
 
         tmp_path = cache_path.with_suffix(".zip.tmp")
         logger.info("bulk_zip.cache_miss", url=url, cache_path=str(cache_path))
         self.download_to_file(url, tmp_path)
-        tmp_path.rename(cache_path)  # atomic on the same filesystem -- no torn/partial cache entries
+        tmp_path.rename(
+            cache_path
+        )  # atomic on the same filesystem -- no torn/partial cache entries
         self._prune_stale_cache(cache_dir, cache_name, keep=cache_path)
         return cache_path
 

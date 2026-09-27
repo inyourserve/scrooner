@@ -29,10 +29,18 @@ class NormalizedQueryText:
 _REVIEWED_REPLACEMENTS: tuple[tuple[str, str, str], ...] = (
     (r"\breturn\s+on\s+equit(?:iy|ityy|yi)\b", "return on equity", "metric_spelling"),
     (r"\bretrun\s+on\s+equit(?:y|iy|ity)\b", "return on equity", "metric_spelling"),
-    (r"\breturn\s+on\s+invested\s+captial\b", "return on invested capital", "metric_spelling"),
+    (
+        r"\breturn\s+on\s+invested\s+captial\b",
+        "return on invested capital",
+        "metric_spelling",
+    ),
     (r"\bmarket\s+capitali[sz]ation\b", "market capitalization", "metric_spelling"),
     (r"\bmarket\s+capt?ali[sz]ation\b", "market capitalization", "metric_spelling"),
-    (r"\bdebt\s+(?:to\s+)?equit(?:y|iy)\s+ratio\b", "debt to equity", "metric_spelling"),
+    (
+        r"\bdebt\s+(?:to\s+)?equit(?:y|iy)\s+ratio\b",
+        "debt to equity",
+        "metric_spelling",
+    ),
     (r"\bdebt\s+equit(?:y|iy)\b", "debt to equity", "metric_spelling"),
     (r"\bprice\s+to\s+earnings?\s+ratio\b", "price to earnings", "metric_form"),
     (r"\bgreater\s+then\b", "greater than", "operator_spelling"),
@@ -63,4 +71,3 @@ def normalize_query_text(text: str) -> NormalizedQueryText:
 
     normalized = re.sub(r"\s+", " ", normalized).strip()
     return NormalizedQueryText(normalized, tuple(corrections))
-

@@ -24,16 +24,28 @@ from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
 
-REQUIRED_CONCEPTS = ["effective_tax_rate_reported", "income_tax_expense", "income_before_tax"]
+REQUIRED_CONCEPTS = [
+    "effective_tax_rate_reported",
+    "income_tax_expense",
+    "income_before_tax",
+]
 
 
 def _load_concept_ids(conn: psycopg.Connection) -> dict[str, int]:
     with conn.cursor() as cur:
-        cur.execute("select name, id from analytics.canonical_concept where name = any(%s)", (REQUIRED_CONCEPTS,))
+        cur.execute(
+            "select name, id from analytics.canonical_concept where name = any(%s)",
+            (REQUIRED_CONCEPTS,),
+        )
         return dict(cur.fetchall())
 
 
-def calculate_tax_reconciliation_for_company(conn: psycopg.Connection, company_id: int, metric_id: int, concept_ids: dict[str, int]) -> dict:
+def calculate_tax_reconciliation_for_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_id: int,
+    concept_ids: dict[str, int],
+) -> dict:
     id_to_name = {v: k for k, v in concept_ids.items()}
     with conn.cursor() as cur:
         cur.execute(
@@ -45,7 +57,9 @@ def calculate_tax_reconciliation_for_company(conn: psycopg.Connection, company_i
             """,
             (company_id, list(concept_ids.values())),
         )
-        by_concept_by_period: dict[str, dict[int, tuple]] = {name: {} for name in concept_ids}
+        by_concept_by_period: dict[str, dict[int, tuple]] = {
+            name: {} for name in concept_ids
+        }
         period_dates: dict[int, tuple] = {}
         for concept_id, period_id, value, start, end, fiscal_period in cur.fetchall():
             by_concept_by_period[id_to_name[concept_id]][period_id] = value
@@ -61,24 +75,60 @@ def calculate_tax_reconciliation_for_company(conn: psycopg.Connection, company_i
         if fiscal_period is None:
             continue
         if period_id not in tax_expense:
-            rows.append({"company_id": company_id, "metric_definition_id": metric_id, "period_start": start,
-                         "period_end": end, "period_label": fiscal_period, "value": None,
-                         "is_null_reason": "missing:income_tax_expense", "source_fact_ids": None})
+            rows.append(
+                {
+                    "company_id": company_id,
+                    "metric_definition_id": metric_id,
+                    "period_start": start,
+                    "period_end": end,
+                    "period_label": fiscal_period,
+                    "value": None,
+                    "is_null_reason": "missing:income_tax_expense",
+                    "source_fact_ids": None,
+                }
+            )
             continue
         if period_id not in pretax_income:
-            rows.append({"company_id": company_id, "metric_definition_id": metric_id, "period_start": start,
-                         "period_end": end, "period_label": fiscal_period, "value": None,
-                         "is_null_reason": "missing:income_before_tax", "source_fact_ids": None})
+            rows.append(
+                {
+                    "company_id": company_id,
+                    "metric_definition_id": metric_id,
+                    "period_start": start,
+                    "period_end": end,
+                    "period_label": fiscal_period,
+                    "value": None,
+                    "is_null_reason": "missing:income_before_tax",
+                    "source_fact_ids": None,
+                }
+            )
             continue
         if pretax_income[period_id] == 0:
-            rows.append({"company_id": company_id, "metric_definition_id": metric_id, "period_start": start,
-                         "period_end": end, "period_label": fiscal_period, "value": None,
-                         "is_null_reason": "zero_denominator", "source_fact_ids": None})
+            rows.append(
+                {
+                    "company_id": company_id,
+                    "metric_definition_id": metric_id,
+                    "period_start": start,
+                    "period_end": end,
+                    "period_label": fiscal_period,
+                    "value": None,
+                    "is_null_reason": "zero_denominator",
+                    "source_fact_ids": None,
+                }
+            )
             continue
         derived_rate = tax_expense[period_id] / pretax_income[period_id]
-        rows.append({"company_id": company_id, "metric_definition_id": metric_id, "period_start": start,
-                     "period_end": end, "period_label": fiscal_period, "value": reported_rate - derived_rate,
-                     "is_null_reason": None, "source_fact_ids": None})
+        rows.append(
+            {
+                "company_id": company_id,
+                "metric_definition_id": metric_id,
+                "period_start": start,
+                "period_end": end,
+                "period_label": fiscal_period,
+                "value": reported_rate - derived_rate,
+                "is_null_reason": None,
+                "source_fact_ids": None,
+            }
+        )
 
     with conn.cursor() as cur:
         cur.execute(
@@ -101,7 +151,12 @@ def calculate_tax_reconciliation_for_company(conn: psycopg.Connection, company_i
 
     computed = sum(1 for r in rows if r["value"] is not None)
     null = sum(1 for r in rows if r["value"] is None)
-    logger.info("tax_reconciliation.company_done", company_id=company_id, computed=computed, null=null)
+    logger.info(
+        "tax_reconciliation.company_done",
+        company_id=company_id,
+        computed=computed,
+        null=null,
+    )
     return {"computed": computed, "null": null}
 
 
@@ -109,20 +164,35 @@ def calculate_tax_reconciliation(conn: psycopg.Connection, ciks: set[str]) -> di
     concept_ids = _load_concept_ids(conn)
     missing_concepts = [c for c in REQUIRED_CONCEPTS if c not in concept_ids]
     if missing_concepts:
-        raise RuntimeError(f"tax_reconciliation: canonical concepts not seeded yet: {missing_concepts}")
+        raise RuntimeError(
+            f"tax_reconciliation: canonical concepts not seeded yet: {missing_concepts}"
+        )
 
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.metric_definition where metric_name = 'effective_tax_rate_gap'")
+        cur.execute(
+            "select id from analytics.metric_definition where metric_name = 'effective_tax_rate_gap'"
+        )
         row = cur.fetchone()
     if row is None:
-        raise RuntimeError("tax_reconciliation: effective_tax_rate_gap metric_definition row not seeded yet")
+        raise RuntimeError(
+            "tax_reconciliation: effective_tax_rate_gap metric_definition row not seeded yet"
+        )
     metric_id = row[0]
 
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -130,7 +200,9 @@ def calculate_tax_reconciliation(conn: psycopg.Connection, ciks: set[str]) -> di
             totals["no_company"] += 1
             continue
         try:
-            stats = calculate_tax_reconciliation_for_company(conn, company_id, metric_id, concept_ids)
+            stats = calculate_tax_reconciliation_for_company(
+                conn, company_id, metric_id, concept_ids
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "tax_reconciliation", exc)

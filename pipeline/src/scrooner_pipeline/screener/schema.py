@@ -38,7 +38,9 @@ class MetricPredicate(BaseModel):
             if self.value is None:
                 raise ValueError(f"operator {self.operator!r} requires 'value'")
             if self.value_range is not None or self.n is not None:
-                raise ValueError(f"operator {self.operator!r} does not accept 'value_range' or 'n'")
+                raise ValueError(
+                    f"operator {self.operator!r} does not accept 'value_range' or 'n'"
+                )
         elif self.operator == "between":
             if self.value_range is None:
                 raise ValueError("operator 'between' requires 'value_range'")
@@ -50,7 +52,9 @@ class MetricPredicate(BaseModel):
             if self.n is None or self.n < 1:
                 raise ValueError(f"operator {self.operator!r} requires a positive 'n'")
             if self.value is not None or self.value_range is not None:
-                raise ValueError(f"operator {self.operator!r} does not accept 'value' or 'value_range'")
+                raise ValueError(
+                    f"operator {self.operator!r} does not accept 'value' or 'value_range'"
+                )
         return self
 
 
@@ -70,7 +74,9 @@ class PredicateGroup(BaseModel):
     """
 
     op: Literal["and", "or", "not"]
-    predicates: list[Union["MetricPredicate", "CategoricalPredicate", "PredicateGroup"]] = Field(min_length=1)
+    predicates: list[
+        Union["MetricPredicate", "CategoricalPredicate", "PredicateGroup"]
+    ] = Field(min_length=1)
 
     @model_validator(mode="after")
     def _check_shape(self) -> "PredicateGroup":
@@ -78,7 +84,9 @@ class PredicateGroup(BaseModel):
             raise ValueError("'not' takes exactly one child predicate")
         for p in self.predicates:
             if isinstance(p, MetricPredicate) and p.operator in RANKED_OPERATORS:
-                raise ValueError(f"operator {p.operator!r} is not valid inside a boolean-tree 'where' clause")
+                raise ValueError(
+                    f"operator {p.operator!r} is not valid inside a boolean-tree 'where' clause"
+                )
         return self
 
 
@@ -121,13 +129,17 @@ class ScreenQuery(BaseModel):
         # independent rankings. Reject rather than guess which one wins.
         ranked = [p for p in self.metric_predicates if p.operator in RANKED_OPERATORS]
         if len(ranked) > 1:
-            raise ValueError("at most one top_n/bottom_n predicate is supported per query")
+            raise ValueError(
+                "at most one top_n/bottom_n predicate is supported per query"
+            )
         return self
 
     @model_validator(mode="after")
     def _check_where_not_mixed_with_flat_filters(self) -> "ScreenQuery":
         if self.where is not None:
-            non_ranked = [p for p in self.metric_predicates if p.operator not in RANKED_OPERATORS]
+            non_ranked = [
+                p for p in self.metric_predicates if p.operator not in RANKED_OPERATORS
+            ]
             if non_ranked or self.categorical_predicates:
                 raise ValueError(
                     "cannot combine 'where' with non-ranked metric_predicates or "

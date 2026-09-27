@@ -126,11 +126,17 @@ def _latest_10q_or_10k(client: SECClient, cik: str) -> dict | None:
             continue
         filing_date = recent["filingDate"][i]
         if best is None or filing_date > best["filing_date"]:
-            best = {"form": form, "filing_date": filing_date, "accession_number": recent["accessionNumber"][i]}
+            best = {
+                "form": form,
+                "filing_date": filing_date,
+                "accession_number": recent["accessionNumber"][i],
+            }
     return best
 
 
-def _filing_summary_reports(client: SECClient, cik_int: int, accession_number: str) -> list[dict]:
+def _filing_summary_reports(
+    client: SECClient, cik_int: int, accession_number: str
+) -> list[dict]:
     accession_nodash = accession_number.replace("-", "")
     base = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{accession_nodash}/"
     response = client.get(base + "FilingSummary.xml")
@@ -140,7 +146,9 @@ def _filing_summary_reports(client: SECClient, cik_int: int, accession_number: s
         html_name = re.search(r"<HtmlFileName>(.*?)</HtmlFileName>", block)
         short_name = re.search(r"<ShortName>(.*?)</ShortName>", block)
         if html_name and short_name:
-            reports.append({"html_file": html_name.group(1), "title": short_name.group(1).strip()})
+            reports.append(
+                {"html_file": html_name.group(1), "title": short_name.group(1).strip()}
+            )
     return reports
 
 
@@ -284,9 +292,18 @@ def parse_segment_report(html: str) -> list[dict]:
 
 
 def update_segment_revenue(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    stats = {"considered": 0, "ok": 0, "no_report": 0, "no_rows_parsed": 0, "errored": 0, "rows_written": 0}
+    stats = {
+        "considered": 0,
+        "ok": 0,
+        "no_report": 0,
+        "no_rows_parsed": 0,
+        "errored": 0,
+        "rows_written": 0,
+    }
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where cik = any(%s)", (list(ciks),))
+        cur.execute(
+            "select id, cik from core.company where cik = any(%s)", (list(ciks),)
+        )
         company_rows = cur.fetchall()
 
     with SECClient() as client:

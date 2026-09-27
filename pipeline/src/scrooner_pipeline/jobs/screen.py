@@ -26,7 +26,9 @@ def _default(o):
 
 
 @app.command("run")
-def run_cmd(query_json: str = typer.Argument(..., help="ScreenQuery as a JSON string.")) -> None:
+def run_cmd(
+    query_json: str = typer.Argument(..., help="ScreenQuery as a JSON string."),
+) -> None:
     """Run a screen query (JSON) against the live database and print the result."""
     query = ScreenQuery.model_validate_json(query_json)
     with get_connection() as conn:

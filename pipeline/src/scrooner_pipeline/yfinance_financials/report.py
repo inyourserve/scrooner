@@ -20,7 +20,9 @@ def summarize(conn: psycopg.Connection) -> dict:
         for concept_name, severity, count in cur.fetchall():
             by_concept_severity.setdefault(concept_name, {})[severity] = count
 
-        cur.execute("select count(distinct company_id) from analytics.statement_comparison_finding")
+        cur.execute(
+            "select count(distinct company_id) from analytics.statement_comparison_finding"
+        )
         (companies_checked,) = cur.fetchone()
 
         cur.execute(
@@ -38,13 +40,24 @@ def summarize(conn: psycopg.Connection) -> dict:
         )
         worst_rows = [
             {
-                "company_name": r[0], "ticker": r[1], "concept_name": r[2], "period_end": r[3],
-                "our_value": r[4], "yfinance_value": r[5], "yfinance_line_item": r[6], "pct_diff": r[7], "note": r[8],
+                "company_name": r[0],
+                "ticker": r[1],
+                "concept_name": r[2],
+                "period_end": r[3],
+                "our_value": r[4],
+                "yfinance_value": r[5],
+                "yfinance_line_item": r[6],
+                "pct_diff": r[7],
+                "note": r[8],
             }
             for r in cur.fetchall()
         ]
 
-    return {"companies_checked": companies_checked, "by_concept_severity": by_concept_severity, "worst_rows": worst_rows}
+    return {
+        "companies_checked": companies_checked,
+        "by_concept_severity": by_concept_severity,
+        "worst_rows": worst_rows,
+    }
 
 
 def render_markdown(summary: dict) -> str:
@@ -59,9 +72,13 @@ def render_markdown(summary: dict) -> str:
     lines.append("")
 
     if summary["worst_rows"]:
-        lines.append("## Major findings (unexplained, i.e. no bank-incompatibility note), worst first")
+        lines.append(
+            "## Major findings (unexplained, i.e. no bank-incompatibility note), worst first"
+        )
         lines.append("")
-        lines.append("| Company | Ticker | Concept | Period | Our value | yfinance value (line item) | % diff | Note |")
+        lines.append(
+            "| Company | Ticker | Concept | Period | Our value | yfinance value (line item) | % diff | Note |"
+        )
         lines.append("|---|---|---|---|---|---|---|---|")
         for row in summary["worst_rows"]:
             pct = f"{row['pct_diff']:.1f}%" if row["pct_diff"] is not None else "—"

@@ -59,7 +59,14 @@ OPENFIGI_URL = "https://api.openfigi.com/v3/mapping"
 # still excluded -- funds and SPAC-merger-artifact securities with no real
 # underlying business), both of these types are a company's genuine primary
 # tradeable equity, not a derivative/secondary instrument.
-PRIMARY_SECURITY_TYPES = {"Common Stock", "ADR", "REIT", "MLP", "Tracking Stk", "Ltd Part"}
+PRIMARY_SECURITY_TYPES = {
+    "Common Stock",
+    "ADR",
+    "REIT",
+    "MLP",
+    "Tracking Stk",
+    "Ltd Part",
+}
 
 # Confirmed live 2026-08-17: unauthenticated OpenFIGI's real per-minute
 # burst limit is much tighter than the ~5,000/day headline figure
@@ -76,14 +83,18 @@ COMMIT_EVERY = 25
 
 
 @retry(
-    retry=lambda retry_state: isinstance(retry_state.outcome.exception(), httpx.HTTPStatusError)
-    and retry_state.outcome.exception().response.status_code == 429,
+    retry=lambda retry_state: (
+        isinstance(retry_state.outcome.exception(), httpx.HTTPStatusError)
+        and retry_state.outcome.exception().response.status_code == 429
+    ),
     stop=stop_after_attempt(4),
     wait=wait_exponential(multiplier=2, min=2, max=20),
     reraise=True,
 )
 def _post_with_retry(client: httpx.Client, ticker: str) -> httpx.Response:
-    response = client.post(OPENFIGI_URL, json=[{"idType": "TICKER", "idValue": ticker, "exchCode": "US"}])
+    response = client.post(
+        OPENFIGI_URL, json=[{"idType": "TICKER", "idValue": ticker, "exchCode": "US"}]
+    )
     response.raise_for_status()
     return response
 
@@ -101,7 +112,9 @@ def _try_classify(client: httpx.Client, ticker: str) -> tuple[str | None, str | 
     return data[0].get("securityType"), data[0].get("name")
 
 
-def _classify_ticker(client: httpx.Client, ticker: str) -> tuple[str | None, str | None]:
+def _classify_ticker(
+    client: httpx.Client, ticker: str
+) -> tuple[str | None, str | None]:
     """Returns (security_type, name) or (None, None) if OpenFIGI has no
     match under a plain US exchCode query -- inconclusive, not negative.
 
@@ -118,12 +131,16 @@ def _classify_ticker(client: httpx.Client, ticker: str) -> tuple[str | None, str
     that was correctly inconclusive."""
     security_type, name = _try_classify(client, ticker)
     if security_type is None and "-" in ticker:
-        time.sleep(REQUEST_INTERVAL_SECONDS)  # the fallback call itself also spends rate-limit budget
+        time.sleep(
+            REQUEST_INTERVAL_SECONDS
+        )  # the fallback call itself also spends rate-limit budget
         security_type, name = _try_classify(client, ticker.replace("-", "/"))
     return security_type, name
 
 
-def update_security_types(conn: psycopg.Connection, ciks: set[str], force: bool = False) -> dict:
+def update_security_types(
+    conn: psycopg.Connection, ciks: set[str], force: bool = False
+) -> dict:
     """Resumable as of 2026-09-06 (previously a single end-of-run commit with
     no skip logic -- fine at golden-10 scale, a real risk at the ~1,000-listing
     scale this now runs at: killing the job partway lost everything). Skips
@@ -140,7 +157,9 @@ def update_security_types(conn: psycopg.Connection, ciks: set[str], force: bool 
         )
         listings = cur.fetchall()
 
-    target = [(lid, ticker) for lid, ticker, sec_type in listings if force or sec_type is None]
+    target = [
+        (lid, ticker) for lid, ticker, sec_type in listings if force or sec_type is None
+    ]
     stats = {
         "considered": len(listings),
         "skipped_already_classified": len(listings) - len(target),
@@ -155,9 +174,13 @@ def update_security_types(conn: psycopg.Connection, ciks: set[str], force: bool 
             if security_type is None:
                 stats["no_match"] += 1
             else:
-                pending.append({"listing_id": listing_id, "security_type": security_type})
+                pending.append(
+                    {"listing_id": listing_id, "security_type": security_type}
+                )
                 stats["classified"] += 1
-            time.sleep(REQUEST_INTERVAL_SECONDS)  # every request consumes rate-limit budget, matched or not
+            time.sleep(
+                REQUEST_INTERVAL_SECONDS
+            )  # every request consumes rate-limit budget, matched or not
 
             if len(pending) >= COMMIT_EVERY or i == len(target) - 1:
                 if pending:
@@ -176,7 +199,9 @@ def update_security_types(conn: psycopg.Connection, ciks: set[str], force: bool 
 
 
 def resolve_primary_tickers(
-    conn: psycopg.Connection, ciks: set[str], fallback_ticker_by_cik: dict[str, str] | None = None
+    conn: psycopg.Connection,
+    ciks: set[str],
+    fallback_ticker_by_cik: dict[str, str] | None = None,
 ) -> dict[str, str]:
     """cik -> primary ticker, using the real classification above instead
     of a curated file. Confirmed live across the full golden-10 before
@@ -260,7 +285,12 @@ def persist_primary_tickers(conn: psycopg.Connection, ciks: set[str]) -> dict:
     resolved = resolve_primary_tickers(conn, ciks)
     now = datetime.now(timezone.utc)
     rows = [
-        {"cik": cik, "ticker": resolved.get(cik), "status": "resolved" if cik in resolved else "no_ticker", "now": now}
+        {
+            "cik": cik,
+            "ticker": resolved.get(cik),
+            "status": "resolved" if cik in resolved else "no_ticker",
+            "now": now,
+        }
         for cik in ciks
     ]
     with conn.cursor() as cur:
@@ -273,4 +303,8 @@ def persist_primary_tickers(conn: psycopg.Connection, ciks: set[str]) -> dict:
             rows,
         )
     conn.commit()
-    return {"considered": len(ciks), "resolved": len(resolved), "no_ticker": len(ciks) - len(resolved)}
+    return {
+        "considered": len(ciks),
+        "resolved": len(resolved),
+        "no_ticker": len(ciks) - len(resolved),
+    }

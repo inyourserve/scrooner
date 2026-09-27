@@ -45,7 +45,10 @@ def non_authoritative_leaks(conn: psycopg.Connection) -> dict:
             """
         )
         metric_value_leaks = cur.fetchone()[0]
-    return {"canonical_fact_leaks": canonical_fact_leaks, "metric_value_leaks": metric_value_leaks}
+    return {
+        "canonical_fact_leaks": canonical_fact_leaks,
+        "metric_value_leaks": metric_value_leaks,
+    }
 
 
 def lineage_integrity(conn: psycopg.Connection) -> dict:
@@ -69,7 +72,10 @@ def lineage_integrity(conn: psycopg.Connection) -> dict:
             """
         )
         metric_value_dangling = cur.fetchone()[0]
-    return {"canonical_fact_dangling": canonical_fact_dangling, "metric_value_dangling": metric_value_dangling}
+    return {
+        "canonical_fact_dangling": canonical_fact_dangling,
+        "metric_value_dangling": metric_value_dangling,
+    }
 
 
 def run(conn: psycopg.Connection) -> dict:
@@ -82,6 +88,11 @@ def run(conn: psycopg.Connection) -> dict:
         and lineage["canonical_fact_dangling"] == 0
         and lineage["metric_value_dangling"] == 0
     )
-    result = {"confidence_distribution": dist, "leaks": leaks, "lineage": lineage, "clean": clean}
+    result = {
+        "confidence_distribution": dist,
+        "leaks": leaks,
+        "lineage": lineage,
+        "clean": clean,
+    }
     logger.info("mapper.validate.done", clean=clean, leaks=leaks, lineage=lineage)
     return result

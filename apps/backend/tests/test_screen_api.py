@@ -35,7 +35,11 @@ def test_screen_endpoint_preserves_full_decimal_precision(monkeypatch):
 
     response = TestClient(app).post(
         "/v1/screen",
-        json={"metric_predicates": [{"metric_name": "roe", "operator": ">", "value": "0.10"}]},
+        json={
+            "metric_predicates": [
+                {"metric_name": "roe", "operator": ">", "value": "0.10"}
+            ]
+        },
     )
 
     assert response.status_code == 200
@@ -75,7 +79,17 @@ def test_metric_catalog_exposes_formula_and_ui_contract(monkeypatch):
                 "formula_version": 1,
                 "category": "Returns",
                 "value_type": "percentage",
-                "operators": [">", "<", ">=", "<=", "=", "!=", "between", "top_n", "bottom_n"],
+                "operators": [
+                    ">",
+                    "<",
+                    ">=",
+                    "<=",
+                    "=",
+                    "!=",
+                    "between",
+                    "top_n",
+                    "bottom_n",
+                ],
             }
         ],
     )
@@ -107,9 +121,13 @@ def test_current_presentation_catalog_has_no_generic_fallbacks():
 @pytest.mark.unit
 def test_ask_contract_shows_interpretation_and_does_not_run_by_default(monkeypatch):
     monkeypatch.setattr(screen, "_log_usage", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(screen, "run_query", lambda *_args: pytest.fail("run_query should not run"))
+    monkeypatch.setattr(
+        screen, "run_query", lambda *_args: pytest.fail("run_query should not run")
+    )
 
-    response = TestClient(app).post("/v1/ask", json={"text": "companies with ROE above 30%"})
+    response = TestClient(app).post(
+        "/v1/ask", json={"text": "companies with ROE above 30%"}
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -192,9 +210,13 @@ def test_four_verified_queries_interpret_through_browser_contract(
 @pytest.mark.unit
 def test_ask_ambiguous_text_never_runs_even_when_requested(monkeypatch):
     monkeypatch.setattr(screen, "_log_usage", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(screen, "run_query", lambda *_args: pytest.fail("ambiguous query executed"))
+    monkeypatch.setattr(
+        screen, "run_query", lambda *_args: pytest.fail("ambiguous query executed")
+    )
 
-    response = TestClient(app).post("/v1/ask", json={"text": "revenue growth above 10%", "run": True})
+    response = TestClient(app).post(
+        "/v1/ask", json={"text": "revenue growth above 10%", "run": True}
+    )
 
     assert response.status_code == 200
     assert response.json()["query"] is None
@@ -205,7 +227,9 @@ def test_ask_ambiguous_text_never_runs_even_when_requested(monkeypatch):
 @pytest.mark.unit
 def test_ask_exposes_recognized_partial_without_making_it_executable(monkeypatch):
     monkeypatch.setattr(screen, "_log_usage", lambda *_args, **_kwargs: None)
-    monkeypatch.setattr(screen, "run_query", lambda *_args: pytest.fail("partial query executed"))
+    monkeypatch.setattr(
+        screen, "run_query", lambda *_args: pytest.fail("partial query executed")
+    )
 
     response = TestClient(app).post(
         "/v1/ask",

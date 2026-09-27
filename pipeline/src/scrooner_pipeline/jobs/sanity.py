@@ -11,14 +11,22 @@ from pathlib import Path
 import typer
 
 from scrooner_pipeline.db.connection import get_connection
-from scrooner_pipeline.sanity.yfinance_check import run_sanity_checks, pick_rotation_batch
+from scrooner_pipeline.sanity.yfinance_check import (
+    run_sanity_checks,
+    pick_rotation_batch,
+)
 from scrooner_pipeline.sanity.report import summarize, render_markdown, should_fail_ci
 from scrooner_pipeline.sanity.tag_investigator import investigate_open_findings
 from scrooner_pipeline.sanity.timeseries_check import run_all as run_timeseries_all
 
 app = typer.Typer()
 
-GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
+GOLDEN_COMPANIES_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tests"
+    / "golden_companies"
+    / "companies.json"
+)
 
 
 def _load_golden_company_ids(conn) -> list[int]:
@@ -31,8 +39,13 @@ def _load_golden_company_ids(conn) -> list[int]:
 
 @app.command("run")
 def run_cmd(
-    limit: int = typer.Option(750, help="Max companies to check this run (rotates coldest-checked-first)."),
-    golden_only: bool = typer.Option(False, help="Restrict to the golden-10 set instead of rotating the full active population."),
+    limit: int = typer.Option(
+        750, help="Max companies to check this run (rotates coldest-checked-first)."
+    ),
+    golden_only: bool = typer.Option(
+        False,
+        help="Restrict to the golden-10 set instead of rotating the full active population.",
+    ),
 ) -> None:
     """Runs the 4 checks (market_cap, trailing_pe, shares_outstanding,
     revenue_zero_check) against yfinance for a batch of companies, upserts
@@ -41,16 +54,28 @@ def run_cmd(
     the whole active population over several days, never all ~5,200 in a
     single run."""
     with get_connection() as conn:
-        company_ids = _load_golden_company_ids(conn) if golden_only else pick_rotation_batch(conn, limit)
+        company_ids = (
+            _load_golden_company_ids(conn)
+            if golden_only
+            else pick_rotation_batch(conn, limit)
+        )
         stats = run_sanity_checks(conn, company_ids)
     typer.echo(f"sanity run: {stats}")
 
 
 @app.command("report")
 def report_cmd(
-    fail_on_findings: bool = typer.Option(False, help="Exit 1 if the report's own should_fail_ci() thresholds are crossed -- for CI."),
-    max_major: int = typer.Option(10, help="How many 'major' rows are tolerated before failing (only with --fail-on-findings)."),
-    github_summary: bool = typer.Option(False, help="Also append the markdown report to $GITHUB_STEP_SUMMARY, if set."),
+    fail_on_findings: bool = typer.Option(
+        False,
+        help="Exit 1 if the report's own should_fail_ci() thresholds are crossed -- for CI.",
+    ),
+    max_major: int = typer.Option(
+        10,
+        help="How many 'major' rows are tolerated before failing (only with --fail-on-findings).",
+    ),
+    github_summary: bool = typer.Option(
+        False, help="Also append the markdown report to $GITHUB_STEP_SUMMARY, if set."
+    ),
 ) -> None:
     """Reads back the current state of analytics.data_sanity_check --
     read-only, safe to run any time, independent of `run`'s own schedule."""
@@ -68,7 +93,9 @@ def report_cmd(
                 f.write(markdown + "\n")
 
     if fail_on_findings and should_fail_ci(summary, max_major=max_major):
-        typer.echo("\nFAILING: critical finding(s) present, or more than max_major 'major' findings.")
+        typer.echo(
+            "\nFAILING: critical finding(s) present, or more than max_major 'major' findings."
+        )
         raise typer.Exit(code=1)
 
 

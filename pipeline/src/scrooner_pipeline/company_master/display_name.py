@@ -32,7 +32,10 @@ import structlog
 import yfinance as yf
 
 from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
-from scrooner_pipeline.company_master.security_type import OPENFIGI_URL, resolve_primary_tickers
+from scrooner_pipeline.company_master.security_type import (
+    OPENFIGI_URL,
+    resolve_primary_tickers,
+)
 from scrooner_pipeline.company_master.yfinance_industry import (
     AGGREGATE_REQUEST_INTERVAL_SECONDS,
     DEFAULT_RATE_LIMITER_LOCK_PATH,
@@ -71,7 +74,9 @@ def _yfinance_name(ticker: str, paced: bool) -> str | None:
     try:
         info = yf.Ticker(ticker).get_info()
     except Exception as e:  # yfinance's own failures are not typed consistently
-        logger.warning("display_name.yfinance_fetch_failed", ticker=ticker, error=str(e))
+        logger.warning(
+            "display_name.yfinance_fetch_failed", ticker=ticker, error=str(e)
+        )
         return None
     name = info.get("longName") or info.get("shortName")
     return name.strip() if name else None
@@ -81,11 +86,15 @@ def _openfigi_name(ticker: str) -> str | None:
     time.sleep(OPENFIGI_PACE_SECONDS)
     try:
         response = httpx.post(
-            OPENFIGI_URL, json=[{"idType": "TICKER", "idValue": ticker, "exchCode": "US"}], timeout=15.0
+            OPENFIGI_URL,
+            json=[{"idType": "TICKER", "idValue": ticker, "exchCode": "US"}],
+            timeout=15.0,
         )
         response.raise_for_status()
     except httpx.HTTPError as e:
-        logger.warning("display_name.openfigi_fetch_failed", ticker=ticker, error=str(e))
+        logger.warning(
+            "display_name.openfigi_fetch_failed", ticker=ticker, error=str(e)
+        )
         return None
     data = response.json()[0].get("data")
     if not data:
@@ -94,7 +103,9 @@ def _openfigi_name(ticker: str) -> str | None:
     return name.strip() if name else None
 
 
-def resolve_display_name(ticker: str | None, company_name: str, paced: bool = True) -> tuple[str, str]:
+def resolve_display_name(
+    ticker: str | None, company_name: str, paced: bool = True
+) -> tuple[str, str]:
     """Returns (display_name, source). Always returns a real name --
     the suffix-strip fallback guarantees this never leaves a company
     without a usable display name, unlike y_industry's honest-null design
@@ -120,7 +131,11 @@ def update_display_names(
         )
         rows = cur.fetchall()
 
-    target = [(cid, cik, name) for cid, cik, name, existing in rows if force or existing is None]
+    target = [
+        (cid, cik, name)
+        for cid, cik, name, existing in rows
+        if force or existing is None
+    ]
     stats = {
         "considered": len(rows),
         "skipped_already_resolved": len(rows) - len(target),
@@ -136,9 +151,13 @@ def update_display_names(
 
     updates = []
     for company_id, cik, company_name in target:
-        display_name, source = resolve_display_name(ticker_by_cik.get(cik), company_name, paced=paced)
+        display_name, source = resolve_display_name(
+            ticker_by_cik.get(cik), company_name, paced=paced
+        )
         stats[source] += 1
-        updates.append({"company_id": company_id, "display_name": display_name, "source": source})
+        updates.append(
+            {"company_id": company_id, "display_name": display_name, "source": source}
+        )
 
     with conn.cursor() as cur:
         cur.executemany(

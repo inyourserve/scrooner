@@ -10,8 +10,12 @@ from scrooner_pipeline.screener.schema import MetricPredicate, ScreenQuery
 def test_screen_run_uses_zero_token_template_to_edit_current_query(monkeypatch):
     captured = {}
 
-    def capture(text, query, user_id, page_size=50, requested_run_id=None, corrections=None):
-        captured.update(text=text, query=query, user_id=user_id, corrections=corrections)
+    def capture(
+        text, query, user_id, page_size=50, requested_run_id=None, corrections=None
+    ):
+        captured.update(
+            text=text, query=query, user_id=user_id, corrections=corrections
+        )
         return {"normalized_query": query.model_dump(mode="json")}
 
     monkeypatch.setattr(screen_runs, "create_run_from_query", capture)

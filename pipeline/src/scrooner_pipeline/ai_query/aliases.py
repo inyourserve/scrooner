@@ -65,7 +65,6 @@ METRIC_ALIASES: dict[str, str] = {
     "eps growth 3y cagr": "eps_growth_3y_cagr",
     "3 year eps growth": "eps_growth_3y_cagr",
     "eps cagr": "eps_growth_3y_cagr",
-
     # Widened 2026-08-31: doc/status/DATA_COVERAGE.md's own "what moves
     # the needle next" flagged this table's 14-of-45-then-64-metric
     # coverage as the single largest remaining product gap -- the company

@@ -186,8 +186,14 @@ def load_operational_snapshot(
         )
         for target in FRESHNESS_TARGETS
     )
-    dead_letters = {layer: int(_scalar(conn, sql) or 0) for layer, sql in DEAD_LETTER_QUERIES.items()}
-    expected_misses = {layer: int(_scalar(conn, sql) or 0) for layer, sql in EXPECTED_MISS_QUERIES.items()}
+    dead_letters = {
+        layer: int(_scalar(conn, sql) or 0)
+        for layer, sql in DEAD_LETTER_QUERIES.items()
+    }
+    expected_misses = {
+        layer: int(_scalar(conn, sql) or 0)
+        for layer, sql in EXPECTED_MISS_QUERIES.items()
+    }
     return OperationalSnapshot(
         generated_at=generated_at,
         freshness=freshness,
@@ -198,11 +204,22 @@ def load_operational_snapshot(
 
 
 def _row_counts(stats: dict) -> dict[str, float]:
-    row_words = ("row", "stored", "inserted", "upserted", "company", "filing", "object", "downloaded")
+    row_words = (
+        "row",
+        "stored",
+        "inserted",
+        "upserted",
+        "company",
+        "filing",
+        "object",
+        "downloaded",
+    )
     return {
         key: float(value)
         for key, value in stats.items()
-        if isinstance(value, Number) and not isinstance(value, bool) and any(word in key.lower() for word in row_words)
+        if isinstance(value, Number)
+        and not isinstance(value, bool)
+        and any(word in key.lower() for word in row_words)
     }
 
 
@@ -253,16 +270,30 @@ def evaluate_alerts(snapshot: OperationalSnapshot) -> list[str]:
         if run.status != "succeeded":
             continue
         completed_at = run.finished_at or run.started_at
-        completed_at = completed_at if completed_at.tzinfo else completed_at.replace(tzinfo=timezone.utc)
+        completed_at = (
+            completed_at
+            if completed_at.tzinfo
+            else completed_at.replace(tzinfo=timezone.utc)
+        )
         key = (run.job, run.params_key)
-        latest_success_by_scope[key] = max(completed_at, latest_success_by_scope.get(key, completed_at))
+        latest_success_by_scope[key] = max(
+            completed_at, latest_success_by_scope.get(key, completed_at)
+        )
 
     for run in snapshot.recent_runs:
-        started_at = run.started_at if run.started_at.tzinfo else run.started_at.replace(tzinfo=timezone.utc)
+        started_at = (
+            run.started_at
+            if run.started_at.tzinfo
+            else run.started_at.replace(tzinfo=timezone.utc)
+        )
         failed_at = run.finished_at or run.started_at
-        failed_at = failed_at if failed_at.tzinfo else failed_at.replace(tzinfo=timezone.utc)
+        failed_at = (
+            failed_at if failed_at.tzinfo else failed_at.replace(tzinfo=timezone.utc)
+        )
         heartbeat = run.heartbeat_at or run.started_at
-        heartbeat = heartbeat if heartbeat.tzinfo else heartbeat.replace(tzinfo=timezone.utc)
+        heartbeat = (
+            heartbeat if heartbeat.tzinfo else heartbeat.replace(tzinfo=timezone.utc)
+        )
         recovered_at = latest_success_by_scope.get((run.job, run.params_key))
         if (
             run.status == "failed"
@@ -287,8 +318,12 @@ def snapshot_as_dict(snapshot: OperationalSnapshot) -> dict:
             {
                 "source": reading.source,
                 "state": reading.state(snapshot.generated_at),
-                "latest_at": reading.latest_at.isoformat() if reading.latest_at else None,
-                "age_hours": round(reading.age(snapshot.generated_at).total_seconds() / 3600, 2)
+                "latest_at": reading.latest_at.isoformat()
+                if reading.latest_at
+                else None,
+                "age_hours": round(
+                    reading.age(snapshot.generated_at).total_seconds() / 3600, 2
+                )
                 if reading.age(snapshot.generated_at) is not None
                 else None,
                 "target_hours": reading.maximum_age.total_seconds() / 3600,

@@ -67,7 +67,9 @@ def _load_fact_rows(conn: psycopg.Connection, company_id: int) -> list[tuple]:
         return cur.fetchall()
 
 
-def resolve_authoritative_for_company(conn: psycopg.Connection, company_id: int) -> dict:
+def resolve_authoritative_for_company(
+    conn: psycopg.Connection, company_id: int
+) -> dict:
     rows = _load_fact_rows(conn, company_id)
     groups: dict[tuple, list[tuple]] = {}
     for fact_id, concept_id, unit_id, period_id, value, filing_date, filing_id in rows:
@@ -83,7 +85,9 @@ def resolve_authoritative_for_company(conn: psycopg.Connection, company_id: int)
             continue  # singleton -- leave the Stage 2d default (true) alone
         distinct_values = {v for _, v in members}
         if len(distinct_values) == 1:
-            winner_id = members[0][0]  # earliest-filed, by construction of the query order
+            winner_id = members[0][
+                0
+            ]  # earliest-filed, by construction of the query order
             make_authoritative.append(winner_id)
             make_non_authoritative.extend(fact_id for fact_id, _ in members[1:])
             agreed_duplicate_groups += 1
@@ -93,10 +97,14 @@ def resolve_authoritative_for_company(conn: psycopg.Connection, company_id: int)
 
     with conn.cursor() as cur:
         if make_authoritative:
-            cur.execute("update core.fact set is_authoritative = true where id = any(%s)", (make_authoritative,))
+            cur.execute(
+                "update core.fact set is_authoritative = true where id = any(%s)",
+                (make_authoritative,),
+            )
         if make_non_authoritative:
             cur.execute(
-                "update core.fact set is_authoritative = false where id = any(%s)", (make_non_authoritative,)
+                "update core.fact set is_authoritative = false where id = any(%s)",
+                (make_non_authoritative,),
             )
     conn.commit()
 
@@ -110,9 +118,19 @@ def resolve_authoritative_for_company(conn: psycopg.Connection, company_id: int)
 
 
 def resolve_authoritative(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "duplicate_groups": 0, "agreed_duplicate_groups": 0, "conflict_groups": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "duplicate_groups": 0,
+        "agreed_duplicate_groups": 0,
+        "conflict_groups": 0,
+    }
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
     for cik in sorted(ciks):

@@ -59,7 +59,9 @@ logger = structlog.get_logger()
 # data -- if error rates climb once running, the fix is to widen this
 # constant back out, not to add more workers on top of it.
 AGGREGATE_REQUEST_INTERVAL_SECONDS = 1.2
-DEFAULT_RATE_LIMITER_LOCK_PATH = Path(tempfile.gettempdir()) / "scrooner_yfinance_rate_limiter.lock"
+DEFAULT_RATE_LIMITER_LOCK_PATH = (
+    Path(tempfile.gettempdir()) / "scrooner_yfinance_rate_limiter.lock"
+)
 COMMIT_EVERY = 25
 
 _rate_limiter = CrossProcessRateLimiter(
@@ -109,7 +111,9 @@ def _fetch_info(ticker: str, paced: bool = True) -> dict:
     return _fetch_info_once(ticker, paced=False)
 
 
-def _classify(ticker: str, paced: bool = True) -> tuple[str | None, str | None, str | None, str | None, int | None, str]:
+def _classify(
+    ticker: str, paced: bool = True
+) -> tuple[str | None, str | None, str | None, str | None, int | None, str]:
     """Returns (sector, industry, about_text, website, employees, status).
     paced=False skips the shared rate limiter AND the rate-limit retry
     entirely -- an explicit, user-directed "try fast first" pass: run
@@ -129,7 +133,9 @@ def _classify(ticker: str, paced: bool = True) -> tuple[str | None, str | None, 
     except YFRateLimitError:
         logger.warning("yfinance_industry.rate_limited", ticker=ticker)
         return None, None, None, None, None, STATUS_ERROR
-    except Exception as e:  # yfinance's own network/parsing failures are not typed consistently
+    except (
+        Exception
+    ) as e:  # yfinance's own network/parsing failures are not typed consistently
         logger.warning("yfinance_industry.fetch_failed", ticker=ticker, error=str(e))
         return None, None, None, None, None, STATUS_ERROR
 
@@ -141,7 +147,13 @@ def _classify(ticker: str, paced: bool = True) -> tuple[str | None, str | None, 
     about_text = info.get("longBusinessSummary")
     website = info.get("website")
     employees = info.get("fullTimeEmployees")
-    if sector is None and industry is None and about_text is None and website is None and employees is None:
+    if (
+        sector is None
+        and industry is None
+        and about_text is None
+        and website is None
+        and employees is None
+    ):
         return None, None, None, None, None, STATUS_NO_DATA
     return sector, industry, about_text, website, employees, STATUS_OK
 
@@ -166,7 +178,9 @@ def update_yfinance_industry(
     stats: dict[str, int] = {
         "considered": len(ciks),
         "no_company": len([c for c in ciks if c not in by_cik]),
-        "skipped_already_resolved": len(ciks) - len(target_ciks) - len([c for c in ciks if c not in by_cik]),
+        "skipped_already_resolved": len(ciks)
+        - len(target_ciks)
+        - len([c for c in ciks if c not in by_cik]),
         STATUS_OK: 0,
         STATUS_NO_DATA: 0,
         STATUS_NOT_FOUND: 0,
@@ -186,17 +200,29 @@ def update_yfinance_industry(
             stats[STATUS_NOT_FOUND] += 1
             pending.append(
                 {
-                    "company_id": company_id, "sector": None, "industry": None,
-                    "about_text": None, "website": None, "employees": None, "status": STATUS_NOT_FOUND,
+                    "company_id": company_id,
+                    "sector": None,
+                    "industry": None,
+                    "about_text": None,
+                    "website": None,
+                    "employees": None,
+                    "status": STATUS_NOT_FOUND,
                 }
             )
         else:
-            sector, industry, about_text, website, employees, status = _classify(ticker, paced=paced)
+            sector, industry, about_text, website, employees, status = _classify(
+                ticker, paced=paced
+            )
             stats[status] += 1
             pending.append(
                 {
-                    "company_id": company_id, "sector": sector, "industry": industry,
-                    "about_text": about_text, "website": website, "employees": employees, "status": status,
+                    "company_id": company_id,
+                    "sector": sector,
+                    "industry": industry,
+                    "about_text": about_text,
+                    "website": website,
+                    "employees": employees,
+                    "status": status,
                 }
             )
 
@@ -211,7 +237,9 @@ def update_yfinance_industry(
             # losing this whole batch's already-fetched (rate-limited!)
             # results and crashing the entire remaining population.
             conn = _write_batch(conn, pending)
-            logger.info("yfinance_industry.progress", done=i + 1, total=len(target_ciks))
+            logger.info(
+                "yfinance_industry.progress", done=i + 1, total=len(target_ciks)
+            )
             pending = []
 
     logger.info("yfinance_industry.done", **stats)
@@ -250,7 +278,9 @@ def _write_batch(conn: psycopg.Connection, rows: list[dict]) -> psycopg.Connecti
         conn.commit()
         return conn
     except psycopg.OperationalError:
-        logger.warning("yfinance_industry.connection_dropped_reconnecting", rows=len(rows))
+        logger.warning(
+            "yfinance_industry.connection_dropped_reconnecting", rows=len(rows)
+        )
         fresh_conn = psycopg.connect(settings.database_url)
         with fresh_conn.cursor() as cur:
             cur.executemany(_UPDATE_SQL, params)

@@ -43,7 +43,9 @@ def _finish_run_safely(run_id: int, status: str, stats: dict) -> None:
         with get_connection() as fresh_conn:
             finish_run(fresh_conn, run_id, status, stats)
     except Exception:
-        logger.exception("collector_runs.finish_run_failed", run_id=run_id, intended_status=status)
+        logger.exception(
+            "collector_runs.finish_run_failed", run_id=run_id, intended_status=status
+        )
 
 
 def _parse_ciks(ciks: str | None) -> set[str] | None:
@@ -103,12 +105,17 @@ def _most_recent_published_date(max_lookback_days: int = 10) -> date:
 @app.command()
 def daily(
     date_str: str = typer.Option(
-        None, "--date", help="YYYY-MM-DD to fetch. Default: most recent date with a published index."
+        None,
+        "--date",
+        help="YYYY-MM-DD to fetch. Default: most recent date with a published index.",
     ),
     ciks: str = typer.Option(
-        None, help="Comma-separated CIKs to restrict to (default: all of raw.company_universe)."
+        None,
+        help="Comma-separated CIKs to restrict to (default: all of raw.company_universe).",
     ),
-    fresh: bool = typer.Option(False, help="Ignore any resumable run and start a brand-new one."),
+    fresh: bool = typer.Option(
+        False, help="Ignore any resumable run and start a brand-new one."
+    ),
 ) -> None:
     """Fetch one day's SEC daily index and record genuinely-new filing
     metadata into raw.sec_filing_documents. Rerunning for the SAME date is
@@ -145,8 +152,12 @@ def daily(
     explicit_ciks = _parse_ciks(ciks)
 
     with get_connection() as conn:
-        only_ciks = explicit_ciks if explicit_ciks is not None else set(get_all_ciks(conn))
-        typer.echo(f"target_date={target_date.isoformat()} scope={'explicit ciks' if explicit_ciks is not None else f'company_universe ({len(only_ciks)} ciks)'}")
+        only_ciks = (
+            explicit_ciks if explicit_ciks is not None else set(get_all_ciks(conn))
+        )
+        typer.echo(
+            f"target_date={target_date.isoformat()} scope={'explicit ciks' if explicit_ciks is not None else f'company_universe ({len(only_ciks)} ciks)'}"
+        )
 
         ctx = start_or_resume_run(
             conn,
@@ -159,7 +170,9 @@ def daily(
         )
         typer.echo(f"run_id={ctx.run_id} resumed={ctx.resumed}")
         try:
-            stats = collect_daily_filings(conn, for_date=target_date, run_id=ctx.run_id, only_ciks=only_ciks)
+            stats = collect_daily_filings(
+                conn, for_date=target_date, run_id=ctx.run_id, only_ciks=only_ciks
+            )
             finish_run(conn, ctx.run_id, "succeeded", stats)
         except Exception:
             _finish_run_safely(ctx.run_id, "failed", {})
@@ -177,18 +190,40 @@ def daily(
         if not todays_filer_ciks:
             return
 
-        cf_ctx = start_or_resume_run(conn, job="companyfacts", only_ciks=todays_filer_ciks, limit=None, force_fresh=fresh)
+        cf_ctx = start_or_resume_run(
+            conn,
+            job="companyfacts",
+            only_ciks=todays_filer_ciks,
+            limit=None,
+            force_fresh=fresh,
+        )
         try:
-            cf_stats = bootstrap_companyfacts(conn, fetched_at=cf_ctx.fetched_at, run_id=cf_ctx.run_id, only_ciks=todays_filer_ciks)
+            cf_stats = bootstrap_companyfacts(
+                conn,
+                fetched_at=cf_ctx.fetched_at,
+                run_id=cf_ctx.run_id,
+                only_ciks=todays_filer_ciks,
+            )
             finish_run(conn, cf_ctx.run_id, "succeeded", cf_stats)
         except Exception:
             _finish_run_safely(cf_ctx.run_id, "failed", {})
             raise
         typer.echo(f"companyfacts: {cf_stats} (run_id={cf_ctx.run_id})")
 
-        sub_ctx = start_or_resume_run(conn, job="submissions", only_ciks=todays_filer_ciks, limit=None, force_fresh=fresh)
+        sub_ctx = start_or_resume_run(
+            conn,
+            job="submissions",
+            only_ciks=todays_filer_ciks,
+            limit=None,
+            force_fresh=fresh,
+        )
         try:
-            sub_stats = bootstrap_submissions(conn, fetched_at=sub_ctx.fetched_at, run_id=sub_ctx.run_id, only_ciks=todays_filer_ciks)
+            sub_stats = bootstrap_submissions(
+                conn,
+                fetched_at=sub_ctx.fetched_at,
+                run_id=sub_ctx.run_id,
+                only_ciks=todays_filer_ciks,
+            )
             finish_run(conn, sub_ctx.run_id, "succeeded", sub_stats)
         except Exception:
             _finish_run_safely(sub_ctx.run_id, "failed", {})

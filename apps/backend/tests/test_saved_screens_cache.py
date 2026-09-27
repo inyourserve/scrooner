@@ -54,7 +54,16 @@ def test_list_screens_caches_a_fresh_database_read(monkeypatch):
             pass
 
         def fetchall(self):
-            return [(1, "Name", "slug", {"metric_predicates": []}, "2026-01-01", "2026-01-02")]
+            return [
+                (
+                    1,
+                    "Name",
+                    "slug",
+                    {"metric_predicates": []},
+                    "2026-01-01",
+                    "2026-01-02",
+                )
+            ]
 
     class FakeConnection:
         def cursor(self):
@@ -67,7 +76,14 @@ def test_list_screens_caches_a_fresh_database_read(monkeypatch):
     monkeypatch.setattr(saved_screens, "get_pooled_connection", pooled_connection)
     screens = saved_screens.list_screens("user-a")
     assert screens == [
-        {"id": 1, "name": "Name", "slug": "slug", "query": {"metric_predicates": []}, "created_at": "2026-01-01", "updated_at": "2026-01-02"}
+        {
+            "id": 1,
+            "name": "Name",
+            "slug": "slug",
+            "query": {"metric_predicates": []},
+            "created_at": "2026-01-01",
+            "updated_at": "2026-01-02",
+        }
     ]
     assert recorded == {"user_id": "user-a", "screens": screens}
 
@@ -75,8 +91,13 @@ def test_list_screens_caches_a_fresh_database_read(monkeypatch):
 @pytest.mark.unit
 def test_get_screen_uses_cached_metadata_but_still_reads_the_run_page(monkeypatch):
     meta = {
-        "id": 1, "name": "Cached", "slug": "cached", "query": {"metric_predicates": []},
-        "last_run_id": "run-1", "created_at": "2026-01-01", "updated_at": "2026-01-02",
+        "id": 1,
+        "name": "Cached",
+        "slug": "cached",
+        "query": {"metric_predicates": []},
+        "last_run_id": "run-1",
+        "created_at": "2026-01-01",
+        "updated_at": "2026-01-02",
     }
     monkeypatch.setattr(
         saved_screens,
@@ -86,7 +107,9 @@ def test_get_screen_uses_cached_metadata_but_still_reads_the_run_page(monkeypatc
 
     class NoDatabaseAccess:
         def cursor(self):
-            raise AssertionError("a cached-metadata hit should never query app.saved_screen")
+            raise AssertionError(
+                "a cached-metadata hit should never query app.saved_screen"
+            )
 
     @contextmanager
     def pooled_connection():
@@ -97,7 +120,10 @@ def test_get_screen_uses_cached_metadata_but_still_reads_the_run_page(monkeypatc
     monkeypatch.setattr(
         saved_screens,
         "_read_page",
-        lambda conn, run_id, user_id, page_size, cursor: read_page_calls.append((run_id, user_id, page_size, cursor)) or {"run_id": run_id},
+        lambda conn, run_id, user_id, page_size, cursor: (
+            read_page_calls.append((run_id, user_id, page_size, cursor))
+            or {"run_id": run_id}
+        ),
     )
 
     # page_size/cursor passed explicitly -- called directly (not through
@@ -105,10 +131,17 @@ def test_get_screen_uses_cached_metadata_but_still_reads_the_run_page(monkeypatc
     # marker default would otherwise reach _read_page unresolved, the same
     # reason test_screen_run_cache.py's own _read_page tests always pass
     # page_size explicitly too.
-    result = saved_screens.get_screen("cached", cursor=None, page_size=50, user_id="user-a")
+    result = saved_screens.get_screen(
+        "cached", cursor=None, page_size=50, user_id="user-a"
+    )
     assert result == {
-        "id": 1, "name": "Cached", "slug": "cached", "query": {"metric_predicates": []},
-        "created_at": "2026-01-01", "updated_at": "2026-01-02", "run": {"run_id": "run-1"},
+        "id": 1,
+        "name": "Cached",
+        "slug": "cached",
+        "query": {"metric_predicates": []},
+        "created_at": "2026-01-01",
+        "updated_at": "2026-01-02",
+        "run": {"run_id": "run-1"},
     }
     assert read_page_calls == [("run-1", "user-a", 50, None)]
 
@@ -145,17 +178,25 @@ def test_create_screen_invalidates_the_list_cache(monkeypatch):
 
     monkeypatch.setattr(saved_screens, "get_pooled_connection", pooled_connection)
     invalidated = []
-    monkeypatch.setattr(saved_screens, "invalidate_screens_list", lambda user_id: invalidated.append(user_id))
+    monkeypatch.setattr(
+        saved_screens,
+        "invalidate_screens_list",
+        lambda user_id: invalidated.append(user_id),
+    )
 
     from scrooner_pipeline.screener.schema import ScreenQuery
 
-    body = saved_screens.SavedScreenCreate(name="My Screen", query=ScreenQuery(metric_predicates=[]))
+    body = saved_screens.SavedScreenCreate(
+        name="My Screen", query=ScreenQuery(metric_predicates=[])
+    )
     saved_screens.create_screen(body, user_id="user-a")
     assert invalidated == ["user-a"]
 
 
 @pytest.mark.unit
-def test_rename_screen_invalidates_detail_and_list_cache_using_the_returned_slug(monkeypatch):
+def test_rename_screen_invalidates_detail_and_list_cache_using_the_returned_slug(
+    monkeypatch,
+):
     class FakeCursor:
         def __enter__(self):
             return self
@@ -179,17 +220,29 @@ def test_rename_screen_invalidates_detail_and_list_cache_using_the_returned_slug
 
     monkeypatch.setattr(saved_screens, "get_pooled_connection", pooled_connection)
     detail_calls, list_calls = [], []
-    monkeypatch.setattr(saved_screens, "invalidate_screen_detail", lambda user_id, slug: detail_calls.append((user_id, slug)))
-    monkeypatch.setattr(saved_screens, "invalidate_screens_list", lambda user_id: list_calls.append(user_id))
+    monkeypatch.setattr(
+        saved_screens,
+        "invalidate_screen_detail",
+        lambda user_id, slug: detail_calls.append((user_id, slug)),
+    )
+    monkeypatch.setattr(
+        saved_screens,
+        "invalidate_screens_list",
+        lambda user_id: list_calls.append(user_id),
+    )
 
-    result = saved_screens.rename_screen(1, saved_screens.SavedScreenRename(name="New Name"), user_id="user-a")
+    result = saved_screens.rename_screen(
+        1, saved_screens.SavedScreenRename(name="New Name"), user_id="user-a"
+    )
     assert result == {"id": 1, "name": "New Name"}
     assert detail_calls == [("user-a", "original-slug")]
     assert list_calls == ["user-a"]
 
 
 @pytest.mark.unit
-def test_delete_screen_invalidates_detail_and_list_cache_using_the_returned_slug(monkeypatch):
+def test_delete_screen_invalidates_detail_and_list_cache_using_the_returned_slug(
+    monkeypatch,
+):
     class FakeCursor:
         def __enter__(self):
             return self
@@ -213,8 +266,16 @@ def test_delete_screen_invalidates_detail_and_list_cache_using_the_returned_slug
 
     monkeypatch.setattr(saved_screens, "get_pooled_connection", pooled_connection)
     detail_calls, list_calls = [], []
-    monkeypatch.setattr(saved_screens, "invalidate_screen_detail", lambda user_id, slug: detail_calls.append((user_id, slug)))
-    monkeypatch.setattr(saved_screens, "invalidate_screens_list", lambda user_id: list_calls.append(user_id))
+    monkeypatch.setattr(
+        saved_screens,
+        "invalidate_screen_detail",
+        lambda user_id, slug: detail_calls.append((user_id, slug)),
+    )
+    monkeypatch.setattr(
+        saved_screens,
+        "invalidate_screens_list",
+        lambda user_id: list_calls.append(user_id),
+    )
 
     result = saved_screens.delete_screen(1, user_id="user-a")
     assert result == {"deleted": 1}
@@ -250,10 +311,22 @@ def test_refresh_screen_invalidates_detail_and_list_cache(monkeypatch):
         yield FakeConnection()
 
     monkeypatch.setattr(saved_screens, "get_pooled_connection", pooled_connection)
-    monkeypatch.setattr(saved_screens, "create_run_from_query", lambda *_args, **_kwargs: {"run_id": "run-2"})
+    monkeypatch.setattr(
+        saved_screens,
+        "create_run_from_query",
+        lambda *_args, **_kwargs: {"run_id": "run-2"},
+    )
     detail_calls, list_calls = [], []
-    monkeypatch.setattr(saved_screens, "invalidate_screen_detail", lambda user_id, slug: detail_calls.append((user_id, slug)))
-    monkeypatch.setattr(saved_screens, "invalidate_screens_list", lambda user_id: list_calls.append(user_id))
+    monkeypatch.setattr(
+        saved_screens,
+        "invalidate_screen_detail",
+        lambda user_id, slug: detail_calls.append((user_id, slug)),
+    )
+    monkeypatch.setattr(
+        saved_screens,
+        "invalidate_screens_list",
+        lambda user_id: list_calls.append(user_id),
+    )
 
     result = saved_screens.refresh_screen("original-slug", user_id="user-a")
     assert result == {"run_id": "run-2"}

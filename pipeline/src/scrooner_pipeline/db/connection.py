@@ -15,7 +15,9 @@ def get_connection() -> Iterator[psycopg.Connection]:
         yield conn
 
 
-def run_tolerating_exit_commit_failure(stage: str, fn: Callable[[psycopg.Connection], Any], *, default: Any = None) -> Any:
+def run_tolerating_exit_commit_failure(
+    stage: str, fn: Callable[[psycopg.Connection], Any], *, default: Any = None
+) -> Any:
     """Runs `fn(conn)` inside a fresh `get_connection()`, tolerating the
     connection having gone dead by the time the `with` block's own
     implicit commit/close runs -- AFTER `fn` already completed and

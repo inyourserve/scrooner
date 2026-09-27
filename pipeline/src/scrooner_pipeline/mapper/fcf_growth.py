@@ -33,7 +33,9 @@ logger = structlog.get_logger()
 LAG_YEARS = {"fcf_growth_yoy": 1, "fcf_growth_3y_cagr": 3, "fcf_growth_5y_cagr": 5}
 
 
-def _load_fcf_fy_history(conn: psycopg.Connection, company_id: int, fcf_metric_id: int) -> dict[int, Decimal]:
+def _load_fcf_fy_history(
+    conn: psycopg.Connection, company_id: int, fcf_metric_id: int
+) -> dict[int, Decimal]:
     """fiscal_year -> fcf value, FY rows only, recovered via core.period."""
     with conn.cursor() as cur:
         cur.execute(
@@ -63,7 +65,9 @@ def _fy_period_dates(conn: psycopg.Connection, company_id: int, fiscal_year: int
         return cur.fetchone()
 
 
-def calculate_fcf_growth_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int]) -> dict:
+def calculate_fcf_growth_for_company(
+    conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int]
+) -> dict:
     fcf_history = _load_fcf_fy_history(conn, company_id, metric_ids["fcf"])
     rows: list[dict] = []
 
@@ -78,19 +82,35 @@ def calculate_fcf_growth_for_company(conn: psycopg.Connection, company_id: int, 
                 continue
 
             if prior_fy not in fcf_history:
-                rows.append({
-                    "company_id": company_id, "metric_definition_id": metric_ids[metric_name],
-                    "period_start": start, "period_end": end, "period_label": "FY",
-                    "value": None, "is_null_reason": f"missing:fcf({prior_fy})", "source_fact_ids": None,
-                })
+                rows.append(
+                    {
+                        "company_id": company_id,
+                        "metric_definition_id": metric_ids[metric_name],
+                        "period_start": start,
+                        "period_end": end,
+                        "period_label": "FY",
+                        "value": None,
+                        "is_null_reason": f"missing:fcf({prior_fy})",
+                        "source_fact_ids": None,
+                    }
+                )
                 continue
 
-            value, reason = _growth_value(fcf_history[fy], fcf_history[prior_fy], lag_years)
-            rows.append({
-                "company_id": company_id, "metric_definition_id": metric_ids[metric_name],
-                "period_start": start, "period_end": end, "period_label": "FY",
-                "value": value, "is_null_reason": reason, "source_fact_ids": None,
-            })
+            value, reason = _growth_value(
+                fcf_history[fy], fcf_history[prior_fy], lag_years
+            )
+            rows.append(
+                {
+                    "company_id": company_id,
+                    "metric_definition_id": metric_ids[metric_name],
+                    "period_start": start,
+                    "period_end": end,
+                    "period_label": "FY",
+                    "value": value,
+                    "is_null_reason": reason,
+                    "source_fact_ids": None,
+                }
+            )
 
     with conn.cursor() as cur:
         target_ids = [metric_ids[m] for m in LAG_YEARS if m in metric_ids]
@@ -114,24 +134,40 @@ def calculate_fcf_growth_for_company(conn: psycopg.Connection, company_id: int, 
 
     computed = sum(1 for r in rows if r["value"] is not None)
     null = sum(1 for r in rows if r["value"] is None)
-    logger.info("fcf_growth.company_done", company_id=company_id, computed=computed, null=null)
+    logger.info(
+        "fcf_growth.company_done", company_id=company_id, computed=computed, null=null
+    )
     return {"computed": computed, "null": null}
 
 
 def calculate_fcf_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
     metric_names = ["fcf", "fcf_growth_yoy", "fcf_growth_3y_cagr", "fcf_growth_5y_cagr"]
     with conn.cursor() as cur:
-        cur.execute("select metric_name, id from analytics.metric_definition where metric_name = any(%s)", (metric_names,))
+        cur.execute(
+            "select metric_name, id from analytics.metric_definition where metric_name = any(%s)",
+            (metric_names,),
+        )
         metric_ids = dict(cur.fetchall())
     missing = [m for m in metric_names if m not in metric_ids]
     if missing:
-        raise RuntimeError(f"fcf_growth: metric_definition rows not seeded yet: {missing}")
+        raise RuntimeError(
+            f"fcf_growth: metric_definition rows not seeded yet: {missing}"
+        )
 
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)

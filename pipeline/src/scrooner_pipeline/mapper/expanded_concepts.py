@@ -91,7 +91,12 @@ import structlog
 logger = structlog.get_logger()
 
 NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
-    ("inventory", "balance_sheet", "first_match", "Inventory, net -- needed for Quick Ratio"),
+    (
+        "inventory",
+        "balance_sheet",
+        "first_match",
+        "Inventory, net -- needed for Quick Ratio",
+    ),
     ("sbc", "income_statement", "first_match", "Stock-based compensation expense"),
     (
         "depreciation_and_amortization",
@@ -101,120 +106,293 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
         "different tags for the same period; first_match (not sum) avoids double-counting. "
         "Feeds ebitda.",
     ),
-    ("accounts_receivable", "balance_sheet", "first_match", "Accounts receivable, net -- needed for Debtor Days"),
-    ("accounts_payable", "balance_sheet", "first_match", "Accounts payable -- needed for Payables Days"),
-    ("goodwill", "balance_sheet", "first_match", "Balance-sheet goodwill -- closes doc 26's named Goodwill/Intangibles gap"),
-    ("basic_eps", "income_statement", "first_match", "Basic EPS -- standalone from diluted EPS, feeds eps_dilution_spread"),
-    ("cf_ar_change", "cash_flow", "first_match",
-     "Cash-flow-statement period change in accounts receivable (indirect-method CFO adjustment) -- "
-     "a different concept from the balance-sheet instant accounts_receivable above. Feeds the AR "
-     "reconciliation-gap cross-check in mapper/reconciliation.py."),
-    ("cf_inventory_change", "cash_flow", "first_match",
-     "Cash-flow-statement period change in inventory. Feeds mapper/reconciliation.py."),
-    ("cf_ap_change", "cash_flow", "first_match",
-     "Cash-flow-statement period change in accounts payable. Feeds mapper/reconciliation.py."),
-    ("research_and_development", "income_statement", "first_match", "R&D expense -- feeds rnd_intensity"),
-    ("interest_income", "income_statement", "first_match", "Interest income -- feeds net_interest_income, "
-     "separate from interest_expense (feeds interest_coverage_ratio already)"),
-    ("sga_expense", "income_statement", "first_match",
-     "SG&A expense -- checked live before choosing the tag: SellingGeneralAndAdministrativeExpense "
-     "(60 companies) is far more common than the standalone GeneralAndAdministrativeExpense (31 "
-     "companies) across the 174-company pool. first_match (not sum) -- unlike a composite concept, "
-     "overlap between these two tags for the same company/period isn't a double-counting risk here "
-     "regardless, since first_match only ever takes one value; priority 1/2 just decides which alternate "
-     "wins if both happen to resolve."),
-    ("comprehensive_income", "income_statement", "first_match",
-     "Comprehensive income (net income + other comprehensive income/loss) -- a real, distinct P&L-adjacent "
-     "figure, not previously captured. 92 companies/13,574 facts across the 174-pool."),
-    ("amortization_of_intangibles", "income_statement", "first_match",
-     "Amortization of intangible assets -- a D&A sub-component, distinct from the already-mapped "
-     "combined depreciation_and_amortization concept. 78 companies/7,077 facts."),
-    ("effective_tax_rate_reported", "income_statement", "first_match",
-     "The company's own reported effective tax rate (EffectiveIncomeTaxRateContinuingOperations), a "
-     "'pure' decimal-fraction ratio (e.g. 0.156 = 15.6%), same scale as the internally-derived "
-     "income_tax_expense/income_before_tax rate ROIC already computes -- feeds "
-     "effective_tax_rate_gap as a cross-check, not a replacement. 93 companies/7,113 facts."),
-    ("employee_count", "balance_sheet", "first_match",
-     "dei:EntityNumberOfEmployees, a cover-page fact -- 178 companies/1,941 facts as of 2026-08-29. "
-     "statement bucket follows public_float's own precedent (neither is really a balance-sheet line item)."),
-    ("other_income_expense_net", "income_statement", "first_match",
-     "Added 2026-09-08, direct user report ('why are financial table rows empty'): 45% of the "
-     "active population (2,368 companies) shows a company that used to report a plain "
-     "InterestExpense line and stopped -- checked live before assuming a bug: 1,618 of those "
-     "(68%) genuinely switched to a NETTED tag (Apple's NonoperatingIncomeExpense: +$269M net "
-     "income FY2024, -$321M net expense FY2025; Freeport-McMoRan's InterestIncomeExpenseNet: "
-     "-$560M to -$602M across FY2020-2022), not a data gap. Deliberately a SEPARATE concept from "
-     "interest_expense, never a fallback merged into it under the same label -- coexistence-"
-     "checked live (company_id=649/Freeport-McMoRan): when both tags are filed for the same "
-     "period, NonoperatingIncomeExpense sometimes MATCHES InterestIncomeExpenseNet exactly, but "
-     "often diverges, even in SIGN (one real period showed +5,592 vs. -6,778) -- confirming this "
-     "is genuinely a broader 'other non-operating items' bucket (can include FX, equity-method "
-     "earnings, investment gains/losses), not purely interest. Labeled and displayed as its own "
-     "'Other Income (Expense), Net' row for exactly this reason -- merging it into interest_expense "
-     "would silently flip sign/meaning for some companies in some years, the same 'same vocabulary, "
-     "different concept' trap this project has hit before (doc 40)."),
-    ("bdc_total_investment_income", "income_statement", "first_match",
-     "A Business Development Company / closed-end fund's real top-line figure -- checked live "
-     "2026-09-04: 44 real active companies (Ares Capital, Main Street Capital, Prospect Capital, "
-     "Goldman Sachs BDC, etc.) surfaced entirely without a `sic_description` (a real classification "
-     "gap this project's own data inherited from SEC, not fixed here) and with zero `revenue` "
-     "coverage -- because a BDC's income statement genuinely has no revenue line at all, it starts "
-     "from 'Total investment income' (interest/dividend/fee income from its portfolio). Deliberately "
-     "a SEPARATE concept, never added as a `revenue` fallback tag -- doc 42 Part 4's own reasoning "
-     "for banks/insurers/REITs applies identically here: blending a lending business's investment "
-     "income into `revenue` would silently corrupt gross_margin/revenue_growth and every other ratio "
-     "that assumes a product company's cost structure. 118 real companies use this tag "
-     "population-wide (broader than the original 44-BDC sample -- other closed-end funds too), "
-     "verified via real values (ARCC $768.0M for the quarter ended 2026-06-30, matching its own "
-     "rendered 'Total investment income' statement line exactly). No downstream metric_definition "
-     "wired to this concept yet -- this pass only closes the raw-data gap (traceable, screenable via "
-     "a future dedicated metric), same 'data layer first' sequencing as segment_revenue.py."),
+    (
+        "accounts_receivable",
+        "balance_sheet",
+        "first_match",
+        "Accounts receivable, net -- needed for Debtor Days",
+    ),
+    (
+        "accounts_payable",
+        "balance_sheet",
+        "first_match",
+        "Accounts payable -- needed for Payables Days",
+    ),
+    (
+        "goodwill",
+        "balance_sheet",
+        "first_match",
+        "Balance-sheet goodwill -- closes doc 26's named Goodwill/Intangibles gap",
+    ),
+    (
+        "basic_eps",
+        "income_statement",
+        "first_match",
+        "Basic EPS -- standalone from diluted EPS, feeds eps_dilution_spread",
+    ),
+    (
+        "cf_ar_change",
+        "cash_flow",
+        "first_match",
+        "Cash-flow-statement period change in accounts receivable (indirect-method CFO adjustment) -- "
+        "a different concept from the balance-sheet instant accounts_receivable above. Feeds the AR "
+        "reconciliation-gap cross-check in mapper/reconciliation.py.",
+    ),
+    (
+        "cf_inventory_change",
+        "cash_flow",
+        "first_match",
+        "Cash-flow-statement period change in inventory. Feeds mapper/reconciliation.py.",
+    ),
+    (
+        "cf_ap_change",
+        "cash_flow",
+        "first_match",
+        "Cash-flow-statement period change in accounts payable. Feeds mapper/reconciliation.py.",
+    ),
+    (
+        "research_and_development",
+        "income_statement",
+        "first_match",
+        "R&D expense -- feeds rnd_intensity",
+    ),
+    (
+        "interest_income",
+        "income_statement",
+        "first_match",
+        "Interest income -- feeds net_interest_income, "
+        "separate from interest_expense (feeds interest_coverage_ratio already)",
+    ),
+    (
+        "sga_expense",
+        "income_statement",
+        "first_match",
+        "SG&A expense -- checked live before choosing the tag: SellingGeneralAndAdministrativeExpense "
+        "(60 companies) is far more common than the standalone GeneralAndAdministrativeExpense (31 "
+        "companies) across the 174-company pool. first_match (not sum) -- unlike a composite concept, "
+        "overlap between these two tags for the same company/period isn't a double-counting risk here "
+        "regardless, since first_match only ever takes one value; priority 1/2 just decides which alternate "
+        "wins if both happen to resolve.",
+    ),
+    (
+        "comprehensive_income",
+        "income_statement",
+        "first_match",
+        "Comprehensive income (net income + other comprehensive income/loss) -- a real, distinct P&L-adjacent "
+        "figure, not previously captured. 92 companies/13,574 facts across the 174-pool.",
+    ),
+    (
+        "amortization_of_intangibles",
+        "income_statement",
+        "first_match",
+        "Amortization of intangible assets -- a D&A sub-component, distinct from the already-mapped "
+        "combined depreciation_and_amortization concept. 78 companies/7,077 facts.",
+    ),
+    (
+        "effective_tax_rate_reported",
+        "income_statement",
+        "first_match",
+        "The company's own reported effective tax rate (EffectiveIncomeTaxRateContinuingOperations), a "
+        "'pure' decimal-fraction ratio (e.g. 0.156 = 15.6%), same scale as the internally-derived "
+        "income_tax_expense/income_before_tax rate ROIC already computes -- feeds "
+        "effective_tax_rate_gap as a cross-check, not a replacement. 93 companies/7,113 facts.",
+    ),
+    (
+        "employee_count",
+        "balance_sheet",
+        "first_match",
+        "dei:EntityNumberOfEmployees, a cover-page fact -- 178 companies/1,941 facts as of 2026-08-29. "
+        "statement bucket follows public_float's own precedent (neither is really a balance-sheet line item).",
+    ),
+    (
+        "other_income_expense_net",
+        "income_statement",
+        "first_match",
+        "Added 2026-09-08, direct user report ('why are financial table rows empty'): 45% of the "
+        "active population (2,368 companies) shows a company that used to report a plain "
+        "InterestExpense line and stopped -- checked live before assuming a bug: 1,618 of those "
+        "(68%) genuinely switched to a NETTED tag (Apple's NonoperatingIncomeExpense: +$269M net "
+        "income FY2024, -$321M net expense FY2025; Freeport-McMoRan's InterestIncomeExpenseNet: "
+        "-$560M to -$602M across FY2020-2022), not a data gap. Deliberately a SEPARATE concept from "
+        "interest_expense, never a fallback merged into it under the same label -- coexistence-"
+        "checked live (company_id=649/Freeport-McMoRan): when both tags are filed for the same "
+        "period, NonoperatingIncomeExpense sometimes MATCHES InterestIncomeExpenseNet exactly, but "
+        "often diverges, even in SIGN (one real period showed +5,592 vs. -6,778) -- confirming this "
+        "is genuinely a broader 'other non-operating items' bucket (can include FX, equity-method "
+        "earnings, investment gains/losses), not purely interest. Labeled and displayed as its own "
+        "'Other Income (Expense), Net' row for exactly this reason -- merging it into interest_expense "
+        "would silently flip sign/meaning for some companies in some years, the same 'same vocabulary, "
+        "different concept' trap this project has hit before (doc 40).",
+    ),
+    (
+        "bdc_total_investment_income",
+        "income_statement",
+        "first_match",
+        "A Business Development Company / closed-end fund's real top-line figure -- checked live "
+        "2026-09-04: 44 real active companies (Ares Capital, Main Street Capital, Prospect Capital, "
+        "Goldman Sachs BDC, etc.) surfaced entirely without a `sic_description` (a real classification "
+        "gap this project's own data inherited from SEC, not fixed here) and with zero `revenue` "
+        "coverage -- because a BDC's income statement genuinely has no revenue line at all, it starts "
+        "from 'Total investment income' (interest/dividend/fee income from its portfolio). Deliberately "
+        "a SEPARATE concept, never added as a `revenue` fallback tag -- doc 42 Part 4's own reasoning "
+        "for banks/insurers/REITs applies identically here: blending a lending business's investment "
+        "income into `revenue` would silently corrupt gross_margin/revenue_growth and every other ratio "
+        "that assumes a product company's cost structure. 118 real companies use this tag "
+        "population-wide (broader than the original 44-BDC sample -- other closed-end funds too), "
+        "verified via real values (ARCC $768.0M for the quarter ended 2026-06-30, matching its own "
+        "rendered 'Total investment income' statement line exactly). No downstream metric_definition "
+        "wired to this concept yet -- this pass only closes the raw-data gap (traceable, screenable via "
+        "a future dedicated metric), same 'data layer first' sequencing as segment_revenue.py.",
+    ),
 ]
 
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
     ("inventory", "us-gaap", "InventoryNet", 1, "approved", ""),
     ("sbc", "us-gaap", "ShareBasedCompensation", 1, "approved", ""),
-    ("sbc", "us-gaap", "AllocatedShareBasedCompensationExpense", 2, "approved",
-     "Added 2026-09-21 -- real alternate tag, not a different concept sharing vocabulary: "
-     "verified via coexistence test against companies reporting BOTH tags for the same period "
-     "(122,531 real pairs, 85.7% agree within 5%) before trusting it, same discipline as every "
-     "other concept_mapping addition this project has made. 3,730 companies have this tag with "
-     "no ShareBasedCompensation row at all -- a real, sizeable gap this closes."),
-    ("depreciation_and_amortization", "us-gaap", "DepreciationAndAmortization", 1, "approved",
-     "Priority 1 -- confirmed live this is the tag AAPL's FY2015 filing itself treats as authoritative when both appear."),
-    ("depreciation_and_amortization", "us-gaap", "DepreciationDepletionAndAmortization", 2, "approved",
-     "Alternate, not summand -- see module docstring's AAPL FY2015 overlap finding."),
-    ("accounts_receivable", "us-gaap", "AccountsReceivableNetCurrent", 1, "approved", ""),
+    (
+        "sbc",
+        "us-gaap",
+        "AllocatedShareBasedCompensationExpense",
+        2,
+        "approved",
+        "Added 2026-09-21 -- real alternate tag, not a different concept sharing vocabulary: "
+        "verified via coexistence test against companies reporting BOTH tags for the same period "
+        "(122,531 real pairs, 85.7% agree within 5%) before trusting it, same discipline as every "
+        "other concept_mapping addition this project has made. 3,730 companies have this tag with "
+        "no ShareBasedCompensation row at all -- a real, sizeable gap this closes.",
+    ),
+    (
+        "depreciation_and_amortization",
+        "us-gaap",
+        "DepreciationAndAmortization",
+        1,
+        "approved",
+        "Priority 1 -- confirmed live this is the tag AAPL's FY2015 filing itself treats as authoritative when both appear.",
+    ),
+    (
+        "depreciation_and_amortization",
+        "us-gaap",
+        "DepreciationDepletionAndAmortization",
+        2,
+        "approved",
+        "Alternate, not summand -- see module docstring's AAPL FY2015 overlap finding.",
+    ),
+    (
+        "accounts_receivable",
+        "us-gaap",
+        "AccountsReceivableNetCurrent",
+        1,
+        "approved",
+        "",
+    ),
     ("accounts_payable", "us-gaap", "AccountsPayableCurrent", 1, "approved", ""),
     ("goodwill", "us-gaap", "Goodwill", 1, "approved", ""),
     ("basic_eps", "us-gaap", "EarningsPerShareBasic", 1, "approved", ""),
-    ("cf_ar_change", "us-gaap", "IncreaseDecreaseInAccountsReceivable", 1, "approved", ""),
-    ("cf_inventory_change", "us-gaap", "IncreaseDecreaseInInventories", 1, "approved", ""),
+    (
+        "cf_ar_change",
+        "us-gaap",
+        "IncreaseDecreaseInAccountsReceivable",
+        1,
+        "approved",
+        "",
+    ),
+    (
+        "cf_inventory_change",
+        "us-gaap",
+        "IncreaseDecreaseInInventories",
+        1,
+        "approved",
+        "",
+    ),
     ("cf_ap_change", "us-gaap", "IncreaseDecreaseInAccountsPayable", 1, "approved", ""),
-    ("research_and_development", "us-gaap", "ResearchAndDevelopmentExpense", 1, "approved", ""),
+    (
+        "research_and_development",
+        "us-gaap",
+        "ResearchAndDevelopmentExpense",
+        1,
+        "approved",
+        "",
+    ),
     ("interest_income", "us-gaap", "InvestmentIncomeInterest", 1, "approved", ""),
-    ("sga_expense", "us-gaap", "SellingGeneralAndAdministrativeExpense", 1, "approved",
-     "Priority 1 -- more common than the standalone G&A tag across the 174-pool (60 vs 31 companies)."),
-    ("sga_expense", "us-gaap", "GeneralAndAdministrativeExpense", 2, "approved",
-     "Alternate for companies that report G&A alone rather than a combined SG&A line."),
-    ("comprehensive_income", "us-gaap", "ComprehensiveIncomeNetOfTax", 1, "approved", ""),
-    ("amortization_of_intangibles", "us-gaap", "AmortizationOfIntangibleAssets", 1, "approved", ""),
-    ("effective_tax_rate_reported", "us-gaap", "EffectiveIncomeTaxRateContinuingOperations", 1, "approved", ""),
+    (
+        "sga_expense",
+        "us-gaap",
+        "SellingGeneralAndAdministrativeExpense",
+        1,
+        "approved",
+        "Priority 1 -- more common than the standalone G&A tag across the 174-pool (60 vs 31 companies).",
+    ),
+    (
+        "sga_expense",
+        "us-gaap",
+        "GeneralAndAdministrativeExpense",
+        2,
+        "approved",
+        "Alternate for companies that report G&A alone rather than a combined SG&A line.",
+    ),
+    (
+        "comprehensive_income",
+        "us-gaap",
+        "ComprehensiveIncomeNetOfTax",
+        1,
+        "approved",
+        "",
+    ),
+    (
+        "amortization_of_intangibles",
+        "us-gaap",
+        "AmortizationOfIntangibleAssets",
+        1,
+        "approved",
+        "",
+    ),
+    (
+        "effective_tax_rate_reported",
+        "us-gaap",
+        "EffectiveIncomeTaxRateContinuingOperations",
+        1,
+        "approved",
+        "",
+    ),
     ("employee_count", "dei", "EntityNumberOfEmployees", 1, "approved", ""),
-    ("other_income_expense_net", "us-gaap", "NonoperatingIncomeExpense", 1, "approved",
-     "Priority 1 -- most common by far, real population count checked live (2,767 companies)."),
-    ("other_income_expense_net", "us-gaap", "InterestIncomeExpenseNet", 2, "approved",
-     "Alternate -- 1,593 companies, checked live to sometimes diverge from priority-1 for the "
-     "same company/period (a real, different, narrower-scoped figure), not a duplicate tag."),
-    ("other_income_expense_net", "us-gaap", "InterestIncomeExpenseNonoperatingNet", 3, "approved",
-     "Alternate -- 1,047 companies, real population count checked live."),
-    ("bdc_total_investment_income", "us-gaap", "GrossInvestmentIncomeOperating", 1, "approved",
-     "Verified 2026-09-04 against 118 real active companies (35 of the original 44 hand-sampled "
-     "BDCs, plus other closed-end funds) -- values sanity-checked plausible and correctly scaled "
-     "(ARCC's own rendered statement line 'Total investment income' = $768.0M, exact match). "
-     "9 of the original 44 BDCs use no gross tag at all, only NetInvestmentIncome (post-expense) "
-     "or per-share/ratio variants -- deliberately NOT added as a fallback here, since substituting "
-     "a net figure for a gross concept would be silently wrong, not just incomplete."),
+    (
+        "other_income_expense_net",
+        "us-gaap",
+        "NonoperatingIncomeExpense",
+        1,
+        "approved",
+        "Priority 1 -- most common by far, real population count checked live (2,767 companies).",
+    ),
+    (
+        "other_income_expense_net",
+        "us-gaap",
+        "InterestIncomeExpenseNet",
+        2,
+        "approved",
+        "Alternate -- 1,593 companies, checked live to sometimes diverge from priority-1 for the "
+        "same company/period (a real, different, narrower-scoped figure), not a duplicate tag.",
+    ),
+    (
+        "other_income_expense_net",
+        "us-gaap",
+        "InterestIncomeExpenseNonoperatingNet",
+        3,
+        "approved",
+        "Alternate -- 1,047 companies, real population count checked live.",
+    ),
+    (
+        "bdc_total_investment_income",
+        "us-gaap",
+        "GrossInvestmentIncomeOperating",
+        1,
+        "approved",
+        "Verified 2026-09-04 against 118 real active companies (35 of the original 44 hand-sampled "
+        "BDCs, plus other closed-end funds) -- values sanity-checked plausible and correctly scaled "
+        "(ARCC's own rendered statement line 'Total investment income' = $768.0M, exact match). "
+        "9 of the original 44 BDCs use no gross tag at all, only NetInvestmentIncome (post-expense) "
+        "or per-share/ratio variants -- deliberately NOT added as a fallback here, since substituting "
+        "a net figure for a gross concept would be silently wrong, not just incomplete.",
+    ),
 ]
 
 
@@ -236,15 +414,32 @@ def seed_new_canonical_concepts(conn: psycopg.Connection) -> dict[str, int]:
         return dict(cur.fetchall())
 
 
-def seed_new_concept_mappings(conn: psycopg.Connection, canonical_id_by_name: dict[str, int]) -> dict:
+def seed_new_concept_mappings(
+    conn: psycopg.Connection, canonical_id_by_name: dict[str, int]
+) -> dict:
     stats = {"considered": len(NEW_CONCEPT_MAPPINGS), "mapped": 0, "unresolved_tag": 0}
     with conn.cursor() as cur:
-        for canonical_name, taxonomy, tag, priority, confidence, notes in NEW_CONCEPT_MAPPINGS:
-            cur.execute("select id from core.concept where taxonomy = %s and tag = %s", (taxonomy, tag))
+        for (
+            canonical_name,
+            taxonomy,
+            tag,
+            priority,
+            confidence,
+            notes,
+        ) in NEW_CONCEPT_MAPPINGS:
+            cur.execute(
+                "select id from core.concept where taxonomy = %s and tag = %s",
+                (taxonomy, tag),
+            )
             row = cur.fetchone()
             if row is None:
                 stats["unresolved_tag"] += 1
-                logger.warning("expanded_concepts.tag_not_in_core", taxonomy=taxonomy, tag=tag, canonical=canonical_name)
+                logger.warning(
+                    "expanded_concepts.tag_not_in_core",
+                    taxonomy=taxonomy,
+                    tag=tag,
+                    canonical=canonical_name,
+                )
                 continue
             concept_id = row[0]
             canonical_id = canonical_id_by_name[canonical_name]

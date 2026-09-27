@@ -18,7 +18,11 @@ import structlog
 import typer
 
 from scrooner_pipeline.collector.companyfacts import bootstrap_companyfacts
-from scrooner_pipeline.collector.retry import finish_run, reap_stale_runs, start_or_resume_run
+from scrooner_pipeline.collector.retry import (
+    finish_run,
+    reap_stale_runs,
+    start_or_resume_run,
+)
 from scrooner_pipeline.collector.submissions import bootstrap_submissions
 from scrooner_pipeline.collector.universe import collect_company_universe
 from scrooner_pipeline.db.connection import get_connection
@@ -26,7 +30,12 @@ from scrooner_pipeline.db.connection import get_connection
 app = typer.Typer()
 logger = structlog.get_logger()
 
-GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
+GOLDEN_COMPANIES_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tests"
+    / "golden_companies"
+    / "companies.json"
+)
 
 
 def _load_golden_ciks() -> set[str]:
@@ -59,7 +68,9 @@ def _finish_run_safely(run_id: int, status: str, stats: dict) -> None:
         with get_connection() as fresh_conn:
             finish_run(fresh_conn, run_id, status, stats)
     except Exception:
-        logger.exception("collector_runs.finish_run_failed", run_id=run_id, intended_status=status)
+        logger.exception(
+            "collector_runs.finish_run_failed", run_id=run_id, intended_status=status
+        )
 
 
 @app.command()
@@ -72,9 +83,13 @@ def universe() -> None:
 
 @app.command()
 def companyfacts(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: full universe)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: full universe)."
+    ),
     limit: int = typer.Option(None, help="Stop after N companies stored."),
-    fresh: bool = typer.Option(False, help="Ignore any resumable run and start a brand-new one."),
+    fresh: bool = typer.Option(
+        False, help="Ignore any resumable run and start a brand-new one."
+    ),
 ) -> None:
     """Bootstrap raw.sec_companyfacts from the bulk companyfacts.zip archive.
     Rerunning after a kill mid-run resumes the same run automatically
@@ -82,10 +97,20 @@ def companyfacts(
     done -- see collector/retry.py."""
     only_ciks = _parse_ciks(ciks)
     with get_connection() as conn:
-        ctx = start_or_resume_run(conn, job="companyfacts", only_ciks=only_ciks, limit=limit, force_fresh=fresh)
+        ctx = start_or_resume_run(
+            conn,
+            job="companyfacts",
+            only_ciks=only_ciks,
+            limit=limit,
+            force_fresh=fresh,
+        )
         try:
             stats = bootstrap_companyfacts(
-                conn, fetched_at=ctx.fetched_at, run_id=ctx.run_id, only_ciks=only_ciks, limit=limit
+                conn,
+                fetched_at=ctx.fetched_at,
+                run_id=ctx.run_id,
+                only_ciks=only_ciks,
+                limit=limit,
             )
             finish_run(conn, ctx.run_id, "succeeded", stats)
         except Exception:
@@ -96,18 +121,28 @@ def companyfacts(
 
 @app.command()
 def submissions(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: full universe)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: full universe)."
+    ),
     limit: int = typer.Option(None, help="Approximate cap on distinct CIKs stored."),
-    fresh: bool = typer.Option(False, help="Ignore any resumable run and start a brand-new one."),
+    fresh: bool = typer.Option(
+        False, help="Ignore any resumable run and start a brand-new one."
+    ),
 ) -> None:
     """Bootstrap raw.sec_submissions from the bulk submissions.zip archive.
     Same resume behavior as `companyfacts`."""
     only_ciks = _parse_ciks(ciks)
     with get_connection() as conn:
-        ctx = start_or_resume_run(conn, job="submissions", only_ciks=only_ciks, limit=limit, force_fresh=fresh)
+        ctx = start_or_resume_run(
+            conn, job="submissions", only_ciks=only_ciks, limit=limit, force_fresh=fresh
+        )
         try:
             stats = bootstrap_submissions(
-                conn, fetched_at=ctx.fetched_at, run_id=ctx.run_id, only_ciks=only_ciks, limit=limit
+                conn,
+                fetched_at=ctx.fetched_at,
+                run_id=ctx.run_id,
+                only_ciks=only_ciks,
+                limit=limit,
             )
             finish_run(conn, ctx.run_id, "succeeded", stats)
         except Exception:
@@ -117,7 +152,11 @@ def submissions(
 
 
 @app.command()
-def golden(fresh: bool = typer.Option(False, help="Ignore any resumable run and start a brand-new one.")) -> None:
+def golden(
+    fresh: bool = typer.Option(
+        False, help="Ignore any resumable run and start a brand-new one."
+    ),
+) -> None:
     """Bootstrap companyfacts + submissions for the fixed golden-company set
     (tests/golden_companies/companies.json) -- doc 08's Day 3 acceptance
     test and doc 05's permanent regression fixture, and Day 4's kill-mid-
@@ -128,18 +167,31 @@ def golden(fresh: bool = typer.Option(False, help="Ignore any resumable run and 
     golden_ciks = _load_golden_ciks()
     typer.echo(f"golden set: {len(golden_ciks)} companies")
     with get_connection() as conn:
-        ctx = start_or_resume_run(conn, job="golden", only_ciks=golden_ciks, limit=None, force_fresh=fresh)
+        ctx = start_or_resume_run(
+            conn, job="golden", only_ciks=golden_ciks, limit=None, force_fresh=fresh
+        )
         typer.echo(f"run_id={ctx.run_id} resumed={ctx.resumed}")
         try:
             cf_stats = bootstrap_companyfacts(
-                conn, fetched_at=ctx.fetched_at, run_id=ctx.run_id, only_ciks=golden_ciks
+                conn,
+                fetched_at=ctx.fetched_at,
+                run_id=ctx.run_id,
+                only_ciks=golden_ciks,
             )
             typer.echo(f"companyfacts: {cf_stats}")
             sub_stats = bootstrap_submissions(
-                conn, fetched_at=ctx.fetched_at, run_id=ctx.run_id, only_ciks=golden_ciks
+                conn,
+                fetched_at=ctx.fetched_at,
+                run_id=ctx.run_id,
+                only_ciks=golden_ciks,
             )
             typer.echo(f"submissions: {sub_stats}")
-            finish_run(conn, ctx.run_id, "succeeded", {"companyfacts": cf_stats, "submissions": sub_stats})
+            finish_run(
+                conn,
+                ctx.run_id,
+                "succeeded",
+                {"companyfacts": cf_stats, "submissions": sub_stats},
+            )
         except Exception:
             _finish_run_safely(ctx.run_id, "failed", {})
             raise
@@ -148,7 +200,9 @@ def golden(fresh: bool = typer.Option(False, help="Ignore any resumable run and 
 
 @app.command("reap-stale-runs")
 def reap_stale_runs_cmd(
-    stale_after_minutes: float = typer.Option(120.0, help="Mark 'running' rows with no heartbeat older than this as failed."),
+    stale_after_minutes: float = typer.Option(
+        120.0, help="Mark 'running' rows with no heartbeat older than this as failed."
+    ),
 ) -> None:
     """Manual/ops entry point for collector.retry.reap_stale_runs -- also
     runs automatically at the start of every bootstrap command, but exposed
@@ -156,7 +210,9 @@ def reap_stale_runs_cmd(
     whose exact params will never be reissued (so auto-resume would never
     reach them)."""
     with get_connection() as conn:
-        reaped = reap_stale_runs(conn, stale_after=timedelta(minutes=stale_after_minutes))
+        reaped = reap_stale_runs(
+            conn, stale_after=timedelta(minutes=stale_after_minutes)
+        )
     typer.echo(f"reaped: {reaped}")
 
 

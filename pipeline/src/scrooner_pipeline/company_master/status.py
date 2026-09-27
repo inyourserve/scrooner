@@ -78,26 +78,47 @@ logger = structlog.get_logger()
 
 STALE_THRESHOLD_DAYS = 18 * 30  # ~18 months, see module docstring
 
-QUALIFYING_FORMS = {"10-K", "10-K/A", "10-Q", "10-Q/A", "20-F", "20-F/A", "40-F", "40-F/A"}
+QUALIFYING_FORMS = {
+    "10-K",
+    "10-K/A",
+    "10-Q",
+    "10-Q/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
+}
 
 DEREGISTRATION_FORMS = {
-    "15-12G", "15-12G/A", "15-15D", "15-15D/A", "15F-12B", "15F-12B/A", "15F-12G", "15F-12G/A",
+    "15-12G",
+    "15-12G/A",
+    "15-15D",
+    "15-15D/A",
+    "15F-12B",
+    "15F-12B/A",
+    "15F-12G",
+    "15F-12G/A",
 }
 
 _TAG_RE = re.compile(r"<[^>]+>")
 _TITLE_OF_CLASS_RE = re.compile(
-    r"([^()]{2,150}?)\s*\(Title of each class of securities covered by this Form\)", re.IGNORECASE
+    r"([^()]{2,150}?)\s*\(Title of each class of securities covered by this Form\)",
+    re.IGNORECASE,
 )
 
 
-def _is_common_stock_deregistration(sec: SECClient, cik: str, accession_number: str) -> bool:
+def _is_common_stock_deregistration(
+    sec: SECClient, cik: str, accession_number: str
+) -> bool:
     cik_int = str(int(cik))
     acc_no_dash = accession_number.replace("-", "")
     url = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{acc_no_dash}/{accession_number}.txt"
     try:
         resp = sec.get(url)
     except Exception:
-        logger.warning("status.form15_fetch_failed", cik=cik, accession_number=accession_number)
+        logger.warning(
+            "status.form15_fetch_failed", cik=cik, accession_number=accession_number
+        )
         return False
     clean = _TAG_RE.sub(" ", resp.text)
     clean = re.sub(r"\s+", " ", clean)
@@ -107,7 +128,9 @@ def _is_common_stock_deregistration(sec: SECClient, cik: str, accession_number: 
     return "common stock" in match.group(1).lower()
 
 
-def _load_latest_filing_dates(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, date | None]:
+def _load_latest_filing_dates(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[int, date | None]:
     if not company_ids:
         return {}
     with conn.cursor() as cur:
@@ -123,7 +146,9 @@ def _load_latest_filing_dates(conn: psycopg.Connection, company_ids: list[int]) 
         return dict(cur.fetchall())
 
 
-def _load_latest_form15_dates(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, date | None]:
+def _load_latest_form15_dates(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[int, date | None]:
     """Newest Form 15/15F filing_date per company -- used to sanity-check a
     confirmed common-stock deregistration signal against filing recency
     (see module docstring, 2026-09-02 finding: AMD/Intel/HP/Caterpillar/US
@@ -149,7 +174,9 @@ def _load_latest_form15_dates(conn: psycopg.Connection, company_ids: list[int]) 
         return dict(cur.fetchall())
 
 
-def _load_candidate_deregistrations(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, list[tuple[str, str]]]:
+def _load_candidate_deregistrations(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[int, list[tuple[str, str]]]:
     """company_id -> [(cik, accession_number), ...] for every Form 15/15F
     filing on record -- candidates only, NOT yet confirmed as a real
     common-stock delisting (see module docstring's JPM finding)."""
@@ -170,7 +197,9 @@ def _load_candidate_deregistrations(conn: psycopg.Connection, company_ids: list[
         return candidates
 
 
-def _confirm_deregistered_company_ids(sec: SECClient, candidates: dict[int, list[tuple[str, str]]]) -> set[int]:
+def _confirm_deregistered_company_ids(
+    sec: SECClient, candidates: dict[int, list[tuple[str, str]]]
+) -> set[int]:
     """Fetches and checks each candidate's own cover page -- only a
     confirmed common-stock deregistration counts, per the module
     docstring's JPM/Chase-Capital-trust finding. Stops at the first
@@ -185,7 +214,9 @@ def _confirm_deregistered_company_ids(sec: SECClient, candidates: dict[int, list
     return confirmed
 
 
-def compute_status(latest_filing_date: date | None, as_of: date, is_deregistered: bool = False) -> tuple[str, str]:
+def compute_status(
+    latest_filing_date: date | None, as_of: date, is_deregistered: bool = False
+) -> tuple[str, str]:
     if is_deregistered:
         return "delisted", "form_15_common_stock_confirmed"
     if latest_filing_date is None:
@@ -196,16 +227,26 @@ def compute_status(latest_filing_date: date | None, as_of: date, is_deregistered
     return "stale", f"no_filing_since:{latest_filing_date.isoformat()}"
 
 
-def _deregistration_overridden_by_later_filing(latest_filing_date: date | None, form15_date: date | None) -> bool:
+def _deregistration_overridden_by_later_filing(
+    latest_filing_date: date | None, form15_date: date | None
+) -> bool:
     """True when a real qualifying 10-K/10-Q was filed after the newest
     Form 15/15F on record -- see module docstring's 2026-09-02 finding."""
-    return latest_filing_date is not None and form15_date is not None and latest_filing_date > form15_date
+    return (
+        latest_filing_date is not None
+        and form15_date is not None
+        and latest_filing_date > form15_date
+    )
 
 
-def update_status(conn: psycopg.Connection, ciks: set[str], as_of: date | None = None) -> dict:
+def update_status(
+    conn: psycopg.Connection, ciks: set[str], as_of: date | None = None
+) -> dict:
     as_of = as_of or date.today()
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select id, cik from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = {cik: cid for cid, cik in cur.fetchall()}
 
     company_ids = list(company_id_by_cik.values())
@@ -216,7 +257,15 @@ def update_status(conn: psycopg.Connection, ciks: set[str], as_of: date | None =
         deregistered_company_ids = _confirm_deregistered_company_ids(sec, candidates)
 
     rows = []
-    stats = {"considered": 0, "active": 0, "stale": 0, "unknown": 0, "delisted": 0, "no_company": 0, "delisting_signal_overridden_by_later_filing": 0}
+    stats = {
+        "considered": 0,
+        "active": 0,
+        "stale": 0,
+        "unknown": 0,
+        "delisted": 0,
+        "no_company": 0,
+        "delisting_signal_overridden_by_later_filing": 0,
+    }
     for cik in sorted(ciks):
         stats["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -225,12 +274,21 @@ def update_status(conn: psycopg.Connection, ciks: set[str], as_of: date | None =
             continue
         latest = latest_by_company.get(company_id)
         is_deregistered = company_id in deregistered_company_ids
-        if is_deregistered and _deregistration_overridden_by_later_filing(latest, form15_by_company.get(company_id)):
+        if is_deregistered and _deregistration_overridden_by_later_filing(
+            latest, form15_by_company.get(company_id)
+        ):
             is_deregistered = False
             stats["delisting_signal_overridden_by_later_filing"] += 1
         status, reason = compute_status(latest, as_of, is_deregistered)
         stats[status] += 1
-        rows.append({"company_id": company_id, "status": status, "status_as_of": as_of, "status_reason": reason})
+        rows.append(
+            {
+                "company_id": company_id,
+                "status": status,
+                "status_as_of": as_of,
+                "status_reason": reason,
+            }
+        )
 
     if rows:
         with conn.cursor() as cur:

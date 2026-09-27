@@ -34,16 +34,16 @@ import structlog
 logger = structlog.get_logger()
 
 MOCK_BASE_PRICE = {
-    "0000019617": Decimal("210"),   # JPM
-    "0000320187": Decimal("75"),    # NKE
-    "0000320193": Decimal("220"),   # AAPL
-    "0000789019": Decimal("430"),   # MSFT
-    "0000895728": Decimal("45"),    # ENB
-    "0001046179": Decimal("190"),   # TSM
-    "0001287750": Decimal("21"),    # ARCC
-    "0001512673": Decimal("75"),    # XYZ (Block)
-    "0001652044": Decimal("175"),   # GOOGL
-    "0001713445": Decimal("110"),   # RDDT
+    "0000019617": Decimal("210"),  # JPM
+    "0000320187": Decimal("75"),  # NKE
+    "0000320193": Decimal("220"),  # AAPL
+    "0000789019": Decimal("430"),  # MSFT
+    "0000895728": Decimal("45"),  # ENB
+    "0001046179": Decimal("190"),  # TSM
+    "0001287750": Decimal("21"),  # ARCC
+    "0001512673": Decimal("75"),  # XYZ (Block)
+    "0001652044": Decimal("175"),  # GOOGL
+    "0001713445": Decimal("110"),  # RDDT
 }
 
 TRADING_DAYS = 30  # small, well-scoped -- enough to test the shape, not a full history
@@ -69,7 +69,9 @@ def generate_mock_prices(cik: str, end_date: date) -> list[dict]:
     base = MOCK_BASE_PRICE[cik]
     # Seeded by (cik, end_date) so reruns for the same date produce the
     # same series -- idempotency for a generator, not just a writer.
-    seed = int(hashlib.sha256(f"{cik}:{end_date.isoformat()}".encode()).hexdigest(), 16) % (2**32)
+    seed = int(
+        hashlib.sha256(f"{cik}:{end_date.isoformat()}".encode()).hexdigest(), 16
+    ) % (2**32)
     rng = Random(seed)
 
     rows = []
@@ -85,7 +87,9 @@ def generate_mock_prices(cik: str, end_date: date) -> list[dict]:
     return rows
 
 
-def load_mock_prices_for_company(conn: psycopg.Connection, company_id: int, cik: str, end_date: date) -> int:
+def load_mock_prices_for_company(
+    conn: psycopg.Connection, company_id: int, cik: str, end_date: date
+) -> int:
     price_rows = generate_mock_prices(cik, end_date)
     if not price_rows:
         return 0
@@ -93,7 +97,10 @@ def load_mock_prices_for_company(conn: psycopg.Connection, company_id: int, cik:
         # Delete-then-reinsert per company -- this project's established
         # default for idempotent per-company writes (see mapper/resolve.py,
         # mapper/calculate.py, company_master/history.py's own fix).
-        cur.execute("delete from core.market_price where company_id = %s and is_mock = true", (company_id,))
+        cur.execute(
+            "delete from core.market_price where company_id = %s and is_mock = true",
+            (company_id,),
+        )
         cur.executemany(
             """
             insert into core.market_price
@@ -107,10 +114,14 @@ def load_mock_prices_for_company(conn: psycopg.Connection, company_id: int, cik:
     return len(price_rows)
 
 
-def load_mock_prices(conn: psycopg.Connection, ciks: set[str], end_date: date | None = None) -> dict:
+def load_mock_prices(
+    conn: psycopg.Connection, ciks: set[str], end_date: date | None = None
+) -> dict:
     end_date = end_date or date.today()
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select id, cik from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = {cik: cid for cid, cik in cur.fetchall()}
 
     stats = {"considered": 0, "ok": 0, "no_company": 0, "no_mock_base_price": 0}
@@ -128,5 +139,7 @@ def load_mock_prices(conn: psycopg.Connection, ciks: set[str], end_date: date | 
         total_rows += rows
         stats["ok"] += 1
 
-    logger.info("company_master.market_price.mock_load_done", total_rows=total_rows, **stats)
+    logger.info(
+        "company_master.market_price.mock_load_done", total_rows=total_rows, **stats
+    )
     return {"total_rows": total_rows, **stats}

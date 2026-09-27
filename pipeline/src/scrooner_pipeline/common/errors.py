@@ -39,7 +39,9 @@ logger = structlog.get_logger()
 _ERROR_TABLES = {"core.normalizer_error", "analytics.mapper_error"}
 
 
-def log_error(conn: psycopg.Connection, table: str, cik: str, stage: str, exc: Exception) -> None:
+def log_error(
+    conn: psycopg.Connection, table: str, cik: str, stage: str, exc: Exception
+) -> None:
     assert table in _ERROR_TABLES, f"unknown error table {table!r}"
     logger.exception(f"{stage}.company_failed", cik=cik, stage=stage)
     try:
@@ -54,7 +56,9 @@ def log_error(conn: psycopg.Connection, table: str, cik: str, stage: str, exc: E
         logger.warning(f"{stage}.log_error_itself_failed", cik=cik, stage=stage)
 
 
-def safe_rollback(conn: psycopg.Connection, *, stage: str, cik: str = "") -> psycopg.Connection:
+def safe_rollback(
+    conn: psycopg.Connection, *, stage: str, cik: str = ""
+) -> psycopg.Connection:
     """Roll back a poisoned transaction, tolerating a dead connection.
 
     `conn.rollback()` itself raises `psycopg.OperationalError` when the

@@ -34,14 +34,18 @@ def evaluate_comparison(value: Decimal | None, operator: str, target: Decimal) -
     raise ValueError(f"not a comparison operator: {operator!r}")
 
 
-def evaluate_between(value: Decimal | None, value_range: tuple[Decimal, Decimal]) -> bool:
+def evaluate_between(
+    value: Decimal | None, value_range: tuple[Decimal, Decimal]
+) -> bool:
     if value is None:
         return False
     low, high = value_range
     return low <= value <= high
 
 
-def rank_top_bottom(candidates: list[tuple[str, Decimal | None]], operator: str, n: int) -> list[str]:
+def rank_top_bottom(
+    candidates: list[tuple[str, Decimal | None]], operator: str, n: int
+) -> list[str]:
     """candidates: list of (cik, value) for every company still in
     consideration after other predicates. Nulls are excluded from the
     ranking entirely -- a missing ROIC is not "the worst ROIC," it's

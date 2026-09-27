@@ -30,13 +30,19 @@ def _default_year_quarter() -> tuple[int, int]:
         return today.year - 1, 4
     return today.year, current_quarter - 1
 
+
 # (canonical_concept_name, taxonomy, tag, is_instant) -- the highest-value
 # concepts first: doc 02's locked V1 metrics' own underlying facts.
 # Deliberately a SMALL, named list, not "every concept" -- same "measure
 # before building broadly" discipline as every other rollout this project
 # has done; widen only once this first pass proves the pattern.
 CONCEPTS_TO_CHECK: list[tuple[str, str, str, bool]] = [
-    ("revenue", "us-gaap", "RevenueFromContractWithCustomerExcludingAssessedTax", False),
+    (
+        "revenue",
+        "us-gaap",
+        "RevenueFromContractWithCustomerExcludingAssessedTax",
+        False,
+    ),
     ("net_income", "us-gaap", "NetIncomeLoss", False),
     ("cfo", "us-gaap", "NetCashProvidedByUsedInOperatingActivities", False),
     ("operating_income", "us-gaap", "OperatingIncomeLoss", False),
@@ -48,14 +54,20 @@ CONCEPTS_TO_CHECK: list[tuple[str, str, str, bool]] = [
 
 def _canonical_concept_id(conn, name: str) -> int:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         return cur.fetchone()[0]
 
 
 @app.command("run")
 def run_cmd(
-    year: int = typer.Option(None, help="Calendar year, e.g. 2026. Default: most recently completed quarter."),
-    quarter: int = typer.Option(None, help="Calendar quarter, 1-4. Default: most recently completed quarter."),
+    year: int = typer.Option(
+        None, help="Calendar year, e.g. 2026. Default: most recently completed quarter."
+    ),
+    quarter: int = typer.Option(
+        None, help="Calendar quarter, 1-4. Default: most recently completed quarter."
+    ),
 ) -> None:
     """Fetches SEC's own bulk Frames data for CONCEPTS_TO_CHECK at the
     given (year, quarter) and compares it against our own core.fact for
@@ -66,12 +78,20 @@ def run_cmd(
         year, quarter = _default_year_quarter()
     typer.echo(f"target: {year} Q{quarter}")
     client = SECClient()
-    totals = {"considered": 0, "matched_company": 0, "ok": 0, "mismatch": 0, "missing_ours": 0}
+    totals = {
+        "considered": 0,
+        "matched_company": 0,
+        "ok": 0,
+        "mismatch": 0,
+        "missing_ours": 0,
+    }
     with get_connection() as conn:
         for concept_name, taxonomy, tag, is_instant in CONCEPTS_TO_CHECK:
             concept_id = _canonical_concept_id(conn, concept_name)
             rows = fetch_frame(client, taxonomy, tag, "USD", year, quarter, is_instant)
-            typer.echo(f"{concept_name} ({taxonomy}:{tag}): fetched {len(rows)} SEC-wide rows")
+            typer.echo(
+                f"{concept_name} ({taxonomy}:{tag}): fetched {len(rows)} SEC-wide rows"
+            )
             stats = compare_frame(conn, concept_id, taxonomy, tag, rows)
             typer.echo(f"  {stats}")
             for key in totals:

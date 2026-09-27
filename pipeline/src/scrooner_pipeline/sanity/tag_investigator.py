@@ -94,14 +94,18 @@ AUTO_FIX_TOLERANCE_PCT = Decimal(20)
 
 def _concept_id(conn: psycopg.Connection, name: str) -> int:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         row = cur.fetchone()
         if row is None:
             raise ValueError(f"canonical_concept {name!r} does not exist")
         return row[0]
 
 
-def _latest_period_id(conn: psycopg.Connection, company_id: int, concept_name: str) -> int | None:
+def _latest_period_id(
+    conn: psycopg.Connection, company_id: int, concept_name: str
+) -> int | None:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -119,7 +123,9 @@ def _latest_period_id(conn: psycopg.Connection, company_id: int, concept_name: s
         return row[0] if row else None
 
 
-def find_candidate_tags(conn: psycopg.Connection, company_id: int, concept_name: str, period_id: int) -> list[dict]:
+def find_candidate_tags(
+    conn: psycopg.Connection, company_id: int, concept_name: str, period_id: int
+) -> list[dict]:
     """Every raw core.fact row this company has, at this exact period, for
     any tag currently mapped to concept_name -- including
     is_authoritative=false rows, which is the whole point: the bug this
@@ -140,7 +146,13 @@ def find_candidate_tags(conn: psycopg.Connection, company_id: int, concept_name:
             (company_id, concept_name, period_id),
         )
         return [
-            {"taxonomy": r[0], "tag": r[1], "value": r[2], "is_authoritative": r[3], "fact_id": r[4]}
+            {
+                "taxonomy": r[0],
+                "tag": r[1],
+                "value": r[2],
+                "is_authoritative": r[3],
+                "fact_id": r[4],
+            }
             for r in cur.fetchall()
         ]
 
@@ -151,8 +163,12 @@ def _pct_diff(candidate: Decimal, external: Decimal) -> Decimal:
 
 
 def investigate(
-    conn: psycopg.Connection, company_id: int, concept_name: str, external_value: Decimal,
-    data_sanity_check_id: int | None = None, period_id: int | None = None,
+    conn: psycopg.Connection,
+    company_id: int,
+    concept_name: str,
+    external_value: Decimal,
+    data_sanity_check_id: int | None = None,
+    period_id: int | None = None,
 ) -> dict:
     """Investigates one (company, concept) sanity finding against
     `external_value` (the independent figure, e.g. yfinance's totalRevenue).
@@ -168,32 +184,75 @@ def investigate(
     if period_id is None:
         period_id = _latest_period_id(conn, company_id, concept_name)
     if period_id is None:
-        outcome = {"outcome": "no_match_found", "note": "no canonical_fact period for this concept at all", "candidate": None}
-        _write_investigation(conn, data_sanity_check_id, company_id, concept_name, None, external_value, outcome)
+        outcome = {
+            "outcome": "no_match_found",
+            "note": "no canonical_fact period for this concept at all",
+            "candidate": None,
+        }
+        _write_investigation(
+            conn,
+            data_sanity_check_id,
+            company_id,
+            concept_name,
+            None,
+            external_value,
+            outcome,
+        )
         return outcome
 
     candidates = find_candidate_tags(conn, company_id, concept_name, period_id)
     if not candidates:
-        outcome = {"outcome": "no_match_found", "note": "no raw core.fact rows under any currently-mapped tag for this period", "candidate": None}
-        _write_investigation(conn, data_sanity_check_id, company_id, concept_name, period_id, external_value, outcome)
+        outcome = {
+            "outcome": "no_match_found",
+            "note": "no raw core.fact rows under any currently-mapped tag for this period",
+            "candidate": None,
+        }
+        _write_investigation(
+            conn,
+            data_sanity_check_id,
+            company_id,
+            concept_name,
+            period_id,
+            external_value,
+            outcome,
+        )
         return outcome
 
     outcome = _score_and_decide(candidates, external_value, concept_name)
     if outcome["outcome"] == "auto_fixed":
-        _write_tag_preference(conn, company_id, concept_name, outcome["candidate"], external_value, outcome["pct_diff"])
+        _write_tag_preference(
+            conn,
+            company_id,
+            concept_name,
+            outcome["candidate"],
+            external_value,
+            outcome["pct_diff"],
+        )
 
-    _write_investigation(conn, data_sanity_check_id, company_id, concept_name, period_id, external_value, outcome)
+    _write_investigation(
+        conn,
+        data_sanity_check_id,
+        company_id,
+        concept_name,
+        period_id,
+        external_value,
+        outcome,
+    )
     return outcome
 
 
-def _score_and_decide(candidates: list[dict], external_value: Decimal, concept_name: str) -> dict:
+def _score_and_decide(
+    candidates: list[dict], external_value: Decimal, concept_name: str
+) -> dict:
     """Pure decision logic, no DB access -- scores every candidate tag's
     value against the external figure, picks the closest, and decides
     whether it's close enough to trust (and, if so, whether this concept
     even has a *_sanity_resolved concept wired up to apply the fix into).
     Split out from investigate() specifically so this decision can be
     unit-tested without a database."""
-    scored = [(c, _pct_diff(Decimal(str(c["value"])), external_value)) for c in candidates]
+    scored = [
+        (c, _pct_diff(Decimal(str(c["value"])), external_value)) for c in candidates
+    ]
     scored.sort(key=lambda pair: pair[1])
     best_candidate, best_pct_diff = scored[0]
 
@@ -201,25 +260,36 @@ def _score_and_decide(candidates: list[dict], external_value: Decimal, concept_n
         resolved_concept_name = FIXABLE_CONCEPTS.get(concept_name)
         if resolved_concept_name is not None:
             return {
-                "outcome": "auto_fixed", "candidate": best_candidate, "pct_diff": best_pct_diff,
+                "outcome": "auto_fixed",
+                "candidate": best_candidate,
+                "pct_diff": best_pct_diff,
                 "note": f"{best_candidate['taxonomy']}:{best_candidate['tag']} reconciles within {best_pct_diff:.1f}% -- applied as override",
             }
         return {
-            "outcome": "needs_review", "candidate": best_candidate, "pct_diff": best_pct_diff,
+            "outcome": "needs_review",
+            "candidate": best_candidate,
+            "pct_diff": best_pct_diff,
             "note": f"{best_candidate['taxonomy']}:{best_candidate['tag']} reconciles within {best_pct_diff:.1f}%, "
-                    f"but {concept_name!r} has no *_sanity_resolved concept wired up yet -- recorded as a lead, not applied",
+            f"but {concept_name!r} has no *_sanity_resolved concept wired up yet -- recorded as a lead, not applied",
         }
     return {
-        "outcome": "no_match_found", "candidate": best_candidate, "pct_diff": best_pct_diff,
+        "outcome": "no_match_found",
+        "candidate": best_candidate,
+        "pct_diff": best_pct_diff,
         "note": f"closest candidate ({best_candidate['taxonomy']}:{best_candidate['tag']}) still off by {best_pct_diff:.1f}%, "
-                f"over the {AUTO_FIX_TOLERANCE_PCT}% tolerance -- likely a real structural difference (e.g. multi-share-class, "
-                f"TTM-vs-period timing), not a resolvable tag mixup",
+        f"over the {AUTO_FIX_TOLERANCE_PCT}% tolerance -- likely a real structural difference (e.g. multi-share-class, "
+        f"TTM-vs-period timing), not a resolvable tag mixup",
     }
 
 
 def _write_investigation(
-    conn: psycopg.Connection, data_sanity_check_id: int | None, company_id: int, concept_name: str,
-    period_id: int | None, external_value: Decimal, outcome: dict,
+    conn: psycopg.Connection,
+    data_sanity_check_id: int | None,
+    company_id: int,
+    concept_name: str,
+    period_id: int | None,
+    external_value: Decimal,
+    outcome: dict,
 ) -> None:
     candidate = outcome.get("candidate")
     with conn.cursor() as cur:
@@ -237,19 +307,29 @@ def _write_investigation(
                     outcome = excluded.outcome, note = excluded.note, investigated_at = now()
             """,
             {
-                "check_id": data_sanity_check_id, "company_id": company_id, "concept_name": concept_name,
-                "period_id": period_id, "taxonomy": candidate["taxonomy"] if candidate else None,
-                "tag": candidate["tag"] if candidate else None, "value": candidate["value"] if candidate else None,
-                "external_value": external_value, "pct_diff": outcome.get("pct_diff"),
-                "outcome": outcome["outcome"], "note": outcome["note"],
+                "check_id": data_sanity_check_id,
+                "company_id": company_id,
+                "concept_name": concept_name,
+                "period_id": period_id,
+                "taxonomy": candidate["taxonomy"] if candidate else None,
+                "tag": candidate["tag"] if candidate else None,
+                "value": candidate["value"] if candidate else None,
+                "external_value": external_value,
+                "pct_diff": outcome.get("pct_diff"),
+                "outcome": outcome["outcome"],
+                "note": outcome["note"],
             },
         )
     conn.commit()
 
 
 def _write_tag_preference(
-    conn: psycopg.Connection, company_id: int, concept_name: str, candidate: dict,
-    external_value: Decimal, pct_diff: Decimal,
+    conn: psycopg.Connection,
+    company_id: int,
+    concept_name: str,
+    candidate: dict,
+    external_value: Decimal,
+    pct_diff: Decimal,
 ) -> None:
     concept_id = _concept_id(conn, concept_name)
     evidence = (
@@ -268,14 +348,19 @@ def _write_tag_preference(
                     evidence = excluded.evidence, discovered_at = now()
             """,
             {
-                "company_id": company_id, "concept_id": concept_id,
-                "taxonomy": candidate["taxonomy"], "tag": candidate["tag"], "evidence": evidence,
+                "company_id": company_id,
+                "concept_id": concept_id,
+                "taxonomy": candidate["taxonomy"],
+                "tag": candidate["tag"],
+                "evidence": evidence,
             },
         )
     conn.commit()
 
 
-def _reconcile_by_mode(rows: list[tuple[int, object, int]]) -> dict[int, tuple[object, int]]:
+def _reconcile_by_mode(
+    rows: list[tuple[int, object, int]],
+) -> dict[int, tuple[object, int]]:
     """rows: (period_id, value, fact_id) tuples, possibly several per
     period (the exact "3 filings, trivially disagreeing" shape this whole
     system exists to handle -- see Flowserve/doc/learnings/2026-09-07).
@@ -293,7 +378,9 @@ def _reconcile_by_mode(rows: list[tuple[int, object, int]]) -> dict[int, tuple[o
     for period_id, pairs in by_period.items():
         counts = Counter(value for value, _fact_id in pairs)
         max_count = max(counts.values())
-        most_common_values = [value for value, count in counts.items() if count == max_count]
+        most_common_values = [
+            value for value, count in counts.items() if count == max_count
+        ]
         # Deterministic tie-break: among equally-supported values, prefer
         # the one attached to the highest fact_id.
         best_value = max(
@@ -305,7 +392,9 @@ def _reconcile_by_mode(rows: list[tuple[int, object, int]]) -> dict[int, tuple[o
     return result
 
 
-def _load_all_facts_for_tag(conn: psycopg.Connection, company_id: int, taxonomy: str, tag: str) -> list[tuple[int, object, int]]:
+def _load_all_facts_for_tag(
+    conn: psycopg.Connection, company_id: int, taxonomy: str, tag: str
+) -> list[tuple[int, object, int]]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -319,7 +408,9 @@ def _load_all_facts_for_tag(conn: psycopg.Connection, company_id: int, taxonomy:
         return cur.fetchall()
 
 
-def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str, resolved_concept_name: str) -> int:
+def resolve_company_tag_preferences(
+    conn: psycopg.Connection, concept_name: str, resolved_concept_name: str
+) -> int:
     """The resolved concept is the primary concept's own value for every
     company WITHOUT a preference (set-based, bulk -- the common case,
     ~5,200 of ~5,216 companies), EXCEPT for the small number of companies
@@ -363,7 +454,10 @@ def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str,
     with conn.cursor() as cur:
         cur.execute(
             "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s and company_id = any(%(preferred_ids)s)",
-            {"resolved_id": resolved_id, "preferred_ids": preferred_company_ids or [-1]},
+            {
+                "resolved_id": resolved_id,
+                "preferred_ids": preferred_company_ids or [-1],
+            },
         )
         cur.execute(
             """
@@ -374,7 +468,11 @@ def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str,
               and company_id != all(%(preferred_ids)s)
             on conflict (company_id, canonical_concept_id, period_id) do nothing
             """,
-            {"resolved_id": resolved_id, "primary_id": primary_id, "preferred_ids": preferred_company_ids or [-1]},
+            {
+                "resolved_id": resolved_id,
+                "primary_id": primary_id,
+                "preferred_ids": preferred_company_ids or [-1],
+            },
         )
 
         for company_id, taxonomy, tag in preferences:
@@ -388,21 +486,29 @@ def resolve_company_tag_preferences(conn: psycopg.Connection, concept_name: str,
                     """,
                     [
                         {
-                            "company_id": company_id, "resolved_id": resolved_id, "period_id": period_id,
-                            "value": value, "source_fact_ids": [fact_id],
+                            "company_id": company_id,
+                            "resolved_id": resolved_id,
+                            "period_id": period_id,
+                            "value": value,
+                            "source_fact_ids": [fact_id],
                         }
                         for period_id, (value, fact_id) in reconciled.items()
                     ],
                 )
 
-        cur.execute("select count(*) from analytics.canonical_fact where canonical_concept_id = %s", (resolved_id,))
+        cur.execute(
+            "select count(*) from analytics.canonical_fact where canonical_concept_id = %s",
+            (resolved_id,),
+        )
         count = cur.fetchone()[0]
     conn.commit()
     return count
 
 
 def investigate_open_findings(
-    conn: psycopg.Connection, severities: tuple[str, ...] = ("critical", "major"), company_id: int | None = None
+    conn: psycopg.Connection,
+    severities: tuple[str, ...] = ("critical", "major"),
+    company_id: int | None = None,
 ) -> dict:
     """Entry point for `scrooner-sanity investigate`: pulls every current
     critical/major analytics.data_sanity_check row, investigates each,
@@ -435,19 +541,30 @@ def investigate_open_findings(
     # directly, but shares_outstanding is the only OTHER one with a real
     # underlying concept to trace -- market_cap/trailing_pe are computed
     # metrics, not raw tags, so there is no "fetcher tree" to trace for them.
-    CONCEPT_FOR_METRIC = {"revenue_zero_check": "revenue", "shares_outstanding": "shares_outstanding"}
+    CONCEPT_FOR_METRIC = {
+        "revenue_zero_check": "revenue",
+        "shares_outstanding": "shares_outstanding",
+    }
 
     for check_id, company_id, metric_name, external_value in rows:
         concept_name = CONCEPT_FOR_METRIC.get(metric_name)
         if concept_name is None or external_value is None:
             continue
         stats["considered"] += 1
-        outcome = investigate(conn, company_id, concept_name, Decimal(external_value), data_sanity_check_id=check_id)
+        outcome = investigate(
+            conn,
+            company_id,
+            concept_name,
+            Decimal(external_value),
+            data_sanity_check_id=check_id,
+        )
         stats[outcome["outcome"]] += 1
 
     for concept_name, resolved_name in FIXABLE_CONCEPTS.items():
         written = resolve_company_tag_preferences(conn, concept_name, resolved_name)
-        logger.info("sanity.tag_investigator.merged", concept=resolved_name, rows=written)
+        logger.info(
+            "sanity.tag_investigator.merged", concept=resolved_name, rows=written
+        )
 
     logger.info("sanity.tag_investigator.done", **stats)
     return stats

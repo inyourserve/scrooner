@@ -66,9 +66,13 @@ class ModelInterpretation(BaseModel):
     def _enforce_status_gate(self) -> "ModelInterpretation":
         if self.status == "ready":
             if self.query is None or self.unrecognized or self.ambiguous:
-                raise ValueError("ready interpretations require a complete query and no unresolved text")
+                raise ValueError(
+                    "ready interpretations require a complete query and no unresolved text"
+                )
         elif self.query is not None:
-            raise ValueError("non-ready interpretations must not contain an executable query")
+            raise ValueError(
+                "non-ready interpretations must not contain an executable query"
+            )
         return self
 
 
@@ -153,13 +157,17 @@ def _reject_unknown_query_fields(raw_query: object) -> None:
 
     def require_mapping(value: object, location: str) -> Mapping:
         if not isinstance(value, Mapping):
-            raise InvalidLLMInterpretationError(f"LLM returned a non-object at {location}")
+            raise InvalidLLMInterpretationError(
+                f"LLM returned a non-object at {location}"
+            )
         return value
 
     def reject_extra(value: Mapping, allowed: set[str], location: str) -> None:
         extra = sorted(set(value) - allowed)
         if extra:
-            raise InvalidLLMInterpretationError(f"LLM returned unknown fields at {location}: {extra}")
+            raise InvalidLLMInterpretationError(
+                f"LLM returned unknown fields at {location}: {extra}"
+            )
 
     def visit_predicate(value: object, location: str) -> None:
         predicate = require_mapping(value, location)
@@ -167,11 +175,17 @@ def _reject_unknown_query_fields(raw_query: object) -> None:
             reject_extra(predicate, {"op", "predicates"}, location)
             children = predicate.get("predicates")
             if not isinstance(children, list):
-                raise InvalidLLMInterpretationError(f"LLM returned invalid predicates at {location}")
+                raise InvalidLLMInterpretationError(
+                    f"LLM returned invalid predicates at {location}"
+                )
             for index, child in enumerate(children):
                 visit_predicate(child, f"{location}.predicates[{index}]")
         elif "metric_name" in predicate:
-            reject_extra(predicate, {"metric_name", "operator", "value", "value_range", "n"}, location)
+            reject_extra(
+                predicate,
+                {"metric_name", "operator", "value", "value_range", "n"},
+                location,
+            )
         else:
             reject_extra(predicate, {"field", "operator", "value"}, location)
 
@@ -216,14 +230,18 @@ def validate_model_interpretation(
     try:
         model_result = ModelInterpretation.model_validate(payload)
     except ValidationError as error:
-        raise InvalidLLMInterpretationError("LLM response did not match the interpretation schema") from error
+        raise InvalidLLMInterpretationError(
+            "LLM response did not match the interpretation schema"
+        ) from error
 
     ambiguities = [
         AmbiguityNote(phrase=item.phrase, candidates=item.candidates)
         for item in model_result.ambiguous
     ]
     if len({candidate.metric_name for candidate in candidates}) != len(candidates):
-        raise InvalidLLMInterpretationError("candidate allow-list contains duplicate metric names")
+        raise InvalidLLMInterpretationError(
+            "candidate allow-list contains duplicate metric names"
+        )
     allowed = {candidate.metric_name: candidate.operators for candidate in candidates}
     for ambiguity in ambiguities:
         unknown_candidates = sorted(set(ambiguity.candidates) - allowed.keys())
@@ -243,9 +261,17 @@ def validate_model_interpretation(
     try:
         query = ScreenQuery.model_validate(model_result.query)
     except ValidationError as error:
-        raise InvalidLLMInterpretationError("LLM query did not match ScreenQuery") from error
-    if not query.metric_predicates and not query.categorical_predicates and query.where is None:
-        raise InvalidLLMInterpretationError("LLM returned a ready query with no filtering or ranking criteria")
+        raise InvalidLLMInterpretationError(
+            "LLM query did not match ScreenQuery"
+        ) from error
+    if (
+        not query.metric_predicates
+        and not query.categorical_predicates
+        and query.where is None
+    ):
+        raise InvalidLLMInterpretationError(
+            "LLM returned a ready query with no filtering or ranking criteria"
+        )
 
     for predicate in _metric_predicates(query):
         if predicate.metric_name not in allowed:

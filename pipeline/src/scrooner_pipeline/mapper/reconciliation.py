@@ -49,16 +49,23 @@ CASH_FLOW_CONCEPTS = {
     "inventory_change_reconciliation_gap": "cf_inventory_change",
     "ap_change_reconciliation_gap": "cf_ap_change",
 }
-REQUIRED_CONCEPTS = sorted(set(BALANCE_SHEET_CONCEPTS.values()) | set(CASH_FLOW_CONCEPTS.values()))
+REQUIRED_CONCEPTS = sorted(
+    set(BALANCE_SHEET_CONCEPTS.values()) | set(CASH_FLOW_CONCEPTS.values())
+)
 
 
 def _load_concept_ids(conn: psycopg.Connection) -> dict[str, int]:
     with conn.cursor() as cur:
-        cur.execute("select name, id from analytics.canonical_concept where name = any(%s)", (REQUIRED_CONCEPTS,))
+        cur.execute(
+            "select name, id from analytics.canonical_concept where name = any(%s)",
+            (REQUIRED_CONCEPTS,),
+        )
         return dict(cur.fetchall())
 
 
-def _load_fy_facts(conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]) -> dict[str, dict[int, Decimal]]:
+def _load_fy_facts(
+    conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]
+) -> dict[str, dict[int, Decimal]]:
     """concept_name -> {fiscal_year: value}, FY periods only -- same shape
     as quality_flags.py's own loader (balance-sheet concepts are instant,
     cash-flow concepts are duration, but both resolve to one value per FY
@@ -81,7 +88,9 @@ def _load_fy_facts(conn: psycopg.Connection, company_id: int, concept_ids: dict[
     return result
 
 
-def _fy_period_dates(conn: psycopg.Connection, company_id: int, anchor_concept_id: int, fiscal_year: int):
+def _fy_period_dates(
+    conn: psycopg.Connection, company_id: int, anchor_concept_id: int, fiscal_year: int
+):
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -96,18 +105,33 @@ def _fy_period_dates(conn: psycopg.Connection, company_id: int, anchor_concept_i
         return cur.fetchone()
 
 
-def _row(company_id: int, metric_id: int, start, end, value: Decimal | None, reason: str | None) -> dict:
+def _row(
+    company_id: int,
+    metric_id: int,
+    start,
+    end,
+    value: Decimal | None,
+    reason: str | None,
+) -> dict:
     if start is None or end is None:
         start = end = date.today()
     return {
-        "company_id": company_id, "metric_definition_id": metric_id,
-        "period_start": start, "period_end": end, "period_label": "FY",
-        "value": value, "is_null_reason": reason, "source_fact_ids": None,
+        "company_id": company_id,
+        "metric_definition_id": metric_id,
+        "period_start": start,
+        "period_end": end,
+        "period_label": "FY",
+        "value": value,
+        "is_null_reason": reason,
+        "source_fact_ids": None,
     }
 
 
 def calculate_reconciliation_for_company(
-    conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_ids: dict[str, int],
+    concept_ids: dict[str, int],
 ) -> dict:
     facts = _load_fy_facts(conn, company_id, concept_ids)
     rows: list[dict] = []
@@ -125,15 +149,35 @@ def calculate_reconciliation_for_company(
             start, end = period if period else (None, None)
 
             if fy not in bs_years:
-                rows.append(_row(company_id, metric_ids[metric_name], start, end, None, f"missing:{bs_concept}({fy})"))
+                rows.append(
+                    _row(
+                        company_id,
+                        metric_ids[metric_name],
+                        start,
+                        end,
+                        None,
+                        f"missing:{bs_concept}({fy})",
+                    )
+                )
                 continue
             if (fy - 1) not in bs_years:
-                rows.append(_row(company_id, metric_ids[metric_name], start, end, None, f"missing:{bs_concept}({fy - 1})"))
+                rows.append(
+                    _row(
+                        company_id,
+                        metric_ids[metric_name],
+                        start,
+                        end,
+                        None,
+                        f"missing:{bs_concept}({fy - 1})",
+                    )
+                )
                 continue
 
             bs_implied_change = bs_years[fy] - bs_years[fy - 1]
             gap = bs_implied_change - cf_years[fy]
-            rows.append(_row(company_id, metric_ids[metric_name], start, end, gap, None))
+            rows.append(
+                _row(company_id, metric_ids[metric_name], start, end, gap, None)
+            )
 
     with conn.cursor() as cur:
         target_ids = list(metric_ids.values())
@@ -157,7 +201,12 @@ def calculate_reconciliation_for_company(
 
     computed = sum(1 for r in rows if r["value"] is not None)
     null = sum(1 for r in rows if r["value"] is None)
-    logger.info("reconciliation.company_done", company_id=company_id, computed=computed, null=null)
+    logger.info(
+        "reconciliation.company_done",
+        company_id=company_id,
+        computed=computed,
+        null=null,
+    )
     return {"computed": computed, "null": null}
 
 
@@ -165,21 +214,37 @@ def calculate_reconciliation(conn: psycopg.Connection, ciks: set[str]) -> dict:
     concept_ids = _load_concept_ids(conn)
     missing_concepts = [c for c in REQUIRED_CONCEPTS if c not in concept_ids]
     if missing_concepts:
-        raise RuntimeError(f"reconciliation: canonical concepts not seeded yet: {missing_concepts}")
+        raise RuntimeError(
+            f"reconciliation: canonical concepts not seeded yet: {missing_concepts}"
+        )
 
     metric_names = list(BALANCE_SHEET_CONCEPTS.keys())
     with conn.cursor() as cur:
-        cur.execute("select metric_name, id from analytics.metric_definition where metric_name = any(%s)", (metric_names,))
+        cur.execute(
+            "select metric_name, id from analytics.metric_definition where metric_name = any(%s)",
+            (metric_names,),
+        )
         metric_ids = dict(cur.fetchall())
     missing_metrics = [m for m in metric_names if m not in metric_ids]
     if missing_metrics:
-        raise RuntimeError(f"reconciliation: metric_definition rows not seeded yet: {missing_metrics}")
+        raise RuntimeError(
+            f"reconciliation: metric_definition rows not seeded yet: {missing_metrics}"
+        )
 
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -187,7 +252,9 @@ def calculate_reconciliation(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = calculate_reconciliation_for_company(conn, company_id, metric_ids, concept_ids)
+            stats = calculate_reconciliation_for_company(
+                conn, company_id, metric_ids, concept_ids
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "reconciliation", exc)

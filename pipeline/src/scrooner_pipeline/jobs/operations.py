@@ -12,7 +12,9 @@ app = typer.Typer()
 
 @app.command()
 def status(
-    fail_on_alert: bool = typer.Option(False, help="Exit 1 when any operational alert is active."),
+    fail_on_alert: bool = typer.Option(
+        False, help="Exit 1 when any operational alert is active."
+    ),
 ) -> None:
     """Print one machine-readable operational snapshot; performs no writes."""
     with get_connection() as conn:

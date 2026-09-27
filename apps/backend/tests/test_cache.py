@@ -6,7 +6,11 @@ import cache
 
 @pytest.mark.unit
 def test_cache_read_failure_falls_back_to_database(monkeypatch):
-    monkeypatch.setattr(cache._client, "get", lambda _key: (_ for _ in ()).throw(ConnectionError("offline")))
+    monkeypatch.setattr(
+        cache._client,
+        "get",
+        lambda _key: (_ for _ in ()).throw(ConnectionError("offline")),
+    )
 
     assert cache.get_cached_result("query") is None
 
@@ -32,7 +36,9 @@ def test_malformed_cache_entry_is_a_miss(monkeypatch):
 @pytest.mark.unit
 def test_repeat_run_key_is_user_and_text_scoped(monkeypatch):
     keys = []
-    monkeypatch.setattr(cache._client, "set", lambda key, *_args, **_kwargs: keys.append(key))
+    monkeypatch.setattr(
+        cache._client, "set", lambda key, *_args, **_kwargs: keys.append(key)
+    )
 
     cache.set_cached_run_id("user-a", "query", "ROE above 20%", "run-1")
     cache.set_cached_run_id("user-b", "query", "ROE above 20%", "run-2")
@@ -45,7 +51,9 @@ def test_repeat_run_key_is_user_and_text_scoped(monkeypatch):
 @pytest.mark.unit
 def test_cached_run_page_round_trips_json(monkeypatch):
     stored = {}
-    monkeypatch.setattr(cache._client, "set", lambda key, value, **_kwargs: stored.update({key: value}))
+    monkeypatch.setattr(
+        cache._client, "set", lambda key, value, **_kwargs: stored.update({key: value})
+    )
     monkeypatch.setattr(cache._client, "get", lambda key: stored.get(key))
 
     page = {"run_id": "run-1", "items": [{"company_id": 1}]}

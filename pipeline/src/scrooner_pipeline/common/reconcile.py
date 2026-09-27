@@ -22,19 +22,30 @@ def parse_error_ids(value: str) -> tuple[int, ...]:
     return tuple(sorted(ids))
 
 
-def _validate_resolution(layer: str, error_ids: Iterable[int], note: str) -> tuple[str, tuple[int, ...], str]:
+def _validate_resolution(
+    layer: str, error_ids: Iterable[int], note: str
+) -> tuple[str, tuple[int, ...], str]:
     if layer not in ERROR_TABLES:
-        raise ValueError(f"unsupported layer {layer!r}; choose from {', '.join(ERROR_TABLES)}")
+        raise ValueError(
+            f"unsupported layer {layer!r}; choose from {', '.join(ERROR_TABLES)}"
+        )
     ids = tuple(sorted(set(error_ids)))
-    if not ids or any(not isinstance(error_id, int) or isinstance(error_id, bool) or error_id <= 0 for error_id in ids):
+    if not ids or any(
+        not isinstance(error_id, int) or isinstance(error_id, bool) or error_id <= 0
+        for error_id in ids
+    ):
         raise ValueError("at least one positive integer error ID is required")
     clean_note = note.strip()
     if len(clean_note) < 20:
-        raise ValueError("resolution note must contain at least 20 characters of evidence")
+        raise ValueError(
+            "resolution note must contain at least 20 characters of evidence"
+        )
     return ERROR_TABLES[layer], ids, clean_note
 
 
-def resolve_dead_letters(conn: Any, *, layer: str, error_ids: Iterable[int], note: str) -> dict[str, Any]:
+def resolve_dead_letters(
+    conn: Any, *, layer: str, error_ids: Iterable[int], note: str
+) -> dict[str, Any]:
     """Resolve exactly the requested rows or make no change.
 
     The table name comes only from ``ERROR_TABLES``; IDs and note remain query
@@ -54,7 +65,9 @@ def resolve_dead_letters(conn: Any, *, layer: str, error_ids: Iterable[int], not
             raise ValueError(f"unknown {layer} error ID(s): {missing}")
         already_resolved = sorted(row[0] for row in found if row[1])
         if already_resolved:
-            raise ValueError(f"already-resolved {layer} error ID(s): {already_resolved}")
+            raise ValueError(
+                f"already-resolved {layer} error ID(s): {already_resolved}"
+            )
 
         cur.execute(
             f"""update {table}

@@ -148,7 +148,9 @@ QUARTER_MIN_DAYS, QUARTER_MAX_DAYS = 75, 105
 MIN_COMPLETENESS_RATIO = Decimal("0.5")
 
 
-def _select_comparable_pair(periods: list[tuple[date, int]]) -> tuple[date, date] | None:
+def _select_comparable_pair(
+    periods: list[tuple[date, int]],
+) -> tuple[date, date] | None:
     """Pure selection logic over an already-fetched (report_period, count)
     list, DESC by report_period -- split out from _find_comparable_periods
     so this real-cadence/completeness algorithm (module docstring point
@@ -170,7 +172,9 @@ def _select_comparable_pair(periods: list[tuple[date, int]]) -> tuple[date, date
     return None
 
 
-def _find_comparable_periods(conn: psycopg.Connection, company_id: int) -> tuple[date, date] | None:
+def _find_comparable_periods(
+    conn: psycopg.Connection, company_id: int
+) -> tuple[date, date] | None:
     """Fetches per-period fund counts for a company and delegates to
     _select_comparable_pair for the actual (latest, prior) decision."""
     with conn.cursor() as cur:
@@ -188,7 +192,9 @@ def _find_comparable_periods(conn: psycopg.Connection, company_id: int) -> tuple
     return _select_comparable_pair(periods)
 
 
-def _period_holdings(conn: psycopg.Connection, company_id: int, report_period: date) -> list[dict]:
+def _period_holdings(
+    conn: psycopg.Connection, company_id: int, report_period: date
+) -> list[dict]:
     """One row per real fund for a single report_period -- DISTINCT ON
     (fund_cik, coalesce(series_id, fund_name)) collapses a rare
     same-period duplicate (e.g. an amendment alongside its original) by
@@ -208,8 +214,12 @@ def _period_holdings(conn: psycopg.Connection, company_id: int, report_period: d
         )
         return [
             {
-                "fund_cik": r[0], "series_id": r[1], "fund_name": r[2],
-                "shares": r[3], "value_usd": r[4], "pct_of_fund_net_assets": r[5],
+                "fund_cik": r[0],
+                "series_id": r[1],
+                "fund_name": r[2],
+                "shares": r[3],
+                "value_usd": r[4],
+                "pct_of_fund_net_assets": r[5],
             }
             for r in cur.fetchall()
         ]
@@ -225,7 +235,9 @@ def _match_key(holding: dict) -> str:
     return f"{cik}:name:{holding['fund_name']}"
 
 
-def _shares_outstanding_current(conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]) -> Decimal | None:
+def _shares_outstanding_current(
+    conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]
+) -> Decimal | None:
     if "shares_outstanding" not in concept_ids:
         return None
     hit = _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"])
@@ -235,7 +247,9 @@ def _shares_outstanding_current(conn: psycopg.Connection, company_id: int, conce
     return fallback[0] if fallback else None
 
 
-def compute_summary_for_company(conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]) -> dict | None:
+def compute_summary_for_company(
+    conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]
+) -> dict | None:
     """Returns None (not an error) when no valid same-cohort
     (latest, prior) pair exists yet for this company -- either fewer than
     2 report_periods are on file at all (CUSIP hasn't matched in both
@@ -251,7 +265,14 @@ def compute_summary_for_company(conn: psycopg.Connection, company_id: int, conce
     prior_holdings = _period_holdings(conn, company_id, report_period_prior)
     shares_out = _shares_outstanding_current(conn, company_id, concept_ids)
 
-    return _build_summary(company_id, report_period_latest, report_period_prior, latest_holdings, prior_holdings, shares_out)
+    return _build_summary(
+        company_id,
+        report_period_latest,
+        report_period_prior,
+        latest_holdings,
+        prior_holdings,
+        shares_out,
+    )
 
 
 def _build_summary(
@@ -285,16 +306,23 @@ def _build_summary(
         if prior is None:
             new_positions += 1
         else:
-            latest_shares, prior_shares = h["shares"] or Decimal(0), prior["shares"] or Decimal(0)
+            latest_shares, prior_shares = (
+                h["shares"] or Decimal(0),
+                prior["shares"] or Decimal(0),
+            )
             if latest_shares > prior_shares:
                 funds_increasing += 1
             elif latest_shares < prior_shares:
                 funds_decreasing += 1
     latest_keys = {_match_key(h) for h in latest_holdings}
-    exited_positions = sum(1 for h in prior_holdings if _match_key(h) not in latest_keys)
+    exited_positions = sum(
+        1 for h in prior_holdings if _match_key(h) not in latest_keys
+    )
 
     top_holders = []
-    for h in sorted(latest_holdings, key=lambda h: h["shares"] or Decimal(0), reverse=True)[:TOP_HOLDERS_LIMIT]:
+    for h in sorted(
+        latest_holdings, key=lambda h: h["shares"] or Decimal(0), reverse=True
+    )[:TOP_HOLDERS_LIMIT]:
         prior = prior_by_key.get(_match_key(h))
         shares = h["shares"] or Decimal(0)
         if prior is None:
@@ -318,9 +346,13 @@ def _build_summary(
                 # fabricated from fund_name/registrant data.
                 "fund_family": None,
                 "shares": str(shares),
-                "value_usd": str(h["value_usd"]) if h["value_usd"] is not None else None,
+                "value_usd": str(h["value_usd"])
+                if h["value_usd"] is not None
+                else None,
                 "ownership_pct": str(shares / shares_out) if shares_out else None,
-                "portfolio_weight_pct": str(h["pct_of_fund_net_assets"]) if h["pct_of_fund_net_assets"] is not None else None,
+                "portfolio_weight_pct": str(h["pct_of_fund_net_assets"])
+                if h["pct_of_fund_net_assets"] is not None
+                else None,
                 "share_change": str(share_change) if prior is not None else None,
                 "pct_change": str(pct_change) if pct_change is not None else None,
                 "status": status,
@@ -334,7 +366,9 @@ def _build_summary(
     # rather than silently dropping it, same precedent as
     # institutional_summary.py's own equivalent backfill.
     exited_in_prior = [h for h in prior_holdings if _match_key(h) not in latest_keys]
-    for h in sorted(exited_in_prior, key=lambda h: h["shares"] or Decimal(0), reverse=True):
+    for h in sorted(
+        exited_in_prior, key=lambda h: h["shares"] or Decimal(0), reverse=True
+    ):
         if len(top_holders) >= TOP_HOLDERS_LIMIT:
             break
         top_holders.append(
@@ -370,13 +404,23 @@ def _build_summary(
     }
 
 
-def compute_mutual_fund_ownership_summary(conn: psycopg.Connection, ciks: set[str]) -> dict:
+def compute_mutual_fund_ownership_summary(
+    conn: psycopg.Connection, ciks: set[str]
+) -> dict:
     concept_ids = _load_concept_ids(conn, {"shares_outstanding"})
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "no_company": 0, "insufficient_periods": 0, "errored": 0, "computed": 0}
+    totals = {
+        "considered": 0,
+        "no_company": 0,
+        "insufficient_periods": 0,
+        "errored": 0,
+        "computed": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)

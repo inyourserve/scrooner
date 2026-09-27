@@ -28,7 +28,10 @@ import json
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 
 logger = structlog.get_logger()
 
@@ -76,7 +79,9 @@ def _extract_contact_fields(cik: str, payload: dict) -> dict:
     }
 
 
-def load_contact_fields(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict | None:
+def load_contact_fields(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict | None:
     storage_path = _latest_base_submission(conn, cik)
     if storage_path is None:
         logger.warning("company_master.contact_details.no_base_submission", cik=cik)

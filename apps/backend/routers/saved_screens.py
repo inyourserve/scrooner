@@ -40,7 +40,9 @@ class SavedScreenRename(BaseModel):
 
 
 def _slug_base(name: str) -> str:
-    ascii_name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower()
+    ascii_name = (
+        unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower()
+    )
     return re.sub(r"[^a-z0-9]+", "-", ascii_name).strip("-") or "screen"
 
 
@@ -73,7 +75,14 @@ def list_screens(user_id: str = Depends(get_current_user_id)) -> list[dict]:
             )
             rows = cur.fetchall()
     screens = [
-        {"id": r[0], "name": r[1], "slug": r[2], "query": r[3], "created_at": str(r[4]), "updated_at": str(r[5])}
+        {
+            "id": r[0],
+            "name": r[1],
+            "slug": r[2],
+            "query": r[3],
+            "created_at": str(r[4]),
+            "updated_at": str(r[5]),
+        }
         for r in rows
     ]
     set_cached_screens_list(user_id, screens)
@@ -81,7 +90,9 @@ def list_screens(user_id: str = Depends(get_current_user_id)) -> list[dict]:
 
 
 @router.post("/screens")
-def create_screen(body: SavedScreenCreate, user_id: str = Depends(get_current_user_id)) -> dict:
+def create_screen(
+    body: SavedScreenCreate, user_id: str = Depends(get_current_user_id)
+) -> dict:
     # No conn.transaction() here -- measured live 2026-09-12: wrapping even
     # a single write in an explicit transaction on this pool costs ~500ms
     # of pure overhead (an explicit BEGIN + COMMIT round trip pair on top
@@ -95,7 +106,10 @@ def create_screen(body: SavedScreenCreate, user_id: str = Depends(get_current_us
         slug = _available_slug(conn, user_id, body.name)
         with conn.cursor() as cur:
             if body.run_id is not None:
-                cur.execute("select 1 from app.user_screen_run where id = %s and user_id = %s", (body.run_id, user_id))
+                cur.execute(
+                    "select 1 from app.user_screen_run where id = %s and user_id = %s",
+                    (body.run_id, user_id),
+                )
                 if cur.fetchone() is None:
                     raise HTTPException(status_code=404, detail="Screen run not found")
             cur.execute(
@@ -106,7 +120,13 @@ def create_screen(body: SavedScreenCreate, user_id: str = Depends(get_current_us
                 # Decimal-as-string handling FastAPI's response encoder
                 # already gets right automatically. Pydantic's own JSON
                 # serializer handles it correctly, same guarantee, explicit.
-                (user_id, body.name.strip(), slug, body.query.model_dump_json(), body.run_id),
+                (
+                    user_id,
+                    body.name.strip(),
+                    slug,
+                    body.query.model_dump_json(),
+                    body.run_id,
+                ),
             )
             new_id = cur.fetchone()[0]
     invalidate_screens_list(user_id)
@@ -139,9 +159,13 @@ def get_screen(
             if row is None:
                 raise HTTPException(status_code=404, detail="Screen not found")
             meta = {
-                "id": row[0], "name": row[1], "slug": row[2], "query": row[3],
+                "id": row[0],
+                "name": row[1],
+                "slug": row[2],
+                "query": row[3],
                 "last_run_id": str(row[4]) if row[4] is not None else None,
-                "created_at": str(row[5]), "updated_at": str(row[6]),
+                "created_at": str(row[5]),
+                "updated_at": str(row[6]),
             }
         set_cached_screen_detail(user_id, slug, meta)
 
@@ -149,7 +173,9 @@ def get_screen(
     payload["run"] = None
     if meta["last_run_id"] is not None:
         with get_pooled_connection() as conn:
-            payload["run"] = _read_page(conn, meta["last_run_id"], user_id, page_size, cursor)
+            payload["run"] = _read_page(
+                conn, meta["last_run_id"], user_id, page_size, cursor
+            )
     return payload
 
 
@@ -183,7 +209,9 @@ def refresh_screen(slug: str, user_id: str = Depends(get_current_user_id)) -> di
 
 
 @router.patch("/screens/{screen_id}")
-def rename_screen(screen_id: int, body: SavedScreenRename, user_id: str = Depends(get_current_user_id)) -> dict:
+def rename_screen(
+    screen_id: int, body: SavedScreenRename, user_id: str = Depends(get_current_user_id)
+) -> dict:
     # Folded the ownership check into the UPDATE's own WHERE clause instead
     # of a separate SELECT first -- found live 2026-09-12 sanity-checking
     # this endpoint's timing: two sequential round trips for what only

@@ -46,7 +46,9 @@ from decimal import ROUND_HALF_UP, Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.mapper.definitions import METRIC_DEFINITIONS as _V1_METRIC_DEFINITIONS
+from scrooner_pipeline.mapper.definitions import (
+    METRIC_DEFINITIONS as _V1_METRIC_DEFINITIONS,
+)
 
 logger = structlog.get_logger()
 
@@ -61,7 +63,9 @@ CORE_V1_METRIC_NAMES = frozenset(name for name, *_rest in _V1_METRIC_DEFINITIONS
 def _pct(covered: int, total: int) -> Decimal:
     if total == 0:
         return Decimal("0.00")
-    return (Decimal(covered) / Decimal(total) * 100).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    return (Decimal(covered) / Decimal(total) * 100).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
 
 
 def _load_total_active_companies(conn: psycopg.Connection) -> int:
@@ -139,10 +143,32 @@ def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dic
 
     concept_pcts = [r["coverage_pct"] for r in rows if r["item_type"] == "concept"]
     metric_pcts = [r["coverage_pct"] for r in rows if r["item_type"] == "metric"]
-    core_v1_pcts = [r["coverage_pct"] for r in rows if r["item_type"] == "metric" and r["item_name"] in CORE_V1_METRIC_NAMES]
-    avg_concept = (sum(concept_pcts) / len(concept_pcts)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP) if concept_pcts else Decimal("0.00")
-    avg_metric = (sum(metric_pcts) / len(metric_pcts)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP) if metric_pcts else Decimal("0.00")
-    avg_core_v1 = (sum(core_v1_pcts) / len(core_v1_pcts)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP) if core_v1_pcts else Decimal("0.00")
+    core_v1_pcts = [
+        r["coverage_pct"]
+        for r in rows
+        if r["item_type"] == "metric" and r["item_name"] in CORE_V1_METRIC_NAMES
+    ]
+    avg_concept = (
+        (sum(concept_pcts) / len(concept_pcts)).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        if concept_pcts
+        else Decimal("0.00")
+    )
+    avg_metric = (
+        (sum(metric_pcts) / len(metric_pcts)).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        if metric_pcts
+        else Decimal("0.00")
+    )
+    avg_core_v1 = (
+        (sum(core_v1_pcts) / len(core_v1_pcts)).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        if core_v1_pcts
+        else Decimal("0.00")
+    )
 
     rows.append(
         {
@@ -200,7 +226,9 @@ def write_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dict:
     as_of = as_of or datetime.now(timezone.utc).date()
     result = compute_snapshot(conn, as_of)
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.coverage_snapshot where snapshot_date = %s", (as_of,))
+        cur.execute(
+            "delete from analytics.coverage_snapshot where snapshot_date = %s", (as_of,)
+        )
         cur.executemany(
             """
             insert into analytics.coverage_snapshot
@@ -215,7 +243,9 @@ def write_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dict:
         "rows_written": len(result["rows"]),
         "avg_concept_coverage_score": str(result["avg_concept_coverage_score"]),
         "avg_metric_coverage_score": str(result["avg_metric_coverage_score"]),
-        "avg_core_v1_metric_coverage_score": str(result["avg_core_v1_metric_coverage_score"]),
+        "avg_core_v1_metric_coverage_score": str(
+            result["avg_core_v1_metric_coverage_score"]
+        ),
         "total_active_companies": result["total_active_companies"],
     }
     logger.info("coverage_snapshot.written", **stats)

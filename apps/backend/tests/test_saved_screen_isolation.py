@@ -28,7 +28,14 @@ class ScreenCursor:
         if normalized.startswith("select id, name, slug, query"):
             user_id = params[0]
             self._rows = [
-                (screen_id, screen["name"], screen["slug"], screen["query"], screen["created_at"], screen["updated_at"])
+                (
+                    screen_id,
+                    screen["name"],
+                    screen["slug"],
+                    screen["query"],
+                    screen["created_at"],
+                    screen["updated_at"],
+                )
                 for screen_id, screen in sorted(self.conn.screens.items())
                 if str(screen["user_id"]) == user_id
             ]
@@ -105,14 +112,18 @@ def test_saved_screen_owner_can_mutate_and_other_user_cannot(monkeypatch):
     assert [row["id"] for row in saved_screens.list_screens(OWNER)] == [1]
     assert saved_screens.list_screens(OTHER) == []
 
-    assert saved_screens.rename_screen(1, saved_screens.SavedScreenRename(name="Renamed"), OWNER) == {
+    assert saved_screens.rename_screen(
+        1, saved_screens.SavedScreenRename(name="Renamed"), OWNER
+    ) == {
         "id": 1,
         "name": "Renamed",
     }
     assert conn.screens[1]["name"] == "Renamed"
 
     with pytest.raises(HTTPException) as rename_exc:
-        saved_screens.rename_screen(1, saved_screens.SavedScreenRename(name="Stolen"), OTHER)
+        saved_screens.rename_screen(
+            1, saved_screens.SavedScreenRename(name="Stolen"), OTHER
+        )
     assert rename_exc.value.status_code == 404
     assert conn.screens[1]["name"] == "Renamed"
 

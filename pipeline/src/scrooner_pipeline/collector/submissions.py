@@ -32,7 +32,10 @@ from typing import Iterator
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.retry import HeartbeatTicker, already_stored_submission_paths
+from scrooner_pipeline.collector.retry import (
+    HeartbeatTicker,
+    already_stored_submission_paths,
+)
 from scrooner_pipeline.collector.storage import SupabaseStorageClient
 from scrooner_pipeline.common.sec_client import SECClient
 
@@ -53,7 +56,9 @@ UPLOAD_BATCH_SIZE = 20
 UPLOAD_WORKERS = 10
 
 
-def _iter_members(zip_path: Path, only_ciks: set[str] | None = None) -> Iterator[tuple[str, str, bytes]]:
+def _iter_members(
+    zip_path: Path, only_ciks: set[str] | None = None
+) -> Iterator[tuple[str, str, bytes]]:
     """Yields (cik, filename, raw_bytes) for every submissions file in the
     bulk archive — base file and every numbered continuation page.
 
@@ -102,27 +107,41 @@ def bootstrap_submissions(
     run_id is always required now (Day 4) -- see companyfacts.py's
     docstring for the same provenance/checkpointing rationale.
     """
-    stats = {"considered": 0, "stored": 0, "skipped": 0, "errors": 0, "not_in_archive": 0}
+    stats = {
+        "considered": 0,
+        "stored": 0,
+        "skipped": 0,
+        "errors": 0,
+        "not_in_archive": 0,
+    }
     already_done_paths = already_stored_submission_paths(conn, run_id)
     if already_done_paths:
         logger.info(
-            "submissions.resume.checkpoint", run_id=run_id, already_done=len(already_done_paths)
+            "submissions.resume.checkpoint",
+            run_id=run_id,
+            already_done=len(already_done_paths),
         )
 
     with SECClient() as sec:
         zip_path = sec.get_cached_bulk_zip(BULK_URL, cache_name="submissions")
-    logger.info("submissions.zip_ready", path=str(zip_path), size_bytes=zip_path.stat().st_size)
+    logger.info(
+        "submissions.zip_ready", path=str(zip_path), size_bytes=zip_path.stat().st_size
+    )
 
     fetched_at_iso = fetched_at.isoformat()
     # Distinct CIKs represented in already_done_paths, for `limit`'s
     # semantics (a resumed pass shouldn't re-count a CIK's `limit`
     # budget for files it already stored before the kill).
     # storage_path shape: raw/sec/submissions/{cik}/{fetched_at_iso}/{filename}
-    stored_ciks: set[str] = {p.split("/")[3] for p in already_done_paths if p.count("/") >= 5}
+    stored_ciks: set[str] = {
+        p.split("/")[3] for p in already_done_paths if p.count("/") >= 5
+    }
     heartbeat = HeartbeatTicker(conn, run_id)
     seen_ciks: set[str] = set()
 
-    def _upload_one(storage: SupabaseStorageClient, item: tuple[str, str, str, bytes]) -> tuple[str, str, str, str, Exception | None]:
+    def _upload_one(
+        storage: SupabaseStorageClient, item: tuple[str, str, str, bytes]
+    ) -> tuple[str, str, str, str, Exception | None]:
         cik, filename, object_path, payload = item
         try:
             storage_path = storage.upload(object_path, payload)
@@ -131,7 +150,9 @@ def bootstrap_submissions(
         except Exception as exc:  # noqa: BLE001 -- reported per-item below, not raised
             return cik, filename, f"raw/{object_path}", "", exc
 
-    def _flush_batch(storage: SupabaseStorageClient, cur, batch: list[tuple[str, str, str, bytes]]) -> None:
+    def _flush_batch(
+        storage: SupabaseStorageClient, cur, batch: list[tuple[str, str, str, bytes]]
+    ) -> None:
         if not batch:
             return
         with ThreadPoolExecutor(max_workers=UPLOAD_WORKERS) as pool:
@@ -154,14 +175,26 @@ def bootstrap_submissions(
             else:
                 conn.rollback()
                 stats["errors"] += 1
-                logger.error("submissions.store_failed", cik=cik, filename=filename, error_type=type(exc).__name__, error=str(exc)[:500])
+                logger.error(
+                    "submissions.store_failed",
+                    cik=cik,
+                    filename=filename,
+                    error_type=type(exc).__name__,
+                    error=str(exc)[:500],
+                )
                 cur.execute(
                     """
                     insert into raw.collector_errors
                         (run_id, cik, source, error_type, message)
                     values (%s, %s, %s, %s, %s)
                     """,
-                    (run_id, cik, "submissions", type(exc).__name__, f"{filename}: {str(exc)[:2000]}"),
+                    (
+                        run_id,
+                        cik,
+                        "submissions",
+                        type(exc).__name__,
+                        f"{filename}: {str(exc)[:2000]}",
+                    ),
                 )
                 conn.commit()
 
@@ -169,7 +202,11 @@ def bootstrap_submissions(
         batch: list[tuple[str, str, str, bytes]] = []
         for cik, filename, payload in _iter_members(zip_path, only_ciks):
             seen_ciks.add(cik)
-            if limit is not None and len(stored_ciks) >= limit and cik not in stored_ciks:
+            if (
+                limit is not None
+                and len(stored_ciks) >= limit
+                and cik not in stored_ciks
+            ):
                 continue
             stats["considered"] += 1
             # Nested under a fetched_at folder (not a single

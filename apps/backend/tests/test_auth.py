@@ -96,7 +96,11 @@ def test_cache_miss_populates_the_cache_after_a_real_resolution(monkeypatch):
     monkeypatch.setattr(auth.httpx, "AsyncClient", lambda: fake)
     monkeypatch.setattr(auth, "get_cached_auth_user_id", lambda _token: None)
     recorded = {}
-    monkeypatch.setattr(auth, "set_cached_auth_user_id", lambda token, uid: recorded.update(token=token, user_id=uid))
+    monkeypatch.setattr(
+        auth,
+        "set_cached_auth_user_id",
+        lambda token, uid: recorded.update(token=token, user_id=uid),
+    )
 
     result = asyncio.run(auth.get_current_user_id("Bearer fresh-token"))
 
@@ -111,10 +115,11 @@ def test_an_invalid_token_is_never_cached(monkeypatch):
     monkeypatch.setattr(auth, "get_cached_auth_user_id", lambda _token: None)
 
     def fail_if_called(*_args, **_kwargs):
-        raise AssertionError("a failed verification must never be cached as a resolved identity")
+        raise AssertionError(
+            "a failed verification must never be cached as a resolved identity"
+        )
 
     monkeypatch.setattr(auth, "set_cached_auth_user_id", fail_if_called)
 
     with pytest.raises(HTTPException):
         asyncio.run(auth.get_current_user_id("Bearer bad-token"))
-

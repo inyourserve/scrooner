@@ -46,19 +46,27 @@ SEVERITY_UNKNOWN = "unknown"
 STALE_THRESHOLD_DAYS = 120
 
 
-def check_freshness(company_id: int, our_latest_period_end: date | None, yfinance_most_recent_quarter: date | None) -> dict:
+def check_freshness(
+    company_id: int,
+    our_latest_period_end: date | None,
+    yfinance_most_recent_quarter: date | None,
+) -> dict:
     """Pure, no DB access -- unit-testable in isolation."""
     if yfinance_most_recent_quarter is None or our_latest_period_end is None:
         return {
-            "company_id": company_id, "our_latest_period_end": our_latest_period_end,
-            "yfinance_most_recent_quarter": yfinance_most_recent_quarter, "days_stale": None,
+            "company_id": company_id,
+            "our_latest_period_end": our_latest_period_end,
+            "yfinance_most_recent_quarter": yfinance_most_recent_quarter,
+            "days_stale": None,
             "severity": SEVERITY_UNKNOWN,
         }
     days_stale = (yfinance_most_recent_quarter - our_latest_period_end).days
     severity = SEVERITY_STALE if days_stale > STALE_THRESHOLD_DAYS else SEVERITY_OK
     return {
-        "company_id": company_id, "our_latest_period_end": our_latest_period_end,
-        "yfinance_most_recent_quarter": yfinance_most_recent_quarter, "days_stale": days_stale,
+        "company_id": company_id,
+        "our_latest_period_end": our_latest_period_end,
+        "yfinance_most_recent_quarter": yfinance_most_recent_quarter,
+        "days_stale": days_stale,
         "severity": severity,
     }
 
@@ -66,7 +74,9 @@ def check_freshness(company_id: int, our_latest_period_end: date | None, yfinanc
 MIN_FACTS_FOR_REAL_PERIOD = 10
 
 
-def load_our_latest_period_ends(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, date]:
+def load_our_latest_period_ends(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[int, date]:
     """One bulk query for the whole batch -- never a query per company,
     same discipline as every other loader in this codebase.
 

@@ -10,7 +10,14 @@ job (any 'critical' row, or more than a small number of 'major' rows)."""
 
 import psycopg
 
-SEVERITY_ORDER = ["critical", "major", "minor", "missing_ours", "missing_external", "ok"]
+SEVERITY_ORDER = [
+    "critical",
+    "major",
+    "minor",
+    "missing_ours",
+    "missing_external",
+    "ok",
+]
 
 
 def summarize(conn: psycopg.Connection) -> dict:
@@ -26,10 +33,14 @@ def summarize(conn: psycopg.Connection) -> dict:
         for metric_name, severity, count in cur.fetchall():
             by_metric_severity.setdefault(metric_name, {})[severity] = count
 
-        cur.execute("select count(distinct company_id) from analytics.data_sanity_check")
+        cur.execute(
+            "select count(distinct company_id) from analytics.data_sanity_check"
+        )
         (companies_checked,) = cur.fetchone()
 
-        cur.execute("select min(checked_at), max(checked_at) from analytics.data_sanity_check")
+        cur.execute(
+            "select min(checked_at), max(checked_at) from analytics.data_sanity_check"
+        )
         oldest_checked_at, newest_checked_at = cur.fetchone()
 
         cur.execute(
@@ -45,13 +56,21 @@ def summarize(conn: psycopg.Connection) -> dict:
         )
         worst_rows = [
             {
-                "company_name": r[0], "ticker": r[1], "metric_name": r[2], "our_value": r[3],
-                "external_value": r[4], "pct_diff": r[5], "note": r[6], "checked_at": r[7],
+                "company_name": r[0],
+                "ticker": r[1],
+                "metric_name": r[2],
+                "our_value": r[3],
+                "external_value": r[4],
+                "pct_diff": r[5],
+                "note": r[6],
+                "checked_at": r[7],
             }
             for r in cur.fetchall()
         ]
 
-        cur.execute("select outcome, count(*) from analytics.data_sanity_investigation group by outcome")
+        cur.execute(
+            "select outcome, count(*) from analytics.data_sanity_investigation group by outcome"
+        )
         investigation_counts = dict(cur.fetchall())
 
         cur.execute(
@@ -68,14 +87,23 @@ def summarize(conn: psycopg.Connection) -> dict:
         )
         investigation_rows = [
             {
-                "company_name": r[0], "ticker": r[1], "concept_name": r[2], "candidate_taxonomy": r[3],
-                "candidate_tag": r[4], "candidate_value": r[5], "external_value": r[6], "pct_diff": r[7],
-                "outcome": r[8], "note": r[9],
+                "company_name": r[0],
+                "ticker": r[1],
+                "concept_name": r[2],
+                "candidate_taxonomy": r[3],
+                "candidate_tag": r[4],
+                "candidate_value": r[5],
+                "external_value": r[6],
+                "pct_diff": r[7],
+                "outcome": r[8],
+                "note": r[9],
             }
             for r in cur.fetchall()
         ]
 
-        cur.execute("select severity, count(*) from analytics.data_freshness_check group by severity")
+        cur.execute(
+            "select severity, count(*) from analytics.data_freshness_check group by severity"
+        )
         freshness_counts = dict(cur.fetchall())
 
         cur.execute(
@@ -90,7 +118,13 @@ def summarize(conn: psycopg.Connection) -> dict:
             """
         )
         stale_rows = [
-            {"company_name": r[0], "ticker": r[1], "our_latest_period_end": r[2], "yfinance_most_recent_quarter": r[3], "days_stale": r[4]}
+            {
+                "company_name": r[0],
+                "ticker": r[1],
+                "our_latest_period_end": r[2],
+                "yfinance_most_recent_quarter": r[3],
+                "days_stale": r[4],
+            }
             for r in cur.fetchall()
         ]
 
@@ -109,8 +143,12 @@ def summarize(conn: psycopg.Connection) -> dict:
 
 def render_markdown(summary: dict) -> str:
     lines = ["# Data Sanity Layer report", ""]
-    lines.append(f"Companies with at least one check: **{summary['companies_checked']}**")
-    lines.append(f"Oldest check: {summary['oldest_checked_at']} · Newest check: {summary['newest_checked_at']}")
+    lines.append(
+        f"Companies with at least one check: **{summary['companies_checked']}**"
+    )
+    lines.append(
+        f"Oldest check: {summary['oldest_checked_at']} · Newest check: {summary['newest_checked_at']}"
+    )
     lines.append("")
     lines.append("| Metric | " + " | ".join(SEVERITY_ORDER) + " |")
     lines.append("|---|" + "---|" * len(SEVERITY_ORDER))
@@ -122,7 +160,9 @@ def render_markdown(summary: dict) -> str:
     if summary["worst_rows"]:
         lines.append("## Worst findings (critical/major, top 25)")
         lines.append("")
-        lines.append("| Company | Ticker | Metric | Our value | yfinance value | % diff | Note |")
+        lines.append(
+            "| Company | Ticker | Metric | Our value | yfinance value | % diff | Note |"
+        )
         lines.append("|---|---|---|---|---|---|---|")
         for row in summary["worst_rows"]:
             pct = f"{row['pct_diff']:.1f}%" if row["pct_diff"] is not None else "—"
@@ -146,11 +186,17 @@ def render_markdown(summary: dict) -> str:
         investigation_rows = summary.get("investigation_rows") or []
         if investigation_rows:
             lines.append("")
-            lines.append("| Company | Ticker | Concept | Candidate tag | Candidate value | External value | % diff | Outcome |")
+            lines.append(
+                "| Company | Ticker | Concept | Candidate tag | Candidate value | External value | % diff | Outcome |"
+            )
             lines.append("|---|---|---|---|---|---|---|---|")
             for row in investigation_rows:
                 pct = f"{row['pct_diff']:.1f}%" if row["pct_diff"] is not None else "—"
-                tag = f"{row['candidate_taxonomy']}:{row['candidate_tag']}" if row["candidate_tag"] else "—"
+                tag = (
+                    f"{row['candidate_taxonomy']}:{row['candidate_tag']}"
+                    if row["candidate_tag"]
+                    else "—"
+                )
                 lines.append(
                     f"| {row['company_name']} | {row['ticker'] or '—'} | {row['concept_name']} | {tag} | "
                     f"{row['candidate_value']} | {row['external_value']} | {pct} | {row['outcome']} |"
@@ -159,7 +205,9 @@ def render_markdown(summary: dict) -> str:
     freshness_counts = summary.get("freshness_counts") or {}
     if freshness_counts:
         lines.append("")
-        lines.append("## Data freshness (doc 45 P0 -- is our latest data current, independent of whether it's correct)")
+        lines.append(
+            "## Data freshness (doc 45 P0 -- is our latest data current, independent of whether it's correct)"
+        )
         lines.append("")
         lines.append(
             f"Current: **{freshness_counts.get('ok', 0)}** · Stale: **{freshness_counts.get('stale', 0)}** · "
@@ -168,7 +216,9 @@ def render_markdown(summary: dict) -> str:
         stale_rows = summary.get("stale_rows") or []
         if stale_rows:
             lines.append("")
-            lines.append("| Company | Ticker | Our latest period | yfinance's most recent quarter | Days stale |")
+            lines.append(
+                "| Company | Ticker | Our latest period | yfinance's most recent quarter | Days stale |"
+            )
             lines.append("|---|---|---|---|---|")
             for row in stale_rows:
                 lines.append(
@@ -187,6 +237,10 @@ def should_fail_ci(summary: dict, max_major: int = 10) -> bool:
     (Alpaca delayed-SIP price vs. Yahoo's own feed, mid-batch during a
     volatile trading day) will occasionally cross the major threshold for
     a handful of companies without indicating a real pipeline bug."""
-    critical_count = sum(counts.get("critical", 0) for counts in summary["by_metric_severity"].values())
-    major_count = sum(counts.get("major", 0) for counts in summary["by_metric_severity"].values())
+    critical_count = sum(
+        counts.get("critical", 0) for counts in summary["by_metric_severity"].values()
+    )
+    major_count = sum(
+        counts.get("major", 0) for counts in summary["by_metric_severity"].values()
+    )
     return critical_count > 0 or major_count > max_major

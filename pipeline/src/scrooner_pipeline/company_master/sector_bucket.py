@@ -75,7 +75,11 @@ SECTOR_RANGES: list[tuple[int, int, str]] = [
     (4800, 4899, "Communication Services"),  # Telephone, broadcasting
     (4900, 4999, "Utilities"),  # Electric, gas, sanitary services
     (5000, 5199, "Industrials"),  # Wholesale trade
-    (5200, 5399, "Consumer Discretionary"),  # Retail -- building materials, department stores
+    (
+        5200,
+        5399,
+        "Consumer Discretionary",
+    ),  # Retail -- building materials, department stores
     (5400, 5499, "Consumer Staples"),  # Retail -- food stores
     (5500, 5799, "Consumer Discretionary"),  # Retail -- auto, apparel, furniture
     (5800, 5899, "Consumer Discretionary"),  # Retail -- eating & drinking places
@@ -164,7 +168,10 @@ def classify_sector(sic_code: str | None, cik: str | None = None) -> tuple[str, 
 
 def update_sector(conn: psycopg.Connection, ciks: set[str]) -> dict:
     with conn.cursor() as cur:
-        cur.execute("select id, cik, sic_code from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select id, cik, sic_code from core.company where cik = any(%s)",
+            (sorted(ciks),),
+        )
         rows = cur.fetchall()
 
     stats: dict[str, int] = {"considered": 0, "no_company": 0}
@@ -180,7 +187,9 @@ def update_sector(conn: psycopg.Connection, ciks: set[str]) -> dict:
         company_id, sic_code = hit
         sector, reason = classify_sector(sic_code, cik=cik)
         stats[sector] = stats.get(sector, 0) + 1
-        updates.append({"company_id": company_id, "sector": sector, "sector_reason": reason})
+        updates.append(
+            {"company_id": company_id, "sector": sector, "sector_reason": reason}
+        )
 
     if updates:
         with conn.cursor() as cur:

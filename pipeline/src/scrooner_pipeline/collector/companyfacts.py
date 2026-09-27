@@ -33,7 +33,10 @@ from typing import Iterator
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.retry import HeartbeatTicker, already_stored_companyfacts_ciks
+from scrooner_pipeline.collector.retry import (
+    HeartbeatTicker,
+    already_stored_companyfacts_ciks,
+)
 from scrooner_pipeline.collector.storage import SupabaseStorageClient
 from scrooner_pipeline.common.sec_client import SECClient
 
@@ -48,7 +51,9 @@ UPLOAD_BATCH_SIZE = 20
 UPLOAD_WORKERS = 10
 
 
-def _iter_members(zip_path: Path, only_ciks: set[str] | None = None) -> Iterator[tuple[str, bytes]]:
+def _iter_members(
+    zip_path: Path, only_ciks: set[str] | None = None
+) -> Iterator[tuple[str, bytes]]:
     """Yields (cik, raw_bytes) for every company in the bulk archive.
 
     `only_ciks`, when given, is checked BEFORE `zf.read()` -- same fix as
@@ -92,21 +97,35 @@ def bootstrap_companyfacts(
     produced it, both for checkpointing and for provenance (doc 05's
     traceability principle: know exactly which run wrote which row).
     """
-    stats = {"considered": 0, "stored": 0, "skipped": 0, "errors": 0, "not_in_archive": 0}
+    stats = {
+        "considered": 0,
+        "stored": 0,
+        "skipped": 0,
+        "errors": 0,
+        "not_in_archive": 0,
+    }
     already_done = already_stored_companyfacts_ciks(conn, run_id)
     if already_done:
-        logger.info("companyfacts.resume.checkpoint", run_id=run_id, already_done=len(already_done))
+        logger.info(
+            "companyfacts.resume.checkpoint",
+            run_id=run_id,
+            already_done=len(already_done),
+        )
 
     seen_ciks: set[str] = set()
 
     with SECClient() as sec:
         zip_path = sec.get_cached_bulk_zip(BULK_URL, cache_name="companyfacts")
-    logger.info("companyfacts.zip_ready", path=str(zip_path), size_bytes=zip_path.stat().st_size)
+    logger.info(
+        "companyfacts.zip_ready", path=str(zip_path), size_bytes=zip_path.stat().st_size
+    )
 
     fetched_at_iso = fetched_at.isoformat()
     heartbeat = HeartbeatTicker(conn, run_id)
 
-    def _upload_one(storage: SupabaseStorageClient, item: tuple[str, str, bytes]) -> tuple[str, str, str, Exception | None]:
+    def _upload_one(
+        storage: SupabaseStorageClient, item: tuple[str, str, bytes]
+    ) -> tuple[str, str, str, Exception | None]:
         cik, object_path, payload = item
         try:
             storage_path = storage.upload(object_path, payload)
@@ -115,7 +134,9 @@ def bootstrap_companyfacts(
         except Exception as exc:  # noqa: BLE001 -- reported per-item below, not raised
             return cik, f"raw/{object_path}", "", exc
 
-    def _flush_batch(storage: SupabaseStorageClient, cur, batch: list[tuple[str, str, bytes]]) -> None:
+    def _flush_batch(
+        storage: SupabaseStorageClient, cur, batch: list[tuple[str, str, bytes]]
+    ) -> None:
         if not batch:
             return
         with ThreadPoolExecutor(max_workers=UPLOAD_WORKERS) as pool:
@@ -137,7 +158,12 @@ def bootstrap_companyfacts(
             else:
                 conn.rollback()
                 stats["errors"] += 1
-                logger.error("companyfacts.store_failed", cik=cik, error_type=type(exc).__name__, error=str(exc)[:500])
+                logger.error(
+                    "companyfacts.store_failed",
+                    cik=cik,
+                    error_type=type(exc).__name__,
+                    error=str(exc)[:500],
+                )
                 cur.execute(
                     """
                     insert into raw.collector_errors
@@ -174,7 +200,9 @@ def bootstrap_companyfacts(
             missing = only_ciks - seen_ciks
             for cik in missing:
                 stats["not_in_archive"] += 1
-                logger.warning("companyfacts.cik_not_in_archive", cik=cik, run_id=run_id)
+                logger.warning(
+                    "companyfacts.cik_not_in_archive", cik=cik, run_id=run_id
+                )
                 cur.execute(
                     """
                     insert into raw.collector_errors

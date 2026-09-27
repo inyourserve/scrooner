@@ -32,7 +32,9 @@ SUPABASE_SERVICE_ROLE_KEY = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
 
 async def get_current_user_id(authorization: str | None = Header(default=None)) -> str:
     if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or malformed Authorization header")
+        raise HTTPException(
+            status_code=401, detail="Missing or malformed Authorization header"
+        )
     token = authorization.removeprefix("Bearer ").strip()
     if not token:
         raise HTTPException(status_code=401, detail="Missing bearer token")
@@ -44,7 +46,10 @@ async def get_current_user_id(authorization: str | None = Header(default=None)) 
     async with httpx.AsyncClient() as client:
         resp = await client.get(
             f"{SUPABASE_URL}/auth/v1/user",
-            headers={"apikey": SUPABASE_SERVICE_ROLE_KEY, "Authorization": f"Bearer {token}"},
+            headers={
+                "apikey": SUPABASE_SERVICE_ROLE_KEY,
+                "Authorization": f"Bearer {token}",
+            },
             timeout=10.0,
         )
     if resp.status_code != 200:

@@ -5,7 +5,10 @@ import json
 import typer
 
 from scrooner_pipeline.db.connection import get_connection
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.pilot import (
     DEFAULT_DATABASE_LIMIT_BYTES,
     evaluate_readiness,
@@ -21,7 +24,9 @@ app = typer.Typer()
 @app.command()
 def preflight(
     target: int = typer.Option(100, min=1, help="Desired number of pilot companies."),
-    database_limit_mb: int = typer.Option(500, min=1, help="Current database capacity limit."),
+    database_limit_mb: int = typer.Option(
+        500, min=1, help="Current database capacity limit."
+    ),
 ) -> None:
     """Fail closed unless universe, payload, quality, and capacity gates pass."""
     with get_connection() as conn:
@@ -32,13 +37,19 @@ def preflight(
         target=target,
         database_limit_bytes=database_limit_mb * 1024 * 1024,
     )
-    typer.echo(json.dumps({
-        "inventory": inventory.__dict__,
-        "ready": readiness.ready,
-        "blockers": readiness.blockers,
-        "projected_database_size_bytes": readiness.projected_database_size_bytes,
-        "database_limit_bytes": readiness.database_limit_bytes,
-    }, default=str, indent=2))
+    typer.echo(
+        json.dumps(
+            {
+                "inventory": inventory.__dict__,
+                "ready": readiness.ready,
+                "blockers": readiness.blockers,
+                "projected_database_size_bytes": readiness.projected_database_size_bytes,
+                "database_limit_bytes": readiness.database_limit_bytes,
+            },
+            default=str,
+            indent=2,
+        )
+    )
     if not readiness.ready:
         raise typer.Exit(1)
 
@@ -108,13 +119,23 @@ def mapping_preflight(
     with SupabaseStorageClient() as storage:
         for cik, storage_path in paths:
             try:
-                payloads[cik] = json.loads(storage.download(strip_bucket_prefix(storage_path)))
+                payloads[cik] = json.loads(
+                    storage.download(strip_bucket_prefix(storage_path))
+                )
             except Exception as exc:
-                failures.append({"cik": cik, "error_type": type(exc).__name__, "message": str(exc)[:300]})
+                failures.append(
+                    {
+                        "cik": cik,
+                        "error_type": type(exc).__name__,
+                        "message": str(exc)[:300],
+                    }
+                )
 
     report = mapped_tag_presence(payloads)
     report["requested"] = len(paths)
-    report["cohort"] = "eligible_stratified_sample" if eligible_sample else "cik_ordered_inventory"
+    report["cohort"] = (
+        "eligible_stratified_sample" if eligible_sample else "cik_ordered_inventory"
+    )
     if eligible_sample:
         report["ciks"] = target_ciks
     report["download_failures"] = failures

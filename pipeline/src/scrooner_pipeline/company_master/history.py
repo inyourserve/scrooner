@@ -33,7 +33,10 @@ from datetime import date, datetime
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 
 logger = structlog.get_logger()
 
@@ -95,8 +98,16 @@ def build_name_history(payload: dict) -> list[dict]:
     current_from = None
     if rows:
         # Current name interval opens where the last former name's interval closed.
-        current_from = max((r["effective_to"] for r in rows if r["effective_to"]), default=None)
-    rows.append({"company_name": payload["name"], "effective_from": current_from, "effective_to": None})
+        current_from = max(
+            (r["effective_to"] for r in rows if r["effective_to"]), default=None
+        )
+    rows.append(
+        {
+            "company_name": payload["name"],
+            "effective_from": current_from,
+            "effective_to": None,
+        }
+    )
     return rows
 
 
@@ -172,11 +183,15 @@ def candidate_ticker_proxy_date(name_history: list[dict]) -> date | None:
     CONFIRMED_TICKER_PROXY_CIKS. Always computed and logged so a future
     reviewer has something concrete to confirm or reject, per doc 11's own
     'rank automatically, accept manually' pattern."""
-    closed_intervals = [r["effective_to"] for r in name_history if r["effective_to"] is not None]
+    closed_intervals = [
+        r["effective_to"] for r in name_history if r["effective_to"] is not None
+    ]
     return max(closed_intervals) if closed_intervals else None
 
 
-def apply_confirmed_ticker_proxy(ticker_dating: dict[str, dict], cik: str, candidate_date: date | None) -> None:
+def apply_confirmed_ticker_proxy(
+    ticker_dating: dict[str, dict], cik: str, candidate_date: date | None
+) -> None:
     if candidate_date is None or cik not in CONFIRMED_TICKER_PROXY_CIKS:
         return
     for ticker, info in ticker_dating.items():
@@ -185,7 +200,9 @@ def apply_confirmed_ticker_proxy(ticker_dating: dict[str, dict], cik: str, candi
             info["source"] = "former_names_backfill"
 
 
-def upsert_name_history(conn: psycopg.Connection, company_id: int, rows: list[dict]) -> int:
+def upsert_name_history(
+    conn: psycopg.Connection, company_id: int, rows: list[dict]
+) -> int:
     """Delete-then-reinsert per company, not ON CONFLICT -- found live
     2026-08-16: SQL's NULL != NULL means `on conflict (company_id,
     company_name, effective_from)` never matches a row whose
@@ -207,13 +224,18 @@ def upsert_name_history(conn: psycopg.Connection, company_id: int, rows: list[di
         # same-key rows are the same historical fact, not real data loss.
         if existing is None or (
             r["effective_to"] is None
-            or (existing["effective_to"] is not None and r["effective_to"] > existing["effective_to"])
+            or (
+                existing["effective_to"] is not None
+                and r["effective_to"] > existing["effective_to"]
+            )
         ):
             deduped[key] = r
     rows = list(deduped.values())
 
     with conn.cursor() as cur:
-        cur.execute("delete from core.company_name_history where company_id = %s", (company_id,))
+        cur.execute(
+            "delete from core.company_name_history where company_id = %s", (company_id,)
+        )
         if rows:
             cur.executemany(
                 """
@@ -226,7 +248,9 @@ def upsert_name_history(conn: psycopg.Connection, company_id: int, rows: list[di
     return len(rows)
 
 
-def update_listing_dating(conn: psycopg.Connection, company_id: int, ticker_dating: dict[str, dict]) -> int:
+def update_listing_dating(
+    conn: psycopg.Connection, company_id: int, ticker_dating: dict[str, dict]
+) -> int:
     if not ticker_dating:
         return 0
     with conn.cursor() as cur:
@@ -238,18 +262,25 @@ def update_listing_dating(conn: psycopg.Connection, company_id: int, ticker_dati
                    source = %(source)s
              where company_id = %(company_id)s and ticker = %(ticker)s
             """,
-            [{"company_id": company_id, "ticker": t, **info} for t, info in ticker_dating.items()],
+            [
+                {"company_id": company_id, "ticker": t, **info}
+                for t, info in ticker_dating.items()
+            ],
         )
     conn.commit()
     return len(ticker_dating)
 
 
-def update_history_for_cik(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict:
+def update_history_for_cik(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict:
     snapshot_paths = _base_submission_snapshots(conn, cik)
     if not snapshot_paths:
         return {"cik": cik, "status": "no_data"}
 
-    snapshots = [(fetched_at, _load_json(storage, path)) for fetched_at, path in snapshot_paths]
+    snapshots = [
+        (fetched_at, _load_json(storage, path)) for fetched_at, path in snapshot_paths
+    ]
     latest_payload = snapshots[-1][1]
 
     with conn.cursor() as cur:
@@ -278,7 +309,12 @@ def update_history_for_cik(storage: SupabaseStorageClient, conn: psycopg.Connect
         ticker_proxy_candidate_date=str(candidate_date) if candidate_date else None,
         ticker_proxy_applied=cik in CONFIRMED_TICKER_PROXY_CIKS,
     )
-    return {"cik": cik, "status": "ok", "name_history_rows": name_rows, "listing_rows": listing_rows}
+    return {
+        "cik": cik,
+        "status": "ok",
+        "name_history_rows": name_rows,
+        "listing_rows": listing_rows,
+    }
 
 
 def update_history(conn: psycopg.Connection, ciks: set[str]) -> dict:

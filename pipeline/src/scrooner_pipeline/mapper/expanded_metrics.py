@@ -63,35 +63,52 @@ FULL_YEAR_MIN_DAYS, FULL_YEAR_MAX_DAYS = 350, 380
 # dividend_yield ended up at a genuine 0% company-wide after several
 # reruns today, even though calculate-price-metrics had computed them
 # correctly hours earlier. The delete must only ever touch this set.
-OUTPUT_METRIC_NAMES = frozenset({
-    "net_debt_ebitda", "ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield",
-    "total_shareholder_yield", "institutional_ownership_pct", "share_dilution_trend",
-    "cash_conversion_cycle",
-    # Added 2026-09-05 (financials display spec gap-fill).
-    "ebitda_margin", "debt_to_ebitda", "fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf",
-    # Added 2026-09-08 (Data Sanity Layer finding): a TTM `ebitda` row,
-    # NOT a new dependency conflict with the comment above -- `ebitda`'s
-    # Q1-Q4/FY rows (calculate.py's own output) are untouched, since the
-    # delete below is scoped to period_label='TTM' only, which no other
-    # writer has ever produced for this metric_definition_id. Real bug
-    # found live: yfinance's ebitda ($168.0B for AAPL) matched
-    # _ebitda_ttm()'s own already-correct sum of 4 quarters ($167.96B)
-    # almost exactly, but that sum was never persisted anywhere reachable
-    # -- every other consumer (and the sanity layer's "most recent
-    # period" query) could only see a single quarter's ebitda ($39.0B),
-    # a ~4x understatement that looked like a data bug but was actually
-    # a missing row. See doc/learnings/2026-09-08-data-sanity-layer.md.
-    "ebitda",
-})
+OUTPUT_METRIC_NAMES = frozenset(
+    {
+        "net_debt_ebitda",
+        "ev_ebitda",
+        "ev_sales",
+        "peg_ratio",
+        "buyback_yield",
+        "total_shareholder_yield",
+        "institutional_ownership_pct",
+        "share_dilution_trend",
+        "cash_conversion_cycle",
+        # Added 2026-09-05 (financials display spec gap-fill).
+        "ebitda_margin",
+        "debt_to_ebitda",
+        "fcf_per_share",
+        "share_repurchases_pct_fcf",
+        "dividends_pct_fcf",
+        # Added 2026-09-08 (Data Sanity Layer finding): a TTM `ebitda` row,
+        # NOT a new dependency conflict with the comment above -- `ebitda`'s
+        # Q1-Q4/FY rows (calculate.py's own output) are untouched, since the
+        # delete below is scoped to period_label='TTM' only, which no other
+        # writer has ever produced for this metric_definition_id. Real bug
+        # found live: yfinance's ebitda ($168.0B for AAPL) matched
+        # _ebitda_ttm()'s own already-correct sum of 4 quarters ($167.96B)
+        # almost exactly, but that sum was never persisted anywhere reachable
+        # -- every other consumer (and the sanity layer's "most recent
+        # period" query) could only see a single quarter's ebitda ($39.0B),
+        # a ~4x understatement that looked like a data bug but was actually
+        # a missing row. See doc/learnings/2026-09-08-data-sanity-layer.md.
+        "ebitda",
+    }
+)
 
 
 def _load_concept_ids(conn: psycopg.Connection, names: set[str]) -> dict[str, int]:
     with conn.cursor() as cur:
-        cur.execute("select name, id from analytics.canonical_concept where name = any(%s)", (sorted(names),))
+        cur.execute(
+            "select name, id from analytics.canonical_concept where name = any(%s)",
+            (sorted(names),),
+        )
         return dict(cur.fetchall())
 
 
-def _latest_metric_value(conn: psycopg.Connection, company_id: int, metric_definition_id: int) -> Decimal | None:
+def _latest_metric_value(
+    conn: psycopg.Connection, company_id: int, metric_definition_id: int
+) -> Decimal | None:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -106,7 +123,9 @@ def _latest_metric_value(conn: psycopg.Connection, company_id: int, metric_defin
         return row[0] if row else None
 
 
-def _ebitda_ttm(conn: psycopg.Connection, company_id: int, ebitda_metric_id: int) -> Decimal | None:
+def _ebitda_ttm(
+    conn: psycopg.Connection, company_id: int, ebitda_metric_id: int
+) -> Decimal | None:
     """Sum of the 4 most recent quarterly `ebitda` metric_value rows --
     same trailing-quarter idea as price_metrics.py's TTM concepts, but
     over metric_value (ebitda is a metric, not a canonical_fact concept),
@@ -130,7 +149,9 @@ def _ebitda_ttm(conn: psycopg.Connection, company_id: int, ebitda_metric_id: int
     return sum(value for value, _end in rows)
 
 
-def _fcf_ttm(conn: psycopg.Connection, company_id: int, fcf_metric_id: int) -> Decimal | None:
+def _fcf_ttm(
+    conn: psycopg.Connection, company_id: int, fcf_metric_id: int
+) -> Decimal | None:
     """Sum of the 4 most recent quarterly `fcf` metric_value rows --
     identical shape to _ebitda_ttm above (fcf is also a metric, not a
     canonical_fact concept), added 2026-09-05 for fcf_per_share/
@@ -174,7 +195,11 @@ def _shares_outstanding_now_and_1y_ago(
             where cf.company_id = %s and cf.canonical_concept_id = %s and p.end_date <= %s
             order by p.end_date desc
             """,
-            (company_id, shares_concept_id, now_end - timedelta(days=FULL_YEAR_MIN_DAYS)),
+            (
+                company_id,
+                shares_concept_id,
+                now_end - timedelta(days=FULL_YEAR_MIN_DAYS),
+            ),
         )
         for value, end in cur.fetchall():
             age_days = (now_end - end).days
@@ -183,7 +208,9 @@ def _shares_outstanding_now_and_1y_ago(
     return now_value, None
 
 
-def _institutional_ownership_shares(conn: psycopg.Connection, company_id: int) -> Decimal | None:
+def _institutional_ownership_shares(
+    conn: psycopg.Connection, company_id: int
+) -> Decimal | None:
     """Sum of Form 13F holdings for the single most recent reporting
     window, deduped per FILER (by filer_cik, not filer_name text) and
     per FILING (by accession_number, preferring an amendment over the
@@ -256,7 +283,12 @@ def _institutional_ownership_shares(conn: psycopg.Connection, company_id: int) -
         return row[0] if row and row[0] is not None else None
 
 
-def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:
+def calculate_expanded_metrics_for_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_ids: dict[str, int],
+    concept_ids: dict[str, int],
+) -> dict:
     # These are all "as of now" composite metrics (some price-dependent,
     # some not) -- anchored on today's date, same "as-of" framing
     # price_metrics.py uses its own price_date for. metric_value's
@@ -282,8 +314,16 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     # prefers the combined LongTermDebt tag, falls back to the summed
     # split tags (LongTermDebtCurrent+LongTermDebtNoncurrent) when the
     # combined tag is absent. See mapper/concept_fallback.py.
-    total_debt_hit = _latest_instant_fact(conn, company_id, concept_ids["total_debt_resolved"]) if "total_debt_resolved" in concept_ids else None
-    cash_hit = _latest_instant_fact(conn, company_id, concept_ids["cash_and_equivalents"]) if "cash_and_equivalents" in concept_ids else None
+    total_debt_hit = (
+        _latest_instant_fact(conn, company_id, concept_ids["total_debt_resolved"])
+        if "total_debt_resolved" in concept_ids
+        else None
+    )
+    cash_hit = (
+        _latest_instant_fact(conn, company_id, concept_ids["cash_and_equivalents"])
+        if "cash_and_equivalents" in concept_ids
+        else None
+    )
     ebitda_ttm = _ebitda_ttm(conn, company_id, metric_ids["ebitda"])
     market_cap = _latest_metric_value(conn, company_id, metric_ids["market_cap"])
 
@@ -291,7 +331,13 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     # every call but never stored, so any OTHER reader (the Data Sanity
     # Layer, a future feature, a human debugging) could only see a single
     # quarter's ebitda via metric_value's own "most recent period" rule.
-    rows.append(_row("ebitda", ebitda_ttm, None if ebitda_ttm is not None else "missing:4_consecutive_quarters"))
+    rows.append(
+        _row(
+            "ebitda",
+            ebitda_ttm,
+            None if ebitda_ttm is not None else "missing:4_consecutive_quarters",
+        )
+    )
 
     # Net Debt / EBITDA -- price-independent
     if total_debt_hit is None or cash_hit is None:
@@ -313,16 +359,36 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     # implicitly via duplication, once inside the price-dependent block);
     # consolidated into one fetch each to avoid the drift risk of two
     # separate queries silently disagreeing.
-    revenue_q = _load_quarterly_facts(conn, company_id, concept_ids["revenue"]) if "revenue" in concept_ids else {}
+    revenue_q = (
+        _load_quarterly_facts(conn, company_id, concept_ids["revenue"])
+        if "revenue" in concept_ids
+        else {}
+    )
     revenue_anchor = _latest_quarter(revenue_q)
-    revenue_ttm, _revenue_fids = _ttm_sum(revenue_q, *revenue_anchor) if revenue_anchor else (None, [])
-    fcf_ttm = _fcf_ttm(conn, company_id, metric_ids["fcf"]) if "fcf" in metric_ids else None
-    buybacks_q = _load_quarterly_facts(conn, company_id, concept_ids["share_buybacks"]) if "share_buybacks" in concept_ids else {}
+    revenue_ttm, _revenue_fids = (
+        _ttm_sum(revenue_q, *revenue_anchor) if revenue_anchor else (None, [])
+    )
+    fcf_ttm = (
+        _fcf_ttm(conn, company_id, metric_ids["fcf"]) if "fcf" in metric_ids else None
+    )
+    buybacks_q = (
+        _load_quarterly_facts(conn, company_id, concept_ids["share_buybacks"])
+        if "share_buybacks" in concept_ids
+        else {}
+    )
     buybacks_anchor = _latest_quarter(buybacks_q)
-    buybacks_ttm, _buybacks_fids = _ttm_sum(buybacks_q, *buybacks_anchor) if buybacks_anchor else (None, [])
-    dividends_q = _load_quarterly_facts(conn, company_id, concept_ids["dividends_paid"]) if "dividends_paid" in concept_ids else {}
+    buybacks_ttm, _buybacks_fids = (
+        _ttm_sum(buybacks_q, *buybacks_anchor) if buybacks_anchor else (None, [])
+    )
+    dividends_q = (
+        _load_quarterly_facts(conn, company_id, concept_ids["dividends_paid"])
+        if "dividends_paid" in concept_ids
+        else {}
+    )
     dividends_anchor = _latest_quarter(dividends_q)
-    dividends_ttm, _dividends_fids = _ttm_sum(dividends_q, *dividends_anchor) if dividends_anchor else (None, [])
+    dividends_ttm, _dividends_fids = (
+        _ttm_sum(dividends_q, *dividends_anchor) if dividends_anchor else (None, [])
+    )
 
     # EBITDA Margin = EBITDA (TTM) / Revenue (TTM)
     if ebitda_ttm is None:
@@ -354,9 +420,21 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     # not guaranteed to be the exact same fiscal year across all three
     # if one input is missing for the latest year but present for an
     # earlier one; is_null_reason below flags exactly which is missing.
-    debtor_days = _latest_metric_value(conn, company_id, metric_ids["debtor_days"]) if "debtor_days" in metric_ids else None
-    inventory_days = _latest_metric_value(conn, company_id, metric_ids["inventory_days"]) if "inventory_days" in metric_ids else None
-    payables_days = _latest_metric_value(conn, company_id, metric_ids["payables_days"]) if "payables_days" in metric_ids else None
+    debtor_days = (
+        _latest_metric_value(conn, company_id, metric_ids["debtor_days"])
+        if "debtor_days" in metric_ids
+        else None
+    )
+    inventory_days = (
+        _latest_metric_value(conn, company_id, metric_ids["inventory_days"])
+        if "inventory_days" in metric_ids
+        else None
+    )
+    payables_days = (
+        _latest_metric_value(conn, company_id, metric_ids["payables_days"])
+        if "payables_days" in metric_ids
+        else None
+    )
     if debtor_days is None:
         rows.append(_row("cash_conversion_cycle", None, "missing:debtor_days"))
     elif inventory_days is None:
@@ -364,7 +442,13 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     elif payables_days is None:
         rows.append(_row("cash_conversion_cycle", None, "missing:payables_days"))
     else:
-        rows.append(_row("cash_conversion_cycle", debtor_days + inventory_days - payables_days, None))
+        rows.append(
+            _row(
+                "cash_conversion_cycle",
+                debtor_days + inventory_days - payables_days,
+                None,
+            )
+        )
 
     # Institutional Ownership % -- price-independent, needs shares_outstanding
     # (same instant-fact + cover-page-fallback resolution price_metrics.py
@@ -372,15 +456,21 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     inst_shares = _institutional_ownership_shares(conn, company_id)
     shares_out_value = None
     if "shares_outstanding" in concept_ids:
-        shares_out_hit = _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"])
+        shares_out_hit = _latest_instant_fact(
+            conn, company_id, concept_ids["shares_outstanding"]
+        )
         shares_out_value = shares_out_hit[0] if shares_out_hit else None
         if shares_out_value is None:
             fallback = _load_shares_outstanding_fallback(conn, company_id)
             shares_out_value = fallback[0] if fallback else None
     if inst_shares is None:
-        rows.append(_row("institutional_ownership_pct", None, "missing:institutional_holdings"))
+        rows.append(
+            _row("institutional_ownership_pct", None, "missing:institutional_holdings")
+        )
     elif shares_out_value is None:
-        rows.append(_row("institutional_ownership_pct", None, "missing:shares_outstanding"))
+        rows.append(
+            _row("institutional_ownership_pct", None, "missing:shares_outstanding")
+        )
     elif shares_out_value == 0:
         rows.append(_row("institutional_ownership_pct", None, "zero_denominator"))
     elif inst_shares > shares_out_value:
@@ -398,15 +488,25 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
         # Null with a clear, distinct reason rather than silently show a
         # number that's definitionally impossible -- the shares_outstanding
         # resolution gap itself is a separate, not-yet-fixed problem.
-        rows.append(_row("institutional_ownership_pct", None, "implausible:institutional_shares_exceed_shares_outstanding"))
+        rows.append(
+            _row(
+                "institutional_ownership_pct",
+                None,
+                "implausible:institutional_shares_exceed_shares_outstanding",
+            )
+        )
     else:
-        rows.append(_row("institutional_ownership_pct", inst_shares / shares_out_value, None))
+        rows.append(
+            _row("institutional_ownership_pct", inst_shares / shares_out_value, None)
+        )
 
     # Share Count Dilution Trend -- price-independent, reused below for
     # Total Shareholder Yield rather than recomputed a second time.
     shares_now, shares_1y_ago = (None, None)
     if "shares_outstanding" in concept_ids:
-        shares_now, shares_1y_ago = _shares_outstanding_now_and_1y_ago(conn, company_id, concept_ids["shares_outstanding"])
+        shares_now, shares_1y_ago = _shares_outstanding_now_and_1y_ago(
+            conn, company_id, concept_ids["shares_outstanding"]
+        )
     dilution = None
     if shares_now is not None and shares_1y_ago not in (None, 0):
         dilution = (shares_now - shares_1y_ago) / shares_1y_ago
@@ -431,7 +531,9 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
     # Share Repurchases % of FCF -- what fraction of real cash generation
     # went to buybacks, distinct from buyback_yield (buybacks / Market Cap).
     if buybacks_ttm is None:
-        rows.append(_row("share_repurchases_pct_fcf", None, "missing:share_buybacks_ttm"))
+        rows.append(
+            _row("share_repurchases_pct_fcf", None, "missing:share_buybacks_ttm")
+        )
     elif fcf_ttm is None:
         rows.append(_row("share_repurchases_pct_fcf", None, "missing:fcf_ttm"))
     elif fcf_ttm == 0:
@@ -452,7 +554,13 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
 
     # Everything below genuinely needs Market Cap (price-dependent)
     if market_cap is None:
-        for m in ("ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield", "total_shareholder_yield"):
+        for m in (
+            "ev_ebitda",
+            "ev_sales",
+            "peg_ratio",
+            "buyback_yield",
+            "total_shareholder_yield",
+        ):
             rows.append(_row(m, None, "missing:market_cap"))
     else:
         enterprise_value = market_cap
@@ -460,7 +568,11 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
             enterprise_value += total_debt_hit[0]
         if cash_hit is not None:
             enterprise_value -= cash_hit[0]
-        ev_reason = None if (total_debt_hit is not None and cash_hit is not None) else "partial:missing_debt_or_cash"
+        ev_reason = (
+            None
+            if (total_debt_hit is not None and cash_hit is not None)
+            else "partial:missing_debt_or_cash"
+        )
 
         # EV/EBITDA
         if ebitda_ttm is None:
@@ -480,7 +592,9 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
 
         # PEG = Trailing P/E / EPS Growth Rate (as a percentage number)
         trailing_pe = _latest_metric_value(conn, company_id, metric_ids["trailing_pe"])
-        eps_growth = _latest_metric_value(conn, company_id, metric_ids["eps_growth_yoy"])
+        eps_growth = _latest_metric_value(
+            conn, company_id, metric_ids["eps_growth_yoy"]
+        )
         if trailing_pe is None:
             rows.append(_row("peg_ratio", None, "missing:trailing_pe"))
         elif eps_growth is None:
@@ -525,11 +639,27 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
         if market_cap == 0:
             rows.append(_row("total_shareholder_yield", None, "zero_denominator"))
         elif dilution is None:
-            rows.append(_row("total_shareholder_yield", None, "missing:share_count_1y_ago"))
+            rows.append(
+                _row("total_shareholder_yield", None, "missing:share_count_1y_ago")
+            )
         else:
-            dividend_contribution = (dividends_ttm / market_cap) if dividends_ttm is not None else Decimal("0")
-            buyback_contribution = (buybacks_ttm / market_cap) if buybacks_ttm is not None else Decimal("0")
-            rows.append(_row("total_shareholder_yield", dividend_contribution + buyback_contribution - dilution, None))
+            dividend_contribution = (
+                (dividends_ttm / market_cap)
+                if dividends_ttm is not None
+                else Decimal("0")
+            )
+            buyback_contribution = (
+                (buybacks_ttm / market_cap)
+                if buybacks_ttm is not None
+                else Decimal("0")
+            )
+            rows.append(
+                _row(
+                    "total_shareholder_yield",
+                    dividend_contribution + buyback_contribution - dilution,
+                    None,
+                )
+            )
 
     with conn.cursor() as cur:
         # Upsert, not delete-then-insert -- found live 2026-09-09/10: this
@@ -569,34 +699,79 @@ def calculate_expanded_metrics_for_company(conn: psycopg.Connection, company_id:
 
     computed = sum(1 for r in rows if r["value"] is not None)
     null = sum(1 for r in rows if r["value"] is None)
-    logger.info("expanded_metrics.company_done", company_id=company_id, computed=computed, null=null)
+    logger.info(
+        "expanded_metrics.company_done",
+        company_id=company_id,
+        computed=computed,
+        null=null,
+    )
     return {"computed": computed, "null": null}
 
 
 def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    metric_names = ["net_debt_ebitda", "ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield", "total_shareholder_yield",
-                     "institutional_ownership_pct", "share_dilution_trend", "cash_conversion_cycle",
-                     "debtor_days", "inventory_days", "payables_days",
-                     "ebitda", "market_cap", "trailing_pe", "eps_growth_yoy", "dividend_yield",
-                     # Added 2026-09-05 (financials display spec gap-fill): fcf (input,
-                     # via _fcf_ttm) plus the 5 new output metrics.
-                     "fcf", "ebitda_margin", "debt_to_ebitda", "fcf_per_share",
-                     "share_repurchases_pct_fcf", "dividends_pct_fcf"]
+    metric_names = [
+        "net_debt_ebitda",
+        "ev_ebitda",
+        "ev_sales",
+        "peg_ratio",
+        "buyback_yield",
+        "total_shareholder_yield",
+        "institutional_ownership_pct",
+        "share_dilution_trend",
+        "cash_conversion_cycle",
+        "debtor_days",
+        "inventory_days",
+        "payables_days",
+        "ebitda",
+        "market_cap",
+        "trailing_pe",
+        "eps_growth_yoy",
+        "dividend_yield",
+        # Added 2026-09-05 (financials display spec gap-fill): fcf (input,
+        # via _fcf_ttm) plus the 5 new output metrics.
+        "fcf",
+        "ebitda_margin",
+        "debt_to_ebitda",
+        "fcf_per_share",
+        "share_repurchases_pct_fcf",
+        "dividends_pct_fcf",
+    ]
     with conn.cursor() as cur:
-        cur.execute("select metric_name, id from analytics.metric_definition where metric_name = any(%s)", (metric_names,))
+        cur.execute(
+            "select metric_name, id from analytics.metric_definition where metric_name = any(%s)",
+            (metric_names,),
+        )
         metric_ids = dict(cur.fetchall())
     concept_ids = _load_concept_ids(
-        conn, {"total_debt_resolved", "cash_and_equivalents", "revenue", "share_buybacks", "shares_outstanding",
-               "dividends_paid"}
+        conn,
+        {
+            "total_debt_resolved",
+            "cash_and_equivalents",
+            "revenue",
+            "share_buybacks",
+            "shares_outstanding",
+            "dividends_paid",
+        },
     )
 
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    output_metric_ids = {k: v for k, v in metric_ids.items() if k in OUTPUT_METRIC_NAMES}
+    output_metric_ids = {
+        k: v for k, v in metric_ids.items() if k in OUTPUT_METRIC_NAMES
+    }
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -604,7 +779,9 @@ def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict
             totals["no_company"] += 1
             continue
         try:
-            stats = calculate_expanded_metrics_for_company(conn, company_id, {**metric_ids, **output_metric_ids}, concept_ids)
+            stats = calculate_expanded_metrics_for_company(
+                conn, company_id, {**metric_ids, **output_metric_ids}, concept_ids
+            )
         except psycopg.OperationalError as exc:
             # Found live 2026-09-14/15: a Supabase pooler connection drop
             # mid-loop (this project's own documented, recurring, still-
@@ -616,7 +793,11 @@ def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict
             # nothing here ever replaced the connection object once it went
             # bad. Reconnect and keep going, same proven pattern as
             # company_master/yfinance_industry.py's _write_batch().
-            logger.warning("expanded_metrics.connection_dropped_reconnecting", cik=cik, exc_info=True)
+            logger.warning(
+                "expanded_metrics.connection_dropped_reconnecting",
+                cik=cik,
+                exc_info=True,
+            )
             conn = psycopg.connect(settings.database_url)
             totals["errored"] += 1
             try:

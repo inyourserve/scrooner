@@ -36,7 +36,10 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.errors import log_error
 from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST
 from scrooner_pipeline.normalizer.units import canonicalize_unit
@@ -57,7 +60,9 @@ def _parse_date(value: str) -> date:
     return datetime.strptime(value, "%Y-%m-%d").date()
 
 
-def _latest_companyfacts_object(conn: psycopg.Connection, cik: str) -> tuple[int, str] | None:
+def _latest_companyfacts_object(
+    conn: psycopg.Connection, cik: str
+) -> tuple[int, str] | None:
     with conn.cursor() as cur:
         cur.execute(
             "select id, storage_path from raw.sec_companyfacts where cik = %s order by fetched_at desc limit 1",
@@ -77,7 +82,10 @@ def _load_filing_lookup(conn: psycopg.Connection, company_id: int) -> dict[str, 
     """accession_number -> filing_id, for this company only (filings aren't
     shared across companies, unlike concept/unit)."""
     with conn.cursor() as cur:
-        cur.execute("select accession_number, id from core.filing where company_id = %s", (company_id,))
+        cur.execute(
+            "select accession_number, id from core.filing where company_id = %s",
+            (company_id,),
+        )
         return dict(cur.fetchall())
 
 
@@ -85,7 +93,8 @@ def _load_period_lookup(conn: psycopg.Connection, company_id: int) -> dict[tuple
     """(start_date, end_date, period_type) -> period_id, for this company."""
     with conn.cursor() as cur:
         cur.execute(
-            "select start_date, end_date, period_type, id from core.period where company_id = %s", (company_id,)
+            "select start_date, end_date, period_type, id from core.period where company_id = %s",
+            (company_id,),
         )
         return {(start, end, ptype): pid for start, end, ptype, pid in cur.fetchall()}
 
@@ -104,7 +113,9 @@ def _load_concept_lookup(conn: psycopg.Connection) -> dict[tuple[str, str], int]
         return {(taxonomy, tag): cid for taxonomy, tag, cid in cur.fetchall()}
 
 
-def upsert_concepts(conn: psycopg.Connection, pairs: set[tuple[str, str]]) -> dict[tuple[str, str], int]:
+def upsert_concepts(
+    conn: psycopg.Connection, pairs: set[tuple[str, str]]
+) -> dict[tuple[str, str], int]:
     if pairs:
         with conn.cursor() as cur:
             cur.executemany(
@@ -140,7 +151,9 @@ def extract_fact_rows(payload: dict) -> list[dict]:
     return rows
 
 
-def normalize_facts_for_cik(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict:
+def normalize_facts_for_cik(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict:
     company_id = _get_company_id(conn, cik)
     if company_id is None:
         logger.warning("facts.no_company_for_cik", cik=cik)
@@ -196,7 +209,12 @@ def normalize_facts_for_cik(storage: SupabaseStorageClient, conn: psycopg.Connec
             # exhaustively -- but never silently drop a fact over it.
             stats["skipped_period_not_found"] += 1
             logger.warning(
-                "facts.period_not_found", cik=cik, tag=r["tag"], start=r["start"], end=r["end"], type=period_type
+                "facts.period_not_found",
+                cik=cik,
+                tag=r["tag"],
+                start=r["start"],
+                end=r["end"],
+                type=period_type,
             )
             continue
 
@@ -271,5 +289,15 @@ def normalize_facts(conn: psycopg.Connection, ciks: set[str]) -> dict:
                 for k in totals:
                     totals[k] += result[k]
 
-    logger.info("facts.normalize.done", excluded=sorted(excluded_requested), errored=errored, **totals)
-    return {"excluded": sorted(excluded_requested), "errored": errored, "totals": totals, "per_cik": per_cik}
+    logger.info(
+        "facts.normalize.done",
+        excluded=sorted(excluded_requested),
+        errored=errored,
+        **totals,
+    )
+    return {
+        "excluded": sorted(excluded_requested),
+        "errored": errored,
+        "totals": totals,
+        "per_cik": per_cik,
+    }

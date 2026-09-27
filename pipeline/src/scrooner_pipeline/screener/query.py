@@ -51,7 +51,11 @@ import psycopg
 import structlog
 from psycopg import sql
 
-from scrooner_pipeline.screener.evaluate import evaluate_between, evaluate_comparison, rank_top_bottom
+from scrooner_pipeline.screener.evaluate import (
+    evaluate_between,
+    evaluate_comparison,
+    rank_top_bottom,
+)
 from scrooner_pipeline.screener.resolve import load_screenable_metric_catalog
 from scrooner_pipeline.screener.schema import (
     RANKED_OPERATORS,
@@ -65,7 +69,15 @@ from scrooner_pipeline.screener.snapshot import get_dataset_version
 logger = structlog.get_logger()
 
 
-_IDENTITY_FIELDS = ("cik", "company_name", "sic_code", "sic_description", "sector", "status", "ticker")
+_IDENTITY_FIELDS = (
+    "cik",
+    "company_name",
+    "sic_code",
+    "sic_description",
+    "sector",
+    "status",
+    "ticker",
+)
 
 
 def _select_snapshot_rows(
@@ -84,7 +96,9 @@ def _select_snapshot_rows(
     Every snapshot read goes through here, scoped to exactly one
     dataset_version -- since migration 0074 the table holds several
     versions side by side, so an unscoped read would mix generations."""
-    columns = [sql.Identifier("company_id")] + [sql.Identifier(f) for f in _IDENTITY_FIELDS]
+    columns = [sql.Identifier("company_id")] + [
+        sql.Identifier(f) for f in _IDENTITY_FIELDS
+    ]
     for name in metric_names:
         columns += [
             sql.Identifier(name),
@@ -92,9 +106,9 @@ def _select_snapshot_rows(
             sql.Identifier(f"{name}__period_end"),
             sql.Identifier(f"{name}__formula_version"),
         ]
-    statement = sql.SQL("select {} from analytics.company_screening_snapshot where dataset_version = %s").format(
-        sql.SQL(", ").join(columns)
-    )
+    statement = sql.SQL(
+        "select {} from analytics.company_screening_snapshot where dataset_version = %s"
+    ).format(sql.SQL(", ").join(columns))
     all_params: list = [dataset_version]
     if where_clause is not None:
         statement = sql.SQL("{} and ({})").format(statement, where_clause)
@@ -113,7 +127,9 @@ def _select_snapshot_rows(
         identity = dict(zip(_IDENTITY_FIELDS, row[1 : 1 + width]))
         metrics = {}
         for i, name in enumerate(metric_names):
-            value, period_label, period_end, formula_version = row[1 + width + i * 4 : 1 + width + i * 4 + 4]
+            value, period_label, period_end, formula_version = row[
+                1 + width + i * 4 : 1 + width + i * 4 + 4
+            ]
             if value is not None:
                 metrics[name] = {
                     "value": value,
@@ -132,7 +148,9 @@ def _metric_names_to_show(query: ScreenQuery) -> set[str]:
     so one formula serves both paths. The ranked name matters: found live
     2026-09-11, "top 5 by roic excluding financials" showed a null roic
     for every match when it was left out."""
-    names = {p.metric_name for p in query.metric_predicates} | set(query.display_metrics)
+    names = {p.metric_name for p in query.metric_predicates} | set(
+        query.display_metrics
+    )
     if query.where is not None:
         names |= _collect_metric_names(query.where)
     if query.sort_by:
@@ -147,9 +165,13 @@ def _is_inactive(status: str | None) -> bool:
     return status is not None and status != "active"
 
 
-def _apply_categorical_predicates(companies: dict[int, dict], predicates: list) -> dict[int, dict]:
+def _apply_categorical_predicates(
+    companies: dict[int, dict], predicates: list
+) -> dict[int, dict]:
     for pred in predicates:
-        companies = {cid: c for cid, c in companies.items() if c.get(pred.field) == pred.value}
+        companies = {
+            cid: c for cid, c in companies.items() if c.get(pred.field) == pred.value
+        }
     return companies
 
 
@@ -185,7 +207,9 @@ def _compile_node(node, catalog: dict) -> tuple[sql.Composable, list]:
 
     if isinstance(node, MetricPredicate):
         if node.metric_name not in catalog:
-            raise ValueError(f"unknown metric_name, not in the screenable catalog: {node.metric_name!r}")
+            raise ValueError(
+                f"unknown metric_name, not in the screenable catalog: {node.metric_name!r}"
+            )
         # node.metric_name is checked against the trusted catalog just
         # above (sourced from analytics.metric_definition, never raw user
         # input), so it's safe to use as a column identifier -- still
@@ -202,7 +226,9 @@ def _compile_node(node, catalog: dict) -> tuple[sql.Composable, list]:
             params += [node.value_range[0], node.value_range[1]]
         else:
             if node.operator not in {">", "<", ">=", "<=", "=", "!="}:
-                raise ValueError(f"operator not valid inside a boolean tree: {node.operator!r}")
+                raise ValueError(
+                    f"operator not valid inside a boolean tree: {node.operator!r}"
+                )
             clause = sql.SQL("{} " + node.operator + " %s").format(column)
             params.append(node.value)
         return clause, params
@@ -241,14 +267,20 @@ def run_query(
     if dataset_version is None:
         dataset_version = get_dataset_version(conn)
 
-    unknown = [p.metric_name for p in query.metric_predicates if p.metric_name not in catalog]
+    unknown = [
+        p.metric_name for p in query.metric_predicates if p.metric_name not in catalog
+    ]
     if query.sort_by and query.sort_by not in catalog:
         unknown.append(query.sort_by)
     unknown += [name for name in query.display_metrics if name not in catalog]
     if query.where is not None:
-        unknown += [name for name in _collect_metric_names(query.where) if name not in catalog]
+        unknown += [
+            name for name in _collect_metric_names(query.where) if name not in catalog
+        ]
     if unknown:
-        raise ValueError(f"unknown metric_name(s), not in the screenable catalog: {sorted(set(unknown))}")
+        raise ValueError(
+            f"unknown metric_name(s), not in the screenable catalog: {sorted(set(unknown))}"
+        )
 
     ranked = [p for p in query.metric_predicates if p.operator in RANKED_OPERATORS]
     excluded_missing_data: dict[int, dict] = {}
@@ -261,8 +293,12 @@ def run_query(
         if not query.include_inactive:
             # Inactive rows ride along in the same round trip so the
             # excluded_inactive list needs no query of its own.
-            where_clause = sql.SQL("status != 'active' or (status = 'active' and ({}))").format(where_clause)
-        rows = _select_snapshot_rows(conn, dataset_version, needed_names, where_clause, params)
+            where_clause = sql.SQL(
+                "status != 'active' or (status = 'active' and ({}))"
+            ).format(where_clause)
+        rows = _select_snapshot_rows(
+            conn, dataset_version, needed_names, where_clause, params
+        )
         exclusion_detail = (
             "per-predicate exclusion attribution is not available for boolean-tree "
             "('where') queries -- a company excluded by one branch may still match via "
@@ -271,9 +307,15 @@ def run_query(
     else:
         rows = _select_snapshot_rows(conn, dataset_version, needed_names)
 
-    excluded_inactive = [] if query.include_inactive else [i["cik"] for _, i, _ in rows if _is_inactive(i["status"])]
+    excluded_inactive = (
+        []
+        if query.include_inactive
+        else [i["cik"] for _, i, _ in rows if _is_inactive(i["status"])]
+    )
     resolved = {
-        (company_id, catalog[name]): data for company_id, _, metrics in rows for name, data in metrics.items()
+        (company_id, catalog[name]): data
+        for company_id, _, metrics in rows
+        for name, data in metrics.items()
     }
 
     if query.where is not None:
@@ -288,8 +330,12 @@ def run_query(
             for company_id, identity, _ in rows
             if query.include_inactive or identity["status"] == "active"
         }
-        companies = _apply_categorical_predicates(companies, query.categorical_predicates)
-        non_ranked = [p for p in query.metric_predicates if p.operator not in RANKED_OPERATORS]
+        companies = _apply_categorical_predicates(
+            companies, query.categorical_predicates
+        )
+        non_ranked = [
+            p for p in query.metric_predicates if p.operator not in RANKED_OPERATORS
+        ]
 
         surviving = dict(companies)
         for pred in non_ranked:
@@ -300,9 +346,16 @@ def run_query(
                 value = resolved_row["value"] if resolved_row else None
                 if value is None:
                     excluded_missing_data.setdefault(
-                        company_id, {"cik": info["cik"], "company_name": info["company_name"], "missing_metrics": []}
+                        company_id,
+                        {
+                            "cik": info["cik"],
+                            "company_name": info["company_name"],
+                            "missing_metrics": [],
+                        },
                     )
-                    excluded_missing_data[company_id]["missing_metrics"].append(pred.metric_name)
+                    excluded_missing_data[company_id]["missing_metrics"].append(
+                        pred.metric_name
+                    )
                     continue
                 if pred.operator == "between":
                     ok = evaluate_between(value, pred.value_range)
@@ -321,13 +374,22 @@ def run_query(
             value = resolved_row["value"] if resolved_row else None
             if value is None:
                 excluded_missing_data.setdefault(
-                    company_id, {"cik": info["cik"], "company_name": info["company_name"], "missing_metrics": []}
+                    company_id,
+                    {
+                        "cik": info["cik"],
+                        "company_name": info["company_name"],
+                        "missing_metrics": [],
+                    },
                 )
-                excluded_missing_data[company_id]["missing_metrics"].append(pred.metric_name)
+                excluded_missing_data[company_id]["missing_metrics"].append(
+                    pred.metric_name
+                )
                 continue
             candidates.append((info["cik"], value))
         ranked_ciks = set(rank_top_bottom(candidates, pred.operator, pred.n))
-        surviving = {cid: info for cid, info in surviving.items() if info["cik"] in ranked_ciks}
+        surviving = {
+            cid: info for cid, info in surviving.items() if info["cik"] in ranked_ciks
+        }
 
     matched = []
     for company_id, info in surviving.items():
@@ -346,8 +408,17 @@ def run_query(
 
     if query.sort_by:
         sort_metric_id = catalog[query.sort_by]
-        present = [m for m in matched if resolved.get((m["company_id"], sort_metric_id), {}).get("value") is not None]
-        missing = [m for m in matched if resolved.get((m["company_id"], sort_metric_id), {}).get("value") is None]
+        present = [
+            m
+            for m in matched
+            if resolved.get((m["company_id"], sort_metric_id), {}).get("value")
+            is not None
+        ]
+        missing = [
+            m
+            for m in matched
+            if resolved.get((m["company_id"], sort_metric_id), {}).get("value") is None
+        ]
         present.sort(key=lambda m: m["cik"])
         present.sort(
             key=lambda m: resolved[(m["company_id"], sort_metric_id)]["value"],
@@ -407,13 +478,19 @@ def load_screen_result_page(
     if not company_ids:
         return []
     names = sorted(_metric_names_to_show(query))
-    rows = _select_snapshot_rows(conn, dataset_version, names, sql.SQL("company_id = any(%s)"), [company_ids])
+    rows = _select_snapshot_rows(
+        conn, dataset_version, names, sql.SQL("company_id = any(%s)"), [company_ids]
+    )
     if not rows:
         # Every version holds the full company universe, so asking for
         # companies and getting none back means the version is gone.
         return None
     by_id = {company_id: (identity, metrics) for company_id, identity, metrics in rows}
     return [
-        {**by_id[company_id][0], "company_id": company_id, "metrics": by_id[company_id][1]}
+        {
+            **by_id[company_id][0],
+            "company_id": company_id,
+            "metrics": by_id[company_id][1],
+        }
         for company_id in company_ids
     ]

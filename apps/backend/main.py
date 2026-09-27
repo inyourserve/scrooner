@@ -12,6 +12,7 @@ from db_pool import close_pool, open_pool
 from observability import api_request_metrics, observe_http_request
 from routers import entitlement, saved_screens, screen, screen_runs
 
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     open_pool()

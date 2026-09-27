@@ -47,7 +47,15 @@ _DOMESTIC_FORMS = {"10-K", "10-K/A", "10-Q", "10-Q/A"}
 _FOREIGN_FORMS = {"20-F", "20-F/A"}
 _MJDS_FORMS = {"40-F", "40-F/A"}
 _REGISTERED_FUND_FORMS = {
-    "N-1A", "N-2", "N-3", "N-4", "N-6", "N-CSR", "N-CSRS", "N-PORT", "S-6"
+    "N-1A",
+    "N-2",
+    "N-3",
+    "N-4",
+    "N-6",
+    "N-CSR",
+    "N-CSRS",
+    "N-PORT",
+    "S-6",
 }
 
 
@@ -158,7 +166,9 @@ def evaluate_candidate(candidate: UniverseCandidate) -> UniverseDecision:
         reasons.append("excluded_company_delisted")
     elif candidate.company_status in {"stale", "unknown", None}:
         uncertain = True
-        reasons.append(f"uncertain_company_status:{candidate.company_status or 'missing'}")
+        reasons.append(
+            f"uncertain_company_status:{candidate.company_status or 'missing'}"
+        )
 
     if candidate.registered_fund_confirmed or regime == "registered_fund":
         excluded = True
@@ -242,31 +252,46 @@ def build_snapshot(candidates: Iterable[UniverseCandidate]) -> list[UniverseDeci
             by_company[decision.company_id].append(index)
 
     for indexes in by_company.values():
-        best_priority = min(exchange_priority(decisions[i].exchange) or 999 for i in indexes)
-        best = [i for i in indexes if exchange_priority(decisions[i].exchange) == best_priority]
+        best_priority = min(
+            exchange_priority(decisions[i].exchange) or 999 for i in indexes
+        )
+        best = [
+            i
+            for i in indexes
+            if exchange_priority(decisions[i].exchange) == best_priority
+        ]
         if len(best) == 1:
             primary_index = best[0]
             row = decisions[primary_index]
             decisions[primary_index] = replace(
                 row,
                 is_primary=True,
-                reason_codes=(*row.reason_codes, "primary_selected_by_exchange_priority"),
+                reason_codes=(
+                    *row.reason_codes,
+                    "primary_selected_by_exchange_priority",
+                ),
             )
             for index in indexes:
                 if index != primary_index:
                     row = decisions[index]
                     decisions[index] = replace(
-                        row, reason_codes=(*row.reason_codes, "eligible_secondary_listing")
+                        row,
+                        reason_codes=(*row.reason_codes, "eligible_secondary_listing"),
                     )
         else:
             for index in best:
                 row = decisions[index]
                 decisions[index] = replace(
                     row,
-                    reason_codes=(*row.reason_codes, "primary_ambiguous_multiple_share_classes"),
+                    reason_codes=(
+                        *row.reason_codes,
+                        "primary_ambiguous_multiple_share_classes",
+                    ),
                 )
 
-    return [replace(row, decision_order=index + 1) for index, row in enumerate(decisions)]
+    return [
+        replace(row, decision_order=index + 1) for index, row in enumerate(decisions)
+    ]
 
 
 def ensure_universe_identities(conn: psycopg.Connection) -> None:
@@ -353,7 +378,9 @@ def persist_snapshot(
             (as_of, POLICY_VERSION),
         )
         snapshot_id = cur.fetchone()[0]
-        cur.execute("delete from core.universe_member where snapshot_id = %s", (snapshot_id,))
+        cur.execute(
+            "delete from core.universe_member where snapshot_id = %s", (snapshot_id,)
+        )
         if decisions:
             cur.executemany(
                 """

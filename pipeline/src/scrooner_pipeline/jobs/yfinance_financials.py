@@ -12,14 +12,25 @@ from pathlib import Path
 import typer
 
 from scrooner_pipeline.db.connection import get_connection
-from scrooner_pipeline.yfinance_financials.fetch import fetch_and_store_statements, pick_rotation_batch
+from scrooner_pipeline.yfinance_financials.fetch import (
+    fetch_and_store_statements,
+    pick_rotation_batch,
+)
 from scrooner_pipeline.yfinance_financials.line_item_map import seed_line_item_mapping
-from scrooner_pipeline.yfinance_financials.compare import compare_statements, investigate_major_findings
+from scrooner_pipeline.yfinance_financials.compare import (
+    compare_statements,
+    investigate_major_findings,
+)
 from scrooner_pipeline.yfinance_financials.report import summarize, render_markdown
 
 app = typer.Typer()
 
-GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
+GOLDEN_COMPANIES_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tests"
+    / "golden_companies"
+    / "companies.json"
+)
 
 
 def _load_golden_company_ids(conn) -> list[int]:
@@ -41,11 +52,14 @@ def seed_line_item_mapping_cmd() -> None:
 
 @app.command("fetch-statements")
 def fetch_statements_cmd(
-    company_ids: str = typer.Option(None, help="Comma-separated company_ids to restrict to (default: golden-10)."),
+    company_ids: str = typer.Option(
+        None, help="Comma-separated company_ids to restrict to (default: golden-10)."
+    ),
     no_pacing: bool = typer.Option(
-        False, "--no-pacing",
+        False,
+        "--no-pacing",
         help="Skip yfinance's shared rate limiter and the rate-limit retry entirely for a fast 'try fast first' "
-             "pass. Always follow with a plain (paced) rerun over whatever's left un-fetched to clean up.",
+        "pass. Always follow with a plain (paced) rerun over whatever's left un-fetched to clean up.",
     ),
 ) -> None:
     """Fetches yfinance's quarterly income statement/balance sheet/cash
@@ -55,27 +69,39 @@ def fetch_statements_cmd(
     blindly at full-population scale, unless --no-pacing is given for a
     deliberate fast first pass (see fetch.py's module docstring)."""
     with get_connection() as conn:
-        target_ids = [int(c.strip()) for c in company_ids.split(",")] if company_ids else _load_golden_company_ids(conn)
+        target_ids = (
+            [int(c.strip()) for c in company_ids.split(",")]
+            if company_ids
+            else _load_golden_company_ids(conn)
+        )
         stats = fetch_and_store_statements(conn, target_ids, paced=not no_pacing)
     typer.echo(f"fetch-statements: {stats}")
 
 
 @app.command("compare")
 def compare_cmd(
-    company_ids: str = typer.Option(None, help="Comma-separated company_ids to restrict to (default: golden-10)."),
+    company_ids: str = typer.Option(
+        None, help="Comma-separated company_ids to restrict to (default: golden-10)."
+    ),
 ) -> None:
     """Compares stored yfinance statement lines against our own
     canonical_fact values (preferring a *_resolved concept where one
     exists), every available quarter, not just the latest."""
     with get_connection() as conn:
-        target_ids = [int(c.strip()) for c in company_ids.split(",")] if company_ids else _load_golden_company_ids(conn)
+        target_ids = (
+            [int(c.strip()) for c in company_ids.split(",")]
+            if company_ids
+            else _load_golden_company_ids(conn)
+        )
         stats = compare_statements(conn, target_ids)
     typer.echo(f"compare: {stats}")
 
 
 @app.command("daily-rotation")
 def daily_rotation_cmd(
-    limit: int = typer.Option(200, help="Companies to fetch+compare this run (rotates coldest-fetched-first)."),
+    limit: int = typer.Option(
+        200, help="Companies to fetch+compare this run (rotates coldest-fetched-first)."
+    ),
 ) -> None:
     """Added 2026-09-08 for the daily cron -- fetch-statements/compare
     previously had no rotation of their own (only an explicit
@@ -100,9 +126,10 @@ def daily_rotation_cmd(
 @app.command("investigate")
 def investigate_cmd(
     limit: int = typer.Option(
-        2000, help="Max findings to investigate this run, oldest first (unbounded blew the daily cron's "
-                    "timeout against an 18,972-finding backlog -- see investigate_major_findings()'s own "
-                    "docstring). Pass 0 for no limit (manual/local use only).",
+        2000,
+        help="Max findings to investigate this run, oldest first (unbounded blew the daily cron's "
+        "timeout against an 18,972-finding backlog -- see investigate_major_findings()'s own "
+        "docstring). Pass 0 for no limit (manual/local use only).",
     ),
 ) -> None:
     """Hands 'major' findings without an already-understood note to

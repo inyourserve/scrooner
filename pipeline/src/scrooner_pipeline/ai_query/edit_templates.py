@@ -18,7 +18,11 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from scrooner_pipeline.ai_query.aliases import METRIC_ALIASES
 from scrooner_pipeline.ai_query.interpreter import InterpretationResult
 from scrooner_pipeline.ai_query.normalizer import normalize_query_text
-from scrooner_pipeline.screener.schema import MetricPredicate, PredicateGroup, ScreenQuery
+from scrooner_pipeline.screener.schema import (
+    MetricPredicate,
+    PredicateGroup,
+    ScreenQuery,
+)
 
 
 _MAGNITUDES = {
@@ -62,18 +66,24 @@ def load_edit_templates() -> tuple[CompiledEditTemplate, ...]:
         raw_templates = json.loads(resource.read_text(encoding="utf-8"))
         templates = [StoredEditTemplate.model_validate(item) for item in raw_templates]
     except (OSError, json.JSONDecodeError, ValidationError, TypeError) as error:
-        raise RuntimeError("stored natural-language edit templates are invalid") from error
+        raise RuntimeError(
+            "stored natural-language edit templates are invalid"
+        ) from error
 
     ids = [template.id for template in templates]
     if len(ids) != len(set(ids)):
         raise RuntimeError("stored natural-language edit template IDs must be unique")
     try:
         return tuple(
-            CompiledEditTemplate(template.id, re.compile(template.pattern, re.IGNORECASE))
+            CompiledEditTemplate(
+                template.id, re.compile(template.pattern, re.IGNORECASE)
+            )
             for template in templates
         )
     except re.error as error:
-        raise RuntimeError("stored natural-language edit template regex is invalid") from error
+        raise RuntimeError(
+            "stored natural-language edit template regex is invalid"
+        ) from error
 
 
 def _parse_value(text: str) -> Decimal | None:
@@ -100,7 +110,14 @@ def _editable_predicates(query: ScreenQuery) -> list[MetricPredicate]:
     ]
 
     def visit(node: MetricPredicate | PredicateGroup | object) -> None:
-        if isinstance(node, MetricPredicate) and node.operator in {">", ">=", "<", "<=", "=", "!="}:
+        if isinstance(node, MetricPredicate) and node.operator in {
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "=",
+            "!=",
+        }:
             predicates.append(node)
         elif isinstance(node, PredicateGroup):
             for child in node.predicates:
@@ -114,16 +131,30 @@ def _editable_predicates(query: ScreenQuery) -> list[MetricPredicate]:
 def _replace_metric_value(value: object, metric_name: str, replacement: Decimal) -> int:
     """Mutate a model-dumped query tree and return the replacement count."""
     if isinstance(value, dict):
-        if value.get("metric_name") == metric_name and value.get("operator") in {">", ">=", "<", "<=", "=", "!="}:
+        if value.get("metric_name") == metric_name and value.get("operator") in {
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "=",
+            "!=",
+        }:
             value["value"] = replacement
             return 1
-        return sum(_replace_metric_value(child, metric_name, replacement) for child in value.values())
+        return sum(
+            _replace_metric_value(child, metric_name, replacement)
+            for child in value.values()
+        )
     if isinstance(value, list):
-        return sum(_replace_metric_value(child, metric_name, replacement) for child in value)
+        return sum(
+            _replace_metric_value(child, metric_name, replacement) for child in value
+        )
     return 0
 
 
-def interpret_edit(text: str, current_query: ScreenQuery) -> InterpretationResult | None:
+def interpret_edit(
+    text: str, current_query: ScreenQuery
+) -> InterpretationResult | None:
     """Apply a stored number-change template, or return ``None`` safely."""
     normalized = normalize_query_text(text)
     matched: re.Match[str] | None = None
@@ -151,7 +182,9 @@ def interpret_edit(text: str, current_query: ScreenQuery) -> InterpretationResul
         metric_name = METRIC_ALIASES.get(metric_phrase.strip().lower())
         if metric_name is None:
             return None
-        matching = [predicate for predicate in editable if predicate.metric_name == metric_name]
+        matching = [
+            predicate for predicate in editable if predicate.metric_name == metric_name
+        ]
         if len(matching) != 1:
             return None
 

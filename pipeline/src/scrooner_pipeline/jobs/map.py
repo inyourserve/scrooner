@@ -5,14 +5,25 @@ from pathlib import Path
 
 import typer
 
-from scrooner_pipeline.db.connection import get_connection, run_tolerating_exit_commit_failure
+from scrooner_pipeline.db.connection import (
+    get_connection,
+    run_tolerating_exit_commit_failure,
+)
 from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper.resolve import resolve
-from scrooner_pipeline.mapper.concept_fallback import resolve_fallbacks, resolve_all_arithmetic_fallbacks, resolve_employee_count_fallback
+from scrooner_pipeline.mapper.concept_fallback import (
+    resolve_fallbacks,
+    resolve_all_arithmetic_fallbacks,
+    resolve_employee_count_fallback,
+)
 from scrooner_pipeline.mapper.conflict_resolution import resolve_all_conflict_fills
-from scrooner_pipeline.mapper.ttm import compute_growth, compute_ttm_margins, compute_ttm_returns
+from scrooner_pipeline.mapper.ttm import (
+    compute_growth,
+    compute_ttm_margins,
+    compute_ttm_returns,
+)
 from scrooner_pipeline.mapper import validate as validate_module
 from scrooner_pipeline.statements.classify import seed as seed_statements
 from scrooner_pipeline.mapper.price_metrics import calculate_price_metrics
@@ -22,18 +33,35 @@ from scrooner_pipeline.mapper.expanded_metrics import calculate_expanded_metrics
 from scrooner_pipeline.mapper.quality_score import calculate_piotroski
 from scrooner_pipeline.mapper.quality_flags import calculate_quality_flags
 from scrooner_pipeline.mapper.reconciliation import calculate_reconciliation
-from scrooner_pipeline.mapper.coverage_matrix import build_registry, build_coverage, corrected_coverage_report
+from scrooner_pipeline.mapper.coverage_matrix import (
+    build_registry,
+    build_coverage,
+    corrected_coverage_report,
+)
 from scrooner_pipeline.mapper.tag_candidates import build_tag_candidates, report_status
 from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
 from scrooner_pipeline.mapper.coverage_snapshot import write_snapshot
-from scrooner_pipeline.parsers.main_parser import run_parser, resolve_parser_results, registry_summary, PARSER_REGISTRY
-from scrooner_pipeline.mapper.main_calculator import METRIC_CALCULATOR_REGISTRY, unregistered_metrics
+from scrooner_pipeline.parsers.main_parser import (
+    run_parser,
+    resolve_parser_results,
+    registry_summary,
+    PARSER_REGISTRY,
+)
+from scrooner_pipeline.mapper.main_calculator import (
+    METRIC_CALCULATOR_REGISTRY,
+    unregistered_metrics,
+)
 
 app = typer.Typer()
 
-GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
+GOLDEN_COMPANIES_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tests"
+    / "golden_companies"
+    / "companies.json"
+)
 
 
 def _load_golden_ciks() -> set[str]:
@@ -51,16 +79,24 @@ def seed_concepts_cmd() -> None:
 
 @app.command("coverage")
 def coverage_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
-    show_unresolved_only: bool = typer.Option(True, help="Only print rows that failed to resolve."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
+    show_unresolved_only: bool = typer.Option(
+        True, help="Only print rows that failed to resolve."
+    ),
 ) -> None:
     """Stage 3a coverage report: for every (company, canonical_concept), did
     at least one mapped tag resolve to real authoritative fact data?"""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         rows = coverage_report(conn, target_ciks)
     unresolved = [r for r in rows if not r["resolved"]]
-    typer.echo(f"{len(rows)} (company, concept) pairs checked; {len(unresolved)} unresolved")
+    typer.echo(
+        f"{len(rows)} (company, concept) pairs checked; {len(unresolved)} unresolved"
+    )
     to_print = unresolved if show_unresolved_only else rows
     for r in to_print:
         typer.echo(f"  {r}")
@@ -68,7 +104,10 @@ def coverage_cmd(
 
 @app.command("unmapped-tags")
 def unmapped_tags_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: every company with facts, not just golden)."),
+    ciks: str = typer.Option(
+        None,
+        help="Comma-separated CIKs to restrict to (default: every company with facts, not just golden).",
+    ),
     limit: int = typer.Option(50, help="Max tags to print."),
 ) -> None:
     """Coverage-gap discovery (doc 11's proposed, never-built Frames-API
@@ -80,18 +119,24 @@ def unmapped_tags_cmd(
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else None
     with get_connection() as conn:
         rows = unmapped_tag_report(conn, target_ciks, limit)
-    typer.echo(f"{len(rows)} unmapped tag(s) with real fact volume (top {limit} by fact_count)")
+    typer.echo(
+        f"{len(rows)} unmapped tag(s) with real fact volume (top {limit} by fact_count)"
+    )
     for r in rows:
         typer.echo(f"  {r}")
 
 
 @app.command("resolve-facts")
 def resolve_facts_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 3b: apply concept_mapping to core.fact, populate
     analytics.canonical_fact. Requires Stage 3a (seed-concepts) to have run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = resolve(conn, target_ciks)
     typer.echo(f"resolve-facts: {stats}")
@@ -99,14 +144,18 @@ def resolve_facts_cmd(
 
 @app.command("resolve-concept-fallbacks")
 def resolve_concept_fallbacks_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 40: prefer-A-else-B merge for concepts needing a safe fallback
     resolve.py's sum/first_match modes can't express (today: total_debt,
     see mapper/concept_fallback.py's own module docstring). Run AFTER
     resolve-facts (reads its output), BEFORE calculate/calculate-piotroski
     (they should consume the *_resolved concept, not the original)."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     # run_tolerating_exit_commit_failure: same shape as ownership.py's
     # update_beneficial_ownership_cmd fix (2026-09-16) -- the outer conn
     # can sit idle long enough for the Supabase pooler to drop it,
@@ -115,7 +164,8 @@ def resolve_concept_fallbacks_cmd(
     # and every company's own work already committed. Don't let that
     # crash a fully-successful run.
     stats = run_tolerating_exit_commit_failure(
-        "resolve_concept_fallbacks_cmd", lambda conn: resolve_fallbacks(conn, target_ciks)
+        "resolve_concept_fallbacks_cmd",
+        lambda conn: resolve_fallbacks(conn, target_ciks),
     )
     typer.echo(f"resolve-concept-fallbacks: {stats}")
 
@@ -139,7 +189,9 @@ def resolve_statement_fallbacks_cmd() -> None:
 
 @app.command("resolve-employee-count-fallback")
 def resolve_employee_count_fallback_cmd(
-    ciks: str = typer.Option(..., help="Comma-separated CIKs to restrict to -- no default, always explicit."),
+    ciks: str = typer.Option(
+        ..., help="Comma-separated CIKs to restrict to -- no default, always explicit."
+    ),
 ) -> None:
     """2026-09-12: employee_count_resolved -- prefers XBRL
     dei:EntityNumberOfEmployees, else core.employee_headcount_disclosure
@@ -180,11 +232,15 @@ def seed_definitions_cmd() -> None:
 
 @app.command("calculate")
 def calculate_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 3d: compute analytics.metric_value for the 10 EDGAR-only,
     non-growth metrics. Requires Stages 3a/3b/3c to have already run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate(conn, target_ciks)
     typer.echo(f"calculate: {stats}")
@@ -192,10 +248,14 @@ def calculate_cmd(
 
 @app.command("growth")
 def growth_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 3e (part 1): compute revenue/EPS growth (YoY + 3Y CAGR)."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = compute_growth(conn, target_ciks)
     typer.echo(f"growth: {stats}")
@@ -203,10 +263,14 @@ def growth_cmd(
 
 @app.command("ttm-returns")
 def ttm_returns_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 3e (part 2): compute TTM ROIC/ROE for quarterly periods."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = compute_ttm_returns(conn, target_ciks)
     typer.echo(f"ttm-returns: {stats}")
@@ -214,7 +278,9 @@ def ttm_returns_cmd(
 
 @app.command("ttm-margins")
 def ttm_margins_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """2026-09-13: compute TTM gross/operating/net margin for quarterly
     periods -- found live that these 3 locked V1 metrics were never
@@ -224,7 +290,9 @@ def ttm_margins_cmd(
     these up automatically once they exist, no screener code change
     needed. See mapper/ttm.py's MARGIN_CONCEPTS docstring for the full
     finding and verification."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = compute_ttm_margins(conn, target_ciks)
     typer.echo(f"ttm-margins: {stats}")
@@ -242,13 +310,17 @@ def seed_statements_cmd() -> None:
 
 @app.command("calculate-price-metrics")
 def calculate_price_metrics_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 3h (doc 25 follow-on): compute the 6 price-dependent metrics
     (Market Cap, Trailing P/E, Price/Sales, Price/Book, Dividend Yield,
     FCF Yield) from core.market_price_alpaca's real price + TTM
     fundamentals. Requires update-market-price to have run first."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_price_metrics(conn, target_ciks)
     typer.echo(f"calculate-price-metrics: {stats}")
@@ -277,13 +349,17 @@ def seed_expanded_definitions_cmd() -> None:
 
 @app.command("calculate-expanded-metrics")
 def calculate_expanded_metrics_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 18 Tier A / doc 26 (2026-08-18): Net Debt/EBITDA, EV/EBITDA,
     EV/Sales, PEG, Buyback Yield, Total Shareholder Yield. Requires
     calculate (for ebitda) and calculate-price-metrics (for market_cap/
     trailing_pe/dividend_yield) to have already run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_expanded_metrics(conn, target_ciks)
     typer.echo(f"calculate-expanded-metrics: {stats}")
@@ -291,14 +367,18 @@ def calculate_expanded_metrics_cmd(
 
 @app.command("calculate-piotroski")
 def calculate_piotroski_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 26 Sec 2 (2026-08-19): standard 9-test Piotroski F-Score (0-9),
     FY vs prior FY. Requires seed-expanded-definitions (for the metric_
     definition row) and resolve-facts (for the 9 raw concepts) to have
     already run. Correctly null for financial institutions -- see
     mapper/quality_score.py's module docstring."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_piotroski(conn, target_ciks)
     typer.echo(f"calculate-piotroski: {stats}")
@@ -306,12 +386,16 @@ def calculate_piotroski_cmd(
 
 @app.command("calculate-quality-flags")
 def calculate_quality_flags_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 26 Sec 2.9 (2026-08-19): fcf_gt_net_income, zero_debt,
     profitable_streak_years, margin_expanding_3yr. Requires
     seed-expanded-definitions and resolve-facts to have already run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_quality_flags(conn, target_ciks)
     typer.echo(f"calculate-quality-flags: {stats}")
@@ -319,13 +403,17 @@ def calculate_quality_flags_cmd(
 
 @app.command("calculate-reconciliation")
 def calculate_reconciliation_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Core-fact-utilization-study.md #2 (2026-08-21): AR/Inventory/AP
     cash-flow-vs-balance-sheet reconciliation gaps, a quality-of-earnings
     cross-check, FY-only. Requires seed-expanded-concepts,
     seed-expanded-definitions, and resolve-facts to have already run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_reconciliation(conn, target_ciks)
     typer.echo(f"calculate-reconciliation: {stats}")
@@ -333,13 +421,17 @@ def calculate_reconciliation_cmd(
 
 @app.command("calculate-tax-reconciliation")
 def calculate_tax_reconciliation_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Utilization-study ranked #5 (2026-08-22): effective_tax_rate_gap,
     a cross-check between the reported effective tax rate and ROIC's own
     internally-derived rate. Requires seed-expanded-concepts,
     seed-expanded-definitions, and resolve-facts to have already run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_tax_reconciliation(conn, target_ciks)
     typer.echo(f"calculate-tax-reconciliation: {stats}")
@@ -347,11 +439,15 @@ def calculate_tax_reconciliation_cmd(
 
 @app.command("calculate-fcf-growth")
 def calculate_fcf_growth_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 18 Tier A (2026-08-22): fcf_growth_3y_cagr/5y_cagr. Requires
     calculate (for fcf) to have already run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_fcf_growth(conn, target_ciks)
     typer.echo(f"calculate-fcf-growth: {stats}")
@@ -359,11 +455,15 @@ def calculate_fcf_growth_cmd(
 
 @app.command("calculate-dividend-streak")
 def calculate_dividend_streak_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 26 (2026-08-22): dividend_growth_streak_years. Requires
     seed-expanded-definitions and resolve-facts to have already run."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = calculate_dividend_streak(conn, target_ciks)
     typer.echo(f"calculate-dividend-streak: {stats}")
@@ -383,8 +483,13 @@ def snapshot_coverage_cmd() -> None:
 
 @app.command()
 def errors(
-    stage: str = typer.Option(None, help="Restrict to one stage (resolve, calculate, growth, ttm_returns, price_metrics)."),
-    unresolved_only: bool = typer.Option(True, help="Only print rows with resolved=false."),
+    stage: str = typer.Option(
+        None,
+        help="Restrict to one stage (resolve, calculate, growth, ttm_returns, price_metrics).",
+    ),
+    unresolved_only: bool = typer.Option(
+        True, help="Only print rows with resolved=false."
+    ),
     limit: int = typer.Option(50, help="Max rows to print."),
 ) -> None:
     """Dead-letter report over analytics.mapper_error (Phase 1 scaling
@@ -425,8 +530,12 @@ def validate_cmd() -> None:
 
 @app.command("run-parser")
 def run_parser_cmd(
-    concept_name: str = typer.Argument(..., help=f"Registered: {sorted(PARSER_REGISTRY)}"),
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: full gap population)."),
+    concept_name: str = typer.Argument(
+        ..., help=f"Registered: {sorted(PARSER_REGISTRY)}"
+    ),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: full gap population)."
+    ),
 ) -> None:
     """Doc 42 Parser 3 architecture: run the dedicated rendered-report
     parser registered for one canonical concept (see parsers/main_parser.py's
@@ -442,7 +551,9 @@ def run_parser_cmd(
 
 @app.command("resolve-parser-results")
 def resolve_parser_results_cmd(
-    concept_name: str = typer.Argument(..., help="Concept whose analytics.concept_parser_result rows to merge."),
+    concept_name: str = typer.Argument(
+        ..., help="Concept whose analytics.concept_parser_result rows to merge."
+    ),
 ) -> None:
     """Merges run-parser's output into the concept's *_sanity_resolved
     display concept (doc 42's Tier 3) -- run-parser alone only writes to
@@ -489,7 +600,11 @@ def corrected_coverage_report_cmd() -> None:
     with get_connection() as conn:
         rows = corrected_coverage_report(conn)
     for row in rows:
-        pct = 100 * row["has_value"] / row["population_size"] if row["population_size"] else 0.0
+        pct = (
+            100 * row["has_value"] / row["population_size"]
+            if row["population_size"]
+            else 0.0
+        )
         typer.echo(
             f"{row['data_point_type']:8s} {row['data_point_name']:40s} "
             f"{row['has_value']:>5}/{row['population_size']:<5} ({pct:5.1f}%)  pop={row['applicable_population']}"
@@ -519,8 +634,14 @@ def tag_candidate_report_cmd() -> None:
     with get_connection() as conn:
         rows = report_status(conn)
     for row in rows:
-        top = f"{row['top_candidate'][0]} ({row['top_candidate'][1]} cos)" if row["top_candidate"] else "-"
-        typer.echo(f"{row['concept']:<32} {row['coverage_pct']:>5}%  {row['status']:<28} top candidate: {top}")
+        top = (
+            f"{row['top_candidate'][0]} ({row['top_candidate'][1]} cos)"
+            if row["top_candidate"]
+            else "-"
+        )
+        typer.echo(
+            f"{row['concept']:<32} {row['coverage_pct']:>5}%  {row['status']:<28} top candidate: {top}"
+        )
 
 
 @app.command("calculator-registry")

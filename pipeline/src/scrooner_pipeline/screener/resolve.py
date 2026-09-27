@@ -65,12 +65,16 @@ def load_screenable_metric_catalog(conn: psycopg.Connection) -> dict[str, int]:
     logic in query.py already treat every metric_definition_id
     uniformly, price-dependent or not."""
     with conn.cursor() as cur:
-        cur.execute("select metric_name, id from analytics.metric_definition where status = 'active'")
+        cur.execute(
+            "select metric_name, id from analytics.metric_definition where status = 'active'"
+        )
         return dict(cur.fetchall())
 
 
 def resolve_most_recent_values(
-    conn: psycopg.Connection, metric_definition_ids: list[int], as_of: date | None = None
+    conn: psycopg.Connection,
+    metric_definition_ids: list[int],
+    as_of: date | None = None,
 ) -> dict[tuple[int, int], dict]:
     """(company_id, metric_definition_id) -> {value, period_label, period_end,
     formula_version, is_null_reason} for the single most-recent row per
@@ -105,7 +109,15 @@ def resolve_most_recent_values(
         rows = cur.fetchall()
 
     result = {}
-    for company_id, metric_definition_id, value, period_label, period_end, is_null_reason, formula_version in rows:
+    for (
+        company_id,
+        metric_definition_id,
+        value,
+        period_label,
+        period_end,
+        is_null_reason,
+        formula_version,
+    ) in rows:
         result[(company_id, metric_definition_id)] = {
             "value": value,
             "period_label": period_label,
@@ -113,5 +125,9 @@ def resolve_most_recent_values(
             "is_null_reason": is_null_reason,
             "formula_version": formula_version,
         }
-    logger.info("screener.resolve.done", metric_count=len(metric_definition_ids), resolved_pairs=len(result))
+    logger.info(
+        "screener.resolve.done",
+        metric_count=len(metric_definition_ids),
+        resolved_pairs=len(result),
+    )
     return result

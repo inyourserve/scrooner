@@ -59,11 +59,20 @@ TRANSACTION_CODE_LABELS: dict[str, tuple[str, str]] = {
     "P": (OPEN_MARKET_BUY, "Open market or private purchase of securities"),
     "S": (OPEN_MARKET_SALE, "Open market or private sale of securities"),
     "A": (GRANT, "Grant, award, or other acquisition per Rule 16b-3(d)"),
-    "M": (OPTION_EXERCISE, "Exercise or conversion of derivative security exempted pursuant to Rule 16b-3"),
-    "X": (OPTION_EXERCISE, "Exercise of in-the-money or at-the-money derivative security"),
+    "M": (
+        OPTION_EXERCISE,
+        "Exercise or conversion of derivative security exempted pursuant to Rule 16b-3",
+    ),
+    "X": (
+        OPTION_EXERCISE,
+        "Exercise of in-the-money or at-the-money derivative security",
+    ),
     "O": (OPTION_EXERCISE, "Exercise of out-of-the-money derivative security"),
     "G": (GIFT, "Bona fide gift"),
-    "F": (TAX_RELATED_DISPOSAL, "Payment of exercise price or tax liability by delivering or withholding securities"),
+    "F": (
+        TAX_RELATED_DISPOSAL,
+        "Payment of exercise price or tax liability by delivering or withholding securities",
+    ),
     # Real codes present in the data, deliberately left unclassified into
     # one of the doc's 6 categories -- see module docstring for why each
     # is NOT a confident match, not merely omitted by oversight.
@@ -73,12 +82,21 @@ TRANSACTION_CODE_LABELS: dict[str, tuple[str, str]] = {
     "J": (OTHER, "Other acquisition or disposition (explained in a footnote)"),
     "K": (OTHER, "Transaction in equity swap or similar instrument"),
     "L": (OTHER, "Small acquisition under Rule 16a-6"),
-    "U": (OTHER, "Disposition pursuant to a tender of shares in a change-of-control transaction"),
+    "U": (
+        OTHER,
+        "Disposition pursuant to a tender of shares in a change-of-control transaction",
+    ),
     "V": (OTHER, "Transaction voluntarily reported earlier than required"),
-    "W": (OTHER, "Acquisition or disposition by will or the laws of descent and distribution"),
+    "W": (
+        OTHER,
+        "Acquisition or disposition by will or the laws of descent and distribution",
+    ),
     "Z": (OTHER, "Deposit into or withdrawal from a voting trust"),
     "E": (OTHER, "Expiration of short derivative position"),
-    "H": (OTHER, "Expiration (or cancellation) of long derivative position with value received"),
+    "H": (
+        OTHER,
+        "Expiration (or cancellation) of long derivative position with value received",
+    ),
 }
 
 

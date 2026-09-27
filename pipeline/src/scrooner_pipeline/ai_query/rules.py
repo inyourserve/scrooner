@@ -46,7 +46,13 @@ from scrooner_pipeline.ai_query.aliases import (
 )
 from scrooner_pipeline.ai_query.interpreter import AmbiguityNote, InterpretationResult
 from scrooner_pipeline.ai_query.normalizer import normalize_query_text
-from scrooner_pipeline.screener.schema import CategoricalPredicate, MetricPredicate, PredicateGroup, ScreenQuery, RANKED_OPERATORS
+from scrooner_pipeline.screener.schema import (
+    CategoricalPredicate,
+    MetricPredicate,
+    PredicateGroup,
+    ScreenQuery,
+    RANKED_OPERATORS,
+)
 
 TOP_BOTTOM_RE = re.compile(r"^(top|bottom)\s+(\d+)\s+(?:by\s+)?(.+)$", re.IGNORECASE)
 
@@ -59,15 +65,24 @@ TOP_BOTTOM_RE = re.compile(r"^(top|bottom)\s+(\d+)\s+(?:by\s+)?(.+)$", re.IGNORE
 # in this grammar (e.g. a bare percentage-metric threshold) are
 # unaffected -- the suffix group is optional.
 _MAGNITUDE_SUFFIXES: dict[str, int] = {
-    "thousand": 1_000, "k": 1_000,
-    "million": 1_000_000, "mn": 1_000_000, "m": 1_000_000,
-    "billion": 1_000_000_000, "bn": 1_000_000_000, "b": 1_000_000_000,
-    "trillion": 1_000_000_000_000, "tn": 1_000_000_000_000, "t": 1_000_000_000_000,
+    "thousand": 1_000,
+    "k": 1_000,
+    "million": 1_000_000,
+    "mn": 1_000_000,
+    "m": 1_000_000,
+    "billion": 1_000_000_000,
+    "bn": 1_000_000_000,
+    "b": 1_000_000_000,
+    "trillion": 1_000_000_000_000,
+    "tn": 1_000_000_000_000,
+    "t": 1_000_000_000_000,
 }
 _MAGNITUDE_PATTERN = "|".join(sorted(_MAGNITUDE_SUFFIXES, key=len, reverse=True))
 NUMBER_RE = rf"\$?([\d,]*\.?\d+)\s*({_MAGNITUDE_PATTERN})?"
 VALUE_RE = re.compile(rf"^{NUMBER_RE}(%)?$", re.IGNORECASE)
-BETWEEN_RE = re.compile(rf"^(.*?)\s+between\s+{NUMBER_RE}(%)?\s+and\s+{NUMBER_RE}(%)?$", re.IGNORECASE)
+BETWEEN_RE = re.compile(
+    rf"^(.*?)\s+between\s+{NUMBER_RE}(%)?\s+and\s+{NUMBER_RE}(%)?$", re.IGNORECASE
+)
 
 # A trailing exclusion clause -- "... excluding financials" / "... except
 # banks" / "... not in the energy sector" -- added 2026-09-11 alongside
@@ -82,7 +97,9 @@ BETWEEN_RE = re.compile(rf"^(.*?)\s+between\s+{NUMBER_RE}(%)?\s+and\s+{NUMBER_RE
 # the text is returned untouched and falls through to the normal
 # unrecognized-clause path, rather than reporting a confusing error about
 # an exclusion target that was never really intended as one.
-NEGATION_RE = re.compile(r",?\s+(?:excluding|except|but\s+not|not\s+in|not)\s+(.+)$", re.IGNORECASE)
+NEGATION_RE = re.compile(
+    r",?\s+(?:excluding|except|but\s+not|not\s+in|not)\s+(.+)$", re.IGNORECASE
+)
 
 # "or" support -- also 2026-09-11. Mixing "and" and "or" in the same
 # query is genuinely ambiguous without parentheses ("A and B or C" could
@@ -106,7 +123,13 @@ def _parse_value(number_str: str, magnitude: str | None, has_percent: bool) -> D
 # discipline as the alias tables themselves. Found live 2026-08-17:
 # "companies with ROE above 30%" failed to parse at all because "companies
 # with roe" doesn't match "roe" in METRIC_ALIASES verbatim.
-METRIC_PHRASE_FILLER_PREFIXES = ["companies with ", "companies that have ", "with ", "where ", "having "]
+METRIC_PHRASE_FILLER_PREFIXES = [
+    "companies with ",
+    "companies that have ",
+    "with ",
+    "where ",
+    "having ",
+]
 
 
 def _strip_filler(phrase: str) -> str:
@@ -138,11 +161,15 @@ def _lookup_sector(phrase: str) -> tuple[str, str] | None:
     normalized = re.sub(r"^companies in\s+", "", normalized)
     normalized = re.sub(r"\s+companies$", "", normalized)
 
-    sic_hit = SECTOR_ALIASES.get(normalized) or SECTOR_ALIASES.get(normalized + " companies")
+    sic_hit = SECTOR_ALIASES.get(normalized) or SECTOR_ALIASES.get(
+        normalized + " companies"
+    )
     if sic_hit:
         return "sic_code", sic_hit
 
-    bucket_hit = SECTOR_BUCKET_ALIASES.get(normalized) or SECTOR_BUCKET_ALIASES.get(normalized + " companies")
+    bucket_hit = SECTOR_BUCKET_ALIASES.get(normalized) or SECTOR_BUCKET_ALIASES.get(
+        normalized + " companies"
+    )
     if bucket_hit:
         return "sector", bucket_hit
 
@@ -161,7 +188,9 @@ def _try_extract_exclusion(text: str) -> tuple[str, CategoricalPredicate | None]
     if sector_hit is None:
         return text, None
     field, value = sector_hit
-    return text[: match.start()].strip(), CategoricalPredicate(field=field, operator="=", value=value)
+    return text[: match.start()].strip(), CategoricalPredicate(
+        field=field, operator="=", value=value
+    )
 
 
 def _find_operator(clause: str) -> tuple[str, str, str] | None:
@@ -181,7 +210,14 @@ def _find_operator(clause: str) -> tuple[str, str, str] | None:
     return metric_part, op, value_part
 
 
-def _parse_clause(clause: str) -> tuple[MetricPredicate | None, CategoricalPredicate | None, str | None, AmbiguityNote | None]:
+def _parse_clause(
+    clause: str,
+) -> tuple[
+    MetricPredicate | None,
+    CategoricalPredicate | None,
+    str | None,
+    AmbiguityNote | None,
+]:
     """Returns exactly one of (metric predicate, categorical predicate,
     unrecognized-text, ambiguity-note) populated, the rest None."""
     clause = clause.strip()
@@ -195,12 +231,22 @@ def _parse_clause(clause: str) -> tuple[MetricPredicate | None, CategoricalPredi
         if metric_name is None:
             return None, None, clause, None
         op = "top_n" if direction.lower() == "top" else "bottom_n"
-        return MetricPredicate(metric_name=metric_name, operator=op, n=int(n)), None, None, None
+        return (
+            MetricPredicate(metric_name=metric_name, operator=op, n=int(n)),
+            None,
+            None,
+            None,
+        )
 
     sector_hit = _lookup_sector(clause)
     if sector_hit:
         field, value = sector_hit
-        return None, CategoricalPredicate(field=field, operator="=", value=value), None, None
+        return (
+            None,
+            CategoricalPredicate(field=field, operator="=", value=value),
+            None,
+            None,
+        )
 
     found_op = _find_operator(clause)
     if found_op:
@@ -214,7 +260,12 @@ def _parse_clause(clause: str) -> tuple[MetricPredicate | None, CategoricalPredi
         if not m:
             return None, None, clause, None
         value = _parse_value(m.group(1), m.group(2), bool(m.group(3)))
-        return MetricPredicate(metric_name=metric_name, operator=op, value=value), None, None, None
+        return (
+            MetricPredicate(metric_name=metric_name, operator=op, value=value),
+            None,
+            None,
+            None,
+        )
 
     return None, None, clause, None
 
@@ -225,7 +276,9 @@ def _describe_predicate(p: MetricPredicate) -> str:
     return f"{p.metric_name} {p.operator} {p.value}"
 
 
-def _find_contradictory_group(metric_predicates: list[MetricPredicate]) -> list[MetricPredicate] | None:
+def _find_contradictory_group(
+    metric_predicates: list[MetricPredicate],
+) -> list[MetricPredicate] | None:
     """Detects an AND-combined set of comparison/between clauses on the SAME
     metric whose intervals don't overlap -- e.g. "P/E below 10 and P/E above
     20" (doc/scoping/46 Example D, CONTRADICTORY_FILTERS). Only ever called
@@ -259,7 +312,10 @@ def _find_contradictory_group(metric_predicates: list[MetricPredicate]) -> list[
         hi_inclusive = True
         for p in group:
             if p.operator == "between":
-                bounds = [(p.value_range[0], True, "lo"), (p.value_range[1], True, "hi")]
+                bounds = [
+                    (p.value_range[0], True, "lo"),
+                    (p.value_range[1], True, "hi"),
+                ]
             elif p.operator == "=":
                 bounds = [(p.value, True, "lo"), (p.value, True, "hi")]
             elif p.operator in (">", ">="):
@@ -299,11 +355,15 @@ def interpret(text: str) -> InterpretationResult:
 def _interpret_normalized(text: str) -> InterpretationResult:
     text = text.strip()
     if not text:
-        return InterpretationResult(query=None, explanation="Empty query.", unrecognized=[""])
+        return InterpretationResult(
+            query=None, explanation="Empty query.", unrecognized=[""]
+        )
 
     between_match = BETWEEN_RE.match(text)
     if between_match:
-        metric_phrase, low_str, low_mag, low_pct, high_str, high_mag, high_pct = between_match.groups()
+        metric_phrase, low_str, low_mag, low_pct, high_str, high_mag, high_pct = (
+            between_match.groups()
+        )
         metric_name, candidates = _lookup_metric(metric_phrase)
         if candidates:
             return InterpretationResult(
@@ -312,17 +372,29 @@ def _interpret_normalized(text: str) -> InterpretationResult:
                 ambiguous=[AmbiguityNote(metric_phrase.strip(), candidates)],
             )
         if metric_name is None:
-            return InterpretationResult(query=None, explanation="Could not recognize the metric.", unrecognized=[metric_phrase.strip()])
+            return InterpretationResult(
+                query=None,
+                explanation="Could not recognize the metric.",
+                unrecognized=[metric_phrase.strip()],
+            )
         low = _parse_value(low_str, low_mag, bool(low_pct))
         high = _parse_value(high_str, high_mag, bool(high_pct))
-        predicate = MetricPredicate(metric_name=metric_name, operator="between", value_range=(low, high))
+        predicate = MetricPredicate(
+            metric_name=metric_name, operator="between", value_range=(low, high)
+        )
         query = ScreenQuery(metric_predicates=[predicate])
         explanation = f"Filtering for: {metric_name} between {low} and {high}."
-        return InterpretationResult(query=query, explanation=explanation, recognized_query=query)
+        return InterpretationResult(
+            query=query, explanation=explanation, recognized_query=query
+        )
 
     text, excluded = _try_extract_exclusion(text)
     if not text:
-        return InterpretationResult(query=None, explanation="Nothing recognized in this query.", unrecognized=[text])
+        return InterpretationResult(
+            query=None,
+            explanation="Nothing recognized in this query.",
+            unrecognized=[text],
+        )
 
     has_and = AND_SPLIT_RE.search(text) is not None
     has_or = OR_SPLIT_RE.search(text) is not None
@@ -333,7 +405,11 @@ def _interpret_normalized(text: str) -> InterpretationResult:
             unrecognized=[text],
         )
     combine_op = "or" if has_or else "and"
-    clauses = [c.strip() for c in (OR_SPLIT_RE if has_or else AND_SPLIT_RE).split(text) if c.strip()]
+    clauses = [
+        c.strip()
+        for c in (OR_SPLIT_RE if has_or else AND_SPLIT_RE).split(text)
+        if c.strip()
+    ]
 
     metric_predicates: list[MetricPredicate] = []
     categorical_predicates: list[CategoricalPredicate] = []
@@ -364,7 +440,12 @@ def _interpret_normalized(text: str) -> InterpretationResult:
         if unrecognized:
             parts.append(f"could not understand: {', '.join(unrecognized)}")
         if ambiguous:
-            parts.append("; ".join(f"'{a.phrase}' could mean: {', '.join(a.candidates)}" for a in ambiguous))
+            parts.append(
+                "; ".join(
+                    f"'{a.phrase}' could mean: {', '.join(a.candidates)}"
+                    for a in ambiguous
+                )
+            )
         recognized_query = None
         if combine_op == "and" and (metric_predicates or categorical_predicates):
             # Only ever built for the flat AND shape -- an OR-combined
@@ -384,12 +465,18 @@ def _interpret_normalized(text: str) -> InterpretationResult:
         )
 
     if not metric_predicates and not categorical_predicates:
-        return InterpretationResult(query=None, explanation="Nothing recognized in this query.", unrecognized=[text])
+        return InterpretationResult(
+            query=None,
+            explanation="Nothing recognized in this query.",
+            unrecognized=[text],
+        )
 
     if combine_op == "and":
         contradictory_group = _find_contradictory_group(metric_predicates)
         if contradictory_group is not None:
-            described = " and ".join(_describe_predicate(p) for p in contradictory_group)
+            described = " and ".join(
+                _describe_predicate(p) for p in contradictory_group
+            )
             return InterpretationResult(
                 query=None,
                 explanation=f"Contradictory filter: no value can satisfy {described} at once.",
@@ -407,18 +494,35 @@ def _interpret_normalized(text: str) -> InterpretationResult:
         # already caught as unrecognized text above).
         where = PredicateGroup(op="or", predicates=non_ranked_nodes)
         if excluded is not None:
-            where = PredicateGroup(op="and", predicates=[where, PredicateGroup(op="not", predicates=[excluded])])
+            where = PredicateGroup(
+                op="and",
+                predicates=[where, PredicateGroup(op="not", predicates=[excluded])],
+            )
         query = ScreenQuery(where=where, metric_predicates=ranked_predicates)
     elif excluded is not None:
-        where = PredicateGroup(op="and", predicates=[*non_ranked_nodes, PredicateGroup(op="not", predicates=[excluded])])
+        where = PredicateGroup(
+            op="and",
+            predicates=[
+                *non_ranked_nodes,
+                PredicateGroup(op="not", predicates=[excluded]),
+            ],
+        )
         query = ScreenQuery(where=where, metric_predicates=ranked_predicates)
     else:
-        query = ScreenQuery(metric_predicates=metric_predicates, categorical_predicates=categorical_predicates)
+        query = ScreenQuery(
+            metric_predicates=metric_predicates,
+            categorical_predicates=categorical_predicates,
+        )
 
-    explanation_parts = [f"{p.metric_name} {p.operator} {p.value if p.value is not None else p.n}" for p in metric_predicates]
+    explanation_parts = [
+        f"{p.metric_name} {p.operator} {p.value if p.value is not None else p.n}"
+        for p in metric_predicates
+    ]
     explanation_parts += [f"{p.field} = {p.value}" for p in categorical_predicates]
     if excluded is not None:
         explanation_parts.append(f"NOT {excluded.field} = {excluded.value}")
     joiner = " OR " if combine_op == "or" else "; "
     explanation = "Filtering for: " + joiner.join(explanation_parts) + "."
-    return InterpretationResult(query=query, explanation=explanation, recognized_query=query)
+    return InterpretationResult(
+        query=query, explanation=explanation, recognized_query=query
+    )

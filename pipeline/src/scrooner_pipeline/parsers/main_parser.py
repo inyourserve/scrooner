@@ -55,7 +55,9 @@ PARSER_REGISTRY = {
 }
 
 
-def run_parser(conn: psycopg.Connection, concept_name: str, ciks: set[str] | None = None) -> dict:
+def run_parser(
+    conn: psycopg.Connection, concept_name: str, ciks: set[str] | None = None
+) -> dict:
     if concept_name not in PARSER_REGISTRY:
         raise ValueError(
             f"No parser registered for concept {concept_name!r}. "
@@ -88,7 +90,15 @@ def registry_summary(conn: psycopg.Connection) -> list[dict]:
             order by cc.name, cpa.parser_name
             """
         )
-        columns = ["concept_name", "parser_name", "matched", "no_report", "no_row_matched", "errored", "total_attempted"]
+        columns = [
+            "concept_name",
+            "parser_name",
+            "matched",
+            "no_report",
+            "no_row_matched",
+            "errored",
+            "total_attempted",
+        ]
         return [dict(zip(columns, row)) for row in cur.fetchall()]
 
 
@@ -136,13 +146,21 @@ def resolve_parser_results(conn: psycopg.Connection, concept_name: str) -> dict:
     each company's own write makes a mid-batch drop lose at most one
     company's progress, and the function stays idempotent on rerun."""
     if concept_name not in FIXABLE_CONCEPTS:
-        raise ValueError(f"{concept_name!r} has no *_sanity_resolved companion in FIXABLE_CONCEPTS")
+        raise ValueError(
+            f"{concept_name!r} has no *_sanity_resolved companion in FIXABLE_CONCEPTS"
+        )
     resolved_concept_name = FIXABLE_CONCEPTS[concept_name]
 
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (concept_name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s",
+            (concept_name,),
+        )
         primary_id = cur.fetchone()[0]
-        cur.execute("select id from analytics.canonical_concept where name = %s", (resolved_concept_name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s",
+            (resolved_concept_name,),
+        )
         resolved_id = cur.fetchone()[0]
 
         cur.execute(
@@ -151,7 +169,12 @@ def resolve_parser_results(conn: psycopg.Connection, concept_name: str) -> dict:
         )
         parser_results = cur.fetchall()
 
-    stats = {"considered": len(parser_results), "applied": 0, "no_matching_period": 0, "errored": 0}
+    stats = {
+        "considered": len(parser_results),
+        "applied": 0,
+        "no_matching_period": 0,
+        "errored": 0,
+    }
     for company_id, value, period_end in parser_results:
         try:
             with conn.cursor() as cur:
@@ -183,8 +206,14 @@ def resolve_parser_results(conn: psycopg.Connection, concept_name: str) -> dict:
                 stats["applied"] += 1
             conn.commit()
         except Exception:
-            logger.warning("main_parser.resolve_parser_results.company_failed", company_id=company_id, exc_info=True)
+            logger.warning(
+                "main_parser.resolve_parser_results.company_failed",
+                company_id=company_id,
+                exc_info=True,
+            )
             stats["errored"] += 1
             conn = safe_rollback(conn, stage="resolve_parser_results")
-    logger.info("main_parser.resolve_parser_results.done", concept=concept_name, **stats)
+    logger.info(
+        "main_parser.resolve_parser_results.done", concept=concept_name, **stats
+    )
     return stats

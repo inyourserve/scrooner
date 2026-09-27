@@ -97,7 +97,9 @@ def select_stratified_sample(
     by_cik = {candidate.cik: candidate for candidate in candidates}
     pool = sorted(by_cik.values(), key=lambda candidate: candidate.cik)
     if len(pool) < target:
-        raise ValueError(f"need {target} distinct eligible companies, found {len(pool)}")
+        raise ValueError(
+            f"need {target} distinct eligible companies, found {len(pool)}"
+        )
 
     populations = Counter(token for candidate in pool for token in candidate.strata())
     selected: list[PilotCandidate] = []
@@ -110,7 +112,11 @@ def select_stratified_sample(
     for token in sorted(populations, key=lambda item: (populations[item], item)):
         if represented[token]:
             continue
-        choices = [row for row in pool if row.cik not in selected_ciks and token in row.strata()]
+        choices = [
+            row
+            for row in pool
+            if row.cik not in selected_ciks and token in row.strata()
+        ]
         if not choices:
             continue
         chosen = choices[0]
@@ -152,13 +158,21 @@ def evaluate_readiness(
             f"insufficient_eligible_primary_companies:{inventory.eligible_primary_count}/{target}"
         )
     if inventory.raw_companyfacts_ciks < target:
-        blockers.append(f"insufficient_companyfacts_payloads:{inventory.raw_companyfacts_ciks}/{target}")
+        blockers.append(
+            f"insufficient_companyfacts_payloads:{inventory.raw_companyfacts_ciks}/{target}"
+        )
     if inventory.raw_submissions_ciks < target:
-        blockers.append(f"insufficient_submissions_payloads:{inventory.raw_submissions_ciks}/{target}")
+        blockers.append(
+            f"insufficient_submissions_payloads:{inventory.raw_submissions_ciks}/{target}"
+        )
     if inventory.unresolved_normalizer_errors:
-        blockers.append(f"unresolved_normalizer_errors:{inventory.unresolved_normalizer_errors}")
+        blockers.append(
+            f"unresolved_normalizer_errors:{inventory.unresolved_normalizer_errors}"
+        )
     if inventory.unresolved_mapper_errors:
-        blockers.append(f"unresolved_mapper_errors:{inventory.unresolved_mapper_errors}")
+        blockers.append(
+            f"unresolved_mapper_errors:{inventory.unresolved_mapper_errors}"
+        )
     if inventory.mapping_coverage is None:
         blockers.append("representative_mapping_coverage_not_measured")
     elif inventory.mapping_coverage < MAPPING_COVERAGE_GATE:
@@ -168,7 +182,9 @@ def evaluate_readiness(
 
     projected = inventory.projected_database_size(target)
     if projected > database_limit_bytes:
-        blockers.append(f"projected_database_capacity_exceeded:{projected}/{database_limit_bytes}")
+        blockers.append(
+            f"projected_database_capacity_exceeded:{projected}/{database_limit_bytes}"
+        )
 
     return PilotReadiness(
         ready=not blockers,
@@ -248,7 +264,9 @@ def classify_failure(stage: str, error_type: str, message: str) -> str:
         return "universe_error"
     if "structural" in text or "not applicable" in text:
         return "expected_structural_null"
-    if any(marker in text for marker in ("timeout", "429", "http", "connection", "storage")):
+    if any(
+        marker in text for marker in ("timeout", "429", "http", "connection", "storage")
+    ):
         return "upstream_source_failure"
     return "unreviewed"
 
@@ -288,7 +306,9 @@ def mapped_tag_presence(payloads: dict[str, dict]) -> dict:
                 "present": resolved[canonical],
                 "missing": count - resolved[canonical],
                 "presence_rate": str(
-                    (Decimal(resolved[canonical]) / Decimal(count)).quantize(Decimal("0.0001"))
+                    (Decimal(resolved[canonical]) / Decimal(count)).quantize(
+                        Decimal("0.0001")
+                    )
                     if count
                     else Decimal("0")
                 ),
@@ -397,7 +417,11 @@ def load_eligible_candidates(conn: psycopg.Connection) -> list[PilotCandidate]:
             sector=sector_group(sic),
             market_cap_band=market_cap_band(cap),
             fiscal_calendar=(
-                "calendar" if fiscal_year_end == "1231" else "non_calendar" if fiscal_year_end else "unknown"
+                "calendar"
+                if fiscal_year_end == "1231"
+                else "non_calendar"
+                if fiscal_year_end
+                else "unknown"
             ),
             filing_regime=classify_filing_regime(forms),
             issuer_kind=issuer_kind(sic),

@@ -67,11 +67,15 @@ _SAFE_METRIC_NAME_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 
 def _validate_metric_name(name: str) -> str:
     if not _SAFE_METRIC_NAME_RE.match(name):
-        raise ValueError(f"metric_name {name!r} is not a safe SQL identifier -- refusing to build a column from it")
+        raise ValueError(
+            f"metric_name {name!r} is not a safe SQL identifier -- refusing to build a column from it"
+        )
     return name
 
 
-def _metric_columns(name: str) -> tuple[sql.Identifier, sql.Identifier, sql.Identifier, sql.Identifier]:
+def _metric_columns(
+    name: str,
+) -> tuple[sql.Identifier, sql.Identifier, sql.Identifier, sql.Identifier]:
     """(value, period_label, period_end, formula_version) column
     identifiers for one metric. Double-underscore separator -- every real
     metric_name in this codebase uses single underscores as its own word
@@ -95,21 +99,31 @@ def _ensure_metric_columns(conn: psycopg.Connection, metric_names: list[str]) ->
     EAV design was built to provide."""
     parts = []
     for name in metric_names:
-        value_col, period_label_col, period_end_col, formula_version_col = _metric_columns(name)
+        value_col, period_label_col, period_end_col, formula_version_col = (
+            _metric_columns(name)
+        )
         parts.append(sql.SQL("add column if not exists {} numeric").format(value_col))
-        parts.append(sql.SQL("add column if not exists {} text").format(period_label_col))
+        parts.append(
+            sql.SQL("add column if not exists {} text").format(period_label_col)
+        )
         parts.append(sql.SQL("add column if not exists {} date").format(period_end_col))
-        parts.append(sql.SQL("add column if not exists {} integer").format(formula_version_col))
+        parts.append(
+            sql.SQL("add column if not exists {} integer").format(formula_version_col)
+        )
     if not parts:
         return
-    statement = sql.SQL("alter table analytics.company_screening_snapshot {}").format(sql.SQL(", ").join(parts))
+    statement = sql.SQL("alter table analytics.company_screening_snapshot {}").format(
+        sql.SQL(", ").join(parts)
+    )
     with conn.cursor() as cur:
         cur.execute(statement)
 
 
 def _load_all_metric_definitions(conn: psycopg.Connection) -> dict[int, str]:
     with conn.cursor() as cur:
-        cur.execute("select id, metric_name from analytics.metric_definition where status = 'active'")
+        cur.execute(
+            "select id, metric_name from analytics.metric_definition where status = 'active'"
+        )
         return dict(cur.fetchall())
 
 
@@ -131,8 +145,13 @@ def _load_company_identity(conn: psycopg.Connection) -> dict[int, dict]:
         rows = cur.fetchall()
     return {
         row[0]: {
-            "cik": row[1], "company_name": row[2], "sic_code": row[3], "sic_description": row[4],
-            "sector": row[5], "status": row[6], "ticker": row[7],
+            "cik": row[1],
+            "company_name": row[2],
+            "sic_code": row[3],
+            "sic_description": row[4],
+            "sector": row[5],
+            "status": row[6],
+            "ticker": row[7],
         }
         for row in rows
     }
@@ -140,7 +159,9 @@ def _load_company_identity(conn: psycopg.Connection) -> dict[int, dict]:
 
 def _next_dataset_version(conn: psycopg.Connection) -> int:
     with conn.cursor() as cur:
-        cur.execute("select version from analytics.screening_dataset_version where id = true")
+        cur.execute(
+            "select version from analytics.screening_dataset_version where id = true"
+        )
         (current,) = cur.fetchone()
     return current + 1
 
@@ -181,9 +202,15 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
         metrics_by_company.setdefault(company_id, {})[id_to_name[metric_id]] = data
 
     identity_columns = [
-        sql.Identifier("company_id"), sql.Identifier("cik"), sql.Identifier("company_name"),
-        sql.Identifier("sic_code"), sql.Identifier("sic_description"), sql.Identifier("sector"),
-        sql.Identifier("status"), sql.Identifier("ticker"), sql.Identifier("dataset_version"),
+        sql.Identifier("company_id"),
+        sql.Identifier("cik"),
+        sql.Identifier("company_name"),
+        sql.Identifier("sic_code"),
+        sql.Identifier("sic_description"),
+        sql.Identifier("sector"),
+        sql.Identifier("status"),
+        sql.Identifier("ticker"),
+        sql.Identifier("dataset_version"),
     ]
     metric_column_list: list[sql.Identifier] = []
     for name in metric_names:
@@ -191,15 +218,22 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
 
     all_columns = identity_columns + metric_column_list
     placeholders = sql.SQL(", ").join(sql.Placeholder() * len(all_columns))
-    insert_statement = sql.SQL("insert into analytics.company_screening_snapshot ({}) values ({})").format(
-        sql.SQL(", ").join(all_columns), placeholders
-    )
+    insert_statement = sql.SQL(
+        "insert into analytics.company_screening_snapshot ({}) values ({})"
+    ).format(sql.SQL(", ").join(all_columns), placeholders)
 
     rows = []
     for company_id, info in identity.items():
         row = [
-            company_id, info["cik"], info["company_name"], info["sic_code"], info["sic_description"],
-            info["sector"], info["status"], info["ticker"], dataset_version,
+            company_id,
+            info["cik"],
+            info["company_name"],
+            info["sic_code"],
+            info["sic_description"],
+            info["sector"],
+            info["status"],
+            info["ticker"],
+            dataset_version,
         ]
         company_metrics = metrics_by_company.get(company_id, {})
         for name in metric_names:
@@ -207,13 +241,23 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
             if data is None:
                 row.extend([None, None, None, None])
             else:
-                row.extend([data["value"], data["period_label"], data["period_end"], data["formula_version"]])
+                row.extend(
+                    [
+                        data["value"],
+                        data["period_label"],
+                        data["period_end"],
+                        data["formula_version"],
+                    ]
+                )
         rows.append(tuple(row))
 
     with conn.cursor() as cur:
         # Rows for this exact version can only exist from an earlier,
         # crashed-then-committed attempt; clearing them keeps a rerun safe.
-        cur.execute("delete from analytics.company_screening_snapshot where dataset_version = %s", (dataset_version,))
+        cur.execute(
+            "delete from analytics.company_screening_snapshot where dataset_version = %s",
+            (dataset_version,),
+        )
         for start in range(0, len(rows), INSERT_BATCH_SIZE):
             cur.executemany(insert_statement, rows[start : start + INSERT_BATCH_SIZE])
         cur.execute(
@@ -230,11 +274,17 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
         dataset_version=dataset_version,
         pruned_rows=pruned,
     )
-    return {"dataset_version": dataset_version, "row_count": len(rows), "metric_count": len(id_to_name)}
+    return {
+        "dataset_version": dataset_version,
+        "row_count": len(rows),
+        "metric_count": len(id_to_name),
+    }
 
 
 def get_dataset_version(conn: psycopg.Connection) -> int:
     with conn.cursor() as cur:
-        cur.execute("select version from analytics.screening_dataset_version where id = true")
+        cur.execute(
+            "select version from analytics.screening_dataset_version where id = true"
+        )
         (version,) = cur.fetchone()
     return version

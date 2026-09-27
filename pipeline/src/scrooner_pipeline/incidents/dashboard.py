@@ -54,7 +54,10 @@ def summarize(conn: psycopg.Connection) -> dict:
             limit 15
             """
         )
-        top_offenders = [{"company_id": r[0], "company_name": r[1], "count": r[2]} for r in cur.fetchall()]
+        top_offenders = [
+            {"company_id": r[0], "company_name": r[1], "count": r[2]}
+            for r in cur.fetchall()
+        ]
 
         cur.execute(
             """
@@ -67,7 +70,12 @@ def summarize(conn: psycopg.Connection) -> dict:
             """
         )
         worst_metrics = [
-            {"source_system": r[0], "metric_or_concept": r[1], "severity": r[2], "count": r[3]}
+            {
+                "source_system": r[0],
+                "metric_or_concept": r[1],
+                "severity": r[2],
+                "count": r[3],
+            }
             for r in cur.fetchall()
         ]
 
@@ -110,7 +118,9 @@ def render_markdown(summary: dict) -> str:
         lines.append("| Source | Metric/Concept | Severity | Count |")
         lines.append("|---|---|---|---|")
         for row in summary["worst_metrics"]:
-            lines.append(f"| {row['source_system']} | {row['metric_or_concept']} | {row['severity']} | {row['count']} |")
+            lines.append(
+                f"| {row['source_system']} | {row['metric_or_concept']} | {row['severity']} | {row['count']} |"
+            )
     else:
         lines.append("_None._")
     lines.append("")

@@ -25,15 +25,45 @@ logger = structlog.get_logger()
 # (name, statement, combination_mode, description) -- same shape as
 # mapper/concepts.py's CANONICAL_CONCEPTS, new rows only.
 NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
-    ("cost_of_revenue", "income_statement", "first_match", "Cost of goods/services sold"),
-    ("operating_expenses", "income_statement", "first_match", "Total operating expenses (SG&A + R&D, where reported as one line)"),
+    (
+        "cost_of_revenue",
+        "income_statement",
+        "first_match",
+        "Cost of goods/services sold",
+    ),
+    (
+        "operating_expenses",
+        "income_statement",
+        "first_match",
+        "Total operating expenses (SG&A + R&D, where reported as one line)",
+    ),
     ("total_assets", "balance_sheet", "first_match", "Total assets"),
     ("total_liabilities", "balance_sheet", "first_match", "Total liabilities"),
     ("ppe_net", "balance_sheet", "first_match", "Property, plant and equipment, net"),
-    ("cash_flow_investing", "cash_flow", "first_match", "Net cash used in/provided by investing activities"),
-    ("cash_flow_financing", "cash_flow", "first_match", "Net cash used in/provided by financing activities"),
-    ("dividends_paid", "cash_flow", "first_match", "Total dividends paid (dollar amount, not per-share)"),
-    ("share_buybacks", "cash_flow", "first_match", "Cash paid for common stock repurchases"),
+    (
+        "cash_flow_investing",
+        "cash_flow",
+        "first_match",
+        "Net cash used in/provided by investing activities",
+    ),
+    (
+        "cash_flow_financing",
+        "cash_flow",
+        "first_match",
+        "Net cash used in/provided by financing activities",
+    ),
+    (
+        "dividends_paid",
+        "cash_flow",
+        "first_match",
+        "Total dividends paid (dollar amount, not per-share)",
+    ),
+    (
+        "share_buybacks",
+        "cash_flow",
+        "first_match",
+        "Cash paid for common stock repurchases",
+    ),
     (
         "public_float",
         "balance_sheet",
@@ -48,20 +78,67 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
 
 # (canonical_concept_name, taxonomy, tag, priority, confidence, notes)
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
-    ("cost_of_revenue", "us-gaap", "CostOfGoodsAndServicesSold", 1, "approved", "Most current tag across the golden set"),
-    ("cost_of_revenue", "us-gaap", "CostOfRevenue", 2, "approved",
-     "Confirmed alternate, not summand, via MSFT's 2016/2017 overlap years reporting identical values under both tags"),
+    (
+        "cost_of_revenue",
+        "us-gaap",
+        "CostOfGoodsAndServicesSold",
+        1,
+        "approved",
+        "Most current tag across the golden set",
+    ),
+    (
+        "cost_of_revenue",
+        "us-gaap",
+        "CostOfRevenue",
+        2,
+        "approved",
+        "Confirmed alternate, not summand, via MSFT's 2016/2017 overlap years reporting identical values under both tags",
+    ),
     ("operating_expenses", "us-gaap", "OperatingExpenses", 1, "approved", ""),
     ("total_assets", "us-gaap", "Assets", 1, "approved", ""),
     ("total_liabilities", "us-gaap", "Liabilities", 1, "approved", ""),
     ("ppe_net", "us-gaap", "PropertyPlantAndEquipmentNet", 1, "approved", ""),
-    ("cash_flow_investing", "us-gaap", "NetCashProvidedByUsedInInvestingActivities", 1, "approved", ""),
-    ("cash_flow_financing", "us-gaap", "NetCashProvidedByUsedInFinancingActivities", 1, "approved", ""),
+    (
+        "cash_flow_investing",
+        "us-gaap",
+        "NetCashProvidedByUsedInInvestingActivities",
+        1,
+        "approved",
+        "",
+    ),
+    (
+        "cash_flow_financing",
+        "us-gaap",
+        "NetCashProvidedByUsedInFinancingActivities",
+        1,
+        "approved",
+        "",
+    ),
     ("dividends_paid", "us-gaap", "PaymentsOfDividends", 1, "approved", ""),
-    ("dividends_paid", "us-gaap", "PaymentsOfDividendsCommonStock", 2, "provisional", "Narrower variant, not yet cross-checked as strictly an alternate"),
-    ("share_buybacks", "us-gaap", "PaymentsForRepurchaseOfCommonStock", 1, "approved", ""),
-    ("public_float", "dei", "EntityPublicFloat", 1, "approved",
-     "Confirmed live 2026-08-17 against real AAPL values ($3.253T as of 2025-03-28) -- see doc 23 Stage B."),
+    (
+        "dividends_paid",
+        "us-gaap",
+        "PaymentsOfDividendsCommonStock",
+        2,
+        "provisional",
+        "Narrower variant, not yet cross-checked as strictly an alternate",
+    ),
+    (
+        "share_buybacks",
+        "us-gaap",
+        "PaymentsForRepurchaseOfCommonStock",
+        1,
+        "approved",
+        "",
+    ),
+    (
+        "public_float",
+        "dei",
+        "EntityPublicFloat",
+        1,
+        "approved",
+        "Confirmed live 2026-08-17 against real AAPL values ($3.253T as of 2025-03-28) -- see doc 23 Stage B.",
+    ),
 ]
 
 # (statement, display_order, display_label, canonical_concept_name) --
@@ -69,30 +146,150 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
 # statement line (revenue, gross_profit, operating_income, etc.) rather
 # than re-mapping them.
 STATEMENT_LINES: list[tuple[str, int, str, str]] = [
-    ("income_statement", 1, "Revenue", "revenue_sanity_resolved"),  # migration 0049, 2026-09-08 -- raw revenue, except a (company, period) the Data Sanity Layer verified and overrode against yfinance
-    ("income_statement", 2, "Cost of Revenue", "cost_of_revenue_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Gross Profit
-    ("income_statement", 3, "Gross Profit", "gross_profit_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Cost of Revenue
-    ("income_statement", 4, "Operating Expenses", "operating_expenses_resolved"),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Gross Profit - Operating Income
-    ("income_statement", 5, "Operating Income", "operating_income_resolved"),  # migration 0059, 2026-09-09 -- adds conflict-fill (see conflict_resolution.py)
-    ("income_statement", 6, "Interest Expense", "interest_expense_resolved"),  # migration 0059, 2026-09-09
-    ("income_statement", 7, "Income Before Tax", "income_before_tax_resolved"),  # migration 0059, 2026-09-09
-    ("income_statement", 8, "Income Tax Expense", "income_tax_expense_resolved"),  # migration 0059, 2026-09-09
-    ("income_statement", 9, "Net Income", "net_income_resolved"),  # migration 0059, 2026-09-09
-    ("income_statement", 10, "Diluted EPS", "diluted_eps_resolved"),  # migration 0059, 2026-09-09
-    ("balance_sheet", 1, "Cash and Equivalents", "cash_and_equivalents_resolved"),  # migration 0059, 2026-09-09
-    ("balance_sheet", 2, "Current Assets", "current_assets_resolved"),  # migration 0059, 2026-09-09
-    ("balance_sheet", 3, "Property, Plant & Equipment", "ppe_net_resolved"),  # migration 0059, 2026-09-09
-    ("balance_sheet", 4, "Total Assets", "total_assets_resolved"),  # migration 0059, 2026-09-09
-    ("balance_sheet", 5, "Current Liabilities", "current_liabilities_resolved"),  # migration 0059, 2026-09-09
-    ("balance_sheet", 6, "Total Debt", "total_debt_resolved"),  # doc 40, 2026-09-02 -- prefers combined tag, falls back to split-tag sum
-    ("balance_sheet", 7, "Total Liabilities", "total_liabilities_resolved"),  # migration 0059, 2026-09-09
-    ("balance_sheet", 8, "Stockholders' Equity", "stockholders_equity_resolved"),  # migration 0059, 2026-09-09
-    ("cash_flow", 1, "Cash from Operations", "cfo_resolved"),  # migration 0059, 2026-09-09
-    ("cash_flow", 2, "Capital Expenditures", "capex_resolved"),  # migration 0059, 2026-09-09
-    ("cash_flow", 3, "Cash from Investing", "cash_flow_investing_resolved"),  # migration 0059, 2026-09-09
-    ("cash_flow", 4, "Cash from Financing", "cash_flow_financing_resolved"),  # migration 0059, 2026-09-09
-    ("cash_flow", 5, "Dividends Paid", "dividends_paid_resolved"),  # migration 0059, 2026-09-09
-    ("cash_flow", 6, "Share Buybacks", "share_buybacks_resolved"),  # migration 0059, 2026-09-09
+    (
+        "income_statement",
+        1,
+        "Revenue",
+        "revenue_sanity_resolved",
+    ),  # migration 0049, 2026-09-08 -- raw revenue, except a (company, period) the Data Sanity Layer verified and overrode against yfinance
+    (
+        "income_statement",
+        2,
+        "Cost of Revenue",
+        "cost_of_revenue_resolved",
+    ),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Gross Profit
+    (
+        "income_statement",
+        3,
+        "Gross Profit",
+        "gross_profit_resolved",
+    ),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Revenue - Cost of Revenue
+    (
+        "income_statement",
+        4,
+        "Operating Expenses",
+        "operating_expenses_resolved",
+    ),  # migration 0047, 2026-09-07 -- prefers the tagged value, falls back to Gross Profit - Operating Income
+    (
+        "income_statement",
+        5,
+        "Operating Income",
+        "operating_income_resolved",
+    ),  # migration 0059, 2026-09-09 -- adds conflict-fill (see conflict_resolution.py)
+    (
+        "income_statement",
+        6,
+        "Interest Expense",
+        "interest_expense_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "income_statement",
+        7,
+        "Income Before Tax",
+        "income_before_tax_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "income_statement",
+        8,
+        "Income Tax Expense",
+        "income_tax_expense_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "income_statement",
+        9,
+        "Net Income",
+        "net_income_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "income_statement",
+        10,
+        "Diluted EPS",
+        "diluted_eps_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "balance_sheet",
+        1,
+        "Cash and Equivalents",
+        "cash_and_equivalents_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "balance_sheet",
+        2,
+        "Current Assets",
+        "current_assets_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "balance_sheet",
+        3,
+        "Property, Plant & Equipment",
+        "ppe_net_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "balance_sheet",
+        4,
+        "Total Assets",
+        "total_assets_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "balance_sheet",
+        5,
+        "Current Liabilities",
+        "current_liabilities_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "balance_sheet",
+        6,
+        "Total Debt",
+        "total_debt_resolved",
+    ),  # doc 40, 2026-09-02 -- prefers combined tag, falls back to split-tag sum
+    (
+        "balance_sheet",
+        7,
+        "Total Liabilities",
+        "total_liabilities_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "balance_sheet",
+        8,
+        "Stockholders' Equity",
+        "stockholders_equity_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "cash_flow",
+        1,
+        "Cash from Operations",
+        "cfo_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "cash_flow",
+        2,
+        "Capital Expenditures",
+        "capex_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "cash_flow",
+        3,
+        "Cash from Investing",
+        "cash_flow_investing_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "cash_flow",
+        4,
+        "Cash from Financing",
+        "cash_flow_financing_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "cash_flow",
+        5,
+        "Dividends Paid",
+        "dividends_paid_resolved",
+    ),  # migration 0059, 2026-09-09
+    (
+        "cash_flow",
+        6,
+        "Share Buybacks",
+        "share_buybacks_resolved",
+    ),  # migration 0059, 2026-09-09
 ]
 
 
@@ -114,15 +311,32 @@ def seed_new_canonical_concepts(conn: psycopg.Connection) -> dict[str, int]:
         return dict(cur.fetchall())
 
 
-def seed_new_concept_mappings(conn: psycopg.Connection, canonical_id_by_name: dict[str, int]) -> dict:
+def seed_new_concept_mappings(
+    conn: psycopg.Connection, canonical_id_by_name: dict[str, int]
+) -> dict:
     stats = {"considered": len(NEW_CONCEPT_MAPPINGS), "mapped": 0, "unresolved_tag": 0}
     with conn.cursor() as cur:
-        for canonical_name, taxonomy, tag, priority, confidence, notes in NEW_CONCEPT_MAPPINGS:
-            cur.execute("select id from core.concept where taxonomy = %s and tag = %s", (taxonomy, tag))
+        for (
+            canonical_name,
+            taxonomy,
+            tag,
+            priority,
+            confidence,
+            notes,
+        ) in NEW_CONCEPT_MAPPINGS:
+            cur.execute(
+                "select id from core.concept where taxonomy = %s and tag = %s",
+                (taxonomy, tag),
+            )
             row = cur.fetchone()
             if row is None:
                 stats["unresolved_tag"] += 1
-                logger.warning("statements.tag_not_in_core", taxonomy=taxonomy, tag=tag, canonical=canonical_name)
+                logger.warning(
+                    "statements.tag_not_in_core",
+                    taxonomy=taxonomy,
+                    tag=tag,
+                    canonical=canonical_name,
+                )
                 continue
             concept_id = row[0]
             canonical_id = canonical_id_by_name[canonical_name]
@@ -141,7 +355,9 @@ def seed_new_concept_mappings(conn: psycopg.Connection, canonical_id_by_name: di
     return stats
 
 
-def seed_statement_lines(conn: psycopg.Connection, canonical_id_by_name: dict[str, int]) -> int:
+def seed_statement_lines(
+    conn: psycopg.Connection, canonical_id_by_name: dict[str, int]
+) -> int:
     """Delete-then-reinsert the WHOLE table, not an upsert keyed on
     (statement, display_order) -- found live 2026-09-13: an upsert never
     removes a row whose key no longer appears in the current
@@ -154,7 +370,12 @@ def seed_statement_lines(conn: psycopg.Connection, canonical_id_by_name: dict[st
     full rebuild is cheap and correct by construction -- no risk of a
     "missing key" gap the way a scoped delete would carry."""
     rows = [
-        {"statement": s, "display_order": o, "display_label": label, "canonical_concept_id": canonical_id_by_name[concept_name]}
+        {
+            "statement": s,
+            "display_order": o,
+            "display_label": label,
+            "canonical_concept_id": canonical_id_by_name[concept_name],
+        }
         for s, o, label, concept_name in STATEMENT_LINES
     ]
     with conn.cursor() as cur:
@@ -174,7 +395,11 @@ def seed(conn: psycopg.Connection) -> dict:
     canonical_id_by_name = seed_new_canonical_concepts(conn)
     mapping_stats = seed_new_concept_mappings(conn, canonical_id_by_name)
     line_count = seed_statement_lines(conn, canonical_id_by_name)
-    return {"new_canonical_concepts": len(NEW_CANONICAL_CONCEPTS), "statement_lines": line_count, **mapping_stats}
+    return {
+        "new_canonical_concepts": len(NEW_CANONICAL_CONCEPTS),
+        "statement_lines": line_count,
+        **mapping_stats,
+    }
 
 
 def get_statement(conn: psycopg.Connection, company_id: int, statement: str) -> dict:
@@ -215,9 +440,15 @@ def get_statement(conn: psycopg.Connection, company_id: int, statement: str) -> 
 
     sorted_periods = sorted(periods, key=lambda k: k[2])
     return {
-        "periods": [{"fiscal_year": fy, "fiscal_period": fp, "period_end": str(pe)} for fy, fp, pe in sorted_periods],
+        "periods": [
+            {"fiscal_year": fy, "fiscal_period": fp, "period_end": str(pe)}
+            for fy, fp, pe in sorted_periods
+        ],
         "lines": [
-            {"label": lines[o]["label"], "values": [lines[o]["values"].get(p) for p in sorted_periods]}
+            {
+                "label": lines[o]["label"],
+                "values": [lines[o]["values"].get(p) for p in sorted_periods],
+            }
             for o in sorted(lines)
         ],
     }

@@ -41,7 +41,9 @@ class SupabaseStorageClient:
         wait=wait_exponential(multiplier=1, min=1, max=30),
         reraise=True,
     )
-    def upload(self, object_path: str, content: bytes, content_type: str = "application/json") -> str:
+    def upload(
+        self, object_path: str, content: bytes, content_type: str = "application/json"
+    ) -> str:
         """Uploads bytes verbatim to {BUCKET}/{object_path}. Returns the
         full storage_path (bucket-prefixed, e.g. "raw/sec/companyfacts/...")
         for the caller to record in Postgres — matches doc 08's path
@@ -70,7 +72,9 @@ class SupabaseStorageClient:
         reraise=True,
     )
     def _head_uncaught(self, object_path: str) -> dict:
-        response = self._client.get(f"/object/info/authenticated/{BUCKET}/{object_path}")
+        response = self._client.get(
+            f"/object/info/authenticated/{BUCKET}/{object_path}"
+        )
         response.raise_for_status()
         return response.json()
 
@@ -129,5 +133,7 @@ def strip_bucket_prefix(storage_path: str) -> str:
     """
     prefix = f"{BUCKET}/"
     if not storage_path.startswith(prefix):
-        raise ValueError(f"storage_path {storage_path!r} does not start with expected bucket prefix {prefix!r}")
-    return storage_path[len(prefix):]
+        raise ValueError(
+            f"storage_path {storage_path!r} does not start with expected bucket prefix {prefix!r}"
+        )
+    return storage_path[len(prefix) :]

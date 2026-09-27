@@ -66,7 +66,12 @@ def capture_state(conn: psycopg.Connection, company_id: int) -> list[dict]:
             (company_id,),
         )
         return [
-            {"source_system": r[0], "metric_or_concept": r[1], "severity": r[2], "period_end": r[3]}
+            {
+                "source_system": r[0],
+                "metric_or_concept": r[1],
+                "severity": r[2],
+                "period_end": r[3],
+            }
             for r in cur.fetchall()
         ]
 
@@ -97,11 +102,35 @@ def diff_state(before: list[dict], after: list[dict]) -> dict:
         was_bad = b not in ("ok",)
         is_bad = a not in ("ok",)
         if was_bad and not is_bad:
-            resolved.append({"source_system": k[0], "metric_or_concept": k[1], "period_end": k[2], "before": b, "after": a})
+            resolved.append(
+                {
+                    "source_system": k[0],
+                    "metric_or_concept": k[1],
+                    "period_end": k[2],
+                    "before": b,
+                    "after": a,
+                }
+            )
         elif not was_bad and is_bad:
-            regressed.append({"source_system": k[0], "metric_or_concept": k[1], "period_end": k[2], "before": b, "after": a})
+            regressed.append(
+                {
+                    "source_system": k[0],
+                    "metric_or_concept": k[1],
+                    "period_end": k[2],
+                    "before": b,
+                    "after": a,
+                }
+            )
         elif was_bad and is_bad:
-            still_open.append({"source_system": k[0], "metric_or_concept": k[1], "period_end": k[2], "before": b, "after": a})
+            still_open.append(
+                {
+                    "source_system": k[0],
+                    "metric_or_concept": k[1],
+                    "period_end": k[2],
+                    "before": b,
+                    "after": a,
+                }
+            )
         else:
             unchanged_ok += 1
 
@@ -113,7 +142,9 @@ def diff_state(before: list[dict], after: list[dict]) -> dict:
     }
 
 
-def verify_company(conn: psycopg.Connection, company_id: int, include_yfinance: bool = True) -> dict:
+def verify_company(
+    conn: psycopg.Connection, company_id: int, include_yfinance: bool = True
+) -> dict:
     """The real end-to-end verifier: snapshot -> rerun the checks that
     are safe to rerun on demand for one company -> snapshot again ->
     diff. This is what actually 'closes the loop' after applying a
@@ -126,7 +157,15 @@ def verify_company(conn: psycopg.Connection, company_id: int, include_yfinance: 
 
     timeseries_stats = defaultdict(int)
     for concept_name, min_ratio, max_ratio, floor, never_negative in CONCEPTS_TO_CHECK:
-        stats = run_concept(conn, concept_name, min_ratio, max_ratio, floor, never_negative, company_id=company_id)
+        stats = run_concept(
+            conn,
+            concept_name,
+            min_ratio,
+            max_ratio,
+            floor,
+            never_negative,
+            company_id=company_id,
+        )
         for k, v in stats.items():
             timeseries_stats[k] += v
 
@@ -156,10 +195,16 @@ def verify_company(conn: psycopg.Connection, company_id: int, include_yfinance: 
 
 def render_markdown(result: dict) -> str:
     lines = [f"# Verification: company_id={result['company_id']}", ""]
-    lines.append(f"Resolved: **{len(result['resolved'])}** | Regressed: **{len(result['regressed'])}** | Still open: **{len(result['still_open'])}** | Unchanged ok: {result['unchanged_ok_count']}")
+    lines.append(
+        f"Resolved: **{len(result['resolved'])}** | Regressed: **{len(result['regressed'])}** | Still open: **{len(result['still_open'])}** | Unchanged ok: {result['unchanged_ok_count']}"
+    )
     lines.append("")
 
-    for label, key in [("Resolved", "resolved"), ("Regressed (new/worse)", "regressed"), ("Still open", "still_open")]:
+    for label, key in [
+        ("Resolved", "resolved"),
+        ("Regressed (new/worse)", "regressed"),
+        ("Still open", "still_open"),
+    ]:
         lines.append(f"## {label}")
         lines.append("")
         rows = result[key]
@@ -169,6 +214,8 @@ def render_markdown(result: dict) -> str:
             lines.append("| Source | Metric/Concept | Period | Before | After |")
             lines.append("|---|---|---|---|---|")
             for r in rows:
-                lines.append(f"| {r['source_system']} | {r['metric_or_concept']} | {r['period_end'] or '-'} | {r['before']} | {r['after']} |")
+                lines.append(
+                    f"| {r['source_system']} | {r['metric_or_concept']} | {r['period_end'] or '-'} | {r['before']} | {r['after']} |"
+                )
         lines.append("")
     return "\n".join(lines)

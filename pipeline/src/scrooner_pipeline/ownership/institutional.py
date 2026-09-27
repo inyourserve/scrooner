@@ -78,6 +78,7 @@ def normalize_issuer_name(name: str) -> str:
     n = _NAME_SUFFIX_RE.sub(" ", n)
     return re.sub(r"\s+", " ", n).strip()
 
+
 # SEC publishes Form 13F bulk data sets on a rolling ~3-month-window basis
 # (verified live 2026-08-17 against
 # https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets --
@@ -136,11 +137,15 @@ def _load_golden_cusips(conn: psycopg.Connection) -> dict[str, int]:
     distinct pair found is used as a match key rather than assuming
     exactly one."""
     with conn.cursor() as cur:
-        cur.execute("select distinct cusip, company_id from core.beneficial_ownership where cusip is not null")
+        cur.execute(
+            "select distinct cusip, company_id from core.beneficial_ownership where cusip is not null"
+        )
         return dict(cur.fetchall())
 
 
-def _load_company_name_lookup(conn: psycopg.Connection, covered_company_ids: set[int]) -> dict[str, int]:
+def _load_company_name_lookup(
+    conn: psycopg.Connection, covered_company_ids: set[int]
+) -> dict[str, int]:
     """normalize_issuer_name(company_name) -> company_id, restricted to
     active companies NOT already covered by a CUSIP (the fallback only
     ever fills a gap CUSIP matching left open, never competes with it)
@@ -166,12 +171,17 @@ def _load_company_name_lookup(conn: psycopg.Connection, covered_company_ids: set
 
     collisions = {name: ids for name, ids in name_to_ids.items() if len(ids) > 1}
     if collisions:
-        logger.warning("institutional_ownership.name_lookup_collisions", count=len(collisions))
+        logger.warning(
+            "institutional_ownership.name_lookup_collisions", count=len(collisions)
+        )
     return {name: ids[0] for name, ids in name_to_ids.items() if len(ids) == 1}
 
 
 def _load_tsv_dict(zf: zipfile.ZipFile, name: str) -> csv.DictReader:
-    return csv.DictReader(io.TextIOWrapper(zf.open(name), encoding="utf-8", errors="replace"), delimiter="\t")
+    return csv.DictReader(
+        io.TextIOWrapper(zf.open(name), encoding="utf-8", errors="replace"),
+        delimiter="\t",
+    )
 
 
 def _load_submission_lookup(zf: zipfile.ZipFile) -> dict[str, dict]:
@@ -432,7 +442,11 @@ def correct_value_scale_anomalies(conn: psycopg.Connection) -> dict:
         companies, filers = cur.fetchone()
         conn.commit()
 
-    stats = {"corrected_rows": corrected_rows, "companies_ever_corrected": companies, "filers_ever_corrected": filers}
+    stats = {
+        "corrected_rows": corrected_rows,
+        "companies_ever_corrected": companies,
+        "filers_ever_corrected": filers,
+    }
     logger.info("institutional_ownership.value_scale_corrected", **stats)
     return stats
 
@@ -441,20 +455,36 @@ def update_institutional_ownership(conn: psycopg.Connection) -> dict:
     cusip_to_company = _load_golden_cusips(conn)
     if not cusip_to_company:
         logger.warning("institutional_ownership.no_cusips")
-        return {"matched_rows": 0, "companies": 0, "infotable_row_count": 0, "windows": {}}
+        return {
+            "matched_rows": 0,
+            "companies": 0,
+            "infotable_row_count": 0,
+            "windows": {},
+        }
 
     # Name-based fallback (2026-09-05) -- fills the gap for companies with
     # no Schedule 13D/13G on file at all, so the CUSIP crosswalk above
     # never learns their CUSIP. Restricted to companies not already
     # covered by a CUSIP; see _load_company_name_lookup's own docstring.
-    name_to_company = _load_company_name_lookup(conn, covered_company_ids=set(cusip_to_company.values()))
-    logger.info("institutional_ownership.name_fallback_lookup", unambiguous_names=len(name_to_company))
+    name_to_company = _load_company_name_lookup(
+        conn, covered_company_ids=set(cusip_to_company.values())
+    )
+    logger.info(
+        "institutional_ownership.name_fallback_lookup",
+        unambiguous_names=len(name_to_company),
+    )
 
     window_stats: dict[str, dict] = {}
     with SECClient() as sec:
         for url, label in BULK_ZIP_WINDOWS:
-            window_stats[label] = _process_window(conn, sec, cusip_to_company, url, label, name_to_company)
-            logger.info("institutional_ownership.window_done", window_label=label, **window_stats[label])
+            window_stats[label] = _process_window(
+                conn, sec, cusip_to_company, url, label, name_to_company
+            )
+            logger.info(
+                "institutional_ownership.window_done",
+                window_label=label,
+                **window_stats[label],
+            )
 
     # _process_window deletes-then-reinserts every matched company's rows
     # for its window on every run, so a corrected row's
@@ -468,16 +498,23 @@ def update_institutional_ownership(conn: psycopg.Connection) -> dict:
     # from each window's own company_ids, so this number can never drift
     # from the real table contents.
     with conn.cursor() as cur:
-        cur.execute("select count(distinct company_id) from core.institutional_ownership")
+        cur.execute(
+            "select count(distinct company_id) from core.institutional_ownership"
+        )
         companies = cur.fetchone()[0]
 
     stats = {
         "matched_rows": sum(w["matched_rows"] for w in window_stats.values()),
         "companies": companies,
-        "infotable_row_count": sum(w["infotable_row_count"] for w in window_stats.values()),
+        "infotable_row_count": sum(
+            w["infotable_row_count"] for w in window_stats.values()
+        ),
         "windows": window_stats,
         "window_labels": [label for _url, label in BULK_ZIP_WINDOWS],
         "value_scale_correction": value_scale_stats,
     }
-    logger.info("institutional_ownership.done", **{k: v for k, v in stats.items() if k != "windows"})
+    logger.info(
+        "institutional_ownership.done",
+        **{k: v for k, v in stats.items() if k != "windows"},
+    )
     return stats

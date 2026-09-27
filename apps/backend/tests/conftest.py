@@ -9,7 +9,9 @@ import sys
 from pathlib import Path
 
 
-os.environ["DATABASE_URL"] = "postgresql://scrooner_test:unused@127.0.0.1:9/scrooner_test"
+os.environ["DATABASE_URL"] = (
+    "postgresql://scrooner_test:unused@127.0.0.1:9/scrooner_test"
+)
 os.environ["SUPABASE_URL"] = "https://scrooner-test.invalid"
 os.environ["SUPABASE_SERVICE_ROLE_KEY"] = "test-only-not-a-secret"
 os.environ["SEC_USER_AGENT"] = "Scrooner test suite test@example.invalid"

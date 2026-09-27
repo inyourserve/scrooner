@@ -74,7 +74,9 @@ def _decode_cursor(cursor: str | None) -> int:
             raise ValueError
         return position
     except (ValueError, UnicodeDecodeError) as error:
-        raise HTTPException(status_code=400, detail="Invalid pagination cursor") from error
+        raise HTTPException(
+            status_code=400, detail="Invalid pagination cursor"
+        ) from error
 
 
 def _apply_default_sort(query: ScreenQuery) -> ScreenQuery:
@@ -101,7 +103,9 @@ def _apply_default_sort(query: ScreenQuery) -> ScreenQuery:
 
 
 def _apply_default_display_metrics(query: ScreenQuery) -> ScreenQuery:
-    requested = list(dict.fromkeys([*query.display_metrics, *DEFAULT_COMPARISON_METRICS]))
+    requested = list(
+        dict.fromkeys([*query.display_metrics, *DEFAULT_COMPARISON_METRICS])
+    )
     return query.model_copy(update={"display_metrics": requested[:20]})
 
 
@@ -110,7 +114,9 @@ def prepare_screen_run_query(query: ScreenQuery) -> ScreenQuery:
     return _apply_default_display_metrics(_apply_default_sort(query))
 
 
-def _read_page(conn, run_id: str, user_id: str, page_size: int, cursor: str | None) -> dict:
+def _read_page(
+    conn, run_id: str, user_id: str, page_size: int, cursor: str | None
+) -> dict:
     cached = get_cached_run_page(user_id, run_id, page_size, cursor)
     if cached is not None:
         return cached
@@ -149,16 +155,32 @@ def _read_page(conn, run_id: str, user_id: str, page_size: int, cursor: str | No
         run = cur.fetchone()
     if run is None:
         raise HTTPException(status_code=404, detail="Screen run not found")
-    query_text, normalized_query, dataset_version, total_count, page_ids, ran_at, missing, inactive = run
+    (
+        query_text,
+        normalized_query,
+        dataset_version,
+        total_count,
+        page_ids,
+        ran_at,
+        missing,
+        inactive,
+    ) = run
 
     # Values come from the run's OWN snapshot version (migration 0074), so
     # a page always shows the numbers the run matched on, never today's.
-    items = load_screen_result_page(conn, ScreenQuery.model_validate(normalized_query), dataset_version, page_ids)
+    items = load_screen_result_page(
+        conn, ScreenQuery.model_validate(normalized_query), dataset_version, page_ids
+    )
     if items is None:
-        raise HTTPException(status_code=410, detail="This screen run's data version has been retired; run the screen again")
+        raise HTTPException(
+            status_code=410,
+            detail="This screen run's data version has been retired; run the screen again",
+        )
 
     previous_cursor = _encode_cursor(max(0, start - page_size)) if start > 0 else None
-    next_cursor = _encode_cursor(start + page_size) if start + page_size < total_count else None
+    next_cursor = (
+        _encode_cursor(start + page_size) if start + page_size < total_count else None
+    )
     page = {
         "run_id": str(run_id),
         "query_text": query_text,
@@ -203,7 +225,12 @@ def create_run_from_query(
 
         result = get_cached_result(query_hash)
         if result is None:
-            result = run_query(conn, query, dataset_version=dataset_version, catalog=get_cached_metric_catalog(conn))
+            result = run_query(
+                conn,
+                query,
+                dataset_version=dataset_version,
+                catalog=get_cached_metric_catalog(conn),
+            )
             set_cached_result(query_hash, result)
         matches = result["matched"]
         exclusions = {
@@ -250,7 +277,9 @@ def create_run_from_query(
                     "total_count": len(matches),
                     "company_ids": [company["company_id"] for company in matches],
                     "missing_ciks": [entry["cik"] for entry in excluded_missing],
-                    "missing_metrics": [",".join(entry["missing_metrics"]) for entry in excluded_missing],
+                    "missing_metrics": [
+                        ",".join(entry["missing_metrics"]) for entry in excluded_missing
+                    ],
                     "ran_at": ran_at,
                     "run_id": run_id_to_create,
                     "user_id": user_id,
@@ -289,23 +318,39 @@ def create_run_from_query(
 
 
 @router.post("/screen-runs")
-def create_screen_run(body: ScreenRunCreate, user_id: str = Depends(get_current_user_id)) -> dict:
+def create_screen_run(
+    body: ScreenRunCreate, user_id: str = Depends(get_current_user_id)
+) -> dict:
     if body.query is not None:
-        return create_run_from_query(body.text.strip(), body.query, user_id, body.page_size, body.run_id)
+        return create_run_from_query(
+            body.text.strip(), body.query, user_id, body.page_size, body.run_id
+        )
     text = body.text.strip()
-    interpretation = interpret_edit(text, body.current_query) if body.current_query is not None else None
+    interpretation = (
+        interpret_edit(text, body.current_query)
+        if body.current_query is not None
+        else None
+    )
     if interpretation is None:
         interpretation = interpret(text)
-    if interpretation.query is None or interpretation.unrecognized or interpretation.ambiguous:
+    if (
+        interpretation.query is None
+        or interpretation.unrecognized
+        or interpretation.ambiguous
+    ):
         return {
             "query": None,
-            "recognized_query": interpretation.recognized_query.model_dump() if interpretation.recognized_query else None,
+            "recognized_query": interpretation.recognized_query.model_dump()
+            if interpretation.recognized_query
+            else None,
             "unrecognized": interpretation.unrecognized,
             "ambiguous": [
                 {"phrase": item.phrase, "candidates": item.candidates}
                 for item in interpretation.ambiguous
             ],
-            "corrections": [asdict(correction) for correction in interpretation.corrections],
+            "corrections": [
+                asdict(correction) for correction in interpretation.corrections
+            ],
             "explanation": interpretation.explanation,
         }
     return create_run_from_query(

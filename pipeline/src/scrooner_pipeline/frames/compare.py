@@ -36,15 +36,22 @@ def _company_id_by_cik(conn: psycopg.Connection) -> dict[str, int]:
         return dict(cur.fetchall())
 
 
-def _concept_id_for_tag(conn: psycopg.Connection, taxonomy: str, tag: str) -> int | None:
+def _concept_id_for_tag(
+    conn: psycopg.Connection, taxonomy: str, tag: str
+) -> int | None:
     with conn.cursor() as cur:
-        cur.execute("select id from core.concept where taxonomy = %s and tag = %s", (taxonomy, tag))
+        cur.execute(
+            "select id from core.concept where taxonomy = %s and tag = %s",
+            (taxonomy, tag),
+        )
         row = cur.fetchone()
         return row[0] if row else None
 
 
 def _load_our_facts_for_tag(
-    conn: psycopg.Connection, concept_id: int, company_ids: list[int],
+    conn: psycopg.Connection,
+    concept_id: int,
+    company_ids: list[int],
 ) -> dict[tuple[int, str, str | None], tuple[Decimal, bool, bool]]:
     """(company_id, end_date_str, start_date_str) -> (value, is_authoritative,
     has_real_fiscal_period) -- one bulk query.
@@ -78,7 +85,14 @@ def _load_our_facts_for_tag(
             (concept_id, company_ids),
         )
         result: dict[tuple[int, str, str | None], tuple[Decimal, bool, bool]] = {}
-        for company_id, end_date, start_date, value, is_authoritative, has_real_fiscal_period in cur.fetchall():
+        for (
+            company_id,
+            end_date,
+            start_date,
+            value,
+            is_authoritative,
+            has_real_fiscal_period,
+        ) in cur.fetchall():
             key = (company_id, end_date, start_date)
             existing = result.get(key)
             # Prefer authoritative over non-authoritative; among equally-
@@ -99,9 +113,19 @@ def _pct_diff(a: Decimal, b: Decimal) -> Decimal:
 
 
 def compare_frame(
-    conn: psycopg.Connection, canonical_concept_id: int, taxonomy: str, tag: str, rows: list[FramesRow],
+    conn: psycopg.Connection,
+    canonical_concept_id: int,
+    taxonomy: str,
+    tag: str,
+    rows: list[FramesRow],
 ) -> dict:
-    stats = {"considered": len(rows), "matched_company": 0, SEVERITY_OK: 0, SEVERITY_MISMATCH: 0, SEVERITY_MISSING_OURS: 0}
+    stats = {
+        "considered": len(rows),
+        "matched_company": 0,
+        SEVERITY_OK: 0,
+        SEVERITY_MISMATCH: 0,
+        SEVERITY_MISSING_OURS: 0,
+    }
     concept_id = _concept_id_for_tag(conn, taxonomy, tag)
     if concept_id is None:
         logger.warning("frames.concept_not_in_core", taxonomy=taxonomy, tag=tag)
@@ -141,15 +165,26 @@ def compare_frame(
         else:
             our_value, _is_auth, _has_real_fp = our_fact
             pct_diff = _pct_diff(our_value, frames_value)
-            severity = SEVERITY_OK if pct_diff <= EXACT_MATCH_TOLERANCE_PCT else SEVERITY_MISMATCH
+            severity = (
+                SEVERITY_OK
+                if pct_diff <= EXACT_MATCH_TOLERANCE_PCT
+                else SEVERITY_MISMATCH
+            )
 
         stats[severity] += 1
         findings.append(
             {
-                "company_id": company_id, "concept_id": canonical_concept_id, "taxonomy": taxonomy, "tag": tag,
-                "period_start": frame_row.period_start, "period_end": frame_row.period_end,
-                "frames_value": frames_value, "our_value": our_value, "pct_diff": pct_diff,
-                "severity": severity, "accession": frame_row.accession,
+                "company_id": company_id,
+                "concept_id": canonical_concept_id,
+                "taxonomy": taxonomy,
+                "tag": tag,
+                "period_start": frame_row.period_start,
+                "period_end": frame_row.period_end,
+                "frames_value": frames_value,
+                "our_value": our_value,
+                "pct_diff": pct_diff,
+                "severity": severity,
+                "accession": frame_row.accession,
             }
         )
 
@@ -171,7 +206,13 @@ _INSERT_SQL = """
 """
 
 
-def _write_findings(conn: psycopg.Connection, company_ids: list[int], taxonomy: str, tag: str, findings: list[dict]) -> None:
+def _write_findings(
+    conn: psycopg.Connection,
+    company_ids: list[int],
+    taxonomy: str,
+    tag: str,
+    findings: list[dict],
+) -> None:
     with conn.cursor() as cur:
         # Delete-then-reinsert, scoped to exactly the companies/tag this
         # call actually evaluated -- same discipline as every other batch

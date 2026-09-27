@@ -44,7 +44,10 @@ from datetime import date, datetime, timedelta
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.sec_client import SECClient
 
@@ -75,7 +78,9 @@ MIN_FILING_DATE = (date.today() - timedelta(days=365 * 3)).isoformat()  # explic
 # a hardcoded string), same reasoning as insider.py's own bound.
 
 _SUBJECT_BLOCK_RE = re.compile(r"SUBJECT COMPANY:(.*?)FILED BY:", re.DOTALL)
-_FILED_BY_BLOCK_RE = re.compile(r"FILED BY:(.*?)(?:FILED BY:|<DOCUMENT>|</(?:SEC|IMS)-HEADER>)", re.DOTALL)
+_FILED_BY_BLOCK_RE = re.compile(
+    r"FILED BY:(.*?)(?:FILED BY:|<DOCUMENT>|</(?:SEC|IMS)-HEADER>)", re.DOTALL
+)
 _NAME_RE = re.compile(r"COMPANY CONFORMED NAME:\s*(.+)")
 _CIK_RE = re.compile(r"CENTRAL INDEX KEY:\s*(\d+)")
 _FILED_DATE_RE = re.compile(r"FILED AS OF DATE:\s*(\d{8})")
@@ -148,11 +153,15 @@ def _parse_header(text: str) -> dict | None:
         "issuer_cik": issuer_cik,
         "filer_name": filer_name,
         "filer_cik": filer_cik,
-        "filed_date": _parse_date_yyyymmdd(filed_date_match.group(1) if filed_date_match else None),
+        "filed_date": _parse_date_yyyymmdd(
+            filed_date_match.group(1) if filed_date_match else None
+        ),
     }
 
 
-def _load_schedule_filings(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> list[dict]:
+def _load_schedule_filings(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> list[dict]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -189,7 +198,12 @@ def update_beneficial_ownership_for_company(
         filings = _load_schedule_filings(storage, conn, cik)
 
     rows: list[dict] = []
-    stats = {"filings_considered": len(filings), "filings_parsed": 0, "issuer_mismatch": 0, "header_unparseable": 0}
+    stats = {
+        "filings_considered": len(filings),
+        "filings_parsed": 0,
+        "issuer_mismatch": 0,
+        "header_unparseable": 0,
+    }
     for f in filings:
         acc_no_dash = f["accession_number"].replace("-", "")
         cik_int = str(int(cik))
@@ -197,19 +211,29 @@ def update_beneficial_ownership_for_company(
         try:
             resp = sec.get(url)
         except Exception:
-            logger.warning("beneficial_ownership.fetch_failed", cik=cik, accession_number=f["accession_number"])
+            logger.warning(
+                "beneficial_ownership.fetch_failed",
+                cik=cik,
+                accession_number=f["accession_number"],
+            )
             continue
         header = _parse_header(resp.text)
         if header is None:
             stats["header_unparseable"] += 1
-            logger.warning("beneficial_ownership.header_unparseable", cik=cik, accession_number=f["accession_number"])
+            logger.warning(
+                "beneficial_ownership.header_unparseable",
+                cik=cik,
+                accession_number=f["accession_number"],
+            )
             continue
         # Require a confirmed issuer_cik match -- a header we couldn't
         # extract issuer_cik from is inconclusive, not a match, so it's
         # skipped the same as a genuine mismatch rather than accepted by
         # default (a missing field must never silently pass the check
         # this stage exists specifically to enforce).
-        if not header["issuer_cik"] or header["issuer_cik"].lstrip("0") != cik.lstrip("0"):
+        if not header["issuer_cik"] or header["issuer_cik"].lstrip("0") != cik.lstrip(
+            "0"
+        ):
             stats["issuer_mismatch"] += 1
             continue
         schedule_type = "13D" if f["form"].startswith("SC 13D") else "13G"
@@ -233,7 +257,9 @@ def update_beneficial_ownership_for_company(
         )
 
     with conn.cursor() as cur:
-        cur.execute("delete from core.beneficial_ownership where company_id = %s", (company_id,))
+        cur.execute(
+            "delete from core.beneficial_ownership where company_id = %s", (company_id,)
+        )
         if rows:
             # ON CONFLICT DO NOTHING (added 2026-08-28, same fix as
             # insider.py's identical issue): accession_number carries a
@@ -284,7 +310,14 @@ def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> di
     def _work() -> None:
         try:
             with get_connection() as company_conn:
-                result_queue.put(("ok", update_beneficial_ownership_for_company(company_conn, sec, company_id, cik)))
+                result_queue.put(
+                    (
+                        "ok",
+                        update_beneficial_ownership_for_company(
+                            company_conn, sec, company_id, cik
+                        ),
+                    )
+                )
         except Exception as exc:  # noqa: BLE001
             result_queue.put(("error", exc))
 
@@ -301,10 +334,19 @@ def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> di
 
 def update_beneficial_ownership(conn: psycopg.Connection, ciks: set[str]) -> dict:
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "timed_out": 0, "stakes": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "timed_out": 0,
+        "stakes": 0,
+    }
     with SECClient() as sec:
         for cik in sorted(ciks):
             totals["considered"] += 1
@@ -315,7 +357,11 @@ def update_beneficial_ownership(conn: psycopg.Connection, ciks: set[str]) -> dic
             try:
                 stats = _run_company_with_timeout(sec, company_id, cik)
             except TimeoutError:
-                logger.warning("beneficial_ownership.company_timed_out", cik=cik, timeout_seconds=PER_COMPANY_TIMEOUT_SECONDS)
+                logger.warning(
+                    "beneficial_ownership.company_timed_out",
+                    cik=cik,
+                    timeout_seconds=PER_COMPANY_TIMEOUT_SECONDS,
+                )
                 totals["timed_out"] += 1
                 continue
             except Exception:

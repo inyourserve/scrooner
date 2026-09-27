@@ -99,18 +99,33 @@ CONCEPT_FOR_COMPARISON: dict[str, str] = {
 # class -- narrowed to SIC codes starting with these prefixes (National/
 # State Commercial Banks, Savings Institutions, per core.company.sic_code).
 BANK_SIC_PREFIXES: tuple[str, ...] = ("602", "603", "606")
-BANK_INCOMPATIBLE_CONCEPTS: frozenset[str] = frozenset({"revenue", "gross_profit", "cost_of_revenue", "operating_expenses", "operating_income"})
+BANK_INCOMPATIBLE_CONCEPTS: frozenset[str] = frozenset(
+    {
+        "revenue",
+        "gross_profit",
+        "cost_of_revenue",
+        "operating_expenses",
+        "operating_income",
+    }
+)
 
 
 def seed_line_item_mapping(conn: psycopg.Connection) -> dict:
     stats = {"considered": len(LINE_ITEM_MAP), "mapped": 0, "unresolved_concept": 0}
     with conn.cursor() as cur:
         for (statement_type, line_item), concept_name in LINE_ITEM_MAP.items():
-            cur.execute("select id from analytics.canonical_concept where name = %s", (concept_name,))
+            cur.execute(
+                "select id from analytics.canonical_concept where name = %s",
+                (concept_name,),
+            )
             row = cur.fetchone()
             if row is None:
                 stats["unresolved_concept"] += 1
-                logger.warning("yfinance_financials.concept_not_found", concept=concept_name, line_item=line_item)
+                logger.warning(
+                    "yfinance_financials.concept_not_found",
+                    concept=concept_name,
+                    line_item=line_item,
+                )
                 continue
             concept_id = row[0]
             sign_flip = (statement_type, line_item) in SIGN_FLIP_LINE_ITEMS
@@ -122,10 +137,13 @@ def seed_line_item_mapping(conn: psycopg.Connection) -> dict:
                     set canonical_concept_id = excluded.canonical_concept_id, sign_flip = excluded.sign_flip, notes = excluded.notes
                 """,
                 {
-                    "statement_type": statement_type, "line_item": line_item, "concept_id": concept_id,
+                    "statement_type": statement_type,
+                    "line_item": line_item,
+                    "concept_id": concept_id,
                     "sign_flip": sign_flip,
                     "notes": "Bank-incompatible: yfinance's own income statement has no equivalent row, or its 'Total Revenue' is a computed aggregate that structurally disagrees with our bank-specific revenue tag -- see module docstring."
-                    if concept_name in BANK_INCOMPATIBLE_CONCEPTS else None,
+                    if concept_name in BANK_INCOMPATIBLE_CONCEPTS
+                    else None,
                 },
             )
             stats["mapped"] += 1

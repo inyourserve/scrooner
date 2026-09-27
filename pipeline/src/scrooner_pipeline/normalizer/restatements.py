@@ -185,10 +185,20 @@ def supersede_facts_for_company(conn: psycopg.Connection, company_id: int) -> di
 
 def resolve_restatements(conn: psycopg.Connection, ciks: set[str]) -> dict:
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "linked": 0, "unmatched": 0, "superseded_pairs": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "linked": 0,
+        "unmatched": 0,
+        "superseded_pairs": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -206,7 +216,13 @@ def resolve_restatements(conn: psycopg.Connection, ciks: set[str]) -> dict:
         totals["linked"] += link_stats["linked"]
         totals["unmatched"] += link_stats["unmatched"]
         totals["superseded_pairs"] += supersede_stats["superseded_pairs"]
-        logger.info("restatements.resolved", cik=cik, company_id=company_id, **link_stats, **supersede_stats)
+        logger.info(
+            "restatements.resolved",
+            cik=cik,
+            company_id=company_id,
+            **link_stats,
+            **supersede_stats,
+        )
 
     logger.info("restatements.resolve.done", **totals)
     return totals

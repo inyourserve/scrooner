@@ -31,7 +31,10 @@ import json
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
@@ -42,7 +45,9 @@ def _load_json(storage: SupabaseStorageClient, storage_path: str) -> dict:
     return json.loads(raw_bytes)
 
 
-def _latest_companyfacts_object(conn: psycopg.Connection, cik: str) -> tuple[int, str] | None:
+def _latest_companyfacts_object(
+    conn: psycopg.Connection, cik: str
+) -> tuple[int, str] | None:
     with conn.cursor() as cur:
         cur.execute(
             "select id, storage_path from raw.sec_companyfacts where cik = %s order by fetched_at desc limit 1",
@@ -80,7 +85,9 @@ def upsert_units(conn: psycopg.Connection, canonical_unit_names: set[str]) -> in
     return len(canonical_unit_names)
 
 
-def normalize_units_for_cik(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict:
+def normalize_units_for_cik(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict:
     cf_row = _latest_companyfacts_object(conn, cik)
     if cf_row is None:
         logger.warning("units.no_companyfacts_for_cik", cik=cik)
@@ -115,7 +122,9 @@ def normalize_units(conn: psycopg.Connection, ciks: set[str]) -> dict:
                 raw_to_canonical.setdefault(canonical, set()).add(raw_unit)
 
     written = upsert_units(conn, all_canonical)
-    collisions = {c: variants for c, variants in raw_to_canonical.items() if len(variants) > 1}
+    collisions = {
+        c: variants for c, variants in raw_to_canonical.items() if len(variants) > 1
+    }
     logger.info(
         "units.normalize.done",
         **stats,

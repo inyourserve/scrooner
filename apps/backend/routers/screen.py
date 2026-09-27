@@ -63,7 +63,9 @@ def _load_metric_catalog() -> list[dict]:
                 "operators": OPERATOR_ORDER,
             }
         )
-    return sorted(catalog, key=lambda metric: (metric["category"], metric["display_name"]))
+    return sorted(
+        catalog, key=lambda metric: (metric["category"], metric["display_name"])
+    )
 
 
 def _log_usage(event_type: str, user_id: str | None = None) -> None:
@@ -92,7 +94,12 @@ def post_screen(query: ScreenQuery, background_tasks: BackgroundTasks) -> dict:
         cached = get_cached_result(query_hash)
         if cached is not None:
             return {**cached, "cache_hit": True}
-        result = run_query(conn, query, dataset_version=dataset_version, catalog=get_cached_metric_catalog(conn))
+        result = run_query(
+            conn,
+            query,
+            dataset_version=dataset_version,
+            catalog=get_cached_metric_catalog(conn),
+        )
     set_cached_result(query_hash, result)
     return {**result, "cache_hit": False}
 
@@ -114,9 +121,13 @@ def post_ask(body: AskRequest, background_tasks: BackgroundTasks) -> dict:
     response = {
         "explanation": result.explanation,
         "query": result.query.model_dump() if result.query else None,
-        "recognized_query": result.recognized_query.model_dump() if result.recognized_query else None,
+        "recognized_query": result.recognized_query.model_dump()
+        if result.recognized_query
+        else None,
         "unrecognized": result.unrecognized,
-        "ambiguous": [{"phrase": a.phrase, "candidates": a.candidates} for a in result.ambiguous],
+        "ambiguous": [
+            {"phrase": a.phrase, "candidates": a.candidates} for a in result.ambiguous
+        ],
         "corrections": [asdict(correction) for correction in result.corrections],
     }
     if body.run and result.query is not None:
@@ -127,7 +138,12 @@ def post_ask(body: AskRequest, background_tasks: BackgroundTasks) -> dict:
             if cached is not None:
                 response["result"] = {**cached, "cache_hit": True}
             else:
-                run_result = run_query(conn, result.query, dataset_version=dataset_version, catalog=get_cached_metric_catalog(conn))
+                run_result = run_query(
+                    conn,
+                    result.query,
+                    dataset_version=dataset_version,
+                    catalog=get_cached_metric_catalog(conn),
+                )
                 set_cached_result(query_hash, run_result)
                 response["result"] = {**run_result, "cache_hit": False}
     return response

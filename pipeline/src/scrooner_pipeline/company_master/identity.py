@@ -14,7 +14,10 @@ import json
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 
 logger = structlog.get_logger()
 
@@ -47,7 +50,9 @@ def _load_json(storage: SupabaseStorageClient, storage_path: str) -> dict:
     return json.loads(raw_bytes)
 
 
-def load_identity_fields(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict | None:
+def load_identity_fields(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict | None:
     storage_path = _latest_base_submission(conn, cik)
     if storage_path is None:
         logger.warning("company_master.identity.no_base_submission", cik=cik)

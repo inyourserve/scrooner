@@ -20,7 +20,10 @@ from datetime import date, datetime
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
@@ -65,15 +68,30 @@ logger = structlog.get_logger()
 # parsing (exec comp, insider holdings from the proxy's own tables)
 # remains explicitly deferred, per doc 19.
 FORM_ALLOWLIST = {
-    "10-K", "10-K/A",
-    "10-Q", "10-Q/A",
-    "20-F", "20-F/A",
-    "40-F", "40-F/A",
-    "8-K", "8-K/A",
-    "15-12G", "15-12G/A", "15-15D", "15-15D/A",
-    "15F-12B", "15F-12B/A", "15F-12G", "15F-12G/A",
-    "SC 14D9", "SC 14D9/A",
-    "DEF 14A", "DEFA14A", "DEFM14A", "DEFR14A",
+    "10-K",
+    "10-K/A",
+    "10-Q",
+    "10-Q/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
+    "8-K",
+    "8-K/A",
+    "15-12G",
+    "15-12G/A",
+    "15-15D",
+    "15-15D/A",
+    "15F-12B",
+    "15F-12B/A",
+    "15F-12G",
+    "15F-12G/A",
+    "SC 14D9",
+    "SC 14D9/A",
+    "DEF 14A",
+    "DEFA14A",
+    "DEFM14A",
+    "DEFR14A",
     # 144/424B5/FWP added 2026-08-29 (zero-new-fetch coverage pass) --
     # same purely-additive widening as everything else in this history.
     # Checked live against the full golden-10 first, not assumed: 144
@@ -83,11 +101,15 @@ FORM_ALLOWLIST = {
     # prospectuses, heavily dominated by JPM's structured-note/ETN
     # issuance program, the same "one CIK, many securities" pattern
     # pipeline/CLAUDE.md already documents for JPM's listings).
-    "144", "424B5", "FWP",
+    "144",
+    "424B5",
+    "FWP",
 }
 
 
-def _latest_submission_files(conn: psycopg.Connection, cik: str) -> list[tuple[int, str]]:
+def _latest_submission_files(
+    conn: psycopg.Connection, cik: str
+) -> list[tuple[int, str]]:
     """(raw_id, storage_path) for every file (base + continuation pages) in
     the MOST RECENT fetch batch for this CIK -- base and continuations share
     one fetched_at, since collector/submissions.py fetches them together in
@@ -139,8 +161,12 @@ def _parse_filings_block(block: dict) -> list[dict]:
             {
                 "accession_number": accession_number,
                 "form": form,
-                "filing_date": _parse_date(filing_dates[i] if i < len(filing_dates) else None),
-                "period_of_report": _parse_date(report_dates[i] if i < len(report_dates) else None),
+                "filing_date": _parse_date(
+                    filing_dates[i] if i < len(filing_dates) else None
+                ),
+                "period_of_report": _parse_date(
+                    report_dates[i] if i < len(report_dates) else None
+                ),
                 "is_amendment": form.endswith("/A"),
                 "items": item_value or None,
             }
@@ -148,7 +174,9 @@ def _parse_filings_block(block: dict) -> list[dict]:
     return rows
 
 
-def load_company_identity(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict | None:
+def load_company_identity(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict | None:
     """Fetches and parses the current submissions snapshot for one CIK.
     Returns None if this CIK has no submissions data collected yet (nothing
     to normalize)."""
@@ -200,7 +228,9 @@ def load_company_identity(storage: SupabaseStorageClient, conn: psycopg.Connecti
     }
 
 
-def upsert_company(conn: psycopg.Connection, cik: str, company_name: str, fiscal_year_end: str | None) -> int:
+def upsert_company(
+    conn: psycopg.Connection, cik: str, company_name: str, fiscal_year_end: str | None
+) -> int:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -218,7 +248,9 @@ def upsert_company(conn: psycopg.Connection, cik: str, company_name: str, fiscal
     return company_id
 
 
-def upsert_listings(conn: psycopg.Connection, company_id: int, listings: list[dict]) -> int:
+def upsert_listings(
+    conn: psycopg.Connection, company_id: int, listings: list[dict]
+) -> int:
     if not listings:
         return 0
     with conn.cursor() as cur:
@@ -242,7 +274,9 @@ def upsert_filings(
 ) -> int:
     if not filings:
         return 0
-    raw_id_by_accession = {f["accession_number"]: raw_id for f, raw_id in raw_submission_id_by_filing}
+    raw_id_by_accession = {
+        f["accession_number"]: raw_id for f, raw_id in raw_submission_id_by_filing
+    }
     rows = [
         {
             "company_id": company_id,
@@ -277,14 +311,20 @@ def upsert_filings(
     return len(rows)
 
 
-def normalize_identity_for_cik(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict:
+def normalize_identity_for_cik(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict:
     identity = load_company_identity(storage, conn, cik)
     if identity is None:
         return {"cik": cik, "status": "no_data"}
 
-    company_id = upsert_company(conn, identity["cik"], identity["company_name"], identity["fiscal_year_end"])
+    company_id = upsert_company(
+        conn, identity["cik"], identity["company_name"], identity["fiscal_year_end"]
+    )
     listing_count = upsert_listings(conn, company_id, identity["listings"])
-    filing_count = upsert_filings(conn, company_id, identity["filings"], identity["raw_submission_id_by_filing"])
+    filing_count = upsert_filings(
+        conn, company_id, identity["filings"], identity["raw_submission_id_by_filing"]
+    )
 
     logger.info(
         "identity.normalized",

@@ -51,11 +51,15 @@ from yfinance.exceptions import YFRateLimitError
 from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
 from scrooner_pipeline.company_master.security_type import resolve_primary_tickers
-from scrooner_pipeline.company_master.yfinance_industry import DEFAULT_RATE_LIMITER_LOCK_PATH
+from scrooner_pipeline.company_master.yfinance_industry import (
+    DEFAULT_RATE_LIMITER_LOCK_PATH,
+)
 
 logger = structlog.get_logger()
 
-AGGREGATE_REQUEST_INTERVAL_SECONDS = 1.2  # same shared budget as yfinance_check.py/yfinance_industry.py
+AGGREGATE_REQUEST_INTERVAL_SECONDS = (
+    1.2  # same shared budget as yfinance_check.py/yfinance_industry.py
+)
 _rate_limiter = CrossProcessRateLimiter(
     max_per_second=1.0 / AGGREGATE_REQUEST_INTERVAL_SECONDS,
     lock_path=DEFAULT_RATE_LIMITER_LOCK_PATH,
@@ -70,18 +74,29 @@ STATEMENT_ATTR = {
 PERIOD_MATCH_TOLERANCE_DAYS = 15
 
 
-def _fetch_one_statement_once(ticker_obj: yf.Ticker, attr: str, paced: bool) -> pd.DataFrame:
+def _fetch_one_statement_once(
+    ticker_obj: yf.Ticker, attr: str, paced: bool
+) -> pd.DataFrame:
     if paced:
         _rate_limiter.wait()
     return getattr(ticker_obj, attr)
 
 
-@retry(retry=retry_if_exception_type(YFRateLimitError), stop=stop_after_attempt(3), wait=wait_fixed(60), reraise=True)
-def _fetch_one_statement_paced_with_retry(ticker_obj: yf.Ticker, attr: str) -> pd.DataFrame:
+@retry(
+    retry=retry_if_exception_type(YFRateLimitError),
+    stop=stop_after_attempt(3),
+    wait=wait_fixed(60),
+    reraise=True,
+)
+def _fetch_one_statement_paced_with_retry(
+    ticker_obj: yf.Ticker, attr: str
+) -> pd.DataFrame:
     return _fetch_one_statement_once(ticker_obj, attr, paced=True)
 
 
-def _fetch_one_statement(ticker_obj: yf.Ticker, attr: str, paced: bool = True) -> pd.DataFrame:
+def _fetch_one_statement(
+    ticker_obj: yf.Ticker, attr: str, paced: bool = True
+) -> pd.DataFrame:
     if paced:
         return _fetch_one_statement_paced_with_retry(ticker_obj, attr)
     # Unpaced "try fast first": no retry at all -- a rate-limit hit here
@@ -92,7 +107,10 @@ def _fetch_one_statement(ticker_obj: yf.Ticker, attr: str, paced: bool = True) -
 
 def _fetch_all_statements(ticker: str, paced: bool = True) -> dict[str, pd.DataFrame]:
     t = yf.Ticker(ticker)
-    return {statement_type: _fetch_one_statement(t, attr, paced) for statement_type, attr in STATEMENT_ATTR.items()}
+    return {
+        statement_type: _fetch_one_statement(t, attr, paced)
+        for statement_type, attr in STATEMENT_ATTR.items()
+    }
 
 
 def pick_rotation_batch(conn: psycopg.Connection, limit: int) -> list[int]:
@@ -136,7 +154,9 @@ def _flatten(df: pd.DataFrame) -> list[tuple[str, date, float | None]]:
     return rows
 
 
-def fetch_and_store_statements(conn: psycopg.Connection, company_ids: list[int], paced: bool = True) -> dict:
+def fetch_and_store_statements(
+    conn: psycopg.Connection, company_ids: list[int], paced: bool = True
+) -> dict:
     # "ok_but_empty" -- added 2026-09-19, real finding not yet root-caused:
     # the daily cron (GitHub Actions runner IPs) wrote ZERO new rows to
     # analytics.yfinance_statement_line for 5 straight days (2026-09-15
@@ -154,9 +174,18 @@ def fetch_and_store_statements(conn: psycopg.Connection, company_ids: list[int],
     # exists so the failure is visible in fetch_done's own stats instead
     # of silently blending into "ok" (indistinguishable from a real thin
     # company reporting nothing), for whoever picks this up next.
-    stats = {"considered": len(company_ids), "ok": 0, "ok_but_empty": 0, "no_ticker": 0, "fetch_failed": 0, "rows_written": 0}
+    stats = {
+        "considered": len(company_ids),
+        "ok": 0,
+        "ok_but_empty": 0,
+        "no_ticker": 0,
+        "fetch_failed": 0,
+        "rows_written": 0,
+    }
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where id = any(%s)", (company_ids,))
+        cur.execute(
+            "select id, cik from core.company where id = any(%s)", (company_ids,)
+        )
         cik_by_company = dict(cur.fetchall())
     ticker_by_cik = resolve_primary_tickers(conn, set(cik_by_company.values()))
 
@@ -173,7 +202,9 @@ def fetch_and_store_statements(conn: psycopg.Connection, company_ids: list[int],
             stats["fetch_failed"] += 1
             continue
         except Exception as e:
-            logger.warning("yfinance_financials.fetch_failed", ticker=ticker, error=str(e))
+            logger.warning(
+                "yfinance_financials.fetch_failed", ticker=ticker, error=str(e)
+            )
             stats["fetch_failed"] += 1
             continue
 
@@ -182,8 +213,12 @@ def fetch_and_store_statements(conn: psycopg.Connection, company_ids: list[int],
             for line_item, period_end, value in _flatten(df):
                 rows.append(
                     {
-                        "company_id": company_id, "statement_type": statement_type, "frequency": "quarterly",
-                        "line_item": line_item, "period_end": period_end, "value": value,
+                        "company_id": company_id,
+                        "statement_type": statement_type,
+                        "frequency": "quarterly",
+                        "line_item": line_item,
+                        "period_end": period_end,
+                        "value": value,
                     }
                 )
         _write_batch(conn, rows)
@@ -213,7 +248,9 @@ def _write_batch(conn: psycopg.Connection, rows: list[dict]) -> None:
             cur.executemany(_UPSERT_SQL, rows)
         conn.commit()
     except psycopg.OperationalError:
-        logger.warning("yfinance_financials.connection_dropped_reconnecting", rows=len(rows))
+        logger.warning(
+            "yfinance_financials.connection_dropped_reconnecting", rows=len(rows)
+        )
         fresh_conn = psycopg.connect(settings.database_url)
         with fresh_conn.cursor() as cur:
             cur.executemany(_UPSERT_SQL, rows)

@@ -101,9 +101,9 @@ _FINANCIAL_INCOME_TAGS = (
 # leaving it looking like an unexplained gap.
 _FPI_COMPANY_IDS = (
     1950,  # Bank of Montreal
-    5,     # Enbridge Inc
-    239,   # Canadian National Railway Co
-    6,     # Taiwan Semiconductor Manufacturing Co Ltd
+    5,  # Enbridge Inc
+    239,  # Canadian National Railway Co
+    6,  # Taiwan Semiconductor Manufacturing Co Ltd
     3389,  # Sify Technologies Ltd
     5689,  # JBS N.V.
 )
@@ -139,8 +139,8 @@ _FPI_COMPANY_IDS = (
 # unlike the four below, they're deliberately left in the unexplained
 # tail rather than force-classified.
 _COREGISTRANT_SUBSIDIARY_COMPANY_IDS = (
-    257,   # Ameren Illinois Co
-    613,   # Georgia Power Co
+    257,  # Ameren Illinois Co
+    613,  # Georgia Power Co
     1044,  # Public Service Co of New Mexico
     1165,  # Consumers Energy Co
 )
@@ -157,11 +157,22 @@ _COREGISTRANT_SUBSIDIARY_COMPANY_IDS = (
 # same structural absence as `passthrough_trust` above, just not caught
 # by SIC_GAP_REASONS since these span several different SIC codes.
 _ROYALTY_AND_PASSTHROUGH_TRUST_COMPANY_IDS = (
-    1731, 1659, 676, 1189, 1214, 1271, 1215,  # oil/gas royalty trusts
-    2105, 3006, 2502, 5043, 2322,  # more oil/gas royalty trusts
+    1731,
+    1659,
+    676,
+    1189,
+    1214,
+    1271,
+    1215,  # oil/gas royalty trusts
+    2105,
+    3006,
+    2502,
+    5043,
+    2322,  # more oil/gas royalty trusts
     237,  # Scully Royalty Ltd
     698,  # Mills Music Trust
-    2715, 5633,  # real estate pass-through/liquidation trusts
+    2715,
+    5633,  # real estate pass-through/liquidation trusts
 )
 
 
@@ -322,15 +333,25 @@ POPULATION_QUERIES = {
 # real_operating_company (set in build_registry()). Curated, not guessed:
 # each family here was checked the same way revenue/dividends were.
 DIVIDEND_FAMILY_DATA_POINTS = (
-    "dividends_paid", "dividends_paid_resolved", "dividends_per_share",
-    "dividend_growth_streak_years", "dividend_yield", "dps_growth_yoy",
-    "dps_growth_3y_cagr", "payout_ratio", "dividends_pct_fcf",
+    "dividends_paid",
+    "dividends_paid_resolved",
+    "dividends_per_share",
+    "dividend_growth_streak_years",
+    "dividend_yield",
+    "dps_growth_yoy",
+    "dps_growth_3y_cagr",
+    "payout_ratio",
+    "dividends_pct_fcf",
 )
 BUYBACK_FAMILY_DATA_POINTS = (
-    "share_buybacks", "share_buybacks_resolved", "buyback_yield", "share_repurchases_pct_fcf",
+    "share_buybacks",
+    "share_buybacks_resolved",
+    "buyback_yield",
+    "share_repurchases_pct_fcf",
 )
 CAPITAL_RETURN_FAMILY_DATA_POINTS = (
-    "cash_returned_to_shareholders", "total_shareholder_yield",
+    "cash_returned_to_shareholders",
+    "total_shareholder_yield",
 )
 BDC_FAMILY_DATA_POINTS = ("bdc_total_investment_income",)
 
@@ -394,7 +415,14 @@ def build_registry(conn: psycopg.Connection) -> dict:
         )
         for name, tags in cur.fetchall():
             source = "mapper/resolve.py" if tags else "mapper/concept_fallback.py"
-            rows.append({"data_point_name": name, "data_point_type": "concept", "required_tags": tags, "source_module": source})
+            rows.append(
+                {
+                    "data_point_name": name,
+                    "data_point_type": "concept",
+                    "required_tags": tags,
+                    "source_module": source,
+                }
+            )
 
         cur.execute(
             """
@@ -414,17 +442,41 @@ def build_registry(conn: psycopg.Connection) -> dict:
         # market_cap) get an empty tag list here -- correct, not a bug:
         # their real "tags needed" is transitively their input metrics'
         # own registry rows, not a new XBRL tag of their own.
-        cur.execute("select metric_name from analytics.metric_definition where status = 'active'")
+        cur.execute(
+            "select metric_name from analytics.metric_definition where status = 'active'"
+        )
         for (name,) in cur.fetchall():
-            rows.append({"data_point_name": name, "data_point_type": "metric", "required_tags": metric_rows.get(name, []), "source_module": "mapper/"})
+            rows.append(
+                {
+                    "data_point_name": name,
+                    "data_point_type": "metric",
+                    "required_tags": metric_rows.get(name, []),
+                    "source_module": "mapper/",
+                }
+            )
 
     # Ownership sections -- no XBRL tag; the SEC form type is the closest
     # equivalent "what do I need to go fetch" signal.
     rows.extend(
         [
-            {"data_point_name": "insider_ownership", "data_point_type": "ownership", "required_tags": ["FORM 4"], "source_module": "ownership/insider.py"},
-            {"data_point_name": "institutional_ownership", "data_point_type": "ownership", "required_tags": ["FORM 13F", "SCHEDULE 13D", "SCHEDULE 13G"], "source_module": "ownership/institutional.py"},
-            {"data_point_name": "mutual_fund_ownership", "data_point_type": "ownership", "required_tags": ["FORM N-PORT"], "source_module": "ownership/mutual_fund.py"},
+            {
+                "data_point_name": "insider_ownership",
+                "data_point_type": "ownership",
+                "required_tags": ["FORM 4"],
+                "source_module": "ownership/insider.py",
+            },
+            {
+                "data_point_name": "institutional_ownership",
+                "data_point_type": "ownership",
+                "required_tags": ["FORM 13F", "SCHEDULE 13D", "SCHEDULE 13G"],
+                "source_module": "ownership/institutional.py",
+            },
+            {
+                "data_point_name": "mutual_fund_ownership",
+                "data_point_type": "ownership",
+                "required_tags": ["FORM N-PORT"],
+                "source_module": "ownership/mutual_fund.py",
+            },
         ]
     )
 
@@ -443,7 +495,9 @@ def build_registry(conn: psycopg.Connection) -> dict:
     for name in BDC_FAMILY_DATA_POINTS:
         population_overrides[name] = "bdc_company"
     for row in rows:
-        row["applicable_population"] = population_overrides.get(row["data_point_name"], "real_operating_company")
+        row["applicable_population"] = population_overrides.get(
+            row["data_point_name"], "real_operating_company"
+        )
 
     with conn.cursor() as cur:
         # Found live 2026-09-06: company_data_point_coverage has a FK to
@@ -558,7 +612,9 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         )
         conn.commit()
 
-        cur.execute("select count(*), count(*) filter (where has_value) from analytics.company_data_point_coverage")
+        cur.execute(
+            "select count(*), count(*) filter (where has_value) from analytics.company_data_point_coverage"
+        )
         total, has_value = cur.fetchone()
 
     # Order matters: classify_concept_gaps() must run first -- it sets the
@@ -607,5 +663,11 @@ def corrected_coverage_report(conn: psycopg.Connection) -> list[dict]:
             order by r.data_point_type, r.data_point_name
             """
         )
-        columns = ("data_point_name", "data_point_type", "applicable_population", "has_value", "population_size")
+        columns = (
+            "data_point_name",
+            "data_point_type",
+            "applicable_population",
+            "has_value",
+            "population_size",
+        )
         return [dict(zip(columns, row)) for row in cur.fetchall()]

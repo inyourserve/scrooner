@@ -46,9 +46,13 @@ class _RequestBucket:
             "count": self.count,
             "client_errors": self.client_errors,
             "server_errors": self.server_errors,
-            "server_error_rate": round(self.server_errors / self.count, 6) if self.count else 0.0,
+            "server_error_rate": round(self.server_errors / self.count, 6)
+            if self.count
+            else 0.0,
             "latency_ms": {
-                "average": round(self.total_duration_ms / self.count, 3) if self.count else 0.0,
+                "average": round(self.total_duration_ms / self.count, 3)
+                if self.count
+                else 0.0,
                 "maximum": round(self.max_duration_ms, 3),
             },
         }
@@ -67,11 +71,15 @@ class ApiRequestMetrics:
             self._total = _RequestBucket()
             self._endpoints: dict[tuple[str, str], _RequestBucket] = {}
 
-    def observe(self, method: str, endpoint: str, status_code: int, duration_ms: float) -> None:
+    def observe(
+        self, method: str, endpoint: str, status_code: int, duration_ms: float
+    ) -> None:
         key = (method.upper(), endpoint)
         with self._lock:
             self._total.observe(status_code, duration_ms)
-            self._endpoints.setdefault(key, _RequestBucket()).observe(status_code, duration_ms)
+            self._endpoints.setdefault(key, _RequestBucket()).observe(
+                status_code, duration_ms
+            )
 
     def snapshot(self) -> dict:
         with self._lock:

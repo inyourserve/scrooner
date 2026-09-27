@@ -34,7 +34,10 @@ def concept_to_metrics(conn: psycopg.Connection, concept_name: str) -> list[dict
             """,
             (concept_name,),
         )
-        return [{"metric_definition_id": r[0], "metric_name": r[1], "role": r[2]} for r in cur.fetchall()]
+        return [
+            {"metric_definition_id": r[0], "metric_name": r[1], "role": r[2]}
+            for r in cur.fetchall()
+        ]
 
 
 def metric_to_saved_screens(conn: psycopg.Connection, metric_name: str) -> list[dict]:
@@ -52,7 +55,10 @@ def metric_to_saved_screens(conn: psycopg.Connection, metric_name: str) -> list[
             """,
             (f'%"{metric_name}"%', metric_name),
         )
-        return [{"saved_screen_id": r[0], "user_id": str(r[1]), "name": r[2]} for r in cur.fetchall()]
+        return [
+            {"saved_screen_id": r[0], "user_id": str(r[1]), "name": r[2]}
+            for r in cur.fetchall()
+        ]
 
 
 def concept_affected_companies(conn: psycopg.Connection, concept_name: str) -> dict:
@@ -100,13 +106,21 @@ def impact_report(conn: psycopg.Connection, concept_name: str) -> dict:
 
 def render_markdown(report: dict) -> str:
     lines = [f"# Impact Analysis: `{report['concept']}`", ""]
-    lines.append(f"- Companies with data under this concept: **{report['affected_companies']:,}**")
-    lines.append(f"- Metrics fed by this concept: **{len(report['metrics_fed'])}** ({', '.join(report['metrics_fed']) or 'none'})")
-    lines.append(f"- Saved screens touched (any fed metric referenced): **{report['total_saved_screens_touched']}**")
+    lines.append(
+        f"- Companies with data under this concept: **{report['affected_companies']:,}**"
+    )
+    lines.append(
+        f"- Metrics fed by this concept: **{len(report['metrics_fed'])}** ({', '.join(report['metrics_fed']) or 'none'})"
+    )
+    lines.append(
+        f"- Saved screens touched (any fed metric referenced): **{report['total_saved_screens_touched']}**"
+    )
     lines.append("")
 
     if not report["metric_impacts"]:
-        lines.append("_No metric_definition reads this concept as a formula input -- either it's a statement-display-only concept (never wired into calculate.py) or the concept name doesn't exist._")
+        lines.append(
+            "_No metric_definition reads this concept as a formula input -- either it's a statement-display-only concept (never wired into calculate.py) or the concept name doesn't exist._"
+        )
         return "\n".join(lines)
 
     lines.append("## Metrics fed")

@@ -28,7 +28,10 @@ from datetime import date, datetime
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
@@ -59,7 +62,9 @@ def _load_json(storage: SupabaseStorageClient, storage_path: str) -> dict:
     return json.loads(raw_bytes)
 
 
-def _latest_companyfacts_object(conn: psycopg.Connection, cik: str) -> tuple[int, str] | None:
+def _latest_companyfacts_object(
+    conn: psycopg.Connection, cik: str
+) -> tuple[int, str] | None:
     with conn.cursor() as cur:
         cur.execute(
             "select id, storage_path from raw.sec_companyfacts where cik = %s order by fetched_at desc limit 1",
@@ -70,7 +75,9 @@ def _latest_companyfacts_object(conn: psycopg.Connection, cik: str) -> tuple[int
 
 def _get_company(conn: psycopg.Connection, cik: str) -> tuple[int, str | None] | None:
     with conn.cursor() as cur:
-        cur.execute("select id, fiscal_year_end from core.company where cik = %s", (cik,))
+        cur.execute(
+            "select id, fiscal_year_end from core.company where cik = %s", (cik,)
+        )
         return cur.fetchone()
 
 
@@ -110,7 +117,10 @@ def extract_fy_tagged_spans(payload: dict) -> set[tuple[str, str]]:
     return fy_spans
 
 
-def build_fye_anchors(periods: set[tuple[str, str | None]], fy_tagged_spans: set[tuple[str, str]] | None = None) -> list[date]:
+def build_fye_anchors(
+    periods: set[tuple[str, str | None]],
+    fy_tagged_spans: set[tuple[str, str]] | None = None,
+) -> list[date]:
     """Every distinct end_date belonging to a full-year-length duration --
     empirically this company's OWN real fiscal-year-end dates. No MMDD
     guessing: verified live that AAPL's actual FYE wobbles day-to-day
@@ -139,7 +149,11 @@ def build_fye_anchors(periods: set[tuple[str, str | None]], fy_tagged_spans: set
     for end, start in periods:
         if start is None:
             continue
-        if FULL_YEAR_MIN_DAYS <= (_parse_date(end) - _parse_date(start)).days <= FULL_YEAR_MAX_DAYS:
+        if (
+            FULL_YEAR_MIN_DAYS
+            <= (_parse_date(end) - _parse_date(start)).days
+            <= FULL_YEAR_MAX_DAYS
+        ):
             duration_anchors.add(_parse_date(end))
             if fy_tagged_spans and (start, end) in fy_tagged_spans:
                 fy_anchors.add(_parse_date(end))
@@ -177,7 +191,13 @@ def _bracket_fye(
     prior_fye = next((a for a in reversed(anchors) if a < target), None)
 
     if next_fye is None:
-        base = anchors[-1] if anchors else (date(target.year - 1, *nominal_month_day) if nominal_month_day else None)
+        base = (
+            anchors[-1]
+            if anchors
+            else (
+                date(target.year - 1, *nominal_month_day) if nominal_month_day else None
+            )
+        )
         if base is not None:
             candidate = base
             while candidate < target:
@@ -194,7 +214,10 @@ def _bracket_fye(
 
 
 def classify_period(
-    end: str, start: str | None, anchors: list[date], nominal_month_day: tuple[int, int] | None
+    end: str,
+    start: str | None,
+    anchors: list[date],
+    nominal_month_day: tuple[int, int] | None,
 ) -> dict:
     end_date = _parse_date(end)
     if start is None:
@@ -219,9 +242,15 @@ def classify_period(
         # end. The instant branch below already requires end_date ==
         # next_fye for its own FY case; this now matches that same
         # anchor-confirmed check, rather than trusting length alone.
-        if FULL_YEAR_MIN_DAYS <= duration_days <= FULL_YEAR_MAX_DAYS and end_date == next_fye:
+        if (
+            FULL_YEAR_MIN_DAYS <= duration_days <= FULL_YEAR_MAX_DAYS
+            and end_date == next_fye
+        ):
             fiscal_period = "FY"
-        elif QUARTER_MIN_DAYS <= duration_days <= QUARTER_MAX_DAYS and prior_fye is not None:
+        elif (
+            QUARTER_MIN_DAYS <= duration_days <= QUARTER_MAX_DAYS
+            and prior_fye is not None
+        ):
             idx = round((end_date - prior_fye).days / NOMINAL_QUARTER_DAYS)
             fiscal_period = f"Q{min(max(idx, 1), 4)}"
         # else: non-standard duration (half-year/three-quarter YTD spans,
@@ -262,7 +291,9 @@ def upsert_periods(conn: psycopg.Connection, company_id: int, rows: list[dict]) 
     return len(rows)
 
 
-def normalize_periods_for_cik(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> dict:
+def normalize_periods_for_cik(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> dict:
     company = _get_company(conn, cik)
     if company is None:
         logger.warning("periods.no_company_for_cik", cik=cik)
@@ -281,7 +312,10 @@ def normalize_periods_for_cik(storage: SupabaseStorageClient, conn: psycopg.Conn
     anchors = build_fye_anchors(distinct_periods, fy_tagged_spans)
     nominal_month_day = _parse_fiscal_year_end(fiscal_year_end)
 
-    rows = [classify_period(end, start, anchors, nominal_month_day) for end, start in distinct_periods]
+    rows = [
+        classify_period(end, start, anchors, nominal_month_day)
+        for end, start in distinct_periods
+    ]
     count = upsert_periods(conn, company_id, rows)
 
     logger.info(
@@ -296,7 +330,13 @@ def normalize_periods_for_cik(storage: SupabaseStorageClient, conn: psycopg.Conn
 
 
 def normalize_periods(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    stats = {"considered": 0, "ok": 0, "no_company": 0, "no_companyfacts": 0, "errored": 0}
+    stats = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "no_companyfacts": 0,
+        "errored": 0,
+    }
     with SupabaseStorageClient() as storage:
         for cik in sorted(ciks):
             stats["considered"] += 1

@@ -67,7 +67,12 @@ from scrooner_pipeline.parsers.revenue_parser import (
     _parse_period_end,
     find_income_statement_report,
 )
-from scrooner_pipeline.segments.segment_revenue import _CELL, _ROW, _cell_text, _parse_value
+from scrooner_pipeline.segments.segment_revenue import (
+    _CELL,
+    _ROW,
+    _cell_text,
+    _parse_value,
+)
 
 logger = structlog.get_logger()
 
@@ -153,7 +158,11 @@ def _extract_cost_of_revenue_rows(html: str) -> dict | None:
         return None
 
     total = sum(matched_values) * scale
-    return {"value": str(total), "period_end": period_end, "matched_rows": len(matched_values)}
+    return {
+        "value": str(total),
+        "period_end": period_end,
+        "matched_rows": len(matched_values),
+    }
 
 
 def _pct_diff(a: Decimal, b: Decimal) -> Decimal:
@@ -161,7 +170,9 @@ def _pct_diff(a: Decimal, b: Decimal) -> Decimal:
     return abs(a - b) / denom * Decimal(100)
 
 
-def _yfinance_target(conn: psycopg.Connection, company_id: int, period_end: str | None) -> Decimal | None:
+def _yfinance_target(
+    conn: psycopg.Connection, company_id: int, period_end: str | None
+) -> Decimal | None:
     """The closest already-fetched yfinance 'Cost Of Revenue' figure for
     this company -- comparison/validation only, per this module's own
     docstring; never stored. Matches on exact period_end first (the
@@ -189,7 +200,9 @@ def _yfinance_target(conn: psycopg.Connection, company_id: int, period_end: str 
     return Decimal(str(row[0]))
 
 
-def _parse_with_outcome(client: SECClient, conn: psycopg.Connection, company_id: int, cik: str) -> tuple[str, dict | None]:
+def _parse_with_outcome(
+    client: SECClient, conn: psycopg.Connection, company_id: int, cik: str
+) -> tuple[str, dict | None]:
     found = find_income_statement_report(client, cik)
     if found is None:
         return "no_report", None
@@ -210,7 +223,10 @@ def _parse_with_outcome(client: SECClient, conn: psycopg.Connection, company_id:
     if pct_diff > YFINANCE_VALIDATION_TOLERANCE_PCT:
         logger.info(
             "cost_of_revenue_parser.yfinance_mismatch",
-            cik=cik, parsed=str(parsed_value), yfinance=str(target), pct_diff=str(pct_diff),
+            cik=cik,
+            parsed=str(parsed_value),
+            yfinance=str(target),
+            pct_diff=str(pct_diff),
         )
         return "no_yfinance_match", None
 
@@ -229,7 +245,9 @@ PARSER_NAME = "cost_of_revenue_parser"
 CONCEPT_NAME = "cost_of_revenue"
 
 
-def find_gap_companies(conn: psycopg.Connection, ciks: set[str] | None = None) -> list[tuple[int, str]]:
+def find_gap_companies(
+    conn: psycopg.Connection, ciks: set[str] | None = None
+) -> list[tuple[int, str]]:
     """Active companies genuinely missing `cost_of_revenue` in
     analytics.canonical_fact, not already attempted by this parser
     before (same efficiency contract as revenue_parser.py's own
@@ -280,13 +298,21 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
     once that data exists -- found and fixed 2026-09-21 before this ran
     broadly enough to matter in practice."""
     stats = {
-        "considered": 0, "ok": 0, "no_report": 0, "no_row_matched": 0,
-        "no_yfinance_target": 0, "no_yfinance_match": 0, "errored": 0,
+        "considered": 0,
+        "ok": 0,
+        "no_report": 0,
+        "no_row_matched": 0,
+        "no_yfinance_target": 0,
+        "no_yfinance_match": 0,
+        "errored": 0,
     }
     candidates = find_gap_companies(conn, ciks)
 
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (CONCEPT_NAME,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s",
+            (CONCEPT_NAME,),
+        )
         canonical_concept_id = cur.fetchone()[0]
 
     results = []
@@ -314,18 +340,27 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
                                     source_report = excluded.source_report, created_at = now()
                             """,
                             (
-                                company_id, canonical_concept_id, PARSER_NAME, result["value"],
-                                result["period_end"], result["source_form"], result["source_accession"],
+                                company_id,
+                                canonical_concept_id,
+                                PARSER_NAME,
+                                result["value"],
+                                result["period_end"],
+                                result["source_form"],
+                                result["source_accession"],
                                 result["source_report"],
                             ),
                         )
                     logger.info(
-                        "cost_of_revenue_parser.company_matched", cik=cik,
-                        value=result["value"], matched_rows=result["matched_rows"],
+                        "cost_of_revenue_parser.company_matched",
+                        cik=cik,
+                        value=result["value"],
+                        matched_rows=result["matched_rows"],
                         pct_diff_vs_yfinance=result["pct_diff_vs_yfinance"],
                     )
             except Exception:
-                logger.warning("cost_of_revenue_parser.company_failed", cik=cik, exc_info=True)
+                logger.warning(
+                    "cost_of_revenue_parser.company_failed", cik=cik, exc_info=True
+                )
                 stats["errored"] += 1
                 outcome = "errored"
                 conn = safe_rollback(conn, stage="cost_of_revenue_parser", cik=cik)

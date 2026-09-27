@@ -27,7 +27,9 @@ def _default(o):
 @app.command("ask")
 def ask_cmd(
     text: str = typer.Argument(..., help="Plain-English screening request."),
-    run: bool = typer.Option(False, help="Also execute the interpreted query through the Screener."),
+    run: bool = typer.Option(
+        False, help="Also execute the interpreted query through the Screener."
+    ),
 ) -> None:
     result = interpret(text)
     typer.echo(f"Explanation: {result.explanation}")

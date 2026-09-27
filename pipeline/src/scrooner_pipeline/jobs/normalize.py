@@ -11,7 +11,10 @@ import typer
 from scrooner_pipeline.db.connection import get_connection
 from scrooner_pipeline.normalizer.dedupe import conflict_summary, resolve_authoritative
 from scrooner_pipeline.normalizer.derived import derive_interim_quarters, derive_q4
-from scrooner_pipeline.normalizer.facts import FACT_EXTRACTION_EXCLUDED_CIKS, normalize_facts
+from scrooner_pipeline.normalizer.facts import (
+    FACT_EXTRACTION_EXCLUDED_CIKS,
+    normalize_facts,
+)
 from scrooner_pipeline.normalizer.identity import normalize_identity
 from scrooner_pipeline.normalizer.periods import normalize_periods
 from scrooner_pipeline.normalizer.restatements import resolve_restatements
@@ -20,7 +23,12 @@ from scrooner_pipeline.normalizer.units import normalize_units
 app = typer.Typer()
 logger = structlog.get_logger()
 
-GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
+GOLDEN_COMPANIES_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tests"
+    / "golden_companies"
+    / "companies.json"
+)
 
 
 def _load_golden_ciks() -> set[str]:
@@ -36,7 +44,9 @@ def _parse_ciks(ciks: str | None) -> set[str] | None:
 
 @app.command()
 def identity(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2a: normalize raw.sec_submissions into core.company/listing/filing."""
     target_ciks = _parse_ciks(ciks) or _load_golden_ciks()
@@ -47,7 +57,9 @@ def identity(
 
 @app.command()
 def periods(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2b: resolve every distinct period in raw.sec_companyfacts into
     core.period. Requires Stage 2a (identity) to have already run for these
@@ -60,7 +72,9 @@ def periods(
 
 @app.command()
 def units(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2c: resolve every distinct unit string in raw.sec_companyfacts
     into core.unit. Independent of identity/periods -- core.unit is a
@@ -73,7 +87,9 @@ def units(
 
 @app.command()
 def facts(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2d: extract every XBRL fact into core.fact. Requires Stages
     2a/2b/2c (identity/periods/units) to have already run for these CIKs.
@@ -87,7 +103,9 @@ def facts(
 
 @app.command()
 def dedupe(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2e: resolve core.fact.is_authoritative for every duplicate
     (company, concept, unit, period) group. Requires Stage 2d (facts) to
@@ -100,7 +118,9 @@ def dedupe(
 
 @app.command()
 def conflicts(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
     limit: int = typer.Option(20, help="Max conflicts to print."),
 ) -> None:
     """Print unresolved conflict groups (Stage 2e) for manual review --
@@ -115,7 +135,9 @@ def conflicts(
 
 @app.command()
 def restatements(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2f: link amendments to what they amend (core.filing.amends_filing_id)
     and supersede the matching core.fact rows. Runs over core.filing for
@@ -130,8 +152,13 @@ def restatements(
 
 @app.command()
 def errors(
-    stage: str = typer.Option(None, help="Restrict to one stage (identity, periods, units, facts, dedupe, restatements, derive_interim_quarters, derive_q4)."),
-    unresolved_only: bool = typer.Option(True, help="Only print rows with resolved=false."),
+    stage: str = typer.Option(
+        None,
+        help="Restrict to one stage (identity, periods, units, facts, dedupe, restatements, derive_interim_quarters, derive_q4).",
+    ),
+    unresolved_only: bool = typer.Option(
+        True, help="Only print rows with resolved=false."
+    ),
     limit: int = typer.Option(50, help="Max rows to print."),
 ) -> None:
     """Dead-letter report over core.normalizer_error (Phase 1 scaling
@@ -160,7 +187,9 @@ def errors(
 
 @app.command("derive-interim-quarters")
 def derive_interim_quarters_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2g follow-on (doc 24/25): derive discrete Q2/Q3 from
     cumulative half-year/three-quarter YTD spans (common on cash-flow
@@ -175,7 +204,9 @@ def derive_interim_quarters_cmd(
 
 @app.command("derive-q4")
 def derive_q4_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 2g: derive Q4 = FY - Q1 - Q2 - Q3 for every duration concept
     that has all three authoritative quarters plus an authoritative FY
@@ -193,7 +224,9 @@ def golden() -> None:
     (2e) and Q4 derivation (2g) skip TSM/ENB per doc 09's Day-7 scope note
     -- identity/periods/units/restatement-linking still run for them."""
     golden_ciks = _load_golden_ciks()
-    typer.echo(f"golden set: {len(golden_ciks)} companies ({len(golden_ciks - FACT_EXTRACTION_EXCLUDED_CIKS)} get fact extraction)")
+    typer.echo(
+        f"golden set: {len(golden_ciks)} companies ({len(golden_ciks - FACT_EXTRACTION_EXCLUDED_CIKS)} get fact extraction)"
+    )
     with get_connection() as conn:
         identity_stats = normalize_identity(conn, golden_ciks)
         typer.echo(f"identity: {identity_stats}")
@@ -202,7 +235,9 @@ def golden() -> None:
         unit_stats = normalize_units(conn, golden_ciks)
         typer.echo(f"units: {unit_stats}")
         fact_result = normalize_facts(conn, golden_ciks)
-        typer.echo(f"facts: excluded={fact_result['excluded']} totals={fact_result['totals']}")
+        typer.echo(
+            f"facts: excluded={fact_result['excluded']} totals={fact_result['totals']}"
+        )
         dedupe_stats = resolve_authoritative(conn, golden_ciks)
         typer.echo(f"dedupe: {dedupe_stats}")
         restatement_stats = resolve_restatements(conn, golden_ciks)

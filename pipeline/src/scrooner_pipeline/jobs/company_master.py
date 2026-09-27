@@ -10,14 +10,22 @@ import typer
 from scrooner_pipeline.company_master.identity import update_identity
 from scrooner_pipeline.company_master.contact_details import update_contact_details
 from scrooner_pipeline.company_master.display_name import update_display_names
-from scrooner_pipeline.company_master.employee_headcount import process_companies as process_employee_headcount
+from scrooner_pipeline.company_master.employee_headcount import (
+    process_companies as process_employee_headcount,
+)
 from scrooner_pipeline.company_master.sector_bucket import update_sector
 from scrooner_pipeline.company_master.history import update_history
 from scrooner_pipeline.company_master.status import update_status
 from scrooner_pipeline.company_master.market_price import load_mock_prices
 from scrooner_pipeline.company_master.market_price_alpaca import update_market_price
-from scrooner_pipeline.company_master.security_type import persist_primary_tickers, resolve_primary_tickers, update_security_types
-from scrooner_pipeline.company_master.shares_outstanding_fallback import update_shares_outstanding_fallback
+from scrooner_pipeline.company_master.security_type import (
+    persist_primary_tickers,
+    resolve_primary_tickers,
+    update_security_types,
+)
+from scrooner_pipeline.company_master.shares_outstanding_fallback import (
+    update_shares_outstanding_fallback,
+)
 from scrooner_pipeline.company_master.universe import build_current_universe
 from scrooner_pipeline.company_master.yfinance_industry import update_yfinance_industry
 from scrooner_pipeline.db.connection import get_connection
@@ -25,7 +33,12 @@ from scrooner_pipeline.db.connection import get_connection
 app = typer.Typer()
 logger = structlog.get_logger()
 
-GOLDEN_COMPANIES_PATH = Path(__file__).resolve().parents[3] / "tests" / "golden_companies" / "companies.json"
+GOLDEN_COMPANIES_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "tests"
+    / "golden_companies"
+    / "companies.json"
+)
 
 
 def _load_golden_ciks() -> set[str]:
@@ -40,12 +53,16 @@ def _load_golden_tickers() -> dict[str, str]:
 
 @app.command("update-identity")
 def update_identity_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 4a-1: parse sic/stateOfIncorporation/entityType/category out of
     each company's already-stored raw.sec_submissions payload into
     core.company. No new SEC fetch."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_identity(conn, target_ciks)
     typer.echo(f"update-identity: {stats}")
@@ -53,13 +70,17 @@ def update_identity_cmd(
 
 @app.command("update-contact-details")
 def update_contact_details_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Zero-new-fetch coverage pass (2026-08-29): parse ein/business address/
     phone out of each company's already-stored raw.sec_submissions payload
     into core.company -- NOT from XBRL/core.fact, which was checked live and
     confirmed to not carry these unitless dei text fields at all."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_contact_details(conn, target_ciks)
     typer.echo(f"update-contact-details: {stats}")
@@ -67,14 +88,18 @@ def update_contact_details_cmd(
 
 @app.command("update-employee-headcount")
 def update_employee_headcount_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 39: fetch the 4 most recent 10-Ks per company (annual-only
     disclosure -- confirmed no 10-Q repeats it), extract employee
     headcount via regex over cleaned visible text, store latest 10-K's
     About text. Genuinely new fetch (10-K primary document bodies aren't
     currently stored anywhere) -- NOT zero-fetch like update-contact-details."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = process_employee_headcount(conn, target_ciks)
     typer.echo(f"update-employee-headcount: {stats}")
@@ -82,11 +107,15 @@ def update_employee_headcount_cmd(
 
 @app.command("update-history")
 def update_history_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 4a-2: populate core.company_name_history and date
     core.listing's effective_from/effective_to/source."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_history(conn, target_ciks)
     typer.echo(f"update-history: {stats}")
@@ -94,11 +123,15 @@ def update_history_cmd(
 
 @app.command("update-status")
 def update_status_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 4a-3: infer core.company.status (active/stale/unknown) from
     core.filing's own filing-recency."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_status(conn, target_ciks)
     typer.echo(f"update-status: {stats}")
@@ -106,12 +139,16 @@ def update_status_cmd(
 
 @app.command("update-sector")
 def update_sector_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Doc 10 Sec 12 / doc 26 Sec 2.8 / doc 28 (2026-08-21): derive
     core.company.sector from the already-captured sic_code via a curated
     SIC-range mapping (company_master/sector_bucket.py) -- zero new fetch."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_sector(conn, target_ciks)
     typer.echo(f"update-sector: {stats}")
@@ -119,12 +156,18 @@ def update_sector_cmd(
 
 @app.command("update-yfinance-industry")
 def update_yfinance_industry_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
     all_active: bool = typer.Option(
-        False, "--all-active", help="Target every active company, not just --ciks/golden set."
+        False,
+        "--all-active",
+        help="Target every active company, not just --ciks/golden set.",
     ),
     force: bool = typer.Option(
-        False, "--force", help="Re-fetch companies already resolved ok/no_data, not just error/unattempted."
+        False,
+        "--force",
+        help="Re-fetch companies already resolved ok/no_data, not just error/unattempted.",
     ),
     no_pacing: bool = typer.Option(
         False,
@@ -151,14 +194,22 @@ def update_yfinance_industry_cmd(
                 cur.execute("select cik from core.company where status = 'active'")
                 target_ciks = {row[0] for row in cur.fetchall()}
         else:
-            target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
-        stats = update_yfinance_industry(conn, target_ciks, force=force, paced=not no_pacing)
+            target_ciks = (
+                {c.strip().zfill(10) for c in ciks.split(",")}
+                if ciks
+                else _load_golden_ciks()
+            )
+        stats = update_yfinance_industry(
+            conn, target_ciks, force=force, paced=not no_pacing
+        )
     typer.echo(f"update-yfinance-industry: {stats}")
 
 
 @app.command("update-display-names")
 def update_display_names_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
     edgar_suffix_only: bool = typer.Option(
         True,
         "--edgar-suffix-only/--all",
@@ -166,9 +217,13 @@ def update_display_names_cmd(
         "(the default, and the actual reported problem). --all targets every given CIK.",
     ),
     no_pacing: bool = typer.Option(
-        False, "--no-pacing", help="Skip yfinance's shared rate limiter for a fast first pass."
+        False,
+        "--no-pacing",
+        help="Skip yfinance's shared rate limiter for a fast first pass.",
     ),
-    force: bool = typer.Option(False, "--force", help="Re-resolve companies that already have a display_name."),
+    force: bool = typer.Option(
+        False, "--force", help="Re-resolve companies that already have a display_name."
+    ),
 ) -> None:
     """Explicit user direction 2026-09-07: clean up company_name's raw EDGAR
     disambiguation suffix (e.g. 'COSTCO WHOLESALE CORP /NEW', 'TUCOWS INC
@@ -187,20 +242,26 @@ def update_display_names_cmd(
                 target_ciks = {row[0] for row in cur.fetchall()}
         else:
             target_ciks = _load_golden_ciks()
-        stats = update_display_names(conn, target_ciks, paced=not no_pacing, force=force)
+        stats = update_display_names(
+            conn, target_ciks, paced=not no_pacing, force=force
+        )
     typer.echo(f"update-display-names: {stats}")
 
 
 @app.command("load-mock-prices")
 def load_mock_prices_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Stage 4b: load MOCK end-of-day prices into core.market_price
     (is_mock=true, source='mock'). Not real market data -- built to unblock
     the pipeline's shape ahead of doc 02's still-open vendor decision. See
     company_master/market_price.py's module docstring before swapping in a
     real vendor."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = load_mock_prices(conn, target_ciks)
     typer.echo(f"load-mock-prices: {stats}")
@@ -208,9 +269,13 @@ def load_mock_prices_cmd(
 
 @app.command("update-security-types")
 def update_security_types_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
     force: bool = typer.Option(
-        False, "--force", help="Re-classify listings that already have a security_type, not just null ones."
+        False,
+        "--force",
+        help="Re-classify listings that already have a security_type, not just null ones.",
     ),
 ) -> None:
     """Classifies each current listing's real security type via OpenFIGI
@@ -219,7 +284,9 @@ def update_security_types_cmd(
     originally used to find a company's primary common-stock/ADR ticker.
     Resumable: skips already-classified listings and commits incrementally
     unless --force."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_security_types(conn, target_ciks, force=force)
     typer.echo(f"update-security-types: {stats}")
@@ -227,9 +294,13 @@ def update_security_types_cmd(
 
 @app.command("update-primary-ticker")
 def update_primary_ticker_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
     all_active: bool = typer.Option(
-        False, "--all-active", help="Target every active company, not just --ciks/golden set."
+        False,
+        "--all-active",
+        help="Target every active company, not just --ciks/golden set.",
     ),
 ) -> None:
     """Persists resolve_primary_tickers()'s output onto core.company
@@ -247,14 +318,20 @@ def update_primary_ticker_cmd(
                 cur.execute("select cik from core.company where status = 'active'")
                 target_ciks = {row[0] for row in cur.fetchall()}
         else:
-            target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+            target_ciks = (
+                {c.strip().zfill(10) for c in ciks.split(",")}
+                if ciks
+                else _load_golden_ciks()
+            )
         stats = persist_primary_tickers(conn, target_ciks)
     typer.echo(f"update-primary-ticker: {stats}")
 
 
 @app.command("update-shares-outstanding-fallback")
 def update_shares_outstanding_fallback_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
 ) -> None:
     """Real fallback for multi-class share-structure companies (Block,
     Reddit) whose shares outstanding is dimensionally XBRL-tagged and
@@ -262,7 +339,9 @@ def update_shares_outstanding_fallback_cmd(
     page instead. See shares_outstanding_fallback.py's module docstring.
     Only fill this gap where the primary XBRL path genuinely has
     nothing; never a replacement for it."""
-    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    target_ciks = (
+        {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
+    )
     with get_connection() as conn:
         stats = update_shares_outstanding_fallback(conn, target_ciks)
     typer.echo(f"update-shares-outstanding-fallback: {stats}")
@@ -270,9 +349,13 @@ def update_shares_outstanding_fallback_cmd(
 
 @app.command("update-market-price")
 def update_market_price_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs to restrict to (default: golden set)."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
     all_active: bool = typer.Option(
-        False, "--all-active", help="Target every active company, not just --ciks/golden set."
+        False,
+        "--all-active",
+        help="Target every active company, not just --ciks/golden set.",
     ),
 ) -> None:
     """Stage 4b real-data follow-on (doc 25): fetch REAL current prices
@@ -295,8 +378,14 @@ def update_market_price_cmd(
                 cur.execute("select cik from core.company where status = 'active'")
                 target_ciks = {row[0] for row in cur.fetchall()}
         else:
-            target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else _load_golden_ciks()
-        ticker_by_cik = resolve_primary_tickers(conn, target_ciks, fallback_ticker_by_cik=_load_golden_tickers())
+            target_ciks = (
+                {c.strip().zfill(10) for c in ciks.split(",")}
+                if ciks
+                else _load_golden_ciks()
+            )
+        ticker_by_cik = resolve_primary_tickers(
+            conn, target_ciks, fallback_ticker_by_cik=_load_golden_tickers()
+        )
         stats = update_market_price(conn, ticker_by_cik)
     typer.echo(f"update-market-price: {stats}")
 

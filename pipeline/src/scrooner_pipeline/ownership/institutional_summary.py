@@ -66,7 +66,9 @@ logger = structlog.get_logger()
 TOP_HOLDERS_LIMIT = 10
 
 
-def _recent_report_periods(conn: psycopg.Connection, company_id: int, limit: int = 2) -> list[date]:
+def _recent_report_periods(
+    conn: psycopg.Connection, company_id: int, limit: int = 2
+) -> list[date]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -81,7 +83,9 @@ def _recent_report_periods(conn: psycopg.Connection, company_id: int, limit: int
         return [row[0] for row in cur.fetchall()]
 
 
-def _period_holders(conn: psycopg.Connection, company_id: int, report_period: date) -> list[dict]:
+def _period_holders(
+    conn: psycopg.Connection, company_id: int, report_period: date
+) -> list[dict]:
     """One row per distinct filer (by filer_cik) for a single
     report_period: picks the single authoritative FILING per filer
     (prefers an amendment's accession_number over the original, else
@@ -128,10 +132,14 @@ def _period_holders(conn: psycopg.Connection, company_id: int, report_period: da
 def _match_key(holder: dict) -> str:
     """filer_cik when resolvable, else a name-prefixed fallback so it can
     never collide with a real CIK string -- see module docstring."""
-    return holder["filer_cik"] if holder["filer_cik"] else f"name:{holder['filer_name']}"
+    return (
+        holder["filer_cik"] if holder["filer_cik"] else f"name:{holder['filer_name']}"
+    )
 
 
-def _shares_outstanding_current(conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]) -> Decimal | None:
+def _shares_outstanding_current(
+    conn: psycopg.Connection, company_id: int, concept_ids: dict[str, int]
+) -> Decimal | None:
     if "shares_outstanding" not in concept_ids:
         return None
     hit = _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"])
@@ -194,7 +202,10 @@ def build_institutional_summary(
         if prior is None:
             new_positions += 1
         else:
-            latest_shares, prior_shares = h["shares"] or Decimal(0), prior["shares"] or Decimal(0)
+            latest_shares, prior_shares = (
+                h["shares"] or Decimal(0),
+                prior["shares"] or Decimal(0),
+            )
             if latest_shares > prior_shares:
                 holders_increased += 1
             elif latest_shares < prior_shares:
@@ -203,7 +214,9 @@ def build_institutional_summary(
     exited_positions = sum(1 for h in prior_holders if _match_key(h) not in latest_keys)
 
     top_holders = []
-    for h in sorted(latest_holders, key=lambda h: h["shares"] or Decimal(0), reverse=True)[:TOP_HOLDERS_LIMIT]:
+    for h in sorted(
+        latest_holders, key=lambda h: h["shares"] or Decimal(0), reverse=True
+    )[:TOP_HOLDERS_LIMIT]:
         prior = prior_by_key.get(_match_key(h))
         shares = h["shares"] or Decimal(0)
         prior_shares = prior["shares"] if prior else None
@@ -224,7 +237,9 @@ def build_institutional_summary(
                 "filer_name": h["filer_name"],
                 "filer_cik": h["filer_cik"],
                 "shares": str(shares),
-                "value_usd": str(h["value_usd"]) if h["value_usd"] is not None else None,
+                "value_usd": str(h["value_usd"])
+                if h["value_usd"] is not None
+                else None,
                 "ownership_pct": str(shares / shares_out) if shares_out else None,
                 "share_change": str(share_change) if prior is not None else None,
                 "pct_change": str(pct_change) if pct_change is not None else None,
@@ -236,10 +251,10 @@ def build_institutional_summary(
     # never appears in latest_holders, so the loop above can't emit an
     # "exited" row for it -- add those explicitly so the Top 10 table can
     # show a real exited position rather than silently dropping it.
-    exited_in_prior_top = [
-        h for h in prior_holders if _match_key(h) not in latest_keys
-    ]
-    for h in sorted(exited_in_prior_top, key=lambda h: h["shares"] or Decimal(0), reverse=True):
+    exited_in_prior_top = [h for h in prior_holders if _match_key(h) not in latest_keys]
+    for h in sorted(
+        exited_in_prior_top, key=lambda h: h["shares"] or Decimal(0), reverse=True
+    ):
         if len(top_holders) >= TOP_HOLDERS_LIMIT:
             break
         top_holders.append(
@@ -289,17 +304,32 @@ def compute_institutional_summary_for_company(
     shares_out = _shares_outstanding_current(conn, company_id, concept_ids)
 
     return build_institutional_summary(
-        company_id, report_period_latest, report_period_prior, latest_holders, prior_holders, shares_out
+        company_id,
+        report_period_latest,
+        report_period_prior,
+        latest_holders,
+        prior_holders,
+        shares_out,
     )
 
 
-def compute_institutional_ownership_summary(conn: psycopg.Connection, ciks: set[str]) -> dict:
+def compute_institutional_ownership_summary(
+    conn: psycopg.Connection, ciks: set[str]
+) -> dict:
     concept_ids = _load_concept_ids(conn, {"shares_outstanding"})
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "no_company": 0, "insufficient_periods": 0, "errored": 0, "computed": 0}
+    totals = {
+        "considered": 0,
+        "no_company": 0,
+        "insufficient_periods": 0,
+        "errored": 0,
+        "computed": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -307,7 +337,9 @@ def compute_institutional_ownership_summary(conn: psycopg.Connection, ciks: set[
             totals["no_company"] += 1
             continue
         try:
-            summary = compute_institutional_summary_for_company(conn, company_id, concept_ids)
+            summary = compute_institutional_summary_for_company(
+                conn, company_id, concept_ids
+            )
         except Exception:
             # Same "one company's failure must not crash the whole batch"
             # discipline as beneficial_ownership.py/insider.py -- no

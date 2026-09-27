@@ -19,7 +19,9 @@ def get_entitlement(user_id: str = Depends(get_current_user_id)) -> dict:
     # fresh-connection-per-call pays (see db_pool.py).
     with get_pooled_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("select tier from app.user_entitlement where user_id = %s", (user_id,))
+            cur.execute(
+                "select tier from app.user_entitlement where user_id = %s", (user_id,)
+            )
             row = cur.fetchone()
     tier = row[0] if row else "free"
     return {"tier": tier}

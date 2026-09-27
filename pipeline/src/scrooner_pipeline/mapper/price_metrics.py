@@ -49,11 +49,16 @@ INSTANT_CONCEPTS = {"shares_outstanding", "stockholders_equity"}
 
 def _load_concept_ids(conn: psycopg.Connection, names: set[str]) -> dict[str, int]:
     with conn.cursor() as cur:
-        cur.execute("select name, id from analytics.canonical_concept where name = any(%s)", (sorted(names),))
+        cur.execute(
+            "select name, id from analytics.canonical_concept where name = any(%s)",
+            (sorted(names),),
+        )
         return dict(cur.fetchall())
 
 
-def _load_quarterly_facts(conn: psycopg.Connection, company_id: int, concept_id: int) -> dict:
+def _load_quarterly_facts(
+    conn: psycopg.Connection, company_id: int, concept_id: int
+) -> dict:
     """(fiscal_year, fiscal_period) -> (value, fact_ids) for real quarters only (Q1-4) -- same shape as ttm.py's own loader."""
     with conn.cursor() as cur:
         cur.execute(
@@ -69,7 +74,9 @@ def _load_quarterly_facts(conn: psycopg.Connection, company_id: int, concept_id:
         return {(fy, fp): (val, fids) for fy, fp, val, fids in cur.fetchall()}
 
 
-def _latest_instant_fact(conn: psycopg.Connection, company_id: int, concept_id: int) -> tuple[Decimal, list[int], object] | None:
+def _latest_instant_fact(
+    conn: psycopg.Connection, company_id: int, concept_id: int
+) -> tuple[Decimal, list[int], object] | None:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -86,7 +93,9 @@ def _latest_instant_fact(conn: psycopg.Connection, company_id: int, concept_id: 
         return (row[0], row[1], row[2]) if row else None
 
 
-def _ttm_sum(by_quarter: dict, fiscal_year: int, fiscal_period: str) -> tuple[Decimal | None, list[int]]:
+def _ttm_sum(
+    by_quarter: dict, fiscal_year: int, fiscal_period: str
+) -> tuple[Decimal | None, list[int]]:
     total = Decimal(0)
     fact_ids: list[int] = []
     for key in _trailing_quarters(fiscal_year, fiscal_period):
@@ -106,7 +115,9 @@ def _latest_quarter(by_quarter: dict) -> tuple[int, str] | None:
     return max(by_quarter, key=lambda k: (k[0], order[k[1]]))
 
 
-def _load_latest_price(conn: psycopg.Connection, company_id: int) -> tuple[Decimal, object] | None:
+def _load_latest_price(
+    conn: psycopg.Connection, company_id: int
+) -> tuple[Decimal, object] | None:
     with conn.cursor() as cur:
         cur.execute(
             "select price, price_date from core.market_price_alpaca where company_id = %s order by price_date desc limit 1",
@@ -116,7 +127,9 @@ def _load_latest_price(conn: psycopg.Connection, company_id: int) -> tuple[Decim
         return (row[0], row[1]) if row else None
 
 
-def _load_shares_outstanding_fallback(conn: psycopg.Connection, company_id: int) -> tuple[Decimal, list[int]] | None:
+def _load_shares_outstanding_fallback(
+    conn: psycopg.Connection, company_id: int
+) -> tuple[Decimal, list[int]] | None:
     """Real fallback for multi-class share-structure companies (Block,
     Reddit) whose shares outstanding is dimensionally XBRL-tagged and
     stripped by the standard Company Facts API -- see
@@ -127,12 +140,20 @@ def _load_shares_outstanding_fallback(conn: psycopg.Connection, company_id: int)
     row's own accession_number, inspectable directly in
     core.shares_outstanding_fallback."""
     with conn.cursor() as cur:
-        cur.execute("select shares from core.shares_outstanding_fallback where company_id = %s", (company_id,))
+        cur.execute(
+            "select shares from core.shares_outstanding_fallback where company_id = %s",
+            (company_id,),
+        )
         row = cur.fetchone()
         return (row[0], []) if row else None
 
 
-def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int], concept_ids: dict[str, int]) -> dict:
+def calculate_price_metrics_for_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_ids: dict[str, int],
+    concept_ids: dict[str, int],
+) -> dict:
     stats = {"computed": 0, "null": 0}
     price_hit = _load_latest_price(conn, company_id)
     if price_hit is None:
@@ -154,11 +175,19 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
         else:
             price_reason = None
 
-    quarterly = {name: _load_quarterly_facts(conn, company_id, concept_ids[name]) for name in TTM_CONCEPTS if name in concept_ids}
+    quarterly = {
+        name: _load_quarterly_facts(conn, company_id, concept_ids[name])
+        for name in TTM_CONCEPTS
+        if name in concept_ids
+    }
     diluted_eps_q = quarterly.get("diluted_eps", {})
-    anchor = _latest_quarter(diluted_eps_q) or _latest_quarter(quarterly.get("revenue", {}))
+    anchor = _latest_quarter(diluted_eps_q) or _latest_quarter(
+        quarterly.get("revenue", {})
+    )
 
-    ttm: dict[str, tuple[Decimal | None, list[int]]] = {name: (None, []) for name in TTM_CONCEPTS}
+    ttm: dict[str, tuple[Decimal | None, list[int]]] = {
+        name: (None, []) for name in TTM_CONCEPTS
+    }
     # metric_value requires non-null period dates even for an honest null.
     # A company with no vendor bar still needs six inspectable null rows, so
     # anchor them to the calculation date rather than attempting to insert
@@ -169,14 +198,24 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
         for name, by_quarter in quarterly.items():
             ttm[name] = _ttm_sum(by_quarter, fy, fp)
 
-    shares_hit = _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"]) if "shares_outstanding" in concept_ids else None
+    shares_hit = (
+        _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"])
+        if "shares_outstanding" in concept_ids
+        else None
+    )
     if shares_hit is None:
         shares_fallback = _load_shares_outstanding_fallback(conn, company_id)
         if shares_fallback is not None:
             shares_hit = (shares_fallback[0], shares_fallback[1], None)
-    equity_hit = _latest_instant_fact(conn, company_id, concept_ids["stockholders_equity"]) if "stockholders_equity" in concept_ids else None
+    equity_hit = (
+        _latest_instant_fact(conn, company_id, concept_ids["stockholders_equity"])
+        if "stockholders_equity" in concept_ids
+        else None
+    )
 
-    def _row(metric_name: str, value: Decimal | None, reason: str | None, fact_ids: list[int]) -> dict:
+    def _row(
+        metric_name: str, value: Decimal | None, reason: str | None, fact_ids: list[int]
+    ) -> dict:
         return {
             "company_id": company_id,
             "metric_definition_id": metric_ids[metric_name],
@@ -191,7 +230,14 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
     rows: list[dict] = []
 
     if price is None:
-        for m in ("market_cap", "trailing_pe", "price_to_sales", "price_to_book", "dividend_yield", "fcf_yield"):
+        for m in (
+            "market_cap",
+            "trailing_pe",
+            "price_to_sales",
+            "price_to_book",
+            "dividend_yield",
+            "fcf_yield",
+        ):
             rows.append(_row(m, None, price_reason, []))
     else:
         # Market Cap = Shares Outstanding x Price
@@ -221,7 +267,9 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
         elif rev_ttm == 0:
             rows.append(_row("price_to_sales", None, "zero_denominator", []))
         else:
-            rows.append(_row("price_to_sales", market_cap / rev_ttm, None, mc_fids + rev_fids))
+            rows.append(
+                _row("price_to_sales", market_cap / rev_ttm, None, mc_fids + rev_fids)
+            )
 
         # Price/Book = Market Cap / Stockholders' Equity (most recent)
         if market_cap is None:
@@ -231,12 +279,21 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
         elif equity_hit[0] == 0:
             rows.append(_row("price_to_book", None, "zero_denominator", []))
         else:
-            rows.append(_row("price_to_book", market_cap / equity_hit[0], None, mc_fids + list(equity_hit[1])))
+            rows.append(
+                _row(
+                    "price_to_book",
+                    market_cap / equity_hit[0],
+                    None,
+                    mc_fids + list(equity_hit[1]),
+                )
+            )
 
         # Dividend Yield = Dividends per Share (TTM) / Price
         dps_ttm, dps_fids = ttm["dividends_per_share"]
         if dps_ttm is None:
-            rows.append(_row("dividend_yield", None, "missing:dividends_per_share_ttm", []))
+            rows.append(
+                _row("dividend_yield", None, "missing:dividends_per_share_ttm", [])
+            )
         else:
             rows.append(_row("dividend_yield", dps_ttm / price, None, dps_fids))
 
@@ -253,7 +310,14 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
             rows.append(_row("fcf_yield", None, "zero_denominator", []))
         else:
             fcf_ttm = cfo_ttm - capex_ttm
-            rows.append(_row("fcf_yield", fcf_ttm / market_cap, None, mc_fids + cfo_fids + capex_fids))
+            rows.append(
+                _row(
+                    "fcf_yield",
+                    fcf_ttm / market_cap,
+                    None,
+                    mc_fids + cfo_fids + capex_fids,
+                )
+            )
 
     with conn.cursor() as cur:
         # Scoped to this stage's own 6 metric_definition_ids AND
@@ -286,17 +350,36 @@ def calculate_price_metrics_for_company(conn: psycopg.Connection, company_id: in
 
 
 def calculate_price_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    price_metric_names = ["market_cap", "trailing_pe", "price_to_sales", "price_to_book", "dividend_yield", "fcf_yield"]
+    price_metric_names = [
+        "market_cap",
+        "trailing_pe",
+        "price_to_sales",
+        "price_to_book",
+        "dividend_yield",
+        "fcf_yield",
+    ]
     with conn.cursor() as cur:
-        cur.execute("select metric_name, id from analytics.metric_definition where metric_name = any(%s)", (price_metric_names,))
+        cur.execute(
+            "select metric_name, id from analytics.metric_definition where metric_name = any(%s)",
+            (price_metric_names,),
+        )
         metric_ids = dict(cur.fetchall())
     concept_ids = _load_concept_ids(conn, TTM_CONCEPTS | INSTANT_CONCEPTS)
 
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -304,7 +387,9 @@ def calculate_price_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = calculate_price_metrics_for_company(conn, company_id, metric_ids, concept_ids)
+            stats = calculate_price_metrics_for_company(
+                conn, company_id, metric_ids, concept_ids
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "price_metrics", exc)

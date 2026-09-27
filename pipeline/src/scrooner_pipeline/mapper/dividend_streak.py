@@ -36,12 +36,16 @@ logger = structlog.get_logger()
 
 def _load_concept_id(conn: psycopg.Connection) -> int | None:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = 'dividends_per_share'")
+        cur.execute(
+            "select id from analytics.canonical_concept where name = 'dividends_per_share'"
+        )
         row = cur.fetchone()
         return row[0] if row else None
 
 
-def _load_fy_history(conn: psycopg.Connection, company_id: int, concept_id: int) -> dict[int, float]:
+def _load_fy_history(
+    conn: psycopg.Connection, company_id: int, concept_id: int
+) -> dict[int, float]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -52,10 +56,16 @@ def _load_fy_history(conn: psycopg.Connection, company_id: int, concept_id: int)
             """,
             (company_id, concept_id),
         )
-        return {fy: value for fy, value in cur.fetchall() if fy is not None and value is not None}
+        return {
+            fy: value
+            for fy, value in cur.fetchall()
+            if fy is not None and value is not None
+        }
 
 
-def _fy_period_dates(conn: psycopg.Connection, company_id: int, concept_id: int, fiscal_year: int):
+def _fy_period_dates(
+    conn: psycopg.Connection, company_id: int, concept_id: int, fiscal_year: int
+):
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -69,16 +79,25 @@ def _fy_period_dates(conn: psycopg.Connection, company_id: int, concept_id: int,
         return cur.fetchone()
 
 
-def calculate_streak_for_company(conn: psycopg.Connection, company_id: int, metric_id: int, concept_id: int) -> dict:
+def calculate_streak_for_company(
+    conn: psycopg.Connection, company_id: int, metric_id: int, concept_id: int
+) -> dict:
     history = _load_fy_history(conn, company_id, concept_id)
     rows: list[dict] = []
 
     if not history:
-        rows.append({
-            "company_id": company_id, "metric_definition_id": metric_id,
-            "period_start": date.today(), "period_end": date.today(), "period_label": "FY",
-            "value": None, "is_null_reason": "no_dividend_history", "source_fact_ids": None,
-        })
+        rows.append(
+            {
+                "company_id": company_id,
+                "metric_definition_id": metric_id,
+                "period_start": date.today(),
+                "period_end": date.today(),
+                "period_label": "FY",
+                "value": None,
+                "is_null_reason": "no_dividend_history",
+                "source_fact_ids": None,
+            }
+        )
     else:
         latest_fy = max(history.keys())
         streak = 0
@@ -88,11 +107,18 @@ def calculate_streak_for_company(conn: psycopg.Connection, company_id: int, metr
             fy -= 1
         period = _fy_period_dates(conn, company_id, concept_id, latest_fy)
         start, end = period if period else (date.today(), date.today())
-        rows.append({
-            "company_id": company_id, "metric_definition_id": metric_id,
-            "period_start": start, "period_end": end, "period_label": "FY",
-            "value": streak, "is_null_reason": None, "source_fact_ids": None,
-        })
+        rows.append(
+            {
+                "company_id": company_id,
+                "metric_definition_id": metric_id,
+                "period_start": start,
+                "period_end": end,
+                "period_label": "FY",
+                "value": streak,
+                "is_null_reason": None,
+                "source_fact_ids": None,
+            }
+        )
 
     with conn.cursor() as cur:
         cur.execute(
@@ -114,27 +140,47 @@ def calculate_streak_for_company(conn: psycopg.Connection, company_id: int, metr
 
     computed = sum(1 for r in rows if r["value"] is not None)
     null = sum(1 for r in rows if r["value"] is None)
-    logger.info("dividend_streak.company_done", company_id=company_id, computed=computed, null=null)
+    logger.info(
+        "dividend_streak.company_done",
+        company_id=company_id,
+        computed=computed,
+        null=null,
+    )
     return {"computed": computed, "null": null}
 
 
 def calculate_dividend_streak(conn: psycopg.Connection, ciks: set[str]) -> dict:
     concept_id = _load_concept_id(conn)
     if concept_id is None:
-        raise RuntimeError("dividend_streak: dividends_per_share canonical concept not found")
+        raise RuntimeError(
+            "dividend_streak: dividends_per_share canonical concept not found"
+        )
 
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.metric_definition where metric_name = 'dividend_growth_streak_years'")
+        cur.execute(
+            "select id from analytics.metric_definition where metric_name = 'dividend_growth_streak_years'"
+        )
         row = cur.fetchone()
     if row is None:
-        raise RuntimeError("dividend_streak: dividend_growth_streak_years metric_definition row not seeded yet")
+        raise RuntimeError(
+            "dividend_streak: dividend_growth_streak_years metric_definition row not seeded yet"
+        )
     metric_id = row[0]
 
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
@@ -142,7 +188,9 @@ def calculate_dividend_streak(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            stats = calculate_streak_for_company(conn, company_id, metric_id, concept_id)
+            stats = calculate_streak_for_company(
+                conn, company_id, metric_id, concept_id
+            )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "dividend_streak", exc)

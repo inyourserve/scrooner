@@ -100,8 +100,14 @@ from yfinance.exceptions import YFRateLimitError
 from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
 from scrooner_pipeline.company_master.security_type import resolve_primary_tickers
-from scrooner_pipeline.company_master.yfinance_industry import DEFAULT_RATE_LIMITER_LOCK_PATH
-from scrooner_pipeline.sanity.freshness_check import check_freshness, load_our_latest_period_ends, write_freshness_checks
+from scrooner_pipeline.company_master.yfinance_industry import (
+    DEFAULT_RATE_LIMITER_LOCK_PATH,
+)
+from scrooner_pipeline.sanity.freshness_check import (
+    check_freshness,
+    load_our_latest_period_ends,
+    write_freshness_checks,
+)
 
 logger = structlog.get_logger()
 
@@ -143,7 +149,14 @@ METRIC_MAPPINGS: list[tuple[str, str, float, float, object, object]] = [
     # live-verified trap as dividend_yield, opposite normalization side.
     ("debt_to_equity", "debtToEquity", 15.0, 40.0, _IDENTITY, _DIVIDE_100),
     ("price_to_book", "priceToBook", 10.0, 30.0, _IDENTITY, _IDENTITY),
-    ("price_to_sales", "priceToSalesTrailing12Months", 10.0, 30.0, _IDENTITY, _IDENTITY),
+    (
+        "price_to_sales",
+        "priceToSalesTrailing12Months",
+        10.0,
+        30.0,
+        _IDENTITY,
+        _IDENTITY,
+    ),
     ("roe", "returnOnEquity", 25.0, 60.0, _IDENTITY, _IDENTITY),
     # Verified live: yfinance's returnOnAssets (27.1%) is ~3.5x ours
     # (7.8%) for AAPL -- a real, unexplained divergence worth surfacing,
@@ -155,7 +168,14 @@ METRIC_MAPPINGS: list[tuple[str, str, float, float, object, object]] = [
     ("net_margin", "profitMargins", 10.0, 25.0, _IDENTITY, _IDENTITY),
     ("quick_ratio", "quickRatio", 15.0, 40.0, _IDENTITY, _IDENTITY),
     ("current_ratio", "currentRatio", 10.0, 30.0, _IDENTITY, _IDENTITY),
-    ("institutional_ownership_pct", "heldPercentInstitutions", 15.0, 40.0, _IDENTITY, _IDENTITY),
+    (
+        "institutional_ownership_pct",
+        "heldPercentInstitutions",
+        15.0,
+        40.0,
+        _IDENTITY,
+        _IDENTITY,
+    ),
     ("payout_ratio", "payoutRatio", 20.0, 50.0, _IDENTITY, _IDENTITY),
     # Verified live: our ebitda ($39.0B) vs. yfinance's ($168.0B) for AAPL
     # -- a ~330% gap, and our OWN ev_ebitda metric implies the ~$168B
@@ -187,13 +207,27 @@ METRIC_MAPPINGS: list[tuple[str, str, float, float, object, object]] = [
 # same as "yfinance has no usable opinion" -- an implausible ratio isn't
 # a meaningful comparison in either direction, not evidence of a bug.
 DEGENERACY_GUARD_METRICS = frozenset(
-    {"net_margin", "gross_margin", "operating_margin", "ebitda_margin", "roa", "roe", "peg_ratio", "revenue_growth_yoy"}
+    {
+        "net_margin",
+        "gross_margin",
+        "operating_margin",
+        "ebitda_margin",
+        "roa",
+        "roe",
+        "peg_ratio",
+        "revenue_growth_yoy",
+    }
 )
-DEGENERACY_GUARD_BOUND = Decimal(3)  # 300% -- generous, matches this project's existing +/-200% precedent with headroom
+DEGENERACY_GUARD_BOUND = Decimal(
+    3
+)  # 300% -- generous, matches this project's existing +/-200% precedent with headroom
 
 THRESHOLDS = {name: (minor, major) for name, _, minor, major, _, _ in METRIC_MAPPINGS}
 _INFO_KEY_BY_METRIC = {name: info_key for name, info_key, *_ in METRIC_MAPPINGS}
-_NORMALIZERS_BY_METRIC = {name: (norm_ours, norm_ext) for name, _, _, _, norm_ours, norm_ext in METRIC_MAPPINGS}
+_NORMALIZERS_BY_METRIC = {
+    name: (norm_ours, norm_ext)
+    for name, _, _, _, norm_ours, norm_ext in METRIC_MAPPINGS
+}
 
 SEVERITY_OK = "ok"
 SEVERITY_MINOR = "minor"
@@ -235,7 +269,9 @@ def _pct_diff(our_value: Decimal, external_value: Decimal) -> Decimal:
     return (our_value - external_value) / denom * Decimal(100)
 
 
-def _load_our_values(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, dict[str, Decimal | None]]:
+def _load_our_values(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[int, dict[str, Decimal | None]]:
     """One query per metric source (metric_value, canonical_fact), never a
     query per company -- see module docstring."""
     values: dict[int, dict[str, Decimal | None]] = {cid: {} for cid in company_ids}
@@ -245,7 +281,9 @@ def _load_our_values(conn: psycopg.Connection, company_ids: list[int]) -> dict[i
         # preferred/latest-period_end, the same rule as screener/resolve.py
         # and apps/app's getLatestMetrics -- kept as a direct SQL port
         # here too, same reasoning: no cross-language import possible).
-        metric_value_names = [name for name in _INFO_KEY_BY_METRIC if name not in ("shares_outstanding",)]
+        metric_value_names = [
+            name for name in _INFO_KEY_BY_METRIC if name not in ("shares_outstanding",)
+        ]
         cur.execute(
             """
             with ranked as (
@@ -282,7 +320,9 @@ def _load_our_values(conn: psycopg.Connection, company_ids: list[int]) -> dict[i
         )
         seen_shares: set[int] = set()
         for company_id, value in cur.fetchall():
-            if company_id not in seen_shares:  # first row per company_id is the latest, since ordered end_date desc
+            if (
+                company_id not in seen_shares
+            ):  # first row per company_id is the latest, since ordered end_date desc
                 values[company_id]["shares_outstanding"] = value
                 seen_shares.add(company_id)
 
@@ -337,7 +377,9 @@ def _load_our_values(conn: psycopg.Connection, company_ids: list[int]) -> dict[i
     return values
 
 
-def _check_metric(company_id: int, metric_name: str, our_value: Decimal | None, external_value) -> dict | None:
+def _check_metric(
+    company_id: int, metric_name: str, our_value: Decimal | None, external_value
+) -> dict | None:
     if external_value is None:
         return None  # yfinance itself has no opinion -- not our data problem, don't record noise
     external_decimal = Decimal(str(external_value))
@@ -352,18 +394,29 @@ def _check_metric(company_id: int, metric_name: str, our_value: Decimal | None, 
         # comparable number anyway -- treat it the same as "yfinance has
         # no usable opinion" rather than crashing the whole batch.
         return None
-    normalize_ours, normalize_external = _NORMALIZERS_BY_METRIC.get(metric_name, (_IDENTITY, _IDENTITY))
+    normalize_ours, normalize_external = _NORMALIZERS_BY_METRIC.get(
+        metric_name, (_IDENTITY, _IDENTITY)
+    )
     if normalize_external is not None:
         external_decimal = normalize_external(external_decimal)
     if our_value is None:
         return {
-            "company_id": company_id, "metric_name": metric_name, "our_value": None,
-            "external_value": external_decimal, "pct_diff": None, "severity": SEVERITY_MISSING_OURS,
+            "company_id": company_id,
+            "metric_name": metric_name,
+            "our_value": None,
+            "external_value": external_decimal,
+            "pct_diff": None,
+            "severity": SEVERITY_MISSING_OURS,
             "note": None,
         }
-    if metric_name in DEGENERACY_GUARD_METRICS and abs(our_value) > DEGENERACY_GUARD_BOUND:
+    if (
+        metric_name in DEGENERACY_GUARD_METRICS
+        and abs(our_value) > DEGENERACY_GUARD_BOUND
+    ):
         return None  # implausible ratio (near-zero revenue/assets denominator) -- not a meaningful comparison either way
-    normalized_ours = normalize_ours(our_value) if normalize_ours is not None else our_value
+    normalized_ours = (
+        normalize_ours(our_value) if normalize_ours is not None else our_value
+    )
     pct_diff = _pct_diff(normalized_ours, external_decimal)
     return {
         # Stored NORMALIZED, not raw -- so a report reader sees both
@@ -371,13 +424,22 @@ def _check_metric(company_id: int, metric_name: str, our_value: Decimal | None, 
         # 0.34 vs 0.34, not the misleading-looking 0.0034 vs 0.34) rather
         # than needing to know this metric's own normalization rule to
         # make sense of the row.
-        "company_id": company_id, "metric_name": metric_name, "our_value": normalized_ours,
-        "external_value": external_decimal, "pct_diff": pct_diff,
-        "severity": _severity_for(metric_name, pct_diff), "note": None,
+        "company_id": company_id,
+        "metric_name": metric_name,
+        "our_value": normalized_ours,
+        "external_value": external_decimal,
+        "pct_diff": pct_diff,
+        "severity": _severity_for(metric_name, pct_diff),
+        "note": None,
     }
 
 
-def _check_revenue_zero(company_id: int, our_revenue: Decimal | None, has_revenue_history: bool, external_total_revenue) -> dict | None:
+def _check_revenue_zero(
+    company_id: int,
+    our_revenue: Decimal | None,
+    has_revenue_history: bool,
+    external_total_revenue,
+) -> dict | None:
     if external_total_revenue is None or not has_revenue_history:
         # No revenue concept ever captured for this company at all -- a
         # real, structural absence (Foreign Private Issuer/BDC/etc, see
@@ -391,21 +453,32 @@ def _check_revenue_zero(company_id: int, our_revenue: Decimal | None, has_revenu
     is_external_material = external_decimal >= REVENUE_ZERO_CHECK_MATERIAL_THRESHOLD
     if is_ours_zero_or_missing and is_external_material:
         return {
-            "company_id": company_id, "metric_name": "revenue_zero_check",
+            "company_id": company_id,
+            "metric_name": "revenue_zero_check",
             "our_value": our_revenue if our_revenue is not None else Decimal(0),
-            "external_value": external_decimal, "pct_diff": None, "severity": SEVERITY_CRITICAL,
+            "external_value": external_decimal,
+            "pct_diff": None,
+            "severity": SEVERITY_CRITICAL,
             "note": "Our most-recent revenue is 0/missing while yfinance reports a material totalRevenue -- "
-                    "same SHAPE as the resolve() authoritative-$0 bug found 2026-09-07, but not necessarily the "
-                    "same root cause (a real, different example found live 2026-09-08: Commerce Bancshares, a "
-                    "bank whose only mapped revenue tag is interest income alone, missing non-interest income -- "
-                    "a completeness gap, not a resolve() bug). Run `scrooner-sanity investigate` to find the real cause.",
+            "same SHAPE as the resolve() authoritative-$0 bug found 2026-09-07, but not necessarily the "
+            "same root cause (a real, different example found live 2026-09-08: Commerce Bancshares, a "
+            "bank whose only mapped revenue tag is interest income alone, missing non-interest income -- "
+            "a completeness gap, not a resolve() bug). Run `scrooner-sanity investigate` to find the real cause.",
         }
     return None  # not every company gets a row here -- this check only ever fires on the failure mode, not routinely
 
 
 def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
-    stats = {"considered": len(company_ids), SEVERITY_OK: 0, SEVERITY_MINOR: 0, SEVERITY_MAJOR: 0,
-              SEVERITY_CRITICAL: 0, SEVERITY_MISSING_OURS: 0, SEVERITY_MISSING_EXTERNAL: 0, "no_ticker": 0}
+    stats = {
+        "considered": len(company_ids),
+        SEVERITY_OK: 0,
+        SEVERITY_MINOR: 0,
+        SEVERITY_MAJOR: 0,
+        SEVERITY_CRITICAL: 0,
+        SEVERITY_MISSING_OURS: 0,
+        SEVERITY_MISSING_EXTERNAL: 0,
+        "no_ticker": 0,
+    }
     if not company_ids:
         return stats
 
@@ -416,9 +489,11 @@ def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
 
     pending: list[dict] = []
     freshness_pending: list[dict] = []
-    evaluated_ids: list[int] = []  # companies we got a real yfinance answer for THIS run -- see _write_batch's
-                                    # own docstring for why only these get their stale rows cleared, not a
-                                    # company we skipped due to a transient fetch failure/no ticker/rate limit.
+    evaluated_ids: list[
+        int
+    ] = []  # companies we got a real yfinance answer for THIS run -- see _write_batch's
+    # own docstring for why only these get their stale rows cleared, not a
+    # company we skipped due to a transient fetch failure/no ticker/rate limit.
     for i, company_id in enumerate(company_ids):
         cik = cik_by_company.get(company_id)
         ticker = ticker_by_company.get(cik) if cik else None
@@ -431,7 +506,9 @@ def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
         except YFRateLimitError:
             logger.warning("sanity.rate_limited", ticker=ticker)
             continue
-        except Exception as e:  # yfinance's own network/parsing failures are not typed consistently
+        except (
+            Exception
+        ) as e:  # yfinance's own network/parsing failures are not typed consistently
             logger.warning("sanity.fetch_failed", ticker=ticker, error=str(e))
             continue
 
@@ -443,12 +520,19 @@ def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
 
         rows = []
         for metric_name, info_key in _INFO_KEY_BY_METRIC.items():
-            row = _check_metric(company_id, metric_name, our_values[company_id].get(metric_name), info.get(info_key))
+            row = _check_metric(
+                company_id,
+                metric_name,
+                our_values[company_id].get(metric_name),
+                info.get(info_key),
+            )
             if row is not None:
                 rows.append(row)
         revenue_row = _check_revenue_zero(
-            company_id, our_values[company_id].get("revenue_latest"),
-            our_values[company_id].get("revenue_has_history") is not None, info.get("totalRevenue"),
+            company_id,
+            our_values[company_id].get("revenue_latest"),
+            our_values[company_id].get("revenue_has_history") is not None,
+            info.get("totalRevenue"),
         )
         if revenue_row is not None:
             rows.append(revenue_row)
@@ -462,10 +546,16 @@ def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
         # core.period.end_date's own type.
         most_recent_quarter_ts = info.get("mostRecentQuarter")
         most_recent_quarter_date = (
-            datetime.fromtimestamp(most_recent_quarter_ts, tz=timezone.utc).date() if most_recent_quarter_ts else None
+            datetime.fromtimestamp(most_recent_quarter_ts, tz=timezone.utc).date()
+            if most_recent_quarter_ts
+            else None
         )
         freshness_pending.append(
-            check_freshness(company_id, latest_period_end_by_company.get(company_id), most_recent_quarter_date)
+            check_freshness(
+                company_id,
+                latest_period_end_by_company.get(company_id),
+                most_recent_quarter_date,
+            )
         )
 
         if len(evaluated_ids) >= COMMIT_EVERY or i == len(company_ids) - 1:
@@ -487,7 +577,9 @@ def _ciks_for(conn: psycopg.Connection, company_ids: list[int]) -> set[str]:
 
 def _cik_by_company(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, str]:
     with conn.cursor() as cur:
-        cur.execute("select id, cik from core.company where id = any(%s)", (company_ids,))
+        cur.execute(
+            "select id, cik from core.company where id = any(%s)", (company_ids,)
+        )
         return dict(cur.fetchall())
 
 
@@ -503,7 +595,9 @@ _INSERT_SQL = """
 """
 
 
-def _write_batch(conn: psycopg.Connection, evaluated_company_ids: list[int], rows: list[dict]) -> psycopg.Connection:
+def _write_batch(
+    conn: psycopg.Connection, evaluated_company_ids: list[int], rows: list[dict]
+) -> psycopg.Connection:
     """Delete-then-reinsert, scoped to the companies actually evaluated
     this run -- NOT a plain per-row upsert. Found live 2026-09-08, first
     real test run: a check that no longer fires (e.g. revenue_zero_check
@@ -528,7 +622,10 @@ def _write_batch(conn: psycopg.Connection, evaluated_company_ids: list[int], row
     params = [{**row, "checked_at": now} for row in rows]
     try:
         with conn.cursor() as cur:
-            cur.execute("delete from analytics.data_sanity_check where company_id = any(%s)", (evaluated_company_ids,))
+            cur.execute(
+                "delete from analytics.data_sanity_check where company_id = any(%s)",
+                (evaluated_company_ids,),
+            )
             if params:
                 cur.executemany(_INSERT_SQL, params)
         conn.commit()
@@ -537,7 +634,10 @@ def _write_batch(conn: psycopg.Connection, evaluated_company_ids: list[int], row
         logger.warning("sanity.connection_dropped_reconnecting", rows=len(rows))
         fresh_conn = psycopg.connect(settings.database_url)
         with fresh_conn.cursor() as cur:
-            cur.execute("delete from analytics.data_sanity_check where company_id = any(%s)", (evaluated_company_ids,))
+            cur.execute(
+                "delete from analytics.data_sanity_check where company_id = any(%s)",
+                (evaluated_company_ids,),
+            )
             if params:
                 cur.executemany(_INSERT_SQL, params)
         fresh_conn.commit()

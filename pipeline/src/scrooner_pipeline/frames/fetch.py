@@ -36,18 +36,36 @@ def period_code(year: int, quarter: int, instant: bool) -> str:
     return f"CY{year}Q{quarter}{suffix}"
 
 
-def fetch_frame(client: SECClient, taxonomy: str, tag: str, unit: str, year: int, quarter: int, instant: bool) -> list[FramesRow]:
+def fetch_frame(
+    client: SECClient,
+    taxonomy: str,
+    tag: str,
+    unit: str,
+    year: int,
+    quarter: int,
+    instant: bool,
+) -> list[FramesRow]:
     period = period_code(year, quarter, instant)
     url = f"{FRAMES_BASE_URL}/{taxonomy}/{tag}/{unit}/{period}.json"
     try:
         data = client.get_json(url)
     except Exception as e:
-        logger.warning("frames.fetch_failed", taxonomy=taxonomy, tag=tag, period=period, error=str(e))
+        logger.warning(
+            "frames.fetch_failed",
+            taxonomy=taxonomy,
+            tag=tag,
+            period=period,
+            error=str(e),
+        )
         return []
     return [
         FramesRow(
-            cik=row["cik"], entity_name=row.get("entityName", ""), value=row["val"],
-            period_start=row.get("start"), period_end=row["end"], accession=row.get("accn", ""),
+            cik=row["cik"],
+            entity_name=row.get("entityName", ""),
+            value=row["val"],
+            period_start=row.get("start"),
+            period_end=row["end"],
+            accession=row.get("accn", ""),
         )
         for row in data.get("data", [])
     ]

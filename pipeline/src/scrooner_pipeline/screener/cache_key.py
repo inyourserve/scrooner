@@ -20,7 +20,12 @@ import hashlib
 import json
 from decimal import Decimal
 
-from scrooner_pipeline.screener.schema import CategoricalPredicate, MetricPredicate, PredicateGroup, ScreenQuery
+from scrooner_pipeline.screener.schema import (
+    CategoricalPredicate,
+    MetricPredicate,
+    PredicateGroup,
+    ScreenQuery,
+)
 
 
 def _default(o):
@@ -46,7 +51,12 @@ def _canon_predicate(p) -> dict:
             "n": p.n,
         }
     if isinstance(p, CategoricalPredicate):
-        return {"type": "categorical", "field": p.field, "operator": p.operator, "value": p.value}
+        return {
+            "type": "categorical",
+            "field": p.field,
+            "operator": p.operator,
+            "value": p.value,
+        }
     raise TypeError(f"unknown predicate node: {p!r}")
 
 

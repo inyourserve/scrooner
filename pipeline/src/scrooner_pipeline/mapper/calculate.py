@@ -58,18 +58,30 @@ logger = structlog.get_logger()
 # Growth metrics are TTM/multi-period -- Stage 3e's job. Price-dependent
 # metrics are excluded via metric_definition.requires_price, not this list.
 DEFERRED_TO_STAGE_3E = {
-    "revenue_growth_yoy", "revenue_growth_3y_cagr", "eps_growth_yoy", "eps_growth_3y_cagr",
+    "revenue_growth_yoy",
+    "revenue_growth_3y_cagr",
+    "eps_growth_yoy",
+    "eps_growth_3y_cagr",
     # 5Y/10Y CAGR added 2026-08-19 -- same Stage 3e (ttm.py) computation
     # path as the original 4, just wider GROWTH_METRICS lag_years.
-    "revenue_growth_5y_cagr", "revenue_growth_10y_cagr", "eps_growth_5y_cagr", "eps_growth_10y_cagr",
+    "revenue_growth_5y_cagr",
+    "revenue_growth_10y_cagr",
+    "eps_growth_5y_cagr",
+    "eps_growth_10y_cagr",
     # dps_growth_yoy/3y_cagr added 2026-08-29 -- same ttm.py GROWTH_METRICS mechanism.
-    "dps_growth_yoy", "dps_growth_3y_cagr",
+    "dps_growth_yoy",
+    "dps_growth_3y_cagr",
     # net_income_growth_*/diluted_shares_growth_* added 2026-09-05
     # (financials display spec) -- same ttm.py GROWTH_METRICS mechanism,
     # net_income and shares_outstanding are both real canonical_fact
     # concepts so this needed zero new logic, only new dict entries.
-    "net_income_growth_yoy", "net_income_growth_3y_cagr", "net_income_growth_5y_cagr", "net_income_growth_10y_cagr",
-    "diluted_shares_growth_yoy", "diluted_shares_growth_3y_cagr", "diluted_shares_growth_5y_cagr",
+    "net_income_growth_yoy",
+    "net_income_growth_3y_cagr",
+    "net_income_growth_5y_cagr",
+    "net_income_growth_10y_cagr",
+    "diluted_shares_growth_yoy",
+    "diluted_shares_growth_3y_cagr",
+    "diluted_shares_growth_5y_cagr",
 }
 
 # net_debt_ebitda is requires_price=false (it genuinely doesn't need
@@ -81,8 +93,15 @@ DEFERRED_TO_STAGE_3E = {
 # FORMULA_SHAPES[metric_name] for every company, since it deliberately
 # has no shape entry and zero metric_definition_input rows.
 DEFERRED_TO_EXPANDED_METRICS = {
-    "net_debt_ebitda", "institutional_ownership_pct", "cash_conversion_cycle", "share_dilution_trend",
-    "piotroski_f_score", "fcf_gt_net_income", "zero_debt", "profitable_streak_years", "margin_expanding_3yr",
+    "net_debt_ebitda",
+    "institutional_ownership_pct",
+    "cash_conversion_cycle",
+    "share_dilution_trend",
+    "piotroski_f_score",
+    "fcf_gt_net_income",
+    "zero_debt",
+    "profitable_streak_years",
+    "margin_expanding_3yr",
     # These 3 are actually computed in mapper/reconciliation.py, not
     # expanded_metrics.py -- grouped into this same set anyway since its
     # real meaning is "not handled by this engine's FORMULA_SHAPES", not
@@ -91,12 +110,17 @@ DEFERRED_TO_EXPANDED_METRICS = {
     # -- this project has hit the "forgot to defer, next calculate() run
     # crashes with a bare KeyError" bug twice already (net_debt_ebitda,
     # share_dilution_trend), see pipeline/CLAUDE.md.
-    "ar_change_reconciliation_gap", "inventory_change_reconciliation_gap", "ap_change_reconciliation_gap",
+    "ar_change_reconciliation_gap",
+    "inventory_change_reconciliation_gap",
+    "ap_change_reconciliation_gap",
     # Added 2026-08-22 (P0/coverage execution pass) -- computed in
     # mapper/tax_reconciliation.py, mapper/fcf_growth.py, and
     # mapper/dividend_streak.py respectively, same "same-edit as the
     # metric_definition row" rule as above.
-    "effective_tax_rate_gap", "fcf_growth_3y_cagr", "fcf_growth_5y_cagr", "dividend_growth_streak_years",
+    "effective_tax_rate_gap",
+    "fcf_growth_3y_cagr",
+    "fcf_growth_5y_cagr",
+    "dividend_growth_streak_years",
     # Added 2026-09-05 (financials display spec gap-fill), same edit as
     # their metric_definition rows. ebitda_margin/debt_to_ebitda/
     # fcf_per_share/share_repurchases_pct_fcf/dividends_pct_fcf all need
@@ -104,7 +128,11 @@ DEFERRED_TO_EXPANDED_METRICS = {
     # canonical_fact -- computed in expanded_metrics.py. fcf_growth_yoy
     # is computed in mapper/fcf_growth.py (same reasoning as
     # fcf_growth_3y_cagr/5y_cagr above).
-    "ebitda_margin", "debt_to_ebitda", "fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf",
+    "ebitda_margin",
+    "debt_to_ebitda",
+    "fcf_per_share",
+    "share_repurchases_pct_fcf",
+    "dividends_pct_fcf",
     "fcf_growth_yoy",
 }
 
@@ -124,7 +152,14 @@ DEFERRED_TO_EXPANDED_METRICS = {
 # inflates a "days" metric ~4x: the numerator is a period FLOW, the
 # denominator a point-in-time STOCK, and only an annual flow is the right
 # scale to divide by an annual-scale balance.
-FY_ONLY_METRICS = {"roic", "roe", "roa", "debtor_days", "inventory_days", "payables_days"}
+FY_ONLY_METRICS = {
+    "roic",
+    "roe",
+    "roa",
+    "debtor_days",
+    "inventory_days",
+    "payables_days",
+}
 
 # gross_margin switched from "ratio" (a direct GrossProfit tag) to
 # "sum_diff_ratio" (Revenue - CostOfRevenue, 2026-09-01) -- checked live
@@ -209,12 +244,17 @@ FORMULA_SHAPES = {
 
 def _load_target_metrics(conn: psycopg.Connection) -> list[dict]:
     with conn.cursor() as cur:
-        cur.execute("select id, metric_name from analytics.metric_definition where requires_price = false")
+        cur.execute(
+            "select id, metric_name from analytics.metric_definition where requires_price = false"
+        )
         rows = cur.fetchall()
         targets = []
         with conn.cursor() as cur2:
             for metric_id, metric_name in rows:
-                if metric_name in DEFERRED_TO_STAGE_3E or metric_name in DEFERRED_TO_EXPANDED_METRICS:
+                if (
+                    metric_name in DEFERRED_TO_STAGE_3E
+                    or metric_name in DEFERRED_TO_EXPANDED_METRICS
+                ):
                     continue
                 cur2.execute(
                     """
@@ -226,7 +266,10 @@ def _load_target_metrics(conn: psycopg.Connection) -> list[dict]:
                     (metric_id,),
                 )
                 # (concept_name, concept_id, role, is_instant)
-                inputs = [(name, cid, role, statement == "balance_sheet") for name, cid, role, statement in cur2.fetchall()]
+                inputs = [
+                    (name, cid, role, statement == "balance_sheet")
+                    for name, cid, role, statement in cur2.fetchall()
+                ]
                 targets.append({"id": metric_id, "name": metric_name, "inputs": inputs})
     return targets
 
@@ -250,15 +293,30 @@ def _load_canonical_facts(conn: psycopg.Connection, company_id: int) -> dict:
         by_period_id: dict[int, dict[int, tuple]] = {}
         by_end_date: dict[int, dict] = {}
         periods: dict[int, tuple] = {}
-        for concept_id, period_id, value, fact_ids, start, end, fiscal_period, period_type in cur.fetchall():
+        for (
+            concept_id,
+            period_id,
+            value,
+            fact_ids,
+            start,
+            end,
+            fiscal_period,
+            period_type,
+        ) in cur.fetchall():
             by_period_id.setdefault(concept_id, {})[period_id] = (value, fact_ids)
             if period_type == "instant":
                 by_end_date.setdefault(concept_id, {})[end] = (value, fact_ids)
             periods[period_id] = (start, end, fiscal_period)
-    return {"by_period_id": by_period_id, "by_end_date": by_end_date, "periods": periods}
+    return {
+        "by_period_id": by_period_id,
+        "by_end_date": by_end_date,
+        "periods": periods,
+    }
 
 
-def _compute(shape: str, values_by_role: dict[str, list[Decimal]]) -> tuple[Decimal | None, str | None]:
+def _compute(
+    shape: str, values_by_role: dict[str, list[Decimal]]
+) -> tuple[Decimal | None, str | None]:
     if shape == "ratio":
         num = values_by_role.get("numerator")
         denom = values_by_role.get("denominator")
@@ -352,9 +410,15 @@ def _compute(shape: str, values_by_role: dict[str, list[Decimal]]) -> tuple[Deci
     raise ValueError(f"unknown formula shape: {shape}")
 
 
-def calculate_for_company(conn: psycopg.Connection, company_id: int, targets: list[dict]) -> dict:
+def calculate_for_company(
+    conn: psycopg.Connection, company_id: int, targets: list[dict]
+) -> dict:
     facts = _load_canonical_facts(conn, company_id)
-    by_period_id, by_end_date, periods = facts["by_period_id"], facts["by_end_date"], facts["periods"]
+    by_period_id, by_end_date, periods = (
+        facts["by_period_id"],
+        facts["by_end_date"],
+        facts["periods"],
+    )
 
     stats = {"computed": 0, "null": 0}
     rows: list[dict] = []
@@ -491,10 +555,19 @@ def calculate_for_company(conn: psycopg.Connection, company_id: int, targets: li
 def calculate(conn: psycopg.Connection, ciks: set[str]) -> dict:
     targets = _load_target_metrics(conn)
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "computed": 0, "null": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "computed": 0,
+        "null": 0,
+    }
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)

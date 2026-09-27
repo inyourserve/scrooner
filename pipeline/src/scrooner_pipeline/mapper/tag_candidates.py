@@ -41,30 +41,51 @@ CONCEPT_SEARCH_KEYWORDS: dict[str, list[str]] = {
     "current_liabilities": ["LiabilitiesCurrent"],
     "interest_expense": ["InterestExpense"],
     "income_tax_expense": ["IncomeTaxExpense", "IncomeTaxProvision"],
-    "income_before_tax": ["BeforeIncomeTax", "IncomeLossFromContinuingOperationsBeforeIncomeTaxes"],
+    "income_before_tax": [
+        "BeforeIncomeTax",
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxes",
+    ],
     "cfo": ["NetCashProvidedByUsedInOperatingActivities"],
-    "capex": ["PaymentsToAcquireProperty", "PaymentsForCapitalImprovements", "PaymentsToAcquireProductiveAssets"],
+    "capex": [
+        "PaymentsToAcquireProperty",
+        "PaymentsForCapitalImprovements",
+        "PaymentsToAcquireProductiveAssets",
+    ],
     "diluted_eps": ["EarningsPerShareDiluted"],
     "shares_outstanding": ["SharesOutstanding"],
     "dividends_per_share": ["DividendsPerShare"],
     "inventory": ["Inventory"],
     "sbc": ["ShareBasedCompensation", "StockCompensation"],
-    "depreciation_and_amortization": ["DepreciationAndAmortization", "DepreciationDepletionAndAmortization"],
+    "depreciation_and_amortization": [
+        "DepreciationAndAmortization",
+        "DepreciationDepletionAndAmortization",
+    ],
     "accounts_receivable": ["AccountsReceivable", "ReceivablesNetCurrent"],
     "accounts_payable": ["AccountsPayable"],
     "goodwill": ["Goodwill"],
     "basic_eps": ["EarningsPerShareBasic"],
-    "cf_ar_change": ["IncreaseDecreaseInAccountsReceivable", "IncreaseDecreaseInReceivables"],
+    "cf_ar_change": [
+        "IncreaseDecreaseInAccountsReceivable",
+        "IncreaseDecreaseInReceivables",
+    ],
     "cf_inventory_change": ["IncreaseDecreaseInInventor"],
     "cf_ap_change": ["IncreaseDecreaseInAccountsPayable"],
     "research_and_development": ["ResearchAndDevelopment"],
     "interest_income": ["InterestIncome", "InvestmentIncomeInterest"],
-    "sga_expense": ["SellingGeneralAndAdministrative", "GeneralAndAdministrativeExpense"],
+    "sga_expense": [
+        "SellingGeneralAndAdministrative",
+        "GeneralAndAdministrativeExpense",
+    ],
     "comprehensive_income": ["ComprehensiveIncome"],
     "amortization_of_intangibles": ["AmortizationOfIntangible"],
     "effective_tax_rate_reported": ["EffectiveIncomeTaxRate"],
     "employee_count": ["NumberOfEmployees"],
-    "cost_of_revenue": ["CostOfGoodsAndServicesSold", "CostOfRevenue", "CostOfGoodsSold", "CostOfSales"],
+    "cost_of_revenue": [
+        "CostOfGoodsAndServicesSold",
+        "CostOfRevenue",
+        "CostOfGoodsSold",
+        "CostOfSales",
+    ],
     "operating_expenses": ["OperatingExpenses", "CostsAndExpenses"],
     "total_assets": ["Assets"],
     "total_liabilities": ["Liabilities"],
@@ -74,7 +95,10 @@ CONCEPT_SEARCH_KEYWORDS: dict[str, list[str]] = {
     "dividends_paid": ["PaymentsOfDividends"],
     "share_buybacks": ["PaymentsForRepurchaseOfCommonStock", "StockRepurchase"],
     "public_float": ["EntityPublicFloat"],
-    "other_income_expense_net": ["NonoperatingIncomeExpense", "InterestIncomeExpenseNet"],
+    "other_income_expense_net": [
+        "NonoperatingIncomeExpense",
+        "InterestIncomeExpenseNet",
+    ],
 }
 
 CANDIDATES_PER_CONCEPT = 15
@@ -82,11 +106,18 @@ CANDIDATES_PER_CONCEPT = 15
 
 def _load_concepts(conn: psycopg.Connection) -> list[dict]:
     with conn.cursor() as cur:
-        cur.execute("select id, name, statement, combination_mode from analytics.canonical_concept order by name")
-        return [{"id": r[0], "name": r[1], "statement": r[2], "combination_mode": r[3]} for r in cur.fetchall()]
+        cur.execute(
+            "select id, name, statement, combination_mode from analytics.canonical_concept order by name"
+        )
+        return [
+            {"id": r[0], "name": r[1], "statement": r[2], "combination_mode": r[3]}
+            for r in cur.fetchall()
+        ]
 
 
-def _load_current_mapped_tags(conn: psycopg.Connection, canonical_concept_id: int) -> set[str]:
+def _load_current_mapped_tags(
+    conn: psycopg.Connection, canonical_concept_id: int
+) -> set[str]:
     with conn.cursor() as cur:
         cur.execute(
             "select cn.tag from analytics.concept_mapping cm join core.concept cn on cn.id = cm.concept_id where cm.canonical_concept_id = %s",
@@ -101,7 +132,9 @@ def _load_canonical_concept_coverage(conn: psycopg.Connection) -> dict[int, int]
     grouped pass over canonical_fact, used to decide which concepts are
     already well_covered and can skip the candidate search entirely."""
     with conn.cursor() as cur:
-        cur.execute("select canonical_concept_id, count(distinct company_id) from analytics.canonical_fact group by canonical_concept_id")
+        cur.execute(
+            "select canonical_concept_id, count(distinct company_id) from analytics.canonical_fact group by canonical_concept_id"
+        )
         return dict(cur.fetchall())
 
 
@@ -123,7 +156,10 @@ def _load_concept_id_coverage(conn: psycopg.Connection) -> dict[int, int]:
 
 
 def _candidate_tags(
-    conn: psycopg.Connection, keywords: list[str], already_mapped_tags: set[str], coverage_by_concept_id: dict[int, int]
+    conn: psycopg.Connection,
+    keywords: list[str],
+    already_mapped_tags: set[str],
+    coverage_by_concept_id: dict[int, int],
 ) -> list[tuple[str, str, int]]:
     if not keywords:
         return []
@@ -134,7 +170,11 @@ def _candidate_tags(
             f"select id, taxonomy, tag from core.concept where taxonomy = 'us-gaap' and ({like_clauses})",
             params,
         )
-        matches = {r[0]: (r[1], r[2]) for r in cur.fetchall() if r[2] not in already_mapped_tags}
+        matches = {
+            r[0]: (r[1], r[2])
+            for r in cur.fetchall()
+            if r[2] not in already_mapped_tags
+        }
         results = [
             (taxonomy, tag, coverage_by_concept_id[cid])
             for cid, (taxonomy, tag) in matches.items()
@@ -157,7 +197,11 @@ def build_tag_candidates(conn: psycopg.Connection) -> dict:
     coverage_by_concept_id = _load_concept_id_coverage(conn)
     canonical_coverage = _load_canonical_concept_coverage(conn)
     total_companies = _total_active_companies(conn)
-    stats = {"considered": len(concepts), "skipped_well_covered": 0, "candidates_written": 0}
+    stats = {
+        "considered": len(concepts),
+        "skipped_well_covered": 0,
+        "candidates_written": 0,
+    }
 
     for concept in concepts:
         # Added 2026-09-08 (part of the "prioritize by coverage" ask):
@@ -169,25 +213,38 @@ def build_tag_candidates(conn: psycopg.Connection) -> dict:
         coverage = canonical_coverage.get(concept["id"], 0)
         if total_companies and coverage >= 0.85 * total_companies:
             with conn.cursor() as cur:
-                cur.execute("delete from analytics.concept_tag_candidate where canonical_concept_id = %s", (concept["id"],))
+                cur.execute(
+                    "delete from analytics.concept_tag_candidate where canonical_concept_id = %s",
+                    (concept["id"],),
+                )
             conn.commit()
             stats["skipped_well_covered"] += 1
             continue
 
         keywords = CONCEPT_SEARCH_KEYWORDS.get(concept["name"], [])
         already_mapped = _load_current_mapped_tags(conn, concept["id"])
-        candidates = _candidate_tags(conn, keywords, already_mapped, coverage_by_concept_id)
+        candidates = _candidate_tags(
+            conn, keywords, already_mapped, coverage_by_concept_id
+        )
 
         with conn.cursor() as cur:
             # Delete-then-reinsert scoped to this concept -- a candidate
             # that's since been mapped (and so no longer a candidate)
             # must disappear, a plain upsert can only ever add/update.
-            cur.execute("delete from analytics.concept_tag_candidate where canonical_concept_id = %s", (concept["id"],))
+            cur.execute(
+                "delete from analytics.concept_tag_candidate where canonical_concept_id = %s",
+                (concept["id"],),
+            )
             if candidates:
                 cur.executemany(
                     _UPSERT_SQL,
                     [
-                        {"canonical_concept_id": concept["id"], "taxonomy": taxonomy, "tag": tag, "company_count": count}
+                        {
+                            "canonical_concept_id": concept["id"],
+                            "taxonomy": taxonomy,
+                            "tag": tag,
+                            "company_count": count,
+                        }
                         for taxonomy, tag, count in candidates
                     ],
                 )

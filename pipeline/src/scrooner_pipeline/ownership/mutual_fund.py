@@ -118,8 +118,14 @@ logger = structlog.get_logger()
 # the oldest entry and add the new one so this always stays exactly the
 # two most-recent windows, not an ever-growing list.
 BULK_ZIP_WINDOWS = [
-    ("2026q2", "https://www.sec.gov/files/dera/data/form-n-port-data-sets/2026q2_nport.zip"),
-    ("2026q1", "https://www.sec.gov/files/dera/data/form-n-port-data-sets/2026q1_nport.zip"),
+    (
+        "2026q2",
+        "https://www.sec.gov/files/dera/data/form-n-port-data-sets/2026q2_nport.zip",
+    ),
+    (
+        "2026q1",
+        "https://www.sec.gov/files/dera/data/form-n-port-data-sets/2026q1_nport.zip",
+    ),
 ]
 
 # Found live 2026-08-31: an unbatched executemany over a full-population
@@ -159,12 +165,17 @@ def _load_golden_cusips(conn: psycopg.Connection) -> dict[str, int]:
     (doc 19 Stage 3's own capture) -- the identical lookup
     institutional.py already uses, not a second implementation."""
     with conn.cursor() as cur:
-        cur.execute("select distinct cusip, company_id from core.beneficial_ownership where cusip is not null")
+        cur.execute(
+            "select distinct cusip, company_id from core.beneficial_ownership where cusip is not null"
+        )
         return dict(cur.fetchall())
 
 
 def _load_tsv_dict(zf: zipfile.ZipFile, name: str) -> csv.DictReader:
-    return csv.DictReader(io.TextIOWrapper(zf.open(name), encoding="utf-8", errors="replace"), delimiter="\t")
+    return csv.DictReader(
+        io.TextIOWrapper(zf.open(name), encoding="utf-8", errors="replace"),
+        delimiter="\t",
+    )
 
 
 def _load_submission_lookup(zf: zipfile.ZipFile) -> dict[str, dict]:
@@ -274,7 +285,9 @@ def _match_holdings(
         submission = submission_lookup.get(accession_number, {})
         registrant = registrant_lookup.get(accession_number, {})
         series = series_lookup.get(accession_number, {})
-        fund_name = series.get("series_name") or registrant.get("registrant_name") or "unknown"
+        fund_name = (
+            series.get("series_name") or registrant.get("registrant_name") or "unknown"
+        )
         currency_code = row["CURRENCY_CODE"].strip() or "USD"
         currency_value = _decimal(row["CURRENCY_VALUE"])
         matched.append(
@@ -301,7 +314,9 @@ def _match_holdings(
     return matched, total_rows
 
 
-def _write_matched_rows(conn: psycopg.Connection, matched_rows: list[dict]) -> list[int]:
+def _write_matched_rows(
+    conn: psycopg.Connection, matched_rows: list[dict]
+) -> list[int]:
     """Delete-then-reinsert per matched company_id, same idempotent-rerun
     pattern as institutional.py (and Mapper's resolve.py/calculate.py
     before it) -- a plain `on conflict do nothing` upsert alone would
@@ -374,14 +389,23 @@ def update_mutual_fund_ownership(conn: psycopg.Connection) -> dict:
             registrant_lookup = _load_registrant_lookup(zf)
             series_lookup = _load_fund_series_lookup(zf)
             matched_rows, holding_row_count = _match_holdings(
-                zf, cusip_to_company, submission_lookup, registrant_lookup, series_lookup, window_label
+                zf,
+                cusip_to_company,
+                submission_lookup,
+                registrant_lookup,
+                series_lookup,
+                window_label,
             )
 
         all_matched_rows.extend(matched_rows)
-        window_fetch_stats.append((window_label, url, sha256, holding_row_count, len(matched_rows)))
+        window_fetch_stats.append(
+            (window_label, url, sha256, holding_row_count, len(matched_rows))
+        )
         logger.info(
             "mutual_fund_ownership.window_done",
-            window_label=window_label, holding_row_count=holding_row_count, matched_rows=len(matched_rows),
+            window_label=window_label,
+            holding_row_count=holding_row_count,
+            matched_rows=len(matched_rows),
         )
 
     # Single delete-then-reinsert pass covering BOTH windows' rows -- see
@@ -390,7 +414,13 @@ def update_mutual_fund_ownership(conn: psycopg.Connection) -> dict:
     company_ids = _write_matched_rows(conn, all_matched_rows)
 
     with conn.cursor() as cur:
-        for window_label, url, sha256, holding_row_count, matched_count in window_fetch_stats:
+        for (
+            window_label,
+            url,
+            sha256,
+            holding_row_count,
+            matched_count,
+        ) in window_fetch_stats:
             cur.execute(
                 """
                 insert into raw.sec_nport_bulk_fetch
@@ -410,7 +440,10 @@ def update_mutual_fund_ownership(conn: psycopg.Connection) -> dict:
         "matched_rows": len(all_matched_rows),
         "companies": len(company_ids),
         "windows": {
-            window_label: {"holding_row_count": holding_row_count, "matched_row_count": matched_count}
+            window_label: {
+                "holding_row_count": holding_row_count,
+                "matched_row_count": matched_count,
+            }
             for window_label, _url, _sha256, holding_row_count, matched_count in window_fetch_stats
         },
     }

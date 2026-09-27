@@ -38,13 +38,20 @@ from scrooner_pipeline.common.alpaca_client import FEED, AlpacaClient
 logger = structlog.get_logger()
 
 
-def update_market_price(conn: psycopg.Connection, ticker_by_cik: dict[str, str]) -> dict:
+def update_market_price(
+    conn: psycopg.Connection, ticker_by_cik: dict[str, str]
+) -> dict:
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ticker_by_cik),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)",
+            (sorted(ticker_by_cik),),
+        )
         company_id_by_cik = dict(cur.fetchall())
 
     ticker_to_company_id = {
-        ticker: company_id_by_cik[cik] for cik, ticker in ticker_by_cik.items() if cik in company_id_by_cik
+        ticker: company_id_by_cik[cik]
+        for cik, ticker in ticker_by_cik.items()
+        if cik in company_id_by_cik
     }
     stats = {
         "considered": len(ticker_by_cik),

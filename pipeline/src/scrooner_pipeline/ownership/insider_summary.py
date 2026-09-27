@@ -65,7 +65,10 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.mapper.price_metrics import _latest_instant_fact, _load_shares_outstanding_fallback
+from scrooner_pipeline.mapper.price_metrics import (
+    _latest_instant_fact,
+    _load_shares_outstanding_fallback,
+)
 
 logger = structlog.get_logger()
 
@@ -90,12 +93,16 @@ def _owner_key(row: dict) -> str:
 
 def _load_concept_id(conn: psycopg.Connection, name: str) -> int | None:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         row = cur.fetchone()
         return row[0] if row else None
 
 
-def _load_transactions_for_company(conn: psycopg.Connection, company_id: int) -> list[dict]:
+def _load_transactions_for_company(
+    conn: psycopg.Connection, company_id: int
+) -> list[dict]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -113,7 +120,11 @@ def _load_transactions_for_company(conn: psycopg.Connection, company_id: int) ->
 def _resolve_shares_outstanding(
     conn: psycopg.Connection, company_id: int, concept_id: int | None
 ) -> tuple[Decimal, list[int]] | None:
-    hit = _latest_instant_fact(conn, company_id, concept_id) if concept_id is not None else None
+    hit = (
+        _latest_instant_fact(conn, company_id, concept_id)
+        if concept_id is not None
+        else None
+    )
     if hit is not None:
         return hit[0], hit[1]
     return _load_shares_outstanding_fallback(conn, company_id)
@@ -131,7 +142,11 @@ def compute_ownership_pct(rows: list[dict], shares_outstanding: Decimal | None) 
         key = _owner_key(row)
         if key is None:
             continue
-        sort_key = (row["transaction_date"] or date.min, row["filing_date"] or date.min, row["id"])
+        sort_key = (
+            row["transaction_date"] or date.min,
+            row["filing_date"] or date.min,
+            row["id"],
+        )
         existing = latest_by_owner.get(key)
         if existing is None or sort_key > existing["_sort_key"]:
             latest_by_owner[key] = {**row, "_sort_key": sort_key}
@@ -176,7 +191,9 @@ CLUSTER_WINDOW_DAYS = 7
 CLUSTER_LOOKBACK_MONTHS = 12
 
 
-def compute_cluster_signal(rows: list[dict], window_days: int = CLUSTER_WINDOW_DAYS, as_of: date | None = None) -> dict:
+def compute_cluster_signal(
+    rows: list[dict], window_days: int = CLUSTER_WINDOW_DAYS, as_of: date | None = None
+) -> dict:
     """Pure function: rows -> {cluster_buy_max_insiders, cluster_buy_window_start,
     cluster_buy_window_end}. doc/audit/2026-08-29_ownership_insider_data_audit.md's
     #3 "missing" finding: "multiple insiders buying in the same short
@@ -232,7 +249,11 @@ def compute_cluster_signal(rows: list[dict], window_days: int = CLUSTER_WINDOW_D
         key=lambda pair: pair[0],
     )
     if not buys:
-        return {"cluster_buy_max_insiders": None, "cluster_buy_window_start": None, "cluster_buy_window_end": None}
+        return {
+            "cluster_buy_max_insiders": None,
+            "cluster_buy_window_start": None,
+            "cluster_buy_window_end": None,
+        }
 
     best_count = 0
     best_start: date | None = None
@@ -255,7 +276,9 @@ def compute_cluster_signal(rows: list[dict], window_days: int = CLUSTER_WINDOW_D
     }
 
 
-def compute_window_summary(rows: list[dict], window_months: int, as_of: date | None = None) -> dict:
+def compute_window_summary(
+    rows: list[dict], window_months: int, as_of: date | None = None
+) -> dict:
     """Pure function: rows (already loaded for one company) -> one
     window's aggregate dict. Open-market buys/sells only (transaction_code
     'P'/'S' respectively per doc's own scope -- grants/exercises/gifts/tax
@@ -267,13 +290,21 @@ def compute_window_summary(rows: list[dict], window_months: int, as_of: date | N
     this runs against). Largest purchase/sale are genuinely NULL when no
     such transaction exists in the window."""
     cutoff = _months_ago(window_months, as_of)
-    in_window = [r for r in rows if r["transaction_date"] is not None and r["transaction_date"] >= cutoff]
+    in_window = [
+        r
+        for r in rows
+        if r["transaction_date"] is not None and r["transaction_date"] >= cutoff
+    ]
 
     buys = [r for r in in_window if r["transaction_code"] == "P"]
     sells = [r for r in in_window if r["transaction_code"] == "S"]
 
-    shares_bought = sum((r["shares"] for r in buys if r["shares"] is not None), Decimal(0))
-    shares_sold = sum((r["shares"] for r in sells if r["shares"] is not None), Decimal(0))
+    shares_bought = sum(
+        (r["shares"] for r in buys if r["shares"] is not None), Decimal(0)
+    )
+    shares_sold = sum(
+        (r["shares"] for r in sells if r["shares"] is not None), Decimal(0)
+    )
 
     def _priced_value(r: dict) -> Decimal | None:
         if r["shares"] is None or r["price_per_share"] is None:
@@ -288,14 +319,21 @@ def compute_window_summary(rows: list[dict], window_months: int, as_of: date | N
     buy_dollar_volume = sum((v for _r, v in buy_values), Decimal(0))
     sell_dollar_volume = sum((v for _r, v in sell_values), Decimal(0))
 
-    insiders_buying_count = len({_owner_key(r) for r in buys if _owner_key(r) is not None})
-    insiders_selling_count = len({_owner_key(r) for r in sells if _owner_key(r) is not None})
+    insiders_buying_count = len(
+        {_owner_key(r) for r in buys if _owner_key(r) is not None}
+    )
+    insiders_selling_count = len(
+        {_owner_key(r) for r in sells if _owner_key(r) is not None}
+    )
 
     def _largest(values: list[tuple[dict, Decimal]], prefix: str) -> dict:
         if not values:
             return {
-                f"largest_{prefix}_owner_name": None, f"largest_{prefix}_date": None,
-                f"largest_{prefix}_shares": None, f"largest_{prefix}_price": None, f"largest_{prefix}_value": None,
+                f"largest_{prefix}_owner_name": None,
+                f"largest_{prefix}_date": None,
+                f"largest_{prefix}_shares": None,
+                f"largest_{prefix}_price": None,
+                f"largest_{prefix}_value": None,
             }
         row, value = max(values, key=lambda pair: pair[1])
         return {
@@ -320,9 +358,13 @@ def compute_window_summary(rows: list[dict], window_months: int, as_of: date | N
     return result
 
 
-def update_insider_summary_for_company(conn: psycopg.Connection, company_id: int, shares_outstanding_concept_id: int | None) -> dict:
+def update_insider_summary_for_company(
+    conn: psycopg.Connection, company_id: int, shares_outstanding_concept_id: int | None
+) -> dict:
     rows = _load_transactions_for_company(conn, company_id)
-    shares_out_hit = _resolve_shares_outstanding(conn, company_id, shares_outstanding_concept_id)
+    shares_out_hit = _resolve_shares_outstanding(
+        conn, company_id, shares_outstanding_concept_id
+    )
     shares_outstanding = shares_out_hit[0] if shares_out_hit else None
 
     ownership = compute_ownership_pct(rows, shares_outstanding)
@@ -330,7 +372,10 @@ def update_insider_summary_for_company(conn: psycopg.Connection, company_id: int
     cluster = compute_cluster_signal(rows)
 
     with conn.cursor() as cur:
-        cur.execute("delete from core.insider_ownership_summary where company_id = %s", (company_id,))
+        cur.execute(
+            "delete from core.insider_ownership_summary where company_id = %s",
+            (company_id,),
+        )
         cur.execute(
             """
             insert into core.insider_ownership_summary
@@ -340,12 +385,21 @@ def update_insider_summary_for_company(conn: psycopg.Connection, company_id: int
             values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             (
-                company_id, ownership["ownership_pct"], ownership["shares_owned_by_insiders"],
-                shares_outstanding, ownership["distinct_insiders_count"], ownership["is_null_reason"],
-                cluster["cluster_buy_max_insiders"], cluster["cluster_buy_window_start"], cluster["cluster_buy_window_end"],
+                company_id,
+                ownership["ownership_pct"],
+                ownership["shares_owned_by_insiders"],
+                shares_outstanding,
+                ownership["distinct_insiders_count"],
+                ownership["is_null_reason"],
+                cluster["cluster_buy_max_insiders"],
+                cluster["cluster_buy_window_start"],
+                cluster["cluster_buy_window_end"],
             ),
         )
-        cur.execute("delete from core.insider_window_summary where company_id = %s", (company_id,))
+        cur.execute(
+            "delete from core.insider_window_summary where company_id = %s",
+            (company_id,),
+        )
         cur.executemany(
             """
             insert into core.insider_window_summary
@@ -430,7 +484,9 @@ def update_insider_summary(conn: psycopg.Connection, ciks: set[str] | None) -> d
         company_id = company_id_by_cik[cik]
         try:
             with get_connection() as company_conn:
-                stats = update_insider_summary_for_company(company_conn, company_id, shares_outstanding_concept_id)
+                stats = update_insider_summary_for_company(
+                    company_conn, company_id, shares_outstanding_concept_id
+                )
         except Exception:
             logger.exception("insider_summary.company_failed", cik=cik)
             totals["errored"] += 1

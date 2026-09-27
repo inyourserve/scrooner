@@ -186,7 +186,11 @@ NET_INCOME_PATTERN = re.compile(
 # value had shipped -- but would have been a serious, silent correctness
 # bug the moment this module's results were wired into the display layer.
 _SCALE_PATTERN = re.compile(r"\$?\s*in\s+(thousands|millions|billions)", re.IGNORECASE)
-_SCALE_MULTIPLIERS = {"thousands": Decimal(1_000), "millions": Decimal(1_000_000), "billions": Decimal(1_000_000_000)}
+_SCALE_MULTIPLIERS = {
+    "thousands": Decimal(1_000),
+    "millions": Decimal(1_000_000),
+    "billions": Decimal(1_000_000_000),
+}
 
 
 def _detect_scale(title_text: str) -> Decimal:
@@ -357,7 +361,9 @@ PARSER_NAME = "revenue_parser"
 CONCEPT_NAME = "revenue"
 
 
-def find_gap_companies(conn: psycopg.Connection, ciks: set[str] | None = None) -> list[tuple[int, str]]:
+def find_gap_companies(
+    conn: psycopg.Connection, ciks: set[str] | None = None
+) -> list[tuple[int, str]]:
     """The real candidate population -- active companies genuinely
     missing `revenue` in analytics.canonical_fact, OR flagged with an
     open critical revenue_zero_check sanity finding (added 2026-09-20:
@@ -416,11 +422,20 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
     Every outcome (matched or not) is also logged to
     analytics.concept_parser_attempt so a rerun never re-fetches a
     company this parser already tried."""
-    stats = {"considered": 0, "ok": 0, "no_report": 0, "no_row_matched": 0, "errored": 0}
+    stats = {
+        "considered": 0,
+        "ok": 0,
+        "no_report": 0,
+        "no_row_matched": 0,
+        "errored": 0,
+    }
     candidates = find_gap_companies(conn, ciks)
 
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (CONCEPT_NAME,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s",
+            (CONCEPT_NAME,),
+        )
         canonical_concept_id = cur.fetchone()[0]
 
     results = []
@@ -430,7 +445,13 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
             outcome = "errored"
             try:
                 outcome, extracted = _parse_revenue_with_outcome(client, cik)
-                stats[{"no_report": "no_report", "no_row_matched": "no_row_matched", "matched": "ok"}[outcome]] += 1
+                stats[
+                    {
+                        "no_report": "no_report",
+                        "no_row_matched": "no_row_matched",
+                        "matched": "ok",
+                    }[outcome]
+                ] += 1
                 if outcome == "matched":
                     result = {"company_id": company_id, "cik": cik, **extracted}
                     results.append(result)

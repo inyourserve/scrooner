@@ -22,7 +22,9 @@ logger = structlog.get_logger()
 FRAMES_BASE_URL = "https://data.sec.gov/api/xbrl/frames"
 
 
-def fetch_frame(sec: SECClient, taxonomy: str, tag: str, unit: str, period: str) -> list[dict]:
+def fetch_frame(
+    sec: SECClient, taxonomy: str, tag: str, unit: str, period: str
+) -> list[dict]:
     """Returns SEC's raw `data` array for one (taxonomy, tag, unit, period)
     -- one row per company reporting that tag for that period, each with at
     least `cik`, `entityName`, `val`. `period` follows doc 07's format:
@@ -31,12 +33,16 @@ def fetch_frame(sec: SECClient, taxonomy: str, tag: str, unit: str, period: str)
     try:
         payload = sec.get_json(url)
     except Exception:
-        logger.warning("frames.fetch_failed", taxonomy=taxonomy, tag=tag, unit=unit, period=period)
+        logger.warning(
+            "frames.fetch_failed", taxonomy=taxonomy, tag=tag, unit=unit, period=period
+        )
         return []
     return payload.get("data", [])
 
 
-def frame_company_count(sec: SECClient, taxonomy: str, tag: str, unit: str, period: str) -> int:
+def frame_company_count(
+    sec: SECClient, taxonomy: str, tag: str, unit: str, period: str
+) -> int:
     """Company-count-only version of fetch_frame -- doc 11's own discovery
     workflow only ever needed the count ('how many companies use tag X'),
     not each company's individual value."""

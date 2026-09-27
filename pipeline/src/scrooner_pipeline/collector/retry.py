@@ -97,7 +97,9 @@ def already_stored_submission_paths(conn: psycopg.Connection, run_id: int) -> se
     files) must each be individually checkpointed -- a resume shouldn't
     re-fetch the 50 files already stored just because the 51st wasn't."""
     with conn.cursor() as cur:
-        cur.execute("select storage_path from raw.sec_submissions where run_id = %s", (run_id,))
+        cur.execute(
+            "select storage_path from raw.sec_submissions where run_id = %s", (run_id,)
+        )
         return {row[0] for row in cur.fetchall()}
 
 
@@ -111,7 +113,9 @@ class RunContext:
     resumed: bool
 
 
-def make_params_key(only_ciks: set[str] | None, limit: int | None, extra: str | None = None) -> str:
+def make_params_key(
+    only_ciks: set[str] | None, limit: int | None, extra: str | None = None
+) -> str:
     """Deterministic string identifying an invocation's filters, so a
     resume only ever matches an invocation with the SAME scope -- rerunning
     `companyfacts --ciks A,B` never resumes a stuck `companyfacts` (full
@@ -184,11 +188,15 @@ def reap_stale_runs(
             )
     conn.commit()
     if stale_ids:
-        logger.warning("collector_runs.reaped", run_ids=stale_ids, stale_after=str(stale_after))
+        logger.warning(
+            "collector_runs.reaped", run_ids=stale_ids, stale_after=str(stale_after)
+        )
     return stale_ids
 
 
-def find_resumable_run(conn: psycopg.Connection, job: str, params_key: str) -> tuple[int, datetime] | None:
+def find_resumable_run(
+    conn: psycopg.Connection, job: str, params_key: str
+) -> tuple[int, datetime] | None:
     """A running row for the exact same (job, params_key) is resumable
     regardless of age -- if you're rerunning the identical command, you
     want to continue that exact logical unit of work. (A stray second
@@ -243,7 +251,9 @@ def start_or_resume_run(
         if found:
             run_id, fetched_at = found
             _touch_heartbeat(conn, run_id)
-            logger.info("collector_runs.resumed", run_id=run_id, job=job, params_key=params_key)
+            logger.info(
+                "collector_runs.resumed", run_id=run_id, job=job, params_key=params_key
+            )
             return RunContext(run_id=run_id, fetched_at=fetched_at, resumed=True)
 
     reap_stale_runs(conn, stale_after=stale_after)
@@ -261,7 +271,13 @@ def start_or_resume_run(
         )
         run_id = cur.fetchone()[0]
     conn.commit()
-    logger.info("collector_runs.started", run_id=run_id, job=job, params_key=params_key, run_type=run_type)
+    logger.info(
+        "collector_runs.started",
+        run_id=run_id,
+        job=job,
+        params_key=params_key,
+        run_type=run_type,
+    )
     return RunContext(run_id=run_id, fetched_at=now, resumed=False)
 
 

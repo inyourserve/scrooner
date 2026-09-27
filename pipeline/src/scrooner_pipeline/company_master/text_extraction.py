@@ -82,7 +82,9 @@ class SubParser:
     scale_hint_lookback_chars: int | None = None
 
 
-def _apply_scale_hint(clean: str, match_start: int, value: float, lookback_chars: int) -> float:
+def _apply_scale_hint(
+    clean: str, match_start: int, value: float, lookback_chars: int
+) -> float:
     window = clean[max(0, match_start - lookback_chars) : match_start]
     if _SCALE_HINT_RE.search(window):
         return value * 1000
@@ -116,14 +118,18 @@ def run_head_parser(
         if value is None:
             continue
         if sub_parser.scale_hint_lookback_chars is not None:
-            value = _apply_scale_hint(clean, matches[0].start(), value, sub_parser.scale_hint_lookback_chars)
+            value = _apply_scale_hint(
+                clean, matches[0].start(), value, sub_parser.scale_hint_lookback_chars
+            )
         if min_plausible <= value <= max_plausible:
             return value, sub_parser.name
 
     return None
 
 
-def looks_like_a_bare_year(total: float, match_count: int, year_min: int = 1990, year_max: int = 2035) -> bool:
+def looks_like_a_bare_year(
+    total: float, match_count: int, year_min: int = 1990, year_max: int = 2035
+) -> bool:
     """Defense in depth for any head parser extracting share/dollar
     counts near a class label or a filing date: a SINGLE lone match
     landing exactly in a plausible calendar-year range is inherently

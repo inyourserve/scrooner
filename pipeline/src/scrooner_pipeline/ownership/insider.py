@@ -55,7 +55,10 @@ from xml.etree import ElementTree as ET
 import psycopg
 import structlog
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.sec_client import SECClient
 
@@ -147,7 +150,9 @@ MIN_FILING_DATE = (date.today() - timedelta(days=365)).isoformat()  # explicit
 # avoids a date-parsing dependency.
 
 
-def _load_form4_filings(storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str) -> list[dict]:
+def _load_form4_filings(
+    storage: SupabaseStorageClient, conn: psycopg.Connection, cik: str
+) -> list[dict]:
     filings: list[dict] = []
     for storage_path in _latest_submission_files(conn, cik):
         payload = json.loads(storage.download(strip_bucket_prefix(storage_path)))
@@ -179,10 +184,21 @@ def _parse_form4(xml_bytes: bytes) -> dict | None:
                 "security_title": _text(tx, "securityTitle/value"),
                 "transaction_date": _date(_text(tx, "transactionDate/value")),
                 "transaction_code": _text(tx, "transactionCoding/transactionCode"),
-                "shares": _decimal(_text(tx, "transactionAmounts/transactionShares/value")),
-                "price_per_share": _decimal(_text(tx, "transactionAmounts/transactionPricePerShare/value")),
-                "acquired_disposed_code": _text(tx, "transactionAmounts/transactionAcquiredDisposedCode/value"),
-                "shares_owned_following": _decimal(_text(tx, "postTransactionAmounts/sharesOwnedFollowingTransaction/value")),
+                "shares": _decimal(
+                    _text(tx, "transactionAmounts/transactionShares/value")
+                ),
+                "price_per_share": _decimal(
+                    _text(tx, "transactionAmounts/transactionPricePerShare/value")
+                ),
+                "acquired_disposed_code": _text(
+                    tx, "transactionAmounts/transactionAcquiredDisposedCode/value"
+                ),
+                "shares_owned_following": _decimal(
+                    _text(
+                        tx,
+                        "postTransactionAmounts/sharesOwnedFollowingTransaction/value",
+                    )
+                ),
             }
         )
     return {
@@ -191,7 +207,8 @@ def _parse_form4(xml_bytes: bytes) -> dict | None:
         "owner_cik": _text(owner, "reportingOwnerId/rptOwnerCik"),
         "is_director": (_text(rel, "isDirector") or "").lower() in ("true", "1"),
         "is_officer": (_text(rel, "isOfficer") or "").lower() in ("true", "1"),
-        "is_ten_percent_owner": (_text(rel, "isTenPercentOwner") or "").lower() in ("true", "1"),
+        "is_ten_percent_owner": (_text(rel, "isTenPercentOwner") or "").lower()
+        in ("true", "1"),
         "officer_title": _text(rel, "officerTitle"),
         "is_10b5_1_plan": _bool(_text(root, "aff10b5One")),
         "transactions": transactions,
@@ -205,7 +222,12 @@ def update_insider_transactions_for_company(
         filings = _load_form4_filings(storage, conn, cik)
 
     rows: list[dict] = []
-    stats = {"filings_considered": len(filings), "filings_parsed": 0, "transactions": 0, "issuer_mismatch": 0}
+    stats = {
+        "filings_considered": len(filings),
+        "filings_parsed": 0,
+        "transactions": 0,
+        "issuer_mismatch": 0,
+    }
     for f in filings:
         acc_no_dash = f["accession_number"].replace("-", "")
         cik_int = str(int(cik))
@@ -219,19 +241,28 @@ def update_insider_transactions_for_company(
         try:
             resp = sec.get(url)
         except Exception:
-            logger.warning("insider.fetch_failed", cik=cik, accession_number=f["accession_number"])
+            logger.warning(
+                "insider.fetch_failed", cik=cik, accession_number=f["accession_number"]
+            )
             continue
         try:
             parsed = _parse_form4(resp.content)
         except ET.ParseError:
-            logger.warning("insider.parse_failed", cik=cik, accession_number=f["accession_number"], url=url)
+            logger.warning(
+                "insider.parse_failed",
+                cik=cik,
+                accession_number=f["accession_number"],
+                url=url,
+            )
             continue
         if parsed is None:
             continue
         # A missing issuer_cik is inconclusive, not a match -- same
         # discipline as beneficial_ownership.py's stricter check, never
         # default a missing field to "passes."
-        if not parsed["issuer_cik"] or parsed["issuer_cik"].lstrip("0") != cik.lstrip("0"):
+        if not parsed["issuer_cik"] or parsed["issuer_cik"].lstrip("0") != cik.lstrip(
+            "0"
+        ):
             stats["issuer_mismatch"] += 1
             continue
         stats["filings_parsed"] += 1
@@ -262,7 +293,9 @@ def update_insider_transactions_for_company(
             stats["transactions"] += 1
 
     with conn.cursor() as cur:
-        cur.execute("delete from core.insider_transaction where company_id = %s", (company_id,))
+        cur.execute(
+            "delete from core.insider_transaction where company_id = %s", (company_id,)
+        )
         if rows:
             # ON CONFLICT DO NOTHING (added 2026-08-27): the unique key is
             # (accession_number, transaction_index) *without* company_id, so
@@ -340,7 +373,14 @@ def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> di
     def _work() -> None:
         try:
             with get_connection() as company_conn:
-                result_queue.put(("ok", update_insider_transactions_for_company(company_conn, sec, company_id, cik)))
+                result_queue.put(
+                    (
+                        "ok",
+                        update_insider_transactions_for_company(
+                            company_conn, sec, company_id, cik
+                        ),
+                    )
+                )
         except Exception as exc:  # noqa: BLE001 -- re-raised on the caller's side below
             result_queue.put(("error", exc))
 
@@ -357,10 +397,19 @@ def _run_company_with_timeout(sec: "SECClient", company_id: int, cik: str) -> di
 
 def update_insider_transactions(conn: psycopg.Connection, ciks: set[str]) -> dict:
     with conn.cursor() as cur:
-        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        cur.execute(
+            "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)
+        )
         company_id_by_cik = dict(cur.fetchall())
 
-    totals = {"considered": 0, "ok": 0, "no_company": 0, "errored": 0, "timed_out": 0, "transactions": 0}
+    totals = {
+        "considered": 0,
+        "ok": 0,
+        "no_company": 0,
+        "errored": 0,
+        "timed_out": 0,
+        "transactions": 0,
+    }
     with SECClient() as sec:
         for cik in sorted(ciks):
             totals["considered"] += 1
@@ -371,7 +420,11 @@ def update_insider_transactions(conn: psycopg.Connection, ciks: set[str]) -> dic
             try:
                 stats = _run_company_with_timeout(sec, company_id, cik)
             except TimeoutError:
-                logger.warning("insider.company_timed_out", cik=cik, timeout_seconds=PER_COMPANY_TIMEOUT_SECONDS)
+                logger.warning(
+                    "insider.company_timed_out",
+                    cik=cik,
+                    timeout_seconds=PER_COMPANY_TIMEOUT_SECONDS,
+                )
                 totals["timed_out"] += 1
                 continue
             except Exception:

@@ -87,7 +87,9 @@ class AlpacaClient:
             try:
                 bars = self._latest_bars_batch(remaining)
                 if dropped:
-                    logger.warning("alpaca_client.dropped_invalid_symbols", symbols=dropped)
+                    logger.warning(
+                        "alpaca_client.dropped_invalid_symbols", symbols=dropped
+                    )
                 return bars
             except httpx.HTTPStatusError as exc:
                 if exc.response.status_code != 400:
