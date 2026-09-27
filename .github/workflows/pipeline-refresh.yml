@@ -142,3 +142,32 @@ jobs:
       - name: Record daily coverage snapshot
         if: always()
         run: uv run --project pipeline scrooner-map snapshot-coverage
+
+  valuations-and-screener:
+    # Separate job (own timeout) so a slow full-population recompute can
+    # never push filing-index past its 90-minute limit. Runs even if
+    # filing-index failed on an alert: prices were still refreshed there,
+    # and a stale screener is worse than one day's partial reprocess.
+    name: Price-dependent metrics and screener snapshot
+    needs: filing-index
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked dependencies
+        run: uv sync --project pipeline --locked
+      - name: Recompute valuations and rebuild the screener snapshot
+        run: pipeline/scripts/refresh_valuations.sh

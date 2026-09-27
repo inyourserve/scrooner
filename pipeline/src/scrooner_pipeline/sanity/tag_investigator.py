@@ -505,6 +505,32 @@ def resolve_company_tag_preferences(
                         for period_id, (value, fact_id) in reconciled.items()
                     ],
                 )
+                if concept_name not in NO_BASELINE_COPY:
+                    # A company can stop filing its preferred tag. Mohawk's
+                    # SalesRevenueGoodsNet ends in 2018, so its revenue
+                    # stopped at 2017 on the stock page while the primary
+                    # concept had correct values through 2026 (found
+                    # 2026-09-27). Periods AFTER the preferred tag's last
+                    # one can't be what the preference was created to fix,
+                    # so the primary concept fills them.
+                    cur.execute(
+                        """
+                        insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+                        select f.company_id, %(resolved_id)s, f.period_id, f.value, f.source_fact_ids
+                        from analytics.canonical_fact f
+                        join core.period p on p.id = f.period_id
+                        where f.canonical_concept_id = %(primary_id)s
+                          and f.company_id = %(company_id)s
+                          and p.end_date > (select max(end_date) from core.period where id = any(%(pref_period_ids)s))
+                        on conflict (company_id, canonical_concept_id, period_id) do nothing
+                        """,
+                        {
+                            "resolved_id": resolved_id,
+                            "primary_id": primary_id,
+                            "company_id": company_id,
+                            "pref_period_ids": list(reconciled),
+                        },
+                    )
 
         cur.execute(
             "select count(*) from analytics.canonical_fact where canonical_concept_id = %s",

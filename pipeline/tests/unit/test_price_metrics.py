@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
 import pytest
@@ -61,7 +61,7 @@ def install_price_inputs(monkeypatch, price):
         13: quarterly("10", 130),
         14: quarterly("2", 140),
     }
-    monkeypatch.setattr(price_metrics, "_load_latest_price", lambda _conn, _company: (price, date(2026, 8, 18)))
+    monkeypatch.setattr(price_metrics, "_load_latest_price", lambda _conn, _company: (price, date.today()))
     monkeypatch.setattr(price_metrics, "_load_quarterly_facts", lambda _conn, _company, concept: by_concept[concept])
     monkeypatch.setattr(
         price_metrics,
@@ -117,3 +117,17 @@ def test_missing_price_null_rows_still_satisfy_required_period_dates(monkeypatch
     assert {row["is_null_reason"] for row in conn.rows} == {"missing:real_price"}
     assert all(isinstance(row["period_start"], date) for row in conn.rows)
     assert all(row["period_start"] == row["period_end"] for row in conn.rows)
+
+
+@pytest.mark.unit
+def test_stale_price_fails_closed_instead_of_valuing_at_an_old_bar(monkeypatch):
+    install_price_inputs(monkeypatch, Decimal("10"))
+    old_bar = date.today() - timedelta(days=price_metrics.MAX_PRICE_AGE_DAYS + 1)
+    monkeypatch.setattr(price_metrics, "_load_latest_price", lambda _conn, _company: (Decimal("10"), old_bar))
+    conn = PriceConnection()
+
+    stats = price_metrics.calculate_price_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+
+    assert stats == {"computed": 0, "null": 6}
+    assert {row["is_null_reason"] for row in conn.rows} == {"stale:real_price"}
+    assert all(row["period_end"] == old_bar for row in conn.rows)

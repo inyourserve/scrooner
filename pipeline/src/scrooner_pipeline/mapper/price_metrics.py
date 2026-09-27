@@ -43,6 +43,13 @@ from scrooner_pipeline.mapper.ttm import _trailing_quarters
 logger = structlog.get_logger()
 
 # metric_name -> which TTM/point-in-time inputs it needs
+# A price older than this is not "current" for valuation. Alpaca still
+# returns a latest bar for tickers that stopped trading (delisted,
+# acquired, moved to grey market) -- 2026-09-27 found 131 companies whose
+# newest bar was 1 month to 5 years old, e.g. a 2021 bar feeding a
+# "current" market cap. 14 calendar days covers any exchange holiday run.
+MAX_PRICE_AGE_DAYS = 14
+
 TTM_CONCEPTS = {"diluted_eps", "revenue", "dividends_per_share", "cfo", "capex"}
 INSTANT_CONCEPTS = {"shares_outstanding", "stockholders_equity"}
 
@@ -165,7 +172,11 @@ def calculate_price_metrics_for_company(
         price_reason = "missing:real_price"
     else:
         price, price_date = price_hit
-        if price <= 0:
+        if (date.today() - price_date).days > MAX_PRICE_AGE_DAYS:
+            # Keep the date so the null row still anchors to the real bar.
+            price = None
+            price_reason = "stale:real_price"
+        elif price <= 0:
             # A non-positive equity price is not economically valid for
             # these ratios and makes Dividend Yield divide by zero. Treat a
             # malformed stored/vendor value as unusable input so one bad bar

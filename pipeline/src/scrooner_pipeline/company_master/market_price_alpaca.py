@@ -28,7 +28,9 @@ security_type.py's own module docstring for the real fix and the TSM
 ADR-vs-Common-Stock nuance that surfaced while building it.
 """
 
+import re
 from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 import psycopg
 import structlog
@@ -36,6 +38,29 @@ import structlog
 from scrooner_pipeline.common.alpaca_client import FEED, AlpacaClient
 
 logger = structlog.get_logger()
+
+_MARKET_TZ = ZoneInfo("America/New_York")
+
+# Share-class tickers are stored SEC-style (BRK-A, BF-B, MOG-A); Alpaca
+# names them with a dot (BRK.A) and rejects the hyphen form as an invalid
+# symbol, which left Berkshire, Brown-Forman, Moog and Crawford with no
+# price at all (2026-09-27). "-P..." is a preferred series, not a class.
+_CLASS_SHARE_RE = re.compile(r"([A-Z]+)-([A-OQ-Z])")
+
+
+def _alpaca_symbol(ticker: str) -> str:
+    match = _CLASS_SHARE_RE.fullmatch(ticker)
+    return f"{match[1]}.{match[2]}" if match else ticker
+
+
+def _trading_date(bar_timestamp: datetime) -> date:
+    """The US trading day a bar belongs to. price_date used to be the
+    run's own date.today(), so a weekend run stored Friday's close again
+    as Saturday/Sunday, and a ticker whose last trade was years ago got
+    that old bar re-stamped as today's price (2026-09-27: 23,367 of
+    53,508 rows). Keying on the bar's own date makes reruns idempotent
+    and lets price_metrics see how old a price really is."""
+    return bar_timestamp.astimezone(_MARKET_TZ).date()
 
 
 def update_market_price(
@@ -63,10 +88,13 @@ def update_market_price(
         logger.warning("market_price_alpaca.no_companies")
         return stats
 
+    ticker_by_symbol = {_alpaca_symbol(t): t for t in ticker_to_company_id}
     with AlpacaClient() as alpaca:
-        bars = alpaca.latest_bars(sorted(ticker_to_company_id))
+        bars = {
+            ticker_by_symbol.get(symbol, symbol): bar
+            for symbol, bar in alpaca.latest_bars(sorted(ticker_by_symbol)).items()
+        }
 
-    today = date.today()
     rows = []
     for ticker, bar in bars.items():
         company_id = ticker_to_company_id.get(ticker)
@@ -77,7 +105,7 @@ def update_market_price(
             {
                 "company_id": company_id,
                 "symbol": ticker,
-                "price_date": today,
+                "price_date": _trading_date(bar_timestamp),
                 "price": bar["c"],
                 "bar_timestamp": bar_timestamp,
                 "feed": FEED,
