@@ -1,0 +1,214 @@
+name: Full-population recompute
+
+# Manual only. Reruns the Normalizer/Mapper chain for every company after
+# WE change a normalizer rule, concept mapping or resolver (founder
+# direction 2026-09-27: rebuild on our own changes, not on a schedule).
+#
+# Runs here, not on a dev machine: from India each Supabase round trip is
+# 0.3-1.7s, and these stages make thousands per company batch (a local
+# debt recompute managed ~6 batches of 50 companies an hour). Runners sit
+# a few ms from the us-east-1 database.
+#
+# Phases, in dependency order:
+#   1. per-company, sharded: normalize stages, then resolve-facts/fallbacks
+#   2. population-wide, once: conflict fills, statement fallbacks, and the
+#      company_tag_preference merge into the *_resolved concepts that TTM
+#      margins read
+#   3. per-company, sharded: every metric stage
+#   4. once: screener snapshot
+# Shards stay at 4 so the whole job holds at most ~4 of the pooler's ~15
+# shared client connections.
+
+on:
+  workflow_dispatch:
+    inputs:
+      normalize_stages:
+        description: "Phase 1 normalizer stages (space-separated, empty to skip)"
+        default: "derive-interim-quarters derive-q4"
+      resolve_stages:
+        description: "Phase 1 mapper stages run right after normalize"
+        default: "resolve-facts resolve-concept-fallbacks"
+      population_stages:
+        description: "Phase 2 population-wide mapper stages"
+        default: "resolve-conflict-fills resolve-statement-fallbacks"
+      metric_stages:
+        description: "Phase 3 per-company mapper stages"
+        default: "calculate growth ttm-returns ttm-margins calculate-price-metrics calculate-expanded-metrics calculate-piotroski calculate-quality-flags calculate-reconciliation calculate-tax-reconciliation calculate-fcf-growth calculate-dividend-streak"
+      scope:
+        description: "all = every company with facts, active = status active only"
+        default: "active"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-recompute-production
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash  # -eo pipefail, so a failing stage isn't hidden behind `| tail`
+
+env:
+  NORMALIZE_STAGES: ${{ inputs.normalize_stages }}
+  RESOLVE_STAGES: ${{ inputs.resolve_stages }}
+  POPULATION_STAGES: ${{ inputs.population_stages }}
+  METRIC_STAGES: ${{ inputs.metric_stages }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+  SHARDS: "4"
+
+jobs:
+  resolve:
+    name: Phase 1 - normalize and resolve (shard ${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Select this shard's companies
+        env:
+          SHARD: ${{ matrix.shard }}
+          SCOPE: ${{ inputs.scope }}
+        run: |
+          uv run --project pipeline python - <<'PY' > ciks.txt
+          import os, psycopg
+          from scrooner_pipeline.common.config import settings
+          scope_filter = "and c.status = 'active'" if os.environ["SCOPE"] == "active" else ""
+          with psycopg.connect(settings.database_url) as conn:
+              rows = conn.execute(
+                  "select c.cik from core.company c where exists "
+                  "(select 1 from core.fact f where f.company_id = c.id) "
+                  + scope_filter + " order by c.cik"
+              ).fetchall()
+          shard, shards = int(os.environ["SHARD"]), int(os.environ["SHARDS"])
+          print(",".join(r[0] for i, r in enumerate(rows) if i % shards == shard))
+          PY
+          echo "companies in shard: $(tr ',' '\n' < ciks.txt | grep -c .)"
+      - name: Normalize
+        if: inputs.normalize_stages != ''
+        run: |
+          for stage in $NORMALIZE_STAGES; do
+            echo "--- normalize $stage ---"
+            uv run --project pipeline scrooner-normalize "$stage" --ciks "$(cat ciks.txt)" | tail -1
+          done
+      - name: Resolve
+        if: inputs.resolve_stages != ''
+        run: |
+          for stage in $RESOLVE_STAGES; do
+            echo "--- map $stage ---"
+            uv run --project pipeline scrooner-map "$stage" --ciks "$(cat ciks.txt)" | tail -1
+          done
+
+  population:
+    name: Phase 2 - population-wide fills
+    needs: resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Population-wide stages
+        if: inputs.population_stages != ''
+        run: |
+          for stage in $POPULATION_STAGES; do
+            echo "--- map $stage ---"
+            uv run --project pipeline scrooner-map "$stage" | tail -1
+          done
+      - name: Merge company tag preferences into *_resolved concepts
+        run: |
+          uv run --project pipeline python - <<'PY'
+          import psycopg
+          from scrooner_pipeline.common.config import settings
+          from scrooner_pipeline.sanity.tag_investigator import (
+              FIXABLE_CONCEPTS,
+              resolve_company_tag_preferences,
+          )
+          with psycopg.connect(settings.database_url) as conn:
+              conn.execute("set statement_timeout = 0")
+              for concept, resolved in FIXABLE_CONCEPTS.items():
+                  print(resolved, resolve_company_tag_preferences(conn, concept, resolved))
+                  conn.commit()
+          PY
+
+  metrics:
+    name: Phase 3 - metrics (shard ${{ matrix.shard }})
+    needs: population
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Select this shard's companies
+        env:
+          SHARD: ${{ matrix.shard }}
+          SCOPE: ${{ inputs.scope }}
+        run: |
+          uv run --project pipeline python - <<'PY' > ciks.txt
+          import os, psycopg
+          from scrooner_pipeline.common.config import settings
+          scope_filter = "and c.status = 'active'" if os.environ["SCOPE"] == "active" else ""
+          with psycopg.connect(settings.database_url) as conn:
+              rows = conn.execute(
+                  "select c.cik from core.company c where exists "
+                  "(select 1 from core.fact f where f.company_id = c.id) "
+                  + scope_filter + " order by c.cik"
+              ).fetchall()
+          shard, shards = int(os.environ["SHARD"]), int(os.environ["SHARDS"])
+          print(",".join(r[0] for i, r in enumerate(rows) if i % shards == shard))
+          PY
+      - name: Metric stages
+        run: |
+          for stage in $METRIC_STAGES; do
+            echo "--- map $stage ---"
+            uv run --project pipeline scrooner-map "$stage" --ciks "$(cat ciks.txt)" | tail -1
+          done
+
+  snapshot:
+    name: Phase 4 - screener snapshot
+    needs: metrics
+    if: always() && needs.metrics.result != 'cancelled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - run: uv run --project pipeline scrooner-screen build-snapshot
