@@ -56,6 +56,12 @@ def test_all_expanded_composite_metrics_compute_with_expected_semantics(monkeypa
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda _conn, _company, concept: instant.get(concept))
     monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda _conn, _company, _metric: Decimal("20"))
     monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda _conn, _company, _metric: Decimal("50"))
+    # This fixture's toy-scale numbers (revenue_ttm=200) are well below
+    # the real materiality floor added 2026-09-27 -- lower it to 0 here
+    # so this test keeps exercising ebitda_margin's normal ratio path,
+    # not the new immaterial-base null (that path has its own dedicated
+    # test, test_ebitda_margin_nulls_on_immaterial_revenue_base below).
+    monkeypatch.setattr(expanded_metrics, "REVENUE_TTM_MATERIALITY_FLOOR", Decimal("0"))
     monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda _conn, _company, metric: dependency_values.get(metric))
     monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda _conn, _company: Decimal("60"))
     monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (Decimal("100"), Decimal("80")))
@@ -191,6 +197,47 @@ def test_total_shareholder_yield_null_not_crash_when_market_cap_is_zero(monkeypa
 
     assert rows[METRIC_IDS["total_shareholder_yield"]]["value"] is None
     assert rows[METRIC_IDS["total_shareholder_yield"]]["is_null_reason"] == "zero_denominator"
+
+
+@pytest.mark.unit
+def test_ebitda_margin_nulls_on_immaterial_revenue_base(monkeypatch):
+    """Root-cause fix, 2026-09-27: a real but tiny TTM revenue base (e.g.
+    Inhibikase Therapeutics' genuine $1) must null ebitda_margin, not
+    produce a mathematically correct but economically meaningless
+    multi-million-percent figure. Confirmed live before fixing -- this
+    exact shape (a real $1 quarterly revenue fact against real multi-
+    million-dollar operating losses) is what plausibility_check.py's
+    operating_margin/ebitda_margin clusters traced back to."""
+    monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: Decimal("-20000000"))
+    monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
+    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (None, None))
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_load_quarterly_facts",
+        # concept 103 = revenue: a real but tiny $1 TTM total (all 4
+        # trailing quarters present, 3 of them genuinely $0).
+        lambda _conn, _company, concept: {
+            103: {
+                (2025, "Q1"): (Decimal("1"), [1]),
+                (2025, "Q2"): (Decimal("0"), [2]),
+                (2025, "Q3"): (Decimal("0"), [3]),
+                (2025, "Q4"): (Decimal("0"), [4]),
+            },
+            104: {},
+            106: {},
+        }[concept],
+    )
+    conn = PriceConnection()
+
+    stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    rows = {r["metric_definition_id"]: r for r in conn.rows}
+
+    assert rows[METRIC_IDS["ebitda_margin"]]["value"] is None
+    assert rows[METRIC_IDS["ebitda_margin"]]["is_null_reason"] == "immaterial_revenue_base"
 
 
 @pytest.mark.unit

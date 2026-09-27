@@ -51,7 +51,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -160,6 +160,63 @@ FY_ONLY_METRICS = {
     "inventory_days",
     "payables_days",
 }
+
+# Materiality floor for revenue-denominated ratios -- added 2026-09-27,
+# root-causing plausibility_check.py's operating_margin/net_margin/
+# pretax_margin cluster. Real, confirmed example: Inhibikase Therapeutics
+# reported a genuine $1 of revenue for the trailing-4-quarter window
+# ending 2024-09-30 (a real, tiny, authoritative fact, not a bug) against
+# real operating losses of ~-$20.06M -- producing a mathematically
+# correct but economically meaningless -2,006,393,700% operating_margin.
+# Same root pattern as ttm.py's CONCEPT_MATERIALITY_FLOORS fix the same
+# day (a near-zero base makes ANY ratio off it meaningless), just for
+# calculate.py's shared ratio/sum_diff_ratio engine instead of growth
+# rates. Scoped ONLY to the metrics whose denominator concept is revenue
+# -- NOT applied to every "ratio"/"sum_diff_ratio" metric (current_ratio/
+# debt_to_equity/roe/roa's denominators -- current liabilities, equity,
+# assets -- going near-zero is a different, already-accepted degenerate-
+# denominator case this project documents elsewhere, e.g. roe's own wide
+# CRITICAL bound in doc 47).
+REVENUE_DENOMINATOR_MATERIALITY_FLOOR = Decimal("1000000")
+REVENUE_DENOMINATOR_METRICS = {
+    "operating_margin",
+    "net_margin",
+    "pretax_margin",
+    "gross_margin",
+    "fcf_margin",
+    "sga_pct_revenue",
+    "rnd_intensity",
+    "capex_pct_revenue",
+    "sbc_pct_revenue",
+}
+
+# Same pattern, asset-denominated -- found live 2026-09-27 root-causing
+# plausibility_check.py's `roa` cluster (175 critical, 142 of them a
+# real shell company with under $1M total assets). Confirmed on Appsoft
+# Technologies, Inc.: real, authoritative FY2025 total_assets = $7 (a
+# real near-defunct shell, not a bug) against a real -$93,642 net loss --
+# mathematically correct -1,337,700% ROA, economically meaningless.
+# Deliberately does NOT include `roe` -- unlike total_assets going near-
+# zero (a company barely functioning at all), equity going near-zero or
+# negative is a real, common, ALREADY-ACCEPTED leverage story (distressed
+# companies, debt-funded buybacks) this project's own doc 47 bounds are
+# deliberately wide for -- see test_non_revenue_ratio_ignores_the_floor.
+ASSET_DENOMINATOR_MATERIALITY_FLOOR = Decimal("1000000")
+ASSET_DENOMINATOR_METRICS = {"roa"}
+
+# Same pattern, interest-expense-denominated -- found live 2026-09-27
+# root-causing `interest_coverage_ratio`'s critical cluster (94, values
+# in the MILLIONS-of-percent range despite this metric's already-wide
+# doc-47 bound of +/-5000). Confirmed on Dermata Therapeutics, Inc.:
+# real, authoritative Q4 2021 interest_expense = $4 (four dollars).
+# Floor set lower than revenue/assets ($10,000, not $1M) -- a real early-
+# stage company's genuine interest expense can legitimately be a few
+# thousand dollars a quarter (Dermata's own Q2 2021: $1,823, Q1 2021:
+# $43,135 -- both real, both left uncapped), unlike revenue/total_assets
+# where anything under $1M for an operating company is itself already
+# a strong shell-company signal.
+INTEREST_EXPENSE_DENOMINATOR_MATERIALITY_FLOOR = Decimal("10000")
+INTEREST_EXPENSE_DENOMINATOR_METRICS = {"interest_coverage_ratio"}
 
 # gross_margin switched from "ratio" (a direct GrossProfit tag) to
 # "sum_diff_ratio" (Revenue - CostOfRevenue, 2026-09-01) -- checked live
@@ -315,7 +372,7 @@ def _load_canonical_facts(conn: psycopg.Connection, company_id: int) -> dict:
 
 
 def _compute(
-    shape: str, values_by_role: dict[str, list[Decimal]]
+    shape: str, values_by_role: dict[str, list[Decimal]], metric_name: str = ""
 ) -> tuple[Decimal | None, str | None]:
     if shape == "ratio":
         num = values_by_role.get("numerator")
@@ -327,6 +384,21 @@ def _compute(
         denom_sum = sum(denom)
         if denom_sum == 0:
             return None, "zero_denominator"
+        if (
+            metric_name in REVENUE_DENOMINATOR_METRICS
+            and abs(denom_sum) < REVENUE_DENOMINATOR_MATERIALITY_FLOOR
+        ):
+            return None, "immaterial_revenue_base"
+        if (
+            metric_name in ASSET_DENOMINATOR_METRICS
+            and abs(denom_sum) < ASSET_DENOMINATOR_MATERIALITY_FLOOR
+        ):
+            return None, "immaterial_asset_base"
+        if (
+            metric_name in INTEREST_EXPENSE_DENOMINATOR_METRICS
+            and abs(denom_sum) < INTEREST_EXPENSE_DENOMINATOR_MATERIALITY_FLOOR
+        ):
+            return None, "immaterial_interest_expense_base"
         return sum(num) / denom_sum, None
 
     if shape == "additive":
@@ -379,6 +451,11 @@ def _compute(
         denom_sum = sum(denom)
         if denom_sum == 0:
             return None, "zero_denominator"
+        if (
+            metric_name in REVENUE_DENOMINATOR_METRICS
+            and abs(denom_sum) < REVENUE_DENOMINATOR_MATERIALITY_FLOOR
+        ):
+            return None, "immaterial_revenue_base"
         return (sum(add) - sum(subtract)) / denom_sum, None
 
     if shape == "roic":
@@ -502,7 +579,7 @@ def calculate_for_company(
             if incomplete_role is not None:
                 value, null_reason = None, f"incomplete:{incomplete_role}"
             else:
-                value, null_reason = _compute(shape, values_by_role)
+                value, null_reason = _compute(shape, values_by_role, metric_name)
             rows.append(
                 {
                     "company_id": company_id,
@@ -579,6 +656,7 @@ def calculate(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "calculate", exc)
+            conn = safe_rollback(conn, stage="calculate", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]

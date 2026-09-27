@@ -9,10 +9,79 @@ from scrooner_pipeline.sanity.plausibility_check import (
     SEVERITY_CRITICAL,
     SEVERITY_OK,
     SEVERITY_WATCH,
+    _load_ttm_revenue_denominators,
     check_absolute,
     check_exact_set,
     check_relative,
 )
+
+
+class _FakeCursor:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
+
+    def execute(self, _sql, _params=()):
+        pass
+
+    def fetchall(self):
+        return self._rows
+
+
+class _FakeConn:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def cursor(self):
+        return _FakeCursor(self._rows)
+
+
+@pytest.mark.unit
+class TestLoadTtmRevenueDenominators:
+    """Root-cause fix, 2026-09-27: RELATIVE_CHECKS' own descriptions say
+    "> Nx TTM revenue", but the denominator used to be whatever single
+    period was most recent -- routinely one quarter, silently inflating
+    the ratio ~4x against a TTM-scale numerator (ebitda/fcf). Confirmed
+    live on United Rentals: latest-period revenue ($929M, one quarter)
+    vs. the real trailing-4-quarter figure (~$3.73B)."""
+
+    def test_latest_fy_period_used_directly(self):
+        # company 1's latest real period is an FY row -- already a
+        # trailing-twelve-month figure as of its own end_date.
+        rows = [
+            (1, 2025, "FY", "2025-12-31", Decimal("1000")),
+            (1, 2025, "Q3", "2025-09-30", Decimal("250")),
+        ]
+        result = _load_ttm_revenue_denominators(_FakeConn(rows))
+        assert result[1] == Decimal("1000")
+
+    def test_sums_complete_trailing_four_quarters(self):
+        # company 2's latest real period is a quarter -- sum the
+        # trailing 4, matching United Rentals' real shape.
+        rows = [
+            (2, 2026, "Q1", "2026-03-31", Decimal("929")),
+            (2, 2025, "Q4", "2025-12-31", Decimal("992")),
+            (2, 2025, "Q3", "2025-09-30", Decimal("938")),
+            (2, 2025, "Q2", "2025-06-30", Decimal("872")),
+        ]
+        result = _load_ttm_revenue_denominators(_FakeConn(rows))
+        assert result[2] == Decimal("3731")
+
+    def test_incomplete_trailing_window_is_skipped_not_guessed(self):
+        # only 2 of the last 4 quarters present -- no denominator at all,
+        # never a partial/wrong sum (same "don't guess" discipline as
+        # check_relative's own missing-denominator skip).
+        rows = [
+            (3, 2026, "Q1", "2026-03-31", Decimal("100")),
+            (3, 2025, "Q4", "2025-12-31", Decimal("90")),
+        ]
+        result = _load_ttm_revenue_denominators(_FakeConn(rows))
+        assert 3 not in result
 
 
 @pytest.mark.unit

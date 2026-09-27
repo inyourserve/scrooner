@@ -100,6 +100,100 @@ def test_formula_edge_cases_return_explicit_null_reason(shape, inputs, reason):
 
 
 @pytest.mark.unit
+@pytest.mark.parametrize("metric_name,shape", [
+    ("operating_margin", "ratio"),
+    ("net_margin", "ratio"),
+    ("pretax_margin", "ratio"),
+    ("sga_pct_revenue", "ratio"),
+    ("gross_margin", "sum_diff_ratio"),
+    ("fcf_margin", "sum_diff_ratio"),
+])
+def test_revenue_denominated_ratios_null_on_immaterial_base(metric_name, shape):
+    """Root-cause fix, 2026-09-27 (Inhibikase Therapeutics finding): a
+    real but tiny ($1) revenue base must not produce a mathematically
+    correct but economically meaningless multi-million-percent margin."""
+    inputs = {"numerator": [Decimal("-20000000")], "denominator": [Decimal("1")]}
+    if shape == "sum_diff_ratio":
+        inputs = {
+            "add": [Decimal("1")],
+            "subtract": [Decimal("20000001")],
+            "denominator": [Decimal("1")],
+        }
+    value, reason = _compute(shape, inputs, metric_name)
+    assert value is None
+    assert reason == "immaterial_revenue_base"
+
+
+@pytest.mark.unit
+def test_non_revenue_ratio_ignores_the_floor():
+    # roe/current_ratio/debt_to_equity etc. are NOT in
+    # REVENUE_DENOMINATOR_METRICS -- a tiny-but-nonzero denominator there
+    # is a different, already-accepted degenerate case (e.g. near-zero
+    # equity), so the floor must not fire for them.
+    value, reason = _compute(
+        "ratio", {"numerator": [Decimal("5")], "denominator": [Decimal("1")]}, "roe"
+    )
+    assert value == Decimal("5")
+    assert reason is None
+
+
+@pytest.mark.unit
+def test_roa_nulls_on_immaterial_asset_base():
+    """Root-cause fix, 2026-09-27 (Appsoft Technologies finding): a real
+    but tiny ($7) total_assets base must not produce a mathematically
+    correct but economically meaningless -1,337,700% ROA."""
+    value, reason = _compute(
+        "ratio", {"numerator": [Decimal("-93642")], "denominator": [Decimal("7")]}, "roa"
+    )
+    assert value is None
+    assert reason == "immaterial_asset_base"
+
+    # Above the floor, computes normally.
+    value, reason = _compute(
+        "ratio",
+        {"numerator": [Decimal("2000000")], "denominator": [Decimal("10000000")]},
+        "roa",
+    )
+    assert value == Decimal("0.2")
+    assert reason is None
+
+
+@pytest.mark.unit
+def test_interest_coverage_ratio_nulls_on_immaterial_interest_expense_base():
+    """Root-cause fix, 2026-09-27 (Dermata Therapeutics finding): a real
+    but tiny ($4) interest_expense base must not produce a mathematically
+    correct but economically meaningless multi-million-percent coverage
+    ratio -- even though this metric's own doc-47 bound is already wide
+    (+/-5000)."""
+    value, reason = _compute(
+        "ratio", {"numerator": [Decimal("-1774")], "denominator": [Decimal("4")]}, "interest_coverage_ratio"
+    )
+    assert value is None
+    assert reason == "immaterial_interest_expense_base"
+
+    # A real small-but-material interest expense (Dermata's own real Q1
+    # 2021 figure) still computes normally.
+    value, reason = _compute(
+        "ratio",
+        {"numerator": [Decimal("100000")], "denominator": [Decimal("43135")]},
+        "interest_coverage_ratio",
+    )
+    assert value == Decimal("100000") / Decimal("43135")
+    assert reason is None
+
+
+@pytest.mark.unit
+def test_revenue_denominated_ratio_computes_normally_above_the_floor():
+    value, reason = _compute(
+        "ratio",
+        {"numerator": [Decimal("3000000")], "denominator": [Decimal("10000000")]},
+        "operating_margin",
+    )
+    assert value == Decimal("0.3")
+    assert reason is None
+
+
+@pytest.mark.unit
 def test_roic_formula_and_decimal_precision_are_exact():
     getcontext().prec = 28
     value, reason = _compute(

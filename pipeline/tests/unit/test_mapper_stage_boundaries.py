@@ -41,8 +41,13 @@ def test_calculation_matches_instant_facts_by_end_date_and_scopes_delete(monkeyp
     period_end = date(2025, 9, 27)
     facts = {
         "by_period_id": {
-            1: {10: (Decimal("20"), [101])},
-            2: {10: (Decimal("100"), [102])},
+            # net_income/revenue scaled to real dollar magnitude (2026-
+            # 09-27's REVENUE_DENOMINATOR_MATERIALITY_FLOOR fix nulls any
+            # revenue-denominated ratio under $1M -- these values were
+            # originally 20/100, a toy-scale immaterial base under the
+            # new floor); ratio (0.2) kept identical.
+            1: {10: (Decimal("2000000"), [101])},
+            2: {10: (Decimal("10000000"), [102])},
             3: {10: (Decimal("30"), [103])},
             4: {10: (Decimal("5"), [104])},
             5: {10: (Decimal("25"), [105])},

@@ -194,6 +194,29 @@ RELATIVE_CHECKS: dict[str, tuple[str, Decimal, str]] = {
 # relative one.
 ABSOLUTE_BOUNDS["effective_tax_rate_gap"] = (_D("-5"), _D("5"), _D("-0.5"), _D("0.5"))
 
+# Sector carve-out, added 2026-09-27 root-causing the ebitda/fcf
+# RELATIVE_CHECKS cluster after the TTM-revenue-denominator fix above.
+# 145 of ~313 remaining ebitda critical findings (46%), 68 more (22%)
+# from Biological Products -- 68% total from two SIC codes -- are real,
+# correctly-computed, structurally-expected pre-revenue/early-stage
+# biotech/pharma economics (large R&D burn against zero/near-zero
+# revenue: Cytokinetics -$695M ebitda on $67.7M revenue, CRISPR
+# Therapeutics -$516M on $13.4M, NuScale Power -$702M on $10.7M --
+# spot-checked, not a mapping/calculation bug in any of them). Same
+# "a real sector characteristic, not a data error" reasoning this
+# project already applied to BDCs/banks/REITs (see BANK_SIC_PREFIXES/
+# bdc_total_investment_income elsewhere in this codebase) -- only
+# EBITDA/FCF are excluded here (R&D-burn-vs-revenue is specifically
+# what makes this sector's ratio structurally large); net_interest_
+# income/cash_returned_to_shareholders/the balance-sheet/reconciliation
+# checks aren't R&D-driven and keep applying to every sector unchanged.
+PRE_REVENUE_RD_SIC_DESCRIPTIONS: set[str] = {
+    "Pharmaceutical Preparations",
+    "Biological Products, (No Diagnostic Substances)",
+    "In Vitro & In Vivo Diagnostic Substances",
+}
+SECTOR_EXCLUDED_RELATIVE_CHECK_METRICS: set[str] = {"ebitda", "fcf"}
+
 
 def check_absolute(value: Decimal, bounds: tuple) -> tuple[str, str | None]:
     """Pure, no DB access -- unit-testable in isolation."""
@@ -247,6 +270,14 @@ def _load_latest_metric_values(
     One bulk query, not a query per company (pipeline/CLAUDE.md's own
     N+1 lesson)."""
     with conn.cursor() as cur:
+        # Raised from the pooler's default 2min -- found live 2026-09-27:
+        # this query started hitting QueryCanceled after this session's
+        # own growth/margin/roa/interest-coverage materiality-floor fixes
+        # rewrote a large share of analytics.metric_value (many new
+        # explicit-null rows), same established pattern as tag_candidates.py/
+        # coverage_matrix.py's own statement_timeout overrides for a rare,
+        # heavier-than-usual full-population scan.
+        cur.execute("set statement_timeout = '5min'")
         cur.execute(
             """
             with ranked as (
@@ -298,6 +329,73 @@ def _load_latest_concept_values(
         }
 
 
+def _load_ttm_revenue_denominators(conn: psycopg.Connection) -> dict[int, Decimal]:
+    """TTM-equivalent revenue per company_id -- fixes a real, confirmed
+    bug found live 2026-09-27 root-causing the `ebitda`/`fcf` RELATIVE_
+    CHECKS clusters (575/465 critical). Every RELATIVE_CHECKS description
+    above says "> Nx TTM revenue", but `_load_latest_concept_values`
+    picks whatever the single most recent canonical_fact PERIOD happens
+    to be -- routinely one quarter, not a trailing-twelve-month figure --
+    while `ebitda`/`fcf`/`net_interest_income` are themselves TTM-scale
+    (expanded_metrics.py persists a TTM row for each). Comparing a TTM
+    numerator against ~1 quarter of revenue silently inflates the ratio
+    ~4x. Confirmed on United Rentals: latest revenue_sanity_resolved
+    picked $929M (Q1 2026 alone), vs. real trailing-4-quarter revenue of
+    ~$3.73B (929+992+938+872, matching its own FY2025 figure of $3.695B)
+    -- a false "4.8x revenue" EBITDA finding that's actually ~1.2x once
+    compared against the real TTM base.
+
+    Prefers a latest FY row directly (a fiscal year's revenue already IS
+    a trailing-twelve-month figure as of its own end_date); otherwise
+    sums the trailing 4 quarters, requiring all 4 to be present -- an
+    incomplete window is skipped for that company (no denominator, no
+    finding), the same "don't guess" discipline check_relative() already
+    uses for a missing/zero denominator."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select cf.company_id, p.fiscal_year, p.fiscal_period, p.end_date, cf.value
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            join core.period p on p.id = cf.period_id
+            where cc.name = 'revenue_sanity_resolved' and p.fiscal_period is not null
+            """
+        )
+        rows = cur.fetchall()
+
+    by_company: dict[int, dict[tuple[int, str], tuple]] = {}
+    for company_id, fy, fp, end_date, value in rows:
+        by_company.setdefault(company_id, {})[(fy, fp)] = (end_date, value)
+
+    quarters = ["Q1", "Q2", "Q3", "Q4"]
+    result: dict[int, Decimal] = {}
+    for company_id, periods in by_company.items():
+        (latest_fy, latest_fp), (_end, latest_value) = max(
+            periods.items(), key=lambda kv: kv[1][0]
+        )
+        if latest_fp == "FY":
+            result[company_id] = latest_value
+            continue
+        if latest_fp not in quarters:
+            continue
+        y, i = latest_fy, quarters.index(latest_fp)
+        total = Decimal("0")
+        complete = True
+        for _ in range(4):
+            key = (y, quarters[i])
+            if key not in periods:
+                complete = False
+                break
+            total += periods[key][1]
+            i -= 1
+            if i < 0:
+                i = 3
+                y -= 1
+        if complete:
+            result[company_id] = total
+    return result
+
+
 _UPSERT_SQL = """
     insert into analytics.metric_plausibility_check
         (company_id, metric_definition_id, period_label, period_end, value, severity, note, checked_at)
@@ -319,7 +417,12 @@ def run_all(conn: psycopg.Connection) -> dict:
         SEVERITY_WATCH: 0,
         SEVERITY_CRITICAL: 0,
         "skipped_no_denominator": 0,
+        "skipped_sector_exclusion": 0,
     }
+
+    with conn.cursor() as cur:
+        cur.execute("select id, sic_description from core.company")
+        sic_description_by_company = dict(cur.fetchall())
 
     all_metric_names = (
         list(ABSOLUTE_BOUNDS) + list(EXACT_SET_METRICS) + list(RELATIVE_CHECKS)
@@ -344,6 +447,25 @@ def run_all(conn: psycopg.Connection) -> dict:
     if RELATIVE_CHECKS:
         concept_names = sorted({c for c, _m, _d in RELATIVE_CHECKS.values()})
         denominators = _load_latest_concept_values(conn, concept_names)
+        # revenue_sanity_resolved needs the TTM-aware loader (see its
+        # own docstring) -- overwrite just that concept's entries,
+        # total_assets_resolved keeps the plain latest-period lookup
+        # (correct as-is: a balance-sheet snapshot has no "TTM" shape).
+        if "revenue_sanity_resolved" in concept_names:
+            ttm_revenue_by_company = _load_ttm_revenue_denominators(conn)
+            for company_id, ttm_revenue in ttm_revenue_by_company.items():
+                denominators[(company_id, "revenue_sanity_resolved")] = ttm_revenue
+            # A company with no complete trailing-4-quarter/FY revenue
+            # window must not silently keep the old single-period value
+            # (would still be the exact bug this fix closes) -- drop it,
+            # producing an honest "skipped_no_denominator" instead.
+            for key in [
+                k
+                for k in denominators
+                if k[1] == "revenue_sanity_resolved"
+                and k[0] not in ttm_revenue_by_company
+            ]:
+                del denominators[key]
 
     findings = []
     for (
@@ -363,6 +485,13 @@ def run_all(conn: psycopg.Connection) -> dict:
         if metric_name in EXACT_SET_METRICS:
             result = check_exact_set(value, EXACT_SET_METRICS[metric_name])
         elif metric_name in RELATIVE_CHECKS:
+            if (
+                metric_name in SECTOR_EXCLUDED_RELATIVE_CHECK_METRICS
+                and sic_description_by_company.get(company_id)
+                in PRE_REVENUE_RD_SIC_DESCRIPTIONS
+            ):
+                stats["skipped_sector_exclusion"] += 1
+                continue
             concept_name, multiplier, description = RELATIVE_CHECKS[metric_name]
             denominator = denominators.get((company_id, concept_name))
             result = check_relative(value, denominator, multiplier, description)

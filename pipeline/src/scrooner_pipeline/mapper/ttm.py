@@ -32,7 +32,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -78,13 +78,58 @@ GROWTH_METRICS = {
 QUARTER_ORDER = ["Q1", "Q2", "Q3", "Q4"]
 
 
+# Materiality floors for the growth-rate engine -- added 2026-09-27 root-
+# causing plausibility_check.py's net_income_growth_yoy/eps_growth_yoy/
+# fcf_growth_yoy cluster (894/702/524 critical violations respectively).
+# Traced a top offender (Infleqtion, Inc., CIK 0002007825) to a real,
+# generalizable structural cause, not a mapping or arithmetic bug: a
+# de-SPAC business-combination discontinuity. Infleqtion's Q1-Q3 2024
+# `core.fact` rows are the PRE-MERGER BLANK-CHECK SHELL's own separately-
+# filed 10-Qs (net_income as small as -$69 for Q3 2024 -- a real,
+# correctly-extracted value for that real filing), while its FY2024 10-K
+# (filed post-merger) uses reverse-merger accounting to report the real
+# OPERATING COMPANY's full-year financials (~-$55.7M) -- and post-merger
+# quarters (Q3 2025: -$33.4M) are the real operating company too. Verified
+# against yfinance before concluding this: Yahoo's own quarterly series
+# for INFQ starts only at 2025-03-31 (the first clean post-merger quarter)
+# with 2024-12-31 returned as NaN -- Yahoo's own data provider evidently
+# can't/doesn't produce a comparable pre-merger quarterly figure either,
+# independently corroborating that Q3 2024's tiny shell value isn't a
+# meaningful economic "prior year" for this company at all. The correct
+# general fix generalizes doc's existing `sanity/timeseries_check.py`
+# materiality-floor idiom (already applied to CONCEPT-level checks) to
+# the growth-rate CALCULATION itself: when the prior-period base is too
+# small to be a real operating-scale figure for a mapped concept, a YoY/
+# CAGR ratio off it is mathematically well-defined but economically
+# meaningless (483,836.84% for Infleqtion) -- correctly null it, the same
+# "don't guess, exclude" discipline this project applies everywhere else,
+# rather than storing a technically-correct but garbage number.
+CONCEPT_MATERIALITY_FLOORS: dict[str, Decimal] = {
+    "revenue": Decimal("1000000"),
+    "net_income": Decimal("1000000"),
+    "diluted_eps": Decimal("0.01"),
+    "dividends_per_share": Decimal("0.01"),
+    "shares_outstanding": Decimal("10000"),
+}
+
+
 def _growth_value(
-    value_t: Decimal, value_prior: Decimal, lag_years: int
+    value_t: Decimal,
+    value_prior: Decimal,
+    lag_years: int,
+    materiality_floor: Decimal = Decimal("0"),
 ) -> tuple[Decimal | None, str | None]:
     """Pure growth calculation shared by the SQL-backed growth job and its
-    regression tests. Returns a value or an explicit null reason."""
+    regression tests. Returns a value or an explicit null reason.
+    `materiality_floor` (see CONCEPT_MATERIALITY_FLOORS) guards against a
+    tiny/near-zero prior-period base producing a mathematically-correct
+    but economically-meaningless ratio -- e.g. a pre-merger SPAC shell's
+    trivial quarter used as the "prior year" for a real operating
+    company's post-merger quarter."""
     if value_prior == 0:
         return None, "zero_base_value"
+    if abs(value_prior) < materiality_floor:
+        return None, "immaterial_prior_base"
     if lag_years == 1:
         return (value_t - value_prior) / value_prior, None
     ratio = value_t / value_prior
@@ -157,6 +202,7 @@ def _compute_growth_for_company(
     for metric_name, (concept_name, lag_years) in GROWTH_METRICS.items():
         concept_id = _load_concept_id(conn, concept_name)
         by_period = _load_company_facts(conn, company_id, concept_id)
+        materiality_floor = CONCEPT_MATERIALITY_FLOORS.get(concept_name, Decimal("0"))
         for (fy, fp), (value_t, fids_t, start_t, end_t) in by_period.items():
             prior_key = (fy - lag_years, fp)
             prior = by_period.get(prior_key)
@@ -175,7 +221,9 @@ def _compute_growth_for_company(
                 )
                 continue
             value_prior, fids_prior, _s, _e = prior
-            growth, growth_reason = _growth_value(value_t, value_prior, lag_years)
+            growth, growth_reason = _growth_value(
+                value_t, value_prior, lag_years, materiality_floor
+            )
             if growth_reason is not None:
                 rows.append(
                     {
@@ -255,6 +303,12 @@ def compute_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "growth", exc)
+            # safe_rollback() tolerates a dead connection (a real,
+            # confirmed cascade found live 2026-09-27: a mid-batch
+            # connection drop otherwise fails EVERY remaining company in
+            # this call, not just one -- same class of bug already fixed
+            # in concept_fallback.py/beneficial_ownership.py etc.).
+            conn = safe_rollback(conn, stage="growth", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]
@@ -469,6 +523,7 @@ def compute_ttm_margins(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "ttm_margins", exc)
+            conn = safe_rollback(conn, stage="ttm_margins", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]
@@ -678,6 +733,7 @@ def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "ttm_returns", exc)
+            conn = safe_rollback(conn, stage="ttm_returns", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]

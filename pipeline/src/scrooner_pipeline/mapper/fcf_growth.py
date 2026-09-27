@@ -25,12 +25,20 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.mapper.ttm import _growth_value
 
 logger = structlog.get_logger()
 
 LAG_YEARS = {"fcf_growth_yoy": 1, "fcf_growth_3y_cagr": 3, "fcf_growth_5y_cagr": 5}
+
+# Same materiality-floor fix as ttm.py's CONCEPT_MATERIALITY_FLOORS
+# (2026-09-27, plausibility_check.py root-cause pass) -- FCF is a
+# dollar-scale figure like net_income/revenue, so it shares their floor.
+# Guards against the identical de-SPAC-shaped trap: a pre-merger shell's
+# trivial prior-year FCF producing a mathematically-correct but
+# meaningless multi-thousand-percent YoY/CAGR figure.
+FCF_MATERIALITY_FLOOR = Decimal("1000000")
 
 
 def _load_fcf_fy_history(
@@ -97,7 +105,7 @@ def calculate_fcf_growth_for_company(
                 continue
 
             value, reason = _growth_value(
-                fcf_history[fy], fcf_history[prior_fy], lag_years
+                fcf_history[fy], fcf_history[prior_fy], lag_years, FCF_MATERIALITY_FLOOR
             )
             rows.append(
                 {
@@ -179,6 +187,7 @@ def calculate_fcf_growth(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "fcf_growth", exc)
+            conn = safe_rollback(conn, stage="fcf_growth", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]

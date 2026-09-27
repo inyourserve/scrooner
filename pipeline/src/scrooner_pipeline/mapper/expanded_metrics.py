@@ -49,6 +49,12 @@ logger = structlog.get_logger()
 
 FULL_YEAR_MIN_DAYS, FULL_YEAR_MAX_DAYS = 350, 380
 
+# Same materiality floor as calculate.py's REVENUE_DENOMINATOR_METRICS
+# fix (2026-09-27) -- see ebitda_margin's own computation below for the
+# real, confirmed example (Inhibikase Therapeutics' genuine $1 TTM
+# revenue).
+REVENUE_TTM_MATERIALITY_FLOOR = Decimal("1000000")
+
 # The 9 metrics this module actually WRITES -- everything else in the
 # metric_ids dict passed into calculate_expanded_metrics_for_company()
 # (ebitda, market_cap, trailing_pe, eps_growth_yoy, dividend_yield,
@@ -397,6 +403,14 @@ def calculate_expanded_metrics_for_company(
         rows.append(_row("ebitda_margin", None, "missing:revenue_ttm"))
     elif revenue_ttm == 0:
         rows.append(_row("ebitda_margin", None, "zero_denominator"))
+    elif abs(revenue_ttm) < REVENUE_TTM_MATERIALITY_FLOOR:
+        # Same materiality-floor fix as calculate.py's REVENUE_DENOMINATOR_
+        # METRICS, 2026-09-27 -- a near-zero-but-nonzero TTM revenue base
+        # (e.g. a pre-revenue biotech's real $1 licensing payment) makes
+        # ANY ratio off it mathematically correct but economically
+        # meaningless, the same pattern found for operating_margin/
+        # net_margin/pretax_margin in calculate.py.
+        rows.append(_row("ebitda_margin", None, "immaterial_revenue_base"))
     else:
         rows.append(_row("ebitda_margin", ebitda_ttm / revenue_ttm, None))
 
