@@ -84,6 +84,19 @@ jobs:
         # into any cron until now -- see doc/data-moat/SYSTEMS.md.
         if: always()
         run: uv run --project pipeline scrooner-sanity timeseries
+      - name: Metric plausibility check (full population)
+        # Added 2026-09-27, direct request ("PE can't be higher/lower
+        # than this? do this for almost all the metrics"). Zero external
+        # calls (same reasoning as the time-series step above) -- checks
+        # each company's most recent value per metric against a
+        # CRITICAL/WATCH range grounded in the real live distribution
+        # (doc/reference/47_Scrooner_Metric_Plausibility_Gates.md). First
+        # live run found 7,003 critical + 7,585 watch violations,
+        # including the exact live bugs the doc's own research surfaced
+        # by hand (roe max 56.6M%, price_to_book max $1.29B, dividend_
+        # yield max 837,700%, negative current_ratio/quick_ratio).
+        if: always()
+        run: uv run --project pipeline scrooner-sanity plausibility
       - name: yfinance full financial statements (rotating batch)
         # Added 2026-09-08 -- deeper than the ratio check above (every
         # quarter's actual line items, not just latest-period ratios),

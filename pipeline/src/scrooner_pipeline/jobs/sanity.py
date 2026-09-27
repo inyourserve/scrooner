@@ -24,6 +24,7 @@ from scrooner_pipeline.sanity.report import (
 )
 from scrooner_pipeline.sanity.tag_investigator import investigate_open_findings
 from scrooner_pipeline.sanity.timeseries_check import run_all as run_timeseries_all
+from scrooner_pipeline.sanity.plausibility_check import run_all as run_plausibility_all
 
 app = typer.Typer()
 
@@ -158,3 +159,16 @@ def timeseries_cmd() -> None:
     with get_connection() as conn:
         stats = run_timeseries_all(conn)
     typer.echo(f"sanity timeseries: {stats}")
+
+
+@app.command("plausibility")
+def plausibility_cmd() -> None:
+    """Metric Plausibility Check (sanity/plausibility_check.py,
+    doc/reference/47_Scrooner_Metric_Plausibility_Gates.md) -- zero
+    external calls, checks each company's most recent value per metric
+    against a CRITICAL/WATCH range grounded in the real live distribution
+    of that metric. Covers the WHOLE active population in one pass, same
+    reasoning as `sanity timeseries`."""
+    with get_connection() as conn:
+        stats = run_plausibility_all(conn)
+    typer.echo(f"sanity plausibility: {stats}")
