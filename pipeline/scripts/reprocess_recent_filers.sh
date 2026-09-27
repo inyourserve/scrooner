@@ -91,8 +91,33 @@ cur.execute(
     where d.filing_date >= current_date - make_interval(days => %s)
       and c.status = 'active'
       and d.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
+    union
+    -- Backlog (added 2026-09-27): a company whose latest 10-K/10-Q has
+    -- no core.fact rows yet, although a companyfacts payload fetched
+    -- after it is already in raw. The lookback above only sees the last
+    -- N days, so any cron outage longer than that lost filings for good:
+    -- 348 companies (Abbott, NextEra, S&P Global, Cintas' FY2026 10-K)
+    -- sat at Q1 2026 after the 09-15..09-26 outages. Capped per run so
+    -- a large backlog drains over a few days instead of blowing the
+    -- job timeout.
+    select cik from (
+      select lf.cik
+      from (
+        select distinct on (f.company_id) f.company_id, c.cik, f.id as filing_id, f.filing_date
+        from core.filing f
+        join core.company c on c.id = f.company_id
+        where c.status = 'active'
+          and f.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
+          and f.filing_date >= current_date - 150
+        order by f.company_id, f.filing_date desc
+      ) lf
+      where not exists (select 1 from core.fact x where x.filing_id = lf.filing_id)
+        and (select max(r.fetched_at)::date from raw.sec_companyfacts r where r.cik = lf.cik) > lf.filing_date
+      order by lf.filing_date desc
+      limit %s
+    ) backlog
     """,
-    (int(os.environ["LOOKBACK_DAYS"]),),
+    (int(os.environ["LOOKBACK_DAYS"]), int(os.environ.get("BACKLOG_LIMIT", "150"))),
 )
 print(','.join(r[0] for r in cur.fetchall()))
 PY
@@ -104,7 +129,7 @@ if [ -z "$CIKS" ]; then
 fi
 
 N=$(echo "$CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
-echo "reprocess_recent_filers: ${N} companies with a filing in the last ${LOOKBACK_DAYS} days"
+echo "reprocess_recent_filers: ${N} companies (filed in the last ${LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
 
 for stage in identity periods units facts dedupe restatements derive-interim-quarters derive-q4; do
   echo "--- normalize $stage ---"
