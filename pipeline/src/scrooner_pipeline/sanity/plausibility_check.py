@@ -107,10 +107,27 @@ ABSOLUTE_BOUNDS: dict[str, tuple[Decimal | None, Decimal | None, Decimal | None,
             "diluted_shares_growth_3y_cagr", "diluted_shares_growth_5y_cagr",
         )
     },
-    # -- Section 8: streaks (bounded by this project's own real data
-    # depth, doc 38's 2015-01-01 floor -- ~11-15 real FY years possible) --
-    "profitable_streak_years": (_D("0"), _D("15"), _D("0"), _D("12")),
-    "dividend_growth_streak_years": (_D("0"), _D("15"), _D("0"), _D("12")),
+    # -- Section 8: streaks --
+    # ORIGINAL bound here was (0, 15, 0, 12), based on a wrong assumption
+    # that fundamentals data is bounded by doc 38's 2015-01-01 floor.
+    # That floor is specific to OWNERSHIP data (Form 13F/13G refiling
+    # cadence reasoning) -- fundamentals (core.fact/canonical_fact) are
+    # NOT bounded there at all. Found live 2026-09-27, first real run:
+    # 348 "critical" violations were EVERY major stable blue-chip
+    # (Procter & Gamble, Apple, IBM, Kimberly-Clark, Hershey, Abbott,
+    # Colgate-Palmolive...) -- confirmed Apple's own real net_income data
+    # runs FY2007-FY2025 (19 real years), and 1,611 companies population-
+    # wide have real FY data before 2010, some back to 1992. A 19-21
+    # year unbroken profitable streak for one of these companies is a
+    # real, correct number, not a bug -- these are exactly the
+    # companies famous for decades of uninterrupted profitability.
+    # Real observed max across the population is exactly 20 (percentile_
+    # cont 99.9% = 19) -- widened critical to 40 (double the real max,
+    # generous headroom for a company with even older data) and watch to
+    # 22 (just above the real max, so THIS population's own longest real
+    # streaks don't sit right at the edge of "worth a look").
+    "profitable_streak_years": (_D("0"), _D("40"), _D("0"), _D("22")),
+    "dividend_growth_streak_years": (_D("0"), _D("40"), _D("0"), _D("22")),
 }
 
 # Exact-set metrics: any value outside this set (besides null, always
