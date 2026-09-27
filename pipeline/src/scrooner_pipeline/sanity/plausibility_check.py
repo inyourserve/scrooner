@@ -43,7 +43,9 @@ SEVERITY_CRITICAL = "critical"
 # change; this dict is the executable source of truth going forward,
 # the doc is the evidence/rationale for how each number was picked.
 _D = Decimal
-ABSOLUTE_BOUNDS: dict[str, tuple[Decimal | None, Decimal | None, Decimal | None, Decimal | None]] = {
+ABSOLUTE_BOUNDS: dict[
+    str, tuple[Decimal | None, Decimal | None, Decimal | None, Decimal | None]
+] = {
     # -- Section 1: margins and returns --
     "gross_margin": (_D("-10"), _D("2"), _D("-2"), _D("1.05")),
     "operating_margin": (_D("-20"), _D("5"), _D("-5"), _D("1")),
@@ -99,12 +101,25 @@ ABSOLUTE_BOUNDS: dict[str, tuple[Decimal | None, Decimal | None, Decimal | None,
     **{
         name: (_D("-1"), _D("1000"), _D("-0.9"), _D("20"))
         for name in (
-            "revenue_growth_yoy", "revenue_growth_3y_cagr", "revenue_growth_5y_cagr", "revenue_growth_10y_cagr",
-            "eps_growth_yoy", "eps_growth_3y_cagr", "eps_growth_5y_cagr", "eps_growth_10y_cagr",
-            "net_income_growth_yoy", "net_income_growth_3y_cagr", "net_income_growth_5y_cagr", "net_income_growth_10y_cagr",
-            "fcf_growth_yoy", "fcf_growth_3y_cagr", "fcf_growth_5y_cagr",
-            "dps_growth_yoy", "dps_growth_3y_cagr",
-            "diluted_shares_growth_3y_cagr", "diluted_shares_growth_5y_cagr",
+            "revenue_growth_yoy",
+            "revenue_growth_3y_cagr",
+            "revenue_growth_5y_cagr",
+            "revenue_growth_10y_cagr",
+            "eps_growth_yoy",
+            "eps_growth_3y_cagr",
+            "eps_growth_5y_cagr",
+            "eps_growth_10y_cagr",
+            "net_income_growth_yoy",
+            "net_income_growth_3y_cagr",
+            "net_income_growth_5y_cagr",
+            "net_income_growth_10y_cagr",
+            "fcf_growth_yoy",
+            "fcf_growth_3y_cagr",
+            "fcf_growth_5y_cagr",
+            "dps_growth_yoy",
+            "dps_growth_3y_cagr",
+            "diluted_shares_growth_3y_cagr",
+            "diluted_shares_growth_5y_cagr",
         )
     },
     # -- Section 8: streaks --
@@ -150,13 +165,29 @@ RELATIVE_CHECKS: dict[str, tuple[str, Decimal, str]] = {
     "ebitda": ("revenue_sanity_resolved", _D("3"), "> 3x TTM revenue"),
     "fcf": ("revenue_sanity_resolved", _D("3"), "> 3x TTM revenue"),
     "net_interest_income": ("revenue_sanity_resolved", _D("1"), "> 1x TTM revenue"),
-    "cash_returned_to_shareholders": ("revenue_sanity_resolved", _D("1"), "> 1x TTM revenue"),
+    "cash_returned_to_shareholders": (
+        "revenue_sanity_resolved",
+        _D("1"),
+        "> 1x TTM revenue",
+    ),
     "working_capital": ("total_assets_resolved", _D("2"), "> 2x total assets"),
     "net_cash": ("total_assets_resolved", _D("2"), "> 2x total assets"),
     "net_change_in_cash": ("total_assets_resolved", _D("2"), "> 2x total assets"),
-    "ar_change_reconciliation_gap": ("revenue_sanity_resolved", _D("0.10"), "> 10% of TTM revenue"),
-    "ap_change_reconciliation_gap": ("revenue_sanity_resolved", _D("0.10"), "> 10% of TTM revenue"),
-    "inventory_change_reconciliation_gap": ("revenue_sanity_resolved", _D("0.10"), "> 10% of TTM revenue"),
+    "ar_change_reconciliation_gap": (
+        "revenue_sanity_resolved",
+        _D("0.10"),
+        "> 10% of TTM revenue",
+    ),
+    "ap_change_reconciliation_gap": (
+        "revenue_sanity_resolved",
+        _D("0.10"),
+        "> 10% of TTM revenue",
+    ),
+    "inventory_change_reconciliation_gap": (
+        "revenue_sanity_resolved",
+        _D("0.10"),
+        "> 10% of TTM revenue",
+    ),
 }
 # effective_tax_rate_gap is already a plain fraction (not a dollar
 # amount), so it gets a normal ABSOLUTE_BOUNDS entry instead of a
@@ -167,10 +198,20 @@ ABSOLUTE_BOUNDS["effective_tax_rate_gap"] = (_D("-5"), _D("5"), _D("-0.5"), _D("
 def check_absolute(value: Decimal, bounds: tuple) -> tuple[str, str | None]:
     """Pure, no DB access -- unit-testable in isolation."""
     crit_min, crit_max, watch_min, watch_max = bounds
-    if (crit_min is not None and value < crit_min) or (crit_max is not None and value > crit_max):
-        return SEVERITY_CRITICAL, f"value {value} outside critical range [{crit_min}, {crit_max}]"
-    if (watch_min is not None and value < watch_min) or (watch_max is not None and value > watch_max):
-        return SEVERITY_WATCH, f"value {value} outside typical range [{watch_min}, {watch_max}]"
+    if (crit_min is not None and value < crit_min) or (
+        crit_max is not None and value > crit_max
+    ):
+        return (
+            SEVERITY_CRITICAL,
+            f"value {value} outside critical range [{crit_min}, {crit_max}]",
+        )
+    if (watch_min is not None and value < watch_min) or (
+        watch_max is not None and value > watch_max
+    ):
+        return (
+            SEVERITY_WATCH,
+            f"value {value} outside typical range [{watch_min}, {watch_max}]",
+        )
     return SEVERITY_OK, None
 
 
@@ -180,18 +221,25 @@ def check_exact_set(value: Decimal, valid: set[Decimal]) -> tuple[str, str | Non
     return SEVERITY_CRITICAL, f"value {value} not in the valid set {sorted(valid)}"
 
 
-def check_relative(value: Decimal, denominator: Decimal | None, multiplier: Decimal, description: str) -> tuple[str, str | None] | None:
+def check_relative(
+    value: Decimal, denominator: Decimal | None, multiplier: Decimal, description: str
+) -> tuple[str, str | None] | None:
     """Returns None (skip, not a finding) when the denominator itself is
     missing or zero -- an implausible-ratio-of-nothing isn't a meaningful
     signal, same reasoning as the DEGENERACY_GUARD in yfinance_check.py."""
     if denominator is None or denominator == 0:
         return None
     if abs(value) > multiplier * abs(denominator):
-        return SEVERITY_CRITICAL, f"abs(value)={abs(value)} exceeds {description} (denominator={denominator})"
+        return (
+            SEVERITY_CRITICAL,
+            f"abs(value)={abs(value)} exceeds {description} (denominator={denominator})",
+        )
     return SEVERITY_OK, None
 
 
-def _load_latest_metric_values(conn: psycopg.Connection, metric_names: list[str]) -> list[tuple]:
+def _load_latest_metric_values(
+    conn: psycopg.Connection, metric_names: list[str]
+) -> list[tuple]:
     """(company_id, metric_definition_id, metric_name, period_label,
     period_end, value) for the MOST RECENT non-null value per (company,
     metric) -- TTM-preferred/latest-period_end, the same rule
@@ -220,7 +268,9 @@ def _load_latest_metric_values(conn: psycopg.Connection, metric_names: list[str]
         return cur.fetchall()
 
 
-def _load_latest_concept_values(conn: psycopg.Connection, concept_names: list[str]) -> dict[tuple[int, str], Decimal]:
+def _load_latest_concept_values(
+    conn: psycopg.Connection, concept_names: list[str]
+) -> dict[tuple[int, str], Decimal]:
     """(company_id, concept_name) -> latest canonical_fact value -- the
     denominator lookup for RELATIVE_CHECKS. Same latest-period_end rule,
     concept side (no TTM label to prefer -- canonical_fact is point-in-time
@@ -242,7 +292,10 @@ def _load_latest_concept_values(conn: psycopg.Connection, concept_names: list[st
             """,
             (concept_names,),
         )
-        return {(company_id, concept_name): value for company_id, concept_name, value in cur.fetchall()}
+        return {
+            (company_id, concept_name): value
+            for company_id, concept_name, value in cur.fetchall()
+        }
 
 
 _UPSERT_SQL = """
@@ -260,9 +313,17 @@ def run_all(conn: psycopg.Connection) -> dict:
     EXACT_SET_METRICS + RELATIVE_CHECKS), full active population, one
     pass. Pure local SQL -- no external calls, safe to run daily against
     everyone (same reasoning as timeseries_check.py's own run_all)."""
-    stats = {"considered": 0, SEVERITY_OK: 0, SEVERITY_WATCH: 0, SEVERITY_CRITICAL: 0, "skipped_no_denominator": 0}
+    stats = {
+        "considered": 0,
+        SEVERITY_OK: 0,
+        SEVERITY_WATCH: 0,
+        SEVERITY_CRITICAL: 0,
+        "skipped_no_denominator": 0,
+    }
 
-    all_metric_names = list(ABSOLUTE_BOUNDS) + list(EXACT_SET_METRICS) + list(RELATIVE_CHECKS)
+    all_metric_names = (
+        list(ABSOLUTE_BOUNDS) + list(EXACT_SET_METRICS) + list(RELATIVE_CHECKS)
+    )
     rows = _load_latest_metric_values(conn, all_metric_names)
 
     # Scoped to every metric_definition_id this module checks AT ALL
@@ -273,7 +334,10 @@ def run_all(conn: psycopg.Connection) -> dict:
     # trap pipeline/CLAUDE.md documents repeatedly (resolve.py, Mapper
     # Day 6, timeseries_check.py's own company_id-scoping fix).
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.metric_definition where metric_name = any(%s)", (all_metric_names,))
+        cur.execute(
+            "select id from analytics.metric_definition where metric_name = any(%s)",
+            (all_metric_names,),
+        )
         all_metric_definition_ids = [r[0] for r in cur.fetchall()]
 
     denominators: dict[tuple[int, str], Decimal] = {}
@@ -282,7 +346,14 @@ def run_all(conn: psycopg.Connection) -> dict:
         denominators = _load_latest_concept_values(conn, concept_names)
 
     findings = []
-    for company_id, metric_definition_id, metric_name, period_label, period_end, value in rows:
+    for (
+        company_id,
+        metric_definition_id,
+        metric_name,
+        period_label,
+        period_end,
+        value,
+    ) in rows:
         stats["considered"] += 1
         try:
             value = Decimal(value)
@@ -305,9 +376,13 @@ def run_all(conn: psycopg.Connection) -> dict:
         stats[severity] += 1
         findings.append(
             {
-                "company_id": company_id, "metric_definition_id": metric_definition_id,
-                "period_label": period_label, "period_end": period_end, "value": value,
-                "severity": severity, "note": note,
+                "company_id": company_id,
+                "metric_definition_id": metric_definition_id,
+                "period_label": period_label,
+                "period_end": period_end,
+                "value": value,
+                "severity": severity,
+                "note": note,
             }
         )
 

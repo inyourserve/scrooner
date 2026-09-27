@@ -1,5 +1,18 @@
 import type { MetadataRoute } from "next";
+import { unstable_cache } from "next/cache";
 import { loadFullCompanyDirectory, getSectorList, getIndustryList } from "@/lib/company/db";
+
+// Not prerendered: a sitemap is cached (built at `next build`) by default,
+// which ran these queries at build time and failed the build anywhere
+// without a reachable Postgres (CI has none). Rendered at request time
+// instead, with the query results held in Next's data cache for an hour.
+export const dynamic = "force-dynamic";
+
+const loadSitemapData = unstable_cache(
+  () => Promise.all([loadFullCompanyDirectory(), getSectorList(), getIndustryList()]),
+  ["sitemap-data"],
+  { revalidate: 3600 },
+);
 
 // Base URL comes from the same env var already used elsewhere in this app
 // (see .env.example) -- never hardcoded, so a staging/preview deploy never
@@ -27,11 +40,7 @@ const STATIC_PAGES: { path: string; changeFrequency: MetadataRoute.Sitemap[numbe
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [directory, sectors, industries] = await Promise.all([
-    loadFullCompanyDirectory(),
-    getSectorList(),
-    getIndustryList(),
-  ]);
+  const [directory, sectors, industries] = await loadSitemapData();
 
   const now = new Date();
   const staticEntries: MetadataRoute.Sitemap = STATIC_PAGES.map((page) => ({
