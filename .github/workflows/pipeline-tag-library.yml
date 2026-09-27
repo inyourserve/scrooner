@@ -1,12 +1,11 @@
 name: SEC Tag Library rebuild
 
+# Manual only (founder direction 2026-09-27): companies file the same tags
+# period after period, so the library is built once and rebuilt only after
+# WE change a concept_mapping or resolver -- that is what changes which tag
+# backs our values. Full rebuild aggregates all of core.fact (~1h).
 on:
   workflow_dispatch:
-  schedule:
-    # Weekly, Sunday: a full rebuild aggregates all of core.fact (~76M rows,
-    # ~1h), too long to add to the daily refresh job's 90-minute budget.
-    # Offset from the other crons so they don't compete for pooler connections.
-    - cron: "15 19 * * 0"
 
 permissions:
   contents: read

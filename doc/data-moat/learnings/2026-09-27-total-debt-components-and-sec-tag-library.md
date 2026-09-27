@@ -60,7 +60,7 @@ This came from founder direction: tag → concept → metric → company, coveri
 
 `scrooner-map gap-tags <concept>` ranks every tag filed by companies that are missing the concept. That turns gap discovery into a single query. Every result is still only a lead and needs a coexistence check before any `concept_mapping` change (doc 40).
 
-The build is chunked (150 companies per delete+insert+commit, with a reconnect on pooler drop). It runs weekly via `.github/workflows/pipeline-tag-library.yml`, because a full rebuild takes about an hour.
+The build is chunked (150 companies per delete+insert+commit, with a reconnect on pooler drop). It is built once and rebuilt manually (`.github/workflows/pipeline-tag-library.yml`, workflow_dispatch) after any concept_mapping or resolver change -- companies file the same tags period after period, so a schedule would mostly redo identical work. A full rebuild takes about an hour.
 
 ## Still to do
 
