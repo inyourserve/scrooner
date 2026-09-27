@@ -62,12 +62,14 @@ def install_price_inputs(monkeypatch, price):
         14: quarterly("2", 140),
     }
     monkeypatch.setattr(price_metrics, "_load_latest_price", lambda _conn, _company: (price, date.today()))
+    monkeypatch.setattr(price_metrics, "_load_latest_diluted_weighted_shares", lambda _conn, _company: None)
+    monkeypatch.setattr(price_metrics, "_load_shares_outstanding_fallback", lambda _conn, _company: None)
     monkeypatch.setattr(price_metrics, "_load_quarterly_facts", lambda _conn, _company, concept: by_concept[concept])
     monkeypatch.setattr(
         price_metrics,
         "_latest_instant_fact",
         lambda _conn, _company, concept: (
-            (Decimal("100"), [150], date(2025, 9, 27))
+            (Decimal("100"), [150], date.today() - timedelta(days=90))
             if concept == 15
             else (Decimal("200"), [160], date(2025, 9, 27))
         ),
@@ -131,3 +133,45 @@ def test_stale_price_fails_closed_instead_of_valuing_at_an_old_bar(monkeypatch):
     assert stats == {"computed": 0, "null": 6}
     assert {row["is_null_reason"] for row in conn.rows} == {"stale:real_price"}
     assert all(row["period_end"] == old_bar for row in conn.rows)
+
+
+TODAY = date(2026, 9, 27)
+OLD = date(2010, 1, 27)
+RECENT = date(2026, 6, 30)
+
+
+@pytest.mark.unit
+def test_fresh_point_in_time_share_count_wins():
+    chosen, reason = price_metrics._choose_shares(
+        (Decimal("100"), [1], RECENT), (Decimal("90"), [2], RECENT), (Decimal("95"), [], RECENT), TODAY
+    )
+    assert chosen == (Decimal("100"), [1]) and reason is None
+
+
+@pytest.mark.unit
+def test_stale_share_count_uses_cover_page_when_it_agrees_with_diluted_average():
+    # Visa-shaped: last plain count is from 2010.
+    chosen, _ = price_metrics._choose_shares(
+        (Decimal("469"), [1], OLD), (Decimal("1900"), [2], RECENT), (Decimal("1812"), [], RECENT), TODAY
+    )
+    assert chosen == (Decimal("1812"), [])
+
+
+@pytest.mark.unit
+def test_cover_page_reading_one_class_is_rejected_for_diluted_average():
+    # Comcast-shaped: the cover page parser read only Class B.
+    chosen, _ = price_metrics._choose_shares(
+        (Decimal("2000"), [1], OLD), (Decimal("3593"), [2], RECENT), (Decimal("9.4"), [], RECENT), TODAY
+    )
+    assert chosen == (Decimal("3593"), [2])
+
+
+@pytest.mark.unit
+def test_only_stale_inputs_give_a_stale_reason_not_an_old_value():
+    chosen, reason = price_metrics._choose_shares((Decimal("469"), [1], OLD), None, None, TODAY)
+    assert chosen is None and reason == "stale:shares_outstanding"
+
+
+@pytest.mark.unit
+def test_no_inputs_is_missing():
+    assert price_metrics._choose_shares(None, None, None, TODAY) == (None, "missing:shares_outstanding")

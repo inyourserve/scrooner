@@ -148,11 +148,85 @@ def _load_shares_outstanding_fallback(
     core.shares_outstanding_fallback."""
     with conn.cursor() as cur:
         cur.execute(
-            "select shares from core.shares_outstanding_fallback where company_id = %s",
+            "select shares, filing_date from core.shares_outstanding_fallback where company_id = %s",
             (company_id,),
         )
         row = cur.fetchone()
-        return (row[0], []) if row else None
+        return (row[0], [], row[1]) if row else None
+
+
+def _load_latest_diluted_weighted_shares(
+    conn: psycopg.Connection, company_id: int
+) -> tuple[Decimal, list[int], object] | None:
+    """Latest authoritative, positive WeightedAverageNumberOfDilutedShares-
+    Outstanding. Multi-class filers (Comcast, UPS, Ford, Mastercard) tag
+    their point-in-time share count per class, which the Company Facts API
+    strips, but they still file this total undimensioned. Read from
+    core.fact (authoritative only) because no canonical concept holds it."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select f.value, f.id, p.end_date
+            from core.fact f
+            join core.concept co on co.id = f.concept_id
+            join core.period p on p.id = f.period_id
+            where f.company_id = %s
+              and co.taxonomy = 'us-gaap'
+              and co.tag = 'WeightedAverageNumberOfDilutedSharesOutstanding'
+              and f.is_authoritative
+              and f.value > 0
+            order by p.end_date desc
+            limit 1
+            """,
+            (company_id,),
+        )
+        row = cur.fetchone()
+        return (row[0], [row[1]], row[2]) if row else None
+
+
+# A share count older than this is not current for market cap. Before
+# 2026-09-27 the latest instant fact was used at any age: 173 companies'
+# market caps used share counts from before 2024 (Visa, Mastercard, UPS,
+# Accenture 2010; Ford 2011; Comcast 2009), because multi-class filers
+# moved to per-class tagging that the Company Facts API strips.
+MAX_SHARES_AGE_DAYS = 480
+# Cover-page counts are checked against the diluted weighted average when
+# both exist. The cover-page parser can read one class only (Comcast:
+# 9.4M Class B instead of ~3.6B total).
+COVER_PAGE_MAX_DEVIATION = Decimal("0.25")
+
+
+def _choose_shares(
+    primary: tuple[Decimal, list[int], object] | None,
+    weighted_diluted: tuple[Decimal, list[int], object] | None,
+    cover_page: tuple[Decimal, list[int], object] | None,
+    today: date,
+) -> tuple[tuple[Decimal, list[int]] | None, str | None]:
+    """Pick the share count for Market Cap. Each input is (value, fact_ids,
+    as_of_date) or None. Returns ((value, fact_ids), None) or (None, reason)."""
+
+    def fresh(hit):
+        return (
+            hit is not None
+            and hit[2] is not None
+            and (today - hit[2]).days <= MAX_SHARES_AGE_DAYS
+        )
+
+    if fresh(primary):
+        return (primary[0], list(primary[1])), None
+    wavg = weighted_diluted if fresh(weighted_diluted) else None
+    cover = cover_page if fresh(cover_page) else None
+    if cover is not None and wavg is not None:
+        if abs(cover[0] - wavg[0]) <= COVER_PAGE_MAX_DEVIATION * wavg[0]:
+            return (cover[0], list(cover[1])), None
+        return (wavg[0], list(wavg[1])), None
+    if wavg is not None:
+        return (wavg[0], list(wavg[1])), None
+    if cover is not None:
+        return (cover[0], list(cover[1])), None
+    if primary is None and weighted_diluted is None and cover_page is None:
+        return None, "missing:shares_outstanding"
+    return None, "stale:shares_outstanding"
 
 
 def calculate_price_metrics_for_company(
@@ -209,15 +283,17 @@ def calculate_price_metrics_for_company(
         for name, by_quarter in quarterly.items():
             ttm[name] = _ttm_sum(by_quarter, fy, fp)
 
-    shares_hit = (
+    primary_shares = (
         _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"])
         if "shares_outstanding" in concept_ids
         else None
     )
-    if shares_hit is None:
-        shares_fallback = _load_shares_outstanding_fallback(conn, company_id)
-        if shares_fallback is not None:
-            shares_hit = (shares_fallback[0], shares_fallback[1], None)
+    shares_hit, shares_reason = _choose_shares(
+        primary_shares,
+        _load_latest_diluted_weighted_shares(conn, company_id),
+        _load_shares_outstanding_fallback(conn, company_id),
+        date.today(),
+    )
     equity_hit = (
         _latest_instant_fact(conn, company_id, concept_ids["stockholders_equity"])
         if "stockholders_equity" in concept_ids
@@ -253,7 +329,7 @@ def calculate_price_metrics_for_company(
     else:
         # Market Cap = Shares Outstanding x Price
         if shares_hit is None:
-            market_cap, mc_fids, mc_reason = None, [], "missing:shares_outstanding"
+            market_cap, mc_fids, mc_reason = None, [], shares_reason
         else:
             market_cap = shares_hit[0] * price
             mc_fids = list(shares_hit[1])
