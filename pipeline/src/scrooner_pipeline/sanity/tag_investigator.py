@@ -417,6 +417,62 @@ def _load_all_facts_for_tag(
         return cur.fetchall()
 
 
+# Stale display rows, dropped so the baseline copy below refills them. The
+# baseline copy is ON CONFLICT DO NOTHING, so without this a corrected
+# primary value never reaches the display concept. Two narrow shapes:
+#  1. A single-source row whose cited core.fact now holds a different value.
+#     derive-q4 rewrites a mistagged "Q4 = full year" fact in place (NiSource
+#     Q4 2025 revenue: $6.52B -> $1.89B), which left the display at $6.52B.
+#  2. A row whose every source fact is a filed Q4 fact that derive-q4 demoted
+#     for carrying the full-year value (normalizer/derived.py
+#     _mistagged_full_year_q4), when it was a separate row from the derived one.
+# Rows backed by any other kind of fact are left alone: the display value is
+# sometimes the right one (American Tower Q3 2020: $2.0B display vs $131.6M
+# in the primary concept). Measured 2026-09-27: shape 1 matched 2 revenue and
+# 5 gross-profit rows population-wide.
+_DROP_STALE_DISPLAY_ROWS_SQL = """
+delete from analytics.canonical_fact cf
+where cf.canonical_concept_id = %(resolved_id)s
+  and cardinality(cf.source_fact_ids) > 0
+  and (
+      (
+          cardinality(cf.source_fact_ids) = 1
+          and exists (
+              select 1 from core.fact f
+              where f.id = cf.source_fact_ids[1] and f.value <> cf.value
+          )
+      )
+      or (
+          exists (
+              select 1 from core.period cp
+              where cp.id = cf.period_id and cp.fiscal_period = 'Q4'
+          )
+          and not exists (
+              select 1
+              from unnest(cf.source_fact_ids) sid
+              join core.fact q on q.id = sid
+              join core.period qp on qp.id = q.period_id
+              where q.is_authoritative
+                 or q.is_derived
+                 or qp.fiscal_period <> 'Q4'
+                 or not exists (
+                     select 1
+                     from core.fact fy
+                     join core.period fp on fp.id = fy.period_id
+                     where fy.company_id = q.company_id
+                       and fy.concept_id = q.concept_id
+                       and fy.unit_id = q.unit_id
+                       and fy.is_authoritative
+                       and fp.fiscal_period = 'FY'
+                       and fp.end_date = qp.end_date
+                       and fy.value = q.value
+                 )
+          )
+      )
+  )
+"""
+
+
 def resolve_company_tag_preferences(
     conn: psycopg.Connection, concept_name: str, resolved_concept_name: str
 ) -> int:
@@ -461,6 +517,14 @@ def resolve_company_tag_preferences(
     preferred_company_ids = [company_id for company_id, _t, _g in preferences]
 
     with conn.cursor() as cur:
+        if concept_name not in NO_BASELINE_COPY:
+            cur.execute(_DROP_STALE_DISPLAY_ROWS_SQL, {"resolved_id": resolved_id})
+            if cur.rowcount:
+                logger.info(
+                    "sanity.tag_investigator.dropped_stale_display_rows",
+                    concept=resolved_concept_name,
+                    rows=cur.rowcount,
+                )
         cur.execute(
             "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s and company_id = any(%(preferred_ids)s)",
             {

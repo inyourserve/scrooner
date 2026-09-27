@@ -82,3 +82,59 @@ class TestReconcileByMode:
         assert result[1] == (100, 2)  # period 1's majority
         assert result[2][0] in (50, 999)  # period 2 has no majority (1 vs 1) -- tie-break still deterministic
         assert result[2] == (999, 5)  # tie-broken to the higher fact_id
+
+
+class _FakeCursor:
+    def __init__(self, conn):
+        self.conn = conn
+        self.rowcount = 0
+        self._result = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
+
+    def execute(self, sql, params=None):
+        text = " ".join(sql.split())
+        self.conn.sql.append(text)
+        if "from analytics.canonical_concept where name" in text:
+            self._result = [(len(self.conn.sql),)]
+        elif "from analytics.company_tag_preference" in text:
+            self._result = []
+        else:
+            self._result = [(0,)]
+
+    def fetchone(self):
+        return self._result[0]
+
+    def fetchall(self):
+        return self._result
+
+
+class _FakeConn:
+    def __init__(self):
+        self.sql = []
+
+    def cursor(self):
+        return _FakeCursor(self)
+
+    def commit(self):
+        pass
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(("concept", "expect_drop"), [("revenue", True), ("total_debt", False)])
+def test_stale_display_rows_are_dropped_except_without_a_refill_path(concept, expect_drop):
+    from scrooner_pipeline.sanity import tag_investigator
+
+    conn = _FakeConn()
+    tag_investigator.resolve_company_tag_preferences(conn, concept, f"{concept}_resolved")
+
+    drops = [s for s in conn.sql if "f.value <> cf.value" in s]
+    assert bool(drops) is expect_drop
+    if expect_drop:
+        # The drop runs before the baseline copy that refills those rows.
+        baseline = next(i for i, s in enumerate(conn.sql) if "on conflict (company_id, canonical_concept_id, period_id) do nothing" in s)
+        assert conn.sql.index(drops[0]) < baseline
