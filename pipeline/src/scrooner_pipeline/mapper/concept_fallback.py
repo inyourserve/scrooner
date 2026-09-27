@@ -48,8 +48,43 @@ logger = structlog.get_logger()
 # same real-world figure, in which case every case is summed). Add a new
 # tuple here for any future case needing the same pattern.
 FALLBACK_PAIRS: list[tuple[str, str, str, str | None]] = [
-    ("total_debt", "total_debt_split", "total_debt_resolved", "LongTermDebt"),
+    # total_debt used to live here -- replaced 2026-09-27 by
+    # resolve_total_debt_components() below. See its docstring.
 ]
+
+# Component-based total debt (2026-09-27). One us-gaap tag per role, in
+# preference order. These are ALTERNATIVE spellings of the same component,
+# never summed with each other.
+DEBT_ALL_IN = ("DebtLongtermAndShorttermCombinedAmount",)  # company's own stated total
+DEBT_ALL_IN_LEASE = (
+    "DebtAndCapitalLeaseObligations",
+)  # total incl. finance leases, last resort
+DEBT_LTD_INCL_CURRENT = (
+    "LongTermDebt",
+    "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
+)
+DEBT_LTD_NONCURRENT = (
+    "LongTermDebtNoncurrent",
+    "LongTermDebtAndCapitalLeaseObligations",
+)
+DEBT_LTD_CURRENT = (
+    "LongTermDebtCurrent",
+    "LongTermDebtAndCapitalLeaseObligationsCurrent",
+)
+DEBT_CURRENT_ALL = ("DebtCurrent",)  # short-term borrowings + current LTD
+DEBT_SHORT_TERM = ("ShortTermBorrowings", "CommercialPaper")
+# Read only as a cross-check (rule 2's tiebreaker), never stored as the value.
+DEBT_CARRYING_CHECK = ("DebtInstrumentCarryingAmount",)
+TOTAL_DEBT_TAGS = (
+    DEBT_ALL_IN
+    + DEBT_ALL_IN_LEASE
+    + DEBT_LTD_INCL_CURRENT
+    + DEBT_LTD_NONCURRENT
+    + DEBT_LTD_CURRENT
+    + DEBT_CURRENT_ALL
+    + DEBT_SHORT_TERM
+    + DEBT_CARRYING_CHECK
+)
 
 # Arithmetic fallback (migration 0047, 2026-09-07): unlike FALLBACK_PAIRS'
 # simple "concept B fills where concept A is null" coalesce, this derives a
@@ -250,7 +285,199 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
                 # docstring for the full history.
                 conn = safe_rollback(conn, stage="concept_fallback", cik=cik)
 
+    debt_stats = resolve_total_debt_components(conn, ciks)
+    stats["total_debt_components"] = debt_stats
     logger.info("concept_fallback.done", **stats)
+    return stats
+
+
+def compute_total_debt(
+    facts: dict[str, tuple[Decimal, int]],
+) -> tuple[Decimal, list[int], str] | None:
+    """Total debt for ONE balance-sheet date from the company's own tags
+    (tag -> (value, fact_id)). Returns (value, source_fact_ids, path) or
+    None when the tags can't give a total -- a blank beats a wrong number.
+
+    Replaces the old sum-mode `total_debt` + split-pair fallback, which
+    summed whichever mapped tags happened to exist: Chevron 2026-06-30 got
+    $0.4B (ShortTermBorrowings alone; its $36.7B long-term debt was under
+    an unmapped tag) and 2025-12-31 double-counted ShortTermBorrowings on
+    top of DebtCurrent, which already contains it.
+
+    Rules, each from real filings (checked against yfinance's Total Debt
+    minus Capital Lease Obligations, 16,064 company-dates, 2026-09-27;
+    within 5%: 42.3% -> 50.6%, wrong: 12.6% -> 9.6%):
+      1. DebtLongtermAndShorttermCombinedAmount -- the company's own total.
+      2. LTD including current maturities + short-term borrowings, unless
+         the "including current" tag equals LongTermDebtNoncurrent (the
+         company uses LongTermDebt for the noncurrent part only --
+         Diamondback, Cheniere) or short-term borrowings equal the current
+         LTD portion (same debt tagged twice -- Boxlight).
+      3. Noncurrent LTD + DebtCurrent (which already holds short-term
+         borrowings and current LTD).
+      4. Noncurrent LTD + current LTD + short-term borrowings.
+      5. DebtAndCapitalLeaseObligations (all-in incl. finance leases).
+    Short-term borrowings alone are NOT a total (69% wrong vs yfinance --
+    T-Mobile's long-term debt is under a custom tag Company Facts omits),
+    so that case returns None.
+
+    LongTermDebt + DebtCurrent with nothing else is ambiguous (is
+    LongTermDebt incl. current?). DebtCurrent is added only when the
+    company's own DebtInstrumentCarryingAmount equals the sum within 1%
+    (Tesla: 7.721 + 1.340 = 9.061 vs 9.08) -- 7/9 right that way, 0/9 for
+    LongTermDebt alone; without that confirmation LongTermDebt alone wins
+    (16 vs 10)."""
+
+    def pick(tags: tuple[str, ...]) -> tuple[Decimal, int] | None:
+        for t in tags:
+            if t in facts:
+                return facts[t]
+        return None
+
+    def done(parts, path):
+        parts = [p for p in parts if p is not None]
+        return sum((p[0] for p in parts), Decimal(0)), [p[1] for p in parts], path
+
+    all_in = pick(DEBT_ALL_IN)
+    if all_in is not None:
+        return done([all_in], "all_in")
+
+    short = pick(DEBT_SHORT_TERM)
+    incl = pick(DEBT_LTD_INCL_CURRENT)
+    noncurrent = pick(DEBT_LTD_NONCURRENT)
+    current_ltd = pick(DEBT_LTD_CURRENT)
+    debt_current = pick(DEBT_CURRENT_ALL)
+
+    incl_is_noncurrent = (
+        incl is not None
+        and noncurrent is not None
+        and incl[0] == noncurrent[0]
+        and ((current_ltd and current_ltd[0]) or (debt_current and debt_current[0]))
+    )
+    if incl is not None and not incl_is_noncurrent:
+        carrying = pick(DEBT_CARRYING_CHECK)
+        only_debt_current = (
+            debt_current is not None
+            and noncurrent is None
+            and current_ltd is None
+            and short is None
+        )
+        if (
+            only_debt_current
+            and carrying is not None
+            and abs(carrying[0] - (incl[0] + debt_current[0]))
+            <= abs(carrying[0]) * Decimal("0.01")
+        ):
+            return done([incl, debt_current], "ltd+debt_current_confirmed")
+        if short is not None and current_ltd is not None and short[0] == current_ltd[0]:
+            short = None
+        return done([incl, short], "ltd_incl_current+short_term")
+    if noncurrent is None and incl_is_noncurrent:
+        noncurrent = incl
+    if debt_current is not None:
+        return done([noncurrent, debt_current], "noncurrent+debt_current")
+    if noncurrent is not None or current_ltd is not None:
+        return done([noncurrent, current_ltd, short], "noncurrent+current+short_term")
+    lease_all_in = pick(DEBT_ALL_IN_LEASE)
+    if lease_all_in is not None:
+        return done([lease_all_in], "all_in_incl_leases")
+    return None
+
+
+def resolve_total_debt_components(
+    conn: psycopg.Connection, ciks: set[str], chunk_size: int = 200
+) -> dict:
+    """Writes total_debt_resolved for every instant period from core.fact
+    via compute_total_debt(). Bulk-loads one chunk of companies per query
+    (no per-row loop over core.fact). Companies with a total_debt
+    company_tag_preference are skipped -- their rows belong to
+    sanity/tag_investigator.resolve_company_tag_preferences(), the same
+    one-writer-per-company exemption the parser rows already get."""
+    stats = {
+        "companies": 0,
+        "skipped_preference": 0,
+        "rows_written": 0,
+        "errored": 0,
+        "paths": {},
+    }
+    resolved_id = _concept_id(conn, "total_debt_resolved")
+    total_debt_id = _concept_id(conn, "total_debt")
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select c.id from core.company c
+            where c.cik = any(%s)
+              and not exists (select 1 from analytics.company_tag_preference p
+                              where p.company_id = c.id and p.canonical_concept_id = %s)
+            order by c.id
+            """,
+            (list(ciks), total_debt_id),
+        )
+        company_ids = [r[0] for r in cur.fetchall()]
+        cur.execute(
+            "select count(*) from core.company where cik = any(%s)", (list(ciks),)
+        )
+        stats["skipped_preference"] = cur.fetchone()[0] - len(company_ids)
+
+    for i in range(0, len(company_ids), chunk_size):
+        chunk = company_ids[i : i + chunk_size]
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    select distinct on (f.company_id, f.period_id, c.tag)
+                           f.company_id, f.period_id, c.tag, f.value, f.id
+                    from core.fact f
+                    join core.concept c on c.id = f.concept_id
+                    join core.period p on p.id = f.period_id
+                    where f.company_id = any(%s) and f.is_authoritative
+                      and c.taxonomy = 'us-gaap' and c.tag = any(%s)
+                      and p.period_type = 'instant'
+                    order by f.company_id, f.period_id, c.tag, f.id desc
+                    """,
+                    (chunk, list(TOTAL_DEBT_TAGS)),
+                )
+                by_period: dict[tuple[int, int], dict] = {}
+                for company_id, period_id, tag, value, fact_id in cur.fetchall():
+                    by_period.setdefault((company_id, period_id), {})[tag] = (
+                        value,
+                        fact_id,
+                    )
+
+                rows = []
+                for (company_id, period_id), facts in by_period.items():
+                    result = compute_total_debt(facts)
+                    if result is None:
+                        continue
+                    value, fact_ids, path = result
+                    stats["paths"][path] = stats["paths"].get(path, 0) + 1
+                    rows.append((company_id, resolved_id, period_id, value, fact_ids))
+
+                cur.execute(
+                    "delete from analytics.canonical_fact where canonical_concept_id = %s and company_id = any(%s)",
+                    (resolved_id, chunk),
+                )
+                if rows:
+                    cur.executemany(
+                        "insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s, %s, %s, %s, %s)",
+                        rows,
+                    )
+            conn.commit()
+            stats["companies"] += len(chunk)
+            stats["rows_written"] += len(rows)
+        except Exception:
+            logger.warning(
+                "concept_fallback.total_debt_chunk_failed",
+                first_company_id=chunk[0],
+                exc_info=True,
+            )
+            stats["errored"] += len(chunk)
+            conn = safe_rollback(conn, stage="total_debt_components", cik=str(chunk[0]))
+    logger.info(
+        "concept_fallback.total_debt_done",
+        **{k: v for k, v in stats.items() if k != "paths"},
+        paths=stats["paths"],
+    )
     return stats
 
 

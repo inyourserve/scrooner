@@ -83,6 +83,15 @@ FIXABLE_CONCEPTS: dict[str, str] = {
     "total_debt": "total_debt_resolved",
 }
 
+# Concepts whose *_resolved baseline is owned by another writer that must
+# NOT be back-filled from the raw primary concept. total_debt_resolved is
+# built from core.fact by mapper/concept_fallback.resolve_total_debt_
+# components() (2026-09-27), which deliberately leaves a period blank when
+# the tags can't give a total; copying the raw sum-mode `total_debt` into
+# those blanks would put back the exact wrong values it replaced (Chevron
+# $0.4B). Preferred companies' own rows are still written here.
+NO_BASELINE_COPY = frozenset({"total_debt"})
+
 # How close a candidate tag's own value must land to the external
 # (yfinance) figure before being trusted as the fix, not just a lead.
 # Wider than the sanity check's own market_cap/trailing_pe thresholds --
@@ -459,8 +468,9 @@ def resolve_company_tag_preferences(
                 "preferred_ids": preferred_company_ids or [-1],
             },
         )
-        cur.execute(
-            """
+        if concept_name not in NO_BASELINE_COPY:
+            cur.execute(
+                """
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
             select company_id, %(resolved_id)s, period_id, value, source_fact_ids
             from analytics.canonical_fact
@@ -468,12 +478,12 @@ def resolve_company_tag_preferences(
               and company_id != all(%(preferred_ids)s)
             on conflict (company_id, canonical_concept_id, period_id) do nothing
             """,
-            {
-                "resolved_id": resolved_id,
-                "primary_id": primary_id,
-                "preferred_ids": preferred_company_ids or [-1],
-            },
-        )
+                {
+                    "resolved_id": resolved_id,
+                    "primary_id": primary_id,
+                    "preferred_ids": preferred_company_ids or [-1],
+                },
+            )
 
         for company_id, taxonomy, tag in preferences:
             facts = _load_all_facts_for_tag(conn, company_id, taxonomy, tag)

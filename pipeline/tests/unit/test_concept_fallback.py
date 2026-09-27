@@ -1,10 +1,12 @@
 from datetime import date
+from decimal import Decimal
 from unittest.mock import MagicMock
 
 import pytest
 
 from scrooner_pipeline.mapper.concept_fallback import (
     _find_or_create_instant_period,
+    compute_total_debt,
     resolve_arithmetic_fallback,
     resolve_fallback_for_company,
 )
@@ -219,3 +221,91 @@ class TestResolveArithmeticFallbackParserExclusion:
         count = resolve_arithmetic_fallback(conn, resolved_id=1, primary_id=2, minuend_id=3, subtrahend_id=4, guard_min_value=0)
         assert count == 5
         conn.commit.assert_called_once()
+
+
+def _debt(**tags):
+    """tag -> (value, fact_id); fact ids are just 1..n in argument order."""
+    return {
+        tag: (Decimal(str(value)), i) for i, (tag, value) in enumerate(tags.items(), 1)
+    }
+
+
+@pytest.mark.unit
+class TestComputeTotalDebt:
+    """Real tag combinations (values in $M) from live core.fact, 2026-09-27."""
+
+    def test_chevron_long_term_incl_current_plus_short_term(self):
+        # Chevron 2026-06-30: old sum-mode total_debt returned only the $401M
+        # ShortTermBorrowings; its real long-term debt sits under the
+        # IncludingCurrentMaturities tag.
+        value, ids, path = compute_total_debt(
+            _debt(
+                LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities=36674,
+                ShortTermBorrowings=401,
+            )
+        )
+        assert value == Decimal("37075")
+        assert ids == [1, 2]
+        assert path == "ltd_incl_current+short_term"
+
+    def test_debt_current_not_added_on_top_of_short_term(self):
+        # The double count behind Chevron 2025-12-31's old $11.9B (DebtCurrent
+        # $10.918B + ShortTermBorrowings $977M): DebtCurrent already contains
+        # short-term borrowings. Noncurrent figure here is illustrative.
+        value, _, path = compute_total_debt(
+            _debt(LongTermDebtNoncurrent=28863, DebtCurrent=10918, ShortTermBorrowings=977)
+        )
+        assert value == Decimal("39781")
+        assert path == "noncurrent+debt_current"
+
+    def test_company_stated_all_in_total_wins(self):
+        # Zapata AI 2025-09-30: DebtLongtermAndShorttermCombinedAmount matched yfinance.
+        value, _, path = compute_total_debt(
+            _debt(LongTermDebt=1.234, DebtCurrent=3.037, DebtLongtermAndShorttermCombinedAmount=4.271)
+        )
+        assert value == Decimal("4.271")
+        assert path == "all_in"
+
+    def test_long_term_debt_used_as_noncurrent_gets_current_added(self):
+        # Cheniere 2026-06-30: LongTermDebt == LongTermDebtNoncurrent, so it
+        # excludes current maturities (no combined tag in this variant).
+        value, _, path = compute_total_debt(
+            _debt(LongTermDebt=22632, LongTermDebtNoncurrent=22632, LongTermDebtCurrent=1411, DebtCurrent=1411)
+        )
+        assert value == Decimal("24043")
+        assert path == "noncurrent+debt_current"
+
+    def test_short_term_equal_to_current_ltd_not_double_counted(self):
+        # Boxlight 2026-06-30: one $34.1M loan tagged as LTD, STB and LTD current.
+        value, _, _ = compute_total_debt(
+            _debt(LongTermDebt=34.129, ShortTermBorrowings=34.129, LongTermDebtCurrent=34.129, LongTermDebtNoncurrent=0)
+        )
+        assert value == Decimal("34.129")
+
+    def test_ambiguous_ltd_plus_debt_current_does_not_guess(self):
+        # Tesla 2025-12-31: 50/50 in the population whether LongTermDebt
+        # excludes current, so DebtCurrent is not added.
+        value, _, path = compute_total_debt(_debt(LongTermDebt=6584, DebtCurrent=1569))
+        assert value == Decimal("6584")
+        assert path == "ltd_incl_current+short_term"
+
+    def test_split_only(self):
+        value, _, path = compute_total_debt(
+            _debt(LongTermDebtNoncurrent=900, LongTermDebtCurrent=100, CommercialPaper=50)
+        )
+        assert value == Decimal("1050")
+        assert path == "noncurrent+current+short_term"
+
+    def test_ambiguous_case_confirmed_by_carrying_amount(self):
+        # Tesla 2026-06-30: DebtInstrumentCarryingAmount 9.080 == 7.721 + 1.340.
+        value, ids, path = compute_total_debt(
+            _debt(LongTermDebt=7.721, DebtCurrent=1.340, DebtInstrumentCarryingAmount=9.080)
+        )
+        assert value == Decimal("9.061")
+        assert ids == [1, 2]  # carrying amount is a check, never a source
+        assert path == "ltd+debt_current_confirmed"
+
+    def test_short_term_only_is_not_a_total(self):
+        # T-Mobile 2026-06-30: only ShortTermBorrowings in Company Facts.
+        assert compute_total_debt(_debt(ShortTermBorrowings=6117)) is None
+        assert compute_total_debt({}) is None

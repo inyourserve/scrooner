@@ -39,6 +39,7 @@ from scrooner_pipeline.mapper.coverage_matrix import (
     corrected_coverage_report,
 )
 from scrooner_pipeline.mapper.tag_candidates import build_tag_candidates, report_status
+from scrooner_pipeline.mapper.tag_library import build_tag_library, gap_tags
 from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
@@ -641,6 +642,53 @@ def tag_candidate_report_cmd() -> None:
         )
         typer.echo(
             f"{row['concept']:<32} {row['coverage_pct']:>5}%  {row['status']:<28} top candidate: {top}"
+        )
+
+
+@app.command("build-tag-library")
+def build_tag_library_cmd(
+    ciks: str = typer.Option(
+        None,
+        help="Comma-separated CIKs to restrict to (default: every company with facts).",
+    ),
+    stages: str = typer.Option(
+        None,
+        help="Comma-separated subset of company_tags,library,lineage (default: all).",
+    ),
+) -> None:
+    """2026-09-27: the SEC Tag Library (migration 0077) -- every tag x every
+    company (analytics.company_sec_tag), tag -> concepts/metrics
+    (analytics.sec_tag_library), and company x concept -> the source tag
+    behind our value (analytics.company_concept_lineage). See
+    mapper/tag_library.py. Run after resolve-facts/build-coverage-matrix/
+    build-tag-candidates so lineage reflects the current values."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else None
+    target_stages = {s.strip() for s in stages.split(",")} if stages else None
+    with get_connection() as conn:
+        stats = build_tag_library(conn, target_ciks, target_stages)
+    typer.echo(f"tag-library: {stats}")
+
+
+@app.command("gap-tags")
+def gap_tags_cmd(
+    concept: str = typer.Argument(
+        ..., help="Canonical concept name, e.g. total_debt_resolved."
+    ),
+    limit: int = typer.Option(30, help="Max tags to print."),
+    period_type: str = typer.Option(
+        None, help="instant or duration (filters by the tag's latest fact)."
+    ),
+) -> None:
+    """For active companies MISSING `concept`, every tag they file ranked by
+    how many of them file it -- the lead list for the next mapping fix.
+    Leads only: coexistence-check before any concept_mapping change."""
+    with get_connection() as conn:
+        rows = gap_tags(conn, concept, limit=limit, period_type=period_type)
+    if rows:
+        typer.echo(f"{rows[0]['missing_total']} active companies missing {concept}")
+    for r in rows:
+        typer.echo(
+            f"  {r['missing_companies_filing']:>5}  {r['tag']:<75} {r['status']:<18} {','.join(r['mapped_concepts'])}"
         )
 
 
