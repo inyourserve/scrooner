@@ -19,10 +19,14 @@ class CaptureCursor:
     def executemany(self, sql, rows):
         self.conn.batches.append((" ".join(sql.split()), [dict(row) for row in rows]))
 
+    def execute(self, sql, params=None):
+        self.conn.statements.append((" ".join(sql.split()), params))
+
 
 class CaptureConnection:
     def __init__(self):
         self.batches = []
+        self.statements = []
         self.commits = 0
 
     def cursor(self):
@@ -59,6 +63,7 @@ def duration_row(fact_id, value, fiscal_period, start, end, *, concept_id=10, un
 def _no_nine_month_ytd_by_default(monkeypatch):
     """Existing chain tests have no 9-month YTD facts; the fallback tests below override this."""
     monkeypatch.setattr(derived, "_load_nine_month_ytd", lambda _conn, _company: {})
+    monkeypatch.setattr(derived, "_load_authoritative_reported_quarters", lambda _conn, _company: {})
 
 
 @pytest.mark.unit
@@ -84,7 +89,7 @@ def test_q4_is_derived_exactly_from_complete_discrete_quarters(monkeypatch):
 
     stats = derived.derive_q4_for_company(conn, 1)
 
-    assert stats == {"candidate_groups": 1, "derived": 1, "derived_from_ytd": 0, "already_reported": 0, "incomplete": 0}
+    assert stats == {"candidate_groups": 1, "derived": 1, "derived_from_ytd": 0, "already_reported": 0, "replaced_full_year_q4": 0, "incomplete": 0}
     assert conn.fact_rows[0]["period_id"] == 404
     assert conn.fact_rows[0]["value"] == Decimal("45")
     assert conn.fact_rows[0]["filing_id"] == 1001
@@ -284,3 +289,41 @@ def test_interim_derivation_is_logically_repeatable(monkeypatch):
 
     assert second_stats == first_stats
     assert second.fact_rows == first.fact_rows
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(("reported_value", "replaced"), [("120", True), ("75", False)])
+def test_reported_q4_carrying_the_full_year_value_is_replaced(monkeypatch, reported_value, replaced):
+    # NiSource-shaped: the 10-K tags the FY total with a Q4 context.
+    fy_start, fy_end = date(2025, 1, 1), date(2025, 12, 31)
+    rows = [
+        duration_row(1, "120", "FY", fy_start, fy_end),
+        duration_row(2, "20", "Q1", fy_start, date(2025, 3, 31)),
+        duration_row(3, "25", "Q2", date(2025, 4, 1), date(2025, 6, 30)),
+        duration_row(4, "30", "Q3", date(2025, 7, 1), date(2025, 9, 30)),
+    ]
+    q4_key = (date(2025, 10, 1), fy_end)
+    monkeypatch.setattr(derived, "_load_quarterly_candidates", lambda _conn, _company: rows)
+    monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {q4_key: 404})
+    monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: {(10, 1, *q4_key)})
+    monkeypatch.setattr(
+        derived,
+        "_load_authoritative_reported_quarters",
+        lambda _conn, _company: {(10, 1, *q4_key): [(99, Decimal(reported_value))]},
+    )
+    conn = CaptureConnection()
+
+    stats = derived.derive_q4_for_company(conn, 1)
+
+    if replaced:
+        assert stats["replaced_full_year_q4"] == 1 and stats["already_reported"] == 0
+        assert conn.statements[0][1] == ([99],)
+        assert conn.fact_rows[0]["value"] == Decimal("45")
+    else:
+        assert stats["already_reported"] == 1
+        assert conn.statements == [] and conn.fact_rows == []
+
+
+@pytest.mark.unit
+def test_full_year_q4_is_kept_when_first_three_quarters_are_zero():
+    assert derived._mistagged_full_year_q4([(1, Decimal("5"))], Decimal("5"), Decimal("0")) == []

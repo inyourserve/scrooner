@@ -156,6 +156,46 @@ def _load_reported_duration_keys(
         return set(cur.fetchall())
 
 
+def _load_authoritative_reported_quarters(
+    conn: psycopg.Connection, company_id: int
+) -> dict[tuple, list[tuple]]:
+    """(concept_id, unit_id, start_date, end_date) -> [(fact_id, value)] for
+    authoritative, REPORTED Q4 duration facts. Used to spot a filed "Q4"
+    that actually carries the full-year value."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select f.concept_id, f.unit_id, p.start_date, p.end_date, f.id, f.value
+            from core.fact f
+            join core.period p on p.id = f.period_id
+            where f.company_id = %s and p.period_type = 'duration'
+              and f.is_derived = false and f.is_authoritative
+              and p.fiscal_period = 'Q4'
+            """,
+            (company_id,),
+        )
+        out: dict[tuple, list[tuple]] = {}
+        for concept_id, unit_id, start, end, fact_id, value in cur.fetchall():
+            out.setdefault((concept_id, unit_id, start, end), []).append(
+                (fact_id, value)
+            )
+        return out
+
+
+def _mistagged_full_year_q4(
+    reported: list[tuple], fy_value, first_three_quarters
+) -> list[int]:
+    """Fact ids of a reported Q4 that is really the full-year figure: its
+    value equals FY while Q1-Q3 are non-zero, so the true Q4 can't equal FY.
+    Found 2026-09-27: 95 companies' own 10-Ks tag the annual value with a
+    Q4 context (L3Harris $21.3B, NiSource $6.5B "Q4" revenue)."""
+    if not reported or first_three_quarters == 0:
+        return []
+    if all(value == fy_value for _fact_id, value in reported):
+        return [fact_id for fact_id, _value in reported]
+    return []
+
+
 def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
     rows = _load_quarterly_candidates(conn, company_id)
     groups: dict[tuple, dict] = {}
@@ -183,6 +223,7 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
 
     existing_periods = _load_existing_periods(conn, company_id)
     reported_keys = _load_reported_duration_keys(conn, company_id)
+    reported_q4 = _load_authoritative_reported_quarters(conn, company_id)
     nine_month_ytd = _load_nine_month_ytd(conn, company_id)
 
     stats = {
@@ -190,12 +231,14 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
         "derived": 0,
         "derived_from_ytd": 0,
         "already_reported": 0,
+        "replaced_full_year_q4": 0,
         "incomplete": 0,
     }
     new_periods: list[
         tuple
     ] = []  # (start, end, fiscal_year) -- may contain duplicates across concepts, deduped below
     to_derive: list[dict] = []
+    demote_fact_ids: list[int] = []
 
     for (concept_id, unit_id, fiscal_year), by_period in groups.items():
         fy = by_period.get("FY")
@@ -237,9 +280,16 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
 
         q4_start, q4_end, first_three_quarters = chain
 
-        if (concept_id, unit_id, q4_start, q4_end) in reported_keys:
-            stats["already_reported"] += 1
-            continue
+        key = (concept_id, unit_id, q4_start, q4_end)
+        if key in reported_keys:
+            bad = _mistagged_full_year_q4(
+                reported_q4.get(key, []), fy["value"], first_three_quarters
+            )
+            if not bad:
+                stats["already_reported"] += 1
+                continue
+            demote_fact_ids.extend(bad)
+            stats["replaced_full_year_q4"] += 1
 
         if (q4_start, q4_end) not in existing_periods:
             new_periods.append((q4_start, q4_end, fiscal_year))
@@ -278,6 +328,16 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
         conn.commit()
         existing_periods = _load_existing_periods(conn, company_id)
 
+    if demote_fact_ids:
+        # Kept, not deleted: the filed value stays inspectable, it just stops
+        # being the authoritative Q4.
+        with conn.cursor() as cur:
+            cur.execute(
+                "update core.fact set is_authoritative = false where id = any(%s)",
+                (demote_fact_ids,),
+            )
+        conn.commit()
+
     if to_derive:
         rows_to_insert = [
             {
@@ -299,7 +359,7 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
                 values
                     (%(company_id)s, %(concept_id)s, %(unit_id)s, %(period_id)s, %(filing_id)s, %(value)s, true, true, %(raw_object_id)s)
                 on conflict (company_id, concept_id, unit_id, period_id, filing_id) do update
-                    set value = excluded.value, is_derived = true
+                    set value = excluded.value, is_derived = true, is_authoritative = true
                 """,
                 rows_to_insert,
             )
