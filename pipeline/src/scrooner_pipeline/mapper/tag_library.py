@@ -121,10 +121,16 @@ mapping as (
     group by 1
 ),
 pref as (
+    -- tags is jsonb: [{"tag": ..., "taxonomy": ...}]; older rows only have tag/taxonomy
     select distinct c.id as concept_id
     from analytics.company_tag_preference p
-    cross join lateral unnest(coalesce(p.tags, array[p.tag])) as t(tag)
-    join core.concept c on c.taxonomy = p.taxonomy and c.tag = t.tag
+    cross join lateral (
+        select e ->> 'taxonomy' as taxonomy, e ->> 'tag' as tag
+        from jsonb_array_elements(coalesce(p.tags, '[]'::jsonb)) as e
+        union
+        select p.taxonomy, p.tag
+    ) as t
+    join core.concept c on c.taxonomy = t.taxonomy and c.tag = t.tag
 ),
 cand as (
     select c.id as concept_id, array_agg(distinct cc.name order by cc.name) as concepts

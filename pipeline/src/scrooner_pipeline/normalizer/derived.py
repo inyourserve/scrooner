@@ -50,6 +50,9 @@ logger = structlog.get_logger()
 # thing in both places.
 HALF_YEAR_MIN_DAYS, HALF_YEAR_MAX_DAYS = 170, 200
 THREE_QUARTER_MIN_DAYS, THREE_QUARTER_MAX_DAYS = 260, 290
+# A derived Q4 span must itself look like one quarter (13-14 weeks, with
+# slack for 52/53-week calendars).
+Q4_MIN_DAYS, Q4_MAX_DAYS = 80, 100
 
 
 def _load_quarterly_candidates(
@@ -70,6 +73,56 @@ def _load_quarterly_candidates(
             (company_id,),
         )
         return cur.fetchall()
+
+
+def _load_nine_month_ytd(
+    conn: psycopg.Connection, company_id: int
+) -> dict[tuple, list]:
+    """(concept_id, unit_id, start_date) -> [(end_date, value)] for every
+    authoritative, unlabeled ~9-month cumulative (YTD) duration fact. The Q3
+    10-Q reports this "nine months ended" figure alongside the discrete
+    quarter; periods.py correctly leaves it unlabeled (it isn't a quarter)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select f.concept_id, f.unit_id, p.start_date, p.end_date, f.value
+            from core.fact f
+            join core.period p on p.id = f.period_id
+            where f.company_id = %s
+              and f.is_authoritative
+              and p.period_type = 'duration'
+              and p.fiscal_period is null
+              and (p.end_date - p.start_date) between %s and %s
+            """,
+            (company_id, THREE_QUARTER_MIN_DAYS, THREE_QUARTER_MAX_DAYS),
+        )
+        out: dict[tuple, list] = {}
+        for concept_id, unit_id, start, end, value in cur.fetchall():
+            out.setdefault((concept_id, unit_id, start), []).append((end, value))
+        return out
+
+
+def _q4_from_nine_month_ytd(fy: dict, nine_month: list) -> tuple | None:
+    """FY - 9-month YTD, when the YTD shares the fiscal year's start and
+    leaves a quarter-length remainder. Returns (q4_start, q4_end, ytd_value)
+    or None. Used only when the Q1+Q2+Q3 chain isn't available -- a single
+    cumulative figure from the Q3 10-Q, rather than three separately
+    filed quarters that must all be present, authoritative and contiguous."""
+    candidates = [
+        (end, value)
+        for end, value in nine_month
+        if end < fy["end_date"]
+        and Q4_MIN_DAYS <= (fy["end_date"] - end).days <= Q4_MAX_DAYS
+    ]
+    if not candidates:
+        return None
+    ends = {end for end, _ in candidates}
+    if len(ends) != 1:
+        return None  # ambiguous: more than one 9-month span for this FY
+    end, value = candidates[0]
+    if len({v for _, v in candidates}) != 1:
+        return None  # disagreeing authoritative values -- don't pick one
+    return end + timedelta(days=1), fy["end_date"], value
 
 
 def _load_existing_periods(
@@ -130,10 +183,12 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
 
     existing_periods = _load_existing_periods(conn, company_id)
     reported_keys = _load_reported_duration_keys(conn, company_id)
+    nine_month_ytd = _load_nine_month_ytd(conn, company_id)
 
     stats = {
         "candidate_groups": len(groups),
         "derived": 0,
+        "derived_from_ytd": 0,
         "already_reported": 0,
         "incomplete": 0,
     }
@@ -143,35 +198,44 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
     to_derive: list[dict] = []
 
     for (concept_id, unit_id, fiscal_year), by_period in groups.items():
-        if not all(k in by_period for k in ("FY", "Q1", "Q2", "Q3")):
+        fy = by_period.get("FY")
+        chain = None
+        if fy is not None and all(k in by_period for k in ("Q1", "Q2", "Q3")):
+            q1, q2, q3 = by_period["Q1"], by_period["Q2"], by_period["Q3"]
+            # Labels alone are not sufficient evidence that subtraction is
+            # valid. A malformed or unusually tagged filing can place a
+            # Q1/Q2/Q3 label on spans with gaps, overlaps, or dates outside
+            # the matching fiscal year. Only derive when the four duration
+            # contexts form one contiguous, nested fiscal-year partition.
+            # Unit comparability is already enforced by the grouping key.
+            if (
+                q1["start_date"] == fy["start_date"]
+                and q2["start_date"] == q1["end_date"] + timedelta(days=1)
+                and q3["start_date"] == q2["end_date"] + timedelta(days=1)
+                and q3["end_date"] < fy["end_date"]
+            ):
+                chain = (
+                    q3["end_date"] + timedelta(days=1),
+                    fy["end_date"],
+                    q1["value"] + q2["value"] + q3["value"],
+                )
+
+        # Fallback (2026-09-27): FY - 9-month YTD. The Q1+Q2+Q3 chain needs
+        # three separate authoritative, contiguous quarters; 1,326 recent
+        # company-years (1,017 companies, net income alone) had a FY and a
+        # 9-month YTD from the Q3 10-Q but no Q4, which left their TTM
+        # figures (margins, P/E, FCF yield) blank or a year stale.
+        via_ytd = False
+        if chain is None and fy is not None:
+            ytd = nine_month_ytd.get((concept_id, unit_id, fy["start_date"]))
+            if ytd:
+                chain = _q4_from_nine_month_ytd(fy, ytd)
+                via_ytd = chain is not None
+        if chain is None:
             stats["incomplete"] += 1
             continue
 
-        fy, q1, q2, q3 = (
-            by_period["FY"],
-            by_period["Q1"],
-            by_period["Q2"],
-            by_period["Q3"],
-        )
-
-        # Labels alone are not sufficient evidence that subtraction is
-        # valid. A malformed or unusually tagged filing can place a Q1/Q2/Q3
-        # label on spans with gaps, overlaps, or dates outside the matching
-        # fiscal year. Only derive when the four duration contexts form one
-        # contiguous, nested fiscal-year partition. Unit comparability is
-        # already enforced by the grouping key above.
-        contexts_are_comparable = (
-            q1["start_date"] == fy["start_date"]
-            and q2["start_date"] == q1["end_date"] + timedelta(days=1)
-            and q3["start_date"] == q2["end_date"] + timedelta(days=1)
-            and q3["end_date"] < fy["end_date"]
-        )
-        if not contexts_are_comparable:
-            stats["incomplete"] += 1
-            continue
-
-        q4_start = q3["end_date"] + timedelta(days=1)
-        q4_end = fy["end_date"]
+        q4_start, q4_end, first_three_quarters = chain
 
         if (concept_id, unit_id, q4_start, q4_end) in reported_keys:
             stats["already_reported"] += 1
@@ -186,11 +250,13 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
                 "unit_id": unit_id,
                 "start": q4_start,
                 "end": q4_end,
-                "value": fy["value"] - q1["value"] - q2["value"] - q3["value"],
+                "value": fy["value"] - first_three_quarters,
                 "filing_id": fy["filing_id"],
                 "raw_object_id": fy["raw_object_id"],
             }
         )
+        if via_ytd:
+            stats["derived_from_ytd"] += 1
 
     # Insert any new Q4 periods first (deduped -- several concepts share the
     # same company-wide Q4 span), one round trip, then fold the new ids into
@@ -258,6 +324,7 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
         "errored": 0,
         "candidate_groups": 0,
         "derived": 0,
+        "derived_from_ytd": 0,
         "already_reported": 0,
         "incomplete": 0,
     }
@@ -274,7 +341,13 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
             log_error(conn, "core.normalizer_error", cik, "derive_q4", exc)
             continue
         totals["ok"] += 1
-        for k in ("candidate_groups", "derived", "already_reported", "incomplete"):
+        for k in (
+            "candidate_groups",
+            "derived",
+            "derived_from_ytd",
+            "already_reported",
+            "incomplete",
+        ):
             totals[k] += stats[k]
 
     logger.info("derived.q4.done", **totals)

@@ -55,6 +55,12 @@ def duration_row(fact_id, value, fiscal_period, start, end, *, concept_id=10, un
     )
 
 
+@pytest.fixture(autouse=True)
+def _no_nine_month_ytd_by_default(monkeypatch):
+    """Existing chain tests have no 9-month YTD facts; the fallback tests below override this."""
+    monkeypatch.setattr(derived, "_load_nine_month_ytd", lambda _conn, _company: {})
+
+
 @pytest.mark.unit
 def test_q4_is_derived_exactly_from_complete_discrete_quarters(monkeypatch):
     fy_start = date(2024, 9, 29)
@@ -78,7 +84,7 @@ def test_q4_is_derived_exactly_from_complete_discrete_quarters(monkeypatch):
 
     stats = derived.derive_q4_for_company(conn, 1)
 
-    assert stats == {"candidate_groups": 1, "derived": 1, "already_reported": 0, "incomplete": 0}
+    assert stats == {"candidate_groups": 1, "derived": 1, "derived_from_ytd": 0, "already_reported": 0, "incomplete": 0}
     assert conn.fact_rows[0]["period_id"] == 404
     assert conn.fact_rows[0]["value"] == Decimal("45")
     assert conn.fact_rows[0]["filing_id"] == 1001
@@ -131,6 +137,77 @@ def test_q4_refuses_non_contiguous_or_non_nested_quarters(monkeypatch):
 
     assert stats["derived"] == 0
     assert stats["incomplete"] == 1
+    assert conn.fact_rows == []
+
+
+def _ytd_setup(monkeypatch, rows, ytd, q4_key):
+    monkeypatch.setattr(derived, "_load_quarterly_candidates", lambda _conn, _company: rows)
+    monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {q4_key: 404})
+    monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: set())
+    monkeypatch.setattr(derived, "_load_nine_month_ytd", lambda _conn, _company: ytd)
+
+
+@pytest.mark.unit
+def test_q4_falls_back_to_fy_minus_nine_month_ytd(monkeypatch):
+    # IMA/FCCN shape: FY + discrete Q3 + a 9-month YTD from the Q3 10-Q,
+    # but no Q1/Q2 -- the chain can't run, FY - YTD can.
+    fy_start, q3_end, fy_end = date(2025, 1, 1), date(2025, 9, 30), date(2025, 12, 31)
+    rows = [
+        duration_row(1, "-45349", "FY", fy_start, fy_end),
+        duration_row(2, "-24779", "Q3", date(2025, 7, 1), q3_end),
+    ]
+    q4_key = (date(2025, 10, 1), fy_end)
+    _ytd_setup(monkeypatch, rows, {(10, 1, fy_start): [(q3_end, Decimal("-38441"))]}, q4_key)
+    conn = CaptureConnection()
+
+    stats = derived.derive_q4_for_company(conn, 1)
+
+    assert stats["derived"] == 1 and stats["derived_from_ytd"] == 1
+    assert conn.fact_rows[0]["value"] == Decimal("-6908")
+    assert conn.fact_rows[0]["period_id"] == 404
+
+
+@pytest.mark.unit
+def test_complete_chain_wins_over_ytd(monkeypatch):
+    fy_start, fy_end = date(2024, 9, 29), date(2025, 9, 27)
+    rows = [
+        duration_row(1, "120", "FY", fy_start, fy_end),
+        duration_row(2, "20", "Q1", fy_start, date(2024, 12, 28)),
+        duration_row(3, "25", "Q2", date(2024, 12, 29), date(2025, 3, 29)),
+        duration_row(4, "30", "Q3", date(2025, 3, 30), date(2025, 6, 28)),
+    ]
+    q4_key = (date(2025, 6, 29), fy_end)
+    _ytd_setup(monkeypatch, rows, {(10, 1, fy_start): [(date(2025, 6, 28), Decimal("99"))]}, q4_key)
+    conn = CaptureConnection()
+
+    stats = derived.derive_q4_for_company(conn, 1)
+
+    assert stats["derived_from_ytd"] == 0
+    assert conn.fact_rows[0]["value"] == Decimal("45")
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "ytd",
+    [
+        # YTD starts on a different date than the fiscal year
+        {(10, 1, date(2025, 2, 1)): [(date(2025, 9, 30), Decimal("-38441"))]},
+        # remainder is not quarter-length (YTD ends a month early)
+        {(10, 1, date(2025, 1, 1)): [(date(2025, 8, 31), Decimal("-38441"))]},
+        # two authoritative YTD values disagree
+        {(10, 1, date(2025, 1, 1)): [(date(2025, 9, 30), Decimal("-38441")), (date(2025, 9, 30), Decimal("-38000"))]},
+    ],
+    ids=["wrong_start", "not_quarter_length", "disagreeing_values"],
+)
+def test_ytd_fallback_refuses_unsafe_inputs(monkeypatch, ytd):
+    fy_start, fy_end = date(2025, 1, 1), date(2025, 12, 31)
+    rows = [duration_row(1, "-45349", "FY", fy_start, fy_end)]
+    _ytd_setup(monkeypatch, rows, ytd, (date(2025, 10, 1), fy_end))
+    conn = CaptureConnection()
+
+    stats = derived.derive_q4_for_company(conn, 1)
+
+    assert stats["derived"] == 0 and stats["incomplete"] == 1
     assert conn.fact_rows == []
 
 
