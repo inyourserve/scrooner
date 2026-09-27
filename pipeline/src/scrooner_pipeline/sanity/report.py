@@ -6,7 +6,8 @@ Deliberately does not judge the pipeline's overall health from a single
 number -- returns the breakdown by severity AND the worst individual rows,
 since a CI job (.github/workflows/pipeline-sanity.yml) wants both: a
 GITHUB_STEP_SUMMARY-friendly table, and a decision of whether to fail the
-job (any 'critical' row, or more than a small number of 'major' rows)."""
+job (when critical/major counts regress against the last passing run's
+baseline -- see find_regressions())."""
 
 import psycopg
 
@@ -229,18 +230,97 @@ def render_markdown(summary: dict) -> str:
     return "\n".join(lines)
 
 
-def should_fail_ci(summary: dict, max_major: int = 10) -> bool:
-    """A single 'critical' row (the revenue-resolves-to-$0 shape, or any
-    future check of similar severity) always fails the job -- these are
-    named, specific, already-understood failure modes, not noise. 'major'
-    rows only fail past a small count, since some real, expected drift
-    (Alpaca delayed-SIP price vs. Yahoo's own feed, mid-batch during a
-    volatile trading day) will occasionally cross the major threshold for
-    a handful of companies without indicating a real pipeline bug."""
-    critical_count = sum(
-        counts.get("critical", 0) for counts in summary["by_metric_severity"].values()
-    )
-    major_count = sum(
-        counts.get("major", 0) for counts in summary["by_metric_severity"].values()
-    )
-    return critical_count > 0 or major_count > max_major
+# Rows are re-checked in rotating batches (`run --limit`), so severity
+# counts drift a little between runs even when nothing regressed. Criticals
+# get zero tolerance; majors may rise by the larger of these before failing.
+MAJOR_TOLERANCE_MIN = 25
+MAJOR_TOLERANCE_PCT = 5.0
+
+
+def _major_tolerance(baseline_count: int) -> int:
+    return max(MAJOR_TOLERANCE_MIN, int(baseline_count * MAJOR_TOLERANCE_PCT / 100))
+
+
+def find_regressions(
+    summary: dict, baseline: dict[str, dict[str, int]] | None
+) -> list[str]:
+    """Compares current severity counts against the last passing run's
+    baseline (analytics.data_sanity_gate_baseline) and returns one line per
+    regression; an empty list means the gate passes. No baseline yet means
+    nothing to regress from -- the first run just establishes one.
+
+    Replaced a fixed "any critical or >10 major" threshold (2026-09-27): the
+    existing backlog (~18,000 major rows) meant that gate could never pass,
+    so it carried no signal. Fails on: any increase in total criticals, a
+    critical in a metric that had none, or majors rising past the rotation
+    tolerance -- in total or for any single metric."""
+    if baseline is None:
+        return []
+
+    def total(counts: dict[str, dict[str, int]], severity: str) -> int:
+        return sum(c.get(severity, 0) for c in counts.values())
+
+    current = summary["by_metric_severity"]
+    regressions: list[str] = []
+
+    now_critical, was_critical = total(current, "critical"), total(baseline, "critical")
+    if now_critical > was_critical:
+        regressions.append(f"critical: {was_critical} -> {now_critical}")
+    for metric, counts in sorted(current.items()):
+        if (
+            counts.get("critical", 0) > 0
+            and baseline.get(metric, {}).get("critical", 0) == 0
+        ):
+            regressions.append(
+                f"{metric}: new critical findings ({counts['critical']})"
+            )
+
+    now_major, was_major = total(current, "major"), total(baseline, "major")
+    if now_major - was_major > _major_tolerance(was_major):
+        regressions.append(f"major (all metrics): {was_major} -> {now_major}")
+    for metric, counts in sorted(current.items()):
+        was = baseline.get(metric, {}).get("major", 0)
+        now = counts.get("major", 0)
+        if now - was > _major_tolerance(was):
+            regressions.append(f"{metric} major: {was} -> {now}")
+
+    return regressions
+
+
+def load_baseline(conn: psycopg.Connection) -> dict[str, dict[str, int]] | None:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select metric_name, severity, count
+            from analytics.data_sanity_gate_baseline
+            where recorded_at = (select max(recorded_at) from analytics.data_sanity_gate_baseline)
+            """
+        )
+        rows = cur.fetchall()
+    if not rows:
+        return None
+    baseline: dict[str, dict[str, int]] = {}
+    for metric_name, severity, count in rows:
+        baseline.setdefault(metric_name, {})[severity] = count
+    return baseline
+
+
+def record_baseline(conn: psycopg.Connection, summary: dict) -> None:
+    """One batched insert, all rows sharing a single recorded_at."""
+    rows = [
+        (metric_name, severity, count)
+        for metric_name, counts in summary["by_metric_severity"].items()
+        for severity, count in counts.items()
+    ]
+    with conn.cursor() as cur:
+        cur.execute("select now()")
+        (recorded_at,) = cur.fetchone()
+        cur.executemany(
+            """
+            insert into analytics.data_sanity_gate_baseline
+                (recorded_at, metric_name, severity, count)
+            values (%s, %s, %s, %s)
+            """,
+            [(recorded_at, *row) for row in rows],
+        )
+    conn.commit()

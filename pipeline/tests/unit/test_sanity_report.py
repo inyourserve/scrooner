@@ -1,6 +1,6 @@
 import pytest
 
-from scrooner_pipeline.sanity.report import render_markdown, should_fail_ci
+from scrooner_pipeline.sanity.report import find_regressions, render_markdown
 
 
 def _summary(by_metric_severity):
@@ -14,22 +14,46 @@ def _summary(by_metric_severity):
 
 
 @pytest.mark.unit
-class TestShouldFailCi:
-    def test_any_critical_fails(self):
-        summary = _summary({"revenue_zero_check": {"critical": 1}})
-        assert should_fail_ci(summary) is True
+class TestFindRegressions:
+    def test_no_baseline_never_fails(self):
+        summary = _summary({"revenue_zero_check": {"critical": 14}, "roa": {"major": 2000}})
+        assert find_regressions(summary, None) == []
 
-    def test_few_majors_do_not_fail(self):
-        summary = _summary({"market_cap": {"major": 3}})
-        assert should_fail_ci(summary, max_major=10) is False
+    def test_existing_backlog_at_baseline_passes(self):
+        counts = {"revenue_zero_check": {"critical": 14}, "roa": {"major": 2000}}
+        assert find_regressions(_summary(counts), counts) == []
 
-    def test_many_majors_fail(self):
-        summary = _summary({"market_cap": {"major": 11}})
-        assert should_fail_ci(summary, max_major=10) is True
+    def test_any_critical_increase_fails(self):
+        baseline = {"revenue_zero_check": {"critical": 14}}
+        summary = _summary({"revenue_zero_check": {"critical": 15}})
+        assert find_regressions(summary, baseline) == ["critical: 14 -> 15"]
 
-    def test_clean_summary_does_not_fail(self):
-        summary = _summary({"market_cap": {"ok": 100}})
-        assert should_fail_ci(summary) is False
+    def test_critical_in_new_metric_fails_even_if_total_flat(self):
+        baseline = {"revenue_zero_check": {"critical": 2}}
+        summary = _summary({"revenue_zero_check": {"critical": 1}, "market_cap": {"critical": 1}})
+        assert find_regressions(summary, baseline) == ["market_cap: new critical findings (1)"]
+
+    def test_major_rotation_noise_within_tolerance_passes(self):
+        baseline = {"roa": {"major": 2000}}
+        summary = _summary({"roa": {"major": 2100}})  # +5% of 2000 = 100 allowed
+        assert find_regressions(summary, baseline) == []
+
+    def test_major_jump_in_one_metric_fails(self):
+        baseline = {"roa": {"major": 2000}, "market_cap": {"major": 100}}
+        summary = _summary({"roa": {"major": 1900}, "market_cap": {"major": 200}})
+        assert find_regressions(summary, baseline) == ["market_cap major: 100 -> 200"]
+
+    def test_small_metric_uses_absolute_minimum_tolerance(self):
+        baseline = {"trailing_pe": {"major": 4}}
+        assert find_regressions(_summary({"trailing_pe": {"major": 29}}), baseline) == []
+        assert "trailing_pe major: 4 -> 30" in find_regressions(
+            _summary({"trailing_pe": {"major": 30}}), baseline
+        )
+
+    def test_improvement_passes(self):
+        baseline = {"revenue_zero_check": {"critical": 14}, "roa": {"major": 2000}}
+        summary = _summary({"revenue_zero_check": {"critical": 3}, "roa": {"major": 500}})
+        assert find_regressions(summary, baseline) == []
 
 
 @pytest.mark.unit

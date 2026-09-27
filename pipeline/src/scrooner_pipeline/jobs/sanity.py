@@ -15,7 +15,13 @@ from scrooner_pipeline.sanity.yfinance_check import (
     run_sanity_checks,
     pick_rotation_batch,
 )
-from scrooner_pipeline.sanity.report import summarize, render_markdown, should_fail_ci
+from scrooner_pipeline.sanity.report import (
+    find_regressions,
+    load_baseline,
+    record_baseline,
+    render_markdown,
+    summarize,
+)
 from scrooner_pipeline.sanity.tag_investigator import investigate_open_findings
 from scrooner_pipeline.sanity.timeseries_check import run_all as run_timeseries_all
 
@@ -67,21 +73,36 @@ def run_cmd(
 def report_cmd(
     fail_on_findings: bool = typer.Option(
         False,
-        help="Exit 1 if the report's own should_fail_ci() thresholds are crossed -- for CI.",
-    ),
-    max_major: int = typer.Option(
-        10,
-        help="How many 'major' rows are tolerated before failing (only with --fail-on-findings).",
+        help="Exit 1 if critical/major counts regressed vs. the last passing run's "
+        "baseline; a passing run records a new baseline. For CI.",
     ),
     github_summary: bool = typer.Option(
         False, help="Also append the markdown report to $GITHUB_STEP_SUMMARY, if set."
     ),
 ) -> None:
     """Reads back the current state of analytics.data_sanity_check --
-    read-only, safe to run any time, independent of `run`'s own schedule."""
+    read-only unless --fail-on-findings, which also records the gate
+    baseline on a passing run."""
     with get_connection() as conn:
         summary = summarize(conn)
-    markdown = render_markdown(summary)
+        markdown = render_markdown(summary)
+
+        regressions: list[str] = []
+        if fail_on_findings:
+            baseline = load_baseline(conn)
+            regressions = find_regressions(summary, baseline)
+            if baseline is None:
+                gate = "\n## Gate\n\nNo baseline yet -- this run establishes it."
+            elif regressions:
+                gate = "\n## Gate: REGRESSED\n\n" + "\n".join(
+                    f"- {r}" for r in regressions
+                )
+            else:
+                gate = "\n## Gate\n\nNo regression vs. the last passing run's baseline."
+            markdown += "\n" + gate
+            if not regressions:
+                record_baseline(conn, summary)
+
     typer.echo(markdown)
 
     if github_summary:
@@ -92,9 +113,9 @@ def report_cmd(
             with open(summary_path, "a") as f:
                 f.write(markdown + "\n")
 
-    if fail_on_findings and should_fail_ci(summary, max_major=max_major):
+    if regressions:
         typer.echo(
-            "\nFAILING: critical finding(s) present, or more than max_major 'major' findings."
+            "\nFAILING: sanity findings regressed vs. the last passing run's baseline."
         )
         raise typer.Exit(code=1)
 
