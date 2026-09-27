@@ -46,11 +46,6 @@ cd "$(dirname "$0")/.."
 
 LOOKBACK_DAYS="${1:-10}"
 
-CIKS=$(uv run python3 -c "
-import psycopg
-from scrooner_pipeline.common.config import settings
-conn = psycopg.connect(settings.database_url)
-cur = conn.cursor()
 # Sourced from raw.sec_filing_documents, NOT core.filing -- core.filing only
 # exists once the Normalizer's identity stage has already run for a CIK, so
 # scoping off of it would silently exclude exactly the companies this
@@ -75,16 +70,33 @@ cur = conn.cursor()
 # been reprocessed into core/analytics for 5+ consecutive days (2026-09-15
 # through 09-19, all "cancelled" on the job timeout annotation), which is
 # why the company page was showing recent quarters as blank cells.
-cur.execute('''
+#
+# The Python below is fed through a quoted heredoc ('PY'), never an inline
+# `python3 -c "..."` string: a double quote inside a comment in that string
+# ('("usually a few hundred CIKs/day")') silently ended the bash string early,
+# so python only ever received the code up to that comment -- it connected,
+# never ran the query, exited 0, and this script reported "no companies" on
+# every scheduled run from 2026-09-19 until 2026-09-27.
+CIKS=$(LOOKBACK_DAYS="$LOOKBACK_DAYS" uv run python3 - <<'PY'
+import os
+import psycopg
+from scrooner_pipeline.common.config import settings
+conn = psycopg.connect(settings.database_url)
+cur = conn.cursor()
+cur.execute(
+    """
     select distinct d.cik
     from raw.sec_filing_documents d
     join core.company c on c.cik = d.cik
-    where d.filing_date >= current_date - interval '${LOOKBACK_DAYS} days'
+    where d.filing_date >= current_date - make_interval(days => %s)
       and c.status = 'active'
       and d.form in ('10-K', '10-K/A', '10-Q', '10-Q/A')
-''')
+    """,
+    (int(os.environ["LOOKBACK_DAYS"]),),
+)
 print(','.join(r[0] for r in cur.fetchall()))
-")
+PY
+)
 
 if [ -z "$CIKS" ]; then
   echo "reprocess_recent_filers: no companies filed in the last ${LOOKBACK_DAYS} days -- nothing to do"
