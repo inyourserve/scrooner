@@ -62,10 +62,37 @@ This came from founder direction: tag → concept → metric → company, coveri
 
 The build is chunked (150 companies per delete+insert+commit, with a reconnect on pooler drop). It is built once and rebuilt manually (`.github/workflows/pipeline-tag-library.yml`, workflow_dispatch) after any concept_mapping or resolver change -- companies file the same tags period after period, so a schedule would mostly redo identical work. A full rebuild takes about an hour.
 
+## Q4 derived from the 9-month YTD (same day)
+
+The next systemic cause, found by triaging the margin/ROA yfinance majors: **2,002 active companies had no valid current TTM**. 916 of them were silently showing a TTM a median two-plus years old, because the "TTM-preferred" rule picks the latest *non-null* TTM row.
+
+The largest single cause was a missing Q4. `normalizer/derived.py` derived Q4 only as FY − Q1 − Q2 − Q3, which needs all three quarters present, authoritative and contiguous. It never used the 9-month year-to-date figure that every Q3 10-Q reports. For net income alone, 1,326 recent company-years (1,017 companies) had a FY plus a 9-month YTD but no Q4.
+
+Fix: when the chain isn't available, fall back to FY − 9-month YTD, and only when all of these hold:
+- the YTD starts on the fiscal-year start;
+- the remainder is 80–100 days;
+- exactly one authoritative YTD value exists.
+
+The chain still wins when both are available. Verified live against exact arithmetic: IMA FY2025 Q4 = −$6,908K, LUVU −$343K, FCCN $3,030K. On the 5 sample companies, 704 of 2,156 Q4s derived came from the new path.
+
+Still open: companies like EXEL, whose FY fact itself is non-authoritative (disagreeing values across filings), can't get a Q4 from either path. That is a Stage 2e conflict case, not a derivation gap.
+
+A second, smaller cause: the `*_resolved` fills (`resolve-conflict-fills`) and `ttm-margins` are in no scheduled job, so they aren't recomputed after new filings. Net income resolved lags raw for 166 companies, operating income for 115.
+
+## Full-population recompute moved to CI
+
+From the dev machine each Supabase round trip is 0.3–1.7 s. A local debt recompute managed about six 50-company batches an hour (roughly 20 hours for everyone). `.github/workflows/pipeline-recompute.yml` (manual `workflow_dispatch`) runs the chain on GitHub-hosted runners in four ordered phases:
+1. sharded normalize + resolve;
+2. population-wide fills + `company_tag_preference` merge;
+3. sharded metrics;
+4. screener snapshot.
+
+It runs committed code only, so uncommitted work in someone's working tree never reaches production data. The first run (2026-09-27) applies both the component debt resolver and the Q4 fallback to every active company.
+
 ## Still to do
 
-- **Recompute the metrics that use `total_debt_resolved`**: `calculate`, `ttm-returns`, `calculate-expanded-metrics`, `calculate-piotroski`, `calculate-quality-flags`, then rebuild the screener snapshot. This is held back because `calculate.py`/`ttm.py`/`expanded_metrics.py` carry another session's uncommitted materiality-floor changes, and a full recompute would push those to production too.
-- **Other systemic yfinance-major clusters found in the same triage, not yet worked:**
+- Add `ttm-margins` and the population-wide `*_resolved` fills to the daily reprocessing, so a new filing's quarter reaches the TTM without a manual recompute.
+- Other systemic yfinance-major clusters found in the same triage, not yet worked:
   - `institutional_ownership_pct` is a median 0.17× yfinance's.
   - `roa` is only ever stored from annual (FY) rows, never trailing-twelve-months, and has 646 sign flips.
-  - Around 400 trailing-twelve-month margin rows compared against yfinance are more than 400 days old.
+- The other session's `calculate-expanded-metrics` process (worktree `88a574e4`) had been running 2h42m at the time of this writing, likely the known silent hang.
