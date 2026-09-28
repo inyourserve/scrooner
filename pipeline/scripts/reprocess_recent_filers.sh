@@ -136,9 +136,16 @@ for stage in identity periods units facts dedupe restatements derive-interim-qua
   uv run scrooner-normalize "$stage" --ciks "$CIKS"
 done
 
-for stage in resolve-facts resolve-concept-fallbacks calculate growth ttm-returns calculate-expanded-metrics calculate-piotroski calculate-quality-flags calculate-reconciliation calculate-tax-reconciliation calculate-fcf-growth calculate-dividend-streak; do
+for stage in resolve-facts resolve-concept-fallbacks calculate growth ttm-returns ttm-margins calculate-expanded-metrics calculate-piotroski calculate-quality-flags calculate-reconciliation calculate-tax-reconciliation calculate-fcf-growth calculate-dividend-streak; do
   echo "--- map $stage ---"
   uv run scrooner-map "$stage" --ciks "$CIKS"
 done
+
+# Keep the SEC Tag Library current (founder direction 2026-09-29: it is the
+# source of truth for data gaps and must never be stale). Refreshes the
+# company x tag rows and concept lineage for just these companies, then the
+# population-wide tag summary, verdict sync and gap leads.
+echo "--- map build-tag-library ---"
+uv run scrooner-map build-tag-library --ciks "$CIKS"
 
 echo "reprocess_recent_filers: done"

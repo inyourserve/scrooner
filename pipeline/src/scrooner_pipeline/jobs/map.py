@@ -39,7 +39,13 @@ from scrooner_pipeline.mapper.coverage_matrix import (
     corrected_coverage_report,
 )
 from scrooner_pipeline.mapper.tag_candidates import build_tag_candidates, report_status
-from scrooner_pipeline.mapper.tag_library import build_tag_library, gap_tags
+from scrooner_pipeline.mapper.tag_library import (
+    build_tag_library,
+    gap_report,
+    gap_tags,
+    record_finding,
+    record_verdict,
+)
 from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
@@ -653,7 +659,7 @@ def build_tag_library_cmd(
     ),
     stages: str = typer.Option(
         None,
-        help="Comma-separated subset of company_tags,library,lineage (default: all).",
+        help="Comma-separated subset of company_tags,library,lineage,leads (default: all).",
     ),
 ) -> None:
     """2026-09-27: the SEC Tag Library (migration 0077) -- every tag x every
@@ -674,22 +680,85 @@ def gap_tags_cmd(
     concept: str = typer.Argument(
         ..., help="Canonical concept name, e.g. total_debt_resolved."
     ),
-    limit: int = typer.Option(30, help="Max tags to print."),
-    period_type: str = typer.Option(
-        None, help="instant or duration (filters by the tag's latest fact)."
-    ),
+    limit: int = typer.Option(25, help="Max tags to print."),
 ) -> None:
-    """For active companies MISSING `concept`, every tag they file ranked by
-    how many of them file it -- the lead list for the next mapping fix.
-    Leads only: coexistence-check before any concept_mapping change."""
+    """Lift-ranked tag leads for active companies MISSING `concept`
+    (analytics.concept_gap_lead). Leads only: coexistence-check each one,
+    then record the outcome with `record-verdict`."""
     with get_connection() as conn:
-        rows = gap_tags(conn, concept, limit=limit, period_type=period_type)
+        rows = gap_tags(conn, concept, limit=limit)
     if rows:
         typer.echo(f"{rows[0]['missing_total']} active companies missing {concept}")
     for r in rows:
         typer.echo(
-            f"  {r['missing_companies_filing']:>5}  {r['tag']:<75} {r['status']:<18} {','.join(r['mapped_concepts'])}"
+            f"  #{r['rank']:<3} {r['missing_companies_filing']:>5} of missing file it  "
+            f"{r['tag']:<70} (filed by {r['active_companies_filing']} active cos)"
         )
+
+
+@app.command("gap-report")
+def gap_report_cmd(
+    limit: int = typer.Option(15, help="Rows per section."),
+) -> None:
+    """The fix queue from the data truth layer (migration 0080): concepts by
+    unexplained missing market cap, metrics by unexplained gaps, and the
+    largest companies missing core data. Explained = a recorded gap_reason
+    or a company_data_finding. Rebuild the tag library first if stale."""
+    with get_connection() as conn:
+        report = gap_report(conn, limit=limit)
+    typer.echo("CONCEPTS (by unexplained missing market cap)")
+    for c, cov, miss, expl, unexpl, mcap, lead, lead_n in report["concepts"]:
+        mcap_b = f"${float(mcap) / 1e9:,.0f}B" if mcap else "-"
+        typer.echo(
+            f"  {c:<34} {cov or 0:>5}%  missing {miss:>5} (explained {expl:>5}, unexplained {unexpl:>5}, {mcap_b:>8})  lead: {lead or '-'} ({lead_n or 0})"
+        )
+    typer.echo("METRICS (by unexplained missing companies)")
+    for m, cov, miss, unexpl, inputs in report["metrics"]:
+        typer.echo(
+            f"  {m:<34} {cov or 0:>5}%  missing {miss:>5} (unexplained {unexpl:>5})  inputs: {inputs or '-'}"
+        )
+    typer.echo("COMPANIES (largest with unexplained core gaps)")
+    for t, name, mcap, miss, unexpl, concepts, findings in report["companies"]:
+        mcap_b = f"${float(mcap) / 1e9:,.1f}B" if mcap else "-"
+        typer.echo(
+            f"  {t or '?':<7} {name[:30]:<30} {mcap_b:>9}  missing {miss} ({unexpl} unexplained): {concepts}  findings={findings}"
+        )
+
+
+@app.command("record-verdict")
+def record_verdict_cmd(
+    tag: str = typer.Argument(..., help="XBRL tag, e.g. NotesPayable."),
+    concept: str = typer.Argument(..., help="Canonical concept, e.g. total_debt."),
+    verdict: str = typer.Argument(
+        ...,
+        help="approved | needs_review | rejected | different_concept | partial_component",
+    ),
+    reason: str = typer.Argument(..., help="One sentence: what the evidence showed."),
+    taxonomy: str = typer.Option("us-gaap"),
+) -> None:
+    """Record an investigation's conclusion about a (tag, concept) pair in
+    analytics.tag_concept_verdict, so the gap leads never re-propose it."""
+    with get_connection() as conn:
+        record_verdict(conn, tag, concept, verdict, reason, taxonomy=taxonomy)
+    typer.echo(f"recorded: {taxonomy}:{tag} -> {concept} = {verdict}")
+
+
+@app.command("record-finding")
+def record_finding_cmd(
+    ticker: str = typer.Argument(...),
+    finding_type: str = typer.Argument(
+        ..., help="pipeline_bug | filer_error | legitimate_absence | data_limit"
+    ),
+    summary: str = typer.Argument(...),
+    concept: str = typer.Option(None, help="Canonical concept, if concept-specific."),
+    status: str = typer.Option("open", help="open | fixed | wont_fix"),
+) -> None:
+    """Record a per-company finding in analytics.company_data_finding."""
+    with get_connection() as conn:
+        record_finding(
+            conn, ticker, finding_type, summary, concept_name=concept, status=status
+        )
+    typer.echo(f"recorded: {ticker} {finding_type} ({status})")
 
 
 @app.command("calculator-registry")

@@ -23,6 +23,7 @@ based SQL -- no per-row Python loop over core.fact (76M rows)."""
 
 import psycopg
 import structlog
+from psycopg.types.json import Jsonb
 
 from scrooner_pipeline.common.config import settings
 
@@ -170,6 +171,94 @@ left join metrics on metrics.concept_id = c.id
 """
 
 
+# Verdicts mirrored from concept_mapping; an 'investigation' verdict for the
+# same (tag, concept) is never overwritten -- a recorded finding outranks
+# the mapping table's bare confidence.
+_SYNC_VERDICTS_SQL = """
+insert into analytics.tag_concept_verdict (taxonomy, tag, canonical_concept_id, verdict, reason, source)
+select c.taxonomy, c.tag, cm.canonical_concept_id,
+       case cm.confidence when 'approved' then 'approved'
+                          when 'rejected' then 'rejected'
+                          else 'needs_review' end,
+       coalesce(nullif(cm.notes, ''), 'concept_mapping confidence=' || cm.confidence),
+       'concept_mapping'
+from analytics.concept_mapping cm
+join core.concept c on c.id = cm.concept_id
+on conflict (taxonomy, tag, canonical_concept_id) do update
+    set verdict = excluded.verdict, reason = excluded.reason, decided_at = now()
+    where analytics.tag_concept_verdict.source = 'concept_mapping'
+"""
+_PRUNE_VERDICTS_SQL = """
+delete from analytics.tag_concept_verdict v
+where v.source = 'concept_mapping'
+  and not exists (
+      select 1 from analytics.concept_mapping cm
+      join core.concept c on c.id = cm.concept_id
+      where c.taxonomy = v.taxonomy and c.tag = v.tag
+        and cm.canonical_concept_id = v.canonical_concept_id)
+"""
+
+# Verdicts that mean "don't propose this tag for this concept again".
+EXCLUDED_VERDICTS = ("rejected", "different_concept", "partial_component")
+
+# Tag leads per concept, ranked by lift: how much more often companies
+# MISSING the concept file the tag than companies that have it. Plain
+# co-occurrence counts are dominated by tags every company files
+# (EntityCommonStockSharesOutstanding, AdditionalPaidInCapital); lift keeps
+# the tags that are distinctive of the gap. Only current tags (a fact in the
+# last 2 years), only active companies. Computed over missing rows only;
+# the "have" side comes from the library's own active_company_count.
+LEAD_MIN_COMPANIES = 10
+LEAD_MIN_LIFT = 0.05
+LEADS_PER_CONCEPT = 25
+_LEADS_SQL = """
+with missing as (
+    select l.canonical_concept_id, l.company_id
+    from analytics.company_concept_lineage l
+    join core.company co on co.id = l.company_id and co.status = 'active'
+    where not l.has_value
+),
+totals as (
+    select l.canonical_concept_id,
+           count(*) filter (where not l.has_value) as n_missing,
+           count(*) filter (where l.has_value) as n_have
+    from analytics.company_concept_lineage l
+    join core.company co on co.id = l.company_id and co.status = 'active'
+    group by 1
+),
+filed as (
+    select m.canonical_concept_id, t.concept_id, count(*) as miss_f
+    from missing m
+    join analytics.company_sec_tag t on t.company_id = m.company_id
+    where t.last_period_end >= current_date - 730
+    group by 1, 2
+),
+scored as (
+    select f.canonical_concept_id, f.concept_id, f.miss_f,
+           f.miss_f::numeric / tt.n_missing
+             - greatest(lib.active_company_count - f.miss_f, 0)::numeric / greatest(tt.n_have, 1) as lift
+    from filed f
+    join totals tt on tt.canonical_concept_id = f.canonical_concept_id
+    join analytics.sec_tag_library lib on lib.concept_id = f.concept_id
+    where f.miss_f >= %(min_companies)s
+      and not exists (
+          select 1 from analytics.concept_mapping cm
+          where cm.concept_id = f.concept_id and cm.canonical_concept_id = f.canonical_concept_id)
+      and not exists (
+          select 1 from analytics.tag_concept_verdict v
+          where v.taxonomy = lib.taxonomy and v.tag = lib.tag
+            and v.canonical_concept_id = f.canonical_concept_id
+            and v.verdict = any(%(excluded)s))
+),
+ranked as (
+    select *, row_number() over (partition by canonical_concept_id order by miss_f * lift desc) as rnk
+    from scored where lift >= %(min_lift)s
+)
+insert into analytics.concept_gap_lead (canonical_concept_id, concept_id, missing_companies_filing, rank)
+select canonical_concept_id, concept_id, miss_f, rnk from ranked where rnk <= %(per_concept)s
+"""
+
+
 def _chunks(ids: list[int], size: int = CHUNK_SIZE) -> list[list[int]]:
     return [ids[i : i + size] for i in range(0, len(ids), size)]
 
@@ -220,9 +309,12 @@ def build_tag_library(
     ciks: set[str] | None = None,
     stages: set[str] | None = None,
 ) -> dict:
-    """stages: subset of {"company_tags", "library", "lineage"}; default all,
-    in that order (library and lineage both read company_sec_tag)."""
-    stages = stages or {"company_tags", "library", "lineage"}
+    """stages: subset of {"company_tags", "library", "lineage", "leads"};
+    default all, in that order (library and lineage read company_sec_tag;
+    leads read library + lineage). With `ciks`, company_tags and lineage
+    refresh just those companies; library, verdict sync and leads are
+    always population-wide (each one set-based statement)."""
+    stages = stages or {"company_tags", "library", "lineage", "leads"}
     ids = _company_ids(conn, ciks)
     if "company_tags" in stages:
         conn = _run_chunked(
@@ -231,6 +323,8 @@ def build_tag_library(
     if "library" in stages:
         with conn.cursor() as cur:
             cur.execute("set statement_timeout = 0")
+            cur.execute(_SYNC_VERDICTS_SQL)
+            cur.execute(_PRUNE_VERDICTS_SQL)
             cur.execute("delete from analytics.sec_tag_library")
             cur.execute(_LIBRARY_SQL)
         conn.commit()
@@ -238,6 +332,20 @@ def build_tag_library(
         conn = _run_chunked(
             conn, ids, "analytics.company_concept_lineage", _LINEAGE_SQL, "lineage"
         )
+    if "leads" in stages:
+        with conn.cursor() as cur:
+            cur.execute("set statement_timeout = 0")
+            cur.execute("delete from analytics.concept_gap_lead")
+            cur.execute(
+                _LEADS_SQL,
+                {
+                    "min_companies": LEAD_MIN_COMPANIES,
+                    "min_lift": LEAD_MIN_LIFT,
+                    "per_concept": LEADS_PER_CONCEPT,
+                    "excluded": list(EXCLUDED_VERDICTS),
+                },
+            )
+        conn.commit()
     with conn.cursor() as cur:
         cur.execute(
             """select (select count(*) from analytics.company_sec_tag),
@@ -256,51 +364,158 @@ def build_tag_library(
 
 
 def gap_tags(
-    conn: psycopg.Connection,
-    concept_name: str,
-    limit: int = 30,
-    active_only: bool = True,
-    period_type: str | None = None,
+    conn: psycopg.Connection, concept_name: str, limit: int = 25
 ) -> list[dict]:
-    """For companies that do NOT have `concept_name`, rank every tag they
-    file by how many of them file it. A lead list, never an approval --
-    doc 40's lesson: tags sharing vocabulary are often a different concept,
-    so each lead still needs a coexistence check before concept_mapping."""
+    """Ranked tag leads for companies MISSING `concept_name`, from
+    analytics.concept_gap_lead (lift-ranked, already excluding mapped tags
+    and tags with a rejected / different_concept / partial_component
+    verdict). A lead list, never an approval: doc 40's lesson is that tags
+    sharing vocabulary are often a different concept, so each lead still
+    needs a coexistence check, then record_verdict() either way."""
     with conn.cursor() as cur:
         cur.execute(
             """
-            with missing as (
-                select l.company_id from analytics.company_concept_lineage l
-                join analytics.canonical_concept cc on cc.id = l.canonical_concept_id
-                join core.company co on co.id = l.company_id
-                where cc.name = %(concept)s and not l.has_value
-                  and (not %(active_only)s or co.status = 'active')
-            )
-            select lib.taxonomy || ':' || lib.tag, lib.mapping_status, lib.mapped_concepts,
-                   count(*) as missing_companies_filing,
-                   (select count(*) from missing) as missing_total
-            from missing m
-            join analytics.company_sec_tag t on t.company_id = m.company_id
-            join analytics.sec_tag_library lib on lib.concept_id = t.concept_id
-            where %(period_type)s::text is null or t.latest_period_type = %(period_type)s
-            group by 1, 2, 3
-            order by 4 desc
-            limit %(limit)s
+            select lib.taxonomy || ':' || lib.tag, gl.missing_companies_filing, gl.rank,
+                   lib.active_company_count, lib.mapped_concepts,
+                   (select count(*) from analytics.company_concept_lineage l
+                     join core.company co on co.id = l.company_id and co.status = 'active'
+                    where l.canonical_concept_id = gl.canonical_concept_id and not l.has_value)
+            from analytics.concept_gap_lead gl
+            join analytics.canonical_concept cc on cc.id = gl.canonical_concept_id
+            join analytics.sec_tag_library lib on lib.concept_id = gl.concept_id
+            where cc.name = %s
+            order by gl.rank
+            limit %s
             """,
-            {
-                "concept": concept_name,
-                "active_only": active_only,
-                "period_type": period_type,
-                "limit": limit,
-            },
+            (concept_name, limit),
         )
         return [
             {
                 "tag": r[0],
-                "status": r[1],
-                "mapped_concepts": r[2],
-                "missing_companies_filing": r[3],
-                "missing_total": r[4],
+                "missing_companies_filing": r[1],
+                "rank": r[2],
+                "active_companies_filing": r[3],
+                "mapped_to_other_concepts": r[4],
+                "missing_total": r[5],
             }
             for r in cur.fetchall()
         ]
+
+
+def gap_report(conn: psycopg.Connection, limit: int = 20) -> dict:
+    """The fix queue: concepts ranked by unexplained missing market cap,
+    metrics by unexplained missing companies, and the biggest companies
+    missing core data."""
+    with conn.cursor() as cur:
+        cur.execute("set statement_timeout = 0")
+        cur.execute(
+            """select concept, coverage_pct, missing, missing_explained, missing_unexplained,
+                      unexplained_market_cap, top_lead_tag, top_lead_companies
+               from analytics.data_gap_by_concept
+               order by unexplained_market_cap desc nulls last, missing_unexplained desc
+               limit %s""",
+            (limit,),
+        )
+        concepts = cur.fetchall()
+        cur.execute(
+            """select metric_name, coverage_pct, missing, missing_unexplained, input_concepts
+               from analytics.data_gap_by_metric
+               order by missing_unexplained desc limit %s""",
+            (limit,),
+        )
+        metrics = cur.fetchall()
+        cur.execute(
+            """select primary_ticker, company_name, market_cap, core_concepts_missing,
+                      core_concepts_unexplained, missing_concepts, open_findings
+               from analytics.data_gap_by_company
+               where core_concepts_unexplained > 0
+               order by market_cap desc nulls last limit %s""",
+            (limit,),
+        )
+        companies = cur.fetchall()
+    return {"concepts": concepts, "metrics": metrics, "companies": companies}
+
+
+def _canonical_concept_id(cur, name: str) -> int:
+    cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+    row = cur.fetchone()
+    if row is None:
+        raise ValueError(f"unknown canonical concept {name!r}")
+    return row[0]
+
+
+def record_verdict(
+    conn: psycopg.Connection,
+    tag: str,
+    concept_name: str,
+    verdict: str,
+    reason: str,
+    evidence: dict | None = None,
+    taxonomy: str = "us-gaap",
+) -> None:
+    """Record what an investigation concluded about a (tag, concept) pair.
+    Overrides a concept_mapping-mirrored verdict for the same pair."""
+    with conn.cursor() as cur:
+        concept_id = _canonical_concept_id(cur, concept_name)
+        cur.execute(
+            """
+            insert into analytics.tag_concept_verdict
+                (taxonomy, tag, canonical_concept_id, verdict, reason, evidence, source)
+            values (%s, %s, %s, %s, %s, %s, 'investigation')
+            on conflict (taxonomy, tag, canonical_concept_id) do update
+                set verdict = excluded.verdict, reason = excluded.reason,
+                    evidence = excluded.evidence, source = 'investigation', decided_at = now()
+            """,
+            (
+                taxonomy,
+                tag,
+                concept_id,
+                verdict,
+                reason,
+                Jsonb(evidence) if evidence else None,
+            ),
+        )
+    conn.commit()
+
+
+def record_finding(
+    conn: psycopg.Connection,
+    ticker: str,
+    finding_type: str,
+    summary: str,
+    concept_name: str | None = None,
+    status: str = "open",
+    evidence: dict | None = None,
+) -> None:
+    """Record a per-company finding (bug, filer error, legitimate absence,
+    data limit). Re-recording the same summary updates its status."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id from core.company where upper(primary_ticker) = upper(%s) order by (status = 'active') desc limit 1",
+            (ticker,),
+        )
+        row = cur.fetchone()
+        if row is None:
+            raise ValueError(f"no company with primary ticker {ticker!r}")
+        concept_id = _canonical_concept_id(cur, concept_name) if concept_name else None
+        cur.execute(
+            """
+            insert into analytics.company_data_finding
+                (company_id, canonical_concept_id, finding_type, status, summary, evidence, resolved_at)
+            values (%s, %s, %s, %s, %s, %s, case when %s = 'open' then null else now() end)
+            on conflict (company_id, canonical_concept_id, summary) do update
+                set status = excluded.status, finding_type = excluded.finding_type,
+                    evidence = coalesce(excluded.evidence, analytics.company_data_finding.evidence),
+                    resolved_at = excluded.resolved_at
+            """,
+            (
+                row[0],
+                concept_id,
+                finding_type,
+                status,
+                summary,
+                Jsonb(evidence) if evidence else None,
+                status,
+            ),
+        )
+    conn.commit()

@@ -50,6 +50,9 @@ on:
       snapshot:
         description: "Rebuild the screener snapshot at the end (yes/no)"
         default: "yes"
+      tag_library:
+        description: "Rebuild the SEC tag library, lineage and gap leads at the end (yes/no); only the last of split dispatches needs it"
+        default: "yes"
 
 permissions:
   contents: read
@@ -242,3 +245,24 @@ jobs:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
       - run: uv run --project pipeline scrooner-screen build-snapshot
+
+  tag-library:
+    name: Phase 5 - SEC tag library, lineage and gap leads
+    needs: snapshot
+    if: always() && needs.metrics.result != 'cancelled' && inputs.tag_library == 'yes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      # The truth layer must reflect what this recompute just changed.
+      # company_tags only moves when phase 1 touched core.fact, but the
+      # full rebuild is cheap enough here to keep it simple and exact.
+      - run: uv run --project pipeline scrooner-map build-tag-library
