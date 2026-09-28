@@ -22,7 +22,13 @@ def main(workflow_file: str) -> int:
     )
     runs = json.loads(result.stdout) if result.returncode == 0 and result.stdout.strip() else []
 
-    scheduled = [r for r in runs if r.get("event") == "schedule"]
+    # A successful manual dispatch proves the workflow works just as well as
+    # a scheduled one. Runs still in progress have no conclusion yet ("") and
+    # must not count as failures.
+    scheduled = [
+        r for r in runs
+        if r.get("event") in ("schedule", "workflow_dispatch") and r.get("conclusion")
+    ]
     if not scheduled:
         print("  no scheduled runs found yet (new workflow, or not committed long enough to have run) -- not flagging")
         return 0

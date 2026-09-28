@@ -46,6 +46,12 @@ jobs:
             if ! grep -q "^\s*schedule:" "$wf_file"; then
               continue
             fi
+            # Never judge this workflow by its own history: it fails whenever
+            # anything else did, so its past runs would keep it red forever
+            # after everything else recovers.
+            if [ "$wf_name" = "workflow-health-check.yml" ]; then
+              continue
+            fi
             echo "=== $wf_name ==="
             python3 .github/scripts/check_workflow_health.py "$wf_name" || failed_any=1
           done
