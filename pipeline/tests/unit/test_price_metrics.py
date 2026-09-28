@@ -42,7 +42,7 @@ METRIC_NAMES = ("market_cap", "trailing_pe", "price_to_sales", "price_to_book", 
 METRIC_IDS = {name: idx for idx, name in enumerate(METRIC_NAMES, 1)}
 CONCEPT_IDS = {
     "diluted_eps": 10, "revenue": 11, "dividends_per_share": 12,
-    "cfo": 13, "capex": 14, "shares_outstanding": 15, "stockholders_equity": 16,
+    "cfo": 13, "capex": 14, "shares_outstanding": 15, "stockholders_equity": 16, "net_income": 17,
 }
 
 
@@ -60,6 +60,7 @@ def install_price_inputs(monkeypatch, price):
         12: quarterly("0.25", 120),
         13: quarterly("10", 130),
         14: quarterly("2", 140),
+        17: quarterly("30", 170),
     }
     monkeypatch.setattr(price_metrics, "_load_latest_price", lambda _conn, _company: (price, date.today()))
     monkeypatch.setattr(price_metrics, "_load_latest_diluted_weighted_shares", lambda _conn, _company: None)
@@ -175,3 +176,49 @@ def test_only_stale_inputs_give_a_stale_reason_not_an_old_value():
 @pytest.mark.unit
 def test_no_inputs_is_missing():
     assert price_metrics._choose_shares(None, None, None, TODAY) == (None, "missing:shares_outstanding")
+
+
+@pytest.mark.unit
+def test_pe_falls_back_to_market_cap_over_net_income_without_diluted_eps(monkeypatch):
+    install_price_inputs(monkeypatch, Decimal("10"))
+    original = price_metrics._load_quarterly_facts
+    monkeypatch.setattr(
+        price_metrics,
+        "_load_quarterly_facts",
+        lambda conn, company, concept: {} if concept == 10 else original(conn, company, concept),
+    )
+    conn = PriceConnection()
+
+    price_metrics.calculate_price_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    pe = next(r for r in conn.rows if r["metric_definition_id"] == METRIC_IDS["trailing_pe"])
+
+    # market cap 1000 (100 shares x $10) / TTM net income 120 (4 x 30)
+    assert pe["value"] == Decimal("1000") / Decimal("120")
+    assert pe["is_null_reason"] is None
+    assert pe["source_fact_ids"] == [150, 170, 171, 172, 173]
+
+
+@pytest.mark.unit
+def test_years_old_eps_is_ignored_and_pe_uses_current_net_income(monkeypatch):
+    # KKR-shaped: plain diluted EPS last filed in 2018, revenue current.
+    install_price_inputs(monkeypatch, Decimal("10"))
+    original = price_metrics._load_quarterly_facts
+    old_eps = {(2018, q): (Decimal("2"), [900 + i]) for i, q in enumerate(("Q1", "Q2", "Q3", "Q4"))}
+    monkeypatch.setattr(
+        price_metrics,
+        "_load_quarterly_facts",
+        lambda conn, company, concept: old_eps if concept == 10 else original(conn, company, concept),
+    )
+    conn = PriceConnection()
+
+    price_metrics.calculate_price_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    pe = next(r for r in conn.rows if r["metric_definition_id"] == METRIC_IDS["trailing_pe"])
+
+    assert pe["value"] == Decimal("1000") / Decimal("120")
+    assert 900 not in (pe["source_fact_ids"] or [])
+
+
+@pytest.mark.unit
+def test_eps_one_quarter_behind_revenue_is_still_used():
+    assert price_metrics._quarters_behind((2026, "Q1"), (2026, "Q2")) == 1
+    assert price_metrics._quarters_behind((2025, "Q4"), (2026, "Q2")) == 2

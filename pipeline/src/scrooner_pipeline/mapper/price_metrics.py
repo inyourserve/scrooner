@@ -50,7 +50,14 @@ logger = structlog.get_logger()
 # "current" market cap. 14 calendar days covers any exchange holiday run.
 MAX_PRICE_AGE_DAYS = 14
 
-TTM_CONCEPTS = {"diluted_eps", "revenue", "dividends_per_share", "cfo", "capex"}
+TTM_CONCEPTS = {
+    "diluted_eps",
+    "revenue",
+    "dividends_per_share",
+    "cfo",
+    "capex",
+    "net_income",
+}
 INSTANT_CONCEPTS = {"shares_outstanding", "stockholders_equity"}
 
 
@@ -113,6 +120,20 @@ def _ttm_sum(
         total += value
         fact_ids.extend(fids)
     return total, fact_ids
+
+
+# EPS whose latest quarter trails the latest revenue quarter by this many
+# quarters or more is treated as absent rather than as current.
+STALE_EPS_QUARTERS = 2
+
+
+def _quarters_behind(
+    older: tuple[int, str] | None, newer: tuple[int, str] | None
+) -> int:
+    if older is None or newer is None:
+        return 0
+    index = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
+    return (newer[0] * 4 + index[newer[1]]) - (older[0] * 4 + index[older[1]])
 
 
 def _latest_quarter(by_quarter: dict) -> tuple[int, str] | None:
@@ -266,9 +287,16 @@ def calculate_price_metrics_for_company(
         if name in concept_ids
     }
     diluted_eps_q = quarterly.get("diluted_eps", {})
-    anchor = _latest_quarter(diluted_eps_q) or _latest_quarter(
-        quarterly.get("revenue", {})
-    )
+    revenue_anchor = _latest_quarter(quarterly.get("revenue", {}))
+    eps_anchor = _latest_quarter(diluted_eps_q)
+    if _quarters_behind(eps_anchor, revenue_anchor) >= STALE_EPS_QUARTERS:
+        # Plain EPS stopped years ago (KKR 2018, Hershey 2010: later EPS is
+        # tagged per share class and stripped), so anchoring on it made P/E
+        # use years-old earnings. Anchor on the current quarter instead;
+        # P/E then falls back to market cap / TTM net income.
+        quarterly["diluted_eps"] = {}
+        eps_anchor = None
+    anchor = eps_anchor or revenue_anchor
 
     ttm: dict[str, tuple[Decimal | None, list[int]]] = {
         name: (None, []) for name in TTM_CONCEPTS
@@ -336,9 +364,18 @@ def calculate_price_metrics_for_company(
             mc_reason = None
         rows.append(_row("market_cap", market_cap, mc_reason, mc_fids))
 
-        # Trailing P/E = Price / Diluted EPS (TTM)
+        # Trailing P/E = Price / Diluted EPS (TTM). When no plain diluted EPS
+        # is filed, Market Cap / TTM net income -- the same ratio on a total
+        # rather than per-share basis. Multi-class filers (Visa, Airbnb,
+        # Hershey, Constellation Brands) tag EPS per share class, which the
+        # Company Facts API strips, so price / EPS was blank for them.
         eps_ttm, eps_fids = ttm["diluted_eps"]
-        if eps_ttm is None:
+        ni_ttm, ni_fids = ttm.get("net_income", (None, []))
+        if eps_ttm is None and market_cap is not None and ni_ttm:
+            rows.append(
+                _row("trailing_pe", market_cap / ni_ttm, None, mc_fids + ni_fids)
+            )
+        elif eps_ttm is None:
             rows.append(_row("trailing_pe", None, "missing:diluted_eps_ttm", []))
         elif eps_ttm == 0:
             rows.append(_row("trailing_pe", None, "zero_denominator", []))
