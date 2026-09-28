@@ -44,6 +44,23 @@ has any data for. If some but not all required inputs are present for
 that period, the row is written with value=null and is_null_reason set to
 exactly which concept(s) were missing -- a null is a traceable outcome
 (doc 04), never silence.
+
+**This module is the orchestration "tree root" only, as of 2026-09-28.**
+It has grown to 6 formula shapes since the "three formula shapes" note
+above was written (ratio/sum_diff/sum_diff_ratio/additive/days/roic) --
+each one's own math now lives in its own module under
+`mapper/calculate_shapes/`, one "sub-tree node" per shape, registered in
+that package's own SHAPE_REGISTRY. This file itself only: loads which
+metrics to compute (`_load_target_metrics`), loads a company's already-
+resolved facts (`_load_canonical_facts`), matches duration/instant
+periods to each metric's anchor period, dispatches to the right shape
+via `_compute()` (a thin re-export of `calculate_shapes.compute`), and
+writes the results. See `calculate_shapes/__init__.py`'s own docstring
+for the full rationale -- the same "registry, not a hardcoded if/elif
+chain a human has to remember to extend" principle already proven for
+`CONCEPT_MATERIALITY_FLOORS` (also now in `calculate_shapes/
+materiality.py`) and for `mapper/main_calculator.py`'s own
+module-level registry (doc 42), applied one layer further in.
 """
 
 from decimal import Decimal
@@ -52,8 +69,21 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.mapper.calculate_shapes import (
+    CONCEPT_MATERIALITY_FLOORS,
+    compute as _compute,
+)
 
 logger = structlog.get_logger()
+
+# Re-exported for backward compatibility -- existing callers/tests that
+# import CONCEPT_MATERIALITY_FLOORS or _compute directly from this
+# module keep working unchanged. The real source of truth for both is
+# now mapper/calculate_shapes/ (see that package's own __init__.py
+# docstring for the 2026-09-28 "one sub-tree node per formula shape"
+# refactor rationale) -- this module is the orchestration "tree root"
+# only: loading targets/facts, period matching, dispatching to the
+# right shape via _compute(), and writing analytics.metric_value.
 
 # Growth metrics are TTM/multi-period -- Stage 3e's job. Price-dependent
 # metrics are excluded via metric_definition.requires_price, not this list.
@@ -159,74 +189,6 @@ FY_ONLY_METRICS = {
     "debtor_days",
     "inventory_days",
     "payables_days",
-}
-
-# Materiality floors, keyed by DENOMINATOR CONCEPT NAME -- refactored
-# 2026-09-27 from an earlier per-metric-name-allowlist design (kept in
-# git history) after a direct follow-up question ("why so big? find the
-# real root cause and fix at root level so it never arises again"). The
-# original design (three separate `{"operating_margin", "net_margin",
-# ...}`-style sets) required a human to notice a new violating metric and
-# manually add its name to a list -- exactly the kind of per-symptom
-# patching that let this gap accumulate silently across months of Mapper
-# builds in the first place (see doc/learnings/2026-09-27-plausibility-
-# gates-root-cause-fixes.md's "why this was so big" analysis). This
-# table is keyed by CONCEPT instead: every ratio/sum_diff_ratio/days-
-# shaped metric in FORMULA_SHAPES automatically inherits the correct
-# floor for whatever concept it actually divides by, current AND future
-# -- a metric added next month with `revenue` as its denominator role
-# needs zero changes here to be protected.
-#
-# A concept appears here ONLY when real data confirmed a near-zero value
-# is a shell/pass-through-entity signal, never a legitimate business
-# state -- concepts where near-zero is a real, meaningful state (equity,
-# for a leveraged/distressed company; current_assets/price, not yet
-# checked) are deliberately absent, so metrics denominating on THEM
-# (roe, price_to_book, debt_to_equity) are correctly unaffected. Every
-# floor value is sized from real company data for that specific
-# concept, not one universal number -- see each entry's own evidence.
-CONCEPT_MATERIALITY_FLOORS: dict[str, Decimal] = {
-    # Confirmed on Inhibikase Therapeutics: real, authoritative $1 TTM
-    # revenue (a genuine tiny licensing payment) against real ~$20M
-    # operating losses produced a -2,006,393,700% operating_margin.
-    "revenue": Decimal("1000000"),
-    # Confirmed on Appsoft Technologies, Inc.: real, authoritative
-    # FY2025 total_assets = $7 (a real near-defunct shell) against a
-    # real -$93,642 net loss produced a -1,337,700% ROA. 142 of 175
-    # roa critical violations were under this exact $1M threshold.
-    "total_assets": Decimal("1000000"),
-    # Confirmed on Invesco CurrencyShares Euro Trust: real, authoritative
-    # current_liabilities of $155,864 (a pass-through currency trust's
-    # genuine near-zero management-fee accrual) against $219.7M current
-    # assets produced a 1,409x current_ratio -- one of several Invesco
-    # CurrencyShares trusts (Swiss Franc/Yen/Pound/AUD) hitting the same
-    # shape, all real commodity/currency pass-through structures with no
-    # real operating liabilities, not a bug.
-    "current_liabilities": Decimal("1000000"),
-    # Confirmed on Dermata Therapeutics, Inc.: real, authoritative Q4
-    # 2021 interest_expense = $4 (four dollars) produced a multi-
-    # million-percent interest_coverage_ratio, despite that metric's
-    # already-wide doc-47 bound of +/-5000 (500,000%). Floor set lower
-    # than revenue/assets/current_liabilities -- a real early-stage
-    # company's genuine interest expense can legitimately be a few
-    # thousand dollars a quarter (Dermata's own real Q2 2021: $1,823,
-    # Q1 2021: $43,135 -- both real, both correctly left uncapped by
-    # this lower floor), unlike revenue/assets/liabilities where
-    # anything under $1M for an operating company is itself already a
-    # strong shell-company signal.
-    "interest_expense": Decimal("10000"),
-    # Deliberately NOT here, checked against real data before excluding,
-    # not assumed: `stockholders_equity` (roe/price_to_book/debt_to_
-    # equity's denominator) -- near-zero or negative equity is a real,
-    # common, already-accepted leverage story for a distressed or heavy-
-    # buyback company, not a shell-company signal; debt_to_equity (same
-    # denominator) already shows ZERO critical findings in the live
-    # data, confirming this concept genuinely doesn't need a floor.
-    # cost_of_revenue (inventory_days/payables_days' denominator) and
-    # current_assets/price were checked for evidence of the same pattern
-    # and none was found this pass -- not added without evidence, same
-    # "verify before trusting" discipline as every concept_mapping
-    # addition in this project.
 }
 
 # gross_margin switched from "ratio" (a direct GrossProfit tag) to
@@ -380,138 +342,6 @@ def _load_canonical_facts(conn: psycopg.Connection, company_id: int) -> dict:
         "by_end_date": by_end_date,
         "periods": periods,
     }
-
-
-def _materiality_floor_violation(
-    denominator_concept_names: frozenset[str], denom_sum: Decimal
-) -> str | None:
-    """Checked by every ratio-shaped formula branch below against
-    CONCEPT_MATERIALITY_FLOORS (see that dict's own module-level
-    docstring for the 2026-09-27 root-cause/design rationale) --
-    returns an explicit null reason naming whichever concept's floor
-    was breached, or None if the denominator is material by every
-    concept it's actually built from. A composite denominator role
-    (e.g. roic's invested_capital, which sums total_debt AND
-    stockholders_equity) checks each concept independently -- any one
-    of them being genuinely immaterial is enough to null the metric."""
-    for concept_name in denominator_concept_names:
-        floor = CONCEPT_MATERIALITY_FLOORS.get(concept_name)
-        if floor is not None and abs(denom_sum) < floor:
-            return f"immaterial_{concept_name}_base"
-    return None
-
-
-def _compute(
-    shape: str,
-    values_by_role: dict[str, list[Decimal]],
-    denominator_concept_names: frozenset[str] = frozenset(),
-) -> tuple[Decimal | None, str | None]:
-    if shape == "ratio":
-        num = values_by_role.get("numerator")
-        denom = values_by_role.get("denominator")
-        if num is None:
-            return None, "missing:numerator"
-        if denom is None:
-            return None, "missing:denominator"
-        denom_sum = sum(denom)
-        if denom_sum == 0:
-            return None, "zero_denominator"
-        floor_violation = _materiality_floor_violation(
-            denominator_concept_names, denom_sum
-        )
-        if floor_violation is not None:
-            return None, floor_violation
-        return sum(num) / denom_sum, None
-
-    if shape == "additive":
-        # All "add"-role inputs, summed -- no subtraction, unlike
-        # sum_diff. New 2026-08-18 for ebitda (operating_income +
-        # depreciation_and_amortization): these are two genuinely
-        # different concepts being added, not alternates for the same
-        # thing (that's what depreciation_and_amortization's own
-        # first_match resolution already handles, one layer down).
-        add = values_by_role.get("add")
-        if add is None:
-            return None, "missing:add"
-        return sum(add), None
-
-    if shape == "days":
-        # (numerator / denominator) x 365 -- Debtor/Inventory/Payables
-        # Days. FY-only (see FY_ONLY_METRICS), same annualization
-        # reasoning as roic/roe: a quarterly denominator would inflate
-        # the day-count ~4x for the same balance-sheet snapshot.
-        num = values_by_role.get("numerator")
-        denom = values_by_role.get("denominator")
-        if num is None:
-            return None, "missing:numerator"
-        if denom is None:
-            return None, "missing:denominator"
-        denom_sum = sum(denom)
-        if denom_sum == 0:
-            return None, "zero_denominator"
-        floor_violation = _materiality_floor_violation(
-            denominator_concept_names, denom_sum
-        )
-        if floor_violation is not None:
-            return None, floor_violation
-        return (sum(num) / denom_sum) * 365, None
-
-    if shape == "sum_diff":
-        add = values_by_role.get("add")
-        subtract = values_by_role.get("subtract")
-        if add is None:
-            return None, "missing:add"
-        if subtract is None:
-            return None, "missing:subtract"
-        return sum(add) - sum(subtract), None
-
-    if shape == "sum_diff_ratio":
-        add = values_by_role.get("add")
-        subtract = values_by_role.get("subtract")
-        denom = values_by_role.get("denominator")
-        if add is None:
-            return None, "missing:add"
-        if subtract is None:
-            return None, "missing:subtract"
-        if denom is None:
-            return None, "missing:denominator"
-        denom_sum = sum(denom)
-        if denom_sum == 0:
-            return None, "zero_denominator"
-        floor_violation = _materiality_floor_violation(
-            denominator_concept_names, denom_sum
-        )
-        if floor_violation is not None:
-            return None, floor_violation
-        return (sum(add) - sum(subtract)) / denom_sum, None
-
-    if shape == "roic":
-        nopat_base = values_by_role.get("nopat_base")
-        tax_num = values_by_role.get("tax_rate_numerator")
-        tax_denom = values_by_role.get("tax_rate_denominator")
-        ic_add = values_by_role.get("invested_capital_add")
-        ic_sub = values_by_role.get("invested_capital_subtract")
-        if nopat_base is None:
-            return None, "missing:nopat_base"
-        if tax_num is None:
-            return None, "missing:tax_rate_numerator"
-        if tax_denom is None:
-            return None, "missing:tax_rate_denominator"
-        if ic_add is None:
-            return None, "missing:invested_capital_add"
-        if ic_sub is None:
-            return None, "missing:invested_capital_subtract"
-        tax_denom_sum = sum(tax_denom)
-        if tax_denom_sum == 0:
-            return None, "zero_pretax_income"
-        tax_rate = sum(tax_num) / tax_denom_sum
-        nopat = sum(nopat_base) * (1 - tax_rate)
-        invested_capital = sum(ic_add) - sum(ic_sub)
-        if invested_capital == 0:
-            return None, "zero_invested_capital"
-        return nopat / invested_capital, None
-
-    raise ValueError(f"unknown formula shape: {shape}")
 
 
 def calculate_for_company(

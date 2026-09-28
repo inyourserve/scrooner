@@ -104,7 +104,10 @@ _register(
     cli_command="scrooner-map calculate",
     description="Generic formula engine (ratio/sum_diff/sum_diff_ratio/days/additive/roic shapes), "
     "driven entirely by metric_definition_input rows -- a new metric of this shape is a data "
-    "change, not a code change.",
+    "change, not a code change. As of 2026-09-28, calculate.py is itself the orchestration "
+    "'tree root' only -- each shape's own math lives in its own module under "
+    "mapper/calculate_shapes/, registered in THAT package's own SHAPE_REGISTRY (this "
+    "registry's module-level split, applied one layer further in).",
 )
 
 _register(
