@@ -100,18 +100,15 @@ def test_formula_edge_cases_return_explicit_null_reason(shape, inputs, reason):
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("metric_name,shape", [
-    ("operating_margin", "ratio"),
-    ("net_margin", "ratio"),
-    ("pretax_margin", "ratio"),
-    ("sga_pct_revenue", "ratio"),
-    ("gross_margin", "sum_diff_ratio"),
-    ("fcf_margin", "sum_diff_ratio"),
-])
-def test_revenue_denominated_ratios_null_on_immaterial_base(metric_name, shape):
+@pytest.mark.parametrize("shape", ["ratio", "sum_diff_ratio"])
+def test_revenue_denominated_ratios_null_on_immaterial_base(shape):
     """Root-cause fix, 2026-09-27 (Inhibikase Therapeutics finding): a
     real but tiny ($1) revenue base must not produce a mathematically
-    correct but economically meaningless multi-million-percent margin."""
+    correct but economically meaningless multi-million-percent margin.
+    Refactored 2026-09-27 (root-cause follow-up, "why so big? fix at
+    root level") from a per-metric-name allowlist to a per-concept
+    registry -- the floor now applies to ANY metric denominating on
+    `revenue`, not just the ones a human remembered to list."""
     inputs = {"numerator": [Decimal("-20000000")], "denominator": [Decimal("1")]}
     if shape == "sum_diff_ratio":
         inputs = {
@@ -119,19 +116,34 @@ def test_revenue_denominated_ratios_null_on_immaterial_base(metric_name, shape):
             "subtract": [Decimal("20000001")],
             "denominator": [Decimal("1")],
         }
-    value, reason = _compute(shape, inputs, metric_name)
+    value, reason = _compute(shape, inputs, frozenset({"revenue"}))
     assert value is None
     assert reason == "immaterial_revenue_base"
 
 
 @pytest.mark.unit
-def test_non_revenue_ratio_ignores_the_floor():
-    # roe/current_ratio/debt_to_equity etc. are NOT in
-    # REVENUE_DENOMINATOR_METRICS -- a tiny-but-nonzero denominator there
-    # is a different, already-accepted degenerate case (e.g. near-zero
-    # equity), so the floor must not fire for them.
+def test_non_floored_concept_ignores_the_floor():
+    # stockholders_equity (roe/price_to_book/debt_to_equity's
+    # denominator) is deliberately NOT in CONCEPT_MATERIALITY_FLOORS --
+    # a tiny-but-nonzero denominator there is a different, already-
+    # accepted degenerate case (e.g. near-zero equity for a leveraged
+    # company), so the floor must not fire for it.
     value, reason = _compute(
-        "ratio", {"numerator": [Decimal("5")], "denominator": [Decimal("1")]}, "roe"
+        "ratio",
+        {"numerator": [Decimal("5")], "denominator": [Decimal("1")]},
+        frozenset({"stockholders_equity"}),
+    )
+    assert value == Decimal("5")
+    assert reason is None
+
+
+@pytest.mark.unit
+def test_no_denominator_concept_names_means_no_floor_check():
+    # The default frozenset() (e.g. a caller that never wires concept
+    # names through, or a test using the old positional-omitted form)
+    # must not accidentally floor everything.
+    value, reason = _compute(
+        "ratio", {"numerator": [Decimal("5")], "denominator": [Decimal("1")]}
     )
     assert value == Decimal("5")
     assert reason is None
@@ -143,19 +155,41 @@ def test_roa_nulls_on_immaterial_asset_base():
     but tiny ($7) total_assets base must not produce a mathematically
     correct but economically meaningless -1,337,700% ROA."""
     value, reason = _compute(
-        "ratio", {"numerator": [Decimal("-93642")], "denominator": [Decimal("7")]}, "roa"
+        "ratio",
+        {"numerator": [Decimal("-93642")], "denominator": [Decimal("7")]},
+        frozenset({"total_assets"}),
     )
     assert value is None
-    assert reason == "immaterial_asset_base"
+    # Reason names the exact concept that breached its floor, generically
+    # derived as f"immaterial_{concept_name}_base" -- see
+    # _materiality_floor_violation()'s own docstring.
+    assert reason == "immaterial_total_assets_base"
 
     # Above the floor, computes normally.
     value, reason = _compute(
         "ratio",
         {"numerator": [Decimal("2000000")], "denominator": [Decimal("10000000")]},
-        "roa",
+        frozenset({"total_assets"}),
     )
     assert value == Decimal("0.2")
     assert reason is None
+
+
+@pytest.mark.unit
+def test_current_liabilities_nulls_on_immaterial_base():
+    """Root-cause fix, 2026-09-27 (Invesco CurrencyShares Euro Trust
+    finding, surfaced chasing current_ratio's own critical cluster): a
+    real but tiny ($155,864) current_liabilities base -- a pass-through
+    currency trust's genuine near-zero management-fee accrual -- must
+    not produce a mathematically correct but meaningless 1,409x
+    current_ratio."""
+    value, reason = _compute(
+        "ratio",
+        {"numerator": [Decimal("219702899")], "denominator": [Decimal("155864")]},
+        frozenset({"current_liabilities"}),
+    )
+    assert value is None
+    assert reason == "immaterial_current_liabilities_base"
 
 
 @pytest.mark.unit
@@ -166,7 +200,9 @@ def test_interest_coverage_ratio_nulls_on_immaterial_interest_expense_base():
     ratio -- even though this metric's own doc-47 bound is already wide
     (+/-5000)."""
     value, reason = _compute(
-        "ratio", {"numerator": [Decimal("-1774")], "denominator": [Decimal("4")]}, "interest_coverage_ratio"
+        "ratio",
+        {"numerator": [Decimal("-1774")], "denominator": [Decimal("4")]},
+        frozenset({"interest_expense"}),
     )
     assert value is None
     assert reason == "immaterial_interest_expense_base"
@@ -176,7 +212,7 @@ def test_interest_coverage_ratio_nulls_on_immaterial_interest_expense_base():
     value, reason = _compute(
         "ratio",
         {"numerator": [Decimal("100000")], "denominator": [Decimal("43135")]},
-        "interest_coverage_ratio",
+        frozenset({"interest_expense"}),
     )
     assert value == Decimal("100000") / Decimal("43135")
     assert reason is None
@@ -187,7 +223,7 @@ def test_revenue_denominated_ratio_computes_normally_above_the_floor():
     value, reason = _compute(
         "ratio",
         {"numerator": [Decimal("3000000")], "denominator": [Decimal("10000000")]},
-        "operating_margin",
+        frozenset({"revenue"}),
     )
     assert value == Decimal("0.3")
     assert reason is None

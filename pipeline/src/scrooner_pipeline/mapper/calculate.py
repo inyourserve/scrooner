@@ -161,62 +161,73 @@ FY_ONLY_METRICS = {
     "payables_days",
 }
 
-# Materiality floor for revenue-denominated ratios -- added 2026-09-27,
-# root-causing plausibility_check.py's operating_margin/net_margin/
-# pretax_margin cluster. Real, confirmed example: Inhibikase Therapeutics
-# reported a genuine $1 of revenue for the trailing-4-quarter window
-# ending 2024-09-30 (a real, tiny, authoritative fact, not a bug) against
-# real operating losses of ~-$20.06M -- producing a mathematically
-# correct but economically meaningless -2,006,393,700% operating_margin.
-# Same root pattern as ttm.py's CONCEPT_MATERIALITY_FLOORS fix the same
-# day (a near-zero base makes ANY ratio off it meaningless), just for
-# calculate.py's shared ratio/sum_diff_ratio engine instead of growth
-# rates. Scoped ONLY to the metrics whose denominator concept is revenue
-# -- NOT applied to every "ratio"/"sum_diff_ratio" metric (current_ratio/
-# debt_to_equity/roe/roa's denominators -- current liabilities, equity,
-# assets -- going near-zero is a different, already-accepted degenerate-
-# denominator case this project documents elsewhere, e.g. roe's own wide
-# CRITICAL bound in doc 47).
-REVENUE_DENOMINATOR_MATERIALITY_FLOOR = Decimal("1000000")
-REVENUE_DENOMINATOR_METRICS = {
-    "operating_margin",
-    "net_margin",
-    "pretax_margin",
-    "gross_margin",
-    "fcf_margin",
-    "sga_pct_revenue",
-    "rnd_intensity",
-    "capex_pct_revenue",
-    "sbc_pct_revenue",
+# Materiality floors, keyed by DENOMINATOR CONCEPT NAME -- refactored
+# 2026-09-27 from an earlier per-metric-name-allowlist design (kept in
+# git history) after a direct follow-up question ("why so big? find the
+# real root cause and fix at root level so it never arises again"). The
+# original design (three separate `{"operating_margin", "net_margin",
+# ...}`-style sets) required a human to notice a new violating metric and
+# manually add its name to a list -- exactly the kind of per-symptom
+# patching that let this gap accumulate silently across months of Mapper
+# builds in the first place (see doc/learnings/2026-09-27-plausibility-
+# gates-root-cause-fixes.md's "why this was so big" analysis). This
+# table is keyed by CONCEPT instead: every ratio/sum_diff_ratio/days-
+# shaped metric in FORMULA_SHAPES automatically inherits the correct
+# floor for whatever concept it actually divides by, current AND future
+# -- a metric added next month with `revenue` as its denominator role
+# needs zero changes here to be protected.
+#
+# A concept appears here ONLY when real data confirmed a near-zero value
+# is a shell/pass-through-entity signal, never a legitimate business
+# state -- concepts where near-zero is a real, meaningful state (equity,
+# for a leveraged/distressed company; current_assets/price, not yet
+# checked) are deliberately absent, so metrics denominating on THEM
+# (roe, price_to_book, debt_to_equity) are correctly unaffected. Every
+# floor value is sized from real company data for that specific
+# concept, not one universal number -- see each entry's own evidence.
+CONCEPT_MATERIALITY_FLOORS: dict[str, Decimal] = {
+    # Confirmed on Inhibikase Therapeutics: real, authoritative $1 TTM
+    # revenue (a genuine tiny licensing payment) against real ~$20M
+    # operating losses produced a -2,006,393,700% operating_margin.
+    "revenue": Decimal("1000000"),
+    # Confirmed on Appsoft Technologies, Inc.: real, authoritative
+    # FY2025 total_assets = $7 (a real near-defunct shell) against a
+    # real -$93,642 net loss produced a -1,337,700% ROA. 142 of 175
+    # roa critical violations were under this exact $1M threshold.
+    "total_assets": Decimal("1000000"),
+    # Confirmed on Invesco CurrencyShares Euro Trust: real, authoritative
+    # current_liabilities of $155,864 (a pass-through currency trust's
+    # genuine near-zero management-fee accrual) against $219.7M current
+    # assets produced a 1,409x current_ratio -- one of several Invesco
+    # CurrencyShares trusts (Swiss Franc/Yen/Pound/AUD) hitting the same
+    # shape, all real commodity/currency pass-through structures with no
+    # real operating liabilities, not a bug.
+    "current_liabilities": Decimal("1000000"),
+    # Confirmed on Dermata Therapeutics, Inc.: real, authoritative Q4
+    # 2021 interest_expense = $4 (four dollars) produced a multi-
+    # million-percent interest_coverage_ratio, despite that metric's
+    # already-wide doc-47 bound of +/-5000 (500,000%). Floor set lower
+    # than revenue/assets/current_liabilities -- a real early-stage
+    # company's genuine interest expense can legitimately be a few
+    # thousand dollars a quarter (Dermata's own real Q2 2021: $1,823,
+    # Q1 2021: $43,135 -- both real, both correctly left uncapped by
+    # this lower floor), unlike revenue/assets/liabilities where
+    # anything under $1M for an operating company is itself already a
+    # strong shell-company signal.
+    "interest_expense": Decimal("10000"),
+    # Deliberately NOT here, checked against real data before excluding,
+    # not assumed: `stockholders_equity` (roe/price_to_book/debt_to_
+    # equity's denominator) -- near-zero or negative equity is a real,
+    # common, already-accepted leverage story for a distressed or heavy-
+    # buyback company, not a shell-company signal; debt_to_equity (same
+    # denominator) already shows ZERO critical findings in the live
+    # data, confirming this concept genuinely doesn't need a floor.
+    # cost_of_revenue (inventory_days/payables_days' denominator) and
+    # current_assets/price were checked for evidence of the same pattern
+    # and none was found this pass -- not added without evidence, same
+    # "verify before trusting" discipline as every concept_mapping
+    # addition in this project.
 }
-
-# Same pattern, asset-denominated -- found live 2026-09-27 root-causing
-# plausibility_check.py's `roa` cluster (175 critical, 142 of them a
-# real shell company with under $1M total assets). Confirmed on Appsoft
-# Technologies, Inc.: real, authoritative FY2025 total_assets = $7 (a
-# real near-defunct shell, not a bug) against a real -$93,642 net loss --
-# mathematically correct -1,337,700% ROA, economically meaningless.
-# Deliberately does NOT include `roe` -- unlike total_assets going near-
-# zero (a company barely functioning at all), equity going near-zero or
-# negative is a real, common, ALREADY-ACCEPTED leverage story (distressed
-# companies, debt-funded buybacks) this project's own doc 47 bounds are
-# deliberately wide for -- see test_non_revenue_ratio_ignores_the_floor.
-ASSET_DENOMINATOR_MATERIALITY_FLOOR = Decimal("1000000")
-ASSET_DENOMINATOR_METRICS = {"roa"}
-
-# Same pattern, interest-expense-denominated -- found live 2026-09-27
-# root-causing `interest_coverage_ratio`'s critical cluster (94, values
-# in the MILLIONS-of-percent range despite this metric's already-wide
-# doc-47 bound of +/-5000). Confirmed on Dermata Therapeutics, Inc.:
-# real, authoritative Q4 2021 interest_expense = $4 (four dollars).
-# Floor set lower than revenue/assets ($10,000, not $1M) -- a real early-
-# stage company's genuine interest expense can legitimately be a few
-# thousand dollars a quarter (Dermata's own Q2 2021: $1,823, Q1 2021:
-# $43,135 -- both real, both left uncapped), unlike revenue/total_assets
-# where anything under $1M for an operating company is itself already
-# a strong shell-company signal.
-INTEREST_EXPENSE_DENOMINATOR_MATERIALITY_FLOOR = Decimal("10000")
-INTEREST_EXPENSE_DENOMINATOR_METRICS = {"interest_coverage_ratio"}
 
 # gross_margin switched from "ratio" (a direct GrossProfit tag) to
 # "sum_diff_ratio" (Revenue - CostOfRevenue, 2026-09-01) -- checked live
@@ -371,8 +382,29 @@ def _load_canonical_facts(conn: psycopg.Connection, company_id: int) -> dict:
     }
 
 
+def _materiality_floor_violation(
+    denominator_concept_names: frozenset[str], denom_sum: Decimal
+) -> str | None:
+    """Checked by every ratio-shaped formula branch below against
+    CONCEPT_MATERIALITY_FLOORS (see that dict's own module-level
+    docstring for the 2026-09-27 root-cause/design rationale) --
+    returns an explicit null reason naming whichever concept's floor
+    was breached, or None if the denominator is material by every
+    concept it's actually built from. A composite denominator role
+    (e.g. roic's invested_capital, which sums total_debt AND
+    stockholders_equity) checks each concept independently -- any one
+    of them being genuinely immaterial is enough to null the metric."""
+    for concept_name in denominator_concept_names:
+        floor = CONCEPT_MATERIALITY_FLOORS.get(concept_name)
+        if floor is not None and abs(denom_sum) < floor:
+            return f"immaterial_{concept_name}_base"
+    return None
+
+
 def _compute(
-    shape: str, values_by_role: dict[str, list[Decimal]], metric_name: str = ""
+    shape: str,
+    values_by_role: dict[str, list[Decimal]],
+    denominator_concept_names: frozenset[str] = frozenset(),
 ) -> tuple[Decimal | None, str | None]:
     if shape == "ratio":
         num = values_by_role.get("numerator")
@@ -384,21 +416,11 @@ def _compute(
         denom_sum = sum(denom)
         if denom_sum == 0:
             return None, "zero_denominator"
-        if (
-            metric_name in REVENUE_DENOMINATOR_METRICS
-            and abs(denom_sum) < REVENUE_DENOMINATOR_MATERIALITY_FLOOR
-        ):
-            return None, "immaterial_revenue_base"
-        if (
-            metric_name in ASSET_DENOMINATOR_METRICS
-            and abs(denom_sum) < ASSET_DENOMINATOR_MATERIALITY_FLOOR
-        ):
-            return None, "immaterial_asset_base"
-        if (
-            metric_name in INTEREST_EXPENSE_DENOMINATOR_METRICS
-            and abs(denom_sum) < INTEREST_EXPENSE_DENOMINATOR_MATERIALITY_FLOOR
-        ):
-            return None, "immaterial_interest_expense_base"
+        floor_violation = _materiality_floor_violation(
+            denominator_concept_names, denom_sum
+        )
+        if floor_violation is not None:
+            return None, floor_violation
         return sum(num) / denom_sum, None
 
     if shape == "additive":
@@ -427,6 +449,11 @@ def _compute(
         denom_sum = sum(denom)
         if denom_sum == 0:
             return None, "zero_denominator"
+        floor_violation = _materiality_floor_violation(
+            denominator_concept_names, denom_sum
+        )
+        if floor_violation is not None:
+            return None, floor_violation
         return (sum(num) / denom_sum) * 365, None
 
     if shape == "sum_diff":
@@ -451,11 +478,11 @@ def _compute(
         denom_sum = sum(denom)
         if denom_sum == 0:
             return None, "zero_denominator"
-        if (
-            metric_name in REVENUE_DENOMINATOR_METRICS
-            and abs(denom_sum) < REVENUE_DENOMINATOR_MATERIALITY_FLOOR
-        ):
-            return None, "immaterial_revenue_base"
+        floor_violation = _materiality_floor_violation(
+            denominator_concept_names, denom_sum
+        )
+        if floor_violation is not None:
+            return None, floor_violation
         return (sum(add) - sum(subtract)) / denom_sum, None
 
     if shape == "roic":
@@ -504,6 +531,9 @@ def calculate_for_company(
         metric_id, metric_name, inputs = target["id"], target["name"], target["inputs"]
         shape = FORMULA_SHAPES[metric_name]
         fy_only = metric_name in FY_ONLY_METRICS
+        denominator_concept_names = frozenset(
+            name for name, _cid, role, _is_instant in inputs if role == "denominator"
+        )
 
         duration_inputs = [i for i in inputs if not i[3]]
         instant_inputs = [i for i in inputs if i[3]]
@@ -579,7 +609,9 @@ def calculate_for_company(
             if incomplete_role is not None:
                 value, null_reason = None, f"incomplete:{incomplete_role}"
             else:
-                value, null_reason = _compute(shape, values_by_role, metric_name)
+                value, null_reason = _compute(
+                    shape, values_by_role, denominator_concept_names
+                )
             rows.append(
                 {
                     "company_id": company_id,

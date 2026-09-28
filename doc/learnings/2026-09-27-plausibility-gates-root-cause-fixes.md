@@ -198,3 +198,36 @@ Extracted the 187 unique CIKs that had failed (`grep -oE "growth\.company_failed
 ## Generalizable lesson
 
 **A near-zero-but-nonzero denominator produces a value that is mathematically correct and structurally meaningless — this is now a recognized, recurring class of bug in this codebase, not a one-off.** Found and fixed in 5 different places in one session (growth-rate priors, TTM-revenue-vs-quarterly-revenue, revenue-denominated margins, asset-denominated ROA, interest-expense-denominated coverage ratio) — always the same shape: (1) both inputs are real, authoritative, correctly-extracted facts; (2) the arithmetic is correct; (3) the result is nonetheless useless for comparison because the denominator's real-world magnitude is below the threshold where a *ratio* of it means anything. The fix is always the same idiom: a per-metric-family materiality floor on the denominator, sized from real data for that specific denominator type (not one universal number — $1M for revenue/assets, $10K for interest expense, because a real company's genuine interest expense is legitimately smaller-scale than its genuine revenue or asset base). Worth checking any NEW ratio-shaped metric added to this pipeline for the same exposure before it ships, rather than waiting for a plausibility-check cluster to surface it.
+
+## Same-day addendum (2026-09-28): "why so big? fix at root level so it never arises again"
+
+Direct follow-up asking for the deeper structural explanation, not just the per-cluster fixes above.
+
+### Why the count was so big — the real structural reason
+
+Three things compounded, not one:
+
+1. **Scrooner covers the full ~5,216-company active population**, not a blue-chip index. That necessarily includes hundreds of penny-stock shells, pre-revenue biotechs, SPACs mid-merger, bankruptcy-emergent companies, and commodity/currency pass-through trusts — company types whose financials are *structurally* different from a normal operating business (near-zero assets, revenue, or liabilities are all *normal* for these).
+2. **The shared calculation engine (`calculate.py`'s `_compute()`) was built as a pure formula executor from day one** — sum numerator inputs, sum denominator inputs, divide. It never had any concept of "is this ratio meaningful," only "can these two numbers be divided." Every ratio-shaped metric added over months of build sessions silently inherited that same blind spot.
+3. **No systematic full-catalog check existed until doc 47 was built.** Everything that had been silently wrong since the 2026-08-26 full-population rollout surfaced in one shot instead of being caught incrementally.
+
+### The root-level fix: per-metric allowlist → per-concept registry
+
+The fixes documented above (`REVENUE_DENOMINATOR_METRICS`, `ASSET_DENOMINATOR_METRICS`, `INTEREST_EXPENSE_DENOMINATOR_METRICS`) were themselves still reactive — three separate sets of metric NAMES a human has to remember to extend every time a new violating metric surfaces. Refactored to a single **`CONCEPT_MATERIALITY_FLOORS: dict[str, Decimal]`**, keyed by the actual canonical concept a metric divides by (`revenue`, `total_assets`, `current_liabilities`, `interest_expense`), consulted automatically by `_compute()`'s `ratio`/`sum_diff_ratio`/`days` branches via a new `_materiality_floor_violation()` helper. `calculate_for_company()` now derives `denominator_concept_names` directly from each metric's own `metric_definition_input` rows (`role == "denominator"`) and passes that through — **a future metric denominating on any registered concept is automatically protected, no manual allowlist edit required.**
+
+### A 5th real bug found extending the coverage: `current_liabilities`
+
+Investigating `current_ratio`/`quick_ratio`'s own critical cluster (denominator = `current_liabilities`, a concept never covered by the original 3-set design) surfaced the same near-zero-denominator shape on a new concept: **5 Invesco CurrencyShares trusts** (Euro/Swiss Franc/Yen/Pound/AUD) showing current ratios of 1,000-3,000x. Verified on Invesco CurrencyShares Euro Trust: real, authoritative `current_liabilities = $155,864` (a genuine near-zero management-fee accrual for a pass-through currency trust with no real operating liabilities) against `current_assets = $219.7M`. Added `"current_liabilities": Decimal("1000000")` to the registry — same $1M floor as revenue/assets, sized the same way (checked the company's own other real periods first).
+
+### Two more real, DIFFERENT root causes found and deliberately NOT fixed this pass
+
+Investigating the same `current_ratio`/`quick_ratio` cluster surfaced two bugs that are **not** materiality issues at all — a floor can't fix either:
+
+- **Oyocar Group Inc.**: real, authoritative, as-filed `AssetsCurrent = -$26` (negative twenty-six dollars). Current assets can never legitimately be negative — this is the filer's own XBRL tagging error in their real 10-Q, not a Scrooner extraction bug (confirmed `is_authoritative=true`, correctly extracted exactly as filed).
+- **Zedge, Inc.**: real, authoritative `InventoryNet = $21.6M` for the same period where `current_assets = $20.3M` — logically impossible under GAAP (inventory is always a subset of current assets), yet both facts are individually correctly-tagged and authoritative under the standard `us-gaap:InventoryNet` tag. Looks like a period-bracketing/context mismatch rather than a mapping or sign error — needs real forensic investigation (checking the source filing directly) before attempting a fix. Sized: 4 companies total show this negative-ratio shape.
+
+Also found, investigated, and correctly left alone: **`goodwill_pct_assets`** (6 critical) — checked whether the same `total_assets` floor would explain it and found it doesn't: most of the affected companies' `total_assets` values are well above $1M (e.g. BTC Digital Ltd. at $39.9M), so this is a different, not-yet-diagnosed bug (most likely the `goodwill` numerator itself being stale/wrong), not a materiality issue. Flagged, not force-fixed under an ill-fitting explanation.
+
+### Deployment status: paused, not skipped
+
+Code refactor complete, 708 pipeline unit tests passing, committed to `main`. The actual population-wide `calculate` rerun needed to apply the new `current_liabilities` floor (437 affected companies) was launched, then **stopped mid-run** after a coordinating peer session (`scrooner-50`) flagged that it was racing a coordinated full-population recompute (`pipeline-recompute.yml`) already in flight across multiple sessions, competing for the same ~15-connection Supabase pooler budget. Killed cleanly (the whole wrapper tree, not just the visible workers, per this project's own documented `xargs -P N` gotcha). Deployment will resume once that peer run reports done — the code is live and correct in `main`, just not yet re-run against the 437 affected companies' stored `analytics.metric_value` rows.
