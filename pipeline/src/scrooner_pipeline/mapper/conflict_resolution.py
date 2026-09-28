@@ -51,6 +51,20 @@ logger = structlog.get_logger()
 
 MAX_SAFE_RATIO = Decimal("1.15")
 
+# Restatement fill (2026-09-29). Beyond MAX_SAFE_RATIO the filings disagree
+# materially -- almost always a restatement: a later 10-K/10-Q re-presents
+# prior periods with corrected values (Symbotic restated all of FY2025 in
+# its FY2026 10-Qs; Q2 2025 net income -3,925K originally, -1,804K
+# restated). dedupe.py marks every version non-authoritative, so the whole
+# period went blank and, with it, every TTM built across it. The latest
+# filing is the company's current official figure (SEC Frames serves the
+# same). Checked against yfinance on 93 restated net-income quarters: the
+# latest-filed value matched 65, the original 28, neither 3. Guards: one
+# unambiguous latest filing date whose facts agree, no zeros, and values
+# within 10x of each other (a wider spread looks like a scale error, not a
+# restatement: 525 net-income conflicts exceed it and stay blank).
+MAX_RESTATEMENT_RATIO = Decimal("10")
+
 # (primary_concept_name, resolved_concept_name) -- the 24 statement-table
 # rows (statements/classify.py's STATEMENT_LINES). The 5 that already have
 # their own arithmetic/coalesce `_resolved` companion still go through this
@@ -62,7 +76,11 @@ CONFLICT_FILL_TARGETS: list[tuple[str, str]] = [
     ("cost_of_revenue", "cost_of_revenue_resolved"),
     ("gross_profit", "gross_profit_resolved"),
     ("operating_expenses", "operating_expenses_resolved"),
-    ("total_debt", "total_debt_resolved"),
+    # total_debt is deliberately absent (2026-09-29): total_debt_resolved is
+    # built from components by concept_fallback.resolve_total_debt_components,
+    # which leaves a period blank when the tags can't give a total. A single
+    # conflicting tag here (ShortTermBorrowings alone) is a partial debt, not
+    # a total -- 254 such rows at 41 companies had slipped in this way.
     ("operating_income", "operating_income_resolved"),
     ("interest_expense", "interest_expense_resolved"),
     ("income_before_tax", "income_before_tax_resolved"),
@@ -102,22 +120,37 @@ def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
 
 
 def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tuple]:
-    """Every (company_id, period_id) where the primary concept's own
-    mapped (non-rejected) tags have 2+ disagreeing core.fact values and
-    NONE is authoritative -- the exact dedupe.py "flag, don't resolve"
-    case. Returns one row per group with every (value, fact_id) pair so
-    the safety check and tie-break can happen in Python."""
+    """Every (company_id, period_id) where the primary concept's
+    highest-priority mapped tag that the company filed for that period has
+    2+ disagreeing core.fact values and NONE is authoritative -- the exact
+    dedupe.py "flag, don't resolve" case. Returns one row per group with
+    every (value, fact_id, filing_date) so the safety check and tie-break
+    can happen in Python.
+
+    Scoped to ONE tag per group (2026-09-29): pooling every mapped tag mixed
+    different concepts into one "conflict" -- Symbotic's NetIncomeLoss
+    (-3.9M / -1.8M) sat beside its much larger ProfitLoss (-21.4M / -9.9M,
+    which includes noncontrolling interests), so no fill was ever safe, and
+    a close pair of two different tags could fill from the lower-priority
+    one. Taking the top-priority tag mirrors resolve()'s own first_match."""
     with conn.cursor() as cur:
         cur.execute(
             """
-            select f.company_id, f.period_id, array_agg(f.value order by f.id), array_agg(f.id order by f.id)
-            from core.fact f
-            join core.concept c on c.id = f.concept_id
-            join analytics.concept_mapping cm on cm.concept_id = c.id
-            join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
-            where cc.id = %s and cm.confidence != 'rejected'
-            group by f.company_id, f.period_id
-            having count(distinct f.value) > 1 and bool_or(f.is_authoritative) = false
+            with facts as (
+                select f.company_id, f.period_id, f.value, f.id, f.is_authoritative,
+                       fl.filing_date, cm.priority,
+                       min(cm.priority) over (partition by f.company_id, f.period_id) as top_priority
+                from core.fact f
+                join core.filing fl on fl.id = f.filing_id
+                join analytics.concept_mapping cm on cm.concept_id = f.concept_id
+                where cm.canonical_concept_id = %s and cm.confidence != 'rejected'
+            )
+            select company_id, period_id, array_agg(value order by id), array_agg(id order by id),
+                   array_agg(filing_date order by id)
+            from facts
+            where priority = top_priority
+            group by company_id, period_id
+            having count(distinct value) > 1 and bool_or(is_authoritative) = false
             """,
             (primary_id,),
         )
@@ -153,6 +186,28 @@ def _safe_fill_value(
     # regardless of how many distinct values are in the group.
     best_idx = max(range(len(fact_ids)), key=lambda i: fact_ids[i])
     return values[best_idx], fact_ids[best_idx]
+
+
+def _restatement_fill_value(
+    values: list[Decimal], fact_ids: list[int], filing_dates: list
+) -> tuple[Decimal, int] | None:
+    """The value from the single latest filing, when the disagreement is too
+    large for _safe_fill_value but still looks like a restatement. None when
+    the latest filing date is shared by disagreeing facts, any value is
+    zero, or the magnitudes differ by more than MAX_RESTATEMENT_RATIO."""
+    if len(values) < 2 or any(v == 0 for v in values):
+        return None
+    mags = [abs(v) for v in values]
+    if max(mags) / min(mags) > MAX_RESTATEMENT_RATIO:
+        return None
+    latest = max(filing_dates)
+    latest_idx = [i for i, d in enumerate(filing_dates) if d == latest]
+    if len(latest_idx) == len(values):
+        return None  # every version filed the same day -- not a restatement
+    if len({values[i] for i in latest_idx}) != 1:
+        return None
+    best = max(latest_idx, key=lambda i: fact_ids[i])
+    return values[best], fact_ids[best]
 
 
 def resolve_baseline_passthrough(
@@ -218,10 +273,17 @@ def resolve_conflict_fill(
 
     to_insert = []
     unsafe = 0
-    for company_id, period_id, values, fact_ids in groups:
+    restated = 0
+    allow_restatement = primary_name not in SPLIT_LIKE_CONCEPTS
+    for company_id, period_id, values, fact_ids, filing_dates in groups:
         if (company_id, period_id) in already:
             continue
         filled = _safe_fill_value(list(values), list(fact_ids))
+        if filled is None and allow_restatement:
+            filled = _restatement_fill_value(
+                list(values), list(fact_ids), list(filing_dates)
+            )
+            restated += filled is not None
         if filled is None:
             unsafe += 1
             continue
@@ -252,6 +314,7 @@ def resolve_conflict_fill(
         "conflict_groups": len(groups),
         "already_resolved": len(groups) - len(to_insert) - unsafe,
         "filled": len(to_insert),
+        "restatement_filled": restated,
         "unsafe_skipped": unsafe,
     }
     logger.info(
@@ -336,7 +399,7 @@ def resolve_split_like_conflicts(
     already = _load_already_resolved(conn, resolved_id)
 
     to_insert = []
-    for company_id, period_id, values, fact_ids in groups:
+    for company_id, period_id, values, fact_ids, _filing_dates in groups:
         if (company_id, period_id) in already:
             continue
         filled = _split_safe_fill_value(list(values), list(fact_ids))

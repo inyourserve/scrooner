@@ -1,6 +1,8 @@
 from decimal import Decimal
 
-from scrooner_pipeline.mapper.conflict_resolution import MAX_SAFE_RATIO, MAX_SPLIT_RATIO, MIN_SPLIT_RATIO, _safe_fill_value, _split_safe_fill_value
+from datetime import date
+
+from scrooner_pipeline.mapper.conflict_resolution import MAX_SAFE_RATIO, MAX_SPLIT_RATIO, MIN_SPLIT_RATIO, _restatement_fill_value, _safe_fill_value, _split_safe_fill_value
 
 
 def test_small_disagreement_picks_highest_fact_id():
@@ -90,3 +92,44 @@ class TestSplitSafeFillValue:
         # scales a negative EPS by the same factor as a positive one.
         values = [Decimal("-3.0"), Decimal("-0.3")]
         assert _split_safe_fill_value(values, [1, 2]) == (Decimal("-0.3"), 2)
+
+
+
+class TestRestatementFillValue:
+    """Symbotic Q2 FY2025 net income: -3,925K in the original 10-Q
+    (2025-05-07), -1,804K restated in the next year's 10-Q (2026-05-06)."""
+
+    def test_latest_filing_wins_for_a_restatement(self):
+        values = [Decimal("-3925000"), Decimal("-1804000")]
+        dates = [date(2025, 5, 7), date(2026, 5, 6)]
+        assert _restatement_fill_value(values, [10, 20], dates) == (Decimal("-1804000"), 20)
+
+    def test_latest_is_by_filing_date_not_fact_id(self):
+        values = [Decimal("-1804000"), Decimal("-3925000")]
+        dates = [date(2026, 5, 6), date(2025, 5, 7)]
+        assert _restatement_fill_value(values, [10, 20], dates) == (Decimal("-1804000"), 10)
+
+    def test_disagreeing_facts_on_the_latest_date_refuse(self):
+        values = [Decimal("100"), Decimal("200"), Decimal("300")]
+        dates = [date(2025, 1, 1), date(2026, 1, 1), date(2026, 1, 1)]
+        assert _restatement_fill_value(values, [1, 2, 3], dates) is None
+
+    def test_same_day_versions_are_not_a_restatement(self):
+        values = [Decimal("100"), Decimal("200")]
+        dates = [date(2026, 1, 1), date(2026, 1, 1)]
+        assert _restatement_fill_value(values, [1, 2], dates) is None
+
+    def test_scale_error_spread_refuses(self):
+        values = [Decimal("1000"), Decimal("1000000")]
+        dates = [date(2025, 1, 1), date(2026, 1, 1)]
+        assert _restatement_fill_value(values, [1, 2], dates) is None
+
+    def test_zero_refuses(self):
+        values = [Decimal("0"), Decimal("500")]
+        dates = [date(2025, 1, 1), date(2026, 1, 1)]
+        assert _restatement_fill_value(values, [1, 2], dates) is None
+
+    def test_sign_flip_within_bounds_uses_latest(self):
+        values = [Decimal("-400"), Decimal("300")]
+        dates = [date(2025, 1, 1), date(2026, 1, 1)]
+        assert _restatement_fill_value(values, [1, 2], dates) == (Decimal("300"), 2)
