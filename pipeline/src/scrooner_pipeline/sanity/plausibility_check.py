@@ -215,7 +215,40 @@ PRE_REVENUE_RD_SIC_DESCRIPTIONS: set[str] = {
     "Biological Products, (No Diagnostic Substances)",
     "In Vitro & In Vivo Diagnostic Substances",
 }
-SECTOR_EXCLUDED_RELATIVE_CHECK_METRICS: set[str] = {"ebitda", "fcf"}
+
+# Generalized 2026-09-29 from the ebitda/fcf-only version above --
+# sector exclusions apply per metric_name, regardless of whether that
+# metric is checked via RELATIVE_CHECKS or ABSOLUTE_BOUNDS (the
+# original design only worked for RELATIVE_CHECKS metrics, since it was
+# built solving the ebitda/fcf case specifically; roe/price_to_book are
+# ABSOLUTE_BOUNDS metrics and needed the same mechanism generalized to
+# reach them).
+#
+# roe/price_to_book -> {"Blank Checks"}: found live investigating the
+# `roe` critical cluster's own top offender, Cantor Equity Partners V,
+# Inc. -- real, authoritative stockholders_equity = $1,693 against real
+# TTM net_income of several million dollars. NOT the same "genuine
+# leverage/distress story" doc 47's own wide ROE bound is deliberately
+# tolerant of (confirmed on a second company the same pass, NRX
+# Pharmaceuticals, real -$170K equity from real, ongoing cash burn --
+# correctly left un-excluded, a real signal worth flagging). SPAC
+# accounting convention classifies most of a blank-check company's
+# raised capital as temporary "shares subject to possible redemption"
+# (excluded from PERMANENT stockholders_equity by design, regardless of
+# the company's actual financial health) -- a pure accounting
+# structural artifact, not a distress signal, that makes both ROE and
+# Price-to-Book meaningless for this one company type specifically.
+# ttm.py's own TTM ROE computation (`_compute_ttm_returns_for_company`)
+# has no materiality-floor mechanism at all (a separate code path from
+# calculate_shapes/, never covered by that refactor) -- this sector
+# exclusion is the right fix here regardless, since a blanket equity
+# floor would incorrectly suppress NRX Pharmaceuticals' real signal.
+SECTOR_EXCLUDED_METRICS: dict[str, set[str]] = {
+    "ebitda": PRE_REVENUE_RD_SIC_DESCRIPTIONS,
+    "fcf": PRE_REVENUE_RD_SIC_DESCRIPTIONS,
+    "roe": {"Blank Checks"},
+    "price_to_book": {"Blank Checks"},
+}
 
 
 def check_absolute(value: Decimal, bounds: tuple) -> tuple[str, str | None]:
@@ -482,16 +515,21 @@ def run_all(conn: psycopg.Connection) -> dict:
         except (InvalidOperation, TypeError):
             continue  # not a finite, comparable number -- nothing to check
 
+        if (
+            metric_name in SECTOR_EXCLUDED_METRICS
+            and sic_description_by_company.get(company_id)
+            in SECTOR_EXCLUDED_METRICS[metric_name]
+        ):
+            # Checked BEFORE the EXACT_SET/RELATIVE_CHECKS/ABSOLUTE_BOUNDS
+            # dispatch below -- generalized 2026-09-29 so a sector
+            # exclusion applies regardless of which check TYPE a metric
+            # uses (roe is ABSOLUTE_BOUNDS, ebitda/fcf are RELATIVE_CHECKS).
+            stats["skipped_sector_exclusion"] += 1
+            continue
+
         if metric_name in EXACT_SET_METRICS:
             result = check_exact_set(value, EXACT_SET_METRICS[metric_name])
         elif metric_name in RELATIVE_CHECKS:
-            if (
-                metric_name in SECTOR_EXCLUDED_RELATIVE_CHECK_METRICS
-                and sic_description_by_company.get(company_id)
-                in PRE_REVENUE_RD_SIC_DESCRIPTIONS
-            ):
-                stats["skipped_sector_exclusion"] += 1
-                continue
             concept_name, multiplier, description = RELATIVE_CHECKS[metric_name]
             denominator = denominators.get((company_id, concept_name))
             result = check_relative(value, denominator, multiplier, description)

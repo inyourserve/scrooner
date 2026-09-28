@@ -5,7 +5,9 @@ import pytest
 from scrooner_pipeline.sanity.plausibility_check import (
     ABSOLUTE_BOUNDS,
     EXACT_SET_METRICS,
+    PRE_REVENUE_RD_SIC_DESCRIPTIONS,
     RELATIVE_CHECKS,
+    SECTOR_EXCLUDED_METRICS,
     SEVERITY_CRITICAL,
     SEVERITY_OK,
     SEVERITY_WATCH,
@@ -196,6 +198,29 @@ def test_every_metric_appears_in_exactly_one_rule_table():
     assert not (absolute_names & exact_set_names)
     assert not (absolute_names & relative_names)
     assert not (exact_set_names & relative_names)
+
+
+@pytest.mark.unit
+def test_sector_excluded_metrics_reach_both_check_types():
+    """Generalized 2026-09-29 (root-causing the roe critical cluster --
+    Cantor Equity Partners V, Inc.'s real $1,693 stockholders_equity, a
+    SPAC trust-accounting artifact, not a leverage/distress story) so a
+    sector exclusion applies regardless of which check type a metric
+    uses -- the original design only reached RELATIVE_CHECKS metrics
+    (ebitda/fcf), roe/price_to_book are ABSOLUTE_BOUNDS metrics."""
+    # ebitda/fcf (RELATIVE_CHECKS) and roe/price_to_book (ABSOLUTE_BOUNDS)
+    # must BOTH be reachable through the one dict -- proves the dispatch
+    # in run_all() (checked before the EXACT_SET/RELATIVE_CHECKS/
+    # ABSOLUTE_BOUNDS branch) isn't accidentally scoped to only one type.
+    assert "ebitda" in SECTOR_EXCLUDED_METRICS
+    assert "ebitda" in RELATIVE_CHECKS
+    assert "roe" in SECTOR_EXCLUDED_METRICS
+    assert "roe" in ABSOLUTE_BOUNDS
+    assert "roe" not in RELATIVE_CHECKS
+
+    assert SECTOR_EXCLUDED_METRICS["ebitda"] == PRE_REVENUE_RD_SIC_DESCRIPTIONS
+    assert SECTOR_EXCLUDED_METRICS["roe"] == {"Blank Checks"}
+    assert SECTOR_EXCLUDED_METRICS["price_to_book"] == {"Blank Checks"}
 
 
 @pytest.mark.unit
