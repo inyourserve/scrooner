@@ -16,20 +16,24 @@ name: Full-population recompute
 #      margins read
 #   3. per-company, sharded: every metric stage
 #   4. once: screener snapshot
-# Shards stay at 4 so the whole job holds at most ~4 of the pooler's ~15
-# shared client connections.
+# Phase 1 uses 4 shards; phase 3 uses 8 (12 stages per company would not
+# fit a 6-hour job on 4). 8 connections is only safe with nothing else
+# attached to the pooler's ~15 shared slots: run this with the daily
+# refresh/sanity jobs and local batch jobs stopped (run 36349512360 died
+# of connection exhaustion with other jobs attached). Empty workflow
+# inputs fall back to their defaults, so skip a phase with `none`.
 
 on:
   workflow_dispatch:
     inputs:
       normalize_stages:
-        description: "Phase 1 normalizer stages (space-separated, empty to skip)"
+        description: "Phase 1 normalizer stages (space-separated; none = skip)"
         default: "derive-interim-quarters derive-q4"
       resolve_stages:
-        description: "Phase 1 mapper stages run right after normalize"
+        description: "Phase 1 mapper stages run right after normalize (none = skip)"
         default: "resolve-facts resolve-concept-fallbacks"
       population_stages:
-        description: "Phase 2 population-wide mapper stages"
+        description: "Phase 2 population-wide mapper stages (none = skip)"
         default: "resolve-statement-fallbacks resolve-conflict-fills"
       metric_stages:
         description: "Phase 3 per-company mapper stages"
@@ -99,14 +103,14 @@ jobs:
           PY
           echo "companies in shard: $(tr ',' '\n' < ciks.txt | grep -c .)"
       - name: Normalize
-        if: inputs.normalize_stages != ''
+        if: env.NORMALIZE_STAGES != 'none'
         run: |
           for stage in $NORMALIZE_STAGES; do
             echo "--- normalize $stage ---"
             uv run --project pipeline scrooner-normalize "$stage" --ciks "$(cat ciks.txt)" | tail -1
           done
       - name: Resolve
-        if: inputs.resolve_stages != ''
+        if: env.RESOLVE_STAGES != 'none'
         run: |
           for stage in $RESOLVE_STAGES; do
             echo "--- map $stage ---"
@@ -134,7 +138,7 @@ jobs:
         # statement_timeout, which only an in-session SET can lift (PGOPTIONS
         # is ignored by the pooler). Order per resolve-conflict-fills' own
         # docstring: statement fallbacks first, then conflict fills.
-        if: env.POPULATION_STAGES != ''
+        if: env.POPULATION_STAGES != 'none'
         run: |
           uv run --project pipeline python - <<'PY'
           import os, psycopg
@@ -176,7 +180,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -202,7 +206,7 @@ jobs:
                   "(select 1 from core.fact f where f.company_id = c.id) "
                   + scope_filter + " order by c.cik"
               ).fetchall()
-          shard, shards = int(os.environ["SHARD"]), int(os.environ["SHARDS"])
+          shard, shards = int(os.environ["SHARD"]), 8
           print(",".join(r[0] for i, r in enumerate(rows) if i % shards == shard))
           PY
       - name: Metric stages
