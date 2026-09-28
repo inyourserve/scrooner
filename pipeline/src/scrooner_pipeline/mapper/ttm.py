@@ -27,6 +27,7 @@ completeness discipline as Stage 3d's per-role check, not "sum whatever's
 available."
 """
 
+from datetime import timedelta
 from decimal import Decimal
 
 import psycopg
@@ -175,24 +176,42 @@ def _load_concept_id(conn: psycopg.Connection, name: str) -> int:
         return cur.fetchone()[0]
 
 
+class FactsByPeriod(dict):
+    """(fiscal_year, fiscal_period) -> (value, fact_ids, period_start,
+    period_end), plus `durations`: every duration fact for the concept,
+    including the unlabeled 6-/9-month year-to-date spans the dict can't
+    key. _ttm_sum's YTD fallback reads `durations`; any plain dict (other
+    modules' own loaders) simply has no fallback."""
+
+    durations: list[tuple]  # (start, end, value, fact_ids, source_concept_id)
+
+
 def _load_company_facts(
     conn: psycopg.Connection, company_id: int, concept_id: int
-) -> dict:
-    """(fiscal_year, fiscal_period) -> (value, fact_ids, period_start, period_end) for one concept."""
+) -> FactsByPeriod:
     with conn.cursor() as cur:
         cur.execute(
             """
-            select p.fiscal_year, p.fiscal_period, cf.value, cf.source_fact_ids, p.start_date, p.end_date
+            select p.fiscal_year, p.fiscal_period, cf.value, cf.source_fact_ids, p.start_date, p.end_date,
+                   (select f.concept_id from core.fact f where f.id = cf.source_fact_ids[1]) as source_concept_id
             from analytics.canonical_fact cf
             join core.period p on p.id = cf.period_id
-            where cf.company_id = %s and cf.canonical_concept_id = %s and p.fiscal_period is not null
+            where cf.company_id = %s and cf.canonical_concept_id = %s
             """,
             (company_id, concept_id),
         )
-        return {
-            (fy, fp): (val, fids, start, end)
-            for fy, fp, val, fids, start, end in cur.fetchall()
-        }
+        rows = cur.fetchall()
+    out = FactsByPeriod(
+        ((fy, fp), (val, fids, start, end))
+        for fy, fp, val, fids, start, end, _src in rows
+        if fp is not None
+    )
+    out.durations = [
+        (start, end, val, fids, src)
+        for _fy, _fp, val, fids, start, end, src in rows
+        if (end - start).days >= YTD_MIN_SPAN_DAYS
+    ]
+    return out
 
 
 def _compute_growth_for_company(
@@ -336,6 +355,89 @@ INSTANT_CONCEPTS = {
 }
 
 
+# YTD-based TTM (2026-09-29, founder suggestion). The four-quarter sum
+# needs every discrete quarter, including a derived Q4 that only exists
+# when FY and Q1-Q3 (or the 9-month YTD) are all authoritative. The
+# standard alternative uses only as-filed cumulative figures:
+#   TTM = latest YTD + prior full year - prior year's same-span YTD
+# e.g. at Q3 FY2026: 9M FY2026 + FY2025 - 9M FY2025. Symbotic restated all
+# of FY2025, so its FY2025 Q4 can never be derived, yet FY2025 and both
+# 9-month spans exist. Used only when the four-quarter chain fails.
+# All three pieces must come from the same XBRL tag: Plains GP's FY2025
+# net income resolved from ProfitLoss ($1,686M, incl. noncontrolling
+# interests) while its quarters and YTDs came from NetIncomeLoss ($259M
+# for the year), so mixing them gave a $1,980M TTM against a real ~$554M.
+YTD_MIN_SPAN_DAYS = 80  # durations only; instants (start == end) excluded
+FULL_YEAR_SPAN_DAYS = (350, 380)
+DATE_SLACK_DAYS = 3
+PRIOR_YEAR_SLACK_DAYS = 8  # 52/53-week calendars shift a year by up to a week
+
+
+def _one_value(candidates: list[tuple]) -> tuple | None:
+    """The single (value, fact_ids) when every candidate agrees, else None."""
+    if not candidates or len({c[0] for c in candidates}) != 1:
+        return None
+    return candidates[0]
+
+
+def _ttm_from_ytd(
+    durations: list[tuple], anchor_end
+) -> tuple[Decimal | None, list[int]]:
+    def near(a, b, days):
+        return abs((a - b).days) <= days
+
+    full_years = [
+        d
+        for d in durations
+        if FULL_YEAR_SPAN_DAYS[0] <= (d[1] - d[0]).days <= FULL_YEAR_SPAN_DAYS[1]
+    ]
+    # A Q4 anchor's TTM is the fiscal year that ends with it.
+    fy_now = _one_value(
+        [
+            (v, f, t)
+            for s, e, v, f, t in full_years
+            if near(e, anchor_end, DATE_SLACK_DAYS)
+        ]
+    )
+    if fy_now is not None:
+        return fy_now[0], list(fy_now[1])
+
+    prior = [fy for fy in full_years if fy[1] < anchor_end]
+    if not prior:
+        return None, []
+    p_start, p_end = max(prior, key=lambda fy: fy[1])[:2]
+    if (anchor_end - p_end).days > FULL_YEAR_SPAN_DAYS[1]:
+        return None, []
+    prior_fy = _one_value(
+        [(v, f, t) for s, e, v, f, t in full_years if s == p_start and e == p_end]
+    )
+    ytd = _one_value(
+        [
+            (v, f, t)
+            for s, e, v, f, t in durations
+            if near(s, p_end + timedelta(days=1), DATE_SLACK_DAYS)
+            and near(e, anchor_end, DATE_SLACK_DAYS)
+        ]
+    )
+    prior_ytd = _one_value(
+        [
+            (v, f, t)
+            for s, e, v, f, t in durations
+            if near(s, p_start, DATE_SLACK_DAYS)
+            and near(e, anchor_end - timedelta(days=365), PRIOR_YEAR_SLACK_DAYS)
+            and e < p_end
+        ]
+    )
+    if prior_fy is None or ytd is None or prior_ytd is None:
+        return None, []
+    if len({prior_fy[2], ytd[2], prior_ytd[2]}) != 1:
+        return None, []  # pieces from different XBRL tags don't subtract
+    return (
+        ytd[0] + prior_fy[0] - prior_ytd[0],
+        list(ytd[1]) + list(prior_fy[1]) + list(prior_ytd[1]),
+    )
+
+
 def _ttm_sum(
     by_period: dict, fiscal_year: int, fiscal_period: str
 ) -> tuple[Decimal | None, list[int]]:
@@ -345,11 +447,18 @@ def _ttm_sum(
     for key in needed:
         hit = by_period.get(key)
         if hit is None:
-            return None, []
+            break
         value, fids, _s, _e = hit
         total += value
         fact_ids.extend(fids)
-    return total, fact_ids
+    else:
+        return total, fact_ids
+
+    durations = getattr(by_period, "durations", None)
+    anchor = by_period.get((fiscal_year, fiscal_period))
+    if durations and anchor is not None:
+        return _ttm_from_ytd(durations, anchor[3])
+    return None, []
 
 
 # --- TTM margins (2026-09-13) ---
