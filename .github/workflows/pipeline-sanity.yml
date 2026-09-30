@@ -97,6 +97,16 @@ jobs:
         # yield max 837,700%, negative current_ratio/quick_ratio).
         if: always()
         run: uv run --project pipeline scrooner-sanity plausibility
+      - name: Period completeness (which quarters are missing, and why)
+        # Added 2026-09-30. Expected periods come from each company's own
+        # 10-Q/10-K filings; every missing quarter/year of six key concepts
+        # gets a cause (rounding conflict, absent from SEC's feed, Q4 not
+        # derived, ...) in analytics.period_gap, and one finding per
+        # company/concept/cause in analytics.company_data_finding. Causes
+        # that stop occurring are marked fixed, so the history is kept.
+        # ~8 minutes for all active companies.
+        if: always()
+        run: uv run --project pipeline python -m scrooner_pipeline.sanity.period_completeness
       - name: yfinance full financial statements (rotating batch)
         # Added 2026-09-08 -- deeper than the ratio check above (every
         # quarter's actual line items, not just latest-period ratios),

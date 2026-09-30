@@ -60,6 +60,16 @@ concept
 
 `incidents verify <company_id>` snapshots `analytics.data_incident` for one company, re-runs the two checks that are cheap and safe to rerun on demand (Tag Investigator resolution, Time-Series self-consistency), snapshots again, and reports resolved/regressed/still-open. Both underlying functions (`investigate_open_findings`, `timeseries_check.run_concept`) gained an optional `company_id` scope specifically for this — the first live run without it took 90+ seconds and had to be killed because it was reprocessing the whole population's ~20,000 open findings just to verify one company; scoped, the same check runs in under 2 minutes end-to-end for one company (dominated by 7 sequential SQL passes, not per-row work). Deliberately does NOT auto-trigger a fresh yfinance/Frames fetch — those only update on their own scheduled run; verifying a fix that depends on one of those means waiting for that run, then diffing again.
 
+## Period Completeness — which quarters are missing, and why (2026-09-30)
+
+`sanity/period_completeness.py`, migration 0083, runs daily in `pipeline-sanity.yml` (`uv run python -m scrooner_pipeline.sanity.period_completeness [--ciks ...]`, ~8 min for all active companies).
+
+- **Expected periods come from the company's own filings** (`core.filing.period_of_report`): each 10-Q → a quarter, each 10-K → a full year plus a Q4 (derived is fine), balance-sheet concepts → the period-end snapshot. Since 2019, for six concepts: display revenue, net income, diluted EPS, CFO, total assets, equity. Only (company, concept) pairs with at least one value are checked; a concept absent entirely is the tag library's question.
+- **Every missing cell gets one cause:** `not_in_sec_feed` (confirmed per filing against SEC's own `companyconcept` accessions, after a 7-day grace), `filing_not_processed`, `conflict_rounding` (≤0.1% apart), `conflict_split` (whole-number ratio, e.g. Apple 2020 4:1), `conflict_material`, `not_resolved`, `q4_not_derived`, `quarter_not_derived` (only year-to-date filed), `no_mapped_tag`. A Q4 whose full year is missing inherits the full year's cause.
+- **Stored:** `analytics.period_gap` (one row per missing cell, with filing and filed values), `analytics.period_completeness` (expected/present/missing per company-concept), `analytics.period_gap_summary` (causes ranked by recent periods and market cap), and one `analytics.company_data_finding` per company/concept/cause (`evidence->>'source' = 'period_completeness'`). A cause that stops occurring is marked `fixed` with `resolved_at` — the history of what was wrong and when it cleared is the point.
+
+First run (2026-09-30): 91.1% of expected cells present; 74,888 missing cells, 21,864 findings. Last 15 months by cause: no mapped tag 3,688 · absent from SEC's feed 1,319 (159 companies, e.g. PayPal's 2026-07-28 10-Q) · Q4 not derived 515 · material conflict 505 · quarter only YTD 495 · rounding conflict 466 (Airbnb, JPM FY net income) · split 117 · never processed 15.
+
 ## Extending this
 
 - **New checker against an existing source** (more yfinance fields, more Frames concepts/periods): add to the relevant module's existing config list (`METRIC_MAPPINGS`, `CONCEPTS_TO_CHECK`, `LINE_ITEM_MAP`) — verify the real field/shape live first, same discipline as every entry already there.
