@@ -201,30 +201,36 @@ where v.source = 'concept_mapping'
 # Verdicts that mean "don't propose this tag for this concept again".
 EXCLUDED_VERDICTS = ("rejected", "different_concept", "partial_component")
 
-# Tag leads per concept, ranked by lift: how much more often companies
-# MISSING the concept file the tag than companies that have it. Plain
-# co-occurrence counts are dominated by tags every company files
-# (EntityCommonStockSharesOutstanding, AdditionalPaidInCapital); lift keeps
-# the tags that are distinctive of the gap. Only current tags (a fact in the
-# last 2 years), only active companies. Computed over missing rows only;
-# the "have" side comes from the library's own active_company_count.
+# Tag leads per concept, with value evidence (2026-09-30). A first version
+# ranked by lift (tags distinctive of companies missing a concept) and was
+# nonsense for sparse concepts -- AssetsCurrent "led" BDC income. A lead now
+# needs two things:
+#   1. It is filed by companies that SHOULD have the concept (its
+#      data_point_registry.applicable_population) but don't.
+#   2. Its values agree with the concept where both exist: for companies
+#      that have the concept and file the tag for the same period, the share
+#      of values within LEAD_AGREE_TOLERANCE. This is the coexistence check
+#      every mapping change already needs, run automatically.
+# Only concepts with concept_mapping rows (the ones a tag can fill) get
+# leads; mapped tags and tags with a rejected / different_concept /
+# partial_component verdict are skipped.
 LEAD_MIN_COMPANIES = 10
-LEAD_MIN_LIFT = 0.05
+LEAD_CANDIDATES_PER_CONCEPT = 40
+LEAD_MIN_PAIRS = 20
+LEAD_MIN_AGREE_RATE = 0.5
+LEAD_AGREE_TOLERANCE = 0.02
 LEADS_PER_CONCEPT = 25
-_LEADS_SQL = """
+_LEAD_CANDIDATES_SQL = """
+create temp table lead_candidates on commit drop as
 with missing as (
     select l.canonical_concept_id, l.company_id
     from analytics.company_concept_lineage l
-    join core.company co on co.id = l.company_id and co.status = 'active'
+    join analytics.canonical_concept cc on cc.id = l.canonical_concept_id
+    join analytics.data_point_registry r on r.data_point_name = cc.name
+    join analytics.company_population cp
+      on cp.company_id = l.company_id and cp.population_name = r.applicable_population
     where not l.has_value
-),
-totals as (
-    select l.canonical_concept_id,
-           count(*) filter (where not l.has_value) as n_missing,
-           count(*) filter (where l.has_value) as n_have
-    from analytics.company_concept_lineage l
-    join core.company co on co.id = l.company_id and co.status = 'active'
-    group by 1
+      and exists (select 1 from analytics.concept_mapping cm where cm.canonical_concept_id = l.canonical_concept_id)
 ),
 filed as (
     select m.canonical_concept_id, t.concept_id, count(*) as miss_f
@@ -232,16 +238,13 @@ filed as (
     join analytics.company_sec_tag t on t.company_id = m.company_id
     where t.last_period_end >= current_date - 730
     group by 1, 2
+    having count(*) >= %(min_companies)s
 ),
-scored as (
-    select f.canonical_concept_id, f.concept_id, f.miss_f,
-           f.miss_f::numeric / tt.n_missing
-             - greatest(lib.active_company_count - f.miss_f, 0)::numeric / greatest(tt.n_have, 1) as lift
+eligible as (
+    select f.*, row_number() over (partition by f.canonical_concept_id order by f.miss_f desc) as rnk
     from filed f
-    join totals tt on tt.canonical_concept_id = f.canonical_concept_id
     join analytics.sec_tag_library lib on lib.concept_id = f.concept_id
-    where f.miss_f >= %(min_companies)s
-      and not exists (
+    where not exists (
           select 1 from analytics.concept_mapping cm
           where cm.concept_id = f.concept_id and cm.canonical_concept_id = f.canonical_concept_id)
       and not exists (
@@ -249,13 +252,32 @@ scored as (
           where v.taxonomy = lib.taxonomy and v.tag = lib.tag
             and v.canonical_concept_id = f.canonical_concept_id
             and v.verdict = any(%(excluded)s))
+)
+select canonical_concept_id, concept_id, miss_f from eligible where rnk <= %(candidates)s
+"""
+_LEAD_SCORE_SQL = """
+with scored as (
+    select c.canonical_concept_id, c.concept_id, c.miss_f,
+           count(*) as pairs,
+           count(*) filter (where abs(f.value - cf.value) <= %(tolerance)s * abs(cf.value)) as agree
+    from lead_candidates c
+    join core.fact f on f.concept_id = c.concept_id and f.is_authoritative
+    join analytics.canonical_fact cf
+      on cf.company_id = f.company_id and cf.period_id = f.period_id
+     and cf.canonical_concept_id = c.canonical_concept_id and cf.value <> 0
+    group by 1, 2, 3
 ),
 ranked as (
-    select *, row_number() over (partition by canonical_concept_id order by miss_f * lift desc) as rnk
-    from scored where lift >= %(min_lift)s
+    select *, agree::numeric / pairs as agree_rate,
+           row_number() over (partition by canonical_concept_id
+                              order by (agree::numeric / pairs) * miss_f desc) as rnk
+    from scored
+    where pairs >= %(min_pairs)s and agree::numeric / pairs >= %(min_agree)s
 )
-insert into analytics.concept_gap_lead (canonical_concept_id, concept_id, missing_companies_filing, rank)
-select canonical_concept_id, concept_id, miss_f, rnk from ranked where rnk <= %(per_concept)s
+insert into analytics.concept_gap_lead
+    (canonical_concept_id, concept_id, missing_companies_filing, rank, coexist_pairs, agree_rate)
+select canonical_concept_id, concept_id, miss_f, rnk, pairs, round(agree_rate, 3)
+from ranked where rnk <= %(per_concept)s
 """
 
 
@@ -337,12 +359,20 @@ def build_tag_library(
             cur.execute("set statement_timeout = 0")
             cur.execute("delete from analytics.concept_gap_lead")
             cur.execute(
-                _LEADS_SQL,
+                _LEAD_CANDIDATES_SQL,
                 {
                     "min_companies": LEAD_MIN_COMPANIES,
-                    "min_lift": LEAD_MIN_LIFT,
-                    "per_concept": LEADS_PER_CONCEPT,
+                    "candidates": LEAD_CANDIDATES_PER_CONCEPT,
                     "excluded": list(EXCLUDED_VERDICTS),
+                },
+            )
+            cur.execute(
+                _LEAD_SCORE_SQL,
+                {
+                    "tolerance": LEAD_AGREE_TOLERANCE,
+                    "min_pairs": LEAD_MIN_PAIRS,
+                    "min_agree": LEAD_MIN_AGREE_RATE,
+                    "per_concept": LEADS_PER_CONCEPT,
                 },
             )
         conn.commit()
@@ -376,7 +406,7 @@ def gap_tags(
         cur.execute(
             """
             select lib.taxonomy || ':' || lib.tag, gl.missing_companies_filing, gl.rank,
-                   lib.active_company_count, lib.mapped_concepts,
+                   lib.active_company_count, lib.mapped_concepts, gl.coexist_pairs, gl.agree_rate,
                    (select count(*) from analytics.company_concept_lineage l
                      join core.company co on co.id = l.company_id and co.status = 'active'
                     where l.canonical_concept_id = gl.canonical_concept_id and not l.has_value)
@@ -396,7 +426,9 @@ def gap_tags(
                 "rank": r[2],
                 "active_companies_filing": r[3],
                 "mapped_to_other_concepts": r[4],
-                "missing_total": r[5],
+                "coexist_pairs": r[5],
+                "agree_rate": r[6],
+                "missing_total": r[7],
             }
             for r in cur.fetchall()
         ]
@@ -410,7 +442,7 @@ def gap_report(conn: psycopg.Connection, limit: int = 20) -> dict:
         cur.execute("set statement_timeout = 0")
         cur.execute(
             """select concept, coverage_pct, missing, missing_explained, missing_unexplained,
-                      unexplained_market_cap, top_lead_tag, top_lead_companies
+                      unexplained_market_cap, top_lead_tag, top_lead_companies, top_lead_agree_rate
                from analytics.data_gap_by_concept
                order by unexplained_market_cap desc nulls last, missing_unexplained desc
                limit %s""",

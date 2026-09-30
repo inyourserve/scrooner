@@ -692,7 +692,7 @@ def gap_tags_cmd(
     for r in rows:
         typer.echo(
             f"  #{r['rank']:<3} {r['missing_companies_filing']:>5} of missing file it  "
-            f"{r['tag']:<70} (filed by {r['active_companies_filing']} active cos)"
+            f"{r['tag']:<70} agrees {float(r['agree_rate']):.0%} on {r['coexist_pairs']} overlapping periods"
         )
 
 
@@ -707,10 +707,11 @@ def gap_report_cmd(
     with get_connection() as conn:
         report = gap_report(conn, limit=limit)
     typer.echo("CONCEPTS (by unexplained missing market cap)")
-    for c, cov, miss, expl, unexpl, mcap, lead, lead_n in report["concepts"]:
+    for c, cov, miss, expl, unexpl, mcap, lead, lead_n, agree in report["concepts"]:
         mcap_b = f"${float(mcap) / 1e9:,.0f}B" if mcap else "-"
+        lead_s = f"{lead} ({lead_n} cos, {float(agree):.0%} agree)" if lead else "-"
         typer.echo(
-            f"  {c:<34} {cov or 0:>5}%  missing {miss:>5} (explained {expl:>5}, unexplained {unexpl:>5}, {mcap_b:>8})  lead: {lead or '-'} ({lead_n or 0})"
+            f"  {c:<34} {cov or 0:>5}%  missing {miss:>5} (explained {expl:>5}, unexplained {unexpl:>5}, {mcap_b:>8})  lead: {lead_s}"
         )
     typer.echo("METRICS (by unexplained missing companies)")
     for m, cov, miss, unexpl, inputs in report["metrics"]:
