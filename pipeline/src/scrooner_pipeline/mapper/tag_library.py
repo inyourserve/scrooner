@@ -220,6 +220,11 @@ LEAD_MIN_PAIRS = 20
 LEAD_MIN_AGREE_RATE = 0.5
 LEAD_AGREE_TOLERANCE = 0.02
 LEADS_PER_CONCEPT = 25
+# Scored one concept at a time over the last ~4 years only: one query over
+# every candidate tag x all history joined 76M-row core.fact at once and
+# risked large temp-file spills -- the production disk went read-only
+# (2026-09-30) while that query and a population-wide rewrite ran together.
+LEAD_EVIDENCE_DAYS = 1460
 _LEAD_CANDIDATES_SQL = """
 create temp table lead_candidates on commit drop as
 with missing as (
@@ -262,9 +267,11 @@ with scored as (
            count(*) filter (where abs(f.value - cf.value) <= %(tolerance)s * abs(cf.value)) as agree
     from lead_candidates c
     join core.fact f on f.concept_id = c.concept_id and f.is_authoritative
+    join core.period p on p.id = f.period_id and p.end_date >= current_date - %(evidence_days)s
     join analytics.canonical_fact cf
       on cf.company_id = f.company_id and cf.period_id = f.period_id
      and cf.canonical_concept_id = c.canonical_concept_id and cf.value <> 0
+    where c.canonical_concept_id = %(concept)s
     group by 1, 2, 3
 ),
 ranked as (
@@ -366,15 +373,19 @@ def build_tag_library(
                     "excluded": list(EXCLUDED_VERDICTS),
                 },
             )
-            cur.execute(
-                _LEAD_SCORE_SQL,
-                {
-                    "tolerance": LEAD_AGREE_TOLERANCE,
-                    "min_pairs": LEAD_MIN_PAIRS,
-                    "min_agree": LEAD_MIN_AGREE_RATE,
-                    "per_concept": LEADS_PER_CONCEPT,
-                },
-            )
+            cur.execute("select distinct canonical_concept_id from lead_candidates")
+            for (concept,) in cur.fetchall():
+                cur.execute(
+                    _LEAD_SCORE_SQL,
+                    {
+                        "concept": concept,
+                        "evidence_days": LEAD_EVIDENCE_DAYS,
+                        "tolerance": LEAD_AGREE_TOLERANCE,
+                        "min_pairs": LEAD_MIN_PAIRS,
+                        "min_agree": LEAD_MIN_AGREE_RATE,
+                        "per_concept": LEADS_PER_CONCEPT,
+                    },
+                )
         conn.commit()
     with conn.cursor() as cur:
         cur.execute(
