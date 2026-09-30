@@ -25,6 +25,7 @@ from scrooner_pipeline.sanity.report import (
 from scrooner_pipeline.sanity.tag_investigator import investigate_open_findings
 from scrooner_pipeline.sanity.timeseries_check import run_all as run_timeseries_all
 from scrooner_pipeline.sanity.plausibility_check import run_all as run_plausibility_all
+from scrooner_pipeline.sanity.accounting_identity import run_all as run_identities_all
 
 app = typer.Typer()
 
@@ -159,6 +160,25 @@ def timeseries_cmd() -> None:
     with get_connection() as conn:
         stats = run_timeseries_all(conn)
     typer.echo(f"sanity timeseries: {stats}")
+
+
+@app.command("identities")
+def identities_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs; default is the whole active population."),
+    layer: str = typer.Option("both", help="display, raw or both."),
+) -> None:
+    """Accounting identity checks (sanity/accounting_identity.py) --
+    measures CORRECTNESS, not coverage: do a company's own numbers agree
+    (Assets = Liabilities + Equity, GP = Revenue - COGS, ...). Zero
+    external calls. Results in analytics.identity_check_summary /
+    identity_check_failure; population score in the
+    analytics.identity_check_score view."""
+    layers = ("display", "raw") if layer == "both" else (layer,)
+    cik_set = {c.strip() for c in ciks.split(",")} if ciks else None
+    with get_connection() as conn:
+        stats = run_identities_all(conn, layers=layers, ciks=cik_set)
+    for key, s in sorted(stats.items()):
+        typer.echo(f"{key:40} checked={s['checked']:>8} pass={s['pass_pct']}% tautology_skipped={s['tautology_skipped']}")
 
 
 @app.command("plausibility")
