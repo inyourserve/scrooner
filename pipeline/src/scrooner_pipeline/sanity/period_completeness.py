@@ -50,12 +50,21 @@ ROUNDING_SPREAD = Decimal("0.001")
 
 # checked concept -> (shape, base concept whose mapped tags are traced)
 CHECK_CONCEPTS: dict[str, tuple[str, str]] = {
+    # Checked concept (the first tuple element) must be the *_resolved
+    # display companion the company page/screener actually reads, not the
+    # raw canonical concept -- found live 2026-10-02: the first run (09-30)
+    # checked 5 of 6 raw concepts directly, so every conflict a later stage
+    # (conflict_resolution.py's restatement fill, 8e5599e) already closed
+    # still looked like an open gap. net_income_resolved already had
+    # Airbnb's FY2025 ($2,511,277,000, the corrected latest-filing value)
+    # and JPMorgan's full FY series on the exact run that reported them
+    # missing. revenue was the one concept already done right.
     "revenue_sanity_resolved": ("duration", "revenue"),
-    "net_income": ("duration", "net_income"),
-    "diluted_eps": ("duration", "diluted_eps"),
-    "cfo": ("duration", "cfo"),
-    "total_assets": ("instant", "total_assets"),
-    "stockholders_equity": ("instant", "stockholders_equity"),
+    "net_income_resolved": ("duration", "net_income"),
+    "diluted_eps_resolved": ("duration", "diluted_eps"),
+    "cfo_resolved": ("duration", "cfo"),
+    "total_assets_resolved": ("instant", "total_assets"),
+    "stockholders_equity_resolved": ("instant", "stockholders_equity"),
 }
 
 # cause -> (company_data_finding.finding_type, stable summary text)
