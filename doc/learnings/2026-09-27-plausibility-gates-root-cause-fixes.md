@@ -245,3 +245,35 @@ Grouped the full 115-company `roe` critical cluster by `sic_description`: Pharma
 **Fix**: generalized `plausibility_check.py`'s sector-exclusion mechanism from `SECTOR_EXCLUDED_RELATIVE_CHECK_METRICS` (ebitda/fcf only, RELATIVE_CHECKS-only) to `SECTOR_EXCLUDED_METRICS: dict[str, set[str]]`, checked once before the EXACT_SET/RELATIVE_CHECKS/ABSOLUTE_BOUNDS dispatch — reaches ABSOLUTE_BOUNDS metrics (`roe`, `price_to_book`, both share the `stockholders_equity` denominator) as well as RELATIVE_CHECKS ones, with zero change to either check type's own logic. 734 pipeline unit tests passing (1 new test asserting the dict reaches both check types correctly).
 
 **Deployment status**: code committed, not yet redeployed — a coordinating peer session is running a multi-stage full-population recompute (refresh, sanity, then a conflict-fill/TTM-recompute pass) that will itself change `metric_value` again. Holding the full `scrooner-sanity plausibility` rerun until that's done, so the resulting numbers reflect the final, stable state rather than an intermediate one.
+
+## Third-day addendum (2026-10-02): `goodwill_pct_assets` investigated and closed out — heterogeneous, correctly left flagged
+
+Last remaining unexamined cluster from doc 47's original list (6 critical). Investigated 2 of 6 companies in depth, found two genuinely *different* root causes, confirming this cluster is heterogeneous rather than one systemic bug:
+
+- **Triller Group Inc.**: `goodwill = $1,005,778,000` ($1.006B) against `total_assets = $50,578,000` for the same FY2024 period — real, authoritative, correctly-mapped `us-gaap:Goodwill` tag from a real 10-K (filed 2026-01-26), no amendment exists. Almost certainly a genuine filer-side 1000x scale error (plausibly should read $1,005,778) — same category as Mosaic Co's dividend-per-share error, not fixable without guessing the intended value.
+- **PetVivo Holdings, Inc.**: `goodwill = $13,407,693` stays **exactly frozen** across 5 consecutive real filing periods (FY2018 through FY2019) while `total_assets` genuinely shrinks from $1.57M to $691K as the company burns cash. Since goodwill is always a subset of total assets by accounting definition, this is structurally impossible once total_assets drops below it — but the flat, repeated value across many periods is a different signature than a one-off typo, more consistent with a stale/carried-over XBRL context than a single data-entry mistake. Not investigated further (would need the actual filing HTML, not just the structured facts, to confirm).
+
+**Conclusion: this cluster does not get a code fix.** Unlike the materiality-floor pattern (revenue/assets/liabilities/interest-expense near-zero) or the SPAC equity-structure pattern (roe/price_to_book), there's no single root cause here that generalizes across companies — each is its own small, real, likely-unfixable-without-guessing anomaly in a real company's own SEC filing. Given the tiny scale (6 of ~245,000 checked values) and this project's standing "never guess a value" discipline, correctly left flagged as `critical` (working as intended — these ARE worth a human's attention) rather than force-fit into an explanation that doesn't actually hold for all 6.
+
+## Final status, this investigation closed out
+
+All items from the original "still open" list have now been either fixed or deliberately, evidence-backed left alone:
+
+| Cluster | Outcome |
+|---|---|
+| Growth-rate discontinuities (net_income/eps/fcf_growth_yoy) | **Fixed** — materiality floor on prior-period base |
+| ebitda/fcf TTM-vs-quarterly denominator | **Fixed** — `_load_ttm_revenue_denominators()` |
+| ebitda/fcf pharma/biotech noise | **Fixed** — sector exclusion |
+| operating_margin/net_margin/roa/interest_coverage_ratio | **Fixed** — concept-keyed materiality floors |
+| current_ratio/quick_ratio (Invesco currency trusts) | **Fixed** — `current_liabilities` floor |
+| roe/price_to_book (SPAC equity structure) | **Fixed** — sector exclusion, generalized mechanism |
+| Oyocar Group (`AssetsCurrent = -$26`) | Investigated, real filer XBRL error, correctly left flagged |
+| Zedge (`InventoryNet` > `current_assets`) | Investigated, likely period-bracketing mismatch, correctly left flagged |
+| Mosaic Co (`dividend_yield` 837,700%+) | Investigated, real filer XBRL scale error, correctly left flagged |
+| goodwill_pct_assets (6 companies) | Investigated, heterogeneous real anomalies, correctly left flagged |
+| working_capital/net_cash (distressed balance sheets) | Investigated, real signal, correctly left flagged |
+| `*_reconciliation_gap` family | By design, diagnostic not a locked ratio, correctly left flagged |
+| Triton International's revenue gap | Sized, not fixed — a real, separate dimensional-XBRL mapping gap, flagged for a future pass |
+| Beasley Broadcast's large-base EPS case (bankruptcy emergence) | Sized, not fixed — the materiality floor doesn't apply to a large prior base |
+
+Verified live via the daily cron's own run (2026-09-30 21:33 UTC, after the coordinated full-population recompute completed): `current_ratio` critical 6→0, `price_to_book` 5→2, `roe` 115→105 (Cantor Equity Partners V confirmed fully excluded, zero rows). Critical count overall: 7,003 (original) → 4,509 (current, includes normal day-to-day drift from new periods/prices on top of all fixes above).

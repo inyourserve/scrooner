@@ -180,6 +180,12 @@ per-company score. Build it in step F, not as another standalone percentage.
 
 ## 8. Results of this pass
 
-See the learnings entry
-`doc/learnings/2026-09-30-accounting-identity-checks-and-cogs-tie.md` for
-before/after numbers on the 172 recomputed companies.
+- **Gross-profit identity for the 172 recomputed companies:** raw 74.1% → 91.1%,
+  display 73.2% → 89.3%.
+- **Microsoft FY2015 gross margin:** 77.1% → 64.7%; the FY row now agrees with its TTM
+  row.
+- **Connection hardening (b61c257):** TCP keepalives on every pipeline connection, and
+  `safe_rollback` in 13 batch loops, enforced by a unit test.
+
+Details, including the read-only window that interrupted the recompute, are in
+`doc/learnings/2026-09-30-accounting-identity-checks-and-cogs-tie.md`.
