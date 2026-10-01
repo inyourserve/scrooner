@@ -28,7 +28,7 @@ already paid the cost of a stage that didn't (doc 04, CLAUDE.md).
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -232,6 +232,7 @@ def resolve(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "resolve", exc)
+            conn = safe_rollback(conn, stage="resolve", cik=cik)
             continue
         totals["ok"] += 1
         totals["resolved"] += stats["resolved"]

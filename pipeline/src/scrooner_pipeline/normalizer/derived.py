@@ -40,7 +40,7 @@ from datetime import timedelta
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -399,6 +399,7 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "core.normalizer_error", cik, "derive_q4", exc)
+            conn = safe_rollback(conn, stage="derive_q4", cik=cik)
             continue
         totals["ok"] += 1
         for k in (

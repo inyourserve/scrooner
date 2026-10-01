@@ -20,7 +20,7 @@ resolves at both FY and quarterly granularity in real data).
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -206,6 +206,7 @@ def calculate_tax_reconciliation(conn: psycopg.Connection, ciks: set[str]) -> di
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "tax_reconciliation", exc)
+            conn = safe_rollback(conn, stage="tax_reconciliation", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]

@@ -32,7 +32,7 @@ actually touches, leaving everything else 2e resolved untouched.
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -211,6 +211,7 @@ def resolve_restatements(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "core.normalizer_error", cik, "restatements", exc)
+            conn = safe_rollback(conn, stage="restatements", cik=cik)
             continue
         totals["ok"] += 1
         totals["linked"] += link_stats["linked"]

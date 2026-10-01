@@ -35,7 +35,7 @@ from scrooner_pipeline.collector.storage import (
     SupabaseStorageClient,
     strip_bucket_prefix,
 )
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -114,6 +114,7 @@ def normalize_units(conn: psycopg.Connection, ciks: set[str]) -> dict:
             except Exception as exc:
                 stats["errored"] += 1
                 log_error(conn, "core.normalizer_error", cik, "units", exc)
+                conn = safe_rollback(conn, stage="units", cik=cik)
                 continue
             stats[result["status"]] += 1
             for raw_unit in result["raw_units"]:

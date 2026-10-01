@@ -42,7 +42,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -144,6 +144,7 @@ def resolve_authoritative(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "core.normalizer_error", cik, "dedupe", exc)
+            conn = safe_rollback(conn, stage="dedupe", cik=cik)
             continue
         totals["ok"] += 1
         for k in ("duplicate_groups", "agreed_duplicate_groups", "conflict_groups"):

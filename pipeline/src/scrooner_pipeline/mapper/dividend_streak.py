@@ -29,7 +29,7 @@ from datetime import date
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -194,6 +194,7 @@ def calculate_dividend_streak(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "dividend_streak", exc)
+            conn = safe_rollback(conn, stage="dividend_streak", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]

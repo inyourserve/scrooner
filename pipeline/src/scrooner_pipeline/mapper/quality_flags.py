@@ -33,7 +33,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
 
@@ -383,6 +383,7 @@ def calculate_quality_flags(conn: psycopg.Connection, ciks: set[str]) -> dict:
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "quality_flags", exc)
+            conn = safe_rollback(conn, stage="quality_flags", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]

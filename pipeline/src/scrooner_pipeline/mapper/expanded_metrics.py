@@ -36,7 +36,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.config import settings
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.mapper.price_metrics import (
     _latest_instant_fact,
     _load_shares_outstanding_fallback,
@@ -822,6 +822,7 @@ def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "analytics.mapper_error", cik, "expanded_metrics", exc)
+            conn = safe_rollback(conn, stage="expanded_metrics", cik=cik)
             continue
         totals["ok"] += 1
         totals["computed"] += stats["computed"]

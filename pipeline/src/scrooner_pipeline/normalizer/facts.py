@@ -40,7 +40,7 @@ from scrooner_pipeline.collector.storage import (
     SupabaseStorageClient,
     strip_bucket_prefix,
 )
-from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST
 from scrooner_pipeline.normalizer.units import canonicalize_unit
 
@@ -283,6 +283,7 @@ def normalize_facts(conn: psycopg.Connection, ciks: set[str]) -> dict:
             except Exception as exc:
                 errored.append(cik)
                 log_error(conn, "core.normalizer_error", cik, "facts", exc)
+                conn = safe_rollback(conn, stage="facts", cik=cik)
                 continue
             per_cik[cik] = result
             if result["status"] == "ok":
