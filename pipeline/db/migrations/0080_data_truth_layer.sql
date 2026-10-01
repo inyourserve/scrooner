@@ -50,6 +50,14 @@ create table if not exists analytics.company_data_finding (
 );
 create index if not exists idx_company_data_finding_open on analytics.company_data_finding (status, company_id);
 
+-- company_data_point_coverage (0042) predates this per-metric gap_reason
+-- column -- it was added live against production out of band at some point
+-- (mapper/coverage_matrix.py's build_coverage() already writes it; found
+-- 2026-10-02 that no committed migration had ever added it, breaking CI's
+-- "apply every migration to clean PostgreSQL" gate on a from-scratch
+-- replay). Idempotent against prod, where it already exists.
+alter table analytics.company_data_point_coverage add column if not exists gap_reason text;
+
 -- 3. Best unmapped tag leads per concept, from companies missing it.
 --    Rebuilt with the library (a 2M-row aggregate, too heavy for a view).
 create table if not exists analytics.concept_gap_lead (
