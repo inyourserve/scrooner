@@ -15,6 +15,13 @@ from cache import get_cached_result, set_cached_result
 from dataset_version_cache import get_cached_dataset_version, get_cached_metric_catalog
 from db_pool import get_pooled_connection, get_usage_connection
 from metric_catalog import OPERATOR_ORDER, presentation_for
+from scrooner_pipeline.ai_query.aliases import (
+    AMBIGUOUS_METRIC_PHRASES,
+    METRIC_ALIASES,
+    OPERATOR_ALIASES,
+    SECTOR_ALIASES,
+    SECTOR_BUCKET_ALIASES,
+)
 from scrooner_pipeline.ai_query.rules import interpret
 from scrooner_pipeline.screener.cache_key import compute_query_hash
 from scrooner_pipeline.screener.query import run_query
@@ -107,6 +114,49 @@ def post_screen(query: ScreenQuery, background_tasks: BackgroundTasks) -> dict:
 @router.get("/metrics")
 def get_metrics() -> list[dict]:
     return _load_metric_catalog()
+
+
+@lru_cache(maxsize=1)
+def _load_nl_vocabulary() -> dict:
+    """The rule-based parser's own curated phrase vocabulary (`ai_query/
+    aliases.py`), exposed read-only for a client-side typeahead on the
+    create-screen text box (2026-10-02) -- the same "type 'ab', see
+    'above'" experience the company-search box already gives for company
+    names. No new vocabulary, no duplication: this is the exact dict the
+    parser itself resolves against, so a suggestion can never drift out
+    of sync with what actually parses. Purely derived from in-process
+    constants, no DB query -- cached forever in this process, same as
+    `_load_metric_catalog` but even cheaper.
+
+    `AMBIGUOUS_METRIC_PHRASES` entries (e.g. "revenue growth") are folded
+    into `metrics` too, with every candidate metric_name listed -- the
+    frontend only needs this to label/insert the phrase text itself; it
+    never resolves meaning here (that still only happens once, in
+    `interpret()`, after the user submits)."""
+    metrics = [
+        {"phrase": phrase, "metric_names": [metric_name]}
+        for phrase, metric_name in METRIC_ALIASES.items()
+    ] + [
+        {"phrase": phrase, "metric_names": metric_names}
+        for phrase, metric_names in AMBIGUOUS_METRIC_PHRASES.items()
+    ]
+    operators = [
+        {"phrase": phrase, "operator": operator}
+        for phrase, operator in OPERATOR_ALIASES.items()
+    ]
+    sectors = [
+        {"phrase": phrase, "field": "sic_code", "value": value}
+        for phrase, value in SECTOR_ALIASES.items()
+    ] + [
+        {"phrase": phrase, "field": "sector", "value": value}
+        for phrase, value in SECTOR_BUCKET_ALIASES.items()
+    ]
+    return {"metrics": metrics, "operators": operators, "sectors": sectors}
+
+
+@router.get("/nl-vocabulary")
+def get_nl_vocabulary() -> dict:
+    return _load_nl_vocabulary()
 
 
 class AskRequest(BaseModel):

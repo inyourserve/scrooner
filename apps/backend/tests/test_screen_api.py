@@ -105,6 +105,26 @@ def test_metric_catalog_exposes_formula_and_ui_contract(monkeypatch):
 
 
 @pytest.mark.unit
+def test_nl_vocabulary_exposes_the_real_parser_alias_tables():
+    # Create-screen typeahead (2026-10-02): must be the SAME dicts
+    # ai_query/rules.py resolves against, not a hand-duplicated copy, so a
+    # suggestion can never name a phrase the real parser wouldn't also
+    # recognize. No DB, no auth.
+    response = TestClient(app).get("/v1/nl-vocabulary")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert {"metrics", "operators", "sectors"} == body.keys()
+    metric_phrases = {entry["phrase"]: entry["metric_names"] for entry in body["metrics"]}
+    assert metric_phrases["return on equity"] == ["roe"]
+    assert set(metric_phrases["revenue growth"]) == {"revenue_growth_yoy", "revenue_growth_3y_cagr"}
+    operator_phrases = {entry["phrase"]: entry["operator"] for entry in body["operators"]}
+    assert operator_phrases["above"] == ">"
+    sector_phrases = {entry["phrase"]: (entry["field"], entry["value"]) for entry in body["sectors"]}
+    assert sector_phrases["technology companies"] == ("sector", "Technology")
+
+
+@pytest.mark.unit
 def test_current_presentation_catalog_has_no_generic_fallbacks():
     # 82 as of 2026-09-10: widened from 47 the same day the Screener's
     # catalog stopped excluding price-dependent metrics (market_cap,
