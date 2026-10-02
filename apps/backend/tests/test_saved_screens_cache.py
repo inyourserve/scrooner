@@ -157,7 +157,9 @@ def test_create_screen_invalidates_the_list_cache(monkeypatch):
 
         def execute(self, sql, _params=()):
             normalized = " ".join(sql.split())
-            if normalized.startswith("select slug from app.saved_screen"):
+            if normalized.startswith("select 1 from app.saved_screen"):
+                self._result = None
+            elif normalized.startswith("select slug from app.saved_screen"):
                 self._result = []
             elif normalized.startswith("insert into app.saved_screen"):
                 self._result = (7,)
@@ -191,6 +193,50 @@ def test_create_screen_invalidates_the_list_cache(monkeypatch):
     )
     saved_screens.create_screen(body, user_id="user-a")
     assert invalidated == ["user-a"]
+
+
+@pytest.mark.unit
+def test_create_screen_rejects_a_duplicate_name_for_the_same_user(monkeypatch):
+    # Found live 2026-10-03: saving the same name twice silently created
+    # two separate rows (same name, different auto-disambiguated slugs)
+    # -- _available_slug was built to dodge the collision, not reject it.
+    class FakeCursor:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def execute(self, sql, _params=()):
+            normalized = " ".join(sql.split())
+            if normalized.startswith("select 1 from app.saved_screen"):
+                self._result = (1,)  # an existing row with this name
+            else:
+                pytest.fail(f"must not reach a second query: {normalized}")
+
+        def fetchone(self):
+            return self._result
+
+    class FakeConnection:
+        def cursor(self):
+            return FakeCursor()
+
+    @contextmanager
+    def pooled_connection():
+        yield FakeConnection()
+
+    monkeypatch.setattr(saved_screens, "get_pooled_connection", pooled_connection)
+
+    from fastapi import HTTPException
+    from scrooner_pipeline.screener.schema import ScreenQuery
+
+    body = saved_screens.SavedScreenCreate(
+        name="  My Screen  ", query=ScreenQuery(metric_predicates=[])
+    )
+    with pytest.raises(HTTPException) as excinfo:
+        saved_screens.create_screen(body, user_id="user-a")
+    assert excinfo.value.status_code == 409
+    assert "My Screen" in excinfo.value.detail
 
 
 @pytest.mark.unit

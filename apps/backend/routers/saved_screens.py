@@ -102,7 +102,28 @@ def create_screen(
     # transactional isolation with it for correctness -- a real race on
     # the slug is still caught by (user_id, slug)'s own unique index at
     # insert time, not silently corrupted.
+    clean_name = body.name.strip()
     with get_pooled_connection() as conn:
+        with conn.cursor() as cur:
+            # Found live 2026-10-03: _available_slug below was built to
+            # auto-disambiguate a colliding NAME by appending "-2" to the
+            # SLUG ("my screen" -> slug "my-screen", then "my-screen-2")
+            # rather than reject it -- so saving the identical name twice
+            # silently created two separate rows with the same name, no
+            # error. A race between two near-simultaneous saves of the
+            # same name can still slip past this check (no DB-level
+            # unique constraint on name, matching the slug race's own
+            # already-accepted risk tolerance noted below) -- rare enough
+            # not to warrant one for a handful-of-rows-per-user table.
+            cur.execute(
+                "select 1 from app.saved_screen where user_id = %s and lower(name) = lower(%s)",
+                (user_id, clean_name),
+            )
+            if cur.fetchone() is not None:
+                raise HTTPException(
+                    status_code=409,
+                    detail=f'You already have a screen named "{clean_name}". Choose a different name.',
+                )
         slug = _available_slug(conn, user_id, body.name)
         with conn.cursor() as cur:
             if body.run_id is not None:
@@ -122,7 +143,7 @@ def create_screen(
                 # serializer handles it correctly, same guarantee, explicit.
                 (
                     user_id,
-                    body.name.strip(),
+                    clean_name,
                     slug,
                     body.query.model_dump_json(),
                     body.run_id,
@@ -130,7 +151,7 @@ def create_screen(
             )
             new_id = cur.fetchone()[0]
     invalidate_screens_list(user_id)
-    return {"id": new_id, "name": body.name.strip(), "slug": slug}
+    return {"id": new_id, "name": clean_name, "slug": slug}
 
 
 @router.get("/screens/{slug}")
