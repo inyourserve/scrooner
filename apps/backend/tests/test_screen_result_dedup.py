@@ -71,10 +71,8 @@ def _patch_common(monkeypatch, conn: FakeConnection, matches=None):
     monkeypatch.setattr(
         screen_runs, "compute_query_hash", lambda _query, _version: "query-hash"
     )
-    monkeypatch.setattr(screen_runs, "get_cached_run_id", lambda *_a: None)
-    monkeypatch.setattr(screen_runs, "get_cached_result", lambda _hash: None)
-    monkeypatch.setattr(screen_runs, "set_cached_result", lambda *_a: None)
-    monkeypatch.setattr(screen_runs, "set_cached_run_id", lambda *_a: None)
+    monkeypatch.setattr(screen_runs, "get_cached_run_lookup", lambda *_a: (None, None))
+    monkeypatch.setattr(screen_runs, "set_cached_run_write", lambda **_k: None)
     monkeypatch.setattr(screen_runs, "set_cached_run_page", lambda *_a: None)
     monkeypatch.setattr(
         screen_runs,

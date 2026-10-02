@@ -45,11 +45,11 @@ def test_repeat_query_reuses_existing_immutable_run(monkeypatch):
     )
     monkeypatch.setattr(
         screen_runs,
-        "get_cached_run_id",
+        "get_cached_run_lookup",
         lambda user_id, query_hash, text: (
-            "run-1"
+            ("run-1", None)
             if (user_id, query_hash, text) == ("user-a", "query-hash", "ROE above 20%")
-            else None
+            else (None, None)
         ),
     )
     monkeypatch.setattr(

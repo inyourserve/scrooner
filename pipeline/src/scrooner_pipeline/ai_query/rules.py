@@ -34,6 +34,7 @@ named test case -- it's a real scope limit of the rule-based grammar, not
 a bug, and exactly the kind of thing a real LLM (6c) would handle better.
 """
 
+import difflib
 import re
 from decimal import Decimal
 
@@ -122,32 +123,123 @@ def _parse_value(number_str: str, magnitude: str | None, has_percent: bool) -> D
 # lookup -- not a generic stopword remover, a curated, reviewed list, same
 # discipline as the alias tables themselves. Found live 2026-08-17:
 # "companies with ROE above 30%" failed to parse at all because "companies
-# with roe" doesn't match "roe" in METRIC_ALIASES verbatim.
+# with roe" doesn't match "roe" in METRIC_ALIASES verbatim. Widened
+# 2026-10-02: a leading article ("a market cap above $10 billion") hit
+# the identical failure, found running the exact worked example from
+# doc/create-screen/scrooner-natural-language-screening-flow.md live.
 METRIC_PHRASE_FILLER_PREFIXES = [
     "companies with ",
     "companies that have ",
     "with ",
     "where ",
     "having ",
+    "a ",
+    "an ",
+    "the ",
 ]
 
 
 def _strip_filler(phrase: str) -> str:
+    # Loops until no listed prefix matches, not just once through the
+    # list -- "with a market cap" needs "with " stripped, THEN "a "
+    # stripped from what's left; a single pass over the list in a fixed
+    # order would only catch whichever prefix happens to be checked
+    # after the other already matched.
     normalized = phrase.strip().lower()
-    for prefix in METRIC_PHRASE_FILLER_PREFIXES:
-        if normalized.startswith(prefix):
-            normalized = normalized[len(prefix) :]
+    changed = True
+    while changed:
+        changed = False
+        for prefix in METRIC_PHRASE_FILLER_PREFIXES:
+            if normalized.startswith(prefix):
+                normalized = normalized[len(prefix) :]
+                changed = True
     return normalized.strip()
+
+
+# A leading imperative carries no filtering meaning -- "Show me X" and "X"
+# ask for the exact same screen. Stripped silently from the whole input,
+# same discipline as METRIC_PHRASE_FILLER_PREFIXES (not surfaced as a
+# "correction": there's nothing to show the user, it's noise removal, not
+# a spelling repair). Longest first so "show me" is tried before the bare
+# "show" prefix would otherwise match first and leave "me " dangling.
+LEADING_QUERY_FILLER_PREFIXES = [
+    "show me the ",
+    "show us the ",
+    "find me the ",
+    "give me the ",
+    "show me ",
+    "show us ",
+    "find me ",
+    "give me ",
+    "list the ",
+    "find ",
+    "list ",
+    "show ",
+    "get ",
+]
+
+
+def _strip_leading_query_filler(text: str) -> str:
+    stripped = text.strip()
+    changed = True
+    while changed:
+        changed = False
+        lowered = stripped.lower()
+        for prefix in LEADING_QUERY_FILLER_PREFIXES:
+            if lowered.startswith(prefix):
+                stripped = stripped[len(prefix) :].strip()
+                changed = True
+                break
+    return stripped
+
+
+# Auto-suggest for a near-miss on a known metric phrase (2026-10-02) --
+# "a likely typo", not a different request. difflib's own similarity
+# ratio (not a loose substring/keyword heuristic) decides "close enough",
+# so an unrelated phrase never gets a confusing, wrong suggestion.
+# Deliberately NOT a silent auto-correct: this returns the same
+# `candidates` shape _lookup_metric already uses for a genuinely
+# ambiguous phrase, so the Ask panel's existing "choose a meaning"
+# clickable UI handles it with zero frontend changes -- the user picks,
+# nothing is substituted on their behalf (doc 02/03: never silently
+# reinterpret). Scoped to metrics only for now: a sector near-miss would
+# need its own suggestion shape (AmbiguityNote.candidates renders as
+# metric names today), not built this pass.
+METRIC_SUGGESTION_CUTOFF = 0.72
+METRIC_SUGGESTION_MIN_LENGTH = 3
+
+
+def _suggest_metric_names(normalized_phrase: str) -> list[str] | None:
+    if len(normalized_phrase) < METRIC_SUGGESTION_MIN_LENGTH:
+        return None
+    close_phrases = difflib.get_close_matches(
+        normalized_phrase,
+        METRIC_ALIASES.keys(),
+        n=3,
+        cutoff=METRIC_SUGGESTION_CUTOFF,
+    )
+    if not close_phrases:
+        return None
+    suggested: list[str] = []
+    for alias_phrase in close_phrases:
+        metric_name = METRIC_ALIASES[alias_phrase]
+        if metric_name not in suggested:
+            suggested.append(metric_name)
+    return suggested or None
 
 
 def _lookup_metric(phrase: str) -> tuple[str | None, list[str] | None]:
     """Returns (metric_name, None) on a confident match, (None, candidates)
-    on a known ambiguous phrase, or (None, None) if nothing matched at all."""
+    on a known ambiguous OR near-miss phrase, or (None, None) if nothing
+    matched or resembled anything at all."""
     normalized = _strip_filler(phrase)
     if normalized in AMBIGUOUS_METRIC_PHRASES:
         return None, AMBIGUOUS_METRIC_PHRASES[normalized]
     if normalized in METRIC_ALIASES:
         return METRIC_ALIASES[normalized], None
+    suggested = _suggest_metric_names(normalized)
+    if suggested:
+        return None, suggested
     return None, None
 
 
@@ -159,6 +251,13 @@ def _lookup_sector(phrase: str) -> tuple[str, str] | None:
     phrases with no prior exact-SIC coverage)."""
     normalized = phrase.strip().lower()
     normalized = re.sub(r"^companies in\s+", "", normalized)
+    # "US technology companies" -> "technology companies": doc 02 scopes
+    # this project to US-listed equities only, so "US"/"U.S." in front of
+    # a sector name is redundant, never a real second filter -- found
+    # live running doc/create-screen/scrooner-natural-language-
+    # screening-flow.md's own worked example ("Show US technology
+    # companies...").
+    normalized = re.sub(r"^u\.?s\.?\s+", "", normalized)
     normalized = re.sub(r"\s+companies$", "", normalized)
 
     sic_hit = SECTOR_ALIASES.get(normalized) or SECTOR_ALIASES.get(
@@ -174,6 +273,38 @@ def _lookup_sector(phrase: str) -> tuple[str, str] | None:
         return "sector", bucket_hit
 
     return None
+
+
+# "{sector phrase} with|having {metric clause}" -- found live 2026-10-02
+# running doc/create-screen/scrooner-natural-language-screening-flow.md's
+# own worked example: "software companies with ROE above 30%" failed
+# outright even though "software companies" and "ROE above 30%" each
+# parse fine alone, because a single clause (no literal "and"/"or")
+# never carries both a categorical AND a metric predicate -- _parse_clause
+# returns exactly one of the two per clause.
+#
+# Splits such a clause into the same two independent clauses "software
+# companies and ROE above 30%" would already produce, reusing the
+# existing AND-combination machinery unchanged -- only commits to this
+# when the text before "with"/"having" actually resolves to a known
+# sector via _lookup_sector, so the existing, unrelated filler-prefix
+# stripping for a bare "companies with {metric}" (no real sector name) is
+# untouched: _lookup_sector("companies") has no hit, so that case falls
+# through here with no change and is handled exactly as before, by
+# _strip_filler stripping "companies with " off the metric phrase.
+_CATEGORY_METRIC_SPLIT_RE = re.compile(r"\s+(?:with|having)\s+", re.IGNORECASE)
+
+
+def _split_category_prefix(clause: str) -> list[str]:
+    match = _CATEGORY_METRIC_SPLIT_RE.search(clause)
+    if not match:
+        return [clause]
+    prefix, remainder = clause[: match.start()].strip(), clause[match.end() :].strip()
+    if not prefix or not remainder:
+        return [clause]
+    if _lookup_sector(prefix) is None:
+        return [clause]
+    return [prefix, remainder]
 
 
 def _try_extract_exclusion(text: str) -> tuple[str, CategoricalPredicate | None]:
@@ -353,7 +484,7 @@ def interpret(text: str) -> InterpretationResult:
 
 
 def _interpret_normalized(text: str) -> InterpretationResult:
-    text = text.strip()
+    text = _strip_leading_query_filler(text.strip())
     if not text:
         return InterpretationResult(
             query=None, explanation="Empty query.", unrecognized=[""]
@@ -406,9 +537,10 @@ def _interpret_normalized(text: str) -> InterpretationResult:
         )
     combine_op = "or" if has_or else "and"
     clauses = [
-        c.strip()
+        piece
         for c in (OR_SPLIT_RE if has_or else AND_SPLIT_RE).split(text)
         if c.strip()
+        for piece in _split_category_prefix(c.strip())
     ]
 
     metric_predicates: list[MetricPredicate] = []

@@ -16,6 +16,15 @@ whatever version this function returns, and a query never gets a result
 computed under a different version than the one in its own hash) --
 doc 02's original "invalidate by dataset_version, never TTL" concern was
 about the actual screen results, which this doesn't touch.
+
+Raised from 30s to 300s (matching CATALOG_TTL_SECONDS below) 2026-10-02
+-- a rebuild is at most once/day, so a 30s window bought nothing but
+extra ~270-300ms cold round trips on the create-screen hot path during
+any gap in sustained traffic (measured live: a single cold snapshot
+query from this dev machine to Supabase costs 1.6-2.3s on its own,
+dominated by network, not computation -- see
+doc/learnings/2026-10-02-create-screen-latency-audit.md). No
+correctness tradeoff: still well under the ~1/day real change rate.
 """
 
 import time
@@ -25,7 +34,7 @@ import psycopg
 from scrooner_pipeline.screener.resolve import load_screenable_metric_catalog
 from scrooner_pipeline.screener.snapshot import get_dataset_version
 
-TTL_SECONDS = 30
+TTL_SECONDS = 300
 
 _cached_version: int | None = None
 _expires_at: float = 0.0

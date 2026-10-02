@@ -30,7 +30,11 @@ from scrooner_pipeline.common.config import settings
 
 _pool = ConnectionPool(
     settings.database_url,
-    min_size=1,
+    # min_size=2, not 1 (raised 2026-10-02): with only 1 connection kept
+    # open, a second concurrent request has to pay the ~1.7s connect cost
+    # itself before it can do any work. Still far under the shared ~15-
+    # connection pooler ceiling (root CLAUDE.md) alongside _usage_pool's 2.
+    min_size=2,
     max_size=5,
     open=False,
     # Most use of this pool is read-only (the Screener never writes) or a

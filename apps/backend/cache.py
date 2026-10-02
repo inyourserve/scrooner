@@ -98,6 +98,67 @@ def set_cached_run_id(
         return
 
 
+# create_run_from_query (routers/screen_runs.py) is the create-screen hot
+# path -- for a brand-new query it previously paid 2 sequential GETs up
+# front (get_cached_run_id, get_cached_result) and up to 3 sequential SETs
+# at the end (set_cached_result, set_cached_run_id, set_cached_run_page),
+# 5 full round trips total. Each is now one pipelined round trip instead
+# -- real latency only when Redis isn't on the same host as the backend
+# (unverified in production as of 2026-10-02, see
+# doc/learnings/2026-10-02-create-screen-latency-audit.md), but free and
+# behavior-identical either way, so there's no reason not to. Same
+# fail-open contract as every other function here: a pipeline error
+# degrades to "nothing was cached," never an error surfaced to the caller.
+def get_cached_run_lookup(
+    user_id: str, query_hash: str, query_text: str
+) -> tuple[str | None, dict | None]:
+    try:
+        run_id_raw, result_raw = (
+            _client.pipeline(transaction=False)
+            .get(_run_key(user_id, query_hash, query_text))
+            .get(_key(query_hash))
+            .execute()
+        )
+    except RedisError:
+        return None, None
+    result = None
+    if result_raw is not None:
+        try:
+            result = json.loads(result_raw)
+        except json.JSONDecodeError:
+            result = None
+    return (run_id_raw or None), result
+
+
+def set_cached_run_write(
+    *,
+    query_hash: str,
+    result: dict | None,
+    user_id: str,
+    query_text: str,
+    run_id: str,
+    page_size: int,
+    page: dict,
+) -> None:
+    """`result` is only set here when this request freshly computed it
+    (i.e. get_cached_run_lookup's result was None) -- pass None when it
+    was already cached, matching set_cached_result's own original
+    call-only-on-miss behavior."""
+    try:
+        pipe = _client.pipeline(transaction=False)
+        if result is not None:
+            pipe.set(_key(query_hash), json.dumps(result, default=_default), ex=TTL_SECONDS)
+        pipe.set(_run_key(user_id, query_hash, query_text), run_id, ex=TTL_SECONDS)
+        pipe.set(
+            _run_page_key(user_id, run_id, page_size, None),
+            json.dumps(page, default=_default),
+            ex=TTL_SECONDS,
+        )
+        pipe.execute()
+    except RedisError:
+        return
+
+
 def get_cached_run_page(
     user_id: str, run_id: str, page_size: int, cursor: str | None
 ) -> dict | None:

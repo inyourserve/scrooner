@@ -6,7 +6,12 @@ from pydantic import ValidationError
 
 from scrooner_pipeline.screener import query as query_module
 from scrooner_pipeline.screener.evaluate import evaluate_between, evaluate_comparison, rank_top_bottom
-from scrooner_pipeline.screener.schema import MetricPredicate, PredicateGroup, ScreenQuery
+from scrooner_pipeline.screener.schema import (
+    CategoricalPredicate,
+    MetricPredicate,
+    PredicateGroup,
+    ScreenQuery,
+)
 
 
 @pytest.mark.unit
@@ -227,6 +232,179 @@ def test_boolean_tree_query_reads_the_snapshot_once_with_the_filter_and_citation
     assert dataset_version == 5
     assert metric_names == ["roe"]
     assert where_clause is not None and params == [Decimal("0.1")]
+
+
+# ---------------------------------------------------------------------------
+# Flat-AND SQL pre-filter (2026-10-02, doc/learnings/2026-10-02-screener-
+# flat-and-prefilter.md). Correctness against the real snapshot table was
+# verified by running the pre-change and post-change run_query side by
+# side against the live dev database for 10 real queries covering every
+# branch below (byte-identical output, see that learnings doc) -- these
+# tests lock in the wiring and the one genuinely subtle case offline.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.unit
+def test_flat_and_query_pushes_a_safe_prefilter_into_the_snapshot_read(monkeypatch):
+    calls = []
+
+    def fake_select(_conn, dataset_version, metric_names, where_clause=None, params=None):
+        calls.append((metric_names, where_clause, params))
+        return []
+
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roe": 10, "debt_to_equity": 11})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", fake_select)
+    query = ScreenQuery(metric_predicates=[
+        MetricPredicate(metric_name="roe", operator=">", value="0.3"),
+        MetricPredicate(metric_name="debt_to_equity", operator="<", value="0.5"),
+    ])
+
+    query_module.run_query(InactiveConnection(), query, dataset_version=1)
+
+    assert len(calls) == 1
+    _metric_names, where_clause, params = calls[0]
+    assert where_clause is not None, "a flat-AND query with real predicates must push a pre-filter"
+    assert params == [Decimal("0.3"), Decimal("0.5")], "full_match params, in predicate order"
+
+
+@pytest.mark.unit
+def test_flat_and_query_with_no_predicates_skips_the_prefilter(monkeypatch):
+    calls = []
+
+    def fake_select(_conn, dataset_version, metric_names, where_clause=None, params=None):
+        calls.append((where_clause, params))
+        return []
+
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", fake_select)
+
+    query_module.run_query(InactiveConnection(), ScreenQuery(), dataset_version=1)
+
+    assert calls == [(None, None)]
+
+
+@pytest.mark.unit
+def test_pure_ranked_query_with_no_other_predicate_skips_the_prefilter(monkeypatch):
+    # Ranking needs full visibility of every candidate's own missing-data
+    # status (query.py's own existing, unchanged logic) -- there is no
+    # column value to push down for a bare top_n/bottom_n, so this must
+    # stay a full, unfiltered read, exactly like before this change.
+    calls = []
+
+    def fake_select(_conn, dataset_version, metric_names, where_clause=None, params=None):
+        calls.append((where_clause, params))
+        return []
+
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roic": 10})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", fake_select)
+    query = ScreenQuery(metric_predicates=[MetricPredicate(metric_name="roic", operator="top_n", n=20)])
+
+    query_module.run_query(InactiveConnection(), query, dataset_version=1)
+
+    assert calls == [(None, None)]
+
+
+@pytest.mark.unit
+def test_categorical_only_query_pushes_a_prefilter(monkeypatch):
+    calls = []
+
+    def fake_select(_conn, dataset_version, metric_names, where_clause=None, params=None):
+        calls.append((where_clause, params))
+        return []
+
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {})
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", fake_select)
+    query = ScreenQuery(categorical_predicates=[CategoricalPredicate(field="sector", operator="=", value="Technology")])
+
+    query_module.run_query(InactiveConnection(), query, dataset_version=1)
+
+    assert calls == [calls[0]]
+    where_clause, params = calls[0]
+    assert where_clause is not None and params == ["Technology"]
+
+
+@pytest.mark.unit
+def test_compile_flat_prefilter_sql_shape_is_the_safe_superset_form():
+    # Render the generated SQL.Composable directly (no live connection
+    # needed -- as_string(None) works for plain ASCII identifiers) and
+    # check its literal shape: "(full_match) or (any_missing)" with
+    # params in full_match's own predicate order, categorical equality
+    # clauses first and unrelaxed. This is what actually proves the
+    # tricky "missing on A, present-and-failing on B" case stays kept --
+    # the OR is across the two WHOLE sub-expressions, never a per-
+    # predicate `(col is null or comparison)` AND'd together (that
+    # independent form is exactly what would wrongly drop that row).
+    clause, params = query_module._compile_flat_prefilter(
+        [
+            MetricPredicate(metric_name="roe", operator=">", value="0.2"),
+            MetricPredicate(metric_name="debt_to_equity", operator="<", value="1"),
+        ],
+        [CategoricalPredicate(field="sector", operator="=", value="Technology")],
+        {"roe": 10, "debt_to_equity": 11},
+    )
+
+    text = clause.as_string(None)
+    assert text == (
+        '"sector" = %s and '
+        '((("roe" is not null and "roe" > %s) and '
+        '("debt_to_equity" is not null and "debt_to_equity" < %s)) '
+        'or ("roe" is null or "debt_to_equity" is null))'
+    )
+    assert params == ["Technology", Decimal("0.2"), Decimal("1")]
+
+
+@pytest.mark.unit
+def test_compile_flat_prefilter_vacuous_case_returns_none():
+    assert query_module._compile_flat_prefilter([], [], {}) == (None, None)
+
+
+@pytest.mark.unit
+def test_compile_flat_prefilter_between_operator():
+    clause, params = query_module._compile_flat_prefilter(
+        [MetricPredicate(metric_name="roic", operator="between", value_range=("0.1", "0.3"))],
+        [],
+        {"roic": 10},
+    )
+
+    assert clause.as_string(None) == (
+        '((("roic" is not null and "roic" between %s and %s)) or ("roic" is null))'
+    )
+    assert params == [Decimal("0.1"), Decimal("0.3")]
+
+
+@pytest.mark.unit
+def test_prefilter_keeps_a_company_missing_an_earlier_predicate_that_would_also_fail_a_later_one(monkeypatch):
+    # The one genuinely subtle case this design has to get right (see
+    # _compile_flat_prefilter's own module docstring): a company missing
+    # metric A (so Python's sequential loop tags it excluded_missing_data
+    # on A and never even checks B) must still be fetched, even though it
+    # ALSO has a present-but-failing value for B -- an independent,
+    # per-predicate `(col IS NULL OR comparison)` AND across predicates
+    # would wrongly drop this row before Python ever saw it.
+    companies = {
+        1: {"cik": "0001", "company_name": "Missing-A-fails-B", "sic_code": "1", "sic_description": "X", "status": "active", "ticker": "A"},
+        2: {"cik": "0002", "company_name": "Passes-both", "sic_code": "1", "sic_description": "X", "status": "active", "ticker": "B"},
+    }
+    resolved = {
+        (1, 10): resolved_row(None, 1),  # roe missing
+        (1, 11): resolved_row(Decimal("2"), 2),  # debt_to_equity present, fails < 1
+        (2, 10): resolved_row(Decimal("0.5"), 3),
+        (2, 11): resolved_row(Decimal("0.2"), 4),
+    }
+    monkeypatch.setattr(query_module, "load_screenable_metric_catalog", lambda _conn: {"roe": 10, "debt_to_equity": 11})
+    monkeypatch.setattr(query_module, "get_dataset_version", lambda _conn: 1)
+    rows = snapshot_rows(companies, resolved, {"roe": 10, "debt_to_equity": 11}, inactive_ciks=())
+    monkeypatch.setattr(query_module, "_select_snapshot_rows", lambda *_args, **_kwargs: rows)
+    query = ScreenQuery(metric_predicates=[
+        MetricPredicate(metric_name="roe", operator=">", value="0.2"),
+        MetricPredicate(metric_name="debt_to_equity", operator="<", value="1"),
+    ])
+
+    result = query_module.run_query(InactiveConnection(), query)
+
+    assert [row["cik"] for row in result["matched"]] == ["0002"]
+    missing = {row["cik"]: row["missing_metrics"] for row in result["excluded_missing_data"]}
+    assert missing == {"0001": ["roe"]}, "tagged only on the first missing predicate, never checked against B"
 
 
 @pytest.mark.unit

@@ -11,12 +11,10 @@ from pydantic import BaseModel, Field
 
 from auth import get_current_user_id
 from cache import (
-    get_cached_result,
-    get_cached_run_id,
+    get_cached_run_lookup,
     get_cached_run_page,
-    set_cached_result,
-    set_cached_run_id,
     set_cached_run_page,
+    set_cached_run_write,
 )
 from dataset_version_cache import get_cached_dataset_version, get_cached_metric_catalog
 from scrooner_pipeline.ai_query.edit_templates import interpret_edit
@@ -211,7 +209,9 @@ def create_run_from_query(
     with get_pooled_connection() as conn:
         dataset_version = get_cached_dataset_version(conn)
         query_hash = compute_query_hash(query, dataset_version)
-        cached_run_id = get_cached_run_id(user_id, query_hash, text)
+        # One pipelined round trip for both independent lookups (was two
+        # sequential GETs) -- see cache.get_cached_run_lookup.
+        cached_run_id, result = get_cached_run_lookup(user_id, query_hash, text)
         if requested_run_id is None and cached_run_id is not None:
             try:
                 cached_page = _read_page(conn, cached_run_id, user_id, page_size, None)
@@ -223,7 +223,7 @@ def create_run_from_query(
                 # A stale Redis pointer (or a retired version) must not
                 # prevent a fresh run.
 
-        result = get_cached_result(query_hash)
+        freshly_computed_result = result is None
         if result is None:
             result = run_query(
                 conn,
@@ -231,7 +231,6 @@ def create_run_from_query(
                 dataset_version=dataset_version,
                 catalog=get_cached_metric_catalog(conn),
             )
-            set_cached_result(query_hash, result)
         matches = result["matched"]
         exclusions = {
             "excluded_missing_data": result["excluded_missing_data"],
@@ -312,8 +311,19 @@ def create_run_from_query(
         "ran_at": str(ran_at),
         "corrections": corrections or [],
     }
-    set_cached_run_id(user_id, query_hash, text, str(run_id))
-    set_cached_run_page(user_id, str(run_id), page_size, None, page)
+    # One pipelined round trip for all three writes (was up to three
+    # sequential SETs) -- see cache.set_cached_run_write. `result` is
+    # passed only when this request computed it fresh; a cache-hit result
+    # is already in Redis under its own TTL.
+    set_cached_run_write(
+        query_hash=query_hash,
+        result=result if freshly_computed_result else None,
+        user_id=user_id,
+        query_text=text,
+        run_id=str(run_id),
+        page_size=page_size,
+        page=page,
+    )
     return page
 
 

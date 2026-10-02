@@ -236,6 +236,102 @@ def _compile_node(node, catalog: dict) -> tuple[sql.Composable, list]:
     raise TypeError(f"unknown predicate node: {node!r}")
 
 
+# ---------------------------------------------------------------------------
+# Flat-AND SQL pre-filter (2026-10-02) -- narrows the snapshot read for the
+# non-`where` query path, which previously fetched every company in the
+# dataset_version unconditionally (see this module's own historical
+# docstring above: "evaluated in Python -- ... Preserves full
+# excluded_missing_data/excluded_inactive attribution"). That attribution
+# is exactly why this can't just reuse _compile_node's plain `col OP %s`
+# compiler the way the `where`-tree path does -- a flat-AND query must
+# still be able to tell the user WHICH metric was missing for an excluded
+# company, and _compile_node's clauses would silently drop (not just
+# fail to match) any row with a NULL value.
+#
+# This is a PURE speed optimization with a proof of safety, not a new
+# filtering rule: it returns a SUPERSET of every row Python's own
+# unchanged logic below would ever place in `matched` or
+# `excluded_missing_data`, so the final output is byte-for-byte identical
+# to fetching the whole population and filtering in Python -- verified by
+# tests/unit/test_query_flat_prefilter.py running BOTH paths against the
+# same fake rows and asserting identical results, not just "it returns
+# something".
+#
+# Why "superset" and not "exact": Python's existing loop (further below)
+# is sequential and SHORT-CIRCUITS -- a company missing metric A is
+# removed from `surviving` and tagged in excluded_missing_data citing
+# ONLY metric A, and metric B is never even checked for it, regardless of
+# whether metric B's value would also have failed. An independent,
+# per-predicate `(col IS NULL OR comparison)` AND across all predicates
+# would UNDER-fetch this exact case (a company missing A but genuinely
+# failing B's comparison) -- so instead this compiles two independent
+# sub-conditions, OR'd together:
+#   - full_match:   every predicate's value is present AND passes
+#   - any_missing:  at least one predicate's value is NULL
+# A row Python would show (in either matched or excluded_missing_data)
+# always satisfies one of these two. A row Python would drop entirely
+# (present value, failed comparison, no missing values anywhere) matches
+# neither and SQL correctly excludes it -- that's the whole saving, since
+# that's normally the overwhelming majority of the population for a
+# selective filter. Categorical predicates get a plain, unrelaxed
+# equality clause (NULL = anything is NULL/falsy in SQL, matching
+# _apply_categorical_predicates' own Python `==` exactly -- no special
+# case needed).
+# ---------------------------------------------------------------------------
+
+
+def _compile_flat_prefilter(
+    non_ranked: list[MetricPredicate],
+    categorical_predicates: list,
+    catalog: dict,
+) -> tuple[sql.Composable, list] | tuple[None, None]:
+    if not non_ranked and not categorical_predicates:
+        return None, None
+
+    clauses: list[sql.Composable] = []
+    params: list = []
+
+    for pred in categorical_predicates:
+        clauses.append(sql.SQL("{} = %s").format(sql.Identifier(pred.field)))
+        params.append(pred.value)
+
+    if non_ranked:
+        full_match_parts: list[sql.Composable] = []
+        any_missing_parts: list[sql.Composable] = []
+        full_match_params: list = []
+        for pred in non_ranked:
+            if pred.metric_name not in catalog:
+                raise ValueError(
+                    "unknown metric_name, not in the screenable catalog: "
+                    f"{pred.metric_name!r}"
+                )
+            column = sql.Identifier(pred.metric_name)
+            if pred.operator == "between":
+                comparison = sql.SQL("{} between %s and %s").format(column)
+                full_match_params += [pred.value_range[0], pred.value_range[1]]
+            elif pred.operator in {">", "<", ">=", "<=", "=", "!="}:
+                comparison = sql.SQL("{} " + pred.operator + " %s").format(column)
+                full_match_params.append(pred.value)
+            else:
+                raise ValueError(
+                    f"operator not valid for a flat predicate: {pred.operator!r}"
+                )
+            full_match_parts.append(
+                sql.SQL("({} is not null and {})").format(column, comparison)
+            )
+            any_missing_parts.append(sql.SQL("{} is null").format(column))
+
+        clauses.append(
+            sql.SQL("(({}) or ({}))").format(
+                sql.SQL(" and ").join(full_match_parts),
+                sql.SQL(" or ").join(any_missing_parts),
+            )
+        )
+        params += full_match_params
+
+    return sql.SQL(" and ").join(clauses), params
+
+
 def _collect_metric_names(node) -> set[str]:
     if isinstance(node, PredicateGroup):
         names: set[str] = set()
@@ -283,6 +379,7 @@ def run_query(
         )
 
     ranked = [p for p in query.metric_predicates if p.operator in RANKED_OPERATORS]
+    non_ranked = [p for p in query.metric_predicates if p.operator not in RANKED_OPERATORS]
     excluded_missing_data: dict[int, dict] = {}
     exclusion_detail = None
     metric_names_to_show = _metric_names_to_show(query)
@@ -305,7 +402,22 @@ def run_query(
             "another, so 'missing data caused this exclusion' has no single meaning here"
         )
     else:
-        rows = _select_snapshot_rows(conn, dataset_version, needed_names)
+        # A safe, superset-preserving SQL pre-filter (see
+        # _compile_flat_prefilter's own module comment) -- narrows the
+        # fetch instead of always reading the whole dataset_version. The
+        # rest of this function's logic (below) is completely unchanged
+        # and still makes every matched/excluded decision in Python; this
+        # only reduces how many rows it has to look at.
+        prefilter_clause, prefilter_params = _compile_flat_prefilter(
+            non_ranked, query.categorical_predicates, catalog
+        )
+        if prefilter_clause is not None and not query.include_inactive:
+            prefilter_clause = sql.SQL(
+                "status != 'active' or (status = 'active' and ({}))"
+            ).format(prefilter_clause)
+        rows = _select_snapshot_rows(
+            conn, dataset_version, needed_names, prefilter_clause, prefilter_params
+        )
 
     excluded_inactive = (
         []
@@ -333,9 +445,6 @@ def run_query(
         companies = _apply_categorical_predicates(
             companies, query.categorical_predicates
         )
-        non_ranked = [
-            p for p in query.metric_predicates if p.operator not in RANKED_OPERATORS
-        ]
 
         surviving = dict(companies)
         for pred in non_ranked:
