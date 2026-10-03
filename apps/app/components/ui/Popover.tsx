@@ -1,13 +1,36 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
-export function Popover({ label, onClose, children, className = "" }: {
+const popoverVariants = cva("ds-popover", {
+  variants: {
+    size: {
+      small: "ds-popover--small",
+      medium: "",
+      large: "ds-popover--large",
+    },
+    align: {
+      start: "ds-popover--start",
+      end: "",
+    },
+    padded: {
+      true: "",
+      false: "ds-popover--flush",
+    },
+  },
+  defaultVariants: { size: "medium", align: "end", padded: true },
+});
+
+type PopoverProps = {
   label: string;
   onClose: () => void;
   children: ReactNode;
   className?: string;
-}) {
+} & VariantProps<typeof popoverVariants>;
+
+export function Popover({ label, onClose, children, className, size, align, padded }: PopoverProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
@@ -35,5 +58,5 @@ export function Popover({ label, onClose, children, className = "" }: {
     };
   }, []);
 
-  return <div ref={panelRef} className={["ds-popover", className].filter(Boolean).join(" ")} role="dialog" aria-label={label}>{children}</div>;
+  return <div ref={panelRef} data-slot="popover" className={cn(popoverVariants({ size, align, padded }), className)} role="dialog" aria-label={label}>{children}</div>;
 }

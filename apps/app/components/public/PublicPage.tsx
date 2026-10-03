@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { PageShell } from "@/components/layout/PageShell";
 import { PublicFooter } from "./PublicFooter";
 import { PublicHeader, type Current } from "./PublicHeader";
 
-export function PublicPage({ title, description, eyebrow, current, wide = false, children }: { title: string; description: string; eyebrow?: string; current?: Current; wide?: boolean; children: ReactNode }) {
-  return <div className="public-site"><PublicHeader current={current} /><main className={`ds-page${wide ? " ds-page--wide" : ""} public-content`} id="main-content" tabIndex={-1}>
-    <header className="ds-page__hero">{eyebrow && <p className="public-eyebrow">{eyebrow}</p>}<h1 className="ds-page__title">{title}</h1><p className="ds-page__lede">{description}</p></header>
+export function PublicPage({ title, description, eyebrow, current, children }: { title: string; description: string; eyebrow?: string; current?: Current; children: ReactNode }) {
+  return <div className="public-site"><PublicHeader current={current} /><PageShell className="public-content" tabIndex={-1}>
+    <PageHeader eyebrow={eyebrow} title={title} description={description} tone="editorial" />
     <div className="public-prose">{children}</div>
-  </main><PublicFooter /></div>;
+  </PageShell><PublicFooter /></div>;
 }

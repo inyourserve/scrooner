@@ -11,6 +11,7 @@ html {
   color: var(--ds-color-text-primary);
   font-family: var(--ds-font-family-sans);
   font-synthesis: none;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
@@ -22,6 +23,7 @@ body {
   color: var(--ds-color-text-primary);
   font-family: var(--ds-font-family-sans);
   line-height: var(--ds-line-height-body);
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 

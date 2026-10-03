@@ -21,7 +21,7 @@ export default async function SectorPage({ params }: Props) {
   const data = await getCompaniesBySectorSlug(slug);
   if (!data) notFound();
   return (
-    <PublicPage title={`${data.sector} stocks`} description={`${data.companies.length} companies in the ${data.sector} sector.`} wide>
+    <PublicPage title={`${data.sector} stocks`} description={`${data.companies.length} companies in the ${data.sector} sector.`}>
       <p className="public-directory-back"><Link href="/stocks/sector">← All sectors</Link></p>
       <ul className="ds-directory">
         {data.companies.map((company) => (

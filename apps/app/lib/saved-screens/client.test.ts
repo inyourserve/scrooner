@@ -11,9 +11,10 @@ describe("savedScreensApi", () => {
     expect(fetchMock).toHaveBeenCalledWith("/api/screens", expect.objectContaining({ headers: expect.objectContaining({ authorization: "Bearer user-token" }) }));
   });
 
-  it("requires a user session before making a request", async () => {
-    const fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
-    await expect(savedScreensApi.list(async () => null)).rejects.toThrow("Sign in");
-    expect(fetchMock).not.toHaveBeenCalled();
+  it("falls back to the same-origin authenticated cookie when the browser token snapshot is empty", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response("[]", { status: 200, headers: { "content-type": "application/json" } }));
+    vi.stubGlobal("fetch", fetchMock);
+    await savedScreensApi.list(async () => null);
+    expect(fetchMock).toHaveBeenCalledWith("/api/screens", expect.objectContaining({ headers: expect.not.objectContaining({ authorization: expect.anything() }) }));
   });
 });

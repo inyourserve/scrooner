@@ -4,9 +4,9 @@ import { BrandMark } from "@/components/ui/BrandMark";
 import type { ReactNode } from "react";
 
 const TRUST_POINTS = [
-  "Every number traces to its source SEC filing, formula, and date.",
-  "Screens are deterministic — AI interprets intent, code decides results.",
-  "SEC EDGAR data across 5,000+ US-listed companies.",
+  "See source, period, and formula context for key metrics.",
+  "Plain language becomes explicit criteria; code evaluates the results.",
+  "Research thousands of US-listed companies with SEC EDGAR data.",
 ];
 
 // The onboarding shell for login/signup/forgot-password -- a quiet
@@ -32,7 +32,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
           <BrandMark className="auth-shell__mark" />
           <span>scrooner</span>
         </Link>
-        <p className="auth-shell__tagline">The easiest way to screen US companies using complex fundamental logic — in plain English.</p>
+        <p className="auth-shell__tagline">Turn investment ideas into rigorous company screens—in plain English.</p>
         <ul className="auth-shell__trust">
           {TRUST_POINTS.map((point) => <li key={point}><Check size={16} aria-hidden="true" />{point}</li>)}
         </ul>

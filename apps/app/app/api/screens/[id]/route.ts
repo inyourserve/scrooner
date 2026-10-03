@@ -1,5 +1,6 @@
 import { backendUrl, proxyBackend } from "@/lib/backend";
 import { requireApiUser } from "@/lib/auth/require-user";
+import { backendAuthorization } from "@/lib/auth/backend-authorization";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export async function GET(request: Request, context: Context) {
     const value = incoming.searchParams.get(key);
     if (value) search.set(key, value);
   }
-  const authorization = request.headers.get("authorization");
+  const authorization = await backendAuthorization(request);
   return proxyBackend(fetch(backendUrl(`/v1/screens/${encodeURIComponent(id)}?${search}`), {
     cache: "no-store",
     headers: { accept: "application/json", ...(authorization ? { authorization } : {}) },
@@ -27,7 +28,7 @@ async function target(request: Request, context: Context, method: "PATCH" | "DEL
   if (unauthorized) return unauthorized;
   const { id } = await context.params;
   if (!/^\d+$/.test(id)) return Response.json({ detail: "Invalid screen id." }, { status: 400 });
-  const authorization = request.headers.get("authorization");
+  const authorization = await backendAuthorization(request);
   return proxyBackend(fetch(backendUrl(`/v1/screens/${id}`), {
     method,
     cache: "no-store",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { collectMetricNames, type ScreenQueryPayload } from "./types";
+import { collectMetricNames, collectPredicateMetricNames, type ScreenQueryPayload } from "./types";
 
 const base: ScreenQueryPayload = {
   metric_predicates: [],
@@ -64,5 +64,16 @@ describe("collectMetricNames", () => {
     };
 
     expect(collectMetricNames(query)).toEqual(["roe"]);
+  });
+
+  it("keeps display-only columns out of match reasons", () => {
+    const query: ScreenQueryPayload = {
+      ...base,
+      metric_predicates: [{ metric_name: "debt_to_equity", operator: "between", value_range: ["0", "1"] }],
+      display_metrics: ["market_cap", "roe"],
+    };
+
+    expect(collectPredicateMetricNames(query)).toEqual(["debt_to_equity"]);
+    expect(collectMetricNames(query)).toEqual(["debt_to_equity", "market_cap", "roe"]);
   });
 });

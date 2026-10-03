@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import { useRouter } from "next/navigation";
 import { metricByName } from "@/lib/screener/catalog";
 import { NATURAL_QUERY_EXAMPLES, parserPhraseForMetric } from "@/lib/screener/interpretation";
+import { applySuggestion, getSuggestions, loadNlVocabulary, type NlVocabulary, type Suggestion } from "@/lib/screener/suggest";
 import type { AskResponse, MetricDefinition } from "@/lib/screener/types";
 import { Button } from "@/components/ui/Button";
 import { StatusPanel } from "@/components/ui/StatusPanel";
@@ -51,13 +52,62 @@ export function NaturalQueryPanel({
   const [error, setError] = useState("");
   const requestVersion = useRef(0);
   const autoRunStarted = useRef(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  function changeText(next: string) {
+  // Typeahead (2026-10-02) -- the same "type 'ab', see 'above'" experience
+  // company search already gives for company names, built entirely
+  // client-side (see lib/screener/suggest.ts's own module comment for why
+  // this can never recommend a phrase the real parser wouldn't also
+  // recognize). `vocabulary` loads once per mount and is never on the
+  // critical path for typing or submitting -- a failed/slow fetch just
+  // means no suggestions, never a blocked textarea.
+  const [vocabulary, setVocabulary] = useState<NlVocabulary | null>(null);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [activeSuggestion, setActiveSuggestion] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    void loadNlVocabulary().then((loaded) => {
+      if (!active) return;
+      setVocabulary(loaded);
+      // The fetch can resolve after the user has already started typing
+      // (its own fetch + the mount effect both race the user's first
+      // keystroke) -- recompute for whatever's in the box right now
+      // instead of waiting for the next keystroke to reflect it.
+      const el = textareaRef.current;
+      if (el) setSuggestions(getSuggestions(loaded, el.value, el.selectionStart ?? el.value.length));
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  function updateSuggestions(nextText: string, cursor: number) {
+    if (!vocabulary) { setSuggestions([]); return; }
+    setSuggestions(getSuggestions(vocabulary, nextText, cursor));
+    setActiveSuggestion(0);
+  }
+
+  function changeText(next: string, cursor?: number) {
     requestVersion.current += 1;
     setText(next);
     setInterpretation(null);
     setState("idle");
     setError("");
+    updateSuggestions(next, cursor ?? next.length);
+  }
+
+  function applySuggestionAt(index: number) {
+    const suggestion = suggestions[index];
+    if (!suggestion) return;
+    const result = applySuggestion(text, suggestion);
+    setText(result.text);
+    setSuggestions([]);
+    window.requestAnimationFrame(() => {
+      const el = textareaRef.current;
+      if (!el) return;
+      el.focus();
+      el.selectionStart = result.cursor;
+      el.selectionEnd = result.cursor;
+    });
   }
 
   async function runQuery(nextText = text) {
@@ -157,6 +207,28 @@ export function NaturalQueryPanel({
   }
 
   function keyboardSubmit(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (suggestions.length > 0) {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setActiveSuggestion((index) => (index + 1) % suggestions.length);
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setActiveSuggestion((index) => (index - 1 + suggestions.length) % suggestions.length);
+        return;
+      }
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setSuggestions([]);
+        return;
+      }
+      if (event.key === "Enter" || event.key === "Tab") {
+        event.preventDefault();
+        applySuggestionAt(activeSuggestion);
+        return;
+      }
+    }
     if ((event.metaKey || event.ctrlKey) && (event.key === "Enter" || event.key === "NumpadEnter")) {
       event.preventDefault();
       if (state !== "loading") void runQuery();
@@ -179,24 +251,58 @@ export function NaturalQueryPanel({
     <section className="natural-query" aria-labelledby="natural-query-title" hidden={hidden}>
       <div className="natural-query-heading">
         <div>
-          <h1 id="natural-query-title">{title}</h1>
+          <p className="workspace-eyebrow">Company screener</p>
+          <h1 className="ds-workspace-title" id="natural-query-title">{title}</h1>
+          <p className="natural-query-subtitle">Describe the companies you want to find. Scrooner will translate your words into verifiable financial criteria.</p>
         </div>
       </div>
 
       <div className="natural-query-workspace">
         <form onSubmit={submit} className="natural-query-form" aria-busy={state === "loading"}>
           <label htmlFor="natural-query-input"><span aria-hidden="true">Query</span><span className="sr-only">Your criteria</span></label>
-          <textarea
-            className="ds-control query-composer"
-            id="natural-query-input"
-            value={text}
-            onChange={(event) => changeText(event.target.value)}
-            onKeyDown={keyboardSubmit}
-            placeholder={"ROE above 20% AND\nDebt to equity below 1"}
-            rows={7}
-            aria-invalid={state === "attention" || state === "error"}
-            aria-describedby={`natural-query-help${state === "attention" ? " natural-query-attention" : ""}${state === "error" ? " natural-query-error" : ""}`}
-          />
+          <div className="natural-query-input-wrap">
+            <textarea
+              ref={textareaRef}
+              className="ds-control query-composer"
+              id="natural-query-input"
+              value={text}
+              onChange={(event) => changeText(event.target.value, event.target.selectionStart ?? event.target.value.length)}
+              onSelect={(event) => updateSuggestions(text, event.currentTarget.selectionStart ?? text.length)}
+              onKeyDown={keyboardSubmit}
+              onBlur={() => setSuggestions([])}
+              placeholder={"ROE above 20% AND\nDebt to equity below 1"}
+              rows={7}
+              aria-controls="natural-query-suggestions"
+              aria-activedescendant={suggestions.length > 0 ? `natural-query-suggestion-${activeSuggestion}` : undefined}
+              autoComplete="off"
+              aria-invalid={state === "attention" || state === "error"}
+              aria-describedby={`natural-query-help${state === "attention" ? " natural-query-attention" : ""}${state === "error" ? " natural-query-error" : ""}`}
+            />
+            {suggestions.length > 0 && (
+              <div className="natural-query-suggestions" id="natural-query-suggestions" role="listbox" aria-label="Matching metrics, operators, and classifications">
+                {suggestions.map((suggestion, index) => (
+                  <button
+                    type="button"
+                    key={`${suggestion.kind}:${suggestion.phrase}`}
+                    id={`natural-query-suggestion-${index}`}
+                    role="option"
+                    aria-selected={index === activeSuggestion}
+                    className={`natural-query-suggestion${index === activeSuggestion ? " is-active" : ""}`}
+                    onMouseEnter={() => setActiveSuggestion(index)}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => applySuggestionAt(index)}
+                  >
+                    <span>
+                      {suggestion.metricNames
+                        ? (metricByName(metrics, suggestion.metricNames[0])?.display_name ?? suggestion.phrase)
+                        : suggestion.phrase}
+                    </span>
+                    <span className="natural-query-suggestion-kind">{suggestion.kind}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="natural-query-actions">
             <span id="natural-query-help" />
             <Button type="submit" loading={state === "loading"} loadingLabel="Finding matches…">Show matches</Button>
@@ -215,7 +321,7 @@ export function NaturalQueryPanel({
 
       {state === "loading" && (
         <StatusPanel className="interpretation-state" title="Finding matching companies" busy>
-          <p>Applying filters.</p>
+          <p>Applying your criteria.</p>
         </StatusPanel>
       )}
 

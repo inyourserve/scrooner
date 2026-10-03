@@ -5,6 +5,7 @@ import { backendUrl } from "@/lib/backend";
 import { buildLoginHref } from "@/lib/auth/redirect";
 import { createClient } from "@/lib/supabase/server";
 import type { SavedScreen } from "@/lib/saved-screens/types";
+import type { MetricDefinition } from "@/lib/screener/types";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Saved screen — Scrooner" };
@@ -24,12 +25,16 @@ export default async function SavedScreenPage({
 
   const search = new URLSearchParams({ page_size: "50" });
   if (query.cursor) search.set("cursor", query.cursor);
-  const response = await fetch(backendUrl(`/v1/screens/${encodeURIComponent(slug)}?${search}`), {
-    cache: "no-store",
-    headers: { accept: "application/json", authorization: `Bearer ${data.session.access_token}` },
-  });
+  const [response, metricsResponse] = await Promise.all([
+    fetch(backendUrl(`/v1/screens/${encodeURIComponent(slug)}?${search}`), {
+      cache: "no-store",
+      headers: { accept: "application/json", authorization: `Bearer ${data.session.access_token}` },
+    }),
+    fetch(backendUrl("/v1/metrics"), { next: { revalidate: 3600 }, headers: { accept: "application/json" } }),
+  ]);
   if (response.status === 404) notFound();
   if (!response.ok) throw new Error("Saved screen could not be loaded.");
   const screen = await response.json() as SavedScreen;
-  return <SavedScreenDetailClient initialScreen={screen} initialPage={Math.max(1, Number(query.page) || 1)} />;
+  const metrics = metricsResponse.ok ? await metricsResponse.json() as MetricDefinition[] : [];
+  return <SavedScreenDetailClient initialScreen={screen} initialPage={Math.max(1, Number(query.page) || 1)} metrics={metrics} />;
 }

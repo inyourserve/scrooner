@@ -5,6 +5,8 @@ import { AccountMenu } from "@/components/public/AccountMenu";
 import { DashboardNavLink } from "@/components/public/DashboardNavLink";
 import { HeaderAuthAction } from "@/components/public/HeaderAuthAction";
 import { HeaderMenu } from "@/components/public/HeaderMenu";
+import { ThemeToggle } from "@/components/public/ThemeToggle";
+import { AuthenticatedNavLinks } from "@/components/public/AuthenticatedNavLinks";
 
 export type Current = "home" | "company" | "explore" | "methodology" | "data-sources" | "about" | "pricing" | "privacy" | "terms" | "dashboard";
 
@@ -33,15 +35,13 @@ export function PublicHeader({
   const item = (href: string, label: string, active: boolean) => active ? <span aria-current="page">{label}</span> : <Link href={href}>{label}</Link>;
   return <>
     <a className="public-skip-link" href={skipHref}>Skip to main content</a>
-    <header className="public-header"><nav className="public-nav" aria-label="Primary navigation">
+    <header className="public-header"><nav className="public-nav ds-container" aria-label="Primary navigation">
       <Link href="/" className="public-brand" aria-label="Scrooner home"><BrandMark /><span className="brand-name">scrooner</span></Link>
       <div className="public-links">
-        {item("/explore", "Explore", current === "explore")}
-        {item("/app/screens/new", "Create screen", false)}
-        {authenticated && item("/app/screens", "Saved screens", false)}
-        {authenticated ? item("/app", "Dashboard", current === "dashboard") : <DashboardNavLink active={current === "dashboard"} />}
+        {authenticated ? <AuthenticatedNavLinks /> : <>{item("/explore", "Explore", current === "explore")}{item("/app/screens/new", "Create screen", false)}<DashboardNavLink active={current === "dashboard"} /></>}
       </div>
       <SearchCommand />
+      <ThemeToggle />
       <HeaderMenu authenticated={authenticated} />
       {authenticated ? <AccountMenu email={userEmail} /> : <HeaderAuthAction />}
     </nav></header><div className="public-header-spacer" aria-hidden="true" />

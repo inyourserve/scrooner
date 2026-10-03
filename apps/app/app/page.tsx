@@ -5,11 +5,12 @@ import { BrandMark } from "@/components/ui/BrandMark";
 import { CompanySearch } from "@/components/public/CompanySearch";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { PublicHeader } from "@/components/public/PublicHeader";
+import { Button } from "@/components/ui/Button";
 import { getCompaniesByTickers } from "@/lib/company/db";
 
 export const metadata: Metadata = {
-  title: "US Stock Screener & Company Research — Scrooner",
-  description: "Search US companies, research SEC-derived financials, and create verifiable stock screens with Scrooner.",
+  title: "Screen US stocks in plain English — Scrooner",
+  description: "Turn an investment thesis into a repeatable US stock screen, then inspect the filings, periods, and formulas behind the results.",
   keywords: ["US stock screener", "stock screener", "company research", "fundamental stock screener"],
 };
 export const dynamic = "force-dynamic";
@@ -58,12 +59,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
   return <div className="public-site">
     {/* Standard Next.js JSON-LD pattern -- content is the fixed object above, never user input. */}
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <PublicHeader current="home" skipHref="#company-search" /><main className="home-main" id="main-content">
+    <PublicHeader current="home" skipHref="#main-content" /><main className="home-main" id="main-content" tabIndex={-1}>
     <div className="hero-wordmark" aria-label="Scrooner"><span className="name">scrooner</span><BrandMark className="hero-research-mark" /></div>
-    <h1 className="tagline">Search and research US public companies.</h1>
-    <p className="subtag">Explore SEC-derived financials, ratios, ownership, and filings—or use the US stock screener to find companies that match your criteria.</p>
+    <h1 className="tagline">Find the companies that fit your thesis.</h1>
+    <p className="subtag">Search a covered US company by name or ticker. To compare the market, describe your criteria in plain English and create a repeatable screen backed by reported fundamentals.</p>
+    <div className="home-primary-action">
+      <Button asChild size="large"><Link href="/app/screens/new">Create a screen</Link></Button>
+    </div>
+    <div className="home-path-divider" aria-hidden="true"><span>or research one company</span></div>
     <div id="company-search"><CompanySearch /></div>
     {quickPicks.length > 0 && <div className="quick-picks" aria-label="Popular company pages"><span className="label">Or analyse:</span>{quickPicks.map((company) => <Link className="ds-chip company-chip" key={company.ticker} href={`/stocks/${company.ticker.toLowerCase()}`}>{names[company.ticker.toUpperCase()] ?? company.company_name}<span className="ticker">{company.ticker}</span></Link>)}</div>}
-    <p className="screener-path">Have an investment thesis? <Link href="/app/screens/new">Create a stock screen →</Link></p>
   </main><PublicFooter /></div>;
 }

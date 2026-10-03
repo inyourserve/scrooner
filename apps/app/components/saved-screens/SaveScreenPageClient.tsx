@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppPageLayout } from "@/components/layout/AppPageLayout";
+import { PageShell } from "@/components/layout/PageShell";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardHeading, CardTitle } from "@/components/ui/Card";
 import { Field } from "@/components/ui/Field";
@@ -23,6 +24,7 @@ export function SaveScreenPageClient() {
   const [name, setName] = useState("");
   const [state, setState] = useState<State>("loading");
   const [error, setError] = useState("");
+  const [nameError, setNameError] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -66,7 +68,7 @@ export function SaveScreenPageClient() {
     event.preventDefault();
     const clean = name.trim();
     if (!clean) {
-      setError("Enter a name for this screen.");
+      setNameError("Enter a name for this screen.");
       return;
     }
     if (!query) return;
@@ -91,16 +93,17 @@ export function SaveScreenPageClient() {
   }
 
   return (
-    <main className="main-content" id="main-content">
+    <PageShell>
       <AppPageLayout>
         <Card className="save-query-card" aria-labelledby="save-query-title">
           <CardHeader><CardHeading><CardTitle id="save-query-title">Save screen</CardTitle><CardDescription>Name this screen so you can run it again later.</CardDescription></CardHeading></CardHeader>
           <CardContent>
-          {state === "loading" && <StatusPanel title="Loading query" busy><p>Preparing the saved screen.</p></StatusPanel>}
-          {state === "error" && !query && <StatusPanel tone="negative" title="Query unavailable"><p>{error}</p></StatusPanel>}
+          {state === "loading" && <StatusPanel title="Loading screen" busy><p>Preparing your criteria.</p></StatusPanel>}
+          {state === "error" && !query && <StatusPanel tone="negative" title="Screen unavailable"><p>{error}</p></StatusPanel>}
           {query && <form onSubmit={save}>
-            <Field htmlFor="saved-screen-name" label="Name" error={error || undefined} errorId="save-screen-error">
-              <input className="ds-control" id="saved-screen-name" maxLength={120} autoFocus value={name} onChange={(event) => { setName(event.target.value); setError(""); }} placeholder="e.g. Durable compounders" aria-invalid={Boolean(error)} aria-describedby={error ? "save-screen-error" : undefined} />
+            {error && <StatusPanel tone="negative" title="Screen could not be saved"><p>{error}</p></StatusPanel>}
+            <Field htmlFor="saved-screen-name" label="Name" error={nameError || undefined} errorId="save-screen-name-error">
+              <input className="ds-control" id="saved-screen-name" maxLength={120} autoFocus value={name} onChange={(event) => { setName(event.target.value); setNameError(""); }} placeholder="e.g. Durable compounders" aria-invalid={Boolean(nameError)} aria-describedby={nameError ? "save-screen-name-error" : undefined} />
             </Field>
             <div className="save-query-preview"><strong>Query</strong><p>{queryText || "Structured fundamental screen"}</p></div>
             <p className="save-query-privacy">Saved screens are private to your account.</p>
@@ -112,6 +115,6 @@ export function SaveScreenPageClient() {
           </CardContent>
         </Card>
       </AppPageLayout>
-    </main>
+    </PageShell>
   );
 }

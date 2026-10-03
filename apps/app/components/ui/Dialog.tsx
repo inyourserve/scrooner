@@ -2,7 +2,21 @@
 
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { X } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { IconButton } from "./IconButton";
+import { cn } from "@/lib/utils";
+
+const dialogVariants = cva("ds-dialog", {
+  variants: {
+    size: {
+      small: "ds-dialog--small",
+      medium: "",
+      large: "ds-dialog--large",
+    },
+  },
+  defaultVariants: { size: "medium" },
+});
 
 type DialogProps = {
   title: string;
@@ -12,7 +26,8 @@ type DialogProps = {
   children?: ReactNode;
   actions?: ReactNode;
   closeLabel?: string;
-};
+  className?: string;
+} & VariantProps<typeof dialogVariants>;
 
 const FOCUSABLE = [
   "button:not([disabled])",
@@ -31,6 +46,8 @@ export function Dialog({
   children,
   actions,
   closeLabel = "Close dialog",
+  size = "medium",
+  className,
 }: DialogProps) {
   const generatedId = useId();
   const titleId = `${generatedId}-title`;
@@ -91,12 +108,13 @@ export function Dialog({
   // class of ancestor-context bug (containing blocks, overflow, stacking),
   // not just a patch for this one sticky-header case.
   return createPortal(
-    <div className="ds-dialog-backdrop" onMouseDown={(event) => {
+    <div className="ds-dialog-backdrop" data-slot="dialog-backdrop" onMouseDown={(event) => {
       if (event.target === event.currentTarget) onClose();
     }}>
       <section
         ref={panelRef}
-        className="ds-dialog"
+        className={cn(dialogVariants({ size }), className)}
+        data-slot="dialog"
         role={role}
         aria-modal="true"
         aria-labelledby={titleId}
@@ -105,7 +123,7 @@ export function Dialog({
       >
         <div className="ds-dialog__header">
           <h2 id={titleId}>{title}</h2>
-          <IconButton label={closeLabel} icon={<span aria-hidden="true">×</span>} onClick={onClose} />
+          <IconButton label={closeLabel} icon={<X size={18} strokeWidth={1.8} aria-hidden="true" />} onClick={onClose} />
         </div>
         {description && <p className="ds-dialog__description" id={descriptionId}>{description}</p>}
         {children && <div className="ds-dialog__body">{children}</div>}

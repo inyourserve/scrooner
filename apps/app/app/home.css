@@ -54,9 +54,35 @@
   animation: home-rise 500ms 140ms var(--ds-ease-standard) both;
 }
 
+.home-primary-action {
+  margin-top: var(--ds-space-6);
+  animation: home-rise 500ms 180ms var(--ds-ease-standard) both;
+}
+
+.home-path-divider {
+  width: min(720px, 100%);
+  margin-top: var(--ds-space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-12);
+  font-weight: var(--ds-font-weight-medium);
+}
+
+.home-path-divider::before,
+.home-path-divider::after {
+  height: 1px;
+  flex: 1;
+  content: "";
+  background: var(--ds-color-border-default);
+}
+
+.home-path-divider span { white-space: nowrap; }
+
 .home-main #company-search {
   width: min(720px, 100%);
-  margin-top: 34px;
+  margin-top: var(--ds-space-4);
   /* position+z-index (not just the animation's own opacity/transform) are
      required here: an element with a CSS animation on opacity/transform
      forms its own stacking context for the life of the rule, regardless of
@@ -100,10 +126,6 @@
 .company-chip:active { transform: translateY(1px); }
 .company-chip .ticker { color: var(--ds-color-text-muted); font-family: var(--ds-font-family-mono); font-size: var(--ds-font-size-11); font-weight: var(--ds-font-weight-medium); letter-spacing: 0.02em; }
 .company-chip:hover .ticker { color: var(--ds-color-action); }
-.screener-path { margin: 25px 0 0; color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-13); }
-.screener-path a:not(.ds-button) { color: var(--ds-color-action-hover); font-weight: var(--ds-font-weight-semibold); text-decoration: none; }
-.screener-path a:hover { text-decoration: underline; text-underline-offset: 3px; }
-
 @keyframes home-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes home-grow { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
 

@@ -25,8 +25,9 @@ export function AccountMenu({ email }: { email: string | null }) {
       <button
         type="button"
         className="account-menu-trigger"
-        aria-haspopup="menu"
+        aria-haspopup="dialog"
         aria-expanded={open}
+        onPointerDown={(event) => event.stopPropagation()}
         onClick={() => setOpen((value) => !value)}
       >
         <UserRound size={15} aria-hidden="true" />

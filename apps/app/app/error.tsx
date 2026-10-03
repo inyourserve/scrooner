@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
+import { PageShell } from "@/components/layout/PageShell";
 
 export default function AppError({
   error,
@@ -15,11 +16,11 @@ export default function AppError({
   }, [error]);
 
   return (
-    <main className="main-content error-page" id="main-content">
+    <PageShell className="error-page">
       <p className="eyebrow">Scrooner</p>
       <h1>Something went wrong</h1>
       <p>We could not display this page. Your account and saved data were not changed.</p>
       <Button type="button" onClick={reset}>Try again</Button>
-    </main>
+    </PageShell>
   );
 }

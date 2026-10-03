@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SaveScreenPageClient } from "@/components/saved-screens/SaveScreenPageClient";
 
 export const metadata: Metadata = {
-  title: "Save query — Scrooner",
+  title: "Save screen — Scrooner",
   description: "Save this screen to your private research library.",
 };
 

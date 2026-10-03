@@ -15,5 +15,5 @@ export function IconButton({ label, icon, tone = "neutral", size = "medium", cla
     className,
   ].filter(Boolean).join(" ");
 
-  return <button type="button" className={classes} aria-label={label} title={label} {...props}>{icon}</button>;
+  return <button type="button" data-slot="icon-button" className={classes} aria-label={label} title={label} {...props}>{icon}</button>;
 }

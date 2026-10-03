@@ -44,7 +44,7 @@ export default async function AllStocksPage({ searchParams }: Props) {
     .sort((a, b) => a.company_name.localeCompare(b.company_name));
 
   return (
-    <PublicPage current="company" title="All stocks" description={`${rows.length.toLocaleString()} US-listed companies covered by Scrooner, browsable A to Z.`} wide>
+    <PublicPage current="company" title="All stocks" description={`${rows.length.toLocaleString()} US-listed companies covered by Scrooner, browsable A to Z.`}>
       <nav className="stocks-directory-jump" aria-label="Jump to letter">
         {activeLetters.map((entry) => (
           <Link key={entry} href={`/stocks?letter=${entry}`} aria-current={entry === letter ? "page" : undefined}>{entry}</Link>

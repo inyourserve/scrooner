@@ -26,10 +26,10 @@ const ACTIONS: Record<Mode, (state: AuthActionState, data: FormData) => Promise<
 };
 
 const COPY = {
-  login: { title: "Welcome back", submit: "Sign in" },
-  signup: { title: "Create your account", submit: "Create account" },
-  recovery: { title: "Reset your password", submit: "Send reset link" },
-  update: { title: "Choose a new password", submit: "Update password" },
+  login: { title: "Welcome back", submit: "Sign in", pending: "Signing in…" },
+  signup: { title: "Create your account", submit: "Create account", pending: "Creating account…" },
+  recovery: { title: "Reset your password", submit: "Send reset link", pending: "Sending reset link…" },
+  update: { title: "Choose a new password", submit: "Update password", pending: "Updating password…" },
 } as const;
 
 // Recovery and signup both end in "we emailed you something," not a
@@ -103,8 +103,8 @@ export function AuthForm({ mode, redirectUrl = "/app" }: { mode: Mode; redirectU
     return (
       <section className="auth-card" aria-labelledby="auth-title">
         <p className="eyebrow">Scrooner account</p>
-        <h1 id="auth-title">Check your email</h1>
-        <StatusPanel className="auth-success" tone="positive" title="On its way">{state.message}</StatusPanel>
+        <h1 id="auth-title">Check your inbox</h1>
+        <StatusPanel className="auth-success" tone="positive" title={mode === "signup" ? "Confirm your email" : "Reset link sent"}>{state.message}</StatusPanel>
         <div className="auth-card__links auth-card__links--center">
           <Link href="/login">Back to sign in</Link>
         </div>
@@ -117,10 +117,10 @@ export function AuthForm({ mode, redirectUrl = "/app" }: { mode: Mode; redirectU
       <p className="eyebrow">Scrooner account</p>
       <h1 id="auth-title">{COPY[mode].title}</h1>
       <p className="auth-card__intro">
-        {mode === "login" && "Sign in to keep your research settings tied to your account."}
-        {mode === "signup" && "Create an account to keep your Scrooner workspace available across sessions."}
-        {mode === "recovery" && "Enter your email and we’ll send a secure link if an account exists."}
-        {mode === "update" && "Use a unique password with at least eight characters."}
+        {mode === "login" && "Sign in to continue with your saved screens and research."}
+        {mode === "signup" && "Save screens, revisit results, and keep your research in one workspace."}
+        {mode === "recovery" && "Enter your email. If an account exists, we’ll send a secure reset link."}
+        {mode === "update" && "Choose a unique password with at least eight characters."}
       </p>
 
       {OAUTH_MODES.has(mode) && <OAuthButtons redirectUrl={redirectUrl} />}
@@ -155,7 +155,7 @@ export function AuthForm({ mode, redirectUrl = "/app" }: { mode: Mode; redirectU
           />
         )}
         {state.message && <p className={`auth-message auth-message--${state.status}`} role={state.status === "error" ? "alert" : "status"}>{state.message}</p>}
-        <Button className="auth-submit" type="submit" loading={pending} loadingLabel="Please wait…">{COPY[mode].submit}</Button>
+        <Button className="auth-submit" type="submit" loading={pending} loadingLabel={COPY[mode].pending}>{COPY[mode].submit}</Button>
       </form>
 
       <div className="auth-card__links">

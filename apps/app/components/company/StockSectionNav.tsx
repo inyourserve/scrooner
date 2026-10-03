@@ -14,5 +14,5 @@ export function StockSectionNav({ sections }: { sections: StockSectionLink[] }) 
     return () => observer.disconnect();
   }, [sections]);
   useEffect(() => { navRef.current?.querySelector(`[href="#${active}"]`)?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }, [active]);
-  return <nav className="stock-section-nav" aria-label="Company research sections" ref={navRef}><div className="stock-section-nav__track">{sections.map((section) => <a className={active === section.id ? "is-active" : undefined} href={`#${section.id}`} aria-current={active === section.id ? "location" : undefined} key={section.id}>{section.label}</a>)}</div></nav>;
+  return <nav className="stock-section-nav" aria-label="Company research sections" ref={navRef}><div className="stock-section-nav__frame ds-container"><div className="stock-section-nav__track">{sections.map((section) => <a className={active === section.id ? "is-active" : undefined} href={`#${section.id}`} aria-current={active === section.id ? "location" : undefined} key={section.id}>{section.label}</a>)}</div></div></nav>;
 }

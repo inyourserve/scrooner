@@ -22,7 +22,7 @@ function exampleHref(example: string) {
 export default async function ExplorePage() {
   const [sectors, industries] = await Promise.all([getSectorList(), getIndustryList()]);
   return (
-    <PublicPage current="explore" title="Explore" description={metadata.description!} wide>
+    <PublicPage current="explore" title="Explore" description={metadata.description!}>
       <section aria-labelledby="explore-screens-title">
         <h2 id="explore-screens-title">Popular screens</h2>
         <p>Run a tested, plain-English screen with one click.</p>

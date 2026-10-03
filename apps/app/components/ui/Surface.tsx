@@ -9,6 +9,7 @@ type SurfaceProps = HTMLAttributes<HTMLDivElement> & {
 export function Surface({ raised = false, padded = false, className = "", children, ...props }: SurfaceProps) {
   return (
     <div
+      data-slot="surface"
       className={["ds-surface", raised ? "ds-surface--raised" : "", padded ? "ds-surface--padded" : "", className].filter(Boolean).join(" ")}
       {...props}
     >

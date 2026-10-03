@@ -50,7 +50,7 @@ export function SavedScreensClient({ initialScreens }: { initialScreens: SavedSc
       await savedScreensApi.rename(renaming.id, cleanName);
       setScreens((current) => current.map((item) => item.id === renaming.id ? { ...item, name: cleanName, updated_at: new Date().toISOString() } : item));
       setRenaming(null);
-      setMessage("Screen renamed.");
+      setMessage(`Renamed to “${cleanName}”.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The screen could not be renamed.");
     } finally {
@@ -63,9 +63,10 @@ export function SavedScreensClient({ initialScreens }: { initialScreens: SavedSc
     setPendingAction("delete");
     try {
       await savedScreensApi.remove(deleting.id);
+      const deletedName = deleting.name;
       setScreens((current) => current.filter((item) => item.id !== deleting.id));
       setDeleting(null);
-      setMessage("Screen deleted.");
+      setMessage(`“${deletedName}” deleted.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The screen could not be deleted.");
     } finally {
@@ -73,19 +74,19 @@ export function SavedScreensClient({ initialScreens }: { initialScreens: SavedSc
     }
   }
 
-  if (state === "loading") return <StatusPanel title="Loading saved screens" busy><p>Retrieving your screen library.</p></StatusPanel>;
-  if (state === "error") return <StatusPanel tone="negative" title="Saved screens are unavailable" action={<Button size="small" variant="ghost" onClick={() => void load()}>Try again</Button>}><p>{message}</p></StatusPanel>;
+  if (state === "loading") return <StatusPanel title="Loading your screens" busy><p>Retrieving the latest saved versions.</p></StatusPanel>;
+  if (state === "error") return <StatusPanel tone="negative" title="We couldn’t load your screens" action={<Button size="small" variant="ghost" onClick={() => void load()}>Try again</Button>}><p>{message}</p></StatusPanel>;
 
   return (
     <>
       {message && <p className={styles.status} role="status">{message}</p>}
       {screens.length === 0 ? (
-        <EmptyState title="No saved screens yet" description="Build a screen and save its criteria to create your research library." action={<Button asChild size="small" variant="secondary"><Link href="/app/screens/new">Build a screen</Link></Button>} />
+        <EmptyState title="Create your first saved screen" description="Turn an investment idea into criteria, review the matches, and save it for later." action={<Button asChild size="small" variant="secondary"><Link href="/app/screens/new">Create screen</Link></Button>} />
       ) : (
         <section className={styles.library} aria-labelledby="screen-library-title">
           <header className={styles.libraryHeader}>
-            <div><h2 id="screen-library-title">Your library</h2><p>{screens.length} saved {screens.length === 1 ? "screen" : "screens"}</p></div>
-            <span className={styles.freshness}>Saved results</span>
+            <div><h2 id="screen-library-title">Your screens</h2><p>{screens.length} saved {screens.length === 1 ? "screen" : "screens"}</p></div>
+            <span className={styles.freshness}>Saved snapshots</span>
           </header>
           <ul className={styles.list}>
             {screens.map((screen) => {
@@ -97,7 +98,7 @@ export function SavedScreensClient({ initialScreens }: { initialScreens: SavedSc
                       <strong>{screen.name}</strong>
                       <span>{count} {count === 1 ? "criterion" : "criteria"}{screen.query.sort_by ? <> · Sort: <code>{screen.query.sort_by}</code></> : null}</span>
                     </span>
-                    <span className={styles.runLabel}>Open <ArrowRight size={14} aria-hidden="true" /></span>
+                    <span className={styles.runLabel}>View results <ArrowRight size={14} aria-hidden="true" /></span>
                   </Link>
                   <time className={styles.updated} dateTime={screen.updated_at}>Updated {formatDate(screen.updated_at)}</time>
                   <div className={styles.actions}>
@@ -111,8 +112,8 @@ export function SavedScreensClient({ initialScreens }: { initialScreens: SavedSc
         </section>
       )}
 
-      {renaming && <Dialog title="Rename screen" onClose={() => setRenaming(null)}><form onSubmit={rename}><Field htmlFor="rename-screen" label="Screen name"><input className="ds-control" id="rename-screen" data-dialog-initial-focus maxLength={120} value={name} onChange={(event) => setName(event.target.value)} /></Field><div className="ds-dialog__actions"><Button type="button" variant="ghost" onClick={() => setRenaming(null)}>Cancel</Button><Button type="submit" disabled={!name.trim()} loading={pendingAction === "rename"} loadingLabel="Renaming…">Rename</Button></div></form></Dialog>}
-      {deleting && <Dialog role="alertdialog" title={`Delete “${deleting.name}”?`} description="This removes the saved criteria. It cannot be undone." onClose={() => setDeleting(null)} actions={<><Button type="button" variant="ghost" onClick={() => setDeleting(null)}>Cancel</Button><Button type="button" variant="destructive" loading={pendingAction === "delete"} loadingLabel="Deleting…" onClick={() => void remove()}>Delete screen</Button></>} />}
+      {renaming && <Dialog title={`Rename “${renaming.name}”`} onClose={() => setRenaming(null)}><form onSubmit={rename}><Field htmlFor="rename-screen" label="Screen name"><input className="ds-control" id="rename-screen" data-dialog-initial-focus maxLength={120} value={name} onChange={(event) => setName(event.target.value)} /></Field><div className="ds-dialog__actions"><Button type="button" variant="ghost" onClick={() => setRenaming(null)}>Cancel</Button><Button type="submit" disabled={!name.trim()} loading={pendingAction === "rename"} loadingLabel="Saving…">Save name</Button></div></form></Dialog>}
+      {deleting && <Dialog role="alertdialog" title={`Delete “${deleting.name}”?`} description="This permanently removes the screen from your library. This action cannot be undone." onClose={() => setDeleting(null)} actions={<><Button type="button" variant="ghost" onClick={() => setDeleting(null)}>Keep screen</Button><Button type="button" variant="destructive" loading={pendingAction === "delete"} loadingLabel="Deleting…" onClick={() => void remove()}>Delete screen</Button></>} />}
     </>
   );
 }

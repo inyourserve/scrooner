@@ -58,6 +58,37 @@ class ScreenRunCreate(BaseModel):
     run_id: UUID | None = None
 
 
+@router.get("/screen-runs")
+def list_recent_screen_runs(
+    limit: int = Query(default=8, ge=1, le=20),
+    user_id: str = Depends(get_current_user_id),
+) -> list[dict]:
+    """Return lightweight per-user history without loading result rows."""
+    with get_pooled_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                select u.id, u.query_text, u.ran_at, r.total_count
+                from app.user_screen_run u
+                join app.screen_result r on r.id = u.screen_result_id
+                where u.user_id = %s
+                order by u.ran_at desc
+                limit %s
+                """,
+                (user_id, limit),
+            )
+            rows = cur.fetchall()
+    return [
+        {
+            "run_id": str(row[0]),
+            "query_text": row[1],
+            "ran_at": str(row[2]),
+            "total_count": row[3],
+        }
+        for row in rows
+    ]
+
+
 def _encode_cursor(position: int) -> str:
     return base64.urlsafe_b64encode(str(position).encode()).decode().rstrip("=")
 

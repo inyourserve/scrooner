@@ -50,12 +50,11 @@ export const browserAccessToken: AccessTokenProvider = async () => {
 
 async function request<T>(path: string, tokenProvider: AccessTokenProvider, init?: RequestInit): Promise<T> {
   const token = await tokenProvider();
-  if (!token) throw new Error("Sign in to manage saved screens.");
   const response = await fetch(path, {
     ...init,
     headers: {
       accept: "application/json",
-      authorization: `Bearer ${token}`,
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
       ...(init?.body ? { "content-type": "application/json" } : {}),
       ...init?.headers,
     },

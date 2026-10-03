@@ -13,15 +13,17 @@ export function EmptyState({
   description,
   action,
   bordered = true,
+  className = "",
 }: {
   icon?: ReactNode;
   title?: string;
   description: ReactNode;
   action?: ReactNode;
   bordered?: boolean;
+  className?: string;
 }) {
   return (
-    <div className={`ds-empty-state${bordered ? " ds-empty-state--bordered" : ""}`}>
+    <div data-slot="empty-state" className={["ds-empty-state", bordered ? "ds-empty-state--bordered" : "", className].filter(Boolean).join(" ")}>
       <div>
         {icon && <span className="ds-empty-state__mark" aria-hidden="true">{icon}</span>}
         {title && <h3>{title}</h3>}

@@ -78,11 +78,26 @@
      and --ds-color-warning, which are already their family's darker shade. */
   --ds-color-positive-strong: var(--ds-color-teal-700);
   --ds-color-negative: var(--ds-color-red-700);
+  --ds-color-negative-solid: var(--ds-color-red-700);
+  --ds-color-negative-solid-hover: var(--ds-color-red-800);
   --ds-color-negative-subtle: var(--ds-color-red-50);
   --ds-color-warning: var(--ds-color-amber-700);
+  --ds-color-warning-solid: var(--ds-color-amber-700);
   --ds-color-warning-subtle: var(--ds-color-amber-50);
   --ds-color-info: var(--ds-color-blue-700);
   --ds-color-info-subtle: var(--ds-color-blue-50);
+  --ds-color-data-positive: var(--ds-color-teal-700);
+  --ds-color-data-negative: var(--ds-color-red-700);
+  --ds-color-data-neutral: var(--ds-color-slate-600);
+  --ds-color-table-hover: var(--ds-color-slate-25);
+  --ds-color-skeleton-highlight: var(--ds-color-slate-25);
+  --ds-color-navigation-active: var(--ds-color-navy-50);
+  --ds-color-chart-1: #355f9d;
+  --ds-color-chart-2: #0e7c66;
+  --ds-color-chart-3: #8b6a2f;
+  --ds-color-chart-4: #705a9c;
+  --ds-color-chart-5: #a24f4a;
+  --ds-color-chart-grid: var(--ds-color-slate-200);
   --ds-color-focus: var(--ds-color-navy-500);
   --ds-color-overlay: rgb(22 32 44 / 52%);
   --ds-color-header-glass: rgb(245 246 248 / 94%);
@@ -96,6 +111,11 @@
   --ds-font-family-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --ds-font-family-editorial: "Newsreader", Georgia, serif;
   --ds-font-family-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  /* Financial values need equal-width digits, not a code aesthetic. Keep
+     ticker symbols and machine identifiers in mono; render prices, ratios,
+     and statement values in the primary face with OpenType tabular figures. */
+  --ds-font-family-numeric: var(--ds-font-family-sans);
+  --ds-font-size-10: 0.625rem;
   --ds-font-size-11: 0.6875rem;
   --ds-font-size-12: 0.75rem;
   --ds-font-size-13: 0.8125rem;
@@ -113,7 +133,19 @@
   --ds-font-weight-regular: 400;
   --ds-font-weight-medium: 500;
   --ds-font-weight-semibold: 600;
+  --ds-font-size-page-title: var(--ds-font-size-30);
+  --ds-font-size-section-title: var(--ds-font-size-18);
+  --ds-font-size-card-title: var(--ds-font-size-16);
+  --ds-font-size-table-header: var(--ds-font-size-11);
+  --ds-font-size-table-cell: var(--ds-font-size-13);
+  --ds-font-size-metric-value: var(--ds-font-size-24);
+  --ds-font-size-metric-label: var(--ds-font-size-12);
+  --ds-font-size-supporting: var(--ds-font-size-13);
+  --ds-font-size-form-label: var(--ds-font-size-13);
+  --ds-font-size-error: var(--ds-font-size-12);
+  --ds-font-size-navigation: var(--ds-font-size-13);
   --ds-line-height-tight: 1.1;
+  --ds-line-height-compact: 1.35;
   --ds-line-height-heading: 1.25;
   --ds-line-height-body: 1.55;
   --ds-line-height-relaxed: 1.7;
@@ -125,6 +157,7 @@
   --ds-space-0-5: 2px;
   --ds-space-1: 4px;
   --ds-space-2: 8px;
+  --ds-space-2-5: 10px;
   --ds-space-3: 12px;
   --ds-space-4: 16px;
   --ds-space-5: 20px;
@@ -135,6 +168,18 @@
   --ds-space-12: 48px;
   --ds-space-16: 64px;
   --ds-space-20: 80px;
+
+  /* Semantic rhythm. These tokens assign one spacing owner to the page,
+     section and surface layers while retaining the 4px base scale above. */
+  --ds-page-space-start: var(--ds-space-12);
+  --ds-page-space-end: var(--ds-space-20);
+  --ds-page-space-start-compact: var(--ds-space-8);
+  --ds-page-space-end-compact: var(--ds-space-16);
+  --ds-page-header-gap: var(--ds-space-7);
+  --ds-section-space: var(--ds-space-10);
+  --ds-section-space-compact: var(--ds-space-8);
+  --ds-surface-padding: var(--ds-space-6);
+  --ds-surface-padding-compact: var(--ds-space-4);
 
   /* Shape and elevation */
   --ds-radius-xs: 4px;
@@ -155,10 +200,27 @@
   --ds-container-content: 960px;
   --ds-container-app: 1220px;
   --ds-container-research: 1296px;
-  --ds-container-gutter: var(--ds-space-8);
-  --ds-container-gutter-compact: var(--ds-space-6);
+  --ds-container-frame: 1600px;
+  --ds-overlay-dialog-sm: 400px;
+  --ds-overlay-dialog-md: 480px;
+  --ds-overlay-dialog-lg: 640px;
+  --ds-overlay-popover-sm: 240px;
+  --ds-overlay-popover-md: 360px;
+  --ds-overlay-popover-lg: 480px;
+  --ds-overlay-tooltip-max: 280px;
+  /* A fluid gutter keeps every global frame on the same guide without a
+     visible jump at the compact breakpoint. */
+  --ds-container-gutter: clamp(var(--ds-space-5), 4vw, var(--ds-space-12));
+  --ds-container-gutter-compact: var(--ds-space-5);
   --ds-grid-item-min: 15rem;
   --ds-grid-item-min-wide: 18.75rem;
+  --ds-results-index-width: 64px;
+  --ds-results-company-width: 260px;
+  --ds-results-classification-width: 230px;
+  --ds-results-metric-width: 148px;
+  --ds-results-metric-width-max: 168px;
+  --ds-results-index-width-compact: 48px;
+  --ds-results-company-width-compact: 210px;
   --ds-control-height-sm: 36px;
   --ds-control-height-md: 42px;
   --ds-control-height-lg: 48px;
@@ -189,8 +251,83 @@
   --accent: var(--ds-color-action-subtle);
   --accent-foreground: var(--ds-color-action-hover);
   --destructive: var(--ds-color-negative);
+  --destructive-foreground: var(--ds-color-text-inverse);
   --border: var(--ds-color-border-default);
   --input: var(--ds-color-border-strong);
   --ring: var(--ds-color-focus);
+  --chart-1: var(--ds-color-chart-1);
+  --chart-2: var(--ds-color-chart-2);
+  --chart-3: var(--ds-color-chart-3);
+  --chart-4: var(--ds-color-chart-4);
+  --chart-5: var(--ds-color-chart-5);
+  --sidebar: var(--ds-color-bg-surface);
+  --sidebar-foreground: var(--ds-color-text-primary);
+  --sidebar-primary: var(--ds-color-action);
+  --sidebar-primary-foreground: var(--ds-color-text-inverse);
+  --sidebar-accent: var(--ds-color-navigation-active);
+  --sidebar-accent-foreground: var(--ds-color-text-primary);
+  --sidebar-border: var(--ds-color-border-default);
+  --sidebar-ring: var(--ds-color-focus);
   --radius: var(--ds-radius-md);
+}
+
+/* Explicit class/data-attribute mode supports a future theme switcher. The
+   media block below makes dark mode useful today without client JavaScript. */
+:is(.dark, [data-theme="dark"]) {
+  color-scheme: dark;
+  --ds-color-bg-canvas: #0c1119;
+  --ds-color-bg-surface: #121923;
+  --ds-color-bg-subtle: #192230;
+  --ds-color-bg-raised: #182230;
+  --ds-color-bg-hover: #1c2735;
+  --ds-color-bg-inverse: #080d14;
+  --ds-color-text-primary: #edf2f8;
+  --ds-color-text-secondary: #b5c0ce;
+  --ds-color-text-muted: #99a6b6;
+  --ds-color-text-inverse: #ffffff;
+  --ds-color-border-subtle: #202b39;
+  --ds-color-border-default: #2c3848;
+  --ds-color-border-strong: #435166;
+  --ds-color-border-positive: #285f50;
+  --ds-color-border-negative: #704039;
+  --ds-color-border-warning: #69552f;
+  --ds-color-action: #526fae;
+  --ds-color-action-hover: #6683c0;
+  --ds-color-action-active: #7892ca;
+  --ds-color-action-subtle: #1d2b43;
+  --ds-color-link: #9fb7e8;
+  --ds-color-positive: #55b395;
+  --ds-color-positive-strong: #76c9ad;
+  --ds-color-positive-subtle: #142c27;
+  --ds-color-negative: #df7b70;
+  --ds-color-negative-solid: #9f3327;
+  --ds-color-negative-solid-hover: #7f281f;
+  --ds-color-negative-subtle: #321d1c;
+  --ds-color-warning: #d6aa5c;
+  --ds-color-warning-solid: #92600c;
+  --ds-color-warning-subtle: #302817;
+  --ds-color-info: #8eb7e6;
+  --ds-color-info-subtle: #17283b;
+  --ds-color-data-positive: #76c9ad;
+  --ds-color-data-negative: #ef9489;
+  --ds-color-data-neutral: #b5c0ce;
+  --ds-color-table-hover: #182332;
+  --ds-color-skeleton-highlight: #243142;
+  --ds-color-navigation-active: #1d2b43;
+  --ds-color-chart-1: #8ba9e1;
+  --ds-color-chart-2: #62bfa1;
+  --ds-color-chart-3: #d2ad68;
+  --ds-color-chart-4: #aa92d4;
+  --ds-color-chart-5: #dc8880;
+  --ds-color-chart-grid: #2c3848;
+  --ds-color-focus: #8fa8db;
+  --ds-color-overlay: rgb(3 7 12 / 72%);
+  --ds-color-header-glass: rgb(12 17 25 / 92%);
+  --ds-color-code-bg: #080c12;
+  --ds-color-code-text: #d9e2ed;
+  --ds-shadow-hairline: 0 1px 2px rgb(0 0 0 / 18%);
+  --ds-shadow-subtle: 0 1px 2px rgb(0 0 0 / 16%);
+  --ds-shadow-surface: 0 1px 2px rgb(0 0 0 / 20%), 0 10px 28px rgb(0 0 0 / 18%);
+  --ds-shadow-popover: 0 18px 44px rgb(0 0 0 / 38%);
+  --ds-focus-ring: 0 0 0 3px rgb(143 168 219 / 34%);
 }

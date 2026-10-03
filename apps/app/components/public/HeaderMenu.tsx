@@ -10,7 +10,7 @@ export function HeaderMenu({ authenticated }: { authenticated: boolean }) {
   const close = () => setOpen(false);
 
   return <div className="header-menu">
-    <button className="header-menu__trigger" type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+    <button className="header-menu__trigger" type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-haspopup="dialog" aria-expanded={open} onPointerDown={(event) => event.stopPropagation()} onClick={() => setOpen((value) => !value)}>
       {open ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
     </button>
     {open && <Popover label="Navigation" onClose={close} className="header-menu__popover">

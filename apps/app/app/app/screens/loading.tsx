@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import listStyles from "@/components/saved-screens/saved-screens.module.css";
 import styles from "../saved-screens/saved-screens.module.css";
+import { PageShell } from "@/components/layout/PageShell";
 
 // Even with routers/saved_screens.py's list_screens now Redis-cached
 // (doc/learnings/2026-09-15-company-page-caching.md), a per-user page like
@@ -16,14 +17,14 @@ import styles from "../saved-screens/saved-screens.module.css";
 // stock page's own loading.tsx.
 export default function ScreensLoading() {
   return (
-    <main className={`main-content ${styles.page}`} id="main-content">
+    <PageShell className={styles.page}>
       <div className={styles.heading}>
-        <PageHeader eyebrow="Research library" title="Saved screens" description="Reusable investment criteria, ready to run against the latest company data." />
-        <Button asChild leadingIcon={<Plus size={16} aria-hidden="true" />}><Link href="/app/screens/new">New screen</Link></Button>
+        <PageHeader eyebrow="Screen library" title="Saved screens" description="Reopen your investment criteria, review saved results, or refresh them against the latest available data." />
+        <Button asChild leadingIcon={<Plus size={16} aria-hidden="true" />}><Link href="/app/screens/new">Create screen</Link></Button>
       </div>
       <div className={styles.note}>
         <span aria-hidden="true" className={styles.noteMark}>i</span>
-        <p><strong>Results open instantly.</strong> Refresh a screen only when you want to run it against newer data.</p>
+        <p><strong>Saved results open instantly.</strong> Refresh a screen only when you need the latest available data.</p>
       </div>
       <section className={listStyles.library} aria-busy="true" aria-label="Loading your saved screens">
         <header className={listStyles.libraryHeader}>
@@ -42,6 +43,6 @@ export default function ScreensLoading() {
           ))}
         </ul>
       </section>
-    </main>
+    </PageShell>
   );
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { AppPageLayout } from "@/components/layout/AppPageLayout";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { PageShell } from "@/components/layout/PageShell";
 import { SavedScreensClient } from "@/components/saved-screens/SavedScreensClient";
 import { Button } from "@/components/ui/Button";
 import { backendUrl } from "@/lib/backend";
@@ -27,18 +28,14 @@ export default async function ScreensPage() {
   const screens = await response.json() as SavedScreen[];
 
   return (
-    <main className="main-content" id="main-content">
+    <PageShell>
       <div className={styles.heading}>
-        <PageHeader eyebrow="Research library" title="Saved screens" description="Reusable investment criteria, ready to run against the latest company data." />
-        <Button asChild leadingIcon={<Plus size={16} aria-hidden="true" />}><Link href="/app/screens/new">New screen</Link></Button>
+        <PageHeader eyebrow="Screen library" title="Saved screens" description="Reopen your investment criteria, review saved results, or refresh them against the latest available data." />
+        <Button asChild leadingIcon={<Plus size={16} aria-hidden="true" />}><Link href="/app/screens/new">Create screen</Link></Button>
       </div>
       <AppPageLayout>
-        <div className={styles.note}>
-          <span aria-hidden="true" className={styles.noteMark}>i</span>
-          <p><strong>Results open instantly.</strong> Refresh a screen only when you want to run it against newer data.</p>
-        </div>
         <SavedScreensClient initialScreens={screens} />
       </AppPageLayout>
-    </main>
+    </PageShell>
   );
 }

@@ -1,6 +1,7 @@
 import { ResearchSection } from "@/components/company/ResearchSection";
 import { stockPageSections } from "@/components/company/stockPageSections";
 import { StockSectionNav } from "@/components/company/StockSectionNav";
+import { PageShell } from "@/components/layout/PageShell";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { PublicHeader } from "@/components/public/PublicHeader";
 
@@ -30,7 +31,7 @@ export default function StockPageLoading() {
       <PublicHeader current="company" skipHref="#company-content" />
       <StockSectionNav sections={stockPageSections} />
 
-      <main className="stock-page__main" id="company-content">
+      <PageShell className="stock-page__main" id="company-content">
         <section className="stock-hero" aria-hidden="true">
           <div className="stock-hero__identity">
             <div className="stock-hero__title-row">
@@ -82,7 +83,7 @@ export default function StockPageLoading() {
             ))}
           </div>
         </ResearchSection>
-      </main>
+      </PageShell>
       <PublicFooter />
     </div>
   );

@@ -19,7 +19,7 @@ describe("SavedScreensClient", () => {
     expect(screen.getByText("Quality")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Rename" }));
     fireEvent.change(screen.getByLabelText("Screen name"), { target: { value: "High quality" } });
-    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Rename" }));
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Save name" }));
     expect(await screen.findByText("High quality")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Delete" }));
     expect(screen.getByRole("alertdialog")).toBeInTheDocument();

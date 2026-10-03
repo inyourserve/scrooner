@@ -11,6 +11,10 @@ import { Popover } from "./Popover";
 import { IconButton } from "./IconButton";
 import { Card, CardContent, CardDescription, CardHeader, CardHeading, CardTitle } from "./Card";
 import { Input, Textarea } from "./Input";
+import { Breadcrumb } from "./Breadcrumb";
+import { Skeleton } from "./Skeleton";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TableRowHeader } from "./Table";
+import { Tooltip } from "./Tooltip";
 
 afterEach(cleanup);
 
@@ -50,6 +54,15 @@ describe("design-system React adapters", () => {
     expect(screen.getByLabelText("Name")).toHaveFocus();
     fireEvent.keyDown(document, { key: "Escape" });
     expect(close).toHaveBeenCalledOnce();
+  });
+
+  it("supports system-owned overlay sizing, alignment, and density", () => {
+    const close = vi.fn();
+    const { rerender } = render(<Dialog title="Details" size="large" onClose={close}>Body</Dialog>);
+    expect(screen.getByRole("dialog", { name: "Details" })).toHaveClass("ds-dialog--large");
+
+    rerender(<Popover label="Filters" size="small" align="start" padded={false} onClose={close}><button>Apply</button></Popover>);
+    expect(screen.getByRole("dialog", { name: "Filters" })).toHaveClass("ds-popover--small", "ds-popover--start", "ds-popover--flush");
   });
 
   it("composes typed visual variants without losing native attributes", () => {
@@ -101,5 +114,40 @@ describe("design-system React adapters", () => {
 
     expect(screen.getByLabelText("Threshold")).toHaveClass("ds-control", "ds-control--large", "ds-control--mono");
     expect(screen.getByLabelText("Screen description")).toHaveClass("ds-control");
+  });
+
+  it("provides compact financial table alignment and sticky-column hooks", () => {
+    render(<TableContainer aria-label="Companies"><Table><TableHeader><TableRow><TableHead data-sticky="true">Company</TableHead><TableHead data-align="right">ROE</TableHead></TableRow></TableHeader><TableBody><TableRow><TableRowHeader data-sticky="true">AAPL</TableRowHeader><TableCell data-align="right">42.1%</TableCell></TableRow></TableBody></Table></TableContainer>);
+
+    expect(screen.getByRole("table")).toHaveClass("ds-table");
+    expect(screen.getByRole("columnheader", { name: "ROE" })).toHaveAttribute("data-align", "right");
+    expect(screen.getByRole("rowheader", { name: "AAPL" })).toHaveAttribute("data-sticky", "true");
+  });
+
+  it("renders shared breadcrumbs and non-announced skeletons", () => {
+    const { container } = render(<><Breadcrumb items={[{ label: "Screens", href: "/app/screens" }, { label: "Quality" }]} /><Skeleton /></>);
+
+    expect(screen.getByRole("navigation", { name: "Breadcrumb" })).toBeInTheDocument();
+    expect(screen.getByText("Quality")).toHaveAttribute("aria-current", "page");
+    expect(container.querySelector("[data-slot='skeleton']")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("connects the shared tooltip trigger to its premium tooltip surface", () => {
+    render(<Tooltip label="Return on equity" side="bottom" align="start">Net income divided by average equity.</Tooltip>);
+
+    const trigger = screen.getByRole("button", { name: "About Return on equity" });
+    const tooltip = screen.getByRole("tooltip");
+    expect(trigger).toHaveClass("ds-tooltip__trigger");
+    expect(trigger).toHaveAttribute("aria-describedby", tooltip.id);
+    expect(tooltip).toHaveClass("ds-tooltip__content");
+    expect(trigger.closest("[data-slot='tooltip']")).toHaveAttribute("data-side", "bottom");
+    expect(trigger.closest("[data-slot='tooltip']")).toHaveAttribute("data-align", "start");
+  });
+
+  it("uses a restrained semantic icon for informational status", () => {
+    const { container } = render(<StatusPanel tone="info" title="Formula note">Calculated from reported fundamentals.</StatusPanel>);
+
+    expect(screen.getByRole("status")).toHaveClass("ds-alert--info");
+    expect(container.querySelector(".ds-alert__mark--info svg")).toBeInTheDocument();
   });
 });

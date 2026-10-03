@@ -1,6 +1,6 @@
-.app-shell { min-height: 100vh; background: var(--ds-color-bg-canvas); color: var(--ds-color-text-primary); }
-.app-shell__stage { min-width: 0; min-height: calc(100vh - 64px); display: flex; flex-direction: column; }
-.app-shell__content { min-width: 0; flex: 1; }
+.app-shell { width: 100%; max-width: 100%; min-height: 100vh; background: var(--ds-color-bg-canvas); color: var(--ds-color-text-primary); }
+.app-shell__stage { width: 100%; max-width: 100%; min-width: 0; min-height: calc(100vh - 64px); display: flex; flex-direction: column; }
+.app-shell__content { width: 100%; max-width: 100%; min-width: 0; flex: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .app-shell *, .app-shell *::before, .app-shell *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }

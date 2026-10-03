@@ -9,7 +9,7 @@ import "./pricing.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SCROONER_URL ?? "https://scrooner.com";
 const SITE_NAME = "Scrooner";
-const SITE_DESCRIPTION = "Build deterministic US fundamental screens and verify every result.";
+const SITE_DESCRIPTION = "Screen US public companies with reported fundamentals, then verify the data behind every result.";
 
 // `metadataBase` resolves every relative URL used in this file and in any
 // page's own `openGraph`/`twitter` metadata (e.g. a per-page `images: [...]`
@@ -53,8 +53,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('scrooner-theme');document.documentElement.dataset.theme=t==='light'||t==='dark'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){}` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Root App Router layout: this stylesheet is shared by every route. */}

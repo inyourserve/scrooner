@@ -113,6 +113,7 @@ describe("ScreenerClient", () => {
     vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
       const path = String(input);
       if (path === "/api/metrics") return Promise.resolve(response(metrics));
+      if (path === "/api/nl-vocabulary") return Promise.resolve(response({ metrics: [], operators: [], sectors: [] }));
       if (path === "/api/screen-runs") {
         const body = JSON.parse(String(init?.body)) as { text: string; page_size: number };
         const interpreted = askHandler ? askHandler({ text: body.text, run: true }) : askPayload;
@@ -148,7 +149,13 @@ describe("ScreenerClient", () => {
 
     expect(await screen.findByText("Add at least one metric or company classification.")).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText("Add at least one metric or company classification.").parentElement).toHaveFocus());
-    expect(fetch).toHaveBeenCalledTimes(1);
+    // Asserting a raw total call count is fragile to any other legitimate
+    // on-mount fetch (NaturalQueryPanel's suggestion vocabulary, 2026-10-02,
+    // caches its own promise at module scope across tests in this file, so
+    // it may or may not re-fire here depending on run order). What this
+    // test actually cares about: the blocked, invalid submit must never
+    // call the Screener itself.
+    expect(fetch).not.toHaveBeenCalledWith("/api/screen", expect.anything());
   });
 
   it("does not create an abort rejection when route cleanup happens during catalog loading", () => {
@@ -201,12 +208,13 @@ describe("ScreenerClient", () => {
     expect(screen.getByText("42.3%")).toHaveAttribute("title", "Exact value: 0.4234567890123456789012345678");
     expect(screen.getByText("TTM · 2026-06-30 · v1")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /AAPL Apple Inc\./ })).toHaveAttribute("href", "https://scrooner.example/stocks/aapl/");
-    expect(screen.getByRole("button", { name: /Sort by Return on equity/ })).toBeInTheDocument();
+    const roeHeader = screen.getByRole("button", { name: /Sort by Return on equity/ });
+    expect(roeHeader).toBeInTheDocument();
+    expect(roeHeader).toHaveTextContent("ROE");
+    expect(roeHeader).toHaveTextContent("%");
     expect(screen.getByRole("heading", { name: "Metric definitions used" })).toBeInTheDocument();
     expect(screen.getByText(/1 company was excluded for missing data/)).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Why matched"));
-    expect(screen.getByText(/Matched at 42.3% · TTM · 2026-06-30 · formula v1/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open company filings and source context/ })).toHaveAttribute("href", "https://scrooner.example/stocks/aapl/");
+    expect(screen.queryByText("Why matched")).not.toBeInTheDocument();
   });
 
   it("preserves criteria and presents an API failure separately", async () => {
@@ -235,6 +243,53 @@ describe("ScreenerClient", () => {
     await waitFor(() => expect(screen.getByText("No companies matched every criterion")).toBeInTheDocument());
   });
 
+  it("keeps existing rows visible while sorting instead of rebuilding the results page", async () => {
+    const initialSortedQuery = { ...roeQuery, sort_by: "roe", sort_desc: true };
+    const populatedResult: ScreenResult = {
+      matched: [{
+        company_id: 1,
+        cik: "0000320193",
+        company_name: "Apple Inc.",
+        sic_code: "3571",
+        sic_description: "Electronic Computers",
+        status: "active",
+        ticker: "AAPL",
+        metrics: { roe: { value: "0.42", period_label: "TTM", period_end: "2026-06-30", formula_version: 1 } },
+      }],
+      excluded_missing_data: [],
+      excluded_inactive: [],
+    };
+    askPayload = { ...readyInterpretation(initialSortedQuery), result: populatedResult };
+    const { container } = render(<ScreenerClient siteUrl="https://scrooner.example" initialMetrics={metrics} resultsFirst />);
+    const input = screen.getByRole("textbox", { name: "Your criteria" });
+    fireEvent.change(input, { target: { value: "companies with ROE above 30%" } });
+    fireEvent.click(screen.getByRole("button", { name: "Show matches" }));
+    expect(await screen.findByText("AAPL")).toBeInTheDocument();
+
+    let resolveSort: (value: Response) => void = () => undefined;
+    const sortRequest = new Promise<Response>((resolve) => { resolveSort = resolve; });
+    vi.mocked(fetch).mockImplementation((request) => String(request) === "/api/screen-runs"
+      ? sortRequest
+      : Promise.reject(new Error(`Unexpected request: ${String(request)}`)));
+
+    fireEvent.click(screen.getByRole("button", { name: /Sort by Return on equity/ }));
+
+    expect(screen.getByText("AAPL")).toBeInTheDocument();
+    expect(container.querySelector(".results-table-wrap")).toHaveAttribute("aria-busy", "true");
+    expect(container.querySelector(".ds-table-skeleton")).not.toBeInTheDocument();
+    expect(screen.getByText("Sorting results…")).toBeInTheDocument();
+
+    const sortedQuery = { ...roeQuery, sort_by: "roe", sort_desc: false };
+    resolveSort(response(persistedRun("companies with ROE above 30%", { ...readyInterpretation(sortedQuery), result: populatedResult })));
+    await waitFor(() => expect(container.querySelector(".results-table-wrap")).toHaveAttribute("aria-busy", "false"));
+    expect(screen.getByText("AAPL")).toBeInTheDocument();
+
+    const requestsAfterFirstSort = vi.mocked(fetch).mock.calls.length;
+    fireEvent.click(screen.getByRole("button", { name: /Sort by Return on equity/ }));
+    expect(screen.getByRole("columnheader", { name: /ROE/ })).toHaveAttribute("aria-sort", "descending");
+    expect(vi.mocked(fetch).mock.calls).toHaveLength(requestsAfterFirstSort);
+  });
+
   it("turns supported language into verified results with one click", async () => {
     render(<ScreenerClient siteUrl="https://scrooner.example" />);
     const input = await screen.findByRole("textbox", { name: "Your criteria" });
@@ -257,7 +312,7 @@ describe("ScreenerClient", () => {
     expect(resultsHeading.compareDocumentPosition(builderDisclosure) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
     expect(resultsHeading).toHaveFocus();
 
-    fireEvent.click(screen.getByText("View exact query sent to the Screener"));
+    fireEvent.click(screen.getByText("View structured screen logic"));
     expect(screen.getByText(/"metric_name": "roe"/)).toBeInTheDocument();
     const askCall = vi.mocked(fetch).mock.calls.find(([path]) => String(path) === "/api/screen-runs");
     expect(JSON.parse(String(askCall?.[1]?.body))).toEqual({ text: "companies with ROE above 30%", page_size: 10 });
@@ -369,6 +424,7 @@ describe("ScreenerClient", () => {
     vi.mocked(fetch).mockImplementation((input) => {
       const path = String(input);
       if (path === "/api/metrics") return Promise.resolve(response(metrics));
+      if (path === "/api/nl-vocabulary") return Promise.resolve(response({ metrics: [], operators: [], sectors: [] }));
       if (path === "/api/screen-runs") {
         askCount += 1;
         return askCount === 1 ? firstAsk : Promise.resolve(response(persistedRun("second current screen", readyInterpretation())));

@@ -19,6 +19,7 @@ REQUIRED_IMPLEMENTATION = (
     ROOT / "apps/app/app/company-research.css",
     ROOT / "apps/app/components/layout/AppShell.tsx",
     ROOT / "apps/app/components/layout/PageHeader.tsx",
+    ROOT / "apps/app/components/layout/PageShell.tsx",
     ROOT / "apps/app/components/ui/Badge.tsx",
     ROOT / "apps/app/components/ui/Button.tsx",
     ROOT / "apps/app/components/ui/Card.tsx",
@@ -70,6 +71,7 @@ REQUIRED_TOKENS = {
     "--ds-shadow-surface",
     "--ds-target-min",
     "--ds-focus-ring",
+    "--ds-container-frame",
 }
 
 
@@ -100,7 +102,14 @@ for path in REQUIRED_IMPLEMENTATION:
         fail(f"missing implementation contract {path.relative_to(ROOT)}")
 
 token_source = TOKENS.read_text()
-definitions = re.findall(r"^\s*(--ds-[a-z0-9-]+)\s*:", token_source, re.MULTILINE)
+# Theme overrides intentionally redefine semantic tokens. The single-source
+# invariant applies to the canonical :root contract; dark-mode selectors may
+# override those names without being mistaken for duplicate declarations.
+root_match = re.search(r":root\s*\{(?P<body>.*?)^\}", token_source, re.MULTILINE | re.DOTALL)
+if not root_match:
+    fail("tokens.css must define a canonical :root token contract")
+root_token_source = root_match.group("body")
+definitions = re.findall(r"^\s*(--ds-[a-z0-9-]+)\s*:", root_token_source, re.MULTILINE)
 duplicates = sorted({name for name in definitions if definitions.count(name) > 1})
 if duplicates:
     fail(f"duplicate token definitions: {', '.join(duplicates)}")
@@ -109,7 +118,7 @@ missing = sorted(REQUIRED_TOKENS.difference(definitions))
 if missing:
     fail(f"missing required tokens: {', '.join(missing)}")
 
-token_values = dict(TOKEN_VALUE.findall(token_source))
+token_values = dict(TOKEN_VALUE.findall(root_token_source))
 
 
 def resolve_hex(token_name: str, seen: set[str] | None = None) -> str:
@@ -220,9 +229,25 @@ default_button = re.search(r"\.ds-button\s*\{(?P<body>.*?)\}", primitive_source,
 if not default_button or "min-height: var(--ds-target-min)" not in default_button.group("body"):
     fail("default .ds-button must use the shared 44px minimum target token")
 
+# Header, footer, and pages must share one outer frame. Page variants may
+# constrain their direct content measure, but must not create independent
+# centered page containers that drift away from the navigation grid.
+page_shell_source = (ROOT / "apps/app/components/layout/PageShell.tsx").read_text()
+public_header_source = (ROOT / "apps/app/components/public/PublicHeader.tsx").read_text()
+public_footer_source = (ROOT / "apps/app/components/public/PublicFooter.tsx").read_text()
+if 'className={cn("ds-page", className)' not in page_shell_source:
+    fail("PageShell must apply the single shared ds-page frame")
+if 'className="public-nav ds-container"' not in public_header_source:
+    fail("public navigation must align to the shared ds-container frame")
+if 'public-footer__inner ds-container' not in public_footer_source:
+    fail("public footer must align to the shared ds-container frame")
+for legacy_selector in (".main-content", ".workspace-page"):
+    if any(legacy_selector in path.read_text() for path in application_sources if path.suffix == ".css"):
+        fail(f"legacy page container {legacy_selector} must use PageShell instead")
+
 print(
     f"design-system contract: {len(definitions)} tokens; "
-    f"{len(REQUIRED_IMPLEMENTATION)} implementation contracts; "
+    f"{len(REQUIRED_IMPLEMENTATION)} implementation contracts; shared frame aligned; "
     "Next.js entry point connected; AA muted text and 44px default targets; "
     "no raw colors, typography, or undefined application tokens"
 )

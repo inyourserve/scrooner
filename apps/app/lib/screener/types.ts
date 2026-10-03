@@ -88,7 +88,7 @@ function isPredicateGroup(node: MetricPredicatePayload | CategoricalPredicatePay
  * `_collect_metric_names` (screener/query.py) so the results table shows
  * a column for every metric an OR/NOT query actually filtered on, not
  * just the ones that happen to live in the flat lists. */
-export function collectMetricNames(query: ScreenQueryPayload): string[] {
+export function collectPredicateMetricNames(query: ScreenQueryPayload): string[] {
   const names = new Set(query.metric_predicates.map((p) => p.metric_name));
   const walk = (node: MetricPredicatePayload | CategoricalPredicatePayload | PredicateGroupPayload) => {
     if (isPredicateGroup(node)) {
@@ -98,6 +98,11 @@ export function collectMetricNames(query: ScreenQueryPayload): string[] {
     }
   };
   if (query.where) walk(query.where);
+  return [...names];
+}
+
+export function collectMetricNames(query: ScreenQueryPayload): string[] {
+  const names = new Set(collectPredicateMetricNames(query));
   for (const name of query.display_metrics ?? []) names.add(name);
   return [...names];
 }

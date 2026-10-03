@@ -8,6 +8,7 @@ export const buttonVariants = cva("ds-button", {
     variant: {
       primary: "ds-button--primary",
       secondary: "ds-button--secondary",
+      outline: "ds-button--outline",
       ghost: "ds-button--ghost",
       destructive: "ds-button--destructive",
     },

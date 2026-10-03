@@ -33,10 +33,12 @@ export function StockHeader({ ticker, companyName, sector, status, price, dayCha
     <div className="stock-hero__identity">
       <div className="stock-hero__title-row">
         <div>
-          <p className="stock-hero__ticker">{ticker ?? "—"} · {sector ?? "Sector unclassified"}</p>
-          <h1 id="company-name"><TickerBadge ticker={ticker ?? "—"} size="sm" /> {companyName}</h1>
+          <p className="stock-hero__ticker">Company research · {ticker ?? "—"} · {sector ?? "Sector unclassified"}</p>
+          <div className="stock-hero__heading-line">
+            <h1 className="ds-workspace-title" id="company-name"><TickerBadge ticker={ticker ?? "—"} size="sm" /> {companyName}</h1>
+            <Badge tone={status === "active" ? "positive" : "neutral"}>{status}</Badge>
+          </div>
         </div>
-        <Badge tone={status === "active" ? "positive" : "neutral"}>{status}</Badge>
       </div>
       <div className="stock-hero__price">
         {price ? (
@@ -63,6 +65,7 @@ export function StockHeader({ ticker, companyName, sector, status, price, dayCha
           </Button>
         )}
       </div>
+      <p className="stock-hero__trust">SEC filing fundamentals · Formula-versioned metrics</p>
     </div>
   );
 }

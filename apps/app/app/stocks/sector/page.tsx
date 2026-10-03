@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function SectorIndexPage() {
   const sectors = await getSectorList();
   return (
-    <PublicPage title="Sectors" description={metadata.description!} wide>
+    <PublicPage title="Sectors" description={metadata.description!}>
       <ul className="ds-directory">
         {sectors.map((row) => (
           <li key={row.slug} className="ds-directory__item">
