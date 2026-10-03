@@ -71,7 +71,9 @@ with open(out_path, "w") as f:
 print(f"active companies: {len(ciks)}", file=sys.stderr)
 PY
 
-readarray -t ALL_CIKS < <(tr ',' '\n' < "$CIK_FILE")
+# Not readarray/mapfile -- macOS's default /bin/bash is 3.2 (pre-4.0),
+# which has neither (see pipeline/CLAUDE.md's own documented gotcha).
+IFS=',' read -ra ALL_CIKS <<< "$(cat "$CIK_FILE")"
 TOTAL=${#ALL_CIKS[@]}
 SHARD_SIZE=$(( (TOTAL + NUM_SHARDS - 1) / NUM_SHARDS ))
 
