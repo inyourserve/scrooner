@@ -32,8 +32,23 @@ import psycopg
 import typer
 
 from scrooner_pipeline.common.config import settings
+from scrooner_pipeline.sanity.period_completeness import CHECK_CONCEPTS
 
 app = typer.Typer(add_completion=False)
+
+
+def _infer_base(concept_name: str) -> str:
+    """The real (gap_concept -> base_concept) mapping, straight from
+    period_completeness.py's own CHECK_CONCEPTS -- not a naive suffix
+    strip, which breaks for revenue_sanity_resolved (base: revenue, not
+    revenue_sanity). Falls back to stripping '_resolved' only for a
+    gap concept not in CHECK_CONCEPTS (shouldn't happen in practice,
+    since period_gap only ever stores CHECK_CONCEPTS' own keys)."""
+    if concept_name in CHECK_CONCEPTS:
+        return CHECK_CONCEPTS[concept_name][1]
+    if concept_name.endswith("_resolved"):
+        return concept_name[: -len("_resolved")]
+    return concept_name
 
 
 def _mapped_tags(cur, concept_name: str) -> set[str]:
@@ -81,22 +96,57 @@ def _sample_gap_periods(cur, concept_name: str, cause: str, sample: int) -> list
 def _candidate_frequency(
     cur, gaps: list[tuple], mapped_tags: set[str]
 ) -> Counter:
-    counter: Counter = Counter()
-    for company_id, period_end in gaps:
-        cur.execute(
-            """
-            select distinct co.tag
-            from core.fact f
-            join core.concept co on co.id = f.concept_id
-            join core.period p on p.id = f.period_id
-            where f.company_id = %s and p.end_date = %s
-              and f.is_authoritative = true and co.taxonomy = 'us-gaap'
-            """,
-            (company_id, period_end),
+    """One batched query over all sampled gap periods via unnest, not a
+    per-period round trip -- found live 2026-10-03: a 300-iteration loop
+    over a single long-lived connection to the remote Supabase DB hit
+    `OperationalError: ... Operation timed out` partway through, the same
+    class of failure this project's own CLAUDE.md already documents for
+    any long-running per-item loop with a round trip between iterations.
+    Batching removes both the slowness and the connection-timeout risk at
+    once -- one query, not hundreds."""
+    if not gaps:
+        return Counter()
+    company_ids = [g[0] for g in gaps]
+    period_ends = [g[1] for g in gaps]
+    # Two steps, not one join: resolve (company_id, period_end) -> period_id
+    # first (uses core.period's own (company_id, start_date, end_date,
+    # period_type) index, leading column company_id), then join core.fact
+    # on period_id alone -- a period_id already belongs to exactly one
+    # company (core.period's own key includes company_id), so no further
+    # company_id filter is needed on the fact side. A single join straight
+    # from the unnet pairs to core.fact (tried first) hit the pooler's 2min
+    # statement_timeout -- the planner couldn't use company_id alone
+    # (idx_fact_company_concept_period needs concept_id too) and fell back
+    # to a slow scan over core.fact's 26GB+ table.
+    cur.execute(
+        """
+        with pairs as (
+            select * from unnest(%(company_ids)s::bigint[], %(period_ends)s::date[])
+                as g(company_id, period_end)
+        ),
+        -- Keep (company_id, period_end) -- the ORIGINAL sample identity --
+        -- alongside period_id, not just period_id alone: one sampled gap
+        -- can resolve to 2+ period rows (instant vs duration, same
+        -- end_date), which inflated frequency past the sample size
+        -- (473/300) when counted by period_id. Counting by the original
+        -- pair keeps "N/sample" a real fraction.
+        periods as (
+            select distinct g.company_id, g.period_end, p.id as period_id
+            from pairs g
+            join core.period p on p.company_id = g.company_id and p.end_date = g.period_end
         )
-        for (tag,) in cur.fetchall():
-            if tag not in mapped_tags:
-                counter[tag] += 1
+        select distinct pr.company_id, pr.period_end, co.tag
+        from periods pr
+        join core.fact f on f.period_id = pr.period_id
+        join core.concept co on co.id = f.concept_id
+        where f.is_authoritative = true and co.taxonomy = 'us-gaap'
+        """,
+        {"company_ids": company_ids, "period_ends": period_ends},
+    )
+    counter: Counter = Counter()
+    for _company_id, _period_end, tag in cur.fetchall():
+        if tag not in mapped_tags:
+            counter[tag] += 1
     return counter
 
 
@@ -180,11 +230,7 @@ def main(
     sample: int = typer.Option(400, help="How many gap periods to sample"),
     top: int = typer.Option(5, help="How many top candidates to coexistence-test and report"),
 ) -> None:
-    base_name = base or (
-        concept_name[: -len("_resolved")]
-        if concept_name.endswith("_resolved")
-        else concept_name
-    )
+    base_name = base or _infer_base(concept_name)
     with psycopg.connect(settings.database_url) as conn:
         with conn.cursor() as cur:
             mapped_tags = _mapped_tags(cur, base_name)
