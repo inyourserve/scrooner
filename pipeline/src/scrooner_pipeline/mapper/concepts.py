@@ -156,6 +156,24 @@ CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "approved",
         "Alternative label used by 2 golden companies",
     ),
+    (
+        "net_income",
+        "us-gaap",
+        "NetIncomeLossAvailableToCommonStockholdersBasic",
+        3,
+        "approved",
+        "2026-10-03, verified: standard GAAP tag (per the SEC XBRL Tag Expert "
+        "spec), first_match priority 3 so it only fires when NEITHER "
+        "NetIncomeLoss nor ProfitLoss resolves for that exact period -- "
+        "confirmed live, 8,190 such gap periods across 2,955 companies, zero "
+        "already resolved another way. Found chasing the 5,654-finding "
+        "'Q4 not derived' cluster: Estee Lauder's FY2026 Q4 derives this tag "
+        "(FY-Q1-Q2-Q3 all present) but not NetIncomeLoss. It differs from "
+        "NetIncomeLoss by preferred dividends (38.6% of 108,677 same-period "
+        "coexistence pairs disagree >1%) -- a real, bounded, named scope "
+        "difference, not a different concept, and first_match's strict "
+        "priority order means it can never override a better value.",
+    ),
     ("stockholders_equity", "us-gaap", "StockholdersEquity", 1, "approved", None),
     (
         "stockholders_equity",
@@ -296,6 +314,26 @@ CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         1,
         "approved",
         "Used consistently by all 8 companies -- no drift observed",
+    ),
+    (
+        "diluted_eps",
+        "us-gaap",
+        "EarningsPerShareBasicAndDiluted",
+        3,
+        "approved",
+        "2026-10-03, verified: a simple-capital-structure company (no "
+        "dilutive securities) reports ONE combined tag since basic and "
+        "diluted EPS are identical by definition -- standard GAAP "
+        "semantics, not a different concept. Found as the dominant "
+        "candidate (195/400 sampled gap periods) behind the single "
+        "largest open-findings cluster, diluted_eps_resolved's "
+        "'no mapped tag' gap (1,821 companies, 15,780 missing periods). "
+        "Coexistence-verified: 17,144/20,002 same-period pairs with "
+        "EarningsPerShareDiluted agree within 1% (85.7%) -- priority 3 "
+        "(after the existing MLP-specific LimitedPartnershipUnitDiluted "
+        "tag at priority 2) so first_match only reaches it when neither "
+        "higher-priority tag resolves for that exact period, never "
+        "overrides.",
     ),
     (
         "shares_outstanding",
