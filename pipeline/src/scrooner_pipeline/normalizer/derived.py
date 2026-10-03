@@ -694,6 +694,13 @@ def derive_interim_quarters(conn: psycopg.Connection, ciks: set[str]) -> dict:
             log_error(
                 conn, "core.normalizer_error", cik, "derive_interim_quarters", exc
             )
+            # Found live 2026-10-03, full-population sharded run: a dead
+            # connection (Supabase pooler drop) was never reconnected here,
+            # unlike derive_q4() just above, which already does this --
+            # so every remaining company after the first drop in each of
+            # 6 parallel shards failed too (4,265 of 5,216 companies,
+            # 82% of the population, errored this way in one run).
+            conn = safe_rollback(conn, stage="derive_interim_quarters", cik=cik)
             continue
         totals["ok"] += 1
         for k in (

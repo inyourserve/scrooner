@@ -11,9 +11,15 @@ SRC = Path(__file__).resolve().parents[2] / "src" / "scrooner_pipeline"
 
 # A per-company loop that logs an error and moves on must replace a
 # possibly-dead connection first. Missing it let one pooler drop fail 169
-# of 172 companies in quality_flags / reconciliation / tax_reconciliation.
+# of 172 companies in quality_flags / reconciliation / tax_reconciliation --
+# and, found live 2026-10-03 (a 6-shard full-population run), 4,265 of
+# 5,216 companies (82%) in normalizer/derived.py's derive_interim_quarters(),
+# missed by this exact regex because that one call site wraps
+# `log_error(` and its closing `)` across 3 lines -- the original regex's
+# `log_error\(conn,[^\n]*\)` only ever matched a single-line call. Widened
+# to match the call across any number of lines (DOTALL, lazy), not just one.
 _LOG_THEN_CONTINUE = re.compile(
-    r"^( +)log_error\(conn,[^\n]*\)\n\1continue\n", re.M
+    r"^( +)log_error\(\s*\n?\s*conn,.*?\n\1\)\n\1continue\n", re.M | re.S
 )
 
 
