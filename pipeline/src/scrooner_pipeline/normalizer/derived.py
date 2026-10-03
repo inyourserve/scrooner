@@ -497,6 +497,18 @@ def derive_interim_quarters_for_company(
             and THREE_QUARTER_MIN_DAYS <= duration_days <= THREE_QUARTER_MAX_DAYS
         ):
             groups.setdefault(key, {})["THREE_Q"] = entry
+        elif fiscal_period is None:
+            # Found live 2026-10-03 (Albertsons' real FY2026 Q2 cfo gap):
+            # a company whose real first quarter falls outside the normal
+            # 80-100-day quarter band (its own 52/53-week calendar made Q1
+            # 111 days) never gets periods.py's 'Q1' label, so it landed
+            # here instead of the Q1 bucket above -- correct, since
+            # labeling it 'Q1' from here would be a different module's
+            # job. Kept as an unlabeled candidate list, resolved against
+            # HALF's own start/end below by structural nesting, not a
+            # day-band guess (unlike HALF/THREE_Q, Q1's real length has
+            # no universal band to check against).
+            groups.setdefault(key, {}).setdefault("UNLABELED", []).append(entry)
         # Q2/Q3/Q4/other non-standard spans: not this derivation's
         # concern -- Q2/Q3 already discrete means nothing to derive;
         # anything else falls outside the clean day-length bands and is
@@ -523,6 +535,21 @@ def derive_interim_quarters_for_company(
             by_span.get("HALF"),
             by_span.get("THREE_Q"),
         )
+        if q1 is None and half is not None:
+            # Structural fallback: any unlabeled fact that starts exactly
+            # where HALF starts and ends before HALF ends IS the first
+            # quarter, whatever its real length -- see the UNLABELED
+            # bucket's own comment above. Exactly one match is the only
+            # safe case; 0 or 2+ candidates means this group is genuinely
+            # ambiguous/incomplete, left for "incomplete_or_inconsistent"
+            # exactly as before.
+            candidates = [
+                c
+                for c in by_span.get("UNLABELED", [])
+                if c["start_date"] == half["start_date"] and c["end_date"] < half["end_date"]
+            ]
+            if len(candidates) == 1:
+                q1 = candidates[0]
 
         # Q2 = HALF - Q1, only when both share the same start (the true
         # fiscal-year start) -- never subtract spans that don't actually

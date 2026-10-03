@@ -245,6 +245,39 @@ def test_cumulative_ytd_values_become_discrete_q2_and_q3(monkeypatch):
 
 
 @pytest.mark.unit
+def test_q2_derives_when_q1_has_an_unusual_unlabeled_duration(monkeypatch):
+    """Real bug, found live 2026-10-03 tracing Albertsons' FY2026 Q2 cfo
+    gap: its real first quarter spans 111 days (a 52/53-week-calendar
+    grocery retailer's irregular Q1), outside periods.py's normal
+    80-100-day quarter band, so it's stored with fiscal_period=None --
+    exactly like the HALF/THREE_Q buckets already handle. The original
+    code only ever looked for an EXPLICITLY 'Q1'-labeled fact, so Q2
+    (and every later quarter for that fiscal year, since Q3 needs HALF
+    which is fine, but any company whose Q1 is unlabeled this way never
+    gets a Q2) silently never derived -- correct, present HALF data sat
+    unused. Must derive from structural nesting (same start as HALF,
+    ends before it), not require the label."""
+    start = date(2025, 2, 23)
+    q1_end = date(2025, 6, 14)  # 111 days -- outside the normal quarter band
+    half_end = date(2025, 9, 6)
+    rows = [
+        duration_row(1, "754400000", None, start, q1_end),
+        duration_row(2, "1282000000", None, start, half_end),
+    ]
+    q2_key = (date(2025, 6, 15), half_end)
+    monkeypatch.setattr(derived, "_load_all_duration_facts", lambda _conn, _company: rows)
+    monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {q2_key: 402})
+    monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: set())
+    conn = CaptureConnection()
+
+    stats = derived.derive_interim_quarters_for_company(conn, 1)
+    values = {row["period_id"]: row["value"] for row in conn.fact_rows}
+
+    assert stats["q2_derived"] == 1
+    assert values == {402: Decimal("527600000")}
+
+
+@pytest.mark.unit
 def test_interim_derivation_refuses_non_nested_spans(monkeypatch):
     q1_start = date(2024, 9, 29)
     other_start = date(2024, 10, 1)
