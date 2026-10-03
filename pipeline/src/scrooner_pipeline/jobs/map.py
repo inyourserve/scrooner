@@ -18,6 +18,8 @@ from scrooner_pipeline.mapper.concept_fallback import (
     resolve_all_arithmetic_fallbacks,
     resolve_employee_count_fallback,
 )
+from scrooner_pipeline.mapper.revenue_resolvers import run_all as run_revenue_resolvers
+from scrooner_pipeline.mapper.dedup_majority_resolver import resolve_all_safe_concepts
 from scrooner_pipeline.mapper.conflict_resolution import resolve_all_conflict_fills
 from scrooner_pipeline.mapper.ttm import (
     compute_growth,
@@ -50,6 +52,12 @@ from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconcilia
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
 from scrooner_pipeline.mapper.coverage_snapshot import write_snapshot
+from scrooner_pipeline.mapper.company_coverage_dashboard import (
+    render_markdown_company,
+    render_markdown_population,
+    summarize_company,
+    summarize_population,
+)
 from scrooner_pipeline.parsers.main_parser import (
     run_parser,
     resolve_parser_results,
@@ -192,6 +200,52 @@ def resolve_statement_fallbacks_cmd() -> None:
     with get_connection() as conn:
         stats = resolve_all_arithmetic_fallbacks(conn)
     typer.echo(f"resolve-statement-fallbacks: {stats}")
+
+
+@app.command("resolve-revenue")
+def resolve_revenue_cmd(
+    include_parser: bool = typer.Option(
+        False,
+        "--include-parser",
+        help="Also run the rendered-report parser resolver (does its own SEC fetches).",
+    ),
+) -> None:
+    """Runs every registered resolver in mapper/revenue_resolvers/
+    (2026-10-02) against revenue_sanity_resolved, in registry order:
+    the resolve()-authoritative-$0 tag-preference sweep, collaboration-
+    arrangement revenue (additive, biotech/pharma), net-lease REIT
+    income (substitute, evidence-gated), and -- only with
+    --include-parser -- the rendered-report parser for dimensionally-
+    stripped filers. Run AFTER resolve-facts (the collaborative/
+    net-lease concepts need their own canonical_fact rows to exist
+    first). Replaces the old resolve-revenue-root-cause-fixes command --
+    see mapper/revenue_resolvers/__init__.py for why this is a registry
+    now, not one bespoke function per discovered company-shape."""
+    with get_connection() as conn:
+        results = run_revenue_resolvers(conn, include_parser=include_parser)
+    for name, stats in results.items():
+        typer.echo(f"resolve-revenue: {name}={stats}")
+
+
+@app.command("resolve-dedup-holes")
+def resolve_dedup_holes_cmd() -> None:
+    """mapper/dedup_majority_resolver.py (2026-10-03): population-wide fix
+    for the Stage 2e "all-non-authoritative" dedup-hole bug, generalized
+    beyond revenue to the 8 balance-sheet/instant concepts a live sample
+    confirmed safe for majority-vote (88-97% clean agreement among
+    disagreeing raw facts): total_assets, current_assets,
+    current_liabilities, total_liabilities, stockholders_equity,
+    shares_outstanding, basic_eps, diluted_eps. Income-statement/cash-flow
+    concepts (revenue, net_income, cfo, gross_profit, operating_income,
+    etc.) were deliberately NOT included -- only 68-75% clean agreement,
+    confirmed on Abbott Labs FY2012 operating_income (3 raw rows, 3
+    genuinely different values, no safe majority) -- needs its own,
+    more careful mechanism, not blind majority vote. Safe to rerun
+    (delete-free upsert, idempotent)."""
+    with get_connection() as conn:
+        results = resolve_all_safe_concepts(conn)
+    for name, stats in results.items():
+        typer.echo(f"resolve-dedup-holes: {name}={stats}")
 
 
 @app.command("resolve-employee-count-fallback")
@@ -588,12 +642,43 @@ def build_coverage_matrix_cmd() -> None:
     """2026-09-05: the two-table coverage system (registry + per-company
     yes/no). Rebuilds both from scratch each run -- never hand-edited,
     can't drift from concept_mapping/metric_definition_input/
-    canonical_fact/metric_value/the ownership tables."""
+    canonical_fact/metric_value/the ownership tables. build_coverage()
+    already internally chains classify_concept_gaps() and classify_
+    company_populations() (confirmed by reading it 2026-10-03, not
+    assumed) -- this single command is the complete rebuild, no
+    additional step needed."""
     with get_connection() as conn:
         registry_stats = build_registry(conn)
         coverage_stats = build_coverage(conn)
     typer.echo(f"registry: {registry_stats}")
     typer.echo(f"coverage: {coverage_stats}")
+
+
+@app.command("company-coverage")
+def company_coverage_cmd(
+    company_id: int = typer.Option(..., "--company-id", help="core.company.id"),
+) -> None:
+    """2026-10-03, by direct request: company-wise coverage, not metric-
+    wise -- "for Visa, what does it have and why is anything missing."
+    3-state classification (present / not applicable / genuine gap),
+    every absence given a human-readable note. Run build-coverage-matrix
+    first so company_data_point_coverage/company_population are fresh."""
+    with get_connection() as conn:
+        summary = summarize_company(conn, company_id)
+    typer.echo(render_markdown_company(summary))
+
+
+@app.command("company-coverage-report")
+def company_coverage_report_cmd(
+    limit: int = typer.Option(50, "--limit"),
+    best: bool = typer.Option(False, "--best", help="Rank best-covered first instead of worst."),
+) -> None:
+    """2026-10-03: population-wide ranking of the same 3-state coverage
+    used by company-coverage, one row per active company. Worst-first by
+    default -- the real-gap worklist."""
+    with get_connection() as conn:
+        rows = summarize_population(conn)
+    typer.echo(render_markdown_population(rows, limit=limit, worst_first=not best))
 
 
 @app.command("corrected-coverage-report")
