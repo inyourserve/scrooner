@@ -1,4 +1,6 @@
-"""Period completeness check (2026-09-30, migration 0083).
+"""Period completeness check (2026-09-30, migration 0083; widened
+2026-10-04, Phase 0 of the "every financial column filled since 2015"
+plan -- see pipeline/CLAUDE.md's same-day entry).
 
 For every active company, which quarters/years of a key concept are
 missing, and why. Expected periods come from the company's own 10-Q/10-K
@@ -7,6 +9,17 @@ year and a Q4 (derived is fine); balance-sheet concepts need the period-end
 snapshot. Only (company, concept) pairs with at least one value since
 HISTORY_START are checked -- a concept that is absent entirely is the tag
 library's question (company_concept_lineage), not this one.
+
+HISTORY_START is 2015-01-01 -- the project's floor for "every financial
+column filled since 2015, or since listing if later." A company listed
+after 2015 is automatically scoped correctly: expected_filing is built
+from the company's own real core.filing rows, so nothing is expected
+before its first real filing exists. CHECK_CONCEPTS covers 16 concepts,
+deliberately the GAAP-universal ones only (see that dict's own comment
+for which were left out and why) -- the population-conditional concepts
+(dividends, buybacks, COGS-based concepts) need coverage_matrix.py's
+applicable_population mechanism wired in here first, or they'd report
+millions of real "a non-payer doesn't pay dividends" cells as fake gaps.
 
 Every missing cell gets one cause (see analytics.period_gap's check list).
 The cause is what makes a gap fixable: the same blank P/E can come from a
@@ -40,7 +53,11 @@ from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
 
-HISTORY_START = date(2019, 1, 1)
+# 2026-10-04, Phase 0 of the "every financial column filled since 2015"
+# plan: widened from 2019-01-01. A company listed after this date is
+# naturally unaffected -- expected_filing is built from the company's own
+# real core.filing rows, so there's nothing to expect before it existed.
+HISTORY_START = date(2015, 1, 1)
 DATE_TOLERANCE_DAYS = 7
 QUARTER_DAYS = (80, 100)
 YEAR_DAYS = (340, 380)
@@ -65,6 +82,33 @@ CHECK_CONCEPTS: dict[str, tuple[str, str]] = {
     "cfo_resolved": ("duration", "cfo"),
     "total_assets_resolved": ("instant", "total_assets"),
     "stockholders_equity_resolved": ("instant", "stockholders_equity"),
+    # Added 2026-10-04, Phase 0: every concept here is GAAP-universal for
+    # a real operating company's statements (not merely common) -- every
+    # 10-K/10-Q that has an income statement must have these income-
+    # statement lines, every balance sheet must have these balance-sheet
+    # lines, and every cash-flow statement is legally 3 sections
+    # (operating/investing/financing), so a missing cell here is always a
+    # real gap, never a structural non-applicability. Deliberately NOT
+    # added: cost_of_revenue/gross_profit/operating_expenses (banks,
+    # insurers, REITs genuinely lack a COGS-based P&L -- already
+    # documented, needs population gating first), ppe_net/capex
+    # (asset-light companies can genuinely have near-zero PP&E),
+    # interest_expense (a real debt-free company has none to report),
+    # dividends_paid/dividends_per_share/share_buybacks (population-
+    # conditional on being a payer/repurchaser). Those need
+    # coverage_matrix.py's applicable_population mechanism wired into
+    # this checker before they can be added without manufacturing false
+    # gaps -- a real, sized follow-on, not done here.
+    "operating_income_resolved": ("duration", "operating_income"),
+    "income_before_tax_resolved": ("duration", "income_before_tax"),
+    "income_tax_expense_resolved": ("duration", "income_tax_expense"),
+    "basic_eps_resolved": ("duration", "basic_eps"),
+    "cash_flow_investing_resolved": ("duration", "cash_flow_investing"),
+    "cash_flow_financing_resolved": ("duration", "cash_flow_financing"),
+    "total_liabilities_resolved": ("instant", "total_liabilities"),
+    "current_assets_resolved": ("instant", "current_assets"),
+    "current_liabilities_resolved": ("instant", "current_liabilities"),
+    "cash_and_equivalents_resolved": ("instant", "cash_and_equivalents"),
 }
 
 # cause -> (company_data_finding.finding_type, stable summary text)
