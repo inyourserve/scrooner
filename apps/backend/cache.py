@@ -320,3 +320,46 @@ def invalidate_screen_detail(user_id: str, slug: str) -> None:
         _client.delete(_screen_detail_key(user_id, slug))
     except RedisError:
         return
+
+
+# Company-page cache (2026-10-03) -- moved here from apps/app/lib/company/
+# cache.ts, same key naming/TTL/fail-open contract, now that the page
+# itself calls this backend instead of holding its own Postgres
+# connection. 15min TTL matches Alpaca's own ~15min price-feed delay
+# (doc 25) -- caching longer never makes the page meaningfully staler
+# than its own source data already is.
+#
+# A "not found" ticker is a real, cacheable result (None), distinct from
+# "nothing cached yet" -- CACHE_MISS is the sentinel for the latter so a
+# cached None (ticker genuinely doesn't exist) isn't mistaken for a miss
+# and re-queried on every request.
+COMPANY_PAGE_TTL_SECONDS = 15 * 60
+CACHE_MISS = object()
+
+
+def _company_page_key(ticker: str) -> str:
+    return f"company-page:{ticker.lower()}"
+
+
+def get_cached_company_page(ticker: str):
+    try:
+        raw = _client.get(_company_page_key(ticker))
+    except RedisError:
+        return CACHE_MISS
+    if raw is None:
+        return CACHE_MISS
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return CACHE_MISS
+
+
+def set_cached_company_page(ticker: str, data: dict | None) -> None:
+    try:
+        _client.set(
+            _company_page_key(ticker),
+            json.dumps(data, default=_default),
+            ex=COMPANY_PAGE_TTL_SECONDS,
+        )
+    except RedisError:
+        return

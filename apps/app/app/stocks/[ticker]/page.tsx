@@ -15,53 +15,37 @@ import { PublicHeader } from "@/components/public/PublicHeader";
 import { Delta } from "@/components/scrooner/Delta";
 import { EmptyState } from "@/components/scrooner/EmptyState";
 import { StockHeader } from "@/components/scrooner/StockHeader";
-import { getCachedCompanyPage, setCachedCompanyPage } from "@/lib/company/cache";
-import { getCompanyPageData, type FilingRow, type MetricRow, type SegmentRevenueRow, type Statement } from "@/lib/company/db";
+import { backendUrl } from "@/lib/backend";
+import type { CompanyPageData, FilingRow, MetricRow, SegmentRevenueRow, Statement } from "@/lib/company/db";
 import { fmtNum, fmtPct, fmtShares } from "@/lib/company/format";
 import { buildChecklist } from "@/lib/company/pros-cons";
 
-// Not force-dynamic (2026-09-15). Measured live: getCompanyPageData's single
-// consolidated query (lib/company/db.ts) executes server-side in ~200ms
-// (EXPLAIN ANALYZE, warm buffers), but force-dynamic paid the FULL request
-// cost -- this dev machine's Supabase (us-east-1) round trip, ~1.5s warm /
-// 7s+ on a fresh connection, the same class of latency ADR 0001 (the
-// screener's Redis cache) already measured and fixed for /v1/screen -- on
-// EVERY request, for EVERY ticker, forever, because raw `postgres` package
-// calls carry none of Next's own fetch-based caching signals.
-//
-// Two things tried before this, both real, both superseded:
-// 1. A plain `revalidate` export did NOTHING -- confirmed live (build +
-//    `next start`, repeated curl timings). Next 16 only applies
-//    `revalidate` to fetch()-based caching signals; this page never calls
-//    fetch().
-// 2. `unstable_cache` (Next's own non-fetch cache) DID work when measured
-//    on a single dev server (~1.5s -> ~0.03s) -- but its default cache
-//    handler is per server PROCESS, not shared, so under any real
-//    horizontally-scaled deployment every instance would independently
-//    pay the full query cost on its own first hit per ticker.
-// Replaced with lib/company/cache.ts -- a Redis-backed cache, same fail-
-// open contract as apps/backend/cache.py (ADR 0001: Redis is already a
-// real production dependency of this monorepo for exactly this problem),
-// shared across every server instance. `cache()` still sits on top to
-// dedupe the generateMetadata vs. page-render call within one request. The
-// page has no per-user state (PublicHeader never reads cookies/auth;
-// confirmed before relying on this) and no request-specific input beyond
-// the ticker route param, so it's safe to cache. 15min TTL (cache.ts) keeps
-// worst-case staleness in the same order of magnitude as Alpaca's own
-// ~15min delayed price feed (doc 25) -- a cache hit now costs one Redis
-// round trip, a cache miss still pays the same real query.
+// Calls apps/backend's GET /v1/company/{ticker} instead of querying
+// Postgres directly (2026-10-03, by explicit founder direction: Next.js
+// must never hold a direct DB connection, consistency with the
+// Screener's own architecture -- doc 04/17's original "Next.js reads
+// Postgres directly" design is deliberately superseded here). The real
+// query and its Redis cache both moved to apps/backend
+// (company_page.py/routers/company.py/cache.py's company-page
+// functions) -- same 15min TTL, same key naming, verified byte-
+// identical against the old direct-query output for two real companies
+// before cutting over (doc/learnings/2026-10-03-company-page-api-port.md).
+// `cache()` still dedupes the generateMetadata vs. page-render call
+// within one request.
 type Props = { params: Promise<{ ticker: string }> };
-type CompanyPageDataReturn = Awaited<ReturnType<typeof getCompanyPageData>>;
 
-async function getCompanyPageDataCached(ticker: string): Promise<CompanyPageDataReturn> {
-  const cached = await getCachedCompanyPage(ticker);
-  if (cached !== undefined) return cached;
-  const data = await getCompanyPageData(ticker);
-  await setCachedCompanyPage(ticker, data);
-  return data;
+async function fetchCompanyPageData(ticker: string): Promise<CompanyPageData | null> {
+  const response = await fetch(backendUrl(`/v1/company/${encodeURIComponent(ticker)}`), {
+    headers: { accept: "application/json" },
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) {
+    throw new Error(`Company page service returned ${response.status} for ticker ${ticker}`);
+  }
+  return (await response.json()) as CompanyPageData;
 }
 
-const getStock = cache(getCompanyPageDataCached);
+const getStock = cache(fetchCompanyPageData);
 
 const metricGroups: { title: string; metrics: [string, string, MetricItem["kind"]][] }[] = [
   { title: "Valuation", metrics: [["trailing_pe", "P/E", "multiple"], ["price_to_sales", "Price / Sales", "multiple"], ["price_to_book", "Price / Book", "multiple"], ["dividend_yield", "Dividend yield", "pct"], ["peg_ratio", "PEG", "multiple"], ["ev_ebitda", "EV / EBITDA", "multiple"]] },
