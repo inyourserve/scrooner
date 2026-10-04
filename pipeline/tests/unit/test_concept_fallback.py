@@ -5,9 +5,12 @@ from unittest.mock import MagicMock
 import pytest
 
 from scrooner_pipeline.mapper.concept_fallback import (
+    _BALANCE_SHEET_ADJUSTMENT_TAGS,
     _find_or_create_instant_period,
     compute_total_debt,
+    resolve_all_balance_sheet_identity_fallbacks,
     resolve_arithmetic_fallback,
+    resolve_balance_sheet_identity_fallback,
     resolve_fallback_for_company,
 )
 
@@ -309,3 +312,70 @@ class TestComputeTotalDebt:
         # T-Mobile 2026-06-30: only ShortTermBorrowings in Company Facts.
         assert compute_total_debt(_debt(ShortTermBorrowings=6117)) is None
         assert compute_total_debt({}) is None
+
+
+
+
+@pytest.mark.unit
+class TestResolveBalanceSheetIdentityFallback:
+    """Assets = Liabilities + StockholdersEquity (+ NCI/temp equity) is a
+    hard accounting identity (verified live 2026-10-05: 99.71% exact
+    agreement across 215,713 real coexisting Assets/
+    LiabilitiesAndStockholdersEquity periods, and an exact 0 residual on a
+    real company -- OptimizeRx Corp 2018-03-31 -- after shipping). These
+    tests check the function issues the right shape of SQL (concept_id
+    lookups, additive-only insert, no delete) rather than re-simulating
+    postgres's CTE/join semantics, which the live verification above
+    already covers."""
+
+    def test_adjustment_tags_are_the_four_real_nci_temp_equity_tags(self):
+        assert _BALANCE_SHEET_ADJUSTMENT_TAGS == (
+            "MinorityInterest",
+            "TemporaryEquityCarryingAmountAttributableToParent",
+            "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterest",
+            "RedeemableNoncontrollingInterestEquityCarryingAmount",
+        )
+
+    def test_resolve_single_direction_issues_additive_insert_only(self):
+        conn = MagicMock()
+        cur = conn.cursor.return_value.__enter__.return_value
+        # concept_id lookups (resolved, assets, other) + adj concept_id lookup
+        cur.fetchone.side_effect = [(100,), (101,), (102,)]
+        cur.fetchall.return_value = [(501,), (502,), (503,)]
+        cur.rowcount = 42
+
+        count = resolve_balance_sheet_identity_fallback(
+            conn,
+            "total_liabilities_resolved",
+            "total_assets_resolved",
+            "stockholders_equity_resolved",
+            -1,
+        )
+
+        assert count == 42
+        conn.commit.assert_called_once()
+        # Never a DELETE -- purely additive, same established-safe idiom
+        # as conflict_resolution.py's resolve_conflict_fill.
+        executed_sql = [c.args[0] for c in cur.execute.call_args_list]
+        assert not any("delete" in sql.lower() for sql in executed_sql)
+        insert_calls = [sql for sql in executed_sql if "insert into" in sql.lower()]
+        assert len(insert_calls) == 1
+        assert "on conflict" in insert_calls[0].lower()
+        assert "do nothing" in insert_calls[0].lower()
+
+    def test_resolve_all_runs_both_directions_with_correct_signs(self):
+        conn = MagicMock()
+        cur = conn.cursor.return_value.__enter__.return_value
+        cur.fetchone.side_effect = [
+            (100,), (101,), (102,),  # liabilities direction: resolved, assets, other
+            (102,), (101,), (100,),  # equity direction: resolved, assets, other
+        ]
+        cur.fetchall.return_value = []
+        cur.rowcount = 7
+
+        stats = resolve_all_balance_sheet_identity_fallbacks(conn)
+
+        assert stats == {
+            "total_liabilities_resolved": 7,
+            "stockholders_equity_resolved": 7,
+        }

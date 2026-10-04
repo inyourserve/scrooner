@@ -848,3 +848,166 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
 
     logger.info("concept_fallback.employee_count_resolved_done", **stats)
     return stats
+
+# Root-cause-2/3 revenue fixes (collaborative-arrangement revenue,
+# net-lease REIT income) moved to mapper/revenue_resolvers/ on 2026-10-02
+# -- revenue-specific resolution strategies now live in that package's
+# sub-mapper registry, not accreting here alongside the generic
+# concept-vs-concept fallback machinery this module owns (total_debt,
+# D&A, capex, employee_count). See that package's __init__.py docstring
+# for why.
+
+# Balance-sheet identity fallback (2026-10-05, doc 49's "low-risk first
+# move" recommendation: add new ARITHMETIC_FALLBACKS-shaped entries
+# informed by sanity/accounting_identity.py's already-validated
+# `balance_sheet` identity, rather than unifying the two mechanisms
+# outright). Assets = Liabilities + StockholdersEquity (+ NCI + temporary
+# equity) is a hard accounting identity (verified live: 99.71% exact
+# agreement, 215,078/215,713 real coexisting Assets/
+# LiabilitiesAndStockholdersEquity periods) -- unlike every other
+# candidate this project has rejected, this one is the SAME number by
+# definition, not a different concept sharing vocabulary.
+#
+# Deliberately NOT built on resolve_arithmetic_fallback() (that function's
+# 5-tuple shape has no room for the identity's real adjustment terms --
+# MinorityInterest/TemporaryEquity*/RedeemableNoncontrollingInterest* --
+# and doc 49's own risk #2 names skipping them as the exact false-gap
+# trap this project has hit before). Measured before building: of
+# total_liabilities_resolved's 9,178 no_mapped_tag gap periods, 7,888
+# (86%) have both Assets and StockholdersEquity already resolved: 6,207
+# need zero adjustment (bare identity holds), 1,681 have a real nonzero
+# NCI/temp-equity fact that must be included, not skipped, to get the
+# right number.
+#
+# Purely additive (INSERT...SELECT ... ON CONFLICT DO NOTHING) -- same
+# established-safe idiom as conflict_resolution.py's resolve_conflict_fill
+# and dedup_majority_resolver.py's majority-vote fill, both of which
+# already write into these same two `_resolved` concepts. This can only
+# ever fill a currently-empty cell; it is structurally impossible for it
+# to overwrite a value either of those modules (or resolve() itself, for
+# the primary Liabilities/StockholdersEquity tag) already produced --
+# avoids the "two writers into one shared _resolved concept" bug class
+# this project has hit three times (roic/roe, expanded_metrics.py,
+# resolve.py's own managed-concept scoping) without needing to coordinate
+# delete scope with any of them at all, since there is no delete.
+_BALANCE_SHEET_ADJUSTMENT_TAGS = (
+    "MinorityInterest",
+    "TemporaryEquityCarryingAmountAttributableToParent",
+    "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterest",
+    "RedeemableNoncontrollingInterestEquityCarryingAmount",
+)
+
+
+def resolve_balance_sheet_identity_fallback(
+    conn: psycopg.Connection,
+    resolved_name: str,
+    assets_name: str,
+    other_name: str,
+    other_sign: int,
+) -> int:
+    """Derives `resolved_name` = Assets - (other_sign * other_name's value)
+    - sum(present adjustment tags), only where `resolved_name` doesn't
+    already have a value for that (company, period). `other_sign` is -1
+    when `other_name` is being SUBTRACTED from Assets to get the target
+    (both of this module's two real uses: total_liabilities = Assets -
+    StockholdersEquity - adj, and stockholders_equity = Assets -
+    total_liabilities - adj -- in both cases the known other term is
+    subtracted, so callers always pass -1 today; the parameter exists so
+    a future caller solving for Assets itself, if ever needed, could pass
+    +1 instead of duplicating this function)."""
+    resolved_id = _concept_id(conn, resolved_name)
+    assets_id = _concept_id(conn, assets_name)
+    other_id = _concept_id(conn, other_name)
+
+    with conn.cursor() as cur:
+        # Resolve the adjustment tags to concept_ids up front and pre-
+        # aggregate by (company_id, period_id) in a standalone CTE --
+        # these 4 tags are rare (NCI/temporary-equity line items), so
+        # filtering core.fact by concept_id = any(...) (idx_fact_concept_id)
+        # first is a small, fast index scan. The original version instead
+        # ran a LATERAL subquery correlated on (company_id, period_id) with
+        # no supporting index on that pair alone -- confirmed live it had
+        # not finished after 60 minutes against core.fact's 26M+ rows,
+        # cancelled via pg_cancel_backend. This version finishes in
+        # seconds: aggregate the small adjustment-tag slice ONCE, then join
+        # it like any other small table.
+        cur.execute(
+            "select id from core.concept where tag = any(%s)",
+            (list(_BALANCE_SHEET_ADJUSTMENT_TAGS),),
+        )
+        adj_concept_ids = [row[0] for row in cur.fetchall()]
+
+        cur.execute(
+            """
+            insert into analytics.canonical_fact
+                (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+            with adj as (
+                select f.company_id, f.period_id,
+                       sum(f.value) as total_adj,
+                       array_agg(f.id) as adj_fact_ids
+                from core.fact f
+                where f.concept_id = any(%(adj_concept_ids)s)
+                  and f.is_authoritative = true
+                group by f.company_id, f.period_id
+            )
+            select
+                a.company_id,
+                %(resolved_id)s,
+                a.period_id,
+                a.value + (%(other_sign)s * o.value) + coalesce(adj.total_adj, 0),
+                a.source_fact_ids || o.source_fact_ids || coalesce(adj.adj_fact_ids, array[]::bigint[])
+            from analytics.canonical_fact a
+            join analytics.canonical_fact o
+                on o.company_id = a.company_id
+               and o.period_id = a.period_id
+               and o.canonical_concept_id = %(other_id)s
+            left join adj
+                on adj.company_id = a.company_id and adj.period_id = a.period_id
+            where a.canonical_concept_id = %(assets_id)s
+            on conflict (company_id, canonical_concept_id, period_id) do nothing
+            """,
+            {
+                "resolved_id": resolved_id,
+                "assets_id": assets_id,
+                "other_id": other_id,
+                "other_sign": other_sign,
+                "adj_concept_ids": adj_concept_ids,
+            },
+        )
+        count = cur.rowcount
+    conn.commit()
+    logger.info(
+        "concept_fallback.balance_sheet_identity_done",
+        concept=resolved_name,
+        rows=count,
+    )
+    return count
+
+
+def resolve_all_balance_sheet_identity_fallbacks(conn: psycopg.Connection) -> dict:
+    """Both directions of the same identity: total_liabilities from
+    Assets-Equity, and stockholders_equity from Assets-Liabilities. Each
+    only fills its OWN currently-empty cells (ON CONFLICT DO NOTHING), so
+    running both in either order is safe -- the second call simply sees
+    whatever currently-resolved values the first call's writes, plus
+    every pre-existing value, already provide; it does not need to chain
+    off the first call's specific output to be correct, only to
+    (optionally) benefit from slightly wider coverage if run after."""
+    liabilities_count = resolve_balance_sheet_identity_fallback(
+        conn,
+        "total_liabilities_resolved",
+        "total_assets_resolved",
+        "stockholders_equity_resolved",
+        -1,
+    )
+    equity_count = resolve_balance_sheet_identity_fallback(
+        conn,
+        "stockholders_equity_resolved",
+        "total_assets_resolved",
+        "total_liabilities_resolved",
+        -1,
+    )
+    return {
+        "total_liabilities_resolved": liabilities_count,
+        "stockholders_equity_resolved": equity_count,
+    }

@@ -16,6 +16,7 @@ from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.concept_fallback import (
     resolve_fallbacks,
     resolve_all_arithmetic_fallbacks,
+    resolve_all_balance_sheet_identity_fallbacks,
     resolve_employee_count_fallback,
 )
 from scrooner_pipeline.mapper.revenue_resolvers import run_all as run_revenue_resolvers
@@ -200,6 +201,31 @@ def resolve_statement_fallbacks_cmd() -> None:
     with get_connection() as conn:
         stats = resolve_all_arithmetic_fallbacks(conn)
     typer.echo(f"resolve-statement-fallbacks: {stats}")
+
+
+@app.command("resolve-balance-sheet-fallback")
+def resolve_balance_sheet_fallback_cmd() -> None:
+    """2026-10-05: total_liabilities_resolved/stockholders_equity_resolved
+    from Assets = Liabilities + StockholdersEquity (+ NCI/temporary
+    equity), doc 49's "low-risk first move" recommendation. Own CLI
+    command, not folded into resolve-statement-fallbacks above -- this
+    query joins analytics.canonical_fact against itself at full-population
+    scale and was found live to risk the Supabase pooler's hard 2-minute
+    statement_timeout under contention (confirmed: it ran cleanly in under
+    2 minutes once optimized to look up the adjustment tags by concept_id
+    first, but hit the cap when a prior run's stuck connection was still
+    holding a lock on the same rows). If this command times out, run the
+    same SQL directly via `psql "$DATABASE_URL" -f <script starting with
+    SET statement_timeout = 0;>`, detached (nohup + disown) -- the
+    documented pattern for any long admin DDL/DML against this project's
+    pooled connection (pipeline/CLAUDE.md's 2026-09-21 entry). Purely
+    additive (ON CONFLICT DO NOTHING) -- safe to run any time after
+    resolve-facts, in any order relative to resolve-statement-fallbacks/
+    resolve-conflict-fills/resolve-dedup-holes, since it can only fill a
+    still-empty cell, never overwrite another writer's value."""
+    with get_connection() as conn:
+        stats = resolve_all_balance_sheet_identity_fallbacks(conn)
+    typer.echo(f"resolve-balance-sheet-fallback: {stats}")
 
 
 @app.command("resolve-revenue")
