@@ -101,6 +101,12 @@ Investigated "quarter filed only as year-to-date" (9,622 cockpit tickets, but `p
 
 **This is cheap to try and potentially the single biggest lever found today — try this FIRST tonight, before Finding 4 or Finding 5.**
 
+## Finding 9 (minor, safe, small): `RevenuesNetOfInterestExpense` unmapped tag
+
+**Small, safe, legitimate — ship if convenient, not a priority.** American Express (and 96 other companies) use `RevenuesNetOfInterestExpense`, not currently in `revenue`'s `concept_mapping`. Verified coexistence: sometimes exactly equals `Revenues` (companies with no interest expense), sometimes genuinely differs (real net-of-interest companies) — unsafe to treat as a blind synonym, but **safe as a lowest-priority fallback tag** (first_match semantics never override an existing higher-priority match). Sized the real gap-fill: only **5 companies** currently have zero other revenue coverage and would benefit. Small win, no real risk, but not a whale — do if there's spare time tonight, skip if not.
+
+(Note: AMEX's own actual gap this morning was `q4_not_derived`, not `no_mapped_tag` — its quarters already resolve fine via this tag path; the real AMEX issue is Finding 7's territory, the FY-level Stage 2e conflict.)
+
 ## Not yet investigated (continuing)
 
 - "quarter filed only as year-to-date" (9,622 tickets) — the known, harder cumulative-YTD cash-flow reconstruction gap. Not touched today.
