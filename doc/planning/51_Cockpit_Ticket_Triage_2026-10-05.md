@@ -274,3 +274,11 @@ Investigated whether `employee_count`'s dramatic raw-vs-resolved coverage gap (3
 5. BDC sub-cluster (Finding 6) — investigated, no safe fix found; deprioritize unless new evidence emerges.
 6. Re-check "quarter filed only as year-to-date" and "not_resolved" after Finding 7 runs — size whatever residual remains before deciding if either needs new code.
 7. Finding 12 (net_income identity derivation) — REJECTED, do not build.
+
+## Decided sequencing (explicit, 2026-10-05): fix first, re-run yfinance sanity after
+
+**Order of operations for tonight and beyond, locked in by direct founder instruction:**
+
+1. **Fix the tickets/findings above first** — Findings 4, 5 (conditionally), 7, 13, 16, 22, 23, in the priority order already listed. This is code + data-cleanup work against the existing (admittedly stale) backlog — don't wait on fresh yfinance data to start, since the root causes are already independently verified against real company examples, not dependent on the sanity tool's own numbers being current.
+2. **Only after the fixes above land, trigger a fresh company-by-company yfinance run** (`yfinance_financials` fetch+compare, plus the other sanity tools — `scrooner-sanity run`/`plausibility`/`identities`) to re-measure against the corrected data. Re-running it BEFORE the fixes would just re-collect the same stale-relative-to-today comparisons and waste the rate-limited fetch budget comparing against data we already know is about to change.
+3. This also means: **don't trust tonight's fix verification against the CURRENT (pre-fix) sanity tables** — verify each fix directly against real company examples (the same method used to find them today), and treat the full sanity-table re-run as the final, fresh confirmation pass once all the fixes are in, not a running commentary during the fix work itself.
