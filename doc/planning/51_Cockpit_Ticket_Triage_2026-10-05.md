@@ -78,6 +78,18 @@ Using `net_income_resolved ÷ shares_outstanding_resolved` (the already-built re
 
 **Generalizable lesson, worth naming explicitly: "shares outstanding" and "weighted-average shares outstanding" are NOT interchangeable, even though both sound like "the share count."** Any future EPS-adjacent derivation must use the weighted-average concept specifically, never the point-in-time one — this is the same class of near-miss as `AssetsNet`≠`Assets` (Finding 6) and `dividends_paid`-bundles-preferred (Finding 3): a plausible-sounding substitute concept that is actually a different real-world quantity.
 
+## Finding 12 (REJECTED after verification): net_income identity derivation for income_before_tax/income_tax_expense
+
+**Looked like a second real whale (14,392 potential new fills: 6,224 for income_before_tax + 8,168 for income_tax_expense), verified unsafe — do NOT ship.**
+
+`net_income = income_before_tax − income_tax_expense (+ disc. ops − NCI + equity method)` is a real identity already in `sanity/accounting_identity.py`, and doc 49 already scoped generalizing it the same way the balance-sheet identity was shipped this morning. Sizing looked promising: 6,224/22,244 (28%) of `income_before_tax`'s gaps and 8,168/27,344 (30%) of `income_tax_expense`'s gaps have the other two terms already resolved.
+
+**Verified via real coexistence before trusting it, properly this time (company/period-scoped, not value-coincidence-scoped — see the methodology note on Finding 4's bonus thread for why that distinction matters):**
+- **Bare formula** (no adjustments): 70.9% agreement (3,546/4,999) — already too low to trust.
+- **With all 3 adjustment terms included** (`IncomeLossFromDiscontinuedOperationsNetOfTax`, `NetIncomeLossAttributableToNoncontrollingInterest`, `IncomeLossFromEquityMethodInvestments`): only **79.3%** (3,963/4,999) — better, but still far short of the 95%+ bar the balance-sheet identity cleared (99.71%).
+
+**Conclusion: this identity is genuinely noisier than the balance-sheet one, even with every documented adjustment term included — confirms, rather than contradicts, this project's own prior finding** (`dedup_majority_resolver.py`'s docstring: income-statement concepts show only 68-75% agreement, "a blind majority vote would silently pick a wrong number ~25-30% of the time"). The same caution applies to an arithmetic-fallback derivation, not just majority-vote. **Do not build `resolve_net_income_identity_fallback()` or similar — the residual 20%+ disagreement would silently corrupt real values.** This is exactly the kind of result doc 49's own risk #1 ("direction matters for pass-rate trust... has NOT been separately verified live, only asserted by algebra") was written to catch before shipping, and it caught something real.
+
 ## Finding 7 (THE BIGGEST WHALE FOUND TODAY, not yet run): `resolve-conflict-fills` may simply need a rerun
 
 **Likely the single highest-leverage action available for tonight — cheap, safe, already-built, possibly just not run recently enough.**
