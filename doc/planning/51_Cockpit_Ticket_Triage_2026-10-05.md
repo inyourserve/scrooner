@@ -220,6 +220,10 @@ Sampled `ebitda`'s 794 "major" findings. **SITE Centers Corp**: our TTM EBITDA =
 
 **This actually strengthens, not weakens, Finding 13's case**: the project has ALREADY built and proven the right mental model for "this ratio genuinely doesn't apply to non-payers" (dividend-family metrics) — but `quick_ratio` was never given the same treatment, even though its underlying issue (inventory absence) deserves a DIFFERENT fix (default-to-zero, not population-rescoping, since quick_ratio — unlike payout_ratio — IS a meaningful, computable number for a zero-inventory company, not an "inapplicable" one). Two different correct fixes for two different kinds of "optional input," both now identified.
 
+## Finding 21 (negative result, confirms Finding 13 doesn't generalize blindly): checked other Screener-blocking metrics for the same null-propagation pattern
+
+Checked `ebitda` and `net_debt_ebitda` (both named in Finding 13's "most commonly missing" list) for the same `quick_ratio`-shaped bug. **Neither has it.** `ebitda = operating_income + depreciation_and_amortization`, both "add" roles in the `additive` shape — unlike `quick_ratio`'s "subtract" role (inventory), an "add" role missing is NOT the same "genuinely zero for some companies" case; a company missing `operating_income` or `D&A` is much more likely a real gap than a correctly-zero value. `net_debt_ebitda` is computed separately in `expanded_metrics.py`, not through the generic engine's null-propagation logic at all. **Confirms Finding 13's fix should stay scoped to `quick_ratio` specifically (and possibly `net_cash_per_share`/`fcf_margin`'s "subtract" roles, already flagged as ambiguous there) — not a blanket shape-level change.**
+
 ## Not yet investigated (continuing)
 
 - "quarter filed only as year-to-date" (9,622 tickets) — the known, harder cumulative-YTD cash-flow reconstruction gap. Not touched today.
