@@ -60,7 +60,32 @@
 
 ## Finding 6 (classification, not a fix): `not_in_sec_feed` cluster is mostly already-known structural absence
 
-**No action needed beyond classification (Phase 3 work).** Top companies: Southern California Edison, Entergy Arkansas, Southern California Gas Co — these are the exact "wholly-owned utility co-registrant subsidiary" pattern already documented (2026-09-12 entry: these file combined 10-Ks under a parent's primary XBRL context, a genuine SEC/EDGAR-side limit, not a Scrooner bug). SIC breakdown also shows pharma/biotech/REITs (same pre-revenue/pass-through pattern as every other structural-absence finding this project has made) plus a cluster of BDCs (Hercules Capital, Stellus Capital BDC, Crescent Capital BDC, RAND Capital Corp) not yet explained — worth a quick check (are these genuinely sparse small-cap filers, or a real Collector gap?) before assuming structural.
+**No action needed beyond classification (Phase 3 work).** Top companies: Southern California Edison, Entergy Arkansas, Southern California Gas Co — these are the exact "wholly-owned utility co-registrant subsidiary" pattern already documented (2026-09-12 entry: these file combined 10-Ks under a parent's primary XBRL context, a genuine SEC/EDGAR-side limit, not a Scrooner bug). SIC breakdown also shows pharma/biotech/REITs (same pre-revenue/pass-through pattern as every other structural-absence finding this project has made).
+
+**BDC sub-cluster (Hercules Capital, Stellus Capital, Crescent Capital BDC, RAND Capital) investigated in depth — genuinely harder, not a quick fix.** All 4 have hundreds of real, recent authoritative facts (latest filings Aug-Sept 2026) — not a Collector gap. The gap is bounded to exactly 2015-2022 across every concept (revenue, total_assets, operating_income, etc.) for Hercules Capital specifically, while data resumes cleanly from ~2021-2022 onward. Root cause: Hercules Capital didn't tag standard `Assets`/`Revenues` before ~2021 — confirmed the raw companyfacts payload has real data back to 2014, but under fund-specific tags. **Found and REJECTED a candidate fallback before shipping it**: `AssetsNet` (2018-2023) looked like a plausible pre-2022 `Assets` substitute, but a direct overlap-period comparison showed it's exactly the negative of `StockholdersEquity` (NAV, sign-flipped) — a BDC/investment-company NAV convention, not total assets at all. This is the same "different concept sharing vocabulary" trap this project has hit repeatedly elsewhere, just caught here before being proposed. **Conclusion: no safe fix found for the BDC pre-2022 gap — leave as `not_in_sec_feed`/structural, don't force a tag mapping here.** A real fix would need digging into each BDC's specific pre-2021 fund-reporting tags case by case, with no guarantee a clean total_assets-equivalent exists at all — not a good use of tonight's time; lower priority than Findings 4/5.
+
+## Finding 7 (THE BIGGEST WHALE FOUND TODAY, not yet run): `resolve-conflict-fills` may simply need a rerun
+
+**Likely the single highest-leverage action available for tonight — cheap, safe, already-built, possibly just not run recently enough.**
+
+Investigated "quarter filed only as year-to-date" (9,622 cockpit tickets, but `period_gap` shows ~24,600 combined across `cfo_resolved`/`cash_flow_investing_resolved`/`cash_flow_financing_resolved` — these 3 cash-flow-statement concepts dominate this bucket almost entirely). Sampled real cases:
+
+- **BK Technologies Corp, Q1 2023**: raw `NetCashProvidedByUsedInOperatingActivities` filed as both `558000` and `558` — an exact 1000x unit-scale typo. Both marked non-authoritative by Stage 2e (correct, by design). Since Q1 has no authoritative fact, `derive_interim_quarters` can't compute Q2 = H1 − Q1, blocking the whole quarter even though H1 itself is fine. Same company, 2024: `-786` vs `-786000`, same exact shape.
+- **U-Haul Holding Co, several periods**: raw values differing by only 0.1%-5% (e.g., `369297000` vs `369670000`, 0.1% apart) — well within the existing `MAX_SAFE_RATIO = 1.15` (15%) tolerance `conflict_resolution.py::resolve_conflict_fill` already handles.
+
+**Both `cfo`, `cash_flow_investing`, and `cash_flow_financing` are ALREADY in `conflict_resolution.py`'s `CONFLICT_FILL_TARGETS` list** (confirmed by reading the source — lines 97-100). This mechanism is purely additive (`INSERT ... ON CONFLICT DO NOTHING`, never a delete), already proven safe against real evidence (Etsy, checked against yfinance), and specifically designed for exactly this shape of problem (small cross-filing disagreement, or a clean restatement).
+
+**Sampled 30 real `cfo_resolved` "quarter not derived" gaps: 22/30 (73%) trace to a Q1 conflict blocking the whole derivation chain** — of those, roughly 1 in 12 is a clean, obvious unit-scale typo (10x/100x/1000x ratio) and the rest are smaller percentage disagreements, many likely within the already-handled 15% tolerance.
+
+**Why this might not need any new code at all**: today's full reprocessing chain (Phase 0, this morning) ran `resolve-facts → resolve-concept-fallbacks → resolve-statement-fallbacks → calculate → growth → ttm-returns → ttm-margins → ...` — **it did NOT include `resolve-conflict-fills` or `resolve-dedup-holes`**. If this hasn't been run population-wide recently (needs verification — check git/run history, not assumed), simply running it tonight could close a very large fraction of this ~24,600-ticket bucket with zero new code.
+
+**For tonight**:
+1. Verify when `resolve-conflict-fills`/`resolve-dedup-holes` were last run population-wide (check for any logged run, or just run them — both are purely additive/safe to rerun).
+2. Run both, population-wide (no `--ciks` option exists — these are set-based, whole-population tools by design).
+3. Re-measure `period_gap` and see how much of the 24,600 cfo/cash-flow-investing/cash-flow-financing bucket closes.
+4. Only if a real residual remains after that, consider whether the clean-unit-scale-typo pattern (1000x/100x/10x ratios) deserves its own narrow, targeted fix beyond what the 15%-tolerance mechanism already catches.
+
+**This is cheap to try and potentially the single biggest lever found today — try this FIRST tonight, before Finding 4 or Finding 5.**
 
 ## Not yet investigated (continuing)
 
@@ -69,10 +94,11 @@
 - The BDC sub-cluster inside `not_in_sec_feed` (Finding 6).
 - Continuing to investigate — this document will be appended to throughout the day.
 
-## Priority order for tonight (my recommendation)
+## Priority order for tonight (my recommendation, revised after Finding 7)
 
-1. **Finding 4** (`conflict_split` mislabeling) — highest confidence, clear fix, ~1,810 tickets correctly reclassified, may surface new unit-scale-error leads.
+1. **Finding 7** (rerun `resolve-conflict-fills`/`resolve-dedup-holes` population-wide) — cheapest, safest, potentially the single biggest lever (~24,600-ticket bucket), zero new code. Try this FIRST and re-measure before doing anything else — it may make some of the other findings partially moot.
 2. **Verify Finding 2's cleanup rebuild actually finished** before assuming it's done.
-3. **Finding 5** (income-statement majority-vote extension) — safe, proven pattern, modest real yield (~400-600).
-4. Investigate the BDC sub-cluster from Finding 6.
-5. Start on "quarter filed only as year-to-date" (9,622) — the biggest still-unexplained bucket.
+3. **Finding 4** (`conflict_split` mislabeling) — highest-confidence code fix, ~1,810 tickets correctly reclassified, may surface new unit-scale-error leads.
+4. **Finding 5** (income-statement majority-vote extension) — safe, proven pattern, modest real yield (~400-600).
+5. BDC sub-cluster (Finding 6) — investigated, no safe fix found; deprioritize unless new evidence emerges.
+6. Re-check "quarter filed only as year-to-date" after Finding 7 runs — size whatever residual remains before deciding if it needs new code.
