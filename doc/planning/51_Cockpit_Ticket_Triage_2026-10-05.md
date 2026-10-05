@@ -107,6 +107,10 @@ Investigated "quarter filed only as year-to-date" (9,622 cockpit tickets, but `p
 
 (Note: AMEX's own actual gap this morning was `q4_not_derived`, not `no_mapped_tag` — its quarters already resolve fine via this tag path; the real AMEX issue is Finding 7's territory, the FY-level Stage 2e conflict.)
 
+## Finding 10 (non-issue): `filing_not_processed` (29 tickets) is just freshness lag
+
+Both affected companies (NEOGENOMICS INC, Kentucky First Federal Bancorp) show the gap at exactly 2026-06-30 — the most recently-filed quarter as of this investigation. Not a bug; these simply haven't gone through the next scheduled reprocessing cycle yet (same mechanism as `reprocess_recent_filers.sh`). No action needed — will self-resolve on the next normal reprocessing pass.
+
 ## Not yet investigated (continuing)
 
 - "quarter filed only as year-to-date" (9,622 tickets) — the known, harder cumulative-YTD cash-flow reconstruction gap. Not touched today.
