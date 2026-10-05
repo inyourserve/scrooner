@@ -2,6 +2,8 @@
 
 **Status: Investigation in progress, written for tonight's fix session.** Full day task: pick up every open `analytics.company_data_finding` ticket, group by root cause, find the highest-leverage ("whale") fixes, document findings — **investigation and write-up only, fixing happens tonight.**
 
+> **⚠️ CRITICAL CAVEAT, read before trusting any count below: `analytics.period_gap` (and therefore `analytics.company_data_finding`) is a snapshot frozen at 2026-10-04 19:08:55 UTC — BEFORE both the balance-sheet-identity fix (Finding "already shipped" below) and the period-corruption cleanup (Finding 2) landed.** Confirmed by checking `period_gap`'s own `checked_at` column directly. This means every count cited in this document (e.g. `total_liabilities_resolved` still showing 9,178 "no_mapped_tag" gaps, when that exact concept was fixed to ~100% hours ago) is **stale relative to today's own fixes** — the real remaining count is almost certainly lower once `period_completeness` is rerun fresh. **The root-cause findings and mechanisms described below are still real and valid** — only the specific ticket counts need a fresh measurement before tonight's prioritization is finalized. Rerun the full `period_completeness` + rebuild `company_data_finding` as the FIRST step tonight, before trusting any number here for sizing decisions.
+
 ## Starting state
 
 60,188 open tickets (as of this morning, before today's cleanup work — see note below on staleness). Grouped by `summary`/`finding_type`:
