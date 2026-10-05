@@ -77,3 +77,77 @@ def test_feb_29_fye_anchor_extrapolates_without_crashing():
     backward = classify_period("2019-05-15", "2019-02-16", anchors, (2, 29))
     assert backward["period_type"] == "duration"
 
+
+
+@pytest.mark.unit
+def test_52_53_week_year_ending_in_early_january_belongs_to_the_prior_fiscal_year():
+    """BlueLinx's real anchors: FY ends 2021-01-02, 2022-01-01, 2022-12-31.
+    Labelling by calendar year gave the last two the same fiscal_year (2022),
+    which collided in derive-q4's (concept, unit, fiscal_year) grouping."""
+    anchors = [date(2021, 1, 2), date(2022, 1, 1), date(2022, 12, 31)]
+
+    fy_ending_jan_2022 = classify_period("2022-01-01", "2021-01-03", anchors, None)
+    fy_ending_dec_2022 = classify_period("2022-12-31", "2022-01-02", anchors, None)
+    fy_ending_jan_2021 = classify_period("2021-01-02", "2020-01-04", anchors, None)
+
+    assert (fy_ending_jan_2022["fiscal_year"], fy_ending_jan_2022["fiscal_period"]) == (2021, "FY")
+    assert (fy_ending_dec_2022["fiscal_year"], fy_ending_dec_2022["fiscal_period"]) == (2022, "FY")
+    assert fy_ending_jan_2021["fiscal_year"] == 2020
+
+    # Quarters inside the fiscal year carry the same label as their year.
+    q1_2021 = classify_period("2021-04-03", "2021-01-03", anchors, None)
+    q1_2022 = classify_period("2022-04-02", "2022-01-02", anchors, None)
+    assert (q1_2021["fiscal_year"], q1_2021["fiscal_period"]) == (2021, "Q1")
+    assert (q1_2022["fiscal_year"], q1_2022["fiscal_period"]) == (2022, "Q1")
+
+
+@pytest.mark.unit
+def test_retailer_year_ending_late_january_keeps_its_calendar_year_label():
+    anchors = [date(2024, 2, 3), date(2025, 2, 1)]
+    fy = classify_period("2025-02-01", "2024-02-04", anchors, None)
+    assert (fy["fiscal_year"], fy["fiscal_period"]) == (2025, "FY")
+
+
+@pytest.mark.unit
+def test_extract_distinct_periods_drops_implausible_filer_date_errors():
+    """Found live 2026-10-05: 10,227 real duration periods across the
+    active population span >400 days, with absurd dates (a truncated
+    "205-01-01" start year, Oracle's 1900-01-01..2199-12-31 sentinel
+    span, Tenax Therapeutics spanning into 1967) -- real filer-side XBRL
+    context errors, not legitimate reporting periods. FULL_YEAR_MAX_DAYS
+    (380) already told us the true ceiling; this bound (400, generous
+    slack) rejects anything beyond it before a core.period row is ever
+    created."""
+    payload = {
+        "facts": {
+            "us-gaap": {
+                "OperatingIncomeLoss": {
+                    "units": {
+                        "USD": [
+                            {"start": "2022-02-01", "end": "2022-04-30"},  # real ~91d quarter
+                            # Truncated year (filer software bug: "202" not "2022")
+                            {"start": "202-02-01", "end": "2022-04-30"},
+                            # Oracle-style "no specific period" sentinel
+                            {"start": "1900-01-01", "end": "2199-12-31"},
+                            # A real-looking but implausibly long span (731 days)
+                            {"start": "2019-01-01", "end": "2020-12-31"},
+                        ]
+                    }
+                },
+                "Assets": {
+                    "units": {
+                        "USD": [
+                            # Instant period with an absurd year, no start at all
+                            {"end": "1967-05-26"},
+                            {"end": "2024-12-31"},
+                        ]
+                    }
+                },
+            }
+        }
+    }
+    periods = extract_distinct_periods(payload)
+    assert periods == {
+        ("2022-04-30", "2022-02-01"),
+        ("2024-12-31", None),
+    }

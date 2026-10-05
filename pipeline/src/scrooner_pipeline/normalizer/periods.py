@@ -81,11 +81,67 @@ def _get_company(conn: psycopg.Connection, cik: str) -> tuple[int, str | None] |
         return cur.fetchone()
 
 
+# Sanity bounds on raw filer-submitted XBRL context dates (2026-10-05).
+# These are NOT this project's own data -- extract_distinct_periods reads
+# `end`/`start` directly off each company's raw SEC companyfacts payload,
+# values a filer's own XBRL-generation software wrote into that filing's
+# context element. Found live investigating an "operating_income not_
+# resolved" gap for BK Technologies: core.period held a row spanning
+# 2019-01-01 to 2020-12-31 (731 days) for a single stray
+# DepreciationDepletionAndAmortization fact -- a real filer-side context
+# error, not a Scrooner bug. Broadened the check population-wide and found
+# it is NOT rare: 10,227 duration periods span >400 days, with absurd
+# dates (year "205", year "202" -- clearly a truncated 4-digit year;
+# Oracle's 1900-01-01..2199-12-31, almost certainly a "no specific period"
+# sentinel some filer software emits; Tenax Therapeutics/Enpro/Mannatech
+# spanning into 1967/1976/2108) -- 88,903 of the resulting facts are
+# `is_authoritative=true` RIGHT NOW, meaning this isn't cold/dead data,
+# it's live in `core.fact` today. FULL_YEAR_MAX_DAYS (380, this file's own
+# already-documented empirical ceiling across AAPL's full 2007-2025
+# history, "no fuzzy boundary cases observed") already told us the true
+# ceiling for a real duration period; nothing here was ever supposed to
+# exceed it by this much. Filtering here -- before ANY core.period row is
+# created -- is the correct layer: Stage 2d (facts.py) already has a
+# graceful, counted skip path for a fact whose period was never created
+# (`skipped_period_not_found`), so a fact pointing at a now-filtered-out
+# garbage period simply gets counted there instead of corrupting a real
+# reporting slot. A plain year-bound check alone would catch most of
+# these (year 205/202/1900/1967/1976/2108 are all absurd on their own),
+# but the real bound that matters is the SPAN -- a company's own
+# `fiscal_year_end`/`now` fields are irrelevant here; what makes a
+# duration period real is only ever its length.
+_MIN_PLAUSIBLE_YEAR = 1990  # EDGAR electronic filing predates nothing earlier
+_MAX_SPAN_DAYS = 400  # FULL_YEAR_MAX_DAYS (380) + generous slack
+
+
+def _is_plausible_period(end: str, start: str | None) -> bool:
+    try:
+        end_date = date.fromisoformat(end)
+    except ValueError:
+        return False
+    if end_date.year < _MIN_PLAUSIBLE_YEAR:
+        return False
+    if start is None:
+        return True
+    try:
+        start_date = date.fromisoformat(start)
+    except ValueError:
+        return False
+    if start_date.year < _MIN_PLAUSIBLE_YEAR:
+        return False
+    if start_date > end_date:
+        return False
+    return (end_date - start_date).days <= _MAX_SPAN_DAYS
+
+
 def extract_distinct_periods(payload: dict) -> set[tuple[str, str | None]]:
     """(end, start_or_None) for every distinct period referenced anywhere in
     a companyfacts payload, across every taxonomy/concept/unit -- the raw
     material this stage resolves, independent of which specific facts will
-    eventually reference them (Stage 2d's job, not this one's)."""
+    eventually reference them (Stage 2d's job, not this one's). Silently
+    drops any (start, end) pair failing `_is_plausible_period` -- a real
+    filer-side XBRL date error, never a legitimate reporting period (see
+    this module's own sanity-bounds comment above)."""
     periods: set[tuple[str, str | None]] = set()
     for _taxonomy, concepts in payload.get("facts", {}).items():
         for _concept, cdata in concepts.items():
@@ -94,7 +150,10 @@ def extract_distinct_periods(payload: dict) -> set[tuple[str, str | None]]:
                     end = e.get("end")
                     if not end:
                         continue
-                    periods.add((end, e.get("start")))
+                    start = e.get("start")
+                    if not _is_plausible_period(end, start):
+                        continue
+                    periods.add((end, start))
     return periods
 
 
@@ -213,6 +272,26 @@ def _bracket_fye(
     return next_fye, prior_fye
 
 
+def _fiscal_year_label(fye: date | None) -> int | None:
+    """Fiscal-year label for a fiscal-year-end date.
+
+    Normally the calendar year of the year-end. A 52/53-week calendar ends on
+    the Saturday/Sunday nearest Dec 31, so a year can end Jan 1-3 of the NEXT
+    calendar year (BlueLinx FY ending 2022-01-01, HNI 2011-01-01, Illumina
+    2012-01-01). SEC files those under the prior fiscal year, and labelling
+    them by calendar year gave two different fiscal years the same label
+    (2022-01-01 and 2022-12-31 both "2022"). derived.py groups by
+    (concept, unit, fiscal_year), so the collision overwrote Q1/FY slots and
+    blocked Q4 derivation (found 2026-10-03, 95 of 98 such companies).
+    A year-end in Jan 1-10 therefore belongs to the prior year; retailers
+    ending late January/early February are unaffected."""
+    if fye is None:
+        return None
+    if fye.month == 1 and fye.day <= 10:
+        return fye.year - 1
+    return fye.year
+
+
 def classify_period(
     end: str,
     start: str | None,
@@ -230,7 +309,7 @@ def classify_period(
         duration_days = (end_date - start_date).days
 
     next_fye, prior_fye = _bracket_fye(end_date, anchors, nominal_month_day)
-    fiscal_year = next_fye.year if next_fye else None
+    fiscal_year = _fiscal_year_label(next_fye)
     fiscal_period = None
 
     if period_type == "duration":
