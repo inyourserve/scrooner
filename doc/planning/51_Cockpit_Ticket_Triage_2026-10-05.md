@@ -206,6 +206,10 @@ Real data: Q1 2026 revenue = $20M (a one-time milestone/licensing payment), H1 2
 
 **`gross_profit` identity's 891 companies — investigated, NOT a new whale, closed.** Sorted by largest disagreement first: 48 companies are the already-known "Flowserve-shaped" revenue=0 bug (operands show `revenue`/`revenue_sanity_resolved` = 0 — a frozen, deliberately-unfixed resolve.py/dedupe.py boundary issue, not new). Sorted by SMALLEST disagreement: the bulk of the remaining ~843 companies (Boston Scientific, Calix, Scotts Miracle-Gro, Gilead Sciences, and hundreds more) show disagreements of exactly ~1.00-1.03% — real-world rounding/reclassification noise sitting just barely outside the identity's own 1% tolerance threshold, not a data quality bug. **Conclusion: this identity's failure population is fully explained by two already-understood causes; no new fix needed here.**
 
+## Finding 18 (mirror-image case — likely WE are correct, yfinance is sparse): `institutional_ownership_pct` majors
+
+Sampled the 845 "major" `institutional_ownership_pct` divergences (data_sanity_check). Our values are plausible real institutional-ownership percentages (HeartCore Enterprises 19.6%, Liberty Global 52.3%, Reliance Global Group 87.8%, Aspire Biopharma 49.9%) — built via the real Form 13F CUSIP-crosswalk system this project has already extensively verified. yfinance's `heldPercentInstitutions` for every one of these sampled companies is ~0.001% (essentially zero/no-data). **This looks like yfinance's own sparse coverage for smaller-cap companies, not a bug on our side** — the opposite risk direction from most other findings today. Not a priority to "fix" — if anything, this is evidence our data is better here, not worse. Worth a note for whoever reviews the sanity backlog: don't treat every "major" divergence as "we're wrong."
+
 ## Not yet investigated (continuing)
 
 - "quarter filed only as year-to-date" (9,622 tickets) — the known, harder cumulative-YTD cash-flow reconstruction gap. Not touched today.
