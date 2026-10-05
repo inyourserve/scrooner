@@ -196,6 +196,14 @@ Real data: Q1 2026 revenue = $20M (a one-time milestone/licensing payment), H1 2
 
 **Recommend for tonight**: rerun `yfinance_financials`'s fetch+compare pipeline (staleness caveat applies here too, same as Finding 15) before trusting the exact current counts, then work down this list the same way Finding 16's `total_debt` investigation did — pick the biggest concept, sample a few real companies, look for a common untagged pattern, size it, verify coexistence safety, only then ship.
 
+## Finding 17 (two more existing systems mined — mostly cross-validate prior findings, one new gross_profit lead)
+
+**`scrooner-sanity plausibility`** (zero external calls, flags each company's most recent metric value against a critical/watch range from the real live distribution): 4,632 critical + 6,165 watch findings. **Sampled the worst `net_income_growth_yoy` cases (Sandisk Corp, -30,113% "growth") — confirmed expected, correct behavior, not a bug**: a real swing from small prior-year profit to a large current-year loss produces a mathematically valid but extreme percentage, exactly what this check is designed to surface for human review, not an error to fix. Most-recent check: 2026-10-02 (3 days stale).
+
+**`scrooner-sanity identities`** (zero external calls, checks whether a company's OWN numbers satisfy accounting identities): 55,516 failures across 3,154 companies. Breakdown: `net_income` 25,817/1,958, `gross_profit` 14,063/891, `balance_sheet` 13,483/1,673, `revenue_nonnegative` 1,736/333, `cash_within_total` 322/148, `current_assets_within_total` 95/38. **The `net_income` failure count directly cross-validates Finding 12's conclusion** (the net_income identity has a genuinely higher real-world disagreement rate, ~20-30%, even with adjustments) — this is the same underlying population, not a new separate bug. Most-recent check: 2026-10-02 (3 days stale, predates both the balance-sheet-identity fix and the period-corruption cleanup — the `balance_sheet` 13,483 failure count in particular is almost certainly overstated relative to today's real state and should be re-measured, not trusted as-is).
+
+**Not yet investigated**: `gross_profit` identity's 891 companies — GP = Revenue − CostOfRevenue disagreeing with the company's own reported GrossProfit tag. Worth a sample check tonight (did not get to it this session) — could be a real tag-mapping issue, or could be explained by the SAME kind of one-time/reclassification item seen in Finding 15.
+
 ## Not yet investigated (continuing)
 
 - "quarter filed only as year-to-date" (9,622 tickets) — the known, harder cumulative-YTD cash-flow reconstruction gap. Not touched today.
