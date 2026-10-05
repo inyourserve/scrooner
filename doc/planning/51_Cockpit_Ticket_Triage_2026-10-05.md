@@ -111,6 +111,17 @@ Investigated "quarter filed only as year-to-date" (9,622 cockpit tickets, but `p
 
 Both affected companies (NEOGENOMICS INC, Kentucky First Federal Bancorp) show the gap at exactly 2026-06-30 — the most recently-filed quarter as of this investigation. Not a bug; these simply haven't gone through the next scheduled reprocessing cycle yet (same mechanism as `reprocess_recent_filers.sh`). No action needed — will self-resolve on the next normal reprocessing pass.
 
+## Finding 11 (new structural category + a short list of real leads): currency trusts share the Hercules Capital-shaped historical gap
+
+Checking which companies show a "real data resumes after a multi-year hole" pattern for `total_assets_resolved` (the same shape as Hercules Capital's BDC gap, Finding 6) surfaced a clean new cluster: **Invesco CurrencyShares Japanese Yen/Australian Dollar/Swiss Franc/Euro/British Pound Sterling Trust** — all 5 share the identical 2015-01-31 start and a gap ending 2019-03-31 or 2023-09-30. These are currency ETF/trust vehicles, the same structural family as the already-known commodity trusts (SPDR Gold Trust) — likely report "total assets" under a trust-specific tag or not at all in the way an operating company does. **Classification candidate for Phase 3, not a fix.**
+
+**A handful of real operating companies in the same result set deserve individual attention tonight, not structural dismissal:**
+- **TANGER INC.** (a real, well-known, actively-traded outlet-mall REIT) — gap 2015-03-31 to 2021-09-30, data resumes to present. REITs have a known different balance-sheet presentation, but a 6-year gap for a company this size/visibility is worth 10 minutes of direct investigation before assuming it's the same REIT pattern as smaller, thinner filers.
+- **Home Federal Bancorp, Inc. of Louisiana** (a real community bank) — gap 2015-02-05 to 2020-05-12.
+- **CPS TECHNOLOGIES CORP** — gap 2015-03-28 to 2021-03-27, an ordinary small-cap manufacturer, no obvious structural reason to be missing `total_assets` for 6 years.
+
+None of these three were individually investigated today (time-boxed) — worth 10-15 minutes each tonight before writing them off as "probably structural," since none obviously belongs to a known non-reporting category the way the currency/commodity trusts clearly do.
+
 ## Not yet investigated (continuing)
 
 - "quarter filed only as year-to-date" (9,622 tickets) — the known, harder cumulative-YTD cash-flow reconstruction gap. Not touched today.
