@@ -43,10 +43,22 @@ logger = structlog.get_logger()
 METRIC_DEFINITIONS: list[tuple[str, str, bool, bool, list[tuple[str, str]]]] = [
     (
         "gross_margin",
-        "Gross Profit / Revenue",
+        "(Revenue - Cost of Revenue) / Revenue",
         False,
         False,
-        [("gross_profit", "numerator"), ("revenue", "denominator")],
+        # Matches the live-seeded, correct roles (confirmed 2026-10-05,
+        # doc/planning/51 Finding 23) -- this entry was stale, describing
+        # the OLD "ratio" shape (gross_profit / revenue) pre-2026-09-01.
+        # calculate.py's FORMULA_SHAPES now computes gross_margin via the
+        # "sum_diff_ratio" shape (revenue add, cost_of_revenue subtract,
+        # revenue denominator), not a direct gross_profit numerator -- the
+        # live system has never been wrong, only this seed definition was
+        # a latent regression risk if `seed-definitions` were ever rerun.
+        [
+            ("revenue", "add"),
+            ("cost_of_revenue", "subtract"),
+            ("revenue", "denominator"),
+        ],
     ),
     (
         "operating_margin",
