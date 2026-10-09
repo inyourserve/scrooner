@@ -81,6 +81,41 @@ FIXABLE_CONCEPTS: dict[str, str] = {
     "gross_profit": "gross_profit_resolved",
     "operating_expenses": "operating_expenses_resolved",
     "total_debt": "total_debt_resolved",
+    # Added 2026-10-02, triaging the 585-row needs_review backlog that had
+    # built up in analytics.data_sanity_investigation: every one of these
+    # 6 already has a *_resolved concept from mapper/concept_fallback.py,
+    # so the only thing missing was this dict entry -- a pure wiring gap,
+    # not a new tag-discovery problem. Every candidate tag involved is
+    # already approved/provisional in concept_mapping (find_candidate_tags
+    # only searches already-mapped tags); this just lets the existing
+    # per-company tag-preference mechanism act on what it already finds,
+    # instead of recording a lead nobody can apply. capex's own 0%
+    # same-period coexistence rate (checked live) is expected, not
+    # alarming -- PaymentsToAcquireProductiveAssets (priority 2) is a
+    # genuinely BROADER figure than PaymentsToAcquirePropertyPlantAndEquipment
+    # (priority 1, approved) for every company checked, and the broader one
+    # is the one matching yfinance's own capex figure -- exactly the
+    # per-company override this mechanism exists for, not a global
+    # priority swap (which would need a full population-wide verification
+    # pass this triage didn't do).
+    "depreciation_and_amortization": "depreciation_and_amortization_resolved",
+    "cash_and_equivalents": "cash_and_equivalents_resolved",
+    "operating_income": "operating_income_resolved",
+    "stockholders_equity": "stockholders_equity_resolved",
+    "share_buybacks": "share_buybacks_resolved",
+    "capex": "capex_resolved",
+    # Deliberately NOT wired, both triaged 2026-10-02:
+    #  - shares_outstanding: known multi-class-share structural divergence
+    #    (Alphabet/Nike), not a resolvable tag mixup -- see this file's own
+    #    module docstring.
+    #  - net_income: us-gaap:ProfitLoss (a real candidate in the backlog)
+    #    typically includes noncontrolling-interest income while
+    #    us-gaap:NetIncomeLoss typically excludes it -- conceptually
+    #    different, not interchangeable. Coexistence-test agreement was
+    #    only 61.3% even restricted to the backlog's own companies. Needs
+    #    an NCI-aware guard (e.g. skip when the company has a material
+    #    MinorityInterest balance) before this concept can be wired safely;
+    #    left as a follow-up, not force-added here.
 }
 
 # Concepts whose *_resolved baseline is owned by another writer that must
@@ -473,6 +508,21 @@ where cf.canonical_concept_id = %(resolved_id)s
 """
 
 
+_FILL_UNCOVERED_FROM_PRIMARY_SQL = """
+insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
+select f.company_id, %(resolved_id)s, f.period_id, f.value, f.source_fact_ids
+from analytics.canonical_fact f
+join core.period p on p.id = f.period_id
+where f.canonical_concept_id = %(primary_id)s
+  and f.company_id = %(company_id)s
+  and (
+      p.end_date > (select max(end_date) from core.period where id = any(%(pref_period_ids)s))
+      or f.value <> 0
+  )
+on conflict (company_id, canonical_concept_id, period_id) do nothing
+"""
+
+
 def resolve_company_tag_preferences(
     conn: psycopg.Connection, concept_name: str, resolved_concept_name: str
 ) -> int:
@@ -577,17 +627,15 @@ def resolve_company_tag_preferences(
                     # 2026-09-27). Periods AFTER the preferred tag's last
                     # one can't be what the preference was created to fix,
                     # so the primary concept fills them.
+                    # Widened 2026-10-03: a period the preferred tag simply
+                    # doesn't cover (before its first filing or between
+                    # filings: Flowserve FY2007-2010 had $3.8-4.5B primary
+                    # revenue and a blank display) is also not one the
+                    # preference corrected. Those get the primary's value
+                    # too, but never a $0, since a spurious $0 is exactly
+                    # what most preferences exist to replace.
                     cur.execute(
-                        """
-                        insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
-                        select f.company_id, %(resolved_id)s, f.period_id, f.value, f.source_fact_ids
-                        from analytics.canonical_fact f
-                        join core.period p on p.id = f.period_id
-                        where f.canonical_concept_id = %(primary_id)s
-                          and f.company_id = %(company_id)s
-                          and p.end_date > (select max(end_date) from core.period where id = any(%(pref_period_ids)s))
-                        on conflict (company_id, canonical_concept_id, period_id) do nothing
-                        """,
+                        _FILL_UNCOVERED_FROM_PRIMARY_SQL,
                         {
                             "resolved_id": resolved_id,
                             "primary_id": primary_id,
@@ -668,3 +716,186 @@ def investigate_open_findings(
 
     logger.info("sanity.tag_investigator.done", **stats)
     return stats
+
+
+# Root cause 1 bulk sweep (2026-10-02): the resolve()-authoritative-$0 bug
+# (pipeline/CLAUDE.md's 2026-09-07/08 entries -- Flowserve, ~20 other named
+# companies, sized at 883 companies/11,992 zero-revenue periods but
+# deliberately left unfixed pending "its own careful pass" rather than a
+# same-session bolt-on). This is that pass. `investigate_open_findings()`
+# above only ever reaches a company once it happens to surface as a
+# critical/major sanity finding (pick_rotation_batch()'s slow coldest-
+# checked-first rotation) AND investigate()'s own AUTO_FIX_TOLERANCE_PCT
+# (20% vs. yfinance) gates the fix -- wrong bar for this bug class: a bank
+# like Commerce Bancshares' best honest alternate tag (interest income
+# alone) is STILL ~78% off from yfinance's full revenue figure (missing
+# non-interest income), yet $0 is still categorically, obviously wrong.
+# This sweep instead uses INTERNAL corroboration (does switching to an
+# alternate ALREADY-MAPPED tag -- any confidence, any is_authoritative --
+# fix most of this company's OWN currently-zero periods), never yfinance,
+# and reaches every qualifying company in one bulk pass rather than
+# waiting for the daily rotation to eventually land on each one.
+def find_internal_tag_preference_candidates(
+    zero_period_ids: set[int],
+    by_tag: dict[tuple[str, str], dict[int, object]],
+    min_ratio: Decimal = Decimal("0.5"),
+    min_fixes: int = 2,
+    min_coverage_floor: int = 5,
+) -> dict | None:
+    """Pure decision logic, no DB access -- unit-testable the same way
+    _score_and_decide() is. For ONE company: picks whichever alternate
+    (taxonomy, tag) pair under the concept's own concept_mapping fixes the
+    most of this company's currently-zero periods (ties broken by total
+    period coverage, i.e. prefer the alternate with the deeper history).
+    Requires BOTH a majority fix ratio (>= min_ratio, default half) AND
+    either a real absolute fix count (>= min_fixes) or a deep enough
+    overall tag history (>= min_coverage_floor) -- guards against a
+    single-period fluke (a pre-revenue biotech's one-off stray nonzero
+    value under an otherwise-unused tag) looking identical to a real,
+    systematic tag-priority bug on a thin sample. Verified against the
+    real population 2026-10-02: this bar selects 31 real, named companies
+    (Commerce Bancshares, Flowserve, Eaton, Dentsply Sirona, PriceSmart,
+    Tetra Technologies, OGE Energy, Qorvo, Baker Hughes, Oscar Health
+    among them) and correctly excludes companies where the best alternate
+    tag only fixes 1-3 of 10-46 zero periods (genuine pre-revenue biotechs
+    with a rare stray nonzero fact, not a systematic bug)."""
+    best: tuple[int, int, str, str] | None = None
+    for (taxonomy, tag), period_map in by_tag.items():
+        fixes = sum(
+            1
+            for pid in zero_period_ids
+            if period_map.get(pid) not in (None, 0)
+        )
+        if fixes == 0:
+            continue
+        coverage = len(period_map)
+        candidate = (fixes, coverage, taxonomy, tag)
+        if best is None or candidate[:2] > best[:2]:
+            best = candidate
+
+    if best is None:
+        return None
+    fixes, coverage, taxonomy, tag = best
+    ratio = Decimal(fixes) / Decimal(max(1, len(zero_period_ids)))
+    if ratio >= min_ratio and (fixes >= min_fixes or coverage >= min_coverage_floor):
+        return {
+            "taxonomy": taxonomy,
+            "tag": tag,
+            "fixes": fixes,
+            "zero_periods": len(zero_period_ids),
+            "coverage": coverage,
+            "ratio": ratio,
+        }
+    return None
+
+
+def _load_zero_periods_by_company(
+    conn: psycopg.Connection, resolved_concept_id: int, real_operating_company_sql: str
+) -> dict[int, set[int]]:
+    with conn.cursor() as cur:
+        cur.execute(
+            f"""
+            select cf.company_id, array_agg(cf.period_id)
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            where cc.name = (select name from analytics.canonical_concept where id = %(resolved_id)s)
+              and cf.value = 0
+              and cf.company_id in ({real_operating_company_sql})
+            group by cf.company_id
+            """,
+            {"resolved_id": resolved_concept_id},
+        )
+        return {r[0]: set(r[1]) for r in cur.fetchall()}
+
+
+def _load_tags_for_company(
+    conn: psycopg.Connection, company_id: int, concept_name: str
+) -> dict[tuple[str, str], dict[int, object]]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select co.taxonomy, co.tag, f.period_id, f.value
+            from core.fact f
+            join core.concept co on co.id = f.concept_id
+            join analytics.concept_mapping cm on cm.concept_id = f.concept_id
+            join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
+            where f.company_id = %s and cc.name = %s
+            """,
+            (company_id, concept_name),
+        )
+        by_tag: dict[tuple[str, str], dict[int, object]] = {}
+        for taxonomy, tag, period_id, value in cur.fetchall():
+            by_tag.setdefault((taxonomy, tag), {})[period_id] = value
+        return by_tag
+
+
+def run_internal_tag_preference_sweep(
+    conn: psycopg.Connection,
+    concept_name: str = "revenue",
+    resolved_concept_name: str = "revenue_sanity_resolved",
+) -> dict:
+    """The actual bulk entry point: scans every company in the
+    real_operating_company population (mapper/coverage_matrix.py's own
+    corrected-denominator population -- never raw status='active', which
+    includes ~400 SPACs/trusts with no real revenue by construction) with
+    at least one zero `resolved_concept_name` period, applies
+    find_internal_tag_preference_candidates()'s bar, and writes a
+    company_tag_preference row (confidence='provisional', same tier every
+    other tag_investigator fix uses) for every company that clears it.
+    Does NOT itself call resolve_company_tag_preferences() -- the caller
+    (the CLI command) runs that once, after this, so the merge sees the
+    final preference set in one pass rather than N incremental ones."""
+    # Local import to avoid a module-level circular import (coverage_matrix
+    # doesn't import tag_investigator, but keeping the dependency direction
+    # explicit and narrow here is cheap).
+    from scrooner_pipeline.mapper.coverage_matrix import POPULATION_QUERIES
+
+    concept_id = _concept_id(conn, concept_name)
+    resolved_id = _concept_id(conn, resolved_concept_name)
+
+    zero_by_company = _load_zero_periods_by_company(
+        conn, resolved_id, POPULATION_QUERIES["real_operating_company"]
+    )
+
+    stats = {"considered": len(zero_by_company), "applied": 0, "no_candidate": 0}
+    applied: list[dict] = []
+    for company_id, zero_period_ids in zero_by_company.items():
+        by_tag = _load_tags_for_company(conn, company_id, concept_name)
+        decision = find_internal_tag_preference_candidates(zero_period_ids, by_tag)
+        if decision is None:
+            stats["no_candidate"] += 1
+            continue
+
+        evidence = (
+            f"Internal-corroboration sweep 2026-10-02 (root cause 1, revenue_zero_check): "
+            f"{decision['taxonomy']}:{decision['tag']} fixes {decision['fixes']}/{decision['zero_periods']} "
+            f"of this company's own zero {concept_name} periods (ratio {decision['ratio']:.2f}, "
+            f"{decision['coverage']} total periods under this tag) -- no yfinance anchor used, "
+            f"same-company internal evidence only. resolve()'s own priority tag is a real, repeated "
+            f"authoritative $0 for this company (not a conflict-driven fallthrough), and this alternate, "
+            f"already-mapped tag consistently carries the real value instead."
+        )
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                insert into analytics.company_tag_preference
+                    (company_id, canonical_concept_id, taxonomy, tag, confidence, evidence)
+                values (%(company_id)s, %(concept_id)s, %(taxonomy)s, %(tag)s, 'provisional', %(evidence)s)
+                on conflict (company_id, canonical_concept_id) do update
+                    set taxonomy = excluded.taxonomy, tag = excluded.tag,
+                        evidence = excluded.evidence, discovered_at = now()
+                """,
+                {
+                    "company_id": company_id,
+                    "concept_id": concept_id,
+                    "taxonomy": decision["taxonomy"],
+                    "tag": decision["tag"],
+                    "evidence": evidence,
+                },
+            )
+        conn.commit()
+        stats["applied"] += 1
+        applied.append({"company_id": company_id, **decision})
+
+    logger.info("sanity.tag_investigator.internal_sweep_done", **stats)
+    return {**stats, "applied_companies": applied}

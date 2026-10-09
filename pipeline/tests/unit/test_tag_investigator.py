@@ -2,7 +2,12 @@ from decimal import Decimal
 
 import pytest
 
-from scrooner_pipeline.sanity.tag_investigator import FIXABLE_CONCEPTS, _reconcile_by_mode, _score_and_decide
+from scrooner_pipeline.sanity.tag_investigator import (
+    FIXABLE_CONCEPTS,
+    _reconcile_by_mode,
+    _score_and_decide,
+    find_internal_tag_preference_candidates,
+)
 
 
 def _candidate(taxonomy="us-gaap", tag="Revenues", value=1000, is_authoritative=True, fact_id=1):
@@ -138,3 +143,104 @@ def test_stale_display_rows_are_dropped_except_without_a_refill_path(concept, ex
         # The drop runs before the baseline copy that refills those rows.
         baseline = next(i for i, s in enumerate(conn.sql) if "on conflict (company_id, canonical_concept_id, period_id) do nothing" in s)
         assert conn.sql.index(drops[0]) < baseline
+
+
+@pytest.mark.unit
+def test_uncovered_periods_fill_from_primary_but_never_with_zero_or_over_preferred():
+    """Flowserve FY2007-2010: the preferred tag has nothing there, the
+    primary has real revenue. The fill must not override a preferred value
+    and must not copy the primary's spurious $0 into an uncovered period."""
+    from scrooner_pipeline.sanity import tag_investigator
+
+    sql = " ".join(tag_investigator._FILL_UNCOVERED_FROM_PRIMARY_SQL.split())
+    assert "on conflict (company_id, canonical_concept_id, period_id) do nothing" in sql
+    assert "f.value <> 0" in sql
+    # Periods after the preferred tag's last one keep the old behaviour.
+    assert "p.end_date > (select max(end_date)" in sql
+    assert "f.company_id = %(company_id)s" in sql
+
+
+@pytest.mark.unit
+class TestFindInternalTagPreferenceCandidates:
+    """Root cause 1 bulk sweep (2026-10-02): pure decision logic for
+    find_internal_tag_preference_candidates(), the same testability
+    discipline _score_and_decide() already has -- no DB access, so the
+    selection bar (majority fix ratio + either a real fix count or deep
+    tag history) can be verified directly against real-shaped scenarios
+    found checking the live population (Commerce Bancshares, Flowserve,
+    and the genuine pre-revenue-biotech false positives it must reject)."""
+
+    def test_picks_alternate_tag_that_fixes_all_zero_periods(self):
+        """Commerce Bancshares' real shape: 'Revenues' is authoritative
+        and genuinely $0 every quarter, while 'InterestAndDividendIncome
+        Operating' is nonzero for every one of those same periods."""
+        zero_periods = {1, 2, 3}
+        by_tag = {
+            ("us-gaap", "Revenues"): {1: 0, 2: 0, 3: 0, 4: 1_000_000},
+            ("us-gaap", "InterestAndDividendIncomeOperating"): {
+                1: 803_838_000,
+                2: 407_331_000,
+                3: 396_507_000,
+            },
+        }
+        result = find_internal_tag_preference_candidates(zero_periods, by_tag)
+        assert result is not None
+        assert result["tag"] == "InterestAndDividendIncomeOperating"
+        assert result["fixes"] == 3
+        assert result["ratio"] == Decimal(1)
+
+    def test_rejects_single_stray_nonzero_value_on_a_thin_sample(self):
+        """A genuine pre-revenue biotech (e.g. ClearSign Technologies'
+        real shape: 1 fix out of 35 zero periods) must NOT get a tag
+        preference from one coincidental nonzero value under an otherwise-
+        unused tag -- that's noise, not a systematic resolve() bug."""
+        zero_periods = set(range(1, 36))  # 35 zero periods
+        by_tag = {
+            ("us-gaap", "InterestAndDividendIncomeOperating"): {1: 50_000},  # only fixes period 1
+        }
+        result = find_internal_tag_preference_candidates(zero_periods, by_tag)
+        assert result is None
+
+    def test_rejects_when_no_alternate_tag_has_any_nonzero_value(self):
+        """The genuinely-pre-revenue case -- no corroborating alternate
+        tag at all, not a bug to fix."""
+        zero_periods = {1, 2, 3}
+        by_tag = {("us-gaap", "Revenues"): {1: 0, 2: 0, 3: 0}}
+        result = find_internal_tag_preference_candidates(zero_periods, by_tag)
+        assert result is None
+
+    def test_accepts_thin_sample_when_the_alternate_tag_has_deep_history(self):
+        """Baker Hughes' real shape: only 1 zero period, but the
+        alternate tag has 16 total periods of real history -- a single
+        clean fix with strong supporting coverage, not a fluke."""
+        zero_periods = {1}
+        by_tag = {
+            ("us-gaap", "RevenueFromContractWithCustomerIncludingAssessedTax"): {
+                i: 1_000_000 + i for i in range(1, 17)
+            },
+        }
+        result = find_internal_tag_preference_candidates(zero_periods, by_tag)
+        assert result is not None
+        assert result["fixes"] == 1
+        assert result["coverage"] == 16
+
+    def test_rejects_below_majority_ratio_even_with_decent_fix_count(self):
+        """Loop Industries' real shape just under the bar: must still
+        require a majority (not just an absolute count) by default."""
+        zero_periods = set(range(1, 11))  # 10 zero periods
+        by_tag = {
+            ("us-gaap", "InterestAndDividendIncomeOperating"): {
+                i: 100_000 for i in range(1, 5)
+            },  # fixes only 4/10 -- below the default 0.5 ratio
+        }
+        result = find_internal_tag_preference_candidates(zero_periods, by_tag)
+        assert result is None
+
+    def test_ties_broken_by_deeper_total_coverage(self):
+        zero_periods = {1, 2}
+        by_tag = {
+            ("us-gaap", "TagA"): {1: 10, 2: 10},  # fixes=2, coverage=2
+            ("us-gaap", "TagB"): {1: 10, 2: 10, 3: 10, 4: 10},  # fixes=2, coverage=4
+        }
+        result = find_internal_tag_preference_candidates(zero_periods, by_tag)
+        assert result["tag"] == "TagB"
