@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from scrooner_pipeline.sanity.period_completeness import CAUSES, classify
+from scrooner_pipeline.sanity.period_completeness import CAUSES, _sec_feed_accessions, classify
 
 
 def cause(**overrides):
@@ -101,3 +101,86 @@ def test_sec_feed_check_overrides_the_inference():
     assert cause(filing_has_facts=False, later_filing_has_facts=False, sec_feed_has_filing=False) == "not_in_sec_feed"
     # In SEC's feed but we have no facts: our miss.
     assert cause(filing_has_facts=False, later_filing_has_facts=True, sec_feed_has_filing=True) == "filing_not_processed"
+
+
+class _FakeResponse:
+    def __init__(self, status_code, payload=None):
+        self.status_code = status_code
+        self._payload = payload or {}
+
+    def json(self):
+        return self._payload
+
+
+class _FakeSECClient:
+    """Returns a queued response per call to .get(), in order -- mirrors
+    _FEED_PROBE_TAGS' own iteration order (dei:EntityCommonStockSharesOutstanding
+    first, then us-gaap:Assets)."""
+
+    def __init__(self, responses):
+        self._responses = list(responses)
+
+    def get(self, _url):
+        return self._responses.pop(0)
+
+
+@pytest.mark.unit
+def test_sec_feed_accessions_treats_an_all_empty_probe_as_unknown_not_absent():
+    """2026-10-09 fix: found live that V. F. Corporation, Monro Inc, and
+    Masco Corp -- all real, large, actively-filing companies -- return an
+    EMPTY units dict from SEC's own companyconcept endpoint for
+    us-gaap:Assets, despite the bulk companyfacts endpoint (and our own
+    already-fetched raw.sec_companyfacts blob) having 100+ real Assets
+    facts for the same CIK. The old code returned on the FIRST 200
+    response even when its own accession set was empty, which single-
+    handedly mislabeled every missing period for a company hitting this
+    SEC-side quirk as "not_in_sec_feed" (data_limit, "not fixable") when
+    the real fix is in our own normalizer, not SEC's data."""
+    client = _FakeSECClient(
+        [
+            _FakeResponse(200, {"units": {"shares": {}}}),
+            _FakeResponse(200, {"units": {"USD": {}}}),
+        ]
+    )
+    assert _sec_feed_accessions(client, "0000103379") is None
+
+
+@pytest.mark.unit
+def test_sec_feed_accessions_falls_through_to_the_second_probe_tag():
+    """A real-but-empty first probe must not short-circuit the second
+    probe tag -- only an all-empty result across every probe is unknown."""
+    client = _FakeSECClient(
+        [
+            _FakeResponse(200, {"units": {"shares": {}}}),
+            _FakeResponse(
+                200,
+                {
+                    "units": {
+                        "USD": [
+                            {"accn": "0000912345-26-000001", "end": "2026-03-31"},
+                        ]
+                    }
+                },
+            ),
+        ]
+    )
+    assert _sec_feed_accessions(client, "0000912345") == {"0000912345-26-000001"}
+
+
+@pytest.mark.unit
+def test_sec_feed_accessions_returns_the_first_nonempty_probe_without_a_second_call():
+    client = _FakeSECClient(
+        [
+            _FakeResponse(
+                200,
+                {
+                    "units": {
+                        "shares": [
+                            {"accn": "0000912345-26-000002", "end": "2026-03-31"},
+                        ]
+                    }
+                },
+            ),
+        ]
+    )
+    assert _sec_feed_accessions(client, "0000912345") == {"0000912345-26-000002"}

@@ -253,6 +253,27 @@ FEED_GRACE_DAYS = 7
 
 
 def _sec_feed_accessions(client: SECClient, cik: str) -> set[str] | None:
+    """Found live 2026-10-09 (cockpit ticket-status deep dive): this used
+    to return on the FIRST 200-status response, even when that response's
+    own `units` dict was EMPTY -- confirmed via direct comparison against
+    SEC's bulk companyfacts endpoint (and our own already-fetched
+    raw.sec_companyfacts blob) for 3 real, large, actively-filing
+    companies (V. F. Corporation, Monro Inc, Masco Corp): SEC's
+    companyconcept single-tag endpoint returns `{"units": {"USD": {}}}`
+    (an empty dict, not even an empty list) for `us-gaap:Assets` for all
+    three, despite the bulk companyfacts endpoint and our own stored
+    payload both having 100+ real Assets facts spanning decades for the
+    same CIK. A real, actively-filing company always has SOME historical
+    accession under at least one of these cover-page-universal tags --
+    an empty result from EVERY probe tag means the companyconcept
+    endpoint itself is unreliable for this CIK, not that the filing is
+    genuinely absent. Fixed: only trust a probe's result if it's
+    non-empty, and keep trying the remaining probe tags before giving up;
+    return None (unknown, not "confirmed absent") only when every probe
+    tag comes back empty or unreachable -- `classify()`'s caller then
+    correctly falls through to "filing_not_processed" (ours to fix) for
+    the real not_in_sec_feed-labeled findings this bug fabricated,
+    instead of the misleading "data_limit" (not fixable) label."""
     for taxonomy, tag in _FEED_PROBE_TAGS:
         url = f"https://data.sec.gov/api/xbrl/companyconcept/CIK{cik}/{taxonomy}/{tag}.json"
         try:
@@ -262,7 +283,9 @@ def _sec_feed_accessions(client: SECClient, cik: str) -> set[str] | None:
         if resp.status_code != 200:
             continue
         units = resp.json().get("units", {})
-        return {row["accn"] for rows in units.values() for row in rows}
+        accessions = {row["accn"] for rows in units.values() for row in rows}
+        if accessions:
+            return accessions
     return None
 
 
