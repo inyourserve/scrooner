@@ -267,3 +267,97 @@ def test_expanded_price_metrics_null_when_market_cap_is_missing(monkeypatch):
     assert rows[METRIC_IDS["fcf_per_share"]]["is_null_reason"] == "missing:fcf_ttm"
     assert rows[METRIC_IDS["share_repurchases_pct_fcf"]]["is_null_reason"] == "missing:share_buybacks_ttm"
     assert rows[METRIC_IDS["dividends_pct_fcf"]]["is_null_reason"] == "missing:dividends_paid_ttm"
+
+
+class _FetchCursor:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
+
+    def execute(self, _sql, _params=()):
+        pass
+
+    def fetchall(self):
+        return self._rows
+
+
+class _FetchConnection:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def cursor(self):
+        return _FetchCursor(self._rows)
+
+
+@pytest.mark.unit
+def test_ebitda_ttm_nulls_when_most_recent_quarter_is_stale():
+    """2026-10-05 fix (doc/planning/51 Finding 22): SITE Centers Corp's real
+    case -- 4 real quarters from 2020, summed and presented as a current
+    "TTM" with no flag at all. Confirmed systemic: 532/3,330 companies (16%)
+    had their "most recent" quarter more than 15 months stale."""
+    from datetime import date, timedelta
+
+    stale_end = date.today() - timedelta(days=400)
+    rows = [
+        (Decimal("10"), stale_end),
+        (Decimal("10"), stale_end - timedelta(days=90)),
+        (Decimal("10"), stale_end - timedelta(days=180)),
+        (Decimal("10"), stale_end - timedelta(days=270)),
+    ]
+    conn = _FetchConnection(rows)
+
+    assert expanded_metrics._ebitda_ttm(conn, 1, 99) is None
+
+
+@pytest.mark.unit
+def test_ebitda_ttm_computes_when_most_recent_quarter_is_fresh():
+    from datetime import date, timedelta
+
+    fresh_end = date.today() - timedelta(days=30)
+    rows = [
+        (Decimal("10"), fresh_end),
+        (Decimal("10"), fresh_end - timedelta(days=90)),
+        (Decimal("10"), fresh_end - timedelta(days=180)),
+        (Decimal("10"), fresh_end - timedelta(days=270)),
+    ]
+    conn = _FetchConnection(rows)
+
+    assert expanded_metrics._ebitda_ttm(conn, 1, 99) == Decimal("40")
+
+
+@pytest.mark.unit
+def test_fcf_ttm_nulls_when_most_recent_quarter_is_stale():
+    """Same staleness guard as _ebitda_ttm -- see that test's docstring."""
+    from datetime import date, timedelta
+
+    stale_end = date.today() - timedelta(days=400)
+    rows = [
+        (Decimal("5"), stale_end),
+        (Decimal("5"), stale_end - timedelta(days=90)),
+        (Decimal("5"), stale_end - timedelta(days=180)),
+        (Decimal("5"), stale_end - timedelta(days=270)),
+    ]
+    conn = _FetchConnection(rows)
+
+    assert expanded_metrics._fcf_ttm(conn, 1, 99) is None
+
+
+@pytest.mark.unit
+def test_fcf_ttm_computes_when_most_recent_quarter_is_fresh():
+    from datetime import date, timedelta
+
+    fresh_end = date.today() - timedelta(days=30)
+    rows = [
+        (Decimal("5"), fresh_end),
+        (Decimal("5"), fresh_end - timedelta(days=90)),
+        (Decimal("5"), fresh_end - timedelta(days=180)),
+        (Decimal("5"), fresh_end - timedelta(days=270)),
+    ]
+    conn = _FetchConnection(rows)
+
+    assert expanded_metrics._fcf_ttm(conn, 1, 99) == Decimal("20")

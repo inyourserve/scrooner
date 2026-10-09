@@ -49,6 +49,19 @@ logger = structlog.get_logger()
 
 FULL_YEAR_MIN_DAYS, FULL_YEAR_MAX_DAYS = 350, 380
 
+# Found live 2026-10-05 (doc/planning/51 Finding 22): _ebitda_ttm()/
+# _fcf_ttm() had zero check on how recent their 4 summed quarters actually
+# are -- a company whose quarterly ebitda/fcf computation simply stopped
+# (data gap, a later stage no longer running for it) kept returning its
+# last-known 4 quarters forever, silently mislabeled "TTM". SITE Centers
+# Corp's real case: 4 quarters from 2020, presented as a current $492.6M
+# TTM EBITDA with no flag. Confirmed systemic: 532/3,330 companies (16%)
+# for ebitda, 640/4,087 (16%) for fcf, more than 15 months stale. A TTM
+# should never be more than one quarter + filing lag stale -- 5 months
+# (150 days) gives real room for a company's own filing cadence/lag
+# without accepting a multi-quarter-old snapshot as "current."
+TTM_STALENESS_THRESHOLD_DAYS = 150
+
 # Same materiality floor as calculate.py's REVENUE_DENOMINATOR_METRICS
 # fix (2026-09-27) -- see ebitda_margin's own computation below for the
 # real, confirmed example (Inhibikase Therapeutics' genuine $1 TTM
@@ -136,7 +149,13 @@ def _ebitda_ttm(
     same trailing-quarter idea as price_metrics.py's TTM concepts, but
     over metric_value (ebitda is a metric, not a canonical_fact concept),
     so it needs its own small loader rather than reusing _ttm_sum's
-    canonical_fact-shaped input directly."""
+    canonical_fact-shaped input directly.
+
+    Guards against staleness (2026-10-05, doc/planning/51 Finding 22):
+    returns None if the most recent of the 4 quarters is more than
+    TTM_STALENESS_THRESHOLD_DAYS old -- without this, a company whose
+    quarterly ebitda computation stopped updating keeps returning its
+    last-known 4 quarters forever, silently mislabeled a current "TTM"."""
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -152,6 +171,9 @@ def _ebitda_ttm(
         rows = cur.fetchall()
     if len(rows) < 4:
         return None
+    most_recent_end = rows[0][1]
+    if (date.today() - most_recent_end).days > TTM_STALENESS_THRESHOLD_DAYS:
+        return None
     return sum(value for value, _end in rows)
 
 
@@ -161,7 +183,8 @@ def _fcf_ttm(
     """Sum of the 4 most recent quarterly `fcf` metric_value rows --
     identical shape to _ebitda_ttm above (fcf is also a metric, not a
     canonical_fact concept), added 2026-09-05 for fcf_per_share/
-    share_repurchases_pct_fcf/dividends_pct_fcf."""
+    share_repurchases_pct_fcf/dividends_pct_fcf. Same staleness guard as
+    _ebitda_ttm above -- see its docstring."""
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -176,6 +199,9 @@ def _fcf_ttm(
         )
         rows = cur.fetchall()
     if len(rows) < 4:
+        return None
+    most_recent_end = rows[0][1]
+    if (date.today() - most_recent_end).days > TTM_STALENESS_THRESHOLD_DAYS:
         return None
     return sum(value for value, _end in rows)
 

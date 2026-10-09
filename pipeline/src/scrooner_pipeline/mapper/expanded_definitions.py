@@ -127,7 +127,19 @@ METRIC_DEFINITIONS: list[tuple[str, str, bool, list[tuple[str, str]]]] = [
         "ebitda",
         "Operating Income + Depreciation & Amortization",
         False,
-        [("operating_income", "add"), ("depreciation_and_amortization", "add")],
+        # Reads the *_resolved concepts (strictly a superset of the raw
+        # ones via baseline-passthrough/fallback merges), not the raw
+        # operating_income/depreciation_and_amortization tags directly --
+        # found live 2026-10-05 (doc/planning/51 Finding 22): a real,
+        # confirmed gap (SITE Centers Corp's raw operating_income
+        # canonical_fact genuinely missing at a period where
+        # operating_income_resolved has the real, conflict-filled value)
+        # was silently nulling ebitda for every company whose
+        # operating_income/D&A only exists via a fallback mechanism.
+        [
+            ("operating_income_resolved", "add"),
+            ("depreciation_and_amortization_resolved", "add"),
+        ],
     ),
     (
         "net_debt_ebitda",
