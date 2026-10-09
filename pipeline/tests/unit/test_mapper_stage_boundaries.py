@@ -96,3 +96,81 @@ def test_calculation_matches_instant_facts_by_end_date_and_scopes_delete(monkeyp
     assert "period_label != 'TTM'" in delete_sql
     assert params == (9, [11, 12])
 
+
+@pytest.mark.unit
+def test_quick_ratio_computes_when_inventory_genuinely_absent(monkeypatch):
+    """2026-10-05 fix (doc/planning/51 Finding 13): quick_ratio's
+    "subtract" role (inventory) is verified-safe to treat as a genuine
+    zero when absent -- most real companies (software, services) hold
+    none. Unlike the ROIC case above, a missing optional component must
+    NOT null the whole metric here."""
+    period_end = date(2025, 9, 27)
+    facts = {
+        "by_period_id": {
+            # current_assets present, inventory absent entirely,
+            # current_liabilities present -- quick_ratio should still
+            # compute as (current_assets - 0) / current_liabilities.
+            1: {10: (Decimal("5000000"), [101])},
+            3: {10: (Decimal("2000000"), [103])},
+        },
+        "by_end_date": {},
+        "periods": {10: (date(2024, 9, 29), period_end, "FY")},
+    }
+    monkeypatch.setattr(calculate, "_load_canonical_facts", lambda _conn, _company: facts)
+    targets = [
+        {
+            "id": 20,
+            "name": "quick_ratio",
+            "inputs": [
+                ("current_assets", 1, "add", False),
+                ("inventory", 2, "subtract", False),
+                ("current_liabilities", 3, "denominator", False),
+            ],
+        },
+    ]
+    conn = MetricConnection()
+
+    stats = calculate.calculate_for_company(conn, 9, targets)
+    by_metric = {row["metric_definition_id"]: row for row in conn.rows}
+
+    assert stats == {"computed": 1, "null": 0}
+    assert by_metric[20]["value"] == Decimal("2.5")  # 5,000,000 / 2,000,000
+
+
+@pytest.mark.unit
+def test_gross_margin_still_nulls_when_cost_of_revenue_absent(monkeypatch):
+    """Confirms the quick_ratio fix is scoped per-metric, not per-shape:
+    gross_margin shares the identical "sum_diff_ratio" shape but its own
+    "subtract" role (cost_of_revenue) is NOT in ZERO_WHEN_ABSENT_CONCEPTS
+    -- a missing cost_of_revenue is almost always a real data gap, not a
+    genuine zero, and must still null the whole metric."""
+    period_end = date(2025, 9, 27)
+    facts = {
+        "by_period_id": {
+            # revenue present, cost_of_revenue absent entirely.
+            1: {10: (Decimal("5000000"), [101])},
+        },
+        "by_end_date": {},
+        "periods": {10: (date(2024, 9, 29), period_end, "FY")},
+    }
+    monkeypatch.setattr(calculate, "_load_canonical_facts", lambda _conn, _company: facts)
+    targets = [
+        {
+            "id": 21,
+            "name": "gross_margin",
+            "inputs": [
+                ("revenue", 1, "add", False),
+                ("cost_of_revenue", 2, "subtract", False),
+                ("revenue", 1, "denominator", False),
+            ],
+        },
+    ]
+    conn = MetricConnection()
+
+    stats = calculate.calculate_for_company(conn, 9, targets)
+    by_metric = {row["metric_definition_id"]: row for row in conn.rows}
+
+    assert stats == {"computed": 0, "null": 1}
+    assert by_metric[21]["value"] is None
+    assert by_metric[21]["is_null_reason"] == "incomplete:subtract"
+

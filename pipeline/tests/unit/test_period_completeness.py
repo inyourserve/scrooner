@@ -63,10 +63,36 @@ def test_every_cause_is_allowed_by_the_migration_and_valid_as_a_finding():
 @pytest.mark.unit
 def test_split_restated_per_share_values_are_not_a_filer_error():
     # Apple FY2019 diluted EPS before and after the 2020 4-for-1 split.
-    assert cause(conflicting_values=[Decimal("11.89"), Decimal("2.97")]) == "conflict_split"
-    assert cause(conflicting_values=[Decimal("-4.0"), Decimal("-1.0")]) == "conflict_split"
-    assert cause(conflicting_values=[Decimal("2.5"), Decimal("1.0")]) == "conflict_material"
-    assert cause(conflicting_values=[Decimal("4.0"), Decimal("-1.0")]) == "conflict_material"
+    # base_concept must be one of SPLIT_AWARE_BASE_CONCEPTS for this
+    # classification to even be attempted -- see the 2026-10-05 fix below.
+    assert cause(conflicting_values=[Decimal("11.89"), Decimal("2.97")], base_concept="diluted_eps") == "conflict_split"
+    assert cause(conflicting_values=[Decimal("-4.0"), Decimal("-1.0")], base_concept="diluted_eps") == "conflict_split"
+    assert cause(conflicting_values=[Decimal("2.5"), Decimal("1.0")], base_concept="diluted_eps") == "conflict_material"
+    assert cause(conflicting_values=[Decimal("4.0"), Decimal("-1.0")], base_concept="diluted_eps") == "conflict_material"
+
+
+@pytest.mark.unit
+def test_conflict_split_is_scoped_to_split_aware_concepts_only():
+    """2026-10-05 fix (doc/planning/51 Finding 4): _is_split_ratio() was being
+    applied to every concept's conflicting values, mislabeling real material
+    disagreements in non-per-share concepts (total_assets, revenue,
+    net_income, etc.) as a harmless "split" whenever the ratio happened to
+    look clean. Palatin Technologies' real ~1000x unit-scale typo is the
+    motivating real-world case -- it must classify as conflict_material,
+    not conflict_split, even though 1000 passes _is_split_ratio()'s own
+    whole-number-ratio check."""
+    # A clean, whole-number ratio (41x) on a non-per-share concept must NOT
+    # be classified as a split -- this is exactly the shape that was wrong.
+    assert cause(conflicting_values=[Decimal("41"), Decimal("1")], base_concept="total_assets") == "conflict_material"
+    assert cause(conflicting_values=[Decimal("1000"), Decimal("1")], base_concept="net_income") == "conflict_material"
+    # No base_concept passed at all (the safe default) must also not
+    # classify as a split.
+    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")]) == "conflict_material"
+    # The legitimate per-share/share-count concepts still classify as a
+    # split when the ratio genuinely looks like one.
+    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")], base_concept="shares_outstanding") == "conflict_split"
+    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")], base_concept="dividends_per_share") == "conflict_split"
+    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")], base_concept="basic_eps") == "conflict_split"
 
 
 @pytest.mark.unit

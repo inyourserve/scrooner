@@ -271,6 +271,33 @@ FORMULA_SHAPES = {
     "cash_returned_to_shareholders": "additive",
 }
 
+# Found live 2026-10-05 (cockpit triage, doc/planning/51): quick_ratio was
+# blocking 2,604 companies (50% of the active population) from a full-metric
+# Screener query -- the single biggest individual blocker found. Root cause:
+# quick_ratio's "subtract" role (inventory) was treated by the generic
+# "every role-concept must resolve" rule (see the 2026-08-16 ROIC comment
+# below) exactly like a REQUIRED input -- but unlike total_debt/
+# stockholders_equity in that ROIC case, a missing `inventory` fact is, for
+# most real companies (software, services, most financials), the CORRECT
+# signal that the company genuinely holds none, not a data gap. The same
+# bug class already fixed once for total_shareholder_yield (2026-09-06,
+# doc/learnings): "a composite metric that sums multiple optional
+# components must treat a genuinely-absent component as $0, never require
+# ALL components non-null."
+#
+# Scoped PER METRIC, not per shape -- `sum_diff_ratio` is shared by 5
+# metrics (gross_margin, fcf_margin, quick_ratio, eps_dilution_spread,
+# net_cash_per_share), and verified live that this fix must NOT generalize
+# blindly: gross_margin's own "subtract" role (cost_of_revenue) is a real,
+# almost-universal line item whose absence is overwhelmingly a genuine
+# data gap, not a correct zero (doc/planning/51's Finding 13 table).
+# net_cash_per_share (total_debt_resolved) and fcf_margin (capex) were
+# explicitly left out here too -- flagged as "ambiguous, needs its own
+# verification" in that same finding, not assumed safe by analogy.
+ZERO_WHEN_ABSENT_CONCEPTS: dict[str, frozenset[str]] = {
+    "quick_ratio": frozenset({"inventory"}),
+}
+
 
 def _load_target_metrics(conn: psycopg.Connection) -> list[dict]:
     with conn.cursor() as cur:
@@ -389,8 +416,15 @@ def calculate_for_company(
         # alone as "invested capital," reporting 346% instead of null. A
         # role is only usable if EVERY concept mapped to it resolved.
         expected_concepts_by_role: dict[str, set[int]] = {}
-        for _name, concept_id, role, _is_instant in inputs:
+        concept_id_to_name: dict[int, str] = {}
+        for name, concept_id, role, _is_instant in inputs:
             expected_concepts_by_role.setdefault(role, set()).add(concept_id)
+            concept_id_to_name[concept_id] = name
+        zero_when_absent_ids = {
+            cid
+            for cid, name in concept_id_to_name.items()
+            if name in ZERO_WHEN_ABSENT_CONCEPTS.get(metric_name, frozenset())
+        }
 
         for period_id in anchor_period_ids:
             start, end, fiscal_period = periods[period_id]
@@ -429,12 +463,21 @@ def calculate_for_company(
             # Drop any role where not every expected concept resolved --
             # a partial summand list must null the whole metric, never
             # silently compute from whichever subset happened to resolve.
+            # Exception, scoped per metric via ZERO_WHEN_ABSENT_CONCEPTS
+            # above: a missing concept that's verified-safe to treat as a
+            # genuine zero (not a data gap) doesn't block the role -- it
+            # simply contributes nothing to the sum, same as if it had
+            # resolved to Decimal(0). Still requires every OTHER (non-
+            # zero-safe) expected concept in that role to resolve.
             incomplete_role = None
             for role, expected in expected_concepts_by_role.items():
-                if found_concepts_by_role.get(role, set()) != expected:
+                missing = expected - found_concepts_by_role.get(role, set())
+                if missing and not missing <= zero_when_absent_ids:
                     incomplete_role = role
                     values_by_role.pop(role, None)
                     break
+                if missing:
+                    values_by_role.setdefault(role, [])
 
             if incomplete_role is not None:
                 value, null_reason = None, f"incomplete:{incomplete_role}"

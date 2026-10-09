@@ -149,10 +149,28 @@ CAUSES: dict[str, tuple[str, str]] = {
 }
 
 
+# Found live 2026-10-05 (cockpit triage, doc/planning/51 Finding 4):
+# _is_split_ratio() was being applied to EVERY concept's conflicting
+# values, with no awareness that only per-share/share-count concepts can
+# legitimately be affected by a stock split. Real dollar-value concepts
+# (total_assets, revenue, net_income, cfo, etc.) were showing up
+# mislabeled "conflict_split" with ratios like 41x, 938x -- real material
+# disagreements (in at least one case, Palatin Technologies' Q4 2019
+# net income, a genuine ~1000x filer unit-scale typo) hidden under an
+# incorrect "harmless split" label. Scoped to the same 4 concepts
+# mapper/dedup_majority_resolver.py's own SPLIT_AWARE_CONCEPTS already
+# treats as legitimately split-sensitive.
+SPLIT_AWARE_BASE_CONCEPTS = frozenset(
+    {"basic_eps", "diluted_eps", "dividends_per_share", "shares_outstanding"}
+)
+
+
 def _is_split_ratio(values: list[Decimal]) -> bool:
     """Pre- and post-split per-share values filed for the same period
     (Apple's 2020 4-for-1: $12.73 vs $3.18 diluted EPS). True when every
-    value is the smallest in magnitude times a whole number >= 2, within 2%."""
+    value is the smallest in magnitude times a whole number >= 2, within 2%.
+    Caller must restrict this to SPLIT_AWARE_BASE_CONCEPTS first -- see
+    that constant's own comment for why."""
     nonzero = [abs(v) for v in values if v != 0]
     if len(nonzero) < 2 or len({v > 0 for v in values if v != 0}) > 1:
         return False
@@ -174,8 +192,14 @@ def classify(
     ytd_facts: int,
     period_kind: str,
     fy_present: bool,
+    base_concept: str = "",
 ) -> str:
-    """The single cause for one missing (company, concept, period) cell."""
+    """The single cause for one missing (company, concept, period) cell.
+    `base_concept` (the CHECK_CONCEPTS base name, e.g. "total_assets")
+    gates whether conflict_split classification is even attempted --
+    see SPLIT_AWARE_BASE_CONCEPTS. Defaults to "" (never split-aware)
+    so any other caller that doesn't pass it keeps the safe, conservative
+    behavior rather than silently becoming split-aware by omission."""
     if not filing_has_facts:
         # Confirmed against SEC when checked; otherwise a later processed
         # filing means the payload was normalized and simply lacked it.
@@ -192,7 +216,7 @@ def classify(
         scale = max(abs(high), abs(low))
         if scale == 0 or (high - low) / scale <= ROUNDING_SPREAD:
             return "conflict_rounding"
-        if _is_split_ratio(conflicting_values):
+        if base_concept in SPLIT_AWARE_BASE_CONCEPTS and _is_split_ratio(conflicting_values):
             return "conflict_split"
         return "conflict_material"
     if period_kind == "Q4" and fy_present:
@@ -444,6 +468,7 @@ def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
             ytd_facts=n_ytd or 0,
             period_kind=kind,
             fy_present=fy_present,
+            base_concept=base,
         )
         detail = {"filing_id": filing_id}
         if in_feed is not None:
