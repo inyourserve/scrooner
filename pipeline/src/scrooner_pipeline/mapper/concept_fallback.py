@@ -75,6 +75,21 @@ DEBT_CURRENT_ALL = ("DebtCurrent",)  # short-term borrowings + current LTD
 DEBT_SHORT_TERM = ("ShortTermBorrowings", "CommercialPaper")
 # Read only as a cross-check (rule 2's tiebreaker), never stored as the value.
 DEBT_CARRYING_CHECK = ("DebtInstrumentCarryingAmount",)
+# Found live 2026-10-05 (doc/planning/51 Finding 16): 337 of 2,640
+# companies missing total_debt via yfinance's own comparison tool use
+# ConvertibleLongTermNotesPayable -- a real, legitimate long-term debt
+# instrument not covered by any category above. Verified coexistence
+# before adding (4,553 real (company, period) pairs): 66% (3,005) have NO
+# other debt tag at all -- a genuine, safe-to-use standalone signal. The
+# other 34% (1,548) coexist with another debt tag and show real evidence
+# of double-counting risk if simply summed in -- e.g. one company's
+# ConvertibleLongTermNotesPayable value exactly equals its own LongTermDebt
+# figure (the same debt tagged twice, a more-granular instrument tag
+# alongside an aggregate one). Added strictly as a LAST-RESORT fallback in
+# compute_total_debt() below -- only reached when every category above
+# found nothing at all, so it can never double-count against a value
+# already captured by another path.
+DEBT_CONVERTIBLE_NOTES_FALLBACK = ("ConvertibleLongTermNotesPayable",)
 TOTAL_DEBT_TAGS = (
     DEBT_ALL_IN
     + DEBT_ALL_IN_LEASE
@@ -84,6 +99,7 @@ TOTAL_DEBT_TAGS = (
     + DEBT_CURRENT_ALL
     + DEBT_SHORT_TERM
     + DEBT_CARRYING_CHECK
+    + DEBT_CONVERTIBLE_NOTES_FALLBACK
 )
 
 # Arithmetic fallback (migration 0047, 2026-09-07): unlike FALLBACK_PAIRS'
@@ -381,6 +397,9 @@ def compute_total_debt(
     lease_all_in = pick(DEBT_ALL_IN_LEASE)
     if lease_all_in is not None:
         return done([lease_all_in], "all_in_incl_leases")
+    convertible_notes = pick(DEBT_CONVERTIBLE_NOTES_FALLBACK)
+    if convertible_notes is not None:
+        return done([convertible_notes], "convertible_notes_fallback")
     return None
 
 

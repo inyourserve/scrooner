@@ -313,6 +313,33 @@ class TestComputeTotalDebt:
         assert compute_total_debt(_debt(ShortTermBorrowings=6117)) is None
         assert compute_total_debt({}) is None
 
+    def test_convertible_notes_used_only_as_a_last_resort(self):
+        # 2026-10-05 fix (doc/planning/51 Finding 16): Orchestra BioMed
+        # Holdings' real debt tag, ConvertibleLongTermNotesPayable -- not
+        # covered by any other category. Verified coexistence before
+        # adding: 66% of real companies with this tag have NO other debt
+        # tag at all (safe, standalone signal); the other 34% coexist with
+        # another debt tag and show real double-counting risk (one
+        # company's ConvertibleLongTermNotesPayable value exactly equalled
+        # its own LongTermDebt figure -- the same debt tagged twice). Must
+        # only ever be used when every other category found nothing.
+        value, _, path = compute_total_debt(
+            _debt(ConvertibleLongTermNotesPayable=1549)
+        )
+        assert value == Decimal("1549")
+        assert path == "convertible_notes_fallback"
+
+    def test_convertible_notes_never_added_alongside_another_debt_tag(self):
+        # The exact double-counting shape found live: a company's
+        # ConvertibleLongTermNotesPayable equalling its own LongTermDebt
+        # figure. Must resolve via the existing LongTermDebt path alone,
+        # never sum the two.
+        value, _, path = compute_total_debt(
+            _debt(LongTermDebt=1982.074, ConvertibleLongTermNotesPayable=1982.074)
+        )
+        assert value == Decimal("1982.074")
+        assert path == "ltd_incl_current+short_term"
+
 
 
 
