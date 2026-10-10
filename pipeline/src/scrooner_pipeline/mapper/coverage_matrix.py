@@ -322,6 +322,35 @@ POPULATION_QUERIES = {
         join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
         where cc.name = 'bdc_total_investment_income'
     """,
+    # Found live 2026-10-10 (doc 50 Phase 4, reconciliation-gap metrics):
+    # inventory_change_reconciliation_gap measured at 45.68% against
+    # real_operating_company (4,818) -- checked whether this was the same
+    # "genuinely doesn't apply" shape already fixed for quick_ratio
+    # (Finding 13, 2026-10-05): 2,686 of 5,216 active companies have
+    # NEVER reported an inventory canonical_fact at all (asset-light
+    # businesses -- software, services, financials), almost exactly the
+    # metric's own missing-population size. accounts_receivable/
+    # accounts_payable checked the same way (1,786/1,694 companies with
+    # zero facts ever) -- a smaller but still real fraction of each
+    # metric's own gap. "Has a fact" (not "has a nonzero fact", unlike
+    # dividend_payer/buyback_company above) is the right test here: the
+    # question is whether the balance-sheet line exists for this company
+    # at all, not whether an activity happened in the most recent period.
+    "has_inventory_company": """
+        select distinct cf.company_id from analytics.canonical_fact cf
+        join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+        where cc.name = 'inventory'
+    """,
+    "has_accounts_receivable_company": """
+        select distinct cf.company_id from analytics.canonical_fact cf
+        join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+        where cc.name = 'accounts_receivable'
+    """,
+    "has_accounts_payable_company": """
+        select distinct cf.company_id from analytics.canonical_fact cf
+        join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+        where cc.name = 'accounts_payable'
+    """,
 }
 
 # capital_return_company is a union of two other named populations rather
@@ -361,6 +390,16 @@ CAPITAL_RETURN_FAMILY_DATA_POINTS = (
     "total_shareholder_yield",
 )
 BDC_FAMILY_DATA_POINTS = ("bdc_total_investment_income",)
+
+# Found live 2026-10-10 (doc 50 Phase 4) -- each reconciliation-gap metric
+# gets its OWN population (not a shared family) since each depends on a
+# genuinely different balance-sheet concept existing at all. See
+# POPULATION_QUERIES' own comment above for the verification evidence.
+RECONCILIATION_GAP_POPULATION_OVERRIDES = {
+    "inventory_change_reconciliation_gap": "has_inventory_company",
+    "ar_change_reconciliation_gap": "has_accounts_receivable_company",
+    "ap_change_reconciliation_gap": "has_accounts_payable_company",
+}
 
 
 def classify_company_populations(conn: psycopg.Connection) -> dict:
@@ -501,6 +540,7 @@ def build_registry(conn: psycopg.Connection) -> dict:
         population_overrides[name] = "capital_return_company"
     for name in BDC_FAMILY_DATA_POINTS:
         population_overrides[name] = "bdc_company"
+    population_overrides.update(RECONCILIATION_GAP_POPULATION_OVERRIDES)
     for row in rows:
         row["applicable_population"] = population_overrides.get(
             row["data_point_name"], "real_operating_company"
