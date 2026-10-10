@@ -162,7 +162,22 @@ def _load_metric_ids(conn: psycopg.Connection) -> dict[str, int]:
             "select metric_name, id from analytics.metric_definition where metric_name = any(%s)",
             (
                 list(GROWTH_METRICS)
-                + ["roic", "roe", "gross_margin", "operating_margin", "net_margin"],
+                + [
+                    "roic",
+                    "roe",
+                    # roa added 2026-10-02: unlike roic/roe, roa never got a
+                    # TTM reconstruction when this function was built -- it
+                    # only ever had calculate.py's FY-anchored row, so it was
+                    # comparing a stale fiscal-year-end snapshot against
+                    # yfinance's rolling trailing-12-month figure (confirmed
+                    # the structural cause of ~29%+ of the sanity check's
+                    # "major" roa findings; the fix mirrors roic/roe exactly,
+                    # same function, same delete-scope widening below).
+                    "roa",
+                    "gross_margin",
+                    "operating_margin",
+                    "net_margin",
+                ],
             ),
         )
         return dict(cur.fetchall())
@@ -642,6 +657,24 @@ def compute_ttm_margins(conn: psycopg.Connection, ciks: set[str]) -> dict:
     return totals
 
 
+def _dedupe_ttm_rows(rows: list[dict]) -> list[dict]:
+    """One row per (metric, period_end, period_label), the table's unique key.
+
+    Two different (fiscal_year, fiscal_period) keys can resolve to the same
+    end date when a company's periods are labelled inconsistently (Vishay has
+    two Q4 spans ending 2009-01-03). Both produced a TTM row for that date and
+    the insert aborted the whole company with a UniqueViolation (found
+    2026-10-03, 2 of 98 companies). Keep the first row, but let a real value
+    replace a null-reason one so a good TTM is never dropped for a bad twin."""
+    kept: dict[tuple, dict] = {}
+    for row in rows:
+        key = (row["metric_definition_id"], row["period_end"], row["period_label"])
+        current = kept.get(key)
+        if current is None or (current["value"] is None and row["value"] is not None):
+            kept[key] = row
+    return list(kept.values())
+
+
 def _compute_ttm_returns_for_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -654,7 +687,12 @@ def _compute_ttm_returns_for_company(
     }
     # Instant facts indexed by end_date for matching against a quarter's own balance-sheet date.
     instant_by_end_date = {}
-    for name in ("total_debt_resolved", "stockholders_equity", "cash_and_equivalents"):
+    for name in (
+        "total_debt_resolved",
+        "stockholders_equity",
+        "cash_and_equivalents",
+        "total_assets",
+    ):
         instant_by_end_date[name] = {
             end: (val, fids)
             for (_fy, _fp), (val, fids, _s, end) in by_concept[name].items()
@@ -666,7 +704,7 @@ def _compute_ttm_returns_for_company(
     } | {k for k in by_concept["net_income"] if k[1] in QUARTER_ORDER}
 
     rows: list[dict] = []
-    for fy, fp in quarter_keys:
+    for fy, fp in sorted(quarter_keys):
         end_date = (
             by_concept["operating_income"].get((fy, fp))
             or by_concept["net_income"].get((fy, fp))
@@ -774,13 +812,50 @@ def _compute_ttm_returns_for_company(
             }
         )
 
+        # ROA (TTM) -- added 2026-10-02, same ttm_net_income already
+        # computed above for ROE, denominated by total_assets at the same
+        # end_date instead of stockholders_equity. Ending-balance (not
+        # average) total_assets, matching ROIC/ROE's own convention --
+        # checked live before shipping: averaging moved the result by only
+        # 1-4 points on real companies, never closed the real gap this fix
+        # targets (a stale FY snapshot vs. yfinance's rolling TTM figure).
+        assets_hit = instant_by_end_date["total_assets"].get(end_date)
+        if ttm_net_income is None or assets_hit is None:
+            roa_value = None
+            roa_reason = (
+                "incomplete:ttm_net_income"
+                if ttm_net_income is None
+                else "incomplete:total_assets"
+            )
+            roa_fids = None
+        elif assets_hit[0] == 0:
+            roa_value, roa_reason, roa_fids = None, "zero_denominator", None
+        else:
+            roa_value = ttm_net_income / assets_hit[0]
+            roa_reason = None
+            roa_fids = fids_ni + list(assets_hit[1])
+
+        rows.append(
+            {
+                "company_id": company_id,
+                "metric_definition_id": metric_ids["roa"],
+                "period_start": start_date,
+                "period_end": end_date,
+                "period_label": "TTM",
+                "value": roa_value,
+                "is_null_reason": roa_reason,
+                "source_fact_ids": roa_fids,
+            }
+        )
+
+    rows = _dedupe_ttm_rows(rows)
     with conn.cursor() as cur:
         cur.execute(
             """
                 delete from analytics.metric_value
                 where company_id = %s and metric_definition_id = any(%s) and period_label = 'TTM'
                 """,
-            (company_id, [metric_ids["roic"], metric_ids["roe"]]),
+            (company_id, [metric_ids["roic"], metric_ids["roe"], metric_ids["roa"]]),
         )
         if rows:
             cur.executemany(
@@ -813,6 +888,7 @@ def compute_ttm_returns(conn: psycopg.Connection, ciks: set[str]) -> dict:
             "total_debt_resolved",
             "stockholders_equity",
             "cash_and_equivalents",
+            "total_assets",
         )
     }
     with conn.cursor() as cur:

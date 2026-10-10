@@ -30,7 +30,7 @@
 #
 # Order matters and mirrors jobs/normalize.py's `golden` command plus the
 # Mapper stages each module's own docstring says must follow resolve-facts:
-# identity -> periods -> units -> facts -> dedupe -> restatements ->
+# identity -> periods -> units -> facts -> dedupe -> restatements -> conflict-latest-filed ->
 # derive-interim-quarters -> derive-q4 -> resolve-facts ->
 # resolve-concept-fallbacks -> calculate -> growth -> ttm-returns ->
 # calculate-expanded-metrics -> calculate-piotroski -> calculate-quality-flags
@@ -45,6 +45,54 @@ export PATH="/opt/homebrew/opt/libxslt/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbi
 cd "$(dirname "$0")/.."
 
 LOOKBACK_DAYS="${1:-10}"
+
+# Status refresh (added 2026-10-02, by direct request -- "manage this list
+# daily... because some company status may be changed"). core.company.status
+# was computed once and never kept current -- `company_master/status.py`'s
+# `update-status` existed but was wired into nothing recurring. This matters
+# for more than freshness in the abstract: the $CIKS query just below this
+# block ALREADY filters `c.status = 'active'`, so a stale status silently
+# changes which companies this whole script (and every population-wide job
+# that scopes to status='active', including mapper/ttm.py's TTM returns and
+# mapper/revenue_resolvers/) ever sees -- the same root shape as the real,
+# already-documented 2026-09-02 incident where 222 active companies sat
+# mislabeled `delisted` for days.
+#
+# Deliberately NARROW, not "any filing in the lookback window" -- an
+# unrestricted identity pass over every recent filer is the EXACT shape that
+# already blew this script's own 90-minute job timeout once (2026-09-19,
+# 2,494 unfiltered CIKs). The real delisting signal, a Form 15/15F-family
+# filing, is rare (2 CIKs in a live 10-day check, not thousands) and never a
+# 10-K/10-Q, so it would never appear in $CIKS's own form-filtered list below
+# -- a company whose last-ever filing is a Form 15 would otherwise never get
+# re-checked by anything recurring. `status.py`'s own DEREGISTRATION_FORMS
+# constant is reused directly here, not re-derived, so this can never drift
+# out of sync with what update-status itself actually checks for.
+DELISTING_CIKS=$(LOOKBACK_DAYS="$LOOKBACK_DAYS" uv run python3 - <<'PY'
+import os
+import psycopg
+from scrooner_pipeline.common.config import settings
+from scrooner_pipeline.company_master.status import DEREGISTRATION_FORMS
+conn = psycopg.connect(settings.database_url)
+cur = conn.cursor()
+cur.execute(
+    """
+    select distinct d.cik
+    from raw.sec_filing_documents d
+    where d.filing_date >= current_date - make_interval(days => %s)
+      and d.form = any(%s)
+    """,
+    (int(os.environ["LOOKBACK_DAYS"]), list(DEREGISTRATION_FORMS)),
+)
+print(','.join(r[0] for r in cur.fetchall()))
+PY
+)
+
+if [ -n "$DELISTING_CIKS" ]; then
+  N_DELISTING=$(echo "$DELISTING_CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
+  echo "reprocess_recent_filers: ${N_DELISTING} companies with a Form 15-family filing in the last ${LOOKBACK_DAYS} days -- ensuring it's normalized before the status check"
+  uv run scrooner-normalize identity --ciks "$DELISTING_CIKS"
+fi
 
 # Sourced from raw.sec_filing_documents, NOT core.filing -- core.filing only
 # exists once the Normalizer's identity stage has already run for a CIK, so
@@ -123,6 +171,19 @@ print(','.join(r[0] for r in cur.fetchall()))
 PY
 )
 
+# Actual status refresh -- merges the 10-K/10-Q filers already selected
+# above (covers "resumed real filing activity," e.g. a stale/unknown company
+# going active again) with $DELISTING_CIKS (covers the Form 15 signal
+# $CIKS's own form filter can never see). Runs before the early-exit below
+# so a day with zero 10-K/10-Q filings but a real Form 15 filing still gets
+# its status checked.
+STATUS_CIKS=$(printf '%s,%s' "$CIKS" "$DELISTING_CIKS" | tr ',' '\n' | awk 'NF' | sort -u | paste -sd, -)
+if [ -n "$STATUS_CIKS" ]; then
+  N_STATUS=$(echo "$STATUS_CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
+  echo "reprocess_recent_filers: refreshing status for ${N_STATUS} companies"
+  uv run scrooner-company-master update-status --ciks "$STATUS_CIKS"
+fi
+
 if [ -z "$CIKS" ]; then
   echo "reprocess_recent_filers: no companies filed in the last ${LOOKBACK_DAYS} days -- nothing to do"
   exit 0
@@ -131,7 +192,9 @@ fi
 N=$(echo "$CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
 echo "reprocess_recent_filers: ${N} companies (filed in the last ${LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
 
-for stage in identity periods units facts dedupe restatements derive-interim-quarters derive-q4; do
+# conflict-latest-filed must follow dedupe: dedupe resets the disagreeing-filings
+# groups it promotes, so skipping it silently reverts them (and re-blocks Q4).
+for stage in identity periods units facts dedupe restatements conflict-latest-filed derive-interim-quarters derive-q4; do
   echo "--- normalize $stage ---"
   uv run scrooner-normalize "$stage" --ciks "$CIKS"
 done

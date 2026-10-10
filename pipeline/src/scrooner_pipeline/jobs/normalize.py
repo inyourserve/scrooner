@@ -17,6 +17,7 @@ from scrooner_pipeline.normalizer.facts import (
 )
 from scrooner_pipeline.normalizer.identity import normalize_identity
 from scrooner_pipeline.normalizer.periods import normalize_periods
+from scrooner_pipeline.normalizer.conflict_latest_filed import resolve_latest_filed
 from scrooner_pipeline.normalizer.restatements import resolve_restatements
 from scrooner_pipeline.normalizer.units import normalize_units
 
@@ -150,11 +151,28 @@ def restatements(
     typer.echo(f"restatements: {stats}")
 
 
+@app.command("conflict-latest-filed")
+def conflict_latest_filed_cmd(
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: golden set)."
+    ),
+) -> None:
+    """Stage 2e-b: where an annual flow fact's filings disagree and Stage 2e
+    left none authoritative, promote the latest-filed one (validated 99.7-100%
+    against SEC Frames for six tags; see normalizer/conflict_latest_filed.py).
+    Run after dedupe/restatements and BEFORE derive-interim-quarters/derive-q4;
+    rerun after any dedupe rerun, which resets these groups."""
+    target_ciks = _parse_ciks(ciks) or _load_golden_ciks()
+    with get_connection() as conn:
+        stats = resolve_latest_filed(conn, target_ciks)
+    typer.echo(f"conflict-latest-filed: {stats}")
+
+
 @app.command()
 def errors(
     stage: str = typer.Option(
         None,
-        help="Restrict to one stage (identity, periods, units, facts, dedupe, restatements, derive_interim_quarters, derive_q4).",
+        help="Restrict to one stage (identity, periods, units, facts, dedupe, restatements, conflict_latest_filed, derive_interim_quarters, derive_q4).",
     ),
     unresolved_only: bool = typer.Option(
         True, help="Only print rows with resolved=false."
