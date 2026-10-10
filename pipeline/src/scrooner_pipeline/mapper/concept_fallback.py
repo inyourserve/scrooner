@@ -868,6 +868,7 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
     logger.info("concept_fallback.employee_count_resolved_done", **stats)
     return stats
 
+
 # Root-cause-2/3 revenue fixes (collaborative-arrangement revenue,
 # net-lease REIT income) moved to mapper/revenue_resolvers/ on 2026-10-02
 # -- revenue-specific resolution strategies now live in that package's

@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     @classmethod
     def _add_keepalives(cls, value: str) -> str:
         return with_keepalives(value)
+
     supabase_url: str
     supabase_service_role_key: str
     sec_user_agent: str

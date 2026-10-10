@@ -479,13 +479,21 @@ def _assemble_statement(rows: list[dict], statement: str, frequency: str) -> dic
     period-key dedup, same sort, same null-filling for a period a given
     line has no value for."""
     if frequency == "annual":
-        matching = [r for r in rows if r["statement"] == statement and (r["fiscal_period"] is None or r["fiscal_period"] == "FY")]
+        matching = [
+            r
+            for r in rows
+            if r["statement"] == statement
+            and (r["fiscal_period"] is None or r["fiscal_period"] == "FY")
+        ]
     else:
         matching = [
             r
             for r in rows
             if r["statement"] == statement
-            and (r["fiscal_period"] is None or r["fiscal_period"] in ("Q1", "Q2", "Q3", "Q4"))
+            and (
+                r["fiscal_period"] is None
+                or r["fiscal_period"] in ("Q1", "Q2", "Q3", "Q4")
+            )
         ]
 
     period_map: dict[str, dict] = {}
@@ -503,7 +511,9 @@ def _assemble_statement(rows: list[dict], statement: str, frequency: str) -> dic
             }
             line_map[display_order]["values"][key] = row["value"]
 
-    ordered_period_items = sorted(period_map.items(), key=lambda kv: kv[1]["period_end"])
+    ordered_period_items = sorted(
+        period_map.items(), key=lambda kv: kv[1]["period_end"]
+    )
     period_keys = [k for k, _ in ordered_period_items]
     periods = [p for _, p in ordered_period_items]
     lines = [
@@ -555,8 +565,12 @@ def get_company_page_data(conn: psycopg.Connection, ticker: str) -> dict | None:
     return {
         "company": company,
         "metrics": {m["metric_name"]: m for m in metrics},
-        "quarterlyResults": _assemble_statement(statements, "income_statement", "quarterly"),
-        "incomeStatement": _assemble_statement(statements, "income_statement", "annual"),
+        "quarterlyResults": _assemble_statement(
+            statements, "income_statement", "quarterly"
+        ),
+        "incomeStatement": _assemble_statement(
+            statements, "income_statement", "annual"
+        ),
         "balanceSheet": _assemble_statement(statements, "balance_sheet", "annual"),
         "cashFlow": _assemble_statement(statements, "cash_flow", "annual"),
         "filings": filings,

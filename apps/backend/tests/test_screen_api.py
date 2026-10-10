@@ -115,12 +115,21 @@ def test_nl_vocabulary_exposes_the_real_parser_alias_tables():
     assert response.status_code == 200
     body = response.json()
     assert {"metrics", "operators", "sectors"} == body.keys()
-    metric_phrases = {entry["phrase"]: entry["metric_names"] for entry in body["metrics"]}
+    metric_phrases = {
+        entry["phrase"]: entry["metric_names"] for entry in body["metrics"]
+    }
     assert metric_phrases["return on equity"] == ["roe"]
-    assert set(metric_phrases["revenue growth"]) == {"revenue_growth_yoy", "revenue_growth_3y_cagr"}
-    operator_phrases = {entry["phrase"]: entry["operator"] for entry in body["operators"]}
+    assert set(metric_phrases["revenue growth"]) == {
+        "revenue_growth_yoy",
+        "revenue_growth_3y_cagr",
+    }
+    operator_phrases = {
+        entry["phrase"]: entry["operator"] for entry in body["operators"]
+    }
     assert operator_phrases["above"] == ">"
-    sector_phrases = {entry["phrase"]: (entry["field"], entry["value"]) for entry in body["sectors"]}
+    sector_phrases = {
+        entry["phrase"]: (entry["field"], entry["value"]) for entry in body["sectors"]
+    }
     assert sector_phrases["technology companies"] == ("sector", "Technology")
 
 

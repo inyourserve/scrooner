@@ -546,7 +546,8 @@ def derive_interim_quarters_for_company(
             candidates = [
                 c
                 for c in by_span.get("UNLABELED", [])
-                if c["start_date"] == half["start_date"] and c["end_date"] < half["end_date"]
+                if c["start_date"] == half["start_date"]
+                and c["end_date"] < half["end_date"]
             ]
             if len(candidates) == 1:
                 q1 = candidates[0]

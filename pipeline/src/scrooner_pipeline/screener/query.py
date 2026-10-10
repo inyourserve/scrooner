@@ -379,7 +379,9 @@ def run_query(
         )
 
     ranked = [p for p in query.metric_predicates if p.operator in RANKED_OPERATORS]
-    non_ranked = [p for p in query.metric_predicates if p.operator not in RANKED_OPERATORS]
+    non_ranked = [
+        p for p in query.metric_predicates if p.operator not in RANKED_OPERATORS
+    ]
     excluded_missing_data: dict[int, dict] = {}
     exclusion_detail = None
     metric_names_to_show = _metric_names_to_show(query)

@@ -59,10 +59,10 @@ _STRUCTURAL_GAP_REASONS: dict[str, str] = {
     "pre_revenue_mining_exploration": "Pre-production exploration miner -- genuinely has no revenue yet.",
     "passthrough_trust": "Royalty/pass-through trust -- not an operating business in the usual sense.",
     "passthrough_commodity_trust": "Commodity/crypto ETF trust (e.g. a gold or bitcoin trust) -- pays sponsor fees, earns no revenue.",
-    "bank_interest_income_not_revenue": "Bank/savings institution -- reports net interest income, not a single \"Revenue\" line.",
-    "reit_net_interest_income_not_revenue": "Mortgage REIT -- earns net interest income, not a single \"Revenue\" line.",
-    "financial_institution_interest_income_not_revenue": "Financial institution -- reports interest/investment income, not a single \"Revenue\" line.",
-    "bdc_reports_investment_income_not_revenue": "Business Development Company -- reports total investment income, not a \"Revenue\" line.",
+    "bank_interest_income_not_revenue": 'Bank/savings institution -- reports net interest income, not a single "Revenue" line.',
+    "reit_net_interest_income_not_revenue": 'Mortgage REIT -- earns net interest income, not a single "Revenue" line.',
+    "financial_institution_interest_income_not_revenue": 'Financial institution -- reports interest/investment income, not a single "Revenue" line.',
+    "bdc_reports_investment_income_not_revenue": 'Business Development Company -- reports total investment income, not a "Revenue" line.',
     "foreign_private_issuer_sparse_xbrl": "Foreign private issuer -- SEC's own data for this filer type is sparse by design (20-F/40-F, not a 10-K).",
     "coregistrant_subsidiary_sparse_sec_xbrl": "Wholly-owned subsidiary filer -- its real financials are consolidated into its parent's filing, not its own.",
 }
@@ -70,7 +70,11 @@ _STRUCTURAL_GAP_REASONS: dict[str, str] = {
 
 def _friendly_note(gap_reason: str | None, not_applicable: bool) -> str:
     if gap_reason is None:
-        return "No reason recorded yet -- a genuine, uninvestigated gap." if not not_applicable else "Not applicable to this company."
+        return (
+            "No reason recorded yet -- a genuine, uninvestigated gap."
+            if not not_applicable
+            else "Not applicable to this company."
+        )
     if gap_reason in _STRUCTURAL_GAP_REASONS:
         return _STRUCTURAL_GAP_REASONS[gap_reason]
     if gap_reason.startswith("missing:"):
@@ -84,7 +88,9 @@ def _friendly_note(gap_reason: str | None, not_applicable: bool) -> str:
     if gap_reason == "non_positive_growth_not_meaningful":
         return "Growth rate not meaningful (negative or zero base)."
     if gap_reason == "negative_ratio_undefined_cagr":
-        return "CAGR undefined (a negative starting value makes compounding meaningless)."
+        return (
+            "CAGR undefined (a negative starting value makes compounding meaningless)."
+        )
     if gap_reason.startswith("immaterial_"):
         return "Base value too small/near-zero for this ratio to be meaningful."
     # Fallback: show the raw code, de-slugged, rather than hide it.
@@ -140,13 +146,17 @@ def summarize_company(conn: psycopg.Connection, company_id: int) -> dict:
                 "data_point_name": name,
                 "data_point_type": dp_type,
                 "status": status_label,
-                "note": None if status_label == "present" else _friendly_note(gap_reason, status_label == "not_applicable"),
+                "note": None
+                if status_label == "present"
+                else _friendly_note(gap_reason, status_label == "not_applicable"),
             }
         )
 
     applicable_total = counts["present"] + counts["gap"]
     coverage_pct = (
-        round(100 * counts["present"] / applicable_total, 1) if applicable_total else None
+        round(100 * counts["present"] / applicable_total, 1)
+        if applicable_total
+        else None
     )
 
     return {
@@ -205,7 +215,9 @@ def summarize_population(conn: psycopg.Connection) -> list[dict]:
     result = []
     for company_id, name, cik, present, gap, not_applicable in rows:
         applicable_total = present + gap
-        coverage_pct = round(100 * present / applicable_total, 1) if applicable_total else None
+        coverage_pct = (
+            round(100 * present / applicable_total, 1) if applicable_total else None
+        )
         result.append(
             {
                 "company_id": company_id,
@@ -244,7 +256,9 @@ def render_markdown_company(summary: dict) -> str:
     return "\n".join(lines)
 
 
-def render_markdown_population(rows: list[dict], limit: int = 50, worst_first: bool = True) -> str:
+def render_markdown_population(
+    rows: list[dict], limit: int = 50, worst_first: bool = True
+) -> str:
     ranked = sorted(
         (r for r in rows if r["coverage_pct"] is not None),
         key=lambda r: r["coverage_pct"],

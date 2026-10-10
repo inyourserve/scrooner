@@ -762,9 +762,7 @@ def find_internal_tag_preference_candidates(
     best: tuple[int, int, str, str] | None = None
     for (taxonomy, tag), period_map in by_tag.items():
         fixes = sum(
-            1
-            for pid in zero_period_ids
-            if period_map.get(pid) not in (None, 0)
+            1 for pid in zero_period_ids if period_map.get(pid) not in (None, 0)
         )
         if fixes == 0:
             continue

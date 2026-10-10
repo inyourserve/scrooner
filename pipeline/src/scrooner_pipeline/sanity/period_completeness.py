@@ -216,7 +216,9 @@ def classify(
         scale = max(abs(high), abs(low))
         if scale == 0 or (high - low) / scale <= ROUNDING_SPREAD:
             return "conflict_rounding"
-        if base_concept in SPLIT_AWARE_BASE_CONCEPTS and _is_split_ratio(conflicting_values):
+        if base_concept in SPLIT_AWARE_BASE_CONCEPTS and _is_split_ratio(
+            conflicting_values
+        ):
             return "conflict_split"
         return "conflict_material"
     if period_kind == "Q4" and fy_present:

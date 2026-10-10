@@ -81,9 +81,13 @@ def test_get_cached_run_lookup_is_one_pipelined_round_trip(monkeypatch):
             calls.append(list(self.queued))
             return ["run-1", None]
 
-    monkeypatch.setattr(cache._client, "pipeline", lambda transaction=True: FakePipeline())
+    monkeypatch.setattr(
+        cache._client, "pipeline", lambda transaction=True: FakePipeline()
+    )
 
-    run_id, result = cache.get_cached_run_lookup("user-a", "query-hash", "ROE above 20%")
+    run_id, result = cache.get_cached_run_lookup(
+        "user-a", "query-hash", "ROE above 20%"
+    )
 
     assert run_id == "run-1"
     assert result is None
@@ -119,7 +123,9 @@ def test_set_cached_run_write_is_one_pipelined_round_trip_and_round_trips(monkey
                 stored[key] = value
             executed_batches.append(len(self.queued))
 
-    monkeypatch.setattr(cache._client, "pipeline", lambda transaction=True: FakePipeline())
+    monkeypatch.setattr(
+        cache._client, "pipeline", lambda transaction=True: FakePipeline()
+    )
     monkeypatch.setattr(cache._client, "get", lambda key: stored.get(key))
 
     cache.set_cached_run_write(
@@ -132,7 +138,9 @@ def test_set_cached_run_write_is_one_pipelined_round_trip_and_round_trips(monkey
         page={"run_id": "run-1", "items": []},
     )
 
-    assert executed_batches == [3], "result + run-id pointer + first page, one round trip"
+    assert executed_batches == [3], (
+        "result + run-id pointer + first page, one round trip"
+    )
     assert cache.get_cached_result("query-hash") == {"matched": []}
     assert cache.get_cached_run_page("user-a", "run-1", 50, None) == {
         "run_id": "run-1",
@@ -155,7 +163,9 @@ def test_set_cached_run_write_skips_result_when_already_cached(monkeypatch):
         def execute(self):
             executed_batches.append(len(self.queued))
 
-    monkeypatch.setattr(cache._client, "pipeline", lambda transaction=True: FakePipeline())
+    monkeypatch.setattr(
+        cache._client, "pipeline", lambda transaction=True: FakePipeline()
+    )
 
     cache.set_cached_run_write(
         query_hash="query-hash",

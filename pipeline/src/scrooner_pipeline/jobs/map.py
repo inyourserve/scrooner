@@ -697,7 +697,9 @@ def company_coverage_cmd(
 @app.command("company-coverage-report")
 def company_coverage_report_cmd(
     limit: int = typer.Option(50, "--limit"),
-    best: bool = typer.Option(False, "--best", help="Rank best-covered first instead of worst."),
+    best: bool = typer.Option(
+        False, "--best", help="Rank best-covered first instead of worst."
+    ),
 ) -> None:
     """2026-10-03: population-wide ranking of the same 3-state coverage
     used by company-coverage, one row per active company. Worst-first by

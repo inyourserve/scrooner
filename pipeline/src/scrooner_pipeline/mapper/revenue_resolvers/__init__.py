@@ -108,7 +108,11 @@ def run_all(conn: psycopg.Connection, *, include_parser: bool = False) -> dict:
     results: dict[str, dict] = {}
     for name, (module, _description) in RESOLVER_REGISTRY.items():
         if name == "rendered_report_parser" and not include_parser:
-            logger.info("revenue_resolvers.skipped", resolver=name, reason="include_parser=False")
+            logger.info(
+                "revenue_resolvers.skipped",
+                resolver=name,
+                reason="include_parser=False",
+            )
             continue
         logger.info("revenue_resolvers.starting", resolver=name)
         stats = module.run(conn)

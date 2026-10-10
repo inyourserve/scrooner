@@ -57,7 +57,9 @@ SAFE_CONCEPTS: list[tuple[str, str]] = [
     ("dividends_per_share", "dividends_per_share_resolved"),
 ]
 
-_TOLERANCE = Decimal("0.005")  # 0.5% relative -- trivial rounding variants count as one vote
+_TOLERANCE = Decimal(
+    "0.005"
+)  # 0.5% relative -- trivial rounding variants count as one vote
 
 # Concepts where a forward stock split SHRINKS the reported value (a 2-for-1
 # split halves EPS) -- confirmed live 2026-10-03 on Nike: two "disagreeing"
@@ -85,18 +87,24 @@ SPLIT_AWARE_CONCEPTS: dict[str, str] = {
     "dividends_per_share": "shrinks",
     "shares_outstanding": "grows",
 }
-_SPLIT_RATIO_TOLERANCE = Decimal("0.02")  # 2% -- wider than _TOLERANCE since this compares
+_SPLIT_RATIO_TOLERANCE = Decimal(
+    "0.02"
+)  # 2% -- wider than _TOLERANCE since this compares
 # a ratio of two already-independently-rounded filed figures, not the figures themselves
 
 
 def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
     with conn.cursor() as cur:
-        cur.execute("select id from analytics.canonical_concept where name = %s", (name,))
+        cur.execute(
+            "select id from analytics.canonical_concept where name = %s", (name,)
+        )
         row = cur.fetchone()
         return row[0] if row else None
 
 
-def _mapped_concept_ids(conn: psycopg.Connection, canonical_concept_id: int) -> list[int]:
+def _mapped_concept_ids(
+    conn: psycopg.Connection, canonical_concept_id: int
+) -> list[int]:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -110,7 +118,9 @@ def _mapped_concept_ids(conn: psycopg.Connection, canonical_concept_id: int) -> 
         return [r[0] for r in cur.fetchall()]
 
 
-def _load_split_ratios(conn: psycopg.Connection, company_ids: list[int]) -> dict[int, list[Decimal]]:
+def _load_split_ratios(
+    conn: psycopg.Connection, company_ids: list[int]
+) -> dict[int, list[Decimal]]:
     """company_id -> list of real, SEC-tag-sourced split ratios (one entry
     per detected split event -- a company with 2 splits gets 2 entries, so
     callers can also try their product for a period predating both)."""
@@ -167,7 +177,9 @@ def _split_reconcile(
     for v in values:
         if v == anchor:
             continue
-        larger, smaller = (abs(v), abs(anchor)) if abs(v) > abs(anchor) else (abs(anchor), abs(v))
+        larger, smaller = (
+            (abs(v), abs(anchor)) if abs(v) > abs(anchor) else (abs(anchor), abs(v))
+        )
         ratio = larger / smaller
         if not any(abs(ratio - c) / c <= _SPLIT_RATIO_TOLERANCE for c in candidates):
             return None  # at least one pair doesn't reconcile -- genuine disagreement
@@ -267,7 +279,13 @@ def resolve_majority_vote_for_concept(
         else {}
     )
 
-    stats = {"considered": len(holes), "fixed": 0, "fixed_via_split": 0, "no_majority": 0, "errored": 0}
+    stats = {
+        "considered": len(holes),
+        "fixed": 0,
+        "fixed_via_split": 0,
+        "no_majority": 0,
+        "errored": 0,
+    }
     CHUNK_SIZE = 1000
     pending: list[dict] = []
 
@@ -312,7 +330,9 @@ def resolve_majority_vote_for_concept(
                 fid
                 for fid, v in fact_rows
                 if via_split
-                or abs(Decimal(str(v)) - best_value) / max(abs(best_value), Decimal("1")) <= _TOLERANCE
+                or abs(Decimal(str(v)) - best_value)
+                / max(abs(best_value), Decimal("1"))
+                <= _TOLERANCE
             ]
             if via_split:
                 stats["fixed_via_split"] += 1
@@ -334,11 +354,19 @@ def resolve_majority_vote_for_concept(
                 exc_info=True,
             )
             stats["errored"] += 1
-            conn = safe_rollback(conn, stage="dedup_majority_resolver", cik=str(company_id))
+            conn = safe_rollback(
+                conn, stage="dedup_majority_resolver", cik=str(company_id)
+            )
         if len(pending) >= CHUNK_SIZE:
             _flush(pending)
             pending = []
-            logger.info("dedup_majority_resolver.progress", concept=concept_name, done=i, total=len(holes), **stats)
+            logger.info(
+                "dedup_majority_resolver.progress",
+                concept=concept_name,
+                done=i,
+                total=len(holes),
+                **stats,
+            )
     _flush(pending)
     logger.info("dedup_majority_resolver.concept_done", concept=concept_name, **stats)
     return stats
@@ -347,5 +375,7 @@ def resolve_majority_vote_for_concept(
 def resolve_all_safe_concepts(conn: psycopg.Connection) -> dict:
     results = {}
     for concept_name, resolved_name in SAFE_CONCEPTS:
-        results[concept_name] = resolve_majority_vote_for_concept(conn, concept_name, resolved_name)
+        results[concept_name] = resolve_majority_vote_for_concept(
+            conn, concept_name, resolved_name
+        )
     return results

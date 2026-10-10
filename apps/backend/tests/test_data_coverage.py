@@ -78,7 +78,10 @@ class TestCompanyCoverageEndpoint:
         monkeypatch.setattr(
             data_coverage,
             "summarize_company",
-            lambda conn, company_id: {"company_id": company_id, "company_name": "Visa Inc."},
+            lambda conn, company_id: {
+                "company_id": company_id,
+                "company_name": "Visa Inc.",
+            },
         )
         result = data_coverage.get_company_coverage(ticker="V", _="user-a")
         assert result["company_id"] == 5718

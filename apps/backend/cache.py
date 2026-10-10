@@ -147,7 +147,9 @@ def set_cached_run_write(
     try:
         pipe = _client.pipeline(transaction=False)
         if result is not None:
-            pipe.set(_key(query_hash), json.dumps(result, default=_default), ex=TTL_SECONDS)
+            pipe.set(
+                _key(query_hash), json.dumps(result, default=_default), ex=TTL_SECONDS
+            )
         pipe.set(_run_key(user_id, query_hash, query_text), run_id, ex=TTL_SECONDS)
         pipe.set(
             _run_page_key(user_id, run_id, page_size, None),
