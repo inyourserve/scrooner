@@ -336,6 +336,13 @@ DIVIDEND_FAMILY_DATA_POINTS = (
     "dividends_paid",
     "dividends_paid_resolved",
     "dividends_per_share",
+    # Found live 2026-10-10 (doc 50 Phase 4): dividends_per_share_resolved
+    # -- the _resolved display concept the company page actually reads --
+    # was missing from this list, so it measured against all 4,818 real
+    # operating companies (41.10%) instead of the real 1,955 dividend-
+    # payer population its own unresolved sibling already uses correctly
+    # (101.28%). Same bug class already fixed once for dividend_yield.
+    "dividends_per_share_resolved",
     "dividend_growth_streak_years",
     "dividend_yield",
     "dps_growth_yoy",
