@@ -131,14 +131,23 @@ jobs:
           node-version: "22"
           cache: npm
           cache-dependency-path: apps/app/package-lock.json
+      # Each step below is `if: always()`: a failure in one used to skip every
+      # later step, so mypy and both dependency audits produced no signal at all
+      # for as long as Ruff failed (found 2026-10-10: 93 mypy errors, 3 urllib3
+      # advisories, and 1 critical + 2 high npm advisories were all hidden).
+      # --no-emit-project: the exported `-e .` line made pip-audit fail to install.
       - name: Ruff formatting debt
+        if: always()
         run: uvx ruff format --check pipeline/src apps/backend
       - name: Python type analysis
+        if: always()
         run: uvx mypy --ignore-missing-imports --follow-imports=skip pipeline/src apps/backend
       - name: Export and audit pipeline dependencies
+        if: always()
         run: |
-          uv export --project pipeline --locked --no-dev --format requirements-txt --output-file /tmp/pipeline-requirements.txt
+          uv export --project pipeline --locked --no-dev --no-emit-project --format requirements-txt --output-file /tmp/pipeline-requirements.txt
           uvx pip-audit --requirement /tmp/pipeline-requirements.txt
       - name: Audit frontend dependencies
+        if: always()
         working-directory: apps/app
         run: npm audit --omit=dev
