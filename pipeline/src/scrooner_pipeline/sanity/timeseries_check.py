@@ -35,6 +35,7 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.db.connection import run_write_with_reconnect
 from scrooner_pipeline.yfinance_financials.line_item_map import CONCEPT_FOR_COMPARISON
 
 logger = structlog.get_logger()
@@ -259,20 +260,23 @@ def run_concept(
         stats[row["severity"]] += 1
         findings.append(row)
 
-    with conn.cursor() as cur:
-        if company_id is None:
-            cur.execute(
-                "delete from analytics.timeseries_outlier_check where canonical_concept_id = %s",
-                (concept_id,),
-            )
-        else:
-            cur.execute(
-                "delete from analytics.timeseries_outlier_check where canonical_concept_id = %s and company_id = %s",
-                (concept_id, company_id),
-            )
-        if findings:
-            cur.executemany(_UPSERT_SQL, findings)
-    conn.commit()
+    def _write(write_conn: psycopg.Connection) -> None:
+        with write_conn.cursor() as cur:
+            if company_id is None:
+                cur.execute(
+                    "delete from analytics.timeseries_outlier_check where canonical_concept_id = %s",
+                    (concept_id,),
+                )
+            else:
+                cur.execute(
+                    "delete from analytics.timeseries_outlier_check where canonical_concept_id = %s and company_id = %s",
+                    (concept_id, company_id),
+                )
+            if findings:
+                cur.executemany(_UPSERT_SQL, findings)
+        write_conn.commit()
+
+    run_write_with_reconnect(conn, _write, stage="timeseries_check")
 
     logger.info(
         "timeseries_check.done", concept=concept_name, company_id=company_id, **stats

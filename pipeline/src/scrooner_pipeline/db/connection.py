@@ -47,3 +47,49 @@ def run_tolerating_exit_commit_failure(
     except psycopg.OperationalError:
         logger.warning(f"{stage}.exit_commit_failed", result=result)
     return result
+
+
+def run_write_with_reconnect(
+    conn: psycopg.Connection,
+    write: Callable[[psycopg.Connection], Any],
+    *,
+    stage: str,
+    attempts: int = 3,
+) -> Any:
+    """Runs `write(conn)`, retrying on a FRESH connection if the pooler drops
+    the original mid-write.
+
+    For the "compute for minutes, then write everything in one transaction"
+    shape: the connection sits idle (or reading) through the computation, and
+    by the time the bulk `executemany` runs the pooler has killed it
+    ("SSL SYSCALL error: Connection timed out"). Found live 2026-10-09 in
+    three nightly jobs at once -- the screener snapshot build, the time-series
+    check and the plausibility check -- each of which failed the whole job.
+
+    `write` MUST be safe to repeat: one transaction that clears what it is
+    about to insert (all three are delete-then-insert), so a half-finished
+    attempt can neither double-write nor leave a partial result behind.
+    The caller's connection is used for the first attempt and never closed
+    here; connections this function opens are always closed.
+    """
+    attempt_conn = conn
+    for attempt in range(1, attempts + 1):
+        try:
+            return write(attempt_conn)
+        except psycopg.OperationalError as exc:
+            logger.warning(
+                f"{stage}.write_retry",
+                attempt=attempt,
+                of=attempts,
+                error=str(exc)[:200],
+            )
+            if attempt == attempts:
+                raise
+        finally:
+            if attempt_conn is not conn:
+                try:
+                    attempt_conn.close()
+                except Exception:
+                    pass
+        attempt_conn = psycopg.connect(settings.database_url)
+    raise AssertionError("unreachable")  # pragma: no cover

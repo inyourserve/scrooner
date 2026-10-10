@@ -46,6 +46,7 @@ import psycopg
 import structlog
 from psycopg import sql
 
+from scrooner_pipeline.db.connection import run_write_with_reconnect
 from scrooner_pipeline.screener.resolve import resolve_most_recent_values
 
 logger = structlog.get_logger()
@@ -188,6 +189,54 @@ def _prune_old_versions(cur: psycopg.Cursor, current_version: int) -> int:
     return cur.rowcount
 
 
+WRITE_ATTEMPTS = 3
+
+
+def _write_snapshot(
+    conn: psycopg.Connection,
+    rows: list[tuple],
+    insert_statement: sql.Composed,
+    dataset_version: int,
+) -> int:
+    """The whole write as ONE transaction: clear this version, insert every
+    row, publish the version, prune old versions. Safe to repeat -- a failed
+    attempt rolls back (or, on a dead connection, never commits), and the
+    leading delete clears any rows an earlier attempt managed to land."""
+    with conn.cursor() as cur:
+        # Rows for this exact version can only exist from an earlier,
+        # crashed-then-committed attempt; clearing them keeps a rerun safe.
+        cur.execute(
+            "delete from analytics.company_screening_snapshot where dataset_version = %s",
+            (dataset_version,),
+        )
+        for start in range(0, len(rows), INSERT_BATCH_SIZE):
+            cur.executemany(insert_statement, rows[start : start + INSERT_BATCH_SIZE])
+        cur.execute(
+            "update analytics.screening_dataset_version set version = %s, updated_at = now() where id = true",
+            (dataset_version,),
+        )
+        pruned = _prune_old_versions(cur, dataset_version)
+    conn.commit()
+    return pruned
+
+
+def _write_snapshot_with_retry(
+    conn: psycopg.Connection,
+    rows: list[tuple],
+    insert_statement: sql.Composed,
+    dataset_version: int,
+) -> int:
+    """The snapshot write, retried on a fresh connection if the pooler drops
+    it (found live 2026-10-09: the nightly rebuild died mid-insert and the
+    screener stayed on a stale snapshot)."""
+    return run_write_with_reconnect(
+        conn,
+        lambda c: _write_snapshot(c, rows, insert_statement, dataset_version),
+        stage="screener.snapshot",
+        attempts=WRITE_ATTEMPTS,
+    )
+
+
 def build_snapshot(conn: psycopg.Connection) -> dict:
     id_to_name = _load_all_metric_definitions(conn)
     metric_names = sorted(id_to_name.values())
@@ -251,21 +300,7 @@ def build_snapshot(conn: psycopg.Connection) -> dict:
                 )
         rows.append(tuple(row))
 
-    with conn.cursor() as cur:
-        # Rows for this exact version can only exist from an earlier,
-        # crashed-then-committed attempt; clearing them keeps a rerun safe.
-        cur.execute(
-            "delete from analytics.company_screening_snapshot where dataset_version = %s",
-            (dataset_version,),
-        )
-        for start in range(0, len(rows), INSERT_BATCH_SIZE):
-            cur.executemany(insert_statement, rows[start : start + INSERT_BATCH_SIZE])
-        cur.execute(
-            "update analytics.screening_dataset_version set version = %s, updated_at = now() where id = true",
-            (dataset_version,),
-        )
-        pruned = _prune_old_versions(cur, dataset_version)
-    conn.commit()
+    pruned = _write_snapshot_with_retry(conn, rows, insert_statement, dataset_version)
 
     logger.info(
         "screener.snapshot.built",

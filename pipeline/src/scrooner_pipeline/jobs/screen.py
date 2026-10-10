@@ -10,7 +10,10 @@ from decimal import Decimal
 import structlog
 import typer
 
-from scrooner_pipeline.db.connection import get_connection
+from scrooner_pipeline.db.connection import (
+    get_connection,
+    run_tolerating_exit_commit_failure,
+)
 from scrooner_pipeline.screener.query import run_query
 from scrooner_pipeline.screener.schema import ScreenQuery
 from scrooner_pipeline.screener.snapshot import build_snapshot
@@ -44,8 +47,10 @@ def build_snapshot_cmd() -> None:
     reads metric_value directly once this exists, so a stale snapshot is
     the only way screen results could lag reality.
     """
-    with get_connection() as conn:
-        result = build_snapshot(conn)
+    # The outer connection idles through the whole rebuild; tolerate the
+    # pooler dropping it before the implicit commit-on-exit (the write itself
+    # retries on a fresh connection -- see screener/snapshot.py).
+    result = run_tolerating_exit_commit_failure("build_snapshot", build_snapshot)
     typer.echo(json.dumps(result, indent=2))
 
 

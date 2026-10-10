@@ -31,6 +31,8 @@ from decimal import Decimal, InvalidOperation
 import psycopg
 import structlog
 
+from scrooner_pipeline.db.connection import run_write_with_reconnect
+
 logger = structlog.get_logger()
 
 SEVERITY_OK = "ok"
@@ -553,14 +555,17 @@ def run_all(conn: psycopg.Connection) -> dict:
             }
         )
 
-    with conn.cursor() as cur:
-        cur.execute(
-            "delete from analytics.metric_plausibility_check where metric_definition_id = any(%s)",
-            (all_metric_definition_ids,),
-        )
-        if findings:
-            cur.executemany(_UPSERT_SQL, findings)
-    conn.commit()
+    def _write(write_conn: psycopg.Connection) -> None:
+        with write_conn.cursor() as cur:
+            cur.execute(
+                "delete from analytics.metric_plausibility_check where metric_definition_id = any(%s)",
+                (all_metric_definition_ids,),
+            )
+            if findings:
+                cur.executemany(_UPSERT_SQL, findings)
+        write_conn.commit()
+
+    run_write_with_reconnect(conn, _write, stage="plausibility_check")
 
     logger.info("plausibility_check.done", **stats)
     return stats
