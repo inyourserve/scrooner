@@ -16,9 +16,15 @@ concurrency:
 
 jobs:
   filing-index:
-    name: SEC filing index and operational gate
+    # Index + Normalizer/Mapper reprocess ONLY. Split from the operational steps
+    # (see `operational-gate` below) on 2026-10-10: the reprocess alone ran past
+    # the old shared 90-minute cap on Oct 9 (84 min in, still going), so the
+    # freshness gate, prices, coverage matrix and tag library after it never
+    # ran for days and the job was cancelled. Oct 8's Normalizer half alone
+    # took ~60 min for 235 companies.
+    name: SEC filing index and reprocess
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 180
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -59,6 +65,41 @@ jobs:
         # core.filing) -- cheap daily, not a full-population rerun.
         if: always()
         run: pipeline/scripts/reprocess_recent_filers.sh
+
+  operational-gate:
+    # Everything that used to follow the reprocess in one job. Runs even if the
+    # reprocess failed or timed out (job-level always()): market prices, the
+    # freshness/dead-letter gate and the coverage tables must never be lost
+    # because the heavy step ran long.
+    name: Tickers, prices, freshness gate and coverage
+    needs: filing-index
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_API_SECRET: ${{ secrets.ALPACA_API_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Require production configuration
+        run: |
+          test -n "$DATABASE_URL"
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_SERVICE_ROLE_KEY"
+          test -n "$SEC_USER_AGENT"
+      - name: Install locked dependencies
+        run: uv sync --project pipeline --locked
       - name: Classify newly-ambiguous multi-listing companies (OpenFIGI)
         # Added 2026-09-20 -- closes a real, confirmed gap: core.listing.
         # security_type classification (company_master/security_type.py,
@@ -145,11 +186,11 @@ jobs:
 
   valuations-and-screener:
     # Separate job (own timeout) so a slow full-population recompute can
-    # never push filing-index past its 90-minute limit. Runs even if
-    # filing-index failed on an alert: prices were still refreshed there,
+    # never push the other jobs past their limits. Runs even if
+    # an earlier job failed on an alert: prices are refreshed in operational-gate,
     # and a stale screener is worse than one day's partial reprocess.
     name: Price-dependent metrics and screener snapshot
-    needs: filing-index
+    needs: [filing-index, operational-gate]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 120

@@ -27,7 +27,10 @@ jobs:
     # (200 companies, 3x request cost each) + a full-population
     # time-series pass (~20min, pure SQL, no external calls) -- bumped
     # from 60 to 90min 2026-09-08 when those two were added.
-    timeout-minutes: 90
+    # 90 was ~13 minutes above a healthy run (77 min on Oct 9) and was hit on
+    # Oct 7/8 when one SEC-fetching step stalled. Per-step caps below stop a
+    # single stall from consuming the job; this cap is the backstop.
+    timeout-minutes: 150
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -73,6 +76,7 @@ jobs:
         # real S&P 500 company) confirmed fixed end-to-end via a live
         # sanity-check rerun, not just the write succeeding.
         if: always()
+        timeout-minutes: 20
         run: |
           uv run --project pipeline scrooner-map run-parser revenue
           uv run --project pipeline scrooner-map resolve-parser-results revenue
@@ -127,6 +131,7 @@ jobs:
         # finding. Default limit (2000/day) clears the backlog over
         # ~10 days instead of one unbounded, timeout-blowing scan.
         if: always()
+        timeout-minutes: 35
         run: |
           uv run --project pipeline scrooner-yfinance-financials seed-line-item-mapping
           uv run --project pipeline scrooner-yfinance-financials daily-rotation --limit 200
@@ -156,6 +161,7 @@ jobs:
         # revenue's own parser step) since this parser's own correctness
         # depends on that data already existing for the company.
         if: always()
+        timeout-minutes: 20
         run: |
           uv run --project pipeline scrooner-map run-parser cost_of_revenue
           uv run --project pipeline scrooner-map resolve-parser-results cost_of_revenue
