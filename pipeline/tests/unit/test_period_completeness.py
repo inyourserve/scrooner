@@ -53,6 +53,8 @@ def test_derivation_gaps():
 def test_every_cause_is_allowed_by_the_migration_and_valid_as_a_finding():
     sql = Path(__file__).parents[2].joinpath("db/migrations/0083_period_completeness.sql").read_text()
     allowed = set(re.findall(r"'([a-z0-9_]+)',?\s+--", sql.split("gap_cause text not null check")[1].split(")),")[0]))
+    widened = Path(__file__).parents[2].joinpath("db/migrations/0090_period_gap_new_causes.sql").read_text()
+    allowed |= set(re.findall(r"'([a-z0-9_]+)'", widened.split("check (gap_cause in (")[1]))
     assert set(CAUSES) == allowed
     assert {finding_type for finding_type, _ in CAUSES.values()} <= {
         "pipeline_bug", "filer_error", "legitimate_absence", "data_limit"
@@ -184,3 +186,24 @@ def test_sec_feed_accessions_returns_the_first_nonempty_probe_without_a_second_c
         ]
     )
     assert _sec_feed_accessions(client, "0000912345") == {"0000912345-26-000002"}
+
+
+@pytest.mark.unit
+def test_candidate_tag_and_absent_line_item_split_out_of_no_mapped_tag():
+    assert cause() == "no_mapped_tag"
+    assert cause(has_candidate_tag=True) == "unmapped_candidate_tag"
+    assert cause(line_item_filed=False) == "no_line_item_filed"
+    # an equivalent tag in hand beats "no such line"; a line the filing does carry stays unexplained
+    assert cause(has_candidate_tag=True, line_item_filed=False) == "unmapped_candidate_tag"
+    assert cause(line_item_filed=True) == "no_mapped_tag"
+    # derivation causes keep priority over the new ones
+    assert cause(period_kind="Q", ytd_facts=1, line_item_filed=False) == "quarter_not_derived"
+    assert CAUSES["no_line_item_filed"][0] == "legitimate_absence"
+    assert CAUSES["unmapped_candidate_tag"][0] == "pipeline_bug"
+
+
+@pytest.mark.unit
+def test_q4_with_full_year_present_is_a_derivation_gap_even_when_the_filing_has_no_facts():
+    # Valvoline FY2022: original 10-K carried no XBRL, the 10-K/A supplied the year.
+    assert cause(filing_has_facts=False, sec_feed_has_filing=False, period_kind="Q4", fy_present=True) == "q4_not_derived"
+    assert cause(filing_has_facts=False, sec_feed_has_filing=False, period_kind="Q4", fy_present=False) == "not_in_sec_feed"

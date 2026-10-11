@@ -146,6 +146,47 @@ CAUSES: dict[str, tuple[str, str]] = {
         "data_limit",
         "Periods missing: no mapped tag in the filing",
     ),
+    "unmapped_candidate_tag": (
+        "pipeline_bug",
+        "Periods missing: filed under an equivalent tag we don't map",
+    ),
+    "no_line_item_filed": (
+        "legitimate_absence",
+        "Periods missing: the filing reports no such line item",
+    ),
+}
+
+# Found live 2026-10-10 (data_limit ticket deep dive): "no_mapped_tag" was
+# filed as data_limit but a sample showed most of it is either ours to fix
+# or a line item the filer genuinely doesn't report. Two evidence rules,
+# both checked against the expected filing's own facts:
+#
+# CANDIDATE_TAGS -- known-equivalent tags that are NOT mapped to the base
+# concept. A fact under one of them in the missing period means the data
+# exists and the mapping is what's missing. Kept to tags whose equivalence
+# was verified (continuing-operations totals equal the plain total unless
+# the filer has discontinued operations); do NOT add per-share variants
+# like IncomeLossFromContinuingOperationsPerDilutedShare -- a different
+# measure, not an equivalent.
+CANDIDATE_TAGS: dict[str, tuple[str, ...]] = {
+    "cash_flow_investing": ("NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",),
+    "cash_flow_financing": ("NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",),
+    "cfo": ("NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",),
+}
+
+# LINE_ITEM_TAGS -- a tag-name regex for the statement line itself, across
+# every tag (mapped or not). If the expected filing carries no fact at all
+# whose tag matches, the filer reports no such line (a loss-making shell has
+# no income-tax line; an unclassified balance sheet has no current assets),
+# so the blank is correct. Anchored/narrow on purpose: IncomeTaxesPaid and
+# tax-rate tags must NOT count as an income-tax-expense line.
+LINE_ITEM_TAGS: dict[str, str] = {
+    "income_tax_expense": r"^(Current|Deferred)?IncomeTaxExpenseBenefit",
+    "income_before_tax": r"BeforeIncomeTax|BeforeTax",
+    "cash_flow_investing": r"InvestingActivities",
+    "cash_flow_financing": r"FinancingActivities",
+    "current_assets": r"^AssetsCurrent$",
+    "current_liabilities": r"^LiabilitiesCurrent$",
 }
 
 
@@ -193,6 +234,8 @@ def classify(
     period_kind: str,
     fy_present: bool,
     base_concept: str = "",
+    has_candidate_tag: bool = False,
+    line_item_filed: bool | None = None,
 ) -> str:
     """The single cause for one missing (company, concept, period) cell.
     `base_concept` (the CHECK_CONCEPTS base name, e.g. "total_assets")
@@ -201,6 +244,11 @@ def classify(
     so any other caller that doesn't pass it keeps the safe, conservative
     behavior rather than silently becoming split-aware by omission."""
     if not filing_has_facts:
+        # 2026-10-10: a Q4 whose full year IS present (e.g. XBRL arrived
+        # only via a 10-K/A -- Valvoline FY2022) is a derivation gap, not
+        # a missing filing: the data is in hand.
+        if period_kind == "Q4" and fy_present:
+            return "q4_not_derived"
         # Confirmed against SEC when checked; otherwise a later processed
         # filing means the payload was normalized and simply lacked it.
         if sec_feed_has_filing is True:
@@ -225,6 +273,10 @@ def classify(
         return "q4_not_derived"
     if period_kind == "Q" and ytd_facts:
         return "quarter_not_derived"
+    if has_candidate_tag:
+        return "unmapped_candidate_tag"
+    if line_item_filed is False:
+        return "no_line_item_filed"
     return "no_mapped_tag"
 
 
@@ -437,6 +489,20 @@ def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
         """,
         {"base": base_id},
     )
+    cand_sql = (
+        "exists (select 1 from core.fact cf2 join core.concept ct on ct.id = cf2.concept_id "
+        "join core.period p on p.id = cf2.period_id "
+        "where cf2.filing_id = e.filing_id and ct.taxonomy = 'us-gaap' "
+        f"and ct.tag = any(%(cand)s) and ({_period_match_sql('p')})) as has_candidate"
+        if base in CANDIDATE_TAGS
+        else "false as has_candidate"
+    )
+    line_sql = (
+        "exists (select 1 from core.fact lf join core.concept lt on lt.id = lf.concept_id "
+        "where lf.filing_id = e.filing_id and lt.tag ~ %(rx)s) as line_filed"
+        if base in LINE_ITEM_TAGS
+        else "null::boolean as line_filed"
+    )
     cur.execute(
         f"""
         with traced as (
@@ -462,11 +528,14 @@ def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
                exists (select 1 from cfp y where y.company_id = e.company_id
                        and abs(y.end_date - e.por) <= {DATE_TOLERANCE_DAYS}
                        and y.period_type = 'duration'
-                       and (y.end_date - y.start_date) between {YEAR_DAYS[0]} and {YEAR_DAYS[1]})
+                       and (y.end_date - y.start_date) between {YEAR_DAYS[0]} and {YEAR_DAYS[1]}),
+               {cand_sql},
+               {line_sql}
         from gap_cell e
         left join agg a on a.company_id = e.company_id and a.filing_id = e.filing_id
              and a.por = e.por and a.kind = e.kind
-        """
+        """,
+        {"cand": list(CANDIDATE_TAGS.get(base, ())), "rx": LINE_ITEM_TAGS.get(base, "")},
     )
     rows = cur.fetchall()
 
@@ -483,6 +552,8 @@ def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
         conflicts,
         n_ytd,
         fy_present,
+        has_candidate,
+        line_filed,
     ) in rows:
         cause = classify(
             filing_has_facts=has_facts,
@@ -494,6 +565,8 @@ def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
             period_kind=kind,
             fy_present=fy_present,
             base_concept=base,
+            has_candidate_tag=bool(has_candidate),
+            line_item_filed=line_filed,
         )
         detail = {"filing_id": filing_id}
         if in_feed is not None:
