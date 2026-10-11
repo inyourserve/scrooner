@@ -192,16 +192,25 @@ fi
 N=$(echo "$CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
 echo "reprocess_recent_filers: ${N} companies (filed in the last ${LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
 
+# shellcheck source=lib/sharded.sh
+source "$(dirname "$0")/lib/sharded.sh"
+SHARDS="${REPROCESS_SHARDS:-4}"
+echo "reprocess_recent_filers: running each stage across up to ${SHARDS} parallel shards"
+
 # conflict-latest-filed must follow dedupe: dedupe resets the disagreeing-filings
 # groups it promotes, so skipping it silently reverts them (and re-blocks Q4).
+# Each stage runs across $SHARDS parallel workers on disjoint companies and is
+# a barrier: every shard finishes before the next stage starts (see
+# scripts/lib/sharded.sh for why this is safe, and why it is needed -- the
+# single-process version exceeded its 180-minute job cap on 2026-10-10).
 for stage in identity periods units facts dedupe restatements conflict-latest-filed derive-interim-quarters derive-q4; do
   echo "--- normalize $stage ---"
-  uv run scrooner-normalize "$stage" --ciks "$CIKS"
+  run_sharded scrooner-normalize "$stage"
 done
 
 for stage in resolve-facts resolve-concept-fallbacks calculate growth ttm-returns ttm-margins calculate-expanded-metrics calculate-piotroski calculate-quality-flags calculate-reconciliation calculate-tax-reconciliation calculate-fcf-growth calculate-dividend-streak; do
   echo "--- map $stage ---"
-  uv run scrooner-map "$stage" --ciks "$CIKS"
+  run_sharded scrooner-map "$stage"
 done
 
 # Keep the SEC Tag Library current (founder direction 2026-09-29: it is the

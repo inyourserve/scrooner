@@ -29,8 +29,11 @@ jobs:
     # from 60 to 90min 2026-09-08 when those two were added.
     # 90 was ~13 minutes above a healthy run (77 min on Oct 9) and was hit on
     # Oct 7/8 when one SEC-fetching step stalled. Per-step caps below stop a
-    # single stall from consuming the job; this cap is the backstop.
-    timeout-minutes: 150
+    # single stall from consuming the job; this cap is the backstop. Raised 150 -> 240
+    # on 2026-10-10: with the database busy, the time-series check alone took 95 min
+    # (14 on Oct 9) and period completeness 30 (12), and the job was cancelled at 150
+    # before the final report. Step caps now bound each one individually.
+    timeout-minutes: 240
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -54,9 +57,11 @@ jobs:
       - name: Install locked dependencies
         run: uv sync --project pipeline --locked
       - name: Run sanity checks (rotating batch)
+        timeout-minutes: 30
         run: uv run --project pipeline scrooner-sanity run --limit "${{ github.event.inputs.limit || '750' }}"
       - name: Investigate and auto-fix reconcilable findings
         if: always()
+        timeout-minutes: 30
         run: uv run --project pipeline scrooner-sanity investigate
       - name: Run rendered-report parser on remaining critical findings
         # Added 2026-09-20 -- closes a real gap: tag_investigator's
@@ -87,6 +92,7 @@ jobs:
         # not a rotating batch. Was built 2026-09-08 but never wired
         # into any cron until now -- see doc/data-moat/SYSTEMS.md.
         if: always()
+        timeout-minutes: 60
         run: uv run --project pipeline scrooner-sanity timeseries
       - name: Metric plausibility check (full population)
         # Added 2026-09-27, direct request ("PE can't be higher/lower
@@ -100,6 +106,7 @@ jobs:
         # by hand (roe max 56.6M%, price_to_book max $1.29B, dividend_
         # yield max 837,700%, negative current_ratio/quick_ratio).
         if: always()
+        timeout-minutes: 20
         run: uv run --project pipeline scrooner-sanity plausibility
       - name: Period completeness (which quarters are missing, and why)
         # Added 2026-09-30. Expected periods come from each company's own
@@ -110,6 +117,7 @@ jobs:
         # that stop occurring are marked fixed, so the history is kept.
         # ~8 minutes for all active companies.
         if: always()
+        timeout-minutes: 45
         run: uv run --project pipeline python -m scrooner_pipeline.sanity.period_completeness
       - name: yfinance full financial statements (rotating batch)
         # Added 2026-09-08 -- deeper than the ratio check above (every
