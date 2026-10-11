@@ -2,8 +2,10 @@ from scrooner_pipeline.mapper.coverage_matrix import (
     BDC_FAMILY_DATA_POINTS,
     BUYBACK_FAMILY_DATA_POINTS,
     CAPITAL_RETURN_FAMILY_DATA_POINTS,
+    DIVIDEND_CONCEPT_DATA_POINTS,
     DIVIDEND_FAMILY_DATA_POINTS,
     POPULATION_QUERIES,
+    RECONCILIATION_GAP_POPULATION_OVERRIDES,
     REVENUE_FAMILY_CONCEPTS,
     SIC_GAP_REASONS,
 )
@@ -63,7 +65,10 @@ def test_population_queries_cover_every_named_population_a_data_point_can_refere
     # dividend_payer/buyback_company instead of its own query (see that
     # function's own comment) -- so every OTHER family's target
     # population must have a real query to build it from.
-    referenced_populations = {"real_operating_company", "dividend_payer", "buyback_company", "bdc_company"}
+    referenced_populations = {
+        "real_operating_company", "dividend_payer", "dividend_family_ever_reported",
+        "buyback_company", "bdc_company",
+    }
     assert referenced_populations <= set(POPULATION_QUERIES.keys())
 
 
@@ -74,9 +79,11 @@ def test_family_data_point_lists_are_disjoint() -> None:
     # not a deliberate choice.
     all_families = [
         DIVIDEND_FAMILY_DATA_POINTS,
+        DIVIDEND_CONCEPT_DATA_POINTS,
         BUYBACK_FAMILY_DATA_POINTS,
         CAPITAL_RETURN_FAMILY_DATA_POINTS,
         BDC_FAMILY_DATA_POINTS,
+        tuple(RECONCILIATION_GAP_POPULATION_OVERRIDES.keys()),
     ]
     seen: set[str] = set()
     for family in all_families:

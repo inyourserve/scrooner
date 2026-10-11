@@ -53,6 +53,7 @@ from scrooner_pipeline.mapper.coverage_matrix import (
     BDC_FAMILY_DATA_POINTS,
     BUYBACK_FAMILY_DATA_POINTS,
     CAPITAL_RETURN_FAMILY_DATA_POINTS,
+    DIVIDEND_CONCEPT_DATA_POINTS,
     DIVIDEND_FAMILY_DATA_POINTS,
     RECONCILIATION_GAP_POPULATION_OVERRIDES,
 )
@@ -75,6 +76,12 @@ logger = structlog.get_logger()
 _FAMILY_POPULATION: dict[str, str] = {}
 for _name in DIVIDEND_FAMILY_DATA_POINTS:
     _FAMILY_POPULATION[_name] = "dividend_payer"
+# 2026-10-11: see coverage_matrix.py's own comment on
+# DIVIDEND_CONCEPT_DATA_POINTS/dividend_family_ever_reported -- the raw
+# concepts themselves need a broader, "ever reported" population, not
+# dividend_payer's deliberately current-state-only one.
+for _name in DIVIDEND_CONCEPT_DATA_POINTS:
+    _FAMILY_POPULATION[_name] = "dividend_family_ever_reported"
 for _name in BUYBACK_FAMILY_DATA_POINTS:
     _FAMILY_POPULATION[_name] = "buyback_company"
 for _name in CAPITAL_RETURN_FAMILY_DATA_POINTS:

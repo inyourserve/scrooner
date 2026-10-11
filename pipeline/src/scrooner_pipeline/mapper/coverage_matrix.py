@@ -305,6 +305,33 @@ POPULATION_QUERIES = {
             or c.id in (select company_id from latest_dps where rn = 1 and value > 0)
         )
     """,
+    # Found live 2026-10-11, by direct report that
+    # dividends_per_share_resolved/dividends_paid* read over 100%
+    # coverage: dividend_payer (above) is deliberately a CURRENT-state
+    # population ("paid a real dividend in the latest reported FY" --
+    # the right denominator for dividend_yield/payout_ratio/dps_growth_*,
+    # which genuinely should only apply to a company's current activity).
+    # But the coverage *count* for dividends_paid*/dividends_per_share*
+    # answers a different, broader question -- "do we have a real,
+    # resolved value for this company, in any year" -- which correctly
+    # includes a real $0 (Parsons Corp, FY2018: genuinely reported paying
+    # none) and a company that paid in the past and later stopped
+    # (Barnwell Industries: real dividends in FY2022/2023, $0 in FY2024).
+    # Both are real, traceable facts, not gaps -- the mismatch between
+    # the two different questions is what pushed coverage past 100%, the
+    # same "measuring the right population" discipline already applied
+    # to inventory/AR/AP above, scoped here to the question these 4
+    # SPECIFIC data points actually ask (has a fact at all, any year,
+    # any value -- not "has a nonzero fact in the latest year").
+    "dividend_family_ever_reported": """
+        select distinct cf.company_id
+        from analytics.canonical_fact cf
+        join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+        join core.company c on c.id = cf.company_id
+        where c.status = 'active'
+          and cc.name in ('dividends_paid', 'dividends_paid_resolved',
+                           'dividends_per_share', 'dividends_per_share_resolved')
+    """,
     "buyback_company": """
         with latest_bb as (
             select cf.company_id, cf.value,
@@ -362,22 +389,27 @@ POPULATION_QUERIES = {
 # real_operating_company (set in build_registry()). Curated, not guessed:
 # each family here was checked the same way revenue/dividends were.
 DIVIDEND_FAMILY_DATA_POINTS = (
-    "dividends_paid",
-    "dividends_paid_resolved",
-    "dividends_per_share",
-    # Found live 2026-10-10 (doc 50 Phase 4): dividends_per_share_resolved
-    # -- the _resolved display concept the company page actually reads --
-    # was missing from this list, so it measured against all 4,818 real
-    # operating companies (41.10%) instead of the real 1,955 dividend-
-    # payer population its own unresolved sibling already uses correctly
-    # (101.28%). Same bug class already fixed once for dividend_yield.
-    "dividends_per_share_resolved",
     "dividend_growth_streak_years",
     "dividend_yield",
     "dps_growth_yoy",
     "dps_growth_3y_cagr",
     "payout_ratio",
     "dividends_pct_fcf",
+)
+# Found live 2026-10-11: the raw/resolved dividend concepts themselves
+# (dividends_paid*/dividends_per_share*) were measured against
+# dividend_payer, a deliberately CURRENT-state population -- pushing
+# coverage over 100% for companies with a real but non-current value
+# (a confirmed $0, or a company that paid in the past and later
+# stopped -- see dividend_family_ever_reported's own comment above).
+# Everything else in DIVIDEND_FAMILY_DATA_POINTS correctly stays on
+# dividend_payer -- dividend_yield/payout_ratio/dps_growth_* genuinely
+# should only apply to a company's CURRENT dividend activity.
+DIVIDEND_CONCEPT_DATA_POINTS = (
+    "dividends_paid",
+    "dividends_paid_resolved",
+    "dividends_per_share",
+    "dividends_per_share_resolved",
 )
 BUYBACK_FAMILY_DATA_POINTS = (
     "share_buybacks",
@@ -534,6 +566,8 @@ def build_registry(conn: psycopg.Connection) -> dict:
     population_overrides: dict[str, str] = {}
     for name in DIVIDEND_FAMILY_DATA_POINTS:
         population_overrides[name] = "dividend_payer"
+    for name in DIVIDEND_CONCEPT_DATA_POINTS:
+        population_overrides[name] = "dividend_family_ever_reported"
     for name in BUYBACK_FAMILY_DATA_POINTS:
         population_overrides[name] = "buyback_company"
     for name in CAPITAL_RETURN_FAMILY_DATA_POINTS:
