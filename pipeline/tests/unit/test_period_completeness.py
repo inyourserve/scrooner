@@ -4,7 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from scrooner_pipeline.sanity.period_completeness import CAUSES, _sec_feed_accessions, classify
+from scrooner_pipeline.sanity.period_completeness import (
+    CAUSES,
+    _sec_feed_accessions,
+    classify,
+)
 
 
 def cause(**overrides):
@@ -23,9 +27,14 @@ def cause(**overrides):
 
 @pytest.mark.unit
 def test_filing_without_facts_is_unprocessed_unless_a_later_filing_was_processed():
-    assert cause(filing_has_facts=False, later_filing_has_facts=False) == "filing_not_processed"
+    assert (
+        cause(filing_has_facts=False, later_filing_has_facts=False)
+        == "filing_not_processed"
+    )
     # Cardinal Health: April 10-Q has no facts, the later 10-K does.
-    assert cause(filing_has_facts=False, later_filing_has_facts=True) == "not_in_sec_feed"
+    assert (
+        cause(filing_has_facts=False, later_filing_has_facts=True) == "not_in_sec_feed"
+    )
 
 
 @pytest.mark.unit
@@ -33,12 +42,18 @@ def test_rounding_conflict_is_separated_from_a_material_one():
     # Airbnb FY2025 net income: $2,511,000,000 vs $2,511,277,000.
     airbnb = [Decimal("2511000000"), Decimal("2511277000")]
     assert cause(conflicting_values=airbnb, period_kind="FY") == "conflict_rounding"
-    assert cause(conflicting_values=[Decimal("100"), Decimal("150")]) == "conflict_material"
+    assert (
+        cause(conflicting_values=[Decimal("100"), Decimal("150")])
+        == "conflict_material"
+    )
 
 
 @pytest.mark.unit
 def test_authoritative_fact_without_canonical_value_is_not_resolved():
-    assert cause(authoritative_facts=1, conflicting_values=[Decimal("5")]) == "not_resolved"
+    assert (
+        cause(authoritative_facts=1, conflicting_values=[Decimal("5")])
+        == "not_resolved"
+    )
 
 
 @pytest.mark.unit
@@ -51,13 +66,33 @@ def test_derivation_gaps():
 
 @pytest.mark.unit
 def test_every_cause_is_allowed_by_the_migration_and_valid_as_a_finding():
-    sql = Path(__file__).parents[2].joinpath("db/migrations/0083_period_completeness.sql").read_text()
-    allowed = set(re.findall(r"'([a-z0-9_]+)',?\s+--", sql.split("gap_cause text not null check")[1].split(")),")[0]))
-    widened = Path(__file__).parents[2].joinpath("db/migrations/0090_period_gap_new_causes.sql").read_text()
-    allowed |= set(re.findall(r"'([a-z0-9_]+)'", widened.split("check (gap_cause in (")[1]))
+    sql = (
+        Path(__file__)
+        .parents[2]
+        .joinpath("db/migrations/0083_period_completeness.sql")
+        .read_text()
+    )
+    allowed = set(
+        re.findall(
+            r"'([a-z0-9_]+)',?\s+--",
+            sql.split("gap_cause text not null check")[1].split(")),")[0],
+        )
+    )
+    widened = (
+        Path(__file__)
+        .parents[2]
+        .joinpath("db/migrations/0090_period_gap_new_causes.sql")
+        .read_text()
+    )
+    allowed |= set(
+        re.findall(r"'([a-z0-9_]+)'", widened.split("check (gap_cause in (")[1])
+    )
     assert set(CAUSES) == allowed
     assert {finding_type for finding_type, _ in CAUSES.values()} <= {
-        "pipeline_bug", "filer_error", "legitimate_absence", "data_limit"
+        "pipeline_bug",
+        "filer_error",
+        "legitimate_absence",
+        "data_limit",
     }
     assert len({summary for _, summary in CAUSES.values()}) == len(CAUSES)
 
@@ -67,10 +102,34 @@ def test_split_restated_per_share_values_are_not_a_filer_error():
     # Apple FY2019 diluted EPS before and after the 2020 4-for-1 split.
     # base_concept must be one of SPLIT_AWARE_BASE_CONCEPTS for this
     # classification to even be attempted -- see the 2026-10-05 fix below.
-    assert cause(conflicting_values=[Decimal("11.89"), Decimal("2.97")], base_concept="diluted_eps") == "conflict_split"
-    assert cause(conflicting_values=[Decimal("-4.0"), Decimal("-1.0")], base_concept="diluted_eps") == "conflict_split"
-    assert cause(conflicting_values=[Decimal("2.5"), Decimal("1.0")], base_concept="diluted_eps") == "conflict_material"
-    assert cause(conflicting_values=[Decimal("4.0"), Decimal("-1.0")], base_concept="diluted_eps") == "conflict_material"
+    assert (
+        cause(
+            conflicting_values=[Decimal("11.89"), Decimal("2.97")],
+            base_concept="diluted_eps",
+        )
+        == "conflict_split"
+    )
+    assert (
+        cause(
+            conflicting_values=[Decimal("-4.0"), Decimal("-1.0")],
+            base_concept="diluted_eps",
+        )
+        == "conflict_split"
+    )
+    assert (
+        cause(
+            conflicting_values=[Decimal("2.5"), Decimal("1.0")],
+            base_concept="diluted_eps",
+        )
+        == "conflict_material"
+    )
+    assert (
+        cause(
+            conflicting_values=[Decimal("4.0"), Decimal("-1.0")],
+            base_concept="diluted_eps",
+        )
+        == "conflict_material"
+    )
 
 
 @pytest.mark.unit
@@ -85,24 +144,71 @@ def test_conflict_split_is_scoped_to_split_aware_concepts_only():
     whole-number-ratio check."""
     # A clean, whole-number ratio (41x) on a non-per-share concept must NOT
     # be classified as a split -- this is exactly the shape that was wrong.
-    assert cause(conflicting_values=[Decimal("41"), Decimal("1")], base_concept="total_assets") == "conflict_material"
-    assert cause(conflicting_values=[Decimal("1000"), Decimal("1")], base_concept="net_income") == "conflict_material"
+    assert (
+        cause(
+            conflicting_values=[Decimal("41"), Decimal("1")],
+            base_concept="total_assets",
+        )
+        == "conflict_material"
+    )
+    assert (
+        cause(
+            conflicting_values=[Decimal("1000"), Decimal("1")],
+            base_concept="net_income",
+        )
+        == "conflict_material"
+    )
     # No base_concept passed at all (the safe default) must also not
     # classify as a split.
-    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")]) == "conflict_material"
+    assert (
+        cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")])
+        == "conflict_material"
+    )
     # The legitimate per-share/share-count concepts still classify as a
     # split when the ratio genuinely looks like one.
-    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")], base_concept="shares_outstanding") == "conflict_split"
-    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")], base_concept="dividends_per_share") == "conflict_split"
-    assert cause(conflicting_values=[Decimal("4.0"), Decimal("1.0")], base_concept="basic_eps") == "conflict_split"
+    assert (
+        cause(
+            conflicting_values=[Decimal("4.0"), Decimal("1.0")],
+            base_concept="shares_outstanding",
+        )
+        == "conflict_split"
+    )
+    assert (
+        cause(
+            conflicting_values=[Decimal("4.0"), Decimal("1.0")],
+            base_concept="dividends_per_share",
+        )
+        == "conflict_split"
+    )
+    assert (
+        cause(
+            conflicting_values=[Decimal("4.0"), Decimal("1.0")],
+            base_concept="basic_eps",
+        )
+        == "conflict_split"
+    )
 
 
 @pytest.mark.unit
 def test_sec_feed_check_overrides_the_inference():
     # PayPal's July 10-Q: latest filing, no facts, absent from SEC's own feed.
-    assert cause(filing_has_facts=False, later_filing_has_facts=False, sec_feed_has_filing=False) == "not_in_sec_feed"
+    assert (
+        cause(
+            filing_has_facts=False,
+            later_filing_has_facts=False,
+            sec_feed_has_filing=False,
+        )
+        == "not_in_sec_feed"
+    )
     # In SEC's feed but we have no facts: our miss.
-    assert cause(filing_has_facts=False, later_filing_has_facts=True, sec_feed_has_filing=True) == "filing_not_processed"
+    assert (
+        cause(
+            filing_has_facts=False,
+            later_filing_has_facts=True,
+            sec_feed_has_filing=True,
+        )
+        == "filing_not_processed"
+    )
 
 
 class _FakeResponse:
@@ -194,10 +300,15 @@ def test_candidate_tag_and_absent_line_item_split_out_of_no_mapped_tag():
     assert cause(has_candidate_tag=True) == "unmapped_candidate_tag"
     assert cause(line_item_filed=False) == "no_line_item_filed"
     # an equivalent tag in hand beats "no such line"; a line the filing does carry stays unexplained
-    assert cause(has_candidate_tag=True, line_item_filed=False) == "unmapped_candidate_tag"
+    assert (
+        cause(has_candidate_tag=True, line_item_filed=False) == "unmapped_candidate_tag"
+    )
     assert cause(line_item_filed=True) == "no_mapped_tag"
     # derivation causes keep priority over the new ones
-    assert cause(period_kind="Q", ytd_facts=1, line_item_filed=False) == "quarter_not_derived"
+    assert (
+        cause(period_kind="Q", ytd_facts=1, line_item_filed=False)
+        == "quarter_not_derived"
+    )
     assert CAUSES["no_line_item_filed"][0] == "legitimate_absence"
     assert CAUSES["unmapped_candidate_tag"][0] == "pipeline_bug"
 
@@ -205,5 +316,21 @@ def test_candidate_tag_and_absent_line_item_split_out_of_no_mapped_tag():
 @pytest.mark.unit
 def test_q4_with_full_year_present_is_a_derivation_gap_even_when_the_filing_has_no_facts():
     # Valvoline FY2022: original 10-K carried no XBRL, the 10-K/A supplied the year.
-    assert cause(filing_has_facts=False, sec_feed_has_filing=False, period_kind="Q4", fy_present=True) == "q4_not_derived"
-    assert cause(filing_has_facts=False, sec_feed_has_filing=False, period_kind="Q4", fy_present=False) == "not_in_sec_feed"
+    assert (
+        cause(
+            filing_has_facts=False,
+            sec_feed_has_filing=False,
+            period_kind="Q4",
+            fy_present=True,
+        )
+        == "q4_not_derived"
+    )
+    assert (
+        cause(
+            filing_has_facts=False,
+            sec_feed_has_filing=False,
+            period_kind="Q4",
+            fy_present=False,
+        )
+        == "not_in_sec_feed"
+    )

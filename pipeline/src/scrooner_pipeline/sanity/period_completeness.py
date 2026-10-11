@@ -169,8 +169,12 @@ CAUSES: dict[str, tuple[str, str]] = {
 # like IncomeLossFromContinuingOperationsPerDilutedShare -- a different
 # measure, not an equivalent.
 CANDIDATE_TAGS: dict[str, tuple[str, ...]] = {
-    "cash_flow_investing": ("NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",),
-    "cash_flow_financing": ("NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",),
+    "cash_flow_investing": (
+        "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
+    ),
+    "cash_flow_financing": (
+        "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",
+    ),
     "cfo": ("NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",),
 }
 
@@ -535,7 +539,10 @@ def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
         left join agg a on a.company_id = e.company_id and a.filing_id = e.filing_id
              and a.por = e.por and a.kind = e.kind
         """,
-        {"cand": list(CANDIDATE_TAGS.get(base, ())), "rx": LINE_ITEM_TAGS.get(base, "")},
+        {
+            "cand": list(CANDIDATE_TAGS.get(base, ())),
+            "rx": LINE_ITEM_TAGS.get(base, ""),
+        },
     )
     rows = cur.fetchall()
 
