@@ -58,6 +58,22 @@ Ordered; each item ends with a commit, push and a line in this doc.
 4. **Financials and Real Estate.** Check which core metrics are really inapplicable to banks versus unmapped. Where inapplicable, the right fix is sector-specific metrics ([doc 33](../execution-plans/33_Scrooner_Sector_Specific_Metrics_Plan.md), FDIC source in doc 32b), not forcing the 20 industrial metrics. Coordinate with lane B, which is producing the applicability evidence.
 5. **Dividend yield.** About 1,159 top-2,000 companies lack it; at least 699 have no dividend history. Decide how the dashboard shows non-payers (a real "no dividend" value, or excluded with a stated reason) with the user; do not change the raw lens silently.
 
+## Where to attack first: top 1,000 (measured 2026-10-13)
+
+Missing values among the top 1,000 by market cap, core 20 metrics, split Financials versus everything else. Raw lens, no exclusions.
+
+| Metric | Financials | Other sectors | What the gap really is | Lane |
+|---|---|---|---|---|
+| Dividend yield | 45 | 433 | Mostly non-payers. A product decision (show "no dividend", or exclude), not a data fix | A + user |
+| Gross margin | 127 | 145 | Other sectors: 28 REITs, 11 electric utilities, oil and gas, railroads. They report no gross profit line. Reasons: `incomplete:subtract` 85, `incomplete:gross_profit_resolved` 58 | B (line evidence) |
+| ROIC | 112 | 169 | 66 `incomplete:total_debt_resolved`; about 76 `incomplete:ttm_operating_income`. The total_debt part may already be improved by 64's convertible-notes fallback; re-measure first | C |
+| Interest coverage | 104 | 191 | Same operating income / interest expense inputs | C, B |
+| FCF yield | 71 | 200 | Capex and CFO TTM (cash-flow tag mapping) | F (migration 0095) |
+| Current ratio | 116 | 59 | 45 Real Estate, 10 Industrials unexplained; Financials do not present a current/non-current split | B |
+| Operating margin | 82 | 57 | Bank-style statements | B / sector metrics |
+
+Reading: roughly half of the top-1,000 gap is Financials and Real Estate, which present statements differently, so the 20 industrial metrics cannot be filled for them by tag mapping. That needs sector-specific metrics ([doc 33](../execution-plans/33_Scrooner_Sector_Specific_Metrics_Plan.md)) or an honest "not presented" state from lane B's evidence layer. The other half is ordinary mapping work in lanes C and F. Lane A does not edit the mapper for these; it re-measures after each lane lands and records the movement in the dashboard history.
+
 ## Handoffs offered (scrooner-f9)
 
 | Item | Proposed owner |
