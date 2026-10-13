@@ -1,5 +1,7 @@
 """Authenticated operational view over persisted daily coverage snapshots."""
 
+from decimal import Decimal
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from scrooner_pipeline.mapper.company_coverage_dashboard import summarize_company
 
@@ -88,6 +90,117 @@ def get_data_coverage(
         "as_of": history[0]["date"] if history else None,
         "history": history,
         "weakest_metrics": metrics,
+    }
+
+
+_BAND_ORDER = ["top_100", "top_500", "top_1000", "top_1500", "top_2000", "top_3000", "all"]
+
+
+def _score_delta(current, previous):
+    return str(current - previous) if current is not None and previous is not None else None
+
+
+@router.get("/data-coverage/groups")
+def get_group_coverage(
+    band: str = Query(default="top_1000", pattern="^(top_(100|500|1000|1500|2000|3000)|all)$"),
+    days: int = Query(default=30, ge=2, le=365),
+    _: str = Depends(get_current_user_id),
+) -> dict:
+    """Core-V1 coverage by company rank band (market cap) and by sector,
+    from analytics.coverage_group_snapshot, with change vs the previous
+    snapshot and a per-band history (mapper/coverage_groups.py)."""
+    with get_pooled_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                select snapshot_date, group_type, group_key, metric_name, companies, covered,
+                       coverage_pct, pct_ge90, pct_lt60
+                from analytics.coverage_group_snapshot
+                where snapshot_date in (
+                    select distinct snapshot_date from analytics.coverage_group_snapshot
+                    order by snapshot_date desc limit 2)
+                """
+            )
+            recent = cur.fetchall()
+            cur.execute(
+                """
+                select snapshot_date, group_key, coverage_pct
+                from analytics.coverage_group_snapshot
+                where group_type = 'rank_band' and metric_name = '__summary__'
+                  and snapshot_date in (
+                    select distinct snapshot_date from analytics.coverage_group_snapshot
+                    order by snapshot_date desc limit %s)
+                order by snapshot_date desc
+                """,
+                (days,),
+            )
+            history_rows = cur.fetchall()
+    dates = sorted({r[0] for r in recent}, reverse=True)
+    if not dates:
+        return {"as_of": None, "previous_as_of": None, "rank_bands": [], "sectors": [], "band_metrics": [], "history": []}
+    latest = dates[0]
+    prior = dates[1] if len(dates) > 1 else None
+    cur_map = {(r[1], r[2], r[3]): r for r in recent if r[0] == latest}
+    prev_map = {(r[1], r[2], r[3]): r for r in recent if r[0] == prior}
+
+    def summary(group_type, key):
+        c = cur_map.get((group_type, key, "__summary__"))
+        if c is None:
+            return None
+        p = prev_map.get((group_type, key, "__summary__"))
+        return {
+            "key": key,
+            "companies": c[4],
+            "score": str(c[6]),
+            "delta": _score_delta(c[6], p[6] if p else None),
+            "pct_ge90": str(c[7]),
+            "pct_lt60": str(c[8]),
+        }
+
+    rank_bands = [x for x in (summary("rank_band", k) for k in _BAND_ORDER) if x]
+    sector_keys = sorted({k[1] for k in cur_map if k[0] == "sector_top1000"})
+    sectors = []
+    for key in sector_keys:
+        t1 = summary("sector_top1000", key)
+        t2 = cur_map.get(("sector_top2000", key, "__summary__"))
+        al = cur_map.get(("sector_all", key, "__summary__"))
+        sectors.append(
+            {
+                **t1,
+                "score_top2000": str(t2[6]) if t2 else None,
+                "companies_top2000": t2[4] if t2 else 0,
+                "score_all": str(al[6]) if al else None,
+                "companies_all": al[4] if al else 0,
+            }
+        )
+    sectors.sort(key=lambda s: Decimal(s["score"]))
+    band_metrics = []
+    for (gt, key, metric), c in cur_map.items():
+        if gt == "rank_band" and key == band and metric != "__summary__":
+            p = prev_map.get((gt, key, metric))
+            band_metrics.append(
+                {
+                    "metric_name": metric,
+                    "companies": c[4],
+                    "covered": c[5],
+                    "missing": c[4] - c[5],
+                    "coverage_pct": str(c[6]),
+                    "delta": _score_delta(c[6], p[6] if p else None),
+                }
+            )
+    band_metrics.sort(key=lambda m: (-m["missing"], m["metric_name"]))
+    by_date: dict = {}
+    for d, key, pct in history_rows:
+        by_date.setdefault(str(d), {})[key] = str(pct)
+    history = [{"date": d, "bands": v} for d, v in sorted(by_date.items(), reverse=True)]
+    return {
+        "as_of": str(latest),
+        "previous_as_of": str(prior) if prior else None,
+        "rank_bands": rank_bands,
+        "sectors": sectors,
+        "band": band,
+        "band_metrics": band_metrics,
+        "history": history,
     }
 
 

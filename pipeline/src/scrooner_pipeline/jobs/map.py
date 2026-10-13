@@ -52,6 +52,7 @@ from scrooner_pipeline.mapper.tag_library import (
 from scrooner_pipeline.mapper.tax_reconciliation import calculate_tax_reconciliation
 from scrooner_pipeline.mapper.fcf_growth import calculate_fcf_growth
 from scrooner_pipeline.mapper.dividend_streak import calculate_dividend_streak
+from scrooner_pipeline.mapper.coverage_groups import write_group_snapshot
 from scrooner_pipeline.mapper.coverage_snapshot import write_snapshot
 from scrooner_pipeline.mapper.company_coverage_dashboard import (
     render_markdown_company,
@@ -565,7 +566,9 @@ def snapshot_coverage_cmd() -> None:
     run once per day after the day's calculate-family stages finish."""
     with get_connection() as conn:
         stats = write_snapshot(conn)
+        group_stats = write_group_snapshot(conn)
     typer.echo(f"snapshot-coverage: {stats}")
+    typer.echo(f"snapshot-coverage groups: {group_stats}")
 
 
 @app.command()

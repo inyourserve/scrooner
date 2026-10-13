@@ -113,3 +113,46 @@ class TestCompanyCoverageEndpoint:
         with pytest.raises(HTTPException) as exc_info:
             data_coverage.get_company_coverage(ticker="NOTREAL", _="user-a")
         assert exc_info.value.status_code == 404
+
+
+@pytest.mark.unit
+def test_group_coverage_reports_bands_sectors_and_deltas(monkeypatch):
+    d1, d0 = date(2026, 10, 13), date(2026, 10, 12)
+    recent = [
+        (d1, "rank_band", "top_1000", "__summary__", 1000, 17400, Decimal("87.00"), Decimal("63.00"), Decimal("4.60")),
+        (d0, "rank_band", "top_1000", "__summary__", 1000, 17300, Decimal("86.50"), Decimal("62.00"), Decimal("4.80")),
+        (d1, "rank_band", "top_1000", "roic", 1000, 700, Decimal("70.00"), None, None),
+        (d1, "sector_top1000", "Financials", "__summary__", 157, 2000, Decimal("71.00"), Decimal("40.00"), Decimal("20.00")),
+    ]
+    history = [(d1, "top_1000", Decimal("87.00")), (d0, "top_1000", Decimal("86.50"))]
+
+    class Cursor:
+        calls = 0
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_a):
+            return None
+
+        def execute(self, *_a):
+            Cursor.calls += 1
+
+        def fetchall(self):
+            return recent if Cursor.calls == 1 else history
+
+    class Connection:
+        def cursor(self):
+            return Cursor()
+
+    @contextmanager
+    def pooled_connection():
+        yield Connection()
+
+    monkeypatch.setattr(data_coverage, "get_pooled_connection", pooled_connection)
+    result = data_coverage.get_group_coverage(band="top_1000", days=30, _="u")
+
+    assert result["rank_bands"][0]["delta"] == "0.50"
+    assert result["sectors"][0]["key"] == "Financials"
+    assert result["band_metrics"][0]["missing"] == 300
+    assert result["history"][0]["bands"]["top_1000"] == "87.00"
