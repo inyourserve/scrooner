@@ -1,0 +1,5 @@
+.stack { display: grid; gap: var(--ds-space-5); margin-top: var(--ds-space-5); }
+.card { overflow: hidden; }
+.bandNav { display: flex; flex-wrap: wrap; gap: var(--ds-space-2); padding: 0 var(--ds-space-5) var(--ds-space-4); }
+.bandNav a { padding: var(--ds-space-1) var(--ds-space-3); border: 1px solid var(--ds-color-border-default); border-radius: var(--ds-radius-md); color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-12); text-decoration: none; }
+.bandNav a[aria-current="true"] { background: var(--ds-color-action-default); color: var(--ds-color-text-on-action); border-color: transparent; }

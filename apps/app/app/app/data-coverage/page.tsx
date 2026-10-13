@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ArrowDown, ArrowRight, ArrowUp, Minus } from "lucide-react";
+import { GroupCoverage, isCoverageBand } from "@/components/data-coverage/GroupCoverage";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PageShell } from "@/components/layout/PageShell";
 import { Badge } from "@/components/ui/Badge";
@@ -30,7 +31,7 @@ type CompanyCoverage = {
   coverage_pct: number | null;
 };
 
-type Props = { searchParams: Promise<{ ticker?: string }> };
+type Props = { searchParams: Promise<{ ticker?: string; band?: string }> };
 
 function score(value: string | null) { return value === null ? "—" : `${Number(value).toFixed(1)}%`; }
 function label(value: string) { return value.replaceAll("_", " ").replace(/\b\w/g, (character) => character.toUpperCase()); }
@@ -49,7 +50,8 @@ function statusIcon(status: CompanyItem["status"]) {
 }
 
 export default async function DataCoveragePage({ searchParams }: Props) {
-  const { ticker: requestedTicker } = await searchParams;
+  const { ticker: requestedTicker, band: requestedBand } = await searchParams;
+  const band = isCoverageBand(requestedBand) ? requestedBand : "top_1000";
   const supabase = await createClient();
   const { data } = await supabase.auth.getSession();
   if (!data.session?.access_token) redirect(buildLoginHref("/app/data-coverage"));
@@ -97,6 +99,8 @@ export default async function DataCoveragePage({ searchParams }: Props) {
         <TableContainer aria-label="Lowest coverage metrics"><Table><TableHeader><TableRow><TableHead>Metric</TableHead><TableHead data-align="right">Coverage</TableHead><TableHead data-align="right">Covered</TableHead><TableHead>Change</TableHead></TableRow></TableHeader><TableBody>{coverage.weakest_metrics.map((metric) => <TableRow key={metric.metric_name}><TableRowHeader>{label(metric.metric_name)}</TableRowHeader><TableCell data-align="right"><strong>{score(metric.coverage_pct)}</strong></TableCell><TableCell data-align="right">{metric.companies_covered.toLocaleString("en-US")} / {metric.total_active_companies.toLocaleString("en-US")}</TableCell><TableCell>{delta(metric.delta)}</TableCell></TableRow>)}</TableBody></Table></TableContainer>
       </Card>
     </div>
+
+    <GroupCoverage accessToken={accessToken} band={band} />
 
     <Card>
       <CardHeader>
