@@ -7,9 +7,11 @@ export const metadata: Metadata = {
   title: "All stocks — every US-listed company Scrooner covers",
   description: "Browse the full directory of US-listed companies covered by Scrooner, one letter at a time.",
 };
-// No force-dynamic (doc 54): loadFullCompanyDirectory calls apps/backend,
-// which caches the ~6k-row directory for 1hr -- this page no longer
-// needs to stay dynamic just to reach Postgres directly.
+// force-dynamic is required (not optional) even though apps/backend now
+// caches this data (doc 54) -- without it, `next build` tries to
+// statically prerender this page at build time, when no backend is
+// running, and the build fails. See app/page.tsx's fuller comment.
+export const dynamic = "force-dynamic";
 
 const LETTERS = ["#", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")];
 

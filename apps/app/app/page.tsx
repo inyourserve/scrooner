@@ -13,11 +13,18 @@ export const metadata: Metadata = {
   description: "Turn an investment thesis into a repeatable US stock screen, then inspect the filings, periods, and formulas behind the results.",
   keywords: ["US stock screener", "stock screener", "company research", "fundamental stock screener"],
 };
-// No force-dynamic: getCompaniesByTickers now calls apps/backend, which
-// caches this 1hr (doc 54) -- the page itself no longer needs to stay
-// dynamic just to reach Postgres directly, same precedent as the
-// company page (apps/stocks/[ticker]/page.tsx has no dynamic export
-// either, for the same reason).
+// force-dynamic is still required here, despite the backend now caching
+// this data (doc 54) -- without it, `next build` tries to statically
+// prerender this page (it has no dynamic URL segment to defer on, unlike
+// the company page's [ticker] route), which means calling the backend's
+// fetch() AT BUILD TIME. CI has no backend running during the build step,
+// so that fetch always ECONNREFUSEDs and fails the whole build (found
+// live 2026-10-13, doc/learnings/2026-10-13-sitewide-caching-built.md's
+// own addendum). force-dynamic defers rendering to real request time
+// instead, where the backend's Redis cache still makes a cache hit fast
+// -- this was never actually a caching regression, just a build-time
+// vs. request-time distinction missed on the first pass.
+export const dynamic = "force-dynamic";
 const names: Record<string, string> = { AAPL: "Apple", MSFT: "Microsoft", NVDA: "Nvidia", AMZN: "Amazon", GOOGL: "Alphabet", "BRK.B": "Berkshire", COST: "Costco", V: "Visa", JPM: "JPMorgan", LLY: "Eli Lilly", KO: "Coca-Cola" };
 
 async function getQuickPicks() {

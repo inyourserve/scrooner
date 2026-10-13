@@ -9,8 +9,10 @@ export const metadata: Metadata = {
   title: "Explore — sectors, industries, and stock screens",
   description: "Start from a popular screen, or browse US-listed companies by sector and industry.",
 };
-// No force-dynamic (doc 54): getSectorList/getIndustryList call
-// apps/backend, each cached 1hr.
+// force-dynamic is required -- see app/page.tsx's fuller comment (build-
+// time prerendering would fetch apps/backend with no backend running;
+// this was the actual CI failure found live 2026-10-13).
+export const dynamic = "force-dynamic";
 
 // Reuses the exact phrases doc 15b already verified parse correctly and
 // reproduce the Screener's own results -- an "explore" surface is not the

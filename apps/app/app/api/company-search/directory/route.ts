@@ -8,6 +8,11 @@ import { loadFullCompanyDirectory } from "@/lib/company/referenceData";
 // apps/backend's Redis cache (shared across instances) now does this
 // job instead, at the same 1hr freshness this endpoint already had.
 //
+// force-dynamic is still required (see app/sitemap.ts's comment) --
+// without it, this route handler is also eagerly executed at build
+// time, hitting the backend fetch with none running in CI.
+export const dynamic = "force-dynamic";
+//
 // Ships the whole ~6k-row active-company directory once so the homepage
 // search box can match client-side with zero network/DB round trip per
 // keystroke -- see CompanySearch.tsx. Tuples, not objects: with ~6k rows

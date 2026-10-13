@@ -8,6 +8,16 @@ import { loadFullCompanyDirectory, getSectorList, getIndustryList } from "@/lib/
 // company page on 2026-09-15. apps/backend's Redis cache (shared across
 // instances) now does this job instead, at the same 1hr freshness this
 // file already had.
+//
+// force-dynamic is still required, same reasoning this file already had
+// before this change (sitemaps are prerendered by default) -- rendering
+// at request time, not build time, is what's needed when the data
+// source is a fetch() to a backend that isn't running during `next
+// build` (CI has none). This was never actually about Postgres vs.
+// apps/backend; removing this export broke CI's build (found live
+// 2026-10-13) because it changed WHEN the fetch happens, not just WHERE
+// it goes.
+export const dynamic = "force-dynamic";
 
 // Base URL comes from the same env var already used elsewhere in this app
 // (see .env.example) -- never hardcoded, so a staging/preview deploy never

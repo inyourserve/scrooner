@@ -7,7 +7,9 @@ export const metadata: Metadata = {
   title: "Industries — browse US stocks",
   description: "All industries covered by Scrooner, with the number of companies in each.",
 };
-// No force-dynamic (doc 54): getIndustryList calls apps/backend, cached 1hr.
+// force-dynamic is required -- see app/page.tsx's fuller comment (build-
+// time prerendering would fetch apps/backend with no backend running).
+export const dynamic = "force-dynamic";
 
 export default async function IndustryIndexPage() {
   const industries = await getIndustryList();
