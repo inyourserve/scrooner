@@ -169,13 +169,11 @@ CAUSES: dict[str, tuple[str, str]] = {
 # like IncomeLossFromContinuingOperationsPerDilutedShare -- a different
 # measure, not an equivalent.
 CANDIDATE_TAGS: dict[str, tuple[str, ...]] = {
-    "cash_flow_investing": (
-        "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
-    ),
-    "cash_flow_financing": (
-        "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",
-    ),
-    "cfo": ("NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",),
+    # Empty on purpose after 2026-10-13: the three cash-flow ...ContinuingOperations
+    # totals found here were mapped (cfo already; investing/financing in
+    # migration 0095), so a gap is no longer "unmapped". Add a base-concept
+    # entry only for a tag whose equivalence was verified live and that is
+    # NOT yet in concept_mapping.
 }
 
 # LINE_ITEM_TAGS -- a tag-name regex for the statement line itself, across
