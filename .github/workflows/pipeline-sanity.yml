@@ -92,7 +92,9 @@ jobs:
         # not a rotating batch. Was built 2026-09-08 but never wired
         # into any cron until now -- see doc/data-moat/SYSTEMS.md.
         if: always()
-        timeout-minutes: 60
+        # 90: a full pass is 7 concepts x ~8-13 min (600-730K period pairs each); at 60
+        # the last concept (stockholders_equity) was cut off every night (Oct 12).
+        timeout-minutes: 90
         run: uv run --project pipeline scrooner-sanity timeseries
       - name: Metric plausibility check (full population)
         # Added 2026-09-27, direct request ("PE can't be higher/lower

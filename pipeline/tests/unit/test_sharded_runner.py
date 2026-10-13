@@ -92,3 +92,25 @@ def test_output_lines_carry_a_shard_prefix(tmp_path):
     out, _ = _run(tmp_path, "0000000001,0000000002", ["facts"], shards=2)
     prefixed = [l for l in out.stdout.splitlines() if l.startswith("[s")]
     assert {l[:5] for l in prefixed} == {"[s0] ", "[s1] "}
+
+
+@pytest.mark.unit
+def test_the_real_reprocess_script_finds_its_helper_when_invoked_the_way_ci_does():
+    """CI runs `pipeline/scripts/reprocess_recent_filers.sh` as a RELATIVE path
+    from the repo root. The script cd's into pipeline/ first, so a helper path
+    derived from a relative $0 after the cd does not resolve -- that broke the
+    entire nightly refresh on 2026-10-12 (3 minutes in), and the stand-in-uv
+    tests above could not see it because they source the helper by absolute
+    path. This runs the real script, from the repo root, by the relative path."""
+    repo_root = HELPER.parents[3]
+    out = subprocess.run(
+        ["bash", "pipeline/scripts/reprocess_recent_filers.sh"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        env={**os.environ, "REPROCESS_SOURCE_CHECK": "1"},
+        timeout=60,
+    )
+    assert "No such file" not in out.stderr, out.stderr
+    assert "SOURCED_OK" in out.stdout, (out.stdout, out.stderr)
+    assert out.returncode == 0

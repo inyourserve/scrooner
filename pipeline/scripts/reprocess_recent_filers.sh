@@ -42,7 +42,21 @@
 # manual/periodic cadence.
 set -e
 export PATH="/opt/homebrew/opt/libxslt/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:$PATH"
-cd "$(dirname "$0")/.."
+# Resolve this script's own directory BEFORE changing directory: CI invokes it as
+# a relative path (pipeline/scripts/reprocess_recent_filers.sh) from the repo
+# root, and after the cd below a relative $0 no longer resolves. Sourcing the
+# shard helper via $0 after the cd broke the whole nightly refresh on 2026-10-12
+# ("lib/sharded.sh: No such file or directory", 3 minutes in).
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/.."
+# shellcheck source=lib/sharded.sh
+source "$SCRIPT_DIR/lib/sharded.sh"
+# Lets the unit test prove the helper resolves under CI's exact invocation
+# without touching a database.
+if [ -n "${REPROCESS_SOURCE_CHECK:-}" ]; then
+  declare -F run_sharded >/dev/null && echo "SOURCED_OK"
+  exit 0
+fi
 
 LOOKBACK_DAYS="${1:-10}"
 
@@ -192,8 +206,6 @@ fi
 N=$(echo "$CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
 echo "reprocess_recent_filers: ${N} companies (filed in the last ${LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
 
-# shellcheck source=lib/sharded.sh
-source "$(dirname "$0")/lib/sharded.sh"
 SHARDS="${REPROCESS_SHARDS:-4}"
 echo "reprocess_recent_filers: running each stage across up to ${SHARDS} parallel shards"
 
