@@ -24,6 +24,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | A. Coverage dashboard and launch readiness | scrooner-98 | `mapper/coverage_groups.py`, `routers/data_coverage.py`, `components/data-coverage/*`, migration 0092, 0094+ | Verify the new dashboard sections visually, then write the launch-readiness check | See "scrooner-98 queue" |
 | B. Concept applicability, filing-line evidence, nightly/CI | scrooner-f9 (confirmed) | migration 0093, `parsers/filing_line_evidence.py`, `scripts/applicability_probe.py`, `probe-filing-lines` in `jobs/map.py`; small edits in `coverage_matrix.py`, `company_coverage_dashboard.py`, `coverage_snapshot.py`; `scripts/lib/sharded.sh`, `reprocess_recent_filers.sh`, `normalizer/conflict_latest_filed.py`; the nightly/CI watch | Evidence layer; adds gap_reason `line_not_presented_in_filing` on absent cells (has_value stays false, unchanged) plus a separate denominator adjustment in `coverage_snapshot.py`; later a ~50 min single-process SEC fetch pass | Phase 3 classifier (first choice) |
 | C. Data sanity, ticket fixes, coverage denominators | scrooner-64 (confirmed) | Committed work only: `coverage_matrix.py`, `coverage_snapshot.py` denominator fixes, doc 50. No uncommitted files. | Running the whole-population sanity re-measure (`timeseries`, `identities`, `plausibility`), then the rate-limited `scrooner-sanity run` | Re-run `period_completeness` + `snapshot-coverage` for final numbers; Phase 3 design is **offered for handoff** |
+| F. `data_limit` ticket triage (cockpit tickets) | scrooner-2b (confirmed) | Committed work only: `sanity/period_completeness.py` (classifier), migrations 0089/0090, `tests/unit/test_period_completeness.py`. No uncommitted files. | Finishing `resolve-conflict-fills` then a whole-population `period_completeness` (heavy DB, ~1h, started 10:36 IST) after the `basic_eps` backfill | (1) cash-flow `...ContinuingOperations` tag mapping (migration 0095), (2) Q4 / YTD-quarter ticket analysis (about 26k open), (3) non-trading status via yfinance (decision needed from founder), (4) accepted from f9: widen conflict-latest-filed |
 | D. Frontend redesign (workspace, watchlist, alerts, company page) | *unconfirmed* | `apps/app/app/app/*`, `components/layout/*`, `components/public/*`, `components/scrooner/*`, `packages/design-system`, `apps/admin` | Uncommitted restyle, oldest files dated 2026-10-02 | Land or discard (see "Stale work") |
 | E. Backend (watchlists) | *unconfirmed* | `apps/backend/routers/watchlists.py`, `tests/test_watchlists.py`, `main.py` | Watchlist endpoints, uncommitted | Commit with D |
 
@@ -44,6 +45,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0092 | scrooner-98 | `coverage_group_snapshot` | applied, committed |
 | 0093 | scrooner-f9 | `company_filing_line_evidence` | in progress |
 | 0094 | free | claim here | |
+| 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | planned, not written |
 
 ## scrooner-98 queue (lane A)
 
@@ -61,7 +63,7 @@ Ordered; each item ends with a commit, push and a line in this doc.
 |---|---|
 | mypy: 93 errors, and Ruff on 3 files | scrooner-ff (idle; not yet confirmed) |
 | Cross-tag `cfo` `quarter_not_derived` | scrooner-64 |
-| Widen conflict-latest-filed to more tags | scrooner-2b (not yet confirmed) |
+| Widen conflict-latest-filed to more tags | scrooner-2b (accepted 2026-10-13; queued after the Q4/YTD analysis) |
 
 Watchlist feature (`apps/app/.../watchlist`, `apps/backend/routers/watchlists.py`): scrooner-98 confirms it is **not** lane A's. Owner still unknown; scrooner-2b or ff are the candidates.
 
