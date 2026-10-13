@@ -108,8 +108,13 @@ About 50 modified or untracked files predate today, some by 11 days. Examples: `
 - The working-tree `data-coverage/page.tsx` still differs from the committed one because lane D has not committed its redesign. Lane A's committed page uses only committed components.
 - scrooner-64 confirmed none of the files are theirs; scrooner-f9 and scrooner-98 own only committed work or named files; scrooner-2b and scrooner-ff also own none of them. **Nobody owns the ~50 remaining files** (watchlist, alerts, account, admin app, design-system, header/company-page restyle, sanity/mapper edits): they look like orphaned work from earlier or ended sessions, or from the user's own editor. This needs the user to say keep or discard; no session should commit or delete them meanwhile. Each owner session: commit your files with named `git add`, or say in this doc that they are scratch and can be discarded. Nobody else deletes them.
 
+## Known working-tree breakage
+
+`next build` fails in the shared working tree on uncommitted, ownerless WIP in `apps/app/components/public/HeaderMenu.tsx` (an `as const` array where only one entry has `action`, so `link.action` on line 33 does not type-check). Committed `main` does not contain it, so deploys from `main` are unaffected, but anyone running a local build hits it. Reported by scrooner-ff. Fix belongs to whoever finishes the watchlist-nav work; the user decides that (see the orphaned files above).
+
 ## Status log
 
 - 2026-10-13: lane A shipped grouped coverage (commits `3309830` and the follow-up dashboard commit). Lane B announced migration 0093 and the shared-module edits.
 
 - 2026-10-13: lane B shipped the filing-line evidence layer (`a18dd40`: migration 0093, `parsers/filing_line_evidence.py`, `probe-filing-lines`, gap reasons in `coverage_matrix.py`, dashboard wording, snapshot denominators). Population SEC pass run sharded (4 shards, ~100 companies/min); results go in `doc/learnings/`. `validate_latest_filed_vs_frames.py` committed for lane F's tag widening. scrooner-ff declined the mypy/Ruff handoff: unowned.
+- 2026-10-13: scrooner-ff shipped site-wide caching from doc 54 (commit 4f0e80a): cached backend directory/sector/industry endpoints, five pages moved off direct Postgres queries.
