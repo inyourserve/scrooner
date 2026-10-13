@@ -54,7 +54,9 @@ def load_full_directory(conn: psycopg.Connection) -> list[dict]:
         return cur.fetchall()
 
 
-def get_companies_by_tickers(conn: psycopg.Connection, tickers: list[str]) -> list[dict]:
+def get_companies_by_tickers(
+    conn: psycopg.Connection, tickers: list[str]
+) -> list[dict]:
     if not tickers:
         return []
     normalized = [t.upper() for t in tickers]

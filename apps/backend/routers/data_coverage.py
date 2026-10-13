@@ -93,7 +93,15 @@ def get_data_coverage(
     }
 
 
-_BAND_ORDER = ["top_100", "top_500", "top_1000", "top_1500", "top_2000", "top_3000", "all"]
+_BAND_ORDER = [
+    "top_100",
+    "top_500",
+    "top_1000",
+    "top_1500",
+    "top_2000",
+    "top_3000",
+    "all",
+]
 
 
 # Launch rules fixed up front (doc 53): a band is launch-ready when its average
@@ -103,7 +111,11 @@ _BAND_ORDER = ["top_100", "top_500", "top_1000", "top_1500", "top_2000", "top_30
 _LAUNCH_MIN_AVG = Decimal("85")
 _LAUNCH_MAX_LT60 = Decimal("10")
 _LAUNCH_MIN_SECTOR = Decimal("60")
-_SECTOR_GROUP_FOR_BAND = {"top_1000": "sector_top1000", "top_2000": "sector_top2000", "all": "sector_all"}
+_SECTOR_GROUP_FOR_BAND = {
+    "top_1000": "sector_top1000",
+    "top_2000": "sector_top2000",
+    "all": "sector_all",
+}
 
 
 def _launch_readiness(rank_bands, cur_map) -> list[dict]:
@@ -113,7 +125,9 @@ def _launch_readiness(rank_bands, cur_map) -> list[dict]:
         weakest = None
         if group_type:
             sector_rows = [
-                (k[1], v[6]) for k, v in cur_map.items() if k[0] == group_type and k[2] == "__summary__"
+                (k[1], v[6])
+                for k, v in cur_map.items()
+                if k[0] == group_type and k[2] == "__summary__"
             ]
             weakest = min(sector_rows, key=lambda r: r[1]) if sector_rows else None
         checks = {
@@ -135,12 +149,18 @@ def _launch_readiness(rank_bands, cur_map) -> list[dict]:
 
 
 def _score_delta(current, previous):
-    return str(current - previous) if current is not None and previous is not None else None
+    return (
+        str(current - previous)
+        if current is not None and previous is not None
+        else None
+    )
 
 
 @router.get("/data-coverage/groups")
 def get_group_coverage(
-    band: str = Query(default="top_1000", pattern="^(top_(100|500|1000|1500|2000|3000)|all)$"),
+    band: str = Query(
+        default="top_1000", pattern="^(top_(100|500|1000|1500|2000|3000)|all)$"
+    ),
     days: int = Query(default=30, ge=2, le=365),
     _: str = Depends(get_current_user_id),
 ) -> dict:
@@ -175,7 +195,14 @@ def get_group_coverage(
             history_rows = cur.fetchall()
     dates = sorted({r[0] for r in recent}, reverse=True)
     if not dates:
-        return {"as_of": None, "previous_as_of": None, "rank_bands": [], "sectors": [], "band_metrics": [], "history": []}
+        return {
+            "as_of": None,
+            "previous_as_of": None,
+            "rank_bands": [],
+            "sectors": [],
+            "band_metrics": [],
+            "history": [],
+        }
     latest = dates[0]
     prior = dates[1] if len(dates) > 1 else None
     cur_map = {(r[1], r[2], r[3]): r for r in recent if r[0] == latest}
@@ -231,7 +258,9 @@ def get_group_coverage(
     by_date: dict = {}
     for d, key, pct in history_rows:
         by_date.setdefault(str(d), {})[key] = str(pct)
-    history = [{"date": d, "bands": v} for d, v in sorted(by_date.items(), reverse=True)]
+    history = [
+        {"date": d, "bands": v} for d, v in sorted(by_date.items(), reverse=True)
+    ]
     return {
         "as_of": str(latest),
         "previous_as_of": str(prior) if prior else None,

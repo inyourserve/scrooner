@@ -119,10 +119,40 @@ class TestCompanyCoverageEndpoint:
 def test_group_coverage_reports_bands_sectors_and_deltas(monkeypatch):
     d1, d0 = date(2026, 10, 13), date(2026, 10, 12)
     recent = [
-        (d1, "rank_band", "top_1000", "__summary__", 1000, 17400, Decimal("87.00"), Decimal("63.00"), Decimal("4.60")),
-        (d0, "rank_band", "top_1000", "__summary__", 1000, 17300, Decimal("86.50"), Decimal("62.00"), Decimal("4.80")),
+        (
+            d1,
+            "rank_band",
+            "top_1000",
+            "__summary__",
+            1000,
+            17400,
+            Decimal("87.00"),
+            Decimal("63.00"),
+            Decimal("4.60"),
+        ),
+        (
+            d0,
+            "rank_band",
+            "top_1000",
+            "__summary__",
+            1000,
+            17300,
+            Decimal("86.50"),
+            Decimal("62.00"),
+            Decimal("4.80"),
+        ),
         (d1, "rank_band", "top_1000", "roic", 1000, 700, Decimal("70.00"), None, None),
-        (d1, "sector_top1000", "Financials", "__summary__", 157, 2000, Decimal("71.00"), Decimal("40.00"), Decimal("20.00")),
+        (
+            d1,
+            "sector_top1000",
+            "Financials",
+            "__summary__",
+            157,
+            2000,
+            Decimal("71.00"),
+            Decimal("40.00"),
+            Decimal("20.00"),
+        ),
     ]
     history = [(d1, "top_1000", Decimal("87.00")), (d0, "top_1000", Decimal("86.50"))]
 

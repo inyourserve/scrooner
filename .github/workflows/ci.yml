@@ -136,12 +136,18 @@ jobs:
       # for as long as Ruff failed (found 2026-10-10: 93 mypy errors, 3 urllib3
       # advisories, and 1 critical + 2 high npm advisories were all hidden).
       # --no-emit-project: the exported `-e .` line made pip-audit fail to install.
+      # --explicit-package-bases: found 2026-10-13 -- doc 54's caching work added
+      # apps/backend/reference_data.py alongside apps/backend/routers/reference_data.py.
+      # Without this flag mypy treats both as the same top-level module ("Duplicate
+      # module named 'reference_data'") and aborts with 1 error, hiding every real
+      # finding again (same failure shape the comment above already names, caused by
+      # a different committed change this time, not Ruff).
       - name: Ruff formatting debt
         if: always()
         run: uvx ruff format --check pipeline/src apps/backend
       - name: Python type analysis
         if: always()
-        run: uvx mypy --ignore-missing-imports --follow-imports=skip pipeline/src apps/backend
+        run: uvx mypy --ignore-missing-imports --follow-imports=skip --explicit-package-bases pipeline/src apps/backend
       - name: Export and audit pipeline dependencies
         if: always()
         run: |
