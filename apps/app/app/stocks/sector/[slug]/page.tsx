@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { PublicPage } from "@/components/public/PublicPage";
-import { getCompaniesBySectorSlug } from "@/lib/company/db";
+import { getCompaniesBySectorSlug } from "@/lib/company/referenceData";
+
+// Calls apps/backend instead of querying Postgres directly (doc 54,
+// 2026-10-13). cache() dedupes the generateMetadata vs. page-render
+// call within one request, same pattern as the company page.
+const getSectorData = cache(getCompaniesBySectorSlug);
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const data = await getCompaniesBySectorSlug(slug);
+  const data = await getSectorData(slug);
   if (!data) return { title: "Sector not found — Scrooner", robots: { index: false } };
   return {
     title: `${data.sector} stocks — Scrooner`,
@@ -18,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SectorPage({ params }: Props) {
   const { slug } = await params;
-  const data = await getCompaniesBySectorSlug(slug);
+  const data = await getSectorData(slug);
   if (!data) notFound();
   return (
     <PublicPage title={`${data.sector} stocks`} description={`${data.companies.length} companies in the ${data.sector} sector.`}>

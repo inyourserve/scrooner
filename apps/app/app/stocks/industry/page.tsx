@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PublicPage } from "@/components/public/PublicPage";
-import { getIndustryList } from "@/lib/company/db";
+import { getIndustryList } from "@/lib/company/referenceData";
 
 export const metadata: Metadata = {
   title: "Industries — browse US stocks",
   description: "All industries covered by Scrooner, with the number of companies in each.",
 };
-export const dynamic = "force-dynamic";
+// No force-dynamic (doc 54): getIndustryList calls apps/backend, cached 1hr.
 
 export default async function IndustryIndexPage() {
   const industries = await getIndustryList();

@@ -6,14 +6,18 @@ import { CompanySearch } from "@/components/public/CompanySearch";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { PublicHeader } from "@/components/public/PublicHeader";
 import { Button } from "@/components/ui/Button";
-import { getCompaniesByTickers } from "@/lib/company/db";
+import { getCompaniesByTickers } from "@/lib/company/referenceData";
 
 export const metadata: Metadata = {
   title: "Screen US stocks in plain English — Scrooner",
   description: "Turn an investment thesis into a repeatable US stock screen, then inspect the filings, periods, and formulas behind the results.",
   keywords: ["US stock screener", "stock screener", "company research", "fundamental stock screener"],
 };
-export const dynamic = "force-dynamic";
+// No force-dynamic: getCompaniesByTickers now calls apps/backend, which
+// caches this 1hr (doc 54) -- the page itself no longer needs to stay
+// dynamic just to reach Postgres directly, same precedent as the
+// company page (apps/stocks/[ticker]/page.tsx has no dynamic export
+// either, for the same reason).
 const names: Record<string, string> = { AAPL: "Apple", MSFT: "Microsoft", NVDA: "Nvidia", AMZN: "Amazon", GOOGL: "Alphabet", "BRK.B": "Berkshire", COST: "Costco", V: "Visa", JPM: "JPMorgan", LLY: "Eli Lilly", KO: "Coca-Cola" };
 
 async function getQuickPicks() {

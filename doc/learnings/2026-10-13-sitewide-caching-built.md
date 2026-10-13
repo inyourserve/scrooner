@@ -1,0 +1,28 @@
+# Site-wide caching built: Option A (2026-10-13)
+
+Follow-up to `doc/scoping/54_Scrooner_Site_Wide_Caching_Scope.md` (originally numbered 52, renumbered on the same day — see that doc's own note on the collision). The founder's direction was explicit: "decide everything by[your]self" — so the doc's own Option A recommendation (centralize in `apps/backend`, consistent with the 2026-10-03 company-page move) was implemented directly rather than re-raised as a question.
+
+## What shipped
+
+- `apps/backend/reference_data.py` — a faithful Python port of 6 `apps/app/lib/company/db.ts` queries (full directory, by-ticker lookup, sector list, industry list, by-sector-slug, by-industry-slug), same SQL text, same `EQUITY_ONLY_SQL` inline substitution pattern `company_page.py` already established on 2026-10-03. `slugify()` ported 1:1 too.
+- `apps/backend/routers/reference_data.py` — `GET /v1/directory`, `/v1/sectors`, `/v1/industries`, `/v1/sectors/{slug}`, `/v1/industries/{slug}`, `/v1/companies?tickers=...`. No auth (public, SEO-indexed data, same posture as `company.py`).
+- `apps/backend/cache.py` — new `REFERENCE_TTL_SECONDS = 3600` (1hr) and `get_cached_reference`/`set_cached_reference`, reusing the existing `CACHE_MISS` sentinel so an unknown sector/industry slug is itself a cacheable 404, not re-queried every request. Same fail-open contract as every other cache in this file.
+- `apps/app/lib/company/referenceData.ts` — thin `fetch()` wrappers calling the new endpoints, replacing the equivalent direct-Postgres functions removed from `lib/company/db.ts` (`loadFullCompanyDirectory`, `getCompaniesByTickers`, `getSectorList`, `getIndustryList`, `getCompaniesBySectorSlug`, `getCompaniesByIndustrySlug`, `slugify` — confirmed zero other callers before deleting, same discipline as the 2026-10-03 port's dead-code cleanup).
+- 7 call sites updated: `app/page.tsx` (homepage quick picks), `app/stocks/page.tsx`, `app/stocks/sector/page.tsx`, `app/stocks/industry/page.tsx`, `app/explore/page.tsx`, `app/stocks/sector/[slug]/page.tsx`, `app/stocks/industry/[slug]/page.tsx` — the latter two wrapped in React's `cache()` (same `generateMetadata`-vs-page-render dedup pattern as the company page). `app/api/company-search/directory/route.ts` and `app/sitemap.ts` also moved off their own `unstable_cache` wrappers onto the same backend call — `unstable_cache`'s per-process-only caching was the exact gap doc 54 named for the directory route, and `sitemap.ts` had the identical pattern.
+- `export const dynamic = "force-dynamic"` removed from all 5 originally-flagged pages (homepage, `/stocks`, `/stocks/sector`, `/stocks/industry`, `/explore`) — they no longer need to force dynamic rendering just to reach Postgres directly, same precedent as the company page (which has never had either export).
+- 8 new backend unit tests (`tests/test_reference_data.py`): cache-hit-skips-DB, cache-miss-queries-and-caches, 404-caches-the-miss, ticker-list-normalizes-into-a-stable-sorted-cache-key.
+
+## Verification
+
+- Backend: 77/77 tests passing (was 69, +8 new).
+- Frontend: `tsc`/`eslint` clean on every file touched; 114/114 vitest tests passing (unchanged count — no existing test depended on the removed functions).
+- Live, end-to-end, not just unit-tested: ran the real backend against the real Supabase DB and a real local Redis on an isolated port, then a real `next dev` instance pointed at it. Hit all 10 routes/endpoints: homepage, `/stocks`, `/stocks/sector`, `/stocks/industry`, `/explore`, a real sector slug, a real industry slug, an unknown sector slug (→ 404), the directory API route, and `/sitemap.xml` — all 200 (except the deliberate 404), with real content (6,069-company directory, "Technology sector" page text, 6,236 sitemap URLs, homepage quick-pick links). Measured a cache-hit at ~13ms vs. a cache-miss at ~1s for `/v1/sectors`, same order-of-magnitude improvement the company page already demonstrated.
+- Production build: `next build --webpack`'s webpack compile step succeeded (`✓ Compiled successfully`) for every file touched. The project-wide `tsc` step inside `next build` failed on one pre-existing error in `components/public/HeaderMenu.tsx` — confirmed via `git diff` to be an unrelated, uncommitted, in-progress peer-session edit (a watchlist-nav feature using `as const` on an object array where one variant has an `action` field the others lack), not caused by or connected to anything in this change. Flagged to the peer, not fixed here.
+
+## One pre-existing, unrelated finding
+
+The homepage's hardcoded quick-pick ticker `"BRK.B"` never matches `core.listing`, which stores it as `BRK-B` (hyphen, not dot) — the same dot-vs-hyphen mismatch already documented elsewhere in root `CLAUDE.md` for Alpaca. Confirmed via a direct query that this is pre-existing (predates this change; the faithful port reproduces the exact same `upper(l.ticker) in (...)` exact-match behavior the original TS code had). Not fixed here — out of scope for a caching-architecture task, and the page's own `.slice(0, 8)` already caps the list before this gap would even change what's visible.
+
+## Shared-tree discipline followed
+
+Checked `git status` before touching anything; the only files modified were ones a concurrent `ListAgents` check confirmed no peer was mid-editing. `apps/backend/main.py` (also being edited by a peer's in-flight watchlists-router work) was edited with the same isolate-the-exact-hunk discipline this project used on 2026-10-03/2026-09-10/09-11 — added only the `reference_data` import and `include_router` line, leaving the peer's `watchlists` lines untouched either side.

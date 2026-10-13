@@ -11,7 +11,15 @@ from fastapi import FastAPI
 from dataset_version_cache import get_cached_dataset_version, get_cached_metric_catalog
 from db_pool import close_pool, get_pooled_connection, open_pool
 from observability import api_request_metrics, observe_http_request
-from routers import company, data_coverage, entitlement, saved_screens, screen, screen_runs
+from routers import (
+    company,
+    data_coverage,
+    entitlement,
+    reference_data,
+    saved_screens,
+    screen,
+    screen_runs,
+)
 
 
 def _warm_screener_caches() -> None:
@@ -65,3 +73,4 @@ app.include_router(saved_screens.router)
 app.include_router(screen_runs.router)
 app.include_router(data_coverage.router)
 app.include_router(company.router)
+app.include_router(reference_data.router)

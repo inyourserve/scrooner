@@ -365,3 +365,51 @@ def set_cached_company_page(ticker: str, data: dict | None) -> None:
         )
     except RedisError:
         return
+
+
+# Reference-data cache (doc 54, 2026-10-13) -- the site's least-
+# personalized, most-repeat-traffic pages (homepage quick picks, the full
+# company directory, sector/industry lists, and their per-slug company
+# lists) had NO caching at all before this: apps/app read Postgres
+# directly on every request with `force-dynamic`, the exact pattern the
+# company page already fixed once (2026-09-15), just never retrofitted
+# here (doc 54's finding). This data only changes when the pipeline
+# reclassifies a company (sector_bucket.py/yfinance_industry.py), not per
+# request -- 1hr TTL matches the precedent this exact data already had
+# via the directory API route's own now-removed unstable_cache(revalidate:
+# 3600) and sitemap.ts's own 3600s, so this is not a freshness regression.
+#
+# Reuses CACHE_MISS (defined above for the company page) rather than a
+# second sentinel: "not in cache yet" and "cached as a real null" (an
+# unmatched sector/industry slug) are genuinely different outcomes here
+# too -- a bad slug should still be cached as 404, not re-queried on
+# every request.
+REFERENCE_TTL_SECONDS = 60 * 60
+
+
+def _reference_key(name: str) -> str:
+    return f"reference:{name}"
+
+
+def get_cached_reference(name: str):
+    try:
+        raw = _client.get(_reference_key(name))
+    except RedisError:
+        return CACHE_MISS
+    if raw is None:
+        return CACHE_MISS
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return CACHE_MISS
+
+
+def set_cached_reference(name: str, data) -> None:
+    try:
+        _client.set(
+            _reference_key(name),
+            json.dumps(data, default=_default),
+            ex=REFERENCE_TTL_SECONDS,
+        )
+    except RedisError:
+        return

@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PublicPage } from "@/components/public/PublicPage";
-import { getSectorList, getIndustryList } from "@/lib/company/db";
+import { getSectorList, getIndustryList } from "@/lib/company/referenceData";
 import { NATURAL_QUERY_EXAMPLES } from "@/lib/screener/interpretation";
 
 export const metadata: Metadata = {
   title: "Explore — sectors, industries, and stock screens",
   description: "Start from a popular screen, or browse US-listed companies by sector and industry.",
 };
-export const dynamic = "force-dynamic";
+// No force-dynamic (doc 54): getSectorList/getIndustryList call
+// apps/backend, each cached 1hr.
 
 // Reuses the exact phrases doc 15b already verified parse correctly and
 // reproduce the Screener's own results -- an "explore" surface is not the

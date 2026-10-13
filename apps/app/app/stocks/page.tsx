@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PublicPage } from "@/components/public/PublicPage";
-import { loadFullCompanyDirectory } from "@/lib/company/db";
+import { loadFullCompanyDirectory } from "@/lib/company/referenceData";
 
 export const metadata: Metadata = {
   title: "All stocks — every US-listed company Scrooner covers",
   description: "Browse the full directory of US-listed companies covered by Scrooner, one letter at a time.",
 };
-export const dynamic = "force-dynamic";
+// No force-dynamic (doc 54): loadFullCompanyDirectory calls apps/backend,
+// which caches the ~6k-row directory for 1hr -- this page no longer
+// needs to stay dynamic just to reach Postgres directly.
 
 const LETTERS = ["#", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")];
 

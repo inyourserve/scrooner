@@ -1,8 +1,8 @@
-# 52. Site-Wide Caching Scope
+# 54. Site-Wide Caching Scope
 
-**Status:** Draft (2026-10-09) — scoping only, nothing in this doc has been built. Prompted directly by the founder: "note down a learning and scoping document, we will create caching system for the entire site," following the same day's broader "my real goal is make the query super faster" direction (see `doc/learnings/2026-10-09-supabase-usage-audit.md` for the infra audit that preceded this).
+**Status:** Built (2026-10-13) — Option A (centralize in `apps/backend`) implemented, by explicit founder direction ("decide everything by[your]self") after this doc's own recommendation. See `doc/learnings/2026-10-13-sitewide-caching-built.md` for what shipped and how it was verified. Originally drafted 2026-10-09 as scoping only; renumbered from 52 to 54 on 2026-10-13 to resolve a real doc-number collision with `doc/planning/52_Scrooner_Coverage_and_Ticket_Backlog_Replan_2026-10-11.md`, written by a concurrent session in the same shared tree. Prompted directly by the founder: "note down a learning and scoping document, we will create caching system for the entire site," following the same day's broader "my real goal is make the query super faster" direction (see `doc/learnings/2026-10-09-supabase-usage-audit.md` for the infra audit that preceded this).
 
-**Owner:** Founder/Product. **Review:** before implementation starts, since this doc ends in an explicit decision point, not a final design.
+**Owner:** Founder/Product. **Review:** when the next force-dynamic/zero-cache page is found, same discipline as this doc's own build method.
 
 ## Why this doc exists
 
@@ -76,6 +76,8 @@ Two genuinely different architectures could serve as "the" unified system, and t
 
 Recommendation, stated plainly rather than left implicit: **Option A**, for one reason that outweighs the extra hop — these five pages are the *cheapest possible candidate* to prove out "the whole site goes through `apps/backend`" as a durable rule, since their queries are simple (sector/industry lists, a directory, 11 hardcoded tickers) and their cache TTLs can be long (hours, not minutes — this data only changes when the pipeline reclassifies a company, see below). A long TTL mostly erases the hop's cost in practice: the number of requests that actually pay the extra network round trip approaches zero once the cache is warm for hours at a time. This also avoids re-litigating the 2026-10-03 consistency decision and avoids `apps/app` regaining a Postgres dependency it just shed. If the founder instead wants Option B (faster to ship, no backend changes), that's a reasonable call too — naming it here so it's a decision, not a default.
 
+**Resolved 2026-10-13: Option A, built.** By explicit founder direction ("decide everything by[your]self") rather than a further back-and-forth — this doc's own recommendation stood on its reasoning (consistency with the 2026-10-03 move, cheapest-candidate argument, long TTLs erasing the hop cost) and nothing in the intervening 4 days changed any of it. See `doc/learnings/2026-10-13-sitewide-caching-built.md` for what was actually shipped, how it was verified live, and the one pre-existing ticker-format gap (confirmed not a regression) found along the way.
+
 ## Proposed TTL policy by data-volatility class
 
 Not yet a final design — proposed as the starting shape for whichever option is chosen:
@@ -99,4 +101,4 @@ The only new category this doc proposes is the first row — everything else alr
 
 ## Next step
 
-Founder decision on Option A vs. B above. Once chosen, implementation is a small, page-by-page port (Option A) or a small Redis-module rebuild plus five call sites (Option B) — either is a short follow-up task, not a redesign.
+Built — see `doc/learnings/2026-10-13-sitewide-caching-built.md`. Remaining, explicitly out of scope for this pass (same list as "What this doc does NOT cover" above): pre-warming, same-region hosting, Storage tiering, cache-hit-rate observability.
