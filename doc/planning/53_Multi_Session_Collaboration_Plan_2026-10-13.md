@@ -22,7 +22,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | Lane | Session | Owns (files / tables) | Current task | Next |
 |---|---|---|---|---|
 | A. Coverage dashboard and launch readiness | scrooner-98 | `mapper/coverage_groups.py`, `routers/data_coverage.py`, `components/data-coverage/*`, migration 0092, 0094+ | Verify the new dashboard sections visually, then write the launch-readiness check | See "scrooner-98 queue" |
-| B. Concept applicability and filing-line evidence | scrooner-f9 | migration 0093 (`company_filing_line_evidence`), `parsers/filing_line_evidence.py`, `probe-filing-lines` command, small edits in `coverage_matrix.py`, `company_coverage_dashboard.py`, `coverage_snapshot.py` | Building evidence layer; later a ~50 min SEC fetch pass (single process) | Reported by f9 |
+| B. Concept applicability, filing-line evidence, nightly/CI | scrooner-f9 (confirmed) | migration 0093, `parsers/filing_line_evidence.py`, `scripts/applicability_probe.py`, `probe-filing-lines` in `jobs/map.py`; small edits in `coverage_matrix.py`, `company_coverage_dashboard.py`, `coverage_snapshot.py`; `scripts/lib/sharded.sh`, `reprocess_recent_filers.sh`, `normalizer/conflict_latest_filed.py`; the nightly/CI watch | Evidence layer; adds gap_reason `line_not_presented_in_filing` on absent cells (has_value stays false, unchanged) plus a separate denominator adjustment in `coverage_snapshot.py`; later a ~50 min single-process SEC fetch pass | Phase 3 classifier (first choice) |
 | C. Data sanity, ticket fixes, coverage denominators | scrooner-64 (confirmed) | Committed work only: `coverage_matrix.py`, `coverage_snapshot.py` denominator fixes, doc 50. No uncommitted files. | Running the whole-population sanity re-measure (`timeseries`, `identities`, `plausibility`), then the rate-limited `scrooner-sanity run` | Re-run `period_completeness` + `snapshot-coverage` for final numbers; Phase 3 design is **offered for handoff** |
 | D. Frontend redesign (workspace, watchlist, alerts, company page) | *unconfirmed* | `apps/app/app/app/*`, `components/layout/*`, `components/public/*`, `components/scrooner/*`, `packages/design-system`, `apps/admin` | Uncommitted restyle, oldest files dated 2026-10-02 | Land or discard (see "Stale work") |
 | E. Backend (watchlists) | *unconfirmed* | `apps/backend/routers/watchlists.py`, `tests/test_watchlists.py`, `main.py` | Watchlist endpoints, uncommitted | Commit with D |
@@ -54,6 +54,16 @@ Ordered; each item ends with a commit, push and a line in this doc.
 3. **Fixable gaps in the top 1,000-2,000** (the "fix first" list): gross margin and ROIC (inputs that do not resolve, mapper tag coverage), interest coverage, FCF yield (capex and CFO TTM), current ratio (no recorded reason). Each fix: investigate with raw tags first, change the mapper, rerun for affected companies only, confirm the grouped snapshot moved.
 4. **Financials and Real Estate.** Check which core metrics are really inapplicable to banks versus unmapped. Where inapplicable, the right fix is sector-specific metrics ([doc 33](../execution-plans/33_Scrooner_Sector_Specific_Metrics_Plan.md), FDIC source in doc 32b), not forcing the 20 industrial metrics. Coordinate with lane B, which is producing the applicability evidence.
 5. **Dividend yield.** About 1,159 top-2,000 companies lack it; at least 699 have no dividend history. Decide how the dashboard shows non-payers (a real "no dividend" value, or excluded with a stated reason) with the user; do not change the raw lens silently.
+
+## Handoffs offered (scrooner-f9)
+
+| Item | Proposed owner |
+|---|---|
+| mypy: 93 errors, and Ruff on 3 files | scrooner-ff (idle; not yet confirmed) |
+| Cross-tag `cfo` `quarter_not_derived` | scrooner-64 |
+| Widen conflict-latest-filed to more tags | scrooner-2b (not yet confirmed) |
+
+Watchlist feature (`apps/app/.../watchlist`, `apps/backend/routers/watchlists.py`): scrooner-98 confirms it is **not** lane A's. Owner still unknown; scrooner-2b or ff are the candidates.
 
 ## Unassigned backlog (from doc 52)
 
