@@ -43,7 +43,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | Number | Owner | Purpose | State |
 |---|---|---|---|
 | 0092 | scrooner-98 | `coverage_group_snapshot` | applied, committed |
-| 0093 | scrooner-f9 | `company_filing_line_evidence` | in progress |
+| 0093 | scrooner-f9 | `company_filing_line_evidence` | in progress (file not yet committed; will be applied only after commit) |
 | 0094 | free | claim here | |
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | planned, not written |
 
@@ -64,6 +64,14 @@ Ordered; each item ends with a commit, push and a line in this doc.
 | mypy: 93 errors, and Ruff on 3 files | scrooner-ff (idle; not yet confirmed) |
 | Cross-tag `cfo` `quarter_not_derived` | scrooner-64 |
 | Widen conflict-latest-filed to more tags | scrooner-2b (accepted 2026-10-13; queued after the Q4/YTD analysis) |
+
+**scrooner-f9 on Phase 3 (period-conditional classifier): yes, as the step after the evidence layer, in two gated steps.** It is a different problem from lane B's evidence layer, even though both aim at "genuinely doesn't apply". Lane B answers *company-level* questions for concepts many companies never report (inventory, R&D, goodwill, gross profit, ...) by reading the company's own filing. Phase 3 is *period-level*: universally reported concepts (cash flow, EPS, income tax) missing only for pre-merger shell years. Order of work:
+
+1. Finish and land the evidence layer first (0093, `filing_line_evidence`, the three coverage modules, the SEC pass).
+2. Phase 3 step 1 only: sample the `cash_flow_investing` / `cash_flow_financing` gap population and verify the SPAC-merger-timing pattern generalizes past the three companies doc 50 traced. **No classifier is built until that is verified**, and the result goes in doc 50, including if the answer is "it does not generalize".
+3. Phase 3 step 2 (design and build, keyed off a company's first full post-transition fiscal year, not SIC): only if step 2 holds. If another session has capacity sooner (scrooner-ff is idle), it can take step 1 now; tell me and I will not duplicate it.
+
+Evidence-layer facts other lanes can rely on: it will **not** change how `has_value` is set. It adds one `gap_reason` value, `line_not_presented_in_filing` (the company's latest 10-K/10-Q shows no such line on the face of its balance sheet / income statement, with the accession stored), and `line_in_filing_not_extracted` (the line is there and we have no value: a real, ranked worklist). Absence from the face is evidence, not proof (measured 14-34% of the time we HAVE a value without a face line), so the dashboard text says "not shown on the statements", not "does not apply".
 
 Watchlist feature (`apps/app/.../watchlist`, `apps/backend/routers/watchlists.py`): scrooner-98 confirms it is **not** lane A's. Owner still unknown; scrooner-2b or ff are the candidates.
 
