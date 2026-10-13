@@ -309,7 +309,7 @@ def test_candidate_tag_and_absent_line_item_split_out_of_no_mapped_tag():
         cause(period_kind="Q", ytd_facts=1, line_item_filed=False)
         == "quarter_not_derived"
     )
-    assert CAUSES["no_line_item_filed"][0] == "legitimate_absence"
+    assert CAUSES["no_line_item_filed"][0] == "data_limit"
     assert CAUSES["unmapped_candidate_tag"][0] == "pipeline_bug"
 
 

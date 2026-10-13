@@ -150,9 +150,17 @@ CAUSES: dict[str, tuple[str, str]] = {
         "pipeline_bug",
         "Periods missing: filed under an equivalent tag we don't map",
     ),
+    # The id is a period_gap CHECK value (migration 0090), so it stays; what
+    # it asserts does not. scrooner-f9 checked a 40-filing sample against the
+    # rendered statements (2026-10-13): 18% of the investing-cash-flow cells
+    # had the line on the statement but no matching fact in our feed, so
+    # "no XBRL fact" is NOT evidence the filer reports no such line. Treated
+    # as data_limit until a rendered-statement check confirms the absence
+    # (filing_line_evidence), which is what may promote it to
+    # legitimate_absence.
     "no_line_item_filed": (
-        "legitimate_absence",
-        "Periods missing: the filing reports no such line item",
+        "data_limit",
+        "Periods missing: no XBRL fact for this line in the filing",
     ),
 }
 
@@ -178,9 +186,10 @@ CANDIDATE_TAGS: dict[str, tuple[str, ...]] = {
 
 # LINE_ITEM_TAGS -- a tag-name regex for the statement line itself, across
 # every tag (mapped or not). If the expected filing carries no fact at all
-# whose tag matches, the filer reports no such line (a loss-making shell has
-# no income-tax line; an unclassified balance sheet has no current assets),
-# so the blank is correct. Anchored/narrow on purpose: IncomeTaxesPaid and
+# whose tag matches, our feed has no such fact. That is often because the
+# filer reports no such line (a loss-making shell has no income-tax line),
+# but not always (~18% of a sampled set had the line on the rendered
+# statement), so it is labelled data_limit, not legitimate_absence. Anchored/narrow on purpose: IncomeTaxesPaid and
 # tax-rate tags must NOT count as an income-tax-expense line.
 LINE_ITEM_TAGS: dict[str, str] = {
     "income_tax_expense": r"^(Current|Deferred)?IncomeTaxExpenseBenefit",
