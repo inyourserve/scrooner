@@ -157,6 +157,18 @@ jobs:
       - name: Enforce freshness and dead-letter health
         if: always()
         run: uv run --project pipeline scrooner-operations --fail-on-alert
+      - name: Refresh filing-line evidence (does each concept's line appear in the latest filing?)
+        # Added 2026-10-13. Independent evidence for "this line does not exist for
+        # this company" vs "it is in the filing and we missed it": reads each
+        # company's latest 10-K/10-Q rendered statements (3 SEC requests each) and
+        # stores the answer in analytics.company_filing_line_evidence, which the
+        # coverage matrix below turns into gap reasons and the snapshot uses for
+        # denominators. Incremental: only companies whose latest filing changed
+        # since the last read (typically tens a day), so it is cheap; bounded to
+        # 20 minutes so a backlog (e.g. after an outage) drains over a few nights
+        # instead of delaying the coverage steps. Must run BEFORE the matrix.
+        if: always()
+        run: uv run --project pipeline scrooner-map probe-filing-lines --max-minutes 20
       - name: Rebuild company/metric/tag coverage matrix
         # The source of truth for "does company X have data point Y, and
         # why not" (analytics.data_point_registry + company_data_point_

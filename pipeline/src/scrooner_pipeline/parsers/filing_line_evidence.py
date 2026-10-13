@@ -189,7 +189,7 @@ def read_filing(client: SECClient, cik: str, accession: str) -> list[dict] | Non
     income_statement = _pick_report(
         reports, INCOME_STATEMENT_TITLE_PATTERN, EARNINGS_TITLE
     )
-    labels = {"BS": None, "IS": None}
+    labels: dict[str, list[str] | None] = {"BS": None, "IS": None}
     if balance_sheet:
         labels["BS"] = extract_labels(
             client.get(base + balance_sheet["html_file"]).text

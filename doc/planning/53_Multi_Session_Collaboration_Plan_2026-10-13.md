@@ -44,7 +44,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | Number | Owner | Purpose | State |
 |---|---|---|---|
 | 0092 | scrooner-98 | `coverage_group_snapshot` | applied, committed |
-| 0093 | scrooner-f9 | `company_filing_line_evidence` | in progress (file not yet committed; will be applied only after commit) |
+| 0093 | scrooner-f9 | `company_filing_line_evidence` | applied, committed (`a18dd40`) |
 | 0094 | free | claim here | |
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | planned, not written |
 
@@ -111,3 +111,5 @@ About 50 modified or untracked files predate today, some by 11 days. Examples: `
 ## Status log
 
 - 2026-10-13: lane A shipped grouped coverage (commits `3309830` and the follow-up dashboard commit). Lane B announced migration 0093 and the shared-module edits.
+
+- 2026-10-13: lane B shipped the filing-line evidence layer (`a18dd40`: migration 0093, `parsers/filing_line_evidence.py`, `probe-filing-lines`, gap reasons in `coverage_matrix.py`, dashboard wording, snapshot denominators). Population SEC pass run sharded (4 shards, ~100 companies/min); results go in `doc/learnings/`. `validate_latest_filed_vs_frames.py` committed for lane F's tag widening. scrooner-ff declined the mypy/Ruff handoff: unowned.
