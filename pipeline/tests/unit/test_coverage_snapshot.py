@@ -26,6 +26,10 @@ class _FakeCursor:
         s = sql.strip()
         if "count(*) from core.company" in s:
             self._last_result = ("scalar", self._total_active)
+        elif (
+            "gap_reason" in s
+        ):  # filing-line N/A counts (checked before company_population: it joins it)
+            self._last_result = ("rows", getattr(self, "_na_rows", []))
         elif "company_population" in s:
             self._last_result = ("rows", getattr(self, "_population_rows", []))
         elif "canonical_concept" in s:
@@ -43,15 +47,24 @@ class _FakeCursor:
 
 
 class _FakeConnection:
-    def __init__(self, total_active, concept_rows, metric_rows, population_rows=None):
+    def __init__(
+        self,
+        total_active,
+        concept_rows,
+        metric_rows,
+        population_rows=None,
+        na_rows=None,
+    ):
         self._total_active = total_active
         self._concept_rows = concept_rows
         self._metric_rows = metric_rows
         self._population_rows = population_rows or []
+        self._na_rows = na_rows or []
 
     def cursor(self):
         cur = _FakeCursor(self._total_active, self._concept_rows, self._metric_rows)
         cur._population_rows = self._population_rows
+        cur._na_rows = self._na_rows
         return cur
 
 
@@ -177,3 +190,51 @@ class TestComputeSnapshot:
         score_row = by_name[("score", "avg_metric_coverage_score")]
         assert score_row["total_active_companies"] == 5216
         assert score_row["companies_covered"] == 2  # 2 metrics averaged, not companies
+
+
+@pytest.mark.unit
+class TestFilingLineDenominators:
+    """Companies whose own latest filing shows the standalone line is not presented
+    are not 'missing' it (coverage_matrix.apply_filing_line_evidence)."""
+
+    def test_documented_not_presented_companies_leave_a_concepts_denominator(self):
+        conn = _FakeConnection(
+            total_active=100,
+            concept_rows=[("goodwill", 60), ("revenue", 90)],
+            metric_rows=[],
+            na_rows=[("goodwill", 30)],
+        )
+        rows = {
+            r["item_name"]: r
+            for r in compute_snapshot(conn, as_of=date(2026, 10, 13))["rows"]
+        }
+        assert rows["goodwill"]["total_active_companies"] == 70
+        assert rows["goodwill"]["coverage_pct"] == Decimal(
+            "85.71"
+        )  # 60 / 70, not 60 / 100
+        assert (
+            rows["revenue"]["total_active_companies"] == 100
+        )  # no evidence: unchanged
+        assert rows["revenue"]["coverage_pct"] == Decimal("90.00")
+
+    def test_the_denominator_never_drops_below_what_was_actually_covered(self):
+        conn = _FakeConnection(
+            total_active=100,
+            concept_rows=[("inventory", 80)],
+            metric_rows=[],
+            na_rows=[("inventory", 60)],
+        )
+        row = compute_snapshot(conn, as_of=date(2026, 10, 13))["rows"][0]
+        assert row["total_active_companies"] == 80
+        assert row["coverage_pct"] == Decimal("100.00")  # capped, never above 100
+
+    def test_metrics_are_not_adjusted_by_filing_line_evidence(self):
+        conn = _FakeConnection(
+            total_active=100,
+            concept_rows=[],
+            metric_rows=[("roic", 50)],
+            na_rows=[("roic", 40)],
+        )
+        row = compute_snapshot(conn, as_of=date(2026, 10, 13))["rows"][0]
+        assert row["total_active_companies"] == 100
+        assert row["coverage_pct"] == Decimal("50.00")

@@ -60,6 +60,9 @@ from scrooner_pipeline.mapper.company_coverage_dashboard import (
     summarize_company,
     summarize_population,
 )
+from scrooner_pipeline.parsers.filing_line_evidence import (
+    run as run_filing_line_evidence,
+)
 from scrooner_pipeline.parsers.main_parser import (
     run_parser,
     resolve_parser_results,
@@ -664,6 +667,41 @@ def parser_registry_summary_cmd() -> None:
         rows = registry_summary(conn)
     for row in rows:
         typer.echo(f"  {row}")
+
+
+@app.command("probe-filing-lines")
+def probe_filing_lines_cmd(
+    ciks: str = typer.Option(
+        None,
+        help="Comma-separated CIKs to restrict to (default: every active company whose evidence is missing or stale).",
+    ),
+    limit: int = typer.Option(None, help="Stop after this many companies."),
+    max_minutes: float = typer.Option(
+        None,
+        help="Stop starting new companies after this many minutes (the rest are picked up next run).",
+    ),
+    force: bool = typer.Option(
+        False, help="Re-read companies whose evidence is already current."
+    ),
+) -> None:
+    """Per-company filing-line evidence (parsers/filing_line_evidence.py, migration
+    0093): does each concept's line appear on the face of the company's latest
+    10-K/10-Q balance sheet or income statement? Incremental -- only companies whose
+    latest filing changed are re-read (3 SEC requests each, shared rate limiter).
+    Run build-coverage-matrix afterwards: it turns the evidence into gap reasons, and
+    snapshot-coverage then uses them for denominators."""
+    target_ciks = {c.strip().zfill(10) for c in ciks.split(",")} if ciks else None
+    stats = run_tolerating_exit_commit_failure(
+        "probe_filing_lines",
+        lambda conn: run_filing_line_evidence(
+            conn,
+            target_ciks,
+            limit=limit,
+            max_seconds=max_minutes * 60 if max_minutes else None,
+            force=force,
+        ),
+    )
+    typer.echo(f"probe-filing-lines: {stats}")
 
 
 @app.command("build-coverage-matrix")

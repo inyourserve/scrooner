@@ -250,6 +250,75 @@ def classify_concept_gaps(conn: psycopg.Connection) -> dict:
     return {"rows": classified}
 
 
+# Filing-line evidence (parsers/filing_line_evidence.py, migration 0093): which
+# data points each evidenced concept speaks for. A concept's evidence also covers
+# its *_resolved siblings, which are the same statement line.
+FILING_LINE_DATA_POINTS: dict[str, tuple[str, ...]] = {
+    "inventory": ("inventory",),
+    "accounts_receivable": ("accounts_receivable",),
+    "accounts_payable": ("accounts_payable",),
+    "goodwill": ("goodwill",),
+    "cost_of_revenue": ("cost_of_revenue", "cost_of_revenue_resolved"),
+    "gross_profit": ("gross_profit", "gross_profit_resolved"),
+    "research_and_development": ("research_and_development",),
+    "interest_income": ("interest_income",),
+    "operating_expenses": ("operating_expenses", "operating_expenses_resolved"),
+}
+REASON_LINE_NOT_PRESENTED = "line_not_presented_in_filing"
+REASON_LINE_COMBINED = "line_presented_combined_with_others"
+REASON_LINE_NOT_EXTRACTED = "line_in_filing_not_extracted"
+# The first two are structural absences of the STANDALONE line (not a failure to
+# extract); the third is a real, investigable gap.
+FILING_LINE_STRUCTURAL_REASONS = (REASON_LINE_NOT_PRESENTED, REASON_LINE_COMBINED)
+
+
+def apply_filing_line_evidence(conn: psycopg.Connection) -> dict:
+    """Gives absent concept cells a reason from the company's own filing, where
+    nothing earlier explained them. Never touches has_value, never overwrites an
+    existing gap_reason (the revenue-family SIC rules run first), and does nothing
+    for a company whose statement could not be located (line_present is NULL)."""
+    with conn.cursor() as cur:
+        cur.execute("select to_regclass('analytics.company_filing_line_evidence')")
+        if cur.fetchone()[0] is None:  # migration 0093 not applied yet
+            logger.info(
+                "coverage_matrix.filing_line_evidence_skipped", reason="table missing"
+            )
+            return {"rows": 0, "skipped": "evidence table missing"}
+        concepts = [c for c, points in FILING_LINE_DATA_POINTS.items() for _ in points]
+        points = [p for points in FILING_LINE_DATA_POINTS.values() for p in points]
+        cur.execute(
+            """
+            with m as (
+                select * from unnest(%(concepts)s::text[], %(points)s::text[]) as t(concept, data_point)
+            )
+            update analytics.company_data_point_coverage cov
+            set gap_reason = case
+                    when e.combined then %(combined)s
+                    when e.line_present then %(not_extracted)s
+                    else %(not_presented)s
+                end
+            from analytics.company_filing_line_evidence e
+            join m on m.concept = e.data_point
+            where cov.company_id = e.company_id
+              and cov.data_point_name = m.data_point
+              and cov.has_value = false
+              and cov.gap_reason is null
+              and e.line_present is not null
+            """,
+            {
+                "concepts": concepts,
+                "points": points,
+                "combined": REASON_LINE_COMBINED,
+                "not_extracted": REASON_LINE_NOT_EXTRACTED,
+                "not_presented": REASON_LINE_NOT_PRESENTED,
+            },
+        )
+        classified = cur.rowcount
+        conn.commit()
+    logger.info("coverage_matrix.filing_line_evidence_applied", rows=classified)
+    return {"rows": classified}
+
+
 # The corrected-coverage-denominator methodology (2026-09-12, see
 # doc/data-moat/learnings/2026-09-12-corrected-coverage-denominator-methodology.md),
 # generalized from revenue/dividends to the whole registry. Every coverage
@@ -702,6 +771,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
     # revenue_sanity_resolved gap_reason values (pre_revenue_spac etc.)
     # that POPULATION_QUERIES['real_operating_company'] reads directly.
     gap_stats = classify_concept_gaps(conn)
+    evidence_stats = apply_filing_line_evidence(conn)
     population_stats = classify_company_populations(conn)
 
     logger.info(
@@ -709,12 +779,14 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         total_rows=total,
         has_value=has_value,
         concept_gaps_classified=gap_stats["rows"],
+        filing_line_evidence_applied=evidence_stats["rows"],
         company_populations_classified=population_stats["rows"],
     )
     return {
         "total_rows": total,
         "has_value": has_value,
         "concept_gaps_classified": gap_stats["rows"],
+        "filing_line_evidence_applied": evidence_stats["rows"],
         "company_populations_classified": population_stats["rows"],
     }
 

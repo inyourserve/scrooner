@@ -46,6 +46,12 @@ from collections import defaultdict
 import psycopg
 import structlog
 
+from scrooner_pipeline.mapper.coverage_matrix import (
+    REASON_LINE_COMBINED,
+    REASON_LINE_NOT_EXTRACTED,
+    REASON_LINE_NOT_PRESENTED,
+)
+
 logger = structlog.get_logger()
 
 # Structural reasons classify_concept_gaps() already verified live
@@ -65,6 +71,10 @@ _STRUCTURAL_GAP_REASONS: dict[str, str] = {
     "bdc_reports_investment_income_not_revenue": 'Business Development Company -- reports total investment income, not a "Revenue" line.',
     "foreign_private_issuer_sparse_xbrl": "Foreign private issuer -- SEC's own data for this filer type is sparse by design (20-F/40-F, not a 10-K).",
     "coregistrant_subsidiary_sparse_sec_xbrl": "Wholly-owned subsidiary filer -- its real financials are consolidated into its parent's filing, not its own.",
+    # From the company's own latest filing (parsers/filing_line_evidence.py). Worded as
+    # evidence, not proof: a line absent from the statements can still be in the notes.
+    REASON_LINE_NOT_PRESENTED: "Not shown on the balance sheet or income statement in the company's latest 10-K/10-Q (it may be disclosed only in the notes).",
+    REASON_LINE_COMBINED: 'Presented only combined with other items in the latest filing (e.g. "accounts payable and accrued expenses"), not as a standalone line.',
 }
 
 
@@ -83,6 +93,8 @@ def _friendly_note(gap_reason: str | None, not_applicable: bool) -> str:
     if gap_reason.startswith("incomplete:"):
         role = gap_reason.split(":", 1)[1]
         return f"One or more required inputs incomplete for this calculation ({role.replace('_', ' ')})."
+    if gap_reason == REASON_LINE_NOT_EXTRACTED:
+        return "The company's latest filing shows this line on its statements, but we have no extracted value -- a genuine, investigable gap."
     if gap_reason == "no_dividend_history":
         return "This company has no record of paying a dividend."
     if gap_reason == "non_positive_growth_not_meaningful":

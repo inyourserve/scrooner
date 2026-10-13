@@ -17,122 +17,38 @@ import argparse
 import collections
 import json
 import random
-import re
 import sys
 
 import psycopg
-import structlog
 
 from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.sec_client import SECClient
-from scrooner_pipeline.parsers.revenue_parser import (
-    _CELL,
-    _ROW,
-    INCOME_STATEMENT_TITLE_PATTERN,
-    PARENTHETICAL_SUFFIX_PATTERN,
-    _cell_text,
-)
-from scrooner_pipeline.segments.segment_revenue import (
-    _filing_summary_reports,
-    _latest_10q_or_10k,
-)
+from scrooner_pipeline.parsers.filing_line_evidence import SPECS, read_filing
+from scrooner_pipeline.segments.segment_revenue import _latest_10q_or_10k
 
-logger = structlog.get_logger()
-
-BALANCE_SHEET_TITLE = re.compile(
-    r"balance\s+sheets?|statements?\s+of\s+(consolidated\s+)?financial\s+(condition|position)"
-    r"|statements?\s+of\s+(net\s+)?assets",
-    re.IGNORECASE,
-)
-EARNINGS_TITLE = re.compile(
-    r"statements?\s+of\s+(consolidated\s+)?(earnings|profit|comprehensive\s+(income|loss))"
-    r"|\bincome\s+statements?\b",
-    re.IGNORECASE,
-)
-# Rendered reports embed a hidden "- Definition ..." popup row under many line
-# items; those are documentation, not statement lines (Apple's "goodwill" match).
-_DEFINITION_ROW = re.compile(r"^\s*-\s*(definition|details?)\b", re.IGNORECASE)
-
-# concept -> (statement, label pattern). Patterns are deliberately about the
-# LINE a reader would see; "present in filing" means such a row exists.
-SPECS: dict[str, tuple[str, re.Pattern]] = {
-    "inventory": ("BS", re.compile(r"\binventor(y|ies)\b", re.I)),
-    "accounts_receivable": (
-        "BS",
-        re.compile(r"(account|trade|customer)s?\s*(and\s+[\w\s]+?)?receivable|^\s*receivables?\b", re.I),
-    ),
-    "accounts_payable": (
-        "BS",
-        re.compile(r"(account|trade)s?\s*(and\s+[\w\s]+?)?payable|^\s*payables?\b", re.I),
-    ),
-    "goodwill": ("BS", re.compile(r"\bgoodwill\b", re.I)),
-    "cost_of_revenue": (
-        "IS",
-        re.compile(r"\bcosts?\s+of\s+(net\s+)?(revenues?|sales|goods|products?|services|operations)\b", re.I),
-    ),
-    "gross_profit": ("IS", re.compile(r"\bgross\s+(profit|margin|income)\b", re.I)),
-    "research_and_development": (
-        "IS",
-        re.compile(r"research\s*(and|&)\s*development|product\s+development|technology\s+and\s+development", re.I),
-    ),
-    "interest_income": (
-        "IS",
-        re.compile(r"interest\s+(income|and\s+(dividend|other|investment)\s+income)|investment\s+income|interest\s+and\s+other\s+income", re.I),
-    ),
-    "operating_expenses": (
-        "IS",
-        re.compile(r"total\s+(operating\s+)?(costs?\s+and\s+)?expenses|total\s+operating\s+costs|operating\s+expenses,?\s+total", re.I),
-    ),
-}
-
-
-def _labels(html: str) -> list[str]:
-    out = []
-    for _cls, inner in _ROW.findall(html):
-        cells = _CELL.findall(inner)
-        if cells:
-            text = _cell_text(cells[0]).strip()
-            if text and not _DEFINITION_ROW.search(text):
-                out.append(text)
-    return out
-
-
-def _pick(reports: list[dict], pattern: re.Pattern, extra: re.Pattern | None = None) -> dict | None:
-    for r in reports:
-        if PARENTHETICAL_SUFFIX_PATTERN.search(r["title"]):
-            continue
-        if pattern.search(r["title"]) or (extra and extra.search(r["title"])):
-            return r
-    return None
+CONCEPTS = [spec.concept for spec in SPECS]
 
 
 def probe_company(client: SECClient, cik: str) -> dict:
+    """Reads one company's latest filing via the shared module (patterns live in
+    parsers/filing_line_evidence.py, the single source of truth). 'line' maps each
+    concept to the matched label, False (statement read, no such line) or None (no
+    evidence); a combined line is shown with a '(combined)' suffix."""
     filing = _latest_10q_or_10k(client, cik)
     if filing is None:
         return {"status": "no_filing"}
-    reports = _filing_summary_reports(client, int(cik), filing["accession_number"])
-    base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{filing['accession_number'].replace('-', '')}/"
-    bs = _pick(reports, BALANCE_SHEET_TITLE)
-    inc = _pick(reports, INCOME_STATEMENT_TITLE_PATTERN, EARNINGS_TITLE)
-    labels = {"BS": [], "IS": []}
-    if bs:
-        labels["BS"] = _labels(client.get(base + bs["html_file"]).text)
-    if inc:
-        labels["IS"] = _labels(client.get(base + inc["html_file"]).text)
-    found = {}
-    for concept, (stmt, pat) in SPECS.items():
-        if stmt == "BS" and not bs or stmt == "IS" and not inc:
-            found[concept] = None  # statement not located: no evidence either way
-            continue
-        hit = next((l for l in labels[stmt] if pat.search(l)), None)
-        found[concept] = hit or False
-    return {
-        "status": "ok",
-        "form": filing["form"],
-        "bs_found": bool(bs),
-        "is_found": bool(inc),
-        "line": found,
-    }
+    rows = read_filing(client, cik, filing["accession_number"])
+    if rows is None:
+        return {"status": "no_reports", "form": filing["form"]}
+    line = {}
+    for r in rows:
+        if r["line_present"] is None:
+            line[r["data_point"]] = None
+        elif not r["line_present"]:
+            line[r["data_point"]] = False
+        else:
+            line[r["data_point"]] = r["matched_label"] + (" (combined)" if r["combined"] else "")
+    return {"status": "ok", "form": filing["form"], "line": line}
 
 
 def sample_companies(conn, per_sector: int, seed: int) -> list[tuple[int, str, str]]:
@@ -161,7 +77,7 @@ def our_data(conn, company_ids: list[int]) -> dict[tuple[int, str], bool]:
         from analytics.company_data_point_coverage
         where company_id = any(%s) and data_point_name = any(%s)
         """,
-        (company_ids, list(SPECS)),
+        (company_ids, CONCEPTS),
     ).fetchall()
     return {(c, n): bool(h) for c, n, h in rows}
 
@@ -196,7 +112,7 @@ def main() -> None:
             except Exception as exc:  # one company's fetch failure must not stop the sample
                 res = {"status": f"error:{type(exc).__name__}"}
             res.update({"company_id": cid, "cik": cik, "sector": sector})
-            res["ours"] = {c: ours.get((cid, c)) for c in SPECS}
+            res["ours"] = {c: ours.get((cid, c)) for c in CONCEPTS}
             results.append(res)
             if i % 25 == 0:
                 print(f"  probed {i}/{len(sample)}", file=sys.stderr, flush=True)

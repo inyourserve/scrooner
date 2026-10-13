@@ -50,6 +50,7 @@ from scrooner_pipeline.mapper.definitions import (
     METRIC_DEFINITIONS as _V1_METRIC_DEFINITIONS,
 )
 from scrooner_pipeline.mapper.coverage_matrix import (
+    FILING_LINE_STRUCTURAL_REASONS,
     BDC_FAMILY_DATA_POINTS,
     BUYBACK_FAMILY_DATA_POINTS,
     CAPITAL_RETURN_FAMILY_DATA_POINTS,
@@ -132,7 +133,31 @@ def _load_population_counts(conn: psycopg.Connection) -> dict[str, int]:
         return dict(cur.fetchall())
 
 
-def _denominator_for(item_name: str, population_counts: dict[str, int], total_active: int) -> int:
+def _load_filing_line_na_counts(conn: psycopg.Connection) -> dict[str, int]:
+    """Per data point: how many companies in the default population have NO value
+    and whose own latest filing shows the standalone line is not presented
+    (coverage_matrix.apply_filing_line_evidence). The line does not exist for them
+    on the statements, so they are not part of what a "complete" count should reach.
+    Only ever the two structural filing-line reasons -- a line that IS in the filing
+    but not extracted stays in the denominator as the real gap it is."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select cov.data_point_name, count(*)
+            from analytics.company_data_point_coverage cov
+            join analytics.company_population p
+              on p.company_id = cov.company_id and p.population_name = %s
+            where cov.has_value = false and cov.gap_reason = any(%s)
+            group by cov.data_point_name
+            """,
+            (_DEFAULT_POPULATION, list(FILING_LINE_STRUCTURAL_REASONS)),
+        )
+        return dict(cur.fetchall())
+
+
+def _denominator_for(
+    item_name: str, population_counts: dict[str, int], total_active: int
+) -> int:
     """The semantically-correct denominator for one concept/metric --
     its named family's population if it has one, else real_operating_
     company, falling back to raw total_active only if that population
@@ -184,10 +209,14 @@ def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dic
     population_counts = _load_population_counts(conn)
     concept_coverage = _load_concept_coverage(conn)
     metric_coverage = _load_metric_coverage(conn)
+    filing_line_na = _load_filing_line_na_counts(conn)
 
     rows = []
     for name, covered in sorted(concept_coverage.items()):
         denom = _denominator_for(name, population_counts, total_active)
+        # Companies whose own filing shows the line is not presented are not "missing"
+        # it. Never below what we actually covered.
+        denom = max(denom - filing_line_na.get(name, 0), covered)
         rows.append(
             {
                 "snapshot_date": as_of,
