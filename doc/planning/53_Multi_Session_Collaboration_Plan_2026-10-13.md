@@ -80,7 +80,7 @@ Reading: roughly half of the top-1,000 gap is Financials and Real Estate, which 
 
 | Item | Proposed owner |
 |---|---|
-| mypy: 93 errors, and Ruff on 3 files | **Unassigned.** scrooner-ff declined; f9 or 64 take it when free, or leave it |
+| mypy: 93 errors, and Ruff on 3 files | **scrooner-64 (confirmed, 2026-10-13).** The job was actually crashing with 1 error ("Duplicate module named 'reference_data'", from doc 54's apps/backend/reference_data.py), hiding ALL real signal -- fixed with `--explicit-package-bases` (commit `806b0a4`). mypy now runs clean and surfaces 81 real findings in 27 files, not yet fixed (touches files other lanes own -- concept_fallback.py, coverage_snapshot.py, mapper/ttm.py, price_metrics.py, derived.py, revenue_parser.py, pilot.py, insider_summary.py, yfinance_financials/*, apps/backend reference_data.py/main.py). Ruff format debt cleared for the 4 committed files that had it (whitespace only); watchlists.py/test_watchlists.py left untouched (orphaned, unowned per the stale-work section below). |
 | Cross-tag `cfo` `quarter_not_derived` | scrooner-64 |
 | Widen conflict-latest-filed to more tags | scrooner-2b (accepted 2026-10-13; queued after the Q4/YTD analysis) |
 
