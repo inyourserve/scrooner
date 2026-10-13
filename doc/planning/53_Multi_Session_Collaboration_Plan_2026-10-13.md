@@ -24,6 +24,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | A. Coverage dashboard and launch readiness | scrooner-98 | `mapper/coverage_groups.py`, `routers/data_coverage.py`, `components/data-coverage/*`, migration 0092, 0094+ | Verify the new dashboard sections visually, then write the launch-readiness check | See "scrooner-98 queue" |
 | B. Concept applicability, filing-line evidence, nightly/CI | scrooner-f9 (confirmed) | migration 0093, `parsers/filing_line_evidence.py`, `scripts/applicability_probe.py`, `probe-filing-lines` in `jobs/map.py`; small edits in `coverage_matrix.py`, `company_coverage_dashboard.py`, `coverage_snapshot.py`; `scripts/lib/sharded.sh`, `reprocess_recent_filers.sh`, `normalizer/conflict_latest_filed.py`; the nightly/CI watch | Evidence layer; adds gap_reason `line_not_presented_in_filing` on absent cells (has_value stays false, unchanged) plus a separate denominator adjustment in `coverage_snapshot.py`; later a ~50 min single-process SEC fetch pass | Phase 3 classifier (first choice) |
 | C. Data sanity, ticket fixes, coverage denominators | scrooner-64 (confirmed) | Committed work only: `coverage_matrix.py`, `coverage_snapshot.py` denominator fixes, doc 50. No uncommitted files. | Running the whole-population sanity re-measure (`timeseries`, `identities`, `plausibility`), then the rate-limited `scrooner-sanity run` | Re-run `period_completeness` + `snapshot-coverage` for final numbers; Phase 3 design is **offered for handoff** |
+| G. Site caching scope, type/lint cleanup | scrooner-ff (confirmed, free) | Uncommitted, named: `doc/scoping/52_Scrooner_Site_Wide_Caching_Scope.md`, `doc/learnings/2026-10-09-supabase-usage-audit.md`, one line in `doc/README.md` | Committing those 3 paths | Takes f9's handoff: mypy (93 errors) and Ruff on 3 files; then caching scope build if the user approves |
 | F. `data_limit` ticket triage (cockpit tickets) | scrooner-2b (confirmed) | Committed work only: `sanity/period_completeness.py` (classifier), migrations 0089/0090, `tests/unit/test_period_completeness.py`. No uncommitted files. | Finishing `resolve-conflict-fills` then a whole-population `period_completeness` (heavy DB, ~1h, started 10:36 IST) after the `basic_eps` backfill | (1) cash-flow `...ContinuingOperations` tag mapping (migration 0095), (2) Q4 / YTD-quarter ticket analysis (about 26k open), (3) non-trading status via yfinance (decision needed from founder), (4) accepted from f9: widen conflict-latest-filed |
 | D. Frontend redesign (workspace, watchlist, alerts, company page) | *unconfirmed* | `apps/app/app/app/*`, `components/layout/*`, `components/public/*`, `components/scrooner/*`, `packages/design-system`, `apps/admin` | Uncommitted restyle, oldest files dated 2026-10-02 | Land or discard (see "Stale work") |
 | E. Backend (watchlists) | *unconfirmed* | `apps/backend/routers/watchlists.py`, `tests/test_watchlists.py`, `main.py` | Watchlist endpoints, uncommitted | Commit with D |
@@ -52,7 +53,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 Ordered; each item ends with a commit, push and a line in this doc.
 
 1. Visually verify `/app/data-coverage` (headless Chrome screenshot) once a logged-in session is available. Not yet possible from this machine, so it needs the user.
-2. **Launch-readiness check.** Add a `launch_readiness` section to `/v1/data-coverage/groups` and the page. It reports, per band, pass/fail against rules set up front: average core coverage at least 85%, no sector in the band below 60%, fewer than 10% of companies below 60%. Today this says the top 1,000 passes except Financials, and the top 2,000 does not pass.
+2. **Launch-readiness check (built 2026-10-13).** Add a `launch_readiness` section to `/v1/data-coverage/groups` and the page. It reports, per band, pass/fail against rules set up front: average core coverage at least 85%, no sector in the band below 60%, fewer than 10% of companies below 60%. Today this says the top 1,000 passes except Financials, and the top 2,000 does not pass.
 3. **Fixable gaps in the top 1,000-2,000** (the "fix first" list): gross margin and ROIC (inputs that do not resolve, mapper tag coverage), interest coverage, FCF yield (capex and CFO TTM), current ratio (no recorded reason). Each fix: investigate with raw tags first, change the mapper, rerun for affected companies only, confirm the grouped snapshot moved.
 4. **Financials and Real Estate.** Check which core metrics are really inapplicable to banks versus unmapped. Where inapplicable, the right fix is sector-specific metrics ([doc 33](../execution-plans/33_Scrooner_Sector_Specific_Metrics_Plan.md), FDIC source in doc 32b), not forcing the 20 industrial metrics. Coordinate with lane B, which is producing the applicability evidence.
 5. **Dividend yield.** About 1,159 top-2,000 companies lack it; at least 699 have no dividend history. Decide how the dashboard shows non-payers (a real "no dividend" value, or excluded with a stated reason) with the user; do not change the raw lens silently.
@@ -61,7 +62,7 @@ Ordered; each item ends with a commit, push and a line in this doc.
 
 | Item | Proposed owner |
 |---|---|
-| mypy: 93 errors, and Ruff on 3 files | scrooner-ff (idle; not yet confirmed) |
+| mypy: 93 errors, and Ruff on 3 files | scrooner-ff (free; proposed, not yet confirmed) |
 | Cross-tag `cfo` `quarter_not_derived` | scrooner-64 |
 | Widen conflict-latest-filed to more tags | scrooner-2b (accepted 2026-10-13; queued after the Q4/YTD analysis) |
 
@@ -73,7 +74,7 @@ Ordered; each item ends with a commit, push and a line in this doc.
 
 Evidence-layer facts other lanes can rely on: it will **not** change how `has_value` is set. It adds one `gap_reason` value, `line_not_presented_in_filing` (the company's latest 10-K/10-Q shows no such line on the face of its balance sheet / income statement, with the accession stored), and `line_in_filing_not_extracted` (the line is there and we have no value: a real, ranked worklist). Absence from the face is evidence, not proof (measured 14-34% of the time we HAVE a value without a face line), so the dashboard text says "not shown on the statements", not "does not apply".
 
-Watchlist feature (`apps/app/.../watchlist`, `apps/backend/routers/watchlists.py`): scrooner-98 confirms it is **not** lane A's. Owner still unknown; scrooner-2b or ff are the candidates.
+Watchlist feature (`apps/app/.../watchlist`, `apps/backend/routers/watchlists.py`): scrooner-98 confirms it is **not** lane A's. **No session claims it**: 64, 2b, ff, f9 and 98 each say they do not own it.
 
 ## Unassigned backlog (from doc 52)
 
@@ -89,7 +90,7 @@ Watchlist feature (`apps/app/.../watchlist`, `apps/backend/routers/watchlists.py
 About 50 modified or untracked files predate today, some by 11 days. Examples: `apps/app/app/app/account`, `alerts`, `watchlist`, `data-coverage/data-coverage.module.css`, `components/layout/StatusPage.tsx`, `WorkspaceHeader.tsx`, `apps/admin/`, `apps/backend/routers/watchlists.py`, `pipeline/src/scrooner_pipeline/sanity/*`, `mapper/expanded_concepts.py`, `ai_query/screen_templates.json`. Until owners commit or discard them:
 
 - The working-tree `data-coverage/page.tsx` still differs from the committed one because lane D has not committed its redesign. Lane A's committed page uses only committed components.
-- scrooner-64 confirmed none of the files are theirs; scrooner-f9 and scrooner-98 own only committed work or named files; 2b and ff have not replied. Each owner session: commit your files with named `git add`, or say in this doc that they are scratch and can be discarded. Nobody else deletes them.
+- scrooner-64 confirmed none of the files are theirs; scrooner-f9 and scrooner-98 own only committed work or named files; scrooner-2b and scrooner-ff also own none of them. **Nobody owns the ~50 remaining files** (watchlist, alerts, account, admin app, design-system, header/company-page restyle, sanity/mapper edits): they look like orphaned work from earlier or ended sessions, or from the user's own editor. This needs the user to say keep or discard; no session should commit or delete them meanwhile. Each owner session: commit your files with named `git add`, or say in this doc that they are scratch and can be discarded. Nobody else deletes them.
 
 ## Status log
 

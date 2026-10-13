@@ -156,3 +156,6 @@ def test_group_coverage_reports_bands_sectors_and_deltas(monkeypatch):
     assert result["sectors"][0]["key"] == "Financials"
     assert result["band_metrics"][0]["missing"] == 300
     assert result["history"][0]["bands"]["top_1000"] == "87.00"
+    readiness = {r["key"]: r for r in result["launch_readiness"]}
+    assert readiness["top_1000"]["ready"] is True
+    assert readiness["top_1000"]["weakest_sector"] == "Financials"

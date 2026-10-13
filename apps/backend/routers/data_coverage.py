@@ -96,6 +96,44 @@ def get_data_coverage(
 _BAND_ORDER = ["top_100", "top_500", "top_1000", "top_1500", "top_2000", "top_3000", "all"]
 
 
+# Launch rules fixed up front (doc 53): a band is launch-ready when its average
+# core coverage is at least 85%, fewer than 10% of its companies sit below 60%,
+# and no sector within it averages below 60%. Sector checks exist only for the
+# top 1,000 / top 2,000 / all groups; other bands report sector_check "n/a".
+_LAUNCH_MIN_AVG = Decimal("85")
+_LAUNCH_MAX_LT60 = Decimal("10")
+_LAUNCH_MIN_SECTOR = Decimal("60")
+_SECTOR_GROUP_FOR_BAND = {"top_1000": "sector_top1000", "top_2000": "sector_top2000", "all": "sector_all"}
+
+
+def _launch_readiness(rank_bands, cur_map) -> list[dict]:
+    out = []
+    for band in rank_bands:
+        group_type = _SECTOR_GROUP_FOR_BAND.get(band["key"])
+        weakest = None
+        if group_type:
+            sector_rows = [
+                (k[1], v[6]) for k, v in cur_map.items() if k[0] == group_type and k[2] == "__summary__"
+            ]
+            weakest = min(sector_rows, key=lambda r: r[1]) if sector_rows else None
+        checks = {
+            "average": Decimal(band["score"]) >= _LAUNCH_MIN_AVG,
+            "tail": Decimal(band["pct_lt60"]) < _LAUNCH_MAX_LT60,
+            "sectors": (weakest[1] >= _LAUNCH_MIN_SECTOR) if weakest else None,
+        }
+        evaluated = [v for v in checks.values() if v is not None]
+        out.append(
+            {
+                "key": band["key"],
+                "ready": all(evaluated),
+                "checks": checks,
+                "weakest_sector": weakest[0] if weakest else None,
+                "weakest_sector_score": str(weakest[1]) if weakest else None,
+            }
+        )
+    return out
+
+
 def _score_delta(current, previous):
     return str(current - previous) if current is not None and previous is not None else None
 
@@ -174,6 +212,7 @@ def get_group_coverage(
             }
         )
     sectors.sort(key=lambda s: Decimal(s["score"]))
+    launch_readiness = _launch_readiness(rank_bands, cur_map)
     band_metrics = []
     for (gt, key, metric), c in cur_map.items():
         if gt == "rank_band" and key == band and metric != "__summary__":
@@ -201,6 +240,7 @@ def get_group_coverage(
         "band": band,
         "band_metrics": band_metrics,
         "history": history,
+        "launch_readiness": launch_readiness,
     }
 
 
