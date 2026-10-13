@@ -4,6 +4,7 @@ No database or network: rendered-statement HTML is built inline, the SEC client 
 stand-in, and cursors are fakes that record the SQL they were given.
 """
 
+import httpx
 import pytest
 
 from scrooner_pipeline.mapper import coverage_matrix
@@ -387,3 +388,62 @@ class TestApplyEvidenceToCoverage:
             coverage_matrix.REASON_LINE_NOT_EXTRACTED
             not in coverage_matrix.FILING_LINE_STRUCTURAL_REASONS
         )
+
+
+def _http_error(status: int) -> httpx.HTTPStatusError:
+    request = httpx.Request(
+        "GET", "https://www.sec.gov/Archives/edgar/data/1/2/FilingSummary.xml"
+    )
+    return httpx.HTTPStatusError(
+        "boom", request=request, response=httpx.Response(status, request=request)
+    )
+
+
+@pytest.mark.unit
+class TestMissingRenderedStatements:
+    """A dormant company's last 10-K from 2006 has no FilingSummary.xml. That is 'no
+    evidence', not a failure: errors were being logged and the filing retried nightly."""
+
+    def test_a_404_on_the_filing_summary_is_no_evidence_not_an_error(self, monkeypatch):
+        def missing(*_):
+            raise _http_error(404)
+
+        monkeypatch.setattr(fle, "_filing_summary_reports", missing)
+        assert (
+            fle.read_filing(_Client({}), "0000000001", "0000000001-06-000001") is None
+        )
+
+    def test_any_other_http_error_is_still_a_real_failure(self, monkeypatch):
+        def server_error(*_):
+            raise _http_error(503)
+
+        monkeypatch.setattr(fle, "_filing_summary_reports", server_error)
+        with pytest.raises(httpx.HTTPStatusError):
+            fle.read_filing(_Client({}), "0000000001", "0000000001-26-000001")
+
+    def test_a_404_on_a_statement_page_means_that_statement_was_not_located(
+        self, monkeypatch
+    ):
+        monkeypatch.setattr(
+            fle,
+            "_filing_summary_reports",
+            lambda *_: _reports(
+                ("BALANCE SHEETS", "R2.htm"), ("STATEMENTS OF OPERATIONS", "R4.htm")
+            ),
+        )
+
+        class _Half(_Client):
+            def get(self, url):
+                if url.endswith("R4.htm"):
+                    raise _http_error(404)
+                return super().get(url)
+
+        client = _Half({"R2.htm": _statement("Inventories")})
+        rows = {
+            r["data_point"]: r
+            for r in fle.read_filing(client, "0000000001", "0000000001-26-000001")
+        }
+        assert rows["inventory"]["line_present"] is True
+        assert (
+            rows["research_and_development"]["line_present"] is None
+        )  # IS not located: unknown

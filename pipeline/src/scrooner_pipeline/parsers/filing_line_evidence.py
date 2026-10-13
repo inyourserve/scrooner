@@ -37,6 +37,7 @@ import re
 import time
 from dataclasses import dataclass
 
+import httpx
 import psycopg
 import structlog
 
@@ -179,9 +180,26 @@ def _pick_report(
     return None
 
 
+def _statement_labels(client: SECClient, url: str) -> list[str] | None:
+    """Row labels of one rendered statement; None (statement not located) on a 404."""
+    try:
+        return extract_labels(client.get(url).text)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 404:
+            return None
+        raise
+
+
 def read_filing(client: SECClient, cik: str, accession: str) -> list[dict] | None:
     """Evidence rows for one filing, or None if it has no FilingSummary reports."""
-    reports = _filing_summary_reports(client, int(cik), accession)
+    try:
+        reports = _filing_summary_reports(client, int(cik), accession)
+    except httpx.HTTPStatusError as exc:
+        # Filings without rendered statements (pre-XBRL, e.g. a dormant company's last
+        # 10-K from 2006) have no FilingSummary.xml: "no evidence", not a failure.
+        if exc.response.status_code == 404:
+            return None
+        raise
     if not reports:
         return None
     base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession.replace('-', '')}/"
@@ -191,13 +209,9 @@ def read_filing(client: SECClient, cik: str, accession: str) -> list[dict] | Non
     )
     labels: dict[str, list[str] | None] = {"BS": None, "IS": None}
     if balance_sheet:
-        labels["BS"] = extract_labels(
-            client.get(base + balance_sheet["html_file"]).text
-        )
+        labels["BS"] = _statement_labels(client, base + balance_sheet["html_file"])
     if income_statement:
-        labels["IS"] = extract_labels(
-            client.get(base + income_statement["html_file"]).text
-        )
+        labels["IS"] = _statement_labels(client, base + income_statement["html_file"])
     rows = []
     for spec in SPECS:
         statement_labels = labels[spec.statement]
