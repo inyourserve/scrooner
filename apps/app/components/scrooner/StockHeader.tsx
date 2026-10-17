@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Delta } from "./Delta";
 import { TickerBadge } from "./TickerBadge";
+import { WatchlistButton } from "@/components/watchlist/WatchlistButton";
 
 // doc/design/shadcn-system.md section 8: "the stock header should become a
 // signature component ... every company gets exactly the same hierarchy."
@@ -17,6 +17,7 @@ export interface StockHeaderPrice {
 }
 
 export interface StockHeaderProps {
+  companyId: number;
   ticker: string | null;
   companyName: string;
   sector: string | null;
@@ -28,7 +29,7 @@ export interface StockHeaderProps {
   website?: string | null;
 }
 
-export function StockHeader({ ticker, companyName, sector, status, price, dayChangePct, dayChangeAbs, website }: StockHeaderProps) {
+export function StockHeader({ companyId, ticker, companyName, sector, status, price, dayChangePct, dayChangeAbs, website }: StockHeaderProps) {
   return (
     <div className="stock-hero__identity">
       <div className="stock-hero__title-row">
@@ -58,7 +59,7 @@ export function StockHeader({ ticker, companyName, sector, status, price, dayCha
         )}
       </div>
       <div className="stock-hero__actions">
-        <Button asChild size="small"><Link href="/app/screens/new">Compare in screener</Link></Button>
+        <WatchlistButton companyId={companyId} />
         {website && (
           <Button asChild size="small" variant="secondary" trailingIcon={<ExternalLink size={16} aria-hidden="true" />}>
             <a href={`https://${website}`} target="_blank" rel="nofollow noopener">Official website</a>

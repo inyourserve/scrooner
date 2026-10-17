@@ -8,7 +8,7 @@ import { TableSkeleton } from "./TableSkeleton";
 import { TickerBadge } from "./TickerBadge";
 
 const pushMock = vi.fn();
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: pushMock }) }));
+vi.mock("next/navigation", () => ({ usePathname: () => "/stocks/aapl", useRouter: () => ({ push: pushMock }) }));
 
 afterEach(cleanup);
 
@@ -95,29 +95,57 @@ describe("TableSkeleton", () => {
 });
 
 describe("StockHeader", () => {
+  beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 401 })));
+  });
+
   it("renders the ticker, name, and status for every company the same way", () => {
-    render(<StockHeader ticker="AAPL" companyName="Apple Inc." sector="Technology" status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
+    render(<StockHeader companyId={1} ticker="AAPL" companyName="Apple Inc." sector="Technology" status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
     expect(screen.getByRole("heading", { name: "AAPL Apple Inc." })).toBeInTheDocument();
     expect(screen.getByText("active")).toHaveClass("ds-badge--positive");
   });
 
   it("shows an honest dash, never a guessed price, when there is no verified price", () => {
-    render(<StockHeader ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
+    render(<StockHeader companyId={1} ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
     expect(screen.getByText("No verified market price on record")).toBeInTheDocument();
   });
 
   it("renders the price and a signed day change when a verified price exists", () => {
-    render(<StockHeader ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={{ value: 309.69, asOfLabel: "Aug 21, 2026, 7:59 PM" }} dayChangePct={1.88} dayChangeAbs={5.72} />);
+    render(<StockHeader companyId={1} ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={{ value: 309.69, asOfLabel: "Aug 21, 2026, 7:59 PM" }} dayChangePct={1.88} dayChangeAbs={5.72} />);
     expect(screen.getByText("$309.69")).toBeInTheDocument();
     expect(screen.getByText("+$5.72 (+1.88%) today")).toHaveClass("ds-delta--positive");
   });
 
   it("only shows the official-website action when a website is actually on file", () => {
-    const { rerender } = render(<StockHeader ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
+    const { rerender } = render(<StockHeader companyId={1} ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
     expect(screen.queryByRole("link", { name: /Official website/ })).not.toBeInTheDocument();
 
-    rerender(<StockHeader ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} website="apple.com" />);
+    rerender(<StockHeader companyId={1} ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} website="apple.com" />);
     expect(screen.getByRole("link", { name: /Official website/ })).toHaveAttribute("href", "https://apple.com");
+  });
+
+  it("opens the watchlist when a saved company action is clicked", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ contains: true }),
+    })));
+    pushMock.mockClear();
+
+    render(<StockHeader companyId={1} ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
+    fireEvent.click(await screen.findByRole("button", { name: "In watchlist" }));
+
+    expect(pushMock).toHaveBeenCalledWith("/app/watchlist");
+  });
+
+  it("sends signed-out users to login before adding a company", async () => {
+    pushMock.mockClear();
+
+    render(<StockHeader companyId={1} ticker="AAPL" companyName="Apple Inc." sector={null} status="active" price={null} dayChangePct={null} dayChangeAbs={null} />);
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
+    fireEvent.click(screen.getByRole("button", { name: "Add to watchlist" }));
+
+    expect(pushMock).toHaveBeenCalledWith("/login?redirect_url=%2Fstocks%2Faapl");
   });
 });
 

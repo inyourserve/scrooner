@@ -19,6 +19,7 @@ from routers import (
     saved_screens,
     screen,
     screen_runs,
+    watchlists,
 )
 
 
@@ -74,3 +75,4 @@ app.include_router(screen_runs.router)
 app.include_router(data_coverage.router)
 app.include_router(company.router)
 app.include_router(reference_data.router)
+app.include_router(watchlists.router)

@@ -49,6 +49,22 @@ export function fmtYears(value: string | null | undefined): string {
   return n.toFixed(0) + (n === 1 ? " yr" : " yrs");
 }
 
+// SEC dates arrive as calendar dates without a timezone. Formatting them in
+// UTC prevents a US browser west of Greenwich from showing the prior day.
+export function fmtDate(value: string | null | undefined): string {
+  if (!value) return "—";
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return value;
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  if (!Number.isFinite(date.getTime())) return value;
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
 // Share counts are whole numbers (Form 4 shares/shares_owned_following) --
 // deliberately separate from fmtNum so statement-table dollar formatting
 // is never accidentally touched by a share-count-specific change.

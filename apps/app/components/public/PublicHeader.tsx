@@ -35,7 +35,7 @@ export function PublicHeader({
   const item = (href: string, label: string, active: boolean) => active ? <span aria-current="page">{label}</span> : <Link href={href}>{label}</Link>;
   return <>
     <a className="public-skip-link" href={skipHref}>Skip to main content</a>
-    <header className="public-header"><nav className="public-nav ds-container" aria-label="Primary navigation">
+    <header className="public-header"><nav className={`public-nav ds-container${authenticated ? " public-nav--authenticated" : ""}`} aria-label="Primary navigation">
       <Link href="/" className="public-brand" aria-label="Scrooner home"><BrandMark /><span className="brand-name">scrooner</span></Link>
       <div className="public-links">
         {authenticated ? <AuthenticatedNavLinks /> : <>{item("/explore", "Explore", current === "explore")}{item("/app/screens/new", "Create screen", false)}<DashboardNavLink active={current === "dashboard"} /></>}

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AlertTriangle, ArrowRight, Bookmark, History, Search } from "lucide-react";
+import { AlertTriangle, ArrowRight, Bookmark, Eye, History, Sparkles } from "lucide-react";
 import { redirect } from "next/navigation";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { PageShell } from "@/components/layout/PageShell";
+import { WorkspaceHeader } from "@/components/layout/WorkspaceHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardHeading, CardTitle } from "@/components/ui/Card";
@@ -26,6 +26,7 @@ function updatedLabel(value: string) {
 }
 
 type RecentRun = { run_id: string; query_text: string; ran_at: string; total_count: number };
+type WatchlistItem = { company_id: number; company_name: string; ticker: string | null; sector: string | null; created_at: string; has_unreviewed?: boolean };
 
 export default async function AppHome() {
   const supabase = await createClient();
@@ -34,39 +35,45 @@ export default async function AppHome() {
 
   let screens: SavedScreen[] = [];
   let recentRuns: RecentRun[] = [];
+  let watchlist: WatchlistItem[] = [];
   let screensUnavailable = false;
   let runsUnavailable = false;
+  let watchlistUnavailable = false;
   const requestHeaders = { accept: "application/json", authorization: `Bearer ${data.session.access_token}` };
-  const [screensResult, runsResult] = await Promise.allSettled([
+  const [screensResult, runsResult, watchlistResult] = await Promise.allSettled([
     fetch(backendUrl("/v1/screens"), {
       cache: "no-store",
       headers: requestHeaders,
     }),
     fetch(backendUrl("/v1/screen-runs?limit=8"), { cache: "no-store", headers: requestHeaders }),
+    fetch(backendUrl("/v1/watchlist"), { cache: "no-store", headers: requestHeaders }),
   ]);
   if (screensResult.status === "fulfilled" && screensResult.value.ok) screens = await screensResult.value.json() as SavedScreen[];
   else screensUnavailable = true;
   if (runsResult.status === "fulfilled" && runsResult.value.ok) recentRuns = await runsResult.value.json() as RecentRun[];
   else runsUnavailable = true;
+  if (watchlistResult.status === "fulfilled" && watchlistResult.value.ok) {
+    const payload = await watchlistResult.value.json() as { items: WatchlistItem[] };
+    watchlist = payload.items;
+  } else watchlistUnavailable = true;
 
   const recentScreens = [...screens]
     .sort((left, right) => Date.parse(right.updated_at) - Date.parse(left.updated_at))
     .slice(0, 6);
+  const watchlistUpdates = watchlist.filter((company) => company.has_unreviewed).length;
 
   return <PageShell>
-    <div className="dashboard-page__header">
-      <PageHeader eyebrow="Your research" title="Dashboard" description="Pick up where you left off, or turn a new investment idea into a screen." />
-      <Button asChild><Link href="/app/screens/new">Create screen</Link></Button>
-    </div>
+    <WorkspaceHeader eyebrow="Your research" title="Dashboard" description="Pick up where you left off, review company changes, or turn a new investment idea into a screen." actions={<Button asChild><Link href="/app/screens/new">Create screen</Link></Button>} />
 
     <section className="dashboard-page__summary" aria-label="Research overview">
-      <Card variant="subtle"><CardContent><span className="dashboard-page__summary-icon"><History size={17} aria-hidden="true" /></span><strong>{recentRuns.length}</strong><small>recent queries</small></CardContent></Card>
-      <Card variant="subtle"><CardContent><span className="dashboard-page__summary-icon"><Bookmark size={17} aria-hidden="true" /></span><strong>{screens.length}</strong><small>saved screens</small></CardContent></Card>
-      <Card variant="subtle"><CardContent><span className="dashboard-page__summary-icon"><Search size={17} aria-hidden="true" /></span><strong>{recentRuns[0]?.total_count ?? "—"}</strong><small>latest matches</small></CardContent></Card>
+      <Link aria-label="Open recent queries" className="dashboard-page__summary-link" href="/app/screens/new"><Card variant="subtle"><CardContent><span className="dashboard-page__summary-icon"><History size={17} aria-hidden="true" /></span><strong>{recentRuns.length}</strong><small>recent queries</small></CardContent></Card></Link>
+      <Link aria-label="Open saved screens" className="dashboard-page__summary-link" href="/app/screens"><Card variant="subtle"><CardContent><span className="dashboard-page__summary-icon"><Bookmark size={17} aria-hidden="true" /></span><strong>{screensUnavailable ? "—" : screens.length}</strong><small>saved screens</small></CardContent></Card></Link>
+      <Link aria-label="Open watchlist" className="dashboard-page__summary-link" href="/app/watchlist"><Card variant="subtle"><CardContent><span className="dashboard-page__summary-icon"><Eye size={17} aria-hidden="true" /></span><strong>{watchlistUnavailable ? "—" : watchlist.length}</strong><small>companies followed</small></CardContent></Card></Link>
+      <Link aria-label="Review watchlist updates" className="dashboard-page__summary-link" href="/app/watchlist"><Card variant="subtle"><CardContent><span className="dashboard-page__summary-icon"><Sparkles size={17} aria-hidden="true" /></span><strong>{watchlistUnavailable ? "—" : watchlistUpdates}</strong><small>updates to review</small></CardContent></Card></Link>
     </section>
 
     <div className="dashboard-page__grid">
-    <Card>
+    <Card className="dashboard-page__card dashboard-page__card--primary">
       <CardHeader>
         <CardHeading><CardTitle>Recent queries</CardTitle><CardDescription>Open a previous result set without rebuilding the screen.</CardDescription></CardHeading>
         <Button asChild variant="ghost" size="small" trailingIcon={<ArrowRight size={14} aria-hidden="true" />}><Link href="/app/screens/new">New query</Link></Button>
@@ -81,7 +88,7 @@ export default async function AppHome() {
       ) : <EmptyState title="No query history yet" description="Describe an investment idea in plain English to begin." action={<Link className="ds-button ds-button--secondary ds-button--small" href="/app/screens/new">Create a query</Link>} />}
     </Card>
 
-    <Card>
+    <Card className="dashboard-page__card">
       <CardHeader>
         <CardHeading><CardTitle>Recent screens</CardTitle><CardDescription>Continue from your most recently updated screens.</CardDescription></CardHeading>
         {screens.length > 0 && <Button asChild variant="ghost" size="small" trailingIcon={<ArrowRight size={14} aria-hidden="true" />}><Link href="/app/screens">View all</Link></Button>}
@@ -110,6 +117,21 @@ export default async function AppHome() {
           action={<Link className="ds-button ds-button--secondary ds-button--small" href="/app/screens/new">Create your first screen</Link>}
         />
       )}
+    </Card>
+
+    <Card className="dashboard-page__card dashboard-page__card--wide">
+      <CardHeader>
+        <CardHeading><CardTitle>Watchlist</CardTitle><CardDescription>Companies you are actively following.</CardDescription></CardHeading>
+        <Button asChild variant="ghost" size="small" trailingIcon={<ArrowRight size={14} aria-hidden="true" />}><Link href="/app/watchlist">Open watchlist</Link></Button>
+      </CardHeader>
+      {watchlistUnavailable ? <EmptyState icon={<AlertTriangle size={22} aria-hidden="true" />} title="Watchlist is unavailable" description="Your saved companies are unaffected." /> : watchlist.length > 0 ? (
+        <div className="dashboard-page__recent-list">
+          {watchlist.slice(0, 5).map((company) => <Link className="dashboard-page__recent-item" href={company.ticker ? `/stocks/${company.ticker.toLowerCase()}` : "/app/watchlist"} key={company.company_id}>
+            <span><strong>{company.company_name}</strong><small>{company.sector ?? "Sector unclassified"}</small></span>
+            <span className="dashboard-page__item-meta"><Badge>{company.ticker ?? "—"}</Badge>{company.has_unreviewed && <Badge tone="warning">New filing</Badge>}</span>
+          </Link>)}
+        </div>
+      ) : <EmptyState title="Your watchlist is empty" description="Follow companies from their research pages to see them here." action={<Link className="ds-button ds-button--secondary ds-button--small" href="/explore">Explore companies</Link>} />}
     </Card>
     </div>
   </PageShell>;

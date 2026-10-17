@@ -1,0 +1,37 @@
+.summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-space-3); margin-bottom: var(--ds-space-5); }
+.summaryContent { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--ds-space-2); }
+.summaryContent small { grid-column: 1 / -1; color: var(--ds-color-text-muted); font-size: var(--ds-font-size-12); }
+.summaryContent > strong { color: var(--ds-color-text-primary); font-size: var(--ds-font-size-24); font-weight: var(--ds-font-weight-semibold); font-variant-numeric: tabular-nums; line-height: var(--ds-line-height-tight); }
+.grid { display: grid; gap: var(--ds-space-5); }
+.tableCard { min-width: 0; overflow: hidden; }
+.tableCard :global(.ds-table-container) { border: 0; border-top: 1px solid var(--ds-color-border-default); border-radius: 0; }
+.companyCard { margin-top: var(--ds-space-5); overflow: hidden; }
+.companySearch { display: grid; gap: var(--ds-space-2); padding: 0 var(--ds-space-5) var(--ds-space-5); }
+.companySearch label { color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-12); font-weight: var(--ds-font-weight-medium); }
+.searchControl { max-width: 560px; min-height: var(--ds-target-min); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--ds-space-2); padding-left: var(--ds-space-3); border: 1px solid var(--ds-color-border-strong); border-radius: var(--ds-radius-md); background: var(--ds-color-bg-default); color: var(--ds-color-text-muted); transition: border-color var(--ds-motion-fast), box-shadow var(--ds-motion-fast); }
+.searchControl:focus-within { border-color: var(--ds-color-action-default); box-shadow: var(--ds-focus-ring); }
+.searchControl input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ds-color-text-primary); font: inherit; text-transform: uppercase; }
+.searchControl input::placeholder { color: var(--ds-color-text-muted); text-transform: none; }
+.searchControl button { align-self: stretch; padding: 0 var(--ds-space-4); border: 0; border-radius: 0 calc(var(--ds-radius-md) - 1px) calc(var(--ds-radius-md) - 1px) 0; background: var(--ds-color-action-default); color: var(--ds-color-text-on-action); font: inherit; font-size: var(--ds-font-size-12); font-weight: var(--ds-font-weight-semibold); cursor: pointer; }
+.searchControl button:hover { background: var(--ds-color-action-hover); }
+.companyPrompt { display: flex; align-items: flex-start; gap: var(--ds-space-3); margin: 0 var(--ds-space-5) var(--ds-space-5); padding: var(--ds-space-4); border: 1px dashed var(--ds-color-border-default); border-radius: var(--ds-radius-md); background: var(--ds-color-bg-subtle); color: var(--ds-color-text-secondary); }
+.companyPrompt strong { color: var(--ds-color-text-primary); font-size: var(--ds-font-size-13); }
+.companyPrompt p { margin: 3px 0 0; color: var(--ds-color-text-muted); font-size: var(--ds-font-size-12); line-height: var(--ds-line-height-relaxed); }
+.companyError { margin: 0 var(--ds-space-5) var(--ds-space-5); padding: var(--ds-space-3) var(--ds-space-4); border-radius: var(--ds-radius-md); background: var(--ds-color-status-negative-subtle); color: var(--ds-color-status-negative); font-size: var(--ds-font-size-12); }
+.companyResult { border-top: 1px solid var(--ds-color-border-default); }
+.companyOverview { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: var(--ds-space-3); padding: var(--ds-space-5); }
+.companyIcon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--ds-radius-md); background: var(--ds-color-bg-subtle); color: var(--ds-color-text-secondary); }
+.companyOverview h3 { margin: 0; font-size: var(--ds-font-size-15); }
+.companyOverview p { margin: 3px 0 0; color: var(--ds-color-text-muted); font-size: var(--ds-font-size-11); }
+.coverageScore { display: grid; justify-items: end; }
+.coverageScore strong { font-size: var(--ds-font-size-20); font-variant-numeric: tabular-nums; }
+.coverageScore span { color: var(--ds-color-text-muted); font-size: var(--ds-font-size-11); }
+.companyStats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0 var(--ds-space-5) var(--ds-space-5); }
+.companyStats div { min-width: 0; padding: var(--ds-space-3); border: 1px solid var(--ds-color-border-default); border-right: 0; background: var(--ds-color-bg-subtle); }
+.companyStats div:first-child { border-radius: var(--ds-radius-md) 0 0 var(--ds-radius-md); }
+.companyStats div:last-child { border-right: 1px solid var(--ds-color-border-default); border-radius: 0 var(--ds-radius-md) var(--ds-radius-md) 0; }
+.companyStats dt { color: var(--ds-color-text-muted); font-size: var(--ds-font-size-11); }
+.companyStats dd { margin: 4px 0 0; overflow: hidden; color: var(--ds-color-text-primary); font-size: var(--ds-font-size-13); font-weight: var(--ds-font-weight-semibold); text-overflow: ellipsis; white-space: nowrap; }
+.companyResult :global(.ds-table-container) { border: 0; border-top: 1px solid var(--ds-color-border-default); border-radius: 0; }
+@media (max-width: 760px) { .summary { grid-template-columns: 1fr; } .companyStats { grid-template-columns: repeat(2, 1fr); } .companyStats div:nth-child(2) { border-right: 1px solid var(--ds-color-border-default); border-radius: 0 var(--ds-radius-md) 0 0; } .companyStats div:nth-child(3) { border-radius: 0 0 0 var(--ds-radius-md); } .companyStats div:last-child { border-radius: 0 0 var(--ds-radius-md) 0; } }
+@media (max-width: 520px) { .searchControl { grid-template-columns: auto minmax(0, 1fr); } .searchControl button { grid-column: 1 / -1; min-height: var(--ds-target-min); margin-left: calc(var(--ds-space-3) * -1); border-radius: 0 0 calc(var(--ds-radius-md) - 1px) calc(var(--ds-radius-md) - 1px); } .companyOverview { grid-template-columns: 40px minmax(0, 1fr); } .coverageScore { grid-column: 2; justify-items: start; } .companyStats { grid-template-columns: 1fr; } .companyStats div, .companyStats div:nth-child(2), .companyStats div:nth-child(3), .companyStats div:last-child { border-right: 1px solid var(--ds-color-border-default); border-bottom: 0; border-radius: 0; } .companyStats div:first-child { border-radius: var(--ds-radius-md) var(--ds-radius-md) 0 0; } .companyStats div:last-child { border-bottom: 1px solid var(--ds-color-border-default); border-radius: 0 0 var(--ds-radius-md) var(--ds-radius-md); } }

@@ -9,9 +9,9 @@ import type { StockSectionLink } from "./StockSectionNav";
 // can render the identical nav instantly.
 export const stockPageSections: StockSectionLink[] = [
   { id: "overview", label: "Overview" }, { id: "analysis", label: "Analysis" },
-  { id: "chart", label: "Chart" }, { id: "quarterly-results", label: "Quarters" },
-  { id: "profit-loss", label: "Income" }, { id: "balance-sheet", label: "Balance sheet" },
-  { id: "cash-flow", label: "Cash flow" }, { id: "ratios", label: "Ratios" },
-  { id: "peers", label: "Peers" }, { id: "shareholding", label: "Ownership" },
-  { id: "documents", label: "Documents" },
+  { id: "chart", label: "Price chart" }, { id: "quarterly-results", label: "Quarterly results" },
+  { id: "profit-loss", label: "Income statement" }, { id: "balance-sheet", label: "Balance sheet" },
+  { id: "cash-flow", label: "Cash flow" }, { id: "ratios", label: "Financial ratios" },
+  { id: "peers", label: "Peer comparison" }, { id: "shareholding", label: "Ownership" },
+  { id: "documents", label: "SEC filings" },
 ];

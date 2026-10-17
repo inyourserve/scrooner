@@ -1,7 +1,25 @@
 .public-eyebrow { margin: 0 0 var(--ds-space-4); color: var(--ds-color-action-hover); font-size: var(--ds-font-size-12); font-weight: var(--ds-font-weight-semibold); letter-spacing: .1em; text-transform: uppercase; }
-.public-prose { display: grid; gap: var(--ds-space-8); }
-.public-prose section { padding-top: var(--ds-space-8); border-top: 1px solid var(--ds-color-border-subtle); }
+.public-prose { display: grid; gap: var(--ds-space-5); }
+.public-prose > section { padding-top: clamp(var(--ds-space-5), 2.5vw, var(--ds-space-8)); }
 .public-prose h2 { margin: 0 0 var(--ds-space-4); font-size: var(--ds-font-size-24); letter-spacing: -.01em; }
+.public-prose > section > h2,
+.public-prose > section > .ds-section-heading {
+  position: relative;
+  margin-bottom: var(--ds-space-6);
+  padding-bottom: var(--ds-space-5);
+  border-bottom: 1px solid var(--ds-color-border-subtle);
+}
+.public-prose > section > h2::after,
+.public-prose > section > .ds-section-heading::after {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 42px;
+  height: 2px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-color-action);
+  content: "";
+}
 .public-prose h3 { margin: var(--ds-space-6) 0 var(--ds-space-2); font-size: var(--ds-font-size-16); }
 .public-prose p, .public-prose li { color: var(--ds-color-text-secondary); font-size: var(--ds-font-size-16); line-height: 1.75; }
 .public-prose p { max-width: 760px; margin: 0 0 var(--ds-space-4); }
@@ -21,6 +39,6 @@
 .stocks-directory-jump a[aria-current="page"] { background: var(--ds-color-action); color: var(--ds-color-text-inverse); }
 
 @media (max-width: 640px) {
-  .public-prose { gap: var(--ds-space-6); }
-  .public-prose section { padding-top: var(--ds-space-6); }
+  .public-prose { gap: var(--ds-space-4); }
+  .public-prose > section { padding-top: var(--ds-surface-padding-compact); }
 }

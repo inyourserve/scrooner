@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import { RefreshCw, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { PageShell } from "@/components/layout/PageShell";
+import { StatusPage } from "@/components/layout/StatusPage";
 
 export default function AppError({
   error,
@@ -16,11 +17,6 @@ export default function AppError({
   }, [error]);
 
   return (
-    <PageShell className="error-page">
-      <p className="eyebrow">Scrooner</p>
-      <h1>Something went wrong</h1>
-      <p>We could not display this page. Your account and saved data were not changed.</p>
-      <Button type="button" onClick={reset}>Try again</Button>
-    </PageShell>
+    <StatusPage code="500" eyebrow="Temporary problem" title="This page couldn’t load" description="Scrooner hit an unexpected issue while preparing this page. Your account, screens, and saved research haven’t been changed." icon={<ShieldAlert size={30} strokeWidth={1.7} />} primaryAction={<Button type="button" onClick={reset} leadingIcon={<RefreshCw size={16} aria-hidden="true" />}>Try again</Button>} detail={error.digest} />
   );
 }

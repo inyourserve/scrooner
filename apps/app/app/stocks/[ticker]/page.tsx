@@ -17,7 +17,7 @@ import { EmptyState } from "@/components/scrooner/EmptyState";
 import { StockHeader } from "@/components/scrooner/StockHeader";
 import { backendUrl } from "@/lib/backend";
 import type { CompanyPageData, FilingRow, MetricRow, SegmentRevenueRow, Statement } from "@/lib/company/db";
-import { fmtNum, fmtPct, fmtShares } from "@/lib/company/format";
+import { fmtDate, fmtNum, fmtPct, fmtShares } from "@/lib/company/format";
 import { buildChecklist } from "@/lib/company/pros-cons";
 
 // Calls apps/backend's GET /v1/company/{ticker} instead of querying
@@ -48,10 +48,10 @@ async function fetchCompanyPageData(ticker: string): Promise<CompanyPageData | n
 const getStock = cache(fetchCompanyPageData);
 
 const metricGroups: { title: string; metrics: [string, string, MetricItem["kind"]][] }[] = [
-  { title: "Valuation", metrics: [["trailing_pe", "P/E", "multiple"], ["price_to_sales", "Price / Sales", "multiple"], ["price_to_book", "Price / Book", "multiple"], ["dividend_yield", "Dividend yield", "pct"], ["peg_ratio", "PEG", "multiple"], ["ev_ebitda", "EV / EBITDA", "multiple"]] },
-  { title: "Growth", metrics: [["revenue_growth_yoy", "Revenue growth · YoY", "pct"], ["revenue_growth_3y_cagr", "Revenue growth · 3Y", "pct"], ["revenue_growth_5y_cagr", "Revenue growth · 5Y", "pct"], ["eps_growth_yoy", "EPS growth · YoY", "pct"], ["eps_growth_3y_cagr", "EPS growth · 3Y", "pct"]] },
+  { title: "Valuation", metrics: [["trailing_pe", "P/E", "multiple"], ["price_to_sales", "Price-to-sales", "multiple"], ["price_to_book", "Price-to-book", "multiple"], ["dividend_yield", "Dividend yield", "pct"], ["peg_ratio", "PEG", "multiple"], ["ev_ebitda", "EV / EBITDA", "multiple"]] },
+  { title: "Growth", metrics: [["revenue_growth_yoy", "Revenue growth (YoY)", "pct"], ["revenue_growth_3y_cagr", "Revenue CAGR (3Y)", "pct"], ["revenue_growth_5y_cagr", "Revenue CAGR (5Y)", "pct"], ["eps_growth_yoy", "EPS growth (YoY)", "pct"], ["eps_growth_3y_cagr", "EPS CAGR (3Y)", "pct"]] },
   { title: "Profitability", metrics: [["gross_margin", "Gross margin", "pct"], ["operating_margin", "Operating margin", "pct"], ["net_margin", "Net margin", "pct"], ["roe", "ROE", "pct"], ["roic", "ROIC", "pct"], ["roa", "ROA", "pct"]] },
-  { title: "Financial strength", metrics: [["current_ratio", "Current ratio", "multiple"], ["quick_ratio", "Quick ratio", "multiple"], ["debt_to_equity", "Debt / equity", "multiple"], ["interest_coverage_ratio", "Interest coverage", "multiple"], ["net_debt_ebitda", "Net debt / EBITDA", "multiple"], ["piotroski_f_score", "Piotroski F-Score", "score"]] },
+  { title: "Financial strength", metrics: [["current_ratio", "Current ratio", "multiple"], ["quick_ratio", "Quick ratio", "multiple"], ["debt_to_equity", "Debt-to-equity", "multiple"], ["interest_coverage_ratio", "Interest coverage ratio", "multiple"], ["net_debt_ebitda", "Net debt / EBITDA", "multiple"], ["piotroski_f_score", "Piotroski F-Score", "score"]] },
   { title: "Cash flow and allocation", metrics: [["fcf", "Free cash flow", "dollar"], ["fcf_margin", "FCF margin", "pct"], ["buyback_yield", "Buyback yield", "pct"], ["total_shareholder_yield", "Shareholder yield", "pct"], ["share_dilution_trend", "Share dilution · YoY", "pct"]] },
 ];
 
@@ -76,13 +76,14 @@ function secUrl(cik: string, accession: string) {
 // investor-relevant filing types lead. `match` checks the exact form prefix
 // SEC itself uses (10-K/A still starts with "10-K", etc.).
 const FILING_GROUPS: { label: string; match: (form: string) => boolean }[] = [
-  { label: "Annual reports", match: (form) => form.startsWith("10-K") },
-  { label: "Quarterly reports", match: (form) => form.startsWith("10-Q") },
-  { label: "Current reports", match: (form) => form.startsWith("8-K") },
+  { label: "Annual reports · 10-K", match: (form) => form.startsWith("10-K") },
+  { label: "Quarterly reports · 10-Q", match: (form) => form.startsWith("10-Q") },
+  { label: "Current reports · 8-K", match: (form) => form.startsWith("8-K") },
   { label: "Proxy statements", match: (form) => /^DEF(A|M|R)?\s?14A$/.test(form) },
-  { label: "Insider transactions", match: (form) => /^[345](\/A)?$/.test(form) },
-  { label: "Ownership disclosures", match: (form) => form.startsWith("SC 13") },
-  { label: "Registration & offerings", match: (form) => /^(S-1|S-3|S-8|424B|FWP|144)/.test(form) },
+  { label: "Insider trades · Forms 3/4/5", match: (form) => /^[345](\/A)?$/.test(form) },
+  { label: "Sale notices · Form 144", match: (form) => form.startsWith("144") },
+  { label: "Beneficial ownership · 13D/G", match: (form) => form.startsWith("SC 13") },
+  { label: "Registration & offerings", match: (form) => /^(S-1|S-3|S-8|424B|FWP)/.test(form) },
 ];
 
 function groupFilings(filings: FilingRow[]) {
@@ -96,13 +97,18 @@ function groupFilings(filings: FilingRow[]) {
     .map((label) => ({ label, filings: buckets.get(label)! }));
 }
 
-const FILING_GROUP_VISIBLE = 5;
+const FILING_GROUP_VISIBLE = 3;
 
 function filingItem(filing: FilingRow, cik: string) {
+  const filingTitle = filing.items ? `${filing.form} · Items ${filing.items}` : `${filing.form} filing`;
   return (
     <a className="filing-item" key={filing.accession_number} href={secUrl(cik, filing.accession_number)} target="_blank" rel="noreferrer">
-      <span className="filing-item__title">{filing.items ? `Items ${filing.items}` : `${filing.form} filing`}<ExternalLink size={12} aria-hidden="true" /></span>
-      <span className="filing-item__meta">Filed {filing.filing_date} · {filing.accession_number}</span>
+      <span className="filing-item__title">{filingTitle}<ExternalLink size={12} aria-hidden="true" /></span>
+      <span className="filing-item__meta">
+        <span>Filed {fmtDate(filing.filing_date)}</span>
+        <span className="filing-item__separator" aria-hidden="true">·</span>
+        <span className="filing-item__accession">{filing.accession_number}</span>
+      </span>
     </a>
   );
 }
@@ -154,7 +160,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 function StatementSection({ id, title, description, companyName, statement, periods }: { id: string; title: string; description: string; companyName: string; statement: Statement; periods: number }) {
-  return <ResearchSection id={id} title={title} description={description} meta={<span className="data-unit">USD · auto-scaled</span>}><FinancialTable title={title} companyName={companyName} statement={statement} periods={periods} /></ResearchSection>;
+  return <ResearchSection id={id} title={title} description={description} className="research-section--data" meta={<span className="data-unit">USD · auto-scaled</span>}><FinancialTable title={title} companyName={companyName} statement={statement} periods={periods} /></ResearchSection>;
 }
 
 export default async function StockPage({ params }: Props) {
@@ -177,18 +183,19 @@ export default async function StockPage({ params }: Props) {
     { label: "Market cap", row: metric("market_cap"), kind: "dollar" },
     { label: "P/E · TTM", row: metric("trailing_pe"), kind: "multiple" },
     { label: "Dividend yield", row: metric("dividend_yield"), kind: "pct" },
-    { label: "Revenue growth · 3Y", row: metric("revenue_growth_3y_cagr"), kind: "pct" },
+    { label: "Revenue CAGR (3Y)", row: metric("revenue_growth_3y_cagr"), kind: "pct" },
     { label: "Operating margin", row: metric("operating_margin"), kind: "pct" },
     { label: "Net margin", row: metric("net_margin"), kind: "pct" },
     { label: "ROE", row: metric("roe"), kind: "pct" },
     { label: "ROIC", row: metric("roic"), kind: "pct" },
-    { label: "Debt / equity", row: metric("debt_to_equity"), kind: "multiple" },
+    { label: "Debt-to-equity", row: metric("debt_to_equity"), kind: "multiple" },
   ];
   const checklist = buildChecklist(metrics, data.metricHistory);
   const strengths = checklist.filter((item) => item.kind === "pro");
   const risks = checklist.filter((item) => item.kind === "con");
   const institutional = institutionalSummary?.total_institutional_pct == null ? null : Number(institutionalSummary.total_institutional_pct);
   const institutionalPercent = institutional !== null && Number.isFinite(institutional) ? Math.max(0, Math.min(100, institutional * 100)) : null;
+  const institutionalChangePoints = institutionalSummary?.qoq_change_pct == null ? null : Number(institutionalSummary.qoq_change_pct) * 100;
   const about = company.about_text?.replace(/^\s*company background\s*[:—-]?\s*/i, "").trim();
 
   return <div className="public-site stock-page">
@@ -198,6 +205,7 @@ export default async function StockPage({ params }: Props) {
     <PageShell className="stock-page__main" id="company-content">
       <section className="stock-hero" id="overview" aria-labelledby="company-name">
         <StockHeader
+          companyId={company.id}
           ticker={company.ticker}
           companyName={company.company_name}
           sector={company.sector}
@@ -208,7 +216,7 @@ export default async function StockPage({ params }: Props) {
           website={company.website}
         />
 
-        <div className="stock-snapshot"><div className="stock-snapshot__metrics"><p className="section-label">Investor snapshot</p><MetricGrid items={keyMetrics} dense /><a href="#ratios" className="quiet-link">View all ratios ↓</a></div><div className="stock-snapshot__about"><p className="section-label">Business overview</p><p>{about || `${company.company_name} is an SEC registrant in the ${company.sector ?? "unclassified"} sector.`}</p><dl>{data.employeeHeadcountHistory[0] && <div><dt>Employees</dt><dd>{data.employeeHeadcountHistory[0].is_approximate ? "~" : ""}{data.employeeHeadcountHistory[0].headcount.toLocaleString("en-US")}</dd></div>}{data.segmentRevenue.length > 0 && <div><dt>Revenue segments</dt><dd>{new Set(data.segmentRevenue.map((item) => item.segment_name)).size}</dd></div>}{data.publicFloat && <div><dt>Public float</dt><dd>${fmtNum(data.publicFloat.value)}</dd></div>}<div><dt>Source</dt><dd>SEC EDGAR</dd></div></dl><details className="plain-disclosure"><summary>Company details</summary><p>CIK {company.cik}{company.business_address_city || company.business_address_state ? ` · ${[company.business_address_city, company.business_address_state].filter(Boolean).join(", ")}` : ""}</p></details></div></div>
+        <div className="stock-snapshot"><div className="stock-snapshot__metrics"><p className="section-label">Investor snapshot</p><p className="snapshot-note">Latest available value for each metric; reporting periods are shown below.</p><MetricGrid items={keyMetrics} /><a href="#ratios" className="quiet-link">View all ratios ↓</a></div><div className="stock-snapshot__about"><p className="section-label">Business overview</p><p>{about || `${company.company_name} is an SEC registrant in the ${company.sector ?? "unclassified"} sector.`}</p><dl>{data.employeeHeadcountHistory[0] && <div><dt>Employees</dt><dd>{data.employeeHeadcountHistory[0].is_approximate ? "~" : ""}{data.employeeHeadcountHistory[0].headcount.toLocaleString("en-US")}</dd><small>Filed {fmtDate(data.employeeHeadcountHistory[0].filing_date)}</small></div>}{data.segmentRevenue.length > 0 && <div><dt>Revenue segments</dt><dd>{new Set(data.segmentRevenue.map((item) => item.segment_name)).size}</dd></div>}{data.publicFloat && <div><dt>SEC public-float value</dt><dd>${fmtNum(data.publicFloat.value)}</dd><small>As of {fmtDate(data.publicFloat.period_end)}</small></div>}<div><dt>Fundamentals</dt><dd>SEC filings</dd></div></dl><details className="plain-disclosure"><summary>Company details</summary><p>CIK {company.cik}{company.business_address_city || company.business_address_state ? ` · ${[company.business_address_city, company.business_address_state].filter(Boolean).join(", ")}` : ""}</p></details></div></div>
       </section>
 
       <ResearchSection id="analysis" title={`${shortName} analysis`} description="Rule-based observations from reported results—not a recommendation." className="analysis-section">
@@ -227,19 +235,19 @@ export default async function StockPage({ params }: Props) {
       </ResearchSection>
 
       <ResearchSection id="peers" title="Peer comparison" description={company.y_industry ? `Companies sharing the "${company.y_industry}" industry classification.` : "Companies sharing the closest available SEC industry classification."}>
-        {data.peerCompanies.length ? <><p className="inline-note">Peer classification is a starting point, not a claim that business models are identical.</p><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Company</th><th>ROIC</th><th>Revenue growth · 3Y</th><th>Net margin</th><th>ROE</th></tr></thead><tbody>
+        {data.peerCompanies.length ? <><p className="inline-note">Peer classification is a starting point, not a claim that business models are identical.</p><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Company</th><th>ROIC</th><th>Revenue CAGR (3Y)</th><th>Net margin</th><th>ROE</th></tr></thead><tbody>
           <tr className="research-table__self"><th scope="row">{shortName}<small>{company.ticker} · this company</small></th><td>{fmtPct(metric("roic")?.value)}</td><td>{fmtPct(metric("revenue_growth_3y_cagr")?.value)}</td><td>{fmtPct(metric("net_margin")?.value)}</td><td>{fmtPct(metric("roe")?.value)}</td></tr>
           {data.peerCompanies.map((peer) => <tr key={peer.ticker}><th scope="row"><Link href={`/stocks/${peer.ticker.toLowerCase()}`}>{peer.company_name}<small>{peer.ticker}</small></Link></th><td>{fmtPct(peer.roic)}</td><td>{fmtPct(peer.revenue_growth_3y_cagr)}</td><td>{fmtPct(peer.net_margin)}</td><td>{fmtPct(peer.roe)}</td></tr>)}
         </tbody><tfoot><tr><th scope="row">Median · {data.peerCompanies.length} peer{data.peerCompanies.length === 1 ? "" : "s"}</th><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.roic)))}</td><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.revenue_growth_3y_cagr)))}</td><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.net_margin)))}</td><td>{fmtPct(medianOf(data.peerCompanies.map((p) => p.roe)))}</td></tr></tfoot></table></div></> : <EmptyState description="No sufficiently comparable companies are available yet." />}
       </ResearchSection>
 
-      <ResearchSection id="shareholding" title={`${company.company_name} ownership`} description="Reported regulatory positions—not live beneficial ownership.">
-        <div className="ownership-overview">{institutionalPercent === null ? <EmptyState description="A complete institutional ownership estimate is not available." /> : <div className="ownership-mix"><div className="ownership-mix__heading"><div><span>Institutions</span><strong>{institutionalPercent.toFixed(1)}%</strong></div><div><span>Other shareholders</span><strong>{(100 - institutionalPercent).toFixed(1)}%</strong></div></div><div className="ownership-mix__bar" aria-label={`Institutions ${institutionalPercent.toFixed(1)} percent, other shareholders ${(100 - institutionalPercent).toFixed(1)} percent`}><span style={{ width: `${institutionalPercent}%` }} /></div><p>These two categories total 100%. Insider and mutual-fund figures overlap with them and must not be added.</p></div>}<dl className="ownership-facts"><div><dt>Institutional change</dt><dd>{fmtPct(institutionalSummary?.qoq_change_pct)}</dd><small>vs prior quarter</small></div><div><dt>Insider ownership</dt><dd>{fmtPct(insiderOwnershipSummary?.ownership_pct)}</dd><small>{insiderOwnershipSummary ? `${insiderOwnershipSummary.distinct_insiders_count} reporting insiders` : "Not available"}</small></div><div><dt>Through mutual funds</dt><dd>{fmtPct(fundSummary?.total_fund_ownership_pct)}</dd><small>included within institutions</small></div></dl></div>
+      <ResearchSection id="shareholding" title={`${company.company_name} ownership`} description="13F institutional positions and company-reported insider ownership; delayed regulatory data, not a live cap table.">
+        <div className="ownership-overview">{institutionalPercent === null ? <EmptyState description="A complete institutional ownership estimate is not available." /> : <div className="ownership-mix"><div className="ownership-mix__heading"><div><span>13F institutions</span><strong>{institutionalPercent.toFixed(1)}%</strong></div><div><span>Not reported in 13F</span><strong>{(100 - institutionalPercent).toFixed(1)}%</strong></div></div><div className="ownership-mix__bar" aria-label={`13F institutions ${institutionalPercent.toFixed(1)} percent, not reported in 13F ${(100 - institutionalPercent).toFixed(1)} percent`}><span style={{ width: `${institutionalPercent}%` }} /></div><p>Estimated from reported 13F positions for {fmtDate(institutionalSummary?.report_period_latest)}. Mutual-fund holdings overlap and must not be added.</p></div>}<dl className="ownership-facts"><div><dt>Institutional change</dt><dd>{institutionalChangePoints == null || !Number.isFinite(institutionalChangePoints) ? "—" : `${institutionalChangePoints >= 0 ? "+" : ""}${institutionalChangePoints.toFixed(1)} pp`}</dd><small>{institutionalSummary ? `${fmtDate(institutionalSummary.report_period_prior)} → ${fmtDate(institutionalSummary.report_period_latest)}` : "Not available"}</small></div><div><dt>Insider ownership</dt><dd>{fmtPct(insiderOwnershipSummary?.ownership_pct)}</dd><small>{insiderOwnershipSummary ? `${insiderOwnershipSummary.distinct_insiders_count} reporting insiders` : "Not available"}</small></div><div><dt>Through mutual funds</dt><dd>{fmtPct(fundSummary?.total_fund_ownership_pct)}</dd><small>{fundSummary ? `${fmtDate(fundSummary.report_period_latest)} · included within institutions` : "Not available"}</small></div></dl></div>
         <div className="disclosure-list">
-          <details><summary><span>Institutional holders</span><small>{data.institutionalHolders.length} reported</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Institution</th><th>Shares</th><th>Value</th><th>Filed</th></tr></thead><tbody>{data.institutionalHolders.map((holder, index) => <tr key={`${holder.filer_name}-${index}`}><th scope="row">{holder.filer_name}</th><td>{fmtShares(holder.shares)}</td><td>{holder.value_usd ? `$${fmtNum(holder.value_usd)}` : "—"}</td><td>{holder.filing_date ?? "—"}</td></tr>)}</tbody></table></div></details>
-          <details><summary><span>Insider transactions</span><small>{data.insiderTransactions.length} reported</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Insider</th><th data-text="true">Type</th><th>Shares</th><th>Price</th><th>Date</th></tr></thead><tbody>{data.insiderTransactions.map((item, index) => <tr key={`${item.accession_number}-${index}`}><th scope="row">{item.reporting_owner_name}<small>{item.officer_title}</small></th><td data-text="true">{item.transaction_code ?? "—"} · {item.acquired_disposed_code === "A" ? "Acquired" : item.acquired_disposed_code === "D" ? "Disposed" : "Reported"}</td><td>{fmtShares(item.shares)}</td><td>{item.price_per_share ? `$${Number(item.price_per_share).toFixed(2)}` : "—"}</td><td>{item.transaction_date ?? "—"}</td></tr>)}</tbody></table></div></details>
-          {fundSummary && <details><summary><span>Mutual-fund holders</span><small>{fundSummary.top_holders.length} reported</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Fund</th><th>Shares</th><th>Value</th><th>As of</th></tr></thead><tbody>{fundSummary.top_holders.map((holder, index) => <tr key={`${holder.fund_cik}-${holder.report_period}-${index}`}><th scope="row">{holder.fund_name}<small>{holder.fund_family}</small></th><td>{fmtShares(holder.shares)}</td><td>{holder.value_usd ? `$${fmtNum(holder.value_usd)}` : "—"}</td><td>{holder.report_period}</td></tr>)}</tbody></table></div></details>}
-          <details><summary><span>Reported holders above 5%</span><small>{data.beneficialOwnership.length} filings</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Filer</th><th data-text="true">Schedule</th><th>Filed</th><th data-text="true">Source</th></tr></thead><tbody>{data.beneficialOwnership.map((holder, index) => <tr key={`${holder.accession_number}-${index}`}><th scope="row">{holder.filer_name}</th><td data-text="true">{holder.schedule_type}{holder.is_amendment ? "/A" : ""}</td><td>{holder.filing_date ?? "—"}</td><td data-text="true"><a href={secUrl(company.cik, holder.accession_number)} target="_blank" rel="noreferrer">SEC filing ↗</a></td></tr>)}</tbody></table></div></details>
+          <details><summary><span>Institutional holders</span><small>{data.institutionalHolders.length} reported</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Institution</th><th>Shares</th><th>Value</th><th>Filed</th></tr></thead><tbody>{data.institutionalHolders.map((holder, index) => <tr key={`${holder.filer_name}-${index}`}><th scope="row">{holder.filer_name}</th><td>{fmtShares(holder.shares)}</td><td>{holder.value_usd ? `$${fmtNum(holder.value_usd)}` : "—"}</td><td>{fmtDate(holder.filing_date)}</td></tr>)}</tbody></table></div></details>
+          <details><summary><span>Insider transactions</span><small>{data.insiderTransactions.length} reported</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Insider</th><th data-text="true">Type</th><th>Shares</th><th>Price</th><th>Date</th></tr></thead><tbody>{data.insiderTransactions.map((item, index) => <tr key={`${item.accession_number}-${index}`}><th scope="row">{item.reporting_owner_name}<small>{item.officer_title}</small></th><td data-text="true">{item.transaction_code ?? "—"} · {item.acquired_disposed_code === "A" ? "Acquired" : item.acquired_disposed_code === "D" ? "Disposed" : "Reported"}</td><td>{fmtShares(item.shares)}</td><td>{item.price_per_share ? `$${Number(item.price_per_share).toFixed(2)}` : "—"}</td><td>{fmtDate(item.transaction_date)}</td></tr>)}</tbody></table></div></details>
+          {fundSummary && <details><summary><span>Mutual-fund holders</span><small>{fundSummary.top_holders.length} reported</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Fund</th><th>Shares</th><th>Value</th><th>As of</th></tr></thead><tbody>{fundSummary.top_holders.map((holder, index) => <tr key={`${holder.fund_cik}-${holder.report_period}-${index}`}><th scope="row">{holder.fund_name}<small>{holder.fund_family}</small></th><td>{fmtShares(holder.shares)}</td><td>{holder.value_usd ? `$${fmtNum(holder.value_usd)}` : "—"}</td><td>{fmtDate(holder.report_period)}</td></tr>)}</tbody></table></div></details>}
+          <details><summary><span>Reported holders above 5%</span><small>{data.beneficialOwnership.length} filings</small></summary><div className="statement-scroll ds-data-table-shell"><table className="research-table ds-data-table" data-presentation="financial"><thead><tr><th>Filer</th><th data-text="true">Schedule</th><th>Filed</th><th data-text="true">Source</th></tr></thead><tbody>{data.beneficialOwnership.map((holder, index) => <tr key={`${holder.accession_number}-${index}`}><th scope="row">{holder.filer_name}</th><td data-text="true">{holder.schedule_type}{holder.is_amendment ? "/A" : ""}</td><td>{fmtDate(holder.filing_date)}</td><td data-text="true"><a href={secUrl(company.cik, holder.accession_number)} target="_blank" rel="noreferrer">SEC filing ↗</a></td></tr>)}</tbody></table></div></details>
         </div>
       </ResearchSection>
 
@@ -289,7 +297,7 @@ export default async function StockPage({ params }: Props) {
         );
       })()}
 
-      <ResearchSection id="documents" title={`${company.company_name} documents`} description="Recent company filings, grouped by type and linked to the original SEC record.">
+      <ResearchSection id="documents" title={`${company.company_name} SEC filings`} description="Recent SEC filings grouped by form type and linked to the original EDGAR record." className="research-section--documents">
         {data.filings.length ? (
           <div className="filing-groups">
             {groupFilings(data.filings).map((group) => {

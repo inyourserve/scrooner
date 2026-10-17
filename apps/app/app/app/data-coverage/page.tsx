@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { ArrowDown, ArrowRight, ArrowUp, Minus } from "lucide-react";
-import { GroupCoverage, isCoverageBand } from "@/components/data-coverage/GroupCoverage";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { ArrowDown, ArrowRight, ArrowUp, Building2, Database, Minus, Search } from "lucide-react";
+import { AppPageLayout } from "@/components/layout/AppPageLayout";
 import { PageShell } from "@/components/layout/PageShell";
+import { GroupCoverage, isCoverageBand } from "@/components/data-coverage/GroupCoverage";
+import { WorkspaceHeader } from "@/components/layout/WorkspaceHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardDescription, CardHeader, CardHeading, CardTitle } from "@/components/ui/Card";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow, TableRowHeader } from "@/components/ui/Table";
 import { backendUrl } from "@/lib/backend";
 import { buildLoginHref } from "@/lib/auth/redirect";
 import { createClient } from "@/lib/supabase/server";
+import styles from "./data-coverage.module.css";
 
 export const metadata: Metadata = { title: "Data coverage — Scrooner" };
 export const dynamic = "force-dynamic";
@@ -78,23 +80,24 @@ export default async function DataCoveragePage({ searchParams }: Props) {
     }
   }
 
-  return <PageShell className="coverage-dashboard">
-    <PageHeader eyebrow="Pipeline health" title="Data coverage" description="Track whether company and metric coverage is improving, stable, or regressing over time." trustItems={["UTC daily snapshots", "Real active-company denominator"]} />
-    <section className="coverage-dashboard__summary" aria-label="Latest coverage scores">
+  return <PageShell>
+    <WorkspaceHeader eyebrow="Pipeline health" title="Data coverage" description="Track whether company and metric coverage is improving, stable, or regressing over time." trustItems={["UTC daily snapshots", "Real active-company denominator"]} />
+    <AppPageLayout>
+    <section className={styles.summary} aria-label="Latest coverage scores">
       {[
         ["Core screening metrics", latest?.core_score, previous?.core_score],
         ["All active metrics", latest?.metric_score, previous?.metric_score],
         ["Canonical concepts", latest?.concept_score, previous?.concept_score],
-      ].map(([title, current, prior]) => <Card variant="subtle" key={title}><CardContent><small>{title}</small><strong>{score(current ?? null)}</strong>{delta(current && prior ? String(Number(current) - Number(prior)) : null)}</CardContent></Card>)}
+      ].map(([title, current, prior]) => <Card variant="subtle" key={title}><CardContent className={styles.summaryContent}><small>{title}</small><strong>{score(current ?? null)}</strong>{delta(current && prior ? String(Number(current) - Number(prior)) : null)}</CardContent></Card>)}
     </section>
 
-    <div className="coverage-dashboard__grid">
-      <Card>
+    <div className={styles.grid}>
+      <Card className={styles.tableCard}>
         <CardHeader><CardHeading><CardTitle>Coverage trend</CardTitle><CardDescription>One persisted log per UTC date. Latest snapshot: {coverage.as_of ?? "not available"}.</CardDescription></CardHeading><ArrowRight size={18} aria-hidden="true" /></CardHeader>
         <TableContainer aria-label="Date-wise coverage history"><Table><TableHeader><TableRow><TableHead>Date</TableHead><TableHead data-align="right">Core metrics</TableHead><TableHead data-align="right">All metrics</TableHead><TableHead data-align="right">Concepts</TableHead><TableHead data-align="right">Companies</TableHead></TableRow></TableHeader><TableBody>{coverage.history.map((row) => <TableRow key={row.date}><TableRowHeader>{row.date}</TableRowHeader><TableCell data-align="right">{score(row.core_score)}</TableCell><TableCell data-align="right">{score(row.metric_score)}</TableCell><TableCell data-align="right">{score(row.concept_score)}</TableCell><TableCell data-align="right">{row.total_active_companies.toLocaleString("en-US")}</TableCell></TableRow>)}</TableBody></Table></TableContainer>
       </Card>
 
-      <Card>
+      <Card className={styles.tableCard}>
         <CardHeader><CardHeading><CardTitle>Weakest metrics</CardTitle><CardDescription>Lowest current company coverage, with movement since the previous snapshot.</CardDescription></CardHeading></CardHeader>
         <TableContainer aria-label="Lowest coverage metrics"><Table><TableHeader><TableRow><TableHead>Metric</TableHead><TableHead data-align="right">Coverage</TableHead><TableHead data-align="right">Covered</TableHead><TableHead>Change</TableHead></TableRow></TableHeader><TableBody>{coverage.weakest_metrics.map((metric) => <TableRow key={metric.metric_name}><TableRowHeader>{label(metric.metric_name)}</TableRowHeader><TableCell data-align="right"><strong>{score(metric.coverage_pct)}</strong></TableCell><TableCell data-align="right">{metric.companies_covered.toLocaleString("en-US")} / {metric.total_active_companies.toLocaleString("en-US")}</TableCell><TableCell>{delta(metric.delta)}</TableCell></TableRow>)}</TableBody></Table></TableContainer>
       </Card>
@@ -102,29 +105,37 @@ export default async function DataCoveragePage({ searchParams }: Props) {
 
     <GroupCoverage accessToken={accessToken} band={band} />
 
-    <Card>
+
+    <Card className={styles.companyCard}>
       <CardHeader>
         <CardHeading>
           <CardTitle>Company-wise coverage</CardTitle>
           <CardDescription>Look up one company: what it has, what genuinely doesn&rsquo;t apply to it, and what&rsquo;s a real gap — with a plain-English reason for every absence.</CardDescription>
         </CardHeading>
       </CardHeader>
-      <form method="get" className="coverage-dashboard__company-search" aria-label="Look up a company by ticker">
-        <input type="text" name="ticker" defaultValue={requestedTicker ?? ""} placeholder="Ticker, e.g. V" aria-label="Ticker" />
-        <button type="submit">Look up</button>
+      <form method="get" className={styles.companySearch} aria-label="Look up a company by ticker">
+        <label htmlFor="coverage-ticker">US ticker symbol</label>
+        <div className={styles.searchControl}>
+          <Search size={16} aria-hidden="true" />
+          <input id="coverage-ticker" type="text" name="ticker" defaultValue={requestedTicker ?? ""} placeholder="e.g. AAPL" autoCapitalize="characters" spellCheck={false} />
+          <button type="submit">Look up coverage</button>
+        </div>
       </form>
-      {companyError && <p role="alert">{companyError}</p>}
+      {companyError && <p className={styles.companyError} role="alert">{companyError}</p>}
+      {!requestedTicker && <div className={styles.companyPrompt}><Database size={20} aria-hidden="true" /><div><strong>Inspect the source of truth</strong><p>Search a ticker to see every expected data point and distinguish a genuine gap from a metric that does not apply.</p></div></div>}
       {companyCoverage && (
-        <>
-          <p>
-            <strong>{companyCoverage.company_name}</strong> (CIK {companyCoverage.cik}) — {companyCoverage.sic_description ?? "sector unknown"}
-            {" · "}
-            Populations: {companyCoverage.populations.length > 0 ? companyCoverage.populations.join(", ") : "none"}
-          </p>
-          <p>
-            <strong>{companyCoverage.coverage_pct !== null ? `${companyCoverage.coverage_pct}%` : "—"}</strong> coverage
-            {" "}({companyCoverage.counts.present ?? 0} present / {companyCoverage.counts.gap ?? 0} genuine gaps / {companyCoverage.counts.not_applicable ?? 0} not applicable)
-          </p>
+        <div className={styles.companyResult}>
+          <div className={styles.companyOverview}>
+            <span className={styles.companyIcon}><Building2 size={18} aria-hidden="true" /></span>
+            <div><h3>{companyCoverage.company_name}</h3><p>{companyCoverage.sic_description ?? "Sector unavailable"} · CIK {companyCoverage.cik}</p></div>
+            <div className={styles.coverageScore}><strong>{companyCoverage.coverage_pct !== null ? `${companyCoverage.coverage_pct}%` : "—"}</strong><span>coverage</span></div>
+          </div>
+          <dl className={styles.companyStats}>
+            <div><dt>Present</dt><dd>{companyCoverage.counts.present ?? 0}</dd></div>
+            <div><dt>Genuine gaps</dt><dd>{companyCoverage.counts.gap ?? 0}</dd></div>
+            <div><dt>Not applicable</dt><dd>{companyCoverage.counts.not_applicable ?? 0}</dd></div>
+            <div><dt>Populations</dt><dd>{companyCoverage.populations.length > 0 ? companyCoverage.populations.join(", ") : "None"}</dd></div>
+          </dl>
           <TableContainer aria-label="Per-data-point coverage for this company">
             <Table>
               <TableHeader>
@@ -147,8 +158,9 @@ export default async function DataCoveragePage({ searchParams }: Props) {
               </TableBody>
             </Table>
           </TableContainer>
-        </>
+        </div>
       )}
     </Card>
+    </AppPageLayout>
   </PageShell>;
 }

@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { WorkspaceHeader } from "@/components/layout/WorkspaceHeader";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import listStyles from "@/components/saved-screens/saved-screens.module.css";
@@ -18,10 +18,7 @@ import { PageShell } from "@/components/layout/PageShell";
 export default function ScreensLoading() {
   return (
     <PageShell className={styles.page}>
-      <div className={styles.heading}>
-        <PageHeader eyebrow="Screen library" title="Saved screens" description="Reopen your investment criteria, review saved results, or refresh them against the latest available data." />
-        <Button asChild leadingIcon={<Plus size={16} aria-hidden="true" />}><Link href="/app/screens/new">Create screen</Link></Button>
-      </div>
+      <WorkspaceHeader eyebrow="Screen library" title="Saved screens" description="Reopen your investment criteria, review saved results, or refresh them against the latest available data." actions={<Button asChild leadingIcon={<Plus size={16} aria-hidden="true" />}><Link href="/app/screens/new">Create screen</Link></Button>} />
       <div className={styles.note}>
         <span aria-hidden="true" className={styles.noteMark}>i</span>
         <p><strong>Saved results open instantly.</strong> Refresh a screen only when you need the latest available data.</p>

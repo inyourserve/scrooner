@@ -1,10 +1,15 @@
-.profile { display: flex; align-items: center; gap: var(--ds-space-5); padding: var(--ds-space-6); }
+.profile { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-6); padding: var(--ds-space-6); }
+.profileMain { display: flex; align-items: center; min-width: 0; gap: var(--ds-space-5); }
 .avatar { width: 56px; height: 56px; flex: none; display: grid; place-items: center; border: 1px solid var(--ds-color-border-strong); border-radius: var(--ds-radius-round); background: var(--ds-color-bg-subtle); color: var(--ds-color-action-hover); font-family: var(--ds-font-family-editorial); font-size: var(--ds-font-size-24); font-weight: var(--ds-font-weight-semibold); }
 .identity { min-width: 0; }
 .identityHeading { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ds-space-2); margin-bottom: var(--ds-space-2); }
 .identityHeading h2 { margin: 0; overflow-wrap: anywhere; font-size: var(--ds-font-size-18); }
 .identityHeading :global(.ds-badge) { display: inline-flex; align-items: center; gap: 4px; }
 .identity p { display: inline-flex; align-items: center; gap: var(--ds-space-2); margin: 0 var(--ds-space-5) 0 0; color: var(--ds-color-text-muted); font-size: var(--ds-font-size-12); }
+.securityStatus { flex: none; display: flex; align-items: center; gap: var(--ds-space-3); padding: var(--ds-space-3) var(--ds-space-4); border: 1px solid var(--ds-color-border-default); border-radius: var(--ds-radius-md); background: var(--ds-color-bg-subtle); color: var(--ds-color-text-secondary); }
+.securityStatus span { display: grid; gap: 2px; }
+.securityStatus strong { color: var(--ds-color-text-primary); font-size: var(--ds-font-size-12); }
+.securityStatus small { color: var(--ds-color-text-muted); font-size: var(--ds-font-size-11); }
 .settings { margin-top: var(--ds-space-5); }
 .sectionHeader { padding: var(--ds-space-5) var(--ds-space-6) var(--ds-space-4); }
 .sectionHeader h2 { margin: 0; font-size: var(--ds-font-size-16); }
@@ -19,7 +24,9 @@
 .backLink:hover { color: var(--ds-color-action-hover); }
 .passwordContent :global(.auth-card) { width: 100%; max-width: none; border-color: var(--ds-color-border-default); border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-surface); }
 @media (max-width: 600px) {
-  .profile { align-items: flex-start; padding: var(--ds-space-5); }
+  .profile { align-items: stretch; flex-direction: column; padding: var(--ds-space-5); }
+  .profileMain { align-items: flex-start; }
+  .securityStatus { width: 100%; }
   .identity p { display: flex; margin: var(--ds-space-1) 0 0; }
   .settingRow { grid-template-columns: 36px minmax(0, 1fr); }
   .settingRow > :global(.ds-button), .settingRow form { grid-column: 2; width: fit-content; }

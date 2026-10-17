@@ -32,11 +32,11 @@ const RESULT_COLUMN_LABELS: Record<string, string> = {
   trailing_pe: "P/E",
   roe: "ROE",
   roic: "ROIC",
-  revenue_growth_yoy: "Revenue growth",
-  eps_growth_yoy: "EPS growth",
+  revenue_growth_yoy: "Revenue growth (YoY)",
+  eps_growth_yoy: "EPS growth (YoY)",
   fcf_margin: "FCF margin",
   dividend_yield: "Dividend yield",
-  debt_to_equity: "Debt / equity",
+  debt_to_equity: "Debt-to-equity",
 };
 
 export function resultColumnLabel(metricName: string, definition?: MetricDefinition) {

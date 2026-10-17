@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { CalendarDays, CheckCircle2, KeyRound, LogOut, Mail } from "lucide-react";
+import { CalendarDays, CheckCircle2, KeyRound, LogOut, Mail, ShieldCheck } from "lucide-react";
 import { AppPageLayout } from "@/components/layout/AppPageLayout";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { PageShell } from "@/components/layout/PageShell";
+import { WorkspaceHeader } from "@/components/layout/WorkspaceHeader";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -20,7 +20,7 @@ export default async function AccountPage() {
   if (!status.enabled) {
     return (
       <PageShell>
-        <PageHeader eyebrow="Account settings" title="Account unavailable" description="Sign-in and account settings are not available in this environment." />
+        <WorkspaceHeader eyebrow="Account settings" title="Account unavailable" description="Sign-in and account settings are not available in this environment." />
       </PageShell>
     );
   }
@@ -35,28 +35,34 @@ export default async function AccountPage() {
 
   return (
     <PageShell>
-      <PageHeader eyebrow="Settings" title="Account" description="Manage your sign-in details and account security." />
+      <WorkspaceHeader eyebrow="Settings" title="Account" description="Manage your identity, security, and access to your Scrooner research workspace." />
 
       <AppPageLayout>
         <section aria-labelledby="account-details"><Card className={styles.profile}>
-          <div className={styles.avatar} aria-hidden="true">{initial}</div>
-          <div className={styles.identity}>
-            <div className={styles.identityHeading}>
-              <h2 id="account-details">{email}</h2>
-              <Badge tone={data.user.email_confirmed_at ? "positive" : "warning"}>
-                {data.user.email_confirmed_at ? <CheckCircle2 size={12} aria-hidden="true" /> : null}
-                {data.user.email_confirmed_at ? "Verified" : "Pending verification"}
-              </Badge>
+          <div className={styles.profileMain}>
+            <div className={styles.avatar} aria-hidden="true">{initial}</div>
+            <div className={styles.identity}>
+              <div className={styles.identityHeading}>
+                <h2 id="account-details">{email}</h2>
+                <Badge tone={data.user.email_confirmed_at ? "positive" : "warning"}>
+                  {data.user.email_confirmed_at ? <CheckCircle2 size={12} aria-hidden="true" /> : null}
+                  {data.user.email_confirmed_at ? "Verified" : "Pending verification"}
+                </Badge>
+              </div>
+              <p><Mail size={14} aria-hidden="true" /> Sign-in email</p>
+              <p><CalendarDays size={14} aria-hidden="true" /> Member since {joined}</p>
             </div>
-            <p><Mail size={14} aria-hidden="true" /> Sign-in email</p>
-            <p><CalendarDays size={14} aria-hidden="true" /> Joined {joined}</p>
+          </div>
+          <div className={styles.securityStatus}>
+            <ShieldCheck size={18} aria-hidden="true" />
+            <span><strong>Account protected</strong><small>Password-based access is active</small></span>
           </div>
         </Card></section>
 
         <section aria-labelledby="security-title"><Card className={styles.settings}>
           <header className={styles.sectionHeader}>
             <h2 id="security-title">Security</h2>
-            <p>Keep your account secure and control this session.</p>
+            <p>Review credentials and control access on this device.</p>
           </header>
           <div className={styles.settingRow}>
             <div className={styles.settingIcon} aria-hidden="true"><KeyRound size={17} /></div>
