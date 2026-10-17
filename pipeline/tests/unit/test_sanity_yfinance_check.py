@@ -143,3 +143,32 @@ class TestCheckRevenueZero:
     def test_silent_when_external_missing(self):
         row = _check_revenue_zero(1, Decimal(0), has_revenue_history=True, external_total_revenue=None)
         assert row is None
+
+    def test_suppressed_when_trailing_quarter_has_material_revenue(self):
+        """Fixed 2026-10-02: comparing yfinance's TTM-shaped totalRevenue
+        against only our single latest period was wrong for lumpy/
+        milestone-revenue companies -- 11 of this check's first 14 real
+        findings were clinical-stage biotechs with an honest $0 current
+        quarter but real revenue in an earlier trailing quarter. A real
+        resolve()-$0 bug (latest AND every recent trailing quarter zero)
+        must still fire -- only suppressed when a trailing quarter has
+        real material revenue."""
+        row = _check_revenue_zero(
+            1,
+            Decimal(0),
+            has_revenue_history=True,
+            external_total_revenue=4_000_000_000,
+            any_trailing_quarter_material=True,
+        )
+        assert row is None
+
+    def test_still_fires_when_no_trailing_quarter_has_material_revenue(self):
+        row = _check_revenue_zero(
+            1,
+            Decimal(0),
+            has_revenue_history=True,
+            external_total_revenue=4_000_000_000,
+            any_trailing_quarter_material=False,
+        )
+        assert row is not None
+        assert row["severity"] == SEVERITY_CRITICAL

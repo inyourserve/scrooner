@@ -22,7 +22,11 @@ from scrooner_pipeline.sanity.report import (
     render_markdown,
     summarize,
 )
-from scrooner_pipeline.sanity.tag_investigator import investigate_open_findings
+from scrooner_pipeline.sanity.tag_investigator import (
+    investigate_open_findings,
+    run_internal_tag_preference_sweep,
+    resolve_company_tag_preferences,
+)
 from scrooner_pipeline.sanity.timeseries_check import run_all as run_timeseries_all
 from scrooner_pipeline.sanity.plausibility_check import run_all as run_plausibility_all
 from scrooner_pipeline.sanity.accounting_identity import run_all as run_identities_all
@@ -149,6 +153,30 @@ def investigate_cmd() -> None:
     typer.echo(f"sanity investigate: {stats}")
 
 
+@app.command("sweep-internal-tag-preferences")
+def sweep_internal_tag_preferences_cmd() -> None:
+    """Root cause 1 bulk sweep (2026-10-02, revenue_zero_check): reaches
+    the WHOLE real_operating_company population in one pass instead of
+    waiting for `investigate`'s slow coldest-checked-first rotation to
+    stumble onto each company, and uses internal (same-company,
+    cross-period) corroboration instead of a yfinance anchor -- the right
+    bar for this bug class, since a bank's best honest alternate tag
+    (interest income alone) can be ~78% off from yfinance's full revenue
+    figure yet still categorically fix a spurious $0. See
+    sanity/tag_investigator.py's run_internal_tag_preference_sweep()
+    docstring for the full reasoning and the selection bar's evidence.
+    Writes analytics.company_tag_preference rows, then immediately
+    re-merges revenue_sanity_resolved so the fix is visible without a
+    separate `investigate` run."""
+    with get_connection() as conn:
+        sweep_stats = run_internal_tag_preference_sweep(conn)
+        merged = resolve_company_tag_preferences(
+            conn, "revenue", "revenue_sanity_resolved"
+        )
+    typer.echo(f"sweep-internal-tag-preferences: {sweep_stats}")
+    typer.echo(f"revenue_sanity_resolved rows after merge: {merged}")
+
+
 @app.command("timeseries")
 def timeseries_cmd() -> None:
     """Time-series self-consistency check (sanity/timeseries_check.py) --
@@ -164,7 +192,9 @@ def timeseries_cmd() -> None:
 
 @app.command("identities")
 def identities_cmd(
-    ciks: str = typer.Option(None, help="Comma-separated CIKs; default is the whole active population."),
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs; default is the whole active population."
+    ),
     layer: str = typer.Option("both", help="display, raw or both."),
 ) -> None:
     """Accounting identity checks (sanity/accounting_identity.py) --
@@ -178,7 +208,9 @@ def identities_cmd(
     with get_connection() as conn:
         stats = run_identities_all(conn, layers=layers, ciks=cik_set)
     for key, s in sorted(stats.items()):
-        typer.echo(f"{key:40} checked={s['checked']:>8} pass={s['pass_pct']}% tautology_skipped={s['tautology_skipped']}")
+        typer.echo(
+            f"{key:40} checked={s['checked']:>8} pass={s['pass_pct']}% tautology_skipped={s['tautology_skipped']}"
+        )
 
 
 @app.command("plausibility")

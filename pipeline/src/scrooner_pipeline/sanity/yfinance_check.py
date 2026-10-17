@@ -237,6 +237,14 @@ SEVERITY_MISSING_OURS = "missing_ours"
 SEVERITY_MISSING_EXTERNAL = "missing_external"
 
 REVENUE_ZERO_CHECK_MATERIAL_THRESHOLD = Decimal(1_000_000)
+# How many of a company's own most-recent revenue_sanity_resolved rows
+# (any granularity) to check for "any material revenue in the trailing
+# window" before firing a critical revenue_zero_check finding -- see
+# _load_our_values' own comment for the full reasoning (false criticals on
+# lumpy/milestone-revenue biotechs). 4 rather than a calendar window
+# because this check has no clean way to convert "4 quarters" into a date
+# range that's correct for every company's own fiscal-year-end.
+TRAILING_QUARTERS_WINDOW = 4
 
 
 def _fetch_info_once(ticker: str) -> dict:
@@ -356,6 +364,20 @@ def _load_our_values(
         # parser) already writes into, and the one the company page
         # itself reads (statements/classify.py) -- this check needs to
         # agree with what a user actually sees, not an earlier layer.
+        # Trailing-quarters fix (2026-10-02): the single-latest-period check
+        # below (revenue_latest) generates false "critical" findings for any
+        # company with genuinely lumpy/milestone revenue -- 11 of the first
+        # 14 companies this check ever flagged were real clinical-stage
+        # biotechs with an honest $0 current quarter but real revenue in an
+        # earlier quarter of the same trailing year (a one-off licensing
+        # payment, not a resolve() bug). Track up to TRAILING_QUARTERS_WINDOW
+        # of each company's own most-recent revenue_sanity_resolved rows (any
+        # granularity -- a few extra FY/Q4-sharing-an-end_date rows in the
+        # window is harmless, this is a coarse "was there ANY recent real
+        # revenue" check, not a precise quarter count) and flag whether ANY
+        # of them clears the material threshold -- if so, `_check_revenue_zero`
+        # suppresses the critical finding even though the single latest
+        # period is still 0/missing.
         cur.execute(
             """
             select cf.company_id, cf.value
@@ -368,11 +390,17 @@ def _load_our_values(
             (company_ids,),
         )
         seen_revenue: set[int] = set()
+        trailing_seen_count: dict[int, int] = {}
         for company_id, value in cur.fetchall():
             values[company_id]["revenue_has_history"] = Decimal(1)
             if company_id not in seen_revenue:
                 values[company_id]["revenue_latest"] = value
                 seen_revenue.add(company_id)
+            count = trailing_seen_count.get(company_id, 0)
+            if count < TRAILING_QUARTERS_WINDOW:
+                if value is not None and value >= REVENUE_ZERO_CHECK_MATERIAL_THRESHOLD:
+                    values[company_id]["revenue_trailing_material"] = Decimal(1)
+                trailing_seen_count[company_id] = count + 1
 
     return values
 
@@ -439,6 +467,7 @@ def _check_revenue_zero(
     our_revenue: Decimal | None,
     has_revenue_history: bool,
     external_total_revenue,
+    any_trailing_quarter_material: bool = False,
 ) -> dict | None:
     if external_total_revenue is None or not has_revenue_history:
         # No revenue concept ever captured for this company at all -- a
@@ -451,7 +480,18 @@ def _check_revenue_zero(
     external_decimal = Decimal(str(external_total_revenue))
     is_ours_zero_or_missing = our_revenue is None or our_revenue == 0
     is_external_material = external_decimal >= REVENUE_ZERO_CHECK_MATERIAL_THRESHOLD
-    if is_ours_zero_or_missing and is_external_material:
+    if (
+        is_ours_zero_or_missing
+        and is_external_material
+        and not any_trailing_quarter_material
+    ):
+        # any_trailing_quarter_material fixed 2026-10-02: comparing yfinance's
+        # genuinely TTM-shaped totalRevenue against only our single LATEST
+        # period was wrong for any company with lumpy/milestone revenue (11
+        # of this check's first 14 real findings were clinical-stage
+        # biotechs with a real $0 current quarter but real revenue in an
+        # earlier trailing quarter -- not a bug). See module docstring/
+        # _load_our_values for the full reasoning.
         return {
             "company_id": company_id,
             "metric_name": "revenue_zero_check",
@@ -459,11 +499,14 @@ def _check_revenue_zero(
             "external_value": external_decimal,
             "pct_diff": None,
             "severity": SEVERITY_CRITICAL,
-            "note": "Our most-recent revenue is 0/missing while yfinance reports a material totalRevenue -- "
-            "same SHAPE as the resolve() authoritative-$0 bug found 2026-09-07, but not necessarily the "
-            "same root cause (a real, different example found live 2026-09-08: Commerce Bancshares, a "
-            "bank whose only mapped revenue tag is interest income alone, missing non-interest income -- "
-            "a completeness gap, not a resolve() bug). Run `scrooner-sanity investigate` to find the real cause.",
+            "note": "Our most-recent revenue is 0/missing (and no quarter in our own trailing "
+            f"{TRAILING_QUARTERS_WINDOW} periods shows material revenue either) while yfinance reports "
+            "a material totalRevenue -- same SHAPE as the resolve() authoritative-$0 bug found "
+            "2026-09-07, but not necessarily the same root cause (a real, different example found live "
+            "2026-09-08: Commerce Bancshares, a bank whose only mapped revenue tag is interest income "
+            "alone, missing non-interest income -- a completeness gap, not a resolve() bug). Run "
+            "`scrooner-sanity investigate` or `scrooner-sanity sweep-internal-tag-preferences` to find "
+            "the real cause.",
         }
     return None  # not every company gets a row here -- this check only ever fires on the failure mode, not routinely
 
@@ -533,6 +576,7 @@ def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
             our_values[company_id].get("revenue_latest"),
             our_values[company_id].get("revenue_has_history") is not None,
             info.get("totalRevenue"),
+            our_values[company_id].get("revenue_trailing_material") is not None,
         )
         if revenue_row is not None:
             rows.append(revenue_row)

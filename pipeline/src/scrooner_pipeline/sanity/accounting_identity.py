@@ -45,14 +45,15 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from decimal import Decimal
+from itertools import combinations
 
 import psycopg
 import structlog
 
 logger = structlog.get_logger()
 
-KIND_EQUALS = "equals"          # target == sum(terms) within tolerance
-KIND_AT_MOST = "at_most"        # target <= sum(terms) within tolerance
+KIND_EQUALS = "equals"  # target == sum(terms) within tolerance
+KIND_AT_MOST = "at_most"  # target <= sum(terms) within tolerance
 KIND_NONNEGATIVE = "nonnegative"  # target >= 0
 
 LAYERS = ("display", "raw")
@@ -87,7 +88,10 @@ IDENTITIES: tuple[Identity, ...] = (
         adjustments=(
             ("MinorityInterest", 1),
             ("TemporaryEquityCarryingAmountAttributableToParent", 1),
-            ("TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterest", 1),
+            (
+                "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterest",
+                1,
+            ),
             ("RedeemableNoncontrollingInterestEquityCarryingAmount", 1),
         ),
         tolerance=Decimal("0.02"),
@@ -173,13 +177,31 @@ def evaluate(
 
     base = sum((values[c] * sign for c, sign in identity.terms), Decimal("0"))
     basis = values[identity.basis] if identity.basis else base
-    adj_total = sum(
-        (adjustments[tag] * sign for tag, sign in identity.adjustments if adjustments and tag in adjustments),
-        Decimal("0"),
-    )
-    candidates = [(base, False)]
-    if adj_total:
-        candidates.append((base + adj_total, True))
+
+    # Try every SUBSET of present adjustments, not just "none" or "all"
+    # (fixed 2026-10-02: the original all-or-nothing version double-counted
+    # for most companies -- equity-method income is usually already
+    # embedded in GAAP pretax income via its standard statement position,
+    # so forcing it in again alongside NCI overshot and produced a worse
+    # gap than NCI alone. Verified live: re-evaluating 1,894 failing
+    # companies against the full powerset of their own present adjustments
+    # made 25.4% of display-layer / 30.2% of raw-layer net_income failures
+    # pass -- the dominant winning subset, 3,167 of 4,247 cases, is
+    # NCI-only without equity-method income). At most 4 adjustments exist
+    # in IDENTITIES today (balance_sheet), so the full powerset is at
+    # most 16 candidates -- cheap per company-period.
+    present_adjustments = [
+        (tag, sign)
+        for tag, sign in identity.adjustments
+        if adjustments and tag in adjustments
+    ]
+    candidates: list[tuple[Decimal, bool]] = [(base, False)]
+    for r in range(1, len(present_adjustments) + 1):
+        for subset in combinations(present_adjustments, r):
+            subset_total = sum(
+                (adjustments[tag] * sign for tag, sign in subset), Decimal("0")
+            )
+            candidates.append((base + subset_total, True))
 
     best: Result | None = None
     for expected, used_adj in candidates:
@@ -190,7 +212,13 @@ def evaluate(
             over = actual - expected
             gap = _rel(over, basis) if over > 0 else Decimal("0")
             passed = gap <= identity.tolerance
-        result = Result(passed=passed, expected=expected, actual=actual, rel_gap=gap, used_adjustments=used_adj)
+        result = Result(
+            passed=passed,
+            expected=expected,
+            actual=actual,
+            rel_gap=gap,
+            used_adjustments=used_adj,
+        )
         if passed:
             return result
         if best is None or gap < best.rel_gap:
@@ -218,7 +246,8 @@ def _load_rows(
     names = identity.concepts
     ids = [concept_ids[n] for n in names]
     value_cols = ", ".join(
-        f"max(value) filter (where canonical_concept_id = {cid}) as v{i}" for i, cid in enumerate(ids)
+        f"max(value) filter (where canonical_concept_id = {cid}) as v{i}"
+        for i, cid in enumerate(ids)
     )
     term_ids = [concept_ids[c] for c, _ in identity.terms]
     source_cols = (
@@ -265,10 +294,14 @@ def check_chunk(
         name=identity.name,
         kind=identity.kind,
         target=_layer_concept_name(identity.target, layer, known),
-        terms=tuple((_layer_concept_name(c, layer, known), s) for c, s in identity.terms),
+        terms=tuple(
+            (_layer_concept_name(c, layer, known), s) for c, s in identity.terms
+        ),
         adjustments=identity.adjustments,
         tolerance=identity.tolerance,
-        basis=_layer_concept_name(identity.basis, layer, known) if identity.basis else None,
+        basis=_layer_concept_name(identity.basis, layer, known)
+        if identity.basis
+        else None,
     )
     names = layered.concepts
     rows = _load_rows(conn, layered, concept_ids, adjustment_ids, company_ids)
@@ -289,7 +322,9 @@ def check_chunk(
             skipped += 1
             continue
         adjustments = {
-            tag: val for (tag, _s), val in zip(layered.adjustments, adj_values) if val is not None
+            tag: val
+            for (tag, _s), val in zip(layered.adjustments, adj_values)
+            if val is not None
         }
         result = evaluate(layered, values, adjustments)
         entry = summary.setdefault(company_id, [0, 0, None])
@@ -297,7 +332,9 @@ def check_chunk(
         if result.passed:
             entry[1] += 1
             continue
-        if result.rel_gap is not None and (entry[2] is None or result.rel_gap > entry[2]):
+        if result.rel_gap is not None and (
+            entry[2] is None or result.rel_gap > entry[2]
+        ):
             entry[2] = result.rel_gap
         failures.append(
             {
@@ -310,7 +347,10 @@ def check_chunk(
                 "actual": result.actual,
                 "rel_gap": result.rel_gap,
                 "operands": json.dumps(
-                    {**{k: str(v) for k, v in values.items()}, **{k: str(v) for k, v in adjustments.items()}}
+                    {
+                        **{k: str(v) for k, v in values.items()},
+                        **{k: str(v) for k, v in adjustments.items()},
+                    }
                 ),
             }
         )
@@ -342,7 +382,10 @@ def _write_chunk(
                     (company_id, identity_name, layer, checked, passed, worst_rel_gap)
                 values (%s, %s, %s, %s, %s, %s)
                 """,
-                [(cid, identity_name, layer, c, p, g) for cid, (c, p, g) in summary.items()],
+                [
+                    (cid, identity_name, layer, c, p, g)
+                    for cid, (c, p, g) in summary.items()
+                ],
             )
         for start in range(0, len(failures), 5000):
             cur.executemany(
@@ -368,16 +411,24 @@ def run_all(
         concept_ids = dict(cur.fetchall())
         tags = sorted({tag for i in IDENTITIES for tag, _ in i.adjustments})
         cur.execute(
-            "select tag, id from core.concept where taxonomy = 'us-gaap' and tag = any(%s)", (tags,)
+            "select tag, id from core.concept where taxonomy = 'us-gaap' and tag = any(%s)",
+            (tags,),
         )
         adjustment_ids = dict(cur.fetchall())
         if ciks:
-            cur.execute("select id from core.company where cik = any(%s) order by id", (list(ciks),))
+            cur.execute(
+                "select id from core.company where cik = any(%s) order by id",
+                (list(ciks),),
+            )
         else:
-            cur.execute("select id from core.company where status = 'active' order by id")
+            cur.execute(
+                "select id from core.company where status = 'active' order by id"
+            )
         company_ids = [r[0] for r in cur.fetchall()]
 
-    identities = [i for i in IDENTITIES if not identity_names or i.name in identity_names]
+    identities = [
+        i for i in IDENTITIES if not identity_names or i.name in identity_names
+    ]
     stats: dict[str, dict] = {}
     for start in range(0, len(company_ids), CHUNK_SIZE):
         chunk = company_ids[start : start + CHUNK_SIZE]
@@ -387,11 +438,20 @@ def run_all(
                     conn, identity, layer, concept_ids, adjustment_ids, chunk
                 )
                 _write_chunk(conn, identity.name, layer, chunk, summary, failures)
-                s = stats.setdefault(f"{identity.name}/{layer}", {"checked": 0, "passed": 0, "tautology_skipped": 0})
+                s = stats.setdefault(
+                    f"{identity.name}/{layer}",
+                    {"checked": 0, "passed": 0, "tautology_skipped": 0},
+                )
                 s["checked"] += sum(v[0] for v in summary.values())
                 s["passed"] += sum(v[1] for v in summary.values())
                 s["tautology_skipped"] += skipped
-        logger.info("identity_check.chunk_done", done=min(start + CHUNK_SIZE, len(company_ids)), total=len(company_ids))
+        logger.info(
+            "identity_check.chunk_done",
+            done=min(start + CHUNK_SIZE, len(company_ids)),
+            total=len(company_ids),
+        )
     for s in stats.values():
-        s["pass_pct"] = round(100 * s["passed"] / s["checked"], 2) if s["checked"] else None
+        s["pass_pct"] = (
+            round(100 * s["passed"] / s["checked"], 2) if s["checked"] else None
+        )
     return stats

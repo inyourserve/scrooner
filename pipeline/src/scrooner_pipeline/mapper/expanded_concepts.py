@@ -244,6 +244,40 @@ NEW_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
         "wired to this concept yet -- this pass only closes the raw-data gap (traceable, screenable via "
         "a future dedicated metric), same 'data layer first' sequencing as segment_revenue.py.",
     ),
+    (
+        "collaborative_arrangement_revenue",
+        "income_statement",
+        "first_match",
+        "Added 2026-10-02, root cause 2 of the revenue_zero_check sweep (BioAtla, Inc., CIK 1826892): "
+        "RevenueFromCollaborativeArrangementExcludingRevenueFromContractWithCustomer is a REAL, distinct "
+        "second revenue stream for biotech/pharma licensing deals -- checked live before adding: 26 "
+        "companies/739 facts population-wide, and coexists with the already-mapped contract-revenue tag "
+        "in 238 real company-periods (both nonzero, same company+period) -- a genuine second stream for "
+        "some filers, NOT a different concept sharing vocabulary, and NOT safe to add to `revenue`'s own "
+        "concept_mapping (first_match would double-count/clobber for the companies reporting both). "
+        "Deliberately its OWN canonical_concept with zero interaction with resolve.py's revenue mapping; "
+        "mapper/revenue_resolvers/collaborative_arrangement.py's run() ADDS this concept's "
+        "value into revenue_sanity_resolved wherever both exist for a period, same 'genuinely additive, "
+        "never double-counted' idiom already used for capex_resolved's PaymentsToAcquireSoftware addend.",
+    ),
+    (
+        "net_lease_revenue",
+        "income_statement",
+        "first_match",
+        "Added 2026-10-02, root cause 3 of the revenue_zero_check sweep (American Strategic Investment "
+        "Co., CIK 1595527, a real net-lease equity REIT): OperatingLeaseLeaseIncome is a real top-line "
+        "figure for equity/net-lease REITs, but checked live before adding -- it coexists with an "
+        "already-mapped, ALREADY-nonzero revenue tag in 11,000+ company-periods elsewhere (a manufacturer "
+        "subleasing office space, a non-REIT company's own minor lease income), so it is NOT safe as a "
+        "general revenue fallback tag. Deliberately its OWN canonical_concept; "
+        "mapper/revenue_resolvers/net_lease_income.py's run() fills revenue_sanity_resolved "
+        "ONLY where the primary is missing/zero AND the company is evidence-gated as a real equity/"
+        "net-lease REIT (SIC 'Real Estate Investment Trusts' AND it never reports a financial-institution "
+        "interest-income tag -- the same bank/mortgage-REIT discriminator mapper/coverage_matrix.py's "
+        "_FINANCIAL_INCOME_TAGS already uses -- 12 real, named equity REITs qualify: Industrial Logistics "
+        "Properties Trust, American Homes 4 Rent, ONE LIBERTY PROPERTIES, Tanger Inc., NETSTREIT Corp, "
+        "Camden Property Trust, Kite Realty Group Trust among them).",
+    ),
 ]
 
 NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
@@ -392,6 +426,24 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "9 of the original 44 BDCs use no gross tag at all, only NetInvestmentIncome (post-expense) "
         "or per-share/ratio variants -- deliberately NOT added as a fallback here, since substituting "
         "a net figure for a gross concept would be silently wrong, not just incomplete.",
+    ),
+    (
+        "collaborative_arrangement_revenue",
+        "us-gaap",
+        "RevenueFromCollaborativeArrangementExcludingRevenueFromContractWithCustomer",
+        1,
+        "approved",
+        "Single-tag, first_match by convention -- feeds mapper/revenue_resolvers/collaborative_arrangement.py's "
+        "additive merge into revenue_sanity_resolved, not the `revenue` concept itself.",
+    ),
+    (
+        "net_lease_revenue",
+        "us-gaap",
+        "OperatingLeaseLeaseIncome",
+        1,
+        "approved",
+        "Single-tag, first_match by convention -- feeds mapper/revenue_resolvers/net_lease_income.py's "
+        "REIT-sector-gated fill into revenue_sanity_resolved, not the `revenue` concept itself.",
     ),
 ]
 

@@ -55,6 +55,29 @@ def test_net_income_adjustment_signs():
     assert r.passed and r.used_adjustments
 
 
+def test_net_income_tries_adjustment_subsets_not_just_all_or_nothing():
+    # Fixed 2026-10-02: Prologis-shaped real case (Q1 2026) -- base minus
+    # NCI alone reconciles exactly, but the OLD all-or-nothing evaluate()
+    # only tried "no adjustments" or "every adjustment summed together",
+    # missing the one subset that actually reconciles (equity-method
+    # income is usually already embedded in pretax income via its
+    # standard statement position, so forcing it in again alongside NCI
+    # overshoots). Base = 100 - 10 = 90 (actual 78, 12% gap -- fails).
+    # NCI-only = 90 - 12 = 78 = actual exactly (passes). Full sum
+    # (NCI + equity-method) = 90 - 12 + 8 = 86 (an 8% gap -- also fails).
+    # Both candidates the old code tried fail; only the NCI-only subset,
+    # which the old code never tried, actually reconciles.
+    ident = BY_NAME["net_income"]
+    values = {"net_income": D("78"), "income_before_tax": D("100"), "income_tax_expense": D("10")}
+    adjustments = {
+        "NetIncomeLossAttributableToNoncontrollingInterest": D("12"),
+        "IncomeLossFromEquityMethodInvestments": D("8"),
+    }
+    r = evaluate(ident, values, adjustments)
+    assert r.passed and r.used_adjustments
+    assert r.expected == D("78")
+
+
 def test_at_most_allows_equal_and_below():
     ident = BY_NAME["current_assets_within_total"]
     assert evaluate(ident, {"current_assets": D("100"), "total_assets": D("100")}).passed
