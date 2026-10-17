@@ -55,6 +55,36 @@ THREE_QUARTER_MIN_DAYS, THREE_QUARTER_MAX_DAYS = 260, 290
 Q4_MIN_DAYS, Q4_MAX_DAYS = 80, 100
 
 
+# Duration concepts that are NOT additive across periods. Subtracting a
+# nine-month (or three-quarter) figure from the annual figure is only valid for
+# flows that add up; a weighted-average share count is an average over its own
+# window, so FY - (Q1+Q2+Q3) is meaningless and mostly negative: measured live
+# 2026-10-17, 444 of 469 derived diluted-share facts and 452 of 478 derived
+# basic-share facts for companies 1-150 were negative, all stored as
+# authoritative. Per the data-team period rule: never apply the generic flow
+# subtraction to weighted-average shares. (EPS is non-additive too but is left
+# alone here on purpose: removing derived Q4 EPS changes TTM EPS and P/E
+# coverage, which is a product decision, not a bug fix.)
+NON_ADDITIVE_TAG_PATTERN = "WeightedAverage%"
+
+
+def _load_non_additive_concept_ids(conn: psycopg.Connection) -> set[int]:
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id from core.concept where tag like %s",
+            (NON_ADDITIVE_TAG_PATTERN,),
+        )
+        return {row[0] for row in cur.fetchall()}
+
+
+def _drop_non_additive(conn: psycopg.Connection, rows: list[tuple]) -> list[tuple]:
+    """Rows are (fact_id, concept_id, ...) tuples from the loaders above."""
+    blocked = _load_non_additive_concept_ids(conn)
+    if not blocked:
+        return rows
+    return [r for r in rows if r[1] not in blocked]
+
+
 def _load_quarterly_candidates(
     conn: psycopg.Connection, company_id: int
 ) -> list[tuple]:
@@ -197,7 +227,7 @@ def _mistagged_full_year_q4(
 
 
 def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
-    rows = _load_quarterly_candidates(conn, company_id)
+    rows = _drop_non_additive(conn, _load_quarterly_candidates(conn, company_id))
     groups: dict[tuple, dict] = {}
     for (
         fact_id,
@@ -457,7 +487,7 @@ def _load_all_duration_facts(conn: psycopg.Connection, company_id: int) -> list[
 def derive_interim_quarters_for_company(
     conn: psycopg.Connection, company_id: int
 ) -> dict:
-    rows = _load_all_duration_facts(conn, company_id)
+    rows = _drop_non_additive(conn, _load_all_duration_facts(conn, company_id))
     groups: dict[tuple, dict] = {}
     for (
         fact_id,
