@@ -55,34 +55,43 @@ THREE_QUARTER_MIN_DAYS, THREE_QUARTER_MAX_DAYS = 260, 290
 Q4_MIN_DAYS, Q4_MAX_DAYS = 80, 100
 
 
-# Duration concepts that are NOT additive across periods. Subtracting a
-# nine-month (or three-quarter) figure from the annual figure is only valid for
-# flows that add up; a weighted-average share count is an average over its own
-# window, so FY - (Q1+Q2+Q3) is meaningless and mostly negative: measured live
-# 2026-10-17, 444 of 469 derived diluted-share facts and 452 of 478 derived
-# basic-share facts for companies 1-150 were negative, all stored as
-# authoritative. Per the data-team period rule: never apply the generic flow
-# subtraction to weighted-average shares. (EPS is non-additive too but is left
-# alone here on purpose: removing derived Q4 EPS changes TTM EPS and P/E
-# coverage, which is a product decision, not a bug fix.)
-NON_ADDITIVE_TAG_PATTERN = "WeightedAverage%"
+# Weighted-average share counts are AVERAGES over their own window, not flows,
+# so the additive rule FY - (Q1+Q2+Q3) is wrong: each quarter is about S, so it
+# yields about -2S (measured live 2026-10-17: 444 of 469 derived diluted-share
+# facts and 452 of 478 basic ones, companies 1-150, were negative, all stored
+# as authoritative). The annual average is the mean of the quarterly averages,
+# so the discrete quarter is recovered with the window-count weights instead:
+#   Q4 = 4*FY - (Q1+Q2+Q3)        or  4*FY - 3*YTD9  when only the 9-month YTD exists
+#   Q2 = 2*H1 - Q1                Q3 = 3*YTD9 - 2*H1
+# Validated against yfinance's own quarterly Basic/Diluted Average Shares for 44
+# company-FY-share-type cases (20 companies, varied fiscal year-ends): median
+# error 0.024%, p90 0.20%, max 0.78%. It is an APPROXIMATION (assumes equal
+# quarter lengths and ignores treasury-method effects), stored like any derived
+# fact (is_derived=true), and a non-positive result is never stored. Adopted
+# 2026-10-17 by the founder for this concept family only. EPS and other
+# non-additive tags are deliberately unchanged.
+AVERAGE_TAG_PATTERN = "WeightedAverage%"
 
 
-def _load_non_additive_concept_ids(conn: psycopg.Connection) -> set[int]:
+def _load_average_concept_ids(conn: psycopg.Connection) -> set[int]:
     with conn.cursor() as cur:
         cur.execute(
             "select id from core.concept where tag like %s",
-            (NON_ADDITIVE_TAG_PATTERN,),
+            (AVERAGE_TAG_PATTERN,),
         )
         return {row[0] for row in cur.fetchall()}
 
 
-def _drop_non_additive(conn: psycopg.Connection, rows: list[tuple]) -> list[tuple]:
-    """Rows are (fact_id, concept_id, ...) tuples from the loaders above."""
-    blocked = _load_non_additive_concept_ids(conn)
-    if not blocked:
-        return rows
-    return [r for r in rows if r[1] not in blocked]
+def _q4_value(fy_value, first_three, *, is_average: bool, via_ytd: bool):
+    """Discrete Q4 from the annual figure and the first three quarters.
+    `first_three` is Q1+Q2+Q3 for the quarterly chain, or the 9-month YTD
+    figure when via_ytd. Returns None when the average method yields a
+    non-positive count (never store it)."""
+    if not is_average:
+        return fy_value - first_three
+    weights = 3 if via_ytd else 1
+    value = 4 * fy_value - weights * first_three
+    return value if value > 0 else None
 
 
 def _load_quarterly_candidates(
@@ -227,7 +236,8 @@ def _mistagged_full_year_q4(
 
 
 def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
-    rows = _drop_non_additive(conn, _load_quarterly_candidates(conn, company_id))
+    rows = _load_quarterly_candidates(conn, company_id)
+    average_ids = _load_average_concept_ids(conn)
     groups: dict[tuple, dict] = {}
     for (
         fact_id,
@@ -310,6 +320,16 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
 
         q4_start, q4_end, first_three_quarters = chain
 
+        q4_value = _q4_value(
+            fy["value"],
+            first_three_quarters,
+            is_average=concept_id in average_ids,
+            via_ytd=via_ytd,
+        )
+        if q4_value is None:
+            stats["incomplete"] += 1
+            continue
+
         key = (concept_id, unit_id, q4_start, q4_end)
         if key in reported_keys:
             bad = _mistagged_full_year_q4(
@@ -330,7 +350,7 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
                 "unit_id": unit_id,
                 "start": q4_start,
                 "end": q4_end,
-                "value": fy["value"] - first_three_quarters,
+                "value": q4_value,
                 "filing_id": fy["filing_id"],
                 "raw_object_id": fy["raw_object_id"],
             }
@@ -487,7 +507,8 @@ def _load_all_duration_facts(conn: psycopg.Connection, company_id: int) -> list[
 def derive_interim_quarters_for_company(
     conn: psycopg.Connection, company_id: int
 ) -> dict:
-    rows = _drop_non_additive(conn, _load_all_duration_facts(conn, company_id))
+    rows = _load_all_duration_facts(conn, company_id)
+    average_ids = _load_average_concept_ids(conn)
     groups: dict[tuple, dict] = {}
     for (
         fact_id,
@@ -591,7 +612,14 @@ def derive_interim_quarters_for_company(
             and q1["start_date"] == half["start_date"]
         ):
             q2_start, q2_end = q1["end_date"] + timedelta(days=1), half["end_date"]
-            if (concept_id, unit_id, q2_start, q2_end) not in reported_keys:
+            q2_value = (
+                2 * half["value"] - q1["value"]
+                if concept_id in average_ids
+                else half["value"] - q1["value"]
+            )
+            if q2_value <= 0 and concept_id in average_ids:
+                stats["incomplete_or_inconsistent"] += 1
+            elif (concept_id, unit_id, q2_start, q2_end) not in reported_keys:
                 if (q2_start, q2_end) not in existing_periods:
                     new_periods[(q2_start, q2_end)] = {
                         "fiscal_year": fiscal_year,
@@ -603,7 +631,7 @@ def derive_interim_quarters_for_company(
                         "unit_id": unit_id,
                         "start": q2_start,
                         "end": q2_end,
-                        "value": half["value"] - q1["value"],
+                        "value": q2_value,
                         "filing_id": half["filing_id"],
                         "raw_object_id": half["raw_object_id"],
                         "metric": "q2_derived",
@@ -621,7 +649,14 @@ def derive_interim_quarters_for_company(
             and half["start_date"] == three_q["start_date"]
         ):
             q3_start, q3_end = half["end_date"] + timedelta(days=1), three_q["end_date"]
-            if (concept_id, unit_id, q3_start, q3_end) not in reported_keys:
+            q3_value = (
+                3 * three_q["value"] - 2 * half["value"]
+                if concept_id in average_ids
+                else three_q["value"] - half["value"]
+            )
+            if q3_value <= 0 and concept_id in average_ids:
+                stats["incomplete_or_inconsistent"] += 1
+            elif (concept_id, unit_id, q3_start, q3_end) not in reported_keys:
                 if (q3_start, q3_end) not in existing_periods:
                     new_periods[(q3_start, q3_end)] = {
                         "fiscal_year": fiscal_year,
@@ -633,7 +668,7 @@ def derive_interim_quarters_for_company(
                         "unit_id": unit_id,
                         "start": q3_start,
                         "end": q3_end,
-                        "value": three_q["value"] - half["value"],
+                        "value": q3_value,
                         "filing_id": three_q["filing_id"],
                         "raw_object_id": three_q["raw_object_id"],
                         "metric": "q3_derived",

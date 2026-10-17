@@ -64,7 +64,7 @@ def _no_nine_month_ytd_by_default(monkeypatch):
     """Existing chain tests have no 9-month YTD facts; the fallback tests below override this."""
     monkeypatch.setattr(derived, "_load_nine_month_ytd", lambda _conn, _company: {})
     monkeypatch.setattr(derived, "_load_authoritative_reported_quarters", lambda _conn, _company: {})
-    monkeypatch.setattr(derived, "_load_non_additive_concept_ids", lambda _conn: set())
+    monkeypatch.setattr(derived, "_load_average_concept_ids", lambda _conn: set())
 
 
 @pytest.mark.unit
@@ -364,10 +364,10 @@ def test_full_year_q4_is_kept_when_first_three_quarters_are_zero():
 
 
 @pytest.mark.unit
-def test_weighted_average_share_counts_are_never_derived_by_subtraction(monkeypatch):
-    # Live 2026-10-17: FY - (Q1+Q2+Q3) on weighted-average share counts produced
-    # negative "authoritative" Q4 facts for ~95% of derived rows. An average over
-    # a window is not additive, so the concept must be skipped entirely.
+def test_weighted_average_q4_uses_window_weights_not_subtraction(monkeypatch):
+    # Live 2026-10-17: FY - (Q1+Q2+Q3) gave -30.15B for Apple's Q4 diluted
+    # shares. Annual average is the mean of the quarterly averages, so
+    # Q4 = 4*FY - (Q1+Q2+Q3); validated against yfinance (median error 0.024%).
     fy_start = date(2024, 9, 29)
     q1_end, q2_end, q3_end, fy_end = (
         date(2024, 12, 28),
@@ -375,52 +375,102 @@ def test_weighted_average_share_counts_are_never_derived_by_subtraction(monkeypa
         date(2025, 6, 28),
         date(2025, 9, 27),
     )
-    shares_concept, flow_concept = 77, 10
+    avg, flow = 77, 10
     rows = [
-        duration_row(1, "100", "FY", fy_start, fy_end, concept_id=shares_concept),
-        duration_row(2, "100", "Q1", fy_start, q1_end, concept_id=shares_concept),
-        duration_row(3, "100", "Q2", date(2024, 12, 29), q2_end, concept_id=shares_concept),
-        duration_row(4, "100", "Q3", date(2025, 3, 30), q3_end, concept_id=shares_concept),
-        duration_row(5, "120", "FY", fy_start, fy_end, concept_id=flow_concept),
-        duration_row(6, "20", "Q1", fy_start, q1_end, concept_id=flow_concept),
-        duration_row(7, "25", "Q2", date(2024, 12, 29), q2_end, concept_id=flow_concept),
-        duration_row(8, "30", "Q3", date(2025, 3, 30), q3_end, concept_id=flow_concept),
+        # Apple FY2025 diluted weighted-average shares (thousands)
+        duration_row(1, "15004697", "FY", fy_start, fy_end, concept_id=avg),
+        duration_row(2, "15150865", "Q1", fy_start, q1_end, concept_id=avg),
+        duration_row(3, "15056133", "Q2", date(2024, 12, 29), q2_end, concept_id=avg),
+        duration_row(4, "14948179", "Q3", date(2025, 3, 30), q3_end, concept_id=avg),
+        duration_row(5, "120", "FY", fy_start, fy_end, concept_id=flow),
+        duration_row(6, "20", "Q1", fy_start, q1_end, concept_id=flow),
+        duration_row(7, "25", "Q2", date(2024, 12, 29), q2_end, concept_id=flow),
+        duration_row(8, "30", "Q3", date(2025, 3, 30), q3_end, concept_id=flow),
     ]
     q4_key = (date(2025, 6, 29), fy_end)
     monkeypatch.setattr(derived, "_load_quarterly_candidates", lambda _conn, _company: rows)
     monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {q4_key: 404})
     monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: set())
-    monkeypatch.setattr(derived, "_load_non_additive_concept_ids", lambda _conn: {shares_concept})
+    monkeypatch.setattr(derived, "_load_average_concept_ids", lambda _conn: {avg})
     conn = CaptureConnection()
 
     stats = derived.derive_q4_for_company(conn, 1)
 
-    assert stats["candidate_groups"] == 1, "only the additive flow concept is a candidate"
-    assert stats["derived"] == 1
-    assert [r["concept_id"] for r in conn.fact_rows] == [flow_concept]
-    assert conn.fact_rows[0]["value"] == Decimal("45")
+    values = {r["concept_id"]: r["value"] for r in conn.fact_rows}
+    assert stats["derived"] == 2
+    assert values[avg] == Decimal("14863611"), "4*FY - (Q1+Q2+Q3)"
+    assert values[flow] == Decimal("45"), "additive flows keep FY - (Q1+Q2+Q3)"
 
 
 @pytest.mark.unit
-def test_weighted_average_share_counts_are_not_split_into_q2_q3(monkeypatch):
-    # Same non-additive rule on the interim (YTD -> discrete Q2/Q3) path.
+def test_weighted_average_q4_from_nine_month_ytd_uses_three_times_ytd(monkeypatch):
+    fy_start = date(2024, 9, 29)
+    fy_end, ytd_end = date(2025, 9, 27), date(2025, 6, 28)
+    avg = 77
+    rows = [duration_row(1, "100", "FY", fy_start, fy_end, concept_id=avg)]
+    q4_key = (date(2025, 6, 29), fy_end)
+    monkeypatch.setattr(derived, "_load_quarterly_candidates", lambda _conn, _company: rows)
+    monkeypatch.setattr(
+        derived, "_load_nine_month_ytd",
+        lambda _conn, _company: {(avg, 1, fy_start): [(ytd_end, Decimal("102"))]},
+    )
+    monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {q4_key: 404})
+    monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: set())
+    monkeypatch.setattr(derived, "_load_average_concept_ids", lambda _conn: {avg})
+    conn = CaptureConnection()
+
+    stats = derived.derive_q4_for_company(conn, 1)
+
+    assert stats["derived_from_ytd"] == 1
+    assert conn.fact_rows[0]["value"] == Decimal("94"), "4*100 - 3*102"
+
+
+@pytest.mark.unit
+def test_weighted_average_q4_is_not_stored_when_result_is_non_positive(monkeypatch):
+    fy_start = date(2024, 9, 29)
+    q1_end, q2_end, q3_end, fy_end = (
+        date(2024, 12, 28), date(2025, 3, 29), date(2025, 6, 28), date(2025, 9, 27),
+    )
+    avg = 77
+    # quarters far above the annual average -> 4*100 - 3*200 < 0: inconsistent inputs
+    rows = [
+        duration_row(1, "100", "FY", fy_start, fy_end, concept_id=avg),
+        duration_row(2, "200", "Q1", fy_start, q1_end, concept_id=avg),
+        duration_row(3, "200", "Q2", date(2024, 12, 29), q2_end, concept_id=avg),
+        duration_row(4, "200", "Q3", date(2025, 3, 30), q3_end, concept_id=avg),
+    ]
+    monkeypatch.setattr(derived, "_load_quarterly_candidates", lambda _conn, _company: rows)
+    monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {})
+    monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: set())
+    monkeypatch.setattr(derived, "_load_average_concept_ids", lambda _conn: {avg})
+    conn = CaptureConnection()
+
+    stats = derived.derive_q4_for_company(conn, 1)
+
+    assert stats["derived"] == 0 and stats["incomplete"] == 1
+    assert conn.fact_rows == []
+
+
+@pytest.mark.unit
+def test_weighted_average_interim_quarters_use_window_weights(monkeypatch):
     start = date(2024, 9, 29)
     q1_end, half_end, three_q_end = date(2024, 12, 28), date(2025, 3, 29), date(2025, 6, 28)
-    shares_concept = 77
+    avg = 77
     rows = [
-        duration_row(1, "100", "Q1", start, q1_end, concept_id=shares_concept),
-        duration_row(2, "100", None, start, half_end, concept_id=shares_concept),
-        duration_row(3, "100", None, start, three_q_end, concept_id=shares_concept),
+        duration_row(1, "100", "Q1", start, q1_end, concept_id=avg),
+        duration_row(2, "98", None, start, half_end, concept_id=avg),    # H1 average
+        duration_row(3, "97", None, start, three_q_end, concept_id=avg),  # 9M average
     ]
     q2_key = (date(2024, 12, 29), half_end)
     q3_key = (date(2025, 3, 30), three_q_end)
     monkeypatch.setattr(derived, "_load_all_duration_facts", lambda _conn, _company: rows)
     monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {q2_key: 402, q3_key: 403})
     monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: set())
-    monkeypatch.setattr(derived, "_load_non_additive_concept_ids", lambda _conn: {shares_concept})
+    monkeypatch.setattr(derived, "_load_average_concept_ids", lambda _conn: {avg})
     conn = CaptureConnection()
 
     stats = derived.derive_interim_quarters_for_company(conn, 1)
+    values = {r["period_id"]: r["value"] for r in conn.fact_rows}
 
-    assert stats["q2_derived"] == 0 and stats["q3_derived"] == 0
-    assert conn.fact_rows == []
+    assert stats["q2_derived"] == 1 and stats["q3_derived"] == 1
+    assert values == {402: Decimal("96"), 403: Decimal("95")}, "2*98-100 and 3*97-2*98"
