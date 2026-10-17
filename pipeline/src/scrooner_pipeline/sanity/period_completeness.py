@@ -50,6 +50,7 @@ import typer
 
 from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.sec_client import SECClient
+from scrooner_pipeline.db.connection import run_write_with_reconnect
 
 logger = structlog.get_logger()
 
@@ -740,9 +741,22 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
                 gaps=len(result["gaps"]),
             )
             results.append(result)
-        stats = _write(cur, results, company_ids)
-        stats["sec_feed_check"] = feed
     conn.commit()
+
+    # Found live 2026-10-13: the compute above runs ~35 minutes on this one
+    # connection, and the pooler dropped it ("SSL SYSCALL error: Operation
+    # timed out") before the bulk write, losing the whole run twice. The
+    # write is delete-then-insert in one transaction, so it is safe to
+    # repeat on a fresh connection (run_write_with_reconnect).
+    def write(write_conn: psycopg.Connection) -> dict:
+        with write_conn.cursor() as wcur:
+            wcur.execute("set local statement_timeout = '20min'")
+            written = _write(wcur, results, company_ids)
+        write_conn.commit()
+        return written
+
+    stats = run_write_with_reconnect(conn, write, stage="period_completeness")
+    stats["sec_feed_check"] = feed
     logger.info("period_completeness.done", **stats)
     return stats
 
