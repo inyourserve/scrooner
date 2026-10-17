@@ -71,6 +71,22 @@ VALIDATED_TAGS: list[tuple[str, str]] = [
     ("us-gaap", "RevenueFromContractWithCustomerExcludingAssessedTax"),
     ("us-gaap", "OperatingIncomeLoss"),
     ("us-gaap", "GrossProfit"),
+    # Added 2026-10-17 after scripts/validate_latest_filed_vs_frames.py
+    # (--kind fy, 600-company sample, latest-filed vs SEC Frames CY values):
+    #   IncomeTaxExpenseBenefit            548/548 = 100.0%  (earliest 18.1%)
+    #   IncomeLossFromContinuingOps...BeforeIncomeTaxes...  445/445 = 100.0%  (earliest 20.9%)
+    #   NetCashProvidedByUsedInInvestingActivities  400/401 = 99.8%  (earliest 34.4%)
+    #   NetCashProvidedByUsedInFinancingActivities  394/394 = 100.0% (earliest 33.5%)
+    # The Q4-gap census found these four were the biggest non-authoritative
+    # full-year holes outside the original six. Annual only: raw quarterly
+    # cash-flow facts are year-to-date and were not measured.
+    ("us-gaap", "IncomeTaxExpenseBenefit"),
+    (
+        "us-gaap",
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    ),
+    ("us-gaap", "NetCashProvidedByUsedInInvestingActivities"),
+    ("us-gaap", "NetCashProvidedByUsedInFinancingActivities"),
 ]
 
 # Quarterly validation covered only these four (see the docstring table).

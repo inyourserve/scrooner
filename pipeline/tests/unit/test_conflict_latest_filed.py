@@ -13,6 +13,10 @@ def test_rule_is_scoped_to_validated_tags_and_annual_flow_facts():
         "RevenueFromContractWithCustomerExcludingAssessedTax",
         "OperatingIncomeLoss",
         "GrossProfit",
+        "IncomeTaxExpenseBenefit",
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+        "NetCashProvidedByUsedInInvestingActivities",
+        "NetCashProvidedByUsedInFinancingActivities",
     }
     assert (m.FULL_YEAR_MIN_DAYS, m.FULL_YEAR_MAX_DAYS) == (340, 380)
     assert (m.QUARTER_MIN_DAYS, m.QUARTER_MAX_DAYS) == (80, 100)
