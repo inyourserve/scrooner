@@ -262,6 +262,11 @@ def run_concept(
 
     def _write(write_conn: psycopg.Connection) -> None:
         with write_conn.cursor() as cur:
+            # A reconnect after a dropped pooler socket leaves the dead session's
+            # row locks in place until the server reaps it, so the retry's delete
+            # can wait past the default 2-minute statement_timeout (all three
+            # retries hit it in the 2026-10-16 sanity run). Give the write room.
+            cur.execute("set local statement_timeout = '10min'")
             if company_id is None:
                 cur.execute(
                     "delete from analytics.timeseries_outlier_check where canonical_concept_id = %s",

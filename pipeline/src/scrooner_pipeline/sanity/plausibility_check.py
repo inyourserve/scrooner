@@ -312,7 +312,9 @@ def _load_latest_metric_values(
         # explicit-null rows), same established pattern as tag_candidates.py/
         # coverage_matrix.py's own statement_timeout overrides for a rare,
         # heavier-than-usual full-population scan.
-        cur.execute("set statement_timeout = '5min'")
+        # 5min -> 15min 2026-10-17: the nightly load query ran into the 5min cap
+        # exactly (QueryCanceled at 5:02) once the runner was under load.
+        cur.execute("set statement_timeout = '15min'")
         cur.execute(
             """
             with ranked as (
@@ -557,6 +559,11 @@ def run_all(conn: psycopg.Connection) -> dict:
 
     def _write(write_conn: psycopg.Connection) -> None:
         with write_conn.cursor() as cur:
+            # A reconnect after a dropped pooler socket leaves the dead session's
+            # row locks in place until the server reaps it, so the retry's delete
+            # can wait past the default 2-minute statement_timeout (all three
+            # retries hit it in the 2026-10-16 sanity run). Give the write room.
+            cur.execute("set local statement_timeout = '10min'")
             cur.execute(
                 "delete from analytics.metric_plausibility_check where metric_definition_id = any(%s)",
                 (all_metric_definition_ids,),
