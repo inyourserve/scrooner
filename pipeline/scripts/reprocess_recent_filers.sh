@@ -215,14 +215,19 @@ echo "reprocess_recent_filers: running each stage across up to ${SHARDS} paralle
 # a barrier: every shard finishes before the next stage starts (see
 # scripts/lib/sharded.sh for why this is safe, and why it is needed -- the
 # single-process version exceeded its 180-minute job cap on 2026-10-10).
+# A stage that exceeds STAGE_TIMEOUT_SECS (a hung shard) is killed and recorded
+# here, and the run continues with the next stage; the script exits non-zero at
+# the end so the failure is visible without losing the rest of the night.
+export STAGE_TIMEOUT_SECS="${STAGE_TIMEOUT_SECS:-1800}"
+FAILED_STAGES=""
 for stage in identity periods units facts dedupe restatements conflict-latest-filed derive-interim-quarters derive-q4; do
   echo "--- normalize $stage ---"
-  run_sharded scrooner-normalize "$stage"
+  run_sharded scrooner-normalize "$stage" || FAILED_STAGES="$FAILED_STAGES normalize:$stage"
 done
 
 for stage in resolve-facts resolve-concept-fallbacks calculate growth ttm-returns ttm-margins calculate-expanded-metrics calculate-piotroski calculate-quality-flags calculate-reconciliation calculate-tax-reconciliation calculate-fcf-growth calculate-dividend-streak; do
   echo "--- map $stage ---"
-  run_sharded scrooner-map "$stage"
+  run_sharded scrooner-map "$stage" || FAILED_STAGES="$FAILED_STAGES map:$stage"
 done
 
 # Keep the SEC Tag Library current (founder direction 2026-09-29: it is the
@@ -232,4 +237,8 @@ done
 echo "--- map build-tag-library ---"
 uv run scrooner-map build-tag-library --ciks "$CIKS"
 
+if [ -n "$FAILED_STAGES" ]; then
+  echo "reprocess_recent_filers: FAILED stages:$FAILED_STAGES" >&2
+  exit 1
+fi
 echo "reprocess_recent_filers: done"

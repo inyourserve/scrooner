@@ -20,6 +20,21 @@
 #   a single process. Output lines are prefixed "[sK] " so interleaved shard
 #   logs stay attributable.
 
+# Kill a process and all its descendants (a hung `uv run` leaves the python
+# worker as a grandchild, which killing only the subshell would orphan).
+_kill_tree() {
+  local pid="$1" child
+  for child in $(pgrep -P "$pid" 2>/dev/null); do _kill_tree "$child"; done
+  kill -9 "$pid" 2>/dev/null || true
+}
+
+# Optional per-stage wall-clock cap, STAGE_TIMEOUT_SECS (default 0 = none). Added
+# 2026-10-17: the nightly reprocess step selected only ~250 companies yet ran the
+# whole 180-minute job cap four nights in a row and was cancelled, with no log
+# kept, because one hung shard (a dead pooler socket, no query, no output) holds
+# the barrier forever. On expiry the stage's shards are killed, the stage is
+# reported by name and counts as failed; every stage is idempotent, so the caller
+# moves on to the next stage instead of losing the whole night.
 run_sharded() {
   local program="$1" stage="$2"
   local n shards k chunk pid rc=0
@@ -44,8 +59,28 @@ run_sharded() {
     pids+=("$!")
   done
 
+  local cap="${STAGE_TIMEOUT_SECS:-0}" started=$SECONDS timed_out=0
+  if [ "$cap" -gt 0 ]; then
+    # Poll instead of `wait`, so a hung shard cannot hold the barrier forever.
+    while :; do
+      local alive=0
+      for pid in "${pids[@]}"; do
+        if kill -0 "$pid" 2>/dev/null; then alive=1; fi
+      done
+      [ "$alive" -eq 0 ] && break
+      if [ $((SECONDS - started)) -ge "$cap" ]; then
+        echo "run_sharded: stage '$stage' exceeded ${cap}s -- killing its shards" >&2
+        for pid in "${pids[@]}"; do _kill_tree "$pid"; done
+        timed_out=1
+        break
+      fi
+      sleep 2
+    done
+  fi
   for pid in "${pids[@]}"; do
-    wait "$pid" || rc=1
+    wait "$pid" 2>/dev/null || rc=1
   done
+  [ "$timed_out" -eq 1 ] && rc=1
+  echo "run_sharded: stage '$stage' took $((SECONDS - started))s (rc=$rc)"
   return "$rc"
 }

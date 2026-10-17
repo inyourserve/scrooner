@@ -114,3 +114,29 @@ def test_the_real_reprocess_script_finds_its_helper_when_invoked_the_way_ci_does
     assert "No such file" not in out.stderr, out.stderr
     assert "SOURCED_OK" in out.stdout, (out.stdout, out.stderr)
     assert out.returncode == 0
+
+
+@pytest.mark.unit
+def test_hung_shard_is_killed_at_the_stage_cap_and_later_stages_still_run(tmp_path):
+    """A shard that never exits must not hold the barrier forever: it is killed at
+    STAGE_TIMEOUT_SECS, the stage is reported failed, and the next stage runs."""
+    uv = tmp_path / "uv"
+    uv.write_text(
+        '#!/usr/bin/env bash\necho "START $3" >> "$FAKE_LOG"\n'
+        '[ "$3" = "hang" ] && sleep 300\necho "END $3" >> "$FAKE_LOG"\n'
+    )
+    uv.chmod(uv.stat().st_mode | stat.S_IEXEC)
+    log = tmp_path / "calls.log"
+    log.write_text("")
+    script = (
+        f'source "{HELPER}"\nCIKS="0000000001,0000000002"\nSHARDS=2\n'
+        "export STAGE_TIMEOUT_SECS=3\n"
+        'run_sharded prog hang || echo "STAGE-FAILED hang"\n'
+        'run_sharded prog after || echo "STAGE-FAILED after"\n'
+    )
+    env = {**os.environ, "PATH": f"{tmp_path}:{os.environ['PATH']}", "FAKE_LOG": str(log)}
+    out = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=40)
+    assert "STAGE-FAILED hang" in out.stdout
+    assert "STAGE-FAILED after" not in out.stdout
+    assert "exceeded 3s" in out.stderr
+    assert "END after" in log.read_text()
