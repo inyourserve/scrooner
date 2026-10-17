@@ -1,0 +1,1 @@
+<section class="ops-panel"><div class="ops-panel__header"><div><h2>{{ title }}</h2><p>Most recent records, bounded for safe inspection.</p></div></div><div class="ops-json-list">{% for row in rows %}<pre>{{ row }}</pre>{% empty %}<p class="ops-muted">No records found.</p>{% endfor %}</div></section>

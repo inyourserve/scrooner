@@ -1,0 +1,22 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Scrooner Operations{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'foundation.css' %}">
+  <link rel="stylesheet" href="{% static 'primitives.css' %}">
+  <link rel="stylesheet" href="{% static 'cockpit/cockpit.css' %}">
+</head>
+<body>
+  <a class="ds-skip-link" href="#main-content">Skip to content</a>
+  <header class="ops-header">
+    <a class="ops-brand" href="{% url 'cockpit:overview' %}">Scrooner <span>Operations</span></a>
+    <nav aria-label="Operations navigation"><a href="{% url 'cockpit:overview' %}">Overview</a><a href="{% url 'operations:tickets' %}">Tickets</a><a href="{% url 'operations:ticket-analytics' %}">Analytics</a><a href="{% url 'operations:work-queue' %}">Work queue</a><a href="{% url 'operations:pipeline' %}">Pipeline</a><a href="{% url 'operations:quality' %}">Quality</a><a href="{% url 'operations:companies' %}">Companies</a><a href="{% url 'operations:mappings' %}">Mappings</a><a href="{% url 'coverage:dashboard' %}">Coverage</a><a href="{% url 'operations:commands' %}">Commands</a><a href="{% url 'operations:activity' %}">Activity</a><a href="/admin/">Admin</a></nav>
+    <div class="ops-user"><span>{{ request.user.get_username }}</span><form action="/admin/logout/" method="post">{% csrf_token %}<button type="submit">Sign out</button></form></div>
+  </header>
+  <main class="ops-main" id="main-content">{% block content %}{% endblock %}</main>
+</body>
+</html>

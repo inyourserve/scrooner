@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Overview — Scrooner Operations{% endblock %}
+{% block content %}
+<header class="ops-page-header"><p>Operations</p><h1>System overview</h1><span>Current data health and the work that needs attention.</span></header>
+<section class="ops-panel ops-work-summary"><div class="ops-panel__header"><div><h2>Agent work queue</h2><p>The canonical source for unresolved operational work.</p></div><a href="{% url 'operations:work-queue' %}">Open work queue →</a></div><div class="ops-score-grid"><article><small>Ready</small><strong>{{ work.ready }}</strong></article><article><small>In progress</small><strong>{{ work.active }}</strong></article><article><small>Approval needed</small><strong>{{ work.approval }}</strong></article><article><small>Escalated</small><strong>{{ work.escalated }}</strong></article></div></section>
+{% if coverage.latest %}
+<section class="ops-score-grid" aria-label="Latest coverage">
+  <article><small>Core metrics</small><strong>{{ coverage.latest.core|floatformat:1 }}%</strong></article>
+  <article><small>All metrics</small><strong>{{ coverage.latest.metric|floatformat:1 }}%</strong></article>
+  <article><small>Concepts</small><strong>{{ coverage.latest.concept|floatformat:1 }}%</strong></article>
+  <article><small>Active companies</small><strong>{{ coverage.latest.companies }}</strong></article>
+</section>
+<section class="ops-panel"><div class="ops-panel__header"><div><h2>Coverage requiring attention</h2><p>Lowest-covered metrics in the latest UTC snapshot.</p></div><a href="{% url 'coverage:dashboard' %}">Open coverage command center →</a></div>
+<div class="ds-table-container" role="region" tabindex="0" aria-label="Weakest metrics"><table class="ds-table"><thead class="ds-table__header"><tr><th class="ds-table__head">Metric</th><th class="ds-table__head" data-align="right">Coverage</th><th class="ds-table__head" data-align="right">Companies</th></tr></thead><tbody class="ds-table__body">{% for metric in coverage.weakest %}<tr class="ds-table__row"><th class="ds-table__cell ds-table__row-header" scope="row">{{ metric.name }}</th><td class="ds-table__cell" data-align="right"><strong>{{ metric.coverage|floatformat:1 }}%</strong></td><td class="ds-table__cell" data-align="right">{{ metric.covered }} / {{ metric.total }}</td></tr>{% endfor %}</tbody></table></div></section>
+{% else %}<section class="ops-empty"><h2>No coverage snapshots yet</h2><p>Run the daily snapshot stage to establish the first baseline.</p></section>{% endif %}
+{% endblock %}
