@@ -90,3 +90,78 @@ def test_family_data_point_lists_are_disjoint() -> None:
         overlap = seen & set(family)
         assert not overlap, f"data point(s) {overlap} appear in more than one population family"
         seen |= set(family)
+
+
+class _FakeCursor:
+    def __init__(self, conn: "_FakeConn") -> None:
+        self._conn = conn
+        self.rowcount = 0
+
+    def __enter__(self) -> "_FakeCursor":
+        return self
+
+    def __exit__(self, *exc: object) -> None:
+        return None
+
+    def execute(self, sql: str, params: object = None) -> None:
+        self._conn.statements.append(" ".join(sql.split()))
+        if self._conn.fail_on and self._conn.fail_on in sql:
+            raise RuntimeError("QueryCanceled: canceling statement due to statement timeout")
+
+    def fetchone(self) -> tuple[int, int]:
+        return (10, 7)
+
+
+class _FakeConn:
+    def __init__(self, fail_on: str | None = None) -> None:
+        self.fail_on = fail_on
+        self.statements: list[str] = []
+        self.commits: list[int] = []
+
+    def cursor(self) -> _FakeCursor:
+        return _FakeCursor(self)
+
+    def commit(self) -> None:
+        # Record how many statements had run when each commit happened.
+        self.commits.append(len(self.statements))
+
+
+def _patch_classifiers(monkeypatch, seen: list[bool]) -> None:
+    import scrooner_pipeline.mapper.coverage_matrix as cm
+
+    def fake(conn, *, commit: bool = True):
+        seen.append(commit)
+        return {"rows": 0}
+
+    monkeypatch.setattr(cm, "classify_concept_gaps", fake)
+    monkeypatch.setattr(cm, "apply_filing_line_evidence", fake)
+    monkeypatch.setattr(cm, "classify_company_populations", fake)
+
+
+def test_build_coverage_is_one_transaction_committed_once_at_the_end(monkeypatch) -> None:
+    # 2026-10-16 nightly: the metric insert hit the statement timeout after
+    # the delete and the concept insert had already been committed, leaving the
+    # table with no metric rows and no gap_reason. The rebuild must be atomic.
+    from scrooner_pipeline.mapper.coverage_matrix import build_coverage
+
+    seen: list[bool] = []
+    _patch_classifiers(monkeypatch, seen)
+    conn = _FakeConn()
+    build_coverage(conn)  # type: ignore[arg-type]
+
+    assert seen == [False, False, False], "classifiers must not commit on their own"
+    assert len(conn.commits) == 1, f"expected exactly one commit, got {conn.commits}"
+    assert conn.commits[0] == len(conn.statements), "the commit must come after every statement"
+
+
+def test_build_coverage_never_commits_when_a_middle_step_fails(monkeypatch) -> None:
+    import pytest
+
+    from scrooner_pipeline.mapper.coverage_matrix import build_coverage
+
+    _patch_classifiers(monkeypatch, [])
+    conn = _FakeConn(fail_on="analytics.metric_definition md")
+    with pytest.raises(RuntimeError):
+        build_coverage(conn)  # type: ignore[arg-type]
+
+    assert conn.commits == [], "a failed rebuild must leave the previous table untouched"

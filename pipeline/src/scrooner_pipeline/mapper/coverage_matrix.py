@@ -176,7 +176,7 @@ _ROYALTY_AND_PASSTHROUGH_TRUST_COMPANY_IDS = (
 )
 
 
-def classify_concept_gaps(conn: psycopg.Connection) -> dict:
+def classify_concept_gaps(conn: psycopg.Connection, *, commit: bool = True) -> dict:
     """Fills `gap_reason` for revenue-family concept rows where has_value
     is false, using the SIC-based structural patterns verified live
     2026-09-11 (see REVENUE_FAMILY_CONCEPTS/SIC_GAP_REASONS above), plus
@@ -244,7 +244,8 @@ def classify_concept_gaps(conn: psycopg.Connection) -> dict:
             },
         )
         classified = cur.rowcount
-        conn.commit()
+        if commit:
+            conn.commit()
 
     logger.info("coverage_matrix.concept_gaps_classified", rows=classified)
     return {"rows": classified}
@@ -272,7 +273,7 @@ REASON_LINE_NOT_EXTRACTED = "line_in_filing_not_extracted"
 FILING_LINE_STRUCTURAL_REASONS = (REASON_LINE_NOT_PRESENTED, REASON_LINE_COMBINED)
 
 
-def apply_filing_line_evidence(conn: psycopg.Connection) -> dict:
+def apply_filing_line_evidence(conn: psycopg.Connection, *, commit: bool = True) -> dict:
     """Gives absent concept cells a reason from the company's own filing, where
     nothing earlier explained them. Never touches has_value, never overwrites an
     existing gap_reason (the revenue-family SIC rules run first), and does nothing
@@ -314,7 +315,8 @@ def apply_filing_line_evidence(conn: psycopg.Connection) -> dict:
             },
         )
         classified = cur.rowcount
-        conn.commit()
+        if commit:
+            conn.commit()
     logger.info("coverage_matrix.filing_line_evidence_applied", rows=classified)
     return {"rows": classified}
 
@@ -503,7 +505,7 @@ RECONCILIATION_GAP_POPULATION_OVERRIDES = {
 }
 
 
-def classify_company_populations(conn: psycopg.Connection) -> dict:
+def classify_company_populations(conn: psycopg.Connection, *, commit: bool = True) -> dict:
     """Rebuilds analytics.company_population from scratch -- one row per
     (company, named population) the company genuinely belongs to. A
     company can belong to several (e.g. a real operating company that
@@ -531,7 +533,8 @@ def classify_company_populations(conn: psycopg.Connection) -> dict:
             """
         )
         total += cur.rowcount
-        conn.commit()
+        if commit:
+            conn.commit()
 
     logger.info("coverage_matrix.company_populations_classified", rows=total)
     return {"rows": total}
@@ -677,7 +680,16 @@ def build_coverage(conn: psycopg.Connection) -> dict:
     (whole-table, not per-company -- this is a full rebuild, not an
     incremental update) to stay well under the connection's statement
     timeout at ~600K rows, same batching discipline as every other
-    full-population write this session."""
+    full-population write this session.
+
+    ATOMIC: the delete, every insert and all three classification passes run
+    in ONE transaction, committed once at the very end. Until 2026-10-17 each
+    step committed on its own, so a statement timeout in the middle (it
+    happened on the 2026-10-16 nightly) left the table half-built -- the
+    concept rows present but no metric rows and no gap_reason at all -- and
+    every dashboard reading it was silently wrong until the next successful
+    rebuild. Now any failure rolls back and the previous complete table stays
+    in place."""
     with conn.cursor() as cur:
         # Found live 2026-09-06: the metric insert below (~428K company x
         # metric combinations, each running its own correlated gap_reason
@@ -695,7 +707,6 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         # timeout-minutes, so this is a per-statement ceiling, not the budget.
         cur.execute("set statement_timeout = '30min'")
         cur.execute("delete from analytics.company_data_point_coverage")
-        conn.commit()
 
         cur.execute(
             """
@@ -708,7 +719,6 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             where c.status = 'active'
             """
         )
-        conn.commit()
 
         # gap_reason is only meaningful when has_value is false -- picked
         # from the most-recent period's is_null_reason (a company can have
@@ -736,7 +746,6 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             where c.status = 'active' and md.status = 'active'
             """
         )
-        conn.commit()
 
         cur.execute(
             """
@@ -765,7 +774,6 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             from core.company c where c.status = 'active'
             """
         )
-        conn.commit()
 
         cur.execute(
             "select count(*), count(*) filter (where has_value) from analytics.company_data_point_coverage"
@@ -774,10 +782,12 @@ def build_coverage(conn: psycopg.Connection) -> dict:
 
     # Order matters: classify_concept_gaps() must run first -- it sets the
     # revenue_sanity_resolved gap_reason values (pre_revenue_spac etc.)
-    # that POPULATION_QUERIES['real_operating_company'] reads directly.
-    gap_stats = classify_concept_gaps(conn)
-    evidence_stats = apply_filing_line_evidence(conn)
-    population_stats = classify_company_populations(conn)
+    # that POPULATION_QUERIES['real_operating_company'] reads directly. They
+    # see the uncommitted rows above because they share this transaction.
+    gap_stats = classify_concept_gaps(conn, commit=False)
+    evidence_stats = apply_filing_line_evidence(conn, commit=False)
+    population_stats = classify_company_populations(conn, commit=False)
+    conn.commit()
 
     logger.info(
         "coverage_matrix.coverage_built",
