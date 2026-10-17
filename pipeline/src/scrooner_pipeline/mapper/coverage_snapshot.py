@@ -205,6 +205,11 @@ def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dic
     """Pure-ish computation (no writes) -- returns the rows a snapshot would
     contain, for testing and for the write path below to share."""
     as_of = as_of or date.today()
+    # The concept/metric coverage aggregates scan canonical_fact / metric_value
+    # and exceeded the pooler's 2-minute default in the 2026-10-16 nightly
+    # (snapshot-coverage failed after ~2 min, leaving no snapshot for 3 days).
+    with conn.cursor() as cur:
+        cur.execute("set statement_timeout = '15min'")
     total_active = _load_total_active_companies(conn)
     population_counts = _load_population_counts(conn)
     concept_coverage = _load_concept_coverage(conn)

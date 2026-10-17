@@ -688,7 +688,12 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         # the existing idx_metric_value_company_metric index already
         # supports each subquery invocation efficiently, the cost is
         # purely the sheer combination count.
-        cur.execute("set statement_timeout = '10min'")
+        #
+        # Raised 10min -> 30min 2026-10-17: the nightly run's matrix step died
+        # with QueryCanceled after ~14 min (a local run takes ~15 min total and
+        # the CI runner is slower under load); the workflow step has its own
+        # timeout-minutes, so this is a per-statement ceiling, not the budget.
+        cur.execute("set statement_timeout = '30min'")
         cur.execute("delete from analytics.company_data_point_coverage")
         conn.commit()
 

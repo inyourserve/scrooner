@@ -170,6 +170,7 @@ jobs:
         if: always()
         run: uv run --project pipeline scrooner-map probe-filing-lines --max-minutes 20
       - name: Rebuild company/metric/tag coverage matrix
+        timeout-minutes: 40
         # The source of truth for "does company X have data point Y, and
         # why not" (analytics.data_point_registry + company_data_point_
         # coverage, doc 41) -- added to the daily cron 2026-09-08, direct
@@ -184,6 +185,7 @@ jobs:
         if: always()
         run: uv run --project pipeline scrooner-map build-coverage-matrix
       - name: Rebuild XBRL tag-candidate library
+        timeout-minutes: 20
         # Retires reference/xbrl_tag_coverage_library.json (2026-09-08,
         # direct user instruction: "retire json, make everything into db
         # as source of truth") -- was a manually-triggered research file,
@@ -193,6 +195,7 @@ jobs:
         if: always()
         run: uv run --project pipeline scrooner-map build-tag-candidates
       - name: Record daily coverage snapshot
+        timeout-minutes: 20
         if: always()
         run: uv run --project pipeline scrooner-map snapshot-coverage
 

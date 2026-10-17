@@ -148,7 +148,7 @@ def _load_concept_id_coverage(conn: psycopg.Connection) -> dict[int, int]:
     """One global aggregation over core.fact, done once, reused for
     every concept's candidate search -- see module docstring."""
     with conn.cursor() as cur:
-        cur.execute("set statement_timeout = '5min'")
+        cur.execute("set statement_timeout = '15min'")
         cur.execute(
             "select concept_id, count(distinct company_id) from core.fact where is_authoritative = true group by concept_id"
         )
