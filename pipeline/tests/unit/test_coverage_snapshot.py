@@ -30,12 +30,16 @@ class _FakeCursor:
             "gap_reason" in s
         ):  # filing-line N/A counts (checked before company_population: it joins it)
             self._last_result = ("rows", getattr(self, "_na_rows", []))
+        elif "analytics.metric_definition" in s:  # also joins company_population
+            # (name, n) means "n companies, all inside the population"
+            self._last_result = (
+                "rows",
+                [r if len(r) == 3 else (r[0], r[1], r[1]) for r in self._metric_rows],
+            )
         elif "company_population" in s:
             self._last_result = ("rows", getattr(self, "_population_rows", []))
         elif "canonical_concept" in s:
             self._last_result = ("rows", self._concept_rows)
-        elif "metric_definition" in s:
-            self._last_result = ("rows", self._metric_rows)
 
     def fetchone(self):
         kind, value = self._last_result
@@ -238,3 +242,40 @@ class TestFilingLineDenominators:
         row = compute_snapshot(conn, as_of=date(2026, 10, 13))["rows"][0]
         assert row["total_active_companies"] == 100
         assert row["coverage_pct"] == Decimal("50.00")
+
+
+@pytest.mark.unit
+class TestMetricNumeratorMatchesDenominatorPopulation:
+    """2026-10-18: ROE showed 4,818 covered of 4,815 (100.06%) because metric
+    values from companies outside the denominator population were counted."""
+
+    def test_metric_never_reads_above_100_percent(self):
+        conn = _FakeConnection(
+            total_active=5206,
+            concept_rows=[],
+            # (name, covered inside population, covered anywhere)
+            metric_rows=[("roe", 4815, 4818)],
+            population_rows=[("real_operating_company", 4815)],
+        )
+        row = compute_snapshot(conn, as_of=date(2026, 10, 18))["rows"][0]
+        assert row["companies_covered"] == 4815
+        assert row["total_active_companies"] == 4815
+        assert row["coverage_pct"] == Decimal("100.00")
+
+    def test_outside_population_values_do_not_inflate_a_partial_metric(self):
+        conn = _FakeConnection(
+            total_active=5206,
+            concept_rows=[],
+            metric_rows=[("roe", 4000, 4100)],
+            population_rows=[("real_operating_company", 4815)],
+        )
+        row = compute_snapshot(conn, as_of=date(2026, 10, 18))["rows"][0]
+        assert row["companies_covered"] == 4000
+        assert row["coverage_pct"] == Decimal("83.074").quantize(Decimal("0.01"))
+
+    def test_published_coverage_is_floored_if_numerator_still_exceeds(self):
+        conn = _FakeConnection(
+            total_active=100, concept_rows=[], metric_rows=[("roe", 120, 120)]
+        )
+        row = compute_snapshot(conn, as_of=date(2026, 10, 18))["rows"][0]
+        assert row["coverage_pct"] <= Decimal("100.00")

@@ -179,26 +179,59 @@ def _load_concept_coverage(conn: psycopg.Connection) -> dict[str, int]:
         return dict(cur.fetchall())
 
 
-def _load_metric_coverage(conn: psycopg.Connection) -> dict[str, int]:
-    """`analytics.metric_value` stores an explicit row with `is_null_reason`
+METRIC_COVERAGE_SQL = """
+    select md.metric_name,
+           count(distinct mv.company_id) filter (
+               where mv.value is not null
+                 and (not (coalesce(m.population_name, %(default)s) = any(%(restricted)s::text[]))
+                      or p.company_id is not null)
+           ) as covered_in_population,
+           count(distinct mv.company_id) filter (where mv.value is not null) as covered_any
+    from analytics.metric_definition md
+    left join unnest(%(names)s::text[], %(pops)s::text[]) as m(metric_name, population_name)
+      on m.metric_name = md.metric_name
+    left join analytics.metric_value mv on mv.metric_definition_id = md.id
+    left join analytics.company_population p
+      on p.company_id = mv.company_id
+     and p.population_name = coalesce(m.population_name, %(default)s)
+    where md.status = 'active'
+    group by md.metric_name
+"""
+
+
+def _load_metric_coverage(
+    conn: psycopg.Connection, population_counts: dict[str, int]
+) -> dict[str, tuple[int, int]]:
+    """metric_name -> (companies with a value INSIDE the metric's denominator
+    population, companies with a value anywhere).
+
+    `analytics.metric_value` stores an explicit row with `is_null_reason`
     set even when a metric couldn't be computed for a company (the same
     traceability discipline as `excluded_missing_data` elsewhere in this
     project) -- `value is not null` is required here, or every metric
     would silently show 100% coverage regardless of how many of its rows
     are real. Found live 2026-09-02 building this module's first real
     snapshot: market_cap showed 5,216/5,216 companies before this filter,
-    3,131/5,216 after -- the true number."""
+    3,131/5,216 after -- the true number.
+
+    Found 2026-10-18 (ROE 4,818 of 4,815 = 100.06%): the denominator is a named
+    population (real_operating_company, ...) but the numerator used to count a
+    company with a value from ANYWHERE, including companies outside that population
+    (reclassified out since their metric rows were written; metric_value rows are
+    never deleted when a company leaves a population). The numerator is now
+    restricted to the same population as the denominator. A population with no rows
+    (classify_company_populations never run) is not restricted -- the denominator
+    falls back to total_active in that case, see _denominator_for."""
+    names = sorted(_FAMILY_POPULATION)
+    params = {
+        "names": names,
+        "pops": [_FAMILY_POPULATION[n] for n in names],
+        "default": _DEFAULT_POPULATION,
+        "restricted": [p for p, n in population_counts.items() if n],
+    }
     with conn.cursor() as cur:
-        cur.execute(
-            """
-            select md.metric_name, count(distinct mv.company_id) filter (where mv.value is not null)
-            from analytics.metric_definition md
-            left join analytics.metric_value mv on mv.metric_definition_id = md.id
-            where md.status = 'active'
-            group by md.metric_name
-            """
-        )
-        return dict(cur.fetchall())
+        cur.execute(METRIC_COVERAGE_SQL, params)
+        return {name: (int(a), int(b)) for name, a, b in cur.fetchall()}
 
 
 def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dict:
@@ -213,7 +246,7 @@ def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dic
     total_active = _load_total_active_companies(conn)
     population_counts = _load_population_counts(conn)
     concept_coverage = _load_concept_coverage(conn)
-    metric_coverage = _load_metric_coverage(conn)
+    metric_coverage = _load_metric_coverage(conn, population_counts)
     filing_line_na = _load_filing_line_na_counts(conn)
 
     rows = []
@@ -232,8 +265,24 @@ def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dic
                 "coverage_pct": _pct(covered, denom),
             }
         )
-    for name, covered in sorted(metric_coverage.items()):
+    for name, (covered, covered_any) in sorted(metric_coverage.items()):
         denom = _denominator_for(name, population_counts, total_active)
+        if covered_any > covered:
+            logger.info(
+                "coverage_snapshot.metric_values_outside_population",
+                metric=name,
+                outside=covered_any - covered,
+            )
+        if covered > denom:
+            # Only reachable when the population fell back to total_active, or the
+            # population table changed between the two reads. Never publish >100%.
+            logger.warning(
+                "coverage_snapshot.covered_exceeds_denominator",
+                metric=name,
+                covered=covered,
+                denominator=denom,
+            )
+            denom = covered
         rows.append(
             {
                 "snapshot_date": as_of,
