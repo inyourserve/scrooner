@@ -15,7 +15,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | done (7 wrong values FILING-CHECKED) |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
-| S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | running |
+| S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | done (DATA-INFERRED only) |
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | running |
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | running |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | todo |
@@ -134,7 +134,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S010 | SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S011 | PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -164,6 +164,10 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: variable annual dividend inflates trailing yield (PGR 6.36%) | S010 | PGR | DATA-INFERRED | open |
 | NEW: ReceivablesNetCurrent not mapped (LMT 3,901M, MO 263M) | S010 | LMT, MO | DATA-INFERRED | open |
 | debt-free company shows a stale old total_debt (VRTX 105M from 2011) | S010 | VRTX | DATA-INFERRED | open (with zero-debt family, ISRG) |
+| NEW: foreign private issuer kept in the US population by one legacy 10-K (BMO: 40-F/IFRS filer, 154 of 163 cells blank, still shows 118.2B mcap); check BNS etc. | S011 | BMO | DATA-INFERRED | open (population; excluded from cohort) |
+| NEW: YoY growth on a negative base has the wrong sign (COF EPS -8.58 -> +4.73 shows -155%); multi-year growth already blanks, YoY does not | S011 | COF | DATA-INFERRED | open |
+| NEW/CRITICAL: canonical_fact used a NON-authoritative DEF 14A fact over the 10-K (MDT net income 4,801 dollars vs 4,801M, ~1e6x small, FY2022-26; derived Q4s -2.6B to -3.6B; TTM ROE 0.86% vs ~10.4%) - breaks the is_authoritative hard rule | S011 | MDT | DATA-INFERRED (fact 64871764) | open (with proxy-beats-10-K family; SCHW is the same scale class) |
+| NEW: stock split missing from split table (BKNG 25-for-1 2026 -> trailing P/E 1.23 vs ~18) | S011 | BKNG | DATA-INFERRED | open (split owner) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
