@@ -691,15 +691,11 @@ def build_coverage(conn: psycopg.Connection) -> dict:
     rebuild. Now any failure rolls back and the previous complete table stays
     in place."""
     with conn.cursor() as cur:
-        # Found live 2026-09-06: the metric insert below (~428K company x
-        # metric combinations, each running its own correlated gap_reason
-        # subquery) exceeded the connection's default 2-minute
-        # statement_timeout. This is a rare, admin-triggered rebuild, not
-        # a per-company loop on any hot path, so a longer timeout for
-        # just this connection is the right fix, not a query rewrite --
-        # the existing idx_metric_value_company_metric index already
-        # supports each subquery invocation efficiently, the cost is
-        # purely the sheer combination count.
+        # Both big inserts are SET-BASED (one grouped scan of canonical_fact /
+        # metric_value, left-joined to the company x concept/metric grid).
+        # Until 2026-10-18 they used a correlated exists/subquery per grid cell
+        # (~406K probes into a ~4.5 GB table) and took 25-30+ min under CI load.
+        # A longer timeout is kept as a safety ceiling only.
         #
         # Raised 10min -> 30min 2026-10-17: the nightly run's matrix step died
         # with QueryCanceled after ~14 min (a local run takes ~15 min total and
@@ -711,11 +707,15 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         cur.execute(
             """
             insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value)
-            select c.id, cc.name, exists (
-                select 1 from analytics.canonical_fact cf where cf.company_id = c.id and cf.canonical_concept_id = cc.id
-            )
+            select c.id, cc.name, (present.company_id is not null)
             from core.company c
             cross join analytics.canonical_concept cc
+            left join (
+                select company_id, canonical_concept_id
+                from analytics.canonical_fact
+                group by company_id, canonical_concept_id
+            ) present
+                on present.company_id = c.id and present.canonical_concept_id = cc.id
             where c.status = 'active'
             """
         )
@@ -735,14 +735,20 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             select
                 c.id,
                 md.metric_name,
-                exists (select 1 from analytics.metric_value mv where mv.company_id = c.id and mv.metric_definition_id = md.id and mv.value is not null),
-                (
-                    select mv2.is_null_reason from analytics.metric_value mv2
-                    where mv2.company_id = c.id and mv2.metric_definition_id = md.id
-                    order by mv2.period_end desc limit 1
-                )
+                coalesce(agg.has_value, false),
+                agg.gap_reason
             from core.company c
             cross join analytics.metric_definition md
+            left join (
+                select
+                    company_id,
+                    metric_definition_id,
+                    bool_or(value is not null) as has_value,
+                    (array_agg(is_null_reason order by period_end desc, period_start desc, period_label))[1] as gap_reason
+                from analytics.metric_value
+                group by company_id, metric_definition_id
+            ) agg
+                on agg.company_id = c.id and agg.metric_definition_id = md.id
             where c.status = 'active' and md.status = 'active'
             """
         )
