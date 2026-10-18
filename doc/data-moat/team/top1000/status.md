@@ -16,7 +16,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | done (7 wrong values FILING-CHECKED) |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
 | S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | done (DATA-INFERRED only) |
-| S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | running |
+| S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | done (wrong values FILING-CHECKED) |
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | running |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | running |
 | S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | todo |
@@ -156,7 +156,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: no debt line -> should be a reported/explicit zero, 16 cells blank incl. zero_debt | S009 | ISRG | FILING-CHECKED | open (Standardization zero-borrowings rule E1/E2) |
 | NEW: face-statement tags unmapped (BA interest-and-debt expense, inventory; ETN receivables; UBER cost of revenue excl. D&A; SCHW interest revenue) | S009 | BA, ETN, UBER, SCHW (22 cells) | FILING-CHECKED | open (Tag Mapper) |
 | NEW: equity includes noncontrolling interest (T 15,990M) -> ROE, P/B skewed | S009 | T | FILING-CHECKED | open |
-| NEW: shareholder-returns blank at non-dividend payers (should use buybacks only) | S009, S010 | NOW, UBER, VRTX, FTNT | DATA-INFERRED | open |
+| shareholder-returns / dividend cells blank with no reason at non-dividend payers | S009, S010, S012 | NOW, UBER, VRTX, FTNT + S012 (18 cells) | DATA-INFERRED | open |
 | D&A only under company-specific tags | S009 | ISRG, ACN, SCHW | FILING-CHECKED | open (with D&A family) |
 | stale: ACN share count from 2010; ETN operating income FY2019 (no subtotal presented) | S009 | ACN, ETN | FILING-CHECKED | open |
 | NEW: ROIC shown on negative invested capital (FTNT -222.6%) | S010 | FTNT | DATA-INFERRED | open |
@@ -164,10 +164,16 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: variable annual dividend inflates trailing yield (PGR 6.36%) | S010 | PGR | DATA-INFERRED | open |
 | NEW: ReceivablesNetCurrent not mapped (LMT 3,901M, MO 263M) | S010 | LMT, MO | DATA-INFERRED | open |
 | debt-free company shows a stale old total_debt (VRTX 105M from 2011) | S010 | VRTX | DATA-INFERRED | open (with zero-debt family, ISRG) |
-| NEW: foreign private issuer kept in the US population by one legacy 10-K (BMO: 40-F/IFRS filer, 154 of 163 cells blank, still shows 118.2B mcap); check BNS etc. | S011 | BMO | DATA-INFERRED | open (population; excluded from cohort) |
+| foreign private issuer kept in the US population by a legacy 10-K (BMO 40-F/IFRS, 154 of 163 blank; BNS 40-F, its 10-Ks are covered-bond ABS reports with 0 facts, 0001140361-21-002628, 152 blank); likely other Canadian banks | S011, S012 | BMO, BNS | DATA-INFERRED | open (population; excluded from cohort) |
 | NEW: YoY growth on a negative base has the wrong sign (COF EPS -8.58 -> +4.73 shows -155%); multi-year growth already blanks, YoY does not | S011 | COF | DATA-INFERRED | open |
 | NEW/CRITICAL: canonical_fact used a NON-authoritative DEF 14A fact over the 10-K (MDT net income 4,801 dollars vs 4,801M, ~1e6x small, FY2022-26; derived Q4s -2.6B to -3.6B; TTM ROE 0.86% vs ~10.4%) - breaks the is_authoritative hard rule | S011 | MDT | DATA-INFERRED (fact 64871764) | open (with proxy-beats-10-K family; SCHW is the same scale class) |
 | NEW: stock split missing from split table (BKNG 25-for-1 2026 -> trailing P/E 1.23 vs ~18) | S011 | BKNG | DATA-INFERRED | open (split owner) |
+| NEW: EPS filed only as continuing-operations EPS (ABNB, 10 cells blank since 2020) | S012 | ABNB | FILING-CHECKED | open |
+| NEW: interest income tagged InvestmentIncomeNonoperating | S012 | ABNB, NET, SNOW, CME | DATA-INFERRED | open (Tag Mapper) |
+| NEW: fiscal quarters labelled Q1/Q2 twice a year (ADP), 15 TTM cells fail | S012 | ADP | DATA-INFERRED | open (Period Engineer) |
+| NEW: customer funds on balance sheet (CME performance bonds, ADP client funds) make current ratio / ROA meaningless | S012 | CME, ADP | DATA-INFERRED | open (Sector Analyst) |
+| NEW: debt shown 0 / stale when debt is under UnsecuredLongTermDebt or convertible notes (CME 0 vs 3,424.2M; NET 0 from 2019 vs 3,270M converts) | S012 | CME, NET | FILING-CHECKED | open (with total_debt family) |
+| stale values (GLW capex 2020, current tag PaymentsForCapitalImprovements; CME shares 66.6M from 2010 vs 359.6M; ADP op income 2014; LOW interest 2011; SBUX gross profit 2020; ABNB capex/D&A) | S012 | 6 | FILING-CHECKED | open (stale family) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
