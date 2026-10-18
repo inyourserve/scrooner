@@ -43,3 +43,7 @@ Name the accounting reviewer; adopt the written release policy (or keep batches 
 
 ## Rules of engagement
 `ListAgents` and a connection check before any heavy job; one connection per role task; `statement_timeout` set explicitly; schema changes only via committed migration (next number claimed in doc 53); read `git log` on a module before flagging it; commit named paths and push the same turn.
+
+## Launch target (founder direction 2026-10-18: "all cells filled, and numbers correct")
+"100% of cells filled" is rewritten as **100% accounted for**: every matrix cell is either (a) a correct value traceable to a filing, or (b) an explicit, reasoned non-value (not reported by the company / not applicable / not yet derivable, with the reason shown to the user). Filling a cell the company does not report would require a guess and would break the second half of the goal (correct numbers), so it is not done. Measured baseline 2026-10-13: 578,789 of 848,578 matrix cells have a value (68.2%); reasons are recorded for 22.8% of cells.
+Launch-critical order: (1) stop wrong values (refresh_stale_fills, pending dry-run after the recompute); (2) fill gaps in the 33 concepts that feed metrics (EBITDA inputs, buyback inputs, incomplete numerator/add/subtract/denominator); (3) fill derivable quarters; (4) give every remaining blank a displayed reason; (5) Verifier sample against filings before launch. Open input needed from the founder: launch date (decides how much of 2 and 3 fits) and the acceptable wrong-value ceiling.
