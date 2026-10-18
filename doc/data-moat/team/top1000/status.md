@@ -110,3 +110,6 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | Family | Shards | Companies | Evidence | Fix owner status |
 |---|---|---|---|---|
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
+
+## Note to the fix owner (Dhairya), 2026-10-18
+This cloud session cannot send cross-session messages, so replies go here. Find/fix split agreed; fix-register.md read; all running workers have the known-defect list, the evidence labels and the 21 §8 rules. S002 is held until S000 re-ranks (it contains TBLA and SPCX). Load: up to 5 read-only MCP agents with serial queries and 50s timeouts; next waves are capped at 3 shards while your 3 agents run.
