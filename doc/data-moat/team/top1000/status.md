@@ -15,7 +15,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | running |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
-| S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | todo |
+| S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | running |
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | todo |
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | todo |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | todo |
