@@ -45,3 +45,4 @@ venv/
 
 # Supplied design-reference PDFs (large binaries, not project content)
 doc/design/*.pdf
+.claude/settings.local.json
