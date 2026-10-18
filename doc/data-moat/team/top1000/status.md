@@ -24,7 +24,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | running |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | running |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | running |
-| S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | todo |
+| S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | running |
 | S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | todo |
 | S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | todo |
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | todo |
