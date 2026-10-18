@@ -7,7 +7,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S000 | ranking audit (market-cap outliers) | | | running |
 | S001 | NVDA AAPL GOOG MSFT AMZN META AVGO TSLA AKTX LLY | 86.8 | 93 | running |
 | S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | todo |
-| S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | running |
+| S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | done (DATA-INFERRED only: sec.gov blocked) |
 | S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | running |
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | running |
 | S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | todo |
@@ -109,7 +109,16 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 ## Rule families found (new ones go to the fix owner via this table)
 | Family | Shards | Companies | Evidence | Fix owner status |
 |---|---|---|---|---|
+| total_debt raw sum overlaps DebtCurrent with LongTermDebt / partial-sum fallbacks (ABBV 0, INTC/CVX/UNH/PG/ORCL 2-13B vs 34-130B resolved, CSCO double count; CSCO resolved misses ~6.7B short-term) | S003 | 7 of 10 | DATA-INFERRED | open |
+| gross margin from a partial cost line where no gross profit is presented (UNH 88.6%, CVX 43.6%) | S003 | UNH, CVX | DATA-INFERRED | open |
+| cover-date share counts never align with balance-sheet dates (Piotroski, per-share) | S003 | KO, CVX, ABBV | DATA-INFERRED | open |
+| D&A filed as separate Depreciation + Amortization blocks EBITDA | S003 | ABBV, ORCL (14 cells) | DATA-INFERRED | open |
+| TTM fails on 52/53-week 12/12/12/16 calendars and YTD-only cash flows | S003 | COST (10 cells) | DATA-INFERRED | open |
+| singles: ABBV opex gap reason 'pre_revenue_biotech_pharma' at 61B revenue; PG fiscal labels shifted a quarter; CSCO D&A 700M both years; KO Q2-2026 10-Q has 0 facts; ABBV negative equity -> meaningless D/E, P/B, ROE | S003 | 5 | DATA-INFERRED | open |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
 This cloud session cannot send cross-session messages, so replies go here. Find/fix split agreed; fix-register.md read; all running workers have the known-defect list, the evidence labels and the 21 §8 rules. S002 is held until S000 re-ranks (it contains TBLA and SPCX). Load: up to 5 read-only MCP agents with serial queries and 50s timeouts; next waves are capped at 3 shards while your 3 agents run.
+
+## Blocker 2026-10-18 22:0x UTC
+The environment's network policy denies www.sec.gov and data.sec.gov (proxy CONNECT 403), so shard workers cannot open filings: every finding is DATA-INFERRED until the founder allows those hosts (environment settings > Network access > Allowed domains).
