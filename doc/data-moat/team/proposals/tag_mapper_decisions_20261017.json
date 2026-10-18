@@ -1,0 +1,1519 @@
+{
+ "task": {
+  "task_id": "tagmapper-20261017-10-gaps",
+  "role": "scrooner-tag-mapper",
+  "objective": "Investigate candidate tags for 10 canonical-concept gaps",
+  "universe_definition": "active core.company with sic_code, seed-fixed 150-company random sample (seed 'tagmapper-20261017'); library counts are full-population (analytics.sec_tag_library built 2026-10-17T17:08Z)",
+  "as_of": "2026-10-17",
+  "allowed_actions": "read-only",
+  "budget": {
+   "case_limit": 10,
+   "tool_call_limit": null,
+   "max_llm_cost_usd": null
+  },
+  "owner": "data team"
+ },
+ "decisions": [
+  {
+   "decision_id": "tagmapper-20261017-01-retained_earnings",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "retained_earnings (new; no canonical_concept exists - checked analytics.canonical_concept 78 rows)",
+    "statement_role": "balance_sheet",
+    "period_type": "instant",
+    "unit": "USD (usd 5815 facts; cad 5)",
+    "dimension_policy": "consolidated entity-level only; dimensions unobservable in stored data",
+    "exclusions": [
+     "RetainedEarningsAppropriated",
+     "RetainedEarningsUnappropriated",
+     "RetainedEarningsUndistributedEarningsFromEquityMethodInvestees",
+     "DevelopmentStageEnterpriseDeficitAccumulatedDuringDevelopmentStage (opposite sign; separate)",
+     "Cumulative*/Adjustments* equity-roll tags",
+     "is_derived=true facts n/a (0 derived)"
+    ],
+    "effective_filing_range": "all; note DevelopmentStage tag is pre-2015 era"
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:RetainedEarningsAccumulatedDeficit",
+     "library_active_companies": 4989,
+     "sample_issuers_auth": 148,
+     "sample_facts_auth": 5820,
+     "nonauth_facts": 6128,
+     "custom_or_standard": "standard",
+     "period": "instant",
+     "unit": "usd",
+     "negative_facts": 3227,
+     "relationship": "exact",
+     "precedence": 1
+    },
+    {
+     "tag": "ifrs-full:RetainedEarnings",
+     "library_active_companies": 65,
+     "sample_issuers": "not in sample extract (tag not queried)",
+     "relationship": "exact_ifrs_alternate",
+     "precedence": 2,
+     "note": "IFRS/FPI scope is an open founder decision (V1 excludes 20-F/40-F); NOT_RUN in sample"
+    },
+    {
+     "tag": "us-gaap:RetainedEarningsAppropriated",
+     "library_active_companies": 115,
+     "sample_issuers_auth": 5,
+     "sample_facts_auth": 40,
+     "relationship": "component",
+     "precedence": "never as total"
+    },
+    {
+     "tag": "us-gaap:RetainedEarningsUnappropriated",
+     "library_active_companies": 86,
+     "sample_issuers_auth": 3,
+     "sample_facts_auth": 16,
+     "relationship": "component",
+     "precedence": "never as total"
+    },
+    {
+     "tag": "us-gaap:RetainedEarningsUndistributedEarningsFromEquityMethodInvestees",
+     "library_active_companies": 60,
+     "sample_issuers_auth": 1,
+     "sample_facts_auth": 11,
+     "relationship": "not_equivalent (memo sub-amount)"
+    },
+    {
+     "tag": "us-gaap:DevelopmentStageEnterpriseDeficitAccumulatedDuringDevelopmentStage",
+     "library_active_companies": 255,
+     "sample_issuers_auth": 9,
+     "sample_facts_auth": 114,
+     "relationship": "not_equivalent (positive-magnitude deficit; sign opposite)",
+     "precedence": "fallback only if sign-normalised under explicit rule"
+    }
+   ],
+   "coexistence": {
+    "RE vs Unappropriated": "14 shared contexts, 3 issuers, 0 equal",
+    "RE vs Appropriated": "38 shared contexts, 5 issuers, 0 equal",
+    "RE vs DevelopmentStageDeficit": "17 shared contexts, 9 issuers, 8 equal, 9 unequal",
+    "RE vs EquityMethodUndistributed": "11 shared contexts, 1 issuer, 0 equal",
+    "Unappropriated+Appropriated = RE": "0 shared contexts - cannot be tested in sample",
+    "coexistence_is_not_equivalence": true,
+    "issuers_with_StockholdersEquity_but_no_RE_tag_in_sample": 1,
+    "RE_tag_without_equity": 0
+   },
+   "counterexamples": [
+    {
+     "case": "company 1117 (sic 4011) FY2010-2012: RetainedEarningsAccumulatedDeficit 17.154B vs RetainedEarningsUnappropriated 12.9B same context - Unappropriated is a component, not equal"
+    },
+    {
+     "case": "company 599 2010-12-31: RE 7.827B vs Appropriated 0.0938B - Appropriated is a sub-amount"
+    },
+    {
+     "case": "companies 1600, 2301, 2952: RE -206,949 / -62.569M / -15,000 vs DevelopmentStageDeficit +206,949 / +62.569M / +15,000 - same magnitude, opposite sign, so equality only after sign flip (sign not stored)"
+    },
+    {
+     "case": "company 4393 (Real Estate, sic 6519): files StockholdersEquity but no RE/appropriated/dev-stage tag in sample - line absent or custom-tagged; do not zero-fill"
+    },
+    {
+     "case": "749 of 5465 RE+equity shared contexts have RE > StockholdersEquity (e.g. company 103 2021-01-01 5.2467B vs 4.4149B): normal with treasury stock/AOCI, so RE must NOT be bounded by equity in plausibility checks"
+    }
+   ],
+   "rationale": "Single dominant standard tag covers 148/150 sample issuers and 4,989 active library companies; instant, USD. Appropriated/Unappropriated are components (never mapped as the total). Deficit sign: 3,227 of 5,820 facts negative (113 of 148 issuers have at least one negative) so the sign must be preserved as reported (negative = deficit); the pre-2015 development-stage tag reports the deficit as a positive magnitude.",
+   "alternatives_considered": [
+    "Map all RetainedEarnings* tags as first_match: rejected, Appropriated/Unappropriated are components.",
+    "Sum Appropriated+Unappropriated when total missing: untestable in sample (0 shared contexts); needs full-population check."
+   ],
+   "proposed_relationship_class": "exact (RetainedEarningsAccumulatedDeficit); component (Appropriated, Unappropriated); not_equivalent (EquityMethodUndistributed, DevelopmentStage deficit)",
+   "proposed_mapping": {
+    "canonical_concept": "retained_earnings",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:RetainedEarningsAccumulatedDeficit"
+    ],
+    "positive_conditions": "instant, USD, entity-level, sign as reported",
+    "negative_conditions": "exclude components and development-stage tag"
+   },
+   "conflict_note": "auth-less contexts for the primary tag: 147 of 5900, 57 with spread >15%.",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null,
+    "library_upper_bound_active_companies_for_primary_tag": 4989
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "tag=RetainedEarningsAccumulatedDeficit active_company_count=4989",
+     "source_type": "database",
+     "source_hash": null
+    },
+    {
+     "ref": "db:core.fact (150-company sample)",
+     "locator": "facts per sample.pkl; counterexample contexts as listed",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Standardization Lead to define concept + sign convention; Verifier to read original balance sheets for 1117, 599, 4393 and 1600/2301/2952; full-population coexistence check before any concept_mapping edit.",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-02-common_stock_value",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "common_stock_value (par/stated amount of common stock on balance sheet; new)",
+    "statement_role": "balance_sheet",
+    "period_type": "instant",
+    "unit": "USD",
+    "exclusions": [
+     "CommonStockNoParValue (per-share unit usd/shares; not a balance)",
+     "CommonStocksIncludingAdditionalPaidInCapital / CommonStockIncludingAdditionalPaidInCapital (combined line)",
+     "CommonStockSharesIssued/Outstanding/Authorized (share counts)",
+     "Common stock value mapped alongside APIC (distinct concept)"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:CommonStockValue",
+     "library_active_companies": 4340,
+     "sample_issuers_auth": 130,
+     "sample_facts_auth": 4783,
+     "nonauth_facts": 4852,
+     "custom_or_standard": "standard",
+     "unit": "usd (usd 4780, cad 3)",
+     "period": "instant",
+     "zero_facts": 109,
+     "relationship": "exact",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:CommonStockValueOutstanding",
+     "library_active_companies": 469,
+     "sample_issuers_auth": 10,
+     "sample_facts_auth": 184,
+     "relationship": "alternate presentation (net of treasury); not proven equivalent",
+     "precedence": 2,
+     "status": "hold for review"
+    },
+    {
+     "tag": "us-gaap:CommonStockNoParValue",
+     "library_active_companies": 474,
+     "sample_issuers_auth": 11,
+     "sample_facts_auth": 219,
+     "unit": "usd/shares (217 of 219)",
+     "zero_facts": 211,
+     "relationship": "not_equivalent (per-share no-par amount, not balance)"
+    },
+    {
+     "tag": "us-gaap:CommonStocksIncludingAdditionalPaidInCapital",
+     "library_active_companies": 118,
+     "sample_issuers_auth": 6,
+     "sample_facts_auth": 199,
+     "relationship": "combined (common stock + APIC)",
+     "precedence": "never as plain common_stock_value"
+    },
+    {
+     "tag": "us-gaap:CommonStockIncludingAdditionalPaidInCapital",
+     "library_active_companies": 46,
+     "sample_issuers_auth": 3,
+     "sample_facts_auth": 30,
+     "relationship": "combined"
+    }
+   ],
+   "coexistence": {
+    "CommonStockValue vs CommonStockNoParValue": "167 shared contexts, 9 issuers, 26 equal, 141 unequal (all 11 NoPar issuers also file CommonStockValue)",
+    "vs CommonStockValueOutstanding": "36 contexts, 8 issuers, 27 equal, 9 unequal",
+    "vs CommonStocksIncludingAPIC": "12 contexts, 4 issuers, 2 equal, 10 unequal",
+    "vs CommonStockIncludingAPIC": "7 contexts, 1 issuer, 1 equal",
+    "vs AdditionalPaidInCapital": "2,473 contexts, 93 issuers, 7 equal (components of equity, distinct)",
+    "CommonStockValue + AdditionalPaidInCapitalCommonStock = CommonStocksIncludingAPIC": "8 of 8 contexts exact (1 issuer, company 3631) - supports 'combined' class",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "company 1377 2020-12-31: CommonStockValue 10.753M vs CommonStockNoParValue 0 (usd/shares) - NoPar is a per-share figure"
+    },
+    {
+     "case": "company 2952 2013-06-30: CommonStockValue 12,000 vs CommonStockValueOutstanding 30.3M - not equal; 'Outstanding' variant carries a different amount"
+    },
+    {
+     "case": "company 1800 2023-12-31: CommonStockValue 9,755 vs CommonStocksIncludingAdditionalPaidInCapital 500,000 (and APIC 72.4M) - the combined tag does not decompose into those two in this issuer; combined tag must not be read as CommonStockValue"
+    },
+    {
+     "case": "company 607 2010: CommonStockValue 482M vs CommonStockIncludingAdditionalPaidInCapital 2.0B-2.14B"
+    }
+   ],
+   "rationale": "CommonStockValue is the dominant standard tag (130/150 sample issuers). Combined common-stock-plus-APIC tags must remain a separate combined line. 8 of 8 shared contexts in one issuer confirm the combined = value + APIC-common-stock arithmetic, but that is one issuer only.",
+   "alternatives_considered": [
+    "Fall back to CommonStockIncludingAPIC when CommonStockValue missing: rejected (would narrow a combined line)."
+   ],
+   "proposed_relationship_class": "exact (CommonStockValue); not_equivalent (NoParValue); combined (the two *IncludingAdditionalPaidInCapital tags); undecided/alternate (ValueOutstanding)",
+   "proposed_mapping": {
+    "canonical_concept": "common_stock_value",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:CommonStockValue"
+    ],
+    "positive_conditions": "instant USD balance",
+    "negative_conditions": "unit usd/shares excluded; combined tags excluded (candidate separate concept common_stock_including_apic)"
+   },
+   "conflict_note": "primary tag: 92 auth-less contexts of 4811, 60 with spread >15%.",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "CommonStockValue active=4340",
+     "source_type": "database",
+     "source_hash": null
+    },
+    {
+     "ref": "db:core.fact sample",
+     "locator": "see counterexamples",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Standardization Lead to decide whether a combined concept is wanted; full-population unit/zero check; Verifier reads balance sheets of 1377, 2952, 1800.",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-03-preferred_stock_value",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "preferred_stock_value (carrying amount of preferred stock within permanent equity; new)",
+    "statement_role": "balance_sheet",
+    "period_type": "instant",
+    "unit": "USD",
+    "exclusions": [
+     "PreferredStockNoParValue (usd/shares per-share)",
+     "TemporaryEquityValueExcludingAdditionalPaidInCapital (mezzanine, outside equity)",
+     "AdditionalPaidInCapitalPreferredStock (APIC component)",
+     "PreferredStockIncludingAdditionalPaidInCapital* (combined)",
+     "Preferred share counts"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:PreferredStockValue",
+     "library_active_companies": 2864,
+     "sample_issuers_auth": 88,
+     "sample_facts_auth": 2378,
+     "nonauth_facts": 2191,
+     "zero_facts": 1753,
+     "issuers_with_only_zero_values": 60,
+     "unit": "usd",
+     "period": "instant",
+     "custom_or_standard": "standard",
+     "relationship": "exact",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:PreferredStockValueOutstanding",
+     "library_active_companies": 251,
+     "sample_issuers_auth": 4,
+     "sample_facts_auth": 71,
+     "zero_facts": 70,
+     "relationship": "alternate; hold",
+     "precedence": 2
+    },
+    {
+     "tag": "us-gaap:PreferredStockNoParValue",
+     "library_active_companies": 322,
+     "sample_issuers_auth": 8,
+     "sample_facts_auth": 162,
+     "unit": "usd/shares (160 of 162)",
+     "relationship": "not_equivalent"
+    },
+    {
+     "tag": "us-gaap:TemporaryEquityValueExcludingAdditionalPaidInCapital",
+     "library_active_companies": 109,
+     "sample_issuers_auth": 2,
+     "sample_facts_auth": 2,
+     "relationship": "not_equivalent (mezzanine)"
+    },
+    {
+     "tag": "us-gaap:AdditionalPaidInCapitalPreferredStock",
+     "library_active_companies": 42,
+     "sample_issuers_auth": 2,
+     "sample_facts_auth": 66,
+     "relationship": "component of APIC"
+    }
+   ],
+   "coexistence": {
+    "PreferredStockValue vs ValueOutstanding": "2 contexts, 2 issuers, 1 equal",
+    "vs PreferredStockNoParValue": "81 contexts, 4 issuers, 69 equal, 12 unequal (equal cases are mostly 0 vs 0)",
+    "vs TemporaryEquityValue...": "2 contexts, 2 issuers, 1 equal",
+    "vs AdditionalPaidInCapitalPreferredStock": "3 contexts, 1 issuer, 0 equal",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "company 3720 2019-03-31: PreferredStockValue 0 vs PreferredStockValueOutstanding 26.5M - different amounts same context"
+    },
+    {
+     "case": "company 3017 2018-2020: PreferredStockValue 0 vs PreferredStockNoParValue 0.001 (usd/shares) - par per share, not a balance"
+    },
+    {
+     "case": "company 5356 2026-06-30: PreferredStockValue 0 vs TemporaryEquityValueExcludingAdditionalPaidInCapital 75.2M - preferred stock presented in mezzanine, would be missed by the permanent-equity tag"
+    },
+    {
+     "case": "company 5714 2025-12-31: PreferredStockValue 0 vs AdditionalPaidInCapitalPreferredStock 973M - substantial preferred equity carried as APIC; PreferredStockValue 0 is a reported zero, not 'no preferred'"
+    }
+   ],
+   "rationale": "1,753 of 2,378 authoritative facts are reported zeros (74%); 60 of 88 issuers only ever report zero. Reported zero must be preserved but must not be read as 'issuer has no preferred equity' (see 5356, 5714). Mezzanine preferred is outside this concept.",
+   "alternatives_considered": [
+    "Fold temporary-equity preferred into this concept: rejected, different balance-sheet position."
+   ],
+   "proposed_relationship_class": "exact (PreferredStockValue); not_equivalent (NoParValue, TemporaryEquity); component (APIC-Preferred)",
+   "proposed_mapping": {
+    "canonical_concept": "preferred_stock_value",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:PreferredStockValue"
+    ],
+    "positive_conditions": "instant USD",
+    "negative_conditions": "exclude usd/shares; exclude mezzanine"
+   },
+   "conflict_note": "primary tag: 7 auth-less contexts of 2351 (5 with spread >15%).",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "PreferredStockValue active=2864",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Standardization Lead: decide whether a 'has preferred' flag needs shares/APIC/mezzanine inputs; Verifier reads 5356 and 5714 statements.",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-04-additional_paid_in_capital",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "additional_paid_in_capital (new)",
+    "statement_role": "balance_sheet",
+    "period_type": "instant",
+    "unit": "USD",
+    "exclusions": [
+     "Adjustments*AdditionalPaidInCapital* (equity-roll movements, duration)",
+     "AdditionalPaidInCapitalPreferredStock (component)",
+     "CommonStocksIncludingAdditionalPaidInCapital (combined)",
+     "Post/PreconfirmationAdditionalPaidInCapital"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:AdditionalPaidInCapital",
+     "library_active_companies": 3678,
+     "sample_issuers_auth": 106,
+     "sample_facts_auth": 3127,
+     "nonauth_facts": 3131,
+     "negative_facts": 6,
+     "zero_facts": 32,
+     "unit": "usd",
+     "period": "instant",
+     "custom_or_standard": "standard",
+     "relationship": "exact (total APIC)",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:AdditionalPaidInCapitalCommonStock",
+     "library_active_companies": 2240,
+     "sample_issuers_auth": 65,
+     "sample_facts_auth": 2297,
+     "relationship": "component or alternate (common-stock APIC only)",
+     "precedence": 2,
+     "note": "33 of 106 AdditionalPaidInCapital issuers also file it in sample; 33 of 45 shared contexts equal"
+    },
+    {
+     "tag": "us-gaap:AdditionalPaidInCapitalPreferredStock",
+     "library_active_companies": 42,
+     "sample_issuers_auth": 2,
+     "sample_facts_auth": 66,
+     "relationship": "component"
+    },
+    {
+     "tag": "us-gaap:CommonStocksIncludingAdditionalPaidInCapital",
+     "library_active_companies": 118,
+     "sample_issuers_auth": 6,
+     "relationship": "combined"
+    }
+   ],
+   "coexistence": {
+    "APIC vs APIC-CommonStock": "45 contexts, 30 issuers, 33 equal, 12 unequal; 73 issuers APIC-only, 32 CommonStock-variant-only",
+    "APIC vs APIC-Preferred": "0 shared contexts",
+    "APIC vs CommonStocksIncludingAPIC": "2 contexts, 1 issuer, 0 equal",
+    "issuers with APIC by either tag": "138 of 150",
+    "issuers with both tags": 33,
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "company 1851 2018-12-31: AdditionalPaidInCapital 7.887M vs AdditionalPaidInCapitalCommonStock 294.2M - the two tags are not interchangeable (possible scale/line difference; needs filing)"
+    },
+    {
+     "case": "company 2730 2016-12-31: APIC 62.95M vs APIC-CommonStock 56.71M - total exceeds common-stock part (other APIC items)"
+    },
+    {
+     "case": "company 1800 2023-12-31: CommonStocksIncludingAPIC 500,000 vs APIC 72.4M - combined tag cannot be APIC"
+    },
+    {
+     "case": "negative APIC reported (e.g. company 2952 2013-03-31 -1.117M; 4490 2013-12-31 -13.1M): sign preserved, do not abs()"
+    }
+   ],
+   "rationale": "APIC total tag is dominant. For the 73 sample issuers that file only one of the tag pair, the common-stock variant is a plausible fallback only where no preferred APIC exists; that is a precedence question for the reviewer, not proven.",
+   "alternatives_considered": [
+    "APIC = AdditionalPaidInCapitalCommonStock + AdditionalPaidInCapitalPreferredStock: only 0 shared contexts to test; rejected pending full population."
+   ],
+   "proposed_relationship_class": "exact (AdditionalPaidInCapital); component/alternate (AdditionalPaidInCapitalCommonStock - fallback only with reviewer approval); component (Preferred); combined (CommonStocksIncludingAPIC)",
+   "proposed_mapping": {
+    "canonical_concept": "additional_paid_in_capital",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:AdditionalPaidInCapital",
+     "us-gaap:AdditionalPaidInCapitalCommonStock (conditional)"
+    ],
+    "negative_conditions": "exclude Adjustments* movement tags and combined tag"
+   },
+   "conflict_note": "primary tag: 87 auth-less contexts of 3168, 21 with spread >15%.",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "AdditionalPaidInCapital active=3678",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Standardization Lead: choose fallback policy; Verifier to read filings for 1851 and 2730.",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-05-weighted_average_shares_basic",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "weighted_average_shares_basic (new; distinct from shares_outstanding point-in-time and from diluted)",
+    "statement_role": "income_statement (EPS note)",
+    "period_type": "duration",
+    "unit": "shares",
+    "exclusions": [
+     "is_derived=true facts (see counterexamples: Q4 subtraction produces negatives)",
+     "ProForma tags",
+     "WeightedAverageNumberDilutedSharesOutstandingAdjustment (dilution increment)",
+     "WeightedAverageNumberOfSharesIssuedBasic",
+     "WeightedAverageNumberOfSharesRestrictedStock",
+     "BasicAndDiluted combined tags as plain basic"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:WeightedAverageNumberOfSharesOutstandingBasic",
+     "library_active_companies": 4752,
+     "sample_issuers_auth": 138,
+     "sample_facts_auth": 8589,
+     "nonauth_facts": 8035,
+     "derived_facts": 1019,
+     "negative_facts": 921,
+     "negative_and_derived": 921,
+     "unit": "shares",
+     "period": "duration (3m 4013, 6m 1291, 9m 1189, 12m 1265 in 30-day-month buckets; 2m ~815 are 52/53-week quarters)",
+     "custom_or_standard": "standard",
+     "relationship": "exact",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:WeightedAverageNumberOfShareOutstandingBasicAndDiluted",
+     "library_active_companies": 2063,
+     "sample_issuers_auth": 70,
+     "sample_facts_auth": 1795,
+     "relationship": "combined (basic = diluted, issuer reports one line)",
+     "precedence": "plain-basic fallback ONLY under a reviewer-approved combined rule; otherwise keep as separate combined line"
+    },
+    {
+     "tag": "us-gaap:WeightedAverageNumberOfSharesOutstandingBasicAndDiluted",
+     "library_active_companies": 74,
+     "sample_issuers_auth": 1,
+     "relationship": "combined; 2 instant-typed facts (period type anomaly)"
+    },
+    {
+     "tag": "us-gaap:WeightedAverageNumberOfSharesIssuedBasic",
+     "library_active_companies": 507,
+     "sample_issuers_auth": 14,
+     "relationship": "not_equivalent (issued, not outstanding)"
+    },
+    {
+     "tag": "us-gaap:WeightedAverageNumberDilutedSharesOutstandingAdjustment",
+     "library_active_companies": 1687,
+     "sample_issuers_auth": 40,
+     "relationship": "component (dilution increment)"
+    }
+   ],
+   "coexistence": {
+    "Basic vs Diluted": "7,971 shared contexts, 133 issuers; 2,985 equal, 4,986 unequal",
+    "Basic vs BasicAndDiluted": "576 contexts, 62 issuers, 489 equal, 87 unequal (scale mismatch cases)",
+    "Basic vs SharesIssuedBasic": "186 contexts, 9 issuers, 47 equal",
+    "Basic + DilutionAdjustment = Diluted": "1,419 contexts, 38 issuers, 1,339 exact (94%) - supports component class",
+    "issuer_counts": "basic 138, basicAndDiluted 70, both 68, BD-without-basic 2, neither basic nor BD 9 of 150",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "DERIVED NEGATIVES: 921 of 1,019 is_derived basic facts are negative (90%), 914 are Q4; 129 of 138 issuers affected, e.g. company 2052 FY2022-2025 -197M..-230M against a ~101M median. Derived Q4 = FY - 9M-YTD subtraction is invalid for weighted averages (03 rule: no generic subtraction of weighted-average shares)."
+    },
+    {
+     "case": "company 1143 2018-03-31: Basic 2,037,000 vs BasicAndDiluted 2,037 - a 1000x unit/scale mismatch between two tags of the same issuer-period (87 unequal contexts of 576)"
+    },
+    {
+     "case": "non-derived values stored under the tag are EPS-sized: company 5820 2010-07-01..09-30 -0.06, -0.2 (unit 'shares'); company 2301 2012 -1.97, -6.96 under BasicAndDiluted tag - issuer mis-tagging, quarantine rather than map"
+    },
+    {
+     "case": "company 2260 2024-12-31 Q4: Basic -282,915,000 vs WeightedAverageNumberOfSharesIssuedBasic 1,157,000"
+    }
+   ],
+   "rationale": "Basic weighted-average shares is a reported-only figure (never derivable by subtraction). The primary tag covers 138/150 sample issuers. 9/150 report neither basic nor combined and 70 report the combined tag in addition to or instead of basic: combined lines are not mapped as plain basic. The mapper must exclude is_derived=true facts for this concept because the Normalizer's Q4 derivation emits negative values for 90% of derived rows.",
+   "alternatives_considered": [
+    "Include derived Q4 values: rejected on evidence (921 negatives).",
+    "Take BasicAndDiluted as basic when basic absent: pending reviewer; sample shows 2 issuers that have BD without basic."
+   ],
+   "proposed_relationship_class": "exact (WeightedAverageNumberOfSharesOutstandingBasic); combined (BasicAndDiluted variants); component (DilutionAdjustment); not_equivalent (IssuedBasic, ProForma)",
+   "proposed_mapping": {
+    "canonical_concept": "weighted_average_shares_basic",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:WeightedAverageNumberOfSharesOutstandingBasic"
+    ],
+    "positive_conditions": "duration, unit shares, is_derived=false, is_authoritative=true, value>0",
+    "negative_conditions": "exclude derived; exclude EPS-magnitude values; no subtraction ever"
+   },
+   "conflict_note": "primary tag: 589 auth-less contexts of 9110, 392 with spread >15% (largest conflict rate of the 10 families).",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null,
+    "engineering_flag": "Existing core.fact derived weighted-average Q4 rows (in this sample: 1,019 basic, 955 diluted, 182 basic-and-diluted) include negatives; separate defect for Period Engineer / Data Engineer, not fixed here"
+   },
+   "evidence": [
+    {
+     "ref": "db:core.fact (150-company sample)",
+     "locator": "is_derived=true AND value<0 for tag WeightedAverageNumberOfSharesOutstandingBasic: 921 rows",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Hand derived-negative finding to Period Engineer (and Triage); Standardization Lead to rule on combined fallback; Verifier to read EPS notes for 2052, 1143, 5820.",
+   "next_reviewer": "Period Engineer (derived defect), Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-06-weighted_average_shares_diluted",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "weighted_average_shares_diluted (new)",
+    "statement_role": "income_statement (EPS note)",
+    "period_type": "duration",
+    "unit": "shares",
+    "exclusions": [
+     "is_derived=true facts",
+     "ProForma",
+     "dilution increment tag as total",
+     "combined BasicAndDiluted as plain diluted unless reviewer-approved combined rule"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding",
+     "library_active_companies": 4729,
+     "sample_issuers_auth": 135,
+     "sample_facts_auth": 8156,
+     "nonauth_facts": 7870,
+     "derived_facts": 955,
+     "negative_facts": 863,
+     "negative_and_derived": 861,
+     "unit": "shares",
+     "period": "duration",
+     "custom_or_standard": "standard",
+     "relationship": "exact",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:WeightedAverageNumberOfShareOutstandingBasicAndDiluted",
+     "library_active_companies": 2063,
+     "sample_issuers_auth": 70,
+     "relationship": "combined",
+     "precedence": "combined line"
+    },
+    {
+     "tag": "us-gaap:ProFormaWeightedAverageSharesOutstandingDiluted",
+     "library_active_companies": 185,
+     "sample_issuers_auth": 9,
+     "sample_facts_auth": 58,
+     "relationship": "not_equivalent (pro forma)"
+    },
+    {
+     "tag": "us-gaap:WeightedAverageNumberDilutedSharesOutstandingAdjustment",
+     "library_active_companies": 1687,
+     "sample_issuers_auth": 40,
+     "relationship": "component"
+    }
+   ],
+   "coexistence": {
+    "Diluted vs BasicAndDiluted": "484 contexts, 55 issuers, 355 equal, 129 unequal",
+    "Basic + Adjustment = Diluted": "1,419 contexts, 1,339 exact; 80 inexact (e.g. company 599 2014Q3 -1,252.6M + -0.1M != -1,253.4M; company 1020 2011Q3 16.509M + -0.023M != 16.528M)",
+    "Diluted < Basic in contexts where both positive": "not isolated; 4,986 basic!=diluted contexts include normal anti-dilution/dilution",
+    "issuer_counts": "diluted 135, basic w/o diluted 5, BD w/o diluted 5",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "861 of 955 derived diluted facts negative (e.g. company 103 2022-07-02..09-30 basic -327.3M, diluted -329.0M both derived Q4/Q3 style) - same derived subtraction defect as basic"
+    },
+    {
+     "case": "company 1307 2014 Q1: Diluted 4,901,464,000 vs BasicAndDiluted 4,901,464 (1000x scale split between two tags)"
+    },
+    {
+     "case": "company 1051 FY2014-15: Diluted 5,049,813 vs BasicAndDiluted 5,029,343 - both exist in same context but differ, so the combined tag is not equal to diluted even for one issuer"
+    },
+    {
+     "case": "company 5820 2010-07-01..09-30 diluted -0.06 under shares unit - EPS-like value in shares tag"
+    }
+   ],
+   "rationale": "Mirrors basic. Diluted must never be derived by subtraction. Basic+Adjustment=Diluted holds exactly in 94% of tested contexts, supporting component class, but the 6% failures show it is not an identity to enforce.",
+   "alternatives_considered": [
+    "Calculate diluted = basic + adjustment when missing: rejected (80 inexact cases)."
+   ],
+   "proposed_relationship_class": "exact (Diluted); combined (BasicAndDiluted); component (Adjustment); not_equivalent (ProForma)",
+   "proposed_mapping": {
+    "canonical_concept": "weighted_average_shares_diluted",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding"
+    ],
+    "positive_conditions": "duration, shares, is_derived=false, value>0",
+    "negative_conditions": "no derived, no EPS-magnitude values"
+   },
+   "conflict_note": "primary tag: 624 auth-less contexts of 8717, 371 with spread >15%.",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:core.fact sample",
+     "locator": "is_derived and value<0 counts per tag",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "As basic record; also decide whether diluted_eps per-share metrics should reference these once available.",
+   "next_reviewer": "Period Engineer, Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-07-operating_lease_rou_asset",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "operating_lease_rou_asset (new; ASC 842, effective periods from 2019)",
+    "statement_role": "balance_sheet",
+    "period_type": "instant",
+    "unit": "USD",
+    "exclusions": [
+     "FinanceLeaseRightOfUseAsset (separate)",
+     "PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAsset* (combined with PP&E; already a candidate for ppe)",
+     "OperatingLeaseRightOfUseAssetAmortizationExpense (duration expense)",
+     "Operating lease liabilities (not asset)"
+    ],
+    "effective_filing_range": "observed earliest end date in sample 2018-03-31; 119 issuers all post-2018"
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:OperatingLeaseRightOfUseAsset",
+     "library_active_companies": 4168,
+     "sample_issuers_auth": 119,
+     "sample_facts_auth": 2380,
+     "nonauth_facts": 2289,
+     "zero_facts": 49,
+     "negative_facts": 0,
+     "unit": "usd (1 cny)",
+     "period": "instant",
+     "custom_or_standard": "standard",
+     "relationship": "exact",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:FinanceLeaseRightOfUseAsset",
+     "library_active_companies": 1449,
+     "sample_issuers_auth": 38,
+     "sample_facts_auth": 392,
+     "relationship": "not_equivalent (finance leases)"
+    },
+    {
+     "tag": "us-gaap:PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization",
+     "library_active_companies": 647,
+     "sample_issuers_auth": 16,
+     "relationship": "not_equivalent / combined with PP&E (library status candidate)"
+    }
+   ],
+   "coexistence": {
+    "Operating vs Finance ROU": "359 contexts, 35 issuers, 0 equal",
+    "Operating ROU vs PPE+FinanceROU combined": "228 contexts, 16 issuers, 0 equal",
+    "Operating ROU vs OperatingLeaseLiabilityNoncurrent": "1,895 contexts, 98 issuers, 37 equal (asset and liability are different balances)",
+    "issuer_counts": "ROU 119 vs lease-liability 117; liability-without-ROU 1",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "company 1113 2019-12-31: OperatingLeaseROU 4.758B vs PP&E+FinanceROU combined 30.17B - combined PP&E line contains no operating ROU"
+    },
+    {
+     "case": "company 604 2024-11-30: OperatingROU 61.1M vs FinanceROU 9.2M - distinct lines"
+    },
+    {
+     "case": "company 1600 2019-03-31: ROU 1,389,731 > Assets 1,111,590 (the only ROU>Assets of 2,309 checked contexts) - candidate filer error or restated basis; do not auto-correct"
+    },
+    {
+     "case": "1 issuer files an operating lease liability tag without any ROU tag (ROU possibly folded into another line, e.g. OtherAssetsNoncurrent) - absent != zero"
+    }
+   ],
+   "rationale": "Single dominant standard tag, instant USD, no negatives, 119/150 sample issuers; no competing alternate tag found in library for operating ROU separate from the finance and PP&E-combined variants.",
+   "alternatives_considered": [
+    "Sum operating + finance ROU into one lease asset: possible later 'total lease assets' concept, not proposed here."
+   ],
+   "proposed_relationship_class": "exact (OperatingLeaseRightOfUseAsset); not_equivalent (Finance, PP&E combined)",
+   "proposed_mapping": {
+    "canonical_concept": "operating_lease_rou_asset",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:OperatingLeaseRightOfUseAsset"
+    ]
+   },
+   "conflict_note": "not measured separately.",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "OperatingLeaseRightOfUseAsset active=4168",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Standardization Lead to approve; Verifier to read balance sheets of 1113, 1600 and the liability-without-ROU issuer.",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-08-interest_paid_cash",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "interest_paid_cash (supplemental cash-flow disclosure; new; cash, not expense)",
+    "statement_role": "cash_flow (supplemental)",
+    "period_type": "duration",
+    "unit": "USD",
+    "exclusions": [
+     "InterestExpense (accrual; concept interest_expense already exists)",
+     "InterestPaidCapitalized (component)",
+     "InterestPaidDiscontinuedOperations (scope-limited)",
+     "DividendsAndInterestPaid (combined; 0 sample issuers)",
+     "ifrs-full InterestPaidClassifiedAs*Activities (not sampled)"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:InterestPaidNet",
+     "library_active_companies": 4060,
+     "sample_issuers_auth": 120,
+     "sample_facts_auth": 4834,
+     "derived_facts": 1816,
+     "negative_facts": 52,
+     "zero_facts": 271,
+     "unit": "usd",
+     "period": "duration (3m 2521, 6m 693, 9m 664, 12m 951)",
+     "relationship": "exact (cash interest paid, net of amounts capitalized)",
+     "precedence": 1,
+     "note": "observed usage 2015-2026 in sample"
+    },
+    {
+     "tag": "us-gaap:InterestPaid",
+     "library_active_companies": 2423,
+     "sample_issuers_auth": 64,
+     "sample_facts_auth": 1876,
+     "derived_facts": 674,
+     "negative_facts": 14,
+     "unit": "usd",
+     "relationship": "exact_predecessor (same concept, older era in sample: ends 2007-2019)",
+     "precedence": 2
+    },
+    {
+     "tag": "us-gaap:InterestPaidCapitalized",
+     "library_active_companies": 231,
+     "sample_issuers_auth": 6,
+     "sample_facts_auth": 105,
+     "relationship": "component / memo"
+    },
+    {
+     "tag": "us-gaap:InterestPaidDiscontinuedOperations",
+     "library_active_companies": 35,
+     "sample_issuers_auth": 2,
+     "relationship": "not_equivalent (scope)"
+    }
+   ],
+   "coexistence": {
+    "InterestPaid vs InterestPaidNet": "298 contexts, 56 issuers, 248 equal, 50 unequal; 63 issuers file both tags in different periods (e.g. company 103: InterestPaid FY2008-2014, Net 2019-2026; 607: 2008-2025 vs 2018-2026)",
+    "Paid/Net vs InterestPaidCapitalized": "30 and 85 contexts, 0 and 3 equal",
+    "InterestPaid vs InterestExpense": "1,208 contexts, 111 equal; 166 of 1,145 with ratio outside 1/3-3x",
+    "InterestPaidNet vs InterestExpense": "2,367 contexts, 169 equal; 386 of 2,336 outside 1/3-3x",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "cash vs expense: company 103 2008-2009: InterestPaid 1.225M vs InterestExpense 4.353M; 2020-10-03..2021-07-02 InterestPaidNet 0 vs InterestExpense 2.6M - cash paid is not interest expense, never substitute"
+    },
+    {
+     "case": "company 1800 2025: InterestPaid 4,629 vs InterestPaidNet 5,870 (H1) - the two cash tags differ in same period (net-of-capitalized or restatement basis)"
+    },
+    {
+     "case": "company 604 2013: InterestPaid 11.999M vs InterestPaidCapitalized 0.443M - capitalized portion is a memo item, not a replacement"
+    },
+    {
+     "case": "52 negative InterestPaidNet facts (and many is_derived=true YTD-subtracted quarter rows: 1,816 derived of 4,834) - cash-flow YTD subtraction is allowed for additive flows, but negatives need review"
+    }
+   ],
+   "rationale": "Two same-concept tags used in different eras by the same issuers (InterestPaid then InterestPaidNet); 63 issuers file both in different periods, and where both exist in the same context 83% are equal. Treat as one concept with era-based precedence, but verify the capitalized-interest difference. Note not all issuers disclose (supplemental, often a note); 'no tag' != zero.",
+   "alternatives_considered": [
+    "Map to interest_expense: rejected (cash vs accrual).",
+    "Use InterestPaid as always-higher precedence: rejected, the newer tag is the dominant current one."
+   ],
+   "proposed_relationship_class": "exact (InterestPaidNet and InterestPaid, with explicit net-of-capitalized caveat); component (Capitalized); not_equivalent (InterestExpense, Discontinued)",
+   "proposed_mapping": {
+    "canonical_concept": "interest_paid_cash",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:InterestPaidNet",
+     "us-gaap:InterestPaid"
+    ],
+    "negative_conditions": "never fall back to InterestExpense"
+   },
+   "conflict_note": "InterestPaid: 121 auth-less of 1987 (19 >15%); InterestPaidNet: 101 of 4882 (22 >15%).",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "InterestPaidNet active=4060; InterestPaid active=2423",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Standardization Lead: confirm era precedence; Verifier to read cash-flow supplemental notes for 1800 and 103; check the taxonomy status of InterestPaid (NOT_RUN).",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-09-income_taxes_paid_cash",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concept": "income_taxes_paid_cash (supplemental cash-flow disclosure; new; cash, not expense)",
+    "statement_role": "cash_flow (supplemental)",
+    "period_type": "duration",
+    "unit": "USD",
+    "exclusions": [
+     "IncomeTaxExpenseBenefit (concept income_tax_expense exists)",
+     "ifrs-full IncomeTaxesPaid* variants (not sampled)",
+     "DividendsAndInterestPaid"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:IncomeTaxesPaidNet",
+     "library_active_companies": 3749,
+     "sample_issuers_auth": 110,
+     "sample_facts_auth": 3545,
+     "derived_facts": 1271,
+     "negative_facts": 303,
+     "negative_issuers": 50,
+     "zero_facts": 357,
+     "unit": "usd",
+     "period": "duration",
+     "relationship": "exact (cash taxes paid net of refunds)",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:IncomeTaxesPaid",
+     "library_active_companies": 2458,
+     "sample_issuers_auth": 70,
+     "sample_facts_auth": 2162,
+     "derived_facts": 777,
+     "negative_facts": 45,
+     "negative_issuers": 17,
+     "unit": "usd",
+     "relationship": "exact_predecessor/alternate (gross or unspecified of refunds; basis not verified)",
+     "precedence": 2
+    }
+   ],
+   "coexistence": {
+    "Paid vs Net": "234 contexts, 50 issuers, 192 equal, 42 unequal; 59 issuers file both in different periods (e.g. 604: Paid 2008-2017, Net 2015-2025; 612: Paid 2007-2025, Net 2023-2025)",
+    "Paid vs IncomeTaxExpenseBenefit": "1,952 contexts, 133 equal",
+    "Net vs IncomeTaxExpenseBenefit": "3,135 contexts, 214 equal",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "company 612 FY2025: IncomeTaxesPaid 211.2M vs IncomeTaxesPaidNet 221.1M same period - the two tags are not interchangeable on basis"
+    },
+    {
+     "case": "company 1051 Q (2025-05-01..07-31): Paid 250,000 vs Net 24,000"
+    },
+    {
+     "case": "company 103 FY2008: IncomeTaxesPaid 1.156M vs IncomeTaxExpenseBenefit -28.8M - cash and expense opposite in sign; never substitute expense for paid"
+    },
+    {
+     "case": "303 negative Net facts across 50 issuers (net refunds) - negative is a legitimate reported refund but must be flagged, not abs()'d"
+    }
+   ],
+   "rationale": "Parallel to interest paid: two cash tags, era-based use, 59 issuers file both. The Net tag represents taxes paid net of refunds; whether the older tag is gross is not verified here (taxonomy label NOT_RUN).",
+   "alternatives_considered": [
+    "Use tax expense when paid missing: rejected (accrual vs cash)."
+   ],
+   "proposed_relationship_class": "exact (IncomeTaxesPaidNet); alternate with unverified basis (IncomeTaxesPaid); not_equivalent (IncomeTaxExpenseBenefit)",
+   "proposed_mapping": {
+    "canonical_concept": "income_taxes_paid_cash",
+    "combination_mode": "first_match",
+    "priority": [
+     "us-gaap:IncomeTaxesPaidNet",
+     "us-gaap:IncomeTaxesPaid"
+    ],
+    "negative_conditions": "never fall back to tax expense"
+   },
+   "conflict_note": "IncomeTaxesPaid: 78 auth-less of 2223 (22 >15%); IncomeTaxesPaidNet: 104 of 3612 (64 >15%).",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "IncomeTaxesPaidNet active=3749; IncomeTaxesPaid active=2458",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Verifier: read cash-flow supplemental notes for 612 and 1051; Standardization Lead to confirm basis wording.",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  },
+  {
+   "decision_id": "tagmapper-20261017-10-shares_issued_authorized",
+   "task_id": "tagmapper-20261017-10-gaps",
+   "kind": "mapping",
+   "status": "proposed",
+   "reviewed_by": null,
+   "proposed_by": "scrooner-tag-mapper (Claude) run 2026-10-17",
+   "policy_version": "data-team-pack-draft (no adopted release policy)",
+   "code_revision": null,
+   "created_at": "2026-10-17T00:00:00Z",
+   "rollback_ref": null,
+   "scope": {
+    "proposed_concepts": [
+     "common_shares_issued",
+     "common_shares_authorized",
+     "preferred_shares_issued",
+     "preferred_shares_authorized"
+    ],
+    "existing": "shares_outstanding (id 16/350) is already approved on us-gaap:CommonStockSharesOutstanding and dei:EntityCommonStockSharesOutstanding - NOT changed; outstanding stays distinct from issued and authorized",
+    "statement_role": "balance_sheet (parenthetical)",
+    "period_type": "instant",
+    "unit": "shares",
+    "exclusions": [
+     "EntityCommonStockSharesOutstanding (cover page, different date)",
+     "Temporary equity share tags",
+     "ExcessStock* tags",
+     "SharesIssued/SharesOutstanding generic tags (mixed use)",
+     "StockIssuedDuringPeriodShares* (flows)",
+     "ShareBasedCompensation...SharesAuthorized (plan reservations)",
+     "StockRepurchaseProgram...Authorized"
+    ]
+   },
+   "candidates": [
+    {
+     "tag": "us-gaap:CommonStockSharesIssued",
+     "library_active_companies": 4405,
+     "sample_issuers_auth": 127,
+     "sample_facts_auth": 4551,
+     "relationship": "exact (issued)",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:CommonStockSharesAuthorized",
+     "library_active_companies": 4337,
+     "sample_issuers_auth": 128,
+     "sample_facts_auth": 4779,
+     "relationship": "exact (authorized)",
+     "precedence": 1
+    },
+    {
+     "tag": "us-gaap:CommonStockSharesOutstanding",
+     "library_active_companies": 4225,
+     "sample_issuers_auth": 128,
+     "sample_facts_auth": 4382,
+     "relationship": "already approved (shares_outstanding)",
+     "precedence": "unchanged"
+    },
+    {
+     "tag": "us-gaap:PreferredStockSharesIssued",
+     "library_active_companies": 3450,
+     "sample_issuers_auth": 108,
+     "sample_facts_auth": 3128,
+     "zero_facts": 2653,
+     "relationship": "exact (issued)"
+    },
+    {
+     "tag": "us-gaap:PreferredStockSharesAuthorized",
+     "library_active_companies": 4004,
+     "sample_issuers_auth": 124,
+     "sample_facts_auth": 4103,
+     "relationship": "exact (authorized)"
+    },
+    {
+     "tag": "us-gaap:PreferredStockSharesOutstanding",
+     "library_active_companies": 3264,
+     "sample_issuers_auth": 104,
+     "sample_facts_auth": 2815,
+     "zero_facts": 2341,
+     "relationship": "exact (outstanding; no concept yet)"
+    },
+    {
+     "tag": "us-gaap:SharesIssued",
+     "library_active_companies": 640,
+     "sample_issuers_auth": 15,
+     "relationship": "generic; ambiguous class; hold"
+    },
+    {
+     "tag": "us-gaap:SharesOutstanding",
+     "library_active_companies": 512,
+     "sample_issuers_auth": 9,
+     "relationship": "generic; hold"
+    }
+   ],
+   "coexistence": {
+    "Issued vs Outstanding (common)": "4,017 contexts, 123 issuers; 3,245 equal (81%), 772 unequal (treasury shares)",
+    "Issued vs Authorized": "4,267 contexts, 4 equal",
+    "Outstanding vs Authorized": "4,048 contexts, 3 equal",
+    "Outstanding vs dei Entity...Outstanding": "144 contexts, 109 equal, 35 unequal (cover-page date differs)",
+    "Preferred Issued vs Outstanding": "2,504 contexts, 2,500 equal",
+    "Preferred Issued vs Authorized": "2,998 contexts, 21 equal",
+    "issuer_counts": "issued 127, outstanding 128, authorized 128; issued-without-outstanding 4, outstanding-without-issued 5, authorized-without-issued 7",
+    "coexistence_is_not_equivalence": true
+   },
+   "counterexamples": [
+    {
+     "case": "company 103 2009-10-02: Issued 177.9M vs Outstanding 172.8M vs Authorized 525M - three different, valid quantities; equality only when no treasury stock"
+    },
+    {
+     "case": "company 5773 2024-09-30: Issued 2.660B < Outstanding 2.960B (7 of 4,017 contexts have issued<outstanding) - likely multi-class or data conflict"
+    },
+    {
+     "case": "company 1851 2021-06-30: Issued 370.1M > Authorized 150M (1 of 4,267 contexts) - impossible on one class; multi-class or error"
+    },
+    {
+     "case": "company 1051 2023-07-31: Outstanding 8.503M vs dei EntityCommonStockSharesOutstanding 4.929M - balance-sheet and cover-page counts differ in date and may differ in class scope"
+    },
+    {
+     "case": "multi-class issuers: Company Facts exposes no class dimension; only 1 context had more than one distinct authoritative value for issued/outstanding, i.e. class detail is likely collapsed or lost upstream - dual-class share totals cannot be assumed"
+    }
+   ],
+   "rationale": "Issued, outstanding and authorized are three distinct balance-sheet quantities (issued>=outstanding by treasury stock; authorized is a legal cap). Keep four new concepts separate and leave shares_outstanding alone. Never infer outstanding = issued, or issued from authorized. Preferred counts are mostly reported zeros (2,653 of 3,128 issued) - preserve reported zero, do not interpret as no authorization.",
+   "alternatives_considered": [
+    "Single 'shares' concept with a kind field: rejected (hides issued vs outstanding distinction).",
+    "Use dei cover-page count as outstanding fallback: already existing policy (approved), untouched."
+   ],
+   "proposed_relationship_class": "exact for each tag-to-own-concept; not_equivalent across the three kinds",
+   "proposed_mapping": {
+    "canonical_concepts": {
+     "common_shares_issued": [
+      "us-gaap:CommonStockSharesIssued"
+     ],
+     "common_shares_authorized": [
+      "us-gaap:CommonStockSharesAuthorized"
+     ],
+     "preferred_shares_issued": [
+      "us-gaap:PreferredStockSharesIssued"
+     ],
+     "preferred_shares_authorized": [
+      "us-gaap:PreferredStockSharesAuthorized"
+     ]
+    },
+    "combination_mode": "first_match"
+   },
+   "conflict_note": "Issued: 166 auth-less of 4652 (101 >15%); Outstanding: 211 of 4524 (106 >15%); Authorized: 104 of 4810 (99 >15%).",
+   "impact": {
+    "affected_issuers": null,
+    "affected_periods": null,
+    "affected_cells": null,
+    "downstream_metrics": null
+   },
+   "evidence": [
+    {
+     "ref": "db:analytics.sec_tag_library",
+     "locator": "CommonStockSharesIssued active=4405, Authorized active=4337, Outstanding approved",
+     "source_type": "database",
+     "source_hash": null
+    }
+   ],
+   "next_action": "Standardization Lead: confirm four concepts and multi-class policy; Verifier reads cover/balance parenthetical for 5773, 1851, 1051.",
+   "next_reviewer": "Standardization Lead, then Data Verifier",
+   "checks": [
+    {
+     "name": "sample_extract_150_companies",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/extract.py"
+    },
+    {
+     "name": "coexistence_and_counterexamples_python_over_extract",
+     "passed": true,
+     "artifact_ref": "/private/tmp/claude-501/-Users-vikash-scrooner/3ef3baa0-7b12-4599-83b3-29dfaa6892d7/scratchpad/an.py"
+    }
+   ],
+   "unresolved_questions": [
+    "Sample of 150 companies supports a proposal, not a global rule; full-population coexistence check (CLAUDE.md rule 3) is NOT_RUN.",
+    "Dimensional share unobservable: core.fact has no dimension column and Company Facts strips dimensional facts; custom (issuer-extension) tags are absent from core.concept/sec_tag_library (only standard taxonomies stored). Original filing R-files / FSDS needed.",
+    "Taxonomy version per fact not stored in core.concept; label/balance/deprecation status NOT_RUN (needs taxonomy files).",
+    "Original filing statement rows NOT inspected (no SEC fetch in this read-only run); presentation line identity is inferred from tag semantics and stored values only.",
+    "Sample includes pre-2015 periods (history gate: pre-2015 is not current display data); counts are over all stored periods unless stated."
+   ],
+   "sample": {
+    "seed": "tagmapper-20261017",
+    "n_companies": 150,
+    "sample_sql": "select id from core.company where status='active' and sic_code is not null order by md5(id::text||%s), id limit 150  -- %s = 'tagmapper-20261017'",
+    "fact_sql": "select f.id,f.company_id,c.taxonomy,c.tag,u.unit_name,p.period_type,p.start_date,p.end_date,p.fiscal_year,p.fiscal_period,f.filing_id,f.value,f.is_authoritative,f.is_derived from core.fact f join core.concept c on c.id=f.concept_id join core.period p on p.id=f.period_id join core.unit u on u.id=f.unit_id where f.company_id=any(%s) and c.taxonomy in ('us-gaap','dei') and c.tag=any(%s)  -- %s = 10-company batches of the 150 sample ids; tag list in sample.pkl['tags']",
+    "note": "Authoritative facts only (is_authoritative=true) for coexistence; non-authoritative counts reported separately. Context = (company, period start, period end). Sample is a 150-company, seed-fixed random draw (Healthcare 30, ConsDisc 17, Industrials 17, Tech 16, Financials 15, Real Estate 15, Other 14, ...): it supports a proposal, not a global rule."
+   }
+  }
+ ]
+}
