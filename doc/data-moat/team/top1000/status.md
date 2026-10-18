@@ -17,7 +17,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
 | S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | done (DATA-INFERRED only) |
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | done (wrong values FILING-CHECKED) |
-| S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | running |
+| S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | done (wrong values FILING-CHECKED) |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | running |
 | S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | running |
 | S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | todo |
@@ -134,7 +134,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S011 | PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S013 | HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -174,6 +174,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: customer funds on balance sheet (CME performance bonds, ADP client funds) make current ratio / ROA meaningless | S012 | CME, ADP | DATA-INFERRED | open (Sector Analyst) |
 | NEW: debt shown 0 / stale when debt is under UnsecuredLongTermDebt or convertible notes (CME 0 vs 3,424.2M; NET 0 from 2019 vs 3,270M converts) | S012 | CME, NET | FILING-CHECKED | open (with total_debt family) |
 | stale values (GLW capex 2020, current tag PaymentsForCapitalImprovements; CME shares 66.6M from 2010 vs 359.6M; ADP op income 2014; LOW interest 2011; SBUX gross profit 2020; ABNB capex/D&A) | S012 | 6 | FILING-CHECKED | open (stale family) |
+| NEW: net income falls back to ProfitLoss (incl. NCI) when NetIncomeLoss is untagged (FCX TTM ~42% overstated; Q1-2026 1,387M vs 881M) | S013 | FCX (+APH, CEG, EQIX, BNY inferred) | FILING-CHECKED (FCX) | open (Standardization: net income = attributable to parent; links the 1,189-row ProfitLoss path in PLAN.md) |
+| NEW: ASC 606 subset used as revenue at miners/utilities (CEG Q2 5,843M vs 7,504M; FCX 25,186M vs 25,915M FY2025; DUK Q1 8,995M vs 9,178M) | S013 | CEG, FCX, DUK | FILING-CHECKED | open (with AXP/COF 606-component family) |
+| NEW: tiny bare LongTermDebt fact outranks face debt tags (MAR 23M vs 16,915M) | S013 | MAR | FILING-CHECKED | open (total_debt family) |
+| NEW: capex filed only per segment (FCX Q2) | S013 | FCX | FILING-CHECKED | open |
+| NEW: smaller: Q4 DPS tag mismatch annual vs quarterly (MAR); single working-capital cash-flow line (MAR); CostsAndExpenses opex-or-not under one gap reason; HCA EBITDA derivable from pretax+interest+D&A; TT cash includes restricted cash | S013 | MAR, HCA, TT | mixed | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
