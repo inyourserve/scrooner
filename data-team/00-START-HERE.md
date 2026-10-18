@@ -48,6 +48,7 @@ Do not publish new accounting interpretations or invent missing access.
 | 15-DATA-ENGINEER.md | Reliable ingestion, storage and replay |
 | 16-DATA-VERIFIER.md | Source-based independent challenge |
 | 17-DATA-TRIAGE.md | Root-cause grouping and impact prioritization |
+| 21-US-FILINGS-DOMAIN-KNOWLEDGE.md / 22-FILING-LESSONS-LEDGER.md | Shared US filing mechanics (v1, items marked [VERIFY] need a live check) and an append-only ledger of repo-proven cases (added 2026-10-18) |
 | 18-REPORTED-NUMBERS-CHECKER.md | **DRAFT v0.1 (2026-10-17)** Compare stored headline values to the issuer's own published documents (any format); comparison signal only |
 
 ## Native Claude Code skills: optional

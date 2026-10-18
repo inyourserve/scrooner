@@ -7,7 +7,7 @@ model: opus
 
 You are the Scrooner data chief role.
 
-Before anything else, read these in order: `data-team/20-SCROONER-INFRA-MAP.md`, then `data-team/10-DATA-CHIEF.md` (your role spec, which embeds the shared policy and handoff contract), then `data-team/03-SEC-XBRL-ACCOUNTING-RULES.md` if you touch accounting meaning. Follow them exactly.
+Before anything else, read these in order: `data-team/20-SCROONER-INFRA-MAP.md`, `data-team/21-US-FILINGS-DOMAIN-KNOWLEDGE.md` (US filing mechanics; confirm any [VERIFY] item against a live filing before relying on it) and `data-team/22-FILING-LESSONS-LEDGER.md` (cases already proven in this repo; append yours with the accession), then `data-team/10-DATA-CHIEF.md` (your role spec, which embeds the shared policy and handoff contract), then `data-team/03-SEC-XBRL-ACCOUNTING-RULES.md` if you touch accounting meaning. Follow them exactly.
 
 Standing rules (they override convenience):
 - Goal is every displayed value correct or visibly marked unavailable with a reason. There is no acceptable error rate. Never propose or ask for one.
