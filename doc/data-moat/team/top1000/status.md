@@ -13,7 +13,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | done (DATA-INFERRED only) |
 | S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | done (DATA-INFERRED only) |
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
-| S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | running |
+| S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | done (7 wrong values FILING-CHECKED) |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
 | S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | running |
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | todo |
@@ -123,7 +123,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | false 'pre_revenue_biotech_pharma' blank reason on large pharma (MRK, ABBV, AMGN, LLY) | S001-S005 | 4 | DATA-INFERRED | open |
 | ratios shown on negative equity (PM, ABBV, DELL) | S003-S005 | 3 | DATA-INFERRED | open |
 | GE PaymentsOfOrdinaryDividends not mapped; employee_count tag filed by none of S004 | S004 | GE; 10 | DATA-INFERRED | open |
-| total_debt composition (S001 adds: LLY base = current only 7.05B vs 54.9B; NVDA/AVGO/TSLA base vs resolved disagree. S005 adds: DELL/TMO double count, RTX 229M vs 37.4B, GEV 63M vs 2.8B, WFC resolved = short-term only 25.2B vs 207.3B; unmapped LongTermDebtAndCapitalLeaseObligations family, ConvertibleDebtNoncurrent) | S001, S003, S005 | 17 of 30 | DATA-INFERRED | open |
+| total_debt composition (S001 adds: LLY base = current only 7.05B vs 54.9B; NVDA/AVGO/TSLA base vs resolved disagree. S005 adds: DELL/TMO double count, RTX 229M vs 37.4B, GEV 63M vs 2.8B, WFC resolved = short-term only 25.2B vs 207.3B; unmapped LongTermDebtAndCapitalLeaseObligations family, ConvertibleDebtNoncurrent) | S001, S003, S005, S009 | 19+ of 40 (S009 adds SCHW 22,669M vs 37,114M, UBER double count 14,720M vs 12,723M) | DATA-INFERRED | open |
 | bank/broker revenue from provisional gross-interest tag instead of RevenuesNetOfInterestExpense (WFC, GS, MS; MS 15.9B vs 21.3B) | S004, S005 | BAC, WFC, GS, MS | DATA-INFERRED | open (fix-register #1) |
 | interest-expense / D&A tag switches leave latest values stuck (TMO gross margin 2019, PANW debt FY2023, RTX, MS, WFC) | S005 | 6 of 10 | DATA-INFERRED | open |
 | GS interest income stored as a 4.4B component vs 22.0B total; GS NII -59.2B (known class) | S005 | GS | DATA-INFERRED | open |
@@ -132,7 +132,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006, S007, S008 | ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S009 | CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -150,6 +150,13 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: capex tag drift (VZ PaymentsToAcquireOtherProductiveAssets unmapped -> capex/FCF stop at 2019; COP stops 2022, custom tag) | S007 | VZ, COP | DATA-INFERRED | open |
 | NEW: asset-manager template | S007 | BLK (28 cells) | DATA-INFERRED | open (Sector Analyst) |
 | NEW: combined accounts-and-notes receivable line | S007 | PEP | DATA-INFERRED | open |
+| NEW: proxy net income filed in thousands stored as dollars (SCHW base net income FY21-25 1000x small, $8.85M); resolved falls back to 'available to common' (8,417M vs filed 8,852M) | S009 | SCHW | FILING-CHECKED | open (with proxy-beats-10-K family) |
+| NEW: no debt line -> should be a reported/explicit zero, 16 cells blank incl. zero_debt | S009 | ISRG | FILING-CHECKED | open (Standardization zero-borrowings rule E1/E2) |
+| NEW: face-statement tags unmapped (BA interest-and-debt expense, inventory; ETN receivables; UBER cost of revenue excl. D&A; SCHW interest revenue) | S009 | BA, ETN, UBER, SCHW (22 cells) | FILING-CHECKED | open (Tag Mapper) |
+| NEW: equity includes noncontrolling interest (T 15,990M) -> ROE, P/B skewed | S009 | T | FILING-CHECKED | open |
+| NEW: shareholder-returns blank at non-dividend payers (should use buybacks only) | S009 | NOW, UBER | DATA-INFERRED | open |
+| D&A only under company-specific tags | S009 | ISRG, ACN, SCHW | FILING-CHECKED | open (with D&A family) |
+| stale: ACN share count from 2010; ETN operating income FY2019 (no subtotal presented) | S009 | ACN, ETN | FILING-CHECKED | open |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
