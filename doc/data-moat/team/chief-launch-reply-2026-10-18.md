@@ -1,0 +1,24 @@
+# Data Chief: launch-in-days answer (read-only, files only, no DB)
+
+Evidence read: doc 22 (FSDS row), doc 32b (FDIC), doc 33 Stage 1, doc 36 (filing types), PLAN.md, doc 56. grep of pipeline/src: no `fdic` module exists (measured: zero hits). Nothing queried.
+
+## 1. FSDS
+Why not worked: doc 22 judged FSDS "redundant with companyfacts, second-opinion cross-check" (a 2026-08-17 judgement, before the coverage audit). Doc 56 (2026-10-17) reversed that using one downloaded quarter (2025q4): sub/pre/num, 520,030 face lines, 9.2% custom tags, num.segments dimensional column. That is a single-quarter measurement.
+Deferring to step 7 is still right for "close blanks", wrong as a pure "later". Reason (measured, doc 56): only 61 mapped-tag cells are empty, so blanks are vocabulary/template/period-conflict, not missing source data. FSDS reuses the same XBRL values, so it does not fill a cell companyfacts lacks (assumption, consistent with doc 22; not tested for older years).
+Would close: nothing directly in days. Helps (a) exact PROVEN_ABSENT evidence (replaces HTML probe), (b) ranking catalog lines, (c) independent reconciliation of our facts vs SEC's own normalization, (d) later segment data. Would not close: Q4 conflicts, bank lines mapped nowhere, or custom-tag lines (still need mapping).
+Cheapest safe pilot (proposal): download 2025q4 zip to local files, outside the DB; load only sub+pre filtered to our 10-K/10-Q filers and 10-K face statements (BS/IS/CF) into a separate scratch schema `fsds_scratch`, or just parquet/CSV; estimate ~tens of MB (the zip is 66-79 MB; compact face-line rows are an unmeasured estimate, doc 56 guessed ~1.5M rows for 3 years). Budget cap 500 MB, drop after report. Do it only as a one-person side task; do NOT block launch.
+
+## 2. FDIC BankFind
+Measured (doc 32b): public no-auth API, live-pulled for JPM Bank CERT 628 with NIMY, EEFFR, RBCT1J, NPERFV, LNATRESR. Closes bank blanks in principle: NIM, efficiency ratio, Tier 1, NPL, reserves/loans. Not built (no module). Crosswalk problem (doc 32b/33): FDIC keys by bank CERT, not holding-company CIK; bank holding companies often have several charters or none FDIC-insured; FFIEC NIC hierarchy gives BHC-to-charter. Doc 33 says check 10-K disclosure first. Whether our bank CIKs map is NOT measured.
+Smallest launch-safe slice: top ~30-50 banks by size only, hand-verified crosswalk (manual curation accepted by doc 33 for small sets), 4 metrics (NIM, efficiency ratio, Tier 1, NPL), shown as "regulatory (FDIC), bank-subsidiary level" never stored as a core.fact value and clearly labeled as charter-level, not consolidated holding company. Caveat: decisions.md locks SEC as the only source of stored values and FDIC as a comparator; showing FDIC metrics as a labeled sector metric needs a founder policy exception. Human: bank accounting reviewer.
+
+## 3. Filing types not used (doc 36, doc 22)
+Measured: 10-K/A and 10-Q/A are in FORM_ALLOWLIST; Stage 2f `restatements.py` supersedes against originals. So amendments are ingested; the LGND error is a labeling error inside a 10-K/A, a detection problem, not a missing form. R-files/FilingSummary are already used (filing_line_evidence.py) for applicability, for only 3 reports per company. FSDS: see 1. Form 15: partial, used for delisting. 8-K items are captured; EX-99.1 earnings-release text is not parsed (assumption: not in doc 36 as extracted; useful for the Reported-Numbers Checker, an independent check, slow; not for launch). NT 10-K/10-Q: not in my reading of doc 36; would be a freshness reason ("late filer"), cheap, low priority; unverified. XBRL calculation/presentation linkbases: not used (no hits); would add sum-identity checks and face order (the FSDS pre table gives presentation order) , defer.
+Cleanest gain for days: code detectors for mislabeled-period and full-year-under-quarter errors on amendments, not new forms.
+
+## 4. Re-rank for days-to-weeks
+Pull forward (1-3 days): wrong-value fix (authoritative copy wins) + weighted-average reprocess; fresh snapshot/stuck nightly; every blank gets a displayed reason (PLAN launch step 4) ; metric gaps in the 33 consumed concepts (EBITDA inputs 7,817, buyback inputs 5,652, incomplete numerator 23,790); Verifier launch sample.
+Ship at launch labeled: bank page with "not applicable: banks do not report gross profit" instead of a blank (template applicability, a displayed reason), plus the 30-50-bank FDIC slice only if founder accepts the policy exception and crosswalk is hand-verified; otherwise "N/A for banks" now.
+Cut/defer: the 10 face lines (feed no metric, measured 45 concepts unused), FSDS load, EX-99.1, calc linkbases, NT forms, long-tail tags, segments.
+"No blanks" must read "no unexplained blanks"; filling an unreported cell breaks "numbers correct".
+Founder: launch date, wrong-value ceiling, FDIC exception, reviewer.
