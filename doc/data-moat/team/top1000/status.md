@@ -169,3 +169,6 @@ All six wrong-value families CONFIRMED against original SEC R-pages:
 Recommended next step for the fix owner: full-population dry-run of the total_debt rule.
 
 Note: shard workers launched as general-purpose agents get their sec.gov fetches blocked by the permission classifier; the scrooner-data-verifier agent type can fetch. Filing checks therefore go to verifier passes (VERIFY-W#), and shard workers stay DATA-INFERRED.
+
+## Priority flag for the fix owner (2026-10-18)
+"Latest 10-Q filed but 0 facts loaded" is now 5 of 80 companies checked (KO, C, NEE, WELL, ABT); C is missing two quarters. If that rate holds, about 60 of the top 1,000 show a stale latest quarter. It is an ingestion/normalize gap, not a mapping one, so one engineering fix covers all of them. A population count (2026 10-Q/10-K filings in core.filing with no core.fact rows, top-1000 ids) timed out under the 55s MCP cap; it needs a chunked run from a session with direct DB access.
