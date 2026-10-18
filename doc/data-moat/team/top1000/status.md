@@ -6,7 +6,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 |---|---|---|---|---|
 | S000 | ranking audit (market-cap outliers) | | | done: 10 wrong market caps FILING-CHECKED, 8 dropped, 14 added |
 | S001 | NVDA AAPL GOOG MSFT AMZN META AVGO TSLA AKTX LLY | 86.8 | 93 | done (DATA-INFERRED only) |
-| S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | running |
+| S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | done (wrong values FILING-CHECKED; TBLA excluded) |
 | S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | done (DATA-INFERRED only: sec.gov blocked) |
 | S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | done (DATA-INFERRED only) |
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | done (DATA-INFERRED only) |
@@ -125,7 +125,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | false 'pre_revenue_biotech_pharma' blank reason on large pharma (MRK, ABBV, AMGN, LLY) | S001-S005 | 4 | DATA-INFERRED | open |
 | ratios shown on negative equity (PM, ABBV, DELL) | S003-S005 | 3 | DATA-INFERRED | open |
 | GE PaymentsOfOrdinaryDividends not mapped; employee_count tag filed by none of S004 | S004 | GE; 10 | DATA-INFERRED | open |
-| total_debt composition (S001 adds: LLY base = current only 7.05B vs 54.9B; NVDA/AVGO/TSLA base vs resolved disagree. S005 adds: DELL/TMO double count, RTX 229M vs 37.4B, GEV 63M vs 2.8B, WFC resolved = short-term only 25.2B vs 207.3B; unmapped LongTermDebtAndCapitalLeaseObligations family, ConvertibleDebtNoncurrent) | S001, S003, S005, S009 | 19+ of 40 (S009 adds SCHW 22,669M vs 37,114M, UBER double count 14,720M vs 12,723M) | DATA-INFERRED | open |
+| total_debt composition (S001 adds: LLY base = current only 7.05B vs 54.9B; NVDA/AVGO/TSLA base vs resolved disagree. S005 adds: DELL/TMO double count, RTX 229M vs 37.4B, GEV 63M vs 2.8B, WFC resolved = short-term only 25.2B vs 207.3B; unmapped LongTermDebtAndCapitalLeaseObligations family, ConvertibleDebtNoncurrent) | S001-S003, S005, S009, S012, S013 | 25+ (S002 adds MU 2,792M vs 5,179M; WMT 39,932M vs 50,411M short-term borrowings omitted) of 40 (S009 adds SCHW 22,669M vs 37,114M, UBER double count 14,720M vs 12,723M) | DATA-INFERRED | open |
 | bank/broker revenue from provisional gross-interest tag instead of RevenuesNetOfInterestExpense (WFC, GS, MS; MS 15.9B vs 21.3B) | S004, S005 | BAC, WFC, GS, MS | DATA-INFERRED | open (fix-register #1) |
 | interest-expense / D&A tag switches leave latest values stuck (TMO gross margin 2019, PANW debt FY2023, RTX, MS, WFC) | S005 | 6 of 10 | DATA-INFERRED | open |
 | GS interest income stored as a 4.4B component vs 22.0B total; GS NII -59.2B (known class) | S005 | GS | DATA-INFERRED | open |
@@ -179,6 +179,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: tiny bare LongTermDebt fact outranks face debt tags (MAR 23M vs 16,915M) | S013 | MAR | FILING-CHECKED | open (total_debt family) |
 | NEW: capex filed only per segment (FCX Q2) | S013 | FCX | FILING-CHECKED | open |
 | NEW: smaller: Q4 DPS tag mismatch annual vs quarterly (MAR); single working-capital cash-flow line (MAR); CostsAndExpenses opex-or-not under one gap reason; HCA EBITDA derivable from pretax+interest+D&A; TT cash includes restricted cash | S013 | MAR, HCA, TT | mixed | open |
+| NEW: quarterly per-share dividend tagged on the full-year context (V $0.59, 0001403161-25-000089 R8) -> derived Q4 -1.18, yield 0.19% vs ~0.63% | S002 | V | FILING-CHECKED | open (Period Engineer: never derive per-share by subtraction) |
+| NEW: EPS filed only per share class | S002 | V (11 cells) | FILING-CHECKED | open (multi-class family) |
+| NEW: annual dividend declared in Q1 -> latest payout ratio 0% | S002 | WMT | FILING-CHECKED | open |
+| NEW: resolver switched latest-quarter revenue from total revenues to net sales (WMT 187,937M -> 186,100M) | S002 | WMT | DATA-INFERRED | open |
+| NEW: predecessor registrant missing after holding-company reorganization (XOM old CIK 34088 not in core.company, 46 period gaps) | S002 | XOM | DATA-INFERRED | open (merge with predecessor-CIK family) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
