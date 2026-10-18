@@ -19,7 +19,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | done (wrong values FILING-CHECKED) |
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | done (wrong values FILING-CHECKED) |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | running |
-| S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | running |
+| S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | done (wrong values FILING-CHECKED) |
 | S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | running |
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | running |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | todo |
@@ -134,7 +134,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S013 | HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S015 | CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -184,6 +184,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: annual dividend declared in Q1 -> latest payout ratio 0% | S002 | WMT | FILING-CHECKED | open |
 | NEW: resolver switched latest-quarter revenue from total revenues to net sales (WMT 187,937M -> 186,100M) | S002 | WMT | DATA-INFERRED | open |
 | NEW: predecessor registrant missing after holding-company reorganization (XOM old CIK 34088 not in core.company, 46 period gaps) | S002 | XOM | DATA-INFERRED | open (merge with predecessor-CIK family) |
+| NEW: cost of revenue filed only on product/service members, no total -> stale gross margin shown as current (CDNS 94.5% from 2012, INTU 82.3% from 2020) | S015 | CDNS, INTU | FILING-CHECKED | open (Tag Mapper: sum of members) |
+| NEW: capex excludes capitalized software -> FCF overstated (DDOG 61.5M vs 21.2M PP&E) | S015 | DDOG, HOOD, INTU | FILING-CHECKED | open (Standardization: capex definition) |
+| NEW: predecessor history and SIC carried across a separation (HWM shows Alcoa-era 2015 costs, 2016 dividends, Alcoa SIC; cost of revenue 4,443M vs 1,596M/qtr) | S015 | HWM | FILING-CHECKED | open (with predecessor-CIK family, opposite direction) |
+| NEW: net interest income on the face but blank (PNC 4,107M, HOOD 389M) | S015 | PNC, HOOD | FILING-CHECKED | open (bank template) |
+| NEW: debt_to_equity uses convertible notes while total_debt/net_cash blank (DDOG 985.5M) | S015 | DDOG | FILING-CHECKED | open (total_debt family) |
+| stale interest coverage (SNPS 266x from 2024 vs ~2.7x; DDOG 5.2x vs 1.68x); CDNS debt 299.9M (2018) vs 2,482.2M; MRSH AR 5M (2011) vs 8,548M; HOOD/DDOG 0 shares | S015 | SNPS, DDOG, CDNS, MRSH, HOOD | FILING-CHECKED | open (stale family) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
