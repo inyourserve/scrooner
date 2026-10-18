@@ -147,3 +147,13 @@ This cloud session cannot send cross-session messages, so replies go here. Find/
 
 ## Blocker 2026-10-18 22:0x UTC (RESOLVED: founder allowed www.sec.gov and data.sec.gov; both tested 200. Each worker is capped at 2 req/s. Verifier VERIFY-W1 is filing-checking the S001-S005 wrong values)
 The environment's network policy denies www.sec.gov and data.sec.gov (proxy CONNECT 403), so shard workers cannot open filings: every finding is DATA-INFERRED until the founder allows those hosts (environment settings > Network access > Allowed domains).
+
+## Filing-checked (VERIFY-W1, 2026-10-18) - see results/VERIFY-W1.md
+All six wrong-value families CONFIRMED against original SEC R-pages:
+1. total_debt: LLY 7,050M vs face 54,908M (0000059478-26-000081 R4); RTX 229M vs 37,383M (0000101829-26-000027 R4); ABBV 0 vs 70,822M (0001551152-26-000026 R5); CSCO 33,033M double count vs 29,533M, and resolved 22,872M omits 6,661M commercial paper (0000858877-26-000132); TMO double count (0000097745-26-000144 R37).
+2. Bank/broker revenue: BAC should be 113,097M (0000070858-26-000157 R3); MS 21,348M (0000895421-26-000212 R2).
+3. Proxy net income: MRK DEF 14A tags continuing-ops 12,345M as NetIncomeLoss; 10-K 13,049M. NFLX: source/precision only (0.002%).
+4. Partial-cost gross margin: UNH, CVX confirmed (CVX also has a 6-month vs 3-month mix).
+5. Stale: GE 22,887M is FY2012 segment profit, not consolidated operating income.
+6. LLY copies agree within rounding (matching copies wrongly treated as conflicts).
+Recommended next step for the fix owner: full-population dry-run of the total_debt rule.
