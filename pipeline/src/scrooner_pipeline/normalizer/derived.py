@@ -94,6 +94,44 @@ def _q4_value(fy_value, first_three, *, is_average: bool, via_ytd: bool):
     return value if value > 0 else None
 
 
+def _retire_derived(
+    conn: psycopg.Connection,
+    company_id: int,
+    keys: list[tuple],
+    existing_periods: dict,
+) -> int:
+    """Demote (never delete) derived facts the current method refuses to produce.
+
+    keys are (concept_id, unit_id, start, end). When the weighted-average method
+    declines a period (non-positive result), a derived row from the old
+    FY - sum(quarters) formula may still sit there as an authoritative, impossible
+    negative share count: 2,203 such rows (824 companies) remained after the
+    2026-10-18 rollout. Only rows with is_derived are touched; the reported facts
+    and the row itself stay inspectable."""
+    params = [
+        {
+            "company_id": company_id,
+            "concept_id": c,
+            "unit_id": u,
+            "period_id": existing_periods[(s, e)],
+        }
+        for (c, u, s, e) in keys
+        if (s, e) in existing_periods
+    ]
+    if not params:
+        return 0
+    with conn.cursor() as cur:
+        cur.executemany(
+            "update core.fact set is_authoritative = false "
+            "where company_id = %(company_id)s and concept_id = %(concept_id)s "
+            "and unit_id = %(unit_id)s and period_id = %(period_id)s "
+            "and is_derived and is_authoritative",
+            params,
+        )
+    conn.commit()
+    return len(params)
+
+
 def _load_quarterly_candidates(
     conn: psycopg.Connection, company_id: int
 ) -> list[tuple]:
@@ -279,6 +317,7 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
     ] = []  # (start, end, fiscal_year) -- may contain duplicates across concepts, deduped below
     to_derive: list[dict] = []
     demote_fact_ids: list[int] = []
+    retire_keys: list[tuple] = []
 
     for (concept_id, unit_id, fiscal_year), by_period in groups.items():
         fy = by_period.get("FY")
@@ -328,6 +367,7 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
         )
         if q4_value is None:
             stats["incomplete"] += 1
+            retire_keys.append((concept_id, unit_id, q4_start, q4_end))
             continue
 
         key = (concept_id, unit_id, q4_start, q4_end)
@@ -377,6 +417,9 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             )
         conn.commit()
         existing_periods = _load_existing_periods(conn, company_id)
+
+    if retire_keys:
+        _retire_derived(conn, company_id, retire_keys, existing_periods)
 
     if demote_fact_ids:
         # Kept, not deleted: the filed value stays inspectable, it just stops
@@ -579,6 +622,7 @@ def derive_interim_quarters_for_company(
         tuple, dict
     ] = {}  # (start, end) -> {"fiscal_year": ..., "fiscal_period": "Q2"|"Q3"}
     to_derive: list[dict] = []
+    retire_keys: list[tuple] = []
 
     for (concept_id, unit_id, fiscal_year), by_span in groups.items():
         q1, half, three_q = (
@@ -619,6 +663,7 @@ def derive_interim_quarters_for_company(
             )
             if q2_value <= 0 and concept_id in average_ids:
                 stats["incomplete_or_inconsistent"] += 1
+                retire_keys.append((concept_id, unit_id, q2_start, q2_end))
             elif (concept_id, unit_id, q2_start, q2_end) not in reported_keys:
                 if (q2_start, q2_end) not in existing_periods:
                     new_periods[(q2_start, q2_end)] = {
@@ -656,6 +701,7 @@ def derive_interim_quarters_for_company(
             )
             if q3_value <= 0 and concept_id in average_ids:
                 stats["incomplete_or_inconsistent"] += 1
+                retire_keys.append((concept_id, unit_id, q3_start, q3_end))
             elif (concept_id, unit_id, q3_start, q3_end) not in reported_keys:
                 if (q3_start, q3_end) not in existing_periods:
                     new_periods[(q3_start, q3_end)] = {
@@ -695,6 +741,9 @@ def derive_interim_quarters_for_company(
             )
         conn.commit()
         existing_periods = _load_existing_periods(conn, company_id)
+
+    if retire_keys:
+        _retire_derived(conn, company_id, retire_keys, existing_periods)
 
     if to_derive:
         rows_to_insert = [

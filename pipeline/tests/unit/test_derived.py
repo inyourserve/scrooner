@@ -474,3 +474,35 @@ def test_weighted_average_interim_quarters_use_window_weights(monkeypatch):
 
     assert stats["q2_derived"] == 1 and stats["q3_derived"] == 1
     assert values == {402: Decimal("96"), 403: Decimal("95")}, "2*98-100 and 3*97-2*98"
+
+
+@pytest.mark.unit
+def test_stale_derived_share_row_is_retired_when_the_method_declines(monkeypatch):
+    # After the rollout 2,203 old negative derived share rows remained: the new
+    # method correctly refuses to store a non-positive average, but nothing
+    # retired the previous FY - sum(quarters) row, still authoritative.
+    fy_start = date(2024, 9, 29)
+    q1_end, q2_end, q3_end, fy_end = (
+        date(2024, 12, 28), date(2025, 3, 29), date(2025, 6, 28), date(2025, 9, 27),
+    )
+    avg = 77
+    rows = [
+        duration_row(1, "100", "FY", fy_start, fy_end, concept_id=avg),
+        duration_row(2, "200", "Q1", fy_start, q1_end, concept_id=avg),
+        duration_row(3, "200", "Q2", date(2024, 12, 29), q2_end, concept_id=avg),
+        duration_row(4, "200", "Q3", date(2025, 3, 30), q3_end, concept_id=avg),
+    ]
+    q4_key = (date(2025, 6, 29), fy_end)
+    monkeypatch.setattr(derived, "_load_quarterly_candidates", lambda _conn, _company: rows)
+    monkeypatch.setattr(derived, "_load_existing_periods", lambda _conn, _company: {q4_key: 404})
+    monkeypatch.setattr(derived, "_load_reported_duration_keys", lambda _conn, _company: set())
+    monkeypatch.setattr(derived, "_load_average_concept_ids", lambda _conn: {avg})
+    conn = CaptureConnection()
+
+    stats = derived.derive_q4_for_company(conn, 7)
+
+    assert stats["derived"] == 0 and stats["incomplete"] == 1
+    retire = [b for b in conn.batches if "set is_authoritative = false" in b[0]]
+    assert len(retire) == 1
+    assert "and is_derived and is_authoritative" in retire[0][0], "only derived rows may be touched"
+    assert conn.fact_rows == []
