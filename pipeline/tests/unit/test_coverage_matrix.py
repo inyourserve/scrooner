@@ -165,3 +165,39 @@ def test_build_coverage_never_commits_when_a_middle_step_fails(monkeypatch) -> N
         build_coverage(conn)  # type: ignore[arg-type]
 
     assert conn.commits == [], "a failed rebuild must leave the previous table untouched"
+
+
+def _run_build_statements(monkeypatch) -> list[str]:
+    from scrooner_pipeline.mapper.coverage_matrix import build_coverage
+
+    _patch_classifiers(monkeypatch, [])
+    conn = _FakeConn()
+    build_coverage(conn)  # type: ignore[arg-type]
+    return conn.statements
+
+
+def test_big_inserts_are_set_based_not_correlated(monkeypatch) -> None:
+    # 2026-10-17: the correlated `exists (... canonical_fact ... cf.company_id =
+    # c.id ...)` per (company x concept) cell exceeded the 30-minute timeout.
+    stmts = _run_build_statements(monkeypatch)
+    concept = next(s for s in stmts if "cross join analytics.canonical_concept" in s)
+    metric = next(s for s in stmts if "cross join analytics.metric_definition md" in s)
+
+    assert "exists" not in concept, "concept insert must not use a per-cell exists probe"
+    assert "left join (" in concept
+    assert "group by company_id, canonical_concept_id" in concept
+
+    assert "exists" not in metric
+    assert "limit 1" not in metric, "no per-cell correlated 'latest row' subquery"
+    assert "mv2" not in metric
+    assert "left join (" in metric
+    assert "group by company_id, metric_definition_id" in metric
+    assert "bool_or(value is not null)" in metric
+    assert "order by period_end desc" in metric  # latest-period reason, deterministic tie-break
+    assert "coalesce(agg.has_value, false)" in metric  # no metric_value rows -> false, row kept
+
+
+def test_no_canonical_fact_probe_correlated_on_company(monkeypatch) -> None:
+    for s in _run_build_statements(monkeypatch):
+        if "from analytics.canonical_fact" in s:
+            assert "cf.company_id = c.id" not in s
