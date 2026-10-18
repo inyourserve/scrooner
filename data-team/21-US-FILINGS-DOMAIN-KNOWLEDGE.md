@@ -21,7 +21,7 @@ Status: v1.1, 2026-10-18, written by Dhairya from SEC rules and repo-verified ca
 - A fact = concept + period + unit + dimensions. **No-dimension facts are the consolidated total**; dimensional facts are segments, classes or components and must never be read as the total.
 - **Duplicates are normal:** the same fact appears in many filings (each 10-K repeats prior years). Restated values appear with a later filing date; the latest-filed figure for a period is the current one unless policy says otherwise.
 - **Decimals/precision:** the same figure can be reported as 3,372,772K and 3,372.8M. Equal within rounding is not a conflict.
-- **Scale and sign:** values are stored in full units; a displayed-in-thousands error is a x1000 bug. Sign follows the tag's balance type and the `negated` label flag; check it, do not assume.
+- **Scale and sign:** values are stored in full units; a displayed-in-thousands error is a x1000 bug. The stored value carries the economic sign; negating labels are display-only and never change the stored sign (EFM 6.5.4-6.5.5, doc 23). Keep the sign as filed: a negative on an element that should not be negative (DQC_0015 list) is a tagging-error candidate to quarantine, not to flip.
 - **Units:** `USD`, `shares`, `USD/shares`, `pure`. A tag filed in a foreign currency or wrong unit is a data error (repo example: `dei:EntityPublicFloat` unit-scale bug, eBay at $31 quintillion).
 - **Tag taxonomy drift:** the same economic line is filed under different tags over time and across companies (repo example: AAPL revenue under 3 tags). Mappings must be scoped by period and company, and new tags enter yearly via the us-gaap taxonomy; old ones are deprecated [VERIFY per release].
 - **Custom (extension) tags:** company-specific, prefix is the ticker/CIK-style namespace. The SEC's published average for 2018-2020 is 16-21% of tagged values using extension tags; our own 9.2% of face lines (doc 56, one quarter) uses a different denominator, so state the denominator before quoting either; they are not comparable across companies without a definition check.
@@ -50,3 +50,17 @@ Status: v1.1, 2026-10-18, written by Dhairya from SEC rules and repo-verified ca
 ## 7. How roles should use this
 - Before proposing, ask: which filing form, which period type, which dimension, which vintage (original or restated), which unit and scale, which sector template, which share class?
 - Write down which assumption from this file your conclusion depends on. If it is [VERIFY], verify it first and record the proof in the ledger.
+
+## 8. Rules from the primary-source study (doc 23, 2026-10-18)
+Source: `23-STUDY-SEC-XBRL-PRIMARY-SOURCES.md` (EDGAR XBRL Guide Aug 2026, Releases 33-9002 and 33-10514, FSDS doc, FASB 2026 taxonomy notes, DQC rule pages, one live companyfacts query). Items doc 23 marks second-hand (ASC 606 dates, ASU 2024-03/2025-01 dates, ASC 842 "all other entities" 2021-12-15) are NOT verified here; doc 25 verified the 606/842/CECL adoption cases from real filings.
+1. Never place a fact in a period using companyfacts `fy`/`fp`. They describe the filing, can be null, and can be `FY` on single-quarter rows. Use `start`/`end`.
+2. Filter companyfacts by `form` before choosing the latest filed: 8-K recast rows and 10-K/A three-year bundles are in the data.
+3. `frame` is a label on one duplicate row and is calendar-aligned (annual 365 +/- 30 days, quarterly 91 +/- 30), not the period definition.
+4. Duplicate numeric facts in one filing must be consistent with one rounded value (decimals-interval overlap); prefer the larger `decimals`.
+5. Scale checks: EntityPublicFloat outside $1M-$10T (DQC_0222), cover shares vs balance-sheet shares over 100x (DQC_0095), a balance sheet with nothing above $1M for large and accelerated filers (DQC_0192).
+6. An XBRL error can strip the whole instance but not the filing, so "no XBRL fact" can mean "stripped". An XBRL-only error does not trigger Item 4.02.
+7. Multi-class issuers have only dimensioned `EntityCommonStockSharesOutstanding` facts: do not require an undimensioned total and do not pick one class as the issuer total.
+8. Keep every historical tag: FASB removes deprecated elements after two annual updates, but old filings still use them.
+9. Custom extension facts are absent from companyfacts and frames; read them from the filing instance or FSDS (identify by name plus accession).
+10. "No-dimension facts are the consolidated total" and "latest filed is current" are defaults, not laws: check the filing for a consolidating-entity axis and for restatement basis before relying on either.
+Unconfirmed in doc 23: cover-page tagging dates, "Big R vs little r" restatement guidance, 10-K/A content rules, and whether the DQC_0013/0014 names are swapped (two sources disagree).
