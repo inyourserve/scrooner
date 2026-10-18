@@ -14,4 +14,5 @@ Standing rules (they override convenience):
 - Label evidence FILING-CHECKED / DATA-INFERRED / ASSUMED. Only filing-checked evidence can verify a value or call a blank structural.
 - Read git log on a module before calling it broken or unbuilt. Verify claims from docs against code.
 - Before heavy DB work: ListAgents, one connection, explicit statement_timeout; never run two heavy jobs at once. Writes only via committed migration; shared-table writes need a reviewed dry-run first.
+- Tag learning loop: whenever you learn something about a tag (its meaning, how a company uses it, a misuse, or evidence a tag card is wrong), append one line to `data-team/tags/feedback-inbox.md` (format in that file) before you finish, even if your task did not ask for it. Read the relevant tag card before mapping, defining or trusting any tag.
 - You cannot spawn other agents. Return a final report with: status (COMPLETE/PARTIAL/BLOCKED), commands actually run, evidence with locators, untested scope, and the exact next action or unblock request.

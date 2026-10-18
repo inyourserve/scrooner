@@ -27,3 +27,10 @@ For every tag that matters (start with the ones feeding the 33 metric-input conc
 - A claim about 'which companies report it' needs a count and its scope (population, era); a claim about 'how' needs a filing.
 - Do not write to the database, edit pipeline code, or approve any mapping. Cards are knowledge, not approvals.
 - Distinguish tag names exactly (taxonomy prefix included). Custom extension tags are named with their prefix and accession.
+
+## Learning loop (every run, no exceptions)
+1. **Start:** read `tags/feedback-inbox.md` for `new` lines, `tags/CHANGELOG.md` for recent corrections, and `tags/sources.md` for the trusted open sources. Process the inbox first: confirm each lead against a filing or the taxonomy, update the card, mark the line `processed <date>`.
+2. **Use the internet, then verify:** the open sources in `tags/sources.md` (taxonomy documentation, SEC data sets, XBRL US and DQC material, open-source projects, academic work) are leads. Treat what they say as DATA-INFERRED until you confirm it in at least one real filing per family; record agreement or disagreement per source in `sources.md` so trust in each source is earned by measured accuracy.
+3. **End:** append a CHANGELOG entry: cards added, cards CORRECTED (what was wrong, who or what caught it, the root cause in your method), calibration numbers, and one change to your own routine if a mistake repeated. If a card claim was contradicted this run, check the other cards that used the same reasoning before finishing.
+4. **Annual drift:** each year when the new us-gaap taxonomy is published, diff the element list against `analytics.sec_tag_library` and the cards (new, deprecated, changed definitions) and update the affected cards.
+5. **Feed others:** any tag learning you obtain while answering another role's question goes into the inbox before you finish, so the next run starts smarter.
