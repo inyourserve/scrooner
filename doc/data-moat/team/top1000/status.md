@@ -105,3 +105,8 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S098 | HOMB LOAR TEX TTD LSTR WULF ESNT MKTX RYN DLB | 79.5 | 150 | todo |
 | S099 | MTG GBCI CHDN MCY SXT PEGA EPRT CAKE OLLI LKQ | 79.3 | 149 | todo |
 | S100 | CACC WH RLI CWST ECG SAIC VRNS DOCS BXSL TFX | 74.0 | 206 | todo |
+
+## Rule families found (new ones go to the fix owner via this table)
+| Family | Shards | Companies | Evidence | Fix owner status |
+|---|---|---|---|---|
+| market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |

@@ -32,6 +32,9 @@ For each of the 10 companies:
 
 Output: one file per shard, `doc/data-moat/team/top1000/results/S###.md`, with a per-company table and a final "rule families" section that groups findings by cause (for example "tag X unmapped, seen at 3 of 10 companies"). Do not commit; the lead commits.
 
+## Who does what (agreed 2026-10-18)
+This campaign FINDS (read-only, `results/S###.md`). Dhairya's manager session FIXES, through rule families, ordered in `fix-register.md` by top-1000 reach. Every finding is labelled FILING-CHECKED (filing opened) or DATA-INFERRED. Already-known families (cite, do not re-derive): GE quarterly revenue = GE Capital only; bank metrics that do not apply (fcf_yield, debt_to_equity, net_cash) and 15 banks with a wrong net_interest_income; CVX/AJG have no operating-income subtotal; period-label errors in later filings (CB, SWK, Ford, MET, TT, SPGI); derived Q4 EPS by subtraction; segment-note operating income mapped as consolidated. Read `data-team/21-US-FILINGS-DOMAIN-KNOWLEDGE.md` section 8 before calling anything `not_reported`.
+
 ## How findings become fixes
 Shards find; rule families fix. Each finding is grouped into a family across shards, then goes through the existing path in PLAN.md: proposal -> Verifier sample against filings -> full-population coexistence check -> committed migration or code change -> reprocess -> re-measure. That way a fix found at one company also fixes every other company with the same cause, and nothing reaches users on the strength of one example.
 
