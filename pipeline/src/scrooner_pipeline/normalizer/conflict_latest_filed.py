@@ -100,6 +100,27 @@ VALIDATED_QUARTER_TAGS: list[tuple[str, str]] = [
 FULL_YEAR_MIN_DAYS, FULL_YEAR_MAX_DAYS = 340, 380
 QUARTER_MIN_DAYS, QUARTER_MAX_DAYS = 80, 100
 
+# Which filings may WIN a period (2026-10-18). A Data Verifier check against the
+# original filings of 47 promoted facts found: (1) proxy statements (DEF 14A and
+# variants) and 10-Qs won annual values -- 2,798 DEF 14A + ~340 10-Q promotions --
+# and a proxy's rounded pay-versus-performance footnote or a 10-Q's AOCI balance
+# is not the annual figure; (2) when the copies differ only by sign, the latest
+# filing is wrong about half the time (5 of 10), because Frames, the earlier
+# validation, publishes the latest filing's own value and so cannot catch a sign
+# error in it. Ineligible filings still count as copies of the period (so a lone
+# 10-K can win when a proxy disagrees) but can never be the winner.
+FY_ELIGIBLE_FORMS = (
+    "10-K", "10-K/A", "10-KT", "10-KT/A",
+    "8-K", "8-K/A",  # recast of prior years after a restatement or discontinued operation
+    "20-F", "20-F/A", "40-F", "40-F/A",
+)
+QUARTER_ELIGIBLE_FORMS = (
+    "10-Q", "10-Q/A", "10-QT",
+    "10-K", "10-K/A", "10-KT", "10-KT/A",
+    "8-K", "8-K/A",
+    "6-K", "6-K/A", "20-F", "20-F/A", "40-F", "40-F/A",
+)
+
 # Picks the latest-filed row of each unresolved group (ties go to the highest
 # fact id, i.e. the one inserted last) and records it in the audit table in
 # the same statement, so a promoted fact can never be missing its audit row.
@@ -108,11 +129,18 @@ with candidates as (
     select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id, f.value,
            fl.filing_date, f.is_authoritative, f.is_derived,
            case when p.fiscal_period = 'FY' then %(rule)s else %(rule_quarter)s end as rule,
+           (   (p.fiscal_period = 'FY' and fl.form = any(%(fy_forms)s))
+            or (p.fiscal_period in ('Q1', 'Q2', 'Q3') and fl.form = any(%(quarter_forms)s))
+           ) as eligible,
            row_number() over w as rn,
            count(*) over w as n,
            bool_or(f.is_authoritative) over w as any_auth,
            min(f.value) over w as vmin,
-           max(f.value) over w as vmax
+           max(f.value) over w as vmax,
+           bool_or(f.value > 0) over w as has_pos,
+           bool_or(f.value < 0) over w as has_neg,
+           min(abs(f.value)) over w as amin,
+           max(abs(f.value)) over w as amax
     from core.fact f
     join core.period p on p.id = f.period_id
     join core.filing fl on fl.id = f.filing_id
@@ -128,12 +156,19 @@ with candidates as (
               and (p.end_date - p.start_date) between %(q_min_days)s and %(q_max_days)s)
       )
     window w as (partition by f.company_id, f.concept_id, f.unit_id, f.period_id
-                 order by fl.filing_date desc, f.id desc
+                 order by (   (p.fiscal_period = 'FY' and fl.form = any(%(fy_forms)s))
+                           or (p.fiscal_period in ('Q1', 'Q2', 'Q3') and fl.form = any(%(quarter_forms)s))
+                          ) desc,
+                          fl.filing_date desc, f.id desc
                  rows between unbounded preceding and unbounded following)
 ),
 winners as (
     select id, n, vmin, vmax, rule from candidates
-    where rn = 1 and n > 1 and not any_auth and vmin <> vmax
+    where rn = 1 and eligible and n > 1 and not any_auth and vmin <> vmax
+      -- copies that differ only by sign (same magnitude, both signs present) are
+      -- quarantined: no filing can be trusted over another without its own
+      -- arithmetic (pre-tax - tax = net income), which this stage does not do
+      and not (has_pos and has_neg and amin = amax)
 ),
 promoted as (
     update core.fact f set is_authoritative = true
@@ -183,6 +218,8 @@ def promote_for_companies(
                 "q_max_days": QUARTER_MAX_DAYS,
                 "rule": RULE,
                 "rule_quarter": RULE_QUARTER,
+                "fy_forms": list(FY_ELIGIBLE_FORMS),
+                "quarter_forms": list(QUARTER_ELIGIBLE_FORMS),
             },
         )
         promoted = cur.rowcount

@@ -40,9 +40,12 @@ def test_quarterly_rule_is_limited_to_the_four_tags_validated_for_quarters():
 def test_promote_sql_only_touches_unresolved_groups_and_audits_each_promotion():
     sql = " ".join(m.PROMOTE_SQL.split())
     # Latest filing first, ties to the highest fact id.
-    assert "order by fl.filing_date desc, f.id desc" in sql
-    # Never overrides a Stage 2e decision, and never promotes a lone or agreeing row.
-    assert "rn = 1 and n > 1 and not any_auth and vmin <> vmax" in sql
+    assert "fl.filing_date desc, f.id desc" in sql
+    # Never overrides a Stage 2e decision, never promotes an agreeing row, never
+    # lets an ineligible form (proxy, 10-Q for annual) win, never promotes a
+    # sign-only conflict.
+    assert "rn = 1 and eligible and n > 1 and not any_auth and vmin <> vmax" in sql
+    assert "not (has_pos and has_neg and amin = amax)" in sql
     assert "not f.is_authoritative" in sql
     # Annual and discrete Q1-Q3 durations only, each with its own tag list;
     # derived facts never compete.
