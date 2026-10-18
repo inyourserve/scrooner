@@ -42,6 +42,8 @@ reconcile_by_mode` already uses, confirmed live to correlate with
 most-recent-filing-date for Etsy's real conflicting facts.
 """
 
+from dataclasses import dataclass
+from datetime import date
 from decimal import Decimal
 
 import psycopg
@@ -249,6 +251,315 @@ def resolve_baseline_passthrough(
         inserted=inserted,
     )
     return inserted
+
+
+# Stale-fill refresh (2026-10-18). EXPLICIT, DRY-RUN-FIRST ONLY: never called
+# from resolve_all_conflict_fills / the nightly. Every writer of the
+# *_resolved concepts is ON CONFLICT DO NOTHING, so a fill written while all
+# copies of a period were non-authoritative is never refreshed when a copy
+# later becomes authoritative (company 2835 FY2023 revenue, ledger
+# 2026-10-18). A first version paired the stored row with the primary row by
+# (company, period) only; the Verifier opened 82 of its proposals in the
+# filings and the proposed value was wrong in 31
+# (data-team/28-VERIFIER-STALE-FILL-PROPOSALS-2026-10-18.md): it swapped in a
+# different tag (ASC 606 subset, continuing-ops subtotal, opposite-signed
+# alternative tag), a derived FY-minus-9M value, or a DEF 14A / 8-K figure.
+# The guards below are that verdict's recommendation, enforced in code.
+
+# Only these forms carry the financial statements a value may be refreshed
+# from. 8-K recasts are re-presentations and DEF 14A pay-versus-performance
+# figures are rounded (AEMD, ledger 2026-10-18).
+STALE_FILL_PERIODIC_FORMS = frozenset(
+    {"10-K", "10-Q", "10-K/A", "10-Q/A", "10-KT", "10-KT/A"}
+)
+
+# A difference at or below this relative size is skipped as the same figure
+# at a different presentation precision, but ONLY if the coarser value really
+# is the finer one rounded at the coarser value's precision (TTWO: 3,372,772K
+# vs 3,372.8M).
+STALE_FILL_ROUNDING_TOLERANCE = Decimal("0.0001")
+
+# Up to this relative difference a same-tag disagreement that is not
+# explained by rounding is too close to call from the numbers alone: it may be
+# a rounded copy (AEMD's DEF 14A 13,400,000 vs 13,388,089 is 0.09%) or a small
+# real re-presentation (JEF 2,187,495K vs 2,186,582K, 0.04%). Routed to review,
+# never auto-replaced.
+STALE_FILL_NEAR_EQUAL_TOLERANCE = Decimal("0.01")
+
+STALE_FILL_GUARD_CLASS = "same_tag_filed_periodic_later_filing"
+
+
+@dataclass(frozen=True)
+class StaleFillCandidate:
+    """One stored *_resolved row (all sources non-authoritative) paired with
+    the primary concept's row for the same (company, period). Tags are
+    'taxonomy:tag' strings of core.concept behind each side's
+    source_fact_ids; a missing source fact simply contributes nothing."""
+
+    concept: str
+    row_id: int
+    company_id: int
+    period_id: int
+    stored: Decimal
+    primary: Decimal
+    stored_tags: frozenset[str]
+    primary_tags: frozenset[str]
+    primary_any_derived: bool | None
+    primary_forms: frozenset[str]
+    stored_filing_date: date | None
+    primary_filing_date: date | None
+    primary_source_fact_ids: tuple[int, ...] = ()
+    primary_accessions: tuple[str, ...] = ()
+    stored_accessions: tuple[str, ...] = ()
+    stored_forms: frozenset[str] = frozenset()
+
+
+def _rounding_consistent(a: Decimal, b: Decimal) -> bool:
+    """True when the coarser-precision value equals the finer one rounded at
+    the coarser value's apparent precision (its trailing zeros / decimal
+    places). Two values at the same apparent precision can't be a rounding of
+    each other."""
+    if a == 0 or b == 0:
+        return False
+    exp_a = a.normalize().as_tuple().exponent
+    exp_b = b.normalize().as_tuple().exponent
+    if not isinstance(exp_a, int) or not isinstance(exp_b, int) or exp_a == exp_b:
+        return False
+    coarse, fine, coarse_exp = (a, b, exp_a) if exp_a > exp_b else (b, a, exp_b)
+    half_unit = Decimal(1).scaleb(coarse_exp) / 2
+    return abs(fine - coarse) <= half_unit
+
+
+def classify_stale_fill(c: StaleFillCandidate) -> tuple[str, str]:
+    """(outcome, reason); outcome is 'propose', 'needs_review' or 'skip'.
+    Guards run in this order and the first one that fires decides, so the
+    reason is the earliest failing guard:
+      skip        equal values
+      skip        stored or primary source facts missing
+      skip        different_tag: the stored and primary source tags differ
+                  (a different tag is a precedence decision, not staleness)
+      skip        primary_derived: any primary source fact is_derived
+      skip        primary_non_periodic_form: a primary form outside
+                  STALE_FILL_PERIODIC_FORMS
+      needs_review filing_date_unknown
+      skip        authoritative_older_than_stored (a newer restated stored
+                  value is never overwritten by an older original)
+      needs_review same_filing_date (dates can't order same-day filings)
+      needs_review sign_flip / zero_value
+      skip        rounding_equivalent (<= 0.01% AND rounding-consistent)
+      needs_review near_equal_not_rounding / rounded_copy_beyond_tolerance
+      propose     everything else"""
+    stored, primary = c.stored, c.primary
+    if stored == primary:
+        return "skip", "equal"
+    if not c.stored_tags:
+        return "skip", "stored_source_facts_missing"
+    if not c.primary_tags:
+        return "skip", "primary_source_facts_missing"
+    if c.stored_tags != c.primary_tags:
+        return "skip", "different_tag"
+    if c.primary_any_derived is not False:
+        return "skip", "primary_derived"
+    if not c.primary_forms or not c.primary_forms <= STALE_FILL_PERIODIC_FORMS:
+        return "skip", "primary_non_periodic_form"
+    if c.stored_filing_date is None or c.primary_filing_date is None:
+        return "needs_review", "filing_date_unknown"
+    if c.primary_filing_date < c.stored_filing_date:
+        return "skip", "authoritative_older_than_stored"
+    if c.primary_filing_date == c.stored_filing_date:
+        return "needs_review", "same_filing_date"
+    if stored == 0 or primary == 0:
+        return "needs_review", "zero_value"
+    if (stored < 0) != (primary < 0):
+        return "needs_review", "sign_flip"
+    rel = abs(stored - primary) / max(abs(stored), abs(primary))
+    rounding = _rounding_consistent(stored, primary)
+    if rel <= STALE_FILL_ROUNDING_TOLERANCE and rounding:
+        return "skip", "rounding_equivalent"
+    if rel <= STALE_FILL_NEAR_EQUAL_TOLERANCE:
+        if rounding:
+            return "needs_review", "rounded_copy_beyond_tolerance"
+        return "needs_review", "near_equal_not_rounding"
+    return "propose", STALE_FILL_GUARD_CLASS
+
+
+_STALE_FILL_CANDIDATE_SQL = """
+select r.id, r.company_id, r.period_id, r.value, p.value, p.source_fact_ids,
+       s.tags, s.max_date, s.accessions, s.forms,
+       q.tags, q.any_derived, q.forms, q.accessions, q.max_date
+from analytics.canonical_fact r
+join analytics.canonical_fact p
+  on p.company_id = r.company_id and p.period_id = r.period_id
+ and p.canonical_concept_id = %(primary_id)s
+cross join lateral (
+    select array_agg(distinct c.taxonomy || ':' || c.tag) as tags,
+           max(fl.filing_date) as max_date,
+           array_agg(distinct fl.accession_number) as accessions,
+           array_agg(distinct fl.form) as forms
+    from core.fact f
+    join core.concept c on c.id = f.concept_id
+    join core.filing fl on fl.id = f.filing_id
+    where f.id = any(r.source_fact_ids)
+) s
+cross join lateral (
+    select array_agg(distinct c.taxonomy || ':' || c.tag) as tags,
+           bool_or(f.is_derived) as any_derived,
+           array_agg(distinct fl.form) as forms,
+           array_agg(distinct fl.accession_number) as accessions,
+           max(fl.filing_date) as max_date
+    from core.fact f
+    join core.concept c on c.id = f.concept_id
+    join core.filing fl on fl.id = f.filing_id
+    where f.id = any(p.source_fact_ids)
+) q
+where r.canonical_concept_id = %(resolved_id)s
+  and r.value is distinct from p.value
+  and cardinality(r.source_fact_ids) > 0
+  and not exists (select 1 from core.fact f
+                  where f.id = any(r.source_fact_ids) and f.is_authoritative)
+  and exists (select 1 from core.fact f
+              where f.id = any(p.source_fact_ids) and f.is_authoritative)
+"""
+
+
+def _load_stale_fill_candidates(
+    conn: psycopg.Connection,
+    primary_name: str,
+    primary_id: int,
+    resolved_id: int,
+    company_ids: list[int] | None,
+) -> list[StaleFillCandidate]:
+    sql = _STALE_FILL_CANDIDATE_SQL
+    if company_ids:
+        sql += "  and r.company_id = any(%(company_ids)s)\n"
+    with conn.cursor() as cur:
+        cur.execute(
+            sql,
+            {
+                "primary_id": primary_id,
+                "resolved_id": resolved_id,
+                "company_ids": company_ids,
+            },
+        )
+        rows = cur.fetchall()
+    return [
+        StaleFillCandidate(
+            concept=primary_name,
+            row_id=row_id,
+            company_id=co,
+            period_id=period,
+            stored=stored,
+            primary=primary,
+            stored_tags=frozenset(s_tags or ()),
+            primary_tags=frozenset(p_tags or ()),
+            primary_any_derived=p_derived,
+            primary_forms=frozenset(p_forms or ()),
+            stored_filing_date=s_date,
+            primary_filing_date=p_date,
+            primary_source_fact_ids=tuple(p_src or ()),
+            primary_accessions=tuple(sorted(p_acc or ())),
+            stored_accessions=tuple(sorted(s_acc or ())),
+            stored_forms=frozenset(s_forms or ()),
+        )
+        for (
+            row_id, co, period, stored, primary, p_src,
+            s_tags, s_date, s_acc, s_forms,
+            p_tags, p_derived, p_forms, p_acc, p_date,
+        ) in rows
+    ]
+
+
+def _stale_fill_record(c: StaleFillCandidate, outcome: str, reason: str) -> dict:
+    return {
+        "concept": c.concept,
+        "id": c.row_id,
+        "company_id": c.company_id,
+        "period_id": c.period_id,
+        "old": c.stored,
+        "new": c.primary,
+        "stored_tags": sorted(c.stored_tags),
+        "primary_tags": sorted(c.primary_tags),
+        "stored_forms": sorted(c.stored_forms),
+        "primary_forms": sorted(c.primary_forms),
+        "stored_accessions": list(c.stored_accessions),
+        "primary_accessions": list(c.primary_accessions),
+        "stored_filing_date": c.stored_filing_date,
+        "primary_filing_date": c.primary_filing_date,
+        "src": list(c.primary_source_fact_ids),
+        "outcome": outcome,
+        "guard": reason,
+    }
+
+
+def refresh_stale_fills(
+    conn: psycopg.Connection,
+    primary_name: str,
+    resolved_name: str,
+    company_ids: list[int] | None = None,
+    dry_run: bool = True,
+) -> dict:
+    """Propose (dry_run=True, the default) or apply replacements of resolved
+    rows built only from non-authoritative facts with the primary concept's
+    authoritative row, using classify_stale_fill's guards. Scoped to rows
+    whose every source fact is non-authoritative, so tag-preference and
+    arithmetic-fallback rows (authoritative sources) are never candidates.
+    Returns 'proposals' (would be written), 'needs_review' (never written by
+    this function) and per-reason skip counts. Writing requires an explicit
+    dry_run=False after the dry-run's proposals were reviewed; it is not part
+    of resolve_all_conflict_fills."""
+    primary_id = _concept_id(conn, primary_name)
+    resolved_id = _concept_id(conn, resolved_name)
+    if primary_id is None or resolved_id is None:
+        return {"primary": primary_name, "skipped": "concept not found"}
+
+    candidates = _load_stale_fill_candidates(
+        conn, primary_name, primary_id, resolved_id, company_ids
+    )
+    proposals: list[dict] = []
+    needs_review: list[dict] = []
+    skipped: dict[str, int] = {}
+    review_counts: dict[str, int] = {}
+    for c in candidates:
+        outcome, reason = classify_stale_fill(c)
+        if outcome == "skip":
+            skipped[reason] = skipped.get(reason, 0) + 1
+        elif outcome == "needs_review":
+            review_counts[reason] = review_counts.get(reason, 0) + 1
+            needs_review.append(_stale_fill_record(c, outcome, reason))
+        else:
+            proposals.append(_stale_fill_record(c, outcome, reason))
+
+    if proposals and not dry_run:
+        with conn.cursor() as cur:
+            for start in range(0, len(proposals), 5000):
+                cur.executemany(
+                    """
+                    update analytics.canonical_fact
+                    set value = %(new)s, source_fact_ids = %(src)s, resolved_at = now()
+                    where id = %(id)s and value = %(old)s
+                    """,
+                    proposals[start : start + 5000],
+                )
+        conn.commit()
+
+    stats = {
+        "candidates": len(candidates),
+        "refreshed": 0 if dry_run else len(proposals),
+        "would_refresh": len(proposals),
+        "needs_review_count": len(needs_review),
+        "needs_review_by_reason": review_counts,
+        "skipped": skipped,
+    }
+    logger.info(
+        "conflict_resolution.stale_refresh",
+        primary=primary_name,
+        resolved=resolved_name,
+        dry_run=dry_run,
+        **stats,
+    )
+    stats["proposals"] = proposals
+    stats["needs_review"] = needs_review
+    return stats
 
 
 def resolve_conflict_fill(
@@ -504,6 +815,9 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     totals["retroactive_split_adjustments"] = retroactive_stats.get("adjusted", 0)
 
     for primary_name, resolved_name in CONFLICT_FILL_TARGETS:
+        # refresh_stale_fills is deliberately NOT called here: it is an
+        # explicit, dry-run-first function whose proposals need review
+        # before any write (data-team/28, 2026-10-18).
         baseline_count = 0
         if resolved_name not in _HAS_OWN_POPULATE_STEP:
             baseline_count = resolve_baseline_passthrough(
