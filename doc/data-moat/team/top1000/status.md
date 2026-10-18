@@ -20,7 +20,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | done (wrong values FILING-CHECKED) |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | done (wrong values FILING-CHECKED) |
 | S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | done (wrong values FILING-CHECKED) |
-| S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | running |
+| S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | done (wrong values FILING-CHECKED) |
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | running |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | running |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | running |
@@ -134,7 +134,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S015 | GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S016 | MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -174,7 +174,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: customer funds on balance sheet (CME performance bonds, ADP client funds) make current ratio / ROA meaningless | S012 | CME, ADP | DATA-INFERRED | open (Sector Analyst) |
 | NEW: debt shown 0 / stale when debt is under UnsecuredLongTermDebt or convertible notes (CME 0 vs 3,424.2M; NET 0 from 2019 vs 3,270M converts) | S012 | CME, NET | FILING-CHECKED | open (with total_debt family) |
 | stale values (GLW capex 2020, current tag PaymentsForCapitalImprovements; CME shares 66.6M from 2010 vs 359.6M; ADP op income 2014; LOW interest 2011; SBUX gross profit 2020; ABNB capex/D&A) | S012 | 6 | FILING-CHECKED | open (stale family) |
-| NEW: net income falls back to ProfitLoss (incl. NCI) when NetIncomeLoss is untagged (FCX TTM ~42% overstated; Q1-2026 1,387M vs 881M) | S013 | FCX (+APH, CEG, EQIX, BNY inferred) | FILING-CHECKED (FCX) | open (Standardization: net income = attributable to parent; links the 1,189-row ProfitLoss path in PLAN.md) |
+| NEW: net income falls back to ProfitLoss (incl. NCI) when NetIncomeLoss is untagged (FCX TTM ~42% overstated; Q1-2026 1,387M vs 881M; AMT 887.5 vs 867.5) | S013, S016 | FCX, AMT (+APH, CEG, EQIX, BNY inferred) | FILING-CHECKED (FCX) | open (Standardization: net income = attributable to parent; links the 1,189-row ProfitLoss path in PLAN.md) |
 | NEW: ASC 606 subset used as revenue at miners/utilities (CEG Q2 5,843M vs 7,504M; FCX 25,186M vs 25,915M FY2025; DUK Q1 8,995M vs 9,178M) | S013 | CEG, FCX, DUK | FILING-CHECKED | open (with AXP/COF 606-component family) |
 | NEW: tiny bare LongTermDebt fact outranks face debt tags (MAR 23M vs 16,915M) | S013 | MAR | FILING-CHECKED | open (total_debt family) |
 | NEW: capex filed only per segment (FCX Q2) | S013 | FCX | FILING-CHECKED | open |
@@ -195,6 +195,14 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: cost of sales only per product/service member (GD; same as CDNS/INTU); quarterly EPS only as continuing-ops (GD; same as ABNB) | S014 | GD | FILING-CHECKED | open |
 | NEW: exchange revenue perimeter (ICE 3,611M vs net revenue 2,666M); current ratio on clearing margin (ICE) | S014 | ICE | FILING-CHECKED | open (with CME customer-funds family) |
 | health insurer gross margin from cost of products only (ELV 89.1%: 5,492M subtracted, 37,024M benefit expense left out); WM gross margin from opex-excl-D&A line | S014 | ELV, WM | FILING-CHECKED | open (partial-cost family, with UNH) |
+| NEW: earlier revenue fix covers old quarters only; new quarters revert to the ASC 606 tag that excludes lease revenue (AMT Q2-2026 211.1M vs 2,749.1M, 0001053507-26-000133 R4; net margin 41.8% vs ~32%) | S016 | AMT | FILING-CHECKED | open (606-subset family; fix must cover future periods) |
+| NEW: ASC 606 figure LARGER than the reported total (WMB +11% Q2, +56% Q1; 0000107263-26-000026 R2) | S016 | WMB | FILING-CHECKED | open (606 family) |
+| NEW: E&P capex tag PaymentsToAcquireOilAndGasPropertyAndEquipment unmapped (60-72 filers) | S016 | EOG (13 cells) | FILING-CHECKED | open (Tag Mapper; high reach for energy) |
+| NEW: re-presentation break in a growth series (MMM Solventum spin: FY2021 original vs FY2022 re-presented, 5y CAGR -6.2%) -> blank growth across the break with a reason | S016 | MMM | FILING-CHECKED | open (re-presentation policy) |
+| NEW: product-line revenue breakdown dropped by source (REGN collaboration revenue) | S016 | REGN | FILING-CHECKED | open |
+| NEW: O&M-only tag must not be mapped as total opex (WMB 597 vs 1,871) | S016 | WMB | FILING-CHECKED | guard for Tag Mapper |
+| stale: REGN shares 94.4M (2012), UPS shares 713.9M (2010), EOG dividends paid stuck at 2009 | S016 | REGN, UPS, EOG | FILING-CHECKED | open (stale family) |
+| plausibility: MRNA implied price $215.80 (unverified) | S016 | MRNA | DATA-INFERRED | check with MCAP-SHARES |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
