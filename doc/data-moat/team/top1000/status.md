@@ -18,7 +18,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | done (DATA-INFERRED only) |
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | done (wrong values FILING-CHECKED) |
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | done (wrong values FILING-CHECKED) |
-| S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | running |
+| S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | done (wrong values FILING-CHECKED) |
 | S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | done (wrong values FILING-CHECKED) |
 | S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | running |
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | running |
@@ -126,7 +126,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | ratios shown on negative equity (PM, ABBV, DELL) | S003-S005 | 3 | DATA-INFERRED | open |
 | GE PaymentsOfOrdinaryDividends not mapped; employee_count tag filed by none of S004 | S004 | GE; 10 | DATA-INFERRED | open |
 | total_debt composition (S001 adds: LLY base = current only 7.05B vs 54.9B; NVDA/AVGO/TSLA base vs resolved disagree. S005 adds: DELL/TMO double count, RTX 229M vs 37.4B, GEV 63M vs 2.8B, WFC resolved = short-term only 25.2B vs 207.3B; unmapped LongTermDebtAndCapitalLeaseObligations family, ConvertibleDebtNoncurrent) | S001-S003, S005, S009, S012, S013 | 25+ (S002 adds MU 2,792M vs 5,179M; WMT 39,932M vs 50,411M short-term borrowings omitted) of 40 (S009 adds SCHW 22,669M vs 37,114M, UBER double count 14,720M vs 12,723M) | DATA-INFERRED | open |
-| bank/broker revenue from provisional gross-interest tag instead of RevenuesNetOfInterestExpense (WFC, GS, MS; MS 15.9B vs 21.3B) | S004, S005 | BAC, WFC, GS, MS | DATA-INFERRED | open (fix-register #1) |
+| bank/broker revenue from provisional gross-interest tag instead of RevenuesNetOfInterestExpense (WFC, GS, MS; MS 15.9B vs 21.3B; USB FY 30,970M vs 28,540M) | S004, S005, S014 | BAC, WFC, GS, MS, USB | DATA-INFERRED | open (fix-register #1) |
 | interest-expense / D&A tag switches leave latest values stuck (TMO gross margin 2019, PANW debt FY2023, RTX, MS, WFC) | S005 | 6 of 10 | DATA-INFERRED | open |
 | GS interest income stored as a 4.4B component vs 22.0B total; GS NII -59.2B (known class) | S005 | GS | DATA-INFERRED | open |
 | implausible ROIC (GEV 129%) | S005 | GEV | DATA-INFERRED | open |
@@ -134,7 +134,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S015 | CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S015 | GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -190,6 +190,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: net interest income on the face but blank (PNC 4,107M, HOOD 389M) | S015 | PNC, HOOD | FILING-CHECKED | open (bank template) |
 | NEW: debt_to_equity uses convertible notes while total_debt/net_cash blank (DDOG 985.5M) | S015 | DDOG | FILING-CHECKED | open (total_debt family) |
 | stale interest coverage (SNPS 266x from 2024 vs ~2.7x; DDOG 5.2x vs 1.68x); CDNS debt 299.9M (2018) vs 2,482.2M; MRSH AR 5M (2011) vs 8,548M; HOOD/DDOG 0 shares | S015 | SNPS, DDOG, CDNS, MRSH, HOOD | FILING-CHECKED | open (stale family) |
+| NEW/MEASUREMENT: coverage counts a metric filled if ANY past period had a value (coverage_matrix.py:746 bool_or(value is not null) over all periods) - S014: 79 cells has_value=true while latest row is null with a gap reason; real blanks ~356 not 277. The 80.86% baseline is overstated; a 'latest period' coverage measure is needed | S014 | all | code-confirmed by lead | open (lane B owner; affects every coverage number) |
+| foreign private issuer that NEVER filed a 10-K (AEM: 40-F/20-F/6-K only) shows FY2009-13 US-GAAP values beside a 2026 market cap | S014 | AEM | FILING-CHECKED | open (population; excluded) |
+| NEW: cost of sales only per product/service member (GD; same as CDNS/INTU); quarterly EPS only as continuing-ops (GD; same as ABNB) | S014 | GD | FILING-CHECKED | open |
+| NEW: exchange revenue perimeter (ICE 3,611M vs net revenue 2,666M); current ratio on clearing margin (ICE) | S014 | ICE | FILING-CHECKED | open (with CME customer-funds family) |
+| health insurer gross margin from cost of products only (ELV 89.1%: 5,492M subtracted, 37,024M benefit expense left out); WM gross margin from opex-excl-D&A line | S014 | ELV, WM | FILING-CHECKED | open (partial-cost family, with UNH) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18

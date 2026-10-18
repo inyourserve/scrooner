@@ -14,7 +14,7 @@ Founder direction 2026-10-18: work company by company on the 1,000 largest compa
 | Blank, no reason (unexplained) | 14,138 | 8.67% |
 | Total | 163,000 | |
 
-"Value present" is not yet "verified correct". Shard S001 (NVDA..LLY) is 86.8% filled; S100 is 74.0%.
+"Value present" is not yet "verified correct". **Correction (S014, code-confirmed):** `has_value` is true if ANY past period had a value (`coverage_matrix.py:746`, `bool_or`), so a metric whose latest period is blank still counts as filled. 80.86% overstates current coverage; S014 measured ~356 real blanks against 277 counted. Shard S001 (NVDA..LLY) is 86.8% filled; S100 is 74.0%.
 
 ## The list: `shards.csv`
 Rank by the latest `market_cap` metric, `real_operating_company` population only. Columns: shard, rank, company_id, cik, ticker, name, sic, mcap_bn, cells, filled, unexplained_blank.
