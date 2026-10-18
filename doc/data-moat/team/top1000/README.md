@@ -43,3 +43,6 @@ The database pooler has about 15 connections shared by every service (14 in use 
 
 ## Status
 See `status.md`.
+
+## SEC access (founder decision 2026-10-18)
+The founder approved declaring their Gmail as the SEC contact: User-Agent `Scrooner research inyourserve@gmail.com`, sent to sec.gov and data.sec.gov only. Each worker is capped at 2 requests/second so the workers together stay under SEC's ~10/s limit.
