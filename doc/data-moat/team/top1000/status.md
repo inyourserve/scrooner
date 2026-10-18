@@ -10,7 +10,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | done (DATA-INFERRED only: sec.gov blocked) |
 | S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | done (DATA-INFERRED only) |
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | done (DATA-INFERRED only) |
-| S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | running |
+| S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | done (DATA-INFERRED only) |
 | S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | running |
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | running |
@@ -128,18 +128,23 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | interest-expense / D&A tag switches leave latest values stuck (TMO gross margin 2019, PANW debt FY2023, RTX, MS, WFC) | S005 | 6 of 10 | DATA-INFERRED | open |
 | GS interest income stored as a 4.4B component vs 22.0B total; GS NII -59.2B (known class) | S005 | GS | DATA-INFERRED | open |
 | implausible ROIC (GEV 129%) | S005 | GEV | DATA-INFERRED | open |
-| NEW: matching copies treated as conflicts (rounded later copy vs precise original both non-authoritative), blanks LLY 2025 quarterly cash flow, TTM, FY2024 balance sheet. Fix: equal-within-rounding = one value, keep more precise | S001 | LLY (likely wide) | DATA-INFERRED | open |
+| matching copies treated as conflicts (S006: 82 headline cells at 8 of 10, even at 0.00015% difference; ANET whole 2024-12-31 balance sheet; MRVL FY2022 quarters. FILING-CHECKED at LLY by VERIFY-W1), blanks LLY 2025 quarterly cash flow, TTM, FY2024 balance sheet. Fix: equal-within-rounding = one value, keep more precise | S001, S006 | LLY + 8 of 10 in S006 | DATA-INFERRED | open |
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S008 | KO, NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006, S008 | KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
-| NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR no_dividend_history with 878M dividends tagged) | S008 | 3 | DATA-INFERRED | open |
+| NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
 | NEW: pretax income tagged only as Domestic + Foreign components | S008 | MCD (5 cells) | DATA-INFERRED | open |
 | NEW: interest expense tagged as interest incurred, capitalized interest separate | S008 | SCCO | DATA-INFERRED | open |
 | NEW: utility capex/interest expense under custom tags | S008 | NEE (17 cells) | DATA-INFERRED | open |
 | NEW: REIT capital improvements as capex (definition) | S008 | WELL (12 cells) | DATA-INFERRED | open (Standardization) |
+| NEW: stock-split basis mix in derived Q4 EPS (KLAC 10-for-1: Q4 diluted EPS -22.61, should be ~1.03; 3y EPS CAGR -46.7%) | S006 | KLAC | DATA-INFERRED | open (Period Engineer) |
+| NEW: AXP revenue = ASC 606 component 11.2B vs RevenuesNetOfInterestExpense 19.6B | S006 | AXP | DATA-INFERRED | open (with bank-revenue family) |
+| NEW: shares_outstanding 0 from a 2015 fallback when only per-class counts are filed | S006 | SHOP | DATA-INFERRED | open |
+| NEW: history lost at a new registrant CIK (successor entity) | S006 | MRVL, LIN, SHOP | DATA-INFERRED | open |
+| C PP&E-plus-finance-lease tag unmapped; C no_dividend_history while paying dividends | S006 | C | DATA-INFERRED | open |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
@@ -157,3 +162,5 @@ All six wrong-value families CONFIRMED against original SEC R-pages:
 5. Stale: GE 22,887M is FY2012 segment profit, not consolidated operating income.
 6. LLY copies agree within rounding (matching copies wrongly treated as conflicts).
 Recommended next step for the fix owner: full-population dry-run of the total_debt rule.
+
+Note: shard workers launched as general-purpose agents get their sec.gov fetches blocked by the permission classifier; the scrooner-data-verifier agent type can fetch. Filing checks therefore go to verifier passes (VERIFY-W#), and shard workers stay DATA-INFERRED.
