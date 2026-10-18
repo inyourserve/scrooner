@@ -277,8 +277,10 @@ def resolve_baseline_passthrough(
 # re-base on a reverse split the split table lacks (GURE, NCRA, SVMB, BURU)
 # are whole-series changes. Decision (doc/data-moat/team/PLAN.md, "Guarded
 # stale-fill: still NOT safe as a class"): this path proposes restatements
-# and corrections only, so re-presentations in original 10-K/10-Q filings go
-# to review and only amendments with no flag remain proposals.
+# and corrections only, so re-presentations (discontinued operations, disposal
+# groups, spin-offs; in any form, amendments included since 2026-10-19) and
+# every original 10-K/10-Q go to review; only amendments with no flag remain
+# proposals.
 
 # Only these forms carry the financial statements a value may be refreshed
 # from. 8-K recasts are re-presentations and DEF 14A pay-versus-performance
@@ -640,12 +642,16 @@ def stale_fill_signals(c: StaleFillCandidate) -> list[str]:
         _is_restricted_cash_tag(t) for t in siblings
     ):
         signals.append("restricted_cash_same_date")
-    # (7) re-presentation policy: original forms are not the proposal class
-    if not _primary_is_amendment(c):
-        if any(_is_re_presentation_tag(t) for t in siblings):
-            signals.append("re_presentation_candidate")
-        elif not STALE_FILL_PROPOSE_ORIGINAL_FORMS:
-            signals.append("original_form_basis_unconfirmed")
+    # (7) re-presentation policy. Discontinued-ops / disposal-group / spin-off
+    # facts for the period mark a re-presentation in ANY periodic form,
+    # amendments included (decided 2026-10-19 after v2: SPGI 10-K/A
+    # 0000064040-13-000008 re-presents 2011 quarters 1,557M -> 1,020M, AROC
+    # 10-K/A 0001389050-17-000015 2014 quarters 739M -> 239M). Unflagged
+    # original forms are not the proposal class either.
+    if any(_is_re_presentation_tag(t) for t in siblings):
+        signals.append("re_presentation_candidate")
+    elif not _primary_is_amendment(c) and not STALE_FILL_PROPOSE_ORIGINAL_FORMS:
+        signals.append("original_form_basis_unconfirmed")
     return signals
 
 
