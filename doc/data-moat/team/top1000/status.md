@@ -6,7 +6,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 |---|---|---|---|---|
 | S000 | ranking audit (market-cap outliers) | | | done: 10 wrong market caps FILING-CHECKED, 8 dropped, 14 added |
 | S001 | NVDA AAPL GOOG MSFT AMZN META AVGO TSLA AKTX LLY | 86.8 | 93 | done (DATA-INFERRED only) |
-| S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | todo |
+| S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | running |
 | S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | done (DATA-INFERRED only: sec.gov blocked) |
 | S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | done (DATA-INFERRED only) |
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | done (DATA-INFERRED only) |
