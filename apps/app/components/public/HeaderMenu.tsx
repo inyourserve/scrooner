@@ -30,7 +30,7 @@ export function HeaderMenu({ authenticated }: { authenticated: boolean }) {
     return (
       <Link
         aria-current={active ? "page" : undefined}
-        className={link.action ? "header-menu__link header-menu__link--action" : "header-menu__link"}
+        className={"action" in link && link.action ?"header-menu__link header-menu__link--action" : "header-menu__link"}
         href={link.href}
         key={link.href}
         onClick={close}
