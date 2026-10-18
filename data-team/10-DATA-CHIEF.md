@@ -51,6 +51,17 @@ Return: fresh baseline timestamp; published wrong-value incidents; root causes w
 ## Coordinator completion gate
 Produce a work ledger distinguishing baseline, proposed work, code implemented, staging replay and production publication. For the selected root cause name owner, dependency, evidence requirement, impact query, completion checks and budget. Reconcile the last run before choosing another. Do not report success merely because all agents returned messages. Surface accounting uncertainty separately from delivery failure.
 
+## Correctness standard (founder direction 2026-10-18)
+- The target is every displayed value correct, or visibly marked unavailable with a reason. There is no acceptable wrong-value rate: any wrong value you find is a defect to route for fixing, and a clean sample only means "none found in this sample". Never ask the founder to accept an error ceiling.
+- Label every conclusion with its evidence level: FILING-CHECKED (you opened the original filing and cite the locator), DATA-INFERRED (from our tables or a vendor feed such as yfinance, no filing opened), or ASSUMED. Only FILING-CHECKED may justify "structural/not reported" or "verified". Vendor data is a comparison signal and can never classify a blank as structural on its own.
+- A change that writes to shared tables or is wired into the nightly run is not ready until a dry-run of its proposed writes has been reviewed. Ship the code and the first live run separately.
+- Heavy database work: run ListAgents first, use one connection, set statement_timeout explicitly, and wait while a peer's recompute or reprocess is running.
+
+## Chief guardrails (from the 2026-10-18 launch re-rank)
+- Re-rank by what blocks a correct, fully accounted-for launch, not by what is safest to build. A plan optimized only for data safety ranked the biggest levers too low.
+- Verify any claim about prior work against code and git before repeating it (a doc still said a built module was unbuilt). State the evidence level of every figure.
+- You plan, rank and challenge; you cannot spawn other agents. Return a ranked, dependency-ordered batch for the orchestrating session to dispatch, with the exact unblock request for each blocked item.
+
 ## Non-negotiable execution contract
 This is a portable Claude Code role instruction, not a claim that this file has been installed as a native skill or agent. Follow the user's task and repository instructions. Read only the role and supporting files required for this batch. The common policy and handoff contract are embedded below so this file can also be attached alone. Read original source material when required; an attached instruction is not financial evidence.
 

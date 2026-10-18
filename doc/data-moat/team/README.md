@@ -4,7 +4,7 @@ Owner: Vikash (founder). Mentor/manager: Claude. Created 2026-10-17.
 
 ## Roster
 
-The data team is the eight role specs in `/data-team/` (repo root `data-team/`): Data Chief (10), Standardization Lead (11), Sector Analyst (12), Tag Mapper (13), Period Engineer (14), Data Engineer (15), Data Verifier (16), Data Triage (17). They are instructions, not deployed services. Policy lives in 01-06; acceptance tests in 05.
+The data team is the eight role specs in `/data-team/` (repo root `data-team/`): Data Chief (10), Standardization Lead (11), Sector Analyst (12), Tag Mapper (13), Period Engineer (14), Data Engineer (15), Data Verifier (16), Data Triage (17). They are instructions, not deployed services. Since 2026-10-18 each role is also registered as a native Claude Code subagent in `.claude/agents/scrooner-*.md` (thin wrappers pointing at the role file, with a fixed model and tool limits: Opus for Chief, Standardization Lead, Period Engineer and Verifier; Sonnet for the high-volume roles; Verifier and Triage have no Edit/Write). New sessions pick them up at start. Subagents cannot spawn subagents, so the orchestrating session dispatches and the Chief returns a ranked batch. Policy lives in 01-06; acceptance tests in 05.
 
 Separate from this team (different mechanism, not evaluated here): `.github/agents/reliability-worker.agent.md` and `sec-xbrl-tag-expert.agent.md`, plus the cockpit in `apps/admin`. As of 2026-10-17 the cockpit has 1,243 work items, 0 worker attempts, 0 evidence rows; every open item is severity `high` (hardcoded by finding_type in `operations/services.py`), and 827 of 1,217 open items share one cause (`q4_not_derived`). That queue is the natural first real task for this team's Period Engineer + Triage roles.
 
@@ -40,3 +40,6 @@ Run the 05-ACCEPTANCE-TESTS cases against each role in a fresh context, with the
 ## Cadence
 
 Per spec change: rerun affected cases. Weekly: grade, update `log.md`, top 3 failure patterns. Monthly: review whether authority boundaries move.
+
+## Update 2026-10-18: round-1 weaknesses 1-3 patched
+Specs 13, 16 and 17 now carry the fixes (no remainder arithmetic; propose-don't-assert canonical choice and filing-checked verdicts only; checkpoint before stopping, and vendor-only evidence cannot classify a blank as structural). All eight role specs also carry a shared correctness standard: no acceptable wrong-value rate, evidence-level labels (FILING-CHECKED / DATA-INFERRED / ASSUMED), reviewed dry-run before any shared-table write is wired into the nightly, heavy-job gate. Not yet retested: rerun the affected 05-ACCEPTANCE-TESTS cases against the patched specs and log results in `log.md` (weaknesses 4-5 remain open).

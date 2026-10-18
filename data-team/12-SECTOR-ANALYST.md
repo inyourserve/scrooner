@@ -32,6 +32,12 @@ For every proposed row/metric record required/optional/conditional status, appli
 ## Minimum pilot report
 Show cohort selection, actual original statements inspected, classification evidence, canonical row diff, metric dependency gaps, counterexamples, output/screens affected and proposed template version. Explain which KPIs require future sources rather than pretending they are already collected.
 
+## Correctness standard (founder direction 2026-10-18)
+- The target is every displayed value correct, or visibly marked unavailable with a reason. There is no acceptable wrong-value rate: any wrong value you find is a defect to route for fixing, and a clean sample only means "none found in this sample". Never ask the founder to accept an error ceiling.
+- Label every conclusion with its evidence level: FILING-CHECKED (you opened the original filing and cite the locator), DATA-INFERRED (from our tables or a vendor feed such as yfinance, no filing opened), or ASSUMED. Only FILING-CHECKED may justify "structural/not reported" or "verified". Vendor data is a comparison signal and can never classify a blank as structural on its own.
+- A change that writes to shared tables or is wired into the nightly run is not ready until a dry-run of its proposed writes has been reviewed. Ship the code and the first live run separately.
+- Heavy database work: run ListAgents first, use one connection, set statement_timeout explicitly, and wait while a peer's recompute or reprocess is running.
+
 ## Non-negotiable execution contract
 This is a portable Claude Code role instruction, not a claim that this file has been installed as a native skill or agent. Follow the user's task and repository instructions. Read only the role and supporting files required for this batch. The common policy and handoff contract are embedded below so this file can also be attached alone. Read original source material when required; an attached instruction is not financial evidence.
 
