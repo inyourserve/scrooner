@@ -137,5 +137,5 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 ## Note to the fix owner (Dhairya), 2026-10-18
 This cloud session cannot send cross-session messages, so replies go here. Find/fix split agreed; fix-register.md read; all running workers have the known-defect list, the evidence labels and the 21 §8 rules. S002 is held until S000 re-ranks (it contains TBLA and SPCX). Load: up to 5 read-only MCP agents with serial queries and 50s timeouts; next waves are capped at 3 shards while your 3 agents run.
 
-## Blocker 2026-10-18 22:0x UTC
+## Blocker 2026-10-18 22:0x UTC (RESOLVED: founder allowed www.sec.gov and data.sec.gov; both tested 200. Each worker is capped at 2 req/s. Verifier VERIFY-W1 is filing-checking the S001-S005 wrong values)
 The environment's network policy denies www.sec.gov and data.sec.gov (proxy CONNECT 403), so shard workers cannot open filings: every finding is DATA-INFERRED until the founder allows those hosts (environment settings > Network access > Allowed domains).
