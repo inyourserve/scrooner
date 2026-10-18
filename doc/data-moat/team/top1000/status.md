@@ -4,7 +4,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 
 | Shard | Tickers | Filled % | Unexplained blanks | Status |
 |---|---|---|---|---|
-| S000 | ranking audit (market-cap outliers) | | | running |
+| S000 | ranking audit (market-cap outliers) | | | done: 10 wrong market caps FILING-CHECKED, 8 dropped, 14 added |
 | S001 | NVDA AAPL GOOG MSFT AMZN META AVGO TSLA AKTX LLY | 86.8 | 93 | done (DATA-INFERRED only) |
 | S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | todo |
 | S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | done (DATA-INFERRED only: sec.gov blocked) |
@@ -104,6 +104,8 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S097 | CPB CROX LGND BLDR BLCO HWC CZR RYTM GATX BKH | 81.5 | 140 | todo |
 | S098 | HOMB LOAR TEX TTD LSTR WULF ESNT MKTX RYN DLB | 79.5 | 150 | todo |
 | S099 | MTG GBCI CHDN MCY SXT PEGA EPRT CAKE OLLI LKQ | 79.3 | 149 | todo |
+| S101 | ASB BGC INSW MBGL NIQ ORA SNDR WFRD (backfill) | | | todo |
+| S102 | BRK-A FWONA BAM PLNT UHAL SUN (market cap blank today) | | | todo |
 | S100 | CACC WH RLI CWST ECG SAIC VRNS DOCS BXSL TFX | 74.0 | 206 | todo |
 
 ## Rule families found (new ones go to the fix owner via this table)
@@ -162,7 +164,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: variable annual dividend inflates trailing yield (PGR 6.36%) | S010 | PGR | DATA-INFERRED | open |
 | NEW: ReceivablesNetCurrent not mapped (LMT 3,901M, MO 263M) | S010 | LMT, MO | DATA-INFERRED | open |
 | debt-free company shows a stale old total_debt (VRTX 105M from 2011) | S010 | VRTX | DATA-INFERRED | open (with zero-debt family, ISRG) |
-| market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
+| MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
 This cloud session cannot send cross-session messages, so replies go here. Find/fix split agreed; fix-register.md read; all running workers have the known-defect list, the evidence labels and the 21 §8 rules. S002 is held until S000 re-ranks (it contains TBLA and SPCX). Load: up to 5 read-only MCP agents with serial queries and 50s timeouts; next waves are capped at 3 shards while your 3 agents run.
@@ -192,3 +194,6 @@ Note: shard workers launched as general-purpose agents get their sec.gov fetches
 4. SHOP shares CONFIRMED wrong: cover Class A 1,208,570,347 + Class B 78,073,584 + 1 founder share; stored 0 is a pre-IPO class zero from a 2016 20-F.
 5. WELL derived operating income CONFIRMED wrong: OperatingExpenses 3,481,412K already includes property costs and interest; no operating income presented (0000766704-19-000061 R3).
 6. Wrong blank reasons CONFIRMED: SCCO revenue 13,420M; DHR paid 878M dividends; C paid 5,372M.
+
+## S000 re-rank applied (2026-10-18)
+Done shards are NOT reissued: dropped companies keep their findings (their wrong market caps are real wrong values) but are marked `excluded` in shards.csv and leave the cohort denominator. Dropped (8): AKTX, TBLA, RPAY, ZLAB, SCNI, KZIA (wrong market cap, FILING-CHECKED), IAU, SLV (commodity trusts, not operating companies). SPCX stays: its market cap is UNDERSTATED ($710B stored, about $1.92T true). Added: S101 = 8 backfill companies; S102 = 6 large companies whose market cap is blank today (BRK-A, FWONA, BAM, PLNT, UHAL, SUN). ENB and TSM wait on doc 02's foreign-private-issuer decision. Rule family MCAP-SHARES (cover-page sum of all classes, ADS ratio from Security12bTitle, diluted-share scale guard, review holds, exclude commodity trusts) is in results/S000.md for the fix owner.

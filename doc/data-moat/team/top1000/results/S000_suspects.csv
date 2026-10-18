@@ -1,0 +1,24 @@
+ticker,company_id,cik,shard_rank,stored_mcap_bn,source_fact_id,source_tag,stored_shares,true_shares_basis,true_shares,price_used,corrected_mcap_bn,cause,evidence_accession,evidence_level,action
+AKTX,2781,0001541157,9,1274.10,58866465,dei:EntityCommonStockSharesOutstanding,155758529533,ADS-equivalent (1 ADS = 80000 ordinary),1946982,8.18,0.016,ads_ratio,0001493152-26-037730,FILING-CHECKED,drop
+TBLA,2766,0001840502,11,999.34,72174896,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,290505359000,cover ordinary 252115754 + non-voting ordinary 18039644,270155398,3.44,0.929,waso_filer_scale_x1000 (stale cover 2024-10-31 skipped),0001840502-26-000012,FILING-CHECKED,drop
+RPAY,5007,0001720592,33,340.64,68511929,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,83285379000,cover Class A 89860647 (+100 Class V),89860647,4.09,0.368,waso_filer_scale_x1000 (cover is dimensioned so stripped),0001193125-26-342440,FILING-CHECKED,drop
+SPCX,4257,0001181412,18,709.77,49306269,us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding,4879000000,cover Class A 7696293669 + Class B 5485486276,13181779945,145.4745,1917.6,multiclass_waso_ytd_understates,0001628280-26-052535,FILING-CHECKED,move to rank ~6
+ZLAB,4796,0001704292,387,26.03,64835449,us-gaap:CommonStockSharesOutstanding,1122445390,ADS-equivalent (1 ADS = 10 ordinary; cover 1122662280 ordinary),112266228,23.19,2.603,ads_ratio,0001628280-26-053793,FILING-CHECKED,drop (below cutoff)
+SCNI,3626,0001611747,688,10.58,64563218,us-gaap:CommonStockSharesOutstanding,13872899584,ADS-equivalent (1 ADS = 4000 ordinary),3468225,0.7623,0.003,ads_ratio,0001213900-26-038011,FILING-CHECKED,drop
+KZIA,3163,0001075880,933,6.19,40844456,dei:EntityCommonStockSharesOutstanding,809418734,ADS-equivalent (1 ADS = 500 ordinary),1618837,7.65,0.012,ads_ratio,0001193125-25-272284,FILING-CHECKED,drop
+AMRN,1820,0000897448,~1100 (outside list),4.75,30903833,us-gaap:CommonStockSharesOutstanding,420044022,ADS-equivalent (1 ADS = 20 ordinary; cover 422456685 ordinary),21122834,11.32,0.239,ads_ratio,0001193125-26-323845,FILING-CHECKED,fix value (not in list)
+GPCR,3442,0001888886,~1130 (outside list),4.58,73629994,dei:EntityCommonStockSharesOutstanding,213929572,ADS-equivalent (1 ADS = 3 ordinary),71309857,21.41,1.527,ads_ratio,0001104659-26-092057,FILING-CHECKED,fix value (not in list)
+DBVT,3641,0001613780,~1460 (outside list),2.68,64989919,dei:EntityCommonStockSharesOutstanding,296061497,ADS-equivalent (1 ADS = 5 ordinary),59212299,9.05,0.536,ads_ratio,0001628280-26-048453,FILING-CHECKED,fix value (not in list)
+SLN,2043,,outside list,1.23,,,,,,,,ads_ratio_suspected (mcap/public float 6.0; foreign issuer),,DATA-INFERRED,verify
+IAU,4561,0001278680,211,61.6,,,,,,,,not_operating_company (SIC 6221 commodity grantor trust),,DATA-INFERRED,drop from population
+SLV,5091,0001330568,367,27.7,,,,,,,,not_operating_company (SIC 6221 commodity grantor trust),,DATA-INFERRED,drop from population
+BRK-A,3034,,missing,null,,,,,,,,stale:shares_outstanding (public float 902.7B at 2025-06-30),,DATA-INFERRED,add once shares fixed
+FWONA,2946,,missing,null,,,,,,,,stale:shares_outstanding (tracking/multi-class; float 32.1B),,DATA-INFERRED,add once shares fixed
+BAM,3697,,missing,null,,,,,,,,stale:shares_outstanding (float 23.2B),,DATA-INFERRED,add once shares fixed
+PLNT,3937,,missing,null,,,,,,,,stale:shares_outstanding (Class A/B; float 9.1B),,DATA-INFERRED,add once shares fixed
+UHAL,107,,missing,null,,,,,,,,stale:shares_outstanding (voting/non-voting classes; float 5.0B),,DATA-INFERRED,add once shares fixed
+SUN,2870,,missing,null,,,,,,,,missing:shares_outstanding (LP units; float 5.8B),,DATA-INFERRED,add once shares fixed
+ENB,5,,missing,null,,,,,,,,missing:shares_outstanding (40-F filer; FPI scope open in doc 02),,DATA-INFERRED,scope decision
+TSM,6,,missing,null,,,,,,,,missing:shares_outstanding (20-F filer; FPI scope open in doc 02),,DATA-INFERRED,scope decision
+CRWD,2726,0001535527,51,231.28,112454587,dei:EntityCommonStockSharesOutstanding,1023934842,cover,1023934842,225.8697,231.28,share jump 4x is a real split,0001535527-26-000031,FILING-CHECKED,keep (cleared)
+KLAC,1213,0000319201,55,218.21,17477297,dei:EntityCommonStockSharesOutstanding,1306546783,cover,1306546783,167.01,218.21,share jump 10x is a real split,0000319201-26-000027,FILING-CHECKED,keep (cleared)
