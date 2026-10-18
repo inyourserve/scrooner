@@ -42,8 +42,8 @@ reconcile_by_mode` already uses, confirmed live to correlate with
 most-recent-filing-date for Etsy's real conflicting facts.
 """
 
-from dataclasses import dataclass
-from datetime import date
+from dataclasses import dataclass, replace
+from datetime import date, timedelta
 from decimal import Decimal
 
 import psycopg
@@ -265,6 +265,20 @@ def resolve_baseline_passthrough(
 # different tag (ASC 606 subset, continuing-ops subtotal, opposite-signed
 # alternative tag), a derived FY-minus-9M value, or a DEF 14A / 8-K figure.
 # The guards below are that verdict's recommendation, enforced in code.
+#
+# Second round (2026-10-19). The Verifier filing-checked 146 of the guarded
+# version's 570 proposals and 19 were still wrong with the same tag, a
+# periodic form and a later filing date
+# (data-team/29-VERIFIER-GUARDED-STALE-FILL-2026-10-18.md): the later filing
+# carried a period-label/context error (SWK, CB, Ford, RDI, MHH, WYY), a
+# continuing-ops subtotal under the total cash-flow tag (MGNC, LRDC), cash
+# plus restricted cash under the plain cash tag (FDCT), a TWD-unit component
+# (IVDA), or a one-day "period" from a debt note (EONR). EPS proposals that
+# re-base on a reverse split the split table lacks (GURE, NCRA, SVMB, BURU)
+# are whole-series changes. Decision (doc/data-moat/team/PLAN.md, "Guarded
+# stale-fill: still NOT safe as a class"): this path proposes restatements
+# and corrections only, so re-presentations in original 10-K/10-Q filings go
+# to review and only amendments with no flag remain proposals.
 
 # Only these forms carry the financial statements a value may be refreshed
 # from. 8-K recasts are re-presentations and DEF 14A pay-versus-performance
@@ -272,6 +286,17 @@ def resolve_baseline_passthrough(
 STALE_FILL_PERIODIC_FORMS = frozenset(
     {"10-K", "10-Q", "10-K/A", "10-Q/A", "10-KT", "10-KT/A"}
 )
+STALE_FILL_AMENDMENT_FORMS = frozenset({"10-K/A", "10-Q/A", "10-KT/A"})
+STALE_FILL_ANNUAL_FORMS = frozenset({"10-K", "10-K/A", "10-KT", "10-KT/A"})
+STALE_FILL_QUARTERLY_FORMS = frozenset({"10-Q", "10-Q/A"})
+
+# Policy switch for original-form (10-K / 10-Q / 10-KT) primaries with no
+# flag. From the data alone they cannot be told apart from re-presentations:
+# 34 of the 41 unflagged originals the Verifier sampled were re-presentations
+# (discontinued operations, reclassifications, perimeter changes). Under the
+# 2026-10-18 decision they are not proposals; set True only by an explicit
+# policy change that accepts re-presented values cell by cell.
+STALE_FILL_PROPOSE_ORIGINAL_FORMS = False
 
 # A difference at or below this relative size is skipped as the same figure
 # at a different presentation precision, but ONLY if the coarser value really
@@ -288,13 +313,161 @@ STALE_FILL_NEAR_EQUAL_TOLERANCE = Decimal("0.01")
 
 STALE_FILL_GUARD_CLASS = "same_tag_filed_periodic_later_filing"
 
+# Concept shapes. Per-share concepts need unit USD/shares and share-basis
+# checks; balance-sheet concepts are instants; every other target is a flow.
+STALE_FILL_PER_SHARE_CONCEPTS = frozenset(
+    {"basic_eps", "diluted_eps", "dividends_per_share"}
+)
+STALE_FILL_INSTANT_CONCEPTS = frozenset(
+    {
+        "cash_and_equivalents",
+        "current_assets",
+        "ppe_net",
+        "total_assets",
+        "current_liabilities",
+        "total_liabilities",
+        "stockholders_equity",
+    }
+)
+STALE_FILL_CASH_FLOW_TOTAL_CONCEPTS = frozenset(
+    {"cfo", "cash_flow_investing", "cash_flow_financing"}
+)
+
+# (4) Unit: the primary fact's unit must equal the stored fact's unit and be
+# USD (IVDA: a TWD-unit cash component, core.fact 45910028).
+STALE_FILL_MONEY_UNIT = "usd"
+STALE_FILL_PER_SHARE_UNIT = "usd/shares"
+
+# (5) Not a real period: a flow shorter than this is not a quarter (EONR's
+# one-day 2025-09-09 debt-note context); a roughly annual duration from a
+# 10-Q is a context error (WYY tagged its Q1 2021 value "12 months ended
+# Dec. 31, 2020"). Apple's 98-day 14-week quarter and 364/371-day years pass.
+STALE_FILL_MIN_FLOW_DAYS = 80
+STALE_FILL_ANNUAL_DAYS = 300
+
+# (1) Comparative window of the primary filing, by form kind and period type:
+# how many years before the document period end (core.filing.
+# period_of_report) its statements reach. A 10-K presents up to three fiscal
+# years of flows (latest ends at period end, earliest ends two years before)
+# and the equity statement opens three years back; a 10-Q presents the
+# current and prior-year quarter/YTD, and its cash-flow statement opens at a
+# year-end up to about 21 months back. Slack covers 52/53-week calendars.
+STALE_FILL_WINDOW_YEARS = {
+    ("annual", "duration"): 2,
+    ("annual", "instant"): 3,
+    ("quarterly", "duration"): 1,
+    ("quarterly", "instant"): 2,
+}
+STALE_FILL_WINDOW_SLACK_DAYS = 21
+STALE_FILL_FUTURE_SLACK_DAYS = 7
+
+# (6) Share-basis change for per-share concepts: a share count that moves by
+# this factor between the two filings is a split or share re-basing (GURE
+# x9.8, NCRA x29.7, SVMB x198.9, BURU 1-for-40), not a restatement to apply
+# cell by cell.
+STALE_FILL_SHARE_BASIS_RATIO = Decimal("1.5")
+STALE_FILL_WEIGHTED_SHARE_TAGS = frozenset(
+    {
+        "us-gaap:WeightedAverageNumberOfSharesOutstandingBasic",
+        "us-gaap:WeightedAverageNumberOfDilutedSharesOutstanding",
+        "us-gaap:WeightedAverageNumberOfShareOutstandingBasicAndDiluted",
+        "us-gaap:WeightedAverageNumberOfSharesOutstandingBasicAndDiluted",
+    }
+)
+STALE_FILL_OUTSTANDING_SHARE_TAGS = frozenset({"us-gaap:CommonStockSharesOutstanding"})
+
+# (2) Discontinued-operations cash flows, or the continuing-operations
+# counterpart of a total cash-flow tag, in the primary filing for the period:
+# the filer may have put the continuing-ops subtotal under the total tag
+# (MGNC 0001683168-26-007689 R6; LRDC 0001199835-26-000359 R6).
+STALE_FILL_DISC_OPS_CASH_FLOW_TAGS = frozenset(
+    {
+        "us-gaap:CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations",
+        "us-gaap:CashProvidedByUsedInInvestingActivitiesDiscontinuedOperations",
+        "us-gaap:CashProvidedByUsedInFinancingActivitiesDiscontinuedOperations",
+        "us-gaap:CashProvidedByUsedInDiscontinuedOperationsOperatingActivities",
+        "us-gaap:CashProvidedByUsedInDiscontinuedOperationsInvestingActivities",
+        "us-gaap:CashProvidedByUsedInDiscontinuedOperationsFinancingActivities",
+        "us-gaap:NetCashProvidedByUsedInDiscontinuedOperations",
+        "us-gaap:NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",
+        "us-gaap:NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
+        "us-gaap:NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",
+        "us-gaap:NetCashProvidedByUsedInContinuingOperations",
+    }
+)
+
+# Patterns (core.concept.tag ILIKE) for the sibling facts loaded from the
+# primary filing at the same period: restricted cash, combined cash, and the
+# discontinued-ops / disposal-group / spin-off families.
+_STALE_FILL_SIBLING_TAG_PATTERNS = (
+    "%RestrictedCash%",
+    "%DiscontinuedOperation%",
+    "%DisposalGroup%",
+    "%Spinoff%",
+    "NetCashProvidedByUsedIn%ContinuingOperations",
+)
+
+
+def _local_tag(tag: str) -> str:
+    return tag.rsplit(":", 1)[-1]
+
+
+def _is_restricted_cash_tag(tag: str) -> bool:
+    """(3) A restricted-cash tag or the combined cash + restricted cash tag
+    (FDCT tagged its combined total with the plain cash element)."""
+    return "restrictedcash" in _local_tag(tag).lower()
+
+
+def _is_re_presentation_tag(tag: str) -> bool:
+    """(7) Discontinued operations, a disposal group or a spin-off: the
+    perimeter of the period differs from the one first filed. The combined
+    cash totals ('CashCashEquivalentsRestrictedCash...IncludingDisposalGroup
+    AndDiscontinuedOperations', the standard ASU 2016-18 cash-flow total, on
+    FDCT 0001493152-26-027765 and IVDA 0001641172-25-015284 with no
+    discontinued operations) and their exchange-rate effect are not evidence
+    of discontinued operations."""
+    local = _local_tag(tag).lower()
+    if local.startswith("cashcashequivalentsrestrictedcash") or local.startswith(
+        "effectofexchangerateoncash"
+    ):
+        return False
+    return (
+        "discontinuedoperation" in local
+        or "disposalgroup" in local
+        or "spinoff" in local
+    )
+
+
+def _years_before(d: date, years: int) -> date:
+    try:
+        return d.replace(year=d.year - years)
+    except ValueError:  # Feb 29
+        return d.replace(year=d.year - years, day=28)
+
+
+def _outside_comparative_window(
+    form: str, period_of_report: date, period_type: str, period_end: date
+) -> bool:
+    kind = "annual" if form in STALE_FILL_ANNUAL_FORMS else "quarterly"
+    years = STALE_FILL_WINDOW_YEARS[(kind, period_type)]
+    earliest = _years_before(period_of_report, years) - timedelta(
+        days=STALE_FILL_WINDOW_SLACK_DAYS
+    )
+    latest = period_of_report + timedelta(days=STALE_FILL_FUTURE_SLACK_DAYS)
+    return period_end < earliest or period_end > latest
+
 
 @dataclass(frozen=True)
 class StaleFillCandidate:
     """One stored *_resolved row (all sources non-authoritative) paired with
     the primary concept's row for the same (company, period). Tags are
     'taxonomy:tag' strings of core.concept behind each side's
-    source_fact_ids; a missing source fact simply contributes nothing."""
+    source_fact_ids; a missing source fact simply contributes nothing.
+
+    The fields after `stored_forms` are evidence for the 2026-10-19 guards.
+    Units and period come from the candidate query; the rest is loaded only
+    for candidates that pass every earlier guard. None means "not loaded",
+    which classify_stale_fill treats as a reason for review, never as clean."""
 
     concept: str
     row_id: int
@@ -312,6 +485,29 @@ class StaleFillCandidate:
     primary_accessions: tuple[str, ...] = ()
     stored_accessions: tuple[str, ...] = ()
     stored_forms: frozenset[str] = frozenset()
+    # (4) lower-case core.unit.unit_name of each side's source facts
+    stored_units: frozenset[str] = frozenset()
+    primary_units: frozenset[str] = frozenset()
+    # (5) the shared period
+    period_type: str | None = None
+    period_start: date | None = None
+    period_end: date | None = None
+    # filings behind each side: primary as (filing_id, form, period_of_report)
+    stored_filing_ids: tuple[int, ...] = ()
+    primary_filings: tuple[tuple[int, str, date | None], ...] = ()
+    # (1) the primary value is filed under the same company/tag/unit at a
+    # different period
+    value_at_other_period: bool | None = None
+    # (2)(3)(7) nonzero restricted-cash / discontinued-ops / disposal-group /
+    # spin-off / continuing-ops cash-flow facts in the primary filing(s) at
+    # the same period
+    primary_sibling_tags: frozenset[str] | None = None
+    # (6) largest ratio between the stored and primary filings' share counts
+    # for the period (None: no comparable share fact); share_basis_checked
+    # says whether the lookup ran at all
+    share_ratio: Decimal | None = None
+    share_basis_checked: bool = False
+    split_on_record: bool | None = None
 
 
 def _rounding_consistent(a: Decimal, b: Decimal) -> bool:
@@ -330,25 +526,15 @@ def _rounding_consistent(a: Decimal, b: Decimal) -> bool:
     return abs(fine - coarse) <= half_unit
 
 
-def classify_stale_fill(c: StaleFillCandidate) -> tuple[str, str]:
-    """(outcome, reason); outcome is 'propose', 'needs_review' or 'skip'.
-    Guards run in this order and the first one that fires decides, so the
-    reason is the earliest failing guard:
-      skip        equal values
-      skip        stored or primary source facts missing
-      skip        different_tag: the stored and primary source tags differ
-                  (a different tag is a precedence decision, not staleness)
-      skip        primary_derived: any primary source fact is_derived
-      skip        primary_non_periodic_form: a primary form outside
-                  STALE_FILL_PERIODIC_FORMS
-      needs_review filing_date_unknown
-      skip        authoritative_older_than_stored (a newer restated stored
-                  value is never overwritten by an older original)
-      needs_review same_filing_date (dates can't order same-day filings)
-      needs_review sign_flip / zero_value
-      skip        rounding_equivalent (<= 0.01% AND rounding-consistent)
-      needs_review near_equal_not_rounding / rounded_copy_beyond_tolerance
-      propose     everything else"""
+def _expected_unit(concept: str) -> str:
+    if concept in STALE_FILL_PER_SHARE_CONCEPTS:
+        return STALE_FILL_PER_SHARE_UNIT
+    return STALE_FILL_MONEY_UNIT
+
+
+def _pre_evidence_outcome(c: StaleFillCandidate) -> tuple[str, str] | None:
+    """Every guard that needs only the candidate query's own columns. None
+    when the candidate passes them all and needs the evidence guards."""
     stored, primary = c.stored, c.primary
     if stored == primary:
         return "skip", "equal"
@@ -362,6 +548,22 @@ def classify_stale_fill(c: StaleFillCandidate) -> tuple[str, str]:
         return "skip", "primary_derived"
     if not c.primary_forms or not c.primary_forms <= STALE_FILL_PERIODIC_FORMS:
         return "skip", "primary_non_periodic_form"
+    # (4) unit
+    expected = frozenset({_expected_unit(c.concept)})
+    if c.primary_units != expected or c.stored_units != c.primary_units:
+        return "skip", "non_usd_unit"
+    # (5) not a real reporting period
+    want_type = "instant" if c.concept in STALE_FILL_INSTANT_CONCEPTS else "duration"
+    if c.period_type != want_type or c.period_end is None:
+        return "skip", "period_type_mismatch"
+    if want_type == "duration":
+        if c.period_start is None:
+            return "skip", "period_type_mismatch"
+        days = (c.period_end - c.period_start).days
+        if days < STALE_FILL_MIN_FLOW_DAYS:
+            return "skip", "short_duration"
+        if days > STALE_FILL_ANNUAL_DAYS and c.primary_forms & STALE_FILL_QUARTERLY_FORMS:
+            return "skip", "annual_from_10q"
     if c.stored_filing_date is None or c.primary_filing_date is None:
         return "needs_review", "filing_date_unknown"
     if c.primary_filing_date < c.stored_filing_date:
@@ -380,25 +582,134 @@ def classify_stale_fill(c: StaleFillCandidate) -> tuple[str, str]:
         if rounding:
             return "needs_review", "rounded_copy_beyond_tolerance"
         return "needs_review", "near_equal_not_rounding"
+    return None
+
+
+def _primary_is_amendment(c: StaleFillCandidate) -> bool:
+    return bool(c.primary_forms) and c.primary_forms <= STALE_FILL_AMENDMENT_FORMS
+
+
+def stale_fill_signals(c: StaleFillCandidate) -> list[str]:
+    """Every review signal of the evidence guards, in a fixed order (the
+    first one is the outcome's reason). An empty list means none fired.
+    Missing evidence is itself a signal, so an unloaded candidate is never
+    proposed."""
+    signals: list[str] = []
+    # (6) share basis, per-share concepts only
+    if c.concept in STALE_FILL_PER_SHARE_CONCEPTS:
+        if not c.share_basis_checked:
+            signals.append("share_basis_not_checked")
+        elif c.share_ratio is not None:
+            if c.share_ratio >= STALE_FILL_SHARE_BASIS_RATIO:
+                signals.append("split_basis_change")
+        else:
+            # No comparable share count in both filings: the value's own move
+            # is the only evidence. A split-sized move goes to review whether
+            # or not a split is on record (on record or not, a split is a
+            # whole-series re-base, never a per-cell refresh).
+            mags = sorted((abs(c.stored), abs(c.primary)))
+            if mags[0] == 0 or mags[1] / mags[0] >= STALE_FILL_SHARE_BASIS_RATIO:
+                signals.append("split_basis_change")
+    # (1a) label error: the primary value sits at another period too
+    if c.value_at_other_period is None:
+        signals.append("other_period_check_not_loaded")
+    elif c.value_at_other_period:
+        signals.append("value_at_other_period")
+    # (1b) period outside the primary filing's own comparative window
+    if not c.primary_filings or c.period_type is None or c.period_end is None:
+        signals.append("comparative_window_unknown")
+    else:
+        for _fid, form, por in c.primary_filings:
+            if por is None:
+                signals.append("comparative_window_unknown")
+                break
+            if _outside_comparative_window(form, por, c.period_type, c.period_end):
+                signals.append("outside_comparative_window")
+                break
+    siblings = c.primary_sibling_tags
+    if siblings is None:
+        signals.append("sibling_check_not_loaded")
+        siblings = frozenset()
+    # (2) continuing-ops subtotal under a total cash-flow tag
+    if c.concept in STALE_FILL_CASH_FLOW_TOTAL_CONCEPTS and (
+        siblings & STALE_FILL_DISC_OPS_CASH_FLOW_TAGS
+    ):
+        signals.append("continuing_ops_subtotal")
+    # (3) cash vs cash plus restricted cash
+    if c.concept == "cash_and_equivalents" and any(
+        _is_restricted_cash_tag(t) for t in siblings
+    ):
+        signals.append("restricted_cash_same_date")
+    # (7) re-presentation policy: original forms are not the proposal class
+    if not _primary_is_amendment(c):
+        if any(_is_re_presentation_tag(t) for t in siblings):
+            signals.append("re_presentation_candidate")
+        elif not STALE_FILL_PROPOSE_ORIGINAL_FORMS:
+            signals.append("original_form_basis_unconfirmed")
+    return signals
+
+
+def classify_stale_fill(c: StaleFillCandidate) -> tuple[str, str]:
+    """(outcome, reason); outcome is 'propose', 'needs_review' or 'skip'.
+    Guards run in this order and the first one that fires decides, so the
+    reason is the earliest failing guard:
+      skip        equal values
+      skip        stored or primary source facts missing
+      skip        different_tag: the stored and primary source tags differ
+                  (a different tag is a precedence decision, not staleness)
+      skip        primary_derived: any primary source fact is_derived
+      skip        primary_non_periodic_form: a primary form outside
+                  STALE_FILL_PERIODIC_FORMS
+      skip        non_usd_unit: primary unit not USD (USD/shares for
+                  per-share) or not equal to the stored unit
+      skip        period_type_mismatch / short_duration (< 80 days) /
+                  annual_from_10q (> 300 days from a 10-Q)
+      needs_review filing_date_unknown
+      skip        authoritative_older_than_stored (a newer restated stored
+                  value is never overwritten by an older original)
+      needs_review same_filing_date (dates can't order same-day filings)
+      needs_review sign_flip / zero_value
+      skip        rounding_equivalent (<= 0.01% AND rounding-consistent)
+      needs_review near_equal_not_rounding / rounded_copy_beyond_tolerance
+      needs_review the first of stale_fill_signals(): split_basis_change,
+                  value_at_other_period, outside_comparative_window,
+                  continuing_ops_subtotal, restricted_cash_same_date,
+                  re_presentation_candidate, original_form_basis_unconfirmed
+                  (or a *_not_loaded / *_unknown evidence gap)
+      propose     everything else: an amendment (10-K/A, 10-Q/A, 10-KT/A)
+                  with no signal"""
+    pre = _pre_evidence_outcome(c)
+    if pre is not None:
+        return pre
+    signals = stale_fill_signals(c)
+    if signals:
+        return "needs_review", signals[0]
     return "propose", STALE_FILL_GUARD_CLASS
 
 
 _STALE_FILL_CANDIDATE_SQL = """
 select r.id, r.company_id, r.period_id, r.value, p.value, p.source_fact_ids,
        s.tags, s.max_date, s.accessions, s.forms,
-       q.tags, q.any_derived, q.forms, q.accessions, q.max_date
+       q.tags, q.any_derived, q.forms, q.accessions, q.max_date,
+       s.units, q.units, s.filing_ids,
+       q.filing_ids, q.filing_forms, q.filing_pors,
+       pr.period_type, pr.start_date, pr.end_date
 from analytics.canonical_fact r
 join analytics.canonical_fact p
   on p.company_id = r.company_id and p.period_id = r.period_id
  and p.canonical_concept_id = %(primary_id)s
+join core.period pr on pr.id = r.period_id
 cross join lateral (
     select array_agg(distinct c.taxonomy || ':' || c.tag) as tags,
            max(fl.filing_date) as max_date,
            array_agg(distinct fl.accession_number) as accessions,
-           array_agg(distinct fl.form) as forms
+           array_agg(distinct fl.form) as forms,
+           array_agg(distinct lower(u.unit_name)) as units,
+           array_agg(distinct fl.id) as filing_ids
     from core.fact f
     join core.concept c on c.id = f.concept_id
     join core.filing fl on fl.id = f.filing_id
+    left join core.unit u on u.id = f.unit_id
     where f.id = any(r.source_fact_ids)
 ) s
 cross join lateral (
@@ -406,10 +717,15 @@ cross join lateral (
            bool_or(f.is_derived) as any_derived,
            array_agg(distinct fl.form) as forms,
            array_agg(distinct fl.accession_number) as accessions,
-           max(fl.filing_date) as max_date
+           max(fl.filing_date) as max_date,
+           array_agg(distinct lower(u.unit_name)) as units,
+           array_agg(fl.id order by fl.id) as filing_ids,
+           array_agg(fl.form order by fl.id) as filing_forms,
+           array_agg(fl.period_of_report order by fl.id) as filing_pors
     from core.fact f
     join core.concept c on c.id = f.concept_id
     join core.filing fl on fl.id = f.filing_id
+    left join core.unit u on u.id = f.unit_id
     where f.id = any(p.source_fact_ids)
 ) q
 where r.canonical_concept_id = %(resolved_id)s
@@ -442,34 +758,220 @@ def _load_stale_fill_candidates(
             },
         )
         rows = cur.fetchall()
-    return [
-        StaleFillCandidate(
-            concept=primary_name,
-            row_id=row_id,
-            company_id=co,
-            period_id=period,
-            stored=stored,
-            primary=primary,
-            stored_tags=frozenset(s_tags or ()),
-            primary_tags=frozenset(p_tags or ()),
-            primary_any_derived=p_derived,
-            primary_forms=frozenset(p_forms or ()),
-            stored_filing_date=s_date,
-            primary_filing_date=p_date,
-            primary_source_fact_ids=tuple(p_src or ()),
-            primary_accessions=tuple(sorted(p_acc or ())),
-            stored_accessions=tuple(sorted(s_acc or ())),
-            stored_forms=frozenset(s_forms or ()),
+    out = []
+    for (
+        row_id, co, period, stored, primary, p_src,
+        s_tags, s_date, s_acc, s_forms,
+        p_tags, p_derived, p_forms, p_acc, p_date,
+        s_units, p_units, s_fids,
+        p_fids, p_fforms, p_fpors,
+        ptype, pstart, pend,
+    ) in rows:
+        filings = {
+            (fid, form, por)
+            for fid, form, por in zip(p_fids or (), p_fforms or (), p_fpors or ())
+        }
+        out.append(
+            StaleFillCandidate(
+                concept=primary_name,
+                row_id=row_id,
+                company_id=co,
+                period_id=period,
+                stored=stored,
+                primary=primary,
+                stored_tags=frozenset(s_tags or ()),
+                primary_tags=frozenset(p_tags or ()),
+                primary_any_derived=p_derived,
+                primary_forms=frozenset(p_forms or ()),
+                stored_filing_date=s_date,
+                primary_filing_date=p_date,
+                primary_source_fact_ids=tuple(p_src or ()),
+                primary_accessions=tuple(sorted(p_acc or ())),
+                stored_accessions=tuple(sorted(s_acc or ())),
+                stored_forms=frozenset(s_forms or ()),
+                stored_units=frozenset(u for u in (s_units or ()) if u is not None),
+                primary_units=frozenset(u for u in (p_units or ()) if u is not None)
+                | (frozenset({"<none>"}) if None in (p_units or ()) else frozenset()),
+                period_type=ptype,
+                period_start=pstart,
+                period_end=pend,
+                stored_filing_ids=tuple(sorted(s_fids or ())),
+                primary_filings=tuple(sorted(filings)),
+            )
         )
-        for (
-            row_id, co, period, stored, primary, p_src,
-            s_tags, s_date, s_acc, s_forms,
-            p_tags, p_derived, p_forms, p_acc, p_date,
-        ) in rows
-    ]
+    return out
+
+
+_EVIDENCE_CHUNK = 2000
+
+
+def _load_sibling_concepts(conn: psycopg.Connection) -> dict[int, str]:
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id, taxonomy || ':' || tag from core.concept where tag ilike any(%s)",
+            (list(_STALE_FILL_SIBLING_TAG_PATTERNS),),
+        )
+        return dict(cur.fetchall())
+
+
+def _load_share_concepts(conn: psycopg.Connection) -> dict[int, str]:
+    tags = STALE_FILL_WEIGHTED_SHARE_TAGS | STALE_FILL_OUTSTANDING_SHARE_TAGS
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id, taxonomy || ':' || tag from core.concept "
+            "where taxonomy || ':' || tag = any(%s)",
+            (sorted(tags),),
+        )
+        return dict(cur.fetchall())
+
+
+def _share_ratio(
+    rows: list[tuple[int, str, str, Decimal]],
+    stored_filing_ids: set[int],
+    primary_filing_ids: set[int],
+) -> Decimal | None:
+    """Largest ratio, over each share tag at each period kind, between a
+    stored-filing count and a primary-filing count. rows are (filing_id, tag,
+    period_kind, value). None when no tag has a positive count in both."""
+    best: Decimal | None = None
+    keys = {(tag, kind) for _f, tag, kind, _v in rows}
+    for key in keys:
+        s_vals = [v for f, t, k, v in rows if (t, k) == key and f in stored_filing_ids and v and v > 0]
+        p_vals = [v for f, t, k, v in rows if (t, k) == key and f in primary_filing_ids and v and v > 0]
+        for a in s_vals:
+            for b in p_vals:
+                ratio = max(a, b) / min(a, b)
+                if best is None or ratio > best:
+                    best = ratio
+    return best
+
+
+def _attach_stale_fill_evidence(
+    conn: psycopg.Connection, cands: list[StaleFillCandidate]
+) -> list[StaleFillCandidate]:
+    """Load the evidence of the 2026-10-19 guards for candidates that passed
+    every earlier guard. Set-based, chunked, index-backed reads only
+    (fact_company_id_concept_id_unit_id_period_id_filing_id_key,
+    idx_fact_company_concept_period)."""
+    if not cands:
+        return []
+    sibling_concepts = _load_sibling_concepts(conn)
+    share_concepts: dict[int, str] = {}
+    if any(c.concept in STALE_FILL_PER_SHARE_CONCEPTS for c in cands):
+        share_concepts = _load_share_concepts(conn)
+    out: list[StaleFillCandidate] = []
+    for start in range(0, len(cands), _EVIDENCE_CHUNK):
+        chunk = cands[start : start + _EVIDENCE_CHUNK]
+        other: set[int] = set()
+        siblings: dict[int, set[str]] = {c.row_id: set() for c in chunk}
+        shares: dict[int, list] = {c.row_id: [] for c in chunk}
+        splits: set[int] = set()
+        with conn.cursor() as cur:
+            # (1a) same company / tag / unit / value at a different period
+            pairs = [(c.row_id, fid) for c in chunk for fid in c.primary_source_fact_ids]
+            if pairs:
+                cur.execute(
+                    """
+                    with q as (select * from unnest(%s::bigint[], %s::bigint[]) as t(rid, fid))
+                    select distinct q.rid
+                    from q
+                    join core.fact f0 on f0.id = q.fid
+                    join core.fact f on f.company_id = f0.company_id
+                     and f.concept_id = f0.concept_id and f.unit_id = f0.unit_id
+                     and f.value = f0.value and f.period_id <> f0.period_id
+                    """,
+                    ([p[0] for p in pairs], [p[1] for p in pairs]),
+                )
+                other = {r[0] for r in cur.fetchall()}
+            # (2)(3)(7) nonzero sibling facts in the primary filing(s), same period
+            trip = [
+                (c.row_id, c.company_id, c.period_id, fid)
+                for c in chunk
+                for fid, _form, _por in c.primary_filings
+            ]
+            if trip and sibling_concepts:
+                cur.execute(
+                    """
+                    with q as (select * from unnest(%s::bigint[], %s::bigint[], %s::bigint[], %s::bigint[])
+                               as t(rid, company_id, period_id, filing_id))
+                    select distinct q.rid, f.concept_id
+                    from q
+                    join core.fact f on f.company_id = q.company_id
+                     and f.period_id = q.period_id and f.filing_id = q.filing_id
+                     and f.concept_id = any(%s::bigint[]) and f.value <> 0
+                    """,
+                    (
+                        [t[0] for t in trip], [t[1] for t in trip],
+                        [t[2] for t in trip], [t[3] for t in trip],
+                        list(sibling_concepts),
+                    ),
+                )
+                for rid, cid in cur.fetchall():
+                    siblings[rid].add(sibling_concepts[cid])
+            # (6) share counts for per-share concepts: weighted average for the
+            # period, shares outstanding at its end date, from either filing
+            per_share = [c for c in chunk if c.concept in STALE_FILL_PER_SHARE_CONCEPTS]
+            if per_share and share_concepts:
+                cur.execute(
+                    """
+                    with q as (select * from unnest(%s::bigint[], %s::bigint[], %s::bigint[])
+                               as t(rid, company_id, period_id))
+                    select q.rid, f.filing_id, f.concept_id,
+                           case when p2.id = q.period_id then 'same' else 'end_instant' end,
+                           f.value
+                    from q
+                    join core.period p on p.id = q.period_id
+                    join core.period p2 on p2.company_id = q.company_id
+                     and (p2.id = q.period_id
+                          or (p2.period_type = 'instant' and p2.end_date = p.end_date))
+                    join core.fact f on f.company_id = q.company_id
+                     and f.period_id = p2.id and f.concept_id = any(%s::bigint[])
+                    """,
+                    (
+                        [c.row_id for c in per_share],
+                        [c.company_id for c in per_share],
+                        [c.period_id for c in per_share],
+                        list(share_concepts),
+                    ),
+                )
+                for rid, fid, cid, kind, value in cur.fetchall():
+                    shares[rid].append((fid, share_concepts[cid], kind, value))
+                cur.execute(
+                    "select company_id, effective_date from analytics.company_stock_split "
+                    "where company_id = any(%s)",
+                    (sorted({c.company_id for c in per_share}),),
+                )
+                split_rows = cur.fetchall()
+                for c in per_share:
+                    lo, hi = c.stored_filing_date, c.primary_filing_date
+                    if any(
+                        co == c.company_id and lo and hi and lo <= eff <= hi
+                        for co, eff in split_rows
+                    ):
+                        splits.add(c.row_id)
+        for c in chunk:
+            is_ps = c.concept in STALE_FILL_PER_SHARE_CONCEPTS
+            out.append(
+                replace(
+                    c,
+                    value_at_other_period=c.row_id in other,
+                    primary_sibling_tags=frozenset(siblings[c.row_id]),
+                    share_basis_checked=is_ps and bool(share_concepts),
+                    share_ratio=_share_ratio(
+                        shares[c.row_id],
+                        set(c.stored_filing_ids),
+                        {f for f, _fm, _p in c.primary_filings},
+                    )
+                    if is_ps
+                    else None,
+                    split_on_record=(c.row_id in splits) if is_ps else None,
+                )
+            )
+    return out
 
 
 def _stale_fill_record(c: StaleFillCandidate, outcome: str, reason: str) -> dict:
+    evidence_loaded = c.primary_sibling_tags is not None
     return {
         "concept": c.concept,
         "id": c.row_id,
@@ -488,6 +990,14 @@ def _stale_fill_record(c: StaleFillCandidate, outcome: str, reason: str) -> dict
         "src": list(c.primary_source_fact_ids),
         "outcome": outcome,
         "guard": reason,
+        "period_start": c.period_start,
+        "period_end": c.period_end,
+        "primary_units": sorted(c.primary_units),
+        "primary_period_of_report": sorted({str(p) for _f, _fm, p in c.primary_filings}),
+        "signals": stale_fill_signals(c) if evidence_loaded else None,
+        "sibling_tags": sorted(c.primary_sibling_tags or ()),
+        "share_ratio": c.share_ratio,
+        "split_on_record": c.split_on_record,
     }
 
 
@@ -497,6 +1007,7 @@ def refresh_stale_fills(
     resolved_name: str,
     company_ids: list[int] | None = None,
     dry_run: bool = True,
+    include_skipped: bool = False,
 ) -> dict:
     """Propose (dry_run=True, the default) or apply replacements of resolved
     rows built only from non-authoritative facts with the primary concept's
@@ -504,7 +1015,8 @@ def refresh_stale_fills(
     whose every source fact is non-authoritative, so tag-preference and
     arithmetic-fallback rows (authoritative sources) are never candidates.
     Returns 'proposals' (would be written), 'needs_review' (never written by
-    this function) and per-reason skip counts. Writing requires an explicit
+    this function) and per-reason skip counts; include_skipped=True also
+    returns the skipped rows (dry-run analysis). Writing requires an explicit
     dry_run=False after the dry-run's proposals were reviewed; it is not part
     of resolve_all_conflict_fills."""
     primary_id = _concept_id(conn, primary_name)
@@ -515,14 +1027,21 @@ def refresh_stale_fills(
     candidates = _load_stale_fill_candidates(
         conn, primary_name, primary_id, resolved_id, company_ids
     )
+    pending = [c for c in candidates if _pre_evidence_outcome(c) is None]
+    loaded = {c.row_id: c for c in _attach_stale_fill_evidence(conn, pending)}
+    candidates = [loaded.get(c.row_id, c) for c in candidates]
+
     proposals: list[dict] = []
     needs_review: list[dict] = []
+    skipped_rows: list[dict] = []
     skipped: dict[str, int] = {}
     review_counts: dict[str, int] = {}
     for c in candidates:
         outcome, reason = classify_stale_fill(c)
         if outcome == "skip":
             skipped[reason] = skipped.get(reason, 0) + 1
+            if include_skipped:
+                skipped_rows.append(_stale_fill_record(c, outcome, reason))
         elif outcome == "needs_review":
             review_counts[reason] = review_counts.get(reason, 0) + 1
             needs_review.append(_stale_fill_record(c, outcome, reason))
@@ -559,6 +1078,8 @@ def refresh_stale_fills(
     )
     stats["proposals"] = proposals
     stats["needs_review"] = needs_review
+    if include_skipped:
+        stats["skipped_rows"] = skipped_rows
     return stats
 
 
