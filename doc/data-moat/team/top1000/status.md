@@ -4,10 +4,10 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 
 | Shard | Tickers | Filled % | Unexplained blanks | Status |
 |---|---|---|---|---|
-| S000 | ranking audit (market-cap outliers) | | | todo |
-| S001 | NVDA AAPL GOOG MSFT AMZN META AVGO TSLA AKTX LLY | 86.8 | 93 | todo |
+| S000 | ranking audit (market-cap outliers) | | | running |
+| S001 | NVDA AAPL GOOG MSFT AMZN META AVGO TSLA AKTX LLY | 86.8 | 93 | running |
 | S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | todo |
-| S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | todo |
+| S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | running |
 | S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | todo |
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | todo |
 | S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | todo |
