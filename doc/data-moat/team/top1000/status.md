@@ -20,7 +20,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | done (wrong values FILING-CHECKED) |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | running |
 | S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | running |
-| S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | todo |
+| S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | running |
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | todo |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | todo |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | todo |
