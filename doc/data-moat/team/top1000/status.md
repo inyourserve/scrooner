@@ -11,7 +11,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | done (DATA-INFERRED only) |
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | done (DATA-INFERRED only) |
 | S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | done (DATA-INFERRED only) |
-| S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | running |
+| S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | done (DATA-INFERRED only) |
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | running |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
@@ -132,7 +132,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006, S008 | KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006, S007, S008 | ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -145,6 +145,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: shares_outstanding 0 from a 2015 fallback when only per-class counts are filed | S006 | SHOP | DATA-INFERRED | open |
 | NEW: history lost at a new registrant CIK (successor entity) | S006 | MRVL, LIN, SHOP | DATA-INFERRED | open |
 | C PP&E-plus-finance-lease tag unmapped; C no_dividend_history while paying dividends | S006 | C | DATA-INFERRED | open |
+| NEW: sign flip between 10-K and 10-Q on the same tag breaks derived Q4 (DIS InterestExpense negative in 10-Ks FY21-25, positive in 10-Qs; derived Q4 -3.2B to -3.6B, should be ~+416M) | S007 | DIS | DATA-INFERRED (companyfacts confirms sign) | open (Period Engineer) |
+| NEW: predecessor CIK not linked after re-registration (growth blanks) | S007 | BLK (0002012383), DIS (0001744489) | DATA-INFERRED | open (merge with 'history lost at new registrant') |
+| NEW: capex tag drift (VZ PaymentsToAcquireOtherProductiveAssets unmapped -> capex/FCF stop at 2019; COP stops 2022, custom tag) | S007 | VZ, COP | DATA-INFERRED | open |
+| NEW: asset-manager template | S007 | BLK (28 cells) | DATA-INFERRED | open (Sector Analyst) |
+| NEW: combined accounts-and-notes receivable line | S007 | PEP | DATA-INFERRED | open |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
