@@ -19,7 +19,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | done (wrong values FILING-CHECKED) |
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | running |
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | running |
-| S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | todo |
+| S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | running |
 | S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | todo |
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | todo |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | todo |
@@ -207,3 +207,6 @@ Note: shard workers launched as general-purpose agents get their sec.gov fetches
 
 ## S000 re-rank applied (2026-10-18)
 Done shards are NOT reissued: dropped companies keep their findings (their wrong market caps are real wrong values) but are marked `excluded` in shards.csv and leave the cohort denominator. Dropped (8): AKTX, TBLA, RPAY, ZLAB, SCNI, KZIA (wrong market cap, FILING-CHECKED), IAU, SLV (commodity trusts, not operating companies). SPCX stays: its market cap is UNDERSTATED ($710B stored, about $1.92T true). Added: S101 = 8 backfill companies; S102 = 6 large companies whose market cap is blank today (BRK-A, FWONA, BAM, PLNT, UHAL, SUN). ENB and TSM wait on doc 02's foreign-private-issuer decision. Rule family MCAP-SHARES (cover-page sum of all classes, ADS ratio from Security12bTitle, diluted-share scale guard, review holds, exclude commodity trusts) is in results/S000.md for the fix owner.
+
+## Population check needed (fix owner, 2026-10-18)
+Foreign private issuers kept in `real_operating_company` by a legacy or ABS 10-K: BMO and BNS confirmed (S011, S012). Query to run with direct DB access, since it timed out under the 55s MCP cap: latest annual form per population company, flagging 40-F/20-F as latest, or a 10-K with no us-gaap facts.
