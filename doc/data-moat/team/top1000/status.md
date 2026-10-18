@@ -12,7 +12,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | done (DATA-INFERRED only) |
 | S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | running |
 | S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | running |
-| S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | running |
+| S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | todo |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
 | S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | todo |
@@ -132,6 +132,14 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S008 | KO, NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
+| NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
+| NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR no_dividend_history with 878M dividends tagged) | S008 | 3 | DATA-INFERRED | open |
+| NEW: pretax income tagged only as Domestic + Foreign components | S008 | MCD (5 cells) | DATA-INFERRED | open |
+| NEW: interest expense tagged as interest incurred, capitalized interest separate | S008 | SCCO | DATA-INFERRED | open |
+| NEW: utility capex/interest expense under custom tags | S008 | NEE (17 cells) | DATA-INFERRED | open |
+| NEW: REIT capital improvements as capex (definition) | S008 | WELL (12 cells) | DATA-INFERRED | open (Standardization) |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
