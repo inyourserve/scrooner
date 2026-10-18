@@ -13,7 +13,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | running |
 | S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | running |
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
-| S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | todo |
+| S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | running |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
 | S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | todo |
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | todo |
