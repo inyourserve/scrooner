@@ -172,3 +172,11 @@ Note: shard workers launched as general-purpose agents get their sec.gov fetches
 
 ## Priority flag for the fix owner (2026-10-18)
 "Latest 10-Q filed but 0 facts loaded" is now 5 of 80 companies checked (KO, C, NEE, WELL, ABT); C is missing two quarters. If that rate holds, about 60 of the top 1,000 show a stale latest quarter. It is an ingestion/normalize gap, not a mapping one, so one engineering fix covers all of them. A population count (2026 10-Q/10-K filings in core.filing with no core.fact rows, top-1000 ids) timed out under the 55s MCP cap; it needs a chunked run from a session with direct DB access.
+
+## Filing-checked (VERIFY-W2, 2026-10-18) - see results/VERIFY-W2.md
+1. KLAC derived Q4 diluted EPS CONFIRMED wrong: filed $1.04 (8-K 0000319201-26-000024 Ex. 99.1). Rule: never derive EPS by subtraction.
+2. AXP revenue CONFIRMED wrong: 11,212M is the segment-note figure (R72); face RevenuesNetOfInterestExpense 19,637M (0000004962-26-000322 R2).
+3. "0-fact 10-Q": DIFFERENT CAUSE. NEE, WELL, C (both) and KO filings carry full XBRL, but SEC companyfacts (our only source) has no facts for those accessions; Frames does carry WELL Q2. Fix: an instance-file or FSDS fallback when companyfacts lacks a filed accession. This corrects the priority flag above: it is an upstream source gap, not our load.
+4. SHOP shares CONFIRMED wrong: cover Class A 1,208,570,347 + Class B 78,073,584 + 1 founder share; stored 0 is a pre-IPO class zero from a 2016 20-F.
+5. WELL derived operating income CONFIRMED wrong: OperatingExpenses 3,481,412K already includes property costs and interest; no operating income presented (0000766704-19-000061 R3).
+6. Wrong blank reasons CONFIRMED: SCCO revenue 13,420M; DHR paid 878M dividends; C paid 5,372M.
