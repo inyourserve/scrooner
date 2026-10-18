@@ -222,6 +222,10 @@ jobs:
           print(",".join(r[0] for i, r in enumerate(rows) if i % shards == shard))
           PY
       - name: Metric stages
+        # `none` skips the whole phase, like the other phases (added 2026-10-18:
+        # without it `none` ran `scrooner-map none` and failed, so split
+        # dispatches had to waste hours on a dummy metric stage).
+        if: env.METRIC_STAGES != 'none'
         run: |
           for stage in $METRIC_STAGES; do
             echo "--- map $stage ---"
