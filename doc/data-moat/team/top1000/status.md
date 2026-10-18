@@ -132,7 +132,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S009 | CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S010 | SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -154,9 +154,14 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: no debt line -> should be a reported/explicit zero, 16 cells blank incl. zero_debt | S009 | ISRG | FILING-CHECKED | open (Standardization zero-borrowings rule E1/E2) |
 | NEW: face-statement tags unmapped (BA interest-and-debt expense, inventory; ETN receivables; UBER cost of revenue excl. D&A; SCHW interest revenue) | S009 | BA, ETN, UBER, SCHW (22 cells) | FILING-CHECKED | open (Tag Mapper) |
 | NEW: equity includes noncontrolling interest (T 15,990M) -> ROE, P/B skewed | S009 | T | FILING-CHECKED | open |
-| NEW: shareholder-returns blank at non-dividend payers (should use buybacks only) | S009 | NOW, UBER | DATA-INFERRED | open |
+| NEW: shareholder-returns blank at non-dividend payers (should use buybacks only) | S009, S010 | NOW, UBER, VRTX, FTNT | DATA-INFERRED | open |
 | D&A only under company-specific tags | S009 | ISRG, ACN, SCHW | FILING-CHECKED | open (with D&A family) |
 | stale: ACN share count from 2010; ETN operating income FY2019 (no subtotal presented) | S009 | ACN, ETN | FILING-CHECKED | open |
+| NEW: ROIC shown on negative invested capital (FTNT -222.6%) | S010 | FTNT | DATA-INFERRED | open |
+| NEW: financial-institution blank reason fires if a company ever filed one of 5 tags, no date/sector check (coverage_matrix.py); hits MO (tobacco); wrong text for PGR (insurer) | S010 | MO, PGR | DATA-INFERRED (code read) | open |
+| NEW: variable annual dividend inflates trailing yield (PGR 6.36%) | S010 | PGR | DATA-INFERRED | open |
+| NEW: ReceivablesNetCurrent not mapped (LMT 3,901M, MO 263M) | S010 | LMT, MO | DATA-INFERRED | open |
+| debt-free company shows a stale old total_debt (VRTX 105M from 2011) | S010 | VRTX | DATA-INFERRED | open (with zero-debt family, ISRG) |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
