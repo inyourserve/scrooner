@@ -8,7 +8,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S001 | NVDA AAPL GOOG MSFT AMZN META AVGO TSLA AKTX LLY | 86.8 | 93 | running |
 | S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | todo |
 | S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | done (DATA-INFERRED only: sec.gov blocked) |
-| S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | running |
+| S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | done (DATA-INFERRED only) |
 | S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | running |
 | S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | todo |
 | S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | todo |
@@ -115,6 +115,14 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | D&A filed as separate Depreciation + Amortization blocks EBITDA | S003 | ABBV, ORCL (14 cells) | DATA-INFERRED | open |
 | TTM fails on 52/53-week 12/12/12/16 calendars and YTD-only cash flows | S003 | COST (10 cells) | DATA-INFERRED | open |
 | singles: ABBV opex gap reason 'pre_revenue_biotech_pharma' at 61B revenue; PG fiscal labels shifted a quarter; CSCO D&A 700M both years; KO Q2-2026 10-Q has 0 facts; ABBV negative equity -> meaningless D/E, P/B, ROE | S003 | 5 | DATA-INFERRED | open |
+| proxy (DEF 14A) / 8-K net income wins over the authoritative 10-K value (NFLX FY21-25, HD FY21-25, MRK FY21 off 5.4%; derived Q4s wrong too) | S004 | 4 of 10 | DATA-INFERRED | open |
+| IncreaseDecreaseInReceivables not mapped to the cash-flow receivables change | S004 | 3 of 10 | DATA-INFERRED | open |
+| OtherNonoperatingIncomeExpense not mapped to other income/expense | S004 | 3 of 10 | DATA-INFERRED | open |
+| bank revenue = gross interest income (BAC 138,566M vs own revenue line 113,097M) | S004 | BAC | DATA-INFERRED | open (fix-register #1) |
+| stale latest value: GE operating income from 2012; RPAY share count from 2018 and diluted WASO ~1000x | S004 | GE, RPAY | DATA-INFERRED | open |
+| false 'pre_revenue_biotech_pharma' blank reason on large pharma (MRK, ABBV) | S003, S004 | 2 | DATA-INFERRED | open |
+| ratios shown on negative equity (PM, ABBV) | S003, S004 | 2 | DATA-INFERRED | open |
+| GE PaymentsOfOrdinaryDividends not mapped; employee_count tag filed by none of S004 | S004 | GE; 10 | DATA-INFERRED | open |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
