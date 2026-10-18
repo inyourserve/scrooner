@@ -631,13 +631,16 @@ class TestVerifier29Guards:
                        date(2025, 9, 15), date(2026, 9, 30), "10-K/A", date(2026, 5, 31))
             assert classify_stale_fill(clean) == ("propose", STALE_FILL_GUARD_CLASS)
 
-    def test_lrdc_operating_income_amendment_stays_a_proposal(self):
-        # Verifier row 60 (B, inside the 38 unflagged amendment rows): the
-        # disc-ops siblings only gate cash-flow totals, and (7) only gates
-        # original forms.
+    def test_lrdc_operating_income_amendment_is_a_re_presentation_candidate(self):
+        # Verifier row 60 (B, discontinued ops): the LRDC 10-K/A reports
+        # discontinued-ops facts for FY2025, so since 2026-10-19 it leaves the
+        # proposal class even though it is an amendment. Without the siblings
+        # it would be a proposal (the cash-flow guard only gates cash flows).
         c = _p("-3322430", "-2587374", "OperatingIncomeLoss", "operating_income",
                date(2024, 6, 1), date(2025, 5, 31), date(2025, 9, 15), date(2026, 9, 30),
                "10-K/A", date(2026, 5, 31), primary_sibling_tags=self.LRDC_SIBLINGS)
+        assert classify_stale_fill(c) == ("needs_review", "re_presentation_candidate")
+        c = StaleFillCandidate(**{**c.__dict__, "primary_sibling_tags": frozenset()})
         assert classify_stale_fill(c) == ("propose", STALE_FILL_GUARD_CLASS)
 
     # --- (3) cash vs cash plus restricted cash ---
@@ -837,6 +840,82 @@ class TestVerifier29Guards:
         c = StaleFillCandidate(**{**c.__dict__, "primary_sibling_tags": frozenset(
             {"us-gaap:IncomeLossFromDiscontinuedOperationsNetOfTax"})})
         assert classify_stale_fill(c) == ("needs_review", "re_presentation_candidate")
+
+    # --- (7) extended to amendments (decision 2026-10-19) ---
+    # Rows from stale_dryrun_guarded_v2.json: values, tags, filing dates,
+    # period_of_report and the primary filing's own discontinued-ops facts
+    # (core.fact, DATA-INFERRED; the re-presentation reading of SPGI/AROC/
+    # FRHC/LEE is not yet filing-checked).
+    DISC_INCOME = frozenset({
+        "us-gaap:IncomeLossFromDiscontinuedOperationsNetOfTax",
+        "us-gaap:IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToReportingEntity",
+    })
+
+    AMENDMENT_RE_PRESENTATIONS = [
+        # SPGI 10-K/A 0000064040-13-000008, 2011 quarters re-presented
+        ("1557000000", "1020000000", "Revenues", date(2011, 4, 1), date(2011, 6, 30),
+         date(2012, 7, 26), date(2013, 3, 20), "10-K/A", date(2012, 12, 31), DISC_INCOME),
+        ("1908000000", "971000000", "Revenues", date(2011, 7, 1), date(2011, 9, 30),
+         date(2012, 11, 2), date(2013, 3, 20), "10-K/A", date(2012, 12, 31), DISC_INCOME),
+        # AROC 10-K/A 0001389050-17-000015, 2014 quarters
+        ("643008000", "209738000", "SalesRevenueNet", date(2014, 1, 1), date(2014, 3, 31),
+         date(2015, 5, 5), date(2017, 2, 9), "10-K/A", date(2015, 12, 31), DISC_INCOME),
+        ("739270000", "239153000", "SalesRevenueNet", date(2014, 4, 1), date(2014, 6, 30),
+         date(2015, 8, 4), date(2017, 2, 9), "10-K/A", date(2015, 12, 31), DISC_INCOME),
+        ("723832000", "247453000", "SalesRevenueNet", date(2014, 7, 1), date(2014, 9, 30),
+         date(2015, 11, 5), date(2017, 2, 9), "10-K/A", date(2015, 12, 31), DISC_INCOME),
+        # FRHC 10-K/A 0000924805-23-000054 (FY to 2020-03 and 2021-03)
+        ("121902000", "83393000", "Revenues", date(2019, 4, 1), date(2020, 3, 31),
+         date(2022, 5, 31), date(2023, 4, 26), "10-K/A", date(2022, 3, 31),
+         frozenset({"us-gaap:CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations"})),
+        ("352551000", "265951000", "Revenues", date(2020, 4, 1), date(2021, 3, 31),
+         date(2022, 5, 31), date(2023, 4, 26), "10-K/A", date(2022, 3, 31),
+         frozenset({"us-gaap:CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations"})),
+        # FRHC 10-Q/A 0000924805-23-000055, quarter to 2020-12-31
+        ("100233000", "78344000", "Revenues", date(2020, 10, 1), date(2020, 12, 31),
+         date(2022, 2, 9), date(2023, 4, 26), "10-Q/A", date(2021, 12, 31),
+         frozenset({"us-gaap:DiscontinuedOperationIncomeLossFromDiscontinuedOperationBeforeIncomeTax"})),
+        # LEE 10-K/A 0000058361-13-000033
+        ("187306000", "180457000", "Revenues", date(2011, 3, 28), date(2011, 6, 26),
+         date(2011, 8, 5), date(2013, 10, 11), "10-K/A", date(2012, 9, 30),
+         frozenset({"us-gaap:IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToReportingEntity"})),
+    ]
+
+    def test_amendments_with_discontinued_ops_are_re_presentation_candidates(self):
+        for old, new, tag, start, end, sd, pd, form, por, sib in self.AMENDMENT_RE_PRESENTATIONS:
+            c = _p(old, new, tag, "revenue", start, end, sd, pd, form, por,
+                   primary_sibling_tags=sib)
+            assert classify_stale_fill(c) == ("needs_review", "re_presentation_candidate"), (tag, end)
+            # the discontinued-ops facts are the only reason it is not proposed
+            clean = StaleFillCandidate(**{**c.__dict__, "primary_sibling_tags": frozenset()})
+            assert classify_stale_fill(clean) == ("propose", STALE_FILL_GUARD_CLASS), (tag, end)
+
+    def test_ncra_amendments_with_discontinued_ops_move_but_clean_ones_stay(self):
+        # NCRA 10-Q/A 0001683168-26-007582 / 10-K/A 0001683168-26-006788:
+        # cost-of-revenue restatements (Verifier PR) in filings that also
+        # report discontinued ops for the period -> review under the policy.
+        for old, new, start, end, sd, pd, form, por in [
+            ("8422440", "5942597", date(2025, 1, 1), date(2025, 6, 30), date(2026, 8, 5),
+             date(2026, 10, 2), "10-Q/A", date(2026, 6, 30)),
+            ("16678871", "11852238", date(2024, 1, 1), date(2024, 12, 31), date(2026, 4, 15),
+             date(2026, 8, 28), "10-K/A", date(2025, 12, 31)),
+        ]:
+            c = _p(old, new, "CostOfGoodsAndServicesSold", "cost_of_revenue", start, end,
+                   sd, pd, form, por, primary_sibling_tags=self.DISC_INCOME)
+            assert classify_stale_fill(c) == ("needs_review", "re_presentation_candidate")
+        # NCRA 6M 2026 diluted EPS in the same 10-Q/A has no discontinued-ops
+        # fact for that period: stays a proposal (Verifier PR row 30).
+        c = _p("-1.8043", "-1.8492", "EarningsPerShareDiluted", "diluted_eps",
+               date(2026, 1, 1), date(2026, 6, 30), date(2026, 8, 5), date(2026, 10, 2),
+               "10-Q/A", date(2026, 6, 30), primary_sibling_tags=frozenset())
+        assert classify_stale_fill(c) == ("propose", STALE_FILL_GUARD_CLASS)
+
+    def test_combined_cash_total_does_not_move_an_amendment(self):
+        c = _p("100", "120", "Revenues", "revenue", date(2025, 1, 1), date(2025, 3, 31),
+               date(2025, 5, 1), date(2026, 1, 1), "10-Q/A", date(2025, 3, 31),
+               primary_sibling_tags=frozenset({
+                   "us-gaap:CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations"}))
+        assert classify_stale_fill(c) == ("propose", STALE_FILL_GUARD_CLASS)
 
     # --- correct amendment rows stay proposals; missing evidence never proposes ---
     def test_correct_amendment_rows_stay_proposals(self):
