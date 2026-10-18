@@ -44,6 +44,9 @@ on:
       scope:
         description: "all = every company with facts, active = status active only"
         default: "active"
+      ciks:
+        description: "Restrict to these 10-digit CIKs (comma/space separated); 'all' = no restriction. Sharding is applied after the restriction."
+        default: "all"
       shards:
         description: "Comma-separated shard ids; their count is the shard total (e.g. 0,1,2)"
         default: "0,1,2"
@@ -99,6 +102,7 @@ jobs:
         env:
           SHARD: ${{ matrix.shard }}
           SCOPE: ${{ inputs.scope }}
+          ONLY_CIKS: ${{ inputs.ciks }}
         run: |
           uv run --project pipeline python - <<'PY' > ciks.txt
           import os, psycopg
@@ -110,6 +114,10 @@ jobs:
                   "(select 1 from core.fact f where f.company_id = c.id) "
                   + scope_filter + " order by c.cik"
               ).fetchall()
+          only = os.environ.get("ONLY_CIKS", "all").strip()
+          if only.lower() != "all":
+              keep = set(only.replace(",", " ").split())
+              rows = [r for r in rows if r[0] in keep]
           shard, shards = int(os.environ["SHARD"]), len(os.environ["SHARD_LIST"].split(","))
           print(",".join(r[0] for i, r in enumerate(rows) if i % shards == shard))
           PY
@@ -207,6 +215,7 @@ jobs:
         env:
           SHARD: ${{ matrix.shard }}
           SCOPE: ${{ inputs.scope }}
+          ONLY_CIKS: ${{ inputs.ciks }}
         run: |
           uv run --project pipeline python - <<'PY' > ciks.txt
           import os, psycopg
@@ -218,6 +227,10 @@ jobs:
                   "(select 1 from core.fact f where f.company_id = c.id) "
                   + scope_filter + " order by c.cik"
               ).fetchall()
+          only = os.environ.get("ONLY_CIKS", "all").strip()
+          if only.lower() != "all":
+              keep = set(only.replace(",", " ").split())
+              rows = [r for r in rows if r[0] in keep]
           shard, shards = int(os.environ["SHARD"]), len(os.environ["SHARD_LIST"].split(","))
           print(",".join(r[0] for i, r in enumerate(rows) if i % shards == shard))
           PY
