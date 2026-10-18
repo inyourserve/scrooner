@@ -448,6 +448,224 @@ NEW_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Wave 1 PROPOSALS (Standardization Lead, 2026-10-18) -- NOT APPROVED, NOT SEEDED.
+#
+# Source: Tag Mapper run on a 300-company convenience sample (doc/data-moat/
+# learnings/2026-10-17-...md section 4). Full contracts: doc/data-moat/
+# wave1-canonical-definitions.md. Nothing here is approved: no entry may carry
+# confidence 'approved' until the Verifier's full-population coexistence checks
+# (same doc, section "Verifier queries") pass and a human accountant/owner
+# approves.
+#
+# Two facts that shape this block (checked in code/migrations, not assumed):
+#  1. analytics.concept_mapping.confidence is CHECK-constrained to
+#     ('approved','provisional','rejected') (migration 0004); 'candidate' is
+#     not a storable value, so proposals use 'provisional'.
+#  2. resolve.py loads every mapping where confidence != 'rejected', so a
+#     'provisional' row WOULD flow into canonical_fact on the next resolve.
+#     Therefore these lists are only merged into NEW_* (and so seeded by
+#     `seed_expanded_concepts_cmd`) when WAVE1_SEED_ENABLED is flipped to True
+#     in a reviewed commit. Default False: this patch changes no behavior.
+#
+# `operating_lease_liability_total_resolved` is declared as a canonical concept
+# with ZERO mapping rows by design (same idiom as total_debt_resolved): the
+# current+noncurrent sum fallback is to be built in concept_fallback.py, not as
+# a `sum` concept_mapping row (a sum row over current/noncurrent would
+# double-count whenever the filer also reports the total tag). That builder is
+# NOT written here.
+WAVE1_SEED_ENABLED = False
+
+WAVE1_CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
+    (
+        "retained_earnings",
+        "balance_sheet",
+        "first_match",
+        "PROPOSED. Retained earnings (accumulated deficit), signed: deficit is negative. Instant, "
+        "consolidated. Never an alias of stockholders_equity (equal in only 27 of 10,560 sampled "
+        "company-periods).",
+    ),
+    (
+        "weighted_avg_shares_basic",
+        "income_statement",
+        "first_match",
+        "PROPOSED. Weighted-average basic shares outstanding for a DURATION. Distinct from "
+        "point-in-time shares outstanding. Derived Q4/interim values use 4*FY-(Q1+Q2+Q3) "
+        "(approximation, must stay flagged derived).",
+    ),
+    (
+        "weighted_avg_shares_diluted",
+        "income_statement",
+        "first_match",
+        "PROPOSED. Weighted-average diluted shares outstanding for a DURATION. Distinct from "
+        "point-in-time shares and from basic. Also a Market Cap share-count fallback in "
+        "price_metrics.py (positive authoritative values only).",
+    ),
+    (
+        "operating_lease_rou_asset",
+        "balance_sheet",
+        "first_match",
+        "PROPOSED. Operating-lease right-of-use asset, instant. Excludes finance-lease ROU assets "
+        "(separate tag family); finance-lease separation unreviewed.",
+    ),
+    (
+        "operating_lease_liability_total",
+        "balance_sheet",
+        "first_match",
+        "PROPOSED. Total operating-lease liability (current + noncurrent) as reported under "
+        "OperatingLeaseLiability. Not debt unless a debt-with-leases policy is separately approved.",
+    ),
+    (
+        "operating_lease_liability_total_resolved",
+        "balance_sheet",
+        "first_match",
+        "PROPOSED. Derived layer: reported total if present, else current + noncurrent when BOTH "
+        "exist. Intentionally has zero concept_mapping rows (see total_debt_resolved idiom); "
+        "built by concept_fallback, not yet written.",
+    ),
+    (
+        "operating_lease_liability_current",
+        "balance_sheet",
+        "first_match",
+        "PROPOSED. Operating-lease liability, current portion (component of the total).",
+    ),
+    (
+        "operating_lease_liability_noncurrent",
+        "balance_sheet",
+        "first_match",
+        "PROPOSED. Operating-lease liability, noncurrent portion (component of the total).",
+    ),
+    (
+        "interest_paid_cash",
+        "cash_flow",
+        "first_match",
+        "PROPOSED. Cash paid for interest (supplemental cash-flow disclosure), duration. NOT "
+        "equivalent to interest_expense (within 10% in only 2,064 of 4,854 sampled pairs); never a "
+        "fallback for it.",
+    ),
+    (
+        "income_taxes_paid_cash",
+        "cash_flow",
+        "first_match",
+        "PROPOSED. Cash paid for income taxes, net of refunds when the tag is the Net variant; "
+        "signed. NOT equivalent to income_tax_expense (off by more than 2x in 2,288 of 6,173 "
+        "sampled pairs); never a fallback for it.",
+    ),
+]
+
+_W1_EV = "Tag Mapper 300-company convenience sample 2026-10-17 (not population); "
+
+WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
+    (
+        "retained_earnings",
+        "us-gaap",
+        "RetainedEarningsAccumulatedDeficit",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "exact, signed. Equals total equity in 27 of 10,560 "
+        "company-periods, so never an alias. OPEN: unit policy (CAD/EUR seen) -- do not convert "
+        "or cross-compare non-USD without an approved FX/currency policy; full-population "
+        "coexistence and dimension check pending.",
+    ),
+    (
+        "weighted_avg_shares_basic",
+        "us-gaap",
+        "WeightedAverageNumberOfSharesOutstandingBasic",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "exact. Duration weighted average, not point-in-time "
+        "shares. OPEN: derived rows must be positive and flagged derived (4*FY-(Q1+Q2+Q3) "
+        "approximation, section 3 of 2026-10-17 learning); post-recompute non-positive check pending.",
+    ),
+    (
+        "weighted_avg_shares_diluted",
+        "us-gaap",
+        "WeightedAverageNumberOfDilutedSharesOutstanding",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "exact. Same open conditions as basic; also feeds the "
+        "price_metrics.py share-count fallback (positive authoritative only).",
+    ),
+    (
+        "operating_lease_rou_asset",
+        "us-gaap",
+        "OperatingLeaseRightOfUseAsset",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "OPEN: finance-lease ROU separation unreviewed; "
+        "counterexample companies 1550, 1312, 683, 1108 need Verifier filing review.",
+    ),
+    (
+        "operating_lease_liability_total",
+        "us-gaap",
+        "OperatingLeaseLiability",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "current+noncurrent equals this total within 0.5% in "
+        "97.7% of 2,708 company-periods; counterexamples companies 1550, 1312, 683 (and 1108 "
+        "flagged) unresolved. Sum fallback belongs in operating_lease_liability_total_resolved, "
+        "not a mapping row.",
+    ),
+    (
+        "operating_lease_liability_current",
+        "us-gaap",
+        "OperatingLeaseLiabilityCurrent",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "component of total; counterexamples as for the total.",
+    ),
+    (
+        "operating_lease_liability_noncurrent",
+        "us-gaap",
+        "OperatingLeaseLiabilityNoncurrent",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "component of total; counterexamples as for the total.",
+    ),
+    (
+        "interest_paid_cash",
+        "us-gaap",
+        "InterestPaidNet",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "net-of-capitalized variant preferred. Cash paid is "
+        "not expense. OPEN: whether Net and gross variants differ in perimeter (capitalized "
+        "interest) enough to forbid first_match across them -- coexistence pending.",
+    ),
+    (
+        "interest_paid_cash",
+        "us-gaap",
+        "InterestPaid",
+        2,
+        "provisional",
+        "PROPOSED alternate, unapproved. " + _W1_EV + "used only where the Net variant is absent "
+        "for the same period; coexistence agreement not yet measured on the population.",
+    ),
+    (
+        "income_taxes_paid_cash",
+        "us-gaap",
+        "IncomeTaxesPaidNet",
+        1,
+        "provisional",
+        "PROPOSED, unapproved. " + _W1_EV + "signed (refunds exceeding payments give negative). "
+        "Cash paid is not expense (off by >2x in 2,288 of 6,173 pairs).",
+    ),
+    (
+        "income_taxes_paid_cash",
+        "us-gaap",
+        "IncomeTaxesPaid",
+        2,
+        "provisional",
+        "PROPOSED alternate, unapproved. " + _W1_EV + "used only where the Net variant is absent "
+        "for the same period; coexistence agreement not yet measured on the population.",
+    ),
+]
+
+if WAVE1_SEED_ENABLED:
+    NEW_CANONICAL_CONCEPTS.extend(WAVE1_CANONICAL_CONCEPTS)
+    NEW_CONCEPT_MAPPINGS.extend(WAVE1_CONCEPT_MAPPINGS)
+
+
 def seed_new_canonical_concepts(conn: psycopg.Connection) -> dict[str, int]:
     with conn.cursor() as cur:
         cur.executemany(
