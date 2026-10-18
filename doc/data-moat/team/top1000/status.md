@@ -9,9 +9,9 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S002 | TBLA MU WMT JPM AMD XOM V SPCX JNJ MA | 75.5 | 176 | todo |
 | S003 | ABBV INTC CVX PLTR COST CSCO KO ORCL PG UNH | 89.0 | 85 | done (DATA-INFERRED only: sec.gov blocked) |
 | S004 | MRK BAC RPAY CAT LRCX GE AMAT PM HD NFLX | 87.4 | 99 | done (DATA-INFERRED only) |
-| S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | running |
-| S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | todo |
-| S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | todo |
+| S005 | DELL MS PANW RTX GS TMO WFC TXN GEV AMGN | 82.1 | 133 | done (DATA-INFERRED only) |
+| S006 | CRWD LIN ANET SHOP KLAC IBM C AXP MRVL CRM | 83.0 | 124 | running |
+| S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | running |
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | todo |
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | todo |
 | S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
@@ -120,9 +120,14 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | OtherNonoperatingIncomeExpense not mapped to other income/expense | S004 | 3 of 10 | DATA-INFERRED | open |
 | bank revenue = gross interest income (BAC 138,566M vs own revenue line 113,097M) | S004 | BAC | DATA-INFERRED | open (fix-register #1) |
 | stale latest value: GE operating income from 2012; RPAY share count from 2018 and diluted WASO ~1000x | S004 | GE, RPAY | DATA-INFERRED | open |
-| false 'pre_revenue_biotech_pharma' blank reason on large pharma (MRK, ABBV) | S003, S004 | 2 | DATA-INFERRED | open |
-| ratios shown on negative equity (PM, ABBV) | S003, S004 | 2 | DATA-INFERRED | open |
+| false 'pre_revenue_biotech_pharma' blank reason on large pharma (MRK, ABBV, AMGN) | S003-S005 | 3 | DATA-INFERRED | open |
+| ratios shown on negative equity (PM, ABBV, DELL) | S003-S005 | 3 | DATA-INFERRED | open |
 | GE PaymentsOfOrdinaryDividends not mapped; employee_count tag filed by none of S004 | S004 | GE; 10 | DATA-INFERRED | open |
+| total_debt composition (S005 adds: DELL/TMO double count, RTX 229M vs 37.4B, GEV 63M vs 2.8B, WFC resolved = short-term only 25.2B vs 207.3B; unmapped LongTermDebtAndCapitalLeaseObligations family, ConvertibleDebtNoncurrent) | S003, S005 | 13 of 20 | DATA-INFERRED | open |
+| bank/broker revenue from provisional gross-interest tag instead of RevenuesNetOfInterestExpense (WFC, GS, MS; MS 15.9B vs 21.3B) | S004, S005 | BAC, WFC, GS, MS | DATA-INFERRED | open (fix-register #1) |
+| interest-expense / D&A tag switches leave latest values stuck (TMO gross margin 2019, PANW debt FY2023, RTX, MS, WFC) | S005 | 6 of 10 | DATA-INFERRED | open |
+| GS interest income stored as a 4.4B component vs 22.0B total; GS NII -59.2B (known class) | S005 | GS | DATA-INFERRED | open |
+| implausible ROIC (GEV 129%) | S005 | GEV | DATA-INFERRED | open |
 | market_cap share count wrong (ADS-underlying ordinary shares; diluted WASO scale) | S000 | AKTX, TBLA, RPAY (+ S000 list) | DATA-INFERRED, S000 checking filings | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
