@@ -72,3 +72,7 @@ Restatement basis (as-filed or restated), rounding tolerance for the Q4 vintage 
 
 ## Progress log (append newest last)
 - 2026-10-18 ~19:40Z: plan written; backup committed; waiting for the Data Sanity run (started 18:10Z) to finish before S0.
+- 2026-10-18 21:22Z: S0 preconditions met (workflows idle, 11 connections, DB up 5 h, peers idle). S1 done: 3,935 violating promoted facts demoted in 8 batches, 3,935 audit rows removed, 0 violating remain; live id list saved in `doc/data-moat/team/backups/violating_promotions_live_20261018.json`. 1,741 companies for S2 (1,196 promotion-affected + 824 stale-share, overlapping).
+- 2026-10-18 21:25Z: S2 dispatched: run 39167755310, 2 shards, commit 6646b13. Checked: the new `conflict_resolution.py` stale-fill code is not called by `resolve-conflict-fills` (comment at conflict_resolution.py:1345), so this run is unaffected by it. Monitor writes `recompute_monitor_S2.log` (scratchpad).
+- 2026-10-18 21:46Z: yfinance cross-check of the demoted annual facts (359 comparable of 3,004 recent-year ones; older years have no yfinance data): yahoo agrees with both copies 54%, only with another copy (demotion right) 36%, only with the demoted value (a right value blanked) 6%, none 3%. Sign-only: latest filing right in 11 of 19. Conclusion: quarantine is safe but loses about half of the right sign-only values; next improvement is a tie-break from the filing's own arithmetic (pre-tax - tax = net income), not yfinance. Next: S3 monitoring, S4 verification.
+
