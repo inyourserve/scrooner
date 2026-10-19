@@ -192,7 +192,13 @@ def test_big_inserts_are_set_based_not_correlated(monkeypatch) -> None:
     assert "mv2" not in metric
     assert "left join (" in metric
     assert "group by company_id, metric_definition_id" in metric
-    assert "bool_or(value is not null)" in metric
+    # latest-period fill (B0(a)): first element of the same ordering as gap_reason
+    assert (
+        "array_agg(value is not null order by period_end desc, period_start desc, period_label))[1] as has_value"
+        in metric
+    )
+    assert "bool_or(value is not null) as has_value," not in metric  # not the old ever-filled rule
+    assert "bool_or(value is not null) as has_value_any_period" in metric  # history kept
     assert "order by period_end desc" in metric  # latest-period reason, deterministic tie-break
     assert "coalesce(agg.has_value, false)" in metric  # no metric_value rows -> false, row kept
 
@@ -201,3 +207,38 @@ def test_no_canonical_fact_probe_correlated_on_company(monkeypatch) -> None:
     for s in _run_build_statements(monkeypatch):
         if "from analytics.canonical_fact" in s:
             assert "cf.company_id = c.id" not in s
+
+
+def test_metric_insert_omits_secondary_column_until_migration_0096_applied(monkeypatch) -> None:
+    # The code must be safe to deploy before the migration: when the
+    # has_value_any_period column does not exist, the insert must not name it.
+    from scrooner_pipeline.mapper.coverage_matrix import build_coverage
+
+    class _NoColCursor(_FakeCursor):
+        def fetchone(self):  # type: ignore[override]
+            last = self._conn.statements[-1]
+            if "information_schema.columns" in last:
+                return (False,)
+            return (10, 7)
+
+    class _NoColConn(_FakeConn):
+        def cursor(self):  # type: ignore[override]
+            return _NoColCursor(self)
+
+    _patch_classifiers(monkeypatch, [])
+    conn = _NoColConn()
+    build_coverage(conn)  # type: ignore[arg-type]
+    metric = next(s for s in conn.statements if "cross join analytics.metric_definition md" in s)
+    assert "has_value_any_period" not in metric
+    assert "array_agg(value is not null order by period_end desc" in metric  # still latest-period
+
+
+def test_latest_period_fill_is_not_ever_filled(monkeypatch) -> None:
+    # Fixture semantics (verified against a scratch Postgres 2026-10-19): company
+    # with FY2019=5 and FY2020=NULL must be NOT filled (gap_reason of FY2020 row)
+    # but has_value_any_period true. The has_value expression must therefore be
+    # the first element of the latest-first ordering, never bool_or.
+    metric = next(s for s in _run_build_statements(monkeypatch) if "cross join analytics.metric_definition md" in s)
+    has_value_expr = metric.split("as has_value")[0].rsplit("(array_agg", 1)[1]
+    assert "value is not null order by period_end desc, period_start desc, period_label" in has_value_expr
+    assert "bool_or" not in has_value_expr

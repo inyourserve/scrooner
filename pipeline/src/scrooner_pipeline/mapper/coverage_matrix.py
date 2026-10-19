@@ -729,22 +729,49 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         # pass below (classify_concept_gaps()) for the revenue-family
         # subset with a known structural cause; ownership rows still have
         # no null-reason mechanism.
+        # A metric cell is FILLED only if the company's LATEST period for that
+        # metric has a value (2026-10-19, top-1000 fix plan B0(a)). It used to be
+        # bool_or(value is not null) over every period ever computed, which
+        # counted a company with a 2019 value and a null latest period as
+        # filled. "Latest" uses the same ordering as gap_reason, so a cell that
+        # is not filled always carries the reason of the very row that is null.
+        # The old "ever had a value" figure is kept in has_value_any_period
+        # (migration 0096) so history is not lost; written only once that column
+        # exists, so the code is safe to run before the migration is applied.
         cur.execute(
             """
-            insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value, gap_reason)
+            select exists (
+                select 1 from information_schema.columns
+                where table_schema = 'analytics'
+                  and table_name = 'company_data_point_coverage'
+                  and column_name = 'has_value_any_period'
+            )
+            """
+        )
+        has_any_col = bool(cur.fetchone()[0])
+        any_col = ", has_value_any_period" if has_any_col else ""
+        any_sel = ",\n                coalesce(agg.has_value_any_period, false)" if has_any_col else ""
+        any_agg = (
+            ",\n                    bool_or(value is not null) as has_value_any_period"
+            if has_any_col
+            else ""
+        )
+        cur.execute(
+            f"""
+            insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value, gap_reason{any_col})
             select
                 c.id,
                 md.metric_name,
                 coalesce(agg.has_value, false),
-                agg.gap_reason
+                agg.gap_reason{any_sel}
             from core.company c
             cross join analytics.metric_definition md
             left join (
                 select
                     company_id,
                     metric_definition_id,
-                    bool_or(value is not null) as has_value,
-                    (array_agg(is_null_reason order by period_end desc, period_start desc, period_label))[1] as gap_reason
+                    (array_agg(value is not null order by period_end desc, period_start desc, period_label))[1] as has_value,
+                    (array_agg(is_null_reason order by period_end desc, period_start desc, period_label))[1] as gap_reason{any_agg}
                 from analytics.metric_value
                 group by company_id, metric_definition_id
             ) agg

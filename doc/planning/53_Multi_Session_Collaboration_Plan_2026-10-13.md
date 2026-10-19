@@ -41,13 +41,14 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0096.** Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0097.** Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
 | 0092 | scrooner-98 | `coverage_group_snapshot` | applied, committed |
 | 0093 | scrooner-f9 | `company_filing_line_evidence` | applied, committed (`a18dd40`) |
 | 0094 | scrooner-f9 | reserved no-op (restores contiguity after 0095 was committed first) | committed |
+| 0096 | data-engineer (top-1000 B0a) | `company_data_point_coverage.has_value_any_period` (old ever-filled figure kept) | written and committed, NOT applied (apply after scrooner-82's D2) |
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | committed (`e7c1b25`) |
 
 ## scrooner-98 queue (lane A)
