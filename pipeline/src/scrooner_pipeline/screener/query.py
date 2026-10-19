@@ -51,6 +51,11 @@ import psycopg
 import structlog
 from psycopg import sql
 
+from scrooner_pipeline.common.sector_applicability import (
+    BANK_SUPPRESSED_METRICS,
+    is_bank_sic,
+    load_bank_company_ids,
+)
 from scrooner_pipeline.screener.evaluate import (
     evaluate_between,
     evaluate_comparison,
@@ -67,6 +72,39 @@ from scrooner_pipeline.screener.schema import (
 from scrooner_pipeline.screener.snapshot import get_dataset_version
 
 logger = structlog.get_logger()
+
+
+def _annotate_bank_suppression(
+    conn: psycopg.Connection,
+    excluded_missing_data: dict[int, dict],
+    sic_by_company: dict[int, str | None],
+) -> None:
+    """A bank excluded for a metric the bank-applicability rule suppresses
+    (common/sector_applicability.py) gets the stated reason next to the
+    metric name, so the exclusion is explained instead of looking like missing
+    data. Additive: only banks with a suppressed missing metric gain a
+    `suppressed_reasons` key; every other entry is unchanged. Read-only.
+
+    The population test needs a database lookup, so it runs only for the
+    excluded companies whose SIC is in the bank range AND that lack a
+    suppressed metric: a screen with no such company issues no extra query."""
+    candidates = [
+        company_id
+        for company_id, entry in excluded_missing_data.items()
+        if is_bank_sic(sic_by_company.get(company_id))
+        and any(name in BANK_SUPPRESSED_METRICS for name in entry["missing_metrics"])
+    ]
+    if not candidates:
+        return
+    with conn.cursor() as cur:
+        bank_ids = load_bank_company_ids(cur, candidates)
+    for company_id in bank_ids & set(candidates):
+        entry = excluded_missing_data[company_id]
+        entry["suppressed_reasons"] = {
+            name: BANK_SUPPRESSED_METRICS[name]
+            for name in entry["missing_metrics"]
+            if name in BANK_SUPPRESSED_METRICS
+        }
 
 
 _IDENTITY_FIELDS = (
@@ -550,6 +588,12 @@ def run_query(
 
     if query.limit is not None:
         matched = matched[: query.limit]
+
+    _annotate_bank_suppression(
+        conn,
+        excluded_missing_data,
+        {company_id: identity.get("sic_code") for company_id, identity, _ in rows},
+    )
 
     result = {
         "matched": matched,

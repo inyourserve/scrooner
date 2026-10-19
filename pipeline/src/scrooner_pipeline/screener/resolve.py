@@ -42,6 +42,12 @@ from datetime import date, timedelta
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.sector_applicability import (
+    BANK_SUPPRESSED_METRICS,
+    apply_to_resolved,
+    load_bank_company_ids,
+)
+
 logger = structlog.get_logger()
 
 MIN_PERIOD_END = date(2015, 1, 1)
@@ -125,9 +131,37 @@ def resolve_most_recent_values(
             "is_null_reason": is_null_reason,
             "formula_version": formula_version,
         }
+    suppressed = _suppress_for_banks(conn, result, metric_definition_ids)
     logger.info(
         "screener.resolve.done",
         metric_count=len(metric_definition_ids),
         resolved_pairs=len(result),
+        bank_suppressed=suppressed,
     )
     return result
+
+
+def _suppress_for_banks(
+    conn: psycopg.Connection,
+    result: dict[tuple[int, int], dict],
+    metric_definition_ids: list[int],
+) -> int:
+    """Bank applicability (common/sector_applicability.py): a bank's value for
+    a suppressed metric is replaced by null plus a stated reason, so the
+    screening snapshot (built from this function) and any live resolve never
+    carry a misleading bank value. analytics.metric_value is not touched.
+    Read-only: two light lookups, no writes."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id, metric_name from analytics.metric_definition where id = any(%s)",
+            (metric_definition_ids,),
+        )
+        suppressed_ids = {
+            metric_id: BANK_SUPPRESSED_METRICS[name]
+            for metric_id, name in cur.fetchall()
+            if name in BANK_SUPPRESSED_METRICS
+        }
+        if not suppressed_ids:
+            return 0
+        bank_ids = load_bank_company_ids(cur)  # whole population, one set-based query
+    return apply_to_resolved(result, bank_ids, suppressed_ids)

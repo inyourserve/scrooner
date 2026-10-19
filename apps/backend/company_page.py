@@ -19,17 +19,39 @@ doc/learnings/2026-10-03-company-page-api-port.md).
 
 assembleStatement()/the metric_history grouping are also ported 1:1
 from db.ts, same algorithm, same tie-breaks.
+
+Bank applicability (2026-10-19) is the one deliberate addition to that port:
+`is_bank` (SIC 6020-6036 plus the company's own bank-shaped filed tags, see
+pipeline common/sector_applicability.py) is computed in the same query, and
+for a bank the metrics, statement rows, FY history and peer cells in the
+suppress list are returned null with a stated reason. A non-bank's output is
+unchanged. Cached pages (cache.py) keep the old values until their TTL expires.
 """
 
 from collections import defaultdict
 
 import psycopg
 
+from scrooner_pipeline.common.sector_applicability import (
+    BANK_SUPPRESSED_METRICS,
+    bank_predicate_sql,
+    metric_suppression_reason,
+    statement_line_suppression_reason,
+)
+
 _EQUITY_ONLY_SQL = (
     "(l.security_type is null or l.security_type in "
     "('Common Stock', 'ADR', 'REIT', 'MLP', 'Tracking Stk', 'Ltd Part'))"
 )
 _HISTORY_FLOOR = "2015-01-01"
+
+# Bank applicability (2026-10-19, common/sector_applicability.py): the peer
+# table's four metrics, of which a bank peer's suppressed ones are left out in
+# SQL so they neither display nor decide the peer ordering.
+_PEER_METRIC_NAMES = ("roe", "roic", "revenue_growth_3y_cagr", "net_margin")
+_PEER_BANK_SUPPRESSED_SQL = ", ".join(
+    f"'{name}'" for name in _PEER_METRIC_NAMES if name in BANK_SUPPRESSED_METRICS
+)
 
 _QUERY = f"""
 with selected_company as (
@@ -38,7 +60,8 @@ with selected_company as (
          c.sector, c.y_sector, c.y_industry, c.status, l.ticker,
          c.about_text, c.y_about_text, c.ein, c.business_address_line1,
          c.business_address_city, c.business_address_state,
-         c.business_address_zip, c.business_phone, c.website, c.y_website
+         c.business_address_zip, c.business_phone, c.website, c.y_website,
+         {bank_predicate_sql("c")} as is_bank
   from core.company c
   join core.listing l on l.company_id = c.id
   where lower(l.ticker) = lower(%(ticker)s) and {_EQUITY_ONLY_SQL}
@@ -46,7 +69,8 @@ with selected_company as (
   limit 1
 ),
 peer_companies as (
-  select distinct on (c.id) c.id, l.ticker, coalesce(c.display_name, c.company_name) as company_name, 'industry'::text as match_basis
+  select distinct on (c.id) c.id, l.ticker, coalesce(c.display_name, c.company_name) as company_name, 'industry'::text as match_basis,
+         {bank_predicate_sql("c")} as is_bank
   from core.company c
   join core.listing l on l.company_id = c.id
   join selected_company company on company.y_industry is not null and c.y_industry = company.y_industry
@@ -68,6 +92,7 @@ peer_metrics as (
   join peer_companies p on p.id = mv.company_id
   where md.metric_name in ('roe', 'roic', 'revenue_growth_3y_cagr', 'net_margin')
     and mv.value is not null
+    and not (p.is_bank and md.metric_name in ({_PEER_BANK_SUPPRESSED_SQL}))
     and (md.metric_name = 'revenue_growth_3y_cagr' or (mv.value >= -2.0 and mv.value <= 2.0))
 ),
 ranked_metrics as (
@@ -212,7 +237,8 @@ select
     'business_address_state', company.business_address_state,
     'business_address_zip', company.business_address_zip,
     'business_phone', company.business_phone,
-    'website', coalesce(company.website, regexp_replace(company.y_website, '^https?://', ''))
+    'website', coalesce(company.website, regexp_replace(company.y_website, '^https?://', '')),
+    'is_bank', company.is_bank
   ) as company,
   coalesce((
     select jsonb_agg(jsonb_build_object(
@@ -526,6 +552,55 @@ def _assemble_statement(rows: list[dict], statement: str, frequency: str) -> dic
     return {"periods": periods, "lines": lines}
 
 
+def suppress_bank_metrics(metrics: list[dict], is_bank: bool) -> list[dict]:
+    """Bank applicability (common/sector_applicability.py). For a bank, every
+    suppressed metric is returned with value null and the stated reason in
+    is_null_reason (the field the page already renders for any null), whether
+    or not a stored row exists. A non-bank is returned unchanged. The stored
+    analytics.metric_value is not touched."""
+    if not is_bank:
+        return metrics
+    by_name = {m["metric_name"]: dict(m) for m in metrics}
+    for name in BANK_SUPPRESSED_METRICS:
+        reason = metric_suppression_reason(name, True)
+        entry = by_name.get(name)
+        if entry is None:
+            by_name[name] = {
+                "metric_name": name,
+                "value": None,
+                "period_label": "",
+                "period_end": "",
+                "is_null_reason": reason,
+            }
+        else:
+            entry["value"] = None
+            entry["is_null_reason"] = reason
+    return [by_name[name] for name in sorted(by_name)]
+
+
+def suppress_bank_statement(statement: dict, is_bank: bool) -> dict:
+    """Same rule for the statement tables: a suppressed row keeps its label,
+    every cell becomes null, and `suppressed_reason` carries the reason. Only
+    lines that carry a suppression reason gain the key, so a non-bank's
+    statement is byte-identical to before."""
+    if not is_bank:
+        return statement
+    lines = []
+    for line in statement["lines"]:
+        reason = statement_line_suppression_reason(line["label"], True)
+        if reason is None:
+            lines.append(line)
+        else:
+            lines.append(
+                {
+                    **line,
+                    "values": [None] * len(line["values"]),
+                    "suppressed_reason": reason,
+                }
+            )
+    return {**statement, "lines": lines}
+
+
 def get_company_page_data(conn: psycopg.Connection, ticker: str) -> dict | None:
     with conn.cursor() as cur:
         cur.execute(_QUERY, {"ticker": ticker})
@@ -554,9 +629,14 @@ def get_company_page_data(conn: psycopg.Connection, ticker: str) -> dict | None:
         segment_revenue,
     ) = row
 
+    is_bank = bool(company.get("is_bank"))
+    metrics = suppress_bank_metrics(metrics, is_bank)
+
     metric_history: dict[str, list] = defaultdict(list)
     metric_trend_history: dict[str, list] = defaultdict(list)
     for entry in metric_history_rows:
+        if is_bank and entry["metric_name"] in BANK_SUPPRESSED_METRICS:
+            continue
         metric_history[entry["metric_name"]].append(entry["value"])
         metric_trend_history[entry["metric_name"]].append(
             {"value": entry["value"], "period_end": entry["period_end"]}
@@ -565,14 +645,18 @@ def get_company_page_data(conn: psycopg.Connection, ticker: str) -> dict | None:
     return {
         "company": company,
         "metrics": {m["metric_name"]: m for m in metrics},
-        "quarterlyResults": _assemble_statement(
-            statements, "income_statement", "quarterly"
+        "quarterlyResults": suppress_bank_statement(
+            _assemble_statement(statements, "income_statement", "quarterly"), is_bank
         ),
-        "incomeStatement": _assemble_statement(
-            statements, "income_statement", "annual"
+        "incomeStatement": suppress_bank_statement(
+            _assemble_statement(statements, "income_statement", "annual"), is_bank
         ),
-        "balanceSheet": _assemble_statement(statements, "balance_sheet", "annual"),
-        "cashFlow": _assemble_statement(statements, "cash_flow", "annual"),
+        "balanceSheet": suppress_bank_statement(
+            _assemble_statement(statements, "balance_sheet", "annual"), is_bank
+        ),
+        "cashFlow": suppress_bank_statement(
+            _assemble_statement(statements, "cash_flow", "annual"), is_bank
+        ),
         "filings": filings,
         "insiderTransactions": insider_transactions,
         "beneficialOwnership": beneficial_ownership,
