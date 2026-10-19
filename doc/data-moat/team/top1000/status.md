@@ -25,7 +25,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | done (wrong values FILING-CHECKED; CNI excluded) |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | running |
 | S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | running |
-| S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | todo |
+| S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | running |
 | S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | todo |
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | todo |
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | todo |
