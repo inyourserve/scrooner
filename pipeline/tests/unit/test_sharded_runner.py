@@ -140,3 +140,95 @@ def test_hung_shard_is_killed_at_the_stage_cap_and_later_stages_still_run(tmp_pa
     assert "STAGE-FAILED after" not in out.stdout
     assert "exceeded 3s" in out.stderr
     assert "END after" in log.read_text()
+
+
+# --- overall budget + tag-library cap (2026-10-19) -------------------------
+# These run the REAL script by the relative path CI uses, from the repo root and
+# from pipeline/, with a stand-in `uv` injected via REPROCESS_PATH_PREFIX (no DB).
+
+SCRIPT_REL = "scripts/reprocess_recent_filers.sh"
+REPO_ROOT = HELPER.parents[3]
+
+FAKE_UV_FULL = """#!/usr/bin/env bash
+# uv run python3 -  -> the two SQL heredocs; uv run <prog> <stage> [--ciks X]
+if [ "$2" = "python3" ]; then
+  if grep -q DEREGISTRATION_FORMS; then echo ""; else echo "0000000001,0000000002,0000000003"; fi
+  exit 0
+fi
+prog="$2"; stage="$3"
+echo "RUN $prog $stage" >> "$FAKE_LOG"
+if [ "$stage" = "build-tag-library" ] && [ -n "$FAKE_TAG_HANG" ]; then sleep 300; fi
+sleep "${FAKE_STAGE_SLEEP:-0}"
+[ "$stage" = "$FAKE_FAIL_STAGE" ] && exit 4
+exit 0
+"""
+
+
+def _run_script(tmp_path, cwd, script_path, **env_extra):
+    uv = tmp_path / "uv"
+    uv.write_text(FAKE_UV_FULL)
+    uv.chmod(uv.stat().st_mode | stat.S_IEXEC)
+    log = tmp_path / "calls.log"
+    log.write_text("")
+    env = {
+        **os.environ,
+        "REPROCESS_PATH_PREFIX": str(tmp_path),
+        "FAKE_LOG": str(log),
+        "REPROCESS_SHARDS": "1",
+        **env_extra,
+    }
+    out = subprocess.run(
+        ["bash", script_path], cwd=cwd, capture_output=True, text=True, env=env, timeout=120
+    )
+    return out, log.read_text().splitlines()
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("cwd,path", [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)])
+def test_full_run_without_budget_pressure_runs_all_23_stages_and_exits_zero(tmp_path, cwd, path):
+    out, calls = _run_script(tmp_path, cwd, path)
+    assert out.returncode == 0, (out.stdout, out.stderr)
+    stages_run = [c.split()[2] for c in calls if c.startswith("RUN scrooner-") and "update-status" not in c]
+    assert len(stages_run) == 23
+    assert stages_run[-1] == "build-tag-library"
+    assert out.stdout.count("took ") == 23  # one "took Ns" line per stage
+    assert "budget exhausted" not in out.stderr
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize("cwd,path", [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)])
+def test_budget_exhaustion_skips_remaining_stages_names_them_once_and_exits_nonzero(tmp_path, cwd, path):
+    out, calls = _run_script(
+        tmp_path, cwd, path, REPROCESS_BUDGET_SECS="2", FAKE_STAGE_SLEEP="1.2"
+    )
+    assert out.returncode != 0
+    assert out.stderr.count("budget exhausted") == 1
+    line = next(l for l in out.stderr.splitlines() if "budget exhausted" in l)
+    ran = {c.split()[2] for c in calls if "scrooner-normalize" in c or "scrooner-map" in c}
+    skipped_names = line.split("skipped: ")[1].split()
+    assert skipped_names and skipped_names[-1] == "map:build-tag-library"
+    assert not ({s.split(":")[1] for s in skipped_names} & ran)  # skipped means never run
+    # a "took" line for every stage: ran + skipped = all 23
+    assert out.stdout.count("took ") == 23
+    assert "FAILED stages" in out.stderr and "budget-skipped" in out.stderr
+
+
+@pytest.mark.unit
+def test_a_failed_stage_does_not_hide_and_later_stages_still_run(tmp_path):
+    out, calls = _run_script(
+        tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL, FAKE_FAIL_STAGE="facts"
+    )
+    assert out.returncode == 1
+    assert "normalize:facts" in out.stderr
+    assert any(c.endswith("build-tag-library") for c in calls)
+
+
+@pytest.mark.unit
+def test_tag_library_is_killed_at_its_cap_and_reported(tmp_path):
+    out, _ = _run_script(
+        tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL,
+        FAKE_TAG_HANG="1", TAG_LIBRARY_TIMEOUT_SECS="2",
+    )
+    assert out.returncode == 1
+    assert "exceeded 2s" in out.stderr
+    assert "map:build-tag-library" in out.stderr

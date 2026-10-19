@@ -84,3 +84,24 @@ run_sharded() {
   echo "run_sharded: stage '$stage' took $((SECONDS - started))s (rc=$rc)"
   return "$rc"
 }
+
+# run_capped <secs> <cmd...>: run one command under a wall-clock cap with no
+# dependency on GNU `timeout` (absent on macOS). Kills the whole process tree on
+# expiry and returns 124 (as `timeout` does); otherwise returns the command's rc.
+run_capped() {
+  local cap="$1" pid started=$SECONDS rc=0
+  shift
+  "$@" &
+  pid=$!
+  while kill -0 "$pid" 2>/dev/null; do
+    if [ "$cap" -gt 0 ] && [ $((SECONDS - started)) -ge "$cap" ]; then
+      echo "run_capped: '$*' exceeded ${cap}s -- killing it" >&2
+      _kill_tree "$pid"
+      wait "$pid" 2>/dev/null || true
+      return 124
+    fi
+    sleep 1
+  done
+  wait "$pid" || rc=$?
+  return "$rc"
+}

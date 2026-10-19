@@ -63,6 +63,10 @@ jobs:
         # being 2+ weeks stale). Scoped to companies with a raw filing in the
         # last 10 days (see the script's own docstring for why raw, not
         # core.filing) -- cheap daily, not a full-population rerun.
+        # 150 < the job's 180: a STEP timeout fails the step and keeps its logs;
+        # a JOB-level cancel deleted them (10-13..10-17). The script's own
+        # REPROCESS_BUDGET_SECS (7000s = 117 min) normally ends the run first.
+        timeout-minutes: 150
         if: always()
         run: pipeline/scripts/reprocess_recent_filers.sh
 

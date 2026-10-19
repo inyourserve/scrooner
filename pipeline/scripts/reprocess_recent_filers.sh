@@ -41,7 +41,10 @@
 # run daily for a handful of companies; that one stays on its existing
 # manual/periodic cadence.
 set -e
-export PATH="/opt/homebrew/opt/libxslt/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:$PATH"
+# REPROCESS_PATH_PREFIX is a test seam only (puts a stand-in `uv` ahead of a real one).
+export PATH="${REPROCESS_PATH_PREFIX:+$REPROCESS_PATH_PREFIX:}/opt/homebrew/opt/libxslt/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:$PATH"
+# Overall wall-clock budget clock (added 2026-10-19): started before any DB work.
+SCRIPT_START=$SECONDS
 # Resolve this script's own directory BEFORE changing directory: CI invokes it as
 # a relative path (pipeline/scripts/reprocess_recent_filers.sh) from the repo
 # root, and after the cd below a relative $0 no longer resolves. Sourcing the
@@ -220,22 +223,56 @@ echo "reprocess_recent_filers: running each stage across up to ${SHARDS} paralle
 # the end so the failure is visible without losing the rest of the night.
 export STAGE_TIMEOUT_SECS="${STAGE_TIMEOUT_SECS:-1800}"
 FAILED_STAGES=""
-for stage in identity periods units facts dedupe restatements conflict-latest-filed derive-interim-quarters derive-q4; do
-  echo "--- normalize $stage ---"
-  run_sharded scrooner-normalize "$stage" || FAILED_STAGES="$FAILED_STAGES normalize:$stage"
-done
 
-for stage in resolve-facts resolve-concept-fallbacks calculate growth ttm-returns ttm-margins calculate-expanded-metrics calculate-piotroski calculate-quality-flags calculate-reconciliation calculate-tax-reconciliation calculate-fcf-growth calculate-dividend-streak; do
-  echo "--- map $stage ---"
-  run_sharded scrooner-map "$stage" || FAILED_STAGES="$FAILED_STAGES map:$stage"
+# Overall budget (added 2026-10-19). 22 sequential stages x the 1800s stage cap
+# is 11h against a 180-minute job cap, and the job was cancelled every night
+# 10-13..10-17 with its logs deleted. Before each stage, if elapsed time is over
+# REPROCESS_BUDGET_SECS (default 7000 = 117 min; 0 disables; 7000 + the 1800s stage cap stays under the 9000s step timeout), the remaining stages
+# are skipped, named in ONE line, and the script exits non-zero. Stage caps are
+# unchanged. The workflow step has timeout-minutes: 150 above this.
+BUDGET_SECS="${REPROCESS_BUDGET_SECS:-7000}"
+TAG_LIBRARY_TIMEOUT_SECS="${TAG_LIBRARY_TIMEOUT_SECS:-1200}"
+STAGES=(
+  normalize:identity normalize:periods normalize:units normalize:facts normalize:dedupe
+  normalize:restatements normalize:conflict-latest-filed normalize:derive-interim-quarters
+  normalize:derive-q4
+  map:resolve-facts map:resolve-concept-fallbacks map:calculate map:growth map:ttm-returns
+  map:ttm-margins map:calculate-expanded-metrics map:calculate-piotroski
+  map:calculate-quality-flags map:calculate-reconciliation map:calculate-tax-reconciliation
+  map:calculate-fcf-growth map:calculate-dividend-streak
+  map:build-tag-library
+)
+SKIPPED=""
+for ((i = 0; i < ${#STAGES[@]}; i++)); do
+  entry="${STAGES[$i]}"
+  kind="${entry%%:*}"
+  stage="${entry#*:}"
+  elapsed=$((SECONDS - SCRIPT_START))
+  if [ "$BUDGET_SECS" -gt 0 ] && [ "$elapsed" -gt "$BUDGET_SECS" ]; then
+    SKIPPED="${STAGES[*]:$i}"
+    echo "reprocess_recent_filers: budget exhausted (${elapsed}s > ${BUDGET_SECS}s), skipped: ${SKIPPED}" >&2
+    for skipped in ${STAGES[@]:$i}; do
+      echo "run_sharded: stage '${skipped#*:}' took 0s (skipped, budget exhausted)"
+    done
+    FAILED_STAGES="$FAILED_STAGES budget-skipped:${SKIPPED// /,}"
+    break
+  fi
+  echo "--- $kind $stage ---"
+  if [ "$entry" = "map:build-tag-library" ]; then
+    # Keep the SEC Tag Library current (founder direction 2026-09-29). NOT covered
+    # by the workflow's later "Rebuild XBRL tag-candidate library" step, which runs
+    # a different command (build-tag-candidates); the full library rebuild is
+    # manual-only (pipeline-tag-library.yml). Capped so it cannot eat the budget.
+    started=$SECONDS
+    rc=0
+    run_capped "$TAG_LIBRARY_TIMEOUT_SECS" uv run scrooner-map build-tag-library --ciks "$CIKS" || rc=$?
+    echo "run_sharded: stage 'build-tag-library' took $((SECONDS - started))s (rc=$rc)"
+    [ "$rc" -eq 0 ] || FAILED_STAGES="$FAILED_STAGES map:build-tag-library"
+    continue
+  fi
+  program="scrooner-$kind"
+  run_sharded "$program" "$stage" || FAILED_STAGES="$FAILED_STAGES $kind:$stage"
 done
-
-# Keep the SEC Tag Library current (founder direction 2026-09-29: it is the
-# source of truth for data gaps and must never be stale). Refreshes the
-# company x tag rows and concept lineage for just these companies, then the
-# population-wide tag summary, verdict sync and gap leads.
-echo "--- map build-tag-library ---"
-uv run scrooner-map build-tag-library --ciks "$CIKS"
 
 if [ -n "$FAILED_STAGES" ]; then
   echo "reprocess_recent_filers: FAILED stages:$FAILED_STAGES" >&2
