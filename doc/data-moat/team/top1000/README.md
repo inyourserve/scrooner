@@ -14,7 +14,7 @@ Founder direction 2026-10-18: work company by company on the 1,000 largest compa
 | Blank, no reason (unexplained) | 14,138 | 8.67% |
 | Total | 163,000 | |
 
-"Value present" is not yet "verified correct". Shard S001 (NVDA..LLY) is 86.8% filled; S100 is 74.0%.
+"Value present" is not yet "verified correct". **Correction (S014, code-confirmed):** `has_value` is true if ANY past period had a value (`coverage_matrix.py:746`, `bool_or`), so a metric whose latest period is blank still counts as filled. 80.86% overstates current coverage; S014 measured ~356 real blanks against 277 counted. Shard S001 (NVDA..LLY) is 86.8% filled; S100 is 74.0%.
 
 ## The list: `shards.csv`
 Rank by the latest `market_cap` metric, `real_operating_company` population only. Columns: shard, rank, company_id, cik, ticker, name, sic, mcap_bn, cells, filled, unexplained_blank.
@@ -43,3 +43,9 @@ The database pooler has about 15 connections shared by every service (14 in use 
 
 ## Status
 See `status.md`.
+
+## SEC access (founder decision 2026-10-18)
+The founder approved declaring their Gmail as the SEC contact: User-Agent `Scrooner research inyourserve@gmail.com`, sent to sec.gov and data.sec.gov only. Each worker is capped at 2 requests/second so the workers together stay under SEC's ~10/s limit.
+
+## Worker hygiene
+Each worker keeps its scratch files in its own subfolder (`<scratchpad>/S###/`). Two workers sharing one folder overwrote each other's request log once (S002/S015).
