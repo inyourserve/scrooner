@@ -16,3 +16,37 @@
 | NotesPayable | debt | sole-tag last resort only, if checks pass | proposal [27] | CDNL double-count counterexample |
 | SeniorNotes, SubordinatedDebt | debt | sole-tag last resort only | proposal [27] | fill none of the named cells |
 | InterestExpenseNonoperating | interest | conditional on check I-2 | proposal [27] | |
+| Revenues | revenue | per company-period; NEVER bank | FILING-CHECKED 6 filers + [32]; cards/revenue.md 2026-10-19 | net at BAC/PNC/Citigroup, gross by definition; GE quarterly = GE Capital |
+| RevenueFromContractWithCustomerExcludingAssessedTax | revenue | total only if no other total; subset at ANDE and banks | FILING-CHECKED (AAPL, BBW; counterexamples) 2026-10-19 | no pre-ASC 606 frame |
+| SalesRevenueNet / GoodsNet / ServicesNet | revenue | pre-ASC 606 periods only, per company | FILING-CHECKED (GE R164) + DATA-INFERRED | absent from 2021/2024/2025 taxonomy files |
+| InterestAndDividendIncomeOperating | revenue / interest | bank total interest income only | FILING-CHECKED; PGR counterexample (insurer) 2026-10-19 | not a bank detector |
+| RevenuesNetOfInterestExpense | revenue | bank presented total (JPM, WFC) | FILING-CHECKED [32] | 64 CY2023 filers |
+| OperatingIncomeLoss | operating income | non-banks with face label; NEVER banks; PLD includes real-estate gains | FILING-CHECKED (AAPL, AMZN, DUK) 2026-10-19 | 13% of revenue filers have none |
+| CostsAndExpenses | operating income | never derive OI; includes interest at CVX/AJG/HTZ/GE, excludes it at AMZN | FILING-CHECKED 2026-10-19 | 195 CY2023 filers have it without OI |
+| OperatingExpenses | operating income | total only where an OI line coexists; component at AJG | FILING-CHECKED 2026-10-19 | |
+| OperatingCostsAndExpenses | operating income | component (excludes SG&A); never total opex | FILING-CHECKED (CVX) | |
+| SellingGeneralAndAdministrativeExpense | operating income | component; sole-opex OI formula proposal only | FILING-CHECKED (DHI, BBW) | |
+| CostOfRevenue / CostOfGoodsAndServicesSold | operating income | cost of sales; take whichever is filed | FILING-CHECKED (AAPL, DHI, BBW) | 172 filers carry both |
+| InterestIncomeExpenseNet | interest | bank NII only; non-banks use it as net interest expense | FILING-CHECKED 29/30 [32] + Citigroup/FLG/ANDE 2026-10-19 | 768 non-bank-like CY2023 filers (Frames proxy) |
+| InterestRevenueExpenseNet | interest | NOT an exact synonym of NII | definition FILING-CHECKED; usage DATA-INFERRED | operating + nonoperating |
+| InterestExpense / InterestExpenseOperating | interest | bank total interest expense; non-banks per company | FILING-CHECKED 30/30 [32] | |
+| InterestExpenseNonoperating / InterestIncomeExpenseNonoperatingNet | interest | non-bank below-the-line; conditional on check I-2 | FILING-CHECKED (PLD, AMZN, BBW) | R-file sign differs from stored sign |
+| InterestExpenseDebt | interest | debt interest only; inside CostsAndExpenses at CVX | FILING-CHECKED | |
+| InvestmentIncomeInterest | interest | NEVER bank interest income; fine for non-bank interest income | FILING-CHECKED (AMZN; banks [32]; FLG 2026-10-19) | |
+| LongTermDebt | debt | total long-term debt (net, no leases) where present | FILING-CHECKED (PLD, ARCC) 2026-10-19 | do not add current on top |
+| LongTermDebtNoncurrent + LongTermDebtCurrent | debt | safe pair | FILING-CHECKED (AAPL, DUK) | AMZN noncurrent only |
+| NotesPayable / NotesPayableCurrent / LongTermNotesPayable / ConvertibleNotesPayable / LongTermLineOfCredit | debt | components or last resort; NotesPayable includes current portion | definition FILING-CHECKED; coexistence NOT_RUN [31] | |
+| AdvancesFromFederalHomeLoanBanks / SubordinatedDebt | debt | bank components, not totals | FILING-CHECKED (EWBC, AX) | stored bank total debt misses them |
+| FinanceLeaseLiability* | debt | lease, not debt unless policy says so | definition FILING-CHECKED | ASC 842 tag |
+| CashAndCashEquivalentsAtCarryingValue | cash | safe cash-and-equivalents; USD only | FILING-CHECKED 7 filers 2026-10-19 | |
+| Cash | cash | only where it is the face cash row (PGR) | FILING-CHECKED | not "cash excluding equivalents" |
+| CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents | cash | cash-flow total from 2018; not balance-sheet cash | FILING-CHECKED | 7 filers in 2013, 5,475 in 2023 |
+| RestrictedCash family | cash | components; sum within one family | FILING-CHECKED (ARCC, HTZ, AX) | |
+| NetIncomeLoss | net income | parent net income from 10-K/10-Q; never DEF 14A | FILING-CHECKED 5 filers 2026-10-19 | |
+| ProfitLoss | net income | consolidated incl. NCI; the row named "Net income" at GE/DHI/ANDE/BRK/PNC | FILING-CHECKED | 235 CY2023 filers have only ProfitLoss |
+| IncomeLossAttributableToParent | net income | NEVER net income (pre-tax by definition) | FILING-CHECKED (HTZ) | |
+| EarningsPerShareBasic / Diluted | EPS | statement-level undimensioned fact; exceptions BRK (class axis), ANDE FY2025 | FILING-CHECKED | |
+| EarningsPerShareBasicAndDiluted / WeightedAverageNumberOfShareOutstandingBasicAndDiluted | EPS | era-limited, pre-2021 mostly | DATA-INFERRED (Frames) + taxonomy presence | 3,156 -> 8 filers; gone from 2025 taxonomy |
+| WeightedAverageNumberOfSharesOutstandingBasic / DilutedSharesOutstanding | shares | safe as filed | FILING-CHECKED | |
+| dei:EntityCommonStockSharesOutstanding | shares | per class; sum classes | FILING-CHECKED (BRK, GOOGL) | |
+| dei:EntityPublicFloat | shares | public float only, validate scale; never market cap | FILING-CHECKED (BRK, GOOGL) | |
