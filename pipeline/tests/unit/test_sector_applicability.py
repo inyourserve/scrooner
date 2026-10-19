@@ -254,3 +254,23 @@ def test_is_bank_sic_boundaries():
     assert not is_bank_sic("6019") and not is_bank_sic("6037")
     assert not is_bank_sic("6199") and not is_bank_sic("3571")
     assert not is_bank_sic(None) and not is_bank_sic("60250")
+
+
+@pytest.mark.unit
+def test_second_round_decisions_are_suppressed_with_their_reasons():
+    from scrooner_pipeline.common.sector_applicability import BANK_BORROWINGS_PENDING
+
+    for name in ("dividends_pct_fcf", "share_repurchases_pct_fcf", "ocf_to_net_income"):
+        assert metric_suppression_reason(name, True) == "not applicable to banks"
+        assert metric_suppression_reason(name, False) is None
+    for name in ("sbc_pct_revenue", "capex_pct_revenue", "sga_pct_revenue", "rnd_intensity"):
+        assert metric_suppression_reason(name, True) == "bank revenue definition pending"
+        assert metric_suppression_reason(name, False) is None
+    assert BANK_BORROWINGS_PENDING == "bank borrowings definition pending"
+    assert statement_line_suppression_reason("Total Debt", True) == "bank borrowings definition pending"
+    for label in ("Current Assets", "Current Liabilities"):
+        assert statement_line_suppression_reason(label, True) == "not applicable to banks"
+        assert statement_line_suppression_reason(label, False) is None
+    # the fcf family stays fully suppressed
+    assert all(n in BANK_SUPPRESSED_METRICS for n in BANK_SUPPRESSED_METRICS if n.startswith("fcf"))
+    assert "fcf_growth_yoy" in BANK_SUPPRESSED_METRICS

@@ -41,6 +41,7 @@ from collections.abc import Iterable
 NOT_APPLICABLE_TO_BANKS = "not applicable to banks"
 BANK_REVENUE_PENDING = "bank revenue definition pending"
 BANK_NII_PENDING = "bank net interest income mapping pending"
+BANK_BORROWINGS_PENDING = "bank borrowings definition pending"
 
 # SIC 6020-6036: commercial banks, savings institutions, credit-union-like
 # depositories in the SEC's classification. Four-digit text in core.company.
@@ -145,6 +146,10 @@ BANK_SUPPRESSED_METRICS: dict[str, str] = {
             "debtor_days",
             "cash_conversion_cycle",
             "piotroski_f_score",
+            # FCF-derived and bank-cash-flow-derived (decision 2026-10-19)
+            "dividends_pct_fcf",
+            "share_repurchases_pct_fcf",
+            "ocf_to_net_income",
         ),
     ),
     # Revenue perimeter has 6 meanings across 30 banks today (data-team/32 s3).
@@ -158,6 +163,11 @@ BANK_SUPPRESSED_METRICS: dict[str, str] = {
             "revenue_growth_3y_cagr",
             "revenue_growth_5y_cagr",
             "revenue_growth_10y_cagr",
+            # derived from the undefined bank revenue (decision 2026-10-19)
+            "sbc_pct_revenue",
+            "capex_pct_revenue",
+            "sga_pct_revenue",
+            "rnd_intensity",
         ),
     ),
     # The current formula uses InvestmentIncomeInterest (three different
@@ -172,23 +182,10 @@ BANK_SUPPRESSED_STATEMENT_LINES: dict[str, str] = {
     "Operating Income": NOT_APPLICABLE_TO_BANKS,
     "EBITDA": NOT_APPLICABLE_TO_BANKS,
     "Free Cash Flow": NOT_APPLICABLE_TO_BANKS,
+    "Total Debt": BANK_BORROWINGS_PENDING,
+    "Current Assets": NOT_APPLICABLE_TO_BANKS,
+    "Current Liabilities": NOT_APPLICABLE_TO_BANKS,
 }
-
-# Not suppressed, but a human should decide (see the task report): derived from
-# a suppressed quantity, or a related balance-sheet row the delegated list does
-# not name. Kept as data so the decision is one edit, never applied implicitly.
-PENDING_HUMAN_DECISION: dict[str, str] = {
-    "dividends_pct_fcf": "uses fcf in the denominator",
-    "share_repurchases_pct_fcf": "uses fcf in the denominator",
-    "sbc_pct_revenue": "uses the undefined bank revenue",
-    "capex_pct_revenue": "uses the undefined bank revenue",
-    "sga_pct_revenue": "uses the undefined bank revenue",
-    "rnd_intensity": "uses the undefined bank revenue",
-    "ocf_to_net_income": "uses bank cash from operations",
-    "Total Debt (statement row)": "wrong at 7 of 30 banks (data-team/32 2a #9-15)",
-    "Current Assets / Current Liabilities (statement rows)": "no such line on a bank balance sheet",
-}
-
 
 def metric_suppression_reason(metric_name: str, is_bank: bool) -> str | None:
     """The reason to show instead of a value, or None (not suppressed). A
