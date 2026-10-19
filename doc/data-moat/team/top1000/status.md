@@ -22,7 +22,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | done (wrong values FILING-CHECKED) |
 | S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | done (wrong values FILING-CHECKED) |
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | running |
-| S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | running |
+| S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | done (wrong values FILING-CHECKED; CNI excluded) |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | running |
 | S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | running |
 | S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | todo |
@@ -175,7 +175,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: debt shown 0 / stale when debt is under UnsecuredLongTermDebt or convertible notes (CME 0 vs 3,424.2M; NET 0 from 2019 vs 3,270M converts) | S012 | CME, NET | FILING-CHECKED | open (with total_debt family) |
 | stale values (GLW capex 2020, current tag PaymentsForCapitalImprovements; CME shares 66.6M from 2010 vs 359.6M; ADP op income 2014; LOW interest 2011; SBUX gross profit 2020; ABNB capex/D&A) | S012 | 6 | FILING-CHECKED | open (stale family) |
 | NEW: net income falls back to ProfitLoss (incl. NCI) when NetIncomeLoss is untagged (FCX TTM ~42% overstated; Q1-2026 1,387M vs 881M; AMT 887.5 vs 867.5) | S013, S016 | FCX, AMT (+APH, CEG, EQIX, BNY inferred) | FILING-CHECKED (FCX) | open (Standardization: net income = attributable to parent; links the 1,189-row ProfitLoss path in PLAN.md) |
-| NEW: ASC 606 subset used as revenue at miners/utilities (CEG Q2 5,843M vs 7,504M; FCX 25,186M vs 25,915M FY2025; DUK Q1 8,995M vs 9,178M) | S013 | CEG, FCX, DUK | FILING-CHECKED | open (with AXP/COF 606-component family) |
+| ASC 606 subset used as revenue (CEG Q2 5,843M vs 7,504M; FCX 25,186M vs 25,915M FY2025; DUK Q1 8,995M vs 9,178M; KMI Q2 4,098M vs 4,477M; CP 4,137M vs 4,164M) | S013, S018 | CEG, FCX, DUK, KMI, CP | FILING-CHECKED | open (with AXP/COF 606-component family) |
 | NEW: tiny bare LongTermDebt fact outranks face debt tags (MAR 23M vs 16,915M) | S013 | MAR | FILING-CHECKED | open (total_debt family) |
 | NEW: capex filed only per segment (FCX Q2) | S013 | FCX | FILING-CHECKED | open |
 | NEW: smaller: Q4 DPS tag mismatch annual vs quarterly (MAR); single working-capital cash-flow line (MAR); CostsAndExpenses opex-or-not under one gap reason; HCA EBITDA derivable from pretax+interest+D&A; TT cash includes restricted cash | S013 | MAR, HCA, TT | mixed | open |
@@ -203,6 +203,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: O&M-only tag must not be mapped as total opex (WMB 597 vs 1,871) | S016 | WMB | FILING-CHECKED | guard for Tag Mapper |
 | stale: REGN shares 94.4M (2012), UPS shares 713.9M (2010), EOG dividends paid stuck at 2009 | S016 | REGN, UPS, EOG | FILING-CHECKED | open (stale family) |
 | plausibility: MRNA implied price $215.80 (unverified) | S016 | MRNA | DATA-INFERRED | check with MCAP-SHARES |
+| NEW: currency mix in price ratios: USD market cap over CAD statements (CP P/B 1.645 = 76.7B USD / 46,626M CAD; P/E, P/S, P/B ~28% low) | S018 | CP | FILING-CHECKED | open (price_metrics: require reporting currency = USD or convert) |
+| NEW: debt filed only per business segment, no consolidated total (GM blank; KKR 36.9B from 2021 vs 53.5B) | S018 | GM, KKR | FILING-CHECKED | open (total_debt family) |
+| NEW: captive finance arm in consolidated cash flow -> FCF yield 19.3%, net cash -110.6B (GM Financial) | S018 | GM | FILING-CHECKED | open (Sector Analyst; also DE) |
+| ITW pretax income under an unmapped tag (stuck FY2023); CL dividends paid tag unmapped (879M filed) | S018 | ITW, CL | FILING-CHECKED | open (Tag Mapper) |
+| near-zero equity -> P/B 319 (CL) | S018 | CL | FILING-CHECKED | open (materiality floor on equity) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
