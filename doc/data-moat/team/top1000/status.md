@@ -1,5 +1,7 @@
 # Shard status
 
+Learning guide: `PLAYBOOK.md` (every problem type: tags, how to spot, fix rule, examples).
+
 Statuses: todo / running / done / reissue (ranking changed). Filled % and unexplained blanks are the 2026-10-18 baseline.
 
 | Shard | Tickers | Filled % | Unexplained blanks | Status |
@@ -23,10 +25,10 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | done (wrong values FILING-CHECKED) |
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | running |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | done (wrong values FILING-CHECKED; CNI excluded) |
-| S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | running |
+| S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | done (all problems per company; FILING-CHECKED) |
 | S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | running |
 | S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | running |
-| S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | todo |
+| S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | running |
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | todo |
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | todo |
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | todo |
