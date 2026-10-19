@@ -144,9 +144,9 @@ Updated as shards finish. If a rule here and a filing disagree, the filing wins.
 ### A8. Stale "latest" values shown as current (very common)
 - **Looks like:** the latest value of a metric comes from years ago because the company switched tags and we only map the old one.
 - **Examples:**
-  - Operating income: GE 2012 (segment profit, FC), ADP 2014, ETN 2019, JCI 2016, JNJ 2015.
+  - Operating income: SHW 2024, TRV 2015, BX 2018 (no subtotal presented), GE 2012 (segment profit, FC), ADP 2014, ETN 2019, JCI 2016, JNJ 2015.
   - Gross margin: TMO 2019, RTX 2020, SBUX 2020, CDNS 2012, INTU 2020, GD 2019, KMI 2022, GM 2021.
-  - Shares: ACN 2010, MA 2010, CME 2010 (66.6M vs 359.6M), REGN 2012, UPS 2010, RPAY 2018.
+  - Shares: CMCSA 2009 (fcf_per_share 9.91 vs ~5.77), ACN 2010, MA 2010, CME 2010 (66.6M vs 359.6M), REGN 2012, UPS 2010, RPAY 2018.
   - Debt: PANW FY2023, CDNS 2018.
   - Interest expense: stale at 8 of 10 in several shards (LOW 2011, KMI coverage from 2014).
   - Cash flow and dividends: VZ capex 2019, COP capex 2022, GLW capex 2020, EOG dividends 2009.
@@ -214,7 +214,8 @@ Updated as shards finish. If a rule here and a filing disagree, the filing wins.
 | Pretax | Domestic + Foreign only; `IncomeLossAttributableToParent` (an after-tax element used for pretax) | MCD; INTU, LITE (stuck at 2020; 0001628280-26-057358 R3) |
 | PP&E | PP&E including finance-lease right-of-use assets | C, + 4 in S019 |
 | Cash | `us-gaap:Cash` (not CashAndCashEquivalents...) | SLB (3,172M from 2015 vs 2,743M) |
-| Buybacks | `PaymentsForRepurchaseOfEquity` | SLB |
+| Buybacks | `PaymentsForRepurchaseOfEquity` (426 filers) | SLB, SHW |
+| MLP equity and distributions | `PartnersCapital`, `DistributionMadeToLimitedPartner*` | EPD (25 cells; false no_dividend_history) |
 | Current debt | custom tag only | SLB (total debt 11,140M vs 12,798M) |
 | Receivables | `ContractWithCustomerAssetNet` used for trade AR (LITE 520.3M) - company-scoped only: NOC uses it for unbilled | LITE |
 
@@ -245,6 +246,7 @@ Every new mapping needs a full-population coexistence check first.
   - AEM and CNI never filed a 10-K.
   - All are excluded from the cohort (doc 02: V1 excludes 20-F/40-F filers).
 - **Not companies:** IAU and SLV are commodity trusts.
+- **Acquired or delisted but still active:** WBD (bought by Skydance 10-06; 8-K 0001193125-26-415055, Form 25, Form 15) still shows a $77.8B market cap on a stale price. Rule: Form 25 or Form 15 marks the company inactive.
 - **Missing large companies:** BRK-A, FWONA, BAM, PLNT, UHAL and SUN have a blank market cap (shard S102).
 
 ---

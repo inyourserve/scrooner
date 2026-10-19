@@ -23,7 +23,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S014 | PWR AEM GD MELI ELV USB ICE WM CSX JCI | 83.0 | 126 | done (wrong values FILING-CHECKED) |
 | S015 | EMR HOOD MRSH APP HWM CDNS SNPS INTU PNC DDOG | 80.6 | 141 | done (wrong values FILING-CHECKED) |
 | S016 | AMT MRNA WMB MMM CTAS MCO REGN EOG UPS MDLZ | 87.8 | 87 | done (wrong values FILING-CHECKED) |
-| S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | running |
+| S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | done (FILING-CHECKED) |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | done (wrong values FILING-CHECKED; CNI excluded) |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | done (all problems per company; FILING-CHECKED) |
 | S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | running |
@@ -210,6 +210,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: captive finance arm in consolidated cash flow -> FCF yield 19.3%, net cash -110.6B (GM Financial) | S018 | GM | FILING-CHECKED | open (Sector Analyst; also DE) |
 | ITW pretax income under an unmapped tag (stuck FY2023); CL dividends paid tag unmapped (879M filed) | S018 | ITW, CL | FILING-CHECKED | open (Tag Mapper) |
 | near-zero equity -> P/B 319 (CL) | S018 | CL | FILING-CHECKED | open (materiality floor on equity) |
+| NEW: MLP template (PartnersCapital, DistributionMadeToLimitedPartner unmapped) | S017 | EPD (25 cells) | FILING-CHECKED | open |
+| NEW: acquired/delisted company still active (Form 25/15 not acted on) | S017 | WBD | FILING-CHECKED | open (Company Master status) |
+| NEW: PaymentsForRepurchaseOfEquity unmapped (426 filers) | S017, S019 | SHW, SLB | FILING-CHECKED | open (Tag Mapper) |
+| insurer with no capex line blanks the FCF chain; insurer shows a BDC investment-income cell | S017 | TRV | FILING-CHECKED | open (Sector Analyst) |
+| NEW (S019): pretax tagged with after-tax IncomeLossAttributableToParent (LITE); trade AR as ContractWithCustomerAssetNet (LITE, company-scoped); us-gaap:Cash unmapped (SLB); custom current-debt tag (SLB) | S019 | LITE, SLB | FILING-CHECKED | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
