@@ -8,6 +8,7 @@ read time so symbol changes never orphan a saved company.
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from scrooner_pipeline.common import staleness
 from scrooner_pipeline.common.sector_applicability import (
     BANK_SUPPRESSED_METRICS,
     load_bank_company_ids,
@@ -18,6 +19,10 @@ from db_pool import get_pooled_connection
 
 
 router = APIRouter(prefix="/v1/watchlist", tags=["watchlist"])
+
+# Staleness guard (common/staleness.py): the company's own latest filed
+# period, selected in the same statement as the rest of the row.
+latest_filed_period_sql = staleness.latest_filed_period_sql("w.company_id")
 
 
 class WatchlistCreate(BaseModel):
@@ -37,14 +42,17 @@ def list_watchlist(
     with get_pooled_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                """
+                f"""
                 select w.company_id, c.company_name, c.primary_ticker,
                        c.sector, w.created_at, w.note, w.reviewed_at,
                        price.price, price.previous_price, price.bar_timestamp,
                        valuation.value as trailing_pe,
                        filing.form, filing.filing_date, filing.accession_number,
                        (filing.filing_date::timestamptz > coalesce(w.reviewed_at, w.created_at)) as has_unreviewed,
-                       c.cik
+                       c.cik,
+                       valuation.period_label as valuation_period_label,
+                       valuation.period_end as valuation_period_end,
+                       {latest_filed_period_sql} as latest_filed_period
                 from app.watchlist_item w
                 join core.company c on c.id = w.company_id
                 left join lateral (
@@ -60,7 +68,7 @@ def list_watchlist(
                     ) ranked_price
                 ) price on true
                 left join lateral (
-                    select mv.value
+                    select mv.value, mv.period_label, mv.period_end
                     from analytics.metric_value mv
                     join analytics.metric_definition md on md.id = mv.metric_definition_id
                     where mv.company_id = w.company_id and md.metric_name = 'trailing_pe'
@@ -83,6 +91,12 @@ def list_watchlist(
             company_ids = [row[0] for row in rows]
             fundamentals = {}
             updates = {}
+            stale_reasons: dict[int, dict[str, str]] = {}
+            latest_filed = {row[0]: row[18] for row in rows}
+            for row in rows:
+                reason = staleness.staleness_reason(row[17], row[16], row[18]) if row[10] is not None else None
+                if reason is not None:
+                    stale_reasons.setdefault(row[0], {})["trailing_pe"] = reason
             if company_ids:
                 # Bank applicability (common/sector_applicability.py): the
                 # fundamentals below include operating_margin, fcf and
@@ -117,8 +131,21 @@ def list_watchlist(
                     """,
                     (company_ids, company_ids),
                 )
-                for fact in cur.fetchall():
+                fact_rows = cur.fetchall()
+                # Staleness guard (common/staleness.py): decided on the LATEST
+                # value (rank 1) only. Rank 5 is the year-ago comparative and
+                # is naturally about a year older, so it is never judged
+                # alone; it goes with its latest value.
+                for fact in fact_rows:
+                    if fact[5] != 1 or (fact[0] in bank_ids and fact[1] in BANK_SUPPRESSED_METRICS):
+                        continue
+                    reason = staleness.staleness_reason(fact[3], fact[4], latest_filed.get(fact[0]))
+                    if reason is not None:
+                        stale_reasons.setdefault(fact[0], {})[fact[1]] = reason
+                for fact in fact_rows:
                     if fact[0] in bank_ids and fact[1] in BANK_SUPPRESSED_METRICS:
+                        continue
+                    if fact[1] in stale_reasons.get(fact[0], {}):
                         continue
                     entry = fundamentals.setdefault(fact[0], {}).setdefault(fact[1], {})
                     entry["latest" if fact[5] == 1 else "previous"] = {
@@ -158,7 +185,11 @@ def list_watchlist(
             "price": str(row[7]) if row[7] is not None else None,
             "previous_price": str(row[8]) if row[8] is not None else None,
             "price_as_of": str(row[9]) if row[9] else None,
-            "valuation": {"label": "P/E", "value": str(row[10])} if row[10] is not None else None,
+            "valuation": (
+                {"label": "P/E", "value": str(row[10])}
+                if row[10] is not None and "trailing_pe" not in stale_reasons.get(row[0], {})
+                else None
+            ),
             "latest_update": ({
                 "form": row[11], "filed_at": str(row[12]), "accession_number": row[13],
                 "source_url": f"https://www.sec.gov/Archives/edgar/data/{row[15].lstrip('0')}/{row[13].replace('-', '')}/{row[13]}-index.html",
@@ -166,6 +197,7 @@ def list_watchlist(
             "has_unreviewed": bool(row[14]),
             "next_earnings": None,
             "fundamentals": fundamentals.get(row[0], {}),
+            **({"suppressed_reasons": stale_reasons[row[0]]} if row[0] in stale_reasons else {}),
             "updates": updates.get(row[0], []),
         }
         for row in rows

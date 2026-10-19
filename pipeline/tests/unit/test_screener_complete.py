@@ -86,9 +86,15 @@ class InactiveCursor:
         return False
 
     def execute(self, _sql, _params=()):
-        pass
+        self.last_sql = str(_sql)
 
     def fetchall(self):
+        # The staleness annotation (screener/query.py) also reads the snapshot
+        # periods, core.filing and metric_value for excluded companies; this
+        # fake has none of those, only the inactive-company answer.
+        last = getattr(self, "last_sql", "")
+        if any(t in last for t in ("company_screening_snapshot", "core.filing", "analytics.metric_value")):
+            return []
         return [("inactive-cik",)]
 
 

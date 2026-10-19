@@ -26,18 +26,30 @@ pipeline common/sector_applicability.py) is computed in the same query, and
 for a bank the metrics, statement rows, FY history and peer cells in the
 suppress list are returned null with a stated reason. A non-bank's output is
 unchanged. Cached pages (cache.py) keep the old values until their TTL expires.
+
+Staleness guard (2026-10-19, pipeline common/staleness.py): the company's own
+latest filed period comes back inside the same query (`latest_filed_period`),
+and a Key Metrics value, a book value, an FY-history series or a peer cell
+that is more than 1 fiscal year (annual) / 2 quarters (quarterly, TTM) behind
+it is returned null with the reason 'not in the latest filing (last reported
+...)'. The statement tables are history grids with explicit period headers and
+are left as stored.
 """
 
 from collections import defaultdict
 
 import psycopg
 
+from scrooner_pipeline.common import staleness
 from scrooner_pipeline.common.sector_applicability import (
     BANK_SUPPRESSED_METRICS,
     bank_predicate_sql,
     metric_suppression_reason,
     statement_line_suppression_reason,
 )
+
+latest_filed_period_sql = staleness.latest_filed_period_sql
+stale_predicate_sql = staleness.stale_predicate_sql
 
 _EQUITY_ONLY_SQL = (
     "(l.security_type is null or l.security_type in "
@@ -70,7 +82,8 @@ with selected_company as (
 ),
 peer_companies as (
   select distinct on (c.id) c.id, l.ticker, coalesce(c.display_name, c.company_name) as company_name, 'industry'::text as match_basis,
-         {bank_predicate_sql("c")} as is_bank
+         {bank_predicate_sql("c")} as is_bank,
+         {latest_filed_period_sql("c.id")} as latest_filed_period
   from core.company c
   join core.listing l on l.company_id = c.id
   join selected_company company on company.y_industry is not null and c.y_industry = company.y_industry
@@ -93,6 +106,7 @@ peer_metrics as (
   where md.metric_name in ('roe', 'roic', 'revenue_growth_3y_cagr', 'net_margin')
     and mv.value is not null
     and not (p.is_bank and md.metric_name in ({_PEER_BANK_SUPPRESSED_SQL}))
+    and not coalesce({stale_predicate_sql("mv.period_label", "mv.period_end", "p.latest_filed_period")}, false)
     and (md.metric_name = 'revenue_growth_3y_cagr' or (mv.value >= -2.0 and mv.value <= 2.0))
 ),
 ranked_metrics as (
@@ -238,7 +252,20 @@ select
     'business_address_zip', company.business_address_zip,
     'business_phone', company.business_phone,
     'website', coalesce(company.website, regexp_replace(company.y_website, '^https?://', '')),
-    'is_bank', company.is_bank
+    'is_bank', company.is_bank,
+    'latest_filed_period', {latest_filed_period_sql("company.id")}::text,
+    'book_value_period_end', (
+      select period.end_date::text
+      from analytics.canonical_fact fact
+      join analytics.canonical_concept concept
+        on concept.id = fact.canonical_concept_id
+      join core.period period on period.id = fact.period_id
+      where fact.company_id = company.id
+        and concept.name = 'stockholders_equity'
+        and period.end_date >= '{_HISTORY_FLOOR}' and period.end_date <= current_date + interval '30 days'
+      order by period.end_date desc
+      limit 1
+    )
   ) as company,
   coalesce((
     select jsonb_agg(jsonb_build_object(
@@ -601,6 +628,39 @@ def suppress_bank_statement(statement: dict, is_bank: bool) -> dict:
     return {**statement, "lines": lines}
 
 
+def stale_metric_history_names(
+    history_rows: list[dict], latest_filed_period
+) -> set[str]:
+    """Names of metrics whose FY history series is stale: if even the series'
+    latest year (max period_end, independent of row order) is more than a
+    fiscal year behind the company's own latest filed period, the whole series
+    is old and is left out (staleness guard)."""
+    newest: dict[str, str] = {}
+    for entry in history_rows:
+        name = entry["metric_name"]
+        end = entry.get("period_end")
+        if end is not None and (name not in newest or end > newest[name]):
+            newest[name] = end
+    return {
+        name
+        for name, end in newest.items()
+        if staleness.staleness_reason(end, "FY", latest_filed_period)
+    }
+
+
+def suppress_stale_book_value(
+    book_value: str | None, period_end: str | None, latest_filed_period
+) -> tuple[str | None, str | None]:
+    """Book value is the latest stockholders' equity of any period (a balance
+    at a date), so the quarterly threshold applies. Returns (value, reason)."""
+    if book_value is None:
+        return None, None
+    reason = staleness.staleness_reason(period_end, "Q4", latest_filed_period)
+    if reason is None:
+        return book_value, None
+    return None, reason
+
+
 def get_company_page_data(conn: psycopg.Connection, ticker: str) -> dict | None:
     with conn.cursor() as cur:
         cur.execute(_QUERY, {"ticker": ticker})
@@ -631,11 +691,19 @@ def get_company_page_data(conn: psycopg.Connection, ticker: str) -> dict | None:
 
     is_bank = bool(company.get("is_bank"))
     metrics = suppress_bank_metrics(metrics, is_bank)
+    latest_filed = company.get("latest_filed_period")
+    metrics = staleness.apply_to_metric_rows(metrics, latest_filed)
+    stale_history_names = stale_metric_history_names(metric_history_rows, latest_filed)
+    book_value, book_value_reason = suppress_stale_book_value(
+        book_value, company.get("book_value_period_end"), latest_filed
+    )
 
     metric_history: dict[str, list] = defaultdict(list)
     metric_trend_history: dict[str, list] = defaultdict(list)
     for entry in metric_history_rows:
         if is_bank and entry["metric_name"] in BANK_SUPPRESSED_METRICS:
+            continue
+        if entry["metric_name"] in stale_history_names:
             continue
         metric_history[entry["metric_name"]].append(entry["value"])
         metric_trend_history[entry["metric_name"]].append(
@@ -665,6 +733,7 @@ def get_company_page_data(conn: psycopg.Connection, ticker: str) -> dict | None:
         "latestPrice": latest_price,
         "priceHistory": price_history,
         "bookValue": book_value,
+        "bookValueSuppressedReason": book_value_reason,
         "metricHistory": dict(metric_history),
         "metricTrendHistory": dict(metric_trend_history),
         "peerCompanies": peer_companies,

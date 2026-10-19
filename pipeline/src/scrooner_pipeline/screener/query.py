@@ -51,6 +51,7 @@ import psycopg
 import structlog
 from psycopg import sql
 
+from scrooner_pipeline.common import staleness
 from scrooner_pipeline.common.sector_applicability import (
     BANK_SUPPRESSED_METRICS,
     is_bank_sic,
@@ -105,6 +106,83 @@ def _annotate_bank_suppression(
             for name in entry["missing_metrics"]
             if name in BANK_SUPPRESSED_METRICS
         }
+
+
+def _annotate_stale_suppression(
+    conn: psycopg.Connection,
+    excluded_missing_data: dict[int, dict],
+    dataset_version: int,
+    catalog: dict[str, int],
+) -> None:
+    """A company excluded because the staleness guard (common/staleness.py)
+    hid its old value gets the stated reason next to the metric name, in the
+    same `suppressed_reasons` key a bank exclusion uses (a bank reason already
+    there is never overwritten). Additive and read-only.
+
+    The snapshot keeps the hidden value's period label and end next to a null
+    value, but a null can also be a genuinely null row, so a candidate must
+    pass two checks before it is explained as stale: its period is stale
+    against the company's own latest filed period (date test), AND a stored
+    non-null metric_value exists at exactly that period (one set-based
+    lookup). Neither a screen with no excluded company nor one whose nulls
+    are all recent issues more than the first one or two light queries."""
+    pairs = [
+        (company_id, name)
+        for company_id, entry in excluded_missing_data.items()
+        for name in entry["missing_metrics"]
+        if name in catalog
+        and name not in entry.get("suppressed_reasons", {})
+    ]
+    if not pairs:
+        return
+    company_ids = sorted({company_id for company_id, _ in pairs})
+    names = sorted({name for _, name in pairs})
+    columns = [sql.Identifier("company_id")]
+    for name in names:
+        columns += [
+            sql.Identifier(f"{name}__period_label"),
+            sql.Identifier(f"{name}__period_end"),
+        ]
+    statement = sql.SQL(
+        "select {} from analytics.company_screening_snapshot "
+        "where dataset_version = %s and company_id = any(%s::bigint[])"
+    ).format(sql.SQL(", ").join(columns))
+    with conn.cursor() as cur:
+        cur.execute(statement, (dataset_version, company_ids))
+        snapshot_rows = cur.fetchall()
+        latest = staleness.load_latest_filed_periods(cur, company_ids)
+    periods: dict[tuple[int, str], tuple] = {}
+    for row in snapshot_rows:
+        for i, name in enumerate(names):
+            periods[(row[0], name)] = (row[1 + 2 * i], row[2 + 2 * i])
+    candidates = []  # (company_id, metric name, label, period_end, reason)
+    for company_id, name in pairs:
+        label, period_end = periods.get((company_id, name), (None, None))
+        reason = staleness.staleness_reason(period_end, label, latest.get(company_id))
+        if reason is not None:
+            candidates.append((company_id, name, label, period_end, reason))
+    if not candidates:
+        return
+    with conn.cursor() as cur:
+        cur.execute(
+            "select t.cid, t.mid from unnest(%s::bigint[], %s::bigint[], %s::text[], %s::date[]) "
+            "as t(cid, mid, pl, pe) "
+            "join analytics.metric_value mv on mv.company_id = t.cid "
+            "and mv.metric_definition_id = t.mid and mv.period_label = t.pl "
+            "and mv.period_end = t.pe where mv.value is not null",
+            (
+                [c[0] for c in candidates],
+                [catalog[c[1]] for c in candidates],
+                [c[2] for c in candidates],
+                [c[3] for c in candidates],
+            ),
+        )
+        confirmed = {(row[0], row[1]) for row in cur.fetchall()}
+    for company_id, name, _label, _period_end, reason in candidates:
+        if (company_id, catalog[name]) in confirmed:
+            excluded_missing_data[company_id].setdefault("suppressed_reasons", {})[
+                name
+            ] = reason
 
 
 _IDENTITY_FIELDS = (
@@ -593,6 +671,9 @@ def run_query(
         conn,
         excluded_missing_data,
         {company_id: identity.get("sic_code") for company_id, identity, _ in rows},
+    )
+    _annotate_stale_suppression(
+        conn, excluded_missing_data, dataset_version, catalog
     )
 
     result = {

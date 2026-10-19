@@ -24,7 +24,7 @@ class WatchlistCursor:
         if normalized.startswith("select w.company_id"):
             user_id, company_id, _ = params
             self._rows = [
-                (item, self.conn.companies[item][0], self.conn.companies[item][1], self.conn.companies[item][2], "2026-10-04T00:00:00Z", self.conn.notes.get((owner, item)), None, None, None, None, None, None, None, None, False, "0000320193")
+                (item, self.conn.companies[item][0], self.conn.companies[item][1], self.conn.companies[item][2], "2026-10-04T00:00:00Z", self.conn.notes.get((owner, item)), None, None, None, None, getattr(self.conn, "pe", None), None, None, None, False, "0000320193", *getattr(self.conn, "valuation_cols", (None, None, None)))
                 for owner, item in self.conn.items
                 if owner == user_id and (company_id is None or item == company_id)
             ]

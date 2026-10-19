@@ -47,6 +47,7 @@ from scrooner_pipeline.common.sector_applicability import (
     apply_to_resolved,
     load_bank_company_ids,
 )
+from scrooner_pipeline.common import staleness
 
 logger = structlog.get_logger()
 
@@ -132,13 +133,33 @@ def resolve_most_recent_values(
             "formula_version": formula_version,
         }
     suppressed = _suppress_for_banks(conn, result, metric_definition_ids)
+    stale = _suppress_stale(conn, result)
     logger.info(
         "screener.resolve.done",
         metric_count=len(metric_definition_ids),
         resolved_pairs=len(result),
         bank_suppressed=suppressed,
+        stale_suppressed=stale,
     )
     return result
+
+
+def _suppress_stale(
+    conn: psycopg.Connection, result: dict[tuple[int, int], dict]
+) -> int:
+    """Staleness guard (common/staleness.py): a value more than 1 fiscal year
+    (annual) or 2 quarters (quarterly/TTM) behind the company's OWN latest
+    filed period is replaced by null plus the reason, so the screening
+    snapshot never serves an old value as current. Runs after the bank
+    suppression, so a bank's stated reason is never overwritten. One
+    set-based read of core.filing for the companies in `result`; no writes,
+    analytics.metric_value untouched."""
+    company_ids = {company_id for company_id, _ in result}
+    if not company_ids:
+        return 0
+    with conn.cursor() as cur:
+        latest = staleness.load_latest_filed_periods(cur, company_ids)
+    return staleness.apply_to_resolved(result, latest)
 
 
 def _suppress_for_banks(
