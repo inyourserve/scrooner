@@ -28,8 +28,10 @@ class WatchlistCursor:
                 for owner, item in self.conn.items
                 if owner == user_id and (company_id is None or item == company_id)
             ]
+        elif normalized.startswith("select c.id from core.company c where c.id = any"):
+            self._rows = [(cid,) for cid in params[0] if cid in getattr(self.conn, "bank_ids", set())]
         elif normalized.startswith("with values_ranked as"):
-            self._rows = []
+            self._rows = list(getattr(self.conn, "fundamental_rows", []))
         elif normalized.startswith("select company_id, form, filing_date::text"):
             self._rows = []
         elif normalized.startswith("insert into app.watchlist_item"):
@@ -122,3 +124,32 @@ def test_watchlist_rejects_unknown_company(monkeypatch):
     with pytest.raises(HTTPException) as exc:
         watchlists.add_to_watchlist(watchlists.WatchlistCreate(company_id=999), OWNER)
     assert exc.value.status_code == 404
+
+
+@pytest.mark.unit
+def test_watchlist_hides_suppressed_fundamentals_for_a_bank_only(monkeypatch):
+    # (company_id, metric, value, period_end, period_label, rank)
+    rows = [
+        (1, "operating_margin", "0.3", "2026-06-30", "Q2", 1),
+        (2, "operating_margin", "0.4", "2026-06-30", "Q2", 1),
+        (2, "diluted_eps", "1.1", "2026-06-30", "Q2", 1),
+    ]
+
+    class BankConnection(WatchlistConnection):
+        companies = {1: ("Apple Inc.", "AAPL", "Technology"), 2: ("Some Bank", "BNK", "Financials")}
+        bank_ids = {2}
+        fundamental_rows = rows
+
+    conn = BankConnection()
+    conn.items.update({(OWNER, 1), (OWNER, 2)})
+
+    @contextmanager
+    def pooled_connection():
+        yield conn
+
+    monkeypatch.setattr(watchlists, "get_pooled_connection", pooled_connection)
+    result = watchlists.list_watchlist(company_id=None, user_id=OWNER)
+    by_id = {item["company_id"]: item["fundamentals"] for item in result["items"]}
+    assert "operating_margin" in by_id[1]            # industrial unchanged
+    assert "operating_margin" not in by_id[2]        # bank: suppressed
+    assert by_id[2]["diluted_eps"]["latest"]["value"] == "1.1"   # EPS kept

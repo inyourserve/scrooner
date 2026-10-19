@@ -8,6 +8,11 @@ read time so symbol changes never orphan a saved company.
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from scrooner_pipeline.common.sector_applicability import (
+    BANK_SUPPRESSED_METRICS,
+    load_bank_company_ids,
+)
+
 from auth import get_current_user_id
 from db_pool import get_pooled_connection
 
@@ -79,6 +84,10 @@ def list_watchlist(
             fundamentals = {}
             updates = {}
             if company_ids:
+                # Bank applicability (common/sector_applicability.py): the
+                # fundamentals below include operating_margin, fcf and
+                # revenue_growth_yoy, all suppressed for banks.
+                bank_ids = load_bank_company_ids(cur, company_ids)
                 cur.execute(
                     """
                     with values_ranked as (
@@ -109,6 +118,8 @@ def list_watchlist(
                     (company_ids, company_ids),
                 )
                 for fact in cur.fetchall():
+                    if fact[0] in bank_ids and fact[1] in BANK_SUPPRESSED_METRICS:
+                        continue
                     entry = fundamentals.setdefault(fact[0], {}).setdefault(fact[1], {})
                     entry["latest" if fact[5] == 1 else "previous"] = {
                         "value": fact[2], "period_end": fact[3], "period_label": fact[4]
