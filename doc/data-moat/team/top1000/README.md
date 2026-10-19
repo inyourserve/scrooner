@@ -49,3 +49,6 @@ The founder approved declaring their Gmail as the SEC contact: User-Agent `Scroo
 
 ## Worker hygiene
 Each worker keeps its scratch files in its own subfolder (`<scratchpad>/S###/`). Two workers sharing one folder overwrote each other's request log once (S002/S015).
+
+## Founder direction 2026-10-19: find ALL problems
+Every shard lists every problem at every company: wrong values, stale values, wrong blank reasons and unexplained blanks, each with the cell, stored value, filed value (where the filing was opened) and cause. Known families get the same full per-company detail, tagged with their family name from status.md or NEW. Counting known-family hits instead of listing them is not enough.
