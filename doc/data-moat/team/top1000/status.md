@@ -31,7 +31,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | done (FILING-CHECKED, history window; IAU excluded) |
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | done (FILING-CHECKED, history window) |
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | done (FILING-CHECKED, history window) |
-| S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | running |
+| S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | done (FILING-CHECKED, history window) |
 | S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | running |
 | S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | running |
 | S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S024 | GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S025 | F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -242,6 +242,14 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | exchange revenue gross vs net (NDAQ 8,262M vs 5,249M) | S024 | NDAQ | FC | open (A2, with ICE) |
 | REIT: O NI 370.5M vs 344.0M to common; debt 4,675M (2017) vs 30,652M; revenue pre-2016 unmapped (RealEstateRevenueNet) | S024 | O | FC | open |
 | GRMN annual DPS filed without a period; PSA dividends stale since 2015; NKE shares stale since 2015; TEAM P/E -1,050 | S024 | GRMN, PSA, NKE, TEAM | FC | open |
+| NEW/CRITICAL: non-authoritative 10-Q fact on a mislabeled full-year context beats the 10-K (FIX FY2025 revenue 1,831.3M vs 9,101.6M; derived Q4 -4,624M; TTM net margin 36.2%) | S025 | FIX | FC | open (period-label family; non-authoritative must never win) |
+| NEW: re-presented and original figures mixed in a derived quarter (EW Q4-2022 revenue 429.9M vs 1,348.3M) | S025 | EW | FC | open (re-presentation policy) |
+| NEW: resolved total debt ignores debt filed only as short-term borrowings (TER, 6 cells) | S025 | TER | FC | open (total_debt) |
+| NEW: inventory only by product type, no total (VST) | S025 | VST | FC | open |
+| EBITDA blank although inputs exist | S025 | F, HUM, PYPL | DI | open |
+| F: total debt 291M (2020) vs 157,126M segment-only; shares 3,727M from 2011; NI incl. NCI; partial-cost gross margin | S025 | F | FC | open (several families) |
+| VST revenue = 606 subset (Q2 4,401M vs 4,017M; FY2021 17,700M vs 12,077M); DAL capex stopped after a tag switch, debt 12,105M vs 12,851M | S025 | VST, DAL | FC | open |
+| history: FY-end total assets blank (HUM, EW FY2015; VEEV FY2018); VST starts 2016 (post-bankruptcy successor) | S025 | HUM, EW, VEEV, VST | FC | open (history window) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
