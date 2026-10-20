@@ -35,7 +35,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | done (FILING-CHECKED, history window) |
 | S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | done (FILING-CHECKED, history window) |
 | S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | done (FILING-CHECKED, history window) |
-| S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | running |
+| S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | done (FILING-CHECKED, history window) |
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | running |
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | running |
 | S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S028 | IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S029 | ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -267,6 +267,13 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW/CRITICAL: a 606 tag on one small sub-line wins as revenue (EXC FY2016-18 revenue 48 / 207 / -62M vs ~31-36B) | S028 | EXC | FC | open (606 family; plausibility guard: revenue < 1% of prior year) |
 | mixed recast vs original bases in derived Q4 (EXC Q4-2020 revenue -8,259M; AIG Q4-2022 -12,609M) | S028 | EXC, AIG | FC | open (Period Engineer: negative derived revenue must never publish) |
 | IDXX debt 449.9M vs 968.9M; AMP revenue gross not net; VTR NI ProfitLoss, op income 2011; MSCI ratios on negative equity | S028 | IDXX, AMP, VTR, MSCI | FC | open (known families) |
+| NEW: filer's own XBRL tags a face line wrongly (ED long-term debt as LongTermDebtFairValue -> debt stuck at 2025) | S029 | ED | FC | open (company-scoped override) |
+| NEW: SG&A stored as G&A only (P 9.1% vs 38.3%; NTAP 4.8% vs 29.9%) | S029 | P, NTAP | FC | open (Tag Mapper) |
+| NEW: net interest expense lands in other income (YUM, SYY) | S029 | YUM, SYY | FC | open (with FITB interest family) |
+| NEW guard: a segment total tagged Revenues beats the face total (NTAP FY revenue 6,237 vs 6,925) | S029 | NTAP | FC | guard for the A3 fix |
+| ED Q4-2025 NI -1,723M vs 298M from a DEF 14A fact (TTM net margin 0.78%) | S029 | ED | SEC-XBRL-checked | open (A4 proxy family, critical) |
+| ADM P/S 1.55 vs 0.47 (606 subset); YUM debt 15,098 vs 12,275; ED revenue 5,231 vs 5,095; PAYX 1,580.7 vs 1,630.5; NTAP cumulative buyback contexts; YUM zero-interest quarters | S029 | ADM, YUM, ED, PAYX, NTAP | FC | open (known families) |
+| history: SYY revenue FY2012-17 unmapped SalesRevenueGoodsNet (also MNST); SYY FY2024 Q4 and NTAP FY2015 Q4 not derived | S029 | SYY, NTAP | FC | open (SalesRevenueGoodsNet = pre-2018 revenue tag, likely wide) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
