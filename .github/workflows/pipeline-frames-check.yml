@@ -6,16 +6,25 @@ on:
     # Weekly, not daily: SEC's Frames data for one calendar quarter
     # doesn't change day to day (it fills in as companies file over the
     # following quarter or two, then stays static) -- a daily run would
-    # burn the same 7 SEC requests against data that hasn't moved. Offset
-    # from the other two crons' times so all three never compete for the
-    # same Supabase pooler connections at once.
-    - cron: "5 17 * * 1"
+    # burn the same 7 SEC requests against data that hasn't moved. Runs at
+    # 06:05Z Monday, before the daily refresh and sanity crons, and shares the
+    # heavy-db-jobs concurrency group below so it never overlaps them (it
+    # overlapped refresh and sanity on 2026-10-19 and failed on a connection
+    # timeout 40 minutes before the database restarted).
+    - cron: "5 6 * * 1"
 
 permissions:
   contents: read
 
+# One queue for every heavy database workflow (2026-10-21). The Supabase database is
+# small (256 MB shared buffers), and it restarted on 2026-10-18 and again on 2026-10-19 while
+# the scheduled refresh, sanity and SEC Frames runs overlapped; the overlap also made Frames and
+# sanity fail with connection timeouts. A shared group makes GitHub run them one at a time.
+# GitHub keeps ONE pending run per group: a newer pending run replaces an older pending one, so
+# check `gh run list` before dispatching a manual run and do not queue two. See
+# doc/data-moat/team/PLAN.md "Operating rule: no overlapping heavy jobs".
 concurrency:
-  group: sec-frames-check-production
+  group: heavy-db-jobs
   cancel-in-progress: false
 
 jobs:
