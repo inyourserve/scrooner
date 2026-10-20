@@ -28,7 +28,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | done (all problems per company; FILING-CHECKED) |
 | S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | done (FILING-CHECKED) |
 | S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | done (FILING-CHECKED, history window) |
-| S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | running |
+| S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | done (FILING-CHECKED, history window; IAU excluded) |
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | running |
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | running |
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | running |
@@ -228,6 +228,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: duration value stored on an instant period (BSX buybacks); negative P/E displayed (BE) | S021 | BSX, BE | DI | open |
 | debt filed only as components, 2012 value shown (DLR 3.27B vs 18.6B) | S021 | DLR | FC (R2) | open (total_debt) |
 | history: unmapped early revenue tag (TRGP 2015-16 missing); BSX FY2015 revenue 8,068 vs 7,477 | S021 | TRGP, BSX | mixed | open (history window) |
+| NEW: DEF 14A facts marked authoritative demote the 10-K net income, then ProfitLoss wins (LNG NI FY2025 6,794M vs 5,330M; FY2021/23/24 too) | S022 | LNG | FC | open (A4 proxy family; critical) |
+| MLP tags unmapped: attributable NI, partners' capital, distributions, per-unit EPS (MPLX revenue Q2 2,615 vs 3,312; 33 cells) | S022 | MPLX | FC | open (MLP template, with EPD, ET) |
+| insurer operating income derived without benefits (AFL operating margin 70.9% vs ~24% pretax); BDC cell filled at an insurer | S022 | AFL | FC | open (insurer template) |
+| segment-only balance sheet (PCAR cash 3,219M from 2019 vs 5,575M; debt blank vs 14,696M) | S022 | PCAR | FC | open (captive finance) |
+| NEW: dividends per share filed only dimensioned (LNG); AFL FY2021 mixed restatement vintages; TEL TTM blank from wrong period labels | S022 | LNG, AFL, TEL | mixed | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
