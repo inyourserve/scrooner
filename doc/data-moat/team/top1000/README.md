@@ -58,3 +58,9 @@ Each shard file also records:
 1. Every wrong value as a test-fixture row: company, cell, stored value, filed value, accession, locator (R-page and line).
 2. For each company, whether its latest 10-Q/10-K has facts in core.fact (accession, fact count). This tracks the stuck-10-Q family.
 Before calling a blank not_reported, read data-team/tags/cards/ and PLAYBOOK.md.
+
+## History window 2015-01-01 to date (founder requirement via data-team/34, 2026-10-20)
+For each company, each shard also records:
+1. The first period we hold vs the company's first filing since 2015. Flag history that starts later than the filings, such as a successor CIK after a reorganisation (known: MRVL, LIN, SHOP, BLK, DIS, XOM).
+2. Annual revenue, net income and total assets for FY2015, FY2018, FY2021 and the latest FY, checked against the filings (FILING-CHECKED where opened), with any pre-2018 tag differences noted.
+3. Every missing quarter since 2015, with its cause: not in SEC feed, 10-Q with no facts loaded, or Q4 not derived.
