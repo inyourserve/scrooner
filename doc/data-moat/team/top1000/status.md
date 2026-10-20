@@ -39,7 +39,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | done (FILING-CHECKED, history window) |
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | done (FILING-CHECKED, history window) |
 | S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | done (FILING-CHECKED, history window) |
-| S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | running |
+| S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | done (FILING-CHECKED, history window) |
 | S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | running |
 | S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | running |
 | S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S032 | BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S033 | VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -288,11 +288,17 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | BIIB 2022 op income as current; HSY EPS, DPS, payout from 2010; KMB/STLD/CCL debt off $18-647M; false pre-revenue reasons BIIB, RPRX (7) | S032 | 6 | FC | open (known families) |
 | history: CCL Q1-Q2 FY2015, RMD FY2017 tags unmapped; Q4 not derived PCG 2019/2020, KMB 2016/2017; recast-mixed derived Q4 CCI 2023 -573, KMB 2022/2023 ~1.7B vs ~4.97B | S032 | 4 | FC | open |
 | NEW: revenue series mixes tags by quarter (HIG YoY -98%, P/S 28.9 vs ~1.3) | S031 | HIG | FC | open (series consistency check) |
-| NEW: Up-C structure: share basis and NI attributable differ (IBKR revenue 760 vs 1,896, NI 1,338 vs 312 across FY2015/18/21/25; ARES NI FY2025 834.5 vs 527.4) | S031 | IBKR, ARES | FC | open (Standardization: Up-C template) |
+| Up-C structure: share basis and NI attributable differ (IBKR revenue 760 vs 1,896, NI 1,338 vs 312 across FY2015/18/21/25; ARES NI FY2025 834.5 vs 527.4) | S031 | IBKR, ARES | FC | open (Standardization: Up-C template) |
 | NEW: debt filed only on an entity axis (ARES) | S031 | ARES | FC | open (total_debt) |
 | NEW: instant flow periods blank dividend yield (IBKR); negative capex from net disposals (HIG); IBKR DPS zeros 2016-20 | S031 | IBKR, HIG | FC | open |
 | DEF 14A NI: ARES FY2021, HIG FY2021/22 | S031 | ARES, HIG | FC | open (A4 proxy family; now 9 companies) |
 | RBLX, WEC NI incl. NCI; WEC EPS stuck FY2025, gross margin 65.7%; PEG PP&E stale since 2010; MTD P/B 2,761 (near-zero equity) | S031 | RBLX, WEC, PEG, MTD | FC | open (known families) |
+| Up-C: market cap counts Class A+B but book value Class A only (TKO P/B 10.2 vs 4.2); TKO FY2025 NI 546.3 vs 195.4 | S033 | TKO | FC | open (Up-C template, with IBKR, ARES) |
+| NEW: merger stub period presented as a full 9M/Q3 (TKO 2023 NI -21.9 = 19 days) | S033 | TKO | FC | open (Period Engineer) |
+| 606 revenue in quarterly margins (CNC 44,375 vs 53,579, gross margin 98.4%); IRM six 2020-21 quarters 606 subset (401.5 vs 1,119.8; 5y CAGR 38% vs ~13%); EQT FY2021 revenue 6,804 vs 3,064.7 | S033 | CNC, IRM, EQT | FC | open (606 family) |
+| TKO FY2022 NI 0 from an 8-K; FY2023/24 NI from DEF 14A | S033 | TKO | FC | open (A4 proxy/8-K family; 10 companies) |
+| SG&A as G&A only (ZS, EXPE); EPS not split-adjusted (CNC, ACGL); ACGL senior notes 4,286 unmapped; EXPE ROIC -14,983% | S033 | 5 | FC | open (known families) |
+| history: 2015-16 revenue tags unmapped (EQT, IRM); ZTS 2025-12-31 balance sheet blank after a recast | S033 | EQT, IRM, ZTS | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
