@@ -36,7 +36,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | done (FILING-CHECKED, history window) |
 | S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | done (FILING-CHECKED, history window) |
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | done (FILING-CHECKED, history window) |
-| S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | running |
+| S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | done (FILING-CHECKED, history window) |
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | running |
 | S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | running |
 | S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | running |
@@ -274,6 +274,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | ED Q4-2025 NI -1,723M vs 298M from a DEF 14A fact (TTM net margin 0.78%) | S029 | ED | SEC-XBRL-checked | open (A4 proxy family, critical) |
 | ADM P/S 1.55 vs 0.47 (606 subset); YUM debt 15,098 vs 12,275; ED revenue 5,231 vs 5,095; PAYX 1,580.7 vs 1,630.5; NTAP cumulative buyback contexts; YUM zero-interest quarters | S029 | ADM, YUM, ED, PAYX, NTAP | FC | open (known families) |
 | history: SYY revenue FY2012-17 unmapped SalesRevenueGoodsNet (also MNST); SYY FY2024 Q4 and NTAP FY2015 Q4 not derived | S029 | SYY, NTAP | FC | open (SalesRevenueGoodsNet = pre-2018 revenue tag, likely wide) |
+| NEW: 16-week Q1 gets no quarter label (KR, 11 TTM cells blank) | S030 | KR | FC | open (Period Engineer; 52/53-week calendars) |
+| NEW: homebuilder inventory and payables tags unmapped | S030 | DHI | FC | open (Sector Analyst) |
+| NEW: absurd margins still shown for near-zero revenue (RVMD ~ -76,000%) | S030 | RVMD | FC | open (materiality floor) |
+| SG&A as G&A only (TTWO 226.3 vs 596.0) | S029, S030 | P, NTAP, TTWO | FC | open |
+| ILMN debt 499 (2022) vs 1,991, FY2021 stored 0; CBRE revenue 606 subset 2018-Q2 2026; ROP capex stuck at 14.3 (2019); KR debt omits finance leases; EL shares blank; net income off at EL, ILMN, CBRE, KR, ROP, CMG (stale resolved rows / proxy) | S030 | 8 | FC | open (known families) |
+| history: 2015-16 revenue tags unmapped (KR, ODFL, CMG); TTWO Q4 FY2022 not derived; mixed restated/original (ROP, CBRE); wrong zeros (ILMN debt FY2021, ROP shares 2015, CBRE cost of revenue Q4-2016) | S030 | 7 | FC | open (history window) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
