@@ -29,7 +29,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | done (FILING-CHECKED) |
 | S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | done (FILING-CHECKED, history window) |
 | S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | done (FILING-CHECKED, history window; IAU excluded) |
-| S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | running |
+| S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | done (FILING-CHECKED, history window) |
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | running |
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | running |
 | S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | running |
@@ -223,7 +223,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | URI Q1 margins -170.8%/93.5%/57.2% vs 36.9%/21.8%/13.3% | S020 | URI | FC (R4) | open (quarter derivation) |
 | NEW: insurer margins and P/S read the base ASC 606 revenue (MET 724M vs 19,154M; net margin 101.7%, P/S 23.9) | S021 | MET | FC (R4) | open (606 family; insurers) |
 | NEW: non-GAAP 'Adjusted earnings' tagged OperatingIncomeLoss stored as operating income (MET 1,604) | S021 | MET | FC (R45) | open (guard: insurer OperatingIncomeLoss) |
-| NEW: net income uses ProfitLoss even when NetIncomeLoss IS filed | S021 | MET, ALL, DLR, AON | DI (SEC XBRL) | open (A5 NCI family; resolver priority) |
+| NEW: net income uses ProfitLoss even when NetIncomeLoss IS filed (FANG FY2025 1,547 vs 1,664; D Q1-2025 711 vs 665) | S021, S023 | MET, ALL, DLR, AON, NUE, FANG, D, DVN | DI (SEC XBRL) | open (A5 NCI family; resolver priority) |
 | NEW: restated FY-end total assets end up blank | S021 | 6 of 10 | DI | open (conflict family) |
 | NEW: duration value stored on an instant period (BSX buybacks); negative P/E displayed (BE) | S021 | BSX, BE | DI | open |
 | debt filed only as components, 2012 value shown (DLR 3.27B vs 18.6B) | S021 | DLR | FC (R2) | open (total_debt) |
@@ -233,6 +233,10 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | insurer operating income derived without benefits (AFL operating margin 70.9% vs ~24% pretax); BDC cell filled at an insurer | S022 | AFL | FC | open (insurer template) |
 | segment-only balance sheet (PCAR cash 3,219M from 2019 vs 5,575M; debt blank vs 14,696M) | S022 | PCAR | FC | open (captive finance) |
 | NEW: dividends per share filed only dimensioned (LNG); AFL FY2021 mixed restatement vintages; TEL TTM blank from wrong period labels | S022 | LNG, AFL, TEL | mixed | open |
+| NEW: operating income derived from a note expense total that includes income tax (DVN Q2 1,497) | S023 | DVN | FC | open (remove derivation) |
+| NEW: tiny restatement differences (1-4M, incl. 8-K recast) blank whole revenue periods (TFC FY2021-22, all 2023) | S023 | TFC | FC | open (conflict tolerance; links LLY rounding family) |
+| NEW: quarters stored under the next fiscal year (NUE 2026 quarters as FY2027, 14 TTM/growth cells blank) | S023 | NUE | FC | open (Period Engineer) |
+| capex/dividends on custom tags (D, CRH); FANG capex and 2015-16 revenue tags unmapped; DVN cover shares rounded to 1.1B | S023 | D, CRH, FANG, DVN | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
