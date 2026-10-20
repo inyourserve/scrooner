@@ -19,7 +19,16 @@ from scrooner_pipeline.common.sector_applicability import (
 from scrooner_pipeline.common.staleness import load_latest_filed_periods
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES
 
-from .model import Cell, CompanyData, ComponentFact, GapRow, Metric, MetricCell, Source
+from .model import (
+    base_name,
+    Cell,
+    CompanyData,
+    ComponentFact,
+    GapRow,
+    Metric,
+    MetricCell,
+    Source,
+)
 
 HISTORY_FLOOR = date(2015, 1, 1)  # doc 38: nothing older is displayed as current
 SOURCE_BATCH = 20_000
@@ -35,6 +44,12 @@ class Registry:
     consumed: dict[str, str] = field(
         default_factory=dict
     )  # concept feeding >= 1 metric -> statement
+    mapped_ids: dict[int, set[str]] = field(
+        default_factory=dict
+    )  # core.concept id -> consumed bases it maps to
+    mapped_tag_count: dict[str, int] = field(
+        default_factory=dict
+    )  # consumed base -> number of mapped tags
 
 
 def execute(cur, sql: str, params, timeout_s: int):
@@ -79,6 +94,23 @@ def load_registry(cur, timeout_s: int = 60) -> Registry:
         timeout_s,
     ):
         reg.consumed[name] = statement
+    bases = {base_name(n) for n in reg.consumed}
+    for base, concept_id in execute(
+        cur,
+        """
+        select cc.name, cm.concept_id from analytics.concept_mapping cm
+        join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
+        where cm.confidence <> 'rejected'
+        """,
+        None,
+        timeout_s,
+    ):
+        b = base_name(base)
+        if b in bases:
+            reg.mapped_ids.setdefault(concept_id, set()).add(b)
+    for bs in reg.mapped_ids.values():
+        for b in bs:
+            reg.mapped_tag_count[b] = reg.mapped_tag_count.get(b, 0) + 1
     reg.adjustment_tags = sorted({tag for i in IDENTITIES for tag, _ in i.adjustments})
     return reg
 
@@ -227,6 +259,31 @@ def load_chunk(
                 data[cid].authoritative_copies.setdefault(r[0], []).append(
                     _source(r[1:])
                 )
+
+    # other non-authoritative copies (a recorded conflict fill has >= 2 non-authoritative copies)
+    for i in range(0, len(non_auth), SOURCE_BATCH):
+        rows = execute(
+            cur,
+            """
+            select f1.id, f2.id, c.tag, f2.value, f2.is_authoritative, f2.is_derived, fl.form, u.unit_name,
+                   fl.accession_number, fl.filing_date, p.start_date, p.end_date
+            from core.fact f1
+            join core.fact f2 on f2.company_id = f1.company_id and f2.concept_id = f1.concept_id
+                 and f2.period_id = f1.period_id and f2.unit_id = f1.unit_id
+                 and not f2.is_authoritative and f2.id <> f1.id
+            join core.concept c on c.id = f2.concept_id
+            join core.unit u on u.id = f2.unit_id
+            join core.period p on p.id = f2.period_id
+            left join core.filing fl on fl.id = f2.filing_id
+            where f1.id = any(%s)
+            """,
+            (non_auth[i : i + SOURCE_BATCH],),
+            timeout_s,
+        )
+        for r in rows:
+            cid = owner.get(r[0])
+            if cid in data:
+                data[cid].conflict_copies.setdefault(r[0], []).append(_source(r[1:]))
 
     # debt components and balance-sheet adjustment facts (authoritative, USD)
     tags = sorted(set(registry.debt_tags) | set(registry.adjustment_tags))
@@ -382,6 +439,27 @@ def _load_history(cur, data, ids, registry, since, timeout_s) -> None:
     for d in data.values():
         d.consumed = dict(registry.consumed)
         d.window_start = floor
+    if registry.mapped_ids:
+        seen: dict[int, dict[str, set]] = defaultdict(lambda: defaultdict(set))
+        for cid, concept_id, start, end in execute(
+            cur,
+            """
+            select distinct f.company_id, f.concept_id, p.start_date, p.end_date
+            from core.fact f join core.period p on p.id = f.period_id
+            where f.company_id = any(%s) and f.concept_id = any(%s) and p.end_date >= %s
+            """,
+            (ids, sorted(registry.mapped_ids), floor),
+            timeout_s,
+        ):
+            for b in registry.mapped_ids.get(concept_id, ()):
+                seen[cid][b].add((start, end))
+        for cid, by_base in seen.items():
+            if cid in data:
+                data[cid].mapped_facts = {
+                    b: sorted(v, key=lambda t: t[1]) for b, v in by_base.items()
+                }
+    for d in data.values():
+        d.mapped_tag_count = dict(registry.mapped_tag_count)
     for cid, first in execute(
         cur,
         "select company_id, min(period_of_report) from core.filing where company_id = any(%s) "

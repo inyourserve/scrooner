@@ -38,7 +38,7 @@ from . import (
     ties,
 )
 from .loader import HISTORY_FLOOR, Registry, load_chunk, load_registry
-from .model import INVARIANTS, WRONG_VALUE, CompanyData, Finding
+from .model import INFO, INVARIANTS, REVIEW, WRONG_VALUE, CompanyData, Finding
 
 logger = structlog.get_logger()
 
@@ -168,11 +168,30 @@ UPSERT_CERTIFICATION = """
         checks_run_at = excluded.checks_run_at,
         open_findings = excluded.open_findings,
         state = case
-            when excluded.open_findings > 0 then 'uncertified'
+            when excluded.state = 'uncertified' then 'uncertified'
             when analytics.company_certification.state = 'uncertified' then 'checks_clean'
             else analytics.company_certification.state
         end
 """
+
+
+def is_blocking(f: Finding) -> bool:
+    """What blocks `checks_clean` (decision 2026-10-21): a wrong_value finding, or an
+    I11 missing cell nobody could classify. `review` and `info` do not block it
+    (review blocks `certified`, which this tool never sets)."""
+    return f.severity == WRONG_VALUE or (
+        f.invariant == "I11" and f.evidence.get("classified") is False
+    )
+
+
+def company_state(findings: list[Finding]) -> str:
+    return "uncertified" if any(is_blocking(f) for f in findings) else "checks_clean"
+
+
+def storable(findings: list[Finding]) -> list[Finding]:
+    """`info` findings are counted in the report but never written: the 0097 table
+    allows only wrong_value and review."""
+    return [f for f in findings if f.severity != INFO]
 
 
 def apply_chunk(
@@ -181,6 +200,7 @@ def apply_chunk(
     """Idempotent write of one chunk in ONE transaction: open findings of these
     companies are deleted and re-inserted, the certification rows upserted.
     Rows with resolved_at set are history and are never touched."""
+    findings = storable(findings)
     by_company: dict[int, list[Finding]] = defaultdict(list)
     for f in findings:
         by_company[f.company_id].append(f)
@@ -212,7 +232,7 @@ def apply_chunk(
             [
                 (
                     cid,
-                    "uncertified" if by_company.get(cid) else "checks_clean",
+                    company_state(by_company.get(cid, [])),
                     now,
                     len(by_company.get(cid, [])),
                 )
@@ -313,12 +333,92 @@ def summarize(result: RunResult) -> dict:
     return {"by_invariant": by_inv, "by_company": by_company, "by_rule": by_rule}
 
 
-def render_text(result: RunResult, show: int = 0) -> str:
+def morning_summary(result: RunResult) -> dict:
+    """One-command report: companies per state, wrong_value by invariant, and the
+    I11 missing CELLS (not findings) by cause bucket. State is what --apply would
+    write (`certified` is never set by this tool)."""
+    by_company: dict[int, list[Finding]] = defaultdict(list)
+    for f in result.findings:
+        by_company[f.company_id].append(f)
+    states: Counter = Counter(
+        company_state(by_company.get(cid, [])) for cid in result.companies
+    )
+    wrong: Counter = Counter(
+        f.invariant for f in result.findings if f.severity == WRONG_VALUE
+    )
+    sev: Counter = Counter(f.severity for f in result.findings)
+    cells: dict[str, Counter] = {"concepts": Counter(), "metrics": Counter()}
+    unclassified_by_kind: Counter = Counter()
+    for h in result.history.values():
+        for (base, kind, cause), ends in (h.get("missing") or {}).items():
+            cells["concepts"][cause] += len(ends)
+            if cause == "unclassified":
+                unclassified_by_kind[("concept", kind)] += len(ends)
+        for (name, kind, cause), ends in (h.get("missing_metrics") or {}).items():
+            cells["metrics"][cause] += len(ends)
+            if cause == "no_row":
+                unclassified_by_kind[("metric", kind)] += len(ends)
+    blocking_i11 = sum(
+        1 for f in result.findings if f.invariant == "I11" and is_blocking(f)
+    )
+    return {
+        "states": states,
+        "wrong_by_invariant": wrong,
+        "severity": sev,
+        "i11_cells": cells,
+        "unclassified_by_kind": unclassified_by_kind,
+        "i11_blocking_findings": blocking_i11,
+        "companies": len(result.companies),
+    }
+
+
+def render_summary(result: RunResult) -> str:
+    m = morning_summary(result)
+    lines = [
+        f"SUMMARY ({m['companies']} companies checked)",
+        "  state (certified is never set here): "
+        + ", ".join(f"{k}={m['states'][k]}" for k in ("checks_clean", "uncertified")),
+        "  rule: checks_clean = zero wrong_value AND zero unclassified I11 cells; review/info do not block it",
+        "  findings by severity: "
+        + ", ".join(f"{k}={v}" for k, v in sorted(m["severity"].items())),
+        "  wrong_value by invariant: "
+        + (
+            ", ".join(
+                f"{i}={m['wrong_by_invariant'][i]}"
+                for i in INVARIANTS
+                if m["wrong_by_invariant"][i]
+            )
+            or "none"
+        ),
+        "  I11 missing concept cells by cause:",
+    ]
+    for cause, n in m["i11_cells"]["concepts"].most_common():
+        lines.append(f"    {cause:<28} {n}")
+    lines.append("  I11 missing metric cells by cause:")
+    for cause, n in m["i11_cells"]["metrics"].most_common(12):
+        lines.append(f"    {cause:<28} {n}")
+    lines.append(
+        "  unclassified I11 cells by kind: "
+        + (
+            ", ".join(
+                f"{k[0]}/{k[1]}={v}"
+                for k, v in sorted(m["unclassified_by_kind"].items())
+            )
+            or "none"
+        )
+    )
+    return "\n".join(lines)
+
+
+def render_text(result: RunResult, show: int = 0, summary_only: bool = False) -> str:
     s = summarize(result)
-    lines = ["Findings per invariant (wrong_value / review):"]
+    head = render_summary(result)
+    if summary_only:
+        return head
+    lines = [head, "", "Findings per invariant (wrong_value / review / info):"]
     for inv in INVARIANTS:
         c = s["by_invariant"][inv]
-        lines.append(f"  {inv:<4} {c[WRONG_VALUE]:>6} / {c['review']:<6}")
+        lines.append(f"  {inv:<4} {c[WRONG_VALUE]:>6} / {c['review']:<6} / {c['info']}")
     lines.append("")
     lines.append("Findings per rule:")
     for (inv, rule, sev), n in sorted(s["by_rule"].items()):

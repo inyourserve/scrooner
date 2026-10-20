@@ -16,8 +16,11 @@ Every stored value (both layers) must be explained by its source facts:
                         one value, so a rounded copy never replaces a precise
                         one). If no authoritative copy exists the cell is a
                         conflict fill (analytics/conflict_resolution.py) and is
-                        reported as `review` with `conflict_filled: true`, because
-                        data-team/20 s2 says this is expected, not a rule break.
+                        a RECORDED conflict fill (>= 2 non-authoritative copies within
+                        15% of each other, stored value is one of them) is `info`
+                        (counted, not stored: expected per data-team/20 s2); any other
+                        non-authoritative source (a lone copy, copies > 15% apart, or a
+                        value that is none of the copies) is `review`.
   value_not_in_sources  the stored value is not what its sources say: for
                         first_match concepts it must equal one source value (or
                         arithmetic of several: sum, a - b, a - rest), for sum
@@ -31,6 +34,7 @@ from decimal import Decimal
 from itertools import combinations, product
 
 from .model import (
+    INFO,
     PERIODIC_FORMS,
     REVIEW,
     WRONG_VALUE,
@@ -41,6 +45,29 @@ from .model import (
 )
 
 ROUNDING_TOLERANCE = Decimal("0.0001")  # 0.01%, the ledger's rounding skip (2026-10-18)
+# mapper/conflict_resolution.py fills a period whose copies are ALL non-authoritative
+# only when the worst-case disagreement is <= 15% (data-team/20 section 2).
+CONFLICT_FILL_MAX_SPREAD = Decimal("0.15")
+
+
+def is_recorded_conflict_fill(value: Decimal, source, others) -> bool:
+    """A non-authoritative source is a RECORDED conflict fill (expected, not a
+    rule break) when the period has no authoritative copy (checked by the
+    caller), at least one other non-authoritative copy exists, the copies
+    disagree by at most 15% of the largest, and the stored value is one of the
+    copies (the resolver's tie-break picks an existing copy; matching copies
+    within rounding count as the same copy)."""
+    copies = [source, *others]
+    if len(copies) < 2:
+        return False
+    values = [c.value for c in copies]
+    biggest = max(abs(v) for v in values)
+    if (
+        biggest != 0
+        and (max(values) - min(values)) / biggest > CONFLICT_FILL_MAX_SPREAD
+    ):
+        return False
+    return any(_close(value, v) for v in values)
 
 
 def _close(a: Decimal, b: Decimal) -> bool:
@@ -167,15 +194,18 @@ def check(data: CompanyData) -> list[Finding]:
                             )
                         )
                 else:
+                    others = data.conflict_copies.get(s.id, [])
+                    recorded = is_recorded_conflict_fill(cell.value, s, others)
                     findings.append(
                         finding(
                             data,
                             "I6",
-                            REVIEW,
+                            INFO if recorded else REVIEW,
                             "non_authoritative_source",
                             cell,
                             other=s.value,
-                            conflict_filled=True,
+                            conflict_filled=recorded,
+                            copies=len(others) + 1,
                             tag=s.tag,
                             accession=s.accession,
                             source_ids=[s.id],

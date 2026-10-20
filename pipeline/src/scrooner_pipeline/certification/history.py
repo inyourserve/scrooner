@@ -19,7 +19,10 @@ of the filing's period, instants within 7 days.
 Every missing cell is classified: first by the analytics.period_gap row for the
 same concept, kind and period end (q4_not_derived, quarter_not_derived,
 no_mapped_tag, no_line_item_filed, not_in_sec_feed, conflict_*,
-filing_not_processed), otherwise `unclassified`. Metrics: a missing metric cell
+filing_not_processed); period_gap tracks only 15 concepts, so for the others
+`infer_cause` uses the facts stored under the concept's mapped tags
+(fact_exists_not_resolved, q4_not_derived, quarter_not_derived, no_mapped_tag),
+and only the rest stays `unclassified`. Metrics: a missing metric cell
 is classified by its stored is_null_reason, or `no_row` when no row exists.
 Certification needs zero `unclassified`/`no_row`; classified gaps stay open
 findings for their owner until filled. All severities are `review` (a gap is
@@ -110,6 +113,65 @@ def _concept_kinds(statement: str) -> tuple[str, ...]:
     return ("I",) if statement == "balance_sheet" else ("FY", "Q", "Q4")
 
 
+def _span_days(start: date | None, end: date) -> int | None:
+    return None if start is None or start == end else (end - start).days
+
+
+def _fact_matches(span: tuple[date | None, date], kind: str, end: date) -> bool:
+    """A mapped fact's (start, end) is the cell's period: same class, end within 7 days."""
+    start, fact_end = span
+    if abs((fact_end - end).days) > TOLERANCE_DAYS:
+        return False
+    d = _span_days(start, fact_end)
+    if kind == "I":
+        return d is None
+    if d is None:
+        return False
+    return (
+        YEAR_MIN <= d <= YEAR_MAX if kind == "FY" else QUARTER_MIN <= d <= QUARTER_MAX
+    )
+
+
+def infer_cause(data: CompanyData, base: str, kind: str, end: date) -> str:
+    """Cause of a missing cell with NO analytics.period_gap row (the table tracks
+    only 15 concepts). Evidence is the facts stored under the tags mapped to the
+    concept (analytics.concept_mapping, not 'rejected'), any authority:
+
+      fact_exists_not_resolved  a fact on this very period exists under a mapped tag
+                                (resolver/derivation/authority dropped it)
+      q4_not_derived            kind Q4, no Q4-length fact, but the fiscal-year fact exists
+      quarter_not_derived       kind Q, no discrete-quarter fact, but a longer
+                                year-to-date fact ends on the same date
+      no_mapped_tag             no fact under any mapped tag for the period AND the
+                                period is otherwise loaded (another concept has data
+                                near that date), so the line is not under a mapped tag
+      unclassified              the concept has no mapped tag, or the period has no
+                                data at all (probable ingestion gap): evidence is
+                                insufficient, a person decides
+
+    The last two Q4/quarter causes reuse period_gap's own names for the same
+    situation so one cause means one thing across tracked and untracked concepts."""
+    if data.mapped_tag_count.get(base, 0) == 0:
+        return "unclassified"
+    spans = data.mapped_facts.get(base, [])
+    if any(_fact_matches(sp, kind, end) for sp in spans):
+        return "fact_exists_not_resolved"
+    if kind == "Q4" and any(_fact_matches(sp, "FY", end) for sp in spans):
+        return "q4_not_derived"
+    if kind == "Q" and any(
+        abs((fe - end).days) <= TOLERANCE_DAYS
+        and (_span_days(st, fe) or 0) > QUARTER_MAX
+        for st, fe in spans
+    ):
+        return "quarter_not_derived"
+    loaded = any(abs((c.end - end).days) <= TOLERANCE_DAYS for c in data.cells) or any(
+        abs((fe - end).days) <= TOLERANCE_DAYS
+        for other in data.mapped_facts.values()
+        for _st, fe in other
+    )
+    return "no_mapped_tag" if loaded else "unclassified"
+
+
 def _gap_cause(gaps: dict, base: str, kind: str, end: date) -> str | None:
     for delta in range(-TOLERANCE_DAYS, TOLERANCE_DAYS + 1):
         cause = gaps.get((base, kind, end + timedelta(days=delta)))
@@ -143,7 +205,9 @@ def history_matrix(data: CompanyData) -> dict:
             if any(_matches(c, kind, end) for c in cells):
                 concepts[(year, kind, "present")] += 1
                 continue
-            cause = _gap_cause(gaps, base, kind, end) or "unclassified"
+            cause = _gap_cause(gaps, base, kind, end) or infer_cause(
+                data, base, kind, end
+            )
             concepts[(year, kind, "missing")] += 1
             if cause == "unclassified":
                 concepts[(year, kind, "unclassified")] += 1
@@ -215,6 +279,9 @@ def check(data: CompanyData) -> list[Finding]:
                 "history",
                 period_end=data.first_filing_period,
                 window_start=str(data.window_start),
+                # blocks checks_clean: the missing years are not explained until a
+                # predecessor-CIK link (or a registration date) is recorded
+                classified=False,
                 first_filing_period=str(data.first_filing_period),
                 note="no periodic filing before this date under this CIK: late registrant or "
                 "history lives at a predecessor CIK (needs a Company Master link)",
@@ -229,6 +296,7 @@ def check(data: CompanyData) -> list[Finding]:
                 "no_periodic_filing_in_window",
                 "history",
                 window_start=str(data.window_start),
+                classified=False,
             )
         )
         return out
