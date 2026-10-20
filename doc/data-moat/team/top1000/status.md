@@ -32,7 +32,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | done (FILING-CHECKED, history window) |
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | done (FILING-CHECKED, history window) |
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | done (FILING-CHECKED, history window) |
-| S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | running |
+| S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | done (FILING-CHECKED, history window) |
 | S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | done (FILING-CHECKED, history window) |
 | S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | running |
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | running |
@@ -257,6 +257,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: resolved cash includes customer funds (XYZ 12,851 vs 6,427); COIN FY2023 assets not restated (206,983 vs 14,754) | S027 | XYZ, COIN | FC | open (customer-funds family) |
 | COIN NI FY2021-25 from proxy, rounded (FY2025 1,300 vs 1,260.3); FITB revenue gross interest income; MNST EPS stuck 2011; CARR equity/NI incl. NCI | S027 | COIN, FITB, MNST, CARR | FC | open (known families) |
 | history: FERG predecessor CIK 1832433 missing (~8 quarters); MNST 2015-16 revenue tag SalesRevenueGoodsNet unmapped | S027 | FERG, MNST | FC | open |
+| NEW: stale resolved rows never rebuilt (WAB, ROK net_income_resolved last rebuilt 2026-09-08, still ProfitLoss incl. non-authoritative facts; ROK FY2023 1,278 vs 1,387; WAB FY2018 291.7 vs 294.9) | S026 | WAB, ROK | FC | open (resolved-concept refresh; links ProfitLoss family) |
+| NEW: accounts payable from a supplier-finance note figure (TEVA 225 vs face 2,531) | S026 | TEVA | FC | open (Tag Mapper guard) |
+| NEW: Form 25 for an ADS-to-share swap is not a delisting (TEVA) | S026 | TEVA | FC | guard for the delisted-still-active rule |
+| TEVA total debt = current only 2018-26 (4,500 vs 16,592); ROK segment earnings as operating income (550 vs 481); MSTR mcap on weighted shares (-8%); WDAY shares 2018; XEL FY2015 / KDP 2018-21 debt understated | S026 | TEVA, ROK, MSTR, WDAY, XEL, KDP | FC | open (known families) |
+| history: Q4 revenue not derived (ADSK, WAB, ROK, WDAY); A missing four Q4 NI; TEVA no 2015 quarters (20-F filer then) | S026 | 6 | FC | open (Period Engineer) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
