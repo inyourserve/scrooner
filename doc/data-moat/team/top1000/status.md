@@ -34,7 +34,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | running |
 | S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | running |
 | S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | running |
-| S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | todo |
+| S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | running |
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | todo |
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | todo |
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | todo |
