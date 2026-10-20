@@ -89,8 +89,8 @@ def list_watchlist(
             )
             rows = cur.fetchall()
             company_ids = [row[0] for row in rows]
-            fundamentals = {}
-            updates = {}
+            fundamentals: dict[int, dict[str, dict[str, dict]]] = {}
+            updates: dict[int, list[dict]] = {}
             stale_reasons: dict[int, dict[str, str]] = {}
             latest_filed = {row[0]: row[18] for row in rows}
             for row in rows:

@@ -215,7 +215,7 @@ def _row_counts(stats: dict) -> dict[str, float]:
         "downloaded",
     )
     return {
-        key: float(value)
+        key: float(value)  # type: ignore[arg-type]  # Number is narrowed by isinstance; keep exact behaviour
         for key, value in stats.items()
         if isinstance(value, Number)
         and not isinstance(value, bool)
@@ -321,10 +321,8 @@ def snapshot_as_dict(snapshot: OperationalSnapshot) -> dict:
                 "latest_at": reading.latest_at.isoformat()
                 if reading.latest_at
                 else None,
-                "age_hours": round(
-                    reading.age(snapshot.generated_at).total_seconds() / 3600, 2
-                )
-                if reading.age(snapshot.generated_at) is not None
+                "age_hours": round(age.total_seconds() / 3600, 2)
+                if (age := reading.age(snapshot.generated_at)) is not None
                 else None,
                 "target_hours": reading.maximum_age.total_seconds() / 3600,
                 "row_count": reading.row_count,

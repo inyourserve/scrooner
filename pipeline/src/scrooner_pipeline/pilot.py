@@ -104,7 +104,7 @@ def select_stratified_sample(
     populations = Counter(token for candidate in pool for token in candidate.strata())
     selected: list[PilotCandidate] = []
     selected_ciks: set[str] = set()
-    represented = Counter()
+    represented: Counter[tuple[str, str]] = Counter()
 
     # Cover every available stratum once, rare strata first. One selected
     # company can satisfy several strata, keeping this a compact set-cover
@@ -284,8 +284,8 @@ def mapped_tag_presence(payloads: dict[str, dict]) -> dict:
         if confidence != "rejected":
             mappings.setdefault(canonical, set()).add((taxonomy, tag))
 
-    resolved = Counter()
-    taxonomy_counts = Counter()
+    resolved: Counter[str] = Counter()
+    taxonomy_counts: Counter[str] = Counter()
     for payload in payloads.values():
         facts = payload.get("facts") or {}
         taxonomy_counts.update(facts.keys())

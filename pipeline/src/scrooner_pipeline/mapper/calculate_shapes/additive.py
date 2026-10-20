@@ -17,4 +17,4 @@ def compute(
     add = values_by_role.get("add")
     if add is None:
         return None, "missing:add"
-    return sum(add), None
+    return sum(add, Decimal(0)), None

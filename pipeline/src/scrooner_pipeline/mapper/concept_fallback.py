@@ -33,6 +33,7 @@ this directly."""
 
 from datetime import date
 from decimal import Decimal
+from typing import Any
 
 import psycopg
 import structlog
@@ -263,7 +264,7 @@ def resolve_fallback_for_company(
 
 
 def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
-    stats = {"considered": 0, "ok": 0, "errored": 0, "rows_written": 0}
+    stats: dict[str, Any] = {"considered": 0, "ok": 0, "errored": 0, "rows_written": 0}
     with conn.cursor() as cur:
         cur.execute(
             "select id, cik from core.company where cik = any(%s)", (list(ciks),)
@@ -380,6 +381,7 @@ def compute_total_debt(
         )
         if (
             only_debt_current
+            and debt_current is not None
             and carrying is not None
             and abs(carrying[0] - (incl[0] + debt_current[0]))
             <= abs(carrying[0]) * Decimal("0.01")
@@ -412,7 +414,7 @@ def resolve_total_debt_components(
     company_tag_preference are skipped -- their rows belong to
     sanity/tag_investigator.resolve_company_tag_preferences(), the same
     one-writer-per-company exemption the parser rows already get."""
-    stats = {
+    stats: dict[str, Any] = {
         "companies": 0,
         "skipped_preference": 0,
         "rows_written": 0,
@@ -593,7 +595,10 @@ def resolve_arithmetic_fallback(
 
 
 def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
-    stats = {"considered": len(ARITHMETIC_FALLBACKS), "rows_written": {}}
+    stats: dict[str, Any] = {
+        "considered": len(ARITHMETIC_FALLBACKS),
+        "rows_written": {},
+    }
     for (
         resolved_name,
         primary_name,

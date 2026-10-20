@@ -52,6 +52,7 @@ in core.fact at all. That's an honest, correctly-reported outcome, not a
 bug in the investigator."""
 
 from decimal import Decimal
+from typing import Any
 
 import psycopg
 import structlog
@@ -227,6 +228,7 @@ def investigate(
     not silence. Returns the outcome dict."""
     if period_id is None:
         period_id = _latest_period_id(conn, company_id, concept_name)
+    outcome: dict[str, Any]
     if period_id is None:
         outcome = {
             "outcome": "no_match_found",

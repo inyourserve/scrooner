@@ -96,7 +96,7 @@ CANONICAL_CONCEPTS: list[tuple[str, str, str, str]] = [
 ]
 
 # (canonical_concept_name, taxonomy, tag, priority, confidence, notes)
-CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
+CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str | None]] = [
     # revenue -- alternatives, newest taxonomy first. Bank-specific tag kept
     # as a low-confidence last resort only; its known-partial subcomponent
     # (InterestAndFeeIncomeLoansAndLeases) is deliberately NOT mapped.

@@ -254,7 +254,7 @@ def calculate_piotroski_for_company(
             )
             continue
 
-        score, reason = _score_year(vals_t, vals_p)
+        score, score_reason = _score_year(vals_t, vals_p)
         rows.append(
             {
                 "company_id": company_id,
@@ -263,7 +263,7 @@ def calculate_piotroski_for_company(
                 "period_end": end,
                 "period_label": "FY",
                 "value": Decimal(score) if score is not None else None,
-                "is_null_reason": reason,
+                "is_null_reason": score_reason,
                 "source_fact_ids": None,
             }
         )

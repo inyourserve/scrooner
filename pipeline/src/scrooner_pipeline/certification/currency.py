@@ -25,7 +25,7 @@ from datetime import date, timedelta
 
 from scrooner_pipeline.common.staleness import staleness_reason
 
-from .model import REVIEW, WRONG_VALUE, CompanyData, Finding, finding
+from .model import REVIEW, WRONG_VALUE, Cell, CompanyData, Finding, finding
 
 INPUT_MAX_AGE_DAYS = 456  # 15 months
 SHARE_TAG_HINTS = (
@@ -52,7 +52,7 @@ def _stale_cells(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
     if data.latest_filed is None:
         return out
-    latest: dict[tuple[str, str], object] = {}
+    latest: dict[tuple[str, str], Cell] = {}
     for c in data.display_cells():
         if c.fiscal_period is None:
             continue
@@ -118,6 +118,7 @@ def _stale_inputs(data: CompanyData) -> list[Finding]:
             if s is not None and s.end is not None and s.end < limit:
                 old.append(s)
         for s in old:
+            assert s.end is not None  # `old` only holds sources with an end date
             out.append(
                 finding(
                     data,

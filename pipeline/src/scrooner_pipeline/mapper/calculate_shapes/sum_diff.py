@@ -17,4 +17,4 @@ def compute(
         return None, "missing:add"
     if subtract is None:
         return None, "missing:subtract"
-    return sum(add) - sum(subtract), None
+    return sum(add, Decimal(0)) - sum(subtract, Decimal(0)), None

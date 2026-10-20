@@ -705,10 +705,11 @@ def _compute_ttm_returns_for_company(
 
     rows: list[dict] = []
     for fy, fp in sorted(quarter_keys):
-        end_date = (
-            by_concept["operating_income"].get((fy, fp))
-            or by_concept["net_income"].get((fy, fp))
-        )[3]
+        anchor_row = by_concept["operating_income"].get((fy, fp)) or by_concept[
+            "net_income"
+        ].get((fy, fp))
+        assert anchor_row is not None  # (fy, fp) came from one of these two maps
+        end_date = anchor_row[3]
         start_date = end_date  # TTM window end; period_start intentionally same as end for a "TTM as of" marker
 
         # ROIC (TTM)
@@ -721,10 +722,13 @@ def _compute_ttm_returns_for_company(
         equity_hit = instant_by_end_date["stockholders_equity"].get(end_date)
         cash_hit = instant_by_end_date["cash_and_equivalents"].get(end_date)
 
-        if None in (ttm_op_income, ttm_tax_num, ttm_tax_denom) or None in (
-            debt_hit,
-            equity_hit,
-            cash_hit,
+        if (
+            ttm_op_income is None
+            or ttm_tax_num is None
+            or ttm_tax_denom is None
+            or debt_hit is None
+            or equity_hit is None
+            or cash_hit is None
         ):
             missing = []
             if ttm_op_income is None:

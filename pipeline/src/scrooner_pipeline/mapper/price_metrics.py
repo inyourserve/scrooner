@@ -90,7 +90,7 @@ def _load_quarterly_facts(
 
 def _latest_instant_fact(
     conn: psycopg.Connection, company_id: int, concept_id: int
-) -> tuple[Decimal, list[int], object] | None:
+) -> tuple[Decimal, list[int], date | None] | None:
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -145,7 +145,7 @@ def _latest_quarter(by_quarter: dict) -> tuple[int, str] | None:
 
 def _load_latest_price(
     conn: psycopg.Connection, company_id: int
-) -> tuple[Decimal, object] | None:
+) -> tuple[Decimal, date] | None:
     with conn.cursor() as cur:
         cur.execute(
             "select price, price_date from core.market_price_alpaca where company_id = %s order by price_date desc limit 1",
@@ -157,7 +157,7 @@ def _load_latest_price(
 
 def _load_shares_outstanding_fallback(
     conn: psycopg.Connection, company_id: int
-) -> tuple[Decimal, list[int]] | None:
+) -> tuple[Decimal, list[int], date] | None:
     """Real fallback for multi-class share-structure companies (Block,
     Reddit) whose shares outstanding is dimensionally XBRL-tagged and
     stripped by the standard Company Facts API -- see
@@ -178,7 +178,7 @@ def _load_shares_outstanding_fallback(
 
 def _load_latest_diluted_weighted_shares(
     conn: psycopg.Connection, company_id: int
-) -> tuple[Decimal, list[int], object] | None:
+) -> tuple[Decimal, list[int], date | None] | None:
     """Latest authoritative, positive WeightedAverageNumberOfDilutedShares-
     Outstanding. Multi-class filers (Comcast, UPS, Ford, Mastercard) tag
     their point-in-time share count per class, which the Company Facts API
@@ -218,9 +218,9 @@ COVER_PAGE_MAX_DEVIATION = Decimal("0.25")
 
 
 def _choose_shares(
-    primary: tuple[Decimal, list[int], object] | None,
-    weighted_diluted: tuple[Decimal, list[int], object] | None,
-    cover_page: tuple[Decimal, list[int], object] | None,
+    primary: tuple[Decimal, list[int], date | None] | None,
+    weighted_diluted: tuple[Decimal, list[int], date | None] | None,
+    cover_page: tuple[Decimal, list[int], date | None] | None,
     today: date,
 ) -> tuple[tuple[Decimal, list[int]] | None, str | None]:
     """Pick the share count for Market Cap. Each input is (value, fact_ids,
@@ -233,7 +233,7 @@ def _choose_shares(
             and (today - hit[2]).days <= MAX_SHARES_AGE_DAYS
         )
 
-    if fresh(primary):
+    if primary is not None and fresh(primary):
         return (primary[0], list(primary[1])), None
     wavg = weighted_diluted if fresh(weighted_diluted) else None
     cover = cover_page if fresh(cover_page) else None
