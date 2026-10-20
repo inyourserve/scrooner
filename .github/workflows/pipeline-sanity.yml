@@ -15,8 +15,15 @@ on:
 permissions:
   contents: read
 
+# One queue for every heavy database workflow (2026-10-21). The Supabase database is
+# small (256 MB shared buffers), and it restarted on 2026-10-18 and again on 2026-10-19 while
+# the scheduled refresh, sanity and SEC Frames runs overlapped; the overlap also made Frames and
+# sanity fail with connection timeouts. A shared group makes GitHub run them one at a time.
+# GitHub keeps ONE pending run per group: a newer pending run replaces an older pending one, so
+# check `gh run list` before dispatching a manual run and do not queue two. See
+# doc/data-moat/team/PLAN.md "Operating rule: no overlapping heavy jobs".
 concurrency:
-  group: data-sanity-layer-production
+  group: heavy-db-jobs
   cancel-in-progress: false
 
 jobs:
