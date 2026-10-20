@@ -41,7 +41,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | done (FILING-CHECKED, history window) |
 | S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | done (FILING-CHECKED, history window) |
 | S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | done (FILING-CHECKED, history window) |
-| S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | running |
+| S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | done (FILING-CHECKED, history window) |
 | S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | running |
 | S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | running |
 | S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S034 | CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S035 | HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -304,6 +304,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: share growth computed across an IPO preferred conversion (CRDO) | S034 | CRDO | FC | open (blank across IPO) |
 | exchange revenue gross (CBOE 1,442.8 vs net 731.6); multi-class shares blank (OKTA, CRWV; CRWV mcap 4.7% low); CRWV debt stuck at Q1 (24,859 vs 35,068); DEF 14A NI (CRWV, OKTA, DXCM) | S034 | CBOE, OKTA, CRWV, DXCM | FC | open (known families; proxy now 13 companies) |
 | history: OKTA revenue 6 quarters before Q3 FY18 + Q4 FY23; GEHC FY2022 10-K missing from companyfacts (FY2020 unavailable); rounding-only conflict blanks CRWV total assets | S034 | OKTA, GEHC, CRWV | FC | open |
+| CRITICAL A4 variants: DEF 14A scale both ways (MDLN FY2025 NI 1.157 TRILLION vs 1,159M; SUNB FY2026 NI 0 vs 1,325M, derived Q4 -1,099M) | S035 | MDLN, SUNB | FC | open (proxy family now 15 companies) |
+| NEW: EPS tagged only as EarningsPerShareDilutedUndistributed (NTRS Q2 4.23) | S035 | NTRS | FC | open (Tag Mapper) |
+| NEW: capex and PP&E filed only on axis members (SUNB capex 855) | S035 | SUNB | FC | open |
+| NEW B1 variant: an earlier 10-Q missing from companyfacts while the later one is present (ALNY Q1) | S035 | ALNY | FC | open (instance/FSDS fallback) |
+| custody bank revenue = fee line only (NTRS FY2025 5,018M vs 8,086M); NTRS debt 2012; MTB/HBAN P/S ~18.5; RKT revenue blank under a false reason (2,784M); VG NI incl. NCI (+21-35%); MDLN mcap 35% low (Class B omitted) | S035 | 6 | FC | open (known families) |
+| history: ALNY revenue Q1-2015..Q3-2016 and Q4-2016 not derived; RKT pre-IPO NI stored as zeros; SUNB/MDLN 2025 quarters | S035 | ALNY, RKT, SUNB, MDLN | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
