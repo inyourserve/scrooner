@@ -38,7 +38,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | running |
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | running |
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | running |
-| S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | todo |
+| S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | running |
 | S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | todo |
 | S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | todo |
 | S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | todo |
