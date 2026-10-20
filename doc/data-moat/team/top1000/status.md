@@ -37,7 +37,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | done (FILING-CHECKED, history window) |
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | done (FILING-CHECKED, history window) |
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | done (FILING-CHECKED, history window) |
-| S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | running |
+| S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | done (FILING-CHECKED, history window) |
 | S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | done (FILING-CHECKED, history window) |
 | S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | running |
 | S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | running |
@@ -287,6 +287,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | CCI base revenue a sub-line (41 vs 1,008): P/S 171.4, gross margin 2.4% | S032 | CCI | FC | open (sub-line revenue guard, with EXC) |
 | BIIB 2022 op income as current; HSY EPS, DPS, payout from 2010; KMB/STLD/CCL debt off $18-647M; false pre-revenue reasons BIIB, RPRX (7) | S032 | 6 | FC | open (known families) |
 | history: CCL Q1-Q2 FY2015, RMD FY2017 tags unmapped; Q4 not derived PCG 2019/2020, KMB 2016/2017; recast-mixed derived Q4 CCI 2023 -573, KMB 2022/2023 ~1.7B vs ~4.97B | S032 | 4 | FC | open |
+| NEW: revenue series mixes tags by quarter (HIG YoY -98%, P/S 28.9 vs ~1.3) | S031 | HIG | FC | open (series consistency check) |
+| NEW: Up-C structure: share basis and NI attributable differ (IBKR revenue 760 vs 1,896, NI 1,338 vs 312 across FY2015/18/21/25; ARES NI FY2025 834.5 vs 527.4) | S031 | IBKR, ARES | FC | open (Standardization: Up-C template) |
+| NEW: debt filed only on an entity axis (ARES) | S031 | ARES | FC | open (total_debt) |
+| NEW: instant flow periods blank dividend yield (IBKR); negative capex from net disposals (HIG); IBKR DPS zeros 2016-20 | S031 | IBKR, HIG | FC | open |
+| DEF 14A NI: ARES FY2021, HIG FY2021/22 | S031 | ARES, HIG | FC | open (A4 proxy family; now 9 companies) |
+| RBLX, WEC NI incl. NCI; WEC EPS stuck FY2025, gross margin 65.7%; PEG PP&E stale since 2010; MTD P/B 2,761 (near-zero equity) | S031 | RBLX, WEC, PEG, MTD | FC | open (known families) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
