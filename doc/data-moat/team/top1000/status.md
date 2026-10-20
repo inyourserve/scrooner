@@ -30,7 +30,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | done (FILING-CHECKED, history window) |
 | S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | done (FILING-CHECKED, history window; IAU excluded) |
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | done (FILING-CHECKED, history window) |
-| S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | running |
+| S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | done (FILING-CHECKED, history window) |
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | running |
 | S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | running |
 | S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S021 | DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S024 | GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -217,7 +217,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW (S019): pretax tagged with after-tax IncomeLossAttributableToParent (LITE); trade AR as ContractWithCustomerAssetNet (LITE, company-scoped); us-gaap:Cash unmapped (SLB); custom current-debt tag (SLB) | S019 | LITE, SLB | FILING-CHECKED | open |
 | NEW: DEF 14A copy displaces the authoritative 10-K NetIncomeLoss and the resolver falls back to the next tag (FDX FY2026 4,426M vs 4,433M; FDX margin/ROE on DEF 14A 4,433 dollars; APO ProfitLoss 5,401M vs NetIncomeLoss 3,492M) | S020 | FDX, APO | FC (FDX), DI (APO) | open (with A4 proxy family; critical) |
 | NEW: operating income derived as revenue minus one 'Operating' expense line (AJG Q2 3,324M, 83.7% margin, pretax 414M) | S020 | AJG | FC (R2) | open (remove derivation; AJG has no subtotal) |
-| segment profit shown as operating income (HON 2,240M, R86) | S020 | HON | FC | open (with GE segment family) |
+| segment profit shown as operating income (HON 2,240M, R86; HONA 995M total segment profit) | S020, S024 | HON, HONA | FC | open (with GE segment family) |
 | SPG: NI 574.1M vs 483.1M to common; shares 8,000 = Class B count | S020 | SPG | FC | open (NCI/multi-class families) |
 | ET equity incl. NCI 49,737M vs partners' capital 35,331M (MLP) | S020 | ET | FC | open (MLP template) |
 | URI Q1 margins -170.8%/93.5%/57.2% vs 36.9%/21.8%/13.3% | S020 | URI | FC (R4) | open (quarter derivation) |
@@ -237,6 +237,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: tiny restatement differences (1-4M, incl. 8-K recast) blank whole revenue periods (TFC FY2021-22, all 2023) | S023 | TFC | FC | open (conflict tolerance; links LLY rounding family) |
 | NEW: quarters stored under the next fiscal year (NUE 2026 quarters as FY2027, 14 TTM/growth cells blank) | S023 | NUE | FC | open (Period Engineer) |
 | capex/dividends on custom tags (D, CRH); FANG capex and 2015-16 revenue tags unmapped; DVN cover shares rounded to 1.1B | S023 | D, CRH, FANG, DVN | FC | open |
+| NEW: merger shell / predecessor zeros stored as real history (BKR NI 0 for FY2015-16 and Q1-2016..Q2-2017; total assets, equity, liabilities 0 at 2017-06-30; real income on a custom tag) | S024 | BKR | FC | open (history window; guard: 0 on a headline concept for a large company) |
+| NEW: pre-redomicile history only as IFRS 20-F facts, unmapped (TEAM: 2,115 IFRS facts; US-GAAP from FY2021) | S024 | TEAM | FC | open (history window; FPI-to-domestic transition) |
+| exchange revenue gross vs net (NDAQ 8,262M vs 5,249M) | S024 | NDAQ | FC | open (A2, with ICE) |
+| REIT: O NI 370.5M vs 344.0M to common; debt 4,675M (2017) vs 30,652M; revenue pre-2016 unmapped (RealEstateRevenueNet) | S024 | O | FC | open |
+| GRMN annual DPS filed without a period; PSA dividends stale since 2015; NKE shares stale since 2015; TEAM P/E -1,050 | S024 | GRMN, PSA, NKE, TEAM | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
