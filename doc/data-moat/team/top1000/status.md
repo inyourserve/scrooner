@@ -44,7 +44,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | running |
 | S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | running |
 | S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | running |
-| S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | todo |
+| S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | running |
 | S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | todo |
 | S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | todo |
 | S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | todo |
