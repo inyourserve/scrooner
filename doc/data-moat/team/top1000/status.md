@@ -34,7 +34,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | done (FILING-CHECKED, history window) |
 | S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | done (FILING-CHECKED, history window) |
 | S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | done (FILING-CHECKED, history window) |
-| S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | running |
+| S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | done (FILING-CHECKED, history window) |
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | running |
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | running |
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S027 | CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S028 | IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -262,6 +262,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: Form 25 for an ADS-to-share swap is not a delisting (TEVA) | S026 | TEVA | FC | guard for the delisted-still-active rule |
 | TEVA total debt = current only 2018-26 (4,500 vs 16,592); ROK segment earnings as operating income (550 vs 481); MSTR mcap on weighted shares (-8%); WDAY shares 2018; XEL FY2015 / KDP 2018-21 debt understated | S026 | TEVA, ROK, MSTR, WDAY, XEL, KDP | FC | open (known families) |
 | history: Q4 revenue not derived (ADSK, WAB, ROK, WDAY); A missing four Q4 NI; TEVA no 2015 quarters (20-F filer then) | S026 | 6 | FC | open (Period Engineer) |
+| NEW/CRITICAL: stock split applied backwards, every EPS row x5 (CVNA 5-for-1: FY2025 diluted 42.25 vs filed 8.45, split-adjusted 1.69) | S028 | CVNA | FC | open (split owner; direction check) |
+| NEW: predecessor history taken from the wrong entity (WCN 2009-2015 annuals are Progressive Waste's 40-F data; FY2015 revenue 1,925.6M vs 2,117.3M) | S028 | WCN | FC | open (history window; predecessor mapping) |
+| NEW/CRITICAL: a 606 tag on one small sub-line wins as revenue (EXC FY2016-18 revenue 48 / 207 / -62M vs ~31-36B) | S028 | EXC | FC | open (606 family; plausibility guard: revenue < 1% of prior year) |
+| mixed recast vs original bases in derived Q4 (EXC Q4-2020 revenue -8,259M; AIG Q4-2022 -12,609M) | S028 | EXC, AIG | FC | open (Period Engineer: negative derived revenue must never publish) |
+| IDXX debt 449.9M vs 968.9M; AMP revenue gross not net; VTR NI ProfitLoss, op income 2011; MSCI ratios on negative equity | S028 | IDXX, AMP, VTR, MSCI | FC | open (known families) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
