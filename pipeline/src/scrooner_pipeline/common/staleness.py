@@ -72,9 +72,18 @@ QUARTERLY_LABELS = frozenset({"Q1", "Q2", "Q3", "Q4", "TTM"})
 # periodic reports. Original and amended forms both count (an amendment of an
 # old period has an old period_of_report and cannot move the reference ahead).
 PERIODIC_FORMS = (
-    "10-K", "10-K/A", "10-KT", "10-KT/A",
-    "10-Q", "10-Q/A", "10-QT", "10-QT/A",
-    "20-F", "20-F/A", "40-F", "40-F/A",
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "10-Q",
+    "10-Q/A",
+    "10-QT",
+    "10-QT/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
 )
 
 
@@ -95,9 +104,7 @@ def _reason(label: str, value_end: date, fiscal_year: int | None) -> str:
     if label in ANNUAL_LABELS:
         year = fiscal_year if fiscal_year is not None else value_end.year
         return f"not in the latest filing (last reported FY{year})"
-    return (
-        f"not in the latest filing (last reported quarter ended {value_end.isoformat()})"
-    )
+    return f"not in the latest filing (last reported quarter ended {value_end.isoformat()})"
 
 
 def staleness_reason(
@@ -208,7 +215,9 @@ def apply_to_metric_rows(metrics: list[dict], latest_period_end) -> list[dict]:
     out = []
     for m in metrics:
         reason = (
-            staleness_reason(m.get("period_end"), m.get("period_label"), latest_period_end)
+            staleness_reason(
+                m.get("period_end"), m.get("period_label"), latest_period_end
+            )
             if m.get("value") is not None
             else None
         )

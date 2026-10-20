@@ -48,7 +48,13 @@ MARKET_CAP_MAX = Decimal("10000000000000")  # $10T: above any listed company
 MARKET_CAP_PRICE_RATIO = Decimal(2)
 PE_FLOOR = Decimal(2)
 PE_BASIS_RATIO = Decimal(5)
-MARGIN_METRICS = ("gross_margin", "operating_margin", "net_margin", "pretax_margin", "ebitda_margin")
+MARGIN_METRICS = (
+    "gross_margin",
+    "operating_margin",
+    "net_margin",
+    "pretax_margin",
+    "ebitda_margin",
+)
 CROSS_CONCEPTS = ("net_income", "operating_income", "cfo", "gross_profit")
 FY_MIN_DAYS, FY_MAX_DAYS = 350, 380
 SHARES_LOOKAROUND_DAYS = 120
@@ -80,7 +86,11 @@ def _neighbour_magnitude(data: CompanyData) -> list[Finding]:
                 if c.value == 0:
                     continue
                 lo, hi = max(0, i - NEIGHBOURS_EACH_SIDE), i + NEIGHBOURS_EACH_SIDE + 1
-                near = [abs(n.value) for j, n in enumerate(series[lo:hi], start=lo) if j != i and n.value != 0]
+                near = [
+                    abs(n.value)
+                    for j, n in enumerate(series[lo:hi], start=lo)
+                    if j != i and n.value != 0
+                ]
                 if len(near) < MIN_NEIGHBOURS:
                     continue
                 med = Decimal(str(median(near)))
@@ -89,8 +99,14 @@ def _neighbour_magnitude(data: CompanyData) -> list[Finding]:
                     sig = power_of_ten_signature(ratio)
                     out.append(
                         finding(
-                            data, "I4", WRONG_VALUE if sig else REVIEW, "neighbour_magnitude", c,
-                            other=med, ratio=str(ratio), power_of_ten_signature=sig,
+                            data,
+                            "I4",
+                            WRONG_VALUE if sig else REVIEW,
+                            "neighbour_magnitude",
+                            c,
+                            other=med,
+                            ratio=str(ratio),
+                            power_of_ten_signature=sig,
                             neighbours=len(near),
                         )
                     )
@@ -110,9 +126,14 @@ def _cross_concept(data: CompanyData) -> list[Finding]:
             if share <= CROSS_CONCEPT_REVIEW:
                 out.append(
                     finding(
-                        data, "I4", WRONG_VALUE if share <= CROSS_CONCEPT_WRONG else REVIEW,
-                        "cross_concept_scale", c, other=rev.value,
-                        share_of_revenue=str(share), against="revenue",
+                        data,
+                        "I4",
+                        WRONG_VALUE if share <= CROSS_CONCEPT_WRONG else REVIEW,
+                        "cross_concept_scale",
+                        c,
+                        other=rev.value,
+                        share_of_revenue=str(share),
+                        against="revenue",
                     )
                 )
     return out
@@ -137,9 +158,16 @@ def _layer_disagreement(data: CompanyData) -> list[Finding]:
             sig = power_of_ten_signature(big)
             out.append(
                 finding(
-                    data, "I4", WRONG_VALUE if sig else REVIEW, "layer_disagreement", b,
-                    other=c.value, resolved_concept=c.concept, ratio=str(big),
-                    power_of_ten_signature=sig, source_ids=sorted(set(b.source_ids) | set(c.source_ids)),
+                    data,
+                    "I4",
+                    WRONG_VALUE if sig else REVIEW,
+                    "layer_disagreement",
+                    b,
+                    other=c.value,
+                    resolved_concept=c.concept,
+                    ratio=str(big),
+                    power_of_ten_signature=sig,
+                    source_ids=sorted(set(b.source_ids) | set(c.source_ids)),
                 )
             )
     return out
@@ -156,7 +184,11 @@ def _eps_vs_shares(data: CompanyData) -> list[Finding]:
         if n is None or e.value == 0 or n.value == 0:
             continue
         s = min(shares, key=lambda x: abs((x.end - e.end).days), default=None)
-        if s is None or abs((s.end - e.end).days) > SHARES_LOOKAROUND_DAYS or s.value <= 0:
+        if (
+            s is None
+            or abs((s.end - e.end).days) > SHARES_LOOKAROUND_DAYS
+            or s.value <= 0
+        ):
             continue
         implied = e.value * s.value
         ratio = abs(implied / n.value)
@@ -165,9 +197,16 @@ def _eps_vs_shares(data: CompanyData) -> list[Finding]:
             sig = power_of_ten_signature(big)
             out.append(
                 finding(
-                    data, "I4", WRONG_VALUE if sig else REVIEW, "eps_vs_net_income_over_shares", e,
-                    other=n.value, implied_net_income=str(implied), shares=str(s.value),
-                    ratio=str(big), power_of_ten_signature=sig,
+                    data,
+                    "I4",
+                    WRONG_VALUE if sig else REVIEW,
+                    "eps_vs_net_income_over_shares",
+                    e,
+                    other=n.value,
+                    implied_net_income=str(implied),
+                    shares=str(s.value),
+                    ratio=str(big),
+                    power_of_ten_signature=sig,
                     source_ids=sorted(set(e.source_ids) | set(n.source_ids)),
                 )
             )
@@ -185,15 +224,33 @@ def _metric_plausibility(data: CompanyData) -> list[Finding]:
         x = latest.get(name)
         if x is not None and x.value > 1:
             out.append(
-                finding(data, "I4", REVIEW, "margin_above_100_percent", name,
-                        stored=x.value, period_end=x.period_end, label=x.label,
-                        source_ids=x.source_ids)
+                finding(
+                    data,
+                    "I4",
+                    REVIEW,
+                    "margin_above_100_percent",
+                    name,
+                    stored=x.value,
+                    period_end=x.period_end,
+                    label=x.label,
+                    source_ids=x.source_ids,
+                )
             )
     mc = latest.get("market_cap")
     if mc is not None:
         if mc.value > MARKET_CAP_MAX:
-            out.append(finding(data, "I4", WRONG_VALUE, "market_cap_above_10T", "market_cap",
-                               stored=mc.value, period_end=mc.period_end, source_ids=mc.source_ids))
+            out.append(
+                finding(
+                    data,
+                    "I4",
+                    WRONG_VALUE,
+                    "market_cap_above_10T",
+                    "market_cap",
+                    stored=mc.value,
+                    period_end=mc.period_end,
+                    source_ids=mc.source_ids,
+                )
+            )
         shares = data.display_by_concept().get("shares_outstanding", [])
         if data.price and shares:
             s = max(shares, key=lambda c: c.end)
@@ -204,19 +261,44 @@ def _metric_plausibility(data: CompanyData) -> list[Finding]:
                 if big >= MARKET_CAP_PRICE_RATIO:
                     sig = power_of_ten_signature(big)
                     out.append(
-                        finding(data, "I4", WRONG_VALUE if sig else REVIEW, "market_cap_vs_price_x_shares",
-                                "market_cap", stored=mc.value, other=implied, period_end=mc.period_end,
-                                price=str(data.price[1]), price_date=str(data.price[0]),
-                                shares=str(s.value), shares_period_end=str(s.end), ratio=str(big),
-                                source_ids=mc.source_ids)
+                        finding(
+                            data,
+                            "I4",
+                            WRONG_VALUE if sig else REVIEW,
+                            "market_cap_vs_price_x_shares",
+                            "market_cap",
+                            stored=mc.value,
+                            other=implied,
+                            period_end=mc.period_end,
+                            price=str(data.price[1]),
+                            price_date=str(data.price[0]),
+                            shares=str(s.value),
+                            shares_period_end=str(s.end),
+                            ratio=str(big),
+                            source_ids=mc.source_ids,
+                        )
                     )
     pe = latest.get("trailing_pe")
     if pe is not None:
         if 0 < pe.value < PE_FLOOR:
-            out.append(finding(data, "I4", REVIEW, "trailing_pe_below_floor", "trailing_pe",
-                               stored=pe.value, period_end=pe.period_end, floor=str(PE_FLOOR),
-                               source_ids=pe.source_ids))
-        ni = [c for c in data.display_by_concept().get("net_income", []) if _class(c) == "FY"]
+            out.append(
+                finding(
+                    data,
+                    "I4",
+                    REVIEW,
+                    "trailing_pe_below_floor",
+                    "trailing_pe",
+                    stored=pe.value,
+                    period_end=pe.period_end,
+                    floor=str(PE_FLOOR),
+                    source_ids=pe.source_ids,
+                )
+            )
+        ni = [
+            c
+            for c in data.display_by_concept().get("net_income", [])
+            if _class(c) == "FY"
+        ]
         if mc is not None and ni and pe.value > 0:
             n = max(ni, key=lambda c: c.end)
             if n.value > 0:
@@ -225,12 +307,21 @@ def _metric_plausibility(data: CompanyData) -> list[Finding]:
                 big = ratio if ratio >= 1 else 1 / ratio
                 if big >= PE_BASIS_RATIO:
                     out.append(
-                        finding(data, "I4", REVIEW, "trailing_pe_vs_market_cap_over_net_income",
-                                "trailing_pe", stored=pe.value, other=basis_pe, period_end=pe.period_end,
-                                net_income_fy=str(n.value), net_income_period_end=str(n.end),
-                                ratio=str(big),
-                                note="price/EPS and market cap/net income disagree: a split or share-basis mismatch",
-                                source_ids=pe.source_ids)
+                        finding(
+                            data,
+                            "I4",
+                            REVIEW,
+                            "trailing_pe_vs_market_cap_over_net_income",
+                            "trailing_pe",
+                            stored=pe.value,
+                            other=basis_pe,
+                            period_end=pe.period_end,
+                            net_income_fy=str(n.value),
+                            net_income_period_end=str(n.end),
+                            ratio=str(big),
+                            note="price/EPS and market cap/net income disagree: a split or share-basis mismatch",
+                            source_ids=pe.source_ids,
+                        )
                     )
     return out
 

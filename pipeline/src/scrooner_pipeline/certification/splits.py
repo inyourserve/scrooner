@@ -45,13 +45,19 @@ def _integer_like(factor: Decimal) -> bool:
 
 
 def _matches_recorded_split(factor: Decimal, data: CompanyData) -> bool:
-    return any(abs(factor - r) / r <= INTEGER_TOLERANCE for _d, r in data.splits if r and r > 1)
+    return any(
+        abs(factor - r) / r <= INTEGER_TOLERANCE for _d, r in data.splits if r and r > 1
+    )
 
 
 def _share_jumps(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
     shares = sorted(
-        (c for c in data.display_cells() if c.base == "shares_outstanding" and c.value > 0),
+        (
+            c
+            for c in data.display_cells()
+            if c.base == "shares_outstanding" and c.value > 0
+        ),
         key=lambda c: c.end,
     )
     for prev, cur in zip(shares, shares[1:]):
@@ -64,8 +70,14 @@ def _share_jumps(data: CompanyData) -> list[Finding]:
             continue
         out.append(
             finding(
-                data, "I9", WRONG_VALUE if _integer_like(factor) else REVIEW, "share_jump_without_split",
-                cur, other=prev.value, factor=str(factor), previous_period_end=str(prev.end),
+                data,
+                "I9",
+                WRONG_VALUE if _integer_like(factor) else REVIEW,
+                "share_jump_without_split",
+                cur,
+                other=prev.value,
+                factor=str(factor),
+                previous_period_end=str(prev.end),
                 splits_on_record=[(str(d), str(r)) for d, r in data.splits],
                 source_ids=sorted(set(cur.source_ids) | set(prev.source_ids)),
             )
@@ -77,13 +89,20 @@ def _basis_mix(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
     by = data.display_by_concept()
     for base in PER_SHARE:
-        quarters = [c for c in by.get(base, []) if c.days is not None and c.days <= QUARTER_MAX_DAYS]
+        quarters = [
+            c
+            for c in by.get(base, [])
+            if c.days is not None and c.days <= QUARTER_MAX_DAYS
+        ]
         quarters.sort(key=lambda c: c.end)
         for i, c in enumerate(quarters):
             if not any(s.derived for s in data.source_facts(c)) or c.value == 0:
                 continue
             near = [
-                n.value for j, n in enumerate(quarters[max(0, i - 3): i + 4], start=max(0, i - 3))
+                n.value
+                for j, n in enumerate(
+                    quarters[max(0, i - 3) : i + 4], start=max(0, i - 3)
+                )
                 if j != i and n.value != 0
             ]
             if len(near) < 2:
@@ -94,14 +113,31 @@ def _basis_mix(data: CompanyData) -> list[Finding]:
             # A tiny but same-sign quarter is just a weak quarter (AMZN Q4 2022 EPS
             # 0.02 against 0.30): only a sign flip, a value >= 5x its neighbours or
             # a small ratio equal (within 5%) to a split recorded for the company signals a basis mix.
-            if flipped and ratio >= Decimal(1) / 2 or ratio >= BASIS_RATIO or (
-                ratio <= 1 / BASIS_RATIO and _matches_recorded_split(1 / ratio, data)
+            if (
+                flipped
+                and ratio >= Decimal(1) / 2
+                or ratio >= BASIS_RATIO
+                or (
+                    ratio <= 1 / BASIS_RATIO
+                    and _matches_recorded_split(1 / ratio, data)
+                )
             ):
                 out.append(
-                    finding(data, "I9", WRONG_VALUE, "per_share_basis_mix", c, other=med,
-                            ratio=str(ratio), sign_flipped=flipped, neighbours=len(near),
-                            derived_fact_ids=[s.id for s in data.source_facts(c) if s.derived],
-                            splits_on_record=[(str(d), str(r)) for d, r in data.splits])
+                    finding(
+                        data,
+                        "I9",
+                        WRONG_VALUE,
+                        "per_share_basis_mix",
+                        c,
+                        other=med,
+                        ratio=str(ratio),
+                        sign_flipped=flipped,
+                        neighbours=len(near),
+                        derived_fact_ids=[
+                            s.id for s in data.source_facts(c) if s.derived
+                        ],
+                        splits_on_record=[(str(d), str(r)) for d, r in data.splits],
+                    )
                 )
     return out
 

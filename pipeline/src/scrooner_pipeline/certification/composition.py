@@ -29,7 +29,14 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from .model import NON_ADDITIVE_DERIVED, REVIEW, WRONG_VALUE, CompanyData, Finding, finding
+from .model import (
+    NON_ADDITIVE_DERIVED,
+    REVIEW,
+    WRONG_VALUE,
+    CompanyData,
+    Finding,
+    finding,
+)
 
 TOTAL_TOLERANCE = Decimal("0.98")  # stored may be 2% under a component (rounding / FX)
 
@@ -64,12 +71,22 @@ def _debt_below_component(data: CompanyData) -> list[Finding]:
         biggest = max(positives, key=lambda f: f.value)
         if cell.value >= biggest.value * TOTAL_TOLERANCE:
             continue
-        rule = "debt_zero_with_components" if cell.value == 0 else "debt_below_component"
+        rule = (
+            "debt_zero_with_components" if cell.value == 0 else "debt_below_component"
+        )
         out.append(
             finding(
-                data, "I8", WRONG_VALUE, rule, cell, other=biggest.value,
-                largest_component_tag=biggest.tag, largest_component_id=biggest.id,
-                components=[{"id": f.id, "tag": f.tag, "value": str(f.value)} for f in positives],
+                data,
+                "I8",
+                WRONG_VALUE,
+                rule,
+                cell,
+                other=biggest.value,
+                largest_component_tag=biggest.tag,
+                largest_component_id=biggest.id,
+                components=[
+                    {"id": f.id, "tag": f.tag, "value": str(f.value)} for f in positives
+                ],
                 source_ids=sorted(set(cell.source_ids) | {biggest.id}),
             )
         )
@@ -83,34 +100,62 @@ def _debt_double_count(data: CompanyData) -> list[Finding]:
         for container, contained in OVERLAPPING_TAGS:
             if container in tags and contained in tags:
                 out.append(
-                    finding(data, "I8", WRONG_VALUE, "debt_double_count", cell,
-                            container=container, contained=contained, tags=sorted(tags))
+                    finding(
+                        data,
+                        "I8",
+                        WRONG_VALUE,
+                        "debt_double_count",
+                        cell,
+                        container=container,
+                        contained=contained,
+                        tags=sorted(tags),
+                    )
                 )
         for a, b in PARTIAL_OVERLAPS:
             if a in tags and b in tags:
                 out.append(
-                    finding(data, "I8", REVIEW, "debt_partial_overlap", cell,
-                            tags=sorted(tags), note=f"{a} includes current maturities also held in {b}")
+                    finding(
+                        data,
+                        "I8",
+                        REVIEW,
+                        "debt_partial_overlap",
+                        cell,
+                        tags=sorted(tags),
+                        note=f"{a} includes current maturities also held in {b}",
+                    )
                 )
     return out
 
 
 def _per_share_derived(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
-    for cell in data.display_cells():  # displayed layer only; base+resolved would double-count
+    for (
+        cell
+    ) in data.display_cells():  # displayed layer only; base+resolved would double-count
         if cell.base not in NON_ADDITIVE_DERIVED:
             continue
         derived = [s for s in data.source_facts(cell) if s.derived]
         if derived:
             out.append(
-                finding(data, "I8", WRONG_VALUE, "per_share_derived_by_subtraction", cell,
-                        derived_fact_ids=[s.id for s in derived], tags=sorted({s.tag for s in derived}),
-                        policy="never derive EPS, weighted shares or ratios by subtraction",
-                        value_checked=False,
-                        note="policy violation; the value was not compared with a filed Q4 figure")
+                finding(
+                    data,
+                    "I8",
+                    WRONG_VALUE,
+                    "per_share_derived_by_subtraction",
+                    cell,
+                    derived_fact_ids=[s.id for s in derived],
+                    tags=sorted({s.tag for s in derived}),
+                    policy="never derive EPS, weighted shares or ratios by subtraction",
+                    value_checked=False,
+                    note="policy violation; the value was not compared with a filed Q4 figure",
+                )
             )
     return out
 
 
 def check(data: CompanyData) -> list[Finding]:
-    return _debt_below_component(data) + _debt_double_count(data) + _per_share_derived(data)
+    return (
+        _debt_below_component(data)
+        + _debt_double_count(data)
+        + _per_share_derived(data)
+    )

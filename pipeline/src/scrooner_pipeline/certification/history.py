@@ -160,12 +160,17 @@ def history_matrix(data: CompanyData) -> dict:
         rows[(m.name, kind, m.end)].append(m)
     for name, kinds in labels.items():
         for kind in sorted(kinds):
-            wanted = {e for k, e in expected if (k == "FY" if kind == "FY" else k in ("Q", "Q4"))}
+            wanted = {
+                e
+                for k, e in expected
+                if (k == "FY" if kind == "FY" else k in ("Q", "Q4"))
+            }
             for end in sorted(wanted):
                 year = end.year
                 metrics[(year, kind, "expected")] += 1
                 found = [
-                    m for delta in range(-TOLERANCE_DAYS, TOLERANCE_DAYS + 1)
+                    m
+                    for delta in range(-TOLERANCE_DAYS, TOLERANCE_DAYS + 1)
                     for m in rows.get((name, kind, end + timedelta(days=delta)), [])
                 ]
                 if any(m.value is not None for m in found):
@@ -175,40 +180,90 @@ def history_matrix(data: CompanyData) -> dict:
                 metrics[(year, kind, "missing")] += 1
                 if reason == "no_row":
                     metrics[(year, kind, "unclassified")] += 1
-                missing_metrics[(name, kind, reason_family(reason) if reason != "no_row" else reason)].append(end)
+                missing_metrics[
+                    (
+                        name,
+                        kind,
+                        reason_family(reason) if reason != "no_row" else reason,
+                    )
+                ].append(end)
                 full_reasons[(name, kind)].add(reason)
-    return {"concepts": concepts, "metrics": metrics, "missing": missing, "missing_metrics": missing_metrics,
-            "metric_reasons": full_reasons}
+    return {
+        "concepts": concepts,
+        "metrics": metrics,
+        "missing": missing,
+        "missing_metrics": missing_metrics,
+        "metric_reasons": full_reasons,
+    }
 
 
 def check(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
     if not data.consumed:
         return out
-    if data.first_filing_period and data.first_filing_period > data.window_start + timedelta(days=LATE_START_DAYS):
+    if (
+        data.first_filing_period
+        and data.first_filing_period
+        > data.window_start + timedelta(days=LATE_START_DAYS)
+    ):
         out.append(
-            finding(data, "I11", REVIEW, "history_starts_after_window", "history",
-                    period_end=data.first_filing_period, window_start=str(data.window_start),
-                    first_filing_period=str(data.first_filing_period),
-                    note="no periodic filing before this date under this CIK: late registrant or "
-                         "history lives at a predecessor CIK (needs a Company Master link)")
+            finding(
+                data,
+                "I11",
+                REVIEW,
+                "history_starts_after_window",
+                "history",
+                period_end=data.first_filing_period,
+                window_start=str(data.window_start),
+                first_filing_period=str(data.first_filing_period),
+                note="no periodic filing before this date under this CIK: late registrant or "
+                "history lives at a predecessor CIK (needs a Company Master link)",
+            )
         )
     if not data.filings:
-        out.append(finding(data, "I11", REVIEW, "no_periodic_filing_in_window", "history",
-                           window_start=str(data.window_start)))
+        out.append(
+            finding(
+                data,
+                "I11",
+                REVIEW,
+                "no_periodic_filing_in_window",
+                "history",
+                window_start=str(data.window_start),
+            )
+        )
         return out
     m = history_matrix(data)
     for (base, kind, cause), ends in sorted(m["missing"].items()):
         out.append(
-            finding(data, "I11", REVIEW, f"missing_cell:{cause}", base, period_end=max(ends),
-                    kind=kind, cause=cause, count=len(ends), classified=cause != "unclassified",
-                    period_ends=[str(e) for e in sorted(ends)[:80]])
+            finding(
+                data,
+                "I11",
+                REVIEW,
+                f"missing_cell:{cause}",
+                base,
+                period_end=max(ends),
+                kind=kind,
+                cause=cause,
+                count=len(ends),
+                classified=cause != "unclassified",
+                period_ends=[str(e) for e in sorted(ends)[:80]],
+            )
         )
     for (name, kind, reason), ends in sorted(m["missing_metrics"].items()):
         out.append(
-            finding(data, "I11", REVIEW, f"missing_metric:{reason}", name, period_end=max(ends),
-                    kind=kind, cause=reason, count=len(ends), classified=reason != "no_row",
-                    reasons_seen=sorted(m["metric_reasons"].get((name, kind), ()))[:5],
-                    period_ends=[str(e) for e in sorted(ends)[:80]])
+            finding(
+                data,
+                "I11",
+                REVIEW,
+                f"missing_metric:{reason}",
+                name,
+                period_end=max(ends),
+                kind=kind,
+                cause=reason,
+                count=len(ends),
+                classified=reason != "no_row",
+                reasons_seen=sorted(m["metric_reasons"].get((name, kind), ()))[:5],
+                period_ends=[str(e) for e in sorted(ends)[:80]],
+            )
         )
     return out

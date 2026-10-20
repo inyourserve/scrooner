@@ -564,7 +564,10 @@ def _pre_evidence_outcome(c: StaleFillCandidate) -> tuple[str, str] | None:
         days = (c.period_end - c.period_start).days
         if days < STALE_FILL_MIN_FLOW_DAYS:
             return "skip", "short_duration"
-        if days > STALE_FILL_ANNUAL_DAYS and c.primary_forms & STALE_FILL_QUARTERLY_FORMS:
+        if (
+            days > STALE_FILL_ANNUAL_DAYS
+            and c.primary_forms & STALE_FILL_QUARTERLY_FORMS
+        ):
             return "skip", "annual_from_10q"
     if c.stored_filing_date is None or c.primary_filing_date is None:
         return "needs_review", "filing_date_unknown"
@@ -766,12 +769,30 @@ def _load_stale_fill_candidates(
         rows = cur.fetchall()
     out = []
     for (
-        row_id, co, period, stored, primary, p_src,
-        s_tags, s_date, s_acc, s_forms,
-        p_tags, p_derived, p_forms, p_acc, p_date,
-        s_units, p_units, s_fids,
-        p_fids, p_fforms, p_fpors,
-        ptype, pstart, pend,
+        row_id,
+        co,
+        period,
+        stored,
+        primary,
+        p_src,
+        s_tags,
+        s_date,
+        s_acc,
+        s_forms,
+        p_tags,
+        p_derived,
+        p_forms,
+        p_acc,
+        p_date,
+        s_units,
+        p_units,
+        s_fids,
+        p_fids,
+        p_fforms,
+        p_fpors,
+        ptype,
+        pstart,
+        pend,
     ) in rows:
         filings = {
             (fid, form, por)
@@ -842,8 +863,16 @@ def _share_ratio(
     best: Decimal | None = None
     keys = {(tag, kind) for _f, tag, kind, _v in rows}
     for key in keys:
-        s_vals = [v for f, t, k, v in rows if (t, k) == key and f in stored_filing_ids and v and v > 0]
-        p_vals = [v for f, t, k, v in rows if (t, k) == key and f in primary_filing_ids and v and v > 0]
+        s_vals = [
+            v
+            for f, t, k, v in rows
+            if (t, k) == key and f in stored_filing_ids and v and v > 0
+        ]
+        p_vals = [
+            v
+            for f, t, k, v in rows
+            if (t, k) == key and f in primary_filing_ids and v and v > 0
+        ]
         for a in s_vals:
             for b in p_vals:
                 ratio = max(a, b) / min(a, b)
@@ -874,7 +903,9 @@ def _attach_stale_fill_evidence(
         splits: set[int] = set()
         with conn.cursor() as cur:
             # (1a) same company / tag / unit / value at a different period
-            pairs = [(c.row_id, fid) for c in chunk for fid in c.primary_source_fact_ids]
+            pairs = [
+                (c.row_id, fid) for c in chunk for fid in c.primary_source_fact_ids
+            ]
             if pairs:
                 cur.execute(
                     """
@@ -907,8 +938,10 @@ def _attach_stale_fill_evidence(
                      and f.concept_id = any(%s::bigint[]) and f.value <> 0
                     """,
                     (
-                        [t[0] for t in trip], [t[1] for t in trip],
-                        [t[2] for t in trip], [t[3] for t in trip],
+                        [t[0] for t in trip],
+                        [t[1] for t in trip],
+                        [t[2] for t in trip],
+                        [t[3] for t in trip],
                         list(sibling_concepts),
                     ),
                 )
@@ -999,7 +1032,9 @@ def _stale_fill_record(c: StaleFillCandidate, outcome: str, reason: str) -> dict
         "period_start": c.period_start,
         "period_end": c.period_end,
         "primary_units": sorted(c.primary_units),
-        "primary_period_of_report": sorted({str(p) for _f, _fm, p in c.primary_filings}),
+        "primary_period_of_report": sorted(
+            {str(p) for _f, _fm, p in c.primary_filings}
+        ),
         "signals": stale_fill_signals(c) if evidence_loaded else None,
         "sibling_tags": sorted(c.primary_sibling_tags or ()),
         "share_ratio": c.share_ratio,

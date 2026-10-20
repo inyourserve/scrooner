@@ -110,15 +110,33 @@ QUARTER_MIN_DAYS, QUARTER_MAX_DAYS = 80, 100
 # error in it. Ineligible filings still count as copies of the period (so a lone
 # 10-K can win when a proxy disagrees) but can never be the winner.
 FY_ELIGIBLE_FORMS = (
-    "10-K", "10-K/A", "10-KT", "10-KT/A",
-    "8-K", "8-K/A",  # recast of prior years after a restatement or discontinued operation
-    "20-F", "20-F/A", "40-F", "40-F/A",
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "8-K",
+    "8-K/A",  # recast of prior years after a restatement or discontinued operation
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
 )
 QUARTER_ELIGIBLE_FORMS = (
-    "10-Q", "10-Q/A", "10-QT",
-    "10-K", "10-K/A", "10-KT", "10-KT/A",
-    "8-K", "8-K/A",
-    "6-K", "6-K/A", "20-F", "20-F/A", "40-F", "40-F/A",
+    "10-Q",
+    "10-Q/A",
+    "10-QT",
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "8-K",
+    "8-K/A",
+    "6-K",
+    "6-K/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
 )
 
 # Picks the latest-filed row of each unresolved group (ties go to the highest

@@ -130,8 +130,7 @@ def _annotate_stale_suppression(
         (company_id, name)
         for company_id, entry in excluded_missing_data.items()
         for name in entry["missing_metrics"]
-        if name in catalog
-        and name not in entry.get("suppressed_reasons", {})
+        if name in catalog and name not in entry.get("suppressed_reasons", {})
     ]
     if not pairs:
         return
@@ -672,9 +671,7 @@ def run_query(
         excluded_missing_data,
         {company_id: identity.get("sic_code") for company_id, identity, _ in rows},
     )
-    _annotate_stale_suppression(
-        conn, excluded_missing_data, dataset_version, catalog
-    )
+    _annotate_stale_suppression(conn, excluded_missing_data, dataset_version, catalog)
 
     result = {
         "matched": matched,

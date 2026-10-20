@@ -16,9 +16,18 @@ INVARIANTS = ("I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9", "I10", "I11"
 # form text. DEF 14A / 8-K / S-1 / 424B are never a source for a statement value.
 PERIODIC_FORMS = frozenset(
     {
-        "10-K", "10-K/A", "10-KT", "10-KT/A",
-        "10-Q", "10-Q/A", "10-QT", "10-QT/A",
-        "20-F", "20-F/A", "40-F", "40-F/A",
+        "10-K",
+        "10-K/A",
+        "10-KT",
+        "10-KT/A",
+        "10-Q",
+        "10-Q/A",
+        "10-QT",
+        "10-QT/A",
+        "20-F",
+        "20-F/A",
+        "40-F",
+        "40-F/A",
     }
 )
 
@@ -147,7 +156,9 @@ class CompanyData:
     debt_facts: list[ComponentFact] = field(default_factory=list)
     adjustment_facts: list[ComponentFact] = field(default_factory=list)
     metrics: list[Metric] = field(default_factory=list)
-    concept_modes: dict[str, str] = field(default_factory=dict)  # name -> combination_mode
+    concept_modes: dict[str, str] = field(
+        default_factory=dict
+    )  # name -> combination_mode
     latest_filed: date | None = None
     splits: list[tuple[date, Decimal]] = field(default_factory=list)
     is_bank: bool = False
@@ -157,11 +168,17 @@ class CompanyData:
     shares_fallback_filed: date | None = None
     as_of: date = field(default_factory=date.today)
     # I11 inputs
-    filings: list[tuple[date, str]] = field(default_factory=list)  # (period_of_report, form), periodic forms, in window
-    first_filing_period: date | None = None  # earliest periodic filing ever (not window-limited)
+    filings: list[tuple[date, str]] = field(
+        default_factory=list
+    )  # (period_of_report, form), periodic forms, in window
+    first_filing_period: date | None = (
+        None  # earliest periodic filing ever (not window-limited)
+    )
     period_gaps: list[GapRow] = field(default_factory=list)
     metric_history: list[MetricCell] = field(default_factory=list)
-    consumed: dict[str, str] = field(default_factory=dict)  # consumed concept name -> statement
+    consumed: dict[str, str] = field(
+        default_factory=dict
+    )  # consumed concept name -> statement
     window_start: date = date(2015, 1, 1)
 
     def cells_for(self, concept: str) -> list[Cell]:
@@ -173,9 +190,7 @@ class CompanyData:
         display layer of sanity/accounting_identity."""
         resolved = {(c.base, c.period_id) for c in self.cells if c.resolved}
         return [
-            c
-            for c in self.cells
-            if c.resolved or (c.base, c.period_id) not in resolved
+            c for c in self.cells if c.resolved or (c.base, c.period_id) not in resolved
         ]
 
     def display_by_concept(self) -> dict[str, list[Cell]]:
@@ -203,7 +218,12 @@ class Finding:
     source_fact_ids: list[int] = field(default_factory=list)
 
     def key(self) -> tuple:
-        return (self.invariant, self.data_point_name, self.period_end, self.evidence.get("rule"))
+        return (
+            self.invariant,
+            self.data_point_name,
+            self.period_end,
+            self.evidence.get("rule"),
+        )
 
 
 def finding(
@@ -247,11 +267,25 @@ def finding(
 
 ADDITIVE_FLOWS = frozenset(
     {
-        "revenue", "cost_of_revenue", "gross_profit", "operating_expenses",
-        "operating_income", "net_income", "income_before_tax", "income_tax_expense",
-        "interest_expense", "cfo", "capex", "cash_flow_investing", "cash_flow_financing",
-        "dividends_paid", "share_buybacks", "sbc", "depreciation_and_amortization",
-        "sga_expense", "research_and_development",
+        "revenue",
+        "cost_of_revenue",
+        "gross_profit",
+        "operating_expenses",
+        "operating_income",
+        "net_income",
+        "income_before_tax",
+        "income_tax_expense",
+        "interest_expense",
+        "cfo",
+        "capex",
+        "cash_flow_investing",
+        "cash_flow_financing",
+        "dividends_paid",
+        "share_buybacks",
+        "sbc",
+        "depreciation_and_amortization",
+        "sga_expense",
+        "research_and_development",
     }
 )
 
@@ -259,7 +293,9 @@ PER_SHARE = frozenset({"diluted_eps", "basic_eps", "dividends_per_share"})
 SHARE_COUNTS = frozenset({"shares_outstanding"})
 # Not monetary in USD: excluded from unit-family and USD scale checks.
 NON_MONETARY = frozenset({"employee_count", "effective_tax_rate_reported"})
-NON_ADDITIVE_DERIVED = PER_SHARE | SHARE_COUNTS | {"effective_tax_rate_reported", "employee_count"}
+NON_ADDITIVE_DERIVED = (
+    PER_SHARE | SHARE_COUNTS | {"effective_tax_rate_reported", "employee_count"}
+)
 
 
 def expected_unit(base: str) -> str | None:

@@ -107,34 +107,79 @@ def check(data: CompanyData) -> list[Finding]:
         for s in sources:
             if s.form is not None and s.form not in PERIODIC_FORMS:
                 findings.append(
-                    finding(data, "I6", WRONG_VALUE, "non_periodic_form", cell, other=s.value,
-                            form=s.form, tag=s.tag, accession=s.accession, source_ids=[s.id],
-                            fact_authoritative=s.authoritative)
+                    finding(
+                        data,
+                        "I6",
+                        WRONG_VALUE,
+                        "non_periodic_form",
+                        cell,
+                        other=s.value,
+                        form=s.form,
+                        tag=s.tag,
+                        accession=s.accession,
+                        source_ids=[s.id],
+                        fact_authoritative=s.authoritative,
+                    )
                 )
             want = expected_unit(cell.base)
             if want is not None and s.unit is not None and s.unit.lower() != want:
                 findings.append(
-                    finding(data, "I6", WRONG_VALUE, "wrong_unit_family", cell, other=s.value,
-                            unit=s.unit, expected_unit=want, tag=s.tag, accession=s.accession,
-                            source_ids=[s.id])
+                    finding(
+                        data,
+                        "I6",
+                        WRONG_VALUE,
+                        "wrong_unit_family",
+                        cell,
+                        other=s.value,
+                        unit=s.unit,
+                        expected_unit=want,
+                        tag=s.tag,
+                        accession=s.accession,
+                        source_ids=[s.id],
+                    )
                 )
             if not s.authoritative:
                 copies = data.authoritative_copies.get(s.id, [])
                 if copies:
                     differing = [c for c in copies if not _close(cell.value, c.value)]
-                    if differing and not any(_close(cell.value, c.value) for c in copies):
+                    if differing and not any(
+                        _close(cell.value, c.value) for c in copies
+                    ):
                         findings.append(
-                            finding(data, "I6", WRONG_VALUE, "differs_from_authoritative_copy", cell,
-                                    other=differing[0].value, tag=s.tag,
-                                    copies=[{"id": c.id, "value": str(c.value), "form": c.form,
-                                             "accession": c.accession} for c in copies],
-                                    source_ids=[s.id])
+                            finding(
+                                data,
+                                "I6",
+                                WRONG_VALUE,
+                                "differs_from_authoritative_copy",
+                                cell,
+                                other=differing[0].value,
+                                tag=s.tag,
+                                copies=[
+                                    {
+                                        "id": c.id,
+                                        "value": str(c.value),
+                                        "form": c.form,
+                                        "accession": c.accession,
+                                    }
+                                    for c in copies
+                                ],
+                                source_ids=[s.id],
+                            )
                         )
                 else:
                     findings.append(
-                        finding(data, "I6", REVIEW, "non_authoritative_source", cell, other=s.value,
-                                conflict_filled=True, tag=s.tag, accession=s.accession,
-                                source_ids=[s.id])
+                        finding(
+                            data,
+                            "I6",
+                            REVIEW,
+                            "non_authoritative_source",
+                            cell,
+                            other=s.value,
+                            conflict_filled=True,
+                            tag=s.tag,
+                            accession=s.accession,
+                            source_ids=[s.id],
+                        )
                     )
         if any(s.derived for s in sources):
             continue  # a derived cell is explained by its inputs, checked elsewhere
@@ -143,24 +188,57 @@ def check(data: CompanyData) -> list[Finding]:
             divisor = Decimal(1)
             for r in ratios:
                 divisor *= r.value
-            if not any(_close(cell.value, s.value / divisor) or _close(cell.value, s.value) for s in sources):
+            if not any(
+                _close(cell.value, s.value / divisor) or _close(cell.value, s.value)
+                for s in sources
+            ):
                 findings.append(
-                    finding(data, "I6", REVIEW, "value_not_in_sources", cell, other=sources[0].value,
-                            split_divisor=str(divisor),
-                            sources=[{"id": s.id, "tag": s.tag, "value": str(s.value)} for s in sources])
+                    finding(
+                        data,
+                        "I6",
+                        REVIEW,
+                        "value_not_in_sources",
+                        cell,
+                        other=sources[0].value,
+                        split_divisor=str(divisor),
+                        sources=[
+                            {"id": s.id, "tag": s.tag, "value": str(s.value)}
+                            for s in sources
+                        ],
+                    )
                 )
         elif mode == "sum":
             total = sum((s.value for s in sources), Decimal(0))
             if not _close(cell.value, total):
                 findings.append(
-                    finding(data, "I6", REVIEW, "value_not_sum_of_sources", cell, other=total,
-                            sources=[{"id": s.id, "tag": s.tag, "value": str(s.value)} for s in sources])
+                    finding(
+                        data,
+                        "I6",
+                        REVIEW,
+                        "value_not_sum_of_sources",
+                        cell,
+                        other=total,
+                        sources=[
+                            {"id": s.id, "tag": s.tag, "value": str(s.value)}
+                            for s in sources
+                        ],
+                    )
                 )
         elif not any(_close(cell.value, s.value) for s in sources) and not (
             len(sources) > 1 and _explained_by_arithmetic(cell.value, sources)
         ):
             findings.append(
-                finding(data, "I6", REVIEW, "value_not_in_sources", cell, other=sources[0].value,
-                        sources=[{"id": s.id, "tag": s.tag, "value": str(s.value)} for s in sources])
+                finding(
+                    data,
+                    "I6",
+                    REVIEW,
+                    "value_not_in_sources",
+                    cell,
+                    other=sources[0].value,
+                    sources=[
+                        {"id": s.id, "tag": s.tag, "value": str(s.value)}
+                        for s in sources
+                    ],
+                )
             )
     return findings
