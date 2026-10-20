@@ -33,7 +33,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | done (FILING-CHECKED, history window) |
 | S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | done (FILING-CHECKED, history window) |
 | S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | running |
-| S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | running |
+| S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | done (FILING-CHECKED, history window) |
 | S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | running |
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | running |
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | todo |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S025 | F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S027 | CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -250,6 +250,13 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | F: total debt 291M (2020) vs 157,126M segment-only; shares 3,727M from 2011; NI incl. NCI; partial-cost gross margin | S025 | F | FC | open (several families) |
 | VST revenue = 606 subset (Q2 4,401M vs 4,017M; FY2021 17,700M vs 12,077M); DAL capex stopped after a tag switch, debt 12,105M vs 12,851M | S025 | VST, DAL | FC | open |
 | history: FY-end total assets blank (HUM, EW FY2015; VEEV FY2018); VST starts 2016 (post-bankruptcy successor) | S025 | HUM, EW, VEEV, VST | FC | open (history window) |
+| NEW/CODE: 10-KT transition reports never collected (FORM_ALLOWLIST normalizer/identity.py:70 omits 10-KT; 0 such filings in core.filing). FERG Aug-Dec 2025 lost (revenue 12,833, NI 786); LHX 2019 10-KT missing | S027 | FERG, LHX (population-wide) | code-confirmed by lead | open (Data Engineer; add 10-KT/10-KT/A) |
+| NEW: fiscal-year-end change scrambles period labels (FERG Apr-Jun 2026 labelled Q4, 23 TTM/growth cells blank; LHX 2020) | S027 | FERG, LHX | FC | open (Period Engineer) |
+| NEW: FY revenue tagged on the Q4 context (LHX Q4 21,865 vs 5,648; P/S 1.19 vs ~2.03) | S027 | LHX | FC | open (period-label family) |
+| NEW: interest lines mapped to other income/expense (FITB shows 2,215 NII there) | S027 | 5 of 10 | FC | open (Tag Mapper) |
+| NEW: resolved cash includes customer funds (XYZ 12,851 vs 6,427); COIN FY2023 assets not restated (206,983 vs 14,754) | S027 | XYZ, COIN | FC | open (customer-funds family) |
+| COIN NI FY2021-25 from proxy, rounded (FY2025 1,300 vs 1,260.3); FITB revenue gross interest income; MNST EPS stuck 2011; CARR equity/NI incl. NCI | S027 | COIN, FITB, MNST, CARR | FC | open (known families) |
+| history: FERG predecessor CIK 1832433 missing (~8 quarters); MNST 2015-16 revenue tag SalesRevenueGoodsNet unmapped | S027 | FERG, MNST | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
