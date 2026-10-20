@@ -38,7 +38,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | done (FILING-CHECKED, history window) |
 | S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | done (FILING-CHECKED, history window) |
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | running |
-| S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | running |
+| S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | done (FILING-CHECKED, history window) |
 | S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | running |
 | S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | running |
 | S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | todo |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S029 | ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S032 | BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -280,6 +280,13 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | SG&A as G&A only (TTWO 226.3 vs 596.0) | S029, S030 | P, NTAP, TTWO | FC | open |
 | ILMN debt 499 (2022) vs 1,991, FY2021 stored 0; CBRE revenue 606 subset 2018-Q2 2026; ROP capex stuck at 14.3 (2019); KR debt omits finance leases; EL shares blank; net income off at EL, ILMN, CBRE, KR, ROP, CMG (stale resolved rows / proxy) | S030 | 8 | FC | open (known families) |
 | history: 2015-16 revenue tags unmapped (KR, ODFL, CMG); TTWO Q4 FY2022 not derived; mixed restated/original (ROP, CBRE); wrong zeros (ILMN debt FY2021, ROP shares 2015, CBRE cost of revenue Q4-2016) | S030 | 7 | FC | open (history window) |
+| NEW: cover share count includes shares held by a subsidiary (PCG 2,680.1M vs 2,202.4M; market cap ~21.7% high) | S032 | PCG | FC | open (MCAP-SHARES: use outstanding net of subsidiary-held) |
+| NEW: debt stored 0 during Chapter 11 (PCG 2019; 23.1B in liabilities subject to compromise) | S032 | PCG | FC | open (total_debt; bankruptcy rule) |
+| NEW: 20-F (IFRS) to 10-K switch: history starts FY2022 and growth cells get a wrong 'missing prior period' reason (CLS) | S032 | CLS | FC | open (with TEAM IFRS family) |
+| CRITICAL: PCG net income 0 for FY2021-25 from a DEF 14A value in millions tagged as dollars | S032 | PCG | FC | open (A4 proxy family; now 7 companies) |
+| CCI base revenue a sub-line (41 vs 1,008): P/S 171.4, gross margin 2.4% | S032 | CCI | FC | open (sub-line revenue guard, with EXC) |
+| BIIB 2022 op income as current; HSY EPS, DPS, payout from 2010; KMB/STLD/CCL debt off $18-647M; false pre-revenue reasons BIIB, RPRX (7) | S032 | 6 | FC | open (known families) |
+| history: CCL Q1-Q2 FY2015, RMD FY2017 tags unmapped; Q4 not derived PCG 2019/2020, KMB 2016/2017; recast-mixed derived Q4 CCI 2023 -573, KMB 2022/2023 ~1.7B vs ~4.97B | S032 | 4 | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
