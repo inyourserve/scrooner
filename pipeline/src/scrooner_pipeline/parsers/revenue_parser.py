@@ -242,7 +242,7 @@ def _parse_period_end(text: str) -> str | None:
     return None
 
 
-def _extract_revenue_row(html: str) -> str | None:
+def _extract_revenue_row(html: str) -> dict[str, str | None] | None:
     """Returns {'value': ..., 'period_end': ...} for the MOST RECENT
     period column (the first data column after the label), or None if
     no safe match exists. Never guesses -- a statement with no row
@@ -453,6 +453,7 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
                     }[outcome]
                 ] += 1
                 if outcome == "matched":
+                    assert extracted is not None  # "matched" always carries the row
                     result = {"company_id": company_id, "cik": cik, **extracted}
                     results.append(result)
                     with conn.cursor() as cur:

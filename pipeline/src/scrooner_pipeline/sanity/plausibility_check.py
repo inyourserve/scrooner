@@ -531,6 +531,7 @@ def run_all(conn: psycopg.Connection) -> dict:
             stats["skipped_sector_exclusion"] += 1
             continue
 
+        result: tuple[str, str | None] | None
         if metric_name in EXACT_SET_METRICS:
             result = check_exact_set(value, EXACT_SET_METRICS[metric_name])
         elif metric_name in RELATIVE_CHECKS:

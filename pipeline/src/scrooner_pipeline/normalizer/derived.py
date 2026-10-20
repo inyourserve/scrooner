@@ -357,6 +357,7 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             stats["incomplete"] += 1
             continue
 
+        assert fy is not None  # every chain construction above requires fy
         q4_start, q4_end, first_three_quarters = chain
 
         q4_value = _q4_value(
@@ -370,10 +371,10 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             retire_keys.append((concept_id, unit_id, q4_start, q4_end))
             continue
 
-        key = (concept_id, unit_id, q4_start, q4_end)
-        if key in reported_keys:
+        q4_key = (concept_id, unit_id, q4_start, q4_end)
+        if q4_key in reported_keys:
             bad = _mistagged_full_year_q4(
-                reported_q4.get(key, []), fy["value"], first_three_quarters
+                reported_q4.get(q4_key, []), fy["value"], first_three_quarters
             )
             if not bad:
                 stats["already_reported"] += 1

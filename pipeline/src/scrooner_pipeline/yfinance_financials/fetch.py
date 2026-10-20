@@ -144,7 +144,7 @@ def _flatten(df: pd.DataFrame) -> list[tuple[str, date, float | None]]:
     """One (line_item, period_end, value) tuple per real cell -- skips
     NaN cells (yfinance leaves a line item blank for a period it doesn't
     apply to, e.g. banks have no 'Gross Profit' row at all)."""
-    rows = []
+    rows: list[tuple[str, date, float | None]] = []
     for line_item in df.index:
         for column in df.columns:
             value = df.loc[line_item, column]

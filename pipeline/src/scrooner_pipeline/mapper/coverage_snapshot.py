@@ -42,6 +42,7 @@ every other coverage query this project has run live."""
 
 from datetime import date, datetime, timezone
 from decimal import ROUND_HALF_UP, Decimal
+from typing import Any
 
 import psycopg
 import structlog
@@ -249,7 +250,7 @@ def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dic
     metric_coverage = _load_metric_coverage(conn, population_counts)
     filing_line_na = _load_filing_line_na_counts(conn)
 
-    rows = []
+    rows: list[dict[str, Any]] = []
     for name, covered in sorted(concept_coverage.items()):
         denom = _denominator_for(name, population_counts, total_active)
         # Companies whose own filing shows the line is not presented are not "missing"

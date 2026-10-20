@@ -33,6 +33,7 @@ from .model import (
     CompanyData,
     Cell,
     Finding,
+    Metric,
     finding,
     power_of_ten_signature,
 )
@@ -215,11 +216,11 @@ def _eps_vs_shares(data: CompanyData) -> list[Finding]:
 
 def _metric_plausibility(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
-    latest = {}
-    for x in data.metrics:
-        k = x.name
-        if k not in latest or x.period_end > latest[k].period_end:
-            latest[k] = x
+    latest: dict[str, Metric] = {}
+    for metric in data.metrics:
+        k = metric.name
+        if k not in latest or metric.period_end > latest[k].period_end:
+            latest[k] = metric
     for name in MARGIN_METRICS:
         x = latest.get(name)
         if x is not None and x.value > 1:

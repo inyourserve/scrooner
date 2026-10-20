@@ -335,18 +335,18 @@ def _compile_node(node, catalog: dict) -> tuple[sql.Composable, list]:
         # the comparison (NULL > anything is NULL, i.e. not true) with no
         # separate NULL check needed.
         column = sql.Identifier(node.metric_name)
-        params: list = []
+        metric_params: list = []
         if node.operator == "between":
             clause = sql.SQL("{} between %s and %s").format(column)
-            params += [node.value_range[0], node.value_range[1]]
+            metric_params += [node.value_range[0], node.value_range[1]]
         else:
             if node.operator not in {">", "<", ">=", "<=", "=", "!="}:
                 raise ValueError(
                     f"operator not valid inside a boolean tree: {node.operator!r}"
                 )
             clause = sql.SQL("{} " + node.operator + " %s").format(column)
-            params.append(node.value)
-        return clause, params
+            metric_params.append(node.value)
+        return clause, metric_params
 
     raise TypeError(f"unknown predicate node: {node!r}")
 

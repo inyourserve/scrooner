@@ -134,6 +134,7 @@ def _tiling_quarters(year: Cell, quarters: list[Cell]) -> list[Cell] | None:
     if len(inside) != 4:
         return None
     for prev, nxt in zip(inside, inside[1:]):
+        assert nxt.start is not None  # `inside` only holds cells with a start
         gap = (nxt.start - prev.end).days
         if not (-TILE_GAP_DAYS <= gap <= TILE_GAP_DAYS):
             return None
@@ -248,7 +249,7 @@ def _label_shift(data: CompanyData) -> list[Finding]:
                 break
         quarters.sort(key=lambda c: c.end)
         for a, b in zip(quarters, quarters[1:] if base in VARYING_FLOWS else []):
-            if (
+            if b.start is not None and (
                 a.value == b.value
                 and abs(a.value) >= MIN_EQUAL_VALUE
                 and abs((b.start - a.end).days) <= TILE_GAP_DAYS

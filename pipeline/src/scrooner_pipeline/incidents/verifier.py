@@ -155,7 +155,7 @@ def verify_company(
 
     investigate_stats = investigate_open_findings(conn, company_id=company_id)
 
-    timeseries_stats = defaultdict(int)
+    timeseries_stats: defaultdict[str, int] = defaultdict(int)
     for concept_name, min_ratio, max_ratio, floor, never_negative in CONCEPTS_TO_CHECK:
         stats = run_concept(
             conn,

@@ -195,11 +195,12 @@ def evaluate(
         for tag, sign in identity.adjustments
         if adjustments and tag in adjustments
     ]
+    adjustment_values = adjustments or {}
     candidates: list[tuple[Decimal, bool]] = [(base, False)]
     for r in range(1, len(present_adjustments) + 1):
         for subset in combinations(present_adjustments, r):
             subset_total = sum(
-                (adjustments[tag] * sign for tag, sign in subset), Decimal("0")
+                (adjustment_values[tag] * sign for tag, sign in subset), Decimal("0")
             )
             candidates.append((base + subset_total, True))
 
@@ -221,8 +222,9 @@ def evaluate(
         )
         if passed:
             return result
-        if best is None or gap < best.rel_gap:
+        if best is None or best.rel_gap is None or gap < best.rel_gap:
             best = result
+    assert best is not None  # candidates always holds at least the no-adjustment case
     return best
 
 

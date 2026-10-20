@@ -88,6 +88,7 @@ query per company in a loop -- see pipeline/CLAUDE.md's restatements.py N+1
 lesson); only the yfinance fetch itself is per-ticker (unavoidable, it's a
 network call), mirroring yfinance_industry.py's own loop shape exactly."""
 
+from collections.abc import Callable
 from datetime import datetime, timezone
 from decimal import Decimal
 
@@ -136,7 +137,9 @@ _IDENTITY = None
 _TIMES_100 = lambda v: v * Decimal(100)
 _DIVIDE_100 = lambda v: v / Decimal(100)
 
-METRIC_MAPPINGS: list[tuple[str, str, float, float, object, object]] = [
+_Normalizer = Callable[[Decimal], Decimal] | None
+
+METRIC_MAPPINGS: list[tuple[str, str, float, float, _Normalizer, _Normalizer]] = [
     ("market_cap", "marketCap", 10.0, 30.0, _IDENTITY, _IDENTITY),
     ("shares_outstanding", "sharesOutstanding", 3.0, 15.0, _IDENTITY, _IDENTITY),
     ("trailing_pe", "trailingPE", 15.0, 40.0, _IDENTITY, _IDENTITY),
