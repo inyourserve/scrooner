@@ -198,6 +198,20 @@ jobs:
         # as the coverage matrix above.
         if: always()
         run: uv run --project pipeline scrooner-map build-tag-candidates
+      - name: Rebuild SEC tag library (population-wide stages)
+        # Moved out of the reprocess script (2026-10-21): the `library` and `leads`
+        # stages rebuild analytics.sec_tag_library for every company regardless of the
+        # reprocess cohort, and ran 12+ minutes without finishing inside the reprocess
+        # step's 20-minute cap. A visible own timeout and timing here shows the real
+        # duration; the cohort stages (company_tags, lineage) stay in the reprocess.
+        timeout-minutes: 45
+        if: always()
+        run: |
+          started=$SECONDS
+          rc=0
+          uv run --project pipeline scrooner-map build-tag-library --stages library,leads || rc=$?
+          echo "build-tag-library (library,leads) took $((SECONDS - started))s (rc=$rc)"
+          exit $rc
       - name: Record daily coverage snapshot
         timeout-minutes: 20
         if: always()

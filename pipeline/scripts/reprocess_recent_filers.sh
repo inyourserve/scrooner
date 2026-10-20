@@ -265,7 +265,13 @@ for ((i = 0; i < ${#STAGES[@]}; i++)); do
     # manual-only (pipeline-tag-library.yml). Capped so it cannot eat the budget.
     started=$SECONDS
     rc=0
-    run_capped "$TAG_LIBRARY_TIMEOUT_SECS" uv run scrooner-map build-tag-library --ciks "$CIKS" || rc=$?
+    # Only the cohort-sized stages run here (company_tags, lineage: about 9 minutes
+    # for 250 companies, measured 2026-10-20). The population-wide `library` and
+    # `leads` stages delete and rebuild analytics.sec_tag_library for EVERY company
+    # regardless of --ciks and did not finish in 12+ minutes (first nightly after the
+    # step timeout, run 39465390068); they now run as their own workflow step in the
+    # operational-gate job with their own timeout and timing.
+    run_capped "$TAG_LIBRARY_TIMEOUT_SECS" uv run scrooner-map build-tag-library --ciks "$CIKS" --stages company_tags,lineage || rc=$?
     echo "run_sharded: stage 'build-tag-library' took $((SECONDS - started))s (rc=$rc)"
     [ "$rc" -eq 0 ] || FAILED_STAGES="$FAILED_STAGES map:build-tag-library"
     continue
