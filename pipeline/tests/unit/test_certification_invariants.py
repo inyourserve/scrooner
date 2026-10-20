@@ -410,11 +410,32 @@ class TestSourceIntegrity:
         add(d, "revenue", 3_372_772_000, date(2023, 6, 30), date(2023, 4, 1), "Q2", sources=[stored], form="10-Q")
         assert "differs_from_authoritative_copy" not in rules(source_integrity.check(d))
 
-    def test_conflict_fill_without_authoritative_copy_is_review_only(self):
+    def conflict_cell(self, stored, copies, *, lone_value=None):
         d = clean_company()
-        add(d, "revenue", 10_000_000, date(2022, 9, 30), date(2022, 7, 1), "Q3", auth=False, form="10-Q", tag="Revenues")
-        f = [x for x in source_integrity.check(d) if x.evidence["rule"] == "non_authoritative_source"]
-        assert f and f[0].severity == REVIEW and f[0].evidence["conflict_filled"] is True
+        first = src("Revenues", lone_value if lone_value is not None else copies[0], auth=False, sid=9101, form="10-Q")
+        d.conflict_copies[9101] = [src("Revenues", v, auth=False, sid=9102 + i, form="10-Q") for i, v in enumerate(copies[1:])]
+        add(d, "revenue", stored, date(2022, 9, 30), date(2022, 7, 1), "Q3", sources=[first], form="10-Q")
+        return d
+
+    def na(self, d):
+        return [x for x in source_integrity.check(d) if x.evidence["rule"] == "non_authoritative_source"]
+
+    def test_recorded_conflict_fill_is_info_not_review(self):
+        """Two non-authoritative copies 4% apart, stored value is one of them (resolver tie-break)."""
+        f = self.na(self.conflict_cell(10_400_000, [10_400_000, 10_000_000]))
+        assert f and f[0].severity == "info" and f[0].evidence["conflict_filled"] is True and f[0].evidence["copies"] == 2
+
+    def test_lone_non_authoritative_source_stays_review(self):
+        f = self.na(self.conflict_cell(10_000_000, [10_000_000]))
+        assert f and f[0].severity == REVIEW and f[0].evidence["conflict_filled"] is False
+
+    def test_conflict_copies_more_than_15_percent_apart_stay_review(self):
+        f = self.na(self.conflict_cell(10_000_000, [10_000_000, 13_000_000]))
+        assert f[0].severity == REVIEW
+
+    def test_stored_value_that_is_none_of_the_copies_stays_review(self):
+        f = self.na(self.conflict_cell(10_200_000, [10_400_000, 10_000_000]))
+        assert f[0].severity == REVIEW
 
     def test_value_not_in_sources(self):
         d = clean_company()
@@ -575,7 +596,14 @@ class TestHistoryCompleteness:
     def test_late_registrant_gets_a_history_starts_after_window_finding(self):
         d = history_company()
         d.first_filing_period = date(2016, 3, 31)
-        assert "history_starts_after_window" in {x.evidence["rule"] for x in history.check(d)}
+        f = [x for x in history.check(d) if x.evidence["rule"] == "history_starts_after_window"]
+        assert f and f[0].evidence["classified"] is False  # blocks checks_clean until a link is recorded
+
+    def test_company_without_any_periodic_filing_in_window_blocks(self):
+        d = history_company()
+        d.filings = []
+        f = history.check(d)
+        assert [x.evidence["rule"] for x in f if x.evidence["classified"] is False] == ["no_periodic_filing_in_window"]
 
     def test_balance_sheet_concept_is_expected_as_instants_only(self):
         d = history_company()
@@ -641,3 +669,61 @@ def test_reason_family_collapses_parameterised_null_reasons():
     assert history.reason_family("missing:fcf(2015),cfo(2014),total_assets(2015)...") == "missing:fcf"
     assert history.reason_family("incomplete:add") == "incomplete:add"
     assert history.reason_family("bank revenue definition pending") == "bank revenue definition pending"
+
+
+# ----------------------------------- I11 cause inference beyond the 15 period_gap concepts
+@pytest.mark.unit
+class TestInferCause:
+    def company(self):
+        d = history_company()
+        d.mapped_tag_count = {"revenue": 2, "total_assets": 1, "cfo": 1}
+        d.consumed = {"revenue_sanity_resolved": "income_statement", "total_assets_resolved": "balance_sheet",
+                      "cfo": "cash_flow"}
+        return d
+
+    def cause(self, d, base, kind, end):
+        return history.infer_cause(d, base, kind, end)
+
+    def test_period_gap_row_wins(self):
+        d = self.company()
+        d.period_gaps = [GapRow("cfo", "FY", date(2015, 12, 31), "not_in_sec_feed")]
+        d.mapped_facts = {"cfo": [(date(2015, 1, 1), date(2015, 12, 31))]}
+        f = [x for x in history.check(d) if x.data_point_name == "cfo" and x.evidence["kind"] == "FY"]
+        causes = {x.evidence["cause"]: x.evidence["period_ends"] for x in f}
+        assert causes["not_in_sec_feed"] == ["2015-12-31"]  # the gap row beat the "fact exists" inference
+        assert "fact_exists_not_resolved" not in causes or "2015-12-31" not in causes["fact_exists_not_resolved"]
+
+    def test_fact_on_the_period_under_a_mapped_tag_is_fact_exists_not_resolved(self):
+        d = self.company()
+        d.mapped_facts = {"cfo": [(date(2015, 1, 1), date(2015, 12, 31))]}
+        assert self.cause(d, "cfo", "FY", date(2015, 12, 31)) == "fact_exists_not_resolved"
+
+    def test_no_fact_under_any_mapped_tag_but_period_loaded_is_no_mapped_tag(self):
+        d = self.company()  # revenue/total_assets cells exist at 2015-12-31, so the period is loaded
+        assert self.cause(d, "cfo", "FY", date(2015, 12, 31)) == "no_mapped_tag"
+
+    def test_period_with_no_data_at_all_stays_unclassified(self):
+        d = self.company()
+        assert self.cause(d, "cfo", "FY", date(2019, 12, 31)) == "unclassified"
+
+    def test_concept_with_no_mapped_tag_in_the_registry_is_unclassified(self):
+        d = self.company()
+        d.mapped_tag_count = {}
+        assert self.cause(d, "cfo", "FY", date(2015, 12, 31)) == "unclassified"
+
+    def test_q4_with_only_the_year_fact_is_q4_not_derived(self):
+        d = self.company()
+        d.mapped_facts = {"cfo": [(date(2015, 1, 1), date(2015, 12, 31))]}
+        assert self.cause(d, "cfo", "Q4", date(2015, 12, 31)) == "q4_not_derived"
+
+    def test_quarter_with_only_a_ytd_fact_is_quarter_not_derived(self):
+        d = self.company()
+        d.mapped_facts = {"cfo": [(date(2016, 1, 1), date(2016, 6, 30))]}  # 6M YTD ending the quarter
+        assert self.cause(d, "cfo", "Q", date(2016, 6, 30)) == "quarter_not_derived"
+
+    def test_instant_fact_matches_instant_not_duration(self):
+        d = self.company()
+        d.mapped_facts = {"total_assets": [(date(2015, 12, 31), date(2015, 12, 31))]}
+        assert self.cause(d, "total_assets", "I", date(2015, 12, 31)) == "fact_exists_not_resolved"
+        d.mapped_facts = {"total_assets": [(date(2015, 1, 1), date(2015, 12, 31))]}
+        assert self.cause(d, "total_assets", "I", date(2015, 12, 31)) != "fact_exists_not_resolved"

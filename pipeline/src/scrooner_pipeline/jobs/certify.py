@@ -40,6 +40,7 @@ def run_cmd(
     statement_timeout: int = typer.Option(DEFAULT_TIMEOUT_S, help="Seconds, set before every query."),
     since: str = typer.Option(HISTORY_FLOOR.isoformat(), help="Earliest period end checked (history gate, doc 38)."),
     show: int = typer.Option(0, help="Also print the first N findings."),
+    summary_only: bool = typer.Option(False, help="Print only the SUMMARY block (states, wrong_value, I11 causes)."),
     json_out: Path = typer.Option(None, help="Write all findings to this JSON file."),
     shards_file: Path = typer.Option(SHARDS_CSV, help="shards.csv path."),
 ) -> None:
@@ -71,7 +72,7 @@ def run_cmd(
         except MigrationNotAppliedError as exc:
             typer.echo(f"REFUSED: {exc}")
             raise typer.Exit(code=2)
-        typer.echo(render_text(result, show=show))
+        typer.echo(render_text(result, show=show, summary_only=summary_only))
         if json_out:
             dump_json(result, json_out)
             typer.echo(f"findings written to {json_out}")

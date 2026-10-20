@@ -116,10 +116,13 @@ class TestLoader:
              [(7, "net_income", D(4801), [11], 100, start, end, "duration", 2023, "FY")]),
             ("where f.id = any", [(11, "NetIncomeLoss", D(4801), False, False, "DEF 14A", "usd",
                                    "0001-23-1", date(2024, 1, 5), start, end)]),
+            ("not f2.is_authoritative", [(11, 13, "NetIncomeLoss", D(4800), False, False, "DEF 14A", "usd",
+                                          "0003-24-1", date(2024, 2, 6), start, end)]),
             ("f1.id = any", [(11, 12, "NetIncomeLoss", D(4_801_000_000), True, False, "10-K", "usd",
                               "0002-24-1", date(2024, 2, 5), start, end)]),
             ("c.tag = any(%s) and u.unit_name", [(7, 21, "LongTermDebt", D(5), 101, date(2023, 12, 31))]),
             ("distinct on (mv.company_id", [(7, "market_cap", True, "TTM", date(2026, 10, 20), D(9), [11])]),
+            ("select distinct f.company_id, f.concept_id", [(7, 21, date(2023, 1, 1), date(2023, 12, 31))]),
             ("min(period_of_report)", [(7, date(2012, 3, 31))]),
             ("select distinct company_id, period_of_report, form", [(7, date(2024, 12, 31), "10-K")]),
             ("from analytics.period_gap pg", [(7, "revenue_sanity_resolved", "Q", date(2024, 6, 30), "no_mapped_tag")]),
@@ -133,7 +136,8 @@ class TestLoader:
         ]
         cur = FakeCursor(routes, [])
         reg = loader.Registry(modes={"net_income": "first_match"}, debt_tags=["LongTermDebt"],
-                              adjustment_tags=["MinorityInterest"])
+                              adjustment_tags=["MinorityInterest"], mapped_ids={21: {"net_income"}},
+                              mapped_tag_count={"net_income": 1})
         data = loader.load_chunk(cur, [7], reg, timeout_s=5, as_of=date(2026, 10, 21))[7]
         assert data.ticker == "TST" and data.cells[0].value == D(4801) and data.cells[0].days == 364
         assert data.sources[11].form == "DEF 14A" and not data.sources[11].authoritative
@@ -142,6 +146,8 @@ class TestLoader:
         assert data.metrics[0].requires_price and data.metrics[0].source_ids == (11,)
         assert data.latest_filed == date(2026, 6, 30) and data.price == (date(2026, 10, 20), D(50))
         assert data.is_bank and not data.bank_sic_without_evidence and data.shares_fallback_filed == date(2026, 8, 1)
+        assert data.conflict_copies[11][0].id == 13 and data.mapped_facts == {"net_income": [(date(2023, 1, 1), date(2023, 12, 31))]}
+        assert data.mapped_tag_count == {"net_income": 1}
         assert data.first_filing_period == date(2012, 3, 31) and data.filings == [(date(2024, 12, 31), "10-K")]
         assert data.period_gaps[0].base == "revenue" and data.period_gaps[0].cause == "no_mapped_tag"
         assert data.metric_history[0].reason == "missing:revenue" and data.metric_history[0].value is None
@@ -195,7 +201,7 @@ class TestDryRunAndApply:
         assert "resolved_at is null" in conn.log[0][1] and conn.log[0][2] == ([1, 2],)
         assert conn.commits == 1 and n == 1
         certs = conn.log[2][2]
-        assert certs[0][:2] == (1, "uncertified") and certs[0][3] == 1
+        assert certs[0][:2] == (1, "uncertified") and certs[0][3] == 1  # finding() is wrong_value
         assert certs[1][:2] == (2, "checks_clean") and certs[1][3] == 0
 
     def test_rerun_with_no_findings_deletes_old_open_findings(self):
@@ -204,12 +210,52 @@ class TestDryRunAndApply:
         assert conn.log[0][1].startswith("delete from analytics.certification_finding")
         assert conn.log[2][2] == [(5, "checks_clean", datetime(2026, 10, 21, tzinfo=timezone.utc), 0)]
 
-    def test_upsert_never_promotes_past_checks_clean_and_demotes_on_findings(self):
+    def test_upsert_state_comes_from_the_python_rule_and_never_promotes_past_checks_clean(self):
         from scrooner_pipeline.certification.runner import UPSERT_CERTIFICATION as sql
         flat = " ".join(sql.split())
-        assert "when excluded.open_findings > 0 then 'uncertified'" in flat
+        assert "when excluded.state = 'uncertified' then 'uncertified'" in flat
         assert "when analytics.company_certification.state = 'uncertified' then 'checks_clean'" in flat
         assert "else analytics.company_certification.state" in flat
+
+    def test_state_rule_review_does_not_block_but_wrong_value_and_unclassified_i11_do(self):
+        from scrooner_pipeline.certification.runner import company_state
+        review = finding(1, "review")
+        wrong = finding(1, "wrong_value")
+        gap_ok = Finding(1, "I11", "review", "revenue", None, None, None, {"rule": "missing_cell:q4_not_derived", "classified": True}, [])
+        gap_bad = Finding(1, "I11", "review", "revenue", None, None, None, {"rule": "missing_cell:unclassified", "classified": False}, [])
+        info = Finding(1, "I6", "info", "revenue", None, None, None, {"rule": "non_authoritative_source"}, [])
+        assert company_state([]) == "checks_clean"
+        assert company_state([review, gap_ok, info]) == "checks_clean"
+        assert company_state([wrong]) == "uncertified"
+        assert company_state([gap_bad]) == "uncertified"
+
+    def test_apply_writes_state_by_rule_and_never_stores_info(self):
+        conn = FakeConn([])
+        info = Finding(2, "I6", "info", "revenue", date(2022, 9, 30), D(1), D(1), {"rule": "non_authoritative_source"}, [1])
+        apply_chunk(conn, [1, 2, 3], [finding(1, "review"), finding(2, "wrong_value"), info],
+                    datetime(2026, 10, 21, tzinfo=timezone.utc))
+        inserted = conn.log[1][2]
+        assert [(r[0], r[2]) for r in inserted] == [(1, "review"), (2, "wrong_value")]  # info never written
+        certs = {r[0]: r for r in conn.log[2][2]}
+        assert certs[1][1] == "checks_clean" and certs[1][3] == 1  # review stored, does not block
+        assert certs[2][1] == "uncertified"
+        assert certs[3][1] == "checks_clean" and certs[3][3] == 0
+
+    def test_morning_summary_counts_states_wrong_values_and_i11_cells(self):
+        from scrooner_pipeline.certification.runner import morning_summary, render_summary, RunResult
+        r = RunResult()
+        r.companies = {1: {"ticker": "A"}, 2: {"ticker": "B"}}
+        r.findings = [finding(1, "wrong_value"), finding(2, "review")]
+        r.history = {1: {"missing": {("revenue", "FY", "unclassified"): [date(2015, 12, 31), date(2016, 12, 31)],
+                                     ("cfo", "Q", "q4_not_derived"): [date(2016, 6, 30)]},
+                         "missing_metrics": {("roe", "FY", "no_row"): [date(2015, 12, 31)]}}}
+        m = morning_summary(r)
+        assert m["states"]["uncertified"] == 1 and m["states"]["checks_clean"] == 1
+        assert m["wrong_by_invariant"]["I4"] == 1
+        assert m["i11_cells"]["concepts"]["unclassified"] == 2 and m["i11_cells"]["concepts"]["q4_not_derived"] == 1
+        assert m["unclassified_by_kind"][("concept", "FY")] == 2 and m["unclassified_by_kind"][("metric", "FY")] == 1
+        text = render_summary(r)
+        assert "checks_clean=1" in text and "uncertified=1" in text and "I4=1" in text
 
     def test_render_text_reports_counts_per_invariant_and_company(self):
         res = certify(FakeConn(self.routes()), [1])

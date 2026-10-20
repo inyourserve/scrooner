@@ -8,6 +8,9 @@ from decimal import Decimal
 
 WRONG_VALUE = "wrong_value"
 REVIEW = "review"
+# Counted and shown in the report but NOT stored (the 0097 table only allows
+# wrong_value|review): a non-authoritative source that is a recorded conflict fill.
+INFO = "info"
 
 INVARIANTS = ("I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9", "I10", "I11")
 
@@ -144,6 +147,12 @@ class CompanyData:
     # authoritative copies of the same (company, tag, period, unit) keyed by the
     # id of the NON-authoritative source fact they are copies of
     authoritative_copies: dict[int, list[Source]] = field(default_factory=dict)
+    # other NON-authoritative copies of the same (company, tag, period, unit), keyed by source id
+    conflict_copies: dict[int, list[Source]] = field(default_factory=dict)
+    # consumed base concept -> distinct (start, end) of every fact (any authority) under a tag
+    # mapped to it (analytics.concept_mapping, not 'rejected'): I11 cause evidence
+    mapped_facts: dict[str, list[tuple[date | None, date]]] = field(default_factory=dict)
+    mapped_tag_count: dict[str, int] = field(default_factory=dict)
     debt_facts: list[ComponentFact] = field(default_factory=list)
     adjustment_facts: list[ComponentFact] = field(default_factory=list)
     metrics: list[Metric] = field(default_factory=list)
