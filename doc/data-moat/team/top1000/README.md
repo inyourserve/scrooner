@@ -52,3 +52,9 @@ Each worker keeps its scratch files in its own subfolder (`<scratchpad>/S###/`).
 
 ## Founder direction 2026-10-19: find ALL problems
 Every shard lists every problem at every company: wrong values, stale values, wrong blank reasons and unexplained blanks, each with the cell, stored value, filed value (where the filing was opened) and cause. Known families get the same full per-company detail, tagged with their family name from status.md or NEW. Counting known-family hits instead of listing them is not enough.
+
+## Certification fields (2026-10-20, for data-team/34 `scrooner-certify`)
+Each shard file also records:
+1. Every wrong value as a test-fixture row: company, cell, stored value, filed value, accession, locator (R-page and line).
+2. For each company, whether its latest 10-Q/10-K has facts in core.fact (accession, fact count). This tracks the stuck-10-Q family.
+Before calling a blank not_reported, read data-team/tags/cards/ and PLAYBOOK.md.
