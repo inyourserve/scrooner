@@ -40,7 +40,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | done (FILING-CHECKED, history window) |
 | S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | done (FILING-CHECKED, history window) |
 | S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | done (FILING-CHECKED, history window) |
-| S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | running |
+| S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | done (FILING-CHECKED, history window) |
 | S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | running |
 | S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | running |
 | S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S033 | VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S034 | CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -299,6 +299,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | TKO FY2022 NI 0 from an 8-K; FY2023/24 NI from DEF 14A | S033 | TKO | FC | open (A4 proxy/8-K family; 10 companies) |
 | SG&A as G&A only (ZS, EXPE); EPS not split-adjusted (CNC, ACGL); ACGL senior notes 4,286 unmapped; EXPE ROIC -14,983% | S033 | 5 | FC | open (known families) |
 | history: 2015-16 revenue tags unmapped (EQT, IRM); ZTS 2025-12-31 balance sheet blank after a recast | S033 | EQT, IRM, ZTS | FC | open |
+| NEW: share counts not split-adjusted (DXCM 4:1: 5y share growth 31%/yr; FY2020 EPS 5.06 vs adjusted 1.33) | S034 | DXCM | FC | open (split owner) |
+| NEW: stray 10-Q value wins for an annual (AXON FY2021 revenue 865.6 vs 863.4; op income -163.1 vs -168.1) | S034 | AXON | FC | open (with FIX non-authoritative 10-Q family) |
+| NEW: share growth computed across an IPO preferred conversion (CRDO) | S034 | CRDO | FC | open (blank across IPO) |
+| exchange revenue gross (CBOE 1,442.8 vs net 731.6); multi-class shares blank (OKTA, CRWV; CRWV mcap 4.7% low); CRWV debt stuck at Q1 (24,859 vs 35,068); DEF 14A NI (CRWV, OKTA, DXCM) | S034 | CBOE, OKTA, CRWV, DXCM | FC | open (known families; proxy now 13 companies) |
+| history: OKTA revenue 6 quarters before Q3 FY18 + Q4 FY23; GEHC FY2022 10-K missing from companyfacts (FY2020 unavailable); rounding-only conflict blanks CRWV total assets | S034 | OKTA, GEHC, CRWV | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
