@@ -145,6 +145,19 @@ class MetricCell:
     reason: str | None
 
 
+@dataclass(frozen=True)
+class MetricSpec:
+    """One active metric from analytics.metric_definition and its inputs
+    (analytics.metric_definition_input). I11 reads the metric's period kinds and
+    lookback from this registry text, never from a hard-coded list."""
+
+    name: str
+    description: str
+    requires_price: bool = False
+    inputs: tuple[str, ...] = ()  # input concept names as stored
+    input_statements: tuple[str, ...] = ()  # statement of each input, same order
+
+
 @dataclass
 class CompanyData:
     company_id: int
@@ -187,6 +200,11 @@ class CompanyData:
     )
     period_gaps: list[GapRow] = field(default_factory=list)
     metric_history: list[MetricCell] = field(default_factory=list)
+    metric_specs: dict[str, MetricSpec] = field(default_factory=dict)
+    # metric name -> period kinds ('FY'|'Q') any company of the loaded chunk has a row for
+    metric_kinds_seen: dict[str, set[str]] = field(default_factory=dict)
+    # earliest period end of any canonical value of this company, not window-limited
+    first_data_period: date | None = None
     consumed: dict[str, str] = field(
         default_factory=dict
     )  # consumed concept name -> statement

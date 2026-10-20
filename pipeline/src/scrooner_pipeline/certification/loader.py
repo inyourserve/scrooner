@@ -25,6 +25,7 @@ from .model import (
     CompanyData,
     ComponentFact,
     GapRow,
+    MetricSpec,
     Metric,
     MetricCell,
     Source,
@@ -41,6 +42,7 @@ class Registry:
     modes: dict[str, str] = field(default_factory=dict)
     debt_tags: list[str] = field(default_factory=list)
     adjustment_tags: list[str] = field(default_factory=list)
+    metrics: dict[str, MetricSpec] = field(default_factory=dict)
     consumed: dict[str, str] = field(
         default_factory=dict
     )  # concept feeding >= 1 metric -> statement
@@ -94,6 +96,27 @@ def load_registry(cur, timeout_s: int = 60) -> Registry:
         timeout_s,
     ):
         reg.consumed[name] = statement
+    specs: dict[str, dict] = {}
+    for mname, desc, req, cname, cstatement in execute(
+        cur,
+        """
+        select md.metric_name, md.formula_description, md.requires_price, cc.name, cc.statement
+        from analytics.metric_definition md
+        left join analytics.metric_definition_input i on i.metric_definition_id = md.id
+        left join analytics.canonical_concept cc on cc.id = i.canonical_concept_id
+        where md.status = 'active'
+        """,
+        None,
+        timeout_s,
+    ):
+        e = specs.setdefault(mname, {"d": desc or "", "r": bool(req), "i": [], "s": []})
+        if cname is not None:
+            e["i"].append(base_name(cname))
+            e["s"].append(cstatement)
+    for mname, e in specs.items():
+        reg.metrics[mname] = MetricSpec(
+            mname, e["d"], e["r"], tuple(e["i"]), tuple(e["s"])
+        )
     bases = {base_name(n) for n in reg.consumed}
     for base, concept_id in execute(
         cur,
@@ -460,6 +483,7 @@ def _load_history(cur, data, ids, registry, since, timeout_s) -> None:
                 }
     for d in data.values():
         d.mapped_tag_count = dict(registry.mapped_tag_count)
+        d.metric_specs = registry.metrics
     for cid, first in execute(
         cur,
         "select company_id, min(period_of_report) from core.filing where company_id = any(%s) "
@@ -503,3 +527,18 @@ def _load_history(cur, data, ids, registry, since, timeout_s) -> None:
     ):
         if cid in data:
             data[cid].metric_history.append(MetricCell(name, label, end, value, reason))
+    kinds_seen: dict[str, set[str]] = defaultdict(set)
+    for d in data.values():
+        for m in d.metric_history:
+            kinds_seen[m.name].add("FY" if m.label == "FY" else "Q")
+    for cid, first in execute(
+        cur,
+        "select cf.company_id, min(p.end_date) from analytics.canonical_fact cf "
+        "join core.period p on p.id = cf.period_id where cf.company_id = any(%s) group by cf.company_id",
+        (ids,),
+        timeout_s,
+    ):
+        if cid in data:
+            data[cid].first_data_period = first
+    for d in data.values():
+        d.metric_kinds_seen = kinds_seen

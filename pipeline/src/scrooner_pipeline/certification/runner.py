@@ -25,6 +25,7 @@ import structlog
 
 from scrooner_pipeline.common.sector_applicability import metric_suppression_reason
 
+from .history import UNCLASSIFIED_METRIC_CAUSES
 from . import (
     composition,
     currency,
@@ -349,14 +350,18 @@ def morning_summary(result: RunResult) -> dict:
     sev: Counter = Counter(f.severity for f in result.findings)
     cells: dict[str, Counter] = {"concepts": Counter(), "metrics": Counter()}
     unclassified_by_kind: Counter = Counter()
+    buckets: Counter = Counter()
+    input_causes: Counter = Counter()
     for h in result.history.values():
         for (base, kind, cause), ends in (h.get("missing") or {}).items():
             cells["concepts"][cause] += len(ends)
             if cause == "unclassified":
                 unclassified_by_kind[("concept", kind)] += len(ends)
+        buckets.update(h.get("metric_buckets") or {})
+        input_causes.update(h.get("metric_input_causes") or {})
         for (name, kind, cause), ends in (h.get("missing_metrics") or {}).items():
             cells["metrics"][cause] += len(ends)
-            if cause == "no_row":
+            if cause in UNCLASSIFIED_METRIC_CAUSES:
                 unclassified_by_kind[("metric", kind)] += len(ends)
     blocking_i11 = sum(
         1 for f in result.findings if f.invariant == "I11" and is_blocking(f)
@@ -367,6 +372,8 @@ def morning_summary(result: RunResult) -> dict:
         "severity": sev,
         "i11_cells": cells,
         "unclassified_by_kind": unclassified_by_kind,
+        "metric_buckets": buckets,
+        "metric_input_causes": input_causes,
         "i11_blocking_findings": blocking_i11,
         "companies": len(result.companies),
     }
@@ -397,6 +404,24 @@ def render_summary(result: RunResult) -> str:
     lines.append("  I11 missing metric cells by cause:")
     for cause, n in m["i11_cells"]["metrics"].most_common(12):
         lines.append(f"    {cause:<28} {n}")
+    lines.append(
+        "  metric cells without a stored row, by bucket (not_defined_for_period_kind is not a gap):"
+    )
+    for cause, n in m["metric_buckets"].most_common():
+        if cause in (
+            "not_defined_for_period_kind",
+            "insufficient_history",
+            "input_gap",
+            "input_gap:unclassified",
+            "no_row_inputs_present",
+            "no_row_inputs_present:metric_has_no_registry_inputs",
+        ):
+            lines.append(f"    {cause:<28} {n}")
+    if m["metric_input_causes"]:
+        lines.append(
+            "    input_gap carries input cause: "
+            + ", ".join(f"{k}={v}" for k, v in m["metric_input_causes"].most_common())
+        )
     lines.append(
         "  unclassified I11 cells by kind: "
         + (

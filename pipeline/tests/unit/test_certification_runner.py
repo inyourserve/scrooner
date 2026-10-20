@@ -112,6 +112,7 @@ class TestLoader:
         end, start = date(2023, 12, 31), date(2023, 1, 1)
         routes = [
             ("from core.company where id", [(7, "0000000007", "TST", "6022")]),
+            ("group by cf.company_id", [(7, date(2011, 6, 30))]),
             ("from analytics.canonical_fact cf",
              [(7, "net_income", D(4801), [11], 100, start, end, "duration", 2023, "FY")]),
             ("where f.id = any", [(11, "NetIncomeLoss", D(4801), False, False, "DEF 14A", "usd",
@@ -148,6 +149,7 @@ class TestLoader:
         assert data.is_bank and not data.bank_sic_without_evidence and data.shares_fallback_filed == date(2026, 8, 1)
         assert data.conflict_copies[11][0].id == 13 and data.mapped_facts == {"net_income": [(date(2023, 1, 1), date(2023, 12, 31))]}
         assert data.mapped_tag_count == {"net_income": 1}
+        assert data.first_data_period == date(2011, 6, 30)
         assert data.first_filing_period == date(2012, 3, 31) and data.filings == [(date(2024, 12, 31), "10-K")]
         assert data.period_gaps[0].base == "revenue" and data.period_gaps[0].cause == "no_mapped_tag"
         assert data.metric_history[0].reason == "missing:revenue" and data.metric_history[0].value is None
@@ -248,7 +250,7 @@ class TestDryRunAndApply:
         r.findings = [finding(1, "wrong_value"), finding(2, "review")]
         r.history = {1: {"missing": {("revenue", "FY", "unclassified"): [date(2015, 12, 31), date(2016, 12, 31)],
                                      ("cfo", "Q", "q4_not_derived"): [date(2016, 6, 30)]},
-                         "missing_metrics": {("roe", "FY", "no_row"): [date(2015, 12, 31)]}}}
+                         "missing_metrics": {("roe", "FY", "no_row_inputs_present"): [date(2015, 12, 31)]}}}
         m = morning_summary(r)
         assert m["states"]["uncertified"] == 1 and m["states"]["checks_clean"] == 1
         assert m["wrong_by_invariant"]["I4"] == 1
