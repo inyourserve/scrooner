@@ -27,7 +27,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | done (wrong values FILING-CHECKED; CNI excluded) |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | done (all problems per company; FILING-CHECKED) |
 | S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | done (FILING-CHECKED) |
-| S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | running |
+| S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | done (FILING-CHECKED, history window) |
 | S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | running |
 | S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | running |
 | S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S020 | URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S021 | DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -221,6 +221,13 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | SPG: NI 574.1M vs 483.1M to common; shares 8,000 = Class B count | S020 | SPG | FC | open (NCI/multi-class families) |
 | ET equity incl. NCI 49,737M vs partners' capital 35,331M (MLP) | S020 | ET | FC | open (MLP template) |
 | URI Q1 margins -170.8%/93.5%/57.2% vs 36.9%/21.8%/13.3% | S020 | URI | FC (R4) | open (quarter derivation) |
+| NEW: insurer margins and P/S read the base ASC 606 revenue (MET 724M vs 19,154M; net margin 101.7%, P/S 23.9) | S021 | MET | FC (R4) | open (606 family; insurers) |
+| NEW: non-GAAP 'Adjusted earnings' tagged OperatingIncomeLoss stored as operating income (MET 1,604) | S021 | MET | FC (R45) | open (guard: insurer OperatingIncomeLoss) |
+| NEW: net income uses ProfitLoss even when NetIncomeLoss IS filed | S021 | MET, ALL, DLR, AON | DI (SEC XBRL) | open (A5 NCI family; resolver priority) |
+| NEW: restated FY-end total assets end up blank | S021 | 6 of 10 | DI | open (conflict family) |
+| NEW: duration value stored on an instant period (BSX buybacks); negative P/E displayed (BE) | S021 | BSX, BE | DI | open |
+| debt filed only as components, 2012 value shown (DLR 3.27B vs 18.6B) | S021 | DLR | FC (R2) | open (total_debt) |
+| history: unmapped early revenue tag (TRGP 2015-16 missing); BSX FY2015 revenue 8,068 vs 7,477 | S021 | TRGP, BSX | mixed | open (history window) |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
@@ -257,3 +264,5 @@ Done shards are NOT reissued: dropped companies keep their findings (their wrong
 
 ## Population check needed (fix owner, 2026-10-18)
 Foreign private issuers kept in `real_operating_company` by a legacy or ABS 10-K: BMO and BNS confirmed (S011, S012). Query to run with direct DB access, since it timed out under the 55s MCP cap: latest annual form per population company, flagging 40-F/20-F as latest, or a 10-K with no us-gaap facts.
+
+Note 2026-10-20: the coverage table was rebuilt on 10-20 (S021: blanks rose from 316 to 402 for its 10 companies, i.e. 86 'filled before, blank now' cells now counted). Baseline figures in README predate this rebuild.
