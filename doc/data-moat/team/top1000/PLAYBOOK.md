@@ -37,6 +37,7 @@ Updated as shards finish. If a rule here and a filing disagree, the filing wins.
     - MU 2,792M vs 5,179M (FC)
     - WMT 39,932M vs 50,411M (FC)
     - ADBE 4,766M vs 6,363M (FC)
+    - APD 896.2M vs 17,481.3M (FC, R5)
     - LITE FY2025 10.6M vs 2,573.2M (FC)
     - CMI 7,236M vs 7,695M, loans payable omitted (FC)
   - Double counted:
@@ -99,6 +100,8 @@ Updated as shards finish. If a rule here and a filing disagree, the filing wins.
   - SCHW base 1000x small; shown 8,417M vs 8,852M (FC)
   - NFLX, HD (precision only)
   - FTNT derived Q4 traced to DEF 14A
+  - FDX FY2026 4,426M vs 4,433M; FDX margin/ROE built on a DEF 14A value of 4,433 *dollars*; derived Q4 -2.84B (FC)
+  - APO: the DEF 14A copy pushes NetIncomeLoss aside, so ProfitLoss 5,401M shows vs 3,492M (DI)
 
 ### A5. Net income includes noncontrolling interest
 - **Tags:** `ProfitLoss` (includes NCI) used when `NetIncomeLoss` is not tagged.
