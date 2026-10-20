@@ -9,7 +9,13 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Cancel superseded runs on branches and pull requests, but let runs on main
+  # FINISH (2026-10-21). Several sessions push to main every minute or two; with
+  # cancel-in-progress on main the Python tests job was cancelled before finishing
+  # on nearly every push, so main almost never had a completed CI result. On main
+  # GitHub now runs one at a time and keeps only the newest pending run, so every
+  # few minutes a full run completes on the then-latest commit.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   python:
