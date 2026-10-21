@@ -40,14 +40,19 @@ import re
 from collections import Counter, defaultdict
 from datetime import date, timedelta
 
+from .thresholds import (
+    TOLERANCE_DAYS,
+    YEAR_MIN,
+    YEAR_MAX,
+    QUARTER_MIN,
+    QUARTER_MAX,
+    LATE_START_DAYS,
+    LOOKBACK_SLACK_DAYS,
+)
 from .model import REVIEW, Cell, CompanyData, Finding, base_name, finding
 
-TOLERANCE_DAYS = 7
-YEAR_MIN, YEAR_MAX = 350, 380
-QUARTER_MIN, QUARTER_MAX = 61, 121
 KINDS = ("FY", "Q", "Q4", "I")
 ANNUAL_FORMS = ("10-K", "10-K/A", "10-KT", "10-KT/A")
-LATE_START_DAYS = 120  # first filing later than window start + this -> flagged
 
 
 def _is_annual(form: str) -> bool:
@@ -114,7 +119,6 @@ def reason_family(reason: str) -> str:
 UNCLASSIFIED_METRIC_CAUSES = frozenset(
     {"no_row_inputs_present", "input_gap:unclassified"}
 )
-LOOKBACK_SLACK_DAYS = 45
 _T_MINUS = re.compile(r"\[(?:t|FY)-(\d+)\]")
 _MOST_RECENT = re.compile(r"(\d+)\s+most recent", re.I)
 

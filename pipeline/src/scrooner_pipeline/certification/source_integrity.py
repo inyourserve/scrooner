@@ -33,6 +33,12 @@ from __future__ import annotations
 from decimal import Decimal
 from itertools import combinations, product
 
+from .thresholds import (
+    PROXY_ROUNDING_MAX,
+    SCALE_RATIO,
+    ROUNDING_TOLERANCE,
+    CONFLICT_FILL_MAX_SPREAD,
+)
 from .model import (
     INFO,
     PERIODIC_FORMS,
@@ -44,10 +50,8 @@ from .model import (
     finding,
 )
 
-ROUNDING_TOLERANCE = Decimal("0.0001")  # 0.01%, the ledger's rounding skip (2026-10-18)
 # mapper/conflict_resolution.py fills a period whose copies are ALL non-authoritative
 # only when the worst-case disagreement is <= 15% (data-team/20 section 2).
-CONFLICT_FILL_MAX_SPREAD = Decimal("0.15")
 
 
 def is_recorded_conflict_fill(value: Decimal, source, others) -> bool:
@@ -120,11 +124,74 @@ def _is_adjustment(tag: str) -> bool:
     return ADJUSTMENT_TAG_HINT in tag
 
 
+def _proxy_value_wrong(stored: Decimal, copies) -> bool:
+    """The stored proxy/8-K number differs from every periodic copy AND the gap is
+    the shape of an error, not of a re-presentation: within PROXY_ROUNDING_MAX
+    (a proxy prints rounded millions or billions: JPM 48,300M vs 48,334M) or a
+    unit-scale gap of SCALE_RATIO or more (SCHW thousands stored as dollars). A
+    gap in between is a recast or restated basis (LLY 8-K revenue 4,514.9M vs the
+    original 4,865.1M): review."""
+    if not copies or any(_close(stored, c.value) for c in copies):
+        return False
+    for c in copies:
+        if c.value == 0 or stored == 0:
+            continue
+        rel = abs(stored - c.value) / max(abs(stored), abs(c.value))
+        ratio = abs(stored / c.value)
+        big = ratio if ratio >= 1 else 1 / ratio
+        if rel > PROXY_ROUNDING_MAX and big < SCALE_RATIO:
+            return False  # at least one copy is a plausible re-presentation basis
+    return True
+
+
+def _non_periodic_findings(data: CompanyData) -> list[Finding]:
+    """I6 non_periodic_form over EVERY stored cell (both layers: the Verifier counts
+    JPM's 15 wrong cells in `net_income` and `net_income_resolved`). A value taken
+    from a proxy or 8-K is a LINEAGE defect (`review`) when a 10-K/10-Q copy gives
+    the same number or a plausible re-presentation (MA, MSFT, AVGO, LLY single-input
+    cells: right as filed); it is `wrong_value` when `_proxy_value_wrong`
+    (data-team/36 items 2 and 7)."""
+    out: list[Finding] = []
+    for cell in data.cells:
+        sources = [s for s in data.source_facts(cell) if not _is_adjustment(s.tag)]
+        for s in sources:
+            if s.form is None or s.form in PERIODIC_FORMS:
+                continue
+            copies = data.periodic_copies.get(s.id, [])
+            differs = len(sources) == 1 and _proxy_value_wrong(cell.value, copies)
+            out.append(
+                finding(
+                    data,
+                    "I6",
+                    WRONG_VALUE if differs else REVIEW,
+                    "non_periodic_form",
+                    cell,
+                    other=copies[0].value if differs else s.value,
+                    form=s.form,
+                    tag=s.tag,
+                    accession=s.accession,
+                    source_ids=[s.id],
+                    fact_authoritative=s.authoritative,
+                    differs_from_periodic_copy=differs,
+                    periodic_copies=[
+                        {
+                            "id": c.id,
+                            "value": str(c.value),
+                            "form": c.form,
+                            "accession": c.accession,
+                        }
+                        for c in copies[:5]
+                    ],
+                )
+            )
+    return out
+
+
 def check(data: CompanyData) -> list[Finding]:
     """Checks the DISPLAYED layer only (the `_resolved` row where one exists):
     the base row of a resolved pair is not shown, and counting both would
     double every finding."""
-    findings: list[Finding] = []
+    findings: list[Finding] = _non_periodic_findings(data)
     for cell in data.display_cells():
         all_sources = data.source_facts(cell)
         sources = [s for s in all_sources if not _is_adjustment(s.tag)]
@@ -132,22 +199,6 @@ def check(data: CompanyData) -> list[Finding]:
         if not sources:
             continue
         for s in sources:
-            if s.form is not None and s.form not in PERIODIC_FORMS:
-                findings.append(
-                    finding(
-                        data,
-                        "I6",
-                        WRONG_VALUE,
-                        "non_periodic_form",
-                        cell,
-                        other=s.value,
-                        form=s.form,
-                        tag=s.tag,
-                        accession=s.accession,
-                        source_ids=[s.id],
-                        fact_authoritative=s.authoritative,
-                    )
-                )
             want = expected_unit(cell.base)
             if want is not None and s.unit is not None and s.unit.lower() != want:
                 findings.append(
@@ -167,7 +218,9 @@ def check(data: CompanyData) -> list[Finding]:
                 )
             if not s.authoritative:
                 copies = data.authoritative_copies.get(s.id, [])
-                if copies:
+                if copies and len(sources) > 1:
+                    pass  # a calculated cell is not comparable with one input's copies (TSLA OI FY2017)
+                elif copies:
                     differing = [c for c in copies if not _close(cell.value, c.value)]
                     if differing and not any(
                         _close(cell.value, c.value) for c in copies
@@ -211,6 +264,35 @@ def check(data: CompanyData) -> list[Finding]:
                             source_ids=[s.id],
                         )
                     )
+        tags = {s.tag for s in sources}
+        if (
+            len(tags) > 1
+            and any(
+                s.form is not None and s.form not in PERIODIC_FORMS for s in sources
+            )
+            and any(s.form in PERIODIC_FORMS for s in sources)
+        ):
+            # R-MIXED-VINTAGE: a calculated cell whose inputs come from a recast filing
+            # and from the original periodic filings (LLY gross profit = 8-K revenue
+            # minus 10-K cost of sales)
+            findings.append(
+                finding(
+                    data,
+                    "I6",
+                    WRONG_VALUE,
+                    "mixed_vintage",
+                    cell,
+                    sources=[
+                        {
+                            "id": s.id,
+                            "tag": s.tag,
+                            "form": s.form,
+                            "accession": s.accession,
+                        }
+                        for s in sources
+                    ],
+                )
+            )
         if any(s.derived for s in sources):
             continue  # a derived cell is explained by its inputs, checked elsewhere
         mode = data.concept_modes.get(cell.concept, "first_match")

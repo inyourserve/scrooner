@@ -20,6 +20,14 @@ from decimal import Decimal
 
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES, Identity, evaluate
 
+from .thresholds import (
+    WRONG_GAP,
+    SCALE_RATIO,
+    CASH_ROLL_TOLERANCE,
+    FY_MIN_DAYS,
+    FY_MAX_DAYS,
+    CASH_DATE_SLACK_DAYS,
+)
 from .model import (
     REVIEW,
     WRONG_VALUE,
@@ -32,7 +40,6 @@ from .model import (
 # Relative gap (to the identity's basis) beyond which a failed tie is no longer
 # plausible rounding / perimeter noise: a 25% gap on assets = L + E is a wrong
 # component, not a missing NCI line.
-WRONG_GAP = Decimal("0.25")
 
 # The net income identity cannot see every reconciling item (discontinued
 # operations, equity-method income, NCI: JNJ's 2023 Kenvue exchange gain puts
@@ -40,15 +47,11 @@ WRONG_GAP = Decimal("0.25")
 # is `wrong_value` only when stored and expected differ by a SCALE (>= 50x either
 # way, or a power-of-ten signature); a smaller gap is `review`.
 SCALE_ONLY_IDENTITIES = frozenset({"net_income"})
-SCALE_RATIO = Decimal(50)
 
 I1_IDENTITIES = ("balance_sheet", "current_assets_within_total", "cash_within_total")
 I2_IDENTITIES = ("gross_profit", "net_income")
 
 # Cash roll-forward: restricted cash, FX and ASU 2016-18 make small gaps normal.
-CASH_ROLL_TOLERANCE = Decimal("0.10")
-FY_MIN_DAYS, FY_MAX_DAYS = 350, 380
-CASH_DATE_SLACK_DAYS = 4
 
 
 def _scale_apart(actual: Decimal, expected: Decimal | None) -> bool:

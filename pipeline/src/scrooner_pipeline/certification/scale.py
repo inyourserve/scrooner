@@ -24,6 +24,28 @@ from __future__ import annotations
 from decimal import Decimal
 from statistics import median
 
+from .thresholds import (
+    MIN_SIGN_CONFLICT,
+    ROLE_LAYER_CONFLICT,
+    ROLE_MIN_NEIGHBOURS,
+    ROLE_RATIO,
+    ROLE_SIGNALS_WRONG,
+    SUM_WRONG,
+    NEIGHBOUR_RATIO,
+    NEIGHBOURS_EACH_SIDE,
+    MIN_NEIGHBOURS,
+    CROSS_CONCEPT_REVIEW,
+    CROSS_CONCEPT_WRONG,
+    LAYER_RATIO,
+    EPS_SHARES_RATIO,
+    MARKET_CAP_MAX,
+    MARKET_CAP_PRICE_RATIO,
+    PE_FLOOR,
+    PE_BASIS_RATIO,
+    FY_MIN_DAYS,
+    FY_MAX_DAYS,
+    SHARES_LOOKAROUND_DAYS,
+)
 from .model import (
     NON_MONETARY,
     PER_SHARE,
@@ -38,17 +60,6 @@ from .model import (
     power_of_ten_signature,
 )
 
-NEIGHBOUR_RATIO = Decimal(1000)
-NEIGHBOURS_EACH_SIDE = 2
-MIN_NEIGHBOURS = 2
-CROSS_CONCEPT_REVIEW = Decimal("0.00001")  # 1e-5 of revenue
-CROSS_CONCEPT_WRONG = Decimal("0.000001")  # 1e-6 of revenue
-LAYER_RATIO = Decimal(100)
-EPS_SHARES_RATIO = Decimal(3)
-MARKET_CAP_MAX = Decimal("10000000000000")  # $10T: above any listed company
-MARKET_CAP_PRICE_RATIO = Decimal(2)
-PE_FLOOR = Decimal(2)
-PE_BASIS_RATIO = Decimal(5)
 MARGIN_METRICS = (
     "gross_margin",
     "operating_margin",
@@ -57,8 +68,6 @@ MARGIN_METRICS = (
     "ebitda_margin",
 )
 CROSS_CONCEPTS = ("net_income", "operating_income", "cfo", "gross_profit")
-FY_MIN_DAYS, FY_MAX_DAYS = 350, 380
-SHARES_LOOKAROUND_DAYS = 120
 
 
 def _class(cell: Cell) -> str | None:
@@ -152,6 +161,25 @@ def _layer_disagreement(data: CompanyData) -> list[Finding]:
         if c.base in PER_SHARE or c.base in SHARE_COUNTS:
             # the resolved layer re-bases per-share and share-count history for
             # splits (Apple basic EPS 5.16 vs 0.0129): a ratio is expected there
+            continue
+        if (b.value > 0) != (c.value > 0) and min(
+            abs(b.value), abs(c.value)
+        ) >= MIN_SIGN_CONFLICT:
+            # the two layers disagree on the SIGN of a material flow: one is an
+            # arithmetic fallback on a component (TSLA operating income FY2017
+            # +1,179M against -1,632M on the face)
+            out.append(
+                finding(
+                    data,
+                    "I4",
+                    WRONG_VALUE,
+                    "layer_sign_conflict",
+                    c,
+                    other=b.value,
+                    base_concept=b.concept,
+                    source_ids=sorted(set(b.source_ids) | set(c.source_ids)),
+                )
+            )
             continue
         ratio = abs(b.value) / abs(c.value)
         big, small = (ratio, 1 / ratio) if ratio >= 1 else (1 / ratio, ratio)
@@ -327,6 +355,121 @@ def _metric_plausibility(data: CompanyData) -> list[Finding]:
     return out
 
 
+ROLE_CONCEPTS = (
+    "revenue",
+    "research_and_development",
+    "operating_expenses",
+    "sga_expense",
+    "cost_of_revenue",
+)
+
+
+def _ratio_off(value: Decimal, reference: Decimal) -> bool:
+    """value is >= ROLE_RATIO times, or <= 1/ROLE_RATIO of, a positive reference
+    (a zero value against a positive reference counts)."""
+    if reference <= 0:
+        return False
+    v = abs(value)
+    return v >= reference * ROLE_RATIO or v <= reference / ROLE_RATIO
+
+
+def _statement_role(data: CompanyData) -> list[Finding]:
+    """R-STATEMENT-ROLE (data-team/36 items 5 and the EMR/NTAP check): a revenue or
+    expense value taken from a different statement line or perimeter under the same
+    tag (JNJ R&D = the cash-flow add-back of acquired IPR&D, 1,841 vs 17,232;
+    EMR FY2022 revenue = the acquiree's 1,660 vs 13,804; NTAP FY2026 = a segment
+    total, 6,237 vs 6,925). Five independent signals per annual cell:
+      neighbours  >= 5x away from the median of its nearest annual values
+      intensity   value / revenue >= 5x away from the concept's own median intensity
+      layer       the resolved row and the base row of the concept differ by > 5%
+      quarters    the four quarters of the year do not sum to it (> 10%, same vintage)
+      margins     revenue below net income or operating income of the same year
+    Two or more signals: `wrong_value`; a layer conflict alone: `review`."""
+    from .period_integrity import _filed_late, _tiling_quarters
+
+    out: list[Finding] = []
+    by = data.display_by_concept()
+    revenue = {c.period_id: c for c in by.get("revenue", [])}
+    base_cells = {(c.base, c.period_id): c for c in data.cells if not c.resolved}
+    for base in ROLE_CONCEPTS:
+        cells = by.get(base, [])
+        years = sorted(
+            (
+                c
+                for c in cells
+                if c.days is not None and FY_MIN_DAYS <= c.days <= FY_MAX_DAYS
+            ),
+            key=lambda c: c.end,
+        )
+        quarters = [c for c in cells if c.days is not None and 61 <= c.days <= 121]
+        if len(years) < ROLE_MIN_NEIGHBOURS + 1:
+            continue
+        intensity = {
+            c.period_id: (abs(c.value) / revenue[c.period_id].value)
+            for c in years
+            if base != "revenue"
+            and c.period_id in revenue
+            and revenue[c.period_id].value > 0
+        }
+        for i, c in enumerate(years):
+            signals: list[str] = []
+            near = [
+                abs(n.value)
+                for j, n in enumerate(years[max(0, i - 2) : i + 3], start=max(0, i - 2))
+                if j != i and n.value != 0
+            ]
+            if len(near) >= 2 and _ratio_off(c.value, Decimal(str(median(near)))):
+                signals.append("neighbours")
+            if c.period_id in intensity:
+                others = [
+                    v for pid, v in intensity.items() if pid != c.period_id and v > 0
+                ]
+                if len(others) >= ROLE_MIN_NEIGHBOURS:
+                    ref = Decimal(str(median(others)))
+                    if _ratio_off(intensity[c.period_id], ref):
+                        signals.append("intensity")
+            b = base_cells.get((base, c.period_id))
+            layer = False
+            if c.resolved and b is not None and b.value != 0 and c.value != 0:
+                layer = (
+                    abs(c.value - b.value) / max(abs(c.value), abs(b.value))
+                    > ROLE_LAYER_CONFLICT
+                )
+                if layer:
+                    signals.append("layer")
+            tile = _tiling_quarters(c, quarters)
+            if tile and c.value != 0:
+                rel = abs(sum((q.value for q in tile), Decimal(0)) - c.value) / abs(
+                    c.value
+                )
+                originals = [q for q in tile if _filed_late(data, q) is False]
+                if rel > SUM_WRONG and not (_filed_late(data, c) and originals):
+                    signals.append("quarters")
+            if base == "revenue":
+                for other in ("net_income", "operating_income"):
+                    o = next(
+                        (x for x in by.get(other, []) if x.period_id == c.period_id),
+                        None,
+                    )
+                    if o is not None and c.value > 0 and abs(o.value) > c.value:
+                        signals.append("margins")
+                        break
+            if len(signals) >= ROLE_SIGNALS_WRONG or layer:
+                out.append(
+                    finding(
+                        data,
+                        "I4",
+                        WRONG_VALUE if len(signals) >= ROLE_SIGNALS_WRONG else REVIEW,
+                        "statement_role_suspect",
+                        c,
+                        other=b.value if b is not None else None,
+                        signals=signals,
+                        concept=base,
+                    )
+                )
+    return out
+
+
 def check(data: CompanyData) -> list[Finding]:
     return (
         _neighbour_magnitude(data)
@@ -334,4 +477,5 @@ def check(data: CompanyData) -> list[Finding]:
         + _layer_disagreement(data)
         + _eps_vs_shares(data)
         + _metric_plausibility(data)
+        + _statement_role(data)
     )

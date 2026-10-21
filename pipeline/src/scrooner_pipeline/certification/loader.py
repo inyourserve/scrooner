@@ -19,6 +19,7 @@ from scrooner_pipeline.common.sector_applicability import (
 from scrooner_pipeline.common.staleness import load_latest_filed_periods
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES
 
+from .thresholds import SOURCE_BATCH
 from .model import (
     base_name,
     Cell,
@@ -29,10 +30,10 @@ from .model import (
     Metric,
     MetricCell,
     Source,
+    PERIODIC_FORMS,
 )
 
 HISTORY_FLOOR = date(2015, 1, 1)  # doc 38: nothing older is displayed as current
-SOURCE_BATCH = 20_000
 DEBT_CONCEPTS = ("total_debt", "total_debt_split")
 
 
@@ -282,6 +283,38 @@ def load_chunk(
                 data[cid].authoritative_copies.setdefault(r[0], []).append(
                     _source(r[1:])
                 )
+
+    # copies, on a 10-K/10-Q-family form, of every source filed on another form (proxy, 8-K)
+    non_periodic = sorted(
+        {
+            s.id
+            for d in data.values()
+            for s in d.sources.values()
+            if s.form is not None and s.form not in PERIODIC_FORMS
+        }
+    )
+    for i in range(0, len(non_periodic), SOURCE_BATCH):
+        rows = execute(
+            cur,
+            """
+            select f1.id, f2.id, c.tag, f2.value, f2.is_authoritative, f2.is_derived, fl.form, u.unit_name,
+                   fl.accession_number, fl.filing_date, p.start_date, p.end_date
+            from core.fact f1
+            join core.fact f2 on f2.company_id = f1.company_id and f2.concept_id = f1.concept_id
+                 and f2.period_id = f1.period_id and f2.unit_id = f1.unit_id and f2.id <> f1.id
+            join core.concept c on c.id = f2.concept_id
+            join core.unit u on u.id = f2.unit_id
+            join core.period p on p.id = f2.period_id
+            join core.filing fl on fl.id = f2.filing_id
+            where f1.id = any(%s) and fl.form = any(%s)
+            """,
+            (non_periodic[i : i + SOURCE_BATCH], sorted(PERIODIC_FORMS)),
+            timeout_s,
+        )
+        for r in rows:
+            cid = owner.get(r[0])
+            if cid in data:
+                data[cid].periodic_copies.setdefault(r[0], []).append(_source(r[1:]))
 
     # other non-authoritative copies (a recorded conflict fill has >= 2 non-authoritative copies)
     for i in range(0, len(non_auth), SOURCE_BATCH):

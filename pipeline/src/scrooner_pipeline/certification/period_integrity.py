@@ -25,6 +25,17 @@ from __future__ import annotations
 from datetime import timedelta
 from decimal import Decimal
 
+from .thresholds import (
+    VINTAGE_LATE_FILING_DAYS,
+    QUARTER_MIN,
+    QUARTER_MAX,
+    YEAR_MIN,
+    YEAR_MAX,
+    SUM_REVIEW,
+    SUM_WRONG,
+    MIN_EQUAL_VALUE,
+    TILE_GAP_DAYS,
+)
 from .model import (
     ADDITIVE_FLOWS,
     REVIEW,
@@ -35,11 +46,6 @@ from .model import (
     finding,
 )
 
-QUARTER_MIN, QUARTER_MAX = 61, 121
-YEAR_MIN, YEAR_MAX = 350, 380
-SUM_REVIEW = Decimal("0.02")
-SUM_WRONG = Decimal("0.10")
-MIN_EQUAL_VALUE = Decimal(1_000_000)
 # Concepts whose quarterly value moves. Dividends, interest on fixed debt, D&A,
 # SBC and similar steady lines repeat to the million (NVDA pays 99M a quarter for
 # years), so equality between adjacent quarters says nothing about them.
@@ -55,7 +61,6 @@ VARYING_FLOWS = frozenset(
         "operating_expenses",
     }
 )
-TILE_GAP_DAYS = 7  # quarters may start a few days off the previous end (calendar slack)
 
 
 def _duration_vs_label(data: CompanyData) -> list[Finding]:
@@ -141,6 +146,35 @@ def _tiling_quarters(year: Cell, quarters: list[Cell]) -> list[Cell] | None:
     return inside
 
 
+def _filed_late(data: CompanyData, cell) -> bool | None:
+    """True when the cell's source filing came more than 200 days after the period
+    end (a later 10-K / 8-K re-presenting it), False when it came from the original
+    filing window, None when no filing date is known."""
+    dates = [s.filing_date for s in data.source_facts(cell) if s.filing_date]
+    if not dates:
+        return None
+    return max(dates) > cell.end + timedelta(days=VINTAGE_LATE_FILING_DAYS)
+
+
+def _same_filing_pair(data: CompanyData, a, b) -> bool:
+    """A source of `a` and a source of `b` (same unit) come from the SAME filing on
+    different contexts: the shape of a label error (the AMD Q2 10-Q equity statement
+    prints the 6-month repurchase in its 3-month block), not coincidence. Tags may
+    differ: the quarter can sit on the equity statement and the window on the cash flow."""
+    for sa in data.source_facts(a):
+        for sb in data.source_facts(b):
+            if (
+                sa.id != sb.id
+                and not sa.derived
+                and not sb.derived
+                and sa.unit == sb.unit
+                and sa.accession
+                and sa.accession == sb.accession
+            ):
+                return True
+    return False
+
+
 def _quarters_vs_year(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
     by = data.display_by_concept()
@@ -162,6 +196,12 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
             rel = abs(total - y.value) / abs(y.value)
             if rel <= SUM_REVIEW:
                 continue
+            # Same-vintage rule (data-team/36 item 1): a year re-presented in a later
+            # filing (ASC 606 recast, Kenvue, discontinued ops) next to quarters from the
+            # original 10-Qs is a basis mix between two defensible readings: `review`.
+            fy_late = _filed_late(data, y)
+            originals = [q for q in tile if _filed_late(data, q) is False]
+            basis_mix = bool(fy_late) and bool(originals)
             median_q = sorted(abs(q.value) for q in tile)[1:3]
             centre = (median_q[0] + median_q[1]) / 2
             suspect = max(tile, key=lambda q: abs(abs(q.value) - centre))
@@ -169,8 +209,10 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
                 finding(
                     data,
                     "I5",
-                    WRONG_VALUE if rel > SUM_WRONG else REVIEW,
-                    "quarters_do_not_sum_to_year",
+                    REVIEW if basis_mix or rel <= SUM_WRONG else WRONG_VALUE,
+                    "quarters_vs_year_basis_mix"
+                    if basis_mix
+                    else "quarters_do_not_sum_to_year",
                     y,
                     other=total,
                     rel_gap=str(rel),
@@ -231,6 +273,8 @@ def _label_shift(data: CompanyData) -> list[Finding]:
                 ]
                 if others and all(o.value == 0 for o in others):
                     break  # the window's other quarters are zero: the value is real
+                if not _same_filing_pair(data, q, w):
+                    continue  # equal by coincidence across two filings (NVDA tax 64M, AMD CFF 28M)
                 out.append(
                     finding(
                         data,

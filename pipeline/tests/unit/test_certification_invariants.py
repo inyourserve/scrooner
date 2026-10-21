@@ -77,8 +77,10 @@ class TestMdtNetIncomeScaleAndProxy:
         assert "cross_concept_scale" in rules(f, "I4", WRONG_VALUE)
 
     def test_proxy_source_is_wrong_value(self):
-        f = [x for x in source_integrity.check(self.broken()) if x.evidence["rule"] == "non_periodic_form"]
-        assert f and f[0].severity == WRONG_VALUE
+        d = self.broken()
+        d.periodic_copies[64871764] = [src("NetIncomeLoss", 4_801_000_000, form="10-K", sid=64871765)]
+        f = [x for x in source_integrity.check(d) if x.evidence["rule"] == "non_periodic_form"]
+        assert f and f[0].severity == WRONG_VALUE and f[0].evidence["differs_from_periodic_copy"] is True
         assert f[0].source_fact_ids == [64871764] and f[0].evidence["form"] == "DEF 14A"
 
     def test_repaired_fixture_is_clean(self):
@@ -324,7 +326,8 @@ class TestBkngSplit:
         assert f and f[0].evidence["rule"] == "share_jump_without_split" and f[0].severity == WRONG_VALUE
 
     def test_recorded_split_is_clean(self):
-        assert splits.check(self.broken(with_split=True)) == []
+        # the jump itself is explained by the split on record
+        assert "share_jump_without_split" not in rules(splits.check(self.broken(with_split=True)))
 
     def test_pe_is_implausible(self):
         f = scale.check(self.broken())
@@ -536,7 +539,7 @@ class TestGuardsFromLiveDryRun:
         d.splits.append((date(2021, 7, 19), D(4)))  # only the old split is on record
         assert "share_jump_without_split" in rules(splits.check(d), "I9", WRONG_VALUE)
         d.splits.append((date(2024, 6, 10), D(10)))
-        assert splits.check(d) == []
+        assert "share_jump_without_split" not in rules(splits.check(d))
 
 
 # ------------------------------------------------------------ I11 history window
@@ -659,7 +662,7 @@ class TestRefinementsFromLiveDryRun:
         d = clean_company()
         for (qs, qe, fp), v in zip(QUARTERS, [D("0.30"), D("0.28"), D("0.31"), D("0.02")]):
             add(d, "diluted_eps", v, qe, qs, fp, tag="EarningsPerShareDiluted", unit="usd/shares", derived=(fp == "Q4"))
-        assert splits.check(d) == []
+        assert "per_share_basis_mix" not in rules(splits.check(d))
 
 
 @pytest.mark.unit

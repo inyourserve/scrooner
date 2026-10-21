@@ -169,6 +169,10 @@ class CompanyData:
     # authoritative copies of the same (company, tag, period, unit) keyed by the
     # id of the NON-authoritative source fact they are copies of
     authoritative_copies: dict[int, list[Source]] = field(default_factory=dict)
+    # copies of a non-periodic-form source (DEF 14A, 8-K) filed on a 10-K/10-Q-family form,
+    # any authority, keyed by the id of the non-periodic source: the stored value is
+    # compared with them (I6 non_periodic_form)
+    periodic_copies: dict[int, list[Source]] = field(default_factory=dict)
     # other NON-authoritative copies of the same (company, tag, period, unit), keyed by source id
     conflict_copies: dict[int, list[Source]] = field(default_factory=dict)
     # consumed base concept -> distinct (start, end) of every fact (any authority) under a tag

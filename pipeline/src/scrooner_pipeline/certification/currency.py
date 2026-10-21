@@ -25,9 +25,9 @@ from datetime import date, timedelta
 
 from scrooner_pipeline.common.staleness import staleness_reason
 
+from .thresholds import INPUT_MAX_AGE_DAYS
 from .model import REVIEW, WRONG_VALUE, Cell, CompanyData, Finding, finding
 
-INPUT_MAX_AGE_DAYS = 456  # 15 months
 SHARE_TAG_HINTS = (
     "SharesOutstanding",
     "SharesIssued",
