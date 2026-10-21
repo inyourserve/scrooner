@@ -63,7 +63,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | done (FILING-CHECKED, history window) |
 | S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | done (FILING-CHECKED, history window) |
 | S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | done (FILING-CHECKED, history window) |
-| S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | running |
+| S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | done (FILING-CHECKED, history window) |
 | S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | running |
 | S059 | NLY JAZZ CACI MAA BF-A GME SJM ARCC GDDY REG | 73.5 | 203 | running |
 | S060 | SGI ALLE AVY MLI GGG CSL CSGP DOC BAX TXT | 88.0 | 90 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S056 | MAS, SUI (Q2), CLH (Q2), WES (Q2, co-registrant CIK), LNT, FTV (Q2), EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S057 | TRU (Q2), MAS, SUI (Q2), CLH (Q2), WES (Q2, co-registrant CIK), LNT, FTV (Q2), EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -354,7 +354,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | VMRK (Equity Residential renamed Vivmark) base revenue stale since Q1-2020, op income = NOI (66.7%), debt double counts commercial paper; ROKU SG&A G&A-only; RL, ROKU share-class issues; UTHR, ROKU stale debt; BRO 2018 split missing | S043 | 6 | FC | open (known families) |
 | history: IFF no revenue before Q4-2016 (SalesRevenueGoodsNet); VMRK Q2/Q3-2020 and FY2022 revenue missing (filer XBRL error); NVT, IFF mixed vintages; RL Q4 FY2015-17 revenue not derived | S043 | IFF, VMRK, NVT, RL | FC | open |
 | NEW: blank inventory makes quick ratio = current ratio (NI 0.498 vs 0.406; AMCR 1.254 vs 0.760; RGLD 2.924 vs 2.683) | S047 | NI, AMCR, RGLD | FC | open (formula: inventory absent must mean 'unknown', not 0, unless reported 0) |
-| NEW/CRITICAL: an acquiree's statements filed in the acquirer's 8-K stored as the acquirer's own (AMCR stores Berry's 8-K 0001104659-25-041417, 116 cells incl. PP&E 3,627) | S047 | AMCR | FC | open (8-K exhibit facts must never become canonical) |
+| NEW/CRITICAL: an acquiree's statements filed in the acquirer's 8-K stored as the acquirer's own (AMCR stores Berry's 8-K 0001104659-25-041417, 116 cells incl. PP&E 3,627; PNFP stores Synovus's 8-K 0002082866-26-000020, 70 facts: FY2025 NI 792.0 vs 641.9, diluted EPS 5.33 vs 8.07) | S047, S057 | AMCR, PNFP | FC | open (8-K exhibit facts must never become canonical) |
 | NEW: stub period counted as a second quarter (SSNC Q3-2015 twice, stub from 2015-07-09) | S047 | SSNC | FC | open (period dedup) |
 | tower REIT revenue = site-development only (SBAC 51.4 vs 715.3; P/S 85 vs ~6.7); BG 606 subset 4,660 vs 21,861; NI customer revenue only 1,289.5 vs 1,342.4; AMCR 1-for-5 reverse split missing (FY2024 EPS 0.505 vs 2.52); BG liabilities add NCI 30,142 vs 27,106; SSNC SG&A G&A-only; stale interest at 5 | S047 | 6 | FC | open (known families) |
 | history: BG nothing before FY2021 (predecessor CIK 1144519 not loaded); RGLD 10-KT not in core.filing (10-KT family), 2015-17 revenue quarters missing; SNX FY2018-19 original/recast mixed (Q4 FY2019 1,894) | S047 | BG, RGLD, SNX | FC | open |
@@ -421,6 +421,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | CRITICAL: EQH FY2021-24 NI from DEF 14A 0001193125-26-341149 stored in dollars (1,755 vs 1,755M; derived Q4s -2,091M..+693M); FY2025 NI ProfitLoss -1,037 vs -1,380; revenue from InterestAndDividendIncomeOperating | S056 | EQH | FC | open (A4 proxy family) |
 | PINS shares 0, mcap 17% high, 981M converts blank; RNR Q2 EPS on unmapped tag; SUI debt stale 7,388 vs ~4,013; stale latest values at all 10 | S056 | PINS, RNR, SUI + 10 | FC | open (known families) |
 | history: ARMK FY2016-20 annual EPS missing; EQH, UNM Q4 EPS missing; MAS, ARMK, SUI revenue mixes original and re-presented across divestitures | S056 | ARMK, EQH, UNM, MAS, SUI | FC | open |
+| NEW: interest filed only on net tags is unmapped, so interest expense goes stale (LECO, JLL, CHTR) | S057 | LECO, JLL, CHTR | FC | open (Tag Mapper) |
+| NEW: stock-comp ratio reads a minor tag (JLL 0% vs FY2025 SBC 112) | S057 | JLL | FC | open |
+| policy: US-GAAP 20-F history canonical for a filer that switched to 10-K (CNH 540 facts) | S057 | CNH | FC | decision needed (founder/doc 02) |
+| PNFP FY2021-24 NI from DEF 14A, revenue gross interest income; CNH 606 revenue 4,143 vs 4,803; CHTR mcap on diluted weighted shares (13.41B vs 12.64B), D&A unmapped; WY debt omits 122 current; SITM debt missing 1,317.6 converts; CRL pretax tag unmapped; JLL, TRU NI incl. NCI; stale interest/capex/D&A 9/10 | S057 | 8 | FC | open (known families) |
+| history: PNFP nothing before 2025 (old CIK 1115055 not linked); CNH no quarters before Q3-2021; Q4 not derived GEN (5), JLL (2); TRU FY2015 revenue tag unmapped | S057 | PNFP, CNH, GEN, JLL, TRU | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
