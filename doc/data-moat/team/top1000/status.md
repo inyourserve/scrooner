@@ -57,7 +57,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | done (FILING-CHECKED, history window) |
 | S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | done (FILING-CHECKED, history window) |
 | S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | done (FILING-CHECKED, history window) |
-| S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | running |
+| S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | done (FILING-CHECKED, history window) |
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | running |
 | S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | running |
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | running |
@@ -390,6 +390,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | variants: 10-Q balance-sheet totals only under a consolidation axis (LEN: no shares, Q3 capex -8.0, debt/AR frozen at FY2025); trade AR only under a related-party axis (FIS); NetIncomeLoss never tagged so ProfitLoss wins every period (CF 869 vs 727; FY2018 428 vs 290) | S049 | LEN, FIS, CF | FC | open |
 | SOFI revenue = fee subset 153.6 vs 1,218.7 (P/S 31.1 vs ~4.4, net margin 102%), SPAC shell rows stored as SoFi's; liabilities add NCI (CF 12,523 vs 6,179; GPC); WES Q2 facts under co-registrant CIK 1414475, capex stale since 2014, MLP tags unmapped; SG&A G&A-only (SOFI, CW, NTNX); stale interest/D&A at 6 | S049 | 8 | FC | open (known families) |
 | history: GPC, FIS 2015-16 revenue tags unmapped; FIS FY2015 from an 8-K; 13 restated FY-end total assets blank; restated EPS quarters blank (NTNX, FSLR, FIS) | S049 | GPC, FIS, NTNX, FSLR | FC | open |
+| NEW: revenue total only on a custom tag plus product-axis members (APA: 21 quarters blank, all revenue ratios empty) | S051 | APA | FC | open (company-scoped) |
+| NEW: sector assigned from SIC ranges mislabels (MEDP, ZBRA as Industrials) | S051 | MEDP, ZBRA | FC | open (sector mapping) |
+| sign flip in every 10-Q since 2022 (RGA operating cash flow; derived Q4-2025 7,330 vs 852) | S051 | RGA | FC | open (DIS sign-flip family) |
+| ESS P/S 1,879.9 on a 2.3M sub-line vs 489M; EWBC revenue gross interest income, 2016-20 a fee sub-line (~95% low); APG Q4-2019 revenue -2,122; DEF 14A NI at DT, RGA, EWBC, APA; stale latest values at 9 of 10 | S051 | 7 | FC | open (known families) |
+| history: Apache not linked to APA (2015-19 missing); TSCO 2015-17 revenue missing | S051 | APA, TSCO | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
