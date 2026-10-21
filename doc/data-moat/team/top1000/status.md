@@ -54,7 +54,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S045 | GPN EXE DOW TROW SW THC JBHT VTRS PHM KEY | 81.5 | 124 | done (FILING-CHECKED, history window) |
 | S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | done (FILING-CHECKED, history window) |
 | S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | done (FILING-CHECKED, history window) |
-| S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | running |
+| S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | done (FILING-CHECKED, history window) |
 | S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | running |
 | S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | running |
 | S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S047 | RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S048 | EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -377,6 +377,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: P/B counts preferred stock as common equity (SMCI) | S046 | SMCI | FC | open |
 | SMCI split applied twice in FY2024 (EPS 0.19 vs 1.92), not at all in FY2022 (5.32 vs 0.53), debt omits 4.66B converts (4,056 vs 8,720); PR ROE from DEF 14A; NI incl. NCI (PR, RS, AMRZ); LYB liabilities add NCI, FY2018-20 revenue trade sales only; SG&A G&A-only at 4 | S046 | 6 | FC | open (known families) |
 | history: PR 2016 rows are the SPAC shell's; SMCI FY2015, AMRZ 2025, LYB 2023 restated/original mixed | S046 | PR, SMCI, AMRZ, LYB | FC | open |
+| NEW: TTM built from non-consecutive quarters (CBRS EBITDA TTM -526.1 from Q1/Q2-2025 + Q1/Q2-2026; net_debt_ebitda 11.07, debt_to_ebitda -1.75, ev_ebitda -25); consecutive-quarter check inconsistent (EVRG EBITDA blank with 4 quarters held) | S048 | CBRS, EVRG | FC | open (TTM helper guard) |
+| split applied twice (TOST 5:1: FY2019 EPS -0.216 vs -1.08; derived Q4-2021 +0.54 vs ~0) | S048 | TOST | FC | open (split owner; with SMCI, EXE) |
+| IPO-quarter weighted shares used for market cap (CBRS 18.1B vs ~28.5B, 3 cover classes) | S048 | CBRS | FC | open (MCAP-SHARES) |
+| 606 revenue (SNA 1,225.8 vs 1,334.8; OVV 2,872 vs 3,013, larger than total in FY2021-22; EVRG 1,350.5 vs 1,443.7); EVRG liabilities add NCI; SNA capex blank; CDW interest from 2014; CRS false FI reason | S048 | 6 | FC | open (known families) |
+| history: predecessor CIKs not linked (EVRG-Westar 54507, OVV-Encana 1157806); EFX 2014-Q3 2016 revenue tag unmapped; FY-end total assets blank after restatement at 5 | S048 | EVRG, OVV, EFX + 5 | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
