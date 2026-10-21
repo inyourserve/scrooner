@@ -52,7 +52,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | done (FILING-CHECKED, history window) |
 | S044 | STZ RBRK INCY DINO USFD CRCL XPO NRG ARXS STE | 80.2 | 149 | done (FILING-CHECKED, history window) |
 | S045 | GPN EXE DOW TROW SW THC JBHT VTRS PHM KEY | 81.5 | 124 | done (FILING-CHECKED, history window) |
-| S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | running |
+| S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | done (FILING-CHECKED, history window) |
 | S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | done (FILING-CHECKED, history window) |
 | S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | running |
 | S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S047 | DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S047 | RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -370,6 +370,13 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | candidate: EPS, DPS, shares tagged only on Class A and dropped by companyfacts (STZ none since 2015) | S044 | STZ | DI | open (multi-class family) |
 | NRG 606 revenue (Q2 7,319 vs 7,481); XPO debt 3,047 vs 3,206, derived Q4-2022 SG&A -288; DINO, STE ProfitLoss NI (DINO FY2022 3,041 vs 2,923); STE Q2 FY2018 revenue 26.2 vs 634.2 (filer date error) | S044 | 5 | FC | open (known families) |
 | history: DINO (HollyFrontier), STE (STERIS Ltd) predecessors not linked; capex missing 51 quarters and period_gap has no capex rows at all | S044 | DINO, STE + population | FC | open (period_gap coverage gap for capex) |
+| rounding change counted as a conflict drops the value (ENTG FY2024 total debt 0 vs 3,981.1; FY2024 inventory and 2024 quarters lost) | S046 | ENTG | FC | open (rounding-conflict family, now 12+ companies) |
+| NEW: cover shares stored 1000x large (PKG FY2025 10-K and one 2024 10-Q) | S046 | PKG | FC | open (MCAP-SHARES scale guard) |
+| NEW: 'other property' line used as total PP&E (PR 57M vs 16,871.6M) | S046 | PR | FC | open (Tag Mapper guard) |
+| NEW: debt-only interest tag used as interest expense (AMRZ FY2025 216 vs 461) | S046 | AMRZ | FC | open |
+| NEW: P/B counts preferred stock as common equity (SMCI) | S046 | SMCI | FC | open |
+| SMCI split applied twice in FY2024 (EPS 0.19 vs 1.92), not at all in FY2022 (5.32 vs 0.53), debt omits 4.66B converts (4,056 vs 8,720); PR ROE from DEF 14A; NI incl. NCI (PR, RS, AMRZ); LYB liabilities add NCI, FY2018-20 revenue trade sales only; SG&A G&A-only at 4 | S046 | 6 | FC | open (known families) |
+| history: PR 2016 rows are the SPAC shell's; SMCI FY2015, AMRZ 2025, LYB 2023 restated/original mixed | S046 | PR, SMCI, AMRZ, LYB | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
