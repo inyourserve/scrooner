@@ -54,9 +54,9 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S045 | GPN EXE DOW TROW SW THC JBHT VTRS PHM KEY | 81.5 | 124 | done (FILING-CHECKED, history window) |
 | S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | running |
 | S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | done (FILING-CHECKED, history window) |
-| S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | todo |
-| S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | todo |
-| S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | todo |
+| S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | running |
+| S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | running |
+| S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | running |
 | S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | todo |
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | todo |
 | S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | todo |
