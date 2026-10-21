@@ -61,7 +61,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | running |
 | S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | running |
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | running |
-| S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | todo |
+| S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | running |
 | S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | todo |
 | S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | todo |
 | S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | todo |
