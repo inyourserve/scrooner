@@ -53,7 +53,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S044 | STZ RBRK INCY DINO USFD CRCL XPO NRG ARXS STE | 80.2 | 149 | running |
 | S045 | GPN EXE DOW TROW SW THC JBHT VTRS PHM KEY | 81.5 | 124 | running |
 | S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | running |
-| S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | todo |
+| S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | running |
 | S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | todo |
 | S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | todo |
 | S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | todo |
