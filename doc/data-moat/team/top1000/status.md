@@ -59,7 +59,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | done (FILING-CHECKED, history window) |
 | S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | running |
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | running |
-| S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | todo |
+| S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | running |
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | todo |
 | S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | todo |
 | S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | todo |
