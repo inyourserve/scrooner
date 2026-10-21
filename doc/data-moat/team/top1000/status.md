@@ -60,7 +60,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | done (FILING-CHECKED, history window) |
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | running |
 | S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | done (FILING-CHECKED, history window) |
-| S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | running |
+| S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | done (FILING-CHECKED, history window) |
 | S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | running |
 | S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | running |
 | S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | todo |
@@ -399,6 +399,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: operating income derived as 606 revenue minus total expenses (TPG -792.4 vs 344.1; margin -67%, EV/EBITDA -11.1) | S053 | TPG | FC | open (remove derivation; with AJG, DVN) |
 | TPG revenue 705 vs 1,841 (606); INVH revenue 606 homebuilding line, 2025 quarters stored 0 (P/S 10.87 vs ~5.6); H dividend yield 0.085% vs 0.33%; ROL 2018 and 2020 3-for-2 splits missing; NWSA FY2022 revenue from an 8-K recast (8,437 vs 10,385); stale interest at 6, capex at HST, INVH | S053 | 7 | FC | open (known families) |
 | history: BURL Q2 10-Q never normalized; ROL 2015-16 revenue under unmapped SalesRevenueServicesNet; J revenue mixes pre/post-Amentum | S053 | BURL, ROL, J | FC | open |
+| Q4 ending early January labelled with the next fiscal year breaks TTM (LDOS, EXEL; P/S, P/E, EV/sales, FCF/buyback/dividend yields blank) | S054 | LDOS, EXEL | DI | open (NUE fiscal-year-label family) |
+| NEW: Q4 tax rate derived by subtraction (PFGC -51.2% vs 26.8%) | S054 | PFGC | FC | open (never derive ratios by subtraction) |
+| NEW: operating statement only on segment members (NVR; 8 cells false FI reason) | S054 | NVR | FC | open |
+| custom buyback tag shows 0 from 2015 (CDE); CDE debt 2.4 vs 705.3; LDOS 606 revenue, dividends paid 0; BEN cash 3,760.9 vs 2,670.3; NVR debt 600.1 (2013) vs 908.2; RBC capex stuck FY2023; PFGC cash 18.4 (2019) vs 92.4; YUMC resolved debt blank vs 66; CRBG FY2022 NI from DEF 14A (8,479 vs 8,159) | S054 | 9 | FC | open (known families) |
+| history: LDOS 10-KT not collected; RBA 2015 revenue tag unmapped; YUMC 2017 quarters on two calendars; EPS quarters missing EXEL 2015, CDE 2017-18 (conflict), RBC/CRBG/YUMC Q4 not derived | S054 | 6 | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
