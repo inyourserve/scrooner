@@ -46,7 +46,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | done (FILING-CHECKED, history window; SLV excluded) |
 | S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | done (FILING-CHECKED, history window) |
 | S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | done (FILING-CHECKED, history window; ZLAB excluded) |
-| S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | running |
+| S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | done (FILING-CHECKED, history window) |
 | S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | done (FILING-CHECKED, history window) |
 | S042 | TPR TPL FOX SYF PPG PFG RF IOT SYM DLTR | 71.7 | 205 | running |
 | S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S041 | HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S041 | VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -335,6 +335,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: dividends paid include payouts to minority holders (LVS Q2 328 vs 199) | S041 | LVS | FC | open (Tag Mapper) |
 | FCNCA revenue gross interest income 2,851 vs 2,432; Q NI incl. NCI and FY2025 from DEF 14A (729 vs 692); CHD 2016 split missing; DRI gross profit = segment figure; AFRM, ECHO shares stale (2020); ROIV false pre-revenue | S041 | 6 | FC | open (known families) |
 | history: CHD 2015-16 revenue tag unmapped; FCNCA diluted EPS 22 quarters missing; ECHO DISH merger recast mixes bases (Q4-2021 revenue 18,332) | S041 | CHD, FCNCA, ECHO | FC | open |
+| NEW: custom buyback tag in Q1 10-Qs only breaks the quarterly chain (FFIV 301.1, R7 of 0001048695-26-000023) | S040 | FFIV | FC | open (Tag Mapper, company-scoped) |
+| NEW: period_gap mislabels SEC-feed gaps as filing_not_processed (VRSK, VLTO Q2) | S040 | VRSK, VLTO | FC | open (gap-cause classifier) |
+| NEW: original and restated annuals stored side by side on calendar vs 52/53-week dates (ATI FY2022 NI 130.9 and 323.5) | S040 | ATI | FC | open (period dedup, with WSM) |
+| CASY op income 4,924.2 vs 369.1 (FY2026 14,724 vs 1,033.6); FFIV SG&A G&A-only 95.6 vs 333.6; LH NI ProfitLoss with a non-authoritative source, revenue mixes tags 2015-17; ULTA debt 800 (2020) vs 339.6; FISV FY2016 EPS 4.15 vs 2.08, buybacks stop 2018, D&A stops 2023 | S040 | 5 | FC | open (known families) |
+| history: ATI, VRSK 2015-16 revenue tags unmapped; VRSK, LH derived Q4 mixing re-presented and original | S040 | ATI, VRSK, LH | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
