@@ -61,7 +61,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | done (FILING-CHECKED, history window) |
 | S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | done (FILING-CHECKED, history window) |
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | done (FILING-CHECKED, history window) |
-| S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | running |
+| S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | done (FILING-CHECKED, history window) |
 | S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | running |
 | S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | running |
 | S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | running |
@@ -410,6 +410,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | capex excludes leasing equipment (FTAI 163.1M/6M); bankruptcy stubs leave no FY/Q4-2023 (TLN, with EXE) | S052 | FTAI, TLN | FC | open |
 | HEI market cap counts one class (16.8B vs ~42B), three 5-for-4 splits unadjusted, Q3 10-Q never loaded; TLN 606 revenue (Q2 894 vs 747; YoY 118.6% vs 18.6%); RIVN shares 1,362M vs 1,448M; FDXF debt 4,264 vs 4,527; BALL NI incl. NCI; FTAI, CLH partial-cost gross margin; stale interest 5/10, interest in other income 4/10; false FI reason BALL, CLH; WCC false no_dividend_history | S052 | 9 | FC | open (known families) |
 | history: RVTY, FTAI, BALL mix original and restated bases | S052 | RVTY, FTAI, BALL | FC | open |
+| continuing-ops EPS as the only EPS tag freezes REIT EPS (KIM at Q4-2020, WPC at Q4-2018; 52 quarters blank) - likely many REITs | S055 | KIM, WPC | FC | open (EPS tag family; high REIT reach) |
+| 20-F to 10-K switch (JHX May 2026, in population): old 20-F values shown as current (interest 2020, DPS 2013), TTM blank though derivable; FY2015-16 revenue missing | S055 | JHX | FC | open (with CLS, SN, TEAM) |
+| per-class only: buybacks, basic EPS, DPS (TSN); TSN market cap Class A only (15.6B vs ~19.6B) | S055 | TSN | FC | open (multi-class) |
+| KIM debt 7,718.7 vs 8,739.6 (mortgages omitted), NI ProfitLoss FY2021-25; EG debt blank vs 3,589; LAMR partial-cost gross margin 67.4%; LOGI SG&A G&A-only (3.5% vs 21.5%); stale interest 6/10; debt-free blank vs 0 (LOGI, LSCC) | S055 | 7 | FC | open (known families) |
+| history: LAMR 2015-16 revenue (AdvertisingRevenue unmapped); LSCC TTM blank on 53-week year, duplicate FY2022 row | S055 | LAMR, LSCC | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
