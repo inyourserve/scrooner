@@ -47,7 +47,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | done (FILING-CHECKED, history window) |
 | S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | done (FILING-CHECKED, history window; ZLAB excluded) |
 | S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | running |
-| S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | running |
+| S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | done (FILING-CHECKED, history window) |
 | S042 | TPR TPL FOX SYF PPG PFG RF IOT SYM DLTR | 71.7 | 205 | running |
 | S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | running |
 | S044 | STZ RBRK INCY DINO USFD CRCL XPO NRG ARXS STE | 80.2 | 149 | todo |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S039 | PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S041 | HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -330,6 +330,11 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: 20-F to 10-K switch leaves derivable trailing P/E and P/S blank (SN) | S039 | SN | FC | open (with CLS, TEAM) |
 | PPL spin/sale restatements mixed with originals (Q4-2019 revenue -225), 606 revenue 9,170 vs 9,042; CPRT Jan-2017 split missing from split table; SG&A G&A-only (SN, CPAY); stale gross margin/op income/capex (VICI, CPAY, CPRT); CPNG ROIC 154%; wrong blank reasons (CINF, DGX, VICI) | S039 | 8 | FC | open (known families) |
 | history: SN no quarters before Q1-2025; CPNG Q4-2023 revenue not derived; VICI shell 0 and 2017 stub stored as annual; QSR pre-2015 Burger King history not linked | S039 | SN, CPNG, VICI, QSR | FC | open |
+| NEW/CRITICAL: spin-off distribution ratio stored as a reverse split (DRI 2015 Four Corners 1-for-3: every per-share value before Nov 2015 3x high; FY2015 EPS 16.41 vs 5.47) | S041 | DRI | FC | open (split owner: spin-offs are not splits) |
+| NEW: Q4 pretax not derived because FY and 9M use different tags (XYL; blanks ROIC) | S041 | XYL | FC | open (Period Engineer: tag-normalized derivation) |
+| NEW: dividends paid include payouts to minority holders (LVS Q2 328 vs 199) | S041 | LVS | FC | open (Tag Mapper) |
+| FCNCA revenue gross interest income 2,851 vs 2,432; Q NI incl. NCI and FY2025 from DEF 14A (729 vs 692); CHD 2016 split missing; DRI gross profit = segment figure; AFRM, ECHO shares stale (2020); ROIV false pre-revenue | S041 | 6 | FC | open (known families) |
+| history: CHD 2015-16 revenue tag unmapped; FCNCA diluted EPS 22 quarters missing; ECHO DISH merger recast mixes bases (Q4-2021 revenue 18,332) | S041 | CHD, FCNCA, ECHO | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
