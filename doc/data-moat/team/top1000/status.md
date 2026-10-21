@@ -42,12 +42,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | done (FILING-CHECKED, history window) |
 | S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | done (FILING-CHECKED, history window) |
 | S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | done (FILING-CHECKED, history window) |
-| S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | running |
+| S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | done (FILING-CHECKED, history window) |
 | S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | done (FILING-CHECKED, history window; SLV excluded) |
 | S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | done (FILING-CHECKED, history window) |
 | S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | running |
-| S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | todo |
-| S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | todo |
+| S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | running |
+| S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | running |
 | S042 | TPR TPL FOX SYF PPG PFG RF IOT SYM DLTR | 71.7 | 205 | todo |
 | S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | todo |
 | S044 | STZ RBRK INCY DINO USFD CRCL XPO NRG ARXS STE | 80.2 | 149 | todo |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S038 | DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S038 | DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -320,6 +320,10 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | bank revenue = 606 fee subset (CFG Q2 451 vs 2,283; FY2025 1,635 vs 8,247; net margin 121%; quarters mix tags) | S038 | CFG | FC | open (A2/A3) |
 | CNP gross margin 1.000 from a cost sub-line of 1; DTE debt 21,736 vs 26,023, capex on custom tags (13 FCF cells); 606 subset revenue AWK, FE, CNP; TW shares 0, mcap no source, dividends unmapped; DOV pretax after-tax tag; OTIS ROIC 92.9% on negative equity; false FI reason DTE, DOV | S038 | 9 | FC | open (known families) |
 | history: TW revenue Q1-Q2 2018 and FY2018 missing; re-presentation breaks (DTE, CNP, FE); ~50 CNP 2017-19 values from an 8-K | S038 | TW, DTE, CNP, FE | FC | open |
+| NEW: two annual rows for one FY with start dates a day apart (WSM FY2017) | S036 | WSM | DI | open (period dedup) |
+| NEW: TTM metrics went null on 10-09 while dependent fcf_yield still shows (DG) | S036 | DG | DI | open (consistency check) |
+| EXR revenue 34.9 vs 874.2 (P/S 220.8, gross margin -23%), debt 2,873 (2018) vs 13,647; RJF revenue gross 4,362 vs 3,928, NII 560 in other income, debt omits 3,522 senior notes; WTW revenue ~2% low; DG buyback yield 9.27% on 2022 buybacks; IR false no_dividend_history; RDDT no shares (per-class), NI from DEF 14A; TDY FY2015 revenue 1,020 vs 2,298 | S036 | 7 | FC | open (known families) |
+| history: DG, EXR pre-2017 revenue on unmapped tags (SalesRevenueGoodsNet, RealEstateRevenueNet); 39 CFO quarters missing (MLM 12, JBL 10, RJF 9); 6 year-end balance sheets blank from rounding conflicts | S036 | 6 | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
