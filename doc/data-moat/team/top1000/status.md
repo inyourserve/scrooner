@@ -43,7 +43,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | done (FILING-CHECKED, history window) |
 | S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | done (FILING-CHECKED, history window) |
 | S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | running |
-| S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | running |
+| S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | done (FILING-CHECKED, history window; SLV excluded) |
 | S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | running |
 | S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | running |
 | S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | todo |
@@ -310,6 +310,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW B1 variant: an earlier 10-Q missing from companyfacts while the later one is present (ALNY Q1) | S035 | ALNY | FC | open (instance/FSDS fallback) |
 | custody bank revenue = fee line only (NTRS FY2025 5,018M vs 8,086M); NTRS debt 2012; MTB/HBAN P/S ~18.5; RKT revenue blank under a false reason (2,784M); VG NI incl. NCI (+21-35%); MDLN mcap 35% low (Class B omitted) | S035 | 6 | FC | open (known families) |
 | history: ALNY revenue Q1-2015..Q3-2016 and Q4-2016 not derived; RKT pre-IPO NI stored as zeros; SUNB/MDLN 2025 quarters | S035 | ALNY, RKT, SUNB, MDLN | FC | open |
+| NEW: SG&A tag includes impairments (KHC 8,459 vs 1,107; SG&A 135% of revenue) | S037 | KHC | FC | open (guard) |
+| NEW/CRITICAL: filer EPS scaled x1,000,000 in 10-Qs (HAL 2021-24, R2 of 0000045012-22-000067 shows $600,000; 9 quarters wrong, Q4-2021 -709,998, 7 blank) | S037 | HAL | FC | open (EPS plausibility guard) |
+| NEW: a filing in raw companyfacts never normalized (HPQ Q3 FY26 0000047217-26-000051) | S037 | HPQ | FC | open (Data Engineer; distinct from B1) |
+| NEW: filer swapped tags on subordinated debentures vs other liabilities (WRB) | S037 | WRB | FC | open (company-scoped) |
+| VRSN debt 0 from 2013 vs 2,334.4, EPS stuck FY2022 (continuing-ops tag only), no quarterly EPS since 2014; FTI op income = segment profit (525.5 vs 479.8), buybacks 0 from 2021 vs 684.9; ON pretax stops 2023; SG&A G&A-only (ON, ZM); stale PP&E (ATO 2015, KHC 2020), interest (HAL 2016); ZM blank vs zero debt | S037 | 7 | FC | open (known families) |
+| history: KHC 2015-16 revenue unmapped and Kraft FY2014 from an 8-K stored as KHC; FTI shell zeros, Q4-2020 revenue 3,426 vs 1,600; WRB EPS not split-adjusted | S037 | KHC, FTI, WRB | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
