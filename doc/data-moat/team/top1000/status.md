@@ -66,7 +66,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | running |
 | S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | running |
 | S059 | NLY JAZZ CACI MAA BF-A GME SJM ARCC GDDY REG | 73.5 | 203 | running |
-| S060 | SGI ALLE AVY MLI GGG CSL CSGP DOC BAX TXT | 88.0 | 90 | todo |
+| S060 | SGI ALLE AVY MLI GGG CSL CSGP DOC BAX TXT | 88.0 | 90 | running |
 | S061 | DKS BJ BMNR FN BBIO GL MANH IT CG CNA | 78.1 | 159 | todo |
 | S062 | FLUT STRL RPM PEN DTM EHC SMTC AKAM PNW SEIC | 83.6 | 113 | todo |
 | S063 | BWXT MKC LII IVZ CCK AFG TOL FIVE INIO AIT | 80.2 | 151 | todo |
