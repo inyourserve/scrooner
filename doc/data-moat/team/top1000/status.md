@@ -45,7 +45,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | done (FILING-CHECKED, history window) |
 | S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | done (FILING-CHECKED, history window; SLV excluded) |
 | S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | done (FILING-CHECKED, history window) |
-| S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | running |
+| S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | done (FILING-CHECKED, history window; ZLAB excluded) |
 | S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | running |
 | S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | running |
 | S042 | TPR TPL FOX SYF PPG PFG RF IOT SYM DLTR | 71.7 | 205 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S038 | DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S039 | PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -324,6 +324,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: TTM metrics went null on 10-09 while dependent fcf_yield still shows (DG) | S036 | DG | DI | open (consistency check) |
 | EXR revenue 34.9 vs 874.2 (P/S 220.8, gross margin -23%), debt 2,873 (2018) vs 13,647; RJF revenue gross 4,362 vs 3,928, NII 560 in other income, debt omits 3,522 senior notes; WTW revenue ~2% low; DG buyback yield 9.27% on 2022 buybacks; IR false no_dividend_history; RDDT no shares (per-class), NI from DEF 14A; TDY FY2015 revenue 1,020 vs 2,298 | S036 | 7 | FC | open (known families) |
 | history: DG, EXR pre-2017 revenue on unmapped tags (SalesRevenueGoodsNet, RealEstateRevenueNet); 39 CFO quarters missing (MLM 12, JBL 10, RJF 9); 6 year-end balance sheets blank from rounding conflicts | S036 | 6 | FC | open |
+| NEW: filer mis-tagged a quarter's D&A (CPRT Q2 8.6 vs ~55; derived Q4 107.8 vs ~61) | S039 | CPRT | FC | open (company-scoped override) |
+| NEW: exchangeable units left out of market cap and NI incl. their NCI (QSR mcap -23%, 105.8M units; Q2 NI 665 vs 507) | S039 | QSR | FC | open (Up-C/exchangeable template) |
+| NEW: diluted EPS stops when a quarter tags only basic continuing-ops EPS (PPL Q1-2026 0.60) | S039 | PPL | FC | open (EPS tag family) |
+| NEW: 20-F to 10-K switch leaves derivable trailing P/E and P/S blank (SN) | S039 | SN | FC | open (with CLS, TEAM) |
+| PPL spin/sale restatements mixed with originals (Q4-2019 revenue -225), 606 revenue 9,170 vs 9,042; CPRT Jan-2017 split missing from split table; SG&A G&A-only (SN, CPAY); stale gross margin/op income/capex (VICI, CPAY, CPRT); CPNG ROIC 154%; wrong blank reasons (CINF, DGX, VICI) | S039 | 8 | FC | open (known families) |
+| history: SN no quarters before Q1-2025; CPNG Q4-2023 revenue not derived; VICI shell 0 and 2017 stub stored as annual; QSR pre-2015 Burger King history not linked | S039 | SN, CPNG, VICI, QSR | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
