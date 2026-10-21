@@ -49,10 +49,10 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | done (FILING-CHECKED, history window) |
 | S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | done (FILING-CHECKED, history window) |
 | S042 | TPR TPL FOX SYF PPG PFG RF IOT SYM DLTR | 71.7 | 205 | done (FILING-CHECKED, history window) |
-| S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | running |
+| S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | done (FILING-CHECKED, history window) |
 | S044 | STZ RBRK INCY DINO USFD CRCL XPO NRG ARXS STE | 80.2 | 149 | running |
 | S045 | GPN EXE DOW TROW SW THC JBHT VTRS PHM KEY | 81.5 | 124 | running |
-| S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | todo |
+| S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | running |
 | S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | todo |
 | S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | todo |
 | S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | todo |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S042 | PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S043 | OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -346,6 +346,13 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | bank note line tagged OperatingIncomeLoss shown as operating income (RF 53M); RF revenue 1,748 vs 1,907; SYF revenue blank every period under a false reason | S042 | RF, SYF | FC | open (bank template) |
 | FOX NI incl. NCI 1,727 vs 1,685, shares 1 vs 419.65M, public float 0 vs $23.5B; IOT SG&A 67.4 vs 285.2; PPG segment op income, gross margin on cost excl. D&A; PFG FY2021-22 NI from DEF 14A | S042 | FOX, IOT, PPG, PFG | FC | open (known families) |
 | history: TPL 2015-2020 under trust CIK 97517 not linked; DLTR FY2014-16 revenue unmapped, derived Q4 FY2022 revenue -5,196 | S042 | TPL, DLTR | FC | open |
+| NEW: derived total liabilities add NCI instead of netting it (IFF 11,211 vs 11,145; BRO 17,304 vs 17,279) | S043 | IFF, BRO | FC | open (derivation fix) |
+| NEW: face EPS tagged DilutedEarningsPerShareProForma (NVT 2021-22, 8 quarters blank) | S043 | NVT | FC | open (EPS tag family; company-scoped) |
+| NEW: filer's own 10-K quarterly EPS at 1/100 scale (BRO Q4 2015-17 0.004-0.007 vs ~0.41-0.66) | S043 | BRO | FC | open (EPS plausibility guard, with HAL x1e6, PPG DPS) |
+| NEW: Q4 EPS derived across a share-count jump (OMC Q4-2025 -4.78, trailing P/E -219) | S043 | OMC | FC | open (never subtract EPS) |
+| holding company revenue = 606 line (L 828 vs 4,734; P/S 6.98 vs ~1.2; net margin 53.6% vs ~9%); MKL FY2016-22 606 subset (FY2021 3,997 vs 12,846), quarters mix tags | S043 | L, MKL | FC | open (606 family; holding-company template) |
+| VMRK (Equity Residential renamed Vivmark) base revenue stale since Q1-2020, op income = NOI (66.7%), debt double counts commercial paper; ROKU SG&A G&A-only; RL, ROKU share-class issues; UTHR, ROKU stale debt; BRO 2018 split missing | S043 | 6 | FC | open (known families) |
+| history: IFF no revenue before Q4-2016 (SalesRevenueGoodsNet); VMRK Q2/Q3-2020 and FY2022 revenue missing (filer XBRL error); NVT, IFF mixed vintages; RL Q4 FY2015-17 revenue not derived | S043 | IFF, VMRK, NVT, RL | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
