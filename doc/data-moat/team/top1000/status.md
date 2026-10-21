@@ -63,7 +63,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | done (FILING-CHECKED, history window) |
 | S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | running |
 | S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | running |
-| S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | todo |
+| S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | running |
 | S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | todo |
 | S059 | NLY JAZZ CACI MAA BF-A GME SJM ARCC GDDY REG | 73.5 | 203 | todo |
 | S060 | SGI ALLE AVY MLI GGG CSL CSGP DOC BAX TXT | 88.0 | 90 | todo |
