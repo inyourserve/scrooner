@@ -22,7 +22,7 @@
 | InterestAndDividendIncomeOperating | revenue / interest | bank total interest income only | FILING-CHECKED; PGR counterexample (insurer) 2026-10-19 | not a bank detector |
 | RevenuesNetOfInterestExpense | revenue | bank presented total (JPM, WFC) | FILING-CHECKED [32] | 64 CY2023 filers |
 | OperatingIncomeLoss | operating income | non-banks with face label; NEVER banks; PLD includes real-estate gains | FILING-CHECKED (AAPL, AMZN, DUK) 2026-10-19 | 13% of revenue filers have none |
-| CostsAndExpenses | operating income | never derive OI; includes interest at CVX/AJG/HTZ/GE, excludes it at AMZN | FILING-CHECKED 2026-10-19 | 195 CY2023 filers have it without OI |
+| CostsAndExpenses | operating income | never derive OI; includes interest at CVX/AJG/HTZ/GE/XOM, excludes it at AMZN; opex-only at HP | FILING-CHECKED 2026-10-19, 2026-10-21 | FY2025 10-K: 958 filers, perimeters 651 all-op / 29 opex-only / 42 incl. interest / 115 no OI / 64 other (R2 report) |
 | OperatingExpenses | operating income | total only where an OI line coexists; component at AJG | FILING-CHECKED 2026-10-19 | |
 | OperatingCostsAndExpenses | operating income | component (excludes SG&A); never total opex | FILING-CHECKED (CVX) | |
 | SellingGeneralAndAdministrativeExpense | operating income | component; sole-opex OI formula proposal only | FILING-CHECKED (DHI, BBW) | |
@@ -33,7 +33,7 @@
 | InterestExpenseNonoperating / InterestIncomeExpenseNonoperatingNet | interest | non-bank below-the-line; conditional on check I-2 | FILING-CHECKED (PLD, AMZN, BBW) | R-file sign differs from stored sign |
 | InterestExpenseDebt | interest | debt interest only; inside CostsAndExpenses at CVX | FILING-CHECKED | |
 | InvestmentIncomeInterest | interest | NEVER bank interest income; fine for non-bank interest income | FILING-CHECKED (AMZN; banks [32]; FLG 2026-10-19) | |
-| LongTermDebt | debt | total long-term debt (net, no leases) where present | FILING-CHECKED (PLD, ARCC) 2026-10-19 | do not add current on top |
+| LongTermDebt | debt | total long-term debt (net, no leases) where present AND it matches the BS carrying lines; face value at AMZN/GOOG, rounded at AAPL 10-Q, sub-item at MAR/TSCO (relayed) | FILING-CHECKED (PLD, ARCC) 2026-10-19; CORRECTED 2026-10-21 by Verifier file 35 | do not add current on top |
 | LongTermDebtNoncurrent + LongTermDebtCurrent | debt | safe pair | FILING-CHECKED (AAPL, DUK) | AMZN noncurrent only |
 | NotesPayable / NotesPayableCurrent / LongTermNotesPayable / ConvertibleNotesPayable / LongTermLineOfCredit | debt | components or last resort; NotesPayable includes current portion | definition FILING-CHECKED; coexistence NOT_RUN [31] | |
 | AdvancesFromFederalHomeLoanBanks / SubordinatedDebt | debt | bank components, not totals | FILING-CHECKED (EWBC, AX) | stored bank total debt misses them |
@@ -50,3 +50,7 @@
 | WeightedAverageNumberOfSharesOutstandingBasic / DilutedSharesOutstanding | shares | safe as filed | FILING-CHECKED | |
 | dei:EntityCommonStockSharesOutstanding | shares | per class; sum classes | FILING-CHECKED (BRK, GOOGL) | |
 | dei:EntityPublicFloat | shares | public float only, validate scale; never market cap | FILING-CHECKED (BRK, GOOGL) | |
+| LongTermDebtAndCapitalLeaseObligations (+Current) | debt | label check required; often plain debt; dimension-only at CAT/APD | FILING-CHECKED (CAT, APD) 2026-10-21 | 297 FY2025 10-K filers use it on a debt-only label (R2 report) |
+| CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents (on the balance sheet) | cash | perimeter uncertain when labelled plain cash | FILING-CHECKED presentation (CMI) 2026-10-21 | 272 FY2025 BS cash rows, 207 labelled plain cash |
+| PaymentsToAcquirePropertyPlantAndEquipment | capex | safe as one capex line; NOT total capex where other capex lines exist | FILING-CHECKED (Air Lease) 2026-10-21; no card yet | 193 FY2025 filers have it plus other capex lines |
+| DepreciationDepletionAndAmortization / DepreciationAndAmortization | D&A | per statement; IS and CF values can differ | FILING-CHECKED (AEO) 2026-10-21; no card yet | 300 filers add other D&A lines beside the combined tag |

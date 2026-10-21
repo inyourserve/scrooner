@@ -40,3 +40,25 @@ Never turn these into global mappings. Source file in brackets.
 | GE | Revenues (quarterly, FY2016 10-K) | 3-month undimensioned facts are the GE Capital total (Q2 2015 = 2,690M, frame CY2015Q2) while the 12-month facts are consolidated | 0000040545-17-000010 R164 + companyconcept |
 | DUK | ShortTermBorrowings | row "Notes payable and commercial paper" | 10-K 0001326160-26-000014 R6 |
 | BRK, GOOGL | EPS / EntityCommonStockSharesOutstanding | only class-dimensioned facts (Class A/B equivalents; A/B/C cover) | BRK 0001193125-26-083899 R1/R4; GOOGL 0001652044-26-000018 R1 |
+| AFG | OperatingIncomeLoss | "Earnings before income taxes" 1,073M (pretax) | 10-K 0001042046-26-000010 R5 (2026-10-21) |
+| ELS | OperatingIncomeLoss | "Income before taxes and other items" 391,349K (pretax) | 10-K 0001628280-26-008722 R5 (2026-10-21) |
+| XOM | Revenues | total revenues AND other income 332,238M (sales 323,905M is a dimension member); interest expense inside CostsAndExpenses | 10-K 0000034088-26-000045 R3 (2026-10-21) |
+| COP | Revenues | "Sales and other operating revenues" 58,944M; total 61,548M is custom cop_RevenuesAndOtherIncome | 10-K 0001163165-26-000009 R3 (2026-10-21) |
+| DDS | Revenues | includes "service charges and other income" (6,563,336K vs RCFC net sales 6,473,623K) | 10-K 0000028917-26-000006 R4 (2026-10-21) |
+| UDR | RevenueFromContractWithCustomerExcludingAssessedTax | fee line only (11,361K of 1,712,317K) | 10-K 0000074208-26-000013 R4 (2026-10-21) |
+| SAM (Boston Beer) | RevenueFromContractWithCustomerIncludingAssessedTax / Revenues | gross of excise 2,087,251K / net 1,964,994K; excise on custom sam_LessExciseTaxes | 10-K 0001193125-26-067467 R2 (2026-10-21) |
+| HP | CostsAndExpenses | "Total operating expenses" 8,218M = opex only (excludes cost of revenue) | 10-K 0000047217-25-000071 R3 (2026-10-21) |
+| CAT | LongTermDebtAndCapitalLeaseObligations* | long-term debt only per segment member, no consolidated undimensioned fact | 10-K 0000018230-26-000008 R5 (2026-10-21) |
+| APD | LongTermDebtAndCapitalLeaseObligations | "Long-term debt" in two rows (16,769.9M and 177.5M in a second block, member not identified), no undimensioned FY fact in FSDS | 10-K 0000002969-25-000055 R6 (2026-10-21) |
+| CMI | CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents | balance-sheet "Cash and cash equivalents" 2,845M (restricted content not verified) | 10-K 0000026172-26-000009 R5 (2026-10-21) |
+| BMI (Badger Meter) | Cash | "Cash and cash equivalents" 226,016K | 10-K 0001193125-26-054739 R2 (2026-10-21) |
+| AAL | D&A | custom aal_MainlineAndExpressDepreciationAndAmortization 2,219M | 10-K 0000006201-26-000014 R7 (2026-10-21) |
+| ACN | D&A | DepreciationAmortizationAndOther "Depreciation, amortization and other" 2,441,594K | 10-K 0001467373-25-000217 R8 (2026-10-21) |
+| AEO | D&A | income statement 211,961K vs cash flow 222,180K | 10-K 0001193125-26-132097 R4/R8 (2026-10-21) |
+| AL (Air Lease) | capex | PaymentsToAcquirePropertyPlantAndEquipment is only "aircraft furnishings, equipment and other assets" 237,683K; flight equipment 2,348,253K and custom deposits 1,045,667K are other lines | 10-K 0001628280-26-007707 R8 (2026-10-21) |
+| ADC (Agree) | InterestExpenseNonoperating | "Interest expense, net" 134,612K (gross tag on a net line) | 10-K 0000917251-26-000013 R5 (2026-10-21) |
+| AAON | InterestIncomeExpenseNet | plain "Interest expense" (17,726), stored -17,726K | 10-K 0000824142-26-000005 R4 (2026-10-21) |
+| BKR | EPS | only "per Class A common share" (2.62), no undimensioned EPS | 10-K 0001701605-26-000007 R3 (2026-10-21) |
+| ABNB | EPS | only EPS on IncomeLossFromContinuingOperationsPerBasicShare (4.10) | 10-K 0001559720-26-000004 R5 (2026-10-21) |
+| SRCE (1st Source) | ProfitLoss / NetIncomeLossAvailableToCommonStockholdersBasic | "Net income" 158,259K / parent 158,277K; no NetIncomeLoss on the face | 10-K 0000034782-26-000011 R5 (2026-10-21) |
+| AMH | CostOfGoodsAndServicesSold | used only with members (property operating 663,954K, property management 134,808K) | 10-K 0001562401-26-000010 R5 (2026-10-21) |

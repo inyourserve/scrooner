@@ -71,6 +71,10 @@ Design in 10 lines:
 9. Guardrails: one process; the SEC_USER_AGENT header for any sec.gov fetch; at most 2 requests per second; caps on file size and wall-clock time; a checksum of the downloaded zip is stored in the report.
 10. Owner: the Data Engineer builds it (pipeline or scripts lane, committed migration only if a table is ever needed). The Tag Expert processes its inbox lines, and the calibration table in CHANGELOG tracks how many flagged changes really affected a card.
 
+### Re-score 2026-10-21 (R2 taxonomy run)
+- FSDS 2026q1 pulled (85 MB zip, streamed, deleted after use) beside 2025q4: 4,601 distinct FY2025 10-K filers. 25 filings opened on sec.gov to confirm patterns (R-file locators in data-team/strategy/team/R2-tag-expert-heterogeneity-taxonomy.md). FSDS labels and undimensioned values agreed with the rendered R-file in 25 of 25; the 4 cases where FSDS had no undimensioned value (CAT, APD, AMH, BRK cost lines) were dimension-only presentations, also consistent. FSDS score now 30/30.
+- **Scope limit (confirmed):** FSDS `num.txt` carries only facts on the presented statements, not note facts (Verifier R7 on DLH; me on Apple 0000320193-25-000079, 92 tags in num = 92 in pre). Coexistence and "filed elsewhere" counts from FSDS are face-only lower bounds. For note facts use FSN (`num` there includes notes) or companyfacts.
+
 ## Not done in this run
 - No DB reads: `pg_stat_activity` showed 16 connections (limit 12), so the `sec_tag_library` counts were not compared with the FSDS/Frames counts. I also found that `sec_tag_library` has no `tag_name` column; check the schema before the next query.
 - FSN `cal.txt` was not pulled in bulk (one filing checked by hand). Next action: load one monthly FSN zip and list every CIK whose CostsAndExpenses has an interest child.

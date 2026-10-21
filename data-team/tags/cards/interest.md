@@ -92,6 +92,8 @@ Carried from company-quirks.md: `InvestmentIncomeInterest` = securities interest
 - Insurers can use IADIO for investment income (PGR), so IADIO does not identify a bank.
 - Provision tag switches between filings of the same bank: CCB (10-K ProvisionForOtherCreditLosses vs 10-Q PLLOL) [32]; pre-CECL `ProvisionForLoanAndLeaseLosses` still used (104 CY2023 filers).
 
+- NEW (me, 2026-10-21, FILING-CHECKED): Agree Realty 0000917251-26-000013 R5 puts the gross tag `InterestExpenseNonoperating` on "Interest expense, net" (134,612K); AAON 0000824142-26-000005 R4 puts the net tag `InterestIncomeExpenseNet` on a plain "Interest expense" row, rendered (17,726), stored -17,726K. Population (non-bank FY2025 10-K face, DATA-INFERRED): gross tags 2,379 line-tags, net tags 569, gross tag on a "net" label 388 (284 with no interest-income row), net tag on a plain expense label 57, stored negative on a gross expense tag 19, interest only in notes 44. Banks: `InterestExpenseOperating` 298 of 317, `InterestExpense` 14. Detail: R2 report sec. 9.
+
 ## 6. Mapping verdict
 - `InterestIncomeExpenseNet`: **safe single tag for BANK net interest income only** (29 of 30 banks FILING-CHECKED [32]; Citigroup and FLG added by me). **Never use it for non-banks** as NII or as interest expense without the sign and meaning checked (ANDE, 768 non-bank-like CY2023 filers). Needs the full-population check (not done).
 - `InterestRevenueExpenseNet`: NOT an exact synonym; map only after a per-company check that no nonoperating interest exists (ACNB); definition FILING-CHECKED (official), usage DATA-INFERRED.
