@@ -62,7 +62,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | done (FILING-CHECKED, history window) |
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | done (FILING-CHECKED, history window) |
 | S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | done (FILING-CHECKED, history window) |
-| S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | running |
+| S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | done (FILING-CHECKED, history window) |
 | S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | running |
 | S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | running |
 | S059 | NLY JAZZ CACI MAA BF-A GME SJM ARCC GDDY REG | 73.5 | 203 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S052 | CLH (Q2), WES (Q2, co-registrant CIK), LNT, FTV (Q2), EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S056 | MAS, SUI (Q2), CLH (Q2), WES (Q2, co-registrant CIK), LNT, FTV (Q2), EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -415,6 +415,12 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | per-class only: buybacks, basic EPS, DPS (TSN); TSN market cap Class A only (15.6B vs ~19.6B) | S055 | TSN | FC | open (multi-class) |
 | KIM debt 7,718.7 vs 8,739.6 (mortgages omitted), NI ProfitLoss FY2021-25; EG debt blank vs 3,589; LAMR partial-cost gross margin 67.4%; LOGI SG&A G&A-only (3.5% vs 21.5%); stale interest 6/10; debt-free blank vs 0 (LOGI, LSCC) | S055 | 7 | FC | open (known families) |
 | history: LAMR 2015-16 revenue (AdvertisingRevenue unmapped); LSCC TTM blank on 53-week year, duplicate FY2022 row | S055 | LAMR, LSCC | FC | open |
+| NEW: issued shares tagged as outstanding (TYL 48.15M vs 40.95M; BVPS 63.08 vs ~74.17) | S056 | TYL | FC | open (MCAP-SHARES guard) |
+| NEW: fiscal-year-end metadata wrong (SUI '0513' vs Dec 31) | S056 | SUI | FC | open (Company Master) |
+| recapitalization stored as a reverse split (EQH 2018 0.4595: FY2016 EPS 4.875 vs 2.24) | S056 | EQH | FC | open (split owner: recaps/spins are not splits; with DRI) |
+| CRITICAL: EQH FY2021-24 NI from DEF 14A 0001193125-26-341149 stored in dollars (1,755 vs 1,755M; derived Q4s -2,091M..+693M); FY2025 NI ProfitLoss -1,037 vs -1,380; revenue from InterestAndDividendIncomeOperating | S056 | EQH | FC | open (A4 proxy family) |
+| PINS shares 0, mcap 17% high, 981M converts blank; RNR Q2 EPS on unmapped tag; SUI debt stale 7,388 vs ~4,013; stale latest values at all 10 | S056 | PINS, RNR, SUI + 10 | FC | open (known families) |
+| history: ARMK FY2016-20 annual EPS missing; EQH, UNM Q4 EPS missing; MAS, ARMK, SUI revenue mixes original and re-presented across divestitures | S056 | ARMK, EQH, UNM, MAS, SUI | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
