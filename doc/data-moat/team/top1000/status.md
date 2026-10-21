@@ -59,7 +59,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | done (FILING-CHECKED, history window) |
 | S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | done (FILING-CHECKED, history window) |
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | running |
-| S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | running |
+| S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | done (FILING-CHECKED, history window) |
 | S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | running |
 | S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | running |
 | S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | todo |
@@ -312,7 +312,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | history: ALNY revenue Q1-2015..Q3-2016 and Q4-2016 not derived; RKT pre-IPO NI stored as zeros; SUNB/MDLN 2025 quarters | S035 | ALNY, RKT, SUNB, MDLN | FC | open |
 | NEW: SG&A tag includes impairments (KHC 8,459 vs 1,107; SG&A 135% of revenue) | S037 | KHC | FC | open (guard) |
 | NEW/CRITICAL: filer EPS scaled x1,000,000 in 10-Qs (HAL 2021-24, R2 of 0000045012-22-000067 shows $600,000; 9 quarters wrong, Q4-2021 -709,998, 7 blank) | S037 | HAL | FC | open (EPS plausibility guard) |
-| NEW: a filing in raw companyfacts never normalized (HPQ Q3 FY26 0000047217-26-000051; MDB Q2 FY27 0001628280-26-059830, 388 facts, raw re-fetched 10-16) | S037, S038 | HPQ, MDB | FC | open (Data Engineer; distinct from B1) |
+| NEW: a filing in raw companyfacts never normalized (HPQ Q3 FY26 0000047217-26-000051; MDB Q2 FY27 0001628280-26-059830, 388 facts, raw re-fetched 10-16; BURL Q2) | S037, S038, S053 | HPQ, MDB, BURL | FC | open (Data Engineer; distinct from B1) |
 | NEW: filer swapped tags on subordinated debentures vs other liabilities (WRB) | S037 | WRB | FC | open (company-scoped) |
 | VRSN debt 0 from 2013 vs 2,334.4, EPS stuck FY2022 (continuing-ops tag only), no quarterly EPS since 2014; FTI op income = segment profit (525.5 vs 479.8), buybacks 0 from 2021 vs 684.9; ON pretax stops 2023; SG&A G&A-only (ON, ZM); stale PP&E (ATO 2015, KHC 2020), interest (HAL 2016); ZM blank vs zero debt | S037 | 7 | FC | open (known families) |
 | history: KHC 2015-16 revenue unmapped and Kraft FY2014 from an 8-K stored as KHC; FTI shell zeros, Q4-2020 revenue 3,426 vs 1,600; WRB EPS not split-adjusted | S037 | KHC, FTI, WRB | FC | open |
@@ -395,6 +395,10 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | sign flip in every 10-Q since 2022 (RGA operating cash flow; derived Q4-2025 7,330 vs 852) | S051 | RGA | FC | open (DIS sign-flip family) |
 | ESS P/S 1,879.9 on a 2.3M sub-line vs 489M; EWBC revenue gross interest income, 2016-20 a fee sub-line (~95% low); APG Q4-2019 revenue -2,122; DEF 14A NI at DT, RGA, EWBC, APA; stale latest values at 9 of 10 | S051 | 7 | FC | open (known families) |
 | history: Apache not linked to APA (2015-19 missing); TSCO 2015-17 revenue missing | S051 | APA, TSCO | FC | open |
+| NEW: split ratio stored wrong (WMG 2020 stored 47.72 vs filed 477,242.61; pre-2020 per-share history wrong factor); pre-IPO shares used (WMG 1,069 shares, FCF/share 782,039); EPS only 3 of 46 quarters | S053 | WMG | FC | open (split owner) |
+| NEW: operating income derived as 606 revenue minus total expenses (TPG -792.4 vs 344.1; margin -67%, EV/EBITDA -11.1) | S053 | TPG | FC | open (remove derivation; with AJG, DVN) |
+| TPG revenue 705 vs 1,841 (606); INVH revenue 606 homebuilding line, 2025 quarters stored 0 (P/S 10.87 vs ~5.6); H dividend yield 0.085% vs 0.33%; ROL 2018 and 2020 3-for-2 splits missing; NWSA FY2022 revenue from an 8-K recast (8,437 vs 10,385); stale interest at 6, capex at HST, INVH | S053 | 7 | FC | open (known families) |
+| history: BURL Q2 10-Q never normalized; ROL 2015-16 revenue under unmapped SalesRevenueServicesNet; J revenue mixes pre/post-Amentum | S053 | BURL, ROL, J | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
