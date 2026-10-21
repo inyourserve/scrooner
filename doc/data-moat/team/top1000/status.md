@@ -55,7 +55,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | done (FILING-CHECKED, history window) |
 | S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | done (FILING-CHECKED, history window) |
 | S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | done (FILING-CHECKED, history window) |
-| S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | running |
+| S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | done (FILING-CHECKED, history window) |
 | S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | done (FILING-CHECKED, history window) |
 | S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | running |
 | S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | running |
@@ -136,7 +136,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S050 | LNT, FTV (Q2), EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S050 | WES (Q2, co-registrant CIK), LNT, FTV (Q2), EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -387,6 +387,9 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: per-unit EPS tagged only by unit class (PAA 0.14 from 2016 vs 2.51) | S050 | PAA | FC | open (MLP template) |
 | DD 1-for-3 reverse split missing (share growth -67.75%, shareholder yield 70%); PAA equity -753 (2017) vs 11,079; debt NDSN 1,923 vs 1,731, ITT 2,973.6 vs 3,728.2, U blank vs 2,237.4; NI from DEF 14A (GIS, FTV), ProfitLoss (PAA); LNT gross margin 86.6% | S050 | 7 | FC | open (known families) |
 | history: derived Q4-2023 revenue negative (FTV -567.7, DD -2,556); ZBH, GIS 2015-16 revenue SalesRevenueGoodsNet unmapped; DD FY2015-16 values are Dow Chemical's | S050 | FTV, DD, ZBH, GIS | FC | open |
+| variants: 10-Q balance-sheet totals only under a consolidation axis (LEN: no shares, Q3 capex -8.0, debt/AR frozen at FY2025); trade AR only under a related-party axis (FIS); NetIncomeLoss never tagged so ProfitLoss wins every period (CF 869 vs 727; FY2018 428 vs 290) | S049 | LEN, FIS, CF | FC | open |
+| SOFI revenue = fee subset 153.6 vs 1,218.7 (P/S 31.1 vs ~4.4, net margin 102%), SPAC shell rows stored as SoFi's; liabilities add NCI (CF 12,523 vs 6,179; GPC); WES Q2 facts under co-registrant CIK 1414475, capex stale since 2014, MLP tags unmapped; SG&A G&A-only (SOFI, CW, NTNX); stale interest/D&A at 6 | S049 | 8 | FC | open (known families) |
+| history: GPC, FIS 2015-16 revenue tags unmapped; FIS FY2015 from an 8-K; 13 restated FY-end total assets blank; restated EPS quarters blank (NTNX, FSLR, FIS) | S049 | GPC, FIS, NTNX, FSLR | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
