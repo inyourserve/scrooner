@@ -70,6 +70,7 @@ ROLE_LAYER_CONFLICT = Decimal(
 
 # ---- I5 period_integrity.py ----
 SUM_REVIEW = Decimal("0.02")  # four quarters vs the year, same filing vintage
+FACE_MAX_PRIORITY = 2  # an approved mapping at priority 1-2 is a face-line tag; priority 3+ are components
 SUM_WRONG = Decimal("0.10")
 MIN_EQUAL_VALUE = Decimal(
     1_000_000
@@ -85,6 +86,8 @@ CONFLICT_FILL_MAX_SPREAD = Decimal(
     "0.15"
 )  # mapper/conflict_resolution.py fills only <= 15% disagreement
 
+RECAST_8K_MIN_FACTS = 100  # an 8-K with this many facts carries full statements (a recast), not a cover page
+
 # ---- I7 currency.py ----
 INPUT_MAX_AGE_DAYS = 456  # 15 months
 
@@ -96,6 +99,10 @@ DPS_RATE_TOLERANCE = Decimal(
 DPS_PAID_MAX_RATIO = Decimal(
     "0.6"
 )  # FY DPS x shares / dividends paid above this: a full-year total, not a quarterly rate
+DPS_PAID_RATE_MIN = Decimal(
+    "0.15"
+)  # year DPS x shares / dividends paid between these: the year value is ONE quarterly rate
+DPS_PAID_RATE_MAX = Decimal("0.40")
 DPS_RATE_MIN_QUARTERS = (
     2  # positive, equal quarterly rates needed to call the year value a rate
 )
@@ -106,9 +113,13 @@ SPLIT_WINDOW_BEFORE = timedelta(days=30)
 SPLIT_WINDOW_AFTER = timedelta(days=150)
 INTEGER_TOLERANCE = Decimal("0.05")
 BASIS_RATIO = Decimal(5)
-DUPLICATE_SPLIT_DAYS = (
-    120  # two same-ratio split rows closer than this may be one split counted twice
+DUPLICATE_EVENT_DAYS = 400  # same-ratio split rows closer than this are ONE event when the filing-dated share series steps at most once between them
+DUPLICATE_STEP_WINDOW_DAYS = (
+    120  # filings reporting a split come up to ~4 months after its effective date
 )
+BASIS_CELL_TOLERANCE = Decimal(
+    "0.10"
+)  # stored/as-filed against the factor its source filing date implies
 CLEAN_RATIOS = (
     2,
     3,
@@ -130,10 +141,6 @@ CLEAN_RATIOS = (
 BREAK_TOLERANCE = Decimal(
     "0.08"
 )  # a series jump within 8% of a clean ratio is a basis break
-RUN_TOLERANCE = Decimal(
-    "0.12"
-)  # accumulated offset of a run against the latest run, 12%
-MIN_RUN_VALUES = 1
 
 # ---- loader.py ----
 SOURCE_BATCH = 20_000

@@ -26,6 +26,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from .thresholds import (
+    FACE_MAX_PRIORITY,
     VINTAGE_LATE_FILING_DAYS,
     QUARTER_MIN,
     QUARTER_MAX,
@@ -175,6 +176,71 @@ def _same_filing_pair(data: CompanyData, a, b) -> bool:
     return False
 
 
+def _face_tag(data: CompanyData, base: str, tag: str) -> bool:
+    role = data.tag_roles.get((base, tag))
+    return role is not None and role[0] <= FACE_MAX_PRIORITY and role[1] == "approved"
+
+
+def _perimeter_mix(data: CompanyData, year, tile) -> bool:
+    """The year and at least one quarter come from different tags, and every tag
+    involved is an approved priority 1-2 mapping of the concept (a face line, the
+    registry's proxy for 'a line on the statement of its own filing')."""
+    fy_tags = {s.tag for s in data.source_facts(year) if not s.derived}
+    q_tags = {s.tag for q in tile for s in data.source_facts(q) if not s.derived}
+    if not fy_tags or not q_tags or fy_tags == q_tags:
+        return False
+    return all(_face_tag(data, year.base, t) for t in fy_tags | q_tags)
+
+
+def _stale_quarter(data: CompanyData, year, tile, total: Decimal) -> Finding | None:
+    ytd9 = next(
+        (
+            c
+            for c in data.display_by_concept().get(year.base, [])
+            if c.days is not None
+            and 240 <= c.days <= 290
+            and c.start is not None
+            and year.start is not None
+            and abs((c.start - year.start).days) <= TILE_GAP_DAYS
+            and abs((c.end - tile[2].end).days) <= TILE_GAP_DAYS
+        ),
+        None,
+    )
+    if ytd9 is None or not any(s.derived for s in data.source_facts(tile[3])):
+        return None
+    gap9 = sum((q.value for q in tile[:3]), Decimal(0)) - ytd9.value
+    if abs(gap9) <= SUM_REVIEW * abs(year.value):
+        return None
+    if abs(gap9 - (total - year.value)) > SUM_REVIEW * abs(year.value):
+        return None
+    dated = [
+        (min(s.filing_date for s in data.source_facts(q) if s.filing_date), q)
+        for q in tile[:3]
+        if any(s.filing_date for s in data.source_facts(q))
+    ]
+    if len(dated) < 3:
+        return None
+    filed, quarter = min(dated, key=lambda t: (t[0], t[1].end))
+    return finding(
+        data,
+        "I5",
+        WRONG_VALUE,
+        "stale_quarter_basis",
+        quarter,
+        other=ytd9.value,
+        year_end=str(year.end),
+        year_value=str(year.value),
+        nine_month_value=str(ytd9.value),
+        quarters_to_q3=str(total - tile[3].value),
+        oldest_quarter_filed=str(filed),
+        note="the year equals its own 9M plus a derived Q4; this quarter is the oldest copy "
+        "(never re-presented) and the three quarters do not add up to the 9M figure",
+        source_ids=sorted(
+            {i for q in tile for i in q.source_ids} | set(ytd9.source_ids)
+        ),
+    )
+
+
 def _quarters_vs_year(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
     by = data.display_by_concept()
@@ -202,6 +268,19 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
             fy_late = _filed_late(data, y)
             originals = [q for q in tile if _filed_late(data, q) is False]
             basis_mix = bool(fy_late) and bool(originals)
+            # (4) FY = the same filing's 9M + a derived Q4: the year is consistent with its
+            # own vintage, the inconsistency sits in Q1-Q3 against the 9M figure, and
+            # the wrong cell is the quarter never re-presented (JNJ interest FY2023:
+            # Q2 346M exists only in the pre-separation 10-Q).
+            stale = _stale_quarter(data, y, tile, total)
+            if stale is not None:
+                out.append(stale)
+                continue
+            # (6) a year and quarters on two DIFFERENT but equally legitimate face tags
+            # (AMD pretax: after / before the equity-method loss, both approved
+            # priority 1-2 tags) are a perimeter mix. A component tag (TSLA
+            # CostOfGoodsSold, provisional priority 3) is not a face line and stays wrong.
+            perimeter = _perimeter_mix(data, y, tile)
             median_q = sorted(abs(q.value) for q in tile)[1:3]
             centre = (median_q[0] + median_q[1]) / 2
             suspect = max(tile, key=lambda q: abs(abs(q.value) - centre))
@@ -209,9 +288,13 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
                 finding(
                     data,
                     "I5",
-                    REVIEW if basis_mix or rel <= SUM_WRONG else WRONG_VALUE,
+                    REVIEW
+                    if basis_mix or perimeter or rel <= SUM_WRONG
+                    else WRONG_VALUE,
                     "quarters_vs_year_basis_mix"
                     if basis_mix
+                    else "quarters_vs_year_perimeter_mix"
+                    if perimeter
                     else "quarters_do_not_sum_to_year",
                     y,
                     other=total,

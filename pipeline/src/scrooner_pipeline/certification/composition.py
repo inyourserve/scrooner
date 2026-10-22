@@ -31,6 +31,8 @@ from datetime import timedelta
 from decimal import Decimal
 
 from .thresholds import (
+    DPS_PAID_RATE_MAX,
+    DPS_PAID_RATE_MIN,
     DPS_PAID_MAX_RATIO,
     SHARES_LOOKAROUND_DAYS,
     TOTAL_TOLERANCE,
@@ -216,9 +218,22 @@ def dps_rate_on_ytd(data: CompanyData) -> dict[int, dict]:
             n = sum(1 for w in values if abs(w - v) <= DPS_RATE_TOLERANCE * v)
             if n > best:
                 rate, best = v, n
+        paid = _paid_ratio(data, y)
+        if (
+            (rate is None or best < DPS_RATE_MIN_QUARTERS)
+            and paid is not None
+            and DPS_PAID_RATE_MIN <= paid <= DPS_PAID_RATE_MAX
+        ):
+            # no quarters to compare with (Visa FY2017 0.165, FY2021 0.32), but the
+            # year's DPS x shares is about a QUARTER of the cash dividends paid
+            flagged[y.period_id] = {
+                "reason": "year DPS x shares is about a quarter of the dividends paid",
+                "paid_ratio": str(paid),
+                "fiscal_year_end": str(y.end),
+            }
+            continue
         if rate is None or best < DPS_RATE_MIN_QUARTERS:
             continue  # no single repeated rate to compare with
-        paid = _paid_ratio(data, y)
         if paid is not None and paid > DPS_PAID_MAX_RATIO:
             continue  # DPS x shares is a full year of cash dividends: declared once, not a rate (WMT)
         for c in [y, *inside_ytd]:

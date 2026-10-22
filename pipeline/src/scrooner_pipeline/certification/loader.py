@@ -53,6 +53,7 @@ class Registry:
     mapped_tag_count: dict[str, int] = field(
         default_factory=dict
     )  # consumed base -> number of mapped tags
+    tag_roles: dict[tuple[str, str], tuple[int, str]] = field(default_factory=dict)
 
 
 def execute(cur, sql: str, params, timeout_s: int):
@@ -135,6 +136,20 @@ def load_registry(cur, timeout_s: int = 60) -> Registry:
     for bs in reg.mapped_ids.values():
         for b in bs:
             reg.mapped_tag_count[b] = reg.mapped_tag_count.get(b, 0) + 1
+    for cname, tag, priority, confidence in execute(
+        cur,
+        """
+        select cc.name, c.tag, cm.priority, cm.confidence from analytics.concept_mapping cm
+        join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
+        join core.concept c on c.id = cm.concept_id
+        where c.taxonomy = 'us-gaap'
+        """,
+        None,
+        timeout_s,
+    ):
+        key = (base_name(cname), tag)
+        if key not in reg.tag_roles or priority < reg.tag_roles[key][0]:
+            reg.tag_roles[key] = (priority, confidence)
     reg.adjustment_tags = sorted({tag for i in IDENTITIES for tag, _ in i.adjustments})
     return reg
 
@@ -315,6 +330,29 @@ def load_chunk(
             cid = owner.get(r[0])
             if cid in data:
                 data[cid].periodic_copies.setdefault(r[0], []).append(_source(r[1:]))
+
+    # fact counts of the 8-K filings used as sources: does the 8-K carry full statements?
+    eight_k = sorted(
+        {
+            s.accession
+            for d in data.values()
+            for s in d.sources.values()
+            if s.form in ("8-K", "8-K/A") and s.accession
+        }
+    )
+    counts: dict[str, int] = {}
+    for i in range(0, len(eight_k), 500):
+        for acc, n in execute(
+            cur,
+            "select fl.accession_number, count(*) from core.fact f join core.filing fl on fl.id = f.filing_id "
+            "where fl.accession_number = any(%s) group by fl.accession_number",
+            (eight_k[i : i + 500],),
+            timeout_s,
+        ):
+            counts[acc] = n
+    for d in data.values():
+        d.filing_fact_counts = counts
+        d.tag_roles = registry.tag_roles
 
     # other non-authoritative copies (a recorded conflict fill has >= 2 non-authoritative copies)
     for i in range(0, len(non_auth), SOURCE_BATCH):

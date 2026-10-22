@@ -173,6 +173,12 @@ class CompanyData:
     # any authority, keyed by the id of the non-periodic source: the stored value is
     # compared with them (I6 non_periodic_form)
     periodic_copies: dict[int, list[Source]] = field(default_factory=dict)
+    # accession -> number of facts the filing carries (8-K sources only): a recast 8-K
+    # holds complete restated statements (hundreds of facts), an earnings release or a
+    # proxy holds a handful
+    filing_fact_counts: dict[str, int] = field(default_factory=dict)
+    # (base concept, us-gaap tag) -> (mapping priority, confidence), analytics.concept_mapping
+    tag_roles: dict[tuple[str, str], tuple[int, str]] = field(default_factory=dict)
     # other NON-authoritative copies of the same (company, tag, period, unit), keyed by source id
     conflict_copies: dict[int, list[Source]] = field(default_factory=dict)
     # consumed base concept -> distinct (start, end) of every fact (any authority) under a tag

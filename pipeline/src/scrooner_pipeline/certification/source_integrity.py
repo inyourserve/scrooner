@@ -34,6 +34,7 @@ from decimal import Decimal
 from itertools import combinations, product
 
 from .thresholds import (
+    RECAST_8K_MIN_FACTS,
     PROXY_ROUNDING_MAX,
     SCALE_RATIO,
     ROUNDING_TOLERANCE,
@@ -144,6 +145,21 @@ def _proxy_value_wrong(stored: Decimal, copies) -> bool:
     return True
 
 
+def _inputs_differ_between_versions(data: CompanyData, sources) -> bool:
+    """R-MIXED-VINTAGE fires only when a recast input is really different from the
+    version in the original periodic filings: some non-periodic source whose
+    10-K/10-Q copies all disagree with it beyond rounding (LLY 8-K revenue 18,312.8M
+    against 21,222.1M). When the copies agree (AVGO FY2017: both versions give gross
+    profit 8,509M) or none was found, the mix is harmless."""
+    for s in sources:
+        if s.form is None or s.form in PERIODIC_FORMS:
+            continue
+        copies = data.periodic_copies.get(s.id, [])
+        if copies and not any(_close(s.value, c.value) for c in copies):
+            return True
+    return False
+
+
 def _non_periodic_findings(data: CompanyData) -> list[Finding]:
     """I6 non_periodic_form over EVERY stored cell (both layers: the Verifier counts
     JPM's 15 wrong cells in `net_income` and `net_income_resolved`). A value taken
@@ -158,6 +174,42 @@ def _non_periodic_findings(data: CompanyData) -> list[Finding]:
             if s.form is None or s.form in PERIODIC_FORMS:
                 continue
             copies = data.periodic_copies.get(s.id, [])
+            if (
+                s.form in ("8-K", "8-K/A")
+                and len(sources) == 1
+                and data.filing_fact_counts.get(s.accession or "", 0)
+                >= RECAST_8K_MIN_FACTS
+                and _close(cell.value, s.value)
+            ):
+                # An 8-K that carries complete restated statements (Item 8.01 recast:
+                # LLY 2019) is the source of the number AS RECAST: right as filed, a
+                # lineage note. A proxy has no statements and rounds, so it never
+                # reaches this branch.
+                out.append(
+                    finding(
+                        data,
+                        "I6",
+                        REVIEW,
+                        "recast_8k_lineage",
+                        cell,
+                        other=s.value,
+                        form=s.form,
+                        tag=s.tag,
+                        accession=s.accession,
+                        facts_in_filing=data.filing_fact_counts[s.accession or ""],
+                        source_ids=[s.id],
+                        periodic_copies=[
+                            {
+                                "id": c.id,
+                                "value": str(c.value),
+                                "form": c.form,
+                                "accession": c.accession,
+                            }
+                            for c in copies[:5]
+                        ],
+                    )
+                )
+                continue
             differs = len(sources) == 1 and _proxy_value_wrong(cell.value, copies)
             out.append(
                 finding(
@@ -267,6 +319,7 @@ def check(data: CompanyData) -> list[Finding]:
         tags = {s.tag for s in sources}
         if (
             len(tags) > 1
+            and _inputs_differ_between_versions(data, sources)
             and any(
                 s.form is not None and s.form not in PERIODIC_FORMS for s in sources
             )

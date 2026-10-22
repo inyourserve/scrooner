@@ -108,6 +108,7 @@ class TestEightKLineage:
 
     def test_lly_gross_profit_from_8k_revenue_minus_original_cogs_is_mixed_vintage(self):
         d = empty()
+        d.periodic_copies[7111] = [src("Revenues", 21_222_100_000, form="10-K", sid=7113)]  # the original, Elanco included
         add(d, "gross_profit_resolved", 12_657_900_000, date(2016, 12, 31), date(2016, 1, 1), "FY",
             sources=[src("Revenues", 18_312_800_000, form="8-K", sid=7111), src("CostOfRevenue", 5_654_900_000, form="10-K", sid=7112)])
         assert "mixed_vintage" in by_rule(source_integrity.check(d), WRONG_VALUE)
@@ -201,80 +202,7 @@ class TestRateOnYtd:
         assert f["effective_tax_rate_reported"].severity == WRONG_VALUE and f["effective_tax_rate_reported"].evidence["method_policy"] is True
 
 
-# ------------------------------------------------ items 3 and 8: share basis runs
-def eps_series(d, years, ni, shares_by_year, *, dps_by_year=None):
-    for y in years:
-        fs, fe = fy(y)
-        add(d, "net_income", ni[y], fe, fs, "FY", tag="NetIncomeLoss")
-        add(d, "diluted_eps", D(ni[y]) / shares_by_year[y], fe, fs, "FY", tag="EarningsPerShareDiluted", unit="usd/shares")
-        add(d, "basic_eps", D(ni[y]) / shares_by_year[y] * D("1.01"), fe, fs, "FY", tag="EarningsPerShareBasic", unit="usd/shares")
-        if dps_by_year:
-            add(d, "dividends_per_share", dps_by_year[y], fe, fs, "FY", tag="CommonStockDividendsPerShareDeclared", unit="usd/shares")
-        add(d, "shares_outstanding", shares_by_year[y], fe, None, "FY", tag="CommonStockSharesOutstanding", unit="shares")
-
-
-class TestShareBasis:
-    def nvda(self):
-        d = empty()
-        years = list(range(2016, 2026))
-        ni = {y: 1_000_000_000 * (y - 2014) for y in years}
-        old = D(2_500_000_000)
-        shares = {y: (old if y <= 2023 else old * 10) for y in years}  # the 10-for-1 of 2024 never applied to the older run
-        eps_series(d, years, ni, shares, dps_by_year={y: D("0.16") if y <= 2023 else D("0.016") for y in years})
-        return d
-
-    def test_nvda_every_cell_before_the_missing_split_is_flagged(self):
-        d = self.nvda()
-        f = [x for x in splits.check(d) if x.evidence["rule"] == "share_basis_mismatch"]
-        flagged = {(x.data_point_name, x.period_end.year) for x in f}
-        for y in range(2016, 2024):
-            for name in ("diluted_eps", "basic_eps", "shares_outstanding", "dividends_per_share"):
-                assert (name, y) in flagged, (name, y)
-        assert all(y >= 2016 and y <= 2023 for _n, y in flagged)  # the current-basis run is untouched
-        assert all(x.severity == WRONG_VALUE and x.evidence["clean_ratio"] == 10 for x in f)
-
-    def test_repaired_series_on_one_basis_is_clean(self):
-        d = empty()
-        years = list(range(2016, 2026))
-        ni = {y: 1_000_000_000 * (y - 2014) for y in years}
-        eps_series(d, years, ni, {y: D(25_000_000_000) for y in years})
-        assert [x for x in splits.check(d) if x.evidence["rule"] == "share_basis_mismatch"] == []
-
-    def test_aapl_fy2018_eps_11_91_is_an_isolated_run_on_the_old_basis(self):
-        d = empty()
-        years = list(range(2015, 2022))
-        ni = {2015: 53_394e6, 2016: 45_687e6, 2017: 48_351e6, 2018: 59_531e6, 2019: 55_256e6, 2020: 57_411e6, 2021: 94_680e6}
-        sh = {2015: 22.3e9, 2016: 21.4e9, 2017: 20.5e9, 2018: 20.0e9, 2019: 18.6e9, 2020: 17.5e9, 2021: 16.9e9}
-        eps_series(d, years, {y: D(int(v)) for y, v in ni.items()}, {y: D(int(v)) for y, v in sh.items()})
-        # FY2018 diluted EPS was never adjusted for the 2020 4-for-1: 11.91 instead of 2.98
-        for c in list(d.cells):
-            if c.concept == "diluted_eps" and c.end.year == 2018:
-                d.cells.remove(c)
-        add(d, "diluted_eps", D("11.91"), date(2018, 12, 31), date(2018, 1, 1), "FY", tag="EarningsPerShareDiluted", unit="usd/shares")
-        f = [x for x in splits.check(d) if x.evidence["rule"] == "share_basis_mismatch"]
-        assert {(x.data_point_name, x.period_end.year) for x in f} == {("diluted_eps", 2018), ("basic_eps", 2018)}
-
-    def test_aapl_share_counts_before_the_2020_split_are_flagged(self):
-        d = empty()
-        for i, y in enumerate(range(2015, 2024)):
-            end = date(y, 9, 26)
-            value = D(5_578_753_000) if y <= 2019 else D(16_976_763_000)
-            add(d, "shares_outstanding", value * (1 if y <= 2019 else 1) - D(i * 10_000_000) , end, None, "FY", tag="CommonStockSharesOutstanding", unit="shares")
-        f = [x for x in splits.check(d) if x.evidence["rule"] == "share_basis_mismatch"]
-        assert {x.period_end.year for x in f} == {2015, 2016, 2017, 2018, 2019}
-
-    def test_split_counted_twice_in_the_table(self):
-        d = empty()
-        d.splits = [(date(2021, 6, 3), D(4)), (date(2021, 7, 19), D(4))]  # NVDA: the same split 46 days apart
-        assert "split_ratio_counted_twice" in by_rule(splits.check(d), REVIEW)
-        d.splits = [(date(2021, 6, 3), D(4)), (date(2022, 7, 19), D(4))]
-        assert "split_ratio_counted_twice" not in by_rule(splits.check(d))
-
-    def test_wmt_sign_flip_to_a_smaller_loss_is_not_a_basis_mix(self):
-        d = empty()
-        for (a, b, label), v in zip(QUARTERS, [D("0.55"), D("0.50"), D("0.47"), D("-0.2467")]):
-            add(d, "basic_eps", v, b, a, label, tag="EarningsPerShareBasic", unit="usd/shares", derived=(label == "Q4"))
-        assert "per_share_basis_mix" not in by_rule(splits.check(d))
+# (share-basis cases live in test_certification_regression_round2.py: they are keyed by source filing date)
 
 
 # ------------------------------------------------ R-STATEMENT-ROLE: EMR, NTAP, JNJ

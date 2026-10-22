@@ -22,6 +22,8 @@ scale.py (I4) so a mismatch is reported once.
 from __future__ import annotations
 
 from datetime import timedelta
+from dataclasses import dataclass
+from datetime import date
 from decimal import Decimal
 from statistics import median
 
@@ -29,17 +31,27 @@ from .thresholds import (
     BASIS_RATIO,
     BREAK_TOLERANCE,
     CLEAN_RATIOS,
-    DUPLICATE_SPLIT_DAYS,
+    BASIS_CELL_TOLERANCE,
+    DUPLICATE_STEP_WINDOW_DAYS,
+    DUPLICATE_EVENT_DAYS,
     INTEGER_TOLERANCE,
     JUMP_FACTOR,
     QUARTER_MAX_DAYS,
-    RUN_TOLERANCE,
     SPLIT_WINDOW_AFTER,
     SPLIT_WINDOW_BEFORE,
     YEAR_MAX,
     YEAR_MIN,
 )
-from .model import PER_SHARE, REVIEW, WRONG_VALUE, CompanyData, Finding, finding
+from .model import (
+    PER_SHARE,
+    SHARE_COUNTS,
+    Cell,
+    REVIEW,
+    WRONG_VALUE,
+    CompanyData,
+    Finding,
+    finding,
+)
 
 
 def _integer_like(factor: Decimal) -> bool:
@@ -164,149 +176,220 @@ def clean_ratio(x: Decimal, tolerance: Decimal = BREAK_TOLERANCE) -> int | None:
     return None
 
 
-def _series(data: CompanyData) -> list[tuple[str, list[tuple[Decimal, list]]]]:
-    """Value series that must not step by a clean split ratio. Each point is
-    (value, cells that sit on that point's basis):
-      shares   display shares_outstanding, one cell per point
-      eps_fy   net income / diluted EPS of each fiscal year (the implied share
-               count, free of business growth); cells = diluted + basic EPS and
-               dividends per share of that period
-      eps_q    the same for discrete quarters
-    """
-    by = data.display_by_concept()
-    out: list[tuple[str, list]] = []
-    shares = sorted(
-        (c for c in by.get("shares_outstanding", []) if c.value > 0),
-        key=lambda c: c.end,
-    )
-    out.append(("shares", [(c.value, [c]) for c in shares]))
-    ni = {c.period_id: c for c in by.get("net_income", [])}
-    basic = {c.period_id: c for c in by.get("basic_eps", [])}
-    dps = {c.period_id: c for c in by.get("dividends_per_share", [])}
-    for name, lo, hi in (
-        ("eps_fy", YEAR_MIN, YEAR_MAX),
-        ("eps_q", 61, QUARTER_MAX_DAYS),
-    ):
-        points = []
-        for e in sorted(by.get("diluted_eps", []), key=lambda c: c.end):
-            n = ni.get(e.period_id)
+@dataclass(frozen=True)
+class SplitEvent:
+    date: date  # the date from which filings are on the NEW basis
+    ratio: Decimal  # 4 for a 4-for-1; below 1 for a reverse split
+    kind: str  # 'recorded' (analytics.company_stock_split) | 'inferred' (a clean step in the share series)
+
+
+def _main_source(data: CompanyData, cell: Cell):
+    """The as-filed source fact whose filing date fixes the cell's basis: of the
+    non-derived sources that carry a filing date (split-ratio adjustment inputs
+    excluded), the LATEST filed. A resolved cell often lists the same fact from
+    several filings (AAPL FY2018 EPS 11.91 in the 2018 and the 2019 10-K; TSLA Q3
+    2019 0.8 in 2019 and 0.16 in the 2020 re-presentation): the newest copy is the
+    version the cell took. None for calculated or undated cells."""
+    sources = [
+        s
+        for s in data.source_facts(cell)
+        if "SplitConversionRatio" not in s.tag
+        and not s.derived
+        and s.filing_date is not None
+    ]
+    if not sources:
+        return None
+    return max(sources, key=lambda s: (s.filing_date, -abs(s.value - cell.value)))
+
+
+def _shares_by_filing(data: CompanyData) -> list[tuple[date, Decimal]]:
+    """As-filed share counts ordered by the DATE OF THE FILING that reported them
+    (median per filing date; every dated source of every share cell counts).
+    Ordered by filing date, a split is one clean step: filings before it report the
+    old basis, filings after it the new one."""
+    by_date: dict[date, dict[int, Decimal]] = {}
+    for c in data.display_cells():
+        if c.base != "shares_outstanding" or c.value <= 0:
+            continue
+        for s in data.source_facts(c):
             if (
-                e.days is None
-                or not (lo <= e.days <= hi)
-                or n is None
-                or e.value == 0
-                or n.value == 0
+                s.derived
+                or s.filing_date is None
+                or s.value <= 0
+                or "SplitConversionRatio" in s.tag
             ):
                 continue
-            if (e.value > 0) != (n.value > 0):
-                continue
-            group = [e] + [
-                x
-                for x in (basic.get(e.period_id), dps.get(e.period_id))
-                if x is not None
-            ]
-            points.append((n.value / e.value, group))
-        out.append((name, points))
+            by_date.setdefault(s.filing_date, {})[s.id] = s.value
+    return [
+        (d, Decimal(str(median(list(v.values()))))) for d, v in sorted(by_date.items())
+    ]
+
+
+def _steps(series: list[tuple[date, Decimal]]) -> list[tuple[date, date, Decimal]]:
+    """(earlier filing date, later filing date, ratio) of every clean step."""
+    out = []
+    for (d0, v0), (d1, v1) in zip(series, series[1:]):
+        r = v1 / v0
+        if clean_ratio(r) is not None:
+            out.append((d0, d1, r))
     return out
 
 
-def _basis_runs(data: CompanyData) -> list[Finding]:
-    """R-SPLIT-BASIS (data-team/36 items 3 and 8): the display layer must sit on ONE
-    share basis. A series that steps by a clean split ratio (within 8% of 2, 3, 4,
-    5 ... 50) between two consecutive points is split into runs; the LATEST run is
-    the current basis, and every earlier run whose accumulated offset to it is
-    itself a clean ratio (within 12%) is on a different basis: EVERY cell of that
-    run is `wrong_value` (NVDA ~216 cells before the 2024 split; AAPL 45 share
-    cells before 2020-08; AAPL FY2018 diluted EPS 11.91 against 2.98 filed, an
-    isolated run between two steps). A step with no split on record is the same
-    finding (the split table is missing the event); evidence says which."""
-    out: list[Finding] = []
-    for name, points in _series(data):
-        if len(points) < 3:
+def _same_ratio(a: Decimal, b: Decimal, tol: Decimal = Decimal("0.15")) -> bool:
+    return a > 0 and b > 0 and abs(a - b) / max(a, b) <= tol
+
+
+def split_events(
+    data: CompanyData,
+) -> tuple[list[SplitEvent], list[tuple[date, date, Decimal, int]]]:
+    """Events used to compute each cell's expected basis, and the duplicates found.
+
+    Recorded rows are collapsed BY RATIO AND EVENT, not by a day window: two rows
+    of the same ratio within DUPLICATE_EVENT_DAYS with at most one clean step of
+    that ratio in the filing-dated share series between them are one split recorded
+    twice (an announcement and an effective date: GOOG 20:1 on 2022-02-01 and
+    2022-07-15, 164 days apart; NVDA 4:1 rows 46 days apart); the LATER date is the
+    event (filings from then on carry the new basis). A clean step with no recorded
+    split near it becomes an inferred event (NVDA 10:1 of 2024 is not in the table).
+    Returns (events, duplicates as (first date, second date, ratio, steps seen))."""
+    series = _shares_by_filing(data)
+    steps = _steps(series)
+    events: list[SplitEvent] = []
+    dups: list[tuple[date, date, Decimal, int]] = []
+    for d, r in sorted(data.splits):
+        if not r or r <= 0:
             continue
-        values = [v for v, _ in points]
-        breaks = []  # (index after which the step happens, ratio)
-        for i in range(len(values) - 1):
-            r = values[i + 1] / values[i]
-            if clean_ratio(r) is not None:
-                breaks.append((i, r))
-        if not breaks:
-            continue
-        # runs: [start_idx, end_idx]
-        edges = [-1] + [i for i, _ in breaks] + [len(values) - 1]
-        runs = [(edges[j] + 1, edges[j + 1]) for j in range(len(edges) - 1)]
-        for j, (a, b) in enumerate(runs[:-1]):
-            offset = Decimal(1)
-            for _i, r in breaks[j:]:
-                offset *= r
-            k = clean_ratio(offset, RUN_TOLERANCE)
-            if k is None:
-                continue
-            step_end = points[b][1][0].end
-            recorded = any(
-                abs((d - step_end).days) <= 400
-                and abs(rr - Decimal(k)) / Decimal(k) <= Decimal("0.12")
-                for d, rr in data.splits
-                if rr and rr > 1
+        if (
+            events
+            and events[-1].kind == "recorded"
+            and _same_ratio(events[-1].ratio, r, Decimal("0.01"))
+        ):
+            prev = events[-1]
+            if 0 < (d - prev.date).days <= DUPLICATE_EVENT_DAYS:
+                lo, hi = (
+                    prev.date - timedelta(days=60),
+                    d + timedelta(days=DUPLICATE_STEP_WINDOW_DAYS),
+                )
+                seen = sum(
+                    1
+                    for _a, b, sr in steps
+                    if lo <= b <= hi
+                    and _same_ratio(sr if sr > 1 else 1 / sr, r if r > 1 else 1 / r)
+                )
+                if seen <= 1:
+                    dups.append((prev.date, d, r, seen))
+                    events[-1] = SplitEvent(d, r, "recorded")
+                    continue
+        events.append(SplitEvent(d, r, "recorded"))
+    for a, b, sr in steps:
+        near = any(
+            _same_ratio(
+                e.ratio if e.ratio > 1 else 1 / e.ratio, sr if sr > 1 else 1 / sr
             )
-            for _v, cells in points[a : b + 1]:
-                for c in cells:
-                    out.append(
-                        finding(
-                            data,
-                            "I9",
-                            WRONG_VALUE,
-                            "share_basis_mismatch",
-                            c,
-                            series=name,
-                            run_offset=str(offset),
-                            clean_ratio=k,
-                            step_after=str(step_end),
-                            run_start=str(points[a][1][0].end),
-                            run_end=str(step_end),
-                            split_on_record_near_step=recorded,
-                            note="cell sits on a share basis that differs from the latest run by a "
-                            "clean split ratio; the display layer should be on one basis",
-                        )
-                    )
+            and a - timedelta(days=90) <= e.date <= b + timedelta(days=90)
+            for e in events
+        )
+        if not near:
+            k = clean_ratio(sr)
+            if k is None:  # _steps only yields clean steps
+                continue
+            events.append(
+                SplitEvent(b, Decimal(k) if sr > 1 else 1 / Decimal(k), "inferred")
+            )
+    return sorted(events, key=lambda e: e.date), dups
+
+
+def _share_basis(data: CompanyData) -> list[Finding]:
+    """R-SPLIT-BASIS by SOURCE FILING DATE (data-team/36, round 2). Every per-share
+    and share-count cell has a source filing dated F. A value filed after a split
+    already sits on the new basis; a value filed before it sits on the old basis.
+    With m = the product of the ratios of the events dated after F:
+      per-share cell  (EPS, DPS)  stored / as-filed must be 1 / m
+      share count                 stored / as-filed must be m (it is never re-based,
+                                  so every share cell filed before a split is flagged)
+    A cell off by more than 10% is `wrong_value`: unadjusted (GOOG FY2020 EPS 59.15
+    vs 2.96), adjusted by the wrong factor (TSLA Q3 2019 0.16 vs 0.053: /5 not /15),
+    divided twice (GOOG Q1 2015 0.0129 vs 0.258) or divided though filed after the
+    split (WMT FY2024 EPS 0.64 vs 1.92). Cells that equal the as-filed value divided
+    by the right factor are not flagged, whatever their neighbours look like."""
+    events, _dups = split_events(data)
+    out: list[Finding] = []
+    for cell in data.display_cells():
+        if cell.base not in PER_SHARE and cell.base not in SHARE_COUNTS:
+            continue
+        s = _main_source(data, cell)
+        if (
+            s is None
+            or s.derived
+            or s.filing_date is None
+            or s.value == 0
+            or cell.value == 0
+        ):
+            continue
+        m = Decimal(1)
+        for e in events:
+            if e.date > s.filing_date:
+                m *= e.ratio
+        want = m if cell.base in SHARE_COUNTS else 1 / m
+        observed = cell.value / s.value
+        if observed <= 0 or abs(observed / want - 1) <= BASIS_CELL_TOLERANCE:
+            continue
+        double = (
+            m == 1
+            and cell.base in PER_SHARE
+            and any(
+                e.date <= s.filing_date and _same_ratio(1 / observed, e.ratio)
+                for e in events
+            )
+        )
+        out.append(
+            finding(
+                data,
+                "I9",
+                WRONG_VALUE,
+                "share_basis_mismatch",
+                cell,
+                other=s.value * (m if cell.base in SHARE_COUNTS else 1 / m),
+                as_filed=str(s.value),
+                filed=str(s.filing_date),
+                accession=s.accession,
+                observed_factor=str(observed),
+                expected_factor=str(want),
+                events=[(str(e.date), str(e.ratio), e.kind) for e in events],
+                adjusted_though_filed_after_split=double,
+                note="stored value is not the as-filed value on the basis implied by its filing date",
+            )
+        )
     return out
 
 
 def _duplicate_splits(data: CompanyData) -> list[Finding]:
-    """The same ratio recorded twice within 120 days: one split counted twice
-    divides older per-share values by the ratio twice (NVDA 4-for-1 of 2021 rows
-    46 days apart: history divided by 16 instead of 40)."""
-    out: list[Finding] = []
-    rows = sorted(data.splits)
-    for (d1, r1), (d2, r2) in zip(rows, rows[1:]):
-        if (
-            r1
-            and r2
-            and abs(r1 - r2) / r1 <= Decimal("0.01")
-            and 0 < (d2 - d1).days <= DUPLICATE_SPLIT_DAYS
-        ):
-            out.append(
-                finding(
-                    data,
-                    "I9",
-                    REVIEW,
-                    "split_ratio_counted_twice",
-                    "company_stock_split",
-                    period_end=d2,
-                    stored=r2,
-                    other=r1,
-                    first_date=str(d1),
-                    second_date=str(d2),
-                    days_apart=(d2 - d1).days,
-                )
-            )
-    return out
+    """A split recorded twice (see `split_events`): the table divides older
+    per-share values by the ratio twice (GOOG: 2015-2021 EPS divided by 400)."""
+    _events, dups = split_events(data)
+    return [
+        finding(
+            data,
+            "I9",
+            WRONG_VALUE,
+            "split_ratio_counted_twice",
+            "company_stock_split",
+            period_end=d2,
+            stored=r,
+            other=r,
+            first_date=str(d1),
+            second_date=str(d2),
+            days_apart=(d2 - d1).days,
+            steps_in_share_series=seen,
+        )
+        for d1, d2, r, seen in dups
+    ]
 
 
 def check(data: CompanyData) -> list[Finding]:
     return (
         _share_jumps(data)
         + _basis_mix(data)
-        + _basis_runs(data)
+        + _share_basis(data)
         + _duplicate_splits(data)
     )
