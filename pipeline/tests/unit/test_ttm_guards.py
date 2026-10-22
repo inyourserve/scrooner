@@ -543,7 +543,7 @@ def test_company_w1_on_propagates_the_guard_reason_to_every_dependent(monkeypatc
 
 
 def test_company_w2_on_hides_stale_buyback_consumers_and_tsy(monkeypatch):
-    _env(monkeypatch, enabled=rule_flags.RF02_AGE_GUARD)
+    _env(monkeypatch, enabled=f"{rule_flags.RF02_AGE_GUARD},{rule_flags.RF_TSY_STALE}")
     conn = _conn({EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2021, 12, 31)))
     _stats, rows = _company_run(monkeypatch, conn)
     why = "guard:stale_ttm_input:share_buybacks"
@@ -559,7 +559,7 @@ def test_company_w2_on_hides_stale_buyback_consumers_and_tsy(monkeypatch):
 
 
 def test_company_tsy_names_every_stale_component(monkeypatch):
-    _env(monkeypatch, enabled=rule_flags.RF02_AGE_GUARD)
+    _env(monkeypatch, enabled=f"{rule_flags.RF02_AGE_GUARD},{rule_flags.RF_TSY_STALE}")
     conn = _conn(
         {EBITDA_ID: FRESH, FCF_ID: FRESH},
         _bounds(date(2021, 12, 31), date(2020, 2, 19)),
@@ -576,24 +576,38 @@ def test_company_tsy_names_every_stale_component(monkeypatch):
 
 
 def test_company_w2_dry_run_changes_nothing_but_records(monkeypatch):
-    _env(monkeypatch, dry=rule_flags.RF02_AGE_GUARD)
+    _env(
+        monkeypatch,
+        dry=f"{rule_flags.RF02_AGE_GUARD},{rule_flags.RF_TSY_STALE}"
+        + ","
+        + rule_flags.RF_TSY_UNEVIDENCED_ZERO,
+    )
     conn = _conn({EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2021, 12, 31)))
     _stats, rows = _company_run(monkeypatch, conn)
     assert rows["buyback_yield"]["value"] == D("0.02")
     assert rows["total_shareholder_yield"]["value"] is not None
     hidden = {
-        d.data_point for d in rule_flags.DECISIONS.decisions if d.outcome == "hidden"
+        (d.rule_id, d.data_point)
+        for d in rule_flags.DECISIONS.decisions
+        if d.outcome == "hidden"
     }
-    assert hidden == {"share_buybacks", "total_shareholder_yield"}
-    by_dp = {d.data_point: d for d in rule_flags.DECISIONS.decisions}
+    assert hidden == {
+        ("ttm.age_guard@2", "share_buybacks"),
+        ("tsy.stale_component@1", "total_shareholder_yield"),
+    }
+    by = {(d.rule_id, d.data_point): d for d in rule_flags.DECISIONS.decisions}
     assert (
-        by_dp["share_buybacks"].consumers
+        by[("ttm.age_guard@2", "share_buybacks")].consumers
         == expanded_metrics.AGE_CONSUMERS["share_buybacks"]
     )
     assert (
-        "total_shareholder_yield" in by_dp["share_buybacks"].consumers
-    )  # TSY is a registered consumer
-    assert by_dp["total_shareholder_yield"].detail == "stale_ttm_input:share_buybacks"
+        "total_shareholder_yield" in by[("ttm.age_guard@2", "share_buybacks")].consumers
+    )  # registered consumer
+    assert (
+        by[("tsy.stale_component@1", "total_shareholder_yield")].detail
+        == "stale_ttm_input:share_buybacks"
+    )
+    assert by[("tsy.unevidenced_zero@1", "total_shareholder_yield")].outcome == "kept"
 
 
 def test_company_w2_on_keeps_current_components_and_tsy(monkeypatch):
@@ -606,7 +620,7 @@ def test_company_w2_on_keeps_current_components_and_tsy(monkeypatch):
 
 
 def test_company_missing_expected_period_hides_everything_it_cannot_tie(monkeypatch):
-    _env(monkeypatch, enabled=rule_flags.RF02_AGE_GUARD)
+    _env(monkeypatch, enabled=f"{rule_flags.RF02_AGE_GUARD},{rule_flags.RF_TSY_STALE}")
     conn = _conn(
         {EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2026, 6, 30)), expected=None
     )
@@ -618,18 +632,51 @@ def test_company_missing_expected_period_hides_everything_it_cannot_tie(monkeypa
     )
 
 
-def test_company_absent_component_is_not_priced_as_zero_without_evidence(monkeypatch):
-    _env(monkeypatch, enabled=rule_flags.RF02_AGE_GUARD)
+def test_company_absent_component_is_measured_but_never_hidden(monkeypatch):
+    """tsy.unevidenced_zero@1 is dry-run only: a company that pays no dividend is a
+    legitimate zero until evidence exists. The cell keeps its value; the count is
+    recorded under its own rule id."""
+    _env(
+        monkeypatch,
+        enabled=f"{rule_flags.RF02_AGE_GUARD},{rule_flags.RF_TSY_STALE}",
+        dry=rule_flags.RF_TSY_UNEVIDENCED_ZERO,
+    )
     conn = _conn({EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2026, 6, 30)))
     _stats, rows = _company_run(monkeypatch, conn, dividends=False)
-    assert rows["total_shareholder_yield"]["value"] is None
-    assert (
-        rows["total_shareholder_yield"]["is_null_reason"]
-        == "guard:unevidenced_zero:dividends_paid"
-    )
+    assert rows["total_shareholder_yield"]["value"] == D(
+        "0.02"
+    )  # buybacks 20 / 1000 + 0 - 0
     assert (
         rows["dividends_pct_fcf"]["is_null_reason"] == "missing:dividends_paid_ttm"
     )  # unchanged wording
+    [d] = [
+        d
+        for d in rule_flags.DECISIONS.decisions
+        if d.rule_id == rule_flags.RF_TSY_UNEVIDENCED_ZERO
+    ]
+    assert (d.mode, d.outcome, d.detail) == (
+        "dry_run",
+        "hidden",
+        "unevidenced_zero:dividends_paid",
+    )
+
+
+def test_unevidenced_zero_cannot_be_turned_on_in_the_stage(monkeypatch):
+    _env(monkeypatch, enabled=rule_flags.RF_TSY_UNEVIDENCED_ZERO)
+    conn = _conn({EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2026, 6, 30)))
+    with pytest.raises(ValueError, match="dry-run only"):
+        _company_run(monkeypatch, conn, dividends=False)
+
+
+def test_rf02_alone_never_turns_a_hidden_component_into_an_implicit_zero_in_tsy(
+    monkeypatch,
+):
+    _env(monkeypatch, enabled=rule_flags.RF02_AGE_GUARD)
+    conn = _conn({EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2021, 12, 31)))
+    _stats, rows = _company_run(monkeypatch, conn)
+    assert rows["buyback_yield"]["value"] is None  # concept consumer hidden
+    # TSY is governed by its own rule: still priced with the buyback TTM it had (20/1000), not with 0
+    assert rows["total_shareholder_yield"]["value"] == D("0.028")  # (8 + 20) / 1000
 
 
 def test_company_evidenced_zero_component_is_counted_as_zero(monkeypatch):
@@ -655,7 +702,7 @@ def test_company_flag_off_keeps_the_zero_default(monkeypatch):
 
 
 def test_company_composite_windows_that_do_not_end_together_are_hidden(monkeypatch):
-    _env(monkeypatch, enabled=rule_flags.RF02_AGE_GUARD)
+    _env(monkeypatch, enabled=f"{rule_flags.RF02_AGE_GUARD},{rule_flags.RF_TSY_STALE}")
     conn = _conn(
         {EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2026, 6, 24), date(2026, 7, 4))
     )
@@ -685,3 +732,15 @@ def test_company_ratio_to_fcf_needs_the_same_window_end_as_fcf(monkeypatch):
         rows["dividends_pct_fcf"]["is_null_reason"]
         == "guard:misaligned_ttm_windows:dividends_paid+fcf"
     )
+
+
+def test_rf02_alone_does_not_zero_a_hidden_dividend_component_in_tsy(monkeypatch):
+    _env(monkeypatch, enabled=rule_flags.RF02_AGE_GUARD)
+    conn = _conn(
+        {EBITDA_ID: FRESH, FCF_ID: FRESH}, _bounds(date(2026, 6, 30), date(2020, 2, 19))
+    )
+    _stats, rows = _company_run(monkeypatch, conn)
+    assert rows["dividends_pct_fcf"]["value"] is None
+    assert rows["total_shareholder_yield"]["value"] == D(
+        "0.028"
+    )  # dividends 8 still priced, not 0
