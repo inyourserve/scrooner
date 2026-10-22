@@ -7,6 +7,7 @@ usage: list_valued_with_reason.py [--cells PATH] --out FILE
 Columns: company_id, ticker, name, shard_rank, mcap_bn, group_draft, data_point_name, gap_reason,
          total_debt_resolved_cell, cash_and_equivalents_cell (the blank/valued state of the two named inputs in the same extract).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -20,18 +21,41 @@ import sb_lib as L  # noqa: E402
 
 def build(ext: L.Extract):
     ids, cohort = L.load_cohort()
-    gmap = {int(r["company_id"]): r["group"] for r in csv.DictReader(open(L.GROUPS_DRAFT, newline=""))}
+    gmap = {
+        int(r["company_id"]): r["group"]
+        for r in csv.DictReader(open(L.GROUPS_DRAFT, newline=""))
+    }
     rows = []
     for (cid, dp), c in sorted(ext.cells.items()):
         if c["has_value"] and c["reason"]:
             co = cohort.get(cid, {})
+
             def st(n):
                 x = ext.cells.get((cid, n))
-                return "absent" if x is None else ("valued" if x["has_value"] else
-                                                    "blank:" + (x["reason"] or "(none)"))
-            rows.append([cid, co.get("ticker", ""), co.get("name", ""), co.get("rank", ""), co.get("mcap_bn", ""),
-                         gmap.get(cid, ""), dp, c["reason"], st("total_debt_resolved"),
-                         st("cash_and_equivalents")])
+                return (
+                    "absent"
+                    if x is None
+                    else (
+                        "valued"
+                        if x["has_value"]
+                        else "blank:" + (x["reason"] or "(none)")
+                    )
+                )
+
+            rows.append(
+                [
+                    cid,
+                    co.get("ticker", ""),
+                    co.get("name", ""),
+                    co.get("rank", ""),
+                    co.get("mcap_bn", ""),
+                    gmap.get(cid, ""),
+                    dp,
+                    c["reason"],
+                    st("total_debt_resolved"),
+                    st("cash_and_equivalents"),
+                ]
+            )
     return rows
 
 
@@ -43,8 +67,20 @@ def main(argv=None):
     rows = build(L.Extract(a.cells))
     with open(a.out, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh, lineterminator="\n")
-        w.writerow(["company_id", "ticker", "name", "shard_rank", "mcap_bn", "group_draft", "data_point_name",
-                    "gap_reason", "total_debt_resolved_cell", "cash_and_equivalents_cell"])
+        w.writerow(
+            [
+                "company_id",
+                "ticker",
+                "name",
+                "shard_rank",
+                "mcap_bn",
+                "group_draft",
+                "data_point_name",
+                "gap_reason",
+                "total_debt_resolved_cell",
+                "cash_and_equivalents_cell",
+            ]
+        )
         w.writerows(rows)
     print(f"wrote {len(rows)} rows to {a.out}")
     return 0

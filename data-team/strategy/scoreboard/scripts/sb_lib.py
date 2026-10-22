@@ -8,6 +8,7 @@ Evidence labels used in output: MEASURED (computed from a stored extract),
 PROXY (DATA-INFERRED classification), REPORTED (taken from a document, not
 recomputed), NOT_COMPUTABLE / NOT_RUN (with the dependency named).
 """
+
 from __future__ import annotations
 
 import csv
@@ -20,8 +21,8 @@ from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
-SB_DIR = SCRIPTS.parent                      # data-team/strategy/scoreboard
-REPO = SB_DIR.parents[2]                     # repo root of the worktree
+SB_DIR = SCRIPTS.parent  # data-team/strategy/scoreboard
+REPO = SB_DIR.parents[2]  # repo root of the worktree
 SHARDS = REPO / "doc/data-moat/team/top1000/shards.csv"
 GRAPH = REPO / "data-team/strategy/data/metric_dependency_graph.csv"
 GROUPS_DRAFT = REPO / "data-team/strategy/data/group_assignment_draft.csv"
@@ -40,23 +41,65 @@ D0_CELLS = 160_718
 D0E_CELLS = 131_138
 
 # Frozen enums (freeze register section 1)
-CLASSES = ("vocabulary", "composition", "period", "ingestion", "resolver", "identity",
-           "evidence_pending", "definition_pending", "guard_hidden", "finding_open",
-           "filer_error", "unclassified")
-OWNERS = ("data_engineer_l1", "data_engineer_l2", "period_engineer", "tag_mapper",
-          "standardization_lead", "accountant", "sector_analyst", "verifier", "triage",
-          "company_master")
+CLASSES = (
+    "vocabulary",
+    "composition",
+    "period",
+    "ingestion",
+    "resolver",
+    "identity",
+    "evidence_pending",
+    "definition_pending",
+    "guard_hidden",
+    "finding_open",
+    "filer_error",
+    "unclassified",
+)
+OWNERS = (
+    "data_engineer_l1",
+    "data_engineer_l2",
+    "period_engineer",
+    "tag_mapper",
+    "standardization_lead",
+    "accountant",
+    "sector_analyst",
+    "verifier",
+    "triage",
+    "company_master",
+)
 # When several blockers carry different classes, a cascade cell takes the first that
 # appears here: real defects before an unknown, an unknown before a candidate-legitimate.
-CLASS_PRECEDENCE = ("identity", "resolver", "ingestion", "vocabulary", "composition",
-                    "period", "finding_open", "guard_hidden", "filer_error",
-                    "definition_pending", "unclassified", "evidence_pending")
+CLASS_PRECEDENCE = (
+    "identity",
+    "resolver",
+    "ingestion",
+    "vocabulary",
+    "composition",
+    "period",
+    "finding_open",
+    "guard_hidden",
+    "filer_error",
+    "definition_pending",
+    "unclassified",
+    "evidence_pending",
+)
 
 # concept-type rows mean "any canonical_fact at any period" (F2); metric rows mean "latest period".
-CONCEPT_KINDS = ("leaf_concept", "resolved_concept", "derived_concept", "external_source")
+CONCEPT_KINDS = (
+    "leaf_concept",
+    "resolved_concept",
+    "derived_concept",
+    "external_source",
+)
 METRIC_KINDS = ("metric", "price_metric")
-KIND_ORDER = ("metric", "leaf_concept", "resolved_concept", "derived_concept", "price_metric",
-              "external_source")
+KIND_ORDER = (
+    "metric",
+    "leaf_concept",
+    "resolved_concept",
+    "derived_concept",
+    "price_metric",
+    "external_source",
+)
 
 
 # ---- hashing / io ------------------------------------------------------------------------
@@ -85,7 +128,9 @@ def sha256_decompressed(p: Path) -> str:
 
 def id_list_hash(ids) -> str:
     """first 16 hex of sha256 over comma-joined ids sorted NUMERICALLY (freeze register)."""
-    return sha256_bytes(",".join(str(i) for i in sorted(int(x) for x in ids)).encode())[:16]
+    return sha256_bytes(",".join(str(i) for i in sorted(int(x) for x in ids)).encode())[
+        :16
+    ]
 
 
 def name_list_hash(names) -> str:
@@ -102,7 +147,9 @@ def write_gz_deterministic(rows_text: str, dest: Path) -> None:
     """gzip with mtime=0 and no filename so the same text always gives the same bytes."""
     raw = rows_text.encode("utf-8")
     with open(dest, "wb") as fh:
-        with gzip.GzipFile(filename="", mode="wb", fileobj=fh, mtime=0, compresslevel=9) as gz:
+        with gzip.GzipFile(
+            filename="", mode="wb", fileobj=fh, mtime=0, compresslevel=9
+        ) as gz:
             gz.write(raw)
 
 
@@ -110,7 +157,9 @@ def pct(num: int, den: int) -> str:
     """percentage to 2 decimals, half-up; '' when the denominator is 0 (never a fake 0)."""
     if den == 0:
         return ""
-    q = (Decimal(num) * 100 / Decimal(den)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    q = (Decimal(num) * 100 / Decimal(den)).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
     return format(q, "f")
 
 
@@ -118,7 +167,9 @@ def pct(num: int, den: int) -> str:
 def load_cohort(shards: Path = SHARDS):
     """-> (ids list sorted numeric, {id: row}) for the non-excluded rows."""
     rows = list(csv.DictReader(open(shards, newline="", encoding="utf-8")))
-    keep = {int(r["company_id"]): r for r in rows if not (r.get("excluded") or "").strip()}
+    keep = {
+        int(r["company_id"]): r for r in rows if not (r.get("excluded") or "").strip()
+    }
     return sorted(keep), keep
 
 
@@ -137,7 +188,9 @@ def load_graph(path: Path = GRAPH):
 
 
 def read_lines(p: Path):
-    return [x.strip() for x in open(p, encoding="utf-8").read().splitlines() if x.strip()]
+    return [
+        x.strip() for x in open(p, encoding="utf-8").read().splitlines() if x.strip()
+    ]
 
 
 class Extract:
@@ -158,7 +211,11 @@ class Extract:
                 if key in self.cells:
                     self.dups += 1
                 hv = (r.get("has_value") or "").strip().lower() in ("t", "true", "1")
-                absent = (r.get("absent_from_table") or "").strip().lower() in ("t", "true", "1")
+                absent = (r.get("absent_from_table") or "").strip().lower() in (
+                    "t",
+                    "true",
+                    "1",
+                )
                 self.cells[key] = {
                     "has_value": hv and not absent,
                     "reason": (r.get("gap_reason") or ""),
@@ -288,7 +345,7 @@ class Classifier:
                 if c is None or (c["has_value"] and not c["reason"]):
                     notes.append(f"{n}:valued_latest")
                     continue
-                if c["has_value"]:           # valued but carries a reason
+                if c["has_value"]:  # valued but carries a reason
                     notes.append(f"{n}:valued_latest")
                     continue
                 sub = self.classify(cid, n, depth + 1)
@@ -296,10 +353,21 @@ class Classifier:
         if truncated:
             notes.append("reason_list_truncated_in_source")
         if blockers:
-            blockers.sort(key=lambda b: CLASS_PRECEDENCE.index(b[0][0]) if b[0][0] in CLASS_PRECEDENCE else 99)
+            blockers.sort(
+                key=lambda b: (
+                    CLASS_PRECEDENCE.index(b[0][0])
+                    if b[0][0] in CLASS_PRECEDENCE
+                    else 99
+                )
+            )
             (cls, owner, rf, _n), name = blockers[0]
             return (cls, owner, rf, f"via:{name}|" + ";".join(notes))
-        return (row["class"], row["owner"], row["rf_id"], f"walk_no_blank_input|{pat}|" + ";".join(notes))
+        return (
+            row["class"],
+            row["owner"],
+            row["rf_id"],
+            f"walk_no_blank_input|{pat}|" + ";".join(notes),
+        )
 
 
 # ---- diff of two extracts (RT-2 / M rows) ------------------------------------------------
@@ -352,8 +420,15 @@ def tally(ext: Extract, graph: dict, names=None):
                 reasonless += 1
                 by_kind[kind]["reasonless"] += 1
             reasons[c["reason"]] += 1
-    return {"cells": n, "valued": valued, "blank": blank, "reasonless": reasonless,
-            "valued_with_reason": vwr, "by_kind": by_kind, "reasons": reasons}
+    return {
+        "cells": n,
+        "valued": valued,
+        "blank": blank,
+        "reasonless": reasonless,
+        "valued_with_reason": vwr,
+        "by_kind": by_kind,
+        "reasons": reasons,
+    }
 
 
 # ---- staleness thresholds read from the product module, never retyped (AT-7.12) ------------
@@ -363,10 +438,15 @@ STALENESS_MODULE = REPO / "pipeline/src/scrooner_pipeline/common/staleness.py"
 def staleness_thresholds(path: Path = STALENESS_MODULE):
     """-> (annual_max_gap_days, quarterly_max_gap_days) parsed from the module's constants."""
     import ast
+
     tree = ast.parse(Path(path).read_text(encoding="utf-8"))
     found = {}
     for node in tree.body:
-        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+        if (
+            isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+        ):
             if node.targets[0].id in ("ANNUAL_MAX_GAP_DAYS", "QUARTERLY_MAX_GAP_DAYS"):
                 found[node.targets[0].id] = ast.literal_eval(node.value)
     if set(found) != {"ANNUAL_MAX_GAP_DAYS", "QUARTERLY_MAX_GAP_DAYS"}:
@@ -374,10 +454,13 @@ def staleness_thresholds(path: Path = STALENESS_MODULE):
     return found["ANNUAL_MAX_GAP_DAYS"], found["QUARTERLY_MAX_GAP_DAYS"]
 
 
-def is_stale(label: str, latest_end: str, ref_end: str, annual: int, quarterly: int) -> bool:
+def is_stale(
+    label: str, latest_end: str, ref_end: str, annual: int, quarterly: int
+) -> bool:
     """Mirror of common/staleness.py: stale only when it can be PROVEN old. Dates are ISO strings.
     Missing ref_end / latest_end / unknown label -> not stale."""
     from datetime import date
+
     if not latest_end or not ref_end or not label:
         return False
     gap = (date.fromisoformat(ref_end[:10]) - date.fromisoformat(latest_end[:10])).days

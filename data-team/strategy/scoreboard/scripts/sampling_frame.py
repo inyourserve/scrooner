@@ -17,6 +17,7 @@ Frames
 usage: sampling_frame.py cells --seed S --n 40 --where reasonless [--exclude F] [--out F]
        sampling_frame.py groups --seed S [--groups group_assignment_draft.csv] [--out F]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -89,17 +90,36 @@ def group_frames(groups: dict, seed: str):
         if size <= CENSUS_MAX:
             policy, k, note = "census", size, "all members read; Verifier re-reads all"
         elif g in MID_GROUPS_READ_ALL_REREAD_30:
-            policy, k, note = "read_all_reread_30_plus_10_risk", DEFAULT_REREAD, "analyst adds 10 risk-selected"
+            policy, k, note = (
+                "read_all_reread_30_plus_10_risk",
+                DEFAULT_REREAD,
+                "analyst adds 10 risk-selected",
+            )
         elif g == "corporate":
-            policy, k, note = "random_60_plus_15_risk_plus_15_negative", CORPORATE_RANDOM, \
-                "analyst adds 15 risk and 15 negative controls"
+            policy, k, note = (
+                "random_60_plus_15_risk_plus_15_negative",
+                CORPORATE_RANDOM,
+                "analyst adds 15 risk and 15 negative controls",
+            )
         else:
-            policy, k, note = "DEFAULT_30_policy_not_stated", DEFAULT_REREAD, \
-                "doc 49 section 5 names no policy for this group: Sector Analyst to confirm"
+            policy, k, note = (
+                "DEFAULT_30_policy_not_stated",
+                DEFAULT_REREAD,
+                "doc 49 section 5 names no policy for this group: Sector Analyst to confirm",
+            )
         for rank, cid in enumerate(members, 1):
-            rows.append({"group": g, "group_size": size, "policy": policy, "company_id": cid,
-                         "seed_rank": rank, "md5key": md5key(str(cid), seed),
-                         "reread": 1 if rank <= k else 0, "policy_note": note})
+            rows.append(
+                {
+                    "group": g,
+                    "group_size": size,
+                    "policy": policy,
+                    "company_id": cid,
+                    "seed_rank": rank,
+                    "md5key": md5key(str(cid), seed),
+                    "reread": 1 if rank <= k else 0,
+                    "policy_note": note,
+                }
+            )
     return rows
 
 
@@ -123,42 +143,117 @@ def main(argv=None):
     ticker = {cid: r["ticker"] for cid, r in cohort.items()}
     name = {cid: r["name"] for cid, r in cohort.items()}
     t2id = {v: k for k, v in ticker.items()}
-    meta = {"seed": a.seed, "ordering": "md5(key || seed) ascending", "generator": "sampling_frame@1",
-            "cohort_ids_hash": L.id_list_hash(ids)}
+    meta = {
+        "seed": a.seed,
+        "ordering": "md5(key || seed) ascending",
+        "generator": "sampling_frame@1",
+        "cohort_ids_hash": L.id_list_hash(ids),
+    }
     if a.cmd == "cells":
         ext = L.Extract(a.cells)
         names = set(L.read_lines(L.D0_NAMES_FILE))
         frame = cell_frame(ext, a.where, names)
         excl = load_exclusions(a.exclude, t2id) if a.exclude else set()
         picked, pool = draw(frame, a.seed, a.n, excl)
-        gmap = {int(r["company_id"]): r["group"] for r in csv.DictReader(open(L.GROUPS_DRAFT, newline=""))}
+        gmap = {
+            int(r["company_id"]): r["group"]
+            for r in csv.DictReader(open(L.GROUPS_DRAFT, newline=""))
+        }
         graph = L.load_graph()
         with open(a.out, "w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh, lineterminator="\n")
-            w.writerow(["rank", "company_id", "ticker", "name", "data_point_name", "kind", "gap_reason",
-                        "group_draft", "md5key"])
+            w.writerow(
+                [
+                    "rank",
+                    "company_id",
+                    "ticker",
+                    "name",
+                    "data_point_name",
+                    "kind",
+                    "gap_reason",
+                    "group_draft",
+                    "md5key",
+                ]
+            )
             for i, (cid, dp) in enumerate(picked, 1):
-                w.writerow([i, cid, ticker.get(cid, ""), name.get(cid, ""), dp, graph.get(dp, {}).get("kind", ""),
-                            ext.cells[(cid, dp)]["reason"], gmap.get(cid, ""), md5key(f"{cid}|{dp}", a.seed)])
-        meta.update({"frame": a.where, "extract_sha256": L.sha256_decompressed(a.cells), "frame_size": len(frame),
-                     "excluded": len(excl & set(frame)), "pool_after_exclusion": pool, "n": len(picked)})
+                w.writerow(
+                    [
+                        i,
+                        cid,
+                        ticker.get(cid, ""),
+                        name.get(cid, ""),
+                        dp,
+                        graph.get(dp, {}).get("kind", ""),
+                        ext.cells[(cid, dp)]["reason"],
+                        gmap.get(cid, ""),
+                        md5key(f"{cid}|{dp}", a.seed),
+                    ]
+                )
+        meta.update(
+            {
+                "frame": a.where,
+                "extract_sha256": L.sha256_decompressed(a.cells),
+                "frame_size": len(frame),
+                "excluded": len(excl & set(frame)),
+                "pool_after_exclusion": pool,
+                "n": len(picked),
+            }
+        )
     else:
-        gmap = {int(r["company_id"]): r["group"] for r in csv.DictReader(open(a.groups, newline=""))}
+        gmap = {
+            int(r["company_id"]): r["group"]
+            for r in csv.DictReader(open(a.groups, newline=""))
+        }
         gmap = {c_: g_ for c_, g_ in gmap.items() if c_ in cohort}
         rows = group_frames(gmap, a.seed)
         with open(a.out, "w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh, lineterminator="\n")
-            w.writerow(["group", "group_size", "policy", "company_id", "ticker", "name", "sic", "seed_rank",
-                        "md5key", "reread", "policy_note"])
+            w.writerow(
+                [
+                    "group",
+                    "group_size",
+                    "policy",
+                    "company_id",
+                    "ticker",
+                    "name",
+                    "sic",
+                    "seed_rank",
+                    "md5key",
+                    "reread",
+                    "policy_note",
+                ]
+            )
             for r in rows:
                 cid = r["company_id"]
-                w.writerow([r["group"], r["group_size"], r["policy"], cid, ticker.get(cid, ""),
-                            name.get(cid, ""), cohort[cid].get("sic", ""), r["seed_rank"], r["md5key"],
-                            r["reread"], r["policy_note"]])
-        meta.update({"frame": "group_audit", "groups_file": str(Path(a.groups).resolve().relative_to(L.REPO)) if Path(a.groups).resolve().is_relative_to(L.REPO) else str(a.groups), "groups_file_sha256":
-                     L.sha256_file(a.groups), "n_companies": len(gmap),
-                     "label": "DRAFT groups (v1): superseded when group_assignment_v2.csv exists; redraw then"})
-    Path(str(a.out) + ".meta.json").write_text(json.dumps(meta, indent=1, sort_keys=True))
+                w.writerow(
+                    [
+                        r["group"],
+                        r["group_size"],
+                        r["policy"],
+                        cid,
+                        ticker.get(cid, ""),
+                        name.get(cid, ""),
+                        cohort[cid].get("sic", ""),
+                        r["seed_rank"],
+                        r["md5key"],
+                        r["reread"],
+                        r["policy_note"],
+                    ]
+                )
+        meta.update(
+            {
+                "frame": "group_audit",
+                "groups_file": str(Path(a.groups).resolve().relative_to(L.REPO))
+                if Path(a.groups).resolve().is_relative_to(L.REPO)
+                else str(a.groups),
+                "groups_file_sha256": L.sha256_file(a.groups),
+                "n_companies": len(gmap),
+                "label": "DRAFT groups (v1): superseded when group_assignment_v2.csv exists; redraw then",
+            }
+        )
+    Path(str(a.out) + ".meta.json").write_text(
+        json.dumps(meta, indent=1, sort_keys=True)
+    )
     print(json.dumps(meta, sort_keys=True))
     return 0
 
