@@ -104,10 +104,11 @@ def test_flag_on_skips_yfinance_and_records_reason():
         s.startswith("delete from analytics.canonical_fact") for s in conn.sql
     )  # old yfinance row removed
     (r,) = store.all()
-    assert (r.reason_code, r.rule_id, r.data_point) == (
-        "not_in_template",
+    assert (r.reason_code, r.rule_id, r.data_point, r.state) == (
+        "yfinance_tier_off",
         RULE,
         "employee_count_resolved",
+        "not_in_template",
     )
 
 

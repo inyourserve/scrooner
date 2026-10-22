@@ -41,7 +41,7 @@ import structlog
 from scrooner_pipeline.common.cell_blank_reason import BlankReason, BlankReasonStore
 from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.rule_before_image import PlannedChange
-from scrooner_pipeline.common.rules_enabled import is_enabled
+from scrooner_pipeline.common.rule_flags import rule_enabled as is_enabled
 
 logger = structlog.get_logger()
 
@@ -920,11 +920,12 @@ def resolve_employee_count_fallback(
                                 company_id=company_id,
                                 data_point="employee_count_resolved",
                                 period_grain="instant",
-                                period_start=None,
-                                period_end=None,
+                                period_start=date.today(),
+                                period_end=date.today(),
                                 basis="resolved",
                                 rule_id=RULE_EMPLOYEE_NO_YFINANCE,
-                                reason_code="not_in_template",
+                                reason_code="yfinance_tier_off",
+                                state="not_in_template",
                                 detail={"dropped_source": "yfinance"},
                             )
                         ],

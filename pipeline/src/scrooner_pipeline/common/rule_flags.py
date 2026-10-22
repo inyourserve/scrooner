@@ -80,6 +80,7 @@ RULES: dict[str, Rule] = {
         _r("debt.total_debt_consistency@1", "RF-11", "lane3", "held total-debt guards R1/R4/R5"),
         _r("revenue.total_disagreement@1", "RF-13", "lane3", "revenue total-disagreement guard (NA-8)"),
         _r("oi.derived_not_face@1", "RF-14", "lane3", "operating income derived-not-face guard (WO-14)"),
+        _r("mcap.ads_conversion@1", "-", "lane3", "NA-15: ADS-priced market cap converted by the filed ratio, else hidden"),
         _r("mcap.share_basis_guard@1", "RF-15", "lane3", "market cap publish guard at the share basis (WO-21)"),
         _r("scale.unit_plausibility@1", "RF-18", "lane3", "scale and unit publish guard (WO-27)"),
         _r("currency.non_usd_price_ratio@1", "RF-19", "lane3", "non-USD reporter price ratios (WO-28)"),
