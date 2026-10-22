@@ -129,3 +129,18 @@ def test_seed_drift_detects_unknown_metric():
         f.code == "seed_not_in_graph" and f.rule == "gross_margin"
         for f in rc.check_seed_drift(g)
     )
+
+
+def test_every_flagged_rule_id_in_code_is_registered_or_pending():
+    ids = rc.code_rule_ids(ROOT)
+    assert "revenue.total_disagreement@1" not in rc.PENDING_REGISTRY_IDS
+    assert rc.check_code_rule_ids(ROOT, ROWS) == []
+    assert set(ids) >= {"employee_count.no_yfinance_tier@1"}
+
+
+def test_unregistered_rule_id_is_a_finding(tmp_path):
+    src = tmp_path / "pipeline" / "src"
+    src.mkdir(parents=True)
+    (src / "m.py").write_text('RULE_ID = "x.made_up_rule@1"\n')
+    f = rc.check_code_rule_ids(tmp_path, ROWS)
+    assert [x.code for x in f] == ["rule_not_in_registry"]

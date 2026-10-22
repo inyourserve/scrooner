@@ -1415,6 +1415,28 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     per_concept["operating_income_arithmetic"] = oi_arithmetic
     totals["operating_income_arithmetic_filled"] = oi_arithmetic.get("inserted", 0)
 
+    # RF-14 operating-income guard (flag-gated, default OFF = no-op): hides fallback cells without
+    # an identity, pretax-equal cells and the named holds; runs after the arithmetic fallback.
+    from scrooner_pipeline.mapper import operating_income_guard
+
+    if is_enabled(operating_income_guard.RULE_ID):
+        oi_guard = operating_income_guard.apply_operating_income_guard(
+            conn, reason_store=PgBlankReasonStore(conn)
+        )
+        oi_guard.pop("planned", None)
+        per_concept["operating_income_guard"] = oi_guard
+
+    # RF-18 scale/unit publish guard (flag-gated, default OFF = no-op): DPS >= 1,000 and
+    # public_float outside USD 1M-10T are hidden with a reason.
+    from scrooner_pipeline.mapper import scale_unit_guard
+
+    if is_enabled(scale_unit_guard.RULE_ID):
+        scale_guard = scale_unit_guard.apply_scale_unit_guard(
+            conn, reason_store=PgBlankReasonStore(conn)
+        )
+        scale_guard.pop("planned", None)
+        per_concept["scale_unit_guard"] = scale_guard
+
     logger.info("conflict_resolution.all_done", **totals)
     return {"totals": totals, "per_concept": per_concept}
 

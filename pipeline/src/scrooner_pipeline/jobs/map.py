@@ -15,7 +15,12 @@ from scrooner_pipeline.db.connection import (
 from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
-from scrooner_pipeline.mapper import revenue_total_guard
+from scrooner_pipeline.mapper import (
+    operating_income_guard,
+    price_publish_guards,
+    revenue_total_guard,
+    scale_unit_guard,
+)
 from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.concept_fallback import (
     resolve_fallbacks,
@@ -353,6 +358,91 @@ def apply_revenue_total_guard_cmd(
         write_before_image(Path(before_image), planned)
         stats["before_image_rows"] = len(planned)
     typer.echo(f"apply-revenue-total-guard: {stats}")
+
+
+@app.command("apply-operating-income-guard")
+def apply_operating_income_guard_cmd(
+    ciks: str = typer.Option(
+        "", help="Comma-separated CIKs; empty = every company (chunks of 100)."
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Evaluate oi.derived_not_face@1 as ON and write NOTHING; emit the "
+        "before-image to --before-image.",
+    ),
+    before_image: str = typer.Option(
+        "", help="With --dry-run: path of the JSONL before-image to write."
+    ),
+) -> None:
+    """RF-14 / WO-14: hide operating_income(_resolved) cells that are an unvouched
+    arithmetic fallback, equal to pretax, or in the named company holds. No-op unless
+    oi.derived_not_face@1 is listed in SCROONER_RULES_ENABLED. The conflict-fill stage
+    runs it too (after the arithmetic fallback)."""
+    target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()} or None
+    with get_connection() as conn:
+        stats = operating_income_guard.apply_operating_income_guard(
+            conn,
+            target,
+            dry_run=dry_run,
+            reason_store=None if dry_run else PgBlankReasonStore(conn),
+        )
+    planned = stats.pop("planned", [])
+    if dry_run and before_image:
+        write_before_image(Path(before_image), planned)
+        stats["before_image_rows"] = len(planned)
+    typer.echo(f"apply-operating-income-guard: {stats}")
+
+
+@app.command("apply-scale-unit-guard")
+def apply_scale_unit_guard_cmd(
+    ciks: str = typer.Option(
+        "", help="Comma-separated CIKs; empty = every company (chunks of 100)."
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Evaluate scale.unit_plausibility@1 as ON and write NOTHING; emit the "
+        "before-image to --before-image.",
+    ),
+    before_image: str = typer.Option(
+        "", help="With --dry-run: path of the JSONL before-image to write."
+    ),
+) -> None:
+    """RF-18 / WO-27: hide dividends_per_share(_resolved) cells with an absolute value of
+    1,000 or more and public_float cells outside USD 1M-10T. No-op unless
+    scale.unit_plausibility@1 is listed in SCROONER_RULES_ENABLED."""
+    target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()} or None
+    with get_connection() as conn:
+        stats = scale_unit_guard.apply_scale_unit_guard(
+            conn,
+            target,
+            dry_run=dry_run,
+            reason_store=None if dry_run else PgBlankReasonStore(conn),
+        )
+    planned = stats.pop("planned", [])
+    if dry_run and before_image:
+        write_before_image(Path(before_image), planned)
+        stats["before_image_rows"] = len(planned)
+    typer.echo(f"apply-scale-unit-guard: {stats}")
+
+
+@app.command("price-guards-dry-run")
+def price_guards_dry_run_cmd(
+    ciks: str = typer.Option(..., help="Comma-separated CIKs (always explicit)."),
+    before_image: str = typer.Option(
+        ...,
+        help="Path of the JSONL before-image (stored metric cells that would be hidden).",
+    ),
+) -> None:
+    """mcap.share_basis_guard@1 and currency.non_usd_price_ratio@1 evaluated as ON over the
+    STORED latest TTM price-metric rows; WRITES NOTHING. The live hook is in
+    calculate-price-metrics (no-op unless a rule is listed in SCROONER_RULES_ENABLED)."""
+    target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()}
+    with get_connection() as conn:
+        planned = price_publish_guards.plan_price_guards(conn, target)
+    n = write_before_image(Path(before_image), planned)
+    typer.echo(f"price-guards-dry-run: {n} cells would be hidden")
 
 
 @app.command("resolve-conflict-fills")
