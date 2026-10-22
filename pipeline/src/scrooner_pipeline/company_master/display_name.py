@@ -31,6 +31,7 @@ import psycopg
 import structlog
 import yfinance as yf
 
+from scrooner_pipeline.company_master.identity_overrides import load_overrides
 from scrooner_pipeline.common.rate_limiter import CrossProcessRateLimiter
 from scrooner_pipeline.company_master.security_type import (
     OPENFIGI_URL,
@@ -131,10 +132,11 @@ def update_display_names(
         )
         rows = cur.fetchall()
 
+    pinned = load_overrides(conn, "display_name", [r[0] for r in rows])  # audited identity overrides
     target = [
         (cid, cik, name)
         for cid, cik, name, existing in rows
-        if force or existing is None
+        if (force or existing is None) and cid not in pinned
     ]
     stats = {
         "considered": len(rows),

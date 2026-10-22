@@ -1,0 +1,38 @@
+{
+ "cik": "0000081023",
+ "name": "PUBLIC SERVICE CO OF NEW MEXICO",
+ "tickers": [
+  "PNMXO"
+ ],
+ "exchanges": [
+  "OTC"
+ ],
+ "formerNames": [],
+ "sic": "4931",
+ "events": [
+  {
+   "accessionNumber": "0000081023-22-000004",
+   "form": "8-K",
+   "filingDate": "2022-07-01",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001108426-14-000128",
+   "form": "8-K",
+   "filingDate": "2014-10-31",
+   "items": "2.01,9.01"
+  },
+  {
+   "accessionNumber": "0001108426-09-000004",
+   "form": "8-K",
+   "filingDate": "2009-02-04",
+   "items": "1.02,2.01,8.01,9.01"
+  },
+  {
+   "accessionNumber": "0001108426-07-000002",
+   "form": "8-K",
+   "filingDate": "2007-01-08",
+   "items": "2.01,8.01"
+  }
+ ]
+}

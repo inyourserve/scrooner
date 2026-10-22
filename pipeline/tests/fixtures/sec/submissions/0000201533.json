@@ -1,0 +1,92 @@
+{
+ "cik": "0000201533",
+ "name": "CONSUMERS ENERGY CO",
+ "tickers": [
+  "CMS-PB"
+ ],
+ "exchanges": [
+  "NYSE"
+ ],
+ "formerNames": [
+  {
+   "name": "CONSUMERS POWER CO",
+   "from": "1994-02-15T00:00:00.000Z",
+   "to": "1997-01-28T00:00:00.000Z"
+  }
+ ],
+ "sic": "4931",
+ "events": [
+  {
+   "accessionNumber": "0001104659-26-060230",
+   "form": "8-K",
+   "filingDate": "2026-05-13",
+   "items": "5.03,5.07,9.01"
+  },
+  {
+   "accessionNumber": "0001104659-24-058008",
+   "form": "8-K",
+   "filingDate": "2024-05-07",
+   "items": "5.03,5.07,9.01"
+  },
+  {
+   "accessionNumber": "0000876661-13-000468",
+   "form": "25-NSE",
+   "filingDate": "2013-07-01",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-13-027442",
+   "form": "8-K",
+   "filingDate": "2013-01-29",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001299933-11-000331",
+   "form": "8-K",
+   "filingDate": "2011-02-01",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001299933-10-002117",
+   "form": "8-K",
+   "filingDate": "2010-05-26",
+   "items": "5.03,5.07,9.01"
+  },
+  {
+   "accessionNumber": "0001299933-09-003414",
+   "form": "8-K",
+   "filingDate": "2009-08-18",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001299933-09-002336",
+   "form": "8-K",
+   "filingDate": "2009-05-27",
+   "items": "5.02,5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001299933-09-000421",
+   "form": "8-K",
+   "filingDate": "2009-01-27",
+   "items": "5.02,5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001299933-07-007402",
+   "form": "8-K",
+   "filingDate": "2007-12-21",
+   "items": "2.01,8.01,9.01"
+  },
+  {
+   "accessionNumber": "0001299933-07-004899",
+   "form": "8-K",
+   "filingDate": "2007-08-14",
+   "items": "5.03"
+  },
+  {
+   "accessionNumber": "0001299933-07-003699",
+   "form": "8-K",
+   "filingDate": "2007-06-18",
+   "items": "2.01,2.06,9.01"
+  }
+ ]
+}
