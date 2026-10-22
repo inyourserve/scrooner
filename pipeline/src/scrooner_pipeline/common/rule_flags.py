@@ -154,6 +154,12 @@ RULES: dict[str, Rule] = {
             "market cap publish guard at the share basis (WO-21)",
         ),
         _r(
+            "mcap.ads_conversion@1",
+            "-",
+            "lane3",
+            "NA-15: ADS-priced market cap converted by the filed ratio, else hidden",
+        ),
+        _r(
             "scale.unit_plausibility@1",
             "RF-18",
             "lane3",

@@ -41,6 +41,8 @@ class _Cur:
             self.res = [(date(2026, 2, 1), c.prose)] if c.prose else []
         elif sql.startswith("select y_employee_count"):
             self.res = [(c.yf,)] if c.yf else []
+        elif sql.startswith("select max(period_of_report) from core.filing"):
+            self.res = [(c.por,)]
         elif sql.startswith("select id from core.period"):
             self.res = [(77,)]
         else:
@@ -57,8 +59,14 @@ class _Cur:
 
 
 class _Conn:
-    def __init__(self, *, xbrl=0, prose=0, yf=0):
-        self.company_id, self.xbrl, self.prose, self.yf = 1, xbrl, prose, yf
+    def __init__(self, *, xbrl=0, prose=0, yf=0, por=date(2026, 6, 30)):
+        self.company_id, self.xbrl, self.prose, self.yf, self.por = (
+            1,
+            xbrl,
+            prose,
+            yf,
+            por,
+        )
         self.sql: list[str] = []
         self.inserts: list[dict] = []
 
@@ -153,3 +161,35 @@ def test_no_core_period_created_when_tier_off():
         conn, {"0000000001"}, environ={"SCROONER_RULES_ENABLED": RULE}
     )
     assert not any("core.period" in s and s.startswith("insert") for s in conn.sql)
+
+
+def test_d4_reason_key_is_the_latest_periodic_period_of_report_grain_I():
+    conn = _Conn(yf=1200, por=date(2026, 6, 30))
+    store = InMemoryBlankReasonStore()
+    cf.resolve_employee_count_fallback(
+        conn,
+        {"0000000001"},
+        reason_store=store,
+        run_id="r1",
+        environ={"SCROONER_RULES_ENABLED": RULE},
+    )
+    (r,) = store.all()
+    assert (r.period_grain, r.period_start, r.period_end) == (
+        "I",
+        date(2026, 6, 30),
+        date(2026, 6, 30),
+    )
+    assert (r.state, r.reason_code) == ("not_in_template", "yfinance_tier_off")
+
+
+def test_d4_company_without_a_periodic_filing_has_no_cell_but_still_loses_the_yfinance_value():
+    conn = _Conn(yf=1200, por=None)
+    store = InMemoryBlankReasonStore()
+    stats = cf.resolve_employee_count_fallback(
+        conn,
+        {"0000000001"},
+        reason_store=store,
+        run_id="r1",
+        environ={"SCROONER_RULES_ENABLED": RULE},
+    )
+    assert store.all() == [] and conn.inserts == [] and stats["yfinance_skipped"] == 1 and stats["errored"] == 0

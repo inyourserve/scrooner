@@ -797,6 +797,23 @@ def _find_or_create_instant_period(
 RULE_EMPLOYEE_NO_YFINANCE = "employee_count.no_yfinance_tier@1"
 
 
+def latest_periodic_period_of_report(
+    conn: psycopg.Connection, company_id: int
+) -> date | None:
+    """Expected period of a company-level cell (lane 1 ruling 2026-10-22): the period_of_report of
+    the company's latest periodic filing. None = the company has no periodic filing and no cell."""
+    from scrooner_pipeline.mapper.revenue_total_guard import PERIODIC_FORMS
+
+    with conn.cursor() as cur:
+        cur.execute(
+            "select max(period_of_report) from core.filing "
+            "where company_id = %s and form = any(%s) and period_of_report is not null",
+            (company_id, sorted(PERIODIC_FORMS)),
+        )
+        row = cur.fetchone()
+    return row[0] if row else None
+
+
 def resolve_employee_count_fallback(
     conn: psycopg.Connection,
     ciks: set[str],
@@ -852,6 +869,7 @@ def resolve_employee_count_fallback(
                     stats["from_prose"] += 1
 
             yfinance_skipped = False
+            cell_date = None
             if not merged:
                 with conn.cursor() as cur:
                     cur.execute(
@@ -862,6 +880,7 @@ def resolve_employee_count_fallback(
                 if y_row and y_row[0] and yf_off:
                     stats["yfinance_skipped"] += 1
                     yfinance_skipped = True
+                    cell_date = latest_periodic_period_of_report(conn, company_id)
                     if dry_run:
                         planned.append(
                             PlannedChange(
@@ -869,7 +888,7 @@ def resolve_employee_count_fallback(
                                 cik=cik,
                                 company_id=company_id,
                                 data_point="employee_count_resolved",
-                                period_end=None,
+                                period_end=cell_date,
                                 before=Decimal(y_row[0]),
                                 after=None,
                                 reason="not_in_template",
@@ -910,7 +929,7 @@ def resolve_employee_count_fallback(
                             for period_id, (value, source_fact_ids) in merged.items()
                         ],
                     )
-                if yfinance_skipped and reason_store is not None:
+                if yfinance_skipped and reason_store is not None and cell_date:
                     reason_store.replace(
                         company_id,
                         RULE_EMPLOYEE_NO_YFINANCE,
@@ -920,10 +939,10 @@ def resolve_employee_count_fallback(
                                 company_id=company_id,
                                 data_point="employee_count_resolved",
                                 period_grain="instant",
-                                # PLACEHOLDER key: lane 1 has not ruled the period key for a
-                                # company-level cell (D-4); do not treat today's date as a contract
-                                period_start=date.today(),
-                                period_end=date.today(),
+                                # lane 1 ruling: grain I at the latest periodic filing's
+                                # period_of_report; no periodic filing, no cell
+                                period_start=cell_date,
+                                period_end=cell_date,
                                 basis="resolved",
                                 rule_id=RULE_EMPLOYEE_NO_YFINANCE,
                                 reason_code="yfinance_tier_off",
