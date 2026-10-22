@@ -250,3 +250,73 @@ New rule families proposed: R-BASIS (restatement basis mix), R-MIXED-VINTAGE (a 
 Rule (supports data-team/37 revenue-total rule): an undimensioned `Revenues` fact is not proof of a consolidated total. It can be an acquiree's revenue in a narrative note (EMR) or a segment table missing its axis (NTAP), same as GE ledger 2026-10-21. Accept a total-revenue fact only if it sits on the income statement presentation (FSDS `pre.txt` stmt = IS) or equals the face line for the same context. Prefer the face RCFC when a bare `Revenues` fact is smaller than it by more than rounding.
 
 Status: COMPLETE for items 1-8, the extra EMR/NTAP check and all 98 non-I8 findings. I8 was judged by class with a 3-case filing sample.
+
+## 2026-10-21 (later): precision of the tuned suite on cells nobody had filing-checked
+
+Re-run (read-only, dry-run default): `uv run scrooner-certify --top1000-shard S001|S002 --statement-timeout 60 --json-out ...` (scratchpad `v36/r_s001.json`, `r_s002.json`). Client connections were 10 at start; one connection per query; SEC fetches one process at <= 2 req/s.
+
+Current `wrong_value` total: 850. By rule: share_basis_mismatch 486, per_share_derived_by_subtraction 282 (ETR 96, EPS 176, DPS 10), dps_rate_on_ytd 31, negative_on_nonnegative 13, mixed_vintage 7, non_periodic_form 7, quarters_do_not_sum_to_year 6, per_share_basis_mix 5, statement_role_suspect 4, share_jump_without_split 3, layer_sign_conflict 2, quarter_equals_longer_window 2, identity:gross_profit 1, layer_disagreement 1.
+
+### Sample (33 cells; FILING-CHECKED unless noted)
+| # | Rule | Cell | Stored | Filed / correct on current basis | Verdict | Locator |
+|---|---|---|---|---|---|---|
+| 1 | share_basis_mismatch | GOOG basic EPS Q1 2015 | 0.0129 | raw 5.16 / 20 = 0.258 | confirmed (divided by 400: the 20:1 split is in the table twice, 2022-02-01 announcement and 2022-07-15 effective, 164 days apart) | 0001652044-15-000005 R59; 10-K 0001652044-23-000016 R10 split note |
+| 2 | share_basis_mismatch | GOOG basic EPS FY2020 | 59.15 | 2.96 | confirmed (unadjusted) | 0001652044-23-000016 R5 |
+| 3 | share_basis_mismatch | GOOG shares 2015-12-31 | 687,348,000 | x20 = 13.75B | confirmed (pre-split basis) | 0001652044-16-000012 BS; R10 split note above |
+| 4 | share_basis_mismatch | AMZN basic EPS FY2020 | 42.64 | 2.13 | confirmed | 10-K 0001018724-23-000004 R4; R10 "20-for-1 ... May 27, 2022 ... retroactively adjusted" |
+| 5 | share_basis_mismatch | AMZN shares 2021-10-20 | 507,147,620 | x20 | confirmed | 10-Q 0001018724-21-000028 cover; R10 above |
+| 6 | share_basis_mismatch | AVGO basic EPS FY2022 | 27.44 | 2.74 | confirmed | 10-K 0001730168-24-000139 R5; R9 "ten-for-one ... July 12, 2024" |
+| 7 | share_basis_mismatch | AVGO shares 2021-02-26 | 408,302,326 | x10 | confirmed | 10-Q 0001730168-21-000045 cover; R9 above |
+| 8 | share_basis_mismatch | WMT basic EPS FY2024 | 0.64 | 1.92 (already post-split as filed) | confirmed, **double adjusted**: the 10-K was filed after the 2024-02-23 split, and the adjustment divided it again (the latent hazard noted in item 8) | 10-K 0000104169-24-000056 R3, R9 split note |
+| 9 | share_basis_mismatch | WMT basic EPS FY2022 | 4.90 | 1.63 | confirmed (unadjusted) | same R3 |
+| 10 | share_basis_mismatch | WMT shares 2019-09-04 | 2,844,284,080 | x3 | confirmed | 10-Q 0000104169-19-000064 cover; R9 above |
+| 11 | share_basis_mismatch | TSLA basic EPS Q3 2017 | -0.2467 | -3.70 / 15 = -0.2467 | **mislocated** (cell is right; see below) | 10-Q 0001564590-17-021343 R4 |
+| 12 | share_basis_mismatch | TSLA shares 2019-07-22 | 179,127,239 | x15 | confirmed | 10-Q 0001564590-19-026445 cover; R4 0001564590-19-038256 (179M basic shares) |
+| 13 | share_basis_mismatch | TSLA basic EPS FY2018 | -5.72 | -1.14 / 3 = -0.38 | confirmed | 10-K 0001564590-21-004599 R4 |
+| 14 | share_basis_mismatch | TSLA basic EPS FY2020 | 0.74 | 0.25 | confirmed | 10-K 0000950170-23-001409 R4 |
+| 15-18 | statement_role_suspect | JNJ R&D FY2021 0, FY2022 0, FY2024 1,841M, FY2025 109M | | 14,277 / 14,135 / 17,232 / 14,665M | confirmed 4/4 (missed FY2023 483M) | item 5 locators |
+| 19 | mixed_vintage | LLY GP FY2016 | 12,657.9M | 14,152.3 recast | confirmed | item 7 |
+| 20 | mixed_vintage | LLY OI Q4 2017 | 727.6M | mixed COGS | confirmed | item 7 |
+| 21 | mixed_vintage | AVGO operating expenses FY2017 | 6,138M | 6,138 | **refuted**: both vintages agree (GP 8,509 in both the FY2018 10-K and the FY2019 10-K) | 10-K 0001730168-19-000144 R4 |
+| 22 | layer_sign_conflict | TSLA OI FY2017 | 1,179.3M | -1,632.1M | confirmed | item 6 |
+| 23 | layer_sign_conflict | AMD buybacks Q4 2023 | -8M | positive | confirmed | 10-Q 0000002488-23-000139 R7 |
+| 24 | dps_rate_on_ytd | V FY2019 DPS | 0.25 | quarterly rate (FY = 4 declarations) | confirmed | 10-K 0001403161-21-000060 R7 "Dividends declared, quarterly ... 12 Months Ended Sep. 30, 2019 $0.25" |
+| 25 | dps_rate_on_ytd | V FY2020 DPS | 0.30 | same | confirmed | same R7 |
+| 26 | dps_rate_on_ytd | V 6M to 2023-03-31 | 0.45 | rate on a 6-month context | confirmed | 10-Q 0001403161-23-000031 R7 |
+| 27 | dps_rate_on_ytd | V Q3 FY2016 derived | 0.00 | 0.14 rate | confirmed (the 10-Q shows only the 9M 0.14) | 10-Q 0001403161-16-000039 R7 |
+| 28 | dps_rate_on_ytd | NVDA 6M to 2015-10-25 | 0.0061 | rate 0.0975 on a 6-month context | confirmed | 10-K 0001045810-16-000205 R58 |
+| 29 | share_jump_without_split | TSLA shares 2021-12-30 | 1,033M | x3 | confirmed | 10-K 0000950170-22-000796 (as-filed pre-split) |
+| 30-31 | non_periodic_form | LLY tax Q1 2017 170.3M, Q4 2017 1,947.5M | | recast values (8-K R99) | refuted (right as recast) | 8-K 0000059478-19-000274 R99 |
+| 32 | quarters_do_not_sum_to_year | AMD pretax FY2017 | -15M | -8 before equity loss | refuted (perimeter) | 10-K 0000002488-19-000011 R2 |
+| 33 | quarters_do_not_sum_to_year | JNJ interest FY2023 | 772M | 772 | **mislocated**: FY is right; Q2 2023 (346M) is the only quarter never re-presented after the Kenvue separation | 10-K 0000200406-24-000013 R5; core.fact copies below |
+
+### TSLA quarterly EPS: the rule flags the right side of a broken series
+Every flagged TSLA `eps_q` cell is correct on the current basis: 30 cells (15 basic, 15 diluted), runs 2015-Q1/Q2, 2016-Q1/Q2 and 2016-09-30 to 2019-06-30. Each equals the as-filed pre-2020 value divided by 15, e.g. Q3 2017 -3.70 / 15. The actually wrong cells were **not flagged**, because the rule treated them as the reference run:
+- Q3 2019 0.16: raw 0.80 in 10-Q 0001564590-19-038256 R4, so it should be 0.053.
+- Q1 2020 0.02 and Q2-Q3 2020 0.11 / 0.107: from filings made between the two splits but only /5 or unadjusted, should be /15 or /3.
+Cause: the "latest run" anchor is a run of wrong cells that sits next to the correct 2021+ run. Fix: anchor on cells whose source filing is dated after the last split, or compute each cell's expected factor from its source filing date (R-SPLIT-BASIS) instead of comparing runs.
+
+### Precision per rule (current 850 findings)
+| Rule | Flagged | Confirmed | Mislocated | Refuted | Precision | Basis |
+|---|---|---|---|---|---|---|
+| share_basis_mismatch | 486 | 456 | 30 (TSLA eps_q) | 0 | 94% | 13 filing-checked; whole TSLA series recomputed from raw facts; other groups from filed split notes |
+| per_share_derived_by_subtraction | 282 | 282 | 0 | 0 | ~100% as a class | ETR method invalid; EPS 5-case sample; the 10 DPS cells are V/NVDA rate-on-YTD |
+| dps_rate_on_ytd | 31 | 31 | 0 | 0 | 100% | 5 filing-checked; misses V FY2017 0.165 and FY2021 0.32 (10-K 0001403161-21-000060 R7) |
+| statement_role_suspect | 4 | 4 | 0 | 0 | 100% | misses JNJ FY2023 483M |
+| mixed_vintage | 7 | 6 | 0 | 1 (AVGO) | 86% | only flag if the inputs' own vintages disagree |
+| layer_sign_conflict | 2 | 2 | 0 | 0 | 100% | |
+| non_periodic_form | 7 | 5 (JPM) | 0 | 2 (LLY recast) | 71% | |
+| quarters_do_not_sum_to_year | 6 | 3 (TSLA COGS, JNJ R&D x2) | 2 (LLY buybacks FY, JNJ interest) | 1 (AMD) | 50% | |
+| quarter_equals_longer_window | 2 | 2 (AMD Q2s) | 0 | 0 | 100% | |
+| I3 / I4 layer_disagreement / per_share_basis_mix | 19 | 19 | 0 | 0 | 100% | earlier filing checks |
+| share_jump_without_split | 3 | 2 | 1 (TSLA 2021-12-31) | 0 | 67% | |
+| identity:gross_profit | 1 | 0 | 1 | 0 | 0% | |
+| **All** | **850** | **812** | **34** | **4** | **95.5%** | |
+
+The flagged cell is wrong in 812 of 850 (95.5%). 38 (4.5%) point at a correct cell: 34 mislocated (a real defect in the same series), 4 plain refutes. This rests on 33 cells opened this round, about 90 earlier filing-checked cells, and arithmetic on filed raw values and filed split ratios for the rest. It is a cell-level estimate, not a population guarantee. Recall misses found in this round: TSLA 4 quarterly EPS cells, V FY2017/FY2021 DPS, JNJ FY2023 R&D, GOOG double-split at the split table itself.
+
+### The four refuted-but-firing cells: can they be told apart from real defects?
+- **LLY tax Q1/Q4 2017 (8-K recast, 0.3-1% off the originals): yes.** The source is an 8-K whose own XBRL carries complete recast statements (R2/R5/R9/R99, Item 8.01 recast of the 2018 10-K), and the stored value equals that 8-K's own statement. Classify as `recast_8k` (lineage review), never `wrong_value`. The JPM proxy values differ: a DEF 14A has no financial statements and rounds.
+- **AMD pretax FY2017: only with a face-line check.** FY (-15M) and quarters use different tags (after vs before the 7M equity-method loss). A plain "different tag" downgrade would also excuse the real TSLA COGS defect, which also mixes tags. The separator: is the FY fact the face line of its own filing? AMD's -15 is a filed 10-K pretax figure, defensible. TSLA's CostOfGoodsSold is a component row, so it stays wrong.
+- **JNJ interest FY2023: yes, and the rule should move the flag to Q2.** FY 772 = 9M 621 (Q3 10-Q, post-separation) + Q4 151, so FY is consistent with its own vintage. Q1 was re-presented later (215 -> 212, 10-Q 0000200406-24-000049) but Q2 346M exists only in the pre-separation 10-Q 0000200406-23-000082. Rule: when FY = same-vintage 9M + Q4, flag the quarter that has no copy in any filing after a sibling's re-presentation, as stale-basis.
+- Net: all four can be separated by code (recast-8-K signature; face-line test; same-vintage FY = 9M + Q4 test) without hiding the confirmed defects in this sample.
