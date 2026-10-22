@@ -1,0 +1,15 @@
+rule_id,company_id,ticker,data_point,outcome,failure_class,old_ttm,new_ttm,anchor_end,reference_end,lag_days,window_ends,detail,displayed_cells_now,displayed_cells_list
+ttm.age_guard@2,123,AAL,dividends_paid,hidden,anchor_not_at_expected_period,175000000,,2020-02-19,2026-06-30,2323,,anchor 2020-02-19 vs expected 2026-06-30: 2323 days behind,1,dividends_pct_fcf
+ttm.age_guard@2,279,KO,dividends_paid,hidden,anchor_not_at_expected_period,10971000000,,2026-04-03,2026-07-03,91,,anchor 2026-04-03 vs expected 2026-07-03: 91 days behind,1,total_shareholder_yield
+ttm.age_guard@2,89,APD,share_buybacks,hidden,anchor_not_at_expected_period,0,,2014-09-30,2026-06-30,4291,,anchor 2014-09-30 vs expected 2026-06-30: 4291 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,123,AAL,share_buybacks,hidden,anchor_not_at_expected_period,18000000,,2021-12-31,2026-06-30,1642,,anchor 2021-12-31 vs expected 2026-06-30: 1642 days behind,2,buyback_yield;share_repurchases_pct_fcf
+ttm.age_guard@2,279,KO,share_buybacks,hidden,anchor_not_at_expected_period,853000000,,2026-04-03,2026-07-03,91,,anchor 2026-04-03 vs expected 2026-07-03: 91 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,89,APD,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,123,AAL,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,225,MTZ,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,279,KO,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1028,PEP,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1857,COST,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.consecutive_window@1,225,MTZ,ebitda,hidden,gap_between_quarters,1019295000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-06-30,2025-03-31",no quarter between 2025-06-30 and 2026-01-01 (184 days missing),5,ebitda;net_debt_ebitda;ebitda_margin;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,1028,PEP,ebitda,hidden,gap_between_quarters,17294000000,,2026-09-05,,,"2026-09-05,2026-06-13,2026-03-21,2025-03-22",no quarter between 2025-03-22 and 2025-12-28 (280 days missing),5,ebitda;net_debt_ebitda;ebitda_margin;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,89,APD,fcf,hidden,gap_between_quarters,-684900000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-12-31,2025-06-30",no quarter between 2025-06-30 and 2025-10-01 (92 days missing),3,fcf_per_share;share_repurchases_pct_fcf;dividends_pct_fcf

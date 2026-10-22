@@ -37,6 +37,13 @@ import structlog
 
 from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.mapper import rule_flags, ttm_guards
+from scrooner_pipeline.mapper.reason_store import (
+    BlankReason,
+    NullReasonSink,
+    ReasonSink,
+)
+from scrooner_pipeline.mapper.rule_flags import DECISIONS, GuardDecision
 from scrooner_pipeline.mapper.price_metrics import (
     _latest_instant_fact,
     _load_shares_outstanding_fallback,
@@ -174,7 +181,9 @@ def _ebitda_ttm(
     most_recent_end = rows[0][1]
     if (date.today() - most_recent_end).days > TTM_STALENESS_THRESHOLD_DAYS:
         return None
-    return sum(value for value, _end in rows)
+    return _apply_window_guard(
+        conn, company_id, ebitda_metric_id, "ebitda", sum(value for value, _end in rows)
+    )
 
 
 def _fcf_ttm(
@@ -203,7 +212,225 @@ def _fcf_ttm(
     most_recent_end = rows[0][1]
     if (date.today() - most_recent_end).days > TTM_STALENESS_THRESHOLD_DAYS:
         return None
-    return sum(value for value, _end in rows)
+    return _apply_window_guard(
+        conn, company_id, fcf_metric_id, "fcf", sum(value for value, _end in rows)
+    )
+
+
+# --- Tier 0 guards (Data Engineer lane 2, 2026-10-22) -------------------
+# RF-01 ttm.consecutive_window@1 (W1) and RF-02 ttm.age_guard@1 (W2). Both
+# default OFF: with no SCROONER_RULES_ENABLED / SCROONER_RULES_DRYRUN entry the
+# code below is never reached and every value and reason is the legacy one.
+# See mapper/rule_flags.py (modes), mapper/ttm_guards.py (rules and evidence).
+REASON_SINK: ReasonSink = NullReasonSink()
+
+WINDOW_CONSUMERS = {
+    "ebitda": (
+        "ebitda",
+        "net_debt_ebitda",
+        "ebitda_margin",
+        "debt_to_ebitda",
+        "ev_ebitda",
+    ),
+    "fcf": ("fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf"),
+}
+AGE_CONSUMERS = {
+    "share_buybacks": (
+        "buyback_yield",
+        "share_repurchases_pct_fcf",
+        "total_shareholder_yield",
+    ),
+    "dividends_paid": ("dividends_pct_fcf", "total_shareholder_yield"),
+}
+# Composites that need ALL their components current and on one window end
+# (RF-02 v2). total_shareholder_yield is a registered consumer of both.
+COMPOSITE_COMPONENTS = {"total_shareholder_yield": ("share_buybacks", "dividends_paid")}
+# Filing-evidenced zeros (none exist until lane 1's cell_evidence does).
+ZERO_EVIDENCE: ttm_guards.ZeroEvidence = ttm_guards.NoZeroEvidence()
+
+
+def _guard_reason(code: str, data_point: str) -> str:
+    return f"guard:{code}:{data_point}"
+
+
+def _record(
+    mode: str,
+    rule_id: str,
+    company_id: int,
+    data_point: str,
+    outcome: str,
+    reason_code: str | None,
+    old_value: Decimal | None,
+    new_value: Decimal | None,
+    detail: str,
+    consumers: tuple[str, ...],
+) -> None:
+    as_of = date.today()
+    DECISIONS.add(
+        GuardDecision(
+            rule_id=rule_id,
+            mode=mode,
+            company_id=company_id,
+            data_point=data_point,
+            period_grain="TTM",
+            period_start=as_of,
+            period_end=as_of,
+            outcome=outcome,
+            reason_code=reason_code,
+            old_value=old_value,
+            new_value=new_value,
+            detail=detail,
+            consumers=consumers,
+        )
+    )
+    if mode == rule_flags.ON and outcome == "hidden" and reason_code:
+        for consumer in consumers:
+            REASON_SINK.add(
+                BlankReason(
+                    company_id=company_id,
+                    data_point_name=consumer,
+                    period_grain="TTM",
+                    period_start=as_of,
+                    period_end=as_of,
+                    rule_id=rule_id,
+                    reason_code=reason_code,
+                    detail={"input": data_point, "detail": detail},
+                )
+            )
+
+
+def _load_quarter_rows(
+    conn: psycopg.Connection, company_id: int, metric_definition_id: int
+) -> list[ttm_guards.QuarterRow]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select mv.value, mv.period_start, mv.period_end, mv.period_label
+            from analytics.metric_value mv
+            where mv.company_id = %s and mv.metric_definition_id = %s
+              and mv.period_label in ('Q1', 'Q2', 'Q3', 'Q4') and mv.value is not null
+            order by mv.period_end desc
+            limit 12
+            """,
+            (company_id, metric_definition_id),
+        )
+        return ttm_guards.rows_from_tuples(cur.fetchall())
+
+
+def _apply_window_guard(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_definition_id: int,
+    data_point: str,
+    legacy: Decimal,
+) -> Decimal | None:
+    """RF-01: the legacy 4-row sum must be four date-contiguous quarters."""
+    mode = rule_flags.rule_mode(rule_flags.RF01_CONSECUTIVE_WINDOW)
+    if mode == rule_flags.OFF:
+        return legacy
+    decision = ttm_guards.contiguous_ttm_window(
+        _load_quarter_rows(conn, company_id, metric_definition_id)
+    )
+    consumers = WINDOW_CONSUMERS[data_point]
+    rule_id = rule_flags.RF01_CONSECUTIVE_WINDOW
+    if not decision.ok:
+        _record(
+            mode,
+            rule_id,
+            company_id,
+            data_point,
+            "hidden",
+            ttm_guards.NON_CONTIGUOUS,
+            legacy,
+            None,
+            f"{decision.failure}: {decision.detail}",
+            consumers,
+        )
+        return None if mode == rule_flags.ON else legacy
+    if decision.total == legacy:
+        _record(
+            mode,
+            rule_id,
+            company_id,
+            data_point,
+            "kept",
+            None,
+            legacy,
+            legacy,
+            "",
+            consumers,
+        )
+        return legacy
+    _record(
+        mode,
+        rule_id,
+        company_id,
+        data_point,
+        "changed",
+        None,
+        legacy,
+        decision.total,
+        "contiguous window differs from the 4 most recent rows",
+        consumers,
+    )
+    return decision.total if mode == rule_flags.ON else legacy
+
+
+def _newest_quarter_end(
+    conn: psycopg.Connection, company_id: int, metric_definition_id: int
+) -> date | None:
+    rows = _load_quarter_rows(conn, company_id, metric_definition_id)
+    return max((r.end for r in rows), default=None)
+
+
+def _age_component(
+    mode: str,
+    company_id: int,
+    data_point: str,
+    ttm_value: Decimal | None,
+    anchor: tuple[int, str] | None,
+    bounds: dict[tuple[int, str], tuple[date, date]],
+    expected_end: date | None,
+) -> ttm_guards.Component:
+    """RF-02 v2 for one concept: classify its TTM against the expected period and
+    record the decision. Hiding is applied by the caller (mode on only)."""
+    anchor_end = bounds[anchor][1] if anchor is not None and anchor in bounds else None
+    comp = ttm_guards.component(data_point, ttm_value, anchor_end, expected_end)
+    consumers = AGE_CONSUMERS[data_point]
+    rule_id = rule_flags.RF02_AGE_GUARD
+    if comp.status == ttm_guards.CURRENT:
+        _record(
+            mode,
+            rule_id,
+            company_id,
+            data_point,
+            "kept",
+            None,
+            ttm_value,
+            ttm_value,
+            "",
+            consumers,
+        )
+    elif comp.status in (ttm_guards.STALE, ttm_guards.NO_REFERENCE):
+        detail = (
+            f"anchor {comp.anchor_end} vs expected period end {expected_end}: "
+            f"{comp.lag_days} days behind"
+            if comp.status == ttm_guards.STALE
+            else f"anchor {comp.anchor_end}: company has no periodic filing period end"
+        )
+        _record(
+            mode,
+            rule_id,
+            company_id,
+            data_point,
+            "hidden",
+            ttm_guards.STALE_INPUT,
+            ttm_value,
+            None,
+            detail,
+            consumers,
+        )
+    return comp
 
 
 def _shares_outstanding_now_and_1y_ago(
@@ -327,6 +554,7 @@ def calculate_expanded_metrics_for_company(
     # period_start/period_end are NOT NULL (found live: the first
     # version passed None and hit a real constraint violation).
     as_of = date.today()
+    DECISIONS.clear_company(company_id)
 
     def _row(metric_name: str, value: Decimal | None, reason: str | None) -> dict:
         return {
@@ -357,6 +585,14 @@ def calculate_expanded_metrics_for_company(
         else None
     )
     ebitda_ttm = _ebitda_ttm(conn, company_id, metric_ids["ebitda"])
+    # RF-01: when the window guard (mode "on") hid the sum, say so instead of
+    # the legacy "missing" wording; dependents inherit the same reason.
+    _ebitda_guard = DECISIONS.reason_for(company_id, "ebitda")
+    no_ebitda = (
+        _guard_reason(_ebitda_guard, "ebitda")
+        if _ebitda_guard
+        else "missing:ebitda_ttm"
+    )
     market_cap = _latest_metric_value(conn, company_id, metric_ids["market_cap"])
 
     # Persist the TTM sum itself (2026-09-08) -- previously computed fresh
@@ -367,7 +603,13 @@ def calculate_expanded_metrics_for_company(
         _row(
             "ebitda",
             ebitda_ttm,
-            None if ebitda_ttm is not None else "missing:4_consecutive_quarters",
+            None
+            if ebitda_ttm is not None
+            else (
+                _guard_reason(_ebitda_guard, "ebitda")
+                if _ebitda_guard
+                else "missing:4_consecutive_quarters"
+            ),
         )
     )
 
@@ -375,7 +617,7 @@ def calculate_expanded_metrics_for_company(
     if total_debt_hit is None or cash_hit is None:
         rows.append(_row("net_debt_ebitda", None, "missing:total_debt_or_cash"))
     elif ebitda_ttm is None:
-        rows.append(_row("net_debt_ebitda", None, "missing:ebitda_ttm"))
+        rows.append(_row("net_debt_ebitda", None, no_ebitda))
     elif ebitda_ttm == 0:
         rows.append(_row("net_debt_ebitda", None, "zero_denominator"))
     else:
@@ -403,6 +645,8 @@ def calculate_expanded_metrics_for_company(
     fcf_ttm = (
         _fcf_ttm(conn, company_id, metric_ids["fcf"]) if "fcf" in metric_ids else None
     )
+    _fcf_guard = DECISIONS.reason_for(company_id, "fcf")
+    no_fcf = _guard_reason(_fcf_guard, "fcf") if _fcf_guard else "missing:fcf_ttm"
     buybacks_q = (
         _load_quarterly_facts(conn, company_id, concept_ids["share_buybacks"])
         if "share_buybacks" in concept_ids
@@ -422,9 +666,90 @@ def calculate_expanded_metrics_for_company(
         _ttm_sum(dividends_q, *dividends_anchor) if dividends_anchor else (None, [])
     )
 
+    # RF-02 v2 (W2, ttm.age_guard@2). Off by default; "dry_run" only records.
+    # A buyback/dividend TTM must END at the expected period (the latest periodic
+    # filing's period_of_report, +/- 7 days); a composite needs every component
+    # current (or a filing-evidenced zero) on one window end. Hiding is applied
+    # in mode "on" only.
+    no_buybacks = "missing:share_buybacks_ttm"
+    no_dividends = "missing:dividends_paid_ttm"
+    pct_fcf_block: dict[str, str | None] = {
+        "share_buybacks": None,
+        "dividends_paid": None,
+    }
+    tsy_block: str | None = None
+    age_mode = rule_flags.rule_mode(rule_flags.RF02_AGE_GUARD)
+    if age_mode != rule_flags.OFF:
+        expected_end = ttm_guards.expected_period_end(conn, company_id)
+        bounds = ttm_guards.load_quarter_bounds(
+            conn,
+            company_id,
+            [
+                concept_ids[n]
+                for n in ("share_buybacks", "dividends_paid")
+                if n in concept_ids
+            ],
+        )
+        comps = {
+            name: _age_component(
+                age_mode,
+                company_id,
+                name,
+                ttm,
+                anchor,
+                bounds.get(concept_ids.get(name, -1), {}),
+                expected_end,
+            )
+            for name, ttm, anchor in (
+                ("share_buybacks", buybacks_ttm, buybacks_anchor),
+                ("dividends_paid", dividends_ttm, dividends_anchor),
+            )
+        }
+        fcf_end = (
+            _newest_quarter_end(conn, company_id, metric_ids["fcf"])
+            if fcf_ttm is not None and "fcf" in metric_ids
+            else None
+        )
+        for name, comp in comps.items():
+            if comp.status == ttm_guards.CURRENT and fcf_ttm is not None:
+                if not ttm_guards.windows_aligned(comp.anchor_end, fcf_end):
+                    pct_fcf_block[name] = _guard_reason(
+                        ttm_guards.MISALIGNED, f"{name}+fcf"
+                    )
+        composite = ttm_guards.composite_decision(
+            company_id, list(comps.values()), ZERO_EVIDENCE
+        )
+        _record(
+            age_mode,
+            rule_flags.RF02_AGE_GUARD,
+            company_id,
+            "total_shareholder_yield",
+            "hidden" if composite.hidden else "kept",
+            composite.reason.split(":")[0] if composite.reason else None,
+            None,
+            None,
+            composite.reason or "",
+            ("total_shareholder_yield",),
+        )
+        if age_mode == rule_flags.ON:
+            if comps["share_buybacks"].status in (
+                ttm_guards.STALE,
+                ttm_guards.NO_REFERENCE,
+            ):
+                buybacks_ttm = None
+                no_buybacks = _guard_reason(ttm_guards.STALE_INPUT, "share_buybacks")
+            if comps["dividends_paid"].status in (
+                ttm_guards.STALE,
+                ttm_guards.NO_REFERENCE,
+            ):
+                dividends_ttm = None
+                no_dividends = _guard_reason(ttm_guards.STALE_INPUT, "dividends_paid")
+            if composite.hidden:
+                tsy_block = f"guard:{composite.reason}"
+
     # EBITDA Margin = EBITDA (TTM) / Revenue (TTM)
     if ebitda_ttm is None:
-        rows.append(_row("ebitda_margin", None, "missing:ebitda_ttm"))
+        rows.append(_row("ebitda_margin", None, no_ebitda))
     elif revenue_ttm is None:
         rows.append(_row("ebitda_margin", None, "missing:revenue_ttm"))
     elif revenue_ttm == 0:
@@ -445,7 +770,7 @@ def calculate_expanded_metrics_for_company(
     if total_debt_hit is None:
         rows.append(_row("debt_to_ebitda", None, "missing:total_debt"))
     elif ebitda_ttm is None:
-        rows.append(_row("debt_to_ebitda", None, "missing:ebitda_ttm"))
+        rows.append(_row("debt_to_ebitda", None, no_ebitda))
     elif ebitda_ttm == 0:
         rows.append(_row("debt_to_ebitda", None, "zero_denominator"))
     else:
@@ -560,7 +885,7 @@ def calculate_expanded_metrics_for_company(
     # FCF Per Share = Free Cash Flow (TTM) / Shares Outstanding (reuses
     # shares_now, already resolved above for share_dilution_trend).
     if fcf_ttm is None:
-        rows.append(_row("fcf_per_share", None, "missing:fcf_ttm"))
+        rows.append(_row("fcf_per_share", None, no_fcf))
     elif shares_now is None:
         rows.append(_row("fcf_per_share", None, "missing:shares_outstanding"))
     elif shares_now == 0:
@@ -571,11 +896,13 @@ def calculate_expanded_metrics_for_company(
     # Share Repurchases % of FCF -- what fraction of real cash generation
     # went to buybacks, distinct from buyback_yield (buybacks / Market Cap).
     if buybacks_ttm is None:
+        rows.append(_row("share_repurchases_pct_fcf", None, no_buybacks))
+    elif pct_fcf_block["share_buybacks"]:
         rows.append(
-            _row("share_repurchases_pct_fcf", None, "missing:share_buybacks_ttm")
+            _row("share_repurchases_pct_fcf", None, pct_fcf_block["share_buybacks"])
         )
     elif fcf_ttm is None:
-        rows.append(_row("share_repurchases_pct_fcf", None, "missing:fcf_ttm"))
+        rows.append(_row("share_repurchases_pct_fcf", None, no_fcf))
     elif fcf_ttm == 0:
         rows.append(_row("share_repurchases_pct_fcf", None, "zero_denominator"))
     else:
@@ -584,9 +911,11 @@ def calculate_expanded_metrics_for_company(
     # Dividends % of FCF -- a cash-based payout coverage check, distinct
     # from payout_ratio (Dividends per Share / Diluted EPS, earnings-based).
     if dividends_ttm is None:
-        rows.append(_row("dividends_pct_fcf", None, "missing:dividends_paid_ttm"))
+        rows.append(_row("dividends_pct_fcf", None, no_dividends))
+    elif pct_fcf_block["dividends_paid"]:
+        rows.append(_row("dividends_pct_fcf", None, pct_fcf_block["dividends_paid"]))
     elif fcf_ttm is None:
-        rows.append(_row("dividends_pct_fcf", None, "missing:fcf_ttm"))
+        rows.append(_row("dividends_pct_fcf", None, no_fcf))
     elif fcf_ttm == 0:
         rows.append(_row("dividends_pct_fcf", None, "zero_denominator"))
     else:
@@ -616,7 +945,7 @@ def calculate_expanded_metrics_for_company(
 
         # EV/EBITDA
         if ebitda_ttm is None:
-            rows.append(_row("ev_ebitda", None, "missing:ebitda_ttm"))
+            rows.append(_row("ev_ebitda", None, no_ebitda))
         elif ebitda_ttm == 0:
             rows.append(_row("ev_ebitda", None, "zero_denominator"))
         else:
@@ -648,7 +977,7 @@ def calculate_expanded_metrics_for_company(
         # buybacks_ttm, already computed price-independently above.
         buyback_yield = None
         if buybacks_ttm is None:
-            rows.append(_row("buyback_yield", None, "missing:share_buybacks_ttm"))
+            rows.append(_row("buyback_yield", None, no_buybacks))
         elif market_cap == 0:
             rows.append(_row("buyback_yield", None, "zero_denominator"))
         else:
@@ -678,6 +1007,10 @@ def calculate_expanded_metrics_for_company(
         # this direct division needs the same guard, not just a None check.
         if market_cap == 0:
             rows.append(_row("total_shareholder_yield", None, "zero_denominator"))
+        elif tsy_block:
+            # RF-02 v2: a stale, unevidenced-zero or misaligned component hides
+            # the composite; every offending component is named in the reason.
+            rows.append(_row("total_shareholder_yield", None, tsy_block))
         elif dilution is None:
             rows.append(
                 _row("total_shareholder_yield", None, "missing:share_count_1y_ago")

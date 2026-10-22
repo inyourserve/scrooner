@@ -1,0 +1,236 @@
+rule_id,company_id,ticker,data_point,outcome,failure_class,old_ttm,new_ttm,anchor_end,reference_end,lag_days,window_ends,detail,displayed_cells_now,displayed_cells_list
+ttm.age_guard@2,105,HWM,dividends_paid,hidden,anchor_not_at_expected_period,228000000,,2016-06-30,2026-06-30,3652,,anchor 2016-06-30 vs expected 2026-06-30: 3652 days behind,2,dividends_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,161,ALOT,dividends_paid,hidden,anchor_not_at_expected_period,497000,,2021-01-31,2026-04-30,1915,,anchor 2021-01-31 vs expected 2026-04-30: 1915 days behind,0,
+ttm.age_guard@2,279,KO,dividends_paid,hidden,anchor_not_at_expected_period,10971000000,,2026-04-03,2026-07-03,91,,anchor 2026-04-03 vs expected 2026-07-03: 91 days behind,1,total_shareholder_yield
+ttm.age_guard@2,440,FELE,dividends_paid,hidden,anchor_not_at_expected_period,49285000,,2026-03-31,2026-06-30,91,,anchor 2026-03-31 vs expected 2026-06-30: 91 days behind,1,total_shareholder_yield
+ttm.age_guard@2,632,HUBB,dividends_paid,hidden,anchor_not_at_expected_period,213000000,,2021-09-30,2026-06-30,1734,,anchor 2021-09-30 vs expected 2026-06-30: 1734 days behind,1,total_shareholder_yield
+ttm.age_guard@2,1225,,dividends_paid,hidden,anchor_not_at_expected_period,0,,2014-12-31,2026-03-31,4108,,anchor 2014-12-31 vs expected 2026-03-31: 4108 days behind,1,dividends_pct_fcf
+ttm.age_guard@2,1929,AIV,dividends_paid,hidden,anchor_not_at_expected_period,415557000,,2025-12-31,2026-06-30,181,,anchor 2025-12-31 vs expected 2026-06-30: 181 days behind,1,total_shareholder_yield
+ttm.age_guard@2,2266,BJRI,dividends_paid,hidden,anchor_not_at_expected_period,0,,2025-12-30,2026-06-30,182,,anchor 2025-12-30 vs expected 2026-06-30: 182 days behind,2,dividends_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,2318,TACT,dividends_paid,hidden,anchor_not_at_expected_period,0,,2020-12-31,2026-06-30,2007,,anchor 2020-12-31 vs expected 2026-06-30: 2007 days behind,2,dividends_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,2657,INNV,dividends_paid,hidden,anchor_not_at_expected_period,9500000,,2021-06-30,2026-06-30,1826,,anchor 2021-06-30 vs expected 2026-06-30: 1826 days behind,2,dividends_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,3267,OXBR,dividends_paid,hidden,anchor_not_at_expected_period,0,,2019-03-31,2026-06-30,2648,,anchor 2019-03-31 vs expected 2026-06-30: 2648 days behind,1,total_shareholder_yield
+ttm.age_guard@2,5646,REYN,dividends_paid,hidden,anchor_not_at_expected_period,192000000,,2026-03-31,2026-06-30,91,,anchor 2026-03-31 vs expected 2026-06-30: 91 days behind,1,total_shareholder_yield
+ttm.age_guard@2,5820,ARR,dividends_paid,hidden,anchor_not_at_expected_period,348811000,,2026-06-30,2026-09-30,92,,anchor 2026-06-30 vs expected 2026-09-30: 92 days behind,1,total_shareholder_yield
+ttm.age_guard@2,199,BDL,share_buybacks,hidden,anchor_not_at_expected_period,10000,,2014-09-27,2026-06-27,4291,,anchor 2014-09-27 vs expected 2026-06-27: 4291 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,279,KO,share_buybacks,hidden,anchor_not_at_expected_period,853000000,,2026-04-03,2026-07-03,91,,anchor 2026-04-03 vs expected 2026-07-03: 91 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,440,FELE,share_buybacks,hidden,anchor_not_at_expected_period,171907000,,2026-03-31,2026-06-30,91,,anchor 2026-03-31 vs expected 2026-06-30: 91 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,632,HUBB,share_buybacks,hidden,anchor_not_at_expected_period,267500000,,2026-03-31,2026-06-30,91,,anchor 2026-03-31 vs expected 2026-06-30: 91 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,1092,RGR,share_buybacks,hidden,anchor_not_at_expected_period,26100000,,2025-12-31,2026-06-27,178,,anchor 2025-12-31 vs expected 2026-06-27: 178 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,1242,NJR,share_buybacks,hidden,anchor_not_at_expected_period,0,,2018-09-30,2026-06-30,2830,,anchor 2018-09-30 vs expected 2026-06-30: 2830 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,1726,CSBB,share_buybacks,hidden,anchor_not_at_expected_period,999000,,2025-12-31,2026-06-30,181,,anchor 2025-12-31 vs expected 2026-06-30: 181 days behind,1,share_repurchases_pct_fcf
+ttm.age_guard@2,1829,AKR,share_buybacks,hidden,anchor_not_at_expected_period,22386000,,2020-12-31,2026-06-30,2007,,anchor 2020-12-31 vs expected 2026-06-30: 2007 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,1929,AIV,share_buybacks,hidden,anchor_not_at_expected_period,256000,,2025-12-31,2026-06-30,181,,anchor 2025-12-31 vs expected 2026-06-30: 181 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,2027,RVP,share_buybacks,hidden,anchor_not_at_expected_period,7618177,,2022-12-31,2026-06-30,1277,,anchor 2022-12-31 vs expected 2026-06-30: 1277 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,2190,IDT,share_buybacks,hidden,anchor_not_at_expected_period,21417000,,2026-01-31,2026-07-31,181,,anchor 2026-01-31 vs expected 2026-07-31: 181 days behind,2,buyback_yield;share_repurchases_pct_fcf
+ttm.age_guard@2,2316,WRBY,share_buybacks,hidden,anchor_not_at_expected_period,0,,2022-12-31,2026-06-30,1277,,anchor 2022-12-31 vs expected 2026-06-30: 1277 days behind,2,buyback_yield;share_repurchases_pct_fcf
+ttm.age_guard@2,2385,UI,share_buybacks,hidden,anchor_not_at_expected_period,0,,2023-06-30,2026-06-30,1096,,anchor 2023-06-30 vs expected 2026-06-30: 1096 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,2574,,share_buybacks,hidden,anchor_not_at_expected_period,0,,2022-12-31,2026-06-30,1277,,anchor 2022-12-31 vs expected 2026-06-30: 1277 days behind,0,
+ttm.age_guard@2,2614,PETS,share_buybacks,hidden,anchor_not_at_expected_period,0,,2021-03-31,2026-06-30,1917,,anchor 2021-03-31 vs expected 2026-06-30: 1917 days behind,2,buyback_yield;share_repurchases_pct_fcf
+ttm.age_guard@2,2655,ESQ,share_buybacks,hidden,anchor_not_at_expected_period,286000,,2023-12-31,2026-06-30,912,,anchor 2023-12-31 vs expected 2026-06-30: 912 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,2657,INNV,share_buybacks,hidden,anchor_not_at_expected_period,77603000,,2021-06-30,2026-06-30,1826,,anchor 2021-06-30 vs expected 2026-06-30: 1826 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,2738,GOGO,share_buybacks,hidden,anchor_not_at_expected_period,0,,2025-12-31,2026-06-30,181,,anchor 2025-12-31 vs expected 2026-06-30: 181 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,2971,AMH,share_buybacks,hidden,anchor_not_at_expected_period,0,,2019-12-31,2026-06-30,2373,,anchor 2019-12-31 vs expected 2026-06-30: 2373 days behind,1,buyback_yield
+ttm.age_guard@2,3267,OXBR,share_buybacks,hidden,anchor_not_at_expected_period,0,,2019-03-31,2026-06-30,2648,,anchor 2019-03-31 vs expected 2026-06-30: 2648 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,3686,SRFM,share_buybacks,hidden,anchor_not_at_expected_period,1300000,,2024-12-31,2026-06-30,546,,anchor 2024-12-31 vs expected 2026-06-30: 546 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,4449,IDYA,share_buybacks,hidden,anchor_not_at_expected_period,0,,2020-03-31,2026-06-30,2282,,anchor 2020-03-31 vs expected 2026-06-30: 2282 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,4670,DK,share_buybacks,hidden,anchor_not_at_expected_period,0,,2023-12-31,2026-06-30,912,,anchor 2023-12-31 vs expected 2026-06-30: 912 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,5126,BSFC,share_buybacks,hidden,anchor_not_at_expected_period,76323,,2023-12-31,2026-06-30,912,,anchor 2023-12-31 vs expected 2026-06-30: 912 days behind,0,
+ttm.age_guard@2,5590,GDOT,share_buybacks,hidden,anchor_not_at_expected_period,0,,2023-12-31,2026-06-30,912,,anchor 2023-12-31 vs expected 2026-06-30: 912 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,5602,IRTC,share_buybacks,hidden,anchor_not_at_expected_period,0,,2025-12-31,2026-06-30,181,,anchor 2025-12-31 vs expected 2026-06-30: 181 days behind,3,buyback_yield;share_repurchases_pct_fcf;total_shareholder_yield
+ttm.age_guard@2,5820,ARR,share_buybacks,hidden,anchor_not_at_expected_period,11929000,,2026-06-30,2026-09-30,92,,anchor 2026-06-30 vs expected 2026-09-30: 92 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,5902,SIVR,share_buybacks,hidden,anchor_not_at_expected_period,32844000,,2013-12-31,2026-06-30,4564,,anchor 2013-12-31 vs expected 2026-06-30: 4564 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,5903,SGOL,share_buybacks,hidden,anchor_not_at_expected_period,418671000,,2013-12-31,2026-06-30,4564,,anchor 2013-12-31 vs expected 2026-06-30: 4564 days behind,2,buyback_yield;total_shareholder_yield
+ttm.age_guard@2,105,HWM,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,147,ARW,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,161,ALOT,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:dividends_paid;unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,199,BDL,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,279,KO,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,440,FELE,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,630,HNI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,632,HUBB,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1001,NPKI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,1092,RGR,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,1138,WSO,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,1187,IVFH,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,1205,COKE,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,1225,,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:dividends_paid;unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,1242,NJR,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,1283,SMTI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1311,RJF,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,1472,RDNT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1580,CLSK,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,1622,AGM,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,1626,STQN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,1646,USAQ,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,1698,CRVL,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,1726,CSBB,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,0,
+ttm.age_guard@2,1728,EFSI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,1760,USPH,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1829,AKR,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,1834,CPRT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1857,COST,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,1862,DECK,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,1872,NSTM,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,1908,GRVE,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,1929,AIV,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2023,WINT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,2027,RVP,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,2070,XPOF,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2073,HSIC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,2100,HRZN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,2155,SPFX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2190,IDT,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,0,
+ttm.age_guard@2,2211,,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2231,AIRI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2243,ABX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,2266,BJRI,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,2305,AWRE,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,2316,WRBY,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,0,
+ttm.age_guard@2,2318,TACT,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:dividends_paid;unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,2385,UI,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,2414,XAEIU,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2427,COTY,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2445,AENT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2454,FMCC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2459,TCMD,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,2527,MQ,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,0,
+ttm.age_guard@2,2574,,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,0,
+ttm.age_guard@2,2614,PETS,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,0,
+ttm.age_guard@2,2646,TROX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,2655,ESQ,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,2657,INNV,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2678,DTII,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2694,AVTX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2697,CALC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2738,GOGO,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,2745,JBI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2764,BMEA,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2825,CHRN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2862,VIP,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2871,NPWR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2928,NXPL,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,2929,ABNB,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,0,
+ttm.age_guard@2,2949,,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,2969,AMSS,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,2971,AMH,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,0,
+ttm.age_guard@2,3024,CNH,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,3052,ANVI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3078,APCX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3156,LADR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,0,
+ttm.age_guard@2,3218,VISM,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3230,KD,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,3267,OXBR,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3271,VTSI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3289,EMBC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,3325,FTAI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,3430,UEEC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3460,DNOW,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,3486,APUS,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3544,MPTI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3561,TGL,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3633,NCL,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3641,DBVT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3686,SRFM,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,3700,PFGC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,3706,RSTRF,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,3756,ROLR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3767,ACBM,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3770,MGNC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3773,MH,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3814,SN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3823,FCCN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3862,BW,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,3866,AAPI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,3870,LAC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,4082,NPO,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,4103,WTBA,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,4129,SUNS,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,4142,CLMT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,4148,PTOS,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4185,RDAC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,4260,,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4281,NTWO,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4299,CDLX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,4359,IMCR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,4377,FUSE,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4383,GPOX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4449,IDYA,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,4507,XRPN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4513,EVMN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4516,MTNE,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4568,TWLV,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4578,FRGT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4580,BWOW,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4643,VEL,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,4670,DK,total_shareholder_yield,hidden,stale_component,,,,,,,stale_ttm_input:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,4734,PAII,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4736,ITOX,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4770,SNNF,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4788,KRRO,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,4816,BRR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4890,AVXL,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4907,GUAC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4936,BWIV,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,4952,DBI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,5004,ACET,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5009,GHXI,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5055,IPXG,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5099,IIIV,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,0,
+ttm.age_guard@2,5126,BSFC,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,0,
+ttm.age_guard@2,5135,CODA,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5161,LDOS,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5187,ATYR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5211,LMNR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,5243,ELVG,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5260,,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5262,,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5276,VGES,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5293,DPC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5316,NFE,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,5324,CWBHF,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5326,GSRV,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5429,TW,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:dividends_paid,0,
+ttm.age_guard@2,5438,MIRM,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5449,ALTG,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,5573,SRTA,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5590,GDOT,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,5602,IRTC,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,5612,UWMC,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,0,
+ttm.age_guard@2,5646,REYN,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:dividends_paid;unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,5684,ZSTK,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5690,BEEM,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5723,NGNE,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5767,MOJO,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5775,SNWV,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5820,ARR,total_shareholder_yield,hidden,stale_component,,,,,,,"stale_ttm_input:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5850,IVR,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5852,MHH,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5886,BIXT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5888,AGPU,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5902,SIVR,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,5903,SGOL,total_shareholder_yield,hidden,stale_component+unevidenced_zero,,,,,,,stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid,1,total_shareholder_yield
+ttm.age_guard@2,5935,STWD,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,unevidenced_zero:share_buybacks,1,total_shareholder_yield
+ttm.age_guard@2,5949,RENT,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.age_guard@2,5954,RUN,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",1,total_shareholder_yield
+ttm.age_guard@2,5985,,total_shareholder_yield,hidden,unevidenced_zero,,,,,,,"unevidenced_zero:share_buybacks,dividends_paid",0,
+ttm.consecutive_window@1,199,BDL,ebitda,hidden,gap_between_quarters,17444000,,2026-06-27,,,"2026-06-27,2026-03-28,2025-12-27,2025-06-28",no quarter between 2025-06-28 and 2025-09-28 (91 days missing),5,ebitda;net_debt_ebitda;ebitda_margin;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,2825,CHRN,ebitda,hidden,gap_between_quarters,-19806000,,2026-08-31,,,"2026-08-31,2026-03-31,2025-12-31,2025-09-30",no quarter between 2026-03-31 and 2026-06-01 (61 days missing),4,ebitda;net_debt_ebitda;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,2969,AMSS,ebitda,hidden,gap_between_quarters,-10520556,,2026-06-30,,,"2026-06-30,2026-03-31,2025-06-30,2025-03-31",no quarter between 2025-06-30 and 2026-01-01 (184 days missing),4,ebitda;net_debt_ebitda;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,3267,OXBR,ebitda,hidden,gap_between_quarters,-32000,,2026-06-30,,,"2026-06-30,2026-03-31,2024-12-31,2024-09-30",no quarter between 2024-12-31 and 2026-01-01 (365 days missing),3,ebitda;ebitda_margin;ev_ebitda
+ttm.consecutive_window@1,3814,SN,ebitda,hidden,gap_between_quarters,802954000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-06-30,2025-03-31",no quarter between 2025-06-30 and 2026-01-01 (184 days missing),4,ebitda;net_debt_ebitda;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,3823,FCCN,ebitda,hidden,gap_between_quarters,-2294894,,2026-06-30,,,"2026-06-30,2026-03-31,2025-12-31,2025-03-31",no quarter between 2025-03-31 and 2025-10-01 (183 days missing),2,ebitda;ebitda_margin
+ttm.consecutive_window@1,4377,FUSE,ebitda,hidden,gap_between_quarters,-7793000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-06-30,2025-03-31",no quarter between 2025-06-30 and 2026-01-01 (184 days missing),4,ebitda;net_debt_ebitda;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,5316,NFE,ebitda,hidden,gap_between_quarters,-204685000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-06-30,2023-12-31",no quarter between 2025-06-30 and 2026-01-01 (184 days missing),5,ebitda;net_debt_ebitda;ebitda_margin;debt_to_ebitda;ev_ebitda
+ttm.consecutive_window@1,199,BDL,fcf,hidden,gap_between_quarters,435000,,2026-06-27,,,"2026-06-27,2026-03-28,2025-12-27,2025-06-28",no quarter between 2025-06-28 and 2025-09-28 (91 days missing),2,fcf_per_share;share_repurchases_pct_fcf
+ttm.consecutive_window@1,1726,CSBB,fcf,hidden,gap_between_quarters,19231000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-09-30,2025-06-30",no quarter between 2025-09-30 and 2026-01-01 (92 days missing),3,fcf_per_share;share_repurchases_pct_fcf;dividends_pct_fcf
+ttm.consecutive_window@1,2027,RVP,fcf,hidden,gap_between_quarters,-8551146,,2026-06-30,,,"2026-06-30,2026-03-31,2025-09-30,2025-06-30",no quarter between 2025-09-30 and 2026-01-01 (92 days missing),2,fcf_per_share;share_repurchases_pct_fcf
+ttm.consecutive_window@1,2825,CHRN,fcf,hidden,gap_between_quarters,2909000,,2026-08-31,,,"2026-08-31,2026-03-31,2025-12-31,2025-09-30",no quarter between 2026-03-31 and 2026-06-01 (61 days missing),1,fcf_per_share
+ttm.consecutive_window@1,3641,DBVT,fcf,hidden,gap_between_quarters,-150173000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-12-31,2024-12-31",no quarter between 2024-12-31 and 2025-10-01 (273 days missing),1,fcf_per_share
+ttm.consecutive_window@1,3814,SN,fcf,hidden,gap_between_quarters,68412000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-06-30,2025-03-31",no quarter between 2025-06-30 and 2026-01-01 (184 days missing),1,fcf_per_share
+ttm.consecutive_window@1,3823,FCCN,fcf,hidden,gap_between_quarters,-3319725,,2026-06-30,,,"2026-06-30,2026-03-31,2025-12-31,2024-12-31",no quarter between 2024-12-31 and 2025-10-01 (273 days missing),1,fcf_per_share
+ttm.consecutive_window@1,4082,NPO,fcf,hidden,gap_between_quarters,158800000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-09-30,2025-06-30",no quarter between 2025-09-30 and 2026-01-01 (92 days missing),2,fcf_per_share;dividends_pct_fcf
+ttm.consecutive_window@1,4377,FUSE,fcf,hidden,gap_between_quarters,-3693000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-06-30,2025-03-31",no quarter between 2025-06-30 and 2026-01-01 (184 days missing),1,fcf_per_share
+ttm.consecutive_window@1,5573,SRTA,fcf,hidden,gap_between_quarters,-15986000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-12-31,2024-06-30",no quarter between 2024-06-30 and 2025-10-01 (457 days missing),1,fcf_per_share
+ttm.consecutive_window@1,5684,ZSTK,fcf,hidden,gap_between_quarters,-7009000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-12-31,2024-12-31",no quarter between 2024-12-31 and 2025-10-01 (273 days missing),1,fcf_per_share
+ttm.consecutive_window@1,5852,MHH,fcf,hidden,gap_between_quarters,7196000,,2026-06-30,,,"2026-06-30,2026-03-31,2025-12-31,2024-12-31",no quarter between 2024-12-31 and 2025-10-01 (273 days missing),1,fcf_per_share
