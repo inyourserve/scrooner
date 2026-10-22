@@ -102,13 +102,13 @@ ADS_TABLE: dict[str, AdsEntry] = {
         "KZIA",
         ((date(2025, 4, 17), 500),),
         foreign=True,
-        evidence="FC 20-F 0001193125-25-272284; foreign private issuer, Chief to rule scope",
+        evidence="FC 20-F 0001193125-25-272284; foreign private issuer: Chief ruled no market cap or price ratio; exclusion is RF-25's job, this hold is the interim",
     ),
     "0001611747": AdsEntry(
         "SCNI",
         ((date(2024, 5, 21), 4000),),
         foreign=True,
-        evidence="FC 20-F 0001213900-26-038011; foreign private issuer, Chief to rule scope",
+        evidence="FC 20-F 0001213900-26-038011; foreign private issuer: Chief ruled no market cap or price ratio; exclusion is RF-25's job, this hold is the interim",
     ),
 }
 

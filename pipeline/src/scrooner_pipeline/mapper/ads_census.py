@@ -1,4 +1,4 @@
-"""DESIGN ONLY (NA-15 census, card section 3.6). Nothing here runs; migrations 0107 and 0108 are
+"""DESIGN ONLY (NA-15 census, card section 3.6). Nothing here runs; migrations 0108 and 0109 are
 claimed in doc 53 and not written or applied.
 
 Why a census. A hand list misses issuers (SLN was not on it); companyfacts strips the class
@@ -20,7 +20,7 @@ Reader (per company, latest periodic 10-K/10-Q/10-KT only, never 8-K/DEF 14A/S-1
           a class with no residual economic rights is flagged `voting_only` (RPAY Class V);
           a title that does not parse is stored with ratio NULL, never guessed.
 
-Draft DDL (0107):
+Draft DDL (0108):
   create table core.security_class_cover (
     accession_number text not null, company_id bigint not null references core.company(id),
     form text not null, period_end date not null, filing_date date not null,
@@ -31,13 +31,13 @@ Draft DDL (0107):
     unit_unknown boolean not null default false, voting_only boolean not null default false,
     source_sha256 text not null, read_at timestamptz not null default now(),
     primary key (accession_number, coalesce(class_member, '')));
-Draft DDL (0108):
+Draft DDL (0109):
   create table analytics.ads_ratio (
     company_id bigint not null references core.company(id), ratio numeric not null,
     effective_from date not null, source_accession text not null,
     evidence_level text not null check (evidence_level in ('FILING-CHECKED','DATA-INFERRED')),
     announced_on date, primary key (company_id, effective_from));
-`ads_conversion.ADS_TABLE` is the interim copy of 0108; the census fills it, the Verifier signs
+`ads_conversion.ADS_TABLE` is the interim copy of 0109; the census fills it, the Verifier signs
 each new company's ratio before it is `convert`-eligible (default stays hide).
 
 Ratio-change detection (card 3.3 signals b and c): F-6/F-6/A/F-6 POS/F-6EF filed after the source
