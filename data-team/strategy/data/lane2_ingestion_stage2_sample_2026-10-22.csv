@@ -1,0 +1,4 @@
+ticker,accession,form,filing_date,companyfacts_object_fetched,stage2_cause,evidence
+KO,0001628280-26-050503,10-Q,2026-07-29,2026-09-29,companyfacts_lacks_accession,"our stored copy of SEC companyfacts (raw/sec/companyfacts, KO) has no entry with this accn; DATA-INFERRED (no filing opened)"
+F,0000037996-26-000156,10-Q,2026-07-29,2026-10-19,companyfacts_lacks_accession,"same test on the F object"
+ABT,0001628280-26-050134,10-Q,2026-07-28,2026-10-22,companyfacts_lacks_accession,"ABT object fetched 2026-10-22 lists only 0001628280-26-010185 (10-K filed 2026-02-20), 0001104659-26-048560 (S-8 2026-04-24) and 0001628280-26-028357 (10-Q filed 2026-04-29) among 2026 filings: SEC companyfacts is about 3 months behind for ABT"

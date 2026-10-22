@@ -1,0 +1,26 @@
+{
+  "zero_fact_filings": 203,
+  "zero_fact_companies": 196,
+  "zero_fact_by_cause": {
+    "too_recent": 14,
+    "check_payload": 177,
+    "no_companyfacts_object": 12
+  },
+  "zero_fact_by_form": {
+    "10-Q": 186,
+    "10-K/A": 4,
+    "10-Q/A": 8,
+    "10-K": 5
+  },
+  "unindexed_filings": 39,
+  "unindexed_companies": 38,
+  "unindexed_by_form": {
+    "10-Q": 24,
+    "10-KT": 3,
+    "10-K": 10,
+    "10-Q/A": 2
+  },
+  "since": "2026-07-01",
+  "db_watermark": "2026-10-22 11:36:38.147742+00:00",
+  "git_sha": "7e146f52782a7fe6d0984228d092a08d641a8351"
+}
