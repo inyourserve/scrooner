@@ -37,6 +37,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.rule_before_image import PlannedChange
+from scrooner_pipeline.mapper import ads_conversion
 from scrooner_pipeline.common.rules_enabled import is_enabled
 
 logger = structlog.get_logger()
@@ -65,6 +66,7 @@ ADS_HOLDS: dict[str, str] = {
     "0001613780": "DBVT: ADS price against ordinary-share facts",
     "0001888886": "GPCR: ADS price against ordinary-share facts",
     "0000897448": "AMRN: listed in WO-ADDENDA AT-21.1; ratio not verified",
+    "0001479615": "SLN: ADS = 3 ordinary shares, FC 10-Q 0001193125-26-341248 cover (not on the original list)",
 }
 
 
@@ -212,7 +214,8 @@ def apply_price_publish_guards(
     value None plus a ``guard:`` reason."""
     mcap_on = is_enabled(RULE_MCAP, environ)
     ccy_on = is_enabled(RULE_CCY, environ)
-    if not (mcap_on or ccy_on):
+    ads_on = is_enabled(ads_conversion.RULE_ADS, environ)
+    if not (mcap_on or ccy_on or ads_on):
         return rows
     by_name = {metric_names[r["metric_definition_id"]]: r for r in rows}
     hide: dict[str, str] = {}
@@ -221,7 +224,30 @@ def apply_price_publish_guards(
             cur.execute("select cik from core.company where id = %s", (company_id,))
             row = cur.fetchone()
             cik = row[0] if row else ""
+    ads_done: set[str] = set()
     if (
+        (mcap_on or ads_on)
+        and cik in ads_conversion.ADS_TABLE
+        and "market_cap" in by_name
+        and by_name["market_cap"]["value"] is not None
+    ):
+        decision = ads_conversion.decide_for_company(
+            conn, company_id, cik, conversion_on=ads_on
+        )
+        if decision is not None:
+            pe = by_name.get("trailing_pe")
+            results = ads_conversion.apply_decision(
+                decision,
+                {n: r["value"] for n, r in by_name.items()},
+                old_shares=shares_hit[0] if shares_hit else None,
+                market_cap_fact_ids=set(by_name["market_cap"]["source_fact_ids"] or []),
+                pe_fact_ids=set(pe["source_fact_ids"] or []) if pe else set(),
+            )
+            for name, (value, reason) in results.items():
+                by_name[name]["value"] = value
+                by_name[name]["is_null_reason"] = reason
+                ads_done.add(name)
+    elif (
         mcap_on
         and "market_cap" in by_name
         and by_name["market_cap"]["value"] is not None
@@ -244,7 +270,7 @@ def apply_price_publish_guards(
         ccy = load_reporting_currency(conn, company_id)
         if ccy != "USD":
             for m in CURRENCY_HIDDEN:
-                if m in by_name and m not in hide:
+                if m in by_name and m not in hide and m not in ads_done:
                     hide[m] = f"guard:non_usd_reporter:{ccy}"
     for name, reason in hide.items():
         by_name[name]["value"] = None
@@ -252,7 +278,11 @@ def apply_price_publish_guards(
     return rows
 
 
-def plan_price_guards(conn: psycopg.Connection, ciks: set[str]) -> list[PlannedChange]:
+def plan_price_guards(
+    conn: psycopg.Connection,
+    ciks: set[str],
+    environ: dict[str, str] | None = None,
+) -> list[PlannedChange]:
     """Dry run over the STORED latest TTM rows; evaluates both rules as ON, writes nothing."""
     out: list[PlannedChange] = []
     with conn.cursor() as cur:
@@ -288,7 +318,34 @@ def plan_price_guards(conn: psycopg.Connection, ciks: set[str]) -> list[PlannedC
                 cur.execute("select value from core.fact where id = %s", (mc[2][0],))
                 r = cur.fetchone()
                 share_fact = (r[0], list(mc[2])) if r else None
-        if mc and mc[0] is not None:
+        ads_on = True  # the dry run evaluates NA-15 as ON
+        if mc and mc[0] is not None and cik in ads_conversion.ADS_TABLE:
+            decision = ads_conversion.decide_for_company(
+                conn, company_id, cik, conversion_on=ads_on
+            )
+            if decision is not None:
+                results = ads_conversion.apply_decision(
+                    decision,
+                    {n: v[0] for n, v in stored.items()},
+                    old_shares=share_fact[0] if share_fact else None,
+                    market_cap_fact_ids=set(mc[2] or []),
+                    pe_fact_ids=set((stored.get("trailing_pe") or (0, 0, []))[2] or []),
+                )
+                for name, (value, reason) in results.items():
+                    if stored[name][0] is not None and value != stored[name][0]:
+                        out.append(
+                            PlannedChange(
+                                ads_conversion.RULE_ADS if ads_on else RULE_MCAP,
+                                cik,
+                                company_id,
+                                name,
+                                stored[name][1],
+                                stored[name][0],
+                                value,
+                                reason or "ads_converted",
+                            )
+                        )
+        elif mc and mc[0] is not None:
             obs = load_share_observations(
                 conn, company_id, share_fact[1] if share_fact else ()
             )
