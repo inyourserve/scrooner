@@ -75,6 +75,7 @@ from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL
 from scrooner_pipeline.common.rule_flags import (
     RULE_MATCHING_COPIES,
     RULE_PERIODIC_FORM_ONLY,
+    rule_dry_run,
     rule_enabled,
 )
 from scrooner_pipeline.normalizer.matching_copies import all_consistent, precision_rank
@@ -105,9 +106,13 @@ def _load_fact_rows(conn: psycopg.Connection, company_id: int) -> list[tuple]:
 
 
 # Change classes reported by the population dry-run (collect_changes=True).
-CLASS_CONFLICT_CLEARED = "conflict_cleared"  # no authoritative copy -> one (the JPM FY/Q4 cases)
+CLASS_CONFLICT_CLEARED = (
+    "conflict_cleared"  # no authoritative copy -> one (the JPM FY/Q4 cases)
+)
 CLASS_NON_PERIODIC_DEMOTED_SAME_VALUE = "non_periodic_demoted_same_value"
-CLASS_AUTHORITY_VALUE_CHANGED = "authority_value_changed"  # authoritative value differs after
+CLASS_AUTHORITY_VALUE_CHANGED = (
+    "authority_value_changed"  # authoritative value differs after
+)
 CLASS_VALUE_TO_NONE = "value_to_none"  # a cell loses its only authoritative copy
 CLASS_PERIODIC_CONFLICT_REMAINS = "periodic_conflict_remains"
 CLASS_MATCHING_COPIES_RESOLVED = "matching_copies_resolved"  # WO-23
@@ -152,8 +157,21 @@ def plan_authority(
     Flags off reproduces the pre-W3 behavior exactly (see module docstring)."""
     groups: dict[tuple, list[_Member]] = {}
     for row in rows:
-        fact_id, concept_id, unit_id, period_id, value, _fd, _fid, form, is_auth, is_derived = row
-        periodic = (form is not None and form in PERIODIC_FORMS_ALL) if periodic_only else True
+        (
+            fact_id,
+            concept_id,
+            unit_id,
+            period_id,
+            value,
+            _fd,
+            _fid,
+            form,
+            is_auth,
+            is_derived,
+        ) = row
+        periodic = (
+            (form is not None and form in PERIODIC_FORMS_ALL) if periodic_only else True
+        )
         groups.setdefault((concept_id, unit_id, period_id), []).append(
             _Member(fact_id, value, form, bool(is_auth), bool(is_derived), periodic)
         )
@@ -264,7 +282,23 @@ def resolve_authoritative_for_company(
     if matching_copies is None:
         matching_copies = rule_enabled(RULE_MATCHING_COPIES)
     rows = _load_fact_rows(conn, company_id)
-    plan = plan_authority(rows, periodic_only=periodic_only, matching_copies=matching_copies)
+    plan = plan_authority(
+        rows, periodic_only=periodic_only, matching_copies=matching_copies
+    )
+    if rule_dry_run(RULE_PERIODIC_FORM_ONLY) or rule_dry_run(RULE_MATCHING_COPIES):
+        # dry_run mode: log what the rules WOULD change, write the legacy plan
+        would = plan_authority(
+            rows,
+            periodic_only=periodic_only or rule_dry_run(RULE_PERIODIC_FORM_ONLY),
+            matching_copies=matching_copies or rule_dry_run(RULE_MATCHING_COPIES),
+        )
+        logger.info(
+            "dedupe.dry_run",
+            company_id=company_id,
+            would_write=len(would.set_true) + len(would.set_false),
+            legacy_write=len(plan.set_true) + len(plan.set_false),
+            **{f"would_{k}": v for k, v in would.stats.items()},
+        )
 
     with conn.cursor() as cur:
         if plan.set_true:
