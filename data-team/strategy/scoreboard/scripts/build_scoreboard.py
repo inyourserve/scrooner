@@ -211,9 +211,12 @@ def build(
     keep = set(names) - removed
     ext_sha = L.sha256_decompressed(extract_path)
     qsha = script_sha()
-    map_path = map_path or L.REASON_MAP_V2
-    map_ver = "v2" if Path(map_path).name == L.REASON_MAP_V2.name else "v1"
-    kver = "proxy@2" if map_ver == "v2" else "proxy@1"
+    map_path = map_path or L.REASON_MAP_V2_1
+    map_ver = {
+        L.REASON_MAP_V2_1.name: "v2.1",
+        L.REASON_MAP_V2.name: "v2",
+    }.get(Path(map_path).name, "v1")
+    kver = {"v2.1": "proxy@2.1", "v2": "proxy@2"}.get(map_ver, "proxy@1")
     R = Rows(as_of, ext_sha, qsha)
 
     absent_cells, outside, _present = grid_report(ext, ids, names)
@@ -850,7 +853,7 @@ def build(
 
     # K4 proxy
     rmap = L.load_reason_map(map_path)
-    clf = L.Classifier(ext, graph, rmap)
+    clf = L.Classifier(ext, graph, rmap, legacy_bucket=(map_ver == "v2"))
     defects, by_class, by_owner, by_bucket = [], Counter(), Counter(), Counter()
     name_set = set(names)
     for cid, dp in sorted(ext.cells):
@@ -878,6 +881,7 @@ def build(
                 res.second_signal,
                 res.bucket,
                 "yes" if res.excl_k1c else "",
+                "yes" if res.currency_unknown else "",
             )
         )
         if not c["has_value"]:
@@ -885,6 +889,8 @@ def build(
             by_owner[owner] += 1
             if res.bucket:
                 by_bucket[res.bucket] += 1
+            if res.currency_unknown:
+                by_bucket["flag:currency_unknown"] += 1
     for cid, dp in absent_cells:
         defects.append(
             (
@@ -897,6 +903,7 @@ def build(
                 "triage",
                 "",
                 "absent_from_table",
+                "",
                 "",
                 "",
                 "",
@@ -961,8 +968,13 @@ def build(
             qfile=qk,
         )
 
-    if map_ver == "v2":
-        for b in ("currency_unknown", "metric_only_fallback"):
+    if map_ver in ("v2", "v2.1"):
+        buckets = (
+            ("currency_unknown", "metric_only_fallback")
+            if map_ver == "v2"
+            else ("metric_only_fallback", "flag:currency_unknown")
+        )
+        for b in buckets:
             R.add(
                 "K",
                 "K4",
@@ -977,7 +989,7 @@ def build(
                 "DATA-INFERRED",
                 wm=wm,
                 qfile=qk,
-                note="sub-bucket of unclassified cascades whose inputs are all valued: currency_unknown = at least one input is a concept row (any period, F2); metric_only_fallback = metric inputs valued at the latest period",
+                note="metric_only_fallback = unclassified cascade whose valued inputs are all metrics at the latest period; currency_unknown (v2: a sub-bucket of unclassified; v2.1: an orthogonal flag on any class) = at least one valued input is a concept row, any period (F2), so whether it is current is unknown",
             )
         R.add(
             "K",
@@ -1260,6 +1272,7 @@ def defects_csv(defects, as_of, ticker, prev_first_seen) -> str:
             "second_signal",
             "unclassified_bucket",
             "excluded_from_k1c",
+            "currency_unknown",
         ]
     )
     for (
@@ -1277,6 +1290,7 @@ def defects_csv(defects, as_of, ticker, prev_first_seen) -> str:
         second,
         bucket,
         excl,
+        cur_unknown,
     ) in defects:
         first = prev_first_seen.get((cid, dp), as_of)
         w.writerow(
@@ -1299,6 +1313,7 @@ def defects_csv(defects, as_of, ticker, prev_first_seen) -> str:
                 second,
                 bucket,
                 excl,
+                cur_unknown,
             ]
         )
     return sio.getvalue()
@@ -1404,9 +1419,9 @@ def main(argv=None):
     ap.add_argument("--out-dir", type=Path, default=L.SB_DIR)
     ap.add_argument(
         "--map",
-        choices=("v1", "v2"),
-        default="v2",
-        help="reason-class map: v2 (default) or v1, the record behind the 2026-10-20 scoreboard",
+        choices=("v1", "v2", "v2.1"),
+        default="v2.1",
+        help="reason-class map: v2.1 (default), v2 (published) or v1 (the record behind the 2026-10-20 scoreboard)",
     )
     ap.add_argument("--erratum", type=int)
     ap.add_argument("--reason", default="")
@@ -1436,7 +1451,11 @@ def main(argv=None):
             for r in csv.DictReader(open(a.ref_end, newline=""))
         }
     out = a.out_dir
-    map_path = L.REASON_MAP_V2 if a.map == "v2" else L.REASON_MAP
+    map_path = {
+        "v1": L.REASON_MAP,
+        "v2": L.REASON_MAP_V2,
+        "v2.1": L.REASON_MAP_V2_1,
+    }[a.map]
     R, defects, absent_cells = build(ext, a.as_of, a.cells, prev, ref, out, map_path)
     bad = validate_rows(R.rows)
     if bad:

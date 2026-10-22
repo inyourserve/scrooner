@@ -55,3 +55,48 @@ v1 = `reason_class_map.csv` as published in `2026-10-20.csv` (record, unchanged)
 
 Valued cells with a reason (excluded from K1c when K1c is measured): 116. Cells whose class moved v1 -> v2: 3,326 (`maps/reclass_v1_to_v2_2026-10-20.csv`).
 
+## Reason map v2.1: K4 proxy v2 vs v2.1 (2026-10-20 export)
+
+v2 (`reason_class_map_v2.csv`, as published) is kept. v2.1 fixes (a)-(f) of the Chief's second review. DATA-INFERRED; blank cells only (37,392).
+
+- `reason_class_map_v2_1.csv` sha256 **2c3de148c10209a91d262ca0def7210c89d57834399e849bb781ba17ca5be9e6**
+- `reason_class_map_v2.csv` sha256 39c905dd5d87f8594c2f96a9979fbd1556f511b4e970617abb0e649f68a3df51 (unchanged)
+
+| class | v2 | v2.1 | change |
+|---|---|---|---|
+| vocabulary | 1,214 | 1,214 | +0 |
+| composition | 0 | 0 | +0 |
+| period | 6,612 | 6,444 | -168 |
+| ingestion | 6 | 6 | +0 |
+| resolver | 16 | 16 | +0 |
+| identity | 0 | 0 | +0 |
+| evidence_pending | 7,070 | 7,070 | +0 |
+| definition_pending | 716 | 716 | +0 |
+| guard_hidden | 204 | 204 | +0 |
+| finding_open | 0 | 0 | +0 |
+| filer_error | 0 | 0 | +0 |
+| unclassified | 21,554 | 21,722 | +168 |
+| total | 37,392 | 37,392 | |
+
+| unclassified sub-bucket / flag | v2 | v2.1 |
+|---|---|---|
+| metric_only_fallback (bucket) | 0 | 168 |
+| currency_unknown (v2: sub-bucket of unclassified; v2.1: orthogonal flag, any class) | 4,671 | 6,515 |
+
+Currency flag is now independent of the class: it marks every blank cell whose classification rests on a concept input valued at 'any period' (F2). It includes the period-class walk fallbacks (1,809 cells).
+
+Expected effect of (a) was period 6,612 -> 6,444, unclassified 21,554 -> 21,722, metric_only_fallback 0 -> 168: measured period 6,444, unclassified 21,722, metric_only_fallback 168.
+
+### Quarter-label prior-period family: three counts reconciled
+
+| count | what it is | evidence |
+|---|---|---|
+| 1,879 | every blank cell whose reason is `missing:prior_period(...)` (the map's n_cells for the pattern) | MEASURED on the export: 1,879 |
+| 81 | of those, the base is a fiscal-year label (`YYYY_FY`) | MEASURED |
+| 1,798 | of those, the base carries a quarter label (Q1 220, Q2 1,318, Q3 131, Q4 129); 1,879 = 81 + 1,798 exactly | MEASURED: 1,798 |
+| 1,776 | docs 47/49 figure | NOT REPRODUCED. The text of that figure is in no committed file (searched data-team/ and doc/data-moat/); no cut of the export gives it (non-FY excluding yoy windows = 1,644; label year 2015+ = 1,736). The gap to 1,798 is 22 cells and its cause is unknown (a different build is possible: the table was rebuilt 2026-10-21). The owner of the doc 47/49 figure must supply its query |
+
+Pre-2015 bases: 62 of 1,798 by FISCAL LABEL (year <= 2014; MEASURED on the export). By `period_start` DATE the count is NOT_COMPUTABLE offline (the extract has no dates); the query is `sql/Q_prior_period_base_dates.sql` (NOT RUN), with the 1,798 cells in `lists/prior_period_quarter_label_bases_2026-10-20.csv`. Do not quote 62 as a date count.
+
+Verifier queue `frames/verifier_queue_v2_1_2026-10-20.csv`: priority 1 = all 116 `partial:missing_debt_or_cash` cells; 2 = 12 gross-margin fallbacks (of 168); 3-5 = 14, 10, 10 buyback / dividend TTM fallbacks (plus named cases PFE, CMI, GOOG where one of their cells is in those pools); 6 = 141 cells carried from the v2 queue (items 3, 5, 6). DATA-INFERRED, none filing-checked.
+
