@@ -35,28 +35,65 @@ Rule, per doc 09's "deterministic when they agree, flag when they don't":
 Formal restatements (10-K/A) are Stage 2f's job, not this one's -- 2e only
 handles same-form-type disagreement (a 10-Q quietly repeating a slightly
 different number than the original 10-K), not amendment supersession.
+
+W3 -- rule source.periodic_form_only@1 (RF-03), flag OFF by default
+------------------------------------------------------------------
+Until 2026-10-22 this stage grouped EVERY fact of a company with no form
+filter, so one rounded DEF 14A pay-versus-performance copy (JPM 57,000M vs the
+10-K's 57,048M) disagreed with the precise 10-K copies and de-authorized all of
+them, and a derived Q4 built on the proxy FY (12,977M) conflicted with the
+10-K-derived Q4 (13,025M) so both lost authority and the priority-3
+"available to common" tag (12,691M) was displayed (ledger 2026-10-22). With the
+flag on (SCROONER_RULES_ENABLED contains the rule ID, common/rule_flags.py):
+- facts and derived rows whose filing is not a periodic report
+  (common/periodic_forms.PERIODIC_FORMS_ALL) never join a group and are never
+  authoritative;
+- a group that SHRANK because non-periodic copies left it and now has exactly
+  one periodic copy makes that copy authoritative (this is what repairs a cell
+  an earlier run had left with no authoritative copy; the derive stages that
+  run after this one re-assert their own demotions, so nothing they decided is
+  lost);
+- a group with no periodic copy has no authoritative fact (a visible blank).
+Flag off: byte-for-byte the previous behavior. Unchanged rows are not written
+(core.fact is already bloated with dead tuples, plan 2026-10-22).
+
+WO-23 -- rule dedupe.matching_copies@1 (RF-46), flag OFF by default: copies
+that differ only by rounding are not a conflict (normalizer/matching_copies.py);
+the most precise copy (fewest trailing zeros, then earliest filed) wins.
 """
 
+from collections import Counter
+from dataclasses import dataclass, field
 from decimal import Decimal
+from typing import Any
 
 import psycopg
 import structlog
 
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL
+from scrooner_pipeline.common.rule_flags import (
+    RULE_MATCHING_COPIES,
+    RULE_PERIODIC_FORM_ONLY,
+    rule_enabled,
+)
+from scrooner_pipeline.normalizer.matching_copies import all_consistent, precision_rank
 
 logger = structlog.get_logger()
 
 
 def _load_fact_rows(conn: psycopg.Connection, company_id: int) -> list[tuple]:
-    """(fact_id, concept_id, unit_id, period_id, value, filing_date, filing_id)
-    for every fact belonging to this company, pre-sorted so the first row in
-    each (concept_id, unit_id, period_id) group is the earliest-filed
-    (ties broken by fact_id, i.e. insertion order) -- makes "earliest wins"
-    a matter of taking members[0], not a separate min() pass."""
+    """(fact_id, concept_id, unit_id, period_id, value, filing_date, filing_id,
+    form, is_authoritative, is_derived) for every fact belonging to this
+    company, pre-sorted so the first row in each (concept_id, unit_id,
+    period_id) group is the earliest-filed (ties broken by fact_id, i.e.
+    insertion order) -- makes "earliest wins" a matter of taking members[0],
+    not a separate min() pass."""
     with conn.cursor() as cur:
         cur.execute(
             """
-            select f.id, f.concept_id, f.unit_id, f.period_id, f.value, fl.filing_date, f.filing_id
+            select f.id, f.concept_id, f.unit_id, f.period_id, f.value, fl.filing_date, f.filing_id,
+                   fl.form, f.is_authoritative, f.is_derived
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             where f.company_id = %s
@@ -67,52 +104,182 @@ def _load_fact_rows(conn: psycopg.Connection, company_id: int) -> list[tuple]:
         return cur.fetchall()
 
 
+# Change classes reported by the population dry-run (collect_changes=True).
+CLASS_CONFLICT_CLEARED = "conflict_cleared"  # no authoritative copy -> one (the JPM FY/Q4 cases)
+CLASS_NON_PERIODIC_DEMOTED_SAME_VALUE = "non_periodic_demoted_same_value"
+CLASS_AUTHORITY_VALUE_CHANGED = "authority_value_changed"  # authoritative value differs after
+CLASS_VALUE_TO_NONE = "value_to_none"  # a cell loses its only authoritative copy
+CLASS_PERIODIC_CONFLICT_REMAINS = "periodic_conflict_remains"
+CLASS_MATCHING_COPIES_RESOLVED = "matching_copies_resolved"  # WO-23
+CLASS_OTHER = "other"
+
+
+@dataclass
+class _Member:
+    fact_id: int
+    value: Decimal
+    form: str | None
+    is_auth: bool
+    is_derived: bool
+    periodic: bool
+
+
+@dataclass
+class AuthorityPlan:
+    set_true: list[int] = field(default_factory=list)
+    set_false: list[int] = field(default_factory=list)
+    stats: dict[str, int] = field(default_factory=dict)
+    # Only filled when collect_changes=True:
+    # (class, concept_id, unit_id, period_id, before_values, after_values, nonperiodic_forms)
+    changes: list[tuple[Any, ...]] = field(default_factory=list)
+    class_counts: Counter = field(default_factory=Counter)
+
+
+def _final_values(members: list[_Member], desired: dict[int, bool]) -> list[Decimal]:
+    return sorted(
+        {m.value for m in members if desired.get(m.fact_id, m.is_auth)}, key=Decimal
+    )
+
+
+def plan_authority(
+    rows: list[tuple],
+    *,
+    periodic_only: bool = False,
+    matching_copies: bool = False,
+    collect_changes: bool = False,
+) -> AuthorityPlan:
+    """Pure: decide is_authoritative for every group of one company's facts.
+    Flags off reproduces the pre-W3 behavior exactly (see module docstring)."""
+    groups: dict[tuple, list[_Member]] = {}
+    for row in rows:
+        fact_id, concept_id, unit_id, period_id, value, _fd, _fid, form, is_auth, is_derived = row
+        periodic = (form is not None and form in PERIODIC_FORMS_ALL) if periodic_only else True
+        groups.setdefault((concept_id, unit_id, period_id), []).append(
+            _Member(fact_id, value, form, bool(is_auth), bool(is_derived), periodic)
+        )
+
+    plan = AuthorityPlan()
+    agreed = conflicts = non_periodic_demoted = shrunk_promoted = matching_resolved = 0
+
+    for key, members in groups.items():
+        periodic_members = [m for m in members if m.periodic]
+        non_periodic = [m for m in members if not m.periodic]
+        desired: dict[int, bool] = {}
+        matching_used = False
+
+        for m in non_periodic:
+            desired[m.fact_id] = False
+        non_periodic_demoted += sum(1 for m in non_periodic if m.is_auth)
+
+        if len(periodic_members) == 1:
+            if non_periodic:
+                lone = periodic_members[0]
+                desired[lone.fact_id] = True
+                shrunk_promoted += 0 if lone.is_auth else 1
+            # else: singleton group, untouched (Stage 2d default stays)
+        elif len(periodic_members) > 1:
+            values = [m.value for m in periodic_members]
+            exact = len(set(values)) == 1
+            agree = exact
+            if not exact and matching_copies and all_consistent(values):
+                agree = True
+                matching_used = True
+            if agree:
+                if exact:
+                    winner = periodic_members[0]  # earliest filed, by query order
+                else:
+                    winner = min(
+                        enumerate(periodic_members),
+                        key=lambda im: (precision_rank(im[1].value), im[0]),
+                    )[1]
+                desired[winner.fact_id] = True
+                for m in periodic_members:
+                    if m is not winner:
+                        desired[m.fact_id] = False
+                agreed += 1
+                matching_resolved += matching_used
+            else:
+                for m in periodic_members:
+                    desired[m.fact_id] = False
+                conflicts += 1
+
+        for m in members:
+            want = desired.get(m.fact_id)
+            if want is None or want == m.is_auth:
+                continue
+            (plan.set_true if want else plan.set_false).append(m.fact_id)
+
+        if collect_changes and (non_periodic or matching_used):
+            before = sorted({m.value for m in members if m.is_auth}, key=Decimal)
+            after = _final_values(members, desired)
+            if not periodic_members:
+                klass = CLASS_VALUE_TO_NONE if before else CLASS_OTHER
+            elif matching_used and not any(not m.periodic for m in members):
+                klass = CLASS_MATCHING_COPIES_RESOLVED
+            elif not before and after:
+                klass = CLASS_CONFLICT_CLEARED
+            elif before and after:
+                klass = (
+                    CLASS_NON_PERIODIC_DEMOTED_SAME_VALUE
+                    if before == after
+                    else CLASS_AUTHORITY_VALUE_CHANGED
+                )
+            elif not before and not after:
+                klass = CLASS_PERIODIC_CONFLICT_REMAINS
+            else:
+                klass = CLASS_VALUE_TO_NONE
+            plan.class_counts[klass] += 1
+            plan.changes.append(
+                (
+                    klass,
+                    key[0],
+                    key[1],
+                    key[2],
+                    before,
+                    after,
+                    sorted({m.form for m in non_periodic if m.form}),
+                )
+            )
+
+    plan.stats = {
+        "duplicate_groups": agreed + conflicts,
+        "agreed_duplicate_groups": agreed,
+        "conflict_groups": conflicts,
+        "non_periodic_demoted": non_periodic_demoted,
+        "shrunk_group_promoted": shrunk_promoted,
+        "matching_copy_groups": matching_resolved,
+    }
+    return plan
+
+
 def resolve_authoritative_for_company(
-    conn: psycopg.Connection, company_id: int
+    conn: psycopg.Connection,
+    company_id: int,
+    *,
+    periodic_only: bool | None = None,
+    matching_copies: bool | None = None,
 ) -> dict:
+    if periodic_only is None:
+        periodic_only = rule_enabled(RULE_PERIODIC_FORM_ONLY)
+    if matching_copies is None:
+        matching_copies = rule_enabled(RULE_MATCHING_COPIES)
     rows = _load_fact_rows(conn, company_id)
-    groups: dict[tuple, list[tuple]] = {}
-    for fact_id, concept_id, unit_id, period_id, value, filing_date, filing_id in rows:
-        groups.setdefault((concept_id, unit_id, period_id), []).append((fact_id, value))
-
-    make_authoritative: list[int] = []
-    make_non_authoritative: list[int] = []
-    agreed_duplicate_groups = 0
-    conflict_groups = 0
-
-    for members in groups.values():
-        if len(members) == 1:
-            continue  # singleton -- leave the Stage 2d default (true) alone
-        distinct_values = {v for _, v in members}
-        if len(distinct_values) == 1:
-            winner_id = members[0][
-                0
-            ]  # earliest-filed, by construction of the query order
-            make_authoritative.append(winner_id)
-            make_non_authoritative.extend(fact_id for fact_id, _ in members[1:])
-            agreed_duplicate_groups += 1
-        else:
-            make_non_authoritative.extend(fact_id for fact_id, _ in members)
-            conflict_groups += 1
+    plan = plan_authority(rows, periodic_only=periodic_only, matching_copies=matching_copies)
 
     with conn.cursor() as cur:
-        if make_authoritative:
+        if plan.set_true:
             cur.execute(
                 "update core.fact set is_authoritative = true where id = any(%s)",
-                (make_authoritative,),
+                (plan.set_true,),
             )
-        if make_non_authoritative:
+        if plan.set_false:
             cur.execute(
                 "update core.fact set is_authoritative = false where id = any(%s)",
-                (make_non_authoritative,),
+                (plan.set_false,),
             )
     conn.commit()
 
-    stats = {
-        "duplicate_groups": agreed_duplicate_groups + conflict_groups,
-        "agreed_duplicate_groups": agreed_duplicate_groups,
-        "conflict_groups": conflict_groups,
-    }
+    stats = dict(plan.stats)
     logger.info("dedupe.resolved", company_id=company_id, **stats)
     return stats
 
@@ -126,6 +293,9 @@ def resolve_authoritative(conn: psycopg.Connection, ciks: set[str]) -> dict:
         "duplicate_groups": 0,
         "agreed_duplicate_groups": 0,
         "conflict_groups": 0,
+        "non_periodic_demoted": 0,
+        "shrunk_group_promoted": 0,
+        "matching_copy_groups": 0,
     }
     with conn.cursor() as cur:
         cur.execute(
@@ -147,7 +317,14 @@ def resolve_authoritative(conn: psycopg.Connection, ciks: set[str]) -> dict:
             conn = safe_rollback(conn, stage="dedupe", cik=cik)
             continue
         totals["ok"] += 1
-        for k in ("duplicate_groups", "agreed_duplicate_groups", "conflict_groups"):
+        for k in (
+            "duplicate_groups",
+            "agreed_duplicate_groups",
+            "conflict_groups",
+            "non_periodic_demoted",
+            "shrunk_group_promoted",
+            "matching_copy_groups",
+        ):
             totals[k] += stats[k]
 
     logger.info("dedupe.resolve.done", **totals)
