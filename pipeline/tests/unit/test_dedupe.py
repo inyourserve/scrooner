@@ -52,8 +52,8 @@ class DedupeConnection:
         self.commits += 1
 
 
-def fact_row(fact_id, concept_id, value, filing_date, filing_id):
-    return (fact_id, concept_id, 1, 100, Decimal(value), filing_date, filing_id)
+def fact_row(fact_id, concept_id, value, filing_date, filing_id, form="10-K", is_auth=True, is_derived=False):
+    return (fact_id, concept_id, 1, 100, Decimal(value), filing_date, filing_id, form, is_auth, is_derived)
 
 
 @pytest.mark.unit
@@ -76,6 +76,9 @@ def test_dedupe_earliest_agreement_wins_and_conflicts_remain_unresolved():
         "duplicate_groups": 2,
         "agreed_duplicate_groups": 1,
         "conflict_groups": 1,
+        "non_periodic_demoted": 0,
+        "shrunk_group_promoted": 0,
+        "matching_copy_groups": 0,
     }
     assert conn.authority == {1: True, 2: False, 3: False, 4: False, 5: True}
 
