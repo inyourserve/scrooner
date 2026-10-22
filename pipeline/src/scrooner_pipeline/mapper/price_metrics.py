@@ -38,6 +38,7 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.mapper import price_publish_guards
 from scrooner_pipeline.mapper.ttm import _trailing_quarters
 
 logger = structlog.get_logger()
@@ -442,6 +443,16 @@ def calculate_price_metrics_for_company(
                     mc_fids + cfo_fids + capex_fids,
                 )
             )
+
+    # RF-15 / RF-19 publish guards (flag-gated, default OFF: returns rows untouched, no query).
+    rows = price_publish_guards.apply_price_publish_guards(
+        conn,
+        company_id,
+        None,
+        rows,
+        {mid: name for name, mid in metric_ids.items()},
+        shares_hit,
+    )
 
     with conn.cursor() as cur:
         # Scoped to this stage's own 6 metric_definition_ids AND

@@ -21,6 +21,7 @@ Run: ``python -m scrooner_pipeline.common.rule_registry_check`` (exit 1 on any f
 from __future__ import annotations
 
 import csv
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -252,11 +253,45 @@ def check_seed_drift(graph: dict[str, Node]) -> list[Finding]:
     return out
 
 
+# Rule IDs that exist in code (behind a flag) but have no registry row yet. Each needs a Chief
+# RF number; the check lists them as findings once removed from this set.
+PENDING_REGISTRY_IDS = frozenset(
+    {
+        "employee_count.no_yfinance_tier@1",  # D-4, founder-approved, no RF number yet
+        "revenue.structure_total@1",  # NA-9 / RF-48, in the NA doc, not in the registry draft rows
+    }
+)
+
+_RULE_CONST = re.compile(r'^RULE\w*\s*=\s*"([a-z_]+\.[a-z_]+@\d+)"', re.M)
+
+
+def code_rule_ids(root: Path) -> dict[str, str]:
+    """rule id -> first file that defines it, from RULE* string constants under pipeline/src."""
+    found: dict[str, str] = {}
+    for path in sorted((root / "pipeline" / "src").rglob("*.py")):
+        for m in _RULE_CONST.finditer(path.read_text()):
+            found.setdefault(m.group(1), str(path.relative_to(root)))
+    return found
+
+
+def check_code_rule_ids(root: Path, rows: list[dict[str, str]]) -> list[Finding]:
+    """Every flagged rule ID in code must be in the registry (AT-DE-04), and every registered
+    rule family that has a flag in code must be spelled the same."""
+    registered = {r["frozen_rule_id"].split(" ")[0] for r in rows}
+    out = []
+    for rid, where in code_rule_ids(root).items():
+        if rid not in registered and rid not in PENDING_REGISTRY_IDS:
+            out.append(Finding(rid, "rule_not_in_registry", f"defined in {where}"))
+    return out
+
+
 def run(root: Path | None = None) -> list[Finding]:
     root = root or repo_root()
     graph = load_graph(root / GRAPH_REL)
-    findings = check_registry(graph, load_registry(root / REGISTRY_REL))
+    rows = load_registry(root / REGISTRY_REL)
+    findings = check_registry(graph, rows)
     findings += check_seed_drift(graph)
+    findings += check_code_rule_ids(root, rows)
     return findings
 
 
