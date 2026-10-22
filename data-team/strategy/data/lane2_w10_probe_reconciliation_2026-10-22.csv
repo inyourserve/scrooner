@@ -1,0 +1,4 @@
+population,how_drawn,companies,with_latest_equity_instant,bs_date_count,cover_after_only,later_only,none_at_or_after,bvps_newest_blank,bvps_newest_blank_with_older_valued_row
+seed1_sample300,"all core.company ids ordered by id, random.Random(1).shuffle, first 300, sorted (same draw as bs_anchor_dryrun and ttm_guards_dryrun)",300,287,210,39,0,38,270,198
+legacy_mod25_unordered,"active companies with id % 25 = 0, limit 200 WITHOUT order by (planner order; reproduced once on 2026-10-22 by scripts/w10_share_date_probe.py --legacy-mod25; not guaranteed repeatable)",200,194,139,27,0,28,191,139
+legacy_mod25_ordered_by_id,"same filter with order by id (deterministic): --legacy-mod25 --order-by-id",200,194,136,29,0,29,190,137
