@@ -42,7 +42,12 @@ from typing import Any, Iterable
 from scrooner_pipeline.common.staleness import load_latest_filed_periods
 from scrooner_pipeline.mapper import ttm_guards
 from scrooner_pipeline.mapper.price_metrics import _latest_quarter, _trailing_quarters
-from scrooner_pipeline.mapper.rule_flags import RF01_CONSECUTIVE_WINDOW, RF02_AGE_GUARD
+from scrooner_pipeline.mapper.rule_flags import (
+    RF01_CONSECUTIVE_WINDOW,
+    RF02_AGE_GUARD,
+    RF_TSY_STALE,
+    RF_TSY_UNEVIDENCED_ZERO,
+)
 
 # Consumers per guarded data point, from data-team/strategy/data/metric_dependency_graph.csv.
 WINDOW_CONSUMERS = {
@@ -211,35 +216,56 @@ def evaluate_age(
 
 def evaluate_composite(
     company_id: int, components: list[ttm_guards.Component]
-) -> Finding | None:
-    """total_shareholder_yield: hidden when any component is stale, an unevidenced
-    zero (absent) or the current windows do not end together."""
-    decision = ttm_guards.composite_decision(company_id, components)
-    if not decision.hidden:
-        return None
-    classes = [
-        c
-        for c, on in (
-            ("stale_component", decision.stale),
-            ("unevidenced_zero", decision.unevidenced),
-            ("misaligned_windows", decision.misaligned),
+) -> list[Finding]:
+    """total_shareholder_yield, counted per RULE (they are separate flags):
+    tsy.stale_component@1 = a stale component or windows that do not end together;
+    tsy.unevidenced_zero@1 = a component with no TTM at all (priced as 0 today;
+    dry-run only, so this count is a measurement, never a planned change)."""
+    d = ttm_guards.composite_decision(company_id, components)
+    out = []
+    if d.stale_reason:
+        classes = [
+            c
+            for c, on in (
+                ("stale_component", d.stale),
+                ("misaligned_windows", d.misaligned),
+            )
+            if on
+        ]
+        out.append(
+            Finding(
+                RF_TSY_STALE,
+                company_id,
+                "total_shareholder_yield",
+                "hidden",
+                "+".join(classes),
+                None,
+                None,
+                None,
+                None,
+                None,
+                "",
+                d.stale_reason,
+            )
         )
-        if on
-    ]
-    return Finding(
-        RF02_AGE_GUARD,
-        company_id,
-        "total_shareholder_yield",
-        "hidden",
-        "+".join(classes),
-        None,
-        None,
-        None,
-        None,
-        None,
-        "",
-        decision.reason or "",
-    )
+    if d.unevidenced_reason:
+        out.append(
+            Finding(
+                RF_TSY_UNEVIDENCED_ZERO,
+                company_id,
+                "total_shareholder_yield",
+                "hidden",
+                "unevidenced_zero",
+                None,
+                None,
+                None,
+                None,
+                None,
+                "",
+                d.unevidenced_reason,
+            )
+        )
+    return out
 
 
 def lag_bucket(comp: ttm_guards.Component) -> str:
@@ -265,20 +291,30 @@ def lag_bucket(comp: ttm_guards.Component) -> str:
     return "behind>1y"
 
 
+def _dkey(f: Finding) -> tuple[int, str]:
+    """Displayed-cells key. total_shareholder_yield is reported once per RULE."""
+    if f.data_point == "total_shareholder_yield" and f.rule_id != RF02_AGE_GUARD:
+        return (f.company_id, f"total_shareholder_yield|{f.rule_id}")
+    return (f.company_id, f.data_point)
+
+
 def summarize(
     findings: list[Finding],
     displayed: dict[tuple[int, str], list[str]],
     lags: Counter[str],
 ) -> dict[str, Any]:
     by_rule: dict[str, Any] = {}
-    for rule in (RF01_CONSECUTIVE_WINDOW, RF02_AGE_GUARD):
+    for rule in (
+        RF01_CONSECUTIVE_WINDOW,
+        RF02_AGE_GUARD,
+        RF_TSY_STALE,
+        RF_TSY_UNEVIDENCED_ZERO,
+    ):
         sel = [f for f in findings if f.rule_id == rule]
         by_dp: dict[str, Any] = {}
         for dp in sorted({f.data_point for f in sel}):
             fs = [f for f in sel if f.data_point == dp]
-            cells = sum(
-                len(displayed.get((f.company_id, f.data_point), [])) for f in fs
-            )
+            cells = sum(len(displayed.get(_dkey(f), [])) for f in fs)
             by_dp[dp] = {
                 "companies": len({f.company_id for f in fs}),
                 "displayed_cells_now": cells,
@@ -452,10 +488,9 @@ def run(  # pragma: no cover - needs a database
                         for m in AGE_CONSUMERS[dp]
                         if ttm_now.get((cid, m)) is not None
                     ]
-            composite = evaluate_composite(cid, comps)
-            if composite:
+            for composite in evaluate_composite(cid, comps):
                 findings.append(composite)
-                displayed[(cid, "total_shareholder_yield")] = [
+                displayed[_dkey(composite)] = [
                     m
                     for m in ("total_shareholder_yield",)
                     if ttm_now.get((cid, m)) is not None
@@ -475,7 +510,7 @@ def write_csv(
         for f in sorted(
             findings, key=lambda x: (x.rule_id, x.data_point, x.company_id)
         ):
-            cells = displayed.get((f.company_id, f.data_point), [])
+            cells = displayed.get(_dkey(f), [])
             w.writerow(
                 {
                     "rule_id": f.rule_id,

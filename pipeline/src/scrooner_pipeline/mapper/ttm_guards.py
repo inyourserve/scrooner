@@ -242,11 +242,26 @@ def component(
 
 @dataclass(frozen=True)
 class CompositeDecision:
-    hidden: bool
-    reason: str | None  # e.g. stale_ttm_input:share_buybacks,dividends_paid
+    """Two independent verdicts (two rules, two flags):
+    `stale_reason`  tsy.stale_component@1: a component is stale or the current
+                    windows do not end together;
+    `unevidenced_reason` tsy.unevidenced_zero@1: a component has no TTM at all and
+                    no filing-evidenced zero (priced as 0 today; dry-run only)."""
+
+    stale_reason: str | None
+    unevidenced_reason: str | None
     stale: tuple[str, ...] = ()
     unevidenced: tuple[str, ...] = ()
     misaligned: bool = False
+
+    @property
+    def hidden(self) -> bool:
+        return bool(self.stale_reason or self.unevidenced_reason)
+
+    @property
+    def reason(self) -> str | None:
+        parts = [r for r in (self.stale_reason, self.unevidenced_reason) if r]
+        return ";".join(parts) or None
 
 
 def composite_decision(
@@ -255,9 +270,9 @@ def composite_decision(
     evidence: ZeroEvidence | None = None,
     tolerance_days: int = EXPECTED_PERIOD_TOLERANCE_DAYS,
 ) -> CompositeDecision:
-    """A composite (total shareholder yield) is shown only when every component is
-    either a CURRENT TTM or a filing-evidenced zero, and the current windows end
-    together. Every offending component is named in the reason."""
+    """A composite (total shareholder yield) is fully supported only when every
+    component is either a CURRENT TTM or a filing-evidenced zero, and the current
+    windows end together. Every offending component is named in the reason."""
     evidence = evidence or NoZeroEvidence()
     stale = tuple(c.name for c in components if c.status in (STALE, NO_REFERENCE))
     unevidenced = tuple(
@@ -272,17 +287,19 @@ def composite_decision(
         len(current_ends) > 1
         and (max(current_ends) - min(current_ends)).days > tolerance_days
     )
-    parts = []
+    stale_parts = []
     if stale:
-        parts.append(f"{STALE_INPUT}:{','.join(stale)}")
-    if unevidenced:
-        parts.append(f"{UNEVIDENCED_ZERO}:{','.join(unevidenced)}")
+        stale_parts.append(f"{STALE_INPUT}:{','.join(stale)}")
     if misaligned:
-        parts.append(
+        stale_parts.append(
             f"{MISALIGNED}:{','.join(c.name for c in components if c.status == CURRENT)}"
         )
     return CompositeDecision(
-        bool(parts), ";".join(parts) or None, stale, unevidenced, misaligned
+        ";".join(stale_parts) or None,
+        f"{UNEVIDENCED_ZERO}:{','.join(unevidenced)}" if unevidenced else None,
+        stale,
+        unevidenced,
+        misaligned,
     )
 
 

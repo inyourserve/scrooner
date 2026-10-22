@@ -85,20 +85,37 @@ def test_age_label_ttm_needs_four_consecutive_labels():
     )  # no label-consecutive TTM exists at all
 
 
-def test_composite_finding_names_the_classes():
+def test_composite_is_counted_per_rule():
     cur = _by_key(2026, 2, 4, "5", EXPECTED)
     stale = _by_key(2021, 4, 4, "5", date(2021, 12, 31))
     _f1, b = dr.evaluate_age(1, "share_buybacks", stale, EXPECTED)
     _f2, d = dr.evaluate_age(1, "dividends_paid", None, EXPECTED)
-    f = dr.evaluate_composite(1, [b, d])
-    assert (
-        f.data_point == "total_shareholder_yield"
-        and f.failure_class == "stale_component+unevidenced_zero"
-    )
-    assert f.detail == "stale_ttm_input:share_buybacks;unevidenced_zero:dividends_paid"
+    found = {f.rule_id: f for f in dr.evaluate_composite(1, [b, d])}
+    assert set(found) == {"tsy.stale_component@1", "tsy.unevidenced_zero@1"}
+    assert found["tsy.stale_component@1"].detail == "stale_ttm_input:share_buybacks"
+    assert found["tsy.unevidenced_zero@1"].detail == "unevidenced_zero:dividends_paid"
     _g, c1 = dr.evaluate_age(1, "share_buybacks", cur, EXPECTED)
     _h, c2 = dr.evaluate_age(1, "dividends_paid", cur, EXPECTED)
-    assert dr.evaluate_composite(1, [c1, c2]) is None
+    assert dr.evaluate_composite(1, [c1, c2]) == []
+    only_absent = dr.evaluate_composite(1, [c1, d])
+    assert [f.rule_id for f in only_absent] == ["tsy.unevidenced_zero@1"]
+
+
+def test_summary_counts_the_two_tsy_rules_separately():
+    cur = _by_key(2026, 2, 4, "5", EXPECTED)
+    stale = _by_key(2021, 4, 4, "5", date(2021, 12, 31))
+    _a, b = dr.evaluate_age(1, "share_buybacks", stale, EXPECTED)
+    _c, d = dr.evaluate_age(1, "dividends_paid", None, EXPECTED)
+    findings = dr.evaluate_composite(1, [b, d])
+    displayed = {dr._dkey(f): ["total_shareholder_yield"] for f in findings}
+    s = dr.summarize(findings, displayed, dr.Counter())["rules"]
+    assert (
+        s["tsy.stale_component@1"]["total_shareholder_yield"]["displayed_cells_now"]
+        == 1
+    )
+    assert s["tsy.unevidenced_zero@1"]["total_shareholder_yield"][
+        "by_failure_class"
+    ] == {"unevidenced_zero": 1}
 
 
 def test_lag_histogram_is_against_the_expected_period():

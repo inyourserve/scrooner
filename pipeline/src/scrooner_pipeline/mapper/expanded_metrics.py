@@ -247,6 +247,7 @@ AGE_CONSUMERS = {
 COMPOSITE_COMPONENTS = {"total_shareholder_yield": ("share_buybacks", "dividends_paid")}
 # Filing-evidenced zeros (none exist until lane 1's cell_evidence does).
 ZERO_EVIDENCE: ttm_guards.ZeroEvidence = ttm_guards.NoZeroEvidence()
+UNEVIDENCED_CODE = ttm_guards.UNEVIDENCED_ZERO
 
 
 def _guard_reason(code: str, data_point: str) -> str:
@@ -384,7 +385,7 @@ def _newest_quarter_end(
 
 
 def _age_component(
-    mode: str,
+    mode: str | None,
     company_id: int,
     data_point: str,
     ttm_value: Decimal | None,
@@ -396,6 +397,8 @@ def _age_component(
     record the decision. Hiding is applied by the caller (mode on only)."""
     anchor_end = bounds[anchor][1] if anchor is not None and anchor in bounds else None
     comp = ttm_guards.component(data_point, ttm_value, anchor_end, expected_end)
+    if mode is None:  # classification only (a TSY rule is active, RF-02 is off)
+        return comp
     consumers = AGE_CONSUMERS[data_point]
     rule_id = rule_flags.RF02_AGE_GUARD
     if comp.status == ttm_guards.CURRENT:
@@ -678,8 +681,20 @@ def calculate_expanded_metrics_for_company(
         "dividends_paid": None,
     }
     tsy_block: str | None = None
+    # total_shareholder_yield is governed by its own two rules (Chief decision
+    # 2026-10-22): stale/misaligned components may hide it; "no TTM at all" is
+    # dry-run only (rule_flags.DRY_RUN_ONLY) and never hides anything.
     age_mode = rule_flags.rule_mode(rule_flags.RF02_AGE_GUARD)
-    if age_mode != rule_flags.OFF:
+    tsy_stale_mode = rule_flags.rule_mode(rule_flags.RF_TSY_STALE)
+    tsy_unev_mode = rule_flags.rule_mode(rule_flags.RF_TSY_UNEVIDENCED_ZERO)
+    # TSY prices the TTMs as they were BEFORE RF-02 hides a stale one, so turning
+    # RF-02 on alone never turns a hidden component into an implicit 0.
+    buybacks_ttm_tsy, dividends_ttm_tsy = buybacks_ttm, dividends_ttm
+    if (
+        rule_flags.OFF != age_mode
+        or tsy_stale_mode != rule_flags.OFF
+        or tsy_unev_mode != rule_flags.OFF
+    ):
         expected_end = ttm_guards.expected_period_end(conn, company_id)
         bounds = ttm_guards.load_quarter_bounds(
             conn,
@@ -692,7 +707,7 @@ def calculate_expanded_metrics_for_company(
         )
         comps = {
             name: _age_component(
-                age_mode,
+                None if age_mode == rule_flags.OFF else age_mode,
                 company_id,
                 name,
                 ttm,
@@ -719,18 +734,36 @@ def calculate_expanded_metrics_for_company(
         composite = ttm_guards.composite_decision(
             company_id, list(comps.values()), ZERO_EVIDENCE
         )
-        _record(
-            age_mode,
-            rule_flags.RF02_AGE_GUARD,
-            company_id,
-            "total_shareholder_yield",
-            "hidden" if composite.hidden else "kept",
-            composite.reason.split(":")[0] if composite.reason else None,
-            None,
-            None,
-            composite.reason or "",
-            ("total_shareholder_yield",),
-        )
+        if tsy_stale_mode != rule_flags.OFF:
+            _record(
+                tsy_stale_mode,
+                rule_flags.RF_TSY_STALE,
+                company_id,
+                "total_shareholder_yield",
+                "hidden" if composite.stale_reason else "kept",
+                composite.stale_reason.split(":")[0]
+                if composite.stale_reason
+                else None,
+                None,
+                None,
+                composite.stale_reason or "",
+                ("total_shareholder_yield",),
+            )
+            if tsy_stale_mode == rule_flags.ON and composite.stale_reason:
+                tsy_block = f"guard:{composite.stale_reason}"
+        if tsy_unev_mode != rule_flags.OFF:  # dry_run only: recorded, never applied
+            _record(
+                tsy_unev_mode,
+                rule_flags.RF_TSY_UNEVIDENCED_ZERO,
+                company_id,
+                "total_shareholder_yield",
+                "hidden" if composite.unevidenced_reason else "kept",
+                UNEVIDENCED_CODE if composite.unevidenced_reason else None,
+                None,
+                None,
+                composite.unevidenced_reason or "",
+                ("total_shareholder_yield",),
+            )
         if age_mode == rule_flags.ON:
             if comps["share_buybacks"].status in (
                 ttm_guards.STALE,
@@ -744,8 +777,6 @@ def calculate_expanded_metrics_for_company(
             ):
                 dividends_ttm = None
                 no_dividends = _guard_reason(ttm_guards.STALE_INPUT, "dividends_paid")
-            if composite.hidden:
-                tsy_block = f"guard:{composite.reason}"
 
     # EBITDA Margin = EBITDA (TTM) / Revenue (TTM)
     if ebitda_ttm is None:
@@ -1017,13 +1048,13 @@ def calculate_expanded_metrics_for_company(
             )
         else:
             dividend_contribution = (
-                (dividends_ttm / market_cap)
-                if dividends_ttm is not None
+                (dividends_ttm_tsy / market_cap)
+                if dividends_ttm_tsy is not None
                 else Decimal("0")
             )
             buyback_contribution = (
-                (buybacks_ttm / market_cap)
-                if buybacks_ttm is not None
+                (buybacks_ttm_tsy / market_cap)
+                if buybacks_ttm_tsy is not None
                 else Decimal("0")
             )
             rows.append(
