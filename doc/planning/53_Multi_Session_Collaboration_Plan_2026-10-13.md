@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0109** (0098-0108 claimed 2026-10-22 below, none written/applied on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0110** (0098-0109 claimed 2026-10-22 below, none written/applied on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -60,8 +60,8 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0104 | (unassigned) | `company_group` + `metric_template` (after design review) | claimed, not written/not applied |
 | 0105 | (unassigned) | output_versioning | claimed, not written/not applied |
 | 0106 | (unassigned) | `slot_observation` (optional) | claimed, not written/not applied |
-| 0107 | data-engineer (lane 3, NA-15, claimed 2026-10-22) | `core.security_class_cover`: per-class cover census (accession, priced ticker, `dei:Security12bTitle`, class member, ordinary shares, as-of date); design in `mapper/ads_census.py` | claimed only; not written/not applied |
-| 0108 | data-engineer (lane 3, NA-15, claimed 2026-10-22) | `analytics.ads_ratio`: ADS ratio history (cik, ticker, ratio, effective_from, source accession, evidence label), replaces `ADS_TABLE` in `mapper/ads_conversion.py` | claimed only; not written/not applied |
+| 0108 | data-engineer (lane 3, NA-15, claimed 2026-10-22; renumbered from 0107, which is lane 2's expanded_ttm_rows_cleanup) | `core.security_class_cover`: per-class cover census (accession, priced ticker, `dei:Security12bTitle`, class member, ordinary shares, as-of date); design in `mapper/ads_census.py` | claimed only; not written/not applied |
+| 0109 | data-engineer (lane 3, NA-15, claimed 2026-10-22) | `analytics.ads_ratio`: ADS ratio history (cik, ticker, ratio, effective_from, source accession, evidence label), replaces `ADS_TABLE` in `mapper/ads_conversion.py` | claimed only; not written/not applied |
 
 ## scrooner-98 queue (lane A)
 

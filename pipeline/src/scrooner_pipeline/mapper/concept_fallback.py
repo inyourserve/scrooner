@@ -1473,6 +1473,8 @@ def resolve_employee_count_fallback(
                                 company_id=company_id,
                                 data_point="employee_count_resolved",
                                 period_grain="instant",
+                                # PLACEHOLDER key: lane 1 has not ruled the period key for a
+                                # company-level cell (D-4); do not treat today's date as a contract
                                 period_start=date.today(),
                                 period_end=date.today(),
                                 basis="resolved",
