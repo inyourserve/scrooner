@@ -1,0 +1,987 @@
+group,group_size,policy,company_id,ticker,name,sic,seed_rank,md5key,reread,policy_note
+bank,40,read_all_reread_30_plus_10_risk,4314,WAL,WESTERN ALLIANCE BANCORPORATION,6022,1,11268692acb2ddd60958e7e9b6260176,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,634,HBAN,HUNTINGTON BANCSHARES INC /MD/,6021,2,18f76df4142dd0f675b1196484059d30,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1403,CFG,CITIZENS FINANCIAL GROUP INC/RI,6022,3,19c489edfac9291ef1851cddba2a23f2,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,716,BAC,BANK OF AMERICA CORP /DE/,6021,4,19e3b3c38ca41273514d96c8c094b103,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1411,SSB,SouthState Bank Corp,6022,5,221b86daecbee7d58493900135fafc89,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1159,ZION,"ZIONS BANCORPORATION, NATIONAL ASSOCIATI",6021,6,2706466237a752ae477c5521012c63cd,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,399,USB,US BANCORP \DE\,6021,7,4563a98ff049dbefb2087bbc000add62,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1345,UBSI,UNITED BANKSHARES INC/WV,6022,8,4faa2d9e01ae307ed3f053d7197ab627,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1702,BOKF,BOK FINANCIAL CORP,6021,9,53e5269af96af7758836f534ff23875e,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1502,FCNCA,FIRST CITIZENS BANCSHARES INC /DE/,6022,10,6022e01e987ee9bb13e7123baec5beed,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1948,COF,CAPITAL ONE FINANCIAL CORP,6021,11,71ee0238238589e87a6a1a4e566fe756,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,285,CBSH,COMMERCE BANCSHARES INC /MO/,6022,12,747353ed9942866718d421301ea939a4,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,5097,HOMB,HOME BANCSHARES INC,6022,13,81d51d86e7c43ff27e9b2dd6926c0487,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1120,UMBF,UMB FINANCIAL CORP,6021,14,83e88d45d74c5adca25ad3a17c54247d,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,415,FNB,FNB CORP/PA/,6021,15,8f4bc0be35e9f2a158318ac8aba6c7e3,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1282,PNC,"PNC FINANCIAL SERVICES GROUP, INC.",6021,16,9a130735024c5d656a5c9d98d074f9ee,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,611,ALLY,Ally Financial Inc.,6022,17,9c93277c60e99906b35f400293fc8f56,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1076,KEY,KEYCORP /NEW/,6021,18,9d9032864e833eaa122556d905798033,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,4938,PNFP,"Pinnacle Financial Partners, Inc.",6021,19,a5462b0cdee607dcbfb0d2871d4a6a25,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1409,BPOP,"POPULAR, INC.",6022,20,a7810ce60ffb62ae0f7a13fedbeb8331,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1082,TFC,TRUIST FINANCIAL CORP,6021,21,abc28d9f27f46feeff76347a7859ee35,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1088,STT,STATE STREET CORP,6022,22,b12656d38bbcd9712723a90e7e9e78e4,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1586,C,CITIGROUP INC,6021,23,b3422f87ce4340b0a9d1b39dda23ca9e,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1262,ONB,OLD NATIONAL BANCORP /IN/,6021,24,b66b71a0897e17df99eeee3ffa5e2cf5,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,602,CFR,"CULLEN/FROST BANKERS, INC.",6021,25,b856d60693ac540a3431229a5a8ba3a4,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,4599,RF,REGIONS FINANCIAL CORP,6021,26,bc719efce03769c551dfdb1b371fbab6,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,3045,EWBC,EAST WEST BANCORP INC,6022,27,bd014da79d6144c18af4cd9c27f8347b,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,3040,PB,PROSPERITY BANCSHARES INC,6022,28,be2c6dd27dae9d14420944d5b475476c,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1682,GBCI,"GLACIER BANCORP, INC.",6022,29,bee5863bc347866f4e1964b226f09321,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1284,VLY,VALLEY NATIONAL BANCORP,6021,30,d5f602e2fe4472f8691b16cef79afd36,1,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,2297,WTFC,WINTRUST FINANCIAL CORP,6022,31,d67ad43ae62c11de339ba2e83bc64b7f,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1,JPM,JPMORGAN CHASE & CO,6021,32,e1bcb1fea40c2a931551bfcaf48236a0,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,409,FHN,FIRST HORIZON CORP,6021,33,e1fd02e767eac7c5a4984cca7090962f,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,403,MTB,M&T BANK CORP,6022,34,e440b30f309107704527f85a00069786,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1010,WFC,WELLS FARGO & COMPANY/MN,6021,35,e7cbcadda245e197b40c044a906351a3,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1769,COLB,"COLUMBIA BANKING SYSTEM, INC.",6022,36,eaae77dacd41035f9eb51066d29f94b2,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1011,NTRS,NORTHERN TRUST CORP,6022,37,ecdb34b66c466d6a133dd64e7ddeb280,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,5614,BNY,Bank of New York Mellon Corp,6022,38,f0f78997e94d7d7ac496d4be1363ab69,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,1393,HWC,HANCOCK WHITNEY CORP,6022,39,fca799dfb8084ec1b4ec27793ca008ec,0,analyst adds 10 risk-selected
+bank,40,read_all_reread_30_plus_10_risk,395,FITB,FIFTH THIRD BANCORP,6022,40,fd93b39558db7bb3cc00ae6e85aafb10,0,analyst adds 10 risk-selected
+bdc_fund_or_unclassified,29,census,1220,GL,GLOBE LIFE INC.,6311,1,03bd73003b7ac8395d3cb096601277af,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,3882,PRU,PRUDENTIAL FINANCIAL INC,6311,2,0e6f6db62fd201429476379e20b3ad79,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,5974,PRI,"Primerica, Inc.",6311,3,100729b69e06fa6f2e34b1308ff2ad07,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,2442,ACT,"Enact Holdings, Inc.",6411,4,1a15225219e59db8e07a7fbc33631931,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,1697,HIG,"HARTFORD INSURANCE GROUP, INC.",6331,5,285b70f0a95db38e8a0c475f5a1fb8d1,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,5726,KKR,KKR & Co. Inc.,6282,6,3b173b5a239b030dbffc46b4df817c3b,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,1824,RGA,REINSURANCE GROUP OF AMERICA INC,6311,7,3bb5805b0fe515e5b7390621989d7d3f,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,4477,AIZ,"ASSURANT, INC.",6399,8,3bf7c9bd6ac53b0cbe5f24aa23b1d772,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,1043,PGR,PROGRESSIVE CORP/OH/,6331,9,4b83224675e14f35c3d3d4ae6bcb455c,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,5164,BXSL,Blackstone Secured Lending Fund,,10,4c30a90fb4875bdf2b3fbf656cfc3761,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,1881,RNR,RENAISSANCERE HOLDINGS LTD,6331,11,65d218ce14287c229d9368c8a8a37061,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,4333,KNSL,"Kinsale Capital Group, Inc.",6331,12,6b8ddd7ba4c5b4053000d877701e3eb2,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,109,AFL,AFLAC INC,6321,13,753f4cd750b8b213251e43d9f9de9a3f,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,7,ARCC,ARES CAPITAL CORP,,14,767c0b69ec9985a0ee6b26b522894a47,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,116,UNM,Unum Group,6321,15,77d2175f38c156243fe505b7cfcec895,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,2732,VOYA,"Voya Financial, Inc.",6311,16,7a03d22381a81d98091b8ef77c8361a4,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,669,L,LOEWS CORP,6331,17,7c62ce298b4d520d76c7eddcc14b47d1,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,5101,FNF,"Fidelity National Financial, Inc.",6361,18,7e7517768665cb04e2d422acaa19932a,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,2668,AFG,AMERICAN FINANCIAL GROUP INC,6331,19,929d8b1714cbac390e69241867fdb82e,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,1709,MTG,MGIC INVESTMENT CORP,6351,20,a6a10799102ca27515286df05a9a05da,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,668,LNC,LINCOLN NATIONAL CORP,6311,21,b3b2e3cf630b45e4a6a86d82531af0f9,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,1057,TRV,"TRAVELERS COMPANIES, INC.",6331,22,bd21047dc9f95c03432a41d9e531d371,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,277,CNA,CNA FINANCIAL CORP,6331,23,c11792afa40ec0f25f0f77e4f5fd6192,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,1813,CB,Chubb Ltd,6331,24,c226d1160fa78a610c7bb1479a8b5e9e,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,5964,FAF,First American Financial Corp,6361,25,c46cd837e4e3ee100ea78308c2df6d1d,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,271,CINF,CINCINNATI FINANCIAL CORP,6331,26,c49ce51d0ce12058d8d63042f3bfeec3,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,3914,WTW,WILLIS TOWERS WATSON PLC,6411,27,f0b8ea271d42f85def41a8400cde12f1,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,3039,OSCR,"Oscar Health, Inc.",6324,28,fd39f05d0e3f3c5fae0fa55ae372536b,1,all members read; Verifier re-reads all
+bdc_fund_or_unclassified,29,census,5897,ESNT,Essent Group Ltd.,6351,29,fd4d6a73f9482fc0cfc7577a0d7cfe8a,1,all members read; Verifier re-reads all
+corporate,701,random_60_plus_15_risk_plus_15_negative,3346,A,"AGILENT TECHNOLOGIES, INC.",3826,1,000f68d93d54873a7d2d4da321d4df38,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5893,TWLO,TWILIO INC,7372,2,00303a7896ecc8bad1654954bd8d321c,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1763,LGND,LIGAND PHARMACEUTICALS INC,2834,3,00e4710519c5ac17b6799c257fc369da,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5396,VRNS,VARONIS SYSTEMS INC,7372,4,0178eb56cf8f3acbb5dd05f03c106890,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3690,Z,"ZILLOW GROUP, INC.",7389,5,01cb9418df17e56fd7a2d41290179c7b,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4337,CCK,"CROWN HOLDINGS, INC.",3411,6,0215d696100dfa2c10ab5be4448e82cd,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,373,EFX,EQUIFAX INC,7320,7,021aad7f45b959037fc4ef59d883c3cd,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5307,INIO,INNIO N.V.,3621,8,03160463c492c68fdd221b4b50834726,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1412,CLF,CLEVELAND-CLIFFS INC.,1000,9,03a0e0ced9a5bf692268028d199ae1cc,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3512,INGM,Ingram Micro Holding Corp,5045,10,04c4fd5816174b366168828740a0062e,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1196,DE,DEERE & CO,3523,11,0504031b2651eec968af12c3066edbe9,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3099,MUSA,Murphy USA Inc.,5500,12,054d51430b2bd2d59913b159ec8a25c8,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3249,S,"SentinelOne, Inc.",7372,13,059cb5d17ec70c116280a984fea90f44,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5606,CARR,CARRIER GLOBAL Corp,3585,14,0678e076fc142482e8e15bb288438029,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4630,TMUS,"T-Mobile US, Inc.",4812,15,06c12bcd706f3894d752a161351f0ba0,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,617,GGG,GRACO INC,3561,16,073c47b6c0537899133c7307555514b8,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1436,HON,HONEYWELL INTERNATIONAL INC,3724,17,074d494b36f89b7f1e6db04126e2cc06,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3353,PAYC,"Paycom Software, Inc.",7372,18,07503fb192d54c98c58cef0c816d390e,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1091,LEVI,LEVI STRAUSS & CO,2300,19,076fc94264d92544bdb70f04d4a9e24c,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4627,Q,"Qnity Electronics, Inc.",3674,20,082cb21999a79d64108270bd3323866f,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1949,MCK,MCKESSON CORP,5122,21,085b20653455cec86ca84f33c83cd0c6,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1469,CSL,CARLISLE COMPANIES INC,3060,22,09cedeb6c3a1bd305d12bc202697070e,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4916,BLDR,"Builders FirstSource, Inc.",5211,23,09ed36500daa4ecae8fdb7525a75ed75,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2286,VRSN,VERISIGN INC/CA,7371,24,0ad9da6dd68c9416be75099574596145,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1512,PPC,PILGRIMS PRIDE CORP,2015,25,0adc81c0b31bba7f62aaf7bda4127a74,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1075,SNA,Snap-on Inc,3420,26,0b5b2e99646362190d925eec3a8e064f,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5257,BBIO,"BridgeBio Pharma, Inc.",2834,27,0c01b16553d41eb02b2278a57c150222,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1253,NSC,NORFOLK SOUTHERN CORP,4011,28,0c0831335302d946efb1e65de44b7530,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3149,BLCO,Bausch & Lomb Corp,3851,29,0dea90e719b91a4887c16fab5b2cd395,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2508,ALKS,Alkermes plc.,2834,30,0df9232f2900a7b9e909b20ca420ca10,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,720,NYT,NEW YORK TIMES CO,2711,31,0f93c58815a4c78be4dc561303c0a7b6,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1897,MLM,MARTIN MARIETTA MATERIALS INC,1400,32,0fa1c03f03f268e3661a037d14719e71,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5380,FOX,Fox Corp,4833,33,101210045d0bc862b3fc3c5274cfb86f,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3087,VSXY,Victoria's Secret & Co.,5621,34,10586f48d5e6989410d0da4f53e0ffdd,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5448,AVAV,AeroVironment Inc,3721,35,109b990506542e7eccb632105c04b4f5,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3,AAPL,Apple Inc.,3571,36,10c599a9bf87fde752155594aa8c13a4,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2003,ST,Sensata Technologies Holding plc,3823,37,10ed4312e0130bce2ae41d5570e57cbe,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4613,NEU,NEWMARKET CORP,2860,38,11566fe1aeeee6d7e9bdae4778f5eade,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4787,EXLS,"ExlService Holdings, Inc.",7389,39,11fa06cc243ae2b260c20afb1fa67525,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4406,GMED,GLOBUS MEDICAL INC,3841,40,12121f0413ec3b3ce00664b6c1e75170,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3893,CBRE,"CBRE GROUP, INC.",6500,41,129eed33e731416900c15c17ea364b7c,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1324,PAYX,PAYCHEX INC,8700,42,12e59eae57de004fa086c213806f8a5e,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4926,FDXF,"FedEx Freight Holding Company, Inc.",4513,43,1310a6b43f219c288b8ea5afd8b479db,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,655,KEX,KIRBY CORP,4400,44,134a6a8c395182024cdfea70473b1468,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2059,MP,MP Materials Corp. / DE,1000,45,143beb5aab5e859f220cebcb8e1c966e,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,275,CLX,CLOROX CO /DE/,2842,46,1476209be6f5d698f01bda8b3d05f437,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1516,QCOM,QUALCOMM INC/DE,3663,47,151f4a638add2b0d0cf5bf3345572dd4,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1013,NUE,NUCOR CORP,3312,48,152ab4da3f1d512499e65d6057c6ff9b,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1896,ALB,ALBEMARLE CORP,2821,49,15c48c1f77d1c2bf53d5562b53502d53,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1732,GILD,"GILEAD SCIENCES, INC.",2836,50,160acb7d9357e4533efa9e776445c93d,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4005,AAOI,"APPLIED OPTOELECTRONICS, INC.",3674,51,165740df0656524de7576c302336a90e,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2607,GWRE,"Guidewire Software, Inc.",7372,52,169870df9ef325b2d87452ee2ac3dbff,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3745,ENSG,"ENSIGN GROUP, INC",8051,53,16cab8c6099bdf67b1fc429ddc874782,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,269,CHDN,Churchill Downs Inc,7948,54,16ea028a1ce2d7becfb0e857e3462dc4,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5494,CHWY,"Chewy, Inc.",5961,55,172dc9160ab2d5411af8ce86f5f5f60c,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3695,GRMN,GARMIN LTD,3812,56,17a0b5a8b9272d9f98a1fcade27ea65c,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5943,ACN,Accenture plc,7389,57,1804c6c24afbe721a15832f86180e62a,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1100,TFX,TELEFLEX INC,3841,58,18557add40f196e97295056af571bd17,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2107,EL,ESTEE LAUDER COMPANIES INC,2844,59,18bd6997c3214fa024a54e05f9c6f3b3,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3053,LII,LENNOX INTERNATIONAL INC,3585,60,18e761a32759163a133bbd09269367c7,1,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5905,SITM,SITIME Corp,3674,61,19044b2d50ddc48f3549c8f23c24f162,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4082,NPO,Enpro Inc.,3050,62,19236303f540b86918c43641f214465d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2706,SYM,Symbotic Inc.,3569,63,192ff6bfff4e8696d9f5ff893cde2fc3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1899,DAR,DARLING INGREDIENTS INC.,2070,64,1942057fe545dd474e61242e4bdddff4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3569,CRM,"Salesforce, Inc.",7372,65,19d4d08f34b6a9514179c3c27585c364,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5069,WDAY,"Workday, Inc.",7374,66,1a63339f68b0741b344465710f3bbfc9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1042,PG,PROCTER & GAMBLE Co,2840,67,1a8232797cbb6025d887c80c552cdc08,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4833,ESTC,Elastic N.V.,7372,68,1aae0b44dd00a3eba6c8a26d6f8ae7c8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3057,KTOS,"KRATOS DEFENSE & SECURITY SOLUTIONS, INC",3760,69,1abe03660b443edb81692ed90ed2d78e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1176,GWW,"W.W. GRAINGER, INC.",5000,70,1acd60f74935266faceb7cf2476d8934,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1588,TTEK,TETRA TECH INC,8711,71,1ad2b44e56289a3cb05fafa7192f651a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,610,GIS,GENERAL MILLS INC,2040,72,1be9958dc9471bb3f1cbacc524d40d7b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,667,LECO,LINCOLN ELECTRIC HOLDINGS INC,3540,73,1d0104d771e39321d79fc19d2ad8c1ff,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4230,SAIA,SAIA INC,4213,74,1d2f259aa88d6210be1352f65b8284b3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1191,CHD,CHURCH & DWIGHT CO INC /DE/,2840,75,1d3cbdc1e37330eae82435b6a1a6e7d8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5261,DIS,Walt Disney Co,7990,76,1d5fed53a38fc45bdf1abdd1e88726a5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3675,W,Wayfair Inc.,5961,77,1d7b690bc088ca688da8c2138be8bea2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1686,REGN,"REGENERON PHARMACEUTICALS, INC.",2834,78,1db6d76f71d33e46844e96575f125bfe,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3187,FIG,"Figma, Inc.",7372,79,1dbfd1980956b0bfe7e7dd9a53f16ca2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,643,INTC,INTEL CORP,3674,80,1e98347d9ede51a21d65e36edb9a5a36,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1153,WWD,"Woodward, Inc.",3620,81,1f617a3d4823dee973888293cdec9076,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3849,NOC,NORTHROP GRUMMAN CORP /DE/,3812,82,1f809d197c8e7ec48f17b192b8a9f669,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3215,UTHR,UNITED THERAPEUTICS Corp,2834,83,1fac3ad48256ddb5ba912497b0456236,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5544,HIMS,"Hims & Hers Health, Inc.",8011,84,2078cafd9f05069078dad222a749e7e7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1923,SSRM,SSR MINING INC.,6795,85,214f8596c40c11ad10cb7b9e93e03738,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,318,CMI,CUMMINS INC,3510,86,216aac5786fd6cf74199def2bdcb816c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3932,MA,Mastercard Inc,7389,87,21a0f97986c4aa785d69c0826931ab98,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1138,WSO,WATSCO INC,5070,88,21c046ebf3251c4ebe7643980ce75403,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3083,DELL,Dell Technologies Inc.,3571,89,21f74fd5a08630d10f6472d9e8934162,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1254,EAT,"BRINKER INTERNATIONAL, INC",5812,90,226be6cd06e85579038795ccf609022a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1102,TER,"TERADYNE, INC",3825,91,22e8f6559056575015314074c295e89b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2904,CSGP,"COSTAR GROUP, INC.",7389,92,2367414cc2b2e4cd027d44896f27f280,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1498,FISV,FISERV INC,7389,93,2380f11ac339cc7f1b57326a15c8b4ca,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,699,MSA,MSA Safety Inc,3842,94,23ff28be53a11a23a464a661a1daf954,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3176,AXSM,"Axsome Therapeutics, Inc.",2834,95,24456c6e3aa0e5276a8435348ad2d1e5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,713,THC,TENET HEALTHCARE CORP,8062,96,24583b4a593bc217a031e079655b552b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1072,AOS,SMITH A O CORP,3630,97,246d63bf50097323d490cd9d86582005,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,76,ABT,ABBOTT LABORATORIES,2834,98,24759408a85bc8605bae6f46a21643d0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5203,ORCL,ORACLE CORP,7372,99,24aac742da3bc39676cb7026ebe44e2a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2151,CRDO,Credo Technology Group Holding Ltd,3674,100,24d5b18cd17c879a2526ce5975d0dc12,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1181,SXT,SENSIENT TECHNOLOGIES CORP,2860,101,24e4def2f1dec3322dd86508bda8b7f6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,301,TAP,MOLSON COORS BEVERAGE CO,2082,102,24e6eba833bba5d23b627bdcc71aa6a5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4491,PRMB,Primo Brands Corp,2080,103,253295bacddb42ed7a811b8a26213c17,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5222,ACA,"Arcosa, Inc.",3440,104,25919deb6a82a3310d3e447d7f366dbc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1870,VIAV,VIAVI SOLUTIONS INC.,3674,105,25a34b61776789f0a765b5ff13b05e0f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1021,PCAR,PACCAR INC,3711,106,25fbf38530794f26d7b4b1d25b521a10,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1467,MGM,MGM Resorts International,7011,107,262fa42664bb242b9bbf70e1d3b70bde,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4100,RYTM,"RHYTHM PHARMACEUTICALS, INC.",2834,108,264afa9f792ad1a1a4d071df720facd5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4197,CPAY,"CORPAY, INC.",7389,109,26fc7b9c633df755e0d716107ce0d771,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,173,AVY,Avery Dennison Corp,2670,110,282a8cace2790d402a344e307db3ad15,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1164,JNJ,JOHNSON & JOHNSON,2834,111,2838c75534b9c5226a25d9bc66e4c8d0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3969,CAVA,"CAVA GROUP, INC.",5812,112,28d375939c19e3ddbe65beabd8dc8134,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2052,FROG,JFrog Ltd,7372,113,29c926cc1a242de87502bacf33b5b17c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,645,IFF,INTERNATIONAL FLAVORS & FRAGRANCES INC,2860,114,29f3b6074a83c5f2b3a408aa8e9009a0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,193,BAX,BAXTER INTERNATIONAL INC,3841,115,2a16582d4a0db6eb605cb0e2f3f62bf5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3967,OLLI,"Ollie's Bargain Outlet Holdings, Inc.",5331,116,2a5186dcf82108d6913efcc676316743,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4330,MEDP,"Medpace Holdings, Inc.",8731,117,2a6d56fc46567159ff216b8f63443f20,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,207,BA,BOEING CO,3721,118,2aadb66283157ab780487196751617cf,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2787,UBER,"Uber Technologies, Inc",7389,119,2ad655ad60d9272a3a889e655d742cea,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4720,TXRH,"Texas Roadhouse, Inc.",5812,120,2af120c96a2768f71d24f58ec5584af6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3907,ROIV,Roivant Sciences Ltd.,2834,121,2b52e3b25a3286c9d6764a812ae76728,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4432,TDG,TransDigm Group INC,3728,122,2b5b5aefae604667352f5c5d831738e3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3030,URI,"UNITED RENTALS, INC.",7359,123,2ba4de6a9971b64072f8f6b160275687,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5347,DOW,DOW INC.,2821,124,2bb6239c2d9a02bbb50d75ef72059a6e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4596,PRAX,"Praxis Precision Medicines, Inc.",2834,125,2c59c89544e8d04148f229f348ba674c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1142,EME,"EMCOR Group, Inc.",1731,126,2c71cca26f7e76ad3baa68d7ee3dbb5c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3001,EBAY,EBAY INC,7389,127,2cdaab8daa4bb266314bd43e93f3b7b3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1236,HD,"HOME DEPOT, INC.",5211,128,2d5b5280df423a1efde0e8033e1c7885,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3385,TDY,TELEDYNE TECHNOLOGIES INC,3812,129,2dfd11f2c78186d754c64fc51bdeed22,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4947,WMG,Warner Music Group Corp.,7900,130,2e3d18920ed0858d39741e7a98bc0058,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5497,SMCI,"Super Micro Computer, Inc.",3571,131,2f34c8cf19fdcba3f91e6f905445b00d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4188,CAI,"Caris Life Sciences, Inc.",8071,132,2f769c05115fc2fb95f5a043e9ec3930,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1166,LHX,"L3HARRIS TECHNOLOGIES, INC. /DE/",3812,133,30f298bf321097077589b3d8f0ce6b19,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1134,WMT,Walmart Inc.,5331,134,3192e8f8eba9988c90a8328e48c64906,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2371,NOV,NOV Inc.,3533,135,31965490d4c399a25f3db4b734e78db7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2007,NET,"Cloudflare, Inc.",7372,136,31a59ee3a43e6d2090e1d696192376a8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1337,CASY,CASEYS GENERAL STORES INC,5500,137,346ecc0090d2ca419099b786ec728795,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3260,ARMK,Aramark,5812,138,3491c645a0aca91ed49a6e6c1ea35e11,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2983,COMP,"Compass, Inc.",6531,139,3522565a87323e814c146e83550d9f4b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2491,BSY,BENTLEY SYSTEMS INC,7372,140,3534e65d283aa1b15ec0135eba2d1b1e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3652,TPR,"TAPESTRY, INC.",3100,141,353b433c92f02b0e34fd833776694190,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3351,CZR,"Caesars Entertainment, Inc.",7011,142,3542fe341ee40d59425a6b0c8987ad7c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5133,CROX,"Crocs, Inc.",3021,143,3543e62bb027928e26218c553bee1eb6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3522,INSM,INSMED Inc,2834,144,35f9acb54515cffd465bf798a03c93a3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4227,SNDK,Sandisk Corp,3572,145,361fec05a6b16d77ad146d85875c9bcf,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2647,DRS,"Leonardo DRS, Inc.",3812,146,3637f49a02440d77f1a8308b35ceb420,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,706,MSI,"Motorola Solutions, Inc.",3663,147,36c3c7fa5161b7b73415ff2a1007238a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1891,NBIX,NEUROCRINE BIOSCIENCES INC,2836,148,36d30e2037fd164bbcad109853862681,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2162,KNX,Knight-Swift Transportation Holdings Inc,4213,149,37b835a624a789c2d4058b5f664213d1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1816,ATR,"APTARGROUP, INC.",3089,150,381dd651ffa60ffad51720e50fd0de89,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5761,PM,Philip Morris International Inc.,2111,151,3863fda21cf0b9cecd8b61abcee02d4e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2584,SLAB,SILICON LABORATORIES INC.,3674,152,3876a104189e8e6d79a608962f79e2d8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2476,CLS,CELESTICA INC,3672,153,3963bc273c238a0395ba048de34bb1c4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4112,TOST,"Toast, Inc.",7374,154,3a1eb27827c55d1458adda3a7268d380,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1914,SSD,"Simpson Manufacturing Co., Inc.",3420,155,3a26f43fe26ecf0b49cb87654f892183,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2087,WAT,WATERS CORP /DE/,3826,156,3a70020bbb21f613409f27cab18e7636,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4455,WLK,WESTLAKE CORP,2860,157,3a8e219856ae5c79948d4b8a925d100e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1670,MNST,Monster Beverage Corp,2086,158,3aa2975eda9b6c090464b3961d40c01d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3234,DOCN,"DigitalOcean Holdings, Inc.",7370,159,3b1a0f2228178016c94e48aab736ba91,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4124,KMX,CARMAX INC,5500,160,3b42b99a3d0dc59a7495eed565bec1ca,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1379,ROST,"ROSS STORES, INC.",5651,161,3b83542ae72faa4ce7303a167bddec8c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2335,ATI,ATI INC,3317,162,3c6a438dcc148866836f88b14fb31652,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2956,DDOG,"Datadog, Inc.",7372,163,3c8e20cc196939afcea0490c81f464f3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2517,LNTH,"Lantheus Holdings, Inc.",2835,164,3c9fa20c9ec7bac4797b66b37af3ca7f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1145,WDC,WESTERN DIGITAL CORP,3572,165,3ce0a733ec9c6deef552e3d7f9326e9c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5119,KNSA,"Kiniksa Pharmaceuticals International, p",2834,166,3d2ba3f22d1014971b9f4665f28839b5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1064,SMTC,SEMTECH CORP,3674,167,3d8d363099c5b60d51ff1380eb91181b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3918,COR,"Cencora, Inc.",5122,168,3de1550da72e9ffaa92c6400b9efbd92,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3510,MDLZ,"Mondelez International, Inc.",2000,169,3e41c046136d93ec6c452ad7db6d890b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4212,CBRS,Cerebras Systems Inc.,3674,170,3e4ebb73f833c83ed13aae4ff8781e89,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2929,ABNB,"Airbnb, Inc.",7340,171,3e63cd2efc59e525f416a72cba38913c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1733,DHI,HORTON D R INC /DE/,1531,172,3ed2c1b7d81f74a7b185f005c7e52c71,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2726,CRWD,"CrowdStrike Holdings, Inc.",7372,173,401f7b0692774f10d31ee68fe87d1eaf,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2518,ALV,AUTOLIV INC,3714,174,4040a3ee14db44b62ac1ce4b56ecc386,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1004,NDSN,NORDSON CORP,3569,175,40784b7b35a5bfa05381b1e606bac6eb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3856,SOLV,Solventum Corp,3841,176,409e0406e014c378e2247c41d251aab3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1144,WST,WEST PHARMACEUTICAL SERVICES INC,3841,177,40a3245052ee6f27c941cae51290df49,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1983,WAB,WESTINGHOUSE AIR BRAKE TECHNOLOGIES CORP,3743,178,40c0bf0993f13fe25a945a83138e5e90,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2889,MANH,MANHATTAN ASSOCIATES INC,7372,179,40e45fe7d9f842f8dc5d3efbb4d5497e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1343,JBHT,HUNT J B TRANSPORT SERVICES INC,4213,180,416bb7473e5765f85b271c84b7ecebb1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4223,FIVE,"FIVE BELOW, INC",5331,181,41db67f08aeaad901cf34c80244ec63c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1550,TEVA,TEVA PHARMACEUTICAL INDUSTRIES LTD,2834,182,41e8fe4a2fc311a98967388a5cda7bc2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3092,CNM,"Core & Main, Inc.",5099,183,42b57ffc9ad37ba35800c9379f9f9d69,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2703,CHRW,"C. H. ROBINSON WORLDWIDE, INC.",4731,184,437f38c857b61db642a49b0a7d85306c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1974,CIEN,CIENA CORP,3661,185,4510c7b9c4ee9b563ae2df4fb84a7a72,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1177,FSS,FEDERAL SIGNAL CORP /DE/,3711,186,458aea9f3f5ce89dab32b8d08217fd0e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,175,AVT,AVNET INC,5065,187,45d9825805bda513f4926fd5293caa3b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1068,SHW,SHERWIN WILLIAMS CO,5200,188,461b7298da4cf1e8b8e996ca58d5309c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1073,SFD,SMITHFIELD FOODS INC,2011,189,461e67b95c72caf0aa46e2e1b87c54fb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5713,CDW,CDW Corp,5961,190,4633705c5e60761c3b3c2d029a1cbfb9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,608,GE,GENERAL ELECTRIC CO,3600,191,4657425dc852878d4535eff9d7840bdd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4036,JHX,James Hardie Industries plc,3272,192,46694e1397fd95b4d890d5dcb8e05b9f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1955,WCC,WESCO INTERNATIONAL INC,5063,193,468b6aa6b7f74a81c6a5d84e4ef29f2e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2641,YUM,YUM BRANDS INC,5812,194,46ba742df614e7f680836e0c8a0bb977,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3283,ZM,"Zoom Communications, Inc.",7370,195,46fbab8d0e63efa5043cfe9dd71f514e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5875,VRSK,"Verisk Analytics, Inc.",7374,196,474a8b6a74070baaed2373af9aaf81b3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5440,LYFT,"Lyft, Inc.",7389,197,47596ac48b1c98ffb96aabfa7ab32ba5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,335,DDS,"DILLARD'S, INC.",5311,198,47ee736356be85f2c0f777051cc3788f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,9,GOOG,Alphabet Inc.,7370,199,486648a043e8cc3bd9ba26d8a4ce2aae,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3132,GH,"Guardant Health, Inc.",8071,200,48678fc5d59078482f00f203667aa46f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,637,ITW,ILLINOIS TOOL WORKS INC,3560,201,48ad81445c93dbfecfb53907627e522b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1095,SYY,SYSCO CORP,5140,202,48e3fdc70486f7c93c3c7ad54d4ce97a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3309,CORT,CORCEPT THERAPEUTICS INC,2834,203,49056513a1e1cb375c80146675f02549,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,626,HEI,HEICO CORP,3724,204,4997dc20f653162f19f4e76a55f82f50,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1610,TECH,BIO-TECHNE Corp,2836,205,49d4b48f2cd5fd3cb0ea9b0e1283fa44,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1712,ZBRA,ZEBRA TECHNOLOGIES CORP,3560,206,4a3f6f58245f3791eb7f544105200470,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4707,ENS,EnerSys,3690,207,4b002e794a551c5006acf04eebffb408,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1263,LRCX,LAM RESEARCH CORP,3559,208,4b15c2468964a7f3902e8d795b028bdc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1583,SBUX,STARBUCKS CORP,5810,209,4c649dc4a7de3dc553ec466993759ef7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3007,NFLX,NETFLIX INC,7841,210,4c669180c8014dcd523c42fc378c3420,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5514,PTGX,"Protagonist Therapeutics, Inc",2834,211,4c90ba8ec57d9648e187295154faba60,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5585,OTIS,Otis Worldwide Corp,3600,212,4cea33e2e19e01cacd9672ce10e40d73,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3336,ESI,Element Solutions Inc,2890,213,4d03cf0f1aa4ede155b6eb934e576a40,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1113,UAL,"United Airlines Holdings, Inc.",4512,214,4ddc168587bc39755e81896ea4acfb6b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1643,LSCC,LATTICE SEMICONDUCTOR CORP,3674,215,4dfa9a657d3d294aaab9af5ea86f0491,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4239,OKTA,"Okta, Inc.",7372,216,4ead65e9d4d463a2b75e7bf6fe2fc6b8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1413,MO,"ALTRIA GROUP, INC.",2111,217,4f49ad01f5038cb79d6f5f7ef00f82fb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1310,WSM,WILLIAMS SONOMA INC,5700,218,4fb49ba9e324d2be4cdab6662e12f47e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1691,STRL,"STERLING INFRASTRUCTURE, INC.",1600,219,4fe469dff6cea25a8329de7aa42a99ef,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4860,DLB,"Dolby Laboratories, Inc.",6794,220,504b70ab637077b4f3bb49cb82a2d608,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1695,IDXX,IDEXX LABORATORIES INC /DE,2835,221,508f9bc8d8961adb7463fbeee089e6d5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1647,PTC,PTC INC.,7372,222,50e0531dea079202905439422cf4eadd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2553,FIX,COMFORT SYSTEMS USA INC,1731,223,517118216bacc331c87b8260ed7e0210,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2848,ABBV,AbbVie Inc.,2834,224,52837a948354f15db6a433d41eb9c7e9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3898,LITE,Lumentum Holdings Inc.,3669,225,5284533f943bf749662302c388bcdff7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1055,RGLD,ROYAL GOLD INC,6795,226,529aa4221366fb3eeaf5d5c85d2620ee,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2802,MKSI,MKS INC,3823,227,53bbda00e1803e98e4c5ae91496a54ef,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1316,CAH,CARDINAL HEALTH INC,5122,228,53c861b4b0af03e0688c5eabf2bd5ba7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5480,NOW,"ServiceNow, Inc.",7372,229,53c9db22bda41ad102ac0c946d16545e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5002,RBC,RBC Bearings INC,3562,230,53ee70457b90eaeb89e3f68813b1ecdb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5563,BR,"BROADRIDGE FINANCIAL SOLUTIONS, INC.",7389,231,53f73a199d5d9c35c753af96e2f64722,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,648,J,JACOBS SOLUTIONS INC.,1600,232,5401140b7d990dcba39624bf21e25925,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4398,VRT,Vertiv Holdings Co,3679,233,54d2d70a730a3e633dafe8e52ae3b1c8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1772,CAKE,CHEESECAKE FACTORY INC,5812,234,5549ae1391a46ee18d61c2fc7f11d29f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1104,TXN,TEXAS INSTRUMENTS INC,3674,235,555611afd6407373188b11c4c50d8530,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2542,XYL,Xylem Inc.,3561,236,5733094110861828a3c96e4a0f9eb780,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4237,ALNY,"ALNYLAM PHARMACEUTICALS, INC.",2834,237,57761c57d79c6755eccb7fb8aa2979d0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1725,AGCO,AGCO CORP /DE,3523,238,57f2099a5cbc9f67da58103fad5c2bca,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2092,BWXT,"BWX Technologies, Inc.",3510,239,5824e0a79853d71b0053c9f248494f3a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4813,LVS,LAS VEGAS SANDS CORP,7011,240,58889ab459c8067bc56df528d1cd9362,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,8,XYZ,"Block, Inc.",7372,241,58e3aa9cda8f610bbe14566e568898f9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,646,IP,INTERNATIONAL PAPER CO /NEW/,2621,242,5a1dfa77c6bc8a04d31898fab672e08c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4044,LOAR,Loar Holdings Inc.,3728,243,5ab85e5fa012df52abdd110e113689f8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2139,OTEX,OPEN TEXT CORP,7373,244,5b2de079fe5f678cdcc47c9e72474c27,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1063,SPXC,"SPX Technologies, Inc.",3540,245,5c140d49bdab9a9816362a96f6348cf9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1946,AEIS,ADVANCED ENERGY INDUSTRIES INC,3679,246,5c63ef14e27e67799b9a2dc0f423f212,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2982,NXT,Nextpower Inc.,3674,247,5c6d68f07fa7bd9db275fabd82321490,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1577,MCHP,MICROCHIP TECHNOLOGY INC,3674,248,5cef9a15497627aeba3f7afe70d7c64d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1821,SANM,SANMINA CORP,3672,249,5d3887a1bff805e8c626aec71f953947,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,243,STZ,"CONSTELLATION BRANDS, INC.",2080,250,5d5a312daa81cd2493624cc27cab9da2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5116,AVGO,Broadcom Inc.,3674,251,5d8159f6c2e25f6147d286a4c0783c09,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4057,HPE,Hewlett Packard Enterprise Co,3570,252,5dcae6b4bf23103bce508313459802f9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4530,FTI,TechnipFMC plc,3533,253,5def6cbba72a40bff495745b88552a07,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1904,RMBS,RAMBUS INC,3674,254,5ea37d312aaa66f1d7c8fa4d2e68437e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1857,COST,COSTCO WHOLESALE CORP /NEW,5331,255,5ec9e6fd119936d3f1e4e29e24e96977,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5727,IDCC,"InterDigital, Inc.",6794,256,5ed71f852b7e694485dc145ebba56509,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3582,BRKR,BRUKER CORP,3826,257,5f40738e344508eea8850c4a41242dda,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1675,ESE,ESCO TECHNOLOGIES INC,3669,258,5fb16e3e390292f1c899cc7698948271,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1358,VZ,VERIZON COMMUNICATIONS INC,4813,259,5fc4f61c3f6bf291d96b1f5a89fee95e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2198,TPL,Texas Pacific Land Corp,6792,260,5fd60fc73e309f4a9c09d9b37eae6ee4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4009,LB,LandBridge Co LLC,6792,261,5ff3068bfd745278c656862f26f6cef5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2665,CPNG,"Coupang, Inc.",5961,262,5ffc0b10d0bf0d148c370f6895238258,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4904,RBLX,Roblox Corp,7372,263,60092328b4148161cf45f2139fc7cd0d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1608,FCFS,"FirstCash Holdings, Inc.",5900,264,60cc6c6dc53242172a3c342ab1e745ed,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5022,AVTR,"Avantor, Inc.",3826,265,61c79fe139d86f16b28ce6e1d57c2811,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5771,ECHO,EchoStar CORP,4899,266,61d81ef1d4f12a519173172101f8dd59,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1171,TXT,TEXTRON INC,3720,267,623510f595b813c56a42e1ab18ca415a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,705,MOG-A,MOOG INC.,3590,268,63b4e80fbd2422d56af53f99e7bc4e01,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3365,DXCM,DEXCOM INC,3841,269,648379e55d7ffb15753a0f062be6af73,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2511,LOGI,LOGITECH INTERNATIONAL S.A.,3577,270,64a779b54a88ad1f7feeb6ed7ebb3bb0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2017,POOL,POOL CORP,5090,271,64d217cb04ce249ace346678ad4ceb53,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5716,SSNC,SS&C Technologies Holdings Inc,7372,272,64fa7f31fc0a4fb5327bb8ae771fda31,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,417,F,FORD MOTOR CO,3711,273,64fc27724f57466817a2a104396c4594,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4967,SUNB,"Sunbelt Rentals Holdings, Inc.",7359,274,6505d4b2e094dda8c7f0a410b8a31eca,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1103,TEX,TEREX CORP,3537,275,655a7f5d8c1e37872959ad2c6f534343,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2865,TRU,TransUnion,7320,276,6668230c8283c486ede743689458744a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1636,CGNX,COGNEX CORP,3823,277,66a32a759656321f99d90a14aae4dbaf,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2528,AUR,"Aurora Innovation, Inc.",7373,278,66a3e67b72b6c3788c4e7db1450b937b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5724,HUBS,HUBSPOT INC,7372,279,66efce936a14935df4e75c565d07cca3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3880,VLTO,Veralto Corp,3825,280,66f0729a6316133be0f3e9b015ed22e2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3354,CHTR,"CHARTER COMMUNICATIONS, INC. /MO/",4841,281,66f15f536efa166d5299c813c4ea8b46,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2128,LYB,LyondellBasell Industries N.V.,2860,282,670c7ec52065335c9ae5d5039690c23f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4841,LIN,LINDE PLC,2810,283,671ea2fe2eb05cea8af6e5a3d82286ee,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,279,KO,COCA COLA CO,2080,284,673a679751e95e8461d8c5625ec55a18,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5577,TEL,TE Connectivity plc,5065,285,679be00edf73a73bc9c50f7c72f24a31,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3465,MELI,MERCADOLIBRE INC,7389,286,679d51d5ffe6186e14e4b0efbe9b8f78,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,241,CP,CANADIAN PACIFIC KANSAS CITY LTD/CN,4011,287,67d117ca5c11e3494f3e4173df83b94a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1025,PH,Parker-Hannifin Corp,3490,288,68103ec5a442e83a333d543e4450f85b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1117,UNP,UNION PACIFIC CORP,4011,289,684386821a4de859f6c4b574e500635a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3315,RIVN,"Rivian Automotive, Inc. / DE",3711,290,6867a1ab7280cd1f75e676446cf5edab,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,145,AWI,ARMSTRONG WORLD INDUSTRIES INC,3089,291,6912c8b26d3dec93e9db9e54c95c8c9a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3678,AXTA,Axalta Coating Systems Ltd.,2851,292,6916ea5cd5f0a58295a1811000978ee8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1834,CPRT,COPART INC,5500,293,69704925318c0e7a33d19464011aeb8c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,654,KMB,KIMBERLY CLARK CORP,2670,294,6989a4c670ffa5a66579538b8ecffafe,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,105,HWM,Howmet Aerospace Inc.,3350,295,6a38bef3e46340bf2d1635920fcfedfb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2169,MTSI,"MACOM Technology Solutions Holdings, Inc",3674,296,6a81f94be7ff128ec7861e0b553f190a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4990,CF,"CF Industries Holdings, Inc.",2870,297,6a8413125f107dcfabf59a29cc26df1e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,678,MAS,MASCO CORP /DE/,3430,298,6aa3afb0a1724c0905cb31ff775a241b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,606,GATX,GATX CORP,4700,299,6b4432f7292c54ae8c7afedf53e4b316,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1992,TRNO,Terreno Realty Corp,6500,300,6c0338509b3b27850dfeabbc802f3801,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,147,ARW,"ARROW ELECTRONICS, INC.",5065,301,6d6840c1a83dbaf4120cac4ab4547174,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1321,MU,MICRON TECHNOLOGY INC,3674,302,6d6aff4feae4df1be96071f9d453856d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2852,ETN,Eaton Corp plc,3590,303,6dc722939ebccc0e4a62100d75e74445,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1170,ITT,ITT INC.,3561,304,6df4292b7b2f50d7cde7b6b4c6cdf8ec,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3913,FLUT,Flutter Entertainment plc,7370,305,6e2f4280df823716737aa3ada83fde0a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3312,DKS,"DICK'S SPORTING GOODS, INC.",5940,306,6fb43e87df50e613366f522021b1aa56,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2271,PEGA,PEGASYSTEMS INC,7374,307,6fe72701d80ebf4cb037b4de06ab87f3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4278,GKOS,GLAUKOS Corp,3841,308,70079b3d084bd2409b460d1f3257c9ba,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,703,MOD,MODINE MANUFACTURING CO,3714,309,709b960c572336faf02030ef680e1879,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5150,LYV,"Live Nation Entertainment, Inc.",7900,310,711606ebed307e800debe598ccedd5ca,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2763,AMKR,"AMKOR TECHNOLOGY, INC.",3674,311,71659fa73203980bf011cd70451988d4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1568,AAON,"AAON, INC.",3585,312,718157cc7cd1ba43c96bf45fa4ab833b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2520,APTV,Aptiv PLC,3714,313,718220d7ebde2179833f41abef2acf03,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1672,ALGM,"ALLEGRO MICROSYSTEMS, INC.",3674,314,718372915eb867ce62c72e134d00e4c5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1817,INTU,INTUIT INC.,7372,315,720de6e54e9fe9376ca00f8eadf590ab,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1778,LFUS,LITTELFUSE INC /DE,3613,316,722c9ec3655fd2c2e51ec563d180a192,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1640,LSTR,LANDSTAR SYSTEM INC,4213,317,7256e299bd961ab3875c7f4870bb8933,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,261,CHE,CHEMED CORP,8082,318,72f5afea97eb5db61db10b5e6f12e584,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4017,IOT,Samsara Inc.,7373,319,73004dfbaf22e7e4346b600b6da3b893,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3639,MDT,Medtronic plc,3845,320,739fec3598e92ed269f252363ba7f4bc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1653,HCA,"HCA Healthcare, Inc.",8062,321,7473b6a8089ab5f9a98381da7a0d9b4e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1388,IT,GARTNER INC,8741,322,749f0fb7092bab244a4291ea586db72c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1714,ODFL,"OLD DOMINION FREIGHT LINE, INC.",4213,323,74f9266544de8877ad7807bf6ea05251,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3406,DKNG,DraftKings Inc.,7990,324,751e15073f1f4070f9a36e5831a0c905,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3831,RVMD,"Revolution Medicines, Inc.",2836,325,75490e8187156e4d47d7620dca6bcbdb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,134,AMAT,APPLIED MATERIALS INC /DE,3674,326,76ca1bf76b810dd6c1abcc975467e883,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4553,MRNA,"Moderna, Inc.",2836,327,7712cb7ac5c3883aa11f34f2107705eb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4647,MOS,MOSAIC CO,2870,328,771bd452b77e3f89342385298536429a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,365,RVTY,"REVVITY, INC.",3826,329,7749c979730829b25c81a94cf5c68f67,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1163,RPM,RPM INTERNATIONAL INC/DE/,2851,330,77549f9b1703317c3105d23df0e4642c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1544,FAST,FASTENAL CO,5200,331,777d61fb869dadaffa79db8a58f4d73b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4969,PLTR,Palantir Technologies Inc.,7372,332,7793f5b6f63a233e7a55c16b12b0fd68,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1456,PLXS,PLEXUS CORP,3672,333,77ab2f7d1d7f347754ac3b76402b5e88,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2133,NTAP,"NetApp, Inc.",3572,334,77b9baf747099e81a8ec6d2d9b98ef99,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3434,ALGN,ALIGN TECHNOLOGY INC,3842,335,77fdb5eb0c4c04e7d250622f40b99054,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4719,IR,Ingersoll Rand Inc.,3560,336,7812ab1efe1eae0f4deb2ddc41f3cc34,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4362,TTD,"Trade Desk, Inc.",7370,337,78498d49c018059c230988b6a8fbc4eb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1298,HXL,HEXCEL CORP /DE/,2821,338,78616ea38f715eed9c0740d40702040c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,687,CVS,CVS HEALTH Corp,5912,339,7930f494f7ba4849dd9a59d7bd170849,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5821,HQY,"HEALTHEQUITY, INC.",7389,340,7931b5cd99659b3266cd7923f7a2f297,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5698,DASH,"DoorDash, Inc.",7389,341,797c990e8d9a0bfe4d210c8daf98efd2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5874,MDB,"MongoDB, Inc.",7372,342,79833e22acddc3730feef617870c89d4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3703,NTNX,"Nutanix, Inc.",7372,343,7a73d9a602c67dbc90cd6494c0eaaa57,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4869,WEX,WEX Inc.,7389,344,7a93168bad02f22494a1315ee1a793a9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4668,DPZ,DOMINOS PIZZA INC,5140,345,7ab52030c61f632f3083e77361123907,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3473,CRL,CHARLES RIVER LABORATORIES INTERNATIONAL,8731,346,7ac6ba9375a07535a7f91ff6f032ca2c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1229,UHS,UNIVERSAL HEALTH SERVICES INC,8062,347,7b42a5ec24acfc091559742c0b2fa388,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3489,ENTG,ENTEGRIS INC,3089,348,7b923edf83ac528aa4df9fb78ba54f2d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4283,BE,Bloom Energy Corp,3620,349,7b9efdd920ac980d038428e69cbecd30,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1589,IEX,IDEX CORP /DE/,3561,350,7ba049266ab82a19491fc4f998d538ab,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2031,TTWO,TAKE TWO INTERACTIVE SOFTWARE INC,7372,351,7bc7d78c92ebb8cc8134c37ec9286422,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1308,HL,HECLA MINING CO/DE/,1400,352,7d20ebd8564aa68925b5be49cedfe0e3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,347,OMC,OMNICOM GROUP INC.,7311,353,7da21eb9010bb41ca94a1092b060f6c5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1112,TSN,"TYSON FOODS, INC.",2015,354,7da67321fca24a0df052f1d844eef900,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,95,MATX,"Matson, Inc.",4400,355,7def86214eb6f9a0cc5ebebb55aa9ba0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3000,NWSA,NEWS CORP,2711,356,7e6f31dee7d76f0b946406085100ffd5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,659,KR,KROGER CO,5411,357,7eadcb80d14247773f0e1a3960d197b9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1534,CDNS,CADENCE DESIGN SYSTEMS INC,7372,358,7ed5578ff63a6a28444ab8a594f1c4ff,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4744,BKR,Baker Hughes Co,3533,359,7ed5a03b6bc6ce103e511078ed7c798f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2441,DOCS,"Doximity, Inc.",7371,360,7eea0917224ef443c5528c611e83f9a6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,123,AAL,American Airlines Group Inc.,4512,361,7f737228105149660b4ce40c82717718,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5063,HONA,Honeywell Aerospace Inc.,3724,362,7fb1d884ef6b5b267597d1a8ed74c88a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4117,CVLT,COMMVAULT SYSTEMS INC,7372,363,80800f6abd81317e0cf86f000ae6b638,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4439,DOCU,"DOCUSIGN, INC.",7372,364,808aee47753487ee98597cb7b0b3ff8f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1554,APH,AMPHENOL CORP /DE/,3678,365,8096705b98898ad4b79a2260b62a925f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,140,ADM,Archer-Daniels-Midland Co,2070,366,81299b2df8f700b1ef0d2dc15fabf571,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3928,MSGS,Madison Square Garden Sports Corp.,7990,367,8185351a29a23e4a79f1b053220e6e35,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3922,SYRE,"Spyre Therapeutics, Inc.",2834,368,81ea616f587f1e1c4a2af179716a51ad,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,353,FLS,FLOWSERVE CORP,3561,369,820220bb16a1f6798765d15ce49a77c7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1185,SYK,STRYKER CORP,3841,370,820c27882d0ea739680aeed56a853623,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4425,AMRZ,Amrize Ltd,3241,371,822e6de977faeb57538395700d9d29e8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3398,SHOP,SHOPIFY INC.,7372,372,82b30658049784db3b5548b49cc66df1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1543,CCL,Carnival Corp Ltd.,4400,373,82b79128dd7de73c161f4891e61cbb33,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3710,QSR,Restaurant Brands International Inc.,5812,374,8351af770bb99253374c7447bfe07e0a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2572,MTD,METTLER TOLEDO INTERNATIONAL INC/,3826,375,836973321d0c51f2ea832e1e3cc73a0d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4994,EXPE,"Expedia Group, Inc.",4700,376,83cbe698b1f10b4e7161671de9bc35af,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3010,LKQ,LKQ CORP,5010,377,83d99ef6d46b49c541798cc380e66f7e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1190,DHR,DANAHER CORP /DE/,3823,378,84276fe1aa5d1a14775e69d60a0a14c5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,295,CAG,CONAGRA BRANDS INC.,2000,379,84bfee9636cfb79563c0d1c38310a5fa,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2602,FORM,FORMFACTOR INC,3674,380,84ffa1de56fe1262d284a56900baff1a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1759,BSX,BOSTON SCIENTIFIC CORP,3841,381,857f7ea754b06f74ed1e6009fc1899a1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,345,DOV,DOVER Corp,3530,382,8597ab37d1a0b508e96aa2a0e3630500,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3048,AXON,"AXON ENTERPRISE, INC.",3480,383,85b1130610c2ae554db55a7530ffafac,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2733,NVDA,NVIDIA CORP,3674,384,85ce5f96542af64abb4ebdaac8651c73,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5947,GM,General Motors Co,3711,385,85ece4c208e6e3f856bd63a719132faa,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3455,SMMT,Summit Therapeutics Inc.,2834,386,8625a6efab0e041b0196cb22687b478a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,215,BMY,BRISTOL MYERS SQUIBB CO,2834,387,86544705d146c6e148391ae2abc5709c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2798,FDX,FEDEX CORP,4513,388,872119a8c2ab865121b0439a6609b8b3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3418,ANET,"Arista Networks, Inc.",3576,389,874ec5aa5264950dded9051079efd19a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2926,CTSH,COGNIZANT TECHNOLOGY SOLUTIONS CORP,7371,390,880bf531e5126104621990a19d68b3de,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4055,PACS,"PACS Group, Inc.",8051,391,88114c1e2575e0b1f7354a4fddaf230d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4067,ACI,"Albertsons Companies, Inc.",5411,392,89284fdc8dbba88b5d48c053ff1e2def,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5948,H,Hyatt Hotels Corp,7011,393,89ab682c82ad0b533bbfe13060490eaa,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,195,BDX,BECTON DICKINSON & CO,3841,394,89c20feaccdde72473b3c624ad02d075,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5574,RNG,"RingCentral, Inc.",7374,395,8a7d8f90e4b906659e1f9536d57a4b2e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5037,AMRX,"Amneal Pharmaceuticals, Inc.",2834,396,8b0334eaebf0dc8e320cceaad12f28d3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3730,FLR,FLUOR CORP,1600,397,8b70053be0816efa0970ab88203ebf41,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1454,EHC,Encompass Health Corp,8060,398,8c57cad4dde5ede3ab9a72fbbe0f8854,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2965,ZETA,Zeta Global Holdings Corp.,7372,399,8dd3e25eee1799905e3c0a10f3392caf,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,171,ADP,AUTOMATIC DATA PROCESSING INC,7374,400,8e32e29d12fb13c50f53f36fec6b80c4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3439,ON,ON SEMICONDUCTOR CORP,3674,401,8e989ffe80f803df06d8f28c647c5395,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1131,VFC,V F CORP,2320,402,8f9b1e4494eb93661cef0696c7dc271a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1975,LMT,LOCKHEED MARTIN CORP,3760,403,900d59130ad9e2a923c2f087f0030499,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1213,KLAC,KLA CORP,3827,404,90a3fb0f846319f17fd90146030771ba,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2432,ROK,"ROCKWELL AUTOMATION, INC",3829,405,9199717896cf1de2cf60c6a57709d212,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,235,CPB,CAMPBELL'S Co,2000,406,91d16272631205a083300c2875d21684,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3205,BTSG,"BrightSpring Health Services, Inc.",8082,407,926ba7724af9d6093bfa51f6fe03d229,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4403,QXO,"QXO, Inc.",5030,408,92b6c07e953968089e14a1de53720ae3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4981,GTES,Gates Industrial Corp Ltd.,3560,409,92ec71099ea05fa248bcadf221bf2e7d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1639,MHK,MOHAWK INDUSTRIES INC,2273,410,93ec0266e95a893c084491ef980dc2ca,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2073,HSIC,HENRY SCHEIN INC,5047,411,942c40d39911fa232a57c08b87db6d28,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2396,STLD,STEEL DYNAMICS INC,3312,412,942d222e4af0b47aa0f0ef61bbafb37c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5038,GME,GameStop Corp.,5734,413,944241a6a947d6e2c5c7636cb39b0720,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4479,LW,"Lamb Weston Holdings, Inc.",2030,414,945f273ba8cc5d31c66b0e9435a68888,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1947,DVA,DAVITA INC.,8090,415,9489d48eaba0e9b3aecdbe0fad75b3ce,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1862,DECK,DECKERS OUTDOOR CORP,3021,416,948cb5d09f8fdacf262980e800958b0e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5338,APP,AppLovin Corp,7370,417,94af63e70a30244fe235ccab5f7fa807,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4114,FERG,Ferguson Enterprises Inc. /DE/,5070,418,953f8e8d89f8424bd935ec1328302f28,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5149,PATH,"UiPath, Inc.",7372,419,95d6591a18d2d268f2bb9d8804f5ad6c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4066,SW,Smurfit Westrock plc,2650,420,9608f5949cbab30fdf666373e13b9adb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4972,PEN,Penumbra Inc,3841,421,9696f8ce6616699949e0d85ba3e26e4f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2011,APG,APi Group Corp,7340,422,970b9c6c8dea18bc51b2459a2068901f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3661,GEHC,GE HealthCare Technologies Inc.,3844,423,97639957d7d40997b8cab2fce124a021,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3660,TTMI,TTM TECHNOLOGIES INC,3672,424,97d69b5ad62bc1b8ac1d098a864ccfd3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5430,GSAT,"Globalstar, Inc.",4899,425,97d904816fe85a13cc8f3c50987c6533,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4691,CBC,"Central Bancompany, Inc.",,426,97f9810f005156817b247270b41db793,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1740,SNPS,SYNOPSYS INC,7372,427,9848ddd387cbded623a19f989ed02e11,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1347,RGEN,REPLIGEN CORP,2836,428,98728466cb049e1a6c48272a4d67609b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1538,FICO,FAIR ISAAC CORP,7389,429,98c02a6b162942c240b9c0a9380c54c3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3873,FIS,"Fidelity National Information Services, ",7389,430,995bb9b4b777fd6ce8dc5d41b1d69b81,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1825,JBL,JABIL INC,3672,431,9a1d36e89302639c62c1b7ea56f19cef,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1917,LEN,LENNAR CORP /NEW/,1520,432,9a794ba7b4170145751c6e5aadb406e3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,671,LOW,LOWES COMPANIES INC,5211,433,9a89358ab37968b7a9ac6defa808b6bd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3366,PCTY,Paylocity Holding Corp,7372,434,9c1a5f7d1745f997289ec9c85525ca92,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1677,AZO,AUTOZONE INC,5531,435,9c1b97119174ad8436d065bda19ae974,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1563,PHM,PULTEGROUP INC/MI/,1531,436,9c20f1c7be5f3d1723da43d69bf37725,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,666,LLY,ELI LILLY & Co,2834,437,9c596b18ff43d5b76e29289ec3f3e528,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1611,LEA,LEAR CORP,3714,438,9cd9f58c608d850fe11681401552d639,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4172,GTLB,Gitlab Inc.,7372,439,9d7040ee4ded99b7803f716dab764586,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1397,VICR,VICOR CORP,3679,440,9dd8d20b6cd7ccf7cbcf330aec5179b7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1684,ACM,AECOM,8711,441,9ddee76fb07b52f529eed378810fb3fc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5944,DBX,"DROPBOX, INC.",7372,442,9e630906a148de9ea31a56a59d90a178,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2328,AMZN,AMAZON COM INC,5961,443,9f18709a1120e42db8408f79d7dc9a6e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2336,PINS,"PINTEREST, INC.",7370,444,9fa09f0c4be7526075b044641d839764,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2081,RPRX,Royalty Pharma plc,2834,445,9fa415f9bfc0408e59272a9ec3e5deef,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5010,NVT,nVent Electric plc,3550,446,9fbe49b254cd4befad561d74dc8fcea9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3814,SN,"SharkNinja, Inc.",3630,447,9fc3ff7339846aef90c82cb160b334d9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4619,CVNA,CARVANA CO.,5500,448,a01cf69c501d3753c5b46b062e62a844,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2964,DUOL,"Duolingo, Inc.",7372,449,a07a26e327a38408930a23d86056ab11,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5018,IBRX,"ImmunityBio, Inc.",2836,450,a12c8748bd6d593eeb8dc8685674bce6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1083,LUV,SOUTHWEST AIRLINES CO,4512,451,a175cf21efa6ac238714eb5115898e75,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,631,HRL,HORMEL FOODS CORP /DE/,2011,452,a209a56ac73cabadbd8583f2423f8939,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2191,U,Unity Software Inc.,7372,453,a218325386c66494fad20811ab342188,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,605,GAP,GAP INC,5651,454,a21f4308927410fc7ec314813c74cc69,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5050,META,"Meta Platforms, Inc.",7370,455,a24c85a45c3f53da124fa21f8b226e85,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,628,HSY,HERSHEY CO,2060,456,a2a1643312b71432a12f6eed51483a70,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1158,TJX,TJX COMPANIES INC /DE/,5651,457,a2ae1db959757218f6446d62efa5cb6f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2345,PAG,"PENSKE AUTOMOTIVE GROUP, INC.",5500,458,a2cc201d4bc943274445a07a4b696972,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,251,CAT,CATERPILLAR INC,3531,459,a38847bfde7738dde6c5c59b616affcd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3470,EW,Edwards Lifesciences Corp,3842,460,a4067e4ace6a72e4002308ce9099d8fa,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4032,HALO,"HALOZYME THERAPEUTICS, INC.",2836,461,a40f1b8de755a1e7c1d6e4b31b1c0bcb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1207,AMGN,AMGEN INC,2836,462,a439c3aa5d6b708421824725fbaeb5f2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5132,ARXS,"Arxis, Inc.",3728,463,a439ce06525bec98e8cd57005567c21f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3545,QLYS,"QUALYS, INC.",7372,464,a46d08746858e545b614454fd260a7d1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4906,KRYS,"Krystal Biotech, Inc.",2836,465,a4bdcd4b4e0d777322afee90dd1d8ceb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,343,DCI,DONALDSON Co INC,3564,466,a56aaa707bdeb34db86e7ef51fee3912,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1717,INCY,INCYTE CORP,8731,467,a5ed79c68ea7c6b5693ce9579ab34ef2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,682,MKC,MCCORMICK & CO INC,2090,468,a634405e45a69777e3f979b349b6fa6c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2370,RKLB,Rocket Lab Corp,3760,469,a670296248409fa7bef483f5b9740b77,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1444,JKHY,JACK HENRY & ASSOCIATES INC,7373,470,a6828c54ebab80f7653d88e8e5ae02e5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5678,LULU,lululemon athletica inc.,2300,471,a6cae98332857f982c0e5ff7ee9f8a5d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2970,CYTK,CYTOKINETICS INC,2834,472,a6d0f0a143f762c2ab8d551f45d14c02,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4,MSFT,MICROSOFT CORP,7372,473,a7960a1e2c12e8d324a96eb7f7d54a54,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2944,MCO,MOODYS CORP /DE/,7320,474,a7cc437e095bdb3245a0cfbdef1ea627,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5880,BAH,Booz Allen Hamilton Holding Corp,8742,475,a83bcb02deeb300b002c3babae2b3e63,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5686,G,Genpact LTD,8742,476,a984dc8a47cec401c057e297c7e5104c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3869,ZBH,"ZIMMER BIOMET HOLDINGS, INC.",3842,477,a9e1e6aa7e3c4d8345d6fc91108ab641,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3596,ILMN,"ILLUMINA, INC.",3826,478,aa2eed07f7e7a00db7e20cf43028807b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4883,FPS,"Forgent Power Solutions, Inc.",3620,479,aa59f3aedd10e51ae5e77b02ab33be85,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4574,INVH,Invitation Homes Inc.,6510,480,aad7884ad365c3c7b007ea82877bb45a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1022,PKG,PACKAGING CORP OF AMERICA,2650,481,aada6d2484ccab20783d8365b74d27cf,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4658,NTSK,Netskope Inc,7372,482,ab3c3673579805a7d4f450a38bfd14bb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5750,ALSN,Allison Transmission Holdings Inc,3714,483,ac2d6dc1071f862f78a8f66141803983,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1160,AIT,APPLIED INDUSTRIAL TECHNOLOGIES INC,5080,484,ac8ce94c4f6c9726f1ce426cb5c2c0c8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4095,CMCSA,COMCAST CORP,4841,485,acc9be811f9845b5f9ff5ecc5c2e0c7f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4294,USFD,US Foods Holding Corp.,5140,486,accf10961d8a81e3cd2f1d01cda25d64,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3908,TKO,"TKO Group Holdings, Inc.",7900,487,acf77145835e87ac89b99aac226f3036,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4316,DD,"DuPont de Nemours, Inc.",2821,488,ad1a27f4c708129d416290c13efee9fd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5663,VMC,Vulcan Materials CO,1400,489,ad9a8fe9d8c52cacda413521717ca4d7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4474,PSKY,Paramount Skydance Corp,4833,490,ada0ae518ea4f68f75c237f111557a3e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2,NKE,"NIKE, Inc.",3021,491,ae510133e1ce767c25fd1ca2f4465888,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1750,RCL,ROYAL CARIBBEAN CRUISES LTD,4400,492,ae5592eecad0b0ab1d728abb4725b576,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1066,SCI,SERVICE CORP INTERNATIONAL,7200,493,af2c2090c6fcdca575414a622218bbb3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2385,UI,Ubiquiti Inc.,3663,494,af5bc961ba164563c4fc08dc8b926954,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3998,MDGL,"MADRIGAL PHARMACEUTICALS, INC.",2834,495,af6cddf2acc6681326503dcc7e1d3ffd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3478,KEYS,"Keysight Technologies, Inc.",3823,496,afaeda0bca4e54f08dfae336917e2343,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,612,GPC,GENUINE PARTS CO,5013,497,aff818483c8c9f079d2015f836ef2fe3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1649,CSCO,"CISCO SYSTEMS, INC.",3576,498,b1608baaf57c4d2123672943f68f3213,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4162,ECG,"Everus Construction Group, Inc.",1531,499,b1a7491135c794e8bc42faf784440ed4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4297,SGI,SOMNIGROUP INTERNATIONAL INC.,2510,500,b214a60777e84efd9ef3fc3199034ac5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5212,ELAN,Elanco Animal Health Inc,2834,501,b407df42bdd8f9da503b91cd228753a5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5421,STE,STERIS plc,3842,502,b41e1a48840639bb96ec99eab522e53c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,632,HUBB,HUBBELL INC,3670,503,b46924d639ec1b31f9a1f4501b71ddd9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1673,FLEX,FLEX LTD.,3672,504,b4b912beb063ed206c32218d537ac938,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5779,KDP,Keurig Dr Pepper Inc.,2080,505,b4e4f60277b7efea10387f5957e642f3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2788,BMRN,BIOMARIN PHARMACEUTICAL INC,2834,506,b6589b5d0735c616c5b061650275e63a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,225,MTZ,MASTEC INC,1623,507,b6bf13addc12f34b8aae49cd3b5a4eae,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5941,TT,Trane Technologies plc,3822,508,b6eb920c7d97259d6b88a77ecc120ba0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1123,RTX,RTX Corp,3724,509,b75909bbab15e36e33fbb7ad7a06ab6e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1087,SWK,"STANLEY BLACK & DECKER, INC.",3420,510,b778937e6390d740c36fccef1a8b249d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3940,KHC,Kraft Heinz Co,2030,511,b7ff85256855807ba370cb66f48a73fb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1038,PPG,PPG INDUSTRIES INC,2851,512,b80d00d2984866f36c4c7d317ff664e4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3966,PODD,INSULET CORP,3841,513,b87fc494256f317c5fd7f2dcaacd286b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2921,CMG,CHIPOTLE MEXICAN GRILL INC,5812,514,b8e28ab42bc86cd6c212e7f434c0cbc2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2407,LAD,LITHIA MOTORS INC,5500,515,b9a7230fed6d44905c4d871a7ddf3bb2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3343,UPS,UNITED PARCEL SERVICE INC,4210,516,b9dd7014bade739e7e284f43d6471def,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1690,IONS,IONIS PHARMACEUTICALS INC,2834,517,ba3fe3334414c638be8716c7a22c55d6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2580,JLL,JONES LANG LASALLE INC,6531,518,baac1781792fb0fc8158f648012b7b9d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4689,SOLS,Solstice Advanced Materials Inc.,2800,519,baca04a4e6d4a465ed774e5ae9c28f2b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4016,BG,Bunge Global SA,2070,520,bb62486170eba3c63d231c3ae15a4975,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1484,M,"Macy's, Inc.",5311,521,bbb3b4f2dd7a2801e5d30a8b4918a9b2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4186,WYNN,WYNN RESORTS LTD,7011,522,bbdea046cc2c47da64d571ea28502059,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4090,XPO,"XPO, Inc.",4700,523,bc6c3f5028b22ae39fca6702842eb137,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1658,RS,"RELIANCE, INC.",5051,524,bc8cd49fc2ba8fcf70c269be1e66ce12,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,217,BF-A,BROWN FORMAN CORP,2080,525,bd5546e390506b36a7c3cc2868485800,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1028,PEP,PEPSICO INC,2080,526,bd6a4cb6d024a87f1fed9b634afc48fa,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2149,MSM,MSC INDUSTRIAL DIRECT CO INC,5084,527,be1a2e6dbdc8ce4e5f3c66dccee852dc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1257,ONTO,ONTO INNOVATION INC.,3829,528,be1fa7b1a70acb3616148034500e8973,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3164,CART,Maplebear Inc.,7389,529,be30b5328e34b1e97ed0bb68fe52fcbc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3155,BKNG,Booking Holdings Inc.,4700,530,be4e19801db78c6d3bcff6998efda895,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1128,VMI,VALMONT INDUSTRIES INC,3440,531,bea08de4a392e3e7cca038c8beb6727c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1595,JCI,Johnson Controls International plc,3585,532,bed1630030221e6461f4cc2685cbabe8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3171,ALLE,Allegion plc,7381,533,beff07b0ac0a0bec3f167877e937cecb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1898,TSCO,TRACTOR SUPPLY CO /DE/,5200,534,bf029a533364337eb3d6779333e0b8df,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1700,VRTX,VERTEX PHARMACEUTICALS INC / MA,2834,535,bf156981606f2337e94bc5115348d47d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,183,BALL,BALL Corp,3411,536,bf438dbd2df1faa9702057c5fd5a1ffe,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4514,FSLR,"FIRST SOLAR, INC.",3674,537,bf4990923386f921a530da2aed2dba17,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4385,JAZZ,Jazz Pharmaceuticals plc,2834,538,c0006af83c62b0d276a87b19698a06e7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,89,APD,"Air Products & Chemicals, Inc.",2810,539,c02564c2a72a508bbabd5cd50d4e7943,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5691,VTRS,Viatris Inc,2834,540,c093e6a4b51b4211e62aa96937dc1e03,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2564,RL,RALPH LAUREN CORP,2320,541,c0a8dcadc7f2ca8f9599c693fc8d03e0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3538,NTRA,"Natera, Inc.",8071,542,c0bd280a731fe488cad78135348c94ae,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1630,GEN,Gen Digital Inc.,7372,543,c0c8bee208a11678125cc7d885d5b62e,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1913,LH,LABCORP HOLDINGS INC.,8071,544,c1555c33af49e2bcab6c57d934acfcbc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1629,CRH,CRH PUBLIC LTD CO,3241,545,c190ed70c5ae7fe14122a20e91c0abbf,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,367,EMR,EMERSON ELECTRIC CO,3600,546,c212d10ce73b2be04ce243da36803b4d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1323,CTAS,CINTAS CORP,2320,547,c216c9f615312de179e1b53f2bda74e3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1041,POWL,POWELL INDUSTRIES INC,3613,548,c2f77995303e947f80728548ca3afe68,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,329,DAL,"DELTA AIR LINES, INC.",4512,549,c33d4efdbdfc44a62d15d551ac6a55c5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1850,BWA,BORGWARNER INC,3714,550,c3c4b496a76c4dd25aedcfcac39030a8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1699,BIIB,BIOGEN INC.,2836,551,c44a7f3c432f15c16e371fced4de682f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2658,BJ,"BJ's Wholesale Club Holdings, Inc.",5331,552,c4a49fdd55b663bf04940352eb6413ee,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1427,ADSK,"Autodesk, Inc.",7372,553,c5364c4e64e79b18735118d1d49ba2b0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5542,DT,"Dynatrace, Inc.",7372,554,c566c168f25d80c0197b85175c125342,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1107,TKR,TIMKEN CO,3562,555,c5c677bdb720955183694fb59b0015e5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3539,ULS,UL Solutions Inc.,8734,556,c6003bc269589350a491261db4c1c963,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2785,MAR,MARRIOTT INTERNATIONAL INC /MD/,7011,557,c619a1cd5ee2aafdc629688782d6438b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4526,MDLN,Medline Inc.,3841,558,c679cb9cb8755ed35e3c9162740e927a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1654,TYL,TYLER TECHNOLOGIES INC,7372,559,c6d822c5187eb1d71c5476bd869e3c10,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2832,PWR,"QUANTA SERVICES, INC.",1731,560,c6f299679e405475ffd91e3f1a3f451a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,103,SWKS,"SKYWORKS SOLUTIONS, INC.",3674,561,c72714f8842ec3ed201e728e35800362,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,607,GD,GENERAL DYNAMICS CORP,3730,562,c728987a77c7cee7b1a819d91b88b99b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1483,TOL,"Toll Brothers, Inc.",1531,563,c7a1aa3b96c7a59ba018ada635885972,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5718,V,VISA INC.,7389,564,c7a5d689415a69d6abb3aa663f517dfe,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2273,HII,"HUNTINGTON INGALLS INDUSTRIES, INC.",3730,565,c816d7a48da0451c5a37d8d8ebd77c91,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1178,CSX,CSX CORP,4011,566,c84e1e1578f24903e8e537c81c0bfae2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2751,INGR,Ingredion Inc,2040,567,c8548cd82ab609c01d41245dfeb5adcb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,700,MMM,3M CO,3841,568,c8e06607697ad1471920779f6f02469c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4220,SNX,TD SYNNEX CORP,5045,569,c98a34fe2f31ff4b95439470dd2d9b41,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2246,KYMR,"Kymera Therapeutics, Inc.",2836,570,c9948363580f538ad558c74b72d11efb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,283,CL,COLGATE PALMOLIVE CO,2844,571,c998f00e9889105f12f17d1139251ccd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3256,LTH,"Life Time Group Holdings, Inc.",7997,572,c9a13a1dc6bd648447f108f9e553a4a9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4935,ZS,"Zscaler, Inc.",7371,573,ca2887204a385ee64230260b92159fd3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1365,TTC,TORO CO,3524,574,ca34bdc1e5e77428630f3f8893c1c1e7,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4434,AA,Alcoa Corp,3334,575,cac2dd2333cb05c592a50f3c7804bdfd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1486,WTS,WATTS WATER TECHNOLOGIES INC,3490,576,cb25e5f9ddec6587fd1db2baccf80680,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4115,TEAM,Atlassian Corp,7372,577,cb319369edfb382b454b1130b22da19d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5461,OC,Owens Corning,3290,578,cbb57e57148ad89fa7d9f0f0a6f692aa,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1978,EXEL,"EXELIXIS, INC.",2836,579,cc6badc14b5c68d3028449c6085a14a0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1067,MLI,MUELLER INDUSTRIES INC,3350,580,cca09fee262992afc8c1a21f18081f4d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3520,WMS,"ADVANCED DRAINAGE SYSTEMS, INC.",3086,581,cd3f9c5c710d2a36565077494f033871,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3739,KVUE,Kenvue Inc.,2844,582,cd72ade714922ed7f66c2cb184989fc0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5457,ETSY,ETSY INC,7389,583,cd8d0130e32352af0d56a9feb121ee69,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2746,RBA,RB GLOBAL INC.,7389,584,ce1f2a78e1b504df954b8f71b0401446,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3614,PCOR,"PROCORE TECHNOLOGIES, INC.",7372,585,ce5204dab1dd3db8c682a31778e1d1f0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5306,AMCR,Amcor plc,3990,586,ce7a7fbef0008bd8d5f686727a66ea43,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2259,FDS,FACTSET RESEARCH SYSTEMS INC,7370,587,cf0bcf29d30df97b503f1100676b8221,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,201,BIO,"BIO-RAD LABORATORIES, INC.",3826,588,cf43a945744e69b0a3ab1d7099383e4c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1274,COO,"COOPER COMPANIES, INC.",3851,589,d023f04edbeac81109bd5c55247ab5d1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1854,SIRI,SIRIUS XM HOLDINGS INC.,4832,590,d31ee80e253b40cf624613da1e6e643d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5830,APPF,APPFOLIO INC,7372,591,d36b707d17d0f4a06c26e36243108136,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3463,ELF,"e.l.f. Beauty, Inc.",2844,592,d37c82518c1949c58308aa4272184dc9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2475,IONQ,"IonQ, Inc.",7373,593,d42a9965e92c5b04603f647a8eac2848,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5735,MSCI,MSCI Inc.,7389,594,d48d21b3c7263722076438c5d307f09f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3700,PFGC,Performance Food Group Co,5141,595,d52b7bbbeffbaddc39d303783621c0cc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,683,MCD,MCDONALDS CORP,5812,596,d5a6c224ae8e9ffe1c7e96a7ba9320b1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,287,CMC,COMMERCIAL METALS Co,3312,597,d5c4533e10bfdfc575351ee2b35e4600,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1074,SJM,J M SMUCKER Co,2033,598,d669fcf11a210322f5ccb06ae8fad137,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5526,TXG,"10x Genomics, Inc.",3826,599,d69240a3cfd6cc382bcecab0d17dc318,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5762,NXPI,NXP Semiconductors N.V.,3674,600,d6c3b05783894ec0fc5bac97ebbd87e4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1054,ROL,ROLLINS INC,7340,601,d6e52147d5db2f261b5995fdb781e81a,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,85,AMD,ADVANCED MICRO DEVICES INC,3674,602,d9151db7cdc37c8d4a306bd56f0fa022,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1972,DLTR,"DOLLAR TREE, INC.",5331,603,d995baa09749e1122e7f12eaa298e910,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2540,ISRG,INTUITIVE SURGICAL INC,3842,604,d9d53b99daa1df3de0f0c5ebf0497e59,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1415,BBY,BEST BUY CO INC,5731,605,da38dbe2be4c3b24e3f50742db8cfa3b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3956,TTAN,"ServiceTitan, Inc.",7372,606,da61221272c77b0f3fe19d2193b3ee72,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,684,SPGI,S&P Global Inc.,7320,607,da6c7243d8367e1ab693eada3174f885,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3024,CNH,CNH Industrial N.V.,3531,608,da7bff1080bd96b4e686b95cd612f5a1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4693,MXL,"MAXLINEAR, INC",3674,609,db04620b7925293b2fb69f3707a6cf38,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1587,FCX,FREEPORT-MCMORAN INC,1000,610,db5972a0a11b8ff4bf2ab7db21091d34,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,702,DY,DYCOM INDUSTRIES INC,1623,611,db8f0ee7b6e224175e5b177e7bf22abd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2378,DGX,QUEST DIAGNOSTICS INC,8071,612,dbe5fb981a315ba601daf6c70783f810,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5170,ALAB,"Astera Labs, Inc.",3674,613,dc2fbfedb566c8b065ec46b8e2560581,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5971,GNRC,GENERAC HOLDINGS INC.,3621,614,dc6cf13220ab8c2715f52b90f8d43bfd,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5632,VEEV,VEEVA SYSTEMS INC,7372,615,dcc3f7a22ca0024b6fa86e2e52ff8ba0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2998,SNAP,Snap Inc,7370,616,dcc808302652f9fbe5ca7a1e01a34d39,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1892,EMN,EASTMAN CHEMICAL CO,2821,617,dd00f75caddc488801981eaab25e02d2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1823,ORLY,O REILLY AUTOMOTIVE INC,5531,618,dd207a09a7d7e451c956f7931e917d11,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4465,RAL,Ralliant Corp,3823,619,dd2de9e973b2481c595296d829cc8a82,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1876,URBN,URBAN OUTFITTERS INC,5651,620,dd42fe6acfc2a8141025c79361afc9f9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4586,MPWR,"MONOLITHIC POWER SYSTEMS, INC.",3674,621,de11df911d61a3a3e42ff9e59466846c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5207,CELH,"Celsius Holdings, Inc.",2086,622,de19c5fdc4139cb8294d7f260f283715,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2576,AME,AMETEK INC/,3823,623,dfc4cd353a62030ee171ec21730a3a81,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1555,COHR,COHERENT CORP.,3827,624,dfc70c0a21e43f1b25ebae272acbcd42,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5869,ZWS,Zurn Elkay Water Solutions Corp,3560,625,dfd910d5fafa162b2ebce70f34ad326d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5511,CRWV,"CoreWeave, Inc.",7372,626,e007334f15b0fc5802cd04d5a8122ff6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5029,WH,"WYNDHAM HOTELS & RESORTS, INC.",7011,627,e09311fc5d9369181442fef0a2d77d61,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2332,ANF,ABERCROMBIE & FITCH CO /DE/,5651,628,e0f0b4303e38932a7de100d308c80a89,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2683,MRVL,"Marvell Technology, Inc.",3674,629,e11813de5c2d725d781d9e632ceb7bb0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5738,FN,Fabrinet,3661,630,e2affb2ade434e19847004ca3c4816d8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5810,IOVA,"IOVANCE BIOTHERAPEUTICS, INC.",2836,631,e39a27401f386cde4646921de53ed551,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3291,HLT,Hilton Worldwide Holdings Inc.,7011,632,e3d697b648cde9cc87551155d2db9de4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,303,GLW,CORNING INC /NY,3357,633,e3d9ce5177cf1c3f0af9542c6862e5e5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4447,FTNT,"Fortinet, Inc.",3577,634,e44338bbd74c3f49364d581e544a2d37,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3886,STX,Seagate Technology Holdings plc,3572,635,e455c2b3d068997d6237b8bbaf507847,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,205,HRB,H&R BLOCK INC,7200,636,e45c38b9ae7a01e04dc64763c1b0c340,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,341,DG,DOLLAR GENERAL CORP,5331,637,e465cd371d707d9aca53e4485c2a3843,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,327,TGT,TARGET CORP,5331,638,e48103b298401648b140f182423c2aa5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1737,ROP,ROPER TECHNOLOGIES INC,3823,639,e5cae60b422df87bd591b500616709c8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3976,NAVN,"Navan, Inc.",7372,640,e5d7d8a758b02cbe53ad64bba9fac27b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2124,SCCO,SOUTHERN COPPER CORP/,1000,641,e5f3f2e948298934e8c6a39437e6bb3c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1789,MTCH,"Match Group, Inc.",7370,642,e6274939a77a78c706db1509bdf9f593,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1027,PNR,PENTAIR plc,3550,643,e6fcffbc0b267977da6989718fac6c63,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4077,NEM,NEWMONT Corp /DE/,1040,644,e717d8b790ccea6c935bdfa86a6d1e6c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,231,CACI,CACI INTERNATIONAL INC /DE/,7373,645,e75a0da5c007fed0a59a497266e7b073,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4255,SARO,"StandardAero, Inc.",3724,646,e77a013627e3164c5e76312a9879d3fe,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5058,PANW,Palo Alto Networks Inc,3577,647,e7bd18c1351b0404306fa97bc0ce1243,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5161,LDOS,"Leidos Holdings, Inc.",7373,648,e84b158dfa38d60d9d7dc3191b67d8b6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3589,GDDY,GoDaddy Inc.,7373,649,e87b614d83f62a86b27184aa45046914,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1439,OSK,OSHKOSH CORP,3711,650,e89dd212e2572b93e53c11da1f96f7e3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3955,AYI,ACUITY INC. (DE),3640,651,e8b539a64634c24f1ecef9dc65ad8ae5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3325,FTAI,FTAI Aviation Ltd.,7350,652,e99a5356bfcb12a38545f19cec9f2a8b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3982,SNOW,Snowflake Inc.,7372,653,eb52a0bf3e2cd65dd1a3375491f5b061,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1841,NVR,NVR INC,1531,654,ed0e722ad2bbe0e67dda9f22075537f1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1669,TRMB,TRIMBLE INC.,3829,655,efa31fbffed2363b1ab6822be9351492,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,622,HAS,"HASBRO, INC.",3944,656,efc72d0d8e067aee30b8e8a59127bff6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,361,ECL,ECOLAB INC.,2840,657,efd40834645164e4f8b47f62ba8ecdc0,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2111,TGTX,"TG THERAPEUTICS, INC.",2834,658,efdc898b1ee88da99b2724f6306861a4,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,629,HPQ,HP INC,3570,659,efe8a60f7344918c71333295403930db,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2895,ZTS,Zoetis Inc.,2834,660,f02b7a8916eef9b617e63fb46b46eeeb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1056,R,RYDER SYSTEM INC,7510,661,f102d03bc13a7182ced5598b0d1c03c9,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,644,IBM,INTERNATIONAL BUSINESS MACHINES CORP,3570,662,f1c78a48aa8d1690a4afd646e1d81740,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1182,MRK,"Merck & Co., Inc.",2834,663,f1f8ffedaaab4260d4ede0e891cada35,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2793,FFIV,"F5, INC.",3576,664,f2c5abad6be3fcc3f823d2c04ee4eadc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3736,CR,Crane Co,3490,665,f2ca8e645220ed65d3b97b373115037c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1382,EXPD,EXPEDITORS INTERNATIONAL OF WASHINGTON I,4731,666,f62ea7797d10b7486971c6301a780a0b,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,249,CRS,CARPENTER TECHNOLOGY CORP,3312,667,f6610fd9035c8e3668d9fd8ed6135a0f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1105,TMO,THERMO FISHER SCIENTIFIC INC.,3829,668,f661cd771331cd21613c64c90f72c928,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5580,ASTS,"AST SpaceMobile, Inc.",4899,669,f6c8f81452ae5b7774c65d32e3fe0083,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1718,ARWR,"ARROWHEAD PHARMACEUTICALS, INC.",2834,670,f6d2726ad5b2e9e2ec2951476bd9f485,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5289,EPAM,"EPAM Systems, Inc.",7371,671,f6f108376b98d42864c6d278d077bd2d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1981,DRI,DARDEN RESTAURANTS INC,5812,672,f7035368b0f61ad9b24c867ae2e2d64d,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3118,SFM,"Sprouts Farmers Market, Inc.",5411,673,f7574cd5ce9dbdbd83ed1253a0bbf4a3,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2409,NCLH,Norwegian Cruise Line Holdings Ltd.,4400,674,f795d1ac2ba177bf206cccb14a954490,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3067,SAIC,Science Applications International Corp,7373,675,f7d156a829bf8c27de29bf36767f3e76,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1488,ADBE,ADOBE INC.,7372,676,f8919f0a8ac45bf3471d6cd7aef09258,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3174,BURL,"Burlington Stores, Inc.",5311,677,f9c55efe7584b5a5ed8b65060cc222a2,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1495,VSAT,VIASAT INC,4899,678,f9d18a56b1657ce04f0e4de2539a3eeb,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4015,GEV,GE Vernova Inc.,3600,679,f9f3b9193b6eb5f6cb020913dd894988,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5822,ROKU,"ROKU, INC",4841,680,fb47574aabbc27ce7f86c81fe0f60e59,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1168,CDE,"Coeur Mining, Inc.",1040,681,fb4a6f243335419185a26f365d7dbf45,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3220,TWST,Twist Bioscience Corp,2836,682,fbb0eb2baf2ef3865a32d264ad0c5ef1,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4232,FTV,Fortive Corp,3823,683,fc3474a1637b7b54bc10500f04d9c131,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4344,SAIL,"SailPoint, Inc.",7372,684,fc9c11f9ad1d09d530a021995c975fcc,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4380,YUMC,"Yum China Holdings, Inc.",5812,685,fd03dff611379a8d79599cfad23b9f1c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1359,T,AT&T INC.,4813,686,fd2ace30b87f06b3437ce23d96025a31,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3213,BROS,Dutch Bros Inc.,5810,687,fd5b55196942921300761cbe5b1957df,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3713,GPN,GLOBAL PAYMENTS INC,7389,688,fd61eb4fe2fa6992289eefa4f0173819,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1985,RMD,RESMED INC,3841,689,fddf773a8730e5ade7f0bf8b60958674,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,2025,IQV,IQVIA HOLDINGS INC.,8731,690,fe029138a8a93910917cb1b97b4f0fc8,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,319,CW,CURTISS WRIGHT CORP,3590,691,fe03b21bacafa677a927beda0e93957f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,10,RDDT,"Reddit, Inc.",7374,692,fe200a92d4aaebcf1286c622ff75f351,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3733,RBRK,"Rubrik, Inc.",7372,693,fe2aeb8a22d62de103de9fbc758187f6,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5969,P,"Everpure, Inc.",3572,694,fe4b61e1c37160ef5e320c645809a228,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3284,AKAM,AKAMAI TECHNOLOGIES INC,7389,695,fe60b033e52ca73673bd97885294215f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,5721,ULTA,"Ulta Beauty, Inc.",5990,696,fe9703f2eae74140830168b4c1dff985,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,3895,PYPL,"PayPal Holdings, Inc.",7389,697,fe9c7c023b35ca7edbf4f617b72f434f,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,128,ADI,ANALOG DEVICES INC,3674,698,fead43be6275b125d7bd1f696f1bb88c,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,4945,TSLA,"Tesla, Inc.",3711,699,ff114f871a2feb173b11e67da4b9aeb5,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1049,RRX,REGAL REXNORD CORP,3569,700,ff26a219e5e9fc3796a64ebb9e251019,0,analyst adds 15 risk and 15 negative controls
+corporate,701,random_60_plus_15_risk_plus_15_negative,1030,PFE,PFIZER INC,2834,701,fffdc05b4436cfcedf0e727745d4d02b,0,analyst adds 15 risk and 15 negative controls
+energy,34,read_all_reread_30_plus_10_risk,2860,MPLX,MPLX LP,4610,1,018393d2ced0e98271ef184a0afacd7a,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1086,CVX,CHEVRON CORP,2911,2,06d54f15b7912b43270ab86865ee424b,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2088,CHRD,Chord Energy Corp,1311,3,07f2776dada5652e47581f2d114f3722,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,5500,CVI,CVR ENERGY INC,2911,4,11ea960b44e72d6e7811ef15908901a0,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,5693,OVV,Ovintiv Inc.,1311,5,1f8fbe8e52294e8b79a1812c908a2d3e,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1296,MUR,MURPHY OIL CORP,1311,6,254e7c1f0a57217973390a657ed6df25,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,4056,COP,CONOCOPHILLIPS,2911,7,319b3775f349ef4c29700dcf1c9b8075,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1804,EXE,EXPAND ENERGY Corp,1311,8,3ea6e364714a324e5538aa547fea6f7e,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,375,EQT,EQT Corp,1311,9,4a67651da41e2c6acbe3d04241290211,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,620,HAL,HALLIBURTON CO,1389,10,51b9a80b628c70effff3fedf14759001,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,4706,MGY,Magnolia Oil & Gas Corp,1311,11,522bb6480b9ec65dee1f0aec36fff52a,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2717,PSX,Phillips 66,2911,12,524b785e1f44ab4b12c8839e2bc67983,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1793,SM,SM Energy Co,1311,13,5395e48fdf44ff724275a3305e7a3e87,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,3496,NE,Noble Corp plc,1381,14,6041b65f057213135ea3d9587b00af74,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,4786,VNOM,"Viper Energy, Inc.",1311,15,696c8022d01a7588896599999e8ae869,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,5831,AR,ANTERO RESOURCES Corp,1311,16,6f26be80c2ed7074e6aceb3d9758b372,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2765,FANG,"Diamondback Energy, Inc.",1311,17,71da77190f17d8e884ca9589e78ea6ca,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2376,MPC,Marathon Petroleum Corp,2911,18,73b0d67aaa2be686196b2c684e1a5a66,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,3600,DINO,HF Sinclair Corp,4610,19,7491e0ab06463ffdac90574724bf87ba,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1195,VAL,Valaris Ltd,1381,20,99d72918776f55b7a6f3d21cb49eb0c9,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1492,OXY,OCCIDENTAL PETROLEUM CORP /DE/,1311,21,9f6f3bacb4b7045ae3b811952e6ce9f2,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2529,VLO,VALERO ENERGY CORP/TX,2911,22,b93be09648e8298963489395d3fa6dab,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,3098,PAA,PLAINS ALL AMERICAN PIPELINE LP,4610,23,b9d47c549f87718d9fc34ae9f6647f9a,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2500,MTDR,Matador Resources Co,1311,24,bb50b26fc348b8ffb14580f7aa28d8cb,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2708,PBF,PBF Energy Inc.,2911,25,be808b0f5b776d9d2dcf62981e35ad5e,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,4225,PR,Permian Resources Corp,1311,26,bfb4d52b89a52f24202517e1f2358a1f,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1059,SLB,SLB LIMITED/NV,1389,27,bfca28556929e87a6bd1e91fd4630a00,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,638,IMO,IMPERIAL OIL LTD,2911,28,c22a752e6764193879d8e2baca6fe62b,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1202,RRC,RANGE RESOURCES CORP,1311,29,c6f2f8f5f9ae34841b1454069a8753ef,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,1560,EOG,EOG RESOURCES INC,1311,30,dcb1e1b37d226b4bd802d3801ec6edd7,1,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,5904,RIG,Transocean Ltd.,1381,31,ed6b8f643442ff206aeb6d8021027832,0,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,3331,DVN,DEVON ENERGY CORP/DE,1311,32,f40f2f6b64747cb4e74c3316047b8901,0,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,2801,APA,APA Corp,1311,33,f8b459180d8ca97fc88767a6f6dd6ef8,0,analyst adds 10 risk-selected
+energy,34,read_all_reread_30_plus_10_risk,5351,XOM,ExxonMobil Holdings Corp,2911,34,fec907b54fb683d38b383aa6e66f204d,0,analyst adds 10 risk-selected
+insurer,28,census,688,MCY,MERCURY GENERAL CORP,6331,1,0772a5d672369aaf21e56ddeb0b64cf7,1,all members read; Verifier re-reads all
+insurer,28,census,1997,THG,"HANOVER INSURANCE GROUP, INC.",6331,2,0b121777a1c6be5dfc83840c4f4c0e44,1,all members read; Verifier re-reads all
+insurer,28,census,3396,EG,"EVEREST GROUP, LTD.",6331,3,0cfdd36c8df39f06dc6e6c173e9c3154,1,all members read; Verifier re-reads all
+insurer,28,census,3980,ELV,"Elevance Health, Inc.",6324,4,1b27a37cc729bf7eb0e651ab1fd1c079,1,all members read; Verifier re-reads all
+insurer,28,census,1233,AJG,Arthur J. Gallagher & Co.,6411,5,1c0ad09437a2c3e80e4209d9b0563daa,1,all members read; Verifier re-reads all
+insurer,28,census,633,HUM,HUMANA INC,6324,6,25c183326445c80fd7c129327126deea,1,all members read; Verifier re-reads all
+insurer,28,census,3127,CNC,CENTENE CORP,6324,7,319967a068f3e0db41625a0e803bf32f,1,all members read; Verifier re-reads all
+insurer,28,census,2042,ACGL,ARCH CAPITAL GROUP LTD.,6331,8,421dae9579df3a862b94e0718f09c786,1,all members read; Verifier re-reads all
+insurer,28,census,3750,PFG,PRINCIPAL FINANCIAL GROUP INC,6321,9,4813f66532d2c7ce2e5668f83b604637,1,all members read; Verifier re-reads all
+insurer,28,census,3459,MET,METLIFE INC,6311,10,563bf08073db9db4ccdc5695aad87c97,1,all members read; Verifier re-reads all
+insurer,28,census,5129,EQH,"Equitable Holdings, Inc.",6411,11,584546d8d47de551c14be914c09514a9,1,all members read; Verifier re-reads all
+insurer,28,census,2930,RYAN,"RYAN SPECIALTY HOLDINGS, INC.",6411,12,5e85029b0db0d526f6ec0876c9f56b64,1,all members read; Verifier re-reads all
+insurer,28,census,4249,MOH,"MOLINA HEALTHCARE, INC.",6324,13,6ef6a31c6f5fbdd8daa4e4068aa10fc7,1,all members read; Verifier re-reads all
+insurer,28,census,1928,ERIE,ERIE INDEMNITY CO,6411,14,6fb7a529b7d27f795fd037f051d06717,1,all members read; Verifier re-reads all
+insurer,28,census,197,WRB,BERKLEY W R CORP,6331,15,76c5dc1fa964b9be3903ebe8265ac150,1,all members read; Verifier re-reads all
+insurer,28,census,5228,CI,Cigna Group,6324,16,7f385671f70b4e967b85b4fffc04829f,1,all members read; Verifier re-reads all
+insurer,28,census,3423,MKL,MARKEL GROUP INC.,6331,17,9815dc9fe63df874f9e06fec417d5add,1,all members read; Verifier re-reads all
+insurer,28,census,1052,RLI,RLI CORP,6331,18,a0c7be060e3a938dc64e30e1a4896221,1,all members read; Verifier re-reads all
+insurer,28,census,2429,JXN,Jackson Financial Inc.,6311,19,a1c1eea40a4fbf4e04c68ce50bd90749,1,all members read; Verifier re-reads all
+insurer,28,census,114,AIG,"AMERICAN INTERNATIONAL GROUP, INC.",6331,20,a6f8454b4067882c1c36ea7725c0ed1e,1,all members read; Verifier re-reads all
+insurer,28,census,1036,BRO,"BROWN & BROWN, INC.",6411,21,af56e8c563f97ce0ce6e25804a8267df,1,all members read; Verifier re-reads all
+insurer,28,census,4325,AXS,AXIS CAPITAL HOLDINGS LTD,6331,22,b2461d3bfe9a049ddc1bbbb7f38b1cbe,1,all members read; Verifier re-reads all
+insurer,28,census,1198,AON,Aon plc,6411,23,cac6286895a2c0806a680aab5240f63b,1,all members read; Verifier re-reads all
+insurer,28,census,1354,UNH,UNITEDHEALTH GROUP INC,6324,24,cbee590921e6e01fb1947688d7d62cd3,1,all members read; Verifier re-reads all
+insurer,28,census,1827,ALL,ALLSTATE CORP,6331,25,d000536e6493dee43a94fb420ae0392c,1,all members read; Verifier re-reads all
+insurer,28,census,677,MRSH,"MARSH & MCLENNAN COMPANIES, INC.",6411,26,e72c93f03e7a3d382e6caced643576f4,1,all members read; Verifier re-reads all
+insurer,28,census,1017,ORI,OLD REPUBLIC INTERNATIONAL CORP,6351,27,eed9648499d21a6c8d61330591f3b489,1,all members read; Verifier re-reads all
+insurer,28,census,3450,CRBG,"Corebridge Financial, Inc.",6311,28,f8b955cf1c667ca0a5655c56b933714d,1,all members read; Verifier re-reads all
+no_revenue_line,1,census,4086,PCVX,"Vaxcyte, Inc.",2836,1,d3777ad887181e5bf818e3e47223e5e9,1,all members read; Verifier re-reads all
+other_financial,49,DEFAULT_30_policy_not_stated,1313,SF,STIFEL FINANCIAL CORP,6211,1,02ffac1c1a565db1299513d95c36a08b,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1553,AMP,AMERIPRISE FINANCIAL INC,6282,2,037335312e16e3f6d2c56369e78fc01b,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1756,CACC,CREDIT ACCEPTANCE CORP,6141,3,0554ec0c361d27c262e6823ea280859a,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,2323,SOFI,"SoFi Technologies, Inc.",6199,4,0aab3e7ec78ccc95eb274a7387a24ee4,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3618,TROW,PRICE T ROWE GROUP INC,6282,5,0dd60dac269f6823dd19f2dbc42c3bd6,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3079,ICE,"Intercontinental Exchange, Inc.",6200,6,15ad85bdd7ba2b5708331a66e3bf15c3,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1886,SNEX,StoneX Group Inc.,6200,7,24c8aac97960bc7fe9440120fd32d2e2,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1204,SCHW,SCHWAB CHARLES CORP,6211,8,2c3c0f416275065eb95bb630934658c2,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,5483,CBOE,"Cboe Global Markets, Inc.",6200,9,31b35af14765acacdad97e8ea610f85f,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3332,CRCL,"Circle Internet Group, Inc.",6199,10,334e2edf8eef7146e3c9aa30ea4ef89e,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,4266,PS,PERSHING SQUARE INC.,6282,11,3a0119f65785ab263a51e281e30bac47,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3062,VCTR,"Victory Capital Holdings, Inc.",6282,12,3d4461117ed36ba511d6e04509822913,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1767,GS,GOLDMAN SACHS GROUP INC,6211,13,3fad7f46414add79bb6f82f6d4a9c132,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,5393,EVR,Evercore Inc.,6282,14,40a47092f640a59731730d28efbe8a87,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,5429,TW,Tradeweb Markets Inc.,6200,15,4450a3a9d0ddd4c1cd5bd7e9ea00704e,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,5613,HOOD,"Robinhood Markets, Inc.",6211,16,458214e56c57ee611eb8ef99eeac2b5f,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,5543,IBKR,"Interactive Brokers Group, Inc.",6211,17,4d7d8cce7989c230037addaa5ce025e3,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,2566,BMNR,"BITMINE IMMERSION TECHNOLOGIES, INC.",6199,18,5f4cafcffe38c69e26b62e1d2eafe6f7,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1938,FRHC,Freedom Holding Corp.,6211,19,62f81545bf950d1b721065aebdd8c339,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,2109,RKT,"Rocket Companies, Inc.",6162,20,79421adf684c6d3f57537d74159cd14f,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,2387,AFRM,"Affirm Holdings, Inc.",6141,21,7e0e8e2f1df86b331b0ca2c3457fa9e0,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,4123,BLK,"BlackRock, Inc.",6211,22,80373a1423eefec76617bd6aaeef9337,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,2152,AMG,"AFFILIATED MANAGERS GROUP, INC.",6282,23,80487db6784fce09e8f044fe9b835e75,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1223,SEIC,SEI INVESTMENTS CO,6211,24,846ad69adf3738c1245f45298f8975ca,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3254,OMF,"OneMain Holdings, Inc.",6141,25,8d3798e60954b00c5c97f7c2234dba5e,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,4554,MKTX,MARKETAXESS HOLDINGS INC,6211,26,8f23252ad635f1a117c2a10735847edd,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,108,AXP,AMERICAN EXPRESS CO,6199,27,93fc5ad2e7b0a4fbe2de179b1e618971,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3487,SYF,Synchrony Financial,6199,28,9d458e2f87643381774b8ad369b3363b,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3380,TPG,TPG Inc.,6282,29,a63d633da3879496baa93877c5c4066e,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3987,CME,CME GROUP INC.,6200,30,a7dfbd1645aad0feccbe1c122ec2d073,1,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,4822,HLI,"HOULIHAN LOKEY, INC.",6282,31,a98b3642d8d702020bddc44d5b4cbebb,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1890,IVZ,Invesco Ltd.,6282,32,b942be82d75c958dae63527c899e0256,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,2568,CG,Carlyle Group Inc.,6282,33,baca2fc633109e63140b1ecc8e088141,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,2820,MSTR,Strategy Inc,6199,34,c00f2c0405058d8cf14029134f0307f1,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3133,GLXY,Galaxy Digital Inc.,6211,35,c00f6ee5c0fdfd1104ccc48c300a3438,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3859,HUT,Hut 8 Corp.,6199,36,ca00ba0e51b9d5cf0893a3db5955db1e,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3117,APO,"Apollo Global Management, Inc.",6282,37,d18eb05278ab70004c7097eb95ed77a8,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1311,RJF,RAYMOND JAMES FINANCIAL INC,6211,38,d28b23dda5ee0811708adf8155584d83,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,4213,ARES,Ares Management Corp,6282,39,d2fd62f27e6214cdd4416c0157e77747,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3349,IREN,IREN Ltd,6199,40,da062b2576fc09709658d96ddccacbfe,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,5647,BX,Blackstone Inc.,6282,41,df832b88507c1652a1fe87b3661783b6,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,599,BEN,FRANKLIN TEMPLETON INC,6282,42,e50dc609dda6ef7aae9f1932a21015e7,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3225,WULF,TERAWULF INC.,6199,43,ea314e28b186b0cd3b0aef86f233e6c7,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,3677,NDAQ,"NASDAQ, INC.",6200,44,ece905a61299a5a96f0edc9b1e95a63d,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1096,JEF,Jefferies Financial Group Inc.,6211,45,eeb1fbdde0373753e3336d4d2609aaa7,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,1807,MS,MORGAN STANLEY,6211,46,f231c609e6da5f7fb7b2e5c90847ee89,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,4717,MORN,"Morningstar, Inc.",6282,47,f633c7bb5e7b0b80455e0708bc664142,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,4489,COIN,"Coinbase Global, Inc.",6199,48,f9f061808d435a2ecd0f88c3a96b9d83,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+other_financial,49,DEFAULT_30_policy_not_stated,5683,LPLA,LPL Financial Holdings Inc.,6200,49,fb8c36c6261cf26558b083b9f7a756e1,0,doc 49 section 5 names no policy for this group: Sector Analyst to confirm
+reit,54,read_all_reread_30_plus_10_risk,1369,VTR,"Ventas, Inc.",6798,1,008738d63a04b6f08e3a0e46a6f3609e,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,4814,VICI,VICI PROPERTIES INC.,6798,2,02754cc0b36902e035293c195188bb9f,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1925,FR,FIRST INDUSTRIAL REALTY TRUST INC,6798,3,041768bf410222cecd6b2aeccdf33f9e,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1903,ADC,AGREE REALTY CORP,6798,4,0545ec794da1e3a65c2be56483ae8023,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,635,EGP,EASTGROUP PROPERTIES INC,6798,5,0883360768c9d52870edeb504dc8f91b,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1874,SUI,SUN COMMUNITIES INC,6798,6,0a32700a9bdedc1b765efee47e6615ab,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3238,LINE,"Lineage, Inc.",6798,7,0fc95c583d3cf81f70eb472b66405652,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,5802,AGNC,AGNC Investment Corp.,6798,8,1185e9679906884e700e2d7ee9948fdb,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3341,CTRE,"CareTrust REIT, Inc.",6798,9,148046609ca213cb812323c86b6f9788,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2725,PLD,"Prologis, Inc.",6798,10,16d72ec1ba64b4939fbae55bb4683063,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2835,CCI,CROWN CASTLE INC.,6798,11,19b2ad09568862155bf75a9e1e9eb4c7,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3214,BRX,Brixmor Property Group Inc.,6798,12,19d3f9e7ebd3e4a4e85357cc1e269d7c,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2625,RHP,"Ryman Hospitality Properties, Inc.",6798,13,23247f595dfa8eeea641bae0e927bd83,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2515,SBAC,SBA COMMUNICATIONS CORP,6798,14,270d5425710d83fe4141fc22674ea747,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2353,IRM,IRON MOUNTAIN INC,6798,15,2c43893a8236236f5c2a30d9f40aa0fd,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1419,DOC,"HEALTHPEAK PROPERTIES, INC.",6798,16,31dadc53b68ebddbc39952f4f71fa8ae,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1776,OHI,OMEGA HEALTHCARE INVESTORS INC,6798,17,35caa87209418ae112efdfeacb7e5593,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,5237,JAN,"Janus Living, Inc.",6798,18,36131809b551b4563571d43a45919be6,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1875,MAA,MID AMERICA APARTMENT COMMUNITIES INC.,6798,19,3ef3ff1ed0fbd3ad2ad49fcb9f17fba7,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1335,O,REALTY INCOME CORP,6798,20,41cf14d1d78454acc529160928383d53,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,5389,HR,Healthcare Realty Trust Inc,6798,21,45666d57416cbeaf4690b37341e81f59,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,4725,EXR,Extra Space Storage Inc.,6798,22,4c5324f9b181bea08e08542beef26ce6,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1830,VNO,VORNADO REALTY TRUST,6798,23,59606483d725011de135c1bbcbc60115,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3113,HST,"HOST HOTELS & RESORTS, INC.",6798,24,60fc9f9835b7954875b22bc2f1a64104,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,5634,PSA,Public Storage,6798,25,682eaaf5ae18d441bbd1c51b1047b4b3,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1716,KIM,KIMCO REALTY CORP,6798,26,6c71f148bc4a83ec20958f63bfac7913,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2549,ARE,"ALEXANDRIA REAL ESTATE EQUITIES, INC.",6798,27,7314044a3270c7582ab73d14e001a711,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2440,WPC,W. P. Carey Inc.,6798,28,735296fb328d6e14b102d9125491f297,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1916,ESS,"ESSEX PROPERTY TRUST, INC.",6798,29,788fdd03f830ea91e86e4496e9732e91,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,4791,DLR,"DIGITAL REALTY TRUST, INC.",6798,30,7fd4a05b867716b0462b858cf47d2542,1,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2971,AMH,American Homes 4 Rent,6798,31,808a4adfdba72efa3a4eb54f950ef9ed,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2985,SPG,SIMON PROPERTY GROUP INC.,6798,32,80933c9e30326f23df14bdfca7dad368,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2854,AMT,AMERICAN TOWER CORP /MA/,6798,33,814980622cae4fa7ebeb9a7a7a3df751,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3338,LAMR,LAMAR ADVERTISING CO/NEW,6798,34,8650d69451d7e5f05c0399eab82b593c,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1871,MAC,MACERICH CO,6798,35,8d91b1765b1f60aff1a23560dbb6f0c7,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,5103,EPRT,"ESSENTIAL PROPERTIES REALTY TRUST, INC.",6798,36,8f183d9df29f0ec79b28b22df6f057e0,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1842,CPT,CAMDEN PROPERTY TRUST,6798,37,98b0a307aca32f0a2fe19d51c1f14b04,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2569,BXP,"BXP, Inc.",6798,38,99527d2711275e2cd7c01a0241041856,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3885,AHR,"American Healthcare REIT, Inc.",6798,39,99538b26c1ffa638ad5401e69c22c151,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1395,NNN,"NNN REIT, INC.",6798,40,a25342d9d4ca45222cc90b4969e273ce,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,4795,CUBE,CubeSmart,6798,41,a3c265ffd1823986b4a05f3636c2a449,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1147,WY,WEYERHAEUSER CO,6798,42,a932e9634e3a403219ace4cf59e9e822,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3485,EQIX,EQUINIX INC,6798,43,b165781f009618c440aea9774d5b5329,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1840,VMRK,VIVMARK RESIDENTIAL,6798,44,b7339d83b10e79b5fa82e1533abe7a16,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1421,WELL,WELLTOWER INC.,6798,45,c60c393e03f7659e48a7222477293346,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1805,ELS,EQUITY LIFESTYLE PROPERTIES INC,6798,46,cf8332e952c987b7542731451161fb68,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1863,REG,REGENCY CENTERS CORP,6798,47,cfc3419a9aaef84084d1dfabaa9a8c8a,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,647,RYN,RAYONIER INC,6798,48,cfeae4aa946892043ca1a1e787d41037,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2699,NLY,ANNALY CAPITAL MANAGEMENT INC,6798,49,d62767904ab1eb29571b91d8b645ee5b,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,391,FRT,FEDERAL REALTY INVESTMENT TRUST,6798,50,e06d6152d69278818035401ab70d043c,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3126,GLPI,"Gaming & Leisure Properties, Inc.",6798,51,f0538cf6f0110de81184ff154a2b9912,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,1016,UDR,"UDR, Inc.",6798,52,f0eb21128af064127bd656ba5e5edd41,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,3070,REXR,"Rexford Industrial Realty, Inc.",6798,53,f9c3e557eacc7be7fee472b6cc84ac75,0,analyst adds 10 risk-selected
+reit,54,read_all_reread_30_plus_10_risk,2034,STAG,"STAG Industrial, Inc.",6798,54,ffb622135e6d88051f6db5274fcff282,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2813,DTM,"DT Midstream, Inc.",4922,1,0477b74777282b86749bf7c25b495673,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1867,CWST,CASELLA WASTE SYSTEMS INC,4953,2,095e937d81c5e37e771c0906e1035bf0,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2340,KMI,"KINDER MORGAN, INC.",4922,3,09e48048b5be281e66e99d21d0dadccb,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2275,NRG,"NRG ENERGY, INC.",4911,4,0c1cee5954701adf3325820d1b418135,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1462,PEG,PUBLIC SERVICE ENTERPRISE GROUP INC,4931,5,129f2a868dc09ed1f3bd62100cfa24e1,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1009,XEL,XCEL ENERGY INC,4931,6,183cb9039437af170df0d464ff350e29,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,4655,VST,Vistra Corp.,4911,7,18ad1ccfac2bbbea3d8e9c79fb7a3589,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1292,D,"DOMINION ENERGY, INC",4911,8,210cf5dc8b4fd11e681ac5180bd76c42,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,4081,VG,"Venture Global, Inc.",4924,9,21639c6676816c8aaad9558371340148,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3028,CWEN,"Clearway Energy, Inc.",4911,10,2a3472e8576f0676b445ad258bf425a4,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3764,TLN,Talen Energy Corp,4911,11,2e0526bc3aae378be2431b479fba1886,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2606,OKE,ONEOK INC /NEW/,4923,12,4c1d628f8bb047b1a8c4f39058b4c6b9,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,142,EAI,"ENTERGY ARKANSAS, LLC",4911,13,53ac1709224f3e4b55ab3e2fd065bfb1,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1565,CLH,CLEAN HARBORS INC,4955,14,5fc4f23e626f88de0921c99876b9d363,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,5607,TRGP,Targa Resources Corp.,4922,15,5ff83feb626efb21690ee7dfdbe2261a,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3800,CNP,CENTERPOINT ENERGY INC,4911,16,60da8f3259df0f92e5ae156fbfdeef96,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,5023,DUK,Duke Energy CORP,4931,17,71fe8e1f0844e3ce96f8f8393cd457fa,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2487,FE,FIRSTENERGY CORP,4911,18,735998465e2248cfab1eccce9e1a4e5a,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1416,PNW,PINNACLE WEST CAPITAL CORP,4911,19,73656cb3e9542bfa27520adbac63c57a,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1031,WTRG,"Essential Utilities, Inc.",4941,20,7b1c1bbc8b1ad790f0c9d8df9d648c2a,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,4541,ET,Energy Transfer LP,4922,21,7bb03cf962c728d55dd088ad6727b31b,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3587,EXC,EXELON CORP,4931,22,7e4caf0b3ca7ffe4c6adf4c7c7eeed03,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3240,CEG,Constellation Energy Corp,4911,23,8446c437213296aea154aeb22b71d154,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,5568,CQP,"Cheniere Energy Partners, L.P.",4924,24,874dcff18ef9d9fdc5905f49835ae755,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1227,LNT,ALLIANT ENERGY CORP,4931,25,8927fb3fe962fe37059d51eb94fa7392,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2165,PCG,PG&E Corp,4931,26,8bceda7a78f3f9d4021dfa51e018811f,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1696,AES,AES CORP,4991,27,8bdc6ea67bd1d08d8c864f3536c3d8e0,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,5747,AWK,"American Water Works Company, Inc.",4941,28,8f1f8a34781bd9c457f649e8f0e57744,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1567,WM,WASTE MANAGEMENT INC,4953,29,914a3715c9f7fa5dfde6576b46b66cc0,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1449,WEC,"WEC ENERGY GROUP, INC.",4931,30,938a9d8dc7df9b0d1ce9a6b783eddc61,1,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3805,BKH,BLACK HILLS CORP /SD/,4911,31,94fa8801249164b38e101a9749bd7aae,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1926,PPL,PPL Corp,4911,32,a2b8d0ff5707641f87a56ce51d543b0b,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1355,ATO,ATMOS ENERGY CORP,4924,33,a6bd6ca5948611fa51a24eaa4a17e8fc,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,712,NFG,NATIONAL FUEL GAS CO,4924,34,aa8728b0a39c30d68f2a796541501a6f,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1400,NEE,NEXTERA ENERGY INC,4911,35,b30d3ca77bbbb1bc3db7ae6f823229d3,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2951,RSG,"REPUBLIC SERVICES, INC.",4953,36,b7677d3733f88987087182ffe455d3a8,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2918,IDA,IDACORP INC,4911,37,b77e5ea04c6ea65aa4b4099d56dcdd6f,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1973,DTE,DTE ENERGY CO,4911,38,bb2adf38710199e6f96255c706a2ff81,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2961,EPD,ENTERPRISE PRODUCTS PARTNERS L.P.,4922,39,c451c5f73e9feaa95771aaca1d543569,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1748,UGI,UGI CORP /PA/,4932,40,d80dcc0fdb02dfa5b3364972ebbb571d,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,4929,WCN,"Waste Connections, Inc.",4953,41,daa23a9ea0df170034fa5a471e44febe,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3774,AM,Antero Midstream Corp,4922,42,e4da7379c7b0aa63263d981bc006467c,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,3607,NI,NISOURCE INC.,4931,43,e71b9c9b11d9a60e29f80efec65e1f7d,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,1150,WMB,"WILLIAMS COMPANIES, INC.",4922,44,ec828dc69713ad52f8ed2df4d22e230c,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2776,ED,CONSOLIDATED EDISON INC,4931,45,efec30d53ab695ad7336a8bf3fdf2ca4,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,101,LNG,"Cheniere Energy, Inc.",4924,46,f1a039822b3d1086b44c90f839466df1,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,4903,EVRG,"Evergy, Inc.",4931,47,f3d6907d67eef791222176950a9626a1,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,4637,SWX,"Southwest Gas Holdings, Inc.",4923,48,fa74f4485061ab8ebe7fc3f1fe1f8662,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,5804,WES,"Western Midstream Partners, LP",4922,49,fb0f27b9a53c7a91a51ec02711cb8b47,0,analyst adds 10 risk-selected
+utility,50,read_all_reread_30_plus_10_risk,2368,OGE,OGE ENERGY CORP.,4911,50,fc0a1eef0c311432273615a107f2fa69,0,analyst adds 10 risk-selected

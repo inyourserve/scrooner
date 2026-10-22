@@ -1,0 +1,41 @@
+rank,company_id,ticker,name,data_point_name,kind,gap_reason,group_draft,md5key
+1,5307,INIO,INNIO N.V.,public_float,leaf_concept,,corporate,0000d3dbe298a38d6b19d3aa0fe17149
+2,2793,FFIV,"F5, INC.",bdc_total_investment_income,leaf_concept,,corporate,0007c4e6e0430a034b79520f3053debf
+3,2751,INGR,Ingredion Inc,cf_ar_change,leaf_concept,,corporate,000cdef2e99d99d66fbd5f3ab77570bc
+4,4586,MPWR,"MONOLITHIC POWER SYSTEMS, INC.",interest_expense,leaf_concept,,corporate,000fbad27735c3c0f9d8fbffb482dcff
+5,5726,KKR,KKR & Co. Inc.,current_ratio,metric,,bdc_fund_or_unclassified,0011b6d8c78822649afdba29edcf7f9c
+6,5480,NOW,"ServiceNow, Inc.",dividends_per_share_resolved,resolved_concept,,corporate,001ec5655575b0279dd7c1d531d6b1b4
+7,4197,CPAY,"CORPAY, INC.",collaborative_arrangement_revenue,leaf_concept,,corporate,001f0d3a3cf6e7dad4fc3f4e887b6798
+8,1534,CDNS,CADENCE DESIGN SYSTEMS INC,dps_growth_3y_cagr,metric,,corporate,002101112cb0504862abff81cfe720fb
+9,4212,CBRS,Cerebras Systems Inc.,other_income_expense_net,leaf_concept,,corporate,0024cb5f06789d040b3f2f42a8f0d145
+10,2965,ZETA,Zeta Global Holdings Corp.,other_income_expense_net,leaf_concept,,corporate,00264d911906345db5b9449384952db8
+11,4541,ET,Energy Transfer LP,other_income_expense_net,leaf_concept,,utility,002bce423ad384495a031df55d9fd116
+12,4706,MGY,Magnolia Oil & Gas Corp,cf_inventory_change,leaf_concept,,energy,0032378f2b6f49be6b776c1afa72ff7d
+13,5101,FNF,"Fidelity National Financial, Inc.",payables_days,metric,,bdc_fund_or_unclassified,003b8b3e09bbb1962cfe5958b09162e8
+14,5726,KKR,KKR & Co. Inc.,inventory_change_reconciliation_gap,metric,,bdc_fund_or_unclassified,00439750bef2acac6177307e4c71b0a9
+15,3039,OSCR,"Oscar Health, Inc.",dps_growth_3y_cagr,metric,,bdc_fund_or_unclassified,00549b67a9ef72eb6eda629fa080a6f7
+16,4706,MGY,Magnolia Oil & Gas Corp,fcf_growth_3y_cagr,metric,,energy,006093a5d21f7a8cb558c88a859367f3
+17,3127,CNC,CENTENE CORP,dps_growth_3y_cagr,metric,,insurer,0064eb7a4e0e0eedd0ad0a720d905f03
+18,1643,LSCC,LATTICE SEMICONDUCTOR CORP,employee_count,leaf_concept,,corporate,006548eadd85476207c3ec385b647f05
+19,1016,UDR,"UDR, Inc.",effective_tax_rate_gap,metric,,reit,006a372dc13d42676c9c967befefe210
+20,626,HEI,HEICO CORP,other_income_expense_net,leaf_concept,,corporate,00736e54eedd16bc43bbe95500bdd855
+21,4325,AXS,AXIS CAPITAL HOLDINGS LTD,operating_income_resolved,derived_concept,,insurer,0074dd51cd297580701d954bf70cbe42
+22,2703,CHRW,"C. H. ROBINSON WORLDWIDE, INC.",interest_expense,leaf_concept,,corporate,00756be0ab72832a1dbaada59cfbe475
+23,1863,REG,REGENCY CENTERS CORP,current_liabilities,leaf_concept,,reit,0076ee2cb06a5c673e634b151fe6f037
+24,2133,NTAP,"NetApp, Inc.",net_lease_revenue,leaf_concept,,corporate,0080db108bd6d12131de7d07569a4c1d
+25,5944,DBX,"DROPBOX, INC.",dividends_paid_resolved,resolved_concept,,corporate,00822b745d11c6290abc9ae4db0a7945
+26,5831,AR,ANTERO RESOURCES Corp,dividends_per_share_resolved,resolved_concept,,energy,00823a92e2bfdca8ee6120c348273789
+27,3332,CRCL,"Circle Internet Group, Inc.",collaborative_arrangement_revenue,leaf_concept,,other_financial,008457ade3c555a3ec36df6dd6907184
+28,4869,WEX,WEX Inc.,dividends_paid,leaf_concept,,corporate,008c20ba4c4ca4a405ee66597f759cc6
+29,1702,BOKF,BOK FINANCIAL CORP,depreciation_and_amortization,leaf_concept,,bank,008f477b81e8a302e9ca011158f0bd07
+30,2549,ARE,"ALEXANDRIA REAL ESTATE EQUITIES, INC.",ar_change_reconciliation_gap,metric,,reit,009565273c2213490dca98cfca9adac6
+31,5393,EVR,Evercore Inc.,net_lease_revenue,leaf_concept,,other_financial,009c80431d48cafb539c8ce0cf969468
+32,5718,V,VISA INC.,inventory_days,metric,,corporate,00a8159464f6df5ad6768349cd52613f
+33,3133,GLXY,Galaxy Digital Inc.,total_debt_resolved,derived_concept,,other_financial,00b4e54b7d42adfacbd76e13d76ece84
+34,5038,GME,GameStop Corp.,cf_ar_change,leaf_concept,,corporate,00b6360f4e929718d44fe323bf5b5ee8
+35,1198,AON,Aon plc,collaborative_arrangement_revenue,leaf_concept,,insurer,00bc9a260cf7f7cd7cecd68729329560
+36,2793,FFIV,"F5, INC.",dividends_per_share,leaf_concept,,corporate,00c0bff681b46a10205b0eaa67d7c6c7
+37,3291,HLT,Hilton Worldwide Holdings Inc.,net_lease_revenue,leaf_concept,,corporate,00c35699a2cb3080de4e08f94abc9091
+38,2970,CYTK,CYTOKINETICS INC,payables_days,metric,,corporate,00c6992d57cb35467cfa78b1ad7edde3
+39,1550,TEVA,TEVA PHARMACEUTICAL INDUSTRIES LTD,cf_ar_change,leaf_concept,,corporate,00c926cb29ffc00d93489717880a5c8a
+40,647,RYN,RAYONIER INC,other_income_expense_net,leaf_concept,,reit,00cc418e20a0c8d89a1cb529a28d00b6

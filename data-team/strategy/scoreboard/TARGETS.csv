@@ -1,0 +1,18 @@
+target_version,effective_from,k_id,gate,target,comparator,applies_to,status,source,note
+v0-skeleton,2026-10-22,K1,C,77.6,>=,D0,WITHDRAWN,48-HANDOVER amendments,"ignored cells Tier 0 hides; targets re-set at Gate A from measured cell_state"
+v0-skeleton,2026-10-22,K1c,A,TBD,>=,D0,NOT_SET,doc 49 7.10,"honest headline; targets set at Gate A from measured K1c"
+v0-skeleton,2026-10-22,K2,C,0,==,D0,ASSUMED,48-HANDOVER 2.2,"reasonless blanks / cell_state unclassified"
+v0-skeleton,2026-10-22,K2,D,0,==,D0,ASSUMED,48-HANDOVER 2.2,
+v0-skeleton,2026-10-22,K2,E,0,==,D0,ASSUMED,48-HANDOVER 2.2,
+v0-skeleton,2026-10-22,K3,D,95,>=,D1:T1,ASSUMED,48-HANDOVER 2.2,"T1 template coverage; 100% of T1 defects closed"
+v0-skeleton,2026-10-22,K3,E,100,>=,D1:T2,ASSUMED,48-HANDOVER 2.2,
+v0-skeleton,2026-10-22,K4,E,0,==,D1:T1+T2,ASSUMED,48-HANDOVER 2.2,"open defects"
+v0-skeleton,2026-10-22,K5b,B,0,==,sample,ASSUMED,48-HANDOVER 2.2,"wrong values in Verifier sample; public error rate only from the rotating audit"
+v0-skeleton,2026-10-22,K6,B,0,==,sample,ASSUMED,48-HANDOVER 2.2,"correct values hidden by a guard"
+v0-skeleton,2026-10-22,K7,E,0,~=,D0,ASSUMED,48-HANDOVER 2.2,"approximately zero"
+v0-skeleton,2026-10-22,K8,C,10,>=,T1 pilot,ASSUMED,48-HANDOVER 2.2,"certified companies"
+v0-skeleton,2026-10-22,K8,D,100,>=,T1,ASSUMED,48-HANDOVER 2.2,
+v0-skeleton,2026-10-22,K8,E,986,>=,T2,ASSUMED,48-HANDOVER 2.2,"T2 = 984 after proposed EAI/PS exclusions"
+v0-skeleton,2026-10-22,K12a,D,10,<=,cohort,ASSUMED,48-HANDOVER 2.2,"filings with zero facts"
+v0-skeleton,2026-10-22,K12a,E,5,<=,cohort,ASSUMED,48-HANDOVER 2.2,
+v0-skeleton,2026-10-22,K13,C,0,==,audited groups,SUPERSEDED,doc 49 section 5,"replaced by the group audit standard (census / seeded re-read / residual bound)"

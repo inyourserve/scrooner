@@ -1,0 +1,117 @@
+company_id,ticker,name,shard_rank,mcap_bn,group_draft,data_point_name,gap_reason,total_debt_resolved_cell,cash_and_equivalents_cell
+10,RDDT,"Reddit, Inc.",355,29.6,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+10,RDDT,"Reddit, Inc.",355,29.6,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+197,WRB,BERKLEY W R CORP,363,28,insurer,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+602,CFR,"CULLEN/FROST BANKERS, INC.",736,9.6,bank,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1021,PCAR,PACCAR INC,220,58.3,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1382,EXPD,EXPEDITORS INTERNATIONAL OF WASHINGTON I,393,25.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+1382,EXPD,EXPEDITORS INTERNATIONAL OF WASHINGTON I,393,25.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1397,VICR,VICOR CORP,760,9,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1483,TOL,"Toll Brothers, Inc.",627,12.3,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+1483,TOL,"Toll Brothers, Inc.",627,12.3,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1636,CGNX,COGNEX CORP,756,9.1,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1682,GBCI,"GLACIER BANCORP, INC.",982,5.7,bank,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1696,AES,AES CORP,685,10.7,utility,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1718,ARWR,"ARROWHEAD PHARMACEUTICALS, INC.",822,7.9,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+1718,ARWR,"ARROWHEAD PHARMACEUTICALS, INC.",822,7.9,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1733,DHI,HORTON D R INC /DE/,293,38.7,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1862,DECK,DECKERS OUTDOOR CORP,644,11.6,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1875,MAA,MID AMERICA APARTMENT COMMUNITIES INC.,584,13.6,reit,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+1891,NBIX,NEUROCRINE BIOSCIENCES INC,579,13.8,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2042,ACGL,ARCH CAPITAL GROUP LTD.,322,34.2,insurer,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2052,FROG,JFrog Ltd,699,10.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2052,FROG,JFrog Ltd,699,10.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2151,CRDO,Credo Technology Group Holding Ltd,336,31.8,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2151,CRDO,Credo Technology Group Holding Ltd,336,31.8,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2191,U,Unity Software Inc.,496,17.7,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2191,U,Unity Software Inc.,496,17.7,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2198,TPL,Texas Pacific Land Corp,412,24.1,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2198,TPL,Texas Pacific Land Corp,412,24.1,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2246,KYMR,"Kymera Therapeutics, Inc.",772,8.7,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2246,KYMR,"Kymera Therapeutics, Inc.",772,8.7,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2336,PINS,"PINTEREST, INC.",557,14.6,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2336,PINS,"PINTEREST, INC.",557,14.6,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2441,DOCS,"Doximity, Inc.",998,5.6,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2441,DOCS,"Doximity, Inc.",998,5.6,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2475,IONQ,"IonQ, Inc.",633,12,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2475,IONQ,"IonQ, Inc.",633,12,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2511,LOGI,LOGITECH INTERNATIONAL S.A.,546,15,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2528,AUR,"Aurora Innovation, Inc.",723,9.8,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2528,AUR,"Aurora Innovation, Inc.",723,9.8,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2540,ISRG,INTUITIVE SURGICAL INC,85,149.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2566,BMNR,"BITMINE IMMERSION TECHNOLOGIES, INC.",603,13,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2706,SYM,Symbotic Inc.,419,23.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2706,SYM,Symbotic Inc.,419,23.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2889,MANH,MANHATTAN ASSOCIATES INC,607,13,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2889,MANH,MANHATTAN ASSOCIATES INC,607,13,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+2964,DUOL,"Duolingo, Inc.",900,6.6,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+2964,DUOL,"Duolingo, Inc.",900,6.6,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3133,GLXY,Galaxy Digital Inc.,919,6.3,other_financial,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3133,GLXY,Galaxy Digital Inc.,919,6.3,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3164,CART,Maplebear Inc.,652,11.5,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3164,CART,Maplebear Inc.,652,11.5,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3187,FIG,"Figma, Inc.",666,11.2,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3187,FIG,"Figma, Inc.",666,11.2,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3283,ZM,"Zoom Communications, Inc.",366,27.7,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3283,ZM,"Zoom Communications, Inc.",366,27.7,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3332,CRCL,"Circle Internet Group, Inc.",436,22,other_financial,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3332,CRCL,"Circle Internet Group, Inc.",436,22,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3396,EG,"EVEREST GROUP, LTD.",547,14.9,insurer,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3398,SHOP,SHOPIFY INC.,54,219.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3398,SHOP,SHOPIFY INC.,54,219.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3434,ALGN,ALIGN TECHNOLOGY INC,695,10.5,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3434,ALGN,ALIGN TECHNOLOGY INC,695,10.5,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3545,QLYS,"QUALYS, INC.",929,6.3,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3545,QLYS,"QUALYS, INC.",929,6.3,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3614,PCOR,"PROCORE TECHNOLOGIES, INC.",774,8.7,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3614,PCOR,"PROCORE TECHNOLOGIES, INC.",774,8.7,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3618,TROW,PRICE T ROWE GROUP INC,444,21.5,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3695,GRMN,GARMIN LTD,233,54.9,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3885,AHR,"American Healthcare REIT, Inc.",646,11.6,reit,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3885,AHR,"American Healthcare REIT, Inc.",646,11.6,reit,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3969,CAVA,"CAVA GROUP, INC.",898,6.7,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3982,SNOW,Snowflake Inc.,117,107.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+3982,SNOW,Snowflake Inc.,117,107.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+3987,CME,CME GROUP INC.,119,105.4,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4017,IOT,Samsara Inc.,418,23.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4017,IOT,Samsara Inc.,418,23.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4086,PCVX,"Vaxcyte, Inc.",743,9.4,no_revenue_line,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4172,GTLB,Gitlab Inc.,766,8.9,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4172,GTLB,Gitlab Inc.,766,8.9,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4239,OKTA,"Okta, Inc.",331,32.8,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4325,AXS,AXIS CAPITAL HOLDINGS LTD,849,7.4,insurer,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4362,TTD,"Trade Desk, Inc.",974,5.8,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4362,TTD,"Trade Desk, Inc.",974,5.8,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4380,YUMC,"Yum China Holdings, Inc.",539,15.5,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4380,YUMC,"Yum China Holdings, Inc.",539,15.5,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4406,GMED,GLOBUS MEDICAL INC,703,10.3,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4406,GMED,GLOBUS MEDICAL INC,703,10.3,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4439,DOCU,"DOCUSIGN, INC.",575,13.9,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4439,DOCU,"DOCUSIGN, INC.",575,13.9,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4554,MKTX,MARKETAXESS HOLDINGS INC,978,5.8,other_financial,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4554,MKTX,MARKETAXESS HOLDINGS INC,978,5.8,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4586,MPWR,"MONOLITHIC POWER SYSTEMS, INC.",215,59.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4586,MPWR,"MONOLITHIC POWER SYSTEMS, INC.",215,59.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4860,DLB,"Dolby Laboratories, Inc.",980,5.7,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4860,DLB,"Dolby Laboratories, Inc.",980,5.7,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+4972,PEN,Penumbra Inc,614,12.6,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+4972,PEN,Penumbra Inc,614,12.6,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5119,KNSA,"Kiniksa Pharmaceuticals International, p",909,6.5,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5149,PATH,"UiPath, Inc.",893,6.7,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+5149,PATH,"UiPath, Inc.",893,6.7,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5170,ALAB,"Astera Labs, Inc.",251,49.4,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+5170,ALAB,"Astera Labs, Inc.",251,49.4,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5393,EVR,Evercore Inc.,690,10.5,other_financial,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+5393,EVR,Evercore Inc.,690,10.5,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5429,TW,Tradeweb Markets Inc.,376,26.7,other_financial,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+5429,TW,Tradeweb Markets Inc.,376,26.7,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5543,IBKR,"Interactive Brokers Group, Inc.",302,37.1,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5613,HOOD,"Robinhood Markets, Inc.",142,90,other_financial,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+5613,HOOD,"Robinhood Markets, Inc.",142,90,other_financial,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5632,VEEV,VEEVA SYSTEMS INC,246,50.3,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5678,LULU,lululemon athletica inc.,705,10.3,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+5678,LULU,lululemon athletica inc.,705,10.3,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5810,IOVA,"IOVANCE BIOTHERAPEUTICS, INC.",940,6.2,corporate,ev_ebitda,partial:missing_debt_or_cash,blank:(none),valued
+5810,IOVA,"IOVANCE BIOTHERAPEUTICS, INC.",940,6.2,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5897,ESNT,Essent Group Ltd.,977,5.8,bdc_fund_or_unclassified,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
+5944,DBX,"DROPBOX, INC.",812,8.1,corporate,ev_sales,partial:missing_debt_or_cash,blank:(none),valued
