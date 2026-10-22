@@ -18,6 +18,7 @@ import io
 import re
 from collections import Counter, defaultdict
 from decimal import ROUND_HALF_UP, Decimal
+from typing import NamedTuple
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
@@ -29,7 +30,8 @@ GROUPS_DRAFT = REPO / "data-team/strategy/data/group_assignment_draft.csv"
 EXPORT_GZ = SB_DIR / "cells/2026-10-20.cells.csv.gz"
 D0_NAMES_FILE = SB_DIR / "maps/d0_datapoints.txt"
 D0E_REMOVED_FILE = SB_DIR / "maps/d0e_removed_30.txt"
-REASON_MAP = SB_DIR / "reason_class_map.csv"
+REASON_MAP = SB_DIR / "reason_class_map.csv"  # v1: the record behind the 2026-10-20 scoreboard
+REASON_MAP_V2 = SB_DIR / "reason_class_map_v2.csv"
 
 # ---- frozen identities (FREEZE-REGISTER-2026-10-22 section 4; doc 44) -------------------
 EXPORT_SHA256 = "39df9373c0125f6785d1b5403c1c7b265e6b84b79f94451e9d764934a81df36d"
@@ -253,15 +255,51 @@ def reason_tokens(reason: str):
 
 
 def load_reason_map(path: Path = REASON_MAP):
+    """-> {(pattern_key, family): row}. A v1 file has no family column: every row is family '*'.
+    v2 rows carry family tokens (see data_point_family) and '*' defaults."""
     m = {}
     for r in csv.DictReader(open(path, newline="", encoding="utf-8")):
-        m[r["pattern_key"]] = r
+        r.setdefault("family", "*")
+        r["family"] = r.get("family") or "*"
+        for k in ("root_cause_class", "candidate_state", "second_signal", "label", "queue_verifier_sample"):
+            r.setdefault(k, "")
+        m[(r["pattern_key"], r["family"])] = r
     return m
+
+
+def data_point_family(dp: str, graph: dict) -> str:
+    """Family token of a data point, used to split one reason pattern by what the cell is.
+    Order matters: explicit names first, then growth prefixes, then the denominator node in the
+    dependency graph (a ratio over revenue, cost of revenue or the share count)."""
+    if dp in ("revenue", "revenue_sanity_resolved"):
+        return "revenue_row"
+    if dp in ("gross_profit", "gross_profit_resolved", "cost_of_revenue", "cost_of_revenue_resolved"):
+        return "gp_cost_row"
+    if dp in ("operating_expenses", "operating_expenses_resolved", "operating_income",
+              "operating_income_resolved"):
+        return "opex_oi_row"
+    if dp.startswith("revenue_growth"):
+        return "revenue_growth"
+    if dp.startswith("dps_growth"):
+        return "dps_growth"
+    if dp.startswith("eps_growth"):
+        return "eps_growth"
+    for node, role in graph.get(dp, {}).get("inputs", []):
+        if role == "denominator" or role.endswith("_denominator"):
+            if node == "revenue":
+                return "den_revenue"
+            if node == "cost_of_revenue":
+                return "den_cost_of_revenue"
+            if node == "shares_outstanding":
+                return "den_share_count"
+    return "*"
 
 
 # ---- token -> data-point resolution (walk) -----------------------------------------------
 TOKEN_ALIASES = {
-    "share_count_1y_ago": ["shares_outstanding"],
+    # share_count_1y_ago is deliberately NOT an alias (v2 item 8): the current shares_outstanding cell
+    # says nothing about the share count one year ago; that reason is a terminal period reason.
+    "fewer_than_3_years_gross_margin": ["gross_margin"],  # v2 item 7: cascades through gross_margin
     "total_debt_or_cash": ["total_debt_resolved", "cash_and_equivalents"],
 }
 
@@ -293,81 +331,119 @@ def resolve_token(token: str, dp: str, graph: dict) -> list[str]:
     return out
 
 
-class Classifier:
-    """Proxy classifier: (company, data point) -> (class, owner, rf_id, note).
+class Result(NamedTuple):
+    """Classifier output. The first four fields are the v1 tuple; the rest are v2 additions."""
 
-    Uses the FROZEN reason_class_map.csv for terminal reasons and for the fallback class of a
-    cascade reason. A cascade cell inherits the class of its blocking input cells for the same
-    company, walking the dependency graph. Never defaults an unmapped reason: it raises
-    UnmappedReason so the caller can list it (must be 0 before the register is published).
+    cls: str
+    owner: str
+    rf: str
+    note: str
+    root_cause: str = ""  # underlying cause when cls is a visible state (guard_hidden -> resolver)
+    candidate: str = ""  # candidate cell state awaiting evidence (history_horizon, undefined_by_math, ...)
+    second_signal: str = ""  # a second role that must also look (e.g. tag_mapper)
+    bucket: str = ""  # sub-bucket under unclassified: currency_unknown | metric_only_fallback
+    excl_k1c: bool = False  # valued cell carrying a reason: excluded from K1c
+
+
+NONE_RESULT = Result("", "", "", "valued")
+
+
+class Classifier:
+    """Proxy classifier: (company, data point) -> Result.
+
+    Uses the FROZEN reason-class map (v1 or v2) for terminal reasons and for the fallback class of
+    a cascade reason; rows are looked up by (pattern, data-point family) then (pattern, '*'). A cascade
+    cell inherits the class of its blocking input cells for the same company, walking the dependency
+    graph. An input with NO ROW in the extract is not valued (v2 item 11) and blocks. Never defaults an
+    unmapped reason: it is counted in `unmapped` so the caller can refuse to publish.
+
+    Valued inputs are noted by what the coverage table can actually say: a CONCEPT input is
+    `valued_any_period` (the row means any period ever had a value, F2), a METRIC input is
+    `valued_latest`. A cascade whose inputs are all valued falls back to the map's class; when any
+    of those inputs is concept-type the fallback is bucketed `currency_unknown` (we cannot tell whether
+    the input is current), otherwise `metric_only_fallback`.
     """
 
     def __init__(self, extract: Extract, graph: dict, reason_map: dict):
         self.x = extract
         self.g = graph
         self.m = reason_map
-        self.memo: dict[tuple[int, str], tuple] = {}
+        self.memo: dict[tuple[int, str], Result] = {}
         self.unmapped: Counter = Counter()
 
-    def classify(self, cid: int, dp: str, _depth: int = 0):
+    def classify(self, cid: int, dp: str, _depth: int = 0) -> Result:
         key = (cid, dp)
         if key in self.memo:
             return self.memo[key]
         cell = self.x.cells.get(key)
         if cell is None:
-            res = ("unclassified", "triage", "", "absent_from_extract")
+            res = Result("unclassified", "triage", "", "absent_from_extract")
         elif cell["absent"]:
-            res = ("unclassified", "triage", "", "absent_from_table")
+            res = Result("unclassified", "triage", "", "absent_from_table")
         elif cell["has_value"] and not cell["reason"]:
-            res = ("", "", "", "valued")
+            res = NONE_RESULT
         else:
             res = self._classify_reason(cid, dp, cell, _depth)
         self.memo[key] = res
         return res
 
-    def _classify_reason(self, cid, dp, cell, depth):
+    def _row(self, pat: str, dp: str):
+        return self.m.get((pat, data_point_family(dp, self.g))) or self.m.get((pat, "*"))
+
+    def _input_state(self, cid: int, n: str):
+        """-> 'no_row' | 'blank' | 'valued_any_period' | 'valued_latest'"""
+        c = self.x.cells.get((cid, n))
+        if c is None or c["absent"]:
+            return "no_row"
+        if not c["has_value"]:
+            return "blank"
+        return ("valued_any_period" if self.g.get(n, {}).get("kind") in CONCEPT_KINDS
+                else "valued_latest")
+
+    def _classify_reason(self, cid, dp, cell, depth) -> Result:
         reason = cell["reason"]
         if reason == "":
-            return ("unclassified", "triage", "", "null_reason")
+            return Result("unclassified", "triage", "", "null_reason")
         pat = reason_pattern(reason)
-        row = self.m.get(pat)
+        row = self._row(pat, dp)
         if row is None:
             self.unmapped[pat] += 1
-            return ("unclassified", "triage", "", f"UNMAPPED_REASON:{pat}")
+            return Result("unclassified", "triage", "", f"UNMAPPED_REASON:{pat}")
+        base = dict(root_cause=row.get("root_cause_class", ""), candidate=row.get("candidate_state", ""),
+                    second_signal=row.get("second_signal", ""))
+        if cell["has_value"] and pat == "partial:missing_debt_or_cash":
+            missing = [n for n in ("total_debt_resolved", "cash_and_equivalents")
+                       if self._input_state(cid, n) in ("blank", "no_row")]
+            return Result(row["class"], row["owner"], row["rf_id"],
+                          f"reason:{pat}|missing_input:{','.join(missing) or 'none_found_in_extract'}",
+                          excl_k1c=True, **base)
         if row["mode"] == "terminal" or depth > 8:
-            return (row["class"], row["owner"], row["rf_id"], f"reason:{pat}")
+            return Result(row["class"], row["owner"], row["rf_id"], f"reason:{pat}", **base)
         # walk
         _, toks, truncated = reason_tokens(reason)
-        blockers, notes = [], []
+        blockers, notes, any_concept_valued = [], [], False
         for t in toks:
             for n in resolve_token(t, dp, self.g):
-                c = self.x.cells.get((cid, n))
-                if c is None or (c["has_value"] and not c["reason"]):
-                    notes.append(f"{n}:valued_latest")
+                st = self._input_state(cid, n)
+                if st in ("valued_any_period", "valued_latest"):
+                    notes.append(f"{n}:{st}")
+                    any_concept_valued = any_concept_valued or st == "valued_any_period"
                     continue
-                if c["has_value"]:  # valued but carries a reason
-                    notes.append(f"{n}:valued_latest")
-                    continue
+                if st == "no_row":
+                    notes.append(f"{n}:no_row")
                 sub = self.classify(cid, n, depth + 1)
                 blockers.append((sub, n))
         if truncated:
             notes.append("reason_list_truncated_in_source")
         if blockers:
-            blockers.sort(
-                key=lambda b: (
-                    CLASS_PRECEDENCE.index(b[0][0])
-                    if b[0][0] in CLASS_PRECEDENCE
-                    else 99
-                )
-            )
-            (cls, owner, rf, _n), name = blockers[0]
-            return (cls, owner, rf, f"via:{name}|" + ";".join(notes))
-        return (
-            row["class"],
-            row["owner"],
-            row["rf_id"],
-            f"walk_no_blank_input|{pat}|" + ";".join(notes),
-        )
+            blockers.sort(key=lambda b: CLASS_PRECEDENCE.index(b[0].cls) if b[0].cls in CLASS_PRECEDENCE else 99)
+            sub, name = blockers[0]
+            return sub._replace(note=f"via:{name}|" + ";".join(notes), excl_k1c=False)
+        bucket = ""
+        if row["class"] == "unclassified":
+            bucket = "currency_unknown" if any_concept_valued else "metric_only_fallback"
+        return Result(row["class"], row["owner"], row["rf_id"],
+                      f"walk_no_blank_input|{pat}|" + ";".join(notes), bucket=bucket, **base)
 
 
 # ---- diff of two extracts (RT-2 / M rows) ------------------------------------------------
