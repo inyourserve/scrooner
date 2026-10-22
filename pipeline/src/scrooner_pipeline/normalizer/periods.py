@@ -33,6 +33,7 @@ from scrooner_pipeline.collector.storage import (
     strip_bucket_prefix,
 )
 from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.normalizer.registrant_loader import adjust_payload
 
 logger = structlog.get_logger()
 
@@ -385,6 +386,13 @@ def normalize_periods_for_cik(
         return {"cik": cik, "status": "no_companyfacts"}
     _raw_id, storage_path = cf_row
     payload = _load_json(storage, storage_path)
+
+    def _co_payload(co_cik: str) -> tuple[int, dict] | None:
+        row = _latest_companyfacts_object(conn, co_cik)
+        return None if row is None else (row[0], _load_json(storage, row[1]))
+
+    # P1 (flag off: payload unchanged): the same payload facts.py will use.
+    payload = adjust_payload(conn, cik, payload, _co_payload)
 
     distinct_periods = extract_distinct_periods(payload)
     fy_tagged_spans = extract_fy_tagged_spans(payload)

@@ -22,8 +22,11 @@ ENV_VAR = "SCROONER_RULES_ENABLED"
 # programming error (a typo would silently mean "off" forever).
 RULE_PERIODIC_FORM_ONLY = "source.periodic_form_only@1"  # RF-03, W3
 RULE_MATCHING_COPIES = "dedupe.matching_copies@1"  # RF-46, WO-23
+RULE_SHARED_ACCESSION_PRIMARY = "entity.shared_accession_primary_filer@1"  # RF-21, P1
 
-KNOWN_RULES = frozenset({RULE_PERIODIC_FORM_ONLY, RULE_MATCHING_COPIES})
+KNOWN_RULES = frozenset(
+    {RULE_PERIODIC_FORM_ONLY, RULE_MATCHING_COPIES, RULE_SHARED_ACCESSION_PRIMARY}
+)
 
 
 def enabled_rules(environ: dict[str, str] | None = None) -> frozenset[str]:
