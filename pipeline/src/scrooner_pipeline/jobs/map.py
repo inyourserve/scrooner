@@ -15,6 +15,7 @@ from scrooner_pipeline.db.connection import (
 from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
+from scrooner_pipeline.mapper import revenue_total_guard
 from scrooner_pipeline.mapper.resolve import resolve
 from scrooner_pipeline.mapper.concept_fallback import (
     resolve_fallbacks,
@@ -317,6 +318,41 @@ def resolve_employee_count_fallback_cmd(
         write_before_image(Path(before_image), planned)
         stats["before_image_rows"] = len(planned)
     typer.echo(f"resolve-employee-count-fallback: {stats}")
+
+
+@app.command("apply-revenue-total-guard")
+def apply_revenue_total_guard_cmd(
+    ciks: str = typer.Option(
+        "", help="Comma-separated CIKs; empty = every company (chunks of 100)."
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Evaluate revenue.total_disagreement@1 as ON and write NOTHING; "
+        "emit the before-image to --before-image.",
+    ),
+    before_image: str = typer.Option(
+        "", help="With --dry-run: path of the JSONL before-image to write."
+    ),
+) -> None:
+    """RF-13: hide revenue / revenue_sanity_resolved for a company-period where two
+    revenue-family total tags disagree by more than 1% and neither is proven the printed
+    total (both directions). No-op unless revenue.total_disagreement@1 is listed in
+    SCROONER_RULES_ENABLED. Run right after resolve-facts; the conflict-fill stage runs it
+    again at its own end. Needs analytics.cell_blank_reason (migration 0100) to hide."""
+    target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()} or None
+    with get_connection() as conn:
+        stats = revenue_total_guard.apply_revenue_total_guard(
+            conn,
+            target,
+            dry_run=dry_run,
+            reason_store=None if dry_run else PgBlankReasonStore(conn),
+        )
+    planned = stats.pop("planned", [])
+    if dry_run and before_image:
+        write_before_image(Path(before_image), planned)
+        stats["before_image_rows"] = len(planned)
+    typer.echo(f"apply-revenue-total-guard: {stats}")
 
 
 @app.command("resolve-conflict-fills")
