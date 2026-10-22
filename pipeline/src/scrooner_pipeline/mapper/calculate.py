@@ -69,6 +69,8 @@ import psycopg
 import structlog
 
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.mapper import bs_anchor, rule_flags
+from scrooner_pipeline.mapper.rule_flags import DECISIONS, GuardDecision
 from scrooner_pipeline.mapper.calculate_shapes import (
     CONCEPT_MATERIALITY_FLOORS,
     compute as _compute,
@@ -371,6 +373,38 @@ def _load_canonical_facts(conn: psycopg.Connection, company_id: int) -> dict:
     }
 
 
+def _record_w10_dry_run(
+    company_id: int,
+    metric_name: str,
+    metric_rows: list[dict],
+    period_ids: list[int],
+    kept_period_ids: set[int],
+) -> None:
+    """RF-10 shadow mode: what the newest row of this metric would become."""
+    if not metric_rows:
+        return
+    kept = [r for r, pid in zip(metric_rows, period_ids) if pid in kept_period_ids]
+    now = max(metric_rows, key=lambda r: r["period_end"])
+    after = max(kept, key=lambda r: r["period_end"]) if kept else None
+    outcome = "kept" if after is now else "changed"
+    DECISIONS.add(
+        GuardDecision(
+            rule_id=rule_flags.RF10_BS_DATE_ANCHOR,
+            mode=rule_flags.DRY_RUN,
+            company_id=company_id,
+            data_point=metric_name,
+            period_grain=now["period_label"],
+            period_start=now["period_start"],
+            period_end=now["period_end"],
+            outcome=outcome,
+            reason_code=now["is_null_reason"],
+            old_value=now["value"],
+            new_value=after["value"] if after else None,
+            detail=f"newest row {now['period_end']} -> {after['period_end'] if after else None}",
+        )
+    )
+
+
 def calculate_for_company(
     conn: psycopg.Connection, company_id: int, targets: list[dict]
 ) -> dict:
@@ -401,10 +435,28 @@ def calculate_for_company(
         # instead, matched by period_id as before -- both concepts in those
         # metrics are always dated as of the same balance-sheet date.
         anchor_inputs = duration_inputs or instant_inputs
+        # RF-10 (W10, default OFF): anchor per-share balance-sheet metrics on
+        # the balance-sheet date, not on the later cover-page share-count date.
+        # Dry-run mode keeps the legacy anchors and only records the effect.
+        w10_mode = (
+            rule_flags.rule_mode(rule_flags.RF10_BS_DATE_ANCHOR)
+            if metric_name in bs_anchor.BS_ANCHORED_METRICS
+            else rule_flags.OFF
+        )
+        w10_anchor_inputs = bs_anchor.anchor_inputs(
+            metric_name, duration_inputs, instant_inputs
+        )
+        if w10_mode == rule_flags.ON:
+            anchor_inputs = w10_anchor_inputs
         anchor_concept_ids = {cid for _name, cid, _role, _is_instant in anchor_inputs}
         anchor_period_ids: set[int] = set()
         for concept_id in anchor_concept_ids:
             anchor_period_ids.update(by_period_id.get(concept_id, {}).keys())
+        w10_kept_period_ids: set[int] = set()
+        for _name, concept_id, _role, _is_instant in w10_anchor_inputs:
+            w10_kept_period_ids.update(by_period_id.get(concept_id, {}).keys())
+        metric_rows_start = len(rows)
+        metric_period_ids: list[int] = []
 
         # A role can have MORE THAN ONE expected concept (roic's
         # invested_capital_add covers both total_debt and
@@ -497,7 +549,17 @@ def calculate_for_company(
                     "source_fact_ids": source_fact_ids or None,
                 }
             )
+            metric_period_ids.append(period_id)
             stats["computed" if value is not None else "null"] += 1
+
+        if w10_mode == rule_flags.DRY_RUN:
+            _record_w10_dry_run(
+                company_id,
+                metric_name,
+                rows[metric_rows_start:],
+                metric_period_ids,
+                w10_kept_period_ids,
+            )
 
     target_ids = [t["id"] for t in targets]
     with conn.cursor() as cur:
