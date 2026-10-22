@@ -1,0 +1,88 @@
+{
+  "rules": {
+    "ttm.consecutive_window@1": {
+      "ebitda": {
+        "companies": 8,
+        "displayed_cells_now": 31,
+        "by_failure_class": {
+          "gap_between_quarters": 8
+        },
+        "by_outcome": {
+          "hidden": 8
+        }
+      },
+      "fcf": {
+        "companies": 12,
+        "displayed_cells_now": 17,
+        "by_failure_class": {
+          "gap_between_quarters": 12
+        },
+        "by_outcome": {
+          "hidden": 12
+        }
+      }
+    },
+    "ttm.age_guard@2": {
+      "dividends_paid": {
+        "companies": 13,
+        "displayed_cells_now": 16,
+        "by_failure_class": {
+          "anchor_not_at_expected_period": 13
+        },
+        "by_outcome": {
+          "hidden": 13
+        }
+      },
+      "share_buybacks": {
+        "companies": 29,
+        "displayed_cells_now": 64,
+        "by_failure_class": {
+          "anchor_not_at_expected_period": 29
+        },
+        "by_outcome": {
+          "hidden": 29
+        }
+      },
+      "total_shareholder_yield": {
+        "companies": 173,
+        "displayed_cells_now": 98,
+        "by_failure_class": {
+          "stale_component": 20,
+          "unevidenced_zero": 138,
+          "stale_component+unevidenced_zero": 15
+        },
+        "by_outcome": {
+          "hidden": 173
+        }
+      }
+    }
+  },
+  "age_lag_distribution": {
+    "share_buybacks:at_expected(<=7d)": 48,
+    "dividends_paid:behind>1y": 7,
+    "share_buybacks:absent": 46,
+    "share_buybacks:behind>1y": 19,
+    "dividends_paid:absent": 14,
+    "share_buybacks:behind<=1q": 4,
+    "dividends_paid:behind<=1q": 4,
+    "dividends_paid:at_expected(<=7d)": 58,
+    "share_buybacks:behind<=2q": 6,
+    "dividends_paid:behind<=2q": 2
+  },
+  "companies_examined": 200,
+  "today": "2026-10-22",
+  "db_watermark": "2026-10-22 12:07:30.355149+00:00",
+  "git_sha": "e48b060dd4b8e4a9b10a7074043fcc4bef6dc8cd",
+  "parameters": {
+    "quarter_days": [
+      61,
+      121
+    ],
+    "adjacent_slack_days": 7,
+    "window_days": [
+      350,
+      385
+    ],
+    "expected_period_tolerance_days": 7
+  }
+}
