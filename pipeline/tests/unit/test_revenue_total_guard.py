@@ -255,7 +255,7 @@ def test_live_deletes_exact_scope_and_stores_reasons():
     assert params == (1, [5, 6], [10])
     rows = store.all()
     assert len(rows) == 2 and {r.rule_id for r in rows} == {g.RULE_ID}
-    assert {r.reason_code for r in rows} == {"guard_hidden"}
+    assert {r.reason_code for r in rows} == {"revenue_total_undecidable"}
     assert rows[0].period_start == date(2021, 10, 1) and rows[0].period_end == date(
         2022, 9, 30
     )

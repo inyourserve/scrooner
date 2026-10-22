@@ -347,6 +347,9 @@ def resolve_employee_count_fallback_cmd(
             dry_run=dry_run,
             reason_store=store if (not dry_run and store.table_exists()) else None,
         )
+        if not dry_run and store._runs:
+            store.finish({k: v for k, v in stats.items() if k != "planned"})
+            conn.commit()
     planned = stats.pop("planned")
     if dry_run and before_image:
         write_before_image(Path(before_image), planned)
@@ -376,12 +379,16 @@ def apply_revenue_total_guard_cmd(
     again at its own end. Needs analytics.cell_blank_reason (migration 0100) to hide."""
     target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()} or None
     with get_connection() as conn:
+        store = None if dry_run else PgBlankReasonStore(conn)
         stats = revenue_total_guard.apply_revenue_total_guard(
             conn,
             target,
             dry_run=dry_run,
-            reason_store=None if dry_run else PgBlankReasonStore(conn),
+            reason_store=store,
         )
+        if store is not None:
+            store.finish({k: v for k, v in stats.items() if k != "planned"})
+            conn.commit()
     planned = stats.pop("planned", [])
     if dry_run and before_image:
         write_before_image(Path(before_image), planned)
@@ -410,12 +417,16 @@ def apply_operating_income_guard_cmd(
     runs it too (after the arithmetic fallback)."""
     target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()} or None
     with get_connection() as conn:
+        store = None if dry_run else PgBlankReasonStore(conn)
         stats = operating_income_guard.apply_operating_income_guard(
             conn,
             target,
             dry_run=dry_run,
-            reason_store=None if dry_run else PgBlankReasonStore(conn),
+            reason_store=store,
         )
+        if store is not None:
+            store.finish({k: v for k, v in stats.items() if k != "planned"})
+            conn.commit()
     planned = stats.pop("planned", [])
     if dry_run and before_image:
         write_before_image(Path(before_image), planned)
@@ -443,12 +454,16 @@ def apply_scale_unit_guard_cmd(
     scale.unit_plausibility@1 is listed in SCROONER_RULES_ENABLED."""
     target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()} or None
     with get_connection() as conn:
+        store = None if dry_run else PgBlankReasonStore(conn)
         stats = scale_unit_guard.apply_scale_unit_guard(
             conn,
             target,
             dry_run=dry_run,
-            reason_store=None if dry_run else PgBlankReasonStore(conn),
+            reason_store=store,
         )
+        if store is not None:
+            store.finish({k: v for k, v in stats.items() if k != "planned"})
+            conn.commit()
     planned = stats.pop("planned", [])
     if dry_run and before_image:
         write_before_image(Path(before_image), planned)

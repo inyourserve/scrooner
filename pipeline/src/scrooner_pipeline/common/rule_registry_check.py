@@ -258,6 +258,7 @@ def check_seed_drift(graph: dict[str, Node]) -> list[Finding]:
 PENDING_REGISTRY_IDS = frozenset(
     {
         "employee_count.no_yfinance_tier@1",  # D-4, founder-approved, no RF number yet
+        "mcap.ads_conversion@1",  # NA-15, registered in common/rule_flags, no registry row yet
         "revenue.structure_total@1",  # NA-9 / RF-48, in the NA doc, not in the registry draft rows
     }
 )

@@ -1,0 +1,87 @@
+{
+ "cik": "0000915912",
+ "name": "AVALONBAY COMMUNITIES INC",
+ "tickers": [],
+ "exchanges": [],
+ "formerNames": [
+  {
+   "name": "AVALON BAY COMMUNITIES INC",
+   "from": "1998-08-03T00:00:00.000Z",
+   "to": "1998-10-06T00:00:00.000Z"
+  },
+  {
+   "name": "BAY APARTMENT COMMUNITIES INC",
+   "from": "1995-02-13T00:00:00.000Z",
+   "to": "1998-06-02T00:00:00.000Z"
+  }
+ ],
+ "sic": "6798",
+ "events": [
+  {
+   "accessionNumber": "0001104659-26-108273",
+   "form": "15-15D",
+   "filingDate": "2026-09-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001104659-26-102433",
+   "form": "15-12G",
+   "filingDate": "2026-08-27",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001104659-26-097833",
+   "form": "8-K",
+   "filingDate": "2026-08-17",
+   "items": "2.01,3.01,3.03,5.01,5.02,5.03,7.01,8.01,9.01"
+  },
+  {
+   "accessionNumber": "0000876661-26-000689",
+   "form": "25-NSE",
+   "filingDate": "2026-08-17",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001104659-23-112594",
+   "form": "8-K",
+   "filingDate": "2023-10-30",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001104659-22-117110",
+   "form": "8-K",
+   "filingDate": "2022-11-10",
+   "items": "5.02,5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001104659-20-062596",
+   "form": "8-K",
+   "filingDate": "2020-05-15",
+   "items": "5.03,5.07,9.01"
+  },
+  {
+   "accessionNumber": "0001104659-19-027393",
+   "form": "8-K",
+   "filingDate": "2019-05-07",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001104659-17-067936",
+   "form": "8-K",
+   "filingDate": "2017-11-13",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001104659-17-010563",
+   "form": "8-K",
+   "filingDate": "2017-02-21",
+   "items": "5.02,5.03,9.01"
+  },
+  {
+   "accessionNumber": "0001104659-15-078540",
+   "form": "8-K",
+   "filingDate": "2015-11-13",
+   "items": "5.03,9.01"
+  }
+ ]
+}

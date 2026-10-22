@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0107** (0098-0106 claimed 2026-10-22 below, none written/applied on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0109** (0098-0108 claimed 2026-10-22 below, none written/applied on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -53,13 +53,15 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | committed (`e7c1b25`) |
 | 0098 | Period Engineer | per-share `gap_cause` CHECK + `analytics.canonical_fact_retired` | claimed, not written/not applied (file written on a held branch only) |
 | 0099 | Period Engineer | split tables `split_event` + `filing_share_basis` | claimed, not written/not applied |
-| 0100 | Data Engineer (lane 3) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | claimed, not written/not applied |
+| 0100 | Data Engineer (lane 1) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | written on branch work/data-engineer/lane1-reason-store, NOT applied (needs 0098/0099 on the merge target for check_migrations contiguity) |
 | 0101 | Data Engineer | minimal definition registry (`metric_definition_active` view + one-active-per-name unique index) | claimed, not written/not applied |
 | 0102 | Data Engineer | thin `cell_state` table with run id | claimed, not written/not applied |
 | 0103 | Period Engineer | `core.derived_fact_input` | claimed, not written/not applied |
 | 0104 | (unassigned) | `company_group` + `metric_template` (after design review) | claimed, not written/not applied |
 | 0105 | (unassigned) | output_versioning | claimed, not written/not applied |
 | 0106 | (unassigned) | `slot_observation` (optional) | claimed, not written/not applied |
+| 0107 | data-engineer (lane 3, NA-15, claimed 2026-10-22) | `core.security_class_cover`: per-class cover census (accession, priced ticker, `dei:Security12bTitle`, class member, ordinary shares, as-of date); design in `mapper/ads_census.py` | claimed only; not written/not applied |
+| 0108 | data-engineer (lane 3, NA-15, claimed 2026-10-22) | `analytics.ads_ratio`: ADS ratio history (cik, ticker, ratio, effective_from, source accession, evidence label), replaces `ADS_TABLE` in `mapper/ads_conversion.py` | claimed only; not written/not applied |
 
 ## scrooner-98 queue (lane A)
 

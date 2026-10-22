@@ -18,6 +18,8 @@ import psycopg
 import structlog
 from psycopg.types.json import Jsonb
 
+from scrooner_pipeline.company_master.identity_overrides import load_overrides
+
 logger = structlog.get_logger()
 
 POLICY_VERSION = "2026-08-18.v1"
@@ -75,6 +77,7 @@ class UniverseCandidate:
     registered_fund_confirmed: bool = False
     spac_or_shell_confirmed: bool = False
     issuer_kind: str | None = None
+    pseudo_ticker_confirmed: bool = False  # audited identity override (bond/preferred/subsidiary security)
 
 
 @dataclass(frozen=True)
@@ -173,6 +176,10 @@ def evaluate_candidate(candidate: UniverseCandidate) -> UniverseDecision:
     if candidate.registered_fund_confirmed or regime == "registered_fund":
         excluded = True
         reasons.append("excluded_registered_fund")
+
+    if candidate.pseudo_ticker_confirmed:
+        excluded = True
+        reasons.append("excluded_pseudo_ticker_not_common_equity")
 
     if candidate.spac_or_shell_confirmed:
         excluded = True
@@ -346,22 +353,25 @@ def load_current_candidates(conn: psycopg.Connection) -> list[UniverseCandidate]
             order by c.cik, l.ticker, l.id
             """
         )
-        return [
-            UniverseCandidate(
-                company_id=row[0],
-                filer_id=row[1],
-                security_id=row[2],
-                listing_id=row[3],
-                cik=row[4],
-                ticker=row[5],
-                exchange=row[6],
-                security_type=row[7],
-                company_status=row[8],
-                sic_code=row[9],
-                filing_forms=tuple(sorted(row[10])),
-            )
-            for row in cur.fetchall()
-        ]
+        rows = cur.fetchall()
+    pseudo = load_overrides(conn, "pseudo_ticker", {r[0] for r in rows})
+    return [
+        UniverseCandidate(
+            pseudo_ticker_confirmed=row[0] in pseudo,
+            company_id=row[0],
+            filer_id=row[1],
+            security_id=row[2],
+            listing_id=row[3],
+            cik=row[4],
+            ticker=row[5],
+            exchange=row[6],
+            security_type=row[7],
+            company_status=row[8],
+            sic_code=row[9],
+            filing_forms=tuple(sorted(row[10])),
+        )
+        for row in rows
+    ]
 
 
 def persist_snapshot(

@@ -123,7 +123,7 @@ def test_live_hides_whole_family_for_the_bad_period_only():
     assert [p for _, p in deletes] == [
         (4647, [1, 2], [11, 12])
     ]  # periods 13 (0.88) and 14 untouched
-    assert {r.reason_code for r in store.all()} == {"guard_hidden"}
+    assert {r.reason_code for r in store.all()} == {"dps_unit_error"}
     assert len(store.all()) == 3
 
 

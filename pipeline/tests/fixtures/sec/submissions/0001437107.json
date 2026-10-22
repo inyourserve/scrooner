@@ -1,0 +1,97 @@
+{
+ "cik": "0001437107",
+ "name": "Warner Bros. Discovery, Inc.",
+ "tickers": [
+  "WBD"
+ ],
+ "exchanges": [
+  "Nasdaq"
+ ],
+ "formerNames": [
+  {
+   "name": "Discovery, Inc.",
+   "from": "2018-03-06T05:00:00.000Z",
+   "to": "2022-04-08T04:00:00.000Z"
+  },
+  {
+   "name": "Discovery Communications, Inc.",
+   "from": "2008-06-11T04:00:00.000Z",
+   "to": "2018-03-05T05:00:00.000Z"
+  }
+ ],
+ "sic": "4841",
+ "events": [
+  {
+   "accessionNumber": "0001193125-26-423553",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423548",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423544",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423540",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423536",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423529",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423523",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423519",
+   "form": "15-15D",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-423513",
+   "form": "15-12G",
+   "filingDate": "2026-10-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-415091",
+   "form": "25",
+   "filingDate": "2026-10-06",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0001193125-26-415055",
+   "form": "8-K",
+   "filingDate": "2026-10-06",
+   "items": "1.01,1.02,2.01,2.03,3.01,3.03,5.01,5.02,5.03,8.01,9.01"
+  },
+  {
+   "accessionNumber": "0001354457-26-000951",
+   "form": "25-NSE",
+   "filingDate": "2026-10-06",
+   "items": ""
+  }
+ ]
+}

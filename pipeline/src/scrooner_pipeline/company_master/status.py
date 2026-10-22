@@ -66,12 +66,14 @@ still technically active -- a generous margin, not a tight one, chosen to
 minimize false 'stale' flags rather than to catch every real gap quickly.
 """
 
+import json
 import re
 from datetime import date, timedelta
 
 import psycopg
 import structlog
 
+from scrooner_pipeline.company_master.identity_overrides import load_overrides
 from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
@@ -289,6 +291,17 @@ def update_status(
                 "status_reason": reason,
             }
         )
+
+    # Audited identity overrides (identity.cik_name_ticker@1) win over the
+    # recency inference: an acquired/deregistered company must not flip back to
+    # 'active' because its last 10-Q is recent (AvalonBay, Warner Bros. Discovery).
+    overrides = load_overrides(conn, "status", [r["company_id"] for r in rows])
+    for row in rows:
+        raw = overrides.get(row["company_id"])
+        if raw:
+            data = json.loads(raw)
+            row["status"], row["status_reason"] = data["status"], data["reason"]
+            stats["identity_override"] = stats.get("identity_override", 0) + 1
 
     if rows:
         with conn.cursor() as cur:
