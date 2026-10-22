@@ -620,7 +620,9 @@ def build(
         for (cid, dp), c in ext.cells.items():
             if dp not in name_set0 or not c["has_value"]:
                 continue
-            if L.is_stale(c["latest_label"], c["latest_end"], ref_end.get(cid, ""), ann, qtr):
+            if L.is_stale(
+                c["latest_label"], c["latest_end"], ref_end.get(cid, ""), ann, qtr
+            ):
                 stale += 1
             elif c["reason"]:
                 vwr_current += 1  # valued but carries a reason: not counted as current (v2 item 10)
@@ -961,13 +963,38 @@ def build(
 
     if map_ver == "v2":
         for b in ("currency_unknown", "metric_only_fallback"):
-            R.add("K", "K4", kver, f"bucket:{b}", "D0", by_bucket.get(b, 0), blank_total, by_bucket.get(b, 0),
-                  "cells", "PROXY", "DATA-INFERRED", wm=wm, qfile=qk,
-                  note="sub-bucket of unclassified cascades whose inputs are all valued: currency_unknown = at least one input is a concept row (any period, F2); metric_only_fallback = metric inputs valued at the latest period")
-        R.add("K", "K2c.excluded_from_k1c", "1", "all", "D0", sum(1 for d in defects if d[3] == "valued_with_reason"),
-              valued_total, sum(1 for d in defects if d[3] == "valued_with_reason"), "cells", "PROXY",
-              "DATA-INFERRED", wm=wm, qfile=qk,
-              note="valued cells that carry a reason; excluded from K1c when K1c is measured")
+            R.add(
+                "K",
+                "K4",
+                kver,
+                f"bucket:{b}",
+                "D0",
+                by_bucket.get(b, 0),
+                blank_total,
+                by_bucket.get(b, 0),
+                "cells",
+                "PROXY",
+                "DATA-INFERRED",
+                wm=wm,
+                qfile=qk,
+                note="sub-bucket of unclassified cascades whose inputs are all valued: currency_unknown = at least one input is a concept row (any period, F2); metric_only_fallback = metric inputs valued at the latest period",
+            )
+        R.add(
+            "K",
+            "K2c.excluded_from_k1c",
+            "1",
+            "all",
+            "D0",
+            sum(1 for d in defects if d[3] == "valued_with_reason"),
+            valued_total,
+            sum(1 for d in defects if d[3] == "valued_with_reason"),
+            "cells",
+            "PROXY",
+            "DATA-INFERRED",
+            wm=wm,
+            qfile=qk,
+            note="valued cells that carry a reason; excluded from K1c when K1c is measured",
+        )
 
     # K4b / K12 baselines REPORTED + live NC
     for cause, n in DOC44_PERIOD_GAPS:
@@ -1235,7 +1262,22 @@ def defects_csv(defects, as_of, ticker, prev_first_seen) -> str:
             "excluded_from_k1c",
         ]
     )
-    for cid, dp, kind, state, reason, cls, owner, rf, note, root, cand, second, bucket, excl in defects:
+    for (
+        cid,
+        dp,
+        kind,
+        state,
+        reason,
+        cls,
+        owner,
+        rf,
+        note,
+        root,
+        cand,
+        second,
+        bucket,
+        excl,
+    ) in defects:
         first = prev_first_seen.get((cid, dp), as_of)
         w.writerow(
             [
@@ -1297,7 +1339,9 @@ def manifest_append(out_dir: Path, files):
         hs = known.get(rel, [])
         if rel == CHAIN_NAME:
             if any(not _chain_prefix_ok(Path(f), x) for x in hs):
-                raise SystemExit(f"IMMUTABILITY VIOLATION: published text of {rel} was edited (AT-7.14)")
+                raise SystemExit(
+                    f"IMMUTABILITY VIOLATION: published text of {rel} was edited (AT-7.14)"
+                )
         elif hs and h not in hs:
             raise SystemExit(
                 f"IMMUTABILITY VIOLATION: {rel} changed since it was published (AT-7.14)"

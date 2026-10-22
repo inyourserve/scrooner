@@ -30,7 +30,9 @@ GROUPS_DRAFT = REPO / "data-team/strategy/data/group_assignment_draft.csv"
 EXPORT_GZ = SB_DIR / "cells/2026-10-20.cells.csv.gz"
 D0_NAMES_FILE = SB_DIR / "maps/d0_datapoints.txt"
 D0E_REMOVED_FILE = SB_DIR / "maps/d0e_removed_30.txt"
-REASON_MAP = SB_DIR / "reason_class_map.csv"  # v1: the record behind the 2026-10-20 scoreboard
+REASON_MAP = (
+    SB_DIR / "reason_class_map.csv"
+)  # v1: the record behind the 2026-10-20 scoreboard
 REASON_MAP_V2 = SB_DIR / "reason_class_map_v2.csv"
 
 # ---- frozen identities (FREEZE-REGISTER-2026-10-22 section 4; doc 44) -------------------
@@ -261,7 +263,13 @@ def load_reason_map(path: Path = REASON_MAP):
     for r in csv.DictReader(open(path, newline="", encoding="utf-8")):
         r.setdefault("family", "*")
         r["family"] = r.get("family") or "*"
-        for k in ("root_cause_class", "candidate_state", "second_signal", "label", "queue_verifier_sample"):
+        for k in (
+            "root_cause_class",
+            "candidate_state",
+            "second_signal",
+            "label",
+            "queue_verifier_sample",
+        ):
             r.setdefault(k, "")
         m[(r["pattern_key"], r["family"])] = r
     return m
@@ -273,10 +281,19 @@ def data_point_family(dp: str, graph: dict) -> str:
     dependency graph (a ratio over revenue, cost of revenue or the share count)."""
     if dp in ("revenue", "revenue_sanity_resolved"):
         return "revenue_row"
-    if dp in ("gross_profit", "gross_profit_resolved", "cost_of_revenue", "cost_of_revenue_resolved"):
+    if dp in (
+        "gross_profit",
+        "gross_profit_resolved",
+        "cost_of_revenue",
+        "cost_of_revenue_resolved",
+    ):
         return "gp_cost_row"
-    if dp in ("operating_expenses", "operating_expenses_resolved", "operating_income",
-              "operating_income_resolved"):
+    if dp in (
+        "operating_expenses",
+        "operating_expenses_resolved",
+        "operating_income",
+        "operating_income_resolved",
+    ):
         return "opex_oi_row"
     if dp.startswith("revenue_growth"):
         return "revenue_growth"
@@ -299,7 +316,9 @@ def data_point_family(dp: str, graph: dict) -> str:
 TOKEN_ALIASES = {
     # share_count_1y_ago is deliberately NOT an alias (v2 item 8): the current shares_outstanding cell
     # says nothing about the share count one year ago; that reason is a terminal period reason.
-    "fewer_than_3_years_gross_margin": ["gross_margin"],  # v2 item 7: cascades through gross_margin
+    "fewer_than_3_years_gross_margin": [
+        "gross_margin"
+    ],  # v2 item 7: cascades through gross_margin
     "total_debt_or_cash": ["total_debt_resolved", "cash_and_equivalents"],
 }
 
@@ -338,10 +357,14 @@ class Result(NamedTuple):
     owner: str
     rf: str
     note: str
-    root_cause: str = ""  # underlying cause when cls is a visible state (guard_hidden -> resolver)
+    root_cause: str = (
+        ""  # underlying cause when cls is a visible state (guard_hidden -> resolver)
+    )
     candidate: str = ""  # candidate cell state awaiting evidence (history_horizon, undefined_by_math, ...)
     second_signal: str = ""  # a second role that must also look (e.g. tag_mapper)
-    bucket: str = ""  # sub-bucket under unclassified: currency_unknown | metric_only_fallback
+    bucket: str = (
+        ""  # sub-bucket under unclassified: currency_unknown | metric_only_fallback
+    )
     excl_k1c: bool = False  # valued cell carrying a reason: excluded from K1c
 
 
@@ -388,7 +411,9 @@ class Classifier:
         return res
 
     def _row(self, pat: str, dp: str):
-        return self.m.get((pat, data_point_family(dp, self.g))) or self.m.get((pat, "*"))
+        return self.m.get((pat, data_point_family(dp, self.g))) or self.m.get(
+            (pat, "*")
+        )
 
     def _input_state(self, cid: int, n: str):
         """-> 'no_row' | 'blank' | 'valued_any_period' | 'valued_latest'"""
@@ -397,8 +422,11 @@ class Classifier:
             return "no_row"
         if not c["has_value"]:
             return "blank"
-        return ("valued_any_period" if self.g.get(n, {}).get("kind") in CONCEPT_KINDS
-                else "valued_latest")
+        return (
+            "valued_any_period"
+            if self.g.get(n, {}).get("kind") in CONCEPT_KINDS
+            else "valued_latest"
+        )
 
     def _classify_reason(self, cid, dp, cell, depth) -> Result:
         reason = cell["reason"]
@@ -409,16 +437,29 @@ class Classifier:
         if row is None:
             self.unmapped[pat] += 1
             return Result("unclassified", "triage", "", f"UNMAPPED_REASON:{pat}")
-        base = dict(root_cause=row.get("root_cause_class", ""), candidate=row.get("candidate_state", ""),
-                    second_signal=row.get("second_signal", ""))
+        base = dict(
+            root_cause=row.get("root_cause_class", ""),
+            candidate=row.get("candidate_state", ""),
+            second_signal=row.get("second_signal", ""),
+        )
         if cell["has_value"] and pat == "partial:missing_debt_or_cash":
-            missing = [n for n in ("total_debt_resolved", "cash_and_equivalents")
-                       if self._input_state(cid, n) in ("blank", "no_row")]
-            return Result(row["class"], row["owner"], row["rf_id"],
-                          f"reason:{pat}|missing_input:{','.join(missing) or 'none_found_in_extract'}",
-                          excl_k1c=True, **base)
+            missing = [
+                n
+                for n in ("total_debt_resolved", "cash_and_equivalents")
+                if self._input_state(cid, n) in ("blank", "no_row")
+            ]
+            return Result(
+                row["class"],
+                row["owner"],
+                row["rf_id"],
+                f"reason:{pat}|missing_input:{','.join(missing) or 'none_found_in_extract'}",
+                excl_k1c=True,
+                **base,
+            )
         if row["mode"] == "terminal" or depth > 8:
-            return Result(row["class"], row["owner"], row["rf_id"], f"reason:{pat}", **base)
+            return Result(
+                row["class"], row["owner"], row["rf_id"], f"reason:{pat}", **base
+            )
         # walk
         _, toks, truncated = reason_tokens(reason)
         blockers, notes, any_concept_valued = [], [], False
@@ -436,14 +477,28 @@ class Classifier:
         if truncated:
             notes.append("reason_list_truncated_in_source")
         if blockers:
-            blockers.sort(key=lambda b: CLASS_PRECEDENCE.index(b[0].cls) if b[0].cls in CLASS_PRECEDENCE else 99)
+            blockers.sort(
+                key=lambda b: (
+                    CLASS_PRECEDENCE.index(b[0].cls)
+                    if b[0].cls in CLASS_PRECEDENCE
+                    else 99
+                )
+            )
             sub, name = blockers[0]
             return sub._replace(note=f"via:{name}|" + ";".join(notes), excl_k1c=False)
         bucket = ""
         if row["class"] == "unclassified":
-            bucket = "currency_unknown" if any_concept_valued else "metric_only_fallback"
-        return Result(row["class"], row["owner"], row["rf_id"],
-                      f"walk_no_blank_input|{pat}|" + ";".join(notes), bucket=bucket, **base)
+            bucket = (
+                "currency_unknown" if any_concept_valued else "metric_only_fallback"
+            )
+        return Result(
+            row["class"],
+            row["owner"],
+            row["rf_id"],
+            f"walk_no_blank_input|{pat}|" + ";".join(notes),
+            bucket=bucket,
+            **base,
+        )
 
 
 # ---- diff of two extracts (RT-2 / M rows) ------------------------------------------------
