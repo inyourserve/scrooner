@@ -38,7 +38,7 @@ import structlog
 
 from scrooner_pipeline.common.rule_before_image import PlannedChange
 from scrooner_pipeline.mapper import ads_conversion
-from scrooner_pipeline.common.rules_enabled import is_enabled
+from scrooner_pipeline.common.rule_flags import rule_enabled as is_enabled
 
 logger = structlog.get_logger()
 

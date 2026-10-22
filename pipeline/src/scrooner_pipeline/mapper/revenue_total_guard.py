@@ -44,7 +44,7 @@ import structlog
 
 from scrooner_pipeline.common.cell_blank_reason import BlankReason, BlankReasonStore
 from scrooner_pipeline.common.rule_before_image import PlannedChange
-from scrooner_pipeline.common.rules_enabled import is_enabled
+from scrooner_pipeline.common.rule_flags import rule_enabled as is_enabled
 
 logger = structlog.get_logger()
 
@@ -323,7 +323,7 @@ def apply_revenue_total_guard(
                     period_end=period_info[period_id][1],
                     basis="resolved",
                     rule_id=RULE_ID,
-                    reason_code="guard_hidden",
+                    reason_code=REASON_DETAIL,
                     detail={
                         "reason": REASON_DETAIL,
                         "evidence": pc.reason,

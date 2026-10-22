@@ -174,7 +174,7 @@ def test_live_deletes_exact_scope_and_stores_reason():
     assert (r.company_id, r.rule_id, r.reason_code, r.data_point) == (
         1,
         g.RULE_ID,
-        "guard_hidden",
+        "named_hold",
         "operating_income_resolved",
     )
     assert r.detail["evidence"].startswith("FILING-CHECKED AFG")

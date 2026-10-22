@@ -1401,7 +1401,7 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     # revenue fill above (which would re-insert hidden periods) and before the operating-income
     # arithmetic below (which reads revenue_sanity_resolved).
     from scrooner_pipeline.common.cell_blank_reason import PgBlankReasonStore
-    from scrooner_pipeline.common.rules_enabled import is_enabled
+    from scrooner_pipeline.common.rule_flags import rule_enabled as is_enabled
     from scrooner_pipeline.mapper import revenue_total_guard
 
     if is_enabled(revenue_total_guard.RULE_ID):
