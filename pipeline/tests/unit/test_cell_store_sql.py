@@ -605,3 +605,38 @@ def test_identity_audit_records_reverses_once_and_cannot_be_deleted(store):
     cs.mark_identity_audit_reversed(store, a)
     with pytest.raises(psycopg.errors.RaiseException):
         cs.mark_identity_audit_reversed(store, a)
+
+
+@pytest.mark.integration
+def test_replace_rule_reasons_deletes_only_its_own_rule_company_and_run(store):
+    r1, r2 = _run(store), _run(store)
+    other_rule = "oi.derived_not_face@1"
+    k2 = cc.CellKey(
+        2, "total_debt_resolved", "I", date(2025, 12, 31), date(2025, 12, 31)
+    )
+    mk = lambda key, rule: cs.guard_hidden(key, rule, "r1", "data_engineer_l1")  # noqa: E731
+    cs.write_blank_reasons(
+        store, r1, [mk(KEY, RULE), mk(KEY, other_rule), mk(k2, RULE)]
+    )
+    cs.write_blank_reasons(store, r2, [mk(KEY, RULE)])
+    store.commit()
+    key_b = cc.CellKey(
+        1, "total_debt_resolved", "I", date(2024, 12, 31), date(2024, 12, 31)
+    )
+    assert cs.replace_rule_reasons(store, r1, 1, RULE, [mk(key_b, RULE)]) == 1
+    rows = store.execute(
+        f"select run_id::text, company_id, rule_id, period_end from {A}.cell_blank_reason order by 1, 2, 3, 4"
+    ).fetchall()
+    assert (r1, 1, RULE, date(2025, 12, 31)) not in rows  # replaced
+    assert (r1, 1, RULE, date(2024, 12, 31)) in rows  # new
+    assert (r1, 1, other_rule, date(2025, 12, 31)) in rows  # other rule untouched
+    assert (r1, 2, RULE, date(2025, 12, 31)) in rows  # other company untouched
+    assert (r2, 1, RULE, date(2025, 12, 31)) in rows  # other run untouched
+    with pytest.raises(ValueError):
+        cs.replace_rule_reasons(
+            store, r1, 1, RULE, [mk(k2, RULE)]
+        )  # company outside scope
+    with pytest.raises(ValueError):
+        cs.replace_rule_reasons(
+            store, r1, 1, RULE, [mk(KEY, other_rule)]
+        )  # rule outside scope
