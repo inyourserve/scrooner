@@ -17,7 +17,7 @@ create table if not exists analytics.certification_finding (
     id bigserial primary key,
     company_id bigint not null references core.company (id),
     invariant text not null
-        check (invariant in ('I1','I2','I3','I4','I5','I6','I7','I8','I9','I10','I11')),
+        check (invariant ~ '^I[0-9]+$'),
     severity text not null check (severity in ('wrong_value', 'review')),
     data_point_name text not null,
     period_end date,
@@ -26,7 +26,14 @@ create table if not exists analytics.certification_finding (
     evidence jsonb not null default '{}'::jsonb,
     source_fact_ids bigint[] not null default '{}',
     found_at timestamptz not null default now(),
-    resolved_at timestamptz
+    resolved_at timestamptz,
+    -- Rule-registry / run provenance (nullable, additive; amended 2026-10-22
+    -- before 0097 was applied).
+    rule_id text,
+    rule_version integer,
+    suite_version text,
+    certify_run_id text,
+    suite_run_at timestamptz
 );
 
 create index if not exists idx_certification_finding_company_open
