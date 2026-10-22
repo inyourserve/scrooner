@@ -24,6 +24,7 @@ from scrooner_pipeline.collector.storage import (
     SupabaseStorageClient,
     strip_bucket_prefix,
 )
+from scrooner_pipeline.normalizer.registrant_loader import filings_to_skip
 from scrooner_pipeline.common.errors import log_error
 
 logger = structlog.get_logger()
@@ -317,6 +318,18 @@ def normalize_identity_for_cik(
     identity = load_company_identity(storage, conn, cik)
     if identity is None:
         return {"cik": cik, "status": "no_data"}
+    # P1 (flag off: empty set): never claim a combined filing this company is
+    # only a co-registrant of, nor a quarantined accession.
+    skip = filings_to_skip(conn, cik)
+    if skip:
+        identity["filings"] = [
+            f for f in identity["filings"] if f["accession_number"] not in skip
+        ]
+        identity["raw_submission_id_by_filing"] = [
+            pair
+            for pair in identity["raw_submission_id_by_filing"]
+            if pair[0]["accession_number"] not in skip
+        ]
 
     company_id = upsert_company(
         conn, identity["cik"], identity["company_name"], identity["fiscal_year_end"]

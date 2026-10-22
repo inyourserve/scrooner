@@ -42,6 +42,7 @@ from scrooner_pipeline.collector.storage import (
 )
 from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST
+from scrooner_pipeline.normalizer.registrant_loader import RAW_OBJECT_KEY, adjust_payload
 from scrooner_pipeline.normalizer.units import canonicalize_unit
 
 logger = structlog.get_logger()
@@ -139,6 +140,7 @@ def extract_fact_rows(payload: dict) -> list[dict]:
                 for e in entries:
                     rows.append(
                         {
+                            "raw_object_id": e.get(RAW_OBJECT_KEY),
                             "taxonomy": taxonomy,
                             "tag": tag,
                             "raw_unit": raw_unit,
@@ -149,6 +151,16 @@ def extract_fact_rows(payload: dict) -> list[dict]:
                         }
                     )
     return rows
+
+
+def _co_registrant_payload_loader(storage: SupabaseStorageClient, conn: psycopg.Connection):
+    def load(co_cik: str) -> tuple[int, dict] | None:
+        row = _latest_companyfacts_object(conn, co_cik)
+        if row is None:
+            return None
+        return row[0], _load_json(storage, row[1])
+
+    return load
 
 
 def normalize_facts_for_cik(
@@ -165,6 +177,9 @@ def normalize_facts_for_cik(
         return {"cik": cik, "status": "no_companyfacts"}
     raw_object_id, storage_path = cf_row
     payload = _load_json(storage, storage_path)
+    # P1 (flag off: returns payload unchanged): drop accessions this company
+    # does not own, merge in the ones it is primary for from co-registrants.
+    payload = adjust_payload(conn, cik, payload, _co_registrant_payload_loader(storage, conn))
 
     filing_by_accn = _load_filing_lookup(conn, company_id)
     period_by_key = _load_period_lookup(conn, company_id)
@@ -234,7 +249,9 @@ def normalize_facts_for_cik(
                 "period_id": period_id,
                 "filing_id": filing_id,
                 "value": r["val"],
-                "raw_object_id": raw_object_id,
+                # entries merged in from a co-registrant's payload (P1) carry
+                # their own raw object; everything else uses this company's
+                "raw_object_id": r.get("raw_object_id") or raw_object_id,
             }
         )
 

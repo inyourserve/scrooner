@@ -37,6 +37,10 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.company_master.identity_overrides import (
+    hold_blocks_share_count,
+    load_market_cap_holds,
+)
 from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.mapper import price_publish_guards
 from scrooner_pipeline.mapper.ttm import _trailing_quarters
@@ -256,6 +260,7 @@ def calculate_price_metrics_for_company(
     company_id: int,
     metric_ids: dict[str, int],
     concept_ids: dict[str, int],
+    holds: dict | None = None,
 ) -> dict:
     stats = {"computed": 0, "null": 0}
     price_hit = _load_latest_price(conn, company_id)
@@ -317,12 +322,27 @@ def calculate_price_metrics_for_company(
         if "shares_outstanding" in concept_ids
         else None
     )
+    weighted_shares = _load_latest_diluted_weighted_shares(conn, company_id)
+    cover_shares = _load_shares_outstanding_fallback(conn, company_id)
     shares_hit, shares_reason = _choose_shares(
-        primary_shares,
-        _load_latest_diluted_weighted_shares(conn, company_id),
-        _load_shares_outstanding_fallback(conn, company_id),
-        date.today(),
+        primary_shares, weighted_shares, cover_shares, date.today()
     )
+    # Audited identity hold (identity.cik_name_ticker@1; no rows = no-op): a
+    # share count older than a known issuance event (VMRK/AvalonBay merger
+    # 2026-08-17) or a bond/preferred "ticker" (EAI) must not price a market cap.
+    hold = (holds or {}).get(company_id)
+    if hold is not None and shares_hit is not None:
+        newest = max(
+            (
+                h[2]
+                for h in (primary_shares, weighted_shares, cover_shares)
+                if h is not None and h[2] is not None
+            ),
+            default=None,
+        )
+        blocked = hold_blocks_share_count(hold, newest)
+        if blocked:
+            shares_hit, shares_reason = None, blocked
     equity_hit = (
         _latest_instant_fact(conn, company_id, concept_ids["stockholders_equity"])
         if "stockholders_equity" in concept_ids
@@ -507,6 +527,9 @@ def calculate_price_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict:
         )
         company_id_by_cik = dict(cur.fetchall())
 
+    # One batched read of the audited identity holds (no rows / table absent: {}).
+    holds = load_market_cap_holds(conn, company_id_by_cik.values())
+
     totals = {
         "considered": 0,
         "ok": 0,
@@ -523,7 +546,7 @@ def calculate_price_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict:
             continue
         try:
             stats = calculate_price_metrics_for_company(
-                conn, company_id, metric_ids, concept_ids
+                conn, company_id, metric_ids, concept_ids, holds
             )
         except Exception as exc:
             totals["errored"] += 1

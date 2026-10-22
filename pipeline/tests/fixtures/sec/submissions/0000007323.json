@@ -1,0 +1,97 @@
+{
+ "cik": "0000007323",
+ "name": "ENTERGY ARKANSAS, LLC",
+ "tickers": [
+  "EAI"
+ ],
+ "exchanges": [
+  "NYSE"
+ ],
+ "formerNames": [
+  {
+   "name": "ENTERGY ARKANSAS INC",
+   "from": "1996-07-17T00:00:00.000Z",
+   "to": "2018-12-04T00:00:00.000Z"
+  },
+  {
+   "name": "ARKANSAS POWER & LIGHT CO",
+   "from": "1994-01-26T00:00:00.000Z",
+   "to": "1996-06-03T00:00:00.000Z"
+  }
+ ],
+ "sic": "4911",
+ "events": [
+  {
+   "accessionNumber": "0000876661-20-000921",
+   "form": "25-NSE",
+   "filingDate": "2020-10-14",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-20-000920",
+   "form": "25-NSE",
+   "filingDate": "2020-10-14",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000065984-18-000288",
+   "form": "15-12B",
+   "filingDate": "2018-12-14",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-18-001290",
+   "form": "25-NSE",
+   "filingDate": "2018-12-04",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-18-001289",
+   "form": "25-NSE",
+   "filingDate": "2018-12-04",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-18-001288",
+   "form": "25-NSE",
+   "filingDate": "2018-12-04",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000065984-18-000245",
+   "form": "8-K",
+   "filingDate": "2018-11-20",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0000065984-18-000241",
+   "form": "15-12G",
+   "filingDate": "2018-11-19",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000065984-17-000041",
+   "form": "15-12G",
+   "filingDate": "2017-01-31",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-16-001277",
+   "form": "25-NSE",
+   "filingDate": "2016-09-15",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000065984-16-000456",
+   "form": "8-K",
+   "filingDate": "2016-03-04",
+   "items": "2.01,8.01"
+  },
+  {
+   "accessionNumber": "0000876661-10-000507",
+   "form": "25-NSE",
+   "filingDate": "2010-12-21",
+   "items": ""
+  }
+ ]
+}

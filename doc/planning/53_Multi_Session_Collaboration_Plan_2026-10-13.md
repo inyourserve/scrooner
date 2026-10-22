@@ -53,7 +53,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | committed (`e7c1b25`) |
 | 0098 | Period Engineer | per-share `gap_cause` CHECK + `analytics.canonical_fact_retired` | claimed, not written/not applied (file written on a held branch only) |
 | 0099 | Period Engineer | split tables `split_event` + `filing_share_basis` | claimed, not written/not applied |
-| 0100 | Data Engineer (lane 3) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | claimed, not written/not applied |
+| 0100 | Data Engineer (lane 1) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | written on branch work/data-engineer/lane1-reason-store, NOT applied (needs 0098/0099 on the merge target for check_migrations contiguity) |
 | 0101 | Data Engineer | minimal definition registry (`metric_definition_active` view + one-active-per-name unique index) | claimed, not written/not applied |
 | 0102 | Data Engineer | thin `cell_state` table with run id | claimed, not written/not applied |
 | 0103 | Period Engineer | `core.derived_fact_input` | claimed, not written/not applied |

@@ -49,6 +49,9 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL_ORDERED
+from scrooner_pipeline.common.rule_flags import RULE_PERIODIC_FORM_ONLY, rule_enabled
+
 logger = structlog.get_logger()
 
 MAX_SAFE_RATIO = Decimal("1.15")
@@ -121,7 +124,9 @@ def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
         return row[0] if row else None
 
 
-def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tuple]:
+def _load_conflict_groups(
+    conn: psycopg.Connection, primary_id: int, periodic_only: bool | None = None
+) -> list[tuple]:
     """Every (company_id, period_id) where the primary concept's
     highest-priority mapped tag that the company filed for that period has
     2+ disagreeing core.fact values and NONE is authoritative -- the exact
@@ -134,7 +139,15 @@ def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tup
     (-3.9M / -1.8M) sat beside its much larger ProfitLoss (-21.4M / -9.9M,
     which includes noncontrolling interests), so no fill was ever safe, and
     a close pair of two different tags could fill from the lower-priority
-    one. Taking the top-priority tag mirrors resolve()'s own first_match."""
+    one. Taking the top-priority tag mirrors resolve()'s own first_match.
+
+    With rule source.periodic_form_only@1 on (W3), copies from a non-periodic
+    filing are not part of the group at all: a rounded DEF 14A copy must never
+    be the "highest fact_id" that gets filled (JPM FY net income 57,000M vs the
+    10-K's 57,048M; MA, SCHW, MDT -- data-team/36 item 2). `periodic_only`
+    defaults to the flag; flag off is the previous query."""
+    if periodic_only is None:
+        periodic_only = rule_enabled(RULE_PERIODIC_FORM_ONLY)
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -146,6 +159,7 @@ def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tup
                 join core.filing fl on fl.id = f.filing_id
                 join analytics.concept_mapping cm on cm.concept_id = f.concept_id
                 where cm.canonical_concept_id = %s and cm.confidence != 'rejected'
+                  and (not %s or fl.form = any(%s))
             )
             select company_id, period_id, array_agg(value order by id), array_agg(id order by id),
                    array_agg(filing_date order by id)
@@ -154,7 +168,7 @@ def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tup
             group by company_id, period_id
             having count(distinct value) > 1 and bool_or(is_authoritative) = false
             """,
-            (primary_id,),
+            (primary_id, periodic_only, list(PERIODIC_FORMS_ALL_ORDERED)),
         )
         return cur.fetchall()
 
