@@ -1,6 +1,6 @@
 # 44. Measured baseline, top 986 (Ritwik, 2026-10-21) — Gate 1 of doc 42
 
-Method: four read-only queries on the live database, one connection each, statement_timeout 60s, cohort = 986 non-excluded companies in doc/data-moat/team/top1000/shards.csv. Pooler 15 of 60 connections. `analytics.company_data_point_coverage` last built 2026-10-20 18:52 UTC. The table has `has_value` (latest period) and no `has_value_any_period`, so migration 0096 is NOT applied; the figures below are the corrected (latest-period) measure. Evidence class: MEASURED (live query), not projection.
+Method: four read-only queries on the live database, one connection each, statement_timeout 60s, cohort = 986 non-excluded companies in doc/data-moat/team/top1000/shards.csv. Pooler 15 of 60 connections. `analytics.company_data_point_coverage` last built 2026-10-20 18:52 UTC. The table has `has_value` and no `has_value_any_period`, so migration 0096 is NOT applied; CORRECTION 2026-10-22 (Data Triage F2, verified in `coverage_matrix.py` lines 706-722): `has_value` is latest-period for METRIC rows only; CONCEPT rows mean 'a canonical_fact exists at any period'. The figures below are therefore the 'table as stored' measure (K1@1), not a latest-period measure for concept rows; the honest headline K1c (valued AND current) is a proxy of 73.35% (117,890 / 160,718) until the live extract E0 is taken. Evidence class: MEASURED (live query), not projection.
 
 ## Result vs the R1 projection
 | Measure | R1 projection | Measured |

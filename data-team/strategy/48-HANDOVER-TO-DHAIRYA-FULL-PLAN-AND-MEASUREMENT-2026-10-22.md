@@ -28,7 +28,7 @@ Written for: Dhairya (chief of staff), who will run execution with the data and 
 ### 2.2 The KPI tree
 | # | KPI | Exact definition | Baseline (MEASURED 2026-10-21, doc 44) | Gate C | Gate D | Gate E | Owner of number |
 |---|---|---|---|---|---|---|---|
-| K1 | Fill (all cells) | cells with `has_value` (latest period) / 160,718 | 76.7% (123,326) | >= 77.6% (cover-date fix +1,427 cells) | >= 80% (S1: top-10 leaves + engine/feed +5,441 = 80.1%) | >= 84% (ceiling about 85.6% if all ~14,300 defects close) | Triage |
+| K1 | Fill (all cells), K1@1 'table as stored' | cells with `has_value` / 160,718; `has_value` is latest-period for METRIC rows only and any-period for CONCEPT rows (F2) | 76.7% (123,326) | >= 77.6% (cover-date fix +1,427 cells) | >= 80% (S1: top-10 leaves + engine/feed +5,441 = 80.1%) | >= 84% (ceiling about 85.6% if all ~14,300 defects close) | Triage |
 | K2 | Reasonless blanks | blank cells with null `gap_reason` / `cell_state` unclassified | 13,349 | **0** | 0 | 0 | Data Engineer; Triage verifies |
 | K3 | Template coverage | template cells in a non-defect state with evidence / template cells | not yet defined (needs groups, Gate C) | measured, per group | >= 95% T1; 100% T1 defects closed | 100% T2 | Triage |
 | K4 | Defect register | open defects by class (vocabulary, composition, period, ingestion, resolver, evidence) and age | unknown until `cell_state` (blank classes in 44/46 are proxies) | counted | falling weekly | 0 for T1/T2 | Triage |
@@ -46,7 +46,7 @@ Targets for K1/K8 are ASSUMED from S1 and R6 upper bounds and are re-set at Gate
 
 ### 2.3 Baseline queries (reproducible; read-only; `pipeline/.env` DATABASE_URL; one connection; `statement_timeout` 60s; cohort ids from `doc/data-moat/team/top1000/shards.csv`, non-excluded = 986)
 ```sql
--- K1/K2: fill and blanks by reason (analytics.company_data_point_coverage; has_value = latest period)
+-- K1/K2: fill and blanks by reason (analytics.company_data_point_coverage; has_value = latest period for metric rows, any period for concept rows; see K1c)
 select count(*) cells, count(*) filter (where has_value) valued,
        count(*) filter (where not has_value and gap_reason is null) reasonless
 from analytics.company_data_point_coverage where company_id = any(:ids);
@@ -145,3 +145,4 @@ Gate A numbers (K1, K2, K11, defect classes) and any class off by more than one 
 - **Dates** are provisional until scrooner-4d's slot calendar; Gate B is day 13 with four release trains; Gate D splits into non-financial and financial T1.
 - **K13 (group integrity)** wording is replaced: not 'zero wrong in a 30-per-group audit' (invalid for groups over 60) but the group audit standard in doc 49 section 5 and the supported statement 'every member opened against its signature, independent re-read 0 wrong, residual bound at 95%, latest fiscal year only'. D1 / K3 are defined over `catalog_version` (133 lines + about 60 sector rows) and may be claimed only after the detector audit (G+35).
 - **K1c (honest headline):** valued AND current. K1@1 (76.7%) is frozen as 'table as stored' and is overstated because CONCEPT rows count any period (63,127 valued concept cells in the 986: 57,691 with a latest period on or after 2025-07-01, 5,436 older). Proxy K1c = 117,890 / 160,718 = 73.4% (cutoff is a proxy for `common/staleness.py`). K14b removed from the Gate A-E tree (no company dimension in `app.usage_event`). Dates in this file are superseded by doc 49 section 4 (Gate B about G+27, three Data Engineer lanes).
+- **Wording correction (Data Triage, 2026-10-22):** 'latest period' applies to metric rows only; concept rows are any-period. K1c and K7 cannot be computed from the cell export (no periods); the reported 73.35% is a proxy (117,890 / 160,718) until the live extract E0 runs after the 0096/0097 apply. Baseline check passed 59 of 59 (D0 160,718; valued 123,326 = 76.73%; D0e 74.98%).
