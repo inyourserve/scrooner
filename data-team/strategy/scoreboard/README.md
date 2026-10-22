@@ -8,7 +8,7 @@ All figures are functions of a cell extract (`cells/<date>.cells.csv.gz`); nothi
 | `<date>.csv` | long format: H header, K KPI, R reconciliation, M movement rows. Never edited; a correction is `<date>.rN.csv` |
 | `cells/` | the extracts. `2026-10-20.cells.csv.gz` = doc 44 export (sha256 of the decompressed bytes `39df9373...`), the control |
 | `defects/` | proxy defect register (`source = proxy`, DATA-INFERRED, never counted as covered) |
-| `reason_class_map.csv` / `reason_class_map_v2.csv` | frozen maps. v1 is the record behind the 2026-10-20 scoreboard (never edited). v2 is keyed (pattern, data-point family) with root_cause_class, candidate_state, second_signal, queue_verifier_sample; `scripts/reclass_v2.py` publishes old-vs-new K4 in CHAIN.md |
+| `reason_class_map.csv` / `reason_class_map_v2.csv` | frozen maps. v1 is the record behind the 2026-10-20 scoreboard (never edited). v2 is keyed (pattern, data-point family) with root_cause_class, candidate_state, second_signal, queue_verifier_sample; `scripts/reclass_v2.py` publishes old-vs-new K4 in CHAIN.md; `reason_class_map_v2_1.csv` (default) adds the second-review fixes, `scripts/reclass_v2_1.py` |
 | `maps/` | D0 data point list (163) and the D0e removal list (30), both hash-checked |
 | `sql/` | the live queries (written, NOT run by the author); `scripts/extract_live.py` runs them under the gates |
 | `lists/`, `frames/` | the 116 valued-with-reason cells; seeded sampling frames; S4's first-draw exclusions |

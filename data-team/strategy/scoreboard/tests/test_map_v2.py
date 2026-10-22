@@ -274,7 +274,10 @@ class TestRules(Base):
         r = self.c(rows).classify(1, "net_margin")
         self.assertIn("net_income:valued_any_period", r.note)
         self.assertNotIn("valued_latest", r.note)
-        self.assertEqual((r.cls, r.bucket), ("unclassified", "currency_unknown"))
+        self.assertEqual(r.cls, "unclassified")
+        self.assertTrue(r.currency_unknown)  # v2.1: an orthogonal flag, not a bucket
+        leg = L.Classifier(mk(self.d, rows), self.g, self.v2, legacy_bucket=True)
+        self.assertEqual(leg.classify(1, "net_margin").bucket, "currency_unknown")
         # a metric input is valued_latest and leaves no currency doubt
         rows = [
             (1, "cash_conversion_cycle", "f", "incomplete:add"),
@@ -382,7 +385,8 @@ class TestK1cAndManifest(Base):
             )  # 2 valued - 1 with a reason
             self.assertEqual(k[("K7", "all", "D0")]["value"], "0")
             self.assertEqual(
-                k[("K4", "bucket:currency_unknown", "D0")]["k_version"], "proxy@2"
+                k[("K4", "bucket:metric_only_fallback", "D0")]["k_version"],
+                "proxy@2.1",
             )
         finally:
             shutil.rmtree(out)

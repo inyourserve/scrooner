@@ -34,6 +34,7 @@ REASON_MAP = (
     SB_DIR / "reason_class_map.csv"
 )  # v1: the record behind the 2026-10-20 scoreboard
 REASON_MAP_V2 = SB_DIR / "reason_class_map_v2.csv"
+REASON_MAP_V2_1 = SB_DIR / "reason_class_map_v2_1.csv"
 
 # ---- frozen identities (FREEZE-REGISTER-2026-10-22 section 4; doc 44) -------------------
 EXPORT_SHA256 = "39df9373c0125f6785d1b5403c1c7b265e6b84b79f94451e9d764934a81df36d"
@@ -366,6 +367,9 @@ class Result(NamedTuple):
         ""  # sub-bucket under unclassified: currency_unknown | metric_only_fallback
     )
     excl_k1c: bool = False  # valued cell carrying a reason: excluded from K1c
+    # ORTHOGONAL flag (map v2.1, item f): a concept input was valued at "any period", so whether the input
+    # is current is unknown. Applies to any class (period fallbacks too), not only to unclassified.
+    currency_unknown: bool = False
 
 
 NONE_RESULT = Result("", "", "", "valued")
@@ -387,7 +391,15 @@ class Classifier:
     the input is current), otherwise `metric_only_fallback`.
     """
 
-    def __init__(self, extract: Extract, graph: dict, reason_map: dict):
+    def __init__(
+        self,
+        extract: Extract,
+        graph: dict,
+        reason_map: dict,
+        legacy_bucket: bool = False,
+    ):
+        # legacy_bucket=True reproduces the v2 register (currency_unknown as a sub-bucket of unclassified)
+        self.legacy_bucket = legacy_bucket
         self.x = extract
         self.g = graph
         self.m = reason_map
@@ -488,15 +500,19 @@ class Classifier:
             return sub._replace(note=f"via:{name}|" + ";".join(notes), excl_k1c=False)
         bucket = ""
         if row["class"] == "unclassified":
-            bucket = (
-                "currency_unknown" if any_concept_valued else "metric_only_fallback"
-            )
+            if self.legacy_bucket:
+                bucket = (
+                    "currency_unknown" if any_concept_valued else "metric_only_fallback"
+                )
+            elif not any_concept_valued:
+                bucket = "metric_only_fallback"
         return Result(
             row["class"],
             row["owner"],
             row["rf_id"],
             f"walk_no_blank_input|{pat}|" + ";".join(notes),
             bucket=bucket,
+            currency_unknown=any_concept_valued,
             **base,
         )
 
