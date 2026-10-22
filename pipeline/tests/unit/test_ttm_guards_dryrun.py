@@ -91,14 +91,16 @@ def test_composite_is_counted_per_rule():
     _f1, b = dr.evaluate_age(1, "share_buybacks", stale, EXPECTED)
     _f2, d = dr.evaluate_age(1, "dividends_paid", None, EXPECTED)
     found = {f.rule_id: f for f in dr.evaluate_composite(1, [b, d])}
-    assert set(found) == {"tsy.stale_component@1", "tsy.unevidenced_zero@1"}
+    assert set(found) == {"tsy.stale_component@1", "composite.unknown_not_zero@1"}
     assert found["tsy.stale_component@1"].detail == "stale_ttm_input:share_buybacks"
-    assert found["tsy.unevidenced_zero@1"].detail == "unevidenced_zero:dividends_paid"
+    assert (
+        found["composite.unknown_not_zero@1"].detail == "zero_not_proven:dividends_paid"
+    )
     _g, c1 = dr.evaluate_age(1, "share_buybacks", cur, EXPECTED)
     _h, c2 = dr.evaluate_age(1, "dividends_paid", cur, EXPECTED)
     assert dr.evaluate_composite(1, [c1, c2]) == []
     only_absent = dr.evaluate_composite(1, [c1, d])
-    assert [f.rule_id for f in only_absent] == ["tsy.unevidenced_zero@1"]
+    assert [f.rule_id for f in only_absent] == ["composite.unknown_not_zero@1"]
 
 
 def test_summary_counts_the_two_tsy_rules_separately():
@@ -113,7 +115,7 @@ def test_summary_counts_the_two_tsy_rules_separately():
         s["tsy.stale_component@1"]["total_shareholder_yield"]["displayed_cells_now"]
         == 1
     )
-    assert s["tsy.unevidenced_zero@1"]["total_shareholder_yield"][
+    assert s["composite.unknown_not_zero@1"]["total_shareholder_yield"][
         "by_failure_class"
     ] == {"unevidenced_zero": 1}
 

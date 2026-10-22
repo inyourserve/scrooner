@@ -219,8 +219,8 @@ def evaluate_composite(
 ) -> list[Finding]:
     """total_shareholder_yield, counted per RULE (they are separate flags):
     tsy.stale_component@1 = a stale component or windows that do not end together;
-    tsy.unevidenced_zero@1 = a component with no TTM at all (priced as 0 today;
-    dry-run only, so this count is a measurement, never a planned change)."""
+    composite.unknown_not_zero@1 (RF-08 applied to TSY) = a component with no TTM
+    at all (priced as 0 today); hidden as "zero not proven" in the R2 train."""
     d = ttm_guards.composite_decision(company_id, components)
     out = []
     if d.stale_reason:
