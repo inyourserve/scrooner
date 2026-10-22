@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Runs pg_restore from the SAME image as the CI database service (postgres:16 in
+# .github/workflows/ci.yml), so the dump tool and the server can never drift apart.
+#
+# Why (2026-10-21): the 'Exercise backup and restore round trip' CI step failed on every
+# run with 'pg_restore: unrecognized configuration parameter "transaction_timeout"'.
+# The PostgreSQL service is 16.15, but the runner's own client tools were newer (ubuntu-latest
+# is migrating to Ubuntu 26, announced for 2026-10-19) and a newer pg_dump/pg_restore writes
+# 'SET transaction_timeout' (a Postgres 17+ setting) that a 16 server rejects. Keep this image
+# tag equal to the 'postgres:' tag of the service. Override with SCROONER_PG_TOOLS_IMAGE.
+exec docker run --rm --network host --user "$(id -u):$(id -g)" -v /tmp:/tmp \
+  -e PGHOST -e PGPORT -e PGUSER -e PGPASSWORD -e PGDATABASE \
+  "${SCROONER_PG_TOOLS_IMAGE:-postgres:16}" pg_restore "$@"
