@@ -2,6 +2,8 @@
 
 Learning guide: `PLAYBOOK.md` (every problem type: tags, how to spot, fix rule, examples).
 
+> 2026-10-22 (session scrooner-7b): a parallel run covered S010-S102; its per-shard files are in results/ (kept where the same shard already existed upstream, otherwise added) with its versions of duplicated shards in results/session-7b-versions/. Merge: results/ALL-SHARDS-ROOT-CAUSES.md (built from the 7b versions via results/digests/D*.md). Findings only.
+
 Statuses: todo / running / done / reissue (ranking changed). Filled % and unexplained blanks are the 2026-10-18 baseline.
 
 | Shard | Tickers | Filled % | Unexplained blanks | Status |
