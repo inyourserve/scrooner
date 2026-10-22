@@ -710,8 +710,26 @@ def build_coverage(conn: psycopg.Connection) -> dict:
 
         cur.execute(
             """
-            insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value)
-            select c.id, cc.name, (present.company_id is not null)
+            select exists (
+                select 1 from information_schema.columns
+                where table_schema = 'analytics'
+                  and table_name = 'company_data_point_coverage'
+                  and column_name = 'has_value_any_period'
+            )
+            """
+        )
+        has_any_col = bool(cur.fetchone()[0])
+        # Concept rows: has_value keeps its current meaning (a canonical_fact
+        # exists at ANY period); has_value_any_period records that same "ever"
+        # figure explicitly, so when has_value later gets the latest-period
+        # meaning (coverage honesty part 2) K1@1 stays reproducible from this
+        # column. Written only once the column exists (migration 0096).
+        concept_any_col = ", has_value_any_period" if has_any_col else ""
+        concept_any_sel = ", (present.company_id is not null)" if has_any_col else ""
+        cur.execute(
+            f"""
+            insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value{concept_any_col})
+            select c.id, cc.name, (present.company_id is not null){concept_any_sel}
             from core.company c
             cross join analytics.canonical_concept cc
             left join (
@@ -742,17 +760,6 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         # The old "ever had a value" figure is kept in has_value_any_period
         # (migration 0096) so history is not lost; written only once that column
         # exists, so the code is safe to run before the migration is applied.
-        cur.execute(
-            """
-            select exists (
-                select 1 from information_schema.columns
-                where table_schema = 'analytics'
-                  and table_name = 'company_data_point_coverage'
-                  and column_name = 'has_value_any_period'
-            )
-            """
-        )
-        has_any_col = bool(cur.fetchone()[0])
         any_col = ", has_value_any_period" if has_any_col else ""
         any_sel = (
             ",\n                coalesce(agg.has_value_any_period, false)"

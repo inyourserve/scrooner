@@ -242,3 +242,33 @@ def test_latest_period_fill_is_not_ever_filled(monkeypatch) -> None:
     has_value_expr = metric.split("as has_value")[0].rsplit("(array_agg", 1)[1]
     assert "value is not null order by period_end desc, period_start desc, period_label" in has_value_expr
     assert "bool_or" not in has_value_expr
+
+
+def test_concept_rows_write_has_value_any_period(monkeypatch) -> None:
+    # K1@1 ("table as stored") must stay reproducible once concept rows get a
+    # latest-period meaning: the "ever had a value" figure is written for
+    # concept rows too, not only metric rows.
+    stmts = _run_build_statements(monkeypatch)
+    concept = next(s for s in stmts if "cross join analytics.canonical_concept" in s)
+    assert "has_value, has_value_any_period)" in concept
+    assert "(present.company_id is not null), (present.company_id is not null)" in concept
+
+
+def test_concept_rows_skip_has_value_any_period_before_migration_0096(monkeypatch) -> None:
+    import scrooner_pipeline.mapper.coverage_matrix as cm
+
+    class NoColCursor(_FakeCursor):
+        def fetchone(self):  # the information_schema probe says: column absent
+            if "information_schema.columns" in self._conn.statements[-1]:
+                return (False,)
+            return (10, 7)
+
+    class NoColConn(_FakeConn):
+        def cursor(self):
+            return NoColCursor(self)
+
+    _patch_classifiers(monkeypatch, [])
+    conn = NoColConn()
+    cm.build_coverage(conn)  # type: ignore[arg-type]
+    concept = next(s for s in conn.statements if "cross join analytics.canonical_concept" in s)
+    assert "has_value_any_period" not in concept
