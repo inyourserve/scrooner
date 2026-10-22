@@ -86,7 +86,8 @@ jobs:
     needs: filing-index
     if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    # 150 (was 90) on 2026-10-22: the tag-library step below needs more than its old 45 minutes.
+    timeout-minutes: 150
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -211,7 +212,12 @@ jobs:
         # reprocess cohort, and ran 12+ minutes without finishing inside the reprocess
         # step's 20-minute cap. A visible own timeout and timing here shows the real
         # duration; the cohort stages (company_tags, lineage) stay in the reprocess.
-        timeout-minutes: 45
+        #
+        # 2026-10-22: raised 45 -> 90. The 45-minute cap killed this step on 10-21 and
+        # again on the 10-22 manual rerun (OBSERVED, 05:52Z to 06:37Z, no completion);
+        # the standalone full rebuild is documented at about 1 hour. The job cap above
+        # was raised to 150 so the coverage snapshot after it still has room.
+        timeout-minutes: 90
         if: always()
         run: |
           started=$SECONDS
