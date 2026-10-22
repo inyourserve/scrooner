@@ -5,6 +5,12 @@ from pathlib import Path
 
 import typer
 
+from scrooner_pipeline.common.rule_before_image import (
+    manifest,
+    restore_command,
+    write_before_image,
+)
+
 from scrooner_pipeline.db.connection import (
     get_connection,
     run_tolerating_exit_commit_failure,
@@ -18,6 +24,7 @@ from scrooner_pipeline.mapper.concept_fallback import (
     resolve_all_arithmetic_fallbacks,
     resolve_all_balance_sheet_identity_fallbacks,
     resolve_employee_count_fallback,
+    resolve_total_debt_components,
 )
 from scrooner_pipeline.mapper.revenue_resolvers import run_all as run_revenue_resolvers
 from scrooner_pipeline.mapper.dedup_majority_resolver import resolve_all_safe_concepts
@@ -188,6 +195,30 @@ def resolve_concept_fallbacks_cmd(
         lambda conn: resolve_fallbacks(conn, target_ciks),
     )
     typer.echo(f"resolve-concept-fallbacks: {stats}")
+
+
+@app.command("total-debt-dry-run")
+def total_debt_dry_run_cmd(
+    ciks: str = typer.Option(
+        ..., help="Comma-separated CIKs (always explicit; chunks of at most 100)."
+    ),
+    before_image: str = typer.Option(
+        ..., help="Path of the JSONL before-image (cells that would change)."
+    ),
+) -> None:
+    """Rule debt.total_debt_consistency@1 (all sub-rules evaluated as ON) in dry-run: reads
+    core.fact and the stored total_debt_resolved, WRITES NOTHING, saves the before/after cell
+    list and prints the rule-run manifest plus the restore command (flag off + recompute of
+    the manifest ciks)."""
+    target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()}
+    with get_connection() as conn:
+        stats = resolve_total_debt_components(conn, target, dry_run=True)
+    planned = stats.pop("planned")
+    n = write_before_image(Path(before_image), planned)
+    man = manifest("debt.total_debt_consistency@1", planned, flag_state="dry_run")
+    typer.echo(f"total-debt-dry-run: {stats}")
+    typer.echo(f"before-image rows: {n}; manifest: {json.dumps(man)[:400]}")
+    typer.echo(f"restore: {restore_command(man)[:300]}")
 
 
 @app.command("resolve-statement-fallbacks")
