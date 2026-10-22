@@ -51,8 +51,8 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0096 | data-engineer (top-1000 B0a) | `company_data_point_coverage.has_value_any_period` (old ever-filled figure kept) | written and committed, NOT applied (apply after scrooner-82's D2) |
 | 0097 | data-engineer (top-1000 P1) | `analytics.certification_finding` + `analytics.company_certification` (certification suite output) | written and committed, NOT applied |
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | committed (`e7c1b25`) |
-| 0098 | Period Engineer | per-share `gap_cause` CHECK + `analytics.canonical_fact_retired` | claimed, not written/not applied (file written on a held branch only) |
-| 0099 | Period Engineer | split tables `split_event` + `filing_share_basis` | claimed, not written/not applied |
+| 0098 | Period Engineer | per-share `gap_cause` CHECK + `analytics.canonical_fact_retired` | written, schema-only, NOT applied: branch work/period-engineer/migrations-0098-0099 (file byte-identical to held/ru1-per-share 91c6171; the RU-1 code stays held) |
+| 0099 | Period Engineer | split tables `split_event` + `filing_share_basis` (SB-1, empty) | written, schema-only, NOT applied: branch work/period-engineer/migrations-0098-0099 |
 | 0100 | Data Engineer (lane 3) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | claimed, not written/not applied |
 | 0101 | Data Engineer | minimal definition registry (`metric_definition_active` view + one-active-per-name unique index) | claimed, not written/not applied |
 | 0102 | Data Engineer | thin `cell_state` table with run id | claimed, not written/not applied |
