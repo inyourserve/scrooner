@@ -5,6 +5,9 @@ from pathlib import Path
 
 import typer
 
+from scrooner_pipeline.common.cell_blank_reason import PgBlankReasonStore
+from scrooner_pipeline.common.rule_before_image import write_before_image
+
 from scrooner_pipeline.db.connection import (
     get_connection,
     run_tolerating_exit_commit_failure,
@@ -283,16 +286,36 @@ def resolve_employee_count_fallback_cmd(
     ciks: str = typer.Option(
         ..., help="Comma-separated CIKs to restrict to -- no default, always explicit."
     ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Evaluate rule employee_count.no_yfinance_tier@1 as ON and write NOTHING; "
+        "emit the before-image (cells that would become blank) to --before-image.",
+    ),
+    before_image: str = typer.Option(
+        "", help="With --dry-run: path of the JSONL before-image to write."
+    ),
 ) -> None:
     """2026-09-12: employee_count_resolved -- prefers XBRL
     dei:EntityNumberOfEmployees, else core.employee_headcount_disclosure
     (10-K prose extraction), else core.company.y_employee_count
-    (yfinance). See concept_fallback.py's own comment above this
+    (yfinance) unless rule employee_count.no_yfinance_tier@1 is listed in
+    SCROONER_RULES_ENABLED (D-4). See concept_fallback.py's own comment above this
     function for why this is company-level, not period-level, unlike
     every other fallback in that module."""
     target_ciks = {c.strip().zfill(10) for c in ciks.split(",")}
     with get_connection() as conn:
-        stats = resolve_employee_count_fallback(conn, target_ciks)
+        store = PgBlankReasonStore(conn)
+        stats = resolve_employee_count_fallback(
+            conn,
+            target_ciks,
+            dry_run=dry_run,
+            reason_store=store if (not dry_run and store.table_exists()) else None,
+        )
+    planned = stats.pop("planned")
+    if dry_run and before_image:
+        write_before_image(Path(before_image), planned)
+        stats["before_image_rows"] = len(planned)
     typer.echo(f"resolve-employee-count-fallback: {stats}")
 
 
