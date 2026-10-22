@@ -202,6 +202,7 @@ def build(
     prev: L.Extract | None,
     ref_end: dict | None,
     out_dir: Path,
+    map_path: Path | None = None,
 ):
     graph = L.load_graph()
     ids, cohort = L.load_cohort()
@@ -210,6 +211,9 @@ def build(
     keep = set(names) - removed
     ext_sha = L.sha256_decompressed(extract_path)
     qsha = script_sha()
+    map_path = map_path or L.REASON_MAP_V2
+    map_ver = "v2" if Path(map_path).name == L.REASON_MAP_V2.name else "v1"
+    kver = "proxy@2" if map_ver == "v2" else "proxy@1"
     R = Rows(as_of, ext_sha, qsha)
 
     absent_cells, outside, _present = grid_report(ext, ids, names)
@@ -294,10 +298,10 @@ def build(
     H("H.shards_sha256", L.sha256_file(L.SHARDS), "MEASURED", "MEASURED")
     H(
         "H.reason_class_map_sha256",
-        L.sha256_file(L.REASON_MAP),
+        L.sha256_file(map_path),
         "MEASURED",
         "MEASURED",
-        "frozen reason_class_map v1",
+        f"frozen reason_class_map {map_ver}",
     )
     H(
         "H.query_files_git_sha",
@@ -611,15 +615,15 @@ def build(
     if has_periods and ref_end is not None:
         ann, qtr = L.staleness_thresholds()
         stale = 0
+        vwr_current = 0
+        name_set0 = set(names)
         for (cid, dp), c in ext.cells.items():
-            if (
-                dp in set(names)
-                and c["has_value"]
-                and L.is_stale(
-                    c["latest_label"], c["latest_end"], ref_end.get(cid, ""), ann, qtr
-                )
-            ):
+            if dp not in name_set0 or not c["has_value"]:
+                continue
+            if L.is_stale(c["latest_label"], c["latest_end"], ref_end.get(cid, ""), ann, qtr):
                 stale += 1
+            elif c["reason"]:
+                vwr_current += 1  # valued but carries a reason: not counted as current (v2 item 10)
         R.add(
             "K",
             "K7",
@@ -643,16 +647,16 @@ def build(
             "1",
             "all",
             "D0",
-            valued_total - stale,
+            valued_total - stale - vwr_current,
             D0,
-            L.pct(valued_total - stale, D0),
+            L.pct(valued_total - stale - vwr_current, D0),
             "percent",
             "MEASURED",
             "MEASURED",
             wm=wm,
             qfile="sql/K7_reference_end.sql",
             qsha=sql_sha("K7_reference_end.sql"),
-            note="valued AND current; the honest headline, quoted beside K1@1",
+            note="valued AND current and carrying no reason (valued-with-reason cells such as partial:missing_debt_or_cash are excluded, not counted as current); the honest headline, quoted beside K1@1",
         )
     else:
         why = (
@@ -843,9 +847,9 @@ def build(
     )
 
     # K4 proxy
-    rmap = L.load_reason_map()
+    rmap = L.load_reason_map(map_path)
     clf = L.Classifier(ext, graph, rmap)
-    defects, by_class, by_owner = [], Counter(), Counter()
+    defects, by_class, by_owner, by_bucket = [], Counter(), Counter(), Counter()
     name_set = set(names)
     for cid, dp in sorted(ext.cells):
         if dp not in name_set:
@@ -853,7 +857,8 @@ def build(
         c = ext.cells[(cid, dp)]
         if c["has_value"] and not c["reason"]:
             continue
-        cls, owner, rf, note = clf.classify(cid, dp)
+        res = clf.classify(cid, dp)
+        cls, owner = res.cls, res.owner
         state = "valued_with_reason" if c["has_value"] else "blank"
         defects.append(
             (
@@ -864,13 +869,20 @@ def build(
                 c["reason"],
                 cls,
                 owner,
-                rf,
-                note,
+                res.rf,
+                res.note,
+                res.root_cause,
+                res.candidate,
+                res.second_signal,
+                res.bucket,
+                "yes" if res.excl_k1c else "",
             )
         )
         if not c["has_value"]:
             by_class[cls] += 1
             by_owner[owner] += 1
+            if res.bucket:
+                by_bucket[res.bucket] += 1
     for cid, dp in absent_cells:
         defects.append(
             (
@@ -883,6 +895,11 @@ def build(
                 "triage",
                 "",
                 "absent_from_table",
+                "",
+                "",
+                "",
+                "",
+                "",
             )
         )
         by_class["unclassified"] += 1
@@ -912,7 +929,7 @@ def build(
         R.add(
             "K",
             "K4",
-            "proxy@1",
+            kver,
             f"class:{cls}",
             "D0",
             by_class.get(cls, 0),
@@ -929,7 +946,7 @@ def build(
         R.add(
             "K",
             "K4",
-            "proxy@1",
+            kver,
             f"owner:{ow}",
             "D0",
             by_owner.get(ow, 0),
@@ -941,6 +958,16 @@ def build(
             wm=wm,
             qfile=qk,
         )
+
+    if map_ver == "v2":
+        for b in ("currency_unknown", "metric_only_fallback"):
+            R.add("K", "K4", kver, f"bucket:{b}", "D0", by_bucket.get(b, 0), blank_total, by_bucket.get(b, 0),
+                  "cells", "PROXY", "DATA-INFERRED", wm=wm, qfile=qk,
+                  note="sub-bucket of unclassified cascades whose inputs are all valued: currency_unknown = at least one input is a concept row (any period, F2); metric_only_fallback = metric inputs valued at the latest period")
+        R.add("K", "K2c.excluded_from_k1c", "1", "all", "D0", sum(1 for d in defects if d[3] == "valued_with_reason"),
+              valued_total, sum(1 for d in defects if d[3] == "valued_with_reason"), "cells", "PROXY",
+              "DATA-INFERRED", wm=wm, qfile=qk,
+              note="valued cells that carry a reason; excluded from K1c when K1c is measured")
 
     # K4b / K12 baselines REPORTED + live NC
     for cause, n in DOC44_PERIOD_GAPS:
@@ -1201,9 +1228,14 @@ def defects_csv(defects, as_of, ticker, prev_first_seen) -> str:
             "proxy_note",
             "first_seen_scoreboard",
             "last_seen_scoreboard",
+            "root_cause_class",
+            "candidate_state",
+            "second_signal",
+            "unclassified_bucket",
+            "excluded_from_k1c",
         ]
     )
-    for cid, dp, kind, state, reason, cls, owner, rf, note in defects:
+    for cid, dp, kind, state, reason, cls, owner, rf, note, root, cand, second, bucket, excl in defects:
         first = prev_first_seen.get((cid, dp), as_of)
         w.writerow(
             [
@@ -1220,29 +1252,57 @@ def defects_csv(defects, as_of, ticker, prev_first_seen) -> str:
                 note,
                 first,
                 as_of,
+                root,
+                cand,
+                second,
+                bucket,
+                excl,
             ]
         )
     return sio.getvalue()
 
 
+CHAIN_NAME = "CHAIN.md"
+
+
+def _chain_prefix_ok(fp: Path, recorded: str) -> bool:
+    """CHAIN.md is append-only: a recorded hash is valid if some section-boundary prefix of the current
+    file (or the whole file) hashes to it. Edits inside already-published text fail."""
+    data = fp.read_bytes()
+    cuts = {len(data)}
+    start = 0
+    while True:
+        k = data.find(b"\n## ", start)
+        if k < 0:
+            break
+        cuts.add(k + 1)
+        start = k + 1
+    return any(L.sha256_bytes(data[:c]) == recorded for c in cuts)
+
+
 def manifest_append(out_dir: Path, files):
-    """Append-only MANIFEST.sha256; a listed file whose hash changed is a hard error (AT-7.14)."""
+    """Append-only MANIFEST.sha256; a listed file whose hash changed is a hard error (AT-7.14).
+    CHAIN.md alone may grow: every line already recorded for it must still match a prefix."""
     mf = out_dir / "MANIFEST.sha256"
-    known = {}
+    known: dict[str, list[str]] = {}
     if mf.exists():
         for ln in mf.read_text().splitlines():
             if ln.strip():
                 h, _, p = ln.partition("  ")
-                known[p] = h
+                known.setdefault(p, []).append(h)
     new = []
     for f in files:
         rel = str(Path(f).relative_to(out_dir))
         h = L.sha256_file(Path(f))
-        if rel in known and known[rel] != h:
+        hs = known.get(rel, [])
+        if rel == CHAIN_NAME:
+            if any(not _chain_prefix_ok(Path(f), x) for x in hs):
+                raise SystemExit(f"IMMUTABILITY VIOLATION: published text of {rel} was edited (AT-7.14)")
+        elif hs and h not in hs:
             raise SystemExit(
                 f"IMMUTABILITY VIOLATION: {rel} changed since it was published (AT-7.14)"
             )
-        if rel not in known:
+        if h not in hs:
             new.append(f"{h}  {rel}")
     if new:
         with open(mf, "a") as fh:
@@ -1258,9 +1318,14 @@ def verify_manifest(out_dir: Path):
             continue
         h, _, p = ln.partition("  ")
         fp = out_dir / p
-        if not fp.exists() or L.sha256_file(fp) != h:
+        if not fp.exists():
             bad.append(p)
-    return bad
+        elif p == CHAIN_NAME:
+            if not _chain_prefix_ok(fp, h):
+                bad.append(p)
+        elif L.sha256_file(fp) != h:
+            bad.append(p)
+    return list(dict.fromkeys(bad))
 
 
 CHAIN_HEADER = """# Denominator and definition chain (generated by scripts/build_scoreboard.py; never hand-edited)
@@ -1293,6 +1358,12 @@ def main(argv=None):
         "--ref-end", type=Path, help="csv company_id,ref_end from extract_live.py"
     )
     ap.add_argument("--out-dir", type=Path, default=L.SB_DIR)
+    ap.add_argument(
+        "--map",
+        choices=("v1", "v2"),
+        default="v2",
+        help="reason-class map: v2 (default) or v1, the record behind the 2026-10-20 scoreboard",
+    )
     ap.add_argument("--erratum", type=int)
     ap.add_argument("--reason", default="")
     ap.add_argument(
@@ -1321,7 +1392,8 @@ def main(argv=None):
             for r in csv.DictReader(open(a.ref_end, newline=""))
         }
     out = a.out_dir
-    R, defects, absent_cells = build(ext, a.as_of, a.cells, prev, ref, out)
+    map_path = L.REASON_MAP_V2 if a.map == "v2" else L.REASON_MAP
+    R, defects, absent_cells = build(ext, a.as_of, a.cells, prev, ref, out, map_path)
     bad = validate_rows(R.rows)
     if bad:
         print("SCOREBOARD INVALID:\n  " + "\n  ".join(bad), file=sys.stderr)
@@ -1377,7 +1449,7 @@ def main(argv=None):
             L.write_gz_deterministic(Path(a.cells).read_text(), cpath)
     files.append(cpath)
     for extra in (
-        "reason_class_map.csv",
+        Path(map_path).name,
         "TARGETS.csv",
         "maps/d0_datapoints.txt",
         "maps/d0e_removed_30.txt",

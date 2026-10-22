@@ -248,7 +248,7 @@ class TestClassifier(unittest.TestCase):
         clf = L.Classifier(ext, self.g, self.m)
         for (cid, dp), cell in ext.cells.items():
             if not cell["has_value"] or cell["reason"]:
-                cls, owner, _rf, _n = clf.classify(cid, dp)
+                cls, owner = clf.classify(cid, dp)[:2]
                 self.assertIn(cls, L.CLASSES)
                 self.assertIn(owner, L.OWNERS)
         self.assertEqual(sum(clf.unmapped.values()), 0)

@@ -14,3 +14,44 @@ K2@1 = null gap_reason. Targets are in TARGETS.csv (versioned, never edit histor
 | D0e | 131,138 | 98,332 | 74.98% | economic-line cells (founder F-1 pending) |
 | D1 | NOT_COMPUTABLE | | | needs groups v2 and templates v1 (Gate C) |
 
+## Reason map v2: K4 proxy old vs new (2026-10-20 export)
+
+v1 = `reason_class_map.csv` as published in `2026-10-20.csv` (record, unchanged). mid = v1 map run through the v2 classifier (isolates the code fixes: items 1, 7, 8, 11). v2 = `reason_class_map_v2.csv` (sha256 39c905dd5d87f859). All DATA-INFERRED; blank cells only (37,392). Items 3, 5, 6 are queued for a Verifier sample (`frames/verifier_queue_map_v2_2026-10-20.csv`, 10 per row, a proposal).
+
+| class | v1 (published) | mid | v2 | v2 - v1 |
+|---|---|---|---|---|
+| vocabulary | 1,214 | 1,214 | 1,214 | +0 |
+| composition | 0 | 0 | 0 | +0 |
+| period | 4,331 | 4,331 | 6,612 | +2,281 |
+| ingestion | 6 | 6 | 6 | +0 |
+| resolver | 204 | 204 | 16 | -188 |
+| identity | 0 | 0 | 0 | +0 |
+| evidence_pending | 9,943 | 9,943 | 7,070 | -2,873 |
+| definition_pending | 0 | 0 | 716 | +716 |
+| guard_hidden | 0 | 0 | 204 | +204 |
+| finding_open | 0 | 0 | 0 | +0 |
+| filer_error | 0 | 0 | 0 | +0 |
+| unclassified | 21,694 | 21,694 | 21,554 | -140 |
+| total | 37,392 | 37,392 | 37,392 | |
+
+| owner | v1 (published) | mid | v2 | v2 - v1 |
+|---|---|---|---|---|
+| data_engineer_l1 | 0 | 0 | 1,427 | +1,427 |
+| data_engineer_l2 | 210 | 210 | 210 | +0 |
+| period_engineer | 6,741 | 6,741 | 6,612 | -129 |
+| tag_mapper | 1,214 | 1,214 | 1,214 | +0 |
+| standardization_lead | 0 | 0 | 0 | +0 |
+| accountant | 0 | 0 | 716 | +716 |
+| sector_analyst | 7,533 | 7,533 | 5,659 | -1,874 |
+| verifier | 0 | 0 | 0 | +0 |
+| triage | 21,694 | 21,694 | 21,554 | -140 |
+| company_master | 0 | 0 | 0 | +0 |
+
+| unclassified sub-bucket (v2) | cells |
+|---|---|
+| currency_unknown | 4,671 |
+| metric_only_fallback | 0 |
+| (unclassified with no bucket: null reason, no row, other) | 16,883 |
+
+Valued cells with a reason (excluded from K1c when K1c is measured): 116. Cells whose class moved v1 -> v2: 3,326 (`maps/reclass_v1_to_v2_2026-10-20.csv`).
+
