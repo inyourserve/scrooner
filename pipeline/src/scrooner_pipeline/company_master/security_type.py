@@ -32,6 +32,8 @@ import psycopg
 import structlog
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+from scrooner_pipeline.company_master.identity_overrides import load_overrides
+
 logger = structlog.get_logger()
 
 OPENFIGI_URL = "https://api.openfigi.com/v3/mapping"
@@ -284,6 +286,14 @@ def persist_primary_tickers(conn: psycopg.Connection, ciks: set[str]) -> dict:
     convention) than a bare boolean would, so no separate column."""
     resolved = resolve_primary_tickers(conn, ciks)
     now = datetime.now(timezone.utc)
+    # Audited identity overrides (identity.cik_name_ticker@1): a company whose
+    # primary ticker was corrected from filing evidence (Skydance PSKY -> SKYD)
+    # is left alone; the nightly would otherwise pick the alphabetically first.
+    with conn.cursor() as cur:
+        cur.execute("select cik, id from core.company where cik = any(%s)", (sorted(ciks),))
+        id_by_cik = dict(cur.fetchall())
+    pinned = load_overrides(conn, "primary_ticker", id_by_cik.values())
+    ciks = {c for c in ciks if id_by_cik.get(c) not in pinned}
     rows = [
         {
             "cik": cik,

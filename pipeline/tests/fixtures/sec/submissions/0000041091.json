@@ -1,0 +1,86 @@
+{
+ "cik": "0000041091",
+ "name": "GEORGIA POWER CO",
+ "tickers": [
+  "GPJA"
+ ],
+ "exchanges": [
+  "NYSE"
+ ],
+ "formerNames": [],
+ "sic": "4911",
+ "events": [
+  {
+   "accessionNumber": "0000876661-17-000644",
+   "form": "25-NSE",
+   "filingDate": "2017-10-25",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000041091-16-000041",
+   "form": "8-K",
+   "filingDate": "2016-11-15",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0000041091-16-000039",
+   "form": "8-K",
+   "filingDate": "2016-08-22",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0000876661-13-000839",
+   "form": "25-NSE",
+   "filingDate": "2013-11-25",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-12-000405",
+   "form": "25-NSE",
+   "filingDate": "2012-07-16",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-10-000402",
+   "form": "25-NSE",
+   "filingDate": "2010-10-15",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-10-000390",
+   "form": "25-NSE",
+   "filingDate": "2010-10-12",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-10-000388",
+   "form": "25-NSE",
+   "filingDate": "2010-10-12",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-10-000226",
+   "form": "25-NSE",
+   "filingDate": "2010-06-24",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000876661-10-000224",
+   "form": "25-NSE",
+   "filingDate": "2010-06-24",
+   "items": ""
+  },
+  {
+   "accessionNumber": "0000092122-09-000046",
+   "form": "8-K",
+   "filingDate": "2009-05-21",
+   "items": "5.03,9.01"
+  },
+  {
+   "accessionNumber": "0000092122-07-000088",
+   "form": "8-K",
+   "filingDate": "2007-10-11",
+   "items": "5.03,8.01,9.01"
+  }
+ ]
+}
