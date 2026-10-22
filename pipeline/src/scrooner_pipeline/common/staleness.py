@@ -61,6 +61,8 @@ from __future__ import annotations
 from collections.abc import Iterable
 from datetime import date, datetime, timedelta
 
+from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL_ORDERED
+
 ANNUAL_MAX_GAP_DAYS = 400
 QUARTERLY_MAX_GAP_DAYS = 230
 FUTURE_DATE_GRACE_DAYS = 30  # same buffer as screener/resolve.py
@@ -71,20 +73,7 @@ QUARTERLY_LABELS = frozenset({"Q1", "Q2", "Q3", "Q4", "TTM"})
 # The company's "own latest filed period": the latest period_of_report of its
 # periodic reports. Original and amended forms both count (an amendment of an
 # old period has an old period_of_report and cannot move the reference ahead).
-PERIODIC_FORMS = (
-    "10-K",
-    "10-K/A",
-    "10-KT",
-    "10-KT/A",
-    "10-Q",
-    "10-Q/A",
-    "10-QT",
-    "10-QT/A",
-    "20-F",
-    "20-F/A",
-    "40-F",
-    "40-F/A",
-)
+PERIODIC_FORMS = PERIODIC_FORMS_ALL_ORDERED
 
 
 def _as_date(value: date | datetime | str | None) -> date | None:

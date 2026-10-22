@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
 
+from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL
+
 WRONG_VALUE = "wrong_value"
 REVIEW = "review"
 # Counted and shown in the report but NOT stored (the 0097 table only allows
@@ -17,22 +19,7 @@ INVARIANTS = ("I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9", "I10", "I11"
 # Forms whose financial-statement facts may be displayed (data-team/34 I6).
 # Same list as common/staleness.PERIODIC_FORMS; kept as a tuple of the facts'
 # form text. DEF 14A / 8-K / S-1 / 424B are never a source for a statement value.
-PERIODIC_FORMS = frozenset(
-    {
-        "10-K",
-        "10-K/A",
-        "10-KT",
-        "10-KT/A",
-        "10-Q",
-        "10-Q/A",
-        "10-QT",
-        "10-QT/A",
-        "20-F",
-        "20-F/A",
-        "40-F",
-        "40-F/A",
-    }
-)
+PERIODIC_FORMS = PERIODIC_FORMS_ALL
 
 
 def base_name(concept: str) -> str:
