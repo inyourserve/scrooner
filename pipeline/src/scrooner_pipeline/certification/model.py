@@ -14,6 +14,23 @@ INFO = "info"
 
 INVARIANTS = ("I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9", "I10", "I11")
 
+# Reserved ids (Data Engineer lane 2, 2026-10-22; data-team/strategy/team/
+# R6-engineering-design.md section 3). Migration 0097 (amended: invariant ~
+# '^I[0-9]+$') already accepts them, so no later migration is needed to store a
+# finding. They have NO implementation: the structure tables they read
+# (filing_statement_line, filing_calc_edge, company_concept_recipe) do not exist
+# and the plan defers them behind the I1-I11 precision gate. A reserved id is
+# not in INVARIANTS, so it never appears in a count, never certifies anything
+# and is never reported as "clean"; finding() refuses to build one, so no rule
+# can start emitting it by accident. To implement: add the rule module, move the
+# id into INVARIANTS, and re-run the per-rule precision and recall measurement.
+RESERVED_INVARIANTS = {
+    "I12": "structure_disagree: path A (companyfacts) and path B (filing structure) "
+    "disagree on a value; severity review until the Verifier confirms",
+    "I13": "recipe_changed: a company's composition recipe for a concept changes "
+    "between consecutive filings (series break)",
+}
+
 # Forms whose financial-statement facts may be displayed (data-team/34 I6).
 # Same list as common/staleness.PERIODIC_FORMS; kept as a tuple of the facts'
 # form text. DEF 14A / 8-K / S-1 / 424B are never a source for a statement value.
@@ -274,6 +291,10 @@ def finding(
 ) -> Finding:
     """Build a Finding; `cell_or_name` is the offending Cell (name, period and
     value are taken from it) or a plain data-point name."""
+    if invariant in RESERVED_INVARIANTS:
+        raise ValueError(
+            f"{invariant} is reserved and not implemented; it cannot produce findings"
+        )
     if isinstance(cell_or_name, Cell):
         name = cell_or_name.concept
         period_end = period_end or cell_or_name.end

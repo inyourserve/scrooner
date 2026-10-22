@@ -39,7 +39,15 @@ from . import (
     ties,
 )
 from .loader import HISTORY_FLOOR, Registry, load_chunk, load_registry
-from .model import INFO, INVARIANTS, REVIEW, WRONG_VALUE, CompanyData, Finding
+from .model import (
+    INFO,
+    INVARIANTS,
+    RESERVED_INVARIANTS,
+    REVIEW,
+    WRONG_VALUE,
+    CompanyData,
+    Finding,
+)
 
 logger = structlog.get_logger()
 
@@ -386,6 +394,8 @@ def render_summary(result: RunResult) -> str:
         "  state (certified is never set here): "
         + ", ".join(f"{k}={m['states'][k]}" for k in ("checks_clean", "uncertified")),
         "  rule: checks_clean = zero wrong_value AND zero unclassified I11 cells; review/info do not block it",
+        "  reserved, NOT implemented (no result; not 'clean'): "
+        + ", ".join(sorted(RESERVED_INVARIANTS)),
         "  findings by severity: "
         + ", ".join(f"{k}={v}" for k, v in sorted(m["severity"].items())),
         "  wrong_value by invariant: "
