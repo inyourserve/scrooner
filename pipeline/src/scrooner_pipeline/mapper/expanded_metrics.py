@@ -247,7 +247,9 @@ AGE_CONSUMERS = {
 COMPOSITE_COMPONENTS = {"total_shareholder_yield": ("share_buybacks", "dividends_paid")}
 # Filing-evidenced zeros (none exist until lane 1's cell_evidence does).
 ZERO_EVIDENCE: ttm_guards.ZeroEvidence = ttm_guards.NoZeroEvidence()
-UNEVIDENCED_CODE = ttm_guards.UNEVIDENCED_ZERO
+UNEVIDENCED_CODE = ttm_guards.ZERO_NOT_PROVEN
+# Hidden cells are defect(guard_hidden) with this root cause (evidence_pending).
+UNEVIDENCED_ROOT_CAUSE = "evidence_pending"
 
 
 def _guard_reason(code: str, data_point: str) -> str:
@@ -265,6 +267,7 @@ def _record(
     new_value: Decimal | None,
     detail: str,
     consumers: tuple[str, ...],
+    root_cause_class: str | None = None,
 ) -> None:
     as_of = date.today()
     DECISIONS.add(
@@ -295,6 +298,7 @@ def _record(
                     period_end=as_of,
                     rule_id=rule_id,
                     reason_code=reason_code,
+                    root_cause_class=root_cause_class,
                     detail={"input": data_point, "detail": detail},
                 )
             )
@@ -681,6 +685,7 @@ def calculate_expanded_metrics_for_company(
         "dividends_paid": None,
     }
     tsy_block: str | None = None
+    tsy_parts: list[str] = []
     # total_shareholder_yield is governed by its own two rules (Chief decision
     # 2026-10-22): stale/misaligned components may hide it; "no TTM at all" is
     # dry-run only (rule_flags.DRY_RUN_ONLY) and never hides anything.
@@ -750,8 +755,11 @@ def calculate_expanded_metrics_for_company(
                 ("total_shareholder_yield",),
             )
             if tsy_stale_mode == rule_flags.ON and composite.stale_reason:
-                tsy_block = f"guard:{composite.stale_reason}"
-        if tsy_unev_mode != rule_flags.OFF:  # dry_run only: recorded, never applied
+                tsy_parts.append(composite.stale_reason)
+        if tsy_unev_mode != rule_flags.OFF:
+            # RF-08 applied to TSY (Chief ruling 2026-10-22): a component with no TTM
+            # is "zero not proven", not a zero. Hidden cells are
+            # defect(guard_hidden, root_cause evidence_pending); mode dry_run records.
             _record(
                 tsy_unev_mode,
                 rule_flags.RF_TSY_UNEVIDENCED_ZERO,
@@ -763,7 +771,12 @@ def calculate_expanded_metrics_for_company(
                 None,
                 composite.unevidenced_reason or "",
                 ("total_shareholder_yield",),
+                root_cause_class=UNEVIDENCED_ROOT_CAUSE,
             )
+            if tsy_unev_mode == rule_flags.ON and composite.unevidenced_reason:
+                tsy_parts.append(composite.unevidenced_reason)
+        if tsy_parts:
+            tsy_block = "guard:" + ";".join(tsy_parts)
         if age_mode == rule_flags.ON:
             if comps["share_buybacks"].status in (
                 ttm_guards.STALE,

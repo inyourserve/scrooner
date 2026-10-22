@@ -29,7 +29,7 @@ periodic filing (`common/staleness.latest_filed_period_sql`).
   * a missing component is counted as 0 in a composite only with a current TTM
     (a reported zero) or a filing-evidenced zero (`ZeroEvidence`; none exists
     until lane 1's cell_evidence does, so today an absent component hides the
-    composite with reason `unevidenced_zero`).
+    composite with reason `zero_not_proven`).
 
 Parameters are ASSUMED values chosen from the filings-domain notes (data-team/21
 section 2) and the certification thresholds; the dry-run reports the
@@ -57,7 +57,7 @@ EXPECTED_PERIOD_TOLERANCE_DAYS = 7
 # Reason codes (is_null_reason is "guard:<code>[:<data point>]").
 NON_CONTIGUOUS = "non_contiguous_ttm_window"
 STALE_INPUT = "stale_ttm_input"
-UNEVIDENCED_ZERO = "unevidenced_zero"
+ZERO_NOT_PROVEN = "zero_not_proven"  # wording: never "not disclosed"
 MISALIGNED = "misaligned_ttm_windows"
 
 # Window failure classes, reported separately by the dry-run.
@@ -245,8 +245,8 @@ class CompositeDecision:
     """Two independent verdicts (two rules, two flags):
     `stale_reason`  tsy.stale_component@1: a component is stale or the current
                     windows do not end together;
-    `unevidenced_reason` tsy.unevidenced_zero@1: a component has no TTM at all and
-                    no filing-evidenced zero (priced as 0 today; dry-run only)."""
+    `unevidenced_reason` composite.unknown_not_zero@1 (RF-08): a component has no TTM at all and
+                    no filing-evidenced zero (priced as 0 today)."""
 
     stale_reason: str | None
     unevidenced_reason: str | None
@@ -296,7 +296,7 @@ def composite_decision(
         )
     return CompositeDecision(
         ";".join(stale_parts) or None,
-        f"{UNEVIDENCED_ZERO}:{','.join(unevidenced)}" if unevidenced else None,
+        f"{ZERO_NOT_PROVEN}:{','.join(unevidenced)}" if unevidenced else None,
         stale,
         unevidenced,
         misaligned,
