@@ -1397,6 +1397,20 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
         totals["baseline_filled"] += baseline_count
         totals["filled"] += stats.get("filled", 0)
         totals["unsafe_skipped"] += stats.get("unsafe_skipped", 0)
+    # RF-13 revenue-total disagreement guard (flag-gated, default OFF = no-op). Must run after the
+    # revenue fill above (which would re-insert hidden periods) and before the operating-income
+    # arithmetic below (which reads revenue_sanity_resolved).
+    from scrooner_pipeline.common.cell_blank_reason import PgBlankReasonStore
+    from scrooner_pipeline.common.rules_enabled import is_enabled
+    from scrooner_pipeline.mapper import revenue_total_guard
+
+    if is_enabled(revenue_total_guard.RULE_ID):
+        guard_stats = revenue_total_guard.apply_revenue_total_guard(
+            conn, reason_store=PgBlankReasonStore(conn)
+        )
+        guard_stats.pop("planned", None)
+        per_concept["revenue_total_guard"] = guard_stats
+
     oi_arithmetic = resolve_operating_income_arithmetic_fallback(conn)
     per_concept["operating_income_arithmetic"] = oi_arithmetic
     totals["operating_income_arithmetic_filled"] = oi_arithmetic.get("inserted", 0)
