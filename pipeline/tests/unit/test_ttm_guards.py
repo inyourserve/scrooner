@@ -313,7 +313,7 @@ def test_on_hides_mastec_and_stores_reasons(monkeypatch, _fixed_today):
     conn = _conn({EBITDA_ID: MASTEC})
     assert expanded_metrics._ebitda_ttm(conn, 225, EBITDA_ID) is None
     assert rule_flags.DECISIONS.reason_for(225, "ebitda") == ttm_guards.NON_CONTIGUOUS
-    keys = {r.data_point for r in _fixed_today.rows}
+    keys = {r.data_point_name for r in _fixed_today.rows}
     assert keys == set(expanded_metrics.WINDOW_CONSUMERS["ebitda"])
     row = _fixed_today.rows[0]
     assert (row.rule_id, row.state, row.defect_class, row.owner) == (

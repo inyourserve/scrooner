@@ -283,7 +283,7 @@ def _record(
             REASON_SINK.add(
                 BlankReason(
                     company_id=company_id,
-                    data_point=consumer,
+                    data_point_name=consumer,
                     period_grain="TTM",
                     period_start=as_of,
                     period_end=as_of,

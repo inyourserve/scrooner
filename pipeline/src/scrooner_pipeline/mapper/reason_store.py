@@ -6,7 +6,7 @@ FREEZE-REGISTER section 2). It is not on origin/main yet, so this module only
 fixes the shape lane 2's guards write against:
 
   * ``BlankReason``       one reason row; the key fields are the frozen cell key
-                          (company, data_point, period_grain, period_start,
+                          (company, data_point_name, period_grain, period_start,
                           period_end, basis) plus the run id.
   * ``ReasonSink``        what a guard calls; the guard never touches SQL.
   * ``NullReasonSink``    default; drops the row (the metric_value row still
@@ -30,7 +30,7 @@ from typing import Any, Protocol
 # Frozen cell key (FREEZE-REGISTER section 2); run_id is added by the store.
 CELL_KEY_FIELDS = (
     "company_id",
-    "data_point",
+    "data_point_name",
     "period_grain",
     "period_start",
     "period_end",
@@ -53,7 +53,7 @@ ASSUMED_COLUMNS = (
 @dataclass(frozen=True)
 class BlankReason:
     company_id: int
-    data_point: str
+    data_point_name: str
     period_grain: str
     period_start: date | None
     period_end: date | None
@@ -97,5 +97,5 @@ class DbReasonSink:
     def add(self, reason: BlankReason) -> None:
         raise ReasonStoreUnavailable(
             "analytics.cell_blank_reason (migration 0100) is not available on this branch; "
-            "wire lane 1's writer here after it lands"
+            "wire lane 1's writer here after it lands (origin/work/data-engineer/lane1-reason-store: common/cell_store.guard_hidden + write_blank_reasons; map BlankReason -> CellKey + guard_hidden(rule_id, reason_code, owner, input_refs=detail))"
         )
