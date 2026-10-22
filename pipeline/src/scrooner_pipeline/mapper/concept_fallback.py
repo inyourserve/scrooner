@@ -260,25 +260,19 @@ GUARD_PREFERENCE = "r4_preference"
 ALL_DEBT_GUARDS = frozenset(
     {GUARD_CONTAINMENT, GUARD_ZERO, GUARD_FLOOR, GUARD_FALLBACK, GUARD_PARTIAL}
 )
-# Rule ID of the family (registry RF-11). The flag lists this ID to enable every sub-rule, or
-# "<ID>/<guard>" (e.g. debt.total_debt_consistency@1/r5_floor) to enable one.
+# Rule ID of the family (registry RF-11). One flag enables every guard: lane 1's rule_flags accepts
+# only family.rule@N IDs, so there are no per-guard flags (a sub-rule ID with "/" is malformed).
 RULE_DEBT = "debt.total_debt_consistency@1"
 
 
 def debt_guards_active(environ: dict[str, str] | None = None) -> frozenset[str]:
     """Guards enabled through SCROONER_RULES_ENABLED; empty (flag OFF) = pre-guard behaviour,
     byte-identical to the compose-only path."""
-    if is_enabled(RULE_DEBT, environ):
-        return ALL_DEBT_GUARDS
-    return frozenset(
-        g for g in ALL_DEBT_GUARDS if is_enabled(f"{RULE_DEBT}/{g}", environ)
-    )
+    return ALL_DEBT_GUARDS if is_enabled(RULE_DEBT, environ) else frozenset()
 
 
 def debt_preference_guard_active(environ: dict[str, str] | None = None) -> bool:
-    return is_enabled(RULE_DEBT, environ) or is_enabled(
-        f"{RULE_DEBT}/{GUARD_PREFERENCE}", environ
-    )
+    return is_enabled(RULE_DEBT, environ)
 
 
 REASON_UNDECIDABLE_ZERO = (
@@ -999,7 +993,11 @@ def resolve_total_debt_components(
                                     period_end=period_end[period_id],
                                     basis="resolved",
                                     rule_id=RULE_DEBT,
-                                    reason_code="guard_hidden",
+                                    reason_code=(
+                                        decision.guards_fired[-1]
+                                        if decision.guards_fired
+                                        else "total_debt_undecidable"
+                                    ),
                                     detail={
                                         "reason": decision.reason,
                                         "guards_fired": list(decision.guards_fired),
