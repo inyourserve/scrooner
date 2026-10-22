@@ -1341,9 +1341,32 @@ def _find_or_create_instant_period(
         return cur.fetchone()[0]
 
 
-def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) -> dict:
+# D-4 (founder-approved in the freeze register, 2026-10-22): the yfinance tier breaks the
+# standing rule "yfinance is never a stored or displayed value". Behind the rules_enabled flag
+# (default OFF = old behaviour) the tier is skipped and the cell is `not_in_template` until a
+# 10-K prose source has a staleness rule and a Verifier sample. Side effect of the OLD
+# behaviour: each yfinance fill created a core.period instant row dated date.today(); turning the
+# tier off leaves those rows behind (we never delete core.period rows). They are listed by
+# data-team/strategy/tools/de_lane3/d4_today_dated_periods.sql and must be excluded from
+# history/period tests.
+RULE_EMPLOYEE_NO_YFINANCE = "employee_count.no_yfinance_tier@1"
+
+
+def resolve_employee_count_fallback(
+    conn: psycopg.Connection,
+    ciks: set[str],
+    *,
+    dry_run: bool = False,
+    reason_store: BlankReasonStore | None = None,
+    run_id: str | None = None,
+    environ: dict[str, str] | None = None,
+) -> dict:
+    """``dry_run`` evaluates the D-4 rule as ON and writes nothing; the cells it would blank are
+    returned under ``stats["planned"]`` as ``PlannedChange`` rows (the before-image)."""
     primary_id = _concept_id(conn, "employee_count")
     resolved_id = _concept_id(conn, "employee_count_resolved")
+    yf_off = dry_run or is_enabled(RULE_EMPLOYEE_NO_YFINANCE, environ)
+    planned: list[PlannedChange] = []
 
     with conn.cursor() as cur:
         cur.execute(
@@ -1351,13 +1374,15 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
         )
         companies = cur.fetchall()
 
-    stats = {
+    stats: dict[str, Any] = {
         "considered": 0,
         "from_xbrl": 0,
         "from_prose": 0,
         "from_yfinance": 0,
+        "yfinance_skipped": 0,
         "still_null": 0,
         "errored": 0,
+        "planned": planned,
     }
     for company_id, cik in companies:
         stats["considered"] += 1
@@ -1381,6 +1406,7 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
                     merged[period_id] = (Decimal(headcount), [])
                     stats["from_prose"] += 1
 
+            yfinance_skipped = False
             if not merged:
                 with conn.cursor() as cur:
                     cur.execute(
@@ -1388,7 +1414,23 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
                         (company_id,),
                     )
                     y_row = cur.fetchone()
-                if y_row and y_row[0]:
+                if y_row and y_row[0] and yf_off:
+                    stats["yfinance_skipped"] += 1
+                    yfinance_skipped = True
+                    if dry_run:
+                        planned.append(
+                            PlannedChange(
+                                rule_id=RULE_EMPLOYEE_NO_YFINANCE,
+                                cik=cik,
+                                company_id=company_id,
+                                data_point="employee_count_resolved",
+                                period_end=None,
+                                before=Decimal(y_row[0]),
+                                after=None,
+                                reason="not_in_template",
+                            )
+                        )
+                elif y_row and y_row[0]:
                     period_id = _find_or_create_instant_period(
                         conn, company_id, date.today()
                     )
@@ -1397,6 +1439,9 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
 
             if not merged:
                 stats["still_null"] += 1
+
+            if dry_run:
+                continue
 
             with conn.cursor() as cur:
                 cur.execute(
@@ -1420,6 +1465,25 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
                             for period_id, (value, source_fact_ids) in merged.items()
                         ],
                     )
+                if yfinance_skipped and reason_store is not None:
+                    reason_store.replace(
+                        company_id,
+                        RULE_EMPLOYEE_NO_YFINANCE,
+                        run_id or "adhoc",
+                        [
+                            BlankReason(
+                                company_id=company_id,
+                                data_point="employee_count_resolved",
+                                period_grain="instant",
+                                period_start=None,
+                                period_end=None,
+                                basis="resolved",
+                                rule_id=RULE_EMPLOYEE_NO_YFINANCE,
+                                reason_code="not_in_template",
+                                detail={"dropped_source": "yfinance"},
+                            )
+                        ],
+                    )
             conn.commit()
         except Exception:
             logger.warning(
@@ -1428,7 +1492,12 @@ def resolve_employee_count_fallback(conn: psycopg.Connection, ciks: set[str]) ->
             stats["errored"] += 1
             conn.rollback()
 
-    logger.info("concept_fallback.employee_count_resolved_done", **stats)
+    logger.info(
+        "concept_fallback.employee_count_resolved_done",
+        dry_run=dry_run,
+        yfinance_tier_off=yf_off,
+        **{k: v for k, v in stats.items() if k != "planned"},
+    )
     return stats
 
 
