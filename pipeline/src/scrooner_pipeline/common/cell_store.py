@@ -222,6 +222,33 @@ def _flush_reasons(conn: psycopg.Connection, batch: list[dict[str, Any]]) -> int
     return len(batch)
 
 
+def replace_rule_reasons(
+    conn: psycopg.Connection,
+    run_id: str,
+    company_id: int,
+    rule_id: str,
+    reasons: Iterable[BlankReason],
+) -> int:
+    """A guard's per-company write: replace ONLY this rule's rows of this
+    company in this run (delete scope = run + company + rule, never wider),
+    then insert. Every reason must belong to that company and rule. Idempotent
+    on retry; does not commit."""
+    parse_rule_id(rule_id)
+    batch = list(reasons)
+    for r in batch:
+        if r.key.company_id != company_id or r.rule_id != rule_id:
+            raise ValueError(
+                "reason outside the replace scope (company or rule differs)"
+            )
+    with conn.cursor() as cur:
+        cur.execute(
+            "delete from analytics.cell_blank_reason "
+            "where run_id = %s::uuid and company_id = %s and rule_id = %s",
+            (run_id, company_id, rule_id),
+        )
+    return write_blank_reasons(conn, run_id, batch)
+
+
 def delete_run_blank_reasons(conn: psycopg.Connection, run_id: str) -> int:
     """Discard the reasons of one run (a failed or superseded dry run). The
     only delete in this API; its scope is the run_id and nothing else."""
@@ -523,6 +550,7 @@ __all__ = [
     "guard_hidden",
     "load_evidence_jsonl",
     "mark_identity_audit_reversed",
+    "replace_rule_reasons",
     "record_identity_audit",
     "start_rule_run",
     "supersede_evidence",
