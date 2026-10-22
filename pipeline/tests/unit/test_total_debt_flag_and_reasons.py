@@ -117,14 +117,13 @@ def test_flag_off_is_byte_identical_to_the_compose_only_path(facts, monkeypatch)
     assert cf.debt_preference_is_applicable("us-gaap", "ShortTermBorrowings") is True
 
 
-def test_family_flag_enables_all_and_sub_rule_flag_enables_one(monkeypatch):
+def test_family_flag_enables_all_guards_and_there_are_no_sub_rule_flags():
     assert cf.debt_guards_active(ON) == ALL
-    one = {"SCROONER_RULES_ENABLED": f"{cf.RULE_DEBT}/{cf.GUARD_FLOOR}"}
-    assert cf.debt_guards_active(one) == frozenset({cf.GUARD_FLOOR})
-    assert cf.debt_preference_guard_active(one) is False
-    assert cf.debt_preference_guard_active(
-        {"SCROONER_RULES_ENABLED": f"{cf.RULE_DEBT}/{cf.GUARD_PREFERENCE}"}
-    )
+    assert cf.debt_preference_guard_active(ON)
+    assert cf.debt_guards_active({}) == frozenset()
+    # lane 1's rule_flags rejects a sub-rule ID (it is not family.rule@N)
+    with pytest.raises(ValueError):
+        cf.debt_guards_active({"SCROONER_RULES_ENABLED": f"{cf.RULE_DEBT}/r5_floor"})
 
 
 # ------------------------------------------------------------------ R5 floor exemption
@@ -305,10 +304,10 @@ def test_blocked_instant_reason_is_persisted_with_its_dates_and_rule_id():
     r = rows[0]
     assert (r.data_point, r.period_grain, r.period_end, r.rule_id, r.reason_code) == (
         "total_debt_resolved",
-        "instant",
+        "I",
         date(2016, 12, 31),
         cf.RULE_DEBT,
-        "guard_hidden",
+        "r6_fallback_overcount",
     )
     assert r.detail["reason"] == cf.REASON_UNDECIDABLE_FALLBACK
     assert stats["reasons_written"] == 1 and stats["rows_written"] == 1
@@ -322,7 +321,14 @@ def test_blocked_instant_reason_is_persisted_with_its_dates_and_rule_id():
 def test_reason_replace_scope_is_own_rule_and_company():
     store = InMemoryBlankReasonStore()
     foreign = cf.BlankReason(
-        2, "x", "instant", None, None, "resolved", "other.rule@1", "guard_hidden"
+        2,
+        "x",
+        "instant",
+        date(2016, 12, 31),
+        date(2016, 12, 31),
+        "resolved",
+        "other.rule@1",
+        "r5_floor",
     )
     with pytest.raises(ValueError):
         store.replace(1, cf.RULE_DEBT, "r1", [foreign])
