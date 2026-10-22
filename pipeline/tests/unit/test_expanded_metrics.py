@@ -8,11 +8,21 @@ from test_price_metrics import PriceConnection, quarterly
 
 
 OUTPUT_NAMES = (
-    "net_debt_ebitda", "institutional_ownership_pct", "share_dilution_trend",
-    "cash_conversion_cycle", "ev_ebitda", "ev_sales", "peg_ratio",
-    "buyback_yield", "total_shareholder_yield",
+    "net_debt_ebitda",
+    "institutional_ownership_pct",
+    "share_dilution_trend",
+    "cash_conversion_cycle",
+    "ev_ebitda",
+    "ev_sales",
+    "peg_ratio",
+    "buyback_yield",
+    "total_shareholder_yield",
     # Added 2026-09-05 (financials display spec gap-fill).
-    "ebitda_margin", "debt_to_ebitda", "fcf_per_share", "share_repurchases_pct_fcf", "dividends_pct_fcf",
+    "ebitda_margin",
+    "debt_to_ebitda",
+    "fcf_per_share",
+    "share_repurchases_pct_fcf",
+    "dividends_pct_fcf",
     # Added 2026-09-08 (Data Sanity Layer finding): a TTM `ebitda` row --
     # "ebitda" moved here from DEPENDENCY_NAMES below. NOT a contradiction
     # of the delete-scope safety this test file exists to enforce: the
@@ -24,16 +34,25 @@ OUTPUT_NAMES = (
     "ebitda",
 )
 DEPENDENCY_NAMES = (
-    "market_cap", "trailing_pe", "eps_growth_yoy", "dividend_yield",
-    "debtor_days", "inventory_days", "payables_days",
+    "market_cap",
+    "trailing_pe",
+    "eps_growth_yoy",
+    "dividend_yield",
+    "debtor_days",
+    "inventory_days",
+    "payables_days",
     "fcf",
 )
 METRIC_IDS = {name: idx for idx, name in enumerate(OUTPUT_NAMES + DEPENDENCY_NAMES, 1)}
 CONCEPT_IDS = {
     # total_debt_resolved, not total_debt, since 2026-09-02 (doc 40) --
     # expanded_metrics.py now reads the fallback-merged concept.
-    "total_debt_resolved": 101, "cash_and_equivalents": 102, "revenue": 103,
-    "share_buybacks": 104, "shares_outstanding": 105, "dividends_paid": 106,
+    "total_debt_resolved": 101,
+    "cash_and_equivalents": 102,
+    "revenue": 103,
+    "share_buybacks": 104,
+    "shares_outstanding": 105,
+    "dividends_paid": 106,
 }
 
 
@@ -53,30 +72,63 @@ def test_all_expanded_composite_metrics_compute_with_expected_semantics(monkeypa
         METRIC_IDS["inventory_days"]: Decimal("60"),
         METRIC_IDS["payables_days"]: Decimal("30"),
     }
-    monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda _conn, _company, concept: instant.get(concept))
-    monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda _conn, _company, _metric: Decimal("20"))
-    monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda _conn, _company, _metric: Decimal("50"))
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_latest_instant_fact",
+        lambda _conn, _company, concept: instant.get(concept),
+    )
+    monkeypatch.setattr(
+        expanded_metrics, "_ebitda_ttm", lambda _conn, _company, _metric: Decimal("20")
+    )
+    monkeypatch.setattr(
+        expanded_metrics, "_fcf_ttm", lambda _conn, _company, _metric: Decimal("50")
+    )
     # This fixture's toy-scale numbers (revenue_ttm=200) are well below
     # the real materiality floor added 2026-09-27 -- lower it to 0 here
     # so this test keeps exercising ebitda_margin's normal ratio path,
     # not the new immaterial-base null (that path has its own dedicated
     # test, test_ebitda_margin_nulls_on_immaterial_revenue_base below).
     monkeypatch.setattr(expanded_metrics, "REVENUE_TTM_MATERIALITY_FLOOR", Decimal("0"))
-    monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda _conn, _company, metric: dependency_values.get(metric))
-    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda _conn, _company: Decimal("60"))
-    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (Decimal("100"), Decimal("80")))
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_latest_metric_value",
+        lambda _conn, _company, metric: dependency_values.get(metric),
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_institutional_ownership_shares",
+        lambda _conn, _company: Decimal("60"),
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_shares_outstanding_now_and_1y_ago",
+        lambda *_args: (Decimal("100"), Decimal("80")),
+    )
     monkeypatch.setattr(
         expanded_metrics,
         "_load_quarterly_facts",
-        lambda _conn, _company, concept: {103: quarterly("50", 10), 104: quarterly("5", 20), 106: quarterly("2", 30)}[concept],
+        lambda _conn, _company, concept: {
+            103: quarterly("50", 10),
+            104: quarterly("5", 20),
+            106: quarterly("2", 30),
+        }[concept],
     )
     conn = PriceConnection()
 
-    stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
-    rows = {name: next(r for r in conn.rows if r["metric_definition_id"] == METRIC_IDS[name]) for name in OUTPUT_NAMES}
+    stats = expanded_metrics.calculate_expanded_metrics_for_company(
+        conn, 1, METRIC_IDS, CONCEPT_IDS
+    )
+    rows = {
+        name: next(
+            r for r in conn.rows if r["metric_definition_id"] == METRIC_IDS[name]
+        )
+        for name in OUTPUT_NAMES
+    }
 
     assert stats == {"computed": 15, "null": 0}
-    assert rows["ebitda"]["value"] == Decimal("20")  # the persisted TTM sum itself, mocked via _ebitda_ttm
+    assert rows["ebitda"]["value"] == Decimal(
+        "20"
+    )  # the persisted TTM sum itself, mocked via _ebitda_ttm
     assert rows["net_debt_ebitda"]["value"] == Decimal("1.5")
     assert rows["institutional_ownership_pct"]["value"] == Decimal("0.6")
     assert rows["share_dilution_trend"]["value"] == Decimal("0.25")
@@ -124,19 +176,40 @@ def test_upsert_scope_excludes_dependency_metric_ids(monkeypatch):
     isolation property itself is unchanged, just verified against the
     upserted rows instead of a DELETE's params."""
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
+    monkeypatch.setattr(
+        expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None
+    )
     monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (None, None))
+    monkeypatch.setattr(
+        expanded_metrics, "_institutional_ownership_shares", lambda *_args: None
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_shares_outstanding_now_and_1y_ago",
+        lambda *_args: (None, None),
+    )
     monkeypatch.setattr(expanded_metrics, "_load_quarterly_facts", lambda *_args: {})
     conn = PriceConnection()
 
-    expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    expanded_metrics.calculate_expanded_metrics_for_company(
+        conn, 1, METRIC_IDS, CONCEPT_IDS
+    )
 
-    delete_calls = [(sql, params) for sql, params in conn.executed if sql.strip().lower().startswith("delete")]
-    assert delete_calls == []  # no separate delete step anymore -- upsert is atomic per row
+    # 2026-10-22: the write is lock + scoped delete + upsert in ONE transaction
+    # (superseded per-day TTM rows no longer pile up). The delete must be
+    # scoped to the OUTPUT ids only -- never the dependency metrics.
+    delete_calls = [
+        (sql, params)
+        for sql, params in conn.executed
+        if sql.strip().lower().startswith("delete")
+    ]
+    assert len(delete_calls) == 1
+    delete_sql, (company, deleted_ids) = delete_calls[0]
+    assert "period_label = 'TTM'" in delete_sql and company == 1
+    assert set(deleted_ids) == {METRIC_IDS[name] for name in OUTPUT_NAMES}
+    assert set(deleted_ids).isdisjoint({METRIC_IDS[name] for name in DEPENDENCY_NAMES})
 
     written_ids = {row["metric_definition_id"] for row in conn.rows}
     dependency_ids = {METRIC_IDS[name] for name in DEPENDENCY_NAMES}
@@ -156,16 +229,26 @@ def test_write_uses_upsert_not_delete_then_insert(monkeypatch):
     ~16-minute window). An atomic upsert (INSERT ... ON CONFLICT DO
     UPDATE) closes that window entirely."""
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
+    monkeypatch.setattr(
+        expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None
+    )
     monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (None, None))
+    monkeypatch.setattr(
+        expanded_metrics, "_institutional_ownership_shares", lambda *_args: None
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_shares_outstanding_now_and_1y_ago",
+        lambda *_args: (None, None),
+    )
     monkeypatch.setattr(expanded_metrics, "_load_quarterly_facts", lambda *_args: {})
     conn = PriceConnection()
 
-    expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    expanded_metrics.calculate_expanded_metrics_for_company(
+        conn, 1, METRIC_IDS, CONCEPT_IDS
+    )
 
     insert_sqls = [sql for sql, _rows in conn.executemany_calls]
     assert len(insert_sqls) == 1
@@ -183,20 +266,43 @@ def test_total_shareholder_yield_null_not_crash_when_market_cap_is_zero(monkeypa
     instead of nulling like buyback_yield's own market_cap==0 guard
     right above it already does."""
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
+    monkeypatch.setattr(
+        expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None
+    )
     monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda _conn, _company, metric: Decimal("0") if metric == METRIC_IDS["market_cap"] else None)
-    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (Decimal("100"), Decimal("80")))
-    monkeypatch.setattr(expanded_metrics, "_load_quarterly_facts", lambda _conn, _company, concept: {103: {}, 104: {}, 106: {}}[concept])
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_latest_metric_value",
+        lambda _conn, _company, metric: (
+            Decimal("0") if metric == METRIC_IDS["market_cap"] else None
+        ),
+    )
+    monkeypatch.setattr(
+        expanded_metrics, "_institutional_ownership_shares", lambda *_args: None
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_shares_outstanding_now_and_1y_ago",
+        lambda *_args: (Decimal("100"), Decimal("80")),
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_load_quarterly_facts",
+        lambda _conn, _company, concept: {103: {}, 104: {}, 106: {}}[concept],
+    )
     conn = PriceConnection()
 
-    stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    stats = expanded_metrics.calculate_expanded_metrics_for_company(
+        conn, 1, METRIC_IDS, CONCEPT_IDS
+    )
     rows = {r["metric_definition_id"]: r for r in conn.rows}
 
     assert rows[METRIC_IDS["total_shareholder_yield"]]["value"] is None
-    assert rows[METRIC_IDS["total_shareholder_yield"]]["is_null_reason"] == "zero_denominator"
+    assert (
+        rows[METRIC_IDS["total_shareholder_yield"]]["is_null_reason"]
+        == "zero_denominator"
+    )
 
 
 @pytest.mark.unit
@@ -209,12 +315,22 @@ def test_ebitda_margin_nulls_on_immaterial_revenue_base(monkeypatch):
     million-dollar operating losses) is what plausibility_check.py's
     operating_margin/ebitda_margin clusters traced back to."""
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: Decimal("-20000000"))
+    monkeypatch.setattr(
+        expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None
+    )
+    monkeypatch.setattr(
+        expanded_metrics, "_ebitda_ttm", lambda *_args: Decimal("-20000000")
+    )
     monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (None, None))
+    monkeypatch.setattr(
+        expanded_metrics, "_institutional_ownership_shares", lambda *_args: None
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_shares_outstanding_now_and_1y_ago",
+        lambda *_args: (None, None),
+    )
     monkeypatch.setattr(
         expanded_metrics,
         "_load_quarterly_facts",
@@ -233,40 +349,71 @@ def test_ebitda_margin_nulls_on_immaterial_revenue_base(monkeypatch):
     )
     conn = PriceConnection()
 
-    stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    stats = expanded_metrics.calculate_expanded_metrics_for_company(
+        conn, 1, METRIC_IDS, CONCEPT_IDS
+    )
     rows = {r["metric_definition_id"]: r for r in conn.rows}
 
     assert rows[METRIC_IDS["ebitda_margin"]]["value"] is None
-    assert rows[METRIC_IDS["ebitda_margin"]]["is_null_reason"] == "immaterial_revenue_base"
+    assert (
+        rows[METRIC_IDS["ebitda_margin"]]["is_null_reason"] == "immaterial_revenue_base"
+    )
 
 
 @pytest.mark.unit
 def test_expanded_price_metrics_null_when_market_cap_is_missing(monkeypatch):
     monkeypatch.setattr(expanded_metrics, "_latest_instant_fact", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None)
+    monkeypatch.setattr(
+        expanded_metrics, "_load_shares_outstanding_fallback", lambda *_args: None
+    )
     monkeypatch.setattr(expanded_metrics, "_ebitda_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_fcf_ttm", lambda *_args: None)
     monkeypatch.setattr(expanded_metrics, "_latest_metric_value", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_institutional_ownership_shares", lambda *_args: None)
-    monkeypatch.setattr(expanded_metrics, "_shares_outstanding_now_and_1y_ago", lambda *_args: (None, None))
+    monkeypatch.setattr(
+        expanded_metrics, "_institutional_ownership_shares", lambda *_args: None
+    )
+    monkeypatch.setattr(
+        expanded_metrics,
+        "_shares_outstanding_now_and_1y_ago",
+        lambda *_args: (None, None),
+    )
     monkeypatch.setattr(expanded_metrics, "_load_quarterly_facts", lambda *_args: {})
     conn = PriceConnection()
 
-    stats = expanded_metrics.calculate_expanded_metrics_for_company(conn, 1, METRIC_IDS, CONCEPT_IDS)
+    stats = expanded_metrics.calculate_expanded_metrics_for_company(
+        conn, 1, METRIC_IDS, CONCEPT_IDS
+    )
     rows = {r["metric_definition_id"]: r for r in conn.rows}
 
     assert stats == {"computed": 0, "null": 15}
-    assert rows[METRIC_IDS["ebitda"]]["is_null_reason"] == "missing:4_consecutive_quarters"
-    assert rows[METRIC_IDS["cash_conversion_cycle"]]["is_null_reason"] == "missing:debtor_days"
-    for name in ("ev_ebitda", "ev_sales", "peg_ratio", "buyback_yield", "total_shareholder_yield"):
+    assert (
+        rows[METRIC_IDS["ebitda"]]["is_null_reason"] == "missing:4_consecutive_quarters"
+    )
+    assert (
+        rows[METRIC_IDS["cash_conversion_cycle"]]["is_null_reason"]
+        == "missing:debtor_days"
+    )
+    for name in (
+        "ev_ebitda",
+        "ev_sales",
+        "peg_ratio",
+        "buyback_yield",
+        "total_shareholder_yield",
+    ):
         assert rows[METRIC_IDS[name]]["is_null_reason"] == "missing:market_cap"
     # Added 2026-09-05 -- all 5 new metrics are price-INDEPENDENT, so they
     # null for their own specific missing-input reasons, not market_cap.
     assert rows[METRIC_IDS["ebitda_margin"]]["is_null_reason"] == "missing:ebitda_ttm"
     assert rows[METRIC_IDS["debt_to_ebitda"]]["is_null_reason"] == "missing:total_debt"
     assert rows[METRIC_IDS["fcf_per_share"]]["is_null_reason"] == "missing:fcf_ttm"
-    assert rows[METRIC_IDS["share_repurchases_pct_fcf"]]["is_null_reason"] == "missing:share_buybacks_ttm"
-    assert rows[METRIC_IDS["dividends_pct_fcf"]]["is_null_reason"] == "missing:dividends_paid_ttm"
+    assert (
+        rows[METRIC_IDS["share_repurchases_pct_fcf"]]["is_null_reason"]
+        == "missing:share_buybacks_ttm"
+    )
+    assert (
+        rows[METRIC_IDS["dividends_pct_fcf"]]["is_null_reason"]
+        == "missing:dividends_paid_ttm"
+    )
 
 
 class _FetchCursor:

@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0107** (0098-0106 claimed 2026-10-22 below, none written/applied on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0108** (0098-0107 claimed 2026-10-22 below, none written/applied on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -60,6 +60,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0104 | (unassigned) | `company_group` + `metric_template` (after design review) | claimed, not written/not applied |
 | 0105 | (unassigned) | output_versioning | claimed, not written/not applied |
 | 0106 | (unassigned) | `slot_observation` (optional) | claimed, not written/not applied |
+| 0107 | Data Engineer (lane 2) | one-time archive + cleanup of superseded `expanded_metrics` TTM rows (`metric_value_ttm_archive` + `archive_superseded_expanded_ttm()`); file written on branch `work/data-engineer/lane2-ttm-row-cleanup`, NOT applied | claimed, written, not applied |
 
 ## scrooner-98 queue (lane A)
 

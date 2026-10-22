@@ -315,6 +315,62 @@ def _institutional_ownership_shares(
         return row[0] if row and row[0] is not None else None
 
 
+# Advisory-lock namespace for this stage's per-company write (first key of
+# pg_advisory_xact_lock(int, int); the second key is the company id).
+TTM_WRITE_LOCK_NAMESPACE = 0x45584D54  # "EXMT"
+
+
+def _replace_ttm_rows(
+    conn: psycopg.Connection,
+    company_id: int,
+    metric_ids: dict[str, int],
+    rows: list[dict],
+) -> None:
+    """Replace this company's TTM rows of the metrics this stage OWNS, in one
+    transaction under a per-company advisory lock.
+
+    Every row here is stamped period_start = period_end = the compute date, so
+    an insert-only (upsert) writer left one TTM row per metric per day forever
+    (found 2026-10-22, cleanup migration 0107). The delete is scoped to
+    (company, OUTPUT_METRIC_NAMES ids, period_label = 'TTM'): the dependency
+    metrics this module only reads (market_cap, trailing_pe, ...) and the
+    Q1-Q4/FY rows of `ebitda` are never touched (the 2026-09-03 wipe bug).
+    The transaction-level advisory lock serialises two writers for the same
+    company (the 2026-09-09/10 UniqueViolation race that moved this write to an
+    upsert); it is released by the commit. `rows` always holds every output
+    metric, so nothing is deleted without a replacement."""
+    owned = sorted(
+        metric_ids[name] for name in OUTPUT_METRIC_NAMES if name in metric_ids
+    )
+    with conn.cursor() as cur:
+        cur.execute(
+            "select pg_advisory_xact_lock(%s, %s)",
+            (TTM_WRITE_LOCK_NAMESPACE, company_id),
+        )
+        cur.execute(
+            "delete from analytics.metric_value "
+            "where company_id = %s and metric_definition_id = any(%s) and period_label = 'TTM'",
+            (company_id, owned),
+        )
+        cur.executemany(
+            """
+            insert into analytics.metric_value
+                (company_id, metric_definition_id, period_start, period_end, period_label,
+                 value, is_null_reason, source_fact_ids)
+            values
+                (%(company_id)s, %(metric_definition_id)s, %(period_start)s, %(period_end)s, %(period_label)s,
+                 %(value)s, %(is_null_reason)s, %(source_fact_ids)s)
+            on conflict (company_id, metric_definition_id, period_start, period_end, period_label)
+            do update set
+                value = excluded.value,
+                is_null_reason = excluded.is_null_reason,
+                source_fact_ids = excluded.source_fact_ids
+            """,
+            rows,
+        )
+        conn.commit()
+
+
 def calculate_expanded_metrics_for_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -701,41 +757,7 @@ def calculate_expanded_metrics_for_company(
                 )
             )
 
-    with conn.cursor() as cur:
-        # Upsert, not delete-then-insert -- found live 2026-09-09/10: this
-        # module's rows are all anchored on period_start=period_end=
-        # date.today() (an "as of now" composite), so two concurrent
-        # invocations for the SAME company on the SAME calendar day (e.g.
-        # a manual run overlapping the daily cron, or two dev sessions on
-        # this shared environment) target the identical primary key and
-        # can race -- one process's INSERT landing between another's
-        # DELETE and its own INSERT raises a real UniqueViolation
-        # (metric_value_company_id_metric_definition_id_period_start_p_key),
-        # confirmed live: 6 real companies hit exactly this in one ~16-
-        # minute window. Safe to upsert instead of delete-first here
-        # specifically because `rows` always contains a full entry for
-        # every OUTPUT_METRIC_NAMES metric on every call (never a partial
-        # subset short-circuited early) -- so there's no "stale row from a
-        # metric this run didn't recompute" case an upsert would leave
-        # behind. ON CONFLICT is atomic per row, so it can't race with
-        # itself the way delete-then-insert could.
-        cur.executemany(
-            """
-            insert into analytics.metric_value
-                (company_id, metric_definition_id, period_start, period_end, period_label,
-                 value, is_null_reason, source_fact_ids)
-            values
-                (%(company_id)s, %(metric_definition_id)s, %(period_start)s, %(period_end)s, %(period_label)s,
-                 %(value)s, %(is_null_reason)s, %(source_fact_ids)s)
-            on conflict (company_id, metric_definition_id, period_start, period_end, period_label)
-            do update set
-                value = excluded.value,
-                is_null_reason = excluded.is_null_reason,
-                source_fact_ids = excluded.source_fact_ids
-            """,
-            rows,
-        )
-        conn.commit()
+    _replace_ttm_rows(conn, company_id, metric_ids, rows)
 
     computed = sum(1 for r in rows if r["value"] is not None)
     null = sum(1 for r in rows if r["value"] is None)
