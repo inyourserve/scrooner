@@ -31,6 +31,7 @@ Deliberately generalized (not hardcoded to total_debt's two concept
 names) so a future `sum`-mode concept needing the same fallback reuses
 this directly."""
 
+from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
 from typing import Any
@@ -105,6 +106,112 @@ TOTAL_DEBT_TAGS = (
     + DEBT_CARRYING_CHECK
     + DEBT_CONVERTIBLE_NOTES_FALLBACK
 )
+
+# --- total_debt guards (2026-10-21, Tag Mapper results file 31 section B) ---
+# Instrument-level borrowing tags. They are NEVER summed into a total here
+# (that is the proposal-only R3 composition); they are read only by the R5
+# guards below, because a published total cannot be smaller than one of its
+# own parts and a total of 0 cannot sit beside a nonzero debt tag. Each tag
+# is a real us-gaap borrowing element; DebtInstrumentCarryingAmount is
+# deliberately absent (gross, per-instrument cross-check only).
+DEBT_INSTRUMENT_TAGS = (
+    "NotesPayable",
+    "NotesPayableCurrent",
+    "LongTermNotesPayable",
+    "LongTermLineOfCredit",
+    "SeniorNotes",
+    "SubordinatedDebt",
+    "AdvancesFromFederalHomeLoanBanks",
+    "LineOfCredit",
+    "LinesOfCreditCurrent",
+    "ConvertibleNotesPayable",
+    "ConvertibleNotesPayableCurrent",
+    "ConvertibleDebt",
+    "ConvertibleDebtCurrent",
+    "ConvertibleDebtNoncurrent",
+    "LoansPayable",
+    "LoansPayableCurrent",
+    "LongTermLoansPayable",
+    "SecuredDebt",
+    "SecuredDebtCurrent",
+    "UnsecuredDebt",
+    "UnsecuredDebtCurrent",
+    "OtherLongTermDebt",
+    "OtherLongTermDebtNoncurrent",
+    "OtherLongTermDebtCurrent",
+    "OtherShortTermBorrowings",
+    "OtherBorrowings",
+    "OtherNotesPayable",
+    "OtherNotesPayableCurrent",
+    "ShortTermBankLoansAndNotesPayable",
+    "SecuredLongTermDebt",
+    "UnsecuredLongTermDebt",
+    "NotesAndLoansPayable",
+    "NotesAndLoansPayableCurrent",
+    "SeniorLongTermNotes",
+    "SeniorNotesCurrent",
+    "JuniorSubordinatedNotes",
+    "SubordinatedDebtCurrent",
+    "SubordinatedLongTermDebt",
+    "NotesPayableToBank",
+    "NotesPayableToBankCurrent",
+    "NotesPayableToBankNoncurrent",
+    "LoansPayableToBank",
+    "LoansPayableToBankCurrent",
+    "CommercialPaperAtCarryingValue",
+    "LongTermNotesAndLoans",
+    "ConvertibleSubordinatedDebt",
+    "ConvertibleSubordinatedDebtCurrent",
+    "ConvertibleSubordinatedDebtNoncurrent",
+    "NonRecourseDebt",
+    "ShortTermNonBankLoansAndNotesPayable",
+    "WarehouseAgreementBorrowings",
+    "OtherLongTermNotesPayable",
+    "OtherLoansPayable",
+    "OtherLoansPayableCurrent",
+    "OtherLoansPayableLongTerm",
+    "SecuredDebtOther",
+)
+# Role tags that can select a composition path (every tag compute_total_debt
+# can sum or pick), minus the gross carrying-amount cross-check.
+DEBT_ROLE_TAGS = tuple(t for t in TOTAL_DEBT_TAGS if t not in DEBT_CARRYING_CHECK)
+# Tags the floor guard compares against (instrument tags plus the
+# convertible last-resort tag, which is itself an instrument).
+DEBT_FLOOR_TAGS = DEBT_INSTRUMENT_TAGS + DEBT_CONVERTIBLE_NOTES_FALLBACK
+# Everything the resolver must load per balance-sheet date.
+TOTAL_DEBT_LOAD_TAGS = TOTAL_DEBT_TAGS + DEBT_INSTRUMENT_TAGS
+
+# R5 floor tolerance: the published total may sit below a single filed
+# instrument tag by at most this fraction of that tag.
+DEBT_FLOOR_TOLERANCE = Decimal("0.02")
+
+GUARD_CONTAINMENT = "r1_containment"
+GUARD_ZERO = "r5_zero"
+GUARD_FLOOR = "r5_floor"
+ALL_DEBT_GUARDS = frozenset({GUARD_CONTAINMENT, GUARD_ZERO, GUARD_FLOOR})
+
+REASON_UNDECIDABLE_ZERO = (
+    "debt composition undecidable: total would be 0 while a debt tag is nonzero"
+)
+REASON_UNDECIDABLE_FLOOR = (
+    "debt composition undecidable: total is below a single filed debt instrument tag"
+)
+
+# R4: a total_debt company_tag_preference is honoured only when the
+# preferred tag is itself a TOTAL. Every one of the 41 preference rows
+# existing on 2026-10-21 names a single component (LongTermDebt,
+# DebtCurrent, ShortTermBorrowings, OtherLongTermDebtNoncurrent,
+# SecuredDebtCurrent), e.g. WFC ShortTermBorrowings 18,323M while its
+# face debt is 193,035M.
+DEBT_TOTAL_PREFERENCE_TAGS = frozenset(DEBT_ALL_IN + DEBT_ALL_IN_LEASE)
+
+
+def debt_preference_is_applicable(taxonomy: str, tag: str) -> bool:
+    """False when a total_debt company_tag_preference names a single
+    component rather than a total (R4). The row stays in the database; the
+    resolvers just do not apply it."""
+    return taxonomy == "us-gaap" and tag in DEBT_TOTAL_PREFERENCE_TAGS
+
 
 # Arithmetic fallback (migration 0047, 2026-09-07): unlike FALLBACK_PAIRS'
 # simple "concept B fills where concept A is null" coalesce, this derives a
@@ -311,10 +418,11 @@ def resolve_fallbacks(conn: psycopg.Connection, ciks: set[str]) -> dict:
     return stats
 
 
-def compute_total_debt(
+def _compose_total_debt(
     facts: dict[str, tuple[Decimal, int]],
 ) -> tuple[Decimal, list[int], str] | None:
-    """Total debt for ONE balance-sheet date from the company's own tags
+    """Path selection only (the pre-2026-10-21 compute_total_debt body); the
+    guards live in evaluate_total_debt(). Total debt for ONE balance-sheet date from the company's own tags
     (tag -> (value, fact_id)). Returns (value, source_fact_ids, path) or
     None when the tags can't give a total -- a blank beats a wrong number.
 
@@ -408,21 +516,128 @@ def compute_total_debt(
     return None
 
 
+@dataclass(frozen=True)
+class DebtDecision:
+    """Outcome of evaluate_total_debt() for one balance-sheet date.
+    `value` is None when no total can be published; then `reason` says why
+    (None reason = the tags never gave a total, as before the guards)."""
+
+    value: Decimal | None
+    source_fact_ids: list[int] = field(default_factory=list)
+    path: str | None = None
+    reason: str | None = None
+    guards_fired: tuple[str, ...] = ()
+
+
+def _containment_ok(facts: dict[str, tuple[Decimal, int]]) -> bool:
+    """R1 guard: bare LongTermDebt may anchor the long-term block only if it
+    contains every part filed beside it: >= LongTermDebtNoncurrent,
+    >= LongTermDebtCurrent and >= half of LongTermDebtAndCapitalLeaseObligations
+    (MAR 23M beside 16,204M noncurrent; TSCO, CSGP, WTRG, DPZ, ALGM)."""
+    ltd = facts["LongTermDebt"][0]
+    for tag in ("LongTermDebtNoncurrent", "LongTermDebtCurrent"):
+        if tag in facts and ltd < facts[tag][0]:
+            return False
+    lease_nc = facts.get("LongTermDebtAndCapitalLeaseObligations")
+    return not (lease_nc is not None and ltd < lease_nc[0] / 2)
+
+
+def evaluate_total_debt(
+    facts: dict[str, tuple[Decimal, int]],
+    guards: frozenset[str] = ALL_DEBT_GUARDS,
+) -> DebtDecision:
+    """compute_total_debt plus the eligible guards from the Tag Mapper's
+    results (data-team/31 section B; R2 and the "prefer N + C" reordering are
+    proposal-only and deliberately not here). A guard that cannot produce a
+    value yields value=None with a reason, never a guess.
+
+      r1_containment  LongTermDebt that fails containment is removed before
+                      path selection, so it cannot outrank the face tags.
+      r5_zero         A total of 0 while any role or instrument debt tag is
+                      nonzero is recomputed with zero-valued tags removed;
+                      still 0/none -> blank.
+      r5_floor        A total below a single filed instrument tag by more
+                      than 2% of that tag is not published.
+
+    `facts` maps tag -> (value, fact_id) and may carry instrument tags; they
+    never enter a path sum."""
+    fired: list[str] = []
+    work = facts
+    if (
+        GUARD_CONTAINMENT in guards
+        and "LongTermDebt" in work
+        and not _containment_ok(work)
+    ):
+        work = {t: v for t, v in work.items() if t != "LongTermDebt"}
+        fired.append(GUARD_CONTAINMENT)
+
+    result = _compose_total_debt(work)
+
+    if GUARD_ZERO in guards and result is not None and result[0] == 0:
+        family = DEBT_ROLE_TAGS + DEBT_INSTRUMENT_TAGS
+        if any(t in work and work[t][0] != 0 for t in family):
+            fired.append(GUARD_ZERO)
+            stripped = {
+                t: v for t, v in work.items() if not (t in DEBT_ROLE_TAGS and v[0] == 0)
+            }
+            result = _compose_total_debt(stripped)
+            if result is None or result[0] == 0:
+                return DebtDecision(
+                    None, reason=REASON_UNDECIDABLE_ZERO, guards_fired=tuple(fired)
+                )
+
+    if GUARD_FLOOR in guards and result is not None:
+        value = result[0]
+        for tag in DEBT_FLOOR_TAGS:
+            if tag not in work:
+                continue
+            part = work[tag][0]
+            if (
+                part > 0
+                and value < part
+                and (part - value) > part * DEBT_FLOOR_TOLERANCE
+            ):
+                fired.append(GUARD_FLOOR)
+                return DebtDecision(
+                    None, reason=REASON_UNDECIDABLE_FLOOR, guards_fired=tuple(fired)
+                )
+
+    if result is None:
+        return DebtDecision(None, guards_fired=tuple(fired))
+    return DebtDecision(result[0], result[1], result[2], guards_fired=tuple(fired))
+
+
+def compute_total_debt(
+    facts: dict[str, tuple[Decimal, int]],
+) -> tuple[Decimal, list[int], str] | None:
+    """(value, source_fact_ids, path) or None; see evaluate_total_debt() for
+    the guards and for the blank reason. Path selection rules: _compose_total_debt."""
+    decision = evaluate_total_debt(facts)
+    if decision.value is None or decision.path is None:
+        return None
+    return decision.value, decision.source_fact_ids, decision.path
+
+
 def resolve_total_debt_components(
     conn: psycopg.Connection, ciks: set[str], chunk_size: int = 200
 ) -> dict:
     """Writes total_debt_resolved for every instant period from core.fact
     via compute_total_debt(). Bulk-loads one chunk of companies per query
     (no per-row loop over core.fact). Companies with a total_debt
-    company_tag_preference are skipped -- their rows belong to
-    sanity/tag_investigator.resolve_company_tag_preferences(), the same
-    one-writer-per-company exemption the parser rows already get."""
+    company_tag_preference that names a TOTAL tag are skipped -- their rows
+    belong to sanity/tag_investigator.resolve_company_tag_preferences(), the
+    same one-writer-per-company exemption the parser rows already get. A
+    preference naming a single component (all 41 existing rows) is not
+    applied (R4, debt_preference_is_applicable) and its company is composed
+    here like any other."""
     stats: dict[str, Any] = {
         "companies": 0,
         "skipped_preference": 0,
         "rows_written": 0,
         "errored": 0,
         "paths": {},
+        "guards": {},
+        "blocked": {},
     }
     resolved_id = _concept_id(conn, "total_debt_resolved")
     total_debt_id = _concept_id(conn, "total_debt")
@@ -432,10 +647,11 @@ def resolve_total_debt_components(
             select c.id from core.company c
             where c.cik = any(%s)
               and not exists (select 1 from analytics.company_tag_preference p
-                              where p.company_id = c.id and p.canonical_concept_id = %s)
+                              where p.company_id = c.id and p.canonical_concept_id = %s
+                                and p.taxonomy = 'us-gaap' and p.tag = any(%s))
             order by c.id
             """,
-            (list(ciks), total_debt_id),
+            (list(ciks), total_debt_id, sorted(DEBT_TOTAL_PREFERENCE_TAGS)),
         )
         company_ids = [r[0] for r in cur.fetchall()]
         cur.execute(
@@ -459,7 +675,7 @@ def resolve_total_debt_components(
                       and p.period_type = 'instant'
                     order by f.company_id, f.period_id, c.tag, f.id desc
                     """,
-                    (chunk, list(TOTAL_DEBT_TAGS)),
+                    (chunk, list(TOTAL_DEBT_LOAD_TAGS)),
                 )
                 by_period: dict[tuple[int, int], dict] = {}
                 for company_id, period_id, tag, value, fact_id in cur.fetchall():
@@ -470,10 +686,20 @@ def resolve_total_debt_components(
 
                 rows = []
                 for (company_id, period_id), facts in by_period.items():
-                    result = compute_total_debt(facts)
-                    if result is None:
+                    decision = evaluate_total_debt(facts)
+                    for g in decision.guards_fired:
+                        stats["guards"][g] = stats["guards"].get(g, 0) + 1
+                    if decision.value is None or decision.path is None:
+                        if decision.reason is not None:
+                            stats["blocked"][decision.reason] = (
+                                stats["blocked"].get(decision.reason, 0) + 1
+                            )
                         continue
-                    value, fact_ids, path = result
+                    value, fact_ids, path = (
+                        decision.value,
+                        decision.source_fact_ids,
+                        decision.path,
+                    )
                     stats["paths"][path] = stats["paths"].get(path, 0) + 1
                     rows.append((company_id, resolved_id, period_id, value, fact_ids))
 
@@ -499,8 +725,10 @@ def resolve_total_debt_components(
             conn = safe_rollback(conn, stage="total_debt_components", cik=str(chunk[0]))
     logger.info(
         "concept_fallback.total_debt_done",
-        **{k: v for k, v in stats.items() if k != "paths"},
+        **{k: v for k, v in stats.items() if k not in ("paths", "guards", "blocked")},
         paths=stats["paths"],
+        guards=stats["guards"],
+        blocked=stats["blocked"],
     )
     return stats
 
