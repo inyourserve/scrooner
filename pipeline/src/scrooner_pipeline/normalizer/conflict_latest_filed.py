@@ -53,10 +53,18 @@ this stage then promotes the same facts again. Run it after dedupe and
 restatements, before the derive stages.
 """
 
+import json
+from collections.abc import Sequence
+from dataclasses import dataclass
+from decimal import Decimal
+from pathlib import Path
+
 import psycopg
 import structlog
 
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.common.periodic_forms import ANNUAL_FORMS_ALL, QUARTERLY_FORMS
+from scrooner_pipeline.common.rule_flags import RULE_PERIODIC_FORM_ONLY, rule_enabled
 
 logger = structlog.get_logger()
 
@@ -138,6 +146,23 @@ QUARTER_ELIGIBLE_FORMS = (
     "40-F",
     "40-F/A",
 )
+
+
+def eligible_forms(
+    periodic_only: bool | None = None,
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """(annual winner forms, quarter winner forms). With rule
+    source.periodic_form_only@1 on, 8-K, 8-K/A and 6-K are no longer eligible
+    winners (WTRG: an 8-K furnishing American Water's statements beat WTRG's
+    own 10-K; ledger 2026-10-22) and the lists are built from
+    common/periodic_forms.py; flag off keeps the historical lists."""
+    if periodic_only is None:
+        periodic_only = rule_enabled(RULE_PERIODIC_FORM_ONLY)
+    if not periodic_only:
+        return FY_ELIGIBLE_FORMS, QUARTER_ELIGIBLE_FORMS
+    quarter = tuple(dict.fromkeys(QUARTERLY_FORMS + ANNUAL_FORMS_ALL))
+    return ANNUAL_FORMS_ALL, quarter
+
 
 # Picks the latest-filed row of each unresolved group (ties go to the highest
 # fact id, i.e. the one inserted last) and records it in the audit table in
@@ -236,8 +261,8 @@ def promote_for_companies(
                 "q_max_days": QUARTER_MAX_DAYS,
                 "rule": RULE,
                 "rule_quarter": RULE_QUARTER,
-                "fy_forms": list(FY_ELIGIBLE_FORMS),
-                "quarter_forms": list(QUARTER_ELIGIBLE_FORMS),
+                "fy_forms": list(eligible_forms()[0]),
+                "quarter_forms": list(eligible_forms()[1]),
             },
         )
         promoted = cur.rowcount
@@ -318,3 +343,164 @@ def resolve_latest_filed(conn: psycopg.Connection, ciks: set[str]) -> dict:
         )
     logger.info("conflict_latest_filed.done", rules=[RULE, RULE_QUARTER], **totals)
     return totals
+
+
+# ---------------------------------------------------------------------------
+# Retiring winners the ban makes ineligible (rule source.periodic_form_only@1)
+# ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class Copy:
+    fact_id: int
+    value: Decimal
+    form: str | None
+    filing_date: object
+    is_authoritative: bool
+    is_derived: bool = False
+
+
+BAN_VALUE_TO_BLANK = "value_to_blank"
+BAN_VALUE_CHANGED = "value_changed"
+BAN_VALUE_SAME = "value_same"
+
+
+def new_winner(
+    copies: Sequence[Copy], eligible: Sequence[str], old_winner_id: int
+) -> Copy | None:
+    """What PROMOTE_SQL would promote for this group once `old_winner_id` is
+    demoted: the latest-filed ELIGIBLE copy, only if more than one copy exists,
+    none is authoritative, the values differ, and the copies do not differ by
+    sign alone. None = the group stays blank."""
+    rest = [
+        Copy(
+            c.fact_id,
+            c.value,
+            c.form,
+            c.filing_date,
+            False if c.fact_id == old_winner_id else c.is_authoritative,
+            c.is_derived,
+        )
+        for c in copies
+        if not c.is_derived
+    ]
+    if len(rest) < 2 or any(c.is_authoritative for c in rest):
+        return None
+    values = [c.value for c in rest]
+    if min(values) == max(values):
+        return None
+    mags = [abs(v) for v in values]
+    if (
+        any(v > 0 for v in values)
+        and any(v < 0 for v in values)
+        and min(mags) == max(mags)
+    ):
+        return None
+    ordered = sorted(
+        rest, key=lambda c: (c.form in eligible, c.filing_date, c.fact_id), reverse=True
+    )
+    top = ordered[0]
+    return top if top.form in eligible else None
+
+
+def classify_ban(
+    copies: Sequence[Copy], eligible: Sequence[str], old_winner_id: int
+) -> str:
+    old = next(c for c in copies if c.fact_id == old_winner_id)
+    new = new_winner(copies, eligible, old_winner_id)
+    if new is None:
+        return BAN_VALUE_TO_BLANK
+    return BAN_VALUE_SAME if new.value == old.value else BAN_VALUE_CHANGED
+
+
+WINNERS_NOT_ELIGIBLE_SQL = """
+select r.fact_id, r.rule, fl.form
+from core.fact_conflict_resolution r
+join core.fact f on f.id = r.fact_id
+join core.filing fl on fl.id = f.filing_id
+where f.company_id = any(%(company_ids)s)
+  and (   (r.rule = %(rule)s         and fl.form <> all(%(fy_forms)s))
+       or (r.rule = %(rule_quarter)s and fl.form <> all(%(quarter_forms)s)))
+order by r.fact_id
+"""
+
+
+def find_ineligible_winners(
+    conn: psycopg.Connection, company_ids: Sequence[int]
+) -> list[tuple[int, str, str]]:
+    """Read-only: promotions already stored whose winner form the ban makes
+    ineligible (8-K recasts, and the DEF 14A / DEFR14A residue of the 2026-10-18
+    form fix). (fact_id, rule, form). Judged against the BAN lists, whatever the flag."""
+    fy, quarter = eligible_forms(periodic_only=True)
+    with conn.cursor() as cur:
+        cur.execute(
+            WINNERS_NOT_ELIGIBLE_SQL,
+            {
+                "company_ids": list(company_ids),
+                "rule": RULE,
+                "rule_quarter": RULE_QUARTER,
+                "fy_forms": list(fy),
+                "quarter_forms": list(quarter),
+            },
+        )
+        return cur.fetchall()
+
+
+def retire_ineligible_winners(
+    conn: psycopg.Connection, winners: Sequence[tuple[int, str, str]], backup_path: Path
+) -> dict[str, int]:
+    """The only writer: demote these promoted facts and delete their audit rows,
+    so the next conflict-latest-filed run promotes the best ELIGIBLE copy (or
+    leaves the period blank). Needs a backup file that already holds every id;
+    scoped by fact id only; does not commit."""
+    ids = sorted({w[0] for w in winners})
+    if not ids:
+        return {"demoted": 0, "audit_rows_deleted": 0}
+    if not backup_path.exists():
+        raise FileNotFoundError(
+            f"backup {backup_path} missing: refusing to retire winners"
+        )
+    backed = {
+        json.loads(x)["fact_id"]
+        for x in backup_path.read_text().splitlines()
+        if x.strip()
+    }
+    if set(ids) - backed:
+        raise ValueError(f"{len(set(ids) - backed)} winners are not in the backup")
+    demoted = deleted = 0
+    with conn.cursor() as cur:
+        for i in range(0, len(ids), 5000):
+            chunk = ids[i : i + 5000]
+            cur.execute(
+                "update core.fact set is_authoritative = false where id = any(%s) and is_authoritative",
+                (chunk,),
+            )
+            demoted += cur.rowcount
+            cur.execute(
+                "delete from core.fact_conflict_resolution where fact_id = any(%s)",
+                (chunk,),
+            )
+            deleted += cur.rowcount
+    return {"demoted": demoted, "audit_rows_deleted": deleted}
+
+
+def write_winner_backup(
+    conn: psycopg.Connection, winners: Sequence[tuple[int, str, str]], path: Path
+) -> int:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    n = 0
+    with conn.cursor() as cur, path.open("w", encoding="utf-8") as fh:
+        for fact_id, rule, form in winners:
+            cur.execute(
+                "select r.fact_id, r.rule, r.group_size, r.value_min, r.value_max, f.company_id, f.concept_id, f.unit_id, f.period_id, f.value "
+                "from core.fact_conflict_resolution r join core.fact f on f.id = r.fact_id where r.fact_id = %s",
+                (fact_id,),
+            )
+            row = cur.fetchone()
+            cols = [c.name for c in cur.description]
+            fh.write(
+                json.dumps(
+                    {**dict(zip(cols, row)), "form": form}, default=str, sort_keys=True
+                )
+                + "\n"
+            )
+            n += 1
+    return n

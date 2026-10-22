@@ -55,6 +55,24 @@ PERIODIC_FORMS_ALL_ORDERED = (
 )
 
 
+# Which periodic forms may WIN a conflict in Stage 2e-b (conflict_latest_filed),
+# built here so the lists cannot drift from PERIODIC_FORMS_ALL. An annual flow
+# fact comes from an annual report; a discrete quarter from a quarterly report or
+# from the annual report that closes the year.
+ANNUAL_FORMS_ALL = (
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "20-F",
+    "20-F/A",
+    "40-F",
+    "40-F/A",
+)
+QUARTERLY_FORMS = ("10-Q", "10-Q/A", "10-QT", "10-QT/A")
+assert set(ANNUAL_FORMS_ALL) | set(QUARTERLY_FORMS) == PERIODIC_FORMS_ALL
+
+
 def is_periodic_form(form: str | None) -> bool:
     """Domestic periodic report (derivation sources)."""
     return form is not None and form.strip().upper() in PERIODIC_FORMS_DOMESTIC
