@@ -35,10 +35,14 @@ class T(unittest.TestCase):
         shutil.rmtree(self.d)
 
     def c(self, rows, m=None, legacy=False):
-        return L.Classifier(mk(self.d, rows), self.g, m or self.v21, legacy_bucket=legacy)
+        return L.Classifier(
+            mk(self.d, rows), self.g, m or self.v21, legacy_bucket=legacy
+        )
 
     def test_published_files_and_generator(self):
-        self.assertEqual(L.sha256_file(L.REASON_MAP_V2)[:24], "39c905dd5d87f8594c2f96a9")   # v2 untouched
+        self.assertEqual(
+            L.sha256_file(L.REASON_MAP_V2)[:24], "39c905dd5d87f8594c2f96a9"
+        )  # v2 untouched
         G21.G.OVERRIDES = G21.OV
         got = G21.G.build(L.EXPORT_GZ)
         have = list(csv.DictReader(open(L.REASON_MAP_V2_1, newline="")))
@@ -47,15 +51,27 @@ class T(unittest.TestCase):
             self.assertIn(r["class"], L.CLASSES)
             self.assertIn(r["owner"], L.OWNERS)
 
-    def test_a_gross_margin_fallback_is_unclassified_metric_only_without_candidate(self):
-        rows = [(1, "margin_expanding_3yr", "f", "missing:fewer_than_3_years_gross_margin"), (1, "gross_margin", "t", "")]
+    def test_a_gross_margin_fallback_is_unclassified_metric_only_without_candidate(
+        self,
+    ):
+        rows = [
+            (1, "margin_expanding_3yr", "f", "missing:fewer_than_3_years_gross_margin"),
+            (1, "gross_margin", "t", ""),
+        ]
         r = self.c(rows).classify(1, "margin_expanding_3yr")
-        self.assertEqual((r.cls, r.owner, r.candidate, r.bucket), ("unclassified", "triage", "", "metric_only_fallback"))
+        self.assertEqual(
+            (r.cls, r.owner, r.candidate, r.bucket),
+            ("unclassified", "triage", "", "metric_only_fallback"),
+        )
         self.assertFalse(r.currency_unknown)
-        o = self.c(rows, self.v2).classify(1, "margin_expanding_3yr")           # mutation: v2 said period / history_horizon
+        o = self.c(rows, self.v2).classify(
+            1, "margin_expanding_3yr"
+        )  # mutation: v2 said period / history_horizon
         self.assertEqual((o.cls, o.candidate), ("period", "history_horizon"))
         # still cascades when gross_margin is blank
-        b = self.c([rows[0], (1, "gross_margin", "f", "line_in_filing_not_extracted")]).classify(1, "margin_expanding_3yr")
+        b = self.c(
+            [rows[0], (1, "gross_margin", "f", "line_in_filing_not_extracted")]
+        ).classify(1, "margin_expanding_3yr")
         self.assertEqual(b.cls, "vocabulary")
 
     def test_b_prior_period_keeps_class_but_no_history_horizon(self):
@@ -65,46 +81,80 @@ class T(unittest.TestCase):
         o = self.c(rows, self.v2).classify(1, "revenue_growth_10y_cagr")
         self.assertEqual(o.candidate, "history_horizon")
 
-    def test_c_ttm_dividend_and_buyback_fallbacks_carry_second_signal_and_candidate(self):
-        for pat, dp, inp in (("missing:share_buybacks_ttm", "share_repurchases_pct_fcf", "share_buybacks"),
-                             ("missing:dividends_paid_ttm", "dividends_pct_fcf", "dividends_paid"),
-                             ("missing:dividends_per_share_ttm", "payout_ratio", "dividends_per_share")):
+    def test_c_ttm_dividend_and_buyback_fallbacks_carry_second_signal_and_candidate(
+        self,
+    ):
+        for pat, dp, inp in (
+            (
+                "missing:share_buybacks_ttm",
+                "share_repurchases_pct_fcf",
+                "share_buybacks",
+            ),
+            ("missing:dividends_paid_ttm", "dividends_pct_fcf", "dividends_paid"),
+            ("missing:dividends_per_share_ttm", "payout_ratio", "dividends_per_share"),
+        ):
             rows = [(1, dp, "f", pat), (1, inp, "t", "")]
             r = self.c(rows).classify(1, dp)
-            self.assertEqual((r.cls, r.second_signal, r.candidate), ("period", "tag_mapper", "evidenced_zero"), pat)
+            self.assertEqual(
+                (r.cls, r.second_signal, r.candidate),
+                ("period", "tag_mapper", "evidenced_zero"),
+                pat,
+            )
             o = self.c(rows, self.v2).classify(1, dp)
-            self.assertEqual((o.second_signal, o.candidate), ("", ""), pat)       # mutation
+            self.assertEqual((o.second_signal, o.candidate), ("", ""), pat)  # mutation
         # when the dividend leaf itself is blank the cell inherits that blocker, not the fallback
-        r = self.c([(1, "payout_ratio", "f", "missing:dividends_per_share_ttm"),
-                    (1, "dividends_per_share", "f", "line_in_filing_not_extracted")]).classify(1, "payout_ratio")
+        r = self.c(
+            [
+                (1, "payout_ratio", "f", "missing:dividends_per_share_ttm"),
+                (1, "dividends_per_share", "f", "line_in_filing_not_extracted"),
+            ]
+        ).classify(1, "payout_ratio")
         self.assertEqual(r.cls, "vocabulary")
 
     def test_d_fcf_ttm_rationale_is_corrected(self):
         row = self.v21[("missing:fcf_ttm", "*")]
         self.assertIn("ANNUAL fcf", row["rationale"])
         self.assertNotIn("ANNUAL fcf", self.v2[("missing:fcf_ttm", "*")]["rationale"])
-        self.assertEqual(L.resolve_token("fcf_ttm", "dividends_pct_fcf", self.g), ["fcf"])   # the claim in the text is true
+        self.assertEqual(
+            L.resolve_token("fcf_ttm", "dividends_pct_fcf", self.g), ["fcf"]
+        )  # the claim in the text is true
 
     def test_e_immaterial_revenue_base_candidate(self):
-        r = self.c([(1, "debtor_days", "f", "immaterial_revenue_base")]).classify(1, "debtor_days")
+        r = self.c([(1, "debtor_days", "f", "immaterial_revenue_base")]).classify(
+            1, "debtor_days"
+        )
         self.assertEqual(r.candidate, "undefined_by_math")
-        self.assertEqual(self.c([(1, "debtor_days", "f", "immaterial_revenue_base")], self.v2).classify(1, "debtor_days").candidate, "")
+        self.assertEqual(
+            self.c([(1, "debtor_days", "f", "immaterial_revenue_base")], self.v2)
+            .classify(1, "debtor_days")
+            .candidate,
+            "",
+        )
 
     def test_f_currency_is_orthogonal_to_the_class(self):
         # period-class walk fallback with a concept input valued at any period: flag set, class untouched
         rows = [(1, "ebitda_margin", "f", "missing:ebitda_ttm"), (1, "ebitda", "t", "")]
         r = self.c(rows).classify(1, "ebitda_margin")
         self.assertEqual(r.cls, "period")
-        self.assertFalse(r.currency_unknown)                                       # ebitda is a metric input
-        rows = [(1, "share_repurchases_pct_fcf", "f", "missing:share_buybacks_ttm"), (1, "share_buybacks", "t", "")]
+        self.assertFalse(r.currency_unknown)  # ebitda is a metric input
+        rows = [
+            (1, "share_repurchases_pct_fcf", "f", "missing:share_buybacks_ttm"),
+            (1, "share_buybacks", "t", ""),
+        ]
         r = self.c(rows).classify(1, "share_repurchases_pct_fcf")
         self.assertEqual((r.cls, r.currency_unknown, r.bucket), ("period", True, ""))
         # mutation: the legacy classifier only bucketed unclassified cells, so it never flagged this period cell
-        rows2 = [(1, "net_margin", "f", "incomplete:numerator"), (1, "net_income", "t", ""), (1, "revenue", "t", "")]
+        rows2 = [
+            (1, "net_margin", "f", "incomplete:numerator"),
+            (1, "net_income", "t", ""),
+            (1, "revenue", "t", ""),
+        ]
         leg = self.c(rows2, self.v2, legacy=True).classify(1, "net_margin")
         self.assertEqual((leg.cls, leg.bucket), ("unclassified", "currency_unknown"))
         new = self.c(rows2).classify(1, "net_margin")
-        self.assertEqual((new.cls, new.bucket, new.currency_unknown), ("unclassified", "", True))
+        self.assertEqual(
+            (new.cls, new.bucket, new.currency_unknown), ("unclassified", "", True)
+        )
 
     def test_published_counts_on_the_export(self):
         ext = L.Extract(L.EXPORT_GZ)
@@ -113,25 +163,39 @@ class T(unittest.TestCase):
         res, clf = R21.classify_blank(ext, g, self.v21, names, False)
         cls, buck, flag = R21.counts(ext, res)
         self.assertEqual(sum(clf.unmapped.values()), 0)
-        self.assertEqual((cls["period"], cls["unclassified"], buck["metric_only_fallback"]), (6444, 21722, 168))
+        self.assertEqual(
+            (cls["period"], cls["unclassified"], buck["metric_only_fallback"]),
+            (6444, 21722, 168),
+        )
         self.assertEqual(flag, 6515)
         r2, _ = R21.classify_blank(ext, g, self.v2, names, True)
         c2, b2, _ = R21.counts(ext, r2)
-        self.assertEqual((c2["period"], c2["unclassified"], b2["currency_unknown"]), (6612, 21554, 4671))   # v2 reproducible
+        self.assertEqual(
+            (c2["period"], c2["unclassified"], b2["currency_unknown"]),
+            (6612, 21554, 4671),
+        )  # v2 reproducible
 
     def test_prior_period_reconciliation_arithmetic(self):
         pp = R21.prior_period_reconciliation(L.Extract(L.EXPORT_GZ))
-        self.assertEqual((pp["all"], pp["fy_base"], pp["quarter_label_base"]), (1879, 81, 1798))
+        self.assertEqual(
+            (pp["all"], pp["fy_base"], pp["quarter_label_base"]), (1879, 81, 1798)
+        )
         self.assertEqual(pp["all"], pp["fy_base"] + pp["quarter_label_base"])
         self.assertEqual(pp["label_year_le_2014"], 62)
 
     def test_verifier_queue_order_and_contents(self):
-        rows = list(csv.DictReader(open(L.SB_DIR / "frames/verifier_queue_v2_1_2026-10-20.csv", newline="")))
+        rows = list(
+            csv.DictReader(
+                open(L.SB_DIR / "frames/verifier_queue_v2_1_2026-10-20.csv", newline="")
+            )
+        )
         prios = [int(r["priority"]) for r in rows]
-        self.assertEqual(prios, sorted(prios))                                      # priority 1 first
+        self.assertEqual(prios, sorted(prios))  # priority 1 first
         p1 = [r for r in rows if r["priority"] == "1"]
         self.assertEqual(len(p1), 116)
-        self.assertTrue(all(r["gap_reason"] == "partial:missing_debt_or_cash" for r in p1))
+        self.assertTrue(
+            all(r["gap_reason"] == "partial:missing_debt_or_cash" for r in p1)
+        )
         gm = [r for r in rows if r["priority"] == "2"]
         self.assertTrue(all(r["data_point_name"] == "margin_expanding_3yr" for r in gm))
         self.assertGreaterEqual(len(gm), 10)
@@ -139,6 +203,7 @@ class T(unittest.TestCase):
 
     def test_manifest_still_verifies(self):
         import build_scoreboard as B
+
         self.assertEqual(B.verify_manifest(L.SB_DIR), [])
 
 
