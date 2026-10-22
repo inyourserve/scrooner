@@ -12,10 +12,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from scrooner_pipeline.common.cell_blank_reason import InMemoryBlankReasonStore
 from scrooner_pipeline.mapper.concept_fallback import (
     ALL_DEBT_GUARDS,
     GUARD_CONTAINMENT,
     GUARD_FLOOR,
+    GUARD_PARTIAL,
     GUARD_ZERO,
     REASON_UNDECIDABLE_FLOOR,
     REASON_UNDECIDABLE_ZERO,
@@ -26,6 +28,13 @@ from scrooner_pipeline.mapper.concept_fallback import (
     resolve_total_debt_components,
 )
 from scrooner_pipeline.sanity.tag_investigator import resolve_company_tag_preferences
+
+
+@pytest.fixture(autouse=True)
+def _guards_enabled(monkeypatch):
+    """The guards ship behind the rules_enabled flag (default OFF); these tests exercise them ON.
+    Flag-OFF identity is covered in test_total_debt_flag_and_reasons.py."""
+    monkeypatch.setenv("SCROONER_RULES_ENABLED", "debt.total_debt_consistency@1")
 
 
 def _d(**tags):
@@ -128,11 +137,14 @@ class TestR1Containment:
         assert GUARD_CONTAINMENT in bad.guards_fired
 
     def test_rejected_bare_tag_is_never_the_value(self):
-        # L 10 < C 50: L is removed; the existing split path publishes the
-        # current part only (path 4, unchanged behaviour), never L.
-        decision = evaluate_total_debt(_d(LongTermDebt=10, LongTermDebtCurrent=50))
+        # L 10 < C 50: L is removed; the existing split path would publish the
+        # current part only (path 4), never L. With r7 (partial component) the
+        # current-only composition is blanked instead; without r7 it is as before.
+        facts = _d(LongTermDebt=10, LongTermDebtCurrent=50)
+        decision = evaluate_total_debt(facts, _without(GUARD_PARTIAL))
         assert decision.value == Decimal("50")
         assert decision.guards_fired == (GUARD_CONTAINMENT,)
+        assert evaluate_total_debt(facts).value is None
 
 
 @pytest.mark.unit
@@ -321,7 +333,9 @@ class TestEvaluateContract:
         cur = conn.cursor.return_value.__enter__.return_value
         cur.fetchone.side_effect = [(1,), (2,), (1,)]
         cur.fetchall.side_effect = [[(7,)], [], []]
-        resolve_total_debt_components(conn, {"0000000001"})
+        resolve_total_debt_components(
+            conn, {"0000000001"}, reason_store=InMemoryBlankReasonStore()
+        )
         fact_query = next(
             c for c in cur.execute.call_args_list if "from core.fact f" in c.args[0]
         )
@@ -357,7 +371,9 @@ class TestR4Preference:
         cur = conn.cursor.return_value.__enter__.return_value
         cur.fetchone.side_effect = [(1,), (2,), (10,)]
         cur.fetchall.return_value = []
-        resolve_total_debt_components(conn, {"0000000001"})
+        resolve_total_debt_components(
+            conn, {"0000000001"}, reason_store=InMemoryBlankReasonStore()
+        )
         sql, params = next(
             (c.args[0], c.args[1])
             for c in cur.execute.call_args_list
