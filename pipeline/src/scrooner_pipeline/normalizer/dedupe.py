@@ -75,6 +75,7 @@ from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL
 from scrooner_pipeline.common.rule_flags import (
     RULE_MATCHING_COPIES,
     RULE_PERIODIC_FORM_ONLY,
+    rule_dry_run,
     rule_enabled,
 )
 from scrooner_pipeline.normalizer.matching_copies import all_consistent, precision_rank
@@ -265,6 +266,20 @@ def resolve_authoritative_for_company(
         matching_copies = rule_enabled(RULE_MATCHING_COPIES)
     rows = _load_fact_rows(conn, company_id)
     plan = plan_authority(rows, periodic_only=periodic_only, matching_copies=matching_copies)
+    if rule_dry_run(RULE_PERIODIC_FORM_ONLY) or rule_dry_run(RULE_MATCHING_COPIES):
+        # dry_run mode: log what the rules WOULD change, write the legacy plan
+        would = plan_authority(
+            rows,
+            periodic_only=periodic_only or rule_dry_run(RULE_PERIODIC_FORM_ONLY),
+            matching_copies=matching_copies or rule_dry_run(RULE_MATCHING_COPIES),
+        )
+        logger.info(
+            "dedupe.dry_run",
+            company_id=company_id,
+            would_write=len(would.set_true) + len(would.set_false),
+            legacy_write=len(plan.set_true) + len(plan.set_false),
+            **{f"would_{k}": v for k, v in would.stats.items()},
+        )
 
     with conn.cursor() as cur:
         if plan.set_true:
