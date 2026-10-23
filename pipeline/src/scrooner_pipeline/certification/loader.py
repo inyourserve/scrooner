@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
 
+from scrooner_pipeline.common.debt_carrying import CARRYING_TAGS
 from scrooner_pipeline.common.sector_applicability import (
     BANK_EVIDENCE_DEPOSIT_TAGS,
     BANK_EVIDENCE_EXPENSE_TAG,
@@ -380,7 +381,9 @@ def load_chunk(
                 data[cid].conflict_copies.setdefault(r[0], []).append(_source(r[1:]))
 
     # debt components and balance-sheet adjustment facts (authoritative, USD)
-    tags = sorted(set(registry.debt_tags) | set(registry.adjustment_tags))
+    tags = sorted(
+        set(registry.debt_tags) | set(registry.adjustment_tags) | set(CARRYING_TAGS)
+    )
     debt = set(registry.debt_tags)
     for cid, fid, tag, value, pid, end in execute(
         cur,
@@ -400,6 +403,8 @@ def load_chunk(
         comp = ComponentFact(id=fid, tag=tag, value=value, period_id=pid, end=end)
         if tag in debt:
             data[cid].debt_facts.append(comp)
+        if tag in CARRYING_TAGS:
+            data[cid].carrying_facts.append(comp)
         if tag in registry.adjustment_tags:
             data[cid].adjustment_facts.append(comp)
 

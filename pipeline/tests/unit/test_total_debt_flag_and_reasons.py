@@ -98,7 +98,9 @@ COR = D(
     DebtCurrent="151.657",
     LongTermDebtAndCapitalLeaseObligations="4310.189",
 )
-ALL = cf.ALL_DEBT_GUARDS
+ALL = (
+    cf.GUARDS_BEFORE_CARRYING
+)  # r1-r7; r8 has its own tests in test_total_debt_carrying.py
 
 
 # ------------------------------------------------------------------ flag OFF identity
@@ -118,7 +120,7 @@ def test_flag_off_is_byte_identical_to_the_compose_only_path(facts, monkeypatch)
 
 
 def test_family_flag_enables_all_guards_and_there_are_no_sub_rule_flags():
-    assert cf.debt_guards_active(ON) == ALL
+    assert cf.debt_guards_active(ON) == cf.ALL_DEBT_GUARDS
     assert cf.debt_preference_guard_active(ON)
     assert cf.debt_guards_active({}) == frozenset()
     # lane 1's rule_flags rejects a sub-rule ID (it is not family.rule@N)
@@ -307,7 +309,7 @@ def test_blocked_instant_reason_is_persisted_with_its_dates_and_rule_id():
         "I",
         date(2016, 12, 31),
         cf.RULE_DEBT,
-        "r6_fallback_overcount",
+        "r8_carrying_lines",
     )
     assert r.detail["reason"] == cf.REASON_UNDECIDABLE_FALLBACK
     assert stats["reasons_written"] == 1 and stats["rows_written"] == 1

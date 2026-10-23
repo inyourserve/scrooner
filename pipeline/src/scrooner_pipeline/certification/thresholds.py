@@ -92,6 +92,9 @@ RECAST_8K_MIN_FACTS = 100  # an 8-K with this many facts carries full statements
 INPUT_MAX_AGE_DAYS = 456  # 15 months
 
 # ---- I8 composition.py ----
+CARRYING_TOLERANCE = Decimal(
+    "0.00001"
+)  # stored total vs carrying lines: exact to a dollar-level rounding
 TOTAL_TOLERANCE = Decimal("0.98")  # stored total may be 2% under a component
 DPS_RATE_TOLERANCE = Decimal(
     "0.02"

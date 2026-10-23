@@ -45,6 +45,8 @@ from scrooner_pipeline.common.cell_blank_reason import (
     BlankReasonStore,
     PgBlankReasonStore,
 )
+from scrooner_pipeline.common.debt_carrying import Hold as CarryingHold
+from scrooner_pipeline.common.debt_carrying import carrying_lines
 from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.rule_before_image import PlannedChange
 from scrooner_pipeline.common.rule_flags import rule_enabled as is_enabled
@@ -256,10 +258,21 @@ GUARD_ZERO = "r5_zero"
 GUARD_FLOOR = "r5_floor"
 GUARD_FALLBACK = "r6_fallback_overcount"
 GUARD_PARTIAL = "r7_partial_component"
+GUARD_CARRYING = "r8_carrying_lines"
 GUARD_PREFERENCE = "r4_preference"
 ALL_DEBT_GUARDS = frozenset(
-    {GUARD_CONTAINMENT, GUARD_ZERO, GUARD_FLOOR, GUARD_FALLBACK, GUARD_PARTIAL}
+    {
+        GUARD_CONTAINMENT,
+        GUARD_ZERO,
+        GUARD_FLOOR,
+        GUARD_FALLBACK,
+        GUARD_PARTIAL,
+        GUARD_CARRYING,
+    }
 )
+# The guards of the first release (r1-r7). evaluate_total_debt's default, so direct callers and the
+# held tests keep their meaning; the flag (debt_guards_active) enables ALL_DEBT_GUARDS incl. r8.
+GUARDS_BEFORE_CARRYING = ALL_DEBT_GUARDS - {GUARD_CARRYING}
 # Rule ID of the family (registry RF-11). One flag enables every guard: lane 1's rule_flags accepts
 # only family.rule@N IDs, so there are no per-guard flags (a sub-rule ID with "/" is malformed).
 RULE_DEBT = "debt.total_debt_consistency@1"
@@ -711,7 +724,7 @@ def _check_guard_reached_fallback(
 
 def evaluate_total_debt(
     facts: dict[str, tuple[Decimal, int]],
-    guards: frozenset[str] = ALL_DEBT_GUARDS,
+    guards: frozenset[str] = GUARDS_BEFORE_CARRYING,
 ) -> DebtDecision:
     """compute_total_debt plus the eligible guards from the Tag Mapper's
     results (data-team/31 section B; R2 and the "prefer N + C" reordering are
@@ -732,6 +745,10 @@ def evaluate_total_debt(
                       (else blank: CVX 2016) and the total must not sit below
                       the filed lease-inclusive total (replaced by the lease
                       family sum when that reproduces it: DPZ 2024; else blank).
+      r8_carrying_lines
+                      Composition from the balance-sheet carrying lines (noncurrent +
+                      current [+ short-term]) ahead of the legacy paths, so a face-value or
+                      rounded LongTermDebt never sets the total (common/debt_carrying.py).
       r7_partial_component
                       The fallback path composed only current portions (no
                       long-term block filed): blank (AAPL 2015-09-26 10,999M
@@ -749,7 +766,23 @@ def evaluate_total_debt(
         work = {t: v for t, v in work.items() if t != "LongTermDebt"}
         fired.append(GUARD_CONTAINMENT)
 
-    result = _compose_total_debt(work)
+    result = None
+    if GUARD_CARRYING in guards:
+        carrying = carrying_lines({t: v[0] for t, v in work.items()})
+        if isinstance(carrying, CarryingHold):
+            fired.append(GUARD_CARRYING)
+            return DebtDecision(
+                None, reason=REASON_UNDECIDABLE_FALLBACK, guards_fired=tuple(fired)
+            )
+        if carrying is not None:
+            fired.append(GUARD_CARRYING)
+            result = (
+                carrying.value,
+                [work[t][1] for t in carrying.tags],
+                carrying.path,
+            )
+    if result is None:
+        result = _compose_total_debt(work)
 
     if GUARD_ZERO in guards and result is not None and result[0] == 0:
         family = DEBT_ROLE_TAGS + DEBT_INSTRUMENT_TAGS

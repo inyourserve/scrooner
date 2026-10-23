@@ -188,6 +188,8 @@ class CompanyData:
     )
     mapped_tag_count: dict[str, int] = field(default_factory=dict)
     debt_facts: list[ComponentFact] = field(default_factory=list)
+    # authoritative balance-sheet carrying-line tags (common/debt_carrying.CARRYING_TAGS)
+    carrying_facts: list[ComponentFact] = field(default_factory=list)
     adjustment_facts: list[ComponentFact] = field(default_factory=list)
     metrics: list[Metric] = field(default_factory=list)
     concept_modes: dict[str, str] = field(

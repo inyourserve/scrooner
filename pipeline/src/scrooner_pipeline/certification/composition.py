@@ -17,6 +17,14 @@ total debt (display layer = `total_debt_resolved` else `total_debt`):
                          one by definition contains the other (OVERLAPPING_TAGS,
                          from the us-gaap element definitions: DATA-INFERRED).
 
+  debt_not_carrying_lines
+                         GATING. The stored total differs from noncurrent + current [+ short-term]
+                         read from the balance-sheet carrying tags (common/debt_carrying.py): a
+                         face-value or rounded LongTermDebt set the total (AAPL, GOOG, AMZN).
+  debt_carrying_lines_undecidable
+                         review: the carrying lines cannot be composed (DebtCurrent unexplained)
+                         yet a total is stored.
+
 per-share by subtraction:
 
   per_share_derived      a per-share or share-count value whose source is a
@@ -30,7 +38,11 @@ from __future__ import annotations
 from datetime import timedelta
 from decimal import Decimal
 
+from scrooner_pipeline.common.debt_carrying import Hold as CarryingHold
+from scrooner_pipeline.common.debt_carrying import carrying_lines
+
 from .thresholds import (
+    CARRYING_TOLERANCE,
     DPS_PAID_RATE_MAX,
     DPS_PAID_RATE_MIN,
     DPS_PAID_MAX_RATIO,
@@ -138,6 +150,57 @@ def _debt_double_count(data: CompanyData) -> list[Finding]:
                         note=f"{a} includes current maturities also held in {b}",
                     )
                 )
+    return out
+
+
+def _debt_not_carrying_lines(data: CompanyData) -> list[Finding]:
+    """Gating: the stored total debt must equal the balance-sheet carrying lines
+    (common/debt_carrying.py) wherever those lines are filed. The pilot (2026-10-24) found AAPL
+    84,297 vs 84,344 and GOOG 49,085 vs 48,543 (a face-value or rounded LongTermDebt) that no
+    other rule caught. A stored value where the lines are undecidable (DebtCurrent unexplained)
+    is a review, not a wrong value."""
+    out: list[Finding] = []
+    by_period: dict[int, dict[str, tuple[int, Decimal]]] = {}
+    for f in data.carrying_facts:
+        cur = by_period.setdefault(f.period_id, {})
+        if f.tag not in cur or f.id > cur[f.tag][0]:
+            cur[f.tag] = (f.id, f.value)
+    for cell in _debt_cells(data):
+        facts = by_period.get(cell.period_id)
+        if not facts:
+            continue
+        result = carrying_lines({t: v for t, (_i, v) in facts.items()})
+        if result is None:
+            continue
+        if isinstance(result, CarryingHold):
+            out.append(
+                finding(
+                    data,
+                    "I8",
+                    REVIEW,
+                    "debt_carrying_lines_undecidable",
+                    cell,
+                    reason=result.reason,
+                    tags=sorted(facts),
+                )
+            )
+            continue
+        if abs(cell.value - result.value) > result.value * CARRYING_TOLERANCE + 1:
+            out.append(
+                finding(
+                    data,
+                    "I8",
+                    WRONG_VALUE,
+                    "debt_not_carrying_lines",
+                    cell,
+                    other=result.value,
+                    expected=str(result.value),
+                    path=result.path,
+                    carrying_tags=list(result.tags),
+                    carrying_ids=[facts[t][0] for t in result.tags],
+                    source_ids=sorted(set(cell.source_ids)),
+                )
+            )
     return out
 
 
@@ -314,6 +377,7 @@ def check(data: CompanyData) -> list[Finding]:
     return (
         _debt_below_component(data)
         + _debt_double_count(data)
+        + _debt_not_carrying_lines(data)
         + _per_share_derived(data, flagged)
         + _dps_rate_findings(data, flagged)
     )
