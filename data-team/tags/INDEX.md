@@ -6,9 +6,9 @@
 | NoninterestIncome | bank | safe single tag | 29/30 [32] | |
 | NoninterestExpense | bank | safe single tag | 30/30 [32] | |
 | InterestAndDividendIncomeOperating / InterestIncomeOperating | bank total interest income | safe | 30/30 [32] | |
-| InterestExpenseOperating / InterestExpense | bank total interest expense | safe | 30/30 [32] | |
+| InterestExpenseOperating / InterestExpense | bank total interest expense | safe as a PERIOD-SCOPED pair (Operating from 2021-09, InterestExpense before) | FILING-CHECKED 30/30 [32] + EFSC, CIVB 2026-10-22; 98.6% equal in 2,254 shared bank periods (DATA-INFERRED) | `interest_expense` maps only InterestExpense: banks go blank after the switch (EFSC FY2025); Frames under-counts InterestExpenseOperating ~10x |
 | Deposits | bank | safe, 27 of 30 | [32] | BANR, CARV components only; TFSL no total |
-| FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss | bank net loans | per-period set | 22/30 [32] | pre-CECL tags still used (FCCO) |
+| FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss | bank net loans | per-period set with a face check (CECL era); LoansAndLeasesReceivableNetReportedAmount before | FILING-CHECKED (EFSC, OSBC) 2026-10-22; cards/bank-loans-and-allowance.md | OSBC: undimensioned value = collateral-dependent loans note total |
 | InvestmentIncomeInterest | bank | NEVER map as bank interest income | FILING-CHECKED [32] | three different meanings |
 | OperatingIncomeLoss | bank | NEVER map for banks without a row-label check | [32] | BANR, PEBO mis-tags |
 | CostsAndExpenses | non-bank | do NOT derive operating income from it | FILING-CHECKED [26] | includes interest at CVX/AJG/HTZ |
@@ -29,7 +29,7 @@
 | CostOfRevenue / CostOfGoodsAndServicesSold | operating income | cost of sales; take whichever is filed | FILING-CHECKED (AAPL, DHI, BBW) | 172 filers carry both |
 | InterestIncomeExpenseNet | interest | bank NII only; non-banks use it as net interest expense | FILING-CHECKED 29/30 [32] + Citigroup/FLG/ANDE 2026-10-19 | 768 non-bank-like CY2023 filers (Frames proxy) |
 | InterestRevenueExpenseNet | interest | NOT an exact synonym of NII | definition FILING-CHECKED; usage DATA-INFERRED | operating + nonoperating |
-| InterestExpense / InterestExpenseOperating | interest | bank total interest expense; non-banks per company | FILING-CHECKED 30/30 [32] | |
+| InterestExpense / InterestExpenseOperating | interest | bank total interest expense, period-scoped (see bank row); non-banks per company | FILING-CHECKED 30/30 [32]; era 2026-10-22 | |
 | InterestExpenseNonoperating / InterestIncomeExpenseNonoperatingNet | interest | non-bank below-the-line; conditional on check I-2 | FILING-CHECKED (PLD, AMZN, BBW) | R-file sign differs from stored sign |
 | InterestExpenseDebt | interest | debt interest only; inside CostsAndExpenses at CVX | FILING-CHECKED | |
 | InvestmentIncomeInterest | interest | NEVER bank interest income; fine for non-bank interest income | FILING-CHECKED (AMZN; banks [32]; FLG 2026-10-19) | |
@@ -54,3 +54,14 @@
 | CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents (on the balance sheet) | cash | perimeter uncertain when labelled plain cash | FILING-CHECKED presentation (CMI) 2026-10-21 | 272 FY2025 BS cash rows, 207 labelled plain cash |
 | PaymentsToAcquirePropertyPlantAndEquipment | capex | safe as one capex line; NOT total capex where other capex lines exist | FILING-CHECKED (Air Lease) 2026-10-21; no card yet | 193 FY2025 filers have it plus other capex lines |
 | DepreciationDepletionAndAmortization / DepreciationAndAmortization | D&A | per statement; IS and CF values can differ | FILING-CHECKED (AEO) 2026-10-21; no card yet | 300 filers add other D&A lines beside the combined tag |
+| GrossInvestmentIncomeOperating | investment income | BDC total investment income ONLY (null-SIC funds); NEVER insurers/ETPs/SPACs | FILING-CHECKED (ARCC; CINF, TRV, PRU) 2026-10-22; cards/investment-income-and-funds.md | sole tag of `bdc_total_investment_income`: 47 of its 118 filers are insurers (gross note line), 42 BDCs |
+| NetInvestmentIncome | investment income | two concepts: insurer face NII (safe) / BDC PRE-tax NII; never pooled | FILING-CHECKED (CINF, TRV, PRU, ARCC) 2026-10-22 | unmapped; does NOT feed bdc_total_investment_income |
+| InvestmentIncomeOperatingAfterExpenseAndTax | investment income | BDC after-tax NII; first choice for the BDC NII row | FILING-CHECKED (ARCC) 2026-10-22 | exists from 2020-09 only |
+| InvestmentIncomeNet | investment income | NOT insurer NII (differs in 252 of 778 periods; includes gains at PGR) | DATA-INFERRED (PGR arithmetic on face R3) 2026-10-22 | |
+| AssetsNet / StockholdersEquity | BDC net assets | StockholdersEquity first (face), AssetsNet alternate after equality check | FILING-CHECKED (ARCC equity); AssetsNet DATA-INFERRED (86% equal, 36 BDCs) 2026-10-22 | |
+| LoansAndLeasesReceivableNetReportedAmount / NotesReceivableNet | bank net loans | pre-CECL era / alternate inside the period-scoped set | FILING-CHECKED (OSBC face) 2026-10-22 | `LoansReceivableNet` = removed element, keep for 2015-2020 (143 cos to 2020-03) |
+| FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest / FinancingReceivableAllowanceForCreditLosses / LoansAndLeasesReceivableAllowance | bank allowance | period-scoped set (CECL -> generic -> pre-CECL); reject 0 when another is non-zero | FILING-CHECKED (EFSC, OSBC) 2026-10-22; pairs 94-97% equal | `AllowanceForLoanAndLeaseLosses*` are roll-forward components, never the balance |
+| PremiumsEarnedNet | insurer / managed care | safe single tag where filed (current periods) | FILING-CHECKED (UNH, PGR) 2026-10-22; cards/insurance-and-managed-care.md | managed-care history pre-2024 on removed/deprecated health tags |
+| PolicyholderBenefitsAndClaimsIncurredNet | insurer / managed care | safe single tag where filed; never BenefitsLossesAndExpenses | FILING-CHECKED (UNH "Medical costs", PGR) 2026-10-22 | PolicyholderBenefitsAndClaimsIncurredHealthCare deprecated 2024 |
+| RegulatoryAssetsCurrent + RegulatoryAssetsNoncurrent | utility | safe pair from the face; plain RegulatoryAssets = note TOTAL (94% equal), never the noncurrent line | FILING-CHECKED (CPK) 2026-10-22; cards/utility-regulatory-and-crypto.md | |
+| CryptoAssetFairValue (+Current/Noncurrent) | crypto | classified pair where the face is classified; plain tag only where it is the face line (MSTR) | FILING-CHECKED (MSTR, CLSK) 2026-10-22 | CLSK plain tag = narrative subset; `CryptoAssetNoncurrent` is not an element; from 2022 only |

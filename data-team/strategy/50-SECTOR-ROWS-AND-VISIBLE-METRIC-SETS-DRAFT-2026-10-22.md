@@ -104,3 +104,20 @@ Core cells shown for every group where they apply: market cap, P/E (trailing, on
 3. New concepts needed (no existing canonical concept): cash and short-term investments, accumulated deficit, equity proceeds, partners' capital; confirm names and period basis.
 4. B7 bank revenue, R8 capex, R7 debt definition, I-row composition: REP rows need the accountant; until named they are `definition_pending` defects, not blanks.
 5. Tag Expert: single-tag candidates for each row (including the tag that feeds `bdc_total_investment_income` at 24 insurers, which my draft BDC rule mistook as a BDC signal).
+
+---
+## v1 CORRECTIONS (2026-10-23, Ritwik) from the Sector Analyst's review of this draft
+Source: the one-paragraph summary in `doc/data-moat/team/PLAN.md` (line 244, "D. Doc 50 review (team/SECTOR-ROWS-REVIEW.md)"). **The review file itself is not in my tree; I applied only what that summary states. Nothing below is verified by me against a filing, and the catalog stays NOT FINAL until the Sector Analyst re-reviews it** (Dhairya excluded it from the freeze-register approval for this reason). Row IDs refer to section 2 above.
+1. **Four groups had no defining sector row:** non-bank lender, crypto/digital, exchange, insurance broker. They get NO rows in this draft; the Sector Analyst and Tag Expert define face-line rows for them. Candidates must be face lines or arithmetic on face lines; the review says asset-manager fee, exchange clearing and broker fiduciary lines exist only as extension tags (filing-instance capture or `data_limit`), so they cannot be required rows until capture exists.
+2. **Tag leads withdrawn or changed (all were leads, never verified):**
+   - B3 total interest expense: my lead `InterestExpense` is replaced by `InterestExpenseOperating` (per the review).
+   - B10 loans, net: the lead is wrong after CECL (post-CECL net-loan presentation differs); lead withdrawn until the Tag Expert gives the post-CECL tag.
+   - B12 allowance: the allowance name appears on the face of 0 of 1,027 filers; B12 becomes note-sourced only, not a face row, so it is `COND` on a note capture and not required.
+   - F2 BDC net investment income: `NetInvestmentIncome` is the PRE-tax BDC line (ARCC 0001287750-26-000006 R5: 1,458.0M vs after-tax 1,415.0M) and the same tag name carries an insurer's investment return at 35 of 40 insurers: two meanings. F2 must state which BDC measure it is; the lead is withdrawn until the definition is chosen. This probably also explains why 24 insurers fed `bdc_total_investment_income` (hypothesis; not queried; Tag Expert).
+   - F3 net assets: `AssetsNet` appears on 0 of 2 BDCs; lead withdrawn.
+   - U2 regulatory assets: plain `RegulatoryAssets` on 0 of 32 utilities; lead withdrawn.
+   - M1/M2 managed care: managed care uses the insurer tags; the managed-care lead rows are withdrawn and the group reuses insurer rows I1-I4 where the face shows them.
+   - Crypto/digital: the lead should be the `CryptoAssetFairValue*` family (no row defined yet).
+3. **Collision:** the existing registry row `net_interest_income` (mapped to `InvestmentIncomeInterest`) collides with the new bank NII row B1 (`InterestIncomeExpenseNet`). One of them is renamed before B1 is created; the Standardization Lead decides.
+4. **Effect on the catalog:** rows B10, B12, F2, F3, U2, M1, M2 are not required until re-defined; the proposed count of 66 is therefore overstated by at least those seven rows plus any row the four new groups need. The visible metric sets in section 3 that cite those rows are provisional.
+Owner of the next version: the Sector Analyst with the Tag Expert and the Standardization Lead; me for the visible metric sets. This correction closes blocker-list item PR1 only after that re-review.
