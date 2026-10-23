@@ -1,11 +1,15 @@
 name: SEC Tag Library rebuild
 
-# Manual only (founder direction 2026-09-27): companies file the same tags
+# Manual, plus a daily 23:00Z run since 2026-10-23 (founder direction 2026-09-27 was manual only): companies file the same tags
 # period after period, so the library is built once and rebuilt only after
 # WE change a concept_mapping or resolver -- that is what changes which tag
 # backs our values. Full rebuild aggregates all of core.fact (~1h).
 on:
   workflow_dispatch:
+  # Daily after the refresh (12:23) and sanity (15:17) schedules, inside the quiet window. Added
+  # 2026-10-23 when the step moved out of pipeline-refresh.yml: it needs more than 90 minutes.
+  schedule:
+    - cron: "0 23 * * *"
 
 permissions:
   contents: read

@@ -86,8 +86,7 @@ jobs:
     needs: filing-index
     if: always()
     runs-on: ubuntu-latest
-    # 150 (was 90) on 2026-10-22: the tag-library step below needs more than its old 45 minutes.
-    timeout-minutes: 150
+    timeout-minutes: 90
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -206,25 +205,10 @@ jobs:
         # as the coverage matrix above.
         if: always()
         run: uv run --project pipeline scrooner-map build-tag-candidates
-      - name: Rebuild SEC tag library (population-wide stages)
-        # Moved out of the reprocess script (2026-10-21): the `library` and `leads`
-        # stages rebuild analytics.sec_tag_library for every company regardless of the
-        # reprocess cohort, and ran 12+ minutes without finishing inside the reprocess
-        # step's 20-minute cap. A visible own timeout and timing here shows the real
-        # duration; the cohort stages (company_tags, lineage) stay in the reprocess.
-        #
-        # 2026-10-22: raised 45 -> 90. The 45-minute cap killed this step on 10-21 and
-        # again on the 10-22 manual rerun (OBSERVED, 05:52Z to 06:37Z, no completion);
-        # the standalone full rebuild is documented at about 1 hour. The job cap above
-        # was raised to 150 so the coverage snapshot after it still has room.
-        timeout-minutes: 90
-        if: always()
-        run: |
-          started=$SECONDS
-          rc=0
-          uv run --project pipeline scrooner-map build-tag-library --stages library,leads || rc=$?
-          echo "build-tag-library (library,leads) took $((SECONDS - started))s (rc=$rc)"
-          exit $rc
+      # The population-wide SEC tag library rebuild (`build-tag-library --stages library,leads`)
+      # moved out of this job on 2026-10-23 into pipeline-tag-library.yml (own schedule, own
+      # 180-minute cap). It ran past a 90-minute cap on the healthy, vacuumed database
+      # (OBSERVED 2026-10-23 16:27Z-17:57Z, killed at the cap) and turned the whole nightly red.
       - name: Record daily coverage snapshot
         timeout-minutes: 20
         if: always()
