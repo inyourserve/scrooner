@@ -284,6 +284,34 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
             median_q = sorted(abs(q.value) for q in tile)[1:3]
             centre = (median_q[0] + median_q[1]) / 2
             suspect = max(tile, key=lambda q: abs(abs(q.value) - centre))
+            odd_sign = [q for q in tile if sum(1 for o in tile if (o.value > 0) == (q.value > 0)) == 1]
+            if len(odd_sign) == 1 and (y.value > 0) != (odd_sign[0].value > 0):
+                suspect = odd_sign[0]  # the one quarter whose sign differs from the other three
+            rule = (
+                "quarters_vs_year_basis_mix"
+                if basis_mix
+                else "quarters_vs_year_perimeter_mix"
+                if perimeter
+                else "quarters_do_not_sum_to_year"
+            )
+            # A sum mismatch that is a plain error names the QUARTER the data points at
+            # (ODFL FY2017 income tax 112.1M is right; Q4 2017 +104.9M is the Tax Act
+            # remeasurement benefit tagged as a provision). A basis or perimeter mix is a
+            # statement about the YEAR against its quarters, so it stays on the year.
+            # ...unless the year itself rests on a component tag that is not a face line
+            # (TSLA cost of revenue FY2017 on CostOfGoodsSold, a priority-3 component): then
+            # the year is the suspect and stays the named cell
+            year_tags = {s.tag for s in data.source_facts(y) if not s.derived}
+            year_is_component = any(
+                (y.base, t) in data.tag_roles and not _face_tag(data, y.base, t)
+                for t in year_tags
+            )  # only a KNOWN non-face mapping counts; an unmapped tag falls back to the quarter
+            named = (
+                suspect
+                if rule == "quarters_do_not_sum_to_year" and not year_is_component
+                else y
+            )
+            implied = y.value - (total - suspect.value)
             out.append(
                 finding(
                     data,
@@ -291,13 +319,13 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
                     REVIEW
                     if basis_mix or perimeter or rel <= SUM_WRONG
                     else WRONG_VALUE,
-                    "quarters_vs_year_basis_mix"
-                    if basis_mix
-                    else "quarters_vs_year_perimeter_mix"
-                    if perimeter
-                    else "quarters_do_not_sum_to_year",
-                    y,
-                    other=total,
+                    rule,
+                    named,
+                    other=implied if named is suspect else total,
+                    year_end=str(y.end),
+                    year_value=str(y.value),
+                    sum_of_quarters=str(total),
+                    implied_quarter_value=str(implied),
                     rel_gap=str(rel),
                     quarters=[
                         {

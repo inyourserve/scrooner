@@ -21,6 +21,7 @@ from decimal import Decimal
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES, Identity, evaluate
 
 from .thresholds import (
+    LIABILITIES_NCI_TOLERANCE,
     WRONG_GAP,
     SCALE_RATIO,
     CASH_ROLL_TOLERANCE,
@@ -29,6 +30,7 @@ from .thresholds import (
     CASH_DATE_SLACK_DAYS,
 )
 from .model import (
+    INFO,
     REVIEW,
     WRONG_VALUE,
     CompanyData,
@@ -46,7 +48,7 @@ from .model import (
 # net income 3x above pretax - tax and the tie is legitimately open). Its failure
 # is `wrong_value` only when stored and expected differ by a SCALE (>= 50x either
 # way, or a power-of-ten signature); a smaller gap is `review`.
-SCALE_ONLY_IDENTITIES = frozenset({"net_income"})
+SCALE_ONLY_IDENTITIES = frozenset({"net_income", "gross_profit"})
 
 I1_IDENTITIES = ("balance_sheet", "current_assets_within_total", "cash_within_total")
 I2_IDENTITIES = ("gross_profit", "net_income")
@@ -102,8 +104,13 @@ def _check_identity(
         if result.passed:
             continue
         if identity.name in SCALE_ONLY_IDENTITIES:
+            # data-team/strategy/team/CERTIFY-HELDOUT-VALIDATION: the net income and
+            # gross profit identities were 0/4 right on held-out cells (NCI at MPC and
+            # SPGI, excise taxes in MO's revenue, a REIT layout at DOC): they cannot see
+            # the reconciling items, so a gap that is not a unit-scale error is `info`
+            # (counted, never stored, never blocking).
             severity = (
-                WRONG_VALUE if _scale_apart(result.actual, result.expected) else REVIEW
+                WRONG_VALUE if _scale_apart(result.actual, result.expected) else INFO
             )
         else:
             severity = WRONG_VALUE if (result.rel_gap or 0) > WRONG_GAP else REVIEW
@@ -124,6 +131,44 @@ def _check_identity(
             )
         )
     return findings
+
+
+NCI_TAGS = (
+    "MinorityInterest",
+    "RedeemableNoncontrollingInterestEquityCarryingAmount",
+    "TemporaryEquityCarryingAmountAttributableToParent",
+)
+
+
+def _liabilities_nci(data: CompanyData) -> list[Finding]:
+    """A total liabilities value built as assets - equity - noncontrolling interest
+    must exclude the noncontrolling interest from liabilities (it is equity). VLO
+    2020-12-31 stored 33,814M (assets less Valero's equity only: the 1.68B NCI sits
+    inside liabilities) against 32,132M on the balance sheet. Applies only to a
+    calculated cell that lists assets, parent equity and an NCI fact among its
+    sources; a filed total liabilities is checked by the balance identity."""
+    out: list[Finding] = []
+    for cell in data.display_cells():
+        if cell.base != "total_liabilities":
+            continue
+        srcs = data.source_facts(cell)
+        a = next((s for s in srcs if s.tag == "Assets"), None)
+        e = next((s for s in srcs if s.tag == "StockholdersEquity"), None)
+        n = [s for s in srcs if s.tag in NCI_TAGS and s.value]
+        if a is None or e is None or not n:
+            continue
+        expected = a.value - e.value - sum((s.value for s in n), Decimal(0))
+        if expected > 0 and abs(cell.value - expected) / expected > LIABILITIES_NCI_TOLERANCE:
+            out.append(
+                finding(
+                    data, "I1", WRONG_VALUE, "liabilities_nci_treatment", cell, other=expected,
+                    assets=str(a.value), parent_equity=str(e.value),
+                    noncontrolling_interest=str(sum((s.value for s in n), Decimal(0))),
+                    note="total liabilities = assets - equity - noncontrolling interest; NCI is equity",
+                    source_ids=sorted(s.id for s in srcs),
+                )
+            )
+    return out
 
 
 def _cash_roll(data: CompanyData, by_period) -> list[Finding]:
@@ -186,6 +231,7 @@ def _cash_roll(data: CompanyData, by_period) -> list[Finding]:
 def check(data: CompanyData) -> list[Finding]:
     by_period = _by_period(data)
     findings: list[Finding] = []
+    findings += _liabilities_nci(data)
     for name in I1_IDENTITIES:
         findings += _check_identity(data, by_period, _identity(name), "I1")
     for name in I2_IDENTITIES:

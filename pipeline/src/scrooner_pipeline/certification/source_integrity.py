@@ -31,9 +31,13 @@ Every stored value (both layers) must be explained by its source facts:
 from __future__ import annotations
 
 from decimal import Decimal
+from types import SimpleNamespace
 from itertools import combinations, product
 
 from .thresholds import (
+    CROSS_VINTAGE_MAX_DIFF,
+    CROSS_VINTAGE_MIN_DIFF,
+    VINTAGE_LATE_FILING_DAYS,
     RECAST_8K_MIN_FACTS,
     PROXY_ROUNDING_MAX,
     SCALE_RATIO,
@@ -86,6 +90,7 @@ def _close(a: Decimal, b: Decimal) -> bool:
 # input (Apple basic EPS 5.43 / 4 = 1.3575; the ratio fact is unit `pure`). It is
 # an adjustment factor, not a source of the value, so it is exempt from the unit
 # test and the value is compared with the main source divided by the ratio.
+REIT_NO_SUBTOTAL = frozenset({"operating_income", "gross_profit", "operating_expenses"})
 ADJUSTMENT_TAG_HINT = "SplitConversionRatio"
 
 
@@ -239,6 +244,132 @@ def _non_periodic_findings(data: CompanyData) -> list[Finding]:
     return out
 
 
+def _all_copies(data: CompanyData, source) -> list:
+    return (
+        data.authoritative_copies.get(source.id, [])
+        + data.conflict_copies.get(source.id, [])
+        + data.periodic_copies.get(source.id, [])
+    )
+
+
+def _sign_flip_between_copies(data: CompanyData, cell, sources) -> list[Finding]:
+    """CMG FY2018 income tax stored -91.9M (a benefit) when the FY2018 and FY2019
+    10-Ks file +91,883K (expense): the FY2020 10-K re-tags the comparative with the
+    opposite sign and the latest copy won. The suite cannot call a negative tax wrong
+    on sign alone, but it can see that copies of ONE fact disagree on sign with equal
+    magnitude. The stored sign in the minority of copies is `wrong_value`; a tie is
+    `review`; the stored sign in the majority is not a finding."""
+    out: list[Finding] = []
+    if len(sources) != 1 or cell.value == 0:
+        return out
+    s = sources[0]
+    copies = _all_copies(data, s)
+    if not copies:
+        return out
+    same, opposite = 1, 0
+    flipped = []
+    for c in copies:
+        if c.value == 0 or not _close(abs(c.value), abs(s.value)):
+            continue
+        if (c.value > 0) == (s.value > 0):
+            same += 1
+        else:
+            opposite += 1
+            flipped.append(c)
+    if not opposite or opposite < same:
+        return out
+    out.append(
+        finding(
+            data, "I6", WRONG_VALUE if opposite > same else REVIEW, "sign_flip_between_copies", cell,
+            other=flipped[0].value, stored_sign_copies=same, opposite_sign_copies=opposite,
+            copies=[
+                {"id": c.id, "value": str(c.value), "form": c.form, "accession": c.accession, "filed": str(c.filing_date)}
+                for c in copies[:6]
+            ],
+            source_ids=[s.id],
+        )
+    )
+    return out
+
+
+def _cross_vintage_arithmetic(data: CompanyData, cell, sources) -> list[Finding]:
+    """BMY gross profit 6M 2017 = 2017 10-Q revenue 10,073M minus the 2018 10-Q's
+    recast cost of sales 2,834M (the 2017 10-Q says 2,821M and files gross profit
+    7,252M): two periodic filings of different vintages, one input restated since.
+
+    `wrong_value` only on POSITIVE proof: the cell has exactly two inputs, they were
+    filed more than 200 days apart, the stored number is their sum or difference, and
+    some single filing holds BOTH inputs at its own values and gives a different number
+    (0.1% to 5% away): the stored value is not what any one filing says. When no filing
+    holds both inputs the mix cannot be shown and nothing is raised; when one filing
+    reproduces the stored value the cell is single-vintage and silent (ALLE gross
+    profit FY2017, SPGI operating expenses Q1 2024: the Verifier's right cells)."""
+    out: list[Finding] = []
+    inputs = {s.tag: s for s in sources}
+    if len(inputs) != 2:
+        return out
+    dated = [s for s in inputs.values() if s.filing_date is not None and s.form in PERIODIC_FORMS]
+    if len(dated) != 2:
+        return out
+    spread = abs((dated[0].filing_date - dated[1].filing_date).days)
+    if spread < VINTAGE_LATE_FILING_DAYS:
+        return out
+    (ta, sa), (tb, sb) = list(inputs.items())
+    ops = {
+        "a-b": lambda a, b: a - b,
+        "b-a": lambda a, b: b - a,
+        "a+b": lambda a, b: a + b,
+    }
+    used = next((name for name, fn in ops.items() if _close(cell.value, fn(sa.value, sb.value))), None)
+    if used is None:
+        return out
+    by_filing: dict[object, dict[str, Decimal]] = {}
+    for s in (sa, sb):
+        for v in (s, *_all_copies(data, s)):
+            if v.filing_date is not None:
+                by_filing.setdefault(v.filing_date, {})[v.tag] = v.value
+    complete = {d: v for d, v in by_filing.items() if ta in v and tb in v}
+    if not complete:
+        return out
+    results = {d: ops[used](v[ta], v[tb]) for d, v in complete.items()}
+    # the filing whose own versions come closest to the stored value; a filing that
+    # reproduces it exactly gives rel = 0 and the cell is single-vintage (silent)
+    nearest_date, nearest = min(results.items(), key=lambda kv: abs(kv[1] - cell.value))
+    rel = abs(nearest - cell.value) / max(abs(nearest), abs(cell.value))
+    if not (CROSS_VINTAGE_MIN_DIFF <= rel <= CROSS_VINTAGE_MAX_DIFF):
+        return out
+    out.append(
+        finding(
+            data, "I6", WRONG_VALUE, "cross_vintage_arithmetic", cell, other=nearest,
+            filing_spread_days=spread, operation=used, filing_with_both_inputs=str(nearest_date),
+            value_in_that_filing=str(nearest), relative_gap=str(rel),
+            sources=[
+                {"id": s.id, "tag": s.tag, "value": str(s.value), "filed": str(s.filing_date)}
+                for s in (sa, sb)
+            ],
+        )
+    )
+    return out
+
+
+def _reit_operating_subtotal(data: CompanyData, cell, sources) -> list[Finding]:
+    """A REIT presents no operating-income, gross-profit or operating-expense subtotal
+    (DOC/HCP Q2 2016: operating income 359.3M = total revenues 538.3M minus the
+    'Operating' property-expense line 179.1M, while total costs and expenses are
+    463.9M). A calculated value for these concepts at a REIT (SIC 6798) is a
+    definition made up from two lines: `wrong_value` until the owner defines it."""
+    if data.sic != "6798" or cell.base not in REIT_NO_SUBTOTAL or len({s.id for s in sources}) < 2:
+        return []
+    return [
+        finding(
+            data, "I6", WRONG_VALUE, "reit_calculated_subtotal", cell,
+            sic=data.sic, tags=sorted({s.tag for s in sources}),
+            note="REITs present no such subtotal; the value is built from two statement lines",
+            source_ids=sorted(s.id for s in sources),
+        )
+    ]
+
+
 def check(data: CompanyData) -> list[Finding]:
     """Checks the DISPLAYED layer only (the `_resolved` row where one exists):
     the base row of a resolved pair is not shown, and counting both would
@@ -250,6 +381,9 @@ def check(data: CompanyData) -> list[Finding]:
         ratios = [s for s in all_sources if _is_adjustment(s.tag) and s.value]
         if not sources:
             continue
+        findings += _sign_flip_between_copies(data, cell, sources)
+        findings += _cross_vintage_arithmetic(data, cell, sources)
+        findings += _reit_operating_subtotal(data, cell, sources)
         for s in sources:
             want = expected_unit(cell.base)
             if want is not None and s.unit is not None and s.unit.lower() != want:

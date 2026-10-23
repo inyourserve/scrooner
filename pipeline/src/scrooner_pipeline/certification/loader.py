@@ -31,7 +31,10 @@ from .model import (
     MetricCell,
     Source,
     PERIODIC_FORMS,
+    PER_SHARE,
 )
+
+from .thresholds import LEASE_INCLUSIVE_DEBT_TAGS  # noqa: E402
 
 HISTORY_FLOOR = date(2015, 1, 1)  # doc 38: nothing older is displayed as current
 DEBT_CONCEPTS = ("total_debt", "total_debt_split")
@@ -331,6 +334,40 @@ def load_chunk(
             if cid in data:
                 data[cid].periodic_copies.setdefault(r[0], []).append(_source(r[1:]))
 
+    # copies of per-share sources from every filing (a split restates the comparative columns
+    # of the filings after it): the only proof that separates a split from an offering
+    per_share_ids = sorted(
+        {
+            sid
+            for d in data.values()
+            for c in d.cells
+            if c.base in PER_SHARE
+            for sid in c.source_ids
+        }
+    )
+    for i in range(0, len(per_share_ids), SOURCE_BATCH):
+        rows = execute(
+            cur,
+            """
+            select f1.id, f2.id, c.tag, f2.value, f2.is_authoritative, f2.is_derived, fl.form, u.unit_name,
+                   fl.accession_number, fl.filing_date, p.start_date, p.end_date
+            from core.fact f1
+            join core.fact f2 on f2.company_id = f1.company_id and f2.concept_id = f1.concept_id
+                 and f2.period_id = f1.period_id and f2.unit_id = f1.unit_id and f2.id <> f1.id
+            join core.concept c on c.id = f2.concept_id
+            join core.unit u on u.id = f2.unit_id
+            join core.period p on p.id = f2.period_id
+            join core.filing fl on fl.id = f2.filing_id
+            where f1.id = any(%s) and not f2.is_derived
+            """,
+            (per_share_ids[i : i + SOURCE_BATCH],),
+            timeout_s,
+        )
+        for r in rows:
+            cid = owner.get(r[0])
+            if cid in data:
+                data[cid].pershare_copies.setdefault(r[0], []).append(_source(r[1:]))
+
     # fact counts of the 8-K filings used as sources: does the 8-K carry full statements?
     eight_k = sorted(
         {
@@ -380,8 +417,10 @@ def load_chunk(
                 data[cid].conflict_copies.setdefault(r[0], []).append(_source(r[1:]))
 
     # debt components and balance-sheet adjustment facts (authoritative, USD)
-    tags = sorted(set(registry.debt_tags) | set(registry.adjustment_tags))
-    debt = set(registry.debt_tags)
+    tags = sorted(
+        set(registry.debt_tags) | set(LEASE_INCLUSIVE_DEBT_TAGS) | set(registry.adjustment_tags)
+    )
+    debt = set(registry.debt_tags) | set(LEASE_INCLUSIVE_DEBT_TAGS)
     for cid, fid, tag, value, pid, end in execute(
         cur,
         """

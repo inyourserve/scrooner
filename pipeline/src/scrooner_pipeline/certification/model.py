@@ -173,6 +173,9 @@ class CompanyData:
     # any authority, keyed by the id of the non-periodic source: the stored value is
     # compared with them (I6 non_periodic_form)
     periodic_copies: dict[int, list[Source]] = field(default_factory=dict)
+    # every other copy (any authority, any filing) of the same (tag, period, unit) for the
+    # sources of PER-SHARE cells: the restated comparatives that prove a split
+    pershare_copies: dict[int, list[Source]] = field(default_factory=dict)
     # accession -> number of facts the filing carries (8-K sources only): a recast 8-K
     # holds complete restated statements (hundreds of facts), an earnings release or a
     # proxy holds a handful
