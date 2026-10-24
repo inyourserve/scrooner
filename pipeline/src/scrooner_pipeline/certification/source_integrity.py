@@ -280,10 +280,22 @@ def _sign_flip_between_copies(data: CompanyData, cell, sources) -> list[Finding]
         return out
     out.append(
         finding(
-            data, "I6", WRONG_VALUE if opposite > same else REVIEW, "sign_flip_between_copies", cell,
-            other=flipped[0].value, stored_sign_copies=same, opposite_sign_copies=opposite,
+            data,
+            "I6",
+            WRONG_VALUE if opposite > same else REVIEW,
+            "sign_flip_between_copies",
+            cell,
+            other=flipped[0].value,
+            stored_sign_copies=same,
+            opposite_sign_copies=opposite,
             copies=[
-                {"id": c.id, "value": str(c.value), "form": c.form, "accession": c.accession, "filed": str(c.filing_date)}
+                {
+                    "id": c.id,
+                    "value": str(c.value),
+                    "form": c.form,
+                    "accession": c.accession,
+                    "filed": str(c.filing_date),
+                }
                 for c in copies[:6]
             ],
             source_ids=[s.id],
@@ -308,7 +320,11 @@ def _cross_vintage_arithmetic(data: CompanyData, cell, sources) -> list[Finding]
     inputs = {s.tag: s for s in sources}
     if len(inputs) != 2:
         return out
-    dated = [s for s in inputs.values() if s.filing_date is not None and s.form in PERIODIC_FORMS]
+    dated = [
+        s
+        for s in inputs.values()
+        if s.filing_date is not None and s.form in PERIODIC_FORMS
+    ]
     if len(dated) != 2:
         return out
     spread = abs((dated[0].filing_date - dated[1].filing_date).days)
@@ -320,14 +336,32 @@ def _cross_vintage_arithmetic(data: CompanyData, cell, sources) -> list[Finding]
         "b-a": lambda a, b: b - a,
         "a+b": lambda a, b: a + b,
     }
-    used = next((name for name, fn in ops.items() if _close(cell.value, fn(sa.value, sb.value))), None)
+    used = next(
+        (
+            name
+            for name, fn in ops.items()
+            if _close(cell.value, fn(sa.value, sb.value))
+        ),
+        None,
+    )
     if used is None:
         return out
     by_filing: dict[object, dict[str, Decimal]] = {}
+    stable: dict[str, Decimal] = {}
     for s in (sa, sb):
-        for v in (s, *_all_copies(data, s)):
+        versions = [s, *_all_copies(data, s)]
+        for v in versions:
             if v.filing_date is not None:
                 by_filing.setdefault(v.filing_date, {})[v.tag] = v.value
+        if all(_close(v.value, s.value) for v in versions):
+            # no loaded version of this input ever differed: it is taken as unchanged, so
+            # it is also present at every later filing that restated the OTHER input
+            # (SPGI revenue is identical in both vintages; only the expense line moved
+            # and the later 10-Q alone gives the stored gross profit)
+            stable[s.tag] = s.value
+    for versions_at in by_filing.values():
+        for tag, value in stable.items():
+            versions_at.setdefault(tag, value)
     complete = {d: v for d, v in by_filing.items() if ta in v and tb in v}
     if not complete:
         return out
@@ -340,11 +374,24 @@ def _cross_vintage_arithmetic(data: CompanyData, cell, sources) -> list[Finding]
         return out
     out.append(
         finding(
-            data, "I6", WRONG_VALUE, "cross_vintage_arithmetic", cell, other=nearest,
-            filing_spread_days=spread, operation=used, filing_with_both_inputs=str(nearest_date),
-            value_in_that_filing=str(nearest), relative_gap=str(rel),
+            data,
+            "I6",
+            WRONG_VALUE,
+            "cross_vintage_arithmetic",
+            cell,
+            other=nearest,
+            filing_spread_days=spread,
+            operation=used,
+            filing_with_both_inputs=str(nearest_date),
+            value_in_that_filing=str(nearest),
+            relative_gap=str(rel),
             sources=[
-                {"id": s.id, "tag": s.tag, "value": str(s.value), "filed": str(s.filing_date)}
+                {
+                    "id": s.id,
+                    "tag": s.tag,
+                    "value": str(s.value),
+                    "filed": str(s.filing_date),
+                }
                 for s in (sa, sb)
             ],
         )
@@ -358,12 +405,21 @@ def _reit_operating_subtotal(data: CompanyData, cell, sources) -> list[Finding]:
     'Operating' property-expense line 179.1M, while total costs and expenses are
     463.9M). A calculated value for these concepts at a REIT (SIC 6798) is a
     definition made up from two lines: `wrong_value` until the owner defines it."""
-    if data.sic != "6798" or cell.base not in REIT_NO_SUBTOTAL or len({s.id for s in sources}) < 2:
+    if (
+        data.sic != "6798"
+        or cell.base not in REIT_NO_SUBTOTAL
+        or len({s.id for s in sources}) < 2
+    ):
         return []
     return [
         finding(
-            data, "I6", WRONG_VALUE, "reit_calculated_subtotal", cell,
-            sic=data.sic, tags=sorted({s.tag for s in sources}),
+            data,
+            "I6",
+            WRONG_VALUE,
+            "reit_calculated_subtotal",
+            cell,
+            sic=data.sic,
+            tags=sorted({s.tag for s in sources}),
             note="REITs present no such subtotal; the value is built from two statement lines",
             source_ids=sorted(s.id for s in sources),
         )

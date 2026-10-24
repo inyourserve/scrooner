@@ -188,6 +188,8 @@ class TestGates:
         rev = src("Revenues", 10_073_000_000, form="10-Q", sid=9401, filed=date(2017, 8, 1))
         cogs = src("CostOfGoodsAndServicesSold", 2_834_000_000, form="10-Q", sid=9402, filed=date(2018, 8, 1))
         d.conflict_copies[9402] = [src("CostOfGoodsAndServicesSold", 2_821_000_000, form="10-Q", sid=9403, filed=date(2017, 8, 1))]
+        # revenue was recast too (ASC 606): the 2018 10-Q says 10,100M, so neither filing alone gives 7,239M
+        d.conflict_copies[9401] = [src("Revenues", 10_100_000_000, form="10-Q", sid=9404, filed=date(2018, 8, 1))]
         add(d, "gross_profit_resolved", 7_239_000_000, date(2017, 6, 30), date(2017, 1, 1), None, sources=[rev, cogs], form="10-Q")
         assert "cross_vintage_arithmetic" in rules(source_integrity.check(d), WRONG_VALUE)
 

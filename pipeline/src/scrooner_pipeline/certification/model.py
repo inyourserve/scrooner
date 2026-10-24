@@ -176,6 +176,9 @@ class CompanyData:
     # every other copy (any authority, any filing) of the same (tag, period, unit) for the
     # sources of PER-SHARE cells: the restated comparatives that prove a split
     pershare_copies: dict[int, list[Source]] = field(default_factory=dict)
+    # source fact id -> (end date, fact id) of facts in the SAME filing with the SAME concept, unit and
+    # value on a discrete quarter 1-3 years later: the twin of a label-shifted quarter (SWK Q1 2017)
+    label_twins: dict[int, list[tuple[date, int]]] = field(default_factory=dict)
     # accession -> number of facts the filing carries (8-K sources only): a recast 8-K
     # holds complete restated statements (hundreds of facts), an earnings release or a
     # proxy holds a handful
@@ -303,6 +306,18 @@ def finding(
         source_fact_ids=[int(i) for i in source_ids],
     )
 
+
+# Claims on the balance sheet that are neither liability nor parent equity: noncontrolling
+# interest, REDEEMABLE noncontrolling interest and temporary (mezzanine) equity. The plural
+# `...IncludingPortionAttributableToNoncontrollingInterests` is the tag ILMN files (33,733K at
+# 2016-07-03); the singular spelling is the one accounting_identity lists.
+NCI_CLAIM_TAGS = (
+    "MinorityInterest",
+    "RedeemableNoncontrollingInterestEquityCarryingAmount",
+    "TemporaryEquityCarryingAmountAttributableToParent",
+    "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterest",
+    "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests",
+)
 
 # ---- shared concept sets (names come from analytics.canonical_concept; they
 # were read from the registry on 2026-10-21, none is assumed) -----------------

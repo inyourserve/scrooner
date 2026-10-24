@@ -31,6 +31,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from .thresholds import (
+    DEBT_DIP_MIN_ASSET_SHARE,
     DEBT_DIP_RATIO,
     Q4_EPS_TOLERANCE,
     Q4_RATE_TOLERANCE,
@@ -132,18 +133,44 @@ def _debt_isolated_dip(data: CompanyData) -> list[Finding]:
     and stays visible in the evidence."""
     out: list[Finding] = []
     cells = sorted((c for c in _debt_cells(data) if c.value > 0), key=lambda c: c.end)
+    total_assets = data.display_by_concept().get("total_assets", [])
     for i, cur in enumerate(cells):
         before = [c for c in cells[max(0, i - 2) : i] if (cur.end - c.end).days <= 260]
         after = [c for c in cells[i + 1 : i + 3] if (c.end - cur.end).days <= 260]
         if not before or not after:
             continue
-        hi_b, hi_a = max(before, key=lambda c: c.value), max(after, key=lambda c: c.value)
-        if hi_b.value >= cur.value * DEBT_DIP_RATIO and hi_a.value >= cur.value * DEBT_DIP_RATIO:
+        hi_b, hi_a = (
+            max(before, key=lambda c: c.value),
+            max(after, key=lambda c: c.value),
+        )
+        # a REAL small debt is not a missing component (FIX 2017-03-31: the face lines are
+        # only current maturities 1,112K + long-term 693K): the neighbours must be
+        # material, at least DEBT_DIP_MIN_ASSET_SHARE of that period's total assets
+        assets = next(
+            (a for a in total_assets if abs((a.end - cur.end).days) <= 7), None
+        )
+        if (
+            assets is not None
+            and assets.value > 0
+            and min(hi_b.value, hi_a.value) < assets.value * DEBT_DIP_MIN_ASSET_SHARE
+        ):
+            continue
+        if (
+            hi_b.value >= cur.value * DEBT_DIP_RATIO
+            and hi_a.value >= cur.value * DEBT_DIP_RATIO
+        ):
             out.append(
                 finding(
-                    data, "I8", WRONG_VALUE, "debt_isolated_dip", cur, other=min(hi_b.value, hi_a.value),
-                    previous_end=str(hi_b.end), previous_value=str(hi_b.value),
-                    next_end=str(hi_a.end), next_value=str(hi_a.value),
+                    data,
+                    "I8",
+                    WRONG_VALUE,
+                    "debt_isolated_dip",
+                    cur,
+                    other=min(hi_b.value, hi_a.value),
+                    previous_end=str(hi_b.end),
+                    previous_value=str(hi_b.value),
+                    next_end=str(hi_a.end),
+                    next_value=str(hi_a.value),
                     note="total debt is a fraction of a balance sheet before AND after it: a component line is missing",
                     source_ids=sorted(set(cur.source_ids)),
                 )
@@ -326,7 +353,9 @@ def _q4_value_status(data: CompanyData, cell) -> dict:
     `differs_from_recompute` = the stored value is off by more than the tolerance;
     `consistent_with_recompute` = it matches (still unsourced: no filed Q4 figure)."""
     by = data.display_by_concept()
-    same = lambda base: next((c for c in by.get(base, []) if c.period_id == cell.period_id), None)  # noqa: E731
+    same = lambda base: next(
+        (c for c in by.get(base, []) if c.period_id == cell.period_id), None
+    )  # noqa: E731
     if cell.base == "effective_tax_rate_reported":
         tax, pre = same("income_tax_expense"), same("income_before_tax")
         if tax is None or pre is None or pre.value == 0:
@@ -335,7 +364,9 @@ def _q4_value_status(data: CompanyData, cell) -> dict:
         tol = Q4_RATE_TOLERANCE
         diff = abs(cell.value - est)
         return {
-            "value_status": "differs_from_recompute" if diff > tol else "consistent_with_recompute",
+            "value_status": "differs_from_recompute"
+            if diff > tol
+            else "consistent_with_recompute",
             "recompute": str(est),
             "recompute_basis": "Q4 income tax / Q4 pretax income",
         }
@@ -362,7 +393,9 @@ def _q4_value_status(data: CompanyData, cell) -> dict:
         est = ni.value / (sum(shares, Decimal(0)) / len(shares))
         diff = abs(cell.value - est) / max(abs(est), Decimal("0.01"))
         return {
-            "value_status": "differs_from_recompute" if diff > Q4_EPS_TOLERANCE else "consistent_with_recompute",
+            "value_status": "differs_from_recompute"
+            if diff > Q4_EPS_TOLERANCE
+            else "consistent_with_recompute",
             "recompute": str(est),
             "recompute_basis": "Q4 net income / mean implied shares of the filed quarters",
         }

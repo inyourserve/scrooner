@@ -35,6 +35,7 @@ from .thresholds import (
     BASIS_CELL_TOLERANCE,
     DUPLICATE_STEP_WINDOW_DAYS,
     DUPLICATE_EVENT_DAYS,
+    MIN_RESTATED_RATIO,
     INTEGER_TOLERANCE,
     JUMP_FACTOR,
     QUARTER_MAX_DAYS,
@@ -165,7 +166,9 @@ def _basis_mix(data: CompanyData) -> list[Finding]:
     return out
 
 
-def clean_ratio(x: Decimal, tolerance: Decimal = BREAK_TOLERANCE) -> int | Decimal | None:
+def clean_ratio(
+    x: Decimal, tolerance: Decimal = BREAK_TOLERANCE
+) -> int | Decimal | None:
     """The split ratio k that `x` or 1/x is within `tolerance` of: a whole ratio
     (2, 3, 4, 5 ... 50) or one of the non-integer ratios real splits use (3-for-2 =
     1.5, 5-for-4 = 1.25, 5-for-2 = 2.5), else None."""
@@ -192,20 +195,24 @@ def _restated_pairs(data: CompanyData) -> list[tuple[date, Decimal]]:
         for s in list(pool.values()):
             for cp in data.pershare_copies.get(s.id, []):
                 pool.setdefault(cp.id, cp)
-        srcs = sorted(
+        dated = sorted(
             (
-                s
+                (s.filing_date, s)
                 for s in pool.values()
                 if "SplitConversionRatio" not in s.tag
                 and not s.derived
                 and s.filing_date is not None
                 and s.value != 0
             ),
-            key=lambda s: s.filing_date,
+            key=lambda t: t[0],
         )
-        for older, newer in zip(srcs, srcs[1:]):
-            if newer.filing_date > older.filing_date and (older.value > 0) == (newer.value > 0):
-                out.append((newer.filing_date, older.value / newer.value))
+        for (d_old, older), (d_new, newer) in zip(dated, dated[1:]):
+            if d_new > d_old and (older.value > 0) == (newer.value > 0):
+                r = older.value / newer.value
+                # an UNCHANGED value (r ~ 1) is no proof of anything: the comparative must
+                # have moved by at least the smallest real split ratio
+                if max(r, 1 / r) >= MIN_RESTATED_RATIO:
+                    out.append((d_new, r))
     return out
 
 
@@ -215,8 +222,12 @@ def _corroborated(b: date, sr: Decimal, pairs: list[tuple[date, Decimal]]) -> bo
     it is an offering or an acquisition (NEM/Newcrest, DOC/HCP and MPC/Andeavor all step
     the cover counts 1.25-1.5x with no restated EPS; ODFL's 3-for-2 does)."""
     for d2, r in pairs:
-        if abs((d2 - b).days) <= 200 and (r > 1) == (sr > 1) and _same_ratio(
-            r if r > 1 else 1 / r, sr if sr > 1 else 1 / sr, Decimal("0.15")
+        if (
+            abs((d2 - b).days) <= 200
+            and (r > 1) == (sr > 1)
+            and _same_ratio(
+                r if r > 1 else 1 / r, sr if sr > 1 else 1 / sr, Decimal("0.15")
+            )
         ):
             return True
     return False
@@ -340,12 +351,14 @@ def split_events(
             k = clean_ratio(sr)
             if k is None:  # _steps only yields clean steps
                 continue
-            if isinstance(k, Decimal) or k != int(k):
-                # a non-integer ratio needs restated per-share comparatives too
-                if implied is None:
-                    implied = _restated_pairs(data)
-                if not _corroborated(b, sr, implied):
-                    continue
+            # EVERY inferred split, integer or not, needs the restated-comparative proof: a
+            # step in the cover counts alone is also an IPO preferred conversion (DOCU 4x),
+            # a self-tender (INCY 0.8x), acquisition shares (STE) or nothing (TER 2x), and
+            # none of those restates a single per-share comparative.
+            if implied is None:
+                implied = _restated_pairs(data)
+            if not _corroborated(b, sr, implied):
+                continue
             kd = Decimal(str(k))
             events.append(SplitEvent(b, kd if sr > 1 else 1 / kd, "inferred"))
     return sorted(events, key=lambda e: e.date), dups

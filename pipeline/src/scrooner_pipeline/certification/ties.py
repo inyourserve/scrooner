@@ -17,10 +17,12 @@ cash-flow statement vs the income statement, retained-earnings roll-forward.
 from __future__ import annotations
 
 from decimal import Decimal
+from typing import Any
 
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES, Identity, evaluate
 
 from .thresholds import (
+    ROUNDING_TOLERANCE,
     LIABILITIES_NCI_TOLERANCE,
     WRONG_GAP,
     SCALE_RATIO,
@@ -30,6 +32,7 @@ from .thresholds import (
     CASH_DATE_SLACK_DAYS,
 )
 from .model import (
+    NCI_CLAIM_TAGS,
     INFO,
     REVIEW,
     WRONG_VALUE,
@@ -38,6 +41,14 @@ from .model import (
     finding,
     power_of_ten_signature,
 )
+
+
+def _close(a: Decimal, b: Decimal) -> bool:
+    return a == b or (
+        max(abs(a), abs(b)) != 0
+        and abs(a - b) / max(abs(a), abs(b)) <= ROUNDING_TOLERANCE
+    )
+
 
 # Relative gap (to the identity's basis) beyond which a failed tie is no longer
 # plausible rounding / perimeter noise: a 25% gap on assets = L + E is a wrong
@@ -133,39 +144,79 @@ def _check_identity(
     return findings
 
 
-NCI_TAGS = (
-    "MinorityInterest",
-    "RedeemableNoncontrollingInterestEquityCarryingAmount",
-    "TemporaryEquityCarryingAmountAttributableToParent",
-)
+NCI_TAGS = NCI_CLAIM_TAGS
 
 
 def _liabilities_nci(data: CompanyData) -> list[Finding]:
-    """A total liabilities value built as assets - equity - noncontrolling interest
-    must exclude the noncontrolling interest from liabilities (it is equity). VLO
-    2020-12-31 stored 33,814M (assets less Valero's equity only: the 1.68B NCI sits
-    inside liabilities) against 32,132M on the balance sheet. Applies only to a
-    calculated cell that lists assets, parent equity and an NCI fact among its
-    sources; a filed total liabilities is checked by the balance identity."""
+    """A calculated total liabilities must equal assets - equity - every claim that is
+    neither liability nor parent equity (noncontrolling interest, REDEEMABLE
+    noncontrolling interest, temporary equity). VLO 2020-12-31 stored 33,814M against
+    32,132M on the balance sheet. The claims are read from the cell's own sources AND
+    from the authoritative facts of the same period (ILMN: the redeemable NCI is not
+    among the cell's sources, so the first version expected 1,845M where the face says
+    1,811M). Two findings, both `wrong_value`:
+      liabilities_nci_added      stored = assets - equity + NCI (the NCI added instead of
+                                 subtracted, SWK 2021: 3.0M on 12,471M), at ANY size
+      liabilities_nci_treatment  stored differs from the right value by more than 0.5%
+    A filed total liabilities is checked by the balance identity instead."""
     out: list[Finding] = []
+    adj: dict[int, dict[str, Decimal]] = {}
+    for f in data.adjustment_facts:
+        if f.tag in NCI_TAGS:
+            adj.setdefault(f.period_id, {})[f.tag] = f.value
     for cell in data.display_cells():
         if cell.base != "total_liabilities":
             continue
         srcs = data.source_facts(cell)
         a = next((s for s in srcs if s.tag == "Assets"), None)
         e = next((s for s in srcs if s.tag == "StockholdersEquity"), None)
-        n = [s for s in srcs if s.tag in NCI_TAGS and s.value]
-        if a is None or e is None or not n:
+        if a is None or e is None:
             continue
-        expected = a.value - e.value - sum((s.value for s in n), Decimal(0))
-        if expected > 0 and abs(cell.value - expected) / expected > LIABILITIES_NCI_TOLERANCE:
+        claims: dict[str, Decimal] = {
+            s.tag: s.value for s in srcs if s.tag in NCI_TAGS and s.value
+        }
+        for tag, value in adj.get(cell.period_id, {}).items():
+            if value:
+                claims.setdefault(tag, value)
+        if not claims:
+            continue
+        n = sum(claims.values(), Decimal(0))
+        expected = a.value - e.value - n
+        if expected <= 0:
+            continue
+        evidence: dict[str, Any] = dict(
+            assets=str(a.value),
+            parent_equity=str(e.value),
+            noncontrolling_interest=str(n),
+            claims={t: str(v) for t, v in claims.items()},
+            note="total liabilities = assets - equity - noncontrolling interests; they are equity",
+        )
+        if _close(cell.value, a.value - e.value + n) and not _close(
+            cell.value, expected
+        ):
             out.append(
                 finding(
-                    data, "I1", WRONG_VALUE, "liabilities_nci_treatment", cell, other=expected,
-                    assets=str(a.value), parent_equity=str(e.value),
-                    noncontrolling_interest=str(sum((s.value for s in n), Decimal(0))),
-                    note="total liabilities = assets - equity - noncontrolling interest; NCI is equity",
+                    data,
+                    "I1",
+                    WRONG_VALUE,
+                    "liabilities_nci_added",
+                    cell,
+                    other=expected,
                     source_ids=sorted(s.id for s in srcs),
+                    **evidence,
+                )
+            )
+        elif abs(cell.value - expected) / expected > LIABILITIES_NCI_TOLERANCE:
+            out.append(
+                finding(
+                    data,
+                    "I1",
+                    WRONG_VALUE,
+                    "liabilities_nci_treatment",
+                    cell,
+                    other=expected,
+                    source_ids=sorted(s.id for s in srcs),
+                    **evidence,
                 )
             )
     return out
