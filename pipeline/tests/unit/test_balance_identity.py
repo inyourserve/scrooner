@@ -88,70 +88,151 @@ def test_amrx_including_nci_temporary_equity_is_subtracted():
     assert a.value == Decimal("3411.265") * M
 
 
-def test_mck_redeemable_nci_on_the_common_carrying_amount_element_is_subtracted():
-    # MCK 2015-06-30 (0000927653-15-000006 R4): 34,673 + 8,142 + 2,741 = 45,556; RNCI 1,430 outside
-    adj = {bi.TEMP_REDEEMABLE_PARTS[0]: Decimal(1430) * M}
-    a = bi.identity_amount("total_liabilities_resolved", Decimal(60000) * M, Decimal(13014) * M, "StockholdersEquity", adj)  # fmt: skip
-    assert isinstance(a, bi.Amount) and a.value == Decimal(45556) * M
+def D_(**kw):
+    return {getattr(bi, k): Decimal(str(v)) * M for k, v in kw.items()}
 
 
-def test_etp_redeemable_nci_on_the_other_carrying_amount_element_is_subtracted():
-    # ETP 2015-09-30 (0001276187-15-000094 R2): mezzanine = preferred units 33 + redeemable NCI 15
-    adj = {
-        bi.TEMP_PARENT: Decimal(33) * M,
-        bi.TEMP_REDEEMABLE_PARTS[2]: Decimal(15) * M,
-    }
-    a = bi.identity_amount("total_liabilities_resolved", Decimal(52000) * M, Decimal(4880) * M, "StockholdersEquity", adj)  # fmt: skip
-    assert isinstance(a, bi.Amount) and a.value == Decimal(52000 - 4880 - 48) * M
+def liab(base, other, tag, adj, nci_family=False):
+    return bi.identity_amount("total_liabilities_resolved", Decimal(str(base)) * M, Decimal(str(other)) * M, tag, adj, nci_family)  # fmt: skip
 
 
-def test_redeemable_nci_total_element_wins_over_its_components():
-    adj = {bi.TEMP_REDEEMABLE_NCI: Decimal(100) * M, bi.TEMP_REDEEMABLE_PARTS[0]: Decimal(60) * M, bi.TEMP_REDEEMABLE_PARTS[1]: Decimal(40) * M}  # fmt: skip
-    a = bi.identity_amount("total_liabilities_resolved", Decimal(1000) * M, Decimal(400) * M, "StockholdersEquity", adj)  # fmt: skip
-    assert isinstance(a, bi.Amount) and a.value == Decimal(500) * M
+def test_strict_mode_reads_only_whole_line_elements_and_holds_components():
+    # NI 2023-12-31 (0001111711-24-000011 R6): 1,360 on the Other component is not on the balance sheet
+    comp = liab(
+        30000,
+        8000,
+        "StockholdersEquity",
+        {bi.TEMP_REDEEMABLE_PARTS[2]: Decimal(1360) * M},
+    )
+    assert comp == bi.Held("redeemable_nci_component_not_proven_on_face")
+    # IPG: FairValue elements alone
+    assert liab(25000, 1000, "StockholdersEquity", {bi.TEMP_MEASURE_ONLY[0]: Decimal(460) * M}) == bi.Held("redeemable_nci_measurement_only")  # fmt: skip
+    assert liab(1000, 400, "StockholdersEquity", {bi.TEMP_GENERIC: Decimal(50) * M}) == bi.Held("temporary_equity_generic_not_proven_on_face")  # fmt: skip
+    # whole-line elements are read: the redeemable NCI total, the parent line, the including-NCI element
+    assert liab(1000, 400, "StockholdersEquity", {bi.TEMP_REDEEMABLE_NCI: Decimal(100) * M}).value == Decimal(500) * M  # fmt: skip
+    assert liab(1000, 400, "StockholdersEquity", {bi.TEMP_PARENT: Decimal(100) * M}).value == Decimal(500) * M  # fmt: skip
 
 
-def test_ipg_redeemable_nci_only_on_a_fair_value_element_is_held_not_guessed():
-    # IPG 2024-06-30: the face RNCI 460.8 is tagged FairValue; placement cannot be proven from the tag alone
-    adj = {bi.TEMP_MEASURE_ONLY[0]: Decimal("460.8") * M}
-    a = bi.identity_amount("total_liabilities_resolved", Decimal(25000) * M, Decimal(1000) * M, "StockholdersEquity", adj)  # fmt: skip
-    assert a == bi.Held("redeemable_nci_measurement_only")
-
-
-def test_a_fair_value_element_beside_a_carrying_amount_is_a_note_and_ignored():
+def test_a_carrying_total_beside_measurement_elements_ignores_the_note_figures():
     adj = {
         bi.TEMP_REDEEMABLE_NCI: Decimal(100) * M,
         bi.TEMP_MEASURE_ONLY[0]: Decimal(130) * M,
     }
-    a = bi.identity_amount("total_liabilities_resolved", Decimal(1000) * M, Decimal(400) * M, "StockholdersEquity", adj)  # fmt: skip
-    assert isinstance(a, bi.Amount) and a.value == Decimal(500) * M
+    assert liab(1000, 400, "StockholdersEquity", adj).value == Decimal(500) * M
 
 
-def test_generic_temporary_equity_alone_is_read_but_beside_a_redeemable_nci_it_is_held():
-    alone = bi.identity_amount("total_liabilities_resolved", Decimal(1000) * M, Decimal(400) * M, "StockholdersEquity", {bi.TEMP_GENERIC: Decimal(50) * M})  # fmt: skip
-    assert isinstance(alone, bi.Amount) and alone.value == Decimal(550) * M
-    both = bi.identity_amount("total_liabilities_resolved", Decimal(1000) * M, Decimal(400) * M, "StockholdersEquity", {bi.TEMP_GENERIC: Decimal(50) * M, bi.TEMP_REDEEMABLE_NCI: Decimal(10) * M})  # fmt: skip
-    assert both == bi.Held("temporary_equity_generic_overlaps_redeemable_nci")
-
-
-def test_equity_direction_is_held_when_no_nci_fact_is_read():
-    # BX 2019-06-30 / KKR 2015-06-30: assets - liabilities is total partners' capital incl NCI, not the parent
-    a = bi.identity_amount(
-        "stockholders_equity_resolved", Decimal(1000) * M, Decimal(600) * M, None, {}
+def test_nci_inclusive_total_must_equal_parent_equity_plus_minority_interest():
+    # FE 2018-03-31 (0001031296-18-000031 R5): an 86M NCI-inclusive fact that is not the face total
+    parent, incl = 10000, 10086
+    held = liab(
+        40000,
+        parent,
+        "StockholdersEquity",
+        {bi.NCI_INCLUSIVE_EQUITY: Decimal(incl) * M},
     )
-    assert a == bi.Held("nci_not_read")
-    p = bi.identity_amount("stockholders_equity_resolved", Decimal(1000) * M, Decimal(600) * M, None, {bi.NCI_UNREAD[0]: Decimal(300) * M})  # fmt: skip
-    assert p == bi.Held("nci_on_unmapped_partnership_elements")
+    assert held == bi.Held("nci_inclusive_total_without_minority_interest")
+    bad = liab(40000, parent, "StockholdersEquity", {bi.NCI_INCLUSIVE_EQUITY: Decimal(incl) * M, bi.NCI: Decimal(500) * M})  # fmt: skip
+    assert bad == bi.Held("nci_inclusive_total_disagrees_with_minority_interest")
+    ok = liab(40000, parent, "StockholdersEquity", {bi.NCI_INCLUSIVE_EQUITY: Decimal(incl) * M, bi.NCI: Decimal(86) * M})  # fmt: skip
+    assert ok.value == Decimal(40000 - incl) * M
+    same = liab(
+        40000,
+        parent,
+        "StockholdersEquity",
+        {bi.NCI_INCLUSIVE_EQUITY: Decimal(parent) * M},
+    )  # no NCI at all
+    assert same.value == Decimal(30000) * M
+
+
+def test_parent_equity_alone_needs_a_filing_without_any_nci_element():
+    assert liab(1000, 400, "StockholdersEquity", {}).value == Decimal(600) * M
+    assert liab(1000, 400, "StockholdersEquity", {}, nci_family=True) == bi.Held(
+        "nci_unconfirmed"
+    )
+
+
+def test_equity_direction_accepts_no_nci_only_when_the_filing_has_none():
+    eq = lambda adj, fam: bi.identity_amount(
+        "stockholders_equity_resolved",
+        Decimal(1000) * M,
+        Decimal(600) * M,
+        None,
+        adj,
+        fam,
+    )  # noqa: E731
+    assert eq({}, False).value == Decimal(400) * M  # AJG: no NCI anywhere in the filing
+    assert eq({}, True) == bi.Held("nci_not_read")  # NCI exists but is not read
+    assert eq({bi.NCI_UNREAD[0]: Decimal(300) * M}, True) == bi.Held(
+        "nci_on_unmapped_partnership_elements"
+    )
+    assert (
+        eq({bi.NCI: Decimal(30) * M, bi.TEMP_PARENT: Decimal(20) * M}, True).value
+        == Decimal(350) * M
+    )
 
 
 def test_liabilities_from_parent_equity_are_held_when_nci_sits_on_partnership_elements():
     adj = {bi.NCI_UNREAD[1]: Decimal(300) * M}
-    a = bi.identity_amount("total_liabilities_resolved", Decimal(1000) * M, Decimal(400) * M, "PartnersCapital", adj)  # fmt: skip
-    assert a == bi.Held("nci_on_unmapped_partnership_elements")
-    # a read NCI total makes the unmapped element irrelevant
+    assert liab(1000, 400, "PartnersCapital", adj, True) == bi.Held(
+        "nci_on_unmapped_partnership_elements"
+    )
     adj[bi.NCI] = Decimal(300) * M
-    b = bi.identity_amount("total_liabilities_resolved", Decimal(1000) * M, Decimal(400) * M, "PartnersCapital", adj)  # fmt: skip
-    assert isinstance(b, bi.Amount) and b.value == Decimal(300) * M
+    assert liab(1000, 400, "PartnersCapital", adj, True).value == Decimal(300) * M
+
+
+# --- with the filing's own face subtotals (LiabilitiesCurrent + LiabilitiesNoncurrent) the identity is a cross-check
+def sub(cur, noncur):
+    return {
+        bi.LIABILITIES_CURRENT: Decimal(str(cur)) * M,
+        bi.LIABILITIES_NONCURRENT: Decimal(str(noncur)) * M,
+    }
+
+
+def test_ni_component_that_the_subtotals_do_not_confirm_is_dropped():
+    # face liabilities 20,940.9; the 1,360 Other carrying amount would give 19,580.9
+    adj = {bi.TEMP_REDEEMABLE_PARTS[2]: Decimal(1360) * M, **sub("7940.9", 13000)}
+    a = liab(30000, "9059.1", "StockholdersEquity", adj)
+    assert (
+        a.value == Decimal("20940.9") * M
+        and "confirmed_by_face_subtotals" in a.basis
+        and "temp_zero" in a.basis
+    )
+
+
+def test_mck_component_that_the_subtotals_confirm_is_subtracted():
+    # MCK 2015-06-30: face liabilities 45,556 with a 1,430 redeemable NCI outside
+    adj = {bi.TEMP_REDEEMABLE_PARTS[0]: Decimal(1430) * M, **sub(30000, 15556)}
+    a = liab(60000, 13014, "StockholdersEquity", adj)
+    assert a.value == Decimal(45556) * M and "temp_zero" not in a.basis
+
+
+def test_ipg_fair_value_element_is_read_when_the_subtotals_confirm_it():
+    adj = {bi.TEMP_MEASURE_ONLY[0]: Decimal("460.8") * M, **sub(10000, "12667.5")}
+    a = liab(25000, "1871.7", "StockholdersEquity", adj)
+    assert a.value == Decimal("22667.5") * M
+
+
+def test_awk_measurement_figure_that_is_not_on_the_face_is_ignored_when_the_subtotals_say_so():
+    adj = {bi.TEMP_MEASURE_ONLY[0]: Decimal(8) * M, **sub(6000, 12000)}
+    a = liab(25000, 7000, "StockholdersEquity", adj)
+    assert a.value == Decimal(18000) * M
+
+
+def test_trgp_unseen_mezzanine_makes_the_identity_disagree_with_the_subtotals_so_the_cell_is_held():
+    # TRGP 2021-09-30: face liabilities 9,823.1; a 749.7 class-member mezzanine fact is not stored
+    a = liab(12000, "1427.2", "StockholdersEquity", sub(3000, "6823.1"))
+    assert a == bi.Held("identity_not_confirmed_by_face_subtotals")
+
+
+def test_fe_nci_inclusive_fact_that_is_not_the_total_loses_to_the_subtotals():
+    # FE 2018-03-31: face 31,420; the 86 'NCI-inclusive' fact would give 38,709-type totals
+    adj = {bi.NCI_INCLUSIVE_EQUITY: Decimal(8000) * M, **sub(10000, 21420)}
+    a = liab(40000, 8580, "StockholdersEquity", adj)
+    assert a.value == Decimal(31420) * M and a.basis.startswith("parent_equity_no_nci")
+
+
+def test_subtotals_cannot_make_up_a_missing_pair():
+    assert bi.face_subtotals({bi.LIABILITIES_CURRENT: Decimal(1)}) is None
 
 
 # ------------------------------------------------------------------ planner with a scripted cursor
@@ -195,17 +276,23 @@ class Conn:
 A, L, E = 1, 2, 3
 T = {  # concept ids
     "MinorityInterest": 10, bi.NCI_INCLUSIVE_EQUITY: 11, bi.TEMP_REDEEMABLE_NCI: 12, "StockholdersEquity": 13,
-    "Assets": 14, bi.LSE: 15, bi.NCI_UNREAD[0]: 16,
+    "Assets": 14, bi.LSE: 15, bi.NCI_UNREAD[0]: 16, bi.LIABILITIES_CURRENT: 17, bi.LIABILITIES_NONCURRENT: 18,
+    bi.TEMP_REDEEMABLE_PARTS[2]: 19,
 }  # fmt: skip
-F1, F2 = 900, 901  # filings
+F1, F2, F3, F4 = (
+    900,
+    901,
+    902,
+    903,
+)  # filings; F4 carries NCI elements the planner does not read; F3 none
 
 
 def canon(pid, concept, value, src, end):
-    return (1134, pid, concept, Decimal(value) * M, src, end)
+    return (1134, pid, concept, Decimal(str(value)) * M, src, end)
 
 
 def fact(pid, filing, tag, value, fid):
-    return (1134, pid, filing, T[tag], Decimal(value) * M, fid)
+    return (1134, pid, filing, T[tag], Decimal(str(value)) * M, fid)
 
 
 def tables(canonical, facts, info):
@@ -214,52 +301,60 @@ def tables(canonical, facts, info):
         "from core.concept where tag": [(i, t) for t, i in T.items()],
         "from core.company": [(1134, "0000104169")],
         "from analytics.canonical_fact cf join core.period": canonical,
+        "select distinct f.company_id, f.filing_id": [(1134, F4)],
         "from core.fact f where": facts,
         "from core.fact f join core.concept": info,
     }  # fmt: skip
 
 
-from datetime import date
+from datetime import date  # noqa: E402
 
-D1, D2, D3, D4, D5, D6, D7, D8 = (date(2026, 7, 31), date(2026, 4, 30), date(2026, 1, 31), date(2025, 10, 31),
-                                  date(2025, 7, 31), date(2025, 4, 30), date(2025, 1, 31), date(2024, 10, 31))  # fmt: skip
+
+def d(n):
+    return date(2020, 1, 1 + n)
+
+
 CANON = [
     # 77: the WMT cell, one filing: legacy-derived liabilities 202,237 (= 100 + 200 + adjustment facts)
-    canon(77, A, 293914, [100], D1), canon(77, E, 97945, [200], D1), canon(77, L, 202237, [100, 200, 301], D1),
-    # 78: empty liabilities cell
-    canon(78, A, 1000, [101], D2), canon(78, E, 400, [201], D2),
+    canon(77, A, 293914, [100], d(0)), canon(77, E, 97945, [200], d(0)), canon(77, L, 202237, [100, 200, 301], d(0)),
+    canon(78, A, 1000, [101], d(1)), canon(78, E, 400, [201], d(1)),  # empty liabilities cell
     # 79: a real Liabilities tag value (no assets ids in the source): untouched
-    canon(79, A, 1000, [102], D3), canon(79, E, 400, [202], D3), canon(79, L, 555, [999], D3),
+    canon(79, A, 1000, [102], d(2)), canon(79, E, 400, [202], d(2)), canon(79, L, 555, [999], d(2)),
     # 80: carries the assets ids but not the equity ids; 82: the equity ids but not the assets ids
-    canon(80, A, 1000, [103], D4), canon(80, E, 400, [203], D4), canon(80, L, 777, [103, 998], D4),
-    canon(82, A, 1000, [105], D6), canon(82, E, 400, [205], D6), canon(82, L, 777, [205, 997], D6),
-    # 81: derived and already correct
-    canon(81, A, 1000, [104], D5), canon(81, E, 400, [204], D5), canon(81, L, 600, [104, 204], D5),
-    # 83: equity input is the NCI-inclusive tag next to a parent-equity tag
-    canon(83, A, 1000, [106], D7), canon(83, E, 400, [206, 207], D7),
-    # 84: IRM: original-10-K assets (filing 900) with restated equity (filing 901)
-    canon(89, A, 1000, [113, 114], date(2023, 7, 31)), canon(89, E, 400, [213], date(2023, 7, 31)), canon(89, L, 800, [113, 114, 213], date(2023, 7, 31)),
-    canon(88, A, 1000, [112], date(2023, 10, 31)), canon(88, E, 400, [212], date(2023, 10, 31)), canon(88, L, 800, [112, 212], date(2023, 10, 31)),
-    canon(84, A, 1000, [108], D8), canon(84, E, 400, [208], D8), canon(84, L, 800, [108, 208], D8),
-    # 85: L&SE (1000.2) differs from assets (1000) in the same filing (BRKR)
-    canon(85, A, 1000, [109], date(2024, 7, 31)), canon(85, E, 400, [209], date(2024, 7, 31)),
-    # 86: adjustment fact of ANOTHER filing for the same instant must not be used
-    canon(86, A, 1000, [110], date(2024, 4, 30)), canon(86, E, 400, [210], date(2024, 4, 30)),
-    # 87: equity direction without an NCI fact (BX/KKR)
-    canon(87, A, 1000, [111], date(2024, 1, 31)), canon(87, L, 600, [211], date(2024, 1, 31)),
+    canon(80, A, 1000, [103], d(3)), canon(80, E, 400, [203], d(3)), canon(80, L, 777, [103, 998], d(3)),
+    canon(82, A, 1000, [105], d(5)), canon(82, E, 400, [205], d(5)), canon(82, L, 777, [205, 997], d(5)),
+    canon(81, A, 1000, [104], d(4)), canon(81, E, 400, [204], d(4)), canon(81, L, 600, [104, 204], d(4)),  # already right
+    canon(83, A, 1000, [106], d(6)), canon(83, E, 400, [206, 207], d(6)),  # NCI-inclusive tag among the equity sources
+    # 84: IRM: original-10-K assets (filing F1) with restated equity (F2); no filing carries both values
+    canon(84, A, 1000, [108], d(7)), canon(84, E, 400, [208], d(7)), canon(84, L, 800, [108, 208], d(7)),
+    # 90: OXY: identical copies in two filings; F1 carries BOTH values, so the terms are not mixed
+    canon(90, A, 1000, [115], d(8)), canon(90, E, 400, [215], d(8)), canon(90, L, 777, [115, 215], d(8)),
+    canon(85, A, 1000, [109], d(9)), canon(85, E, 400, [209], d(9)),  # L&SE 1000.2 in the same filing (BRKR)
+    canon(86, A, 1000, [110], d(10)), canon(86, E, 400, [210], d(10)),  # adjustment of ANOTHER filing
+    canon(87, A, 1000, [111], d(11)), canon(87, L, 600, [211], d(11)),  # equity direction, partnership NCI unread
+    canon(91, A, 1000, [116], d(12)), canon(91, L, 600, [216], d(12)),  # AJG: a filing with no NCI element
+    canon(93, A, 1000, [118], d(14)), canon(93, E, 400, [218], d(14)), canon(93, L, 777, [118, 218], d(14)),  # NCI elements exist in F4
+    canon(94, A, 1000, [119], d(15)), canon(94, L, 600, [219], d(15)),  # equity direction in F4
+    canon(95, A, 1000, [120], d(16)), canon(95, E, 400, [220], d(16)), canon(95, L, 777, [120, 220], d(16)),
+    canon(96, A, 1000, [121], d(17)), canon(96, E, 400, [221], d(17)), canon(96, L, 777, [121, 221], d(17)),
+    canon(92, A, 30000, [117], d(13)), canon(92, E, "9059.1", [217], d(13)),  # NI: face subtotals reject the component
 ]  # fmt: skip
 FACTS = [
     fact(77, F1, "MinorityInterest", 6561, 301), fact(77, F1, bi.NCI_INCLUSIVE_EQUITY, 104506, 302), fact(77, F1, bi.TEMP_REDEEMABLE_NCI, 293, 303),
     fact(85, F1, bi.LSE, "1000.2", 304),
-    fact(84, F1, "StockholdersEquity", 450, 307),
     fact(86, F2, bi.TEMP_REDEEMABLE_NCI, 100, 305),
     fact(87, F1, bi.NCI_UNREAD[0], 300, 306),
+    fact(90, F1, "Assets", 1000, 308), fact(90, F1, "StockholdersEquity", 400, 309),
+    fact(95, F1, "Assets", 900, 313), fact(95, F1, "StockholdersEquity", 400, 314),  # same equity value, other assets value
+    fact(96, F1, "Assets", 1000, 315), fact(96, F1, "StockholdersEquity", 350, 316),  # same assets value, other equity value
+    fact(92, F3, bi.TEMP_REDEEMABLE_PARTS[2], 1360, 310), fact(92, F3, bi.LIABILITIES_CURRENT, "7940.9", 311), fact(92, F3, bi.LIABILITIES_NONCURRENT, 13000, 312),
 ]  # fmt: skip
-INFO = [(i, "Assets", F1) for i in (113, 112, 100, 101, 102, 103, 104, 105, 106, 108, 109, 110, 111)] + [
+INFO = [(i, "Assets", F1) for i in (100, 101, 102, 103, 104, 105, 106, 108, 109, 110, 111)] + [
     (200, "StockholdersEquity", F1), (201, "StockholdersEquity", F1), (202, "StockholdersEquity", F1),
     (203, "StockholdersEquity", F1), (204, "StockholdersEquity", F1), (205, "StockholdersEquity", F1),
     (206, bi.NCI_INCLUSIVE_EQUITY, F1), (207, "StockholdersEquity", F1), (208, "StockholdersEquity", F2),
-    (209, "StockholdersEquity", F1), (210, "StockholdersEquity", F1), (211, "Liabilities", F1), (212, "StockholdersEquity", F2), (114, "Assets", F2), (213, "StockholdersEquity", F1),
+    (209, "StockholdersEquity", F1), (210, "StockholdersEquity", F1), (211, "Liabilities", F1), (216, "Liabilities", F3),
+    (118, "Assets", F4), (218, "StockholdersEquity", F4), (119, "Assets", F4), (219, "Liabilities", F4), (120, "Assets", F1), (220, "StockholdersEquity", F2), (121, "Assets", F1), (221, "StockholdersEquity", F2), (115, "Assets", F2), (116, "Assets", F3), (215, "StockholdersEquity", F1), (117, "Assets", F3), (217, "StockholdersEquity", F3),
 ]  # fmt: skip
 TABLES = tables(CANON, FACTS, INFO)
 
@@ -270,9 +365,13 @@ def planned():
     return conn, {(p.period_end, p.concept[:5]): p for p in plan}
 
 
+def day(n):
+    return str(d(n))
+
+
 def test_planner_replaces_a_row_this_fallback_wrote_fills_an_empty_cell_and_leaves_a_tag_value():
     conn, by = planned()
-    r = by[("2026-07-31", "total")]
+    r = by[(day(0), "total")]
     assert (r.kind, r.before, r.after) == (
         "replace",
         str(Decimal(202237) * M),
@@ -283,71 +382,83 @@ def test_planner_replaces_a_row_this_fallback_wrote_fills_an_empty_cell_and_leav
     assert {100, 200, 301, 302, 303} <= set(
         r.source_fact_ids
     )  # lineage: base, equity and the adjustment facts
-    f = by[("2026-04-30", "total")]
+    f = by[(day(1), "total")]
     assert (f.kind, f.before, f.after) == ("fill", None, str(Decimal(600) * M))
     # untouched: a real tag value, rows missing one side's source ids, and a derived row that is already right
-    for d in ("2026-01-31", "2025-10-31", "2025-04-30", "2025-07-31"):
-        assert (d, "total") not in by
-    # only the adjustment elements of the SAME filing are read, one value per filing
+    for n in (2, 3, 5, 4):
+        assert (day(n), "total") not in by
     assert any("f.filing_id" in " ".join(q.split()) for q, _ in conn.cur.sql)
 
 
 def test_the_nci_inclusive_tag_among_the_equity_sources_is_recorded_as_the_input():
     _, by = planned()
-    p = by[("2025-01-31", "total")]
+    p = by[(day(6), "total")]
     assert p.equity_tag == bi.NCI_INCLUSIVE_EQUITY and p.basis.startswith(
         "equity_nci_inclusive"
     )
 
 
-def test_mixed_vintage_is_solved_inside_the_assets_filing_from_its_own_equity():
-    # IRM 2018-12-31: original 10-K assets with the restated 10-K equity -> the old 10-K's own equity is used
+def test_terms_that_no_single_filing_carries_together_give_no_value():
+    # IRM 2018-12-31: original 10-K assets with the restated 10-K equity
     _, by = planned()
-    p = by[("2024-10-31", "total")]
-    assert (p.kind, p.after, p.filing_id) == ("replace", str(Decimal(550) * M), F1)
-    assert (
-        p.equity_tag == "StockholdersEquity"
-        and 307 in p.source_fact_ids
-        and 208 not in p.source_fact_ids
-    )
-
-
-def test_assets_that_themselves_span_two_filings_give_no_value():
-    _, by = planned()
-    assert by[("2023-07-31", "total")].basis == "mixed_vintage"
-
-
-def test_mixed_vintage_without_the_equity_in_the_assets_filing_gives_no_value():
-    _, by = planned()
-    p = by[("2023-10-31", "total")]
+    p = by[(day(7), "total")]
     assert (p.kind, p.after, p.basis) == ("hold", None, "mixed_vintage") and p.before == str(Decimal(800) * M)  # fmt: skip
+
+
+def test_no_filing_carries_both_values_when_either_value_differs():
+    _, by = planned()
+    assert by[(day(16), "total")].basis == "mixed_vintage"
+    assert by[(day(17), "total")].basis == "mixed_vintage"
+
+
+def test_identical_values_in_two_filings_are_not_mixed_when_one_filing_carries_both():
+    # OXY 2018-12-31: values are compared, not accessions
+    _, by = planned()
+    p = by[(day(8), "total")]
+    assert (p.kind, p.after, p.filing_id) == ("replace", str(Decimal(600) * M), F1)
+    assert 309 in p.source_fact_ids and 215 not in p.source_fact_ids
 
 
 def test_base_is_liabilities_and_equity_when_filed_in_the_same_filing():
     _, by = planned()
-    p = by[("2024-07-31", "total")]
+    p = by[(day(9), "total")]
     assert p.after == str(Decimal("600.2") * M) and p.basis.endswith(
         "base_lse"
     )  # BRKR: 1,000.2 - 400
-    assert by[("2026-04-30", "total")].basis.endswith("base_assets")
+    assert by[(day(1), "total")].basis.endswith("base_assets")
 
 
 def test_an_adjustment_filed_in_another_filing_is_not_used():
     _, by = planned()
-    p = by[("2024-04-30", "total")]
-    assert p.after == str(
+    assert by[(day(10), "total")].after == str(
         Decimal(600) * M
-    )  # the 100 redeemable NCI belongs to filing 901, the cell to filing 900
+    )  # the 100 redeemable NCI belongs to filing F2
 
 
-def test_equity_direction_without_an_nci_fact_is_a_hold_in_the_plan():
+def test_equity_direction_follows_the_filing_s_nci_elements():
     _, by = planned()
-    p = by[("2024-01-31", "stock")]
-    assert (p.kind, p.after, p.basis) == (
+    assert (by[(day(11), "stock")].kind, by[(day(11), "stock")].basis) == (
         "hold",
-        None,
         "nci_on_unmapped_partnership_elements",
     )
+    aj = by[(day(12), "stock")]  # AJG: no NCI element anywhere in filing F3
+    assert (aj.kind, aj.after, aj.basis.startswith("no_nci_in_filing")) == (
+        "fill",
+        str(Decimal(400) * M),
+        True,
+    )
+
+
+def test_a_filing_with_nci_elements_the_planner_cannot_read_holds_a_parent_only_cell():
+    _, by = planned()
+    assert by[(day(14), "total")].basis == "nci_unconfirmed"
+    assert by[(day(15), "stock")].basis == "nci_not_read"
+
+
+def test_planner_uses_the_face_subtotals_to_drop_an_unproven_component():
+    _, by = planned()
+    p = by[(day(13), "total")]
+    assert p.after == str(Decimal("20940.9") * M) and "confirmed_by_face_subtotals" in p.basis and p.filing_id == F3  # fmt: skip
 
 
 def test_apply_writes_replacements_and_fills_only_and_never_a_hold(tmp_path):

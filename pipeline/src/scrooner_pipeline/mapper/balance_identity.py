@@ -28,6 +28,17 @@ Rule (pure, ``identity_amount``); every term comes from ONE filing, else no valu
     - temporary equity, HELD unless ``MinorityInterest`` is filed in the same filing;
   * NCI carried on unmapped partnership elements (``PartnersCapital...NoncontrollingInterest``) holds both
     directions when no NCI total is read (BX, KKR).
+V3 (Verifier, fresh sample): a tag cannot show what is on the face (NI: a carrying-amount element that is not on the
+balance sheet; TRGP: class-member mezzanine not stored; FE: an NCI-inclusive fact that is not the total). So:
+  * when the filing prints LiabilitiesCurrent and LiabilitiesNoncurrent, the identity is a CROSS-CHECK: every reading
+    of the equity and mezzanine terms is tried and only one that reproduces the subtotals is used (else hold);
+  * without the subtotals only whole-line elements are read (components, the generic element and FairValue /
+    RedemptionValue elements hold the cell), the NCI-inclusive total must equal parent equity + MinorityInterest,
+    and a parent-only reading needs a filing with no NCI element of any kind;
+  * several filings are one balance sheet only when ONE filing carries both VALUES (OXY), never by accession.
+Residual: a filing without face subtotals and with a mezzanine line that is not stored (member-only facts) cannot
+be detected here; the final answer is the face total or the sum of the face liability lines (slot-record machinery).
+
 Redeemable common of a SPAC sits in temporary equity, so it is outside liabilities; the per-share exit
 (DC-SHARE-COUNT-DATE section 5) is a book-value-per-share rule and is not touched here.
 
@@ -79,6 +90,8 @@ LSE = "LiabilitiesAndStockholdersEquity"
 PARENT_EQUITY = "StockholdersEquity"
 LIABILITIES_TAG = "Liabilities"
 ASSETS_TAG = "Assets"
+LIABILITIES_CURRENT = "LiabilitiesCurrent"
+LIABILITIES_NONCURRENT = "LiabilitiesNoncurrent"
 ADJUSTMENT_TAGS = (
     NCI,
     TEMP_PARENT,
@@ -95,6 +108,9 @@ LOAD_TAGS = (
     LSE,
     PARENT_EQUITY,
     LIABILITIES_TAG,
+    ASSETS_TAG,
+    LIABILITIES_CURRENT,
+    LIABILITIES_NONCURRENT,
 )
 
 LIABILITIES = "total_liabilities_resolved"
@@ -114,23 +130,48 @@ class Held:
     reason: str
 
 
-def temporary_equity(adj: dict[str, Decimal]) -> tuple[Decimal, str] | Held:
-    """Temporary equity (mezzanine) from carrying-amount elements of ONE filing; see the module doc."""
+def unit_of(x: Decimal) -> Decimal:
+    """The power of ten (at most a million) a whole-currency amount is printed to."""
+    n = abs(x)
+    unit = Decimal(1)
+    if n == n.to_integral_value() and n != 0:
+        while unit < Decimal(10) ** 6 and n % (unit * 10) == 0:
+            unit *= 10
+    return unit
+
+
+def rounding_tol(*values: Decimal) -> Decimal:
+    return 2 * max(unit_of(v) for v in values)
+
+
+def temporary_equity(
+    adj: dict[str, Decimal], strict: bool = True
+) -> tuple[Decimal, str] | Held:
+    """Temporary equity (mezzanine) from carrying-amount elements of ONE filing.
+
+    ``strict`` (no face subtotals to confirm against): only the elements that are the whole line are read -
+    the including-NCI element, the parent line, the redeemable-NCI TOTAL. A component (Common / Preferred /
+    Other), the generic element and measurement-only elements are not proof of a face line (NI 2023-12-31:
+    a 1,360M Other carrying amount that is not on the balance sheet), so the cell is held."""
     if TEMP_INCL in adj:
         return adj[TEMP_INCL], "temp_incl"
     redeemable_parts = [adj[t] for t in TEMP_REDEEMABLE_PARTS if t in adj]
     if TEMP_REDEEMABLE_NCI in adj:
         rnci: Decimal | None = adj[TEMP_REDEEMABLE_NCI]
     elif redeemable_parts:
+        if strict:
+            return Held("redeemable_nci_component_not_proven_on_face")
         rnci = sum(redeemable_parts, Decimal(0))
     else:
         rnci = None
     if rnci is None and any(adj.get(t) for t in TEMP_MEASURE_ONLY):
-        return Held("redeemable_nci_measurement_only")
+        if strict:
+            return Held("redeemable_nci_measurement_only")
+        rnci = sum((adj[t] for t in TEMP_MEASURE_ONLY if t in adj), Decimal(0))
     parent = adj.get(TEMP_PARENT)
     if parent is None and TEMP_GENERIC in adj:
-        if rnci is not None:
-            return Held("temporary_equity_generic_overlaps_redeemable_nci")
+        if strict:
+            return Held("temporary_equity_generic_not_proven_on_face")
         parent = adj[TEMP_GENERIC]
     if parent is None and rnci is None:
         return Decimal(0), ""
@@ -139,38 +180,102 @@ def temporary_equity(adj: dict[str, Decimal]) -> tuple[Decimal, str] | Held:
     return (parent if parent is not None else rnci or Decimal(0)), "temp_one_line"
 
 
+def face_subtotals(adj: dict[str, Decimal]) -> Decimal | None:
+    """Current + noncurrent liabilities when the filing prints both subtotals (a face self-consistency proof)."""
+    if LIABILITIES_CURRENT in adj and LIABILITIES_NONCURRENT in adj:
+        return adj[LIABILITIES_CURRENT] + adj[LIABILITIES_NONCURRENT]
+    return None
+
+
+def _equity_options(
+    other: Decimal, other_tag: str | None, adj: dict[str, Decimal]
+) -> list[tuple[str, Decimal]]:
+    if other_tag == NCI_INCLUSIVE_EQUITY:
+        return [("equity_nci_inclusive", other)]
+    opts: list[tuple[str, Decimal]] = []
+    if NCI_INCLUSIVE_EQUITY in adj:
+        opts.append(("filed_nci_inclusive_total", adj[NCI_INCLUSIVE_EQUITY]))
+    if NCI in adj:
+        opts.append(("parent_equity+nci", other + adj[NCI]))
+    opts.append(("parent_equity_no_nci", other))
+    return opts
+
+
 def identity_amount(
     target: str,
     base: Decimal,
     other: Decimal,
     other_tag: str | None,
     adj: dict[str, Decimal],
+    nci_family: bool = False,
 ) -> Amount | Held:
     """``target`` is LIABILITIES (other = the equity input, ``other_tag`` its tag) or EQUITY (other = liabilities).
-    ``base`` is the left side of the identity (L&SE when filed, else Assets)."""
-    temp = temporary_equity(adj)
+    ``base`` is the left side of the identity (L&SE when filed, else Assets); ``nci_family`` says the filing
+    carries some NCI element at all.
+
+    With the filing's own face subtotals (LiabilitiesCurrent + LiabilitiesNoncurrent) the identity is only a
+    cross-check: every reading of the equity and mezzanine terms is tried and the one that reproduces the
+    subtotals is used, else the cell is held. Without them only whole-line elements are read and the NCI terms
+    must agree (NCI-inclusive total - parent equity = MinorityInterest)."""
+    nci_unread = any(adj.get(t) for t in NCI_UNREAD)
+    sub = face_subtotals(adj) if target == LIABILITIES else None
+    if target == LIABILITIES and sub is not None:
+        temps: list[tuple[str, Decimal]] = [("", Decimal(0))]
+        loose = temporary_equity(adj, strict=False)
+        if isinstance(loose, tuple) and loose[0] != 0:
+            temps.insert(0, (f"+{loose[1]}", loose[0]))
+        best: tuple[Decimal, str] | None = None
+        chosen = Decimal(0)
+        for e_name, e_val in _equity_options(other, other_tag, adj):
+            for t_name, t_val in temps:
+                cand = base - e_val - t_val
+                gap = abs(cand - sub)
+                if gap <= Decimal("0.0005") * abs(sub) + rounding_tol(sub, cand) and (
+                    best is None or gap < best[0]
+                ):
+                    best = (
+                        gap,
+                        f"{e_name}{t_name or '+temp_zero'}+confirmed_by_face_subtotals",
+                    )
+                    chosen = cand
+        if best is None:
+            return Held("identity_not_confirmed_by_face_subtotals")
+        return Amount(chosen, best[1], other_tag)
+    temp = temporary_equity(adj, strict=True)
     if isinstance(temp, Held):
         return temp
     temp_value, temp_basis = temp
     tail = f"+{temp_basis}" if temp_basis else ""
-    nci_unread = any(adj.get(t) for t in NCI_UNREAD)
     if target == LIABILITIES:
+        tol = rounding_tol(other, adj.get(NCI_INCLUSIVE_EQUITY, other))
         if other_tag == NCI_INCLUSIVE_EQUITY:
             total_equity, basis = other, "equity_nci_inclusive"
         elif NCI_INCLUSIVE_EQUITY in adj:
+            implied = adj[NCI_INCLUSIVE_EQUITY] - other
+            if NCI in adj:
+                if abs(implied - adj[NCI]) > tol:
+                    return Held("nci_inclusive_total_disagrees_with_minority_interest")
+            elif abs(implied) > tol:
+                return Held("nci_inclusive_total_without_minority_interest")
             total_equity, basis = adj[NCI_INCLUSIVE_EQUITY], "filed_nci_inclusive_total"
         elif NCI in adj:
             total_equity, basis = other + adj[NCI], "parent_equity+nci"
         elif nci_unread:
             return Held("nci_on_unmapped_partnership_elements")
+        elif nci_family:
+            return Held("nci_unconfirmed")
         else:
             total_equity, basis = other, "parent_equity_no_nci_filed"
         return Amount(base - total_equity - temp_value, basis + tail, other_tag)
-    if NCI not in adj:
-        return Held(
-            "nci_on_unmapped_partnership_elements" if nci_unread else "nci_not_read"
-        )
-    return Amount(base - other - adj[NCI] - temp_value, "less_nci" + tail, other_tag)
+    if NCI in adj:
+        nci, basis = adj[NCI], "less_nci"
+    elif nci_unread:
+        return Held("nci_on_unmapped_partnership_elements")
+    elif nci_family:
+        return Held("nci_not_read")
+    else:
+        nci, basis = Decimal(0), "no_nci_in_filing"
+    return Amount(base - other - nci - temp_value, basis + tail, other_tag)
 
 
 @dataclass
@@ -265,6 +370,15 @@ def plan_identity(
             by_filing: dict[tuple[int, int, int], dict[str, tuple[Decimal, int]]] = {}
             for cid, pid, fil, con, val, fid in cur.fetchall():
                 by_filing.setdefault((cid, pid, fil), {})[name_of[con]] = (val, fid)
+            cur.execute(
+                """select distinct f.company_id, f.filing_id from core.fact f
+                   join core.concept k on k.id = f.concept_id
+                   where f.company_id = any(%s)
+                     and (k.tag ilike '%%noncontrollinginterest%%' or k.tag ilike '%%minorityinterest%%'
+                          or k.tag ilike '%%noncontrollingowner%%')""",
+                (part,),
+            )
+            nci_family_filings = {(c_, f_) for c_, f_ in cur.fetchall()}
             need = {
                 s for c in cells.values() for _, (_, src, _) in c.items() for s in src
             }
@@ -313,32 +427,48 @@ def plan_identity(
                     plan.append(held("no_source_filing"))
                     continue
                 if len(filings) > 1:
-                    # mixed vintage (IRM: original 10-K assets, restated equity). The cell is solved inside the
-                    # assets filing from that filing's OWN copy of the other term, else it is held.
-                    a_filings = {fact_info[s][1] for s in a_src if s in fact_info}
-                    if len(a_filings) != 1:
+                    # several filings supplied the terms. They are NOT mixed when one filing carries both
+                    # values (OXY: identical copies in two filings); otherwise no value (IRM: original assets,
+                    # restated equity). Values are compared, not accessions.
+                    fil_ok = None
+                    for cand in sorted(filings):
+                        own = by_filing.get((cid, pid, cand), {})
+                        base_ok = any(
+                            t in own and own[t][0] == a_val for t in (ASSETS_TAG, LSE)
+                        )
+                        wanted = (
+                            (PARENT_EQUITY, NCI_INCLUSIVE_EQUITY)
+                            if target == LIABILITIES
+                            else (LIABILITIES_TAG,)
+                        )
+                        t_ok = next(
+                            (t for t in wanted if t in own and own[t][0] == o_val), None
+                        )
+                        if base_ok and t_ok:
+                            fil_ok, other_tag = (
+                                cand,
+                                (t_ok if target == LIABILITIES else None),
+                            )
+                            o_src = [own[t_ok][1]]
+                            break
+                    if fil_ok is None:
                         plan.append(held("mixed_vintage"))
                         continue
-                    (fil,) = a_filings
-                    own = by_filing.get((cid, pid, fil), {})
-                    wanted = (
-                        (PARENT_EQUITY, NCI_INCLUSIVE_EQUITY)
-                        if target == LIABILITIES
-                        else (LIABILITIES_TAG,)
-                    )
-                    found_tag = next((t for t in wanted if t in own), None)
-                    if found_tag is None:
-                        plan.append(held("mixed_vintage", fil))
-                        continue
-                    o_val, o_src = own[found_tag][0], [own[found_tag][1]]
-                    other_tag = found_tag if target == LIABILITIES else None
+                    fil = fil_ok
                 else:
                     (fil,) = filings
                 same = by_filing.get((cid, pid, fil), {})
                 adj = {t: v for t, (v, _) in same.items()}
                 base = adj[LSE] if LSE in adj else a_val
                 base_name = "lse" if LSE in adj else "assets"
-                amt = identity_amount(target, base, o_val, other_tag, adj)
+                amt = identity_amount(
+                    target,
+                    base,
+                    o_val,
+                    other_tag,
+                    adj,
+                    (cid, fil) in nci_family_filings,
+                )
                 if isinstance(amt, Held):
                     plan.append(held(amt.reason, fil))
                     continue
