@@ -77,8 +77,10 @@ class TestMdtNetIncomeScaleAndProxy:
         assert "cross_concept_scale" in rules(f, "I4", WRONG_VALUE)
 
     def test_proxy_source_is_wrong_value(self):
-        f = [x for x in source_integrity.check(self.broken()) if x.evidence["rule"] == "non_periodic_form"]
-        assert f and f[0].severity == WRONG_VALUE
+        d = self.broken()
+        d.periodic_copies[64871764] = [src("NetIncomeLoss", 4_801_000_000, form="10-K", sid=64871765)]
+        f = [x for x in source_integrity.check(d) if x.evidence["rule"] == "non_periodic_form"]
+        assert f and f[0].severity == WRONG_VALUE and f[0].evidence["differs_from_periodic_copy"] is True
         assert f[0].source_fact_ids == [64871764] and f[0].evidence["form"] == "DEF 14A"
 
     def test_repaired_fixture_is_clean(self):
@@ -324,7 +326,8 @@ class TestBkngSplit:
         assert f and f[0].evidence["rule"] == "share_jump_without_split" and f[0].severity == WRONG_VALUE
 
     def test_recorded_split_is_clean(self):
-        assert splits.check(self.broken(with_split=True)) == []
+        # the jump itself is explained by the split on record
+        assert "share_jump_without_split" not in rules(splits.check(self.broken(with_split=True)))
 
     def test_pe_is_implausible(self):
         f = scale.check(self.broken())
@@ -536,7 +539,7 @@ class TestGuardsFromLiveDryRun:
         d.splits.append((date(2021, 7, 19), D(4)))  # only the old split is on record
         assert "share_jump_without_split" in rules(splits.check(d), "I9", WRONG_VALUE)
         d.splits.append((date(2024, 6, 10), D(10)))
-        assert splits.check(d) == []
+        assert "share_jump_without_split" not in rules(splits.check(d))
 
 
 # ------------------------------------------------------------ I11 history window
@@ -612,16 +615,15 @@ class TestHistoryCompleteness:
         assert m["concepts"][(2016, "I", "expected")] == 2  # Q1 10-Q and FY end
         assert m["concepts"][(2015, "FY", "expected")] == 1
 
-    def test_metric_without_row_is_unclassified_and_with_reason_is_classified(self):
+    def test_metric_with_a_stated_reason_is_classified(self):
         d = history_company()
         d.metric_history = [
             MetricCell("net_margin", "FY", date(2015, 12, 31), D("0.1"), None),
             MetricCell("net_margin", "FY", date(2016, 12, 31), None, "bank revenue definition pending"),
-            MetricCell("roe", "FY", date(2015, 12, 31), D("0.2"), None),
         ]
-        rules_ = {x.evidence["rule"] for x in history.check(d) if x.data_point_name in ("net_margin", "roe")}
-        assert "missing_metric:bank revenue definition pending" in rules_
-        assert "missing_metric:no_row" in rules_  # roe has no 2016 row
+        f = [x for x in history.check(d) if x.data_point_name == "net_margin"]
+        assert [x.evidence["rule"] for x in f] == ["missing_metric:bank revenue definition pending"]
+        assert f[0].evidence["classified"] is True
 
     def test_full_suite_includes_i11(self):
         d = history_company()
@@ -660,7 +662,7 @@ class TestRefinementsFromLiveDryRun:
         d = clean_company()
         for (qs, qe, fp), v in zip(QUARTERS, [D("0.30"), D("0.28"), D("0.31"), D("0.02")]):
             add(d, "diluted_eps", v, qe, qs, fp, tag="EarningsPerShareDiluted", unit="usd/shares", derived=(fp == "Q4"))
-        assert splits.check(d) == []
+        assert "per_share_basis_mix" not in rules(splits.check(d))
 
 
 @pytest.mark.unit
@@ -727,3 +729,117 @@ class TestInferCause:
         assert self.cause(d, "total_assets", "I", date(2015, 12, 31)) == "fact_exists_not_resolved"
         d.mapped_facts = {"total_assets": [(date(2015, 1, 1), date(2015, 12, 31))]}
         assert self.cause(d, "total_assets", "I", date(2015, 12, 31)) != "fact_exists_not_resolved"
+
+
+# ----------------------------------------- metric cells with no stored row: the four buckets
+from scrooner_pipeline.certification.model import MetricSpec  # noqa: E402
+
+
+def metric_company(specs, rows, *, first=date(2010, 1, 1)):
+    d = history_company()
+    d.metric_specs = {s.name: s for s in specs}
+    d.metric_history = rows
+    d.first_data_period = first
+    d.mapped_tag_count = {"revenue": 1, "total_assets": 1}
+    return d
+
+
+FY15, FY16 = date(2015, 12, 31), date(2016, 12, 31)
+
+
+def buckets(d):
+    return history.history_matrix(d)["metric_buckets"]
+
+
+def metric_findings(d, name):
+    return {x.evidence["rule"]: x for x in history.check(d) if x.data_point_name == name}
+
+
+@pytest.mark.unit
+class TestMetricNoRowBuckets:
+    def test_a_fy_only_metric_is_not_defined_on_quarters(self):
+        spec = MetricSpec("debtor_days", "(Accounts Receivable / Revenue) x 365, FY only", False, ("accounts_receivable",), ("balance_sheet",))
+        d = metric_company([spec], [MetricCell("debtor_days", "FY", FY15, D(40), None), MetricCell("debtor_days", "FY", FY16, D(41), None)])
+        assert buckets(d)["not_defined_for_period_kind"] == 3  # Q1 2016 10-Q, Q4 2015, Q4 2016
+        assert "missing_metric:not_defined_for_period_kind" not in metric_findings(d, "debtor_days")
+
+    def test_a_ttm_price_metric_has_no_fy_or_quarter_cell(self):
+        spec = MetricSpec("market_cap", "Shares Outstanding x Price", True, ("shares_outstanding",), ("balance_sheet",))
+        d = metric_company([spec], [])
+        assert buckets(d)["not_defined_for_period_kind"] > 0 and metric_findings(d, "market_cap") == {}
+
+    def test_a_kind_written_for_any_company_of_the_chunk_is_defined(self):
+        spec = MetricSpec("debtor_days", "(Accounts Receivable / Revenue) x 365, FY only", False, ("accounts_receivable",), ("balance_sheet",))
+        d = metric_company([spec], [MetricCell("debtor_days", "FY", FY15, D(40), None)])
+        d.metric_kinds_seen = {"debtor_days": {"FY", "Q"}}  # another company has quarterly rows
+        assert buckets(d)["not_defined_for_period_kind"] == 0
+
+    def test_observed_kinds_beat_the_registry_text(self):
+        """ROE-style: the text names no period kind, only FY rows exist anywhere -> quarters are not defined."""
+        spec = MetricSpec("roa", "Net Income / Total Assets", False, ("net_income",), ("income_statement",))
+        d = metric_company([spec], [MetricCell("roa", "FY", FY15, D(1), None), MetricCell("roa", "FY", FY16, D(1), None)])
+        d.metric_kinds_seen = {"roa": {"FY"}}
+        assert buckets(d)["not_defined_for_period_kind"] > 0 and buckets(d)["no_row_inputs_present"] == 0
+
+    def test_a_composite_metric_without_registry_inputs_is_counted_apart(self):
+        spec = MetricSpec("peg_ratio", "Trailing P/E / EPS Growth Rate, FY only", False, (), ())
+        d = metric_company([spec], [MetricCell("peg_ratio", "FY", FY15, D(1), None)])
+        b = buckets(d)
+        assert b["no_row_inputs_present"] == 1 and b["no_row_inputs_present:metric_has_no_registry_inputs"] == 1
+
+    def test_b_cagr_that_looks_back_before_the_first_period_is_insufficient_history(self):
+        spec = MetricSpec("revenue_growth_10y_cagr", "(Revenue[t] / Revenue[t-10]) ^ (1/10) - 1, same fiscal_period.", False, ("revenue",), ("income_statement",))
+        d = metric_company([spec], [MetricCell(spec.name, "FY", FY15, D(1), None)], first=date(2012, 6, 30))
+        f = metric_findings(d, spec.name)
+        assert list(f) == ["missing_metric:insufficient_history"] and f["missing_metric:insufficient_history"].evidence["classified"] is True
+
+    def test_b_the_same_cagr_with_enough_history_is_not_insufficient(self):
+        spec = MetricSpec("revenue_growth_10y_cagr", "(Revenue[t] / Revenue[t-10]) ^ (1/10) - 1, same fiscal_period.", False, ("revenue",), ("income_statement",))
+        d = metric_company([spec], [MetricCell(spec.name, "FY", FY15, D(1), None)], first=date(2001, 1, 1))
+        assert "missing_metric:insufficient_history" not in metric_findings(d, spec.name)
+
+    def test_lookback_is_read_from_the_registry_text(self):
+        def lb(text):
+            return history.lookback_days(MetricSpec("m", text))
+        assert lb("(Revenue[t] / Revenue[t-3]) ^ (1/3) - 1") == int(3 * 365.25)
+        assert lb("same fiscal_period year over year") == int(365.25)
+        assert lb("1 if gross margin increased across the 3 most recent CONSECUTIVE FY years") == int(2 * 365.25)
+        assert lb("Gross Profit / Revenue") == 0
+
+    def test_c_an_input_that_is_a_classified_missing_cell_carries_its_cause(self):
+        spec = MetricSpec("net_margin", "Net Income / Revenue, FY only", False, ("revenue",), ("income_statement",))
+        d = metric_company([spec], [MetricCell("net_margin", "FY", FY15, D(1), None)])
+        d.cells = [c for c in d.cells if not (c.base == "revenue" and c.end == FY16 and c.fiscal_period == "FY")]
+        d.period_gaps = [GapRow("revenue_sanity_resolved", "FY", FY16, "no_mapped_tag")]
+        f = metric_findings(d, "net_margin")
+        assert list(f) == ["missing_metric:input_gap"] and f["missing_metric:input_gap"].evidence["classified"] is True
+        assert history.history_matrix(d)["metric_input_causes"]["no_mapped_tag"] == 1
+
+    def test_c_an_input_gap_whose_own_cause_is_unclassified_still_blocks(self):
+        spec = MetricSpec("net_margin", "Net Income / Revenue, FY only", False, ("revenue",), ("income_statement",))
+        d = metric_company([spec], [MetricCell("net_margin", "FY", FY15, D(1), None)])
+        d.cells = [c for c in d.cells if not (c.base == "revenue" and c.end == FY16 and c.fiscal_period == "FY")]
+        d.mapped_tag_count = {}  # no period_gap row and no mapped tag: the input cell is `unclassified`
+        f = metric_findings(d, "net_margin")
+        assert list(f) == ["missing_metric:input_gap:unclassified"]
+        assert f["missing_metric:input_gap:unclassified"].evidence["classified"] is False
+
+    def test_d_all_inputs_present_but_no_row_is_a_blocking_gap(self):
+        spec = MetricSpec("net_margin", "Net Income / Revenue, FY only", False, ("revenue",), ("income_statement",))
+        d = metric_company([spec], [MetricCell("net_margin", "FY", FY15, D(1), None)])
+        f = metric_findings(d, "net_margin")  # revenue FY2016 exists, the metric row for FY2016 does not
+        assert list(f) == ["missing_metric:no_row_inputs_present"]
+        assert f["missing_metric:no_row_inputs_present"].evidence["classified"] is False
+
+    def test_balance_sheet_metric_at_fiscal_year_end_is_present_under_the_fy_label(self):
+        spec = MetricSpec("current_ratio", "Current Assets / Current Liabilities", False, ("current_assets",), ("balance_sheet",))
+        rows = [MetricCell("current_ratio", "FY", FY15, D(1), None), MetricCell("current_ratio", "FY", FY16, D(1), None),
+                MetricCell("current_ratio", "Q1", date(2016, 3, 31), D(1), None)]
+        d = metric_company([spec], rows)
+        assert history.history_matrix(d)["metric_buckets"]["no_row_inputs_present"] == 0
+
+    def test_a_row_with_a_stated_reason_keeps_its_reason_not_a_bucket(self):
+        spec = MetricSpec("net_margin", "Net Income / Revenue", False, ("revenue",), ("income_statement",))
+        d = metric_company([spec], [MetricCell("net_margin", "FY", FY15, D(1), None),
+                                    MetricCell("net_margin", "FY", FY16, None, "incomplete:numerator")])
+        assert "missing_metric:incomplete:numerator" in metric_findings(d, "net_margin")

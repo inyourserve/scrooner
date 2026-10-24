@@ -56,6 +56,8 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.mapper.concept_fallback import debt_preference_is_applicable
+
 logger = structlog.get_logger()
 
 # concept_name -> resolved_concept_name for concepts wired up with a
@@ -564,6 +566,16 @@ def resolve_company_tag_preferences(
             (primary_id,),
         )
         preferences = cur.fetchall()
+    if concept_name == "total_debt":
+        # R4 (2026-10-21): a total_debt preference that names a single
+        # component (WFC ShortTermBorrowings 18,323M vs 193,035M face debt)
+        # is not applied; mapper/concept_fallback composes that company.
+        # The preference row stays in the database.
+        preferences = [
+            (company_id, taxonomy, tag)
+            for company_id, taxonomy, tag in preferences
+            if debt_preference_is_applicable(taxonomy, tag)
+        ]
     preferred_company_ids = [company_id for company_id, _t, _g in preferences]
 
     with conn.cursor() as cur:

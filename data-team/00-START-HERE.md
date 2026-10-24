@@ -74,3 +74,6 @@ E: expansion based on measured correctness, maintenance effort and product value
 
 ## What is not installed
 No database adapter, scheduler, production permission, API key, credential, live collector or automatic publication is included. Ask Claude to inspect and integrate with existing implementation using 07-IMPLEMENTATION-AND-REVIEW-QUEUE.md. Counts from earlier audits are supplied historical claims until remeasured. These instructions do not replace original filings as evidence.
+
+## Optional shared memory (beta)
+Before researching a topic from scratch you may run `python3 mind/mind.py search "<topic>"` to find what the team already knows (filing lessons, tag cases, rules, decisions); `get <id>` for the full entry; `feedback <id> helped|wrong` afterwards. Entries are hints with an evidence label; the cited source wins. It is optional and never a blocker (mind/README.md).

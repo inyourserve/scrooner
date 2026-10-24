@@ -25,7 +25,19 @@ import structlog
 
 from scrooner_pipeline.common.sector_applicability import metric_suppression_reason
 
-from . import composition, currency, history, period_integrity, scale, sector, sign, source_integrity, splits, ties
+from .history import UNCLASSIFIED_METRIC_CAUSES
+from . import (
+    composition,
+    currency,
+    history,
+    period_integrity,
+    scale,
+    sector,
+    sign,
+    source_integrity,
+    splits,
+    ties,
+)
 from .loader import HISTORY_FLOOR, Registry, load_chunk, load_registry
 from .model import INFO, INVARIANTS, REVIEW, WRONG_VALUE, CompanyData, Finding
 
@@ -61,14 +73,20 @@ class RunResult:
     errors: list[str] = field(default_factory=list)
     chunk_seconds: list[float] = field(default_factory=list)
     written: int = 0
-    history: dict[int, dict] = field(default_factory=dict)  # company id -> history_matrix
+    history: dict[int, dict] = field(
+        default_factory=dict
+    )  # company id -> history_matrix
     company_seconds: dict[int, float] = field(default_factory=dict)
 
 
 def served_view(data: CompanyData) -> CompanyData:
     """Copy of `data` whose metrics are the ones a reader would see after the
     serve-time bank suppression: the sector check tests that path."""
-    shown = [m for m in data.metrics if metric_suppression_reason(m.name, data.is_bank) is None]
+    shown = [
+        m
+        for m in data.metrics
+        if metric_suppression_reason(m.name, data.is_bank) is None
+    ]
     return replace(data, metrics=shown)
 
 
@@ -80,12 +98,25 @@ def run_checks(data: CompanyData) -> list[Finding]:
     seen: set[tuple] = set()
     unique: list[Finding] = []
     for f in out:
-        k = (f.invariant, f.data_point_name, f.period_end, f.evidence.get("rule"), f.stored_value)
+        k = (
+            f.invariant,
+            f.data_point_name,
+            f.period_end,
+            f.evidence.get("rule"),
+            f.stored_value,
+        )
         if k in seen:
             continue
         seen.add(k)
         unique.append(f)
-    unique.sort(key=lambda f: (f.company_id, INVARIANTS.index(f.invariant), f.data_point_name, f.period_end or date.min))
+    unique.sort(
+        key=lambda f: (
+            f.company_id,
+            INVARIANTS.index(f.invariant),
+            f.data_point_name,
+            f.period_end or date.min,
+        )
+    )
     return unique
 
 
@@ -100,7 +131,10 @@ def load_shard_company_ids(shard: str, path: Path = SHARDS_CSV) -> list[int]:
     out: list[int] = []
     with open(path, newline="") as fh:
         for row in csv.DictReader(fh):
-            if row["shard"].strip().upper() == shard.strip().upper() and not (row.get("excluded") or "").strip():
+            if (
+                row["shard"].strip().upper() == shard.strip().upper()
+                and not (row.get("excluded") or "").strip()
+            ):
                 out.append(int(row["company_id"]))
     if not out:
         raise ValueError(f"no (non-excluded) companies for shard {shard!r} in {path}")
@@ -146,7 +180,9 @@ def is_blocking(f: Finding) -> bool:
     """What blocks `checks_clean` (decision 2026-10-21): a wrong_value finding, or an
     I11 missing cell nobody could classify. `review` and `info` do not block it
     (review blocks `certified`, which this tool never sets)."""
-    return f.severity == WRONG_VALUE or (f.invariant == "I11" and f.evidence.get("classified") is False)
+    return f.severity == WRONG_VALUE or (
+        f.invariant == "I11" and f.evidence.get("classified") is False
+    )
 
 
 def company_state(findings: list[Finding]) -> str:
@@ -159,7 +195,9 @@ def storable(findings: list[Finding]) -> list[Finding]:
     return [f for f in findings if f.severity != INFO]
 
 
-def apply_chunk(conn, company_ids: list[int], findings: list[Finding], now: datetime) -> int:
+def apply_chunk(
+    conn, company_ids: list[int], findings: list[Finding], now: datetime
+) -> int:
     """Idempotent write of one chunk in ONE transaction: open findings of these
     companies are deleted and re-inserted, the certification rows upserted.
     Rows with resolved_at set are history and are never touched."""
@@ -176,9 +214,16 @@ def apply_chunk(conn, company_ids: list[int], findings: list[Finding], now: date
             INSERT_FINDING,
             [
                 (
-                    f.company_id, f.invariant, f.severity, f.data_point_name, f.period_end,
-                    f.stored_value, f.expected_or_other_value,
-                    json.dumps(f.evidence, default=_json_default), f.source_fact_ids, now,
+                    f.company_id,
+                    f.invariant,
+                    f.severity,
+                    f.data_point_name,
+                    f.period_end,
+                    f.stored_value,
+                    f.expected_or_other_value,
+                    json.dumps(f.evidence, default=_json_default),
+                    f.source_fact_ids,
+                    now,
                 )
                 for f in findings
             ],
@@ -186,7 +231,12 @@ def apply_chunk(conn, company_ids: list[int], findings: list[Finding], now: date
         cur.executemany(
             UPSERT_CERTIFICATION,
             [
-                (cid, company_state(by_company.get(cid, [])), now, len(by_company.get(cid, [])))
+                (
+                    cid,
+                    company_state(by_company.get(cid, [])),
+                    now,
+                    len(by_company.get(cid, [])),
+                )
                 for cid in company_ids
             ],
         )
@@ -224,10 +274,14 @@ def certify(
         findings: list[Finding] = []
         loaded_ids: list[int] = []
         try:
-            findings, loaded_ids = _check_ids(conn, part, registry, since, timeout_s, result)
+            findings, loaded_ids = _check_ids(
+                conn, part, registry, since, timeout_s, result
+            )
         except psycopg.errors.QueryCanceled as exc:
             conn.rollback()
-            result.errors.append(f"chunk {n}: statement_timeout ({timeout_s}s) on {part}: {exc}")
+            result.errors.append(
+                f"chunk {n}: statement_timeout ({timeout_s}s) on {part}: {exc}"
+            )
             say(f"chunk {n}/{len(parts)}: TIMEOUT, retrying per company")
             for cid in part:
                 try:
@@ -236,18 +290,26 @@ def certify(
                     loaded_ids += ok
                 except psycopg.errors.QueryCanceled:
                     conn.rollback()
-                    result.errors.append(f"company {cid}: statement_timeout ({timeout_s}s), not checked")
+                    result.errors.append(
+                        f"company {cid}: statement_timeout ({timeout_s}s), not checked"
+                    )
         conn.rollback()
         result.findings += findings
         if apply and loaded_ids:
-            result.written += apply_chunk(conn, loaded_ids, findings, datetime.now(timezone.utc))
+            result.written += apply_chunk(
+                conn, loaded_ids, findings, datetime.now(timezone.utc)
+            )
         result.chunk_seconds.append(time.monotonic() - started)
-        say(f"chunk {n}/{len(parts)}: {len(loaded_ids)} companies, {len(findings)} findings, "
-            f"{result.chunk_seconds[-1]:.1f}s")
+        say(
+            f"chunk {n}/{len(parts)}: {len(loaded_ids)} companies, {len(findings)} findings, "
+            f"{result.chunk_seconds[-1]:.1f}s"
+        )
     return result
 
 
-def _check_ids(conn, ids, registry, since, timeout_s, result) -> tuple[list[Finding], list[int]]:
+def _check_ids(
+    conn, ids, registry, since, timeout_s, result
+) -> tuple[list[Finding], list[int]]:
     with conn.cursor() as cur:
         data = load_chunk(cur, ids, registry, since=since, timeout_s=timeout_s)
     findings: list[Finding] = []
@@ -279,43 +341,97 @@ def morning_summary(result: RunResult) -> dict:
     by_company: dict[int, list[Finding]] = defaultdict(list)
     for f in result.findings:
         by_company[f.company_id].append(f)
-    states: Counter = Counter(company_state(by_company.get(cid, [])) for cid in result.companies)
-    wrong: Counter = Counter(f.invariant for f in result.findings if f.severity == WRONG_VALUE)
+    states: Counter = Counter(
+        company_state(by_company.get(cid, [])) for cid in result.companies
+    )
+    wrong: Counter = Counter(
+        f.invariant for f in result.findings if f.severity == WRONG_VALUE
+    )
     sev: Counter = Counter(f.severity for f in result.findings)
     cells: dict[str, Counter] = {"concepts": Counter(), "metrics": Counter()}
     unclassified_by_kind: Counter = Counter()
+    buckets: Counter = Counter()
+    input_causes: Counter = Counter()
     for h in result.history.values():
         for (base, kind, cause), ends in (h.get("missing") or {}).items():
             cells["concepts"][cause] += len(ends)
             if cause == "unclassified":
                 unclassified_by_kind[("concept", kind)] += len(ends)
+        buckets.update(h.get("metric_buckets") or {})
+        input_causes.update(h.get("metric_input_causes") or {})
         for (name, kind, cause), ends in (h.get("missing_metrics") or {}).items():
             cells["metrics"][cause] += len(ends)
-            if cause == "no_row":
+            if cause in UNCLASSIFIED_METRIC_CAUSES:
                 unclassified_by_kind[("metric", kind)] += len(ends)
-    blocking_i11 = sum(1 for f in result.findings if f.invariant == "I11" and is_blocking(f))
-    return {"states": states, "wrong_by_invariant": wrong, "severity": sev, "i11_cells": cells,
-            "unclassified_by_kind": unclassified_by_kind, "i11_blocking_findings": blocking_i11,
-            "companies": len(result.companies)}
+    blocking_i11 = sum(
+        1 for f in result.findings if f.invariant == "I11" and is_blocking(f)
+    )
+    return {
+        "states": states,
+        "wrong_by_invariant": wrong,
+        "severity": sev,
+        "i11_cells": cells,
+        "unclassified_by_kind": unclassified_by_kind,
+        "metric_buckets": buckets,
+        "metric_input_causes": input_causes,
+        "i11_blocking_findings": blocking_i11,
+        "companies": len(result.companies),
+    }
 
 
 def render_summary(result: RunResult) -> str:
     m = morning_summary(result)
-    lines = [f"SUMMARY ({m['companies']} companies checked)",
-             "  state (certified is never set here): "
-             + ", ".join(f"{k}={m['states'][k]}" for k in ("checks_clean", "uncertified")),
-             "  rule: checks_clean = zero wrong_value AND zero unclassified I11 cells; review/info do not block it",
-             "  findings by severity: " + ", ".join(f"{k}={v}" for k, v in sorted(m["severity"].items())),
-             "  wrong_value by invariant: "
-             + (", ".join(f"{i}={m['wrong_by_invariant'][i]}" for i in INVARIANTS if m["wrong_by_invariant"][i]) or "none"),
-             "  I11 missing concept cells by cause:"]
+    lines = [
+        f"SUMMARY ({m['companies']} companies checked)",
+        "  state (certified is never set here): "
+        + ", ".join(f"{k}={m['states'][k]}" for k in ("checks_clean", "uncertified")),
+        "  rule: checks_clean = zero wrong_value AND zero unclassified I11 cells; review/info do not block it",
+        "  findings by severity: "
+        + ", ".join(f"{k}={v}" for k, v in sorted(m["severity"].items())),
+        "  wrong_value by invariant: "
+        + (
+            ", ".join(
+                f"{i}={m['wrong_by_invariant'][i]}"
+                for i in INVARIANTS
+                if m["wrong_by_invariant"][i]
+            )
+            or "none"
+        ),
+        "  I11 missing concept cells by cause:",
+    ]
     for cause, n in m["i11_cells"]["concepts"].most_common():
         lines.append(f"    {cause:<28} {n}")
     lines.append("  I11 missing metric cells by cause:")
     for cause, n in m["i11_cells"]["metrics"].most_common(12):
         lines.append(f"    {cause:<28} {n}")
-    lines.append("  unclassified I11 cells by kind: "
-                 + (", ".join(f"{k[0]}/{k[1]}={v}" for k, v in sorted(m["unclassified_by_kind"].items())) or "none"))
+    lines.append(
+        "  metric cells without a stored row, by bucket (not_defined_for_period_kind is not a gap):"
+    )
+    for cause, n in m["metric_buckets"].most_common():
+        if cause in (
+            "not_defined_for_period_kind",
+            "insufficient_history",
+            "input_gap",
+            "input_gap:unclassified",
+            "no_row_inputs_present",
+            "no_row_inputs_present:metric_has_no_registry_inputs",
+        ):
+            lines.append(f"    {cause:<28} {n}")
+    if m["metric_input_causes"]:
+        lines.append(
+            "    input_gap carries input cause: "
+            + ", ".join(f"{k}={v}" for k, v in m["metric_input_causes"].most_common())
+        )
+    lines.append(
+        "  unclassified I11 cells by kind: "
+        + (
+            ", ".join(
+                f"{k[0]}/{k[1]}={v}"
+                for k, v in sorted(m["unclassified_by_kind"].items())
+            )
+            or "none"
+        )
+    )
     return "\n".join(lines)
 
 
@@ -334,7 +450,9 @@ def render_text(result: RunResult, show: int = 0, summary_only: bool = False) ->
         lines.append(f"  {inv:<4} {rule:<45} {sev:<11} {n}")
     lines.append("")
     lines.append("Findings per company (ticker: invariant counts):")
-    for cid, info in sorted(result.companies.items(), key=lambda kv: str(kv[1]["ticker"])):
+    for cid, info in sorted(
+        result.companies.items(), key=lambda kv: str(kv[1]["ticker"])
+    ):
         counts = s["by_company"].get(cid, Counter())
         body = ", ".join(f"{i}={counts[i]}" for i in INVARIANTS if counts[i]) or "clean"
         lines.append(f"  {info['ticker'] or cid}: {body}")
@@ -368,7 +486,9 @@ def render_history(result: RunResult, years: tuple[int, ...] = HISTORY_YEARS) ->
     """I11 per company: present/expected cells per sampled year, annual (FY) and
     quarterly (Q + Q4), concepts then metrics; `u` = unclassified missing."""
     lines = ["I11 history completeness (present/expected, u = unclassified missing):"]
-    for cid, info in sorted(result.companies.items(), key=lambda kv: str(kv[1]["ticker"])):
+    for cid, info in sorted(
+        result.companies.items(), key=lambda kv: str(kv[1]["ticker"])
+    ):
         h = result.history.get(cid) or {}
         if not h:
             lines.append(f"  {info['ticker'] or cid}: no history data")
@@ -378,19 +498,28 @@ def render_history(result: RunResult, years: tuple[int, ...] = HISTORY_YEARS) ->
             for y in years:
                 for name, kinds in (("A", ("FY",)), ("Q", ("Q", "Q4"))):
                     e = _cnt(h[key], y, kinds, "expected")
-                    parts.append(f"{y}{name} {_cnt(h[key], y, kinds, 'present')}/{e} u{_cnt(h[key], y, kinds, 'unclassified')}")
+                    parts.append(
+                        f"{y}{name} {_cnt(h[key], y, kinds, 'present')}/{e} u{_cnt(h[key], y, kinds, 'unclassified')}"
+                    )
             lines.append(f"  {info['ticker'] or cid} {label}: " + " | ".join(parts))
-        lines.append(f"  {info['ticker'] or cid} seconds: {result.company_seconds.get(cid, 0):.2f}")
+        lines.append(
+            f"  {info['ticker'] or cid} seconds: {result.company_seconds.get(cid, 0):.2f}"
+        )
     return "\n".join(lines)
 
 
 def dump_json(result: RunResult, path: Path) -> None:
     rows = [
         {
-            "company_id": f.company_id, "invariant": f.invariant, "severity": f.severity,
-            "data_point_name": f.data_point_name, "period_end": f.period_end,
-            "stored_value": f.stored_value, "expected_or_other_value": f.expected_or_other_value,
-            "evidence": f.evidence, "source_fact_ids": f.source_fact_ids,
+            "company_id": f.company_id,
+            "invariant": f.invariant,
+            "severity": f.severity,
+            "data_point_name": f.data_point_name,
+            "period_end": f.period_end,
+            "stored_value": f.stored_value,
+            "expected_or_other_value": f.expected_or_other_value,
+            "evidence": f.evidence,
+            "source_fact_ids": f.source_fact_ids,
         }
         for f in result.findings
     ]

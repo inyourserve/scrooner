@@ -26,22 +26,22 @@ def pid(start: date | None, end: date) -> int:
 
 
 def src(tag: str, value, *, form="10-K", unit="usd", auth=True, derived=False, end=None, sid=None,
-        accession="0000000000-26-000001") -> Source:
+        accession="0000000000-26-000001", filed=None) -> Source:
     if sid is None:
         _next_source[0] += 1
         sid = _next_source[0]
     return Source(id=sid, tag=tag, value=D(value), authoritative=auth, derived=derived, form=form,
-                  unit=unit, accession=accession, filing_date=date(2026, 2, 1), end=end)
+                  unit=unit, accession=accession, filing_date=filed or date(2026, 2, 1), end=end)
 
 
 def add(data: CompanyData, concept: str, value, end: date, start: date | None = None, fp: str | None = None,
         *, sources: list[Source] | None = None, tag: str | None = None, form="10-K", unit="usd",
-        derived=False, auth=True) -> Cell:
+        derived=False, auth=True, filed=None, accession="0000000000-26-000001") -> Cell:
     """Add one canonical cell plus (unless `sources` is given) one clean source fact."""
     value = D(value)
     ptype = "instant" if start is None else "duration"
     if sources is None:
-        sources = [src(tag or concept, value, form=form, unit=unit, derived=derived, auth=auth, end=end)]
+        sources = [src(tag or concept, value, form=form, unit=unit, derived=derived, auth=auth, end=end, filed=filed, accession=accession)]
     cell = Cell(
         concept=concept, value=value, period_id=pid(start, end), start=start, end=end, period_type=ptype,
         fiscal_year=end.year, fiscal_period=fp, source_ids=tuple(s.id for s in sources),

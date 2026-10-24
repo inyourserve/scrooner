@@ -1,0 +1,1 @@
+select co.tag, p.end_date, f.value, f.is_authoritative, fi.accession_number from core.fact f join core.concept co on co.id=f.concept_id join core.period p on p.id=f.period_id join core.filing fi on fi.id=f.filing_id where f.company_id=1553 and co.tag ilike '%LongTermDebt%' order by p.end_date desc limit 8

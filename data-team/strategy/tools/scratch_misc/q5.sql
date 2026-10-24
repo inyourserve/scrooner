@@ -1,0 +1,3 @@
+select cc.name, cc.combination_mode, cc.statement, string_agg(co.tag||':'||cm.priority||':'||cm.confidence, ' | ' order by cm.priority) tags, left(cc.description,160)
+from analytics.canonical_concept cc left join analytics.concept_mapping cm on cm.canonical_concept_id=cc.id left join core.concept co on co.id=cm.concept_id group by 1,2,3,5 order by 1;
+select md.metric_name, string_agg(cc.name||':'||mi.role, ', ') from analytics.metric_definition md join analytics.metric_definition_input mi on mi.metric_definition_id=md.id join analytics.canonical_concept cc on cc.id=mi.canonical_concept_id group by 1 order by 1

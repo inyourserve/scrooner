@@ -64,6 +64,8 @@ Findings:
 - NEW (me): PGR uses `Cash` for cash and cash equivalents (so "Cash" is not "cash excluding equivalents" there).
 - NEW (me): AMZN, HTZ, AX show balance-sheet cash and cash-flow ending cash differ by exactly the restricted amount; a free-cash-flow or net-cash calculation that uses the cash-flow ending tag against the balance-sheet tag will be off by restricted cash.
 
+- NEW (me, 2026-10-21, FILING-CHECKED presentation): Cummins 0000026172-26-000009 R5 tags its balance-sheet row "Cash and cash equivalents" 2,845M with the restricted-inclusive total `CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents` (whether restricted cash is inside was NOT verified); Badger Meter 0001193125-26-054739 R2 tags "Cash and cash equivalents" 226,016K with plain `Cash`. Population (FY2025 10-K face, DATA-INFERRED): the restricted-inclusive tag is the BS cash row at 272 filers, 207 of them labelled plain "cash and cash equivalents"; `Cash` is the cash row at 440 (shells 123); CF ending cash equals BS cash at 2,128, equals BS cash + restricted rows at 719, needs reconciliation at 660 (banks 191). Detail: R2 report sec. 11.
+
 ## 6. Mapping verdict
 - `CashAndCashEquivalentsAtCarryingValue`: **safe as the cash-and-equivalents line** when present (AAPL, AMZN, ARCC, HTZ, PLD, EWBC, AX FILING-CHECKED); require unit USD (IVDA).
 - `Cash`: acceptable only where it is the filer's face cash-and-equivalents row (PGR); never fill `Cash` ahead of CCE without a coexistence check (MOJO case [28]: CCE = 0 alongside `Cash`).

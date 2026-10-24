@@ -1,0 +1,10 @@
+# Brief 2 (Ritwik, 2026-10-21): follow BRIEF.md hard rules (read-only code/DB writes; evidence labels; final message <= 700 words; write your report file under data-team/strategy/team/). Capacity update: Postgres max_connections is 60 (15 in use at 11:30 IST); DB gate is now <= 40 connections, one connection per agent, statement_timeout 60s, chunk by company ids. Disk: Mac has about 8 GB free; keep downloads under 300 MB and delete.
+
+New MEASURED data (read these, do not recompute):
+- data-team/strategy/44-MEASURED-BASELINE-2026-10-21.md (fill 76.7%, 123,326 of 160,718 cells, top 986 companies)
+- data-team/strategy/data/cohort_cells.csv (company_id, data_point_name, has_value, gap_reason; 160,718 rows)
+- data-team/strategy/data/group_assignment_draft.csv (my DRAFT group per company from SIC + data signals; unaudited)
+- data-team/strategy/data/empirical_template_candidates.csv (blank % per data point per draft group)
+Blank classes (37,392 blanks): U0 no reason 13,349 (35.7%); C1 'incomplete:*' input missing 8,142; D1 'missing:*_ttm' 4,086; H1 history window too short 2,839; C2 named input missing 2,764; A1 line not on filer statements 2,492; M1 math undefined 1,381; T1 sector template pending 961; X1 on filing but not extracted 654; E1 evidenced zero activity 323; other ~400.
+Key structural findings so far: (1) corporate group (701 companies) holds 22,295 blanks; only 2,700 sit in rows blank for >=90% of corporates (bdc_total_investment_income, collaborative_arrangement_revenue, employee_count, net_lease_revenue are sector-only or non-XBRL rows counted against everyone); 17,818 sit in mid rows. (2) About 40% of blanks are CASCADES: a derived metric blank because an input is blank (net_cash_per_share, book_value_per_share, interest_coverage, cash_returned, ebitda_ttm family). (3) Some cascades come from a LEGITIMATE absence propagating (rnd_intensity for companies with no R&D; dividend metrics for non-payers).
+The system we are designing: group templates + conditional rules with evidenced states + dependency-graph attribution (fix leaves first) + certification. Your task below feeds that design.

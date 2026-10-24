@@ -68,6 +68,9 @@ Findings:
 - NEW (me): ANDE EPS tag switch across consecutive 10-Ks (above).
 - NEW (me): BRK and GOOGL carry their EPS/shares/cover shares only as class-dimensioned facts; any "one value per company" rule fails or picks one class.
 - NEW (me): the row named "Net income" is `ProfitLoss` at GE, DHI, ANDE, BRK, PNC; stored `net_income` must say which one it is.
+- RELAYED (Verifier file 35, FILING-CHECKED by them, not re-opened by me): NVDA 10-Qs carry the period-end `CommonStockSharesOutstanding` only in the equity statement under the equity-component column dimension (24,147M at 2026-07-26, 0001045810-26-000075 R5), so companyfacts has no undimensioned value and the page shows the 10-K count.
+- NEW (me, 2026-10-21, FILING-CHECKED): Baker Hughes 0001701605-26-000007 R3 reports EPS only "per Class A common share" (2.62) with no undimensioned EPS fact; Airbnb 0001559720-26-000004 R5 tags its only EPS (4.10, no discontinued ops) with `IncomeLossFromContinuingOperationsPerBasicShare`; 1st Source 0000034782-26-000011 R5 has `ProfitLoss` "Net income" 158,259K and the parent figure on `NetIncomeLossAvailableToCommonStockholdersBasic` 158,277K, no `NetIncomeLoss` on the face; ANF 0001018840-26-000012 cash flow R7 starts with `ProfitLoss` 514,995K while the income statement R3 bottom line is `NetIncomeLoss` 506,921K.
+- NEW population (me, FY2025 10-K face, 4,601 filers, DATA-INFERRED): NetIncomeLoss only 3,053; both ProfitLoss and NetIncomeLoss 1,114 (different 750); ProfitLoss only 294; CF starts with ProfitLoss while IS shows parent 724; ProfitLoss - NCI = NetIncomeLoss passes 891 of 907. BS shares outstanding only per class 682; issued only 430; EPS only per class 227; continuing-ops EPS tag only 71. Detail: R2 report sec. 6, 12.
 - NEW (me): EPS and share counts for BRK Class A (46,563 per share) and Class B (31.04) differ by 1,500; the pair must not be averaged or compared across companies without the class.
 
 ## 6. Mapping verdict

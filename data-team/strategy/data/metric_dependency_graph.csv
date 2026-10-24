@@ -1,0 +1,165 @@
+data_point,kind,module,period_basis,direct_inputs(node:role),ultimate_leaf_inputs,cohort_blank_cells_of_986,notes
+accounts_payable,leaf_concept,resolve.py (concept_mapping tags),instant,,,267,XBRL tag(s) via concept_mapping; first_match
+accounts_receivable,leaf_concept,resolve.py (concept_mapping tags),instant,,,242,XBRL tag(s) via concept_mapping; first_match
+amortization_of_intangibles,leaf_concept,resolve.py (concept_mapping tags),duration,,,151,XBRL tag(s) via concept_mapping; first_match
+ap_change_reconciliation_gap,metric,reconciliation.py,"FY t, t-1",accounts_payable:req;cf_ap_change:req,accounts_payable;cf_ap_change,545,
+ar_change_reconciliation_gap,metric,reconciliation.py,"FY t, t-1",accounts_receivable:req;cf_ar_change:req,accounts_receivable;cf_ar_change,498,
+basic_eps,leaf_concept,resolve.py (concept_mapping tags),duration,,,15,XBRL tag(s) via concept_mapping; first_match
+basic_eps_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,basic_eps:base,basic_eps,15,base concept plus conflict-filled periods (superset)
+bdc_total_investment_income,leaf_concept,resolve.py (concept_mapping tags),duration,,,957,XBRL tag(s) via concept_mapping; first_match
+book_value_per_share,metric,calculate.py (ratio),per period,stockholders_equity:numerator;shares_outstanding:denominator,stockholders_equity;shares_outstanding,851,
+buyback_yield,metric,expanded_metrics.py,TTM,share_buybacks:ttm_numerator;market_cap:denominator,share_buybacks;shares_outstanding;price,291,
+capex,leaf_concept,resolve.py (concept_mapping tags),duration,,,81,XBRL tag(s) via concept_mapping; first_match
+capex_pct_revenue,metric,calculate.py (ratio),per period,capex:numerator;revenue:denominator,capex;revenue,191,
+capex_resolved,resolved_concept,concept_fallback.py,duration,capex:base,capex,81,capex + PaymentsToAcquireSoftware (only where capex exists)
+cash_and_equivalents,leaf_concept,resolve.py (concept_mapping tags),instant,,,1,XBRL tag(s) via concept_mapping; first_match
+cash_and_equivalents_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,cash_and_equivalents:base,cash_and_equivalents,1,base concept plus conflict-filled periods (superset)
+cash_conversion_cycle,metric,expanded_metrics.py,TTM,debtor_days:add;inventory_days:add;payables_days:subtract,accounts_receivable;revenue;inventory;cost_of_revenue;accounts_payable,598,"metric of metrics, FY"
+cash_flow_financing,leaf_concept,resolve.py (concept_mapping tags),duration,,,0,XBRL tag(s) via concept_mapping; first_match
+cash_flow_financing_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,cash_flow_financing:base,cash_flow_financing,0,base concept plus conflict-filled periods (superset)
+cash_flow_investing,leaf_concept,resolve.py (concept_mapping tags),duration,,,2,XBRL tag(s) via concept_mapping; first_match
+cash_flow_investing_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,cash_flow_investing:base,cash_flow_investing,2,base concept plus conflict-filled periods (superset)
+cash_returned_to_shareholders,metric,calculate.py (additive),per period,dividends_paid:add;share_buybacks:add,dividends_paid;share_buybacks,530,
+cf_ap_change,leaf_concept,resolve.py (concept_mapping tags),duration,,,422,XBRL tag(s) via concept_mapping; first_match
+cf_ar_change,leaf_concept,resolve.py (concept_mapping tags),duration,,,365,XBRL tag(s) via concept_mapping; first_match
+cf_inventory_change,leaf_concept,resolve.py (concept_mapping tags),duration,,,413,XBRL tag(s) via concept_mapping; first_match
+cfo,leaf_concept,resolve.py (concept_mapping tags),duration,,,0,XBRL tag(s) via concept_mapping; first_match
+cfo_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,cfo:base,cfo,0,base concept plus conflict-filled periods (superset)
+collaborative_arrangement_revenue,leaf_concept,resolve.py (concept_mapping tags),duration,,,982,XBRL tag(s) via concept_mapping; first_match
+comprehensive_income,leaf_concept,resolve.py (concept_mapping tags),duration,,,28,XBRL tag(s) via concept_mapping; first_match
+cost_of_revenue,leaf_concept,resolve.py (concept_mapping tags),duration,,,276,XBRL tag(s) via concept_mapping; first_match
+cost_of_revenue_resolved,derived_concept,concept_fallback.py ARITHMETIC_FALLBACKS,duration,cost_of_revenue:alt;revenue:alt_derive;gross_profit:alt_derive,cost_of_revenue;revenue;gross_profit,245,"cost_of_revenue (or rendered-report dimensional sum), else revenue - gross_profit"
+current_assets,leaf_concept,resolve.py (concept_mapping tags),instant,,,167,XBRL tag(s) via concept_mapping; first_match
+current_assets_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,current_assets:base,current_assets,167,base concept plus conflict-filled periods (superset)
+current_liabilities,leaf_concept,resolve.py (concept_mapping tags),instant,,,167,XBRL tag(s) via concept_mapping; first_match
+current_liabilities_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,current_liabilities:base,current_liabilities,167,base concept plus conflict-filled periods (superset)
+current_ratio,metric,calculate.py (ratio),per period,current_assets:numerator;current_liabilities:denominator,current_assets;current_liabilities,167,
+debt_to_ebitda,metric,expanded_metrics.py,TTM,total_debt_resolved:numerator;ebitda:ttm_denominator,total_debt;total_debt_split;operating_income;revenue;operating_expenses;depreciation_and_amortization,473,
+debt_to_equity,metric,calculate.py (ratio),per period,total_debt_resolved:numerator;stockholders_equity:denominator,total_debt;total_debt_split;stockholders_equity,209,
+debtor_days,metric,calculate.py (days),FY only,accounts_receivable:numerator;revenue:denominator,accounts_receivable;revenue,318,
+depreciation_and_amortization,leaf_concept,resolve.py (concept_mapping tags),duration,,,126,XBRL tag(s) via concept_mapping; first_match
+depreciation_and_amortization_resolved,resolved_concept,concept_fallback.py,duration,depreciation_and_amortization:base,depreciation_and_amortization,126,max of DepreciationAndAmortization / DepreciationDepletionAndAmortization
+diluted_eps,leaf_concept,resolve.py (concept_mapping tags),duration,,,7,XBRL tag(s) via concept_mapping; first_match
+diluted_eps_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,diluted_eps:base,diluted_eps,7,base concept plus conflict-filled periods (superset)
+diluted_shares_growth_3y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-3,shares_outstanding:base_t;shares_outstanding:base_t_minus_3,shares_outstanding,163,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+diluted_shares_growth_5y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-5,shares_outstanding:base_t;shares_outstanding:base_t_minus_5,shares_outstanding,193,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+diluted_shares_growth_yoy,metric,ttm.py GROWTH_METRICS,FY t vs FY t-1,shares_outstanding:base_t;shares_outstanding:base_t_minus_1,shares_outstanding,119,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+dividend_growth_streak_years,metric,dividend_streak.py,latest FY,dividends_per_share:req,dividends_per_share,323,null reason no_dividend_history when no DPS ever
+dividend_yield,price_metric,price_metrics.py,TTM,dividends_per_share:ttm_numerator;price:denominator,dividends_per_share;price,453,
+dividends_paid,leaf_concept,resolve.py (concept_mapping tags),duration,,,280,XBRL tag(s) via concept_mapping; first_match
+dividends_paid_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,dividends_paid:base,dividends_paid,280,base concept plus conflict-filled periods (superset)
+dividends_pct_fcf,metric,expanded_metrics.py,TTM,dividends_paid:ttm_numerator;fcf:ttm_denominator,dividends_paid;cfo;capex,563,
+dividends_per_share,leaf_concept,resolve.py (concept_mapping tags),duration,,,294,XBRL tag(s) via concept_mapping; first_match
+dividends_per_share_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,dividends_per_share:base,dividends_per_share,294,base concept plus conflict-filled periods (superset)
+dps_growth_3y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-3,dividends_per_share:base_t;dividends_per_share:base_t_minus_3,dividends_per_share,431,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+dps_growth_yoy,metric,ttm.py GROWTH_METRICS,FY t vs FY t-1,dividends_per_share:base_t;dividends_per_share:base_t_minus_1,dividends_per_share,370,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+ebitda,metric,calculate.py (additive),"quarterly rows + persisted TTM row (expanded_metrics.py: 4 consecutive quarters, <=150 days old)",operating_income_resolved:add;depreciation_and_amortization_resolved:add,operating_income;revenue;operating_expenses;depreciation_and_amortization,427,
+ebitda_margin,metric,expanded_metrics.py,TTM,ebitda:ttm_numerator;revenue:ttm_denominator,operating_income;revenue;operating_expenses;depreciation_and_amortization,452,
+effective_tax_rate_gap,metric,tax_reconciliation.py,FY,effective_tax_rate_reported:req;income_tax_expense:req;income_before_tax:req,effective_tax_rate_reported;income_tax_expense;income_before_tax,89,
+effective_tax_rate_reported,leaf_concept,resolve.py (concept_mapping tags),duration,,,42,XBRL tag(s) via concept_mapping; first_match
+employee_count,leaf_concept,resolve.py (concept_mapping tags),instant,,,925,XBRL tag(s) via concept_mapping; first_match
+employee_count_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,employee_count:base,employee_count,8,base concept plus conflict-filled periods (superset)
+eps_dilution_spread,metric,calculate.py (sum_diff_ratio),per period,basic_eps:add;diluted_eps:subtract;basic_eps:denominator,basic_eps;diluted_eps,23,
+eps_growth_10y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-10,diluted_eps:base_t;diluted_eps:base_t_minus_10,diluted_eps,418,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+eps_growth_3y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-3,diluted_eps:base_t;diluted_eps:base_t_minus_3,diluted_eps,224,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+eps_growth_5y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-5,diluted_eps:base_t;diluted_eps:base_t_minus_5,diluted_eps,266,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+eps_growth_yoy,metric,ttm.py GROWTH_METRICS,FY t vs FY t-1,diluted_eps:base_t;diluted_eps:base_t_minus_1,diluted_eps,52,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+ev_ebitda,metric,expanded_metrics.py,TTM,market_cap:ev_base;total_debt_resolved:add;cash_and_equivalents:subtract;ebitda:ttm_denominator,shares_outstanding;price;total_debt;total_debt_split;cash_and_equivalents;operating_income;revenue;operating_expenses;depreciation_and_amortization,427,
+ev_sales,metric,expanded_metrics.py,TTM,market_cap:ev_base;total_debt_resolved:add;cash_and_equivalents:subtract;revenue:ttm_denominator,shares_outstanding;price;total_debt;total_debt_split;cash_and_equivalents;revenue,57,
+fcf,metric,calculate.py (sum_diff),per period,cfo:add;capex:subtract,cfo;capex,176,
+fcf_growth_3y_cagr,metric,fcf_growth.py,FY t vs FY t-3,fcf:base_t;fcf:base_t_minus_3,cfo;capex,323,reads the fcf METRIC FY rows (metric of metric)
+fcf_growth_5y_cagr,metric,fcf_growth.py,FY t vs FY t-5,fcf:base_t;fcf:base_t_minus_5,cfo;capex,343,reads the fcf METRIC FY rows (metric of metric)
+fcf_growth_yoy,metric,fcf_growth.py,FY t vs FY t-1,fcf:base_t;fcf:base_t_minus_1,cfo;capex,132,reads the fcf METRIC FY rows (metric of metric)
+fcf_gt_net_income,metric,quality_flags.py,FY,cfo:req;capex:req;net_income:req,cfo;capex;net_income,165,
+fcf_margin,metric,calculate.py (sum_diff_ratio),per period,cfo:add;capex:subtract;revenue:denominator,cfo;capex;revenue,191,
+fcf_per_share,metric,expanded_metrics.py,TTM,fcf:ttm_numerator;shares_outstanding:denominator,cfo;capex;shares_outstanding,281,fcf TTM = sum of 4 quarterly fcf metric rows
+fcf_yield,price_metric,price_metrics.py,TTM,cfo:ttm_add;capex:ttm_subtract;market_cap:denominator,cfo;capex;shares_outstanding;price,255,
+goodwill,leaf_concept,resolve.py (concept_mapping tags),instant,,,97,XBRL tag(s) via concept_mapping; first_match
+goodwill_pct_assets,metric,calculate.py (ratio),per period,goodwill:numerator;total_assets:denominator,goodwill;total_assets,190,
+gross_margin,metric,calculate.py (sum_diff_ratio),per period,revenue:add;cost_of_revenue:subtract;revenue:denominator,revenue;cost_of_revenue,391,quarterly/FY engine; TTM variant in ttm.py reads gross_profit_resolved / revenue_sanity_resolved
+gross_profit,leaf_concept,resolve.py (concept_mapping tags),duration,,,466,XBRL tag(s) via concept_mapping; first_match
+gross_profit_resolved,derived_concept,concept_fallback.py ARITHMETIC_FALLBACKS,duration,gross_profit:alt;revenue:alt_derive;cost_of_revenue_resolved:alt_derive,gross_profit;revenue;cost_of_revenue,255,"gross_profit, else revenue - cost_of_revenue_resolved (revenue>0)"
+income_before_tax,leaf_concept,resolve.py (concept_mapping tags),duration,,,27,XBRL tag(s) via concept_mapping; first_match
+income_before_tax_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,income_before_tax:base,income_before_tax,27,base concept plus conflict-filled periods (superset)
+income_tax_expense,leaf_concept,resolve.py (concept_mapping tags),duration,,,12,XBRL tag(s) via concept_mapping; first_match
+income_tax_expense_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,income_tax_expense:base,income_tax_expense,12,base concept plus conflict-filled periods (superset)
+insider_ownership,external_source,core.insider_ownership_summary (Form 4),12 months,,,5,
+institutional_ownership,external_source,core.institutional_ownership (Form 13F),latest window,,,6,
+institutional_ownership_pct,metric,expanded_metrics.py,latest,institutional_ownership:source;shares_outstanding:denominator,institutional_ownership;shares_outstanding,230,
+interest_coverage_ratio,metric,calculate.py (ratio),per period,operating_income:numerator;interest_expense:denominator,operating_income;interest_expense,788,
+interest_expense,leaf_concept,resolve.py (concept_mapping tags),duration,,,136,XBRL tag(s) via concept_mapping; first_match
+interest_expense_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,interest_expense:base,interest_expense,136,base concept plus conflict-filled periods (superset)
+interest_income,leaf_concept,resolve.py (concept_mapping tags),duration,,,521,XBRL tag(s) via concept_mapping; first_match
+inventory,leaf_concept,resolve.py (concept_mapping tags),instant,,,385,XBRL tag(s) via concept_mapping; first_match
+inventory_change_reconciliation_gap,metric,reconciliation.py,"FY t, t-1",inventory:req;cf_inventory_change:req,inventory;cf_inventory_change,507,
+inventory_days,metric,calculate.py (days),FY only,inventory:numerator;cost_of_revenue:denominator,inventory;cost_of_revenue,498,
+margin_expanding_3yr,metric,quality_flags.py,3 consecutive FY,gross_profit:req;revenue:req,gross_profit;revenue,535,needs gross margin for 3 consecutive FY
+market_cap,price_metric,price_metrics.py,latest,shares_outstanding:multiplicand;price:multiplier,shares_outstanding;price,0,"shares_outstanding (fallback diluted weighted shares, cover-page) x Alpaca price (core.market_price_alpaca)"
+mutual_fund_ownership,external_source,core.fund_ownership_summary (N-PORT),2 periods,,,51,
+net_cash,metric,calculate.py (sum_diff),per period,cash_and_equivalents:add;total_debt_resolved:subtract,cash_and_equivalents;total_debt;total_debt_split,208,
+net_cash_per_share,metric,calculate.py (sum_diff_ratio),per period,cash_and_equivalents:add;total_debt_resolved:subtract;shares_outstanding:denominator,cash_and_equivalents;total_debt;total_debt_split;shares_outstanding,865,
+net_change_in_cash,metric,calculate.py (additive),per period,cfo:add;cash_flow_investing:add;cash_flow_financing:add,cfo;cash_flow_investing;cash_flow_financing,9,
+net_debt_ebitda,metric,expanded_metrics.py,TTM,total_debt_resolved:numerator;cash_and_equivalents:numerator;ebitda:ttm_denominator,total_debt;total_debt_split;cash_and_equivalents;operating_income;revenue;operating_expenses;depreciation_and_amortization,473,
+net_income,leaf_concept,resolve.py (concept_mapping tags),duration,,,0,XBRL tag(s) via concept_mapping; first_match
+net_income_growth_10y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-10,net_income:base_t;net_income:base_t_minus_10,net_income,341,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+net_income_growth_3y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-3,net_income:base_t;net_income:base_t_minus_3,net_income,167,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+net_income_growth_5y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-5,net_income:base_t;net_income:base_t_minus_5,net_income,217,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+net_income_growth_yoy,metric,ttm.py GROWTH_METRICS,FY t vs FY t-1,net_income:base_t;net_income:base_t_minus_1,net_income,5,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+net_income_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,net_income:base,net_income,0,base concept plus conflict-filled periods (superset)
+net_interest_income,metric,calculate.py (sum_diff),per period,interest_income:add;interest_expense:subtract,interest_income;interest_expense,892,
+net_lease_revenue,leaf_concept,resolve.py (concept_mapping tags),duration,,,861,XBRL tag(s) via concept_mapping; first_match
+net_margin,metric,calculate.py (ratio),per period,net_income:numerator;revenue:denominator,net_income;revenue,26,TTM variant (ttm.py) reads net_income_resolved / revenue_sanity_resolved
+ocf_to_net_income,metric,calculate.py (ratio),per period,cfo:numerator;net_income:denominator,cfo;net_income,14,
+operating_expenses,leaf_concept,resolve.py (concept_mapping tags),duration,,,580,XBRL tag(s) via concept_mapping; first_match
+operating_expenses_resolved,derived_concept,concept_fallback.py ARITHMETIC_FALLBACKS,duration,operating_expenses:alt;gross_profit_resolved:alt_derive;operating_income:alt_derive,operating_expenses;gross_profit;revenue;cost_of_revenue;operating_income,194,"operating_expenses, else gross_profit_resolved - operating_income"
+operating_income,leaf_concept,resolve.py (concept_mapping tags),duration,,,155,XBRL tag(s) via concept_mapping; first_match
+operating_income_resolved,derived_concept,conflict_resolution.py derive_operating_income,duration,operating_income:alt;revenue:alt_derive;operating_expenses:alt_derive,operating_income;revenue;operating_expenses,124,"operating_income (+conflict-fill), else revenue - opex - ..."
+operating_margin,metric,calculate.py (ratio),per period,operating_income:numerator;revenue:denominator,operating_income;revenue,209,TTM variant (ttm.py) reads operating_income_resolved / revenue_sanity_resolved
+other_income_expense_net,leaf_concept,resolve.py (concept_mapping tags),duration,,,314,XBRL tag(s) via concept_mapping; first_match
+payables_days,metric,calculate.py (days),FY only,accounts_payable:numerator;cost_of_revenue:denominator,accounts_payable;cost_of_revenue,438,
+payout_ratio,metric,calculate.py (ratio),per period,dividends_per_share:numerator;diluted_eps:denominator,dividends_per_share;diluted_eps,405,
+peg_ratio,metric,expanded_metrics.py,TTM,trailing_pe:numerator;eps_growth_yoy:denominator,diluted_eps;price,372,
+piotroski_f_score,metric,quality_score.py,FY t and FY t-1,net_income:req;cfo:req;total_assets:req;current_assets:req;current_liabilities:req;revenue:req;gross_profit_resolved:req;total_debt_resolved:req;shares_outstanding:req,net_income;cfo;total_assets;current_assets;current_liabilities;revenue;gross_profit;cost_of_revenue;total_debt;total_debt_split;shares_outstanding,710,all 9 inputs x 2 years required; gross_profit falls back to revenue - cost_of_revenue
+ppe_net,leaf_concept,resolve.py (concept_mapping tags),instant,,,79,XBRL tag(s) via concept_mapping; first_match
+ppe_net_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,ppe_net:base,ppe_net,79,base concept plus conflict-filled periods (superset)
+pretax_margin,metric,calculate.py (ratio),per period,income_before_tax:numerator;revenue:denominator,income_before_tax;revenue,88,
+price_to_book,price_metric,price_metrics.py,latest,market_cap:numerator;stockholders_equity:denominator,shares_outstanding;price;stockholders_equity,5,
+price_to_sales,price_metric,price_metrics.py,TTM,market_cap:numerator;revenue:ttm_denominator,shares_outstanding;price;revenue,60,
+profitable_streak_years,metric,quality_flags.py,latest FY,net_income:req,net_income,9,
+public_float,leaf_concept,resolve.py (concept_mapping tags),instant,,,10,XBRL tag(s) via concept_mapping; first_match
+quick_ratio,metric,calculate.py (sum_diff_ratio),per period,current_assets:add;inventory:subtract;current_liabilities:denominator,current_assets;inventory;current_liabilities,169,inventory is zero-when-absent (ZERO_WHEN_ABSENT_CONCEPTS)
+research_and_development,leaf_concept,resolve.py (concept_mapping tags),duration,,,508,XBRL tag(s) via concept_mapping; first_match
+revenue,leaf_concept,resolve.py (concept_mapping tags),duration,,,7,XBRL tag(s) via concept_mapping; first_match
+revenue_growth_10y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-10,revenue:base_t;revenue:base_t_minus_10,revenue,359,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+revenue_growth_3y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-3,revenue:base_t;revenue:base_t_minus_3,revenue,93,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+revenue_growth_5y_cagr,metric,ttm.py GROWTH_METRICS,FY t vs FY t-5,revenue:base_t;revenue:base_t_minus_5,revenue,131,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+revenue_growth_yoy,metric,ttm.py GROWTH_METRICS,FY t vs FY t-1,revenue:base_t;revenue:base_t_minus_1,revenue,46,prior-period missing => reason missing:prior_period(..); negative/zero base => null by rule
+revenue_sanity_resolved,resolved_concept,conflict_resolution.py,duration,revenue:base,revenue,7,revenue plus conflict-fill and sanity filter
+rnd_intensity,metric,calculate.py (ratio),per period,research_and_development:numerator;revenue:denominator,research_and_development;revenue,643,
+roa,metric,calculate.py (ratio),FY + TTM (ttm.py),net_income:numerator;total_assets:denominator,net_income;total_assets,14,
+roe,metric,calculate.py (ratio),FY + TTM (ttm.py),net_income:numerator;stockholders_equity:denominator,net_income;stockholders_equity,20,
+roic,metric,calculate.py (roic),FY + TTM (ttm.py),operating_income:nopat_base;income_tax_expense:tax_rate_numerator;income_before_tax:tax_rate_denominator;total_debt_resolved:invested_capital_add;stockholders_equity:invested_capital_add;cash_and_equivalents:invested_capital_subtract,operating_income;income_tax_expense;income_before_tax;total_debt;total_debt_split;stockholders_equity;cash_and_equivalents,422,
+sbc,leaf_concept,resolve.py (concept_mapping tags),duration,,,20,XBRL tag(s) via concept_mapping; first_match
+sbc_pct_revenue,metric,calculate.py (ratio),per period,sbc:numerator;revenue:denominator,sbc;revenue,148,
+sga_expense,leaf_concept,resolve.py (concept_mapping tags),duration,,,149,XBRL tag(s) via concept_mapping; first_match
+sga_pct_revenue,metric,calculate.py (ratio),per period,sga_expense:numerator;revenue:denominator,sga_expense;revenue,187,
+share_buybacks,leaf_concept,resolve.py (concept_mapping tags),duration,,,89,XBRL tag(s) via concept_mapping; first_match
+share_buybacks_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,duration,share_buybacks:base,share_buybacks,89,base concept plus conflict-filled periods (superset)
+share_dilution_trend,metric,expanded_metrics.py,latest vs ~1y ago,shares_outstanding:now;shares_outstanding:one_year_ago,shares_outstanding,123,
+share_repurchases_pct_fcf,metric,expanded_metrics.py,TTM,share_buybacks:ttm_numerator;fcf:ttm_denominator,share_buybacks;cfo;capex,445,
+shares_outstanding,leaf_concept,resolve.py (concept_mapping tags),instant,,,64,XBRL tag(s) via concept_mapping; first_match
+shares_outstanding_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,shares_outstanding:base,shares_outstanding,64,base concept plus conflict-filled periods (superset)
+stockholders_equity,leaf_concept,resolve.py (concept_mapping tags),instant,,,5,XBRL tag(s) via concept_mapping; first_match
+stockholders_equity_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,stockholders_equity:base,stockholders_equity,1,base concept plus conflict-filled periods (superset)
+total_assets,leaf_concept,resolve.py (concept_mapping tags),instant,,,0,XBRL tag(s) via concept_mapping; first_match
+total_assets_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,total_assets:base,total_assets,0,base concept plus conflict-filled periods (superset)
+total_debt,leaf_concept,resolve.py,instant,,,129,sum mode over debt tags
+total_debt_resolved,derived_concept,concept_fallback.py resolve_total_debt_components,instant,total_debt:alt;total_debt_split:alt,total_debt;total_debt_split,79,"component-based debt: all-in tag, else summed components; OR over alternatives"
+total_debt_split,leaf_concept,resolve.py,instant,,,306,sum of LongTermDebtCurrent+Noncurrent
+total_liabilities,leaf_concept,resolve.py (concept_mapping tags),instant,,,190,XBRL tag(s) via concept_mapping; first_match
+total_liabilities_resolved,resolved_concept,conflict_resolution.py / dedup_majority_resolver.py,instant,total_liabilities:base,total_liabilities,1,base concept plus conflict-filled periods (superset)
+total_shareholder_yield,metric,expanded_metrics.py,TTM,dividends_paid:ttm_optional;share_buybacks:ttm_optional;market_cap:denominator;shares_outstanding:now;shares_outstanding:one_year_ago,dividends_paid;share_buybacks;shares_outstanding;price,123,missing dividends/buybacks default to 0 here; blank only if market_cap or 1y-ago shares missing
+trailing_pe,price_metric,price_metrics.py,TTM,diluted_eps:ttm_denominator;price:numerator,diluted_eps;price,36,else market_cap / TTM net income
+working_capital,metric,calculate.py (sum_diff),per period,current_assets:add;current_liabilities:subtract,current_assets;current_liabilities,167,
+zero_debt,metric,quality_flags.py,FY,total_debt_resolved:req,total_debt;total_debt_split,184,null (not 0) when debt not reported
+price,external_source,core.market_price_alpaca,daily,,,0,Alpaca delayed_sip bars; not a canonical concept

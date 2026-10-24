@@ -30,17 +30,31 @@ app = typer.Typer(help=__doc__)
 @app.command("run")
 def run_cmd(
     ciks: str = typer.Option("", help="Comma-separated CIKs."),
-    top1000_shard: str = typer.Option("", "--top1000-shard", help="Campaign shard id, e.g. S001."),
-    limit: int = typer.Option(0, help="Check at most this many companies (0 = all selected)."),
+    top1000_shard: str = typer.Option(
+        "", "--top1000-shard", help="Campaign shard id, e.g. S001."
+    ),
+    limit: int = typer.Option(
+        0, help="Check at most this many companies (0 = all selected)."
+    ),
     dry_run: bool = typer.Option(
-        True, "--dry-run/--apply",
+        True,
+        "--dry-run/--apply",
         help="Dry run (default): print findings, write nothing. --apply writes the two certification tables.",
     ),
-    chunk_size: int = typer.Option(MAX_CHUNK, help=f"Companies per chunk (capped at {MAX_CHUNK})."),
-    statement_timeout: int = typer.Option(DEFAULT_TIMEOUT_S, help="Seconds, set before every query."),
-    since: str = typer.Option(HISTORY_FLOOR.isoformat(), help="Earliest period end checked (history gate, doc 38)."),
+    chunk_size: int = typer.Option(
+        MAX_CHUNK, help=f"Companies per chunk (capped at {MAX_CHUNK})."
+    ),
+    statement_timeout: int = typer.Option(
+        DEFAULT_TIMEOUT_S, help="Seconds, set before every query."
+    ),
+    since: str = typer.Option(
+        HISTORY_FLOOR.isoformat(),
+        help="Earliest period end checked (history gate, doc 38).",
+    ),
     show: int = typer.Option(0, help="Also print the first N findings."),
-    summary_only: bool = typer.Option(False, help="Print only the SUMMARY block (states, wrong_value, I11 causes)."),
+    summary_only: bool = typer.Option(
+        False, help="Print only the SUMMARY block (states, wrong_value, I11 causes)."
+    ),
     json_out: Path = typer.Option(None, help="Write all findings to this JSON file."),
     shards_file: Path = typer.Option(SHARDS_CSV, help="shards.csv path."),
 ) -> None:
@@ -63,11 +77,18 @@ def run_cmd(
         ids = list(dict.fromkeys(ids))
         if limit:
             ids = ids[:limit]
-        typer.echo(f"mode: {'DRY RUN (nothing written)' if dry_run else 'APPLY'}; companies: {len(ids)}")
+        typer.echo(
+            f"mode: {'DRY RUN (nothing written)' if dry_run else 'APPLY'}; companies: {len(ids)}"
+        )
         try:
             result = certify(
-                conn, ids, chunk_size=chunk_size, timeout_s=statement_timeout, since=since_date,
-                apply=not dry_run, progress=typer.echo,
+                conn,
+                ids,
+                chunk_size=chunk_size,
+                timeout_s=statement_timeout,
+                since=since_date,
+                apply=not dry_run,
+                progress=typer.echo,
             )
         except MigrationNotAppliedError as exc:
             typer.echo(f"REFUSED: {exc}")
@@ -77,8 +98,12 @@ def run_cmd(
             dump_json(result, json_out)
             typer.echo(f"findings written to {json_out}")
         if not dry_run:
-            typer.echo(f"rows written to analytics.certification_finding: {result.written}")
-        typer.echo(f"elapsed: {sum(result.chunk_seconds):.1f}s over {len(result.chunk_seconds)} chunk(s)")
+            typer.echo(
+                f"rows written to analytics.certification_finding: {result.written}"
+            )
+        typer.echo(
+            f"elapsed: {sum(result.chunk_seconds):.1f}s over {len(result.chunk_seconds)} chunk(s)"
+        )
     finally:
         conn.close()
 

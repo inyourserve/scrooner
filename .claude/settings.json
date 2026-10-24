@@ -5,12 +5,23 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/mind/mind.py\" brief",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.session_id' | { read -r sid; marker=\"/tmp/.claude_claudemd_reminder_${sid:-unknown}\"; if [ -f \"$marker\" ]; then exit 0; fi; touch \"$marker\"; printf '%s' '{\"decision\":\"block\",\"reason\":\"Before stopping: review this session for anything durable and project-wide worth capturing in CLAUDE.md at the repo root (architecture decisions, conventions, build/test/lint commands, gotchas). Create CLAUDE.md if it does not exist yet. Keep entries terse and only add what will still be true and useful in future sessions. If nothing durable came up, say so briefly and stop normally.\"}'; }",
+            "command": "jq -r '.session_id' | { read -r sid; marker=\"/tmp/.claude_claudemd_reminder_${sid:-unknown}\"; if [ -f \"$marker\" ]; then exit 0; fi; touch \"$marker\"; printf '%s' '{\"decision\":\"block\",\"reason\":\"Before stopping: (mind is in BETA, so this is optional) consider whether this session produced anything durable that a future agent would otherwise re-learn (a gotcha, a verified rule, a decision, a working command). If so, capture each with: python3 mind/mind.py add --title ... --kind rule|lesson|howto|decision|gotcha|reference --evidence FILING-CHECKED|DATA-INFERRED|CODE-CHECKED|ASSUMED --tags ... --paths ... --body ... (search first so you do not duplicate; use amend for an existing entry). Do NOT add it to CLAUDE.md, which is already too large. If a mind entry you used was wrong, run mind.py feedback <id> wrong. Optionally rate how useful the mind was this session with: python3 mind/mind.py rate 0-5 (0 = did not use it, which is neutral and fine; add --outside if the real win came from going beyond it). If nothing is worth capturing, or it does not fit, just say so briefly and stop normally.\"}'; }",
             "timeout": 15
           }
         ]
