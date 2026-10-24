@@ -198,8 +198,8 @@ def test_aapl_fy2015_has_no_noncurrent_line_so_nothing_is_composed():
 
 
 def test_the_debt_current_at_or_above_the_parts_path_is_gone():
-    # DebtCurrent 40 above the listed part (10) and no lease fact: contradicted, not accepted
-    tags = dict(LongTermDebtNoncurrent=100, LongTermDebtCurrent=10, DebtCurrent=40)
+    # parts 10 + 35 exceed DebtCurrent 40 and no subset reproduces it: contradicted, not accepted
+    tags = dict(LongTermDebtNoncurrent=100, LongTermDebtCurrent=10, CommercialPaper=35, DebtCurrent=40)  # fmt: skip
     assert dc.carrying_lines(V(**tags)) == dc.Hold("current_block_unexplained")
 
 
@@ -418,11 +418,11 @@ def test_the_same_excess_without_a_confirming_total_is_still_held():
         for k, v in LLY_16.items()
         if k not in ("DebtLongtermAndShorttermCombinedAmount", "LongTermDebt")
     }
-    assert dc.carrying_lines(V(**no_total)) == dc.Hold("current_block_unexplained")
-    wrong_total = dict(LLY_16, DebtLongtermAndShorttermCombinedAmount="9000")
-    assert dc.carrying_lines(
-        V(**{k: v for k, v in wrong_total.items() if k != "LongTermDebt"})
-    ) is None or isinstance(dc.carrying_lines(V(**wrong_total)), (dc.Hold, type(None)))
+    # with any lease evidence filed the excess may be a lease: still held (V4: without it, DebtCurrent is the face line)
+    with_lease = dict(no_total, FinanceLeaseLiabilityNoncurrent="1")
+    assert dc.carrying_lines(V(**with_lease)) == dc.Hold("current_block_unexplained")
+    accepted = total(no_total, "borrowings_only")
+    assert any("face_line_no_lease_evidence" in x for x in accepted.slots.proofs)
 
 
 def test_zero_debt_current_means_zero_current_leases_and_the_total_is_lease_inclusive():
@@ -520,7 +520,8 @@ def test_label_not_determined_only_when_no_lease_fact_or_line_exists():
 def test_goog_debt_current_beyond_parts_without_confirmation_is_still_held():
     tags = dict(
         LongTermDebtNoncurrent=100, CommercialPaper=40, DebtCurrent=90
-    )  # 50 unlisted, no lease fact, no total
+    )  # 50 unlisted, no total: a lease fact beside it means the 50 may be a lease
+    tags["FinanceLeaseLiabilityNoncurrent"] = 5
     assert dc.carrying_lines(V(**tags)) == dc.Hold("current_block_unexplained")
 
 
@@ -883,3 +884,160 @@ def test_ko_short_term_borrowings_contains_its_components_and_is_counted_once():
 def test_distinct_short_term_amounts_that_are_not_containment_still_hold():
     tags = dict(KO_1912, OtherShortTermBorrowings=500)  # 10,007 + 500 != 10,994
     assert dc.carrying_lines(V(**tags)) == dc.Hold("short_term_overlap_unresolved")
+
+
+# ------------------------------------------------------------------ V4 verifier fixes (2026-10-24)
+ABBV_2203 = dict(LongTermDebtAndCapitalLeaseObligations=63522, LongTermDebtAndCapitalLeaseObligationsCurrent=9940, ShortTermBorrowings=12)  # fmt: skip
+ABBV_1712 = dict(DebtAndCapitalLeaseObligations=36968, LongTermDebtAndCapitalLeaseObligations=30953,
+                 LongTermDebtAndCapitalLeaseObligationsCurrent=6015, ShortTermBorrowings=400)  # fmt: skip
+CVX_1503 = dict(CapitalLeaseObligationsNoncurrent=65, LongTermDebt=22700, LongTermDebtNoncurrent=29960, ShortTermBorrowings=3908)  # fmt: skip
+CVX_1409 = dict(CapitalLeaseObligationsNoncurrent=84, LongTermDebt=12400, LongTermDebtNoncurrent=19960, ShortTermBorrowings=5665)  # fmt: skip
+
+
+@pytest.mark.parametrize(
+    "tags, want",
+    [(ABBV_2203, 73474), (ABBV_1712, 37368)],
+    ids=["2022-03-31", "2017-12-31"],
+)
+def test_abbv_separate_short_term_borrowings_line_is_part_of_the_lease_inclusive_total(
+    tags, want
+):
+    # 10-Q 0001551152-22-000017 R5: 12 + 9,940 + 63,522 = 73,474; 10-K 0001551152-18-000014 R5: 400 + 6,015 + 30,953
+    c = total(tags)
+    assert c.value == Decimal(want) * M
+    assert c.composition == dc.COMPOSITION_LEASE_INCLUSIVE_LINES
+    assert "ShortTermBorrowings" in c.tags
+
+
+def test_abbv_short_term_borrowings_are_not_added_when_debt_current_is_the_current_line():
+    # DebtCurrent is the whole current side: a ShortTermBorrowings beside it is inside it
+    tags = dict(LongTermDebtAndCapitalLeaseObligations=30953, DebtCurrent=6415,
+                DebtAndCapitalLeaseObligations=37368, ShortTermBorrowings=400)  # fmt: skip
+    assert total(tags).value == Decimal(37368) * M
+
+
+def test_abbv_conflicting_short_term_amounts_beside_a_lease_inclusive_current_line_hold():
+    tags = dict(ABBV_2203, CommercialPaper=7)  # 12 vs 7: neither contained nor proven
+    assert dc.carrying_lines(V(**tags)) == dc.Hold("short_term_overlap_unresolved")
+
+
+@pytest.mark.parametrize(
+    "tags, want",
+    [(CVX_1503, 33933), (CVX_1409, 25709)],
+    ids=["2015-03-31", "2014-09-30"],
+)
+def test_cvx_pre_2015_noncurrent_capital_lease_face_line_is_included(tags, want):
+    # 10-Q 0000093410-15-000020 R5: 3,908 + 29,960 + 65; 10-Q 0000093410-14-000049 R5: 5,665 + 19,960 + 84.
+    # LongTermDebt (22,700) is below the noncurrent line: the r1 containment guard removes it before r8
+    d = cf.evaluate_total_debt(F(**tags), GUARDS)
+    assert d.value == Decimal(want) * M
+    assert d.composition == dc.COMPOSITION_BORROWINGS_PLUS_LEASES
+    b = cf.evaluate_total_debt(F(**tags), GUARDS, "borrowings_only")
+    assert b.value == d.value - Decimal(tags["CapitalLeaseObligationsNoncurrent"]) * M
+
+
+def test_short_term_only_composition_is_not_used_when_long_term_debt_may_hold_the_current_maturities():
+    # a LongTermDebt that contains the noncurrent line includes untagged current maturities: legacy path decides
+    tags = dict(
+        LongTermDebt=30500, LongTermDebtNoncurrent=29960, ShortTermBorrowings=3908
+    )
+    assert dc.carrying_lines(V(**tags)) is None
+
+
+MRK_13 = dict(DebtAndCapitalLeaseObligations=25100, DebtCurrent=4521, LongTermDebtCurrent=2100, LongTermDebtNoncurrent=20539)  # fmt: skip
+INTC_1203 = dict(CommercialPaper=273, DebtCurrent=362, LongTermDebtNoncurrent=7088)
+UNH_2403 = dict(CommercialPaper=7300, DebtCurrent=9787, LongTermDebtNoncurrent=63850)
+CSCO_1704 = dict(DebtCurrent=4248, LongTermDebt=30470, LongTermDebtCurrent=2248, LongTermDebtNoncurrent=28222)  # fmt: skip
+CSCO_2410 = dict(DebtCurrent=12364, LongTermDebt=20117, LongTermDebtCurrent=494, LongTermDebtNoncurrent=19623)  # fmt: skip
+
+
+@pytest.mark.parametrize(
+    "tags, want",
+    [
+        (MRK_13, 25060),
+        (INTC_1203, 7450),
+        (UNH_2403, 73637),
+        (CSCO_1704, 32470),
+        (CSCO_2410, 31987),
+    ],
+    ids=[
+        "MRK-2013-12-31",
+        "INTC-2012-03-31",
+        "UNH-2024-03-31",
+        "CSCO-2017-04-29",
+        "CSCO-2024-10-26",
+    ],
+)
+def test_debt_current_that_is_the_face_line_is_the_whole_current_side(tags, want):
+    # filings: MRK 0000310158-14-000009 R4; INTC 0001193125-12-212253 R4; UNH 0000731766-24-000155 R2;
+    # CSCO 0000858877-17-000010 / -24-000030 R2: the filer tags only commercial paper or current maturities
+    c = total(tags)
+    assert c.value == Decimal(want) * M
+    assert any("face_line_no_lease_evidence" in p or "corroborated" in p for p in c.slots.proofs)  # fmt: skip
+
+
+def test_debt_current_excess_is_still_held_when_lease_lines_sit_beside_it():
+    # GOOG 2018-03-31 (CP 1,300 vs DebtCurrent 1,329 with a lease-inclusive noncurrent line) stays a hold
+    assert dc.carrying_lines(V(**GOOG_1803)) == dc.Hold("current_block_unexplained")
+    # same shape as UNH, plus a finance-lease fact: the excess may be the lease
+    tags = dict(UNH_2403, FinanceLeaseLiabilityNoncurrent=100)
+    assert dc.carrying_lines(V(**tags)) in (dc.Hold("current_block_unexplained"), dc.Hold("lease_location_unknown"))  # fmt: skip
+
+
+def test_debt_current_smaller_than_a_part_pair_is_still_a_contradiction():
+    # two parts that together exceed DebtCurrent contradict it; only an unexplained EXCESS is accepted
+    tags = dict(DebtCurrent=1000, CommercialPaper=700, ShortTermBorrowings=600, LongTermDebtNoncurrent=5000)  # fmt: skip
+    assert dc.carrying_lines(V(**tags)) == dc.Hold("current_block_unexplained")
+
+
+def test_csco_long_term_debt_is_accepted_only_when_it_is_noncurrent_plus_current_maturities():
+    tags = dict(
+        CSCO_2410, LongTermDebt=20500
+    )  # no longer equals 19,623 + 494 and is far from the total
+    assert dc.carrying_lines(V(**tags)) is None
+
+
+def test_abbv_filer_aggregate_that_includes_the_short_term_line_also_proves_the_total():
+    # aggregate 37,368 = 400 + 6,015 + 30,953; a debt-only LongTermDebt beside it must not hold the total
+    tags = dict(ABBV_1712, DebtAndCapitalLeaseObligations=37368, LongTermDebt=30000)
+    c = total(tags)
+    assert c.value == Decimal(37368) * M and any("filer_aggregate" in p for p in c.slots.proofs)  # fmt: skip
+
+
+def test_noncurrent_line_alone_is_not_a_total_even_with_a_noncurrent_capital_lease():
+    # no short-term line, no current line: nothing to compose (AAPL FY2015 shape), not a zero current side
+    tags = dict(LongTermDebtNoncurrent=29960, CapitalLeaseObligationsNoncurrent=65)
+    assert dc.carrying_lines(V(**tags)) is None
+
+
+def test_short_term_only_composition_leaves_overlapping_short_term_amounts_to_the_legacy_path():
+    # LLY 2010-09-30: ShortTermBorrowings 155.1 beside ShortTermBankLoansAndNotesPayable 125
+    tags = dict(LongTermDebtNoncurrent=6982, ShortTermBorrowings=155.1, ShortTermBankLoansAndNotesPayable=125)  # fmt: skip
+    assert dc.carrying_lines(V(**tags)) is None
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [dict(LongTermDebtAndCapitalLeaseObligationsCurrent=60),
+     dict(LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities=2041)],
+    ids=["AMD-2013-lease-inclusive-current", "KO-including-current-maturities"],
+)  # fmt: skip
+def test_short_term_only_composition_never_drops_a_filed_current_maturities_line(extra):
+    # AMD 2013-12-28: 1,986 + 60 + 55 = 2,101, not 1,986 + 55
+    tags = dict(LongTermDebtNoncurrent=1986, ShortTermBorrowings=55, **extra)
+    assert dc.carrying_lines(V(**tags)) is None
+
+
+def test_current_capital_lease_stays_unlocated_for_a_post_842_finance_lease_half():
+    # only the pre-ASC 842 CapitalLeaseObligationsNoncurrent tag lets the current half sit inside the current debt
+    tags = dict(LongTermDebtNoncurrent=19960, ShortTermBorrowings=5665, FinanceLeaseLiabilityNoncurrent=84)  # fmt: skip
+    c = total(tags)
+    assert c.value == Decimal(19960 + 5665) * M and c.composition == dc.COMPOSITION_LEASES_INCOMPLETE  # fmt: skip
+
+
+def test_long_term_debt_agreement_counts_a_short_term_container_once_without_a_current_maturities_tag():
+    # no LongTermDebtCurrent, so only the short-term subtraction can reconcile LongTermDebt (noncurrent + maturities):
+    # DebtCurrent 80 = container 50 + maturities 30; the container 50 holds CP 30 + other 20
+    tags = dict(LongTermDebtNoncurrent=100, DebtCurrent=80, ShortTermBorrowings=50, CommercialPaper=30,
+                OtherShortTermBorrowings=20, LongTermDebt=130)  # fmt: skip
+    assert total(tags, "borrowings_only").value == Decimal(180) * M

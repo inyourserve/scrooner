@@ -111,6 +111,16 @@ CARRYING_TAGS = tuple(
         + list(LEASE_CURRENT)
     )
 )
+# any of these filed beside DebtCurrent means part of it may be a lease, so its excess over the filed parts is
+# not accepted without corroboration
+LEASE_EVIDENCE_TAGS = (
+    *LEASE_NONCURRENT,
+    *LEASE_CURRENT,
+    LEASE_TOTAL,
+    LEASE_TOTAL_PRE842,
+    LEASE_INCL_NONCURRENT,
+    LEASE_INCL_CURRENT,
+)
 EXPLAIN_TOLERANCE = Decimal("0.02")
 AGREEMENT_TOLERANCE = Decimal("0.10")
 PERIMETERS = ("lease_inclusive", "borrowings_only")
@@ -374,9 +384,18 @@ def _current_borrowings(
                 Decimal(0),
             )
             if lc is None or not _subset_matches(parts, dc - lc):
-                if not (dc > sum(parts) - tol and _corroborated(vals, bn, dc, short)):
+                uncontradicted = dc > sum(parts) - tol
+                if uncontradicted and _corroborated(vals, bn, dc, short):
+                    proof += "+corroborated_by_stated_total"
+                elif uncontradicted and not any(t in vals for t in LEASE_EVIDENCE_TAGS):
+                    # DebtCurrent is itself the face line ("Short-term debt", "Loans payable and current
+                    # portion of long-term debt"): the filer tags only some of it (commercial paper, or
+                    # nothing). No filed part exceeds it and no lease line sits beside it that could be
+                    # inside it, so it is the whole current side (MRK, INTC, UNH, CSCO). With any lease
+                    # evidence filed the excess may be a lease: HELD (GOOG 2018-03-31, TSLA).
+                    proof += "+face_line_no_lease_evidence"
+                else:
                     return None, tags, proof, "current_block_unexplained"
-                proof += "+corroborated_by_stated_total"
         if lc is not None:
             if lc > dc + tol:
                 return None, tags, proof, "current_block_unexplained"
@@ -437,8 +456,17 @@ def _lease_inclusive_only(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | Non
         c = dc  # DebtCurrent is the lease-inclusive current line, proved by the filer's own aggregate
     else:
         return None
-    total = n + c
-    proven = agg is not None and abs(agg - total) <= CORROBORATION_TOLERANCE * agg
+    st, st_tags, st_proof = Decimal(0), [], ""
+    if LEASE_INCL_CURRENT in vals:
+        # a separate short-term borrowings face line sits beside the lease-inclusive current line (ABBV: 12M in
+        # 2022-03-31, 400M in 2017-12-31); with DebtCurrent as the current line it already holds them
+        st, st_tags, st_proof, st_hold = _short_term(vals, c, n)
+        if st_hold:
+            return Hold(st_hold)
+    total = n + c + st
+    proven = agg is not None and any(
+        abs(agg - x) <= CORROBORATION_TOLERANCE * agg for x in (n + c, total)
+    )
     if not proven:
         other = [vals[t] for t in (RELATED_PARTY, "LongTermDebt") if t in vals]
         if dc is not None and LEASE_INCL_CURRENT in vals:
@@ -456,21 +484,46 @@ def _lease_inclusive_only(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | Non
             for t in (
                 LEASE_INCL_NONCURRENT,
                 LEASE_INCL_CURRENT if LEASE_INCL_CURRENT in vals else "DebtCurrent",
+                *st_tags,
             )
             if t
         ),
         proofs=(
             "lease_inclusive_face_lines_same_perimeter"
-            + ("+filer_aggregate" if proven else ""),
+            + ("+filer_aggregate" if proven else "")
+            + st_proof,
         ),
         path="carrying_lease_inclusive_lines",
         lease_reason="lease_facts_absent",
     )
 
 
+_SHORT_ONLY_TAGS = frozenset(
+    {
+        PLAIN_NONCURRENT,
+        *SHORT_TERM,
+        *LEASE_NONCURRENT,
+        *LEASE_CURRENT,
+        LEASE_TOTAL,
+        LEASE_TOTAL_PRE842,
+        REFINANCED,
+    }
+)
+
+
+def _may_hold_current_maturities(tag: str) -> bool:
+    """A filed debt line other than the noncurrent line, the short-term lines and the lease facts could be the
+    current maturities (AMD: the lease-inclusive current line; KO: the including-current-maturities total), so a
+    short-term-only composition would drop it."""
+    return tag not in _SHORT_ONLY_TAGS and (
+        tag in CARRYING_TAGS or "CurrentMaturities" in tag
+    )
+
+
 def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
     """Build the two slots; None when the carrying lines are not applicable (no noncurrent or no current line)."""
     L, lc, ln, lease_reason, lease_tags = _lease_slot(vals)
+    nt_tag = _first(vals, LEASE_NONCURRENT)
     # only filed lease FACTS count here; a half derived from the face lines does not locate the current leases
     any_lease_fact = any(
         t in vals
@@ -530,6 +583,31 @@ def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
     tags.append(ntag)
     proofs.append(nproof)
     bc, ctags, cproof, hold = _current_borrowings(vals, lc, any_lease_fact, bn)
+    if (
+        bc is None
+        and hold is None
+        and ntag == PLAIN_NONCURRENT
+        and not any(_may_hold_current_maturities(t) for t in vals)
+    ):
+        # only a short-term borrowings line is filed beside the noncurrent line (CVX 2014-2015: "Short-term
+        # debt" 3,908 + "Long-term debt" 29,960 + "Capital lease obligations" 65): the legacy path's composition,
+        # now with the noncurrent capital-lease face line
+        st, st_tags, st_proof, st_hold = _short_term(vals, Decimal(0), bn)
+        # an overlap among the short-term amounts is not decided here: the legacy path keeps deciding (LLY 2010)
+        if not st_hold and st > 0:
+            bc, ctags, cproof = (
+                st,
+                st_tags,
+                "short_term_only_no_current_maturities_tagged" + st_proof,
+            )
+            if (
+                lc is None
+                and ln is not None
+                and nt_tag == "CapitalLeaseObligationsNoncurrent"
+            ):
+                # pre-ASC 842: the current capital lease is inside the current debt lines, only the noncurrent
+                # one is a face line of its own
+                L, lease_reason = ln, None
     if hold == "lease_location_unknown" and LEASE_INCL_NONCURRENT in vals:
         # the current side cannot be split, but the filer's own aggregate may prove both lines lease-inclusive
         alt = _lease_inclusive_only(vals)
@@ -552,6 +630,12 @@ def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
         and lt
         >= bn  # a LongTermDebt below the noncurrent line is partial (r1 containment's case), not a total
         and abs(lt - (borrowings - short_inside)) > AGREEMENT_TOLERANCE * lt
+        # LongTermDebt that is exactly the noncurrent line plus the current maturities agrees (CSCO: the
+        # rest of DebtCurrent is untagged short-term debt that LongTermDebt never holds)
+        and not (
+            PLAIN_CURRENT in vals
+            and abs(lt - (bn + vals[PLAIN_CURRENT])) <= CORROBORATION_TOLERANCE * lt
+        )
     ):
         return None  # LongTermDebt describes other lines (partial / other basis)
     all_in = vals.get("DebtLongtermAndShorttermCombinedAmount")
