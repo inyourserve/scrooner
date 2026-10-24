@@ -401,6 +401,16 @@ def calculate_for_company(
         # instead, matched by period_id as before -- both concepts in those
         # metrics are always dated as of the same balance-sheet date.
         anchor_inputs = duration_inputs or instant_inputs
+        if not duration_inputs:
+            # W10 (2026-10-24): a pure-instant metric whose denominator is a share count
+            # (book_value_per_share, net_cash_per_share) must not anchor on the share
+            # count's own dates. Shares outstanding is dated on the filing's COVER page,
+            # a few weeks after the balance-sheet date, so anchoring on it created a
+            # newest row (e.g. AAPL 2026-07-17) with no equity/cash/debt on that date and
+            # a null value, hiding the real value one row earlier (2026-06-27: 7.36). Anchor
+            # on the non-denominator inputs; the denominator is still looked up by end date.
+            numerator_inputs = [i for i in instant_inputs if i[2] != "denominator"]
+            anchor_inputs = numerator_inputs or instant_inputs
         anchor_concept_ids = {cid for _name, cid, _role, _is_instant in anchor_inputs}
         anchor_period_ids: set[int] = set()
         for concept_id in anchor_concept_ids:

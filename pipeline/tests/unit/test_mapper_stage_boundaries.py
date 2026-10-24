@@ -174,3 +174,44 @@ def test_gross_margin_still_nulls_when_cost_of_revenue_absent(monkeypatch):
     assert by_metric[21]["value"] is None
     assert by_metric[21]["is_null_reason"] == "incomplete:subtract"
 
+
+
+@pytest.mark.unit
+def test_instant_ratio_does_not_anchor_on_the_share_count_cover_date(monkeypatch):
+    """W10 (2026-10-24): shares outstanding is dated on the filing's cover page, after the
+    balance-sheet date. Anchoring on it made a newest, null row (AAPL 2026-07-17) beside the
+    real one (2026-06-27: 7.36). Only the balance-sheet date may produce a row."""
+    balance_date = date(2026, 6, 27)
+    cover_date = date(2026, 7, 17)
+    facts = {
+        "by_period_id": {
+            1: {10: (Decimal("73600"), [101])},  # equity at the balance-sheet date only
+            2: {10: (Decimal("10000"), [102]), 11: (Decimal("9990"), [103])},  # shares
+        },
+        "by_end_date": {
+            1: {balance_date: (Decimal("73600"), [101])},
+            2: {balance_date: (Decimal("10000"), [102]), cover_date: (Decimal("9990"), [103])},
+        },
+        "periods": {
+            10: (balance_date, balance_date, "Q3"),
+            11: (cover_date, cover_date, "Q3"),
+        },
+    }
+    monkeypatch.setattr(calculate, "_load_canonical_facts", lambda _conn, _company: facts)
+    targets = [
+        {
+            "id": 30,
+            "name": "book_value_per_share",
+            "inputs": [
+                ("stockholders_equity", 1, "numerator", True),
+                ("shares_outstanding", 2, "denominator", True),
+            ],
+        },
+    ]
+    conn = MetricConnection()
+
+    stats = calculate.calculate_for_company(conn, 9, targets)
+
+    assert stats == {"computed": 1, "null": 0}
+    assert [r["period_end"] for r in conn.rows] == [balance_date]
+    assert conn.rows[0]["value"] == Decimal("7.36")
