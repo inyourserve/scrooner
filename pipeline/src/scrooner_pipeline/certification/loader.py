@@ -29,8 +29,17 @@ from .model import (
     MetricSpec,
     Metric,
     MetricCell,
+    NCI_CLAIM_TAGS,
     Source,
     PERIODIC_FORMS,
+    PER_SHARE,
+)
+
+from .thresholds import (  # noqa: E402
+    LEASE_INCLUSIVE_DEBT_TAGS,
+    MAX_DURATION_DAYS,
+    MIN_EQUAL_VALUE,
+    OLD_COMPARATIVE_DAYS,
 )
 
 HISTORY_FLOOR = date(2015, 1, 1)  # doc 38: nothing older is displayed as current
@@ -150,7 +159,9 @@ def load_registry(cur, timeout_s: int = 60) -> Registry:
         key = (base_name(cname), tag)
         if key not in reg.tag_roles or priority < reg.tag_roles[key][0]:
             reg.tag_roles[key] = (priority, confidence)
-    reg.adjustment_tags = sorted({tag for i in IDENTITIES for tag, _ in i.adjustments})
+    reg.adjustment_tags = sorted(
+        {tag for i in IDENTITIES for tag, _ in i.adjustments} | set(NCI_CLAIM_TAGS)
+    )
     return reg
 
 
@@ -227,8 +238,13 @@ def load_chunk(
         join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
         join core.period p on p.id = cf.period_id
         where cf.company_id = any(%s) and (%s::date is null or p.end_date >= %s::date)
+          -- a duration longer than MAX_DURATION_DAYS is not a reporting period (AZO's
+          -- program-to-date repurchases 1998-01-01..2015-05-09, 6,337 days): not displayed,
+          -- not checked
+          and (p.start_date is null or p.start_date >= p.end_date
+               or p.end_date - p.start_date <= %s)
         """,
-        (ids, since, since),
+        (ids, since, since, MAX_DURATION_DAYS),
         timeout_s,
     ):
         if cid not in data or value is None:
@@ -331,6 +347,79 @@ def load_chunk(
             if cid in data:
                 data[cid].periodic_copies.setdefault(r[0], []).append(_source(r[1:]))
 
+    # label-shifted quarters: a discrete quarter whose source filing came > 800 days after the
+    # quarter ended carries a value identical (same company, concept, unit) to a fact on the
+    # same quarter of a later year, in any filing (SWK Q1 2017 revenue 3,209.3M in the FY2019
+    # 10-K = the Q1 2018 figure of the FY2018 10-K, carried on a 2017 context)
+    old_quarter_ids = sorted(
+        {
+            s.id
+            for d in data.values()
+            for s in d.sources.values()
+            if s.filing_date is not None
+            and s.start is not None
+            and s.end is not None
+            and 61 <= (s.end - s.start).days <= 121
+            and (s.filing_date - s.end).days > OLD_COMPARATIVE_DAYS
+            and abs(s.value) >= MIN_EQUAL_VALUE
+        }
+    )
+    for i in range(0, len(old_quarter_ids), SOURCE_BATCH):
+        rows = execute(
+            cur,
+            """
+            select f1.id, p2.end_date, f2.id
+            from core.fact f1
+            join core.period p1 on p1.id = f1.period_id
+            join core.period p2 on p2.end_date between p1.end_date + 340 and p1.end_date + 1130
+                 and p2.end_date - p2.start_date between 61 and 121
+            join core.fact f2 on f2.period_id = p2.id and f2.company_id = f1.company_id
+                 and f2.concept_id = f1.concept_id and f2.unit_id = f1.unit_id
+                 and f2.value = f1.value
+            where f1.id = any(%s)
+            """,
+            (old_quarter_ids[i : i + SOURCE_BATCH],),
+            timeout_s,
+        )
+        for sid, end2, fid in rows:
+            cid = owner.get(sid)
+            if cid in data:
+                data[cid].label_twins.setdefault(sid, []).append((end2, fid))
+
+    # copies of per-share sources from every filing (a split restates the comparative columns
+    # of the filings after it): the only proof that separates a split from an offering
+    per_share_ids = sorted(
+        {
+            sid
+            for d in data.values()
+            for c in d.cells
+            if c.base in PER_SHARE
+            for sid in c.source_ids
+        }
+    )
+    for i in range(0, len(per_share_ids), SOURCE_BATCH):
+        rows = execute(
+            cur,
+            """
+            select f1.id, f2.id, c.tag, f2.value, f2.is_authoritative, f2.is_derived, fl.form, u.unit_name,
+                   fl.accession_number, fl.filing_date, p.start_date, p.end_date
+            from core.fact f1
+            join core.fact f2 on f2.company_id = f1.company_id and f2.concept_id = f1.concept_id
+                 and f2.period_id = f1.period_id and f2.unit_id = f1.unit_id and f2.id <> f1.id
+            join core.concept c on c.id = f2.concept_id
+            join core.unit u on u.id = f2.unit_id
+            join core.period p on p.id = f2.period_id
+            join core.filing fl on fl.id = f2.filing_id
+            where f1.id = any(%s) and not f2.is_derived
+            """,
+            (per_share_ids[i : i + SOURCE_BATCH],),
+            timeout_s,
+        )
+        for r in rows:
+            cid = owner.get(r[0])
+            if cid in data:
+                data[cid].pershare_copies.setdefault(r[0], []).append(_source(r[1:]))
+
     # fact counts of the 8-K filings used as sources: does the 8-K carry full statements?
     eight_k = sorted(
         {
@@ -380,8 +469,12 @@ def load_chunk(
                 data[cid].conflict_copies.setdefault(r[0], []).append(_source(r[1:]))
 
     # debt components and balance-sheet adjustment facts (authoritative, USD)
-    tags = sorted(set(registry.debt_tags) | set(registry.adjustment_tags))
-    debt = set(registry.debt_tags)
+    tags = sorted(
+        set(registry.debt_tags)
+        | set(LEASE_INCLUSIVE_DEBT_TAGS)
+        | set(registry.adjustment_tags)
+    )
+    debt = set(registry.debt_tags) | set(LEASE_INCLUSIVE_DEBT_TAGS)
     for cid, fid, tag, value, pid, end in execute(
         cur,
         """

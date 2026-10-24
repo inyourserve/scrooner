@@ -284,6 +284,40 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
             median_q = sorted(abs(q.value) for q in tile)[1:3]
             centre = (median_q[0] + median_q[1]) / 2
             suspect = max(tile, key=lambda q: abs(abs(q.value) - centre))
+            odd_sign = [
+                q
+                for q in tile
+                if sum(1 for o in tile if (o.value > 0) == (q.value > 0)) == 1
+            ]
+            if len(odd_sign) == 1 and (y.value > 0) != (odd_sign[0].value > 0):
+                suspect = odd_sign[
+                    0
+                ]  # the one quarter whose sign differs from the other three
+            rule = (
+                "quarters_vs_year_basis_mix"
+                if basis_mix
+                else "quarters_vs_year_perimeter_mix"
+                if perimeter
+                else "quarters_do_not_sum_to_year"
+            )
+            # A sum mismatch that is a plain error names the QUARTER the data points at
+            # (ODFL FY2017 income tax 112.1M is right; Q4 2017 +104.9M is the Tax Act
+            # remeasurement benefit tagged as a provision). A basis or perimeter mix is a
+            # statement about the YEAR against its quarters, so it stays on the year.
+            # ...unless the year itself rests on a component tag that is not a face line
+            # (TSLA cost of revenue FY2017 on CostOfGoodsSold, a priority-3 component): then
+            # the year is the suspect and stays the named cell
+            year_tags = {s.tag for s in data.source_facts(y) if not s.derived}
+            year_is_component = any(
+                (y.base, t) in data.tag_roles and not _face_tag(data, y.base, t)
+                for t in year_tags
+            )  # only a KNOWN non-face mapping counts; an unmapped tag falls back to the quarter
+            named = (
+                suspect
+                if rule == "quarters_do_not_sum_to_year" and not year_is_component
+                else y
+            )
+            implied = y.value - (total - suspect.value)
             out.append(
                 finding(
                     data,
@@ -291,13 +325,13 @@ def _quarters_vs_year(data: CompanyData) -> list[Finding]:
                     REVIEW
                     if basis_mix or perimeter or rel <= SUM_WRONG
                     else WRONG_VALUE,
-                    "quarters_vs_year_basis_mix"
-                    if basis_mix
-                    else "quarters_vs_year_perimeter_mix"
-                    if perimeter
-                    else "quarters_do_not_sum_to_year",
-                    y,
-                    other=total,
+                    rule,
+                    named,
+                    other=implied if named is suspect else total,
+                    year_end=str(y.end),
+                    year_value=str(y.value),
+                    sum_of_quarters=str(total),
+                    implied_quarter_value=str(implied),
                     rel_gap=str(rel),
                     quarters=[
                         {
@@ -396,6 +430,43 @@ def _label_shift(data: CompanyData) -> list[Finding]:
     return out
 
 
+def _same_quarter_other_year(data: CompanyData) -> list[Finding]:
+    """SWK Q1 2017 revenue 3,209.3M was filed as 2,805.6M: 3,209.3M is the Q1 2019 figure,
+    carried on a 2017 context in the FY2019 10-K. The loader finds, for each discrete
+    quarter whose source filing came more than ~2 years after the quarter ended (no 10-K
+    carries a comparative that old), a fact in ANY filing of the company with the same concept,
+    unit and value on the same quarter one to three years later (`label_twins`). Such a
+    quarter is a label shifted by whole years: `wrong_value` on the EARLIER quarter."""
+    out: list[Finding] = []
+    for cell in data.display_cells():
+        if (
+            cell.base not in ADDITIVE_FLOWS
+            or cell.days is None
+            or not (QUARTER_MIN <= cell.days <= QUARTER_MAX)
+        ):
+            continue
+        for sid in cell.source_ids:
+            twins = data.label_twins.get(sid)
+            if twins:
+                end2, fid = min(twins)
+                out.append(
+                    finding(
+                        data,
+                        "I5",
+                        WRONG_VALUE,
+                        "quarter_label_shift",
+                        cell,
+                        other=cell.value,
+                        equals_fact_on_quarter_ending=str(end2),
+                        twin_fact_id=fid,
+                        source_ids=[sid],
+                        note="a filing holds this exact value on the same quarter of a later year",
+                    )
+                )
+                break
+    return out
+
+
 def _duplicate_windows(data: CompanyData) -> list[Finding]:
     out: list[Finding] = []
     seen: dict[tuple, Cell] = {}
@@ -424,5 +495,6 @@ def check(data: CompanyData) -> list[Finding]:
         _duration_vs_label(data)
         + _quarters_vs_year(data)
         + _label_shift(data)
+        + _same_quarter_other_year(data)
         + _duplicate_windows(data)
     )

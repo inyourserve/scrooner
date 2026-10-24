@@ -25,7 +25,7 @@ from datetime import date, timedelta
 
 from scrooner_pipeline.common.staleness import staleness_reason
 
-from .thresholds import INPUT_MAX_AGE_DAYS
+from .thresholds import ANNUAL_ONLY_MAX_GAP_DAYS, INPUT_MAX_AGE_DAYS
 from .model import REVIEW, WRONG_VALUE, Cell, CompanyData, Finding, finding
 
 SHARE_TAG_HINTS = (
@@ -40,6 +40,9 @@ _QUARTER_LABELS = ("Q1", "Q2", "Q3", "Q4")
 
 def _is_share_fact(tag: str) -> bool:
     return any(h in tag for h in SHARE_TAG_HINTS)
+
+
+ANNUAL_ONLY_CONCEPTS = frozenset({"public_float", "employee_count"})
 
 
 def _label_class(label: str | None) -> str:
@@ -60,9 +63,22 @@ def _stale_cells(data: CompanyData) -> list[Finding]:
         if k not in latest or c.end > latest[k].end:
             latest[k] = c
     for (base, _cls), c in latest.items():
-        reason = staleness_reason(
-            c.end, c.fiscal_period, data.latest_filed, fiscal_year=c.fiscal_year
-        )
+        # public float and employee count are disclosed once a year (10-K cover, Item 1).
+        # The float is measured at the end of the second quarter and first appears in the
+        # NEXT 10-K, so its legitimate age against the latest 10-Q reaches ~20 months
+        # (MLI float of 2025-06-27 against a 10-Q of 2026-09-26 is 456 days): judged on
+        # ANNUAL_ONLY_MAX_GAP_DAYS, not on the quarterly or the 400-day annual rule.
+        if base in ANNUAL_ONLY_CONCEPTS:
+            gap = (data.latest_filed - c.end).days
+            reason = (
+                f"not in the latest filing (last reported FY{c.fiscal_year or c.end.year})"
+                if gap > ANNUAL_ONLY_MAX_GAP_DAYS
+                else None
+            )
+        else:
+            reason = staleness_reason(
+                c.end, c.fiscal_period, data.latest_filed, fiscal_year=c.fiscal_year
+            )
         if reason:
             out.append(
                 finding(
