@@ -190,6 +190,44 @@ def test_liabilities_from_parent_equity_are_held_when_nci_sits_on_partnership_el
 
 
 # --- with the filing's own face subtotals (LiabilitiesCurrent + LiabilitiesNoncurrent) the identity is a cross-check
+def ref(base, other, tag, adj):
+    return bi.reference_reading("total_liabilities_resolved", Decimal(str(base)) * M, Decimal(str(other)) * M, tag, adj)  # fmt: skip
+
+
+def test_reference_reading_ignores_an_nci_inclusive_fact_that_is_not_the_total():
+    # FE 2018-03-31 (0001031296-18-000031 R5): parent equity 7,375, a stray 86 'NCI-inclusive' fact; face 31,420
+    assert (
+        ref(
+            38795,
+            7375,
+            "StockholdersEquity",
+            {bi.NCI_INCLUSIVE_EQUITY: Decimal(86) * M},
+        )
+        == Decimal(31420) * M
+    )
+
+
+def test_reference_reading_uses_the_nci_inclusive_total_when_it_agrees_and_leaves_out_unproven_mezzanine():
+    # NI 2023-12-31 (0001111711-24-000011 R6): 31,077.2 - 10,136.3 = 20,940.9; the 1,360 component is not subtracted
+    adj = {bi.NCI_INCLUSIVE_EQUITY: Decimal("10136.3") * M, bi.NCI: Decimal("1866.7") * M, bi.TEMP_REDEEMABLE_PARTS[2]: Decimal(1360) * M}  # fmt: skip
+    assert ref("31077.2", "8269.6", "StockholdersEquity", adj) == Decimal("20940.9") * M
+    # parent + MinorityInterest when no inclusive total is filed; whole-line mezzanine is subtracted
+    assert ref(1000, 400, "StockholdersEquity", {bi.NCI: Decimal(50) * M, bi.TEMP_PARENT: Decimal(30) * M}) == Decimal(520) * M  # fmt: skip
+    # the equity input already is the total
+    assert (
+        ref(1000, 400, bi.NCI_INCLUSIVE_EQUITY, {bi.NCI: Decimal(50) * M})
+        == Decimal(600) * M
+    )
+    # an inclusive total that disagrees with parent + MinorityInterest is ignored
+    assert ref(1000, 400, "StockholdersEquity", {bi.NCI_INCLUSIVE_EQUITY: Decimal(900) * M, bi.NCI: Decimal(50) * M}) == Decimal(550) * M  # fmt: skip
+    assert (
+        bi.reference_reading(
+            "stockholders_equity_resolved", Decimal(1), Decimal(1), None, {}
+        )
+        is None
+    )
+
+
 def sub(cur, noncur):
     return {
         bi.LIABILITIES_CURRENT: Decimal(str(cur)) * M,
@@ -464,6 +502,11 @@ def test_equity_direction_follows_the_filing_s_nci_elements():
 def test_a_filing_with_nci_elements_the_planner_cannot_read_holds_a_parent_only_cell():
     _, by = planned()
     assert by[(day(14), "total")].basis == "nci_unconfirmed"
+    # the independent reading of a held cell travels with it (parent equity only: 1,000 - 400)
+    assert by[(day(14), "total")].reference == str(Decimal(600) * M)
+    assert (
+        by[(day(15), "stock")].reference is None
+    )  # the equity direction has no reference
     assert by[(day(15), "stock")].basis == "nci_not_read"
 
 
@@ -471,6 +514,12 @@ def test_a_filing_with_temporary_equity_elements_but_none_read_for_the_instant_i
     # TRGP 2021-09-30: a 749.7M Series A preferred filed only with a class-of-stock member; no fact is stored
     _, by = planned()
     assert by[(day(18), "total")].basis == "temporary_equity_present_not_read"
+
+
+def test_planner_holds_carry_the_reference_reading():
+    _, by = planned()
+    # the NI-type cell is not a hold here; a mixed-vintage hold has no reading at all
+    assert by[(day(7), "total")].reference is None
 
 
 def test_planner_uses_the_face_subtotals_to_drop_an_unproven_component():

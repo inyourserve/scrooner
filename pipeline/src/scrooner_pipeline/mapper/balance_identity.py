@@ -201,6 +201,40 @@ def _equity_options(
     return opts
 
 
+def reference_reading(
+    target: str,
+    base: Decimal,
+    other: Decimal,
+    other_tag: str | None,
+    adj: dict[str, Decimal],
+) -> Decimal | None:
+    """The identity read WITHOUT the terms that could not be proven, for a held liabilities cell: the NCI-inclusive
+    total only when it agrees with parent equity + MinorityInterest (else ignored), mezzanine only from whole-line
+    elements (components, the generic element and measurement-only elements are left out). FE 2018-03-31: the 86M
+    'NCI-inclusive' fact is ignored -> 31,420M = the face; NI 2023-12-31: assets - NCI-inclusive total = 20,940.9M =
+    the face, the stored 24,674.3M differs. The equity direction has no reference (parent equity needs the NCI)."""
+    if target != LIABILITIES:
+        return None
+    temp = temporary_equity(adj, strict=True)
+    temp_value = temp[0] if isinstance(temp, tuple) else Decimal(0)
+    if other_tag == NCI_INCLUSIVE_EQUITY:
+        total = other
+    else:
+        incl = adj.get(NCI_INCLUSIVE_EQUITY)
+        tol = rounding_tol(other, incl if incl is not None else other)
+        implied = None if incl is None else incl - other
+        if incl is not None and (
+            (NCI in adj and abs(implied - adj[NCI]) <= tol)
+            or (NCI not in adj and abs(implied) <= tol)
+        ):
+            total = incl
+        elif NCI in adj:
+            total = other + adj[NCI]
+        else:
+            total = other
+    return base - total - temp_value
+
+
 def identity_amount(
     target: str,
     base: Decimal,
@@ -298,6 +332,9 @@ class PlannedChange:
     period_id: int = 0
     source_fact_ids: tuple[int, ...] = ()
     filing_id: int | None = None
+    # holds only: the best-supported identity reading WITHOUT the terms the planner could not prove (an independent
+    # reading of the same cell, see reference_reading); the hold writer blanks a stored value only if it differs
+    reference: str | None = None
 
     def rel_change(self) -> Decimal | None:
         if self.before is None or self.after is None or Decimal(self.before) == 0:
@@ -431,10 +468,13 @@ def plan_identity(
                         else next(iter(sorted(tags)), None)
                     )
 
-                def held(reason: str, fil: int | None = None) -> PlannedChange:
+                def held(
+                    reason: str, fil: int | None = None, ref: Decimal | None = None
+                ) -> PlannedChange:
                     return PlannedChange(
                         cid, cik_of[cid], str(end), target, before, None, reason,
                         other_tag, "0", "hold", pid, tuple(a_src) + tuple(o_src), fil,
+                        None if ref is None else str(ref),
                     )  # fmt: skip
 
                 if not filings:
@@ -485,7 +525,13 @@ def plan_identity(
                     (cid, fil) in temp_family_filings,
                 )
                 if isinstance(amt, Held):
-                    plan.append(held(amt.reason, fil))
+                    plan.append(
+                        held(
+                            amt.reason,
+                            fil,
+                            reference_reading(target, base, o_val, other_tag, adj),
+                        )
+                    )
                     continue
                 legacy_adj = sum((adj.get(t, Decimal(0)) for t in (NCI, TEMP_PARENT, TEMP_INCL, TEMP_REDEEMABLE_NCI)), Decimal(0))  # fmt: skip
                 if stored is not None and stored[0] == amt.value:
