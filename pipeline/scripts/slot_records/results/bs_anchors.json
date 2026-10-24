@@ -1,0 +1,12 @@
+{"anchors": [
+ {"ticker": "WMT",  "period_end": "2015-04-30", "expected": null, "note": "189,115M is a lane-3 sample; period TBC by Verifier"},
+ {"ticker": "NI",   "period_end": "2023-12-31", "expected": "20940900000"},
+ {"ticker": "FE",   "period_end": "2018-03-31", "expected": "31420000000"},
+ {"ticker": "TRGP", "period_end": "2021-09-30", "expected": "9823100000"},
+ {"ticker": "DVN",  "period_end": "2017-03-31", "expected": "15212000000"},
+ {"ticker": "MCK",  "period_end": "2015-06-30", "expected": "45556000000"},
+ {"ticker": "OXY",  "period_end": "2018-12-31", "expected": null, "note": "value TBC from VERIFY-IDENTITY-FIX"},
+ {"ticker": "AWK",  "period_end": "2017-12-31", "expected": null, "note": "value TBC"},
+ {"ticker": "EMR",  "period_end": "2016-09-30", "expected": "16231000000", "note": "no printed total: face-sum; period assumed FY2016, TBC"},
+ {"ticker": "BX",   "period_end": "2021-12-31", "expected": null, "note": "partners capital parent 6,308.4M is an equity anchor, period TBC"}
+]}

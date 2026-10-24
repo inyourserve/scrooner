@@ -1,0 +1,184 @@
+{
+ "anchor_results": [
+  {
+   "ticker": "EMR",
+   "period_end": "2016-09-30",
+   "expected": "16231000000",
+   "note": "no printed total: face-sum; period assumed FY2016, TBC",
+   "got": "12815000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "WMT",
+   "period_end": "2015-04-30",
+   "expected": null,
+   "note": "189,115M is a lane-3 sample; period TBC by Verifier",
+   "got": "120757000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "OXY",
+   "period_end": "2018-12-31",
+   "expected": null,
+   "note": "value TBC from VERIFY-IDENTITY-FIX",
+   "got": "12323000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "MCK",
+   "period_end": "2015-06-30",
+   "expected": "45556000000",
+   "got": "45552000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "FE",
+   "period_end": "2018-03-31",
+   "expected": "31420000000",
+   "got": "31420000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "DVN",
+   "period_end": "2017-03-31",
+   "expected": "15212000000",
+   "got": "15212000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "NI",
+   "period_end": "2023-12-31",
+   "expected": "20940900000",
+   "got": "21013400000",
+   "missing": [],
+   "missing_custom": [
+    "ObligationsToRenewableGenerationAssetDeveloper"
+   ],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "TRGP",
+   "period_end": "2021-09-30",
+   "expected": "9823100000",
+   "got": "9671900000",
+   "missing": [],
+   "missing_custom": [
+    "DerivativeLiabilityBeforeEffectsOfMasterNettingArrangementsNoncurrent"
+   ],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "BX",
+   "period_end": "2021-12-31",
+   "expected": null,
+   "note": "partners capital parent 6,308.4M is an equity anchor, period TBC",
+   "got": "19490362000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "AWK",
+   "period_end": "2017-12-31",
+   "expected": null,
+   "note": "value TBC",
+   "got": "14089000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  }
+ ],
+ "identity": {
+  "ties": 459,
+  "gaps": 191
+ },
+ "per_company": {
+  "EMR": {
+   "identity_ties": 44,
+   "identity_gap": 2
+  },
+  "GE": {
+   "identity_ties": 26,
+   "identity_gap": 20
+  },
+  "WMT": {
+   "identity_ties": 47
+  },
+  "AJG": {
+   "identity_ties": 41,
+   "identity_gap": 5
+  },
+  "T": {
+   "identity_gap": 46
+  },
+  "OXY": {
+   "identity_gap": 46
+  },
+  "MCK": {
+   "identity_gap": 1,
+   "identity_ties": 33,
+   "needs_instance_reader": 12
+  },
+  "FE": {
+   "identity_gap": 17,
+   "identity_ties": 28
+  },
+  "VLO": {
+   "identity_ties": 46
+  },
+  "DVN": {
+   "identity_gap": 8,
+   "identity_ties": 6,
+   "not_computable": 2,
+   "needs_instance_reader": 30
+  },
+  "BRKR": {
+   "needs_instance_reader": 28,
+   "identity_ties": 18
+  },
+  "NI": {
+   "identity_ties": 35,
+   "needs_instance_reader": 5,
+   "identity_gap": 3,
+   "not_computable": 3
+  },
+  "ET": {
+   "identity_ties": 36,
+   "needs_instance_reader": 1,
+   "identity_gap": 8,
+   "not_computable": 1
+  },
+  "TRGP": {
+   "needs_instance_reader": 46
+  },
+  "BX": {
+   "identity_gap": 17,
+   "identity_ties": 29
+  },
+  "KKR": {
+   "identity_gap": 13,
+   "identity_ties": 27,
+   "not_computable": 2
+  },
+  "AWK": {
+   "needs_instance_reader": 28,
+   "identity_gap": 5,
+   "identity_ties": 13
+  },
+  "DIS": {
+   "identity_ties": 30
+  }
+ }
+}
