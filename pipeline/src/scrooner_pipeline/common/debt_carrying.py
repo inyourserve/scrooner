@@ -456,7 +456,7 @@ def _lease_inclusive_only(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | Non
         c = dc  # DebtCurrent is the lease-inclusive current line, proved by the filer's own aggregate
     else:
         return None
-    st, st_tags, st_proof = Decimal(0), [], ""
+    st, st_tags, st_proof = Decimal(0), list[str](), ""
     if LEASE_INCL_CURRENT in vals:
         # a separate short-term borrowings face line sits beside the lease-inclusive current line (ABBV: 12M in
         # 2022-03-31, 400M in 2017-12-31); with DebtCurrent as the current line it already holds them
