@@ -31,6 +31,16 @@
    "ticker": "ABBV",
    "period_end": "2022-03-31",
    "lease_inclusive": "73474000000"
+  },
+  {
+   "ticker": "GOOG",
+   "period_end": "2015-09-30",
+   "lease_inclusive": "5231000000"
+  },
+  {
+   "ticker": "ABBV",
+   "period_end": "2015-06-30",
+   "lease_inclusive": "31123000000"
   }
  ]
 }

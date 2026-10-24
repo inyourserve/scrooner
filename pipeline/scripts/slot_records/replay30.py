@@ -24,6 +24,9 @@ LEASE_TAGS = {
     "cur": ["FinanceLeaseLiabilityCurrent", "CapitalLeaseObligationsCurrent"],
     "noncur": ["FinanceLeaseLiabilityNoncurrent", "CapitalLeaseObligationsNoncurrent"],
 }
+# The filer's own printed debt aggregates confirm a missing member is a
+# face blank (zero), not a data gap (Verifier V2 fix 6: ABBV 2015-06-30).
+AGG_TAGS = ["DebtAndCapitalLeaseObligations", "DebtLongtermAndShorttermCombinedAmount"]
 
 records = defaultdict(list)
 for line in open(sys.argv[1]):
@@ -94,6 +97,7 @@ for cik in sorted(records):
     for rec in records[cik]:
         tags.update(m["tag"] for m in rec["members"])
     tags.update(t for side in LEASE_TAGS.values() for t in side)
+    tags.update(AGG_TAGS)
     facts = fetch_facts(cur, cik, tags)
     cells = [(k, v) for k, v in by_cell.items() if k[0] == cik]
     for (cik_, period_end), rows in sorted(cells):
@@ -141,19 +145,26 @@ for cik in sorted(records):
         # (it hid KO's custom 2014-18 line). Borrowings-only verdicts dropped:
         # the variant does not remove current finance leases inside non-combined
         # short-term lines (CVX 2022, LRCX) - it stays informational only.
+        filer_agg = next((day[t][0] for t in AGG_TAGS if t in day), None)
+        verdict = None
         if not rec.get("coverage_clean", True):
             verdict = "not_computable_uncovered_candidates"
+        elif missing and filer_agg is not None and abs(lease_incl - filer_agg) <= 1:
+            pass  # the filer's own printed total confirms the blanks are zero
+        elif missing and before_vals and any(abs(lease_incl - b) <= 1 for b in before_vals):
+            verdict = "agrees_lease_inclusive_blank_member"
         elif missing:
             verdict = "not_computable_missing_member"
         elif not day:
             verdict = "not_computable_no_facts"
-        elif before_vals and any(abs(lease_incl - b) <= 1 for b in before_vals):
-            verdict = "agrees_lease_inclusive"
-        elif before_vals:
-            verdict = "DISAGREES_with_lane3"
-        else:
-            verdict = "lane3_blank_slot_has_value"
-        if is_hold and verdict in ("agrees_lease_inclusive", "DISAGREES_with_lane3", "lane3_blank_slot_has_value"):
+        if verdict is None:
+            if before_vals and any(abs(lease_incl - b) <= 1 for b in before_vals):
+                verdict = "agrees_lease_inclusive"
+            elif before_vals:
+                verdict = "DISAGREES_with_lane3"
+            else:
+                verdict = "lane3_blank_slot_has_value"
+        if is_hold and verdict in ("agrees_lease_inclusive", "agrees_lease_inclusive_blank_member", "DISAGREES_with_lane3", "lane3_blank_slot_has_value"):
             report["summary"]["holds_resolved_by_slot"] += 1
             report["per_company"][ticker]["holds_resolved_by_slot"] += 1
         report["summary"][verdict] += 1

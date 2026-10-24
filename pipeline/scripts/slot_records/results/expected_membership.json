@@ -37,5 +37,59 @@
    "expect": "excluded",
    "covering": "2015-07"
   }
+ ],
+ "MSFT": [
+  {
+   "tag": [
+    "DepositsReceivedForSecuritiesLoanedAtCarryingValue"
+   ],
+   "expect": "excluded",
+   "covering": "2014-12"
+  }
+ ],
+ "GOOG": [
+  {
+   "tag": [
+    "DepositsReceivedForSecuritiesLoanedAtCarryingValue"
+   ],
+   "expect": "excluded",
+   "covering": "2015-09"
+  }
+ ],
+ "GE": [
+  {
+   "tag": [
+    "ShortTermDebtAssumed"
+   ],
+   "expect": "excluded",
+   "covering": "2018-12"
+  },
+  {
+   "tag": [
+    "LongTermDebtAssumed"
+   ],
+   "expect": "excluded",
+   "covering": "2018-12"
+  }
+ ],
+ "TSLA": [
+  {
+   "tag": [
+    "DueToRelatedPartiesCurrent",
+    "DueToRelatedPartiesNoncurrent"
+   ],
+   "expect": "member",
+   "covering": "2017-12"
+  }
+ ],
+ "AMZN": [
+  {
+   "tag": [
+    "LongTermLeaseLiabilities",
+    "LeaseLiabilityNoncurrent"
+   ],
+   "expect": "excluded",
+   "covering": "2019-12"
+  }
  ]
 }

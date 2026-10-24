@@ -55,8 +55,12 @@ AGG_PARENT_RX = re.compile(
 # and anything unclassified fails the record (coverage_clean=false).
 DEBT_RX = re.compile(
     r"Debt|Borrow|Loan|NotesPayable|NotesAndLoans|CommercialPaper|"
-    r"Lines?OfCredit|Lease|Convertible|FinanceObligation"
+    r"Lines?OfCredit|Lease|Convertible|FinanceObligation|DueToRelatedParties"
 )
+# Members come ONLY from the balance-sheet statement role (Verifier V2 R1/R3:
+# note-role arcs put MSFT/GOOG securities-lending and GE/AVGO/TSLA note lines
+# into members). Aggregates stay role-wide: they are evidence, not members.
+BS_ROLE_RX = re.compile(r"balance ?-?sheets?|financial ?position|financial ?condition", re.I)
 # Candidate lines that are NOT debt members, with the recorded reason.
 EXCLUDE_CLASSES = [
     (re.compile(r"AccountsPayable|AccruedLiabilit", re.I), "excluded_combined_nondebt"),
@@ -77,6 +81,25 @@ EXCLUDE_CLASSES = [
     ),
     (re.compile(r"ReserveFor", re.I), "excluded_equity_reserve"),
     # PG ReserveForEsopDebtRetirement is an equity-section contra, not debt
+    (
+        re.compile(r"DepositsReceivedForSecuritiesLoaned", re.I),
+        "excluded_securities_lending_payable",
+        # Dhairya ruling under delegation (Std Lead to confirm): collateral
+        # payable, not a borrowing; was +430M MSFT 2014, +62% GOOG 2015
+    ),
+    (
+        re.compile(r"^(ShortTerm|LongTerm)DebtAssumed$"),
+        "excluded_intercompany_elimination",
+        # GE's 'assumed by GE / GE Capital' lines are 0 in the consolidated
+        # column (0000040545-19-000014 R4); only the consolidated context counts
+    ),
+    (
+        re.compile(r"^(LongTerm)?LeaseLiabilit(y|ies)(Current|Noncurrent)?$"),
+        "excluded_mixed_lease",
+        # a GENERIC 'lease liability' line (AMZN custom LeaseLiabilityNoncurrent)
+        # mixes operating and finance leases; needs the lease note to split -
+        # excluded (hold) rather than guessed (Verifier V2 R2)
+    ),
 ]
 # Never part of any debt perimeter even though the name matches ("Lease"):
 # straight-line rent and similar accruals would be false positives; keep the
@@ -172,7 +195,7 @@ def parse_cal(path: Path) -> dict:
 def debt_observation(adsh: str, form: str, period: str, cal: dict) -> dict:
     members: dict[str, dict] = {}
     for (role, parent), children in cal["arcs"].items():
-        if parent not in PARENTS:
+        if parent not in PARENTS or not BS_ROLE_RX.search(role):
             continue
         for child, weight in children:
             if not DEBT_RX.search(child) or EXCLUDE_RX.search(child):
