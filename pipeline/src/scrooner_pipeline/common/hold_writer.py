@@ -26,6 +26,7 @@ planners; ``REASON_MAP`` is the mapping reason_code -> (state, defect class, own
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from collections import Counter, defaultdict
@@ -44,16 +45,32 @@ from scrooner_pipeline.mapper import canonical_archive as ca
 WRITER_RULE = "holds.blank_writer@1"
 
 
+# What a hold may do to the stored value (policy 2026-10-24, reversible): a value the planner merely could not
+# confirm is KEPT (it often equals the face: FE 2018-03-31 31,420M); it is blanked only with positive evidence.
+POLICY_REFERENCE = "blank_if_reference_differs"  # an independent reading differs from the stored value by > 0.5%
+POLICY_KNOWN_WRONG = (
+    "blank_always_known_wrong"  # the reason itself contradicts the stored value
+)
+POLICY_KEEP = "keep_unverified"  # never blank; an internal evidence row records the unverified hold
+POLICIES = frozenset({POLICY_REFERENCE, POLICY_KNOWN_WRONG, POLICY_KEEP})
+REFERENCE_TOLERANCE = Decimal("0.005")
+
+
 @dataclass(frozen=True)
 class ReasonSpec:
     state: str
     defect_class: str
     owner: str
     root_cause_class: str
+    policy: str = POLICY_KEEP
+
+    def __post_init__(self) -> None:
+        if self.policy not in POLICIES:
+            raise ValueError(f"unknown blank policy {self.policy!r}")
 
 
-def _guard(owner: str, root: str) -> ReasonSpec:
-    return ReasonSpec("defect", "guard_hidden", owner, root)
+def _guard(owner: str, root: str, policy: str = POLICY_KEEP) -> ReasonSpec:
+    return ReasonSpec("defect", "guard_hidden", owner, root, policy)
 
 
 # reason_code -> (state, defect class, owner, root cause). A value hidden by a guard is defect(guard_hidden, owner)
@@ -63,41 +80,53 @@ REASON_MAP: dict[str, ReasonSpec] = {
     "mixed_vintage": _guard("data_engineer_l1", "resolver"),
     "no_source_filing": _guard("data_engineer_l1", "resolver"),
     "identity_not_confirmed_by_face_subtotals": _guard(
-        "standardization_lead", "composition"
+        "standardization_lead", "composition", POLICY_REFERENCE
     ),
-    "nci_unconfirmed": _guard("standardization_lead", "composition"),
-    "nci_not_read": _guard("standardization_lead", "composition"),
+    "nci_unconfirmed": _guard("standardization_lead", "composition", POLICY_REFERENCE),
+    "nci_not_read": _guard("standardization_lead", "composition", POLICY_REFERENCE),
     "nci_on_unmapped_partnership_elements": _guard(
-        "standardization_lead", "composition"
+        "standardization_lead", "composition", POLICY_REFERENCE
     ),
     "nci_inclusive_total_without_minority_interest": _guard(
-        "standardization_lead", "composition"
+        "standardization_lead", "composition", POLICY_REFERENCE
     ),
     "nci_inclusive_total_disagrees_with_minority_interest": _guard(
-        "standardization_lead", "composition"
+        "standardization_lead", "composition", POLICY_REFERENCE
     ),
-    "redeemable_nci_measurement_only": _guard("standardization_lead", "composition"),
+    "redeemable_nci_measurement_only": _guard(
+        "standardization_lead", "composition", POLICY_REFERENCE
+    ),
     "redeemable_nci_component_not_proven_on_face": _guard(
-        "standardization_lead", "composition"
+        "standardization_lead", "composition", POLICY_REFERENCE
     ),
     "temporary_equity_generic_not_proven_on_face": _guard(
-        "standardization_lead", "composition"
+        "standardization_lead", "composition", POLICY_REFERENCE
     ),
     "temporary_equity_generic_overlaps_redeemable_nci": _guard(
-        "standardization_lead", "composition"
+        "standardization_lead", "composition", POLICY_REFERENCE
     ),
-    "temporary_equity_present_not_read": _guard("data_engineer_l2", "ingestion"),
+    "temporary_equity_present_not_read": _guard(
+        "data_engineer_l2", "ingestion", POLICY_REFERENCE
+    ),
     # total debt (debt.total_debt_consistency@1): see debt_reason_code()
     "debt_current_block_unexplained": _guard("standardization_lead", "composition"),
-    "debt_zero_with_nonzero_tag": _guard("data_engineer_l1", "composition"),
-    "debt_below_instrument_tag": _guard("data_engineer_l1", "composition"),
-    "debt_below_lease_inclusive_total": _guard("standardization_lead", "composition"),
+    "debt_zero_with_nonzero_tag": _guard(
+        "data_engineer_l1", "composition", POLICY_KNOWN_WRONG
+    ),
+    "debt_below_instrument_tag": _guard(
+        "data_engineer_l1", "composition", POLICY_KNOWN_WRONG
+    ),
+    "debt_below_lease_inclusive_total": _guard(
+        "standardization_lead", "composition", POLICY_KNOWN_WRONG
+    ),
     "debt_lease_location_unknown": _guard("standardization_lead", "composition"),
     "debt_short_term_overlap": _guard("standardization_lead", "composition"),
     "debt_borrowings_not_separable": _guard("standardization_lead", "composition"),
     "debt_related_party_unresolved": _guard("standardization_lead", "composition"),
     "debt_negative_component": _guard("data_engineer_l1", "composition"),
-    "debt_partial_component": _guard("data_engineer_l1", "composition"),
+    "debt_partial_component": _guard(
+        "data_engineer_l1", "composition", POLICY_KNOWN_WRONG
+    ),
 }
 
 # fragments of the debt guards' hold texts (mapper/concept_fallback.py REASON_*), most specific first
@@ -137,7 +166,9 @@ class Hold:
     )  # what the planner saw; the writer blanks only a row that still equals it
     source_fact_ids: tuple[int, ...] = ()
     evidence: Mapping[str, Any] = field(default_factory=dict)
-    reference_value: Decimal | None = None  # e.g. total assets, for the relative size
+    # an INDEPENDENT reading of the same cell (face-subtotal reading, a different-vintage copy, the confirmed
+    # alternative); the stored value is blanked under POLICY_REFERENCE only if it differs from this by > 0.5%
+    reference_value: Decimal | None = None
     reason_text: str | None = None
     period_grain: str = "I"
     basis: str = "latest"
@@ -161,6 +192,16 @@ class Hold:
             self.period_end,
             self.basis,
         )
+
+    def decision(self, stored_now: Decimal) -> str:
+        """'blank' only with positive evidence that the stored value is wrong, else 'keep'."""
+        policy = REASON_MAP[self.reason_code].policy
+        if policy == POLICY_KNOWN_WRONG:
+            return "blank"
+        if policy == POLICY_REFERENCE and self.reference_value:
+            diff = abs(stored_now - self.reference_value) / abs(self.reference_value)
+            return "blank" if diff > REFERENCE_TOLERANCE else "keep"
+        return "keep"
 
     def reason(self) -> cs.BlankReason:
         spec = REASON_MAP[self.reason_code]
@@ -187,6 +228,10 @@ def _get(row: Any, name: str, default: Any = None) -> Any:
     )
 
 
+def _decimal(x: Any) -> Decimal | None:
+    return None if x is None else Decimal(str(x))
+
+
 def holds_from_plan(
     rows: Iterable[Any], rule_id: str = "balance.identity_equity_basis@1"
 ) -> list[Hold]:
@@ -204,6 +249,9 @@ def holds_from_plan(
                 rule_id=rule_id,
                 reason_code=_get(r, "basis"),
                 stored_value=None if before is None else Decimal(str(before)),
+                reference_value=_decimal(
+                    _get(r, "reference", _get(r, "reference_value"))
+                ),
                 source_fact_ids=tuple(_get(r, "source_fact_ids") or ()),
                 evidence={
                     k: v
@@ -254,7 +302,13 @@ MAGNITUDE_BUCKETS = (
     ("10B-100B", Decimal(10) ** 11),
     (">=100B", Decimal("Infinity")),
 )
-RATIO_BUCKETS = (("<1%", Decimal("0.01")), ("1-10%", Decimal("0.1")), ("10-50%", Decimal("0.5")), ("50-100%", Decimal(1)), (">=100%", Decimal("Infinity")))  # fmt: skip
+RATIO_BUCKETS = (  # |stored - reference| / |reference|
+    ("0.5-1%", Decimal("0.01")),
+    ("1-5%", Decimal("0.05")),
+    ("5-25%", Decimal("0.25")),
+    ("25-100%", Decimal(1)),
+    (">=100%", Decimal("Infinity")),
+)
 
 
 def _bucket(x: Decimal, buckets: tuple[tuple[str, Decimal], ...]) -> str:
@@ -292,57 +346,65 @@ def _stored_now(
     return out
 
 
+def _empty() -> dict[str, Any]:
+    return {
+        "holds": 0, "would_blank": 0, "kept_unverified": 0, "already_blank": 0, "changed_since_plan": 0,
+        "magnitude": Counter(), "difference_to_reference": Counter(),
+    }  # fmt: skip
+
+
 def summarize(conn: Any, holds: list[Hold]) -> dict[str, dict[str, Any]]:
-    """Per producing rule id: holds, would_blank (a stored row that still equals the planned value), already
-    blank, changed since the plan, and the size distribution of the values that would be blanked. Read-only."""
+    """Per producing rule id (and per reason code under ``by_reason``): holds, would_blank (positive evidence that the
+    stored value is wrong), kept_unverified (stored row stays; an internal evidence row is written), already_blank,
+    changed_since_plan, the size of the values that would be blanked and their relative difference to the reference
+    reading. Read-only."""
     stored = _stored_now(conn, holds)
     out: dict[str, dict[str, Any]] = {}
     for h in holds:
-        s = out.setdefault(
-            h.rule_id,
-            {"holds": 0, "would_blank": 0, "already_blank": 0, "changed_since_plan": 0,
-             "by_reason": Counter(), "magnitude": Counter(), "relative_to_reference": Counter()},
-        )  # fmt: skip
-        s["holds"] += 1
+        rule = out.setdefault(h.rule_id, {**_empty(), "by_reason": {}})
+        reason = rule["by_reason"].setdefault(h.reason_code, _empty())
         row = stored.get((h.company_id, h.data_point, h.period_end))
+        for s in (rule, reason):
+            s["holds"] += 1
         if row is None:
-            s["already_blank"] += 1
+            key = "already_blank"
         elif h.stored_value is not None and row[1] != h.stored_value:
-            s["changed_since_plan"] += 1
+            key = "changed_since_plan"
+        elif h.decision(row[1]) == "blank":
+            key = "would_blank"
         else:
-            s["would_blank"] += 1
-            s["by_reason"][h.reason_code] += 1
-            s["magnitude"][_bucket(abs(row[1]), MAGNITUDE_BUCKETS)] += 1
-            if h.reference_value:
-                s["relative_to_reference"][
-                    _bucket(abs(row[1]) / abs(h.reference_value), RATIO_BUCKETS)
-                ] += 1
+            key = "kept_unverified"
+        for s in (rule, reason):
+            s[key] += 1
+            if key == "would_blank":
+                s["magnitude"][_bucket(abs(row[1]), MAGNITUDE_BUCKETS)] += 1
+                if h.reference_value:
+                    diff = abs(row[1] - h.reference_value) / abs(h.reference_value)
+                    s["difference_to_reference"][_bucket(diff, RATIO_BUCKETS)] += 1
     return out
 
 
 def format_summary(summary: dict[str, dict[str, Any]]) -> str:
+    def counts(s: dict[str, Any]) -> str:
+        return (
+            f"holds={s['holds']} would_blank={s['would_blank']} kept_unverified={s['kept_unverified']} "
+            f"already_blank={s['already_blank']} changed_since_plan={s['changed_since_plan']}"
+        )
+
+    def dist(s: dict[str, Any]) -> str:
+        size = ", ".join(
+            f"{n}={s['magnitude'].get(n, 0)}" for n, _ in MAGNITUDE_BUCKETS
+        )
+        diff = ", ".join(
+            f"{n}={s['difference_to_reference'].get(n, 0)}" for n, _ in RATIO_BUCKETS
+        )
+        return f"size[{size}] vs-reference[{diff}]" if s["would_blank"] else ""
+
     lines = []
     for rule_id, s in sorted(summary.items()):
-        lines.append(
-            f"{rule_id}: holds={s['holds']} would_blank={s['would_blank']} already_blank={s['already_blank']} "
-            f"changed_since_plan={s['changed_since_plan']}"
-        )
-        lines.append(
-            "  by reason: "
-            + ", ".join(f"{k}={v}" for k, v in s["by_reason"].most_common())
-        )
-        lines.append(
-            "  value size: "
-            + ", ".join(f"{n}={s['magnitude'].get(n, 0)}" for n, _ in MAGNITUDE_BUCKETS)
-        )
-        if s["relative_to_reference"]:
-            lines.append(
-                "  vs reference: "
-                + ", ".join(
-                    f"{n}={s['relative_to_reference'].get(n, 0)}"
-                    for n, _ in RATIO_BUCKETS
-                )
-            )
+        lines.append(f"{rule_id}: {counts(s)}")
+        for code, r in sorted(s["by_reason"].items(), key=lambda kv: -kv[1]["holds"]):
+            lines.append(f"  {code}: {counts(r)} {dist(r)}".rstrip())
     return "\n".join(lines)
 
 
@@ -378,6 +440,8 @@ def apply_holds(
     if rule_mode(WRITER_RULE, environ if environ is not None else os.environ) != ON:
         raise PermissionError(f"{WRITER_RULE} is not ON; refusing to write")
     stats: dict[str, Any] = {
+        "kept_unverified": 0,
+        "evidence_written": 0,
         "blanked": 0,
         "reasons_written": 0,
         "skipped_changed": 0,
@@ -423,6 +487,33 @@ def _ciks(conn: Any, company_ids: set[int]) -> list[str]:
         return [r[0] for r in cur.fetchall()]
 
 
+def _record_unverified(conn: Any, h: Hold, stored_now: Decimal) -> int:
+    """Append-only internal evidence row (analytics.cell_evidence) for a hold that was kept: producing rule id,
+    reason code (detector_version), evidence refs (source_hash). The table has no 'unverified_hold' kind, so it
+    uses 'detector_audit' with the locator 'unverified_hold:<reason>' (a new kind needs a migration). Idempotent via
+    import_key: the same hold, value and reference writes one row."""
+    refs = json.dumps(
+        {"stored": str(stored_now), "reference": None if h.reference_value is None else str(h.reference_value),
+         "evidence": dict(h.evidence), "source_fact_ids": list(h.source_fact_ids)}, sort_keys=True, default=str,
+    )  # fmt: skip
+    digest = hashlib.sha256(refs.encode()).hexdigest()
+    import_key = hashlib.sha256(
+        f"unverified_hold|{h.rule_id}|{h.key.as_tuple()}|{h.reason_code}|{digest}".encode()
+    ).hexdigest()
+    rec = cs.EvidenceRecord(
+        key=h.key,
+        state_claimed="value",
+        rule_id=h.rule_id,
+        evidence_kind="detector_audit",
+        evidence_level="DATA-INFERRED",
+        recorded_by="hold_writer",
+        locator=f"unverified_hold:{h.reason_code}",
+        detector_version=h.reason_code,
+        source_hash=digest,
+    )
+    return 1 if cs.append_evidence(conn, rec, import_key=import_key) is not None else 0
+
+
 def _apply_company(
     conn: Any,
     cid: int,
@@ -449,6 +540,11 @@ def _apply_company(
                 stats["skipped_changed"] += (
                     1  # the cell moved since the plan: not blanked, not explained
                 )
+                continue
+            if row is not None and h.decision(row[1]) == "keep":
+                # not proven wrong: the value stays visible, no user-facing reason; an internal evidence row
+                stats["kept_unverified"] += 1
+                stats["evidence_written"] += _record_unverified(conn, h, row[1])
                 continue
             if row is None and (h.data_point, h.period_end, h.reason_code) in done:
                 stats["skipped_done"] += 1  # blanked and explained by an earlier run
