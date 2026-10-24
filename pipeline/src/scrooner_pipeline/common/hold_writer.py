@@ -376,7 +376,7 @@ def summarize(conn: Any, holds: list[Hold]) -> dict[str, dict[str, Any]]:
             key = "kept_unverified"
         for s in (rule, reason):
             s[key] += 1
-            if key == "would_blank":
+            if row is not None and key == "would_blank":
                 s["magnitude"][_bucket(abs(row[1]), MAGNITUDE_BUCKETS)] += 1
                 if h.reference_value:
                     diff = abs(row[1] - h.reference_value) / abs(h.reference_value)
