@@ -36,7 +36,8 @@ EXCLUDE_RX = re.compile(
     r"PreferredStock|CommonStock|Equity|TreasuryStock|RetainedEarnings|"
     r"AccumulatedOtherComprehensive|CommitmentsAndContingencies|"
     r"DebtSecurities|SecuritiesBorrowed|LiabilitiesCurrent$|LiabilitiesNoncurrent$|"
-    r"OtherThanLongtermDebt"  # 'liabilities other than LTD' is the non-debt remainder line
+    r"OtherThanLongtermDebt|"  # 'liabilities other than LTD' is the non-debt remainder line
+    r"TemporaryEquity|RedeemableNoncontrolling"  # mezzanine, never total debt (Verifier: MU 2014-15 redeemable convertible notes)
 )
 # Debt AGGREGATE parents (face or note roles): their children are the filer's
 # own statement of what a debt total contains (e.g. GOOG's note-level
@@ -59,9 +60,24 @@ BORROWING_RX = re.compile(r"Debt|Borrow|CommercialPaper|NotesPayable|LineOfCredi
 ERA_RX = re.compile(r"us-gaap[/-](\d{4})")
 
 
+# Combined by the FASB definition itself, whatever the printed label says:
+# DebtCurrent/DebtNoncurrent are "borrowings plus finance (capital) lease"
+# aggregates (Verifier 2026-10-24: MU's "Current debt" DebtCurrent at
+# 2021-09-02 is exactly the current finance-lease amount; GOOG's 2015-16
+# "Short-term debt" DebtCurrent contains current capital leases).
+COMBINED_TAGS = {
+    "DebtCurrent",
+    "DebtNoncurrent",
+    "DebtAndCapitalLeaseObligations",
+    "DebtLongtermAndShorttermCombinedAmount",
+}
+
+
 def classify(tag: str) -> str:
     """A line naming both a borrowing and a lease (or an explicit And-joined
     aggregate) is 'combined' and must never be mapped as either side alone."""
+    if tag in COMBINED_TAGS:
+        return "combined"
     is_borrowing = bool(BORROWING_RX.search(tag))
     is_fin_lease = bool(FINANCE_LEASE_RX.search(tag))
     is_op_lease = bool(OPERATING_LEASE_RX.search(tag))
