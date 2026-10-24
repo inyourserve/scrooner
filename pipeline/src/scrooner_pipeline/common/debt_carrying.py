@@ -74,6 +74,8 @@ SHORT_TERM = (
     "CommercialPaper",
     "OtherShortTermBorrowings",
     "ShortTermBankLoansAndNotesPayable",
+    # KO prints "Loans and notes payable" (13,030M at 2019-06-28) under this tag
+    "NotesAndLoansPayableCurrent",
 )
 CURRENT_PART_TAGS = (
     "ShortTermBorrowings",
@@ -271,6 +273,22 @@ def _corroborated(
     )
 
 
+def _short_amount(vals: Mapping[str, Decimal], limit: Decimal) -> Decimal:
+    """The short-term borrowings inside a current side (for the LongTermDebt agreement): distinct amounts; a
+    container counts once."""
+    distinct = sorted(
+        {vals[t] for t in SHORT_TERM if t in vals and 0 < vals[t] <= limit}
+    )
+    if len(distinct) <= 1:
+        return sum(distinct, Decimal(0))
+    top, rest = distinct[-1], distinct[:-1]
+    for n in range(1, len(rest) + 1):
+        for combo in combinations(rest, n):
+            if abs(sum(combo) - top) <= CORROBORATION_TOLERANCE * top:
+                return top
+    return sum(distinct, Decimal(0))
+
+
 def _short_term(
     vals: Mapping[str, Decimal], current_maturities: Decimal, bn: Decimal
 ) -> tuple[Decimal, list[str], str, str | None]:
@@ -296,6 +314,14 @@ def _short_term(
             "+short_term" + ("_same_line" if len(tags) > 1 else ""),
             None,
         )
+    # one amount equal to the sum of the others is the line that CONTAINS them (KO 2019-12-31: short-term
+    # borrowings 10,994 = commercial paper 10,007 + other 987): the container is the slot
+    top, rest = distinct[-1], distinct[:-1]
+    for n in range(1, len(rest) + 1):
+        for combo in combinations(rest, n):
+            if abs(sum(combo) - top) <= CORROBORATION_TOLERANCE * top:
+                tags = [t for t in SHORT_TERM if t in present and present[t] == top]
+                return top, tags, "+short_term_container_of_components", None
     all_in = vals.get("DebtLongtermAndShorttermCombinedAmount")
     if all_in:
         for n in range(len(distinct), 0, -1):
@@ -518,14 +544,7 @@ def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
     borrowings = bn + bc
     lt = vals.get("LongTermDebt")
     # LongTermDebt holds the long-term debt including current maturities but not the short-term borrowings
-    short_inside = sum(
-        {
-            vals[t]
-            for t in SHORT_TERM
-            if t in vals and 0 < vals[t] <= bc * (1 + EXPLAIN_TOLERANCE)
-        },
-        Decimal(0),
-    )  # distinct amounts: tags holding one line count once
+    short_inside = _short_amount(vals, bc * (1 + EXPLAIN_TOLERANCE))
     if (
         lt is not None
         and lt > 0

@@ -854,3 +854,32 @@ def test_a_coarser_long_term_debt_never_replaces_a_precise_noncurrent_line():
         LongTermDebtNoncurrent="1384.342", LongTermDebtCurrent=0, LongTermDebt=1384
     )
     assert total(tags, "borrowings_only").value == Decimal("1384342000")
+
+
+# ------------------------------------------------------------------ vocabulary scan of 30 more cohort companies
+KO_1906 = dict(
+    LongTermDebt=32045,
+    LongTermDebtCurrent=2749,
+    LongTermDebtNoncurrent=29296,
+    NotesAndLoansPayableCurrent=13030,
+)
+KO_1912 = dict(CommercialPaper=10007, LongTermDebt=31769, OtherShortTermBorrowings=987, ShortTermBorrowings=10994,
+               LongTermDebtCurrent=4253, LongTermDebtNoncurrent=27516, NotesAndLoansPayableCurrent=10994)  # fmt: skip
+
+
+def test_ko_loans_and_notes_payable_is_a_short_term_face_line():
+    # before: 32,045 (the line was missing); the face "Loans and notes payable" 13,030 is a short-term borrowing
+    assert total(KO_1906, "borrowings_only").value == Decimal(45075) * M
+
+
+def test_ko_short_term_borrowings_contains_its_components_and_is_counted_once():
+    c = total(KO_1912, "borrowings_only")
+    assert (
+        c.value == Decimal(42763) * M
+    )  # 27,516 + 4,253 + 10,994, not + 10,007 + 987 on top
+    assert any("container_of_components" in p for p in c.slots.proofs)
+
+
+def test_distinct_short_term_amounts_that_are_not_containment_still_hold():
+    tags = dict(KO_1912, OtherShortTermBorrowings=500)  # 10,007 + 500 != 10,994
+    assert dc.carrying_lines(V(**tags)) == dc.Hold("short_term_overlap_unresolved")
