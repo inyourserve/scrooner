@@ -215,9 +215,15 @@ def _apply_lease_evidence(record: dict, run: list[dict], company: str, lease_fac
             for role_children in (o.get("aggregates", {}).get(m["tag"], {}) or {}).values()
             for c in role_children
         ]
+        lease_dates = lease_facts.get((company, side_key), set())
+        # FSDS dates are month-rounded, so match on year-month; "ALL" means a
+        # lease fact exists at every instant for this company/side.
+        period_months = {p[:7] for p in periods if p}
+        lease_months = {d[:7] for d in lease_dates if d != "ALL"}
+        has_lease_fact = "ALL" in lease_dates or bool(period_months & lease_months)
         if any(FINANCE_LEASE_RX.search(c) or OPERATING_LEASE_RX.search(c) for c in calc_children):
             m["class"], m["class_evidence"] = "combined", "calc_children"
-        elif m["side"] not in face_lease_sides and periods & lease_facts.get((company, side_key), set()):
+        elif m["side"] not in face_lease_sides and has_lease_fact:
             m["class"], m["class_evidence"] = "combined", "same_date_lease_fact"
         else:
             m["class"], m["class_evidence"] = "borrowing", "no_lease_part_found"
