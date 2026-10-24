@@ -92,8 +92,10 @@ def D_(**kw):
     return {getattr(bi, k): Decimal(str(v)) * M for k, v in kw.items()}
 
 
-def liab(base, other, tag, adj, nci_family=False):
-    return bi.identity_amount("total_liabilities_resolved", Decimal(str(base)) * M, Decimal(str(other)) * M, tag, adj, nci_family)  # fmt: skip
+def liab(base, other, tag, adj, nci_family=False, temp_family=False):
+    return bi.identity_amount(
+        "total_liabilities_resolved", Decimal(str(base)) * M, Decimal(str(other)) * M, tag, adj, nci_family, temp_family
+    )  # fmt: skip
 
 
 def test_strict_mode_reads_only_whole_line_elements_and_holds_components():
@@ -142,6 +144,13 @@ def test_nci_inclusive_total_must_equal_parent_equity_plus_minority_interest():
         {bi.NCI_INCLUSIVE_EQUITY: Decimal(parent) * M},
     )  # no NCI at all
     assert same.value == Decimal(30000) * M
+
+
+def test_temporary_equity_family_without_a_read_element_holds_but_a_read_element_is_enough():
+    adj = {bi.TEMP_PARENT: Decimal(100) * M}
+    assert liab(1000, 400, "StockholdersEquity", {}, temp_family=True) == bi.Held("temporary_equity_present_not_read")  # fmt: skip
+    assert liab(1000, 400, "StockholdersEquity", adj, temp_family=True).value == Decimal(500) * M  # fmt: skip
+    assert liab(1000, 400, "StockholdersEquity", {}).value == Decimal(600) * M
 
 
 def test_parent_equity_alone_needs_a_filing_without_any_nci_element():
@@ -279,11 +288,12 @@ T = {  # concept ids
     "Assets": 14, bi.LSE: 15, bi.NCI_UNREAD[0]: 16, bi.LIABILITIES_CURRENT: 17, bi.LIABILITIES_NONCURRENT: 18,
     bi.TEMP_REDEEMABLE_PARTS[2]: 19,
 }  # fmt: skip
-F1, F2, F3, F4 = (
+F1, F2, F3, F4, F5 = (
     900,
     901,
     902,
     903,
+    904,
 )  # filings; F4 carries NCI elements the planner does not read; F3 none
 
 
@@ -301,6 +311,7 @@ def tables(canonical, facts, info):
         "from core.concept where tag": [(i, t) for t, i in T.items()],
         "from core.company": [(1134, "0000104169")],
         "from analytics.canonical_fact cf join core.period": canonical,
+        "ilike 'temporaryequity": [(1134, F5)],
         "select distinct f.company_id, f.filing_id": [(1134, F4)],
         "from core.fact f where": facts,
         "from core.fact f join core.concept": info,
@@ -337,6 +348,7 @@ CANON = [
     canon(94, A, 1000, [119], d(15)), canon(94, L, 600, [219], d(15)),  # equity direction in F4
     canon(95, A, 1000, [120], d(16)), canon(95, E, 400, [220], d(16)), canon(95, L, 777, [120, 220], d(16)),
     canon(96, A, 1000, [121], d(17)), canon(96, E, 400, [221], d(17)), canon(96, L, 777, [121, 221], d(17)),
+    canon(97, A, 1000, [122], d(18)), canon(97, E, 400, [222], d(18)), canon(97, L, 777, [122, 222], d(18)),  # TRGP-like
     canon(92, A, 30000, [117], d(13)), canon(92, E, "9059.1", [217], d(13)),  # NI: face subtotals reject the component
 ]  # fmt: skip
 FACTS = [
@@ -354,7 +366,7 @@ INFO = [(i, "Assets", F1) for i in (100, 101, 102, 103, 104, 105, 106, 108, 109,
     (203, "StockholdersEquity", F1), (204, "StockholdersEquity", F1), (205, "StockholdersEquity", F1),
     (206, bi.NCI_INCLUSIVE_EQUITY, F1), (207, "StockholdersEquity", F1), (208, "StockholdersEquity", F2),
     (209, "StockholdersEquity", F1), (210, "StockholdersEquity", F1), (211, "Liabilities", F1), (216, "Liabilities", F3),
-    (118, "Assets", F4), (218, "StockholdersEquity", F4), (119, "Assets", F4), (219, "Liabilities", F4), (120, "Assets", F1), (220, "StockholdersEquity", F2), (121, "Assets", F1), (221, "StockholdersEquity", F2), (115, "Assets", F2), (116, "Assets", F3), (215, "StockholdersEquity", F1), (117, "Assets", F3), (217, "StockholdersEquity", F3),
+    (118, "Assets", F4), (218, "StockholdersEquity", F4), (119, "Assets", F4), (219, "Liabilities", F4), (122, "Assets", F5), (222, "StockholdersEquity", F5), (120, "Assets", F1), (220, "StockholdersEquity", F2), (121, "Assets", F1), (221, "StockholdersEquity", F2), (115, "Assets", F2), (116, "Assets", F3), (215, "StockholdersEquity", F1), (117, "Assets", F3), (217, "StockholdersEquity", F3),
 ]  # fmt: skip
 TABLES = tables(CANON, FACTS, INFO)
 
@@ -453,6 +465,12 @@ def test_a_filing_with_nci_elements_the_planner_cannot_read_holds_a_parent_only_
     _, by = planned()
     assert by[(day(14), "total")].basis == "nci_unconfirmed"
     assert by[(day(15), "stock")].basis == "nci_not_read"
+
+
+def test_a_filing_with_temporary_equity_elements_but_none_read_for_the_instant_is_held():
+    # TRGP 2021-09-30: a 749.7M Series A preferred filed only with a class-of-stock member; no fact is stored
+    _, by = planned()
+    assert by[(day(18), "total")].basis == "temporary_equity_present_not_read"
 
 
 def test_planner_uses_the_face_subtotals_to_drop_an_unproven_component():
