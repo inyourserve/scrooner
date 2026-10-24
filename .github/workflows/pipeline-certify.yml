@@ -72,7 +72,7 @@ jobs:
           failed=""
           for s in $SHARDS; do
             echo "::group::certify $s ($mode)"
-            if ! timeout "$SHARD_TIMEOUT_SECS" uv run --project pipeline scrooner-certify run \
+            if ! timeout "$SHARD_TIMEOUT_SECS" uv run --project pipeline scrooner-certify \
                 --top1000-shard "$s" $mode --summary-only --json-out "certify-out/$s.json"; then
               echo "::error::shard $s failed or hit the ${SHARD_TIMEOUT_SECS}s cap"
               failed="$failed $s"
