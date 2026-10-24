@@ -232,6 +232,42 @@ def resolve_balance_sheet_fallback_cmd() -> None:
     typer.echo(f"resolve-balance-sheet-fallback: {stats}")
 
 
+@app.command("balance-identity-dry-run")
+def balance_identity_dry_run_cmd(
+    ciks: str = typer.Option(
+        "", help="Comma-separated CIKs; empty = every company with total assets."
+    ),
+    out: Path = typer.Option(
+        Path("balance_identity_plan.jsonl"), help="Before-image / plan file (JSONL)."
+    ),
+) -> None:
+    """Read-only: print the corrected balance-sheet identity values (rule balance.identity_equity_basis@1)
+    next to what is stored. Writes nothing to the database."""
+    from scrooner_pipeline.mapper import balance_identity
+
+    with get_connection() as conn:
+        conn.execute("set statement_timeout = 20000")
+        with conn.cursor() as cur:
+            if ciks.strip():
+                cur.execute(
+                    "select id from core.company where cik = any(%s) order by id",
+                    ([c.strip() for c in ciks.split(",")],),
+                )
+            else:
+                cur.execute(
+                    "select distinct cf.company_id from analytics.canonical_fact cf join analytics.canonical_concept cc "
+                    "on cc.id = cf.canonical_concept_id where cc.name = %s order by 1",
+                    (balance_identity.ASSETS,),
+                )
+            ids = [r[0] for r in cur.fetchall()]
+        plan = balance_identity.plan_identity(conn, ids)
+        conn.rollback()
+    balance_identity.write_before_image(out, plan)
+    typer.echo(
+        f"balance-identity-dry-run: {len(plan)} cells planned for {len(ids)} companies -> {out}"
+    )
+
+
 @app.command("resolve-revenue")
 def resolve_revenue_cmd(
     include_parser: bool = typer.Option(

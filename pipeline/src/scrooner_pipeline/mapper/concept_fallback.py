@@ -1018,6 +1018,31 @@ def resolve_all_balance_sheet_identity_fallbacks(conn: psycopg.Connection) -> di
     every pre-existing value, already provide; it does not need to chain
     off the first call's specific output to be correct, only to
     (optionally) benefit from slightly wider coverage if run after."""
+    from scrooner_pipeline.common.rule_flags import DRY_RUN, ON, rule_mode
+    from scrooner_pipeline.mapper import balance_identity
+
+    mode = rule_mode(balance_identity.RULE_ID)
+    if mode in (ON, DRY_RUN):
+        with conn.cursor() as cur:
+            cur.execute(
+                "select distinct company_id from analytics.canonical_fact cf join analytics.canonical_concept cc "
+                "on cc.id = cf.canonical_concept_id where cc.name = %s order by 1",
+                (balance_identity.ASSETS,),
+            )
+            company_ids = [r[0] for r in cur.fetchall()]
+        plan = balance_identity.plan_identity(conn, company_ids)
+        image = balance_identity.before_image_path()
+        if mode == DRY_RUN:
+            balance_identity.write_before_image(image, plan)
+            logger.info(
+                "concept_fallback.balance_identity_dry_run",
+                planned=len(plan),
+                before_image=str(image),
+            )
+        else:
+            changed = balance_identity.apply_identity(conn, plan, image)
+            logger.info("concept_fallback.balance_identity_on", rows=changed)
+            return {"balance_identity_rows": changed}
     liabilities_count = resolve_balance_sheet_identity_fallback(
         conn,
         "total_liabilities_resolved",

@@ -166,6 +166,13 @@ RULES: dict[str, Rule] = {
             "non-USD reporter price ratios (WO-28)",
         ),
         _r(
+            "balance.identity_equity_basis@1",
+            "-",
+            "lane3",
+            "balance-sheet identity fallback: liabilities = assets - total equity (incl NCI) - temporary equity (sign and NCI double count)",
+            dry_run=True,
+        ),
+        _r(
             "revenue.structure_total@1",
             "RF-48",
             "lane3",
