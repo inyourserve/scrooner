@@ -154,6 +154,13 @@ RULES: dict[str, Rule] = {
             "market cap publish guard at the share basis (WO-21)",
         ),
         _r(
+            "holds.blank_writer@1",
+            "-",
+            "lane3",
+            "shared hold writer: a planner's hold rows get a reason (cell_blank_reason) and the stored value is archived and removed",
+            dry_run=True,
+        ),
+        _r(
             "scale.unit_plausibility@1",
             "RF-18",
             "lane3",
