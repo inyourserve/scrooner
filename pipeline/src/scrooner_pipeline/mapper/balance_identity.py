@@ -208,6 +208,7 @@ def identity_amount(
     other_tag: str | None,
     adj: dict[str, Decimal],
     nci_family: bool = False,
+    temp_family: bool = False,
 ) -> Amount | Held:
     """``target`` is LIABILITIES (other = the equity input, ``other_tag`` its tag) or EQUITY (other = liabilities).
     ``base`` is the left side of the identity (L&SE when filed, else Assets); ``nci_family`` says the filing
@@ -245,6 +246,10 @@ def identity_amount(
     if isinstance(temp, Held):
         return temp
     temp_value, temp_basis = temp
+    if temp_family and not temp_basis:
+        # the filing carries temporary-equity / redeemable-NCI elements (TRGP: a Series A preferred only with a
+        # class-of-stock member, so no undimensioned fact is stored) but none is read for this instant
+        return Held("temporary_equity_present_not_read")
     tail = f"+{temp_basis}" if temp_basis else ""
     if target == LIABILITIES:
         tol = rounding_tol(other, adj.get(NCI_INCLUSIVE_EQUITY, other))
@@ -379,6 +384,15 @@ def plan_identity(
                 (part,),
             )
             nci_family_filings = {(c_, f_) for c_, f_ in cur.fetchall()}
+            cur.execute(
+                """select distinct f.company_id, f.filing_id from core.fact f
+                   join core.concept k on k.id = f.concept_id
+                   where f.company_id = any(%s)
+                     and (k.tag ilike 'temporaryequity%%' or k.tag ilike 'redeemablenoncontrolling%%'
+                          or k.tag ilike '%%redeemablepreferred%%')""",
+                (part,),
+            )
+            temp_family_filings = {(c_, f_) for c_, f_ in cur.fetchall()}
             need = {
                 s for c in cells.values() for _, (_, src, _) in c.items() for s in src
             }
@@ -468,6 +482,7 @@ def plan_identity(
                     other_tag,
                     adj,
                     (cid, fil) in nci_family_filings,
+                    (cid, fil) in temp_family_filings,
                 )
                 if isinstance(amt, Held):
                     plan.append(held(amt.reason, fil))
