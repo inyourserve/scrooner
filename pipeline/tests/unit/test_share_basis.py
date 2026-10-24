@@ -1213,3 +1213,118 @@ def test_one_period_move_by_the_companys_own_ratio_is_not_a_violation():
         b.cell(res, "diluted_eps_resolved", "2015-04-01", "2015-06-30").status
         == sb.SHOWN
     )
+
+
+def test_share_copy_off_by_a_million_vs_its_own_filing_is_dropped():
+    """PCG 10-Q 0001004980-13-000025: CommonStockSharesOutstanding
+    430,718,293,000,000 beside cover 442,173,394 and basic WASO 434M."""
+    b = Book()
+    q = b.filing("0001004980-13-000025", "2013-05-01")
+    b.add(BS_SHARES, "430718293000000", None, "2012-12-31", q)
+    b.add(COVER, "442173394", None, "2013-04-23", q)
+    b.add(
+        "WeightedAverageNumberOfSharesOutstandingBasic",
+        "434000000",
+        "2013-01-01",
+        "2013-03-31",
+        q,
+    )
+    res = run(b)
+    assert (
+        b.cell(res, "shares_outstanding_resolved", None, "2012-12-31").status
+        == sb.HIDE_UNITS_SCALE
+    )
+    assert b.cell(res, "shares_outstanding_resolved", None, "2013-04-23").value == D(
+        "442173394"
+    )
+
+
+def test_two_share_copies_off_by_scale_with_no_majority_are_hidden():
+    b = Book()
+    a = b.filing("S-1", "2014-01-28")
+    c = b.filing("S-2", "2014-04-24")
+    b.add(BS_SHARES, "899213000", None, "2013-09-28", a)
+    b.add(BS_SHARES, "899213", None, "2013-09-28", c)
+    res = run(b)
+    assert (
+        b.cell(res, "shares_outstanding_resolved", None, "2013-09-28").status
+        == sb.HIDE_UNITS_SCALE
+    )
+
+
+def test_zero_filed_share_count_is_hidden():
+    b = Book()
+    k = b.filing("0000908937-25-000005", "2025-01-30", "10-K")
+    b.add(BS_SHARES, "0", None, "2023-12-31", k)
+    res = run(b)
+    assert (
+        b.cell(res, "shares_outstanding_resolved", None, "2023-12-31").status
+        == sb.HIDE_ZERO_SHARES
+    )
+
+
+def test_dps_off_by_a_units_scale_vs_the_company_median_is_hidden():
+    """VICI 10-Q 0001705696-18-000086 files Q2 2018 DPS as 262,500."""
+    b = Book()
+    for i, (s, e, v) in enumerate(
+        (
+            ("2018-01-01", "2018-03-31", "0.16"),
+            ("2018-04-01", "2018-06-30", "262500"),
+            ("2018-07-01", "2018-09-30", "0.2625"),
+            ("2018-10-01", "2018-12-31", "0.2875"),
+            ("2019-01-01", "2019-03-31", "0.2875"),
+        )
+    ):
+        b.add(DPS_DECL, v, s, e, b.filing(f"V-{i}", f"20{19 + i // 4}-0{1 + i % 4}-15"))
+    res = run(b)
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2018-04-01", "2018-06-30").status
+        == sb.HIDE_UNITS_SCALE
+    )
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2018-07-01", "2018-09-30").status
+        == sb.SHOWN
+    )
+
+
+def test_dps_guard_needs_enough_other_values_and_a_large_gap():
+    b = Book()
+    for i, (s, e, v) in enumerate(
+        (
+            ("2018-01-01", "2018-03-31", "0.10"),
+            ("2018-04-01", "2018-06-30", "4.10"),  # a special dividend, 41x
+            ("2018-07-01", "2018-09-30", "0.10"),
+            ("2018-10-01", "2018-12-31", "0.11"),
+        )
+    ):
+        b.add(DPS_DECL, v, s, e, b.filing(f"W-{i}", f"2019-0{1 + i}-15"))
+    res = run(b)
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2018-04-01", "2018-06-30").status
+        == sb.SHOWN
+    )
+
+
+def test_share_count_far_off_the_company_median_is_hidden():
+    """DLTR 10-K 0000935703-11-000058 files a share count of 123.5 (in
+    millions) with no other share count in that filing."""
+    b = Book()
+    for i, (d, v) in enumerate(
+        (
+            ("2010-01-30", "123000000"),
+            ("2011-01-29", "123.5"),
+            ("2012-01-28", "117000000"),
+            ("2013-02-02", "221000000"),
+            ("2014-02-01", "207000000"),
+        )
+    ):
+        b.add(BS_SHARES, v, None, d, b.filing(f"D-{i}", f"201{i}-03-20", "10-K"))
+    res = run(b)
+    assert (
+        b.cell(res, "shares_outstanding_resolved", None, "2011-01-29").status
+        == sb.HIDE_UNITS_SCALE
+    )
+    assert (
+        b.cell(res, "shares_outstanding_resolved", None, "2013-02-02").status
+        == sb.SHOWN
+    )

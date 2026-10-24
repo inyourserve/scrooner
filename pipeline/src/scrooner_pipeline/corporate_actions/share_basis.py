@@ -179,6 +179,13 @@ HIDE_COMPANY_INVARIANT = "basis_review_company_invariant"
 HIDE_NO_FILED_SOURCE = "no_filed_source"
 HIDE_LABEL_ERROR = "quarter_equals_year_label_error"
 HIDE_DPS_BASIS = "dividend_basis_pending"
+HIDE_UNITS_SCALE = "units_scale_suspect"
+HIDE_ZERO_SHARES = "zero_share_count_filed"
+# A DPS value this many times the company's median DPS of the same series
+# (or 1/this) is a units error in its filing (VICI 262,500 for 0.2625 in
+# 10-Q 0001705696-18-000086; SWX 2,480; ROST 255; HL 0.25 vs 0.0025).
+DPS_SCALE_SUSPECT_RATIO = Decimal(50)
+DPS_SCALE_MIN_OTHERS = 3
 
 # Restatement policy for a period whose copies disagree on the SAME basis
 # (no split between them): "hide" is design 2.8 (accepted in doc 49). The
@@ -202,6 +209,8 @@ HIDDEN_REASON_TEXT = {
     HIDE_NO_FILED_SOURCE: "not filed separately in a 10-K or 10-Q (per-share values are not derived)",
     HIDE_LABEL_ERROR: "the filed quarter equals the full-year value of the same filing (label error)",
     HIDE_DPS_BASIS: "dividend basis pending (declared vs paid, AC-24): this series mixes both",
+    HIDE_UNITS_SCALE: "filed value looks off by a units scale (thousands or millions)",
+    HIDE_ZERO_SHARES: "the filing reports zero shares outstanding",
 }
 
 
@@ -1079,6 +1088,17 @@ def resolve_cells(
         if f.usable_source:
             same_filing[(f.filing_id, f.tag, f.unit)][f.period_id].add(f.value)
 
+    # filing -> other share counts in that filing (cover and weighted averages)
+    share_refs: dict[int, list[Decimal]] = defaultdict(list)
+    for f in facts:
+        if (
+            f.usable_source
+            and f.unit == "shares"
+            and f.value > 0
+            and f.tag in ("EntityCommonStockSharesOutstanding", *WASO_TAGS)
+        ):
+            share_refs[f.filing_id].append(f.value)
+
     out: list[CellResult] = []
     for concept, (kind, base) in TARGETS.items():
         tags = mapped_tags.get(base, [])
@@ -1135,18 +1155,60 @@ def resolve_cells(
                 conv.append((f, fac, convert(f.value, fac, kind)))
             conv.sort(key=lambda x: (x[0].filing_date, x[0].fact_id))
             note = ""
-            if kind == SHARES and len(conv) > 2:
+            if kind == SHARES:
+                # Same-filing evidence first (PCG 10-Q 0001004980-13-000025:
+                # CommonStockSharesOutstanding 430,718,293,000,000 beside cover
+                # 442,173,394 and WASO 434M): a copy 1000x or 10^6 off its own
+                # filing's other share counts is a units error.
                 kept = [
-                    x
-                    for x in conv
-                    if not any(
-                        is_share_scale_artifact(y[2], x[2], kind) and y[2] > x[2]
-                        for y in conv
-                    )
+                    x for x in conv if not _off_scale_in_own_filing(x[0], share_refs)
                 ]
+                if not kept:
+                    out.append(
+                        CellResult(
+                            concept, pid, HIDE_UNITS_SCALE, None, (), None, None, ()
+                        )
+                    )
+                    continue
                 if len(kept) != len(conv):
-                    note = f"dropped {len(conv) - len(kept)} copy(ies) off by a units scale"
+                    note = f"dropped {len(conv) - len(kept)} copy(ies) off scale vs own filing"
                     conv = kept
+                if all(x[2] == 0 for x in conv):
+                    out.append(
+                        CellResult(
+                            concept, pid, HIDE_ZERO_SHARES, None, (), None, None, ()
+                        )
+                    )
+                    continue
+                conv = [x for x in conv if x[2] != 0] or conv
+                # Copies off by a units scale against each other: keep the
+                # strict majority, else hide (AAPL 899,213 vs 899,213,000 x2).
+                if any(
+                    is_share_scale_artifact(x[2], y[2], kind)
+                    for x in conv
+                    for y in conv
+                ):
+                    groups: list[list] = []
+                    for x in conv:
+                        for g in groups:
+                            if _all_agree([g[0], x], kind):
+                                g.append(x)
+                                break
+                        else:
+                            groups.append([x])
+                    groups.sort(key=len, reverse=True)
+                    if len(groups) > 1 and len(groups[0]) > len(groups[1]):
+                        note = f"dropped {len(conv) - len(groups[0])} copy(ies) off by a units scale"
+                        conv = sorted(
+                            groups[0], key=lambda x: (x[0].filing_date, x[0].fact_id)
+                        )
+                    else:
+                        out.append(
+                            CellResult(
+                                concept, pid, HIDE_UNITS_SCALE, None, (), None, None, ()
+                            )
+                        )
+                        continue
             agree = _all_agree(conv, kind)
             if not agree and len(conv) > 1:
                 # Label shift (Verifier 2026-10-24): a disagreeing copy that
@@ -1212,7 +1274,12 @@ def resolve_cells(
                     note,
                 )
             )
-    return _one_dividend_basis(out, mapped_tags.get("dividends_per_share", []))
+    return _dps_scale_guard(
+        _dps_scale_guard(
+            _one_dividend_basis(out, mapped_tags.get("dividends_per_share", []))
+        ),
+        "shares_outstanding_resolved",
+    )
 
 
 LABEL_ERROR_TOL = Decimal("0.015")  # as-filed cents (ASSUMED), scaled by the factor
@@ -1280,6 +1347,88 @@ def _quarter_is_year_label_error(
         )
     )
     return ytd is not None and ytd > tol and abs(value + ytd - year) > tol
+
+
+WASO_TAGS = (
+    "WeightedAverageNumberOfSharesOutstandingBasic",
+    "WeightedAverageNumberOfDilutedSharesOutstanding",
+)
+_SCALE_STEPS = (Decimal(1000), Decimal(10**6))
+
+
+def _off_scale_in_own_filing(f: SourceFact, refs: Mapping[int, list[Decimal]]) -> bool:
+    """True when every other share count in f's own filing sits a factor
+    1000 or 10^6 away from f (within 25%), i.e. f carries a units error."""
+    others = [v for v in refs.get(f.filing_id, []) if v != f.value]
+    if not others or f.value <= 0:
+        return False
+
+    def off(v: Decimal) -> bool:
+        for k in _SCALE_STEPS:
+            for target in (v * k, v / k):
+                if abs(f.value - target) <= Decimal("0.25") * target:
+                    return True
+        return False
+
+    return all(off(v) for v in others)
+
+
+def _dps_scale_guard(
+    cells: list[CellResult], concept: str = "dividends_per_share_resolved"
+) -> list[CellResult]:
+    """Hide a shown value >= DPS_SCALE_SUSPECT_RATIO x (or <= 1/x) the median
+    of the company's other shown values of the same concept and series
+    (interim / annual; instants are one series), when at least
+    DPS_SCALE_MIN_OTHERS others exist. DPS (VICI 262,500) and share counts on
+    the current basis (DLTR 10-K 0000935703-11-000058: 123.5, a count in
+    millions with no other share count in the filing); never EPS, which
+    legitimately swings this much."""
+
+    def series(c: CellResult) -> str:
+        assert c.chosen is not None
+        start = c.chosen.start_date
+        days = (c.chosen.end_date - start).days if start else 0
+        return "annual" if days >= 350 else "interim"
+
+    dps = [
+        c
+        for c in cells
+        if c.concept == concept
+        and c.status == SHOWN
+        and c.chosen is not None
+        and c.value is not None
+        and c.value > 0
+    ]
+    flagged: set[tuple[str, int]] = set()
+    for c in dps:
+        assert c.value is not None
+        others = sorted(
+            o.value for o in dps if o is not c and series(o) == series(c) and o.value
+        )
+        if len(others) < DPS_SCALE_MIN_OTHERS:
+            continue
+        med = others[len(others) // 2]
+        ratio = c.value / med
+        if ratio >= DPS_SCALE_SUSPECT_RATIO or ratio <= 1 / DPS_SCALE_SUSPECT_RATIO:
+            flagged.add((c.concept, c.period_id))
+    if not flagged:
+        return cells
+    return [
+        CellResult(
+            c.concept,
+            c.period_id,
+            HIDE_UNITS_SCALE,
+            None,
+            (),
+            c.chosen,
+            c.factor,
+            c.candidates,
+            "off the company's median by a units scale",
+        )
+        if (c.concept, c.period_id) in flagged
+        else c
+        for c in cells
+    ]
 
 
 def _all_agree(conv: list[tuple[SourceFact, Fraction, Decimal]], kind: str) -> bool:
