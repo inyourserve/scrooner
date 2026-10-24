@@ -20,6 +20,7 @@ from scrooner_pipeline.mapper.calculate import calculate
 from scrooner_pipeline.mapper.concepts import coverage_report, seed, unmapped_tag_report
 from scrooner_pipeline.mapper import definitions as definitions_module
 from scrooner_pipeline.mapper import (
+    debt_metrics_pending,
     operating_income_guard,
     price_publish_guards,
     revenue_total_guard,
@@ -212,6 +213,10 @@ def total_debt_dry_run_cmd(
     before_image: str = typer.Option(
         ..., help="Path of the JSONL before-image (cells that would change)."
     ),
+    perimeter: str = typer.Option(
+        "lease_inclusive",
+        help="lease_inclusive (borrowings + finance leases, the card's proposal) or borrowings_only.",
+    ),
 ) -> None:
     """Rule debt.total_debt_consistency@1 (all sub-rules evaluated as ON) in dry-run: reads
     core.fact and the stored total_debt_resolved, WRITES NOTHING, saves the before/after cell
@@ -219,7 +224,9 @@ def total_debt_dry_run_cmd(
     the manifest ciks)."""
     target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()}
     with get_connection() as conn:
-        stats = resolve_total_debt_components(conn, target, dry_run=True)
+        stats = resolve_total_debt_components(
+            conn, target, dry_run=True, perimeter=perimeter
+        )
     planned = stats.pop("planned")
     n = write_before_image(Path(before_image), planned)
     man = manifest("debt.total_debt_consistency@1", planned, flag_state="dry_run")
@@ -487,6 +494,38 @@ def price_guards_dry_run_cmd(
         planned = price_publish_guards.plan_price_guards(conn, target)
     n = write_before_image(Path(before_image), planned)
     typer.echo(f"price-guards-dry-run: {n} cells would be hidden")
+
+
+@app.command("apply-debt-metrics-pending")
+def apply_debt_metrics_pending_cmd(
+    ciks: str = typer.Option(
+        "", help="Comma-separated CIKs; empty = every company (chunks of 100)."
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Count the cells that would be hidden; write nothing."
+    ),
+    before_image: str = typer.Option(
+        "", help="With --dry-run: path of the JSONL before-image to write."
+    ),
+) -> None:
+    """AC-1 interim: hide the ten total-debt consumers (debt_to_equity, net_cash, net_cash_per_share,
+    net_debt_ebitda, debt_to_ebitda, ev_ebitda, ev_sales, roic, piotroski_f_score, zero_debt) with
+    'definition pending accountant review'. Run AFTER the metric stages. No-op unless
+    debt.metrics_pending_ac1@1 is listed in SCROONER_RULES_ENABLED."""
+    target = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()} or None
+    with get_connection() as conn:
+        store = None if dry_run else PgBlankReasonStore(conn)
+        stats = debt_metrics_pending.apply_debt_metrics_pending(
+            conn, target, dry_run=dry_run, reason_store=store
+        )
+        if store is not None:
+            store.finish({k: v for k, v in stats.items() if k != "planned"})
+            conn.commit()
+    planned = stats.pop("planned", [])
+    if dry_run and before_image:
+        write_before_image(Path(before_image), planned)
+        stats["before_image_rows"] = len(planned)
+    typer.echo(f"apply-debt-metrics-pending: {stats}")
 
 
 @app.command("resolve-conflict-fills")

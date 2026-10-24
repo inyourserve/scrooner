@@ -55,6 +55,7 @@ class BlankReason:
     detail: dict[str, Any] = field(default_factory=dict, hash=False, compare=False)
     state: str = "defect"
     owner: str = "data_engineer_l1"
+    defect_class: str = "guard_hidden"  # e.g. definition_pending (owner accountant) for an unanswered AC card
 
     def __post_init__(self) -> None:
         parse_rule_id(self.rule_id)
@@ -78,6 +79,10 @@ class BlankReason:
             )
         if self.state == "defect" and self.owner not in OWNERS:
             raise ValueError(f"owner {self.owner!r} not in the frozen owner list")
+        if self.state == "defect" and self.defect_class not in DEFECT_CLASSES:
+            raise ValueError(
+                f"defect_class {self.defect_class!r} not in the frozen list"
+            )
 
     def key(self) -> CellKey:
         return CellKey(
@@ -90,6 +95,16 @@ class BlankReason:
         )
 
     def to_store_row(self) -> cell_store.BlankReason:
+        if self.state == "defect" and self.defect_class != "guard_hidden":
+            return cell_store.BlankReason(
+                key=self.key(),
+                state="defect",
+                rule_id=self.rule_id,
+                reason_code=self.reason_code,
+                defect_class=self.defect_class,
+                owner=self.owner,
+                input_refs=dict(self.detail),
+            )
         if self.state == "defect":
             return cell_store.guard_hidden(
                 self.key(),

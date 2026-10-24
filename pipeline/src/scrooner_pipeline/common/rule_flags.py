@@ -154,6 +154,12 @@ RULES: dict[str, Rule] = {
             "market cap publish guard at the share basis (WO-21)",
         ),
         _r(
+            "debt.metrics_pending_ac1@1",
+            "-",
+            "lane3",
+            "ten total-debt consumers hidden as 'definition pending accountant review' until AC-1",
+        ),
+        _r(
             "mcap.ads_conversion@1",
             "-",
             "lane3",

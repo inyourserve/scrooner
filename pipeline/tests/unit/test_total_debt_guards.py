@@ -15,6 +15,7 @@ import pytest
 from scrooner_pipeline.common.cell_blank_reason import InMemoryBlankReasonStore
 from scrooner_pipeline.mapper.concept_fallback import (
     ALL_DEBT_GUARDS,
+    GUARDS_BEFORE_CARRYING,
     GUARD_CONTAINMENT,
     GUARD_FLOOR,
     GUARD_PARTIAL,
@@ -45,7 +46,7 @@ NO_GUARDS = frozenset()
 
 
 def _without(guard):
-    return ALL_DEBT_GUARDS - {guard}
+    return GUARDS_BEFORE_CARRYING - {guard}
 
 
 @pytest.mark.unit

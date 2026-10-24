@@ -46,7 +46,12 @@ from scrooner_pipeline.common.cell_blank_reason import (
     PgBlankReasonStore,
 )
 from scrooner_pipeline.common.debt_carrying import Hold as CarryingHold
-from scrooner_pipeline.common.debt_carrying import carrying_lines
+from scrooner_pipeline.common.debt_carrying import (
+    CARRYING_TAGS,
+    DEFAULT_PERIMETER,
+    REFINANCED,
+    carrying_lines,
+)
 from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.rule_before_image import PlannedChange
 from scrooner_pipeline.common.rule_flags import rule_enabled as is_enabled
@@ -250,6 +255,7 @@ TOTAL_DEBT_LOAD_TAGS = tuple(
         + DEBT_DISCOUNT_COST_TAGS
         + DEBT_CURRENT_PART_TAGS
         + ("DebtAndCapitalLeaseObligations",)
+        + CARRYING_TAGS
     )
 )
 
@@ -298,7 +304,18 @@ REASON_UNDECIDABLE_FALLBACK = "debt composition undecidable: current debt total 
 REASON_UNDECIDABLE_LEASE = (
     "debt composition undecidable: total is below the filed lease-inclusive debt total"
 )
+REASON_LEASE_LOCATION = "debt composition undecidable: finance leases are filed but cannot be placed inside or outside the current debt line"
+REASON_BORROWINGS_NOT_SEPARABLE = "debt composition undecidable: borrowings cannot be separated from the lease-inclusive debt lines"
+REASON_RELATED_PARTY = "debt composition undecidable: related-party or debt-only current lines sit beside lease-inclusive lines"
+REASON_NEGATIVE_COMPONENT = "debt composition undecidable: a debt component is negative"
 REASON_PARTIAL_COMPONENT = "debt composition undecidable: only current debt portions are filed (no long-term block)"
+_CARRYING_HOLD_REASONS = {
+    "current_block_unexplained": REASON_UNDECIDABLE_FALLBACK,
+    "lease_location_unknown": REASON_LEASE_LOCATION,
+    "borrowings_not_separable": REASON_BORROWINGS_NOT_SEPARABLE,
+    "related_party_unresolved": REASON_RELATED_PARTY,
+    "negative_component": REASON_NEGATIVE_COMPONENT,
+}
 
 # R4: a total_debt company_tag_preference is honoured only when the
 # preferred tag is itself a TOTAL. Every one of the 41 preference rows
@@ -642,6 +659,12 @@ class DebtDecision:
     path: str | None = None
     reason: str | None = None
     guards_fired: tuple[str, ...] = ()
+    composition: str | None = (
+        None  # debt_carrying.COMPOSITION_* when r8 built the value
+    )
+    slots: Any = (
+        None  # the perimeter record (debt_carrying.DebtSlots) when r8 built the value
+    )
 
 
 def _containment_ok(facts: dict[str, tuple[Decimal, int]]) -> bool:
@@ -725,6 +748,7 @@ def _check_guard_reached_fallback(
 def evaluate_total_debt(
     facts: dict[str, tuple[Decimal, int]],
     guards: frozenset[str] = GUARDS_BEFORE_CARRYING,
+    perimeter: str = DEFAULT_PERIMETER,
 ) -> DebtDecision:
     """compute_total_debt plus the eligible guards from the Tag Mapper's
     results (data-team/31 section B; R2 and the "prefer N + C" reordering are
@@ -767,12 +791,16 @@ def evaluate_total_debt(
         fired.append(GUARD_CONTAINMENT)
 
     result = None
+    composition = None
+    slots = None
     if GUARD_CARRYING in guards:
-        carrying = carrying_lines({t: v[0] for t, v in work.items()})
+        carrying = carrying_lines({t: v[0] for t, v in work.items()}, perimeter)
         if isinstance(carrying, CarryingHold):
             fired.append(GUARD_CARRYING)
             return DebtDecision(
-                None, reason=REASON_UNDECIDABLE_FALLBACK, guards_fired=tuple(fired)
+                None,
+                reason=_CARRYING_HOLD_REASONS[carrying.reason],
+                guards_fired=tuple(fired),
             )
         if carrying is not None:
             fired.append(GUARD_CARRYING)
@@ -781,6 +809,7 @@ def evaluate_total_debt(
                 [work[t][1] for t in carrying.tags],
                 carrying.path,
             )
+            composition, slots = carrying.composition, carrying.slots
     if result is None:
         result = _compose_total_debt(work)
 
@@ -848,7 +877,14 @@ def evaluate_total_debt(
 
     if result is None:
         return DebtDecision(None, guards_fired=tuple(fired))
-    return DebtDecision(result[0], result[1], result[2], guards_fired=tuple(fired))
+    return DebtDecision(
+        result[0],
+        result[1],
+        result[2],
+        guards_fired=tuple(fired),
+        composition=composition,
+        slots=slots,
+    )
 
 
 def compute_total_debt(
@@ -862,6 +898,19 @@ def compute_total_debt(
     return decision.value, decision.source_fact_ids, decision.path
 
 
+def _planned_reason(decision: "DebtDecision") -> str:
+    """guards fired, then the composition and the two slots (the perimeter record) for the dry-run file."""
+    text = "+".join(decision.guards_fired) or "unchanged_by_guards"
+    if decision.composition:
+        text += f":{decision.composition}"
+        if decision.slots is not None:
+            b, l_ = decision.slots.borrowings, decision.slots.leases
+            text += f"|borrowings={b}|finance_leases={l_}|proofs={'+'.join(decision.slots.proofs)}"
+    elif decision.reason:
+        text += f":hold={decision.reason}"
+    return text
+
+
 def resolve_total_debt_components(
     conn: psycopg.Connection,
     ciks: set[str],
@@ -871,6 +920,7 @@ def resolve_total_debt_components(
     reason_store: BlankReasonStore | None = None,
     run_id: str | None = None,
     environ: dict[str, str] | None = None,
+    perimeter: str = DEFAULT_PERIMETER,
 ) -> dict:
     """Writes total_debt_resolved for every instant period from core.fact
     via compute_total_debt(). Bulk-loads one chunk of companies per query
@@ -949,18 +999,19 @@ def resolve_total_debt_components(
                 cur.execute(
                     """
                     select distinct on (f.company_id, f.period_id, c.tag)
-                           f.company_id, f.period_id, c.tag, f.value, f.id, p.end_date
+                           f.company_id, f.period_id, c.tag, f.value, f.id, p.end_date, p.period_type
                     from core.fact f
                     join core.concept c on c.id = f.concept_id
                     join core.period p on p.id = f.period_id
                     where f.company_id = any(%s) and f.is_authoritative
                       and c.taxonomy = 'us-gaap' and c.tag = any(%s)
-                      and p.period_type = 'instant'
+                      and (p.period_type = 'instant' or c.tag = %s)
                     order by f.company_id, f.period_id, c.tag, f.id desc
                     """,
-                    (chunk, list(TOTAL_DEBT_LOAD_TAGS)),
+                    (chunk, list(TOTAL_DEBT_LOAD_TAGS), REFINANCED),
                 )
-                by_period: dict[tuple[int, int], dict] = {}
+                by_end: dict[tuple[int, Any], dict] = {}
+                instant_pid: dict[tuple[int, Any], int] = {}
                 period_end: dict[int, Any] = {}
                 for (
                     company_id,
@@ -969,12 +1020,20 @@ def resolve_total_debt_components(
                     value,
                     fact_id,
                     end_date,
+                    period_type,
                 ) in cur.fetchall():
-                    by_period.setdefault((company_id, period_id), {})[tag] = (
-                        value,
-                        fact_id,
-                    )
-                    period_end[period_id] = end_date
+                    # the refinanced amount is a duration fact: join it to the instant by end date
+                    cur_fact = by_end.setdefault((company_id, end_date), {}).get(tag)
+                    if cur_fact is None or fact_id > cur_fact[1]:
+                        by_end[(company_id, end_date)][tag] = (value, fact_id)
+                    if period_type == "instant":
+                        instant_pid[(company_id, end_date)] = period_id
+                        period_end[period_id] = end_date
+                by_period: dict[tuple[int, int], dict] = {
+                    (company_id, instant_pid[(company_id, end_date)]): facts
+                    for (company_id, end_date), facts in by_end.items()
+                    if (company_id, end_date) in instant_pid
+                }
                 stored: dict[tuple[int, int], Decimal] = {}
                 if dry_run:
                     cur.execute(
@@ -990,7 +1049,7 @@ def resolve_total_debt_components(
                 rows = []
                 reasons: dict[int, list[BlankReason]] = {cid: [] for cid in chunk}
                 for (company_id, period_id), facts in by_period.items():
-                    decision = evaluate_total_debt(facts, guards)
+                    decision = evaluate_total_debt(facts, guards, perimeter)
                     for g in decision.guards_fired:
                         stats["guards"][g] = stats["guards"].get(g, 0) + 1
                     new_value = decision.value if decision.path is not None else None
@@ -1006,10 +1065,7 @@ def resolve_total_debt_components(
                                     period_end=period_end[period_id],
                                     before=before,
                                     after=new_value,
-                                    reason=(
-                                        "+".join(decision.guards_fired)
-                                        or "unchanged_by_guards"
-                                    ),
+                                    reason=_planned_reason(decision),
                                 )
                             )
                     if decision.value is None or decision.path is None:

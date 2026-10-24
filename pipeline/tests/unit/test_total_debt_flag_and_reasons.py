@@ -256,7 +256,7 @@ class _Cur:
             rows = []
             for company, facts in ((1, CVX), (2, PFE)):
                 for tag, (v, fid) in facts.items():
-                    rows.append((company, 100 + company, tag, v, fid, e))
+                    rows.append((company, 100 + company, tag, v, fid, e, "instant"))
             self.res = rows
         elif sql.startswith(
             "select company_id, period_id, value from analytics.canonical_fact"
