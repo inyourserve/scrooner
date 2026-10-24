@@ -103,12 +103,12 @@ def test_t3_t4_tsla_lease_inclusive_lines_are_held_never_summed_with_debt_only_l
     )
 
 
-def test_t5_goog_2023_12_31_borrowings_only_and_lease_facts_incomplete():
+def test_t5_goog_2023_12_31_borrowings_and_a_truthful_label_while_lease_facts_are_incomplete():
     b = total(GOOG_23, "borrowings_only")
     assert b.value == Decimal(12870) * M  # 13,000 - 130, not the gross 14,746
-    i = total(
-        GOOG_23, "lease_inclusive"
-    )  # current lease fact (363) not stored: leases unverified
+    # the current finance-lease fact (363) and FinanceLeaseLiability (1,746) exist only as NON-authoritative
+    # conflict copies, so the lease-inclusive total (14,616) is not reachable: borrowings with the label
+    i = total(GOOG_23)
     assert (
         i.composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
         and i.value == Decimal(12870) * M
@@ -118,6 +118,12 @@ def test_t5_goog_2023_12_31_borrowings_only_and_lease_facts_incomplete():
         Decimal(14253) * M,
         Decimal(14746) * M,
     )  # mixed perimeter / gross of discount
+    # once the authoritative halves exist the card's 14,616 follows
+    full = dict(GOOG_23, FinanceLeaseLiabilityCurrent=363)
+    assert (
+        total(full).value == Decimal(14616) * M
+        and total(full).composition == dc.COMPOSITION_BORROWINGS_PLUS_LEASES
+    )
 
 
 def test_t6_goog_2025_borrowings_and_finance_leases():
@@ -418,19 +424,139 @@ def test_the_same_excess_without_a_confirming_total_is_still_held():
     ) is None or isinstance(dc.carrying_lines(V(**wrong_total)), (dc.Hold, type(None)))
 
 
-def test_zero_debt_current_needs_no_lease_split():
-    c = total(GOOG_17, "borrowings_only")
-    assert c.value == Decimal(3943) * M
+def test_zero_debt_current_means_zero_current_leases_and_the_total_is_lease_inclusive():
+    assert total(GOOG_17, "borrowings_only").value == Decimal(3943) * M
     i = total(GOOG_17)
     assert (
-        i.composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
-        and i.slots.lease_reason == "lease_facts_incomplete"
-    )
+        i.composition == dc.COMPOSITION_BORROWINGS_PLUS_LEASES
+        and i.value == Decimal(3969) * M
+    )  # 3,943 + 26 = LTDCap
 
 
-def test_mu_2021_current_side_cannot_be_split_without_the_current_lease_fact():
+def test_mu_2021_09_02_filer_aggregate_proves_both_lines_lease_inclusive():
+    c = total(dict(MU_21, DebtAndCapitalLeaseObligations=6776))
+    assert (
+        c.value == Decimal(6776) * M
+        and c.composition == dc.COMPOSITION_LEASE_INCLUSIVE_LINES
+    )  # 155 + 6,621
+    assert dc.carrying_lines(
+        V(**dict(MU_21, DebtAndCapitalLeaseObligations=6776)), "borrowings_only"
+    ) == dc.Hold("borrowings_not_separable")
+    # without the aggregate the current side cannot be split
     assert dc.carrying_lines(V(**MU_21)) == dc.Hold("lease_location_unknown")
 
 
-def test_goog_2016_debt_current_beyond_parts_with_no_confirmation_is_held_not_accepted():
-    assert dc.carrying_lines(V(**GOOG_16)) == dc.Hold("current_block_unexplained")
+GOOG_1509 = dict(LongTermDebtNoncurrent=1994, CapitalLeaseObligationsCurrent=238, CapitalLeaseObligationsNoncurrent=0,
+                 DebtCurrent=3237, LongTermDebtAndCapitalLeaseObligations=1994, LongTermDebtAndCapitalLeaseObligationsCurrent=1237)  # fmt: skip
+GOOG_1603 = dict(LongTermDebtNoncurrent=1987, CapitalLeaseObligationsCurrent=223, DebtCurrent=3221,
+                 LongTermDebtAndCapitalLeaseObligations=1987, LongTermDebtAndCapitalLeaseObligationsCurrent=1223)  # fmt: skip
+GOOG_1803 = dict(
+    CommercialPaper=1300,
+    LongTermDebtNoncurrent=3944,
+    DebtCurrent=1329,
+    LongTermDebtAndCapitalLeaseObligations=3973,
+)
+TSLA_1809 = dict(LongTermDebt="8665.163", DebtCurrent="1833.475", LongTermDebtAndCapitalLeaseObligations="9669.879",
+                 LongTermDebtAndCapitalLeaseObligationsCurrent="2106.538")  # fmt: skip
+NVDA_15 = dict(ConvertibleDebtCurrent=0, ConvertibleDebtNoncurrent=1384, CapitalLeaseObligationsCurrent="3.414",
+               CapitalLeasesFutureMinimumPaymentsPresentValueOfNetMinimumPayments="17.5")  # fmt: skip
+NVDA_16 = dict(ConvertibleDebtCurrent=1413, ConvertibleDebtNoncurrent=0, CapitalLeaseObligationsCurrent=4,
+               CapitalLeaseObligationsNoncurrent=10)  # fmt: skip
+
+
+@pytest.mark.parametrize(
+    ("tags", "want"),
+    [(GOOG_1509, 5231), (GOOG_1603, 5208), (GOOG_16, 4203)],
+    ids=["2015-09-30", "2016-03-31", "2016-06-30"],
+)
+def test_goog_short_term_debt_is_commercial_paper_plus_the_current_capital_lease(
+    tags, want
+):
+    # DebtCurrent holds the current capital lease; the lease-inclusive current line is not a debt-only part
+    c = total(tags)
+    assert (
+        c.value == Decimal(want) * M
+        and c.composition == dc.COMPOSITION_BORROWINGS_PLUS_LEASES
+    )
+    assert "debt_current_whole_current_side+less_current_lease_fact" in c.slots.proofs
+    assert total(tags, "borrowings_only").value == c.value - c.slots.leases
+
+
+def test_goog_2018_03_31_stays_a_hold():
+    # stored 5,273 matches neither 5,244 (borrowings) nor 5,302 (+ leases): no current lease fact, DebtCurrent beyond CP
+    assert dc.carrying_lines(V(**GOOG_1803)) == dc.Hold("current_block_unexplained")
+
+
+def test_tsla_2018_09_30_is_held_because_debt_only_totals_sit_beside_the_lease_inclusive_lines():
+    # shown before: 11,776,417K; face 11,779,051K includes a 2,634K related-party convertible with no stored fact
+    assert dc.carrying_lines(V(**TSLA_1809)) == dc.Hold("related_party_unresolved")
+    assert cf.evaluate_total_debt(F(**TSLA_1809), GUARDS).value is None
+
+
+def test_dpz_still_shows_because_its_debt_only_total_is_noise_not_a_second_set_of_lines():
+    c = total(dict(DPZ, LongTermDebt="14.7"))
+    assert c.value == Decimal("4975338000")
+
+
+def test_nvda_pre_842_capital_leases_use_the_total_obligation_fact():
+    c = total(NVDA_15)
+    assert (
+        c.value == Decimal("1401500000")
+        and c.composition == dc.COMPOSITION_BORROWINGS_PLUS_LEASES
+    )  # 1,384 + 17.5
+    assert total(NVDA_15, "borrowings_only").value == Decimal(1384) * M
+    assert total(NVDA_16).value == Decimal(1427) * M  # 1,413 + 4 + 10
+
+
+def test_label_not_determined_only_when_no_lease_fact_or_line_exists():
+    assert (
+        total(AAPL).composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
+    )  # no lease fact at all
+    assert total(LLY).composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
+    assert total(GOOG_25).composition == dc.COMPOSITION_BORROWINGS_PLUS_LEASES
+
+
+def test_goog_debt_current_beyond_parts_without_confirmation_is_still_held():
+    tags = dict(
+        LongTermDebtNoncurrent=100, CommercialPaper=40, DebtCurrent=90
+    )  # 50 unlisted, no lease fact, no total
+    assert dc.carrying_lines(V(**tags)) == dc.Hold("current_block_unexplained")
+
+
+def test_zero_debt_current_with_a_nonzero_current_lease_fact_is_a_contradiction():
+    tags = dict(
+        LongTermDebtNoncurrent=100,
+        DebtCurrent=0,
+        FinanceLeaseLiabilityCurrent=5,
+        FinanceLeaseLiabilityNoncurrent=2,
+    )
+    assert dc.carrying_lines(V(**tags)) == dc.Hold("current_block_unexplained")
+
+
+def test_current_lease_derived_from_the_lease_inclusive_current_line_less_the_debt_only_one():
+    # LTDCapC 14 less LongTermDebtCurrent 10 = 4 current leases, inside DebtCurrent 14
+    tags = dict(LongTermDebtNoncurrent=100, LongTermDebtCurrent=10, DebtCurrent=14, LongTermDebtAndCapitalLeaseObligations=103,
+                LongTermDebtAndCapitalLeaseObligationsCurrent=14)  # fmt: skip
+    c = total(tags)
+    assert c.slots.leases == Decimal(7) * M  # 3 noncurrent + 4 current
+    assert c.slots.borrowings == Decimal(110) * M and c.value == Decimal(117) * M
+
+
+def test_a_related_party_line_alone_holds_lease_inclusive_only_lines():
+    tags = dict(LongTermDebtAndCapitalLeaseObligations=1000, LongTermDebtAndCapitalLeaseObligationsCurrent=100,
+                NotesPayableRelatedPartiesCurrentAndNoncurrent=1)  # fmt: skip
+    assert dc.carrying_lines(V(**tags)) == dc.Hold("related_party_unresolved")
+
+
+def test_a_lease_half_derived_from_face_lines_does_not_trigger_the_location_hold():
+    # AVGO-shaped: DebtCurrent beside a lease-inclusive noncurrent line, no lease FACT filed
+    tags = dict(
+        LongTermDebtNoncurrent=100,
+        LongTermDebtAndCapitalLeaseObligations=103,
+        DebtCurrent=10,
+    )
+    c = total(tags)
+    assert (
+        c.value == Decimal(110) * M
+        and c.composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
+    )

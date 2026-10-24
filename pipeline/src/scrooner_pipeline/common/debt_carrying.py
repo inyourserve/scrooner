@@ -60,6 +60,11 @@ LEASE_NONCURRENT = (
 )
 LEASE_CURRENT = ("FinanceLeaseLiabilityCurrent", "CapitalLeaseObligationsCurrent")
 LEASE_TOTAL = "FinanceLeaseLiability"
+# pre-ASC 842 total capital-lease obligation (current + noncurrent), used when FinanceLeaseLiability is absent
+LEASE_TOTAL_PRE842 = (
+    "CapitalLeasesFutureMinimumPaymentsPresentValueOfNetMinimumPayments"
+)
+LEASE_AGGREGATE = "DebtAndCapitalLeaseObligations"
 REFINANCED = "ShortTermDebtRefinancedAmount"  # a duration fact; the caller keys it by the instant's end date
 RELATED_PARTY = "NotesPayableRelatedPartiesCurrentAndNoncurrent"
 SHORT_TERM = ("ShortTermBorrowings", "CommercialPaper")
@@ -72,7 +77,6 @@ CURRENT_PART_TAGS = (
     "NotesPayableCurrent",
     "ConvertibleNotesPayableCurrent",
     PLAIN_CURRENT,
-    LEASE_INCL_CURRENT,
 )
 CARRYING_TAGS = tuple(
     dict.fromkeys(
@@ -84,6 +88,8 @@ CARRYING_TAGS = tuple(
             LEASE_INCL_NONCURRENT,
             LEASE_INCL_CURRENT,
             LEASE_TOTAL,
+            LEASE_TOTAL_PRE842,
+            LEASE_AGGREGATE,
             REFINANCED,
             RELATED_PARTY,
             "DebtCurrent",
@@ -148,13 +154,28 @@ def _first(vals: Mapping[str, Decimal], tags: tuple[str, ...]) -> str | None:
 def _lease_slot(
     vals: Mapping[str, Decimal],
 ) -> tuple[Decimal | None, Decimal | None, Decimal | None, str | None, list[str]]:
-    """(L total, L current, L noncurrent, reason when unverified, tags)."""
+    """(L total, L current, L noncurrent, reason when unverified, tags).
+
+    A missing half is derived from the lease-inclusive face line less the debt-only line when both are filed
+    (GOOG 2016-06-30: lease-inclusive noncurrent 1,984 less LongTermDebtNoncurrent 1,984 = 0)."""
     ct, nt = _first(vals, LEASE_CURRENT), _first(vals, LEASE_NONCURRENT)
     lc = vals[ct] if ct else None
     ln = vals[nt] if nt else None
     tags = [t for t in (ct, nt) if t]
-    if LEASE_TOTAL in vals:
-        return vals[LEASE_TOTAL], lc, ln, None, [LEASE_TOTAL, *tags]
+    if ln is None and LEASE_INCL_NONCURRENT in vals and PLAIN_NONCURRENT in vals:
+        ln = max(vals[LEASE_INCL_NONCURRENT] - vals[PLAIN_NONCURRENT], Decimal(0))
+        tags += [LEASE_INCL_NONCURRENT, PLAIN_NONCURRENT]
+    if lc is None and LEASE_INCL_CURRENT in vals and PLAIN_CURRENT in vals:
+        lc = max(vals[LEASE_INCL_CURRENT] - vals[PLAIN_CURRENT], Decimal(0))
+        tags += [LEASE_INCL_CURRENT, PLAIN_CURRENT]
+    if lc is None and vals.get("DebtCurrent") == 0:
+        lc = Decimal(
+            0
+        )  # DebtCurrent includes current capital leases by definition: zero means none
+        tags.append("DebtCurrent")
+    for total_tag in (LEASE_TOTAL, LEASE_TOTAL_PRE842):
+        if total_tag in vals:
+            return vals[total_tag], lc, ln, None, [total_tag, *tags]
     if lc is not None and ln is not None:
         return lc + ln, lc, ln, None, tags
     if lc is None and ln is None:
@@ -204,7 +225,7 @@ def _current_borrowings(
             proof += "+less_refinanced"
         if dc < 0:
             return None, tags, proof, "negative_component"
-        if dc == 0:
+        if dc == 0 and (lc is None or lc == 0):
             return Decimal(0), tags, proof + "+zero", None
         tol = dc * EXPLAIN_TOLERANCE
         parts = [
@@ -260,20 +281,57 @@ def _current_borrowings(
     return None, [], "", None
 
 
+OTHER_DEBT_LINE_SHARE = Decimal("0.05")
+
+
 def _lease_inclusive_only(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
-    """Lease-inclusive face lines and no lease facts to separate them (DPZ, TSLA)."""
-    if LEASE_INCL_CURRENT not in vals:
-        return None
-    n, c = vals[LEASE_INCL_NONCURRENT], vals[LEASE_INCL_CURRENT]
+    """Lease-inclusive face lines and no lease facts to separate them (DPZ, MU 2021, TSLA).
+
+    The total of the two lease-inclusive lines is used only when nothing else says other debt face lines
+    exist: a related-party notes line, or a debt-only subtotal (DebtCurrent / LongTermDebt) of a size that
+    belongs to the same debt. TSLA files both beside its lease-inclusive lines and some of its face lines
+    (related-party convertibles, 2.4-2.6M) have no stored fact, so the total would silently miss them:
+    HELD. The filer's own aggregate DebtAndCapitalLeaseObligations equal to DebtCurrent + the noncurrent line
+    proves both lines are lease-inclusive and complete (MU 2021: 155 + 6,621 = 6,776)."""
+    n = vals[LEASE_INCL_NONCURRENT]
+    agg = vals.get(LEASE_AGGREGATE)
     dc = vals.get("DebtCurrent")
-    if RELATED_PARTY in vals or (dc is not None and dc > c * (1 + EXPLAIN_TOLERANCE)):
-        return Hold("related_party_unresolved")
+    if LEASE_INCL_CURRENT in vals:
+        c = vals[LEASE_INCL_CURRENT]
+    elif (
+        dc is not None
+        and agg is not None
+        and abs(agg - (dc + n)) <= CORROBORATION_TOLERANCE * agg
+    ):
+        c = dc  # DebtCurrent is the lease-inclusive current line, proved by the filer's own aggregate
+    else:
+        return None
+    total = n + c
+    proven = agg is not None and abs(agg - total) <= CORROBORATION_TOLERANCE * agg
+    if not proven:
+        other = [vals[t] for t in (RELATED_PARTY, "LongTermDebt") if t in vals]
+        if dc is not None and LEASE_INCL_CURRENT in vals:
+            other.append(dc)
+        if RELATED_PARTY in vals or any(
+            v >= OTHER_DEBT_LINE_SHARE * total for v in other
+        ):
+            return Hold("related_party_unresolved")
     return DebtSlots(
         borrowings=None,
         leases=None,
-        lease_inclusive_total=n + c,
-        tags=(LEASE_INCL_NONCURRENT, LEASE_INCL_CURRENT),
-        proofs=("lease_inclusive_face_lines_same_perimeter",),
+        lease_inclusive_total=total,
+        tags=tuple(
+            t
+            for t in (
+                LEASE_INCL_NONCURRENT,
+                LEASE_INCL_CURRENT if LEASE_INCL_CURRENT in vals else "DebtCurrent",
+            )
+            if t
+        ),
+        proofs=(
+            "lease_inclusive_face_lines_same_perimeter"
+            + ("+filer_aggregate" if proven else ""),
+        ),
         path="carrying_lease_inclusive_lines",
         lease_reason="lease_facts_absent",
     )
@@ -282,7 +340,11 @@ def _lease_inclusive_only(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | Non
 def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
     """Build the two slots; None when the carrying lines are not applicable (no noncurrent or no current line)."""
     L, lc, ln, lease_reason, lease_tags = _lease_slot(vals)
-    any_lease_fact = bool(lease_tags)
+    # only filed lease FACTS count here; a half derived from the face lines does not locate the current leases
+    any_lease_fact = any(
+        t in vals
+        for t in (LEASE_TOTAL, LEASE_TOTAL_PRE842, *LEASE_CURRENT, *LEASE_NONCURRENT)
+    )
     tags: list[str] = []
     proofs: list[str] = []
     plain_complete = PLAIN_NONCURRENT in vals and (
@@ -325,6 +387,11 @@ def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
     tags.append(ntag)
     proofs.append(nproof)
     bc, ctags, cproof, hold = _current_borrowings(vals, lc, any_lease_fact, bn)
+    if hold == "lease_location_unknown" and LEASE_INCL_NONCURRENT in vals:
+        # the current side cannot be split, but the filer's own aggregate may prove both lines lease-inclusive
+        alt = _lease_inclusive_only(vals)
+        if isinstance(alt, DebtSlots):
+            return alt
     if hold:
         return Hold(hold)
     if bc is None:
