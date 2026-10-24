@@ -1,0 +1,61 @@
+group,row_or_lead,tags,companies_with_any,group_size,share
+bank,sr.fin.net_interest_income,InterestIncomeExpenseNet|InterestRevenueExpenseNet,43,44,0.98
+bank,sr.fin.interest_income_total,InterestAndDividendIncomeOperating|InterestIncomeOperating,43,44,0.98
+bank,sr.fin.interest_expense_total,InterestExpenseOperating|InterestExpense,44,44,1.0
+bank,draft B3 lead InterestExpense only,InterestExpense,2,44,0.05
+bank,sr.bank.noninterest_income,NoninterestIncome,44,44,1.0
+bank,sr.bank.noninterest_expense,NoninterestExpense,44,44,1.0
+bank,sr.fin.provision_credit_losses,ProvisionForLoanLeaseAndOtherLosses|ProvisionForLoanAndLeaseLosses|ProvisionForLoanLossesExpensed|FinancingReceivableExcludingAccruedInterestCreditLossExpenseReversal|ProvisionForCreditLosses|ProvisionForOtherCreditLosses|ProvisionForLoanAndLeaseLossesExcludingUnfundedCommitments,33,44,0.75
+bank,draft B6 lead ProvisionForLoanLeaseAndOtherLosses only,ProvisionForLoanLeaseAndOtherLosses,21,44,0.48
+bank,sr.bank.deposits_total,Deposits,41,44,0.93
+bank,sr.fin.loans_net post-CECL tag,FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss,33,44,0.75
+bank,draft B10 lead LoansAndLeasesReceivableNetReportedAmount (pre-CECL),LoansAndLeasesReceivableNetReportedAmount,1,44,0.02
+bank,sr.fin.loans_net any of 3,FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss|LoansAndLeasesReceivableNetReportedAmount|NotesReceivableNet|LoansReceivableNet,40,44,0.91
+bank,sr.fin.allowance post-CECL,FinancingReceivableAllowanceForCreditLossExcludingAccruedInterest|FinancingReceivableAllowanceForCreditLosses|LoansAndLeasesReceivableAllowance,35,44,0.8
+insurer,sr.ins.premiums_earned,PremiumsEarnedNet,36,40,0.9
+insurer,sr.ins.net_investment_income,NetInvestmentIncome|InvestmentIncomeNet,35,40,0.88
+insurer,sr.ins.benefits_claims_incurred,PolicyholderBenefitsAndClaimsIncurredNet|IncurredClaimsPropertyCasualtyAndLiability|PolicyholderBenefitsAndClaimsIncurredGross,33,40,0.82
+insurer,sr.ins.policy_acquisition_cost_amortization,DeferredPolicyAcquisitionCostAmortizationExpense,19,40,0.47
+insurer,sr.ins.reserves_unpaid_claims,LiabilityForClaimsAndClaimsAdjustmentExpense,27,40,0.68
+insurer,sr.ins.future_policy_benefits,LiabilityForFuturePolicyBenefits|LiabilityForFuturePolicyBenefitsAndUnpaidClaimsAndClaimsAdjustmentExpense|PolicyholderContractDeposits,21,40,0.53
+insurer,revenue total (Revenues),Revenues,40,40,1.0
+managed_care,sr.ins.premiums_earned at managed care,PremiumsEarnedNet,6,7,0.86
+managed_care,sr.ins.benefits_claims_incurred at managed care,PolicyholderBenefitsAndClaimsIncurredNet,6,7,0.86
+insurance_broker,single revenue line,RevenueFromContractWithCustomerExcludingAssessedTax|Revenues,7,7,1.0
+insurance_broker,fiduciary assets,FiduciaryAssets|FiduciaryAssetsCurrent|FiduciaryCashCurrent,0,7,0.0
+reit_equity,sr.reit.rental_revenue,OperatingLeaseLeaseIncome|OperatingLeasesIncomeStatementLeaseRevenue|RealEstateRevenueNet|LeaseAndRentalRevenue,28,53,0.53
+reit_equity,sr.reit.real_estate_net,RealEstateInvestmentPropertyNet,36,53,0.68
+reit_equity,sr.reit.real_estate_at_cost (face),RealEstateInvestmentPropertyAtCost|RealEstateInvestmentPropertyGross,26,53,0.49
+reit_equity,sr.reit.accumulated_depreciation (face),RealEstateInvestmentPropertyAccumulatedDepreciation,30,53,0.57
+reit_equity,sr.reit.general_and_administrative,GeneralAndAdministrativeExpense,47,53,0.89
+reit_equity,sr.reit.property_operating_expenses,DirectCostsOfLeasedAndRentedPropertyOrEquipment|OperatingExpenses|CostDirectLaborAndPropertyOperatingExpense,25,53,0.47
+reit_mortgage,sr.fin.net_interest_income,InterestIncomeExpenseNet,2,2,1.0
+reit_mortgage,sr.fin.interest_income_total,InterestIncomeOperating|InterestAndDividendIncomeOperating,2,2,1.0
+reit_mortgage,repurchase agreements,SecuritiesSoldUnderAgreementsToRepurchase|AssetsSoldUnderAgreementsToRepurchase,1,2,0.5
+bdc,sr.bdc.total_investment_income,GrossInvestmentIncomeOperating,2,2,1.0
+bdc,"draft F2 NetInvestmentIncome (pre-tax at ARCC, BXSL)",NetInvestmentIncome,2,2,1.0
+bdc,NII after tax,InvestmentIncomeOperatingAfterExpenseAndTax,2,2,1.0
+bdc,draft F3 AssetsNet,AssetsNet,0,2,0.0
+bdc,net assets = StockholdersEquity,StockholdersEquity,2,2,1.0
+bdc,sr.bdc.nav_per_share,NetAssetValuePerShare,2,2,1.0
+bdc,sr.bdc.investments_fair_value,InvestmentOwnedAtFairValue,2,2,1.0
+bdc,net increase in net assets,NetIncomeLoss,2,2,1.0
+asset_manager,compensation (LaborAndRelatedExpense),LaborAndRelatedExpense,11,14,0.79
+asset_manager,total revenue single tag,RevenueFromContractWithCustomerExcludingAssessedTax|Revenues,14,14,1.0
+asset_manager,management fee tag candidates,InvestmentAdvisoryManagementAndAdministrativeFees|InvestmentAdvisoryFees|AssetManagementFees1|AssetManagementFees|ManagementFeeRevenue,0,14,0.0
+broker_dealer,net revenues,RevenuesNetOfInterestExpense,7,11,0.64
+broker_dealer,Revenues,Revenues,8,11,0.73
+broker_dealer,commissions,BrokerageCommissionsRevenue,4,11,0.36
+broker_dealer,receivables from brokers/dealers,ReceivablesFromBrokersDealersAndClearingOrganizations,7,11,0.64
+crypto_digital,digital assets BS,CryptoAssetFairValue|CryptoAssetFairValueNoncurrent|CryptoAssetFairValueCurrent|CryptoAssetNoncurrent|CryptoAssetCost,6,8,0.75
+crypto_digital,digital asset gains IS,CryptoAssetRealizedGainLossOperating|CryptoAssetRealizedAndUnrealizedGainLossOperating|CryptoAssetUnrealizedGainLossOperating,5,8,0.62
+lender_nonbank,provision,ProvisionForLoanLossesExpensed|ProvisionForLoanLeaseAndOtherLosses|FinancingReceivableExcludingAccruedInterestCreditLossExpenseReversal,3,4,0.75
+lender_nonbank,loans receivable net,NotesReceivableNet|FinancingReceivableExcludingAccruedInterestAfterAllowanceForCreditLoss|LoansReceivableNet,3,4,0.75
+utility,draft U1 PublicUtilitiesPropertyPlantAndEquipmentNet,PublicUtilitiesPropertyPlantAndEquipmentNet,12,32,0.38
+utility,draft U2 RegulatoryAssets (no suffix),RegulatoryAssets,0,32,0.0
+utility,regulatory assets current/noncurrent,RegulatoryAssetsCurrent|RegulatoryAssetsNoncurrent|RegulatoryAssets,22,32,0.69
+utility,regulatory liabilities,RegulatoryLiabilityCurrent|RegulatoryLiabilityNoncurrent|RegulatoryLiabilities,22,32,0.69
+midstream,PartnersCapital,PartnersCapital|PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest|LimitedPartnersCapitalAccount,6,14,0.43
+midstream,EPS per LP unit (basic/diluted),NetIncomeLossPerOutstandingLimitedPartnershipUnitBasicNetOfTax|NetIncomeLossPerOutstandingLimitedPartnershipUnitDiluted|NetIncomeLossPerOutstandingLimitedPartnershipUnit,5,14,0.36
+midstream,EPS per share (basic/diluted),EarningsPerShareBasic|EarningsPerShareDiluted,8,14,0.57
+exchange,clearing/margin lines (us-gaap tags),MarginDepositsAndGuarantyFundsCurrent|MarginDepositsAndGuarantyFundsLiabilitiesCurrent|MarginDepositsAssets|MarginDepositsLiabilities,0,6,0.0

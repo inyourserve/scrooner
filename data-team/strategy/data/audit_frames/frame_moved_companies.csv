@@ -1,0 +1,119 @@
+company_id,cik,ticker,company_name,group,variant,overlays,assignment_basis,stratum,risk_flags,risk_score,s2_opened,tier,proposed_draw
+5351,0002115436,XOM,ExxonMobil Holdings Corp,excluded.successor_cik_pending,,,excluded_rule,top100|noncalendar|era2026,moved_from_draft;noncalendar_fye;identity_event,3,Y,moved,all_have_evidence
+1354,0000731766,UNH,UNITEDHEALTH GROUP INC,managed_care,,,code_reader,top100|calendar|era2026,fsds_queue_cleared_by_reader;moved_from_draft,2,Y,moved,all_have_evidence
+1807,0000895421,MS,MORGAN STANLEY,broker_dealer,bulge_bracket,deposit_taking_operations,hand_read,top100|calendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence;seeded30
+1767,0000886982,GS,GOLDMAN SACHS GROUP INC,broker_dealer,bulge_bracket,deposit_taking_operations,hand_read,top100|calendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+108,0000004962,AXP,AMERICAN EXPRESS CO,bank,bank_like_card,,hand_read,top100|calendar|era2026,subvariant:bank_like_card;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+4123,0002012383,BLK,"BlackRock, Inc.",asset_manager,traditional,,hand_read,top100|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+1204,0000316709,SCHW,SCHWAB CHARLES CORP,broker_dealer,retail_brokerage_bank,deposit_taking_operations,hand_read,top100|calendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+1813,0000896159,CB,Chubb Ltd,insurer,pc,,code,top100|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+1043,0000080661,PGR,PROGRESSIVE CORP/OH/,insurer,pc,,code,top100|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+3987,0001156375,CME,CME GROUP INC.,exchange,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+3980,0001156039,ELV,"Elevance Health, Inc.",managed_care,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;moved_from_draft,2,Y,moved,all_have_evidence
+3079,0001571949,ICE,"Intercontinental Exchange, Inc.",exchange,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+1567,0000823768,WM,WASTE MANAGEMENT INC,corporate,,,code,rest|calendar|era2026,moved_from_draft,1,Y,moved,all_have_evidence
+5613,0001783879,HOOD,"Robinhood Markets, Inc.",broker_dealer,retail_brokerage_fintech,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+677,0000062709,MRSH,"MARSH & MCLENNAN COMPANIES, INC.",insurance_broker,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+1150,0000107263,WMB,"WILLIAMS COMPANIES, INC.",midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+5647,0001393818,BX,Blackstone Inc.,asset_manager,alternatives,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+1057,0000086312,TRV,"TRAVELERS COMPANIES, INC.",insurer,pc,,code,rest|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence
+5228,0001739940,CI,Cigna Group,managed_care,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;moved_from_draft,2,Y,moved,all_have_evidence
+2961,0001061219,EPD,ENTERPRISE PRODUCTS PARTNERS L.P.,midstream,mlp,,hand_read,rest|calendar|era2026,subvariant:mlp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,N,moved,all_have_evidence
+5726,0001404912,KKR,KKR & Co. Inc.,asset_manager,alternatives,insurance_operations,hand_read,rest|calendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+2340,0001506307,KMI,"KINDER MORGAN, INC.",midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+2951,0001060391,RSG,"REPUBLIC SERVICES, INC.",corporate,,,code,rest|calendar|era2026,moved_from_draft,1,Y,moved,all_have_evidence
+4541,0001276187,ET,Energy Transfer LP,midstream,mlp,,hand_read,rest|calendar|era2026,subvariant:mlp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+3117,0001858681,APO,"Apollo Global Management, Inc.",asset_manager,alternatives,insurance_operations,hand_read,rest|calendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+1233,0000354190,AJG,Arthur J. Gallagher & Co.,insurance_broker,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+1198,0000315293,AON,Aon plc,insurance_broker,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+5607,0001389170,TRGP,Targa Resources Corp.,midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,N,moved,all_have_evidence
+109,0000004977,AFL,AFLAC INC,insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+101,0000003570,LNG,"Cheniere Energy, Inc.",midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,N,moved,all_have_evidence
+2606,0001039684,OKE,ONEOK INC /NEW/,midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+2860,0001552000,MPLX,MPLX LP,midstream,mlp,,hand_read,rest|calendar|era2026,subvariant:mlp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence;seeded30
+5063,0002089271,HONA,Honeywell Aerospace Inc.,excluded.no_10k_yet,,,excluded_rule,rest|noncalendar|era2026,moved_from_draft;noncalendar_fye,2,N,moved,all_have_evidence
+3677,0001120193,NDAQ,"NASDAQ, INC.",exchange,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+633,0000049071,HUM,HUMANA INC,managed_care,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;moved_from_draft,2,Y,moved,all_have_evidence
+2820,0001050446,MSTR,Strategy Inc,crypto_digital,treasury,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+4489,0001679788,COIN,"Coinbase Global, Inc.",crypto_digital,exchange_platform,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+1553,0000820027,AMP,AMERIPRISE FINANCIAL INC,asset_manager,wealth_management,insurance_operations,hand_read,rest|calendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence;seeded30
+4929,0001318220,WCN,"Waste Connections, Inc.",corporate,,,code,rest|calendar|era2026,moved_from_draft,1,N,moved,all_have_evidence
+3882,0001137774,PRU,PRUDENTIAL FINANCIAL INC,insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+5543,0001381197,IBKR,"Interactive Brokers Group, Inc.",broker_dealer,electronic_broker,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+1697,0000874766,HIG,"HARTFORD INSURANCE GROUP, INC.",insurer,pc,,code,rest|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence
+4213,0001176948,ARES,Ares Management Corp,asset_manager,alternatives,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+3127,0001071739,CNC,CENTENE CORP,managed_care,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;moved_from_draft,2,Y,moved,all_have_evidence
+5483,0001374310,CBOE,"Cboe Global Markets, Inc.",exchange,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+4081,0002007855,VG,"Venture Global, Inc.",midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence;seeded30
+5568,0001383650,CQP,"Cheniere Energy Partners, L.P.",midstream,mlp,,hand_read,rest|calendar|era2026,subvariant:mlp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+2109,0001805284,RKT,"Rocket Companies, Inc.",lender_nonbank,mortgage_originator,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft,2,Y,moved,all_have_evidence
+1311,0000720005,RJF,RAYMOND JAMES FINANCIAL INC,broker_dealer,retail_brokerage_bank,deposit_taking_operations,hand_read,rest|noncalendar|era2025,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,5,Y,moved,all_have_evidence
+3914,0001140536,WTW,WILLIS TOWERS WATSON PLC,insurance_broker,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+5429,0001758730,TW,Tradeweb Markets Inc.,exchange,electronic_marketplace,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+271,0000020286,CINF,CINCINNATI FINANCIAL CORP,insurer,pc,,code,rest|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+5683,0001397911,LPLA,LPL Financial Holdings Inc.,broker_dealer,independent_bd,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+2387,0001820953,AFRM,"Affirm Holdings, Inc.",lender_nonbank,bnpl,,hand_read,rest|noncalendar|era2026,hand_read;moved_from_draft;noncalendar_fye,3,Y,moved,all_have_evidence;seeded30
+3487,0001601712,SYF,Synchrony Financial,bank,bank_like_card,,hand_read,rest|calendar|era2026,subvariant:bank_like_card;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+1036,0000079282,BRO,"BROWN & BROWN, INC.",insurance_broker,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+669,0000060086,L,LOEWS CORP,insurer,pc,conglomerate_insurer,hand_read,rest|calendar|era2026,overlay;subvariant:pc;hand_read;moved_from_draft,4,Y,moved,all_have_evidence;seeded30
+3332,0001876042,CRCL,"Circle Internet Group, Inc.",crypto_digital,stablecoin_issuer,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+5132,0002093536,ARXS,"Arxis, Inc.",excluded.no_10k_yet,,,excluded_rule,rest|noncalendar|era2026,moved_from_draft;noncalendar_fye,2,N,moved,all_have_evidence
+3618,0001113169,TROW,PRICE T ROWE GROUP INC,asset_manager,traditional,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+2323,0001818874,SOFI,"SoFi Technologies, Inc.",bank,bank_like_fintech,,hand_read,rest|calendar|era2026,subvariant:bank_like_fintech;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence;seeded30
+5804,0001423902,WES,"Western Midstream Partners, LP",midstream,mlp,,hand_read,rest|calendar|era2026,subvariant:mlp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+3098,0001070423,PAA,PLAINS ALL AMERICAN PIPELINE LP,midstream,mlp,,hand_read,rest|calendar|era2026,subvariant:mlp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence;seeded30
+4266,0002026053,PS,PERSHING SQUARE INC.,excluded.no_10k_yet,,,excluded_rule,rest|noncalendar|era2026,moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,3,Y,moved,all_have_evidence
+1824,0000898174,RGA,REINSURANCE GROUP OF AMERICA INC,insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence
+1565,0000822818,CLH,CLEAN HARBORS INC,corporate,,,code,rest|calendar|era2026,moved_from_draft,1,Y,moved,all_have_evidence
+3380,0001880661,TPG,TPG Inc.,asset_manager,alternatives,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+4574,0001687229,INVH,Invitation Homes Inc.,reit_equity,property_reit,,code,rest|calendar|era2026,moved_from_draft,1,Y,moved,all_have_evidence
+599,0000038777,BEN,FRANKLIN TEMPLETON INC,asset_manager,traditional,,hand_read,rest|noncalendar|era2025,hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,4,Y,moved,all_have_evidence
+116,0000005513,UNM,Unum Group,insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence
+1881,0000913144,RNR,RENAISSANCERE HOLDINGS LTD,insurer,pc,,code,rest|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence
+4477,0001267238,AIZ,"ASSURANT, INC.",insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence
+2699,0001043219,NLY,ANNALY CAPITAL MANAGEMENT INC,reit_mortgage,agency_hybrid,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+2566,0001829311,BMNR,"BITMINE IMMERSION TECHNOLOGIES, INC.",crypto_digital,treasury,,hand_read,rest|noncalendar|era2025,hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,4,Y,moved,all_have_evidence
+1220,0000320335,GL,GLOBE LIFE INC.,insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence
+2568,0001527166,CG,Carlyle Group Inc.,asset_manager,alternatives,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+277,0000021175,CNA,CNA FINANCIAL CORP,insurer,pc,,code,rest|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+2813,0001842022,DTM,"DT Midstream, Inc.",midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,N,moved,all_have_evidence
+1223,0000350894,SEIC,SEI INVESTMENTS CO,asset_manager,technology_and_asset_mgmt,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+1890,0000914208,IVZ,Invesco Ltd.,asset_manager,traditional,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+2668,0001042046,AFG,AMERICAN FINANCIAL GROUP INC,insurer,pc,,code,rest|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+5307,0002109150,INIO,INNIO N.V.,excluded.no_10k_yet,,,excluded_rule,rest|noncalendar|era2026,moved_from_draft;noncalendar_fye,2,N,moved,all_have_evidence
+1938,0000924805,FRHC,Freedom Holding Corp.,broker_dealer,emerging_markets_broker,insurance_operations,hand_read,rest|noncalendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,5,Y,moved,all_have_evidence;seeded30
+1928,0000922621,ERIE,ERIE INDEMNITY CO,insurance_broker,management_company,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+1313,0000720672,SF,STIFEL FINANCIAL CORP,broker_dealer,retail_brokerage_bank,deposit_taking_operations,hand_read,rest|calendar|era2026,overlay;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+4249,0001179929,MOH,"MOLINA HEALTHCARE, INC.",managed_care,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;moved_from_draft,2,Y,moved,all_have_evidence
+2930,0001849253,RYAN,"RYAN SPECIALTY HOLDINGS, INC.",insurance_broker,,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence;seeded30
+5101,0001331875,FNF,"Fidelity National Financial, Inc.",insurer,title,,code,rest|calendar|era2026,subvariant:title;moved_from_draft,2,Y,moved,all_have_evidence
+5393,0001360901,EVR,Evercore Inc.,corporate,advisory,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+3039,0001568651,OSCR,"Oscar Health, Inc.",managed_care,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;moved_from_draft,2,Y,moved,all_have_evidence
+5802,0001423689,AGNC,AGNC Investment Corp.,reit_mortgage,agency,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+1096,0000096223,JEF,Jefferies Financial Group Inc.,broker_dealer,investment_bank,,hand_read,rest|noncalendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,4,Y,moved,all_have_evidence
+2152,0001004434,AMG,"AFFILIATED MANAGERS GROUP, INC.",asset_manager,multi_affiliate,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+3774,0001623925,AM,Antero Midstream Corp,midstream,c_corp,,hand_read,rest|calendar|era2026,subvariant:c_corp;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+3349,0001878848,IREN,IREN Ltd,crypto_digital,miner,,hand_read,rest|noncalendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,4,Y,moved,all_have_evidence
+4822,0001302215,HLI,"HOULIHAN LOKEY, INC.",corporate,advisory,,hand_read,rest|noncalendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,4,Y,moved,all_have_evidence
+5974,0001475922,PRI,"Primerica, Inc.",insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+142,0000007323,EAI,"ENTERGY ARKANSAS, LLC",excluded.subsidiary_registrant,,,excluded_rule,rest|calendar|era2026,moved_from_draft,1,Y,moved,all_have_evidence
+2732,0001535929,VOYA,"Voya Financial, Inc.",insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence
+4333,0001669162,KNSL,"Kinsale Capital Group, Inc.",insurer,pc,,code,rest|calendar|era2026,subvariant:pc;moved_from_draft,2,Y,moved,all_have_evidence
+3859,0001964789,HUT,Hut 8 Corp.,crypto_digital,miner,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+4691,0002065601,CBC,"Central Bancompany, Inc.",bank,deposit_taker,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+5237,0002100805,JAN,"Janus Living, Inc.",excluded.no_10k_yet,,,excluded_rule,rest|noncalendar|era2026,moved_from_draft;noncalendar_fye,2,N,moved,all_have_evidence
+4717,0001289419,MORN,"Morningstar, Inc.",corporate,financial_services_information,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+668,0000059558,LNC,LINCOLN NATIONAL CORP,insurer,life,,code,rest|calendar|era2026,subvariant:life;moved_from_draft,2,Y,moved,all_have_evidence
+1992,0001476150,TRNO,Terreno Realty Corp,reit_equity,property_reit,,code,rest|calendar|era2026,moved_from_draft,1,Y,moved,all_have_evidence
+1886,0000913760,SNEX,StoneX Group Inc.,broker_dealer,commodity_broker,,hand_read,rest|noncalendar|era2025,hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,4,Y,moved,all_have_evidence;seeded30
+3062,0001570827,VCTR,"Victory Capital Holdings, Inc.",asset_manager,traditional,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+5964,0001472787,FAF,First American Financial Corp,insurer,title,,code,rest|calendar|era2026,subvariant:title;moved_from_draft,2,Y,moved,all_have_evidence
+3254,0001584207,OMF,"OneMain Holdings, Inc.",lender_nonbank,consumer_finance,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft,2,Y,moved,all_have_evidence
+2442,0001823529,ACT,"Enact Holdings, Inc.",insurer,mortgage,,hand_read,rest|calendar|era2026,subvariant:mortgage;hand_read;moved_from_draft;ambiguous_or_blank_sic,4,Y,moved,all_have_evidence
+3133,0001859392,GLXY,Galaxy Digital Inc.,crypto_digital,platform,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+3225,0001083301,WULF,TERAWULF INC.,crypto_digital,miner,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+5897,0001448893,ESNT,Essent Group Ltd.,insurer,mortgage,,code,rest|calendar|era2026,subvariant:mortgage;moved_from_draft,2,Y,moved,all_have_evidence;seeded30
+4554,0001278021,MKTX,MARKETAXESS HOLDINGS INC,exchange,electronic_marketplace,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,moved,all_have_evidence
+1709,0000876437,MTG,MGIC INVESTMENT CORP,insurer,mortgage,,code,rest|calendar|era2026,subvariant:mortgage;moved_from_draft,2,Y,moved,all_have_evidence
+1756,0000885550,CACC,CREDIT ACCEPTANCE CORP,lender_nonbank,subprime_auto,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft,2,Y,moved,all_have_evidence
+1867,0000911177,CWST,CASELLA WASTE SYSTEMS INC,corporate,,,code,rest|calendar|era2026,moved_from_draft,1,N,moved,all_have_evidence
