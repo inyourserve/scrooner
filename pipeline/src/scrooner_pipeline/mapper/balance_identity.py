@@ -221,17 +221,15 @@ def reference_reading(
         total = other
     else:
         incl = adj.get(NCI_INCLUSIVE_EQUITY)
-        tol = rounding_tol(other, incl if incl is not None else other)
-        implied = None if incl is None else incl - other
-        if incl is not None and (
-            (NCI in adj and abs(implied - adj[NCI]) <= tol)
-            or (NCI not in adj and abs(implied) <= tol)
-        ):
-            total = incl
-        elif NCI in adj:
-            total = other + adj[NCI]
-        else:
-            total = other
+        total = other + adj[NCI] if NCI in adj else other
+        if incl is not None:
+            implied = incl - other
+            tol = rounding_tol(other, incl)
+            agrees = (
+                abs(implied - adj[NCI]) <= tol if NCI in adj else abs(implied) <= tol
+            )
+            if agrees:
+                total = incl
     return base - total - temp_value
 
 
