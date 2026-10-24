@@ -44,6 +44,13 @@ for a in values["anchors"]:
             failures.append(
                 f"{a['ticker']} {a['period_end']}: slot {cell['slot_lease_inclusive']} != anchor {a['lease_inclusive']}"
             )
+    if "verdict" in a:
+        if cell is None:
+            failures.append(f"{a['ticker']} {a['period_end']}: no replay cell for verdict anchor")
+        elif cell["verdict"] != a["verdict"]:
+            failures.append(
+                f"{a['ticker']} {a['period_end']}: verdict {cell['verdict']} != anchor {a['verdict']}"
+            )
     if "member_present" in a:
         covered = any(
             r["company"] == a["ticker"]

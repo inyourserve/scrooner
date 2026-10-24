@@ -61,6 +61,11 @@ DEBT_RX = re.compile(
 # note-role arcs put MSFT/GOOG securities-lending and GE/AVGO/TSLA note lines
 # into members). Aggregates stay role-wide: they are evidence, not members.
 BS_ROLE_RX = re.compile(r"balance ?-?sheets?|financial ?position|financial ?condition", re.I)
+# Verifier V3 defect 2: note roles can CONTAIN 'BalanceSheet' (AVGO
+# CondensedConsolidatingFinancialInformationBalanceSheetDetails, GE Guarantor
+# ...StatementOfFinancialPositionDetails, TSLA DisclosureVIE...Detail) - the
+# statement role is the one WITHOUT these markers.
+NOTE_ROLE_RX = re.compile(r"Detail|Disclosure|Consolidating|Guarantor|Parenthetical", re.I)
 # Candidate lines that are NOT debt members, with the recorded reason.
 EXCLUDE_CLASSES = [
     (re.compile(r"AccountsPayable|AccruedLiabilit", re.I), "excluded_combined_nondebt"),
@@ -144,6 +149,14 @@ def tag_of(href: str) -> str:
     return href.split("#")[-1].split("_", 1)[-1]
 
 
+def is_custom(href: str) -> bool:
+    """A non-us-gaap/ifrs prefix marks a filer extension tag; its values never
+    reach the companyfacts API, so a replay must route it to the instance
+    reader instead of silently treating it as absent (Verifier V3)."""
+    prefix = href.split("#")[-1].split("_", 1)[0].lower()
+    return prefix not in ("us-gaap", "ifrs-full", "srt", "dei")
+
+
 def parse_metalinks(path: Path) -> dict:
     """Modern filings (e.g. MSFT 2024+) ship no separate _cal.xml; the calc
     relationships live in MetaLinks.json (instance -> tag -> calculation:
@@ -167,7 +180,10 @@ def parse_metalinks(path: Path) -> dict:
                 continue
             parent = parent_q.split("_", 1)[-1]
             role = role_uri.rsplit("/", 1)[-1]
-            arcs.setdefault((role, parent), []).append((child, str(float(rel.get("weight") or 1))))
+            child_custom = child_q.split("_", 1)[0].lower() not in ("us-gaap", "ifrs-full", "srt", "dei")
+            arcs.setdefault((role, parent), []).append(
+                (child, str(float(rel.get("weight") or 1)), child_custom)
+            )
     return {"era": era, "arcs": arcs}
 
 
@@ -181,23 +197,26 @@ def parse_cal(path: Path) -> dict:
     arcs: dict[tuple[str, str], list[tuple[str, str]]] = {}
     for link in root.iter(NS + "calculationLink"):
         role = (link.get(XL + "role") or "").rsplit("/", 1)[-1]
-        loc = {l.get(XL + "label"): tag_of(l.get(XL + "href")) for l in link.iter(NS + "loc")}
+        loc = {
+            l.get(XL + "label"): (tag_of(l.get(XL + "href")), is_custom(l.get(XL + "href")))
+            for l in link.iter(NS + "loc")
+        }
         for a in link.iter(NS + "calculationArc"):
             parent = loc.get(a.get(XL + "from"))
             child = loc.get(a.get(XL + "to"))
             if parent is None or child is None:
                 continue
             w = a.get("weight") or "1"
-            arcs.setdefault((role, parent), []).append((child, str(float(w))))
+            arcs.setdefault((role, parent[0]), []).append((child[0], str(float(w)), child[1]))
     return {"era": era, "arcs": arcs}
 
 
 def debt_observation(adsh: str, form: str, period: str, cal: dict) -> dict:
     members: dict[str, dict] = {}
     for (role, parent), children in cal["arcs"].items():
-        if parent not in PARENTS or not BS_ROLE_RX.search(role):
+        if parent not in PARENTS or not BS_ROLE_RX.search(role) or NOTE_ROLE_RX.search(role):
             continue
-        for child, weight in children:
+        for child, weight, child_custom in children:
             if not DEBT_RX.search(child) or EXCLUDE_RX.search(child):
                 continue
             side = "current" if parent == "LiabilitiesCurrent" else "noncurrent"
@@ -209,6 +228,7 @@ def debt_observation(adsh: str, form: str, period: str, cal: dict) -> dict:
                     "tag": child,
                     "side": side,
                     "class": excl or classify(child),
+                    "custom": child_custom,
                     "weight": weight,
                     "calc_parent": parent,
                     "roles": [],
@@ -218,7 +238,7 @@ def debt_observation(adsh: str, form: str, period: str, cal: dict) -> dict:
     for (role, parent), children in cal["arcs"].items():
         if AGG_PARENT_RX.match(parent):
             aggregates.setdefault(parent, {})[role] = [
-                {"tag": c, "weight": w, "class": classify(c)} for c, w in children
+                {"tag": c, "weight": w, "class": classify(c)} for c, w, _ in children
             ]
     ordered = sorted(members.values(), key=lambda x: (x["side"], x["tag"]))
     fp_src = "|".join(f"{m['side']}:{m['tag']}:{m['weight']}" for m in ordered)

@@ -44,6 +44,7 @@ for r in lane3:
     key = (r["cik"], r["period_end"])
     by_cell.setdefault(key, []).append(r)
 # Verifier value anchors are evaluated even when lane 3 has no row there.
+anchor_keys: set = set()
 anchors_path = Path(sys.argv[1]).parent / "results" / "expected_values.json"
 if not anchors_path.exists():
     anchors_path = Path(sys.argv[1]).parent / "expected_values.json"
@@ -52,10 +53,12 @@ if anchors_path.exists():
     for recs in records.values():
         for r in recs:
             tick2cik[r["company"]] = r["cik"]
+    anchor_keys = set()
     for a in json.loads(anchors_path.read_text())["anchors"]:
         cik = tick2cik.get(a["ticker"])
         if cik:
             by_cell.setdefault((cik, a["period_end"]), [])
+            anchor_keys.add((cik, a["period_end"]))
 
 def covering_record(cik, period_end):
     ym = period_end[:7]
@@ -102,7 +105,7 @@ for cik in sorted(records):
     cells = [(k, v) for k, v in by_cell.items() if k[0] == cik]
     for (cik_, period_end), rows in sorted(cells):
         ticker = records[cik][0]["company"]
-        if period_end < "2015-01-01":
+        if period_end < "2015-01-01" and (cik_, period_end) not in anchor_keys:
             verdict = "out_of_window_pre2015"
             report["summary"][verdict] += 1
             report["per_company"][ticker][verdict] += 1
@@ -115,7 +118,7 @@ for cik in sorted(records):
             continue
         day = facts.get(period_end, {})
         lease_incl = Decimal(0)
-        missing, nonauth = [], []
+        missing, missing_custom, nonauth = [], [], []
         combined_sides = set()
         for m in rec["members"]:
             if m["class"] == "operating_lease":
@@ -127,6 +130,11 @@ for cik in sorted(records):
                 lease_incl += v
                 if not auth:
                     nonauth.append(m["tag"])
+            elif m.get("custom"):
+                # custom tags never reach the API: not a blank, a data gap that
+                # only the filing instance can fill (Verifier V3: GE non-recourse
+                # 3,083M, RPAY long-term debt 240.96M)
+                missing_custom.append(m["tag"])
             else:
                 missing.append(m["tag"])
         lease_content = Decimal(0)
@@ -147,12 +155,15 @@ for cik in sorted(records):
         # short-term lines (CVX 2022, LRCX) - it stays informational only.
         filer_agg = next((day[t][0] for t in AGG_TAGS if t in day), None)
         verdict = None
+        # A verdict must NEVER depend on production's value: production is the
+        # thing being replaced (Verifier V3 defect 1). A blank is accepted only
+        # from the filing itself: the filer's own printed total ties.
         if not rec.get("coverage_clean", True):
             verdict = "not_computable_uncovered_candidates"
+        elif missing_custom:
+            verdict = "needs_instance_reader"
         elif missing and filer_agg is not None and abs(lease_incl - filer_agg) <= 1:
             pass  # the filer's own printed total confirms the blanks are zero
-        elif missing and before_vals and any(abs(lease_incl - b) <= 1 for b in before_vals):
-            verdict = "agrees_lease_inclusive_blank_member"
         elif missing:
             verdict = "not_computable_missing_member"
         elif not day:
@@ -164,7 +175,7 @@ for cik in sorted(records):
                 verdict = "DISAGREES_with_lane3"
             else:
                 verdict = "lane3_blank_slot_has_value"
-        if is_hold and verdict in ("agrees_lease_inclusive", "agrees_lease_inclusive_blank_member", "DISAGREES_with_lane3", "lane3_blank_slot_has_value"):
+        if is_hold and verdict in ("agrees_lease_inclusive", "DISAGREES_with_lane3", "lane3_blank_slot_has_value"):
             report["summary"]["holds_resolved_by_slot"] += 1
             report["per_company"][ticker]["holds_resolved_by_slot"] += 1
         report["summary"][verdict] += 1
@@ -173,7 +184,8 @@ for cik in sorted(records):
             {"ticker": ticker, "cik": cik, "period_end": period_end, "verdict": verdict,
              "slot_lease_inclusive": str(lease_incl), "slot_borrowings": str(borrowings),
              "lane3_before": sorted(str(b) for b in before_vals), "hold": is_hold,
-             "missing_members": missing, "nonauth_members": nonauth}
+             "missing_members": missing, "missing_custom_members": missing_custom,
+             "nonauth_members": nonauth}
         )
 conn.close()
 report["summary"] = dict(report["summary"])

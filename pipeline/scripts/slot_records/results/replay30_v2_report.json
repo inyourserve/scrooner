@@ -12,6 +12,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": [
     "LongTermDebtNoncurrent"
    ]
@@ -28,6 +29,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -42,6 +44,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -56,6 +59,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -70,6 +74,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -84,6 +89,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -98,6 +104,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -112,6 +119,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -126,6 +134,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -140,6 +149,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -154,6 +164,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -168,6 +179,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -182,6 +194,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -196,6 +209,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -210,6 +224,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -224,13 +239,14 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
    "ticker": "GE",
    "cik": "0000040545",
    "period_end": "2015-10-09",
-   "verdict": "not_computable_missing_member",
+   "verdict": "needs_instance_reader",
    "slot_lease_inclusive": "0",
    "slot_borrowings": "0",
    "lane3_before": [
@@ -239,8 +255,10 @@
    "hold": true,
    "missing_members": [
     "LongTermDebtAndCapitalLeaseObligations",
-    "NonRecourseBorrowingsOfConsolidatedSecuritizationEntities",
     "ShortTermBorrowings"
+   ],
+   "missing_custom_members": [
+    "NonRecourseBorrowingsOfConsolidatedSecuritizationEntities"
    ],
    "nonauth_members": []
   },
@@ -248,14 +266,15 @@
    "ticker": "GE",
    "cik": "0000040545",
    "period_end": "2015-12-31",
-   "verdict": "agrees_lease_inclusive_blank_member",
+   "verdict": "needs_instance_reader",
    "slot_lease_inclusive": "194519000000",
    "slot_borrowings": "194519000000",
    "lane3_before": [
     "194519000000"
    ],
    "hold": false,
-   "missing_members": [
+   "missing_members": [],
+   "missing_custom_members": [
     "NonRecourseBorrowingsOfConsolidatedSecuritizationEntities"
    ],
    "nonauth_members": []
@@ -270,6 +289,7 @@
    "lane3_before": [],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": [
     "DebtCurrent",
     "LongTermDebtAndCapitalLeaseObligations"
@@ -287,6 +307,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -301,6 +322,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -315,6 +337,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -329,6 +352,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -343,6 +367,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -357,6 +382,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -371,6 +397,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -385,6 +412,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -399,6 +427,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -413,6 +442,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -427,6 +457,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -441,6 +472,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -455,6 +487,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -469,6 +502,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -483,6 +517,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -497,6 +532,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": [
     "DebtCurrent",
     "LongTermDebtNoncurrent"
@@ -514,6 +550,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -528,6 +565,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -542,6 +580,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -556,6 +595,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -570,6 +610,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -584,6 +625,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -598,6 +640,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -612,6 +655,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -626,6 +670,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -640,6 +685,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -654,6 +700,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -668,6 +715,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -682,6 +730,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -696,6 +745,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -710,6 +760,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -724,6 +775,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -738,6 +790,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -752,6 +805,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -766,6 +820,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -780,6 +835,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -794,6 +850,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -808,6 +865,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -822,6 +880,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -836,6 +895,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -850,6 +910,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -864,6 +925,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -878,6 +940,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -892,6 +955,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -906,6 +970,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -920,6 +985,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -934,6 +1000,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -948,6 +1015,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -962,6 +1030,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -976,6 +1045,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -990,6 +1060,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1004,6 +1075,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1018,6 +1090,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1032,6 +1105,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1046,6 +1120,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1060,6 +1135,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1074,6 +1150,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1088,6 +1165,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1102,6 +1180,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1116,6 +1195,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1130,6 +1210,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1144,6 +1225,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": [
     "DebtCurrent",
     "LongTermDebtNoncurrent"
@@ -1161,6 +1243,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1175,6 +1258,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1189,6 +1273,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1203,6 +1288,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1217,6 +1303,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1231,6 +1318,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1245,6 +1333,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1259,6 +1348,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1273,6 +1363,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1287,6 +1378,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1301,6 +1393,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1315,6 +1408,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1329,6 +1423,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1343,6 +1438,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1357,6 +1453,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1371,6 +1468,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1385,6 +1483,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1399,6 +1498,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1413,6 +1513,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1427,6 +1528,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1441,6 +1543,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1455,6 +1558,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1469,6 +1573,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1483,6 +1588,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1497,6 +1603,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1511,6 +1618,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1525,6 +1633,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1539,6 +1648,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1553,6 +1663,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1567,6 +1678,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1581,6 +1693,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1595,6 +1708,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1609,6 +1723,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1623,6 +1738,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1637,6 +1753,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": [
     "LongTermDebtAndCapitalLeaseObligations"
    ]
@@ -1653,6 +1770,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1667,6 +1785,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1681,6 +1800,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1695,6 +1815,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1709,6 +1830,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1723,6 +1845,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1737,6 +1860,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1751,6 +1875,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1765,6 +1890,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1779,6 +1905,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1793,6 +1920,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1807,6 +1935,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1821,6 +1950,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1835,6 +1965,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1849,6 +1980,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1863,6 +1995,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1877,6 +2010,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1891,6 +2025,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1905,6 +2040,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1919,6 +2055,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1933,6 +2070,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1947,6 +2085,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1961,6 +2100,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1975,6 +2115,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -1989,6 +2130,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2003,6 +2145,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2017,6 +2160,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2031,6 +2175,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2045,6 +2190,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2059,6 +2205,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2073,6 +2220,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2087,6 +2235,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2101,6 +2250,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2115,6 +2265,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2129,6 +2280,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2143,6 +2295,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2157,6 +2310,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2171,6 +2325,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2185,6 +2340,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2199,6 +2355,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2213,6 +2370,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2227,6 +2385,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2241,6 +2400,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2255,6 +2415,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2269,6 +2430,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2283,6 +2445,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2297,6 +2460,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2311,6 +2475,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2325,6 +2490,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2339,6 +2505,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2353,6 +2520,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2367,6 +2535,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2381,6 +2550,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2395,6 +2565,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2407,6 +2578,7 @@
    "lane3_before": [],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2419,6 +2591,7 @@
    "lane3_before": [],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2433,6 +2606,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2447,6 +2621,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": [
     "LongTermDebtNoncurrent"
    ]
@@ -2463,6 +2638,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2477,6 +2653,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2491,6 +2668,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2505,6 +2683,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2519,6 +2698,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2533,6 +2713,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2547,6 +2728,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2561,6 +2743,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2575,6 +2758,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2589,6 +2773,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2603,6 +2788,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2617,6 +2803,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2631,6 +2818,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2645,6 +2833,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2659,6 +2848,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2673,6 +2863,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2687,6 +2878,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2701,6 +2893,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2715,6 +2908,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2729,6 +2923,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2743,6 +2938,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2757,6 +2953,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2771,6 +2968,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2785,6 +2983,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2799,6 +2998,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2813,6 +3013,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2827,6 +3028,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2841,6 +3043,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2855,6 +3058,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2869,6 +3073,20 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
+   "nonauth_members": []
+  },
+  {
+   "ticker": "MSFT",
+   "cik": "0000789019",
+   "period_end": "2014-12-31",
+   "verdict": "lane3_blank_slot_has_value",
+   "slot_lease_inclusive": "28308000000",
+   "slot_borrowings": "28308000000",
+   "lane3_before": [],
+   "hold": false,
+   "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2883,6 +3101,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2897,6 +3116,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2911,6 +3131,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2925,6 +3146,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2939,6 +3161,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2953,6 +3176,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2967,6 +3191,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2981,6 +3206,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -2995,6 +3221,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3009,6 +3236,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3023,6 +3251,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3037,6 +3266,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3051,6 +3281,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3065,6 +3296,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3079,6 +3311,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3093,6 +3326,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3107,6 +3341,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3121,6 +3356,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3135,6 +3371,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3149,6 +3386,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3163,6 +3401,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3177,6 +3416,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3191,6 +3431,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3205,6 +3446,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3219,6 +3461,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3233,6 +3476,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3247,6 +3491,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": [
     "LongTermDebtNoncurrent"
    ]
@@ -3263,6 +3508,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3277,6 +3523,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3291,6 +3538,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3305,6 +3553,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3319,6 +3568,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3333,6 +3583,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3347,6 +3598,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3361,6 +3613,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3375,6 +3628,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3389,6 +3643,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3403,6 +3658,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3417,6 +3673,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3431,6 +3688,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3445,6 +3703,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3459,6 +3718,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3473,6 +3733,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3487,6 +3748,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3501,6 +3763,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3515,6 +3778,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3529,6 +3793,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3543,6 +3808,7 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3557,7 +3823,27 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
+  },
+  {
+   "ticker": "TSLA",
+   "cik": "0001318605",
+   "period_end": "2017-12-31",
+   "verdict": "needs_instance_reader",
+   "slot_lease_inclusive": "10314868000",
+   "slot_borrowings": "9628834000",
+   "lane3_before": [],
+   "hold": false,
+   "missing_members": [
+    "DueToRelatedPartiesNoncurrent"
+   ],
+   "missing_custom_members": [
+    "ConvertibleSeniorNotesIssueToRelatedPartiesNonCurrent"
+   ],
+   "nonauth_members": [
+    "LongTermDebtAndCapitalLeaseObligations"
+   ]
   },
   {
    "ticker": "ORCL",
@@ -3571,6 +3857,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3585,6 +3872,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3599,6 +3887,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3613,6 +3902,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3627,6 +3917,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3641,6 +3932,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3655,6 +3947,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3669,6 +3962,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3683,6 +3977,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3697,6 +3992,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3711,6 +4007,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3725,6 +4022,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3739,6 +4037,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3753,6 +4052,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3767,6 +4067,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3781,6 +4082,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3795,6 +4097,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3809,6 +4112,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3823,6 +4127,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3837,6 +4142,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3851,6 +4157,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3865,6 +4172,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3879,6 +4187,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3893,6 +4202,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3907,6 +4217,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3921,6 +4232,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3935,6 +4247,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3949,6 +4262,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3963,6 +4277,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -3977,13 +4292,14 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
    "ticker": "ABBV",
    "cik": "0001551152",
    "period_end": "2015-06-30",
-   "verdict": "agrees_lease_inclusive_blank_member",
+   "verdict": "not_computable_missing_member",
    "slot_lease_inclusive": "31123000000",
    "slot_borrowings": "31123000000",
    "lane3_before": [
@@ -3993,6 +4309,7 @@
    "missing_members": [
     "ShortTermBorrowings"
    ],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4007,6 +4324,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4021,6 +4339,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4035,6 +4354,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4049,6 +4369,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4063,6 +4384,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4077,6 +4399,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4091,6 +4414,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4105,6 +4429,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4119,6 +4444,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4133,6 +4459,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4147,6 +4474,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4161,6 +4489,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4175,6 +4504,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4189,6 +4519,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4203,6 +4534,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4217,6 +4549,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4231,6 +4564,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4245,6 +4579,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4259,6 +4594,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4273,6 +4609,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4287,6 +4624,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4301,6 +4639,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4315,6 +4654,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4329,6 +4669,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4343,6 +4684,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4357,6 +4699,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4371,6 +4714,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4385,6 +4729,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4399,6 +4744,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4413,6 +4759,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4427,13 +4774,14 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
    "ticker": "ABBV",
    "cik": "0001551152",
    "period_end": "2024-06-30",
-   "verdict": "agrees_lease_inclusive_blank_member",
+   "verdict": "not_computable_missing_member",
    "slot_lease_inclusive": "70634000000",
    "slot_borrowings": "70634000000",
    "lane3_before": [
@@ -4443,13 +4791,14 @@
    "missing_members": [
     "ShortTermBorrowings"
    ],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
    "ticker": "ABBV",
    "cik": "0001551152",
    "period_end": "2024-09-30",
-   "verdict": "agrees_lease_inclusive_blank_member",
+   "verdict": "not_computable_missing_member",
    "slot_lease_inclusive": "71079000000",
    "slot_borrowings": "71079000000",
    "lane3_before": [
@@ -4459,6 +4808,7 @@
    "missing_members": [
     "ShortTermBorrowings"
    ],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4473,6 +4823,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4487,6 +4838,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4501,6 +4853,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4515,6 +4868,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4529,6 +4883,7 @@
    ],
    "hold": true,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
@@ -4541,13 +4896,14 @@
    "lane3_before": [],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   },
   {
    "ticker": "RPAY",
    "cik": "0001720592",
    "period_end": "2020-03-31",
-   "verdict": "agrees_lease_inclusive_blank_member",
+   "verdict": "needs_instance_reader",
    "slot_lease_inclusive": "5502000",
    "slot_borrowings": "5502000",
    "lane3_before": [
@@ -4555,8 +4911,10 @@
    ],
    "hold": true,
    "missing_members": [
-    "LongTermDebtExcludingLineOfCreditNoncurrent",
     "LongTermLineOfCredit"
+   ],
+   "missing_custom_members": [
+    "LongTermDebtExcludingLineOfCreditNoncurrent"
    ],
    "nonauth_members": []
   },
@@ -4564,13 +4922,15 @@
    "ticker": "RPAY",
    "cik": "0001720592",
    "period_end": "2021-12-31",
-   "verdict": "not_computable_missing_member",
+   "verdict": "needs_instance_reader",
    "slot_lease_inclusive": "17394000",
    "slot_borrowings": "17394000",
    "lane3_before": [],
    "hold": false,
    "missing_members": [
-    "LongTermDebtCurrent",
+    "LongTermDebtCurrent"
+   ],
+   "missing_custom_members": [
     "LongTermDebtExcludingLineOfCreditNoncurrent"
    ],
    "nonauth_members": [
@@ -4589,18 +4949,32 @@
    ],
    "hold": false,
    "missing_members": [],
+   "missing_custom_members": [],
+   "nonauth_members": []
+  },
+  {
+   "ticker": "AVGO",
+   "cik": "0001730168",
+   "period_end": "2019-11-03",
+   "verdict": "lane3_blank_slot_has_value",
+   "slot_lease_inclusive": "32798000000",
+   "slot_borrowings": "32798000000",
+   "lane3_before": [],
+   "hold": false,
+   "missing_members": [],
+   "missing_custom_members": [],
    "nonauth_members": []
   }
  ],
  "summary": {
   "out_of_window_pre2015": 146,
-  "holds_resolved_by_slot": 149,
+  "holds_resolved_by_slot": 145,
   "DISAGREES_with_lane3": 217,
   "agrees_lease_inclusive": 98,
-  "not_computable_missing_member": 2,
-  "agrees_lease_inclusive_blank_member": 5,
-  "lane3_blank_slot_has_value": 4,
-  "no_covering_record": 9
+  "needs_instance_reader": 5,
+  "lane3_blank_slot_has_value": 6,
+  "no_covering_record": 9,
+  "not_computable_missing_member": 3
  },
  "per_company": {
   "AMD": {
@@ -4622,8 +4996,7 @@
   },
   "GE": {
    "out_of_window_pre2015": 4,
-   "not_computable_missing_member": 1,
-   "agrees_lease_inclusive_blank_member": 1,
+   "needs_instance_reader": 2,
    "lane3_blank_slot_has_value": 1
   },
   "INTC": {
@@ -4677,6 +5050,9 @@
    "holds_resolved_by_slot": 5,
    "agrees_lease_inclusive": 4
   },
+  "MSFT": {
+   "lane3_blank_slot_has_value": 1
+  },
   "CSCO": {
    "out_of_window_pre2015": 10,
    "DISAGREES_with_lane3": 26,
@@ -4702,6 +5078,9 @@
    "holds_resolved_by_slot": 1,
    "DISAGREES_with_lane3": 1
   },
+  "TSLA": {
+   "needs_instance_reader": 1
+  },
   "ORCL": {
    "out_of_window_pre2015": 10,
    "holds_resolved_by_slot": 11,
@@ -4716,19 +5095,20 @@
   },
   "ABBV": {
    "out_of_window_pre2015": 8,
-   "holds_resolved_by_slot": 40,
+   "holds_resolved_by_slot": 37,
    "agrees_lease_inclusive": 36,
-   "agrees_lease_inclusive_blank_member": 3,
+   "not_computable_missing_member": 3,
    "DISAGREES_with_lane3": 1
   },
   "GOOG": {
    "lane3_blank_slot_has_value": 1
   },
   "RPAY": {
-   "holds_resolved_by_slot": 1,
-   "agrees_lease_inclusive_blank_member": 1,
-   "not_computable_missing_member": 1,
+   "needs_instance_reader": 2,
    "DISAGREES_with_lane3": 1
+  },
+  "AVGO": {
+   "lane3_blank_slot_has_value": 1
   }
  }
 }

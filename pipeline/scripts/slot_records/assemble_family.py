@@ -55,7 +55,7 @@ for cik, era_list in sorted(eras.items()):
         confirmed = set()
         for (role, parent), children in arcs.items():
             if parent_rx.search(parent):
-                confirmed.update(c for c, _ in children)
+                confirmed.update(c for c, *_ in children)
         members = []
         for m in era["members"]:
             mm = dict(m)

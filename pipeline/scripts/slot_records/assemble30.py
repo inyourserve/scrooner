@@ -1,4 +1,8 @@
 """Assemble the 30-company-set debt slot records (stdlib, run with -I).
+"""
+import re  # noqa: E402,F401
+
+_DOC = """
 
 Joins FSDS-detected eras (era_detect.py) with the boundary filings' own calc
 linkbases: each era's members come from its first filing's _cal.xml; adjacent
@@ -6,7 +10,7 @@ eras whose CAL debt fingerprints are identical are re-collapsed (a face
 label/order change with no calc change is not a format change). Lease
 classification follows the Verifier's evidence rule via build_debt_slots.
 usage: assemble30.py <eras.json> <boundary_cal_dir> <lease_facts.csv> <out.jsonl>
-"""
+"""  # noqa: E501
 import json
 import sys
 from pathlib import Path
@@ -96,6 +100,23 @@ for cik, era_list in sorted(eras.items()):
                 reason = "label_match_only_nondebt_tag"
             if reason:
                 excluded.append({"tag": tag, "label": cand["label"], "reason": reason})
+                continue
+            side = (
+                "current" if re.search(r"Current$|^ShortTerm", tag)
+                else "noncurrent" if re.search(r"Noncurrent$|^LongTerm", tag)
+                else None
+            )
+            if not cand["custom"] and side:
+                # a STANDARD face line missing from the statement-role cal
+                # (AVGO 2018: LiabilitiesCurrent children live only in the
+                # consolidating-note role) is admitted from the face itself;
+                # custom uncovered lines stay dirty for the Verifier
+                rec["members"].append(
+                    {"tag": tag, "side": side, "class": b.classify(tag), "custom": False,
+                     "weight": "1.0", "calc_parent": None, "roles": [],
+                     "source": "face_line_not_in_statement_cal"}
+                )
+                member_tags.add(tag)
             else:
                 uncovered.append({"tag": tag, "label": cand["label"], "custom": cand["custom"]})
         excluded.extend(
