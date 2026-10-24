@@ -128,9 +128,17 @@ for cik in sorted(records):
         if rec is None:
             report["anchor_results"].append({**a, "result": "no_record"})
             continue
-        liab, miss, miss_custom = liab_value(rec, day)
-        got = str(liab) if liab is not None else None
-        ok = ("expected" in a and got == a["expected"])
+        if a.get("kind") == "equity_parent":
+            got_v = day.get(rec["equity_parent_tag"] or "StockholdersEquity")
+            miss, miss_custom = [], []
+        else:
+            got_v, miss, miss_custom = liab_value(rec, day)
+        got = str(got_v) if got_v is not None else None
+        tol = Decimal(a.get("tolerance", "1"))
+        ok = (
+            a.get("expected") is not None and got_v is not None
+            and abs(got_v - Decimal(a["expected"])) <= tol
+        )
         report["anchor_results"].append(
             {**a, "got": got, "missing": miss, "missing_custom": miss_custom,
              "result": "PASS" if ok else "CHECK"}

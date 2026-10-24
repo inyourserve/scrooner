@@ -2,20 +2,38 @@
  "anchor_results": [
   {
    "ticker": "EMR",
-   "period_end": "2016-09-30",
+   "period_end": "2024-12-31",
    "expected": "16231000000",
-   "note": "no printed total: face-sum; period assumed FY2016, TBC",
-   "got": "12815000000",
+   "note": "no printed total: face-sum",
+   "got": "16231000000",
    "missing": [],
    "missing_custom": [],
-   "result": "CHECK"
+   "result": "PASS"
   },
   {
    "ticker": "WMT",
-   "period_end": "2015-04-30",
-   "expected": null,
-   "note": "189,115M is a lane-3 sample; period TBC by Verifier",
-   "got": "120757000000",
+   "period_end": "2026-07-31",
+   "expected": "189115000000",
+   "src": "0000104169-26-000154 R4",
+   "got": "189115000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "AJG",
+   "period_end": "2019-01-01",
+   "expected": "3000568000",
+   "kind": "equity_parent",
+   "note": "no NCI",
+   "result": "no_record"
+  },
+  {
+   "ticker": "T",
+   "period_end": "2026-06-30",
+   "expected": "299920000000",
+   "src": "0000732717-26-000297 R5",
+   "got": "165289000000",
    "missing": [],
    "missing_custom": [],
    "result": "CHECK"
@@ -23,8 +41,7 @@
   {
    "ticker": "OXY",
    "period_end": "2018-12-31",
-   "expected": null,
-   "note": "value TBC from VERIFY-IDENTITY-FIX",
+   "expected": "22524000000",
    "got": "12323000000",
    "missing": [],
    "missing_custom": [],
@@ -43,7 +60,18 @@
    "ticker": "FE",
    "period_end": "2018-03-31",
    "expected": "31420000000",
+   "src": "0001031296-18-000031 R5",
    "got": "31420000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "VLO",
+   "period_end": "2020-12-31",
+   "expected": "32132000000",
+   "src": "0001035002-21-000051 R2",
+   "got": "32132000000",
    "missing": [],
    "missing_custom": [],
    "result": "PASS"
@@ -52,15 +80,30 @@
    "ticker": "DVN",
    "period_end": "2017-03-31",
    "expected": "15212000000",
+   "src": "0001564590-17-008268 R4",
    "got": "15212000000",
    "missing": [],
    "missing_custom": [],
    "result": "PASS"
   },
   {
+   "ticker": "BRKR",
+   "period_end": "2019-03-31",
+   "expected": "1298700000",
+   "tolerance": "200000",
+   "note": "face does not add up by 0.2M",
+   "got": "1298700000",
+   "missing": [],
+   "missing_custom": [
+    "OthersShareholdersEquity"
+   ],
+   "result": "PASS"
+  },
+  {
    "ticker": "NI",
    "period_end": "2023-12-31",
    "expected": "20940900000",
+   "src": "0001111711-24-000011 R6",
    "got": "21013400000",
    "missing": [],
    "missing_custom": [
@@ -72,6 +115,8 @@
    "ticker": "TRGP",
    "period_end": "2021-09-30",
    "expected": "9823100000",
+   "src": "0001564590-21-054348 R2",
+   "note": "749.7M Series A mezzanine filed only with class-of-stock member",
    "got": "9671900000",
    "missing": [],
    "missing_custom": [
@@ -81,10 +126,22 @@
   },
   {
    "ticker": "BX",
-   "period_end": "2021-12-31",
-   "expected": null,
-   "note": "partners capital parent 6,308.4M is an equity anchor, period TBC",
-   "got": "19490362000",
+   "period_end": "2019-06-30",
+   "expected": "6308400000",
+   "kind": "equity_parent",
+   "src": "0001193125-19-216805 R2",
+   "got": "6308355000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "KKR",
+   "period_end": "2015-06-30",
+   "expected": "5947400000",
+   "kind": "equity_parent",
+   "src": "0001404912-15-000005 R2",
+   "got": "5947415000",
    "missing": [],
    "missing_custom": [],
    "result": "CHECK"
@@ -92,12 +149,21 @@
   {
    "ticker": "AWK",
    "period_end": "2017-12-31",
-   "expected": null,
-   "note": "value TBC",
+   "expected": "14097000000",
+   "note": "8M redeemable preferred sits inside total long-term debt",
    "got": "14089000000",
    "missing": [],
    "missing_custom": [],
    "result": "CHECK"
+  },
+  {
+   "ticker": "DIS",
+   "period_end": "2020-03-28",
+   "expected": "102321000000",
+   "got": "102321000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
   }
  ],
  "identity": {
