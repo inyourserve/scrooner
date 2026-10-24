@@ -1,0 +1,9 @@
+{
+  "_comment": "Regression fixtures from VERIFY-SLOT-RECORDS-2026-10-24 + RECHECK: expected class of DebtCurrent/DebtNoncurrent members per company. Checked by check_expected_classes.py against the emitted *_debt_slots.jsonl / goog_cells_slots.jsonl.",
+  "MU": {"DebtCurrent": "combined"},
+  "GOOG": {"DebtCurrent": "combined"},
+  "MRK": {"DebtCurrent": "borrowing"},
+  "INTC": {"DebtCurrent": "borrowing"},
+  "CSCO": {"DebtCurrent": "borrowing"},
+  "UNH": {"DebtCurrent": "borrowing"}
+}

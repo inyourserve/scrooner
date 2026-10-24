@@ -60,17 +60,17 @@ BORROWING_RX = re.compile(r"Debt|Borrow|CommercialPaper|NotesPayable|LineOfCredi
 ERA_RX = re.compile(r"us-gaap[/-](\d{4})")
 
 
-# Combined by the FASB definition itself, whatever the printed label says:
-# DebtCurrent/DebtNoncurrent are "borrowings plus finance (capital) lease"
-# aggregates (Verifier 2026-10-24: MU's "Current debt" DebtCurrent at
-# 2021-09-02 is exactly the current finance-lease amount; GOOG's 2015-16
-# "Short-term debt" DebtCurrent contains current capital leases).
+# Combined by NAME: the tag itself joins borrowings and leases.
 COMBINED_TAGS = {
-    "DebtCurrent",
-    "DebtNoncurrent",
     "DebtAndCapitalLeaseObligations",
     "DebtLongtermAndShorttermCombinedAmount",
 }
+# Combined only WITH EVIDENCE (Verifier re-check 2026-10-24): DebtCurrent /
+# DebtNoncurrent MAY hold a lease part (MU, GOOG 2015-16) or may be pure
+# borrowings (MRK, INTC, CSCO, UNH - no lease fact exists at those dates).
+# Evidence = the filer's own calc children of the line, or a same-date
+# finance/capital-lease fact with no separate same-side lease line on the face.
+DEFINITIONAL_MAYBE = {"DebtCurrent", "DebtNoncurrent"}
 
 
 def classify(tag: str) -> str:
@@ -183,23 +183,49 @@ def debt_observation(adsh: str, form: str, period: str, cal: dict) -> dict:
     }
 
 
-def collapse(observations: list[dict], company: str) -> list[dict]:
+def collapse(observations: list[dict], company: str, lease_facts: dict) -> list[dict]:
     """Consecutive identical fingerprints -> one PROPOSED slot record."""
     records = []
     run: list[dict] = []
     for obs in observations:
         if run and obs["debt_fingerprint"] != run[-1]["debt_fingerprint"]:
-            records.append(_record(run, company))
+            records.append(_record(run, company, lease_facts))
             run = []
         run.append(obs)
     if run:
-        records.append(_record(run, company))
+        records.append(_record(run, company, lease_facts))
     return records
 
 
-def _record(run: list[dict], company: str) -> dict:
+def _apply_lease_evidence(record: dict, run: list[dict], company: str, lease_facts: dict) -> None:
+    """DebtCurrent/DebtNoncurrent become 'combined' only with evidence; the
+    rule is era-level: any period in the era with a same-side lease fact (and
+    no separate same-side lease line on the face) marks the line combined."""
+    face_lease_sides = {
+        m["side"] for m in record["members"] if m["class"] in ("finance_lease", "operating_lease")
+    }
+    periods = {o["period_of_report"] for o in run}
+    for m in record["members"]:
+        if m["tag"] not in DEFINITIONAL_MAYBE:
+            continue
+        side_key = "cur" if m["side"] == "current" else "noncur"
+        calc_children = [
+            c["tag"]
+            for o in run
+            for role_children in (o.get("aggregates", {}).get(m["tag"], {}) or {}).values()
+            for c in role_children
+        ]
+        if any(FINANCE_LEASE_RX.search(c) or OPERATING_LEASE_RX.search(c) for c in calc_children):
+            m["class"], m["class_evidence"] = "combined", "calc_children"
+        elif m["side"] not in face_lease_sides and periods & lease_facts.get((company, side_key), set()):
+            m["class"], m["class_evidence"] = "combined", "same_date_lease_fact"
+        else:
+            m["class"], m["class_evidence"] = "borrowing", "no_lease_part_found"
+
+
+def _record(run: list[dict], company: str, lease_facts: dict) -> dict:
     first, last = run[0], run[-1]
-    return {
+    record = {
         "kind": "slot_record",
         "company": company,
         "canonical_concept": "total_debt",
@@ -216,13 +242,29 @@ def _record(run: list[dict], company: str) -> dict:
         "evidence_accession": first["accession"],
         "evidence_level": "FILING-CHECKED",
         "source": "build_debt_slots.py (filer's own _cal.xml)",
-        "members": first["members"],
+        "members": [dict(m) for m in first["members"]],
     }
+    _apply_lease_evidence(record, run, company, lease_facts)
+    return record
+
+
+def load_lease_facts(path: Path | None) -> dict:
+    """CSV ticker,end_date,side -> {(ticker, side): {end_date, ...}}"""
+    facts: dict[tuple[str, str], set] = {}
+    if path is None or not path.exists():
+        return facts
+    for line in path.read_text().splitlines()[1:]:
+        if not line.strip():
+            continue
+        ticker, end_date, side = line.strip().split(",")
+        facts.setdefault((ticker, side), set()).add(end_date)
+    return facts
 
 
 def main() -> None:
     cal_dir, acc_file, out_path = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
     company = sys.argv[4] if len(sys.argv) > 4 else "MU"
+    lease_facts = load_lease_facts(Path(sys.argv[5]) if len(sys.argv) > 5 else None)
     observations = []
     missing = []
     for line in acc_file.read_text().splitlines():
@@ -239,7 +281,7 @@ def main() -> None:
             missing.append(adsh)
             continue
         observations.append(debt_observation(adsh, form, period, cal))
-    records = collapse(observations, company)
+    records = collapse(observations, company, lease_facts)
     with open(out_path, "w") as f:
         for obs in observations:
             f.write(json.dumps(obs) + "\n")
