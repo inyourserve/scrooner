@@ -1,0 +1,29 @@
+concept_outcome,cells
+cfo|agree_all_vintages,459
+cfo|agree_latest_only,17
+cfo|no_stored_cell,38
+diluted_eps|DISAGREE_stored_is_asfiled_div_10 (split-adjusted stored),43
+diluted_eps|DISAGREE_stored_is_asfiled_div_15 (split-adjusted stored),20
+diluted_eps|DISAGREE_stored_is_asfiled_div_16 (split-adjusted stored),33
+diluted_eps|DISAGREE_stored_is_asfiled_div_20 (split-adjusted stored),44
+diluted_eps|DISAGREE_stored_is_asfiled_div_3 (split-adjusted stored),5
+diluted_eps|DISAGREE_stored_is_asfiled_div_4 (split-adjusted stored),28
+diluted_eps|DISAGREE_stored_is_asfiled_div_400 (split-adjusted stored),31
+diluted_eps|agree_all_vintages,425
+diluted_eps|agree_latest_only,64
+diluted_eps|agree_original_only,14
+diluted_eps|no_stored_cell,11
+net_income|DISAGREE,1
+net_income|agree_all_vintages,706
+net_income|agree_latest_only,34
+net_income|agree_middle_vintage,1
+net_income|agree_original_only,3
+net_income|no_stored_cell,22
+revenue|DISAGREE,4
+revenue|agree_all_vintages,689
+revenue|agree_latest_only,19
+revenue|agree_original_only,6
+revenue|no_stored_cell,17
+total_assets|agree_all_vintages,435
+total_assets|agree_original_only,3
+total_assets|no_stored_cell,15
