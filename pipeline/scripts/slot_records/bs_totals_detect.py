@@ -60,16 +60,33 @@ CAP_TOTAL_RX = re.compile(r"Capitalization")
 TOTAL_LABEL_RX = re.compile(r"^\s*total\b", re.I)
 
 
+# Asset/equity rows that leak into the liabilities zone on some faces
+# (Verifier BS-v0 class 2: MCK's OtherAdditionalCapital equity line, NI's
+# PrepaidExpenseCurrent, ET's cash). Lexical guard until the taxonomy
+# balance-attribute guard lands (needs the FASB schema, approval pending).
+NONLIAB_RX = re.compile(
+    r"PrepaidExpense|CashAndCashEquivalents|OtherAdditionalCapital|"
+    r"Receivable$|ReceivableNet|ReceivableCurrent|Inventory|"
+    r"UnamortizedDebt|DeferredCosts?[A-Z]|RightOfUseAsset"
+)
+
+
 def classify_line(tag, label):
     """Per-line class; works for liabilities-first AND capitalization-format
     (utilities: equity, LTD, Total Capitalization, then liabilities - NI/AWK)."""
-    if NOISE_RX.search(tag) or tag in ("Liabilities", "LiabilitiesAndStockholdersEquity"):
+    if NOISE_RX.search(tag) or tag in ("Liabilities", "LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital"):
         return "excluded_total_or_noise"
+    if tag.endswith("Abstract"):
+        return "excluded_abstract"
+    if NONLIAB_RX.search(tag):
+        return "excluded_nonliability"
     if MEZZ_RX.search(tag):
         return "mezz"
     if tag in EQUITY_TOTAL_TAGS:
         return "equity_total"
-    if tag == "MinorityInterest":
+    if tag in ("MinorityInterest", "NonredeemableNoncontrollingInterest",
+               "PartnersCapitalAttributableToNoncontrollingInterest",
+               "MinorityInterestInLimitedPartnerships"):
         return "nci"
     if CAP_TOTAL_RX.search(tag):
         return "excluded_cap_total"  # equity+debt combined subtotal, never summed
@@ -84,27 +101,42 @@ for adsh, meta in by_filing.items():
     tags = [t for _, _, t, _, _ in ordered]
     zone_start = tags.index("Assets") + 1 if "Assets" in tags else 0
     zone = ordered[zone_start:]
+    # rows RENDERED AFTER the L&E total are re-renders of lines already inside
+    # the totals (Verifier class 3: NI's ARO-current and prepaid after the
+    # total) - truncate the zone at the filer's own closing total
+    zone_tags = [t for _, _, t, _, _ in zone]
+    for lse in ("LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital"):
+        if lse in zone_tags:
+            zone = zone[: zone_tags.index(lse) + 1]
+            break
     zone_lines = []
-    skeleton = []  # summable liability lines, filer's own 'Total ...' subtotals
-    run_start = 0  # index in skeleton where the current un-subtotaled run began
     for _, _, t, c, lb in zone:
         cls = classify_line(t, lb)
-        zone_lines.append({"tag": t, "custom": c, "label": lb, "seg": cls})
-        if cls != "liab":
-            # an equity/mezz/capitalization line ends the current liability
-            # run: a later 'Total ...' subtotal must not reach across it
-            # (NI: 'Total Current Liabilities' must not swallow the LTD line
-            # that sits in the Capitalization section)
-            run_start = len(skeleton)
+        zone_lines.append(
+            {"tag": t, "custom": c, "label": lb, "seg": cls,
+             "total_label": bool(TOTAL_LABEL_RX.search(lb or ""))}
+        )
+    # PERIMETER BY FACE POSITION (Dhairya ruling): a mezzanine-tagged line is
+    # 'mezz' only when printed between the liabilities section and equity;
+    # printed INSIDE the liabilities run (AWK's redeemable preferred inside
+    # total long-term debt) it belongs to liabilities.
+    # neighbor-based: a mezz-tagged line whose printed neighbors are both
+    # liability lines sits INSIDE the liabilities section (AWK's redeemable
+    # preferred inside total long-term debt) - works for capitalization
+    # layouts too, where equity prints first and 'no equity seen' fails
+    for i, z in enumerate(zone_lines):
+        if z["seg"] != "mezz":
             continue
-        if TOTAL_LABEL_RX.search(lb or "") and len(skeleton) > run_start:
-            # the filer's own subtotal replaces the component lines of its run
-            skeleton[run_start:] = [t]
-            run_start = len(skeleton)
-        else:
-            skeleton.append(t)
-            if TOTAL_LABEL_RX.search(lb or ""):
-                run_start = len(skeleton)
+        prev_seg = next((zone_lines[j]["seg"] for j in range(i - 1, -1, -1)
+                         if not zone_lines[j]["seg"].startswith("excluded")), None)
+        next_seg = next((zone_lines[j]["seg"] for j in range(i + 1, len(zone_lines))
+                         if not zone_lines[j]["seg"].startswith("excluded")), None)
+        if prev_seg == "liab" and next_seg == "liab":
+            z["seg"] = "liab"
+    # the RAW liability line list; subtotal dedup happens in the assembler
+    # against the filer's own statement-role calc graph (label-run replacement
+    # proved wrong: T's 'Total deferred credits...' swallowed Long-Term Debt)
+    skeleton = [z["tag"] for z in zone_lines if z["seg"] == "liab"]
     mezz = [z["tag"] for z in zone_lines if z["seg"] == "mezz"]
     anchors = {name: any(t in tagset for _, _, t, _, _ in zone) for name, tagset in ANCHORS.items()}
     fp = tuple(skeleton) + ("||",) + tuple(mezz) + (

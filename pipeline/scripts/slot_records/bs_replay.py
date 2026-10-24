@@ -32,9 +32,14 @@ EXTRA = ["Assets", "Liabilities", "StockholdersEquity", "MinorityInterest",
 
 
 def fetch(cik, tags):
+    """SAME-ACCESSION inputs (Verifier BS-v0 class 5): every term of a cell
+    comes from ONE filing - the one whose period_of_report is the instant
+    (the original), else the accession covering the most member tags. Mixing
+    copies across filings let a restated ARO slip into DVN 2018-03-31."""
     cur.execute(
         """
-        select distinct on (co.tag, p.end_date) co.tag, p.end_date::text, f.value::numeric, f.is_authoritative
+        select co.tag, p.end_date::text, f.value::numeric, f.is_authoritative,
+               fi.accession_number, fi.period_of_report::text
         from core.fact f
         join core.concept co on co.id=f.concept_id
         join core.period p on p.id=f.period_id
@@ -48,19 +53,51 @@ def fetch(cik, tags):
         """,
         (cik, list(tags)),
     )
-    facts = defaultdict(dict)
-    for tag, e, v, auth in cur.fetchall():
-        facts[e][tag] = v
+    by_acc = defaultdict(lambda: defaultdict(dict))  # end -> accession -> tag -> value
+    original = {}  # end -> accession whose period_of_report == end
+    for tag, e, v, auth, acc, por in cur.fetchall():
+        if tag not in by_acc[e][acc]:
+            by_acc[e][acc][tag] = v
+        if por == e:
+            original.setdefault(e, acc)
+    facts = {}
+    for e, accs in by_acc.items():
+        acc = original.get(e) or max(accs, key=lambda a: len(accs[a]))
+        facts[e] = dict(accs[acc])
+        facts[e]["__accession__"] = acc
     return facts
+
+
+def rounding_unit(day):
+    """The filer's rounding unit at this instant: the largest power of ten
+    dividing every member value (capped at 1e6). The identity tolerance is
+    this unit, not a percentage (Verifier: 0.05% let 4-14M errors tie)."""
+    unit = Decimal(1000000)
+    for k, v in day.items():
+        if k == "__accession__" or v is None or v == 0:
+            continue
+        while unit > 1 and v % unit != 0:
+            unit /= 10
+    return unit
 
 
 def covering(cik, end):
     ym = end[:7]
-    return next((r for r in records[cik] if r["period_from"][:7] <= ym <= r["period_to"][:7]), None)
+    rec = next((r for r in records[cik] if r["period_from"][:7] <= ym <= r["period_to"][:7]), None)
+    if rec is None and end[8:10] <= "03":
+        # FSDS month-rounds 52/53-week ends like 2019-01-01 to the prior
+        # month (AJG anchor); fall back to the previous month's record
+        import datetime
+        d = datetime.date.fromisoformat(end).replace(day=1) - datetime.timedelta(days=1)
+        ym = str(d)[:7]
+        rec = next((r for r in records[cik] if r["period_from"][:7] <= ym <= r["period_to"][:7]), None)
+    return rec
 
 
 def liab_value(rec, day):
     members = rec["total_liabilities_members"]
+    if rec["total_liabilities_rule"].startswith("hold"):
+        return None, ["__held__:" + rec["total_liabilities_rule"]], []
     if rec["total_liabilities_rule"] == "printed_total":
         v = day.get("Liabilities")
         return (v, [], []) if v is not None else (None, ["Liabilities"], [])
@@ -112,12 +149,10 @@ for cik in sorted(records):
                 mezz = day[t]
                 break
         gap = day["Assets"] - (liab + mezz + eq_incl)
-        rel = abs(gap) / day["Assets"] if day["Assets"] else Decimal(0)
-        if rel <= Decimal("0.0005"):
-            stats["identity_ties"] += 1
-        else:
-            stats["identity_gap"] += 1
-        report["identity"]["ties" if rel <= Decimal("0.0005") else "gaps"] += 1
+        tol = rounding_unit(day)
+        key = "identity_ties" if abs(gap) <= tol else "identity_gap"
+        stats[key] += 1
+        report["identity"]["ties" if key == "identity_ties" else "gaps"] += 1
     report["per_company"][ticker] = dict(stats)
     for a in anchors:
         if a["ticker"] != ticker:

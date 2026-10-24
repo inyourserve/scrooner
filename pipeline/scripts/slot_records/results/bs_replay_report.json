@@ -11,6 +11,17 @@
    "result": "PASS"
   },
   {
+   "ticker": "BRO",
+   "period_end": "2019-01-01",
+   "expected": "3000568000",
+   "kind": "equity_parent",
+   "note": "Verifier correction: 3,000,568K at 2019-01-01 is BROWN & BROWN (CIK 0000079282), mislabelled AJG in the first list",
+   "got": null,
+   "missing": [],
+   "missing_custom": [],
+   "result": "CHECK"
+  },
+  {
    "ticker": "WMT",
    "period_end": "2026-07-31",
    "expected": "189115000000",
@@ -21,40 +32,32 @@
    "result": "PASS"
   },
   {
-   "ticker": "AJG",
-   "period_end": "2019-01-01",
-   "expected": "3000568000",
-   "kind": "equity_parent",
-   "note": "no NCI",
-   "result": "no_record"
-  },
-  {
    "ticker": "T",
    "period_end": "2026-06-30",
    "expected": "299920000000",
    "src": "0000732717-26-000297 R5",
-   "got": "165289000000",
+   "got": "299920000000",
    "missing": [],
    "missing_custom": [],
-   "result": "CHECK"
+   "result": "PASS"
   },
   {
    "ticker": "OXY",
    "period_end": "2018-12-31",
    "expected": "22524000000",
-   "got": "12323000000",
+   "got": "22524000000",
    "missing": [],
    "missing_custom": [],
-   "result": "CHECK"
+   "result": "PASS"
   },
   {
    "ticker": "MCK",
    "period_end": "2015-06-30",
    "expected": "45556000000",
-   "got": "45552000000",
+   "got": "45556000000",
    "missing": [],
    "missing_custom": [],
-   "result": "CHECK"
+   "result": "PASS"
   },
   {
    "ticker": "FE",
@@ -104,12 +107,10 @@
    "period_end": "2023-12-31",
    "expected": "20940900000",
    "src": "0001111711-24-000011 R6",
-   "got": "21013400000",
+   "got": "20940900000",
    "missing": [],
-   "missing_custom": [
-    "ObligationsToRenewableGenerationAssetDeveloper"
-   ],
-   "result": "CHECK"
+   "missing_custom": [],
+   "result": "PASS"
   },
   {
    "ticker": "TRGP",
@@ -167,81 +168,85 @@
   }
  ],
  "identity": {
-  "ties": 459,
-  "gaps": 191
+  "ties": 432,
+  "gaps": 61
  },
  "per_company": {
   "EMR": {
-   "identity_ties": 44,
-   "identity_gap": 2
+   "identity_ties": 33,
+   "not_computable": 13
   },
   "GE": {
-   "identity_ties": 26,
-   "identity_gap": 20
+   "identity_ties": 34,
+   "identity_gap": 12
+  },
+  "BRO": {
+   "not_computable": 47
   },
   "WMT": {
-   "identity_ties": 47
+   "identity_ties": 13,
+   "not_computable": 34
   },
   "AJG": {
-   "identity_ties": 41,
-   "identity_gap": 5
-  },
-  "T": {
-   "identity_gap": 46
-  },
-  "OXY": {
-   "identity_gap": 46
-  },
-  "MCK": {
-   "identity_gap": 1,
-   "identity_ties": 33,
-   "needs_instance_reader": 12
-  },
-  "FE": {
-   "identity_gap": 17,
-   "identity_ties": 28
-  },
-  "VLO": {
    "identity_ties": 46
   },
-  "DVN": {
-   "identity_gap": 8,
-   "identity_ties": 6,
-   "not_computable": 2,
-   "needs_instance_reader": 30
+  "T": {
+   "identity_ties": 42,
+   "not_computable": 4
   },
-  "BRKR": {
-   "needs_instance_reader": 28,
-   "identity_ties": 18
-  },
-  "NI": {
-   "identity_ties": 35,
-   "needs_instance_reader": 5,
-   "identity_gap": 3,
-   "not_computable": 3
-  },
-  "ET": {
+  "OXY": {
    "identity_ties": 36,
-   "needs_instance_reader": 1,
-   "identity_gap": 8,
+   "not_computable": 10
+  },
+  "MCK": {
+   "identity_ties": 19,
+   "not_computable": 17,
+   "needs_instance_reader": 10
+  },
+  "FE": {
+   "identity_ties": 23,
+   "not_computable": 17,
+   "identity_gap": 5
+  },
+  "VLO": {
+   "identity_ties": 45,
    "not_computable": 1
   },
+  "DVN": {
+   "identity_ties": 6,
+   "not_computable": 29,
+   "needs_instance_reader": 11
+  },
+  "BRKR": {
+   "needs_instance_reader": 25,
+   "identity_ties": 13,
+   "not_computable": 8
+  },
+  "NI": {
+   "identity_ties": 4,
+   "not_computable": 42
+  },
+  "ET": {
+   "identity_ties": 35,
+   "needs_instance_reader": 1,
+   "not_computable": 9,
+   "identity_gap": 1
+  },
   "TRGP": {
-   "needs_instance_reader": 46
+   "needs_instance_reader": 16,
+   "not_computable": 30
   },
   "BX": {
-   "identity_gap": 17,
-   "identity_ties": 29
+   "identity_gap": 18,
+   "identity_ties": 28
   },
   "KKR": {
-   "identity_gap": 13,
-   "identity_ties": 27,
-   "not_computable": 2
+   "identity_gap": 14,
+   "identity_ties": 25
   },
   "AWK": {
-   "needs_instance_reader": 28,
-   "identity_gap": 5,
-   "identity_ties": 13
+   "not_computable": 35,
+   "identity_gap": 11
   },
   "DIS": {
    "identity_ties": 30

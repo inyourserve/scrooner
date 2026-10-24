@@ -168,6 +168,13 @@ for cik in sorted(records):
             verdict = "not_computable_missing_member"
         elif not day:
             verdict = "not_computable_no_facts"
+        elif filer_agg is not None and abs(lease_incl - filer_agg) > 1:
+            # NOTE-TIE CHECK (Verifier V4: COST 2018-09-02 - a 90M current
+            # portion folded into another face line is invisible to a
+            # face-built record; only the debt note's carrying total shows
+            # it). A gap between the era sum and the filer's own note
+            # carrying total goes to review, never published either way.
+            verdict = "face_note_gap_review"
         if verdict is None:
             if before_vals and any(abs(lease_incl - b) <= 1 for b in before_vals):
                 verdict = "agrees_lease_inclusive"
@@ -180,9 +187,17 @@ for cik in sorted(records):
             report["per_company"][ticker]["holds_resolved_by_slot"] += 1
         report["summary"][verdict] += 1
         report["per_company"][ticker][verdict] += 1
+        publishable = verdict not in (
+            "needs_instance_reader", "not_computable_missing_member",
+            "not_computable_no_facts", "not_computable_uncovered_candidates",
+            "face_note_gap_review",
+        )
         report["cells"].append(
             {"ticker": ticker, "cik": cik, "period_end": period_end, "verdict": verdict,
-             "slot_lease_inclusive": str(lease_incl), "slot_borrowings": str(borrowings),
+             # a partial sum must be NULL on any non-publishable verdict:
+             # nothing downstream may carry GE's 194,519M or RPAY's 5.5M
+             "slot_lease_inclusive": str(lease_incl) if publishable else None,
+             "slot_borrowings": str(borrowings) if publishable else None,
              "lane3_before": sorted(str(b) for b in before_vals), "hold": is_hold,
              "missing_members": missing, "missing_custom_members": missing_custom,
              "nonauth_members": nonauth}

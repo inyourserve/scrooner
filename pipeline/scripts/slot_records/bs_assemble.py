@@ -26,7 +26,7 @@ EQUITY_PARENT_TAGS = {
 }
 MEZZ_RX = re.compile(r"TemporaryEquity|RedeemableNoncontrolling|RedeemablePreferred")
 NOISE_RX = re.compile(r"CommitmentsAndContingencies")
-TICKER = json.loads('{"0000354190":"AJG","0001410636":"AWK","0001109354":"BRKR","0001393818":"BX","0001744489":"DIS","0001090012":"DVN","0000032604":"EMR","0001276187":"ET","0001031296":"FE","0000040545":"GE","0001404912":"KKR","0000927653":"MCK","0001111711":"NI","0000797468":"OXY","0000732717":"T","0001389170":"TRGP","0001035002":"VLO","0000104169":"WMT"}')
+TICKER = json.loads('{"0000354190":"AJG","0001410636":"AWK","0001109354":"BRKR","0001393818":"BX","0001744489":"DIS","0001090012":"DVN","0000032604":"EMR","0001276187":"ET","0001031296":"FE","0000040545":"GE","0001404912":"KKR","0000927653":"MCK","0001111711":"NI","0000797468":"OXY","0000732717":"T","0001389170":"TRGP","0001035002":"VLO","0000104169":"WMT","0000079282":"BRO"}')
 
 eras = json.load(open(sys.argv[1]))
 cal_dir = Path(sys.argv[2])
@@ -55,14 +55,23 @@ for cik, era_list in sorted(eras.items()):
         elif meta.exists():
             cal = b.parse_metalinks(meta)
             tax_era, arcs = cal["era"], cal["arcs"]
-        # statement-role liability partition from the boundary cal
-        cal_liab = set()
+        # statement-role calc graph: parent -> children (for root-finding)
+        cal_children = defaultdict(set)
         for (role, parent), children in arcs.items():
             if not b.BS_ROLE_RX.search(role) or b.NOTE_ROLE_RX.search(role):
                 continue
-            if parent in ("Liabilities", "LiabilitiesCurrent", "LiabilitiesNoncurrent",
-                          "LiabilitiesAndStockholdersEquity"):
-                cal_liab.update(c for c, _, _ in children)
+            cal_children[parent].update(c for c, _, _ in children)
+        cal_liab = set(cal_children.get("Liabilities", set()) | cal_children.get("LiabilitiesCurrent", set())
+                       | cal_children.get("LiabilitiesNoncurrent", set())
+                       | cal_children.get("LiabilitiesAndStockholdersEquity", set()))
+
+        def descendants(tag, seen=None):
+            seen = seen or set()
+            for ch in cal_children.get(tag, ()):  # statement role only
+                if ch not in seen:
+                    seen.add(ch)
+                    descendants(ch, seen)
+            return seen
         zone = era["zone_lines"]
         anchors = era["anchors"]
         by_tag = {z["tag"]: z for z in zone}
@@ -71,17 +80,38 @@ for cik, era_list in sorted(eras.items()):
             liab_members = [{"tag": "Liabilities", "custom": False, "rule": "printed_total"}]
             rule = "printed_total"
         else:
-            liab_members = [
-                {"tag": t, "custom": by_tag.get(t, {}).get("custom", False),
-                 "label": by_tag.get(t, {}).get("label", ""),
-                 "cal_confirmed": t in cal_liab, "rule": "face_sum"}
-                for t in era.get("skeleton", [])
-            ]
-            rule = "face_sum" if liab_members else "hold_no_liability_lines"
+            raw = era.get("skeleton", [])
+            raw_set = set(raw)
+            # ROOTS of the liability line set under the filer's own statement-
+            # role calc graph: a subtotal keeps itself and drops its printed
+            # cal-descendants (T: 'Total deferred credits...' covers exactly
+            # its own group, never the standalone Long-Term Debt line)
+            covered = set()
+            for t in raw:
+                covered |= descendants(t) & raw_set
+            roots = [t for t in raw if t not in covered]
+            if not cal_children:
+                # raw lines without the filer's calc graph DOUBLE COUNT
+                # (subtotals + their components both summed: FE +14.6B,
+                # DVN +2.5B when a boundary cal is missing). No cal -> hold.
+                liab_members = []
+                rule = "hold_no_cal_for_dedup"
+            else:
+                liab_members = [
+                    {"tag": t, "custom": by_tag.get(t, {}).get("custom", False),
+                     "label": by_tag.get(t, {}).get("label", ""),
+                     "cal_confirmed": t in cal_liab, "rule": "face_sum",
+                     "dedup": "cal_roots"}
+                    for t in roots
+                ]
+                rule = "face_sum" if liab_members else "hold_no_liability_lines"
         # equity / nci / mezzanine slots
         eq_tags = [z["tag"] for z in zone if z["seg"] in ("equity_total", "nci", "equity_component")]
         equity_parent = next((t for t in eq_tags if t in EQUITY_PARENT_TAGS), None)
-        nci = "MinorityInterest" if "MinorityInterest" in eq_tags else None
+        nci = next((t for t in eq_tags if t in (
+            "MinorityInterest", "NonredeemableNoncontrollingInterest",
+            "PartnersCapitalAttributableToNoncontrollingInterest",
+            "MinorityInterestInLimitedPartnerships")), None)
         mezz_face = [z for z in zone if MEZZ_RX.search(z["tag"])]
         mezz_dims = sorted({t for (t, _) in dim_mezz.get(cik, set())})
         rec = {
