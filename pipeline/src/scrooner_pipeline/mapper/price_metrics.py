@@ -11,12 +11,28 @@ because this stage has no code path that can even reach the mock table;
 a metric computed from a mock price could never be silently
 indistinguishable from a real one, by construction, not by a flag.
 
-Trailing-twelve-month reconstruction for diluted_eps/revenue/dividends_
+Trailing-twelve-month reconstruction for revenue/net income/dividends_
 per_share/cfo/capex reuses ttm.py's own _trailing_quarters helper --
 same (fiscal_year, fiscal_period) arithmetic already proven for TTM
-ROIC/ROE, not a second implementation of the same idea. TTM EPS sums
-the four quarterly diluted_eps values as reported (the standard TTM-EPS
-convention), not net income re-divided by a blended share count.
+ROIC/ROE, not a second implementation of the same idea.
+
+Per-share rule (2026-10-22, WO-2 RU-1; doc 42, data-team/14): EPS is never
+summed over quarters and a DERIVED per-share quarter is never used at all.
+Quarterly EPS divides by each quarter's own weighted share count, so four
+quarters do not add up to the year (MSFT Q4 FY26 derived 4.80 vs filed
+4.81, AAPL Q4 FY25 1.84 vs 1.85, KLAC -22.61 across a split). So:
+- The TTM anchor is the company's current quarter: the latest revenue or
+  net-income quarter. EPS never sets it (before this change a company that
+  had just filed its 10-K, with no Q4 EPS once Q4 EPS stops being derived,
+  anchored on Q3 and every TTM went one quarter stale).
+- TTM EPS exists only at a Q4 anchor, where the trailing window IS the
+  fiscal year: the filed full-year diluted EPS. Elsewhere Trailing P/E is
+  market cap / TTM net income (the existing multi-class fallback; basis
+  identified by its source_fact_ids: share count + net income facts).
+- Dividend yield still sums four quarterly dividends per share, but a
+  derived quarter counts as missing, so the yield is blank with
+  PER_SHARE_NOT_DERIVED_REASON until the Standardization Lead's definition
+  (AC-13) replaces the sum.
 
 period_label='TTM' for all 6 rows -- a price-dependent ratio is
 inherently "as of now" combined with trailing fundamentals, not a
@@ -37,6 +53,8 @@ from decimal import Decimal
 import psycopg
 import structlog
 
+from scrooner_pipeline.common import rule_flags
+from scrooner_pipeline.common.derivation_policy import PER_SHARE_NOT_DERIVED_REASON
 from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.mapper.ttm import _trailing_quarters
 
@@ -59,15 +77,20 @@ TTM_CONCEPTS = {
     "net_income",
 }
 INSTANT_CONCEPTS = {"shares_outstanding", "stockholders_equity"}
+# TTM inputs that are per-share: a derived quarter of these is never used.
+PER_SHARE_TTM_CONCEPTS = {"diluted_eps", "dividends_per_share"}
+# A Q4 anchor and the filed FY must end on the same date (52/53-week slack).
+ANCHOR_FY_END_SLACK_DAYS = 7
 
 
-def _load_concept_ids(conn: psycopg.Connection, names: set[str]) -> dict[str, int]:
-    with conn.cursor() as cur:
-        cur.execute(
-            "select name, id from analytics.canonical_concept where name = any(%s)",
-            (sorted(names),),
-        )
-        return dict(cur.fetchall())
+class QuarterFacts(dict):
+    """(fiscal_year, fiscal_period) -> (value, fact_ids) for Q1-Q4, plus
+    `end_dates` ((fy, fp) -> period end) and `derived_keys` (quarters whose
+    canonical value has a derived core.fact source). Plain dicts (tests,
+    older callers) behave as "no dates, nothing derived"."""
+
+    end_dates: dict
+    derived_keys: set
 
 
 def _load_quarterly_facts(
@@ -77,7 +100,9 @@ def _load_quarterly_facts(
     with conn.cursor() as cur:
         cur.execute(
             """
-            select p.fiscal_year, p.fiscal_period, cf.value, cf.source_fact_ids
+            select p.fiscal_year, p.fiscal_period, cf.value, cf.source_fact_ids, p.end_date,
+                   exists (select 1 from core.fact f
+                           where f.id = any(cf.source_fact_ids) and f.is_derived) as any_derived
             from analytics.canonical_fact cf
             join core.period p on p.id = cf.period_id
             where cf.company_id = %s and cf.canonical_concept_id = %s
@@ -85,7 +110,111 @@ def _load_quarterly_facts(
             """,
             (company_id, concept_id),
         )
-        return {(fy, fp): (val, fids) for fy, fp, val, fids in cur.fetchall()}
+        rows = cur.fetchall()
+    out = QuarterFacts(((fy, fp), (val, fids)) for fy, fp, val, fids, _e, _d in rows)
+    out.end_dates = {(fy, fp): end for fy, fp, _v, _f, end, _d in rows}
+    out.derived_keys = {(fy, fp) for fy, fp, _v, _f, _e, derived in rows if derived}
+    return out
+
+
+def _load_annual_facts(
+    conn: psycopg.Connection, company_id: int, concept_id: int
+) -> dict[int, tuple[Decimal, list[int], date]]:
+    """fiscal_year -> (value, fact_ids, period end) for FY rows whose sources
+    are all filed (not derived). Used for TTM EPS at a Q4 anchor."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select p.fiscal_year, cf.value, cf.source_fact_ids, p.end_date
+            from analytics.canonical_fact cf
+            join core.period p on p.id = cf.period_id
+            where cf.company_id = %s and cf.canonical_concept_id = %s
+              and p.fiscal_period = 'FY'
+              and not exists (select 1 from core.fact f
+                              where f.id = any(cf.source_fact_ids) and f.is_derived)
+            """,
+            (company_id, concept_id),
+        )
+        return {fy: (val, list(fids), end) for fy, val, fids, end in cur.fetchall()}
+
+
+def _without_derived(by_quarter: dict) -> tuple[dict, bool]:
+    """The quarters minus any whose value comes from a derived fact, and
+    whether any was dropped. Belt and braces for RU-1: derived per-share rows
+    written before the guard stay in core.fact until the reviewed retirement
+    runs, and must never feed a TTM meanwhile."""
+    derived: set = getattr(by_quarter, "derived_keys", set())
+    if not derived:
+        return by_quarter, False
+    kept = {k: v for k, v in by_quarter.items() if k not in derived}
+    return kept, len(kept) != len(by_quarter)
+
+
+def _per_share_window_blocked(
+    original: dict, kept: dict, anchor: tuple[int, str] | None
+) -> bool:
+    """True when the per-share TTM window at `anchor` is incomplete because
+    of the no-derivation rule, not because the company has no such values:
+    a window quarter was dropped as derived, or the window's Q4 is absent
+    while another window quarter is filed (Q4 per-share values are almost
+    never filed separately). Drives the reason text, never a value."""
+    if anchor is None:
+        return False
+    window = _trailing_quarters(*anchor)
+    if any(k in original and k not in kept for k in window):
+        return True
+    has_filed = any(k in kept for k in window)
+    q4_missing = any(k[1] == "Q4" and k not in kept for k in window)
+    return has_filed and q4_missing
+
+
+def _current_quarter(*series: dict) -> tuple[int, str] | None:
+    """The company's current quarter for TTM purposes: the latest quarter of
+    the given (additive) series. Per-share series are never passed here."""
+    anchors = [a for a in (_latest_quarter(s) for s in series) if a is not None]
+    if not anchors:
+        return None
+    order = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
+    return max(anchors, key=lambda k: (k[0], order[k[1]]))
+
+
+def _anchor_end(anchor: tuple[int, str], *series: dict) -> date | None:
+    for s in series:
+        end = getattr(s, "end_dates", {}).get(anchor)
+        if end is not None:
+            return end
+    return None
+
+
+def _ttm_eps_at_anchor(
+    anchor: tuple[int, str] | None,
+    anchor_end: date | None,
+    annual_eps: dict,
+) -> tuple[Decimal | None, list[int]]:
+    """Filed full-year diluted EPS when the anchor is a Q4 (the trailing
+    window is that fiscal year), else (None, []). Never a sum of quarters."""
+    if anchor is None or anchor[1] != "Q4":
+        return None, []
+    hit = annual_eps.get(anchor[0])
+    if hit is None:
+        return None, []
+    value, fids, fy_end = hit
+    if (
+        anchor_end is not None
+        and fy_end is not None
+        and abs((fy_end - anchor_end).days) > ANCHOR_FY_END_SLACK_DAYS
+    ):
+        return None, []  # labels disagree with dates: do not pair them
+    return value, list(fids)
+
+
+def _load_concept_ids(conn: psycopg.Connection, names: set[str]) -> dict[str, int]:
+    with conn.cursor() as cur:
+        cur.execute(
+            "select name, id from analytics.canonical_concept where name = any(%s)",
+            (sorted(names),),
+        )
+        return dict(cur.fetchall())
 
 
 def _latest_instant_fact(
@@ -122,9 +251,18 @@ def _ttm_sum(
     return total, fact_ids
 
 
-# EPS whose latest quarter trails the latest revenue quarter by this many
-# quarters or more is treated as absent rather than as current.
+# Legacy path (release pair OFF): EPS whose latest quarter trails the latest
+# revenue quarter by this many quarters or more is treated as absent.
 STALE_EPS_QUARTERS = 2
+
+# SB-7 (release pair ON): these inputs are read from their current-basis
+# twin written by corporate_actions/share_basis.py, so a TTM or a market cap
+# never mixes pre- and post-split values.
+CURRENT_BASIS_TWINS = {
+    "diluted_eps": "diluted_eps_resolved",
+    "dividends_per_share": "dividends_per_share_resolved",
+    "shares_outstanding": "shares_outstanding_resolved",
+}
 
 
 def _quarters_behind(
@@ -134,6 +272,23 @@ def _quarters_behind(
         return 0
     index = {"Q1": 1, "Q2": 2, "Q3": 3, "Q4": 4}
     return (newer[0] * 4 + index[newer[1]]) - (older[0] * 4 + index[older[1]])
+
+
+def _current_basis_ids(
+    conn: psycopg.Connection, concept_ids: dict[str, int]
+) -> dict[str, int]:
+    """concept_ids with each CURRENT_BASIS_TWINS input pointed at its twin;
+    an input whose twin is missing from the catalog is dropped (blank with
+    reason), never silently read on the as-filed basis."""
+    twins = _load_concept_ids(conn, set(CURRENT_BASIS_TWINS.values()))
+    out = dict(concept_ids)
+    for base, twin in CURRENT_BASIS_TWINS.items():
+        if base in out:
+            if twin in twins:
+                out[base] = twins[twin]
+            else:
+                del out[base]
+    return out
 
 
 def _latest_quarter(by_quarter: dict) -> tuple[int, str] | None:
@@ -250,6 +405,60 @@ def _choose_shares(
     return None, "stale:shares_outstanding"
 
 
+def _ru1_ttm(
+    conn: psycopg.Connection,
+    company_id: int,
+    concept_ids: dict[str, int],
+    price_date: date | None,
+) -> tuple[dict[str, tuple[Decimal | None, list[int]]], date, dict[str, bool]]:
+    """RU-1 TTM inputs (release pair ON). Quarterly diluted EPS is not
+    loaded at all: it is never summed and never sets the anchor (TTM EPS
+    comes from the filed FY at a Q4 anchor). Derived per-share quarters are
+    treated as missing."""
+    quarterly = {
+        name: _load_quarterly_facts(conn, company_id, concept_ids[name])
+        for name in TTM_CONCEPTS
+        if name in concept_ids and name != "diluted_eps"
+    }
+    # Per-share quarters: a derived value is never used (treated as missing).
+    per_share_original = {
+        name: quarterly[name] for name in PER_SHARE_TTM_CONCEPTS & set(quarterly)
+    }
+    for name, series in per_share_original.items():
+        quarterly[name], _dropped = _without_derived(series)
+
+    # The anchor is the company's current quarter from the additive series
+    # (revenue, net income), never from EPS: KKR (EPS stopped in 2018) and a
+    # company that has just filed its 10-K (no Q4 EPS) both stay current.
+    revenue_q = quarterly.get("revenue", {})
+    net_income_q = quarterly.get("net_income", {})
+    anchor = _current_quarter(revenue_q, net_income_q)
+
+    ttm: dict[str, tuple[Decimal | None, list[int]]] = {
+        name: (None, []) for name in TTM_CONCEPTS
+    }
+    # metric_value requires non-null period dates even for an honest null.
+    # A company with no vendor bar still needs six inspectable null rows, so
+    # anchor them to the calculation date rather than attempting to insert
+    # NULL dates (a path the all-priced golden set never exercised).
+    period_end = price_date or date.today()
+    per_share_window_blocked = {
+        name: _per_share_window_blocked(series, quarterly[name], anchor)
+        for name, series in per_share_original.items()
+    }
+    if anchor is not None:
+        fy, fp = anchor
+        for name, by_quarter in quarterly.items():
+            ttm[name] = _ttm_sum(by_quarter, fy, fp)
+        if "diluted_eps" in concept_ids:
+            ttm["diluted_eps"] = _ttm_eps_at_anchor(
+                anchor,
+                _anchor_end(anchor, revenue_q, net_income_q),
+                _load_annual_facts(conn, company_id, concept_ids["diluted_eps"]),
+            )
+    return ttm, period_end, per_share_window_blocked
+
+
 def calculate_price_metrics_for_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -281,35 +490,37 @@ def calculate_price_metrics_for_company(
         else:
             price_reason = None
 
-    quarterly = {
-        name: _load_quarterly_facts(conn, company_id, concept_ids[name])
-        for name in TTM_CONCEPTS
-        if name in concept_ids
-    }
-    diluted_eps_q = quarterly.get("diluted_eps", {})
-    revenue_anchor = _latest_quarter(quarterly.get("revenue", {}))
-    eps_anchor = _latest_quarter(diluted_eps_q)
-    if _quarters_behind(eps_anchor, revenue_anchor) >= STALE_EPS_QUARTERS:
-        # Plain EPS stopped years ago (KKR 2018, Hershey 2010: later EPS is
-        # tagged per share class and stripped), so anchoring on it made P/E
-        # use years-old earnings. Anchor on the current quarter instead;
-        # P/E then falls back to market cap / TTM net income.
-        quarterly["diluted_eps"] = {}
-        eps_anchor = None
-    anchor = eps_anchor or revenue_anchor
-
-    ttm: dict[str, tuple[Decimal | None, list[int]]] = {
-        name: (None, []) for name in TTM_CONCEPTS
-    }
-    # metric_value requires non-null period dates even for an honest null.
-    # A company with no vendor bar still needs six inspectable null rows, so
-    # anchor them to the calculation date rather than attempting to insert
-    # NULL dates (a path the all-priced golden set never exercised).
-    period_end = price_date or date.today()
-    if anchor is not None:
-        fy, fp = anchor
-        for name, by_quarter in quarterly.items():
-            ttm[name] = _ttm_sum(by_quarter, fy, fp)
+    pair_on = rule_flags.per_share_pair_enabled()
+    if pair_on:
+        concept_ids = _current_basis_ids(conn, concept_ids)
+    per_share_window_blocked: dict[str, bool] = {}
+    ttm: dict[str, tuple[Decimal | None, list[int]]]
+    if not pair_on:
+        # Legacy path, unchanged (release pair OFF).
+        quarterly = {
+            name: _load_quarterly_facts(conn, company_id, concept_ids[name])
+            for name in TTM_CONCEPTS
+            if name in concept_ids
+        }
+        diluted_eps_q = quarterly.get("diluted_eps", {})
+        revenue_anchor = _latest_quarter(quarterly.get("revenue", {}))
+        eps_anchor = _latest_quarter(diluted_eps_q)
+        if _quarters_behind(eps_anchor, revenue_anchor) >= STALE_EPS_QUARTERS:
+            # Plain EPS stopped years ago (KKR 2018, Hershey 2010): anchor on
+            # the current quarter; P/E falls back to market cap / TTM NI.
+            quarterly["diluted_eps"] = {}
+            eps_anchor = None
+        anchor = eps_anchor or revenue_anchor
+        ttm = {name: (None, []) for name in TTM_CONCEPTS}
+        period_end = price_date or date.today()
+        if anchor is not None:
+            fy, fp = anchor
+            for name, by_quarter in quarterly.items():
+                ttm[name] = _ttm_sum(by_quarter, fy, fp)
+    else:
+        ttm, period_end, per_share_window_blocked = _ru1_ttm(
+            conn, company_id, concept_ids, price_date
+        )
 
     primary_shares = (
         _latest_instant_fact(conn, company_id, concept_ids["shares_outstanding"])
@@ -364,23 +575,40 @@ def calculate_price_metrics_for_company(
             mc_reason = None
         rows.append(_row("market_cap", market_cap, mc_reason, mc_fids))
 
-        # Trailing P/E = Price / Diluted EPS (TTM). When no plain diluted EPS
-        # is filed, Market Cap / TTM net income -- the same ratio on a total
-        # rather than per-share basis. Multi-class filers (Visa, Airbnb,
-        # Hershey, Constellation Brands) tag EPS per share class, which the
-        # Company Facts API strips, so price / EPS was blank for them.
+        # Trailing P/E = Price / filed FY diluted EPS at a Q4 anchor. Anywhere
+        # else (Q1-Q3 anchors: the trailing window contains a Q4 whose EPS is
+        # not filed separately; multi-class filers whose EPS is per class and
+        # stripped by the Company Facts API: Visa, Airbnb, Hershey) it is
+        # Market Cap / TTM net income -- the same ratio on a total basis.
         eps_ttm, eps_fids = ttm["diluted_eps"]
         ni_ttm, ni_fids = ttm.get("net_income", (None, []))
-        if eps_ttm is None and market_cap is not None and ni_ttm:
+        if not pair_on:
+            # Legacy P/E (release pair OFF), unchanged.
+            if eps_ttm is None and market_cap is not None and ni_ttm:
+                rows.append(
+                    _row("trailing_pe", market_cap / ni_ttm, None, mc_fids + ni_fids)
+                )
+            elif eps_ttm is None:
+                rows.append(_row("trailing_pe", None, "missing:diluted_eps_ttm", []))
+            elif eps_ttm == 0:
+                rows.append(_row("trailing_pe", None, "zero_denominator", []))
+            else:
+                rows.append(_row("trailing_pe", price / eps_ttm, None, eps_fids))
+        elif eps_ttm is not None:
+            if eps_ttm == 0:
+                rows.append(_row("trailing_pe", None, "zero_denominator", []))
+            else:
+                rows.append(_row("trailing_pe", price / eps_ttm, None, eps_fids))
+        elif market_cap is None:
+            rows.append(_row("trailing_pe", None, mc_reason, []))
+        elif ni_ttm is None:
+            rows.append(_row("trailing_pe", None, "missing:net_income_ttm", []))
+        elif ni_ttm == 0:
+            rows.append(_row("trailing_pe", None, "zero_denominator", []))
+        else:
             rows.append(
                 _row("trailing_pe", market_cap / ni_ttm, None, mc_fids + ni_fids)
             )
-        elif eps_ttm is None:
-            rows.append(_row("trailing_pe", None, "missing:diluted_eps_ttm", []))
-        elif eps_ttm == 0:
-            rows.append(_row("trailing_pe", None, "zero_denominator", []))
-        else:
-            rows.append(_row("trailing_pe", price / eps_ttm, None, eps_fids))
 
         # Price/Sales = Market Cap / Revenue (TTM)
         rev_ttm, rev_fids = ttm["revenue"]
@@ -413,8 +641,13 @@ def calculate_price_metrics_for_company(
             )
 
         # Dividend Yield = Dividends per Share (TTM) / Price
+        # Quarters are filed values only (derived ones were dropped above).
+        # If the window failed while the company does report quarterly DPS,
+        # the gap is the unfiled Q4, not an absent dividend: say so.
         dps_ttm, dps_fids = ttm["dividends_per_share"]
-        if dps_ttm is None:
+        if dps_ttm is None and per_share_window_blocked.get("dividends_per_share"):
+            rows.append(_row("dividend_yield", None, PER_SHARE_NOT_DERIVED_REASON, []))
+        elif dps_ttm is None:
             rows.append(
                 _row("dividend_yield", None, "missing:dividends_per_share_ttm", [])
             )

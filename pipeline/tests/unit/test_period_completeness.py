@@ -3,12 +3,24 @@ from decimal import Decimal
 from pathlib import Path
 
 import pytest
-
+from scrooner_pipeline.common.derivation_policy import PER_SHARE_GAP_CAUSE
 from scrooner_pipeline.sanity.period_completeness import (
     CAUSES,
+    _per_share_cause_allowed,
     _sec_feed_accessions,
     classify,
 )
+
+
+@pytest.fixture(autouse=True)
+def _release_pair_on(monkeypatch):
+    """RU-1 behaviour is flag-gated (default OFF = legacy, proven by the
+    *_legacy_off.py copy of this module); these tests exercise it ON."""
+    monkeypatch.setenv(
+        "SCROONER_RULES_ENABLED",
+        "split.event_basis@1,pershare.never_derive@1,derive.periodic_inputs_only@1",
+    )
+    monkeypatch.delenv("SCROONER_RULES_DRYRUN", raising=False)
 
 
 def cause(**overrides):
@@ -65,6 +77,109 @@ def test_derivation_gaps():
 
 
 @pytest.mark.unit
+@pytest.mark.parametrize("base", ["diluted_eps", "basic_eps", "dividends_per_share"])
+def test_per_share_derivation_gaps_are_not_filed_separately_data_limit(base):
+    # MSFT Q4 FY26 / AAPL Q4 FY25 diluted EPS: FY filed in the 10-K, no
+    # filed 3-month Q4 fact, and per-share values are never derived.
+    assert (
+        cause(period_kind="Q4", fy_present=True, base_concept=base)
+        == PER_SHARE_GAP_CAUSE
+    )
+    # A Q2/Q3 per-share value filed only as YTD (H1 EPS - Q1 EPS is not Q2 EPS).
+    assert cause(period_kind="Q", ytd_facts=1, base_concept=base) == PER_SHARE_GAP_CAUSE
+    # A Q4 whose 10-K has no facts at all but the FY is in hand.
+    assert (
+        cause(
+            filing_has_facts=False, period_kind="Q4", fy_present=True, base_concept=base
+        )
+        == PER_SHARE_GAP_CAUSE
+    )
+    assert CAUSES[PER_SHARE_GAP_CAUSE][0] == "data_limit"
+
+
+@pytest.mark.unit
+def test_per_share_cause_leaves_other_causes_and_concepts_alone():
+    # Additive concepts keep the derivation-gap labels.
+    assert (
+        cause(period_kind="Q4", fy_present=True, base_concept="net_income")
+        == "q4_not_derived"
+    )
+    assert (
+        cause(period_kind="Q", ytd_facts=1, base_concept="cfo") == "quarter_not_derived"
+    )
+    # Per-share cells with other evidence keep that evidence's cause.
+    assert (
+        cause(
+            period_kind="Q4",
+            fy_present=True,
+            base_concept="diluted_eps",
+            authoritative_facts=1,
+        )
+        == "not_resolved"
+    )
+    assert (
+        cause(
+            base_concept="diluted_eps",
+            conflicting_values=[Decimal("12.73"), Decimal("3.18")],
+        )
+        == "conflict_split"
+    )
+    assert (
+        cause(period_kind="Q4", fy_present=False, base_concept="diluted_eps")
+        == "no_mapped_tag"
+    )
+
+
+@pytest.mark.unit
+def test_per_share_cause_falls_back_to_old_labels_until_0098_is_applied():
+    assert (
+        cause(
+            period_kind="Q4",
+            fy_present=True,
+            base_concept="diluted_eps",
+            per_share_cause_enabled=False,
+        )
+        == "q4_not_derived"
+    )
+    assert (
+        cause(
+            period_kind="Q",
+            ytd_facts=1,
+            base_concept="basic_eps",
+            per_share_cause_enabled=False,
+        )
+        == "quarter_not_derived"
+    )
+
+
+class _ConstraintCursor:
+    def __init__(self, row):
+        self.row, self.sql = row, None
+
+    def execute(self, sql, params=None):
+        self.sql = sql
+
+    def fetchone(self):
+        return self.row
+
+
+@pytest.mark.unit
+def test_per_share_cause_allowed_reads_the_live_check_constraint():
+    before = _ConstraintCursor(
+        ("CHECK ((gap_cause = ANY (ARRAY['q4_not_derived'::text])))",)
+    )
+    after = _ConstraintCursor(
+        (
+            "CHECK ((gap_cause = ANY (ARRAY['q4_not_derived'::text, 'per_share_not_filed_separately'::text])))",
+        )
+    )
+    assert _per_share_cause_allowed(before) is False
+    assert _per_share_cause_allowed(after) is True
+    assert _per_share_cause_allowed(_ConstraintCursor(None)) is False
+    assert "period_gap_gap_cause_check" in after.sql
+
+
+@pytest.mark.unit
 def test_every_cause_is_allowed_by_the_migration_and_valid_as_a_finding():
     sql = (
         Path(__file__)
@@ -87,7 +202,24 @@ def test_every_cause_is_allowed_by_the_migration_and_valid_as_a_finding():
     allowed |= set(
         re.findall(r"'([a-z0-9_]+)'", widened.split("check (gap_cause in (")[1])
     )
-    assert set(CAUSES) == allowed
+    # 0098 restates the full list and adds per_share_not_filed_separately.
+    latest = (
+        Path(__file__)
+        .parents[2]
+        .joinpath(
+            "db/migrations/0098_per_share_gap_cause_and_canonical_fact_retired.sql"
+        )
+        .read_text()
+    )
+    latest_allowed = set(
+        re.findall(
+            r"'([a-z0-9_]+)'",
+            latest.split("check (gap_cause in (")[1].split("));")[0],
+        )
+    )
+    assert allowed <= latest_allowed, "0098 must keep every earlier cause"
+    assert latest_allowed - allowed == {PER_SHARE_GAP_CAUSE}
+    assert set(CAUSES) == latest_allowed
     assert {finding_type for finding_type, _ in CAUSES.values()} <= {
         "pipeline_bug",
         "filer_error",
@@ -333,4 +465,39 @@ def test_q4_with_full_year_present_is_a_derivation_gap_even_when_the_filing_has_
             fy_present=False,
         )
         == "not_in_sec_feed"
+    )
+
+
+@pytest.mark.unit
+def test_pre_2021_08_09_q4_per_share_stays_a_capture_gap():
+    from datetime import date
+
+    # Item 302(a): FY ending before 2021-08-09 had to file Q4 quarterly data.
+    assert (
+        cause(
+            period_kind="Q4",
+            fy_present=True,
+            base_concept="diluted_eps",
+            period_end=date(2019, 12, 31),
+        )
+        == "q4_not_derived"
+    )
+    assert (
+        cause(
+            period_kind="Q4",
+            fy_present=True,
+            base_concept="diluted_eps",
+            period_end=date(2021, 8, 9),
+        )
+        == PER_SHARE_GAP_CAUSE
+    )
+    # Quarter-from-YTD per-share gaps are not affected by the cutoff.
+    assert (
+        cause(
+            period_kind="Q",
+            ytd_facts=1,
+            base_concept="basic_eps",
+            period_end=date(2019, 6, 30),
+        )
+        == PER_SHARE_GAP_CAUSE
     )

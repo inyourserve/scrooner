@@ -186,6 +186,14 @@ HIDE_DPS_BASIS = "dividend_basis_pending"
 # keep today's cell untouched. Changing this is a Standardization Lead call.
 RESTATEMENT_POLICY = "hide"
 
+# One DPS basis per series while AC-24 (declared vs paid) is open:
+# "hide_off_basis" (default) shows a mixed series on the mapping's
+# priority-1 tag (CommonStockDividendsPerShareDeclared) and hides only the
+# cells that exist solely on another tag; "hide_series" hides the whole
+# mixed series. Cohort-1000 counts for both are in
+# data-team/strategy/team/SPLIT-REBASE-COHORT-DRYRUN-2026-10-24.md.
+DPS_MIXED_POLICY = "hide_off_basis"
+
 HIDDEN_REASON_TEXT = {
     HIDE_BASIS_REVIEW: "share basis under review (a possible split is not confirmed by two kinds of filing evidence)",
     HIDE_BASIS_CONFLICT: "filed copies disagree after converting each to the current share basis",
@@ -998,7 +1006,11 @@ def invariant_violations(
             continue  # a units error in one copy, judged per cell
         if any(p.lo < e.basis_date <= p.hi for e in review):
             continue  # the cells it touches are hidden as review already
-        r: Fraction | None = p.ratio
+        # Only ratios built from this company's own events (or 1) count: a
+        # restated small EPS that happens to fit an unrelated clean ratio
+        # (CRM 0.09 -> 0.28 ~ 3x, cohort-1000 dry-run) is a restatement; an
+        # unrelated real basis change would have formed its own candidate.
+        r: Fraction | None = p.ratio if p.ratio in basis_like else None
         if r is None:
             r = next(
                 (
@@ -1020,16 +1032,8 @@ def invariant_violations(
         # DPS alone moving by 2 or 4 is a rate/annual context error (TER, AIG).
         if len(tags) < 2 or not (tags & (EPS_TAGS | SHARE_COUNT_TAGS)):
             continue
-        if (
-            r in POWER_OF_TEN
-            and not (tags & SHARE_COUNT_TAGS)
-            and not any(
-                e.ratio in (r, 1 / r)
-                for e in events
-                if e.status in ("confirmed", "review")
-            )
-        ):
-            continue  # units scale in one copy (RGA, HALO), judged per cell
+        # A per-share power-of-ten units error (RGA, HALO) never reaches here:
+        # its ratio is not built from this company's own events (above).
         out.extend(members)
     return out
 
@@ -1208,7 +1212,7 @@ def resolve_cells(
                     note,
                 )
             )
-    return _one_dividend_basis(out)
+    return _one_dividend_basis(out, mapped_tags.get("dividends_per_share", []))
 
 
 LABEL_ERROR_TOL = Decimal("0.015")  # as-filed cents (ASSUMED), scaled by the factor
@@ -1286,7 +1290,9 @@ def _all_agree(conv: list[tuple[SourceFact, Fraction, Decimal]], kind: str) -> b
     )
 
 
-def _one_dividend_basis(cells: list[CellResult]) -> list[CellResult]:
+def _one_dividend_basis(
+    cells: list[CellResult], dps_tags: list[str] | None = None
+) -> list[CellResult]:
     """One DPS basis per series (Verifier 2026-10-24, LLY: Q3 2018/2019 would
     show CashPaid 0.5625/0.645 next to Declared quarters). AC-24 (declared
     vs paid) is open, so a quarterly or an annual DPS series whose shown
@@ -1310,6 +1316,11 @@ def _one_dividend_basis(cells: list[CellResult]) -> list[CellResult]:
     mixed = {k for k, v in tags_by_series.items() if len(v) > 1}
     if not mixed:
         return cells
+    order = list(dps_tags or [])
+    basis_tag = {
+        k: next((t for t in order if t in tags_by_series[k]), min(tags_by_series[k]))
+        for k in mixed
+    }
     out = []
     for c in cells:
         if (
@@ -1317,6 +1328,10 @@ def _one_dividend_basis(cells: list[CellResult]) -> list[CellResult]:
             and c.status == SHOWN
             and c.chosen
             and series(c) in mixed
+            and (
+                DPS_MIXED_POLICY == "hide_series"
+                or c.chosen.tag != basis_tag[series(c)]
+            )
         ):
             c = CellResult(
                 c.concept, c.period_id, HIDE_DPS_BASIS, None, (), c.chosen, c.factor,
@@ -1473,6 +1488,10 @@ def run_split_rebase(
     if mode == rule_flags.OFF:
         return {"mode": mode, "companies": 0}
     ru1_on = rule_flags.rule_enabled(RU1_RULE_ID, environ)
+    if mode == rule_flags.ON:
+        if run_id is None:
+            raise ValueError("mode on needs a run_id for rollback")
+        rule_flags.per_share_pair_enabled(environ)  # raises unless RU-1 is on too
     if not company_ids:
         raise ValueError("split re-base needs an explicit company list (cohort scope)")
     mapped = load_mapped_tags(conn)
@@ -1484,8 +1503,7 @@ def run_split_rebase(
         current = load_current_cells(conn, cid)
         results.append((res, current))
         if mode == rule_flags.ON:
-            if run_id is None:
-                raise ValueError("mode on needs a run_id for rollback")
+            assert run_id is not None
             write_company(conn, res, current, run_id=run_id, remove_derived_only=ru1_on)
     return {
         "mode": mode,
@@ -1669,3 +1687,37 @@ def classify_change(
         if abs(old - new * kd) <= half_unit(old, PER_SHARE) + kd * Decimal("0.005"):
             return WAS_UNADJUSTED if kd > 1 else WAS_DOUBLE_DIVIDED
     return OTHER_CHANGED
+
+
+# --------------------------------------------------------------------------
+# SB-6 writer registry: who writes each owned resolved concept in a mode.
+# --------------------------------------------------------------------------
+def registered_writers(
+    concept: str, environ: Mapping[str, str] | None = None
+) -> list[str]:
+    from scrooner_pipeline.corporate_actions.stock_splits import (
+        RETROACTIVE_ADJUSTMENT_CONCEPTS,
+        retroactive_adjustment_active,
+    )
+    from scrooner_pipeline.mapper.conflict_resolution import (
+        SPLIT_LIKE_CONCEPTS,
+        active_conflict_fill_targets,
+    )
+    from scrooner_pipeline.mapper.dedup_majority_resolver import active_safe_concepts
+
+    out = []
+    for primary, resolved in active_conflict_fill_targets(environ):
+        if resolved == concept:
+            out += ["conflict_resolution.baseline", "conflict_resolution.conflict_fill"]
+            if primary in SPLIT_LIKE_CONCEPTS:
+                out.append("conflict_resolution.split_like")
+    if any(r == concept for _, r in active_safe_concepts(environ)):
+        out.append("dedup_majority_resolver")
+    if (
+        retroactive_adjustment_active(environ)
+        and concept in RETROACTIVE_ADJUSTMENT_CONCEPTS.values()
+    ):
+        out.append("stock_splits.retroactive")
+    if concept in TARGETS and rule_flags.per_share_pair_enabled(environ):
+        out.append("share_basis")
+    return out

@@ -35,9 +35,18 @@ logger = structlog.get_logger()
 
 
 def _load_concept_id(conn: psycopg.Connection) -> int | None:
+    from scrooner_pipeline.common import rule_flags
+
+    # SB-7: with the split re-base / RU-1 pair ON the streak compares years
+    # on the current share basis (a 4:1 split is not a dividend cut).
+    name = (
+        "dividends_per_share_resolved"
+        if rule_flags.per_share_pair_enabled()
+        else "dividends_per_share"
+    )
     with conn.cursor() as cur:
         cur.execute(
-            "select id from analytics.canonical_concept where name = 'dividends_per_share'"
+            "select id from analytics.canonical_concept where name = %s", (name,)
         )
         row = cur.fetchone()
         return row[0] if row else None

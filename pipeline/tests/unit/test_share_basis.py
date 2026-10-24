@@ -1075,7 +1075,9 @@ def test_mixed_dividend_basis_in_one_series_is_hidden_pending_ac24():
     res = run(b)
     q3 = b.cell(res, "dividends_per_share_resolved", "2018-07-01", "2018-09-30")
     q1 = b.cell(res, "dividends_per_share_resolved", "2018-01-01", "2018-03-31")
-    assert q3.status == q1.status == sb.HIDE_DPS_BASIS
+    # default: the series is shown on the declared basis; the paid-only Q3 is hidden
+    assert q3.status == sb.HIDE_DPS_BASIS
+    assert q1.status == sb.SHOWN and q1.chosen.tag == DPS_DECL
     fy = b.cell(res, "dividends_per_share_resolved", "2018-01-01", "2018-12-31")
     assert fy.status == sb.SHOWN  # the annual series is on one tag
 
@@ -1112,4 +1114,102 @@ def test_two_vintage_restatement_is_still_hidden():
     assert (
         b.cell(res, "diluted_eps_resolved", "2016-07-01", "2017-06-30").status
         == sb.HIDE_RESTATED
+    )
+
+
+def test_hide_series_policy_hides_the_whole_mixed_series(monkeypatch):
+    monkeypatch.setattr(sb, "DPS_MIXED_POLICY", "hide_series")
+    b = Book()
+    q = b.filing("L-1", "2018-11-01")
+    k = b.filing("L-2", "2020-02-19", "10-K")
+    b.add(DPS_DECL, "0.5625", "2018-01-01", "2018-03-31", q)
+    b.add(DPS_PAID, "0.5625", "2018-07-01", "2018-09-30", k)
+    res = run(b)
+    q1 = b.cell(res, "dividends_per_share_resolved", "2018-01-01", "2018-03-31")
+    assert q1.status == sb.HIDE_DPS_BASIS
+
+
+def test_restatement_fitting_an_unrelated_clean_ratio_is_not_a_company_violation():
+    """CRM-like: a confirmed 4:1 exists, and a later 10-K restates two small
+    quarters roughly 3x (0.09 -> 0.28, 0.10 -> 0.31): restatement, judged per
+    cell, never a company-wide hide."""
+    b = aapl()
+    a = b.filing("C-9", "2018-03-09", "10-K")
+    c = b.filing("C-10", "2019-03-08", "10-K")
+    for s, e, old, new in (
+        ("2017-02-01", "2017-04-30", "0.09", "0.28"),
+        ("2017-05-01", "2017-07-31", "0.10", "0.31"),
+    ):
+        for tag in (EPS_B, EPS_D):
+            b.add(tag, old, s, e, a)
+            b.add(tag, new, s, e, c)
+    # ... while the other comparatives in the same two filings are unchanged
+    for s, e, v in (
+        ("2016-02-01", "2016-04-30", "1.10"),
+        ("2016-05-01", "2016-07-31", "1.20"),
+        ("2016-08-01", "2016-10-31", "1.30"),
+        ("2016-02-01", "2017-01-31", "4.80"),
+    ):
+        for tag in (EPS_B, EPS_D):
+            b.add(tag, v, s, e, a)
+            b.add(tag, v, s, e, c)
+    res = run(b)
+    assert res.violations == []
+    assert all(e.status in ("confirmed", "rejected") for e in res.events)
+    cell = b.cell(res, "basic_eps_resolved", "2017-02-01", "2017-04-30")
+    assert cell.status == sb.HIDE_RESTATED
+
+
+def _with_confirmed_two_for_one(b: Book) -> tuple[str, str]:
+    """A company with a filed 2:1 (ratio fact + pairs + share step) in 2013,
+    plus two later 10-Ks for the cases below."""
+    pre = b.filing("X-1", "2013-05-02")
+    post = b.filing("X-2", "2013-07-26")
+    _two_to_one(b, pre, post)
+    b.add(RATIO, "2", None, "2013-05-14", post)
+    return b.filing("X-3", "2016-02-20", "10-K"), b.filing("X-4", "2017-02-20", "10-K")
+
+
+def test_dps_only_move_by_the_companys_own_ratio_is_not_a_violation():
+    """A DPS rate/annual context error that happens to equal the company's
+    own split ratio (2x on two periods, Declared and CashPaid) while EPS is
+    unchanged: judged per cell, the company is not hidden."""
+    b = Book()
+    a, c = _with_confirmed_two_for_one(b)
+    for s, e in (("2015-01-01", "2015-03-31"), ("2015-04-01", "2015-06-30")):
+        for tag in (DPS_DECL, DPS_PAID):
+            b.add(tag, "0.20", s, e, a)
+            b.add(tag, "0.40", s, e, c)
+        b.add(EPS_D, "1.00", s, e, a)
+        b.add(EPS_D, "1.00", s, e, c)
+    res = run(b)
+    assert res.violations == []
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2015-01-01", "2015-03-31").status
+        == sb.SHOWN
+    )
+
+
+def test_one_period_move_by_the_companys_own_ratio_is_not_a_violation():
+    """One period (basic and diluted) moving 2x between two later 10-Ks is a
+    context error at that period, not a missed split."""
+    b = Book()
+    a, c = _with_confirmed_two_for_one(b)
+    for tag in (EPS_B, EPS_D):
+        b.add(tag, "0.80", "2015-01-01", "2015-03-31", a)
+        b.add(tag, "0.40", "2015-01-01", "2015-03-31", c)
+    for s, e, v in (
+        ("2015-04-01", "2015-06-30", "0.90"),
+        ("2015-07-01", "2015-09-30", "0.95"),
+        ("2015-01-01", "2015-12-31", "3.50"),
+        ("2014-01-01", "2014-12-31", "3.10"),
+    ):
+        for tag in (EPS_B, EPS_D):
+            b.add(tag, v, s, e, a)
+            b.add(tag, v, s, e, c)
+    res = run(b)
+    assert res.violations == []
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2015-04-01", "2015-06-30").status
+        == sb.SHOWN
     )

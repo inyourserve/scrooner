@@ -185,13 +185,13 @@ def _run_script(tmp_path, cwd, script_path, **env_extra):
 
 @pytest.mark.unit
 @pytest.mark.parametrize("cwd,path", [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)])
-def test_full_run_without_budget_pressure_runs_all_23_stages_and_exits_zero(tmp_path, cwd, path):
+def test_full_run_without_budget_pressure_runs_all_24_stages_and_exits_zero(tmp_path, cwd, path):
     out, calls = _run_script(tmp_path, cwd, path)
     assert out.returncode == 0, (out.stdout, out.stderr)
     stages_run = [c.split()[2] for c in calls if c.startswith("RUN scrooner-") and "update-status" not in c]
-    assert len(stages_run) == 23
+    assert len(stages_run) == 24  # map:split-rebase added 2026-10-24 (SB-8)
     assert stages_run[-1] == "build-tag-library"
-    assert out.stdout.count("took ") == 23  # one "took Ns" line per stage
+    assert out.stdout.count("took ") == 24  # one "took Ns" line per stage
     assert "budget exhausted" not in out.stderr
 
 
@@ -208,8 +208,9 @@ def test_budget_exhaustion_skips_remaining_stages_names_them_once_and_exits_nonz
     skipped_names = line.split("skipped: ")[1].split()
     assert skipped_names and skipped_names[-1] == "map:build-tag-library"
     assert not ({s.split(":")[1] for s in skipped_names} & ran)  # skipped means never run
-    # a "took" line for every stage: ran + skipped = all 23
-    assert out.stdout.count("took ") == 23
+    # a "took" line for every stage: ran + skipped = all 24 (map:split-rebase
+    # added 2026-10-24, WO-22 SB-8)
+    assert out.stdout.count("took ") == 24
     assert "FAILED stages" in out.stderr and "budget-skipped" in out.stderr
 
 

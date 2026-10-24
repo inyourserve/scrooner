@@ -222,6 +222,12 @@ RULES: dict[str, Rule] = {
             "FY DPS must be at least the sum of Q1-Q3",
         ),
         _r(
+            "derive.periodic_inputs_only@1",
+            "RF-03",
+            "period_engineer",
+            "derived quarters take inputs only from 10-K/10-Q-family filings (RU-1 form gate; JPM DEF 14A, WTRG 8-K)",
+        ),
+        _r(
             "derive.additive_allowlist@1",
             "RF-27",
             "period_engineer",
@@ -285,6 +291,26 @@ RULE_MATCHING_COPIES = "dedupe.matching_copies@1"
 RULE_SHARED_ACCESSION_PRIMARY = "entity.shared_accession_primary_filer@1"
 RULE_IDENTITY = "identity.cik_name_ticker@1"
 KNOWN_RULES = frozenset(RULES)
+
+# Release pair (Release Manager / coordinator 2026-10-24): the split re-base
+# and RU-1 ship together. Either one ON without the other is refused.
+SPLIT_BASIS_RULE = "split.event_basis@1"
+PER_SHARE_NEVER_DERIVE_RULE = "pershare.never_derive@1"
+
+
+def per_share_pair_enabled(environ: Mapping[str, str] | None = None) -> bool:
+    """True when BOTH split.event_basis@1 and pershare.never_derive@1 are on,
+    False when neither is. Exactly one on raises: a half-shipped pair would
+    re-base values while derived per-share cells (or the legacy writers)
+    still use the old basis."""
+    split_on = rule_enabled(SPLIT_BASIS_RULE, environ)
+    ru1_on = rule_enabled(PER_SHARE_NEVER_DERIVE_RULE, environ)
+    if split_on != ru1_on:
+        raise ValueError(
+            f"{SPLIT_BASIS_RULE} and {PER_SHARE_NEVER_DERIVE_RULE} ship together: "
+            "enable both or neither"
+        )
+    return split_on
 
 
 def parse_rule_ids(raw: str | None) -> frozenset[str]:

@@ -793,6 +793,15 @@ def calculate_expanded_metrics(conn: psycopg.Connection, ciks: set[str]) -> dict
             "dividends_paid",
         },
     )
+    from scrooner_pipeline.common import rule_flags
+
+    if rule_flags.per_share_pair_enabled():
+        # SB-7: share counts on the current basis, so the dilution trend and
+        # the ownership denominator never compare pre- and post-split counts.
+        twin = _load_concept_ids(conn, {"shares_outstanding_resolved"})
+        concept_ids.pop("shares_outstanding", None)
+        if "shares_outstanding_resolved" in twin:
+            concept_ids["shares_outstanding"] = twin["shares_outstanding_resolved"]
 
     with conn.cursor() as cur:
         cur.execute(
