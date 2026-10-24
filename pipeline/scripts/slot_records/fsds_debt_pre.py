@@ -1,8 +1,9 @@
 """Lean FSDS pass for era detection (stdlib, run with -I): from one FSDS
-quarter zip, write the face balance-sheet presentation rows of the selected
-CIKs' 10-K/10-Q filings (tag, report, line, label) as JSONL. No values; the
-fingerprint later comes from the ordered debt-family tags per filing.
-usage: fsds_debt_pre.py <quarter.zip> <out.jsonl> <cik,cik,...>
+quarter zip, write the face presentation rows of the selected CIKs' 10-K/10-Q
+filings (tag, report, line, label) as JSONL. No values; the fingerprint later
+comes from the ordered family tags per filing.
+usage: fsds_debt_pre.py <quarter.zip> <out.jsonl> <cik,cik,...> [stmts=BS]
+  stmts: comma list of FSDS statement codes to keep (BS, CF, IS, ...)
 """
 import csv
 import io
@@ -28,7 +29,8 @@ def rows(z, name):
                 yield ix, r + [""] * (len(hdr) - len(r))
 
 
-def main(zpath, out, ciks):
+def main(zpath, out, ciks, stmts="BS"):
+    stmts = set(stmts.split(","))
     ciks = {c.strip() for c in ciks.split(",")}
     z = zipfile.ZipFile(zpath)
     subs = {}
@@ -44,7 +46,7 @@ def main(zpath, out, ciks):
     with open(out, "a") as o:
         for ix, r in rows(z, "pre.txt"):
             a = r[ix["adsh"]]
-            if a in subs and r[ix["stmt"]] == "BS" and r[ix["inpth"]] == "0":
+            if a in subs and r[ix["stmt"]] in stmts and r[ix["inpth"]] == "0":
                 o.write(
                     json.dumps(
                         {
@@ -52,6 +54,7 @@ def main(zpath, out, ciks):
                             **subs[a],
                             "report": int(r[ix["report"]]),
                             "line": int(r[ix["line"]]),
+                            "stmt": r[ix["stmt"]],
                             "tag": r[ix["tag"]],
                             "custom": r[ix["version"]] == a,
                             "label": r[ix["plabel"]],
@@ -63,4 +66,4 @@ def main(zpath, out, ciks):
     print(zpath.rsplit("/", 1)[-1], "filings", len(subs), "bs_rows", n)
 
 
-main(*sys.argv[1:4])
+main(*sys.argv[1:5])

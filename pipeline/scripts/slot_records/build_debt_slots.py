@@ -47,10 +47,37 @@ AGG_PARENT_RX = re.compile(
     r"LongTermDebtAndCapitalLeaseObligations(IncludingCurrentMaturities)?|"
     r"LongTermDebt|DebtCurrent|DebtNoncurrent)$"
 )
-# A child is debt-family if it matches this (the pilot's regex, plus LineOfCredit).
+# BROAD debt-candidate net (Verifier 30-set rejection, D1): the old narrow
+# regex missed whole face lines - KO NotesAndLoansPayable[Current] ("Loans and
+# notes payable"), ORCL LongTermNotesAndLoans, AMD LinesOfCredit (plural).
+# This is a wide CANDIDATE detector; membership is then decided by the face
+# coverage check: every candidate is a member or carries a recorded exclusion,
+# and anything unclassified fails the record (coverage_clean=false).
 DEBT_RX = re.compile(
-    r"Debt|Borrow|Lease|CommercialPaper|NotesPayable|LineOfCredit|Convertible"
+    r"Debt|Borrow|Loan|NotesPayable|NotesAndLoans|CommercialPaper|"
+    r"Lines?OfCredit|Lease|Convertible|FinanceObligation"
 )
+# Candidate lines that are NOT debt members, with the recorded reason.
+EXCLUDE_CLASSES = [
+    (re.compile(r"AccountsPayable|AccruedLiabilit", re.I), "excluded_combined_nondebt"),
+    # a combined AP+accrued(+debt) line is never a debt member (AMAT 2015:
+    # amat_AccountsPayableandAccruedLiabilitiesCurrentandDebtCurrent is the
+    # face "Accounts payable and accrued expenses" row)
+    (
+        re.compile(
+            r"Receivable|LeasedAsset|PropertySubjectTo|CapitalLeasedAssets|"
+            r"CapitalLeases.*(BalanceSheet|Deprecation)|PropertyPlantandEquipment|"
+            r"SolarEnergy|RightofUseAsset",
+            re.I,
+        ),
+        "excluded_asset_side",
+        # lenders' finance receivables (CAT/CSCO/GE), leased ASSETS
+        # (TSLA solar/vehicles, WMT property under capital leases) - the
+        # label net catches them; they are never liabilities
+    ),
+    (re.compile(r"ReserveFor", re.I), "excluded_equity_reserve"),
+    # PG ReserveForEsopDebtRetirement is an equity-section contra, not debt
+]
 # Never part of any debt perimeter even though the name matches ("Lease"):
 # straight-line rent and similar accruals would be false positives; keep the
 # regex result but classify, and let the replay variants decide.
@@ -152,12 +179,13 @@ def debt_observation(adsh: str, form: str, period: str, cal: dict) -> dict:
                 continue
             side = "current" if parent == "LiabilitiesCurrent" else "noncurrent"
             key = f"{side}:{child}"
+            excl = next((reason for rx, reason in EXCLUDE_CLASSES if rx.search(child)), None)
             members.setdefault(
                 key,
                 {
                     "tag": child,
                     "side": side,
-                    "class": classify(child),
+                    "class": excl or classify(child),
                     "weight": weight,
                     "calc_parent": parent,
                     "roles": [],

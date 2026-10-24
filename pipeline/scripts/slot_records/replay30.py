@@ -40,6 +40,19 @@ by_cell = {}
 for r in lane3:
     key = (r["cik"], r["period_end"])
     by_cell.setdefault(key, []).append(r)
+# Verifier value anchors are evaluated even when lane 3 has no row there.
+anchors_path = Path(sys.argv[1]).parent / "results" / "expected_values.json"
+if not anchors_path.exists():
+    anchors_path = Path(sys.argv[1]).parent / "expected_values.json"
+if anchors_path.exists():
+    tick2cik = {}
+    for recs in records.values():
+        for r in recs:
+            tick2cik[r["company"]] = r["cik"]
+    for a in json.loads(anchors_path.read_text())["anchors"]:
+        cik = tick2cik.get(a["ticker"])
+        if cik:
+            by_cell.setdefault((cik, a["period_end"]), [])
 
 def covering_record(cik, period_end):
     ym = period_end[:7]
@@ -49,6 +62,9 @@ def covering_record(cik, period_end):
     return None
 
 def fetch_facts(cur, cik, tags):
+    # Verifier D2: restrict facts to PERIODIC filings - the non-authoritative
+    # fallback once took an 8-K recast copy (GE 2021-12-31: 35,114M from an
+    # 8-K vs the 10-K face 35,185M).
     cur.execute(
         """
         select distinct on (co.tag, p.end_date) co.tag, p.end_date::text, f.value::numeric, f.is_authoritative
@@ -57,8 +73,10 @@ def fetch_facts(cur, cik, tags):
         join core.period p on p.id = f.period_id
         join core.unit u on u.id = f.unit_id
         join core.company c on c.id = f.company_id
+        join core.filing fi on fi.id = f.filing_id
         where c.cik = %s and p.period_type = 'instant' and co.taxonomy = 'us-gaap'
           and u.unit_name = 'usd' and co.tag = any(%s)
+          and fi.form in ('10-K','10-Q','10-K/A','10-Q/A')
         order by co.tag, p.end_date, f.is_authoritative desc, f.id desc
         """,
         (cik, list(tags)),
@@ -119,17 +137,23 @@ for cik in sorted(records):
         borrowings = lease_incl - lease_content
         before_vals = {Decimal(r["before"]) for r in rows if r.get("before")}
         is_hold = any("hold" in (r.get("reason") or "") and not r.get("after") for r in rows)
-        if not day or (missing and lease_incl == 0):
+        # Verifier: a missing member is a HARD STOP, never a silent zero
+        # (it hid KO's custom 2014-18 line). Borrowings-only verdicts dropped:
+        # the variant does not remove current finance leases inside non-combined
+        # short-term lines (CVX 2022, LRCX) - it stays informational only.
+        if not rec.get("coverage_clean", True):
+            verdict = "not_computable_uncovered_candidates"
+        elif missing:
+            verdict = "not_computable_missing_member"
+        elif not day:
             verdict = "not_computable_no_facts"
         elif before_vals and any(abs(lease_incl - b) <= 1 for b in before_vals):
             verdict = "agrees_lease_inclusive"
-        elif before_vals and any(abs(borrowings - b) <= 1 for b in before_vals):
-            verdict = "agrees_borrowings_only"
         elif before_vals:
             verdict = "DISAGREES_with_lane3"
         else:
             verdict = "lane3_blank_slot_has_value"
-        if is_hold and verdict in ("agrees_lease_inclusive", "agrees_borrowings_only", "DISAGREES_with_lane3", "lane3_blank_slot_has_value"):
+        if is_hold and verdict in ("agrees_lease_inclusive", "DISAGREES_with_lane3", "lane3_blank_slot_has_value"):
             report["summary"]["holds_resolved_by_slot"] += 1
             report["per_company"][ticker]["holds_resolved_by_slot"] += 1
         report["summary"][verdict] += 1

@@ -11,7 +11,15 @@ import re
 import sys
 from collections import defaultdict
 
-DEBT_RX = re.compile(r"Debt|Borrow|Lease|CommercialPaper|NotesPayable|LineOfCredit|Convertible")
+# BROAD candidate net (Verifier D1): tag OR printed label can flag a line.
+DEBT_RX = re.compile(
+    r"Debt|Borrow|Loan|NotesPayable|NotesAndLoans|CommercialPaper|"
+    r"Lines?OfCredit|Lease|Convertible|FinanceObligation"
+)
+LABEL_RX = re.compile(
+    r"debt|borrow|loan|notes? payable|lease|commercial paper|credit facilit|convertible",
+    re.I,
+)
 EXCLUDE_RX = re.compile(
     r"PreferredStock|CommonStock|Equity|TreasuryStock|RetainedEarnings|"
     r"AccumulatedOtherComprehensive|CommitmentsAndContingencies|"
@@ -30,20 +38,28 @@ for line in open(sys.argv[1]):
     by_filing[r["adsh"]] = {
         "cik": r["cik"], "form": r["form"], "period": iso(r["period"]), "filed": iso(r["filed"]),
     }
-    if DEBT_RX.search(r["tag"]) and not EXCLUDE_RX.search(r["tag"]):
-        lines[r["adsh"]].append((r["report"], r["line"], r["tag"], r["custom"]))
+    if (DEBT_RX.search(r["tag"]) or LABEL_RX.search(r.get("label") or "")) and not EXCLUDE_RX.search(r["tag"]):
+        lines[r["adsh"]].append(
+            (r["report"], r["line"], r["tag"], r["custom"], r.get("label") or "")
+        )
 
 companies = defaultdict(list)
 for adsh, meta in by_filing.items():
-    fp_tags = tuple(t for _, _, t, _ in sorted(lines.get(adsh, [])))
-    companies[meta["cik"]].append((meta["filed"], meta["period"], adsh, meta["form"], fp_tags))
+    cands = sorted(lines.get(adsh, []))
+    fp_tags = tuple(t for _, _, t, _, _ in cands)
+    candidates = [
+        {"tag": t, "custom": cu, "label": lb} for _, _, t, cu, lb in cands
+    ]
+    companies[meta["cik"]].append(
+        (meta["filed"], meta["period"], adsh, meta["form"], fp_tags, candidates)
+    )
 
 eras_out = {}
 boundaries = []
 for cik, filings in companies.items():
     filings.sort()  # by filed date
     eras = []
-    for filed, period, adsh, form, fp in filings:
+    for filed, period, adsh, form, fp, candidates in filings:
         if eras and eras[-1]["fp"] == list(fp):
             eras[-1]["last"] = adsh
             eras[-1]["period_to"] = period
@@ -51,7 +67,8 @@ for cik, filings in companies.items():
         else:
             eras.append(
                 {"fp": list(fp), "first": adsh, "last": adsh, "form": form,
-                 "period_from": period, "period_to": period, "filed_from": filed, "n": 1}
+                 "period_from": period, "period_to": period, "filed_from": filed, "n": 1,
+                 "candidates": candidates}
             )
             boundaries.append((cik, adsh))
     eras_out[cik] = eras

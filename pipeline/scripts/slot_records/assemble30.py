@@ -76,12 +76,45 @@ for cik, era_list in sorted(eras.items()):
         run = [{"period_of_report": span["period_from"], "aggregates": obs.get("aggregates", {})},
                {"period_of_report": span["period_to"], "aggregates": obs.get("aggregates", {})}]
         b._apply_lease_evidence(rec, run, ticker, lease_facts)
+        # cal-sourced exclusions (e.g. combined AP lines) are bookkept as
+        # exclusions, never as members
+        excluded_members = [m for m in rec["members"] if m["class"].startswith("excluded_")]
+        rec["members"] = [m for m in rec["members"] if not m["class"].startswith("excluded_")]
+        # FACE COVERAGE CHECK (Verifier D1): every face line that reads as debt
+        # (by tag or printed label) is a member or carries a recorded exclusion;
+        # anything else fails the record.
+        member_tags = {m["tag"] for m in rec["members"]}
+        excluded, uncovered = [], []
+        for cand in span.get("candidates", []):
+            tag = cand["tag"]
+            if tag in member_tags:
+                continue
+            reason = next((rsn for rx, rsn in b.EXCLUDE_CLASSES if rx.search(tag)), None)
+            if reason is None and b.EXCLUDE_RX.search(tag):
+                reason = "excluded_structural"
+            if reason is None and not b.DEBT_RX.search(tag):
+                reason = "label_match_only_nondebt_tag"
+            if reason:
+                excluded.append({"tag": tag, "label": cand["label"], "reason": reason})
+            else:
+                uncovered.append({"tag": tag, "label": cand["label"], "custom": cand["custom"]})
+        excluded.extend(
+            {"tag": m["tag"], "label": "", "reason": m["class"]} for m in excluded_members
+        )
+        rec["excluded_candidates"] = excluded
+        rec["uncovered_candidates"] = uncovered
+        rec["coverage_clean"] = not uncovered
         records.append(rec)
     for rec in records:
         out.write(json.dumps(rec) + "\n")
-    summary.append((ticker, len(era_list), len(records), len(missing)))
+    dirty = sum(1 for r in records if not r["coverage_clean"])
+    summary.append((ticker, len(era_list), len(records), len(missing), dirty))
 
-print(f"{'ticker':6} {'fsds_eras':>9} {'cal_records':>11} {'missing_cal':>11}")
-for t, fe, cr, mi in sorted(summary):
-    print(f"{t:6} {fe:>9} {cr:>11} {mi:>11}")
-print("total records:", sum(c for _, _, c, _ in summary), "missing:", sum(m for *_, m in summary))
+print(f"{'ticker':6} {'fsds_eras':>9} {'cal_records':>11} {'missing_cal':>11} {'NOT_COVERED':>11}")
+for t, fe, cr, mi, dirty in sorted(summary):
+    print(f"{t:6} {fe:>9} {cr:>11} {mi:>11} {dirty:>11}")
+print(
+    "total records:", sum(c for _, _, c, _, _ in summary),
+    "missing:", sum(m for *_, m, _ in summary),
+    "coverage_dirty:", sum(d for *_, d in summary),
+)
