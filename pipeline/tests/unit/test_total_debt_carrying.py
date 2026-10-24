@@ -110,10 +110,10 @@ def test_t5_goog_2023_12_31_borrowings_and_a_truthful_label_while_lease_facts_ar
     # conflict copies, so the lease-inclusive total (14,616) is not reachable: borrowings with the label
     i = total(GOOG_23)
     assert (
-        i.composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
+        i.composition == dc.COMPOSITION_LEASES_INCOMPLETE
         and i.value == Decimal(12870) * M
     )
-    assert i.slots.lease_reason == "lease_facts_incomplete"
+    assert i.slots.lease_reason == "lease_facts_incomplete" and i.slots.lease_fact_filed
     assert i.value not in (
         Decimal(14253) * M,
         Decimal(14746) * M,
@@ -303,6 +303,7 @@ class _Cur:
                         i + 1,
                         end,
                         "duration" if dur else "instant",
+                        True,
                     )
                 )
             self.res = rows
@@ -560,3 +561,296 @@ def test_a_lease_half_derived_from_face_lines_does_not_trigger_the_location_hold
         c.value == Decimal(110) * M
         and c.composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
     )
+
+
+# ------------------------------------------------------------------ V3 verifier findings (2026-10-24)
+# AAPL files "Commercial paper and repurchase agreements" as OtherShortTermBorrowings (10-Q 0000320193-20-000062 R4)
+AAPL_2006 = dict(
+    OtherShortTermBorrowings=11166,
+    LongTermDebtCurrent=7509,
+    LongTermDebtNoncurrent=94048,
+    FinanceLeaseLiability=650,
+)
+AAPL_2003 = dict(
+    OtherShortTermBorrowings=10029,
+    LongTermDebtCurrent=10392,
+    LongTermDebtNoncurrent=89086,
+    FinanceLeaseLiability=648,
+)
+AAPL_1909 = dict(
+    CommercialPaper=5980,
+    OtherShortTermBorrowings=5980,
+    LongTermDebtCurrent=10260,
+    LongTermDebtNoncurrent=91807,
+)
+
+
+def test_aapl_2020_06_27_includes_the_commercial_paper_and_repurchase_agreements_line():
+    c = total(AAPL_2006)
+    assert (
+        c.value == Decimal(113373) * M
+    )  # 11,166 + 7,509 + 94,048 + finance leases 650
+    assert (
+        c.slots.borrowings == Decimal(112723) * M and c.slots.leases == Decimal(650) * M
+    )
+    assert (
+        total(AAPL_2006, "borrowings_only").value != Decimal(102207) * M
+    )  # the wrong value the Verifier found
+
+
+def test_aapl_2020_03_28_same_mechanism():
+    c = total(AAPL_2003)
+    assert c.value == Decimal(110155) * M  # was 100,126: missed the 10,029 line
+    assert c.slots.borrowings == Decimal(109507) * M
+
+
+def test_aapl_2019_09_28_commercial_paper_and_other_short_term_borrowings_are_one_line():
+    c = total(AAPL_1909, "borrowings_only")
+    assert c.value == (Decimal(5980) + 10260 + 91807) * M  # not 5,980 twice
+    assert "CommercialPaper" in c.tags and "OtherShortTermBorrowings" in c.tags
+    assert any("short_term_same_line" in p for p in c.slots.proofs)
+
+
+def test_distinct_short_term_amounts_are_held_unless_the_stated_total_proves_the_sum():
+    tags = dict(
+        LongTermDebtNoncurrent=100,
+        LongTermDebtCurrent=10,
+        CommercialPaper=5,
+        OtherShortTermBorrowings=11,
+    )
+    assert dc.carrying_lines(V(**tags)) == dc.Hold("short_term_overlap_unresolved")
+    # the stated total shows the two are separate lines (100 + 10 + 5 + 11)
+    c = dc.carrying_lines(
+        V(**dict(tags, DebtLongtermAndShorttermCombinedAmount="126.4"))
+    )
+    assert c.value == Decimal(126) * M
+    # ... or that the larger line contains the smaller (100 + 10 + 11)
+    c = dc.carrying_lines(
+        V(**dict(tags, DebtLongtermAndShorttermCombinedAmount="121.3"))
+    )
+    assert c.value == Decimal(121) * M and "CommercialPaper" not in c.tags
+
+
+def test_short_term_tag_equal_to_the_current_maturities_is_still_dropped():
+    c = total(
+        dict(
+            LongTermDebtNoncurrent=100, LongTermDebtCurrent=10, ShortTermBorrowings=10
+        ),
+        "borrowings_only",
+    )
+    assert c.value == Decimal(110) * M
+
+
+NVDA_15_FACE = dict(LongTermDebt="1384.342", ConvertibleDebtCurrent=0, ConvertibleDebtNoncurrent=1384,
+                    CapitalLeaseObligationsCurrent="3.414", CapitalLeaseObligationsNoncurrent="14.086",
+                    CapitalLeasesFutureMinimumPaymentsPresentValueOfNetMinimumPayments="17.5")  # fmt: skip
+
+
+def test_nvda_fy2015_uses_the_precise_face_line_not_the_rounded_note_figure():
+    c = total(NVDA_15_FACE)
+    assert c.value == Decimal(
+        "1401842000"
+    )  # 1,384,342K + 14,086K + 3,414K (10-K 0001045810-15-000036 R5)
+    assert total(NVDA_15_FACE, "borrowings_only").value == Decimal("1384342000")
+    assert any("precise_copy_long_term_debt" in p for p in c.slots.proofs)
+    # the rounded figure alone stays 1,384M
+    assert (
+        total(
+            {k: v for k, v in NVDA_15_FACE.items() if k != "LongTermDebt"},
+            "borrowings_only",
+        ).value
+        == Decimal(1384) * M
+    )
+
+
+def test_a_longtermdebt_that_is_not_a_rounding_of_the_note_figure_is_not_a_precise_copy():
+    far = dict(NVDA_15_FACE, LongTermDebt="1390")
+    assert total(far, "borrowings_only").value == Decimal(1384) * M
+
+
+def _c(v, i, auth):
+    return (Decimal(v), i, auth)
+
+
+def test_refine_copies_rounding_variants_and_conflicts():
+    # authoritative rounded copy anchors; the precise non-authoritative copy it is a rounding of wins
+    assert dc.refine_copies(
+        [_c("1384000000", 1, True), _c("1384342000", 2, False)]
+    ) == (Decimal("1384342000"), 2)
+    # no authoritative copy: a rounded/precise pair that Stage 2e de-authorized (NVDA capital leases 14.0 / 14.086)
+    assert dc.refine_copies([_c("14000000", 1, False), _c("14086000", 2, False)]) == (
+        Decimal("14086000"),
+        2,
+    )
+    assert (
+        dc.refine_copies([_c("14086000", 2, False)]) is None
+    )  # a lone non-authoritative copy is never used
+    assert (
+        dc.refine_copies([_c("1000000000", 1, False), _c("1300000000", 2, False)])
+        is None
+    )  # a real conflict
+    assert dc.refine_copies(
+        [_c("1000000000", 1, True), _c("1300000000", 2, False)]
+    ) == (Decimal("1000000000"), 1)
+    assert dc.refine_copies([_c("5", 1, True)]) == (Decimal("5"), 1)
+
+
+def test_is_rounding_variant_bounds():
+    assert dc.is_rounding_variant(Decimal("1384000000"), Decimal("1384342000"))
+    assert dc.is_rounding_variant(Decimal("14000000"), Decimal("14086000"))
+    assert not dc.is_rounding_variant(
+        Decimal("1384000000"), Decimal("1385000000")
+    )  # beyond half a unit
+    assert not dc.is_rounding_variant(
+        Decimal("1000000000"), Decimal("1400000000")
+    )  # a $1B round number is no licence
+    assert not dc.is_rounding_variant(
+        Decimal("1384342000"), Decimal("1384000000")
+    )  # the precise one is no rounding of the coarse
+
+
+AVGO_25 = dict(LongTermDebtNoncurrent=61984, LongTermDebtCurrent=3152, LongTermDebtAndCapitalLeaseObligations=61984,
+               LongTermDebtAndCapitalLeaseObligationsCurrent=3152)  # fmt: skip
+
+
+def test_avgo_fy2025_no_finance_leases_equals_zero_without_a_filed_zero():
+    c = total(
+        AVGO_25
+    )  # SYNTHETIC from the Verifier's read: 3,152 + 61,984 = 65,136M, lease halves only derived
+    assert c.value == Decimal(65136) * M and c.slots.leases is None
+    assert (
+        c.composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
+        and c.slots.lease_reason == "lease_zero_unproven"
+    )
+    filed = dict(
+        AVGO_25, FinanceLeaseLiabilityCurrent=0, FinanceLeaseLiabilityNoncurrent=0
+    )
+    z = total(filed)
+    assert (
+        z.slots.leases == 0 and z.composition == dc.COMPOSITION_BORROWINGS_PLUS_LEASES
+    )
+
+
+def test_incomplete_label_needs_an_authoritative_lease_fact_not_a_derived_half():
+    assert (
+        total(GOOG_23).composition == dc.COMPOSITION_LEASES_INCOMPLETE
+    )  # noncurrent 1,383 filed
+    derived_only = dict(
+        LongTermDebtNoncurrent=100,
+        LongTermDebtAndCapitalLeaseObligations=103,
+        DebtCurrent=10,
+    )
+    assert total(derived_only).composition == dc.COMPOSITION_LEASES_NOT_DETERMINED
+
+
+class _CopyCur(_Cur):
+    """Returns NVDA FY2015 with the Stage 2e conflict copies: LongTermDebt 1,384 / 1,384.342 both de-authorized."""
+
+    def execute(self, sql, params=None):
+        sql = " ".join(sql.split())
+        if "from core.fact f" in sql:
+            from datetime import date
+
+            end = date(2015, 1, 25)
+            r = [
+                (
+                    1,
+                    100,
+                    "ConvertibleDebtNoncurrent",
+                    Decimal(1384) * M,
+                    1,
+                    end,
+                    "instant",
+                    True,
+                ),
+                (1, 100, "ConvertibleDebtCurrent", Decimal(0), 2, end, "instant", True),
+                (
+                    1,
+                    100,
+                    "CapitalLeaseObligationsCurrent",
+                    Decimal("3.414") * M,
+                    3,
+                    end,
+                    "instant",
+                    True,
+                ),
+                (
+                    1,
+                    100,
+                    "CapitalLeaseObligationsNoncurrent",
+                    Decimal(14) * M,
+                    4,
+                    end,
+                    "instant",
+                    False,
+                ),
+                (
+                    1,
+                    100,
+                    "CapitalLeaseObligationsNoncurrent",
+                    Decimal("14.086") * M,
+                    5,
+                    end,
+                    "instant",
+                    False,
+                ),
+                (1, 100, "LongTermDebt", Decimal(1384) * M, 6, end, "instant", False),
+                (
+                    1,
+                    100,
+                    "LongTermDebt",
+                    Decimal("1384.342") * M,
+                    7,
+                    end,
+                    "instant",
+                    False,
+                ),
+            ]
+            self.c.params = params
+            self.res = r
+        elif sql.startswith(
+            "select company_id, period_id, value from analytics.canonical_fact"
+        ):
+            self.res = []
+        else:
+            super().execute(sql, params)
+
+
+class _CopyConn(_Conn):
+    def cursor(self):
+        return _CopyCur(self)
+
+
+def test_writer_resolves_rounding_copies_only_under_the_carrying_guard():
+    on = {"SCROONER_RULES_ENABLED": cf.RULE_DEBT}
+    st = cf.resolve_total_debt_components(
+        _CopyConn(), {"x"}, dry_run=True, environ=on, perimeter="borrowings_only"
+    )
+    (pc,) = st["planned"]
+    assert pc.after == Decimal(
+        "1384342000"
+    )  # LongTermDebt precise copy, not the rounded convertible 1,384M
+    st = cf.resolve_total_debt_components(_CopyConn(), {"x"}, dry_run=True, environ=on)
+    assert st["planned"][0].after == Decimal("1401842000")
+
+
+def test_the_loader_asks_for_non_authoritative_copies_only_when_the_carrying_guard_is_on():
+    conn = _CopyConn()
+    cf.resolve_total_debt_components(conn, {"x"}, dry_run=True, environ={})
+    assert conn.params[1] is True  # dry run evaluates r8 as ON
+    # flag off, live: no copies are requested (byte-identical legacy loading)
+    conn2 = _CopyConn()
+    try:
+        cf.resolve_total_debt_components(
+            conn2, {"x"}, dry_run=False, reason_store=None, environ={}
+        )
+    except Exception:
+        pass
+    assert getattr(conn2, "params", [None, False])[1] is False
+
+
+def test_a_coarser_long_term_debt_never_replaces_a_precise_noncurrent_line():
+    tags = dict(
+        LongTermDebtNoncurrent="1384.342", LongTermDebtCurrent=0, LongTermDebt=1384
+    )
+    assert total(tags, "borrowings_only").value == Decimal("1384342000")

@@ -67,7 +67,14 @@ LEASE_TOTAL_PRE842 = (
 LEASE_AGGREGATE = "DebtAndCapitalLeaseObligations"
 REFINANCED = "ShortTermDebtRefinancedAmount"  # a duration fact; the caller keys it by the instant's end date
 RELATED_PARTY = "NotesPayableRelatedPartiesCurrentAndNoncurrent"
-SHORT_TERM = ("ShortTermBorrowings", "CommercialPaper")
+# short-term borrowing face tags. AAPL prints "Commercial paper and repurchase agreements" as
+# OtherShortTermBorrowings (11,166M at 2020-06-27 against a CommercialPaper note figure): the slot must include it.
+SHORT_TERM = (
+    "ShortTermBorrowings",
+    "CommercialPaper",
+    "OtherShortTermBorrowings",
+    "ShortTermBankLoansAndNotesPayable",
+)
 CURRENT_PART_TAGS = (
     "ShortTermBorrowings",
     "CommercialPaper",
@@ -109,13 +116,14 @@ DEFAULT_PERIMETER = "lease_inclusive"
 
 COMPOSITION_BORROWINGS_PLUS_LEASES = "borrowings_plus_finance_leases"
 COMPOSITION_LEASES_NOT_DETERMINED = "finance_leases_not_determined"
+COMPOSITION_LEASES_INCOMPLETE = "finance_leases_incomplete"  # some lease fact is authoritative, the other half is not
 COMPOSITION_LEASE_INCLUSIVE_LINES = "lease_inclusive_face_lines"
 COMPOSITION_BORROWINGS_ONLY = "borrowings_only"
 
 
 @dataclass(frozen=True)
 class Hold:
-    # current_block_unexplained | lease_location_unknown | borrowings_not_separable
+    # current_block_unexplained | lease_location_unknown | short_term_overlap_unresolved | borrowings_not_separable
     # | related_party_unresolved | negative_component
     reason: str
 
@@ -132,9 +140,10 @@ class DebtSlots:
     tags: tuple[str, ...]
     proofs: tuple[str, ...]
     path: str
-    lease_reason: str | None = (
-        None  # lease_facts_absent | lease_facts_incomplete when leases is None
-    )
+    # lease_facts_absent | lease_facts_incomplete | lease_zero_unproven when leases is None
+    lease_reason: str | None = None
+    # an actual lease FACT (not a half derived from face lines) is authoritative
+    lease_fact_filed: bool = False
 
 
 @dataclass(frozen=True)
@@ -145,6 +154,51 @@ class Carrying:
     perimeter: str  # the perimeter requested
     composition: str  # what value is: see COMPOSITION_*
     slots: DebtSlots
+
+
+def trailing_unit(x: Decimal) -> Decimal:
+    """The power of ten a whole-dollar amount is rounded to (1,384,000,000 -> 1,000,000); 1 for any amount
+    that is not a round number. Capped at 1e9."""
+    n = abs(x)
+    if n != n.to_integral_value() or n == 0:
+        return Decimal(1)
+    unit = Decimal(1)
+    while unit < Decimal(10) ** 9 and n % (unit * 10) == 0:
+        unit *= 10
+    return unit
+
+
+def is_rounding_variant(coarse: Decimal, precise: Decimal) -> bool:
+    """``coarse`` is ``precise`` rounded to its own trailing-zero unit, at most to the million (filers round to
+    thousands or millions): NVDA 1,384,000,000 vs 1,384,342,000; 14,000,000 vs 14,086,000. Within half the unit."""
+    if coarse == precise:
+        return True
+    unit = min(trailing_unit(coarse), Decimal(10) ** 6)
+    return unit > 1 and abs(coarse - precise) <= unit / 2
+
+
+def refine_copies(
+    copies: list[tuple[Decimal, int, bool]],
+) -> tuple[Decimal, int] | None:
+    """Pick the value of ONE line from its copies (value, fact id, authoritative): the most precise copy that
+    the anchor is a rounded form of ("a rounded copy never replaces a precise one", ledger).
+    With an authoritative copy it anchors the choice; without one, at least two copies must all be rounding
+    variants of the most precise (Stage 2e de-authorized a rounded/precise pair as a conflict; WO-23's case).
+    A genuine conflict, or a lone non-authoritative copy, returns None."""
+    if not copies:
+        return None
+    auth = [c for c in copies if c[2]]
+    if auth:
+        anchor = max(auth, key=lambda c: c[1])
+        pool = [c for c in copies if is_rounding_variant(anchor[0], c[0])]
+    else:
+        if len(copies) < 2:
+            return None
+        pool = copies
+    best = min(pool, key=lambda c: (trailing_unit(c[0]), -c[1]))
+    if not auth and not all(is_rounding_variant(c[0], best[0]) for c in copies):
+        return None
+    return best[0], best[1]
 
 
 def _first(vals: Mapping[str, Decimal], tags: tuple[str, ...]) -> str | None:
@@ -161,6 +215,9 @@ def _lease_slot(
     ct, nt = _first(vals, LEASE_CURRENT), _first(vals, LEASE_NONCURRENT)
     lc = vals[ct] if ct else None
     ln = vals[nt] if nt else None
+    filed_zero_proof = (
+        bool(ct and nt) or LEASE_TOTAL in vals or LEASE_TOTAL_PRE842 in vals
+    )
     tags = [t for t in (ct, nt) if t]
     if ln is None and LEASE_INCL_NONCURRENT in vals and PLAIN_NONCURRENT in vals:
         ln = max(vals[LEASE_INCL_NONCURRENT] - vals[PLAIN_NONCURRENT], Decimal(0))
@@ -177,6 +234,9 @@ def _lease_slot(
         if total_tag in vals:
             return vals[total_tag], lc, ln, None, [total_tag, *tags]
     if lc is not None and ln is not None:
+        if lc + ln == 0 and not filed_zero_proof:
+            # zeros derived from face-line differences are not a filed zero (AVGO FY2025)
+            return None, lc, ln, "lease_zero_unproven", tags
         return lc + ln, lc, ln, None, tags
     if lc is None and ln is None:
         return None, None, None, "lease_facts_absent", []
@@ -209,6 +269,51 @@ def _corroborated(
     return bool(
         lt and abs(lt - (bn + dc - parts_short)) <= CORROBORATION_TOLERANCE * lt
     )
+
+
+def _short_term(
+    vals: Mapping[str, Decimal], current_maturities: Decimal, bn: Decimal
+) -> tuple[Decimal, list[str], str, str | None]:
+    """The short-term borrowings slot: (value, tags, proof, hold reason).
+
+    Tags holding the same amount are one line (AAPL 2019-09-28: CommercialPaper = OtherShortTermBorrowings =
+    5,980); a value equal to the current maturities is the same debt tagged twice and is dropped. Distinct
+    amounts may overlap (a note figure inside the face line) or be separate lines: they are summed only when the
+    company-stated total proves the sum, else HELD (``short_term_overlap_unresolved``)."""
+    present = {
+        t: vals[t]
+        for t in SHORT_TERM
+        if t in vals and vals[t] > 0 and vals[t] != current_maturities
+    }
+    if not present:
+        return Decimal(0), [], "", None
+    distinct = sorted(set(present.values()))
+    if len(distinct) == 1:
+        tags = [t for t in SHORT_TERM if t in present]
+        return (
+            distinct[0],
+            tags,
+            "+short_term" + ("_same_line" if len(tags) > 1 else ""),
+            None,
+        )
+    all_in = vals.get("DebtLongtermAndShorttermCombinedAmount")
+    if all_in:
+        for n in range(len(distinct), 0, -1):
+            for combo in combinations(distinct, n):
+                if (
+                    abs(bn + current_maturities + sum(combo) - all_in)
+                    <= CORROBORATION_TOLERANCE * all_in
+                ):
+                    tags = [
+                        t for t in SHORT_TERM if t in present and present[t] in combo
+                    ]
+                    return (
+                        sum(combo, Decimal(0)),
+                        tags,
+                        "+short_term_confirmed_by_stated_total",
+                        None,
+                    )
+    return Decimal(0), [], "", "short_term_overlap_unresolved"
 
 
 def _current_borrowings(
@@ -266,11 +371,11 @@ def _current_borrowings(
     if PLAIN_CURRENT in vals:
         c = vals[PLAIN_CURRENT]
         tags = [PLAIN_CURRENT]
-        s = _first(vals, SHORT_TERM)
-        if s is not None and vals[s] != c:
-            tags.append(s)
-            return c + vals[s], tags, "current_maturities_plus_short_term", None
-        return c, tags, "current_maturities", None
+        st, st_tags, st_proof, st_hold = _short_term(vals, c, bn)
+        if st_hold:
+            return None, tags, "", st_hold
+        tags += st_tags
+        return c + st, tags, "current_maturities" + st_proof, None
     if CONVERTIBLE_CURRENT in vals:
         return (
             vals[CONVERTIBLE_CURRENT],
@@ -384,6 +489,18 @@ def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
         return _lease_inclusive_only(vals)
     else:
         return None
+    lt_precise = vals.get("LongTermDebt")
+    if (
+        lt_precise is not None
+        and ntag in (PLAIN_NONCURRENT, CONVERTIBLE_NONCURRENT)
+        and lt_precise != bn
+        and is_rounding_variant(bn, lt_precise)
+    ):
+        # the face "Long-term debt" is the precise copy of the rounded note figure (NVDA FY2015)
+        bn = lt_precise
+        nproof += "+precise_copy_long_term_debt"
+        tags.append(ntag)
+        ntag = "LongTermDebt"
     tags.append(ntag)
     proofs.append(nproof)
     bc, ctags, cproof, hold = _current_borrowings(vals, lc, any_lease_fact, bn)
@@ -402,14 +519,13 @@ def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
     lt = vals.get("LongTermDebt")
     # LongTermDebt holds the long-term debt including current maturities but not the short-term borrowings
     short_inside = sum(
-        (
+        {
             vals[t]
             for t in SHORT_TERM
-            + ("OtherShortTermBorrowings", "ShortTermBankLoansAndNotesPayable")
             if t in vals and 0 < vals[t] <= bc * (1 + EXPLAIN_TOLERANCE)
-        ),
+        },
         Decimal(0),
-    )
+    )  # distinct amounts: tags holding one line count once
     if (
         lt is not None
         and lt > 0
@@ -435,6 +551,7 @@ def debt_slots(vals: Mapping[str, Decimal]) -> DebtSlots | Hold | None:
         proofs=tuple(proofs),
         path="carrying_slots",
         lease_reason=None if L is not None else lease_reason,
+        lease_fact_filed=any_lease_fact,
     )
 
 
@@ -473,7 +590,9 @@ def carrying_lines(
             slots.tags,
             slots.path,
             perimeter,
-            COMPOSITION_LEASES_NOT_DETERMINED,
+            COMPOSITION_LEASES_INCOMPLETE
+            if slots.lease_reason == "lease_facts_incomplete" and slots.lease_fact_filed
+            else COMPOSITION_LEASES_NOT_DETERMINED,
             slots,
         )
     return Carrying(

@@ -340,8 +340,8 @@ class TestEvaluateContract:
         fact_query = next(
             c for c in cur.execute.call_args_list if "from core.fact f" in c.args[0]
         )
-        assert "NotesPayable" in fact_query.args[1][1]
-        assert "LongTermDebt" in fact_query.args[1][1]
+        assert "NotesPayable" in fact_query.args[1][4]
+        assert "LongTermDebt" in fact_query.args[1][4]
 
     def test_negative_total_is_not_blocked_by_a_negative_instrument_tag(self):
         facts = _d(LongTermDebt=-600, NotesPayable=-500)

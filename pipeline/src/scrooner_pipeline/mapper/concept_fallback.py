@@ -51,6 +51,7 @@ from scrooner_pipeline.common.debt_carrying import (
     DEFAULT_PERIMETER,
     REFINANCED,
     carrying_lines,
+    refine_copies,
 )
 from scrooner_pipeline.common.errors import safe_rollback
 from scrooner_pipeline.common.rule_before_image import PlannedChange
@@ -265,6 +266,8 @@ GUARD_FLOOR = "r5_floor"
 GUARD_FALLBACK = "r6_fallback_overcount"
 GUARD_PARTIAL = "r7_partial_component"
 GUARD_CARRYING = "r8_carrying_lines"
+_PRECISION_FORMS = frozenset({"10-K", "10-K/A", "10-KT", "10-KT/A", "10-Q", "10-Q/A"})
+_CARRYING_TAG_SET = frozenset(CARRYING_TAGS)
 GUARD_PREFERENCE = "r4_preference"
 ALL_DEBT_GUARDS = frozenset(
     {
@@ -305,6 +308,7 @@ REASON_UNDECIDABLE_LEASE = (
     "debt composition undecidable: total is below the filed lease-inclusive debt total"
 )
 REASON_LEASE_LOCATION = "debt composition undecidable: finance leases are filed but cannot be placed inside or outside the current debt line"
+REASON_SHORT_TERM_OVERLAP = "debt composition undecidable: several different short-term borrowing amounts are filed and the stated total does not show how they combine"
 REASON_BORROWINGS_NOT_SEPARABLE = "debt composition undecidable: borrowings cannot be separated from the lease-inclusive debt lines"
 REASON_RELATED_PARTY = "debt composition undecidable: related-party or debt-only current lines sit beside lease-inclusive lines"
 REASON_NEGATIVE_COMPONENT = "debt composition undecidable: a debt component is negative"
@@ -312,6 +316,7 @@ REASON_PARTIAL_COMPONENT = "debt composition undecidable: only current debt port
 _CARRYING_HOLD_REASONS = {
     "current_block_unexplained": REASON_UNDECIDABLE_FALLBACK,
     "lease_location_unknown": REASON_LEASE_LOCATION,
+    "short_term_overlap_unresolved": REASON_SHORT_TERM_OVERLAP,
     "borrowings_not_separable": REASON_BORROWINGS_NOT_SEPARABLE,
     "related_party_unresolved": REASON_RELATED_PARTY,
     "negative_component": REASON_NEGATIVE_COMPONENT,
@@ -944,6 +949,9 @@ def resolve_total_debt_components(
     guards = ALL_DEBT_GUARDS if dry_run else debt_guards_active(environ)
     pref_guard = dry_run or debt_preference_guard_active(environ)
     live_guards = bool(guards) and not dry_run
+    precision_on = (
+        GUARD_CARRYING in guards
+    )  # rounded/precise copies of one line are resolved only by r8
     if live_guards and reason_store is None:
         reason_store = PgBlankReasonStore(conn)
     if live_guards and isinstance(reason_store, PgBlankReasonStore):
@@ -998,19 +1006,29 @@ def resolve_total_debt_components(
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    select distinct on (f.company_id, f.period_id, c.tag)
-                           f.company_id, f.period_id, c.tag, f.value, f.id, p.end_date, p.period_type
+                    select f.company_id, f.period_id, c.tag, f.value, f.id, p.end_date, p.period_type,
+                           f.is_authoritative
                     from core.fact f
                     join core.concept c on c.id = f.concept_id
                     join core.period p on p.id = f.period_id
-                    where f.company_id = any(%s) and f.is_authoritative
+                    join core.filing fl on fl.id = f.filing_id
+                    where f.company_id = any(%s)
+                      and (f.is_authoritative
+                           or (%s and c.tag = any(%s) and fl.form = any(%s)))
                       and c.taxonomy = 'us-gaap' and c.tag = any(%s)
                       and (p.period_type = 'instant' or c.tag = %s)
                     order by f.company_id, f.period_id, c.tag, f.id desc
                     """,
-                    (chunk, list(TOTAL_DEBT_LOAD_TAGS), REFINANCED),
+                    (
+                        chunk,
+                        precision_on,
+                        list(CARRYING_TAGS),
+                        sorted(_PRECISION_FORMS),
+                        list(TOTAL_DEBT_LOAD_TAGS),
+                        REFINANCED,
+                    ),
                 )
-                by_end: dict[tuple[int, Any], dict] = {}
+                copies: dict[tuple[int, Any, str], list[tuple[Decimal, int, bool]]] = {}
                 instant_pid: dict[tuple[int, Any], int] = {}
                 period_end: dict[int, Any] = {}
                 for (
@@ -1021,14 +1039,28 @@ def resolve_total_debt_components(
                     fact_id,
                     end_date,
                     period_type,
+                    is_auth,
                 ) in cur.fetchall():
                     # the refinanced amount is a duration fact: join it to the instant by end date
-                    cur_fact = by_end.setdefault((company_id, end_date), {}).get(tag)
-                    if cur_fact is None or fact_id > cur_fact[1]:
-                        by_end[(company_id, end_date)][tag] = (value, fact_id)
+                    copies.setdefault((company_id, end_date, tag), []).append(
+                        (value, fact_id, is_auth)
+                    )
                     if period_type == "instant":
                         instant_pid[(company_id, end_date)] = period_id
                         period_end[period_id] = end_date
+                by_end: dict[tuple[int, Any], dict] = {}
+                for (company_id, end_date, tag), group in copies.items():
+                    if precision_on and tag in _CARRYING_TAG_SET:
+                        picked = refine_copies(group)
+                    else:
+                        auth_only = [g for g in group if g[2]]
+                        picked = (
+                            max(auth_only, key=lambda g: g[1])[:2]
+                            if auth_only
+                            else None
+                        )
+                    if picked is not None:
+                        by_end.setdefault((company_id, end_date), {})[tag] = picked
                 by_period: dict[tuple[int, int], dict] = {
                     (company_id, instant_pid[(company_id, end_date)]): facts
                     for (company_id, end_date), facts in by_end.items()

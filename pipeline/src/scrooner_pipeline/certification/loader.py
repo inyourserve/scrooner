@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
 
-from scrooner_pipeline.common.debt_carrying import CARRYING_TAGS
+from scrooner_pipeline.common.debt_carrying import CARRYING_TAGS, refine_copies
 from scrooner_pipeline.common.sector_applicability import (
     BANK_EVIDENCE_DEPOSIT_TAGS,
     BANK_EVIDENCE_EXPENSE_TAG,
@@ -385,6 +385,9 @@ def load_chunk(
         set(registry.debt_tags) | set(registry.adjustment_tags) | set(CARRYING_TAGS)
     )
     debt = set(registry.debt_tags)
+    carrying_groups: dict[
+        tuple[int, int, str, date], list[tuple[Decimal, int, bool]]
+    ] = {}
     for cid, fid, tag, value, pid, end in execute(
         cur,
         """
@@ -404,9 +407,39 @@ def load_chunk(
         if tag in debt:
             data[cid].debt_facts.append(comp)
         if tag in CARRYING_TAGS:
-            data[cid].carrying_facts.append(comp)
+            carrying_groups.setdefault((cid, pid, tag, end), []).append(
+                (value, fid, True)
+            )
         if tag in registry.adjustment_tags:
             data[cid].adjustment_facts.append(comp)
+    # rounding variants of the same line (an authoritative rounded copy and a precise non-authoritative one, or a
+    # rounded/precise pair Stage 2e de-authorized): the most precise copy represents the line
+    for cid, fid, tag, value, pid, end in execute(
+        cur,
+        """
+        select f.company_id, f.id, c.tag, f.value, f.period_id, p.end_date
+        from core.fact f
+        join core.concept c on c.id = f.concept_id
+        join core.unit u on u.id = f.unit_id
+        join core.period p on p.id = f.period_id
+        join core.filing fl on fl.id = f.filing_id
+        where f.company_id = any(%s) and not f.is_authoritative and c.taxonomy = 'us-gaap'
+          and c.tag = any(%s) and u.unit_name = 'usd'
+          and fl.form in ('10-K', '10-K/A', '10-KT', '10-KT/A', '10-Q', '10-Q/A')
+          and (%s::date is null or p.end_date >= %s::date)
+        """,
+        (ids, sorted(CARRYING_TAGS), since, since),
+        timeout_s,
+    ):
+        carrying_groups.setdefault((cid, pid, tag, end), []).append((value, fid, False))
+    for (cid, pid, tag, end), group in carrying_groups.items():
+        picked = refine_copies(group)
+        if picked is not None:
+            data[cid].carrying_facts.append(
+                ComponentFact(
+                    id=picked[1], tag=tag, value=picked[0], period_id=pid, end=end
+                )
+            )
 
     # displayed metrics: latest non-null per metric and label class
     for cid, name, req, label, pend, value, src in execute(
