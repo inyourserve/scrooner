@@ -165,6 +165,10 @@ def goog() -> Book:
     b.add(EPS_D, "2.93", "2020-01-01", "2020-12-31", k22)
     b.add(EPS_D, "112.20", "2021-01-01", "2021-12-31", k21)
     b.add(EPS_D, "5.61", "2021-01-01", "2021-12-31", k22)
+    b.add(EPS_B, "59.15", "2020-01-01", "2020-12-31", k21)
+    b.add(EPS_B, "2.96", "2020-01-01", "2020-12-31", k22)
+    b.add(EPS_B, "113.88", "2021-01-01", "2021-12-31", k21)
+    b.add(EPS_B, "5.69", "2021-01-01", "2021-12-31", k22)
     b.add(EPS_D, "1.21", "2022-04-01", "2022-06-30", q2)
     b.add(EPS_D, "1.21", "2022-04-01", "2022-06-30", q2_23)
     b.add(BS_SHARES, "662121000", None, "2021-12-31", k21)
@@ -427,6 +431,8 @@ def test_reverse_split_seen_only_as_a_filed_pair_is_review_and_hides():
     c = b.filing("B-2", "2026-10-01", "10-K/A")
     b.add(EPS_D, "-0.05", "2025-01-01", "2025-12-31", a)
     b.add(EPS_D, "-2.00", "2025-01-01", "2025-12-31", c)
+    b.add(EPS_B, "-0.05", "2025-01-01", "2025-12-31", a)
+    b.add(EPS_B, "-2.00", "2025-01-01", "2025-12-31", c)
     b.add(EPS_D, "-0.07", "2024-01-01", "2024-12-31", a)
     res = run(b)
     (ev,) = res.events
@@ -472,18 +478,19 @@ def test_one_period_context_swap_is_not_a_company_violation():
     b = Book()
     a = b.filing("Z-1", "2012-07-27")
     c = b.filing("Z-2", "2013-01-30", "10-K")
-    b.add(EPS_B, "0.29", "2012-01-01", "2012-03-31", a)
-    b.add(EPS_B, "0.44", "2012-01-01", "2012-03-31", c)
-    b.add(EPS_B, "0.44", "2011-01-01", "2011-03-31", a)
-    b.add(EPS_B, "0.29", "2011-01-01", "2011-03-31", c)
-    for s, e, v in (
-        ("2011-04-01", "2011-06-30", "0.42"),
-        ("2011-07-01", "2011-09-30", "0.14"),
-        ("2011-01-01", "2011-12-31", "1.39"),
-        ("2011-10-01", "2011-12-31", "0.39"),
-    ):
-        b.add(EPS_B, v, s, e, a)
-        b.add(EPS_B, v, s, e, c)
+    for tag in (EPS_B, EPS_D):
+        b.add(tag, "0.29", "2012-01-01", "2012-03-31", a)
+        b.add(tag, "0.44", "2012-01-01", "2012-03-31", c)
+        b.add(tag, "0.44", "2011-01-01", "2011-03-31", a)
+        b.add(tag, "0.29", "2011-01-01", "2011-03-31", c)
+        for s, e, v in (
+            ("2011-04-01", "2011-06-30", "0.42"),
+            ("2011-07-01", "2011-09-30", "0.14"),
+            ("2011-01-01", "2011-12-31", "1.39"),
+            ("2011-10-01", "2011-12-31", "0.39"),
+        ):
+            b.add(tag, v, s, e, a)
+            b.add(tag, v, s, e, c)
     res = run(b)
     assert res.violations == []
     assert all(e.status == "rejected" for e in res.events)
@@ -548,8 +555,7 @@ def test_quarter_holding_the_years_only_dividend_is_shown():
     q3 = b.filing("0001045810-13-000109", "2013-11-20")
     k = b.filing("0001045810-13-000008", "2013-03-12", "10-K")
     b.add(DPS_PAID, "0", "2012-01-30", "2012-10-28", q3)
-    b.add(DPS_DECL, "0.075", "2012-07-30", "2012-10-28", q3)
-    b.add(DPS_DECL, "0.075", "2012-01-30", "2013-01-27", k)
+    b.add(DPS_PAID, "0.075", "2012-01-30", "2013-01-27", k)
     b.add(DPS_PAID, "0.075", "2012-10-29", "2013-01-27", k)
     res = run(b)
     cell = b.cell(res, "dividends_per_share_resolved", "2012-10-29", "2013-01-27")
@@ -814,8 +820,9 @@ def test_comparatives_not_rebased_across_a_confirmed_split_hide_the_company():
         ("2022-01-01", "2022-12-31", "4.00"),
         ("2021-01-01", "2021-12-31", "3.00"),
     ):
-        b.add(EPS_D, v, s, e, a)
-        b.add(EPS_D, v, s, e, c)
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s, e, a)
+            b.add(tag, v, s, e, c)
     b.add(EPS_D, "1.10", "2023-01-01", "2023-03-31", q)
     b.add(COVER, "100000000", None, "2023-01-25", a)
     b.add(COVER, "100500000", None, "2023-04-25", q)
@@ -857,6 +864,8 @@ def test_pair_spanning_two_confirmed_splits_is_not_a_third_event():
     old = b.filing("0001564590-18-002956", "2018-02-23", "10-K")
     b.add(EPS_D, "-11.83", "2017-01-01", "2017-12-31", old)
     b.add(EPS_D, "-0.79", "2017-01-01", "2017-12-31", "0000950170-23-001409")
+    b.add(EPS_B, "-11.83", "2017-01-01", "2017-12-31", old)
+    b.add(EPS_B, "-0.79", "2017-01-01", "2017-12-31", "0000950170-23-001409")
     res = run(b)
     assert {e.status for e in res.events} <= {"confirmed", "rejected"}
     assert (
@@ -865,4 +874,242 @@ def test_pair_spanning_two_confirmed_splits_is_not_a_third_event():
     )
     assert b.cell(res, "diluted_eps_resolved", "2017-01-01", "2017-12-31").value == D(
         "-0.79"
+    )
+
+
+# --------------------------------------------------------------------------
+# Rules from the 1,000-company cohort dry-run (2026-10-24), SYNTHETIC
+# fixtures shaped like the named companies' facts (DATA-INFERRED cases).
+# --------------------------------------------------------------------------
+def _two_to_one(b: Book, pre: str, post: str, *, cover: bool = True) -> None:
+    """A real 2:1 between filings `pre` and `post`: EPS basic and diluted on
+    two periods re-presented / 2, plus cover counts doubling."""
+    for s, e, v in (
+        ("2012-01-01", "2012-12-31", "3.02"),
+        ("2011-01-01", "2011-12-31", "2.50"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s, e, pre)
+            b.add(tag, str(D(v) / 2), s, e, post)
+    if cover:
+        b.add(COVER, "48000000", None, "2013-04-20", pre)
+        b.add(COVER, "96200000", None, "2013-07-20", post)
+
+
+def test_redisclosed_old_split_does_not_confirm_a_later_one_pair_cluster():
+    """WAB: the 2013 2:1 is re-disclosed in later 10-Ks; a single DPS copy
+    pair at ratio 2 a year later must not become a second confirmed 2:1."""
+    b = Book()
+    pre = b.filing("W-1", "2013-05-02")
+    post = b.filing("W-2", "2013-07-26")
+    q16 = b.filing("W-3", "2015-11-01")
+    k16 = b.filing("W-4", "2016-02-19", "10-K")
+    _two_to_one(b, pre, post)
+    b.add(RATIO, "2", None, "2013-05-14", post)
+    b.add(RATIO, "2", None, "2013-05-14", k16)  # re-disclosure, >400 days later
+    for tag in (DPS_PAID, DPS_DECL):
+        b.add(tag, "0.10", "2015-07-01", "2015-09-30", q16)
+        b.add(tag, "0.05", "2015-07-01", "2015-09-30", k16)
+    res = run(b)
+    assert [(e.ratio, e.status) for e in res.events if e.status == "confirmed"] == [
+        (2, "confirmed")
+    ]
+    assert {e.status for e in res.events} == {"confirmed", "rejected"}
+    assert res.violations == []
+
+
+def test_inverted_ratio_fact_attaches_to_the_observed_split():
+    """TTD files its 2021 10:1 as 0.1: attach it to the ratio-10 event, never
+    leave it as a loose review candidate that hides all earlier filings."""
+    b = Book()
+    pre = b.filing("T-1", "2021-05-10")
+    post = b.filing("T-2", "2021-08-10")
+    for s, e, v in (
+        ("2020-01-01", "2020-12-31", "4.80"),
+        ("2019-01-01", "2019-12-31", "2.60"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s, e, pre)
+            b.add(tag, str(D(v) / 10), s, e, post)
+    b.add(RATIO, "0.1", None, "2021-06-16", post)
+    res = run(b)
+    assert [(e.ratio, e.status) for e in res.events] == [(10, "confirmed")]
+    assert "ratio_fact" in res.events[0].kinds
+
+
+def test_non_clean_ratio_fact_is_an_exchange_ratio_not_a_split():
+    """DUK 0.8708 / WTW 0.3775 style values: rejected, nothing hidden."""
+    b = Book()
+    a = b.filing("D-1", "2012-02-01", "10-K")
+    c = b.filing("D-2", "2013-02-01", "10-K")
+    b.add(EPS_D, "4.00", "2011-01-01", "2011-12-31", a)
+    b.add(EPS_D, "4.20", "2012-01-01", "2012-12-31", c)
+    b.add(RATIO, "0.8708", None, "2012-06-30", c)
+    res = run(b)
+    assert [e.status for e in res.events] == ["rejected"]
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2011-01-01", "2011-12-31").status
+        == sb.SHOWN
+    )
+
+
+def test_restated_share_counts_count_as_share_evidence():
+    """MA/CSX/CME: no undimensioned cover series, but EPS basic and diluted
+    / 10 and weighted shares x 10 on two periods in the later filing."""
+    b = Book()
+    pre = b.filing("M-1", "2013-11-01")
+    post = b.filing("M-2", "2014-02-14", "10-K")
+    for s, e, v, w in (
+        ("2012-01-01", "2012-12-31", "22.73", "122000000"),
+        ("2011-01-01", "2011-12-31", "14.85", "127000000"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s, e, pre)
+            b.add(tag, str((D(v) / 10).quantize(D("0.01"))), s, e, post)
+        b.add("WeightedAverageNumberOfSharesOutstandingBasic", w, s, e, pre)
+        b.add(
+            "WeightedAverageNumberOfSharesOutstandingBasic", str(D(w) * 10), s, e, post
+        )
+    res = run(b)
+    (ev,) = res.events
+    assert ev.status == "confirmed" and ev.ratio == 10
+    assert set(ev.kinds) == {"filed_pair", "share_step"}
+    assert ev.evidence_json()["share_step_from"] == "restated_share_counts"
+
+
+def test_single_tag_dps_move_is_not_an_event_or_a_company_violation():
+    """TER/AIG: DPS on two periods moves x4 between filings (rate vs annual
+    context), EPS does not. Judged per cell; the company is not hidden."""
+    b = Book()
+    a = b.filing("R-1", "2021-02-24", "10-K")
+    c = b.filing("R-2", "2022-02-24", "10-K")
+    for s, e, v in (
+        ("2020-01-01", "2020-12-31", "0.10"),
+        ("2019-01-01", "2019-12-31", "0.09"),
+    ):
+        b.add(DPS_PAID, v, s, e, a)
+        b.add(DPS_PAID, str(D(v) * 4), s, e, c)
+        b.add(EPS_D, "3.00", s, e, a)
+        b.add(EPS_D, "3.00", s, e, c)
+    res = run(b)
+    assert all(e.status == "rejected" for e in res.events)
+    assert res.violations == []
+    cell = b.cell(res, "diluted_eps_resolved", "2020-01-01", "2020-12-31")
+    assert cell.status == sb.SHOWN
+    dps = b.cell(res, "dividends_per_share_resolved", "2020-01-01", "2020-12-31")
+    assert dps.status == sb.HIDE_RESTATED
+
+
+def test_per_share_power_of_ten_without_share_counts_is_a_units_error():
+    """HALO/RGA: basic and diluted EPS x1000 in one filing, share counts
+    unchanged: not a 1-for-1000 reverse split; cells judged per copy."""
+    b = Book()
+    a = b.filing("H-1", "2018-02-20", "10-K")
+    c = b.filing("H-2", "2019-02-20", "10-K")
+    for s, e, v in (
+        ("2017-01-01", "2017-12-31", "0.87"),
+        ("2016-01-01", "2016-12-31", "0.42"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s, e, a)
+            b.add(tag, str(D(v) * 1000), s, e, c)
+    res = run(b)
+    assert all(e.status == "rejected" for e in res.events)
+    assert res.violations == []
+
+
+def test_same_ratio_confirmed_twice_keeps_one_and_reviews_the_gap():
+    """KR: a 2:1 seen at two boundaries 6 months apart is one event; the
+    filing between them cannot be placed and is basis review."""
+    b = Book()
+    f1 = b.filing("K-1", "2014-12-16")
+    f2 = b.filing("K-2", "2015-03-31", "10-K")
+    f3 = b.filing("K-3", "2015-06-30")
+    f4 = b.filing("K-4", "2015-09-22")
+    _two_to_one(b, f1, f2)
+    for s, e, v in (
+        ("2013-01-01", "2013-12-31", "1.90"),
+        ("2014-01-01", "2014-03-31", "0.80"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s, e, f3)
+            b.add(tag, str(D(v) / 2), s, e, f4)
+    b.add(COVER, "96000000", None, "2015-09-15", f4)
+    b.add(RATIO, "2", None, "2015-06-25", f4)
+    res = run(b)
+    assert [e.status for e in res.events].count("confirmed") == 1
+    filing_ids = {f.accession: f.filing_id for f in b.facts}
+    assert res.basis[filing_ids["K-2"]].status == "review"
+    assert "same-ratio" in res.basis[filing_ids["K-2"]].note
+
+
+def test_one_eps_tag_moving_alone_is_not_an_event():
+    """A context or entry error in one EPS tag (diluted 2x in the later
+    filing, basic unchanged) is judged per cell, not a split candidate that
+    hides every earlier filing."""
+    b = Book()
+    a = b.filing("O-1", "2020-02-01", "10-K")
+    c = b.filing("O-2", "2021-02-01", "10-K")
+    for s, e in (("2019-01-01", "2019-12-31"), ("2018-01-01", "2018-12-31")):
+        b.add(EPS_D, "2.40", s, e, a)
+        b.add(EPS_D, "1.20", s, e, c)
+    b.add(EPS_D, "2.00", "2017-01-01", "2017-12-31", a)
+    res = run(b)
+    assert [e.status for e in res.events] == ["rejected"]
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2017-01-01", "2017-12-31").status
+        == sb.SHOWN
+    )
+
+
+def test_mixed_dividend_basis_in_one_series_is_hidden_pending_ac24():
+    """LLY: interim DPS cells would come from Declared for most quarters and
+    CashPaid (0.5625) for Q3 2018; one series, two bases -> hidden."""
+    b = Book()
+    q = b.filing("L-1", "2018-11-01")
+    k = b.filing("0000059478-20-000057", "2020-02-19", "10-K")
+    b.add(DPS_DECL, "1.125", "2018-01-01", "2018-06-30", q)
+    b.add(DPS_DECL, "0.5625", "2018-01-01", "2018-03-31", q)
+    b.add(DPS_PAID, "0.5625", "2018-07-01", "2018-09-30", k)
+    b.add(DPS_DECL, "2.25", "2018-01-01", "2018-12-31", k)
+    res = run(b)
+    q3 = b.cell(res, "dividends_per_share_resolved", "2018-07-01", "2018-09-30")
+    q1 = b.cell(res, "dividends_per_share_resolved", "2018-01-01", "2018-03-31")
+    assert q3.status == q1.status == sb.HIDE_DPS_BASIS
+    fy = b.cell(res, "dividends_per_share_resolved", "2018-01-01", "2018-12-31")
+    assert fy.status == sb.SHOWN  # the annual series is on one tag
+
+
+def test_label_shifted_copy_is_dropped_not_read_as_a_restatement():
+    """NVDA FY2018 10-K puts the Q2 value 0.98 on the 6-month context while
+    two 10-Qs give 1.83 (Verifier false hold, 2026-10-24)."""
+    b = Book()
+    q2 = b.filing("0001045810-17-000123", "2017-08-23")
+    q3 = b.filing("0001045810-17-000176", "2017-11-21")
+    k = b.filing("0001045810-18-000010", "2018-02-28", "10-K")
+    for tag, six, q in ((EPS_B, "1.83", "0.98"), (EPS_D, "1.71", "0.92")):
+        b.add(tag, six, "2017-01-30", "2017-07-30", q2)
+        b.add(tag, six, "2017-01-30", "2017-07-30", q3)
+        b.add(tag, q, "2017-01-30", "2017-07-30", k)  # shifted
+        b.add(tag, q, "2017-05-01", "2017-07-30", k)  # its own Q2 in the same filing
+        b.add(tag, q, "2017-05-01", "2017-07-30", q2)
+    res = run(b)
+    cell = b.cell(res, "basic_eps_resolved", "2017-01-30", "2017-07-30")
+    assert cell.status == sb.SHOWN and cell.value == D("1.83")
+    assert "label-shifted" in cell.note
+
+
+def test_two_vintage_restatement_is_still_hidden():
+    """MSFT ASC 606: the restated copy does not equal any other period's
+    value in its filing, so the hold stays."""
+    b = Book()
+    a = b.filing("0001564590-17-014900", "2017-08-02", "10-K")
+    c = b.filing("0001564590-18-019062", "2018-08-03", "10-K")
+    b.add(EPS_D, "2.71", "2016-07-01", "2017-06-30", a)
+    b.add(EPS_D, "3.25", "2016-07-01", "2017-06-30", c)
+    b.add(EPS_D, "2.13", "2017-07-01", "2018-06-30", c)
+    res = run(b)
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2016-07-01", "2017-06-30").status
+        == sb.HIDE_RESTATED
     )

@@ -178,6 +178,7 @@ HIDE_RESTATED = "restated_between_filings"
 HIDE_COMPANY_INVARIANT = "basis_review_company_invariant"
 HIDE_NO_FILED_SOURCE = "no_filed_source"
 HIDE_LABEL_ERROR = "quarter_equals_year_label_error"
+HIDE_DPS_BASIS = "dividend_basis_pending"
 
 # Restatement policy for a period whose copies disagree on the SAME basis
 # (no split between them): "hide" is design 2.8 (accepted in doc 49). The
@@ -192,6 +193,7 @@ HIDDEN_REASON_TEXT = {
     HIDE_COMPANY_INVARIANT: "share basis under review (filed comparatives contradict the split history)",
     HIDE_NO_FILED_SOURCE: "not filed separately in a 10-K or 10-Q (per-share values are not derived)",
     HIDE_LABEL_ERROR: "the filed quarter equals the full-year value of the same filing (label error)",
+    HIDE_DPS_BASIS: "dividend basis pending (declared vs paid, AC-24): this series mixes both",
 }
 
 
@@ -389,11 +391,16 @@ def _kind_of(fact: SourceFact) -> str | None:
     return None
 
 
-def build_filed_pairs(facts: Iterable[SourceFact]) -> list[FiledPair]:
+def build_filed_pairs(
+    facts: Iterable[SourceFact], extra_tags: Iterable[str] = ()
+) -> list[FiledPair]:
     """Consecutive copies (by filing date) of one tag/unit/period from
-    periodic, non-derived filings."""
+    periodic, non-derived filings. `extra_tags` adds the mapped tags of the
+    per-share and share concepts (ET files LP-unit EPS)."""
     groups: dict[tuple[str, str, int], list[SourceFact]] = defaultdict(list)
-    evidence_tags = set(EVIDENCE_PER_SHARE_TAGS) | set(EVIDENCE_SHARE_TAGS)
+    evidence_tags = (
+        set(EVIDENCE_PER_SHARE_TAGS) | set(EVIDENCE_SHARE_TAGS) | set(extra_tags)
+    )
     for f in facts:
         if f.tag in evidence_tags and f.usable_source and _kind_of(f):
             groups[(f.tag, f.unit, f.period_id)].append(f)
@@ -491,6 +498,9 @@ class Event:
     disclosures: list[Disclosure] = field(default_factory=list)
     status: str = "review"  # confirmed | review | rejected | pending
     note: str = ""
+    restated_shares: bool = False  # filer re-presented share counts by the ratio
+    clean: bool = True  # disclosure-only: ratio snaps to a clean split ratio
+    doubt: tuple[date, date] | None = None  # window where a duplicate was seen
 
     @property
     def kinds(self) -> list[str]:
@@ -499,7 +509,7 @@ class Event:
             k.append("ratio_fact")
         if self.pairs:
             k.append("filed_pair")
-        if self.steps:
+        if self.steps or self.restated_shares:
             k.append("share_step")
         return k
 
@@ -552,6 +562,11 @@ class Event:
                 for s in self.steps
             ],
             "observed_window": [_iso(self.lo), _iso(self.hi)],
+            "share_step_from": (
+                "series"
+                if self.steps
+                else ("restated_share_counts" if self.restated_shares else None)
+            ),
             "note": self.note,
         }
 
@@ -600,20 +615,82 @@ def _ratio_one_pairs_spanning(pairs: list[FiledPair], lo: date, hi: date) -> int
     return sum(1 for p in pairs if p.ratio == ONE and p.lo <= lo and p.hi >= hi)
 
 
+POWER_OF_TEN = frozenset(
+    {Fraction(100), Fraction(1000), Fraction(1, 100), Fraction(1, 1000)}
+)
+EPS_TAGS = frozenset(
+    {
+        "EarningsPerShareBasic",
+        "EarningsPerShareDiluted",
+        "EarningsPerShareBasicAndDiluted",
+    }
+)
+SHARE_COUNT_TAGS = frozenset(EVIDENCE_SHARE_TAGS)
+SNAP_REL = Decimal("0.001")
+
+
+def snap_ratio(r: Fraction) -> Fraction | None:
+    """The clean ratio within 0.1% of r (ratio facts are often rounded:
+    WRB files 0.6667 for 2/3), else None (an exchange or conversion ratio:
+    DUK 0.8708, WTW 0.3775, ACI 2.072)."""
+    rd = Decimal(r.numerator) / Decimal(r.denominator)
+    cands = list(CLEAN_RATIOS) + [1 / k for k in CLEAN_RATIOS]
+    for k in sorted(set(cands)):
+        kd = Decimal(k.numerator) / Decimal(k.denominator)
+        if abs(rd - kd) <= SNAP_REL * kd:
+            return k
+    return None
+
+
+def _disclosure_distance(d: Disclosure, e: Event) -> int:
+    """Days from the disclosure's own dates to the event's observed window."""
+    assert e.lo is not None and e.hi is not None
+    dates = [d.fact.end_date, d.fact.filing_date]
+    if d.fact.start_date is not None:
+        dates.append(d.fact.start_date)
+    best = None
+    for x in dates:
+        dist = (
+            0 if e.lo <= x <= e.hi else min(abs((x - e.lo).days), abs((x - e.hi).days))
+        )
+        best = dist if best is None else min(best, dist)
+    assert best is not None
+    return best
+
+
+def _support(e: Event) -> int:
+    return len(e.pairs) + 3 * len(e.steps) + len(e.disclosures)
+
+
 def detect_events(
     pairs: list[FiledPair],
     steps: list[ShareStep],
     disclosures: list[Disclosure],
     filings: list[Filing],
 ) -> list[Event]:
-    """Pure: evidence -> events with status. Deterministic for fixed input."""
+    """Pure: evidence -> events with status. Deterministic for fixed input.
+    Rules learned on the 1,000-company cohort dry-run (2026-10-24):
+    - a disclosure attaches to ONE observed event, the nearest of ratio k or
+      1/k (TTD files its 10:1 as 0.1; WAB and CGNX re-disclose old splits in
+      later filings, which must not confirm a spurious later cluster);
+    - per-share and share-count filed pairs moving inversely, on >= 2
+      periods, are the filer's own re-presented share counts and count as
+      the share_step kind (MA, CSX, CME: class-dimensioned or missing cover
+      counts leave no undimensioned share series);
+    - a pair-only candidate from one tag, or a per-share power-of-ten move
+      without share-count support, is a context or units error judged per
+      cell (TER, BRO, HALO, RGA), not an event;
+    - a disclosure-only candidate whose ratio is not a clean split ratio is
+      an exchange or conversion ratio (DUK, WTW, ACI), not an event;
+    - two confirmed events of one ratio within DISCLOSURE_MERGE_DAYS keep the
+      better-supported one; filings between them are basis review (KR)."""
     by_ratio: dict[Fraction, list[tuple[date, date, object]]] = defaultdict(list)
     for p in pairs:
         if p.ratio is not None and p.ratio != ONE:
             by_ratio[p.ratio].append((p.lo, p.hi, p))
-    for s in steps:
-        if s.ratio is not None and s.ratio != ONE:
-            by_ratio[s.ratio].append((s.lo, s.hi, s))
+    for st in steps:
+        if st.ratio is not None and st.ratio != ONE:
+            by_ratio[st.ratio].append((st.lo, st.hi, st))
 
     events: list[Event] = []
     for ratio in sorted(by_ratio):
@@ -622,33 +699,35 @@ def detect_events(
             for m in members:
                 (ev.pairs if isinstance(m, FiledPair) else ev.steps).append(m)
             ev.lo, ev.hi = _refine_window(lo, hi, pairs, steps)
+            per_share_tags = {p.tag for p in ev.pairs if p.kind == PER_SHARE}
+            share_pairs = [p for p in ev.pairs if p.kind == SHARES]
+            periods = {p.period_id for p in ev.pairs}
+            ev.restated_shares = bool(
+                share_pairs and len(per_share_tags) >= 2 and len(periods) >= 2
+            )
             events.append(ev)
 
-    # Attach disclosures: overlap with an observed boundary of the same ratio,
-    # else the nearest same-ratio observed event within DISCLOSURE_MERGE_DAYS.
     loose: list[Disclosure] = []
     for d in disclosures:
-        same = [e for e in events if e.ratio == d.ratio and e.lo and e.hi]
-        hits = [e for e in same if d.window_lo < e.hi and d.window_hi > e.lo]  # type: ignore[operator]
-        if not hits:
-            near = sorted(
-                (abs((e.basis_date - d.anchor).days), e.local_id, e) for e in same
-            )
-            hits = [near[0][2]] if near and near[0][0] <= DISCLOSURE_MERGE_DAYS else []
-        if hits:
-            for e in hits:
-                e.disclosures.append(d)
+        k = snap_ratio(d.ratio) or d.ratio
+        same = [e for e in events if e.ratio in (k, 1 / k) and e.lo and e.hi]
+        near = sorted(
+            (_disclosure_distance(d, e), e.ratio != k, e.local_id, e) for e in same
+        )
+        if near and near[0][0] <= DISCLOSURE_MERGE_DAYS:
+            near[0][3].disclosures.append(d)
         else:
             loose.append(d)
 
-    # Loose same-ratio disclosures within DISCLOSURE_MERGE_DAYS are one event.
     for d in loose:
+        snapped = snap_ratio(d.ratio)
+        ratio = snapped if snapped is not None else d.ratio
         prev = next(
             (
                 e
                 for e in events
                 if e.hi is None
-                and e.ratio == d.ratio
+                and e.ratio == ratio
                 and abs((d.anchor - e.basis_date).days) <= DISCLOSURE_MERGE_DAYS
             ),
             None,
@@ -656,7 +735,9 @@ def detect_events(
         if prev is not None:
             prev.disclosures.append(d)
         else:
-            events.append(Event(len(events), d.ratio, None, None, disclosures=[d]))
+            ev = Event(len(events), ratio, None, None, disclosures=[d])
+            ev.clean = snapped is not None
+            events.append(ev)
 
     filing_dates = sorted(f.filing_date for f in filings)
     for ev in events:
@@ -665,10 +746,16 @@ def detect_events(
             continue
         if ev.hi is None:  # disclosure only
             anchor = ev.basis_date
+            if not ev.clean:
+                ev.status, ev.note = (
+                    "rejected",
+                    "not a clean split ratio (exchange/conversion)",
+                )
+                continue
             if not filing_dates or filing_dates[-1] <= anchor:
                 ev.status, ev.note = "pending", "no filing on the new basis yet"
                 continue
-            if not filing_dates or filing_dates[0] >= anchor:
+            if filing_dates[0] >= anchor:
                 ev.status, ev.note = "pending", "every held filing post-dates it"
                 continue
             span_lo = max((x for x in filing_dates if x <= anchor), default=anchor)
@@ -689,17 +776,51 @@ def detect_events(
                 "share-count step only; filed comparatives span it at ratio 1",
             )
             continue
-        if (
-            not ev.steps
-            and spanning_one >= REFUTE_MIN_PAIRS
-            and spanning_one >= 2 * len(ev.pairs)
-        ):
-            ev.status, ev.note = (
-                "rejected",
-                f"{len(ev.pairs)} filed pair(s) contradicted by {spanning_one} ratio-1 pairs",
-            )
-            continue
+        if not ev.steps:
+            pair_tags = {p.tag for p in ev.pairs}
+            if len(pair_tags) < 2:
+                ev.status, ev.note = (
+                    "rejected",
+                    "pairs from one tag only (judged per cell)",
+                )
+                continue
+            if not pair_tags & (EPS_TAGS | SHARE_COUNT_TAGS):
+                ev.status, ev.note = (
+                    "rejected",
+                    "dividend tags only; a split moves EPS (rate/annual context error)",
+                )
+                continue
+            if ev.ratio in POWER_OF_TEN and not any(p.kind == SHARES for p in ev.pairs):
+                ev.status, ev.note = (
+                    "rejected",
+                    "per-share power-of-ten move without share counts: units scale suspect",
+                )
+                continue
+            if spanning_one >= REFUTE_MIN_PAIRS and spanning_one >= 2 * len(ev.pairs):
+                ev.status, ev.note = (
+                    "rejected",
+                    f"{len(ev.pairs)} filed pair(s) contradicted by {spanning_one} ratio-1 pairs",
+                )
+                continue
         ev.status, ev.note = "review", "one evidence kind only"
+
+    # Same ratio confirmed twice within the merge distance: one economic event.
+    conf = sorted(
+        (e for e in events if e.status == "confirmed"), key=lambda e: e.basis_date
+    )
+    for a_ev, b_ev in itertools.combinations(conf, 2):
+        if a_ev.status != "confirmed" or b_ev.status != "confirmed":
+            continue
+        if a_ev.ratio != b_ev.ratio:
+            continue
+        if abs((b_ev.basis_date - a_ev.basis_date).days) > DISCLOSURE_MERGE_DAYS:
+            continue
+        keep, drop = (a_ev, b_ev) if _support(a_ev) >= _support(b_ev) else (b_ev, a_ev)
+        drop.status = "rejected"
+        drop.note = f"same ratio as the better-supported event at {keep.basis_date}"
+        lo = min(x for x in (a_ev.lo, b_ev.lo) if x is not None)
+        hi = max(x for x in (a_ev.hi, b_ev.hi) if x is not None)
+        keep.doubt = (lo, hi)
 
     # A single-kind candidate whose every observation spans >= 2 confirmed
     # events with this product is those events seen across both (TSLA 5x3).
@@ -707,7 +828,7 @@ def detect_events(
     for ev in events:
         if ev.status != "review" or ev.hi is None:
             continue
-        obs = [(p.lo, p.hi) for p in ev.pairs] + [(s.lo, s.hi) for s in ev.steps]
+        obs = [(p.lo, p.hi) for p in ev.pairs] + [(st.lo, st.hi) for st in ev.steps]
         if obs and all(
             _spanned_product(confirmed, lo, hi) == ev.ratio for lo, hi in obs
         ):
@@ -810,7 +931,12 @@ def compute_filing_basis(
             and fl.filing_id not in placed[e.local_id]
         ]
         touched_by_review = [e for e in review if fl.filing_date < e.basis_date]
-        if touched_by_review:
+        in_doubt = [
+            e for e in confirmed if e.doubt and e.doubt[0] < fl.filing_date < e.doubt[1]
+        ]
+        if in_doubt:
+            status, note = "review", "between two same-ratio split observations"
+        elif touched_by_review:
             status, note = "review", "before an unconfirmed split candidate"
         elif inside and not has_count:
             status, note = (
@@ -886,9 +1012,25 @@ def invariant_violations(
             continue
         groups[(p.old.filing_id, p.new.filing_id, r)].append((p, expected))
     out: list[tuple[FiledPair, Fraction]] = []
-    for members in groups.values():
-        if len({m[0].period_id for m in members}) >= INVARIANT_MIN_PERIODS:
-            out.extend(members)
+    for (_o, _n, r), members in groups.items():
+        tags = {m[0].tag for m in members}
+        if len({m[0].period_id for m in members}) < INVARIANT_MIN_PERIODS:
+            continue
+        # A basis change moves EPS (or share counts) and more than one tag;
+        # DPS alone moving by 2 or 4 is a rate/annual context error (TER, AIG).
+        if len(tags) < 2 or not (tags & (EPS_TAGS | SHARE_COUNT_TAGS)):
+            continue
+        if (
+            r in POWER_OF_TEN
+            and not (tags & SHARE_COUNT_TAGS)
+            and not any(
+                e.ratio in (r, 1 / r)
+                for e in events
+                if e.status in ("confirmed", "review")
+            )
+        ):
+            continue  # units scale in one copy (RGA, HALO), judged per cell
+        out.extend(members)
     return out
 
 
@@ -924,6 +1066,14 @@ def resolve_cells(
         all_tag_period[(f.tag, f.period_id)].append(f)
         if f.usable_source:
             by_tag_period[(f.tag, f.period_id)].append(f)
+
+    # (filing, tag, unit) -> period -> values: for label-shift detection.
+    same_filing: dict[tuple[int, str, str], dict[int, set[Decimal]]] = defaultdict(
+        lambda: defaultdict(set)
+    )
+    for f in facts:
+        if f.usable_source:
+            same_filing[(f.filing_id, f.tag, f.unit)][f.period_id].add(f.value)
 
     out: list[CellResult] = []
     for concept, (kind, base) in TARGETS.items():
@@ -993,11 +1143,31 @@ def resolve_cells(
                 if len(kept) != len(conv):
                     note = f"dropped {len(conv) - len(kept)} copy(ies) off by a units scale"
                     conv = kept
-            agree = all(
-                abs(ca - cb) <= _agree_tol(a, fa, b, fb, kind)
-                for i, (a, fa, ca) in enumerate(conv)
-                for (b, fb, cb) in conv[i + 1 :]
-            )
+            agree = _all_agree(conv, kind)
+            if not agree and len(conv) > 1:
+                # Label shift (Verifier 2026-10-24): a disagreeing copy that
+                # equals the same tag's value for ANOTHER period in its own
+                # filing is a context error, not a restatement (AMZN FY2012
+                # 10-K 0001193125-13-028520 puts 2012 quarters on 2011
+                # contexts; NVDA FY2018 10-K puts Q2 0.98 on the 6M context).
+                shifted = [
+                    x
+                    for x in conv
+                    if any(
+                        x[0].value in vals
+                        for other, vals in same_filing[
+                            (x[0].filing_id, x[0].tag, x[0].unit)
+                        ].items()
+                        if other != pid
+                    )
+                ]
+                rest = [x for x in conv if x not in shifted]
+                if shifted and rest and _all_agree(rest, kind):
+                    note = (note + "; " if note else "") + (
+                        f"dropped {len(shifted)} label-shifted copy(ies): "
+                        + ",".join(x[0].accession for x in shifted)
+                    )
+                    conv, agree = rest, True
             cand_view = tuple(
                 (f.fact_id, f.accession, f.value, fac, c) for f, fac, c in conv
             )
@@ -1038,7 +1208,7 @@ def resolve_cells(
                     note,
                 )
             )
-    return out
+    return _one_dividend_basis(out)
 
 
 LABEL_ERROR_TOL = Decimal("0.015")  # as-filed cents (ASSUMED), scaled by the factor
@@ -1108,6 +1278,54 @@ def _quarter_is_year_label_error(
     return ytd is not None and ytd > tol and abs(value + ytd - year) > tol
 
 
+def _all_agree(conv: list[tuple[SourceFact, Fraction, Decimal]], kind: str) -> bool:
+    return all(
+        abs(ca - cb) <= _agree_tol(a, fa, b, fb, kind)
+        for i, (a, fa, ca) in enumerate(conv)
+        for (b, fb, cb) in conv[i + 1 :]
+    )
+
+
+def _one_dividend_basis(cells: list[CellResult]) -> list[CellResult]:
+    """One DPS basis per series (Verifier 2026-10-24, LLY: Q3 2018/2019 would
+    show CashPaid 0.5625/0.645 next to Declared quarters). AC-24 (declared
+    vs paid) is open, so a quarterly or an annual DPS series whose shown
+    cells come from more than one tag is hidden with a reason; a series on
+    one tag is shown on that tag's basis."""
+
+    def series(c: CellResult) -> str:
+        assert c.chosen is not None
+        start = c.chosen.start_date
+        days = (c.chosen.end_date - start).days if start else 0
+        return "annual" if days >= 350 else "interim"
+
+    tags_by_series: dict[str, set[str]] = defaultdict(set)
+    for c in cells:
+        if (
+            c.concept == "dividends_per_share_resolved"
+            and c.status == SHOWN
+            and c.chosen
+        ):
+            tags_by_series[series(c)].add(c.chosen.tag)
+    mixed = {k for k, v in tags_by_series.items() if len(v) > 1}
+    if not mixed:
+        return cells
+    out = []
+    for c in cells:
+        if (
+            c.concept == "dividends_per_share_resolved"
+            and c.status == SHOWN
+            and c.chosen
+            and series(c) in mixed
+        ):
+            c = CellResult(
+                c.concept, c.period_id, HIDE_DPS_BASIS, None, (), c.chosen, c.factor,
+                c.candidates, f"series uses {sorted(tags_by_series[series(c)])}",
+            )  # fmt: skip
+        out.append(c)
+    return out
+
+
 def _agree_tol(
     a: SourceFact, fa: Fraction, b: SourceFact, fb: Fraction, kind: str
 ) -> Decimal:
@@ -1147,7 +1365,13 @@ def compute_company(
                 f.filing_id, Filing(f.filing_id, f.filing_date, f.form, f.accession)
             )
     filings = sorted(filings_by_id.values(), key=lambda x: (x.filing_date, x.filing_id))
-    pairs = build_filed_pairs(facts)
+    extra = {
+        t
+        for base in (b for _, b in TARGETS.values())
+        for t in mapped_tags.get(base, [])
+    }
+    extra -= {"EntityCommonStockSharesOutstanding"}  # cover dates differ per filing
+    pairs = build_filed_pairs(facts, extra)
     series = build_share_series(facts)
     steps = build_share_steps(series)
     disclosures = build_disclosures(facts)
