@@ -148,11 +148,13 @@ def hold(
     company=1,
     end=D1,
     value="500000000",
-    reason="mixed_vintage",
+    reason="identity_not_confirmed_by_face_subtotals",
     rule=IDENTITY,
     dp="total_liabilities_resolved",
+    reference="400000000",  # an independent reading 25% below the stored 500M: positive evidence of an error
     **kw,
 ):
+    kw.setdefault("reference_value", None if reference is None else Decimal(reference))
     return hw.Hold(
         company, dp, end, rule, reason, None if value is None else Decimal(value), **kw
     )
@@ -251,30 +253,153 @@ def test_debt_plan_rows_become_holds_only_when_the_value_would_be_blank():
 
 # ------------------------------------------------------------------ dry run
 @pytest.mark.integration
-def test_dry_run_counts_what_would_be_blanked_per_rule_and_changes_nothing(seeded):
+def test_dry_run_counts_per_rule_and_per_reason_and_changes_nothing(seeded):
     holds = [
-        hold(),  # 500M present
-        hold(end=D2, value="700000000", reference_value=Decimal(7_000_000_000)),
+        hold(),  # 500M present, reference 400M: 25% apart -> would blank
+        hold(end=D2, value="700000000", reference="699000000"),  # 0.14% apart -> kept
         hold(company=2, value="1"),  # the stored value moved since the plan
         hold(company=2, end=D2, value="1"),  # nothing stored: already blank
-        hold(
-            rule=DEBT,
-            dp="total_debt_resolved",
-            value="3000000000",
-            reason="debt_negative_component",
-        ),
-    ]
+        hold(reason="mixed_vintage", end=D2, value="700000000", reference=None, company=1, dp="total_debt_resolved"),  # no such stored row
+        hold(rule=DEBT, dp="total_debt_resolved", value="3000000000", reason="debt_below_instrument_tag", reference=None),
+    ]  # fmt: skip
     before = rows(seeded, "canonical_fact")
     s = hw.summarize(seeded, holds)
-    assert s[IDENTITY]["holds"] == 4 and s[IDENTITY]["would_blank"] == 2
-    assert s[IDENTITY]["changed_since_plan"] == 1 and s[IDENTITY]["already_blank"] == 1
-    assert s[IDENTITY]["magnitude"] == {"100M-1B": 2}
-    assert dict(s[IDENTITY]["relative_to_reference"]) == {"10-50%": 1}  # 700M of 7B
-    assert s[DEBT]["would_blank"] == 1 and s[DEBT]["magnitude"] == {"1B-10B": 1}
-    assert "would_blank=2" in hw.format_summary(s)
+    ident = s[IDENTITY]
+    assert (ident["holds"], ident["would_blank"], ident["kept_unverified"]) == (5, 1, 1)
+    assert (ident["changed_since_plan"], ident["already_blank"]) == (1, 2)
+    r = ident["by_reason"]["identity_not_confirmed_by_face_subtotals"]
+    assert (r["would_blank"], r["kept_unverified"]) == (1, 1)
+    assert dict(r["magnitude"]) == {"100M-1B": 1}
+    assert dict(r["difference_to_reference"]) == {
+        "25-100%": 1
+    }  # |500M - 400M| / 400M = 25%
+    assert s[DEBT]["would_blank"] == 1 and dict(s[DEBT]["magnitude"]) == {"1B-10B": 1}
+    text = hw.format_summary(s)
+    assert (
+        "would_blank=1" in text
+        and "kept_unverified=1" in text
+        and "identity_not_confirmed" in text
+    )
     assert rows(seeded, "canonical_fact") == before and not rows(
         seeded, "cell_blank_reason"
     )
+    assert not rows(seeded, "cell_evidence")
+
+
+# ------------------------------------------------------------------ the blank policy
+D = Decimal
+
+
+def test_decision_blanks_only_with_positive_evidence():
+    ref = hold(reference="1000")
+    assert ref.decision(D("1005")) == "keep"  # exactly 0.5% apart
+    assert ref.decision(D("1005.1")) == "blank"  # just beyond
+    assert ref.decision(D("994.9")) == "blank"
+    assert (
+        hold(reference=None).decision(D("1")) == "keep"
+    )  # no independent reading -> never blank
+    assert hold(reference="0").decision(D("1")) == "keep"
+    # a keep_unverified reason never blanks, even with a reference far from the stored value
+    assert hold(reason="mixed_vintage", reference="1").decision(D("1000")) == "keep"
+    # the explicit known-wrong reasons blank without a reference
+    for code in ("debt_zero_with_nonzero_tag", "debt_below_instrument_tag", "debt_below_lease_inclusive_total", "debt_partial_component"):  # fmt: skip
+        assert hold(rule=DEBT, reason=code, reference=None).decision(D("1")) == "blank"
+
+
+def test_policy_table_is_total_and_the_known_wrong_list_is_explicit():
+    assert {c for c, sp in hw.REASON_MAP.items() if sp.policy == hw.POLICY_KNOWN_WRONG} == {
+        "debt_zero_with_nonzero_tag", "debt_below_instrument_tag", "debt_below_lease_inclusive_total", "debt_partial_component"}  # fmt: skip
+    assert {c for c, sp in hw.REASON_MAP.items() if sp.policy == hw.POLICY_KEEP} >= {"mixed_vintage", "no_source_filing", "debt_short_term_overlap"}  # fmt: skip
+    assert all(sp.policy in hw.POLICIES for sp in hw.REASON_MAP.values())
+    with pytest.raises(ValueError):
+        hw.ReasonSpec("defect", "guard_hidden", "triage", "composition", "sometimes")
+
+
+def _fe_and_ni(store):
+    # FE 2018-03-31: stored 31,420M equals the face and the reference reading; NI 2023-12-31: stored 24,674.3M, the
+    # reference (assets - NCI-inclusive total) is the face 20,940.9M
+    put(store, 1, 100, 10, "31420000000")
+    put(store, 2, 100, 10, "24674300000")
+    store.commit()
+    return [
+        hold(company=1, value="31420000000", reference="31420000000", evidence={"filing_id": 1007936}),
+        hold(company=2, value="24674300000", reference="20940900000", evidence={"filing_id": 1236891}),
+    ]  # fmt: skip
+
+
+@pytest.mark.integration
+def test_fe_is_kept_and_ni_is_blanked(store, tmp_path):
+    holds = _fe_and_ni(store)
+    s = hw.summarize(store, holds)[IDENTITY]
+    assert (s["would_blank"], s["kept_unverified"]) == (1, 1)
+    out = hw.apply_holds(store, holds, before_image=tmp_path / "i.jsonl", environ=ON)
+    assert (out["blanked"], out["kept_unverified"], out["evidence_written"]) == (
+        1,
+        1,
+        1,
+    )
+    left = rows(store, "canonical_fact", "company_id, value")
+    assert left == [
+        (1, Decimal("31420000000"))
+    ]  # FE untouched, NI archived and removed
+    assert [r[0] for r in rows(store, "canonical_fact_retired", "company_id")] == [2]
+    reasons = rows(store, "cell_blank_reason", "company_id, reason_code")
+    assert reasons == [
+        (2, "identity_not_confirmed_by_face_subtotals")
+    ]  # no user-visible reason for FE
+    ev = rows(store, "cell_evidence", "company_id, rule_id, evidence_kind, evidence_level, state_claimed, locator, detector_version, recorded_by")  # fmt: skip
+    assert ev == [(1, IDENTITY, "detector_audit", "DATA-INFERRED", "value", "unverified_hold:identity_not_confirmed_by_face_subtotals", "identity_not_confirmed_by_face_subtotals", "hold_writer")]  # fmt: skip
+
+
+@pytest.mark.integration
+def test_kept_holds_write_one_evidence_row_however_often_the_writer_runs(
+    store, tmp_path
+):
+    holds = _fe_and_ni(store)
+    hw.apply_holds(store, holds, before_image=tmp_path / "a.jsonl", environ=ON)
+    again = hw.apply_holds(store, holds, before_image=tmp_path / "b.jsonl", environ=ON)
+    assert again["evidence_written"] == 0 and again["blanked"] == 0
+    assert (
+        len(rows(store, "cell_evidence")) == 1
+        and len(rows(store, "cell_blank_reason")) == 1
+    )
+
+
+@pytest.mark.integration
+def test_a_keep_unverified_reason_is_never_blanked_even_far_from_its_reference(
+    seeded, tmp_path
+):
+    h = hold(reason="mixed_vintage", reference="1")
+    out = hw.apply_holds(seeded, [h], before_image=tmp_path / "i.jsonl", environ=ON)
+    assert (
+        out["kept_unverified"] == 1
+        and out["blanked"] == 0
+        and len(rows(seeded, "canonical_fact")) == 4
+    )
+    assert (
+        not rows(seeded, "cell_blank_reason")
+        and len(rows(seeded, "cell_evidence")) == 1
+    )
+
+
+@pytest.mark.integration
+def test_a_known_wrong_debt_reason_blanks_without_a_reference(seeded, tmp_path):
+    h = hold(rule=DEBT, dp="total_debt_resolved", value="3000000000", reason="debt_below_instrument_tag", reference=None)  # fmt: skip
+    out = hw.apply_holds(seeded, [h], before_image=tmp_path / "i.jsonl", environ=ON)
+    assert out["blanked"] == 1 and not rows(seeded, "cell_evidence")
+
+
+@pytest.mark.integration
+def test_identity_plan_references_reach_the_hold(seeded):
+    got = hw.holds_from_plan([
+        {"kind": "hold", "company_id": 1, "concept": "total_liabilities_resolved", "period_end": "2026-03-31",
+         "before": "500000000", "basis": "nci_unconfirmed", "reference": "400000000"}])  # fmt: skip
+    assert (
+        got[0].reference_value == Decimal(400000000)
+        and got[0].decision(Decimal(500000000)) == "blank"
+    )
+    none = hw.holds_from_plan([{"kind": "hold", "company_id": 1, "concept": "x", "period_end": "2026-03-31", "before": "5", "basis": "nci_unconfirmed", "reference": None}])  # fmt: skip
+    assert none[0].reference_value is None
 
 
 # ------------------------------------------------------------------ apply
@@ -283,7 +408,7 @@ def test_apply_archives_removes_explains_and_writes_the_before_image(seeded, tmp
     img = tmp_path / "img.jsonl"
     stats = hw.apply_holds(
         seeded,
-        [hold(evidence={"filing_id": 7}, source_fact_ids=(3,)), hold(rule=DEBT, dp="total_debt_resolved", value="3000000000", reason="debt_negative_component")],
+        [hold(evidence={"filing_id": 7}, source_fact_ids=(3,)), hold(rule=DEBT, dp="total_debt_resolved", value="3000000000", reason="debt_below_instrument_tag")],
         before_image=img, environ=ON,
     )  # fmt: skip
     assert (
@@ -307,8 +432,8 @@ def test_apply_archives_removes_explains_and_writes_the_before_image(seeded, tmp
         "select data_point_name, period_grain, period_start, period_end, state, defect_class, owner, root_cause_class, "
         "rule_id, reason_code, input_refs, source_fact_ids from analytics.cell_blank_reason order by rule_id"
     ).fetchall()
-    assert r[1] == ("total_debt_resolved", "I", D1, D1, "defect", "guard_hidden", "data_engineer_l1", "composition", DEBT, "debt_negative_component", {}, [])  # fmt: skip
-    assert r[0] == ("total_liabilities_resolved", "I", D1, D1, "defect", "guard_hidden", "data_engineer_l1", "resolver", IDENTITY, "mixed_vintage", {"filing_id": 7}, [3])  # fmt: skip
+    assert r[1] == ("total_debt_resolved", "I", D1, D1, "defect", "guard_hidden", "data_engineer_l1", "composition", DEBT, "debt_below_instrument_tag", {}, [])  # fmt: skip
+    assert r[0] == ("total_liabilities_resolved", "I", D1, D1, "defect", "guard_hidden", "standardization_lead", "composition", IDENTITY, "identity_not_confirmed_by_face_subtotals", {"filing_id": 7}, [3])  # fmt: skip
     manifest = seeded.execute(
         "select rule_id, mode, flag_state, before_image_ref, stats->>'blanked' from analytics.rule_run"
     ).fetchall()
@@ -325,7 +450,7 @@ def test_a_second_run_changes_nothing(seeded, tmp_path):
             rule=DEBT,
             dp="total_debt_resolved",
             value="3000000000",
-            reason="debt_negative_component",
+            reason="debt_below_instrument_tag",
         ),
     ]
     hw.apply_holds(seeded, holds, before_image=tmp_path / "a.jsonl", environ=ON)
@@ -409,7 +534,7 @@ def test_rollback_restores_the_values_and_discards_the_reasons(seeded, tmp_path)
             "company_id, canonical_concept_id, period_id, value, source_fact_ids",
         )
     )
-    s = hw.apply_holds(seeded, [hold(), hold(rule=DEBT, dp="total_debt_resolved", value="3000000000", reason="debt_negative_component")], before_image=tmp_path / "i.jsonl", environ=ON)  # fmt: skip
+    s = hw.apply_holds(seeded, [hold(), hold(rule=DEBT, dp="total_debt_resolved", value="3000000000", reason="debt_below_instrument_tag")], before_image=tmp_path / "i.jsonl", environ=ON)  # fmt: skip
     assert hw.rollback_run(seeded, s["run_id"]) == {
         "restored": 2,
         "reasons_discarded": 2,
