@@ -578,3 +578,28 @@ class TestDebtDipMateriality:
     ):
         d = self.series((6_400_000_000, 319_000_000, 6_350_000_000), 30_000_000_000)
         assert "debt_isolated_dip" in rules(composition.check(d), WRONG_VALUE)
+
+
+# ------------------------------------------------ (4) a stored zero reproduced by the arithmetic
+class TestZeroDifferenceCrossVintage:
+    def test_zero_gross_profit_from_equal_revenue_and_cost_does_not_divide_zero_by_zero(
+        self,
+    ):
+        # CI crashed on 8 certify shards with decimal.DivisionUndefined (0 / max(0, 0))
+        d = empty()
+        rev = src("Revenues", 500, form="10-Q", sid=9801, filed=date(2024, 4, 30))
+        exp = src("CostOfRevenue", 500, form="10-Q", sid=9802, filed=date(2025, 4, 30))
+        d.conflict_copies[9802] = [
+            src("CostOfRevenue", 500, form="10-Q", sid=9803, filed=date(2024, 4, 30))
+        ]
+        add(
+            d,
+            "gross_profit_resolved",
+            0,
+            date(2024, 3, 31),
+            date(2024, 1, 1),
+            None,
+            sources=[rev, exp],
+            form="10-Q",
+        )
+        assert "cross_vintage_arithmetic" not in rules(source_integrity.check(d))

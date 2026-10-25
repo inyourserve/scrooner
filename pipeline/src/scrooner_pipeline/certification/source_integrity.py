@@ -369,7 +369,10 @@ def _cross_vintage_arithmetic(data: CompanyData, cell, sources) -> list[Finding]
     # the filing whose own versions come closest to the stored value; a filing that
     # reproduces it exactly gives rel = 0 and the cell is single-vintage (silent)
     nearest_date, nearest = min(results.items(), key=lambda kv: abs(kv[1] - cell.value))
-    rel = abs(nearest - cell.value) / max(abs(nearest), abs(cell.value))
+    scale = max(abs(nearest), abs(cell.value))
+    if scale == 0:
+        return out  # both zero: nothing differs (0/0 raised DivisionUndefined in CI)
+    rel = abs(nearest - cell.value) / scale
     if not (CROSS_VINTAGE_MIN_DIFF <= rel <= CROSS_VINTAGE_MAX_DIFF):
         return out
     out.append(
