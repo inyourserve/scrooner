@@ -35,10 +35,12 @@ def M(**kw):  # footing lines in thousands -> dollars
 
 
 def ctx(face, lines=None, like=None, end=END):
-    """face: does THIS period's own balance sheet show an inventory line at its date (True / False); None = the
-    statement does not show the date (unavailable)."""
-    pf = {} if face is None else {end: qe.PeriodFace(face, False)}
-    return qe.Context(None, {end: lines or {}}, {end: like or {}}, {}, pf)
+    """face: does THIS period's own balance sheet show an inventory line at its date (True / False); "hide" = the
+    statement was read but does not show the date (or predates machine-readable statements); None = no readable
+    statement here (the value stays, flagged)."""
+    pf = {end: qe.PeriodFace(face, False)} if face in (True, False) else {}
+    hide = frozenset({end}) if face == "hide" else frozenset()
+    return qe.Context(None, {end: lines or {}}, {end: like or {}}, {}, pf, {}, hide)
 
 
 def fixture_ctx(name):
@@ -180,27 +182,32 @@ def test_missing_inventory_reason_matrix():
     assert (
         qe.inventory_missing_reason(ctx(False, nofoot), END) is None
     )  # the statement shows no inventory line
+    # the statement is readable but does not show the date (CIK 0001907982 2020-12-31, a 10-K/A with newer columns)
     assert (
-        qe.inventory_missing_reason(ctx(None, nofoot), END) == qe.REASON_UNAVAILABLE
-    )  # the date is not shown: hidden
-    assert qe.face_unavailable(ctx(None, nofoot), END)
+        qe.inventory_missing_reason(ctx("hide", nofoot), END) == qe.REASON_UNAVAILABLE
+    )
+    # no readable statement here (FSDS lacks the filing): the stored value stays, flagged
+    assert qe.inventory_missing_reason(ctx(None, nofoot), END) is None
+    assert qe.face_unavailable(ctx("hide", nofoot), END)
     assert not qe.face_unavailable(ctx(False, nofoot), END) and not qe.face_unavailable(
-        ctx(None, foot), END
+        ctx("hide", foot), END
     )
     assert not qe.face_unavailable(
-        ctx(None, nofoot, inv), END
+        ctx("hide", nofoot, inv), END
     )  # an inventory-like current fact decides first
-    # an inventory-like current fact decides before the statement, whatever the statement says
+    # an inventory-like current fact hides when the statement shows an inventory line or cannot be read ...
     assert (
-        qe.inventory_missing_reason(ctx(False, nofoot, inv), END) == qe.REASON_UNMAPPED
+        qe.inventory_missing_reason(ctx(True, nofoot, inv), END) == qe.REASON_UNMAPPED
     )
     assert (
         qe.inventory_missing_reason(ctx(None, nofoot, inv), END) == qe.REASON_UNMAPPED
     )
+    # ... but a statement that was read and shows NO inventory line leaves the value (0001522540 2023-06-30: a note figure)
+    assert qe.inventory_missing_reason(ctx(False, nofoot, inv), END) is None
     # an inventory-like figure larger than current assets is not a current line
     assert (
         qe.inventory_missing_reason(
-            ctx(False, nofoot, M(InventoryFinishedGoodsNetOfReserves=5000)), END
+            ctx(None, nofoot, M(InventoryFinishedGoodsNetOfReserves=5000)), END
         )
         is None
     )
@@ -214,7 +221,7 @@ def test_missing_inventory_reason_matrix():
     # the statement of ANOTHER date says nothing about this one
     assert (
         qe.inventory_missing_reason(ctx(True, nofoot, end=date(2025, 1, 1)), END)
-        == qe.REASON_UNAVAILABLE
+        is None
     )
 
 
@@ -226,16 +233,23 @@ def test_the_latest_statements_evidence_no_longer_decides_a_past_period():
     assert qe.inventory_missing_reason(c, END) is None
 
 
-def test_cp_materials_and_supplies_is_an_inventory_line_under_the_default_switch(
-    monkeypatch,
-):
-    # CP 2017-03-31 (0000016875-17-000029): cash 201 + receivables 631 + other 77 = 909 of CA 1,110; materials and supplies 201
+def test_cp_materials_and_supplies_face_line_hides_with_the_founder_reason(monkeypatch):
+    # CP 2017-03-31 (0000016875-17-000029): cash 201 + receivables 631 + other 77 = 909 of CA 1,110; the face presents
+    # "Materials and supplies" 201
     lines = M(AssetsCurrent=1110, CashAndCashEquivalentsAtCarryingValue=201, AccountsReceivableNetCurrent=631, OtherAssetsCurrent=77)  # fmt: skip
     like = {"MaterialsSuppliesAndOther": D(201) * K}
-    assert (
-        qe.inventory_missing_reason(ctx(False, lines, like), END) == qe.REASON_UNMAPPED
+    c = qe.Context(
+        False,
+        {END: lines},
+        {END: like},
+        {END: D(201) * K},
+        {END: qe.PeriodFace(False, True)},
     )
-    # the rule keeps the switch in one place: the loader filters inventory-like tags with it
+    assert qe.inventory_missing_reason(c, END) == qe.REASON_MATERIALS
+    # without a read statement the inventory-like fact decides
+    assert (
+        qe.inventory_missing_reason(ctx(None, lines, like), END) == qe.REASON_UNMAPPED
+    )
     monkeypatch.setattr(qe, "MATERIALS_AND_SUPPLIES_ARE_INVENTORY", False)
     assert not qe.is_inventory_like("MaterialsSuppliesAndOther")
 
@@ -447,7 +461,7 @@ def test_an_unavailable_statement_hides_the_cell_with_its_reason(monkeypatch):
         "NKE",
         with_inventory=False,
         rule_on=True,
-        context=ctx(None, {"AssetsCurrent": ca}),
+        context=ctx("hide", {"AssetsCurrent": ca}),
     )
     assert row["value"] is None and row["is_null_reason"] == qe.REASON_UNAVAILABLE
 
@@ -702,3 +716,69 @@ def test_a_date_without_a_periodic_filing_of_its_own_uses_the_filing_of_its_curr
     }
     assert c.face_by_date == {
         END: qe.PeriodFace(True, False), date(2024, 4, 30): qe.PeriodFace(False, False)}  # fmt: skip
+
+
+def test_fsds_rounded_year_end_dates_match_the_cell_s_date():
+    # 52/53-week filers: the data set shows 2020-09-30 for the balance sheet of 2020-09-27 (0001792044)
+    assert qe._column(date(2020, 9, 27), frozenset({date(2020, 9, 30)})) == date(
+        2020, 9, 30
+    )
+    assert qe._column(date(2020, 9, 27), frozenset({date(2019, 9, 30)})) is None
+    assert qe._column(
+        date(2020, 9, 30), frozenset({date(2020, 9, 30), date(2020, 9, 27)})
+    ) == date(2020, 9, 30)
+    conn = _Conn({
+        "join core.filing fl": [], "from core.filing where": [(date(2020, 9, 27), "0001193125-20-290294")],
+        "from analytics.company_filing_line_evidence": [(True,)], "from core.fact f join core.period": [],
+    })  # fmt: skip
+    c = qe.load_context(
+        conn,
+        5,
+        like_ids=[],
+        face={"0001193125-20-290294": AF({date(2020, 9, 30)}, {date(2020, 9, 30)})},
+    )
+    assert (
+        c.face_by_date == {date(2020, 9, 27): qe.PeriodFace(True, False)}
+        and not c.face_hide_dates
+    )
+
+
+def test_a_filing_missing_from_the_data_set_is_kept_after_2009_and_hidden_before():
+    # 0001162896 / 0001314102 are readable statements the data set lacks: kept. EOG 2008/2009: no machine-readable pages: hidden
+    conn = _Conn({
+        "join core.filing fl": [], "from analytics.company_filing_line_evidence": [(True,)],
+        "from core.filing where": [(date(2019, 3, 31), "0001493152-19-007263"), (date(2008, 12, 31), "0000821189-09-000047")],
+        "from core.fact f join core.period": [],
+    })  # fmt: skip
+    c = qe.load_context(conn, 5, like_ids=[], face={})
+    assert c.face_hide_dates == {date(2008, 12, 31)} and not c.face_by_date
+    assert (
+        qe._accession_year("0000821189-09-000047") == 2009
+        and qe._accession_year("0001193125-16-708358") == 2016
+    )
+
+
+def test_the_planner_flags_instead_of_hiding_a_value_that_already_subtracts_inventory():
+    # 18 of 20 drawn presented-not-extracted cells store exactly the face quick ratio (STE 2019-03-31 1.8175 vs current
+    # ratio 2.2): the inventory WAS subtracted, only our canonical fact is missing now. Hide only stored == current ratio.
+    got = qe.plan_quick_ratio(_planner_conn([], True), [1, 2], face={"acc-1": AF({END}, {END}), "acc-0": AF({D0}, {D0})})  # fmt: skip
+    by = {p.period_end: p.outcome for p in got}
+    assert by == {
+        "2026-06-30": "hide",
+        "2025-06-30": "flag_keep",
+    }  # 2.075 == current 2.075; 2.0 != current 2.5
+
+
+def test_materials_by_face_hides_cells_that_stay(monkeypatch):
+    # FDX 'Spare parts, supplies, and fuel', ConEd 'Fuel oil, gas in storage, materials and supplies'
+    tables = {
+        "select id from analytics.metric_definition": [(7,)],
+        "select id, cik from core.company": [(1, "0000000001")],
+        "from analytics.metric_value": [(1, END, "Q2", D("1.4754")), (1, D0, "Q2", D("1.0"))],
+        "from core.filing where": [(1, END, "acc-m"), (1, D0, "acc-n")],
+    }  # fmt: skip
+    face = {"acc-m": AF({END}, {END}, {END}), "acc-n": AF({D0}, {D0})}
+    got = qe.plan_materials_by_face(_Conn(tables), [1], face)
+    assert [(p.period_end, p.reason, p.outcome) for p in got] == [
+        ("2026-06-30", qe.REASON_MATERIALS, "hide")
+    ]

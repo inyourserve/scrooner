@@ -96,3 +96,29 @@ def test_quarters_and_the_interim_jsonl_round_trip(tmp_path):
     qf.write_jsonl(f, {A1: face}, "fsds:2025q1")
     assert qf.load_jsonl(f) == {A1: face}
     assert qf.load_jsonl(tmp_path / "missing.jsonl") == {}
+
+
+def test_supplies_labels_count_as_a_materials_line_but_inventory_named_ones_do_not(
+    tmp_path,
+):
+    # FDX 'Spare parts, supplies, and fuel'; ConEd 'Fuel oil, gas in storage, materials and supplies'; UPS prints neither
+    z = make_zip(
+        tmp_path,
+        [
+            pre(A1, "BS", "OtherAssetsCurrent", "Spare parts, supplies, and fuel"),
+            pre(A2, "BS", "OtherAssetsCurrent", "Fuel oil, gas in storage, materials and supplies"),
+            pre(A3, "BS", "InventoryRawMaterialsAndSupplies", "Raw materials and supplies inventory"),
+            pre(A4, "BS", "OtherAssetsCurrent", "Prepaid expenses and other"),
+        ],
+        [num(a, t, "20241231", "5") for a, t in (
+            (A1, "OtherAssetsCurrent"), (A2, "OtherAssetsCurrent"), (A3, "InventoryRawMaterialsAndSupplies"), (A4, "OtherAssetsCurrent"))],
+    )  # fmt: skip
+    got = qf.balance_sheet_faces(z, {A1, A2, A3, A4})
+    assert got[A1].materials_dates == {D1} and got[A2].materials_dates == {D1}
+    assert got[A3].materials_dates == frozenset() and got[A3].inventory_dates == {
+        D1
+    }  # an inventory sub-line
+    assert (
+        got[A4].materials_dates == frozenset()
+        and got[A4].inventory_dates == frozenset()
+    )

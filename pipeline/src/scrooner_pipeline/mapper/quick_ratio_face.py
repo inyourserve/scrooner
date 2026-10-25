@@ -34,9 +34,9 @@ FSDS_URL = (
     "https://www.sec.gov/files/dera/data/financial-statement-data-sets/{year}q{q}.zip"
 )
 _INVENTORY_LABEL = re.compile(r"\binventor(y|ies)\b", re.I)
-_MATERIALS_LABEL = re.compile(
-    r"\bmaterials?\b.{0,12}\bsupplies\b|\bsupplies\b.{0,12}\bmaterials?\b", re.I
-)
+# a presented supplies line that is not inventory-named: "Materials and supplies", "Spare parts, supplies, and fuel",
+# "Fuel oil, gas in storage, materials and supplies"
+_MATERIALS_LABEL = re.compile(r"\bsupplies\b|\bspare parts\b", re.I)
 csv.field_size_limit(10**8)
 
 
