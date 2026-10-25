@@ -1136,6 +1136,15 @@ def _metrics(cur, ids: list[int], plan: Plan, core: str, analytics: str) -> None
 
 
 NCI_LABEL = re.compile(r"non-?controlling|minority|attributable to", re.I)
+# XBRL standard labels of pre-tax lines name the NCI in the element title
+# ("Income ... before Income Taxes, Noncontrolling Interest, Total", VRSN): not an NCI line.
+NCI_LABEL_IGNORE = re.compile(r"before\s+(provision\s+for\s+)?income\s+tax", re.I)
+
+
+def has_nci_line(labels: Sequence[str]) -> bool:
+    return any(
+        NCI_LABEL.search(lab) and not NCI_LABEL_IGNORE.search(lab) for lab in labels
+    )
 
 
 def sec_income_statement_labels(client, cik: str, accession: str) -> list[str] | None:
@@ -1195,7 +1204,7 @@ def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
                 labels_for(cik[f.company_id], f.accession) if f.accession else None
             )
         labels = cache[key]
-        if labels is None or any(NCI_LABEL.search(lab) for lab in labels):
+        if labels is None or has_nci_line(labels):
             continue
         plan.cells[i] = replace(
             c,
@@ -1226,7 +1235,7 @@ def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
                     labels_for(cik[f.company_id], f.accession) if f.accession else None
                 )
             labels = cache[key]
-            if labels is None or any(NCI_LABEL.search(lab) for lab in labels):
+            if labels is None or has_nci_line(labels):
                 clean = False
                 break
         if not clean:
