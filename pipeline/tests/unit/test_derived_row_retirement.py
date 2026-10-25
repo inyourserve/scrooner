@@ -799,3 +799,85 @@ def test_apply_writes_a_rederived_quarter_with_its_filed_inputs_and_restores(con
     with conn.cursor() as cur:
         rr.restore(cur, "rq", core="rcore", analytics="ranalytics")
     assert _state(conn)[1] == before[1]
+
+
+@pytest.mark.unit
+def test_coarsen_mixed_scales_only():
+    D = Decimal
+    f = lambda v: _fact(1, v, filed=date(2025, 1, 1))  # noqa: E731
+    # BAH: year in millions, nine months in thousands -> quarter at millions
+    assert rr._coarsen(D("192705000"), [f("935000000"), f("742295000")]) == (
+        D("193000000"),
+        1_000_000,
+    )
+    # both in millions, or both in thousands: untouched
+    assert rr._coarsen(D("193000000"), [f("935000000"), f("742000000")]) == (
+        D("193000000"),
+        1,
+    )
+    assert rr._coarsen(D("192705000"), [f("935000000"), f("742295000")])[0] != D(
+        "192705000"
+    )
+    assert rr._coarsen(D("-192705000"), [f("935000000"), f("742295000")])[0] == D(
+        "-193000000"
+    )
+
+
+@pytest.mark.integration
+def test_bah_mixed_unit_quarter_is_shown_at_the_coarser_unit(conn):
+    _quarter_world(conn, fy_value="935000000", fy_filing=8)
+    conn.execute("update rcore.fact set value = 742295000 where id = 611")
+    plan = _plan_b(conn)
+    cell = plan.cells[0]
+    assert cell.action == rr.ACT_REPLACE and cell.replacement_value == Decimal(
+        "193000000"
+    )
+    assert plan.info["quarters_rounded_to_coarsest_input_scale"] == 1
+
+
+def _profitloss_only_quarter(conn):
+    conn.execute("insert into rcore.concept values (13,'ProfitLoss')")
+    conn.execute(
+        "insert into ranalytics.concept_mapping (canonical_concept_id, concept_id, priority) values (4,13,2)"
+    )
+    conn.execute(
+        "insert into rcore.filing values (6,1,'K','10-K','2023-02-01'),(7,1,'Q','10-Q','2022-11-01')"
+    )
+    conn.execute(
+        "insert into rcore.period values (20,1,'2022-01-01','2022-12-31','duration',2022,'FY'),"
+        "(21,1,'2022-01-01','2022-09-30','duration',2022,null),(22,1,'2022-10-01','2022-12-31','duration',2022,'Q4')"
+    )
+    _f(conn, 800, NI, USD, 22, 2, "999")
+    _cell(conn, CC_NI, 22, "999", [800])
+    _f(
+        conn, 801, PROFIT, USD, 20, 6, "817600000"
+    )  # VRSN: the only bottom line is ProfitLoss
+    _f(conn, 802, PROFIT, USD, 21, 7, "552900000")
+    return _plan_b(conn)
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    ("labels", "released"),
+    [
+        (["Net income"], True),
+        (["Net income", "Net income attributable to noncontrolling interest"], False),
+        (None, False),
+    ],
+)
+def test_quarter_from_profitloss_is_released_only_by_the_face_check(
+    conn, labels, released
+):
+    plan = _profitloss_only_quarter(conn)
+    cell = plan.cells[0]
+    assert (cell.action, cell.reason_code) == (
+        rr.ACT_REMOVE,
+        "proxy_nci_inclusive_only",
+    )
+    with conn.cursor() as cur:
+        rr.resolve_nci_face(cur, plan, lambda cik, acc: labels, core="rcore")
+    cell = plan.cells[0]
+    assert (cell.action == rr.ACT_REPLACE) is released
+    if released:
+        assert cell.replacement_value == Decimal("264700000")
+        assert cell.replacement_source_ids == (801, 802)

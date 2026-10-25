@@ -224,6 +224,9 @@ class Plan:
     nci_pending: dict[int, FactRow] = field(
         default_factory=dict
     )  # cell id -> NCI-inclusive pick awaiting the face check
+    quarter_pending: dict[int, tuple[Decimal, tuple[FactRow, ...]]] = field(
+        default_factory=dict
+    )  # cell id -> quarter derived from NCI-inclusive inputs awaiting the face check
     metric_value_ids: list[int] = field(default_factory=list)
     info: dict[str, Any] = field(default_factory=dict)
 
@@ -784,6 +787,28 @@ QUARTER_RESTATED_POLICY = "hide"  # or "original_basis"
 VINTAGE_MAX_GAP_DAYS = 370  # same as the certification cross_vintage_arithmetic test
 
 
+def _scale_unit(v: Decimal) -> int:
+    """Filing scale a value is reported at: 1,000,000 or 1,000 if it is a multiple of
+    it, else 1 (capped at millions: a multiple of 1e9 may still be filed in millions)."""
+    for g in (10**6, 10**3):
+        if v % g == 0:
+            return g
+    return 1
+
+
+def _coarsen(value: Decimal, inputs: Sequence[FactRow]) -> tuple[Decimal, int]:
+    """A quarter built from inputs reported at DIFFERENT scales (BAH: year in
+    millions, nine months in thousands) is only known to the coarsest scale:
+    show it at that scale (192,705,000 -> 193,000,000), never with false
+    precision. Returns (value, scale applied or 1)."""
+    scales = [_scale_unit(f.value) for f in inputs]
+    g = max(scales)
+    if g == min(scales) or g < 10**6:
+        return value, 1
+    q = (abs(value) / g).quantize(Decimal(1), rounding="ROUND_HALF_UP") * g
+    return (q if value >= 0 else -q), g
+
+
 def _one_vintage(restated: bool, facts: Sequence[FactRow]) -> bool:
     """Original-basis inputs must come from one reporting vintage: filed within
     VINTAGE_MAX_GAP_DAYS of each other. Copies that agree need no such test."""
@@ -963,7 +988,7 @@ def _vet_and_promote(
     tag_of: dict[int, str] = {f.concept_id: f.tag for fs in groups.values() for f in fs}
 
     used: set[int] = set()
-    unverified = same = differs = filled = original = 0
+    unverified = same = differs = filled = original = rounded_units = 0
     for c in targets:
         qs, qe = period[c.period_id]
         src, ccid, company = meta[c.canonical_fact_id]
@@ -983,7 +1008,22 @@ def _vet_and_promote(
             if v == "disagree":
                 verdict = "disagree"
         i = plan.cells.index(c)
+        pending_q = None
+        if verdict == "none":
+            # only an NCI-inclusive tag (ProfitLoss) carries the line: usable if the
+            # filings' income statements show no NCI line (VRSN, SAIC); face check later
+            for cid in sorted(
+                (x for x in prios if tag_of.get(x) in NCI_INCLUSIVE_TAGS),
+                key=lambda x: prios[x],
+            ):
+                v, val, ins = _rederive(groups, company, cid, src.unit, qs, qe)
+                if v in ("ok", "ok_original"):
+                    pending_q = (val, tuple(ins))
+                    break
         if verdict == "ok":
+            value, g_applied = _coarsen(value, inputs)
+            if g_applied > 1:
+                rounded_units += 1
             old = picked.get(c.canonical_fact_id)
             if old is not None:
                 if abs(old.value - value) <= 1:
@@ -1000,7 +1040,9 @@ def _vet_and_promote(
                 reason_code=None,
                 replacement_fact_id=None,
                 replacement_value=value,
-                replacement_form="derived: "
+                replacement_form="derived"
+                + (f" (rounded to {g_applied:,})" if g_applied > 1 else "")
+                + ": "
                 + " - ".join(f.accession or "?" for f in inputs[:2]),
                 replacement_accession=None,
                 replacement_was_authoritative=None,
@@ -1021,6 +1063,21 @@ def _vet_and_promote(
                 replacement_source_ids=(),
                 note="filed input copies disagree",
             )
+        elif pending_q is not None:
+            picked.pop(c.canonical_fact_id, None)
+            plan.quarter_pending[c.canonical_fact_id] = pending_q
+            plan.cells[i] = replace(
+                c,
+                action=ACT_REMOVE,
+                reason_code="proxy_nci_inclusive_only",
+                replacement_fact_id=None,
+                replacement_value=None,
+                replacement_form=None,
+                replacement_accession=None,
+                replacement_was_authoritative=None,
+                replacement_source_ids=(),
+                note="quarter from NCI-inclusive inputs, awaiting the face check",
+            )
         elif c.canonical_fact_id in picked:
             # a stored derived quarter with no filed inputs to re-check: hidden, not kept
             unverified += 1
@@ -1037,6 +1094,7 @@ def _vet_and_promote(
                 replacement_source_ids=(),
                 note="no filed inputs to verify the stored derived quarter",
             )
+    plan.info["quarters_rounded_to_coarsest_input_scale"] = rounded_units
     plan.info["quarters_on_original_basis_after_restatement"] = original
     plan.info["quarters_rederived_same_as_stored"] = same
     plan.info["quarters_rederived_differs_from_stored"] = differs
@@ -1109,11 +1167,15 @@ def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
     ProfitLoss bottom line is then the net income (MA 10-K 0001141391-25-000011
     R4 prints one 'Net Income' line). No label evidence keeps the cell hidden."""
     pend = plan.nci_pending
-    if not pend:
+    qpend = plan.quarter_pending
+    if not pend and not qpend:
         return 0
+    companies = {f.company_id for f in pend.values()} | {
+        f.company_id for _, ins in qpend.values() for f in ins
+    }
     cur.execute(
         _q("select id, cik from {core}.company where id = any(%(ids)s)", core),
-        {"ids": sorted({f.company_id for f in pend.values()})},
+        {"ids": sorted(companies)},
     )
     cik = dict(cur.fetchall())
     cache: dict[tuple[int, str | None], list[str] | None] = {}
@@ -1149,6 +1211,41 @@ def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
         if not f.is_authoritative:
             promote.add(f.fact_id)
         released += 1
+    # quarters derived from NCI-inclusive inputs: every input filing's income
+    # statement must show no NCI line (VRSN Q4 = 817.6 - 552.9, SAIC 358 - 273)
+    for i, c in enumerate(plan.cells):
+        got = qpend.get(c.canonical_fact_id)
+        if got is None or c.action != ACT_REMOVE:
+            continue
+        value, inputs = got
+        clean = True
+        for f in inputs:
+            key = (f.company_id, f.accession)
+            if key not in cache:
+                cache[key] = (
+                    labels_for(cik[f.company_id], f.accession) if f.accession else None
+                )
+            labels = cache[key]
+            if labels is None or any(NCI_LABEL.search(lab) for lab in labels):
+                clean = False
+                break
+        if not clean:
+            continue
+        value, g_applied = _coarsen(value, inputs)
+        plan.cells[i] = replace(
+            c,
+            action=ACT_REPLACE,
+            reason_code=None,
+            replacement_value=value,
+            replacement_form="derived"
+            + (f" (rounded to {g_applied:,})" if g_applied > 1 else "")
+            + ": "
+            + " - ".join(f.accession or "?" for f in inputs[:2]),
+            replacement_source_ids=tuple(f.fact_id for f in inputs),
+            note=_gap_bucket(c.stored_value, value),
+        )
+        promote.update(f.fact_id for f in inputs if not f.is_authoritative)
+        released += 1
     plan.promote_fact_ids = sorted(promote)
     plan.info["nci_cells_released_by_face_check"] = released
     plan.info["face_filings_read"] = len(cache)
@@ -1161,6 +1258,7 @@ def merge(plans: Sequence[Plan], family: str, rule_id: str) -> Plan:
         out.facts += p.facts
         out.promote_fact_ids += p.promote_fact_ids
         out.nci_pending.update(p.nci_pending)
+        out.quarter_pending.update(p.quarter_pending)
         out.cells += p.cells
         out.metric_value_ids += p.metric_value_ids
         for k, v in p.info.items():
