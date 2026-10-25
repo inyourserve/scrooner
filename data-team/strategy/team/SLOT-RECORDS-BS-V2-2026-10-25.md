@@ -29,5 +29,24 @@ With borrowed graphs only, 22 instants were withheld, every one a real double co
 ## For the Verifier (fresh draw requested)
 Every AWK era (expect `needs_instance_reader`, no value), the 129 formerly held ties (WMT 34, NI 32, MCK 15, EMR 13, FE 12, ET 6, AWK 6, DVN 5, BRKR 5, VLO 1), all 47 BRO instants (46 tie, 1 not computable), GE's 12 printed-total gaps.
 
+## V3 addendum (same day): the Verifier's four pre-switch-on fixes
+Verifier 2 on V2 (`VERIFY-BS-TOTALS-V2-2026-10-25.md`): 112 of 112 shown values right across 114 filings; four fixes required before switch-on. All applied:
+1. Mezzanine slot now holds only lines the detector CLASSED mezzanine by position (AWK's custom Total long-term debt subtotal no longer appears in `mezzanine_face`).
+2. Equity guard extended: `OtherCapital` (MCK "Other (1)" equity row, 0000927653-18-000010 R4), `ConvertiblePreferredUnits` / `*PreferredUnits|CommonUnits|LimitedPartnersUnits` (ET 0001276187-16-000165 R2). Side effect: MCK's 12 `needs_instance_reader` cells and ET's custom member were that equity row; both companies now tie at every instant.
+3. A standard member missing in a column is treated as a printed blank (zero) ONLY when the identity ties without it on the same filing (DVN 2018-06-30, 2018-09-30, 2018-12-31 held-for-sale liabilities; ET 2018-03-31). State `member_blank_in_column_identity_confirmed`. A missing custom member still holds for the instance reader.
+4. The identity's mezzanine term is read only from the record's face lines; the tag fallback (GE's 408M `RedeemableNoncontrollingInterestEquityCarryingAmount`, a note value) is gone. GE: 12 gaps -> 0.
+
+| | V2 | V3 |
+|---|---|---|
+| identity ties | 699 | 728 |
+| identity gaps | 12 | 0 |
+| member blank in column, identity-confirmed | n/a | 4 (DVN 3, ET 1) |
+| needs_instance_reader | 143 | 123 (AWK 46, TRGP 46, DVN 30, BRKR 1) |
+| not computable | 5 | 1 (BRO 2019-01-01 lease-adoption column) |
+| anchors | 14/16 + 2 holds | 14/16 + 2 holds |
+| records on a borrowed calc graph | 2 | 2 (`cal_source` starts with `borrowed:`) |
+
+Draw requested: MCK, ET, DVN 2018, the two borrowed-graph records, plus a random tie sample.
+
 ## Budget
 SEC requests this step: 326 (plus 163 TLS handshake failures from a system Python without a cert bundle that never reached sec.gov). Cumulative about 776 of 1,100. Free disk 10 GB. Cal folder 62 MB (kept until the family closes).

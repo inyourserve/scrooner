@@ -124,11 +124,10 @@ def identity(rec, day, liab):
         cands.append(eq_p + nci)
     if not cands:
         cands.append(Decimal(0))
+    # mezzanine ONLY from the record's own face lines (Verifier BS-V2 fix 4:
+    # the tag fallback subtracted GE's 408M RedeemableNoncontrollingInterest
+    # note value, which is not a face line, and flagged 12 right values)
     mezz = sum((day.get(m["tag"]) or Decimal(0)) for m in rec["mezzanine_face"])
-    for t in MEZZ_FALLBACK:
-        if not rec["mezzanine_face"] and day.get(t) is not None:
-            mezz = day[t]
-            break
     # Right-hand side total: the filer's own 'total liabilities and equity'
     # line (Verifier BS-V1 rule), else total assets. BRKR 2019-03-31 prints
     # assets 2,242.5M against a liabilities side of 2,242.3M: its own face
@@ -188,9 +187,22 @@ for cik in sorted(records):
         if miss_custom:
             stats["needs_instance_reader"] += 1
             continue
-        if liab is None or miss:
+        if liab is None:
             stats["not_computable"] += 1
             continue
+        if miss:
+            # Verifier BS-V2 fix 3: a standard member printed BLANK in this
+            # column (DVN 2018-09-30 held-for-sale liabilities) is zero. Proof
+            # that it is blank rather than unfetched: the identity ties without
+            # it on the same filing. Otherwise the cell stays not computable.
+            if rec["total_liabilities_rule"] == "face_sum" and "Assets" in day:
+                g, t = identity(rec, day, liab)
+                if abs(g) <= t:
+                    stats["member_blank_in_column_identity_confirmed"] += 1
+                    miss = []
+            if miss:
+                stats["not_computable"] += 1
+                continue
         gap, tol = identity(rec, day, liab)
         key = "identity_ties" if abs(gap) <= tol else "identity_gap"
         stats[key] += 1
@@ -226,6 +238,11 @@ for cik in sorted(records):
             miss, miss_custom = [], []
         else:
             got_v, miss, miss_custom = liab_value(rec, day)
+            if miss and not miss_custom and got_v is not None and "Assets" in day \
+                    and rec["total_liabilities_rule"] == "face_sum":
+                g, t = identity(rec, day, got_v)
+                if abs(g) <= t:
+                    miss = []  # member blank in this column, identity-confirmed
             if miss or miss_custom:
                 got_v = None  # partial sums are never a value (AWK leaked 7,599M)
             elif got_v is not None and "Assets" in day:

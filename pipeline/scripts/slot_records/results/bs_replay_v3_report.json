@@ -1,0 +1,241 @@
+{
+ "anchor_results": [
+  {
+   "ticker": "EMR",
+   "period_end": "2024-12-31",
+   "expected": "16231000000",
+   "note": "no printed total: face-sum",
+   "got": "16231000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "BRO",
+   "period_end": "2018-12-31",
+   "expected": "3000568000",
+   "kind": "equity_parent",
+   "note": "Verifier correction: 3,000,568K is BROWN & BROWN (CIK 0000079282), mislabelled AJG in the first list. Verifier BS-V1: the instant is 2018-12-31 (FY2018 10-K 0000079282-19-000006); the 2019-01-01 column exists only in the Q1-2019 10-Q as the lease-adoption column",
+   "got": "3000568000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "WMT",
+   "period_end": "2026-07-31",
+   "expected": "189115000000",
+   "src": "0000104169-26-000154 R4",
+   "got": "189115000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "T",
+   "period_end": "2026-06-30",
+   "expected": "299920000000",
+   "src": "0000732717-26-000297 R5",
+   "got": "299920000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "OXY",
+   "period_end": "2018-12-31",
+   "expected": "22524000000",
+   "got": "22524000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "MCK",
+   "period_end": "2015-06-30",
+   "expected": "45556000000",
+   "got": "45556000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "FE",
+   "period_end": "2018-03-31",
+   "expected": "31420000000",
+   "src": "0001031296-18-000031 R5",
+   "got": "31420000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "VLO",
+   "period_end": "2020-12-31",
+   "expected": "32132000000",
+   "src": "0001035002-21-000051 R2",
+   "got": "32132000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "DVN",
+   "period_end": "2017-03-31",
+   "expected": "15212000000",
+   "src": "0001564590-17-008268 R4",
+   "got": "15212000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "BRKR",
+   "period_end": "2019-03-31",
+   "expected": "1298700000",
+   "tolerance": "200000",
+   "note": "face does not add up by 0.2M",
+   "got": "1298700000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "NI",
+   "period_end": "2023-12-31",
+   "expected": "20940900000",
+   "src": "0001111711-24-000011 R6",
+   "got": "20940900000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "TRGP",
+   "period_end": "2021-09-30",
+   "expected": "9823100000",
+   "src": "0001564590-21-054348 R2",
+   "note": "749.7M Series A mezzanine filed only with class-of-stock member",
+   "got": null,
+   "missing": [],
+   "missing_custom": [
+    "DerivativeLiabilityBeforeEffectsOfMasterNettingArrangementsNoncurrent"
+   ],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "BX",
+   "period_end": "2019-06-30",
+   "expected": "6308400000",
+   "kind": "equity_parent",
+   "src": "0001193125-19-216805 R2",
+   "tolerance": "100000",
+   "note": "face quoted in millions to one decimal (6,308.4); fact 6,308,355,000; Verifier BS-V1: value right",
+   "got": "6308355000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "KKR",
+   "period_end": "2015-06-30",
+   "expected": "5947400000",
+   "kind": "equity_parent",
+   "src": "0001404912-15-000005 R2",
+   "tolerance": "100000",
+   "note": "face quoted in millions to one decimal (5,947.4); fact 5,947,415,000; Verifier BS-V1: value right",
+   "got": "5947415000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  },
+  {
+   "ticker": "AWK",
+   "period_end": "2017-12-31",
+   "expected": "14097000000",
+   "note": "8M redeemable preferred sits inside total long-term debt",
+   "got": null,
+   "missing": [],
+   "missing_custom": [
+    "LongTermDebtIncludesRedeemablePreferredStockAtRedemptionValue"
+   ],
+   "result": "CHECK"
+  },
+  {
+   "ticker": "DIS",
+   "period_end": "2020-03-28",
+   "expected": "102321000000",
+   "got": "102321000000",
+   "missing": [],
+   "missing_custom": [],
+   "result": "PASS"
+  }
+ ],
+ "identity": {
+  "ties": 728
+ },
+ "per_company": {
+  "EMR": {
+   "identity_ties": 46
+  },
+  "GE": {
+   "identity_ties": 46
+  },
+  "BRO": {
+   "identity_ties": 46,
+   "not_computable": 1
+  },
+  "WMT": {
+   "identity_ties": 47
+  },
+  "AJG": {
+   "identity_ties": 46
+  },
+  "T": {
+   "identity_ties": 46
+  },
+  "OXY": {
+   "identity_ties": 46
+  },
+  "MCK": {
+   "identity_ties": 46
+  },
+  "FE": {
+   "identity_ties": 45
+  },
+  "VLO": {
+   "identity_ties": 46
+  },
+  "DVN": {
+   "identity_ties": 16,
+   "member_blank_in_column_identity_confirmed": 3,
+   "needs_instance_reader": 30
+  },
+  "BRKR": {
+   "identity_ties": 45,
+   "needs_instance_reader": 1
+  },
+  "NI": {
+   "identity_ties": 46
+  },
+  "ET": {
+   "identity_ties": 46,
+   "member_blank_in_column_identity_confirmed": 1
+  },
+  "TRGP": {
+   "needs_instance_reader": 46
+  },
+  "BX": {
+   "identity_ties": 46
+  },
+  "KKR": {
+   "identity_ties": 39
+  },
+  "AWK": {
+   "needs_instance_reader": 46
+  },
+  "DIS": {
+   "identity_ties": 30
+  }
+ }
+}

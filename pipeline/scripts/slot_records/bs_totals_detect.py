@@ -51,7 +51,11 @@ EQUITY_START_RX = re.compile(
     # OthersShareholdersEquity) must never sit in the liabilities members.
     # Lexical balance-type guard until the FASB balance attribute CSV lands.
     r"ShareholdersEquity|Shareholders|StockholdersEquity|EquityAttributable|"
-    r"CapitalSurplus|CapitalStock|PaidInCapital|OtherEquity|EquityOther"
+    r"CapitalSurplus|CapitalStock|PaidInCapital|OtherEquity|EquityOther|"
+    # Verifier BS-V2 fix 2: MCK 'Other (1)' equity row tagged OtherCapital
+    # (0000927653-18-000010 R4); ET ConvertiblePreferredUnits is an
+    # equity-section line (0001276187-16-000165 R2)
+    r"OtherCapital(?!iz)|PreferredUnits|CommonUnits|LimitedPartnersUnits"
 )
 MEZZ_RX = re.compile(r"TemporaryEquity|RedeemableNoncontrolling|RedeemablePreferred")
 # Verifier BS-V1 item 1 (AWK): a DEBT subtotal whose element name mentions the

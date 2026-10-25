@@ -131,7 +131,10 @@ for cik, era_list in sorted(eras.items()):
             "MinorityInterest", "NonredeemableNoncontrollingInterest",
             "PartnersCapitalAttributableToNoncontrollingInterest",
             "MinorityInterestInLimitedPartnerships")), None)
-        mezz_face = [z for z in zone if MEZZ_RX.search(z["tag"])]
+        # mezzanine = lines the detector CLASSED mezzanine by position, never
+        # by name alone (Verifier BS-V2 fix 1: AWK's custom Total long-term
+        # debt subtotal matched the pattern and would be subtracted twice)
+        mezz_face = [z for z in zone if z["seg"] == "mezz"]
         mezz_dims = sorted({t for (t, _) in dim_mezz.get(cik, set())})
         rec = {
             "kind": "slot_record", "company": ticker, "cik": cik,
