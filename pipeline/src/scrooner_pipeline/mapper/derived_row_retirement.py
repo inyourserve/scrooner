@@ -56,12 +56,13 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import re
 import json
 import time
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict, dataclass, field
-from datetime import date
+from dataclasses import asdict, dataclass, field, replace
+from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -112,6 +113,12 @@ REASON_TEXT = {
     ),
     "proxy_nci_inclusive_only": (
         "only a net income figure that includes noncontrolling interests is filed; not shown"
+    ),
+    "derived_mixed_vintage": (
+        "the quarter would mix a restated year with original quarters; not shown"
+    ),
+    "derived_from_rounded_input": (
+        "the quarter would be derived from a rounded input; not shown"
     ),
     "proxy_filed_copies_disagree": (
         "10-K/10-Q copies of this figure disagree; not shown until resolved"
@@ -199,6 +206,9 @@ class Plan:
     promote_fact_ids: list[int] = field(
         default_factory=list
     )  # non-authoritative copies to re-promote
+    nci_pending: dict[int, FactRow] = field(
+        default_factory=dict
+    )  # cell id -> NCI-inclusive pick awaiting the face check
     metric_value_ids: list[int] = field(default_factory=list)
     info: dict[str, Any] = field(default_factory=dict)
 
@@ -272,6 +282,19 @@ PERIODIC_COPIES_SQL = (
     + """
 where f.company_id = any(%(ids)s) and f.concept_id = any(%(cids)s)
   and f.period_id = any(%(pids)s) and fl.form = any(%(forms)s)
+"""
+)
+
+PERIOD_SQL = (
+    "select id, start_date, end_date from {core}.period where id = any(%(pids)s)"
+)
+
+INPUT_FACTS_SQL = (
+    FACT_SELECT
+    + """
+where f.company_id = any(%(ids)s) and f.concept_id = any(%(cids)s)
+  and fl.form = any(%(forms)s) and not f.is_derived
+  and p.end_date = any(%(ends)s)
 """
 )
 
@@ -437,6 +460,20 @@ def _sig_digits(v: Decimal) -> int:
 
 
 def _rounded_copy_of(rounded: Decimal, precise: Decimal) -> bool:
+    """True when `rounded` is `precise` rounded to the coarseness `rounded` itself
+    shows. (A) its own trailing zeros: 3,900,000,000 rounds -3,909,000,000 to
+    1e8 (ST); needs 2+ significant digits so 1.0M is never "a rounding" of 1.1M.
+    (B) a filing scale (thousands, millions, billions) with 2+ whole digits in it:
+    100,000,000 for 100,293,000. A restatement inside half a rounding step is
+    indistinguishable from rounding here; the Verifier samples these."""
+    exp = rounded.normalize().as_tuple().exponent
+    if (
+        isinstance(exp, int)
+        and exp > 0
+        and _sig_digits(rounded) >= 2
+        and abs(precise - rounded) <= Decimal(10) ** exp / 2
+    ):
+        return True
     for scale in (Decimal(10) ** 9, Decimal(10) ** 6, Decimal(10) ** 3):
         if rounded % scale == 0:
             units = abs(rounded) / scale
@@ -627,7 +664,10 @@ def plan_proxy_chunk(
             {"ids": ids, "pids": pids, "tags": list(NCI_INCOME_TAGS)},
         )
         nci_nonzero = {(r[0], r[1]) for r in cur.fetchall()}
-    promote: set[int] = set()
+    picked: dict[int, FactRow] = {}
+    meta: dict[
+        int, tuple[FactRow, int, int]
+    ] = {}  # cell -> (source fact, canonical id, company)
     for cf_id, company, ccid, cname, pid, pend, value, sources in cells:
         sources_t = tuple(sources)
         retired = tuple(s for s in sources_t if s in by_id)
@@ -677,9 +717,13 @@ def plan_proxy_chunk(
             else:
                 cand = inclusive
         pick = _pick_precise(cand)
+        meta[cf_id] = (src, ccid, company)
+        if nci_blocked:
+            pending = _pick_precise(inclusive)
+            if pending is not None:
+                plan.nci_pending[cf_id] = pending
         if pick is not None:
-            if not pick.is_authoritative:
-                promote.add(pick.fact_id)
+            picked[cf_id] = pick
             plan.cells.append(
                 CellPlan(
                     **base,
@@ -708,10 +752,201 @@ def plan_proxy_chunk(
                     note=f"periodic_copies={len(cand)}",
                 )
             )
+    promote = _vet_and_promote(cur, ids, plan, picked, meta, tags_by_cc, core)
     plan.promote_fact_ids = sorted(promote)
     plan.info["periodic_facts_to_repromote"] = len(promote)
     _metrics(cur, ids, plan, core, analytics)
     return plan
+
+
+VINTAGE_MAX_GAP_DAYS = 370  # same as the certification cross_vintage_arithmetic test
+
+
+def _vet_and_promote(
+    cur,
+    ids: list[int],
+    plan: Plan,
+    picked: dict[int, FactRow],
+    meta: dict[int, tuple[FactRow, int, int]],
+    tags_by_cc: Mapping[int, Mapping[int, int]],
+    core: str,
+) -> set[int]:
+    """(a) A replacement that is itself a DERIVED quarter must be one-vintage and
+    built from precise inputs, else it is removed with a reason (EQH Q4 2021 mixed
+    a restated year with original nine months; ST Q4 2023 used a rounded year).
+    (b) A quarter that ends up blank gets its attributable year and year-to-date
+    copies re-promoted, so the next Normalizer run can derive it (LNG). Returns
+    the facts to re-promote."""
+    derived_cells = [
+        c
+        for c in plan.cells
+        if c.action == ACT_REPLACE and picked[c.canonical_fact_id].is_derived
+    ]
+    blank_cells = [
+        c for c in plan.cells if c.action == ACT_REMOVE and c.canonical_fact_id in meta
+    ]
+    need = derived_cells + blank_cells
+    ends: set[date] = set()
+    period: dict[int, tuple[date, date]] = {}
+    cids: set[int] = set()
+    if need:
+        cur.execute(_q(PERIOD_SQL, core), {"pids": sorted({c.period_id for c in need})})
+        period = {r[0]: (r[1], r[2]) for r in cur.fetchall()}
+        for c in need:
+            qs, qe = period[c.period_id]
+            ends |= {qe, qs - timedelta(days=1)}
+            if c.action == ACT_REPLACE:
+                cids.add(picked[c.canonical_fact_id].concept_id)
+            else:
+                cids |= set(tags_by_cc.get(meta[c.canonical_fact_id][1], {}))
+    groups: dict[tuple, list[FactRow]] = defaultdict(list)
+    if need and cids and ends:
+        cur.execute(
+            _q(INPUT_FACTS_SQL, core),
+            {
+                "ids": ids,
+                "cids": sorted(cids),
+                "ends": sorted(ends),
+                "forms": sorted(PERIODIC_FORMS_DOMESTIC),
+            },
+        )
+        for row in cur.fetchall():
+            f = _fact(row)
+            groups[
+                (f.company_id, f.concept_id, f.unit, f.start_date, f.end_date)
+            ].append(f)
+
+    def long_year(key: tuple, qe: date) -> bool:
+        return key[4] == qe and key[3] is not None and (qe - key[3]).days > 300
+
+    unverified = 0
+    for c in derived_cells:
+        pick = picked[c.canonical_fact_id]
+        qs, qe = period[c.period_id]
+        matches: list[tuple[FactRow, FactRow, list[FactRow], list[FactRow]]] = []
+        for ykey, fy_copies in groups.items():
+            if ykey[:3] != (c.company_id, pick.concept_id, pick.unit) or not long_year(
+                ykey, qe
+            ):
+                continue
+            ytd_copies = groups.get(
+                (
+                    c.company_id,
+                    pick.concept_id,
+                    pick.unit,
+                    ykey[3],
+                    qs - timedelta(days=1),
+                ),
+                [],
+            )
+            for fy_f in fy_copies:
+                for y_f in ytd_copies:
+                    if abs(fy_f.value - y_f.value - pick.value) <= 1:
+                        matches.append((fy_f, y_f, fy_copies, ytd_copies))
+        if not matches:
+            unverified += (
+                1  # a Q1+Q2+Q3 chain or no stored inputs: cannot be vetted here
+            )
+            continue
+        same = [
+            m
+            for m in matches
+            if m[0].filing_date
+            and m[1].filing_date
+            and abs((m[0].filing_date - m[1].filing_date).days) <= VINTAGE_MAX_GAP_DAYS
+        ]
+        code = None
+        if not same:
+            code = "derived_mixed_vintage"
+        else:
+            fy_f, y_f, fy_copies, y_copies = same[0]
+            for used, copies in ((fy_f, fy_copies), (y_f, y_copies)):
+                if any(
+                    o.value != used.value
+                    and _sig_digits(o.value) > _sig_digits(used.value)
+                    and _rounded_copy_of(used.value, o.value)
+                    for o in copies
+                ):
+                    code = "derived_from_rounded_input"
+        if code:
+            i = plan.cells.index(c)
+            plan.cells[i] = replace(
+                c,
+                action=ACT_REMOVE,
+                reason_code=code,
+                replacement_fact_id=None,
+                replacement_value=None,
+                replacement_form=None,
+                replacement_accession=None,
+                replacement_was_authoritative=None,
+                note="vetted derived replacement",
+            )
+            del picked[c.canonical_fact_id]
+    plan.info["derived_replacements_vintage_unverified"] = unverified
+
+    promote = {f.fact_id for k, f in picked.items() if not f.is_authoritative}
+    rederive = 0
+    for c in blank_cells:
+        qs, qe = period[c.period_id]
+        if (qe - qs).days > 100:
+            continue
+        src, ccid, company = meta[c.canonical_fact_id]
+        prios = tags_by_cc.get(ccid, {})
+        best: list[FactRow] | None = None
+        for ykey, fy_copies in groups.items():
+            if ykey[0] != company or ykey[2] != src.unit or not long_year(ykey, qe):
+                continue
+            usable = [
+                f
+                for f in fy_copies
+                if f.tag not in NCI_INCLUSIVE_TAGS and f.concept_id in prios
+            ]
+            ytd = [
+                f
+                for key, fs in groups.items()
+                if key[:3] == (company, key[1], src.unit)
+                and key[3] == ykey[3]
+                and key[4] == qs - timedelta(days=1)
+                for f in fs
+                if f.tag not in NCI_INCLUSIVE_TAGS and f.concept_id in prios
+            ]
+            fy_pick = (
+                _pick_precise(
+                    [
+                        f
+                        for f in usable
+                        if f.concept_id
+                        == min(
+                            (f2.concept_id for f2 in usable), key=lambda cid: prios[cid]
+                        )
+                    ]
+                )
+                if usable
+                else None
+            )
+            y_pick = (
+                _pick_precise(
+                    [
+                        f
+                        for f in ytd
+                        if f.concept_id
+                        == min(
+                            (f2.concept_id for f2 in ytd), key=lambda cid: prios[cid]
+                        )
+                    ]
+                )
+                if ytd
+                else None
+            )
+            if fy_pick and y_pick:
+                best = [fy_pick, y_pick]
+        if best:
+            ids_ = [f.fact_id for f in best if not f.is_authoritative]
+            if ids_:
+                promote.update(ids_)
+                rederive += 1
+    plan.info["blank_quarters_with_inputs_repromoted"] = rederive
+    return promote
 
 
 def _metrics(cur, ids: list[int], plan: Plan, core: str, analytics: str) -> None:
@@ -746,11 +981,90 @@ def _metrics(cur, ids: list[int], plan: Plan, core: str, analytics: str) -> None
         scan(todo[k : k + 10])
 
 
+NCI_LABEL = re.compile(r"non-?controlling|minority|attributable to", re.I)
+
+
+def sec_income_statement_labels(client, cik: str, accession: str) -> list[str] | None:
+    """Row labels of the filing's rendered income statement (the filing's face),
+    or None when it cannot be located (then there is no evidence either way)."""
+    import httpx
+
+    from scrooner_pipeline.parsers import filing_line_evidence as fle
+    from scrooner_pipeline.segments.segment_revenue import _filing_summary_reports
+
+    try:
+        reports = _filing_summary_reports(client, int(cik), accession)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 404:
+            return None
+        raise
+    report = fle._pick_report(
+        reports, fle.INCOME_STATEMENT_TITLE_PATTERN, fle.EARNINGS_TITLE
+    )
+    if report is None:
+        return None
+    base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession.replace('-', '')}/"
+    return fle._statement_labels(client, base + report["html_file"])
+
+
+def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
+    """A cell blocked only because an NCI income FACT exists is released when the
+    filing's income statement shows NO noncontrolling or attributable line: the
+    ProfitLoss bottom line is then the net income (MA 10-K 0001141391-25-000011
+    R4 prints one 'Net Income' line). No label evidence keeps the cell hidden."""
+    pend = plan.nci_pending
+    if not pend:
+        return 0
+    cur.execute(
+        _q("select id, cik from {core}.company where id = any(%(ids)s)", core),
+        {"ids": sorted({f.company_id for f in pend.values()})},
+    )
+    cik = dict(cur.fetchall())
+    cache: dict[tuple[int, str | None], list[str] | None] = {}
+    promote = set(plan.promote_fact_ids)
+    released = 0
+    for i, c in enumerate(plan.cells):
+        f = pend.get(c.canonical_fact_id)
+        if (
+            f is None
+            or c.action != ACT_REMOVE
+            or c.reason_code != "proxy_nci_inclusive_only"
+        ):
+            continue
+        key = (f.company_id, f.accession)
+        if key not in cache:
+            cache[key] = (
+                labels_for(cik[f.company_id], f.accession) if f.accession else None
+            )
+        labels = cache[key]
+        if labels is None or any(NCI_LABEL.search(lab) for lab in labels):
+            continue
+        plan.cells[i] = replace(
+            c,
+            action=ACT_REPLACE,
+            reason_code=None,
+            replacement_fact_id=f.fact_id,
+            replacement_value=f.value,
+            replacement_form=f.form,
+            replacement_accession=f.accession,
+            replacement_was_authoritative=f.is_authoritative,
+            note="face_has_no_nci_line",
+        )
+        if not f.is_authoritative:
+            promote.add(f.fact_id)
+        released += 1
+    plan.promote_fact_ids = sorted(promote)
+    plan.info["nci_cells_released_by_face_check"] = released
+    plan.info["face_filings_read"] = len(cache)
+    return released
+
+
 def merge(plans: Sequence[Plan], family: str, rule_id: str) -> Plan:
     out = Plan(family, rule_id)
     for p in plans:
         out.facts += p.facts
         out.promote_fact_ids += p.promote_fact_ids
+        out.nci_pending.update(p.nci_pending)
         out.cells += p.cells
         out.metric_value_ids += p.metric_value_ids
         for k, v in p.info.items():
@@ -979,6 +1293,7 @@ def run_dry_run(
     chunk: int = 100,
     statement_timeout: str = "60s",
     log=lambda m: print(m, flush=True),
+    face_labels=None,
 ) -> dict[str, Any]:
     """READ-ONLY. One connection. Writes CSV/JSON files into out_dir only."""
     cur = conn.cursor()
@@ -1021,6 +1336,8 @@ def run_dry_run(
         if fam not in families:
             continue
         plan = merge(plans[fam], family_name, rule)
+        if fam == "B" and face_labels is not None:
+            resolve_nci_face(cur, plan, face_labels)
         summary[family_name] = summarize(plan, cohort)
         _write_csvs(out_dir, plan)
     (out_dir / "retirement_dryrun_summary.json").write_text(
@@ -1080,6 +1397,13 @@ def _write_csvs(out_dir: Path, plan: Plan) -> None:
             w.writerow([i])
 
 
+def _sec_labels():
+    from scrooner_pipeline.common.sec_client import SECClient
+
+    client = SECClient()
+    return lambda cik, accession: sec_income_statement_labels(client, cik, accession)
+
+
 def main(argv: list[str] | None = None) -> int:
     import psycopg
 
@@ -1096,6 +1420,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--ciks", default=None)
     ap.add_argument("--chunk", type=int, default=100)
     ap.add_argument("--statement-timeout", default="60s")
+    ap.add_argument(
+        "--no-face",
+        action="store_true",
+        help="skip the SEC income-statement face check",
+    )
     args = ap.parse_args(argv)
     fams = ("A", "B") if args.family == "both" else (args.family,)
     cohort = _cohort(Path(args.cohort_csv)) if args.cohort_csv else None
@@ -1116,6 +1445,7 @@ def main(argv: list[str] | None = None) -> int:
             company_ids=ids,
             chunk=args.chunk,
             statement_timeout=args.statement_timeout,
+            face_labels=None if args.no_face else _sec_labels(),
         )
     print(json.dumps(summary, indent=2, default=str))
     return 0
