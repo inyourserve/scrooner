@@ -400,13 +400,14 @@ def plan_quick_ratio(
                     kept = True
                 else:
                     continue
+            assert kept or reason is not None
             cur_ratio = current.get((cid, end))
             equal = cur_ratio is not None and abs(
                 Decimal(value) - Decimal(cur_ratio)
             ) <= Decimal("0.0005")
             out.append(
                 PlannedCell(cid, cik_of[cid], str(end), label, str(value), str(value) if kept else None,
-                            "kept_unverified:face_unavailable" if kept else reason,
+                            "kept_unverified:face_unavailable" if kept or reason is None else reason,
                             None if cur_ratio is None else str(cur_ratio), equal,
                             "kept_unverified" if kept else "null", ctx[cid].accession_by_date.get(end))
             )  # fmt: skip
