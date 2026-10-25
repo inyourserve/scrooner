@@ -513,9 +513,10 @@ def test_family_b_other_tag_precise_copy_and_derived_q4_fallback(conn):
         rr.ACT_REPLACE,
         311,
     )
-    assert (by_period[8].action, by_period[8].replacement_fact_id) == (
-        rr.ACT_REPLACE,
-        321,
+    # a stored derived Q4 with no filed year/9M to check it against is hidden
+    assert (by_period[8].action, by_period[8].reason_code) == (
+        rr.ACT_REMOVE,
+        "derived_inputs_unverified",
     )
     assert plan.promote_fact_ids == []
 
@@ -605,9 +606,20 @@ def _quarter_world(c, *, fy_value, fy_filing, extra_fy=()):
 
 
 @pytest.mark.integration
-def test_eqh_restated_year_gives_the_original_basis_quarter_not_the_mixed_one(conn):
-    # EQH Q4 2021: original year -439M (filed 2022) and LDTI-restated 1,755M (filed 2024)
-    # are both filed. The stored 2,448M mixes them; the original basis gives 254M.
+def test_eqh_restated_year_hides_the_quarter_by_default(conn):
+    # founder ruling: hide restated periods whose copies disagree, quarters included
+    _quarter_world(
+        conn, fy_value="1755000000", fy_filing=6, extra_fy=[(612, 8, "-439000000")]
+    )
+    _f(conn, 601, NI, USD, 22, 8, "2448000000", derived=True)
+    assert rr.QUARTER_RESTATED_POLICY == "hide"
+    cell = _plan_b(conn).cells[0]
+    assert (cell.action, cell.reason_code) == (rr.ACT_REMOVE, "derived_inputs_disagree")
+
+
+@pytest.mark.integration
+def test_original_basis_switch_gives_the_original_quarter(conn, monkeypatch):
+    monkeypatch.setattr(rr, "QUARTER_RESTATED_POLICY", "original_basis")
     _quarter_world(
         conn, fy_value="1755000000", fy_filing=6, extra_fy=[(612, 8, "-439000000")]
     )
@@ -619,18 +631,26 @@ def test_eqh_restated_year_gives_the_original_basis_quarter_not_the_mixed_one(co
     )
     assert cell.replacement_source_ids == (612, 611)
     assert plan.info["quarters_on_original_basis_after_restatement"] == 1
-    assert plan.info["quarters_rederived_differs_from_stored"] == 1
 
 
 @pytest.mark.integration
-def test_restated_quarter_is_hidden_under_the_hide_policy(conn, monkeypatch):
-    monkeypatch.setattr(rr, "QUARTER_RESTATED_POLICY", "hide")
-    _quarter_world(
-        conn, fy_value="1755000000", fy_filing=6, extra_fy=[(612, 8, "-439000000")]
+def test_derived_replacement_with_no_filed_inputs_is_hidden(conn):
+    conn.execute("insert into rcore.filing values (8,1,'K22','10-K','2022-02-01')")
+    conn.execute(
+        "insert into rcore.period values (22,1,'2021-10-01','2021-12-31','duration',2021,'Q4')"
     )
-    _f(conn, 601, NI, USD, 22, 8, "2448000000", derived=True)
-    cell = _plan_b(conn).cells[0]
-    assert (cell.action, cell.reason_code) == (rr.ACT_REMOVE, "derived_inputs_disagree")
+    _f(conn, 600, NI, USD, 22, 2, "999")
+    _cell(conn, CC_NI, 22, "999", [600])
+    _f(
+        conn, 601, NI, USD, 22, 8, "254000000", derived=True
+    )  # no year, no nine months stored
+    plan = _plan_b(conn)
+    cell = plan.cells[0]
+    assert (cell.action, cell.reason_code) == (
+        rr.ACT_REMOVE,
+        "derived_inputs_unverified",
+    )
+    assert plan.info["derived_replacements_unverified_no_inputs"] == 1
 
 
 @pytest.mark.integration
