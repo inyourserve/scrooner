@@ -99,6 +99,10 @@ for cik in sorted(records):
     tags = set()
     for rec in records[cik]:
         tags.update(m["tag"] for m in rec["members"])
+        for m in rec["members"]:
+            tie = m.get("tie") or {}
+            tags.update(tie.get("roots", []))
+            tags.update(t for t in (tie.get("total"), tie.get("less")) if t)
     tags.update(t for side in LEASE_TAGS.values() for t in side)
     tags.update(AGG_TAGS)
     facts = fetch_facts(cur, cik, tags)
@@ -154,6 +158,29 @@ for cik in sorted(records):
         # the variant does not remove current finance leases inside non-combined
         # short-term lines (CVX 2022, LRCX) - it stays informational only.
         filer_agg = next((day[t][0] for t in AGG_TAGS if t in day), None)
+        # FACE-ADMISSION VALUE TIE (Verifier V4 guard iv): a member admitted
+        # from the face (not in the statement-role cal) is used only when its
+        # zone roots sum to the filer's printed side total on this instant;
+        # otherwise the cell holds. Rounding unit = the filer's (bs_replay rule).
+        tie_pending = []
+        for m in rec["members"]:
+            tie = m.get("tie")
+            if not tie or m["tag"] not in day:
+                continue
+            if not tie.get("computable") or tie.get("total") not in day:
+                tie_pending.append(f"{m['tag']}:no_printed_total")
+                continue
+            vals = [day[t][0] for t in tie["roots"] if t in day]
+            if len(vals) != len(tie["roots"]):
+                tie_pending.append(f"{m['tag']}:root_values_missing")
+                continue
+            target = day[tie["total"]][0] - (day[tie["less"]][0] if tie.get("less") and tie["less"] in day else Decimal(0))
+            unit = Decimal(1000000)
+            for v in vals + [target]:
+                while unit > 1 and v != 0 and v % unit != 0:
+                    unit /= 10
+            if abs(sum(vals) - target) > unit:
+                tie_pending.append(f"{m['tag']}:gap={sum(vals) - target}")
         verdict = None
         # A verdict must NEVER depend on production's value: production is the
         # thing being replaced (Verifier V3 defect 1). A blank is accepted only
@@ -162,6 +189,8 @@ for cik in sorted(records):
             verdict = "not_computable_uncovered_candidates"
         elif missing_custom:
             verdict = "needs_instance_reader"
+        elif tie_pending:
+            verdict = "face_admission_tie_pending"
         elif missing and filer_agg is not None and abs(lease_incl - filer_agg) <= 1:
             pass  # the filer's own printed total confirms the blanks are zero
         elif missing:
@@ -190,7 +219,7 @@ for cik in sorted(records):
         publishable = verdict not in (
             "needs_instance_reader", "not_computable_missing_member",
             "not_computable_no_facts", "not_computable_uncovered_candidates",
-            "face_note_gap_review",
+            "face_note_gap_review", "face_admission_tie_pending",
         )
         report["cells"].append(
             {"ticker": ticker, "cik": cik, "period_end": period_end, "verdict": verdict,
@@ -200,7 +229,7 @@ for cik in sorted(records):
              "slot_borrowings": str(borrowings) if publishable else None,
              "lane3_before": sorted(str(b) for b in before_vals), "hold": is_hold,
              "missing_members": missing, "missing_custom_members": missing_custom,
-             "nonauth_members": nonauth}
+             "nonauth_members": nonauth, "face_admission_tie_pending": tie_pending}
         )
 conn.close()
 report["summary"] = dict(report["summary"])

@@ -21,6 +21,23 @@ for line in open(sys.argv[1]):
     records[r["cik"]].append(r)
 anchors = json.loads(open(sys.argv[2]).read())["anchors"]
 
+# Optional 4th arg: instance-reader evidence JSONL (instance_reader.py). Custom
+# member values the API never carries are taken from the filing's OWN instance,
+# same accession as the cell (never from another filing), undimensioned
+# context only. Rows: {cik, adsh, tag, period_type, end, value, unit, decimals}.
+instance_evidence = defaultdict(dict)  # (adsh, end) -> tag -> Decimal
+instance_rows = 0
+if len(sys.argv) > 4 and os.path.exists(sys.argv[4]):
+    for line in open(sys.argv[4]):
+        r = json.loads(line)
+        if r.get("period_type") != "instant" or r.get("value") in (None, "") or (r.get("unit") or "USD") != "USD":
+            continue
+        try:
+            instance_evidence[(r["adsh"], r["end"])].setdefault(r["tag"], Decimal(r["value"]))
+            instance_rows += 1
+        except Exception:  # noqa: BLE001
+            continue
+
 conn = psycopg.connect(os.environ["DATABASE_URL"])
 cur = conn.cursor()
 report = {"anchor_results": [], "identity": defaultdict(int), "per_company": {}}
@@ -66,6 +83,11 @@ def fetch(cik, tags):
         acc = original.get(e) or max(accs, key=lambda a: len(accs[a]))
         facts[e] = dict(accs[acc])
         facts[e]["__accession__"] = acc
+        # custom-tag values from the SAME accession's instance (instance reader)
+        for tag, v in instance_evidence.get((acc, e), {}).items():
+            if tag not in facts[e]:
+                facts[e][tag] = v
+                facts[e].setdefault("__instance_filled__", []).append(tag)
     return facts
 
 
@@ -75,7 +97,7 @@ def rounding_unit(day):
     this unit, not a percentage (Verifier: 0.05% let 4-14M errors tie)."""
     unit = Decimal(1000000)
     for k, v in day.items():
-        if k == "__accession__" or v is None or v == 0:
+        if k.startswith("__") or v is None or v == 0:
             continue
         while unit > 1 and v % unit != 0:
             unit /= 10
@@ -187,6 +209,8 @@ for cik in sorted(records):
         if miss_custom:
             stats["needs_instance_reader"] += 1
             continue
+        if day.get("__instance_filled__"):
+            stats["instance_filled"] += 1
         if liab is None:
             stats["not_computable"] += 1
             continue

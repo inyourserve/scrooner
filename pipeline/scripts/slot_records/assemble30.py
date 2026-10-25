@@ -9,14 +9,19 @@ linkbases: each era's members come from its first filing's _cal.xml; adjacent
 eras whose CAL debt fingerprints are identical are re-collapsed (a face
 label/order change with no calc change is not a format change). Lease
 classification follows the Verifier's evidence rule via build_debt_slots.
-usage: assemble30.py <eras.json> <boundary_cal_dir> <lease_facts.csv> <out.jsonl>
+usage: assemble30.py <eras.json> <boundary_cal_dir> <lease_facts.csv> <out.jsonl> [face_rows.jsonl(.gz)]
+  face_rows: FSDS pre rows (stmt=BS) of the boundary filings, for the
+  face-admission guards; without it no face line is admitted.
 """  # noqa: E501
+import gzip
 import json
 import sys
+from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import build_debt_slots as b  # noqa: E402
+import face_admission as fa  # noqa: E402
 
 TICKER = {
     "0000002488": "AMD", "0000006951": "AMAT", "0000018230": "CAT", "0000021344": "KO",
@@ -34,6 +39,19 @@ eras = json.load(open(sys.argv[1]))
 cal_dir = Path(sys.argv[2])
 lease_facts = b.load_lease_facts(Path(sys.argv[3]))
 out = open(sys.argv[4], "w")
+
+# ordered BS face rows per boundary filing (for the face-admission guards)
+face_rows: dict[str, list] = {}
+if len(sys.argv) > 5:
+    boundary = {e["first"] for el in eras.values() for e in el}
+    tmp = defaultdict(list)
+    opener = gzip.open if sys.argv[5].endswith(".gz") else open
+    with opener(sys.argv[5], "rt") as fh:
+        for line in fh:
+            r = json.loads(line)
+            if r.get("stmt") == "BS" and r["adsh"] in boundary:
+                tmp[r["adsh"]].append((r["report"], r["line"], {"tag": r["tag"], "custom": r["custom"], "label": r.get("label") or ""}))
+    face_rows = {a: [d for _, _, d in sorted(v, key=lambda x: (x[0], x[1]))] for a, v in tmp.items()}
 
 summary = []
 for cik, era_list in sorted(eras.items()):
@@ -109,14 +127,23 @@ for cik, era_list in sorted(eras.items()):
             if not cand["custom"] and side:
                 # a STANDARD face line missing from the statement-role cal
                 # (AVGO 2018: LiabilitiesCurrent children live only in the
-                # consolidating-note role) is admitted from the face itself;
-                # custom uncovered lines stay dirty for the Verifier
-                rec["members"].append(
-                    {"tag": tag, "side": side, "class": b.classify(tag), "custom": False,
-                     "weight": "1.0", "calc_parent": None, "roles": [],
-                     "source": "face_line_not_in_statement_cal"}
-                )
-                member_tags.add(tag)
+                # consolidating-note role) may be admitted from the face itself,
+                # behind the Verifier's four guards (face_admission.py): never
+                # an Abstract row, only inside the liabilities zone, never a
+                # calc descendant / total / component of a member, and a value
+                # tie at replay. Custom uncovered lines stay dirty for the Verifier.
+                face = face_rows.get(adsh, [])
+                ok, why, tie = fa.admit(tag, face, cal["arcs"], member_tags, side) if face else (
+                    False, "no_face_rows_for_boundary_filing", None)
+                if ok:
+                    rec["members"].append(
+                        {"tag": tag, "side": side, "class": b.classify(tag), "custom": False,
+                         "weight": "1.0", "calc_parent": None, "roles": [],
+                         "source": "face_line_not_in_statement_cal", "tie": tie}
+                    )
+                    member_tags.add(tag)
+                else:
+                    excluded.append({"tag": tag, "label": cand["label"], "reason": f"face_admission_rejected:{why}"})
             else:
                 uncovered.append({"tag": tag, "label": cand["label"], "custom": cand["custom"]})
         excluded.extend(

@@ -1,0 +1,14 @@
+{
+  "_note": "Verifier VERIFY-SLOT-RECORDS-30SET-V4 section (a) fixtures for the face_line_not_in_statement_cal rule. Tags resolved from the filings' FSDS face rows on 2026-10-25. EW 0001099800-16-000044: the two must-admit lines (securitization program 430, long-term debt due currently 161) are not present in the FSDS BS rows of that filing (lines 21-27 only), so that fixture cannot be exercised from FSDS and is listed for the Verifier to re-read on the R page.",
+  "0001130310-26-000008": {"must_not_admit": ["OtherLongTermDebtNoncurrent"]},
+  "0001193125-15-363617": {"must_not_admit": ["OtherLongTermDebtNoncurrent"]},
+  "0001193125-25-041730": {"must_not_admit": ["LongTermLineOfCredit", "FinanceLeaseLiabilityNoncurrent"]},
+  "0001571949-17-000003": {"must_not_admit": ["LongTermDebt"]},
+  "0000217346-21-000019": {"must_not_admit": ["LongTermDebt"]},
+  "0000070145-19-000013": {"must_not_admit": ["UnamortizedLossReacquiredDebtNoncurrent"], "must_admit": ["LongTermDebtNoncurrent"]},
+  "0001730168-18-000019": {"must_admit": ["LongTermDebtCurrent"]},
+  "0001558370-19-007718": {"must_admit": ["DebtCurrent", "LongTermDebtNoncurrent"]},
+  "0001558370-19-010666": {"must_admit": ["LongTermDebtNoncurrent"]},
+  "0001193125-25-257624": {"must_admit": ["LongTermDebtCurrent", "LongTermDebtNoncurrent"]},
+  "0001558370-17-003802": {"must_admit": ["LongTermDebtNoncurrent"]}
+}
