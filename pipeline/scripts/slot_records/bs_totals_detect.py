@@ -42,6 +42,10 @@ def iso(d):
 
 
 import re  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+sys.path.insert(0, str(Path(__file__).parent))
+import taxonomy_attrs as ta  # noqa: E402
 
 EQUITY_START_RX = re.compile(
     r"^(Preferred|Common)Stock|AdditionalPaidInCapital|RetainedEarnings|"
@@ -108,6 +112,14 @@ def classify_line(tag, label):
         return "excluded_cap_total"  # equity+debt combined subtotal, never summed
     if EQUITY_START_RX.search(tag):
         return "equity_component"
+    # STRUCTURAL guard (FASB element attributes, taxonomy_attrs.py): a standard
+    # element with a debit balance is an asset or contra item, never a
+    # liability member; abstract elements are headers. Lexical guards above
+    # remain for custom and retired elements the CSV does not know.
+    if ta.is_abstract(tag):
+        return "excluded_abstract"
+    if ta.balance(tag) == "debit":
+        return "excluded_nonliability_debit_balance"
     return "liab"
 
 

@@ -19,7 +19,12 @@ Guards (the Verifier's four):
 Pure functions; stdlib only.
 """
 import re
+import sys
 from collections import defaultdict
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import taxonomy_attrs as ta  # noqa: E402
 
 ABSTRACT_RX = re.compile(r"Abstract$")
 TOTAL_LABEL_RX = re.compile(r"^\s*total\b", re.I)
@@ -109,8 +114,10 @@ def tie_spec(zone, cm, side):
 
 def admit(tag, face_rows, arcs, member_tags, side):
     """-> (admit: bool, reason: str, tie: dict|None)."""
-    if ABSTRACT_RX.search(tag):
+    if ABSTRACT_RX.search(tag) or ta.is_abstract(tag):
         return False, "abstract_header_row", None
+    if ta.balance(tag) == "debit":
+        return False, "debit_balance_element_not_a_liability", None
     zone, known = liabilities_zone(face_rows)
     if not known:
         return False, "no_assets_total_row_zone_unknown", None
