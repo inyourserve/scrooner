@@ -20,7 +20,11 @@ import re
 import shutil
 import sys
 import time
-import urllib.request
+import urllib.request  # noqa: F401 (kept for type of exceptions)
+from pathlib import Path as _P
+import sys as _s
+_s.path.insert(0, str(_P(__file__).parent))
+import common  # noqa: E402
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -37,22 +41,17 @@ requests = 0
 last = 0.0
 
 
+_client = None
+
+
 def get(url):
-    global requests, last
-    if shutil.disk_usage("/private/tmp").free < 4 * 1024**3:
-        sys.exit(f"free disk < 4 GB after {requests} requests; stopping")
-    wait = 0.26 - (time.monotonic() - last)
-    if wait > 0:
-        time.sleep(wait)
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Encoding": "gzip, deflate"})
-    last = time.monotonic()
-    requests += 1
-    with urllib.request.urlopen(req, timeout=60) as r:
-        data = r.read()
-        if r.headers.get("Content-Encoding") == "gzip":
-            import gzip
-            data = gzip.decompress(data)
-        return data
+    """sec.gov fetch through the shared client (UA, <= 4 req/s, disk floor, counter)."""
+    global _client, requests
+    if _client is None:
+        _client = common.SecClient()
+    data = _client.get(url)
+    requests = _client.requests
+    return data
 
 
 def parse_instance(path, cik, wanted):

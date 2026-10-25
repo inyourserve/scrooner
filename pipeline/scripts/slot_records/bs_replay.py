@@ -14,6 +14,10 @@ from collections import defaultdict
 from decimal import Decimal
 
 import psycopg
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).parent))
+import common  # noqa: E402
 
 records = defaultdict(list)
 for line in open(sys.argv[1]):
@@ -74,49 +78,20 @@ EXTRA = ["Assets", "Liabilities", "StockholdersEquity", "MinorityInterest",
 
 
 def fetch(cik, tags):
-    """SAME-ACCESSION inputs (Verifier BS-v0 class 5): every term of a cell
-    comes from ONE filing - the one whose period_of_report is the instant
-    (the original), else the accession covering the most member tags. Mixing
-    copies across filings let a restated ARO slip into DVN 2018-03-31."""
-    cur.execute(
-        """
-        select co.tag, p.end_date::text, f.value::numeric, f.is_authoritative,
-               fi.accession_number, fi.period_of_report::text
-        from core.fact f
-        join core.concept co on co.id=f.concept_id
-        join core.period p on p.id=f.period_id
-        join core.unit u on u.id=f.unit_id
-        join core.company c on c.id=f.company_id
-        join core.filing fi on fi.id=f.filing_id
-        where c.cik=%s and p.period_type='instant' and co.taxonomy='us-gaap'
-          and u.unit_name='usd' and co.tag = any(%s)
-          and fi.form in ('10-K','10-Q','10-K/A','10-Q/A')
-        order by co.tag, p.end_date, f.is_authoritative desc, f.id desc
-        """,
-        (cik, list(tags)),
-    )
-    by_acc = defaultdict(lambda: defaultdict(dict))  # end -> accession -> tag -> value
-    original = {}  # end -> accession whose period_of_report == end
-    for tag, e, v, auth, acc, por in cur.fetchall():
-        if tag not in by_acc[e][acc]:
-            by_acc[e][acc][tag] = v
-        if por == e:
-            original.setdefault(e, acc)
-    facts = {}
-    for e, accs in by_acc.items():
-        acc = original.get(e) or max(accs, key=lambda a: len(accs[a]))
-        facts[e] = dict(accs[acc])
-        facts[e]["__accession__"] = acc
-        # custom-tag values from the SAME accession's instance (instance reader)
+    """SAME-ACCESSION inputs (shared common.fetch_instants) plus custom-tag values
+    from the same accession's instance (instance reader evidence)."""
+    facts = common.fetch_instants(cur, cik, tags)
+    for e, day in facts.items():
+        acc = day["__accession__"]
         for tag, v in instance_evidence.get((acc, e), {}).items():
-            if tag not in facts[e]:
-                facts[e][tag] = v
-                facts[e].setdefault("__instance_filled__", []).append(tag)
+            if tag not in day:
+                day[tag] = v
+                day.setdefault("__instance_filled__", []).append(tag)
         for tag, v in instance_dim_sum.get((acc, e), {}).items():
-            if tag in mezz_tags and (tag not in facts[e] or tag not in accs[acc]):
-                facts[e][tag] = v
-                facts[e].setdefault("__dim_mezz__", set()).add(tag)
-                facts[e].setdefault("__instance_filled__", []).append(f"{tag}[dims:{len(instance_dim_members[(acc, e)][tag])}]")
+            if tag in mezz_tags and tag not in day:
+                day[tag] = v
+                day.setdefault("__dim_mezz__", set()).add(tag)
+                day.setdefault("__instance_filled__", []).append(f"{tag}[dims:{len(instance_dim_members[(acc, e)][tag])}]")
     return facts
 
 
@@ -125,16 +100,8 @@ mezz_tags = {m["tag"] for rs in records.values() for r in rs for m in r["mezzani
 
 
 def rounding_unit(day):
-    """The filer's rounding unit at this instant: the largest power of ten
-    dividing every member value (capped at 1e6). The identity tolerance is
-    this unit, not a percentage (Verifier: 0.05% let 4-14M errors tie)."""
-    unit = Decimal(1000000)
-    for k, v in day.items():
-        if k.startswith("__") or v is None or v == 0:
-            continue
-        while unit > 1 and v % unit != 0:
-            unit /= 10
-    return unit
+    """The filer's rounding unit at this instant (shared common.rounding_unit)."""
+    return common.rounding_unit([v for k, v in day.items() if not k.startswith("__")])
 
 
 def covering(cik, end):

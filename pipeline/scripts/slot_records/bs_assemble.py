@@ -19,6 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import build_debt_slots as b  # noqa: E402
+import common  # noqa: E402
 
 EQUITY_PARENT_TAGS = {
     "StockholdersEquity", "PartnersCapital", "MembersEquity",
@@ -42,21 +43,9 @@ with gzip.open(sys.argv[3], "rt") as f:
 out = open(sys.argv[4], "w")
 summary = []
 def load_cal(adsh):
-    """The boundary filing's statement-role calc arcs (cal.xml, else MetaLinks)."""
-    cals = sorted((cal_dir / adsh).glob("*_cal.xml")) or sorted((cal_dir / adsh).glob("*.xsd"))
-    meta = cal_dir / adsh / "MetaLinks.json"
-    if cals:
-        cal = b.parse_cal(cals[0])  # separate linkbase, or embedded in the schema
-    elif meta.exists():
-        cal = b.parse_metalinks(meta)
-    else:
-        return None, {}
-    children = defaultdict(set)
-    for (role, parent), kids in cal["arcs"].items():
-        if not b.BS_ROLE_RX.search(role) or b.NOTE_ROLE_RX.search(role):
-            continue
-        children[parent].update(c for c, _, _ in kids)
-    return cal["era"], children
+    """The boundary filing's statement-role calc arcs (shared loader: _cal.xml -> .xsd -> MetaLinks)."""
+    era, arcs = common.load_cal(cal_dir, adsh)
+    return era, common.statement_children(arcs, b.BS_ROLE_RX) if arcs else {}
 
 
 for cik, era_list in sorted(eras.items()):
