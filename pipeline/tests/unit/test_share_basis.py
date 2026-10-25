@@ -18,7 +18,7 @@ the accession is cited):
 from __future__ import annotations
 
 import itertools
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 from fractions import Fraction
 
@@ -593,7 +593,7 @@ def test_announced_split_with_no_new_basis_filing_is_pending():
     b.add(EPS_D, "4.00", "2025-01-01", "2025-12-31", k)
     b.add(RATIO, "10", None, "2026-06-01", k)
     res = run(b)
-    assert [e.status for e in res.events] == ["pending"]
+    assert res.events == []  # a ratio fact dated after its own filing is not read
     assert b.cell(res, "diluted_eps_resolved", "2025-01-01", "2025-12-31").value == D(
         "4.00"
     )
@@ -1445,7 +1445,8 @@ def test_original_filing_must_agree_with_the_later_copy():
     b.add(DPS_DECL, "0.26", "2020-07-01", "2020-09-30", k)
     res = run(b)
     cell = b.cell(res, "dividends_per_share_resolved", "2019-07-01", "2019-09-30")
-    assert cell.status == sb.SHOWN and cell.value == D("0.24")
+    # one later copy against the original: unresolved, held (never the later 0.26)
+    assert cell.status == sb.HIDE_RESTATED
 
 
 def test_rate_on_a_longer_context_in_the_original_is_dropped():
@@ -1470,7 +1471,7 @@ def test_share_copies_in_thousands_next_to_waso_are_not_flagged():
         (("2010-12-31", "15900245"), ("2011-06-30", "15927231"), ("2011-09-30", "15937821"),
          ("2011-12-31", "15937821"), ("2012-03-31", "15993881"))
     ):  # fmt: skip
-        f = b.filing(f"S-{i}", f"201{1 + i // 4}-0{1 + i % 4}-28")
+        f = b.filing(f"S-{i}", (date.fromisoformat(d) + timedelta(days=40)).isoformat())
         b.add(BS_SHARES, v, None, d, f)
         b.add(
             "WeightedAverageNumberOfSharesOutstandingBasic",
@@ -1507,3 +1508,240 @@ def test_phase_one_keeps_the_stored_value_for_other_changed_cells():
         fy19,
     ) in p2
     assert sb.WRITE_PHASE == 1
+
+
+def test_lone_outlier_does_not_beat_a_majority_of_later_copies():
+    """TEX Q2 2020 DPS: the original 10-Q 0.12, two later 10-Ks 0; TSCO
+    2023-02-08: six copies 1.03, one later 0.22."""
+    b = Book()
+    q = b.filing("0000097216-20-000259", "2020-10-28")
+    k1 = b.filing("0000097216-22-000013", "2022-02-11", "10-K")
+    k2 = b.filing("0000097216-23-000012", "2023-02-10", "10-K")
+    b.add(DPS_DECL, "0.12", "2020-04-01", "2020-06-30", q)
+    b.add(DPS_DECL, "0", "2020-04-01", "2020-06-30", k1)
+    b.add(DPS_DECL, "0", "2020-04-01", "2020-06-30", k2)
+    res = run(b)
+    cell = b.cell(res, "dividends_per_share_resolved", "2020-04-01", "2020-06-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0")
+
+    b = Book()
+    accs = [
+        b.filing(f"T-{i}", f"202{3 + i // 4}-0{1 + (i % 4) * 2}-20") for i in range(7)
+    ]
+    for acc in accs[:6]:
+        b.add(DPS_DECL, "1.03", None, "2023-02-08", acc)
+    b.add(DPS_DECL, "0.22", None, "2023-02-08", accs[6])
+    res = run(b)
+    assert b.cell(res, "dividends_per_share_resolved", None, "2023-02-08").value == D(
+        "1.03"
+    )
+
+
+def test_future_dated_context_is_not_a_reported_value():
+    """PPL 10-Q 0000922224-13-000025 (filed Aug 2013) tags the November 2013
+    dividend 0.36; the later filing reports 0.3675."""
+    b = Book()
+    q = b.filing("0000922224-13-000025", "2013-08-05")
+    k = b.filing("K-14", "2014-02-20", "10-K")
+    b.add(DPS_DECL, "0.36", "2013-11-01", "2013-11-30", q)
+    b.add(DPS_DECL, "0.3675", "2013-11-01", "2013-11-30", k)
+    res = run(b)
+    cell = b.cell(res, "dividends_per_share_resolved", "2013-11-01", "2013-11-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0.3675")
+
+
+def test_recurring_stock_dividends_hold_earlier_filings():
+    """VLY-like 5% stock dividend: EPS basic and diluted re-presented / 1.05
+    on two periods -> review, earlier filings held; CBSH tags
+    StockIssuedDuringPeriodValueStockDividend."""
+    b = Book()
+    a = b.filing("V-1", "2010-02-25", "10-K")
+    c = b.filing("V-2", "2011-02-25", "10-K")
+    for s_, e, v in (
+        ("2009-01-01", "2009-12-31", "0.73"),
+        ("2008-01-01", "2008-12-31", "0.84"),
+    ):
+        for tag in (EPS_B, EPS_D):
+            b.add(tag, v, s_, e, a)
+            b.add(tag, str((D(v) / D("1.05")).quantize(D("0.01"))), s_, e, c)
+    b.add(EPS_D, "0.61", "2007-01-01", "2007-12-31", a)
+    res = run(b)
+    assert [e.status for e in res.events] == ["review"]
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2007-01-01", "2007-12-31").status
+        == sb.HIDE_BASIS_REVIEW
+    )
+
+    b = Book()
+    a = b.filing("C-1", "2018-02-25", "10-K")
+    k = b.filing("C-2", "2019-02-25", "10-K")
+    b.add(EPS_D, "3.20", "2017-01-01", "2017-12-31", a)
+    b.add(
+        "StockIssuedDuringPeriodValueStockDividend",
+        "886000",
+        "2018-01-01",
+        "2018-12-31",
+        k,
+        unit="usd",
+    )
+    res = run(b)
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2017-01-01", "2017-12-31").status
+        == sb.HIDE_BASIS_REVIEW
+    )
+
+
+def test_confirmed_event_contradicted_by_comparatives_is_rejected():
+    """ANF 2013: a ratio fact and one tag pair, no share-count step, while many
+    comparatives span the boundary unchanged: not a split."""
+    b = Book()
+    a = b.filing("A-1", "2012-03-30", "10-K")
+    c = b.filing("A-2", "2013-04-02", "10-K")
+    for s_, e, v in (
+        ("2011-01-30", "2012-01-28", "1.55"),
+        ("2010-01-31", "2011-01-29", "1.73"),
+        ("2011-10-30", "2012-01-28", "0.42"),
+        ("2011-07-31", "2011-10-29", "0.18"),
+    ):
+        for tag in (EPS_B, EPS_D):
+            b.add(tag, v, s_, e, a)
+            b.add(tag, v, s_, e, c)
+    for tag in (DPS_DECL, DPS_PAID):
+        b.add(tag, "0.70", "2011-01-30", "2012-01-28", a)
+        b.add(tag, "0.35", "2011-01-30", "2012-01-28", c)
+    b.add(RATIO, "2", None, "2013-03-01", c)
+    res = run(b)
+    assert "confirmed" not in [e.status for e in res.events]
+    assert res.violations == []
+
+
+def test_no_representation_slack_on_a_quarter_or_instant():
+    """TSCO 2023-02-08 DPS: six copies 1.03 on the pre-5:1 basis (0.206) and a
+    2025 filing's 0.22 (the 2024 rate on a 2023 date) are not one value."""
+    b = tsco_like = Book()
+    pre = [b.filing(f"P-{i}", f"2023-0{3 + i}-01") for i in range(3)]
+    post = b.filing("0000916365-25-000089", "2025-02-25", "10-K")
+    for acc in pre:
+        b.add(DPS_DECL, "1.03", None, "2023-02-08", acc)
+    b.add(DPS_DECL, "0.22", None, "2023-02-08", post)
+    for acc, v in ((pre[2], "1.03"), (post, "0.206")):
+        for tag in (EPS_B, EPS_D):
+            b.add(tag, str(D(v) * 9), "2022-01-01", "2022-12-31", acc)
+            b.add(tag, str(D(v) * 4), "2021-01-01", "2021-12-31", acc)
+    b.add(COVER, "110000000", None, "2023-05-01", pre[2])
+    b.add(COVER, "535000000", None, "2025-02-10", post)
+    b.add(RATIO, "5", None, "2024-12-20", post)
+    res = run(tsco_like)
+    cell = b.cell(res, "dividends_per_share_resolved", None, "2023-02-08")
+    assert cell.status == sb.SHOWN and cell.value == D("0.206")
+
+
+def test_confirmed_product_across_two_splits_is_not_a_third_event():
+    """CPRT: 2:1 in Nov 2022 and 2:1 in Sep 2023; per-share and share counts
+    re-presented 4x between a pre-2022 and a post-2023 filing (filed pair +
+    restated shares, no ratio fact) are the product, not a 4:1 split."""
+    b = Book()
+    f0 = b.filing("P-0", "2022-03-01")
+    f1 = b.filing("P-1", "2022-09-01", "10-K")
+    f2 = b.filing("P-2", "2022-11-20")
+    f3 = b.filing("P-3", "2023-08-01")
+    f4 = b.filing("P-4", "2023-09-30", "10-K")
+    _two_to_one(b, f1, f2)
+    for s_, e, v in (
+        ("2021-08-01", "2022-07-31", "4.40"),
+        ("2020-08-01", "2021-07-31", "3.90"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, str(D(v) / 2), s_, e, f3)
+            b.add(tag, str(D(v) / 4), s_, e, f4)
+    for s_, e, v, w in (
+        ("2019-08-01", "2020-07-31", "3.20", "230000000"),
+        ("2018-08-01", "2019-07-31", "2.80", "232000000"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s_, e, f0)
+            b.add(tag, str(D(v) / 4), s_, e, f4)
+        b.add("WeightedAverageNumberOfSharesOutstandingBasic", w, s_, e, f0)
+        b.add(
+            "WeightedAverageNumberOfSharesOutstandingBasic", str(int(w) * 4), s_, e, f4
+        )
+    b.add(COVER, "96500000", None, "2023-07-20", f3)
+    b.add(COVER, "193000000", None, "2023-09-20", f4)
+    b.add(RATIO, "2", None, "2023-08-20", f4)
+    res = run(b)
+    assert [e.ratio for e in res.events if e.status == "confirmed"] == [2, 2]
+    assert res.violations == []
+    assert b.cell(res, "diluted_eps_resolved", "2019-08-01", "2020-07-31").value == D(
+        "0.8"
+    )
+
+
+def test_q4_equal_to_a_rate_tagged_year_is_shown():
+    """BPOP FY2016: a later filing puts the quarterly 0.15 on the year while
+    the 9M YTD is 0.45: the year is the rate error, the Q4 0.15 is right."""
+    b = Book()
+    q = b.filing("B-1", "2016-11-05")
+    k = b.filing("B-2", "2017-03-01", "10-K")
+    b.add(DPS_DECL, "0.45", "2016-01-01", "2016-09-30", q)
+    b.add(DPS_DECL, "0.15", "2016-10-01", "2016-12-31", k)
+    b.add(DPS_DECL, "0.15", "2016-01-01", "2016-12-31", k)
+    res = run(b)
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2016-10-01", "2016-12-31").status
+        == sb.SHOWN
+    )
+
+
+def test_scale_guard_compares_within_a_local_window():
+    """C 2012 quarterly DPS 0.01 vs 0.51+ five years later: real dividend
+    growth, not a units error."""
+    b = Book()
+    vals = [("2011-01-01", "2011-03-31", "0.01"), ("2011-04-01", "2011-06-30", "0.01"),
+            ("2011-07-01", "2011-09-30", "0.01"), ("2012-01-01", "2012-03-31", "0.01"),
+            ("2017-01-01", "2017-03-31", "0.60"), ("2017-04-01", "2017-06-30", "0.60"),
+            ("2017-07-01", "2017-09-30", "0.60"), ("2017-10-01", "2017-12-31", "0.60"),
+            ("2018-01-01", "2018-03-31", "0.60")]  # fmt: skip
+    for i, (s_, e, v) in enumerate(vals):
+        b.add(
+            DPS_DECL,
+            v,
+            s_,
+            e,
+            b.filing(
+                f"C-{i}", (date.fromisoformat(e) + timedelta(days=35)).isoformat()
+            ),
+        )
+    res = run(b)
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2012-01-01", "2012-03-31").status
+        == sb.SHOWN
+    )
+
+
+def test_eps_original_is_never_dropped_as_a_label_shift():
+    """The original 10-Q's Q1 0.40 equals its prior-year comparative 0.40 (a
+    normal coincidence); a later 10-K copies Q2's 0.45 onto Q1."""
+    b = Book()
+    q = b.filing("E-1", "2019-05-01")
+    k = b.filing("E-2", "2020-02-20", "10-K")
+    b.add(EPS_D, "0.40", "2019-01-01", "2019-03-31", q)
+    b.add(EPS_D, "0.40", "2018-01-01", "2018-03-31", q)
+    b.add(EPS_D, "0.45", "2019-01-01", "2019-03-31", k)
+    b.add(EPS_D, "0.45", "2019-04-01", "2019-06-30", k)
+    res = run(b)
+    cell = b.cell(res, "diluted_eps_resolved", "2019-01-01", "2019-03-31")
+    assert cell.status == sb.SHOWN and cell.value == D("0.40")
+
+
+def test_rate_on_longer_context_is_found_across_dividend_tags():
+    """LEA's original 10-Q: 9M Declared 0.20 while its 3-month value is filed
+    on CashPaid 0.20."""
+    b = Book()
+    q = b.filing("0000842162-14-000002", "2014-10-24")
+    k = b.filing("0000842162-15-000013", "2015-04-24")
+    b.add(DPS_DECL, "0.20", "2014-01-01", "2014-09-27", q)
+    b.add(DPS_PAID, "0.20", "2014-06-29", "2014-09-27", q)
+    b.add(DPS_DECL, "0.60", "2014-01-01", "2014-09-27", k)
+    res = run(b)
+    cell = b.cell(res, "dividends_per_share_resolved", "2014-01-01", "2014-09-27")
+    assert cell.status == sb.SHOWN and cell.value == D("0.60")
