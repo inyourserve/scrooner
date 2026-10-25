@@ -2,38 +2,37 @@
 
 Period Engineer. Rules `split.event_basis@1` (dry_run) + `pershare.never_derive@1` (classification only). Read-only: 6 connections max, `default_transaction_read_only`, statement_timeout 20s, chunks of 50, peak 8 pooler/app backends (team cap 30). 1,000 of 1,000 companies processed, 0 failures. Branch `work/period-engineer/split-rebase`; runner `pipeline/scripts/split_rebase_cohort_dryrun.py`; per-cell table `doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_20261024.csv.gz` (old value, new value, class, status, factor, chosen fact and accession, every candidate). Cohort file `data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv`. Evidence: DATA-INFERRED unless a row says FILING-CHECKED (the Verifier's 194-value sample on the 11 companies passed with 0 wrong, VERIFY-SPLIT-REBASE-2026-10-24.md).
 
-## Cells by class (per-share and share-count resolved concepts; run 3, 2026-10-25)
+## Cells by class (per-share and share-count resolved concepts; run 4, 2026-10-25)
 
 | Class | All periods | Periods ending 2015-01-01 or later |
 |---|---|---|
-| unchanged | 274,392 | 201,291 |
-| rounding only | 2,792 | 1,674 |
-| was unadjusted (stored value on a pre-split basis) | 6,703 | 2,007 |
-| was double-divided (stored value divided too often) | 1,481 | 943 |
-| shares re-based | 6,693 | 3,691 |
-| other changed (filed copy replaces a different stored value) | 182 | 132 |
-| new (no stored cell today) | 1,000 | 853 |
-| hidden: restated copies disagree on one basis | 2,390 | 1,690 |
-| derived-only, removed with RU-1 | 19,890 | 15,188 |
-| hidden: copies disagree after conversion | 1,959 | 1,020 |
-| hidden: unconfirmed split candidate | 9,824 | 3,929 |
-| hidden: company invariant | 1,685 | 1,103 |
-| hidden: dividend basis pending (AC-24, off-basis cells only) | 9,314 | 6,192 |
-| hidden: units scale suspect | 286 | 138 |
-| hidden: zero share count filed | 107 | 64 |
-| hidden: quarter equals year (label error) | 13 | 9 |
-| still blank (no stored cell, none shown) | 1,162 | 812 |
-| hidden:dividend_per_share_invalid | 846 | 493 |
-| **total cells evaluated** | 340,719 | 241,229 |
+| unchanged | 256,267 | 206,296 |
+| rounding only | 2,570 | 1,774 |
+| was unadjusted (stored value on a pre-split basis) | 4,765 | 2,126 |
+| was double-divided (stored value divided too often) | 1,466 | 1,077 |
+| shares re-based | 5,891 | 3,716 |
+| other changed (filed copy replaces a different stored value) | 231 | 168 |
+| new (no stored cell today) | 1,028 | 929 |
+| hidden: restated copies disagree on one basis | 3,304 | 2,162 |
+| derived-only, removed with RU-1 | 17,890 | 15,188 |
+| hidden: copies disagree after conversion | 1,780 | 1,012 |
+| hidden: unconfirmed split candidate | 1,790 | 849 |
+| hidden: company invariant | 1,667 | 1,345 |
+| hidden: dividend basis pending (AC-24, off-basis cells only) | 4,132 | 3,339 |
+| hidden: units scale suspect | 235 | 146 |
+| hidden: zero share count filed | 99 | 64 |
+| hidden: quarter equals year (label error) | 0 | 0 |
+| still blank (no stored cell, none shown) | 1,050 | 736 |
+| hidden:dividend_per_share_invalid | 425 | 302 |
+| **total cells evaluated** | 304,590 | 241,229 |
 
-## Rerun 2026-10-25 after Verifier-1000 (VERIFY-SPLIT-REBASE-1000-2026-10-24.md)
+## Run 4, 2026-10-25 after VERIFY-SPLIT-RUN3-2026-10-25.md
 
-Fixes: original-filing agreement (a later copy alone never decides; the original is never dropped as a label shift, except a DPS rate on a longer context, LEA); same-filing DPS checks (negative; zero while dividends paid; annual below the sum of its quarters; an annual rate on a quarter, 3.2-4.8x); quarter-equals-year only when the year is a plausible total (BPOP); a same-ratio duplicate only when the filings reverse between them (CPRT, AAON, HEI repeated splits kept); a review candidate on a confirmed boundary rejected (PRAX 1:10 step, EOG 1/500); share same-filing scale check confirmed by the local series (SAIA, EXEL); median guards within 3 years (C 2012, CF 2007).
+Fixes: two or more own-vintage dividend copies (filed within 180 days of the period end) that agree stand over a later majority (PPL 2022-06 0.225); a dividend cell with no own-vintage copy whose copies equal the next year's value is held; with no clean later majority a dividend takes the original filing's value (RSG, PPL 2017-11, OC 2019, NSC, OGE, MSI, MORN, AMGN Q4 2023); three or more EPS vintages are held (Dominion Q1 2024); zero dividend copies beside dividends paid are dropped; a YTD dividend below the sum of its filed quarters is dropped (LEA 9M 0.60 shown); the mixed dividend-tag hide applies only where the tags disagree on a common period; the quarter-equals-year guard is retired (SSNC, HST); the annual-on-quarter check needs four positive quarters summing to the value (OGE yes; HST special 0.92 and first-dividend quarters no); stock-dividend holds need the same ratio a year apart (the value tag alone no longer holds: EQIX, IRM); a per-share move with no share-count move is not a split (IONS); a disclosure beside a confirmed split is not a second candidate (GSAT).
 
-Phase switch (`WRITE_PHASE = 1`): phase 1 writes every class except `other_changed` (178 cells, stored value kept, no reason); phase 2 adds them after the Verifier's recheck. Phase 1 covers 340,541 of 340,719 evaluated cells.
+Cell totals fell from 340,719 to 304,590 because pre-2015 facts were removed from core.fact upstream between runs (MSFT's facts now start 2015-01-22); periods ending 2015 or later are unchanged at 241,229. Phase 1 still excludes `other_changed` (231 cells); it covers 304,359 of 304,590 cells. Companies tripping the invariant: HWM, KDP, GL, CBSH, CELH.
 
-Open after this run (DATA-INFERRED): LEA 9M 2014 DPS still held as restated; HEI, HOMB, ANF, CELH still trip the invariant (with KDP, HWM, UGI); PRAX share cells now held as copy conflict; BWA FY2019 DPS (stored 0.68 is right) is newly hidden by the zero-with-paid check (the chosen copy is 0); `other_changed` still contains COO Q1 FY2020 DPS 0, DCI Q4 FY2015 DPS 0.34, TEX Q2 2020 DPS 0.12, HSIC Q2 2019 basic 0.77, all excluded from phase-1 writes.
-
+Still open: PRAX share cells (copy conflict), CELH and GL (invariant), CBSH (invariant, recurring stock dividends), NSC Q4 2020, RSG Q4 2016, OC Q4 2018 (derived only, removed by RU-1 policy), SCI 2011 FY (the chosen tag files 0 while dividends were paid; no correct copy on that tag), CVNA, SYRE, BAX Q3 2018 (unresolved, from the Verifier).
 
 ## Rerun 3, 2026-10-25 after the other_changed recheck (VERIFY-SPLIT-OTHER-CHANGED-2026-10-25.md)
 
@@ -272,10 +271,11 @@ Review candidates (cells of filings before them are hidden 'share basis under re
 
 | Ticker | Violating filed pairs | Cells hidden |
 |---|---|---|
+| HWM | 2 | 298 |
 | KDP | 10 | 473 |
-| HWM | 5 | 484 |
-| HEI | 4 | 319 |
-| UGI | 28 | 409 |
+| GL | 20 | 439 |
+| CBSH | 6 | 248 |
+| CELH | 4 | 209 |
 
 ## 20 largest value changes (one per company)
 
