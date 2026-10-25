@@ -94,9 +94,6 @@ REASON_TEXT = {
     "proxy_only_source": (
         "only a proxy statement carries this figure; not shown (use the 10-K or 10-Q)"
     ),
-    "proxy_no_authoritative_periodic_copy": (
-        "no authoritative 10-K/10-Q copy of this figure yet; not shown"
-    ),
     "proxy_filed_copies_disagree": (
         "10-K/10-Q copies of this figure disagree; not shown until resolved"
     ),
@@ -164,6 +161,7 @@ class CellPlan:
     replacement_value: Decimal | None = None
     replacement_form: str | None = None
     replacement_accession: str | None = None
+    replacement_was_authoritative: bool | None = None
     note: str = ""
 
     @property
@@ -179,6 +177,9 @@ class Plan:
         default_factory=list
     )  # facts to demote (authoritative)
     cells: list[CellPlan] = field(default_factory=list)
+    promote_fact_ids: list[int] = field(
+        default_factory=list
+    )  # non-authoritative copies to re-promote
     metric_value_ids: list[int] = field(default_factory=list)
     info: dict[str, Any] = field(default_factory=dict)
 
@@ -187,6 +188,7 @@ class Plan:
         payload = {
             "rule": self.rule_id,
             "facts": sorted(f.fact_id for f in self.facts),
+            "promote": sorted(set(self.promote_fact_ids)),
             "cells": sorted(
                 (
                     c.canonical_fact_id,
@@ -241,6 +243,27 @@ where f.company_id = any(%(ids)s) and f.concept_id = any(%(cids)s)
   and fl.form = any(%(forms)s)
 """
 )
+
+# Family B candidates: ANY periodic-form fact (authoritative or not, derived or
+# not). A proxy fact that conflicts with the 10-K copies makes dedupe mark those
+# copies non-authoritative (CHE FY2021, JPM FY2021, GIS FY2024); once the proxy
+# fact is demoted they agree, so they are valid candidates.
+PERIODIC_COPIES_SQL = (
+    FACT_SELECT
+    + """
+where f.company_id = any(%(ids)s) and f.concept_id = any(%(cids)s)
+  and f.period_id = any(%(pids)s) and fl.form = any(%(forms)s)
+"""
+)
+
+CELL_TAGS_SQL = """
+select cc.id, cm.concept_id, cm.priority
+from {analytics}.canonical_concept cc
+join {analytics}.canonical_concept base
+  on base.name = cc.name or base.name || '_resolved' = cc.name
+join {analytics}.concept_mapping cm on cm.canonical_concept_id = base.id
+where cc.id = any(%(ccids)s) and cm.confidence <> 'rejected'
+"""
 
 NONAUTH_PERIODIC_COUNT_SQL = """
 select f.company_id, f.concept_id, f.period_id, count(*)
@@ -383,6 +406,40 @@ def _pick_one(copies: Sequence[FactRow]) -> FactRow | None:
     return top
 
 
+def _sig_digits(v: Decimal) -> int:
+    return len(v.normalize().as_tuple().digits)
+
+
+def _pick_precise(copies: Sequence[FactRow]) -> FactRow | None:
+    """Like _pick_one, but the witness is the most PRECISE copy (most significant
+    digits; a later rounded restatement of the same figure never replaces the
+    precise one: SM, ANET), then the most recently filed. None when the copies
+    disagree beyond rounding (vintage or tag conflict: the cell is hidden)."""
+    if not copies:
+        return None
+    top = max(
+        copies,
+        key=lambda f: (_sig_digits(f.value), f.filing_date or date.min, f.fact_id),
+    )
+    for other in copies:
+        base = max(abs(top.value), abs(other.value))
+        if not base or abs(top.value - other.value) / base <= ROUNDING:
+            continue
+        # a copy rounded to its own trailing zeros (2,087,000,000 for 2,087,321,000)
+        # is the same figure when the precise one rounds to it
+        exp = other.value.normalize().as_tuple().exponent
+        if (
+            isinstance(exp, int)
+            and exp > 0
+            and _sig_digits(other.value)
+            >= 3  # 1.0M vs 1.1M is a restatement, not rounding
+            and abs(top.value - other.value) <= Decimal("0.5") * Decimal(10) ** exp
+        ):
+            continue
+        return None
+    return top
+
+
 def _gap_bucket(stored: Decimal, filed: Decimal) -> str:
     if filed == 0:
         return "filed_zero"
@@ -508,10 +565,33 @@ def plan_proxy_chunk(
     plan.info["proxy_facts_authoritative_not_displayed"] = sum(
         1 for f in proxy if f.is_authoritative and f.fact_id not in fed
     )
-    cids = sorted({by_id[i].concept_id for i in fed})
     pids = sorted({c[4] for c in cells})
-    copies = _filed_copies(cur, ids, cids, pids, core)
-    nonauth = _nonauth_periodic(cur, ids, cids, pids, core)
+    ccids = sorted({c[2] for c in cells})
+    tags_by_cc: dict[int, dict[int, int]] = defaultdict(
+        dict
+    )  # canonical id -> concept -> priority
+    if ccids:
+        cur.execute(_q(CELL_TAGS_SQL, core, analytics), {"ccids": ccids})
+        for ccid_, cid_, prio_ in cur.fetchall():
+            tags_by_cc[ccid_][cid_] = prio_
+    all_cids = sorted(
+        {by_id[i].concept_id for i in fed} | {c for m in tags_by_cc.values() for c in m}
+    )
+    copies: dict[tuple[int, int, int], list[FactRow]] = defaultdict(list)
+    if all_cids and pids:
+        cur.execute(
+            _q(PERIODIC_COPIES_SQL, core),
+            {
+                "ids": ids,
+                "cids": all_cids,
+                "pids": pids,
+                "forms": sorted(PERIODIC_FORMS_DOMESTIC),
+            },
+        )
+        for row in cur.fetchall():
+            f = _fact(row)
+            copies[(f.company_id, f.concept_id, f.period_id)].append(f)
+    promote: set[int] = set()
     for cf_id, company, ccid, cname, pid, pend, value, sources in cells:
         sources_t = tuple(sources)
         retired = tuple(s for s in sources_t if s in by_id)
@@ -536,13 +616,21 @@ def plan_proxy_chunk(
             )
             continue
         src = by_id[retired[0]]
-        cand = [
-            f
-            for f in copies.get((company, src.concept_id, pid), [])
-            if f.unit == src.unit
-        ]
-        pick = _pick_one(cand)
+        # every tag mapped to the cell's concept, same unit; the best (lowest)
+        # priority tag that has any periodic copy decides (MA: ProfitLoss)
+        mapped = dict(tags_by_cc.get(ccid, {}))
+        mapped.setdefault(src.concept_id, 99)
+        by_prio: dict[int, list[FactRow]] = defaultdict(list)
+        for cid_, prio_ in mapped.items():
+            by_prio[prio_] += [
+                f for f in copies.get((company, cid_, pid), []) if f.unit == src.unit
+            ]
+        live = [p_ for p_ in sorted(by_prio) if by_prio[p_]]
+        cand = by_prio[live[0]] if live else []
+        pick = _pick_precise(cand)
         if pick is not None:
+            if not pick.is_authoritative:
+                promote.add(pick.fact_id)
             plan.cells.append(
                 CellPlan(
                     **base,
@@ -551,25 +639,22 @@ def plan_proxy_chunk(
                     replacement_value=pick.value,
                     replacement_form=pick.form,
                     replacement_accession=pick.accession,
+                    replacement_was_authoritative=pick.is_authoritative,
                     note=_gap_bucket(Decimal(value), pick.value),
                 )
             )
         else:
-            n_non = nonauth.get((company, src.concept_id, pid), 0)
-            if cand:
-                code = "proxy_filed_copies_disagree"
-            elif n_non:
-                code = "proxy_no_authoritative_periodic_copy"
-            else:
-                code = "proxy_only_source"
+            code = "proxy_filed_copies_disagree" if cand else "proxy_only_source"
             plan.cells.append(
                 CellPlan(
                     **base,
                     action=ACT_REMOVE,
                     reason_code=code,
-                    note=f"nonauth_periodic_copies={n_non}",
+                    note=f"periodic_copies={len(cand)}",
                 )
             )
+    plan.promote_fact_ids = sorted(promote)
+    plan.info["periodic_facts_to_repromote"] = len(promote)
     _metrics(cur, ids, plan, core, analytics)
     return plan
 
@@ -610,6 +695,7 @@ def merge(plans: Sequence[Plan], family: str, rule_id: str) -> Plan:
     out = Plan(family, rule_id)
     for p in plans:
         out.facts += p.facts
+        out.promote_fact_ids += p.promote_fact_ids
         out.cells += p.cells
         out.metric_value_ids += p.metric_value_ids
         for k, v in p.info.items():
@@ -648,6 +734,7 @@ def summarize(plan: Plan, cohort: set[int] | None = None) -> dict[str, Any]:
         "rule_id": plan.rule_id,
         "digest": plan.digest(),
         "facts_to_demote": len(plan.facts),
+        "facts_to_repromote": len(set(plan.promote_fact_ids)),
         "facts_to_demote_companies": len({f.company_id for f in plan.facts}),
         "metric_values_to_recompute": len(set(plan.metric_value_ids)),
         "info": plan.info,
@@ -712,6 +799,7 @@ def apply_plan(
                 )
     stats = {
         "facts_demoted": 0,
+        "facts_promoted": 0,
         "cells_replaced": 0,
         "cells_removed": 0,
         "cells_inserted": 0,
@@ -742,6 +830,27 @@ def apply_plan(
             },
         )
         stats["facts_demoted"] = cur.rowcount
+    promote_ids = sorted(set(plan.promote_fact_ids))
+    if promote_ids:
+        cur.execute(
+            f"""
+            with prior as (
+                select id, company_id, is_authoritative from {core}.fact
+                where id = any(%(ids)s::bigint[]) and not is_authoritative
+                for update
+            ), logged as (
+                insert into {analytics}.fact_authority_retired
+                    (fact_id, company_id, rule_id, reason_code, run_id, prior_is_authoritative)
+                select id, company_id, %(rule)s, 'promote_periodic_copy', %(run)s, is_authoritative
+                from prior
+                returning fact_id
+            )
+            update {core}.fact f set is_authoritative = true
+            from logged where f.id = logged.fact_id
+            """,
+            {"ids": promote_ids, "rule": plan.rule_id, "run": run_id},
+        )
+        stats["facts_promoted"] = cur.rowcount
     # 2. cells
     replaces = [c for c in plan.cells if c.action == ACT_REPLACE]
     removes = [c for c in plan.cells if c.action == ACT_REMOVE]
