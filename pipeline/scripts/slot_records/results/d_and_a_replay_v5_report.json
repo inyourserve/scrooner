@@ -47977,13 +47977,13 @@
    "start": "2024-09-01",
    "end": "2025-02-28",
    "accession": "0000950170-25-052106",
-   "verdict": "needs_instance_reader",
+   "verdict": "G1_printed_line",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
-   "slot_narrow": null,
-   "slot_broad": null,
+   "slot_narrow": "6596000",
+   "slot_broad": "6596000",
    "prod_value": "6596000",
    "differs_from_prod": false,
    "missing": [],
@@ -47996,13 +47996,13 @@
    "start": "2024-09-01",
    "end": "2025-05-31",
    "accession": "0000950170-25-094616",
-   "verdict": "needs_instance_reader",
+   "verdict": "G1_printed_line",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
-   "slot_narrow": null,
-   "slot_broad": null,
+   "slot_narrow": "10155000",
+   "slot_broad": "10155000",
    "prod_value": "10155000",
    "differs_from_prod": false,
    "missing": [],
@@ -48015,13 +48015,13 @@
    "start": "2024-09-01",
    "end": "2025-08-31",
    "accession": "0001193125-25-269773",
-   "verdict": "needs_instance_reader",
+   "verdict": "G1_printed_line",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
-   "slot_narrow": null,
-   "slot_broad": null,
+   "slot_narrow": "14046000",
+   "slot_broad": "14046000",
    "prod_value": "14046000",
    "differs_from_prod": false,
    "missing": [],
@@ -48036,7 +48036,7 @@
    "accession": "0000950170-25-052106",
    "verdict": "not_a_face_column",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
    "slot_narrow": null,
@@ -48055,7 +48055,7 @@
    "accession": "0000950170-25-094616",
    "verdict": "not_a_face_column",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
    "slot_narrow": null,
@@ -48074,7 +48074,6 @@
    "accession": null,
    "verdict": "no_facts_this_period",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization",
     "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
@@ -48094,13 +48093,13 @@
    "start": "2025-09-01",
    "end": "2025-11-30",
    "accession": "0001193125-26-006355",
-   "verdict": "needs_instance_reader",
+   "verdict": "G1_printed_line",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
-   "slot_narrow": null,
-   "slot_broad": null,
+   "slot_narrow": "4109000",
+   "slot_broad": "4109000",
    "prod_value": "4109000",
    "differs_from_prod": false,
    "missing": [],
@@ -48113,13 +48112,13 @@
    "start": "2025-09-01",
    "end": "2026-02-28",
    "accession": "0001193125-26-145622",
-   "verdict": "needs_instance_reader",
+   "verdict": "G1_printed_line",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
-   "slot_narrow": null,
-   "slot_broad": null,
+   "slot_narrow": "8386000",
+   "slot_broad": "8386000",
    "prod_value": "8386000",
    "differs_from_prod": false,
    "missing": [],
@@ -48132,13 +48131,13 @@
    "start": "2025-09-01",
    "end": "2026-05-31",
    "accession": "0001193125-26-297529",
-   "verdict": "needs_instance_reader",
+   "verdict": "G1_printed_line",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
-   "slot_narrow": null,
-   "slot_broad": null,
+   "slot_narrow": "12731000",
+   "slot_broad": "12731000",
    "prod_value": "12731000",
    "differs_from_prod": false,
    "missing": [],
@@ -48153,7 +48152,7 @@
    "accession": "0001193125-26-145622",
    "verdict": "not_a_face_column",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
    "slot_narrow": null,
@@ -48172,7 +48171,7 @@
    "accession": "0001193125-26-297529",
    "verdict": "not_a_face_column",
    "gate_detail": [
-    "BondPremiumAndAccruedInterestAmortization"
+    "DepreciationDepletionAndAmortization"
    ],
    "section_tie": null,
    "slot_narrow": null,
@@ -48186,10 +48185,10 @@
   }
  ],
  "summary": {
-  "G1_printed_line": 1263,
-  "prod_agrees": 862,
+  "G1_printed_line": 1269,
+  "prod_agrees": 868,
   "not_a_face_column": 800,
-  "needs_instance_reader": 390,
+  "needs_instance_reader": 384,
   "prod_blank_slot_has_value": 371,
   "no_facts_this_period": 172,
   "prod_differs": 30
@@ -48366,10 +48365,9 @@
    "needs_instance_reader": 24
   },
   "KRUS": {
-   "G1_printed_line": 21,
+   "G1_printed_line": 27,
    "not_a_face_column": 14,
-   "no_facts_this_period": 6,
-   "needs_instance_reader": 6
+   "no_facts_this_period": 6
   }
  }
 }

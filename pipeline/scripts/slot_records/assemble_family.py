@@ -16,6 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import build_debt_slots as b  # noqa: E402
+import family_config as fc  # noqa: E402
 
 TICKER = {
     "0000002488": "AMD", "0000006951": "AMAT", "0000018230": "CAT", "0000021344": "KO",
@@ -72,6 +73,7 @@ for cik, era_list in sorted(eras.items()):
         members = []
         for m in era["members"]:
             mm = dict(m)
+            mm["class"] = fc.classify(family, m["tag"], m["stmt"])  # classes come from family_config NOW, not from era-detect time
             mm["section_confirmed"] = m["tag"] in confirmed if m["stmt"] == "CF" else None
             if m["custom"]:
                 mm["value_derivable_from_api"] = False  # custom tags never reach companyfacts
