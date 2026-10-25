@@ -241,6 +241,41 @@ def _major_tolerance(baseline_count: int) -> int:
     return max(MAJOR_TOLERANCE_MIN, int(baseline_count * MAJOR_TOLERANCE_PCT / 100))
 
 
+EVALUATED = ("ok", "minor", "major", "critical")  # rows where both sides had a value
+
+
+def major_rate(counts: dict[str, int]) -> float | None:
+    """Majors among the rows that were actually evaluated (missing_ours / missing_external excluded): the gate counts
+    majors against ALL rows, so more coverage (fewer missing_ours) reads as a regression; the rate does not."""
+    evaluated = sum(counts.get(k, 0) for k in EVALUATED)
+    return None if evaluated == 0 else counts.get("major", 0) / evaluated
+
+
+def _rate_text(now: dict[str, int], was: dict[str, int]) -> str:
+    r_now, r_was = major_rate(now), major_rate(was)
+    if r_now is None or r_was is None:
+        return ""
+    return f" [major rate among evaluated: {r_was:.1%} -> {r_now:.1%}]"
+
+
+def major_rate_lines(
+    summary: dict, baseline: dict[str, dict[str, int]] | None
+) -> list[str]:
+    """Per metric: evaluated rows and the major rate, now and (when a baseline exists) at the baseline."""
+    lines = []
+    for metric, counts in sorted(summary["by_metric_severity"].items()):
+        rate = major_rate(counts)
+        if rate is None:
+            continue
+        evaluated = sum(counts.get(k, 0) for k in EVALUATED)
+        text = f"{metric}: major {counts.get('major', 0)} of {evaluated} evaluated ({rate:.1%})"
+        was = (baseline or {}).get(metric)
+        if was and major_rate(was) is not None:
+            text += f"; baseline {was.get('major', 0)} of {sum(was.get(k, 0) for k in EVALUATED)} ({major_rate(was):.1%})"
+        lines.append(text)
+    return lines
+
+
 def find_regressions(
     summary: dict, baseline: dict[str, dict[str, int]] | None
 ) -> list[str]:
@@ -277,12 +312,21 @@ def find_regressions(
 
     now_major, was_major = total(current, "major"), total(baseline, "major")
     if now_major - was_major > _major_tolerance(was_major):
-        regressions.append(f"major (all metrics): {was_major} -> {now_major}")
+        regressions.append(
+            f"major (all metrics): {was_major} -> {now_major}"
+            + _rate_text(
+                {k: total(current, k) for k in EVALUATED},
+                {k: total(baseline, k) for k in EVALUATED},
+            )
+        )
     for metric, counts in sorted(current.items()):
         was = baseline.get(metric, {}).get("major", 0)
         now = counts.get("major", 0)
         if now - was > _major_tolerance(was):
-            regressions.append(f"{metric} major: {was} -> {now}")
+            regressions.append(
+                f"{metric} major: {was} -> {now}"
+                + _rate_text(counts, baseline.get(metric, {}))
+            )
 
     return regressions
 

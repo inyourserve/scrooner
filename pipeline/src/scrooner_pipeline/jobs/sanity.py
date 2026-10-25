@@ -17,6 +17,7 @@ from scrooner_pipeline.sanity.yfinance_check import (
 )
 from scrooner_pipeline.sanity.report import (
     find_regressions,
+    major_rate_lines,
     load_baseline,
     record_baseline,
     render_markdown,
@@ -105,7 +106,12 @@ def report_cmd(
                 )
             else:
                 gate = "\n## Gate\n\nNo regression vs. the last passing run's baseline."
-            markdown += "\n" + gate
+            markdown += (
+                "\n"
+                + gate
+                + "\n\n### Major rate among evaluated rows (information; the gate threshold is unchanged)\n\n"
+                + "\n".join(f"- {line}" for line in major_rate_lines(summary, baseline))
+            )
             if not regressions:
                 record_baseline(conn, summary)
 
