@@ -273,9 +273,7 @@ REASON_LINE_NOT_EXTRACTED = "line_in_filing_not_extracted"
 FILING_LINE_STRUCTURAL_REASONS = (REASON_LINE_NOT_PRESENTED, REASON_LINE_COMBINED)
 
 
-def apply_filing_line_evidence(
-    conn: psycopg.Connection, *, commit: bool = True
-) -> dict:
+def apply_filing_line_evidence(conn: psycopg.Connection, *, commit: bool = True) -> dict:
     """Gives absent concept cells a reason from the company's own filing, where
     nothing earlier explained them. Never touches has_value, never overwrites an
     existing gap_reason (the revenue-family SIC rules run first), and does nothing
@@ -507,9 +505,7 @@ RECONCILIATION_GAP_POPULATION_OVERRIDES = {
 }
 
 
-def classify_company_populations(
-    conn: psycopg.Connection, *, commit: bool = True
-) -> dict:
+def classify_company_populations(conn: psycopg.Connection, *, commit: bool = True) -> dict:
     """Rebuilds analytics.company_population from scratch -- one row per
     (company, named population) the company genuinely belongs to. A
     company can belong to several (e.g. a real operating company that
@@ -754,11 +750,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
         )
         has_any_col = bool(cur.fetchone()[0])
         any_col = ", has_value_any_period" if has_any_col else ""
-        any_sel = (
-            ",\n                coalesce(agg.has_value_any_period, false)"
-            if has_any_col
-            else ""
-        )
+        any_sel = ",\n                coalesce(agg.has_value_any_period, false)" if has_any_col else ""
         any_agg = (
             ",\n                    bool_or(value is not null) as has_value_any_period"
             if has_any_col

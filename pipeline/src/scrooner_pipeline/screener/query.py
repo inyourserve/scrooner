@@ -130,7 +130,8 @@ def _annotate_stale_suppression(
         (company_id, name)
         for company_id, entry in excluded_missing_data.items()
         for name in entry["missing_metrics"]
-        if name in catalog and name not in entry.get("suppressed_reasons", {})
+        if name in catalog
+        and name not in entry.get("suppressed_reasons", {})
     ]
     if not pairs:
         return
@@ -335,18 +336,18 @@ def _compile_node(node, catalog: dict) -> tuple[sql.Composable, list]:
         # the comparison (NULL > anything is NULL, i.e. not true) with no
         # separate NULL check needed.
         column = sql.Identifier(node.metric_name)
-        metric_params: list = []
+        params: list = []
         if node.operator == "between":
             clause = sql.SQL("{} between %s and %s").format(column)
-            metric_params += [node.value_range[0], node.value_range[1]]
+            params += [node.value_range[0], node.value_range[1]]
         else:
             if node.operator not in {">", "<", ">=", "<=", "=", "!="}:
                 raise ValueError(
                     f"operator not valid inside a boolean tree: {node.operator!r}"
                 )
             clause = sql.SQL("{} " + node.operator + " %s").format(column)
-            metric_params.append(node.value)
-        return clause, metric_params
+            params.append(node.value)
+        return clause, params
 
     raise TypeError(f"unknown predicate node: {node!r}")
 
@@ -671,7 +672,9 @@ def run_query(
         excluded_missing_data,
         {company_id: identity.get("sic_code") for company_id, identity, _ in rows},
     )
-    _annotate_stale_suppression(conn, excluded_missing_data, dataset_version, catalog)
+    _annotate_stale_suppression(
+        conn, excluded_missing_data, dataset_version, catalog
+    )
 
     result = {
         "matched": matched,

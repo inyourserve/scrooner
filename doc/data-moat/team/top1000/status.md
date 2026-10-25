@@ -2,7 +2,7 @@
 
 Learning guide: `PLAYBOOK.md` (every problem type: tags, how to spot, fix rule, examples).
 
-> 2026-10-22 (session scrooner-7b): a parallel run covered S010-S102; its per-shard files are in results/ (kept where the same shard already existed upstream, otherwise added) with its versions of duplicated shards in results/session-7b-versions/. Merge: results/ALL-SHARDS-ROOT-CAUSES.md (built from the 7b versions via results/digests/D*.md). Findings only.
+> 2026-10-22: ALL SHARDS S010-S102 run (S010 rerun filing-checked: results/S010-filing-checked.md). Merged findings (no fixes): results/ALL-SHARDS-ROOT-CAUSES.md, built from results/digests/D*.md. Baseline columns below are the 2026-10-18 figures; coverage was recounted on 2026-10-20 (latest-period rule), so they are not comparable. Evidence is mostly the latest 10-Q; 10-K history largely unchecked.
 
 Statuses: todo / running / done / reissue (ranking changed). Filled % and unexplained blanks are the 2026-10-18 baseline.
 
@@ -18,7 +18,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S007 | GILD ADI DIS SNDK VZ ABT QCOM PEP COP BLK | 84.6 | 106 | done (DATA-INFERRED only) |
 | S008 | DE UNP MCD TMUS PFE SCCO NEE WELL TJX DHR | 83.4 | 123 | done (DATA-INFERRED only) |
 | S009 | T SCHW ETN BA ISRG NOW STX UBER ACN CB | 83.3 | 116 | done (7 wrong values FILING-CHECKED) |
-| S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | todo |
+| S010 | MPC VLO LMT VRTX PGR SPGI MO NEM FTNT BMY | 87.7 | 89 | done 2026-10-21/22 (results/S010.md; see ALL-SHARDS-ROOT-CAUSES.md) |
 | S011 | COF BKNG PH MDT BMO CVS WDC PLD MCK PSX | 77.9 | 224 | done (DATA-INFERRED only) |
 | S012 | ADP BNS SYK GLW LOW SBUX SNOW ABNB CME NET | 72.8 | 243 | done (wrong values FILING-CHECKED) |
 | S013 | HCA TT MAR FCX BNY EQIX APH CEG ADBE DUK | 84.1 | 112 | done (wrong values FILING-CHECKED) |
@@ -28,89 +28,89 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | S017 | DASH SHW ECL BX TRV CI EPD VRT CMCSA WBD | 79.6 | 148 | done (FILING-CHECKED) |
 | S018 | HLT ITW KKR MSI CP ROST CL KMI CNI GM | 79.6 | 210 | done (wrong values FILING-CHECKED; CNI excluded) |
 | S019 | RCL NOC LITE SLB NSC CMI HPE ORLY RSG TGT | 89.3 | 90 | done (all problems per company; FILING-CHECKED) |
-| S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | done (FILING-CHECKED) |
-| S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | done (FILING-CHECKED, history window) |
-| S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | done (FILING-CHECKED, history window; IAU excluded) |
-| S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | done (FILING-CHECKED, history window) |
-| S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | done (FILING-CHECKED, history window) |
-| S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | done (FILING-CHECKED, history window) |
-| S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | done (FILING-CHECKED, history window) |
-| S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | done (FILING-CHECKED, history window) |
-| S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | done (FILING-CHECKED, history window) |
-| S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | done (FILING-CHECKED, history window) |
-| S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | done (FILING-CHECKED, history window) |
-| S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | done (FILING-CHECKED, history window) |
-| S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | done (FILING-CHECKED, history window) |
-| S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | done (FILING-CHECKED, history window) |
-| S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | done (FILING-CHECKED, history window) |
-| S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | done (FILING-CHECKED, history window) |
-| S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | done (FILING-CHECKED, history window) |
-| S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | done (FILING-CHECKED, history window; SLV excluded) |
-| S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | done (FILING-CHECKED, history window) |
-| S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | done (FILING-CHECKED, history window; ZLAB excluded) |
-| S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | done (FILING-CHECKED, history window) |
-| S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | done (FILING-CHECKED, history window) |
-| S042 | TPR TPL FOX SYF PPG PFG RF IOT SYM DLTR | 71.7 | 205 | done (FILING-CHECKED, history window) |
-| S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | done (FILING-CHECKED, history window) |
-| S044 | STZ RBRK INCY DINO USFD CRCL XPO NRG ARXS STE | 80.2 | 149 | done (FILING-CHECKED, history window) |
-| S045 | GPN EXE DOW TROW SW THC JBHT VTRS PHM KEY | 81.5 | 124 | done (FILING-CHECKED, history window) |
-| S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | done (FILING-CHECKED, history window) |
-| S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | done (FILING-CHECKED, history window) |
-| S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | done (FILING-CHECKED, history window) |
-| S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | done (FILING-CHECKED, history window) |
-| S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | done (FILING-CHECKED, history window) |
-| S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | done (FILING-CHECKED, history window) |
-| S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | done (FILING-CHECKED, history window) |
-| S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | done (FILING-CHECKED, history window) |
-| S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | done (FILING-CHECKED, history window) |
-| S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | done (FILING-CHECKED, history window) |
-| S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | done (FILING-CHECKED, history window) |
-| S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | done (FILING-CHECKED, history window) |
-| S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | running |
-| S059 | NLY JAZZ CACI MAA BF-A GME SJM ARCC GDDY REG | 73.5 | 203 | running |
-| S060 | SGI ALLE AVY MLI GGG CSL CSGP DOC BAX TXT | 88.0 | 90 | running |
-| S061 | DKS BJ BMNR FN BBIO GL MANH IT CG CNA | 78.1 | 159 | running |
-| S062 | FLUT STRL RPM PEN DTM EHC SMTC AKAM PNW SEIC | 83.6 | 113 | todo |
-| S063 | BWXT MKC LII IVZ CCK AFG TOL FIVE INIO AIT | 80.2 | 151 | todo |
-| S064 | BTSG SWKS IONQ ASTS DVA WTS CR CORT BWA AR | 81.5 | 130 | todo |
-| S065 | NXT ELS MOG-A DECK SMMT AHR WTRG FRHC W ELAN | 77.1 | 163 | todo |
-| S066 | ALLY CART DOCN HUBS GLPI TECH GNRC PAYC QXO WSO | 83.4 | 122 | todo |
-| S067 | AMH ALB ERIE HRL AVTR FIG UDR SCI TXRH UHS | 76.4 | 176 | todo |
-| S068 | SF NYT COO ARW AA JKHY ONTO MOH FHN RYAN | 79.9 | 144 | todo |
-| S069 | HII FDS FNF SAIL AES BMRN GSAT SCNI EGP EVR | 75.4 | 179 | todo |
-| S070 | OSCR KNX CLX PSKY ALGN SNAP AGNC AMKR FROG DDS | 76.1 | 163 | todo |
-| S071 | MDGL BSY GMED ENSG LULU RRX HL JEF DCI DPZ | 86.9 | 100 | todo |
-| S072 | BPOP RRC MUSA UMBF AMG CPT RGEN SSB TTMI PBF | 77.2 | 156 | todo |
-| S073 | MTCH OGE AUR PODD WTFC GKOS IBRX AM WMS ONB | 82.6 | 131 | todo |
-| S074 | LFUS IREN ESTC DAR ORI CFR HSIC BIO AEIS TTC | 80.9 | 145 | todo |
-| S075 | DRS BXP PCVX SANM SM KRYS RMBS SOLS FCFS DKNG | 75.9 | 175 | todo |
-| S076 | ZION ALSN FRT APTV R CGNX AYI LTH SIRI VICR | 82.6 | 128 | todo |
-| S077 | FLS HLI SAIA BAH OC GTLB TTEK TXG JXN CUBE | 79.1 | 160 | todo |
-| S078 | PCTY KYMR PRI PCOR CTRE CAI CYTK CHWY VMI EAI | 73.9 | 171 | todo |
-| S079 | ESI EAT VOYA ALV BRX PNR VNOM CHRD BRKR ADC | 80.2 | 145 | todo |
-| S080 | PTGX KNSL SPXC HUT TGTX UGI IDCC AXSM REXR TWST | 78.3 | 165 | todo |
-| S081 | CNM AOS VIAV MHK PB WAL FORM VSAT THG GAP | 79.6 | 157 | todo |
-| S082 | WLK DBX NEU COLB NNN CBSH LEVI CBC MOD RHP | 75.0 | 170 | todo |
-| S083 | OSK ARWR ATR JAN AAL ZWS WYNN ETSY FR TKR | 78.4 | 169 | todo |
-| S084 | MORN MSGS FPS ZETA LNC APPF DY HQY NFG IDA | 79.0 | 158 | todo |
-| S085 | PACS BOKF ACM LINE KTOS KMX NTSK TAP AXS URBN | 76.7 | 159 | todo |
-| S086 | AVT SLAB RAL ARE SFD S LW MSM AGCO SSD | 84.6 | 108 | todo |
-| S087 | ACA MGM KEX AXTA CMC PRMB MTDR MP IONS EMN | 84.0 | 104 | todo |
-| S088 | AWI VSXY CELH SARO NE MATX Z VLY TRNO SYRE | 75.4 | 164 | todo |
-| S089 | ALKS COMP MSA PPC NCLH CLF STAG CAG FSS HXL | 85.3 | 108 | todo |
-| S090 | SNEX PRAX PATH NOV CHE VCTR ELF CAVA FAF DUOL | 76.9 | 166 | todo |
-| S091 | BROS GTES MAC LNTH VFC ANF LAD SSRM KNSA OMF | 78.1 | 152 | todo |
-| S092 | ESE MXL HIMS ACT AAOI ACI UBSI RNG GLXY SWX | 77.8 | 153 | todo |
-| S093 | AMRX EPAM LYFT POOL LB RIG M NAVN QLYS G | 78.6 | 146 | todo |
-| S094 | WEX FLR KZIA TTAN CVI CVLT INGR AVAV OTEX IOVA | 76.6 | 235 | todo |
-| S095 | INGM CWEN VNO PLXS ENS AAON FNB SFM EXLS MGY | 81.7 | 128 | todo |
-| S096 | HRB HR MOS MUR NPO VAL ST LEA ALGM POWL | 88.2 | 87 | todo |
-| S097 | CPB CROX LGND BLDR BLCO HWC CZR RYTM GATX BKH | 81.5 | 140 | todo |
-| S098 | HOMB LOAR TEX TTD LSTR WULF ESNT MKTX RYN DLB | 79.5 | 150 | todo |
-| S099 | MTG GBCI CHDN MCY SXT PEGA EPRT CAKE OLLI LKQ | 79.3 | 149 | todo |
-| S101 | ASB BGC INSW MBGL NIQ ORA SNDR WFRD (backfill) | | | todo |
-| S102 | BRK-A FWONA BAM PLNT UHAL SUN (market cap blank today) | | | todo |
-| S100 | CACC WH RLI CWST ECG SAIC VRNS DOCS BXSL TFX | 74.0 | 206 | todo |
+| S020 | ET FDX HON APD SPG APO AJG COR IMO URI | 81.3 | 142 | done 2026-10-21/22 (results/S020.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S021 | BSX MET TDG GWW ALL BE OXY AON TRGP DLR | 80.6 | 158 | done 2026-10-21/22 (results/S021.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S022 | IAU TEL AFL LNG MPWR CAH OKE MPLX FAST PCAR | 76.6 | 184 | done 2026-10-21/22 (results/S022.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S023 | NXPI NUE TFC FANG AME NTRA KEYS D DVN CRH | 83.8 | 110 | done (latest 10-Q FILING-CHECKED for all 10; 10-K history not checked) |
+| S024 | BKR NKE GRMN EBAY HONA O TEAM NDAQ PSA BDX | 77.7 | 179 | done 2026-10-21/22 (results/S024.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S025 | AZO VST F TER FIX VEEV EW HUM PYPL DAL | 85.3 | 108 | done 2026-10-21/22 (results/S025.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S026 | ALAB ADSK A WAB TEVA MSTR XEL ROK KDP WDAY | 87.5 | 98 | done 2026-10-21/22 (results/S026.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S027 | CIEN STT XYZ LHX FITB CARR COIN COHR FERG MNST | 80.1 | 140 | done 2026-10-21/22 (results/S027.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S028 | IQV EXC AMP IDXX VTR CVNA WAT WCN AIG MSCI | 79.3 | 152 | done 2026-10-21/22 (results/S028.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S029 | ED P YUM LYV MCHP PRU ADM NTAP PAYX SYY | 86.3 | 107 | done 2026-10-21/22 (results/S029.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S030 | ILMN ODFL DHI CBRE TTWO EL CMG ROP RVMD KR | 81.3 | 132 | done 2026-10-21/22 (results/S030.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S031 | TWLO IBKR HIG ARES UI KVUE PEG WEC RBLX MTD | 80.4 | 141 | done 2026-10-21/22 (results/S031.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S032 | KMB RPRX PCG CCI CCL CLS HSY STLD RMD BIIB | 84.9 | 110 | done 2026-10-21/22 (results/S032.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S033 | CNC ACGL TKO EQT IRM ZS VMC FLEX EXPE ZTS | 82.2 | 129 | done 2026-10-21/22 (results/S033.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S034 | OKTA CBOE DXCM CRWV EME CRDO AXON GEHC UAL CTSH | 80.6 | 137 | done 2026-10-21/22 (results/S034.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S035 | MTB VG ALNY HBAN SUNB MDLN CQP RKLB NTRS RKT | 69.7 | 201 | done 2026-10-21/22 (results/S035.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S036 | IR RJF MLM DG RDDT EXR WSM WTW JBL TDY | 84.2 | 119 | done 2026-10-21/22 (results/S036.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S037 | ATO KHC WRB HAL ON ZM SLV HPQ FTI VRSN | 80.4 | 167 | done 2026-10-21/22 (results/S037.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S038 | OTIS WST MDB DTE AWK TW FE CFG CNP DOV | 82.3 | 120 | done 2026-10-21/22 (results/S038.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S039 | PPL SN CPAY CPNG CINF QSR ZLAB VICI DGX CPRT | 79.8 | 143 | done 2026-10-21/22 (results/S039.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S040 | LH CASY EXPD ULTA ATI FISV LPLA FFIV VRSK VLTO | 85.0 | 100 | done 2026-10-21/22 (results/S040.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S041 | CHD AFRM ECHO LVS DRI FCNCA XYL HUBB ROIV Q | 81.4 | 123 | done 2026-10-21/22 (results/S041.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S042 | TPR TPL FOX SYF PPG PFG RF IOT SYM DLTR | 71.7 | 205 | done 2026-10-21/22 (results/S042.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S043 | NVT BRO IFF OMC RL VMRK MKL UTHR ROKU L | 81.7 | 141 | done 2026-10-21/22 (results/S043.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S044 | STZ RBRK INCY DINO USFD CRCL XPO NRG ARXS STE | 80.2 | 149 | done 2026-10-21/22 (results/S044.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S045 | GPN EXE DOW TROW SW THC JBHT VTRS PHM KEY | 81.5 | 124 | done 2026-10-21/22 (results/S045.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S046 | ENTG PKG GH INSM RS PTC AMRZ SMCI LYB PR | 85.1 | 107 | done 2026-10-21/22 (results/S046.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S047 | BG NI RGLD AMCR BR MTSI SBAC SSNC SNX BBY | 87.9 | 84 | done 2026-10-21/22 (results/S047.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S048 | WWD LUV EVRG CBRS OVV SNA EFX CDW CRS TOST | 81.9 | 125 | done 2026-10-21/22 (results/S048.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S049 | SOFI FSLR CW FIS GPC LEN NTNX CF WES IP | 84.4 | 127 | done 2026-10-21/22 (results/S049.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S050 | ZBH NDSN PAA PS ITT U GIS LNT FTV DD | 82.5 | 122 | done 2026-10-21/22 (results/S050.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S051 | DT ZBRA RGA EWBC IEX APG ESS TSCO MEDP APA | 76.7 | 162 | done 2026-10-21/22 (results/S051.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S052 | HEI RVTY FTAI FDXF RIVN CLH TLN BALL WCC FICO | 83.8 | 115 | done 2026-10-21/22 (results/S052.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S053 | BURL J HST WMG TPG CHRW NWSA H ROL INVH | 77.9 | 161 | done 2026-10-21/22 (results/S053.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S054 | CDE RBC NVR BEN LDOS EXEL RBA CRBG YUMC PFGC | 81.3 | 134 | done 2026-10-21/22 (results/S054.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S055 | KIM TSN MTZ LAMR JHX LOGI EG WPC ULS LSCC | 78.0 | 161 | done 2026-10-21/22 (results/S055.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S056 | MAS TYL SOLV UNM RNR ARMK PINS EQH MKSI SUI | 77.4 | 161 | done 2026-10-21/22 (results/S056.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S057 | GEN CNH CRL PNFP LECO TRU WY SITM JLL CHTR | 82.5 | 126 | done 2026-10-21/22 (results/S057.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S058 | AIZ SWK PAG HAS DOCU TRMB GWRE OHI NBIX HALO | 82.5 | 131 | done 2026-10-21/22 (results/S058.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S059 | NLY JAZZ CACI MAA BF-A GME SJM ARCC GDDY REG | 73.5 | 203 | done 2026-10-21/22 (results/S059.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S060 | SGI ALLE AVY MLI GGG CSL CSGP DOC BAX TXT | 88.0 | 90 | done 2026-10-21/22 (results/S060.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S061 | DKS BJ BMNR FN BBIO GL MANH IT CG CNA | 78.1 | 159 | done 2026-10-21/22 (results/S061.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S062 | FLUT STRL RPM PEN DTM EHC SMTC AKAM PNW SEIC | 83.6 | 113 | done 2026-10-21/22 (results/S062.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S063 | BWXT MKC LII IVZ CCK AFG TOL FIVE INIO AIT | 80.2 | 151 | done 2026-10-21/22 (results/S063.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S064 | BTSG SWKS IONQ ASTS DVA WTS CR CORT BWA AR | 81.5 | 130 | done 2026-10-21/22 (results/S064.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S065 | NXT ELS MOG-A DECK SMMT AHR WTRG FRHC W ELAN | 77.1 | 163 | done 2026-10-21/22 (results/S065.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S066 | ALLY CART DOCN HUBS GLPI TECH GNRC PAYC QXO WSO | 83.4 | 122 | done 2026-10-21/22 (results/S066.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S067 | AMH ALB ERIE HRL AVTR FIG UDR SCI TXRH UHS | 76.4 | 176 | done 2026-10-21/22 (results/S067.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S068 | SF NYT COO ARW AA JKHY ONTO MOH FHN RYAN | 79.9 | 144 | done 2026-10-21/22 (results/S068.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S069 | HII FDS FNF SAIL AES BMRN GSAT SCNI EGP EVR | 75.4 | 179 | done 2026-10-21/22 (results/S069.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S070 | OSCR KNX CLX PSKY ALGN SNAP AGNC AMKR FROG DDS | 76.1 | 163 | done 2026-10-21/22 (results/S070.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S071 | MDGL BSY GMED ENSG LULU RRX HL JEF DCI DPZ | 86.9 | 100 | done 2026-10-21/22 (results/S071.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S072 | BPOP RRC MUSA UMBF AMG CPT RGEN SSB TTMI PBF | 77.2 | 156 | done 2026-10-21/22 (results/S072.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S073 | MTCH OGE AUR PODD WTFC GKOS IBRX AM WMS ONB | 82.6 | 131 | done 2026-10-21/22 (results/S073.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S074 | LFUS IREN ESTC DAR ORI CFR HSIC BIO AEIS TTC | 80.9 | 145 | done 2026-10-21/22 (results/S074.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S075 | DRS BXP PCVX SANM SM KRYS RMBS SOLS FCFS DKNG | 75.9 | 175 | done 2026-10-21/22 (results/S075.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S076 | ZION ALSN FRT APTV R CGNX AYI LTH SIRI VICR | 82.6 | 128 | done 2026-10-21/22 (results/S076.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S077 | FLS HLI SAIA BAH OC GTLB TTEK TXG JXN CUBE | 79.1 | 160 | done 2026-10-21/22 (results/S077.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S078 | PCTY KYMR PRI PCOR CTRE CAI CYTK CHWY VMI EAI | 73.9 | 171 | done 2026-10-21/22 (results/S078.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S079 | ESI EAT VOYA ALV BRX PNR VNOM CHRD BRKR ADC | 80.2 | 145 | done 2026-10-21/22 (results/S079.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S080 | PTGX KNSL SPXC HUT TGTX UGI IDCC AXSM REXR TWST | 78.3 | 165 | done 2026-10-21/22 (results/S080.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S081 | CNM AOS VIAV MHK PB WAL FORM VSAT THG GAP | 79.6 | 157 | done 2026-10-21/22 (results/S081.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S082 | WLK DBX NEU COLB NNN CBSH LEVI CBC MOD RHP | 75.0 | 170 | done 2026-10-21/22 (results/S082.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S083 | OSK ARWR ATR JAN AAL ZWS WYNN ETSY FR TKR | 78.4 | 169 | done 2026-10-21/22 (results/S083.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S084 | MORN MSGS FPS ZETA LNC APPF DY HQY NFG IDA | 79.0 | 158 | done 2026-10-21/22 (results/S084.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S085 | PACS BOKF ACM LINE KTOS KMX NTSK TAP AXS URBN | 76.7 | 159 | done 2026-10-21/22 (results/S085.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S086 | AVT SLAB RAL ARE SFD S LW MSM AGCO SSD | 84.6 | 108 | done 2026-10-21/22 (results/S086.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S087 | ACA MGM KEX AXTA CMC PRMB MTDR MP IONS EMN | 84.0 | 104 | done 2026-10-21/22 (results/S087.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S088 | AWI VSXY CELH SARO NE MATX Z VLY TRNO SYRE | 75.4 | 164 | done 2026-10-21/22 (results/S088.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S089 | ALKS COMP MSA PPC NCLH CLF STAG CAG FSS HXL | 85.3 | 108 | done 2026-10-21/22 (results/S089.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S090 | SNEX PRAX PATH NOV CHE VCTR ELF CAVA FAF DUOL | 76.9 | 166 | done 2026-10-21/22 (results/S090.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S091 | BROS GTES MAC LNTH VFC ANF LAD SSRM KNSA OMF | 78.1 | 152 | done 2026-10-21/22 (results/S091.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S092 | ESE MXL HIMS ACT AAOI ACI UBSI RNG GLXY SWX | 77.8 | 153 | done 2026-10-21/22 (results/S092.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S093 | AMRX EPAM LYFT POOL LB RIG M NAVN QLYS G | 78.6 | 146 | done 2026-10-21/22 (results/S093.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S094 | WEX FLR KZIA TTAN CVI CVLT INGR AVAV OTEX IOVA | 76.6 | 235 | done 2026-10-21/22 (results/S094.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S095 | INGM CWEN VNO PLXS ENS AAON FNB SFM EXLS MGY | 81.7 | 128 | done 2026-10-21/22 (results/S095.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S096 | HRB HR MOS MUR NPO VAL ST LEA ALGM POWL | 88.2 | 87 | done 2026-10-21/22 (results/S096.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S097 | CPB CROX LGND BLDR BLCO HWC CZR RYTM GATX BKH | 81.5 | 140 | done 2026-10-21/22 (results/S097.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S098 | HOMB LOAR TEX TTD LSTR WULF ESNT MKTX RYN DLB | 79.5 | 150 | done 2026-10-21/22 (results/S098.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S099 | MTG GBCI CHDN MCY SXT PEGA EPRT CAKE OLLI LKQ | 79.3 | 149 | done 2026-10-21/22 (results/S099.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S101 | ASB BGC INSW MBGL NIQ ORA SNDR WFRD (backfill) | | | done 2026-10-21/22 (results/S101.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S102 | BRK-A FWONA BAM PLNT UHAL SUN (market cap blank today) | | | done 2026-10-21/22 (results/S102.md; see ALL-SHARDS-ROOT-CAUSES.md) |
+| S100 | CACC WH RLI CWST ECG SAIC VRNS DOCS BXSL TFX | 74.0 | 206 | done 2026-10-21/22 (results/S100.md; see ALL-SHARDS-ROOT-CAUSES.md) |
 
 ## Rule families found (new ones go to the fix owner via this table)
 | Family | Shards | Companies | Evidence | Fix owner status |
@@ -138,7 +138,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | no combined D&A tag filed; components fallback needed (proposal-only) | S001, S003, S005 | GOOG, MSFT, AVGO, ABBV, ORCL, TXN, GEV | DATA-INFERRED | open |
 | base row blank while value exists or is derivable (gross profit, total liabilities, opex) | S001 | AMZN, LLY (10 cells) | DATA-INFERRED | open |
 | multi-class issuer with no undimensioned share count (21 §8.7) | S001 | META (10 cells; market cap has no source facts) | DATA-INFERRED | open |
-| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S057 | TRU (Q2), MAS, SUI (Q2), CLH (Q2), WES (Q2, co-registrant CIK), LNT, FTV (Q2), EVRG (Q2), RS (Q2), DOW, INCY (Q2), BG (Q2), OMC (Q2), PPG, PFG (Q2), VRSK, VLTO (Q2), HUBB (Q2), PPL (Q2), DG (Q2), DTE, FE, CNP (Q2), HBAN (Q2), CTSH, GEHC (Q2), VMC (Q2), BIIB (Q2), ED (Q2), IQV, EXC (Q2), CARR (Q2), F, HUM, PYPL (Q2), GRMN (Q2), DLR (Q2), BE (Q2), URI (Q2), MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
+| NEW: 10-Q in core.filing but 0 facts loaded (latest quarter stuck at Q1) | S003, S006-S016 | MDLZ (Q2), GD, JCI, CDNS (Q2), HCA (Q2), DUK (Q2), PLD (Q2), SPGI (Q2), CB (Q2), ABT (0001628280-26-050134), KO, C (Q1+Q2 2026), NEE (0000753308-26-000060), WELL (0000766704-26-000030) | DATA-INFERRED | open |
 | NEW: stale companyfacts fetch (DE last fetched 2026-08-22, Q3 FY26 10-Q missing) | S008 | DE | DATA-INFERRED | open |
 | NEW: derived operating income subtracts cost of revenue twice (WELL 9M-2019 -1,650M) | S008 | WELL | DATA-INFERRED | open |
 | NEW: wrong sector blank reasons (SCCO pre_revenue_mining at 8.5B revenue; WELL equity REIT given mortgage-REIT reason; DHR and C no_dividend_history while paying) | S006, S008 | 4 | DATA-INFERRED | open |
@@ -207,7 +207,7 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: O&M-only tag must not be mapped as total opex (WMB 597 vs 1,871) | S016 | WMB | FILING-CHECKED | guard for Tag Mapper |
 | stale: REGN shares 94.4M (2012), UPS shares 713.9M (2010), EOG dividends paid stuck at 2009 | S016 | REGN, UPS, EOG | FILING-CHECKED | open (stale family) |
 | plausibility: MRNA implied price $215.80 (unverified) | S016 | MRNA | DATA-INFERRED | check with MCAP-SHARES |
-| currency mix in price ratios: USD market cap over CAD statements (CP, IMO; CP P/B 1.645 = 76.7B USD / 46,626M CAD; P/E, P/S, P/B ~28% low) | S018, S020 | CP, IMO | FILING-CHECKED | open (price_metrics: require reporting currency = USD or convert) |
+| NEW: currency mix in price ratios: USD market cap over CAD statements (CP P/B 1.645 = 76.7B USD / 46,626M CAD; P/E, P/S, P/B ~28% low) | S018 | CP | FILING-CHECKED | open (price_metrics: require reporting currency = USD or convert) |
 | NEW: debt filed only per business segment, no consolidated total (GM blank; KKR 36.9B from 2021 vs 53.5B) | S018 | GM, KKR | FILING-CHECKED | open (total_debt family) |
 | NEW: captive finance arm in consolidated cash flow -> FCF yield 19.3%, net cash -110.6B (GM Financial) | S018 | GM | FILING-CHECKED | open (Sector Analyst; also DE) |
 | ITW pretax income under an unmapped tag (stuck FY2023); CL dividends paid tag unmapped (879M filed) | S018 | ITW, CL | FILING-CHECKED | open (Tag Mapper) |
@@ -217,217 +217,6 @@ Statuses: todo / running / done / reissue (ranking changed). Filled % and unexpl
 | NEW: PaymentsForRepurchaseOfEquity unmapped (426 filers) | S017, S019 | SHW, SLB | FILING-CHECKED | open (Tag Mapper) |
 | insurer with no capex line blanks the FCF chain; insurer shows a BDC investment-income cell | S017 | TRV | FILING-CHECKED | open (Sector Analyst) |
 | NEW (S019): pretax tagged with after-tax IncomeLossAttributableToParent (LITE); trade AR as ContractWithCustomerAssetNet (LITE, company-scoped); us-gaap:Cash unmapped (SLB); custom current-debt tag (SLB) | S019 | LITE, SLB | FILING-CHECKED | open |
-| NEW: DEF 14A copy displaces the authoritative 10-K NetIncomeLoss and the resolver falls back to the next tag (FDX FY2026 4,426M vs 4,433M; FDX margin/ROE on DEF 14A 4,433 dollars; APO ProfitLoss 5,401M vs NetIncomeLoss 3,492M) | S020 | FDX, APO | FC (FDX), DI (APO) | open (with A4 proxy family; critical) |
-| NEW: operating income derived as revenue minus one 'Operating' expense line (AJG Q2 3,324M, 83.7% margin, pretax 414M) | S020 | AJG | FC (R2) | open (remove derivation; AJG has no subtotal) |
-| segment profit shown as operating income (HON 2,240M, R86; HONA 995M total segment profit) | S020, S024 | HON, HONA | FC | open (with GE segment family) |
-| SPG: NI 574.1M vs 483.1M to common; shares 8,000 = Class B count | S020 | SPG | FC | open (NCI/multi-class families) |
-| ET equity incl. NCI 49,737M vs partners' capital 35,331M (MLP) | S020 | ET | FC | open (MLP template) |
-| URI Q1 margins -170.8%/93.5%/57.2% vs 36.9%/21.8%/13.3% | S020 | URI | FC (R4) | open (quarter derivation) |
-| NEW: insurer margins and P/S read the base ASC 606 revenue (MET 724M vs 19,154M; net margin 101.7%, P/S 23.9) | S021 | MET | FC (R4) | open (606 family; insurers) |
-| NEW: non-GAAP 'Adjusted earnings' tagged OperatingIncomeLoss stored as operating income (MET 1,604) | S021 | MET | FC (R45) | open (guard: insurer OperatingIncomeLoss) |
-| NEW: net income uses ProfitLoss even when NetIncomeLoss IS filed (FANG FY2025 1,547 vs 1,664; D Q1-2025 711 vs 665) | S021, S023 | MET, ALL, DLR, AON, NUE, FANG, D, DVN | DI (SEC XBRL) | open (A5 NCI family; resolver priority) |
-| NEW: restated FY-end total assets end up blank | S021 | 6 of 10 | DI | open (conflict family) |
-| NEW: duration value stored on an instant period (BSX buybacks); negative P/E displayed (BE) | S021 | BSX, BE | DI | open |
-| debt filed only as components, 2012 value shown (DLR 3.27B vs 18.6B) | S021 | DLR | FC (R2) | open (total_debt) |
-| history: unmapped early revenue tag (TRGP 2015-16 missing); BSX FY2015 revenue 8,068 vs 7,477 | S021 | TRGP, BSX | mixed | open (history window) |
-| NEW: DEF 14A facts marked authoritative demote the 10-K net income, then ProfitLoss wins (LNG NI FY2025 6,794M vs 5,330M; FY2021/23/24 too) | S022 | LNG | FC | open (A4 proxy family; critical) |
-| MLP tags unmapped: attributable NI, partners' capital, distributions, per-unit EPS (MPLX revenue Q2 2,615 vs 3,312; 33 cells) | S022 | MPLX | FC | open (MLP template, with EPD, ET) |
-| insurer operating income derived without benefits (AFL operating margin 70.9% vs ~24% pretax); BDC cell filled at an insurer | S022 | AFL | FC | open (insurer template) |
-| segment-only balance sheet (PCAR cash 3,219M from 2019 vs 5,575M; debt blank vs 14,696M) | S022 | PCAR | FC | open (captive finance) |
-| NEW: dividends per share filed only dimensioned (LNG); AFL FY2021 mixed restatement vintages; TEL TTM blank from wrong period labels | S022 | LNG, AFL, TEL | mixed | open |
-| NEW: operating income derived from a note expense total that includes income tax (DVN Q2 1,497) | S023 | DVN | FC | open (remove derivation) |
-| NEW: tiny restatement differences (1-4M, incl. 8-K recast) blank whole revenue periods (TFC FY2021-22, all 2023) | S023 | TFC | FC | open (conflict tolerance; links LLY rounding family) |
-| NEW: quarters stored under the next fiscal year (NUE 2026 quarters as FY2027, 14 TTM/growth cells blank) | S023 | NUE | FC | open (Period Engineer) |
-| capex/dividends on custom tags (D, CRH); FANG capex and 2015-16 revenue tags unmapped; DVN cover shares rounded to 1.1B | S023 | D, CRH, FANG, DVN | FC | open |
-| NEW: merger shell / predecessor zeros stored as real history (BKR NI 0 for FY2015-16 and Q1-2016..Q2-2017; total assets, equity, liabilities 0 at 2017-06-30; real income on a custom tag) | S024 | BKR | FC | open (history window; guard: 0 on a headline concept for a large company) |
-| NEW: pre-redomicile history only as IFRS 20-F facts, unmapped (TEAM: 2,115 IFRS facts; US-GAAP from FY2021) | S024 | TEAM | FC | open (history window; FPI-to-domestic transition) |
-| exchange revenue gross vs net (NDAQ 8,262M vs 5,249M) | S024 | NDAQ | FC | open (A2, with ICE) |
-| REIT: O NI 370.5M vs 344.0M to common; debt 4,675M (2017) vs 30,652M; revenue pre-2016 unmapped (RealEstateRevenueNet) | S024 | O | FC | open |
-| GRMN annual DPS filed without a period; PSA dividends stale since 2015; NKE shares stale since 2015; TEAM P/E -1,050 | S024 | GRMN, PSA, NKE, TEAM | FC | open |
-| NEW/CRITICAL: non-authoritative 10-Q fact on a mislabeled full-year context beats the 10-K (FIX FY2025 revenue 1,831.3M vs 9,101.6M; derived Q4 -4,624M; TTM net margin 36.2%) | S025 | FIX | FC | open (period-label family; non-authoritative must never win) |
-| NEW: re-presented and original figures mixed in a derived quarter (EW Q4-2022 revenue 429.9M vs 1,348.3M) | S025 | EW | FC | open (re-presentation policy) |
-| NEW: resolved total debt ignores debt filed only as short-term borrowings (TER, 6 cells) | S025 | TER | FC | open (total_debt) |
-| NEW: inventory only by product type, no total (VST) | S025 | VST | FC | open |
-| EBITDA blank although inputs exist | S025 | F, HUM, PYPL | DI | open |
-| F: total debt 291M (2020) vs 157,126M segment-only; shares 3,727M from 2011; NI incl. NCI; partial-cost gross margin | S025 | F | FC | open (several families) |
-| VST revenue = 606 subset (Q2 4,401M vs 4,017M; FY2021 17,700M vs 12,077M); DAL capex stopped after a tag switch, debt 12,105M vs 12,851M | S025 | VST, DAL | FC | open |
-| history: FY-end total assets blank (HUM, EW FY2015; VEEV FY2018); VST starts 2016 (post-bankruptcy successor) | S025 | HUM, EW, VEEV, VST | FC | open (history window) |
-| NEW/CODE: 10-KT transition reports never collected (FORM_ALLOWLIST normalizer/identity.py:70 omits 10-KT; 0 such filings in core.filing). FERG Aug-Dec 2025 lost (revenue 12,833, NI 786); LHX 2019 10-KT missing | S027 | FERG, LHX (population-wide) | code-confirmed by lead | open (Data Engineer; add 10-KT/10-KT/A) |
-| NEW: fiscal-year-end change scrambles period labels (FERG Apr-Jun 2026 labelled Q4, 23 TTM/growth cells blank; LHX 2020) | S027 | FERG, LHX | FC | open (Period Engineer) |
-| NEW: FY revenue tagged on the Q4 context (LHX Q4 21,865 vs 5,648; P/S 1.19 vs ~2.03) | S027 | LHX | FC | open (period-label family) |
-| NEW: interest lines mapped to other income/expense (FITB shows 2,215 NII there) | S027 | 5 of 10 | FC | open (Tag Mapper) |
-| NEW: resolved cash includes customer funds (XYZ 12,851 vs 6,427); COIN FY2023 assets not restated (206,983 vs 14,754) | S027 | XYZ, COIN | FC | open (customer-funds family) |
-| COIN NI FY2021-25 from proxy, rounded (FY2025 1,300 vs 1,260.3); FITB revenue gross interest income; MNST EPS stuck 2011; CARR equity/NI incl. NCI | S027 | COIN, FITB, MNST, CARR | FC | open (known families) |
-| history: FERG predecessor CIK 1832433 missing (~8 quarters); MNST 2015-16 revenue tag SalesRevenueGoodsNet unmapped | S027 | FERG, MNST | FC | open |
-| NEW: stale resolved rows never rebuilt (WAB, ROK net_income_resolved last rebuilt 2026-09-08, still ProfitLoss incl. non-authoritative facts; ROK FY2023 1,278 vs 1,387; WAB FY2018 291.7 vs 294.9) | S026 | WAB, ROK | FC | open (resolved-concept refresh; links ProfitLoss family) |
-| NEW: accounts payable from a supplier-finance note figure (TEVA 225 vs face 2,531) | S026 | TEVA | FC | open (Tag Mapper guard) |
-| NEW: Form 25 for an ADS-to-share swap is not a delisting (TEVA) | S026 | TEVA | FC | guard for the delisted-still-active rule |
-| TEVA total debt = current only 2018-26 (4,500 vs 16,592); ROK segment earnings as operating income (550 vs 481); MSTR mcap on weighted shares (-8%); WDAY shares 2018; XEL FY2015 / KDP 2018-21 debt understated | S026 | TEVA, ROK, MSTR, WDAY, XEL, KDP | FC | open (known families) |
-| history: Q4 revenue not derived (ADSK, WAB, ROK, WDAY); A missing four Q4 NI; TEVA no 2015 quarters (20-F filer then) | S026 | 6 | FC | open (Period Engineer) |
-| NEW/CRITICAL: stock split applied backwards, every EPS row x5 (CVNA 5-for-1: FY2025 diluted 42.25 vs filed 8.45, split-adjusted 1.69) | S028 | CVNA | FC | open (split owner; direction check) |
-| NEW: predecessor history taken from the wrong entity (WCN 2009-2015 annuals are Progressive Waste's 40-F data; FY2015 revenue 1,925.6M vs 2,117.3M) | S028 | WCN | FC | open (history window; predecessor mapping) |
-| NEW/CRITICAL: a 606 tag on one small sub-line wins as revenue (EXC FY2016-18 revenue 48 / 207 / -62M vs ~31-36B) | S028 | EXC | FC | open (606 family; plausibility guard: revenue < 1% of prior year) |
-| mixed recast vs original bases in derived Q4 (EXC Q4-2020 revenue -8,259M; AIG Q4-2022 -12,609M) | S028 | EXC, AIG | FC | open (Period Engineer: negative derived revenue must never publish) |
-| IDXX debt 449.9M vs 968.9M; AMP revenue gross not net; VTR NI ProfitLoss, op income 2011; MSCI ratios on negative equity | S028 | IDXX, AMP, VTR, MSCI | FC | open (known families) |
-| NEW: filer's own XBRL tags a face line wrongly (ED long-term debt as LongTermDebtFairValue -> debt stuck at 2025) | S029 | ED | FC | open (company-scoped override) |
-| NEW: SG&A stored as G&A only (P 9.1% vs 38.3%; NTAP 4.8% vs 29.9%) | S029 | P, NTAP | FC | open (Tag Mapper) |
-| NEW: net interest expense lands in other income (YUM, SYY) | S029 | YUM, SYY | FC | open (with FITB interest family) |
-| NEW guard: a segment total tagged Revenues beats the face total (NTAP FY revenue 6,237 vs 6,925) | S029 | NTAP | FC | guard for the A3 fix |
-| ED Q4-2025 NI -1,723M vs 298M from a DEF 14A fact (TTM net margin 0.78%) | S029 | ED | SEC-XBRL-checked | open (A4 proxy family, critical) |
-| ADM P/S 1.55 vs 0.47 (606 subset); YUM debt 15,098 vs 12,275; ED revenue 5,231 vs 5,095; PAYX 1,580.7 vs 1,630.5; NTAP cumulative buyback contexts; YUM zero-interest quarters | S029 | ADM, YUM, ED, PAYX, NTAP | FC | open (known families) |
-| history: SYY revenue FY2012-17 unmapped SalesRevenueGoodsNet (also MNST); SYY FY2024 Q4 and NTAP FY2015 Q4 not derived | S029 | SYY, NTAP | FC | open (SalesRevenueGoodsNet = pre-2018 revenue tag, likely wide) |
-| NEW: 16-week Q1 gets no quarter label (KR, 11 TTM cells blank) | S030 | KR | FC | open (Period Engineer; 52/53-week calendars) |
-| NEW: homebuilder inventory and payables tags unmapped | S030 | DHI | FC | open (Sector Analyst) |
-| NEW: absurd margins still shown for near-zero revenue (RVMD ~ -76,000%) | S030 | RVMD | FC | open (materiality floor) |
-| SG&A as G&A only (TTWO 226.3 vs 596.0) | S029, S030 | P, NTAP, TTWO | FC | open |
-| ILMN debt 499 (2022) vs 1,991, FY2021 stored 0; CBRE revenue 606 subset 2018-Q2 2026; ROP capex stuck at 14.3 (2019); KR debt omits finance leases; EL shares blank; net income off at EL, ILMN, CBRE, KR, ROP, CMG (stale resolved rows / proxy) | S030 | 8 | FC | open (known families) |
-| history: 2015-16 revenue tags unmapped (KR, ODFL, CMG); TTWO Q4 FY2022 not derived; mixed restated/original (ROP, CBRE); wrong zeros (ILMN debt FY2021, ROP shares 2015, CBRE cost of revenue Q4-2016) | S030 | 7 | FC | open (history window) |
-| NEW: cover share count includes shares held by a subsidiary (PCG 2,680.1M vs 2,202.4M; market cap ~21.7% high) | S032 | PCG | FC | open (MCAP-SHARES: use outstanding net of subsidiary-held) |
-| NEW: debt stored 0 during Chapter 11 (PCG 2019; 23.1B in liabilities subject to compromise) | S032 | PCG | FC | open (total_debt; bankruptcy rule) |
-| NEW: 20-F (IFRS) to 10-K switch: history starts FY2022 and growth cells get a wrong 'missing prior period' reason (CLS) | S032 | CLS | FC | open (with TEAM IFRS family) |
-| CRITICAL: PCG net income 0 for FY2021-25 from a DEF 14A value in millions tagged as dollars | S032 | PCG | FC | open (A4 proxy family; now 7 companies) |
-| CCI base revenue a sub-line (41 vs 1,008): P/S 171.4, gross margin 2.4% | S032 | CCI | FC | open (sub-line revenue guard, with EXC) |
-| BIIB 2022 op income as current; HSY EPS, DPS, payout from 2010; KMB/STLD/CCL debt off $18-647M; false pre-revenue reasons BIIB, RPRX (7) | S032 | 6 | FC | open (known families) |
-| history: CCL Q1-Q2 FY2015, RMD FY2017 tags unmapped; Q4 not derived PCG 2019/2020, KMB 2016/2017; recast-mixed derived Q4 CCI 2023 -573, KMB 2022/2023 ~1.7B vs ~4.97B | S032 | 4 | FC | open |
-| NEW: revenue series mixes tags by quarter (HIG YoY -98%, P/S 28.9 vs ~1.3) | S031 | HIG | FC | open (series consistency check) |
-| Up-C structure: share basis and NI attributable differ (IBKR revenue 760 vs 1,896, NI 1,338 vs 312 across FY2015/18/21/25; ARES NI FY2025 834.5 vs 527.4) | S031 | IBKR, ARES | FC | open (Standardization: Up-C template) |
-| NEW: debt filed only on an entity axis (ARES) | S031 | ARES | FC | open (total_debt) |
-| NEW: instant flow periods blank dividend yield (IBKR); negative capex from net disposals (HIG); IBKR DPS zeros 2016-20 | S031 | IBKR, HIG | FC | open |
-| DEF 14A NI: ARES FY2021, HIG FY2021/22 | S031 | ARES, HIG | FC | open (A4 proxy family; now 9 companies) |
-| RBLX, WEC NI incl. NCI; WEC EPS stuck FY2025, gross margin 65.7%; PEG PP&E stale since 2010; MTD P/B 2,761 (near-zero equity) | S031 | RBLX, WEC, PEG, MTD | FC | open (known families) |
-| Up-C: market cap counts Class A+B but book value Class A only (TKO P/B 10.2 vs 4.2); TKO FY2025 NI 546.3 vs 195.4 | S033 | TKO | FC | open (Up-C template, with IBKR, ARES) |
-| NEW: merger stub period presented as a full 9M/Q3 (TKO 2023 NI -21.9 = 19 days) | S033 | TKO | FC | open (Period Engineer) |
-| 606 revenue in quarterly margins (CNC 44,375 vs 53,579, gross margin 98.4%); IRM six 2020-21 quarters 606 subset (401.5 vs 1,119.8; 5y CAGR 38% vs ~13%); EQT FY2021 revenue 6,804 vs 3,064.7 | S033 | CNC, IRM, EQT | FC | open (606 family) |
-| TKO FY2022 NI 0 from an 8-K; FY2023/24 NI from DEF 14A | S033 | TKO | FC | open (A4 proxy/8-K family; 10 companies) |
-| SG&A as G&A only (ZS, EXPE); EPS not split-adjusted (CNC, ACGL); ACGL senior notes 4,286 unmapped; EXPE ROIC -14,983% | S033 | 5 | FC | open (known families) |
-| history: 2015-16 revenue tags unmapped (EQT, IRM); ZTS 2025-12-31 balance sheet blank after a recast | S033 | EQT, IRM, ZTS | FC | open |
-| NEW: share counts not split-adjusted (DXCM 4:1: 5y share growth 31%/yr; FY2020 EPS 5.06 vs adjusted 1.33) | S034 | DXCM | FC | open (split owner) |
-| NEW: stray 10-Q value wins for an annual (AXON FY2021 revenue 865.6 vs 863.4; op income -163.1 vs -168.1) | S034 | AXON | FC | open (with FIX non-authoritative 10-Q family) |
-| NEW: share growth computed across an IPO preferred conversion (CRDO) | S034 | CRDO | FC | open (blank across IPO) |
-| exchange revenue gross (CBOE 1,442.8 vs net 731.6); multi-class shares blank (OKTA, CRWV; CRWV mcap 4.7% low); CRWV debt stuck at Q1 (24,859 vs 35,068); DEF 14A NI (CRWV, OKTA, DXCM) | S034 | CBOE, OKTA, CRWV, DXCM | FC | open (known families; proxy now 13 companies) |
-| history: OKTA revenue 6 quarters before Q3 FY18 + Q4 FY23; GEHC FY2022 10-K missing from companyfacts (FY2020 unavailable); rounding-only conflict blanks CRWV total assets | S034 | OKTA, GEHC, CRWV | FC | open |
-| CRITICAL A4 variants: DEF 14A scale both ways (MDLN FY2025 NI 1.157 TRILLION vs 1,159M; SUNB FY2026 NI 0 vs 1,325M, derived Q4 -1,099M) | S035 | MDLN, SUNB | FC | open (proxy family now 15 companies) |
-| NEW: EPS tagged only as EarningsPerShareDilutedUndistributed (NTRS Q2 4.23) | S035 | NTRS | FC | open (Tag Mapper) |
-| NEW: capex and PP&E filed only on axis members (SUNB capex 855) | S035 | SUNB | FC | open |
-| NEW B1 variant: an earlier 10-Q missing from companyfacts while the later one is present (ALNY Q1) | S035 | ALNY | FC | open (instance/FSDS fallback) |
-| custody bank revenue = fee line only (NTRS FY2025 5,018M vs 8,086M); NTRS debt 2012; MTB/HBAN P/S ~18.5; RKT revenue blank under a false reason (2,784M); VG NI incl. NCI (+21-35%); MDLN mcap 35% low (Class B omitted) | S035 | 6 | FC | open (known families) |
-| history: ALNY revenue Q1-2015..Q3-2016 and Q4-2016 not derived; RKT pre-IPO NI stored as zeros; SUNB/MDLN 2025 quarters | S035 | ALNY, RKT, SUNB, MDLN | FC | open |
-| NEW: SG&A tag includes impairments (KHC 8,459 vs 1,107; SG&A 135% of revenue) | S037 | KHC | FC | open (guard) |
-| NEW/CRITICAL: filer EPS scaled x1,000,000 in 10-Qs (HAL 2021-24, R2 of 0000045012-22-000067 shows $600,000; 9 quarters wrong, Q4-2021 -709,998, 7 blank) | S037 | HAL | FC | open (EPS plausibility guard) |
-| NEW: a filing in raw companyfacts never normalized (HPQ Q3 FY26 0000047217-26-000051; MDB Q2 FY27 0001628280-26-059830, 388 facts, raw re-fetched 10-16; BURL Q2) | S037, S038, S052, S053 | HPQ, MDB, BURL, HEI | FC | open (Data Engineer; distinct from B1) |
-| NEW: filer swapped tags on subordinated debentures vs other liabilities (WRB) | S037 | WRB | FC | open (company-scoped) |
-| VRSN debt 0 from 2013 vs 2,334.4, EPS stuck FY2022 (continuing-ops tag only), no quarterly EPS since 2014; FTI op income = segment profit (525.5 vs 479.8), buybacks 0 from 2021 vs 684.9; ON pretax stops 2023; SG&A G&A-only (ON, ZM); stale PP&E (ATO 2015, KHC 2020), interest (HAL 2016); ZM blank vs zero debt | S037 | 7 | FC | open (known families) |
-| history: KHC 2015-16 revenue unmapped and Kraft FY2014 from an 8-K stored as KHC; FTI shell zeros, Q4-2020 revenue 3,426 vs 1,600; WRB EPS not split-adjusted | S037 | KHC, FTI, WRB | FC | open |
-| NEW: combined 'basic and diluted' EPS line tagged only as Basic -> diluted EPS blank (MDB 11 quarters) | S038 | MDB | FC | open (Tag Mapper) |
-| bank revenue = 606 fee subset (CFG Q2 451 vs 2,283; FY2025 1,635 vs 8,247; net margin 121%; quarters mix tags) | S038 | CFG | FC | open (A2/A3) |
-| CNP gross margin 1.000 from a cost sub-line of 1; DTE debt 21,736 vs 26,023, capex on custom tags (13 FCF cells); 606 subset revenue AWK, FE, CNP; TW shares 0, mcap no source, dividends unmapped; DOV pretax after-tax tag; OTIS ROIC 92.9% on negative equity; false FI reason DTE, DOV | S038 | 9 | FC | open (known families) |
-| history: TW revenue Q1-Q2 2018 and FY2018 missing; re-presentation breaks (DTE, CNP, FE); ~50 CNP 2017-19 values from an 8-K | S038 | TW, DTE, CNP, FE | FC | open |
-| NEW: two annual rows for one FY with start dates a day apart (WSM FY2017) | S036 | WSM | DI | open (period dedup) |
-| NEW: TTM metrics went null on 10-09 while dependent fcf_yield still shows (DG) | S036 | DG | DI | open (consistency check) |
-| EXR revenue 34.9 vs 874.2 (P/S 220.8, gross margin -23%), debt 2,873 (2018) vs 13,647; RJF revenue gross 4,362 vs 3,928, NII 560 in other income, debt omits 3,522 senior notes; WTW revenue ~2% low; DG buyback yield 9.27% on 2022 buybacks; IR false no_dividend_history; RDDT no shares (per-class), NI from DEF 14A; TDY FY2015 revenue 1,020 vs 2,298 | S036 | 7 | FC | open (known families) |
-| history: DG, EXR pre-2017 revenue on unmapped tags (SalesRevenueGoodsNet, RealEstateRevenueNet); 39 CFO quarters missing (MLM 12, JBL 10, RJF 9); 6 year-end balance sheets blank from rounding conflicts | S036 | 6 | FC | open |
-| NEW: filer mis-tagged a quarter's D&A (CPRT Q2 8.6 vs ~55; derived Q4 107.8 vs ~61) | S039 | CPRT | FC | open (company-scoped override) |
-| NEW: exchangeable units left out of market cap and NI incl. their NCI (QSR mcap -23%, 105.8M units; Q2 NI 665 vs 507) | S039 | QSR | FC | open (Up-C/exchangeable template) |
-| NEW: diluted EPS stops when a quarter tags only basic continuing-ops EPS (PPL Q1-2026 0.60) | S039 | PPL | FC | open (EPS tag family) |
-| NEW: 20-F to 10-K switch leaves derivable trailing P/E and P/S blank (SN) | S039 | SN | FC | open (with CLS, TEAM) |
-| PPL spin/sale restatements mixed with originals (Q4-2019 revenue -225), 606 revenue 9,170 vs 9,042; CPRT Jan-2017 split missing from split table; SG&A G&A-only (SN, CPAY); stale gross margin/op income/capex (VICI, CPAY, CPRT); CPNG ROIC 154%; wrong blank reasons (CINF, DGX, VICI) | S039 | 8 | FC | open (known families) |
-| history: SN no quarters before Q1-2025; CPNG Q4-2023 revenue not derived; VICI shell 0 and 2017 stub stored as annual; QSR pre-2015 Burger King history not linked | S039 | SN, CPNG, VICI, QSR | FC | open |
-| NEW/CRITICAL: spin-off distribution ratio stored as a reverse split (DRI 2015 Four Corners 1-for-3: every per-share value before Nov 2015 3x high; FY2015 EPS 16.41 vs 5.47) | S041 | DRI | FC | open (split owner: spin-offs are not splits) |
-| NEW: Q4 pretax not derived because FY and 9M use different tags (XYL; blanks ROIC) | S041 | XYL | FC | open (Period Engineer: tag-normalized derivation) |
-| NEW: dividends paid include payouts to minority holders (LVS Q2 328 vs 199) | S041 | LVS | FC | open (Tag Mapper) |
-| FCNCA revenue gross interest income 2,851 vs 2,432; Q NI incl. NCI and FY2025 from DEF 14A (729 vs 692); CHD 2016 split missing; DRI gross profit = segment figure; AFRM, ECHO shares stale (2020); ROIV false pre-revenue | S041 | 6 | FC | open (known families) |
-| history: CHD 2015-16 revenue tag unmapped; FCNCA diluted EPS 22 quarters missing; ECHO DISH merger recast mixes bases (Q4-2021 revenue 18,332) | S041 | CHD, FCNCA, ECHO | FC | open |
-| NEW: custom buyback tag in Q1 10-Qs only breaks the quarterly chain (FFIV 301.1, R7 of 0001048695-26-000023) | S040 | FFIV | FC | open (Tag Mapper, company-scoped) |
-| NEW: period_gap mislabels SEC-feed gaps as filing_not_processed (VRSK, VLTO Q2) | S040 | VRSK, VLTO | FC | open (gap-cause classifier) |
-| NEW: original and restated annuals stored side by side on calendar vs 52/53-week dates (ATI FY2022 NI 130.9 and 323.5) | S040 | ATI | FC | open (period dedup, with WSM) |
-| CASY op income 4,924.2 vs 369.1 (FY2026 14,724 vs 1,033.6); FFIV SG&A G&A-only 95.6 vs 333.6; LH NI ProfitLoss with a non-authoritative source, revenue mixes tags 2015-17; ULTA debt 800 (2020) vs 339.6; FISV FY2016 EPS 4.15 vs 2.08, buybacks stop 2018, D&A stops 2023 | S040 | 5 | FC | open (known families) |
-| history: ATI, VRSK 2015-16 revenue tags unmapped; VRSK, LH derived Q4 mixing re-presented and original | S040 | ATI, VRSK, LH | FC | open |
-| NEW: two splits applied unevenly (TPL 3:1 x2: FY2022 EPS 57.77 vs 6.42; derived Q4-2025 EPS -8.59 vs 1.78) | S042 | TPL | FC | open (split owner) |
-| NEW: per-share value at 1/100 scale (PPG 2019 DPS 0.0048 vs 0.48) | S042 | PPG | FC | open (DPS plausibility guard) |
-| NEW: SPAC shell's own filings loaded as a parallel series (SYM) | S042 | SYM | FC | open (predecessor/shell handling) |
-| bank note line tagged OperatingIncomeLoss shown as operating income (RF 53M); RF revenue 1,748 vs 1,907; SYF revenue blank every period under a false reason | S042 | RF, SYF | FC | open (bank template) |
-| FOX NI incl. NCI 1,727 vs 1,685, shares 1 vs 419.65M, public float 0 vs $23.5B; IOT SG&A 67.4 vs 285.2; PPG segment op income, gross margin on cost excl. D&A; PFG FY2021-22 NI from DEF 14A | S042 | FOX, IOT, PPG, PFG | FC | open (known families) |
-| history: TPL 2015-2020 under trust CIK 97517 not linked; DLTR FY2014-16 revenue unmapped, derived Q4 FY2022 revenue -5,196 | S042 | TPL, DLTR | FC | open |
-| NEW: derived total liabilities add NCI instead of netting it (IFF 11,211 vs 11,145; BRO 17,304 vs 17,279) | S043 | IFF, BRO | FC | open (derivation fix) |
-| NEW: face EPS tagged DilutedEarningsPerShareProForma (NVT 2021-22, 8 quarters blank) | S043 | NVT | FC | open (EPS tag family; company-scoped) |
-| NEW: filer's own 10-K quarterly EPS at 1/100 scale (BRO Q4 2015-17 0.004-0.007 vs ~0.41-0.66) | S043 | BRO | FC | open (EPS plausibility guard, with HAL x1e6, PPG DPS) |
-| NEW: Q4 EPS derived across a share-count jump (OMC Q4-2025 -4.78, trailing P/E -219) | S043 | OMC | FC | open (never subtract EPS) |
-| holding company revenue = 606 line (L 828 vs 4,734; P/S 6.98 vs ~1.2; net margin 53.6% vs ~9%); MKL FY2016-22 606 subset (FY2021 3,997 vs 12,846), quarters mix tags | S043 | L, MKL | FC | open (606 family; holding-company template) |
-| VMRK (Equity Residential renamed Vivmark) base revenue stale since Q1-2020, op income = NOI (66.7%), debt double counts commercial paper; ROKU SG&A G&A-only; RL, ROKU share-class issues; UTHR, ROKU stale debt; BRO 2018 split missing | S043 | 6 | FC | open (known families) |
-| history: IFF no revenue before Q4-2016 (SalesRevenueGoodsNet); VMRK Q2/Q3-2020 and FY2022 revenue missing (filer XBRL error); NVT, IFF mixed vintages; RL Q4 FY2015-17 revenue not derived | S043 | IFF, VMRK, NVT, RL | FC | open |
-| NEW: blank inventory makes quick ratio = current ratio (NI 0.498 vs 0.406; AMCR 1.254 vs 0.760; RGLD 2.924 vs 2.683) | S047 | NI, AMCR, RGLD | FC | open (formula: inventory absent must mean 'unknown', not 0, unless reported 0) |
-| NEW/CRITICAL: an acquiree's statements filed in the acquirer's 8-K stored as the acquirer's own (AMCR stores Berry's 8-K 0001104659-25-041417, 116 cells incl. PP&E 3,627; PNFP stores Synovus's 8-K 0002082866-26-000020, 70 facts: FY2025 NI 792.0 vs 641.9, diluted EPS 5.33 vs 8.07) | S047, S057 | AMCR, PNFP | FC | open (8-K exhibit facts must never become canonical) |
-| NEW: stub period counted as a second quarter (SSNC Q3-2015 twice, stub from 2015-07-09) | S047 | SSNC | FC | open (period dedup) |
-| tower REIT revenue = site-development only (SBAC 51.4 vs 715.3; P/S 85 vs ~6.7); BG 606 subset 4,660 vs 21,861; NI customer revenue only 1,289.5 vs 1,342.4; AMCR 1-for-5 reverse split missing (FY2024 EPS 0.505 vs 2.52); BG liabilities add NCI 30,142 vs 27,106; SSNC SG&A G&A-only; stale interest at 5 | S047 | 6 | FC | open (known families) |
-| history: BG nothing before FY2021 (predecessor CIK 1144519 not loaded); RGLD 10-KT not in core.filing (10-KT family), 2015-17 revenue quarters missing; SNX FY2018-19 original/recast mixed (Q4 FY2019 1,894) | S047 | BG, RGLD, SNX | FC | open |
-| NEW: co-registrant 10-Q facts filed under the other registrant's CIK in companyfacts (DOW Q2 0001751788-26-000147: 492 facts under TDCC CIK 29915) | S045 | DOW | FC | open (B1 variant; co-registrant lookup) |
-| NEW: bankruptcy emergence splits a year into two stub periods; FY/Q1/Q4 blank as no_mapped_tag; FY NI filled from DEF 14A (EXE 2021, 6,328) | S045 | EXE | FC | open (Period Engineer) |
-| shell zeros stored as history (VTRS ~40 rows, EPS -1.7M; SW 2024); EXE EPS split adjusted twice (-170,594) | S045 | VTRS, SW, EXE | FC | open (with BKR shell family) |
-| THC NI incl. NCI every period (Q2 1,045 vs 826; FY2025 DEF 14A 2,367 vs 1,407); KEY revenue gross interest income, P/S 12.09 on 606 fees; PHM debt 43.9 vs 2,298; DOW Q4-2018 revenue 9,282 vs 11,944; wrong dividend zeros GPN, DOW | S045 | 6 | FC | open (known families) |
-| history: DOW 2015-16 (TDCC not linked); TROW, THC 2015-16 revenue tags unmapped; VTRS Q4 NI 7 years; GPN 10-KT never collected | S045 | DOW, TROW, THC, VTRS, GPN | FC | open |
-| CRITICAL: DEF 14A NI 1,000,000x small (RBRK FY2025 -1.15 vs -1,154.8; derived Q4 +1,038.8; TTM ROA +3.3% on a loss-maker) | S044 | RBRK | FC | open (A4 proxy family, ~20 companies) |
-| NEW: one-month asset purchase shown as latest capex (INCY 48.7, May 2024); INCY total debt 19,094 is a filer scale error vs ~0 | S044 | INCY | FC | open |
-| NEW: preferred dividend shown as common DPS and dividends paid (XPO $10, 2015-19) | S044 | XPO | FC | open |
-| NEW: LLC members-equity tag blanks equity, P/B, ROE (ARXS) | S044 | ARXS | FC | open (Tag Mapper) |
-| candidate: EPS, DPS, shares tagged only on Class A and dropped by companyfacts (STZ none since 2015) | S044 | STZ | DI | open (multi-class family) |
-| NRG 606 revenue (Q2 7,319 vs 7,481); XPO debt 3,047 vs 3,206, derived Q4-2022 SG&A -288; DINO, STE ProfitLoss NI (DINO FY2022 3,041 vs 2,923); STE Q2 FY2018 revenue 26.2 vs 634.2 (filer date error) | S044 | 5 | FC | open (known families) |
-| history: DINO (HollyFrontier), STE (STERIS Ltd) predecessors not linked; capex missing 51 quarters and period_gap has no capex rows at all | S044 | DINO, STE + population | FC | open (period_gap coverage gap for capex) |
-| rounding change counted as a conflict drops the value (ENTG FY2024 total debt 0 vs 3,981.1; FY2024 inventory and 2024 quarters lost) | S046 | ENTG | FC | open (rounding-conflict family, now 12+ companies) |
-| NEW: cover shares stored 1000x large (PKG FY2025 10-K and one 2024 10-Q) | S046 | PKG | FC | open (MCAP-SHARES scale guard) |
-| NEW: 'other property' line used as total PP&E (PR 57M vs 16,871.6M) | S046 | PR | FC | open (Tag Mapper guard) |
-| NEW: debt-only interest tag used as interest expense (AMRZ FY2025 216 vs 461) | S046 | AMRZ | FC | open |
-| NEW: P/B counts preferred stock as common equity (SMCI) | S046 | SMCI | FC | open |
-| SMCI split applied twice in FY2024 (EPS 0.19 vs 1.92), not at all in FY2022 (5.32 vs 0.53), debt omits 4.66B converts (4,056 vs 8,720); PR ROE from DEF 14A; NI incl. NCI (PR, RS, AMRZ); LYB liabilities add NCI, FY2018-20 revenue trade sales only; SG&A G&A-only at 4 | S046 | 6 | FC | open (known families) |
-| history: PR 2016 rows are the SPAC shell's; SMCI FY2015, AMRZ 2025, LYB 2023 restated/original mixed | S046 | PR, SMCI, AMRZ, LYB | FC | open |
-| NEW: TTM built from non-consecutive quarters (CBRS EBITDA TTM -526.1 from Q1/Q2-2025 + Q1/Q2-2026; net_debt_ebitda 11.07, debt_to_ebitda -1.75, ev_ebitda -25); consecutive-quarter check inconsistent (EVRG EBITDA blank with 4 quarters held) | S048 | CBRS, EVRG | FC | open (TTM helper guard) |
-| split applied twice (TOST 5:1: FY2019 EPS -0.216 vs -1.08; derived Q4-2021 +0.54 vs ~0) | S048 | TOST | FC | open (split owner; with SMCI, EXE) |
-| IPO-quarter weighted shares used for market cap (CBRS 18.1B vs ~28.5B, 3 cover classes) | S048 | CBRS | FC | open (MCAP-SHARES) |
-| 606 revenue (SNA 1,225.8 vs 1,334.8; OVV 2,872 vs 3,013, larger than total in FY2021-22; EVRG 1,350.5 vs 1,443.7); EVRG liabilities add NCI; SNA capex blank; CDW interest from 2014; CRS false FI reason | S048 | 6 | FC | open (known families) |
-| history: predecessor CIKs not linked (EVRG-Westar 54507, OVV-Encana 1157806); EFX 2014-Q3 2016 revenue tag unmapped; FY-end total assets blank after restatement at 5 | S048 | EVRG, OVV, EFX + 5 | FC | open |
-| NEW: filer reports expenses as negatives and we accept them (FTV interest -31.6, opex -483.8, interest coverage -6.07) | S050 | FTV | FC | open (sign guard for expense concepts) |
-| NEW: investing/financing cash-flow totals only on continuing-ops tags, unmapped (DD stale since 2025-06) | S050 | DD | FC | open (Tag Mapper) |
-| NEW: per-unit EPS tagged only by unit class (PAA 0.14 from 2016 vs 2.51) | S050 | PAA | FC | open (MLP template) |
-| DD 1-for-3 reverse split missing (share growth -67.75%, shareholder yield 70%); PAA equity -753 (2017) vs 11,079; debt NDSN 1,923 vs 1,731, ITT 2,973.6 vs 3,728.2, U blank vs 2,237.4; NI from DEF 14A (GIS, FTV), ProfitLoss (PAA); LNT gross margin 86.6% | S050 | 7 | FC | open (known families) |
-| history: derived Q4-2023 revenue negative (FTV -567.7, DD -2,556); ZBH, GIS 2015-16 revenue SalesRevenueGoodsNet unmapped; DD FY2015-16 values are Dow Chemical's | S050 | FTV, DD, ZBH, GIS | FC | open |
-| variants: 10-Q balance-sheet totals only under a consolidation axis (LEN: no shares, Q3 capex -8.0, debt/AR frozen at FY2025); trade AR only under a related-party axis (FIS); NetIncomeLoss never tagged so ProfitLoss wins every period (CF 869 vs 727; FY2018 428 vs 290) | S049 | LEN, FIS, CF | FC | open |
-| SOFI revenue = fee subset 153.6 vs 1,218.7 (P/S 31.1 vs ~4.4, net margin 102%), SPAC shell rows stored as SoFi's; liabilities add NCI (CF 12,523 vs 6,179; GPC); WES Q2 facts under co-registrant CIK 1414475, capex stale since 2014, MLP tags unmapped; SG&A G&A-only (SOFI, CW, NTNX); stale interest/D&A at 6 | S049 | 8 | FC | open (known families) |
-| history: GPC, FIS 2015-16 revenue tags unmapped; FIS FY2015 from an 8-K; 13 restated FY-end total assets blank; restated EPS quarters blank (NTNX, FSLR, FIS) | S049 | GPC, FIS, NTNX, FSLR | FC | open |
-| NEW: revenue total only on a custom tag plus product-axis members (APA: 21 quarters blank, all revenue ratios empty) | S051 | APA | FC | open (company-scoped) |
-| NEW: sector assigned from SIC ranges mislabels (MEDP, ZBRA as Industrials) | S051 | MEDP, ZBRA | FC | open (sector mapping) |
-| sign flip in every 10-Q since 2022 (RGA operating cash flow; derived Q4-2025 7,330 vs 852) | S051 | RGA | FC | open (DIS sign-flip family) |
-| ESS P/S 1,879.9 on a 2.3M sub-line vs 489M; EWBC revenue gross interest income, 2016-20 a fee sub-line (~95% low); APG Q4-2019 revenue -2,122; DEF 14A NI at DT, RGA, EWBC, APA; stale latest values at 9 of 10 | S051 | 7 | FC | open (known families) |
-| history: Apache not linked to APA (2015-19 missing); TSCO 2015-17 revenue missing | S051 | APA, TSCO | FC | open |
-| NEW: split ratio stored wrong (WMG 2020 stored 47.72 vs filed 477,242.61; pre-2020 per-share history wrong factor); pre-IPO shares used (WMG 1,069 shares, FCF/share 782,039); EPS only 3 of 46 quarters | S053 | WMG | FC | open (split owner) |
-| NEW: operating income derived as 606 revenue minus total expenses (TPG -792.4 vs 344.1; margin -67%, EV/EBITDA -11.1) | S053 | TPG | FC | open (remove derivation; with AJG, DVN) |
-| TPG revenue 705 vs 1,841 (606); INVH revenue 606 homebuilding line, 2025 quarters stored 0 (P/S 10.87 vs ~5.6); H dividend yield 0.085% vs 0.33%; ROL 2018 and 2020 3-for-2 splits missing; NWSA FY2022 revenue from an 8-K recast (8,437 vs 10,385); stale interest at 6, capex at HST, INVH | S053 | 7 | FC | open (known families) |
-| history: BURL Q2 10-Q never normalized; ROL 2015-16 revenue under unmapped SalesRevenueServicesNet; J revenue mixes pre/post-Amentum | S053 | BURL, ROL, J | FC | open |
-| Q4 ending early January labelled with the next fiscal year breaks TTM (LDOS, EXEL; P/S, P/E, EV/sales, FCF/buyback/dividend yields blank) | S054 | LDOS, EXEL | DI | open (NUE fiscal-year-label family) |
-| NEW: Q4 tax rate derived by subtraction (PFGC -51.2% vs 26.8%) | S054 | PFGC | FC | open (never derive ratios by subtraction) |
-| NEW: operating statement only on segment members (NVR; 8 cells false FI reason) | S054 | NVR | FC | open |
-| custom buyback tag shows 0 from 2015 (CDE); CDE debt 2.4 vs 705.3; LDOS 606 revenue, dividends paid 0; BEN cash 3,760.9 vs 2,670.3; NVR debt 600.1 (2013) vs 908.2; RBC capex stuck FY2023; PFGC cash 18.4 (2019) vs 92.4; YUMC resolved debt blank vs 66; CRBG FY2022 NI from DEF 14A (8,479 vs 8,159) | S054 | 9 | FC | open (known families) |
-| history: LDOS 10-KT not collected; RBA 2015 revenue tag unmapped; YUMC 2017 quarters on two calendars; EPS quarters missing EXEL 2015, CDE 2017-18 (conflict), RBC/CRBG/YUMC Q4 not derived | S054 | 6 | FC | open |
-| NEW: a spin-off whose first filing is a 10-K gets no TTM, so P/E and P/S stay blank (FDXF: P/E ~25, P/S ~1.87 computable) | S052 | FDXF | FC | open (TTM from first 10-K) |
-| NEW: dividends taken from a note's narrative text (FDXF 48M) | S052 | FDXF | FC | open (guard) |
-| NEW: duplicate 10-Q with impossible EPS 465-890 (FTAI 2022) | S052 | FTAI | FC | open (EPS plausibility guard) |
-| capex excludes leasing equipment (FTAI 163.1M/6M); bankruptcy stubs leave no FY/Q4-2023 (TLN, with EXE) | S052 | FTAI, TLN | FC | open |
-| HEI market cap counts one class (16.8B vs ~42B), three 5-for-4 splits unadjusted, Q3 10-Q never loaded; TLN 606 revenue (Q2 894 vs 747; YoY 118.6% vs 18.6%); RIVN shares 1,362M vs 1,448M; FDXF debt 4,264 vs 4,527; BALL NI incl. NCI; FTAI, CLH partial-cost gross margin; stale interest 5/10, interest in other income 4/10; false FI reason BALL, CLH; WCC false no_dividend_history | S052 | 9 | FC | open (known families) |
-| history: RVTY, FTAI, BALL mix original and restated bases | S052 | RVTY, FTAI, BALL | FC | open |
-| continuing-ops EPS as the only EPS tag freezes REIT EPS (KIM at Q4-2020, WPC at Q4-2018; 52 quarters blank) - likely many REITs | S055 | KIM, WPC | FC | open (EPS tag family; high REIT reach) |
-| 20-F to 10-K switch (JHX May 2026, in population): old 20-F values shown as current (interest 2020, DPS 2013), TTM blank though derivable; FY2015-16 revenue missing | S055 | JHX | FC | open (with CLS, SN, TEAM) |
-| per-class only: buybacks, basic EPS, DPS (TSN); TSN market cap Class A only (15.6B vs ~19.6B) | S055 | TSN | FC | open (multi-class) |
-| KIM debt 7,718.7 vs 8,739.6 (mortgages omitted), NI ProfitLoss FY2021-25; EG debt blank vs 3,589; LAMR partial-cost gross margin 67.4%; LOGI SG&A G&A-only (3.5% vs 21.5%); stale interest 6/10; debt-free blank vs 0 (LOGI, LSCC) | S055 | 7 | FC | open (known families) |
-| history: LAMR 2015-16 revenue (AdvertisingRevenue unmapped); LSCC TTM blank on 53-week year, duplicate FY2022 row | S055 | LAMR, LSCC | FC | open |
-| NEW: issued shares tagged as outstanding (TYL 48.15M vs 40.95M; BVPS 63.08 vs ~74.17) | S056 | TYL | FC | open (MCAP-SHARES guard) |
-| NEW: fiscal-year-end metadata wrong (SUI '0513' vs Dec 31) | S056 | SUI | FC | open (Company Master) |
-| recapitalization stored as a reverse split (EQH 2018 0.4595: FY2016 EPS 4.875 vs 2.24) | S056 | EQH | FC | open (split owner: recaps/spins are not splits; with DRI) |
-| CRITICAL: EQH FY2021-24 NI from DEF 14A 0001193125-26-341149 stored in dollars (1,755 vs 1,755M; derived Q4s -2,091M..+693M); FY2025 NI ProfitLoss -1,037 vs -1,380; revenue from InterestAndDividendIncomeOperating | S056 | EQH | FC | open (A4 proxy family) |
-| PINS shares 0, mcap 17% high, 981M converts blank; RNR Q2 EPS on unmapped tag; SUI debt stale 7,388 vs ~4,013; stale latest values at all 10 | S056 | PINS, RNR, SUI + 10 | FC | open (known families) |
-| history: ARMK FY2016-20 annual EPS missing; EQH, UNM Q4 EPS missing; MAS, ARMK, SUI revenue mixes original and re-presented across divestitures | S056 | ARMK, EQH, UNM, MAS, SUI | FC | open |
-| NEW: interest filed only on net tags is unmapped, so interest expense goes stale (LECO, JLL, CHTR) | S057 | LECO, JLL, CHTR | FC | open (Tag Mapper) |
-| NEW: stock-comp ratio reads a minor tag (JLL 0% vs FY2025 SBC 112) | S057 | JLL | FC | open |
-| policy: US-GAAP 20-F history canonical for a filer that switched to 10-K (CNH 540 facts) | S057 | CNH | FC | decision needed (founder/doc 02) |
-| PNFP FY2021-24 NI from DEF 14A, revenue gross interest income; CNH 606 revenue 4,143 vs 4,803; CHTR mcap on diluted weighted shares (13.41B vs 12.64B), D&A unmapped; WY debt omits 122 current; SITM debt missing 1,317.6 converts; CRL pretax tag unmapped; JLL, TRU NI incl. NCI; stale interest/capex/D&A 9/10 | S057 | 8 | FC | open (known families) |
-| history: PNFP nothing before 2025 (old CIK 1115055 not linked); CNH no quarters before Q3-2021; Q4 not derived GEN (5), JLL (2); TRU FY2015 revenue tag unmapped | S057 | PNFP, CNH, GEN, JLL, TRU | FC | open |
 | MCAP-SHARES: market cap share count wrong (ADS ratio AKTX/ZLAB/SCNI/KZIA/AMRN/GPCR/DBVT; filer 1000x diluted shares TBLA/RPAY; multi-class cover dropped SPCX understated; root causes price_metrics.py:179-247,362) | S000 | 10 (7 in top 1000) | FILING-CHECKED | open |
 
 ## Note to the fix owner (Dhairya), 2026-10-18
@@ -464,5 +253,3 @@ Done shards are NOT reissued: dropped companies keep their findings (their wrong
 
 ## Population check needed (fix owner, 2026-10-18)
 Foreign private issuers kept in `real_operating_company` by a legacy or ABS 10-K: BMO and BNS confirmed (S011, S012). Query to run with direct DB access, since it timed out under the 55s MCP cap: latest annual form per population company, flagging 40-F/20-F as latest, or a 10-K with no us-gaap facts.
-
-Note 2026-10-20: the coverage table was rebuilt on 10-20 (S021: blanks rose from 316 to 402 for its 10 companies, i.e. 86 'filled before, blank now' cells now counted). Baseline figures in README predate this rebuild.

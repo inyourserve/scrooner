@@ -17,8 +17,6 @@ a tax rate is a pure ratio, no annualization distortion the way ROIC/
 resolves at both FY and quarterly granularity in real data).
 """
 
-from decimal import Decimal
-
 import psycopg
 import structlog
 
@@ -59,7 +57,7 @@ def calculate_tax_reconciliation_for_company(
             """,
             (company_id, list(concept_ids.values())),
         )
-        by_concept_by_period: dict[str, dict[int, Decimal]] = {
+        by_concept_by_period: dict[str, dict[int, tuple]] = {
             name: {} for name in concept_ids
         }
         period_dates: dict[int, tuple] = {}

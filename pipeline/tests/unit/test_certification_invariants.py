@@ -640,7 +640,7 @@ class TestRefinementsFromLiveDryRun:
                 d.cells.remove(c)
         add(d, "net_income", 410_000_000, date(2024, 12, 31), date(2024, 1, 1), "FY", tag="NetIncomeLoss")  # 2.6x expected 165M? pretax-tax
         f = [x for x in ties.check(d) if x.evidence["rule"] == "identity:net_income"]
-        assert f and f[0].severity == "info"  # round 3: identities that cannot see NCI / discontinued ops are not stored
+        assert f and f[0].severity == REVIEW
 
     def test_flat_dividends_in_adjacent_quarters_are_not_a_finding(self):
         """NVDA pays 99M a quarter for years: equal adjacent quarters are normal for dividends."""

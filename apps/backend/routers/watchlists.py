@@ -89,16 +89,12 @@ def list_watchlist(
             )
             rows = cur.fetchall()
             company_ids = [row[0] for row in rows]
-            fundamentals: dict[int, dict[str, dict[str, dict]]] = {}
-            updates: dict[int, list[dict]] = {}
+            fundamentals = {}
+            updates = {}
             stale_reasons: dict[int, dict[str, str]] = {}
             latest_filed = {row[0]: row[18] for row in rows}
             for row in rows:
-                reason = (
-                    staleness.staleness_reason(row[17], row[16], row[18])
-                    if row[10] is not None
-                    else None
-                )
+                reason = staleness.staleness_reason(row[17], row[16], row[18]) if row[10] is not None else None
                 if reason is not None:
                     stale_reasons.setdefault(row[0], {})["trailing_pe"] = reason
             if company_ids:
@@ -141,13 +137,9 @@ def list_watchlist(
                 # is naturally about a year older, so it is never judged
                 # alone; it goes with its latest value.
                 for fact in fact_rows:
-                    if fact[5] != 1 or (
-                        fact[0] in bank_ids and fact[1] in BANK_SUPPRESSED_METRICS
-                    ):
+                    if fact[5] != 1 or (fact[0] in bank_ids and fact[1] in BANK_SUPPRESSED_METRICS):
                         continue
-                    reason = staleness.staleness_reason(
-                        fact[3], fact[4], latest_filed.get(fact[0])
-                    )
+                    reason = staleness.staleness_reason(fact[3], fact[4], latest_filed.get(fact[0]))
                     if reason is not None:
                         stale_reasons.setdefault(fact[0], {})[fact[1]] = reason
                 for fact in fact_rows:
@@ -157,9 +149,7 @@ def list_watchlist(
                         continue
                     entry = fundamentals.setdefault(fact[0], {}).setdefault(fact[1], {})
                     entry["latest" if fact[5] == 1 else "previous"] = {
-                        "value": fact[2],
-                        "period_end": fact[3],
-                        "period_label": fact[4],
+                        "value": fact[2], "period_end": fact[3], "period_label": fact[4]
                     }
                 cur.execute(
                     """
@@ -178,15 +168,11 @@ def list_watchlist(
                     (user_id, company_ids),
                 )
                 for update in cur.fetchall():
-                    updates.setdefault(update[0], []).append(
-                        {
-                            "form": update[1],
-                            "filed_at": update[2],
-                            "accession_number": update[3],
-                            "is_unreviewed": bool(update[5]),
-                            "source_url": f"https://www.sec.gov/Archives/edgar/data/{update[4].lstrip('0')}/{update[3].replace('-', '')}/{update[3]}-index.html",
-                        }
-                    )
+                    updates.setdefault(update[0], []).append({
+                        "form": update[1], "filed_at": update[2], "accession_number": update[3],
+                        "is_unreviewed": bool(update[5]),
+                        "source_url": f"https://www.sec.gov/Archives/edgar/data/{update[4].lstrip('0')}/{update[3].replace('-', '')}/{update[3]}-index.html",
+                    })
     items = [
         {
             "company_id": row[0],
@@ -201,28 +187,17 @@ def list_watchlist(
             "price_as_of": str(row[9]) if row[9] else None,
             "valuation": (
                 {"label": "P/E", "value": str(row[10])}
-                if row[10] is not None
-                and "trailing_pe" not in stale_reasons.get(row[0], {})
+                if row[10] is not None and "trailing_pe" not in stale_reasons.get(row[0], {})
                 else None
             ),
-            "latest_update": (
-                {
-                    "form": row[11],
-                    "filed_at": str(row[12]),
-                    "accession_number": row[13],
-                    "source_url": f"https://www.sec.gov/Archives/edgar/data/{row[15].lstrip('0')}/{row[13].replace('-', '')}/{row[13]}-index.html",
-                }
-                if row[11]
-                else None
-            ),
+            "latest_update": ({
+                "form": row[11], "filed_at": str(row[12]), "accession_number": row[13],
+                "source_url": f"https://www.sec.gov/Archives/edgar/data/{row[15].lstrip('0')}/{row[13].replace('-', '')}/{row[13]}-index.html",
+            } if row[11] else None),
             "has_unreviewed": bool(row[14]),
             "next_earnings": None,
             "fundamentals": fundamentals.get(row[0], {}),
-            **(
-                {"suppressed_reasons": stale_reasons[row[0]]}
-                if row[0] in stale_reasons
-                else {}
-            ),
+            **({"suppressed_reasons": stale_reasons[row[0]]} if row[0] in stale_reasons else {}),
             "updates": updates.get(row[0], []),
         }
         for row in rows
@@ -252,19 +227,13 @@ def update_watchlist_item(
             )
             row = cur.fetchone()
             if row is None:
-                raise HTTPException(
-                    status_code=404, detail="Company is not in your watchlist"
-                )
+                raise HTTPException(status_code=404, detail="Company is not in your watchlist")
             if body.mark_reviewed:
                 cur.execute(
                     "insert into app.watchlist_review (user_id, company_id) values (%s, %s)",
                     (user_id, company_id),
                 )
-    return {
-        "company_id": company_id,
-        "note": row[0],
-        "reviewed_at": str(row[1]) if row[1] else None,
-    }
+    return {"company_id": company_id, "note": row[0], "reviewed_at": str(row[1]) if row[1] else None}
 
 
 @router.post("", status_code=201)

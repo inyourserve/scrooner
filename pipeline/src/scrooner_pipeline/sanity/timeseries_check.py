@@ -35,7 +35,6 @@ from decimal import Decimal
 import psycopg
 import structlog
 
-from scrooner_pipeline.common.config import settings
 from scrooner_pipeline.db.connection import run_write_with_reconnect
 from scrooner_pipeline.yfinance_financials.line_item_map import CONCEPT_FOR_COMPARISON
 
@@ -290,77 +289,30 @@ def run_concept(
     return stats
 
 
-CONCEPT_ATTEMPTS = 3
-
-
 def run_all(conn: psycopg.Connection, company_id: int | None = None) -> dict:
-    """Run every concept's check, surviving a dropped database connection.
-
-    Found 2026-10-20 (the first sanity run that ran with nothing else attached):
-    a pooler socket drop during one concept's write (`SSL SYSCALL: Connection
-    timed out`) was handled by run_write_with_reconnect, which finishes THAT write
-    on a fresh connection, but the caller's connection stayed dead, so the next
-    concept's first query raised "the connection is closed" and the whole
-    full-population step crashed with five of seven concepts unchecked. Each
-    concept is a self-contained load plus delete-then-insert, so it is safe to
-    repeat: this loop replaces a dead connection before each concept and retries a
-    concept whose connection drops mid-way. Connections opened here are closed
-    here; the caller's connection is never closed.
-    """
     totals = {
         "considered": 0,
         SEVERITY_OK: 0,
         SEVERITY_OUTLIER: 0,
         SEVERITY_SIGN_VIOLATION: 0,
     }
-    owned: list[psycopg.Connection] = []
-
-    def _reconnect(reason: str) -> psycopg.Connection:
-        logger.warning("timeseries_check.reconnect", reason=reason)
-        fresh = psycopg.connect(settings.database_url)
-        owned.append(fresh)
-        return fresh
-
-    try:
-        for (
+    for (
+        concept_name,
+        min_ratio,
+        max_ratio,
+        materiality_floor,
+        never_negative,
+    ) in CONCEPTS_TO_CHECK:
+        stats = run_concept(
+            conn,
             concept_name,
             min_ratio,
             max_ratio,
             materiality_floor,
             never_negative,
-        ) in CONCEPTS_TO_CHECK:
-            for attempt in range(1, CONCEPT_ATTEMPTS + 1):
-                if conn.closed:
-                    conn = _reconnect(f"connection closed before {concept_name}")
-                try:
-                    stats = run_concept(
-                        conn,
-                        concept_name,
-                        min_ratio,
-                        max_ratio,
-                        materiality_floor,
-                        never_negative,
-                        company_id,
-                    )
-                    break
-                except psycopg.OperationalError as exc:
-                    logger.warning(
-                        "timeseries_check.concept_retry",
-                        concept=concept_name,
-                        attempt=attempt,
-                        of=CONCEPT_ATTEMPTS,
-                        error=str(exc)[:200],
-                    )
-                    if attempt == CONCEPT_ATTEMPTS:
-                        raise
-                    conn = _reconnect(f"{concept_name} failed: {type(exc).__name__}")
-            for key in totals:
-                totals[key] += stats.get(key, 0)
-    finally:
-        for extra in owned:
-            try:
-                extra.close()
-            except Exception:
-                pass
+            company_id,
+        )
+        for key in totals:
+            totals[key] += stats.get(key, 0)
     logger.info("timeseries_check.all_done", company_id=company_id, **totals)
     return totals

@@ -187,7 +187,6 @@ BANK_SUPPRESSED_STATEMENT_LINES: dict[str, str] = {
     "Current Liabilities": NOT_APPLICABLE_TO_BANKS,
 }
 
-
 def metric_suppression_reason(metric_name: str, is_bank: bool) -> str | None:
     """The reason to show instead of a value, or None (not suppressed). A
     non-bank is never suppressed, whatever the metric."""

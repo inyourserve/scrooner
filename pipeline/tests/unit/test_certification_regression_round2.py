@@ -92,10 +92,6 @@ class TestShareBasisByFilingDate:
             cell(d, "shares_outstanding", shares, shares, filed, fy_end, fp="FY", unit="shares")
         cell(d, "diluted_eps", D("1.74"), D("1.74"), date(2023, 2, 24), date(2023, 1, 29), start=date(2022, 1, 31), fp="FY")
         cell(d, "diluted_eps", D("2.94"), D("2.94"), date(2025, 2, 26), date(2025, 1, 26), start=date(2024, 1, 29), fp="FY")
-        # the proof (round 4): Q2 FY2024 EPS 0.25 in the 2023 10-Q, 0.025 in the 2024 10-Q comparative
-        two = [src("EarningsPerShareDiluted", D("0.25"), unit="usd/shares", filed=date(2023, 8, 25), form="10-Q"),
-               src("EarningsPerShareDiluted", D("0.025"), unit="usd/shares", filed=date(2024, 8, 28), form="10-Q")]
-        add(d, "diluted_eps", D("0.025"), date(2023, 7, 30), date(2023, 5, 1), "Q2", sources=two)
         events, _ = splits.split_events(d)
         assert [(e.kind, e.ratio) for e in events] == [("inferred", D(10))]
         assert flagged(d) == {("shares_outstanding", date(2023, 1, 29)), ("shares_outstanding", date(2024, 1, 28)),

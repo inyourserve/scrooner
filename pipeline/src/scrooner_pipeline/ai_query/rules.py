@@ -390,9 +390,9 @@ def _parse_clause(
         m = VALUE_RE.match(value_phrase)
         if not m:
             return None, None, clause, None
-        metric_value = _parse_value(m.group(1), m.group(2), bool(m.group(3)))
+        value = _parse_value(m.group(1), m.group(2), bool(m.group(3)))
         return (
-            MetricPredicate(metric_name=metric_name, operator=op, value=metric_value),
+            MetricPredicate(metric_name=metric_name, operator=op, value=value),
             None,
             None,
             None,

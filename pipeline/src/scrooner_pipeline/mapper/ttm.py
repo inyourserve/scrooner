@@ -27,12 +27,17 @@ completeness discipline as Stage 3d's per-role check, not "sum whatever's
 available."
 """
 
-from datetime import timedelta
+from datetime import date, timedelta
 from decimal import Decimal
 
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.derivation_policy import (
+    PER_SHARE_CANONICAL_CONCEPTS,
+    PER_SHARE_NOT_DERIVED_REASON,
+    q4_per_share_reason,
+)
 from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
@@ -196,19 +201,32 @@ class FactsByPeriod(dict):
     period_end), plus `durations`: every duration fact for the concept,
     including the unlabeled 6-/9-month year-to-date spans the dict can't
     key. _ttm_sum's YTD fallback reads `durations`; any plain dict (other
-    modules' own loaders) simply has no fallback."""
+    modules' own loaders) simply has no fallback.
+
+    `per_share` marks a per-share concept (EPS, DPS): it never gets the YTD
+    route (YTD + prior FY - prior YTD is a subtraction of per-share values,
+    which is never valid), and `derived_keys` lists its periods whose value
+    comes from a derived core.fact (treated as not filed)."""
 
     durations: list[tuple]  # (start, end, value, fact_ids, source_concept_id)
+    per_share: bool = False
+    derived_keys: frozenset = frozenset()
 
 
 def _load_company_facts(
-    conn: psycopg.Connection, company_id: int, concept_id: int
+    conn: psycopg.Connection,
+    company_id: int,
+    concept_id: int,
+    *,
+    per_share: bool = False,
 ) -> FactsByPeriod:
     with conn.cursor() as cur:
         cur.execute(
             """
             select p.fiscal_year, p.fiscal_period, cf.value, cf.source_fact_ids, p.start_date, p.end_date,
-                   (select f.concept_id from core.fact f where f.id = cf.source_fact_ids[1]) as source_concept_id
+                   (select f.concept_id from core.fact f where f.id = cf.source_fact_ids[1]) as source_concept_id,
+                   exists (select 1 from core.fact f
+                           where f.id = any(cf.source_fact_ids) and f.is_derived) as any_derived
             from analytics.canonical_fact cf
             join core.period p on p.id = cf.period_id
             where cf.company_id = %s and cf.canonical_concept_id = %s
@@ -218,28 +236,125 @@ def _load_company_facts(
         rows = cur.fetchall()
     out = FactsByPeriod(
         ((fy, fp), (val, fids, start, end))
-        for fy, fp, val, fids, start, end, _src in rows
+        for fy, fp, val, fids, start, end, _src, _d in rows
         if fp is not None
     )
-    out.durations = [
-        (start, end, val, fids, src)
-        for _fy, _fp, val, fids, start, end, src in rows
-        if (end - start).days >= YTD_MIN_SPAN_DAYS
-    ]
+    out.per_share = per_share
+    if per_share:
+        out.durations = []  # no YTD route for per-share values
+        out.derived_keys = frozenset(
+            (fy, fp) for fy, fp, *_rest, derived in rows if fp is not None and derived
+        )
+    else:
+        out.durations = [
+            (start, end, val, fids, src)
+            for _fy, _fp, val, fids, start, end, src, _d in rows
+            if (end - start).days >= YTD_MIN_SPAN_DAYS
+        ]
     return out
+
+
+def _load_q4_periods(
+    conn: psycopg.Connection, company_id: int
+) -> dict[int, tuple[date, date]]:
+    """fiscal_year -> (start, end) of the company's Q4 period, for the
+    per-share growth rows whose Q4 input is not filed (no canonical row to
+    take dates from). Only a fiscal year with exactly one Q4 period."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select fiscal_year, start_date, end_date from core.period
+            where company_id = %s and period_type = 'duration' and fiscal_period = 'Q4'
+            """,
+            (company_id,),
+        )
+        rows = cur.fetchall()
+    by_year: dict[int, list[tuple[date, date]]] = {}
+    for fy, start, end in rows:
+        by_year.setdefault(fy, []).append((start, end))
+    return {fy: spans[0] for fy, spans in by_year.items() if len(spans) == 1}
+
+
+def _per_share_growth_reason(
+    by_period: dict, key: tuple[int, str], prior_key: tuple[int, str]
+) -> str | None:
+    """The input's own cause when either side of a per-share growth
+    comparison is a derived value, or is a Q4 that is not filed while the
+    same fiscal year's FY is (passed through instead of a generic
+    missing:prior_period). For a Q4 of a fiscal year ending before
+    2021-08-09 the 10-K had to file it (Item 302(a)), so the reason says
+    "not captured yet", not "not filed separately"."""
+    if not getattr(by_period, "per_share", False):
+        return None
+    derived: frozenset = getattr(by_period, "derived_keys", frozenset())
+    for k in (key, prior_key):
+        fy_hit = by_period.get((k[0], "FY"))
+        if k in derived:
+            if k[1] == "Q4":
+                return q4_per_share_reason(by_period[k][3])
+            return PER_SHARE_NOT_DERIVED_REASON
+        if k[1] == "Q4" and k not in by_period and fy_hit is not None:
+            # NA-1 split by fiscal-year end (Item 302(a), 2021-08-09).
+            return q4_per_share_reason(fy_hit[3])
+    return None
 
 
 def _compute_growth_for_company(
     conn: psycopg.Connection, company_id: int, metric_ids: dict[str, int]
 ) -> dict:
     rows: list[dict] = []
+    q4_periods: dict | None = None
     for metric_name, (concept_name, lag_years) in GROWTH_METRICS.items():
         concept_id = _load_concept_id(conn, concept_name)
-        by_period = _load_company_facts(conn, company_id, concept_id)
+        per_share = concept_name in PER_SHARE_CANONICAL_CONCEPTS
+        by_period = _load_company_facts(
+            conn, company_id, concept_id, per_share=per_share
+        )
         materiality_floor = CONCEPT_MATERIALITY_FLOORS.get(concept_name, Decimal("0"))
+        if per_share:
+            # A Q4 whose per-share value is not filed has no canonical row,
+            # so without this it would have no growth row at all (a blank
+            # with no reason). Give it one, carrying the input's cause.
+            if q4_periods is None:
+                q4_periods = _load_q4_periods(conn, company_id)
+            taken_spans = {(v[2], v[3]) for v in by_period.values()}
+            for fy in sorted({k[0] for k in by_period if k[1] == "FY"}):
+                if (fy, "Q4") in by_period or fy not in q4_periods:
+                    continue
+                q4_start, q4_end = q4_periods[fy]
+                if (q4_start, q4_end) in taken_spans:
+                    continue  # mislabelled twin already keys this span
+                taken_spans.add((q4_start, q4_end))
+                rows.append(
+                    {
+                        "company_id": company_id,
+                        "metric_definition_id": metric_ids[metric_name],
+                        "period_start": q4_start,
+                        "period_end": q4_end,
+                        "period_label": "Q4",
+                        "value": None,
+                        "is_null_reason": q4_per_share_reason(q4_end),
+                        "source_fact_ids": None,
+                    }
+                )
         for (fy, fp), (value_t, fids_t, start_t, end_t) in by_period.items():
             prior_key = (fy - lag_years, fp)
             prior = by_period.get(prior_key)
+            per_share_reason = _per_share_growth_reason(by_period, (fy, fp), prior_key)
+            if per_share_reason is not None:
+                rows.append(
+                    {
+                        "company_id": company_id,
+                        "metric_definition_id": metric_ids[metric_name],
+                        "period_start": start_t,
+                        "period_end": end_t,
+                        "period_label": fp,
+                        "value": None,
+                        "is_null_reason": per_share_reason,
+                        "source_fact_ids": None,
+                    }
+                )
+                continue
             if prior is None:
                 rows.append(
                     {
@@ -469,6 +584,8 @@ def _ttm_sum(
     else:
         return total, fact_ids
 
+    if getattr(by_period, "per_share", False):
+        return None, []  # never YTD + prior FY - prior YTD for per-share values
     durations = getattr(by_period, "durations", None)
     anchor = by_period.get((fiscal_year, fiscal_period))
     if durations and anchor is not None:
@@ -705,11 +822,10 @@ def _compute_ttm_returns_for_company(
 
     rows: list[dict] = []
     for fy, fp in sorted(quarter_keys):
-        anchor_row = by_concept["operating_income"].get((fy, fp)) or by_concept[
-            "net_income"
-        ].get((fy, fp))
-        assert anchor_row is not None  # (fy, fp) came from one of these two maps
-        end_date = anchor_row[3]
+        end_date = (
+            by_concept["operating_income"].get((fy, fp))
+            or by_concept["net_income"].get((fy, fp))
+        )[3]
         start_date = end_date  # TTM window end; period_start intentionally same as end for a "TTM as of" marker
 
         # ROIC (TTM)
@@ -722,13 +838,10 @@ def _compute_ttm_returns_for_company(
         equity_hit = instant_by_end_date["stockholders_equity"].get(end_date)
         cash_hit = instant_by_end_date["cash_and_equivalents"].get(end_date)
 
-        if (
-            ttm_op_income is None
-            or ttm_tax_num is None
-            or ttm_tax_denom is None
-            or debt_hit is None
-            or equity_hit is None
-            or cash_hit is None
+        if None in (ttm_op_income, ttm_tax_num, ttm_tax_denom) or None in (
+            debt_hit,
+            equity_hit,
+            cash_hit,
         ):
             missing = []
             if ttm_op_income is None:

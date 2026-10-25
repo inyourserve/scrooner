@@ -142,14 +142,7 @@ fi
 # so python only ever received the code up to that comment -- it connected,
 # never ran the query, exited 0, and this script reported "no companies" on
 # every scheduled run from 2026-09-19 until 2026-09-27.
-# The 10-K/10-Q cohort uses its own, shorter window (2026-10-23). The 10-day window reselected
-# every company that filed in the last 10 days on every night, so each company was deduped and
-# re-derived up to ten times; in earnings season that is 300+ companies a night, and dedupe,
-# derive-interim-quarters and derive-q4 each hit their 30-minute caps (OBSERVED 2026-10-23, 327
-# companies). The backlog branch below still catches any filing a failed night skipped, and the
-# Form 15 check keeps the full LOOKBACK_DAYS window.
-FILER_LOOKBACK_DAYS="${FILER_LOOKBACK_DAYS:-4}"
-CIKS=$(LOOKBACK_DAYS="$FILER_LOOKBACK_DAYS" uv run python3 - <<'PY'
+CIKS=$(LOOKBACK_DAYS="$LOOKBACK_DAYS" uv run python3 - <<'PY'
 import os
 import psycopg
 from scrooner_pipeline.common.config import settings
@@ -214,7 +207,7 @@ if [ -z "$CIKS" ]; then
 fi
 
 N=$(echo "$CIKS" | tr ',' '\n' | wc -l | tr -d ' ')
-echo "reprocess_recent_filers: ${N} companies (filed in the last ${FILER_LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
+echo "reprocess_recent_filers: ${N} companies (filed in the last ${LOOKBACK_DAYS} days, or latest 10-K/10-Q not yet normalized)"
 
 SHARDS="${REPROCESS_SHARDS:-4}"
 echo "reprocess_recent_filers: running each stage across up to ${SHARDS} parallel shards"

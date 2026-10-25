@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0111** (0098-0109 claimed 2026-10-22 below; 0110 claimed 2026-10-25 by scrooner-25; 0098-0100 written on main, none of 0101-0110 written on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0100** (0100-0102 reserved by Dhairya on 2026-10-22 for the Data Engineer and the Standardization Lead, who record their own rows; 0103 is claimed by the Period Engineer; 0103 cannot be committed before 0100-0102 exist). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -51,19 +51,11 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0096 | data-engineer (top-1000 B0a) | `company_data_point_coverage.has_value_any_period` (old ever-filled figure kept) | written and committed, NOT applied (apply after scrooner-82's D2) |
 | 0097 | data-engineer (top-1000 P1) | `analytics.certification_finding` + `analytics.company_certification` (certification suite output) | written and committed, NOT applied |
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | committed (`e7c1b25`) |
-| 0098 | Period Engineer | per-share `gap_cause` CHECK + `analytics.canonical_fact_retired` | written, schema-only, NOT applied: branch work/period-engineer/migrations-0098-0099 (file byte-identical to held/ru1-per-share 91c6171; the RU-1 code stays held) |
-| 0099 | Period Engineer | split tables `split_event` + `filing_share_basis` (SB-1, empty) | written, schema-only, NOT applied: branch work/period-engineer/migrations-0098-0099 |
-| 0100 | Data Engineer (lane 1) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | written on branch work/data-engineer/lane1-reason-store, NOT applied (needs 0098/0099 on the merge target for check_migrations contiguity) |
-| 0101 | Data Engineer | minimal definition registry (`metric_definition_active` view + one-active-per-name unique index) | claimed, not written/not applied |
-| 0102 | Data Engineer | thin `cell_state` table with run id | claimed, not written/not applied |
-| 0103 | Period Engineer | `core.derived_fact_input` | claimed, not written/not applied |
-| 0104 | (unassigned) | `company_group` + `metric_template` (after design review) | claimed, not written/not applied |
-| 0105 | (unassigned) | output_versioning | claimed, not written/not applied |
-| 0106 | (unassigned) | `slot_observation` (optional) | claimed, not written/not applied |
-| 0107 | Data Engineer (lane 2) | `expanded_ttm_rows_cleanup` | claimed, written on a lane 2 branch, NOT applied |
-| 0108 | Data Engineer (lane 3) | ADS tables (first of two; renumbered from an earlier claim) | claimed, not written/not applied |
-| 0109 | Data Engineer (lane 3) | ADS tables (second of two) | claimed, not written/not applied |
-| 0110 | scrooner-25 (core engine, lane A) | `analytics.company_slot_record` (THE company-wise mapper table: slot composition per company per taxonomy era, evidence level, approver != preparer, supersedes chain; design: data-team/strategy/EXCEPTION-RULE-REGISTER-DESIGN-2026-10-24.md) | claimed 2026-10-25 after Verifier gate PASS on BS totals V3; written on branch work/scrooner-25/slot-records, NOT applied (needs 0101-0109 on the merge target for contiguity) |
+| 0098 | period-engineer (WO-2 RU-1, claimed 2026-10-22) | `period_gap` gap_cause CHECK + `per_share_not_filed_separately`; `analytics.canonical_fact_retired` archive table | file written, NOT committed, NOT applied (Release Manager commits after the dry-run and Verifier sample) |
+| 0099 | period-engineer (WO-2 item 6 split basis, claimed 2026-10-22) | `analytics.split_event`, `analytics.filing_share_basis` | claimed only; file not written yet (build after RU-1) |
+| 0103 | period-engineer (claimed 2026-10-22, Dhairya ruling) | `core.derived_fact_input` (derived-fact input lineage) | claimed only; file not written yet |
+
+**Lane F note (period-engineer, 2026-10-22):** for RU-1 I edited `sanity/period_completeness.py` (lane F, scrooner-2b): new cause `per_share_not_filed_separately` (`data_limit`) for per-share base concepts whose Q4 has a filed FY but no filed 3-month fact, or whose Q2/Q3 has only YTD. Uncommitted; scrooner-2b please review before the Release Manager commit. The classification for every other concept is unchanged.
 
 ## scrooner-98 queue (lane A)
 

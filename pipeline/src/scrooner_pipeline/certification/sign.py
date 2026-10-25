@@ -68,22 +68,16 @@ def check(data: CompanyData) -> list[Finding]:
     for cell in data.cells:
         sources = data.source_facts(cell)
         derived = [s for s in sources if s.derived]
-        # A CALCULATED cell (two or more input facts, e.g. opex = gross profit - operating
-        # income) cannot legitimately come out negative on a concept that is an amount of
-        # expense or an asset: the negative is another line (LMT: other income +62M shown
-        # as opex -62M). A single filed fact can (an insurer's revenue after losses).
-        calculated = len({s.id for s in sources if not s.derived}) >= 2
         if cell.base in NONNEGATIVE_CONCEPTS and cell.value < 0:
             findings.append(
                 finding(
                     data,
                     "I3",
-                    WRONG_VALUE if derived or calculated else REVIEW,
+                    WRONG_VALUE if derived else REVIEW,
                     "negative_on_nonnegative_concept",
                     cell,
                     other=None,
                     derived_source=bool(derived),
-                    calculated_from_inputs=calculated,
                     tags=sorted({s.tag for s in sources}),
                     forms=sorted({s.form or "?" for s in sources}),
                     policy="quarantine, never flip",

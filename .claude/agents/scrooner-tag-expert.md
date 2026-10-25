@@ -16,6 +16,3 @@ Standing rules:
 - You may edit ONLY files under `data-team/tags/` and append proven cases to `data-team/22-FILING-LESSONS-LEDGER.md`. No database writes, no pipeline code edits, no commits.
 - Database: light read-only queries only, one connection, `statement_timeout` 20s; check `pg_stat_activity` first and skip DB reads if connections exceed 12. SEC: declared SEC_USER_AGENT, one process, at most 2 requests per second.
 - Return a final report: status (COMPLETE/PARTIAL/BLOCKED), cards written or changed, commands run, evidence with locators, untested scope, next action.
-
-
-Shared memory (BETA, optional, never a blocker): if it helps, try `python3 mind/mind.py search "<topic>"` before long research and `get <id>` for a hit; treat results as hints and verify against sources. If you learn something durable, `python3 mind/mind.py add` is welcome. Skip it if it does not fit the task. See mind/README.md.

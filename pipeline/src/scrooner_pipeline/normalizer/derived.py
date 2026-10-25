@@ -35,14 +35,31 @@ day-04 learnings entry already flagged for the Collector. Fixed by
 batching, not by retrying harder.
 """
 
+import re
 from datetime import timedelta
 
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.derivation_policy import (
+    PER_SHARE_NOT_DERIVED_REASON,
+    PERIODIC_FORMS_DOMESTIC,
+)
 from scrooner_pipeline.common.errors import log_error, safe_rollback
 
 logger = structlog.get_logger()
+
+# Periodic-form gate (2026-10-22, WO-2 RU-1): every INPUT to a derived quarter
+# (FY, Q1-Q3, 6M/9M YTD) must come from a 10-K/10-Q-family filing. A proxy
+# (DEF 14A) or 8-K fact can be authoritative when it is the only copy, and
+# it fed wrong derivations: JPM Q4 2025 net income 12,977M from the proxy's
+# rounded 57.0B (core.fact 182608846; the 10-K gives 13,025M) and WTRG Q4
+# from American Water's statements furnished in an 8-K. See
+# common/derivation_policy.py. Reported-Q4 lookups that only BLOCK
+# derivation (_load_reported_duration_keys) are deliberately not gated: a
+# non-periodic copy there leaves the cell for the authority gate (WO-1.4)
+# instead of creating a second authoritative value beside it.
+DERIVATION_INPUT_FORMS = sorted(PERIODIC_FORMS_DOMESTIC)
 
 # Same day-length bands periods.py itself uses to classify a duration
 # span (see that module's own comment) -- reused here, not
@@ -71,6 +88,60 @@ Q4_MIN_DAYS, Q4_MAX_DAYS = 80, 100
 # 2026-10-17 by the founder for this concept family only. EPS and other
 # non-additive tags are deliberately unchanged.
 AVERAGE_TAG_PATTERN = "WeightedAverage%"
+
+
+# Per-share values and ratios are NEVER derived (2026-10-21, fix register
+# item 12). FY - 9M (or FY - Q1 - Q2 - Q3) is only valid for additive flows;
+# EPS and dividends per share divide by a different weighted share count (or
+# a different declared-dividend basis) in every window, so the difference is
+# not the quarter's value. FILING-CHECKED failures of the old behaviour:
+# MSFT Q4 FY26 diluted EPS derived 4.80 vs 4.81 filed (core.fact 341935,
+# 8-K 0001193125-26-323632 Ex. 99.1); AAPL Q4 FY25 1.84 vs 1.85 (8-K
+# 0000320193-25-000077 Ex. 99.1); KLAC Q4 -22.61 (split-basis mix); V
+# quarterly dividend on the full-year context giving Q4 DPS -1.18; negative
+# derived DPS at AGNT (0001104659-26-019145 R6) and LEA.
+#
+# The guard is structural and tag-independent first: any unit that is a
+# ratio (contains '/', e.g. usd/shares, usd/bbl, cad/usd) or 'pure' is not a
+# flow. Belt and braces, a per-share tag name blocks derivation even if the
+# filer used a monetary unit. A filed value (FY EPS from the 10-K, a
+# discrete Q4 from a 10-K quarterly table) is a normal reported fact and is
+# untouched; the derived cell simply stays empty, and consumers must show it
+# as unavailable with NON_ADDITIVE_UNAVAILABLE_REASON.
+#
+# This stage only STOPS producing such rows. Rows derived before this change
+# are deliberately not retired here: retirement is a shared-table write that
+# needs its own reviewed dry-run (data-team rule), not a side effect of the
+# nightly reprocess.
+NON_ADDITIVE_UNAVAILABLE_REASON = PER_SHARE_NOT_DERIVED_REASON
+PER_SHARE_TAG_REGEX = (
+    r"Per(Basic|Diluted|BasicAndDiluted)?Share|PerOutstanding[A-Za-z]*Unit|PerUnit"
+)
+_PER_SHARE_TAG = re.compile(PER_SHARE_TAG_REGEX)
+
+
+def is_ratio_unit(unit_name: str) -> bool:
+    """True for a unit that is a ratio of two measures (per share, per unit,
+    per barrel, an exchange rate) or dimensionless ('pure'). Unit names are
+    case-folded in core.unit (units.canonicalize_unit)."""
+    name = unit_name.strip().lower()
+    return "/" in name or name == "pure"
+
+
+def is_per_share_tag(tag: str) -> bool:
+    return bool(_PER_SHARE_TAG.search(tag))
+
+
+def _load_non_additive(conn: psycopg.Connection) -> tuple[set[int], set[int]]:
+    """(ratio unit ids, per-share concept ids). Global lookups, not per company."""
+    with conn.cursor() as cur:
+        cur.execute("select id, unit_name from core.unit")
+        unit_ids = {uid for uid, name in cur.fetchall() if is_ratio_unit(name)}
+        cur.execute(
+            "select id from core.concept where tag ~ %s", (PER_SHARE_TAG_REGEX,)
+        )
+        concept_ids = {row[0] for row in cur.fetchall()}
+    return unit_ids, concept_ids
 
 
 def _load_average_concept_ids(conn: psycopg.Connection) -> set[int]:
@@ -132,22 +203,52 @@ def _retire_derived(
     return len(params)
 
 
+QUARTERLY_CANDIDATES_SQL = """
+    select f.id, f.concept_id, f.unit_id, f.value, f.filing_id, f.raw_object_id,
+           p.fiscal_year, p.fiscal_period, p.start_date, p.end_date
+    from core.fact f
+    join core.period p on p.id = f.period_id
+    join core.filing fl on fl.id = f.filing_id
+    where f.company_id = %(company_id)s
+      and f.is_authoritative
+      and fl.form = any(%(forms)s)
+      and p.period_type = 'duration'
+      and p.fiscal_period in ('FY', 'Q1', 'Q2', 'Q3')
+"""
+
+NINE_MONTH_YTD_SQL = """
+    select f.concept_id, f.unit_id, p.start_date, p.end_date, f.value
+    from core.fact f
+    join core.period p on p.id = f.period_id
+    join core.filing fl on fl.id = f.filing_id
+    where f.company_id = %(company_id)s
+      and f.is_authoritative
+      and fl.form = any(%(forms)s)
+      and p.period_type = 'duration'
+      and p.fiscal_period is null
+      and (p.end_date - p.start_date) between %(min_days)s and %(max_days)s
+"""
+
+ALL_DURATION_FACTS_SQL = """
+    select f.id, f.concept_id, f.unit_id, f.value, f.filing_id, f.raw_object_id,
+           p.fiscal_year, p.fiscal_period, p.start_date, p.end_date
+    from core.fact f
+    join core.period p on p.id = f.period_id
+    join core.filing fl on fl.id = f.filing_id
+    where f.company_id = %(company_id)s
+      and f.is_authoritative
+      and fl.form = any(%(forms)s)
+      and p.period_type = 'duration'
+"""
+
+
 def _load_quarterly_candidates(
     conn: psycopg.Connection, company_id: int
 ) -> list[tuple]:
     with conn.cursor() as cur:
         cur.execute(
-            """
-            select f.id, f.concept_id, f.unit_id, f.value, f.filing_id, f.raw_object_id,
-                   p.fiscal_year, p.fiscal_period, p.start_date, p.end_date
-            from core.fact f
-            join core.period p on p.id = f.period_id
-            where f.company_id = %s
-              and f.is_authoritative
-              and p.period_type = 'duration'
-              and p.fiscal_period in ('FY', 'Q1', 'Q2', 'Q3')
-            """,
-            (company_id,),
+            QUARTERLY_CANDIDATES_SQL,
+            {"company_id": company_id, "forms": DERIVATION_INPUT_FORMS},
         )
         return cur.fetchall()
 
@@ -161,17 +262,13 @@ def _load_nine_month_ytd(
     quarter; periods.py correctly leaves it unlabeled (it isn't a quarter)."""
     with conn.cursor() as cur:
         cur.execute(
-            """
-            select f.concept_id, f.unit_id, p.start_date, p.end_date, f.value
-            from core.fact f
-            join core.period p on p.id = f.period_id
-            where f.company_id = %s
-              and f.is_authoritative
-              and p.period_type = 'duration'
-              and p.fiscal_period is null
-              and (p.end_date - p.start_date) between %s and %s
-            """,
-            (company_id, THREE_QUARTER_MIN_DAYS, THREE_QUARTER_MAX_DAYS),
+            NINE_MONTH_YTD_SQL,
+            {
+                "company_id": company_id,
+                "forms": DERIVATION_INPUT_FORMS,
+                "min_days": THREE_QUARTER_MIN_DAYS,
+                "max_days": THREE_QUARTER_MAX_DAYS,
+            },
         )
         out: dict[tuple, list] = {}
         for concept_id, unit_id, start, end, value in cur.fetchall():
@@ -274,8 +371,13 @@ def _mistagged_full_year_q4(
 
 
 def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
+    # A company with a very large fact history needs more than the pooler's 2-min
+    # default for its duration scans (CIK 0000707179 timed out every night).
+    with conn.cursor() as cur:
+        cur.execute("set local statement_timeout = '30min'")
     rows = _load_quarterly_candidates(conn, company_id)
     average_ids = _load_average_concept_ids(conn)
+    ratio_unit_ids, per_share_concept_ids = _load_non_additive(conn)
     groups: dict[tuple, dict] = {}
     for (
         fact_id,
@@ -311,6 +413,8 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
         "already_reported": 0,
         "replaced_full_year_q4": 0,
         "incomplete": 0,
+        "non_additive_not_derived": 0,
+        "demoted_full_year_q4_not_replaced": 0,
     }
     new_periods: list[
         tuple
@@ -353,11 +457,27 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             if ytd:
                 chain = _q4_from_nine_month_ytd(fy, ytd)
                 via_ytd = chain is not None
+
+        if unit_id in ratio_unit_ids or concept_id in per_share_concept_ids:
+            # Never derived (see NON_ADDITIVE_UNAVAILABLE_REASON). A filed
+            # "Q4" carrying the full-year value is still demoted, as before,
+            # but nothing replaces it: the cell becomes unavailable.
+            stats["non_additive_not_derived"] += 1
+            if chain is not None and fy is not None:
+                cell_key = (concept_id, unit_id, chain[0], chain[1])
+                if cell_key in reported_keys:
+                    bad = _mistagged_full_year_q4(
+                        reported_q4.get(cell_key, []), fy["value"], chain[2]
+                    )
+                    if bad:
+                        demote_fact_ids.extend(bad)
+                        stats["demoted_full_year_q4_not_replaced"] += 1
+            continue
+
         if chain is None:
             stats["incomplete"] += 1
             continue
 
-        assert fy is not None  # every chain construction above requires fy
         q4_start, q4_end, first_three_quarters = chain
 
         q4_value = _q4_value(
@@ -371,10 +491,10 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             retire_keys.append((concept_id, unit_id, q4_start, q4_end))
             continue
 
-        q4_key = (concept_id, unit_id, q4_start, q4_end)
-        if q4_key in reported_keys:
+        key = (concept_id, unit_id, q4_start, q4_end)
+        if key in reported_keys:
             bad = _mistagged_full_year_q4(
-                reported_q4.get(q4_key, []), fy["value"], first_three_quarters
+                reported_q4.get(key, []), fy["value"], first_three_quarters
             )
             if not bad:
                 stats["already_reported"] += 1
@@ -481,6 +601,8 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
         "derived_from_ytd": 0,
         "already_reported": 0,
         "incomplete": 0,
+        "non_additive_not_derived": 0,
+        "demoted_full_year_q4_not_replaced": 0,
     }
     for cik in sorted(ciks):
         totals["considered"] += 1
@@ -489,10 +611,6 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
-            # A company with a very large fact history needs more than the pooler's
-            # 2-min default for its duration scans (CIK 0000707179 timed out nightly).
-            with conn.cursor() as cur:
-                cur.execute("set local statement_timeout = '30min'")
             stats = derive_q4_for_company(conn, company_id)
         except Exception as exc:
             totals["errored"] += 1
@@ -506,6 +624,8 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
             "derived_from_ytd",
             "already_reported",
             "incomplete",
+            "non_additive_not_derived",
+            "demoted_full_year_q4_not_replaced",
         ):
             totals[k] += stats[k]
 
@@ -538,16 +658,8 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
 def _load_all_duration_facts(conn: psycopg.Connection, company_id: int) -> list[tuple]:
     with conn.cursor() as cur:
         cur.execute(
-            """
-            select f.id, f.concept_id, f.unit_id, f.value, f.filing_id, f.raw_object_id,
-                   p.fiscal_year, p.fiscal_period, p.start_date, p.end_date
-            from core.fact f
-            join core.period p on p.id = f.period_id
-            where f.company_id = %s
-              and f.is_authoritative
-              and p.period_type = 'duration'
-            """,
-            (company_id,),
+            ALL_DURATION_FACTS_SQL,
+            {"company_id": company_id, "forms": DERIVATION_INPUT_FORMS},
         )
         return cur.fetchall()
 
@@ -557,6 +669,7 @@ def derive_interim_quarters_for_company(
 ) -> dict:
     rows = _load_all_duration_facts(conn, company_id)
     average_ids = _load_average_concept_ids(conn)
+    ratio_unit_ids, per_share_concept_ids = _load_non_additive(conn)
     groups: dict[tuple, dict] = {}
     for (
         fact_id,
@@ -622,6 +735,7 @@ def derive_interim_quarters_for_company(
         "q3_derived": 0,
         "already_reported": 0,
         "incomplete_or_inconsistent": 0,
+        "non_additive_not_derived": 0,
     }
     new_periods: dict[
         tuple, dict
@@ -630,6 +744,10 @@ def derive_interim_quarters_for_company(
     retire_keys: list[tuple] = []
 
     for (concept_id, unit_id, fiscal_year), by_span in groups.items():
+        if unit_id in ratio_unit_ids or concept_id in per_share_concept_ids:
+            # H1 EPS - Q1 EPS is not Q2 EPS (see NON_ADDITIVE_UNAVAILABLE_REASON).
+            stats["non_additive_not_derived"] += 1
+            continue
         q1, half, three_q = (
             by_span.get("Q1"),
             by_span.get("HALF"),
@@ -800,6 +918,7 @@ def derive_interim_quarters(conn: psycopg.Connection, ciks: set[str]) -> dict:
         "q3_derived": 0,
         "already_reported": 0,
         "incomplete_or_inconsistent": 0,
+        "non_additive_not_derived": 0,
     }
     for cik in sorted(ciks):
         totals["considered"] += 1
@@ -829,6 +948,7 @@ def derive_interim_quarters(conn: psycopg.Connection, ciks: set[str]) -> dict:
             "q3_derived",
             "already_reported",
             "incomplete_or_inconsistent",
+            "non_additive_not_derived",
         ):
             totals[k] += stats[k]
 

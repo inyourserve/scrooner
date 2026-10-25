@@ -28,7 +28,6 @@ refactor be verified purely against the existing unit-test suite while
 the production database was unreachable.
 """
 
-from collections.abc import Callable
 from decimal import Decimal
 
 from scrooner_pipeline.mapper.calculate_shapes import (
@@ -44,7 +43,7 @@ from scrooner_pipeline.mapper.calculate_shapes.materiality import (
     materiality_floor_violation,
 )
 
-SHAPE_REGISTRY: dict[str, Callable[..., tuple[Decimal | None, str | None]]] = {
+SHAPE_REGISTRY: dict[str, callable] = {
     "ratio": ratio.compute,
     "sum_diff": sum_diff.compute,
     "sum_diff_ratio": sum_diff_ratio.compute,

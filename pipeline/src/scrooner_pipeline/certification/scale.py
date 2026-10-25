@@ -423,9 +423,7 @@ def _statement_role(data: CompanyData) -> list[Finding]:
             # history: 5x away from the median of ALL the other years (JNJ FY2023 R&D 483M
             # sits between two wrong years, so its nearest neighbours cannot judge it)
             far = [abs(n.value) for j, n in enumerate(years) if j != i and n.value != 0]
-            if len(far) >= ROLE_MIN_NEIGHBOURS and _ratio_off(
-                c.value, Decimal(str(median(far)))
-            ):
+            if len(far) >= ROLE_MIN_NEIGHBOURS and _ratio_off(c.value, Decimal(str(median(far)))):
                 signals.append("history")
             if c.period_id in intensity:
                 others = [

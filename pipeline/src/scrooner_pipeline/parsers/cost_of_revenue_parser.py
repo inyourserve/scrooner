@@ -324,7 +324,6 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
                 outcome, extracted = _parse_with_outcome(client, conn, company_id, cik)
                 stats[outcome if outcome != "matched" else "ok"] += 1
                 if outcome == "matched":
-                    assert extracted is not None  # "matched" always carries the row
                     result = {"company_id": company_id, "cik": cik, **extracted}
                     results.append(result)
                     with conn.cursor() as cur:

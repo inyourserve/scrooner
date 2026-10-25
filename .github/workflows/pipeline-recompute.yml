@@ -56,9 +56,6 @@ on:
       tag_library:
         description: "Rebuild the SEC tag library, lineage and gap leads at the end (yes/no); only the last of split dispatches needs it"
         default: "yes"
-      rules:
-        description: "Value-changing rules for THIS dispatch only, e.g. 'on:source.periodic_form_only@1 dry_run:ttm.age_guard@1' (empty = every rule off). Validated against common/rule_flags.RULES; list them with `python -m scrooner_pipeline.common.rule_flags --list`"
-        default: ""
 
 permissions:
   contents: read
@@ -108,14 +105,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
-      - name: Resolve rule flags
-        env:
-          RULES_INPUT: ${{ inputs.rules }}
-        run: |
-          # Validates the dispatch text (a typo fails here, before any stage runs) and
-          # exports SCROONER_RULES_ENABLED / SCROONER_RULES_DRYRUN to the later steps of
-          # this job only. The scheduled workflows never set them.
-          uv run --project pipeline python -m scrooner_pipeline.common.rule_flags --dispatch "$RULES_INPUT" >> "$GITHUB_ENV"
       - name: Select this shard's companies
         env:
           SHARD: ${{ matrix.shard }}
@@ -170,14 +159,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
-      - name: Resolve rule flags
-        env:
-          RULES_INPUT: ${{ inputs.rules }}
-        run: |
-          # Validates the dispatch text (a typo fails here, before any stage runs) and
-          # exports SCROONER_RULES_ENABLED / SCROONER_RULES_DRYRUN to the later steps of
-          # this job only. The scheduled workflows never set them.
-          uv run --project pipeline python -m scrooner_pipeline.common.rule_flags --dispatch "$RULES_INPUT" >> "$GITHUB_ENV"
       - name: Population-wide stages
         # Called directly, not via the CLI: each is one set-based statement over
         # the whole population and outlives the pooler's 2-minute server-side
@@ -237,14 +218,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
-      - name: Resolve rule flags
-        env:
-          RULES_INPUT: ${{ inputs.rules }}
-        run: |
-          # Validates the dispatch text (a typo fails here, before any stage runs) and
-          # exports SCROONER_RULES_ENABLED / SCROONER_RULES_DRYRUN to the later steps of
-          # this job only. The scheduled workflows never set them.
-          uv run --project pipeline python -m scrooner_pipeline.common.rule_flags --dispatch "$RULES_INPUT" >> "$GITHUB_ENV"
       - name: Select this shard's companies
         env:
           SHARD: ${{ matrix.shard }}
@@ -295,14 +268,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
-      - name: Resolve rule flags
-        env:
-          RULES_INPUT: ${{ inputs.rules }}
-        run: |
-          # Validates the dispatch text (a typo fails here, before any stage runs) and
-          # exports SCROONER_RULES_ENABLED / SCROONER_RULES_DRYRUN to the later steps of
-          # this job only. The scheduled workflows never set them.
-          uv run --project pipeline python -m scrooner_pipeline.common.rule_flags --dispatch "$RULES_INPUT" >> "$GITHUB_ENV"
       - run: uv run --project pipeline scrooner-screen build-snapshot
 
   tag-library:
@@ -321,14 +286,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
-      - name: Resolve rule flags
-        env:
-          RULES_INPUT: ${{ inputs.rules }}
-        run: |
-          # Validates the dispatch text (a typo fails here, before any stage runs) and
-          # exports SCROONER_RULES_ENABLED / SCROONER_RULES_DRYRUN to the later steps of
-          # this job only. The scheduled workflows never set them.
-          uv run --project pipeline python -m scrooner_pipeline.common.rule_flags --dispatch "$RULES_INPUT" >> "$GITHUB_ENV"
       # The truth layer must reflect what this recompute just changed.
       # company_tags only moves when phase 1 touched core.fact, but the
       # full rebuild is cheap enough here to keep it simple and exact.

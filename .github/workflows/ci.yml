@@ -9,13 +9,7 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  # Cancel superseded runs on branches and pull requests, but let runs on main
-  # FINISH (2026-10-21). Several sessions push to main every minute or two; with
-  # cancel-in-progress on main the Python tests job was cancelled before finishing
-  # on nearly every push, so main almost never had a completed CI result. On main
-  # GitHub now runs one at a time and keeps only the newest pending run, so every
-  # few minutes a full run completes on the then-latest commit.
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: true
 
 jobs:
   python:
@@ -112,12 +106,7 @@ jobs:
       - name: Exercise backup and restore round trip
         env:
           SCROONER_ALLOW_EPHEMERAL_RESTORE: "1"
-        run: |
-          # pg_dump / pg_restore come from the same postgres image as the service
-          # (see scripts/ci/pgbin/pg_dump); the runner's own client tools drifted newer
-          # than the server and wrote a setting the server rejects.
-          export PATH="$PWD/scripts/ci/pgbin:$PATH"
-          bash scripts/verify_backup_restore.sh
+        run: bash scripts/verify_backup_restore.sh
       - name: Check local documentation links
         run: python scripts/check_docs.py
       - name: Check common secret patterns

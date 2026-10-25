@@ -562,9 +562,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "RetainedEarningsAccumulatedDeficit",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "exact, signed. Equals total equity in 27 of 10,560 "
+        "PROPOSED, unapproved. " + _W1_EV + "exact, signed. Equals total equity in 27 of 10,560 "
         "company-periods, so never an alias. OPEN: unit policy (CAD/EUR seen) -- do not convert "
         "or cross-compare non-USD without an approved FX/currency policy; full-population "
         "coexistence and dimension check pending.",
@@ -575,9 +573,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "WeightedAverageNumberOfSharesOutstandingBasic",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "exact. Duration weighted average, not point-in-time "
+        "PROPOSED, unapproved. " + _W1_EV + "exact. Duration weighted average, not point-in-time "
         "shares. OPEN: derived rows must be positive and flagged derived (4*FY-(Q1+Q2+Q3) "
         "approximation, section 3 of 2026-10-17 learning); post-recompute non-positive check pending.",
     ),
@@ -587,9 +583,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "WeightedAverageNumberOfDilutedSharesOutstanding",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "exact. Same open conditions as basic; also feeds the "
+        "PROPOSED, unapproved. " + _W1_EV + "exact. Same open conditions as basic; also feeds the "
         "price_metrics.py share-count fallback (positive authoritative only).",
     ),
     (
@@ -598,9 +592,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "OperatingLeaseRightOfUseAsset",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "OPEN: finance-lease ROU separation unreviewed; "
+        "PROPOSED, unapproved. " + _W1_EV + "OPEN: finance-lease ROU separation unreviewed; "
         "counterexample companies 1550, 1312, 683, 1108 need Verifier filing review.",
     ),
     (
@@ -609,9 +601,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "OperatingLeaseLiability",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "current+noncurrent equals this total within 0.5% in "
+        "PROPOSED, unapproved. " + _W1_EV + "current+noncurrent equals this total within 0.5% in "
         "97.7% of 2,708 company-periods; counterexamples companies 1550, 1312, 683 (and 1108 "
         "flagged) unresolved. Sum fallback belongs in operating_lease_liability_total_resolved, "
         "not a mapping row.",
@@ -622,9 +612,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "OperatingLeaseLiabilityCurrent",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "component of total; counterexamples as for the total.",
+        "PROPOSED, unapproved. " + _W1_EV + "component of total; counterexamples as for the total.",
     ),
     (
         "operating_lease_liability_noncurrent",
@@ -632,9 +620,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "OperatingLeaseLiabilityNoncurrent",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "component of total; counterexamples as for the total.",
+        "PROPOSED, unapproved. " + _W1_EV + "component of total; counterexamples as for the total.",
     ),
     (
         "interest_paid_cash",
@@ -642,9 +628,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "InterestPaidNet",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "net-of-capitalized variant preferred. Cash paid is "
+        "PROPOSED, unapproved. " + _W1_EV + "net-of-capitalized variant preferred. Cash paid is "
         "not expense. OPEN: whether Net and gross variants differ in perimeter (capitalized "
         "interest) enough to forbid first_match across them -- coexistence pending.",
     ),
@@ -654,9 +638,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "InterestPaid",
         2,
         "provisional",
-        "PROPOSED alternate, unapproved. "
-        + _W1_EV
-        + "used only where the Net variant is absent "
+        "PROPOSED alternate, unapproved. " + _W1_EV + "used only where the Net variant is absent "
         "for the same period; coexistence agreement not yet measured on the population.",
     ),
     (
@@ -665,9 +647,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "IncomeTaxesPaidNet",
         1,
         "provisional",
-        "PROPOSED, unapproved. "
-        + _W1_EV
-        + "signed (refunds exceeding payments give negative). "
+        "PROPOSED, unapproved. " + _W1_EV + "signed (refunds exceeding payments give negative). "
         "Cash paid is not expense (off by >2x in 2,288 of 6,173 pairs).",
     ),
     (
@@ -676,9 +656,7 @@ WAVE1_CONCEPT_MAPPINGS: list[tuple[str, str, str, int, str, str]] = [
         "IncomeTaxesPaid",
         2,
         "provisional",
-        "PROPOSED alternate, unapproved. "
-        + _W1_EV
-        + "used only where the Net variant is absent "
+        "PROPOSED alternate, unapproved. " + _W1_EV + "used only where the Net variant is absent "
         "for the same period; coexistence agreement not yet measured on the population.",
     ),
 ]

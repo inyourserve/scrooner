@@ -302,9 +302,7 @@ def _pair_basis(
 ) -> str | None:
     if fy.accessions & ytd.accessions:
         return "same_accession"
-    verdict = _overlap_verdict(
-        fy.accessions, ytd.accessions, context, tol, exclude_spans
-    )
+    verdict = _overlap_verdict(fy.accessions, ytd.accessions, context, tol, exclude_spans)
     if verdict is False:
         return None
     if verdict is True:
@@ -341,12 +339,7 @@ def _span(f: Fact) -> int:
 
 
 def _ytd9_source(
-    facts: list[Fact],
-    fy_start: date,
-    fy_end: date,
-    q4_min: int,
-    q4_max: int,
-    tol: Tolerance,
+    facts: list[Fact], fy_start: date, fy_end: date, q4_min: int, q4_max: int, tol: Tolerance
 ) -> _Source | None:
     cand = [
         f
@@ -362,20 +355,13 @@ def _ytd9_source(
         return None
     ends = {f.end_date for f in cand}
     if len(ends) != 1:
-        return _Source(
-            "ytd9", FORMULA_YTD9, [], [], min(ends), "ytd9_multiple_end_dates"
-        )
+        return _Source("ytd9", FORMULA_YTD9, [], [], min(ends), "ytd9_multiple_end_dates")
     cl = _clusters(cand, tol)
     return _Source("ytd9", FORMULA_YTD9, cl, [cl], next(iter(ends)))
 
 
 def _chain_source(
-    facts: list[Fact],
-    fy_start: date,
-    fy_end: date,
-    q4_min: int,
-    q4_max: int,
-    tol: Tolerance,
+    facts: list[Fact], fy_start: date, fy_end: date, q4_min: int, q4_max: int, tol: Tolerance
 ) -> _Source | None:
     by_q: dict[str, list[Fact]] = {"Q1": [], "Q2": [], "Q3": []}
     for f in facts:
@@ -394,9 +380,7 @@ def _chain_source(
     for q in ("Q1", "Q2", "Q3"):
         span_set = {(f.start_date, f.end_date) for f in by_q[q]}
         if len(span_set) != 1:
-            return _Source(
-                "chain", FORMULA_CHAIN, [], [], fy_end, f"{q}_multiple_spans"
-            )
+            return _Source("chain", FORMULA_CHAIN, [], [], fy_end, f"{q}_multiple_spans")
         s, e = next(iter(span_set))
         assert s is not None
         spans.append((s, e))
@@ -411,9 +395,7 @@ def _chain_source(
         return _Source("chain", FORMULA_CHAIN, [], series, e3, "chain_not_contiguous")
     if any(len(s) != 1 for s in series):
         # Per-quarter restatement chains are not paired here (documented limit).
-        return _Source(
-            "chain", FORMULA_CHAIN, [], series, e3, "chain_member_has_multiple_values"
-        )
+        return _Source("chain", FORMULA_CHAIN, [], series, e3, "chain_member_has_multiple_values")
     members = [s[0] for s in series]
     composite_facts = [m.rep for m in members]
     composite = _Cluster(
@@ -480,15 +462,7 @@ def _result_for_source(
     for i, fyc in enumerate(fy_clusters):
         for j, yc in enumerate(src.clusters):
             basis = _pair_basis(
-                fyc,
-                i,
-                len(fy_clusters),
-                yc,
-                j,
-                len(src.clusters),
-                context,
-                tol,
-                exclude_spans,
+                fyc, i, len(fy_clusters), yc, j, len(src.clusters), context, tol, exclude_spans
             )
             if basis:
                 pairs.append(_Pair(fyc, i, yc, j, basis))
@@ -564,15 +538,12 @@ def evaluate_cell(
     durations = [f for f in raw if f.start_date is not None]
     if raw and not durations:
         return block(BLOCKED_NON_ADDITIVE, "instant_facts_only")
-    cand.direct_q4_fact_ids = sorted(
-        f.fact_id for f in durations if f.fiscal_period == "Q4"
-    )
+    cand.direct_q4_fact_ids = sorted(f.fact_id for f in durations if f.fiscal_period == "Q4")
 
     fy_facts = [
         f
         for f in durations
-        if f.fiscal_period == "FY"
-        and FULL_YEAR_MIN_DAYS <= _span(f) <= FULL_YEAR_MAX_DAYS
+        if f.fiscal_period == "FY" and FULL_YEAR_MIN_DAYS <= _span(f) <= FULL_YEAR_MAX_DAYS
     ]
     if not fy_facts:
         return block(BLOCKED_NO_FY, "no_full_year_fact")
@@ -602,9 +573,7 @@ def evaluate_cell(
         if any(_has_sign_conflict(ser, tol) for ser in s.series):
             return block(BLOCKED_SIGN, f"{s.kind}_copies_differ_only_by_sign")
 
-    exclude_spans: set[tuple[date | None, date]] = {
-        (f.start_date, f.end_date) for f in durations
-    }
+    exclude_spans: set[tuple[date | None, date]] = {(f.start_date, f.end_date) for f in durations}
     ctx = [*context_facts, *durations]
     results = []
     reasons = []
@@ -702,13 +671,9 @@ def _fy_groups(facts: list[Fact]) -> dict[date, list[Fact]]:
         if (
             f.fiscal_period == "FY"
             and f.start_date is not None
-            and FULL_YEAR_MIN_DAYS
-            <= (f.end_date - f.start_date).days
-            <= FULL_YEAR_MAX_DAYS
+            and FULL_YEAR_MIN_DAYS <= (f.end_date - f.start_date).days <= FULL_YEAR_MAX_DAYS
         ):
-            fy_by_start[f.start_date] = max(
-                fy_by_start.get(f.start_date, f.end_date), f.end_date
-            )
+            fy_by_start[f.start_date] = max(fy_by_start.get(f.start_date, f.end_date), f.end_date)
     groups: dict[date, list[Fact]] = {s: [] for s in fy_by_start}
     for f in facts:
         if f.start_date is None:
@@ -766,12 +731,7 @@ def load_candidates(
         for (cid, concept, unit), facts in sorted(by_key.items()):
             if concept not in additive:
                 yield evaluate_cell(
-                    [],
-                    company_id=cid,
-                    concept_id=concept,
-                    additive=False,
-                    tol=tol,
-                    unit=unit,
+                    [], company_id=cid, concept_id=concept, additive=False, tol=tol, unit=unit
                 )
                 continue
             for _start, group in sorted(_fy_groups(facts).items()):

@@ -311,8 +311,10 @@ def compute_window_summary(
             return None
         return r["shares"] * r["price_per_share"]
 
-    buy_values = [(r, v) for r in buys if (v := _priced_value(r)) is not None]
-    sell_values = [(r, v) for r in sells if (v := _priced_value(r)) is not None]
+    buy_values = [(r, _priced_value(r)) for r in buys]
+    buy_values = [(r, v) for r, v in buy_values if v is not None]
+    sell_values = [(r, _priced_value(r)) for r in sells]
+    sell_values = [(r, v) for r, v in sell_values if v is not None]
 
     buy_dollar_volume = sum((v for _r, v in buy_values), Decimal(0))
     sell_dollar_volume = sum((v for _r, v in sell_values), Decimal(0))

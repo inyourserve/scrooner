@@ -14,7 +14,6 @@ fiscal quarter-end, so the join below uses a tolerance window
 picks the CLOSEST core.period within that window, not just any period
 inside it."""
 
-from datetime import date
 from decimal import Decimal
 
 import psycopg
@@ -92,7 +91,7 @@ def _load_mapping(conn: psycopg.Connection) -> dict[tuple[str, str], dict]:
 
 def _load_our_periods(
     conn: psycopg.Connection, company_id: int
-) -> list[tuple[int, date, str]]:
+) -> list[tuple[int, object, str]]:
     """QUARTERLY periods only -- matches yfinance's own `quarterly_*`
     statements' granularity (fetch.py fetches quarterly, not annual).
     Real bug found live 2026-09-08: a company's Q4 and FY periods can
@@ -144,8 +143,8 @@ _PERIOD_TYPE_FOR_STATEMENT: dict[str, str] = {
 
 
 def _closest_period(
-    periods: list[tuple[int, date, str]], target_end: date, period_type: str
-) -> tuple[int, date] | None:
+    periods: list[tuple[int, object, str]], target_end: object, period_type: str
+) -> tuple[int, object] | None:
     from datetime import timedelta
 
     candidates = [

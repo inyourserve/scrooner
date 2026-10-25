@@ -230,6 +230,9 @@ export interface StatementPeriod {
 export interface StatementLineRow {
   label: string;
   values: (string | null)[];
+  // Set by apps/backend for a bank's suppressed row (every value is null):
+  // the stated reason the row is not shown, e.g. "not applicable to banks".
+  suppressed_reason?: string;
 }
 
 export interface Statement {

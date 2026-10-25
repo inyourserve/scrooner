@@ -1,18 +1,11 @@
 name: SEC Tag Library rebuild
 
-# Manual, plus a weekly Sunday 23:00Z run since 2026-10-23 (founder direction 2026-09-27 was manual only): companies file the same tags
+# Manual only (founder direction 2026-09-27): companies file the same tags
 # period after period, so the library is built once and rebuilt only after
 # WE change a concept_mapping or resolver -- that is what changes which tag
 # backs our values. Full rebuild aggregates all of core.fact (~1h).
 on:
   workflow_dispatch:
-  # Weekly, Sunday 23:00Z, inside the quiet window. Added 2026-10-23 as daily, changed to weekly
-  # 2026-10-24: the first scheduled run took 2 h 55 min and was cut off by the 05:09Z compute
-  # restart (OBSERVED, run 40048907814), so a daily run would hold the shared heavy-db-jobs
-  # queue for about 3 hours every day. The nightly reprocess already refreshes the per-company
-  # tag stages for recent filers.
-  schedule:
-    - cron: "0 23 * * 0"
 
 permissions:
   contents: read

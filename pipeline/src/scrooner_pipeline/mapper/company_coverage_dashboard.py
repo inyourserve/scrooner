@@ -142,7 +142,7 @@ def summarize_company(conn: psycopg.Connection, company_id: int) -> dict:
         rows = cur.fetchall()
 
     items = []
-    counts: defaultdict[str, int] = defaultdict(int)
+    counts = defaultdict(int)
     for name, dp_type, applicable_population, has_value, gap_reason in rows:
         if has_value:
             status_label = "present"
