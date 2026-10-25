@@ -42,9 +42,16 @@ with gzip.open(sys.argv[3], "rt") as f:
 
 out = open(sys.argv[4], "w")
 summary = []
+ARC_WEIGHT = {}  # (adsh, child) -> weight in the statement role (VMI: deferred taxes carry -1)
+
+
 def load_cal(adsh):
     """The boundary filing's statement-role calc arcs (shared loader: _cal.xml -> .xsd -> MetaLinks)."""
     era, arcs = common.load_cal(cal_dir, adsh)
+    for (role, parent), kids in arcs.items():
+        if b.BS_ROLE_RX.search(role) and not b.NOTE_ROLE_RX.search(role):
+            for c, w, _cu in kids:
+                ARC_WEIGHT.setdefault((adsh, c), w)
     return era, common.statement_children(arcs, b.BS_ROLE_RX) if arcs else {}
 
 
@@ -131,6 +138,7 @@ for cik, era_list in sorted(eras.items()):
                     {"tag": t, "custom": by_tag.get(t, {}).get("custom", False),
                      "label": by_tag.get(t, {}).get("label", ""),
                      "cal_confirmed": t in cal_liab, "rule": "face_sum",
+                     "weight": ARC_WEIGHT.get((adsh, t), "1.0"),
                      "dedup": dedup_kind, "tax_covered": t in tax_covered}
                     for t in roots
                 ]

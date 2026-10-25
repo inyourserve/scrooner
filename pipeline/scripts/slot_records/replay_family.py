@@ -64,6 +64,8 @@ for cik in sorted(records):
         if rec.get("section"):
             tags.add(rec["section"]["total"])
             tags.update(r["tag"] for r in rec["section"]["roots"])
+        tags.update(("NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",
+                     "NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations"))
     cur.execute(
         """
         select p.start_date::text, p.end_date::text, cf.value::numeric
@@ -155,7 +157,11 @@ for cik in sorted(records):
         # if the filer tagged the cash-flow SECTION TOTAL for the same
         # (start, end) in the same accession; anything else is a note or a
         # derived figure and never a slot value.
-        face_column = bool(sec) and sec["total"] in day
+        # either spelling of the section total counts (Verifier V3: ContinuingOperations
+        # in the record's cal, plain NetCashProvidedByUsedIn... on many filings)
+        TOTAL_FAMILY = {"d_and_a": ("NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations"),
+                        "capex": ("NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations")}[family]
+        face_column = bool(sec) and any(t in day for t in TOTAL_FAMILY + (sec["total"],))
         if not day:
             verdict = "no_facts_this_period"
         elif not face_column:

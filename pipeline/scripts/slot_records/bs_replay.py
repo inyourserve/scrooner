@@ -222,7 +222,10 @@ def identity(rec, day, liab):
         [mezz_total_only] if mezz_total_only is not None else [])
     gaps = [rhs - (liab + m + e) for m in mezz_readings for e in cands]
     gap = min(gaps, key=abs)
-    return gap, rounding_unit(day)
+    # footing tolerance (Verifier batch 6: HRL, CAH): a face that foots in the
+    # filer's rounding unit can be off by one unit per summed line pair
+    n_terms = sum(1 for m in rec["total_liabilities_members"] if day.get(m["tag"]) is not None) + 3
+    return gap, rounding_unit(day) * max(2, n_terms // 2)
 
 
 def alt_readings(rec, day, liab):
@@ -231,10 +234,25 @@ def alt_readings(rec, day, liab):
     them covers (TMUS, ALB: the filer's cal omits the total-to-components arc).
     Capitalization-format filers print long-term debt before current
     liabilities, so B is wrong for them and A is right: the identity decides."""
+    readings = [liab]
     covered = [m for m in rec["total_liabilities_members"] if m.get("tax_covered") and day.get(m["tag"]) is not None]
-    if not covered:
-        return [liab]
-    return [liab, liab - sum(day[m["tag"]] for m in covered)]
+    if covered:
+        readings.append(liab - sum(day[m["tag"]] * Decimal(m.get("weight", "1.0")) for m in covered))
+    # reading C (Verifier batch 6, DTE x13): a member whose value equals the
+    # sum of the members printed immediately before it since the previous
+    # subtotal is a printed parent; its children are not summed beside it.
+    mem = [m for m in rec["total_liabilities_members"] if day.get(m["tag"]) is not None]
+    vals = [day[m["tag"]] * Decimal(m.get("weight", "1.0")) for m in mem]
+    drop = Decimal(0)
+    run_start = 0
+    for i in range(1, len(vals)):
+        run = vals[run_start:i]
+        if len(run) >= 2 and abs(sum(run) - vals[i]) <= rounding_unit(day):
+            drop += sum(run)
+            run_start = i + 1
+    if drop:
+        readings.append(liab - drop)
+    return readings
 
 
 def best_reading(rec, day, liab):
@@ -266,7 +284,7 @@ def liab_value(rec, day):
     for m in members:
         v = day.get(m["tag"])
         if v is not None:
-            tot += v
+            tot += v * Decimal(m.get("weight", "1.0"))  # the filer's own arc weight (VMI -1 deferred taxes)
         elif m.get("custom"):
             miss_custom.append(m["tag"])
         else:
