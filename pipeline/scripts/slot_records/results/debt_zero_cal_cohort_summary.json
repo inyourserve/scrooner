@@ -1,0 +1,4187 @@
+{
+ "summary": {
+  "hold_no_note_total": 15284,
+  "note_tie_published": 9423,
+  "member_value_missing": 853,
+  "hold_note_gap": 8245,
+  "needs_instance_reader": 3958,
+  "no_debt_line": 203
+ },
+ "per_company": {
+  "0000001800": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 11,
+   "member_value_missing": 1
+  },
+  "0000002488": {
+   "hold_no_note_total": 19,
+   "note_tie_published": 22,
+   "hold_note_gap": 3
+  },
+  "0000002969": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 2,
+   "hold_note_gap": 9,
+   "member_value_missing": 1
+  },
+  "0000003453": {
+   "hold_note_gap": 44,
+   "needs_instance_reader": 2
+  },
+  "0000003570": {
+   "note_tie_published": 46
+  },
+  "0000004127": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 5,
+   "note_tie_published": 16
+  },
+  "0000004281": {
+   "hold_no_note_total": 7,
+   "hold_note_gap": 25,
+   "member_value_missing": 2,
+   "note_tie_published": 12
+  },
+  "0000004457": {
+   "note_tie_published": 17,
+   "hold_note_gap": 29
+  },
+  "0000004962": {
+   "note_tie_published": 46
+  },
+  "0000004977": {
+   "note_tie_published": 46
+  },
+  "0000005272": {
+   "hold_no_note_total": 2,
+   "note_tie_published": 28,
+   "member_value_missing": 1
+  },
+  "0000005513": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 10
+  },
+  "0000006201": {
+   "hold_note_gap": 36,
+   "hold_no_note_total": 9,
+   "member_value_missing": 1
+  },
+  "0000006281": {
+   "hold_no_note_total": 34,
+   "hold_note_gap": 6
+  },
+  "0000006951": {
+   "hold_no_note_total": 28,
+   "hold_note_gap": 4,
+   "note_tie_published": 15
+  },
+  "0000007084": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 11,
+   "hold_note_gap": 1
+  },
+  "0000007431": {
+   "hold_no_note_total": 45,
+   "member_value_missing": 1
+  },
+  "0000007536": {
+   "hold_no_note_total": 45
+  },
+  "0000007789": {
+   "note_tie_published": 27,
+   "needs_instance_reader": 5,
+   "hold_note_gap": 9,
+   "member_value_missing": 5
+  },
+  "0000008670": {
+   "hold_no_note_total": 44,
+   "needs_instance_reader": 1,
+   "member_value_missing": 1
+  },
+  "0000008818": {
+   "hold_no_note_total": 40,
+   "hold_note_gap": 7
+  },
+  "0000008858": {
+   "hold_note_gap": 34,
+   "note_tie_published": 11,
+   "member_value_missing": 1
+  },
+  "0000009389": {
+   "needs_instance_reader": 5,
+   "hold_note_gap": 22,
+   "note_tie_published": 1,
+   "hold_no_note_total": 18
+  },
+  "0000010456": {
+   "hold_no_note_total": 20,
+   "hold_note_gap": 3,
+   "member_value_missing": 2,
+   "needs_instance_reader": 21
+  },
+  "0000010795": {
+   "hold_no_note_total": 46
+  },
+  "0000011544": {},
+  "0000012208": {
+   "hold_note_gap": 29,
+   "note_tie_published": 1,
+   "hold_no_note_total": 16
+  },
+  "0000012659": {
+   "hold_note_gap": 10,
+   "hold_no_note_total": 5,
+   "member_value_missing": 6,
+   "note_tie_published": 25
+  },
+  "0000012927": {
+   "hold_no_note_total": 15,
+   "note_tie_published": 12,
+   "hold_note_gap": 19
+  },
+  "0000014272": {
+   "hold_no_note_total": 15,
+   "hold_note_gap": 28,
+   "note_tie_published": 3
+  },
+  "0000014693": {
+   "hold_no_note_total": 2,
+   "note_tie_published": 44
+  },
+  "0000015615": {
+   "hold_no_note_total": 46
+  },
+  "0000016058": {
+   "note_tie_published": 45,
+   "no_debt_line": 1
+  },
+  "0000016732": {
+   "hold_note_gap": 45
+  },
+  "0000016875": {},
+  "0000016918": {
+   "hold_note_gap": 11,
+   "note_tie_published": 35
+  },
+  "0000017843": {
+   "note_tie_published": 24,
+   "hold_note_gap": 6,
+   "hold_no_note_total": 16
+  },
+  "0000018230": {
+   "needs_instance_reader": 5,
+   "member_value_missing": 6
+  },
+  "0000019584": {
+   "note_tie_published": 19,
+   "member_value_missing": 9,
+   "hold_no_note_total": 18
+  },
+  "0000019617": {
+   "hold_no_note_total": 46
+  },
+  "0000020212": {
+   "hold_no_note_total": 26,
+   "needs_instance_reader": 17,
+   "hold_note_gap": 3
+  },
+  "0000020286": {
+   "hold_note_gap": 46
+  },
+  "0000021076": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 10
+  },
+  "0000021175": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 11
+  },
+  "0000021344": {
+   "needs_instance_reader": 14,
+   "note_tie_published": 22,
+   "hold_no_note_total": 8
+  },
+  "0000021665": {
+   "hold_no_note_total": 40,
+   "hold_note_gap": 6
+  },
+  "0000022356": {
+   "hold_no_note_total": 46
+  },
+  "0000022444": {
+   "hold_note_gap": 32,
+   "needs_instance_reader": 14
+  },
+  "0000023217": {
+   "hold_note_gap": 46,
+   "member_value_missing": 1
+  },
+  "0000024545": {
+   "hold_note_gap": 39,
+   "note_tie_published": 3,
+   "hold_no_note_total": 3
+  },
+  "0000024741": {
+   "hold_no_note_total": 46
+  },
+  "0000026172": {
+   "hold_note_gap": 46
+  },
+  "0000026324": {
+   "hold_no_note_total": 2,
+   "hold_note_gap": 32,
+   "note_tie_published": 12
+  },
+  "0000027419": {
+   "needs_instance_reader": 2,
+   "hold_no_note_total": 34,
+   "hold_note_gap": 9
+  },
+  "0000027904": {
+   "hold_note_gap": 41,
+   "needs_instance_reader": 5
+  },
+  "0000028917": {
+   "hold_no_note_total": 25,
+   "member_value_missing": 7
+  },
+  "0000029534": {
+   "hold_note_gap": 15,
+   "hold_no_note_total": 16,
+   "note_tie_published": 9
+  },
+  "0000029644": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 12
+  },
+  "0000029905": {
+   "hold_no_note_total": 14,
+   "hold_note_gap": 14,
+   "note_tie_published": 18
+  },
+  "0000029989": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0000030625": {
+   "note_tie_published": 16,
+   "hold_note_gap": 30
+  },
+  "0000031462": {
+   "hold_note_gap": 17,
+   "needs_instance_reader": 29
+  },
+  "0000031791": {
+   "hold_no_note_total": 12,
+   "hold_note_gap": 16,
+   "note_tie_published": 4
+  },
+  "0000032604": {
+   "hold_no_note_total": 43,
+   "hold_note_gap": 3
+  },
+  "0000033185": {
+   "hold_note_gap": 22,
+   "hold_no_note_total": 24
+  },
+  "0000033213": {
+   "hold_note_gap": 30,
+   "note_tie_published": 3,
+   "hold_no_note_total": 13
+  },
+  "0000034903": {
+   "hold_no_note_total": 34,
+   "hold_note_gap": 11
+  },
+  "0000035527": {
+   "note_tie_published": 46
+  },
+  "0000036104": {
+   "note_tie_published": 35,
+   "hold_no_note_total": 11
+  },
+  "0000036270": {
+   "note_tie_published": 44,
+   "member_value_missing": 2
+  },
+  "0000036966": {
+   "hold_no_note_total": 45,
+   "member_value_missing": 1
+  },
+  "0000037808": {
+   "note_tie_published": 46
+  },
+  "0000037996": {
+   "needs_instance_reader": 13,
+   "member_value_missing": 2
+  },
+  "0000038777": {
+   "needs_instance_reader": 6,
+   "note_tie_published": 40,
+   "member_value_missing": 1
+  },
+  "0000039263": {
+   "hold_no_note_total": 46
+  },
+  "0000039911": {
+   "needs_instance_reader": 39
+  },
+  "0000040211": {
+   "needs_instance_reader": 46
+  },
+  "0000040533": {
+   "note_tie_published": 3,
+   "needs_instance_reader": 2,
+   "hold_note_gap": 38
+  },
+  "0000040545": {
+   "needs_instance_reader": 23,
+   "hold_note_gap": 23
+  },
+  "0000040704": {
+   "hold_no_note_total": 45,
+   "hold_note_gap": 1
+  },
+  "0000040729": {
+   "note_tie_published": 31,
+   "needs_instance_reader": 15
+  },
+  "0000040987": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 10,
+   "hold_note_gap": 2
+  },
+  "0000042888": {
+   "hold_no_note_total": 46
+  },
+  "0000045012": {
+   "hold_no_note_total": 39,
+   "note_tie_published": 1,
+   "hold_note_gap": 6
+  },
+  "0000046080": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 5,
+   "hold_note_gap": 5
+  },
+  "0000046619": {
+   "hold_note_gap": 41,
+   "hold_no_note_total": 1,
+   "note_tie_published": 4
+  },
+  "0000047111": {
+   "hold_note_gap": 43
+  },
+  "0000047217": {
+   "hold_note_gap": 43,
+   "note_tie_published": 3
+  },
+  "0000048465": {
+   "hold_no_note_total": 44,
+   "member_value_missing": 3
+  },
+  "0000048898": {
+   "hold_no_note_total": 31,
+   "note_tie_published": 5,
+   "hold_note_gap": 9
+  },
+  "0000049071": {
+   "hold_no_note_total": 43,
+   "hold_note_gap": 2
+  },
+  "0000049196": {
+   "note_tie_published": 45
+  },
+  "0000049600": {
+   "hold_no_note_total": 37,
+   "note_tie_published": 1,
+   "hold_note_gap": 8
+  },
+  "0000049826": {
+   "note_tie_published": 24,
+   "hold_note_gap": 4,
+   "hold_no_note_total": 18
+  },
+  "0000049938": {},
+  "0000050863": {
+   "hold_no_note_total": 25,
+   "hold_note_gap": 21
+  },
+  "0000051143": {
+   "hold_note_gap": 19,
+   "member_value_missing": 1,
+   "hold_no_note_total": 26
+  },
+  "0000051253": {
+   "hold_note_gap": 18,
+   "member_value_missing": 1,
+   "hold_no_note_total": 16,
+   "needs_instance_reader": 10,
+   "note_tie_published": 2
+  },
+  "0000051434": {
+   "hold_note_gap": 40,
+   "hold_no_note_total": 6
+  },
+  "0000052827": {
+   "hold_no_note_total": 28,
+   "note_tie_published": 2,
+   "hold_note_gap": 9,
+   "member_value_missing": 6
+  },
+  "0000052988": {
+   "hold_no_note_total": 31,
+   "member_value_missing": 1,
+   "needs_instance_reader": 9
+  },
+  "0000055785": {
+   "hold_no_note_total": 44,
+   "hold_note_gap": 2
+  },
+  "0000056047": {
+   "hold_no_note_total": 18,
+   "note_tie_published": 27,
+   "hold_note_gap": 1
+  },
+  "0000056873": {
+   "needs_instance_reader": 34,
+   "hold_note_gap": 9
+  },
+  "0000059478": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 11
+  },
+  "0000059527": {
+   "hold_no_note_total": 30,
+   "hold_note_gap": 5,
+   "note_tie_published": 10,
+   "member_value_missing": 1
+  },
+  "0000059558": {
+   "needs_instance_reader": 30,
+   "note_tie_published": 8
+  },
+  "0000060086": {
+   "hold_no_note_total": 37,
+   "hold_note_gap": 3,
+   "note_tie_published": 6
+  },
+  "0000060667": {
+   "hold_no_note_total": 39,
+   "hold_note_gap": 5
+  },
+  "0000062709": {
+   "note_tie_published": 7,
+   "hold_note_gap": 39
+  },
+  "0000062996": {
+   "hold_note_gap": 3,
+   "note_tie_published": 11,
+   "hold_no_note_total": 31,
+   "member_value_missing": 1
+  },
+  "0000063754": {
+   "hold_no_note_total": 3,
+   "note_tie_published": 43
+  },
+  "0000063908": {
+   "hold_no_note_total": 31,
+   "note_tie_published": 8,
+   "hold_note_gap": 4,
+   "member_value_missing": 1,
+   "needs_instance_reader": 2
+  },
+  "0000064040": {
+   "note_tie_published": 18,
+   "hold_no_note_total": 2,
+   "needs_instance_reader": 11,
+   "hold_note_gap": 14
+  },
+  "0000064803": {
+   "hold_no_note_total": 25,
+   "hold_note_gap": 17,
+   "member_value_missing": 3
+  },
+  "0000064996": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 9,
+   "note_tie_published": 1
+  },
+  "0000065984": {},
+  "0000066570": {
+   "hold_note_gap": 45,
+   "note_tie_published": 1
+  },
+  "0000066740": {
+   "hold_no_note_total": 14,
+   "hold_note_gap": 24,
+   "needs_instance_reader": 8
+  },
+  "0000067215": {
+   "note_tie_published": 17,
+   "hold_note_gap": 29
+  },
+  "0000067347": {
+   "hold_note_gap": 2,
+   "hold_no_note_total": 43,
+   "member_value_missing": 1
+  },
+  "0000067887": {
+   "hold_no_note_total": 42
+  },
+  "0000068505": {
+   "hold_no_note_total": 43
+  },
+  "0000070145": {
+   "needs_instance_reader": 46
+  },
+  "0000070318": {
+   "hold_note_gap": 44,
+   "hold_no_note_total": 2
+  },
+  "0000070858": {
+   "note_tie_published": 46
+  },
+  "0000071691": {
+   "hold_note_gap": 7,
+   "hold_no_note_total": 13
+  },
+  "0000072331": {
+   "hold_note_gap": 22,
+   "member_value_missing": 1,
+   "note_tie_published": 23
+  },
+  "0000072741": {},
+  "0000072903": {
+   "hold_no_note_total": 24,
+   "hold_note_gap": 21,
+   "needs_instance_reader": 1
+  },
+  "0000072971": {
+   "note_tie_published": 45
+  },
+  "0000073124": {
+   "hold_no_note_total": 38,
+   "needs_instance_reader": 8
+  },
+  "0000073309": {
+   "hold_no_note_total": 38,
+   "member_value_missing": 5,
+   "hold_note_gap": 1
+  },
+  "0000074208": {
+   "note_tie_published": 45
+  },
+  "0000074260": {
+   "note_tie_published": 46
+  },
+  "0000075362": {
+   "needs_instance_reader": 7
+  },
+  "0000075677": {
+   "hold_no_note_total": 27,
+   "note_tie_published": 1,
+   "hold_note_gap": 18
+  },
+  "0000076334": {
+   "hold_note_gap": 27,
+   "note_tie_published": 1,
+   "hold_no_note_total": 18
+  },
+  "0000077360": {
+   "note_tie_published": 44,
+   "hold_note_gap": 1
+  },
+  "0000077476": {
+   "hold_no_note_total": 23,
+   "hold_note_gap": 11
+  },
+  "0000078003": {
+   "hold_no_note_total": 37,
+   "note_tie_published": 8,
+   "hold_note_gap": 1
+  },
+  "0000078128": {
+   "hold_note_gap": 3,
+   "note_tie_published": 1,
+   "needs_instance_reader": 42
+  },
+  "0000079282": {
+   "note_tie_published": 46
+  },
+  "0000079879": {
+   "hold_note_gap": 45
+  },
+  "0000080420": {
+   "hold_note_gap": 4,
+   "note_tie_published": 27,
+   "hold_no_note_total": 15
+  },
+  "0000080424": {
+   "hold_no_note_total": 45,
+   "hold_note_gap": 1
+  },
+  "0000080661": {
+   "note_tie_published": 46
+  },
+  "0000082811": {
+   "note_tie_published": 39,
+   "hold_no_note_total": 6,
+   "hold_note_gap": 2
+  },
+  "0000084246": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 10,
+   "member_value_missing": 2
+  },
+  "0000084839": {
+   "hold_no_note_total": 23,
+   "hold_note_gap": 7
+  },
+  "0000085535": {
+   "hold_no_note_total": 38,
+   "note_tie_published": 2
+  },
+  "0000085961": {
+   "needs_instance_reader": 46
+  },
+  "0000086312": {
+   "note_tie_published": 46
+  },
+  "0000087347": {
+   "hold_no_note_total": 8,
+   "needs_instance_reader": 38
+  },
+  "0000088205": {
+   "hold_note_gap": 46
+  },
+  "0000088941": {
+   "hold_no_note_total": 46
+  },
+  "0000089089": {
+   "hold_note_gap": 46
+  },
+  "0000089439": {
+   "hold_no_note_total": 38,
+   "hold_note_gap": 8
+  },
+  "0000089800": {
+   "hold_no_note_total": 25,
+   "note_tie_published": 21
+  },
+  "0000091142": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 11,
+   "member_value_missing": 1
+  },
+  "0000091388": {
+   "hold_note_gap": 6,
+   "member_value_missing": 1,
+   "hold_no_note_total": 6
+  },
+  "0000091419": {
+   "note_tie_published": 37,
+   "hold_no_note_total": 9
+  },
+  "0000091440": {
+   "note_tie_published": 13,
+   "needs_instance_reader": 15,
+   "hold_no_note_total": 15
+  },
+  "0000091576": {
+   "hold_note_gap": 46
+  },
+  "0000092122": {},
+  "0000092230": {
+   "note_tie_published": 46
+  },
+  "0000092380": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 10
+  },
+  "0000093410": {
+   "hold_note_gap": 10,
+   "hold_no_note_total": 36
+  },
+  "0000093556": {
+   "note_tie_published": 37,
+   "hold_note_gap": 3,
+   "hold_no_note_total": 4
+  },
+  "0000093751": {
+   "note_tie_published": 7,
+   "hold_no_note_total": 31,
+   "needs_instance_reader": 8
+  },
+  "0000094845": {
+   "note_tie_published": 42,
+   "hold_note_gap": 3
+  },
+  "0000096021": {
+   "hold_note_gap": 23,
+   "hold_no_note_total": 21
+  },
+  "0000096223": {
+   "needs_instance_reader": 46
+  },
+  "0000096943": {
+   "hold_note_gap": 32,
+   "hold_no_note_total": 14
+  },
+  "0000097210": {
+   "hold_no_note_total": 39
+  },
+  "0000097216": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0000097476": {
+   "hold_no_note_total": 1,
+   "note_tie_published": 45
+  },
+  "0000097745": {
+   "note_tie_published": 18,
+   "member_value_missing": 1,
+   "hold_note_gap": 27
+  },
+  "0000098362": {
+   "note_tie_published": 27,
+   "hold_no_note_total": 1,
+   "hold_note_gap": 18
+  },
+  "0000100493": {
+   "note_tie_published": 46
+  },
+  "0000100517": {
+   "needs_instance_reader": 20,
+   "hold_no_note_total": 26
+  },
+  "0000100885": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0000101382": {
+   "note_tie_published": 43,
+   "member_value_missing": 3
+  },
+  "0000101829": {
+   "hold_note_gap": 11,
+   "hold_no_note_total": 35
+  },
+  "0000102729": {
+   "hold_no_note_total": 30,
+   "hold_note_gap": 12,
+   "member_value_missing": 4
+  },
+  "0000103379": {
+   "hold_note_gap": 12,
+   "hold_no_note_total": 34
+  },
+  "0000104169": {
+   "note_tie_published": 17,
+   "hold_note_gap": 30
+  },
+  "0000105016": {
+   "hold_no_note_total": 22,
+   "member_value_missing": 1,
+   "needs_instance_reader": 23
+  },
+  "0000105634": {
+   "needs_instance_reader": 28,
+   "hold_note_gap": 9,
+   "hold_no_note_total": 9
+  },
+  "0000105770": {
+   "hold_note_gap": 12,
+   "hold_no_note_total": 7,
+   "note_tie_published": 13,
+   "needs_instance_reader": 14
+  },
+  "0000106040": {
+   "hold_note_gap": 1,
+   "note_tie_published": 38,
+   "hold_no_note_total": 3
+  },
+  "0000106535": {
+   "note_tie_published": 15,
+   "hold_no_note_total": 5,
+   "hold_note_gap": 1,
+   "needs_instance_reader": 25
+  },
+  "0000107263": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0000108312": {
+   "hold_note_gap": 3,
+   "hold_no_note_total": 20,
+   "needs_instance_reader": 10,
+   "note_tie_published": 11,
+   "member_value_missing": 2
+  },
+  "0000109198": {
+   "hold_no_note_total": 42
+  },
+  "0000109380": {
+   "note_tie_published": 37,
+   "hold_no_note_total": 8,
+   "hold_note_gap": 1
+  },
+  "0000109563": {
+   "hold_no_note_total": 25,
+   "note_tie_published": 21
+  },
+  "0000110621": {
+   "hold_no_note_total": 46
+  },
+  "0000200406": {
+   "hold_no_note_total": 41,
+   "hold_note_gap": 5
+  },
+  "0000202058": {
+   "hold_note_gap": 14,
+   "hold_no_note_total": 30
+  },
+  "0000215466": {
+   "hold_no_note_total": 33,
+   "needs_instance_reader": 13
+  },
+  "0000216228": {
+   "hold_no_note_total": 3,
+   "hold_note_gap": 30,
+   "note_tie_published": 9
+  },
+  "0000217346": {},
+  "0000277135": {
+   "hold_no_note_total": 32,
+   "hold_note_gap": 7,
+   "note_tie_published": 7
+  },
+  "0000277509": {
+   "hold_no_note_total": 15,
+   "hold_note_gap": 11,
+   "needs_instance_reader": 20
+  },
+  "0000277948": {
+   "hold_note_gap": 46
+  },
+  "0000310142": {
+   "hold_no_note_total": 38,
+   "note_tie_published": 4,
+   "hold_note_gap": 4
+  },
+  "0000310158": {
+   "hold_note_gap": 46
+  },
+  "0000310764": {
+   "hold_no_note_total": 3,
+   "note_tie_published": 43
+  },
+  "0000313616": {
+   "hold_note_gap": 45,
+   "note_tie_published": 1
+  },
+  "0000313927": {
+   "note_tie_published": 30,
+   "hold_no_note_total": 16
+  },
+  "0000314808": {
+   "hold_no_note_total": 42,
+   "note_tie_published": 3
+  },
+  "0000315189": {
+   "needs_instance_reader": 40,
+   "hold_no_note_total": 2
+  },
+  "0000315293": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 11
+  },
+  "0000315852": {
+   "hold_no_note_total": 3,
+   "needs_instance_reader": 40
+  },
+  "0000316709": {
+   "hold_no_note_total": 40,
+   "member_value_missing": 1,
+   "note_tie_published": 1,
+   "hold_note_gap": 4
+  },
+  "0000318154": {
+   "note_tie_published": 44,
+   "hold_note_gap": 2
+  },
+  "0000319201": {
+   "note_tie_published": 39,
+   "hold_note_gap": 7
+  },
+  "0000320187": {
+   "hold_no_note_total": 30,
+   "note_tie_published": 16
+  },
+  "0000320193": {
+   "note_tie_published": 4,
+   "hold_no_note_total": 27,
+   "hold_note_gap": 15
+  },
+  "0000320335": {
+   "note_tie_published": 41,
+   "hold_no_note_total": 5
+  },
+  "0000350894": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 35,
+   "note_tie_published": 1
+  },
+  "0000352541": {
+   "member_value_missing": 27,
+   "hold_no_note_total": 18
+  },
+  "0000352915": {
+   "hold_no_note_total": 15,
+   "note_tie_published": 11,
+   "hold_note_gap": 20
+  },
+  "0000354190": {
+   "needs_instance_reader": 46
+  },
+  "0000354950": {
+   "hold_note_gap": 10,
+   "hold_no_note_total": 33
+  },
+  "0000702165": {
+   "hold_note_gap": 21,
+   "hold_no_note_total": 25
+  },
+  "0000703351": {
+   "hold_note_gap": 46,
+   "member_value_missing": 1
+  },
+  "0000704532": {
+   "hold_no_note_total": 4,
+   "no_debt_line": 25
+  },
+  "0000707179": {
+   "needs_instance_reader": 14,
+   "hold_no_note_total": 31
+  },
+  "0000707549": {
+   "hold_no_note_total": 17,
+   "hold_note_gap": 29
+  },
+  "0000711404": {
+   "hold_no_note_total": 15,
+   "note_tie_published": 16,
+   "hold_note_gap": 16
+  },
+  "0000713676": {
+   "needs_instance_reader": 34,
+   "hold_note_gap": 12
+  },
+  "0000714310": {
+   "needs_instance_reader": 46
+  },
+  "0000715957": {
+   "needs_instance_reader": 45
+  },
+  "0000717423": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0000717605": {
+   "note_tie_published": 37,
+   "member_value_missing": 3,
+   "hold_note_gap": 6
+  },
+  "0000719413": {
+   "hold_no_note_total": 25,
+   "member_value_missing": 4,
+   "needs_instance_reader": 17
+  },
+  "0000719955": {
+   "needs_instance_reader": 20,
+   "hold_no_note_total": 13
+  },
+  "0000720005": {
+   "member_value_missing": 7,
+   "hold_no_note_total": 36,
+   "hold_note_gap": 1,
+   "note_tie_published": 2
+  },
+  "0000720672": {
+   "note_tie_published": 17,
+   "needs_instance_reader": 3,
+   "hold_note_gap": 13,
+   "member_value_missing": 2,
+   "no_debt_line": 10
+  },
+  "0000721371": {
+   "hold_note_gap": 37,
+   "hold_no_note_total": 8
+  },
+  "0000723125": {
+   "note_tie_published": 19,
+   "hold_note_gap": 27
+  },
+  "0000723254": {
+   "hold_no_note_total": 9,
+   "hold_note_gap": 26,
+   "note_tie_published": 11
+  },
+  "0000723531": {
+   "hold_no_note_total": 24,
+   "no_debt_line": 1,
+   "note_tie_published": 15
+  },
+  "0000726728": {
+   "needs_instance_reader": 40,
+   "hold_no_note_total": 6
+  },
+  "0000726958": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 3,
+   "hold_note_gap": 9
+  },
+  "0000728535": {
+   "hold_no_note_total": 31,
+   "member_value_missing": 3,
+   "hold_note_gap": 12
+  },
+  "0000729986": {
+   "hold_no_note_total": 8,
+   "hold_note_gap": 38
+  },
+  "0000730272": {
+   "hold_no_note_total": 31,
+   "member_value_missing": 7,
+   "note_tie_published": 4
+  },
+  "0000731766": {
+   "hold_no_note_total": 18,
+   "hold_note_gap": 28
+  },
+  "0000731802": {
+   "hold_no_note_total": 33,
+   "needs_instance_reader": 13
+  },
+  "0000732712": {
+   "note_tie_published": 15,
+   "hold_note_gap": 7,
+   "hold_no_note_total": 23
+  },
+  "0000732717": {
+   "hold_no_note_total": 33,
+   "hold_note_gap": 13
+  },
+  "0000737758": {
+   "hold_no_note_total": 8,
+   "note_tie_published": 31,
+   "member_value_missing": 3,
+   "hold_note_gap": 1
+  },
+  "0000740260": {
+   "needs_instance_reader": 14,
+   "note_tie_published": 24,
+   "hold_no_note_total": 2,
+   "hold_note_gap": 6
+  },
+  "0000745732": {
+   "hold_no_note_total": 12,
+   "note_tie_published": 30
+  },
+  "0000746515": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 30
+  },
+  "0000749251": {
+   "hold_no_note_total": 5,
+   "note_tie_published": 41
+  },
+  "0000750577": {
+   "note_tie_published": 46
+  },
+  "0000751364": {
+   "hold_no_note_total": 45
+  },
+  "0000751978": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 29
+  },
+  "0000753308": {
+   "hold_no_note_total": 45
+  },
+  "0000759944": {
+   "note_tie_published": 46
+  },
+  "0000763901": {
+   "hold_no_note_total": 1,
+   "hold_note_gap": 45
+  },
+  "0000764038": {
+   "hold_no_note_total": 31,
+   "no_debt_line": 3,
+   "member_value_missing": 1
+  },
+  "0000764065": {
+   "note_tie_published": 25,
+   "hold_note_gap": 3,
+   "hold_no_note_total": 19
+  },
+  "0000764180": {
+   "hold_no_note_total": 17,
+   "note_tie_published": 28,
+   "hold_note_gap": 1
+  },
+  "0000764478": {
+   "hold_note_gap": 8,
+   "hold_no_note_total": 7,
+   "note_tie_published": 14,
+   "needs_instance_reader": 4,
+   "member_value_missing": 3
+  },
+  "0000764622": {
+   "hold_note_gap": 45,
+   "note_tie_published": 1
+  },
+  "0000765880": {
+   "hold_no_note_total": 1,
+   "hold_note_gap": 40,
+   "member_value_missing": 1,
+   "needs_instance_reader": 5
+  },
+  "0000766704": {
+   "hold_note_gap": 31,
+   "member_value_missing": 2,
+   "note_tie_published": 12
+  },
+  "0000769397": {
+   "note_tie_published": 10,
+   "hold_note_gap": 27,
+   "hold_no_note_total": 9,
+   "member_value_missing": 1
+  },
+  "0000773840": {
+   "hold_note_gap": 46
+  },
+  "0000775158": {
+   "hold_note_gap": 13,
+   "note_tie_published": 21,
+   "member_value_missing": 5,
+   "hold_no_note_total": 6
+  },
+  "0000779152": {
+   "hold_note_gap": 5,
+   "note_tie_published": 2,
+   "hold_no_note_total": 32,
+   "no_debt_line": 1
+  },
+  "0000783325": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 10,
+   "note_tie_published": 1
+  },
+  "0000785161": {
+   "hold_note_gap": 42,
+   "hold_no_note_total": 4
+  },
+  "0000785786": {
+   "hold_note_gap": 11,
+   "hold_no_note_total": 9,
+   "member_value_missing": 1,
+   "needs_instance_reader": 25
+  },
+  "0000788784": {
+   "hold_note_gap": 2,
+   "member_value_missing": 12,
+   "note_tie_published": 31
+  },
+  "0000789019": {
+   "hold_note_gap": 17,
+   "note_tie_published": 29
+  },
+  "0000789570": {
+   "member_value_missing": 3,
+   "note_tie_published": 29,
+   "hold_note_gap": 14
+  },
+  "0000790051": {
+   "note_tie_published": 34,
+   "member_value_missing": 2,
+   "hold_no_note_total": 3,
+   "hold_note_gap": 7
+  },
+  "0000794170": {
+   "needs_instance_reader": 6,
+   "hold_no_note_total": 40
+  },
+  "0000794367": {
+   "hold_note_gap": 16,
+   "hold_no_note_total": 1,
+   "needs_instance_reader": 27
+  },
+  "0000795403": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 1,
+   "hold_note_gap": 7,
+   "member_value_missing": 3
+  },
+  "0000796343": {
+   "hold_no_note_total": 3,
+   "note_tie_published": 34,
+   "hold_note_gap": 3
+  },
+  "0000797468": {
+   "hold_no_note_total": 6,
+   "hold_note_gap": 32,
+   "member_value_missing": 5,
+   "note_tie_published": 3
+  },
+  "0000797721": {
+   "hold_note_gap": 5,
+   "needs_instance_reader": 42
+  },
+  "0000798354": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 10
+  },
+  "0000798941": {
+   "hold_no_note_total": 23,
+   "needs_instance_reader": 3,
+   "hold_note_gap": 4,
+   "note_tie_published": 16
+  },
+  "0000802481": {
+   "note_tie_published": 3,
+   "hold_no_note_total": 3,
+   "needs_instance_reader": 40
+  },
+  "0000804328": {
+   "hold_no_note_total": 1,
+   "note_tie_published": 44,
+   "hold_note_gap": 1
+  },
+  "0000811156": {},
+  "0000813672": {
+   "hold_no_note_total": 41
+  },
+  "0000814547": {
+   "note_tie_published": 37,
+   "hold_note_gap": 7,
+   "hold_no_note_total": 2
+  },
+  "0000815097": {
+   "hold_no_note_total": 17,
+   "note_tie_published": 2,
+   "hold_note_gap": 27
+  },
+  "0000815556": {
+   "hold_no_note_total": 3,
+   "note_tie_published": 43
+  },
+  "0000818686": {
+   "hold_note_gap": 1,
+   "hold_no_note_total": 34
+  },
+  "0000820027": {
+   "member_value_missing": 22
+  },
+  "0000820313": {
+   "note_tie_published": 13,
+   "hold_no_note_total": 33
+  },
+  "0000820318": {
+   "note_tie_published": 42,
+   "hold_note_gap": 4
+  },
+  "0000821189": {
+   "hold_no_note_total": 46
+  },
+  "0000822416": {
+   "hold_no_note_total": 29,
+   "hold_note_gap": 1,
+   "needs_instance_reader": 16
+  },
+  "0000822818": {
+   "hold_no_note_total": 40,
+   "note_tie_published": 5
+  },
+  "0000823768": {
+   "note_tie_published": 46
+  },
+  "0000824142": {
+   "hold_no_note_total": 46
+  },
+  "0000827052": {},
+  "0000827054": {
+   "hold_no_note_total": 8,
+   "hold_note_gap": 4,
+   "note_tie_published": 34
+  },
+  "0000829224": {
+   "note_tie_published": 40
+  },
+  "0000831001": {
+   "note_tie_published": 44
+  },
+  "0000831259": {
+   "hold_no_note_total": 24,
+   "member_value_missing": 1,
+   "note_tie_published": 22
+  },
+  "0000831641": {
+   "hold_no_note_total": 27,
+   "hold_note_gap": 11,
+   "note_tie_published": 7
+  },
+  "0000832101": {
+   "hold_note_gap": 42,
+   "hold_no_note_total": 4
+  },
+  "0000833444": {
+   "hold_note_gap": 8,
+   "member_value_missing": 1,
+   "hold_no_note_total": 37
+  },
+  "0000840489": {
+   "needs_instance_reader": 46
+  },
+  "0000842023": {
+   "hold_no_note_total": 41,
+   "member_value_missing": 5
+  },
+  "0000842162": {
+   "hold_note_gap": 36,
+   "hold_no_note_total": 7
+  },
+  "0000849395": {
+   "hold_note_gap": 11
+  },
+  "0000849399": {
+   "hold_no_note_total": 5,
+   "note_tie_published": 41
+  },
+  "0000851205": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 29
+  },
+  "0000851968": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 3,
+   "hold_note_gap": 8
+  },
+  "0000853816": {
+   "hold_no_note_total": 19,
+   "note_tie_published": 25,
+   "hold_note_gap": 1
+  },
+  "0000855658": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 10,
+   "member_value_missing": 2
+  },
+  "0000857005": {
+   "hold_no_note_total": 18,
+   "note_tie_published": 16,
+   "hold_note_gap": 13
+  },
+  "0000858877": {
+   "hold_note_gap": 41,
+   "note_tie_published": 6
+  },
+  "0000860730": {
+   "note_tie_published": 45
+  },
+  "0000860731": {
+   "hold_no_note_total": 19,
+   "hold_note_gap": 12,
+   "note_tie_published": 9
+  },
+  "0000861884": {
+   "hold_no_note_total": 10,
+   "hold_note_gap": 15,
+   "needs_instance_reader": 19,
+   "member_value_missing": 1
+  },
+  "0000864749": {
+   "note_tie_published": 30,
+   "hold_note_gap": 1,
+   "member_value_missing": 6
+  },
+  "0000865752": {
+   "no_debt_line": 1,
+   "note_tie_published": 4,
+   "hold_no_note_total": 2
+  },
+  "0000866291": {
+   "hold_no_note_total": 11,
+   "hold_note_gap": 13
+  },
+  "0000866374": {
+   "note_tie_published": 18,
+   "hold_note_gap": 21,
+   "hold_no_note_total": 7
+  },
+  "0000866706": {
+   "note_tie_published": 18,
+   "hold_note_gap": 28
+  },
+  "0000866787": {
+   "note_tie_published": 1,
+   "member_value_missing": 1,
+   "hold_note_gap": 29
+  },
+  "0000868671": {
+   "hold_no_note_total": 39,
+   "needs_instance_reader": 7
+  },
+  "0000868857": {
+   "hold_note_gap": 46
+  },
+  "0000872589": {
+   "needs_instance_reader": 5,
+   "no_debt_line": 1,
+   "hold_no_note_total": 29,
+   "member_value_missing": 1
+  },
+  "0000874015": {
+   "needs_instance_reader": 10,
+   "member_value_missing": 25,
+   "hold_no_note_total": 11
+  },
+  "0000874238": {
+   "hold_no_note_total": 31,
+   "note_tie_published": 9,
+   "hold_note_gap": 4,
+   "needs_instance_reader": 2
+  },
+  "0000874716": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 1,
+   "hold_note_gap": 10
+  },
+  "0000874761": {},
+  "0000874766": {
+   "hold_no_note_total": 8,
+   "note_tie_published": 38
+  },
+  "0000875045": {
+   "note_tie_published": 34,
+   "hold_note_gap": 11
+  },
+  "0000875320": {
+   "hold_no_note_total": 42,
+   "needs_instance_reader": 4
+  },
+  "0000875357": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0000876437": {
+   "hold_note_gap": 36
+  },
+  "0000877212": {
+   "hold_no_note_total": 18,
+   "note_tie_published": 5,
+   "hold_note_gap": 19
+  },
+  "0000878927": {
+   "hold_note_gap": 33,
+   "note_tie_published": 13,
+   "hold_no_note_total": 1
+  },
+  "0000879101": {
+   "hold_no_note_total": 37,
+   "hold_note_gap": 9
+  },
+  "0000879169": {
+   "hold_no_note_total": 39,
+   "member_value_missing": 4,
+   "hold_note_gap": 2
+  },
+  "0000879407": {
+   "member_value_missing": 4,
+   "hold_no_note_total": 38
+  },
+  "0000880266": {
+   "note_tie_published": 26,
+   "hold_note_gap": 20
+  },
+  "0000882095": {
+   "hold_note_gap": 28,
+   "note_tie_published": 9,
+   "hold_no_note_total": 9
+  },
+  "0000882184": {
+   "hold_no_note_total": 46
+  },
+  "0000882835": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 11
+  },
+  "0000883241": {
+   "hold_no_note_total": 41,
+   "note_tie_published": 6
+  },
+  "0000884614": {
+   "hold_note_gap": 16,
+   "hold_no_note_total": 30
+  },
+  "0000884887": {
+   "hold_no_note_total": 16,
+   "hold_note_gap": 30
+  },
+  "0000885550": {
+   "hold_no_note_total": 46
+  },
+  "0000885725": {
+   "note_tie_published": 43,
+   "hold_no_note_total": 3
+  },
+  "0000886163": {
+   "needs_instance_reader": 8,
+   "hold_no_note_total": 37,
+   "hold_note_gap": 1
+  },
+  "0000886982": {
+   "needs_instance_reader": 46
+  },
+  "0000887343": {
+   "hold_no_note_total": 46
+  },
+  "0000887596": {
+   "hold_no_note_total": 35,
+   "member_value_missing": 1
+  },
+  "0000888491": {
+   "needs_instance_reader": 46
+  },
+  "0000889331": {
+   "note_tie_published": 44,
+   "member_value_missing": 1
+  },
+  "0000891103": {
+   "note_tie_published": 14,
+   "hold_note_gap": 10,
+   "hold_no_note_total": 12,
+   "member_value_missing": 1,
+   "needs_instance_reader": 10
+  },
+  "0000893538": {
+   "hold_no_note_total": 39,
+   "note_tie_published": 1,
+   "hold_note_gap": 6
+  },
+  "0000895126": {
+   "note_tie_published": 9,
+   "hold_no_note_total": 35,
+   "member_value_missing": 1,
+   "hold_note_gap": 2
+  },
+  "0000895417": {
+   "hold_no_note_total": 33,
+   "note_tie_published": 3,
+   "hold_note_gap": 8,
+   "member_value_missing": 1
+  },
+  "0000895421": {
+   "note_tie_published": 11,
+   "hold_note_gap": 28,
+   "needs_instance_reader": 7
+  },
+  "0000896159": {
+   "note_tie_published": 19,
+   "member_value_missing": 1,
+   "needs_instance_reader": 16,
+   "hold_note_gap": 9
+  },
+  "0000896622": {
+   "hold_no_note_total": 46
+  },
+  "0000896878": {
+   "note_tie_published": 44,
+   "no_debt_line": 1,
+   "hold_note_gap": 2
+  },
+  "0000897723": {
+   "hold_note_gap": 26,
+   "hold_no_note_total": 20
+  },
+  "0000898173": {
+   "note_tie_published": 5,
+   "hold_note_gap": 5,
+   "hold_no_note_total": 36
+  },
+  "0000898174": {
+   "hold_note_gap": 23,
+   "note_tie_published": 23
+  },
+  "0000898293": {
+   "hold_no_note_total": 15,
+   "note_tie_published": 31
+  },
+  "0000899051": {
+   "note_tie_published": 46
+  },
+  "0000899689": {
+   "hold_no_note_total": 3,
+   "hold_note_gap": 40,
+   "note_tie_published": 3
+  },
+  "0000900075": {
+   "hold_no_note_total": 19,
+   "hold_note_gap": 6,
+   "needs_instance_reader": 16
+  },
+  "0000906107": {
+   "needs_instance_reader": 44
+  },
+  "0000906163": {
+   "hold_no_note_total": 10
+  },
+  "0000906345": {
+   "hold_note_gap": 42,
+   "note_tie_published": 4
+  },
+  "0000908255": {
+   "hold_note_gap": 23,
+   "hold_no_note_total": 23
+  },
+  "0000908937": {
+   "hold_no_note_total": 46
+  },
+  "0000909832": {
+   "note_tie_published": 10,
+   "hold_note_gap": 18,
+   "hold_no_note_total": 14
+  },
+  "0000910521": {
+   "hold_no_note_total": 46
+  },
+  "0000910606": {
+   "member_value_missing": 21,
+   "note_tie_published": 13,
+   "needs_instance_reader": 11
+  },
+  "0000911177": {
+   "hold_note_gap": 44,
+   "hold_no_note_total": 2
+  },
+  "0000912093": {
+   "hold_no_note_total": 26,
+   "note_tie_published": 13
+  },
+  "0000912242": {
+   "needs_instance_reader": 46
+  },
+  "0000912593": {
+   "hold_no_note_total": 10,
+   "hold_note_gap": 8,
+   "member_value_missing": 9,
+   "note_tie_published": 8,
+   "needs_instance_reader": 10
+  },
+  "0000912595": {
+   "hold_no_note_total": 29
+  },
+  "0000912615": {
+   "hold_no_note_total": 32,
+   "member_value_missing": 6,
+   "no_debt_line": 6,
+   "note_tie_published": 1
+  },
+  "0000913144": {
+   "note_tie_published": 46
+  },
+  "0000913760": {
+   "hold_note_gap": 45,
+   "note_tie_published": 1
+  },
+  "0000914208": {
+   "needs_instance_reader": 46
+  },
+  "0000914475": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 36,
+   "member_value_missing": 1
+  },
+  "0000915389": {
+   "note_tie_published": 46
+  },
+  "0000915913": {
+   "hold_note_gap": 1,
+   "hold_no_note_total": 4,
+   "note_tie_published": 41
+  },
+  "0000916076": {
+   "hold_note_gap": 7,
+   "note_tie_published": 37,
+   "member_value_missing": 2
+  },
+  "0000916365": {
+   "hold_no_note_total": 23,
+   "member_value_missing": 6,
+   "hold_note_gap": 18
+  },
+  "0000916540": {
+   "note_tie_published": 4,
+   "hold_note_gap": 38
+  },
+  "0000917251": {
+   "hold_note_gap": 25,
+   "hold_no_note_total": 12,
+   "member_value_missing": 4,
+   "needs_instance_reader": 5
+  },
+  "0000917273": {
+   "hold_no_note_total": 45
+  },
+  "0000920148": {
+   "hold_no_note_total": 21,
+   "hold_note_gap": 5,
+   "member_value_missing": 1,
+   "needs_instance_reader": 19
+  },
+  "0000920371": {
+   "hold_no_note_total": 24,
+   "no_debt_line": 5,
+   "hold_note_gap": 17
+  },
+  "0000920522": {
+   "needs_instance_reader": 8,
+   "hold_note_gap": 35,
+   "hold_no_note_total": 3
+  },
+  "0000920760": {
+   "hold_no_note_total": 5,
+   "member_value_missing": 3,
+   "note_tie_published": 7
+  },
+  "0000921638": {
+   "note_tie_published": 11,
+   "member_value_missing": 6,
+   "hold_no_note_total": 2
+  },
+  "0000921825": {
+   "hold_note_gap": 13,
+   "hold_no_note_total": 33
+  },
+  "0000922224": {
+   "member_value_missing": 43,
+   "note_tie_published": 1
+  },
+  "0000922621": {
+   "hold_no_note_total": 25
+  },
+  "0000924805": {
+   "needs_instance_reader": 20,
+   "hold_no_note_total": 11
+  },
+  "0000927003": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 5,
+   "note_tie_published": 22,
+   "member_value_missing": 4
+  },
+  "0000927066": {
+   "hold_note_gap": 1,
+   "hold_no_note_total": 45
+  },
+  "0000927628": {
+   "needs_instance_reader": 46
+  },
+  "0000927653": {
+   "hold_note_gap": 34,
+   "note_tie_published": 12
+  },
+  "0000929008": {
+   "hold_no_note_total": 15,
+   "hold_note_gap": 31
+  },
+  "0000935703": {
+   "hold_no_note_total": 24,
+   "hold_note_gap": 8,
+   "member_value_missing": 2,
+   "note_tie_published": 3
+  },
+  "0000936340": {
+   "member_value_missing": 27,
+   "hold_note_gap": 5,
+   "hold_no_note_total": 13
+  },
+  "0000936395": {
+   "hold_no_note_total": 40,
+   "hold_note_gap": 3
+  },
+  "0000936468": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 5,
+   "member_value_missing": 2,
+   "hold_note_gap": 5
+  },
+  "0000939767": {
+   "note_tie_published": 12,
+   "member_value_missing": 1,
+   "hold_no_note_total": 26,
+   "needs_instance_reader": 4
+  },
+  "0000940944": {
+   "hold_note_gap": 4,
+   "note_tie_published": 41
+  },
+  "0000943452": {
+   "hold_note_gap": 22,
+   "note_tie_published": 24
+  },
+  "0000943819": {
+   "member_value_missing": 5,
+   "note_tie_published": 40,
+   "hold_no_note_total": 1
+  },
+  "0000944695": {
+   "note_tie_published": 46
+  },
+  "0000945841": {
+   "needs_instance_reader": 27,
+   "note_tie_published": 18
+  },
+  "0000946581": {
+   "hold_note_gap": 17,
+   "hold_no_note_total": 25,
+   "note_tie_published": 4
+  },
+  "0000947484": {
+   "hold_no_note_total": 28
+  },
+  "0001000228": {
+   "hold_no_note_total": 45,
+   "hold_note_gap": 1
+  },
+  "0001000697": {
+   "note_tie_published": 18,
+   "hold_note_gap": 24,
+   "hold_no_note_total": 1,
+   "member_value_missing": 1
+  },
+  "0001001250": {
+   "hold_no_note_total": 25,
+   "hold_note_gap": 12,
+   "needs_instance_reader": 9
+  },
+  "0001001316": {
+   "hold_no_note_total": 14,
+   "needs_instance_reader": 32
+  },
+  "0001001838": {
+   "hold_note_gap": 2,
+   "member_value_missing": 9,
+   "note_tie_published": 31,
+   "hold_no_note_total": 4
+  },
+  "0001002047": {
+   "hold_no_note_total": 15,
+   "note_tie_published": 32
+  },
+  "0001002638": {
+   "hold_note_gap": 21,
+   "hold_no_note_total": 3,
+   "note_tie_published": 22
+  },
+  "0001002910": {},
+  "0001003078": {
+   "hold_note_gap": 34,
+   "needs_instance_reader": 2,
+   "note_tie_published": 2,
+   "hold_no_note_total": 6
+  },
+  "0001004434": {
+   "hold_note_gap": 16,
+   "note_tie_published": 30
+  },
+  "0001004980": {
+   "hold_no_note_total": 41,
+   "hold_note_gap": 5
+  },
+  "0001013237": {
+   "note_tie_published": 46
+  },
+  "0001013857": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 30
+  },
+  "0001013871": {
+   "hold_note_gap": 46,
+   "member_value_missing": 1
+  },
+  "0001014473": {
+   "hold_no_note_total": 17
+  },
+  "0001015328": {
+   "hold_no_note_total": 46
+  },
+  "0001018724": {
+   "hold_note_gap": 46
+  },
+  "0001018840": {
+   "needs_instance_reader": 14,
+   "hold_no_note_total": 23
+  },
+  "0001018963": {
+   "hold_no_note_total": 44,
+   "note_tie_published": 3
+  },
+  "0001019849": {
+   "needs_instance_reader": 46
+  },
+  "0001020569": {
+   "hold_note_gap": 43,
+   "needs_instance_reader": 3
+  },
+  "0001021635": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 11
+  },
+  "0001021860": {
+   "hold_note_gap": 16,
+   "needs_instance_reader": 29
+  },
+  "0001022079": {
+   "hold_note_gap": 25,
+   "hold_no_note_total": 21
+  },
+  "0001022671": {
+   "hold_note_gap": 35,
+   "note_tie_published": 11
+  },
+  "0001023128": {
+   "needs_instance_reader": 46
+  },
+  "0001024478": {
+   "hold_no_note_total": 38,
+   "note_tie_published": 8
+  },
+  "0001025378": {
+   "needs_instance_reader": 46
+  },
+  "0001030894": {
+   "hold_no_note_total": 7
+  },
+  "0001031296": {
+   "hold_no_note_total": 45
+  },
+  "0001031308": {
+   "note_tie_published": 24
+  },
+  "0001032208": {},
+  "0001032975": {},
+  "0001034054": {
+   "note_tie_published": 46
+  },
+  "0001034670": {
+   "hold_no_note_total": 43,
+   "hold_note_gap": 3
+  },
+  "0001035002": {
+   "hold_note_gap": 35,
+   "note_tie_published": 11
+  },
+  "0001035267": {},
+  "0001035443": {
+   "hold_note_gap": 41,
+   "needs_instance_reader": 5
+  },
+  "0001035983": {
+   "hold_note_gap": 2,
+   "note_tie_published": 36,
+   "member_value_missing": 2,
+   "hold_no_note_total": 6
+  },
+  "0001037038": {
+   "note_tie_published": 37,
+   "hold_no_note_total": 6
+  },
+  "0001037540": {
+   "hold_no_note_total": 39,
+   "hold_note_gap": 7
+  },
+  "0001037646": {
+   "needs_instance_reader": 46
+  },
+  "0001037868": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0001037976": {
+   "hold_note_gap": 11,
+   "needs_instance_reader": 35
+  },
+  "0001038074": {
+   "hold_no_note_total": 21,
+   "member_value_missing": 17
+  },
+  "0001039399": {
+   "hold_no_note_total": 27,
+   "note_tie_published": 14,
+   "hold_note_gap": 1
+  },
+  "0001039684": {
+   "hold_note_gap": 45,
+   "hold_no_note_total": 1
+  },
+  "0001040829": {
+   "note_tie_published": 16,
+   "hold_note_gap": 30
+  },
+  "0001041061": {
+   "hold_note_gap": 6,
+   "hold_no_note_total": 40
+  },
+  "0001042046": {
+   "note_tie_published": 46
+  },
+  "0001043219": {
+   "needs_instance_reader": 46
+  },
+  "0001043277": {
+   "note_tie_published": 44,
+   "hold_note_gap": 2
+  },
+  "0001045609": {
+   "note_tie_published": 45
+  },
+  "0001045810": {
+   "note_tie_published": 19,
+   "hold_no_note_total": 2,
+   "hold_note_gap": 25
+  },
+  "0001046102": {
+   "note_tie_published": 40,
+   "member_value_missing": 4
+  },
+  "0001046257": {
+   "hold_note_gap": 8,
+   "note_tie_published": 38
+  },
+  "0001047127": {
+   "hold_no_note_total": 20,
+   "hold_note_gap": 25
+  },
+  "0001047862": {
+   "hold_note_gap": 14,
+   "hold_no_note_total": 13,
+   "needs_instance_reader": 18
+  },
+  "0001048286": {
+   "hold_note_gap": 45,
+   "hold_no_note_total": 1
+  },
+  "0001048477": {
+   "hold_no_note_total": 44,
+   "note_tie_published": 2
+  },
+  "0001048695": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 27
+  },
+  "0001048911": {
+   "member_value_missing": 1,
+   "hold_no_note_total": 16,
+   "hold_note_gap": 20,
+   "needs_instance_reader": 9
+  },
+  "0001049502": {
+   "note_tie_published": 26,
+   "needs_instance_reader": 15
+  },
+  "0001050446": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 8,
+   "hold_note_gap": 7,
+   "note_tie_published": 15
+  },
+  "0001050915": {
+   "hold_note_gap": 19,
+   "hold_no_note_total": 24,
+   "needs_instance_reader": 3
+  },
+  "0001051470": {
+   "note_tie_published": 16,
+   "hold_note_gap": 30
+  },
+  "0001053507": {
+   "hold_note_gap": 18,
+   "hold_no_note_total": 28
+  },
+  "0001056696": {
+   "hold_no_note_total": 30
+  },
+  "0001057352": {
+   "hold_no_note_total": 7,
+   "note_tie_published": 8,
+   "needs_instance_reader": 15,
+   "hold_note_gap": 13
+  },
+  "0001057877": {
+   "hold_no_note_total": 30,
+   "note_tie_published": 8,
+   "hold_note_gap": 2,
+   "needs_instance_reader": 3
+  },
+  "0001058090": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 23,
+   "note_tie_published": 7
+  },
+  "0001058290": {
+   "hold_no_note_total": 41,
+   "hold_note_gap": 4
+  },
+  "0001059556": {
+   "hold_no_note_total": 5,
+   "hold_note_gap": 1,
+   "note_tie_published": 35,
+   "member_value_missing": 5
+  },
+  "0001060391": {
+   "hold_note_gap": 23,
+   "hold_no_note_total": 23
+  },
+  "0001061219": {
+   "hold_no_note_total": 46
+  },
+  "0001061983": {
+   "hold_no_note_total": 6,
+   "note_tie_published": 10,
+   "needs_instance_reader": 27
+  },
+  "0001063761": {
+   "note_tie_published": 46
+  },
+  "0001065088": {
+   "note_tie_published": 24,
+   "hold_note_gap": 22
+  },
+  "0001065280": {
+   "hold_no_note_total": 31,
+   "hold_note_gap": 15
+  },
+  "0001065696": {
+   "hold_note_gap": 3,
+   "needs_instance_reader": 43
+  },
+  "0001067701": {
+   "note_tie_published": 16,
+   "hold_note_gap": 29
+  },
+  "0001067983": {},
+  "0001068851": {
+   "needs_instance_reader": 4,
+   "hold_no_note_total": 29,
+   "hold_note_gap": 8,
+   "member_value_missing": 1
+  },
+  "0001069157": {
+   "note_tie_published": 16,
+   "member_value_missing": 4,
+   "hold_no_note_total": 26
+  },
+  "0001069183": {
+   "hold_no_note_total": 28,
+   "no_debt_line": 6,
+   "note_tie_published": 6
+  },
+  "0001069202": {
+   "hold_note_gap": 45
+  },
+  "0001069258": {
+   "hold_note_gap": 13,
+   "note_tie_published": 14,
+   "hold_no_note_total": 18
+  },
+  "0001070423": {
+   "hold_note_gap": 46
+  },
+  "0001070750": {
+   "hold_note_gap": 45,
+   "member_value_missing": 1
+  },
+  "0001071739": {
+   "note_tie_published": 46
+  },
+  "0001075531": {
+   "needs_instance_reader": 21,
+   "note_tie_published": 11,
+   "hold_no_note_total": 14
+  },
+  "0001082554": {
+   "hold_no_note_total": 40,
+   "member_value_missing": 1
+  },
+  "0001083301": {
+   "hold_no_note_total": 22,
+   "hold_note_gap": 5,
+   "member_value_missing": 2,
+   "note_tie_published": 1,
+   "needs_instance_reader": 11
+  },
+  "0001086222": {
+   "hold_no_note_total": 46
+  },
+  "0001088856": {
+   "hold_no_note_total": 42
+  },
+  "0001089063": {
+   "hold_no_note_total": 38,
+   "hold_note_gap": 1
+  },
+  "0001090012": {
+   "note_tie_published": 17,
+   "member_value_missing": 5,
+   "hold_no_note_total": 9,
+   "hold_note_gap": 15
+  },
+  "0001090425": {
+   "note_tie_published": 20,
+   "no_debt_line": 1,
+   "hold_no_note_total": 25
+  },
+  "0001090727": {
+   "hold_no_note_total": 26,
+   "hold_note_gap": 20
+  },
+  "0001090872": {
+   "hold_no_note_total": 9,
+   "hold_note_gap": 11,
+   "note_tie_published": 26
+  },
+  "0001091667": {
+   "note_tie_published": 46
+  },
+  "0001093557": {
+   "note_tie_published": 3,
+   "hold_no_note_total": 43
+  },
+  "0001094285": {
+   "hold_note_gap": 7,
+   "hold_no_note_total": 13,
+   "note_tie_published": 22
+  },
+  "0001094831": {
+   "needs_instance_reader": 32,
+   "member_value_missing": 2,
+   "hold_note_gap": 5,
+   "note_tie_published": 7
+  },
+  "0001095073": {
+   "hold_no_note_total": 46
+  },
+  "0001096343": {
+   "note_tie_published": 46
+  },
+  "0001097149": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 30
+  },
+  "0001097864": {
+   "note_tie_published": 3,
+   "hold_note_gap": 41
+  },
+  "0001099219": {
+   "needs_instance_reader": 46
+  },
+  "0001099590": {
+   "hold_no_note_total": 30,
+   "hold_note_gap": 16
+  },
+  "0001099800": {
+   "hold_no_note_total": 46
+  },
+  "0001100682": {
+   "hold_note_gap": 16,
+   "member_value_missing": 1,
+   "hold_no_note_total": 30
+  },
+  "0001101239": {
+   "hold_note_gap": 40,
+   "member_value_missing": 5,
+   "hold_no_note_total": 1
+  },
+  "0001101302": {
+   "note_tie_published": 40,
+   "hold_note_gap": 5
+  },
+  "0001103982": {
+   "hold_no_note_total": 40,
+   "hold_note_gap": 5
+  },
+  "0001104506": {
+   "member_value_missing": 5,
+   "hold_note_gap": 41
+  },
+  "0001107843": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 31
+  },
+  "0001108426": {},
+  "0001108524": {
+   "hold_no_note_total": 11,
+   "hold_note_gap": 17,
+   "note_tie_published": 18
+  },
+  "0001109354": {
+   "hold_note_gap": 30,
+   "hold_no_note_total": 14
+  },
+  "0001109357": {
+   "needs_instance_reader": 22,
+   "member_value_missing": 17,
+   "hold_note_gap": 2,
+   "hold_no_note_total": 4
+  },
+  "0001110803": {
+   "note_tie_published": 2,
+   "hold_no_note_total": 26,
+   "member_value_missing": 2,
+   "needs_instance_reader": 11
+  },
+  "0001111711": {
+   "hold_no_note_total": 45,
+   "hold_note_gap": 1
+  },
+  "0001113169": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 29,
+   "needs_instance_reader": 1
+  },
+  "0001116132": {
+   "hold_note_gap": 47
+  },
+  "0001116942": {
+   "hold_note_gap": 29,
+   "note_tie_published": 11,
+   "member_value_missing": 4
+  },
+  "0001120193": {
+   "hold_no_note_total": 6,
+   "note_tie_published": 40
+  },
+  "0001121788": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 29
+  },
+  "0001123360": {
+   "note_tie_published": 23,
+   "hold_note_gap": 24
+  },
+  "0001124198": {
+   "hold_no_note_total": 15,
+   "member_value_missing": 3,
+   "needs_instance_reader": 28
+  },
+  "0001125376": {
+   "hold_no_note_total": 14,
+   "note_tie_published": 1,
+   "hold_note_gap": 3,
+   "needs_instance_reader": 28
+  },
+  "0001126328": {
+   "note_tie_published": 45
+  },
+  "0001130310": {
+   "needs_instance_reader": 45
+  },
+  "0001130464": {
+   "hold_no_note_total": 45,
+   "note_tie_published": 1
+  },
+  "0001133421": {
+   "hold_no_note_total": 23,
+   "hold_note_gap": 23
+  },
+  "0001136869": {
+   "hold_no_note_total": 26,
+   "hold_note_gap": 20
+  },
+  "0001136893": {
+   "note_tie_published": 9,
+   "hold_no_note_total": 3,
+   "hold_note_gap": 34
+  },
+  "0001137774": {
+   "needs_instance_reader": 15,
+   "hold_no_note_total": 31
+  },
+  "0001137789": {
+   "hold_note_gap": 43
+  },
+  "0001138118": {
+   "needs_instance_reader": 10,
+   "member_value_missing": 2,
+   "hold_note_gap": 4,
+   "hold_no_note_total": 30
+  },
+  "0001140536": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 10
+  },
+  "0001140859": {
+   "note_tie_published": 9,
+   "hold_note_gap": 29,
+   "hold_no_note_total": 5,
+   "member_value_missing": 1,
+   "needs_instance_reader": 3
+  },
+  "0001141391": {
+   "hold_no_note_total": 14,
+   "hold_note_gap": 2,
+   "note_tie_published": 30
+  },
+  "0001144215": {
+   "hold_no_note_total": 35,
+   "note_tie_published": 11
+  },
+  "0001145197": {
+   "hold_no_note_total": 32,
+   "note_tie_published": 14
+  },
+  "0001156039": {
+   "hold_no_note_total": 30,
+   "note_tie_published": 15,
+   "hold_note_gap": 1
+  },
+  "0001156375": {
+   "hold_no_note_total": 46
+  },
+  "0001157601": {
+   "hold_no_note_total": 17,
+   "member_value_missing": 2,
+   "hold_note_gap": 6,
+   "note_tie_published": 11
+  },
+  "0001158114": {
+   "note_tie_published": 3,
+   "hold_note_gap": 17,
+   "hold_no_note_total": 12,
+   "needs_instance_reader": 14
+  },
+  "0001159036": {
+   "hold_note_gap": 31,
+   "note_tie_published": 13,
+   "hold_no_note_total": 2
+  },
+  "0001159152": {
+   "note_tie_published": 2
+  },
+  "0001163165": {
+   "hold_no_note_total": 28,
+   "note_tie_published": 9,
+   "hold_note_gap": 9
+  },
+  "0001164727": {
+   "hold_no_note_total": 16,
+   "needs_instance_reader": 30
+  },
+  "0001164863": {
+   "hold_note_gap": 12,
+   "note_tie_published": 27,
+   "hold_no_note_total": 7
+  },
+  "0001166003": {
+   "hold_note_gap": 14,
+   "hold_no_note_total": 5,
+   "needs_instance_reader": 27
+  },
+  "0001166691": {
+   "hold_note_gap": 37,
+   "needs_instance_reader": 3,
+   "note_tie_published": 4,
+   "hold_no_note_total": 2
+  },
+  "0001169561": {
+   "hold_no_note_total": 29
+  },
+  "0001170010": {
+   "needs_instance_reader": 47
+  },
+  "0001174922": {
+   "note_tie_published": 46
+  },
+  "0001175454": {
+   "hold_no_note_total": 37,
+   "hold_note_gap": 9
+  },
+  "0001176948": {
+   "needs_instance_reader": 30
+  },
+  "0001177394": {
+   "note_tie_published": 6,
+   "hold_note_gap": 26,
+   "hold_no_note_total": 14
+  },
+  "0001177609": {
+   "hold_no_note_total": 45
+  },
+  "0001177702": {
+   "note_tie_published": 6,
+   "hold_no_note_total": 30,
+   "hold_note_gap": 10
+  },
+  "0001178670": {
+   "hold_no_note_total": 34,
+   "note_tie_published": 5,
+   "needs_instance_reader": 1
+  },
+  "0001179929": {
+   "needs_instance_reader": 8,
+   "hold_note_gap": 1,
+   "hold_no_note_total": 35,
+   "member_value_missing": 2
+  },
+  "0001192448": {
+   "member_value_missing": 9,
+   "hold_no_note_total": 27
+  },
+  "0001206264": {
+   "note_tie_published": 12,
+   "hold_note_gap": 13,
+   "hold_no_note_total": 21
+  },
+  "0001212545": {
+   "hold_no_note_total": 1,
+   "needs_instance_reader": 45
+  },
+  "0001214816": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 34,
+   "member_value_missing": 1
+  },
+  "0001219601": {
+   "note_tie_published": 46
+  },
+  "0001232524": {
+   "note_tie_published": 46
+  },
+  "0001236275": {
+   "hold_note_gap": 2,
+   "note_tie_published": 37,
+   "member_value_missing": 4,
+   "hold_no_note_total": 3
+  },
+  "0001237831": {
+   "no_debt_line": 13,
+   "hold_no_note_total": 8,
+   "member_value_missing": 4
+  },
+  "0001260221": {
+   "hold_no_note_total": 1,
+   "hold_note_gap": 44
+  },
+  "0001261333": {
+   "hold_no_note_total": 32
+  },
+  "0001262039": {
+   "no_debt_line": 1,
+   "note_tie_published": 2,
+   "hold_no_note_total": 20
+  },
+  "0001262823": {
+   "hold_no_note_total": 6,
+   "note_tie_published": 35,
+   "hold_note_gap": 4
+  },
+  "0001267238": {
+   "hold_no_note_total": 38,
+   "hold_note_gap": 2,
+   "note_tie_published": 6
+  },
+  "0001274494": {
+   "hold_note_gap": 25,
+   "note_tie_published": 21
+  },
+  "0001276187": {
+   "note_tie_published": 20,
+   "needs_instance_reader": 1,
+   "hold_note_gap": 25
+  },
+  "0001278021": {
+   "hold_no_note_total": 30
+  },
+  "0001280452": {},
+  "0001281761": {
+   "hold_note_gap": 1,
+   "note_tie_published": 45
+  },
+  "0001282637": {
+   "note_tie_published": 30,
+   "hold_note_gap": 16
+  },
+  "0001283699": {
+   "hold_no_note_total": 10,
+   "hold_note_gap": 11,
+   "needs_instance_reader": 25
+  },
+  "0001285785": {
+   "hold_no_note_total": 43,
+   "hold_note_gap": 1,
+   "member_value_missing": 2
+  },
+  "0001286681": {
+   "hold_no_note_total": 34,
+   "hold_note_gap": 11
+  },
+  "0001287750": {
+   "needs_instance_reader": 1,
+   "note_tie_published": 15
+  },
+  "0001288469": {
+   "no_debt_line": 1,
+   "hold_note_gap": 5,
+   "hold_no_note_total": 31,
+   "note_tie_published": 1
+  },
+  "0001289308": {
+   "hold_note_gap": 39,
+   "hold_no_note_total": 1,
+   "member_value_missing": 1
+  },
+  "0001289419": {
+   "hold_no_note_total": 23,
+   "hold_note_gap": 3,
+   "note_tie_published": 20
+  },
+  "0001289460": {
+   "note_tie_published": 7,
+   "hold_note_gap": 9,
+   "hold_no_note_total": 25,
+   "member_value_missing": 5
+  },
+  "0001289490": {
+   "needs_instance_reader": 20,
+   "hold_no_note_total": 26
+  },
+  "0001297989": {
+   "hold_no_note_total": 21,
+   "hold_note_gap": 9,
+   "member_value_missing": 1,
+   "note_tie_published": 14
+  },
+  "0001297996": {
+   "needs_instance_reader": 45
+  },
+  "0001298675": {
+   "hold_note_gap": 19,
+   "member_value_missing": 7,
+   "hold_no_note_total": 19
+  },
+  "0001300514": {
+   "needs_instance_reader": 46
+  },
+  "0001302215": {
+   "hold_note_gap": 25,
+   "hold_no_note_total": 18
+  },
+  "0001308547": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 27
+  },
+  "0001309108": {
+   "hold_note_gap": 15,
+   "hold_no_note_total": 29,
+   "note_tie_published": 2,
+   "member_value_missing": 1
+  },
+  "0001315098": {
+   "hold_no_note_total": 17,
+   "hold_note_gap": 5
+  },
+  "0001316835": {
+   "note_tie_published": 2,
+   "needs_instance_reader": 1,
+   "hold_note_gap": 2,
+   "hold_no_note_total": 30
+  },
+  "0001318220": {
+   "hold_note_gap": 41
+  },
+  "0001318605": {
+   "needs_instance_reader": 41,
+   "hold_no_note_total": 4,
+   "hold_note_gap": 1
+  },
+  "0001319161": {
+   "note_tie_published": 41,
+   "member_value_missing": 1,
+   "hold_no_note_total": 1,
+   "needs_instance_reader": 3
+  },
+  "0001321655": {
+   "hold_no_note_total": 22,
+   "member_value_missing": 2
+  },
+  "0001321732": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 29,
+   "member_value_missing": 1
+  },
+  "0001324404": {
+   "note_tie_published": 43,
+   "hold_no_note_total": 3
+  },
+  "0001324424": {
+   "hold_no_note_total": 10,
+   "note_tie_published": 33,
+   "hold_note_gap": 3
+  },
+  "0001324948": {
+   "note_tie_published": 34,
+   "hold_note_gap": 8,
+   "member_value_missing": 1,
+   "hold_no_note_total": 4
+  },
+  "0001326110": {
+   "needs_instance_reader": 4,
+   "hold_no_note_total": 18,
+   "member_value_missing": 9
+  },
+  "0001326160": {
+   "member_value_missing": 23,
+   "needs_instance_reader": 22
+  },
+  "0001326380": {
+   "needs_instance_reader": 18,
+   "note_tie_published": 13,
+   "hold_note_gap": 1,
+   "hold_no_note_total": 5
+  },
+  "0001326801": {
+   "hold_no_note_total": 30,
+   "no_debt_line": 1,
+   "note_tie_published": 8
+  },
+  "0001327567": {
+   "hold_no_note_total": 17,
+   "note_tie_published": 29
+  },
+  "0001327811": {
+   "hold_no_note_total": 18,
+   "needs_instance_reader": 7,
+   "note_tie_published": 19
+  },
+  "0001331520": {
+   "needs_instance_reader": 46
+  },
+  "0001331875": {
+   "note_tie_published": 46
+  },
+  "0001333986": {
+   "note_tie_published": 28,
+   "hold_no_note_total": 6
+  },
+  "0001334036": {
+   "needs_instance_reader": 2,
+   "hold_no_note_total": 44
+  },
+  "0001335258": {
+   "hold_no_note_total": 15,
+   "hold_note_gap": 31
+  },
+  "0001336920": {
+   "hold_no_note_total": 33,
+   "hold_note_gap": 13
+  },
+  "0001341439": {
+   "hold_no_note_total": 33,
+   "note_tie_published": 12,
+   "member_value_missing": 1
+  },
+  "0001341766": {
+   "hold_no_note_total": 32,
+   "member_value_missing": 3,
+   "hold_note_gap": 5
+  },
+  "0001352010": {
+   "note_tie_published": 2,
+   "hold_no_note_total": 42
+  },
+  "0001360604": {
+   "note_tie_published": 46
+  },
+  "0001360901": {
+   "hold_no_note_total": 46
+  },
+  "0001361113": {
+   "hold_no_note_total": 30
+  },
+  "0001366868": {
+   "note_tie_published": 43,
+   "needs_instance_reader": 1,
+   "hold_note_gap": 2
+  },
+  "0001368622": {
+   "hold_no_note_total": 16,
+   "hold_note_gap": 18,
+   "member_value_missing": 3
+  },
+  "0001370637": {
+   "hold_no_note_total": 12,
+   "note_tie_published": 31,
+   "member_value_missing": 3
+  },
+  "0001370946": {
+   "hold_note_gap": 44,
+   "hold_no_note_total": 2
+  },
+  "0001373715": {
+   "hold_no_note_total": 45,
+   "note_tie_published": 1
+  },
+  "0001374310": {
+   "no_debt_line": 1,
+   "note_tie_published": 31,
+   "member_value_missing": 7
+  },
+  "0001375365": {
+   "note_tie_published": 17,
+   "hold_note_gap": 4,
+   "hold_no_note_total": 7,
+   "needs_instance_reader": 14
+  },
+  "0001376139": {
+   "needs_instance_reader": 24,
+   "hold_no_note_total": 16,
+   "hold_note_gap": 6
+  },
+  "0001377121": {
+   "hold_no_note_total": 21,
+   "note_tie_published": 2,
+   "member_value_missing": 7
+  },
+  "0001381197": {
+   "needs_instance_reader": 3,
+   "member_value_missing": 1,
+   "hold_no_note_total": 42
+  },
+  "0001383312": {
+   "note_tie_published": 38,
+   "hold_no_note_total": 8
+  },
+  "0001383650": {
+   "note_tie_published": 46
+  },
+  "0001384905": {
+   "note_tie_published": 4,
+   "hold_note_gap": 3,
+   "member_value_missing": 3,
+   "hold_no_note_total": 32
+  },
+  "0001385157": {
+   "hold_no_note_total": 42,
+   "note_tie_published": 1,
+   "hold_note_gap": 3
+  },
+  "0001389170": {
+   "hold_no_note_total": 3,
+   "hold_note_gap": 5,
+   "note_tie_published": 1,
+   "needs_instance_reader": 37
+  },
+  "0001390777": {
+   "member_value_missing": 6,
+   "note_tie_published": 22
+  },
+  "0001393052": {
+   "needs_instance_reader": 13,
+   "hold_no_note_total": 12
+  },
+  "0001393311": {
+   "hold_no_note_total": 4,
+   "note_tie_published": 40,
+   "hold_note_gap": 2
+  },
+  "0001393818": {
+   "hold_note_gap": 46
+  },
+  "0001396009": {
+   "note_tie_published": 45
+  },
+  "0001397187": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 30
+  },
+  "0001397911": {
+   "note_tie_published": 27,
+   "needs_instance_reader": 19
+  },
+  "0001398659": {
+   "note_tie_published": 35,
+   "hold_no_note_total": 11
+  },
+  "0001402057": {
+   "note_tie_published": 2,
+   "hold_no_note_total": 33,
+   "hold_note_gap": 11
+  },
+  "0001402436": {
+   "note_tie_published": 46
+  },
+  "0001403161": {
+   "no_debt_line": 1,
+   "note_tie_published": 35,
+   "hold_note_gap": 2,
+   "hold_no_note_total": 5
+  },
+  "0001403568": {
+   "hold_no_note_total": 22,
+   "member_value_missing": 2
+  },
+  "0001404655": {
+   "hold_no_note_total": 31,
+   "needs_instance_reader": 12,
+   "member_value_missing": 3
+  },
+  "0001404912": {
+   "note_tie_published": 24,
+   "member_value_missing": 1
+  },
+  "0001405495": {
+   "hold_no_note_total": 46
+  },
+  "0001408198": {
+   "hold_no_note_total": 24,
+   "note_tie_published": 21,
+   "hold_note_gap": 1
+  },
+  "0001408710": {
+   "hold_no_note_total": 43,
+   "member_value_missing": 4
+  },
+  "0001410636": {
+   "hold_no_note_total": 31,
+   "hold_note_gap": 15
+  },
+  "0001411207": {
+   "note_tie_published": 3,
+   "hold_note_gap": 40,
+   "hold_no_note_total": 3
+  },
+  "0001413329": {
+   "hold_no_note_total": 46
+  },
+  "0001413447": {
+   "hold_no_note_total": 1,
+   "note_tie_published": 19,
+   "hold_note_gap": 5
+  },
+  "0001415404": {
+   "hold_note_gap": 39,
+   "note_tie_published": 3,
+   "needs_instance_reader": 4
+  },
+  "0001418135": {
+   "hold_note_gap": 25,
+   "needs_instance_reader": 2,
+   "note_tie_published": 2,
+   "hold_no_note_total": 17
+  },
+  "0001423689": {
+   "hold_no_note_total": 46
+  },
+  "0001423902": {
+   "member_value_missing": 4,
+   "note_tie_published": 17,
+   "hold_note_gap": 24
+  },
+  "0001425205": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 25,
+   "member_value_missing": 5
+  },
+  "0001428336": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 4,
+   "hold_note_gap": 6,
+   "note_tie_published": 20
+  },
+  "0001428439": {
+   "member_value_missing": 2,
+   "no_debt_line": 4,
+   "note_tie_published": 4,
+   "hold_no_note_total": 26
+  },
+  "0001433195": {
+   "hold_no_note_total": 32,
+   "no_debt_line": 1
+  },
+  "0001433270": {
+   "hold_no_note_total": 16,
+   "needs_instance_reader": 30
+  },
+  "0001439288": {
+   "note_tie_published": 39,
+   "hold_no_note_total": 6
+  },
+  "0001441816": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 32
+  },
+  "0001442145": {
+   "hold_note_gap": 18,
+   "note_tie_published": 4,
+   "hold_no_note_total": 23,
+   "member_value_missing": 1
+  },
+  "0001443646": {
+   "note_tie_published": 46
+  },
+  "0001447669": {
+   "hold_no_note_total": 11,
+   "note_tie_published": 22
+  },
+  "0001448893": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 34
+  },
+  "0001451505": {
+   "hold_note_gap": 8,
+   "note_tie_published": 37,
+   "hold_no_note_total": 1
+  },
+  "0001451809": {
+   "member_value_missing": 3,
+   "hold_no_note_total": 14,
+   "no_debt_line": 10
+  },
+  "0001466258": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0001467373": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 11
+  },
+  "0001467623": {
+   "hold_no_note_total": 29,
+   "member_value_missing": 5
+  },
+  "0001467858": {},
+  "0001468174": {
+   "hold_no_note_total": 40,
+   "hold_note_gap": 6
+  },
+  "0001472787": {
+   "note_tie_published": 16,
+   "hold_note_gap": 30
+  },
+  "0001474432": {
+   "no_debt_line": 2,
+   "hold_no_note_total": 24
+  },
+  "0001474735": {
+   "hold_note_gap": 16,
+   "needs_instance_reader": 30
+  },
+  "0001475922": {
+   "hold_no_note_total": 29,
+   "needs_instance_reader": 17
+  },
+  "0001476150": {
+   "hold_note_gap": 40,
+   "member_value_missing": 6
+  },
+  "0001477294": {
+   "needs_instance_reader": 46
+  },
+  "0001477333": {
+   "needs_instance_reader": 4,
+   "hold_no_note_total": 23,
+   "member_value_missing": 1
+  },
+  "0001478242": {
+   "hold_no_note_total": 35,
+   "hold_note_gap": 10
+  },
+  "0001479094": {
+   "needs_instance_reader": 3,
+   "hold_note_gap": 42
+  },
+  "0001486159": {
+   "hold_no_note_total": 5,
+   "note_tie_published": 41
+  },
+  "0001486957": {
+   "hold_no_note_total": 32,
+   "hold_note_gap": 1,
+   "needs_instance_reader": 13
+  },
+  "0001489393": {
+   "hold_no_note_total": 46
+  },
+  "0001492691": {
+   "hold_note_gap": 19,
+   "note_tie_published": 15,
+   "needs_instance_reader": 11
+  },
+  "0001493594": {
+   "hold_no_note_total": 40,
+   "note_tie_published": 1
+  },
+  "0001501585": {
+   "note_tie_published": 27,
+   "member_value_missing": 4,
+   "hold_no_note_total": 10,
+   "needs_instance_reader": 5
+  },
+  "0001506293": {
+   "hold_no_note_total": 30
+  },
+  "0001506307": {
+   "needs_instance_reader": 46
+  },
+  "0001510295": {
+   "hold_note_gap": 46
+  },
+  "0001511737": {
+   "note_tie_published": 1,
+   "hold_note_gap": 43,
+   "hold_no_note_total": 2
+  },
+  "0001512673": {
+   "hold_no_note_total": 26,
+   "needs_instance_reader": 6,
+   "hold_note_gap": 6,
+   "note_tie_published": 1
+  },
+  "0001513761": {
+   "hold_no_note_total": 33,
+   "hold_note_gap": 13
+  },
+  "0001516513": {
+   "hold_no_note_total": 21
+  },
+  "0001520006": {
+   "hold_no_note_total": 31,
+   "member_value_missing": 2,
+   "needs_instance_reader": 5,
+   "hold_note_gap": 8
+  },
+  "0001520262": {
+   "note_tie_published": 8,
+   "hold_no_note_total": 35,
+   "member_value_missing": 1,
+   "hold_note_gap": 2
+  },
+  "0001521036": {
+   "member_value_missing": 3,
+   "hold_no_note_total": 31,
+   "note_tie_published": 11
+  },
+  "0001521332": {
+   "note_tie_published": 46
+  },
+  "0001524472": {
+   "note_tie_published": 36,
+   "needs_instance_reader": 10
+  },
+  "0001527166": {
+   "needs_instance_reader": 46
+  },
+  "0001528396": {
+   "no_debt_line": 2,
+   "hold_no_note_total": 23,
+   "hold_note_gap": 5
+  },
+  "0001531152": {
+   "hold_note_gap": 10,
+   "note_tie_published": 20
+  },
+  "0001534504": {
+   "needs_instance_reader": 8,
+   "hold_note_gap": 4,
+   "member_value_missing": 1,
+   "hold_no_note_total": 34
+  },
+  "0001534701": {
+   "member_value_missing": 1,
+   "hold_no_note_total": 33,
+   "note_tie_published": 13
+  },
+  "0001535527": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 26
+  },
+  "0001535929": {
+   "note_tie_published": 26,
+   "hold_no_note_total": 1,
+   "hold_note_gap": 19
+  },
+  "0001539838": {
+   "note_tie_published": 37,
+   "hold_note_gap": 9
+  },
+  "0001543151": {
+   "hold_no_note_total": 22,
+   "hold_note_gap": 8
+  },
+  "0001551152": {
+   "hold_no_note_total": 34,
+   "member_value_missing": 1,
+   "hold_note_gap": 11
+  },
+  "0001551182": {
+   "hold_note_gap": 36,
+   "hold_no_note_total": 10
+  },
+  "0001552000": {
+   "hold_note_gap": 39,
+   "member_value_missing": 7
+  },
+  "0001552033": {
+   "note_tie_published": 45
+  },
+  "0001552275": {
+   "needs_instance_reader": 3,
+   "hold_no_note_total": 31,
+   "hold_note_gap": 5,
+   "note_tie_published": 7
+  },
+  "0001555280": {
+   "hold_no_note_total": 43
+  },
+  "0001559720": {
+   "hold_no_note_total": 19,
+   "hold_note_gap": 1,
+   "note_tie_published": 2
+  },
+  "0001560385": {
+   "hold_note_gap": 46,
+   "hold_no_note_total": 1
+  },
+  "0001561550": {
+   "hold_no_note_total": 28
+  },
+  "0001562088": {
+   "hold_no_note_total": 21
+  },
+  "0001562401": {
+   "needs_instance_reader": 8,
+   "member_value_missing": 18,
+   "note_tie_published": 11,
+   "hold_note_gap": 9
+  },
+  "0001563190": {
+   "hold_no_note_total": 7,
+   "member_value_missing": 13,
+   "note_tie_published": 2
+  },
+  "0001564408": {
+   "hold_no_note_total": 15,
+   "note_tie_published": 10,
+   "hold_note_gap": 5
+  },
+  "0001564708": {
+   "no_debt_line": 1,
+   "note_tie_published": 34,
+   "hold_note_gap": 5,
+   "hold_no_note_total": 3
+  },
+  "0001567094": {
+   "note_tie_published": 16
+  },
+  "0001567683": {
+   "hold_no_note_total": 23,
+   "hold_note_gap": 23
+  },
+  "0001568651": {
+   "hold_no_note_total": 22
+  },
+  "0001570827": {
+   "note_tie_published": 35,
+   "member_value_missing": 1
+  },
+  "0001571123": {
+   "note_tie_published": 45,
+   "hold_no_note_total": 1,
+   "member_value_missing": 1
+  },
+  "0001571283": {
+   "note_tie_published": 46,
+   "member_value_missing": 1
+  },
+  "0001571949": {
+   "hold_note_gap": 10,
+   "note_tie_published": 36,
+   "member_value_missing": 2
+  },
+  "0001571996": {
+   "hold_note_gap": 42
+  },
+  "0001573516": {
+   "hold_note_gap": 46
+  },
+  "0001575515": {
+   "note_tie_published": 1,
+   "member_value_missing": 2,
+   "needs_instance_reader": 19,
+   "hold_no_note_total": 20,
+   "hold_note_gap": 3
+  },
+  "0001575965": {
+   "note_tie_published": 21,
+   "hold_no_note_total": 13,
+   "member_value_missing": 1,
+   "needs_instance_reader": 13
+  },
+  "0001576280": {
+   "hold_no_note_total": 26,
+   "note_tie_published": 6
+  },
+  "0001579091": {
+   "hold_no_note_total": 12
+  },
+  "0001579241": {
+   "note_tie_published": 27,
+   "hold_note_gap": 19
+  },
+  "0001579298": {
+   "needs_instance_reader": 33,
+   "hold_no_note_total": 12
+  },
+  "0001579428": {
+   "hold_no_note_total": 35,
+   "member_value_missing": 4
+  },
+  "0001579878": {
+   "hold_no_note_total": 5
+  },
+  "0001581068": {
+   "no_debt_line": 46
+  },
+  "0001581280": {
+   "hold_no_note_total": 25,
+   "hold_note_gap": 2,
+   "member_value_missing": 4
+  },
+  "0001582961": {
+   "note_tie_published": 4,
+   "hold_no_note_total": 14,
+   "needs_instance_reader": 4
+  },
+  "0001583708": {
+   "hold_no_note_total": 14,
+   "no_debt_line": 5
+  },
+  "0001584207": {
+   "note_tie_published": 45
+  },
+  "0001584509": {
+   "hold_no_note_total": 26,
+   "hold_note_gap": 20
+  },
+  "0001585521": {
+   "hold_no_note_total": 30
+  },
+  "0001585689": {
+   "needs_instance_reader": 4,
+   "hold_no_note_total": 42
+  },
+  "0001590364": {
+   "note_tie_published": 46
+  },
+  "0001590714": {
+   "note_tie_published": 1,
+   "hold_no_note_total": 33,
+   "needs_instance_reader": 1,
+   "hold_note_gap": 11
+  },
+  "0001590717": {
+   "hold_note_gap": 37,
+   "member_value_missing": 7,
+   "note_tie_published": 2
+  },
+  "0001590895": {
+   "note_tie_published": 1,
+   "member_value_missing": 1,
+   "hold_no_note_total": 16,
+   "hold_note_gap": 28
+  },
+  "0001590955": {
+   "hold_no_note_total": 12,
+   "note_tie_published": 28,
+   "hold_note_gap": 1,
+   "member_value_missing": 3
+  },
+  "0001591698": {
+   "hold_no_note_total": 15,
+   "note_tie_published": 11,
+   "member_value_missing": 2
+  },
+  "0001594805": {
+   "hold_no_note_total": 7
+  },
+  "0001596532": {
+   "needs_instance_reader": 1,
+   "hold_no_note_total": 20,
+   "no_debt_line": 2
+  },
+  "0001599298": {
+   "hold_no_note_total": 23,
+   "member_value_missing": 1
+  },
+  "0001600033": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 4
+  },
+  "0001601046": {
+   "hold_no_note_total": 9,
+   "hold_note_gap": 17,
+   "note_tie_published": 21
+  },
+  "0001601712": {
+   "needs_instance_reader": 6,
+   "member_value_missing": 33,
+   "note_tie_published": 7
+  },
+  "0001603923": {
+   "hold_no_note_total": 33,
+   "needs_instance_reader": 3,
+   "hold_note_gap": 10
+  },
+  "0001604028": {
+   "note_tie_published": 5,
+   "hold_note_gap": 23,
+   "hold_no_note_total": 18
+  },
+  "0001604821": {
+   "hold_note_gap": 4,
+   "member_value_missing": 2,
+   "hold_no_note_total": 38
+  },
+  "0001609711": {
+   "hold_no_note_total": 45
+  },
+  "0001611052": {
+   "hold_no_note_total": 21
+  },
+  "0001613103": {
+   "hold_no_note_total": 46
+  },
+  "0001616707": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 5,
+   "note_tie_published": 24,
+   "member_value_missing": 2,
+   "hold_note_gap": 11
+  },
+  "0001616862": {
+   "note_tie_published": 45
+  },
+  "0001617640": {
+   "hold_no_note_total": 23,
+   "hold_note_gap": 4,
+   "note_tie_published": 19
+  },
+  "0001618673": {
+   "note_tie_published": 37,
+   "member_value_missing": 4
+  },
+  "0001618732": {
+   "no_debt_line": 3,
+   "hold_no_note_total": 33
+  },
+  "0001618756": {
+   "hold_note_gap": 43,
+   "hold_no_note_total": 1,
+   "member_value_missing": 3
+  },
+  "0001622536": {
+   "hold_no_note_total": 5,
+   "note_tie_published": 10
+  },
+  "0001623925": {
+   "note_tie_published": 29,
+   "hold_note_gap": 1
+  },
+  "0001628171": {
+   "hold_no_note_total": 26
+  },
+  "0001632970": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 40
+  },
+  "0001633917": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 33,
+   "hold_note_gap": 1
+  },
+  "0001633978": {
+   "no_debt_line": 1,
+   "hold_note_gap": 19,
+   "hold_no_note_total": 11,
+   "note_tie_published": 6
+  },
+  "0001635088": {
+   "note_tie_published": 5,
+   "hold_note_gap": 8,
+   "hold_no_note_total": 8
+  },
+  "0001635327": {
+   "note_tie_published": 10
+  },
+  "0001636282": {
+   "hold_no_note_total": 20
+  },
+  "0001636519": {
+   "hold_no_note_total": 38
+  },
+  "0001637207": {
+   "note_tie_published": 18,
+   "hold_no_note_total": 1,
+   "hold_note_gap": 26
+  },
+  "0001637459": {
+   "hold_note_gap": 1,
+   "hold_no_note_total": 43
+  },
+  "0001638826": {
+   "note_tie_published": 6,
+   "hold_no_note_total": 2
+  },
+  "0001639300": {
+   "hold_note_gap": 4,
+   "hold_no_note_total": 35
+  },
+  "0001639438": {
+   "hold_no_note_total": 12
+  },
+  "0001639723": {
+   "member_value_missing": 4
+  },
+  "0001640147": {
+   "hold_no_note_total": 24
+  },
+  "0001642896": {
+   "hold_no_note_total": 17
+  },
+  "0001645590": {
+   "hold_note_gap": 35,
+   "note_tie_published": 1,
+   "hold_no_note_total": 8
+  },
+  "0001646972": {
+   "hold_note_gap": 5,
+   "hold_no_note_total": 29
+  },
+  "0001649094": {
+   "hold_no_note_total": 22
+  },
+  "0001649904": {
+   "hold_no_note_total": 26,
+   "note_tie_published": 2,
+   "member_value_missing": 2
+  },
+  "0001650164": {
+   "hold_no_note_total": 19
+  },
+  "0001650372": {
+   "hold_no_note_total": 16
+  },
+  "0001652044": {
+   "hold_no_note_total": 33,
+   "hold_note_gap": 11
+  },
+  "0001653482": {},
+  "0001658566": {
+   "hold_no_note_total": 6,
+   "member_value_missing": 1,
+   "note_tie_published": 33
+  },
+  "0001659166": {
+   "note_tie_published": 38
+  },
+  "0001660134": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 34
+  },
+  "0001664703": {
+   "needs_instance_reader": 34
+  },
+  "0001665918": {
+   "note_tie_published": 3,
+   "hold_no_note_total": 34,
+   "hold_note_gap": 3,
+   "member_value_missing": 1
+  },
+  "0001666700": {
+   "hold_note_gap": 29,
+   "hold_no_note_total": 7
+  },
+  "0001668397": {
+   "hold_note_gap": 3,
+   "hold_no_note_total": 37
+  },
+  "0001669162": {
+   "hold_no_note_total": 14,
+   "no_debt_line": 2,
+   "note_tie_published": 15,
+   "member_value_missing": 1
+  },
+  "0001671933": {
+   "hold_no_note_total": 36
+  },
+  "0001673358": {
+   "hold_no_note_total": 40
+  },
+  "0001674101": {
+   "no_debt_line": 1,
+   "note_tie_published": 6,
+   "hold_note_gap": 5,
+   "needs_instance_reader": 15
+  },
+  "0001675149": {
+   "hold_no_note_total": 30,
+   "hold_note_gap": 10
+  },
+  "0001679049": {
+   "hold_no_note_total": 16,
+   "note_tie_published": 21,
+   "needs_instance_reader": 2,
+   "member_value_missing": 1
+  },
+  "0001679273": {
+   "hold_no_note_total": 20,
+   "hold_note_gap": 5,
+   "member_value_missing": 4,
+   "needs_instance_reader": 10
+  },
+  "0001679788": {
+   "hold_no_note_total": 5,
+   "note_tie_published": 7,
+   "needs_instance_reader": 10
+  },
+  "0001681459": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 3,
+   "hold_note_gap": 1,
+   "note_tie_published": 22,
+   "needs_instance_reader": 12
+  },
+  "0001682852": {
+   "needs_instance_reader": 2,
+   "hold_no_note_total": 26
+  },
+  "0001687229": {
+   "hold_no_note_total": 3,
+   "hold_note_gap": 31,
+   "note_tie_published": 4
+  },
+  "0001689548": {
+   "hold_no_note_total": 24
+  },
+  "0001690820": {
+   "hold_no_note_total": 30,
+   "hold_note_gap": 7
+  },
+  "0001692115": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 2
+  },
+  "0001692819": {
+   "hold_no_note_total": 28,
+   "hold_note_gap": 10
+  },
+  "0001698990": {
+   "note_tie_published": 32
+  },
+  "0001699150": {
+   "hold_no_note_total": 36,
+   "hold_note_gap": 1
+  },
+  "0001701605": {
+   "hold_note_gap": 36
+  },
+  "0001705696": {
+   "member_value_missing": 2,
+   "hold_note_gap": 3,
+   "note_tie_published": 29,
+   "needs_instance_reader": 1
+  },
+  "0001707753": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 8,
+   "note_tie_published": 21
+  },
+  "0001707925": {
+   "no_debt_line": 2,
+   "hold_no_note_total": 1,
+   "hold_note_gap": 31
+  },
+  "0001711269": {
+   "hold_no_note_total": 26,
+   "member_value_missing": 6
+  },
+  "0001711279": {
+   "member_value_missing": 3,
+   "hold_no_note_total": 25,
+   "needs_instance_reader": 5
+  },
+  "0001713445": {
+   "hold_no_note_total": 10
+  },
+  "0001713683": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 8,
+   "note_tie_published": 20
+  },
+  "0001718512": {
+   "note_tie_published": 34
+  },
+  "0001720635": {
+   "note_tie_published": 17,
+   "hold_note_gap": 17
+  },
+  "0001722482": {
+   "note_tie_published": 28
+  },
+  "0001722684": {
+   "hold_no_note_total": 34
+  },
+  "0001723128": {
+   "no_debt_line": 1,
+   "hold_note_gap": 2,
+   "hold_no_note_total": 1,
+   "needs_instance_reader": 21,
+   "member_value_missing": 9
+  },
+  "0001728951": {
+   "needs_instance_reader": 15,
+   "hold_note_gap": 18
+  },
+  "0001730168": {
+   "note_tie_published": 7,
+   "hold_note_gap": 11,
+   "hold_no_note_total": 10
+  },
+  "0001730430": {
+   "hold_no_note_total": 29
+  },
+  "0001734722": {
+   "hold_no_note_total": 22
+  },
+  "0001736035": {
+   "note_tie_published": 16
+  },
+  "0001736297": {},
+  "0001739104": {
+   "note_tie_published": 27,
+   "hold_note_gap": 5
+  },
+  "0001739445": {
+   "hold_no_note_total": 1,
+   "hold_note_gap": 31
+  },
+  "0001739940": {
+   "hold_no_note_total": 31
+  },
+  "0001743881": {
+   "hold_no_note_total": 1,
+   "needs_instance_reader": 21,
+   "member_value_missing": 6
+  },
+  "0001744489": {
+   "hold_note_gap": 2,
+   "note_tie_published": 22,
+   "hold_no_note_total": 6
+  },
+  "0001748790": {
+   "hold_note_gap": 1,
+   "hold_no_note_total": 28
+  },
+  "0001751008": {
+   "hold_no_note_total": 17,
+   "hold_note_gap": 3,
+   "note_tie_published": 2
+  },
+  "0001751788": {
+   "hold_note_gap": 17,
+   "hold_no_note_total": 12
+  },
+  "0001754301": {
+   "note_tie_published": 28,
+   "hold_no_note_total": 2
+  },
+  "0001755672": {
+   "hold_no_note_total": 1
+  },
+  "0001757898": {
+   "note_tie_published": 15,
+   "needs_instance_reader": 15
+  },
+  "0001758730": {
+   "hold_no_note_total": 29
+  },
+  "0001759509": {
+   "hold_no_note_total": 4,
+   "hold_note_gap": 26
+  },
+  "0001766502": {
+   "hold_no_note_total": 28
+  },
+  "0001769628": {
+   "note_tie_published": 5,
+   "needs_instance_reader": 1
+  },
+  "0001770787": {
+   "hold_no_note_total": 26,
+   "note_tie_published": 1,
+   "member_value_missing": 1
+  },
+  "0001773383": {
+   "hold_no_note_total": 18,
+   "hold_note_gap": 1,
+   "note_tie_published": 10
+  },
+  "0001773751": {
+   "hold_no_note_total": 20,
+   "no_debt_line": 1
+  },
+  "0001780312": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 15,
+   "note_tie_published": 6
+  },
+  "0001781335": {
+   "hold_note_gap": 14,
+   "note_tie_published": 12,
+   "member_value_missing": 1
+  },
+  "0001783180": {
+   "note_tie_published": 3,
+   "hold_note_gap": 21,
+   "hold_no_note_total": 1
+  },
+  "0001783879": {
+   "hold_no_note_total": 21
+  },
+  "0001792044": {
+   "no_debt_line": 1,
+   "note_tie_published": 2,
+   "hold_no_note_total": 23
+  },
+  "0001792580": {
+   "note_tie_published": 27
+  },
+  "0001792789": {
+   "hold_no_note_total": 23
+  },
+  "0001796209": {
+   "needs_instance_reader": 26
+  },
+  "0001800667": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 22
+  },
+  "0001801368": {
+   "hold_no_note_total": 6,
+   "needs_instance_reader": 9,
+   "note_tie_published": 9
+  },
+  "0001802768": {
+   "hold_no_note_total": 3,
+   "note_tie_published": 22
+  },
+  "0001805284": {
+   "needs_instance_reader": 25
+  },
+  "0001807794": {
+   "hold_no_note_total": 18
+  },
+  "0001810806": {
+   "hold_no_note_total": 24
+  },
+  "0001811074": {
+   "hold_no_note_total": 12
+  },
+  "0001815442": {
+   "hold_no_note_total": 24
+  },
+  "0001818874": {
+   "hold_no_note_total": 2,
+   "no_debt_line": 1,
+   "note_tie_published": 21
+  },
+  "0001819994": {
+   "no_debt_line": 1,
+   "needs_instance_reader": 4,
+   "hold_no_note_total": 8,
+   "hold_note_gap": 8
+  },
+  "0001820953": {
+   "needs_instance_reader": 23
+  },
+  "0001822993": {
+   "note_tie_published": 2,
+   "needs_instance_reader": 19
+  },
+  "0001823529": {
+   "note_tie_published": 20
+  },
+  "0001824920": {
+   "hold_no_note_total": 24
+  },
+  "0001828108": {
+   "hold_no_note_total": 19
+  },
+  "0001829311": {
+   "hold_no_note_total": 7,
+   "needs_instance_reader": 6,
+   "member_value_missing": 1
+  },
+  "0001833756": {
+   "note_tie_published": 22
+  },
+  "0001834584": {
+   "hold_note_gap": 14,
+   "hold_no_note_total": 6,
+   "note_tie_published": 2
+  },
+  "0001835632": {
+   "hold_note_gap": 19,
+   "note_tie_published": 1
+  },
+  "0001837240": {},
+  "0001841666": {
+   "hold_note_gap": 1,
+   "hold_no_note_total": 2,
+   "needs_instance_reader": 19
+  },
+  "0001842022": {
+   "needs_instance_reader": 3,
+   "hold_no_note_total": 17,
+   "hold_note_gap": 1
+  },
+  "0001849253": {
+   "hold_note_gap": 9,
+   "hold_no_note_total": 8,
+   "note_tie_published": 4
+  },
+  "0001851003": {
+   "note_tie_published": 21
+  },
+  "0001852131": {
+   "hold_no_note_total": 9
+  },
+  "0001856437": {
+   "hold_no_note_total": 1,
+   "needs_instance_reader": 19
+  },
+  "0001856525": {
+   "hold_no_note_total": 20
+  },
+  "0001858681": {
+   "member_value_missing": 8,
+   "note_tie_published": 10
+  },
+  "0001859392": {
+   "hold_no_note_total": 5
+  },
+  "0001860742": {
+   "hold_no_note_total": 6,
+   "note_tie_published": 9,
+   "needs_instance_reader": 3
+  },
+  "0001865782": {
+   "note_tie_published": 10
+  },
+  "0001866581": {
+   "note_tie_published": 2,
+   "member_value_missing": 4,
+   "hold_note_gap": 11,
+   "needs_instance_reader": 3
+  },
+  "0001868159": {
+   "hold_no_note_total": 9
+  },
+  "0001868275": {
+   "hold_note_gap": 7,
+   "hold_no_note_total": 12
+  },
+  "0001869198": {
+   "note_tie_published": 20
+  },
+  "0001874178": {
+   "hold_no_note_total": 9,
+   "note_tie_published": 11
+  },
+  "0001876042": {
+   "hold_no_note_total": 5
+  },
+  "0001878848": {
+   "hold_no_note_total": 4
+  },
+  "0001880661": {
+   "hold_no_note_total": 5,
+   "note_tie_published": 13
+  },
+  "0001883685": {
+   "hold_no_note_total": 18
+  },
+  "0001889539": {
+   "note_tie_published": 2,
+   "member_value_missing": 13
+  },
+  "0001895262": {
+   "hold_no_note_total": 16
+  },
+  "0001897762": {
+   "hold_note_gap": 8
+  },
+  "0001901440": {
+   "hold_note_gap": 2,
+   "note_tie_published": 6,
+   "hold_no_note_total": 2
+  },
+  "0001915657": {
+   "hold_no_note_total": 8,
+   "hold_note_gap": 3,
+   "member_value_missing": 1,
+   "note_tie_published": 6
+  },
+  "0001932393": {
+   "hold_no_note_total": 3,
+   "hold_note_gap": 10
+  },
+  "0001937926": {
+   "no_debt_line": 1,
+   "needs_instance_reader": 6
+  },
+  "0001943896": {
+   "needs_instance_reader": 4,
+   "hold_no_note_total": 6
+  },
+  "0001944013": {
+   "member_value_missing": 1,
+   "hold_no_note_total": 10,
+   "note_tie_published": 3
+  },
+  "0001944048": {
+   "note_tie_published": 2,
+   "needs_instance_reader": 10
+  },
+  "0001957132": {
+   "hold_no_note_total": 3
+  },
+  "0001964738": {
+   "note_tie_published": 7,
+   "hold_note_gap": 3
+  },
+  "0001964789": {
+   "hold_no_note_total": 1,
+   "note_tie_published": 5,
+   "needs_instance_reader": 6
+  },
+  "0001967680": {
+   "note_tie_published": 10
+  },
+  "0001973266": {
+   "note_tie_published": 12
+  },
+  "0001995807": {
+   "hold_no_note_total": 7,
+   "hold_note_gap": 2
+  },
+  "0001996810": {
+   "no_debt_line": 1,
+   "hold_no_note_total": 2
+  },
+  "0001996862": {
+   "note_tie_published": 10
+  },
+  "0002000178": {
+   "note_tie_published": 10
+  },
+  "0002001184": {
+   "hold_no_note_total": 8,
+   "hold_note_gap": 2
+  },
+  "0002005951": {
+   "note_tie_published": 8
+  },
+  "0002007855": {
+   "note_tie_published": 6
+  },
+  "0002011641": {
+   "hold_note_gap": 2,
+   "hold_no_note_total": 7
+  },
+  "0002012383": {
+   "note_tie_published": 8
+  },
+  "0002015845": {
+   "hold_no_note_total": 1,
+   "note_tie_published": 7
+  },
+  "0002019410": {
+   "hold_note_gap": 5
+  },
+  "0002021728": {
+   "hold_no_note_total": 2
+  },
+  "0002023554": {
+   "member_value_missing": 2,
+   "note_tie_published": 3
+  },
+  "0002025410": {
+   "hold_no_note_total": 8
+  },
+  "0002030781": {
+   "note_tie_published": 4
+  },
+  "0002035989": {
+   "member_value_missing": 3,
+   "hold_no_note_total": 2
+  },
+  "0002041385": {
+   "note_tie_published": 4
+  },
+  "0002041610": {
+   "hold_note_gap": 4
+  },
+  "0002042694": {
+   "hold_note_gap": 5,
+   "hold_no_note_total": 2
+  },
+  "0002046386": {
+   "hold_no_note_total": 3
+  },
+  "0002054696": {
+   "hold_note_gap": 5
+  },
+  "0002058873": {
+   "hold_no_note_total": 3,
+   "hold_note_gap": 1
+  },
+  "0002063196": {
+   "hold_no_note_total": 4
+  },
+  "0002064953": {
+   "hold_no_note_total": 1,
+   "needs_instance_reader": 3
+  },
+  "0002065601": {},
+  "0002074176": {
+   "note_tie_published": 4
+  },
+  "0002080126": {
+   "no_debt_line": 1,
+   "note_tie_published": 2
+  },
+  "0002082247": {
+   "hold_note_gap": 1
+  },
+  "0002082866": {
+   "hold_no_note_total": 1
+  },
+  "0002083785": {
+   "note_tie_published": 3
+  }
+ }
+}
