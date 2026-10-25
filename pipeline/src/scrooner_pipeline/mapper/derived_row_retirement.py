@@ -73,6 +73,22 @@ from scrooner_pipeline.mapper import canonical_archive
 RULE_RATIO = "retire.derived_ratio_cells@1"
 RULE_PROXY = "retire.proxy_form_cells@1"
 
+# Net income including the noncontrolling interest. The net_income concept is
+# attributable to the parent: these tags are never preferred, and are used only
+# when the company/period has no nonzero NCI income fact (FCX FY2021 5,365M vs
+# 4,306M attributable; THC FY2023 1,311M vs 611M; CAT, TXRH, PCG).
+NCI_INCLUSIVE_TAGS = frozenset(
+    {
+        "ProfitLoss",
+        "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest",
+    }
+)
+NCI_INCOME_TAGS = (
+    "NetIncomeLossAttributableToNoncontrollingInterest",
+    "IncomeLossFromContinuingOperationsAttributableToNoncontrollingEntity",
+    "MinorityInterestInNetIncomeLossOfConsolidatedEntities",
+)
+
 TAX_RATE_TAG = "EffectiveIncomeTaxRateContinuingOperations"
 TAX_RATE_CANONICAL = "effective_tax_rate_reported"
 # Proxy-statement family. The dry-run lists the forms it actually met.
@@ -93,6 +109,9 @@ REASON_TEXT = {
     ),
     "proxy_only_source": (
         "only a proxy statement carries this figure; not shown (use the 10-K or 10-Q)"
+    ),
+    "proxy_nci_inclusive_only": (
+        "only a net income figure that includes noncontrolling interests is filed; not shown"
     ),
     "proxy_filed_copies_disagree": (
         "10-K/10-Q copies of this figure disagree; not shown until resolved"
@@ -256,6 +275,13 @@ where f.company_id = any(%(ids)s) and f.concept_id = any(%(cids)s)
 """
 )
 
+NCI_FACTS_SQL = """
+select distinct f.company_id, f.period_id
+from {core}.fact f join {core}.concept c on c.id = f.concept_id
+where f.company_id = any(%(ids)s) and f.period_id = any(%(pids)s)
+  and c.tag = any(%(tags)s) and f.value <> 0
+"""
+
 CELL_TAGS_SQL = """
 select cc.id, cm.concept_id, cm.priority
 from {analytics}.canonical_concept cc
@@ -410,6 +436,14 @@ def _sig_digits(v: Decimal) -> int:
     return len(v.normalize().as_tuple().digits)
 
 
+def _rounded_copy_of(rounded: Decimal, precise: Decimal) -> bool:
+    for scale in (Decimal(10) ** 9, Decimal(10) ** 6, Decimal(10) ** 3):
+        if rounded % scale == 0:
+            units = abs(rounded) / scale
+            return len(str(int(units))) >= 2 and abs(precise - rounded) <= scale / 2
+    return False
+
+
 def _pick_precise(copies: Sequence[FactRow]) -> FactRow | None:
     """Like _pick_one, but the witness is the most PRECISE copy (most significant
     digits; a later rounded restatement of the same figure never replaces the
@@ -425,16 +459,11 @@ def _pick_precise(copies: Sequence[FactRow]) -> FactRow | None:
         base = max(abs(top.value), abs(other.value))
         if not base or abs(top.value - other.value) / base <= ROUNDING:
             continue
-        # a copy rounded to its own trailing zeros (2,087,000,000 for 2,087,321,000)
-        # is the same figure when the precise one rounds to it
-        exp = other.value.normalize().as_tuple().exponent
-        if (
-            isinstance(exp, int)
-            and exp > 0
-            and _sig_digits(other.value)
-            >= 3  # 1.0M vs 1.1M is a restatement, not rounding
-            and abs(top.value - other.value) <= Decimal("0.5") * Decimal(10) ** exp
-        ):
+        # a copy rounded to a filing scale (thousands, millions, billions) is the same
+        # figure when the precise one rounds to it (SM 770,000,000 vs 770,293,000;
+        # WDAY 29M vs 29.373M). The rounded copy needs at least 2 whole digits in its
+        # scale (1.0M vs 1.1M is a restatement, not rounding).
+        if _rounded_copy_of(other.value, top.value):
             continue
         return None
     return top
@@ -591,6 +620,13 @@ def plan_proxy_chunk(
         for row in cur.fetchall():
             f = _fact(row)
             copies[(f.company_id, f.concept_id, f.period_id)].append(f)
+    nci_nonzero: set[tuple[int, int]] = set()
+    if pids:
+        cur.execute(
+            _q(NCI_FACTS_SQL, core),
+            {"ids": ids, "pids": pids, "tags": list(NCI_INCOME_TAGS)},
+        )
+        nci_nonzero = {(r[0], r[1]) for r in cur.fetchall()}
     promote: set[int] = set()
     for cf_id, company, ccid, cname, pid, pend, value, sources in cells:
         sources_t = tuple(sources)
@@ -621,12 +657,25 @@ def plan_proxy_chunk(
         mapped = dict(tags_by_cc.get(ccid, {}))
         mapped.setdefault(src.concept_id, 99)
         by_prio: dict[int, list[FactRow]] = defaultdict(list)
+        inclusive: list[FactRow] = []
         for cid_, prio_ in mapped.items():
-            by_prio[prio_] += [
-                f for f in copies.get((company, cid_, pid), []) if f.unit == src.unit
-            ]
+            for f in copies.get((company, cid_, pid), []):
+                if f.unit != src.unit:
+                    continue
+                if f.tag in NCI_INCLUSIVE_TAGS:
+                    inclusive.append(f)
+                else:
+                    by_prio[prio_].append(f)
         live = [p_ for p_ in sorted(by_prio) if by_prio[p_]]
         cand = by_prio[live[0]] if live else []
+        nci_blocked = False
+        if not cand and inclusive:
+            # NCI-inclusive income only: usable solely when no nonzero NCI income
+            # fact exists for the period (then it equals the attributable figure)
+            if (company, pid) in nci_nonzero:
+                nci_blocked = True
+            else:
+                cand = inclusive
         pick = _pick_precise(cand)
         if pick is not None:
             if not pick.is_authoritative:
@@ -644,7 +693,13 @@ def plan_proxy_chunk(
                 )
             )
         else:
-            code = "proxy_filed_copies_disagree" if cand else "proxy_only_source"
+            code = (
+                "proxy_nci_inclusive_only"
+                if nci_blocked
+                else "proxy_filed_copies_disagree"
+                if cand
+                else "proxy_only_source"
+            )
             plan.cells.append(
                 CellPlan(
                     **base,

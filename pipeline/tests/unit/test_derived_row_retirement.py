@@ -518,6 +518,47 @@ def test_family_b_other_tag_precise_copy_and_derived_q4_fallback(conn):
     assert plan.promote_fact_ids == []
 
 
+@pytest.mark.unit
+def test_rounded_copy_rule():
+    D = Decimal
+    assert rr._rounded_copy_of(D("770000000"), D("770293000"))  # SM
+    assert rr._rounded_copy_of(D("29000000"), D("29373000"))  # WDAY
+    assert rr._rounded_copy_of(D("230000000"), D("230141000"))  # NOW
+    assert not rr._rounded_copy_of(D("1000000"), D("1100000"))  # restatement
+    assert not rr._rounded_copy_of(D("770000000"), D("780000000"))
+
+
+@pytest.mark.integration
+def test_family_b_never_replaces_with_nci_inclusive_income(conn):
+    conn.execute(
+        "insert into rcore.concept values (13,'ProfitLoss'),(14,'NetIncomeLossAttributableToNoncontrollingInterest')"
+    )
+    conn.execute(
+        "insert into ranalytics.concept_mapping (canonical_concept_id, concept_id, priority) values (4,13,0)"
+    )  # ProfitLoss ranked FIRST, as in the real mapping
+    # FCX shape: ProfitLoss 5,365 > attributable 4,306; attributable wins
+    _f(conn, 500, NI, USD, 1, 2, "5000")
+    _f(conn, 501, PROFIT, USD, 1, 1, "5365000000")
+    _f(conn, 502, NI, USD, 1, 1, "4306000000")
+    _cell(conn, CC_NI, 1, "5000", [500])
+    # ProfitLoss only and a nonzero NCI fact: hidden, not replaced
+    _f(conn, 510, NI, USD, 2, 2, "100")
+    _f(conn, 511, PROFIT, USD, 2, 1, "313675000")
+    _f(conn, 512, 14, USD, 2, 1, "8800000")
+    _cell(conn, CC_NI, 2, "100", [510])
+    # ProfitLoss only, no NCI fact: usable (MA shape)
+    _f(conn, 520, NI, USD, 3, 2, "12900000000")
+    _f(conn, 521, PROFIT, USD, 3, 1, "12874000000")
+    _cell(conn, CC_NI, 3, "12900000000", [520])
+    by = {c.period_id: c for c in _plan_b(conn).cells}
+    assert (by[1].action, by[1].replacement_fact_id) == (rr.ACT_REPLACE, 502)
+    assert (by[2].action, by[2].reason_code) == (
+        rr.ACT_REMOVE,
+        "proxy_nci_inclusive_only",
+    )
+    assert (by[3].action, by[3].replacement_fact_id) == (rr.ACT_REPLACE, 521)
+
+
 @pytest.mark.integration
 def test_family_b_vintage_disagreement_hides_the_cell(conn):
     # RGA/MET shape: original and restated 10-K values differ materially -> hide
@@ -529,3 +570,15 @@ def test_family_b_vintage_disagreement_hides_the_cell(conn):
     assert plan.cells[0].action == rr.ACT_REMOVE
     assert plan.cells[0].reason_code == "proxy_filed_copies_disagree"
     assert plan.promote_fact_ids == []
+
+
+@pytest.mark.unit
+def test_pick_precise_resolves_sm_wday_now_rounding_but_not_restatements():
+    precise = _fact(1, "770293000", filed=date(2025, 2, 1))
+    rounded = _fact(2, "770000000", filed=date(2026, 2, 1))  # later, rounded
+    assert rr._pick_precise([rounded, precise]).fact_id == 1
+    restated = _fact(3, "1100000", filed=date(2026, 2, 1))
+    assert (
+        rr._pick_precise([_fact(4, "1000000", filed=date(2025, 2, 1)), restated])
+        is None
+    )
