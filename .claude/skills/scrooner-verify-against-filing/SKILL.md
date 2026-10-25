@@ -15,6 +15,7 @@ Branch and commit under test; report files (manifest of cells: cik, instant, sho
 - Routes: (1) R page via `FilingSummary.xml` -> `fetch_statements` (1 + 3 requests per filing); (2) FSN rows (financial statement and notes data sets) when the R page is absent or the era predates R pages.
 - Parse columns by date, not position (old R pages have a leading blank column). Check scale (thousands/millions) before comparing; tolerance is half the printed rounding unit.
 - A cell is read from the accession it claims, not a later restatement.
+- `FaceLiabilities.combined=True` (several registrant blocks): first block used; confirm it is the registrant you verify. `unavailable`, or an equity footed from components, is a hand-read cell, not evidence.
 
 ## Sample design (`seeded_sample(manifest, seed)`)
 Per company: first, last, every era boundary, every reading B instant (taxonomy-total-covered roots), every withheld cell, plus seeded random picks. Record the seed so a re-run picks the same cells. Failing-era companies get more picks. Re-read by hand any cell your automation disagrees on before calling it wrong (a parser slip is not a builder error; say how many you re-read).

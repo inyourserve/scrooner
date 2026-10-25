@@ -97,3 +97,95 @@ def test_seeded_sample_deterministic_and_covers_required():
 def test_verdict_skeleton_has_all_sections():
     t = fk.verdict_skeleton("BS batch 9", "2026-10-26", "b", "abc", 5, {"ties": 3}, ["r.json"])
     assert all(f"## {s}" in t for s in fk.VERDICT_SECTIONS) and "Seed 5" in t
+
+
+def _page(rows, cols=("Dec. 31, 2020",), head="BALANCE SHEETS - USD ($) $ in Millions"):
+    h = f"<tr><th>{head}</th>" + "".join(f"<th>{c}</th>" for c in cols) + "</tr>"
+    body = "".join(f"<tr><td class='pl'>{lab}</td>" + "".join(f"<td class='nump'>{v}</td>" for v in vals) + "</tr>" for lab, *vals in rows)
+    return fk.parse_rpage(h + body)
+
+
+D = date(2020, 12, 31)
+
+
+def test_report_selection_pairs_name_with_own_file_and_skips_misspelt_parenthetical():
+    xml = ("<Report><HtmlFileName>R3.htm</HtmlFileName><ShortName>Balance Sheets (Paranthetical)</ShortName></Report>"
+           "<Report><HtmlFileName>R2.htm</HtmlFileName><ShortName>Balance Sheets</ShortName></Report>"
+           "<Report><HtmlFileName>R4.htm</HtmlFileName><ShortName>Statements of Operations and Comprehensive Income</ShortName></Report>")
+    got = fk.find_report_files(xml)
+    assert got["BS"] == ("Balance Sheets", "R2.htm") and got["IS"][1] == "R4.htm"
+
+
+def test_old_page_element_name_suffix_and_separate_footnote_cells():
+    assert fk.parse_number("2,341,284us-gaap_Liabilities") == Decimal(2341284)
+    html = ("<tr><th>BS (USD $)In Millions</th><th>Mar. 31, 2015</th><th>Dec. 31, 2014</th></tr>"
+            "<tr><td>Total liabilities</td><td class='nump'>2,341,284us-gaap_Liabilities</td><td class='fn'>[1]</td>"
+            "<td class='nump'>2,341,046us-gaap_Liabilities</td><td class='fn'>[1]</td></tr>"
+            "<tr><td>X</td><td></td><td></td></tr>")
+    p = fk.parse_rpage(html)
+    assert p.rows[0].values == [Decimal(2341284), Decimal(2341046)] and len(p.rows) == 1
+
+
+def test_header_footnote_column_and_trailing_fn_cells():
+    html = ("<tr><th>BS - USD ($)</th><th>Sep. 30, 2025</th><th>Dec. 31, 2024</th><th><sup>[1]</sup></th></tr>"
+            "<tr><td>Total liabilities</td><td class='th'><sup></sup></td><td class='nump'>$ 5</td><td class='nump'>$ 4</td><td class='fn'></td></tr>")
+    p = fk.parse_rpage(html)
+    assert len(p.columns) == 2 and p.rows[0].values == [Decimal(5), Decimal(4)]
+
+
+@pytest.mark.parametrize("le_label,eq_label", [
+    ("Total liabilities, redeemable noncontrolling interests, and shareholders' equity", "Total shareholders' equity"),
+    ("TOTAL LIABILITIES, NONCONTROLLING INTERESTS IN THE OPERATING PARTNERSHIP AND SHAREHOLDERS' EQUITY", "Total shareholders' equity"),
+    ("Total liabilities, preferred units, and equity", "Total partners' equity"),
+    ("TOTAL CAPITALIZATION AND LIABILITIES", "Total common stockholders' equity"),
+    ("Liabilities and Shareholders' equity, Total", "Total shareholders' equity"),
+    ("Total liabilities and equity", "Stockholders' Equity, Including Portion Attributable to Noncontrolling Interest"),
+    ("Total", "Total shareholders' equity"),
+])
+def test_label_variants(le_label, eq_label):
+    p = _page([("Total assets", 100), ("Accounts payable", 10), (eq_label, 40), (le_label, 100)])
+    r = fk.face_liabilities(p, D)
+    assert r.method == "derived" and r.value == Decimal(60), r
+
+
+def test_combined_filing_uses_first_registrant_block():
+    p = _page([("Accounts payable", 5), ("Total equity", 40), ("Total liabilities and equity", 100),
+               ("Accounts payable", 1), ("Total equity", 13), ("Total liabilities and equity", 30)])
+    r = fk.face_liabilities(p, D)
+    assert r.value == Decimal(60) and r.combined
+
+
+def test_redeemable_preferred_inside_debt_is_not_mezzanine_but_real_mezzanine_is():
+    awk = _page([("Total common stockholders' equity", 40), ("Long-term debt", 90), ("Redeemable preferred stock at redemption value", 8),
+                 ("Total long-term debt", 98), ("TOTAL CAPITALIZATION AND LIABILITIES", 200)])
+    assert fk.face_liabilities(awk, D).value == Decimal(160)
+    khc = _page([("Total current liabilities", 10), ("Redeemable preferred stock", 8), ("Common stock", 1),
+                 ("Total shareholders' equity", 40), ("Total liabilities and equity", 100)])
+    assert fk.face_liabilities(khc, D).value == Decimal(52)
+    wmt = _page([("Nonredeemable noncontrolling interest", 3), ("Total equity", 40), ("Total liabilities and equity", 100)])
+    assert fk.face_liabilities(wmt, D).value == Decimal(60)
+
+
+def test_equity_on_common_stock_line_only_when_it_foots():
+    ok = _page([("Additional paid in capital", 7), ("Retained earnings", 5), ("Common stock - authorized", 12), ("Total liabilities and equity", 50)])
+    assert fk.face_liabilities(ok, D).value == Decimal(38)
+    bad = _page([("Additional paid in capital", 7), ("Retained earnings", 5), ("Common stock - authorized", 13), ("Total liabilities and equity", 50)])
+    assert fk.face_liabilities(bad, D).method == "unavailable"
+
+
+def test_position_rules_for_mezzanine():
+    debt_first = _page([("Long-term debt", 90), ("Redeemable preferred stock", 8), ("Total long-term debt", 98),
+                        ("Total shareholders' equity", 40), ("Total liabilities and equity", 200)])
+    assert fk.face_liabilities(debt_first, D).value == Decimal(160)  # redeemable inside debt: not mezzanine
+    in_equity = _page([("Total current liabilities", 10), ("Common stock", 1), ("Redeemable preferred in equity section", 3),
+                       ("Total shareholders' equity", 40), ("Total liabilities and equity", 100)])
+    assert fk.face_liabilities(in_equity, D).value == Decimal(60)  # after equity starts: not mezzanine
+    one_row = _page([("Retained earnings", 12), ("Common stock - authorized", 12), ("Total liabilities and equity", 50)])
+    assert fk.face_liabilities(one_row, D).method == "unavailable"  # a single row never 'foots'
+
+
+def test_epd_convertible_preferred_units_between_liabilities_and_equity():
+    p = _page([("Total current liabilities", 10), ("Redeemable preferred limited partner interests", None),
+               ("Series A cumulative convertible preferred units (50,000 units outstanding)", 49),
+               ("Total equity", 26000), ("Total liabilities, preferred units, and equity", 63736)])
+    assert fk.face_liabilities(p, D).value == Decimal(63736 - 26000 - 49)
