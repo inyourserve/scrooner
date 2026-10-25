@@ -33,7 +33,6 @@ def test_every_reason_code_has_display_text():
         "ratio_derived_no_filed_value",
         "ratio_derived_filed_copies_disagree",
         "proxy_only_source",
-        "proxy_no_authoritative_periodic_copy",
         "proxy_filed_copies_disagree",
     ):
         assert code in rr.REASON_TEXT and code in src
@@ -341,7 +340,13 @@ def test_family_b_plan_outcomes(conn):
     )
     assert by_period[1].note == "scale_1e3_or_1e6"
     assert by_period[2].reason_code == "proxy_only_source"
-    assert by_period[3].reason_code == "proxy_no_authoritative_periodic_copy"
+    assert (
+        by_period[3].action == rr.ACT_REPLACE
+        and by_period[3].replacement_fact_id == 221
+    )
+    assert plan.promote_fact_ids == [
+        221
+    ]  # non-authoritative only because the proxy conflicted
     assert by_period[4].reason_code == "proxy_filed_copies_disagree"
     assert sorted(f.fact_id for f in plan.facts) == [200, 210, 220, 230]
     assert plan.info["proxy_facts_authoritative_not_displayed"] == 1  # fact 250
@@ -379,8 +384,9 @@ def test_apply_then_restore_is_exact_and_replan_is_empty(conn, family):
     after = _state(conn)
     assert after != before
     assert stats["facts_demoted"] == len(plan.facts) == 4
-    assert stats["cells_replaced"] == 1
-    assert stats["cells_removed"] == (2 if family == "A" else 3)
+    assert stats["cells_replaced"] == (1 if family == "A" else 2)
+    assert stats["cells_removed"] == 2
+    assert stats["facts_promoted"] == (0 if family == "A" else 1)
     facts = dict(after[1])
     for f in plan.facts:
         assert facts[f.fact_id] is False
@@ -393,7 +399,8 @@ def test_apply_then_restore_is_exact_and_replan_is_empty(conn, family):
         assert cells[(CC_TAX, 3)][3] == Decimal("0.5")  # review cell untouched
     else:
         assert cells[(CC_NI_RES, 1)][3] == Decimal("268550000")
-        assert (CC_NI_RES, 2) not in cells and (CC_NI, 3) not in cells
+        assert (CC_NI_RES, 2) not in cells and (CC_NI, 4) not in cells
+        assert cells[(CC_NI, 3)][3] == Decimal("5000000")
         assert cells[(CC_NI, 5)][3] == Decimal("777")  # 8-K untouched
     # retired rows keep their before-image and reason
     arch = conn.execute(
@@ -410,7 +417,7 @@ def test_apply_then_restore_is_exact_and_replan_is_empty(conn, family):
     # rollback restores cells and facts exactly
     with conn.cursor() as cur:
         out = rr.restore(cur, "run-1", core="rcore", analytics="ranalytics")
-    assert out["facts_restored"] == 4
+    assert out["facts_restored"] == (4 if family == "A" else 5)
     restored = _state(conn)
     assert restored[1] == before[1]
     assert sorted(restored[0], key=lambda r: (r[1], r[2])) == sorted(
@@ -462,3 +469,63 @@ def test_apply_with_flag_off_changes_nothing(conn):
                 analytics="ranalytics",
             )
     assert _state(conn) == before
+
+
+PROFIT, CC_PROFIT_PRIO = 13, 2
+
+
+def _extra_b(c):
+    c.execute("insert into rcore.concept values (13,'ProfitLoss')")
+    c.execute(
+        "insert into ranalytics.concept_mapping (canonical_concept_id, concept_id, priority)"
+        " values (4,13,2)"
+    )
+    # period 6 (MA): proxy NetIncomeLoss rounded; the 10-K carries it on ProfitLoss only
+    _f(c, 300, NI, USD, 6, 2, "12900000000")
+    _f(c, 301, PROFIT, USD, 6, 1, "12874000000")
+    _cell(c, CC_NI, 6, "12900000000", [300])
+    # period 7 (SM/ANET): precise 10-K copy vs a later rounded copy -> keep the precise one
+    _f(c, 310, NI, USD, 7, 2, "2087")
+    _f(c, 311, NI, USD, 7, 1, "2087321000")
+    _f(c, 312, NI, USD, 7, 5, "2087000000")
+    _cell(c, CC_NI, 7, "2087", [310])
+    # Q4 derived on a proxy filing (CMG/NFLX shape): fall back to the 10-K-derived Q4 fact
+    _f(c, 320, NI, USD, 8, 2, "999", derived=True)
+    _f(c, 321, NI, USD, 8, 1, "1234", derived=True)
+    _cell(c, CC_NI, 8, "999", [320])
+
+
+@pytest.mark.integration
+def test_family_b_other_tag_precise_copy_and_derived_q4_fallback(conn):
+    conn.execute(
+        "insert into rcore.period values (8,1,'2025-10-01','2025-12-31','duration',2025,'Q4')"
+    )
+    _extra_b(conn)
+    plan = _plan_b(conn)
+    by_period = {c.period_id: c for c in plan.cells}
+    assert (by_period[6].action, by_period[6].replacement_fact_id) == (
+        rr.ACT_REPLACE,
+        301,
+    )
+    assert (by_period[7].action, by_period[7].replacement_fact_id) == (
+        rr.ACT_REPLACE,
+        311,
+    )
+    assert (by_period[8].action, by_period[8].replacement_fact_id) == (
+        rr.ACT_REPLACE,
+        321,
+    )
+    assert plan.promote_fact_ids == []
+
+
+@pytest.mark.integration
+def test_family_b_vintage_disagreement_hides_the_cell(conn):
+    # RGA/MET shape: original and restated 10-K values differ materially -> hide
+    _f(conn, 400, NI, USD, 1, 2, "100")
+    _f(conn, 401, NI, USD, 1, 1, "1000000", auth=False)
+    _f(conn, 402, NI, USD, 1, 5, "1100000", auth=False)
+    _cell(conn, CC_NI, 1, "100", [400])
+    plan = _plan_b(conn)
+    assert plan.cells[0].action == rr.ACT_REMOVE
+    assert plan.cells[0].reason_code == "proxy_filed_copies_disagree"
+    assert plan.promote_fact_ids == []
