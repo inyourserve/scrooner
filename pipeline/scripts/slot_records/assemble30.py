@@ -98,6 +98,21 @@ for cik, era_list in sorted(eras.items()):
         run = [{"period_of_report": span["period_from"], "aggregates": obs.get("aggregates", {})},
                {"period_of_report": span["period_to"], "aggregates": obs.get("aggregates", {})}]
         b._apply_lease_evidence(rec, run, ticker, lease_facts)
+        # Verifier V5 (WSO 2024-12-31): a debt-and-lease total whose own calc
+        # children (any role) include an OPERATING lease line (321,715K of
+        # operating leases inside 'LongTermDebtAndCapitalLeaseObligations',
+        # and in the current-portion tag beside it) must never feed a
+        # borrowings slot: class it excluded_mixed_lease so the lease-evidence
+        # path and the Verifier see it.
+        any_role_children = fa.all_role_children(cal["arcs"])
+        for m in rec["members"]:
+            if not m["class"].startswith("excluded_") and any(
+                "OperatingLease" in ch for ch in fa.descendants(any_role_children, m["tag"])
+            ):
+                m["class"] = "excluded_mixed_lease"
+                m["mixed_lease_evidence"] = sorted(
+                    ch for ch in fa.descendants(any_role_children, m["tag"]) if "OperatingLease" in ch
+                )
         # cal-sourced exclusions (e.g. combined AP lines) are bookkept as
         # exclusions, never as members
         excluded_members = [m for m in rec["members"] if m["class"].startswith("excluded_")]

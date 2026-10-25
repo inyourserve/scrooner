@@ -25,7 +25,9 @@ anchors = json.loads(open(sys.argv[2]).read())["anchors"]
 # member values the API never carries are taken from the filing's OWN instance,
 # same accession as the cell (never from another filing), undimensioned
 # context only. Rows: {cik, adsh, tag, period_type, end, value, unit, decimals}.
-instance_evidence = defaultdict(dict)  # (adsh, end) -> tag -> Decimal
+instance_evidence = defaultdict(dict)  # (adsh, end) -> tag -> Decimal   (undimensioned)
+instance_dim_sum = defaultdict(lambda: defaultdict(Decimal))  # (adsh, end) -> tag -> sum over dimension members
+instance_dim_members = defaultdict(lambda: defaultdict(list))
 instance_rows = 0
 if len(sys.argv) > 4 and os.path.exists(sys.argv[4]):
     for line in open(sys.argv[4]):
@@ -33,10 +35,32 @@ if len(sys.argv) > 4 and os.path.exists(sys.argv[4]):
         if r.get("period_type") != "instant" or r.get("value") in (None, "") or (r.get("unit") or "USD") != "USD":
             continue
         try:
-            instance_evidence[(r["adsh"], r["end"])].setdefault(r["tag"], Decimal(r["value"]))
-            instance_rows += 1
+            v = Decimal(r["value"])
         except Exception:  # noqa: BLE001
             continue
+        key = (r["adsh"], r["end"])
+        if r.get("dims"):
+            # a face line tagged per member of ONE axis (class of stock): the
+            # face total is the sum of the members of that axis. In a 10-K the
+            # same preferred appears under two axes (TRGP 2021-12-31: 749.7M
+            # twice), so members are grouped per axis and ONE axis is used
+            # (StatementClassOfStockAxis first, else the axis with most members).
+            # Used only for MEZZANINE slots whose undimensioned value is
+            # absent; the identity gate still has to tie.
+            if r["dims"].count("=") == 1:
+                axis, member = r["dims"].split("=", 1)
+                instance_dim_members[key][r["tag"]].append((axis, member, v))
+            continue
+        instance_evidence[key].setdefault(r["tag"], v)
+        instance_rows += 1
+for key, bytag in instance_dim_members.items():
+    for tag, rows in bytag.items():
+        per_axis = defaultdict(dict)
+        for axis, member, v in rows:
+            per_axis[axis].setdefault(member, v)
+        axis = "StatementClassOfStockAxis" if "StatementClassOfStockAxis" in per_axis else max(per_axis, key=lambda a: len(per_axis[a]))
+        instance_dim_sum[key][tag] = sum(per_axis[axis].values(), Decimal(0))
+        instance_dim_members[key][tag] = [f"{axis}={m}" for m in per_axis[axis]]
 
 conn = psycopg.connect(os.environ["DATABASE_URL"])
 cur = conn.cursor()
@@ -88,7 +112,16 @@ def fetch(cik, tags):
             if tag not in facts[e]:
                 facts[e][tag] = v
                 facts[e].setdefault("__instance_filled__", []).append(tag)
+        for tag, v in instance_dim_sum.get((acc, e), {}).items():
+            if tag in mezz_tags and (tag not in facts[e] or tag not in accs[acc]):
+                facts[e][tag] = v
+                facts[e].setdefault("__dim_mezz__", set()).add(tag)
+                facts[e].setdefault("__instance_filled__", []).append(f"{tag}[dims:{len(instance_dim_members[(acc, e)][tag])}]")
     return facts
+
+
+mezz_tags = {m["tag"] for rs in records.values() for r in rs for m in r["mezzanine_face"]} | {
+    t for rs in records.values() for r in rs for t in (r.get("mezzanine_dim_tags") or [])}
 
 
 def rounding_unit(day):
@@ -149,7 +182,17 @@ def identity(rec, day, liab):
     # mezzanine ONLY from the record's own face lines (Verifier BS-V2 fix 4:
     # the tag fallback subtracted GE's 408M RedeemableNoncontrollingInterest
     # note value, which is not a face line, and flagged 12 right values)
-    mezz = sum((day.get(m["tag"]) or Decimal(0)) for m in rec["mezzanine_face"])
+    # face mezzanine lines, plus the record's dimensioned mezzanine tags (FSDS
+    # dims extract) for eras whose face list omits the line (TRGP 2016-12-31,
+    # 2018-03-31: Series A preferred tagged only per class of stock)
+    face_tags = {m["tag"] for m in rec["mezzanine_face"]}
+    dim_only = set(rec.get("mezzanine_dim_tags") or []) - face_tags
+    mezz = sum((day.get(t) or Decimal(0)) for t in face_tags)
+    # a dimension-only mezzanine tag counts ONLY with its per-class value read
+    # from the same accession's instance, never with an undimensioned API fact
+    # of the same name (GE: RedeemableNoncontrollingInterestEquityCarryingAmount
+    # 408M is a note value, not a face line; Verifier BS-V2 fix 4)
+    mezz += sum(day[t] for t in dim_only if t in day.get("__dim_mezz__", set()))
     # Right-hand side total: the filer's own 'total liabilities and equity'
     # line (Verifier BS-V1 rule), else total assets. BRKR 2019-03-31 prints
     # assets 2,242.5M against a liabilities side of 2,242.3M: its own face
@@ -192,6 +235,7 @@ for cik in sorted(records):
     for r in records[cik]:
         tags.update(m["tag"] for m in r["total_liabilities_members"])
         tags.update(m["tag"] for m in r["mezzanine_face"])
+        tags.update(r.get("mezzanine_dim_tags") or [])
         if r["equity_parent_tag"]:
             tags.add(r["equity_parent_tag"])
         if r.get("nci_tag"):

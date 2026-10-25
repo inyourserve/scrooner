@@ -116,12 +116,10 @@
    "expected": "9823100000",
    "src": "0001564590-21-054348 R2",
    "note": "749.7M Series A mezzanine filed only with class-of-stock member",
-   "got": null,
+   "got": "9823100000",
    "missing": [],
-   "missing_custom": [
-    "DerivativeLiabilityBeforeEffectsOfMasterNettingArrangementsNoncurrent"
-   ],
-   "result": "CHECK"
+   "missing_custom": [],
+   "result": "PASS"
   },
   {
    "ticker": "BX",
@@ -154,12 +152,10 @@
    "period_end": "2017-12-31",
    "expected": "14097000000",
    "note": "8M redeemable preferred sits inside total long-term debt",
-   "got": null,
+   "got": "14097000000",
    "missing": [],
-   "missing_custom": [
-    "LongTermDebtIncludesRedeemablePreferredStockAtRedemptionValue"
-   ],
-   "result": "CHECK"
+   "missing_custom": [],
+   "result": "PASS"
   },
   {
    "ticker": "DIS",
@@ -172,7 +168,7 @@
   }
  ],
  "identity": {
-  "ties": 728
+  "ties": 851
  },
  "per_company": {
   "EMR": {
@@ -207,13 +203,13 @@
    "identity_ties": 46
   },
   "DVN": {
-   "identity_ties": 16,
-   "member_blank_in_column_identity_confirmed": 3,
-   "needs_instance_reader": 30
+   "identity_ties": 46,
+   "member_blank_in_column_identity_confirmed": 7,
+   "instance_filled": 30
   },
   "BRKR": {
-   "identity_ties": 45,
-   "needs_instance_reader": 1
+   "identity_ties": 46,
+   "instance_filled": 1
   },
   "NI": {
    "identity_ties": 46
@@ -223,7 +219,8 @@
    "member_blank_in_column_identity_confirmed": 1
   },
   "TRGP": {
-   "needs_instance_reader": 46
+   "instance_filled": 46,
+   "identity_ties": 46
   },
   "BX": {
    "identity_ties": 46
@@ -232,7 +229,8 @@
    "identity_ties": 39
   },
   "AWK": {
-   "needs_instance_reader": 46
+   "instance_filled": 46,
+   "identity_ties": 46
   },
   "DIS": {
    "identity_ties": 30

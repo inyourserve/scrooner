@@ -24,6 +24,18 @@ from collections import defaultdict
 ABSTRACT_RX = re.compile(r"Abstract$")
 TOTAL_LABEL_RX = re.compile(r"^\s*total\b", re.I)
 LSE_TOTALS = ("LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital")
+EQUITY_TOTAL_TAGS = ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+                     "StockholdersEquity", "PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest",
+                     "PartnersCapital", "MembersEquity")
+# equity-section rows (same net as bs_totals_detect's guard) and the
+# capitalization subtotal, excluded from a liabilities tie span
+EQUITY_RX = re.compile(
+    r"^(Preferred|Common)Stock|AdditionalPaidInCapital|RetainedEarnings|AccumulatedOtherComprehensive|"
+    r"TreasuryStock|StockholdersEquity|PartnersCapital|MembersEquity|Shareholders|EquityAttributable|"
+    r"CapitalSurplus|CapitalStock|PaidInCapital|OtherEquity|EquityOther|OtherCapital(?!iz)|"
+    r"PreferredUnits|CommonUnits|LimitedPartnersUnits|MinorityInterest|NoncontrollingInterest"
+)
+CAP_TOTAL_RX = re.compile(r"Capitalization")
 
 
 def all_role_children(arcs):
@@ -76,13 +88,23 @@ def tie_spec(zone, cm, side):
         span = [t for t in ztags[: ztags.index("LiabilitiesCurrent")] if not ABSTRACT_RX.search(t)]
         return {"side": side, "total": "LiabilitiesCurrent", "roots": _roots(span, cm), "computable": True}
     # noncurrent: rows after the current total up to the Liabilities total
-    if "Liabilities" not in ztags:
+    if "Liabilities" in ztags:
+        lo = ztags.index("LiabilitiesCurrent") + 1 if "LiabilitiesCurrent" in ztags else 0
+        hi = ztags.index("Liabilities")
+        span = [t for t in ztags[lo:hi] if not ABSTRACT_RX.search(t)]
+        return {"side": side, "total": "Liabilities", "less": ["LiabilitiesCurrent"] if lo else [],
+                "roots": _roots(span, cm), "computable": True}
+    # capitalization-format filers (NFG, NI, AWK: equity, long-term debt, total
+    # capitalization, then liabilities; no printed Liabilities total): every
+    # non-equity zone root must sum to L&E total less total equity
+    lse = next((t for t in LSE_TOTALS if t in ztags), None)
+    eq_total = next((t for t in EQUITY_TOTAL_TAGS if t in ztags), None)
+    if not lse or not eq_total:
         return {"side": side, "total": None, "roots": [], "computable": False}
-    lo = ztags.index("LiabilitiesCurrent") + 1 if "LiabilitiesCurrent" in ztags else 0
-    hi = ztags.index("Liabilities")
-    span = [t for t in ztags[lo:hi] if not ABSTRACT_RX.search(t)]
-    return {"side": side, "total": "Liabilities", "less": "LiabilitiesCurrent" if lo else None,
-            "roots": _roots(span, cm), "computable": True}
+    span = [t for t in ztags if t != lse and not ABSTRACT_RX.search(t) and not EQUITY_RX.search(t)
+            and not CAP_TOTAL_RX.search(t) and t != "CommitmentsAndContingencies"]
+    return {"side": side, "total": lse, "less": [eq_total], "roots": _roots(span, cm),
+            "computable": True, "format": "capitalization"}
 
 
 def admit(tag, face_rows, arcs, member_tags, side):

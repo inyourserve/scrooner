@@ -65,15 +65,20 @@ def parse_instance(path, cik, wanted):
         if ident is None or int(re.sub(r"\D", "", ident.text or "0") or 0) != int(cik):
             continue
         seg = ent.find(XBRLI + "segment")
+        dims = []
         if seg is not None and list(seg):
-            continue  # dimensioned context: not the consolidated face value
+            # dimensioned context: kept ONLY for explicitly wanted tags (a
+            # mezzanine line tagged per class of stock, TRGP Series A preferred),
+            # with the axis/member recorded; the replay decides whether to use it
+            for m in seg:
+                dims.append(f"{(m.get('dimension') or '').split(':')[-1]}={(m.text or '').strip().split(':')[-1]}")
         per = c.find(XBRLI + "period")
         inst = per.find(XBRLI + "instant")
         if inst is not None:
-            contexts[c.get("id")] = ("instant", inst.text.strip(), inst.text.strip())
+            contexts[c.get("id")] = ("instant", inst.text.strip(), inst.text.strip(), dims)
         else:
             s, e = per.find(XBRLI + "startDate"), per.find(XBRLI + "endDate")
-            contexts[c.get("id")] = ("duration", s.text.strip(), e.text.strip())
+            contexts[c.get("id")] = ("duration", s.text.strip(), e.text.strip(), dims)
     units = {}
     for u in root.iter(XBRLI + "unit"):
         m = u.find(XBRLI + "measure")
@@ -86,20 +91,21 @@ def parse_instance(path, cik, wanted):
         ctx = el.get("contextRef")
         if ctx not in contexts:
             continue
-        prefix = ns.rsplit("/", 1)[-1]
+        ptype, start, end, dims = contexts[ctx]
         if wanted and local not in wanted:
             continue
+        if dims and not wanted:
+            continue  # unfiltered reads keep the consolidated (undimensioned) facts only
         if el.get("{http://www.w3.org/2001/XMLSchema-instance}nil") == "true":
             value = None
         else:
             value = (el.text or "").strip()
-        ptype, start, end = contexts[ctx]
         out.append({
             "tag": local, "namespace": ns, "custom": "fasb.org/us-gaap" not in ns and "fasb.org/srt" not in ns
             and "xbrl.sec.gov/dei" not in ns,
             "period_type": ptype, "start": start, "end": end,
             "value": value, "decimals": el.get("decimals"), "unit": units.get(el.get("unitRef")),
-            "context": ctx,
+            "context": ctx, "dims": ";".join(dims),
         })
     return out
 

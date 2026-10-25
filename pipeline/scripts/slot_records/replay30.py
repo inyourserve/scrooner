@@ -12,6 +12,7 @@ Read-only: one DB connection, SELECTs only.
 usage: DATABASE_URL=... replay30.py <records.jsonl> <lane3_dir> <out_report.json>
 """
 import json
+import re
 import os
 import sys
 from collections import defaultdict
@@ -83,14 +84,40 @@ def fetch_facts(cur, cik, tags):
         where c.cik = %s and p.period_type = 'instant' and co.taxonomy = 'us-gaap'
           and u.unit_name = 'usd' and co.tag = any(%s)
           and fi.form in ('10-K','10-Q','10-K/A','10-Q/A')
-        order by co.tag, p.end_date, f.is_authoritative desc, f.id desc
+        order by co.tag, p.end_date, (fi.period_of_report = p.end_date) desc, f.is_authoritative desc, f.id desc
         """,
         (cik, list(tags)),
     )
     facts = defaultdict(dict)
     for tag, end_date, value, is_auth in cur.fetchall():
         facts[end_date][tag] = (value, is_auth)
+    # custom-tag values from the filing's OWN instance (instance_reader.py),
+    # same accession as the instant's original periodic filing only
+    if instance_evidence:
+        cur.execute(
+            """select fi.accession_number, fi.period_of_report::text from core.filing fi
+               join core.company c on c.id = fi.company_id
+               where c.cik = %s and fi.form in ('10-K','10-Q') and fi.period_of_report >= '2015-01-01'""",
+            (cik,),
+        )
+        for acc, por in cur.fetchall():
+            for tag, v in instance_evidence.get((acc, por), {}).items():
+                if tag in tags and tag not in facts[por]:
+                    facts[por][tag] = (v, True)
+                    facts[por].setdefault("__instance_filled__", ([], True))[0].append(tag)
     return facts
+
+# optional 4th arg: instance-reader evidence JSONL -> (adsh, end) -> tag -> Decimal
+instance_evidence = defaultdict(dict)
+if len(sys.argv) > 4 and os.path.exists(sys.argv[4]):
+    for line in open(sys.argv[4]):
+        r = json.loads(line)
+        if r.get("period_type") != "instant" or r.get("value") in (None, "") or (r.get("unit") or "USD") != "USD":
+            continue
+        try:
+            instance_evidence[(r["adsh"], r["end"])].setdefault(r["tag"], Decimal(r["value"]))
+        except Exception:  # noqa: BLE001
+            continue
 
 report = {"cells": [], "summary": defaultdict(int), "per_company": defaultdict(lambda: defaultdict(int))}
 conn = psycopg.connect(os.environ["DATABASE_URL"])
@@ -102,9 +129,13 @@ for cik in sorted(records):
         for m in rec["members"]:
             tie = m.get("tie") or {}
             tags.update(tie.get("roots", []))
-            tags.update(t for t in (tie.get("total"), tie.get("less")) if t)
+            less = tie.get("less") or []
+            tags.update([less] if isinstance(less, str) else less)
+            if tie.get("total"):
+                tags.add(tie["total"])
     tags.update(t for side in LEASE_TAGS.values() for t in side)
     tags.update(AGG_TAGS)
+    tags.update(("LongTermDebt", "LongTermDebtCurrent"))  # debt-note carrying total + current portion (COST rule)
     facts = fetch_facts(cur, cik, tags)
     cells = [(k, v) for k, v in by_cell.items() if k[0] == cik]
     for (cik_, period_end), rows in sorted(cells):
@@ -151,6 +182,45 @@ for cik in sorted(records):
                     lease_content += day[lt][0]
                     break
         borrowings = lease_incl - lease_content
+        # CURRENT MATURITIES IN A COMBINED LINE (Verifier V5, COST 2018-09-02:
+        # face shows only LongTermDebtNoncurrent 6,487M; the debt note carries
+        # 6,577M with a 90M current portion inside 'other current liabilities').
+        # A record with NO current-maturities member never publishes the
+        # noncurrent face figure as total debt: if the filer's own note total
+        # (LongTermDebt) reconciles as noncurrent face + note current portion,
+        # the current portion is added from the note (same accession, periodic
+        # form); otherwise the cell holds as face_note_gap_review.
+        note_current_added = None
+        note_gap = False
+        current_unverified = False
+        has_current_ltd = any(
+            m["side"] == "current" and re.search(r"LongTermDebt|DebtCurrent|CurrentPortion|Maturit", m["tag"])
+            for m in rec["members"]
+        )
+        ltd_note = day.get("LongTermDebt")
+        if not has_current_ltd and ltd_note is not None:
+            noncur_ltd = sum(
+                (day[m["tag"]][0] for m in rec["members"]
+                 if m["side"] == "noncurrent" and m["tag"] in day and re.search(r"LongTermDebt", m["tag"])),
+                Decimal(0),
+            )
+            ltd_cur = day.get("LongTermDebtCurrent")
+            if abs(ltd_note[0] - noncur_ltd) <= 1:
+                pass  # no current portion exists
+            elif ltd_cur is not None and abs(noncur_ltd + ltd_cur[0] - ltd_note[0]) <= 1:
+                lease_incl += ltd_cur[0]
+                borrowings += ltd_cur[0]
+                note_current_added = ltd_cur[0]
+            else:
+                note_gap = True
+        elif not has_current_ltd and any(
+            m["side"] == "noncurrent" and m["tag"] in day and re.search(r"LongTermDebt", m["tag"]) for m in rec["members"]
+        ):
+            # noncurrent long-term debt on the face, no current-maturities line,
+            # and no note carrying total at this instant to prove there is no
+            # current portion (COST 10-Qs): never publish the noncurrent figure
+            # as total debt; hold for the Verifier / instance reader.
+            current_unverified = True
         before_vals = {Decimal(r["before"]) for r in rows if r.get("before")}
         is_hold = any("hold" in (r.get("reason") or "") and not r.get("after") for r in rows)
         # Verifier: a missing member is a HARD STOP, never a silent zero
@@ -174,7 +244,12 @@ for cik in sorted(records):
             if len(vals) != len(tie["roots"]):
                 tie_pending.append(f"{m['tag']}:root_values_missing")
                 continue
-            target = day[tie["total"]][0] - (day[tie["less"]][0] if tie.get("less") and tie["less"] in day else Decimal(0))
+            less = tie.get("less") or []
+            less = [less] if isinstance(less, str) else less
+            if any(t not in day for t in less):
+                tie_pending.append(f"{m['tag']}:less_values_missing")
+                continue
+            target = day[tie["total"]][0] - sum((day[t][0] for t in less), Decimal(0))
             unit = Decimal(1000000)
             for v in vals + [target]:
                 while unit > 1 and v != 0 and v % unit != 0:
@@ -197,6 +272,10 @@ for cik in sorted(records):
             verdict = "not_computable_missing_member"
         elif not day:
             verdict = "not_computable_no_facts"
+        elif note_gap:
+            verdict = "face_note_gap_review"
+        elif current_unverified:
+            verdict = "current_maturities_unverified"
         elif filer_agg is not None and abs(lease_incl - filer_agg) > 1:
             # NOTE-TIE CHECK (Verifier V4: COST 2018-09-02 - a 90M current
             # portion folded into another face line is invisible to a
@@ -219,7 +298,7 @@ for cik in sorted(records):
         publishable = verdict not in (
             "needs_instance_reader", "not_computable_missing_member",
             "not_computable_no_facts", "not_computable_uncovered_candidates",
-            "face_note_gap_review", "face_admission_tie_pending",
+            "face_note_gap_review", "face_admission_tie_pending", "current_maturities_unverified",
         )
         report["cells"].append(
             {"ticker": ticker, "cik": cik, "period_end": period_end, "verdict": verdict,
@@ -229,7 +308,8 @@ for cik in sorted(records):
              "slot_borrowings": str(borrowings) if publishable else None,
              "lane3_before": sorted(str(b) for b in before_vals), "hold": is_hold,
              "missing_members": missing, "missing_custom_members": missing_custom,
-             "nonauth_members": nonauth, "face_admission_tie_pending": tie_pending}
+             "nonauth_members": nonauth, "face_admission_tie_pending": tie_pending,
+             "note_current_portion_added": str(note_current_added) if note_current_added is not None else None}
         )
 conn.close()
 report["summary"] = dict(report["summary"])

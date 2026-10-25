@@ -4,9 +4,9 @@
    "ticker": "AMAT",
    "cik": "0000006951",
    "period_end": "2016-10-30",
-   "verdict": "face_note_gap_review",
-   "slot_lease_inclusive": null,
-   "slot_borrowings": null,
+   "verdict": "DISAGREES_with_lane3",
+   "slot_lease_inclusive": "3343000000",
+   "slot_borrowings": "3343000000",
    "lane3_before": [
     "400000000"
    ],
@@ -16,15 +16,16 @@
    "nonauth_members": [
     "LongTermDebtNoncurrent"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "AMAT",
    "cik": "0000006951",
    "period_end": "2023-10-29",
-   "verdict": "agrees_lease_inclusive",
-   "slot_lease_inclusive": "5561000000",
-   "slot_borrowings": "5561000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "5561000000"
    ],
@@ -32,15 +33,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "AMAT",
    "cik": "0000006951",
    "period_end": "2026-04-26",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "6455000000",
-   "slot_borrowings": "6455000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "7654000000"
    ],
@@ -48,7 +50,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -64,7 +67,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -80,7 +84,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -96,7 +101,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -112,7 +118,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -128,7 +135,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -144,7 +152,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -160,7 +169,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -176,7 +186,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -192,7 +203,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -208,7 +220,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -224,7 +237,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -240,7 +254,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "KO",
@@ -256,7 +271,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "GE",
@@ -277,7 +293,8 @@
     "NonRecourseBorrowingsOfConsolidatedSecuritizationEntities"
    ],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "GE",
@@ -294,8 +311,12 @@
    "missing_custom_members": [
     "NonRecourseBorrowingsOfConsolidatedSecuritizationEntities"
    ],
-   "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "nonauth_members": [
+    "LongTermDebtAndCapitalLeaseObligations",
+    "ShortTermBorrowings"
+   ],
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "GE",
@@ -312,7 +333,8 @@
     "DebtCurrent",
     "LongTermDebtAndCapitalLeaseObligations"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -328,7 +350,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -344,7 +367,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -360,7 +384,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -376,7 +401,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -392,7 +418,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -408,7 +435,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -424,7 +452,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -440,7 +469,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -456,7 +486,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -472,7 +503,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -488,7 +520,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -504,7 +537,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -520,7 +554,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -536,7 +571,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "INTC",
@@ -552,15 +588,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PG",
    "cik": "0000080424",
    "period_end": "2015-06-30",
    "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "30345000000",
-   "slot_borrowings": "30345000000",
+   "slot_lease_inclusive": "30350000000",
+   "slot_borrowings": "30350000000",
    "lane3_before": [
     "11579000000"
    ],
@@ -571,15 +608,16 @@
     "DebtCurrent",
     "LongTermDebtNoncurrent"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2015-03-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "33933000000",
-   "slot_borrowings": "33868000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "26608000000"
    ],
@@ -587,15 +625,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2015-06-30",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "31910000000",
-   "slot_borrowings": "31831000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "24221000000"
    ],
@@ -603,15 +642,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2015-09-30",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "35876000000",
-   "slot_borrowings": "35790000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "28280000000"
    ],
@@ -619,15 +659,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2016-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "46126000000",
-   "slot_borrowings": "46033000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "43330000000"
    ],
@@ -635,15 +676,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2017-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "38763000000",
-   "slot_borrowings": "38669000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "35426000000"
    ],
@@ -651,15 +693,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2018-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "34459000000",
-   "slot_borrowings": "34332000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "29456000000"
    ],
@@ -667,15 +710,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2019-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "26973000000",
-   "slot_borrowings": "26691000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "22012000000"
    ],
@@ -683,15 +727,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2020-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "44315000000",
-   "slot_borrowings": "43868000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "27224000000"
    ],
@@ -699,15 +744,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2021-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "31369000000",
-   "slot_borrowings": "30920000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "25932000000"
    ],
@@ -715,15 +761,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2022-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "23339000000",
-   "slot_borrowings": "22936000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "27389000000"
    ],
@@ -731,15 +778,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2023-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "20836000000",
-   "slot_borrowings": "20262000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "25379000000"
    ],
@@ -747,15 +795,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2024-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "24541000000",
-   "slot_borrowings": "23995000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "32791000000"
    ],
@@ -763,15 +812,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CVX",
    "cik": "0000093410",
    "period_end": "2025-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "40758000000",
-   "slot_borrowings": "40099000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "50699000000"
    ],
@@ -779,7 +829,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -795,7 +846,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -811,7 +863,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -827,7 +880,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -843,7 +897,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -859,7 +914,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -875,7 +931,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -891,7 +948,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -907,7 +965,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -923,7 +982,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -939,7 +999,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -955,7 +1016,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -971,7 +1033,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -987,7 +1050,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1003,7 +1067,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1019,7 +1084,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1035,7 +1101,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1051,7 +1118,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1067,7 +1135,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1083,7 +1152,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1099,7 +1169,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1115,7 +1186,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1131,7 +1203,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1147,7 +1220,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1163,7 +1237,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1179,7 +1254,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1195,7 +1271,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "WMT",
@@ -1211,15 +1288,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "JNJ",
    "cik": "0000200406",
    "period_end": "2021-01-03",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "35266000000",
-   "slot_borrowings": "35266000000",
+   "verdict": "agrees_lease_inclusive",
+   "slot_lease_inclusive": "37065000000",
+   "slot_borrowings": "37065000000",
    "lane3_before": [
     "37065000000"
    ],
@@ -1227,15 +1305,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": "1799000000"
   },
   {
    "ticker": "JNJ",
    "cik": "0000200406",
    "period_end": "2022-01-02",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "33751000000",
-   "slot_borrowings": "33751000000",
+   "verdict": "agrees_lease_inclusive",
+   "slot_lease_inclusive": "35882000000",
+   "slot_borrowings": "35882000000",
    "lane3_before": [
     "35882000000"
    ],
@@ -1243,15 +1322,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": "2131000000"
   },
   {
    "ticker": "JNJ",
    "cik": "0000200406",
    "period_end": "2023-12-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "29332000000",
-   "slot_borrowings": "29332000000",
+   "verdict": "agrees_lease_inclusive",
+   "slot_lease_inclusive": "30801000000",
+   "slot_borrowings": "30801000000",
    "lane3_before": [
     "30801000000"
    ],
@@ -1259,15 +1339,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": "1469000000"
   },
   {
    "ticker": "JNJ",
    "cik": "0000200406",
    "period_end": "2024-12-29",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "36634000000",
-   "slot_borrowings": "36634000000",
+   "verdict": "agrees_lease_inclusive",
+   "slot_lease_inclusive": "38383000000",
+   "slot_borrowings": "38383000000",
    "lane3_before": [
     "38383000000"
    ],
@@ -1275,15 +1356,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": "1749000000"
   },
   {
    "ticker": "JNJ",
    "cik": "0000200406",
    "period_end": "2025-12-28",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "47933000000",
-   "slot_borrowings": "47933000000",
+   "verdict": "agrees_lease_inclusive",
+   "slot_lease_inclusive": "49933000000",
+   "slot_borrowings": "49933000000",
    "lane3_before": [
     "49933000000"
    ],
@@ -1291,7 +1373,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": "2000000000"
   },
   {
    "ticker": "MRK",
@@ -1310,7 +1393,8 @@
     "DebtCurrent",
     "LongTermDebtNoncurrent"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1326,7 +1410,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1342,7 +1427,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1358,7 +1444,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1374,7 +1461,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1390,7 +1478,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1406,7 +1495,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1422,7 +1512,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1438,7 +1529,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1454,7 +1546,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1470,7 +1563,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1486,7 +1580,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1502,7 +1597,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1518,7 +1614,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1534,7 +1631,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1550,7 +1648,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1566,7 +1665,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1582,7 +1682,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1598,7 +1699,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1614,7 +1716,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1630,7 +1733,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1646,7 +1750,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1662,7 +1767,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1678,7 +1784,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1694,7 +1801,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1710,7 +1818,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1726,7 +1835,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1742,7 +1852,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1758,7 +1869,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1774,7 +1886,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1790,7 +1903,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MRK",
@@ -1806,7 +1920,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1822,7 +1937,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1838,7 +1954,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1854,7 +1971,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1872,7 +1990,8 @@
    "nonauth_members": [
     "LongTermDebtAndCapitalLeaseObligations"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1888,7 +2007,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1904,7 +2024,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1920,7 +2041,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1936,7 +2058,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1952,7 +2075,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1968,7 +2092,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -1984,7 +2109,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -2000,7 +2126,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "HD",
@@ -2016,7 +2143,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2032,7 +2160,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2048,7 +2177,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2064,7 +2194,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2080,7 +2211,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2096,7 +2228,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2112,7 +2245,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2128,7 +2262,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2144,7 +2279,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2160,7 +2296,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2176,7 +2313,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2192,7 +2330,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2208,7 +2347,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2224,7 +2364,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2240,7 +2381,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2256,7 +2398,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2272,7 +2415,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2288,7 +2432,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2304,7 +2449,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2320,7 +2466,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2336,7 +2483,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2352,7 +2500,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2368,7 +2517,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2384,7 +2534,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2400,7 +2551,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2416,7 +2568,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2432,7 +2585,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2448,7 +2602,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2464,7 +2619,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2480,7 +2636,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2496,7 +2653,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2512,7 +2670,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2528,7 +2687,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2544,7 +2704,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2560,7 +2721,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2576,7 +2738,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2592,7 +2755,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2608,7 +2772,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2624,7 +2789,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2640,7 +2806,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2656,7 +2823,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2672,7 +2840,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2688,7 +2857,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2704,7 +2874,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2720,7 +2891,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "LRCX",
@@ -2736,7 +2908,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2752,7 +2925,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2770,7 +2944,8 @@
    "nonauth_members": [
     "LongTermDebtNoncurrent"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2786,7 +2961,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2802,7 +2978,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2818,7 +2995,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2834,7 +3012,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2850,7 +3029,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2866,7 +3046,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2882,7 +3063,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2898,7 +3080,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2914,7 +3097,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2930,7 +3114,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2946,7 +3131,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2962,7 +3148,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2978,7 +3165,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -2994,7 +3182,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3010,7 +3199,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3026,7 +3216,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3042,7 +3233,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3058,7 +3250,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3074,7 +3267,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3090,7 +3284,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3106,7 +3301,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3122,7 +3318,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3138,7 +3335,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3154,7 +3352,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3170,7 +3369,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3186,7 +3386,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3202,7 +3403,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3218,7 +3420,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3234,7 +3437,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "UNH",
@@ -3250,7 +3454,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3266,7 +3471,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3282,7 +3488,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3298,7 +3505,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3314,7 +3522,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3330,7 +3539,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3346,7 +3556,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3362,7 +3573,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3378,7 +3590,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3394,7 +3607,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3410,7 +3624,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3426,7 +3641,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3442,7 +3658,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3458,7 +3675,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3474,7 +3692,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3490,7 +3709,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3506,7 +3726,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3522,7 +3743,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3538,7 +3760,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3554,7 +3777,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3570,7 +3794,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3586,7 +3811,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3602,7 +3828,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3618,7 +3845,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3634,7 +3862,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3650,7 +3879,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "CSCO",
@@ -3666,15 +3896,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
    "cik": "0000909832",
    "period_end": "2015-08-30",
    "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "6135000000",
-   "slot_borrowings": "6135000000",
+   "slot_lease_inclusive": "6147000000",
+   "slot_borrowings": "6147000000",
    "lane3_before": [
     "1283000000"
    ],
@@ -3684,7 +3915,8 @@
    "nonauth_members": [
     "LongTermDebtNoncurrent"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3700,15 +3932,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
    "cik": "0000909832",
    "period_end": "2018-09-02",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "6487000000",
-   "slot_borrowings": "6487000000",
+   "verdict": "agrees_lease_inclusive",
+   "slot_lease_inclusive": "6577000000",
+   "slot_borrowings": "6577000000",
    "lane3_before": [
     "6577000000"
    ],
@@ -3716,15 +3949,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": "90000000"
   },
   {
    "ticker": "COST",
    "cik": "0000909832",
    "period_end": "2018-11-25",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "6480000000",
-   "slot_borrowings": "6480000000",
+   "verdict": "face_note_gap_review",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "6514000000"
    ],
@@ -3732,7 +3966,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3748,7 +3983,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3764,7 +4000,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3780,7 +4017,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3796,7 +4034,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3812,7 +4051,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3828,7 +4068,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3844,7 +4085,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3860,7 +4102,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3876,7 +4119,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3892,7 +4136,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3908,7 +4153,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3924,7 +4170,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3940,7 +4187,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
@@ -3956,15 +4204,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "COST",
    "cik": "0000909832",
    "period_end": "2025-08-31",
-   "verdict": "DISAGREES_with_lane3",
-   "slot_lease_inclusive": "5713000000",
-   "slot_borrowings": "5713000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "5788000000"
    ],
@@ -3972,15 +4221,16 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MA",
    "cik": "0001141391",
    "period_end": "2017-12-31",
-   "verdict": "agrees_lease_inclusive",
-   "slot_lease_inclusive": "5424000000",
-   "slot_borrowings": "5424000000",
+   "verdict": "current_maturities_unverified",
+   "slot_lease_inclusive": null,
+   "slot_borrowings": null,
    "lane3_before": [
     "5424000000"
    ],
@@ -3988,7 +4238,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MA",
@@ -4004,7 +4255,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "MA",
@@ -4020,7 +4272,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "SPCX",
@@ -4036,7 +4289,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4052,7 +4306,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4068,7 +4323,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4084,7 +4340,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4100,7 +4357,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4116,7 +4374,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4132,7 +4391,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4148,7 +4408,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4164,7 +4425,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4180,7 +4442,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4196,7 +4459,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ORCL",
@@ -4212,7 +4476,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4220,7 +4485,7 @@
    "period_end": "2020-12-31",
    "verdict": "agrees_lease_inclusive",
    "slot_lease_inclusive": "31536000000",
-   "slot_borrowings": "31499000000",
+   "slot_borrowings": "31486000000",
    "lane3_before": [
     "31536000000"
    ],
@@ -4228,7 +4493,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4244,7 +4510,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4260,7 +4527,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4276,7 +4544,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4292,7 +4561,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4308,7 +4578,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4324,7 +4595,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4340,7 +4612,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4356,7 +4629,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4372,7 +4646,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4388,7 +4663,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4404,7 +4680,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4420,7 +4697,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4436,7 +4714,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4452,7 +4731,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4468,7 +4748,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4484,7 +4765,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "PM",
@@ -4500,7 +4782,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4516,7 +4799,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4534,7 +4818,8 @@
    ],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4550,7 +4835,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4566,7 +4852,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4582,7 +4869,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4598,7 +4886,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4614,7 +4903,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4630,7 +4920,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4646,7 +4937,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4662,7 +4954,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4678,7 +4971,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4694,7 +4988,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4710,7 +5005,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4726,7 +5022,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4742,7 +5039,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4758,7 +5056,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4774,7 +5073,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4790,7 +5090,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4806,7 +5107,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4822,7 +5124,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4838,7 +5141,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4854,7 +5158,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4870,7 +5175,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4886,7 +5192,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4902,7 +5209,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4918,7 +5226,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4934,7 +5243,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4950,7 +5260,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4966,7 +5277,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4982,7 +5294,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -4998,7 +5311,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5014,7 +5328,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5030,7 +5345,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5048,7 +5364,8 @@
    ],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5066,7 +5383,8 @@
    ],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5082,7 +5400,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5098,7 +5417,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5114,7 +5434,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5130,7 +5451,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "ABBV",
@@ -5146,7 +5468,8 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "RPAY",
@@ -5166,7 +5489,8 @@
     "LongTermDebtExcludingLineOfCreditNoncurrent"
    ],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "RPAY",
@@ -5186,7 +5510,8 @@
    "nonauth_members": [
     "DueToRelatedPartiesCurrent"
    ],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   },
   {
    "ticker": "RPAY",
@@ -5202,16 +5527,18 @@
    "missing_members": [],
    "missing_custom_members": [],
    "nonauth_members": [],
-   "face_admission_tie_pending": []
+   "face_admission_tie_pending": [],
+   "note_current_portion_added": null
   }
  ],
  "summary": {
   "out_of_window_pre2015": 146,
-  "face_note_gap_review": 95,
-  "agrees_lease_inclusive": 93,
-  "DISAGREES_with_lane3": 128,
-  "holds_resolved_by_slot": 136,
+  "holds_resolved_by_slot": 137,
+  "DISAGREES_with_lane3": 107,
+  "current_maturities_unverified": 8,
   "needs_instance_reader": 4,
+  "face_note_gap_review": 104,
+  "agrees_lease_inclusive": 97,
   "no_covering_record": 9,
   "not_computable_missing_member": 3
  },
@@ -5221,9 +5548,9 @@
   },
   "AMAT": {
    "out_of_window_pre2015": 11,
-   "face_note_gap_review": 1,
-   "agrees_lease_inclusive": 1,
-   "DISAGREES_with_lane3": 1
+   "holds_resolved_by_slot": 1,
+   "DISAGREES_with_lane3": 1,
+   "current_maturities_unverified": 2
   },
   "CAT": {
    "out_of_window_pre2015": 1
@@ -5251,7 +5578,8 @@
   },
   "CVX": {
    "out_of_window_pre2015": 8,
-   "DISAGREES_with_lane3": 13
+   "face_note_gap_review": 9,
+   "current_maturities_unverified": 4
   },
   "WMT": {
    "out_of_window_pre2015": 22,
@@ -5259,7 +5587,7 @@
   },
   "JNJ": {
    "out_of_window_pre2015": 1,
-   "DISAGREES_with_lane3": 5
+   "agrees_lease_inclusive": 5
   },
   "MRK": {
    "out_of_window_pre2015": 5,
@@ -5292,16 +5620,19 @@
   "COST": {
    "out_of_window_pre2015": 5,
    "holds_resolved_by_slot": 1,
-   "DISAGREES_with_lane3": 17,
-   "agrees_lease_inclusive": 2,
-   "no_covering_record": 4
+   "DISAGREES_with_lane3": 14,
+   "agrees_lease_inclusive": 3,
+   "no_covering_record": 4,
+   "face_note_gap_review": 1,
+   "current_maturities_unverified": 1
   },
   "NFLX": {
    "out_of_window_pre2015": 1
   },
   "MA": {
    "out_of_window_pre2015": 1,
-   "agrees_lease_inclusive": 2,
+   "current_maturities_unverified": 1,
+   "agrees_lease_inclusive": 1,
    "face_note_gap_review": 1
   },
   "SPCX": {
