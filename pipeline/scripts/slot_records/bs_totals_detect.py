@@ -61,7 +61,12 @@ EQUITY_START_RX = re.compile(
     # equity-section line (0001276187-16-000165 R2)
     r"OtherCapital(?!iz)|PreferredUnits|CommonUnits|LimitedPartnersUnits"
 )
-MEZZ_RX = re.compile(r"TemporaryEquity|RedeemableNoncontrolling|RedeemablePreferred")
+MEZZ_RX = re.compile(
+    r"TemporaryEquity|RedeemableNoncontrolling|RedeemablePreferred|"
+    # census 2026-10-25: US Foods' mezzanine convertible preferred (491M) is
+    # tagged with the 'nonredeemable or redeemable at issuer option' element
+    r"ConvertiblePreferredStockNonredeemableOrRedeemableIssuerOptionValue"
+)
 # Verifier BS-V1 item 1 (AWK): a DEBT subtotal whose element name mentions the
 # redeemable preferred it includes ('LongTermDebtIncludesRedeemablePreferred
 # StockAtRedemptionValue' = Total long-term debt) is a liability line, never

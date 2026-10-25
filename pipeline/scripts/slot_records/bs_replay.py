@@ -177,6 +177,11 @@ def identity(rec, day, liab):
         if nci is None:
             nci = day.get("MinorityInterest") or Decimal(0)
         cands.append(eq_p + nci)
+        if nci:
+            # census 2026-10-25 (Carlyle): the filer's 'total partners' capital'
+            # line already INCLUDES the noncontrolling interests it also prints,
+            # so the parent line alone is the third reading
+            cands.append(eq_p)
     if not cands:
         cands.append(Decimal(0))
     # mezzanine ONLY from the record's own face lines (Verifier BS-V2 fix 4:
@@ -208,20 +213,39 @@ def identity(rec, day, liab):
             if day.get(t) is not None:
                 seen_vals[t] = day[t]
                 break
-    mezz = sum(seen_vals.values(), Decimal(0))
+    # census 2026-10-25 (Vornado 623.8 = 619.3 + 4.5; ADS): a mezzanine TOTAL
+    # line printed with its components - when one value equals the sum of the
+    # others it is the total and counts once
+    vals = list(seen_vals.values())
+    for v in vals:
+        if len(vals) > 1 and abs(sum(vals) - v - v) <= Decimal(1):
+            vals = [v]
+            break
+    mezz = sum(vals, Decimal(0))
     # a dimension-only mezzanine tag, when the face has NO mezzanine line at
     # all, counts ONLY with its per-class value read from the same accession's
     # instance, never with an undimensioned API fact of the same name (GE:
     # RedeemableNoncontrollingInterestEquityCarryingAmount 408M is a note
-    # value, not a face line; Verifier BS-V2 fix 4)
+    # value, not a face line; Verifier BS-V2 fix 4). For a PRINTED-TOTAL record
+    # (cross-check only, nothing withheld) the plain API value is tried as a
+    # second reading, so a face value the FSDS face list missed (JEF 406K,
+    # Alexandria 12-14M) does not show as a false gap.
     if not face_tags:
         mezz += sum(day[t] for t in dim_only if t in day.get("__dim_mezz__", set()))
+    mezz_alt = None
+    if not face_tags and rec["total_liabilities_rule"] == "printed_total":
+        api_dims = [day[t] for t in dim_only if t in day and t not in day.get("__dim_mezz__", set())]
+        if api_dims:
+            mezz_alt = mezz + max(api_dims)
     # Right-hand side total: the filer's own 'total liabilities and equity'
     # line (Verifier BS-V1 rule), else total assets. BRKR 2019-03-31 prints
     # assets 2,242.5M against a liabilities side of 2,242.3M: its own face
     # does not tie to assets, but ties to its L&E total exactly.
     rhs = day.get("LiabilitiesAndStockholdersEquity", day["Assets"])
-    gap = min((rhs - (liab + mezz + e) for e in cands), key=abs)
+    gaps = [rhs - (liab + mezz + e) for e in cands]
+    if mezz_alt is not None:
+        gaps += [rhs - (liab + mezz_alt + e) for e in cands]
+    gap = min(gaps, key=abs)
     return gap, rounding_unit(day)
 
 
