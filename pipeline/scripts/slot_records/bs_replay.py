@@ -187,12 +187,35 @@ def identity(rec, day, liab):
     # 2018-03-31: Series A preferred tagged only per class of stock)
     face_tags = {m["tag"] for m in rec["mezzanine_face"]}
     dim_only = set(rec.get("mezzanine_dim_tags") or []) - face_tags
-    mezz = sum((day.get(t) or Decimal(0)) for t in face_tags)
-    # a dimension-only mezzanine tag counts ONLY with its per-class value read
-    # from the same accession's instance, never with an undimensioned API fact
-    # of the same name (GE: RedeemableNoncontrollingInterestEquityCarryingAmount
-    # 408M is a note value, not a face line; Verifier BS-V2 fix 4)
-    mezz += sum(day[t] for t in dim_only if t in day.get("__dim_mezz__", set()))
+    # census 2026-10-25 (698 companies): (1) a filer may tag the SAME
+    # mezzanine line twice (ADS: RedeemableNoncontrollingInterest...Common and
+    # TemporaryEquity...IncludingNCI both 78,252K) - identical values at one
+    # instant are one line; (2) the face mezzanine line's value may sit under
+    # a variant tag of the same family (SUI face 'TemporaryEquity', value under
+    # TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrolling
+    # Interests) - when the face line has no value, a same-accession fact of a
+    # recorded dimension tag stands in for it.
+    seen_vals = {}
+    for t in sorted(face_tags):
+        v = day.get(t)
+        if v is None:
+            continue
+        if v in seen_vals.values():
+            continue  # same line tagged twice
+        seen_vals[t] = v
+    if face_tags and not seen_vals:
+        for t in sorted(dim_only):
+            if day.get(t) is not None:
+                seen_vals[t] = day[t]
+                break
+    mezz = sum(seen_vals.values(), Decimal(0))
+    # a dimension-only mezzanine tag, when the face has NO mezzanine line at
+    # all, counts ONLY with its per-class value read from the same accession's
+    # instance, never with an undimensioned API fact of the same name (GE:
+    # RedeemableNoncontrollingInterestEquityCarryingAmount 408M is a note
+    # value, not a face line; Verifier BS-V2 fix 4)
+    if not face_tags:
+        mezz += sum(day[t] for t in dim_only if t in day.get("__dim_mezz__", set()))
     # Right-hand side total: the filer's own 'total liabilities and equity'
     # line (Verifier BS-V1 rule), else total assets. BRKR 2019-03-31 prints
     # assets 2,242.5M against a liabilities side of 2,242.3M: its own face
@@ -275,6 +298,17 @@ for cik in sorted(records):
         key = "identity_ties" if abs(gap) <= tol else "identity_gap"
         stats[key] += 1
         report["identity"]["ties" if key == "identity_ties" else "gaps"] += 1
+        published = liab if (key == "identity_ties" or not rec.get("requires_identity_tie")) else None
+        report.setdefault("cells", []).append({
+            "ticker": ticker, "cik": cik, "end": end, "accession": day.get("__accession__"),
+            "era_first": rec["filing_from"], "era_from": rec["period_from"], "era_to": rec["period_to"],
+            "rule": rec["total_liabilities_rule"], "cal_source": rec.get("cal_source"),
+            "total_liabilities": str(published) if published is not None else None,
+            "identity": key, "gap": str(gap), "tol": str(tol),
+            "equity_parent": str(day.get(rec["equity_parent_tag"] or "StockholdersEquity")),
+            "instance_filled": day.get("__instance_filled__", []),
+            "boundary_instant": end[:7] == rec["period_from"][:7],
+        })
         if key == "identity_gap" and rec.get("requires_identity_tie"):
             stats["withheld_identity_gap"] += 1  # face-sum value NOT published
             report.setdefault("withheld", []).append({
