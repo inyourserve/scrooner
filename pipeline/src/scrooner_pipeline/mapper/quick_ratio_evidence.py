@@ -38,14 +38,31 @@ from typing import Any
 
 RULE_ID = "quick_ratio.inventory_evidence@1"
 EVIDENCE_POINT = "inventory"
+# Founder ruling 2026-10-25: a current MaterialsSuppliesAndOther (or materials-captioned non-inventory) face line hides
+# the quick ratio. The switch turns that rule off in one place; inventory-named supplies elements are inventory either way.
 MATERIALS_AND_SUPPLIES_ARE_INVENTORY = True
 
-REASON_UNMAPPED = "incomplete:inventory_like_tag_unmapped"
-REASON_PRESENTED = "incomplete:inventory_presented_not_extracted"
-REASON_UNAVAILABLE = "incomplete:inventory_statement_unavailable"
-# Founder ruling 2026-10-25: the quick ratio keeps its locked formula; where a current materials-and-supplies face line
-# exists the figure is hidden with this reason (the formula cannot say whether the line is inventory).
-REASON_MATERIALS = "incomplete:materials_supplies_line_present"
+# ONE mapping table from cause to the reason code shown to the reader: changing a code is a one-line edit here.
+# Precedence when several apply (one reason per cell, first wins): materials > not_authoritative > unavailable >
+# presented > review (RECORD-INVENTORY2 section 6).
+HIDE_REASONS = {
+    "materials": "incomplete:materials_supplies_line_present",
+    "not_authoritative": "incomplete:inventory_fact_not_authoritative",
+    "unavailable": "incomplete:inventory_statement_unavailable",
+    "presented": "incomplete:inventory_presented_not_extracted",
+    "review": "incomplete:inventory_value_under_review",
+}
+PRECEDENCE = ("materials", "not_authoritative", "unavailable", "presented", "review")
+REASON_MATERIALS = HIDE_REASONS["materials"]
+REASON_NOT_AUTHORITATIVE = HIDE_REASONS["not_authoritative"]
+REASON_UNAVAILABLE = HIDE_REASONS["unavailable"]
+REASON_PRESENTED = HIDE_REASONS["presented"]
+REASON_REVIEW = HIDE_REASONS["review"]
+# Registrants whose WIP line was read in their own policy note as client billable costs (not inventory, all years):
+# {cik: filing and paragraph}. The note-text guard applies only after someone read the note, never on a caption.
+CONTRACT_ASSET_NOTE_READ = {
+    "0000029989": "OMC 10-K FY2016 0000029989-17-000004 and FY2015 0000029989-16-000015, Note 2 Significant Accounting Policies",
+}
 
 # words that make an inventory-named tag NOT a current balance-sheet inventory line (flows, reserves and noncurrent
 # figures). "Other" is deliberately absent: OtherInventorySupplies is a line.
@@ -59,12 +76,10 @@ _EXCLUDED = (
 
 
 def is_inventory_like(tag: str) -> bool:
-    """A balance-sheet inventory line ("...NetOfReserves" lines are lines; reserves on their own are not)."""
+    """A balance-sheet inventory element ("...NetOfReserves" lines are lines; reserves on their own are not).
+    MaterialsSuppliesAndOther is NOT inventory (element text: not included in inventory)."""
     t = tag.replace("NetOfReserves", "").replace("NetOfReserve", "")
-    named = "nventor" in t or (
-        MATERIALS_AND_SUPPLIES_ARE_INVENTORY and "MaterialsSupplies" in t
-    )
-    return named and not any(w in t for w in _EXCLUDED)
+    return "nventor" in t and not any(w in t for w in _EXCLUDED)
 
 
 # Current-asset lines used to foot the current-assets total (us-gaap tags, instant facts of the period's own filing).
@@ -159,94 +174,93 @@ class Context:
     # per balance-sheet date: does that period's OWN balance sheet show an inventory line (True / False)? A date that
     # is absent means the face is UNAVAILABLE
     face_by_date: dict[date, PeriodFace] = field(default_factory=dict)
-    # InventoryRawMaterialsAndSupplies-type facts (a sub-line of inventory, not a materials-and-supplies line), per date
-    supplies_subline: dict[date, Decimal] = field(default_factory=dict)
     # dates whose statement was read but does not show the date (a 10-K/A with newer columns only), or whose filing
     # predates machine-readable statements (2009): the cell is hidden as unavailable. A date in neither map has no
     # readable statement here (FSDS does not carry every filing): the stored value is kept and flagged.
     face_hide_dates: frozenset[date] = field(default_factory=frozenset)
+    # dates where InventoryNet exists only as non-authoritative copies (no authoritative one): never read, never mapped
+    nonauthoritative_dates: frozenset[date] = field(default_factory=frozenset)
     accession_by_date: dict[date, str] = field(
         default_factory=dict
     )  # the filing whose AssetsCurrent fact is the period's
 
 
+def _materials_cause(ctx: Context, end: date, ca: Decimal | None) -> bool:
+    """A current materials-and-supplies line outside inventory: from the period's own statement when it was read,
+    else from the fact (a current MaterialsSuppliesAndOther no larger than current assets, not inside a footed total)."""
+    if not MATERIALS_AND_SUPPLIES_ARE_INVENTORY:
+        return False
+    face = ctx.face_by_date.get(end)
+    if face is not None:
+        return face.materials_line
+    value = ctx.materials_supplies.get(end)
+    lines = ctx.lines_by_date.get(end, {})
+    return bool(
+        value
+        and value > 0
+        and (ca is None or (value <= ca and not foots_without_inventory(ca, lines)))
+    )
+
+
+def hide_cause(
+    ctx: Context, end: date, current_assets: Decimal | None, inventory_present: bool
+) -> str | None:
+    """The cause (key of HIDE_REASONS) that hides the quick ratio of this cell, or None when the value stays.
+
+    ``inventory_present``: our canonical data holds an authoritative inventory value for the date, so the formula
+    runs; then only the materials-and-supplies rule can hide it. Otherwise (the f67a927 class: a missing inventory
+    would be treated as zero) the period's own statement decides, per date column:
+      - the current-assets total foots without an inventory line -> the zero stands;
+      - InventoryNet exists only as non-authoritative copies -> not_authoritative;
+      - the statement does not show the date / predates machine-readable statements -> unavailable;
+      - the statement shows an inventory line at the date (OMC's contract-asset WIP excluded) -> review when the
+        approved face-slot rule (authoritative member sub-lines of the period's own filing) yields a value that is not
+        yet published, else presented; no inventory line -> the value stays (a note figure: 0001522540 2023-06-30);
+      - no readable statement in the data set (after 2009): member facts -> review, else the value stays, flagged."""
+    lines = ctx.lines_by_date.get(end, {})
+    ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
+    causes: set[str] = set()
+    if _materials_cause(ctx, end, ca):
+        causes.add("materials")
+    if not inventory_present and not (
+        ca is not None and foots_without_inventory(ca, lines)
+    ):
+        like = ctx.inventory_like.get(end, {})
+        has_member = any(0 < v <= (ca if ca is not None else v) for v in like.values())
+        face = ctx.face_by_date.get(end)
+        if end in ctx.nonauthoritative_dates:
+            causes.add("not_authoritative")
+        elif face is None and end in ctx.face_hide_dates and not has_member:
+            causes.add("unavailable")
+        elif face is not None and face.inventory_line:
+            causes.add("review" if has_member else "presented")
+        elif face is None and has_member:
+            causes.add("review")
+    return next((c for c in PRECEDENCE if c in causes), None)
+
+
 def inventory_missing_reason(
     ctx: Context, end: date, current_assets: Decimal | None = None
 ) -> str | None:
-    """Why a quick_ratio cell with NO inventory fact at ``end`` must be NULL, or None when the value stays.
-
-    Order: the period's own current assets foot without inventory -> stays. Then, when the period's own statement was
-    read at the cell's date column: an inventory line with a value -> hidden (``unmapped`` when an inventory-like
-    current fact explains the residual, else ``presented_not_extracted``); no inventory line -> stays (a note figure
-    or a later-added line: 0001522540 2023-06-30). Without a read statement: an inventory-like current fact ->
-    ``unmapped``; a statement that does not show the date -> ``statement_unavailable``; otherwise it stays."""
-    lines = ctx.lines_by_date.get(end, {})
-    ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
-    if ca is not None and foots_without_inventory(ca, lines):
-        return None  # no room for an inventory line in this period's own balance sheet
-    like = ctx.inventory_like.get(end, {})
-    has_like = any(0 < v <= (ca if ca is not None else v) for v in like.values())
-    face = ctx.face_by_date.get(end)
-    if face is not None:
-        if face.materials_line:
-            return REASON_MATERIALS  # founder ruling: a materials-and-supplies face line hides the figure (CP)
-        if not face.inventory_line:
-            return None
-        return REASON_UNMAPPED if has_like else REASON_PRESENTED
-    if has_like:
-        return REASON_UNMAPPED
-    if end in ctx.face_hide_dates:
-        return REASON_UNAVAILABLE
-    return None
-
-
-def face_unavailable(
-    ctx: Context, end: date, current_assets: Decimal | None = None
-) -> bool:
-    """True when the cell reaches the statement test and the period's own statement does not show the date."""
-    lines = ctx.lines_by_date.get(end, {})
-    ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
-    if ca is not None and foots_without_inventory(ca, lines):
-        return False
-    like = ctx.inventory_like.get(end, {})
-    if any(0 < v <= (ca if ca is not None else v) for v in like.values()):
-        return False
-    return end in ctx.face_hide_dates
+    """Reason text for a cell with NO inventory value (None: the zero stands)."""
+    cause = hide_cause(ctx, end, current_assets, inventory_present=False)
+    return None if cause is None else HIDE_REASONS[cause]
 
 
 def materials_supplies_reason(
     ctx: Context, end: date, current_assets: Decimal | None = None
 ) -> str | None:
-    """Hide reason for a cell whose inventory value exists but whose period carries a supplies line.
+    """Reason text for a cell whose inventory value exists (only the materials-and-supplies rule can hide it)."""
+    cause = hide_cause(ctx, end, current_assets, inventory_present=True)
+    return None if cause is None else HIDE_REASONS[cause]
 
-    With the period's own statement read: REASON_MATERIALS when it presents a materials-and-supplies line (founder
-    ruling 2026-10-25); REASON_PRESENTED when it presents an inventory line and a supplies fact exists (the fact is part
-    of that line: STE, WMS, the inventory-named sub-lines); nothing when it presents neither (UPS 2023-12-31).
-    Without the statement: the fact-based test (a true materials fact -> REASON_MATERIALS, an inventory-named
-    sub-line -> REASON_PRESENTED), unless the current-assets total foots without the line or the figure exceeds it."""
-    if not MATERIALS_AND_SUPPLIES_ARE_INVENTORY:
-        return None
-    face = ctx.face_by_date.get(end)
-    if face is not None:
-        if face.materials_line:
-            return REASON_MATERIALS
-        has_supplies = bool(
-            ctx.materials_supplies.get(end) or ctx.supplies_subline.get(end)
-        )
-        return REASON_PRESENTED if face.inventory_line and has_supplies else None
-    lines = ctx.lines_by_date.get(end, {})
-    ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
 
-    def current_line(value: Decimal | None) -> bool:
-        if not value or value <= 0:
-            return False
-        return ca is None or (value <= ca and not foots_without_inventory(ca, lines))
-
-    if current_line(ctx.materials_supplies.get(end)):
-        return REASON_MATERIALS
-    if current_line(ctx.supplies_subline.get(end)):
-        return REASON_PRESENTED
-    return None
+def face_unavailable(
+    ctx: Context, end: date, current_assets: Decimal | None = None
+) -> bool:
+    return (
+        hide_cause(ctx, end, current_assets, inventory_present=False) == "unavailable"
+    )
 
 
 def load_inventory_concept_ids(conn: Any) -> tuple[list[int], set[int]]:
@@ -306,9 +320,10 @@ def load_context(
     company_id: int,
     like_ids: list[int] | None = None,
     face: dict[str, Any] | None = None,
+    mapped_ids: set[int] | None = None,
 ) -> Context:
-    if like_ids is None:
-        like_ids, _ = load_inventory_concept_ids(conn)
+    if like_ids is None or mapped_ids is None:
+        like_ids, mapped_ids = load_inventory_concept_ids(conn)
     if face is None:
         face = default_face()
     with conn.cursor() as cur:
@@ -317,27 +332,9 @@ def load_context(
             (company_id, EVIDENCE_POINT),
         )
         row = cur.fetchone()
-        lines: dict[date, dict[str, Decimal]] = {}
-        like: dict[date, dict[str, Decimal]] = {}
-        materials: dict[date, Decimal] = {}
-        subline: dict[date, Decimal] = {}
-        cur.execute(
-            """select distinct on (p.end_date, k.tag) p.end_date, k.tag, f.value
-               from core.fact f join core.period p on p.id = f.period_id join core.concept k on k.id = f.concept_id
-               where f.company_id = %s and p.period_type = 'instant' and k.taxonomy = 'us-gaap'
-                 and (k.tag = any(%s) or f.concept_id = any(%s))
-               order by p.end_date, k.tag, f.is_authoritative desc, f.id desc""",
-            (company_id, sorted(FOOTING_TAGS), like_ids or [0]),
-        )
-        for end, tag, value in cur.fetchall():
-            if tag in FOOTING_TAGS:
-                lines.setdefault(end, {})[tag] = value
-            else:
-                like.setdefault(end, {})[tag] = value
-                if "MaterialsSupplies" in tag or "RawMaterialsAndSupplies" in tag:
-                    # a true materials-and-supplies line, or (inventory-named) a sub-line of inventory
-                    target = subline if "nventor" in tag else materials
-                    target[end] = target.get(end, Decimal(0)) + value
+        cur.execute("select cik from core.company where id = %s", (company_id,))
+        cik_row = cur.fetchone()
+        cik = cik_row[0] if cik_row else ""
         cur.execute(
             """select distinct on (period_of_report) period_of_report, accession_number from core.filing
                where company_id = %s and period_of_report is not null
@@ -359,8 +356,45 @@ def load_context(
         )
         for end_date, acc in cur.fetchall():
             accession.setdefault(end_date, acc)
+        lines: dict[date, dict[str, Decimal]] = {}
+        like: dict[date, dict[str, Decimal]] = {}
+        materials: dict[date, Decimal] = {}
+        cur.execute(
+            """select distinct on (p.end_date, k.tag, fl.accession_number, f.is_authoritative)
+                      p.end_date, k.tag, f.value, fl.accession_number, f.is_authoritative
+               from core.fact f join core.period p on p.id = f.period_id join core.concept k on k.id = f.concept_id
+               join core.filing fl on fl.id = f.filing_id
+               where f.company_id = %s and p.period_type = 'instant' and k.taxonomy = 'us-gaap'
+                 and (k.tag = any(%s) or f.concept_id = any(%s))
+               order by p.end_date, k.tag, fl.accession_number, f.is_authoritative desc, f.id desc""",
+            (company_id, sorted(FOOTING_TAGS), like_ids or [0]),
+        )
+        rank: dict[tuple[date, str], tuple[int, int]] = {}
+        for r in cur.fetchall():
+            end, tag, value = r[0], r[1], r[2]
+            acc, auth = (r[3], r[4]) if len(r) > 3 else (accession.get(end), True)
+            own = acc == accession.get(end)
+            if tag in FOOTING_TAGS:
+                score = (int(own), int(bool(auth)))
+                if score > rank.get((end, tag), (-1, -1)):
+                    rank[(end, tag)] = score
+                    lines.setdefault(end, {})[tag] = value
+            elif own and auth:
+                # a member fact must be authoritative and from the period's own filing (CLAUDE.md hard filter)
+                if "MaterialsSupplies" in tag and "nventor" not in tag:
+                    materials[end] = materials.get(end, Decimal(0)) + value
+                else:
+                    like.setdefault(end, {})[tag] = value
+        cur.execute(
+            """select p.end_date, bool_or(f.is_authoritative) from core.fact f join core.period p on p.id = f.period_id
+               where f.company_id = %s and f.concept_id = any(%s) and p.period_type = 'instant'
+               group by p.end_date""",
+            (company_id, sorted(mapped_ids) or [0]),
+        )
+        nonauth = {d for d, any_auth in cur.fetchall() if not any_auth}
     face_by_date: dict[date, PeriodFace] = {}
     hide: set[date] = set()
+    wip_excluded = cik in CONTRACT_ASSET_NOTE_READ
     for d, acc in accession.items():
         f = face.get(acc)
         if f is None:
@@ -373,9 +407,11 @@ def load_context(
         if hit is None:
             hide.add(d)  # the statement is readable but does not show this date
             continue
+        inv_col = _column(d, f.inventory_dates)
+        if wip_excluded and inv_col is not None and inv_col in f.wip_only_dates:
+            inv_col = None  # the registrant's own note reads this line as client billable costs
         face_by_date[d] = PeriodFace(
-            _column(d, f.inventory_dates) is not None,
-            _column(d, f.materials_dates) is not None,
+            inv_col is not None, _column(d, f.materials_dates) is not None
         )
     return Context(
         None if row is None else row[0],
@@ -383,8 +419,8 @@ def load_context(
         like,
         materials,
         face_by_date,
-        subline,
         frozenset(hide),
+        frozenset(nonauth),
         accession,
     )
 
@@ -419,7 +455,7 @@ def plan_quick_ratio(
     from decimal import Decimal
 
     out: list[PlannedCell] = []
-    like_ids, _ = load_inventory_concept_ids(conn)
+    like_ids, mapped_ids = load_inventory_concept_ids(conn)
     with conn.cursor() as cur:
         cur.execute(
             "select id from analytics.metric_definition where metric_name = 'quick_ratio'"
@@ -463,7 +499,7 @@ def plan_quick_ratio(
             )
             have = set(cur.fetchall())
         ctx = {
-            cid: load_context(conn, cid, like_ids, face)
+            cid: load_context(conn, cid, like_ids, face, mapped_ids)
             for cid in {s[0] for s in stored}
         }
         for cid, end, label, value in stored:

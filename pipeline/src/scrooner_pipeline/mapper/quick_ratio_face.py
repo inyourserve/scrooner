@@ -45,6 +45,9 @@ class AccessionFace:
     statement_dates: frozenset[date] = field(default_factory=frozenset)
     inventory_dates: frozenset[date] = field(default_factory=frozenset)
     materials_dates: frozenset[date] = field(default_factory=frozenset)
+    # dates where the ONLY inventory value is on InventoryWorkInProcess lines (OMC): excluded for a registrant whose
+    # note was read as client billable costs (quick_ratio_evidence.CONTRACT_ASSET_NOTE_READ)
+    wip_only_dates: frozenset[date] = field(default_factory=frozenset)
 
 
 def quarter_of(filed: date) -> tuple[int, int]:
@@ -69,11 +72,13 @@ def _ddate(s: str) -> date | None:
 def balance_sheet_faces(
     zip_path: Path, accessions: set[str]
 ) -> dict[str, AccessionFace]:
-    """accession (with dashes) -> AccessionFace for the accessions that have balance-sheet rows in this data set."""
+    """accession (with dashes) -> AccessionFace for the accessions that have balance-sheet rows in this data set.
+
+    Only lines ABOVE the report's ``AssetsCurrent`` row count as current inventory or supplies lines (the registrant's
+    own block: co-registrant blocks carry ``coreg`` on their values and are skipped). A WIP line whose value is also
+    tagged as a contract asset in the same filing is not inventory (OMC 2017-2019)."""
     adsh_of = {a.replace("-", ""): a for a in accessions}
-    kinds: dict[
-        tuple[str, str], tuple[bool, bool]
-    ] = {}  # (adsh, tag) -> (is_inventory, is_materials)
+    groups: dict[tuple[str, str], list[tuple[int, str, str]]] = {}
     with zipfile.ZipFile(zip_path) as zf:
         for r in _rows(zf, "pre.txt"):
             key = r["adsh"].replace("-", "")
@@ -83,39 +88,78 @@ def balance_sheet_faces(
                 or r.get("inpth") not in ("0", "", None)
             ):
                 continue
-            label, tag = r.get("plabel", ""), r.get("tag", "")
-            tag_materials = "MaterialsSupplies" in tag and "nventor" not in tag
-            inv = bool(_INVENTORY_LABEL.search(label)) or (
-                not tag_materials and is_inventory_like(tag)
+            try:
+                line = int(r.get("line") or 0)
+            except ValueError:
+                line = 0
+            groups.setdefault((key, r.get("report", "")), []).append(
+                (line, r.get("tag", ""), r.get("plabel", ""))
             )
-            mat = (not inv) and (bool(_MATERIALS_LABEL.search(label)) or tag_materials)
-            old = kinds.get((key, tag), (False, False))
-            kinds[(key, tag)] = (old[0] or inv, old[1] or mat)
+        kinds: dict[
+            tuple[str, str], tuple[bool, bool]
+        ] = {}  # (adsh, tag) -> (is_inventory, is_materials)
+        bs_tags: set[tuple[str, str]] = set()
+        for (key, _report), rows in groups.items():
+            ac_line = min(
+                (ln for ln, tag, _ in rows if tag == "AssetsCurrent"), default=None
+            )
+            for ln, tag, label in rows:
+                bs_tags.add((key, tag))
+                if ac_line is not None and ln >= ac_line:
+                    continue  # at or below the current-assets total: not a current line
+                tag_materials = "MaterialsSupplies" in tag and "nventor" not in tag
+                inv = bool(_INVENTORY_LABEL.search(label)) or (
+                    not tag_materials and is_inventory_like(tag)
+                )
+                mat = (not inv) and (
+                    bool(_MATERIALS_LABEL.search(label)) or tag_materials
+                )
+                old = kinds.get((key, tag), (False, False))
+                kinds[(key, tag)] = (old[0] or inv, old[1] or mat)
         statement: dict[str, set[date]] = {}
-        inventory: dict[str, set[date]] = {}
+        inv_values: dict[tuple[str, str], dict[date, Decimal]] = {}
         materials: dict[str, set[date]] = {}
+        contract_asset: dict[tuple[str, date], set[Decimal]] = {}
         for r in _rows(zf, "num.txt"):
             key = r["adsh"].replace("-", "")
-            k = kinds.get((key, r["tag"]))
-            if k is None or r.get("qtrs") != "0" or r.get("coreg"):
+            tag = r["tag"]
+            if key not in adsh_of or r.get("qtrs") != "0" or r.get("coreg"):
                 continue
             d = _ddate(r["ddate"])
             if d is None:
                 continue
-            statement.setdefault(key, set()).add(d)
             try:
-                nonzero = Decimal(r["value"] or "0") != 0
+                value = Decimal(r["value"] or "0")
             except InvalidOperation:
                 continue
-            if k[0] and nonzero:
-                inventory.setdefault(key, set()).add(d)
-            if k[1] and nonzero:
+            if tag.startswith("ContractWithCustomerAsset") and value != 0:
+                contract_asset.setdefault((key, d), set()).add(value)
+            if (key, tag) in bs_tags:
+                statement.setdefault(key, set()).add(d)
+            k = kinds.get((key, tag))
+            if k is None or value == 0:
+                continue
+            if k[0]:
+                inv_values.setdefault((key, tag), {})[d] = value
+            if k[1]:
                 materials.setdefault(key, set()).add(d)
+    inventory: dict[str, set[date]] = {}
+    non_wip: dict[str, set[date]] = {}
+    for (key, tag), by_date in inv_values.items():
+        for d, value in by_date.items():
+            if tag.startswith("InventoryWorkInProcess") and value in contract_asset.get(
+                (key, d), ()
+            ):
+                continue  # the filer's own XBRL also tags this amount as a contract asset
+            inventory.setdefault(key, set()).add(d)
+            if not tag.startswith("InventoryWorkInProcess"):
+                non_wip.setdefault(key, set()).add(d)
     return {
         adsh_of[key]: AccessionFace(
             frozenset(dates),
             frozenset(inventory.get(key, ())),
             frozenset(materials.get(key, ())),
+            frozenset(inventory.get(key, set()) - non_wip.get(key, set())),
         )
         for key, dates in statement.items()
     }
@@ -137,6 +181,9 @@ def write_jsonl(path: Path, found: dict[str, AccessionFace], source: str) -> Non
                         "materials_dates": sorted(
                             d.isoformat() for d in face.materials_dates
                         ),
+                        "wip_only_dates": sorted(
+                            d.isoformat() for d in face.wip_only_dates
+                        ),
                         "source": source,
                     }
                 )
@@ -154,5 +201,8 @@ def load_jsonl(path: Path) -> dict[str, AccessionFace]:
                     frozenset(date.fromisoformat(d) for d in rec["statement_dates"]),
                     frozenset(date.fromisoformat(d) for d in rec["inventory_dates"]),
                     frozenset(date.fromisoformat(d) for d in rec["materials_dates"]),
+                    frozenset(
+                        date.fromisoformat(d) for d in rec.get("wip_only_dates", [])
+                    ),
                 )
     return out
