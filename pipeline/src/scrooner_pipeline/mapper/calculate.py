@@ -71,6 +71,8 @@ import structlog
 from scrooner_pipeline.common.errors import log_error, safe_rollback
 from scrooner_pipeline.mapper import bs_anchor, rule_flags
 from scrooner_pipeline.mapper.rule_flags import DECISIONS, GuardDecision
+from scrooner_pipeline.common.rule_flags import rule_enabled
+from scrooner_pipeline.mapper import quick_ratio_evidence
 from scrooner_pipeline.mapper.calculate_shapes import (
     CONCEPT_MATERIALITY_FLOORS,
     compute as _compute,
@@ -417,6 +419,8 @@ def calculate_for_company(
 
     stats = {"computed": 0, "null": 0}
     rows: list[dict] = []
+    inventory_rule_on = rule_enabled(quick_ratio_evidence.RULE_ID)
+    inventory_ctx: quick_ratio_evidence.Context | None = None
 
     for target in targets:
         metric_id, metric_name, inputs = target["id"], target["name"], target["inputs"]
@@ -522,17 +526,34 @@ def calculate_for_company(
             # resolved to Decimal(0). Still requires every OTHER (non-
             # zero-safe) expected concept in that role to resolve.
             incomplete_role = None
+            evidence_reason = None
             for role, expected in expected_concepts_by_role.items():
                 missing = expected - found_concepts_by_role.get(role, set())
                 if missing and not missing <= zero_when_absent_ids:
                     incomplete_role = role
                     values_by_role.pop(role, None)
                     break
+                if missing and inventory_rule_on:
+                    # a missing inventory is a zero only where the filing says the line is not presented
+                    if inventory_ctx is None:
+                        inventory_ctx = quick_ratio_evidence.load_context(
+                            conn, company_id
+                        )
+                    evidence_reason = quick_ratio_evidence.inventory_missing_reason(
+                        inventory_ctx, end
+                    )
+                    if evidence_reason is not None:
+                        incomplete_role = role
+                        values_by_role.pop(role, None)
+                        break
                 if missing:
                     values_by_role.setdefault(role, [])
 
             if incomplete_role is not None:
-                value, null_reason = None, f"incomplete:{incomplete_role}"
+                value, null_reason = (
+                    None,
+                    evidence_reason or f"incomplete:{incomplete_role}",
+                )
             else:
                 value, null_reason = _compute(
                     shape, values_by_role, denominator_concept_names
