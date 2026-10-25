@@ -25,7 +25,13 @@ CASES = json.loads((Path(__file__).parent / "fixtures" / "live_25.json").read_te
 def test_manifest_is_complete():
     assert len(CASES) == 25
     for c in CASES:
-        assert {"cik", "accession", "instant", "expected_face_liabilities", "page_multiplier"} <= set(c)
+        assert {
+            "cik",
+            "accession",
+            "instant",
+            "expected_face_liabilities",
+            "page_multiplier",
+        } <= set(c)
 
 
 class _Client:
@@ -33,6 +39,7 @@ class _Client:
         self.ua, self.last, self.n = os.environ["SEC_USER_AGENT"], 0.0, 0
         try:
             import certifi
+
             self.ctx = ssl.create_default_context(cafile=certifi.where())
         except ImportError:
             self.ctx = None
@@ -45,13 +52,22 @@ class _Client:
         return urllib.request.urlopen(req, timeout=60, context=self.ctx).read()
 
 
-@pytest.mark.skipif(not os.environ.get("SCROONER_LIVE_SEC"), reason="live sec.gov test; set SCROONER_LIVE_SEC=1")
+@pytest.mark.skipif(
+    not os.environ.get("SCROONER_LIVE_SEC"),
+    reason="live sec.gov test; set SCROONER_LIVE_SEC=1",
+)
 def test_live_25_reproduce():
     client, bad = _Client(), []
     for c in CASES:
         base = f"https://www.sec.gov/Archives/edgar/data/{int(c['cik'])}/{c['accession'].replace('-', '')}/"
         page = fk.fetch_statements(client, base, ("BS",))["BS"]
         r = fk.face_liabilities(page, date.fromisoformat(c["instant"]))
-        if r.value is None or r.value != Decimal(c["expected_face_liabilities"]) or page.multiplier != c["page_multiplier"]:
-            bad.append((c["ticker"], c["instant"], r.value, c["expected_face_liabilities"]))
+        if (
+            r.value is None
+            or r.value != Decimal(c["expected_face_liabilities"])
+            or page.multiplier != c["page_multiplier"]
+        ):
+            bad.append(
+                (c["ticker"], c["instant"], r.value, c["expected_face_liabilities"])
+            )
     assert not bad, bad
