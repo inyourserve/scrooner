@@ -44,6 +44,18 @@ Rollback: restore(cur, run_id) = canonical_archive.restore_run (cells,
 migration 0098 analytics.canonical_fact_retired) + re-promotion of the facts
 logged in fact_authority_retired for that run.
 
+ORDER OF STEPS AFTER ANY APPLY (Release Manager's, not mine to change):
+    1. apply_plan for one rule inside one reviewed transaction (flag ON, digest
+       equal to the reviewed one);
+    2. Normalizer re-run for the affected companies (derived quarters follow the
+       demoted/re-promoted facts);
+    3. Stage 2e dedupe re-run (so re-promoted copies are not marked
+       non-authoritative again);
+    4. Verifier sample and a certify re-run; restore(run_id) if it fails.
+Restated periods whose filed copies disagree are HIDDEN (founder ruling
+2026-10-26), quarters included; QUARTER_RESTATED_POLICY="original_basis" is the
+off switch for a later "show confirmed restatements" ruling.
+
 NOTHING HERE RUNS ITSELF. The plan functions use a read-only session. The
 apply function raises unless the rule is in mode ON (common/rule_flags), and
 unless the plan digest equals the digest the reviewer saw. It never commits;
@@ -113,6 +125,9 @@ REASON_TEXT = {
     ),
     "proxy_nci_inclusive_only": (
         "only a net income figure that includes noncontrolling interests is filed; not shown"
+    ),
+    "derived_inputs_unverified": (
+        "the stored quarter has no filed year and year-to-date to check it against; not shown"
     ),
     "derived_inputs_disagree": (
         "the filed copies of the year or earlier quarters disagree (restated); not shown"
@@ -762,7 +777,10 @@ def plan_proxy_chunk(
 
 QUARTER_MIN_DAYS, QUARTER_MAX_DAYS = 75, 105
 
-QUARTER_RESTATED_POLICY = "original_basis"  # or "hide"
+# Founder ruling 2026-10-26: HIDE restated periods whose copies disagree, quarters
+# included. "original_basis" is the off switch for a later "show confirmed
+# restatements" ruling (CLI --original-basis).
+QUARTER_RESTATED_POLICY = "hide"  # or "original_basis"
 VINTAGE_MAX_GAP_DAYS = 370  # same as the certification cross_vintage_arithmetic test
 
 
@@ -1004,7 +1022,21 @@ def _vet_and_promote(
                 note="filed input copies disagree",
             )
         elif c.canonical_fact_id in picked:
-            unverified += 1  # a stored derived quarter with no filed inputs to re-check
+            # a stored derived quarter with no filed inputs to re-check: hidden, not kept
+            unverified += 1
+            picked.pop(c.canonical_fact_id)
+            plan.cells[i] = replace(
+                c,
+                action=ACT_REMOVE,
+                reason_code="derived_inputs_unverified",
+                replacement_fact_id=None,
+                replacement_value=None,
+                replacement_form=None,
+                replacement_accession=None,
+                replacement_was_authoritative=None,
+                replacement_source_ids=(),
+                note="no filed inputs to verify the stored derived quarter",
+            )
     plan.info["quarters_on_original_basis_after_restatement"] = original
     plan.info["quarters_rederived_same_as_stored"] = same
     plan.info["quarters_rederived_differs_from_stored"] = differs
@@ -1491,14 +1523,14 @@ def main(argv: list[str] | None = None) -> int:
         help="skip the SEC income-statement face check",
     )
     ap.add_argument(
-        "--hide-restated-quarters",
+        "--original-basis",
         action="store_true",
-        help="hide quarters whose year/YTD copies disagree instead of using the original basis",
+        help="OFF-SWITCH for a later 'show confirmed restatements' ruling: derive quarters from the earliest-filed copies instead of hiding them",
     )
     args = ap.parse_args(argv)
     global QUARTER_RESTATED_POLICY
-    if args.hide_restated_quarters:
-        QUARTER_RESTATED_POLICY = "hide"
+    if args.original_basis:
+        QUARTER_RESTATED_POLICY = "original_basis"
     fams = ("A", "B") if args.family == "both" else (args.family,)
     cohort = _cohort(Path(args.cohort_csv)) if args.cohort_csv else None
     with psycopg.connect(settings.database_url, autocommit=True) as conn:
