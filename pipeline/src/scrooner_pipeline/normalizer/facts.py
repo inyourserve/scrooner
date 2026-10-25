@@ -50,10 +50,11 @@ logger = structlog.get_logger()
 # identity/period/unit-only until doc 02's 20-F/40-F decision closes.
 FACT_EXTRACTION_EXCLUDED_CIKS = {"0001046179", "0000895728"}  # TSM, ENB
 
-# Founder decision 2026-10-25 (doc 38 hard ceiling): no fact whose period ends before
-# 2015-01-01 is stored. The pre-2015 purge deletes them; without this floor every
-# reprocess of a company would re-insert them from its raw companyfacts payload.
-FACT_HISTORY_FLOOR = date(2015, 1, 1)
+# Founder decision 2026-10-25: no fact whose period ends before 2014-01-01 is stored
+# (calendar 2014 stays so FY2015 growth and opening balances remain computable). The
+# purge deleted older rows; without this floor every reprocess would re-insert them from
+# the raw companyfacts payload.
+FACT_HISTORY_FLOOR = date(2014, 1, 1)
 
 
 def _load_json(storage: SupabaseStorageClient, storage_path: str) -> dict:
