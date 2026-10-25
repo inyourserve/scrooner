@@ -13,8 +13,10 @@ NUM = "adsh\ttag\tversion\tddate\tqtrs\tuom\tcoreg\tvalue\n"
 D1, D0 = date(2024, 12, 31), date(2023, 12, 31)
 
 
-def pre(adsh, stmt, tag, label, inpth="0"):
-    return [adsh, "2", "1", stmt, inpth, "H", tag, "v", label, "0"]
+def pre(adsh, stmt, tag, label, inpth="0", line=None):
+    # the current-assets total comes after its lines in a balance sheet
+    line = line or ("9" if tag == "AssetsCurrent" else "1")
+    return [adsh, "2", line, stmt, inpth, "H", tag, "v", label, "0"]
 
 
 def num(adsh, tag, ddate, value, qtrs="0", coreg=""):
@@ -92,7 +94,9 @@ def test_quarters_and_the_interim_jsonl_round_trip(tmp_path):
         date(2024, 1, 31)
     ) == (2024, 1)
     f = tmp_path / "face.jsonl"
-    face = qf.AccessionFace(frozenset({D1, D0}), frozenset({D0}), frozenset({D1}))
+    face = qf.AccessionFace(
+        frozenset({D1, D0}), frozenset({D0}), frozenset({D1}), frozenset({D0})
+    )
     qf.write_jsonl(f, {A1: face}, "fsds:2025q1")
     assert qf.load_jsonl(f) == {A1: face}
     assert qf.load_jsonl(tmp_path / "missing.jsonl") == {}
@@ -122,3 +126,46 @@ def test_supplies_labels_count_as_a_materials_line_but_inventory_named_ones_do_n
         got[A4].materials_dates == frozenset()
         and got[A4].inventory_dates == frozenset()
     )
+
+
+def test_only_lines_above_the_current_assets_total_count(tmp_path):
+    z = make_zip(
+        tmp_path,
+        [
+            pre(A1, "BS", "InventoryNet", "Inventories", line="2"),
+            pre(A1, "BS", "AssetsCurrent", "Total current assets", line="5"),
+            pre(A2, "BS", "AssetsCurrent", "Total current assets", line="5"),
+            pre(A2, "BS", "InventoryNet", "Inventories", line="9"),  # a noncurrent block below the total
+            pre(A3, "BS", "InventoryNet", "Inventories", line="9"),  # no AssetsCurrent row: unclassified, accepted
+        ],
+        [num(A1, "InventoryNet", "20241231", "5"), num(A2, "InventoryNet", "20241231", "5"),
+         num(A3, "InventoryNet", "20241231", "5"), num(A1, "AssetsCurrent", "20241231", "50"), num(A2, "AssetsCurrent", "20241231", "50")],
+    )  # fmt: skip
+    got = qf.balance_sheet_faces(z, {A1, A2, A3})
+    assert got[A1].inventory_dates == {D1} and got[A2].inventory_dates == frozenset()
+    assert got[A3].inventory_dates == {D1}
+
+
+def test_a_wip_line_that_is_also_a_contract_asset_is_not_inventory(tmp_path):
+    # OMC 2018-03-31: Work in process 1,378.0 on InventoryWorkInProcess, the same amount tagged ContractWithCustomerAssetGrossCurrent
+    z = make_zip(
+        tmp_path,
+        [pre(A1, "BS", "InventoryWorkInProcess", "Work in process", line="2"), pre(A1, "BS", "AssetsCurrent", "Total current assets", line="5"),
+         pre(A2, "BS", "InventoryWorkInProcess", "Work in process", line="2"), pre(A2, "BS", "AssetsCurrent", "Total current assets", line="5"),
+         pre(A3, "BS", "InventoryWorkInProcess", "Work in process", line="2"), pre(A3, "BS", "InventoryFinishedGoods", "Finished goods", line="3"),
+         pre(A3, "BS", "AssetsCurrent", "Total current assets", line="5")],
+        [num(A1, "InventoryWorkInProcess", "20241231", "1378"), num(A1, "ContractWithCustomerAssetGrossCurrent", "20241231", "1378"),
+         num(A1, "AssetsCurrent", "20241231", "9000"),
+         num(A2, "InventoryWorkInProcess", "20241231", "1378"), num(A2, "AssetsCurrent", "20241231", "9000"),  # no contract-asset tag (pre-606)
+         num(A3, "InventoryWorkInProcess", "20241231", "10"), num(A3, "InventoryFinishedGoods", "20241231", "20"), num(A3, "AssetsCurrent", "20241231", "9000")],
+    )  # fmt: skip
+    got = qf.balance_sheet_faces(z, {A1, A2, A3})
+    assert (
+        got[A1].inventory_dates == frozenset() and got[A1].wip_only_dates == frozenset()
+    )  # guard: equal contract asset
+    assert got[A2].inventory_dates == {D1} and got[A2].wip_only_dates == {
+        D1
+    }  # WIP only: excluded only after a note read
+    assert (
+        got[A3].inventory_dates == {D1} and got[A3].wip_only_dates == frozenset()
+    )  # finished goods beside it
