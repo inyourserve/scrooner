@@ -269,6 +269,21 @@ RULES: dict[str, Rule] = {
             "lane2",
             "10-KT transition filings (WO-19)",
         ),
+        # ---- Data Engineer: retirement of stored rows (RU-1 family; default OFF)
+        _r(
+            "retire.derived_ratio_cells@1",
+            "-",
+            "data_engineer",
+            "retire stored derived ratio-unit facts (effective tax rate by subtraction) and their cells",
+            dry_run=True,
+        ),
+        _r(
+            "retire.proxy_form_cells@1",
+            "-",
+            "data_engineer",
+            "retire proxy-statement (DEF 14A family) facts as authoritative/displayed sources",
+            dry_run=True,
+        ),
         _r(
             "ownership.institutional_share_base@1",
             "RF-47",

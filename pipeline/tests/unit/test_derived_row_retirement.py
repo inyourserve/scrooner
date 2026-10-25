@@ -1,0 +1,464 @@
+"""mapper/derived_row_retirement.py: plan (read-only), apply (flag-gated) and
+restore on real SQL in an isolated database (schemas rcore / ranalytics stand
+in for core / analytics). The archive DDL below is a copy of migration 0098's
+canonical_fact_retired (foreign keys stripped) plus the draft
+fact_authority_retired; both live in the test database only."""
+
+from datetime import date
+from decimal import Decimal
+
+import psycopg
+import pytest
+
+from scrooner_pipeline.common import rule_flags as rf
+from scrooner_pipeline.mapper import derived_row_retirement as rr
+
+ON_RATIO = {rf.ENV_ENABLED: rr.RULE_RATIO}
+ON_PROXY = {rf.ENV_ENABLED: rr.RULE_PROXY}
+
+
+# ------------------------------------------------------------------ unit
+@pytest.mark.unit
+def test_rules_are_registered_and_default_off():
+    for rule in (rr.RULE_RATIO, rr.RULE_PROXY):
+        assert rule in rf.RULES
+        assert rf.rule_mode(rule, {}) == rf.OFF
+        assert rf.rule_mode(rule, {rf.ENV_DRYRUN: rule}) == rf.DRY_RUN
+
+
+@pytest.mark.unit
+def test_every_reason_code_has_display_text():
+    src = __import__("inspect").getsource(rr)
+    for code in (
+        "ratio_derived_no_filed_value",
+        "ratio_derived_filed_copies_disagree",
+        "proxy_only_source",
+        "proxy_no_authoritative_periodic_copy",
+        "proxy_filed_copies_disagree",
+    ):
+        assert code in rr.REASON_TEXT and code in src
+
+
+def _fact(fid, value, *, filed, form="10-K"):
+    return rr.FactRow(
+        fid,
+        1,
+        1,
+        1,
+        "T",
+        "usd",
+        "FY",
+        None,
+        None,
+        Decimal(value),
+        True,
+        False,
+        form,
+        "acc",
+        filed,
+    )
+
+
+@pytest.mark.unit
+def test_pick_one_rounding_is_one_value_and_real_disagreement_is_none():
+    a = _fact(1, "1316000000", filed=date(2025, 2, 1))
+    b = _fact(2, "1315605000", filed=date(2025, 3, 1))  # 0.03% apart -> not equal
+    assert rr._pick_one([a, b]) is None
+    c = _fact(3, "1316000000", filed=date(2025, 3, 1))
+    assert rr._pick_one([a, c]).fact_id == 3  # most recently filed witness
+    assert rr._pick_one([]) is None
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    ("stored", "filed", "bucket"),
+    [
+        ("268550", "268550000", "scale_1e3_or_1e6"),  # CHE DEFR14A in thousands
+        ("2087", "2087321000", "scale_1e3_or_1e6"),  # ANET DEF 14A in millions
+        ("1316000000", "1315605000", "under_0.1pct"),
+        ("57000", "57048", "under_0.1pct"),
+        ("100", "105", "1_to_10pct"),
+        ("100", "150", "10pct_or_more"),
+    ],
+)
+def test_gap_bucket(stored, filed, bucket):
+    assert rr._gap_bucket(Decimal(stored), Decimal(filed)) == bucket
+
+
+class _NoCursor:
+    def execute(self, *a, **k):
+        raise AssertionError("apply touched the database while the rule is off")
+
+
+@pytest.mark.unit
+def test_apply_refuses_when_rule_is_off_or_dry_run_and_never_touches_db():
+    plan = rr.Plan("A_ratio_derived", rr.RULE_RATIO)
+    for env in ({}, {rf.ENV_DRYRUN: rr.RULE_RATIO}, ON_PROXY):
+        with pytest.raises(rr.RuleNotEnabled):
+            rr.apply_plan(
+                _NoCursor(),
+                plan,
+                run_id="r",
+                expected_digest=plan.digest(),
+                environ=env,
+            )
+
+
+@pytest.mark.unit
+def test_apply_refuses_a_plan_that_is_not_the_reviewed_one():
+    plan = rr.Plan("A_ratio_derived", rr.RULE_RATIO)
+    with pytest.raises(rr.PlanChanged):
+        rr.apply_plan(
+            _NoCursor(), plan, run_id="r", expected_digest="0" * 64, environ=ON_RATIO
+        )
+
+
+@pytest.mark.unit
+def test_digest_changes_with_any_decision():
+    def cell(action):
+        return rr.CellPlan(
+            "A", rr.RULE_RATIO, 1, 1, 1, "c", 1, None, Decimal("1"), (5,), (5,), action
+        )
+
+    p1 = rr.Plan("A", rr.RULE_RATIO, cells=[cell(rr.ACT_REMOVE)])
+    p2 = rr.Plan("A", rr.RULE_RATIO, cells=[cell(rr.ACT_REVIEW)])
+    assert (
+        p1.digest() != p2.digest()
+        and p1.digest()
+        == rr.Plan("A", rr.RULE_RATIO, cells=[cell(rr.ACT_REMOVE)]).digest()
+    )
+
+
+# ------------------------------------------------------------ real SQL
+ARCHIVE_DDL = """
+create table ranalytics.canonical_fact_retired (
+    id bigint generated always as identity primary key,
+    action text not null check (action in ('replaced', 'removed', 'inserted')),
+    canonical_fact_id bigint not null, company_id bigint not null,
+    canonical_concept_id bigint not null, period_id bigint not null,
+    value numeric, source_fact_ids bigint[], resolved_at timestamptz,
+    reason_code text not null, run_id text not null, basis_version text,
+    retired_at timestamptz not null default now(), restored_at timestamptz);
+"""
+SCHEMA = """
+create schema rcore; create schema ranalytics;
+create table rcore.concept (id bigint primary key, tag text);
+create table rcore.unit (id bigint primary key, unit_name text);
+create table rcore.period (id bigint primary key, company_id bigint, start_date date,
+    end_date date, period_type text, fiscal_year int, fiscal_period text);
+create table rcore.filing (id bigint primary key, company_id bigint, accession_number text,
+    form text, filing_date date);
+create table rcore.fact (id bigint primary key, company_id bigint, concept_id bigint,
+    unit_id bigint, period_id bigint, filing_id bigint, value numeric,
+    is_derived boolean default false, is_authoritative boolean default true);
+create table ranalytics.canonical_concept (id bigint primary key, name text);
+create table ranalytics.concept_mapping (id bigserial primary key, canonical_concept_id bigint,
+    concept_id bigint, priority int, confidence text default 'approved');
+create table ranalytics.canonical_fact (id bigint generated always as identity primary key,
+    company_id bigint not null, canonical_concept_id bigint not null, period_id bigint not null,
+    value numeric not null, source_fact_ids bigint[] not null,
+    resolved_at timestamptz not null default now(),
+    unique (company_id, canonical_concept_id, period_id));
+create table ranalytics.metric_value (id bigserial primary key, company_id bigint,
+    source_fact_ids bigint[]);
+"""
+TAX, NI, OTHER = 303, 11, 12
+PURE, USD = 1, 2
+CC_TAX, CC_NI, CC_NI_RES = 148, 4, 253
+
+
+@pytest.fixture
+def conn(isolated_database_url):
+    with psycopg.connect(isolated_database_url) as c:
+        c.execute(
+            "drop schema if exists rcore cascade; drop schema if exists ranalytics cascade"
+        )
+        c.execute(SCHEMA)
+        c.execute(ARCHIVE_DDL)
+        c.execute(
+            rr.FACT_AUTHORITY_RETIRED_DDL_DRAFT.replace("analytics.", "ranalytics.")
+        )
+        c.execute(
+            "insert into rcore.concept values (303,'EffectiveIncomeTaxRateContinuingOperations'),"
+            "(11,'NetIncomeLoss'),(12,'OtherRate')"
+        )
+        c.execute("insert into rcore.unit values (1,'pure'),(2,'usd')")
+        c.execute(
+            "insert into ranalytics.canonical_concept values (148,'effective_tax_rate_reported'),"
+            "(4,'net_income'),(253,'net_income_resolved')"
+        )
+        c.execute(
+            "insert into ranalytics.concept_mapping (canonical_concept_id, concept_id, priority)"
+            " values (148,303,1),(4,11,1)"
+        )
+        c.execute(
+            "insert into rcore.filing values (1,1,'K1','10-K','2026-02-01'),"
+            "(2,1,'P1','DEF 14A','2026-04-01'),(3,1,'Q1','10-Q','2025-11-01'),"
+            "(4,1,'E1','8-K','2026-03-01'),(5,1,'K2','10-K','2026-03-01')"
+        )
+        for i in range(1, 8):
+            c.execute(
+                "insert into rcore.period values (%s,1,'2025-10-01','2025-12-31','duration',2025,'Q4')",
+                (i,),
+            )
+        yield c
+        c.rollback()
+        c.execute(
+            "drop schema if exists rcore cascade; drop schema if exists ranalytics cascade"
+        )
+        c.commit()
+
+
+def _f(c, fid, concept, unit, period, filing, value, *, derived=False, auth=True):
+    c.execute(
+        "insert into rcore.fact values (%s,1,%s,%s,%s,%s,%s,%s,%s)",
+        (fid, concept, unit, period, filing, Decimal(value), derived, auth),
+    )
+
+
+def _cell(c, ccid, period, value, sources):
+    return c.execute(
+        "insert into ranalytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)"
+        " values (1,%s,%s,%s,%s) returning id",
+        (ccid, period, Decimal(value), sources),
+    ).fetchone()[0]
+
+
+def _state(c):
+    cells = c.execute(
+        "select company_id, canonical_concept_id, period_id, value, source_fact_ids"
+        " from ranalytics.canonical_fact order by 1,2,3"
+    ).fetchall()
+    facts = c.execute(
+        "select id, is_authoritative from rcore.fact order by id"
+    ).fetchall()
+    return cells, facts
+
+
+def _plan_a(c):
+    with c.cursor() as cur:
+        return rr.plan_ratio_chunk(
+            cur,
+            [1],
+            cids=[TAX],
+            uids=[PURE],
+            mapped_priority={TAX: 1},
+            core="rcore",
+            analytics="ranalytics",
+        )
+
+
+def _plan_b(c):
+    with c.cursor() as cur:
+        return rr.plan_proxy_chunk(cur, [1], core="rcore", analytics="ranalytics")
+
+
+def _seed_a(c):
+    # period 1: derived Q4 rate -0.40 (PGR shape), a filed 10-K Q4 rate exists -> replace
+    _f(c, 100, TAX, PURE, 1, 3, "-0.404", derived=True)
+    _f(c, 101, TAX, PURE, 1, 1, "0.206")
+    _cell(c, CC_TAX, 1, "-0.404", [100])
+    # period 2: derived, nothing filed -> remove with reason
+    _f(c, 110, TAX, PURE, 2, 3, "-0.787", derived=True)
+    _cell(c, CC_TAX, 2, "-0.787", [110])
+    # period 3: cell with two sources -> review, untouched
+    _f(c, 120, TAX, PURE, 3, 3, "0.5", derived=True)
+    _f(c, 121, TAX, PURE, 3, 1, "0.2")
+    _cell(c, CC_TAX, 3, "0.5", [120, 121])
+    # period 4: filed copies disagree (and a derived one) -> remove, disagree
+    _f(c, 130, TAX, PURE, 4, 3, "0.9", derived=True)
+    _f(c, 131, TAX, PURE, 4, 1, "0.21")
+    _f(c, 132, TAX, PURE, 4, 5, "0.25")
+    _cell(c, CC_TAX, 4, "0.9", [130])
+    # not in scope: derived fact on another tag; a filed (not derived) rate cell
+    _f(c, 140, OTHER, PURE, 5, 3, "0.1", derived=True)
+    _f(c, 141, TAX, PURE, 6, 1, "0.3")
+    _cell(c, CC_TAX, 6, "0.3", [141])
+
+
+def _seed_b(c):
+    # period 1 (net_income_resolved): DEF 14A in thousands vs 10-K in dollars -> replace, scale
+    _f(c, 200, NI, USD, 1, 2, "268550")
+    _f(c, 201, NI, USD, 1, 1, "268550000")
+    _cell(c, CC_NI_RES, 1, "268550", [200])
+    # period 2: proxy only -> remove proxy_only_source
+    _f(c, 210, NI, USD, 2, 2, "57000000000")
+    _cell(c, CC_NI_RES, 2, "57000000000", [210])
+    # period 3: only a NON-authoritative 10-K copy -> remove, no authoritative periodic copy
+    _f(c, 220, NI, USD, 3, 2, "5000")
+    _f(c, 221, NI, USD, 3, 1, "5000000", auth=False)
+    _cell(c, CC_NI, 3, "5000", [220])
+    # period 4: two disagreeing 10-K copies -> remove, copies disagree
+    _f(c, 230, NI, USD, 4, 2, "100")
+    _f(c, 231, NI, USD, 4, 1, "101000")
+    _f(c, 232, NI, USD, 4, 5, "150000")
+    _cell(c, CC_NI, 4, "100", [230])
+    # period 5: 8-K source -> out of scope, untouched
+    _f(c, 240, NI, USD, 5, 4, "777")
+    _cell(c, CC_NI, 5, "777", [240])
+    # period 6: authoritative proxy fact that feeds no cell -> counted, not demoted
+    _f(c, 250, NI, USD, 6, 2, "42")
+
+
+@pytest.mark.integration
+def test_family_a_plan_outcomes(conn):
+    _seed_a(conn)
+    plan = _plan_a(conn)
+    by_period = {c.period_id: c for c in plan.cells}
+    assert set(by_period) == {1, 2, 3, 4}
+    a = by_period[1]
+    assert (a.action, a.replacement_fact_id, a.replacement_value) == (
+        rr.ACT_REPLACE,
+        101,
+        Decimal("0.206"),
+    )
+    assert (by_period[2].action, by_period[2].reason_code) == (
+        rr.ACT_REMOVE,
+        "ratio_derived_no_filed_value",
+    )
+    assert by_period[3].action == rr.ACT_REVIEW
+    assert (by_period[4].action, by_period[4].reason_code) == (
+        rr.ACT_REMOVE,
+        "ratio_derived_filed_copies_disagree",
+    )
+    # demote list: only authoritative derived tax-rate facts, 140 (other tag) and 101 (filed) excluded
+    assert sorted(f.fact_id for f in plan.facts) == [100, 110, 120, 130]
+    assert plan.info["derived_ratio_facts_total"] == 4
+    s = rr.summarize(plan, cohort={1})
+    assert s["all_companies"]["cells"] == 4 and s["cohort"]["cells"] == 4
+    assert s["all_companies"]["by_action"][rr.ACT_REPLACE] == 1
+
+
+@pytest.mark.integration
+def test_family_b_plan_outcomes(conn):
+    _seed_b(conn)
+    plan = _plan_b(conn)
+    by_period = {c.period_id: c for c in plan.cells}
+    assert set(by_period) == {1, 2, 3, 4}
+    assert (
+        by_period[1].action == rr.ACT_REPLACE
+        and by_period[1].replacement_fact_id == 201
+    )
+    assert by_period[1].note == "scale_1e3_or_1e6"
+    assert by_period[2].reason_code == "proxy_only_source"
+    assert by_period[3].reason_code == "proxy_no_authoritative_periodic_copy"
+    assert by_period[4].reason_code == "proxy_filed_copies_disagree"
+    assert sorted(f.fact_id for f in plan.facts) == [200, 210, 220, 230]
+    assert plan.info["proxy_facts_authoritative_not_displayed"] == 1  # fact 250
+    assert plan.info["proxy_forms_met"] == {"DEF 14A": 5}
+
+
+@pytest.mark.integration
+def test_plan_is_read_only(conn):
+    _seed_a(conn)
+    _seed_b(conn)
+    before = _state(conn)
+    _plan_a(conn)
+    _plan_b(conn)
+    assert _state(conn) == before
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("family", ["A", "B"])
+def test_apply_then_restore_is_exact_and_replan_is_empty(conn, family):
+    _seed_a(conn)
+    _seed_b(conn)
+    plan_fn, env = (_plan_a, ON_RATIO) if family == "A" else (_plan_b, ON_PROXY)
+    before = _state(conn)
+    plan = plan_fn(conn)
+    with conn.cursor() as cur:
+        stats = rr.apply_plan(
+            cur,
+            plan,
+            run_id="run-1",
+            expected_digest=plan.digest(),
+            environ=env,
+            core="rcore",
+            analytics="ranalytics",
+        )
+    after = _state(conn)
+    assert after != before
+    assert stats["facts_demoted"] == len(plan.facts) == 4
+    assert stats["cells_replaced"] == 1
+    assert stats["cells_removed"] == (2 if family == "A" else 3)
+    facts = dict(after[1])
+    for f in plan.facts:
+        assert facts[f.fact_id] is False
+    cells = {(c[1], c[2]): c for c in after[0]}
+    if family == "A":
+        assert cells[(CC_TAX, 1)][3] == Decimal("0.206") and cells[(CC_TAX, 1)][4] == [
+            101
+        ]
+        assert (CC_TAX, 2) not in cells and (CC_TAX, 4) not in cells
+        assert cells[(CC_TAX, 3)][3] == Decimal("0.5")  # review cell untouched
+    else:
+        assert cells[(CC_NI_RES, 1)][3] == Decimal("268550000")
+        assert (CC_NI_RES, 2) not in cells and (CC_NI, 3) not in cells
+        assert cells[(CC_NI, 5)][3] == Decimal("777")  # 8-K untouched
+    # retired rows keep their before-image and reason
+    arch = conn.execute(
+        "select action, reason_code from ranalytics.canonical_fact_retired"
+        " where run_id='run-1' order by canonical_fact_id"
+    ).fetchall()
+    assert {a[0] for a in arch} == {"replaced", "removed"}
+    assert all(a[1].startswith(plan.rule_id) for a in arch)
+    # a second look finds nothing left to retire in the rule's own scope
+    again = plan_fn(conn)
+    assert [
+        c for c in again.cells if c.action != rr.ACT_REVIEW
+    ] == [] and again.facts == []
+    # rollback restores cells and facts exactly
+    with conn.cursor() as cur:
+        out = rr.restore(cur, "run-1", core="rcore", analytics="ranalytics")
+    assert out["facts_restored"] == 4
+    restored = _state(conn)
+    assert restored[1] == before[1]
+    assert sorted(restored[0], key=lambda r: (r[1], r[2])) == sorted(
+        before[0], key=lambda r: (r[1], r[2])
+    )
+    with conn.cursor() as cur:  # twice is a no-op
+        assert (
+            rr.restore(cur, "run-1", core="rcore", analytics="ranalytics")[
+                "facts_restored"
+            ]
+            == 0
+        )
+
+
+@pytest.mark.integration
+def test_apply_refuses_stale_cells_and_changes_nothing(conn):
+    _seed_a(conn)
+    plan = _plan_a(conn)
+    conn.execute("update ranalytics.canonical_fact set value = 9 where period_id = 2")
+    before = _state(conn)
+    with conn.cursor() as cur:
+        with pytest.raises(rr.PlanChanged):
+            rr.apply_plan(
+                cur,
+                plan,
+                run_id="run-2",
+                expected_digest=plan.digest(),
+                environ=ON_RATIO,
+                core="rcore",
+                analytics="ranalytics",
+            )
+    assert _state(conn) == before
+
+
+@pytest.mark.integration
+def test_apply_with_flag_off_changes_nothing(conn):
+    _seed_a(conn)
+    plan = _plan_a(conn)
+    before = _state(conn)
+    with conn.cursor() as cur:
+        with pytest.raises(rr.RuleNotEnabled):
+            rr.apply_plan(
+                cur,
+                plan,
+                run_id="run-3",
+                expected_digest=plan.digest(),
+                environ={},
+                core="rcore",
+                analytics="ranalytics",
+            )
+    assert _state(conn) == before
