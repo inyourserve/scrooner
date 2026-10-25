@@ -314,6 +314,19 @@ def load_context(
             (company_id,),
         )
         accession = dict(cur.fetchall())
+        # a cell whose date has no periodic filing of its own (a transition-period or amended filing carries it): the
+        # filing of the period's current-assets fact is the statement that shows the date
+        cur.execute(
+            """select distinct on (p.end_date) p.end_date, fl.accession_number
+               from core.fact f join core.period p on p.id = f.period_id
+               join core.concept k on k.id = f.concept_id join core.filing fl on fl.id = f.filing_id
+               where f.company_id = %s and p.period_type = 'instant' and k.taxonomy = 'us-gaap'
+                 and k.tag = 'AssetsCurrent'
+               order by p.end_date, f.is_authoritative desc, f.id desc""",
+            (company_id,),
+        )
+        for end_date, acc in cur.fetchall():
+            accession.setdefault(end_date, acc)
     face_by_date: dict[date, PeriodFace] = {}
     for d, acc in accession.items():
         f = face.get(acc)
