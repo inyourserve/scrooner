@@ -104,6 +104,36 @@ def fetch_instants(cur, cik, tags, since="2015-01-01"):
     return facts
 
 
+def fetch_durations(cur, cik, tags, since="2015-01-01"):
+    """{(start, end): (accession, {tag: Decimal})} with every term of a cell from
+    ONE filing (the original whose period_of_report is the end date, else the
+    accession carrying the most of the needed tags). Periodic forms only."""
+    cur.execute(
+        """
+        select co.tag, p.start_date::text, p.end_date::text, f.value::numeric, f.is_authoritative,
+               fi.accession_number, fi.period_of_report::text
+        from core.fact f
+        join core.concept co on co.id = f.concept_id
+        join core.period p on p.id = f.period_id
+        join core.unit u on u.id = f.unit_id
+        join core.company c on c.id = f.company_id
+        join core.filing fi on fi.id = f.filing_id
+        where c.cik = %s and p.period_type = 'duration' and co.taxonomy = 'us-gaap'
+          and u.unit_name = 'usd' and co.tag = any(%s) and p.end_date >= %s and fi.form = any(%s)
+        order by co.tag, p.start_date, p.end_date, f.is_authoritative desc, f.id desc
+        """,
+        (cik, sorted(tags), since, list(PERIODIC_FORMS)),
+    )
+    by_acc = defaultdict(lambda: defaultdict(dict))
+    original = {}
+    for tag, s, e, v, _auth, acc, por in cur.fetchall():
+        by_acc[(s, e)][acc].setdefault(tag, v)
+        if por == e:
+            original.setdefault((s, e), acc)
+    return {key: (original.get(key) or max(accs, key=lambda a: len(accs[a])), accs[original.get(key) or max(accs, key=lambda a: len(accs[a]))])
+            for key, accs in by_acc.items()}
+
+
 def face_rows_for(path, accessions, stmt="BS"):
     """Ordered face rows per filing: {adsh: [{tag, custom, label}, ...]}."""
     tmp = defaultdict(list)

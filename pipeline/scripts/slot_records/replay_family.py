@@ -24,6 +24,10 @@ from collections import defaultdict
 from decimal import Decimal
 
 import psycopg
+from pathlib import Path as _Path
+
+sys.path.insert(0, str(_Path(__file__).parent))
+import common  # noqa: E402
 
 family = sys.argv[1]
 PROD_CONCEPT = {"d_and_a": "depreciation_and_amortization_resolved", "capex": "capex_resolved"}[family]
@@ -72,33 +76,7 @@ for cik in sorted(records):
         (cik, PROD_CONCEPT),
     )
     prod = {(s, e): v for s, e, v in cur.fetchall()}
-    cur.execute(
-        """
-        select co.tag, p.start_date::text, p.end_date::text, f.value::numeric, f.is_authoritative,
-               fi.accession_number, fi.period_of_report::text
-        from core.fact f
-        join core.concept co on co.id = f.concept_id
-        join core.period p on p.id = f.period_id
-        join core.unit u on u.id = f.unit_id
-        join core.company c on c.id = f.company_id
-        join core.filing fi on fi.id = f.filing_id
-        where c.cik = %s and p.period_type = 'duration' and co.taxonomy = 'us-gaap'
-          and u.unit_name = 'usd' and co.tag = any(%s) and p.end_date >= '2015-01-01'
-          and fi.form in ('10-K','10-Q','10-K/A','10-Q/A')
-        order by co.tag, p.start_date, p.end_date, f.is_authoritative desc, f.id desc
-        """,
-        (cik, sorted(tags)),
-    )
-    by_acc = defaultdict(lambda: defaultdict(dict))
-    original = {}
-    for tag, s, e, v, auth, acc, por in cur.fetchall():
-        by_acc[(s, e)][acc].setdefault(tag, v)
-        if por == e:
-            original.setdefault((s, e), acc)
-    facts = {}
-    for key, accs in by_acc.items():
-        acc = original.get(key) or max(accs, key=lambda a: len(accs[a]))
-        facts[key] = (acc, accs[acc])
+    facts = common.fetch_durations(cur, cik, tags)
     for (s, e) in sorted(set(prod) | set(facts)):
         ym = e[:7]
         rec = next((r for r in records[cik] if r["period_from"][:7] <= ym <= r["period_to"][:7]), None)
