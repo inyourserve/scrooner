@@ -8,7 +8,8 @@
 # per-cell dump and withheld details go to the report file, not the terminal.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
-REPO="$(cd "$HERE/../../.." && pwd)"
+# the pipeline env and venv live in the main checkout, not in a worktree
+REPO="${PIPELINE_HOME:-/Users/vikash/scrooner/pipeline}"
 SCRATCH="${SCRATCH:-/private/tmp/claude-501/-Users-vikash-scrooner/6f443880-97cf-4cf4-95d5-77b8189f3fb4/scratchpad}"
 NAME="$1"; CIKS="$2"; ANCHORS="${3:-$SCRATCH/no_anchors.json}"
 [[ "$CIKS" == @* ]] && CIKS="$(tr '\n' ',' < "${CIKS#@}" | sed 's/,$//')"
