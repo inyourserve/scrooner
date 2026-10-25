@@ -218,6 +218,54 @@ def test_cp_materials_and_supplies_is_an_inventory_line_under_the_default_switch
     assert not qe.is_inventory_like("MaterialsSuppliesAndOther")
 
 
+def test_a_current_materials_and_supplies_line_hides_the_figure_with_a_reason(
+    monkeypatch,
+):
+    # founder ruling 2026-10-25: the formula is locked; wherever a current MaterialsSuppliesAndOther line exists the
+    # figure is hidden. CP 2017-03-31: CA 1,110 does not foot without the 201 line.
+    lines = M(AssetsCurrent=1110, CashAndCashEquivalentsAtCarryingValue=201, AccountsReceivableNetCurrent=631, OtherAssetsCurrent=77)  # fmt: skip
+    c = qe.Context(
+        False,
+        {END: lines},
+        {END: {"MaterialsSuppliesAndOther": D(201) * K}},
+        {END: D(201) * K},
+    )
+    assert qe.materials_supplies_reason(c, END) == qe.REASON_MATERIALS
+    # not when the current-assets total foots without it (the figure is inside another line or a note)
+    foot = M(AssetsCurrent=1110, CashAndCashEquivalentsAtCarryingValue=1110)
+    assert (
+        qe.materials_supplies_reason(
+            qe.Context(False, {END: foot}, {}, {END: D(201) * K}), END
+        )
+        is None
+    )
+    # not when it is larger than current assets (not a current line), nor when there is none
+    assert (
+        qe.materials_supplies_reason(
+            qe.Context(False, {END: lines}, {}, {END: D(5000) * K}), END
+        )
+        is None
+    )
+    assert qe.materials_supplies_reason(qe.Context(False, {END: lines}), END) is None
+    # the named switch turns the rule off in one place
+    monkeypatch.setattr(qe, "MATERIALS_AND_SUPPLIES_ARE_INVENTORY", False)
+    assert qe.materials_supplies_reason(c, END) is None
+
+
+def test_calculate_hides_a_quick_ratio_that_has_an_inventory_value_but_a_materials_line(
+    monkeypatch,
+):
+    ca, cl, inv, _stored, correct = FIXTURES["XOM"]
+    lines = {"AssetsCurrent": ca, "CashAndCashEquivalentsAtCarryingValue": ca / 4}
+    c = qe.Context(
+        True, {END: lines}, {}, {END: D(3200) * K}
+    )  # XOM: materials and supplies 3,200 on the face
+    row = _run(monkeypatch, "XOM", with_inventory=True, rule_on=True, context=c)
+    assert row["value"] is None and row["is_null_reason"] == qe.REASON_MATERIALS
+    off = _run(monkeypatch, "XOM", with_inventory=True, rule_on=False, context=c)
+    assert abs(off["value"] - correct) < Decimal("0.002")  # flag off: untouched
+
+
 def _target():
     return [
         {
@@ -374,9 +422,36 @@ def test_load_context_splits_footing_lines_from_inventory_like_facts_per_date():
         END: {"AssetsCurrent": D(100)},
         date(2025, 12, 31): {"AssetsCurrent": D(90)},
     }
-    assert c.inventory_like == {END: {"InventoryFinishedGoodsNetOfReserves": D(30)}}
+    assert (
+        c.inventory_like == {END: {"InventoryFinishedGoodsNetOfReserves": D(30)}}
+        and c.materials_supplies == {}
+    )
     assert any("p.period_type = 'instant'" in q for q in conn.cur.sql)
     assert qe.load_context(_Conn({"from analytics.company_filing_line_evidence": [], "from core.fact f join core.period": []}), 5, like_ids=[]).line_present is None  # fmt: skip
+
+
+def test_load_context_collects_materials_and_supplies_per_date():
+    conn = _Conn({
+        "from analytics.company_filing_line_evidence": [(False,)],
+        "from core.fact f join core.period": [(END, "MaterialsSuppliesAndOther", D(201)), (END, "InventoryRawMaterialsAndSupplies", D(5))],
+    })  # fmt: skip
+    c = qe.load_context(conn, 5, like_ids=[1])
+    assert c.materials_supplies == {END: D(201)} and set(c.inventory_like[END]) == {"MaterialsSuppliesAndOther"} | {"InventoryRawMaterialsAndSupplies"}  # fmt: skip
+
+
+def test_planner_also_lists_cells_with_an_inventory_value_and_a_materials_line():
+    # the XOM-type cell: inventory is mapped (so it is in `have`), the stored value is not the current ratio
+    tables_conn = _planner_conn(
+        [
+            (END, "MaterialsSuppliesAndOther", D(3200)),
+            (END, "AssetsCurrent", D(1000000)),
+        ],
+        None,
+    )
+    got = qe.plan_quick_ratio(tables_conn, [2])
+    assert [(p.company_id, p.reason) for p in got if p.company_id == 2] == [
+        (2, qe.REASON_MATERIALS)
+    ]
 
 
 def test_inventory_concept_loader_drops_mapped_and_non_balance_sheet_tags():
