@@ -76,6 +76,26 @@ for cik, era_list in sorted(eras.items()):
             if m["custom"]:
                 mm["value_derivable_from_api"] = False  # custom tags never reach companyfacts
             members.append(mm)
+        # MEMBER-LEVEL composition (gate design 2026-10-25): among the CF
+        # members, which are calc parents of which, in the cash-flow STATEMENT
+        # role (never a note role). G1: a single root member = the printed
+        # line. G2: a parent whose printed children tie to it.
+        cf_tags = {m["tag"] for m in members if m["stmt"] == "CF"}
+        parent_of = {}
+        for (role, parent), children in arcs.items():
+            if b.NOTE_ROLE_RX.search(role) or not CF_ROLE_RX.search(role):
+                continue
+            if parent in cf_tags:
+                for c, w, cu in children:
+                    if c in cf_tags:
+                        parent_of[c] = {"parent": parent, "weight": w}
+        roots = sorted(t for t in cf_tags if t not in parent_of)
+        composition = {
+            "roots": roots,
+            "children_of": {p: sorted(c for c, v in parent_of.items() if v["parent"] == p) for p in set(v["parent"] for v in parent_of.values())},
+            "weights": {c: v["weight"] for c, v in parent_of.items()},
+            "has_statement_cal": bool(section),
+        }
         rec = {
             "kind": "slot_record", "company": ticker, "cik": cik,
             "canonical_concept": family, "rule_type": "slot_composition",
@@ -87,8 +107,8 @@ for cik, era_list in sorted(eras.items()):
             "evidence_accession": era["first"], "evidence_level": "FILING-CHECKED",
             "source": f"assemble_family.py ({family}: FSDS face lines + boundary cal)",
             "members": members,
-            "section": section or None,  # None -> no statement-role section cal: cells hold
-            "requires_section_tie": True,
+            "section": section or None,  # the section arithmetic, informational since the gate redesign
+            "composition": composition,
         }
         out.write(json.dumps(rec) + "\n")
         n_rec += 1

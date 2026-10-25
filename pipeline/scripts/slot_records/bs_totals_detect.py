@@ -166,6 +166,11 @@ for adsh, meta in by_filing.items():
                          if not zone_lines[j]["seg"].startswith("excluded")), None)
         if prev_seg == "liab" and next_seg == "liab":
             z["seg"] = "liab"
+        # Verifier census check (Alexandria RE): a preferred line tagged with a
+        # mezzanine-looking element but printed INSIDE the equity section
+        # (between equity rows) is equity, never subtracted as mezzanine
+        elif prev_seg in ("equity_component", "equity_total", "nci") and next_seg in ("equity_component", "equity_total", "nci", None):
+            z["seg"] = "equity_component"
     # the RAW liability line list; subtotal dedup happens in the assembler
     # against the filer's own statement-role calc graph (label-run replacement
     # proved wrong: T's 'Total deferred credits...' swallowed Long-Term Debt)

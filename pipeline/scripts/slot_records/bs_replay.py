@@ -221,6 +221,13 @@ def identity(rec, day, liab):
         if len(vals) > 1 and abs(sum(vals) - v - v) <= Decimal(1):
             vals = [v]
             break
+    # Verifier census check (ADS over-count): when a mezzanine TOTAL element
+    # ('...IncludingPortionAttributableToNoncontrollingInterests' or
+    # 'TemporaryEquityCarryingAmount...') is printed beside component lines,
+    # the total alone is the mezzanine
+    totals = [t for t in seen_vals if "IncludingPortionAttributableToNoncontrollingInterest" in t or t.startswith("TemporaryEquityCarryingAmount")]
+    if len(seen_vals) > 1 and len(totals) == 1:
+        vals = [seen_vals[totals[0]]]
     mezz = sum(vals, Decimal(0))
     # a dimension-only mezzanine tag, when the face has NO mezzanine line at
     # all, counts ONLY with its per-class value read from the same accession's

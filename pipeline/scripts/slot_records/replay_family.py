@@ -51,7 +51,7 @@ conn = psycopg.connect(os.environ["DATABASE_URL"])
 cur = conn.cursor()
 cur.execute("set statement_timeout = '60s'")
 report = {"cells": [], "summary": defaultdict(int), "per_company": defaultdict(lambda: defaultdict(int))}
-PUBLISHABLE = {"section_ties", "section_ties_narrow_only"}
+PUBLISHABLE = {"G1_printed_line", "G2_composition_ties"}
 for cik in sorted(records):
     ticker = records[cik][0]["company"]
     tags = set()
@@ -115,7 +115,9 @@ for cik in sorted(records):
             return sum((day[m["tag"]] for m in cf_members if m["class"] in classes and m["tag"] in day), Decimal(0))
 
         narrow, broad = total(NARROW), total(BROAD)
-        # THE GATE: the filer's own section arithmetic on this accession
+        # Section arithmetic: INFORMATIONAL only since the gate redesign
+        # (SLOT-RECORDS-DA-CAPEX-GATE-DESIGN-2026-10-25): its roots include
+        # lines the API never carries.
         sec = rec.get("section")
         tie = None
         if sec and sec["total"] in day:
@@ -124,27 +126,61 @@ for cik in sorted(records):
             if len(present) == len(vals):
                 gap = day[sec["total"]] - sum(v * w for v, w in present)
                 tie = abs(gap) <= rounding_unit([v for v, _ in present] + [day[sec["total"]]])
+        # THE GATE (member level): G1 a single root member in the slot's classes
+        # is the filer's printed line; G2 a root that is a calc PARENT of other
+        # members publishes only when its printed children tie to it on this
+        # accession; children themselves are never summed beside their parent.
+        comp = rec.get("composition") or {}
+        roots = [t for t in comp.get("roots", []) if any(m["tag"] == t and m["class"] in BROAD for m in cf_members)]
+        children_of = comp.get("children_of", {})
+        gate = None
+        gate_detail = None
+        if not comp.get("has_statement_cal"):
+            gate = "hold_no_statement_cal"
+        elif not roots:
+            gate = "hold_no_root_member"
+        else:
+            g2_ok, g2_fail = [], []
+            for rt in roots:
+                kids = children_of.get(rt, [])
+                if not kids:
+                    continue  # a leaf root: G1, the printed line itself
+                if rt not in day:
+                    g2_fail.append(f"{rt}:parent_value_missing")
+                    continue
+                kv = [(day.get(k), Decimal(comp["weights"].get(k, "1.0"))) for k in kids]
+                if any(v is None for v, _ in kv):
+                    g2_fail.append(f"{rt}:child_value_missing")
+                    continue
+                gap = day[rt] - sum(v * w for v, w in kv)
+                (g2_ok if abs(gap) <= rounding_unit([v for v, _ in kv] + [day[rt]]) else g2_fail).append(f"{rt}:{gap}")
+            missing_roots = [rt for rt in roots if rt not in day]
+            if g2_fail:
+                gate = "hold_composition_gap"
+                gate_detail = g2_fail
+            elif missing_roots:
+                gate = "hold_root_value_missing"
+                gate_detail = missing_roots
             else:
-                tie = None  # a root value is missing: cannot prove the section
+                gate = "G2_composition_ties" if g2_ok else "G1_printed_line"
+                gate_detail = g2_ok or roots
+
+        def roots_total(classes):
+            # the slot value: ROOT members only (never a child beside its parent)
+            return sum((day[t] for t in roots if t in day and any(m["tag"] == t and m["class"] in classes for m in cf_members)), Decimal(0))
+
+        narrow, broad = roots_total(NARROW), roots_total(BROAD)
         verdict = None
         if not day:
             verdict = "no_facts_this_period"
-        elif missing_custom:
+        elif missing_custom and any(m.get("custom") and m["tag"] in roots for m in cf_members):
             verdict = "needs_instance_reader"
-        elif missing_std and not any(m["class"] in NARROW for m in cf_members if m["tag"] in day):
-            verdict = "not_computable_missing_member"
-        elif sec is None:
-            verdict = "hold_no_section_cal"
-        elif sec["total"] not in day:
-            verdict = "hold_section_total_missing"
-        elif tie is None:
-            verdict = "hold_section_root_missing"
-        elif not tie:
-            verdict = "hold_section_gap"
-        elif missing_std:
-            verdict = "section_ties_narrow_only"  # broad variant incomplete
+        elif gate.startswith("hold"):
+            verdict = gate
+        elif not any(m["tag"] in roots and m["class"] in NARROW for m in cf_members):
+            verdict = "no_narrow_root"  # only broad-class lines on the face (e.g. amortization only)
         else:
-            verdict = "section_ties"
+            verdict = gate
         pv = prod.get((s, e))
         publishable = verdict in PUBLISHABLE
         report["summary"][verdict] += 1
@@ -156,6 +192,7 @@ for cik in sorted(records):
             report["summary"]["prod_blank_slot_has_value"] += 1
         report["cells"].append(
             {"ticker": ticker, "start": s, "end": e, "accession": acc, "verdict": verdict,
+             "gate_detail": gate_detail, "section_tie": tie,
              "slot_narrow": str(narrow) if publishable else None,
              "slot_broad": str(broad) if publishable and not missing_std else None,
              "prod_value": str(pv) if pv is not None else None,
