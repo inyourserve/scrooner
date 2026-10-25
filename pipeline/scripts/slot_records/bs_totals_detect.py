@@ -46,9 +46,19 @@ import re  # noqa: E402
 EQUITY_START_RX = re.compile(
     r"^(Preferred|Common)Stock|AdditionalPaidInCapital|RetainedEarnings|"
     r"AccumulatedOtherComprehensive|TreasuryStock|StockholdersEquity|"
-    r"PartnersCapital|MembersEquity|LimitedPartnersCapital|GeneralPartnersCapital"
+    r"PartnersCapital|MembersEquity|LimitedPartnersCapital|GeneralPartnersCapital|"
+    # Verifier BS-V1 item 3: a filer's own equity element (BRKR
+    # OthersShareholdersEquity) must never sit in the liabilities members.
+    # Lexical balance-type guard until the FASB balance attribute CSV lands.
+    r"ShareholdersEquity|Shareholders|StockholdersEquity|EquityAttributable|"
+    r"CapitalSurplus|CapitalStock|PaidInCapital|OtherEquity|EquityOther"
 )
 MEZZ_RX = re.compile(r"TemporaryEquity|RedeemableNoncontrolling|RedeemablePreferred")
+# Verifier BS-V1 item 1 (AWK): a DEBT subtotal whose element name mentions the
+# redeemable preferred it includes ('LongTermDebtIncludesRedeemablePreferred
+# StockAtRedemptionValue' = Total long-term debt) is a liability line, never
+# mezzanine. Debt-reading tags win over the mezzanine pattern.
+DEBT_LIKE_RX = re.compile(r"Debt|Borrow|NotesPayable|Loan")
 NOISE_RX = re.compile(r"CommitmentsAndContingencies")
 
 EQUITY_TOTAL_TAGS = {
@@ -80,8 +90,10 @@ def classify_line(tag, label):
         return "excluded_abstract"
     if NONLIAB_RX.search(tag):
         return "excluded_nonliability"
-    if MEZZ_RX.search(tag):
+    if MEZZ_RX.search(tag) and not DEBT_LIKE_RX.search(tag):
         return "mezz"
+    if MEZZ_RX.search(tag):
+        return "liab"  # debt subtotal that names the preferred it contains (AWK)
     if tag in EQUITY_TOTAL_TAGS:
         return "equity_total"
     if tag in ("MinorityInterest", "NonredeemableNoncontrollingInterest",

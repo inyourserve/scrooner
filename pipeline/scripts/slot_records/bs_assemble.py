@@ -41,26 +41,45 @@ with gzip.open(sys.argv[3], "rt") as f:
 
 out = open(sys.argv[4], "w")
 summary = []
+def load_cal(adsh):
+    """The boundary filing's statement-role calc arcs (cal.xml, else MetaLinks)."""
+    cals = sorted((cal_dir / adsh).glob("*_cal.xml"))
+    meta = cal_dir / adsh / "MetaLinks.json"
+    if cals:
+        cal = b.parse_cal(cals[0])
+    elif meta.exists():
+        cal = b.parse_metalinks(meta)
+    else:
+        return None, {}
+    children = defaultdict(set)
+    for (role, parent), kids in cal["arcs"].items():
+        if not b.BS_ROLE_RX.search(role) or b.NOTE_ROLE_RX.search(role):
+            continue
+        children[parent].update(c for c, _, _ in kids)
+    return cal["era"], children
+
+
 for cik, era_list in sorted(eras.items()):
     ticker = TICKER.get(cik, cik)
     n_rec, dirty = 0, 0
+    # The FILER'S OWN calc graph across all its boundary filings. An era whose
+    # boundary filing has no cal file borrows it for subtotal dedup (Verifier
+    # BS-V1 item 2: 129 clean ties were held as hold_no_cal_for_dedup); the
+    # value is then published only if the accounting identity ties (replay).
+    company_children = defaultdict(set)
+    company_cal_sources = []
+    for e2 in era_list:
+        _, ch = load_cal(e2["first"])
+        if ch:
+            company_cal_sources.append(e2["first"])
+            for p, kids in ch.items():
+                company_children[p].update(kids)
     for era in era_list:
         adsh = era["first"]
-        cals = sorted((cal_dir / adsh).glob("*_cal.xml"))
-        meta = cal_dir / adsh / "MetaLinks.json"
-        tax_era, arcs = None, {}
-        if cals:
-            cal = b.parse_cal(cals[0])
-            tax_era, arcs = cal["era"], cal["arcs"]
-        elif meta.exists():
-            cal = b.parse_metalinks(meta)
-            tax_era, arcs = cal["era"], cal["arcs"]
-        # statement-role calc graph: parent -> children (for root-finding)
-        cal_children = defaultdict(set)
-        for (role, parent), children in arcs.items():
-            if not b.BS_ROLE_RX.search(role) or b.NOTE_ROLE_RX.search(role):
-                continue
-            cal_children[parent].update(c for c, _, _ in children)
+        tax_era, cal_children = load_cal(adsh)
+        borrowed = False
+        if not cal_children and company_children:
+            cal_children, borrowed = company_children, True
         cal_liab = set(cal_children.get("Liabilities", set()) | cal_children.get("LiabilitiesCurrent", set())
                        | cal_children.get("LiabilitiesNoncurrent", set())
                        | cal_children.get("LiabilitiesAndStockholdersEquity", set()))
@@ -91,7 +110,7 @@ for cik, era_list in sorted(eras.items()):
                 covered |= descendants(t) & raw_set
             roots = [t for t in raw if t not in covered]
             if not cal_children:
-                # raw lines without the filer's calc graph DOUBLE COUNT
+                # raw lines without ANY calc graph of this filer DOUBLE COUNT
                 # (subtotals + their components both summed: FE +14.6B,
                 # DVN +2.5B when a boundary cal is missing). No cal -> hold.
                 liab_members = []
@@ -101,7 +120,7 @@ for cik, era_list in sorted(eras.items()):
                     {"tag": t, "custom": by_tag.get(t, {}).get("custom", False),
                      "label": by_tag.get(t, {}).get("label", ""),
                      "cal_confirmed": t in cal_liab, "rule": "face_sum",
-                     "dedup": "cal_roots"}
+                     "dedup": "cal_roots_borrowed" if borrowed else "cal_roots"}
                     for t in roots
                 ]
                 rule = "face_sum" if liab_members else "hold_no_liability_lines"
@@ -125,6 +144,12 @@ for cik, era_list in sorted(eras.items()):
             "source": "bs_assemble.py (FSDS skeleton + boundary statement-role cal)",
             "total_liabilities_rule": rule,
             "total_liabilities_members": liab_members,
+            # a face-sum value is PUBLISHED only when assets = L + mezz +
+            # equity(incl. NCI) ties within the filer's rounding unit on the
+            # same filing (Verifier BS-V1: never produce a value beside a gap)
+            "requires_identity_tie": rule == "face_sum",
+            "cal_source": "own" if (rule == "face_sum" and not borrowed) else (
+                f"borrowed:{','.join(company_cal_sources[:3])}" if borrowed else None),
             "equity_parent_tag": equity_parent,
             "nci_tag": nci,
             "mezzanine_face": [

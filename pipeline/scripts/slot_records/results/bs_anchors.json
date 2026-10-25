@@ -42,24 +42,28 @@
   },
   {
    "ticker": "BRO",
-   "period_end": "2019-01-01",
+   "period_end": "2018-12-31",
    "expected": "3000568000",
    "kind": "equity_parent",
-   "note": "Verifier correction: 3,000,568K at 2019-01-01 is BROWN & BROWN (CIK 0000079282), mislabelled AJG in the first list"
+   "note": "Verifier correction: 3,000,568K is BROWN & BROWN (CIK 0000079282), mislabelled AJG in the first list. Verifier BS-V1: the instant is 2018-12-31 (FY2018 10-K 0000079282-19-000006); the 2019-01-01 column exists only in the Q1-2019 10-Q as the lease-adoption column"
   },
   {
    "ticker": "BX",
    "period_end": "2019-06-30",
    "expected": "6308400000",
    "kind": "equity_parent",
-   "src": "0001193125-19-216805 R2"
+   "src": "0001193125-19-216805 R2",
+   "tolerance": "100000",
+   "note": "face quoted in millions to one decimal (6,308.4); fact 6,308,355,000; Verifier BS-V1: value right"
   },
   {
    "ticker": "KKR",
    "period_end": "2015-06-30",
    "expected": "5947400000",
    "kind": "equity_parent",
-   "src": "0001404912-15-000005 R2"
+   "src": "0001404912-15-000005 R2",
+   "tolerance": "100000",
+   "note": "face quoted in millions to one decimal (5,947.4); fact 5,947,415,000; Verifier BS-V1: value right"
   },
   {
    "ticker": "BRKR",

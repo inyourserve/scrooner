@@ -27,7 +27,8 @@ report = {"anchor_results": [], "identity": defaultdict(int), "per_company": {}}
 
 EXTRA = ["Assets", "Liabilities", "StockholdersEquity", "MinorityInterest",
          "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
-         "PartnersCapital", "TemporaryEquityCarryingAmountAttributableToParent",
+         "PartnersCapital", "LiabilitiesAndStockholdersEquity",
+         "TemporaryEquityCarryingAmountAttributableToParent",
          "RedeemableNoncontrollingInterestEquityCarryingAmount", "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests"]
 
 
@@ -94,6 +95,57 @@ def covering(cik, end):
     return rec
 
 
+MEZZ_FALLBACK = ("TemporaryEquityCarryingAmountAttributableToParent",
+                 "RedeemableNoncontrollingInterestEquityCarryingAmount",
+                 "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests")
+
+
+def identity(rec, day, liab):
+    """assets - (L + mezzanine + equity incl. NCI) on ONE filing, and the
+    filer's rounding unit as tolerance. A face-sum value is PUBLISHED only when
+    this ties (Verifier BS-V1: never produce a value beside a flagged gap; the
+    identity is the gate, never the source of the value)."""
+    # Equity (incl. NCI) read two ways from the filer's own lines: the
+    # including-NCI total, and parent equity + NCI. FE 2018-03-31 carries a
+    # stray 86M 'including NCI' fact beside a correct 7,375M equity line, so
+    # a tie against EITHER reading is accepted (both are the filer's totals).
+    cands = []
+    for t in ("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+              "PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest"):
+        if day.get(t) is not None:
+            cands.append(day[t])
+    eq_p = day.get(rec["equity_parent_tag"] or "StockholdersEquity")
+    if eq_p is not None:
+        # NCI under the filer's own face tag (ET 2026-06-30: 15.2B of
+        # noncontrolling interest not under MinorityInterest), else MinorityInterest
+        nci = day.get(rec.get("nci_tag") or "MinorityInterest")
+        if nci is None:
+            nci = day.get("MinorityInterest") or Decimal(0)
+        cands.append(eq_p + nci)
+    if not cands:
+        cands.append(Decimal(0))
+    mezz = sum((day.get(m["tag"]) or Decimal(0)) for m in rec["mezzanine_face"])
+    for t in MEZZ_FALLBACK:
+        if not rec["mezzanine_face"] and day.get(t) is not None:
+            mezz = day[t]
+            break
+    # Right-hand side total: the filer's own 'total liabilities and equity'
+    # line (Verifier BS-V1 rule), else total assets. BRKR 2019-03-31 prints
+    # assets 2,242.5M against a liabilities side of 2,242.3M: its own face
+    # does not tie to assets, but ties to its L&E total exactly.
+    rhs = day.get("LiabilitiesAndStockholdersEquity", day["Assets"])
+    gap = min((rhs - (liab + mezz + e) for e in cands), key=abs)
+    return gap, rounding_unit(day)
+
+
+def publishable(rec, day, liab):
+    """None when the record demands an identity tie and it does not tie."""
+    if liab is None or not rec.get("requires_identity_tie"):
+        return liab
+    gap, tol = identity(rec, day, liab)
+    return liab if abs(gap) <= tol else None
+
+
 def liab_value(rec, day):
     members = rec["total_liabilities_members"]
     if rec["total_liabilities_rule"].startswith("hold"):
@@ -121,6 +173,9 @@ for cik in sorted(records):
         tags.update(m["tag"] for m in r["mezzanine_face"])
         if r["equity_parent_tag"]:
             tags.add(r["equity_parent_tag"])
+        if r.get("nci_tag"):
+            tags.add(r["nci_tag"])
+    tags.add("PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest")
     facts = fetch(cik, tags)
     stats = defaultdict(int)
     for end, day in sorted(facts.items()):
@@ -136,23 +191,26 @@ for cik in sorted(records):
         if liab is None or miss:
             stats["not_computable"] += 1
             continue
-        eq_incl = day.get("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest")
-        if eq_incl is None:
-            eq_p = day.get(rec["equity_parent_tag"] or "StockholdersEquity") or Decimal(0)
-            nci = day.get("MinorityInterest") or Decimal(0)
-            eq_incl = eq_p + nci
-        mezz = sum((day.get(m["tag"]) or Decimal(0)) for m in rec["mezzanine_face"])
-        for t in ("TemporaryEquityCarryingAmountAttributableToParent",
-                  "RedeemableNoncontrollingInterestEquityCarryingAmount",
-                  "TemporaryEquityCarryingAmountIncludingPortionAttributableToNoncontrollingInterests"):
-            if not rec["mezzanine_face"] and day.get(t) is not None:
-                mezz = day[t]
-                break
-        gap = day["Assets"] - (liab + mezz + eq_incl)
-        tol = rounding_unit(day)
+        gap, tol = identity(rec, day, liab)
         key = "identity_ties" if abs(gap) <= tol else "identity_gap"
         stats[key] += 1
         report["identity"]["ties" if key == "identity_ties" else "gaps"] += 1
+        if key == "identity_gap" and rec.get("requires_identity_tie"):
+            stats["withheld_identity_gap"] += 1  # face-sum value NOT published
+            report.setdefault("withheld", []).append({
+                "ticker": ticker, "end": end, "accession": day.get("__accession__"),
+                "face_sum": str(liab), "gap": str(gap), "tol": str(tol),
+                "rhs_lse": str(day.get("LiabilitiesAndStockholdersEquity")),
+                "assets": str(day["Assets"]),
+                "equity_parent": str(day.get(rec["equity_parent_tag"] or "StockholdersEquity")),
+                "nci": str(day.get(rec.get("nci_tag") or "MinorityInterest")),
+                "equity_incl": str(day.get("StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest")),
+                "mezz": {m["tag"]: str(day.get(m["tag"])) for m in rec["mezzanine_face"]},
+                "members": {m["tag"]: str(day.get(m["tag"])) for m in rec["total_liabilities_members"]},
+                "record_from": rec["period_from"], "cal_source": rec.get("cal_source"),
+            })
+        elif key == "identity_gap":
+            stats["printed_total_identity_gap"] += 1  # filer's own total; gap is a cross-check finding
     report["per_company"][ticker] = dict(stats)
     for a in anchors:
         if a["ticker"] != ticker:
@@ -168,6 +226,12 @@ for cik in sorted(records):
             miss, miss_custom = [], []
         else:
             got_v, miss, miss_custom = liab_value(rec, day)
+            if miss or miss_custom:
+                got_v = None  # partial sums are never a value (AWK leaked 7,599M)
+            elif got_v is not None and "Assets" in day:
+                got_v = publishable(rec, day, got_v)
+                if got_v is None:
+                    miss = ["__withheld__:identity_gap"]
         got = str(got_v) if got_v is not None else None
         tol = Decimal(a.get("tolerance", "1"))
         ok = (
@@ -184,6 +248,11 @@ json.dump(report, open(sys.argv[3], "w"), indent=1, default=str)
 print(json.dumps(report["identity"]))
 for t, s in sorted(report["per_company"].items()):
     print(t, dict(s))
+for w in report.get("withheld", []):
+    print("WITHHELD", w["ticker"], w["end"], w["accession"], "face_sum", w["face_sum"], "gap", w["gap"],
+          "tol", w["tol"], "lse", w["rhs_lse"], "A", w["assets"], "eq", w["equity_parent"], "nci", w["nci"],
+          "eq_incl", w["equity_incl"], "mezz", w["mezz"], "cal", w["cal_source"])
+    print("         members", w["members"])
 print("--- anchors:")
 for a in report["anchor_results"]:
     print(a["ticker"], a["period_end"], a.get("expected"), "->", a.get("got"), a["result"])
