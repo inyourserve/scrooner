@@ -250,6 +250,15 @@ REVENUE_ZERO_CHECK_MATERIAL_THRESHOLD = Decimal(1_000_000)
 TRAILING_QUARTERS_WINDOW = 4
 
 
+_YAHOO_QUICK_INPUTS = (
+    "cash_and_equivalents_resolved",
+    "cash_and_equivalents",
+    "accounts_receivable",
+    "current_liabilities_resolved",
+    "current_liabilities",
+)
+
+
 def _fetch_info_once(ticker: str) -> dict:
     _rate_limiter.wait()
     return yf.Ticker(ticker).get_info()
@@ -306,14 +315,51 @@ def _load_our_values(
                 from analytics.metric_value mv
                 join analytics.metric_definition md on md.id = mv.metric_definition_id
                 where mv.company_id = any(%s) and md.metric_name = any(%s)
-                  and mv.value is not null
             )
             select company_id, metric_name, value from ranked where rn = 1
             """,
             (company_ids, metric_value_names),
         )
+        # The newest snapshot decides, NULL included: a NULL newest snapshot (e.g. the 150-day TTM guard,
+        # 5eeb7a0) is a value the product hides, so the check must not fall back to an older non-null row
+        # (that compared yfinance with a number users never see: 296 of 850 ebitda_margin majors). NULL here
+        # becomes `missing_ours` in _check_metric.
         for company_id, metric_name, value in cur.fetchall():
             values[company_id][metric_name] = value
+
+        # quick_ratio, Yahoo's own formula built from OUR inputs (informational): (cash + receivables) / current
+        # liabilities at the latest balance-sheet date that has all three. Yahoo adds short-term investments, which
+        # is not a canonical concept here, so this is a lower bound of Yahoo's numerator.
+        cur.execute(
+            """
+            select cf.company_id, cc.name, p.end_date, cf.value
+            from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            join core.period p on p.id = cf.period_id
+            where cf.company_id = any(%s) and p.period_type = 'instant'
+              and cc.name = any(%s)
+            order by cf.company_id, p.end_date desc
+            """,
+            (company_ids, list(_YAHOO_QUICK_INPUTS)),
+        )
+        by_date: dict[tuple[int, object], dict[str, Decimal]] = {}
+        for company_id, name, end, value in cur.fetchall():
+            by_date.setdefault((company_id, end), {}).setdefault(name, value)
+        done: set[int] = set()
+        for (
+            company_id,
+            _end,
+        ), got in by_date.items():  # insertion order = newest date first per company
+            if company_id in done:
+                continue
+            cash = got.get(
+                "cash_and_equivalents_resolved", got.get("cash_and_equivalents")
+            )
+            cl = got.get("current_liabilities_resolved", got.get("current_liabilities"))
+            ar = got.get("accounts_receivable")
+            if cash is not None and cl and ar is not None:
+                values[company_id]["quick_ratio_yahoo_formula"] = (cash + ar) / cl
+                done.add(company_id)
 
         # shares_outstanding: latest instant canonical_fact (a point-in-time
         # balance, not a period flow -- "most recent end_date" is the right
@@ -406,6 +452,29 @@ def _load_our_values(
                 trailing_seen_count[company_id] = count + 1
 
     return values
+
+
+def _annotate_row(row: dict, our: dict, external) -> None:
+    """quick_ratio rows carry Yahoo's formula built from our inputs as an informational note."""
+    if row["metric_name"] == "quick_ratio":
+        row["note"] = _yahoo_formula_note(
+            our.get("quick_ratio_yahoo_formula"), external
+        )
+
+
+def _yahoo_formula_note(ours: Decimal | None, external) -> str | None:
+    """Informational only (never part of the severity): Yahoo's quick ratio is (cash + short-term investments +
+    receivables) / current liabilities; ours is (current assets - inventory) / current liabilities, so a large gap
+    can be a definition difference (TGT, KO, LLY, ADP, ICE) rather than an extraction error."""
+    if ours is None or external is None:
+        return None
+    try:
+        ext = Decimal(str(external))
+        if not ext.is_finite() or ext == 0:
+            return f"yahoo_formula_from_our_inputs={ours:.3f}"
+        return f"yahoo_formula_from_our_inputs={ours:.3f} (vs yahoo {_pct_diff(ours, ext):.1f}%)"
+    except Exception:  # an informational note must never break the check
+        return None
 
 
 def _check_metric(
@@ -573,6 +642,7 @@ def run_sanity_checks(conn: psycopg.Connection, company_ids: list[int]) -> dict:
                 info.get(info_key),
             )
             if row is not None:
+                _annotate_row(row, our_values[company_id], info.get(info_key))
                 rows.append(row)
         revenue_row = _check_revenue_zero(
             company_id,

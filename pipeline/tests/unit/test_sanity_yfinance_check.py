@@ -48,14 +48,18 @@ class TestNormalization:
 
     def test_dividend_yield_normalizes_our_fraction_to_match_yfinance_percentage(self):
         # Real AAPL values: ours = 0.003390..., yfinance's dividendYield = 0.34
-        row = _check_metric(1, "dividend_yield", Decimal("0.003390487261455003390487261455"), 0.34)
+        row = _check_metric(
+            1, "dividend_yield", Decimal("0.003390487261455003390487261455"), 0.34
+        )
         assert row["our_value"] == Decimal("0.339048726145500339048726145500")
         assert row["external_value"] == Decimal("0.34")
         assert row["severity"] == SEVERITY_OK
 
     def test_debt_to_equity_normalizes_yfinance_percentage_to_match_our_ratio(self):
         # Real AAPL values: ours = 0.7654..., yfinance's debtToEquity = 78.445
-        row = _check_metric(1, "debt_to_equity", Decimal("0.7654389880952380952380952381"), 78.445)
+        row = _check_metric(
+            1, "debt_to_equity", Decimal("0.7654389880952380952380952381"), 78.445
+        )
         assert row["external_value"] == Decimal("0.78445")
         assert row["severity"] == SEVERITY_OK
 
@@ -121,27 +125,43 @@ class TestCheckRevenueZero:
         structural absence, not the resolve() authoritative-$0 bug this
         check targets. All three fired as false-positive 'critical'
         findings on the first real test run before this guard existed."""
-        row = _check_revenue_zero(1, None, has_revenue_history=False, external_total_revenue=50_000_000_000)
+        row = _check_revenue_zero(
+            1, None, has_revenue_history=False, external_total_revenue=50_000_000_000
+        )
         assert row is None
 
     def test_fires_when_history_exists_but_latest_is_zero(self):
         """The actual Flowserve-shaped bug: revenue history exists, but
         the current/latest value has resolved to a spurious $0 while an
         independent source shows a real, material figure."""
-        row = _check_revenue_zero(1, Decimal(0), has_revenue_history=True, external_total_revenue=4_000_000_000)
+        row = _check_revenue_zero(
+            1,
+            Decimal(0),
+            has_revenue_history=True,
+            external_total_revenue=4_000_000_000,
+        )
         assert row is not None
         assert row["severity"] == SEVERITY_CRITICAL
 
     def test_silent_when_external_revenue_immaterial(self):
-        row = _check_revenue_zero(1, Decimal(0), has_revenue_history=True, external_total_revenue=100)
+        row = _check_revenue_zero(
+            1, Decimal(0), has_revenue_history=True, external_total_revenue=100
+        )
         assert row is None
 
     def test_silent_when_our_revenue_is_real(self):
-        row = _check_revenue_zero(1, Decimal(5_000_000_000), has_revenue_history=True, external_total_revenue=4_800_000_000)
+        row = _check_revenue_zero(
+            1,
+            Decimal(5_000_000_000),
+            has_revenue_history=True,
+            external_total_revenue=4_800_000_000,
+        )
         assert row is None
 
     def test_silent_when_external_missing(self):
-        row = _check_revenue_zero(1, Decimal(0), has_revenue_history=True, external_total_revenue=None)
+        row = _check_revenue_zero(
+            1, Decimal(0), has_revenue_history=True, external_total_revenue=None
+        )
         assert row is None
 
     def test_suppressed_when_trailing_quarter_has_material_revenue(self):
@@ -172,3 +192,112 @@ class TestCheckRevenueZero:
         )
         assert row is not None
         assert row["severity"] == SEVERITY_CRITICAL
+
+
+class _ScriptCur:
+    def __init__(self, scripts):
+        self.scripts, self.rows, self.sql = scripts, [], []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def execute(self, sql, params=None):
+        s = " ".join(sql.split()).lower()
+        self.sql.append(s)
+        for key, rows in self.scripts:
+            if key in s:
+                self.rows = rows
+                return
+        self.rows = []
+
+    def fetchall(self):
+        return self.rows
+
+
+class _ScriptConn:
+    def __init__(self, scripts):
+        self.cur = _ScriptCur(scripts)
+
+    def cursor(self):
+        return self.cur
+
+
+@pytest.mark.unit
+class TestProductRuleAndYahooFormula:
+    def test_the_newest_snapshot_decides_even_when_it_is_null(self):
+        from scrooner_pipeline.sanity.yfinance_check import _load_our_values
+
+        conn = _ScriptConn(
+            [
+                (
+                    "with ranked",
+                    [(1, "ebitda_margin", None), (2, "ebitda_margin", Decimal("0.2"))],
+                )
+            ]
+        )
+        got = _load_our_values(conn, [1, 2])
+        assert got[1]["ebitda_margin"] is None and got[2]["ebitda_margin"] == Decimal(
+            "0.2"
+        )
+        ranked = next(q for q in conn.cur.sql if "with ranked" in q)
+        assert (
+            "mv.value is not null" not in ranked and "rn = 1" in ranked
+        )  # no fall-back to an older non-null row
+
+    def test_a_null_newest_snapshot_is_missing_ours_not_a_comparison_with_an_older_value(
+        self,
+    ):
+        row = _check_metric(1, "ebitda_margin", None, 0.31)
+        assert row["severity"] == SEVERITY_MISSING_OURS and row["our_value"] is None
+
+    def test_yahoo_formula_is_cash_plus_receivables_over_current_liabilities_at_the_latest_complete_date(
+        self,
+    ):
+        from datetime import date
+
+        from scrooner_pipeline.sanity.yfinance_check import _load_our_values
+
+        d1, d0 = date(2026, 6, 30), date(2026, 3, 31)
+        rows = [  # ordered newest date first per company, as the query orders them
+            (1, "cash_and_equivalents", d1, Decimal(6903)), (1, "accounts_receivable", d1, Decimal(1465)),
+            (1, "current_liabilities", d1, Decimal(11409)),
+            (2, "cash_and_equivalents", d1, Decimal(10)), (2, "current_liabilities", d1, Decimal(50)),  # no receivables at the newest date -> falls to d0
+            (2, "cash_and_equivalents", d0, Decimal(100)), (2, "accounts_receivable", d0, Decimal(100)),
+            (2, "current_liabilities", d0, Decimal(400)),
+        ]  # fmt: skip
+        conn = _ScriptConn([("cc.name = any(%s)", rows)])
+        got = _load_our_values(conn, [1, 2])
+        assert abs(
+            got[1]["quick_ratio_yahoo_formula"] - Decimal(8368) / Decimal(11409)
+        ) < Decimal("1e-12")
+        assert got[2]["quick_ratio_yahoo_formula"] == Decimal("0.5")
+
+    def test_the_note_is_informational_and_never_raises(self):
+        from scrooner_pipeline.sanity.yfinance_check import _yahoo_formula_note
+
+        assert (
+            _yahoo_formula_note(None, 1.0) is None
+            and _yahoo_formula_note(Decimal(1), None) is None
+        )
+        assert "yahoo_formula_from_our_inputs=0.734" in _yahoo_formula_note(
+            Decimal("0.7335"), 1.193
+        )
+        assert (
+            _yahoo_formula_note(Decimal("0.5"), float("nan"))
+            == "yahoo_formula_from_our_inputs=0.500"
+        )
+
+    def test_only_quick_ratio_rows_get_the_note(self):
+        from scrooner_pipeline.sanity.yfinance_check import _annotate_row
+
+        q = {"metric_name": "quick_ratio", "note": None}
+        o = {"metric_name": "roa", "note": None}
+        _annotate_row(q, {"quick_ratio_yahoo_formula": Decimal("0.7")}, 1.2)
+        _annotate_row(o, {"quick_ratio_yahoo_formula": Decimal("0.7")}, 1.2)
+        assert (
+            q["note"].startswith("yahoo_formula_from_our_inputs=0.700")
+            and o["note"] is None
+        )
