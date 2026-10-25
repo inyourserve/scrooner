@@ -115,7 +115,7 @@ for cik in sorted(records):
         children_of = comp.get("children_of", {})
         gate = None
         gate_detail = None
-        if not comp.get("has_statement_cal"):
+        if not comp.get("has_statement_cal") and not roots:
             gate = "hold_no_statement_cal"
         elif not roots:
             gate = "hold_no_root_member"
@@ -161,7 +161,10 @@ for cik in sorted(records):
         # in the record's cal, plain NetCashProvidedByUsedIn... on many filings)
         TOTAL_FAMILY = {"d_and_a": ("NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations"),
                         "capex": ("NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations")}[family]
-        face_column = bool(sec) and any(t in day for t in TOTAL_FAMILY + (sec["total"],))
+        # a record with NO section cal still has face columns: the filer's
+        # section total for the same (start, end) in the same accession decides
+        # (Verifier V4: KRUS, AVGO, RPAY 38 false drops)
+        face_column = any(t in day for t in TOTAL_FAMILY + ((sec["total"],) if sec else ()))
         if not day:
             verdict = "no_facts_this_period"
         elif not face_column:
