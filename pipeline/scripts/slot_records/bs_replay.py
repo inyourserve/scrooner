@@ -258,12 +258,34 @@ def identity(rec, day, liab):
     return gap, rounding_unit(day)
 
 
+def alt_readings(rec, day, liab):
+    """Reading A = all cal roots (liab). Reading B = roots minus the lines a
+    taxonomy total (LiabilitiesCurrent / LiabilitiesNoncurrent) printed after
+    them covers (TMUS, ALB: the filer's cal omits the total-to-components arc).
+    Capitalization-format filers print long-term debt before current
+    liabilities, so B is wrong for them and A is right: the identity decides."""
+    covered = [m for m in rec["total_liabilities_members"] if m.get("tax_covered") and day.get(m["tag"]) is not None]
+    if not covered:
+        return [liab]
+    return [liab, liab - sum(day[m["tag"]] for m in covered)]
+
+
+def best_reading(rec, day, liab):
+    """(value, gap, tol, reading) for the reading with the smallest identity gap."""
+    best = None
+    for i, v in enumerate(alt_readings(rec, day, liab)):
+        gap, tol = identity(rec, day, v)
+        if best is None or abs(gap) < abs(best[1]):
+            best = (v, gap, tol, "A_cal_roots" if i == 0 else "B_taxonomy_total_covers")
+    return best
+
+
 def publishable(rec, day, liab):
-    """None when the record demands an identity tie and it does not tie."""
+    """None when the record demands an identity tie and no reading ties."""
     if liab is None or not rec.get("requires_identity_tie"):
         return liab
-    gap, tol = identity(rec, day, liab)
-    return liab if abs(gap) <= tol else None
+    v, gap, tol, _ = best_reading(rec, day, liab)
+    return v if abs(gap) <= tol else None
 
 
 def liab_value(rec, day):
@@ -327,15 +349,17 @@ for cik in sorted(records):
             if miss:
                 stats["not_computable"] += 1
                 continue
-        gap, tol = identity(rec, day, liab)
+        liab, gap, tol, reading = best_reading(rec, day, liab)
         key = "identity_ties" if abs(gap) <= tol else "identity_gap"
         stats[key] += 1
+        if reading != "A_cal_roots" and key == "identity_ties":
+            stats["reading_B_taxonomy_total"] += 1
         report["identity"]["ties" if key == "identity_ties" else "gaps"] += 1
         published = liab if (key == "identity_ties" or not rec.get("requires_identity_tie")) else None
         report.setdefault("cells", []).append({
             "ticker": ticker, "cik": cik, "end": end, "accession": day.get("__accession__"),
             "era_first": rec["filing_from"], "era_from": rec["period_from"], "era_to": rec["period_to"],
-            "rule": rec["total_liabilities_rule"], "cal_source": rec.get("cal_source"),
+            "rule": rec["total_liabilities_rule"], "cal_source": rec.get("cal_source"), "reading": reading,
             "total_liabilities": str(published) if published is not None else None,
             "identity": key, "gap": str(gap), "tol": str(tol),
             "equity_parent": str(day.get(rec["equity_parent_tag"] or "StockholdersEquity")),

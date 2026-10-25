@@ -109,10 +109,32 @@ for cik, era_list in sorted(eras.items()):
             for t in raw:
                 covered |= descendants(t) & raw_set
             roots = [t for t in raw if t not in covered]
-            if not cal_children:
-                # raw lines without ANY calc graph of this filer DOUBLE COUNT
-                # (subtotals + their components both summed: FE +14.6B,
-                # DVN +2.5B when a boundary cal is missing). No cal -> hold.
+            # TAXONOMY-TOTAL coverage by face position (batch 2: TMUS 2015-18,
+            # ALB 2015 - the filer's statement calc omits the arc from
+            # LiabilitiesCurrent / LiabilitiesNoncurrent to their components,
+            # so the total and its lines were both roots). A us-gaap total
+            # element covers the liability lines PRINTED before it since the
+            # previous total; the identity gate still decides publication.
+            # This is an element rule (taxonomy totals), not a label rule.
+            TOTALS = ("LiabilitiesCurrent", "LiabilitiesNoncurrent", "LiabilitiesOtherThanLongtermDebtNoncurrent")
+            tax_covered = set()
+            run = []
+            for t in raw:
+                if t in TOTALS:
+                    tax_covered |= {x for x in run if x not in TOTALS}
+                    run = []
+                else:
+                    run.append(t)
+            # NOT dropped: capitalization-format filers (EMR, FE, NI, AWK) print
+            # long-term debt BEFORE current liabilities, so 'covered' lines are
+            # only an ALTERNATIVE reading; the replay publishes whichever
+            # reading ties the identity (reading A: all cal roots; reading B:
+            # roots minus taxonomy-total-covered lines).
+            dedup_kind = ("cal_roots_borrowed" if borrowed else "cal_roots") if cal_children else "taxonomy_totals_only"
+            if not cal_children and not (set(raw) & set(TOTALS)):
+                # raw lines without ANY calc graph of this filer and no taxonomy
+                # total on the face DOUBLE COUNT (FE +14.6B, DVN +2.5B when a
+                # boundary cal is missing). No structure at all -> hold.
                 liab_members = []
                 rule = "hold_no_cal_for_dedup"
             else:
@@ -120,7 +142,7 @@ for cik, era_list in sorted(eras.items()):
                     {"tag": t, "custom": by_tag.get(t, {}).get("custom", False),
                      "label": by_tag.get(t, {}).get("label", ""),
                      "cal_confirmed": t in cal_liab, "rule": "face_sum",
-                     "dedup": "cal_roots_borrowed" if borrowed else "cal_roots"}
+                     "dedup": dedup_kind, "tax_covered": t in tax_covered}
                     for t in roots
                 ]
                 rule = "face_sum" if liab_members else "hold_no_liability_lines"
@@ -151,8 +173,9 @@ for cik, era_list in sorted(eras.items()):
             # equity(incl. NCI) ties within the filer's rounding unit on the
             # same filing (Verifier BS-V1: never produce a value beside a gap)
             "requires_identity_tie": rule == "face_sum",
-            "cal_source": "own" if (rule == "face_sum" and not borrowed) else (
-                f"borrowed:{','.join(company_cal_sources[:3])}" if borrowed else None),
+            "cal_source": ("own" if cal_children and not borrowed else
+                           f"borrowed:{','.join(company_cal_sources[:3])}" if borrowed else
+                           "none:taxonomy_totals" if rule == "face_sum" else None),
             "equity_parent_tag": equity_parent,
             "nci_tag": nci,
             "mezzanine_face": [
