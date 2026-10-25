@@ -605,9 +605,26 @@ def _quarter_world(c, *, fy_value, fy_filing, extra_fy=()):
 
 
 @pytest.mark.integration
-def test_eqh_year_copies_disagree_so_the_quarter_stays_hidden(conn):
-    # EQH Q4 2021: original year -439M and LDTI-restated year 1,755M are both filed;
-    # the founder ruling hides the quarter while the copies disagree
+def test_eqh_restated_year_gives_the_original_basis_quarter_not_the_mixed_one(conn):
+    # EQH Q4 2021: original year -439M (filed 2022) and LDTI-restated 1,755M (filed 2024)
+    # are both filed. The stored 2,448M mixes them; the original basis gives 254M.
+    _quarter_world(
+        conn, fy_value="1755000000", fy_filing=6, extra_fy=[(612, 8, "-439000000")]
+    )
+    _f(conn, 601, NI, USD, 22, 8, "2448000000", derived=True)
+    plan = _plan_b(conn)
+    cell = plan.cells[0]
+    assert cell.action == rr.ACT_REPLACE and cell.replacement_value == Decimal(
+        "254000000"
+    )
+    assert cell.replacement_source_ids == (612, 611)
+    assert plan.info["quarters_on_original_basis_after_restatement"] == 1
+    assert plan.info["quarters_rederived_differs_from_stored"] == 1
+
+
+@pytest.mark.integration
+def test_restated_quarter_is_hidden_under_the_hide_policy(conn, monkeypatch):
+    monkeypatch.setattr(rr, "QUARTER_RESTATED_POLICY", "hide")
     _quarter_world(
         conn, fy_value="1755000000", fy_filing=6, extra_fy=[(612, 8, "-439000000")]
     )
