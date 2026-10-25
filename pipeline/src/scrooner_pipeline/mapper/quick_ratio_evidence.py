@@ -161,6 +161,10 @@ class Context:
     face_by_date: dict[date, PeriodFace] = field(default_factory=dict)
     # InventoryRawMaterialsAndSupplies-type facts (a sub-line of inventory, not a materials-and-supplies line), per date
     supplies_subline: dict[date, Decimal] = field(default_factory=dict)
+    # dates whose statement was read but does not show the date (a 10-K/A with newer columns only), or whose filing
+    # predates machine-readable statements (2009): the cell is hidden as unavailable. A date in neither map has no
+    # readable statement here (FSDS does not carry every filing): the stored value is kept and flagged.
+    face_hide_dates: frozenset[date] = field(default_factory=frozenset)
     accession_by_date: dict[date, str] = field(
         default_factory=dict
     )  # the filing whose AssetsCurrent fact is the period's
@@ -169,18 +173,31 @@ class Context:
 def inventory_missing_reason(
     ctx: Context, end: date, current_assets: Decimal | None = None
 ) -> str | None:
-    """Why a quick_ratio cell with NO inventory fact at ``end`` must be NULL, or None when a zero is safe."""
+    """Why a quick_ratio cell with NO inventory fact at ``end`` must be NULL, or None when the value stays.
+
+    Order: the period's own current assets foot without inventory -> stays. Then, when the period's own statement was
+    read at the cell's date column: an inventory line with a value -> hidden (``unmapped`` when an inventory-like
+    current fact explains the residual, else ``presented_not_extracted``); no inventory line -> stays (a note figure
+    or a later-added line: 0001522540 2023-06-30). Without a read statement: an inventory-like current fact ->
+    ``unmapped``; a statement that does not show the date -> ``statement_unavailable``; otherwise it stays."""
     lines = ctx.lines_by_date.get(end, {})
     ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
     if ca is not None and foots_without_inventory(ca, lines):
         return None  # no room for an inventory line in this period's own balance sheet
     like = ctx.inventory_like.get(end, {})
-    if any(0 < v <= (ca if ca is not None else v) for v in like.values()):
-        return REASON_UNMAPPED
+    has_like = any(0 < v <= (ca if ca is not None else v) for v in like.values())
     face = ctx.face_by_date.get(end)
-    if face is None:
-        return REASON_UNAVAILABLE  # the period's own statement does not show this date: hidden, not guessed
-    return REASON_PRESENTED if face.inventory_line else None
+    if face is not None:
+        if face.materials_line:
+            return REASON_MATERIALS  # founder ruling: a materials-and-supplies face line hides the figure (CP)
+        if not face.inventory_line:
+            return None
+        return REASON_UNMAPPED if has_like else REASON_PRESENTED
+    if has_like:
+        return REASON_UNMAPPED
+    if end in ctx.face_hide_dates:
+        return REASON_UNAVAILABLE
+    return None
 
 
 def face_unavailable(
@@ -194,7 +211,7 @@ def face_unavailable(
     like = ctx.inventory_like.get(end, {})
     if any(0 < v <= (ca if ca is not None else v) for v in like.values()):
         return False
-    return end not in ctx.face_by_date
+    return end in ctx.face_hide_dates
 
 
 def materials_supplies_reason(
@@ -253,6 +270,21 @@ def load_inventory_concept_ids(conn: Any) -> tuple[list[int], set[int]]:
 
 FACE_FILE_ENV = "SCROONER_QR_FACE_FILE"
 _face_cache: dict[str, dict[str, bool]] = {}
+
+
+def _accession_year(accession: str) -> int:
+    """The year in an accession number (0001193125-16-708358 -> 2016)."""
+    yy = int(accession.split("-")[1])
+    return 2000 + yy if yy < 90 else 1900 + yy
+
+
+def _column(d: date, dates: frozenset[date]) -> date | None:
+    """The data-set column for a balance-sheet date. FSDS rounds 52/53-week year-ends to the month end
+    (2020-09-27 appears as 2020-09-30), so a date within 6 days counts."""
+    if d in dates:
+        return d
+    near = [x for x in dates if abs((x - d).days) <= 6]
+    return min(near, key=lambda x: abs((x - d).days)) if near else None
 
 
 def default_face() -> dict[str, Any]:
@@ -328,10 +360,23 @@ def load_context(
         for end_date, acc in cur.fetchall():
             accession.setdefault(end_date, acc)
     face_by_date: dict[date, PeriodFace] = {}
+    hide: set[date] = set()
     for d, acc in accession.items():
         f = face.get(acc)
-        if f is not None and d in f.statement_dates:
-            face_by_date[d] = PeriodFace(d in f.inventory_dates, d in f.materials_dates)
+        if f is None:
+            # not in the data set: filings before 2010 have no machine-readable statement (hidden); later ones may
+            # simply be missing from it (kept, flagged)
+            if _accession_year(acc) < 2010:
+                hide.add(d)
+            continue
+        hit = _column(d, f.statement_dates)
+        if hit is None:
+            hide.add(d)  # the statement is readable but does not show this date
+            continue
+        face_by_date[d] = PeriodFace(
+            _column(d, f.inventory_dates) is not None,
+            _column(d, f.materials_dates) is not None,
+        )
     return Context(
         None if row is None else row[0],
         lines,
@@ -339,6 +384,7 @@ def load_context(
         materials,
         face_by_date,
         subline,
+        frozenset(hide),
         accession,
     )
 
@@ -355,6 +401,11 @@ class PlannedCell:
     current_ratio: str | None
     equals_current_ratio: bool
     accession: str | None = None
+    # hide: the stored value is wrong today (it equals the current ratio, inventory was treated as zero) or a supplies
+    # line the locked formula cannot classify is on the face. flag_keep: the stored value differs from the current
+    # ratio, so inventory WAS subtracted when it was computed (only our canonical inventory fact is missing now):
+    # the value is right, it is flagged, and a recompute without the fact would break it
+    outcome: str = "hide"
 
 
 def plan_quick_ratio(
@@ -428,9 +479,60 @@ def plan_quick_ratio(
             equal = cur_ratio is not None and abs(
                 Decimal(value) - Decimal(cur_ratio)
             ) <= Decimal("0.0005")
+            supplies_path = (cid, end) in have
             out.append(
                 PlannedCell(cid, cik_of[cid], str(end), label, str(value), None, reason,
                             None if cur_ratio is None else str(cur_ratio), equal,
-                            ctx[cid].accession_by_date.get(end))
+                            ctx[cid].accession_by_date.get(end),
+                            "hide" if supplies_path or equal else "flag_keep")
             )  # fmt: skip
+    return out
+
+
+def plan_materials_by_face(
+    conn: Any, company_ids: list[int], face: dict[str, Any], chunk: int = 200
+) -> list[PlannedCell]:
+    """Light dry run for the cells that STAY (an inventory value exists): a quick_ratio is hidden with
+    ``materials_supplies_line_present`` wherever the period's own balance sheet presents a materials-and-supplies line
+    (FDX 'Spare parts, supplies, and fuel', ConEd 'Fuel oil, gas in storage, materials and supplies'). Reads only the
+    face and the stored cells; no fact context."""
+    out: list[PlannedCell] = []
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id from analytics.metric_definition where metric_name = 'quick_ratio'"
+        )
+        qr = cur.fetchone()[0]
+        cur.execute(
+            "select id, cik from core.company where id = any(%s)", (company_ids,)
+        )
+        cik_of = dict(cur.fetchall())
+    for i in range(0, len(company_ids), chunk):
+        part = company_ids[i : i + chunk]
+        with conn.cursor() as cur:
+            cur.execute(
+                """select company_id, period_end, period_label, value from analytics.metric_value
+                   where company_id = any(%s) and metric_definition_id = %s and value is not null
+                     and period_label <> 'TTM'""",
+                (part, qr),
+            )
+            stored = cur.fetchall()
+            cur.execute(
+                """select distinct on (company_id, period_of_report) company_id, period_of_report, accession_number
+                   from core.filing where company_id = any(%s) and period_of_report is not null
+                     and form in ('10-K', '10-Q', '10-K405', '10-KT', '10-KSB', '10-QSB')
+                   order by company_id, period_of_report, is_amendment, filing_date, id""",
+                (part,),
+            )
+            acc = {(c, d): a for c, d, a in cur.fetchall()}
+        for cid, end, label, value in stored:
+            f = face.get(acc.get((cid, end), ""))
+            if (
+                f is not None
+                and _column(end, f.materials_dates) is not None
+                and _column(end, f.statement_dates)
+            ):
+                out.append(
+                    PlannedCell(cid, cik_of[cid], str(end), label, str(value), None, REASON_MATERIALS,
+                                None, False, acc[(cid, end)], "hide")
+                )  # fmt: skip
     return out
