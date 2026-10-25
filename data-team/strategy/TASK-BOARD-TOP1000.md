@@ -6,7 +6,7 @@ States: **done** = verified and on main or applied; **wip** = being built, evide
 
 ## 0. The scoreboard (what the user would see today)
 
-**Task count (39 tasks, 2026-10-25 night): done 10 (26%), in progress 12 (31%), blocked 5 (13%), not started 12 (31%). Remaining 29 (74%). By what a user sees: 0% (nothing is switched on in production yet; the first switch-on waits on migrations 0098-0100 being applied and the Verifier's batch samples).**
+**Task count (39 tasks, 2026-10-25 late night): done 12 (31%), in progress 15 (38%), blocked 2 (5%), not started 10 (26%). Remaining 27 (69%). By what a user sees: 0% (nothing is switched on in production yet; the first switch-on waits on migrations 0098-0100 being applied and the Verifier's batch samples).**
 
 | Number | Value | Source | Goal |
 |---|---|---|---|
@@ -41,11 +41,11 @@ Plain reading: a lot has been built and verified on branches, and nothing has re
 | F2 | Honest coverage measure (latest period has value) | done | migration 0096 applied; scoreboard E1 c4a375d | re-extract after each release |
 | F3 | Certification suite I1-I11 (dry-run) | done | 7028d17, workflow on main 8a4d3a1 | I12/I13 reserved, need structure tables |
 | F4 | Certify dry-run over the whole cohort | wip | 92/103 shards in run 40094543570; writes nothing (dry-run default) | rerun missing 11 shards; decide when it may write `certification_finding` |
-| F5 | Migrations 0098-0100 (reason store, split tables, cell evidence, registrant, audit) | wip (founder "go ahead" 2026-10-25, relayed to scrooner-4d) | on main (614608c, ecf7fb2, 4203a53); NOT yet applied | scrooner-4d applies; confirm in its session if it asks |
+| F5 | Migrations 0098-0100 (reason store, split tables, cell evidence, registrant, audit) | **done: applied to production 2026-10-25** (founder in scrooner-4d's session; 8 new tables present, empty; period_gap constraint includes per_share_not_filed_separately) | | reason rules and split re-base can now dry-run against real tables |
 | F6 | Migration for `analytics.company_slot_record` (the mapper table) | written (0110, claimed in doc 53; on branch work/scrooner-25/slot-records; NOT applied) | cannot land on main before 0101-0109 exist (contiguity check) | Data Engineer lanes write 0101-0109; then 0110 merges and is applied with the first switch-on |
 | F7 | Four scheduled workflows green | blocked | refresh green; sanity red (regression baseline not reset); health-check red by design; certify unknown after 8a4d3a1 | scrooner-4d |
 | F8 | Parallel execution of heavy jobs (replaces "quiet window and clock G", founder 2026-10-25: "move faster, thread, shard, multiple connections") | wip (budgets proposed) | scrooner-4d: max_connections 90, pooler reserves ~15, nightly refresh ~8; proposal max 4 heavy shards at once (4-8 connections), never alongside the 16:05Z refresh. Dhairya: 8 pooler connections total for data-team agents | Dhairya + 4d agree the budget, then run sharded |
-| F9 | Companyfacts storage dedupe (94 GB bucket, 92% repeat fetches) + delete data before 2015-01-01 | authorized by founder 2026-10-25, not started | words: "delete duplicate companyfacts objects after hash check, keep the latest payload per CIK"; "keep data from January 2015 only, any data before 2015 - delete" | scrooner-4d: backup, hash-dedupe, archive-then-delete pre-2015 core rows (cut to be ruled by Dhairya) |
+| F9 | Companyfacts storage dedupe + delete data before 2015-01-01 | wip: pre-2015 purge RUNNING (scrooner-4d, founder-authorized in its session, backup taken first); dedupe next | words: "delete duplicate companyfacts objects after hash check, keep the latest payload per CIK"; "keep data from January 2015 only" | final counts from scrooner-4d |
 | F10 | Approver policy (agents only, approver != preparer, founder signs novel definitions) | done (founder confirmed 2026-10-25: "approved, dhairya understand this") | THE-PLAN 7.1 to be closed by Dhairya | none |
 
 ## 2. Core engine: company slot records (lane A, scrooner-25)
@@ -73,7 +73,7 @@ The slot record is the mapper: per company, per statement line, the tags that co
 |---|---|---|---|---|
 | B1 | Live total-liabilities identity bug (5,252 cohort cells, 185 companies) | wip | identity-fix v2 branch (interim, frozen); hold-writer a277d8d; dry-run only | superseded by A5; waits on BS V1 Verifier recheck |
 | B2 | Split re-base + per-share derivation ban | wip | work/period-engineer/split-rebase d7fdefd; clean classes 194/194 Verifier pass; other_changed class being fixed | Verifier 1 recheck; flag on in quiet window |
-| B3 | Reason rules (5 flag-gated rules; 7,724 pending closures need audits) | blocked | work/data-engineer/reason-rules cddbf7e, dry-run only | F5 (migrations applied) |
+| B3 | Reason rules (5 flag-gated rules; 7,724 pending closures need audits) | wip (unblocked 2026-10-25: 0098-0100 applied) | work/data-engineer/reason-rules cddbf7e, dry-run only | dry-run against the live reason store, Verifier sample, then flag on |
 | B4 | Total debt via slot records | wip | = A3/A4 | scrooner-25 |
 | B5 | Common equity + W10 share-date anchor | not started | lane2-w10-anchor branch has the anchor rule (300-company sample, 0 regressions) | dispatch |
 | B6 | Interest expense 2024 taxonomy tag (~1,500 companies) | not started | tag exists only from the 2024 taxonomy; needs an era rule | design era rule, then dispatch |
@@ -96,8 +96,8 @@ The slot record is the mapper: per company, per statement line, the tags that co
 
 | # | Task | State | Next |
 |---|---|---|---|
-| R1 | 8 cell states + reason store (migration 0100) | on main, not applied | F5 |
-| R2 | Reason rules closing the 13,354 reasonless blanks | blocked (B3) | F5 |
+| R1 | 8 cell states + reason store (migration 0100) | done (applied 2026-10-25) | populate via the reason rules |
+| R2 | Reason rules closing the 13,354 reasonless blanks | wip (unblocked; B3) | dry-run, Verifier, flag on |
 | R3 | Group/template model (66 sector rows, visible metric set per group, doc 50) | draft, not built | Sector Analyst + Standardization rulings |
 | R4 | Reasons shown on the company page (apps/app) | not started | after R1 |
 
@@ -106,6 +106,7 @@ Decided 2026-10-25 (to scrooner-25): (1) migrations 0098-0100: go ahead; (2) sto
 Still open: show unaudited 8-K Q4 earnings figures, labelled? (THE-PLAN 7.2); load SEC Notes data sets after a size pilot? (THE-PLAN 7.3).
 
 ## 7. Movement log (newest first)
+- 2026-10-25 (late night): founder applied migrations 0098-0100 in scrooner-4d's session (8 tables present); pre-2015 purge running there. Blocked count 5 -> 2 (sanity/health workflows; Verifier 1 split recheck). BS cross-check: Vornado, Carlyle, US Foods now tie; 9 companies with unexplained printed-total gaps handed to the Verifier.
 - 2026-10-25 (night, after limit reset): BS rollout batch 1 done (JPM, BAC, TRV, PLD, DUK, GE, EMR, WMT, T, VLO): 453 identity ties, 0 withheld, 2 SEC requests; Verifier manifest pushed. Census rerun with two mezzanine fixes running. Debt V5.2 queued for Verifier (AMAT 2023-10-29, COST 2025-08-31 first).
 - 2026-10-25 (after limit reset): Verifier cleared the BS family for the 1,000-company rollout (123 instance-filled cells, no wrong shown value). BS census over 698 no-cal companies: 621 tie at every instant. Debt V5.2: holds -> flags per Verifier. D&A/capex resumed with a filing-side gate; first gate too strict, redesign queued. EW fixture dropped (no such Edwards balance sheet).
 - 2026-10-25 (late night): BS totals family complete on 19 companies: 851 ties, 0 gaps, 0 holds, 16/16 anchors; the 123 instance-reader cells filled from the filings' own instances (338 SEC requests). Debt V5.1: COST-class current-maturities rule and LongTermDebt note-tie on every cell (185 cells to review, 0 published beside a gap). FASB 2025 element CSV fetched. 0110 DDL written. SEC usage ~1,138 of 1,300; free disk 7.9 GB.
