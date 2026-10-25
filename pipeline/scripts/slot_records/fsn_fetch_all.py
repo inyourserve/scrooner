@@ -52,5 +52,8 @@ for q in quarters:
     m["status"] = "ok"
     with open(manifest_all, "a") as f:
         f.write(json.dumps(m) + "\n")
-    print(f"{q}: ok, zip {m['zip_bytes']/1e6:.0f} MB, extracts {m['extract_bytes_total']/1e6:.0f} MB, zip kept={m['zip_kept']}  [{requests_used} requests, {time.monotonic()-t0:.0f}s]")
+    print(f"{q}: ok, zip {m['zip_bytes']/1e6:.0f} MB, extracts {m['extract_bytes_total']/1e6:.0f} MB, zip kept={m['zip_kept']}, optional skipped={m.get('optional_tables_skipped')}  [{requests_used} requests, {time.monotonic()-t0:.0f}s]")
+    if m.get("optional_tables_skipped"):
+        print("free disk below 3.5 GB: optional tables skipped; stopping after this quarter's manifest (Dhairya rule) and asking")
+        break
 print(f"done; requests used {requests_used}")

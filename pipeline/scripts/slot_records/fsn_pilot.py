@@ -92,11 +92,18 @@ with zipfile.ZipFile(zpath) as z:
             except (KeyError, ValueError):
                 continue
     print(f"cohort filings in {quarter}: {len(adshs)}")
+    MANDATORY = {"sub", "cal", "pre", "num"}  # kept locally always (Dhairya 2026-10-26)
+    OPTIONAL_FLOOR = 3.5 * GB                 # txt/dim/ren/tag only while free disk stays above this
+    manifest["optional_tables_skipped"] = []
     for n in names:
         if not n.lower().endswith(".tsv"):
             continue
         table = Path(n).stem.lower()
         info = z.getinfo(n)
+        if table not in MANDATORY and shutil.disk_usage(str(out)).free < OPTIONAL_FLOOR:
+            manifest["optional_tables_skipped"].append(table)
+            print(f"  {table:5} skipped: free disk below 3.5 GB")
+            continue
         with z.open(n) as fh:
             first = fh.readline()
             cols = first.decode("utf-8", "replace").rstrip("\n").split("\t")
