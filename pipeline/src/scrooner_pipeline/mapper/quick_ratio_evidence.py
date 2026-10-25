@@ -16,8 +16,11 @@ For a cell with no inventory fact at its date, with CA = current assets of that 
     inside other current assets). No evidence needed.
  2. Otherwise, an inventory-like CURRENT fact at that date no larger than CA -> NULL ``inventory_like_tag_unmapped``
     (NKE: the 7,846 residual is InventoryFinishedGoodsNetOfReserves; BA, XOM, CP's materials and supplies).
- 3. Otherwise, nothing explains the residual: the latest-statements evidence decides (line not presented -> zero;
-    presented -> NULL ``inventory_presented_not_extracted``; no evidence -> NULL ``inventory_presence_unknown``).
+ 3. Otherwise, nothing in our stored lines explains the residual: THIS period's own balance sheet decides
+    (``Context.face_by_date``, read per accession from the FSDS presentation rows, ``quick_ratio_face.py``):
+    an inventory line shown -> NULL ``inventory_presented_not_extracted``; the statement shows none -> the zero stands;
+    the statement is UNAVAILABLE -> the stored value is KEPT and counted as kept-unverified (never NULLed on a guess,
+    never decided from the latest statements: BBIO, SWX, TGTX, IOVA, DVN, GOOG, T, MP, RGLD ... had no inventory line).
 Every NULL carries its reason; the rule never guesses a value.
 
 ``MATERIALS_AND_SUPPLIES_ARE_INVENTORY`` is a named switch: whether "materials and supplies" lines count as inventory
@@ -143,7 +146,15 @@ class Context:
     inventory_like: dict[date, dict[str, Decimal]] = field(default_factory=dict)
     materials_supplies: dict[date, Decimal] = field(
         default_factory=dict
-    )  # the MaterialsSupplies* facts, per date
+    )  # MaterialsSuppliesAndOther-type facts, per date
+    # per balance-sheet date: does that period's OWN balance sheet show an inventory line (True / False)? A date that
+    # is absent means the face is UNAVAILABLE
+    face_by_date: dict[date, bool] = field(default_factory=dict)
+    # InventoryRawMaterialsAndSupplies-type facts (a sub-line of inventory, not a materials-and-supplies line), per date
+    supplies_subline: dict[date, Decimal] = field(default_factory=dict)
+    accession_by_date: dict[date, str] = field(
+        default_factory=dict
+    )  # the filing whose AssetsCurrent fact is the period's
 
 
 def inventory_missing_reason(
@@ -157,28 +168,49 @@ def inventory_missing_reason(
     like = ctx.inventory_like.get(end, {})
     if any(0 < v <= (ca if ca is not None else v) for v in like.values()):
         return REASON_UNMAPPED
-    if ctx.line_present is False:
-        return None
-    if ctx.line_present is True:
+    if ctx.face_by_date.get(end) is True:
         return REASON_PRESENTED
-    return REASON_UNKNOWN
+    # the period's own statement shows no inventory line (False), or is unavailable: the stored value is kept
+    return None
+
+
+def face_unavailable(
+    ctx: Context, end: date, current_assets: Decimal | None = None
+) -> bool:
+    """True when the zero is KEPT only because the period's own statement could not be read (unverified)."""
+    lines = ctx.lines_by_date.get(end, {})
+    ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
+    if ca is not None and foots_without_inventory(ca, lines):
+        return False
+    like = ctx.inventory_like.get(end, {})
+    if any(0 < v <= (ca if ca is not None else v) for v in like.values()):
+        return False
+    return end not in ctx.face_by_date
 
 
 def materials_supplies_reason(
     ctx: Context, end: date, current_assets: Decimal | None = None
 ) -> str | None:
-    """REASON_MATERIALS when a current materials-and-supplies line exists in the period's own balance sheet (not when
-    the current-assets total foots without it: then it is inside another line or a note), else None."""
+    """Hide reason for a cell whose inventory value exists but whose period carries a supplies line the locked formula
+    cannot classify: REASON_MATERIALS for a true current materials-and-supplies face line (founder ruling 2026-10-25);
+    REASON_PRESENTED for an inventory-named supplies sub-line (Verifier: the label MaterialsSupplies must not be used
+    where there is no materials-and-supplies face line). Neither applies when the current-assets total foots without
+    the line (it is inside another line or a note) or the figure exceeds current assets."""
     if not MATERIALS_AND_SUPPLIES_ARE_INVENTORY:
-        return None
-    value = ctx.materials_supplies.get(end)
-    if not value or value <= 0:
         return None
     lines = ctx.lines_by_date.get(end, {})
     ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
-    if ca is not None and (value > ca or foots_without_inventory(ca, lines)):
-        return None
-    return REASON_MATERIALS
+
+    def current_line(value: Decimal | None) -> bool:
+        if not value or value <= 0:
+            return False
+        return ca is None or (value <= ca and not foots_without_inventory(ca, lines))
+
+    if current_line(ctx.materials_supplies.get(end)):
+        return REASON_MATERIALS
+    if current_line(ctx.supplies_subline.get(end)):
+        return REASON_PRESENTED
+    return None
 
 
 def load_inventory_concept_ids(conn: Any) -> tuple[list[int], set[int]]:
@@ -200,11 +232,34 @@ def load_inventory_concept_ids(conn: Any) -> tuple[list[int], set[int]]:
     return like, mapped
 
 
+FACE_FILE_ENV = "SCROONER_QR_FACE_FILE"
+_face_cache: dict[str, dict[str, bool]] = {}
+
+
+def default_face() -> dict[str, bool]:
+    """accession -> does its balance sheet show an inventory line, from the interim JSONL named by the environment
+    (empty when unset: every face is then unavailable and the stored value is kept)."""
+    import os
+    from pathlib import Path
+
+    from scrooner_pipeline.mapper import quick_ratio_face
+
+    path = os.environ.get(FACE_FILE_ENV, "")
+    if path and path not in _face_cache:
+        _face_cache[path] = quick_ratio_face.load_jsonl(Path(path))
+    return _face_cache.get(path, {})
+
+
 def load_context(
-    conn: Any, company_id: int, like_ids: list[int] | None = None
+    conn: Any,
+    company_id: int,
+    like_ids: list[int] | None = None,
+    face: dict[str, bool] | None = None,
 ) -> Context:
     if like_ids is None:
         like_ids, _ = load_inventory_concept_ids(conn)
+    if face is None:
+        face = default_face()
     with conn.cursor() as cur:
         cur.execute(
             "select line_present from analytics.company_filing_line_evidence where company_id = %s and data_point = %s",
@@ -214,6 +269,7 @@ def load_context(
         lines: dict[date, dict[str, Decimal]] = {}
         like: dict[date, dict[str, Decimal]] = {}
         materials: dict[date, Decimal] = {}
+        subline: dict[date, Decimal] = {}
         cur.execute(
             """select distinct on (p.end_date, k.tag) p.end_date, k.tag, f.value
                from core.fact f join core.period p on p.id = f.period_id join core.concept k on k.id = f.concept_id
@@ -227,9 +283,30 @@ def load_context(
                 lines.setdefault(end, {})[tag] = value
             else:
                 like.setdefault(end, {})[tag] = value
-                if "MaterialsSupplies" in tag:
-                    materials[end] = materials.get(end, Decimal(0)) + value
-    return Context(None if row is None else row[0], lines, like, materials)
+                if "MaterialsSupplies" in tag or "RawMaterialsAndSupplies" in tag:
+                    # a true materials-and-supplies line, or (inventory-named) a sub-line of inventory
+                    target = subline if "nventor" in tag else materials
+                    target[end] = target.get(end, Decimal(0)) + value
+        cur.execute(
+            """select distinct on (p.end_date) p.end_date, fl.accession_number
+               from core.fact f join core.period p on p.id = f.period_id
+               join core.concept k on k.id = f.concept_id join core.filing fl on fl.id = f.filing_id
+               where f.company_id = %s and p.period_type = 'instant' and k.taxonomy = 'us-gaap'
+                 and k.tag = 'AssetsCurrent'
+               order by p.end_date, f.is_authoritative desc, f.id desc""",
+            (company_id,),
+        )
+        accession = dict(cur.fetchall())
+    face_by_date = {d: face[a] for d, a in accession.items() if a in face}
+    return Context(
+        None if row is None else row[0],
+        lines,
+        like,
+        materials,
+        face_by_date,
+        subline,
+        accession,
+    )
 
 
 @dataclass
@@ -243,10 +320,16 @@ class PlannedCell:
     reason: str
     current_ratio: str | None
     equals_current_ratio: bool
+    outcome: str = "null"  # null | kept_unverified (the period's own statement could not be read: stored value kept)
+    accession: str | None = None
 
 
 def plan_quick_ratio(
-    conn: Any, company_ids: list[int], chunk: int = 100
+    conn: Any,
+    company_ids: list[int],
+    chunk: int = 100,
+    face: dict[str, bool] | None = None,
+    include_kept: bool = False,
 ) -> list[PlannedCell]:
     """Read-only dry run: stored quick_ratio cells that have a value although NO inventory fact exists at their date
     (the cells f67a927 turned into current ratio) and that the evidence rule would turn into NULL."""
@@ -296,7 +379,10 @@ def plan_quick_ratio(
                 (part, inv_concept),
             )
             have = set(cur.fetchall())
-        ctx = {cid: load_context(conn, cid, like_ids) for cid in {s[0] for s in stored}}
+        ctx = {
+            cid: load_context(conn, cid, like_ids, face)
+            for cid in {s[0] for s in stored}
+        }
         for cid, end, label, value in stored:
             if (cid, end) in have:
                 reason = materials_supplies_reason(
@@ -304,14 +390,24 @@ def plan_quick_ratio(
                 )  # inventory present, but a materials line exists
             else:
                 reason = inventory_missing_reason(ctx[cid], end)
+            kept = False
             if reason is None:
-                continue
+                if (
+                    include_kept
+                    and (cid, end) not in have
+                    and face_unavailable(ctx[cid], end)
+                ):
+                    kept = True
+                else:
+                    continue
             cur_ratio = current.get((cid, end))
             equal = cur_ratio is not None and abs(
                 Decimal(value) - Decimal(cur_ratio)
             ) <= Decimal("0.0005")
             out.append(
-                PlannedCell(cid, cik_of[cid], str(end), label, str(value), None, reason,
-                            None if cur_ratio is None else str(cur_ratio), equal)
+                PlannedCell(cid, cik_of[cid], str(end), label, str(value), str(value) if kept else None,
+                            "kept_unverified:face_unavailable" if kept else reason,
+                            None if cur_ratio is None else str(cur_ratio), equal,
+                            "kept_unverified" if kept else "null", ctx[cid].accession_by_date.get(end))
             )  # fmt: skip
     return out
