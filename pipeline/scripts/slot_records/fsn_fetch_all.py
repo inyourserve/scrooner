@@ -48,6 +48,11 @@ for q in quarters:
             print("disk or size condition failed; stopping")
             break
         continue
+    # store in Supabase (founder 2026-10-26): extracts + zip to the private bucket, local zip removed
+    up = subprocess.run([sys.executable, "-I", str(HERE / "fsn_upload.py"), str(qdir)], capture_output=True, text=True)
+    if up.returncode != 0:
+        print(f"{q}: extracted but UPLOAD FAILED ({(up.stdout + up.stderr).strip()[-300:]}); stopping and asking")
+        break
     m = json.load(open(man))
     m["status"] = "ok"
     with open(manifest_all, "a") as f:
