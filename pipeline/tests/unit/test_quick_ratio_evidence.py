@@ -35,14 +35,10 @@ def M(**kw):  # footing lines in thousands -> dollars
 
 
 def ctx(face, lines=None, like=None, end=END):
-    """face: does THIS period's own balance sheet show an inventory line (True / False), None = unavailable."""
-    return qe.Context(
-        None,
-        {end: lines or {}},
-        {end: like or {}},
-        {},
-        {} if face is None else {end: face},
-    )
+    """face: does THIS period's own balance sheet show an inventory line at its date (True / False); None = the
+    statement does not show the date (unavailable)."""
+    pf = {} if face is None else {end: qe.PeriodFace(face, False)}
+    return qe.Context(None, {end: lines or {}}, {end: like or {}}, {}, pf)
 
 
 def fixture_ctx(name):
@@ -185,9 +181,9 @@ def test_missing_inventory_reason_matrix():
         qe.inventory_missing_reason(ctx(False, nofoot), END) is None
     )  # the statement shows no inventory line
     assert (
-        qe.inventory_missing_reason(ctx(None, nofoot), END) is None
-    )  # unavailable: the stored value is kept ...
-    assert qe.face_unavailable(ctx(None, nofoot), END)  # ... and flagged as unverified
+        qe.inventory_missing_reason(ctx(None, nofoot), END) == qe.REASON_UNAVAILABLE
+    )  # the date is not shown: hidden
+    assert qe.face_unavailable(ctx(None, nofoot), END)
     assert not qe.face_unavailable(ctx(False, nofoot), END) and not qe.face_unavailable(
         ctx(None, foot), END
     )
@@ -218,7 +214,7 @@ def test_missing_inventory_reason_matrix():
     # the statement of ANOTHER date says nothing about this one
     assert (
         qe.inventory_missing_reason(ctx(True, nofoot, end=date(2025, 1, 1)), END)
-        is None
+        == qe.REASON_UNAVAILABLE
     )
 
 
@@ -226,7 +222,7 @@ def test_the_latest_statements_evidence_no_longer_decides_a_past_period():
     # SWX, TGTX, IOVA, IBRX, BBIO 2024, DVN 2020, GOOG 2016, T 2015, MP 2020, RGLD 2015, ASTS 2023, VTRS 2020: the latest
     # statements show inventory, the period's own statement does not
     nofoot = M(AssetsCurrent=1000, CashAndCashEquivalentsAtCarryingValue=100)
-    c = qe.Context(True, {END: nofoot}, {}, {}, {END: False})
+    c = qe.Context(True, {END: nofoot}, {}, {}, {END: qe.PeriodFace(False, False)})
     assert qe.inventory_missing_reason(c, END) is None
 
 
@@ -302,6 +298,35 @@ def test_an_inventory_named_supplies_subline_is_not_called_a_materials_and_suppl
         )
         is None
     )
+
+
+def test_materials_hide_follows_the_period_s_own_statement_when_it_was_read():
+    lines = M(AssetsCurrent=1000, CashAndCashEquivalentsAtCarryingValue=100)
+    facts = (
+        {END: D(10) * K},
+        {END: D(40) * K},
+    )  # a materials fact and an inventory-named supplies fact exist
+
+    def with_face(pf):
+        return qe.Context(False, {END: lines}, {}, facts[0], {END: pf}, facts[1])
+
+    # UPS 2023-12-31: no inventory or materials line on the face -> the stored value is right, nothing is hidden
+    assert (
+        qe.materials_supplies_reason(with_face(qe.PeriodFace(False, False)), END)
+        is None
+    )
+    # STE 2019-03-31 / WMS 2015-03-31 print "Inventories" and no materials line -> inventory_presented_not_extracted
+    assert (
+        qe.materials_supplies_reason(with_face(qe.PeriodFace(True, False)), END)
+        == qe.REASON_PRESENTED
+    )
+    # a materials-and-supplies line on the face -> the founder ruling's reason
+    assert (
+        qe.materials_supplies_reason(with_face(qe.PeriodFace(False, True)), END)
+        == qe.REASON_MATERIALS
+    )
+    # no supplies fact at all: an inventory line alone hides nothing
+    assert qe.materials_supplies_reason(qe.Context(False, {END: lines}, {}, {}, {END: qe.PeriodFace(True, False)}), END) is None  # fmt: skip
 
 
 def test_calculate_hides_a_quick_ratio_that_has_an_inventory_value_but_a_materials_line(
@@ -404,14 +429,19 @@ def test_the_periods_own_current_assets_total_is_passed_even_when_the_lines_lack
     # no AssetsCurrent line stored, and the statement shows inventory: only the passed total lets the footing see that
     # cash alone is the whole of current assets
     c = qe.Context(
-        True, {END: {"CashAndCashEquivalentsAtCarryingValue": ca}}, {}, {}, {END: True}
+        True,
+        {END: {"CashAndCashEquivalentsAtCarryingValue": ca}},
+        {},
+        {},
+        {END: qe.PeriodFace(True, False)},
     )
     row = _run(monkeypatch, "NKE", with_inventory=False, rule_on=True, context=c)
     assert row["value"] == ca / cl and row["is_null_reason"] is None
 
 
-def test_an_unavailable_statement_keeps_the_stored_value(monkeypatch):
-    ca, cl, *_ = FIXTURES["NKE"]
+def test_an_unavailable_statement_hides_the_cell_with_its_reason(monkeypatch):
+    # EOG 2008-12-31 / 2009-06-30 (no readable pages), CIK 0001907982 2020-12-31 (a later filing without that column)
+    ca, *_ = FIXTURES["NKE"]
     row = _run(
         monkeypatch,
         "NKE",
@@ -419,7 +449,7 @@ def test_an_unavailable_statement_keeps_the_stored_value(monkeypatch):
         rule_on=True,
         context=ctx(None, {"AssetsCurrent": ca}),
     )
-    assert row["value"] == ca / cl and row["is_null_reason"] is None
+    assert row["value"] is None and row["is_null_reason"] == qe.REASON_UNAVAILABLE
 
 
 def test_a_statement_that_shows_inventory_nulls_with_the_presented_reason(monkeypatch):
@@ -477,7 +507,7 @@ class _Conn:
 
 def test_load_context_splits_footing_lines_from_inventory_like_facts_per_date():
     conn = _Conn({
-        "join core.filing fl": [(END, "0000000001-26-000001")],
+        "from core.filing where": [(END, "0000000001-26-000001")],
         "from analytics.company_filing_line_evidence": [(True,)],
         "from core.fact f join core.period": [
             (END, "AssetsCurrent", D(100)), (END, "InventoryFinishedGoodsNetOfReserves", D(30)),
@@ -495,12 +525,12 @@ def test_load_context_splits_footing_lines_from_inventory_like_facts_per_date():
         and c.materials_supplies == {}
     )
     assert any("p.period_type = 'instant'" in q for q in conn.cur.sql)
-    assert qe.load_context(_Conn({"from analytics.company_filing_line_evidence": [], "from core.fact f join core.period": []}), 5, like_ids=[]).line_present is None  # fmt: skip
+    assert qe.load_context(_Conn({"from core.filing where": [], "from analytics.company_filing_line_evidence": [], "from core.fact f join core.period": []}), 5, like_ids=[]).line_present is None  # fmt: skip
 
 
 def test_load_context_collects_materials_and_supplies_per_date():
     conn = _Conn({
-        "join core.filing fl": [],
+        "from core.filing where": [],
         "from analytics.company_filing_line_evidence": [(False,)],
         "from core.fact f join core.period": [(END, "MaterialsSuppliesAndOther", D(201)), (END, "InventoryRawMaterialsAndSupplies", D(5))],
     })  # fmt: skip
@@ -544,7 +574,7 @@ def _planner_conn(context_rows, evidence):
         "from core.concept": [],
         "from analytics.canonical_fact cf": [(2, END)],  # company 2 has an inventory fact at END
         "from analytics.company_filing_line_evidence": [(evidence,)],
-        "join core.filing fl": [(END, "acc-1"), (date(2025, 6, 30), "acc-0")],
+        "from core.filing where": [(END, "acc-1"), (date(2025, 6, 30), "acc-0")],
         "from core.fact f join core.period": context_rows,
     }  # fmt: skip
     calls = iter([
@@ -569,74 +599,81 @@ def _planner_conn(context_rows, evidence):
     return Conn(tables)
 
 
+from scrooner_pipeline.mapper.quick_ratio_face import AccessionFace  # noqa: E402
+
+D0 = date(2025, 6, 30)
+
+
+def AF(dates, inventory=(), materials=()):
+    return AccessionFace(frozenset(dates), frozenset(inventory), frozenset(materials))
+
+
 def test_planner_lists_only_value_cells_without_inventory_that_the_rule_nulls():
-    got = qe.plan_quick_ratio(
-        _planner_conn([], True), [1, 2], face={"acc-1": True, "acc-0": True}
-    )
-    assert [
-        (p.company_id, p.period_end, p.reason, p.new, p.equals_current_ratio)
-        for p in got
-    ] == [
-        (1, "2026-06-30", qe.REASON_PRESENTED, None, True),
-        (
-            1,
-            "2025-06-30",
-            qe.REASON_PRESENTED,
-            None,
-            False,
-        ),  # the current ratio of that date differs: not asserted equal
-    ]
+    face = {"acc-1": AF({END}, {END}), "acc-0": AF({D0}, {D0})}
+    got = qe.plan_quick_ratio(_planner_conn([], True), [1, 2], face=face)
+    assert [(p.company_id, p.period_end, p.reason, p.new, p.equals_current_ratio, p.accession) for p in got] == [
+        (1, "2026-06-30", qe.REASON_PRESENTED, None, True, "acc-1"),
+        (1, "2025-06-30", qe.REASON_PRESENTED, None, False, "acc-0"),  # that date's current ratio differs
+    ]  # fmt: skip
 
 
-def test_planner_leaves_cells_alone_where_the_period_foots_or_no_line_is_shown():
+def test_planner_leaves_cells_alone_where_the_period_foots_or_its_own_date_shows_no_line():
+    # the statements show the dates and no inventory value at them
+    shows_none = {"acc-1": AF({END}), "acc-0": AF({D0})}
+    assert qe.plan_quick_ratio(_planner_conn([], False), [1, 2], face=shows_none) == []
+    # a line that has a value only in the COMPARATIVE column does not count for the cell's own date
+    comparative_only = {"acc-1": AF({END, D0}, {D0}), "acc-0": AF({D0})}
     assert (
-        qe.plan_quick_ratio(
-            _planner_conn([], False), [1, 2], face={"acc-1": False, "acc-0": False}
-        )
+        qe.plan_quick_ratio(_planner_conn([], False), [1, 2], face=comparative_only)
         == []
     )
-    assert (
-        qe.plan_quick_ratio(_planner_conn([], False), [1, 2], face={}) == []
-    )  # unavailable: kept, not listed
     foot = [(END, "AssetsCurrent", D(100)), (END, "CashAndCashEquivalentsAtCarryingValue", D(100)),
-            (date(2025, 6, 30), "AssetsCurrent", D(100)), (date(2025, 6, 30), "CashAndCashEquivalentsAtCarryingValue", D(100))]  # fmt: skip
+            (D0, "AssetsCurrent", D(100)), (D0, "CashAndCashEquivalentsAtCarryingValue", D(100))]  # fmt: skip
     assert (
         qe.plan_quick_ratio(
-            _planner_conn(foot, True), [1, 2], face={"acc-1": True, "acc-0": True}
+            _planner_conn(foot, True), [1, 2], face={"acc-1": AF({END}, {END})}
         )
         == []
     )
 
 
-def test_planner_counts_kept_unverified_cells_when_the_statement_is_unavailable():
+def test_planner_hides_cells_whose_statement_does_not_show_the_date():
+    # CIK 0001907982 2020-12-31: decided from a filing that shows only newer years; EOG: no readable pages
     got = qe.plan_quick_ratio(
-        _planner_conn([], False), [1, 2], face={}, include_kept=True
+        _planner_conn([], False),
+        [1, 2],
+        face={"acc-1": AF({date(2022, 12, 31)}, {date(2022, 12, 31)})},
     )
-    assert {(p.company_id, p.period_end, p.outcome, p.new) for p in got} == {
-        (1, "2026-06-30", "kept_unverified", "2.075"), (1, "2025-06-30", "kept_unverified", "2.0")}  # fmt: skip
-    assert all(
-        p.reason == "kept_unverified:face_unavailable" and p.accession for p in got
-    )
+    assert {(p.period_end, p.reason) for p in got} == {("2026-06-30", qe.REASON_UNAVAILABLE), ("2025-06-30", qe.REASON_UNAVAILABLE)}  # fmt: skip
 
 
-def test_load_context_reads_the_period_s_own_statement_through_its_accession():
+def test_load_context_reads_the_period_s_own_statement_at_the_cell_s_own_date():
     conn = _Conn({
-        "join core.filing fl": [(END, "0000000001-26-000001"), (date(2025, 12, 31), "0000000001-26-000002")],
+        "from core.filing where": [(END, "0000000001-26-000001"), (date(2025, 12, 31), "0000000001-26-000002"), (D0, "0000000001-25-000003")],
         "from analytics.company_filing_line_evidence": [(True,)],
         "from core.fact f join core.period": [],
     })  # fmt: skip
-    c = qe.load_context(
-        conn,
-        5,
-        like_ids=[],
-        face={"0000000001-26-000001": False, "0000000001-26-000099": True},
-    )
+    face = {
+        "0000000001-26-000001": AF(
+            {END, D0}, {D0}, {END}
+        ),  # inventory only in the comparative column; materials at END
+        "0000000001-26-000099": AF(
+            {date(2025, 12, 31)}, {date(2025, 12, 31)}
+        ),  # some other accession
+        "0000000001-25-000003": AF(
+            {date(2024, 6, 30)}, {date(2024, 6, 30)}
+        ),  # shows only OTHER dates than its own
+    }
+    c = qe.load_context(conn, 5, like_ids=[], face=face)
+    q = next(s for s in conn.cur.sql if "from core.filing where" in s)
+    assert (
+        "order by period_of_report, is_amendment, filing_date" in q
+    )  # the original periodic filing of the date
+    assert "'10-k'" in q and "'10-q'" in q
     assert c.face_by_date == {
-        END: False
-    }  # the second date's accession has no statement read: unavailable
-    assert c.accession_by_date[date(2025, 12, 31)] == "0000000001-26-000002"
-
-
-def test_a_statement_that_was_read_is_not_listed_as_unverified():
-    got = qe.plan_quick_ratio(_planner_conn([], False), [1, 2], face={"acc-1": False, "acc-0": False}, include_kept=True)  # fmt: skip
-    assert got == []
+        END: qe.PeriodFace(inventory_line=False, materials_line=True)
+    }
+    assert (
+        c.accession_by_date[date(2025, 12, 31)] == "0000000001-26-000002"
+    )  # no statement read: unavailable
+    assert D0 not in c.face_by_date  # the filing's statement does not show its own date
