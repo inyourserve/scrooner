@@ -213,6 +213,17 @@ for cik in sorted(records):
                 note_current_added = ltd_cur[0]
             else:
                 note_gap = True
+        elif has_current_ltd and ltd_note is not None:
+            # both sides on the face: the long-term-debt members must still tie
+            # to the filer's note carrying total (COST 2019-02-17: face 1,698 +
+            # 4,794 = 6,492M vs note 6,525M); a gap goes to review, never shown
+            ltd_face = sum(
+                (day[m["tag"]][0] for m in rec["members"]
+                 if m["tag"] in day and re.search(r"LongTermDebt", m["tag"]) and m["class"] != "operating_lease"),
+                Decimal(0),
+            )
+            if abs(ltd_note[0] - ltd_face) > 1:
+                note_gap = True
         elif not has_current_ltd and any(
             m["side"] == "noncurrent" and m["tag"] in day and re.search(r"LongTermDebt", m["tag"]) for m in rec["members"]
         ):

@@ -48,5 +48,18 @@ Verifier 2 on V2 (`VERIFY-BS-TOTALS-V2-2026-10-25.md`): 112 of 112 shown values 
 
 Draw requested: MCK, ET, DVN 2018, the two borrowed-graph records, plus a random tie sample.
 
+## V3.2 addendum: instance reader, every held cell filled (same day)
+`instance_reader.py` reads each held instant's ORIGINAL periodic filing (folder index + inline-XBRL instance, 2 requests), keeps facts in undimensioned filer-entity contexts, plus, for explicitly wanted mezzanine tags, facts dimensioned on one axis (TRGP's Series A preferred is tagged only per `StatementClassOfStockAxis`; in 10-Ks the same value also appears under a second axis, so members are grouped per axis and one axis is used). Downloads are deleted after extraction; evidence JSONL `results/instance_evidence_bs.jsonl` (412 rows, 340 KB).
+
+| | V3 | V3.2 |
+|---|---|---|
+| identity ties | 728 | 851 |
+| needs_instance_reader | 123 | 0 (AWK 46, TRGP 46, DVN 30, BRKR 1 filled; each ties) |
+| gaps / withheld | 0 | 0 |
+| anchors | 14/16 + 2 holds | 16/16 PASS (TRGP 9,823.1M; AWK 14,097M) |
+| SEC requests | | 94 + 152 + 92 = 338; cumulative about 1,138 of the 1,300 cap |
+
+Rules added: a dimension-only mezzanine tag counts only with its per-class instance value, never with an undimensioned API fact of the same name (GE's 408M note value); a member blank in a column is zero only when the identity ties without it; mezzanine lines are the ones classed by face position.
+
 ## Budget
 SEC requests this step: 326 (plus 163 TLS handshake failures from a system Python without a cert bundle that never reached sec.gov). Cumulative about 776 of 1,100. Free disk 10 GB. Cal folder 62 MB (kept until the family closes).
