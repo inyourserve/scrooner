@@ -6,6 +6,8 @@ States: **done** = verified and on main or applied; **wip** = being built, evide
 
 ## 0. The scoreboard (what the user would see today)
 
+**Task count (39 tasks, 2026-10-25 night): done 10 (26%), in progress 12 (31%), blocked 5 (13%), not started 12 (31%). Remaining 29 (74%). By what a user sees: 0% (nothing is switched on in production yet; the first switch-on waits on migrations 0098-0100 being applied and the Verifier's batch samples).**
+
 | Number | Value | Source | Goal |
 |---|---|---|---|
 | Certified companies | 0 | `analytics.company_certification` (0 rows, live 2026-10-25) | 1,000 |
@@ -104,6 +106,7 @@ Decided 2026-10-25 (to scrooner-25): (1) migrations 0098-0100: go ahead; (2) sto
 Still open: show unaudited 8-K Q4 earnings figures, labelled? (THE-PLAN 7.2); load SEC Notes data sets after a size pilot? (THE-PLAN 7.3).
 
 ## 7. Movement log (newest first)
+- 2026-10-25 (night, after limit reset): BS rollout batch 1 done (JPM, BAC, TRV, PLD, DUK, GE, EMR, WMT, T, VLO): 453 identity ties, 0 withheld, 2 SEC requests; Verifier manifest pushed. Census rerun with two mezzanine fixes running. Debt V5.2 queued for Verifier (AMAT 2023-10-29, COST 2025-08-31 first).
 - 2026-10-25 (after limit reset): Verifier cleared the BS family for the 1,000-company rollout (123 instance-filled cells, no wrong shown value). BS census over 698 no-cal companies: 621 tie at every instant. Debt V5.2: holds -> flags per Verifier. D&A/capex resumed with a filing-side gate; first gate too strict, redesign queued. EW fixture dropped (no such Edwards balance sheet).
 - 2026-10-25 (late night): BS totals family complete on 19 companies: 851 ties, 0 gaps, 0 holds, 16/16 anchors; the 123 instance-reader cells filled from the filings' own instances (338 SEC requests). Debt V5.1: COST-class current-maturities rule and LongTermDebt note-tie on every cell (185 cells to review, 0 published beside a gap). FASB 2025 element CSV fetched. 0110 DDL written. SEC usage ~1,138 of 1,300; free disk 7.9 GB.
 - 2026-10-25 (night): founder: "complete all the tasks by today itself, ask everyone to work hard" relayed to Dhairya and scrooner-4d. Core engine: 0110 DDL written (F6); face-admission guards built, 15/15 fixtures pass (A4); instance reader built and running on AWK/BRKR (A7). Debt V5 replay on 33 companies: 0 face lines admitted, 1 rejected (NFG-type asset-side line), no regressions.
