@@ -154,6 +154,13 @@ RULES: dict[str, Rule] = {
             "market cap publish guard at the share basis (WO-21)",
         ),
         _r(
+            "quick_ratio.inventory_evidence@1",
+            "-",
+            "lane3",
+            "quick_ratio: a missing inventory is zero only where the filing-line evidence says the line is not presented; else NULL with a reason",
+            dry_run=True,
+        ),
+        _r(
             "scale.unit_plausibility@1",
             "RF-18",
             "lane3",
