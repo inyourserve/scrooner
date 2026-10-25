@@ -33,6 +33,12 @@ from typing import Iterator
 import psycopg
 import structlog
 
+from scrooner_pipeline.collector.dedupe import (
+    dedupe_enabled,
+    latest_stored,
+    partition_unchanged,
+    unchanged_ciks_for_run,
+)
 from scrooner_pipeline.collector.retry import (
     HeartbeatTicker,
     already_stored_companyfacts_ciks,
@@ -103,8 +109,14 @@ def bootstrap_companyfacts(
         "skipped": 0,
         "errors": 0,
         "not_in_archive": 0,
+        "unchanged_skipped": 0,
     }
     already_done = already_stored_companyfacts_ciks(conn, run_id)
+    dedupe_on = dedupe_enabled(conn)
+    if dedupe_on:
+        already_done |= unchanged_ciks_for_run(conn, run_id)
+    else:
+        logger.warning("companyfacts.dedupe_disabled_migration_0111_not_applied")
     if already_done:
         logger.info(
             "companyfacts.resume.checkpoint",
@@ -139,6 +151,24 @@ def bootstrap_companyfacts(
     ) -> None:
         if not batch:
             return
+        if dedupe_on:
+            latest = latest_stored(conn, [item[0] for item in batch])
+            batch, unchanged = partition_unchanged(batch, latest)
+            for u_cik, u_sha, kept_id in unchanged:
+                cur.execute(
+                    """
+                    insert into raw.sec_companyfacts_unchanged_fetch
+                        (cik, fetched_at, run_id, sha256, kept_raw_id)
+                    values (%s, %s, %s, %s, %s)
+                    on conflict (cik, fetched_at) do nothing
+                    """,
+                    (u_cik, fetched_at, run_id, u_sha, kept_id),
+                )
+                conn.commit()
+                stats["unchanged_skipped"] += 1
+                heartbeat.tick()
+            if not batch:
+                return
         with ThreadPoolExecutor(max_workers=UPLOAD_WORKERS) as pool:
             results = list(pool.map(lambda item: _upload_one(storage, item), batch))
         for cik, storage_path, sha256, exc in results:

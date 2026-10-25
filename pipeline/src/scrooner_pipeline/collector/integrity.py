@@ -126,6 +126,7 @@ class TableCounts:
     table: str
     rows_with_storage_path: int = 0
     existence_checked: int = 0
+    redirected_to_keeper: int = 0
     existence_ok: int = 0
     existence_missing: int = 0
     hash_checked: int = 0
@@ -175,6 +176,40 @@ class ReconciliationReport:
         return sum(tc.rows_with_storage_path for tc in self.table_counts)
 
 
+def load_retired_map(conn: psycopg.Connection) -> dict[tuple[str, int], str]:
+    """(source_table, raw_id) -> keeper storage_path for every Storage object
+    that was retired because an identical-bytes keeper remains (migration
+    0111, Rule S). Empty when the migration is not applied."""
+    with conn.cursor() as cur:
+        cur.execute("select to_regclass('raw.storage_object_retired') is not null")
+        if not cur.fetchone()[0]:
+            conn.rollback()
+            return {}
+        cur.execute(
+            "select source_table, raw_id, keeper_storage_path from raw.storage_object_retired"
+        )
+        out = {(t, i): k for t, i, k in cur.fetchall()}
+    conn.rollback()
+    return out
+
+
+def resolve_storage_path(
+    table: str,
+    row: dict,
+    retired: dict[tuple[str, int], str],
+) -> tuple[str, bool]:
+    """(path to check, redirected). A retired row is checked at its keeper's
+    path: same cik + same sha256, so the recorded sha256 still has to match
+    the bytes found there. The row's own storage_path stays in any issue
+    report. Rows without an integer `id` key (filing documents) never redirect."""
+    raw_id = row.get("id")
+    if isinstance(raw_id, int):
+        keeper = retired.get((table, raw_id))
+        if keeper is not None:
+            return keeper, True
+    return row["storage_path"], False
+
+
 def _fetch_rows(conn: psycopg.Connection, table_cfg: dict) -> list[dict]:
     table = table_cfg["table"]
     cols = list(table_cfg["key_cols"]) + ["cik", "storage_path", "sha256"]
@@ -215,6 +250,7 @@ def reconcile(
     table_counts: list[TableCounts] = []
     run_counts_map: dict[tuple[str, int | None], RunCounts] = {}
     issues: list[RowIssue] = []
+    retired = load_retired_map(conn)
 
     try:
         for cfg in _CHECKED_TABLES:
@@ -236,6 +272,11 @@ def reconcile(
                         check_failed=tc.check_failed,
                     )
                 storage_path = row["storage_path"]
+                check_path, redirected = resolve_storage_path(
+                    cfg["table"], row, retired
+                )
+                if redirected:
+                    tc.redirected_to_keeper += 1
                 run_id = row.get("run_id")
                 row_key = {k: row[k] for k in cfg["key_cols"]}
                 rc = run_counts_map.setdefault(
@@ -244,7 +285,7 @@ def reconcile(
                 rc.rows += 1
 
                 try:
-                    object_path = strip_bucket_prefix(storage_path)
+                    object_path = strip_bucket_prefix(check_path)
                 except ValueError as exc:
                     tc.check_failed += 1
                     issues.append(

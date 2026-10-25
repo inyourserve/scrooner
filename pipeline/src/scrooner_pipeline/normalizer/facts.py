@@ -41,6 +41,7 @@ from scrooner_pipeline.collector.storage import (
     strip_bucket_prefix,
 )
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
 from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST
 from scrooner_pipeline.normalizer.units import canonicalize_unit
 
@@ -50,10 +51,10 @@ logger = structlog.get_logger()
 # identity/period/unit-only until doc 02's 20-F/40-F decision closes.
 FACT_EXTRACTION_EXCLUDED_CIKS = {"0001046179", "0000895728"}  # TSM, ENB
 
-# Founder decision 2026-10-25 (doc 38 hard ceiling): no fact whose period ends before
-# 2015-01-01 is stored. The pre-2015 purge deletes them; without this floor every
+# Founder decision 2026-10-25 (revised: floor moved 2015 -> 2014-01-01 to keep prior-year inputs): no fact whose period ends before
+# 2014-01-01 is stored. The pre-2015 purge deletes them; without this floor every
 # reprocess of a company would re-insert them from its raw companyfacts payload.
-FACT_HISTORY_FLOOR = date(2015, 1, 1)
+FACT_HISTORY_FLOOR = HISTORY_FLOOR  # 2014-01-01, single source: common/history_floor.py (founder 2026-10-25: keep calendar 2014)
 
 
 def _load_json(storage: SupabaseStorageClient, storage_path: str) -> dict:
