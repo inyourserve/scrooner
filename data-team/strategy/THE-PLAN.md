@@ -31,7 +31,7 @@ Stopped until the cohort is done: non-cohort companies, new studies and cards, a
 Push path to `main` open; migrations 0098-0100 on `main`; four scheduled workflows green; quiet window; clock G set. 0096/0097 are applied.
 
 ## 7. Decisions only the founder can make
-1. Approver policy: agent approvers only ("certified by documented process"), agents plus a human for the financials, or a human reviewer. (A relayed "no human involvement" is NOT adopted until he confirms here.)
+1. Approver policy: DECIDED 2026-10-25, confirmed by the founder in the main session: agents only; the approver is never the preparer; the founder signs only novel definition calls. (Closed.)
 2. Show unaudited 8-K Q4 earnings figures (labelled)? 
 3. Load SEC Notes data sets for the cohort after a one-month size pilot?
 4. Push permission for the Release Manager.
