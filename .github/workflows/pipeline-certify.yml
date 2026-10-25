@@ -64,7 +64,7 @@ jobs:
         run: |
           set -u
           if [ "$SHARDS" = "all" ] || [ -z "$SHARDS" ]; then
-            SHARDS=$(python3 -c "import csv; print(' '.join(sorted({r['shard'].strip() for r in csv.DictReader(open('doc/data-moat/team/top1000/shards.csv'))})))")
+            SHARDS=$(python3 -c "import csv; print(' '.join(sorted({r['shard'].strip() for r in csv.DictReader(open('doc/data-moat/team/top1000/shards.csv')) if not (r.get('excluded') or '').strip()})))")
           fi
           mode="--dry-run"
           if [ "$APPLY" = "true" ]; then mode="--apply"; fi

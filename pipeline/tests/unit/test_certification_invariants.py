@@ -176,6 +176,15 @@ class TestKlacDerivedQ4Eps:
         f = composition.check(self.broken())
         assert any(x.evidence["rule"] == "per_share_derived_by_subtraction" and x.severity == WRONG_VALUE for x in f)
 
+    def test_neighbours_that_average_to_zero_do_not_divide_by_zero(self):
+        # CI crashed on certify shards S056/S085 with decimal.DivisionByZero
+        d = clean_company()
+        values = [D("-0.10"), D("0.10"), D("0"), D("2.00")]
+        for (qs, qe, fp), v in zip(QUARTERS, values):
+            add(d, "diluted_eps", v, qe, qs, fp, tag="EarningsPerShareDiluted", unit="usd/shares",
+                derived=(fp == "Q4"))
+        assert splits.check(d) == []
+
     def test_basis_mix_is_wrong_value(self):
         f = splits.check(self.broken())
         assert f and f[0].evidence["rule"] == "per_share_basis_mix" and f[0].severity == WRONG_VALUE

@@ -131,6 +131,8 @@ def _basis_mix(data: CompanyData) -> list[Finding]:
             if len(near) < 2:
                 continue
             med = Decimal(str(median(near)))
+            if med == 0:
+                continue  # neighbours of opposite sign average to 0: no level to compare to
             ratio = abs(c.value) / abs(med)
             flipped = (c.value > 0) != (med > 0)
             # A tiny but same-sign quarter is just a weak quarter (AMZN Q4 2022 EPS
