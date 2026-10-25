@@ -8,7 +8,7 @@ States: **done** = verified and on main or applied; **wip** = being built, evide
 
 **Task count (39 tasks, 2026-10-25 late night): done 12 (31%), in progress 16 (41%), blocked 1 (3%), not started 10 (26%). Remaining 27 (69%).**
 
-Consequence of the pre-2015 purge (founder decision): FY2015 year-over-year growth cells become reasoned blanks (no prior year in the window).
+History floor 2014-01-01 (founder, corrected 2026-10-25): FY2015 year-over-year growth keeps its prior year; nothing before 2014 is kept.
 
 ** By what a user sees: 0% (nothing is switched on in production yet; the first switch-on waits on migrations 0098-0100 being applied and the Verifier's batch samples).**
 
@@ -49,7 +49,7 @@ Plain reading: a lot has been built and verified on branches, and nothing has re
 | F6 | Migration for `analytics.company_slot_record` (the mapper table) | written (0110, claimed in doc 53; on branch work/scrooner-25/slot-records; NOT applied) | cannot land on main before 0101-0109 exist (contiguity check) | Data Engineer lanes write 0101-0109; then 0110 merges and is applied with the first switch-on |
 | F7 | Four scheduled workflows green | wip -> mostly done (scrooner-4d 2026-10-25): sanity baseline reset at the founder's instruction (gate passes; 2 critical / 15,619 major recorded, quick_ratio regressed +240 with NO cause found: an accepted debt until B7 lands), nightly refresh fixed (039141a), dead letters 0; certify rerun of the 11 shards running (40169529802) | the quick_ratio +240 needs a root cause, not just a baseline | fold the certify aggregate in when 4d sends it |
 | F8 | Parallel execution of heavy jobs (replaces "quiet window and clock G", founder 2026-10-25: "move faster, thread, shard, multiple connections") | wip (budgets proposed) | scrooner-4d: max_connections 90, pooler reserves ~15, nightly refresh ~8; proposal max 4 heavy shards at once (4-8 connections), never alongside the 16:05Z refresh. Dhairya: 8 pooler connections total for data-team agents | Dhairya + 4d agree the budget, then run sharded |
-| F9 | Companyfacts storage dedupe + delete data before 2015-01-01 | wip: pre-2015 purge RUNNING (scrooner-4d, founder-authorized in its session, backup taken first); dedupe next | words: "delete duplicate companyfacts objects after hash check, keep the latest payload per CIK"; "keep data from January 2015 only" | final counts from scrooner-4d |
+| F9 | Companyfacts storage dedupe + history floor | wip: floor is **2014-01-01** (founder to Dhairya, 2026-10-25); the purge that started at 2015-01-01 is being corrected by scrooner-4d (stop at the 2014 line, restore any 2014 rows from the verified backup); hash-dedupe of raw companyfacts next | | final counts from scrooner-4d |
 | F10 | Approver policy (agents only, approver != preparer, founder signs novel definitions) | done (founder confirmed 2026-10-25: "approved, dhairya understand this") | THE-PLAN 7.1 to be closed by Dhairya | none |
 
 ## 2. Core engine: company slot records (lane A, scrooner-25)
