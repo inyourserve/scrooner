@@ -26,7 +26,7 @@ STATEMENT_PATTERNS = {
     "IS": r"income|operations|earnings|loss",
     "CF": r"cash flow",
 }
-_EXCLUDED_NAMES = re.compile(r"parenthetical|details|tables?\b|policies|comprehensive", re.I)
+_EXCLUDED_NAMES = re.compile(r"par[ae]nthetical|details|tables?\b|policies|(?<!and )comprehensive", re.I)
 
 
 class Client(Protocol):
@@ -64,7 +64,8 @@ def _clean(cell: str) -> str:
 def parse_number(text: str) -> Decimal | None:
     """'$ 1,234' -> 1234; '(1,234)' -> -1234; blank/dash -> None."""
     t = text.replace("$", "").replace(",", "").replace("—", "").replace("–", "").strip()
-    t = re.sub(r"\[\d+\]", "", t).strip()  # footnote markers
+    t = re.sub(r"\[\d+\]", "", t)  # footnote markers
+    t = re.sub(r"[A-Za-z][\w-]*_\w+$", "", t).strip()  # old pages: '2,341us-gaap_Liabilities'
     if not t or t == "-":
         return None
     neg = t.startswith("(") and t.endswith(")")
@@ -84,48 +85,65 @@ def parse_date(text: str) -> date | None:
     return datetime.strptime(f"{mon} {m.group(2)} {m.group(3)}", "%b %d %Y").date()
 
 
+_POPUP = re.compile(r"^(X|Namespace Prefix:|Data Type:|Balance Type:|Period Type:|Definition:?|References?:?|Details? .*)$", re.I)
+_FOOT = re.compile(r"^(\[\d+\]\s*)*$")  # empty or footnote-only cell
+
+
+def _cells(tr: str) -> list[tuple[str, str]]:
+    """(css class, clean text) per cell."""
+    out = []
+    for m in re.finditer(r"<t([dh])([^>]*)>(.*?)</t\1>", tr, re.S | re.I):
+        cls = re.search(r"""class=["']([^"']*)["']""", m.group(2))
+        out.append((cls.group(1) if cls else "", _clean(m.group(3))))
+    return out
+
+
 def parse_rpage(page_html: str) -> RPage:
-    """Parse one R page. Columns come from the last header row made of dates.
-    A data row with more cells than columns (a leading blank column on old R
-    pages) is aligned from the right, never from the left."""
+    """Parse one R page. Columns come from the last header row made of dates
+    (footnote header cells ignored). In data rows only value cells count:
+    footnote cells ('[1]', class fn) and blank spacer cells (class th) are
+    dropped, then a row with more cells than columns (leading blank column on
+    old pages) is aligned from the right. Hidden '- Definition' rows skipped."""
     title, multiplier, columns = "", 1, []
     rows: list[Row] = []
     for tr in re.findall(r"<tr.*?</tr>", page_html, re.S | re.I):
-        cells = [_clean(c) for c in re.findall(r"<t[dh].*?</t[dh]>", tr, re.S | re.I)]
-        if not any(cells):
+        cells = _cells(tr)
+        if not any(t for _, t in cells):
             continue
         if not title:
-            title = cells[0]
-            m = re.search(r"in (thousands|millions|billions)", " ".join(cells), re.I)
+            title = cells[0][1]
+            m = re.search(r"in (thousands|millions|billions)", " ".join(t for _, t in cells), re.I)
             multiplier = _SCALE[m.group(1).lower()] if m else 1
-        tail = [c for c in cells[1:] if c]
+        tail = [t for _, t in cells[1:] if t and not _FOOT.match(t)]
         if tail and all(parse_date(c) for c in tail):
             columns = [parse_date(c) for c in tail]  # type: ignore[misc]
             continue
-        if not columns or not cells[0]:
-            continue  # header rows ("12 Months Ended") and spacer rows
-        vals = [parse_number(c) for c in cells[1:]]
+        label = re.sub(r"\s*\[\d+\]", "", cells[0][1]).strip()
+        if not columns or not label or label.startswith("- ") or _POPUP.match(label):
+            continue  # header rows ("12 Months Ended"), spacers, popup definitions
+        vals = [parse_number(t) for c, t in cells[1:] if c not in ("fn", "th") and not (t and _FOOT.match(t))]
         if len(vals) > len(columns):
             vals = vals[-len(columns):]
         elif len(vals) < len(columns):
             vals += [None] * (len(columns) - len(vals))
-        rows.append(Row(cells[0], vals))
+        rows.append(Row(label, vals))
     return RPage(title, multiplier, columns, rows)
 
 
 def find_report_files(filing_summary_xml: str) -> dict[str, tuple[str, str]]:
-    """First matching (ShortName, HtmlFileName) per statement kind BS/IS/CF."""
-    reps = re.findall(
-        r"<Report[^>]*>.*?<ShortName>(.*?)</ShortName>.*?<HtmlFileName>(.*?)</HtmlFileName>",
-        filing_summary_xml, re.S)
+    """First matching (ShortName, HtmlFileName) per statement kind BS/IS/CF.
+    Each <Report> block is read on its own (HtmlFileName precedes ShortName)."""
     out: dict[str, tuple[str, str]] = {}
-    for name, fn in reps:
-        n = html.unescape(name)
+    for block in re.findall(r"<Report\b.*?</Report>", filing_summary_xml, re.S):
+        sn, fn = re.search(r"<ShortName>(.*?)</ShortName>", block, re.S), re.search(r"<HtmlFileName>(.*?)</HtmlFileName>", block, re.S)
+        if not sn or not fn:
+            continue
+        n = html.unescape(sn.group(1))
         if _EXCLUDED_NAMES.search(n):
             continue
         for kind in ("BS", "CF", "IS"):  # BS/CF first so "income" never claims them
             if kind not in out and re.search(STATEMENT_PATTERNS[kind], n, re.I):
-                out[kind] = (n, fn)
+                out[kind] = (n, fn.group(1).strip())
                 break
     return out
 
@@ -141,10 +159,19 @@ def fetch_statements(client: Client, folder_url: str, kinds: Iterable[str] = ("B
 # ---- face-derived liabilities -------------------------------------------------
 
 _MEZZ = re.compile(r"redeemable|mezzanine|temporary equity|operating partnership|puttable|"
-                   r"preferred (stock|units|shares).*(subject|redeem)|subject to (possible )?redemption", re.I)
+                   r"subject to (possible )?redemption|convertible preferred (units|stock|shares)", re.I)
+_NOT_MEZZ = re.compile(r"non-?redeemable|^total|attributable|long-term debt|debt", re.I)
 _TOTAL_LIAB = re.compile(r"^total liabilities$", re.I)
-_TOTAL_LE = re.compile(r"^total liabilities,? (and|&) .*(equity|deficit|capital|shareholders|stockholders)", re.I)
-_TOTAL_EQ = re.compile(r"^total .*(equity|deficit|capital)$|^total (stockholders|shareholders)", re.I)
+_TOTAL_LE = re.compile(
+    r"^total (capitalization and )?liabilities\b.*(\band\b|&).*(equity|deficit|capital|investment|shareholders|stockholders)"
+    r"|^total capitalization and liabilities$|^liabilities and .*(equity|deficit|capital),? total$", re.I)
+_BARE_TOTAL = re.compile(r"^total$", re.I)  # accepted as L&E only as the last row
+_TOTAL_EQ = re.compile(
+    r"^total .*(equity|deficit|capital|investment)\b|^total (stockholders|shareholders)"
+    r"|(stockholders|shareholders)'? equity,? including (the )?portion attributable to non-?controlling", re.I)
+_EQ_INCL = re.compile(
+    r"^total (equity|deficit|capital|\(deficit\) equity|equity \(deficit\))$"
+    r"|including (the )?portion attributable to non-?controlling", re.I)
 
 
 @dataclass
@@ -153,35 +180,74 @@ class FaceLiabilities:
     method: str  # printed_total | derived | unavailable
     parts: dict[str, Decimal]
     note: str = ""
+    combined: bool = False  # several registrant blocks; first block used
 
 
 def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
     """Printed 'Total liabilities' if present; else total L&E - total equity
-    (incl. NCI) - printed mezzanine. Never sums children. Unavailable if a
-    needed printed line is missing: the caller marks the cell 'cannot derive'."""
+    (incl. NCI) - mezzanine. Never sums children. Unavailable if a needed
+    printed line is missing: the caller marks the cell 'cannot derive'.
+
+    Combined filings stack one balance sheet per registrant: only rows up to
+    the FIRST total-L&E line are searched. Mezzanine is by position: a
+    redeemable line must sit AFTER the liabilities total/last liability
+    section and BEFORE equity, never inside debt (AWK) and never 'nonredeemable'."""
     c = page.column(when)
-
-    def pick(rx: re.Pattern[str]) -> list[tuple[str, Decimal]]:
-        return [(r.label, r.values[c]) for r in page.rows if rx.search(r.label) and r.values[c] is not None]
-
-    tl = pick(_TOTAL_LIAB)
+    rows = [(i, r.label, r.values[c]) for i, r in enumerate(page.rows)]
+    le_idx = [i for i, lab, v in rows if v is not None and _TOTAL_LE.search(lab)]
+    if not le_idx and rows:  # bare 'Total' as the page's last printed row (IDACORP)
+        last = [(i, lab, v) for i, lab, v in rows if v is not None][-1:]
+        if last and _BARE_TOTAL.match(last[0][1]):
+            le_idx = [last[0][0]]
+    combined = len(le_idx) > 1
+    end = le_idx[0] + 1 if le_idx else len(rows)
+    blk = [(i, lab, v) for i, lab, v in rows[:end] if v is not None]
+    tl = [x for x in blk if _TOTAL_LIAB.match(x[1])]
     if tl:
-        return FaceLiabilities(tl[0][1], "printed_total", {tl[0][0]: tl[0][1]})
-    le = pick(_TOTAL_LE)
-    if not le:
+        return FaceLiabilities(tl[0][2], "printed_total", {tl[0][1]: tl[0][2]}, combined=combined)
+    if not le_idx:
         return FaceLiabilities(None, "unavailable", {}, "no total L&E line")
-    eq = [x for x in pick(_TOTAL_EQ) if not _TOTAL_LE.search(x[0])]
+    le = next(x for x in blk if x[0] == le_idx[0])
+    eq = [x for x in blk if _TOTAL_EQ.search(x[1]) and not _TOTAL_LE.search(x[1])]
+    foot = False
+    if not eq:  # XEL: equity total printed on a 'Common stock' line; accept only if it foots
+        eq = _common_stock_footing(blk)
+        foot = bool(eq)
     if not eq:
         return FaceLiabilities(None, "unavailable", {}, "no total equity line")
-    # prefer the NCI-inclusive total ("Total equity"); else the last total-equity line
-    incl = [x for x in eq if re.fullmatch(r"total (equity|deficit|capital|\(deficit\) equity|equity \(deficit\))", x[0], re.I)]
+    incl = [x for x in eq if _EQ_INCL.search(x[1])]
     equity = (incl or eq)[-1]
-    mezz = [(r.label, r.values[c]) for r in page.rows
-            if _MEZZ.search(r.label) and r.values[c] is not None and not r.label.lower().startswith("total")
-            and not re.search(r"\bequity\b.*attributable|total", r.label, re.I)]
-    parts = {le[0][0]: le[0][1], equity[0]: equity[1], **{k: v for k, v in mezz}}
-    value = le[0][1] - equity[1] - sum((v for _, v in mezz), Decimal(0))
-    return FaceLiabilities(value, "derived", parts, "L&E - equity - mezzanine")
+    # mezzanine: by position, before the first equity-section line, never inside debt
+    eq_rows = [x[0] for x in blk if re.search(r"equity|deficit|capital|stockholders|shareholders|common stock", x[1], re.I)
+               and not _MEZZ.search(x[1]) and x[0] <= equity[0]]
+    first_eq = min(eq_rows, default=equity[0])
+    mezz = [x for x in blk if x[0] < first_eq and _MEZZ.search(x[1]) and not _NOT_MEZZ.search(x[1])
+            and not _is_inside_debt(page, x[0])]
+    parts = {le[1]: le[2], equity[1]: equity[2], **{x[1]: x[2] for x in mezz}}
+    value = le[2] - equity[2] - sum((x[2] for x in mezz), Decimal(0))
+    return FaceLiabilities(value, "derived", parts, "L&E - equity - mezzanine" + (" (equity footed from components)" if foot else ""), combined)
+
+
+def _common_stock_footing(blk: list) -> list:
+    """A 'Common stock...' line whose value equals the sum of the consecutive
+    rows right before it (APIC, retained earnings, AOCI ...): a printed equity total."""
+    for k, x in enumerate(blk):
+        if re.match(r"common stock", x[1], re.I):
+            acc, n = Decimal(0), 0
+            for y in reversed(blk[max(0, k - 6):k]):
+                acc, n = acc + y[2], n + 1
+                if n >= 2 and acc == x[2]:
+                    return [x]
+    return []
+
+
+def _is_inside_debt(page: RPage, idx: int) -> bool:
+    """True when a later 'Total ... debt' line closes a section containing row idx
+    with no other 'Total' line in between (redeemable preferred inside debt)."""
+    for r in page.rows[idx + 1:]:
+        if re.match(r"^total\b", r.label, re.I):
+            return bool(re.search(r"debt|borrowings", r.label, re.I))
+    return False
 
 
 def cell_matches(shown: Decimal, face: Decimal, multiplier: int, rounding_unit: int | None = None) -> bool:
