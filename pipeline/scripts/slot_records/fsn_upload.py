@@ -48,6 +48,8 @@ def upload(local, obj):
     data = local.read_bytes()
     status, body = call("POST", f"/storage/v1/object/{bucket}/{obj}", data,
                         {"Content-Type": "application/octet-stream", "x-upsert": "true"})
+    if status == 400 and b"EntityTooLarge" in body:
+        return None  # blocked by the PROJECT-wide Storage file-size limit (dashboard setting)
     if status not in (200, 201):
         raise SystemExit(f"upload failed {obj}: {status} {body[:200]!r}")
     # verify by listing the object
@@ -71,6 +73,11 @@ for f in sorted(qdir.iterdir()):
         continue
     obj = f"{quarter}/{f.name}"
     n = upload(f, obj)
+    if n is None:
+        uploaded["objects"][f.name] = {"bytes": f.stat().st_size, "blocked": "project_file_size_limit",
+                                       "note": "raise the project's global Storage file-size limit in the dashboard, then re-run fsn_upload.py"}
+        print(f"  BLOCKED {f.name} {f.stat().st_size/1e6:.1f} MB: project file-size limit; kept locally")
+        continue
     uploaded["objects"][f.name] = {"bytes": n}
     total += n
     print(f"  uploaded {f.name} {n/1e6:.1f} MB")
@@ -80,4 +87,4 @@ for f in sorted(qdir.iterdir()):
 # the manifest itself, last
 json.dump(manifest, open(man_path, "w"), indent=1)
 upload(man_path, f"{quarter}/{man_path.name}")
-print(f"{quarter}: {len(uploaded['objects'])} objects, {total/1e6:.1f} MB in {bucket}; local zip removed")
+print(f"{quarter}: {len(uploaded['objects'])} objects, {total/1e6:.1f} MB in {bucket}; blocked: {[k for k,v in uploaded['objects'].items() if v.get('blocked')]}")
