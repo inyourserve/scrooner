@@ -195,10 +195,11 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
     c = page.column(when)
     rows = [(i, r.label, r.values[c]) for i, r in enumerate(page.rows)]
     le_idx = [i for i, lab, v in rows if v is not None and _TOTAL_LE.search(lab)]
-    if not le_idx and rows:  # bare 'Total' as the page's last printed row (IDACORP)
-        last = [(i, lab, v) for i, lab, v in rows if v is not None][-1:]
-        if last and _BARE_TOTAL.match(last[0][1]):
-            le_idx = [last[0][0]]
+    if not le_idx:  # bare 'Total' (IDACORP): the first one AFTER a total-equity line; the
+        # earlier bare 'Total' is total assets
+        eq_seen = [i for i, lab, v in rows if v is not None and _TOTAL_EQ.search(lab)]
+        le_idx = [i for i, lab, v in rows if v is not None and _BARE_TOTAL.match(lab)
+                  and eq_seen and i > eq_seen[0]]
     combined = len(le_idx) > 1
     end = le_idx[0] + 1 if le_idx else len(rows)
     blk = [(i, lab, v) for i, lab, v in rows[:end] if v is not None]
@@ -208,6 +209,9 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
     if not le_idx:
         return FaceLiabilities(None, "unavailable", {}, "no total L&E line")
     le = next(x for x in blk if x[0] == le_idx[0])
+    if not any(_TOTAL_EQ.search(x[1]) and not _TOTAL_LE.search(x[1]) for x in blk):  # L&E printed BEFORE equity (LDOS)
+        stop = le_idx[1] if len(le_idx) > 1 else len(rows)
+        blk = blk + [x for x in rows[end:stop] if x[2] is not None]
     eq = [x for x in blk if _TOTAL_EQ.search(x[1]) and not _TOTAL_LE.search(x[1])]
     foot = False
     if not eq:  # XEL: equity total printed on a 'Common stock' line; accept only if it foots

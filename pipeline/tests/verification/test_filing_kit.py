@@ -189,3 +189,16 @@ def test_epd_convertible_preferred_units_between_liabilities_and_equity():
                ("Series A cumulative convertible preferred units (50,000 units outstanding)", 49),
                ("Total equity", 26000), ("Total liabilities, preferred units, and equity", 63736)])
     assert fk.face_liabilities(p, D).value == Decimal(63736 - 26000 - 49)
+
+
+def test_idacorp_bare_total_picks_first_total_after_equity():
+    p = _page([("Total current assets", 5), ("Total", 6609), ("Total current liabilities", 2), ("Total equity", 2473), ("Total", 6609),
+               ("Total current assets", 4), ("Total", 6453), ("Total equity", 2279), ("Total capitalization", 4116), ("Total", 6453)])
+    r = fk.face_liabilities(p, D)
+    assert r.value == Decimal(6609 - 2473) and r.combined
+
+
+def test_ldos_le_printed_before_equity_section():
+    p = _page([("Total assets", 9132), ("Total current liabilities", 2016), ("Total liabilities and stockholders' equity", 9132),
+               ("Total equity", 3147), ("Total stockholder's equity", 3135)])
+    assert fk.face_liabilities(p, D).value == Decimal(5985)
