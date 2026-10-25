@@ -507,6 +507,7 @@ class _Conn:
 
 def test_load_context_splits_footing_lines_from_inventory_like_facts_per_date():
     conn = _Conn({
+        "join core.filing fl": [],
         "from core.filing where": [(END, "0000000001-26-000001")],
         "from analytics.company_filing_line_evidence": [(True,)],
         "from core.fact f join core.period": [
@@ -525,11 +526,12 @@ def test_load_context_splits_footing_lines_from_inventory_like_facts_per_date():
         and c.materials_supplies == {}
     )
     assert any("p.period_type = 'instant'" in q for q in conn.cur.sql)
-    assert qe.load_context(_Conn({"from core.filing where": [], "from analytics.company_filing_line_evidence": [], "from core.fact f join core.period": []}), 5, like_ids=[]).line_present is None  # fmt: skip
+    assert qe.load_context(_Conn({"join core.filing fl": [],"from core.filing where": [], "from analytics.company_filing_line_evidence": [], "from core.fact f join core.period": []}), 5, like_ids=[]).line_present is None  # fmt: skip
 
 
 def test_load_context_collects_materials_and_supplies_per_date():
     conn = _Conn({
+        "join core.filing fl": [],
         "from core.filing where": [],
         "from analytics.company_filing_line_evidence": [(False,)],
         "from core.fact f join core.period": [(END, "MaterialsSuppliesAndOther", D(201)), (END, "InventoryRawMaterialsAndSupplies", D(5))],
@@ -574,6 +576,7 @@ def _planner_conn(context_rows, evidence):
         "from core.concept": [],
         "from analytics.canonical_fact cf": [(2, END)],  # company 2 has an inventory fact at END
         "from analytics.company_filing_line_evidence": [(evidence,)],
+        "join core.filing fl": [],
         "from core.filing where": [(END, "acc-1"), (date(2025, 6, 30), "acc-0")],
         "from core.fact f join core.period": context_rows,
     }  # fmt: skip
@@ -649,6 +652,7 @@ def test_planner_hides_cells_whose_statement_does_not_show_the_date():
 
 def test_load_context_reads_the_period_s_own_statement_at_the_cell_s_own_date():
     conn = _Conn({
+        "join core.filing fl": [],
         "from core.filing where": [(END, "0000000001-26-000001"), (date(2025, 12, 31), "0000000001-26-000002"), (D0, "0000000001-25-000003")],
         "from analytics.company_filing_line_evidence": [(True,)],
         "from core.fact f join core.period": [],
@@ -677,3 +681,24 @@ def test_load_context_reads_the_period_s_own_statement_at_the_cell_s_own_date():
         c.accession_by_date[date(2025, 12, 31)] == "0000000001-26-000002"
     )  # no statement read: unavailable
     assert D0 not in c.face_by_date  # the filing's statement does not show its own date
+
+
+def test_a_date_without_a_periodic_filing_of_its_own_uses_the_filing_of_its_current_assets_fact():
+    # CIK 0001058811 2024-04-30: no 10-K/10-Q has that period_of_report; the transition-period filing carries it
+    conn = _Conn({
+        "join core.filing fl": [(date(2024, 4, 30), "0001213900-24-109054"), (END, "ignored-primary-wins")],
+        "from core.filing where": [(END, "0000000001-26-000001")],
+        "from analytics.company_filing_line_evidence": [(None,)],
+        "from core.fact f join core.period": [],
+    })  # fmt: skip
+    face = {
+        "0001213900-24-109054": AF({date(2024, 4, 30)}, ()),
+        "0000000001-26-000001": AF({END}, {END}),
+    }
+    c = qe.load_context(conn, 5, like_ids=[], face=face)
+    assert c.accession_by_date == {
+        END: "0000000001-26-000001",
+        date(2024, 4, 30): "0001213900-24-109054",
+    }
+    assert c.face_by_date == {
+        END: qe.PeriodFace(True, False), date(2024, 4, 30): qe.PeriodFace(False, False)}  # fmt: skip
