@@ -881,3 +881,17 @@ def test_quarter_from_profitloss_is_released_only_by_the_face_check(
     if released:
         assert cell.replacement_value == Decimal("264700000")
         assert cell.replacement_source_ids == (801, 802)
+
+
+@pytest.mark.unit
+def test_pretax_standard_label_naming_the_nci_is_not_an_nci_line():
+    assert not rr.has_nci_line(
+        [
+            "Income from Continuing Operations before Income Taxes, Noncontrolling Interest, Total",
+            "Net income",
+        ]
+    )
+    assert rr.has_nci_line(
+        ["Net income", "Less: net income attributable to noncontrolling interests"]
+    )
+    assert rr.has_nci_line(["Noncontrolling interest"])
