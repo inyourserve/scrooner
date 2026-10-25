@@ -225,10 +225,12 @@ def identity(rec, day, liab):
     # ('...IncludingPortionAttributableToNoncontrollingInterests' or
     # 'TemporaryEquityCarryingAmount...') is printed beside component lines,
     # the total alone is the mezzanine
+    # ... but ET 2015-17 prints two DISTINCT mezzanine items (redeemable NCI 15M
+    # beside a 'TemporaryEquity...' line), so the total-only reading is an
+    # ALTERNATIVE the identity may tie against, never an override.
     totals = [t for t in seen_vals if "IncludingPortionAttributableToNoncontrollingInterest" in t or t.startswith("TemporaryEquityCarryingAmount")]
-    if len(seen_vals) > 1 and len(totals) == 1:
-        vals = [seen_vals[totals[0]]]
     mezz = sum(vals, Decimal(0))
+    mezz_total_only = seen_vals[totals[0]] if (len(seen_vals) > 1 and len(totals) == 1) else None
     # a dimension-only mezzanine tag, when the face has NO mezzanine line at
     # all, counts ONLY with its per-class value read from the same accession's
     # instance, never with an undimensioned API fact of the same name (GE:
@@ -249,9 +251,9 @@ def identity(rec, day, liab):
     # assets 2,242.5M against a liabilities side of 2,242.3M: its own face
     # does not tie to assets, but ties to its L&E total exactly.
     rhs = day.get("LiabilitiesAndStockholdersEquity", day["Assets"])
-    gaps = [rhs - (liab + mezz + e) for e in cands]
-    if mezz_alt is not None:
-        gaps += [rhs - (liab + mezz_alt + e) for e in cands]
+    mezz_readings = [mezz] + ([mezz_alt] if mezz_alt is not None else []) + (
+        [mezz_total_only] if mezz_total_only is not None else [])
+    gaps = [rhs - (liab + m + e) for m in mezz_readings for e in cands]
     gap = min(gaps, key=abs)
     return gap, rounding_unit(day)
 
