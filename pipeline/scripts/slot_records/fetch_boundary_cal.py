@@ -61,7 +61,18 @@ for line in open(sys.argv[1]):
     try:
         idx = json.loads(get(folder + "index.json"))
         names = [i["name"] for i in idx["directory"]["item"]]
+        # fallback chain: _cal.xml -> calc linkbase embedded in the .xsd ->
+        # MetaLinks.json (some 2024+ filings ship no _cal.xml AND a MetaLinks
+        # with zero calculation entries: DVN 0000950170-24-092424, BRKR
+        # 0000950170-25-030897)
         target = next((n for n in names if n.endswith("_cal.xml")), None)
+        data = None
+        if target is None:
+            xsd = next((n for n in names if n.endswith(".xsd")), None)
+            if xsd:
+                body = get(folder + xsd)
+                if b"calculationArc" in body:
+                    target, data = xsd, body
         if target is None and "MetaLinks.json" in names:
             target = "MetaLinks.json"
         if target is None:
@@ -69,7 +80,8 @@ for line in open(sys.argv[1]):
             (d / "NO_CAL_IN_FOLDER").write_text("\n".join(names))
             failed += 1
             continue
-        data = get(folder + target)
+        if data is None:
+            data = get(folder + target)
         d.mkdir(parents=True, exist_ok=True)
         (d / target).write_bytes(data)
         fetched += 1

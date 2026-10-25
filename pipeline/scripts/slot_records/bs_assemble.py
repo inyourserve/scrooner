@@ -43,10 +43,10 @@ out = open(sys.argv[4], "w")
 summary = []
 def load_cal(adsh):
     """The boundary filing's statement-role calc arcs (cal.xml, else MetaLinks)."""
-    cals = sorted((cal_dir / adsh).glob("*_cal.xml"))
+    cals = sorted((cal_dir / adsh).glob("*_cal.xml")) or sorted((cal_dir / adsh).glob("*.xsd"))
     meta = cal_dir / adsh / "MetaLinks.json"
     if cals:
-        cal = b.parse_cal(cals[0])
+        cal = b.parse_cal(cals[0])  # separate linkbase, or embedded in the schema
     elif meta.exists():
         cal = b.parse_metalinks(meta)
     else:
