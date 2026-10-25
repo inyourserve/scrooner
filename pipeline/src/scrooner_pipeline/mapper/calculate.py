@@ -510,6 +510,19 @@ def calculate_for_company(
                 value, null_reason = _compute(
                     shape, values_by_role, denominator_concept_names
                 )
+            if inventory_rule_on and zero_when_absent_ids and value is not None:
+                # founder ruling: a current materials-and-supplies face line hides the figure with a reason
+                if inventory_ctx is None:
+                    inventory_ctx = quick_ratio_evidence.load_context(conn, company_id)
+                materials_reason = quick_ratio_evidence.materials_supplies_reason(
+                    inventory_ctx,
+                    end,
+                    sum(values_by_role["add"], Decimal(0))
+                    if values_by_role.get("add")
+                    else None,
+                )
+                if materials_reason is not None:
+                    value, null_reason = None, materials_reason
             rows.append(
                 {
                     "company_id": company_id,

@@ -39,6 +39,9 @@ MATERIALS_AND_SUPPLIES_ARE_INVENTORY = True
 REASON_UNMAPPED = "incomplete:inventory_like_tag_unmapped"
 REASON_PRESENTED = "incomplete:inventory_presented_not_extracted"
 REASON_UNKNOWN = "incomplete:inventory_presence_unknown"
+# Founder ruling 2026-10-25: the quick ratio keeps its locked formula; where a current materials-and-supplies face line
+# exists the figure is hidden with this reason (the formula cannot say whether the line is inventory).
+REASON_MATERIALS = "incomplete:materials_supplies_line_present"
 
 # words that make an inventory-named tag NOT a current balance-sheet inventory line (flows, reserves and noncurrent
 # figures). "Other" is deliberately absent: OtherInventorySupplies is a line.
@@ -138,6 +141,9 @@ class Context:
     line_present: bool | None
     lines_by_date: dict[date, dict[str, Decimal]] = field(default_factory=dict)
     inventory_like: dict[date, dict[str, Decimal]] = field(default_factory=dict)
+    materials_supplies: dict[date, Decimal] = field(
+        default_factory=dict
+    )  # the MaterialsSupplies* facts, per date
 
 
 def inventory_missing_reason(
@@ -156,6 +162,23 @@ def inventory_missing_reason(
     if ctx.line_present is True:
         return REASON_PRESENTED
     return REASON_UNKNOWN
+
+
+def materials_supplies_reason(
+    ctx: Context, end: date, current_assets: Decimal | None = None
+) -> str | None:
+    """REASON_MATERIALS when a current materials-and-supplies line exists in the period's own balance sheet (not when
+    the current-assets total foots without it: then it is inside another line or a note), else None."""
+    if not MATERIALS_AND_SUPPLIES_ARE_INVENTORY:
+        return None
+    value = ctx.materials_supplies.get(end)
+    if not value or value <= 0:
+        return None
+    lines = ctx.lines_by_date.get(end, {})
+    ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
+    if ca is not None and (value > ca or foots_without_inventory(ca, lines)):
+        return None
+    return REASON_MATERIALS
 
 
 def load_inventory_concept_ids(conn: Any) -> tuple[list[int], set[int]]:
@@ -190,6 +213,7 @@ def load_context(
         row = cur.fetchone()
         lines: dict[date, dict[str, Decimal]] = {}
         like: dict[date, dict[str, Decimal]] = {}
+        materials: dict[date, Decimal] = {}
         cur.execute(
             """select distinct on (p.end_date, k.tag) p.end_date, k.tag, f.value
                from core.fact f join core.period p on p.id = f.period_id join core.concept k on k.id = f.concept_id
@@ -203,7 +227,9 @@ def load_context(
                 lines.setdefault(end, {})[tag] = value
             else:
                 like.setdefault(end, {})[tag] = value
-    return Context(None if row is None else row[0], lines, like)
+                if "MaterialsSupplies" in tag:
+                    materials[end] = materials.get(end, Decimal(0)) + value
+    return Context(None if row is None else row[0], lines, like, materials)
 
 
 @dataclass
@@ -273,8 +299,11 @@ def plan_quick_ratio(
         ctx = {cid: load_context(conn, cid, like_ids) for cid in {s[0] for s in stored}}
         for cid, end, label, value in stored:
             if (cid, end) in have:
-                continue
-            reason = inventory_missing_reason(ctx[cid], end)
+                reason = materials_supplies_reason(
+                    ctx[cid], end
+                )  # inventory present, but a materials line exists
+            else:
+                reason = inventory_missing_reason(ctx[cid], end)
             if reason is None:
                 continue
             cur_ratio = current.get((cid, end))
