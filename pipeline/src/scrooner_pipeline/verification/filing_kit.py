@@ -149,7 +149,7 @@ def parse_rpage(page_html: str) -> RPage:
         elif len(vals) < len(columns):
             vals += [None] * (len(columns) - len(vals))
         rows.append(Row(label, vals))
-    return RPage(title, multiplier, columns, rows)
+    return RPage(title, multiplier, columns, rows)  # type: ignore[arg-type]
 
 
 def find_report_files(filing_summary_xml: str) -> dict[str, tuple[str, str]]:
@@ -265,7 +265,7 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
         _TOTAL_EQ.search(x[1]) and not _TOTAL_LE.search(x[1]) for x in blk
     ):  # L&E printed BEFORE equity (LDOS)
         stop = le_idx[1] if len(le_idx) > 1 else len(rows)
-        blk = blk + [x for x in rows[end:stop] if x[2] is not None]
+        blk = blk + [x for x in rows[end:stop] if x[2] is not None]  # type: ignore[misc]
     eq = [x for x in blk if _TOTAL_EQ.search(x[1]) and not _TOTAL_LE.search(x[1])]
     foot = False
     if (
