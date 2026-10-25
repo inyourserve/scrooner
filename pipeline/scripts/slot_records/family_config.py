@@ -19,7 +19,9 @@ FAMILIES = {
         ),
         "classes": [
             (re.compile(r"AmortizationOfDebtDiscount|DebtIssuanceCost|AmortizationOfFinancingCosts"), "financing_amort"),
-            (re.compile(r"AccretionAmortizationOfDiscountsAndPremiums"), "investment_amort"),
+            # Verifier V5 (KRUS): a custom bond-premium amortization line is investment
+            # amortization, never a D&A component
+            (re.compile(r"AccretionAmortizationOfDiscountsAndPremiums|Premium|Discount"), "investment_amort"),
             (re.compile(r"DepreciationDepletionAndAmortization|DepreciationAmortizationAndAccretionNet|DepreciationAndAmortization$|^Depreciation$|DepreciationNonproduction|AmortizationOfIntangibleAssets|CapitalizedComputerSoftwareAmortization"), "asset_da"),
             (re.compile(r"."), "other_amort"),
         ],
