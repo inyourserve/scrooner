@@ -48,6 +48,55 @@ def load_cal(cal_dir, adsh):
     return cal["era"], cal["arcs"]
 
 
+_FSN_CAL_CACHE = {}
+
+
+def fsn_cal_arcs(cal_tsv_path, adsh, pre_tsv_path=None):
+    """Arcs for one filing from the FSN data set's cal.tsv, in the same shape
+    as load_cal: {(role, parent): [(child, weight, child_is_custom)]}. cal.tsv
+    has no role URIs, only a group number, so the STATEMENT of a group is
+    decided by the elements it totals (an element rule, not a label rule):
+      BS = the largest group whose parents include LiabilitiesAndStockholders
+           Equity / LiabilitiesAndPartnersCapital (or Assets together with
+           Liabilities / LiabilitiesCurrent / StockholdersEquity);
+      CF = the group with NetCashProvidedByUsedInOperatingActivities as parent;
+      other groups keep 'grp<n>' (treated as note roles by the statement
+      filters). 'negative' is the weight (1 / -1); custom = version column not
+      us-gaap/srt/dei/ifrs. pre_tsv_path is accepted for a future refinement."""
+    import csv
+    import io
+    import subprocess
+    key = str(cal_tsv_path)
+    if key not in _FSN_CAL_CACHE:
+        if key.endswith(".zst"):
+            fh = io.TextIOWrapper(subprocess.Popen(["zstd", "-dc", key], stdout=subprocess.PIPE).stdout, encoding="utf-8", errors="replace")
+        else:
+            fh = open(key, encoding="utf-8", errors="replace")
+        by = defaultdict(lambda: defaultdict(list))  # adsh -> grp -> [(parent, child, weight, custom)]
+        for r in csv.DictReader(fh, delimiter="\t"):
+            custom = not r.get("cversion", "").startswith(("us-gaap", "srt", "dei", "ifrs"))
+            by[r["adsh"]][r["grp"]].append((r["ptag"], r["ctag"], str(float(r.get("negative") or "1")), custom))
+        _FSN_CAL_CACHE[key] = by
+    groups = _FSN_CAL_CACHE[key].get(adsh, {})
+    bs_candidates = []
+    cf_group = None
+    for g, arcs in groups.items():
+        parents = {p for p, _c, _w, _cu in arcs}
+        if parents & {"LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital"} or (
+                "Assets" in parents and parents & {"Liabilities", "LiabilitiesCurrent", "StockholdersEquity"}):
+            bs_candidates.append((len(arcs), g))
+        if "NetCashProvidedByUsedInOperatingActivities" in parents or "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations" in parents:
+            if cf_group is None or len(arcs) > len(groups[cf_group]):
+                cf_group = g
+    bs_group = max(bs_candidates)[1] if bs_candidates else None
+    out = defaultdict(list)
+    for g, arcs in groups.items():
+        role = "BS#grp" + g if g == bs_group else ("CashFlow#grp" + g if g == cf_group else "grp" + g)
+        for p, c, w, cu in arcs:
+            out[(role, p)].append((c, w, cu))
+    return dict(out)
+
+
 def statement_children(arcs, role_rx):
     """parent -> set(children) restricted to the statement role (never a note role)."""
     children = defaultdict(set)

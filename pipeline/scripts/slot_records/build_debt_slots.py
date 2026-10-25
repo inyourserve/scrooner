@@ -60,7 +60,7 @@ DEBT_RX = re.compile(
 # Members come ONLY from the balance-sheet statement role (Verifier V2 R1/R3:
 # note-role arcs put MSFT/GOOG securities-lending and GE/AVGO/TSLA note lines
 # into members). Aggregates stay role-wide: they are evidence, not members.
-BS_ROLE_RX = re.compile(r"balance ?-?sheets?|financial ?position|financial ?condition", re.I)
+BS_ROLE_RX = re.compile(r"balance ?-?sheets?|financial ?position|financial ?condition|^BS#grp", re.I)  # FSN role strings too
 # Verifier V3 defect 2: note roles can CONTAIN 'BalanceSheet' (AVGO
 # CondensedConsolidatingFinancialInformationBalanceSheetDetails, GE Guarantor
 # ...StatementOfFinancialPositionDetails, TSLA DisclosureVIE...Detail) - the
