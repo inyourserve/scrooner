@@ -437,13 +437,10 @@ def test_reverse_split_seen_only_as_a_filed_pair_is_review_and_hides():
     res = run(b)
     (ev,) = res.events
     assert ev.status == "review" and ev.ratio == Fraction(1, 40)
-    assert b.cell(res, "diluted_eps_resolved", "2025-01-01", "2025-12-31").value == D(
-        "-2.00"
-    )
-    assert (
-        b.cell(res, "diluted_eps_resolved", "2024-01-01", "2024-12-31").status
-        == sb.HIDE_BASIS_REVIEW
-    )
+    # Verifier-1000 rule: the period's original filing (pre-boundary, review)
+    # must agree, so the later re-presented -2.00 alone is not shown either
+    for s, e in (("2025-01-01", "2025-12-31"), ("2024-01-01", "2024-12-31")):
+        assert b.cell(res, "diluted_eps_resolved", s, e).status == sb.HIDE_BASIS_REVIEW
 
 
 def test_double_counted_event_hides_the_company():
@@ -1034,10 +1031,12 @@ def test_same_ratio_confirmed_twice_keeps_one_and_reviews_the_gap():
         for tag in (EPS_D, EPS_B):
             b.add(tag, v, s, e, f3)
             b.add(tag, str(D(v) / 2), s, e, f4)
+    b.add(COVER, "48100000", None, "2015-06-20", f3)  # KR: back on the old basis
     b.add(COVER, "96000000", None, "2015-09-15", f4)
     b.add(RATIO, "2", None, "2015-06-25", f4)
     res = run(b)
     assert [e.status for e in res.events].count("confirmed") == 1
+    assert "review" not in [e.status for e in res.events]
     filing_ids = {f.accession: f.filing_id for f in b.facts}
     assert res.basis[filing_ids["K-2"]].status == "review"
     assert "same-ratio" in res.basis[filing_ids["K-2"]].note
@@ -1328,3 +1327,183 @@ def test_share_count_far_off_the_company_median_is_hidden():
         b.cell(res, "shares_outstanding_resolved", None, "2013-02-02").status
         == sb.SHOWN
     )
+
+
+def test_real_repeated_splits_months_apart_are_both_kept():
+    """CPRT 2:1 in Nov 2022 and again in Sep 2023 (no reversal between):
+    both confirmed, the 4x pairs across both are their product."""
+    b = Book()
+    f1 = b.filing("P-1", "2022-09-01", "10-K")
+    f2 = b.filing("P-2", "2022-11-20")
+    f3 = b.filing("P-3", "2023-08-01")
+    f4 = b.filing("P-4", "2023-09-30", "10-K")
+    _two_to_one(b, f1, f2)
+    for s, e, v in (
+        ("2021-08-01", "2022-07-31", "4.40"),
+        ("2020-08-01", "2021-07-31", "3.90"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, str(D(v) / 2), s, e, f3)
+            b.add(tag, str(D(v) / 4), s, e, f4)
+    b.add(COVER, "96500000", None, "2023-07-20", f3)
+    b.add(COVER, "193000000", None, "2023-09-20", f4)
+    b.add(RATIO, "2", None, "2023-08-20", f4)
+    res = run(b)
+    assert sorted(str(e.basis_date) for e in res.events if e.status == "confirmed") == [
+        "2022-11-20",
+        "2023-09-30",
+    ]
+    assert res.violations == []
+
+
+def test_review_candidate_on_a_confirmed_boundary_is_rejected():
+    """PRAX: a 1:15 reverse split with a concurrent offering moves the share
+    count only 1:10; that step is the confirmed split plus issuance."""
+    b = Book()
+    pre = b.filing("X-1", "2024-02-01", "10-K")
+    post = b.filing("X-2", "2024-03-10")
+    for s, e, v in (
+        ("2023-01-01", "2023-09-30", "-1.20"),
+        ("2022-01-01", "2022-12-31", "-2.10"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s, e, pre)
+            b.add(tag, str(D(v) * 15), s, e, post)
+    b.add(COVER, "90000000", None, "2024-01-25", pre)
+    b.add(COVER, "9000000", None, "2024-03-05", post)
+    b.add(RATIO, "0.0667", None, "2024-03-05", post)
+    res = run(b)
+    assert [e.status for e in res.events if e.ratio == Fraction(1, 15)] == ["confirmed"]
+    assert all(e.status != "review" for e in res.events)
+
+
+def test_dps_same_filing_checks():
+    """OHI negative DPS; BWA zero DPS while dividends were paid; WTRG annual
+    DPS below its quarters; OGE an annual rate on a quarter."""
+    b = Book()
+    k = b.filing("K-1", "2020-02-20", "10-K")
+    b.add(DPS_DECL, "-0.66", "2019-01-01", "2019-03-31", b.filing("Q-1", "2019-05-01"))
+    b.add(DPS_DECL, "0", "2019-01-01", "2019-12-31", k)
+    b.add(
+        "PaymentsOfDividendsCommonStock",
+        "140000000",
+        "2019-01-01",
+        "2019-12-31",
+        k,
+        unit="usd",
+    )
+    res = run(b)
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2019-01-01", "2019-03-31").status
+        == sb.HIDE_DPS_INVALID
+    )
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2019-01-01", "2019-12-31").status
+        == sb.HIDE_DPS_INVALID
+    )
+
+    b = Book()
+    for i, (s, e, v) in enumerate(
+        (
+            ("2024-01-01", "2024-03-31", "0.3255"),
+            ("2024-04-01", "2024-06-30", "0.3255"),
+            ("2024-07-01", "2024-09-30", "0.3255"),
+            ("2024-10-01", "2024-12-31", "0.3255"),
+            ("2024-01-01", "2024-12-31", "0.3255"),  # WTRG: the rate on the year
+            ("2020-01-01", "2020-03-31", "1.505"),  # OGE-like annual on a quarter
+            ("2020-04-01", "2020-06-30", "0.3875"),
+            ("2020-07-01", "2020-09-30", "0.3875"),
+            ("2020-10-01", "2020-12-31", "0.3875"),
+        )
+    ):
+        b.add(DPS_DECL, v, s, e, b.filing(f"W-{i}", f"2025-0{1 + i % 9}-15"))
+    res = run(b)
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2024-01-01", "2024-12-31").status
+        == sb.HIDE_DPS_INVALID
+    )
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2020-01-01", "2020-03-31").status
+        == sb.HIDE_DPS_INVALID
+    )
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2020-04-01", "2020-06-30").status
+        == sb.SHOWN
+    )
+
+
+def test_original_filing_must_agree_with_the_later_copy():
+    """XYL Q3 2019: the original 10-Q gives 0.24; a later 10-K puts the next
+    year's rate 0.26 on that quarter (and 0.26 is also that later filing's own
+    Q3 2020 value). The original is never dropped as shifted; the later copy is."""
+    b = Book()
+    q = b.filing("XYL-1", "2019-10-31")
+    k = b.filing("XYL-2", "2021-02-20", "10-K")
+    b.add(DPS_DECL, "0.24", "2019-07-01", "2019-09-30", q)
+    b.add(DPS_DECL, "0.24", "2019-04-01", "2019-06-30", q)  # same rate, normal
+    b.add(DPS_DECL, "0.26", "2019-07-01", "2019-09-30", k)  # shifted comparative
+    b.add(DPS_DECL, "0.26", "2020-07-01", "2020-09-30", k)
+    res = run(b)
+    cell = b.cell(res, "dividends_per_share_resolved", "2019-07-01", "2019-09-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0.24")
+
+
+def test_rate_on_a_longer_context_in_the_original_is_dropped():
+    """LEA 9M 2014: the original 10-Q puts the quarterly 0.20 on the 9-month
+    context; later filings give 0.60 (Verifier false hold)."""
+    b = Book()
+    q = b.filing("0000842162-14-000002", "2014-10-24")
+    k = b.filing("0000842162-15-000013", "2015-04-24")
+    b.add(DPS_DECL, "0.20", "2014-01-01", "2014-09-27", q)
+    b.add(DPS_DECL, "0.20", "2014-06-29", "2014-09-27", q)
+    b.add(DPS_DECL, "0.60", "2014-01-01", "2014-09-27", k)
+    res = run(b)
+    cell = b.cell(res, "dividends_per_share_resolved", "2014-01-01", "2014-09-27")
+    assert cell.status == sb.SHOWN and cell.value == D("0.60")
+
+
+def test_share_copies_in_thousands_next_to_waso_are_not_flagged():
+    """SAIA/EXEL file weighted averages in thousands: the correct count must
+    not be hidden by the same-filing scale check when its own series agrees."""
+    b = Book()
+    for i, (d, v) in enumerate(
+        (("2010-12-31", "15900245"), ("2011-06-30", "15927231"), ("2011-09-30", "15937821"),
+         ("2011-12-31", "15937821"), ("2012-03-31", "15993881"))
+    ):  # fmt: skip
+        f = b.filing(f"S-{i}", f"201{1 + i // 4}-0{1 + i % 4}-28")
+        b.add(BS_SHARES, v, None, d, f)
+        b.add(
+            "WeightedAverageNumberOfSharesOutstandingBasic",
+            str(int(v) // 1000),
+            "2011-01-01",
+            d,
+            f,
+        )
+    res = run(b)
+    assert (
+        b.cell(res, "shares_outstanding_resolved", None, "2011-06-30").status
+        == sb.SHOWN
+    )
+
+
+def test_phase_one_keeps_the_stored_value_for_other_changed_cells():
+    b = aapl()
+    res = run(b)
+    fy18 = b.pid("2017-10-01", "2018-09-29")
+    fy19 = b.pid("2018-09-30", "2019-09-28")
+    current = {
+        ("diluted_eps_resolved", fy18): (
+            1,
+            D("11.91"),
+            (),
+        ),  # was unadjusted -> written
+        ("diluted_eps_resolved", fy19): (2, D("-2.97"), ()),  # other_changed -> kept
+    }
+    p1 = {(c.concept, c.period_id) for c in sb.cells_to_write(res, current, phase=1)}
+    p2 = {(c.concept, c.period_id) for c in sb.cells_to_write(res, current, phase=2)}
+    assert ("diluted_eps_resolved", fy18) in p1 and ("diluted_eps_resolved", fy18) in p2
+    assert ("diluted_eps_resolved", fy19) not in p1 and (
+        "diluted_eps_resolved",
+        fy19,
+    ) in p2
+    assert sb.WRITE_PHASE == 1

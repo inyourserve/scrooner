@@ -181,6 +181,8 @@ HIDE_LABEL_ERROR = "quarter_equals_year_label_error"
 HIDE_DPS_BASIS = "dividend_basis_pending"
 HIDE_UNITS_SCALE = "units_scale_suspect"
 HIDE_ZERO_SHARES = "zero_share_count_filed"
+FY_RATE_TOL = Decimal("0.005")
+HIDE_DPS_INVALID = "dividend_per_share_invalid"
 # A DPS value this many times the company's median DPS of the same series
 # (or 1/this) is a units error in its filing (VICI 262,500 for 0.2625 in
 # 10-Q 0001705696-18-000086; SWX 2,480; ROST 255; HL 0.25 vs 0.0025).
@@ -211,6 +213,7 @@ HIDDEN_REASON_TEXT = {
     HIDE_DPS_BASIS: "dividend basis pending (declared vs paid, AC-24): this series mixes both",
     HIDE_UNITS_SCALE: "filed value looks off by a units scale (thousands or millions)",
     HIDE_ZERO_SHARES: "the filing reports zero shares outstanding",
+    HIDE_DPS_INVALID: "dividend per share fails a same-filing check (sign, paid, quarters vs year)",
 }
 
 
@@ -832,24 +835,78 @@ def detect_events(
             continue
         if abs((b_ev.basis_date - a_ev.basis_date).days) > DISCLOSURE_MERGE_DAYS:
             continue
+        # Only when the filings REVERSE between the two boundaries (KR: the
+        # share series goes 491M -> 953M -> 485M -> 973M). Real repeated
+        # splits months apart show no reversal (CPRT 2:1 Nov 2022 and Sep
+        # 2023; AAON 3:2 2013 and 2014; HEI 5:4 2012 and 2018; Verifier 1000).
+        win_lo = min(x for x in (a_ev.lo, b_ev.lo) if x is not None)
+        win_hi = max(x for x in (a_ev.hi, b_ev.hi) if x is not None)
+        inverse = 1 / a_ev.ratio
+        reversed_between = any(
+            p.ratio == inverse and win_lo <= p.lo and p.hi <= win_hi for p in pairs
+        ) or any(
+            st.ratio == inverse and win_lo <= st.lo and st.hi <= win_hi for st in steps
+        )
+        if not reversed_between:
+            continue
         keep, drop = (a_ev, b_ev) if _support(a_ev) >= _support(b_ev) else (b_ev, a_ev)
         drop.status = "rejected"
         drop.note = f"same ratio as the better-supported event at {keep.basis_date}"
         lo = min(x for x in (a_ev.lo, b_ev.lo) if x is not None)
         hi = max(x for x in (a_ev.hi, b_ev.hi) if x is not None)
         keep.doubt = (lo, hi)
+        # the reversal itself (a 1/k candidate between them) is the same
+        # filer inconsistency, not an event of its own
+        for ev in events:
+            if (
+                ev.ratio == inverse
+                and ev.status in ("review", "confirmed")
+                and ev.lo is not None
+                and ev.hi is not None
+                and win_lo <= ev.lo
+                and ev.hi <= win_hi
+            ):
+                ev.status, ev.note = (
+                    "rejected",
+                    "reversal between duplicate observations",
+                )
 
-    # A single-kind candidate whose every observation spans >= 2 confirmed
-    # events with this product is those events seen across both (TSLA 5x3).
+    # A candidate (review, or confirmed without a ratio fact) whose every
+    # observation spans >= 2 other confirmed events with this product is those
+    # events seen across both (TSLA 5x3; CPRT's 4x across its two 2:1s).
+    for ev in events:
+        if ev.hi is None or ev.status not in ("review", "confirmed"):
+            continue
+        if ev.status == "confirmed" and ev.disclosures:
+            continue
+        others = [e for e in events if e.status == "confirmed" and e is not ev]
+        obs = [(p.lo, p.hi) for p in ev.pairs] + [(st.lo, st.hi) for st in ev.steps]
+        if obs and all(_spanned_product(others, lo, hi) == ev.ratio for lo, hi in obs):
+            ev.status, ev.note = "rejected", "product of confirmed events"
+    # A single-kind candidate on the same boundary as a confirmed split of a
+    # different ratio is that split plus issuance or scale noise (PRAX 1:15
+    # with a concurrent offering gives a 1:10 share step; EOG's 2:1 with a
+    # 1/500 pair pattern; Verifier 1000).
     confirmed = [e for e in events if e.status == "confirmed"]
     for ev in events:
-        if ev.status != "review" or ev.hi is None:
+        if ev.status != "review" or ev.hi is None or ev.lo is None:
             continue
-        obs = [(p.lo, p.hi) for p in ev.pairs] + [(st.lo, st.hi) for st in ev.steps]
-        if obs and all(
-            _spanned_product(confirmed, lo, hi) == ev.ratio for lo, hi in obs
-        ):
-            ev.status, ev.note = "rejected", "product of confirmed events"
+        hit = next(
+            (
+                e
+                for e in confirmed
+                if e.ratio != ev.ratio
+                and e.lo is not None
+                and e.hi is not None
+                and max(e.lo, ev.lo) < min(e.hi, ev.hi)
+            ),
+            None,
+        )
+        if hit is not None:
+            ev.status, ev.note = (
+                "rejected",
+                f"same boundary as the confirmed {hit.ratio} split at {hit.basis_date}",
+            )
     return events
 
 
@@ -1099,6 +1156,14 @@ def resolve_cells(
         ):
             share_refs[f.filing_id].append(f.value)
 
+    period_days: dict[int, int] = {}
+    paid: dict[tuple[int, date | None, date], Decimal] = {}
+    for f in facts:
+        if f.start_date is not None:
+            period_days[f.period_id] = (f.end_date - f.start_date).days
+        if f.tag in DIVIDENDS_PAID_TAGS and f.usable_source and f.value > 0:
+            paid[(f.filing_id, f.start_date, f.end_date)] = f.value
+
     out: list[CellResult] = []
     for concept, (kind, base) in TARGETS.items():
         tags = mapped_tags.get(base, [])
@@ -1160,19 +1225,11 @@ def resolve_cells(
                 # CommonStockSharesOutstanding 430,718,293,000,000 beside cover
                 # 442,173,394 and WASO 434M): a copy 1000x or 10^6 off its own
                 # filing's other share counts is a units error.
-                kept = [
-                    x for x in conv if not _off_scale_in_own_filing(x[0], share_refs)
-                ]
-                if not kept:
-                    out.append(
-                        CellResult(
-                            concept, pid, HIDE_UNITS_SCALE, None, (), None, None, ()
-                        )
-                    )
-                    continue
-                if len(kept) != len(conv):
-                    note = f"dropped {len(conv) - len(kept)} copy(ies) off scale vs own filing"
-                    conv = kept
+                # Confirmed against the company's own local series in the
+                # post-pass: SAIA/EXEL file weighted averages in thousands, so
+                # the own-filing test alone would flag the CORRECT count.
+                if any(_off_scale_in_own_filing(x[0], share_refs) for x in conv):
+                    note = OWN_FILING_SCALE_NOTE
                 if all(x[2] == 0 for x in conv):
                     out.append(
                         CellResult(
@@ -1209,6 +1266,27 @@ def resolve_cells(
                             )
                         )
                         continue
+            # Fix (1), Verifier 1000: the period's OWN ORIGINAL filing (the
+            # earliest periodic copy) must be usable and agree with the value
+            # shown; a later copy alone never decides (TRMB, DCI shift
+            # comparatives by a year; XYL, TSCO, GLPI put the current rate on
+            # a prior period; OHI, BWA, WTRG, OGE, TEX one-off errors).
+            original = min(cands, key=lambda f: (f.filing_date, f.fact_id))
+            if not any(x[0] is original for x in conv):
+                out.append(
+                    CellResult(
+                        concept,
+                        pid,
+                        HIDE_BASIS_REVIEW,
+                        None,
+                        (),
+                        None,
+                        None,
+                        (),
+                        note="original filing's share basis is not resolved",
+                    )
+                )
+                continue
             agree = _all_agree(conv, kind)
             if not agree and len(conv) > 1:
                 # Label shift (Verifier 2026-10-24): a disagreeing copy that
@@ -1216,15 +1294,17 @@ def resolve_cells(
                 # filing is a context error, not a restatement (AMZN FY2012
                 # 10-K 0001193125-13-028520 puts 2012 quarters on 2011
                 # contexts; NVDA FY2018 10-K puts Q2 0.98 on the 6M context).
+                # The original copy is never dropped as shifted (equal dividend
+                # rates in neighbouring quarters are normal: XYL, GLPI, COO),
+                # except a DPS rate on a LONGER context equal to a 3-month value
+                # in its own filing (LEA 9M 2014 0.20 in 0000842162-14-000002).
                 shifted = [
                     x
                     for x in conv
-                    if any(
-                        x[0].value in vals
-                        for other, vals in same_filing[
-                            (x[0].filing_id, x[0].tag, x[0].unit)
-                        ].items()
-                        if other != pid
+                    if _label_shifted(x[0], pid, same_filing, period_days)
+                    and (
+                        x[0] is not original
+                        or _rate_on_longer_context(x[0], pid, same_filing, period_days)
                     )
                 ]
                 rest = [x for x in conv if x not in shifted]
@@ -1248,6 +1328,10 @@ def resolve_cells(
                     )
                 )
                 continue
+            if not any(x[0] is original for x in conv):
+                # the original was dropped as a rate-on-longer-context error:
+                # the earliest remaining copy is the period's original now
+                original = conv[0][0]
             f, fac, value = conv[-1]
             if kind == PER_SHARE and _quarter_is_year_label_error(
                 f, value, tags, latest, fac
@@ -1274,6 +1358,7 @@ def resolve_cells(
                     note,
                 )
             )
+    out = _dps_same_filing_checks(out, paid)
     return _dps_scale_guard(
         _dps_scale_guard(
             _one_dividend_basis(out, mapped_tags.get("dividends_per_share", []))
@@ -1346,7 +1431,138 @@ def _quarter_is_year_label_error(
             and (k[2] - k[1]).days >= 250
         )
     )
-    return ytd is not None and ytd > tol and abs(value + ytd - year) > tol
+    # The year must be a plausible total (>= the 9M YTD): BPOP FY2016's later
+    # 0.15 copy is itself the rate error, and its Q4 0.15 is right.
+    return (
+        ytd is not None
+        and ytd > tol
+        and year >= ytd - tol
+        and abs(value + ytd - year) > tol
+    )
+
+
+DIVIDENDS_PAID_TAGS = ("PaymentsOfDividendsCommonStock", "PaymentsOfDividends")
+OWN_FILING_SCALE_NOTE = "own filing's other share counts sit a units scale away"
+# An interim DPS about four times its neighbours' median is an annual rate on
+# a quarter (OGE Q1 2020 1.505 vs 0.3875 quarterly; Verifier 1000). A special
+# dividend far outside this band is not touched here.
+DPS_ANNUAL_ON_QUARTER_BAND = (Decimal("3.2"), Decimal("4.8"))
+LOCAL_WINDOW_DAYS = 1100
+
+
+def _label_shifted(f: SourceFact, pid: int, same_filing, period_days) -> bool:
+    return any(
+        f.value in vals
+        for other, vals in same_filing[(f.filing_id, f.tag, f.unit)].items()
+        if other != pid
+    )
+
+
+def _rate_on_longer_context(f: SourceFact, pid: int, same_filing, period_days) -> bool:
+    """A DPS on a > 100-day context equal to a <= 100-day value of the same
+    tag in its own filing (a quarterly rate on a YTD or annual context)."""
+    if f.tag not in (
+        "CommonStockDividendsPerShareDeclared",
+        "CommonStockDividendsPerShareCashPaid",
+    ):
+        return False
+    if period_days.get(pid, 0) <= 100:
+        return False
+    return any(
+        f.value in vals
+        for other, vals in same_filing[(f.filing_id, f.tag, f.unit)].items()
+        if other != pid and period_days.get(other, 999) <= 100
+    )
+
+
+def _dps_same_filing_checks(
+    cells: list[CellResult], paid: Mapping[tuple[int, date | None, date], Decimal]
+) -> list[CellResult]:
+    """Verifier 1000 fix (2), filing evidence only:
+    - DPS below zero (OHI Q1 2019 -0.66);
+    - DPS zero while the same filing shows dividends paid for that period
+      (BWA FY2019, 140M paid);
+    - an annual DPS below the sum of its filed quarters (a quarterly rate on
+      the full year: WTRG FY2024 0.3255 vs 1.2652; BPOP FY2016 0.15);
+    - an interim DPS >= 2.5x its neighbours' median (an annual rate on a
+      quarter: OGE Q1 2020 1.505)."""
+    dps = [
+        c
+        for c in cells
+        if c.concept == "dividends_per_share_resolved"
+        and c.status == SHOWN
+        and c.chosen is not None
+        and c.value is not None
+    ]
+
+    def days(c: CellResult) -> int:
+        assert c.chosen is not None
+        return (
+            (c.chosen.end_date - c.chosen.start_date).days if c.chosen.start_date else 0
+        )
+
+    quarters = [c for c in dps if 0 < days(c) <= 100]
+    bad: dict[tuple[str, int], str] = {}
+    for c in dps:
+        assert c.chosen is not None and c.value is not None
+        key = (c.concept, c.period_id)
+        if c.value < 0:
+            bad[key] = "negative dividend per share"
+            continue
+        if c.value == 0 and paid.get(
+            (c.chosen.filing_id, c.chosen.start_date, c.chosen.end_date)
+        ):
+            bad[key] = "zero dividend per share while the filing shows dividends paid"
+            continue
+        if days(c) >= 350 and c.chosen.start_date is not None:
+            inside = [
+                q.value
+                for q in quarters
+                if q.chosen is not None
+                and q.chosen.start_date is not None
+                and q.chosen.start_date >= c.chosen.start_date
+                and q.chosen.end_date <= c.chosen.end_date
+                and q.value is not None
+            ]
+            if len(inside) >= 3 and c.value < sum(inside, Decimal(0)) - FY_RATE_TOL:
+                bad[key] = "annual dividend per share below the sum of its quarters"
+        elif 0 < days(c) <= 100:
+            near = sorted(
+                q.value
+                for q in quarters
+                if q is not c
+                and q.value is not None
+                and q.value > 0
+                and q.chosen is not None
+                and abs((q.chosen.end_date - c.chosen.end_date).days) <= 400
+            )
+            med = near[len(near) // 2] if near else None
+            if (
+                len(near) >= 2
+                and med
+                and DPS_ANNUAL_ON_QUARTER_BAND[0] * med
+                <= c.value
+                <= DPS_ANNUAL_ON_QUARTER_BAND[1] * med
+            ):
+                bad[key] = "quarterly dividend per share looks like an annual amount"
+    if not bad:
+        return cells
+    return [
+        CellResult(
+            c.concept,
+            c.period_id,
+            HIDE_DPS_INVALID,
+            None,
+            (),
+            c.chosen,
+            c.factor,
+            c.candidates,
+            bad[(c.concept, c.period_id)],
+        )
+        if (c.concept, c.period_id) in bad
+        else c
+        for c in cells
+    ]
 
 
 WASO_TAGS = (
@@ -1402,10 +1618,20 @@ def _dps_scale_guard(
     flagged: set[tuple[str, int]] = set()
     for c in dps:
         assert c.value is not None
+        assert c.chosen is not None
         others = sorted(
-            o.value for o in dps if o is not c and series(o) == series(c) and o.value
+            o.value
+            for o in dps
+            if o is not c
+            and series(o) == series(c)
+            and o.value
+            and o.chosen is not None
+            and abs((o.chosen.end_date - c.chosen.end_date).days) <= LOCAL_WINDOW_DAYS
         )
         if len(others) < DPS_SCALE_MIN_OTHERS:
+            # too little local history: an own-filing scale flag decides alone
+            if OWN_FILING_SCALE_NOTE in c.note:
+                flagged.add((c.concept, c.period_id))
             continue
         med = others[len(others) // 2]
         ratio = c.value / med
@@ -1617,7 +1843,7 @@ def load_current_cells(
 
 def all_input_tags(mapped_tags: Mapping[str, list[str]]) -> set[str]:
     tags = set(EVIDENCE_PER_SHARE_TAGS) | set(EVIDENCE_SHARE_TAGS) | set(SERIES_TAGS)
-    tags |= set(SPLIT_RATIO_TAGS)
+    tags |= set(SPLIT_RATIO_TAGS) | set(DIVIDENDS_PAID_TAGS)
     for base_tags in mapped_tags.values():
         tags |= set(base_tags)
     return tags
@@ -1660,6 +1886,27 @@ def run_split_rebase(
         "results": results,
         "ru1_on": ru1_on,
     }
+
+
+# Phase switch (Dhairya decision 2026-10-24, Verifier 1000): phase 1 writes
+# every class except `other_changed` (a filed copy replacing a different
+# stored value: 13 of 14 sampled were wrong), whose stored value is kept
+# untouched; phase 2 writes it too once the Verifier's recheck passes.
+WRITE_PHASE = 1
+
+
+def cells_to_write(
+    res: CompanyResult, current: Mapping, *, phase: int = WRITE_PHASE
+) -> list[CellResult]:
+    out = []
+    for c in res.cells:
+        if c.status != SHOWN or c.value is None:
+            continue
+        hit = current.get((c.concept, c.period_id))
+        if phase < 2 and classify_change(hit[1] if hit else None, c) == OTHER_CHANGED:
+            continue
+        out.append(c)
+    return out
 
 
 def cells_to_remove(
@@ -1751,7 +1998,7 @@ def write_company(
                 for b in res.basis.values()
             ],
         )
-        shown = [c for c in res.cells if c.status == SHOWN]
+        shown = cells_to_write(res, current)
         rows = [
             ca.CanonicalRow(
                 res.company_id,

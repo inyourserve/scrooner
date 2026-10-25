@@ -6,26 +6,33 @@ Period Engineer. Rules `split.event_basis@1` (dry_run) + `pershare.never_derive@
 
 | Class | All periods | Periods ending 2015-01-01 or later |
 |---|---|---|
-| unchanged | 277,648 | 201,445 |
-| rounding only | 2,670 | 1,539 |
-| was unadjusted (stored value on a pre-split basis) | 6,476 | 1,881 |
-| was double-divided (stored value divided too often) | 1,452 | 888 |
-| shares re-based | 6,301 | 3,410 |
-| other changed (filed copy replaces a different stored value) | 195 | 140 |
-| new (no stored cell today) | 995 | 807 |
-| hidden: restated copies disagree on one basis | 5,373 | 3,686 |
+| unchanged | 277,210 | 201,344 |
+| rounding only | 2,851 | 1,709 |
+| was unadjusted (stored value on a pre-split basis) | 6,831 | 1,977 |
+| was double-divided (stored value divided too often) | 1,435 | 855 |
+| shares re-based | 6,738 | 3,655 |
+| other changed (filed copy replaces a different stored value) | 178 | 127 |
+| new (no stored cell today) | 877 | 748 |
+| hidden: restated copies disagree on one basis | 5,407 | 3,729 |
 | derived-only, removed with RU-1 | 19,839 | 15,172 |
-| hidden: copies disagree after conversion | 1,913 | 970 |
-| hidden: unconfirmed split candidate | 2,289 | 977 |
-| hidden: company invariant | 3,855 | 2,678 |
-| hidden: dividend basis pending (AC-24, off-basis cells only) | 9,653 | 6,297 |
-| hidden: units scale suspect | 753 | 391 |
+| hidden: copies disagree after conversion | 2,002 | 1,041 |
+| hidden: unconfirmed split candidate | 2,620 | 1,188 |
+| hidden: company invariant | 2,653 | 1,823 |
+| hidden: dividend basis pending (AC-24, off-basis cells only) | 9,485 | 6,214 |
+| hidden: units scale suspect | 290 | 138 |
 | hidden: zero share count filed | 107 | 64 |
-| hidden: quarter equals year (label error) | 33 | 26 |
-| still blank (no stored cell, none shown) | 1,167 | 858 |
+| hidden: quarter equals year (label error) | 12 | 9 |
+| still blank (no stored cell, none shown) | 1,285 | 917 |
+| hidden:dividend_per_share_invalid | 899 | 519 |
 | **total cells evaluated** | 340,719 | 241,229 |
 
-Classes: 'was unadjusted' / 'was double-divided' are today's wrong values that the pass corrects; 'hidden' rows are cells shown today that would become unavailable with the stated reason. 'derived-only, removed with RU-1' is the RU-1 half of the pair (Q4 per-share by subtraction).
+## Rerun 2026-10-25 after Verifier-1000 (VERIFY-SPLIT-REBASE-1000-2026-10-24.md)
+
+Fixes: original-filing agreement (a later copy alone never decides; the original is never dropped as a label shift, except a DPS rate on a longer context, LEA); same-filing DPS checks (negative; zero while dividends paid; annual below the sum of its quarters; an annual rate on a quarter, 3.2-4.8x); quarter-equals-year only when the year is a plausible total (BPOP); a same-ratio duplicate only when the filings reverse between them (CPRT, AAON, HEI repeated splits kept); a review candidate on a confirmed boundary rejected (PRAX 1:10 step, EOG 1/500); share same-filing scale check confirmed by the local series (SAIA, EXEL); median guards within 3 years (C 2012, CF 2007).
+
+Phase switch (`WRITE_PHASE = 1`): phase 1 writes every class except `other_changed` (178 cells, stored value kept, no reason); phase 2 adds them after the Verifier's recheck. Phase 1 covers 340,541 of 340,719 evaluated cells.
+
+Open after this run (DATA-INFERRED): LEA 9M 2014 DPS still held as restated; HEI, HOMB, ANF, CELH still trip the invariant (with KDP, HWM, UGI); PRAX share cells now held as copy conflict; BWA FY2019 DPS (stored 0.68 is right) is newly hidden by the zero-with-paid check (the chosen copy is 0); `other_changed` still contains COO Q1 FY2020 DPS 0, DCI Q4 FY2015 DPS 0.34, TEX Q2 2020 DPS 0.12, HSIC Q2 2019 basic 0.77, all excluded from phase-1 writes.
 
 ## Events
 
@@ -260,16 +267,11 @@ Review candidates (cells of filings before them are hidden 'share basis under re
 |---|---|---|
 | KDP | 10 | 473 |
 | HWM | 5 | 484 |
-| HEI | 42 | 319 |
-| BRO | 52 | 465 |
-| CPRT | 40 | 359 |
+| HEI | 4 | 319 |
+| UGI | 28 | 409 |
 | CELH | 4 | 209 |
-| SNEX | 16 | 337 |
 | ANF | 17 | 351 |
 | HOMB | 26 | 408 |
-| AAON | 31 | 450 |
-
-Read (DATA-INFERRED): KDP is the 2018 Keurig/Dr Pepper reverse merger (cross-entity history); CPRT, SNEX, AAON, HEI, HOMB, ANF, HWM, BRO and CELH show filed comparatives that disagree with the observed boundary (a missed or mis-placed boundary). Hiding is the safe state until a filing check places the boundary.
 
 ## 20 largest value changes (one per company)
 
