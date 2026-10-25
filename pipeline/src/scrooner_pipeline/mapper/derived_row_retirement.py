@@ -762,6 +762,36 @@ def plan_proxy_chunk(
 
 QUARTER_MIN_DAYS, QUARTER_MAX_DAYS = 75, 105
 
+QUARTER_RESTATED_POLICY = "original_basis"  # or "hide"
+VINTAGE_MAX_GAP_DAYS = 370  # same as the certification cross_vintage_arithmetic test
+
+
+def _one_vintage(restated: bool, facts: Sequence[FactRow]) -> bool:
+    """Original-basis inputs must come from one reporting vintage: filed within
+    VINTAGE_MAX_GAP_DAYS of each other. Copies that agree need no such test."""
+    if not restated:
+        return True
+    dates = [f.filing_date for f in facts if f.filing_date]
+    return (
+        len(dates) == len(facts)
+        and (max(dates) - min(dates)).days <= VINTAGE_MAX_GAP_DAYS
+    )
+
+
+def _basis_pick(copies: Sequence[FactRow]) -> tuple[FactRow | None, bool]:
+    """(input fact, restated). One value across the copies (rounding aside): the
+    precise copy. Copies that disagree were restated: under policy
+    'original_basis' the EARLIEST-filed copy is the input (the figure as first
+    reported, which pairs with the original year-to-date); under 'hide' there is
+    no input."""
+    pick = _pick_precise(copies)
+    if pick is not None:
+        return pick, False
+    if QUARTER_RESTATED_POLICY != "original_basis" or not copies:
+        return None, True
+    first = min(copies, key=lambda f: (f.filing_date or date.max, f.fact_id))
+    return first, True
+
 
 def _rederive(
     groups: Mapping[tuple, list[FactRow]],
@@ -796,13 +826,14 @@ def _rederive(
         a_copies = groups.get((company, concept, unit, s0, qe), [])
         b_copies = groups.get((company, concept, unit, s0, qs - day), [])
         if a_copies and b_copies:
-            pa, pb = _pick_precise(a_copies), _pick_precise(b_copies)
-            if pa is None or pb is None:
+            (pa, ra), (pb, rb) = _basis_pick(a_copies), _basis_pick(b_copies)
+            if pa is None or pb is None or not _one_vintage(ra or rb, [pa, pb]):
                 verdict = "disagree"
                 continue
-            return "ok", pa.value - pb.value, [pa, pb]
+            return ("ok_original" if ra or rb else "ok"), pa.value - pb.value, [pa, pb]
         # discrete quarters from s0 up to qs - 1
         chain: list[FactRow] = []
+        any_restated = False
         cur_start = s0
         ok = True
         while cur_start < qs and ok:
@@ -818,20 +849,21 @@ def _rederive(
             if len(nxt) != 1:
                 ok = False
                 break
-            pick = _pick_precise(nxt[0][1])
+            pick, restated_q = _basis_pick(nxt[0][1])
             if pick is None:
                 verdict = "disagree"
                 ok = False
                 break
+            any_restated = any_restated or restated_q
             chain.append(pick)
             cur_start = nxt[0][0][4] + day
         if ok and chain and cur_start == qs and a_copies:
-            pa = _pick_precise(a_copies)
-            if pa is None:
+            pa, ra = _basis_pick(a_copies)
+            if pa is None or not _one_vintage(ra or any_restated, [pa, *chain]):
                 verdict = "disagree"
                 continue
             return (
-                "ok",
+                "ok_original" if ra or any_restated else "ok",
                 pa.value - sum((f.value for f in chain), Decimal(0)),
                 [pa, *chain],
             )
@@ -913,7 +945,7 @@ def _vet_and_promote(
     tag_of: dict[int, str] = {f.concept_id: f.tag for fs in groups.values() for f in fs}
 
     used: set[int] = set()
-    unverified = same = differs = filled = 0
+    unverified = same = differs = filled = original = 0
     for c in targets:
         qs, qe = period[c.period_id]
         src, ccid, company = meta[c.canonical_fact_id]
@@ -925,8 +957,10 @@ def _vet_and_promote(
         verdict, value, inputs = "none", None, []
         for cid in ordered:
             v, val, ins = _rederive(groups, company, cid, src.unit, qs, qe)
-            if v == "ok":
-                verdict, value, inputs = v, val, ins
+            if v in ("ok", "ok_original"):
+                verdict, value, inputs = "ok", val, ins
+                if v == "ok_original":
+                    original += 1
                 break
             if v == "disagree":
                 verdict = "disagree"
@@ -971,6 +1005,7 @@ def _vet_and_promote(
             )
         elif c.canonical_fact_id in picked:
             unverified += 1  # a stored derived quarter with no filed inputs to re-check
+    plan.info["quarters_on_original_basis_after_restatement"] = original
     plan.info["quarters_rederived_same_as_stored"] = same
     plan.info["quarters_rederived_differs_from_stored"] = differs
     plan.info["blank_quarters_filled_from_precise_inputs"] = filled
@@ -1455,7 +1490,15 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="skip the SEC income-statement face check",
     )
+    ap.add_argument(
+        "--hide-restated-quarters",
+        action="store_true",
+        help="hide quarters whose year/YTD copies disagree instead of using the original basis",
+    )
     args = ap.parse_args(argv)
+    global QUARTER_RESTATED_POLICY
+    if args.hide_restated_quarters:
+        QUARTER_RESTATED_POLICY = "hide"
     fams = ("A", "B") if args.family == "both" else (args.family,)
     cohort = _cohort(Path(args.cohort_csv)) if args.cohort_csv else None
     with psycopg.connect(settings.database_url, autocommit=True) as conn:
