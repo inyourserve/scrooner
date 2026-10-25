@@ -1,0 +1,4197 @@
+{
+ "companies": 698,
+ "all_tie": 621,
+ "with_gaps": 71,
+ "ties": 26968,
+ "gaps": 493,
+ "per_company": [
+  {
+   "cik": "0000920148",
+   "ties": 0,
+   "gaps": 46,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001604028",
+   "ties": 0,
+   "gaps": 46,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000912593",
+   "ties": 5,
+   "gaps": 40,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000096223",
+   "ties": 10,
+   "gaps": 36,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001176948",
+   "ties": 16,
+   "gaps": 30,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000899689",
+   "ties": 25,
+   "gaps": 21,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001527166",
+   "ties": 26,
+   "gaps": 20,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001035443",
+   "ties": 27,
+   "gaps": 19,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001037540",
+   "ties": 29,
+   "gaps": 17,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001579091",
+   "ties": 0,
+   "gaps": 12,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001665918",
+   "ties": 29,
+   "gaps": 12,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001730168",
+   "ties": 19,
+   "gaps": 12,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001137774",
+   "ties": 35,
+   "gaps": 11,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001075531",
+   "ties": 36,
+   "gaps": 10,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000886163",
+   "ties": 37,
+   "gaps": 9,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001552000",
+   "ties": 37,
+   "gaps": 9,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000920371",
+   "ties": 38,
+   "gaps": 8,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000906107",
+   "ties": 37,
+   "gaps": 7,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000927003",
+   "ties": 40,
+   "gaps": 7,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001212545",
+   "ties": 39,
+   "gaps": 7,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001402436",
+   "ties": 39,
+   "gaps": 7,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001046102",
+   "ties": 37,
+   "gaps": 6,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001309108",
+   "ties": 40,
+   "gaps": 6,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001674101",
+   "ties": 27,
+   "gaps": 6,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001780312",
+   "ties": 22,
+   "gaps": 6,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000080661",
+   "ties": 40,
+   "gaps": 5,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000723125",
+   "ties": 41,
+   "gaps": 5,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001318605",
+   "ties": 41,
+   "gaps": 5,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001341766",
+   "ties": 35,
+   "gaps": 5,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001384905",
+   "ties": 41,
+   "gaps": 5,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001636282",
+   "ties": 38,
+   "gaps": 4,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002012383",
+   "ties": 4,
+   "gaps": 4,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000900075",
+   "ties": 44,
+   "gaps": 3,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001069202",
+   "ties": 42,
+   "gaps": 3,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001773383",
+   "ties": 26,
+   "gaps": 3,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000820318",
+   "ties": 44,
+   "gaps": 2,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001023128",
+   "ties": 46,
+   "gaps": 2,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001590364",
+   "ties": 44,
+   "gaps": 2,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001618756",
+   "ties": 46,
+   "gaps": 2,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001769628",
+   "ties": 4,
+   "gaps": 2,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000004962",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000029644",
+   "ties": 46,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000037996",
+   "ties": 44,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000707549",
+   "ties": 46,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000797721",
+   "ties": 47,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000849399",
+   "ties": 46,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000874716",
+   "ties": 47,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000935703",
+   "ties": 44,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001063761",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001069183",
+   "ties": 47,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001236275",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001318220",
+   "ties": 41,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001321732",
+   "ties": 43,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001433270",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001468174",
+   "ties": 47,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001524472",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001552275",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001563190",
+   "ties": 21,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001570827",
+   "ties": 35,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001576280",
+   "ties": 31,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001590895",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001603923",
+   "ties": 45,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001638826",
+   "ties": 7,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001664703",
+   "ties": 34,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001689548",
+   "ties": 23,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001770787",
+   "ties": 28,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001781335",
+   "ties": 25,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001819994",
+   "ties": 23,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001837240",
+   "ties": 22,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001849253",
+   "ties": 20,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001852131",
+   "ties": 14,
+   "gaps": 1,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000002969",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000004127",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000004281",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000004457",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000004977",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000005272",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000005513",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000006951",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000007789",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000008670",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000008858",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000009389",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000011544",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000012208",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000012659",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000014272",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000014693",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000015615",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000016732",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000016875",
+   "ties": 0,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000017843",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000018230",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000019584",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000019617",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000020212",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000020286",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000021076",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000021175",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000021665",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000022356",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000022444",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000023217",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000024545",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000024741",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000026172",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000026324",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000031462",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000031791",
+   "ties": 42,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000033185",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000033213",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000034903",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000035527",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000036104",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000036270",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000036966",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000037808",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000038777",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000039263",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000040211",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000040704",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000040729",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000045012",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000046080",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000046619",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000047111",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000048898",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000049071",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000049196",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000049600",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000049938",
+   "ties": 0,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000051143",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000056873",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000059558",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000060086",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000060667",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000062996",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000063754",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000064040",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000064996",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000066570",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000066740",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000067215",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000067347",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000067887",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000070318",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000070858",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000072971",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000073124",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000073309",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000074208",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000074260",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000075362",
+   "ties": 0,
+   "gaps": 0,
+   "not_computable": 46
+  },
+  {
+   "cik": "0000076334",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000077360",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000077476",
+   "ties": 35,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000078003",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000079879",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000080420",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000080424",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000084246",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000084839",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000085535",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000085961",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000086312",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000087347",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000089439",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000091142",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000091419",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000091440",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000091576",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000092122",
+   "ties": 0,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000092230",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000093410",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000093751",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000094845",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000096943",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000097210",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000097216",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000097476",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000100885",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000101382",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000101829",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 1
+  },
+  {
+   "cik": "0000105634",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000105770",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000106040",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000106535",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000108312",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000109380",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000109563",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000200406",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000216228",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000217346",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000277509",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000277948",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000313927",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000315189",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 1
+  },
+  {
+   "cik": "0000315293",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000315852",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000316709",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000319201",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000320193",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000320335",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000350894",
+   "ties": 42,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000354950",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000702165",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000704532",
+   "ties": 48,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000707179",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000711404",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000713676",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000714310",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000715957",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000717605",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000719413",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 1
+  },
+  {
+   "cik": "0000719955",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000720005",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000720672",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000723531",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000726728",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000726958",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000729986",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000731766",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000740260",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000749251",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000750577",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000751364",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000751978",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000759944",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000763901",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000764038",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000764065",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000764180",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000765880",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000766704",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000779152",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000785161",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000785786",
+   "ties": 43,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000789019",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000794170",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000796343",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000798354",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000798941",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000802481",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000804328",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000814547",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000818686",
+   "ties": 35,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000820027",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000822416",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000823768",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000827052",
+   "ties": 0,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000829224",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000831001",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000831259",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000832101",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000840489",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000849395",
+   "ties": 11,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000855658",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000857005",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000858877",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 1
+  },
+  {
+   "cik": "0000864749",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000866291",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000866706",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000868671",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000868857",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000872589",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000874015",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000874766",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000875045",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000875320",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 2
+  },
+  {
+   "cik": "0000875357",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000876437",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000877212",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000878927",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000879101",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000879169",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000880266",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000882184",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000882835",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000883241",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000884614",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000885550",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000886982",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000887343",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000888491",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000895417",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000895421",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000896159",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000896878",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000898174",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000898293",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000899051",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000906163",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000906345",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000908937",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000909832",
+   "ties": 42,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000910606",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000912242",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000912595",
+   "ties": 29,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000912615",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000913144",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000913760",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000914208",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000914475",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000915389",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000916076",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000916365",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000916540",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000917251",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000917273",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000920522",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000920760",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000921638",
+   "ties": 19,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000921825",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000922621",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000927066",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000927628",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000929008",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000936395",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 3
+  },
+  {
+   "cik": "0000936468",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000939767",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000940944",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000943452",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000943819",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000944695",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000945841",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000946581",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0000947484",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001000228",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001000697",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001001316",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001002047",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001003078",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001004434",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001013237",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001013857",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001013871",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001014473",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001015328",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001018963",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 1
+  },
+  {
+   "cik": "0001019849",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001021635",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001021860",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001025378",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001030894",
+   "ties": 7,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001031308",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001032975",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001035267",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001035983",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001037038",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001037646",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001037868",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001037976",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001038074",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001039399",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001041061",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001042046",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001043219",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001043277",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001045609",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001047127",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001048477",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001050446",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001050915",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001051470",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001053507",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001057352",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001058090",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001058290",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001059556",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001061983",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001065088",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001065280",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001067701",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001067983",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 6
+  },
+  {
+   "cik": "0001068851",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001069157",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001069258",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001070750",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001071739",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001082554",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001086222",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001090872",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001093557",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001094285",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001094831",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001095073",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001096343",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001097149",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001097864",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001099219",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001099590",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001100682",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001101239",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001103982",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001104506",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001107843",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001108426",
+   "ties": 0,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001108524",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001109357",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001113169",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001116132",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001120193",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001123360",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001125376",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001126328",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001133421",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001136869",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001136893",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001137789",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001138118",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001140536",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001141391",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001144215",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001145197",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001156039",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001156375",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001157601",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001158114",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001159152",
+   "ties": 2,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001163165",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001164727",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001164863",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001170010",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001174922",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001177394",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001177609",
+   "ties": 48,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001178670",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001179929",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001192448",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001206264",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001214816",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001237831",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001260221",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001261333",
+   "ties": 34,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001262039",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001262823",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001267238",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001274494",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001278021",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001280452",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001281761",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001282637",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001287750",
+   "ties": 16,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001289308",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001289419",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001289460",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001289490",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001297989",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001297996",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001298675",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001300514",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001302215",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001308547",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001315098",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001316835",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001319161",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001321655",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001324948",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 2
+  },
+  {
+   "cik": "0001326110",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001326380",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001326801",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001327811",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001331520",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001331875",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001333986",
+   "ties": 34,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001334036",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001352010",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001360604",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001360901",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001370637",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001373715",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001375365",
+   "ties": 42,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001381197",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001383312",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001385157",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001390777",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001393052",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001393311",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001396009",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001397187",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001397911",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001398659",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001403161",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001403568",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001404655",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001405495",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001408198",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001408710",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001411207",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001413329",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001415404",
+   "ties": 48,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001418135",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001423689",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001423902",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001428336",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001428439",
+   "ties": 36,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001433195",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001439288",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001441816",
+   "ties": 35,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001442145",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001443646",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001447669",
+   "ties": 41,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001448893",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001451809",
+   "ties": 27,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001466258",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001467623",
+   "ties": 34,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001467858",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001472787",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001474432",
+   "ties": 41,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001474735",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001475922",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001476150",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001477294",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001477333",
+   "ties": 28,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001478242",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001479094",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001486159",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001492691",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001493594",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001501585",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001506293",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001506307",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001510295",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001511737",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001512673",
+   "ties": 42,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001513761",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001516513",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001520262",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001521036",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001521332",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001528396",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001534504",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001534701",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001535527",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001535929",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001539838",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001543151",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001552033",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001555280",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001559720",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001560385",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001561550",
+   "ties": 28,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001562088",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001562401",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001564408",
+   "ties": 38,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001567094",
+   "ties": 16,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001567683",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001568651",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001571283",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001571949",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001571996",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001573516",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001575515",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001575965",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001579241",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001579878",
+   "ties": 5,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001581068",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001581280",
+   "ties": 31,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001582961",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001583708",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001584207",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001585521",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001585689",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001590714",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001590717",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001591698",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001596532",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001599298",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001600033",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001601046",
+   "ties": 47,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001601712",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001604821",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001611052",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001613103",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001616707",
+   "ties": 46,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001616862",
+   "ties": 45,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001618673",
+   "ties": 43,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001618732",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001628171",
+   "ties": 26,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001633917",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001635088",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001635327",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001636519",
+   "ties": 44,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001639300",
+   "ties": 43,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001639438",
+   "ties": 12,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001639723",
+   "ties": 4,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001640147",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001642896",
+   "ties": 18,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001649094",
+   "ties": 25,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001649904",
+   "ties": 36,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001650164",
+   "ties": 20,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001650372",
+   "ties": 16,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001653482",
+   "ties": 20,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001658566",
+   "ties": 42,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001660134",
+   "ties": 38,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001668397",
+   "ties": 41,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001669162",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001671933",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001673358",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001675149",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001679049",
+   "ties": 40,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001679788",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001682852",
+   "ties": 31,
+   "gaps": 0,
+   "not_computable": 1
+  },
+  {
+   "cik": "0001687229",
+   "ties": 38,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001690820",
+   "ties": 37,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001692819",
+   "ties": 38,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001699150",
+   "ties": 37,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001705696",
+   "ties": 35,
+   "gaps": 0,
+   "not_computable": 1
+  },
+  {
+   "cik": "0001707753",
+   "ties": 32,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001711279",
+   "ties": 35,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001713445",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001713683",
+   "ties": 34,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001718512",
+   "ties": 34,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001720635",
+   "ties": 34,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001722482",
+   "ties": 28,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001722684",
+   "ties": 34,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001728951",
+   "ties": 33,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001730430",
+   "ties": 32,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001734722",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001736035",
+   "ties": 16,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001736297",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001739104",
+   "ties": 32,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001739445",
+   "ties": 32,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001739940",
+   "ties": 31,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001748790",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001751008",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001757898",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001759509",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001766502",
+   "ties": 30,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001783180",
+   "ties": 25,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001783879",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001792044",
+   "ties": 27,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001792580",
+   "ties": 27,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001792789",
+   "ties": 23,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001796209",
+   "ties": 26,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001800667",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001802768",
+   "ties": 25,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001805284",
+   "ties": 25,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001807794",
+   "ties": 19,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001810806",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001811074",
+   "ties": 23,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001815442",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001820953",
+   "ties": 23,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001822993",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001823529",
+   "ties": 20,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001824920",
+   "ties": 24,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001828108",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001834584",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001835632",
+   "ties": 22,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001842022",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001851003",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001856437",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001856525",
+   "ties": 21,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001858681",
+   "ties": 18,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001860742",
+   "ties": 18,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001865782",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001866581",
+   "ties": 20,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001868159",
+   "ties": 9,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001868275",
+   "ties": 19,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001869198",
+   "ties": 20,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001874178",
+   "ties": 20,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001876042",
+   "ties": 5,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001878848",
+   "ties": 4,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001880661",
+   "ties": 18,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001883685",
+   "ties": 18,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001889539",
+   "ties": 16,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001895262",
+   "ties": 16,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001897762",
+   "ties": 8,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001901440",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001932393",
+   "ties": 13,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001937926",
+   "ties": 7,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001943896",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001944048",
+   "ties": 14,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001957132",
+   "ties": 3,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001964738",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001964789",
+   "ties": 12,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001973266",
+   "ties": 12,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001995807",
+   "ties": 9,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0001996810",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002001184",
+   "ties": 10,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002007855",
+   "ties": 6,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002011641",
+   "ties": 9,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002015845",
+   "ties": 8,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002019410",
+   "ties": 5,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002021728",
+   "ties": 2,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002023554",
+   "ties": 7,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002025410",
+   "ties": 8,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002030781",
+   "ties": 6,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002035989",
+   "ties": 5,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002046386",
+   "ties": 3,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002054696",
+   "ties": 5,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002058873",
+   "ties": 4,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002063196",
+   "ties": 4,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002064953",
+   "ties": 4,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002065601",
+   "ties": 3,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002074176",
+   "ties": 4,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002082866",
+   "ties": 3,
+   "gaps": 0,
+   "not_computable": 0
+  },
+  {
+   "cik": "0002083785",
+   "ties": 3,
+   "gaps": 0,
+   "not_computable": 0
+  }
+ ]
+}

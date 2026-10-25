@@ -135,7 +135,8 @@ for cik in sorted(records):
                 tags.add(tie["total"])
     tags.update(t for side in LEASE_TAGS.values() for t in side)
     tags.update(AGG_TAGS)
-    tags.update(("LongTermDebt", "LongTermDebtCurrent"))  # debt-note carrying total + current portion (COST rule)
+    tags.update(("LongTermDebt", "LongTermDebtCurrent",
+                 "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"))  # debt-note figures (COST rule)
     facts = fetch_facts(cur, cik, tags)
     cells = [(k, v) for k, v in by_cell.items() if k[0] == cik]
     for (cik_, period_end), rows in sorted(cells):
@@ -193,45 +194,52 @@ for cik in sorted(records):
         note_current_added = None
         note_gap = False
         current_unverified = False
-        has_current_ltd = any(
-            m["side"] == "current" and re.search(r"LongTermDebt|DebtCurrent|CurrentPortion|Maturit", m["tag"])
-            for m in rec["members"]
-        )
+        note_flag = None
+        # Verifier V5.1 (17 of 20 review cells were false holds): the FACE is the
+        # carrying value; the note's LongTermDebt is often principal (COST
+        # 6,525M principal vs 6,492M carrying = 33M discount), or excludes
+        # commercial paper / short-term borrowings (CSCO, UNH, INTC, WMT), or
+        # is a rounded narrative (MRK, MA). A face-vs-note difference is
+        # therefore a FLAG on the cell, never a hold. The only hold left is a
+        # record with NO current-side line at all whose current maturities
+        # cannot be proven zero or reconciled from the note (COST 2018-09-02
+        # was reconciled: 6,487 + 90 = 6,577; AMAT 2023-10-29 holds).
+        has_current_side = any(m["side"] == "current" and m["class"] != "operating_lease" for m in rec["members"])
         ltd_note = day.get("LongTermDebt")
-        if not has_current_ltd and ltd_note is not None:
-            noncur_ltd = sum(
-                (day[m["tag"]][0] for m in rec["members"]
-                 if m["side"] == "noncurrent" and m["tag"] in day and re.search(r"LongTermDebt", m["tag"])),
-                Decimal(0),
-            )
+        noncur_ltd = sum(
+            (day[m["tag"]][0] for m in rec["members"]
+             if m["side"] == "noncurrent" and m["tag"] in day and re.search(r"LongTermDebt", m["tag"])),
+            Decimal(0),
+        )
+        if not has_current_side and noncur_ltd > 0:
             ltd_cur = day.get("LongTermDebtCurrent")
-            if abs(ltd_note[0] - noncur_ltd) <= 1:
-                pass  # no current portion exists
-            elif ltd_cur is not None and abs(noncur_ltd + ltd_cur[0] - ltd_note[0]) <= 1:
+            next12 = day.get("LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths")
+            if ltd_note is not None and abs(ltd_note[0] - noncur_ltd) <= 1:
+                pass  # the note total equals the face noncurrent: no current portion
+            elif (ltd_cur is not None and ltd_cur[0] == 0) or (next12 is not None and next12[0] == 0):
+                pass  # the filer states no current maturities (MA 2017-12-31)
+            elif ltd_cur is not None and ltd_note is not None and abs(noncur_ltd + ltd_cur[0] - ltd_note[0]) <= 1:
                 lease_incl += ltd_cur[0]
                 borrowings += ltd_cur[0]
                 note_current_added = ltd_cur[0]
+            elif ltd_cur is not None and ltd_cur[0] > 0:
+                # a current portion exists in the note but the totals do not
+                # reconcile (principal vs carrying): add it and flag
+                lease_incl += ltd_cur[0]
+                borrowings += ltd_cur[0]
+                note_current_added = ltd_cur[0]
+                note_flag = f"current_portion_from_note_unreconciled:{ltd_cur[0]}"
             else:
-                note_gap = True
-        elif has_current_ltd and ltd_note is not None:
-            # both sides on the face: the long-term-debt members must still tie
-            # to the filer's note carrying total (COST 2019-02-17: face 1,698 +
-            # 4,794 = 6,492M vs note 6,525M); a gap goes to review, never shown
+                current_unverified = True
+        if ltd_note is not None:
             ltd_face = sum(
                 (day[m["tag"]][0] for m in rec["members"]
-                 if m["tag"] in day and re.search(r"LongTermDebt", m["tag"]) and m["class"] != "operating_lease"),
+                 if m["tag"] in day and re.search(r"Debt|Borrow|CommercialPaper|NotesPayable", m["tag"])
+                 and m["class"] not in ("operating_lease", "finance_lease")),
                 Decimal(0),
-            )
+            ) + (note_current_added or Decimal(0))
             if abs(ltd_note[0] - ltd_face) > 1:
-                note_gap = True
-        elif not has_current_ltd and any(
-            m["side"] == "noncurrent" and m["tag"] in day and re.search(r"LongTermDebt", m["tag"]) for m in rec["members"]
-        ):
-            # noncurrent long-term debt on the face, no current-maturities line,
-            # and no note carrying total at this instant to prove there is no
-            # current portion (COST 10-Qs): never publish the noncurrent figure
-            # as total debt; hold for the Verifier / instance reader.
-            current_unverified = True
+                note_flag = (note_flag + ";" if note_flag else "") + f"face_vs_note_LongTermDebt:{ltd_face - ltd_note[0]}"
         before_vals = {Decimal(r["before"]) for r in rows if r.get("before")}
         is_hold = any("hold" in (r.get("reason") or "") and not r.get("after") for r in rows)
         # Verifier: a missing member is a HARD STOP, never a silent zero
@@ -239,6 +247,11 @@ for cik in sorted(records):
         # the variant does not remove current finance leases inside non-combined
         # short-term lines (CVX 2022, LRCX) - it stays informational only.
         filer_agg = next((day[t][0] for t in AGG_TAGS if t in day), None)
+        agg_unit = Decimal(0)
+        if filer_agg is not None:  # the filer's rounding unit for the aggregate (0.1B narratives)
+            agg_unit = Decimal(100000000)
+            while agg_unit > 1 and filer_agg != 0 and filer_agg % agg_unit != 0:
+                agg_unit /= 10
         # FACE-ADMISSION VALUE TIE (Verifier V4 guard iv): a member admitted
         # from the face (not in the statement-role cal) is used only when its
         # zone roots sum to the filer's printed side total on this instant;
@@ -287,13 +300,14 @@ for cik in sorted(records):
             verdict = "face_note_gap_review"
         elif current_unverified:
             verdict = "current_maturities_unverified"
-        elif filer_agg is not None and abs(lease_incl - filer_agg) > 1:
-            # NOTE-TIE CHECK (Verifier V4: COST 2018-09-02 - a 90M current
-            # portion folded into another face line is invisible to a
-            # face-built record; only the debt note's carrying total shows
-            # it). A gap between the era sum and the filer's own note
-            # carrying total goes to review, never published either way.
-            verdict = "face_note_gap_review"
+        elif filer_agg is not None and abs(lease_incl - filer_agg) > max(Decimal(1), agg_unit):
+            # NOTE-TIE (Verifier V4 -> V5.1): the COST-class omission is now
+            # caught by the no-current-side rule above, and the Verifier found
+            # 17 of 20 remaining note gaps were principal-vs-carrying,
+            # commercial paper or rounded narratives. A residual gap beyond
+            # the filer's rounding unit is a FLAG for the Verifier, never a
+            # hold; the face value (carrying) is published.
+            note_flag = (note_flag + ";" if note_flag else "") + f"face_vs_note_aggregate:{lease_incl - filer_agg}"
         if verdict is None:
             if before_vals and any(abs(lease_incl - b) <= 1 for b in before_vals):
                 verdict = "agrees_lease_inclusive"
@@ -320,7 +334,8 @@ for cik in sorted(records):
              "lane3_before": sorted(str(b) for b in before_vals), "hold": is_hold,
              "missing_members": missing, "missing_custom_members": missing_custom,
              "nonauth_members": nonauth, "face_admission_tie_pending": tie_pending,
-             "note_current_portion_added": str(note_current_added) if note_current_added is not None else None}
+             "note_current_portion_added": str(note_current_added) if note_current_added is not None else None,
+             "note_flag": note_flag}
         )
 conn.close()
 report["summary"] = dict(report["summary"])

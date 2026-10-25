@@ -1,0 +1,2243 @@
+{
+ "anchor_results": [],
+ "identity": {
+  "ties": 26968,
+  "gaps": 493
+ },
+ "per_company": {
+  "0000002969": {
+   "identity_ties": 47
+  },
+  "0000004127": {
+   "identity_ties": 47
+  },
+  "0000004281": {
+   "identity_ties": 46
+  },
+  "0000004457": {
+   "identity_ties": 46
+  },
+  "0000004962": {
+   "identity_ties": 45,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000004977": {
+   "identity_ties": 46
+  },
+  "0000005272": {
+   "identity_ties": 47
+  },
+  "0000005513": {
+   "identity_ties": 46
+  },
+  "0000006951": {
+   "identity_ties": 47
+  },
+  "0000007789": {
+   "identity_ties": 46
+  },
+  "0000008670": {
+   "identity_ties": 46
+  },
+  "0000008858": {
+   "identity_ties": 46
+  },
+  "0000009389": {
+   "identity_ties": 46
+  },
+  "0000011544": {
+   "identity_ties": 46
+  },
+  "0000012208": {
+   "identity_ties": 46
+  },
+  "0000012659": {
+   "identity_ties": 46
+  },
+  "0000014272": {
+   "identity_ties": 46
+  },
+  "0000014693": {
+   "identity_ties": 46
+  },
+  "0000015615": {
+   "identity_ties": 46
+  },
+  "0000016732": {
+   "identity_ties": 47
+  },
+  "0000016875": {},
+  "0000017843": {
+   "identity_ties": 46
+  },
+  "0000018230": {
+   "identity_ties": 46
+  },
+  "0000019584": {
+   "identity_ties": 46
+  },
+  "0000019617": {
+   "identity_ties": 46
+  },
+  "0000020212": {
+   "identity_ties": 46
+  },
+  "0000020286": {
+   "identity_ties": 46
+  },
+  "0000021076": {
+   "identity_ties": 44
+  },
+  "0000021175": {
+   "identity_ties": 46
+  },
+  "0000021665": {
+   "identity_ties": 46
+  },
+  "0000022356": {
+   "identity_ties": 46
+  },
+  "0000022444": {
+   "identity_ties": 46
+  },
+  "0000023217": {
+   "identity_ties": 47
+  },
+  "0000024545": {
+   "identity_ties": 45
+  },
+  "0000024741": {
+   "identity_ties": 46
+  },
+  "0000026172": {
+   "identity_ties": 46
+  },
+  "0000026324": {
+   "identity_ties": 46
+  },
+  "0000029644": {
+   "identity_ties": 46,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000031462": {
+   "identity_ties": 46
+  },
+  "0000031791": {
+   "identity_ties": 42
+  },
+  "0000033185": {
+   "identity_ties": 46
+  },
+  "0000033213": {
+   "identity_ties": 46
+  },
+  "0000034903": {
+   "identity_ties": 45
+  },
+  "0000035527": {
+   "identity_ties": 46
+  },
+  "0000036104": {
+   "identity_ties": 46
+  },
+  "0000036270": {
+   "identity_ties": 46
+  },
+  "0000036966": {
+   "identity_ties": 46
+  },
+  "0000037808": {
+   "identity_ties": 46
+  },
+  "0000037996": {
+   "identity_ties": 44,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000038777": {
+   "identity_ties": 46
+  },
+  "0000039263": {
+   "identity_ties": 46
+  },
+  "0000040211": {
+   "identity_ties": 46
+  },
+  "0000040704": {
+   "identity_ties": 46
+  },
+  "0000040729": {
+   "identity_ties": 46
+  },
+  "0000045012": {
+   "identity_ties": 46
+  },
+  "0000046080": {
+   "identity_ties": 46
+  },
+  "0000046619": {
+   "identity_ties": 46
+  },
+  "0000047111": {
+   "identity_ties": 44
+  },
+  "0000048898": {
+   "identity_ties": 45
+  },
+  "0000049071": {
+   "identity_ties": 45
+  },
+  "0000049196": {
+   "identity_ties": 45
+  },
+  "0000049600": {
+   "identity_ties": 46
+  },
+  "0000049938": {},
+  "0000051143": {
+   "identity_ties": 46
+  },
+  "0000056873": {
+   "identity_ties": 44
+  },
+  "0000059558": {
+   "identity_ties": 46
+  },
+  "0000060086": {
+   "identity_ties": 46
+  },
+  "0000060667": {
+   "identity_ties": 45
+  },
+  "0000062996": {
+   "identity_ties": 45
+  },
+  "0000063754": {
+   "identity_ties": 46
+  },
+  "0000064040": {
+   "identity_ties": 45
+  },
+  "0000064996": {
+   "identity_ties": 46
+  },
+  "0000066570": {
+   "identity_ties": 46
+  },
+  "0000066740": {
+   "identity_ties": 46
+  },
+  "0000067215": {
+   "identity_ties": 46
+  },
+  "0000067347": {
+   "identity_ties": 46
+  },
+  "0000067887": {
+   "identity_ties": 46
+  },
+  "0000070318": {
+   "identity_ties": 46
+  },
+  "0000070858": {
+   "identity_ties": 46
+  },
+  "0000072971": {
+   "identity_ties": 46
+  },
+  "0000073124": {
+   "identity_ties": 46
+  },
+  "0000073309": {
+   "identity_ties": 45
+  },
+  "0000074208": {
+   "identity_ties": 45
+  },
+  "0000074260": {
+   "identity_ties": 46
+  },
+  "0000075362": {
+   "not_computable": 46
+  },
+  "0000076334": {
+   "identity_ties": 46
+  },
+  "0000077360": {
+   "identity_ties": 45
+  },
+  "0000077476": {
+   "identity_ties": 35
+  },
+  "0000078003": {
+   "identity_ties": 45
+  },
+  "0000079879": {
+   "identity_ties": 45
+  },
+  "0000080420": {
+   "identity_ties": 46
+  },
+  "0000080424": {
+   "identity_ties": 46
+  },
+  "0000080661": {
+   "identity_ties": 40,
+   "identity_gap": 5,
+   "printed_total_identity_gap": 5
+  },
+  "0000084246": {
+   "identity_ties": 46
+  },
+  "0000084839": {
+   "identity_ties": 46
+  },
+  "0000085535": {
+   "identity_ties": 46
+  },
+  "0000085961": {
+   "identity_ties": 46
+  },
+  "0000086312": {
+   "identity_ties": 46
+  },
+  "0000087347": {
+   "identity_ties": 46
+  },
+  "0000089439": {
+   "identity_ties": 46
+  },
+  "0000091142": {
+   "identity_ties": 46
+  },
+  "0000091419": {
+   "identity_ties": 45
+  },
+  "0000091440": {
+   "identity_ties": 46
+  },
+  "0000091576": {
+   "identity_ties": 46
+  },
+  "0000092122": {},
+  "0000092230": {
+   "identity_ties": 46
+  },
+  "0000093410": {
+   "identity_ties": 46
+  },
+  "0000093751": {
+   "identity_ties": 46
+  },
+  "0000094845": {
+   "identity_ties": 46
+  },
+  "0000096223": {
+   "identity_gap": 36,
+   "printed_total_identity_gap": 36,
+   "identity_ties": 10
+  },
+  "0000096943": {
+   "identity_ties": 46
+  },
+  "0000097210": {
+   "identity_ties": 44
+  },
+  "0000097216": {
+   "identity_ties": 46
+  },
+  "0000097476": {
+   "identity_ties": 46
+  },
+  "0000100885": {
+   "identity_ties": 46
+  },
+  "0000101382": {
+   "identity_ties": 46
+  },
+  "0000101829": {
+   "identity_ties": 45,
+   "not_computable": 1
+  },
+  "0000105634": {
+   "identity_ties": 46
+  },
+  "0000105770": {
+   "identity_ties": 46
+  },
+  "0000106040": {
+   "identity_ties": 46
+  },
+  "0000106535": {
+   "identity_ties": 45
+  },
+  "0000108312": {
+   "identity_ties": 47
+  },
+  "0000109380": {
+   "identity_ties": 46
+  },
+  "0000109563": {
+   "identity_ties": 46
+  },
+  "0000200406": {
+   "identity_ties": 46
+  },
+  "0000216228": {
+   "identity_ties": 44
+  },
+  "0000217346": {
+   "identity_ties": 45
+  },
+  "0000277509": {
+   "identity_ties": 46
+  },
+  "0000277948": {
+   "identity_ties": 46
+  },
+  "0000313927": {
+   "identity_ties": 46
+  },
+  "0000315189": {
+   "identity_ties": 47,
+   "not_computable": 1
+  },
+  "0000315293": {
+   "identity_ties": 46
+  },
+  "0000315852": {
+   "identity_ties": 45
+  },
+  "0000316709": {
+   "identity_ties": 46
+  },
+  "0000319201": {
+   "identity_ties": 46
+  },
+  "0000320193": {
+   "identity_ties": 46
+  },
+  "0000320335": {
+   "identity_ties": 46
+  },
+  "0000350894": {
+   "identity_ties": 42
+  },
+  "0000354950": {
+   "identity_ties": 46
+  },
+  "0000702165": {
+   "identity_ties": 46
+  },
+  "0000704532": {
+   "identity_ties": 48
+  },
+  "0000707179": {
+   "identity_ties": 45
+  },
+  "0000707549": {
+   "identity_ties": 46,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000711404": {
+   "identity_ties": 47
+  },
+  "0000713676": {
+   "identity_ties": 46
+  },
+  "0000714310": {
+   "identity_ties": 46
+  },
+  "0000715957": {
+   "identity_ties": 45
+  },
+  "0000717605": {
+   "identity_ties": 46
+  },
+  "0000719413": {
+   "identity_ties": 46,
+   "not_computable": 1
+  },
+  "0000719955": {
+   "identity_ties": 45
+  },
+  "0000720005": {
+   "identity_ties": 46
+  },
+  "0000720672": {
+   "identity_ties": 45
+  },
+  "0000723125": {
+   "identity_gap": 5,
+   "printed_total_identity_gap": 5,
+   "identity_ties": 41
+  },
+  "0000723531": {
+   "identity_ties": 47
+  },
+  "0000726728": {
+   "identity_ties": 46
+  },
+  "0000726958": {
+   "identity_ties": 46
+  },
+  "0000729986": {
+   "identity_ties": 46
+  },
+  "0000731766": {
+   "identity_ties": 46
+  },
+  "0000740260": {
+   "identity_ties": 46
+  },
+  "0000749251": {
+   "identity_ties": 46
+  },
+  "0000750577": {
+   "identity_ties": 46
+  },
+  "0000751364": {
+   "identity_ties": 45
+  },
+  "0000751978": {
+   "identity_ties": 45
+  },
+  "0000759944": {
+   "identity_ties": 46
+  },
+  "0000763901": {
+   "identity_ties": 46
+  },
+  "0000764038": {
+   "identity_ties": 46
+  },
+  "0000764065": {
+   "identity_ties": 47
+  },
+  "0000764180": {
+   "identity_ties": 46
+  },
+  "0000765880": {
+   "identity_ties": 46
+  },
+  "0000766704": {
+   "identity_ties": 45
+  },
+  "0000779152": {
+   "identity_ties": 44
+  },
+  "0000785161": {
+   "identity_ties": 46
+  },
+  "0000785786": {
+   "identity_ties": 43
+  },
+  "0000789019": {
+   "identity_ties": 46
+  },
+  "0000794170": {
+   "identity_ties": 47
+  },
+  "0000796343": {
+   "identity_ties": 46
+  },
+  "0000797721": {
+   "identity_ties": 47,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000798354": {
+   "identity_ties": 46
+  },
+  "0000798941": {
+   "identity_ties": 46
+  },
+  "0000802481": {
+   "identity_ties": 46
+  },
+  "0000804328": {
+   "identity_ties": 46
+  },
+  "0000814547": {
+   "identity_ties": 46
+  },
+  "0000818686": {
+   "identity_ties": 35
+  },
+  "0000820027": {
+   "identity_ties": 46
+  },
+  "0000820318": {
+   "identity_ties": 44,
+   "identity_gap": 2,
+   "printed_total_identity_gap": 2
+  },
+  "0000822416": {
+   "identity_ties": 46
+  },
+  "0000823768": {
+   "identity_ties": 46
+  },
+  "0000827052": {},
+  "0000829224": {
+   "identity_ties": 46
+  },
+  "0000831001": {
+   "identity_ties": 44
+  },
+  "0000831259": {
+   "identity_ties": 46
+  },
+  "0000832101": {
+   "identity_ties": 46
+  },
+  "0000840489": {
+   "identity_ties": 46
+  },
+  "0000849395": {
+   "identity_ties": 11
+  },
+  "0000849399": {
+   "identity_ties": 46,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000855658": {
+   "identity_ties": 46
+  },
+  "0000857005": {
+   "identity_ties": 47
+  },
+  "0000858877": {
+   "identity_ties": 47,
+   "not_computable": 1
+  },
+  "0000864749": {
+   "identity_ties": 45
+  },
+  "0000866291": {
+   "identity_ties": 24
+  },
+  "0000866706": {
+   "identity_ties": 46
+  },
+  "0000868671": {
+   "identity_ties": 46
+  },
+  "0000868857": {
+   "identity_ties": 46
+  },
+  "0000872589": {
+   "identity_ties": 46
+  },
+  "0000874015": {
+   "identity_ties": 46
+  },
+  "0000874716": {
+   "identity_ties": 47,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000874766": {
+   "identity_ties": 46
+  },
+  "0000875045": {
+   "identity_ties": 45
+  },
+  "0000875320": {
+   "identity_ties": 46,
+   "not_computable": 2
+  },
+  "0000875357": {
+   "identity_ties": 46
+  },
+  "0000876437": {
+   "identity_ties": 46
+  },
+  "0000877212": {
+   "identity_ties": 45
+  },
+  "0000878927": {
+   "identity_ties": 47
+  },
+  "0000879101": {
+   "identity_ties": 46
+  },
+  "0000879169": {
+   "identity_ties": 45
+  },
+  "0000880266": {
+   "identity_ties": 46
+  },
+  "0000882184": {
+   "identity_ties": 46
+  },
+  "0000882835": {
+   "identity_ties": 46
+  },
+  "0000883241": {
+   "identity_ties": 47
+  },
+  "0000884614": {
+   "identity_ties": 46
+  },
+  "0000885550": {
+   "identity_ties": 46
+  },
+  "0000886163": {
+   "identity_ties": 37,
+   "identity_gap": 9,
+   "printed_total_identity_gap": 9
+  },
+  "0000886982": {
+   "identity_ties": 46
+  },
+  "0000887343": {
+   "identity_ties": 46
+  },
+  "0000888491": {
+   "identity_ties": 46
+  },
+  "0000895417": {
+   "identity_ties": 45
+  },
+  "0000895421": {
+   "identity_ties": 46
+  },
+  "0000896159": {
+   "identity_ties": 45
+  },
+  "0000896878": {
+   "identity_ties": 46
+  },
+  "0000898174": {
+   "identity_ties": 46
+  },
+  "0000898293": {
+   "identity_ties": 46
+  },
+  "0000899051": {
+   "identity_ties": 46
+  },
+  "0000899689": {
+   "identity_gap": 21,
+   "printed_total_identity_gap": 21,
+   "identity_ties": 25
+  },
+  "0000900075": {
+   "identity_ties": 44,
+   "identity_gap": 3,
+   "printed_total_identity_gap": 3
+  },
+  "0000906107": {
+   "identity_gap": 7,
+   "printed_total_identity_gap": 7,
+   "identity_ties": 37
+  },
+  "0000906163": {
+   "identity_ties": 46
+  },
+  "0000906345": {
+   "identity_ties": 46
+  },
+  "0000908937": {
+   "identity_ties": 46
+  },
+  "0000909832": {
+   "identity_ties": 42
+  },
+  "0000910606": {
+   "identity_ties": 30
+  },
+  "0000912242": {
+   "identity_ties": 46
+  },
+  "0000912593": {
+   "identity_ties": 5,
+   "identity_gap": 40,
+   "printed_total_identity_gap": 40
+  },
+  "0000912595": {
+   "identity_ties": 29
+  },
+  "0000912615": {
+   "identity_ties": 47
+  },
+  "0000913144": {
+   "identity_ties": 46
+  },
+  "0000913760": {
+   "identity_ties": 46
+  },
+  "0000914208": {
+   "identity_ties": 46
+  },
+  "0000914475": {
+   "identity_ties": 46
+  },
+  "0000915389": {
+   "identity_ties": 46
+  },
+  "0000916076": {
+   "identity_ties": 46
+  },
+  "0000916365": {
+   "identity_ties": 46
+  },
+  "0000916540": {
+   "identity_ties": 46
+  },
+  "0000917251": {
+   "identity_ties": 46
+  },
+  "0000917273": {
+   "identity_ties": 45
+  },
+  "0000920148": {
+   "identity_gap": 46,
+   "printed_total_identity_gap": 46
+  },
+  "0000920371": {
+   "identity_ties": 38,
+   "identity_gap": 8,
+   "printed_total_identity_gap": 8
+  },
+  "0000920522": {
+   "identity_ties": 46
+  },
+  "0000920760": {
+   "identity_ties": 46
+  },
+  "0000921638": {
+   "identity_ties": 19
+  },
+  "0000921825": {
+   "identity_ties": 46
+  },
+  "0000922621": {
+   "identity_ties": 46
+  },
+  "0000927003": {
+   "identity_ties": 40,
+   "identity_gap": 7,
+   "printed_total_identity_gap": 7
+  },
+  "0000927066": {
+   "identity_ties": 46
+  },
+  "0000927628": {
+   "identity_ties": 46
+  },
+  "0000929008": {
+   "identity_ties": 46
+  },
+  "0000935703": {
+   "identity_ties": 44,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0000936395": {
+   "identity_ties": 47,
+   "not_computable": 3
+  },
+  "0000936468": {
+   "identity_ties": 46
+  },
+  "0000939767": {
+   "identity_ties": 47
+  },
+  "0000940944": {
+   "identity_ties": 45
+  },
+  "0000943452": {
+   "identity_ties": 46
+  },
+  "0000943819": {
+   "identity_ties": 46
+  },
+  "0000944695": {
+   "identity_ties": 46
+  },
+  "0000945841": {
+   "identity_ties": 45
+  },
+  "0000946581": {
+   "identity_ties": 46
+  },
+  "0000947484": {
+   "identity_ties": 46
+  },
+  "0001000228": {
+   "identity_ties": 46
+  },
+  "0001000697": {
+   "identity_ties": 45
+  },
+  "0001001316": {
+   "identity_ties": 46
+  },
+  "0001002047": {
+   "identity_ties": 47
+  },
+  "0001003078": {
+   "identity_ties": 45
+  },
+  "0001004434": {
+   "identity_ties": 46
+  },
+  "0001013237": {
+   "identity_ties": 46
+  },
+  "0001013857": {
+   "identity_ties": 46
+  },
+  "0001013871": {
+   "identity_ties": 45
+  },
+  "0001014473": {
+   "identity_ties": 46
+  },
+  "0001015328": {
+   "identity_ties": 46
+  },
+  "0001018963": {
+   "identity_ties": 47,
+   "not_computable": 1
+  },
+  "0001019849": {
+   "identity_ties": 46
+  },
+  "0001021635": {
+   "identity_ties": 45
+  },
+  "0001021860": {
+   "identity_ties": 45
+  },
+  "0001023128": {
+   "identity_ties": 46,
+   "identity_gap": 2,
+   "printed_total_identity_gap": 2
+  },
+  "0001025378": {
+   "identity_ties": 46
+  },
+  "0001030894": {
+   "identity_ties": 7
+  },
+  "0001031308": {
+   "identity_ties": 24
+  },
+  "0001032975": {
+   "identity_ties": 46
+  },
+  "0001035267": {
+   "identity_ties": 46
+  },
+  "0001035443": {
+   "identity_gap": 19,
+   "printed_total_identity_gap": 19,
+   "identity_ties": 27
+  },
+  "0001035983": {
+   "identity_ties": 46
+  },
+  "0001037038": {
+   "identity_ties": 46
+  },
+  "0001037540": {
+   "identity_gap": 17,
+   "printed_total_identity_gap": 17,
+   "identity_ties": 29
+  },
+  "0001037646": {
+   "identity_ties": 45
+  },
+  "0001037868": {
+   "identity_ties": 46
+  },
+  "0001037976": {
+   "identity_ties": 46
+  },
+  "0001038074": {
+   "identity_ties": 45
+  },
+  "0001039399": {
+   "identity_ties": 46
+  },
+  "0001041061": {
+   "identity_ties": 45
+  },
+  "0001042046": {
+   "identity_ties": 46
+  },
+  "0001043219": {
+   "identity_ties": 46
+  },
+  "0001043277": {
+   "identity_ties": 46
+  },
+  "0001045609": {
+   "identity_ties": 45
+  },
+  "0001046102": {
+   "identity_ties": 37,
+   "identity_gap": 6,
+   "printed_total_identity_gap": 6
+  },
+  "0001047127": {
+   "identity_ties": 45
+  },
+  "0001048477": {
+   "identity_ties": 46
+  },
+  "0001050446": {
+   "identity_ties": 46
+  },
+  "0001050915": {
+   "identity_ties": 46
+  },
+  "0001051470": {
+   "identity_ties": 46
+  },
+  "0001053507": {
+   "identity_ties": 46
+  },
+  "0001057352": {
+   "identity_ties": 46
+  },
+  "0001058090": {
+   "identity_ties": 46
+  },
+  "0001058290": {
+   "identity_ties": 45
+  },
+  "0001059556": {
+   "identity_ties": 46
+  },
+  "0001061983": {
+   "identity_ties": 46
+  },
+  "0001063761": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 45
+  },
+  "0001065088": {
+   "identity_ties": 46
+  },
+  "0001065280": {
+   "identity_ties": 46
+  },
+  "0001067701": {
+   "identity_ties": 45
+  },
+  "0001067983": {
+   "identity_ties": 40,
+   "not_computable": 6
+  },
+  "0001068851": {
+   "identity_ties": 46
+  },
+  "0001069157": {
+   "identity_ties": 46
+  },
+  "0001069183": {
+   "identity_ties": 47,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001069202": {
+   "identity_gap": 3,
+   "printed_total_identity_gap": 3,
+   "identity_ties": 42
+  },
+  "0001069258": {
+   "identity_ties": 46
+  },
+  "0001070750": {
+   "identity_ties": 46
+  },
+  "0001071739": {
+   "identity_ties": 46
+  },
+  "0001075531": {
+   "identity_ties": 36,
+   "identity_gap": 10,
+   "printed_total_identity_gap": 10
+  },
+  "0001082554": {
+   "identity_ties": 46
+  },
+  "0001086222": {
+   "identity_ties": 46
+  },
+  "0001090872": {
+   "identity_ties": 47
+  },
+  "0001093557": {
+   "identity_ties": 46
+  },
+  "0001094285": {
+   "identity_ties": 45
+  },
+  "0001094831": {
+   "identity_ties": 46
+  },
+  "0001095073": {
+   "identity_ties": 46
+  },
+  "0001096343": {
+   "identity_ties": 46
+  },
+  "0001097149": {
+   "identity_ties": 46
+  },
+  "0001097864": {
+   "identity_ties": 46
+  },
+  "0001099219": {
+   "identity_ties": 46
+  },
+  "0001099590": {
+   "identity_ties": 46
+  },
+  "0001100682": {
+   "identity_ties": 46
+  },
+  "0001101239": {
+   "identity_ties": 46
+  },
+  "0001103982": {
+   "identity_ties": 45
+  },
+  "0001104506": {
+   "identity_ties": 46
+  },
+  "0001107843": {
+   "identity_ties": 46
+  },
+  "0001108426": {},
+  "0001108524": {
+   "identity_ties": 46
+  },
+  "0001109357": {
+   "identity_ties": 45
+  },
+  "0001113169": {
+   "identity_ties": 46
+  },
+  "0001116132": {
+   "identity_ties": 46
+  },
+  "0001120193": {
+   "identity_ties": 46
+  },
+  "0001123360": {
+   "identity_ties": 47
+  },
+  "0001125376": {
+   "identity_ties": 47
+  },
+  "0001126328": {
+   "identity_ties": 45
+  },
+  "0001133421": {
+   "identity_ties": 46
+  },
+  "0001136869": {
+   "identity_ties": 46
+  },
+  "0001136893": {
+   "identity_ties": 46
+  },
+  "0001137774": {
+   "identity_ties": 35,
+   "identity_gap": 11,
+   "printed_total_identity_gap": 11
+  },
+  "0001137789": {
+   "identity_ties": 47
+  },
+  "0001138118": {
+   "identity_ties": 46
+  },
+  "0001140536": {
+   "identity_ties": 46
+  },
+  "0001141391": {
+   "identity_ties": 46
+  },
+  "0001144215": {
+   "identity_ties": 46
+  },
+  "0001145197": {
+   "identity_ties": 47
+  },
+  "0001156039": {
+   "identity_ties": 46
+  },
+  "0001156375": {
+   "identity_ties": 46
+  },
+  "0001157601": {
+   "identity_ties": 46
+  },
+  "0001158114": {
+   "identity_ties": 46
+  },
+  "0001159152": {
+   "identity_ties": 2
+  },
+  "0001163165": {
+   "identity_ties": 46
+  },
+  "0001164727": {
+   "identity_ties": 46
+  },
+  "0001164863": {
+   "identity_ties": 46
+  },
+  "0001170010": {
+   "identity_ties": 47
+  },
+  "0001174922": {
+   "identity_ties": 46
+  },
+  "0001176948": {
+   "identity_gap": 30,
+   "printed_total_identity_gap": 30,
+   "identity_ties": 16
+  },
+  "0001177394": {
+   "identity_ties": 46
+  },
+  "0001177609": {
+   "identity_ties": 48
+  },
+  "0001178670": {
+   "identity_ties": 45
+  },
+  "0001179929": {
+   "identity_ties": 46
+  },
+  "0001192448": {
+   "identity_ties": 45
+  },
+  "0001206264": {
+   "identity_ties": 46
+  },
+  "0001212545": {
+   "identity_ties": 39,
+   "identity_gap": 7,
+   "printed_total_identity_gap": 7
+  },
+  "0001214816": {
+   "identity_ties": 45
+  },
+  "0001236275": {
+   "identity_ties": 45,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001237831": {
+   "identity_ties": 46
+  },
+  "0001260221": {
+   "identity_ties": 46
+  },
+  "0001261333": {
+   "identity_ties": 34
+  },
+  "0001262039": {
+   "identity_ties": 46
+  },
+  "0001262823": {
+   "identity_ties": 46
+  },
+  "0001267238": {
+   "identity_ties": 46
+  },
+  "0001274494": {
+   "identity_ties": 46
+  },
+  "0001278021": {
+   "identity_ties": 46
+  },
+  "0001280452": {
+   "identity_ties": 46
+  },
+  "0001281761": {
+   "identity_ties": 46
+  },
+  "0001282637": {
+   "identity_ties": 46
+  },
+  "0001287750": {
+   "identity_ties": 16
+  },
+  "0001289308": {
+   "identity_ties": 44
+  },
+  "0001289419": {
+   "identity_ties": 46
+  },
+  "0001289460": {
+   "identity_ties": 46
+  },
+  "0001289490": {
+   "identity_ties": 46
+  },
+  "0001297989": {
+   "identity_ties": 45
+  },
+  "0001297996": {
+   "identity_ties": 45
+  },
+  "0001298675": {
+   "identity_ties": 45
+  },
+  "0001300514": {
+   "identity_ties": 46
+  },
+  "0001302215": {
+   "identity_ties": 44
+  },
+  "0001308547": {
+   "identity_ties": 46
+  },
+  "0001309108": {
+   "identity_gap": 6,
+   "printed_total_identity_gap": 6,
+   "identity_ties": 40
+  },
+  "0001315098": {
+   "identity_ties": 22
+  },
+  "0001316835": {
+   "identity_ties": 46
+  },
+  "0001318220": {
+   "identity_ties": 41,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001318605": {
+   "identity_gap": 5,
+   "printed_total_identity_gap": 5,
+   "identity_ties": 41
+  },
+  "0001319161": {
+   "identity_ties": 47
+  },
+  "0001321655": {
+   "identity_ties": 24
+  },
+  "0001321732": {
+   "identity_ties": 43,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001324948": {
+   "identity_ties": 46,
+   "not_computable": 2
+  },
+  "0001326110": {
+   "identity_ties": 44
+  },
+  "0001326380": {
+   "identity_ties": 45
+  },
+  "0001326801": {
+   "identity_ties": 46
+  },
+  "0001327811": {
+   "identity_ties": 46
+  },
+  "0001331520": {
+   "identity_ties": 46
+  },
+  "0001331875": {
+   "identity_ties": 46
+  },
+  "0001333986": {
+   "identity_ties": 34
+  },
+  "0001334036": {
+   "identity_ties": 46
+  },
+  "0001341766": {
+   "identity_ties": 35,
+   "identity_gap": 5,
+   "printed_total_identity_gap": 5
+  },
+  "0001352010": {
+   "identity_ties": 46
+  },
+  "0001360604": {
+   "identity_ties": 46
+  },
+  "0001360901": {
+   "identity_ties": 46
+  },
+  "0001370637": {
+   "identity_ties": 46
+  },
+  "0001373715": {
+   "identity_ties": 46
+  },
+  "0001375365": {
+   "identity_ties": 42
+  },
+  "0001381197": {
+   "identity_ties": 46
+  },
+  "0001383312": {
+   "identity_ties": 46
+  },
+  "0001384905": {
+   "identity_ties": 41,
+   "identity_gap": 5,
+   "printed_total_identity_gap": 5
+  },
+  "0001385157": {
+   "identity_ties": 46
+  },
+  "0001390777": {
+   "identity_ties": 46
+  },
+  "0001393052": {
+   "identity_ties": 47
+  },
+  "0001393311": {
+   "identity_ties": 46
+  },
+  "0001396009": {
+   "identity_ties": 45
+  },
+  "0001397187": {
+   "identity_ties": 45
+  },
+  "0001397911": {
+   "identity_ties": 46
+  },
+  "0001398659": {
+   "identity_ties": 46
+  },
+  "0001402436": {
+   "identity_ties": 39,
+   "identity_gap": 7,
+   "printed_total_identity_gap": 7
+  },
+  "0001403161": {
+   "identity_ties": 45
+  },
+  "0001403568": {
+   "identity_ties": 46
+  },
+  "0001404655": {
+   "identity_ties": 46
+  },
+  "0001405495": {
+   "identity_ties": 46
+  },
+  "0001408198": {
+   "identity_ties": 46
+  },
+  "0001408710": {
+   "identity_ties": 46
+  },
+  "0001411207": {
+   "identity_ties": 46
+  },
+  "0001413329": {
+   "identity_ties": 46
+  },
+  "0001415404": {
+   "identity_ties": 48
+  },
+  "0001418135": {
+   "identity_ties": 46
+  },
+  "0001423689": {
+   "identity_ties": 46
+  },
+  "0001423902": {
+   "identity_ties": 45
+  },
+  "0001428336": {
+   "identity_ties": 47
+  },
+  "0001428439": {
+   "identity_ties": 36
+  },
+  "0001433195": {
+   "identity_ties": 45
+  },
+  "0001433270": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 45
+  },
+  "0001439288": {
+   "identity_ties": 45
+  },
+  "0001441816": {
+   "identity_ties": 35
+  },
+  "0001442145": {
+   "identity_ties": 45
+  },
+  "0001443646": {
+   "identity_ties": 46
+  },
+  "0001447669": {
+   "identity_ties": 41
+  },
+  "0001448893": {
+   "identity_ties": 46
+  },
+  "0001451809": {
+   "identity_ties": 27
+  },
+  "0001466258": {
+   "identity_ties": 46
+  },
+  "0001467623": {
+   "identity_ties": 34
+  },
+  "0001467858": {
+   "identity_ties": 46
+  },
+  "0001468174": {
+   "identity_ties": 47,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001472787": {
+   "identity_ties": 46
+  },
+  "0001474432": {
+   "identity_ties": 41
+  },
+  "0001474735": {
+   "identity_ties": 46
+  },
+  "0001475922": {
+   "identity_ties": 46
+  },
+  "0001476150": {
+   "identity_ties": 46
+  },
+  "0001477294": {
+   "identity_ties": 46
+  },
+  "0001477333": {
+   "identity_ties": 28
+  },
+  "0001478242": {
+   "identity_ties": 45
+  },
+  "0001479094": {
+   "identity_ties": 45
+  },
+  "0001486159": {
+   "identity_ties": 46
+  },
+  "0001492691": {
+   "identity_ties": 45
+  },
+  "0001493594": {
+   "identity_ties": 47
+  },
+  "0001501585": {
+   "identity_ties": 46
+  },
+  "0001506293": {
+   "identity_ties": 30
+  },
+  "0001506307": {
+   "identity_ties": 46
+  },
+  "0001510295": {
+   "identity_ties": 46
+  },
+  "0001511737": {
+   "identity_ties": 46
+  },
+  "0001512673": {
+   "identity_ties": 42
+  },
+  "0001513761": {
+   "identity_ties": 46
+  },
+  "0001516513": {
+   "identity_ties": 21
+  },
+  "0001520262": {
+   "identity_ties": 46
+  },
+  "0001521036": {
+   "identity_ties": 45
+  },
+  "0001521332": {
+   "identity_ties": 46
+  },
+  "0001524472": {
+   "identity_ties": 45,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001527166": {
+   "identity_gap": 20,
+   "printed_total_identity_gap": 20,
+   "identity_ties": 26
+  },
+  "0001528396": {
+   "identity_ties": 47
+  },
+  "0001534504": {
+   "identity_ties": 46
+  },
+  "0001534701": {
+   "identity_ties": 46
+  },
+  "0001535527": {
+   "identity_ties": 30
+  },
+  "0001535929": {
+   "identity_ties": 46
+  },
+  "0001539838": {
+   "identity_ties": 46
+  },
+  "0001543151": {
+   "identity_ties": 30
+  },
+  "0001552000": {
+   "identity_ties": 37,
+   "identity_gap": 9,
+   "printed_total_identity_gap": 9
+  },
+  "0001552033": {
+   "identity_ties": 45
+  },
+  "0001552275": {
+   "identity_ties": 45,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001555280": {
+   "identity_ties": 46
+  },
+  "0001559720": {
+   "identity_ties": 22
+  },
+  "0001560385": {
+   "identity_ties": 46
+  },
+  "0001561550": {
+   "identity_ties": 28
+  },
+  "0001562088": {
+   "identity_ties": 21
+  },
+  "0001562401": {
+   "identity_ties": 46
+  },
+  "0001563190": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 21
+  },
+  "0001564408": {
+   "identity_ties": 38
+  },
+  "0001567094": {
+   "identity_ties": 16
+  },
+  "0001567683": {
+   "identity_ties": 46
+  },
+  "0001568651": {
+   "identity_ties": 22
+  },
+  "0001570827": {
+   "identity_ties": 35,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001571283": {
+   "identity_ties": 46
+  },
+  "0001571949": {
+   "identity_ties": 46
+  },
+  "0001571996": {
+   "identity_ties": 40
+  },
+  "0001573516": {
+   "identity_ties": 46
+  },
+  "0001575515": {
+   "identity_ties": 45
+  },
+  "0001575965": {
+   "identity_ties": 46
+  },
+  "0001576280": {
+   "identity_ties": 31,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001579091": {
+   "identity_gap": 12,
+   "printed_total_identity_gap": 12
+  },
+  "0001579241": {
+   "identity_ties": 46
+  },
+  "0001579878": {
+   "identity_ties": 5
+  },
+  "0001581068": {
+   "identity_ties": 46
+  },
+  "0001581280": {
+   "identity_ties": 31
+  },
+  "0001582961": {
+   "identity_ties": 22
+  },
+  "0001583708": {
+   "identity_ties": 21
+  },
+  "0001584207": {
+   "identity_ties": 45
+  },
+  "0001585521": {
+   "identity_ties": 30
+  },
+  "0001585689": {
+   "identity_ties": 46
+  },
+  "0001590364": {
+   "identity_gap": 2,
+   "printed_total_identity_gap": 2,
+   "identity_ties": 44
+  },
+  "0001590714": {
+   "identity_ties": 46
+  },
+  "0001590717": {
+   "identity_ties": 46
+  },
+  "0001590895": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 45
+  },
+  "0001591698": {
+   "identity_ties": 46
+  },
+  "0001596532": {
+   "identity_ties": 46
+  },
+  "0001599298": {
+   "identity_ties": 24
+  },
+  "0001600033": {
+   "identity_ties": 40
+  },
+  "0001601046": {
+   "identity_ties": 47
+  },
+  "0001601712": {
+   "identity_ties": 46
+  },
+  "0001603923": {
+   "identity_ties": 45,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001604028": {
+   "identity_gap": 46,
+   "printed_total_identity_gap": 46
+  },
+  "0001604821": {
+   "identity_ties": 45
+  },
+  "0001611052": {
+   "identity_ties": 21
+  },
+  "0001613103": {
+   "identity_ties": 46
+  },
+  "0001616707": {
+   "identity_ties": 46
+  },
+  "0001616862": {
+   "identity_ties": 45
+  },
+  "0001618673": {
+   "identity_ties": 43
+  },
+  "0001618732": {
+   "identity_ties": 40
+  },
+  "0001618756": {
+   "identity_gap": 2,
+   "printed_total_identity_gap": 2,
+   "identity_ties": 46
+  },
+  "0001628171": {
+   "identity_ties": 26
+  },
+  "0001633917": {
+   "identity_ties": 44
+  },
+  "0001635088": {
+   "identity_ties": 21
+  },
+  "0001635327": {
+   "identity_ties": 10
+  },
+  "0001636282": {
+   "identity_gap": 4,
+   "printed_total_identity_gap": 4,
+   "identity_ties": 38
+  },
+  "0001636519": {
+   "identity_ties": 44
+  },
+  "0001638826": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 7
+  },
+  "0001639300": {
+   "identity_ties": 43
+  },
+  "0001639438": {
+   "identity_ties": 12
+  },
+  "0001639723": {
+   "identity_ties": 4
+  },
+  "0001640147": {
+   "identity_ties": 24
+  },
+  "0001642896": {
+   "identity_ties": 18
+  },
+  "0001649094": {
+   "identity_ties": 25
+  },
+  "0001649904": {
+   "identity_ties": 36
+  },
+  "0001650164": {
+   "identity_ties": 20
+  },
+  "0001650372": {
+   "identity_ties": 16
+  },
+  "0001653482": {
+   "identity_ties": 20
+  },
+  "0001658566": {
+   "identity_ties": 42
+  },
+  "0001660134": {
+   "identity_ties": 38
+  },
+  "0001664703": {
+   "identity_ties": 34,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001665918": {
+   "identity_ties": 29,
+   "identity_gap": 12,
+   "printed_total_identity_gap": 12
+  },
+  "0001668397": {
+   "identity_ties": 41
+  },
+  "0001669162": {
+   "identity_ties": 40
+  },
+  "0001671933": {
+   "identity_ties": 40
+  },
+  "0001673358": {
+   "identity_ties": 40
+  },
+  "0001674101": {
+   "identity_gap": 6,
+   "printed_total_identity_gap": 6,
+   "identity_ties": 27
+  },
+  "0001675149": {
+   "identity_ties": 40
+  },
+  "0001679049": {
+   "identity_ties": 40
+  },
+  "0001679788": {
+   "identity_ties": 22
+  },
+  "0001682852": {
+   "identity_ties": 31,
+   "not_computable": 1
+  },
+  "0001687229": {
+   "identity_ties": 38
+  },
+  "0001689548": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 23
+  },
+  "0001690820": {
+   "identity_ties": 37
+  },
+  "0001692819": {
+   "identity_ties": 38
+  },
+  "0001699150": {
+   "identity_ties": 37
+  },
+  "0001705696": {
+   "not_computable": 1,
+   "identity_ties": 35
+  },
+  "0001707753": {
+   "identity_ties": 32
+  },
+  "0001711279": {
+   "identity_ties": 35
+  },
+  "0001713445": {
+   "identity_ties": 10
+  },
+  "0001713683": {
+   "identity_ties": 34
+  },
+  "0001718512": {
+   "identity_ties": 34
+  },
+  "0001720635": {
+   "identity_ties": 34
+  },
+  "0001722482": {
+   "identity_ties": 28
+  },
+  "0001722684": {
+   "identity_ties": 34
+  },
+  "0001728951": {
+   "identity_ties": 33
+  },
+  "0001730168": {
+   "identity_ties": 19,
+   "identity_gap": 12,
+   "printed_total_identity_gap": 12
+  },
+  "0001730430": {
+   "identity_ties": 32
+  },
+  "0001734722": {
+   "identity_ties": 22
+  },
+  "0001736035": {
+   "identity_ties": 16
+  },
+  "0001736297": {
+   "identity_ties": 10
+  },
+  "0001739104": {
+   "identity_ties": 32
+  },
+  "0001739445": {
+   "identity_ties": 32
+  },
+  "0001739940": {
+   "identity_ties": 31
+  },
+  "0001748790": {
+   "identity_ties": 30
+  },
+  "0001751008": {
+   "identity_ties": 22
+  },
+  "0001757898": {
+   "identity_ties": 30
+  },
+  "0001759509": {
+   "identity_ties": 30
+  },
+  "0001766502": {
+   "identity_ties": 30
+  },
+  "0001769628": {
+   "identity_gap": 2,
+   "printed_total_identity_gap": 2,
+   "identity_ties": 4
+  },
+  "0001770787": {
+   "identity_ties": 28,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001773383": {
+   "identity_ties": 26,
+   "identity_gap": 3,
+   "printed_total_identity_gap": 3
+  },
+  "0001780312": {
+   "identity_gap": 6,
+   "printed_total_identity_gap": 6,
+   "identity_ties": 22
+  },
+  "0001781335": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 25
+  },
+  "0001783180": {
+   "identity_ties": 25
+  },
+  "0001783879": {
+   "identity_ties": 21
+  },
+  "0001792044": {
+   "identity_ties": 27
+  },
+  "0001792580": {
+   "identity_ties": 27
+  },
+  "0001792789": {
+   "identity_ties": 23
+  },
+  "0001796209": {
+   "identity_ties": 26
+  },
+  "0001800667": {
+   "identity_ties": 24
+  },
+  "0001802768": {
+   "identity_ties": 25
+  },
+  "0001805284": {
+   "identity_ties": 25
+  },
+  "0001807794": {
+   "identity_ties": 19
+  },
+  "0001810806": {
+   "identity_ties": 24
+  },
+  "0001811074": {
+   "identity_ties": 23
+  },
+  "0001815442": {
+   "identity_ties": 24
+  },
+  "0001819994": {
+   "identity_ties": 23,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001820953": {
+   "identity_ties": 23
+  },
+  "0001822993": {
+   "identity_ties": 22
+  },
+  "0001823529": {
+   "identity_ties": 20
+  },
+  "0001824920": {
+   "identity_ties": 24
+  },
+  "0001828108": {
+   "identity_ties": 22
+  },
+  "0001834584": {
+   "identity_ties": 22
+  },
+  "0001835632": {
+   "identity_ties": 22
+  },
+  "0001837240": {
+   "identity_ties": 22,
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1
+  },
+  "0001842022": {
+   "identity_ties": 21
+  },
+  "0001849253": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 20
+  },
+  "0001851003": {
+   "identity_ties": 21
+  },
+  "0001852131": {
+   "identity_gap": 1,
+   "printed_total_identity_gap": 1,
+   "identity_ties": 14
+  },
+  "0001856437": {
+   "identity_ties": 21
+  },
+  "0001856525": {
+   "identity_ties": 21
+  },
+  "0001858681": {
+   "identity_ties": 18
+  },
+  "0001860742": {
+   "identity_ties": 18
+  },
+  "0001865782": {
+   "identity_ties": 10
+  },
+  "0001866581": {
+   "identity_ties": 20
+  },
+  "0001868159": {
+   "identity_ties": 9
+  },
+  "0001868275": {
+   "identity_ties": 19
+  },
+  "0001869198": {
+   "identity_ties": 20
+  },
+  "0001874178": {
+   "identity_ties": 20
+  },
+  "0001876042": {
+   "identity_ties": 5
+  },
+  "0001878848": {
+   "identity_ties": 4
+  },
+  "0001880661": {
+   "identity_ties": 18
+  },
+  "0001883685": {
+   "identity_ties": 18
+  },
+  "0001889539": {
+   "identity_ties": 16
+  },
+  "0001895262": {
+   "identity_ties": 16
+  },
+  "0001897762": {
+   "identity_ties": 8
+  },
+  "0001901440": {
+   "identity_ties": 10
+  },
+  "0001932393": {
+   "identity_ties": 13
+  },
+  "0001937926": {
+   "identity_ties": 7
+  },
+  "0001943896": {
+   "identity_ties": 10
+  },
+  "0001944048": {
+   "identity_ties": 14
+  },
+  "0001957132": {
+   "identity_ties": 3
+  },
+  "0001964738": {
+   "identity_ties": 10
+  },
+  "0001964789": {
+   "identity_ties": 12
+  },
+  "0001973266": {
+   "identity_ties": 12
+  },
+  "0001995807": {
+   "identity_ties": 9
+  },
+  "0001996810": {
+   "identity_ties": 10
+  },
+  "0002001184": {
+   "identity_ties": 10
+  },
+  "0002007855": {
+   "identity_ties": 6
+  },
+  "0002011641": {
+   "identity_ties": 9
+  },
+  "0002012383": {
+   "identity_ties": 4,
+   "identity_gap": 4,
+   "printed_total_identity_gap": 4
+  },
+  "0002015845": {
+   "identity_ties": 8
+  },
+  "0002019410": {
+   "identity_ties": 5
+  },
+  "0002021728": {
+   "identity_ties": 2
+  },
+  "0002023554": {
+   "identity_ties": 7
+  },
+  "0002025410": {
+   "identity_ties": 8
+  },
+  "0002030781": {
+   "identity_ties": 6
+  },
+  "0002035989": {
+   "identity_ties": 5
+  },
+  "0002046386": {
+   "identity_ties": 3
+  },
+  "0002054696": {
+   "identity_ties": 5
+  },
+  "0002058873": {
+   "identity_ties": 4
+  },
+  "0002063196": {
+   "identity_ties": 4
+  },
+  "0002064953": {
+   "identity_ties": 4
+  },
+  "0002065601": {
+   "identity_ties": 3
+  },
+  "0002074176": {
+   "identity_ties": 4
+  },
+  "0002082866": {
+   "identity_ties": 3
+  },
+  "0002083785": {
+   "identity_ties": 3
+  }
+ }
+}

@@ -32,6 +32,7 @@ SECTION_PARENT = {
     "d_and_a": re.compile(r"NetCashProvidedByUsedInOperatingActivities"),
     "capex": re.compile(r"NetCashProvidedByUsedInInvestingActivities"),
 }
+CF_ROLE_RX = re.compile(r"cash ?-?flows?", re.I)
 
 family, eras_path, cal_dir, out_path = sys.argv[1], sys.argv[2], Path(sys.argv[3]), sys.argv[4]
 eras = json.load(open(eras_path))
@@ -53,9 +54,21 @@ for cik, era_list in sorted(eras.items()):
             tax_era, arcs = cal["era"], cal["arcs"]
         parent_rx = SECTION_PARENT[family]
         confirmed = set()
+        # the filer's own cash-flow SECTION arithmetic from the statement role
+        # (never a note role): the section total tag and its signed roots. The
+        # replay publishes a member value only when the section ties on the
+        # same accession (the analogue of the balance-sheet identity gate;
+        # a verdict never depends on production's value).
+        section = {}
         for (role, parent), children in arcs.items():
-            if parent_rx.search(parent):
-                confirmed.update(c for c, *_ in children)
+            if not parent_rx.search(parent):
+                continue
+            confirmed.update(c for c, *_ in children)
+            if b.NOTE_ROLE_RX.search(role) or not CF_ROLE_RX.search(role):
+                continue
+            if len(children) > len(section.get("roots", [])):
+                section = {"total": parent, "role": role,
+                           "roots": [{"tag": c, "weight": w, "custom": cu} for c, w, cu in children]}
         members = []
         for m in era["members"]:
             mm = dict(m)
@@ -74,6 +87,8 @@ for cik, era_list in sorted(eras.items()):
             "evidence_accession": era["first"], "evidence_level": "FILING-CHECKED",
             "source": f"assemble_family.py ({family}: FSDS face lines + boundary cal)",
             "members": members,
+            "section": section or None,  # None -> no statement-role section cal: cells hold
+            "requires_section_tie": True,
         }
         out.write(json.dumps(rec) + "\n")
         n_rec += 1
