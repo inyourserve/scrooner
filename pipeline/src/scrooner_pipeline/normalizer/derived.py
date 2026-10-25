@@ -489,6 +489,10 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
             totals["no_company"] += 1
             continue
         try:
+            # A company with a very large fact history needs more than the pooler's
+            # 2-min default for its duration scans (CIK 0000707179 timed out nightly).
+            with conn.cursor() as cur:
+                cur.execute("set local statement_timeout = '30min'")
             stats = derive_q4_for_company(conn, company_id)
         except Exception as exc:
             totals["errored"] += 1
