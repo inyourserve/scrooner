@@ -540,7 +540,11 @@ def calculate_for_company(
                             conn, company_id
                         )
                     evidence_reason = quick_ratio_evidence.inventory_missing_reason(
-                        inventory_ctx, end
+                        inventory_ctx,
+                        end,
+                        sum(values_by_role["add"], Decimal(0))
+                        if values_by_role.get("add")
+                        else None,
                     )
                     if evidence_reason is not None:
                         incomplete_role = role
