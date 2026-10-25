@@ -141,6 +141,7 @@ create table ranalytics.canonical_fact_retired (
 """
 SCHEMA = """
 create schema rcore; create schema ranalytics;
+create table rcore.company (id bigint primary key, cik text);
 create table rcore.concept (id bigint primary key, tag text);
 create table rcore.unit (id bigint primary key, unit_name text);
 create table rcore.period (id bigint primary key, company_id bigint, start_date date,
@@ -173,6 +174,7 @@ def conn(isolated_database_url):
             "drop schema if exists rcore cascade; drop schema if exists ranalytics cascade"
         )
         c.execute(SCHEMA)
+        c.execute("insert into rcore.company values (1,'0000000001')")
         c.execute(ARCHIVE_DDL)
         c.execute(
             rr.FACT_AUTHORITY_RETIRED_DDL_DRAFT.replace("analytics.", "ranalytics.")
@@ -524,6 +526,8 @@ def test_rounded_copy_rule():
     assert rr._rounded_copy_of(D("770000000"), D("770293000"))  # SM
     assert rr._rounded_copy_of(D("29000000"), D("29373000"))  # WDAY
     assert rr._rounded_copy_of(D("230000000"), D("230141000"))  # NOW
+    assert rr._rounded_copy_of(D("-3900000000"), D("-3909000000"))  # ST
+    assert rr._rounded_copy_of(D("100000000"), D("100293000"))
     assert not rr._rounded_copy_of(D("1000000"), D("1100000"))  # restatement
     assert not rr._rounded_copy_of(D("770000000"), D("780000000"))
 
@@ -582,3 +586,103 @@ def test_pick_precise_resolves_sm_wday_now_rounding_but_not_restatements():
         rr._pick_precise([_fact(4, "1000000", filed=date(2025, 2, 1)), restated])
         is None
     )
+
+
+def _quarter_world(c, *, fy_value, fy_filing, extra_fy=()):
+    c.execute(
+        "insert into rcore.filing values (6,1,'K24','10-K','2024-02-01'),(7,1,'Q21','10-Q','2021-11-01'),(8,1,'K22','10-K','2022-02-01')"
+    )
+    c.execute(
+        "insert into rcore.period values (20,1,'2021-01-01','2021-12-31','duration',2021,'FY'),"
+        "(21,1,'2021-01-01','2021-09-30','duration',2021,null),(22,1,'2021-10-01','2021-12-31','duration',2021,'Q4')"
+    )
+    _f(c, 600, NI, USD, 22, 2, "999")  # the proxy-sourced value on the Q4 cell
+    _cell(c, CC_NI, 22, "999", [600])
+    _f(c, 610, NI, USD, 20, fy_filing, fy_value)
+    for i, (fid, filing, value) in enumerate(extra_fy):
+        _f(c, fid, NI, USD, 20, filing, value)
+    _f(c, 611, NI, USD, 21, 7, "-693000000")
+
+
+@pytest.mark.integration
+def test_derived_replacement_mixing_vintages_is_removed_and_same_vintage_kept(conn):
+    # EQH Q4 2021: restated year (filed 2024) minus original nine months (filed 2021)
+    _quarter_world(conn, fy_value="1755000000", fy_filing=6)
+    _f(conn, 601, NI, USD, 22, 8, "2448000000", derived=True)
+    cell = _plan_b(conn).cells[0]
+    assert (cell.action, cell.reason_code) == (rr.ACT_REMOVE, "derived_mixed_vintage")
+
+
+@pytest.mark.integration
+def test_derived_replacement_from_one_vintage_is_kept(conn):
+    _quarter_world(conn, fy_value="-439000000", fy_filing=8)
+    _f(conn, 601, NI, USD, 22, 8, "254000000", derived=True)
+    cell = _plan_b(conn).cells[0]
+    assert (cell.action, cell.replacement_fact_id) == (rr.ACT_REPLACE, 601)
+
+
+@pytest.mark.integration
+def test_derived_replacement_from_a_rounded_year_is_removed(conn):
+    # ST Q4 2023: year used -3,900M although the precise -3,909M is filed
+    _quarter_world(
+        conn, fy_value="-3900000000", fy_filing=8, extra_fy=[(612, 6, "-3909000000")]
+    )
+    _f(conn, 601, NI, USD, 22, 8, "-3207000000", derived=True)  # -3,900 - (-693)
+    cell = _plan_b(conn).cells[0]
+    assert (cell.action, cell.reason_code) == (
+        rr.ACT_REMOVE,
+        "derived_from_rounded_input",
+    )
+
+
+@pytest.mark.integration
+def test_blank_quarter_gets_its_attributable_year_and_ytd_repromoted(conn):
+    # LNG: nothing periodic for the quarter itself, the 10-K year and the 10-Q nine months
+    # are non-authoritative: re-promote them so the next Normalizer run can derive Q4
+    _quarter_world(conn, fy_value="-1000000000", fy_filing=8)
+    conn.execute(
+        "update rcore.fact set is_authoritative = false where id in (610, 611)"
+    )
+    plan = _plan_b(conn)
+    assert plan.cells[0].action == rr.ACT_REMOVE
+    assert plan.promote_fact_ids == [610, 611]
+
+
+def _blocked_nci(conn):
+    conn.execute(
+        "insert into rcore.concept values (13,'ProfitLoss'),(14,'NetIncomeLossAttributableToNoncontrollingInterest')"
+    )
+    conn.execute(
+        "insert into ranalytics.concept_mapping (canonical_concept_id, concept_id, priority) values (4,13,0)"
+    )
+    _f(conn, 700, NI, USD, 1, 2, "100")
+    _f(conn, 701, PROFIT, USD, 1, 1, "12874000000")
+    _f(conn, 702, 14, USD, 1, 5, "16000000")  # an NCI fact exists, but not on the face
+    _cell(conn, CC_NI, 1, "100", [700])
+    return _plan_b(conn)
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize(
+    ("labels", "released"),
+    [
+        (["Revenues", "Net Income"], True),  # MA: one bottom line
+        (
+            [
+                "Net income",
+                "Net income attributable to noncontrolling interests",
+                "Net income attributable to X",
+            ],
+            False,
+        ),
+        (None, False),  # statement not located: no evidence, stays hidden
+    ],
+)
+def test_nci_block_is_released_only_by_a_face_without_nci_line(conn, labels, released):
+    plan = _blocked_nci(conn)
+    assert plan.cells[0].reason_code == "proxy_nci_inclusive_only"
+    with conn.cursor() as cur:
+        rr.resolve_nci_face(cur, plan, lambda cik, acc: labels, core="rcore")
+    assert (plan.cells[0].action == rr.ACT_REPLACE) is released
+    if released:
+        assert plan.cells[0].replacement_fact_id == 701
