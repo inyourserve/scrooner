@@ -605,47 +605,92 @@ def _quarter_world(c, *, fy_value, fy_filing, extra_fy=()):
 
 
 @pytest.mark.integration
-def test_derived_replacement_mixing_vintages_is_removed_and_same_vintage_kept(conn):
-    # EQH Q4 2021: restated year (filed 2024) minus original nine months (filed 2021)
-    _quarter_world(conn, fy_value="1755000000", fy_filing=6)
+def test_eqh_year_copies_disagree_so_the_quarter_stays_hidden(conn):
+    # EQH Q4 2021: original year -439M and LDTI-restated year 1,755M are both filed;
+    # the founder ruling hides the quarter while the copies disagree
+    _quarter_world(
+        conn, fy_value="1755000000", fy_filing=6, extra_fy=[(612, 8, "-439000000")]
+    )
     _f(conn, 601, NI, USD, 22, 8, "2448000000", derived=True)
     cell = _plan_b(conn).cells[0]
-    assert (cell.action, cell.reason_code) == (rr.ACT_REMOVE, "derived_mixed_vintage")
+    assert (cell.action, cell.reason_code) == (rr.ACT_REMOVE, "derived_inputs_disagree")
 
 
 @pytest.mark.integration
-def test_derived_replacement_from_one_vintage_is_kept(conn):
-    _quarter_world(conn, fy_value="-439000000", fy_filing=8)
+def test_hubs_bah_precise_derivation_equal_to_stored_is_kept_whatever_the_filing_dates(
+    conn,
+):
+    # value-based: year and nine months filed far apart but one value each
+    _quarter_world(
+        conn, fy_value="-439000000", fy_filing=6
+    )  # year filed 2024, 9M filed 2021
     _f(conn, 601, NI, USD, 22, 8, "254000000", derived=True)
-    cell = _plan_b(conn).cells[0]
-    assert (cell.action, cell.replacement_fact_id) == (rr.ACT_REPLACE, 601)
+    plan = _plan_b(conn)
+    cell = plan.cells[0]
+    assert cell.action == rr.ACT_REPLACE and cell.replacement_value == Decimal(
+        "254000000"
+    )
+    assert cell.replacement_source_ids == (610, 611)
+    assert plan.info["quarters_rederived_same_as_stored"] == 1
 
 
 @pytest.mark.integration
-def test_derived_replacement_from_a_rounded_year_is_removed(conn):
-    # ST Q4 2023: year used -3,900M although the precise -3,909M is filed
+def test_rounded_input_is_replaced_by_the_precise_copy_ste_hood_st(conn):
+    # year filed rounded (-3,900M) and precise (-3,909M): the quarter uses the precise one
     _quarter_world(
         conn, fy_value="-3900000000", fy_filing=8, extra_fy=[(612, 6, "-3909000000")]
     )
-    _f(conn, 601, NI, USD, 22, 8, "-3207000000", derived=True)  # -3,900 - (-693)
-    cell = _plan_b(conn).cells[0]
-    assert (cell.action, cell.reason_code) == (
-        rr.ACT_REMOVE,
-        "derived_from_rounded_input",
-    )
+    _f(
+        conn, 601, NI, USD, 22, 8, "-3207000000", derived=True
+    )  # built from the rounded year
+    plan = _plan_b(conn)
+    cell = plan.cells[0]
+    assert cell.action == rr.ACT_REPLACE
+    assert cell.replacement_value == Decimal("-3216000000")  # -3,909 - (-693)
+    assert cell.replacement_source_ids == (612, 611)
+    assert plan.info["quarters_rederived_differs_from_stored"] == 1
 
 
 @pytest.mark.integration
-def test_blank_quarter_gets_its_attributable_year_and_ytd_repromoted(conn):
-    # LNG: nothing periodic for the quarter itself, the 10-K year and the 10-Q nine months
-    # are non-authoritative: re-promote them so the next Normalizer run can derive Q4
+def test_blank_quarter_is_rederived_from_nonauthoritative_inputs_and_they_are_promoted(
+    conn,
+):
+    # SM/WDAY/LNG: nothing stored for the quarter; year and nine months are filed
     _quarter_world(conn, fy_value="-1000000000", fy_filing=8)
     conn.execute(
         "update rcore.fact set is_authoritative = false where id in (610, 611)"
     )
     plan = _plan_b(conn)
-    assert plan.cells[0].action == rr.ACT_REMOVE
+    cell = plan.cells[0]
+    assert cell.action == rr.ACT_REPLACE and cell.replacement_value == Decimal(
+        "-307000000"
+    )
     assert plan.promote_fact_ids == [610, 611]
+    assert plan.info["blank_quarters_filled_from_precise_inputs"] == 1
+
+
+@pytest.mark.integration
+def test_quarter_from_discrete_quarters_when_there_is_no_nine_month_fact(conn):
+    conn.execute("insert into rcore.filing values (8,1,'K22','10-K','2022-02-01')")
+    conn.execute(
+        "insert into rcore.period values (20,1,'2021-01-01','2021-12-31','duration',2021,'FY'),"
+        "(21,1,'2021-01-01','2021-03-31','duration',2021,'Q1'),"
+        "(23,1,'2021-04-01','2021-06-30','duration',2021,'Q2'),"
+        "(24,1,'2021-07-01','2021-09-30','duration',2021,'Q3'),"
+        "(22,1,'2021-10-01','2021-12-31','duration',2021,'Q4')"
+    )
+    _f(conn, 600, NI, USD, 22, 2, "999")
+    _cell(conn, CC_NI, 22, "999", [600])
+    for fid, per, val in (
+        (610, 20, "1000"),
+        (611, 21, "100"),
+        (612, 23, "200"),
+        (613, 24, "300"),
+    ):
+        _f(conn, fid, NI, USD, per, 8, val)
+    cell = _plan_b(conn).cells[0]
+    assert cell.action == rr.ACT_REPLACE and cell.replacement_value == Decimal("400")
+    assert cell.replacement_source_ids == (610, 611, 612, 613)
 
 
 def _blocked_nci(conn):
@@ -686,3 +731,34 @@ def test_nci_block_is_released_only_by_a_face_without_nci_line(conn, labels, rel
     assert (plan.cells[0].action == rr.ACT_REPLACE) is released
     if released:
         assert plan.cells[0].replacement_fact_id == 701
+
+
+@pytest.mark.integration
+def test_apply_writes_a_rederived_quarter_with_its_filed_inputs_and_restores(conn):
+    _quarter_world(conn, fy_value="-1000000000", fy_filing=8)
+    conn.execute(
+        "update rcore.fact set is_authoritative = false where id in (610, 611)"
+    )
+    before = _state(conn)
+    plan = _plan_b(conn)
+    with conn.cursor() as cur:
+        rr.apply_plan(
+            cur,
+            plan,
+            run_id="rq",
+            expected_digest=plan.digest(),
+            environ=ON_PROXY,
+            core="rcore",
+            analytics="ranalytics",
+        )
+    cell = conn.execute(
+        "select value, source_fact_ids from ranalytics.canonical_fact"
+        " where canonical_concept_id = %s and period_id = 22",
+        (CC_NI,),
+    ).fetchone()
+    assert cell == (Decimal("-307000000"), [610, 611])
+    facts = dict(conn.execute("select id, is_authoritative from rcore.fact").fetchall())
+    assert facts[610] and facts[611] and not facts[600]
+    with conn.cursor() as cur:
+        rr.restore(cur, "rq", core="rcore", analytics="ranalytics")
+    assert _state(conn)[1] == before[1]

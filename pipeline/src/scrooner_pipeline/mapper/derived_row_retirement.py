@@ -114,11 +114,8 @@ REASON_TEXT = {
     "proxy_nci_inclusive_only": (
         "only a net income figure that includes noncontrolling interests is filed; not shown"
     ),
-    "derived_mixed_vintage": (
-        "the quarter would mix a restated year with original quarters; not shown"
-    ),
-    "derived_from_rounded_input": (
-        "the quarter would be derived from a rounded input; not shown"
+    "derived_inputs_disagree": (
+        "the filed copies of the year or earlier quarters disagree (restated); not shown"
     ),
     "proxy_filed_copies_disagree": (
         "10-K/10-Q copies of this figure disagree; not shown until resolved"
@@ -188,6 +185,9 @@ class CellPlan:
     replacement_form: str | None = None
     replacement_accession: str | None = None
     replacement_was_authoritative: bool | None = None
+    replacement_source_ids: tuple[
+        int, ...
+    ] = ()  # a re-derived quarter: the filed inputs
     note: str = ""
 
     @property
@@ -222,6 +222,7 @@ class Plan:
                 (
                     c.canonical_fact_id,
                     c.action,
+                    list(c.replacement_source_ids),
                     c.reason_code,
                     c.replacement_fact_id,
                     str(c.replacement_value),
@@ -294,7 +295,7 @@ INPUT_FACTS_SQL = (
     + """
 where f.company_id = any(%(ids)s) and f.concept_id = any(%(cids)s)
   and fl.form = any(%(forms)s) and not f.is_derived
-  and p.end_date = any(%(ends)s)
+  and p.end_date between %(lo)s and %(hi)s
 """
 )
 
@@ -759,7 +760,82 @@ def plan_proxy_chunk(
     return plan
 
 
-VINTAGE_MAX_GAP_DAYS = 370  # same as the certification cross_vintage_arithmetic test
+QUARTER_MIN_DAYS, QUARTER_MAX_DAYS = 75, 105
+
+
+def _rederive(
+    groups: Mapping[tuple, list[FactRow]],
+    company: int,
+    concept: int,
+    unit: str,
+    qs: date,
+    qe: date,
+) -> tuple[str, Decimal | None, list[FactRow]]:
+    """Quarter [qs, qe] from the PRECISE filed copies of one tag: the year-to-date
+    ending qe minus the year-to-date ending the day before qs (Q4 = FY - 9M,
+    Q3 = 9M - 6M), else the year-to-date minus the discrete quarters before it.
+    Every input must have ONE value across all its filed copies (rounding aside);
+    copies that disagree are a restatement and the quarter stays hidden (founder
+    ruling). Returns ('ok', value, inputs) | ('disagree', None, []) | ('none', None, [])."""
+    day = timedelta(days=1)
+    starts = sorted(
+        {
+            k[3]
+            for k in groups
+            if k[0] == company
+            and k[1] == concept
+            and k[2] == unit
+            and k[4] == qe
+            and k[3] is not None
+            and k[3] < qs
+            and (qe - k[3]).days <= 380
+        }
+    )
+    verdict = "none"
+    for s0 in starts:
+        a_copies = groups.get((company, concept, unit, s0, qe), [])
+        b_copies = groups.get((company, concept, unit, s0, qs - day), [])
+        if a_copies and b_copies:
+            pa, pb = _pick_precise(a_copies), _pick_precise(b_copies)
+            if pa is None or pb is None:
+                verdict = "disagree"
+                continue
+            return "ok", pa.value - pb.value, [pa, pb]
+        # discrete quarters from s0 up to qs - 1
+        chain: list[FactRow] = []
+        cur_start = s0
+        ok = True
+        while cur_start < qs and ok:
+            nxt = [
+                (k, v)
+                for k, v in groups.items()
+                if k[:3] == (company, concept, unit)
+                and k[3] == cur_start
+                and k[4] is not None
+                and k[4] < qs
+                and QUARTER_MIN_DAYS <= (k[4] - cur_start).days + 1 <= QUARTER_MAX_DAYS
+            ]
+            if len(nxt) != 1:
+                ok = False
+                break
+            pick = _pick_precise(nxt[0][1])
+            if pick is None:
+                verdict = "disagree"
+                ok = False
+                break
+            chain.append(pick)
+            cur_start = nxt[0][0][4] + day
+        if ok and chain and cur_start == qs and a_copies:
+            pa = _pick_precise(a_copies)
+            if pa is None:
+                verdict = "disagree"
+                continue
+            return (
+                "ok",
+                pa.value - sum((f.value for f in chain), Decimal(0)),
+                [pa, *chain],
+            )
+    return verdict, None, []
 
 
 def _vet_and_promote(
@@ -771,42 +847,61 @@ def _vet_and_promote(
     tags_by_cc: Mapping[int, Mapping[int, int]],
     core: str,
 ) -> set[int]:
-    """(a) A replacement that is itself a DERIVED quarter must be one-vintage and
-    built from precise inputs, else it is removed with a reason (EQH Q4 2021 mixed
-    a restated year with original nine months; ST Q4 2023 used a rounded year).
-    (b) A quarter that ends up blank gets its attributable year and year-to-date
-    copies re-promoted, so the next Normalizer run can derive it (LNG). Returns
-    the facts to re-promote."""
-    derived_cells = [
+    """Quarter cells (a derived replacement, or a blank quarter) are re-derived
+    from the precise filed copies of ATTRIBUTABLE tags already in core.fact
+    (verifier B5): EQH-style disagreeing copies stay hidden; HUBS/BAH-style
+    cells whose precise derivation equals the stored one are kept (value-based,
+    not date-based); STE/HOOD get the precise value; CAG uses the attributable
+    tag; SM/WDAY blank quarters are filled. Inputs that are non-authoritative
+    are re-promoted. Returns the facts to re-promote."""
+    targets = [
         c
         for c in plan.cells
-        if c.action == ACT_REPLACE and picked[c.canonical_fact_id].is_derived
+        if c.canonical_fact_id in meta
+        and (
+            (c.action == ACT_REPLACE and picked[c.canonical_fact_id].is_derived)
+            or (
+                c.action == ACT_REMOVE
+                and c.reason_code in ("proxy_only_source", "proxy_nci_inclusive_only")
+            )
+        )
     ]
-    blank_cells = [
-        c for c in plan.cells if c.action == ACT_REMOVE and c.canonical_fact_id in meta
-    ]
-    need = derived_cells + blank_cells
-    ends: set[date] = set()
     period: dict[int, tuple[date, date]] = {}
-    cids: set[int] = set()
-    if need:
-        cur.execute(_q(PERIOD_SQL, core), {"pids": sorted({c.period_id for c in need})})
+    if targets:
+        cur.execute(
+            _q(PERIOD_SQL, core), {"pids": sorted({c.period_id for c in targets})}
+        )
         period = {r[0]: (r[1], r[2]) for r in cur.fetchall()}
-        for c in need:
-            qs, qe = period[c.period_id]
-            ends |= {qe, qs - timedelta(days=1)}
-            if c.action == ACT_REPLACE:
-                cids.add(picked[c.canonical_fact_id].concept_id)
-            else:
-                cids |= set(tags_by_cc.get(meta[c.canonical_fact_id][1], {}))
+    targets = [
+        c
+        for c in targets
+        if QUARTER_MIN_DAYS
+        <= (period[c.period_id][1] - period[c.period_id][0]).days + 1
+        <= QUARTER_MAX_DAYS
+    ]
     groups: dict[tuple, list[FactRow]] = defaultdict(list)
-    if need and cids and ends:
+    if targets:
+        cids = sorted(
+            {
+                cid
+                for c in targets
+                for cid in tags_by_cc.get(meta[c.canonical_fact_id][1], {})
+            }
+            | {
+                picked[c.canonical_fact_id].concept_id
+                for c in targets
+                if c.canonical_fact_id in picked
+            }
+        )
+        lo = min(period[c.period_id][0] for c in targets) - timedelta(days=400)
+        hi = max(period[c.period_id][1] for c in targets)
         cur.execute(
             _q(INPUT_FACTS_SQL, core),
             {
-                "ids": ids,
-                "cids": sorted(cids),
-                "ends": sorted(ends),
+                "ids": sorted({c.company_id for c in targets}),
+                "cids": cids,
+                "lo": lo,
+                "hi": hi,
                 "forms": sorted(PERIODIC_FORMS_DOMESTIC),
             },
         )
@@ -815,138 +910,72 @@ def _vet_and_promote(
             groups[
                 (f.company_id, f.concept_id, f.unit, f.start_date, f.end_date)
             ].append(f)
+    tag_of: dict[int, str] = {f.concept_id: f.tag for fs in groups.values() for f in fs}
 
-    def long_year(key: tuple, qe: date) -> bool:
-        return key[4] == qe and key[3] is not None and (qe - key[3]).days > 300
-
-    unverified = 0
-    for c in derived_cells:
-        pick = picked[c.canonical_fact_id]
+    used: set[int] = set()
+    unverified = same = differs = filled = 0
+    for c in targets:
         qs, qe = period[c.period_id]
-        matches: list[tuple[FactRow, FactRow, list[FactRow], list[FactRow]]] = []
-        for ykey, fy_copies in groups.items():
-            if ykey[:3] != (c.company_id, pick.concept_id, pick.unit) or not long_year(
-                ykey, qe
-            ):
-                continue
-            ytd_copies = groups.get(
-                (
-                    c.company_id,
-                    pick.concept_id,
-                    pick.unit,
-                    ykey[3],
-                    qs - timedelta(days=1),
-                ),
-                [],
+        src, ccid, company = meta[c.canonical_fact_id]
+        prios = tags_by_cc.get(ccid, {})
+        ordered = sorted(
+            (cid for cid in prios if tag_of.get(cid) not in NCI_INCLUSIVE_TAGS),
+            key=lambda cid: prios[cid],
+        )
+        verdict, value, inputs = "none", None, []
+        for cid in ordered:
+            v, val, ins = _rederive(groups, company, cid, src.unit, qs, qe)
+            if v == "ok":
+                verdict, value, inputs = v, val, ins
+                break
+            if v == "disagree":
+                verdict = "disagree"
+        i = plan.cells.index(c)
+        if verdict == "ok":
+            old = picked.get(c.canonical_fact_id)
+            if old is not None:
+                if abs(old.value - value) <= 1:
+                    same += 1
+                else:
+                    differs += 1
+            else:
+                filled += 1
+            picked.pop(c.canonical_fact_id, None)
+            used.update(f.fact_id for f in inputs if not f.is_authoritative)
+            plan.cells[i] = replace(
+                c,
+                action=ACT_REPLACE,
+                reason_code=None,
+                replacement_fact_id=None,
+                replacement_value=value,
+                replacement_form="derived: "
+                + " - ".join(f.accession or "?" for f in inputs[:2]),
+                replacement_accession=None,
+                replacement_was_authoritative=None,
+                replacement_source_ids=tuple(f.fact_id for f in inputs),
+                note=_gap_bucket(c.stored_value, value),
             )
-            for fy_f in fy_copies:
-                for y_f in ytd_copies:
-                    if abs(fy_f.value - y_f.value - pick.value) <= 1:
-                        matches.append((fy_f, y_f, fy_copies, ytd_copies))
-        if not matches:
-            unverified += (
-                1  # a Q1+Q2+Q3 chain or no stored inputs: cannot be vetted here
-            )
-            continue
-        same = [
-            m
-            for m in matches
-            if m[0].filing_date
-            and m[1].filing_date
-            and abs((m[0].filing_date - m[1].filing_date).days) <= VINTAGE_MAX_GAP_DAYS
-        ]
-        code = None
-        if not same:
-            code = "derived_mixed_vintage"
-        else:
-            fy_f, y_f, fy_copies, y_copies = same[0]
-            for used, copies in ((fy_f, fy_copies), (y_f, y_copies)):
-                if any(
-                    o.value != used.value
-                    and _sig_digits(o.value) > _sig_digits(used.value)
-                    and _rounded_copy_of(used.value, o.value)
-                    for o in copies
-                ):
-                    code = "derived_from_rounded_input"
-        if code:
-            i = plan.cells.index(c)
+        elif verdict == "disagree":
+            picked.pop(c.canonical_fact_id, None)
             plan.cells[i] = replace(
                 c,
                 action=ACT_REMOVE,
-                reason_code=code,
+                reason_code="derived_inputs_disagree",
                 replacement_fact_id=None,
                 replacement_value=None,
                 replacement_form=None,
                 replacement_accession=None,
                 replacement_was_authoritative=None,
-                note="vetted derived replacement",
+                replacement_source_ids=(),
+                note="filed input copies disagree",
             )
-            del picked[c.canonical_fact_id]
-    plan.info["derived_replacements_vintage_unverified"] = unverified
-
-    promote = {f.fact_id for k, f in picked.items() if not f.is_authoritative}
-    rederive = 0
-    for c in blank_cells:
-        qs, qe = period[c.period_id]
-        if (qe - qs).days > 100:
-            continue
-        src, ccid, company = meta[c.canonical_fact_id]
-        prios = tags_by_cc.get(ccid, {})
-        best: list[FactRow] | None = None
-        for ykey, fy_copies in groups.items():
-            if ykey[0] != company or ykey[2] != src.unit or not long_year(ykey, qe):
-                continue
-            usable = [
-                f
-                for f in fy_copies
-                if f.tag not in NCI_INCLUSIVE_TAGS and f.concept_id in prios
-            ]
-            ytd = [
-                f
-                for key, fs in groups.items()
-                if key[:3] == (company, key[1], src.unit)
-                and key[3] == ykey[3]
-                and key[4] == qs - timedelta(days=1)
-                for f in fs
-                if f.tag not in NCI_INCLUSIVE_TAGS and f.concept_id in prios
-            ]
-            fy_pick = (
-                _pick_precise(
-                    [
-                        f
-                        for f in usable
-                        if f.concept_id
-                        == min(
-                            (f2.concept_id for f2 in usable), key=lambda cid: prios[cid]
-                        )
-                    ]
-                )
-                if usable
-                else None
-            )
-            y_pick = (
-                _pick_precise(
-                    [
-                        f
-                        for f in ytd
-                        if f.concept_id
-                        == min(
-                            (f2.concept_id for f2 in ytd), key=lambda cid: prios[cid]
-                        )
-                    ]
-                )
-                if ytd
-                else None
-            )
-            if fy_pick and y_pick:
-                best = [fy_pick, y_pick]
-        if best:
-            ids_ = [f.fact_id for f in best if not f.is_authoritative]
-            if ids_:
-                promote.update(ids_)
-                rederive += 1
-    plan.info["blank_quarters_with_inputs_repromoted"] = rederive
-    return promote
+        elif c.canonical_fact_id in picked:
+            unverified += 1  # a stored derived quarter with no filed inputs to re-check
+    plan.info["quarters_rederived_same_as_stored"] = same
+    plan.info["quarters_rederived_differs_from_stored"] = differs
+    plan.info["blank_quarters_filled_from_precise_inputs"] = filled
+    plan.info["derived_replacements_unverified_no_inputs"] = unverified
+    return {f.fact_id for f in picked.values() if not f.is_authoritative} | used
 
 
 def _metrics(cur, ids: list[int], plan: Plan, core: str, analytics: str) -> None:
@@ -1232,7 +1261,7 @@ def apply_plan(
                     c.canonical_concept_id,
                     c.period_id,
                     c.replacement_value,  # type: ignore[arg-type]
-                    (c.replacement_fact_id,),  # type: ignore[arg-type]
+                    c.replacement_source_ids or (c.replacement_fact_id,),  # type: ignore[arg-type]
                 )
                 for c in replaces
             ],
@@ -1387,6 +1416,7 @@ def _write_csvs(out_dir: Path, plan: Plan) -> None:
             d = asdict(c)
             d["source_fact_ids"] = ";".join(map(str, c.source_fact_ids))
             d["retired_source_ids"] = ";".join(map(str, c.retired_source_ids))
+            d["replacement_source_ids"] = ";".join(map(str, c.replacement_source_ids))
             w.writerow([d[k] for k in cols] + [c.reason_text])
     with (out_dir / f"{tag}_metric_values_to_recompute.csv").open(
         "w", newline=""
