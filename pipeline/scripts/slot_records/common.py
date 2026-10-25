@@ -107,7 +107,10 @@ def fetch_instants(cur, cik, tags, since="2015-01-01"):
 def fetch_durations(cur, cik, tags, since="2015-01-01"):
     """{(start, end): (accession, {tag: Decimal})} with every term of a cell from
     ONE filing (the original whose period_of_report is the end date, else the
-    accession carrying the most of the needed tags). Periodic forms only."""
+    accession carrying the most of the needed tags). Periodic forms only, and
+    NEVER a derived fact (Verifier D&A V2: ABBV Q4 2020 replay 2,088M came from
+    a derived quarter built on a nine-month figure not on the Q3 10-Q face;
+    the slot engine reads what the filer tagged, never a subtraction)."""
     cur.execute(
         """
         select co.tag, p.start_date::text, p.end_date::text, f.value::numeric, f.is_authoritative,
@@ -120,6 +123,7 @@ def fetch_durations(cur, cik, tags, since="2015-01-01"):
         join core.filing fi on fi.id = f.filing_id
         where c.cik = %s and p.period_type = 'duration' and co.taxonomy = 'us-gaap'
           and u.unit_name = 'usd' and co.tag = any(%s) and p.end_date >= %s and fi.form = any(%s)
+          and f.is_derived = false
         order by co.tag, p.start_date, p.end_date, f.is_authoritative desc, f.id desc
         """,
         (cik, sorted(tags), since, list(PERIODIC_FORMS)),

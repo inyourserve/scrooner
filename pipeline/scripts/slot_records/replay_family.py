@@ -149,8 +149,17 @@ for cik in sorted(records):
 
         narrow, broad = roots_total(NARROW), roots_total(BROAD)
         verdict = None
+        # FACE COLUMN rule (Verifier D&A V2, KRUS Q3 FY2021: a 3-month figure
+        # rounded to 1.2M came from a note; the 10-Q cash flow prints only the
+        # year-to-date column). A duration is a face column of this filing only
+        # if the filer tagged the cash-flow SECTION TOTAL for the same
+        # (start, end) in the same accession; anything else is a note or a
+        # derived figure and never a slot value.
+        face_column = bool(sec) and sec["total"] in day
         if not day:
             verdict = "no_facts_this_period"
+        elif not face_column:
+            verdict = "not_a_face_column"
         elif missing_custom and any(m.get("custom") and m["tag"] in roots for m in cf_members):
             verdict = "needs_instance_reader"
         elif gate.startswith("hold"):
