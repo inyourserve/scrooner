@@ -234,6 +234,7 @@ class Plan:
         default_factory=dict
     )  # cell id -> inputs whose printed scale must be read from the filing
     scale_log: list[dict] = field(default_factory=list)
+    authority_exceptions: list[dict] = field(default_factory=list)
     metric_value_ids: list[int] = field(default_factory=list)
     info: dict[str, Any] = field(default_factory=dict)
 
@@ -743,6 +744,8 @@ def plan_proxy_chunk(
             else:
                 cand = inclusive
         pick = _pick_precise(cand)
+        if pick is not None:
+            pick = _prefer_authoritative(pick, cand)
         meta[cf_id] = (src, ccid, company)
         if nci_blocked:
             pending = _pick_precise(inclusive)
@@ -812,7 +815,8 @@ def _scale_suspect(inputs: Sequence[FactRow]) -> bool:
     return max(scales) >= 10**6 and max(scales) > min(scales)
 
 
-def _round_to(value: Decimal, g: int) -> Decimal:
+def _round_to(value: Decimal, g: Decimal | int) -> Decimal:
+    g = Decimal(g)
     q = (abs(value) / g).quantize(Decimal(1), rounding="ROUND_HALF_UP") * g
     return q if value >= 0 else -q
 
@@ -821,17 +825,31 @@ SCALE_WORDS = {"billions": 10**9, "millions": 10**6, "thousands": 10**3}
 
 
 def scale_from_html(html: str) -> int | None:
-    """Printed scale of a rendered statement from its header ("USD ($) $ in
-    Millions" -> 1,000,000; "USD ($)" alone -> 1). None when not found."""
+    """Printed MONEY scale of a rendered statement from its header ("USD ($) $ in
+    Millions" -> 1,000,000; "USD ($)" alone -> 1). A shares phrase ("shares in
+    Millions", ABNB) is never the money scale. None when not found."""
     head = html[:4000]
     m = re.search(r"\$\s*in\s+(billions|millions|thousands)", head, re.I) or re.search(
-        r"\bin\s+(billions|millions|thousands)\b", head, re.I
+        r"(?<!shares )(?<!shares  )\bin\s+(billions|millions|thousands)\b", head, re.I
     )
     if m:
         return SCALE_WORDS[m.group(1).lower()]
     if re.search(r"USD\s*\(\$\)", head):
         return 1
     return None
+
+
+def _prefer_authoritative(x: FactRow, copies: Sequence[FactRow]) -> FactRow:
+    """Re-promoting a later copy beside an authoritative original leaves two
+    authoritative facts for one company/tag/period until Stage 2e re-runs. If an
+    authoritative copy of the SAME value exists, use it as the input/source
+    (earliest filed) and promote nothing."""
+    if x.is_authoritative:
+        return x
+    same = [f for f in copies if f.is_authoritative and f.value == x.value]
+    if not same:
+        return x
+    return min(same, key=lambda f: (f.filing_date or date.max, f.fact_id))
 
 
 def _one_vintage(restated: bool, facts: Sequence[FactRow]) -> bool:
@@ -854,7 +872,7 @@ def _basis_pick(copies: Sequence[FactRow]) -> tuple[FactRow | None, bool]:
     no input."""
     pick = _pick_precise(copies)
     if pick is not None:
-        return pick, False
+        return _prefer_authoritative(pick, copies), False
     if QUARTER_RESTATED_POLICY != "original_basis" or not copies:
         return None, True
     first = min(copies, key=lambda f: (f.filing_date or date.max, f.fact_id))
@@ -1164,93 +1182,148 @@ NCI_LABEL = re.compile(r"non-?controlling|minority|attributable to", re.I)
 NCI_LABEL_IGNORE = re.compile(r"before\s+(provision\s+for\s+)?income\s+tax", re.I)
 
 
+# "Net Income (Loss), Including Portion Attributable to Noncontrolling Interest"
+# (Ambac) is the TOTAL including the NCI, not an NCI-only line.
+INCLUDING_NCI = re.compile(
+    r"including\s+(the\s+)?(portion\s+)?(attributable\s+to\s+)?non-?controlling", re.I
+)
+
+
 def has_nci_line(labels: Sequence[str]) -> bool:
     return any(
-        NCI_LABEL.search(lab) and not NCI_LABEL_IGNORE.search(lab) for lab in labels
+        NCI_LABEL.search(lab)
+        and not NCI_LABEL_IGNORE.search(lab)
+        and not INCLUDING_NCI.search(lab)
+        for lab in labels
     )
 
 
-def sec_income_statement_labels(client, cik: str, accession: str) -> list[str] | None:
-    """Row labels of the filing's rendered income statement (the filing's face),
-    or None when it cannot be located (then there is no evidence either way)."""
-    import httpx
+class FilingFace:
+    """Income statement of one filing, read with the Verifier kit
+    (verification/filing_kit.py: statement selection incl. combined
+    income + comprehensive-income pages, printed decimals). Cached per filing."""
 
-    from scrooner_pipeline.parsers import filing_line_evidence as fle
-    from scrooner_pipeline.segments.segment_revenue import _filing_summary_reports
+    def __init__(self, client) -> None:
+        self._client = client
+        self._cache: dict[tuple[str, str], tuple | None] = {}
 
-    try:
-        reports = _filing_summary_reports(client, int(cik), accession)
-    except httpx.HTTPStatusError as exc:
-        if exc.response.status_code == 404:
+    def _get(self, url: str) -> bytes | None:
+        import httpx
+
+        try:
+            return self._client.get(url).content
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code == 404:
+                return None
+            raise
+
+    def page(self, cik: str, accession: str):
+        """(RPage, money scale or None) or None when the statement is not found."""
+        key = (cik, accession)
+        if key not in self._cache:
+            from scrooner_pipeline.verification import filing_kit as kit
+
+            folder = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession.replace('-', '')}/"
+            out = None
+            fs = self._get(folder + "FilingSummary.xml")
+            sel = (
+                kit.select_income_statement(fs.decode("utf8", "ignore")) if fs else None
+            )
+            if sel:
+                raw = self._get(folder + sel[1])
+                if raw:
+                    html = raw.decode("utf8", "ignore")
+                    out = (kit.parse_rpage(html), scale_from_html(html))
+            self._cache[key] = out
+        return self._cache[key]
+
+    def labels(self, cik: str, accession: str) -> list[str] | None:
+        got = self.page(cik, accession)
+        return None if got is None else [r.label for r in got[0].rows]
+
+    def printed_unit(self, cik: str, accession: str, fact: FactRow) -> Decimal | None:
+        """Rounding unit of the printed cell that carries `fact`: money scale x
+        10^-decimals read from the page (kit RPage.printed_unit), never from
+        trailing zeros. None when the cell cannot be found on the page."""
+        got = self.page(cik, accession)
+        if (
+            got is None
+            or got[1] is None
+            or fact.end_date is None
+            or fact.start_date is None
+        ):
             return None
-        raise
-    report = fle._pick_report(
-        reports, fle.INCOME_STATEMENT_TITLE_PATTERN, fle.EARNINGS_TITLE
-    )
-    if report is None:
+        page, mult = got
+        page.multiplier = mult
+        months = max(1, round((fact.end_date - fact.start_date).days / 30.4375))
+        try:
+            col = page.column(fact.end_date, months)
+        except KeyError:
+            try:
+                col = page.column(fact.end_date)
+            except KeyError:
+                return None
+        except Exception:  # ambiguous column
+            return None
+        kinds = (
+            ["consolidated"]
+            if fact.tag in NCI_INCLUSIVE_TAGS
+            else ["attributable", "consolidated"]
+        )
+        for want in kinds:
+            for kind, row in _income_rows(page):
+                if kind != want or col >= len(row.values) or row.values[col] is None:
+                    continue
+                unit = page.printed_unit(row, col)
+                if abs(fact.value - row.values[col] * mult) <= unit / 2 + Decimal(
+                    "0.5"
+                ):
+                    return unit
         return None
-    base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession.replace('-', '')}/"
-    return fle._statement_labels(client, base + report["html_file"])
 
 
-def sec_income_statement_scale(client, cik: str, accession: str) -> int | None:
-    """Printed scale (1, 1,000, 1,000,000 ...) of the filing's income statement page."""
-    import httpx
+def _income_rows(page):
+    from scrooner_pipeline.verification import filing_kit as kit
 
-    from scrooner_pipeline.parsers import filing_line_evidence as fle
-    from scrooner_pipeline.segments.segment_revenue import _filing_summary_reports
-
-    try:
-        reports = _filing_summary_reports(client, int(cik), accession)
-    except httpx.HTTPStatusError as exc:
-        if exc.response.status_code == 404:
-            return None
-        raise
-    report = fle._pick_report(
-        reports, fle.INCOME_STATEMENT_TITLE_PATTERN, fle.EARNINGS_TITLE
-    )
-    if report is None:
-        return None
-    base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession.replace('-', '')}/"
-    try:
-        return scale_from_html(client.get(base + report["html_file"]).text)
-    except httpx.HTTPStatusError as exc:
-        if exc.response.status_code == 404:
-            return None
-        raise
+    out = []
+    for kind, row in kit.net_income_lines(page):
+        if kind == "nci" and INCLUDING_NCI.search(row.label):
+            kind = "consolidated"
+        out.append((kind, row))
+    return out
 
 
-def resolve_scale(cur, plan: Plan, scale_for, core: str = "core") -> dict[str, int]:
+def resolve_scale(cur, plan: Plan, unit_for, core: str = "core") -> dict[str, int]:
     """For quarters whose inputs look like mixed scales, read the PRINTED scale of
     each input's filing (never infer it from trailing zeros: AKTX -17,298K minus
     -12,000K is -5,298K, both printed in thousands). All inputs printed at one
     scale: the exact value stands. Different scales: the quarter is shown at the
     coarsest printed scale (BAH 193,000,000). A scale that cannot be read hides
-    the quarter (`derived_scale_unverified`). scale_for=None hides every pending
+    the quarter (`derived_scale_unverified`). unit_for=None hides every pending
     cell."""
     out = {"exact": 0, "rounded": 0, "hidden": 0}
     if not plan.scale_pending:
         return out
     companies = {f.company_id for ins in plan.scale_pending.values() for f in ins}
     cik = {}
-    if scale_for is not None:
+    if unit_for is not None:
         cur.execute(
             _q("select id, cik from {core}.company where id = any(%(ids)s)", core),
             {"ids": sorted(companies)},
         )
         cik = dict(cur.fetchall())
-    cache: dict[tuple[int, str | None], int | None] = {}
+    cache: dict[tuple[int, str | None], Decimal | None] = {}
     for i, c in enumerate(plan.cells):
         inputs = plan.scale_pending.get(c.canonical_fact_id)
         if inputs is None or c.action != ACT_REPLACE:
             continue
         scales = []
         for f in inputs:
-            key = (f.company_id, f.accession)
+            key = (f.fact_id, f.accession)
             if key not in cache:
                 cache[key] = (
-                    scale_for(cik[f.company_id], f.accession)
-                    if scale_for is not None and f.accession
+                    unit_for(cik[f.company_id], f.accession, f)
+                    if unit_for is not None and f.accession
                     else None
                 )
             scales.append(cache[key])
@@ -1295,6 +1368,79 @@ def resolve_scale(cur, plan: Plan, scale_for, core: str = "core") -> dict[str, i
     plan.info["scale_check_rounded"] = out["rounded"]
     plan.info["scale_check_hidden"] = out["hidden"]
     return out
+
+
+AUTH_KEYS_SQL = """
+select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id from {core}.fact f
+where f.id = any(%(ids)s::bigint[])
+"""
+AUTH_STATE_SQL = """
+select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id, f.is_authoritative, fl.form
+from {core}.fact f
+join unnest(%(c)s::bigint[], %(k)s::bigint[], %(u)s::bigint[], %(p)s::bigint[]) as k(c, k, u, p)
+  on f.company_id = k.c and f.concept_id = k.k and f.unit_id = k.u and f.period_id = k.p
+left join {core}.filing fl on fl.id = f.filing_id
+"""
+
+
+def check_authority(cur, plan: Plan, core: str = "core") -> list[dict]:
+    """After the planned demotions and promotions, every company/tag/unit/period
+    that the plan touches must have EXACTLY ONE authoritative fact (verifier B11).
+    Returns the exceptions (also counted in plan.info)."""
+    touched = set(plan.promote_fact_ids) | {f.fact_id for f in plan.facts}
+    for c in plan.cells:
+        if c.action == ACT_REPLACE:
+            touched |= set(c.replacement_source_ids) | (
+                {c.replacement_fact_id} if c.replacement_fact_id else set()
+            )
+    ids = sorted(touched)
+    keys: set[tuple] = set()
+    for i in range(0, len(ids), 2000):
+        cur.execute(_q(AUTH_KEYS_SQL, core), {"ids": ids[i : i + 2000]})
+        keys |= {tuple(r[1:]) for r in cur.fetchall()}
+    state: dict[tuple, list[tuple]] = defaultdict(list)
+    keys_l = sorted(keys)
+    for i in range(0, len(keys_l), 400):
+        chunk = keys_l[i : i + 400]
+        cur.execute(
+            _q(AUTH_STATE_SQL, core),
+            {
+                "c": [k[0] for k in chunk],
+                "k": [k[1] for k in chunk],
+                "u": [k[2] for k in chunk],
+                "p": [k[3] for k in chunk],
+            },
+        )
+        for fid, co, cn, un, pe, auth, form in cur.fetchall():
+            state[(co, cn, un, pe)].append((fid, auth, form))
+    demote = {f.fact_id for f in plan.facts}
+    promote = set(plan.promote_fact_ids)
+    bad = []
+    for key, facts in state.items():
+        final = [
+            fid
+            for fid, auth, _ in facts
+            if (auth and fid not in demote) or fid in promote
+        ]
+        if len(final) != 1:
+            bad.append(
+                {
+                    "company_id": key[0],
+                    "concept_id": key[1],
+                    "unit_id": key[2],
+                    "period_id": key[3],
+                    "authoritative_after": len(final),
+                    "authoritative_fact_ids": ";".join(map(str, final)),
+                    "all_fact_ids": ";".join(str(f[0]) for f in facts),
+                }
+            )
+    plan.info["authority_keys_checked"] = len(state)
+    plan.info["authority_keys_zero"] = sum(b["authoritative_after"] == 0 for b in bad)
+    plan.info["authority_keys_multiple"] = sum(
+        b["authoritative_after"] > 1 for b in bad
+    )
+    plan.authority_exceptions = bad
+    return bad
 
 
 def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
@@ -1671,6 +1817,7 @@ def run_dry_run(
             resolve_nci_face(cur, plan, face_labels)
         if fam == "B":
             resolve_scale(cur, plan, scale_for)
+            check_authority(cur, plan)
         summary[family_name] = summarize(plan, cohort)
         _write_csvs(out_dir, plan)
         _write_review_files(out_dir, plan, cohort)
@@ -1683,6 +1830,11 @@ def run_dry_run(
 def _write_review_files(out_dir: Path, plan: Plan, cohort: set[int] | None) -> None:
     """Files for the Release Manager's reviewed plan (nothing here touches the DB)."""
     tag = plan.family
+    if plan.authority_exceptions:
+        with (out_dir / f"{tag}_authority_exceptions.csv").open("w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=list(plan.authority_exceptions[0]))
+            w.writeheader()
+            w.writerows(plan.authority_exceptions)
     if plan.scale_log:
         with (out_dir / f"{tag}_scale_check.csv").open("w", newline="") as fh:
             cols = [
@@ -1828,18 +1980,15 @@ def _write_csvs(out_dir: Path, plan: Plan) -> None:
             w.writerow([i])
 
 
-def _sec_labels():
+def _sec_face() -> FilingFace:
     from scrooner_pipeline.common.sec_client import SECClient
 
-    client = SECClient()
-    return lambda cik, accession: sec_income_statement_labels(client, cik, accession)
+    return FilingFace(SECClient())
 
 
-def _sec_scale():
-    from scrooner_pipeline.common.sec_client import SECClient
-
-    client = SECClient()
-    return lambda cik, accession: sec_income_statement_scale(client, cik, accession)
+def _face_kwargs() -> dict:
+    face = _sec_face()
+    return {"face_labels": face.labels, "scale_for": face.printed_unit}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1891,8 +2040,7 @@ def main(argv: list[str] | None = None) -> int:
             company_ids=ids,
             chunk=args.chunk,
             statement_timeout=args.statement_timeout,
-            face_labels=None if args.no_face else _sec_labels(),
-            scale_for=None if args.no_face else _sec_scale(),
+            **({} if args.no_face else _face_kwargs()),
         )
     print(json.dumps(summary, indent=2, default=str))
     return 0
