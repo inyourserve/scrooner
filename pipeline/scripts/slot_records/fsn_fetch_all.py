@@ -26,7 +26,9 @@ done = set()
 if manifest_all.exists():
     for line in open(manifest_all):
         done.add(json.loads(line)["quarter"])
-quarters = [l.split()[0] for l in open(links_path) if l.strip()]
+links = [l.split() for l in open(links_path) if l.strip()]
+quarters = [l[0] for l in links]
+url_of = {l[0]: l[1] for l in links if len(l) > 1}
 requests_used = 0
 t0 = time.monotonic()
 for q in quarters:
@@ -36,7 +38,8 @@ for q in quarters:
         print(f"request budget {max_requests} reached before {q}; stopping and asking")
         break
     qdir = out_root / q
-    r = subprocess.run([sys.executable, "-I", str(HERE / "fsn_pilot.py"), q, cohort, str(qdir)], capture_output=True, text=True)
+    cmd = [sys.executable, "-I", str(HERE / "fsn_pilot.py"), q, cohort, str(qdir)] + ([url_of[q]] if q in url_of else [])
+    r = subprocess.run(cmd, capture_output=True, text=True)
     requests_used += 2  # HEAD + GET
     tail = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()[-300:]
     man = qdir / f"{q}_manifest.json"

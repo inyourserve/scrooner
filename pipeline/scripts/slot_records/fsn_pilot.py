@@ -26,7 +26,9 @@ from pathlib import Path
 quarter, cohort_path, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
 out.mkdir(parents=True, exist_ok=True)
 UA = os.environ["SEC_USER_AGENT"]
-url = f"https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/{quarter}_notes.zip"
+# a 4th argument is an explicit zip URL (the SEC publishes recent periods as MONTHLY files,
+# e.g. 2026_09_notes.zip, and consolidates them into quarterly files later)
+url = sys.argv[4] if len(sys.argv) > 4 else f"https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/{quarter}_notes.zip"
 cohort = {int(l.strip()) for l in open(cohort_path) if l.strip()}
 GB = 1024**3
 
