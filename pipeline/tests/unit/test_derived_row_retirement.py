@@ -822,6 +822,10 @@ def test_scale_suspect_only_selects_candidates_it_never_sets_the_unit():
         ),
         ("INCOME STATEMENT - USD ($)", 1),
         ("In Thousands, unless otherwise specified", 1_000),
+        (
+            "CONSOLIDATED STATEMENTS OF INCOME - USD ($) shares in Millions",
+            1,
+        ),  # ABNB: shares phrase only
         ("nothing useful", None),
     ],
 )
@@ -901,7 +905,7 @@ def test_resolve_scale_uses_the_printed_scale_not_trailing_zeros(
     scales, outcome, value
 ):
     plan = _plan_with_scale_pending("192705000", ("A", "B"))
-    out = rr.resolve_scale(_Cur(), plan, lambda cik, acc: scales[acc])
+    out = rr.resolve_scale(_Cur(), plan, lambda cik, acc, f: scales[acc])
     assert out[outcome] == 1
     cell = plan.cells[0]
     assert cell.replacement_value == value
@@ -986,3 +990,166 @@ def test_pretax_standard_label_naming_the_nci_is_not_an_nci_line():
         ["Net income", "Less: net income attributable to noncontrolling interests"]
     )
     assert rr.has_nci_line(["Noncontrolling interest"])
+
+
+# ---- printed unit from the page (kit decimals), Ambac label, authority
+
+FS_XML = """<FilingSummary><MyReports>
+<Report><HtmlFileName>R4.htm</HtmlFileName><ShortName>CONSOLIDATED STATEMENTS OF INCOME</ShortName><MenuCategory>Statements</MenuCategory></Report>
+</MyReports></FilingSummary>"""
+
+
+def _r4(title, rows):
+    body = "".join(
+        f'<tr><td class="pl">{lab}</td>'
+        + "".join(f'<td class="nump">{v}</td>' for v in vals)
+        + "</tr>"
+        for lab, vals in rows
+    )
+    return (
+        f'<table><tr><th class="tl">{title}</th><th class="th" colspan="2">9 Months Ended</th></tr>'
+        '<tr><th class="th">Sep. 30, 2025</th><th class="th">Sep. 30, 2024</th></tr>'
+        + body
+        + "</table>"
+    ).encode()
+
+
+class _Resp:
+    def __init__(self, content):
+        self.content = content
+
+
+class _FakeClient:
+    def __init__(self, files):
+        self.files = files
+
+    def get(self, url):
+        return _Resp(self.files[url.rsplit("/", 1)[1]])
+
+
+def _fx(value, tag="NetIncomeLoss"):
+    return rr.FactRow(
+        1,
+        1,
+        1,
+        1,
+        tag,
+        "usd",
+        "9M",
+        date(2025, 1, 1),
+        date(2025, 9, 30),
+        Decimal(value),
+        True,
+        False,
+        "10-Q",
+        "0001628280-25-049844",
+        date(2025, 11, 1),
+    )
+
+
+@pytest.mark.unit
+def test_printed_unit_uses_the_decimals_printed_on_the_page():
+    # company 2993: nine months printed '$ 60.0' in millions -> unit 0.1M, not 1M
+    page = _r4(
+        "CONSOLIDATED STATEMENTS OF INCOME - USD ($) $ in Millions",
+        [("Net income", ["$ 60.0", "$ 55.1"])],
+    )
+    face = rr.FilingFace(
+        _FakeClient({"FilingSummary.xml": FS_XML.encode(), "R4.htm": page})
+    )
+    assert face.printed_unit(
+        "0000000001", "0001628280-25-049844", _fx("60000000")
+    ) == Decimal(100000)
+    assert (
+        face.printed_unit("0000000001", "0001628280-25-049844", _fx("61000000")) is None
+    )  # not this cell
+
+
+@pytest.mark.unit
+def test_printed_unit_ignores_a_shares_phrase_and_whole_dollar_pages():
+    # ABNB: money printed in whole dollars, header says 'shares in Millions'
+    page = _r4(
+        "CONSOLIDATED STATEMENTS OF INCOME - USD ($) shares in Millions",
+        [("Net income", ["2,648,349,000", "1"])],
+    )
+    face = rr.FilingFace(
+        _FakeClient({"FilingSummary.xml": FS_XML.encode(), "R4.htm": page})
+    )
+    assert face.printed_unit("0000000001", "A", _fx("2648349000")) == Decimal(1)
+
+
+@pytest.mark.unit
+def test_profitloss_fact_matches_the_consolidated_line_and_ambac_total_is_not_an_nci_line():
+    lab = "Net Income (Loss), Including Portion Attributable to Noncontrolling Interest"
+    page = _r4(
+        "CONSOLIDATED STATEMENTS OF INCOME - USD ($) $ in Thousands",
+        [(lab, ["522,380", "1"])],
+    )
+    face = rr.FilingFace(
+        _FakeClient({"FilingSummary.xml": FS_XML.encode(), "R4.htm": page})
+    )
+    assert face.printed_unit(
+        "0000000001", "A", _fx("522380000", tag="ProfitLoss")
+    ) == Decimal(1000)
+    assert not rr.has_nci_line([lab, "Net income attributable to Ambac"][:1])
+    assert rr.has_nci_line(["Net income attributable to noncontrolling interest"])
+
+
+@pytest.mark.unit
+def test_prefer_authoritative_copy_of_the_same_value():
+    f = lambda i, v, a, d: rr.FactRow(
+        i, 1, 1, 1, "T", "usd", None, None, None, Decimal(v), a, False, "10-K", "x", d
+    )  # noqa: E731
+    later, original = (
+        f(2, "100", False, date(2026, 1, 1)),
+        f(1, "100", True, date(2024, 1, 1)),
+    )
+    assert rr._prefer_authoritative(later, [later, original]).fact_id == 1
+    other = f(3, "101", True, date(2025, 1, 1))
+    assert (
+        rr._prefer_authoritative(later, [later, other]).fact_id == 2
+    )  # different value: no substitute
+
+
+@pytest.mark.integration
+def test_authoritative_original_is_used_and_nothing_is_promoted_beside_it(conn):
+    _f(conn, 900, NI, USD, 1, 2, "100")  # proxy
+    _f(conn, 901, NI, USD, 1, 1, "5000000")  # authoritative original
+    _f(conn, 902, NI, USD, 1, 5, "5000000", auth=False)  # later copy, same value
+    _cell(conn, CC_NI, 1, "100", [900])
+    plan = _plan_b(conn)
+    cell = plan.cells[0]
+    assert cell.action == rr.ACT_REPLACE and cell.replacement_fact_id == 901
+    assert plan.promote_fact_ids == []
+    with conn.cursor() as cur:
+        assert rr.check_authority(cur, plan, core="rcore") == []
+    assert plan.info["authority_keys_checked"] == 1
+
+
+@pytest.mark.integration
+def test_disagreeing_copies_hide_the_cell_and_leave_one_authoritative_fact(conn):
+    _f(conn, 900, NI, USD, 1, 2, "100")  # proxy, demoted
+    _f(conn, 901, NI, USD, 1, 1, "5000000", auth=False)
+    _f(conn, 903, NI, USD, 1, 3, "9000000")  # authoritative, different value
+    _cell(conn, CC_NI, 1, "100", [900])
+    plan = _plan_b(conn)
+    with conn.cursor() as cur:
+        bad = rr.check_authority(cur, plan, core="rcore")
+    assert plan.cells[0].action == rr.ACT_REMOVE and plan.promote_fact_ids == []
+    assert bad == []  # only 903 stays authoritative
+
+
+@pytest.mark.integration
+def test_authority_check_reports_a_promotion_that_would_leave_two(conn):
+    conn.execute("insert into rcore.filing values (9,1,'P2','DEFA14A','2026-05-01')")
+    _f(conn, 900, NI, USD, 1, 2, "100")  # proxy feeding the cell: demoted
+    _f(conn, 901, NI, USD, 1, 1, "5000000", auth=False)  # only periodic copy: promoted
+    _f(
+        conn, 904, NI, USD, 1, 9, "5000000"
+    )  # another authoritative proxy-form copy, feeds no cell
+    _cell(conn, CC_NI, 1, "100", [900])
+    plan = _plan_b(conn)
+    assert plan.promote_fact_ids == [901]
+    with conn.cursor() as cur:
+        bad = rr.check_authority(cur, plan, core="rcore")
+    assert len(bad) == 1 and bad[0]["authoritative_after"] == 2
