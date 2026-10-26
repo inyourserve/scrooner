@@ -835,3 +835,79 @@ def test_materials_by_face_hides_cells_that_stay():
     assert [(p.period_end, p.reason, p.outcome) for p in got] == [
         ("2026-06-30", qe.REASON_MATERIALS, "hide")
     ]
+
+
+# ---- a stored-right value whose inventory fact is demoted must not become the current ratio at the next recompute
+TXN_2018 = (
+    D(8097) * D(1000000),
+    D(2474) * D(1000000),
+    D(2217) * D(1000000),
+)  # CA, CL, inventories (0000097476-19-000007)
+
+
+def _recompute(monkeypatch, ca, cl, inv, context, rule_on):
+    by_end = {
+        CA: {END: (ca, [1])},
+        CL: {END: (cl, [3])},
+    }  # the inventory fact is missing from canonical data now
+    by_period = {CA: {10: (ca, [1])}, CL: {10: (cl, [3])}}
+    monkeypatch.setattr(
+        calc, "_load_canonical_facts",
+        lambda conn, cid: {"by_period_id": by_period, "by_end_date": by_end, "periods": {10: (END, END, "Q2")}},
+    )  # fmt: skip
+    env = {rule_flags.ENV_ENABLED: qe.RULE_ID} if rule_on else {}
+    monkeypatch.setattr(
+        calc, "rule_enabled", lambda rid: rule_flags.rule_enabled(rid, env)
+    )
+    monkeypatch.setattr(
+        qe,
+        "load_context",
+        lambda conn, cid, like_ids=None, face=None, mapped_ids=None: context,
+    )
+    conn = MagicMock()
+    cur = conn.cursor.return_value.__enter__.return_value
+    calc.calculate_for_company(conn, 1, _target())
+    return cur.executemany.call_args.args[1][0]
+
+
+@pytest.mark.parametrize(
+    ("label", "nonauth", "member", "reason"),
+    [
+        ("TXN 2018: the InventoryNet copy was demoted to non-authoritative", True, {}, qe.REASON_NOT_AUTHORITATIVE),
+        ("NKE-type: no inventory fact, authoritative member sub-lines", False, {"InventoryFinishedGoodsNetOfReserves": D(2217)}, qe.REASON_REVIEW),
+        ("NKE-type: no inventory fact, no member value", False, {}, qe.REASON_PRESENTED),
+    ],
+)  # fmt: skip
+def test_a_right_stored_value_whose_inventory_fact_is_gone_is_hidden_not_turned_into_the_current_ratio(
+    monkeypatch, label, nonauth, member, reason
+):
+    ca, cl, inv = TXN_2018
+    lines = {"AssetsCurrent": ca, "CashAndCashEquivalentsAtCarryingValue": ca / 4}
+    context = qe.Context(
+        False, {END: lines}, {END: {k: v * D(1000000) for k, v in member.items()}}, {}, {END: qe.PeriodFace(True, False)},
+        frozenset(), frozenset({END}) if nonauth else frozenset(),
+    )  # fmt: skip
+    current_ratio = ca / cl
+    right = (ca - inv) / cl
+    assert abs(right - D("2.3767")) < D(
+        "0.0001"
+    )  # the value that was stored and is right
+    off = _recompute(monkeypatch, ca, cl, inv, context, rule_on=False)
+    assert off["value"] == current_ratio  # the live code today: the wrong number
+    on = _recompute(monkeypatch, ca, cl, inv, context, rule_on=True)
+    assert (
+        on["value"] is None
+        and on["value"] != current_ratio
+        and on["is_null_reason"] == reason
+    ), label
+
+
+def test_when_the_face_shows_no_inventory_line_the_zero_stands_on_recompute(
+    monkeypatch,
+):
+    ca, cl, inv = TXN_2018
+    context = qe.Context(
+        False, {END: {"AssetsCurrent": ca}}, {}, {}, {END: qe.PeriodFace(False, False)}
+    )
+    row = _recompute(monkeypatch, ca, cl, inv, context, rule_on=True)
+    assert row["value"] == ca / cl and row["is_null_reason"] is None
