@@ -43,6 +43,10 @@ with open(out, "w") as fo:
         for r in rd:
             if r["tag"] not in wanted or r["qtrs"] != "0" or r["uom"] != "USD" or r["value"] in ("", None):
                 continue
+            # consolidated registrant only: a co-registrant (subsidiary) value or a
+            # non-primary duplicate (iprx != 0) is not the face value of the filer
+            if (r.get("coreg") or "").strip() or (r.get("iprx") or "0") not in ("0", ""):
+                continue
             undim = r["dimh"] == NO_DIM
             if not undim and r["tag"] not in wanted_mezz:
                 continue
