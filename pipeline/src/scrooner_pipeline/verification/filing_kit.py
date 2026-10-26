@@ -155,6 +155,21 @@ def _cells3(tr: str) -> list[tuple[str, str, int]]:
     return out
 
 
+_UNIT_PHRASE = re.compile(r"(\$|[A-Za-z]+)?\s*\bin (thousands|millions|billions)", re.IGNORECASE)
+_NON_MONEY = {"shares", "share", "units", "unit", "options", "warrants"}
+
+
+def money_multiplier(header: str) -> int:
+    """Scale of the MONEY figures from the header phrase: '$ in Millions' or a bare
+    'In Thousands' (old pages). 'shares in Millions' / 'units in Thousands' scale
+    share counts, never money; 'USD ($)' alone means whole dollars (ABNB)."""
+    for m in _UNIT_PHRASE.finditer(header):
+        if (m.group(1) or "").lower() in _NON_MONEY:
+            continue
+        return _SCALE[m.group(2).lower()]
+    return 1
+
+
 def _decimals(text: str) -> int | None:
     t = re.sub(r"\[\d+\]|[A-Za-z][\w-]*_\w+$", "", text)
     if parse_number(t) is None:
@@ -183,12 +198,7 @@ def parse_rpage(page_html: str) -> RPage:
         title_row = not title
         if title_row:
             title = cells[0][1]
-            m = re.search(
-                r"in (thousands|millions|billions)",
-                " ".join(t for _, t in cells),
-                re.IGNORECASE,
-            )
-            multiplier = _SCALE[m.group(1).lower()] if m else 1
+            multiplier = money_multiplier(" ".join(t for _, t in cells))
         if not rows:
             for c, t, sp in cells3:
                 d = _DURATION_HDR.match(t)
@@ -342,7 +352,11 @@ def net_income_lines(page: RPage) -> list[tuple[str, Row]]:
             or re.search(r"before|comprehensive", lab, re.IGNORECASE)
         ):
             continue
-        if _NCI.search(lab):
+        if re.search(r"discontinued|continuing operations", lab, re.IGNORECASE):
+            continue  # a component, not the bottom line
+        if re.search(r"including (the )?(portion )?attributable to", lab, re.IGNORECASE):
+            kind = "consolidated"  # NCI-INCLUSIVE total, not the NCI line (Ambac)
+        elif _NCI.search(lab):
             kind = "nci"
         elif _ATTR.search(lab):
             kind = "attributable"
