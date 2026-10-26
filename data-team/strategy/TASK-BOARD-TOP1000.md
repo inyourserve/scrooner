@@ -18,25 +18,22 @@ History floor 2014-01-01 (founder, corrected 2026-10-25): FY2015 year-over-year 
 | Companies whose cells have changed in production because of this programme | 0 | every fix is on a branch, dry-run, flag off | 1,000 |
 | Reasonless blanks, cohort v1.1 | 13,354 of 161,533 cells | coverage table rebuilt 2026-10-23, snapshot 2026-10-24 | 0 |
 | Valued cells, cohort v1.1 | 124,029 (76.8%) | same | every cell valued or reasoned |
-| Wrong-value findings, certify dry-run | 37,681 at 898 companies | run 40094543570 (2026-10-24), 92 of 103 shards completed; 11-shard rerun 40169529802 running | 0 |
+| Wrong-value findings, certify dry-run | 40,774 at 977 of 986 companies | all 100 shards (runs 40094543570, 40226692160, 40231673689; dry-run, writes nothing) | 0 |
 | Slot-record cells filing-checked by the Verifier today | 0 wrong of 112 + 55 + 123 + 80 + 27 (BS) and 19 (debt) | VERIFY-* files 2026-10-25 | every shown cell |
-| Review findings, certify dry-run | 181,450 (I11 history 135,396) | same | classified |
+| Review findings, certify dry-run | 198,688 (plus 37,385 info) | same | classified |
 
 Plain reading: a lot has been built and verified on branches, and nothing has reached a user yet. The chain that unblocks production writes is: apply migrations 0098-0100 (needs the founder's go in scrooner-4d's session) -> quiet window -> flag-on dry-run -> Verifier zero-wrong -> release.
 
-### Wrong values by cause (certify dry-run, 92 shards; where the 37,681 come from)
+### Wrong values by cause (certify dry-run, all 100 shards, 986 companies; where the 40,774 come from)
 
-| Cause (invariant) | Findings | Data points | Owner / fix | State |
-|---|---|---|---|---|
-| Per-share value derived by subtraction (I8) | 14,816 | basic/diluted EPS, effective tax rate | Period Engineer: per-share derivation ban (B2) | wip, flag off |
-| Split basis mixed in one series (I9) | 8,034 | shares outstanding, EPS, DPS | Period Engineer: split re-base (B2) | wip, 194/194 clean class passed Verifier; other_changed class being fixed |
-| Total liabilities = assets - equity, NCI added wrongly (I1) | 4,532 | total_liabilities | scrooner-25 slot records BS totals (B1 replacement) | wip, 14/16 anchors pass |
-| Statement arithmetic does not tie (I6) | 6,245 | gross profit, opex, net income, operating income | perimeter families (slot records) + Standardization rulings | not started as slot families |
-| Stale / wrong-period value shown (I3, I4, I5) | 3,009 | mixed | stale guards (lane 2 branches, flag off) | wip, flag off |
-| Effective tax rate on YTD/derived inputs (I8) | 5,079 | effective_tax_rate_reported | **no owner yet** | not started |
-| Other (I2) | 53 | | | |
-
-11 shards did not complete in that run (S000, S024, S047, S056, S065, S068, S073, S078, S085, S101, S102); the rerun is scrooner-4d's.
+| Cause (invariant / rule) | Findings | Owner / fix | State |
+|---|---|---|---|
+| I8 per-share derived by subtraction (16,013 of 16,978) | 16,978 | Period Engineer: per-share derivation ban (B2); effective tax rate part Data Engineer (B8) | wip, flag off |
+| I9 share basis mismatch (7,519 of 8,907) | 8,907 | Period Engineer: split re-base (B2) | wip, clean class Verifier-passed |
+| I6 statement arithmetic: wrong unit family 3,824, REIT calculated subtotal 1,993 | 6,656 | Data Triage to classify (B10), then slot families | not started |
+| I1 total liabilities with NCI added (4,442) | 4,813 | scrooner-25 BS totals slot family: Verifier-passed on 19 + batches 1-6; records for all 999 companies | built, not switched on |
+| I3 / I4 / I5 stale or wrong-period value | 3,358 | lane 2 stale guards | wip, flag off |
+| I2 other | 62 | | |
 
 ## 1. Foundations and gates
 
