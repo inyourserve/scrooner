@@ -35,6 +35,51 @@ Plain reading: a lot has been built and verified on branches, and nothing has re
 | I3 / I4 / I5 stale or wrong-period value | 3,358 | lane 2 stale guards | wip, flag off |
 | I2 other | 62 | | |
 
+### Certify baseline: the denominator for "wrong values removed" (2026-10-26)
+
+Certify dry-run, 100 shards, 986 cohort companies (runs 40094543570, 40226692160, 40231673689; dry-run only). Total findings 276,847: **wrong_value 40,774**, review 198,688, info 37,385. 977 of 986 companies have at least one wrong_value finding; 0 are checks_clean. Machine-readable, all severities: . Re-run the dry-run after each fix lands and report the delta per rule against this table.
+
+| Invariant | Rule | wrong_value findings | Companies |
+|---|---|---|---|
+| I8 | per_share_derived_by_subtraction | 16,013 | 957 |
+| I9 | share_basis_mismatch | 7,519 | 162 |
+| I1 | liabilities_nci_added | 4,442 | 158 |
+| I6 | wrong_unit_family | 3,824 | 10 |
+| I6 | reit_calculated_subtotal | 1,993 | 39 |
+| I3 | negative_on_nonnegative_concept | 1,531 | 367 |
+| I9 | per_share_basis_mix | 1,115 | 336 |
+| I5 | quarters_do_not_sum_to_year | 496 | 230 |
+| I6 | differs_from_authoritative_copy | 453 | 187 |
+| I4 | statement_role_suspect | 406 | 171 |
+| I8 | debt_below_component | 346 | 85 |
+| I8 | dps_rate_on_ytd | 343 | 72 |
+| I5 | stale_quarter_basis | 327 | 202 |
+| I6 | non_periodic_form | 272 | 68 |
+| I9 | share_jump_without_split | 268 | 119 |
+| I1 | liabilities_nci_treatment | 266 | 20 |
+| I8 | debt_isolated_dip | 252 | 163 |
+| I5 | quarter_label_shift | 136 | 20 |
+| I4 | layer_sign_conflict | 125 | 69 |
+| I4 | neighbour_magnitude | 122 | 88 |
+| I1 | identity:balance_sheet | 93 | 39 |
+| I4 | layer_disagreement | 90 | 41 |
+| I6 | mixed_vintage | 87 | 30 |
+| I5 | quarter_equals_longer_window | 63 | 37 |
+| I2 | identity:net_income | 57 | 34 |
+| I4 | eps_vs_net_income_over_shares | 33 | 14 |
+| I6 | sign_flip_between_copies | 23 | 13 |
+| I8 | debt_zero_with_components | 20 | 9 |
+| I4 | cross_concept_scale | 17 | 5 |
+| I5 | quarter_label_on_long_period | 12 | 3 |
+| I1 | identity:cash_within_total | 11 | 10 |
+| I9 | split_ratio_counted_twice | 5 | 5 |
+| I2 | identity:gross_profit | 5 | 5 |
+| I6 | cross_vintage_arithmetic | 4 | 3 |
+| I8 | debt_double_count | 4 | 2 |
+| I1 | identity:current_assets_within_total | 1 | 1 |
+
+Unowned families I3/I5/I4 are classified in .
+
 ## 1. Foundations and gates
 
 | # | Task | State | Evidence / blocker | Next |
