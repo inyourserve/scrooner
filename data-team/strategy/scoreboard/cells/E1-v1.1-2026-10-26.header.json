@@ -1,0 +1,12 @@
+{
+ "authorised_by": "Dhairya via a5 2026-10-26, v1.1 cohort, read-only; founder: connection limit is 90",
+ "certification_checks_run_at": "None",
+ "certification_table_exists": true,
+ "connections_at_start": 18,
+ "coverage_checked_at": "2026-10-25 17:48:24.694289+00:00",
+ "finished": "2026-10-26T04:44:02.727001+00:00",
+ "has_value_any_period_exists": true,
+ "period_gap_checked_at": "2026-10-25 19:28:55.687448+00:00",
+ "snapshot_date": "2026-10-25",
+ "started": "2026-10-26T04:37:43.180304+00:00"
+}
