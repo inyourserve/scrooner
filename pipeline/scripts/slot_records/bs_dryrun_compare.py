@@ -55,12 +55,26 @@ for cik in ciks:
         elif slot is not None:
             state = "slot_fills_blank"
         elif pv is not None:
-            state = "slot_holds_prod_has_value" if c else "no_slot_cell_prod_has_value"
+            if c:
+                state = "slot_holds_prod_has_value"
+            else:
+                # classify the production cell that has no slot cell
+                ends_c = sorted(k[1] for k in cells if k[0] == cik)
+                if not ends_c:
+                    state = "no_slot:company_not_in_records"
+                elif end < "2015-01-01":
+                    state = "no_slot:pre_window"
+                elif end < ends_c[0]:
+                    state = "no_slot:before_first_record"
+                elif end > ends_c[-1]:
+                    state = "no_slot:after_last_record"
+                else:
+                    state = "no_slot:instant_between_records"
         else:
             state = "both_blank"
         summary[state] += 1
         per_company[cik][state] += 1
-        if state in ("slot_differs", "slot_holds_prod_has_value"):
+        if True:  # FULL cells file (Verifier: agree and fill cells included so the Release Manager can reproduce every count)
             diffs.append({"cik": cik, "end": end, "state": state, "slot": str(slot) if slot is not None else None,
                           "production": str(pv) if pv is not None else None,
                           "rule": c.get("rule") if c else None, "reading": c.get("reading") if c else None,
@@ -69,8 +83,12 @@ conn.close()
 json.dump({"summary": dict(summary), "companies": len(ciks),
            "companies_with_a_difference": sum(1 for v in per_company.values() if v.get("slot_differs")),
            "per_company": {k: dict(v) for k, v in per_company.items()}}, open(out_prefix + "_summary.json", "w"), indent=1)
+import hashlib
 with open(out_prefix + "_cells.jsonl", "w") as f:
     for d in diffs:
-        f.write(json.dumps(d) + "\n")
+        f.write(json.dumps(d, sort_keys=True) + "\n")
+digest = hashlib.sha256(open(out_prefix + "_cells.jsonl", "rb").read()).hexdigest()
+open(out_prefix + "_cells.sha256", "w").write(digest + "\n")
+print("cells file sha256", digest)
 print(json.dumps(dict(summary), indent=1))
 print("companies", len(ciks), "with a slot_differs cell:", sum(1 for v in per_company.values() if v.get("slot_differs")))
