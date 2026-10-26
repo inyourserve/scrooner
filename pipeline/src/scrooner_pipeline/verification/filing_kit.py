@@ -155,7 +155,9 @@ def _cells3(tr: str) -> list[tuple[str, str, int]]:
     return out
 
 
-_UNIT_PHRASE = re.compile(r"(\$|[A-Za-z]+)?\s*\bin (thousands|millions|billions)", re.IGNORECASE)
+_UNIT_PHRASE = re.compile(
+    r"(\$|[A-Za-z]+)?\s*\bin (thousands|millions|billions)", re.IGNORECASE
+)
 _NON_MONEY = {"shares", "share", "units", "unit", "options", "warrants"}
 
 
@@ -354,7 +356,9 @@ def net_income_lines(page: RPage) -> list[tuple[str, Row]]:
             continue
         if re.search(r"discontinued|continuing operations", lab, re.IGNORECASE):
             continue  # a component, not the bottom line
-        if re.search(r"including (the )?(portion )?attributable to", lab, re.IGNORECASE):
+        if re.search(
+            r"including (the )?(portion )?attributable to", lab, re.IGNORECASE
+        ):
             kind = "consolidated"  # NCI-INCLUSIVE total, not the NCI line (Ambac)
         elif _NCI.search(lab):
             kind = "nci"

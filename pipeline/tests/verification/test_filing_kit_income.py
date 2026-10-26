@@ -245,53 +245,106 @@ def test_note_pages_and_per_share_parenthetical_never_selected():
 
 
 # ---- ABNB: money printed in whole dollars; the only unit phrase is 'shares in Millions'
-@pytest.mark.parametrize("hdr,want", [
-    ("CONSOLIDATED STATEMENTS OF OPERATIONS - USD ($) shares in Millions", 1),
-    ("Statements - USD ($) $ in Thousands, shares in Millions", 1_000),
-    ("Statements - USD ($) shares in Thousands, $ in Thousands", 1_000),
-    ("Statements - USD ($) $ in Millions, shares in Thousands", 1_000_000),
-    ("Statements (USD $)In Millions, except Per Share data", 1_000_000),
-    ("Statements - USD ($) units in Thousands", 1),
-    ("Statements - USD ($)", 1),
-])
+@pytest.mark.parametrize(
+    "hdr,want",
+    [
+        ("CONSOLIDATED STATEMENTS OF OPERATIONS - USD ($) shares in Millions", 1),
+        ("Statements - USD ($) $ in Thousands, shares in Millions", 1_000),
+        ("Statements - USD ($) shares in Thousands, $ in Thousands", 1_000),
+        ("Statements - USD ($) $ in Millions, shares in Thousands", 1_000_000),
+        ("Statements (USD $)In Millions, except Per Share data", 1_000_000),
+        ("Statements - USD ($) units in Thousands", 1),
+        ("Statements - USD ($)", 1),
+    ],
+)
 def test_money_multiplier_from_money_phrase_only(hdr, want):
     assert fk.money_multiplier(hdr) == want
 
 
 def test_abnb_whole_dollar_page_with_shares_in_millions():
-    p = _page("CONSOLIDATED STATEMENTS OF OPERATIONS - USD ($)<br> shares in Millions", [("12 Months Ended", 2)],
-              ["Dec. 31, 2024", "Dec. 31, 2023"], [("Net income", ["$ 2,648,000,000", "$ 4,792,000,000"])])
+    p = _page(
+        "CONSOLIDATED STATEMENTS OF OPERATIONS - USD ($)<br> shares in Millions",
+        [("12 Months Ended", 2)],
+        ["Dec. 31, 2024", "Dec. 31, 2023"],
+        [("Net income", ["$ 2,648,000,000", "$ 4,792,000,000"])],
+    )
     assert p.multiplier == 1
     row = fk.net_income_lines(p)[0][1]
-    assert row.values[0] == Decimal(2_648_000_000) and p.printed_unit(row, 0) == Decimal(1)
+    assert row.values[0] == Decimal(2_648_000_000) and p.printed_unit(
+        row, 0
+    ) == Decimal(1)
 
 
 # ---- Ambac: 'Including Portion Attributable to Noncontrolling Interest' is the TOTAL; combined page
 def _ambac(scale_hdr, spans, dates, ni):
-    return _page(f"Consolidated Statements of Total Comprehensive Income - USD ($) {scale_hdr}", spans, dates, [
-        ("Total revenues and other income", [74] * len(dates)),
-        ("Net Income (Loss) Attributable to Nonredeemable Noncontrolling Interest", [0] * len(dates)),
-        ("Net Income (Loss), Including Portion Attributable to Noncontrolling Interest", ni[0]),
-        ("Net income attributable to common stockholders", ni[1]),
-        ("Net income (loss) from discontinued operations", ["(497)"] * len(dates)),
-        ("Other comprehensive income (loss), after tax", [None] * len(dates)),
-        ("Net Income (Loss), Including Portion Attributable to Noncontrolling Interest", ni[0]),
-        ("Total comprehensive income (loss) attributable to common stockholders", ["13"] * len(dates))])
+    return _page(
+        f"Consolidated Statements of Total Comprehensive Income - USD ($) {scale_hdr}",
+        spans,
+        dates,
+        [
+            ("Total revenues and other income", [74] * len(dates)),
+            (
+                "Net Income (Loss) Attributable to Nonredeemable Noncontrolling Interest",
+                [0] * len(dates),
+            ),
+            (
+                "Net Income (Loss), Including Portion Attributable to Noncontrolling Interest",
+                ni[0],
+            ),
+            ("Net income attributable to common stockholders", ni[1]),
+            ("Net income (loss) from discontinued operations", ["(497)"] * len(dates)),
+            ("Other comprehensive income (loss), after tax", [None] * len(dates)),
+            (
+                "Net Income (Loss), Including Portion Attributable to Noncontrolling Interest",
+                ni[0],
+            ),
+            (
+                "Total comprehensive income (loss) attributable to common stockholders",
+                ["13"] * len(dates),
+            ),
+        ],
+    )
 
 
 def test_ambac_including_nci_is_consolidated_and_combined_page_read():
-    xml = _summary(("Consolidated Statements of Total Comprehensive Income", "R4.htm", "Statements"))
-    assert fk.select_income_statement(xml) == ("Consolidated Statements of Total Comprehensive Income", "R4.htm", True)
-    p = _ambac("$ in Millions", [("3 Months Ended", 2), ("9 Months Ended", 2)],
-               ["Sep. 30, 2023", "Sep. 30, 2022", "Sep. 30, 2023", "Sep. 30, 2022"],
-               (["66", "340", "21", "348"], ["66", "340", "19", "347"]))
-    assert [k for k, _ in fk.net_income_lines(p)] == ["nci", "consolidated", "attributable"]  # discontinued + OCI block skipped
-    att = [r for k, r in fk.net_income_lines(p) if k == "attributable"][0]
-    assert att.values[p.column(date(2022, 9, 30), months=9)] == Decimal(347) and p.multiplier == 1_000_000
+    xml = _summary(
+        (
+            "Consolidated Statements of Total Comprehensive Income",
+            "R4.htm",
+            "Statements",
+        )
+    )
+    assert fk.select_income_statement(xml) == (
+        "Consolidated Statements of Total Comprehensive Income",
+        "R4.htm",
+        True,
+    )
+    p = _ambac(
+        "$ in Millions",
+        [("3 Months Ended", 2), ("9 Months Ended", 2)],
+        ["Sep. 30, 2023", "Sep. 30, 2022", "Sep. 30, 2023", "Sep. 30, 2022"],
+        (["66", "340", "21", "348"], ["66", "340", "19", "347"]),
+    )
+    assert [k for k, _ in fk.net_income_lines(p)] == [
+        "nci",
+        "consolidated",
+        "attributable",
+    ]  # discontinued + OCI block skipped
+    att = next(r for k, r in fk.net_income_lines(p) if k == "attributable")
+    assert (
+        att.values[p.column(date(2022, 9, 30), months=9)] == Decimal(347)
+        and p.multiplier == 1_000_000
+    )
 
 
 def test_ambac_fy_in_thousands():
-    p = _ambac("$ in Thousands", [("12 Months Ended", 3)], ["Dec. 31, 2024", "Dec. 31, 2023", "Dec. 31, 2022"],
-               (["(58,921)", "(23,232)", "(35,244)"], ["(556,449)", "3,632", "522,380"]))
-    att = [r for k, r in fk.net_income_lines(p) if k == "attributable"][0]
-    assert att.values[p.column(date(2022, 12, 31))] == Decimal(522380) and p.printed_unit(att, 2) == Decimal(1000)
+    p = _ambac(
+        "$ in Thousands",
+        [("12 Months Ended", 3)],
+        ["Dec. 31, 2024", "Dec. 31, 2023", "Dec. 31, 2022"],
+        (["(58,921)", "(23,232)", "(35,244)"], ["(556,449)", "3,632", "522,380"]),
+    )
+    att = next(r for k, r in fk.net_income_lines(p) if k == "attributable")
+    assert att.values[p.column(date(2022, 12, 31))] == Decimal(
+        522380
+    ) and p.printed_unit(att, 2) == Decimal(1000)
