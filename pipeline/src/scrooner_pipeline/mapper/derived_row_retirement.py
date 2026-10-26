@@ -234,6 +234,9 @@ class Plan:
         default_factory=dict
     )  # cell id -> inputs whose printed scale must be read from the filing
     scale_log: list[dict] = field(default_factory=list)
+    supersede_fact_ids: list[int] = field(
+        default_factory=list
+    )  # authoritative copies of the same figure demoted beside a promoted precise copy
     authority_exceptions: list[dict] = field(default_factory=list)
     metric_value_ids: list[int] = field(default_factory=list)
     info: dict[str, Any] = field(default_factory=dict)
@@ -244,6 +247,7 @@ class Plan:
             "rule": self.rule_id,
             "facts": sorted(f.fact_id for f in self.facts),
             "promote": sorted(set(self.promote_fact_ids)),
+            "supersede": sorted(set(self.supersede_fact_ids)),
             "cells": sorted(
                 (
                     c.canonical_fact_id,
@@ -1354,6 +1358,7 @@ def resolve_scale(cur, plan: Plan, unit_for, core: str = "core") -> dict[str, in
         else:
             g = max(scales)
             new = _round_to(c.replacement_value, g)
+            new = new.to_integral_value() if new == new.to_integral_value() else new
             plan.cells[i] = replace(
                 c,
                 replacement_value=new,
@@ -1375,7 +1380,7 @@ select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id from {core}.fact
 where f.id = any(%(ids)s::bigint[])
 """
 AUTH_STATE_SQL = """
-select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id, f.is_authoritative, fl.form
+select f.id, f.company_id, f.concept_id, f.unit_id, f.period_id, f.is_authoritative, fl.form, f.value
 from {core}.fact f
 join unnest(%(c)s::bigint[], %(k)s::bigint[], %(u)s::bigint[], %(p)s::bigint[]) as k(c, k, u, p)
   on f.company_id = k.c and f.concept_id = k.k and f.unit_id = k.u and f.period_id = k.p
@@ -1383,11 +1388,25 @@ left join {core}.filing fl on fl.id = f.filing_id
 """
 
 
+def _same_figure(a: Decimal, b: Decimal) -> bool:
+    base = max(abs(a), abs(b))
+    return (
+        not base
+        or abs(a - b) / base <= ROUNDING
+        or _rounded_copy_of(a, b)
+        or _rounded_copy_of(b, a)
+    )
+
+
 def check_authority(cur, plan: Plan, core: str = "core") -> list[dict]:
-    """After the planned demotions and promotions, every company/tag/unit/period
-    that the plan touches must have EXACTLY ONE authoritative fact (verifier B11).
-    Returns the exceptions (also counted in plan.info)."""
-    touched = set(plan.promote_fact_ids) | {f.fact_id for f in plan.facts}
+    """Every company/tag/unit/period of a PROMOTED or SOURCE fact must end with
+    EXACTLY ONE authoritative fact (verifier B11). Another authoritative copy of
+    the same figure (a rounded copy, a proxy-form copy) is demoted beside a
+    promoted precise copy (`supersede_fact_ids`); an authoritative copy of a
+    materially different figure is an exception. Keys whose proxy fact is only
+    demoted (cell hidden or filled from another tag) are not checked: nothing
+    is promoted there. Returns the exceptions (also counted in plan.info)."""
+    touched = set(plan.promote_fact_ids)
     for c in plan.cells:
         if c.action == ACT_REPLACE:
             touched |= set(c.replacement_source_ids) | (
@@ -1411,16 +1430,27 @@ def check_authority(cur, plan: Plan, core: str = "core") -> list[dict]:
                 "p": [k[3] for k in chunk],
             },
         )
-        for fid, co, cn, un, pe, auth, form in cur.fetchall():
-            state[(co, cn, un, pe)].append((fid, auth, form))
+        for fid, co, cn, un, pe, auth, form, val in cur.fetchall():
+            state[(co, cn, un, pe)].append((fid, auth, form, Decimal(val)))
     demote = {f.fact_id for f in plan.facts}
     promote = set(plan.promote_fact_ids)
+    supersede: set[int] = set()
     bad = []
     for key, facts in state.items():
+        promoted = [f for f in facts if f[0] in promote]
+        if promoted:
+            for fid, auth, _, val in facts:
+                if (
+                    auth
+                    and fid not in demote
+                    and fid not in promote
+                    and _same_figure(val, promoted[0][3])
+                ):
+                    supersede.add(fid)
         final = [
             fid
-            for fid, auth, _ in facts
-            if (auth and fid not in demote) or fid in promote
+            for fid, auth, _, _ in facts
+            if ((auth and fid not in demote) or fid in promote) and fid not in supersede
         ]
         if len(final) != 1:
             bad.append(
@@ -1434,11 +1464,13 @@ def check_authority(cur, plan: Plan, core: str = "core") -> list[dict]:
                     "all_fact_ids": ";".join(str(f[0]) for f in facts),
                 }
             )
+    plan.supersede_fact_ids = sorted(supersede)
     plan.info["authority_keys_checked"] = len(state)
     plan.info["authority_keys_zero"] = sum(b["authoritative_after"] == 0 for b in bad)
     plan.info["authority_keys_multiple"] = sum(
         b["authoritative_after"] > 1 for b in bad
     )
+    plan.info["authoritative_copies_superseded"] = len(supersede)
     plan.authority_exceptions = bad
     return bad
 
@@ -1538,6 +1570,7 @@ def merge(plans: Sequence[Plan], family: str, rule_id: str) -> Plan:
     for p in plans:
         out.facts += p.facts
         out.promote_fact_ids += p.promote_fact_ids
+        out.supersede_fact_ids += p.supersede_fact_ids
         out.nci_pending.update(p.nci_pending)
         out.quarter_pending.update(p.quarter_pending)
         out.scale_pending.update(p.scale_pending)
@@ -1650,7 +1683,7 @@ def apply_plan(
         "cells_inserted": 0,
     }
     # 1. fact before-image, then demote (never delete)
-    fact_ids = sorted({f.fact_id for f in plan.facts})
+    fact_ids = sorted({f.fact_id for f in plan.facts} | set(plan.supersede_fact_ids))
     if fact_ids:
         cur.execute(
             f"""
