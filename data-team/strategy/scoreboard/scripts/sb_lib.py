@@ -35,6 +35,7 @@ REASON_MAP = (
 )  # v1: the record behind the 2026-10-20 scoreboard
 REASON_MAP_V2 = SB_DIR / "reason_class_map_v2.csv"
 REASON_MAP_V2_1 = SB_DIR / "reason_class_map_v2_1.csv"
+REASON_MAP_V2_2 = SB_DIR / "reason_class_map_v2_2.csv"
 
 # ---- frozen identities (FREEZE-REGISTER-2026-10-22 section 4; doc 44) -------------------
 EXPORT_SHA256 = "39df9373c0125f6785d1b5403c1c7b265e6b84b79f94451e9d764934a81df36d"

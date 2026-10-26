@@ -8,7 +8,7 @@ AUTHORED, NOT RUN (WO-7, 2026-10-22). Run only when scrooner-4d says so: E0 imme
 Rules it enforces (it exits non-zero instead of continuing):
   * ONE connection, opened read only (default_transaction_read_only = on), statement_timeout = 60s
     (--statement-timeout-ms; never raised on a timeout: the chunk is halved instead, down to 5 ids).
-  * Before EVERY statement batch: select count(*) from pg_stat_activity must be <= --max-connections (14).
+  * Before EVERY statement batch: select count(*) from pg_stat_activity must be <= --max-connections (--max-connections, default 60).
   * Reads only the sources in the allowed list of the review (section 1.1). No write statement exists.
   * Never run beside a heavy job: --authorised-by is mandatory and is recorded in the header.
 The connection string comes from pipeline/.env (DATABASE_URL) and is never printed.
@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sb_lib as L  # noqa: E402
 
 SQL = L.SB_DIR / "sql"
-MAX_CONN_DEFAULT = 14
+MAX_CONN_DEFAULT = 60  # max_connections is 90 on the 2 GB compute (2026-10-26); 14 dated from the ~15 pooler cap
 CHUNK_BASE = 100
 CHUNK_CANON = 25
 MIN_CHUNK = 5

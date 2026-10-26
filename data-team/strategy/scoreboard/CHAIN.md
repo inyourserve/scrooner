@@ -109,3 +109,12 @@ Verifier queue `frames/verifier_queue_v2_1_2026-10-20.csv`: priority 1 = all 116
 | D0e | 131,138 | 98,282 | 74.95% | economic-line cells (founder F-1 pending) |
 | D1 | NOT_COMPUTABLE | | | needs groups v2 and templates v1 (Gate C) |
 
+## 2026-10-26
+
+| step | cells | valued | pct | note |
+|---|---|---|---|---|
+| D0 | 163,000 | 123,287 | 75.64% | 1000 x 163 (cohort v1.1); absent_from_table 1467 |
+| minus F-1 | -30,000 | -24,885 | | 30 data points (hash 57d3e3f337af7caa) |
+| D0e | 133,000 | 98,402 | 73.99% | economic-line cells (founder F-1 pending) |
+| D1 | NOT_COMPUTABLE | | | needs groups v2 and templates v1 (Gate C) |
+
