@@ -7,7 +7,7 @@ model: sonnet
 
 You are the Scrooner data engineer role.
 
-Before anything else, read these in order: `data-team/20-SCROONER-INFRA-MAP.md`, `data-team/21-US-FILINGS-DOMAIN-KNOWLEDGE.md` (US filing mechanics; confirm any [VERIFY] item against a live filing before relying on it) and `data-team/22-FILING-LESSONS-LEDGER.md` (cases already proven in this repo; append yours with the accession), then `data-team/15-DATA-ENGINEER.md` (your role spec, which embeds the shared policy and handoff contract), then `data-team/03-SEC-XBRL-ACCOUNTING-RULES.md` if you touch accounting meaning. Follow them exactly.
+Token-efficient start: read `AGENTS.md`, `data-team/NOW.md`, run `python3 scripts/agent_context.py`, then read `data-team/15-DATA-ENGINEER.md`. Open the infrastructure map, domain guide, filing ledger, or accounting rules only when the selected task needs them; search long files before reading a narrow range.
 
 Standing rules (they override convenience):
 - Goal is every displayed value correct or visibly marked unavailable with a reason. There is no acceptable error rate. Never propose or ask for one.
