@@ -129,6 +129,9 @@ REASON_TEXT = {
     "derived_inputs_unverified": (
         "the stored quarter has no filed year and year-to-date to check it against; not shown"
     ),
+    "derived_scale_unverified": (
+        "the quarter mixes reporting scales and the printed scale could not be read; not shown"
+    ),
     "derived_inputs_disagree": (
         "the filed copies of the year or earlier quarters disagree (restated); not shown"
     ),
@@ -227,6 +230,10 @@ class Plan:
     quarter_pending: dict[int, tuple[Decimal, tuple[FactRow, ...]]] = field(
         default_factory=dict
     )  # cell id -> quarter derived from NCI-inclusive inputs awaiting the face check
+    scale_pending: dict[int, tuple[FactRow, ...]] = field(
+        default_factory=dict
+    )  # cell id -> inputs whose printed scale must be read from the filing
+    scale_log: list[dict] = field(default_factory=list)
     metric_value_ids: list[int] = field(default_factory=list)
     info: dict[str, Any] = field(default_factory=dict)
 
@@ -796,17 +803,35 @@ def _scale_unit(v: Decimal) -> int:
     return 1
 
 
-def _coarsen(value: Decimal, inputs: Sequence[FactRow]) -> tuple[Decimal, int]:
-    """A quarter built from inputs reported at DIFFERENT scales (BAH: year in
-    millions, nine months in thousands) is only known to the coarsest scale:
-    show it at that scale (192,705,000 -> 193,000,000), never with false
-    precision. Returns (value, scale applied or 1)."""
+def _scale_suspect(inputs: Sequence[FactRow]) -> bool:
+    """Candidate for the printed-scale check: the inputs LOOK like different
+    reporting scales from their trailing zeros. Trailing zeros prove nothing
+    ('96.0', '4,274.0', '12,000' printed in thousands; AKTX), so this only
+    selects which quarters to look up on the filing page, never the unit."""
     scales = [_scale_unit(f.value) for f in inputs]
-    g = max(scales)
-    if g == min(scales) or g < 10**6:
-        return value, 1
+    return max(scales) >= 10**6 and max(scales) > min(scales)
+
+
+def _round_to(value: Decimal, g: int) -> Decimal:
     q = (abs(value) / g).quantize(Decimal(1), rounding="ROUND_HALF_UP") * g
-    return (q if value >= 0 else -q), g
+    return q if value >= 0 else -q
+
+
+SCALE_WORDS = {"billions": 10**9, "millions": 10**6, "thousands": 10**3}
+
+
+def scale_from_html(html: str) -> int | None:
+    """Printed scale of a rendered statement from its header ("USD ($) $ in
+    Millions" -> 1,000,000; "USD ($)" alone -> 1). None when not found."""
+    head = html[:4000]
+    m = re.search(r"\$\s*in\s+(billions|millions|thousands)", head, re.I) or re.search(
+        r"\bin\s+(billions|millions|thousands)\b", head, re.I
+    )
+    if m:
+        return SCALE_WORDS[m.group(1).lower()]
+    if re.search(r"USD\s*\(\$\)", head):
+        return 1
+    return None
 
 
 def _one_vintage(restated: bool, facts: Sequence[FactRow]) -> bool:
@@ -1021,8 +1046,8 @@ def _vet_and_promote(
                     pending_q = (val, tuple(ins))
                     break
         if verdict == "ok":
-            value, g_applied = _coarsen(value, inputs)
-            if g_applied > 1:
+            if _scale_suspect(inputs):
+                plan.scale_pending[c.canonical_fact_id] = tuple(inputs)
                 rounded_units += 1
             old = picked.get(c.canonical_fact_id)
             if old is not None:
@@ -1040,9 +1065,7 @@ def _vet_and_promote(
                 reason_code=None,
                 replacement_fact_id=None,
                 replacement_value=value,
-                replacement_form="derived"
-                + (f" (rounded to {g_applied:,})" if g_applied > 1 else "")
-                + ": "
+                replacement_form="derived: "
                 + " - ".join(f.accession or "?" for f in inputs[:2]),
                 replacement_accession=None,
                 replacement_was_authoritative=None,
@@ -1094,7 +1117,7 @@ def _vet_and_promote(
                 replacement_source_ids=(),
                 note="no filed inputs to verify the stored derived quarter",
             )
-    plan.info["quarters_rounded_to_coarsest_input_scale"] = rounded_units
+    plan.info["quarters_pending_printed_scale_check"] = rounded_units
     plan.info["quarters_on_original_basis_after_restatement"] = original
     plan.info["quarters_rederived_same_as_stored"] = same
     plan.info["quarters_rederived_differs_from_stored"] = differs
@@ -1170,6 +1193,110 @@ def sec_income_statement_labels(client, cik: str, accession: str) -> list[str] |
     return fle._statement_labels(client, base + report["html_file"])
 
 
+def sec_income_statement_scale(client, cik: str, accession: str) -> int | None:
+    """Printed scale (1, 1,000, 1,000,000 ...) of the filing's income statement page."""
+    import httpx
+
+    from scrooner_pipeline.parsers import filing_line_evidence as fle
+    from scrooner_pipeline.segments.segment_revenue import _filing_summary_reports
+
+    try:
+        reports = _filing_summary_reports(client, int(cik), accession)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 404:
+            return None
+        raise
+    report = fle._pick_report(
+        reports, fle.INCOME_STATEMENT_TITLE_PATTERN, fle.EARNINGS_TITLE
+    )
+    if report is None:
+        return None
+    base = f"https://www.sec.gov/Archives/edgar/data/{int(cik)}/{accession.replace('-', '')}/"
+    try:
+        return scale_from_html(client.get(base + report["html_file"]).text)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 404:
+            return None
+        raise
+
+
+def resolve_scale(cur, plan: Plan, scale_for, core: str = "core") -> dict[str, int]:
+    """For quarters whose inputs look like mixed scales, read the PRINTED scale of
+    each input's filing (never infer it from trailing zeros: AKTX -17,298K minus
+    -12,000K is -5,298K, both printed in thousands). All inputs printed at one
+    scale: the exact value stands. Different scales: the quarter is shown at the
+    coarsest printed scale (BAH 193,000,000). A scale that cannot be read hides
+    the quarter (`derived_scale_unverified`). scale_for=None hides every pending
+    cell."""
+    out = {"exact": 0, "rounded": 0, "hidden": 0}
+    if not plan.scale_pending:
+        return out
+    companies = {f.company_id for ins in plan.scale_pending.values() for f in ins}
+    cik = {}
+    if scale_for is not None:
+        cur.execute(
+            _q("select id, cik from {core}.company where id = any(%(ids)s)", core),
+            {"ids": sorted(companies)},
+        )
+        cik = dict(cur.fetchall())
+    cache: dict[tuple[int, str | None], int | None] = {}
+    for i, c in enumerate(plan.cells):
+        inputs = plan.scale_pending.get(c.canonical_fact_id)
+        if inputs is None or c.action != ACT_REPLACE:
+            continue
+        scales = []
+        for f in inputs:
+            key = (f.company_id, f.accession)
+            if key not in cache:
+                cache[key] = (
+                    scale_for(cik[f.company_id], f.accession)
+                    if scale_for is not None and f.accession
+                    else None
+                )
+            scales.append(cache[key])
+        log = {
+            "canonical_fact_id": c.canonical_fact_id,
+            "company_id": c.company_id,
+            "period_end": c.period_end,
+            "value_before": c.replacement_value,
+            "input_accessions": ";".join(f.accession or "?" for f in inputs),
+            "printed_scales": ";".join(str(x) for x in scales),
+        }
+        if any(x is None for x in scales):
+            plan.cells[i] = replace(
+                c,
+                action=ACT_REMOVE,
+                reason_code="derived_scale_unverified",
+                replacement_fact_id=None,
+                replacement_value=None,
+                replacement_form=None,
+                replacement_source_ids=(),
+                note="printed scale of an input could not be read",
+            )
+            out["hidden"] += 1
+            log["outcome"] = "hidden"
+        elif max(scales) == min(scales):
+            out["exact"] += 1
+            log["outcome"] = "exact"
+        else:
+            g = max(scales)
+            new = _round_to(c.replacement_value, g)
+            plan.cells[i] = replace(
+                c,
+                replacement_value=new,
+                replacement_form=f"{c.replacement_form} (shown at {g:,})",
+                note=_gap_bucket(c.stored_value, new),
+            )
+            out["rounded"] += 1
+            log["outcome"] = f"rounded_to_{g}"
+            log["value_after"] = new
+        plan.scale_log.append(log)
+    plan.info["scale_check_exact"] = out["exact"]
+    plan.info["scale_check_rounded"] = out["rounded"]
+    plan.info["scale_check_hidden"] = out["hidden"]
+    return out
+
+
 def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
     """A cell blocked only because an NCI income FACT exists is released when the
     filing's income statement shows NO noncontrolling or attributable line: the
@@ -1240,15 +1367,14 @@ def resolve_nci_face(cur, plan: Plan, labels_for, core: str = "core") -> int:
                 break
         if not clean:
             continue
-        value, g_applied = _coarsen(value, inputs)
+        if _scale_suspect(inputs):
+            plan.scale_pending[c.canonical_fact_id] = tuple(inputs)
         plan.cells[i] = replace(
             c,
             action=ACT_REPLACE,
             reason_code=None,
             replacement_value=value,
-            replacement_form="derived"
-            + (f" (rounded to {g_applied:,})" if g_applied > 1 else "")
-            + ": "
+            replacement_form="derived: "
             + " - ".join(f.accession or "?" for f in inputs[:2]),
             replacement_source_ids=tuple(f.fact_id for f in inputs),
             note=_gap_bucket(c.stored_value, value),
@@ -1268,6 +1394,7 @@ def merge(plans: Sequence[Plan], family: str, rule_id: str) -> Plan:
         out.promote_fact_ids += p.promote_fact_ids
         out.nci_pending.update(p.nci_pending)
         out.quarter_pending.update(p.quarter_pending)
+        out.scale_pending.update(p.scale_pending)
         out.cells += p.cells
         out.metric_value_ids += p.metric_value_ids
         for k, v in p.info.items():
@@ -1497,6 +1624,7 @@ def run_dry_run(
     statement_timeout: str = "60s",
     log=lambda m: print(m, flush=True),
     face_labels=None,
+    scale_for=None,
 ) -> dict[str, Any]:
     """READ-ONLY. One connection. Writes CSV/JSON files into out_dir only."""
     cur = conn.cursor()
@@ -1541,12 +1669,111 @@ def run_dry_run(
         plan = merge(plans[fam], family_name, rule)
         if fam == "B" and face_labels is not None:
             resolve_nci_face(cur, plan, face_labels)
+        if fam == "B":
+            resolve_scale(cur, plan, scale_for)
         summary[family_name] = summarize(plan, cohort)
         _write_csvs(out_dir, plan)
+        _write_review_files(out_dir, plan, cohort)
     (out_dir / "retirement_dryrun_summary.json").write_text(
         json.dumps(summary, indent=2, default=str)
     )
     return summary
+
+
+def _write_review_files(out_dir: Path, plan: Plan, cohort: set[int] | None) -> None:
+    """Files for the Release Manager's reviewed plan (nothing here touches the DB)."""
+    tag = plan.family
+    if plan.scale_log:
+        with (out_dir / f"{tag}_scale_check.csv").open("w", newline="") as fh:
+            cols = [
+                "canonical_fact_id",
+                "company_id",
+                "period_end",
+                "input_accessions",
+                "printed_scales",
+                "outcome",
+                "value_before",
+                "value_after",
+            ]
+            w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
+            w.writeheader()
+            w.writerows(plan.scale_log)
+    users: dict[int, list[int]] = defaultdict(list)
+    for c in plan.cells:
+        if c.action == ACT_REPLACE:
+            for fid in c.replacement_source_ids or (c.replacement_fact_id,):
+                if fid is not None:
+                    users[fid].append(c.canonical_fact_id)
+    with (out_dir / f"{tag}_promote_facts_before_image.csv").open(
+        "w", newline=""
+    ) as fh:
+        w = csv.writer(fh)
+        w.writerow(
+            [
+                "fact_id",
+                "prior_is_authoritative",
+                "new_is_authoritative",
+                "used_by_canonical_fact_ids",
+            ]
+        )
+        for fid in sorted(set(plan.promote_fact_ids)):
+            w.writerow([fid, False, True, ";".join(map(str, users.get(fid, [])))])
+    demote = {f.fact_id: f for f in plan.facts}
+    with (out_dir / f"{tag}_proxy_only_recheck.csv").open("w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(
+            [
+                "canonical_fact_id",
+                "company_id",
+                "in_cohort",
+                "concept",
+                "period_end",
+                "stored_value",
+                "proxy_fact_ids",
+                "proxy_accessions",
+                "proxy_forms",
+            ]
+        )
+        for c in plan.cells:
+            if c.reason_code != "proxy_only_source":
+                continue
+            fs = [demote[i] for i in c.retired_source_ids if i in demote]
+            w.writerow(
+                [
+                    c.canonical_fact_id,
+                    c.company_id,
+                    None if cohort is None else c.company_id in cohort,
+                    c.concept,
+                    c.period_end,
+                    c.stored_value,
+                    ";".join(map(str, c.retired_source_ids)),
+                    ";".join(f.accession or "?" for f in fs),
+                    ";".join(f.form or "?" for f in fs),
+                ]
+            )
+    release = {
+        "rule_id": plan.rule_id,
+        "plan_digest": plan.digest(),
+        "enable_with": f"SCROONER_RULES_ENABLED={plan.rule_id} (dispatch input rules='on:{plan.rule_id}')",
+        "steps": [
+            "1 apply_plan(cur, plan, run_id, expected_digest=<plan_digest>) in ONE reviewed transaction; archive tables must exist (migration 0098 + fact_authority_retired migration)",
+            "2 Normalizer re-run for the affected companies",
+            "3 Stage 2e dedupe re-run",
+            "4 Verifier sample + scrooner-certify re-run",
+            "5 on failure: restore(cur, run_id) (cells from canonical_fact_retired, facts from fact_authority_retired)",
+        ],
+        "counts": {
+            "facts_to_demote": len(plan.facts),
+            "facts_to_promote": len(set(plan.promote_fact_ids)),
+            "cells_replace": sum(c.action == ACT_REPLACE for c in plan.cells),
+            "cells_remove": sum(c.action == ACT_REMOVE for c in plan.cells),
+            "cells_review_not_retired": sum(c.action == ACT_REVIEW for c in plan.cells),
+            "metric_values_to_recompute": len(set(plan.metric_value_ids)),
+        },
+    }
+    (out_dir / f"{tag}_release_plan.json").write_text(
+        json.dumps(release, indent=2, default=str)
+    )
 
 
 def _write_csvs(out_dir: Path, plan: Plan) -> None:
@@ -1608,6 +1835,13 @@ def _sec_labels():
     return lambda cik, accession: sec_income_statement_labels(client, cik, accession)
 
 
+def _sec_scale():
+    from scrooner_pipeline.common.sec_client import SECClient
+
+    client = SECClient()
+    return lambda cik, accession: sec_income_statement_scale(client, cik, accession)
+
+
 def main(argv: list[str] | None = None) -> int:
     import psycopg
 
@@ -1658,6 +1892,7 @@ def main(argv: list[str] | None = None) -> int:
             chunk=args.chunk,
             statement_timeout=args.statement_timeout,
             face_labels=None if args.no_face else _sec_labels(),
+            scale_for=None if args.no_face else _sec_scale(),
         )
     print(json.dumps(summary, indent=2, default=str))
     return 0

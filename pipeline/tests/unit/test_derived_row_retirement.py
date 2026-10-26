@@ -802,37 +802,128 @@ def test_apply_writes_a_rederived_quarter_with_its_filed_inputs_and_restores(con
 
 
 @pytest.mark.unit
-def test_coarsen_mixed_scales_only():
-    D = Decimal
+def test_scale_suspect_only_selects_candidates_it_never_sets_the_unit():
     f = lambda v: _fact(1, v, filed=date(2025, 1, 1))  # noqa: E731
-    # BAH: year in millions, nine months in thousands -> quarter at millions
-    assert rr._coarsen(D("192705000"), [f("935000000"), f("742295000")]) == (
-        D("193000000"),
-        1_000_000,
+    assert rr._scale_suspect([f("935000000"), f("742295000")])  # BAH-like
+    assert rr._scale_suspect(
+        [f("17298000"), f("12000000")]
+    )  # AKTX: looks mixed, is not
+    assert not rr._scale_suspect([f("935000000"), f("742000000")])
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    ("header", "scale"),
+    [
+        ("CONSOLIDATED STATEMENTS OF INCOME - USD ($) $ in Millions", 1_000_000),
+        (
+            "Consolidated Statements of Operations - USD ($) shares in Thousands, $ in Thousands",
+            1_000,
+        ),
+        ("INCOME STATEMENT - USD ($)", 1),
+        ("In Thousands, unless otherwise specified", 1_000),
+        ("nothing useful", None),
+    ],
+)
+def test_printed_scale_from_the_page_header(header, scale):
+    assert rr.scale_from_html(f"<th>{header}</th>") == scale
+
+
+class _Cur:
+    def execute(self, *a, **k):
+        pass
+
+    def fetchall(self):
+        return [(1, "0000000001")]
+
+
+def _plan_with_scale_pending(value, accessions):
+    ins = tuple(
+        rr.FactRow(
+            i,
+            1,
+            1,
+            1,
+            "NetIncomeLoss",
+            "usd",
+            None,
+            None,
+            None,
+            Decimal(v),
+            True,
+            False,
+            "10-K",
+            acc,
+            date(2025, 1, 1),
+        )
+        for i, (v, acc) in enumerate(
+            zip(("935000000", "742295000"), accessions), start=1
+        )
     )
-    # both in millions, or both in thousands: untouched
-    assert rr._coarsen(D("193000000"), [f("935000000"), f("742000000")]) == (
-        D("193000000"),
+    cell = rr.CellPlan(
+        "B",
+        rr.RULE_PROXY,
         1,
+        1,
+        1,
+        "net_income",
+        1,
+        None,
+        Decimal("9"),
+        (9,),
+        (9,),
+        rr.ACT_REPLACE,
+        replacement_value=Decimal(value),
+        replacement_source_ids=(1, 2),
+        replacement_form="derived",
     )
-    assert rr._coarsen(D("192705000"), [f("935000000"), f("742295000")])[0] != D(
-        "192705000"
-    )
-    assert rr._coarsen(D("-192705000"), [f("935000000"), f("742295000")])[0] == D(
-        "-193000000"
-    )
+    return rr.Plan("B", rr.RULE_PROXY, cells=[cell], scale_pending={1: ins})
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    ("scales", "outcome", "value"),
+    [
+        (
+            {"A": 1_000_000, "B": 1_000},
+            "rounded",
+            Decimal("193000000"),
+        ),  # BAH: printed millions + thousands
+        (
+            {"A": 1_000, "B": 1_000},
+            "exact",
+            Decimal("192705000"),
+        ),  # AKTX: both printed in thousands
+        ({"A": 1_000_000, "B": None}, "hidden", None),
+    ],
+)
+def test_resolve_scale_uses_the_printed_scale_not_trailing_zeros(
+    scales, outcome, value
+):
+    plan = _plan_with_scale_pending("192705000", ("A", "B"))
+    out = rr.resolve_scale(_Cur(), plan, lambda cik, acc: scales[acc])
+    assert out[outcome] == 1
+    cell = plan.cells[0]
+    assert cell.replacement_value == value
+    assert (cell.reason_code == "derived_scale_unverified") is (outcome == "hidden")
+
+
+@pytest.mark.unit
+def test_resolve_scale_without_sec_hides_every_pending_cell():
+    plan = _plan_with_scale_pending("192705000", ("A", "B"))
+    assert rr.resolve_scale(_Cur(), plan, None)["hidden"] == 1
 
 
 @pytest.mark.integration
-def test_bah_mixed_unit_quarter_is_shown_at_the_coarser_unit(conn):
+def test_bah_shaped_quarter_is_pending_the_printed_scale_check(conn):
     _quarter_world(conn, fy_value="935000000", fy_filing=8)
     conn.execute("update rcore.fact set value = 742295000 where id = 611")
     plan = _plan_b(conn)
     cell = plan.cells[0]
     assert cell.action == rr.ACT_REPLACE and cell.replacement_value == Decimal(
-        "193000000"
+        "192705000"
     )
-    assert plan.info["quarters_rounded_to_coarsest_input_scale"] == 1
+    assert list(plan.scale_pending) == [cell.canonical_fact_id]
 
 
 def _profitloss_only_quarter(conn):
