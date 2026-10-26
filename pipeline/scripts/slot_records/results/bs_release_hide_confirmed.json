@@ -1,0 +1,22 @@
+[
+ {
+  "cik": "0000764622",
+  "end": "2021-12-31",
+  "why": "Verifier: production 16,212M vs face 15,981,762K"
+ },
+ {
+  "cik": "0001130464",
+  "end": "2019-12-31",
+  "why": "Verifier: production adds NCI 101,946K (one of six; the other five instants await naming)"
+ },
+ {
+  "cik": "0000055785",
+  "end": "2016-06-30",
+  "why": "Verifier: production 14,802M vs 14,282M + redeemable preferred 64"
+ },
+ {
+  "cik": "0000055785",
+  "end": "2021-09-30",
+  "why": "Verifier: production wrong"
+ }
+]
