@@ -213,11 +213,12 @@ def build(
     qsha = script_sha()
     map_path = map_path or L.REASON_MAP_V2_1
     map_ver = {
+        L.REASON_MAP_V2_3.name: "v2.3",
         L.REASON_MAP_V2_2.name: "v2.2",
         L.REASON_MAP_V2_1.name: "v2.1",
         L.REASON_MAP_V2.name: "v2",
     }.get(Path(map_path).name, "v1")
-    kver = {"v2.2": "proxy@2.2", "v2.1": "proxy@2.1", "v2": "proxy@2"}.get(map_ver, "proxy@1")
+    kver = {"v2.3": "proxy@2.3", "v2.2": "proxy@2.2", "v2.1": "proxy@2.1", "v2": "proxy@2"}.get(map_ver, "proxy@1")
     R = Rows(as_of, ext_sha, qsha)
 
     absent_cells, outside, _present = grid_report(ext, ids, names)
@@ -969,7 +970,7 @@ def build(
             qfile=qk,
         )
 
-    if map_ver in ("v2", "v2.1", "v2.2"):
+    if map_ver in ("v2", "v2.1", "v2.2", "v2.3"):
         buckets = (
             ("currency_unknown", "metric_only_fallback")
             if map_ver == "v2"
@@ -1423,7 +1424,7 @@ def main(argv=None):
     ap.add_argument("--out-dir", type=Path, default=L.SB_DIR)
     ap.add_argument(
         "--map",
-        choices=("v1", "v2", "v2.1", "v2.2"),
+        choices=("v1", "v2", "v2.1", "v2.2", "v2.3"),
         default="v2.1",
         help="reason-class map: v2.1 (default), v2 (published) or v1 (the record behind the 2026-10-20 scoreboard)",
     )
@@ -1468,6 +1469,7 @@ def main(argv=None):
         "v2": L.REASON_MAP_V2,
         "v2.1": L.REASON_MAP_V2_1,
         "v2.2": L.REASON_MAP_V2_2,
+        "v2.3": L.REASON_MAP_V2_3,
     }[a.map]
     R, defects, absent_cells = build(ext, a.as_of, a.cells, prev, ref, out, map_path)
     bad = validate_rows(R.rows)
