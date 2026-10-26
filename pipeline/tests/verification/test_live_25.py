@@ -16,7 +16,6 @@ from decimal import Decimal
 from pathlib import Path
 
 import pytest
-
 from scrooner_pipeline.verification import filing_kit as fk
 
 CASES = json.loads((Path(__file__).parent / "fixtures" / "live_25.json").read_text())

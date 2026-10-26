@@ -393,7 +393,9 @@ _MEZZ = re.compile(
 _NOT_MEZZ = re.compile(
     r"non-?redeemable|^total|attributable|long-term debt|debt", re.IGNORECASE
 )
-_TOTAL_LIAB = re.compile(r"^(total )?liabilities$", re.IGNORECASE)  # PEP prints plain "Liabilities"
+_TOTAL_LIAB = re.compile(
+    r"^(total )?liabilities$", re.IGNORECASE
+)  # PEP prints plain "Liabilities"
 _TOTAL_LE = re.compile(
     r"^total (capitalization and )?liabilities\b.*(\band\b|&).*(equity|deficit|capital|investment|shareholders|stockholders)"
     r"|^total capitalization and liabilities$|^liabilities and .*(equity|deficit|capital),? total$",
@@ -439,7 +441,12 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
         got = [_face_col(page, i) for i in cols]
         if all(g.value is not None and g.value == got[0].value for g in got):
             return got[0]
-        return FaceLiabilities(None, "unavailable", {}, f"duplicate date columns differ: {[g.value for g in got]}")
+        return FaceLiabilities(
+            None,
+            "unavailable",
+            {},
+            f"duplicate date columns differ: {[g.value for g in got]}",
+        )
 
 
 def _face_col(page: RPage, c: int) -> FaceLiabilities:
@@ -496,7 +503,9 @@ def _face_col(page: RPage, c: int) -> FaceLiabilities:
             re.IGNORECASE,
         )
         and not _MEZZ.search(x[1])
-        and not re.search(r"equity (method|securit|invest)|investments? in", x[1], re.IGNORECASE)
+        and not re.search(
+            r"equity (method|securit|invest)|investments? in", x[1], re.IGNORECASE
+        )
         and x[0] <= equity[0]
         and (not assets or x[0] > assets[0])  # 'Equity method investments' are assets
     ]
@@ -534,8 +543,18 @@ def _from_subtotals(blk: list, le: tuple) -> FaceLiabilities | None:
     both exist in that order and every valued row after the long-term subtotal is
     equity-like (else a liability section such as contributions in aid of
     construction would be missing from the sum)."""
-    cur = [x for x in blk if re.match(r"(total )?current liabilities$", x[1], re.IGNORECASE)]
-    lt = [x for x in blk if re.match(r"(total )?(long-?term|non-?current) liabilities$", x[1], re.IGNORECASE)]
+    cur = [
+        x
+        for x in blk
+        if re.match(r"(total )?current liabilities$", x[1], re.IGNORECASE)
+    ]
+    lt = [
+        x
+        for x in blk
+        if re.match(
+            r"(total )?(long-?term|non-?current) liabilities$", x[1], re.IGNORECASE
+        )
+    ]
     if not cur or not lt or lt[-1][0] < cur[-1][0]:
         return None
     after = [x for x in blk if lt[-1][0] < x[0] < le[0]]
@@ -545,7 +564,9 @@ def _from_subtotals(blk: list, le: tuple) -> FaceLiabilities | None:
     if value <= 0 or value >= le[2]:
         return None
     return FaceLiabilities(
-        value, "derived_from_subtotals", {cur[-1][1]: cur[-1][2], lt[-1][1]: lt[-1][2]},
+        value,
+        "derived_from_subtotals",
+        {cur[-1][1]: cur[-1][2], lt[-1][1]: lt[-1][2]},
         "derived from subtotals: printed current + long-term liabilities; no total-equity line",
     )
 
