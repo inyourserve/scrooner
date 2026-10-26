@@ -19,6 +19,7 @@ History floor 2014-01-01 (founder, corrected 2026-10-25): FY2015 year-over-year 
 | Reasonless blanks, cohort v1.1 | 13,354 of 161,533 cells | coverage table rebuilt 2026-10-23, snapshot 2026-10-24 | 0 |
 | Valued cells, cohort v1.1 | 124,029 (76.8%) | same | every cell valued or reasoned |
 | Wrong-value findings, certify dry-run | 40,774 at 977 of 986 companies | all 100 shards (runs 40094543570, 40226692160, 40231673689; dry-run, writes nothing) | 0 |
+| Production total-liabilities cells the slot engine would correct (dry-run 2026-10-26) | 3,769 at 358 companies (256 against the filer's own printed total) | results/bs_dryrun_total_liabilities_summary.json | released behind a flag after the Verifier sample |
 | Slot-record cells filing-checked by the Verifier today | 0 wrong of 112 + 55 + 123 + 80 + 27 (BS) and 19 (debt) | VERIFY-* files 2026-10-25 | every shown cell |
 | Review findings, certify dry-run | 198,688 (plus 37,385 info) | same | classified |
 
@@ -153,6 +154,7 @@ Decided 2026-10-25 (to scrooner-25): (1) migrations 0098-0100: go ahead; (2) sto
 2026-10-26: THE-PLAN 7.3 (load the SEC Financial Statement and Notes data sets) APPROVED by the founder in scrooner-25's session after the 2024q4 pilot; full download running (47 quarters, ~94 requests, disk floor 3 GB, extracts local; Storage bucket still Dhairya's call). Still open: show unaudited 8-K Q4 earnings figures, labelled? (THE-PLAN 7.2).
 
 ## 7. Movement log (newest first)
+- 2026-10-26 (evening): FIRST RELEASE CANDIDATE: total-liabilities dry-run over 952 companies: production differs from the filing-checked slot value in 3,769 cells (358 companies), 88 blanks filled, 230 would hide pending the reader; handed to Dhairya for the Verifier sample and the Release Manager slot.
 - 2026-10-26 (later): the SEC publishes the latest 12 months of FSN as monthly files; all 12 (Oct 2025 to Sep 2026, 2.16 GB zips + 0.5 GB extracts) fetched and uploaded, 24 requests; FSN now covers every cohort filing 2014q1 to Sep 2026. SEC usage ~1,436 of 2,600. Total-liabilities dry-run (slot vs production, 999 companies) running for release review.
 - 2026-10-26: FSN full download COMPLETE: 47 quarters, 25.76 GB (zips + all-table cohort extracts) in the private bucket fsn-notes, sha256 ledger, 0 blocked, 94 requests; SEC usage ~1,412 of 2,600. Next: rerun BS holds and census gaps from FSN rows (0 requests), capex ruling build, debt at scale from FSN cal rows.
 - 2026-10-26 (later): Verifier PASSED D&A/capex V5 (32/32); KRUS false holds fixed (V5.1). Census rerun after purge/VACUUM: 637 of 698 no-cal companies tie everywhere (was 621). FSN flow: 18+ of 47 quarters in the bucket, zips included. Purge to the 2014 floor, VACUUM and storage dedupe finished (scrooner-4d).
