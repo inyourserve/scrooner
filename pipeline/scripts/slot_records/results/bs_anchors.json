@@ -101,6 +101,13 @@
    "period_end": "2018-03-31",
    "expected": "31420000000",
    "src": "0001031296-18-000031 R5"
+  },
+  {
+   "ticker": "UPS",
+   "period_end": "2017-12-31",
+   "expected": "44373000000",
+   "src": "0001090727-18-000009; Verifier release-1 draw: total L&E 45,403 - total equity 1,030; deferred compensation obligations are an equity-section line",
+   "tolerance": "1000000"
   }
  ]
 }

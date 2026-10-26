@@ -350,7 +350,7 @@ for cik in sorted(records):
             "era_first": rec["filing_from"], "era_from": rec["period_from"], "era_to": rec["period_to"],
             "rule": rec["total_liabilities_rule"], "cal_source": rec.get("cal_source"), "reading": reading,
             "total_liabilities": str(published) if published is not None else None,
-            "identity": key, "gap": str(gap), "tol": str(tol),
+            "identity": key, "gap": str(gap), "tol": str(tol), "unit": str(rounding_unit(day)),
             "equity_parent": str(day.get(rec["equity_parent_tag"] or "StockholdersEquity")),
             "instance_filled": day.get("__instance_filled__", []),
             "boundary_instant": end[:7] == rec["period_from"][:7],

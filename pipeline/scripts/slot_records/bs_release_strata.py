@@ -30,6 +30,8 @@ hide_ok = {(k["cik"], k["end"]) for k in json.load(open(hide_path))}
 # comparison carried 'reading' and 'rule' only, so a fill is 'prefill' when the
 # cell has no FSN/instance evidence in the current replay reports
 filled = set()
+gapinfo = {}
+from decimal import Decimal
 import glob
 import os
 for rep in glob.glob(os.path.join(os.path.dirname(current_path), "bs_replay_*_report.json")):
@@ -40,6 +42,7 @@ for rep in glob.glob(os.path.join(os.path.dirname(current_path), "bs_replay_*_re
     for c in r.get("cells", []):
         if c.get("instance_filled"):
             filled.add((c["cik"], c["end"]))
+        gapinfo[(c["cik"], c["end"])] = (abs(Decimal(c.get("gap", "0"))), Decimal(c.get("unit", c.get("tol", "1"))), c.get("rule"))
 rel1, rel2, strata = [], [], Counter()
 for line in open(current_path):
     c = json.loads(line)
@@ -64,9 +67,18 @@ for line in open(current_path):
     if key in keep:
         c["release"] = "kept_verified_right"
         continue
+    g = gapinfo.get(key)
+    exact = g is not None and (g[2] == "printed_total" or g[0] <= g[1])  # face sum ties within ONE printed unit (Verifier release-1 rule)
+    if stratum in ("sampled", "fill_prefill") and g is None:
+        stratum = c["stratum"] = "no_committed_replay_row"; strata[stratum] += 1
+    if stratum in ("sampled", "fill_prefill") and not exact:
+        stratum = c["stratum"] = "gap_within_tolerance_not_exact"; strata[stratum] += 1
     if stratum in ("sampled", "fill_prefill") or (stratum.startswith("hold") and key in hide_ok):
         c["release"] = "1"
         rel1.append(c)
+    elif stratum in ("gap_within_tolerance_not_exact", "no_committed_replay_row"):
+        c["release"] = "2"
+        rel2.append(c)
     elif stratum in ("changed_rule", "new_since_fill", "fill_new"):
         c["release"] = "2"
         rel2.append(c)

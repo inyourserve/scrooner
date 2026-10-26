@@ -171,6 +171,20 @@ for adsh, meta in by_filing.items():
         # (between equity rows) is equity, never subtracted as mezzanine
         elif prev_seg in ("equity_component", "equity_total", "nci") and next_seg in ("equity_component", "equity_total", "nci", None):
             z["seg"] = "equity_component"
+    # EQUITY-BLOCK position guard (Verifier release-1 draw, UPS 2017-12-31:
+    # 'Deferred compensation obligations' 37M printed inside the equity
+    # section, offset by treasury stock, was summed as a liability). Once the
+    # equity block has started (first equity component or equity total) and
+    # until the L&E total, a 'liab'-classed line is an equity-section line.
+    in_equity = False
+    for z in zone_lines:
+        if z["seg"] in ("equity_component", "equity_total", "nci"):
+            in_equity = True
+        elif z["seg"] == "liab" and in_equity:
+            z["seg"] = "equity_component"
+            z["equity_block_guard"] = True
+        elif z["seg"] == "excluded_cap_total":
+            in_equity = False  # capitalization layouts: liabilities resume after Total capitalization
     # the RAW liability line list; subtotal dedup happens in the assembler
     # against the filer's own statement-role calc graph (label-run replacement
     # proved wrong: T's 'Total deferred credits...' swallowed Long-Term Debt)
