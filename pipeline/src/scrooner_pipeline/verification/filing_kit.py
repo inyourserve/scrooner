@@ -393,7 +393,7 @@ _MEZZ = re.compile(
 _NOT_MEZZ = re.compile(
     r"non-?redeemable|^total|attributable|long-term debt|debt", re.IGNORECASE
 )
-_TOTAL_LIAB = re.compile(r"^total liabilities$", re.IGNORECASE)
+_TOTAL_LIAB = re.compile(r"^(total )?liabilities$", re.IGNORECASE)  # PEP prints plain "Liabilities"
 _TOTAL_LE = re.compile(
     r"^total (capitalization and )?liabilities\b.*(\band\b|&).*(equity|deficit|capital|investment|shareholders|stockholders)"
     r"|^total capitalization and liabilities$|^liabilities and .*(equity|deficit|capital),? total$",
@@ -403,12 +403,12 @@ _BARE_TOTAL = re.compile(
     r"^total$", re.IGNORECASE
 )  # accepted as L&E only as the last row
 _TOTAL_EQ = re.compile(
-    r"^total .*(equity|deficit|capital|investment)\b|^total (stockholders|shareholders)"
+    r"^total .*(equity|deficit|capital|investment)\b|^total (stockholders|shareholders)|^equity( \(deficit\))?$"
     r"|(stockholders|shareholders)'? equity,? including (the )?portion attributable to non-?controlling",
     re.IGNORECASE,
 )
 _EQ_INCL = re.compile(
-    r"^total (equity|deficit|capital|\(deficit\) equity|equity \(deficit\))$"
+    r"^(total )?(equity|deficit|capital|\(deficit\) equity|equity \(deficit\))$"
     r"|including (the )?portion attributable to non-?controlling",
     re.IGNORECASE,
 )
@@ -432,7 +432,17 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
     the FIRST total-L&E line are searched. Mezzanine is by position: a
     redeemable line must sit AFTER the liabilities total/last liability
     section and BEFORE equity, never inside debt (AWK) and never 'nonredeemable'."""
-    c = page.column(when)
+    try:
+        return _face_col(page, page.column(when))
+    except AmbiguousColumn:  # duplicate date columns (restated / as-adjusted copies)
+        cols = [i for i, d in enumerate(page.columns) if d == when]
+        got = [_face_col(page, i) for i in cols]
+        if all(g.value is not None and g.value == got[0].value for g in got):
+            return got[0]
+        return FaceLiabilities(None, "unavailable", {}, f"duplicate date columns differ: {[g.value for g in got]}")
+
+
+def _face_col(page: RPage, c: int) -> FaceLiabilities:
     rows = [(i, r.label, r.values[c]) for i, r in enumerate(page.rows)]
     le_idx = [i for i, lab, v in rows if v is not None and _TOTAL_LE.search(lab)]
     if (
@@ -469,10 +479,14 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
         eq = _common_stock_footing(blk)
         foot = bool(eq)
     if not eq:
+        sub = _from_subtotals(blk, le)
+        if sub:
+            return sub
         return FaceLiabilities(None, "unavailable", {}, "no total equity line")
     incl = [x for x in eq if _EQ_INCL.search(x[1])]
     equity = (incl or eq)[-1]
     # mezzanine: by position, before the first equity-section line, never inside debt
+    assets = [x[0] for x in blk if re.match(r"total assets$", x[1], re.IGNORECASE)]
     eq_rows = [
         x[0]
         for x in blk
@@ -482,7 +496,9 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
             re.IGNORECASE,
         )
         and not _MEZZ.search(x[1])
+        and not re.search(r"equity (method|securit|invest)|investments? in", x[1], re.IGNORECASE)
         and x[0] <= equity[0]
+        and (not assets or x[0] > assets[0])  # 'Equity method investments' are assets
     ]
     first_eq = min(eq_rows, default=equity[0])
     mezz = [
@@ -502,6 +518,35 @@ def face_liabilities(page: RPage, when: date) -> FaceLiabilities:
         "L&E - equity - mezzanine"
         + (" (equity footed from components)" if foot else ""),
         combined,
+    )
+
+
+_EQUITYLIKE = re.compile(
+    r"equity|stockholders|shareholders|stock|capital|earnings|surplus|comprehensive|"
+    r"noncontrolling|non-controlling|preferred|treasury|paid|deficit",
+    re.IGNORECASE,
+)
+
+
+def _from_subtotals(blk: list, le: tuple) -> FaceLiabilities | None:
+    """No total-equity line (WEC capitalization layout): liabilities = printed
+    current-liabilities subtotal + printed long-term-liabilities subtotal. Only when
+    both exist in that order and every valued row after the long-term subtotal is
+    equity-like (else a liability section such as contributions in aid of
+    construction would be missing from the sum)."""
+    cur = [x for x in blk if re.match(r"(total )?current liabilities$", x[1], re.IGNORECASE)]
+    lt = [x for x in blk if re.match(r"(total )?(long-?term|non-?current) liabilities$", x[1], re.IGNORECASE)]
+    if not cur or not lt or lt[-1][0] < cur[-1][0]:
+        return None
+    after = [x for x in blk if lt[-1][0] < x[0] < le[0]]
+    if any(not _EQUITYLIKE.search(x[1]) for x in after):
+        return None
+    value = cur[-1][2] + lt[-1][2]
+    if value <= 0 or value >= le[2]:
+        return None
+    return FaceLiabilities(
+        value, "derived_from_subtotals", {cur[-1][1]: cur[-1][2], lt[-1][1]: lt[-1][2]},
+        "derived from subtotals: printed current + long-term liabilities; no total-equity line",
     )
 
 

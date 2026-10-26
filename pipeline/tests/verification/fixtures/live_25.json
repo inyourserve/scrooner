@@ -273,5 +273,82 @@
   "expected_full_units": "2846214000",
   "note": "printed total; combined filing (Lamar Media below)",
   "evidence": "FILING-CHECKED by hand, Verifier 2"
+ },
+ {
+  "ticker": "WEC",
+  "cik": "0000783325",
+  "accession": "0000107815-20-000277",
+  "instant": "2020-09-30",
+  "expected_face_liabilities": "24862.9",
+  "page_multiplier": 1000000,
+  "expected_full_units": "2.48629E+10",
+  "note": "subtotals CL 2,840.0 + LTL 22,022.9, no total-equity line",
+  "evidence": "FILING-CHECKED by printed line sums, kit owner (WEC/EMR values from Verifier dry-run)"
+ },
+ {
+  "ticker": "WEC",
+  "cik": "0000783325",
+  "accession": "0000107815-22-000116",
+  "instant": "2021-12-31",
+  "expected_face_liabilities": "27875.2",
+  "page_multiplier": 1000000,
+  "expected_full_units": "2.78752E+10",
+  "note": "subtotals 3,753.0 + 24,122.2",
+  "evidence": "FILING-CHECKED by printed line sums, kit owner (WEC/EMR values from Verifier dry-run)"
+ },
+ {
+  "ticker": "EMR",
+  "cik": "0000032604",
+  "accession": "0000032604-22-000041",
+  "instant": "2022-09-30",
+  "expected_face_liabilities": "19356",
+  "page_multiplier": 1000000,
+  "expected_full_units": "1.9356E+10",
+  "note": "35,672 - 16,316; header has shares in Thousands",
+  "evidence": "FILING-CHECKED by printed line sums, kit owner (WEC/EMR values from Verifier dry-run)"
+ },
+ {
+  "ticker": "OMC",
+  "cik": "0000029989",
+  "accession": "0000029989-26-000026",
+  "instant": "2026-09-30",
+  "expected_face_liabilities": "39083.7",
+  "page_multiplier": 1000000,
+  "expected_full_units": "3.90837E+10",
+  "note": "sum of printed liability lines; Temporary Equity redeemable NCI 266.9 outside; Equity method row in assets",
+  "evidence": "FILING-CHECKED by printed line sums, kit owner (WEC/EMR values from Verifier dry-run)"
+ },
+ {
+  "ticker": "LYB",
+  "cik": "0001489393",
+  "accession": "0001489393-26-000012",
+  "instant": "2025-12-31",
+  "expected_face_liabilities": "23796",
+  "page_multiplier": 1000000,
+  "expected_full_units": "2.3796E+10",
+  "note": "sum of printed liability lines 6,129+12,124+1,327+1,900+2,316",
+  "evidence": "FILING-CHECKED by printed line sums, kit owner (WEC/EMR values from Verifier dry-run)"
+ },
+ {
+  "ticker": "LEA",
+  "cik": "0000842162",
+  "accession": "0000842162-26-000011",
+  "instant": "2025-12-31",
+  "expected_face_liabilities": "9642.1",
+  "page_multiplier": 1000000,
+  "expected_full_units": "9.6421E+9",
+  "note": "5,667.1 + 3,975.0 printed subtotals; bare Equity total",
+  "evidence": "FILING-CHECKED by printed line sums, kit owner (WEC/EMR values from Verifier dry-run)"
+ },
+ {
+  "ticker": "PEP",
+  "cik": "0000077476",
+  "accession": "0000077476-26-000048",
+  "instant": "2026-09-05",
+  "expected_face_liabilities": "89489",
+  "page_multiplier": 1000000,
+  "expected_full_units": "8.9489E+10",
+  "note": "printed total liabilities; shares in Thousands header",
+  "evidence": "FILING-CHECKED by printed line sums, kit owner (WEC/EMR values from Verifier dry-run)"
  }
 ]

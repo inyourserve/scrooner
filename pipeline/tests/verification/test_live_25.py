@@ -1,9 +1,9 @@
-"""Regression: the Verifier's 25 hand-checked balance-sheet instants.
+"""Regression: the Verifier's hand-checked balance-sheet instants.
 
 Skipped by default (needs sec.gov). Run live (~2 requests per filing, 4 req/s):
   cd pipeline && SCROONER_LIVE_SEC=1 SEC_USER_AGENT="..." PYTHONPATH=src \
     .venv/bin/python -m pytest tests/verification/test_live_25.py --noconftest
-Must pass 25 of 25.
+Must pass all (25 original + 7 layout cases = 32).
 """
 
 import json
@@ -23,7 +23,7 @@ CASES = json.loads((Path(__file__).parent / "fixtures" / "live_25.json").read_te
 
 
 def test_manifest_is_complete():
-    assert len(CASES) == 25
+    assert len(CASES) == 32
     for c in CASES:
         assert {
             "cik",
