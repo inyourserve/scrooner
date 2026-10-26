@@ -17,6 +17,8 @@ Branch and commit under test; report files (manifest of cells: cik, instant, sho
 - A cell is read from the accession it claims, not a later restatement.
 - `FaceLiabilities.combined=True` (several registrant blocks): first block used; confirm it is the registrant you verify. `unavailable`, or an equity footed from components, is a hand-read cell, not evidence.
 
+- Income statements: `select_income_statement` (Statements pages only; combined=True when only a comprehensive page exists). Duration pages repeat end dates, so `page.column(date, months=9)`; an unqualified ambiguous date raises. `net_income_lines` keeps consolidated / nci / attributable apart. Rounding unit = `page.printed_unit(row, col)` (scale x 10^-decimals as printed), never trailing zeros.
+
 ## Sample design (`seeded_sample(manifest, seed)`)
 Per company: first, last, every era boundary, every reading B instant (taxonomy-total-covered roots), every withheld cell, plus seeded random picks. Record the seed so a re-run picks the same cells. Failing-era companies get more picks. Re-read by hand any cell your automation disagrees on before calling it wrong (a parser slip is not a builder error; say how many you re-read).
 

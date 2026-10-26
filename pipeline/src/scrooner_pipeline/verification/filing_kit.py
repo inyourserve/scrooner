@@ -42,6 +42,11 @@ class Client(Protocol):
 class Row:
     label: str
     values: list[Decimal | None]
+    decimals: list[int | None] = field(default_factory=list)  # digits after the point as printed
+
+
+class AmbiguousColumn(KeyError):
+    """The end date appears under several duration columns; say which (months=)."""
 
 
 @dataclass
@@ -50,11 +55,28 @@ class RPage:
     multiplier: int  # printed unit: 1, 1_000, 1_000_000 ...
     columns: list[date]
     rows: list[Row] = field(default_factory=list)
+    months: list[int | None] = field(default_factory=list)  # "N Months Ended" per column; None = instant
 
-    def column(self, when: date) -> int:
-        if when not in self.columns:
-            raise KeyError(f"{when} not among columns {self.columns}")
-        return self.columns.index(when)
+    def column(self, when: date, months: int | None = None) -> int:
+        """Index of the column ending ``when``. Duration pages repeat the end date
+        (3 months and 9 months both end Sep. 30): pass ``months``; without it an
+        ambiguous date raises instead of silently taking the first."""
+        idx = [
+            i
+            for i, d in enumerate(self.columns)
+            if d == when and (months is None or (self.months[i:i + 1] or [None])[0] == months)
+        ]
+        if not idx:
+            raise KeyError(f"{when} (months={months}) not among columns {list(zip(self.columns, self.months))}")
+        if len(idx) > 1:
+            raise AmbiguousColumn(f"{when} is ambiguous; pass months= one of {[self.months[i] for i in idx]}")
+        return idx[0]
+
+    def printed_unit(self, row: Row, col: int) -> Decimal:
+        """Rounding unit of a printed cell: scale x 10^-decimals, from the printed
+        text (never from trailing zeros of the value)."""
+        d = row.decimals[col] if col < len(row.decimals) else None
+        return Decimal(self.multiplier).scaleb(-(d or 0))
 
     def find(self, rx: str, exclude: str | None = None) -> list[Row]:
         pat = re.compile(rx, re.IGNORECASE)
@@ -105,11 +127,28 @@ _FOOT = re.compile(r"^(\[\d+\]\s*)*$")  # empty or footnote-only cell
 
 def _cells(tr: str) -> list[tuple[str, str]]:
     """(css class, clean text) per cell."""
+    return [(c, t) for c, t, _ in _cells3(tr)]
+
+
+def _cells3(tr: str) -> list[tuple[str, str, int]]:
+    """(css class, clean text, colspan) per cell."""
     out = []
     for m in re.finditer(r"<t([dh])([^>]*)>(.*?)</t\1>", tr, re.DOTALL | re.IGNORECASE):
         cls = re.search(r"""class=["']([^"']*)["']""", m.group(2))
-        out.append((cls.group(1) if cls else "", _clean(m.group(3))))
+        span = re.search(r"""colspan=["']?(\d+)""", m.group(2))
+        out.append((cls.group(1) if cls else "", _clean(m.group(3)), int(span.group(1)) if span else 1))
     return out
+
+
+def _decimals(text: str) -> int | None:
+    t = re.sub(r"\[\d+\]|[A-Za-z][\w-]*_\w+$", "", text)
+    if parse_number(t) is None:
+        return None
+    m = re.search(r"\.(\d+)", t)
+    return len(m.group(1)) if m else 0
+
+
+_DURATION_HDR = re.compile(r"^(\d+) Months? Ended$", re.IGNORECASE)
 
 
 def parse_rpage(page_html: str) -> RPage:
@@ -119,12 +158,15 @@ def parse_rpage(page_html: str) -> RPage:
     dropped, then a row with more cells than columns (leading blank column on
     old pages) is aligned from the right. Hidden '- Definition' rows skipped."""
     title, multiplier, columns = "", 1, []
+    spans: list[int] = []
     rows: list[Row] = []
     for tr in re.findall(r"<tr.*?</tr>", page_html, re.DOTALL | re.IGNORECASE):
-        cells = _cells(tr)
+        cells3 = _cells3(tr)
+        cells = [(c, t) for c, t, _ in cells3]
         if not any(t for _, t in cells):
             continue
-        if not title:
+        title_row = not title
+        if title_row:
             title = cells[0][1]
             m = re.search(
                 r"in (thousands|millions|billions)",
@@ -132,46 +174,130 @@ def parse_rpage(page_html: str) -> RPage:
                 re.IGNORECASE,
             )
             multiplier = _SCALE[m.group(1).lower()] if m else 1
-        tail = [t for _, t in cells[1:] if t and not _FOOT.match(t)]
-        if tail and all(parse_date(c) for c in tail):
+        if not rows:
+            for c, t, sp in cells3:
+                d = _DURATION_HDR.match(t)
+                if d:
+                    spans += [int(d.group(1))] * sp
+        # the second header row of a two-row header has NO title cell (rowspan=2),
+        # so its first cell is already a date: keep it
+        first_is_title = title_row or cells[0][0] == "tl"
+        tail = [t for _, t in (cells[1:] if first_is_title else cells) if t and not _FOOT.match(t)]
+        if not rows and tail and all(parse_date(c) for c in tail):
             columns = [parse_date(c) for c in tail]  # type: ignore[misc]
             continue
         label = re.sub(r"\s*\[\d+\]", "", cells[0][1]).strip()
         if not columns or not label or label.startswith("- ") or _POPUP.match(label):
             continue  # header rows ("12 Months Ended"), spacers, popup definitions
-        vals = [
-            parse_number(t)
-            for c, t in cells[1:]
-            if c not in ("fn", "th") and not (t and _FOOT.match(t))
+        texts = [
+            t for c, t in cells[1:] if c not in ("fn", "th") and not (t and _FOOT.match(t))
         ]
+        vals = [parse_number(t) for t in texts]
+        decs = [_decimals(t) for t in texts]
         if len(vals) > len(columns):
-            vals = vals[-len(columns) :]
+            vals, decs = vals[-len(columns) :], decs[-len(columns) :]
         elif len(vals) < len(columns):
-            vals += [None] * (len(columns) - len(vals))
-        rows.append(Row(label, vals))
-    return RPage(title, multiplier, columns, rows)  # type: ignore[arg-type]
+            pad = len(columns) - len(vals)
+            vals, decs = vals + [None] * pad, decs + [None] * pad
+        rows.append(Row(label, vals, decs))
+    months: list[int | None] = list(spans) if len(spans) == len(columns) else [None] * len(columns)
+    return RPage(title, multiplier, columns, rows, months)  # type: ignore[arg-type]
+
+
+_IS_NAME = re.compile(r"income|operations|earnings|loss|profit", re.IGNORECASE)
+_IS_NOT = re.compile(
+    r"details|tables?\b|policies|taxes|segment|discontinued|"
+    r"stockholders|shareholders|equity|cash flow|balance sheet|financial position",
+    re.IGNORECASE,
+)
+
+
+def _reports(filing_summary_xml: str) -> list[tuple[str, str, str]]:
+    """(ShortName, HtmlFileName, MenuCategory) per <Report> block."""
+    out = []
+    for block in re.findall(r"<Report\b.*?</Report>", filing_summary_xml, re.DOTALL):
+        sn = re.search(r"<ShortName>(.*?)</ShortName>", block, re.DOTALL)
+        fn = re.search(r"<HtmlFileName>(.*?)</HtmlFileName>", block, re.DOTALL)
+        mc = re.search(r"<MenuCategory>(.*?)</MenuCategory>", block, re.DOTALL)
+        if sn and fn:
+            out.append((html.unescape(sn.group(1)), fn.group(1).strip(), mc.group(1).strip() if mc else ""))
+    return out
+
+
+def select_income_statement(filing_summary_xml: str) -> tuple[str, str, bool] | None:
+    """(ShortName, file, combined) of the real income statement, or None.
+    Only 'Statements' menu pages when the summary has categories (never notes such
+    as 'Income Taxes' or 'Net Income Per Share'); parenthetical and per-share pages
+    excluded. Rank: pure income/operations statement, then combined 'Operations and
+    Comprehensive Income', then a comprehensive-income page (combined=True: its first
+    block is net income, the filer has no separate statement, e.g. VRSN)."""
+    reps = _reports(filing_summary_xml)
+    if any(mc == "Statements" for _, _, mc in reps):
+        reps = [r for r in reps if r[2] == "Statements"]
+    best: tuple[int, int, tuple[str, str, bool]] | None = None
+    categorised = any(mc == "Statements" for _, _, mc in _reports(filing_summary_xml))
+    for pos, (n, fn, _) in enumerate(reps):
+        if re.search(r"par[ae]nthetical", n, re.IGNORECASE) or not _IS_NAME.search(n) or _IS_NOT.search(n):
+            continue
+        if not categorised and not re.search(r"statements?\b", n, re.IGNORECASE):
+            continue  # no menu categories: a name must say 'statement(s)', never a note title
+        if re.search(r"comprehensive", n, re.IGNORECASE):
+            combined = bool(re.search(r"(income|operations|earnings|loss)\s*(\(loss\)\s*)?and\s+comprehensive", n, re.IGNORECASE))
+            rank = 1 if combined else 2
+        else:
+            combined, rank = False, 0
+        if best is None or (rank, pos) < best[:2]:
+            best = (rank, pos, (n, fn, rank > 0))
+    return best[2] if best else None
 
 
 def find_report_files(filing_summary_xml: str) -> dict[str, tuple[str, str]]:
     """First matching (ShortName, HtmlFileName) per statement kind BS/IS/CF.
-    Each <Report> block is read on its own (HtmlFileName precedes ShortName)."""
+    Each <Report> block is read on its own (HtmlFileName precedes ShortName).
+    IS uses :func:`select_income_statement`."""
     out: dict[str, tuple[str, str]] = {}
-    for block in re.findall(r"<Report\b.*?</Report>", filing_summary_xml, re.DOTALL):
-        sn, fn = (
-            re.search(r"<ShortName>(.*?)</ShortName>", block, re.DOTALL),
-            re.search(r"<HtmlFileName>(.*?)</HtmlFileName>", block, re.DOTALL),
-        )
-        if not sn or not fn:
-            continue
-        n = html.unescape(sn.group(1))
+    for n, fn, _ in _reports(filing_summary_xml):
         if _EXCLUDED_NAMES.search(n):
             continue
-        for kind in ("BS", "CF", "IS"):  # BS/CF first so "income" never claims them
-            if kind not in out and re.search(
-                STATEMENT_PATTERNS[kind], n, re.IGNORECASE
-            ):
-                out[kind] = (n, fn.group(1).strip())
+        for kind in ("BS", "CF"):
+            if kind not in out and re.search(STATEMENT_PATTERNS[kind], n, re.IGNORECASE):
+                out[kind] = (n, fn)
                 break
+    sel = select_income_statement(filing_summary_xml)
+    if sel:
+        out["IS"] = (sel[0], sel[1])
+    return out
+
+
+# ---- income statement lines ---------------------------------------------------
+
+_NET = re.compile(r"\bnet (income|loss|earnings|\(loss\)|profit)", re.IGNORECASE)
+_STOP = re.compile(r"per (common )?share|comprehensive", re.IGNORECASE)  # header rows that end the income block
+_NCI = re.compile(r"non-?controlling|minority", re.IGNORECASE)
+_ATTR = re.compile(r"attributable to|available to|applicable to|to common", re.IGNORECASE)
+_PER_SHARE = re.compile(r"per (common )?share|per unit|basic|diluted|weighted", re.IGNORECASE)
+
+
+def net_income_lines(page: RPage) -> list[tuple[str, Row]]:
+    """Net-income-like rows with their kind. 'attributable' = to the parent or
+    common holders; 'nci' = attributable to noncontrolling interests; 'consolidated'
+    = net income including NCI (or the only bottom line). Pre-tax lines ('before
+    income taxes'), per-share and share-count lines are skipped. Labels are kept so
+    the caller never merges NCI-inclusive and attributable figures."""
+    out = []
+    for r in page.rows:
+        lab = r.label
+        if all(v is None for v in r.values) and _STOP.search(lab):
+            break  # EPS block and the comprehensive-income block repeat 'Net income'
+        if not _NET.search(lab) or _PER_SHARE.search(lab) or re.search(r"before|comprehensive", lab, re.IGNORECASE):
+            continue
+        if _NCI.search(lab):
+            kind = "nci"
+        elif _ATTR.search(lab):
+            kind = "attributable"
+        else:
+            kind = "consolidated"
+        out.append((kind, r))
     return out
 
 
