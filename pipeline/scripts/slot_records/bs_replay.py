@@ -150,7 +150,10 @@ def identity(rec, day, liab):
             # so the parent line alone is the third reading
             cands.append(eq_p)
     if not cands:
-        cands.append(Decimal(0))
+        # capitalization layout with NO total-equity line (WEC, Verifier dry-run
+        # check): equity is the sum of the printed equity component lines
+        comps = [day[t] for t in rec.get("equity_component_tags", []) if day.get(t) is not None]
+        cands.append(sum(comps, Decimal(0)) if comps else Decimal(0))
     # mezzanine ONLY from the record's own face lines (Verifier BS-V2 fix 4:
     # the tag fallback subtracted GE's 408M RedeemableNoncontrollingInterest
     # note value, which is not a face line, and flagged 12 right values)
@@ -303,6 +306,7 @@ for cik in sorted(records):
             tags.add(r["equity_parent_tag"])
         if r.get("nci_tag"):
             tags.add(r["nci_tag"])
+        tags.update(r.get("equity_component_tags", []))  # WEC-type layouts: equity from printed components
     tags.add("PartnersCapitalIncludingPortionAttributableToNoncontrollingInterest")
     facts = fetch(cik, tags)
     stats = defaultdict(int)

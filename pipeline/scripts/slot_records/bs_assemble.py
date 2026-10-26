@@ -174,6 +174,7 @@ for cik, era_list in sorted(eras.items()):
                            f"borrowed:{','.join(company_cal_sources[:3])}" if borrowed else
                            "none:taxonomy_totals" if rule == "face_sum" else None),
             "equity_parent_tag": equity_parent,
+            "equity_component_tags": [z["tag"] for z in zone if z["seg"] == "equity_component" and not z["custom"]],
             "nci_tag": nci,
             "mezzanine_face": [
                 {"tag": z["tag"], "custom": z["custom"], "label": z["label"]} for z in mezz_face
