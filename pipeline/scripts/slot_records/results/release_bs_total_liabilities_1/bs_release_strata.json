@@ -1,0 +1,20 @@
+{
+ "strata": {
+  "no_slot:before_first_record": 527,
+  "sampled": 3441,
+  "no_slot:instant_between_records": 754,
+  "new_since_fill": 1135,
+  "agree": 32988,
+  "no_slot:after_last_record": 249,
+  "hold_custom_subtotal": 663,
+  "fill_prefill": 90,
+  "changed_rule": 326,
+  "hold_other": 194,
+  "both_blank": 41,
+  "fill_new": 9
+ },
+ "release1_cells": 3533,
+ "release2_cells": 1470,
+ "kept_verified_right": 6,
+ "hide_confirmed_wrong": 4
+}

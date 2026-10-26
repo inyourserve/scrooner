@@ -1,0 +1,3822 @@
+{
+ "summary": {
+  "no_slot:before_first_record": 527,
+  "slot_differs": 4902,
+  "no_slot:instant_between_records": 754,
+  "agree": 32988,
+  "no_slot:after_last_record": 249,
+  "slot_holds_prod_has_value": 857,
+  "slot_fills_blank": 99,
+  "both_blank": 41
+ },
+ "companies": 985,
+ "companies_with_a_difference": 393,
+ "per_company": {
+  "0000001800": {
+   "no_slot:before_first_record": 4,
+   "slot_differs": 37,
+   "no_slot:instant_between_records": 4
+  },
+  "0000002488": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0000002969": {
+   "agree": 46,
+   "slot_differs": 1
+  },
+  "0000003453": {
+   "agree": 43,
+   "slot_differs": 3
+  },
+  "0000003570": {
+   "slot_differs": 34,
+   "agree": 12
+  },
+  "0000004127": {
+   "agree": 47
+  },
+  "0000004281": {
+   "agree": 46
+  },
+  "0000004457": {
+   "agree": 46
+  },
+  "0000004962": {
+   "agree": 46
+  },
+  "0000004977": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000005272": {
+   "agree": 46,
+   "slot_differs": 1
+  },
+  "0000005513": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0000006201": {
+   "no_slot:before_first_record": 4,
+   "agree": 7,
+   "slot_differs": 3,
+   "no_slot:after_last_record": 32
+  },
+  "0000006281": {
+   "agree": 23,
+   "no_slot:instant_between_records": 24
+  },
+  "0000006951": {
+   "agree": 46,
+   "slot_differs": 1
+  },
+  "0000007084": {
+   "slot_differs": 17,
+   "no_slot:instant_between_records": 1,
+   "no_slot:after_last_record": 29
+  },
+  "0000007431": {
+   "agree": 37,
+   "no_slot:instant_between_records": 6,
+   "slot_differs": 3
+  },
+  "0000007536": {
+   "slot_differs": 45,
+   "no_slot:after_last_record": 1
+  },
+  "0000007789": {
+   "agree": 46
+  },
+  "0000008670": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000008818": {
+   "no_slot:before_first_record": 8,
+   "agree": 9,
+   "no_slot:instant_between_records": 30
+  },
+  "0000008858": {
+   "agree": 46
+  },
+  "0000009389": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000010456": {
+   "slot_differs": 9,
+   "no_slot:instant_between_records": 6,
+   "agree": 31
+  },
+  "0000010795": {
+   "agree": 24,
+   "slot_differs": 22
+  },
+  "0000011544": {
+   "agree": 46
+  },
+  "0000012208": {
+   "agree": 46
+  },
+  "0000012659": {
+   "agree": 45,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0000012927": {
+   "slot_differs": 18,
+   "no_slot:instant_between_records": 1,
+   "agree": 27
+  },
+  "0000014272": {
+   "agree": 46
+  },
+  "0000014693": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0000015615": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000016058": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000016732": {
+   "agree": 47
+  },
+  "0000016918": {
+   "agree": 45,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000017843": {
+   "agree": 46
+  },
+  "0000018230": {
+   "agree": 46
+  },
+  "0000019584": {
+   "agree": 46
+  },
+  "0000019617": {
+   "agree": 46
+  },
+  "0000020212": {
+   "agree": 46
+  },
+  "0000020286": {
+   "agree": 46
+  },
+  "0000021076": {
+   "agree": 44,
+   "no_slot:instant_between_records": 1
+  },
+  "0000021175": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000021344": {
+   "no_slot:before_first_record": 3,
+   "slot_differs": 35,
+   "no_slot:instant_between_records": 7
+  },
+  "0000021665": {
+   "agree": 46
+  },
+  "0000022356": {
+   "agree": 46
+  },
+  "0000022444": {
+   "agree": 45,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000023217": {
+   "agree": 47
+  },
+  "0000024545": {
+   "agree": 45
+  },
+  "0000024741": {
+   "agree": 46
+  },
+  "0000026172": {
+   "agree": 46
+  },
+  "0000026324": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000027419": {
+   "agree": 40,
+   "slot_differs": 5,
+   "no_slot:instant_between_records": 2
+  },
+  "0000027904": {
+   "agree": 8,
+   "slot_differs": 5,
+   "no_slot:after_last_record": 33
+  },
+  "0000028917": {
+   "slot_holds_prod_has_value": 3,
+   "no_slot:instant_between_records": 14,
+   "agree": 29,
+   "no_slot:after_last_record": 1
+  },
+  "0000029534": {
+   "agree": 44,
+   "no_slot:instant_between_records": 2
+  },
+  "0000029644": {
+   "agree": 47
+  },
+  "0000029905": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000029989": {
+   "slot_differs": 45,
+   "slot_fills_blank": 1
+  },
+  "0000030625": {
+   "slot_differs": 6,
+   "slot_holds_prod_has_value": 40,
+   "no_slot:instant_between_records": 1
+  },
+  "0000031462": {
+   "agree": 46
+  },
+  "0000031791": {
+   "agree": 42,
+   "no_slot:instant_between_records": 3,
+   "no_slot:after_last_record": 1
+  },
+  "0000032604": {
+   "slot_differs": 46
+  },
+  "0000033185": {
+   "agree": 46
+  },
+  "0000033213": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000034903": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000035527": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000036104": {
+   "agree": 46
+  },
+  "0000036270": {
+   "agree": 46
+  },
+  "0000036966": {
+   "agree": 46
+  },
+  "0000037808": {
+   "agree": 46
+  },
+  "0000037996": {
+   "agree": 45
+  },
+  "0000038777": {
+   "agree": 46
+  },
+  "0000039263": {
+   "agree": 46
+  },
+  "0000039911": {
+   "agree": 7,
+   "no_slot:instant_between_records": 38,
+   "no_slot:after_last_record": 2
+  },
+  "0000040211": {
+   "agree": 46
+  },
+  "0000040533": {
+   "agree": 31,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 13
+  },
+  "0000040545": {
+   "agree": 42,
+   "slot_differs": 4
+  },
+  "0000040704": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0000040729": {
+   "agree": 46
+  },
+  "0000040987": {
+   "slot_differs": 46
+  },
+  "0000042888": {
+   "no_slot:before_first_record": 2,
+   "agree": 42,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0000045012": {
+   "agree": 46
+  },
+  "0000046080": {
+   "agree": 46
+  },
+  "0000046619": {
+   "agree": 46
+  },
+  "0000047111": {
+   "agree": 44,
+   "no_slot:instant_between_records": 2
+  },
+  "0000047217": {
+   "slot_differs": 9,
+   "no_slot:instant_between_records": 3,
+   "agree": 34
+  },
+  "0000048465": {
+   "slot_differs": 43,
+   "no_slot:instant_between_records": 4
+  },
+  "0000048898": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000049071": {
+   "agree": 45
+  },
+  "0000049196": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000049600": {
+   "agree": 46
+  },
+  "0000049826": {
+   "slot_differs": 46
+  },
+  "0000050863": {
+   "slot_differs": 35,
+   "agree": 11
+  },
+  "0000051143": {
+   "agree": 46
+  },
+  "0000051253": {
+   "slot_differs": 45,
+   "no_slot:after_last_record": 1
+  },
+  "0000051434": {
+   "slot_differs": 26,
+   "no_slot:instant_between_records": 1,
+   "agree": 19
+  },
+  "0000052827": {
+   "slot_differs": 42,
+   "no_slot:instant_between_records": 3
+  },
+  "0000052988": {
+   "slot_differs": 36,
+   "no_slot:instant_between_records": 10
+  },
+  "0000055785": {
+   "slot_differs": 46
+  },
+  "0000056047": {
+   "slot_differs": 46
+  },
+  "0000056873": {
+   "agree": 44,
+   "no_slot:instant_between_records": 2,
+   "no_slot:after_last_record": 1
+  },
+  "0000059478": {
+   "slot_differs": 43,
+   "agree": 3
+  },
+  "0000059527": {
+   "slot_differs": 6,
+   "agree": 31,
+   "slot_holds_prod_has_value": 9
+  },
+  "0000059558": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000060086": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000060667": {
+   "agree": 45,
+   "no_slot:instant_between_records": 2
+  },
+  "0000062709": {
+   "slot_holds_prod_has_value": 33,
+   "slot_differs": 13
+  },
+  "0000062996": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000063754": {
+   "agree": 43,
+   "slot_differs": 3,
+   "no_slot:after_last_record": 1
+  },
+  "0000063908": {
+   "agree": 41,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 4
+  },
+  "0000064040": {
+   "agree": 45
+  },
+  "0000064803": {
+   "slot_differs": 11,
+   "agree": 36,
+   "no_slot:instant_between_records": 2
+  },
+  "0000064996": {
+   "agree": 46
+  },
+  "0000066570": {
+   "agree": 46
+  },
+  "0000066740": {
+   "agree": 46
+  },
+  "0000067215": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0000067347": {
+   "agree": 46
+  },
+  "0000067887": {
+   "agree": 39,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 7
+  },
+  "0000068505": {
+   "slot_differs": 45,
+   "no_slot:after_last_record": 1
+  },
+  "0000070145": {
+   "slot_holds_prod_has_value": 46
+  },
+  "0000070318": {
+   "agree": 46
+  },
+  "0000070858": {
+   "agree": 46
+  },
+  "0000071691": {
+   "no_slot:before_first_record": 11,
+   "slot_differs": 8,
+   "no_slot:instant_between_records": 16,
+   "agree": 11
+  },
+  "0000072331": {
+   "agree": 43,
+   "no_slot:instant_between_records": 3,
+   "slot_differs": 1
+  },
+  "0000072903": {
+   "agree": 45,
+   "slot_holds_prod_has_value": 1
+  },
+  "0000072971": {
+   "agree": 46
+  },
+  "0000073124": {
+   "agree": 46
+  },
+  "0000073309": {
+   "agree": 45,
+   "no_slot:after_last_record": 1
+  },
+  "0000074208": {
+   "agree": 45
+  },
+  "0000074260": {
+   "agree": 46
+  },
+  "0000075677": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000076334": {
+   "agree": 46
+  },
+  "0000077360": {
+   "agree": 45
+  },
+  "0000077476": {
+   "agree": 34,
+   "no_slot:instant_between_records": 10,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 2
+  },
+  "0000078003": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000078128": {
+   "slot_holds_prod_has_value": 31,
+   "no_slot:instant_between_records": 15
+  },
+  "0000079282": {
+   "agree": 32,
+   "slot_differs": 14,
+   "no_slot:instant_between_records": 1
+  },
+  "0000079879": {
+   "agree": 45
+  },
+  "0000080420": {
+   "agree": 46
+  },
+  "0000080424": {
+   "agree": 46
+  },
+  "0000080661": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000082811": {
+   "slot_differs": 47
+  },
+  "0000084246": {
+   "agree": 46
+  },
+  "0000084839": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000085535": {
+   "agree": 46
+  },
+  "0000085961": {
+   "slot_differs": 2,
+   "agree": 44
+  },
+  "0000086312": {
+   "agree": 46,
+   "no_slot:after_last_record": 1
+  },
+  "0000087347": {
+   "agree": 46
+  },
+  "0000088205": {
+   "slot_differs": 6,
+   "agree": 27,
+   "no_slot:instant_between_records": 11,
+   "no_slot:after_last_record": 2
+  },
+  "0000088941": {
+   "agree": 26,
+   "slot_differs": 18,
+   "slot_holds_prod_has_value": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0000089089": {
+   "slot_differs": 44,
+   "agree": 2
+  },
+  "0000089439": {
+   "agree": 46
+  },
+  "0000089800": {
+   "agree": 43,
+   "slot_differs": 3
+  },
+  "0000091142": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000091388": {
+   "slot_differs": 13,
+   "no_slot:instant_between_records": 2
+  },
+  "0000091419": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000091440": {
+   "agree": 45,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000091576": {
+   "agree": 46
+  },
+  "0000092230": {
+   "agree": 46
+  },
+  "0000092380": {
+   "agree": 44,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0000093410": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000093556": {
+   "slot_differs": 36,
+   "agree": 10,
+   "no_slot:after_last_record": 1
+  },
+  "0000093751": {
+   "agree": 46
+  },
+  "0000094845": {
+   "agree": 46,
+   "no_slot:after_last_record": 1
+  },
+  "0000096021": {
+   "slot_differs": 41,
+   "no_slot:instant_between_records": 3,
+   "agree": 2
+  },
+  "0000096223": {
+   "agree": 46,
+   "no_slot:after_last_record": 1
+  },
+  "0000096943": {
+   "agree": 46
+  },
+  "0000097210": {
+   "no_slot:before_first_record": 1,
+   "agree": 44,
+   "no_slot:instant_between_records": 1
+  },
+  "0000097216": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000097476": {
+   "agree": 46
+  },
+  "0000097745": {
+   "agree": 26,
+   "slot_differs": 20
+  },
+  "0000098362": {
+   "slot_differs": 44,
+   "agree": 2,
+   "no_slot:instant_between_records": 1
+  },
+  "0000100493": {
+   "slot_differs": 46
+  },
+  "0000100517": {
+   "slot_holds_prod_has_value": 30,
+   "no_slot:instant_between_records": 7,
+   "both_blank": 2,
+   "agree": 6,
+   "slot_differs": 1
+  },
+  "0000100885": {
+   "agree": 46
+  },
+  "0000101382": {
+   "agree": 46
+  },
+  "0000101829": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000102729": {
+   "slot_differs": 32,
+   "agree": 14
+  },
+  "0000103379": {
+   "slot_differs": 4,
+   "agree": 42
+  },
+  "0000104169": {
+   "slot_differs": 47
+  },
+  "0000105016": {
+   "slot_differs": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000105634": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000105770": {
+   "agree": 46
+  },
+  "0000106040": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0000106535": {
+   "agree": 44,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0000107263": {
+   "slot_differs": 46
+  },
+  "0000108312": {
+   "agree": 46,
+   "slot_differs": 1
+  },
+  "0000109198": {
+   "agree": 42,
+   "slot_differs": 3,
+   "no_slot:instant_between_records": 2
+  },
+  "0000109380": {
+   "agree": 46
+  },
+  "0000109563": {
+   "agree": 46
+  },
+  "0000110621": {
+   "slot_differs": 46
+  },
+  "0000200406": {
+   "agree": 46
+  },
+  "0000202058": {
+   "slot_differs": 25,
+   "no_slot:instant_between_records": 2,
+   "agree": 20
+  },
+  "0000215466": {
+   "agree": 46
+  },
+  "0000216228": {
+   "agree": 44,
+   "no_slot:instant_between_records": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000217346": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000277135": {
+   "slot_differs": 45,
+   "agree": 1
+  },
+  "0000277509": {
+   "agree": 46
+  },
+  "0000277948": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000310142": {
+   "agree": 46
+  },
+  "0000310158": {
+   "slot_differs": 46
+  },
+  "0000310764": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000313616": {
+   "slot_differs": 46
+  },
+  "0000313927": {
+   "agree": 46
+  },
+  "0000314808": {
+   "slot_differs": 22,
+   "slot_holds_prod_has_value": 10,
+   "no_slot:instant_between_records": 1,
+   "agree": 14
+  },
+  "0000315189": {
+   "agree": 47,
+   "no_slot:instant_between_records": 2
+  },
+  "0000315293": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000315852": {
+   "agree": 43,
+   "slot_differs": 2
+  },
+  "0000316709": {
+   "agree": 46
+  },
+  "0000318154": {
+   "agree": 46
+  },
+  "0000319201": {
+   "agree": 46
+  },
+  "0000320187": {
+   "agree": 46
+  },
+  "0000320193": {
+   "agree": 46
+  },
+  "0000320335": {
+   "agree": 42,
+   "slot_differs": 4
+  },
+  "0000350894": {
+   "agree": 42
+  },
+  "0000352915": {
+   "slot_differs": 46
+  },
+  "0000354190": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0000354950": {
+   "agree": 45,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0000702165": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000703351": {
+   "agree": 22,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 23
+  },
+  "0000704532": {
+   "agree": 48
+  },
+  "0000707179": {
+   "agree": 45
+  },
+  "0000707549": {
+   "agree": 47
+  },
+  "0000711404": {
+   "agree": 47
+  },
+  "0000713676": {
+   "agree": 46
+  },
+  "0000714310": {
+   "agree": 46
+  },
+  "0000715957": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000717423": {
+   "agree": 39,
+   "no_slot:instant_between_records": 7
+  },
+  "0000717605": {
+   "agree": 46
+  },
+  "0000719413": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000719955": {
+   "agree": 43,
+   "no_slot:instant_between_records": 2,
+   "slot_differs": 2
+  },
+  "0000720005": {
+   "agree": 46
+  },
+  "0000720672": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000721371": {
+   "agree": 4,
+   "slot_holds_prod_has_value": 1,
+   "slot_differs": 40
+  },
+  "0000723125": {
+   "agree": 46,
+   "no_slot:after_last_record": 1
+  },
+  "0000723254": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0000723531": {
+   "agree": 46,
+   "slot_differs": 1
+  },
+  "0000726728": {
+   "agree": 46
+  },
+  "0000726958": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0000728535": {
+   "agree": 42,
+   "no_slot:instant_between_records": 2,
+   "slot_differs": 2
+  },
+  "0000729986": {
+   "agree": 46
+  },
+  "0000730272": {
+   "agree": 42,
+   "no_slot:instant_between_records": 3,
+   "slot_differs": 1
+  },
+  "0000731766": {
+   "agree": 46
+  },
+  "0000731802": {
+   "slot_holds_prod_has_value": 46
+  },
+  "0000732712": {
+   "slot_holds_prod_has_value": 43,
+   "no_slot:instant_between_records": 3
+  },
+  "0000732717": {
+   "slot_differs": 45,
+   "agree": 1
+  },
+  "0000737758": {
+   "no_slot:before_first_record": 2,
+   "agree": 37,
+   "no_slot:instant_between_records": 8
+  },
+  "0000740260": {
+   "agree": 46
+  },
+  "0000745732": {
+   "slot_holds_prod_has_value": 4,
+   "agree": 41,
+   "no_slot:instant_between_records": 2
+  },
+  "0000746515": {
+   "slot_differs": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000749251": {
+   "agree": 46
+  },
+  "0000750577": {
+   "agree": 46
+  },
+  "0000751364": {
+   "agree": 45
+  },
+  "0000751978": {
+   "agree": 45
+  },
+  "0000753308": {
+   "slot_holds_prod_has_value": 23,
+   "agree": 22
+  },
+  "0000759944": {
+   "agree": 46
+  },
+  "0000763901": {
+   "agree": 46
+  },
+  "0000764038": {
+   "agree": 46
+  },
+  "0000764065": {
+   "agree": 47
+  },
+  "0000764180": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000764478": {
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 9,
+   "agree": 14,
+   "no_slot:after_last_record": 23
+  },
+  "0000764622": {
+   "no_slot:before_first_record": 27,
+   "slot_holds_prod_has_value": 19
+  },
+  "0000765880": {
+   "agree": 46
+  },
+  "0000766704": {
+   "agree": 45
+  },
+  "0000769397": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0000773840": {
+   "slot_differs": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000775158": {
+   "agree": 43,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1,
+   "slot_holds_prod_has_value": 1
+  },
+  "0000779152": {
+   "agree": 43,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0000783325": {
+   "both_blank": 6,
+   "slot_holds_prod_has_value": 29,
+   "agree": 5,
+   "slot_fills_blank": 2,
+   "slot_differs": 4
+  },
+  "0000785161": {
+   "agree": 46
+  },
+  "0000785786": {
+   "agree": 43,
+   "no_slot:instant_between_records": 3,
+   "no_slot:after_last_record": 1
+  },
+  "0000789019": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000789570": {
+   "no_slot:before_first_record": 1,
+   "agree": 24,
+   "no_slot:instant_between_records": 3,
+   "slot_differs": 18
+  },
+  "0000790051": {
+   "agree": 29,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 2,
+   "slot_holds_prod_has_value": 14
+  },
+  "0000794170": {
+   "agree": 47
+  },
+  "0000794367": {
+   "agree": 6,
+   "slot_differs": 15,
+   "no_slot:instant_between_records": 24,
+   "no_slot:after_last_record": 2
+  },
+  "0000795403": {
+   "agree": 37,
+   "no_slot:instant_between_records": 5,
+   "slot_differs": 4
+  },
+  "0000796343": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0000797468": {
+   "agree": 33,
+   "slot_differs": 13
+  },
+  "0000797721": {
+   "agree": 47,
+   "slot_differs": 1
+  },
+  "0000798354": {
+   "agree": 46
+  },
+  "0000798941": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000802481": {
+   "agree": 46
+  },
+  "0000804328": {
+   "agree": 46
+  },
+  "0000813672": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000814547": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000815097": {
+   "agree": 23,
+   "slot_differs": 23,
+   "no_slot:instant_between_records": 1
+  },
+  "0000815556": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000818686": {
+   "no_slot:before_first_record": 2,
+   "agree": 34,
+   "slot_differs": 1
+  },
+  "0000820027": {
+   "agree": 46
+  },
+  "0000820313": {
+   "no_slot:before_first_record": 1,
+   "slot_differs": 25,
+   "agree": 20
+  },
+  "0000820318": {
+   "agree": 46
+  },
+  "0000821189": {
+   "agree": 42,
+   "slot_differs": 4
+  },
+  "0000822416": {
+   "agree": 46
+  },
+  "0000822818": {
+   "agree": 45
+  },
+  "0000823768": {
+   "agree": 46
+  },
+  "0000824142": {
+   "agree": 41,
+   "slot_differs": 5
+  },
+  "0000827054": {
+   "slot_differs": 1,
+   "agree": 44,
+   "no_slot:instant_between_records": 1
+  },
+  "0000829224": {
+   "agree": 46
+  },
+  "0000831001": {
+   "agree": 44
+  },
+  "0000831259": {
+   "agree": 46
+  },
+  "0000831641": {
+   "no_slot:before_first_record": 11,
+   "slot_differs": 35
+  },
+  "0000832101": {
+   "agree": 46
+  },
+  "0000833444": {
+   "agree": 6,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 38,
+   "slot_holds_prod_has_value": 1
+  },
+  "0000840489": {
+   "slot_differs": 4,
+   "agree": 42
+  },
+  "0000842023": {
+   "agree": 32,
+   "slot_differs": 8,
+   "no_slot:instant_between_records": 5,
+   "slot_holds_prod_has_value": 1
+  },
+  "0000842162": {
+   "slot_differs": 44,
+   "no_slot:instant_between_records": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000849395": {
+   "no_slot:before_first_record": 4,
+   "agree": 11
+  },
+  "0000849399": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0000851205": {
+   "no_slot:before_first_record": 3,
+   "agree": 42,
+   "no_slot:after_last_record": 1
+  },
+  "0000851968": {
+   "no_slot:before_first_record": 1,
+   "agree": 43,
+   "slot_holds_prod_has_value": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000853816": {
+   "no_slot:before_first_record": 4,
+   "agree": 21,
+   "slot_differs": 2,
+   "no_slot:instant_between_records": 18
+  },
+  "0000855658": {
+   "agree": 46,
+   "no_slot:after_last_record": 1
+  },
+  "0000857005": {
+   "agree": 47
+  },
+  "0000858877": {
+   "agree": 47
+  },
+  "0000860730": {
+   "agree": 20,
+   "slot_differs": 25
+  },
+  "0000860731": {
+   "agree": 44,
+   "slot_differs": 1,
+   "slot_holds_prod_has_value": 1
+  },
+  "0000861884": {
+   "slot_differs": 28,
+   "no_slot:instant_between_records": 7,
+   "agree": 10
+  },
+  "0000864749": {
+   "agree": 44,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 2
+  },
+  "0000865752": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0000866291": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0000866374": {
+   "slot_differs": 11,
+   "agree": 35
+  },
+  "0000866706": {
+   "agree": 46
+  },
+  "0000866787": {
+   "agree": 36,
+   "no_slot:instant_between_records": 9,
+   "no_slot:after_last_record": 1
+  },
+  "0000868671": {
+   "agree": 46
+  },
+  "0000868857": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0000872589": {
+   "agree": 46
+  },
+  "0000874015": {
+   "agree": 43,
+   "slot_differs": 3
+  },
+  "0000874238": {
+   "no_slot:before_first_record": 1,
+   "slot_differs": 14,
+   "agree": 31
+  },
+  "0000874716": {
+   "agree": 48
+  },
+  "0000874761": {
+   "slot_differs": 37,
+   "no_slot:instant_between_records": 7,
+   "no_slot:after_last_record": 2
+  },
+  "0000874766": {
+   "agree": 46
+  },
+  "0000875045": {
+   "agree": 45
+  },
+  "0000875320": {
+   "agree": 46
+  },
+  "0000875357": {
+   "agree": 46
+  },
+  "0000876437": {
+   "agree": 46
+  },
+  "0000877212": {
+   "agree": 44,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000878927": {
+   "agree": 47
+  },
+  "0000879101": {
+   "agree": 46
+  },
+  "0000879169": {
+   "agree": 45
+  },
+  "0000879407": {
+   "no_slot:before_first_record": 3,
+   "slot_differs": 24,
+   "no_slot:instant_between_records": 14,
+   "agree": 5
+  },
+  "0000880266": {
+   "agree": 46
+  },
+  "0000882095": {
+   "slot_differs": 46
+  },
+  "0000882184": {
+   "agree": 46
+  },
+  "0000882835": {
+   "agree": 46
+  },
+  "0000883241": {
+   "agree": 47
+  },
+  "0000884614": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000884887": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0000885550": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000885725": {
+   "agree": 23,
+   "slot_differs": 22,
+   "slot_holds_prod_has_value": 1
+  },
+  "0000886163": {
+   "agree": 46
+  },
+  "0000886982": {
+   "agree": 46
+  },
+  "0000887343": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000887596": {
+   "agree": 24,
+   "no_slot:instant_between_records": 20,
+   "slot_differs": 2
+  },
+  "0000888491": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000889331": {
+   "agree": 14,
+   "no_slot:instant_between_records": 2,
+   "slot_holds_prod_has_value": 2,
+   "slot_differs": 27
+  },
+  "0000891103": {
+   "slot_differs": 42,
+   "agree": 4
+  },
+  "0000893538": {
+   "agree": 46
+  },
+  "0000895126": {
+   "slot_differs": 20,
+   "agree": 26,
+   "no_slot:instant_between_records": 1
+  },
+  "0000895417": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000895421": {
+   "agree": 46
+  },
+  "0000896159": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000896622": {
+   "slot_holds_prod_has_value": 46
+  },
+  "0000896878": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0000897723": {
+   "agree": 31,
+   "slot_differs": 6,
+   "slot_holds_prod_has_value": 2,
+   "no_slot:after_last_record": 7
+  },
+  "0000898173": {
+   "agree": 46
+  },
+  "0000898174": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000898293": {
+   "agree": 46
+  },
+  "0000899051": {
+   "agree": 46
+  },
+  "0000899689": {
+   "agree": 46
+  },
+  "0000900075": {
+   "agree": 47
+  },
+  "0000906107": {
+   "no_slot:before_first_record": 2,
+   "agree": 44
+  },
+  "0000906163": {
+   "agree": 46
+  },
+  "0000906345": {
+   "agree": 46
+  },
+  "0000908255": {
+   "slot_holds_prod_has_value": 23,
+   "agree": 22,
+   "slot_differs": 1
+  },
+  "0000908937": {
+   "agree": 46
+  },
+  "0000909832": {
+   "agree": 41,
+   "no_slot:instant_between_records": 3,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 2
+  },
+  "0000910521": {
+   "agree": 42,
+   "no_slot:instant_between_records": 4
+  },
+  "0000910606": {
+   "agree": 30
+  },
+  "0000911177": {
+   "slot_differs": 9,
+   "agree": 37
+  },
+  "0000912093": {
+   "agree": 38,
+   "slot_differs": 8
+  },
+  "0000912242": {
+   "agree": 46
+  },
+  "0000912593": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000912595": {
+   "agree": 29
+  },
+  "0000912615": {
+   "agree": 47
+  },
+  "0000913144": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000913760": {
+   "agree": 46
+  },
+  "0000914208": {
+   "agree": 46
+  },
+  "0000914475": {
+   "agree": 46
+  },
+  "0000915389": {
+   "agree": 46
+  },
+  "0000915913": {
+   "slot_differs": 46
+  },
+  "0000916076": {
+   "slot_differs": 3,
+   "agree": 43
+  },
+  "0000916365": {
+   "agree": 46
+  },
+  "0000916540": {
+   "agree": 45,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000917251": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0000917273": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0000920148": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000920371": {
+   "agree": 46
+  },
+  "0000920522": {
+   "agree": 46
+  },
+  "0000920760": {
+   "agree": 46
+  },
+  "0000921638": {
+   "no_slot:before_first_record": 5,
+   "agree": 19
+  },
+  "0000921825": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000922621": {
+   "agree": 46
+  },
+  "0000924805": {
+   "slot_differs": 3,
+   "agree": 42,
+   "no_slot:instant_between_records": 4
+  },
+  "0000927003": {
+   "agree": 47
+  },
+  "0000927066": {
+   "agree": 46
+  },
+  "0000927628": {
+   "agree": 46
+  },
+  "0000927653": {
+   "slot_differs": 46
+  },
+  "0000929008": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0000935703": {
+   "slot_differs": 1,
+   "agree": 44,
+   "no_slot:instant_between_records": 2
+  },
+  "0000936340": {
+   "no_slot:before_first_record": 2,
+   "slot_holds_prod_has_value": 30,
+   "no_slot:instant_between_records": 5,
+   "slot_differs": 8
+  },
+  "0000936395": {
+   "agree": 47,
+   "no_slot:instant_between_records": 1
+  },
+  "0000936468": {
+   "agree": 46
+  },
+  "0000939767": {
+   "agree": 47
+  },
+  "0000940944": {
+   "agree": 44,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0000943452": {
+   "agree": 46
+  },
+  "0000943819": {
+   "agree": 46
+  },
+  "0000944695": {
+   "agree": 46
+  },
+  "0000945841": {
+   "agree": 45
+  },
+  "0000946581": {
+   "agree": 46
+  },
+  "0000947484": {
+   "agree": 46
+  },
+  "0001000228": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001000697": {
+   "agree": 45,
+   "no_slot:after_last_record": 1
+  },
+  "0001001250": {
+   "slot_differs": 33,
+   "agree": 13
+  },
+  "0001001316": {
+   "agree": 46
+  },
+  "0001001838": {
+   "slot_differs": 36,
+   "no_slot:instant_between_records": 10
+  },
+  "0001002047": {
+   "agree": 45,
+   "slot_differs": 2
+  },
+  "0001002638": {
+   "slot_differs": 46
+  },
+  "0001003078": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0001004434": {
+   "agree": 46
+  },
+  "0001004980": {
+   "slot_differs": 46
+  },
+  "0001013237": {
+   "agree": 46
+  },
+  "0001013857": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001013871": {
+   "no_slot:before_first_record": 1,
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001014473": {
+   "agree": 46
+  },
+  "0001015328": {
+   "agree": 46
+  },
+  "0001018724": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001018840": {
+   "agree": 1,
+   "no_slot:instant_between_records": 19,
+   "slot_differs": 28
+  },
+  "0001018963": {
+   "agree": 47,
+   "no_slot:instant_between_records": 1
+  },
+  "0001019849": {
+   "agree": 46
+  },
+  "0001020569": {
+   "slot_differs": 46
+  },
+  "0001021635": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001021860": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001022079": {
+   "slot_differs": 44,
+   "slot_holds_prod_has_value": 2
+  },
+  "0001022671": {
+   "slot_holds_prod_has_value": 1,
+   "agree": 42,
+   "slot_differs": 3
+  },
+  "0001023128": {
+   "agree": 48
+  },
+  "0001024478": {
+   "agree": 20,
+   "slot_differs": 26
+  },
+  "0001025378": {
+   "agree": 46
+  },
+  "0001030894": {
+   "no_slot:before_first_record": 1,
+   "agree": 7
+  },
+  "0001031296": {
+   "slot_differs": 7,
+   "agree": 38
+  },
+  "0001031308": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0001032975": {
+   "agree": 46
+  },
+  "0001034054": {
+   "agree": 17,
+   "slot_differs": 29
+  },
+  "0001034670": {
+   "slot_differs": 42,
+   "no_slot:instant_between_records": 3,
+   "agree": 1
+  },
+  "0001035002": {
+   "slot_differs": 46
+  },
+  "0001035267": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001035443": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001035983": {
+   "agree": 46
+  },
+  "0001037038": {
+   "agree": 46
+  },
+  "0001037540": {
+   "agree": 46
+  },
+  "0001037646": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0001037868": {
+   "agree": 46
+  },
+  "0001037976": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0001038074": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0001039399": {
+   "agree": 46
+  },
+  "0001039684": {
+   "slot_holds_prod_has_value": 44,
+   "slot_differs": 2
+  },
+  "0001040829": {
+   "no_slot:before_first_record": 20,
+   "agree": 26
+  },
+  "0001041061": {
+   "agree": 44,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0001042046": {
+   "agree": 46
+  },
+  "0001043219": {
+   "agree": 46
+  },
+  "0001043277": {
+   "agree": 46
+  },
+  "0001045609": {
+   "agree": 45
+  },
+  "0001045810": {
+   "slot_differs": 1,
+   "agree": 46
+  },
+  "0001046102": {
+   "agree": 43
+  },
+  "0001046257": {
+   "slot_differs": 21,
+   "agree": 25
+  },
+  "0001047127": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001047862": {
+   "no_slot:before_first_record": 27,
+   "slot_differs": 5,
+   "agree": 13
+  },
+  "0001048286": {
+   "agree": 11,
+   "slot_differs": 2,
+   "no_slot:after_last_record": 33
+  },
+  "0001048477": {
+   "agree": 46
+  },
+  "0001048695": {
+   "agree": 46
+  },
+  "0001048911": {
+   "no_slot:before_first_record": 1,
+   "slot_holds_prod_has_value": 40,
+   "no_slot:instant_between_records": 5
+  },
+  "0001049502": {
+   "agree": 46
+  },
+  "0001050446": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001050915": {
+   "agree": 46
+  },
+  "0001051470": {
+   "agree": 39,
+   "slot_differs": 7
+  },
+  "0001053507": {
+   "agree": 46
+  },
+  "0001056696": {
+   "agree": 42,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 3
+  },
+  "0001057352": {
+   "agree": 46
+  },
+  "0001057877": {
+   "no_slot:before_first_record": 20,
+   "slot_differs": 18,
+   "no_slot:instant_between_records": 5,
+   "slot_holds_prod_has_value": 1
+  },
+  "0001058090": {
+   "agree": 46
+  },
+  "0001058290": {
+   "agree": 45
+  },
+  "0001059556": {
+   "agree": 46
+  },
+  "0001060391": {
+   "slot_differs": 46
+  },
+  "0001061219": {
+   "slot_fills_blank": 46
+  },
+  "0001061983": {
+   "agree": 46
+  },
+  "0001063761": {
+   "agree": 46
+  },
+  "0001065088": {
+   "agree": 46
+  },
+  "0001065280": {
+   "agree": 46
+  },
+  "0001065696": {
+   "agree": 10,
+   "slot_holds_prod_has_value": 1,
+   "slot_differs": 35
+  },
+  "0001067701": {
+   "agree": 45
+  },
+  "0001067983": {
+   "agree": 40,
+   "no_slot:instant_between_records": 6
+  },
+  "0001068851": {
+   "agree": 46
+  },
+  "0001069157": {
+   "agree": 46
+  },
+  "0001069183": {
+   "agree": 46,
+   "slot_differs": 2
+  },
+  "0001069202": {
+   "agree": 45
+  },
+  "0001069258": {
+   "agree": 46
+  },
+  "0001070423": {
+   "slot_fills_blank": 42,
+   "slot_differs": 4
+  },
+  "0001070750": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001071739": {
+   "agree": 46
+  },
+  "0001075531": {
+   "agree": 46
+  },
+  "0001082554": {
+   "agree": 46
+  },
+  "0001083301": {
+   "agree": 43,
+   "slot_differs": 3
+  },
+  "0001086222": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001088856": {
+   "agree": 44,
+   "no_slot:instant_between_records": 2
+  },
+  "0001089063": {
+   "agree": 44,
+   "slot_differs": 3
+  },
+  "0001090012": {
+   "slot_differs": 37,
+   "agree": 9
+  },
+  "0001090425": {
+   "agree": 44,
+   "slot_differs": 1,
+   "slot_holds_prod_has_value": 1
+  },
+  "0001090727": {
+   "slot_holds_prod_has_value": 13,
+   "slot_differs": 32,
+   "no_slot:instant_between_records": 1
+  },
+  "0001090872": {
+   "agree": 47,
+   "no_slot:instant_between_records": 1
+  },
+  "0001091667": {
+   "agree": 5,
+   "slot_differs": 41
+  },
+  "0001093557": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001094285": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0001094831": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001095073": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001096343": {
+   "agree": 46
+  },
+  "0001097149": {
+   "agree": 46
+  },
+  "0001097864": {
+   "agree": 46
+  },
+  "0001099219": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001099590": {
+   "agree": 46
+  },
+  "0001099800": {
+   "no_slot:before_first_record": 3,
+   "agree": 37,
+   "no_slot:instant_between_records": 5,
+   "slot_differs": 1
+  },
+  "0001100682": {
+   "agree": 46
+  },
+  "0001101239": {
+   "agree": 46
+  },
+  "0001101302": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001103982": {
+   "agree": 45
+  },
+  "0001104506": {
+   "agree": 46
+  },
+  "0001107843": {
+   "agree": 46
+  },
+  "0001108524": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0001109354": {
+   "slot_differs": 39,
+   "agree": 7
+  },
+  "0001109357": {
+   "agree": 45
+  },
+  "0001110803": {
+   "agree": 30,
+   "slot_differs": 6,
+   "no_slot:instant_between_records": 10
+  },
+  "0001111711": {
+   "slot_differs": 25,
+   "agree": 21
+  },
+  "0001113169": {
+   "agree": 46
+  },
+  "0001116132": {
+   "agree": 46
+  },
+  "0001116942": {
+   "no_slot:before_first_record": 3,
+   "slot_holds_prod_has_value": 10,
+   "no_slot:instant_between_records": 9,
+   "agree": 24
+  },
+  "0001120193": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001121788": {
+   "agree": 40,
+   "no_slot:instant_between_records": 4,
+   "slot_differs": 1
+  },
+  "0001123360": {
+   "agree": 47
+  },
+  "0001124198": {
+   "slot_differs": 42,
+   "no_slot:instant_between_records": 3,
+   "agree": 1
+  },
+  "0001125376": {
+   "agree": 47
+  },
+  "0001126328": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001130310": {
+   "agree": 25,
+   "slot_differs": 6,
+   "no_slot:instant_between_records": 14
+  },
+  "0001130464": {
+   "slot_holds_prod_has_value": 46
+  },
+  "0001133421": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001136869": {
+   "agree": 46
+  },
+  "0001136893": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001137774": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001137789": {
+   "agree": 46,
+   "slot_differs": 1
+  },
+  "0001138118": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001140536": {
+   "agree": 46
+  },
+  "0001140859": {
+   "agree": 11,
+   "slot_differs": 35
+  },
+  "0001141391": {
+   "agree": 46
+  },
+  "0001144215": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001145197": {
+   "agree": 47
+  },
+  "0001156039": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001156375": {
+   "agree": 46
+  },
+  "0001157601": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001158114": {
+   "agree": 46
+  },
+  "0001159036": {
+   "agree": 43,
+   "no_slot:instant_between_records": 3
+  },
+  "0001159152": {
+   "no_slot:before_first_record": 11,
+   "agree": 2
+  },
+  "0001163165": {
+   "agree": 46
+  },
+  "0001164727": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001164863": {
+   "agree": 46
+  },
+  "0001166003": {
+   "agree": 19,
+   "slot_differs": 27
+  },
+  "0001166691": {
+   "no_slot:before_first_record": 20,
+   "slot_differs": 26
+  },
+  "0001169561": {
+   "agree": 42,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 3
+  },
+  "0001170010": {
+   "agree": 47
+  },
+  "0001174922": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001175454": {
+   "agree": 32,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 13
+  },
+  "0001176948": {
+   "agree": 46
+  },
+  "0001177394": {
+   "agree": 45,
+   "slot_differs": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0001177609": {
+   "agree": 48
+  },
+  "0001177702": {
+   "agree": 46
+  },
+  "0001178670": {
+   "agree": 45
+  },
+  "0001179929": {
+   "agree": 46
+  },
+  "0001192448": {
+   "agree": 45
+  },
+  "0001206264": {
+   "agree": 46
+  },
+  "0001212545": {
+   "agree": 46
+  },
+  "0001214816": {
+   "agree": 45
+  },
+  "0001219601": {
+   "slot_differs": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0001232524": {
+   "slot_holds_prod_has_value": 44,
+   "slot_differs": 2
+  },
+  "0001236275": {
+   "agree": 46
+  },
+  "0001237831": {
+   "agree": 46
+  },
+  "0001260221": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001261333": {
+   "no_slot:before_first_record": 1,
+   "agree": 34
+  },
+  "0001262039": {
+   "agree": 46
+  },
+  "0001262823": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001267238": {
+   "agree": 46
+  },
+  "0001274494": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001276187": {
+   "slot_differs": 45,
+   "slot_fills_blank": 1
+  },
+  "0001278021": {
+   "agree": 46
+  },
+  "0001280452": {
+   "agree": 43,
+   "slot_differs": 3
+  },
+  "0001281761": {
+   "agree": 46
+  },
+  "0001282637": {
+   "agree": 46
+  },
+  "0001283699": {
+   "agree": 44,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0001285785": {
+   "slot_differs": 44,
+   "no_slot:instant_between_records": 2
+  },
+  "0001286681": {
+   "no_slot:before_first_record": 3,
+   "agree": 11,
+   "no_slot:instant_between_records": 30,
+   "no_slot:after_last_record": 2
+  },
+  "0001287750": {
+   "no_slot:before_first_record": 1,
+   "agree": 16
+  },
+  "0001288469": {
+   "agree": 46
+  },
+  "0001289308": {
+   "agree": 44,
+   "no_slot:instant_between_records": 1,
+   "no_slot:after_last_record": 1
+  },
+  "0001289419": {
+   "agree": 46
+  },
+  "0001289460": {
+   "agree": 46
+  },
+  "0001289490": {
+   "agree": 46
+  },
+  "0001297989": {
+   "agree": 45
+  },
+  "0001297996": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001298675": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001300514": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001302215": {
+   "no_slot:before_first_record": 1,
+   "agree": 43,
+   "slot_differs": 1
+  },
+  "0001308547": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001309108": {
+   "agree": 46
+  },
+  "0001315098": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001316835": {
+   "agree": 46
+  },
+  "0001318220": {
+   "no_slot:before_first_record": 1,
+   "agree": 41,
+   "slot_differs": 1
+  },
+  "0001318605": {
+   "agree": 46
+  },
+  "0001319161": {
+   "agree": 45,
+   "slot_differs": 2
+  },
+  "0001321655": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0001321732": {
+   "agree": 43,
+   "slot_differs": 1
+  },
+  "0001324404": {
+   "slot_differs": 46
+  },
+  "0001324424": {
+   "slot_differs": 40,
+   "slot_holds_prod_has_value": 6
+  },
+  "0001324948": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001326110": {
+   "agree": 43,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0001326160": {
+   "slot_differs": 39,
+   "no_slot:instant_between_records": 6
+  },
+  "0001326380": {
+   "agree": 45,
+   "no_slot:instant_between_records": 2
+  },
+  "0001326801": {
+   "agree": 43,
+   "slot_differs": 3
+  },
+  "0001327567": {
+   "agree": 32,
+   "slot_differs": 14,
+   "no_slot:instant_between_records": 1
+  },
+  "0001327811": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0001331520": {
+   "agree": 46
+  },
+  "0001331875": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001333986": {
+   "no_slot:before_first_record": 4,
+   "agree": 34
+  },
+  "0001334036": {
+   "agree": 46
+  },
+  "0001335258": {
+   "slot_differs": 42,
+   "slot_holds_prod_has_value": 4
+  },
+  "0001336920": {
+   "agree": 25,
+   "no_slot:instant_between_records": 3,
+   "slot_holds_prod_has_value": 1,
+   "slot_differs": 18
+  },
+  "0001341439": {
+   "slot_differs": 45,
+   "no_slot:instant_between_records": 2
+  },
+  "0001341766": {
+   "no_slot:before_first_record": 1,
+   "agree": 39,
+   "slot_differs": 1
+  },
+  "0001352010": {
+   "agree": 46
+  },
+  "0001360604": {
+   "agree": 44,
+   "slot_differs": 1,
+   "slot_fills_blank": 1
+  },
+  "0001360901": {
+   "agree": 46
+  },
+  "0001361113": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001366868": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0001368622": {
+   "agree": 13,
+   "no_slot:instant_between_records": 20,
+   "slot_differs": 13,
+   "no_slot:after_last_record": 1
+  },
+  "0001370637": {
+   "agree": 46
+  },
+  "0001370946": {
+   "slot_differs": 28,
+   "agree": 18
+  },
+  "0001373715": {
+   "agree": 46
+  },
+  "0001374310": {
+   "agree": 38,
+   "slot_differs": 5,
+   "no_slot:instant_between_records": 3
+  },
+  "0001375365": {
+   "agree": 41,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0001376139": {
+   "slot_differs": 46
+  },
+  "0001377121": {
+   "no_slot:before_first_record": 2,
+   "agree": 40
+  },
+  "0001381197": {
+   "agree": 46
+  },
+  "0001383312": {
+   "agree": 46
+  },
+  "0001383650": {
+   "both_blank": 33,
+   "slot_fills_blank": 2,
+   "agree": 10
+  },
+  "0001384905": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001385157": {
+   "agree": 46
+  },
+  "0001389170": {
+   "slot_differs": 46
+  },
+  "0001390777": {
+   "slot_differs": 1,
+   "agree": 45
+  },
+  "0001393052": {
+   "agree": 47
+  },
+  "0001393311": {
+   "agree": 46
+  },
+  "0001393818": {
+   "agree": 46
+  },
+  "0001396009": {
+   "slot_differs": 2,
+   "agree": 43
+  },
+  "0001397187": {
+   "agree": 45,
+   "no_slot:instant_between_records": 2
+  },
+  "0001397911": {
+   "agree": 46
+  },
+  "0001398659": {
+   "agree": 46
+  },
+  "0001402057": {
+   "agree": 46
+  },
+  "0001402436": {
+   "agree": 46
+  },
+  "0001403161": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001403568": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0001404655": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001404912": {
+   "agree": 39,
+   "no_slot:instant_between_records": 3
+  },
+  "0001405495": {
+   "agree": 46
+  },
+  "0001408198": {
+   "agree": 46
+  },
+  "0001408710": {
+   "agree": 46
+  },
+  "0001410636": {
+   "slot_differs": 3,
+   "agree": 43
+  },
+  "0001411207": {
+   "agree": 46
+  },
+  "0001413329": {
+   "agree": 46
+  },
+  "0001413447": {
+   "no_slot:before_first_record": 4,
+   "agree": 26,
+   "no_slot:instant_between_records": 1
+  },
+  "0001415404": {
+   "agree": 47,
+   "slot_differs": 1
+  },
+  "0001418135": {
+   "agree": 46
+  },
+  "0001423689": {
+   "agree": 46
+  },
+  "0001423902": {
+   "agree": 43,
+   "slot_differs": 2
+  },
+  "0001425205": {
+   "agree": 44,
+   "no_slot:instant_between_records": 2
+  },
+  "0001428336": {
+   "agree": 47
+  },
+  "0001428439": {
+   "no_slot:before_first_record": 1,
+   "agree": 36
+  },
+  "0001433195": {
+   "agree": 45
+  },
+  "0001433270": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001439288": {
+   "agree": 45
+  },
+  "0001441816": {
+   "no_slot:before_first_record": 1,
+   "agree": 35
+  },
+  "0001442145": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001443646": {
+   "agree": 46
+  },
+  "0001447669": {
+   "no_slot:before_first_record": 1,
+   "agree": 41
+  },
+  "0001448893": {
+   "agree": 46
+  },
+  "0001451505": {
+   "slot_differs": 42,
+   "agree": 4
+  },
+  "0001451809": {
+   "no_slot:before_first_record": 1,
+   "agree": 27
+  },
+  "0001466258": {
+   "agree": 46
+  },
+  "0001467373": {
+   "slot_holds_prod_has_value": 42,
+   "slot_differs": 4
+  },
+  "0001467623": {
+   "no_slot:before_first_record": 1,
+   "agree": 34
+  },
+  "0001467858": {
+   "agree": 46
+  },
+  "0001468174": {
+   "agree": 47,
+   "slot_differs": 1
+  },
+  "0001472787": {
+   "agree": 46
+  },
+  "0001474432": {
+   "no_slot:before_first_record": 1,
+   "agree": 40,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 3
+  },
+  "0001474735": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0001475922": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001476150": {
+   "agree": 46
+  },
+  "0001477294": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001477333": {
+   "no_slot:before_first_record": 1,
+   "agree": 28
+  },
+  "0001478242": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001479094": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001486159": {
+   "agree": 46,
+   "no_slot:instant_between_records": 2
+  },
+  "0001486957": {
+   "slot_differs": 38,
+   "no_slot:instant_between_records": 3,
+   "agree": 5
+  },
+  "0001489393": {
+   "slot_differs": 34,
+   "no_slot:after_last_record": 12
+  },
+  "0001492691": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001493594": {
+   "agree": 47
+  },
+  "0001501585": {
+   "agree": 46
+  },
+  "0001506293": {
+   "no_slot:before_first_record": 1,
+   "agree": 30
+  },
+  "0001506307": {
+   "agree": 46
+  },
+  "0001510295": {
+   "agree": 46
+  },
+  "0001511737": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001512673": {
+   "no_slot:before_first_record": 1,
+   "agree": 41,
+   "slot_differs": 1
+  },
+  "0001513761": {
+   "agree": 46
+  },
+  "0001516513": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001520006": {
+   "slot_differs": 44,
+   "no_slot:instant_between_records": 2
+  },
+  "0001520262": {
+   "agree": 46
+  },
+  "0001521036": {
+   "agree": 45
+  },
+  "0001521332": {
+   "agree": 46
+  },
+  "0001524472": {
+   "agree": 46
+  },
+  "0001527166": {
+   "agree": 46
+  },
+  "0001528396": {
+   "agree": 46,
+   "slot_differs": 1
+  },
+  "0001531152": {
+   "no_slot:before_first_record": 4,
+   "agree": 32,
+   "no_slot:instant_between_records": 1
+  },
+  "0001534504": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001534701": {
+   "agree": 46
+  },
+  "0001535527": {
+   "no_slot:before_first_record": 1,
+   "agree": 30
+  },
+  "0001535929": {
+   "agree": 46
+  },
+  "0001539838": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001543151": {
+   "no_slot:before_first_record": 1,
+   "agree": 30
+  },
+  "0001551152": {
+   "agree": 21,
+   "slot_differs": 25
+  },
+  "0001551182": {
+   "slot_differs": 46
+  },
+  "0001552000": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001552033": {
+   "agree": 44,
+   "slot_differs": 1
+  },
+  "0001552275": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001555280": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001559720": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001560385": {
+   "agree": 46
+  },
+  "0001561550": {
+   "no_slot:before_first_record": 1,
+   "agree": 28
+  },
+  "0001562088": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001562401": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001563190": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001564408": {
+   "no_slot:before_first_record": 1,
+   "agree": 38
+  },
+  "0001564708": {
+   "slot_holds_prod_has_value": 14,
+   "slot_differs": 32
+  },
+  "0001567094": {
+   "no_slot:before_first_record": 7,
+   "agree": 16
+  },
+  "0001567683": {
+   "agree": 41,
+   "slot_differs": 5
+  },
+  "0001568651": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001570827": {
+   "no_slot:before_first_record": 1,
+   "agree": 35,
+   "slot_differs": 1
+  },
+  "0001571123": {
+   "agree": 27,
+   "no_slot:instant_between_records": 2,
+   "slot_differs": 18
+  },
+  "0001571283": {
+   "agree": 46
+  },
+  "0001571949": {
+   "agree": 46
+  },
+  "0001571996": {
+   "no_slot:before_first_record": 1,
+   "agree": 39,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 2
+  },
+  "0001573516": {
+   "agree": 46
+  },
+  "0001575515": {
+   "agree": 45,
+   "no_slot:instant_between_records": 1
+  },
+  "0001575965": {
+   "agree": 46
+  },
+  "0001576280": {
+   "no_slot:before_first_record": 1,
+   "agree": 32
+  },
+  "0001579091": {
+   "no_slot:before_first_record": 1,
+   "agree": 12
+  },
+  "0001579241": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001579298": {
+   "agree": 46
+  },
+  "0001579428": {
+   "no_slot:before_first_record": 1,
+   "agree": 42
+  },
+  "0001579878": {
+   "no_slot:before_first_record": 1,
+   "agree": 5
+  },
+  "0001581068": {
+   "agree": 46
+  },
+  "0001581280": {
+   "no_slot:before_first_record": 1,
+   "agree": 31
+  },
+  "0001582961": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001583708": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001584207": {
+   "agree": 45
+  },
+  "0001584509": {
+   "slot_differs": 47
+  },
+  "0001585521": {
+   "no_slot:before_first_record": 1,
+   "agree": 30
+  },
+  "0001585689": {
+   "agree": 45,
+   "slot_differs": 1
+  },
+  "0001590364": {
+   "agree": 44,
+   "slot_differs": 2
+  },
+  "0001590714": {
+   "agree": 45,
+   "slot_fills_blank": 1
+  },
+  "0001590717": {
+   "agree": 46
+  },
+  "0001590895": {
+   "agree": 46
+  },
+  "0001590955": {
+   "agree": 38,
+   "no_slot:instant_between_records": 7,
+   "slot_differs": 1
+  },
+  "0001591698": {
+   "agree": 46
+  },
+  "0001594805": {
+   "no_slot:before_first_record": 9,
+   "agree": 7
+  },
+  "0001596532": {
+   "agree": 46
+  },
+  "0001599298": {
+   "no_slot:before_first_record": 4,
+   "agree": 24
+  },
+  "0001600033": {
+   "no_slot:before_first_record": 1,
+   "agree": 40
+  },
+  "0001601046": {
+   "agree": 47
+  },
+  "0001601712": {
+   "agree": 46
+  },
+  "0001603923": {
+   "agree": 46
+  },
+  "0001604028": {
+   "slot_differs": 1,
+   "agree": 45
+  },
+  "0001604821": {
+   "agree": 45
+  },
+  "0001609711": {
+   "slot_differs": 34,
+   "agree": 11
+  },
+  "0001611052": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001613103": {
+   "agree": 46,
+   "no_slot:instant_between_records": 1
+  },
+  "0001616707": {
+   "agree": 46
+  },
+  "0001616862": {
+   "agree": 45
+  },
+  "0001617640": {
+   "agree": 46
+  },
+  "0001618673": {
+   "no_slot:before_first_record": 1,
+   "agree": 43,
+   "no_slot:instant_between_records": 1
+  },
+  "0001618732": {
+   "no_slot:before_first_record": 1,
+   "agree": 39,
+   "slot_differs": 1
+  },
+  "0001618756": {
+   "agree": 47,
+   "slot_differs": 1
+  },
+  "0001622536": {
+   "slot_holds_prod_has_value": 6,
+   "no_slot:instant_between_records": 3,
+   "agree": 9
+  },
+  "0001623925": {
+   "no_slot:before_first_record": 1,
+   "agree": 37,
+   "no_slot:instant_between_records": 1
+  },
+  "0001628171": {
+   "no_slot:before_first_record": 1,
+   "agree": 26
+  },
+  "0001632970": {
+   "no_slot:before_first_record": 1,
+   "agree": 42
+  },
+  "0001633917": {
+   "agree": 43,
+   "slot_differs": 1
+  },
+  "0001633978": {
+   "agree": 44,
+   "no_slot:instant_between_records": 1
+  },
+  "0001635088": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001635327": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001636282": {
+   "no_slot:before_first_record": 1,
+   "agree": 42
+  },
+  "0001636519": {
+   "no_slot:before_first_record": 1,
+   "agree": 44
+  },
+  "0001637207": {
+   "no_slot:before_first_record": 3,
+   "slot_differs": 42,
+   "no_slot:instant_between_records": 1
+  },
+  "0001637459": {
+   "slot_holds_prod_has_value": 1,
+   "agree": 44
+  },
+  "0001638826": {
+   "no_slot:before_first_record": 1,
+   "agree": 8
+  },
+  "0001639300": {
+   "no_slot:before_first_record": 2,
+   "slot_differs": 2,
+   "agree": 41,
+   "no_slot:instant_between_records": 1
+  },
+  "0001639438": {
+   "no_slot:before_first_record": 1,
+   "agree": 12,
+   "no_slot:after_last_record": 1
+  },
+  "0001639723": {
+   "no_slot:before_first_record": 1,
+   "agree": 4
+  },
+  "0001640147": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0001642896": {
+   "no_slot:before_first_record": 1,
+   "agree": 18
+  },
+  "0001645590": {
+   "slot_holds_prod_has_value": 1,
+   "no_slot:instant_between_records": 4,
+   "slot_differs": 40
+  },
+  "0001646972": {
+   "no_slot:before_first_record": 1,
+   "agree": 21,
+   "slot_holds_prod_has_value": 9,
+   "no_slot:instant_between_records": 3
+  },
+  "0001649094": {
+   "no_slot:before_first_record": 1,
+   "agree": 25
+  },
+  "0001649904": {
+   "no_slot:before_first_record": 1,
+   "agree": 36
+  },
+  "0001650164": {
+   "no_slot:before_first_record": 1,
+   "agree": 20
+  },
+  "0001650372": {
+   "no_slot:before_first_record": 1,
+   "agree": 16
+  },
+  "0001652044": {
+   "agree": 44
+  },
+  "0001653482": {
+   "no_slot:before_first_record": 1,
+   "agree": 20
+  },
+  "0001658566": {
+   "no_slot:before_first_record": 1,
+   "agree": 42
+  },
+  "0001659166": {
+   "no_slot:before_first_record": 2,
+   "slot_differs": 39
+  },
+  "0001660134": {
+   "no_slot:before_first_record": 1,
+   "agree": 36,
+   "slot_differs": 2
+  },
+  "0001664703": {
+   "no_slot:before_first_record": 2,
+   "slot_differs": 5,
+   "agree": 29,
+   "slot_fills_blank": 1
+  },
+  "0001665918": {
+   "no_slot:before_first_record": 1,
+   "agree": 41
+  },
+  "0001666700": {
+   "no_slot:before_first_record": 2,
+   "slot_holds_prod_has_value": 7,
+   "no_slot:instant_between_records": 1,
+   "agree": 29
+  },
+  "0001668397": {
+   "no_slot:before_first_record": 1,
+   "agree": 41
+  },
+  "0001669162": {
+   "no_slot:before_first_record": 2,
+   "agree": 40
+  },
+  "0001671933": {
+   "no_slot:before_first_record": 1,
+   "agree": 40
+  },
+  "0001673358": {
+   "no_slot:before_first_record": 1,
+   "agree": 39,
+   "slot_differs": 1
+  },
+  "0001674101": {
+   "no_slot:before_first_record": 1,
+   "agree": 29,
+   "slot_differs": 4
+  },
+  "0001675149": {
+   "no_slot:before_first_record": 1,
+   "agree": 40
+  },
+  "0001679049": {
+   "no_slot:before_first_record": 4,
+   "agree": 40
+  },
+  "0001679273": {
+   "no_slot:before_first_record": 1,
+   "agree": 19,
+   "no_slot:instant_between_records": 15,
+   "slot_differs": 5
+  },
+  "0001679788": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001681459": {
+   "no_slot:before_first_record": 1,
+   "slot_differs": 5,
+   "agree": 34
+  },
+  "0001682852": {
+   "no_slot:before_first_record": 1,
+   "agree": 31
+  },
+  "0001687229": {
+   "no_slot:before_first_record": 1,
+   "agree": 38
+  },
+  "0001689548": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0001690820": {
+   "no_slot:before_first_record": 1,
+   "agree": 37
+  },
+  "0001692115": {
+   "no_slot:before_first_record": 21,
+   "slot_holds_prod_has_value": 19
+  },
+  "0001692819": {
+   "no_slot:before_first_record": 1,
+   "agree": 38
+  },
+  "0001698990": {
+   "agree": 7,
+   "slot_differs": 30
+  },
+  "0001699150": {
+   "no_slot:before_first_record": 2,
+   "agree": 37
+  },
+  "0001701605": {
+   "no_slot:before_first_record": 1,
+   "agree": 1,
+   "slot_differs": 36
+  },
+  "0001705696": {
+   "no_slot:before_first_record": 1,
+   "agree": 35
+  },
+  "0001707753": {
+   "no_slot:before_first_record": 1,
+   "agree": 32
+  },
+  "0001707925": {
+   "no_slot:before_first_record": 3,
+   "agree": 31
+  },
+  "0001711269": {
+   "no_slot:before_first_record": 4,
+   "slot_differs": 23,
+   "no_slot:instant_between_records": 6
+  },
+  "0001711279": {
+   "no_slot:before_first_record": 1,
+   "agree": 35,
+   "no_slot:instant_between_records": 1
+  },
+  "0001713445": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001713683": {
+   "no_slot:before_first_record": 1,
+   "agree": 34
+  },
+  "0001718512": {
+   "no_slot:before_first_record": 1,
+   "agree": 34
+  },
+  "0001720635": {
+   "no_slot:before_first_record": 2,
+   "agree": 34
+  },
+  "0001722482": {
+   "no_slot:before_first_record": 1,
+   "agree": 28
+  },
+  "0001722684": {
+   "no_slot:before_first_record": 2,
+   "agree": 34
+  },
+  "0001723128": {
+   "agree": 2,
+   "no_slot:after_last_record": 33
+  },
+  "0001728951": {
+   "no_slot:before_first_record": 1,
+   "agree": 33
+  },
+  "0001730168": {
+   "no_slot:before_first_record": 1,
+   "agree": 31,
+   "no_slot:instant_between_records": 3
+  },
+  "0001730430": {
+   "no_slot:before_first_record": 1,
+   "agree": 32
+  },
+  "0001734722": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001736035": {
+   "no_slot:before_first_record": 1,
+   "agree": 16
+  },
+  "0001736297": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001739104": {
+   "no_slot:before_first_record": 1,
+   "agree": 32
+  },
+  "0001739445": {
+   "no_slot:before_first_record": 2,
+   "agree": 32
+  },
+  "0001739940": {
+   "no_slot:before_first_record": 1,
+   "agree": 31
+  },
+  "0001743881": {
+   "no_slot:before_first_record": 1,
+   "agree": 28
+  },
+  "0001744489": {
+   "no_slot:before_first_record": 3,
+   "slot_differs": 30
+  },
+  "0001748790": {
+   "no_slot:before_first_record": 1,
+   "agree": 29,
+   "slot_differs": 1,
+   "no_slot:instant_between_records": 1
+  },
+  "0001751008": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001751788": {
+   "no_slot:before_first_record": 2,
+   "slot_holds_prod_has_value": 29
+  },
+  "0001754301": {
+   "no_slot:before_first_record": 1,
+   "slot_holds_prod_has_value": 1,
+   "slot_differs": 30
+  },
+  "0001755672": {
+   "no_slot:before_first_record": 1,
+   "slot_differs": 1
+  },
+  "0001757898": {
+   "no_slot:before_first_record": 1,
+   "agree": 30
+  },
+  "0001758730": {
+   "no_slot:before_first_record": 2,
+   "agree": 29
+  },
+  "0001759509": {
+   "no_slot:before_first_record": 1,
+   "agree": 29,
+   "slot_differs": 1
+  },
+  "0001766502": {
+   "no_slot:before_first_record": 1,
+   "agree": 30
+  },
+  "0001769628": {
+   "no_slot:before_first_record": 1,
+   "agree": 6
+  },
+  "0001770787": {
+   "no_slot:before_first_record": 1,
+   "agree": 29
+  },
+  "0001773383": {
+   "no_slot:before_first_record": 1,
+   "agree": 29
+  },
+  "0001773751": {
+   "agree": 28,
+   "slot_differs": 1
+  },
+  "0001780312": {
+   "no_slot:before_first_record": 1,
+   "slot_differs": 5,
+   "agree": 23
+  },
+  "0001781335": {
+   "no_slot:before_first_record": 1,
+   "agree": 25,
+   "slot_differs": 1
+  },
+  "0001783180": {
+   "no_slot:before_first_record": 1,
+   "agree": 25
+  },
+  "0001783879": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001792044": {
+   "agree": 27
+  },
+  "0001792580": {
+   "no_slot:before_first_record": 2,
+   "agree": 27
+  },
+  "0001792789": {
+   "no_slot:before_first_record": 1,
+   "agree": 23
+  },
+  "0001796209": {
+   "no_slot:before_first_record": 4,
+   "agree": 26
+  },
+  "0001800667": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0001801368": {
+   "no_slot:before_first_record": 1,
+   "agree": 26
+  },
+  "0001802768": {
+   "no_slot:before_first_record": 1,
+   "agree": 25
+  },
+  "0001805284": {
+   "no_slot:before_first_record": 1,
+   "agree": 25
+  },
+  "0001807794": {
+   "no_slot:before_first_record": 1,
+   "agree": 19
+  },
+  "0001810806": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0001811074": {
+   "no_slot:before_first_record": 1,
+   "agree": 23
+  },
+  "0001815442": {
+   "no_slot:before_first_record": 1,
+   "agree": 24
+  },
+  "0001818874": {
+   "slot_fills_blank": 1,
+   "agree": 23
+  },
+  "0001819994": {
+   "agree": 24
+  },
+  "0001820953": {
+   "no_slot:before_first_record": 1,
+   "agree": 23
+  },
+  "0001822993": {
+   "no_slot:before_first_record": 2,
+   "agree": 21,
+   "no_slot:instant_between_records": 1,
+   "slot_differs": 1
+  },
+  "0001823529": {
+   "no_slot:before_first_record": 1,
+   "agree": 20
+  },
+  "0001824920": {
+   "agree": 24
+  },
+  "0001828108": {
+   "no_slot:before_first_record": 1,
+   "agree": 22,
+   "no_slot:instant_between_records": 1
+  },
+  "0001829311": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001833756": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001834584": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001835632": {
+   "no_slot:before_first_record": 1,
+   "agree": 22
+  },
+  "0001837240": {
+   "no_slot:before_first_record": 2,
+   "agree": 23
+  },
+  "0001841666": {
+   "no_slot:before_first_record": 5,
+   "slot_holds_prod_has_value": 22
+  },
+  "0001842022": {
+   "no_slot:before_first_record": 2,
+   "agree": 21
+  },
+  "0001849253": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001851003": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001852131": {
+   "no_slot:before_first_record": 1,
+   "agree": 15
+  },
+  "0001856437": {
+   "no_slot:before_first_record": 4,
+   "agree": 21
+  },
+  "0001856525": {
+   "no_slot:before_first_record": 1,
+   "agree": 21
+  },
+  "0001858681": {
+   "no_slot:before_first_record": 1,
+   "agree": 17,
+   "slot_differs": 1
+  },
+  "0001859392": {
+   "no_slot:before_first_record": 2,
+   "agree": 5
+  },
+  "0001860742": {
+   "no_slot:before_first_record": 1,
+   "agree": 18
+  },
+  "0001865782": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001866581": {
+   "no_slot:before_first_record": 1,
+   "agree": 19,
+   "slot_differs": 1
+  },
+  "0001868159": {
+   "no_slot:before_first_record": 1,
+   "agree": 9
+  },
+  "0001868275": {
+   "agree": 19
+  },
+  "0001869198": {
+   "no_slot:before_first_record": 1,
+   "agree": 20
+  },
+  "0001874178": {
+   "no_slot:before_first_record": 1,
+   "agree": 20
+  },
+  "0001876042": {
+   "no_slot:before_first_record": 1,
+   "agree": 5
+  },
+  "0001878848": {
+   "no_slot:before_first_record": 1,
+   "agree": 4
+  },
+  "0001880661": {
+   "no_slot:before_first_record": 1,
+   "agree": 18
+  },
+  "0001883685": {
+   "no_slot:before_first_record": 1,
+   "agree": 18
+  },
+  "0001889539": {
+   "no_slot:before_first_record": 2,
+   "agree": 15,
+   "slot_differs": 1
+  },
+  "0001895262": {
+   "no_slot:before_first_record": 2,
+   "agree": 16
+  },
+  "0001897762": {
+   "no_slot:before_first_record": 2,
+   "agree": 8
+  },
+  "0001901440": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001915657": {
+   "no_slot:before_first_record": 2,
+   "slot_differs": 7,
+   "agree": 11
+  },
+  "0001932393": {
+   "no_slot:before_first_record": 1,
+   "agree": 13
+  },
+  "0001937926": {
+   "no_slot:before_first_record": 2,
+   "slot_differs": 1,
+   "agree": 6
+  },
+  "0001943896": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001944013": {
+   "no_slot:before_first_record": 1,
+   "agree": 13,
+   "no_slot:instant_between_records": 1
+  },
+  "0001944048": {
+   "no_slot:before_first_record": 1,
+   "agree": 14
+  },
+  "0001957132": {
+   "no_slot:before_first_record": 3,
+   "agree": 3
+  },
+  "0001964738": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001964789": {
+   "no_slot:before_first_record": 1,
+   "agree": 12
+  },
+  "0001967680": {
+   "no_slot:before_first_record": 2,
+   "slot_differs": 9,
+   "no_slot:instant_between_records": 1
+  },
+  "0001973266": {
+   "no_slot:before_first_record": 1,
+   "agree": 11,
+   "slot_differs": 1
+  },
+  "0001995807": {
+   "no_slot:before_first_record": 1,
+   "agree": 9
+  },
+  "0001996810": {
+   "no_slot:before_first_record": 1,
+   "agree": 10
+  },
+  "0001996862": {
+   "no_slot:before_first_record": 5,
+   "slot_differs": 10
+  },
+  "0002000178": {
+   "no_slot:before_first_record": 1,
+   "agree": 9,
+   "no_slot:instant_between_records": 1
+  },
+  "0002001184": {
+   "no_slot:before_first_record": 1,
+   "agree": 9,
+   "slot_differs": 1
+  },
+  "0002005951": {
+   "no_slot:before_first_record": 2,
+   "agree": 8,
+   "no_slot:instant_between_records": 1
+  },
+  "0002007855": {
+   "no_slot:before_first_record": 1,
+   "agree": 6
+  },
+  "0002011641": {
+   "no_slot:before_first_record": 1,
+   "agree": 9
+  },
+  "0002012383": {
+   "no_slot:before_first_record": 1,
+   "agree": 8
+  },
+  "0002015845": {
+   "no_slot:before_first_record": 1,
+   "agree": 8
+  },
+  "0002019410": {
+   "no_slot:before_first_record": 1,
+   "agree": 5
+  },
+  "0002021728": {
+   "no_slot:before_first_record": 1,
+   "agree": 2
+  },
+  "0002023554": {
+   "no_slot:before_first_record": 1,
+   "agree": 7
+  },
+  "0002025410": {
+   "no_slot:before_first_record": 1,
+   "agree": 8
+  },
+  "0002030781": {
+   "no_slot:before_first_record": 1,
+   "agree": 6
+  },
+  "0002035989": {
+   "no_slot:before_first_record": 1,
+   "agree": 5
+  },
+  "0002041385": {
+   "no_slot:before_first_record": 3,
+   "agree": 3
+  },
+  "0002041610": {
+   "slot_differs": 6
+  },
+  "0002042694": {
+   "no_slot:before_first_record": 1,
+   "slot_fills_blank": 1,
+   "agree": 7
+  },
+  "0002046386": {
+   "no_slot:before_first_record": 1,
+   "agree": 3
+  },
+  "0002054696": {
+   "no_slot:before_first_record": 1,
+   "agree": 5
+  },
+  "0002058873": {
+   "no_slot:before_first_record": 1,
+   "agree": 4
+  },
+  "0002063196": {
+   "no_slot:before_first_record": 1,
+   "agree": 4
+  },
+  "0002064953": {
+   "no_slot:before_first_record": 1,
+   "agree": 4
+  },
+  "0002065601": {
+   "no_slot:before_first_record": 1,
+   "agree": 3
+  },
+  "0002074176": {
+   "no_slot:before_first_record": 1,
+   "agree": 4
+  },
+  "0002080126": {
+   "no_slot:before_first_record": 2,
+   "agree": 2
+  },
+  "0002082247": {
+   "no_slot:before_first_record": 1,
+   "agree": 1
+  },
+  "0002082866": {
+   "no_slot:before_first_record": 1,
+   "agree": 3
+  },
+  "0002083785": {
+   "no_slot:before_first_record": 2,
+   "agree": 3
+  }
+ }
+}
