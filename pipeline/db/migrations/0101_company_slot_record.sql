@@ -1,4 +1,4 @@
--- 0110: analytics.company_slot_record - THE company-wise mapper table.
+-- 0101: analytics.company_slot_record (renumbered from the 0110 claim on 2026-10-26, Dhairya: next contiguous number so CI stays green) - THE company-wise mapper table.
 -- Design: data-team/strategy/EXCEPTION-RULE-REGISTER-DESIGN-2026-10-24.md (v2,
 -- one table, not a register beside the mapper). Claimed in doc 53 on
 -- 2026-10-25 by scrooner-25 after the Verifier passed the balance-sheet-totals
