@@ -981,9 +981,13 @@ def test_restated_share_counts_count_as_share_evidence():
         for tag in (EPS_D, EPS_B):
             b.add(tag, v, s, e, pre)
             b.add(tag, str((D(v) / 10).quantize(D("0.01"))), s, e, post)
-        b.add("WeightedAverageNumberOfSharesOutstandingBasic", w, s, e, pre)
+        b.add("WeightedAverageNumberOfDilutedSharesOutstanding", w, s, e, pre)
         b.add(
-            "WeightedAverageNumberOfSharesOutstandingBasic", str(D(w) * 10), s, e, post
+            "WeightedAverageNumberOfDilutedSharesOutstanding",
+            str(D(w) * 10),
+            s,
+            e,
+            post,
         )
     res = run(b)
     (ev,) = res.events
@@ -1689,8 +1693,8 @@ def test_confirmed_product_across_two_splits_is_not_a_third_event():
             b.add(tag, str(D(v) / 2), s_, e, f3)
             b.add(tag, str(D(v) / 4), s_, e, f4)
     for s_, e, v, w in (
-        ("2019-08-01", "2020-07-31", "3.20", "230000000"),
-        ("2018-08-01", "2019-07-31", "2.80", "232000000"),
+        ("2019-08-01", "2020-07-31", "3.20", "47512345"),
+        ("2018-08-01", "2019-07-31", "2.80", "47834567"),
     ):
         for tag in (EPS_D, EPS_B):
             b.add(tag, v, s_, e, f0)
@@ -1923,7 +1927,7 @@ def test_disclosure_beside_a_confirmed_split_is_not_a_second_candidate():
     assert "review" not in [e.status for e in res.events]
 
 
-def test_ppl_one_month_comparative_without_its_own_vintage_is_held():
+def test_later_comparatives_without_own_vintage_are_shown_as_filed():
     """PPL 2022-06 one-month DPS exists only as 2023 comparatives, each equal
     to the 2023-06 value in the same filing (0.24); the originals report the
     quarter (0.225) on another context."""
@@ -1934,10 +1938,10 @@ def test_ppl_one_month_comparative_without_its_own_vintage_is_held():
         if m > 6:  # the May 10-Q cannot hold June 2023
             b.add(DPS_DECL, "0.24", "2023-06-01", "2023-06-30", acc)
     res = run(b)
-    assert (
-        b.cell(res, "dividends_per_share_resolved", "2022-06-01", "2022-06-30").status
-        == sb.HIDE_RESTATED
-    )
+    # rule withdrawn (Verifier run 4: constant dividend rates made every later
+    # comparative "equal next year's value"; FNB, WAL, EWBC, MSM, MS, AM, NEM)
+    cell = b.cell(res, "dividends_per_share_resolved", "2022-06-01", "2022-06-30")
+    assert cell.status == sb.SHOWN
 
 
 def test_first_dividend_quarter_is_not_an_annual_amount():
@@ -1994,3 +1998,210 @@ def test_two_own_vintage_dividend_copies_beat_a_later_majority():
     res = run(b)
     cell = b.cell(res, "dividends_per_share_resolved", "2022-06-01", "2022-06-30")
     assert cell.status == sb.SHOWN and cell.value == D("0.225")
+
+
+def test_year_totals_choose_the_filed_quarter_values():
+    """COST FY2013: Q2 own-vintage 10-Q 0.275 (regular only) vs 10-K 7.275
+    (with the $7 special); FY 8.17 in 0000909832-14-000021."""
+    b = Book()
+    q2 = b.filing("COST-Q2", "2013-03-10")
+    k = b.filing("0000909832-14-000021", "2014-10-15", "10-K")
+    q3 = b.filing("COST-Q3", "2013-06-05")
+    vals = (("2012-09-03", "2012-11-25", "0.275"), ("2012-11-26", "2013-02-17", None),
+            ("2013-02-18", "2013-05-12", "0.31"), ("2013-05-13", "2013-09-01", "0.31"))  # fmt: skip
+    for s_, e_, v in vals:
+        if v:
+            b.add(DPS_DECL, v, s_, e_, k)
+    b.add(DPS_DECL, "0.275", "2012-11-26", "2013-02-17", q2)
+    b.add(DPS_DECL, "0.275", "2012-11-26", "2013-02-17", q3)
+    b.add(DPS_DECL, "7.275", "2012-11-26", "2013-02-17", k)
+    b.add(DPS_DECL, "8.17", "2012-09-03", "2013-09-01", k)
+    res = run(b)
+    cell = b.cell(res, "dividends_per_share_resolved", "2012-11-26", "2013-02-17")
+    assert cell.status == sb.SHOWN and cell.value == D("7.275")
+
+
+def test_year_totals_fix_two_shifted_quarters_together():
+    """OKE 2014: FY 2.125 = 0.40 + 0.56 + 0.575 + 0.59; the own-vintage Q2
+    and Q3 copies carry the next quarter's rate (0.575, 0.59)."""
+    b = Book()
+    k = b.filing("OKE-K", "2015-02-24", "10-K")
+    q2 = b.filing("OKE-Q2", "2014-08-05")
+    q3 = b.filing("OKE-Q3", "2014-11-04")
+    b.add(DPS_DECL, "0.40", "2014-01-01", "2014-03-31", k)
+    for acc, v2, v3 in ((q2, "0.575", None), (q3, None, "0.59"), (k, "0.56", "0.575")):
+        if v2:
+            b.add(DPS_DECL, v2, "2014-04-01", "2014-06-30", acc)
+        if v3:
+            b.add(DPS_DECL, v3, "2014-07-01", "2014-09-30", acc)
+    b.add(
+        DPS_DECL, "0.575", "2014-04-01", "2014-06-30", b.filing("OKE-Q2b", "2014-09-01")
+    )
+    b.add(
+        DPS_DECL, "0.59", "2014-07-01", "2014-09-30", b.filing("OKE-Q3b", "2014-12-01")
+    )
+    b.add(DPS_DECL, "0.59", "2014-10-01", "2014-12-31", k)
+    b.add(DPS_DECL, "2.125", "2014-01-01", "2014-12-31", k)
+    res = run(b)
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2014-04-01", "2014-06-30"
+    ).value == D("0.56")
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2014-07-01", "2014-09-30"
+    ).value == D("0.575")
+
+
+def test_year_solve_leaves_an_ambiguous_year_alone():
+    b = Book()
+    k = b.filing("A-K", "2021-02-20", "10-K")
+    q = b.filing("A-Q", "2020-08-01")
+    for s_, e_ in (("2020-01-01", "2020-03-31"), ("2020-04-01", "2020-06-30"),
+                   ("2020-07-01", "2020-09-30"), ("2020-10-01", "2020-12-31")):  # fmt: skip
+        b.add(DPS_DECL, "0.50", s_, e_, k)
+    b.add(DPS_DECL, "0.50", "2020-04-01", "2020-06-30", q)
+    b.add(DPS_DECL, "2.00", "2020-01-01", "2020-12-31", k)
+    res = run(b)
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2020-04-01", "2020-06-30"
+    ).value == D("0.50")
+
+
+def test_forward_split_seen_through_weighted_average_shares():
+    """CVNA 2026 5-for-1: no cover or balance-sheet count, basic weighted
+    shares 137.6M (FY2025 10-K) -> 717.7M (Q2 2026 10-Q), ratio fact 0.2 (the
+    filer's inverted convention); FY2021 filed -1.63 becomes -0.326."""
+    b = Book()
+    k21 = b.filing("CV-21", "2022-02-24", "10-K")
+    k25 = b.filing("CV-25", "2026-02-18", "10-K")
+    q26 = b.filing("0001690820-26-000055", "2026-07-29")
+    b.add(EPS_D, "-1.63", "2021-01-01", "2021-12-31", k21)
+    b.add(
+        "WeightedAverageNumberOfSharesOutstandingBasic",
+        "135412000",
+        "2021-01-01",
+        "2021-12-31",
+        k21,
+    )
+    b.add(
+        "WeightedAverageNumberOfSharesOutstandingBasic",
+        "137634000",
+        "2025-01-01",
+        "2025-12-31",
+        k25,
+    )
+    b.add(
+        "WeightedAverageNumberOfSharesOutstandingBasic",
+        "717691000",
+        "2026-04-01",
+        "2026-06-30",
+        q26,
+    )
+    b.add(RATIO, "0.2", None, "2026-05-08", q26)
+    res = run(b)
+    assert [(e.ratio, e.status) for e in res.events if e.status == "confirmed"] == [
+        (5, "confirmed")
+    ]
+    assert b.cell(res, "diluted_eps_resolved", "2021-01-01", "2021-12-31").value == D(
+        "-0.326"
+    )
+
+
+def test_invariant_hides_only_cells_filed_up_to_the_last_contradiction():
+    """CBSH: cells re-filed after the last contradicting filing are shown."""
+    b = Book()
+    a = b.filing("C-1", "2023-02-01", "10-K")
+    q = b.filing("C-2", "2023-05-01")
+    c = b.filing("C-3", "2024-02-01", "10-K")
+    late = b.filing("C-4", "2026-02-20", "10-K")
+    for s_, e, v in (
+        ("2022-01-01", "2022-12-31", "4.00"),
+        ("2021-01-01", "2021-12-31", "3.00"),
+    ):
+        for tag in (EPS_D, EPS_B):
+            b.add(tag, v, s_, e, a)
+            b.add(tag, v, s_, e, c)
+    b.add(EPS_D, "1.10", "2023-01-01", "2023-03-31", q)
+    b.add(EPS_D, "4.20", "2025-01-01", "2025-12-31", late)
+    b.add(COVER, "100000000", None, "2023-01-25", a)
+    b.add(COVER, "100500000", None, "2023-04-25", q)
+    b.add(COVER, "201000000", None, "2024-01-25", c)
+    b.add(COVER, "202000000", None, "2026-02-10", late)
+    b.add(RATIO, "2", None, "2023-09-01", c)
+    res = run(b)
+    assert res.violations
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2022-01-01", "2022-12-31").status
+        == sb.HIDE_COMPANY_INVARIANT
+    )
+    assert (
+        b.cell(res, "diluted_eps_resolved", "2025-01-01", "2025-12-31").status
+        == sb.SHOWN
+    )
+
+
+def test_amendment_share_counts_are_not_series_points():
+    b = Book()
+    a = b.filing("S-1", "2024-02-01", "10-K")
+    amend = b.filing("S-2", "2024-09-01", "10-Q/A")
+    b.add(COVER, "100000000", None, "2024-01-25", a)
+    b.add(COVER, "20000000", None, "2024-08-25", amend)
+    series = sb.build_share_series(b.facts)
+    assert [f.accession for f in series] == ["S-1"]
+
+
+def test_year_solve_uses_the_nine_month_total_without_a_filed_q4():
+    """COP 2021 as filed: Q4 dividend only derived; the "declared" tag
+    disagrees with itself (9M 0.46 and 1.75; Q3 0.46 and 0.89 = two
+    declarations), CashPaid gives 9M 1.29 and Q3 0.43 (Verifier run 4: right
+    Q3 is 0.43, FY 1.75 = 0.43 x 3 + 0.46)."""
+    b = Book()
+    q1 = b.filing("COP-Q1", "2021-05-06")
+    q2 = b.filing("COP-Q2", "2021-08-05")
+    q3 = b.filing("COP-Q3", "2021-11-04")
+    k = b.filing("COP-K", "2022-02-17", "10-K")
+    q3b = b.filing("COP-Q3b", "2022-11-03")
+    b.add(DPS_PAID, "0.43", "2021-01-01", "2021-03-31", q1)
+    b.add(
+        DPS_DECL, "0.43", "2021-01-01", "2021-03-31", b.filing("COP-Q1b", "2022-05-05")
+    )
+    b.add(DPS_PAID, "0.43", "2021-04-01", "2021-06-30", q2)
+    b.add(
+        DPS_DECL, "0.43", "2021-04-01", "2021-06-30", b.filing("COP-Q2b", "2022-08-04")
+    )
+    b.add(DPS_PAID, "0.86", "2021-01-01", "2021-06-30", q2)
+    b.add(DPS_PAID, "0.43", "2021-07-01", "2021-09-30", q3)
+    b.add(DPS_DECL, "0.46", "2021-07-01", "2021-09-30", q3)
+    b.add(DPS_DECL, "0.89", "2021-07-01", "2021-09-30", q3b)
+    b.add(DPS_PAID, "1.29", "2021-01-01", "2021-09-30", q3)
+    b.add(DPS_DECL, "0.46", "2021-01-01", "2021-09-30", q3)
+    b.add(DPS_DECL, "1.75", "2021-01-01", "2021-09-30", q3b)
+    b.add(DPS_DECL, "1.75", "2021-01-01", "2021-12-31", k)
+    res = run(b)
+    cell = b.cell(res, "dividends_per_share_resolved", "2021-07-01", "2021-09-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0.43")
+    nine = b.cell(res, "dividends_per_share_resolved", "2021-01-01", "2021-09-30")
+    assert nine.status == sb.SHOWN and nine.value == D("1.29")
+
+
+def test_year_solve_hides_a_nine_month_cell_no_filed_copy_adds_up():
+    """A 9M dividend whose filed copies disagree (0.46 / 1.75) and none
+    equals the solved quarters' sum (0.43 x 3) is hidden, not shown."""
+    b = Book()
+    q1 = b.filing("X-Q1", "2021-05-06")
+    q2 = b.filing("X-Q2", "2021-08-05")
+    q3 = b.filing("X-Q3", "2021-11-04")
+    k = b.filing("X-K", "2022-02-17", "10-K")
+    q3b = b.filing("X-Q3b", "2022-11-03")
+    q3c = b.filing("X-Q3c", "2023-11-02")
+    b.add(DPS_DECL, "0.43", "2021-01-01", "2021-03-31", q1)
+    b.add(DPS_DECL, "0.43", "2021-04-01", "2021-06-30", q2)
+    b.add(DPS_DECL, "0.43", "2021-07-01", "2021-09-30", q3)
+    b.add(DPS_DECL, "0.47", "2021-07-01", "2021-09-30", q3b)
+    b.add(DPS_DECL, "0.46", "2021-10-01", "2021-12-31", k)
+    b.add(DPS_DECL, "0.46", "2021-01-01", "2021-09-30", q3)
+    b.add(DPS_DECL, "1.75", "2021-01-01", "2021-09-30", q3b)
+    b.add(DPS_DECL, "1.75", "2021-01-01", "2021-09-30", q3c)
+    b.add(DPS_DECL, "1.75", "2021-01-01", "2021-12-31", k)
+    res = run(b)
+    nine = b.cell(res, "dividends_per_share_resolved", "2021-01-01", "2021-09-30")
+    assert nine.status == sb.HIDE_DPS_INVALID

@@ -2,6 +2,53 @@
 
 Period Engineer. Rules `split.event_basis@1` (dry_run) + `pershare.never_derive@1` (classification only). Read-only: 6 connections max, `default_transaction_read_only`, statement_timeout 20s, chunks of 50, peak 8 pooler/app backends (team cap 30). 1,000 of 1,000 companies processed, 0 failures. Branch `work/period-engineer/split-rebase`; runner `pipeline/scripts/split_rebase_cohort_dryrun.py`; per-cell table `doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_20261024.csv.gz` (old value, new value, class, status, factor, chosen fact and accession, every candidate). Cohort file `data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv`. Evidence: DATA-INFERRED unless a row says FILING-CHECKED (the Verifier's 194-value sample on the 11 companies passed with 0 wrong, VERIFY-SPLIT-REBASE-2026-10-24.md).
 
+## Run 5, 2026-10-26 after Verifier 1's run-4 findings
+
+Read-only, 2 connections, statement_timeout 20s, chunks of 50, peak 5 pooler/app backends. 1,000 of 1,000 companies, 0 failures. Per-cell CSV regenerated (same path). Events: 160 confirmed, 45 review, 38 pending, 880 rejected. Invariant companies: HWM, KDP, CBSH, CELH (GL released).
+
+| Class | All periods | Periods ending 2015-01-01 or later |
+|---|---|---|
+| unchanged | 224,431 | 209,101 |
+| hidden:no_filed_source | 15,855 | 15,188 |
+| share_count_rebased | 4,307 | 3,750 |
+| was_unadjusted | 2,814 | 2,297 |
+| rounding_only | 2,041 | 1,816 |
+| hidden:restated_between_filings | 1,777 | 1,668 |
+| hidden:dividend_basis_pending | 1,602 | 1,487 |
+| was_double_divided | 1,184 | 1,078 |
+| hidden:basis_review | 1,156 | 989 |
+| hidden:basis_conflict | 1,118 | 1,005 |
+| new_value | 959 | 947 |
+| still_blank_with_reason | 757 | 718 |
+| hidden:basis_review_company_invariant | 546 | 471 |
+| hidden:dividend_per_share_invalid | 346 | 319 |
+| other_changed | 190 | 178 |
+| hidden:units_scale_suspect | 173 | 155 |
+| hidden:zero_share_count_filed | 69 | 62 |
+| **total** | 259,325 | 241,229 |
+
+The all-period total went from 304,590 to 259,325 because more pre-2015 facts were removed from core.fact upstream. The 2015+ total is unchanged at 241,229. Phase 1 still skips `other_changed` (190 cells).
+
+Fixes (each tested and mutation-checked):
+- **Fiscal-year solve.** For each fiscal year with a filed total, each quarter gets one of its filed dividend copies (either tag) so the quarters add up to the filed 6M, 9M and FY totals. A unique solution sets the quarters; anything else leaves them alone. A span's total counts only when that tag's copies of it all agree. Filed 6M/9M cells must equal the sum of the solved quarters: a matching filed copy is used, otherwise the cell is hidden (`dividend_per_share_invalid`). A year-solved quarter is exempt from the mixed-tag hide. Results: COST Q2 FY2013, OKE 2014 0.56/0.575 (stored values were right), COP Q3 2021 0.43 and 9M 1.29 (COP's later "declared" copies 0.89 and 1.75 are filer errors).
+- **CVNA 5-for-1 forward split.** Weighted shares now count in the share series, and the share-step tolerance is 5%. CVNA FY2021 EPS is -8.15 -> -0.326.
+- **Invariant scope.** The company invariant now hides only cells filed up to the latest violating filing, so GL is released and CBSH keeps only its pre-2026 cells hidden.
+- **Amendments.** /A filings are left out of the share series.
+- **Mixed-tag hide.** Applies only within 400 days of a period where the tags disagree.
+- **Withdrawn rule.** The no-own-vintage hold is removed.
+
+Named cases, hidden cells from 2015 on, by reason:
+- **Released.** COST, OKE, FNB, MSM, CYTK, HST and SNDK (one basis_review left) are hidden only for `no_filed_source`, the RU-1 derived-only policy.
+- **SSNC.** Q4 2023 and Q4 2024 stay `dividend_basis_pending`. Q4 is derived and the two tags disagree nearby.
+- **Still open, not fixed this run:**
+  - LMT: 13 dividend_basis_pending, 12 restated, 6 invalid. One dividend basis per company is not built.
+  - PRAX: 66 basis_conflict. Re-basing by 15 is not built.
+  - CBSH: 248 invariant. The 2026-basis cells are not re-based.
+  - QXO: 177 basis_conflict. NLY: 171 basis_conflict. SYRE: 199 basis_review. MTCH: 85 basis_review.
+  - TRNO: 7 dividend_basis_pending. HAS: 1 restated. RGA: 7 restated, 6 units-scale. GL: 2 restated. SMMT: 2 restated.
+
+Evidence: DATA-INFERRED from core.fact copies. Expected values for COST, OKE, COP and CVNA are from Verifier run 4 (FILING-CHECKED by the Verifier).
+
 ## Cells by class (per-share and share-count resolved concepts; run 4, 2026-10-25)
 
 | Class | All periods | Periods ending 2015-01-01 or later |
