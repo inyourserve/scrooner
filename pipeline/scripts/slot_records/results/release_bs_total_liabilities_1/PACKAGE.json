@@ -1,0 +1,49 @@
+{
+ "rule_id": "slot.bs_total_liabilities@1",
+ "family": "balance-sheet totals: total_liabilities_resolved",
+ "verifier": "VERIFY-TOTAL-LIABILITIES-DRYRUN-2026-10-26.md (140/140 differences production wrong; >=97.9% at 95%); release 1 = the sampled population only",
+ "release1": {
+  "cells_file": "bs_release_release1_cells.jsonl",
+  "sha256": "2c1afc2b339b504f054254f4fbeaf604b4c2c7a988b2ec18242cddcee58811f5",
+  "cells": 3533,
+  "companies": 354,
+  "by_state": {
+   "slot_differs": 3441,
+   "slot_fills_blank": 90,
+   "slot_holds_prod_has_value": 2
+  },
+  "kept_verified_right": "bs_release_keep_list.json (6 cells, untouched)",
+  "hide_confirmed_wrong_applied": 2,
+  "before_image": "bs_release_r1_before_image.jsonl (3,443 canonical_fact rows)",
+  "rollback": "bs_release_r1_rollback.sql (generated, run in one transaction by the Release Manager only)",
+  "touched_ciks": "release1_touched_ciks.txt"
+ },
+ "release2": {
+  "cells_file": "bs_release_release2_cells.jsonl",
+  "sha256": "a72dc2351519fbf8275101040f3565b36d18aa89805b5237318f4224bfb8d8b4",
+  "cells": 1470,
+  "strata": {
+   "new_since_fill": 1135,
+   "changed_rule": 326,
+   "fill_new": 9
+  },
+  "status": "needs its own Verifier stratum before shipping"
+ },
+ "holds_not_hidden": {
+  "hold_custom_subtotal": 663,
+  "hold_other": 194,
+  "rule": "production stays on these in release 1 (Dhairya); fix custom subtotals with the printed-subtotal reading before release 2"
+ },
+ "full_dry_run": {
+  "cells_file": "bs_dryrun_total_liabilities_cells.jsonl.gz",
+  "sha256_uncompressed": "b57cfaadb6f692cbd6178aca724e59607363915bdcb6ae3e1a47a30e9233c210",
+  "summary": "bs_dryrun_total_liabilities_summary.json"
+ },
+ "flag": {
+  "convention": "lane 2 rule flags: SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.bs_total_liabilities@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence and before-image, not a new write path"
+ },
+ "post_write": "certify rerun (I1-I11) on the 354 touched companies (release1_touched_ciks.txt) via the pipeline-certify workflow; expected: I1 liabilities_nci_added findings drop on these companies; any new finding blocks",
+ "evidence_per_cell": "accession, rule (printed_total | face_sum), reading (A cal roots | B taxonomy total), identity tie within the filer's rounding unit; slot records in slot_rows_bs_cohort.jsonl.gz (0110 -> 0101 shape)"
+}

@@ -92,6 +92,14 @@ RULES: dict[str, Rule] = {
             "lane1",
             "audited identity fixes (script-applied; the override READ is data-driven, not flag-driven)",
         ),
+        # ---- slot records: balance-sheet production write path (release 1)
+        _r(
+            "slot.bs_total_liabilities@1",
+            "-",
+            "lane1",
+            "slot-record total_liabilities_resolved: release-package write path (mapper/slot_bs_total_liabilities.py)",
+            dry_run=True,
+        ),
         # ---- lane 2: metric-stage guards
         _r(
             "ttm.consecutive_window@1",
