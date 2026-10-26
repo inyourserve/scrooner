@@ -1156,19 +1156,20 @@ def test_authority_check_supersedes_a_same_figure_copy_beside_the_promoted_one(c
 
 
 @pytest.mark.integration
-def test_authority_check_reports_a_different_authoritative_figure(conn):
+def test_authority_check_demotes_a_proxy_form_copy_with_a_different_figure_beside_the_10k(
+    conn,
+):
     conn.execute("insert into rcore.filing values (9,1,'P2','DEFA14A','2026-05-01')")
     _f(conn, 900, NI, USD, 1, 2, "100")
     _f(conn, 901, NI, USD, 1, 1, "5000000", auth=False)
     _f(
         conn, 904, NI, USD, 1, 9, "9000000"
-    )  # a materially different authoritative figure
+    )  # a different authoritative figure, but on a proxy form
     _cell(conn, CC_NI, 1, "100", [900])
     plan = _plan_b(conn)
     with conn.cursor() as cur:
-        bad = rr.check_authority(cur, plan, core="rcore")
-    assert len(bad) == 1 and bad[0]["authoritative_after"] == 2
-    assert plan.supersede_fact_ids == []
+        assert rr.check_authority(cur, plan, core="rcore") == []
+    assert plan.supersede_fact_ids == [904]
 
 
 @pytest.mark.integration
@@ -1196,3 +1197,108 @@ def test_apply_demotes_superseded_copies_and_restore_brings_them_back(conn):
     with conn.cursor() as cur:
         rr.restore(cur, "rs", core="rcore", analytics="ranalytics")
     assert _state(conn)[1] == before[1]
+
+
+@pytest.mark.unit
+def test_a_restatement_is_not_a_rounding():
+    D = Decimal
+    assert not rr._rounded_copy_of(
+        D("250000000"), D("247000000")
+    )  # company 3460 FY2023
+    assert rr._rounded_copy_of(D("-3900000000"), D("-3909000000"))  # ST still rounds
+
+
+@pytest.mark.integration
+def test_later_filing_restating_the_year_hides_the_cell(conn):
+    # 3460: 10-Ks in 2024/2025 give 247M, the 2026 10-K restates to 250M (authoritative)
+    _f(conn, 900, NI, USD, 1, 2, "250")
+    _f(conn, 901, NI, USD, 1, 1, "247000000", auth=False)
+    _f(conn, 902, NI, USD, 1, 5, "250000000")
+    _cell(conn, CC_NI, 1, "250", [900])
+    plan = _plan_b(conn)
+    cell = plan.cells[0]
+    assert (cell.action, cell.reason_code) == (
+        rr.ACT_REMOVE,
+        "proxy_filed_copies_disagree",
+    )
+    assert plan.promote_fact_ids == []
+
+
+@pytest.mark.integration
+def test_authority_check_hides_a_cell_whose_promotion_meets_a_restated_authoritative_figure(
+    conn,
+):
+    _f(conn, 901, NI, USD, 1, 1, "5000000", auth=False)
+    _f(conn, 903, NI, USD, 1, 3, "5200000")  # authoritative, materially different
+    cell = rr.CellPlan(
+        "B",
+        rr.RULE_PROXY,
+        1,
+        1,
+        4,
+        "net_income",
+        1,
+        None,
+        Decimal("9"),
+        (900,),
+        (900,),
+        rr.ACT_REPLACE,
+        replacement_fact_id=901,
+        replacement_value=Decimal("5000000"),
+    )
+    plan = rr.Plan("B", rr.RULE_PROXY, cells=[cell], promote_fact_ids=[901])
+    with conn.cursor() as cur:
+        bad = rr.check_authority(cur, plan, core="rcore")
+    assert (
+        plan.cells[0].action == rr.ACT_REMOVE
+        and plan.promote_fact_ids == []
+        and bad == []
+    )
+    assert plan.info["cells_hidden_because_a_later_filing_restates"] == 1
+
+
+@pytest.mark.integration
+def test_authority_check_keeps_one_of_a_10k_and_its_10ka_and_demotes_a_different_8k(
+    conn,
+):
+    conn.execute(
+        "insert into rcore.filing values (9,1,'KA','10-K/A','2026-03-01'),(10,1,'E8','8-K','2026-03-02')"
+    )
+    _f(conn, 910, NI, USD, 2, 1, "562152000")  # 10-K (the source)
+    _f(conn, 911, NI, USD, 2, 9, "562152000")  # 10-K/A, same figure, also authoritative
+    _f(conn, 912, NI, USD, 2, 10, "543705000")  # 8-K, different figures, authoritative
+    cell = rr.CellPlan(
+        "B",
+        rr.RULE_PROXY,
+        1,
+        1,
+        4,
+        "net_income",
+        2,
+        None,
+        Decimal("9"),
+        (900,),
+        (900,),
+        rr.ACT_REPLACE,
+        replacement_fact_id=910,
+        replacement_value=Decimal("562152000"),
+    )
+    plan = rr.Plan("B", rr.RULE_PROXY, cells=[cell])
+    with conn.cursor() as cur:
+        bad = rr.check_authority(cur, plan, core="rcore")
+    assert bad == [] and plan.supersede_fact_ids == [911, 912]
+    assert plan.cells[0].action == rr.ACT_REPLACE
+
+
+@pytest.mark.unit
+def test_whole_dollar_page_with_six_trailing_zeros_is_a_millions_rounding():
+    page = _r4(
+        "CONSOLIDATED STATEMENTS OF INCOME - USD ($)",
+        [("Net income", ["1,893,000,000", "1,574,337,000"])],
+    )
+    face = rr.FilingFace(
+        _FakeClient({"FilingSummary.xml": FS_XML.encode(), "R4.htm": page})
+    )
+    assert face.printed_unit("0000000001", "A", _fx("1893000000")) == Decimal(
+        10**6
+    )  # ABNB FY input

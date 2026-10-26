@@ -503,6 +503,9 @@ def _rounded_copy_of(rounded: Decimal, precise: Decimal) -> bool:
         and exp > 0
         and _sig_digits(rounded) >= 2
         and abs(precise - rounded) <= Decimal(10) ** exp / 2
+        # a rounding never moves a figure by more than 0.5%: 250M against 247M
+        # (company 3460 FY2023) is a restatement, not "250M rounded to 2 digits"
+        and (not precise or abs(precise - rounded) / abs(precise) <= Decimal("0.005"))
     ):
         return True
     for scale in (Decimal(10) ** 9, Decimal(10) ** 6, Decimal(10) ** 3):
@@ -1279,6 +1282,10 @@ class FilingFace:
                 if kind != want or col >= len(row.values) or row.values[col] is None:
                     continue
                 unit = page.printed_unit(row, col)
+                if unit == 1 and fact.value % 10**6 == 0:
+                    # a whole-dollar page whose figure ends in six zeros was rounded
+                    # to millions by the filer (ABNB '1,893,000,000'): unit 1M
+                    unit = Decimal(10**6)
                 if abs(fact.value - row.values[col] * mult) <= unit / 2 + Decimal(
                     "0.5"
                 ):
@@ -1400,19 +1407,29 @@ def _same_figure(a: Decimal, b: Decimal) -> bool:
 
 def check_authority(cur, plan: Plan, core: str = "core") -> list[dict]:
     """Every company/tag/unit/period of a PROMOTED or SOURCE fact must end with
-    EXACTLY ONE authoritative fact (verifier B11). Another authoritative copy of
-    the same figure (a rounded copy, a proxy-form copy) is demoted beside a
-    promoted precise copy (`supersede_fact_ids`); an authoritative copy of a
-    materially different figure is an exception. Keys whose proxy fact is only
-    demoted (cell hidden or filled from another tag) are not checked: nothing
-    is promoted there. Returns the exceptions (also counted in plan.info)."""
-    touched = set(plan.promote_fact_ids)
-    for c in plan.cells:
-        if c.action == ACT_REPLACE:
-            touched |= set(c.replacement_source_ids) | (
-                {c.replacement_fact_id} if c.replacement_fact_id else set()
-            )
-    ids = sorted(touched)
+    EXACTLY ONE authoritative fact (verifier B11/B13). Resolution, in order:
+      1. an authoritative fact filed on a non-periodic form (8-K, proxy) never
+         stays beside an authoritative 10-K/10-Q-family fact (company 4938: the
+         8-K carries different figures from the 10-K);
+      2. further authoritative copies of the SAME figure (a 10-K/A beside its
+         10-K, a rounded copy) are demoted (`supersede_fact_ids`);
+      3. an authoritative copy of a materially different figure means a later
+         filing restated the period: the cells that use the key are hidden
+         (`proxy_filed_copies_disagree` / `derived_inputs_disagree`) and their
+         promotions dropped (company 3460 FY2023: 247M vs the restated 250M).
+    Keys whose proxy fact is only demoted are not checked: nothing is promoted
+    there. Returns the remaining exceptions (also counted in plan.info)."""
+
+    def used_ids(with_promote: bool = True) -> set[int]:
+        out = set(plan.promote_fact_ids) if with_promote else set()
+        for c in plan.cells:
+            if c.action == ACT_REPLACE:
+                out |= set(c.replacement_source_ids) | (
+                    {c.replacement_fact_id} if c.replacement_fact_id else set()
+                )
+        return out
+
+    ids = sorted(used_ids())
     keys: set[tuple] = set()
     for i in range(0, len(ids), 2000):
         cur.execute(_q(AUTH_KEYS_SQL, core), {"ids": ids[i : i + 2000]})
@@ -1433,37 +1450,80 @@ def check_authority(cur, plan: Plan, core: str = "core") -> list[dict]:
         for fid, co, cn, un, pe, auth, form, val in cur.fetchall():
             state[(co, cn, un, pe)].append((fid, auth, form, Decimal(val)))
     demote = {f.fact_id for f in plan.facts}
-    promote = set(plan.promote_fact_ids)
+    hidden_by_restatement = 0
     supersede: set[int] = set()
-    bad = []
-    for key, facts in state.items():
-        promoted = [f for f in facts if f[0] in promote]
-        if promoted:
-            for fid, auth, _, val in facts:
-                if (
-                    auth
-                    and fid not in demote
-                    and fid not in promote
-                    and _same_figure(val, promoted[0][3])
-                ):
-                    supersede.add(fid)
-        final = [
-            fid
-            for fid, auth, _, _ in facts
-            if ((auth and fid not in demote) or fid in promote) and fid not in supersede
-        ]
-        if len(final) != 1:
-            bad.append(
-                {
-                    "company_id": key[0],
-                    "concept_id": key[1],
-                    "unit_id": key[2],
-                    "period_id": key[3],
-                    "authoritative_after": len(final),
-                    "authoritative_fact_ids": ";".join(map(str, final)),
-                    "all_fact_ids": ";".join(str(f[0]) for f in facts),
+    bad: list[dict] = []
+    for _pass in range(3):
+        used = used_ids()
+        promote = set(plan.promote_fact_ids)
+        supersede = set()
+        bad = []
+        for key, facts in state.items():
+            auth_now = [
+                f for f in facts if (f[1] and f[0] not in demote) or f[0] in promote
+            ]
+            if len(auth_now) > 1:
+                if any(f[2] in PERIODIC_FORMS_DOMESTIC for f in auth_now):
+                    supersede |= {
+                        f[0] for f in auth_now if f[2] not in PERIODIC_FORMS_DOMESTIC
+                    }
+                    auth_now = [f for f in auth_now if f[0] not in supersede]
+            if len(auth_now) > 1:
+                anchor = next(
+                    (f for f in auth_now if f[0] in promote),
+                    next((f for f in auth_now if f[0] in used), auth_now[0]),
+                )
+                supersede |= {
+                    f[0]
+                    for f in auth_now
+                    if f[0] != anchor[0] and _same_figure(f[3], anchor[3])
                 }
+                auth_now = [f for f in auth_now if f[0] not in supersede]
+            if len(auth_now) != 1:
+                bad.append(
+                    {
+                        "company_id": key[0],
+                        "concept_id": key[1],
+                        "unit_id": key[2],
+                        "period_id": key[3],
+                        "authoritative_after": len(auth_now),
+                        "authoritative_fact_ids": ";".join(str(f[0]) for f in auth_now),
+                        "all_fact_ids": ";".join(str(f[0]) for f in facts),
+                        "_key_ids": {f[0] for f in facts},
+                    }
+                )
+        if not bad:
+            break
+        # a restated period: hide the cells that use the key, drop their promotions
+        bad_ids = set().union(*(b["_key_ids"] for b in bad))
+        for i, c in enumerate(plan.cells):
+            if c.action != ACT_REPLACE:
+                continue
+            srcs = set(c.replacement_source_ids) | (
+                {c.replacement_fact_id} if c.replacement_fact_id else set()
             )
+            if srcs & bad_ids:
+                plan.cells[i] = replace(
+                    c,
+                    action=ACT_REMOVE,
+                    reason_code=(
+                        "derived_inputs_disagree"
+                        if c.replacement_source_ids
+                        else "proxy_filed_copies_disagree"
+                    ),
+                    replacement_fact_id=None,
+                    replacement_value=None,
+                    replacement_form=None,
+                    replacement_accession=None,
+                    replacement_was_authoritative=None,
+                    replacement_source_ids=(),
+                    note="a later filing restates this period",
+                )
+                hidden_by_restatement += 1
+        keep = used_ids(with_promote=False)
+        plan.promote_fact_ids = [p for p in plan.promote_fact_ids if p in keep]
+    for b in bad:
+        b.pop("_key_ids", None)
     plan.supersede_fact_ids = sorted(supersede)
     plan.info["authority_keys_checked"] = len(state)
     plan.info["authority_keys_zero"] = sum(b["authoritative_after"] == 0 for b in bad)
@@ -1471,6 +1531,7 @@ def check_authority(cur, plan: Plan, core: str = "core") -> list[dict]:
         b["authoritative_after"] > 1 for b in bad
     )
     plan.info["authoritative_copies_superseded"] = len(supersede)
+    plan.info["cells_hidden_because_a_later_filing_restates"] = hidden_by_restatement
     plan.authority_exceptions = bad
     return bad
 
@@ -1863,6 +1924,11 @@ def run_dry_run(
 def _write_review_files(out_dir: Path, plan: Plan, cohort: set[int] | None) -> None:
     """Files for the Release Manager's reviewed plan (nothing here touches the DB)."""
     tag = plan.family
+    with (out_dir / f"{tag}_superseded_facts.csv").open("w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["fact_id", "is_authoritative_now", "new_is_authoritative"])
+        for fid in sorted(set(plan.supersede_fact_ids)):
+            w.writerow([fid, True, False])
     if plan.authority_exceptions:
         with (out_dir / f"{tag}_authority_exceptions.csv").open("w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=list(plan.authority_exceptions[0]))
@@ -1950,6 +2016,7 @@ def _write_review_files(out_dir: Path, plan: Plan, cohort: set[int] | None) -> N
         "counts": {
             "facts_to_demote": len(plan.facts),
             "facts_to_promote": len(set(plan.promote_fact_ids)),
+            "facts_to_supersede": len(set(plan.supersede_fact_ids)),
             "cells_replace": sum(c.action == ACT_REPLACE for c in plan.cells),
             "cells_remove": sum(c.action == ACT_REMOVE for c in plan.cells),
             "cells_review_not_retired": sum(c.action == ACT_REVIEW for c in plan.cells),
