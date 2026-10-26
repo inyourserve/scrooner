@@ -2,6 +2,71 @@
 
 Period Engineer. Rules `split.event_basis@1` (dry_run) + `pershare.never_derive@1` (classification only). Read-only: 6 connections max, `default_transaction_read_only`, statement_timeout 20s, chunks of 50, peak 8 pooler/app backends (team cap 30). 1,000 of 1,000 companies processed, 0 failures. Branch `work/period-engineer/split-rebase`; runner `pipeline/scripts/split_rebase_cohort_dryrun.py`; per-cell table `doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_20261024.csv.gz` (old value, new value, class, status, factor, chosen fact and accession, every candidate). Cohort file `data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv`. Evidence: DATA-INFERRED unless a row says FILING-CHECKED (the Verifier's 194-value sample on the 11 companies passed with 0 wrong, VERIFY-SPLIT-REBASE-2026-10-24.md).
 
+## Run 6, 2026-10-26 after VERIFY-SPLIT-RUN5-2026-10-26.md
+
+Read-only, 2 connections, statement_timeout 20s, chunks of 50, peak 6 pooler/app backends. 1,000 of 1,000 companies, 0 failures. The per-cell CSV is regenerated with two new columns, `chosen_tag` and `note`. Events: 160 confirmed, 34 review, 38 pending, 876 rejected. Invariant companies: HWM, KDP, CBSH, CELH.
+
+| Class | All periods | Periods ending 2015-01-01 or later |
+|---|---|---|
+| unchanged | 223,103 | 207,937 |
+| hidden:no_filed_source | 15,855 | 15,188 |
+| share_count_rebased | 4,660 | 4,071 |
+| hidden:dividend_basis_pending | 3,686 | 3,280 |
+| was_unadjusted | 2,922 | 2,394 |
+| rounding_only | 2,071 | 1,841 |
+| hidden:restated_between_filings | 1,711 | 1,607 |
+| was_double_divided | 1,376 | 1,270 |
+| new_value | 1,088 | 1,069 |
+| hidden:basis_review | 687 | 575 |
+| still_blank_with_reason | 628 | 596 |
+| hidden:basis_review_company_invariant | 546 | 471 |
+| hidden:basis_conflict | 285 | 281 |
+| other_changed | 258 | 238 |
+| hidden:dividend_per_share_invalid | 198 | 185 |
+| hidden:units_scale_suspect | 182 | 164 |
+| hidden:zero_share_count_filed | 69 | 62 |
+| **total** | 259,325 | 241,229 |
+
+**Basis consistency, all 681 companies with shown dividends:**
+- Before (run 5, chosen tags looked up read-only from core.fact): 240 companies mixed declared and paid.
+- After: 0. 65 companies still show some cells from the other tag, but only where the value equals the sum of the basis tag's filed quarters for the same span (394 cells, note "equals the sum of its ... quarters").
+
+**Fixes (each tested; 23 targeted mutants, all killed):**
+1. **One dividend basis per company (AC-24 default).**
+   - The basis is the tag with more filed quarters ending 2015 or later. It falls back to the whole history, then to every filed span, when there are fewer than four. A tie goes to Declared.
+   - A shown cell on the other tag is replaced by the basis tag's value when all of the basis tag's copies agree and one is from the period's own vintage. Otherwise it is hidden as `dividend_basis_pending`.
+   - The year-solve exemption is removed: AMT Q4 2023 is no longer 1.62 paid.
+   - The basis pass now runs before the same-filing checks.
+2. **Zero dividends beside a paid dividend.**
+   - A positive CashPaid DPS in the same filing counts as evidence (AFL Q1 2026 now 0.61).
+   - The generic `PaymentsOfDividends` (which also carries preferred, NCI and dividend-equivalent payments) counts only at or above one cent a quarter over the filing's own share count, and at or above a quarter of the nearest filed quarterly rate. This releases BPOP Q1 2015 0 and NWSA FY2015 0. WYNN Q1 2021 0 is hidden as off its CashPaid basis.
+   - A contradicted zero original no longer blocks the cell (AES).
+3. **Invalid-dividend false holds.**
+   - Annual vs quarters counts one quarter per end date (BX FY2014 1.92).
+   - "Annual on a quarter" uses a relative tolerance only. It yields to the filing's own common dividends paid over its share count, within 10% (WY Q1 2022 1.63), to the same filing's prior-year same quarter at the same value (VAL Q1 2019 0.04), and to two or more filings of the value including one from its own vintage (HL Q1 2021 0.00875).
+   - Results: FE FY2016 1.44 is shown (equals CashPaid 0.36 × 4). LLY FY2019 2.68 is hidden as off its CashPaid basis.
+4. **Clerical restated holds.**
+   - A per-share copy off by ×1,000 or ×1,000,000: the majority wins; on a tie, the copy within 10× of the local magnitude wins when the other is at least 100× off (NPO 1.29; BE -0.10 and 9M -0.38).
+   - A share count corrected by an amendment within 60 days (ANF, BWXT, SNDK). The amended original is also kept out of the share series.
+   - For share counts the original stands over a lone later copy. TSCO and TTEK now show 136,416,000 × 5 and 54,714,000 × 5, re-based by their confirmed 5-for-1 splits.
+   - A units-scale original no longer blocks the cell (AM 484,042,000).
+5. **Basis false holds.**
+   - A share-step-only event at an offering-sized ratio (between 1/2 and 2) with no per-share or ratio evidence is rejected (SYRE 2022 and 2025 5:4).
+   - Balance-sheet and weighted counts dated more than 130 days before their filing are left out of the share series (LYFT's 2018 count in its 2020 10-K).
+   - A zero per-share value is the same on every basis (QXO Q2 2018).
+   - A confirmed split inside an issuance or merger step within 1.5× of the event ratio places earlier filings (NLY 1:4, SIRI 1:10). NLY Q4 2016 7.16, Q1 2021 DPS 0.88 and 9M 2020 DPS 2.76 are shown.
+6. **Removed.** The run-5 "annual on a quarter" ratio guard is gone. It was dead logic: a sum of four positive quarters is always at least 3× the second-smallest.
+
+**Still held, or not released:**
+- SIRI H1 2024 basic 1.76: `basis_conflict`. The old entity's copy (0.15 × 10 = 1.5) conflicts with the current entity's 1.76, and the predecessor-accounting call is not made by this pass.
+- HL FY2020 0.01625, LLY FY2019 2.68, WYNN Q1 2021 0, MSM 9M FY2021 5.75, AMT 2023 quarters, CVI Q2 2020: hidden as off the company's dividend basis, per the one-basis rule.
+- HL Q3 2021: hidden. The cell resolves to a later 0.01 copy over the own-vintage 0.01125 on two tags.
+- TDG FY2016 zeros are now shown (CashPaid 0 in three 10-Ks; the 3M paid is below a quarter of the nearest filed rate, 24). The Verifier called 9M FY2016 a justified hold; this needs a recheck against the filing.
+- The 21 policy holds for full-retrospective restatements stay hidden, per the founder's ruling.
+- `other_changed` rose from 190 to 258. 94 cells are new, all dividends, mostly a stored declared value (often 0) replaced by the company's paid-basis copy (BA, LMT, AFL, MKC, ALV, AES, DCI -379.62 -> 0.19). Phase 1 still does not write them.
+
+Evidence: DATA-INFERRED from core.fact copies. The Verifier's verdicts cited above are FILING-CHECKED by the Verifier.
+
 ## Run 5, 2026-10-26 after Verifier 1's run-4 findings
 
 Read-only, 2 connections, statement_timeout 20s, chunks of 50, peak 5 pooler/app backends. 1,000 of 1,000 companies, 0 failures. Per-cell CSV regenerated (same path). Events: 160 confirmed, 45 review, 38 pending, 880 rejected. Invariant companies: HWM, KDP, CBSH, CELH (GL released).

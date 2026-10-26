@@ -66,7 +66,7 @@ from __future__ import annotations
 import hashlib
 import itertools
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 from datetime import date, timedelta
@@ -203,13 +203,8 @@ DPS_SCALE_MIN_OTHERS = 3
 # keep today's cell untouched. Changing this is a Standardization Lead call.
 RESTATEMENT_POLICY = "hide"
 
-# One DPS basis per series while AC-24 (declared vs paid) is open:
-# "hide_off_basis" (default) shows a mixed series on the mapping's
-# priority-1 tag (CommonStockDividendsPerShareDeclared) and hides only the
-# cells that exist solely on another tag; "hide_series" hides the whole
-# mixed series. Cohort-1000 counts for both are in
-# data-team/strategy/team/SPLIT-REBASE-COHORT-DRYRUN-2026-10-24.md.
-DPS_MIXED_POLICY = "hide_off_basis"
+# One dividend basis per COMPANY while AC-24 (declared vs paid) is open
+# (Verifier run 5): see company_dividend_basis / _one_dividend_basis.
 
 HIDDEN_REASON_TEXT = {
     HIDE_BASIS_REVIEW: "share basis under review (a possible split is not confirmed by two kinds of filing evidence)",
@@ -476,25 +471,50 @@ def build_filed_pairs(
     return pairs
 
 
+SERIES_MAX_AGE_DAYS = 130
+
+
 def build_share_series(facts: Iterable[SourceFact]) -> list[SourceFact]:
     """One share count per periodic filing: the latest-instant cover count,
     else the latest-instant balance-sheet count; median of ties."""
     by_filing: dict[int, dict[str, list[SourceFact]]] = defaultdict(
         lambda: defaultdict(list)
     )
+    facts = list(facts)
+    # An original count an amendment corrects within 60 days is a typo, not
+    # a share step (SNDK 10-Q 114,863,251 vs the 10-Q/A's 144,863,251).
+    amended = {
+        (g.tag, g.period_id): g
+        for g in facts
+        if _is_amendment(g) and g.tag in SERIES_TAGS and g.usable_source
+    }
     for f in facts:
+        g = amended.get((f.tag, f.period_id))
         if (
             f.tag in SERIES_TAGS
             and f.unit == "shares"
             and f.usable_source
             and f.value > 0
             and not _is_amendment(f)
+            and not (
+                g is not None
+                and g.value != f.value
+                and 0 <= (g.filing_date - f.filing_date).days <= 60
+            )
         ):
             by_filing[f.filing_id][f.tag].append(f)
     series: list[SourceFact] = []
     for tags in by_filing.values():
         for tag in SERIES_TAGS:
-            cands = tags.get(tag)
+            # a count dated long before its own filing is not the filing's
+            # current count (LYFT 10-K 2020-02-28: CommonStockSharesOutstanding
+            # at 2018-12-31; Verifier run 5)
+            cands = [
+                c
+                for c in tags.get(tag, [])
+                if tag == "EntityCommonStockSharesOutstanding"
+                or (c.filing_date - c.end_date).days <= SERIES_MAX_AGE_DAYS
+            ]
             if not cands:
                 continue
             latest = max(c.end_date for c in cands)
@@ -904,6 +924,15 @@ def detect_events(
                     f"{len(ev.pairs)} filed pair(s) contradicted by {spanning_one} ratio-1 pairs",
                 )
                 continue
+        if not ev.pairs and not ev.disclosures and Fraction(1, 2) < ev.ratio < 2:
+            # an offering- or buyback-sized share move with no per-share or
+            # ratio evidence is not a split candidate (SYRE 2022 and 2025
+            # +21% / +28% read as 5:4; Verifier run 5: false holds)
+            ev.status, ev.note = (
+                "rejected",
+                "share-count step only, at an offering-sized ratio",
+            )
+            continue
         ev.status, ev.note = "review", "one evidence kind only"
 
     # Same ratio confirmed twice within the merge distance: one economic event.
@@ -1080,6 +1109,23 @@ def compute_filing_basis(
                 and id(stp) not in rejected_steps
             ):
                 acc *= stp.ratio
+            elif stp is not None and stp.ratio is None:
+                # A confirmed split inside a step that also carries issuance
+                # or a merger (NLY 1:4 in 2022 with offerings: 1.46B -> 0.47B;
+                # SIRI 1:10 with the Liberty merger): the step is the split
+                # when it lies within 1.5x of the event's ratio.
+                inside_step = [
+                    e
+                    for e in confirmed
+                    if stp.old_fact.filing_date
+                    < e.basis_date
+                    <= stp.new_fact.filing_date
+                ]
+                if len(inside_step) == 1 and stp.old_fact.value > 0:
+                    k = inside_step[0].ratio
+                    r = Fraction(stp.new_fact.value) / Fraction(stp.old_fact.value)
+                    if k * Fraction(2, 3) <= r <= k * Fraction(3, 2):
+                        acc *= k
             observed[series[i].filing_id] = acc
 
     out: dict[int, FilingBasis] = {}
@@ -1261,8 +1307,7 @@ def resolve_cells(
         period_span[f.period_id] = (f.start_date, f.end_date)
         if f.start_date is not None:
             period_days[f.period_id] = (f.end_date - f.start_date).days
-        if f.tag in DIVIDENDS_PAID_TAGS and f.usable_source and f.value > 0:
-            paid[(f.filing_id, f.start_date, f.end_date)] = f.value
+    paid = _common_dividend_paid_evidence(facts, share_refs)
 
     # (start, end) -> current-basis DPS of the latest usable 3-month copy
     quarter_dps: dict[tuple[date, date], Decimal] = {}
@@ -1289,28 +1334,6 @@ def resolve_cells(
                     convert(f.value, b_.factor, PER_SHARE),
                 )
     quarter_dps = {k_: v[2] for k_, v in _q_best.items()}
-    # (tag, start, end) -> current-basis DPS of the latest usable copy, any span
-    _t_best: dict[tuple, tuple] = {}
-    for f in facts:
-        b_ = basis.get(f.filing_id)
-        if (
-            f.tag
-            in (
-                "CommonStockDividendsPerShareDeclared",
-                "CommonStockDividendsPerShareCashPaid",
-            )
-            and f.usable_source
-            and b_ is not None
-            and b_.usable
-        ):
-            k3 = (f.tag, f.start_date, f.end_date)
-            if k3 not in _t_best or (f.filing_date, f.fact_id) > _t_best[k3][:2]:
-                _t_best[k3] = (
-                    f.filing_date,
-                    f.fact_id,
-                    convert(f.value, b_.factor, PER_SHARE),
-                )
-    dps_by_tag_span = {k3: v[2] for k3, v in _t_best.items()}
     # (start, end) -> every usable filed DPS copy on either tag, current basis
     dps_copies_by_span: dict[tuple, list[tuple[SourceFact, Decimal]]] = defaultdict(
         list
@@ -1332,6 +1355,15 @@ def resolve_cells(
             )
 
     all_conv: dict[tuple[str, int], list] = {}
+    # concept -> (end, |value|) of every usable filed copy: the local scale a
+    # units-scale copy is judged against (BE Q3 2025 -100 vs -0.10)
+    local_abs: dict[str, list[tuple[date, Decimal, int]]] = defaultdict(list)
+    for concept_, (kind_, base_) in TARGETS.items():
+        if kind_ != PER_SHARE:
+            continue
+        for f in facts:
+            if f.tag in mapped_tags.get(base_, []) and f.usable_source and f.value != 0:
+                local_abs[concept_].append((f.end_date, abs(f.value), f.period_id))
     out: list[CellResult] = []
     for concept, (kind, base) in TARGETS.items():
         tags = mapped_tags.get(base, [])
@@ -1379,6 +1411,14 @@ def resolve_cells(
             usable = [
                 f for f in cands if f.filing_id in basis and basis[f.filing_id].usable
             ]
+            if (
+                not usable
+                and kind == PER_SHARE
+                and cands
+                and all(f.value == 0 for f in cands)
+            ):
+                # zero is zero on every share basis (QXO Q2 2018; Verifier run 5)
+                usable = [f for f in cands if f.filing_id in basis]
             if not usable:
                 st = {basis[f.filing_id].status for f in cands if f.filing_id in basis}
                 reason = HIDE_BASIS_CONFLICT if "conflict" in st else HIDE_BASIS_REVIEW
@@ -1398,7 +1438,8 @@ def resolve_cells(
                 continue
             conv = []
             for f in usable:
-                fac = basis[f.filing_id].factor
+                b_f = basis[f.filing_id]
+                fac = b_f.factor if b_f.usable and b_f.factor is not None else ONE
                 conv.append((f, fac, convert(f.value, fac, kind)))
             conv.sort(key=lambda x: (x[0].filing_date, x[0].fact_id))
             all_conv[(concept, pid)] = list(conv)
@@ -1449,12 +1490,39 @@ def resolve_cells(
                             )
                         )
                         continue
+            if kind == PER_SHARE and len(conv) > 1:
+                kept = _per_share_scale_pick(
+                    conv,
+                    [
+                        (e_, v_)
+                        for e_, v_, p_ in local_abs.get(concept, [])
+                        if p_ != pid
+                    ],
+                    conv[0][0].end_date,
+                )
+                if kept is None:
+                    out.append(
+                        CellResult(
+                            concept, pid, HIDE_UNITS_SCALE, None, (), None, None, ()
+                        )
+                    )
+                    continue
+                if len(kept) < len(conv):
+                    note = f"dropped {len(conv) - len(kept)} copy(ies) off by a units scale"
+                    conv = kept
             # Fix (1), Verifier 1000: the period's OWN ORIGINAL filing (the
             # earliest periodic copy) must be usable and agree with the value
             # shown; a later copy alone never decides (TRMB, DCI shift
             # comparatives by a year; XYL, TSCO, GLPI put the current rate on
             # a prior period; OHI, BWA, WTRG, OGE, TEX one-off errors).
             original = min(cands, key=lambda f: (f.filing_date, f.fact_id))
+            if "off by a units scale" in note and not any(
+                x[0] is original for x in conv
+            ):
+                # the original was the units-scale copy (AM 10-K 484,042 vs
+                # 484,042,000 in four later filings): the earliest kept copy
+                # stands in for it
+                original = conv[0][0]
             if not any(x[0] is original for x in conv):
                 out.append(
                     CellResult(
@@ -1481,6 +1549,12 @@ def resolve_cells(
                 ]
                 if zeros and len(zeros) < len(conv):
                     conv = [x for x in conv if x not in zeros]
+                    if not any(x[0] is original for x in conv):
+                        # the original was a contradicted zero (AES Q2 2020)
+                        original = min(
+                            (x[0] for x in conv),
+                            key=lambda f: (f.filing_date, f.fact_id),
+                        )
             if concept == "dividends_per_share_resolved" and len(conv) > 1:
                 # A DPS on a longer context below the sum of the company's own
                 # filed quarters inside it is a quarterly rate on a YTD or
@@ -1550,6 +1624,26 @@ def resolve_cells(
                         f"dropped {len(shifted)} label-shifted copy(ies)"
                     )
                     conv, agree = rest, True
+            if not agree and len(conv) > 1 and kind == SHARES:
+                # A share count corrected by an amendment filed within 60 days
+                # of the original (ANF 10-Q/A next day 68,016,186 vs 86,016,786;
+                # BWXT 10-K/A; SNDK 10-Q/A 144,863,251 vs 114,863,251; Verifier
+                # run 5): the amendment's count, if no later copy disagrees.
+                orig_f = conv_original(conv, original)[0]
+                amends = [
+                    x
+                    for x in conv
+                    if _is_amendment(x[0])
+                    and 0 <= (x[0].filing_date - orig_f.filing_date).days <= 60
+                    and not _all_agree([x, conv_original(conv, original)], kind)
+                ]
+                if amends:
+                    fixed = [
+                        x for x in conv if x[0].filing_date >= amends[0][0].filing_date
+                    ]
+                    if _all_agree(fixed, kind):
+                        note = (note + "; " if note else "") + "corrected by amendment"
+                        conv, agree = fixed, True
             if not agree and len(conv) > 1:
                 # Majority of LATER copies (Verifier other_changed recheck): a
                 # lone outlier never beats agreeing later copies (TEX Q2 2020
@@ -1618,7 +1712,17 @@ def resolve_cells(
                     )
                     agree = _all_agree(conv, kind)
                 elif (
-                    concept == "dividends_per_share_resolved"
+                    (
+                        concept == "dividends_per_share_resolved"
+                        # a count at a date is not restated either; a lone later
+                        # copy is another date's count (TSCO 2015-03-28 vs the
+                        # 2014-09-27 count) or a typo (TTEK 2019-06-30)
+                        or (
+                            kind == SHARES
+                            and (original.filing_date - original.end_date).days
+                            <= OWN_VINTAGE_DAYS
+                        )
+                    )
                     and orig_group
                     and any(x[0] is original for x in conv)
                 ):
@@ -1629,7 +1733,7 @@ def resolve_cells(
                     # another year's rate on the comparative).
                     note = (
                         note + "; " if note else ""
-                    ) + "original filing's value (dividends are not restated)"
+                    ) + "original filing's value (not restated)"
                     conv = sorted(
                         orig_group, key=lambda x: (x[0].filing_date, x[0].fact_id)
                     )
@@ -1679,15 +1783,24 @@ def resolve_cells(
     out = _dps_year_solve(
         out, all_conv, dps_copies_by_span, mapped_tags.get("dividends_per_share", [])
     )
-    out = _dps_same_filing_checks(out, paid)
-    return _dps_scale_guard(
-        _dps_scale_guard(
-            _one_dividend_basis(
-                out, mapped_tags.get("dividends_per_share", []), dps_by_tag_span
-            )
-        ),
-        "shares_outstanding_resolved",
+    out = _one_dividend_basis(
+        out, mapped_tags.get("dividends_per_share", []), dps_copies_by_span, paid
     )
+    dps_by_filing: dict[int, list[tuple[date | None, date, Decimal, date]]] = (
+        defaultdict(list)
+    )
+    for f in facts:
+        if f.usable_source and f.tag in (
+            "CommonStockDividendsPerShareDeclared",
+            "CommonStockDividendsPerShareCashPaid",
+        ):
+            dps_by_filing[f.filing_id].append(
+                (f.start_date, f.end_date, f.value, f.filing_date)
+            )
+    out = _dps_same_filing_checks(
+        out, paid, common_dividend_paid_per_share(facts, share_refs), dps_by_filing
+    )
+    return _dps_scale_guard(_dps_scale_guard(out), "shares_outstanding_resolved")
 
 
 DIVIDENDS_PAID_TAGS = ("PaymentsOfDividendsCommonStock", "PaymentsOfDividends")
@@ -1759,6 +1872,58 @@ YEAR_SOLVE_TOL = Decimal("0.0051")
 YEAR_SOLVE_NOTE = "set by the fiscal year's filed totals"
 
 
+PER_SHARE_SCALE_STEPS = (Decimal(1000), Decimal(10**6))
+
+
+def _per_share_scale_pick(
+    conv: list[tuple[SourceFact, Fraction, Decimal]],
+    local: list[tuple[date, Decimal]],
+    end: date,
+) -> list | None:
+    """Per-share copies that disagree only by a units scale (x1,000 or
+    x1,000,000; NPO Q3 2022 diluted 1.29 vs 1,290,000 in the 10-K, BE Q3 2025
+    -0.10 vs -100). Keeps the strict majority; on a tie, the group within 10x
+    of the company's local median magnitude (other periods within 1,100
+    days) while the other is at least 100x off; None (hide) otherwise.
+    Copies with no such relation are returned unchanged."""
+    groups: list[list] = []
+    for x in conv:
+        for g in groups:
+            if g[0][2] == x[2]:
+                g.append(x)
+                break
+        else:
+            groups.append([x])
+    if len(groups) != 2:
+        return conv
+    a, b = groups[0][0][2], groups[1][0][2]
+    if a == 0 or b == 0 or (a > 0) != (b > 0):
+        return conv
+    hi, lo = (abs(a), abs(b)) if abs(a) > abs(b) else (abs(b), abs(a))
+    if not any(abs(hi / lo - k) <= k * Decimal("0.005") for k in PER_SHARE_SCALE_STEPS):
+        return conv
+    groups.sort(key=len, reverse=True)
+    if len(groups[0]) > len(groups[1]):
+        keep = groups[0]
+    else:
+        others = sorted(
+            v for e_, v in local if abs((e_ - end).days) <= LOCAL_WINDOW_DAYS
+        )
+        if len(others) < 3:
+            return None
+        med = others[len(others) // 2]
+
+        def off(v: Decimal) -> Decimal:
+            r = abs(v) / med
+            return r if r >= 1 else 1 / r
+
+        g0, g1 = sorted(groups, key=lambda g: off(g[0][2]))
+        if not (off(g0[0][2]) <= 10 and off(g1[0][2]) >= 100):
+            return None
+        keep = g0
+    return sorted(keep, key=lambda x: (x[0].filing_date, x[0].fact_id))
+
+
 def _dps_year_solve(
     cells: list[CellResult],
     all_conv: Mapping[tuple[str, int], list],
@@ -1807,6 +1972,13 @@ def _dps_year_solve(
         if t not in tags
     ]
 
+    def total_tag(start: date, end: date) -> str | None:
+        copies = span_copies.get((start, end), [])
+        for t in tag_order:
+            if len({v for f, v in copies if f.tag == t}) == 1:
+                return t
+        return None
+
     def total(start: date, end: date) -> Decimal | None:
         """The filed total for a span from the first tag whose copies of it
         all agree; a tag that disagrees with itself is not a total (COP's
@@ -1822,6 +1994,7 @@ def _dps_year_solve(
         {k for k in span_copies if k[0] is not None and (k[1] - k[0]).days >= 350}
     )
     changes: dict[int, tuple[Decimal, SourceFact]] = {}
+    year_tag: dict[int, str | None] = {}
     cum_changes: dict[int, tuple[Decimal, SourceFact] | None] = {}
     for fs, fe in fy_spans:
         fy_total = total(fs, fe)
@@ -1903,6 +2076,7 @@ def _dps_year_solve(
                 None,
             )
             cum_changes[cc.period_id] = match
+            year_tag[cc.period_id] = total_tag(fs, fe)
         for pid, (v, f) in zip(quarters, hits[0]):
             cur = qcells[pid]
             if cur.status == SHOWN and cur.value == v:
@@ -1910,6 +2084,7 @@ def _dps_year_solve(
             if cur.status not in (SHOWN, HIDE_RESTATED, HIDE_BASIS_CONFLICT):
                 continue
             changes[pid] = (v, f)
+            year_tag[pid] = total_tag(fs, fe)
     if not changes and not cum_changes:
         return cells
     out = []
@@ -1947,14 +2122,156 @@ def _dps_year_solve(
                 f,
                 c.factor,
                 c.candidates,
-                YEAR_SOLVE_NOTE,
+                f"{YEAR_SOLVE_NOTE} ({year_tag.get(c.period_id)})",
             )
         )
     return out
 
 
+DPS_BASIS_FROM = date(2015, 1, 1)
+OWN_VINTAGE_DAYS = 180
+PAID_MIN_PER_QUARTER = Decimal("0.01")
+
+
+def _confirmed_by_own_vintage_copies(
+    c: CellResult,
+    dps_by_filing: Mapping[int, list[tuple[date | None, date, Decimal, date]]] | None,
+) -> bool:
+    """Two or more filings file the value for this quarter (either dividend
+    tag), one of them within 180 days of the quarter end: a real rate (HL Q3
+    2021 0.01125 in 0001437749-21-025360 and 0001193125-22-281241), not one
+    filing's annual figure on a quarter."""
+    if not dps_by_filing or c.chosen is None:
+        return False
+    s0, e0, v0 = c.chosen.start_date, c.chosen.end_date, c.value
+    dates = {
+        fd
+        for rows in dps_by_filing.values()
+        for s_, e_, v, fd in rows
+        if s_ == s0 and e_ == e0 and v == v0
+    }
+    return len(dates) >= 2 and any((fd - e0).days <= OWN_VINTAGE_DAYS for fd in dates)
+
+
+def _same_as_prior_year_quarter(
+    c: CellResult,
+    dps_by_filing: Mapping[int, list[tuple[date | None, date, Decimal, date]]] | None,
+) -> bool:
+    """The chosen filing also files the same quarter a year earlier at the
+    same value: a steady quarterly rate, not an annual amount (VAL Q1 2019
+    0.04 beside Q1 2018 0.04 in 0000314808-19-000085)."""
+    if not dps_by_filing or c.chosen is None or c.chosen.start_date is None:
+        return False
+    for s_, e_, v, _fd in dps_by_filing.get(c.chosen.filing_id, []):
+        if (
+            s_ is not None
+            and abs((c.chosen.end_date - e_).days - 365) <= 10
+            and abs((c.chosen.start_date - s_).days - 365) <= 10
+            and v == c.chosen.value
+        ):
+            return True
+    return False
+
+
+def _paid_confirms(
+    c: CellResult,
+    paid_per_share: Mapping[tuple[int, date | None, date], Decimal] | None,
+) -> bool:
+    """The same filing's common dividends paid over its own share count equal
+    the value within 10% (WY Q1 2022 1.63: 1,218M paid, base plus variable;
+    VAL Q1 2019 0.04: 4.5M over the re-based weighted shares)."""
+    if not paid_per_share or c.chosen is None or c.value is None or c.value <= 0:
+        return False
+    ps = paid_per_share.get(
+        (c.chosen.filing_id, c.chosen.start_date, c.chosen.end_date)
+    )
+    return ps is not None and abs(ps - c.value) <= Decimal("0.10") * c.value
+
+
+def common_dividend_paid_per_share(
+    facts: list[SourceFact], share_refs: Mapping[int, list[Decimal]]
+) -> dict[tuple[int, date | None, date], Decimal]:
+    """(filing, start, end) -> PaymentsOfDividendsCommonStock over the
+    filing's median share count (cover and weighted averages)."""
+    out: dict[tuple[int, date | None, date], Decimal] = {}
+    for f in facts:
+        if (
+            f.tag != "PaymentsOfDividendsCommonStock"
+            or not f.usable_source
+            or f.value <= 0
+        ):
+            continue
+        refs = sorted(share_refs.get(f.filing_id, []))
+        if refs:
+            out[(f.filing_id, f.start_date, f.end_date)] = (
+                f.value / refs[len(refs) // 2]
+            )
+    return out
+
+
+def _common_dividend_paid_evidence(
+    facts: list[SourceFact], share_refs: Mapping[int, list[Decimal]]
+) -> dict[tuple[int, date | None, date], Decimal]:
+    """(filing, start, end) -> evidence that the filing shows a COMMON
+    dividend paid for that period: PaymentsOfDividendsCommonStock, or a
+    positive CommonStockDividendsPerShareCashPaid. The generic
+    PaymentsOfDividends also carries preferred, noncontrolling and
+    dividend-equivalent payments (BPOP Q1 2015 620K before its first common
+    dividend, WYNN Q1 2021 295K while suspended; Verifier run 5), so it
+    counts only when, over the filing's own share count, it is at least a
+    cent a quarter and at least a quarter of the company's nearest filed
+    quarterly rate."""
+    pos_q = sorted(
+        (f.end_date, f.value)
+        for f in facts
+        if f.tag
+        in (
+            "CommonStockDividendsPerShareDeclared",
+            "CommonStockDividendsPerShareCashPaid",
+        )
+        and f.usable_source
+        and f.value > 0
+        and f.start_date is not None
+        and 80 <= (f.end_date - f.start_date).days <= 120
+    )
+    out: dict[tuple[int, date | None, date], Decimal] = {}
+    for f in facts:
+        if not f.usable_source or f.value <= 0:
+            continue
+        key = (f.filing_id, f.start_date, f.end_date)
+        if f.tag in (
+            "PaymentsOfDividendsCommonStock",
+            "CommonStockDividendsPerShareCashPaid",
+        ):
+            out[key] = f.value
+            continue
+        if f.tag != "PaymentsOfDividends" or f.start_date is None:
+            continue
+        refs = sorted(share_refs.get(f.filing_id, []))
+        if not refs:
+            out[key] = f.value  # no share count to judge by: keep the guard
+            continue
+        quarters = max(
+            Decimal((f.end_date - f.start_date).days) / Decimal(91), Decimal(1)
+        )
+        per_q = f.value / refs[len(refs) // 2] / quarters
+        near = [
+            (abs((e_ - f.end_date).days), v)
+            for e_, v in pos_q
+            if abs((e_ - f.end_date).days) <= LOCAL_WINDOW_DAYS
+        ]
+        nearest = min(near)[1] if near else None
+        if per_q >= PAID_MIN_PER_QUARTER and (nearest is None or per_q * 4 >= nearest):
+            out[key] = f.value
+    return out
+
+
 def _dps_same_filing_checks(
-    cells: list[CellResult], paid: Mapping[tuple[int, date | None, date], Decimal]
+    cells: list[CellResult],
+    paid: Mapping[tuple[int, date | None, date], Decimal],
+    paid_per_share: Mapping[tuple[int, date | None, date], Decimal] | None = None,
+    dps_by_filing: Mapping[int, list[tuple[date | None, date, Decimal, date]]]
+    | None = None,
 ) -> list[CellResult]:
     """Verifier 1000 fix (2), filing evidence only:
     - DPS below zero (OHI Q1 2019 -0.66);
@@ -1979,7 +2296,15 @@ def _dps_same_filing_checks(
             (c.chosen.end_date - c.chosen.start_date).days if c.chosen.start_date else 0
         )
 
-    quarters = [c for c in dps if 80 <= days(c) <= 100]
+    # one quarter per end date, the longest (BX 2014: 04-01 and 04-08 to 06-30)
+    _q_by_end: dict[date, CellResult] = {}
+    for c in dps:
+        if 80 <= days(c) <= 100:
+            assert c.chosen is not None
+            e_ = c.chosen.end_date
+            if e_ not in _q_by_end or days(c) > days(_q_by_end[e_]):
+                _q_by_end[e_] = c
+    quarters = list(_q_by_end.values())
     bad: dict[tuple[str, int], str] = {}
     for c in dps:
         assert c.chosen is not None and c.value is not None
@@ -2028,7 +2353,12 @@ def _dps_same_filing_checks(
                 assert cv is not None
                 if (
                     total > 0
-                    and abs(cv - total) <= Decimal("0.005") * total + FY_RATE_TOL
+                    # relative only: HL's sub-cent quarters (0.0025 ...) sit
+                    # within an absolute half cent of many sums
+                    and abs(cv - total) <= Decimal("0.005") * total
+                    and not _paid_confirms(c, paid_per_share)
+                    and not _same_as_prior_year_quarter(c, dps_by_filing)
+                    and not _confirmed_by_own_vintage_copies(c, dps_by_filing)
                 ):
                     bad[key] = (
                         "quarterly dividend per share looks like an annual amount"
@@ -2154,87 +2484,160 @@ def _all_agree(conv: list[tuple[SourceFact, Fraction, Decimal]], kind: str) -> b
     )
 
 
+def company_dividend_basis(
+    span_copies: Mapping[tuple, list[tuple[SourceFact, Decimal]]],
+    dps_tags: list[str],
+) -> str | None:
+    """AC-24 default (Verifier run 5): one dividend basis per company. The
+    tag with more filed quarters ending 2015-01-01 or later (the whole
+    history, then every filed period, when fewer than four); a tie goes to
+    Declared (the first mapped tag)."""
+
+    def counts(since: date | None, quarters_only: bool = True) -> Counter:
+        n: Counter = Counter()
+        for (start, end), copies in span_copies.items():
+            if start is None:
+                continue
+            if quarters_only and not 80 <= (end - start).days <= 120:
+                continue
+            if since is not None and end < since:
+                continue
+            for t in {f.tag for f, _ in copies}:
+                n[t] += 1
+        return n
+
+    count = counts(DPS_BASIS_FROM)
+    if sum(count.values()) < 4:  # too few recent quarters: the whole history
+        count = counts(None)
+    if sum(count.values()) < 4:  # hardly any quarters: every filed period
+        count = counts(None, quarters_only=False)
+    if not count:
+        return None
+    order = list(dps_tags) + sorted(t for t in count if t not in dps_tags)
+    return max(order, key=lambda t: (count[t], -order.index(t)))
+
+
+def _equals_basis_quarters(
+    value: Decimal,
+    span: tuple,
+    span_copies: Mapping[tuple, list[tuple[SourceFact, Decimal]]],
+    basis_tag: str,
+) -> bool:
+    """A 6M / 9M / annual value on the other tag that equals the sum of the
+    basis tag's filed quarters covering the whole span is the same number on
+    both bases (FE FY2016 Declared 1.44 = CashPaid 0.36 x 4)."""
+    start, end = span
+    if start is None or (end - start).days < 150:
+        return False
+    by_end: dict[date, tuple[date, Decimal]] = {}
+    for (qs, qe), copies in span_copies.items():
+        if qs is None or qs < start or qe > end or not 80 <= (qe - qs).days <= 120:
+            continue
+        vals = {v for f, v in copies if f.tag == basis_tag}
+        if len(vals) != 1:
+            continue
+        if qe not in by_end or qs < by_end[qe][0]:
+            by_end[qe] = (qs, next(iter(vals)))
+    chain = sorted((qs, qe, v) for qe, (qs, v) in by_end.items())
+    if (
+        not chain
+        or abs((chain[0][0] - start).days) > 7
+        or abs((chain[-1][1] - end).days) > 7
+    ):
+        return False
+    if any(abs((b[0] - a[1]).days) > 7 for a, b in itertools.pairwise(chain)):
+        return False
+    return abs(sum((v for _s, _e, v in chain), Decimal(0)) - value) <= YEAR_SOLVE_TOL
+
+
 def _one_dividend_basis(
     cells: list[CellResult],
-    dps_tags: list[str] | None = None,
-    by_tag_span: Mapping | None = None,
+    dps_tags: list[str],
+    span_copies: Mapping[tuple, list[tuple[SourceFact, Decimal]]],
+    paid: Mapping[tuple[int, date | None, date], Decimal],
 ) -> list[CellResult]:
-    """One DPS basis per series (Verifier 2026-10-24, LLY: Q3 2018/2019 would
-    show CashPaid 0.5625/0.645 next to Declared quarters). AC-24 (declared
-    vs paid) is open, so a quarterly or an annual DPS series whose shown
-    cells come from more than one tag is hidden with a reason; a series on
-    one tag is shown on that tag's basis."""
-
-    def series(c: CellResult) -> str:
-        assert c.chosen is not None
-        start = c.chosen.start_date
-        days = (c.chosen.end_date - start).days if start else 0
-        return "annual" if days >= 350 else "interim"
-
-    tags_by_series: dict[str, set[str]] = defaultdict(set)
-    for c in cells:
-        if (
-            c.concept == "dividends_per_share_resolved"
-            and c.status == SHOWN
-            and c.chosen
-        ):
-            tags_by_series[series(c)].add(c.chosen.tag)
-    mixed = {k for k, v in tags_by_series.items() if len(v) > 1}
-    # Only when the two tags disagree on a period both report (LLY: declared
-    # and paid timing differ). Equal values on every common period mean one
-    # economic basis (NSC, AMGN, SSNC, MSI; Verifier run 3).
-    if mixed and by_tag_span is not None and len(dps_tags or []) >= 2:
-        t1, t2 = (dps_tags or [])[:2]
-        common = [
-            (k[1], k[2])
-            for k in by_tag_span
-            if k[0] == t1 and (t2, k[1], k[2]) in by_tag_span
-        ]
-        disagree_ends: list[date] | None = [
-            e_
-            for s_, e_ in common
-            if abs(by_tag_span[(t1, s_, e_)] - by_tag_span[(t2, s_, e_)]) > FY_RATE_TOL
-        ]
-        if common and not disagree_ends:
-            mixed = set()
-        if not common:
-            disagree_ends = None  # no common period: keep the conservative hide
-    else:
-        disagree_ends = None
-    if not mixed:
+    """One dividend basis per company, never mixed (AC-24 default, Verifier
+    run 5: AES, AMT, CVI, CWEN, LMT and AFL mixed declared and paid quarters).
+    A shown cell on the other tag is replaced by the basis tag's filed value
+    when every basis copy of that period agrees and one of them is from the
+    period's own vintage; otherwise it is hidden as dividend basis pending.
+    A quarter the fiscal year's basis-tag totals fix stays."""
+    concept = "dividends_per_share_resolved"
+    basis_tag = company_dividend_basis(span_copies, dps_tags)
+    if basis_tag is None:
         return cells
-    order = list(dps_tags or [])
-    basis_tag = {
-        k: next((t for t in order if t in tags_by_series[k]), min(tags_by_series[k]))
-        for k in mixed
-    }
+    paid_spans = {(s_, e_) for _f, s_, e_ in paid}
     out = []
     for c in cells:
         if (
-            c.concept == "dividends_per_share_resolved"
-            and c.status == SHOWN
-            and c.chosen
-            and series(c) in mixed
-            # a quarter the fiscal year's filed totals fix is not a basis
-            # guess (COP Q3 2021: CashPaid 0.43 is the only filed copy that
-            # adds up to the declared FY 1.75)
-            and c.note != YEAR_SOLVE_NOTE
-            and (
-                disagree_ends is None
-                or any(
-                    abs((e_ - c.chosen.end_date).days) <= 400 for e_ in disagree_ends
+            c.concept != concept
+            or c.status != SHOWN
+            or c.chosen is None
+            or c.chosen.tag == basis_tag
+        ):
+            out.append(c)
+            continue
+        span = (c.chosen.start_date, c.chosen.end_date)
+        on_basis = sorted(
+            ((f, v) for f, v in span_copies.get(span, []) if f.tag == basis_tag),
+            key=lambda x: (x[0].filing_date, x[0].fact_id),
+        )
+        vals = {v for _f, v in on_basis}
+        own = [
+            f
+            for f, _v in on_basis
+            if (f.filing_date - f.end_date).days <= OWN_VINTAGE_DAYS
+        ]
+        if (
+            len(vals) == 1
+            and own
+            and not (next(iter(vals)) == 0 and span in paid_spans)
+        ):
+            f0, v0 = on_basis[0]
+            out.append(
+                CellResult(
+                    c.concept,
+                    c.period_id,
+                    SHOWN,
+                    v0,
+                    (f0.fact_id,),
+                    f0,
+                    c.factor,
+                    c.candidates,
+                    f"on the company's dividend basis ({basis_tag})",
                 )
             )
-            and (
-                DPS_MIXED_POLICY == "hide_series"
-                or c.chosen.tag != basis_tag[series(c)]
-            )
+            continue
+        if c.value is not None and _equals_basis_quarters(
+            c.value, span, span_copies, basis_tag
         ):
-            c = CellResult(
-                c.concept, c.period_id, HIDE_DPS_BASIS, None, (), c.chosen, c.factor,
-                c.candidates, f"series uses {sorted(tags_by_series[series(c)])}",
-            )  # fmt: skip
-        out.append(c)
+            out.append(
+                CellResult(
+                    c.concept,
+                    c.period_id,
+                    SHOWN,
+                    c.value,
+                    c.source_fact_ids,
+                    c.chosen,
+                    c.factor,
+                    c.candidates,
+                    f"equals the sum of its {basis_tag} quarters",
+                )
+            )
+            continue
+        out.append(
+            CellResult(
+                c.concept,
+                c.period_id,
+                HIDE_DPS_BASIS,
+                None,
+                (),
+                c.chosen,
+                c.factor,
+                c.candidates,
+                f"off the company's dividend basis ({basis_tag})",
+            )
+        )
     return out
 
 

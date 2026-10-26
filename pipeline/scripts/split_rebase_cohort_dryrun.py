@@ -179,7 +179,8 @@ def write_cells(w, results, ticker, periods) -> None:
     w.writerow(
         ["ticker", "company_id", "concept", "period_id", "start", "end", "old_value",
          "new_value", "class", "status", "factor", "chosen_fact_id", "chosen_accession",
-         "chosen_as_filed", "n_candidates", "candidates", "source_fact_ids"]
+         "chosen_as_filed", "n_candidates", "candidates", "source_fact_ids",
+         "chosen_tag", "note"]
     )  # fmt: skip
     for cid, res, current, _err in results:
         if res is None:
@@ -197,14 +198,14 @@ def write_cells(w, results, ticker, periods) -> None:
                  c.chosen.accession if c.chosen else None,
                  c.chosen.value if c.chosen else None, len(c.candidates),
                  ";".join(f"{i}:{a}:{v}@f{f}={cv}" for i, a, v, f, cv in c.candidates),
-                 list(c.source_fact_ids)]
+                 list(c.source_fact_ids), c.chosen.tag if c.chosen else None, c.note]
             )  # fmt: skip
         for key, (_i, v, _s) in current.items():
             if key not in keys:
                 s, e = periods.get(key[1], (None, None))
                 w.writerow([ticker[cid], cid, key[0], key[1], s, e, v, v,
                             "untouched_no_mapped_fact", "untouched", None, None, None,
-                            None, 0, "", []])  # fmt: skip
+                            None, 0, "", [], None, ""])  # fmt: skip
 
 
 def _magnitude(old: Decimal, new: Decimal) -> Decimal:
