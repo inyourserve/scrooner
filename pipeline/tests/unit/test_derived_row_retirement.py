@@ -1140,16 +1140,59 @@ def test_disagreeing_copies_hide_the_cell_and_leave_one_authoritative_fact(conn)
 
 
 @pytest.mark.integration
-def test_authority_check_reports_a_promotion_that_would_leave_two(conn):
+def test_authority_check_supersedes_a_same_figure_copy_beside_the_promoted_one(conn):
     conn.execute("insert into rcore.filing values (9,1,'P2','DEFA14A','2026-05-01')")
     _f(conn, 900, NI, USD, 1, 2, "100")  # proxy feeding the cell: demoted
     _f(conn, 901, NI, USD, 1, 1, "5000000", auth=False)  # only periodic copy: promoted
     _f(
         conn, 904, NI, USD, 1, 9, "5000000"
-    )  # another authoritative proxy-form copy, feeds no cell
+    )  # authoritative proxy-form copy of the SAME figure
     _cell(conn, CC_NI, 1, "100", [900])
     plan = _plan_b(conn)
     assert plan.promote_fact_ids == [901]
     with conn.cursor() as cur:
+        assert rr.check_authority(cur, plan, core="rcore") == []
+    assert plan.supersede_fact_ids == [904]
+
+
+@pytest.mark.integration
+def test_authority_check_reports_a_different_authoritative_figure(conn):
+    conn.execute("insert into rcore.filing values (9,1,'P2','DEFA14A','2026-05-01')")
+    _f(conn, 900, NI, USD, 1, 2, "100")
+    _f(conn, 901, NI, USD, 1, 1, "5000000", auth=False)
+    _f(
+        conn, 904, NI, USD, 1, 9, "9000000"
+    )  # a materially different authoritative figure
+    _cell(conn, CC_NI, 1, "100", [900])
+    plan = _plan_b(conn)
+    with conn.cursor() as cur:
         bad = rr.check_authority(cur, plan, core="rcore")
     assert len(bad) == 1 and bad[0]["authoritative_after"] == 2
+    assert plan.supersede_fact_ids == []
+
+
+@pytest.mark.integration
+def test_apply_demotes_superseded_copies_and_restore_brings_them_back(conn):
+    conn.execute("insert into rcore.filing values (9,1,'P2','DEFA14A','2026-05-01')")
+    _f(conn, 900, NI, USD, 1, 2, "100")
+    _f(conn, 901, NI, USD, 1, 1, "5000000", auth=False)
+    _f(conn, 904, NI, USD, 1, 9, "5000000")
+    _cell(conn, CC_NI, 1, "100", [900])
+    before = _state(conn)
+    plan = _plan_b(conn)
+    with conn.cursor() as cur:
+        rr.check_authority(cur, plan, core="rcore")
+        rr.apply_plan(
+            cur,
+            plan,
+            run_id="rs",
+            expected_digest=plan.digest(),
+            environ=ON_PROXY,
+            core="rcore",
+            analytics="ranalytics",
+        )
+    facts = dict(conn.execute("select id, is_authoritative from rcore.fact").fetchall())
+    assert [i for i, a in facts.items() if a] == [901]  # exactly one authoritative fact
+    with conn.cursor() as cur:
+        rr.restore(cur, "rs", core="rcore", analytics="ranalytics")
+    assert _state(conn)[1] == before[1]
