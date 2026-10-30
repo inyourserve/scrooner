@@ -20,12 +20,26 @@ from decimal import Decimal
 
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES, Identity, evaluate
 
-from .model import REVIEW, WRONG_VALUE, CompanyData, Finding, finding, power_of_ten_signature
+from .thresholds import (
+    WRONG_GAP,
+    SCALE_RATIO,
+    CASH_ROLL_TOLERANCE,
+    FY_MIN_DAYS,
+    FY_MAX_DAYS,
+    CASH_DATE_SLACK_DAYS,
+)
+from .model import (
+    REVIEW,
+    WRONG_VALUE,
+    CompanyData,
+    Finding,
+    finding,
+    power_of_ten_signature,
+)
 
 # Relative gap (to the identity's basis) beyond which a failed tie is no longer
 # plausible rounding / perimeter noise: a 25% gap on assets = L + E is a wrong
 # component, not a missing NCI line.
-WRONG_GAP = Decimal("0.25")
 
 # The net income identity cannot see every reconciling item (discontinued
 # operations, equity-method income, NCI: JNJ's 2023 Kenvue exchange gain puts
@@ -33,15 +47,11 @@ WRONG_GAP = Decimal("0.25")
 # is `wrong_value` only when stored and expected differ by a SCALE (>= 50x either
 # way, or a power-of-ten signature); a smaller gap is `review`.
 SCALE_ONLY_IDENTITIES = frozenset({"net_income"})
-SCALE_RATIO = Decimal(50)
 
 I1_IDENTITIES = ("balance_sheet", "current_assets_within_total", "cash_within_total")
 I2_IDENTITIES = ("gross_profit", "net_income")
 
 # Cash roll-forward: restricted cash, FX and ASU 2016-18 make small gaps normal.
-CASH_ROLL_TOLERANCE = Decimal("0.10")
-FY_MIN_DAYS, FY_MAX_DAYS = 350, 380
-CASH_DATE_SLACK_DAYS = 4
 
 
 def _scale_apart(actual: Decimal, expected: Decimal | None) -> bool:
@@ -63,7 +73,9 @@ def _identity(name: str) -> Identity:
     return next(i for i in IDENTITIES if i.name == name)
 
 
-def _check_identity(data: CompanyData, by_period, identity: Identity, invariant: str) -> list[Finding]:
+def _check_identity(
+    data: CompanyData, by_period, identity: Identity, invariant: str
+) -> list[Finding]:
     findings: list[Finding] = []
     names = identity.concepts
     if any(n not in by_period for n in names):
@@ -75,7 +87,9 @@ def _check_identity(data: CompanyData, by_period, identity: Identity, invariant:
     for period_id in sorted(common):
         cells = {n: by_period[n][period_id] for n in names}
         target = cells[identity.target]
-        term_sources = {s for c in (cells[n] for n, _ in identity.terms) for s in c.source_ids}
+        term_sources = {
+            s for c in (cells[n] for n, _ in identity.terms) for s in c.source_ids
+        }
         if set(target.source_ids) & term_sources:
             continue  # tautology guard: target was derived from its own terms
         values = {n: c.value for n, c in cells.items()}
@@ -88,7 +102,9 @@ def _check_identity(data: CompanyData, by_period, identity: Identity, invariant:
         if result.passed:
             continue
         if identity.name in SCALE_ONLY_IDENTITIES:
-            severity = WRONG_VALUE if _scale_apart(result.actual, result.expected) else REVIEW
+            severity = (
+                WRONG_VALUE if _scale_apart(result.actual, result.expected) else REVIEW
+            )
         else:
             severity = WRONG_VALUE if (result.rel_gap or 0) > WRONG_GAP else REVIEW
         findings.append(
@@ -112,7 +128,9 @@ def _check_identity(data: CompanyData, by_period, identity: Identity, invariant:
 
 def _cash_roll(data: CompanyData, by_period) -> list[Finding]:
     findings: list[Finding] = []
-    cash = sorted(by_period.get("cash_and_equivalents", {}).values(), key=lambda c: c.end)
+    cash = sorted(
+        by_period.get("cash_and_equivalents", {}).values(), key=lambda c: c.end
+    )
     if not cash:
         return findings
     for cfo in by_period.get("cfo", {}).values():
@@ -123,9 +141,17 @@ def _cash_roll(data: CompanyData, by_period) -> list[Finding]:
         fin = by_period.get("cash_flow_financing", {}).get(cfo.period_id)
         if inv is None or fin is None:
             continue
-        end_cash = next((c for c in cash if abs((c.end - cfo.end).days) <= CASH_DATE_SLACK_DAYS), None)
+        end_cash = next(
+            (c for c in cash if abs((c.end - cfo.end).days) <= CASH_DATE_SLACK_DAYS),
+            None,
+        )
         prior_cash = next(
-            (c for c in cash if abs((c.end - cfo.start).days - 1) <= CASH_DATE_SLACK_DAYS), None
+            (
+                c
+                for c in cash
+                if abs((c.end - cfo.start).days - 1) <= CASH_DATE_SLACK_DAYS
+            ),
+            None,
         )
         if end_cash is None or prior_cash is None:
             continue

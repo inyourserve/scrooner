@@ -1,0 +1,31 @@
+change,ticker,company_id,name,reason_or_basis
+REMOVED_FROM_986,EAI,142,"ENTERGY ARKANSAS, LLC",subsidiary registrant (no equity of its own; combined Entergy filing)
+REMOVED_FROM_986,PS,4266,PERSHING SQUARE INC.,no 10-K yet (Pershing Square Inc.)
+REMOVED_FROM_986,HONA,5063,Honeywell Aerospace Inc.,no 10-K yet (10-Q only)
+REMOVED_FROM_986,INIO,5307,INNIO N.V.,no 10-K yet (10-Q only)
+REMOVED_FROM_986,ARXS,5132,"Arxis, Inc.",no 10-K yet (10-Q only)
+REMOVED_FROM_986,JAN,5237,"Janus Living, Inc.",no 10-K yet (10-Q only)
+NOT_ADMITTED_WAITLIST,SPCX,4257,SPACE EXPLORATION TECHNOLOGIES CORP,no 10-K yet (10-Q filed 2026-10-22); enters at the next cohort event when its first 10-K posts; market cap understated in our data (true about $1.92T per S000)
+NOT_ADMITTED_WAITLIST,MBGL,5085,Mobility Global Inc.,no 10-K yet (10-Q only)
+BOUNDARY_DROPPED,ORA,4771,"ORMAT TECHNOLOGIES, INC.","files 10-K; DB market cap 5.36bn is below the current 1,000th (TFX/BXSL 5.5bn)"
+BOUNDARY_DROPPED,SNDR,4635,"Schneider National, Inc.","files 10-K; DB market cap 5.26bn is below the current 1,000th"
+ADDED,BRK-A,3034,BERKSHIRE HATHAWAY INC,10-K 2026-03-02; S000 re-rank backfill
+ADDED,BAM,3697,Brookfield Asset Management Ltd.,10-K 2026-03-02; earlier filings are 40-F/20-F
+ADDED,UHAL,107,U-Haul Holding Co /NV/,10-K 2026-05-27; S000 backfill
+ADDED,FWONA,2946,Liberty Media Corp,10-K 2026-02-26; S000 backfill
+ADDED,PLNT,3937,"Planet Fitness, Inc.",10-K 2026-02-25; S000 backfill
+ADDED,SUN,2870,Sunoco LP,10-K 2026-02-19; S000 backfill
+ADDED,ASB,155,ASSOCIATED BANC-CORP,10-K 2026-02-12; S000 backfill; DB market cap 5.73bn
+ADDED,BGC,3392,"BGC Group, Inc.",10-K 2026-04-28; S000 backfill; DB market cap 5.58bn
+ADDED,INSW,4472,"International Seaways, Inc.",10-K 2026-02-26; S000 backfill; DB market cap 5.56bn
+ADDED,NIQ,4591,NIQ Global Intelligence plc,10-K 2026-02-27; S000 backfill; DB market cap 5.85bn
+ADDED,WFRD,3513,Weatherford International plc,10-K 2026-02-04; S000 backfill; DB market cap 6.32bn
+ADDED,SO,1081,SOUTHERN CO,10-K 2026-02-19
+ADDED,SRE,2503,SEMPRA,10-K 2026-02-26
+ADDED,AEE,2144,AMEREN CORP,10-K 2026-02-18
+ADDED,ETR,694,ENTERGY CORP /DE/,10-K 2026-02-19
+ADDED,CTVA,5394,"Corteva, Inc.",10-K 2026-02-12
+ADDED,EIX,1576,EDISON INTERNATIONAL,10-K 2026-02-18
+ADDED,CMS,1525,CMS ENERGY CORP,10-K 2026-02-10
+ADDED,ES,1008,EVERSOURCE ENERGY,10-K 2026-02-17
+ADDED,TXNM,3562,TXNM ENERGY INC,10-K 2026-02-27

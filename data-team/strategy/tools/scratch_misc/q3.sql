@@ -1,0 +1,1 @@
+select table_name, column_name, data_type from information_schema.columns where table_schema='analytics' and table_name in ('company_concept_lineage','concept_mapping','canonical_concept','metric_definition_input') order by table_name, ordinal_position

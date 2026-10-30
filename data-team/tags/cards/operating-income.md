@@ -77,6 +77,9 @@ Cross-tabs CY2023:
 - NEW: PLD `OperatingIncomeLoss` includes real estate disposition gains, so it is not comparable with AAPL-type operating income (me).
 - NEW: AMZN and CVX show the same tag (`CostsAndExpenses`) with opposite interest treatment (me). A screener "operating margin = 1 - CostsAndExpenses/Revenues" would be right for AMZN and wrong for CVX.
 
+- NEW (me, 2026-10-21, FILING-CHECKED): `OperatingIncomeLoss` is pretax income at AFG 0001042046-26-000010 R5 ("Earnings before income taxes" 1,073M = revenues 8,174M - costs 7,101M) and ELS 0001628280-26-008722 R5 ("Income before taxes and other items" 391,349K); PEBO and BANR mis-tags recur in FY2025 10-Ks. 30 FY2025 10-K filers carry this label shift (DATA-INFERRED).
+- NEW (me, 2026-10-21): `CostsAndExpenses` has four perimeters in 958 FY2025 10-K filers (DATA-INFERRED, identities): revenue - CE = OI 651; CE = operating expenses only (GP - CE = OI) 29, e.g. HP 0000047217-25-000071 R3 "Total operating expenses" 8,218M (FILING-CHECKED); revenue - CE = pretax (interest inside) 42, e.g. XOM 0000034088-26-000045 R3 (interest expense 603M inside "Total costs and other deductions" 290,970M, FILING-CHECKED); no OI line 115; other items between CE and OI 64. Detail: R2 report sec. 5.
+
 ## 6. Mapping verdict
 - `OperatingIncomeLoss`: **safe per company for non-financial filers when the face row is labelled operating income** (FILING-CHECKED: AAPL, AMZN, DUK; PLD only with a gains caveat). **NEVER for banks without a row-label check** (BANR, PEBO).
 - `CostsAndExpenses`: **never** to derive operating income or opex (CVX, AJG, HTZ, GE); usable only as "total costs as filed" with the interest question answered per filer. FILING-CHECKED.

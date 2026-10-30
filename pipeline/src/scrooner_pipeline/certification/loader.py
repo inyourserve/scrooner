@@ -19,10 +19,21 @@ from scrooner_pipeline.common.sector_applicability import (
 from scrooner_pipeline.common.staleness import load_latest_filed_periods
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES
 
-from .model import base_name, Cell, CompanyData, ComponentFact, GapRow, Metric, MetricCell, Source
+from .thresholds import SOURCE_BATCH
+from .model import (
+    base_name,
+    Cell,
+    CompanyData,
+    ComponentFact,
+    GapRow,
+    MetricSpec,
+    Metric,
+    MetricCell,
+    Source,
+    PERIODIC_FORMS,
+)
 
 HISTORY_FLOOR = date(2015, 1, 1)  # doc 38: nothing older is displayed as current
-SOURCE_BATCH = 20_000
 DEBT_CONCEPTS = ("total_debt", "total_debt_split")
 
 
@@ -32,14 +43,25 @@ class Registry:
     modes: dict[str, str] = field(default_factory=dict)
     debt_tags: list[str] = field(default_factory=list)
     adjustment_tags: list[str] = field(default_factory=list)
-    consumed: dict[str, str] = field(default_factory=dict)  # concept feeding >= 1 metric -> statement
-    mapped_ids: dict[int, set[str]] = field(default_factory=dict)  # core.concept id -> consumed bases it maps to
-    mapped_tag_count: dict[str, int] = field(default_factory=dict)  # consumed base -> number of mapped tags
+    metrics: dict[str, MetricSpec] = field(default_factory=dict)
+    consumed: dict[str, str] = field(
+        default_factory=dict
+    )  # concept feeding >= 1 metric -> statement
+    mapped_ids: dict[int, set[str]] = field(
+        default_factory=dict
+    )  # core.concept id -> consumed bases it maps to
+    mapped_tag_count: dict[str, int] = field(
+        default_factory=dict
+    )  # consumed base -> number of mapped tags
+    tag_roles: dict[tuple[str, str], tuple[int, str]] = field(default_factory=dict)
 
 
 def execute(cur, sql: str, params, timeout_s: int):
     """Run one statement under an explicit statement_timeout and return all rows."""
-    cur.execute("select set_config('statement_timeout', %s, false)", (str(int(timeout_s) * 1000),))
+    cur.execute(
+        "select set_config('statement_timeout', %s, false)",
+        (str(int(timeout_s) * 1000),),
+    )
     cur.execute(sql, params)
     return cur.fetchall()
 
@@ -47,7 +69,10 @@ def execute(cur, sql: str, params, timeout_s: int):
 def load_registry(cur, timeout_s: int = 60) -> Registry:
     reg = Registry()
     for cid, name, mode in execute(
-        cur, "select id, name, combination_mode from analytics.canonical_concept", None, timeout_s
+        cur,
+        "select id, name, combination_mode from analytics.canonical_concept",
+        None,
+        timeout_s,
     ):
         reg.names[cid] = name
         reg.modes[name] = mode
@@ -73,6 +98,27 @@ def load_registry(cur, timeout_s: int = 60) -> Registry:
         timeout_s,
     ):
         reg.consumed[name] = statement
+    specs: dict[str, dict] = {}
+    for mname, desc, req, cname, cstatement in execute(
+        cur,
+        """
+        select md.metric_name, md.formula_description, md.requires_price, cc.name, cc.statement
+        from analytics.metric_definition md
+        left join analytics.metric_definition_input i on i.metric_definition_id = md.id
+        left join analytics.canonical_concept cc on cc.id = i.canonical_concept_id
+        where md.status = 'active'
+        """,
+        None,
+        timeout_s,
+    ):
+        e = specs.setdefault(mname, {"d": desc or "", "r": bool(req), "i": [], "s": []})
+        if cname is not None:
+            e["i"].append(base_name(cname))
+            e["s"].append(cstatement)
+    for mname, e in specs.items():
+        reg.metrics[mname] = MetricSpec(
+            mname, e["d"], e["r"], tuple(e["i"]), tuple(e["s"])
+        )
     bases = {base_name(n) for n in reg.consumed}
     for base, concept_id in execute(
         cur,
@@ -90,21 +136,49 @@ def load_registry(cur, timeout_s: int = 60) -> Registry:
     for bs in reg.mapped_ids.values():
         for b in bs:
             reg.mapped_tag_count[b] = reg.mapped_tag_count.get(b, 0) + 1
+    for cname, tag, priority, confidence in execute(
+        cur,
+        """
+        select cc.name, c.tag, cm.priority, cm.confidence from analytics.concept_mapping cm
+        join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
+        join core.concept c on c.id = cm.concept_id
+        where c.taxonomy = 'us-gaap'
+        """,
+        None,
+        timeout_s,
+    ):
+        key = (base_name(cname), tag)
+        if key not in reg.tag_roles or priority < reg.tag_roles[key][0]:
+            reg.tag_roles[key] = (priority, confidence)
     reg.adjustment_tags = sorted({tag for i in IDENTITIES for tag, _ in i.adjustments})
     return reg
 
 
 def resolve_company_ids(cur, ciks: list[str], timeout_s: int = 60) -> list[int]:
     padded = [c.strip().zfill(10) for c in ciks if c.strip()]
-    rows = execute(cur, "select id from core.company where cik = any(%s) order by id", (padded,), timeout_s)
+    rows = execute(
+        cur,
+        "select id from core.company where cik = any(%s) order by id",
+        (padded,),
+        timeout_s,
+    )
     return [r[0] for r in rows]
 
 
 def _source(row) -> Source:
     (fid, tag, value, auth, derived, form, unit, accession, fdate, start, end) = row
     return Source(
-        id=fid, tag=tag, value=value, authoritative=auth, derived=derived, form=form,
-        unit=unit, accession=accession, filing_date=fdate, start=start, end=end,
+        id=fid,
+        tag=tag,
+        value=value,
+        authoritative=auth,
+        derived=derived,
+        form=form,
+        unit=unit,
+        accession=accession,
+        filing_date=fdate,
+        start=start,
+        end=end,
     )
 
 
@@ -133,13 +207,18 @@ def load_chunk(
     ids = sorted(set(company_ids))
     data: dict[int, CompanyData] = {}
     for cid, cik, ticker, sic in execute(
-        cur, "select id, cik, primary_ticker, sic_code from core.company where id = any(%s)", (ids,), timeout_s
+        cur,
+        "select id, cik, primary_ticker, sic_code from core.company where id = any(%s)",
+        (ids,),
+        timeout_s,
     ):
-        data[cid] = CompanyData(company_id=cid, cik=cik, ticker=ticker, sic=sic, as_of=as_of)
+        data[cid] = CompanyData(
+            company_id=cid, cik=cik, ticker=ticker, sic=sic, as_of=as_of
+        )
 
     # canonical values with their periods
     all_source_ids: set[int] = set()
-    for (cid, name, value, src, pid, start, end, ptype, fy, fp) in execute(
+    for cid, name, value, src, pid, start, end, ptype, fy, fp in execute(
         cur,
         """
         select cf.company_id, cc.name, cf.value, cf.source_fact_ids, p.id, p.start_date, p.end_date,
@@ -157,8 +236,17 @@ def load_chunk(
         src_t = tuple(src or ())
         all_source_ids.update(src_t)
         data[cid].cells.append(
-            Cell(concept=name, value=value, period_id=pid, start=start, end=end,
-                 period_type=ptype, fiscal_year=fy, fiscal_period=fp, source_ids=src_t)
+            Cell(
+                concept=name,
+                value=value,
+                period_id=pid,
+                start=start,
+                end=end,
+                period_type=ptype,
+                fiscal_year=fy,
+                fiscal_period=fp,
+                source_ids=src_t,
+            )
         )
     for d in data.values():
         d.concept_modes = dict(registry.modes)
@@ -168,7 +256,10 @@ def load_chunk(
     all_sources: dict[int, Source] = {}
     for i in range(0, len(wanted), SOURCE_BATCH):
         rows = execute(
-            cur, _SOURCE_SELECT + " where f.id = any(%s)", (wanted[i : i + SOURCE_BATCH],), timeout_s
+            cur,
+            _SOURCE_SELECT + " where f.id = any(%s)",
+            (wanted[i : i + SOURCE_BATCH],),
+            timeout_s,
         )
         all_sources.update({r[0]: _source(r) for r in rows})
     for d in data.values():
@@ -178,7 +269,9 @@ def load_chunk(
                     d.sources[sid] = all_sources[sid]
 
     # authoritative copies of every NON-authoritative source (matching-copies rule)
-    non_auth = sorted({s.id for d in data.values() for s in d.sources.values() if not s.authoritative})
+    non_auth = sorted(
+        {s.id for d in data.values() for s in d.sources.values() if not s.authoritative}
+    )
     owner = {s.id: d.company_id for d in data.values() for s in d.sources.values()}
     for i in range(0, len(non_auth), SOURCE_BATCH):
         rows = execute(
@@ -202,7 +295,64 @@ def load_chunk(
         for r in rows:
             cid = owner.get(r[0])
             if cid in data:
-                data[cid].authoritative_copies.setdefault(r[0], []).append(_source(r[1:]))
+                data[cid].authoritative_copies.setdefault(r[0], []).append(
+                    _source(r[1:])
+                )
+
+    # copies, on a 10-K/10-Q-family form, of every source filed on another form (proxy, 8-K)
+    non_periodic = sorted(
+        {
+            s.id
+            for d in data.values()
+            for s in d.sources.values()
+            if s.form is not None and s.form not in PERIODIC_FORMS
+        }
+    )
+    for i in range(0, len(non_periodic), SOURCE_BATCH):
+        rows = execute(
+            cur,
+            """
+            select f1.id, f2.id, c.tag, f2.value, f2.is_authoritative, f2.is_derived, fl.form, u.unit_name,
+                   fl.accession_number, fl.filing_date, p.start_date, p.end_date
+            from core.fact f1
+            join core.fact f2 on f2.company_id = f1.company_id and f2.concept_id = f1.concept_id
+                 and f2.period_id = f1.period_id and f2.unit_id = f1.unit_id and f2.id <> f1.id
+            join core.concept c on c.id = f2.concept_id
+            join core.unit u on u.id = f2.unit_id
+            join core.period p on p.id = f2.period_id
+            join core.filing fl on fl.id = f2.filing_id
+            where f1.id = any(%s) and fl.form = any(%s)
+            """,
+            (non_periodic[i : i + SOURCE_BATCH], sorted(PERIODIC_FORMS)),
+            timeout_s,
+        )
+        for r in rows:
+            cid = owner.get(r[0])
+            if cid in data:
+                data[cid].periodic_copies.setdefault(r[0], []).append(_source(r[1:]))
+
+    # fact counts of the 8-K filings used as sources: does the 8-K carry full statements?
+    eight_k = sorted(
+        {
+            s.accession
+            for d in data.values()
+            for s in d.sources.values()
+            if s.form in ("8-K", "8-K/A") and s.accession
+        }
+    )
+    counts: dict[str, int] = {}
+    for i in range(0, len(eight_k), 500):
+        for acc, n in execute(
+            cur,
+            "select fl.accession_number, count(*) from core.fact f join core.filing fl on fl.id = f.filing_id "
+            "where fl.accession_number = any(%s) group by fl.accession_number",
+            (eight_k[i : i + 500],),
+            timeout_s,
+        ):
+            counts[acc] = n
+    for d in data.values():
+        d.filing_fact_counts = counts
+        d.tag_roles = registry.tag_roles
 
     # other non-authoritative copies (a recorded conflict fill has >= 2 non-authoritative copies)
     for i in range(0, len(non_auth), SOURCE_BATCH):
@@ -232,7 +382,7 @@ def load_chunk(
     # debt components and balance-sheet adjustment facts (authoritative, USD)
     tags = sorted(set(registry.debt_tags) | set(registry.adjustment_tags))
     debt = set(registry.debt_tags)
-    for (cid, fid, tag, value, pid, end) in execute(
+    for cid, fid, tag, value, pid, end in execute(
         cur,
         """
         select f.company_id, f.id, c.tag, f.value, f.period_id, p.end_date
@@ -254,7 +404,7 @@ def load_chunk(
             data[cid].adjustment_facts.append(comp)
 
     # displayed metrics: latest non-null per metric and label class
-    for (cid, name, req, label, pend, value, src) in execute(
+    for cid, name, req, label, pend, value, src in execute(
         cur,
         """
         select distinct on (mv.company_id, md.metric_name,
@@ -273,11 +423,26 @@ def load_chunk(
     ):
         src_t = tuple(src or ())
         data[cid].metrics.append(
-            Metric(name=name, label=label, period_end=pend, value=value, requires_price=req, source_ids=src_t)
+            Metric(
+                name=name,
+                label=label,
+                period_end=pend,
+                value=value,
+                requires_price=req,
+                source_ids=src_t,
+            )
         )
-    metric_src = sorted({i for d in data.values() for m in d.metrics for i in m.source_ids} - set(all_sources))
+    metric_src = sorted(
+        {i for d in data.values() for m in d.metrics for i in m.source_ids}
+        - set(all_sources)
+    )
     for i in range(0, len(metric_src), SOURCE_BATCH):
-        rows = execute(cur, _SOURCE_SELECT + " where f.id = any(%s)", (metric_src[i : i + SOURCE_BATCH],), timeout_s)
+        rows = execute(
+            cur,
+            _SOURCE_SELECT + " where f.id = any(%s)",
+            (metric_src[i : i + SOURCE_BATCH],),
+            timeout_s,
+        )
         all_sources.update({r[0]: _source(r) for r in rows})
     for d in data.values():
         for m in d.metrics:
@@ -289,8 +454,10 @@ def load_chunk(
             data[cid].latest_filed = day
 
     for cid, eff, ratio in execute(
-        cur, "select company_id, effective_date, ratio from analytics.company_stock_split where company_id = any(%s)",
-        (ids,), timeout_s,
+        cur,
+        "select company_id, effective_date, ratio from analytics.company_stock_split where company_id = any(%s)",
+        (ids,),
+        timeout_s,
     ):
         if cid in data:
             data[cid].splits.append((eff, Decimal(ratio)))
@@ -302,20 +469,26 @@ def load_chunk(
         from core.market_price_alpaca where company_id = any(%s)
         order by company_id, price_date desc
         """,
-        (ids,), timeout_s,
+        (ids,),
+        timeout_s,
     ):
         if cid in data:
             data[cid].price = (pdate, price)
 
     for cid, filed in execute(
-        cur, "select company_id, filing_date from core.shares_outstanding_fallback where company_id = any(%s)",
-        (ids,), timeout_s,
+        cur,
+        "select company_id, filing_date from core.shares_outstanding_fallback where company_id = any(%s)",
+        (ids,),
+        timeout_s,
     ):
         if cid in data:
             data[cid].shares_fallback_filed = filed
 
     # bank population (the one definition in sector_applicability) + evidence flags
-    cur.execute("select set_config('statement_timeout', %s, false)", (str(int(timeout_s) * 1000),))
+    cur.execute(
+        "select set_config('statement_timeout', %s, false)",
+        (str(int(timeout_s) * 1000),),
+    )
     bank_ids = load_bank_company_ids(cur, ids)
     evidence: dict[int, set[str]] = defaultdict(set)
     for cid, tag in execute(
@@ -341,7 +514,16 @@ def load_chunk(
     return data
 
 
-PERIODIC_FILING_FORMS = ("10-K", "10-K/A", "10-KT", "10-KT/A", "10-Q", "10-Q/A", "10-QT", "10-QT/A")
+PERIODIC_FILING_FORMS = (
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "10-Q",
+    "10-Q/A",
+    "10-QT",
+    "10-QT/A",
+)
 
 
 def _load_history(cur, data, ids, registry, since, timeout_s) -> None:
@@ -367,9 +549,12 @@ def _load_history(cur, data, ids, registry, since, timeout_s) -> None:
                 seen[cid][b].add((start, end))
         for cid, by_base in seen.items():
             if cid in data:
-                data[cid].mapped_facts = {b: sorted(v, key=lambda t: t[1]) for b, v in by_base.items()}
+                data[cid].mapped_facts = {
+                    b: sorted(v, key=lambda t: t[1]) for b, v in by_base.items()
+                }
     for d in data.values():
         d.mapped_tag_count = dict(registry.mapped_tag_count)
+        d.metric_specs = registry.metrics
     for cid, first in execute(
         cur,
         "select company_id, min(period_of_report) from core.filing where company_id = any(%s) "
@@ -413,3 +598,18 @@ def _load_history(cur, data, ids, registry, since, timeout_s) -> None:
     ):
         if cid in data:
             data[cid].metric_history.append(MetricCell(name, label, end, value, reason))
+    kinds_seen: dict[str, set[str]] = defaultdict(set)
+    for d in data.values():
+        for m in d.metric_history:
+            kinds_seen[m.name].add("FY" if m.label == "FY" else "Q")
+    for cid, first in execute(
+        cur,
+        "select cf.company_id, min(p.end_date) from analytics.canonical_fact cf "
+        "join core.period p on p.id = cf.period_id where cf.company_id = any(%s) group by cf.company_id",
+        (ids,),
+        timeout_s,
+    ):
+        if cid in data:
+            data[cid].first_data_period = first
+    for d in data.values():
+        d.metric_kinds_seen = kinds_seen

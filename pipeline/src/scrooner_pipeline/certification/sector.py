@@ -35,18 +35,41 @@ def check(data: CompanyData) -> list[Finding]:
             reason = BANK_SUPPRESSED_METRICS.get(m.name)
             if reason is not None and m.value is not None:
                 out.append(
-                    finding(data, "I10", WRONG_VALUE, "bank_shows_suppressed_metric", m.name,
-                            stored=m.value, period_end=m.period_end, label=m.label,
-                            should_show=reason, sic=data.sic)
+                    finding(
+                        data,
+                        "I10",
+                        WRONG_VALUE,
+                        "bank_shows_suppressed_metric",
+                        m.name,
+                        stored=m.value,
+                        period_end=m.period_end,
+                        label=m.label,
+                        should_show=reason,
+                        sic=data.sic,
+                    )
                 )
     if data.bank_sic_without_evidence:
         out.append(
-            finding(data, "I10", REVIEW, "bank_sic_without_evidence", "sector_template",
-                    sic=data.sic, note="SIC in 6020-6036 but no bank tag evidence; family unconfirmed")
+            finding(
+                data,
+                "I10",
+                REVIEW,
+                "bank_sic_without_evidence",
+                "sector_template",
+                sic=data.sic,
+                note="SIC in 6020-6036 but no bank tag evidence; family unconfirmed",
+            )
         )
     if data.bank_evidence_without_sic:
         out.append(
-            finding(data, "I10", REVIEW, "bank_evidence_without_sic", "sector_template",
-                    sic=data.sic, note="files bank tags but SIC is not a bank SIC; family unconfirmed")
+            finding(
+                data,
+                "I10",
+                REVIEW,
+                "bank_evidence_without_sic",
+                "sector_template",
+                sic=data.sic,
+                note="files bank tags but SIC is not a bank SIC; family unconfirmed",
+            )
         )
     return out

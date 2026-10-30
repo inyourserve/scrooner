@@ -27,14 +27,34 @@ from .model import REVIEW, WRONG_VALUE, CompanyData, Finding, finding
 
 NONNEGATIVE_CONCEPTS = frozenset(
     {
-        "revenue", "cost_of_revenue", "operating_expenses", "sga_expense",
-        "research_and_development", "interest_expense", "sbc",
-        "depreciation_and_amortization", "amortization_of_intangibles",
-        "total_assets", "total_liabilities", "current_assets", "current_liabilities",
-        "cash_and_equivalents", "total_debt", "total_debt_split", "inventory",
-        "ppe_net", "goodwill", "accounts_receivable", "accounts_payable",
-        "shares_outstanding", "public_float", "employee_count",
-        "dividends_per_share", "dividends_paid", "share_buybacks", "capex",
+        "revenue",
+        "cost_of_revenue",
+        "operating_expenses",
+        "sga_expense",
+        "research_and_development",
+        "interest_expense",
+        "sbc",
+        "depreciation_and_amortization",
+        "amortization_of_intangibles",
+        "total_assets",
+        "total_liabilities",
+        "current_assets",
+        "current_liabilities",
+        "cash_and_equivalents",
+        "total_debt",
+        "total_debt_split",
+        "inventory",
+        "ppe_net",
+        "goodwill",
+        "accounts_receivable",
+        "accounts_payable",
+        "shares_outstanding",
+        "public_float",
+        "employee_count",
+        "dividends_per_share",
+        "dividends_paid",
+        "share_buybacks",
+        "capex",
     }
 )
 
@@ -65,7 +85,11 @@ def check(data: CompanyData) -> list[Finding]:
             )
         if EXTRA_NONNEGATIVE_TAGS:
             for s in sources:
-                if s.tag in EXTRA_NONNEGATIVE_TAGS and s.value < 0 and cell.base not in NONNEGATIVE_CONCEPTS:
+                if (
+                    s.tag in EXTRA_NONNEGATIVE_TAGS
+                    and s.value < 0
+                    and cell.base not in NONNEGATIVE_CONCEPTS
+                ):
                     findings.append(
                         finding(
                             data,
