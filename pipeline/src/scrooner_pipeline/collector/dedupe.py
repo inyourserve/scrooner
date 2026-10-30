@@ -51,13 +51,17 @@ def partition_unchanged(
 
 def dedupe_enabled(conn: psycopg.Connection) -> bool:
     with conn.cursor() as cur:
-        cur.execute("select to_regclass('raw.sec_companyfacts_unchanged_fetch') is not null")
+        cur.execute(
+            "select to_regclass('raw.sec_companyfacts_unchanged_fetch') is not null"
+        )
         row = cur.fetchone()
     conn.rollback()
     return bool(row and row[0])
 
 
-def latest_stored(conn: psycopg.Connection, ciks: list[str]) -> dict[str, tuple[int, str]]:
+def latest_stored(
+    conn: psycopg.Connection, ciks: list[str]
+) -> dict[str, tuple[int, str]]:
     if not ciks:
         return {}
     with conn.cursor() as cur:

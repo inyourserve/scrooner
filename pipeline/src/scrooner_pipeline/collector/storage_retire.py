@@ -44,7 +44,7 @@ import random
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 import structlog
 
@@ -119,9 +119,7 @@ def read_manifest(path: Path) -> list[Candidate]:
     return out
 
 
-def build_rule_s_plan(
-    rows: list[ObjectRow], referenced: set[int]
-) -> dict[int, int]:
+def build_rule_s_plan(rows: list[ObjectRow], referenced: set[int]) -> dict[int, int]:
     """raw_id -> keeper raw_id for every object Rule S would delete today.
 
     Keeper of a (cik, sha256) group = the latest fetched (ties: highest id).
@@ -135,10 +133,10 @@ def build_rule_s_plan(
             keeper[k] = r
     plan: dict[int, int] = {}
     for r in rows:
-        k = keeper[(r.cik, r.sha256)]
-        if r.raw_id == k.raw_id or r.raw_id in referenced:
+        kept = keeper[(r.cik, r.sha256)]
+        if r.raw_id == kept.raw_id or r.raw_id in referenced:
             continue
-        plan[r.raw_id] = k.raw_id
+        plan[r.raw_id] = kept.raw_id
     return plan
 
 
@@ -224,7 +222,9 @@ def execute_batch(
     ids = [c.raw_id for c in batch]
     hit = db.referenced_among(ids)
     if hit:
-        raise Abort(f"{len(hit)} object(s) are now referenced by core.fact: {sorted(hit)[:10]}")
+        raise Abort(
+            f"{len(hit)} object(s) are now referenced by core.fact: {sorted(hit)[:10]}"
+        )
     for c in batch:
         r, k = rows_by_id.get(c.raw_id), rows_by_id.get(c.keeper_raw_id)
         if r is None or k is None or (r.etag, r.size) != (k.etag, k.size):
@@ -290,7 +290,7 @@ def run(
         reasons[why] = reasons.get(why, 0) + 1
     already = db.retired_ids() if db.table_exists() else set()
     todo = [c for c in chk.approved if c.raw_id not in already]
-    summary = {
+    summary: dict[str, Any] = {
         "mode": mode,
         "manifest": len(manifest),
         "today_plan": len(plan),
@@ -335,7 +335,11 @@ def run(
             with ledger.open("a") as f:
                 f.write(
                     json.dumps(
-                        {**res, "raw_ids": [c.raw_id for c in part], "at": datetime.now(timezone.utc).isoformat()}
+                        {
+                            **res,
+                            "raw_ids": [c.raw_id for c in part],
+                            "at": datetime.now(timezone.utc).isoformat(),
+                        }
                     )
                     + "\n"
                 )
@@ -360,7 +364,9 @@ def _rollback(
         restored += len(done_ids)
         if ledger is not None:
             with ledger.open("a") as f:
-                f.write(json.dumps({"rollback": batch_label, "raw_ids": done_ids}) + "\n")
+                f.write(
+                    json.dumps({"rollback": batch_label, "raw_ids": done_ids}) + "\n"
+                )
     summary["restored"] = restored
     return summary
 
@@ -369,7 +375,9 @@ def _rollback(
 
 
 class PgDb:
-    def __init__(self, conn) -> None:  # psycopg connection, read/write only in execute modes
+    def __init__(
+        self, conn
+    ) -> None:  # psycopg connection, read/write only in execute modes
         self.conn = conn
 
     def _q(self, sql: str, args=None):
@@ -423,13 +431,18 @@ class PgDb:
         }
 
     def table_exists(self) -> bool:
-        return bool(self._q("select to_regclass('raw.storage_object_retired') is not null")[0][0])
+        return bool(
+            self._q("select to_regclass('raw.storage_object_retired') is not null")[0][
+                0
+            ]
+        )
 
     def retired_ids(self) -> set[int]:
         return {
             r[0]
             for r in self._q(
-                "select raw_id from raw.storage_object_retired where source_table = %s", (TABLE,)
+                "select raw_id from raw.storage_object_retired where source_table = %s",
+                (TABLE,),
             )
         }
 
@@ -450,7 +463,12 @@ class PgDb:
         self.conn.commit()
 
     def fetch_retired(self, batch: str | None) -> list[dict]:
-        cols = ["raw_id", "retired_storage_path", "keeper_storage_path", "executor_batch"]
+        cols = [
+            "raw_id",
+            "retired_storage_path",
+            "keeper_storage_path",
+            "executor_batch",
+        ]
         rows = self._q(
             "select raw_id, retired_storage_path, keeper_storage_path, executor_batch "
             "from raw.storage_object_retired where source_table = %s "
@@ -469,7 +487,9 @@ class PgDb:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--manifest", required=True, type=Path)
-    ap.add_argument("--mode", default="dry-run", choices=["dry-run", "pilot", "execute", "rollback"])
+    ap.add_argument(
+        "--mode", default="dry-run", choices=["dry-run", "pilot", "execute", "rollback"]
+    )
     ap.add_argument("--batch-size", type=int, default=2000)
     ap.add_argument("--pilot-n", type=int, default=500)
     ap.add_argument("--sha-sample", type=int, default=10)
@@ -491,9 +511,16 @@ def main(argv: list[str] | None = None) -> int:
         else:
             with SupabaseStorageClient() as store:
                 summary = run(
-                    db, store, manifest, args.mode,
-                    batch_size=args.batch_size, pilot_n=args.pilot_n, seed=args.seed,
-                    sha_sample=args.sha_sample, ledger=args.ledger, confirm=args.confirm,
+                    db,
+                    store,
+                    manifest,
+                    args.mode,
+                    batch_size=args.batch_size,
+                    pilot_n=args.pilot_n,
+                    seed=args.seed,
+                    sha_sample=args.sha_sample,
+                    ledger=args.ledger,
+                    confirm=args.confirm,
                     rollback_batch=args.rollback_batch,
                 )
     print(json.dumps(summary, indent=2, default=str))
