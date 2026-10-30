@@ -373,6 +373,13 @@ RULES: dict[str, Rule] = {
             dry_run=True,
         ),
         _r(
+            "retire.derived_per_share_cells@1",
+            "-",
+            "data_engineer",
+            "retire stored derived EPS facts (quarters by subtraction) and their cells",
+            dry_run=True,
+        ),
+        _r(
             "ownership.institutional_share_base@1",
             "RF-47",
             "lane2",
