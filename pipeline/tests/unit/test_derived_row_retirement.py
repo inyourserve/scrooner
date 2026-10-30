@@ -1314,3 +1314,171 @@ def test_whole_dollar_page_with_six_trailing_zeros_is_a_millions_rounding():
     assert face.printed_unit("0000000001", "A", _fx("1893000000")) == Decimal(
         10**6
     )  # ABNB FY input
+
+
+# ------------------------------------------------------------------ family C (derived EPS), unit
+BASIC, DILUTED, BOTH = 11, 12, 13  # EarningsPerShareBasic / Diluted / BasicAndDiluted
+CC_B, CC_D, CC_BR = 117, 15, 291  # basic_eps, diluted_eps, basic_eps_resolved
+
+
+def _eps(
+    fid,
+    concept,
+    period,
+    value,
+    *,
+    derived=False,
+    fp="Q4",
+    end=date(2025, 12, 31),
+    filed=date(2026, 2, 1),
+):
+    return (fid, 1, period, concept, "T", "usd/shares", fp, None, end, Decimal(value), True, derived,
+            "10-K", f"acc{fid}", filed)  # fmt: skip
+
+
+class _FakeCur:
+    """Answers the family C queries by their SQL text."""
+
+    def __init__(self, derived, cells, filed):
+        self.derived, self.cells, self.filed, self.rows = derived, cells, filed, []
+
+    def execute(self, sql, params=None):
+        if "f.is_derived\n  and f.concept_id" in sql:
+            self.rows = [r for r in self.derived if r[3] in params["cids"]]
+        elif (
+            "from analytics.concept_mapping cm" in sql
+            and "select distinct cc.id" in sql
+        ):
+            self.rows = [(CC_B,), (CC_D,), (CC_BR,)]
+        elif "cf.source_fact_ids && %(fids)s" in sql and "canonical_fact cf" in sql:
+            self.rows = [c for c in self.cells if set(c[7]) & set(params["fids"])]
+        elif "not f.is_derived\n  and fl.form" in sql:
+            self.rows = [
+                r
+                for r in self.filed
+                if r[3] in params["cids"] and r[2] in params["pids"]
+            ]
+        elif "metric_value mv" in sql:
+            self.rows = []
+        else:
+            raise AssertionError(sql)
+
+    def fetchall(self):
+        return self.rows
+
+
+PRIORITY = {"basic_eps": {BASIC: 1, BOTH: 2}, "diluted_eps": {DILUTED: 1, BOTH: 2}}
+
+
+def _plan_c(derived, cells, filed):
+    return rr.plan_per_share_chunk(
+        _FakeCur(derived, cells, filed), [1], uids=[9], priority_by_name=PRIORITY
+    )
+
+
+@pytest.mark.unit
+def test_family_c_rule_is_registered_default_off_and_reasons_have_text():
+    assert (
+        rr.RULE_PER_SHARE in rf.RULES and rf.rule_mode(rr.RULE_PER_SHARE, {}) == rf.OFF
+    )
+    for code in (
+        "per_share_not_filed_separately",
+        "per_share_not_captured",
+        "per_share_filed_copies_disagree",
+    ):
+        assert rr.REASON_TEXT[code]
+
+
+@pytest.mark.unit
+def test_per_share_reason_follows_item_302a():
+    # FY ending on/after 2021-08-09: Q4 EPS is not filed separately; before it the 10-K quarterly note filed it
+    assert (
+        rr.per_share_reason("Q4", date(2021, 12, 31))
+        == "per_share_not_filed_separately"
+    )
+    assert (
+        rr.per_share_reason("Q4", date(2021, 8, 9)) == "per_share_not_filed_separately"
+    )
+    assert rr.per_share_reason("Q4", date(2020, 12, 31)) == "per_share_not_captured"
+    assert (
+        rr.per_share_reason("Q2", date(2025, 6, 30)) == "per_share_not_captured"
+    )  # every 10-Q files Q2
+    assert rr.per_share_reason(None, date(2025, 6, 30)) == "per_share_not_captured"
+
+
+@pytest.mark.unit
+def test_family_c_replaces_from_the_cells_own_mapping_and_removes_with_the_era_reason():
+    derived = [
+        _eps(
+            100, BOTH, 1, "1.10", derived=True
+        ),  # FY 4.40 - 9M 3.30: one fact feeds basic AND diluted
+        _eps(110, BASIC, 2, "0.95", derived=True, end=date(2019, 12, 31)),
+        _eps(120, BASIC, 3, "0.50", derived=True),
+        _eps(130, BASIC, 4, "0.70", derived=True),
+    ]
+    cells = [
+        (1000, 1, CC_B, "basic_eps", 1, date(2025, 12, 31), Decimal("1.10"), [100]),
+        (1001, 1, CC_D, "diluted_eps", 1, date(2025, 12, 31), Decimal("1.10"), [100]),
+        (1002, 1, CC_B, "basic_eps", 2, date(2019, 12, 31), Decimal("0.95"), [110]),
+        (
+            1003,
+            1,
+            CC_BR,
+            "basic_eps_resolved",
+            3,
+            date(2025, 12, 31),
+            Decimal("0.25"),
+            [120],
+        ),  # 2:1 re-based
+        (1004, 1, CC_B, "basic_eps", 4, date(2025, 12, 31), Decimal("0.70"), [130]),
+        (
+            1005,
+            1,
+            999,
+            "dividends_per_share",
+            1,
+            date(2025, 12, 31),
+            Decimal("1.10"),
+            [100],
+        ),  # not family C
+    ]
+    filed = [
+        _eps(200, BASIC, 1, "1.12"),  # a filed discrete basic Q4 (10-K quarterly note)
+        _eps(210, DILUTED, 9, "9"),  # another period: never a candidate
+        _eps(230, BASIC, 4, "0.71", filed=date(2026, 2, 1)),
+        _eps(231, BASIC, 4, "0.69", filed=date(2026, 3, 1)),  # copies disagree
+    ]
+    plan = _plan_c(derived, cells, filed)
+    by = {
+        c.canonical_fact_id: (c.action, c.reason_code, c.replacement_fact_id)
+        for c in plan.cells
+    }
+    assert by == {
+        1000: (rr.ACT_REPLACE, None, 200),
+        1001: (
+            rr.ACT_REMOVE,
+            "per_share_not_filed_separately",
+            None,
+        ),  # basic's copy never fills diluted
+        1002: (
+            rr.ACT_REMOVE,
+            "per_share_not_captured",
+            None,
+        ),  # FY2019: the 10-K had to file Q4
+        1003: (rr.ACT_REVIEW, None, None),
+        1004: (rr.ACT_REMOVE, "per_share_filed_copies_disagree", None),
+    }
+    assert sorted(f.fact_id for f in plan.facts) == [100, 110, 120, 130]
+    assert plan.family == "C_per_share_derived" and plan.rule_id == rr.RULE_PER_SHARE
+
+
+@pytest.mark.unit
+def test_family_c_leaves_a_cell_with_other_sources_for_review():
+    derived = [_eps(100, BASIC, 1, "1.10", derived=True)]
+    cells = [
+        (1000, 1, CC_B, "basic_eps", 1, date(2025, 12, 31), Decimal("1.10"), [100, 101])
+    ]
+    plan = _plan_c(derived, cells, [])
+    assert [(c.action, c.note) for c in plan.cells] == [
+        (rr.ACT_REVIEW, "has other sources")
+    ]
