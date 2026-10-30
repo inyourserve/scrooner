@@ -723,7 +723,11 @@ def resolve_capex_with_software(
 ) -> int:
     capex_id = _concept_id(conn, "capex")
     resolved_id = _concept_id(conn, "capex_resolved")
-    params = {"resolved_id": resolved_id, "capex_id": capex_id, "company_ids": company_ids}
+    params = {
+        "resolved_id": resolved_id,
+        "capex_id": capex_id,
+        "company_ids": company_ids,
+    }
     with conn.cursor() as cur:
         cur.execute(
             "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s"

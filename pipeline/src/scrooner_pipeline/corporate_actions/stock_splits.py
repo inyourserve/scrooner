@@ -117,7 +117,11 @@ def detect_stock_splits(
             join core.period p on p.id = f.period_id
             where c.tag = any(%(tags)s) and f.is_authoritative = true and p.period_type = 'instant'
             """
-            + (" and f.company_id = any(%(company_ids)s)" if company_ids is not None else ""),
+            + (
+                " and f.company_id = any(%(company_ids)s)"
+                if company_ids is not None
+                else ""
+            ),
             {"tags": list(SPLIT_RATIO_TAGS), "company_ids": company_ids},
         )
         rows = cur.fetchall()
@@ -274,7 +278,11 @@ def resolve_retroactive_split_adjustments(
     with conn.cursor() as cur:
         cur.execute(
             "select company_id, effective_date, ratio, source_fact_id from analytics.company_stock_split"
-            + (" where company_id = any(%(company_ids)s)" if company_ids is not None else ""),
+            + (
+                " where company_id = any(%(company_ids)s)"
+                if company_ids is not None
+                else ""
+            ),
             {"company_ids": company_ids},
         )
         split_rows = cur.fetchall()

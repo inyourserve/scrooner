@@ -196,14 +196,20 @@ def _company_ids_for_ciks(conn, ciks: str | None) -> list[int] | None:
         return None
     wanted = sorted({c.strip().zfill(10) for c in ciks.split(",") if c.strip()})
     with conn.cursor() as cur:
-        cur.execute("select id from core.company where cik = any(%s) order by id", (wanted,))
+        cur.execute(
+            "select id from core.company where cik = any(%s) order by id", (wanted,)
+        )
         ids = [row[0] for row in cur.fetchall()]
     if len(ids) != len(wanted):
-        typer.echo(f"warning: {len(wanted) - len(ids)} of {len(wanted)} CIKs not in core.company")
+        typer.echo(
+            f"warning: {len(wanted) - len(ids)} of {len(wanted)} CIKs not in core.company"
+        )
     return ids
 
 
-def _run_resolve_stage(name: str, fn, ciks: str | None, dry_run: bool, statement_timeout: str):
+def _run_resolve_stage(
+    name: str, fn, ciks: str | None, dry_run: bool, statement_timeout: str
+):
     """Shared driver for the two formerly population-only resolve stages
     (2026-10-31). `statement_timeout` is set on the session because the pooler
     default (2 min) killed these stages population-wide more than once (root
@@ -225,7 +231,9 @@ def _run_resolve_stage(name: str, fn, ciks: str | None, dry_run: bool, statement
             if dry_run:
                 conn.rollback()
     scope = f"{len(company_ids)} companies" if company_ids is not None else "population"
-    typer.echo(f"{name} ({scope}{', DRY RUN, rolled back' if dry_run else ''}): {stats}")
+    typer.echo(
+        f"{name} ({scope}{', DRY RUN, rolled back' if dry_run else ''}): {stats}"
+    )
 
 
 @app.command("resolve-statement-fallbacks")
@@ -233,9 +241,12 @@ def resolve_statement_fallbacks_cmd(
     ciks: str = typer.Option(
         None, help="Comma-separated CIKs to restrict to (default: whole population)."
     ),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Run and roll back; write nothing."),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Run and roll back; write nothing."
+    ),
     statement_timeout: str = typer.Option(
-        "10min", help="Postgres statement_timeout for this session (pooler default is 2min)."
+        "10min",
+        help="Postgres statement_timeout for this session (pooler default is 2min).",
     ),
 ) -> None:
     """Migration 0047 / 2026-09-07: gross_profit_resolved,
@@ -350,9 +361,12 @@ def resolve_conflict_fills_cmd(
     ciks: str = typer.Option(
         None, help="Comma-separated CIKs to restrict to (default: whole population)."
     ),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Run and roll back; write nothing."),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Run and roll back; write nothing."
+    ),
     statement_timeout: str = typer.Option(
-        "10min", help="Postgres statement_timeout for this session (pooler default is 2min)."
+        "10min",
+        help="Postgres statement_timeout for this session (pooler default is 2min).",
     ),
 ) -> None:
     """Migration 0059 / 2026-09-09: fills a statement-table cell that's
@@ -367,7 +381,11 @@ def resolve_conflict_fills_cmd(
     company that filed after the last manual population recompute (2026-10-21)
     had a new net_income fact and no net_income_resolved row."""
     _run_resolve_stage(
-        "resolve-conflict-fills", resolve_all_conflict_fills, ciks, dry_run, statement_timeout
+        "resolve-conflict-fills",
+        resolve_all_conflict_fills,
+        ciks,
+        dry_run,
+        statement_timeout,
     )
 
 

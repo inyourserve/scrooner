@@ -177,7 +177,8 @@ def _load_already_resolved(
     with conn.cursor() as cur:
         cur.execute(
             "select company_id, period_id from analytics.canonical_fact "
-            "where canonical_concept_id = %(resolved_id)s" + _company_scope(company_ids),
+            "where canonical_concept_id = %(resolved_id)s"
+            + _company_scope(company_ids),
             {"resolved_id": resolved_id, "company_ids": company_ids},
         )
         return {(row[0], row[1]) for row in cur.fetchall()}
@@ -259,7 +260,11 @@ def resolve_baseline_passthrough(
             + """
             on conflict (company_id, canonical_concept_id, period_id) do nothing
             """,
-            {"resolved_id": resolved_id, "primary_id": primary_id, "company_ids": company_ids},
+            {
+                "resolved_id": resolved_id,
+                "primary_id": primary_id,
+                "company_ids": company_ids,
+            },
         )
         inserted = cur.rowcount
     conn.commit()
@@ -1375,7 +1380,9 @@ def resolve_all_conflict_fills(
     # CONFLICT_FILL_TARGETS at all (a standalone concept, not one of the
     # 24 dedupe-conflict-shaped statement lines), so it's simplest run
     # here rather than invented its own CLI step for one concept.
-    per_concept["capex_software"] = {"rows": resolve_capex_with_software(conn, company_ids)}
+    per_concept["capex_software"] = {
+        "rows": resolve_capex_with_software(conn, company_ids)
+    }
     per_concept["depreciation_and_amortization_max"] = {
         "rows": resolve_depreciation_and_amortization_max(conn, company_ids)
     }
