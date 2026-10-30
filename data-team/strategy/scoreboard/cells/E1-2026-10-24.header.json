@@ -1,0 +1,12 @@
+{
+ "authorised_by": "Dhairya under delegation, plan approved by the founder 2026-10-24; slot released by scrooner-4d 2026-10-24 12:35Z",
+ "certification_checks_run_at": "None",
+ "certification_table_exists": true,
+ "connections_at_start": 12,
+ "coverage_checked_at": "2026-10-24 08:45:12.434048+00:00",
+ "finished": "2026-10-24T12:30:58.119290+00:00",
+ "has_value_any_period_exists": true,
+ "period_gap_checked_at": "2026-10-24 12:07:40.275192+00:00",
+ "snapshot_date": "2026-10-24",
+ "started": "2026-10-24T12:24:30.067554+00:00"
+}

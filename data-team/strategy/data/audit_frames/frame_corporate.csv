@@ -1,0 +1,705 @@
+company_id,cik,ticker,company_name,group,variant,overlays,assignment_basis,stratum,risk_flags,risk_score,s2_opened,tier,proposed_draw
+2733,0001045810,NVDA,NVIDIA CORP,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3,0000320193,AAPL,Apple Inc.,corporate,,,code,top100|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+9,0001652044,GOOG,Alphabet Inc.,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+4,0000789019,MSFT,MICROSOFT CORP,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+2328,0001018724,AMZN,AMAZON COM INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+5050,0001326801,META,"Meta Platforms, Inc.",corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+5116,0001730168,AVGO,Broadcom Inc.,corporate,,,code,top100|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4945,0001318605,TSLA,"Tesla, Inc.",corporate,ev_manufacturer,crypto_holdings,hand_read,top100|calendar|era2026,overlay;hand_read,2,N,V,not_drawn
+666,0000059478,LLY,ELI LILLY & Co,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1321,0000723125,MU,MICRON TECHNOLOGY INC,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+1134,0000104169,WMT,Walmart Inc.,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+85,0000002488,AMD,ADVANCED MICRO DEVICES INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+5718,0001403161,V,VISA INC.,corporate,,,code,top100|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+1164,0000200406,JNJ,JOHNSON & JOHNSON,corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3932,0001141391,MA,Mastercard Inc,corporate,,,code,top100|calendar|era2026,,0,N,V,random60
+2848,0001551152,ABBV,AbbVie Inc.,corporate,,,code,top100|calendar|era2026,,0,N,V,random60
+643,0000050863,INTC,INTEL CORP,corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4969,0001321655,PLTR,Palantir Technologies Inc.,corporate,,,code_reader,top100|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1857,0000909832,COST,COSTCO WHOLESALE CORP /NEW,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1649,0000858877,CSCO,"CISCO SYSTEMS, INC.",corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+279,0000021344,KO,COCA COLA CO,corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+5203,0001341439,ORCL,ORACLE CORP,corporate,,,code_reader,top100|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1042,0000080424,PG,PROCTER & GAMBLE Co,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1182,0000310158,MRK,"Merck & Co., Inc.",corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+251,0000018230,CAT,CATERPILLAR INC,corporate,equipment_manufacturer,captive_finance,hand_read,top100|calendar|era2026,overlay;hand_read,2,N,V,not_drawn
+1263,0000707549,LRCX,LAM RESEARCH CORP,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+608,0000040545,GE,GENERAL ELECTRIC CO,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+134,0000006951,AMAT,APPLIED MATERIALS INC /DE,corporate,,,code,top100|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+5761,0001413329,PM,Philip Morris International Inc.,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1236,0000354950,HD,"HOME DEPOT, INC.",corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3007,0001065280,NFLX,NETFLIX INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+3083,0001571996,DELL,Dell Technologies Inc.,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5058,0001327567,PANW,Palo Alto Networks Inc,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+1123,0000101829,RTX,RTX Corp,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1105,0000097745,TMO,THERMO FISHER SCIENTIFIC INC.,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1104,0000097476,TXN,TEXAS INSTRUMENTS INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+4015,0001996810,GEV,GE Vernova Inc.,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1207,0000318154,AMGN,AMGEN INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+2726,0001535527,CRWD,"CrowdStrike Holdings, Inc.",corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4841,0001707925,LIN,LINDE PLC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+3418,0001596532,ANET,"Arista Networks, Inc.",corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3398,0001594805,SHOP,SHOPIFY INC.,corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1213,0000319201,KLAC,KLA CORP,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,Y,V,not_drawn
+644,0000051143,IBM,INTERNATIONAL BUSINESS MACHINES CORP,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+2683,0001835632,MRVL,"Marvell Technology, Inc.",corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3569,0001108524,CRM,"Salesforce, Inc.",corporate,,,code,top100|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+1732,0000882095,GILD,"GILEAD SCIENCES, INC.",corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+128,0000006281,ADI,ANALOG DEVICES INC,corporate,,,code,top100|noncalendar|era2025,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+5261,0001744489,DIS,Walt Disney Co,corporate,,,code,top100|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4227,0002023554,SNDK,Sandisk Corp,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+1358,0000732712,VZ,VERIZON COMMUNICATIONS INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+76,0000001800,ABT,ABBOTT LABORATORIES,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1516,0000804328,QCOM,QUALCOMM INC/DE,corporate,,,code,top100|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+1028,0000077476,PEP,PEPSICO INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1196,0000315189,DE,DEERE & CO,corporate,equipment_manufacturer,captive_finance,hand_read,top100|noncalendar|era2025,overlay;hand_read;noncalendar_fye;finsignals=1,3,N,V,risk15
+1117,0000100885,UNP,UNION PACIFIC CORP,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+683,0000063908,MCD,MCDONALDS CORP,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+4630,0001283699,TMUS,"T-Mobile US, Inc.",corporate,,,code_reader,top100|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,not_drawn
+1030,0000078003,PFE,PFIZER INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+2124,0001001838,SCCO,SOUTHERN COPPER CORP/,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1158,0000109198,TJX,TJX COMPANIES INC /DE/,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1190,0000313616,DHR,DANAHER CORP /DE/,corporate,,,code,top100|calendar|era2026,,0,N,V,random60
+1359,0000732717,T,AT&T INC.,corporate,,,code_reader,top100|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+2852,0001551182,ETN,Eaton Corp plc,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+207,0000012927,BA,BOEING CO,corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2540,0001035267,ISRG,INTUITIVE SURGICAL INC,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+5480,0001373715,NOW,"ServiceNow, Inc.",corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3886,0001137789,STX,Seagate Technology Holdings plc,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2787,0001543151,UBER,"Uber Technologies, Inc",corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+5943,0001467373,ACN,Accenture plc,corporate,,,code,top100|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1975,0000936468,LMT,LOCKHEED MARTIN CORP,corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+1700,0000875320,VRTX,VERTEX PHARMACEUTICALS INC / MA,corporate,,,code,top100|calendar|era2026,,0,Y,V,not_drawn
+684,0000064040,SPGI,S&P Global Inc.,corporate,,,code,top100|calendar|era2026,,0,N,V,random60
+1413,0000764180,MO,"ALTRIA GROUP, INC.",corporate,,,code,top100|calendar|era2026,,0,N,V,not_drawn
+4077,0001164727,NEM,NEWMONT Corp /DE/,corporate,,,code,top100|calendar|era2026,,0,N,V,random60
+4447,0001262039,FTNT,"Fortinet, Inc.",corporate,,,code,top100|calendar|era2026,,0,N,V,random60
+215,0000014272,BMY,BRISTOL MYERS SQUIBB CO,corporate,,,code,top100|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3155,0001075531,BKNG,Booking Holdings Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+1025,0000076334,PH,Parker-Hannifin Corp,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+3639,0001613103,MDT,Medtronic plc,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+687,0000064803,CVS,CVS HEALTH Corp,corporate,retail_pbm_insurer,managed_care_operations,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=3,2,N,V,not_drawn
+1145,0000106040,WDC,WESTERN DIGITAL CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1949,0000927653,MCK,MCKESSON CORP,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+171,0000008670,ADP,AUTOMATIC DATA PROCESSING INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+1185,0000310764,SYK,STRYKER CORP,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+303,0000024741,GLW,CORNING INC /NY,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+671,0000060667,LOW,LOWES COMPANIES INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1583,0000829224,SBUX,STARBUCKS CORP,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+3982,0001640147,SNOW,Snowflake Inc.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+2929,0001559720,ABNB,"Airbnb, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2007,0001477333,NET,"Cloudflare, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1653,0000860730,HCA,"HCA Healthcare, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+5941,0001466258,TT,Trane Technologies plc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2785,0001048286,MAR,MARRIOTT INTERNATIONAL INC /MD/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1587,0000831259,FCX,FREEPORT-MCMORAN INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1554,0000820313,APH,AMPHENOL CORP /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+1488,0000796343,ADBE,ADOBE INC.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2832,0001050915,PWR,"QUANTA SERVICES, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+607,0000040533,GD,GENERAL DYNAMICS CORP,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3465,0001099590,MELI,MERCADOLIBRE INC,corporate,,,code,rest|calendar|era2026,;finsignals=2,0,N,V,negctl15
+1567,0000823768,WM,WASTE MANAGEMENT INC,corporate,,,code,rest|calendar|era2026,moved_from_draft,1,Y,V,not_drawn
+1178,0000277948,CSX,CSX CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1595,0000833444,JCI,Johnson Controls International plc,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+367,0000032604,EMR,EMERSON ELECTRIC CO,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+5338,0001751008,APP,AppLovin Corp,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+105,0000004281,HWM,Howmet Aerospace Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1534,0000813672,CDNS,CADENCE DESIGN SYSTEMS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1740,0000883241,SNPS,SYNOPSYS INC,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+1817,0000896878,INTU,INTUIT INC.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+2956,0001561550,DDOG,"Datadog, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4553,0001682852,MRNA,"Moderna, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+700,0000066740,MMM,3M CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1323,0000723254,CTAS,CINTAS CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2944,0001059556,MCO,MOODYS CORP /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1686,0000872589,REGN,"REGENERON PHARMACEUTICALS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3343,0001090727,UPS,UNITED PARCEL SERVICE INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+3510,0001103982,MDLZ,"Mondelez International, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5698,0001792789,DASH,"DoorDash, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1068,0000089800,SHW,SHERWIN WILLIAMS CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+361,0000031462,ECL,ECOLAB INC.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4398,0001674101,VRT,Vertiv Holdings Co,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4095,0001166691,CMCSA,COMCAST CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3291,0001585689,HLT,Hilton Worldwide Holdings Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+637,0000049826,ITW,ILLINOIS TOOL WORKS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+706,0000068505,MSI,"Motorola Solutions, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+241,0000016875,CP,CANADIAN PACIFIC KANSAS CITY LTD/CN,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1379,0000745732,ROST,"ROSS STORES, INC.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+283,0000021665,CL,COLGATE PALMOLIVE CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5947,0001467858,GM,General Motors Co,corporate,auto_manufacturer,captive_finance,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=1,2,N,V,not_drawn
+1750,0000884887,RCL,ROYAL CARIBBEAN CRUISES LTD,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3849,0001133421,NOC,NORTHROP GRUMMAN CORP /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3898,0001633978,LITE,Lumentum Holdings Inc.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1253,0000702165,NSC,NORFOLK SOUTHERN CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+318,0000026172,CMI,CUMMINS INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4057,0001645590,HPE,Hewlett Packard Enterprise Co,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+1823,0000898173,ORLY,O REILLY AUTOMOTIVE INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+2951,0001060391,RSG,"REPUBLIC SERVICES, INC.",corporate,,,code,rest|calendar|era2026,moved_from_draft,1,Y,V,not_drawn
+327,0000027419,TGT,TARGET CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2798,0001048911,FDX,FEDEX CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+1436,0000773840,HON,HONEYWELL INTERNATIONAL INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+89,0000002969,APD,"Air Products & Chemicals, Inc.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+3918,0001140859,COR,"Cencora, Inc.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+3030,0001067701,URI,"UNITED RENTALS, INC.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,random60
+1759,0000885725,BSX,BOSTON SCIENTIFIC CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4432,0001260221,TDG,TransDigm Group INC,corporate,,,code_reader,rest|noncalendar|era2025,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+1176,0000277135,GWW,"W.W. GRAINGER, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+4283,0001664703,BE,Bloom Energy Corp,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5577,0001385157,TEL,TE Connectivity plc,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4586,0001280452,MPWR,"MONOLITHIC POWER SYSTEMS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1316,0000721371,CAH,CARDINAL HEALTH INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+1544,0000815556,FAST,FASTENAL CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1021,0000075362,PCAR,PACCAR INC,corporate,truck_manufacturer,captive_finance,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=3,2,Y,V,risk15
+5762,0001413447,NXPI,NXP Semiconductors N.V.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1013,0000073309,NUE,NUCOR CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2576,0001037868,AME,AMETEK INC/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3538,0001604821,NTRA,"Natera, Inc.",corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+3478,0001601046,KEYS,"Keysight Technologies, Inc.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+1629,0000849395,CRH,CRH PUBLIC LTD CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4744,0001701605,BKR,Baker Hughes Co,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+2,0000320187,NKE,"NIKE, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3695,0001121788,GRMN,GARMIN LTD,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3001,0001065088,EBAY,EBAY INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+4115,0001650372,TEAM,Atlassian Corp,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+195,0000010795,BDX,BECTON DICKINSON & CO,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+1677,0000866787,AZO,AUTOZONE INC,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+417,0000037996,F,FORD MOTOR CO,corporate,auto_manufacturer,captive_finance,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=1,2,N,V,not_drawn
+1102,0000097210,TER,"TERADYNE, INC",corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+2553,0001035983,FIX,COMFORT SYSTEMS USA INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+5632,0001393052,VEEV,VEEVA SYSTEMS INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+3470,0001099800,EW,Edwards Lifesciences Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3895,0001633917,PYPL,"PayPal Holdings, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,not_drawn
+329,0000027904,DAL,"DELTA AIR LINES, INC.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,random60
+5170,0001736297,ALAB,"Astera Labs, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1427,0000769397,ADSK,"Autodesk, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3346,0001090872,A,"AGILENT TECHNOLOGIES, INC.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+1983,0000943452,WAB,WESTINGHOUSE AIR BRAKE TECHNOLOGIES CORP,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1550,0000818686,TEVA,TEVA PHARMACEUTICAL INDUSTRIES LTD,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2432,0001024478,ROK,"ROCKWELL AUTOMATION, INC",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+5779,0001418135,KDP,Keurig Dr Pepper Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+5069,0001327811,WDAY,"Workday, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1974,0000936395,CIEN,CIENA CORP,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+8,0001512673,XYZ,"Block, Inc.",corporate,payments,lending_operations;crypto_holdings,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=2,2,N,V,not_drawn
+1166,0000202058,LHX,"L3HARRIS TECHNOLOGIES, INC. /DE/",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5606,0001783180,CARR,CARRIER GLOBAL Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+1555,0000820318,COHR,COHERENT CORP.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4114,0002011641,FERG,Ferguson Enterprises Inc. /DE/,corporate,,,code_reader,rest|noncalendar|era2025,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+1670,0000865752,MNST,Monster Beverage Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2025,0001478242,IQV,IQVIA HOLDINGS INC.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1695,0000874716,IDXX,IDEXX LABORATORIES INC /DE,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4619,0001690820,CVNA,CARVANA CO.,corporate,,,code,rest|calendar|era2026,;finsignals=2,0,N,V,not_drawn
+2087,0001000697,WAT,WATERS CORP /DE/,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+4929,0001318220,WCN,"Waste Connections, Inc.",corporate,,,code,rest|calendar|era2026,moved_from_draft,1,N,V,not_drawn
+5735,0001408198,MSCI,MSCI Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5969,0001474432,P,"Everpure, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,Y,V,not_drawn
+2641,0001041061,YUM,YUM BRANDS INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5150,0001335258,LYV,"Live Nation Entertainment, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1577,0000827054,MCHP,MICROCHIP TECHNOLOGY INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+140,0000007084,ADM,Archer-Daniels-Midland Co,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2133,0001002047,NTAP,"NetApp, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1324,0000723531,PAYX,PAYCHEX INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1095,0000096021,SYY,SYSCO CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3596,0001110803,ILMN,"ILLUMINA, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1714,0000878927,ODFL,"OLD DOMINION FREIGHT LINE, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1733,0000882184,DHI,HORTON D R INC /DE/,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye;finsignals=3,1,N,V,negctl15
+3893,0001138118,CBRE,"CBRE GROUP, INC.",corporate,real_estate_services,,hand_read,rest|calendar|era2026,hand_read;finsignals=1,1,Y,V,not_drawn
+2031,0000946581,TTWO,TAKE TWO INTERACTIVE SOFTWARE INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+2107,0001001250,EL,ESTEE LAUDER COMPANIES INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2921,0001058090,CMG,CHIPOTLE MEXICAN GRILL INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1737,0000882835,ROP,ROPER TECHNOLOGIES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3831,0001628171,RVMD,"Revolution Medicines, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+659,0000056873,KR,KROGER CO,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5893,0001447669,TWLO,TWILIO INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=3,1,N,V,negctl15
+2385,0001511737,UI,Ubiquiti Inc.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3739,0001944048,KVUE,Kenvue Inc.,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4904,0001315098,RBLX,Roblox Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2572,0001037646,MTD,METTLER TOLEDO INTERNATIONAL INC/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+654,0000055785,KMB,KIMBERLY CLARK CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2081,0001802768,RPRX,Royalty Pharma plc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=3,1,N,V,negctl15
+1543,0000815097,CCL,Carnival Corp Ltd.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=2,2,N,V,negctl15
+2476,0001030894,CLS,CELESTICA INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+628,0000047111,HSY,HERSHEY CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2396,0001022671,STLD,STEEL DYNAMICS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1985,0000943819,RMD,RESMED INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1699,0000875045,BIIB,BIOGEN INC.,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3908,0001973266,TKO,"TKO Group Holdings, Inc.",corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+4935,0001713683,ZS,"Zscaler, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,Y,V,not_drawn
+5663,0001396009,VMC,Vulcan Materials CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1673,0000866374,FLEX,FLEX LTD.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+4994,0001324424,EXPE,"Expedia Group, Inc.",corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+2895,0001555280,ZTS,Zoetis Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+4239,0001660134,OKTA,"Okta, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+3365,0001093557,DXCM,DEXCOM INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+5511,0001769628,CRWV,"CoreWeave, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1142,0000105634,EME,"EMCOR Group, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2151,0001807794,CRDO,Credo Technology Group Holding Ltd,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+3048,0001069183,AXON,"AXON ENTERPRISE, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3661,0001932393,GEHC,GE HealthCare Technologies Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1113,0000100517,UAL,"United Airlines Holdings, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2926,0001058290,CTSH,COGNIZANT TECHNOLOGY SOLUTIONS CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4237,0001178670,ALNY,"ALNYLAM PHARMACEUTICALS, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,not_drawn
+4967,0002083785,SUNB,"Sunbelt Rentals Holdings, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+4526,0002046386,MDLN,Medline Inc.,corporate,,,hand_read,rest|calendar|era2026,hand_read;finsignals=2,1,N,V,not_drawn
+2370,0001819994,RKLB,Rocket Lab Corp,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+4719,0001699150,IR,Ingersoll Rand Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1897,0000916076,MLM,MARTIN MARIETTA MATERIALS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+341,0000029534,DG,DOLLAR GENERAL CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+10,0001713445,RDDT,"Reddit, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1310,0000719955,WSM,WILLIAMS SONOMA INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1825,0000898293,JBL,JABIL INC,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,Y,V,not_drawn
+3385,0001094285,TDY,TELEDYNE TECHNOLOGIES INC,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+3940,0001637459,KHC,Kraft Heinz Co,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+3439,0001097864,ON,ON SEMICONDUCTOR CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3283,0001585521,ZM,"Zoom Communications, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+629,0000047217,HPQ,HP INC,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4530,0001681459,FTI,TechnipFMC plc,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2286,0001014473,VRSN,VERISIGN INC/CA,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5585,0001781335,OTIS,Otis Worldwide Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1144,0000105770,WST,WEST PHARMACEUTICAL SERVICES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5874,0001441816,MDB,"MongoDB, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+345,0000029905,DOV,DOVER Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3814,0001957132,SN,"SharkNinja, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4197,0001175454,CPAY,"CORPAY, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,not_drawn
+2665,0001834584,CPNG,"Coupang, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3710,0001618756,QSR,Restaurant Brands International Inc.,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+2378,0001022079,DGX,QUEST DIAGNOSTICS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1834,0000900075,CPRT,COPART INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1913,0000920148,LH,LABCORP HOLDINGS INC.,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+1337,0000726958,CASY,CASEYS GENERAL STORES INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,Y,V,risk15
+1382,0000746515,EXPD,EXPEDITORS INTERNATIONAL OF WASHINGTON INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5721,0001403568,ULTA,"Ulta Beauty, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2335,0001018963,ATI,ATI INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1498,0000798354,FISV,FISERV INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2793,0001048695,FFIV,"F5, INC.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+5875,0001442145,VRSK,"Verisk Analytics, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3880,0001967680,VLTO,Veralto Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1191,0000313927,CHD,CHURCH & DWIGHT CO INC /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5771,0001415404,ECHO,EchoStar CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4813,0001300514,LVS,LAS VEGAS SANDS CORP,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1981,0000940944,DRI,DARDEN RESTAURANTS INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2542,0001524472,XYL,Xylem Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+632,0000048898,HUBB,HUBBELL INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3907,0001635088,ROIV,Roivant Sciences Ltd.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+4627,0002058873,Q,"Qnity Electronics, Inc.",corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+3652,0001116132,TPR,"TAPESTRY, INC.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+2198,0001811074,TPL,Texas Pacific Land Corp,corporate,land_royalty,royalty_land,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=1,2,Y,V,not_drawn
+5380,0001754301,FOX,Fox Corp,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1038,0000079879,PPG,PPG INDUSTRIES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+4017,0001642896,IOT,Samsara Inc.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2706,0001837240,SYM,Symbotic Inc.,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+1972,0000935703,DLTR,"DOLLAR TREE, INC.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+5010,0001720635,NVT,nVent Electric plc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+645,0000051253,IFF,INTERNATIONAL FLAVORS & FRAGRANCES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+347,0000029989,OMC,OMNICOM GROUP INC.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2564,0001037038,RL,RALPH LAUREN CORP,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3215,0001082554,UTHR,UNITED THERAPEUTICS Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5822,0001428439,ROKU,"ROKU, INC",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+243,0000016918,STZ,"CONSTELLATION BRANDS, INC.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3733,0001943896,RBRK,"Rubrik, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+1717,0000879169,INCY,INCYTE CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+4294,0001665918,USFD,US Foods Holding Corp.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4090,0001166003,XPO,"XPO, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5421,0001757898,STE,STERIS plc,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3713,0001123360,GPN,GLOBAL PAYMENTS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5347,0001751788,DOW,DOW INC.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4066,0002005951,SW,Smurfit Westrock plc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader,1,N,V,not_drawn
+713,0000070318,THC,TENET HEALTHCARE CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+1343,0000728535,JBHT,HUNT J B TRANSPORT SERVICES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5691,0001792044,VTRS,Viatris Inc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1563,0000822416,PHM,PULTEGROUP INC/MI/,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,negctl15
+3489,0001101302,ENTG,ENTEGRIS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1022,0000075677,PKG,PACKAGING CORP OF AMERICA,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,negctl15
+3132,0001576280,GH,"Guardant Health, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3522,0001104506,INSM,INSMED Inc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1658,0000861884,RS,"RELIANCE, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1647,0000857005,PTC,PTC INC.,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4425,0002035989,AMRZ,Amrize Ltd,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5497,0001375365,SMCI,"Super Micro Computer, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2128,0001489393,LYB,LyondellBasell Industries N.V.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4016,0001996862,BG,Bunge Global SA,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1055,0000085535,RGLD,ROYAL GOLD INC,corporate,mining_royalty,royalty_land,hand_read,rest|calendar|era2026,overlay;hand_read,2,Y,V,risk15
+5306,0001748790,AMCR,Amcor plc,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5563,0001383312,BR,"BROADRIDGE FINANCIAL SOLUTIONS, INC.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2169,0001493594,MTSI,"MACOM Technology Solutions Holdings, Inc.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+5716,0001402436,SSNC,SS&C Technologies Holdings Inc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4220,0001177394,SNX,TD SYNNEX CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1415,0000764478,BBY,BEST BUY CO INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1153,0000108312,WWD,"Woodward, Inc.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+1083,0000092380,LUV,SOUTHWEST AIRLINES CO,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,negctl15
+4212,0002021728,CBRS,Cerebras Systems Inc.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1075,0000091440,SNA,Snap-on Inc,corporate,tools_manufacturer,captive_finance,hand_read,rest|noncalendar|era2026,overlay;hand_read;noncalendar_fye,3,N,V,risk15
+373,0000033185,EFX,EQUIFAX INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5713,0001402057,CDW,CDW Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+249,0000017843,CRS,CARPENTER TECHNOLOGY CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4112,0001650164,TOST,"Toast, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+4514,0001274494,FSLR,"FIRST SOLAR, INC.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,Y,V,not_drawn
+319,0000026324,CW,CURTISS WRIGHT CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3873,0001136893,FIS,"Fidelity National Information Services, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+612,0000040987,GPC,GENUINE PARTS CO,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+1917,0000920760,LEN,LENNAR CORP /NEW/,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=2,2,N,V,negctl15
+3703,0001618732,NTNX,"Nutanix, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+4990,0001324404,CF,"CF Industries Holdings, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+646,0000051434,IP,INTERNATIONAL PAPER CO /NEW/,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,Y,V,not_drawn
+3869,0001136869,ZBH,"ZIMMER BIOMET HOLDINGS, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1004,0000072331,NDSN,NORDSON CORP,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+1170,0000216228,ITT,ITT INC.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2191,0001810806,U,Unity Software Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+610,0000040704,GIS,GENERAL MILLS INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+4232,0001659166,FTV,Fortive Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4316,0001666700,DD,"DuPont de Nemours, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5542,0001773383,DT,"Dynatrace, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1712,0000877212,ZBRA,ZEBRA TECHNOLOGIES CORP,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1589,0000832101,IEX,IDEX CORP /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2011,0001796209,APG,APi Group Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1898,0000916365,TSCO,TRACTOR SUPPLY CO /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4330,0001668397,MEDP,"Medpace Holdings, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+626,0000046619,HEI,HEICO CORP,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+365,0000031791,RVTY,"REVVITY, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3325,0001590364,FTAI,FTAI Aviation Ltd.,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4926,0002082247,FDXF,"FedEx Freight Holding Company, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3315,0001874178,RIVN,"Rivian Automotive, Inc. / DE",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1565,0000822818,CLH,CLEAN HARBORS INC,corporate,,,code,rest|calendar|era2026,moved_from_draft,1,Y,V,not_drawn
+183,0000009389,BALL,BALL Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1955,0000929008,WCC,WESCO INTERNATIONAL INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1538,0000814547,FICO,FAIR ISAAC CORP,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+3174,0001579298,BURL,"Burlington Stores, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+648,0000052988,J,JACOBS SOLUTIONS INC.,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4947,0001319161,WMG,Warner Music Group Corp.,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+2703,0001043277,CHRW,"C. H. ROBINSON WORLDWIDE, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+3000,0001564708,NWSA,NEWS CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+5948,0001468174,H,Hyatt Hotels Corp,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,random60
+1054,0000084839,ROL,ROLLINS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1168,0000215466,CDE,"Coeur Mining, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5002,0001324948,RBC,RBC Bearings INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1841,0000906163,NVR,NVR INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=4,1,N,V,negctl15
+5161,0001336920,LDOS,"Leidos Holdings, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1978,0000939767,EXEL,"EXELIXIS, INC.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2746,0001046102,RBA,RB GLOBAL INC.,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+4380,0001673358,YUMC,"Yum China Holdings, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3700,0001618673,PFGC,Performance Food Group Co,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1112,0000100493,TSN,"TYSON FOODS, INC.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+225,0000015615,MTZ,MASTEC INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4036,0001159152,JHX,James Hardie Industries plc,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+2511,0001032975,LOGI,LOGITECH INTERNATIONAL S.A.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3539,0001901440,ULS,UL Solutions Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1643,0000855658,LSCC,LATTICE SEMICONDUCTOR CORP,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+678,0000062996,MAS,MASCO CORP /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1654,0000860731,TYL,TYLER TECHNOLOGIES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3856,0001964738,SOLV,Solventum Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3260,0001584509,ARMK,Aramark,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+2336,0001506293,PINS,"PINTEREST, INC.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,random60
+2802,0001049502,MKSI,MKS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1630,0000849399,GEN,Gen Digital Inc.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3024,0001567094,CNH,CNH Industrial N.V.,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3473,0001100682,CRL,"CHARLES RIVER LABORATORIES INTERNATIONAL, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+667,0000059527,LECO,LINCOLN ELECTRIC HOLDINGS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2865,0001552033,TRU,TransUnion,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5905,0001451809,SITM,SITIME Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2580,0001037976,JLL,JONES LANG LASALLE INC,corporate,real_estate_services,,hand_read,rest|calendar|era2026,hand_read;finsignals=2,1,Y,V,not_drawn
+3354,0001091667,CHTR,"CHARTER COMMUNICATIONS, INC. /MO/",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1087,0000093556,SWK,"STANLEY BLACK & DECKER, INC.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,risk15
+2345,0001019849,PAG,"PENSKE AUTOMOTIVE GROUP, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+622,0000046080,HAS,"HASBRO, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4439,0001261333,DOCU,"DOCUSIGN, INC.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1669,0000864749,TRMB,TRIMBLE INC.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2607,0001528396,GWRE,"Guidewire Software, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1891,0000914475,NBIX,NEUROCRINE BIOSCIENCES INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4032,0001159036,HALO,"HALOZYME THERAPEUTICS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4385,0001232524,JAZZ,Jazz Pharmaceuticals plc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+231,0000016058,CACI,CACI INTERNATIONAL INC /DE/,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+217,0000014693,BF-A,BROWN FORMAN CORP,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+5038,0001326380,GME,GameStop Corp.,corporate,retailer,crypto_holdings,hand_read,rest|noncalendar|era2026,overlay;hand_read;noncalendar_fye,3,N,V,risk15
+1074,0000091419,SJM,J M SMUCKER Co,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,risk15
+3589,0001609711,GDDY,GoDaddy Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4297,0001206264,SGI,SOMNIGROUP INTERNATIONAL INC.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3171,0001579241,ALLE,Allegion plc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+173,0000008818,AVY,Avery Dennison Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1067,0000089439,MLI,MUELLER INDUSTRIES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+617,0000042888,GGG,GRACO INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1469,0000790051,CSL,CARLISLE COMPANIES INC,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+2904,0001057352,CSGP,"COSTAR GROUP, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+193,0000010456,BAX,BAXTER INTERNATIONAL INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1171,0000217346,TXT,TEXTRON INC,corporate,aerospace_defense_manufacturer,captive_finance,hand_read,rest|noncalendar|era2026,overlay;hand_read;noncalendar_fye;finsignals=2,3,N,V,risk15
+3312,0001089063,DKS,"DICK'S SPORTING GOODS, INC.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2658,0001531152,BJ,"BJ's Wholesale Club Holdings, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5738,0001408710,FN,Fabrinet,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5257,0001743881,BBIO,"BridgeBio Pharma, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2889,0001056696,MANH,MANHATTAN ASSOCIATES INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1388,0000749251,IT,GARTNER INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3913,0001635327,FLUT,Flutter Entertainment plc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1691,0000874238,STRL,"STERLING INFRASTRUCTURE, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1163,0000110621,RPM,RPM INTERNATIONAL INC/DE/,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4972,0001321732,PEN,Penumbra Inc,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1454,0000785161,EHC,Encompass Health Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+1064,0000088941,SMTC,SEMTECH CORP,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,risk15
+3284,0001086222,AKAM,AKAMAI TECHNOLOGIES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2092,0001486957,BWXT,"BWX Technologies, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+682,0000063754,MKC,MCCORMICK & CO INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3053,0001069202,LII,LENNOX INTERNATIONAL INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4337,0001219601,CCK,"CROWN HOLDINGS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1483,0000794170,TOL,"Toll Brothers, Inc.",corporate,,,code_reader,rest|noncalendar|era2025,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=4,2,N,V,negctl15
+4223,0001177609,FIVE,"FIVE BELOW, INC",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1160,0000109563,AIT,APPLIED INDUSTRIAL TECHNOLOGIES INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3205,0001865782,BTSG,"BrightSpring Health Services, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+103,0000004127,SWKS,"SKYWORKS SOLUTIONS, INC.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+2475,0001824920,IONQ,"IonQ, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5580,0001780312,ASTS,"AST SpaceMobile, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1947,0000927066,DVA,DAVITA INC.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1486,0000795403,WTS,WATTS WATER TECHNOLOGIES INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3736,0001944013,CR,Crane Co,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3309,0001088856,CORT,CORCEPT THERAPEUTICS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1850,0000908255,BWA,BORGWARNER INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2982,0001852131,NXT,Nextpower Inc.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+705,0000067887,MOG-A,MOOG INC.,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+1862,0000910521,DECK,DECKERS OUTDOOR CORP,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3455,0001599298,SMMT,Summit Therapeutics Inc.,corporate,biotech_pre_revenue,pre_revenue,hand_read,rest|calendar|era2026,overlay;hand_read,2,N,V,not_drawn
+3675,0001616707,W,Wayfair Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5212,0001739104,ELAN,Elanco Animal Health Inc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3164,0001579091,CART,Maplebear Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3234,0001582961,DOCN,"DigitalOcean Holdings, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5724,0001404655,HUBS,HUBSPOT INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1610,0000842023,TECH,BIO-TECHNE Corp,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5971,0001474735,GNRC,GENERAC HOLDINGS INC.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3353,0001590955,PAYC,"Paycom Software, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4403,0001236275,QXO,"QXO, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1138,0000105016,WSO,WATSCO INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1896,0000915913,ALB,ALBEMARLE CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+631,0000048465,HRL,HORMEL FOODS CORP /DE/,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+5022,0001722482,AVTR,"Avantor, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3187,0001579878,FIG,"Figma, Inc.",corporate,software,crypto_holdings,hand_read,rest|calendar|era2026,overlay;hand_read,2,N,V,not_drawn
+1066,0000089089,SCI,SERVICE CORP INTERNATIONAL,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4720,0001289460,TXRH,"Texas Roadhouse, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+1229,0000352915,UHS,UNIVERSAL HEALTH SERVICES INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+720,0000071691,NYT,NEW YORK TIMES CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1274,0000711404,COO,"COOPER COMPANIES, INC.",corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+147,0000007536,ARW,"ARROW ELECTRONICS, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+4434,0001675149,AA,Alcoa Corp,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+1444,0000779152,JKHY,JACK HENRY & ASSOCIATES INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+1257,0000704532,ONTO,ONTO INNOVATION INC.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+2273,0001501585,HII,"HUNTINGTON INGALLS INDUSTRIES, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2259,0001013237,FDS,FACTSET RESEARCH SYSTEMS INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4344,0002030781,SAIL,"SailPoint, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2788,0001048477,BMRN,BIOMARIN PHARMACEUTICAL INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+5430,0001366868,GSAT,"Globalstar, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5393,0001360901,EVR,Evercore Inc.,corporate,advisory,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic;finsignals=1,3,Y,V,risk15
+2162,0001492691,KNX,Knight-Swift Transportation Holdings Inc.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,negctl15
+275,0000021076,CLX,CLOROX CO /DE/,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,Y,V,not_drawn
+4474,0002041610,PSKY,Skydance Corp,corporate,,,code,rest|calendar|era2026,identity_event,1,N,V,random60
+3434,0001097149,ALGN,ALIGN TECHNOLOGY INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2998,0001564408,SNAP,Snap Inc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2763,0001047127,AMKR,"AMKOR TECHNOLOGY, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+2052,0001800667,FROG,JFrog Ltd,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+335,0000028917,DDS,"DILLARD'S, INC.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+3998,0001157601,MDGL,"MADRIGAL PHARMACEUTICALS, INC.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,random60
+2491,0001031308,BSY,BENTLEY SYSTEMS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4406,0001237831,GMED,GLOBUS MEDICAL INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3745,0001125376,ENSG,"ENSIGN GROUP, INC",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+5678,0001397187,LULU,lululemon athletica inc.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1049,0000082811,RRX,REGAL REXNORD CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1308,0000719413,HL,HECLA MINING CO/DE/,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+343,0000029644,DCI,DONALDSON Co INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4668,0001286681,DPZ,DOMINOS PIZZA INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3099,0001573516,MUSA,Murphy USA Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1347,0000730272,RGEN,REPLIGEN CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3660,0001116942,TTMI,TTM TECHNOLOGIES INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,negctl15
+1789,0000891103,MTCH,"Match Group, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2528,0001828108,AUR,"Aurora Innovation, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3966,0001145197,PODD,INSULET CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4278,0001192448,GKOS,GLAUKOS Corp,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,not_drawn
+5018,0001326110,IBRX,"ImmunityBio, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3520,0001604028,WMS,"ADVANCED DRAINAGE SYSTEMS, INC.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1778,0000889331,LFUS,LITTELFUSE INC /DE,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4833,0001707753,ESTC,Elastic N.V.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1899,0000916540,DAR,DARLING INGREDIENTS INC.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+2073,0001000228,HSIC,HENRY SCHEIN INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+201,0000012208,BIO,"BIO-RAD LABORATORIES, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1946,0000927003,AEIS,ADVANCED ENERGY INDUSTRIES INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1365,0000737758,TTC,TORO CO,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+2647,0001833756,DRS,"Leonardo DRS, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4086,0001649094,PCVX,"Vaxcyte, Inc.",corporate,biotech_pre_revenue,pre_revenue,hand_read,rest|calendar|era2026,overlay;hand_read,2,Y,V,not_drawn
+1821,0000897723,SANM,SANMINA CORP,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4906,0001711279,KRYS,"Krystal Biotech, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1904,0000917273,RMBS,RAMBUS INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4689,0002064953,SOLS,Solstice Advanced Materials Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1608,0000840489,FCFS,"FirstCash Holdings, Inc.",corporate,pawn_retail,lending_operations,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=3,2,N,V,not_drawn
+3406,0001883685,DKNG,DraftKings Inc.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5750,0001411207,ALSN,Allison Transmission Holdings Inc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+2520,0001521332,APTV,Aptiv PLC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1056,0000085961,R,RYDER SYSTEM INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1636,0000851205,CGNX,COGNEX CORP,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,Y,V,negctl15
+3955,0001144215,AYI,ACUITY INC. (DE),corporate,,,code_reader,rest|noncalendar|era2025,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+3256,0001869198,LTH,"Life Time Group Holdings, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1854,0000908937,SIRI,SIRIUS XM HOLDINGS INC.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1397,0000751978,VICR,VICOR CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+353,0000030625,FLS,FLOWSERVE CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+4822,0001302215,HLI,"HOULIHAN LOKEY, INC.",corporate,advisory,,hand_read,rest|noncalendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic;noncalendar_fye,4,Y,V,risk15
+4230,0001177702,SAIA,SAIA INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5880,0001443646,BAH,Booz Allen Hamilton Holding Corp,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+5461,0001370946,OC,Owens Corning,corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+4172,0001653482,GTLB,Gitlab Inc.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1588,0000831641,TTEK,TETRA TECH INC,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,random60
+5526,0001770787,TXG,"10x Genomics, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3366,0001591698,PCTY,Paylocity Holding Corp,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2246,0001815442,KYMR,"Kymera Therapeutics, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+3614,0001611052,PCOR,"PROCORE TECHNOLOGIES, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+4188,0002019410,CAI,"Caris Life Sciences, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+2970,0001061983,CYTK,CYTOKINETICS INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+5494,0001766502,CHWY,"Chewy, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1128,0000102729,VMI,VALMONT INDUSTRIES INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3336,0001590714,ESI,Element Solutions Inc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1254,0000703351,EAT,"BRINKER INTERNATIONAL, INC",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+2518,0001034670,ALV,AUTOLIV INC,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+1027,0000077360,PNR,PENTAIR plc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3582,0001109354,BRKR,BRUKER CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5514,0001377121,PTGX,"Protagonist Therapeutics, Inc",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1063,0000088205,SPXC,"SPX Technologies, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2111,0001001316,TGTX,"TG THERAPEUTICS, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5727,0001405495,IDCC,"InterDigital, Inc.",corporate,ip_licensing,,hand_read,rest|calendar|era2026,hand_read,1,Y,V,not_drawn
+3176,0001579428,AXSM,"Axsome Therapeutics, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3220,0001581280,TWST,Twist Bioscience Corp,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye;finsignals=1,1,N,V,not_drawn
+3092,0001856525,CNM,"Core & Main, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1072,0000091142,AOS,SMITH A O CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1870,0000912093,VIAV,VIAVI SOLUTIONS INC.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+1639,0000851968,MHK,MOHAWK INDUSTRIES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2602,0001039399,FORM,FORMFACTOR INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1495,0000797721,VSAT,VIASAT INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+605,0000039911,GAP,GAP INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4455,0001262823,WLK,WESTLAKE CORP,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+5944,0001467623,DBX,"DROPBOX, INC.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,Y,V,not_drawn
+4613,0001282637,NEU,NEWMARKET CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1091,0000094845,LEVI,LEVI STRAUSS & CO,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+703,0000067347,MOD,MODINE MANUFACTURING CO,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1439,0000775158,OSK,OSHKOSH CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1718,0000879407,ARWR,"ARROWHEAD PHARMACEUTICALS, INC.",corporate,,,code_reader,rest|noncalendar|era2025,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=2,2,N,V,negctl15
+1816,0000896622,ATR,"APTARGROUP, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+123,0000006201,AAL,American Airlines Group Inc.,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+5869,0001439288,ZWS,Zurn Elkay Water Solutions Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4186,0001174922,WYNN,WYNN RESORTS LTD,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,not_drawn
+5457,0001370637,ETSY,ETSY INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1107,0000098362,TKR,TIMKEN CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4717,0001289419,MORN,"Morningstar, Inc.",corporate,financial_services_information,,hand_read,rest|calendar|era2026,hand_read;moved_from_draft;ambiguous_or_blank_sic,3,Y,V,risk15
+3928,0001636519,MSGS,Madison Square Garden Sports Corp.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4883,0002080126,FPS,"Forgent Power Solutions, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+2965,0001851003,ZETA,Zeta Global Holdings Corp.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5830,0001433195,APPF,APPFOLIO INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+702,0000067215,DY,DYCOM INDUSTRIES INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+5821,0001428336,HQY,"HEALTHEQUITY, INC.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+4055,0002001184,PACS,"PACS Group, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=2,1,N,V,not_drawn
+1684,0000868857,ACM,AECOM,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+3057,0001069258,KTOS,"KRATOS DEFENSE & SECURITY SOLUTIONS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4124,0001170010,KMX,CARMAX INC,corporate,auto_retailer,captive_finance,hand_read,rest|noncalendar|era2026,overlay;hand_read;noncalendar_fye,3,N,V,risk15
+4658,0002063196,NTSK,Netskope Inc,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+301,0000024545,TAP,MOLSON COORS BEVERAGE CO,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1876,0000912615,URBN,URBAN OUTFITTERS INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+175,0000008858,AVT,AVNET INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,Y,V,not_drawn
+2584,0001038074,SLAB,SILICON LABORATORIES INC.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4465,0002041385,RAL,Ralliant Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1073,0000091388,SFD,SMITHFIELD FOODS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3249,0001583708,S,"SentinelOne, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+4479,0001679273,LW,"Lamb Weston Holdings, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2149,0001003078,MSM,MSC INDUSTRIAL DIRECT CO INC,corporate,,,code_reader,rest|noncalendar|era2025,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+1725,0000880266,AGCO,AGCO CORP /DE,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1914,0000920371,SSD,"Simpson Manufacturing Co., Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+5222,0001739445,ACA,"Arcosa, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1467,0000789570,MGM,MGM Resorts International,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+655,0000056047,KEX,KIRBY CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3678,0001616862,AXTA,Axalta Coating Systems Ltd.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+287,0000022444,CMC,COMMERCIAL METALS Co,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+4491,0002042694,PRMB,Primo Brands Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2059,0001801368,MP,MP Materials Corp. / DE,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1690,0000874015,IONS,IONIS PHARMACEUTICALS INC,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1892,0000915389,EMN,EASTMAN CHEMICAL CO,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+145,0000007431,AWI,ARMSTRONG WORLD INDUSTRIES INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3087,0001856437,VSXY,Victoria's Secret & Co.,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5207,0001341766,CELH,"Celsius Holdings, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+4255,0002025410,SARO,"StandardAero, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+95,0000003453,MATX,"Matson, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3690,0001617640,Z,"ZILLOW GROUP, INC.",corporate,,,code,rest|calendar|era2026,;finsignals=2,0,N,V,not_drawn
+3922,0001636282,SYRE,"Spyre Therapeutics, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2508,0001520262,ALKS,Alkermes plc.,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2983,0001563190,COMP,"Compass, Inc.",corporate,real_estate_brokerage,,hand_read,rest|calendar|era2026,hand_read;finsignals=1,1,Y,V,not_drawn
+699,0000066570,MSA,MSA Safety Inc,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1512,0000802481,PPC,PILGRIMS PRIDE CORP,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+2409,0001513761,NCLH,Norwegian Cruise Line Holdings Ltd.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1412,0000764065,CLF,CLEVELAND-CLIFFS INC.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+295,0000023217,CAG,CONAGRA BRANDS INC.,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+1177,0000277509,FSS,FEDERAL SIGNAL CORP /DE/,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1298,0000717605,HXL,HEXCEL CORP /DE/,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4596,0001689548,PRAX,"Praxis Precision Medicines, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5149,0001734722,PATH,"UiPath, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+2371,0001021860,NOV,NOV Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+261,0000019584,CHE,CHEMED CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3463,0001600033,ELF,"e.l.f. Beauty, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3969,0001639438,CAVA,"CAVA GROUP, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+2964,0001562088,DUOL,"Duolingo, Inc.",corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+3213,0001866581,BROS,Dutch Bros Inc.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+4981,0001718512,GTES,Gates Industrial Corp Ltd.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2517,0001521036,LNTH,"Lantheus Holdings, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1131,0000103379,VFC,V F CORP,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,risk15
+2332,0001018840,ANF,ABERCROMBIE & FITCH CO /DE/,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+2407,0001023128,LAD,LITHIA MOTORS INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+1923,0000921638,SSRM,SSR MINING INC.,corporate,mining,,hand_read,rest|calendar|era2026,hand_read,1,Y,V,not_drawn
+5119,0001730430,KNSA,"Kiniksa Pharmaceuticals International, plc",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1675,0000866706,ESE,ESCO TECHNOLOGIES INC,corporate,,,code_reader,rest|noncalendar|era2025,fsds_queue_cleared_by_reader;noncalendar_fye;finsignals=1,2,N,V,not_drawn
+4693,0001288469,MXL,"MAXLINEAR, INC",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5544,0001773751,HIMS,"Hims & Hers Health, Inc.",corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4005,0001158114,AAOI,"APPLIED OPTOELECTRONICS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4067,0001646972,ACI,"Albertsons Companies, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+5574,0001384905,RNG,"RingCentral, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5037,0001723128,AMRX,"Amneal Pharmaceuticals, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5289,0001352010,EPAM,"EPAM Systems, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5440,0001759509,LYFT,"Lyft, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2017,0000945841,POOL,POOL CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4009,0001995807,LB,LandBridge Corp,corporate,land_royalty,royalty_land,hand_read,rest|calendar|era2026,overlay;hand_read;finsignals=1,2,Y,V,not_drawn
+1484,0000794367,M,"Macy's, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3976,0001639723,NAVN,"Navan, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+3545,0001107843,QLYS,"QUALYS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5686,0001398659,G,Genpact LTD,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4869,0001309108,WEX,WEX Inc.,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3730,0001124198,FLR,FLUOR CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3956,0001638826,TTAN,"ServiceTitan, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4117,0001169561,CVLT,COMMVAULT SYSTEMS INC,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+2751,0001046257,INGR,Ingredion Inc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+5448,0001368622,AVAV,AeroVironment Inc,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+2139,0001002638,OTEX,OPEN TEXT CORP,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5810,0001425205,IOVA,"IOVANCE BIOTHERAPEUTICS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3512,0001897762,INGM,Ingram Micro Holding Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1456,0000785786,PLXS,PLEXUS CORP,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+4707,0001289308,ENS,EnerSys,corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1568,0000824142,AAON,"AAON, INC.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+3118,0001575515,SFM,"Sprouts Farmers Market, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4787,0001297989,EXLS,"ExlService Holdings, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+205,0000012659,HRB,H&R BLOCK INC,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+4647,0001285785,MOS,MOSAIC CO,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+4082,0001164863,NPO,Enpro Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2003,0001477294,ST,Sensata Technologies Holding plc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1611,0000842162,LEA,LEAR CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1672,0000866291,ALGM,"ALLEGRO MICROSYSTEMS, INC.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1041,0000080420,POWL,POWELL INDUSTRIES INC,corporate,,,code,rest|noncalendar|era2025,noncalendar_fye,1,N,V,not_drawn
+235,0000016732,CPB,CAMPBELL'S Co,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+5133,0001334036,CROX,"Crocs, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1763,0000886163,LGND,LIGAND PHARMACEUTICALS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4916,0001316835,BLDR,"Builders FirstSource, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3149,0001860742,BLCO,Bausch & Lomb Corp,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3351,0001590895,CZR,"Caesars Entertainment, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+4100,0001649904,RYTM,"RHYTHM PHARMACEUTICALS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,random60
+606,0000040211,GATX,GATX CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4044,0002000178,LOAR,Loar Holdings Inc.,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1103,0000097216,TEX,TEREX CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+4362,0001671933,TTD,"Trade Desk, Inc.",corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+1640,0000853816,LSTR,LANDSTAR SYSTEM INC,corporate,,,code,rest|calendar|era2026,;finsignals=1,0,N,V,not_drawn
+4860,0001308547,DLB,"Dolby Laboratories, Inc.",corporate,ip_licensing,,hand_read,rest|noncalendar|era2025,hand_read;noncalendar_fye;finsignals=1,2,Y,V,not_drawn
+269,0000020212,CHDN,Churchill Downs Inc,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1181,0000310142,SXT,SENSIENT TECHNOLOGIES CORP,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+2271,0001013857,PEGA,PEGASYSTEMS INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1772,0000887596,CAKE,CHEESECAKE FACTORY INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3967,0001639300,OLLI,"Ollie's Bargain Outlet Holdings, Inc.",corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,not_drawn
+3010,0001065696,LKQ,LKQ CORP,corporate,,,code_reader,rest|calendar|era2026,fsds_queue_cleared_by_reader;finsignals=1,1,N,V,not_drawn
+5029,0001722684,WH,"WYNDHAM HOTELS & RESORTS, INC.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+1867,0000911177,CWST,CASELLA WASTE SYSTEMS INC,corporate,,,code,rest|calendar|era2026,moved_from_draft,1,N,V,not_drawn
+4162,0002015845,ECG,"Everus Construction Group, Inc.",corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn
+3067,0001571123,SAIC,Science Applications International Corp,corporate,,,code,rest|noncalendar|era2026,noncalendar_fye,1,N,V,random60
+5396,0001361113,VRNS,VARONIS SYSTEMS INC,corporate,,,code,rest|calendar|era2026,,0,Y,V,not_drawn
+2441,0001516513,DOCS,"Doximity, Inc.",corporate,,,code_reader,rest|noncalendar|era2026,fsds_queue_cleared_by_reader;noncalendar_fye,2,N,V,not_drawn
+1100,0000096943,TFX,TELEFLEX INC,corporate,,,code,rest|calendar|era2026,,0,N,V,not_drawn

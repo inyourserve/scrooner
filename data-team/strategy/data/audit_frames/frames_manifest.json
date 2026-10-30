@@ -1,0 +1,83 @@
+{
+ "seed": 20261022,
+ "source": "group_assignment_v2.csv",
+ "source_sha1": "1d75889cb820b7d54ae42da0ee8888337529d923",
+ "scope": "cohort_file_v1 members not excluded.*",
+ "tiers": {
+  "census_small_groups": {
+   "groups": {
+    "midstream": 14,
+    "asset_manager": 14,
+    "broker_dealer": 11,
+    "crypto_digital": 8,
+    "managed_care": 7,
+    "insurance_broker": 7,
+    "exchange": 6,
+    "lender_nonbank": 4,
+    "bdc": 2,
+    "reit_mortgage": 2
+   },
+   "n": 75,
+   "reader": "Verifier independent re-read of ALL members",
+   "bound_if_all_clean": "0 wrong of N at the filing date (exact)"
+  },
+  "seeded_groups": {
+   "bank": {
+    "N": 44,
+    "random": 30,
+    "risk": 10,
+    "total_read": 40,
+    "bound_zero_wrong_in_random": 2,
+    "note": "random draw alone; risk-selected members add coverage but are not random"
+   },
+   "insurer": {
+    "N": 40,
+    "random": 30,
+    "risk": 10,
+    "total_read": 40,
+    "bound_zero_wrong_in_random": 2,
+    "note": "random draw alone; risk-selected members add coverage but are not random"
+   },
+   "utility": {
+    "N": 32,
+    "random": 30,
+    "risk": 2,
+    "total_read": 32,
+    "bound_zero_wrong_in_random": 1,
+    "note": "random draw alone; risk-selected members add coverage but are not random"
+   },
+   "energy": {
+    "N": 31,
+    "random": 30,
+    "risk": 1,
+    "total_read": 31,
+    "bound_zero_wrong_in_random": 0,
+    "note": "random draw alone; risk-selected members add coverage but are not random"
+   },
+   "reit_equity": {
+    "N": 53,
+    "random": 30,
+    "risk": 10,
+    "total_read": 40,
+    "bound_zero_wrong_in_random": 3,
+    "note": "random draw alone; risk-selected members add coverage but are not random"
+   }
+  },
+  "corporate": {
+   "N": 704,
+   "random_frame_size": 505,
+   "random": 60,
+   "risk": 15,
+   "negative_controls": 15,
+   "negative_control_pool": 24,
+   "bound_zero_wrong_in_random": 32,
+   "bound_pooled_with_S2_30_even_spaced": 21,
+   "note": "negative controls are code-assigned corporates (no hand read, no overlay) with >= 2 FSDS financial-line flags; bound applies to the random part only; the S2 30 are systematic, so the pooled bound is indicative"
+  },
+  "moved_companies": {
+   "n": 118,
+   "rule": "every moved company has an evidence row (accession + locator) in group_moves_v2.csv; Verifier re-reads the 40 not previously Verifier-checked or a seeded 30"
+  }
+ },
+ "note": "proposed_draw is reproducible but NOT independent; the Verifier lane must re-draw with its own seed (draw_audit_sample.py) before the result counts toward a denominator change. Sector Analyst openings (hand reads, R-file reader) are classification evidence, not audit evidence."
+}

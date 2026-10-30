@@ -1,5 +1,7 @@
 # Scrooner financial-data team — portable Claude Code instructions
 
+> **Current repository workflow:** start with `AGENTS.md` and `data-team/NOW.md`, then run `python3 scripts/agent_context.py`. The material below is the portable/deep-reference pack; do not load it all for ordinary work.
+
 Version: 1.0. Prepared October 17, 2026. Purpose: run evidence-backed financial-data work without hiring a full data team. These files are role instructions and operating contracts, not a deployed integration or professional accounting certification.
 
 ## Keep one folder

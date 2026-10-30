@@ -176,6 +176,15 @@ class TestKlacDerivedQ4Eps:
         f = composition.check(self.broken())
         assert any(x.evidence["rule"] == "per_share_derived_by_subtraction" and x.severity == WRONG_VALUE for x in f)
 
+    def test_neighbours_that_average_to_zero_do_not_divide_by_zero(self):
+        # CI crashed on certify shards S056/S085 with decimal.DivisionByZero
+        d = clean_company()
+        values = [D("-0.10"), D("0.10"), D("0"), D("2.00")]
+        for (qs, qe, fp), v in zip(QUARTERS, values):
+            add(d, "diluted_eps", v, qe, qs, fp, tag="EarningsPerShareDiluted", unit="usd/shares",
+                derived=(fp == "Q4"))
+        assert splits.check(d) == []
+
     def test_basis_mix_is_wrong_value(self):
         f = splits.check(self.broken())
         assert f and f[0].evidence["rule"] == "per_share_basis_mix" and f[0].severity == WRONG_VALUE
@@ -640,7 +649,7 @@ class TestRefinementsFromLiveDryRun:
                 d.cells.remove(c)
         add(d, "net_income", 410_000_000, date(2024, 12, 31), date(2024, 1, 1), "FY", tag="NetIncomeLoss")  # 2.6x expected 165M? pretax-tax
         f = [x for x in ties.check(d) if x.evidence["rule"] == "identity:net_income"]
-        assert f and f[0].severity == REVIEW
+        assert f and f[0].severity == "info"  # round 3: identities that cannot see NCI / discontinued ops are not stored
 
     def test_flat_dividends_in_adjacent_quarters_are_not_a_finding(self):
         """NVDA pays 99M a quarter for years: equal adjacent quarters are normal for dividends."""

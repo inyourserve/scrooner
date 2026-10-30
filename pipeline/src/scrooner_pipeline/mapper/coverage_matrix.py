@@ -17,6 +17,9 @@ required_tags holds the SEC form type instead, the closest domain
 equivalent to "what do I need to go fetch."
 """
 
+import csv
+from pathlib import Path
+
 import psycopg
 import structlog
 
@@ -678,6 +681,22 @@ def build_registry(conn: psycopg.Connection) -> dict:
     return {"rows": len(rows)}
 
 
+COHORT_FILE = (
+    Path(__file__).resolve().parents[4]
+    / "data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv"
+)
+
+
+def cohort_company_ids(path: Path = COHORT_FILE) -> list[int]:
+    """company_id of every member of the frozen top-1000 cohort (v1.1), whatever its
+    status. Empty (with a warning) when the file is not checked out."""
+    if not path.exists():
+        logger.warning("coverage.cohort_file_missing", path=str(path))
+        return []
+    with open(path, newline="", encoding="utf-8") as fh:
+        return sorted(int(r["company_id"]) for r in csv.DictReader(fh))
+
+
 def build_coverage(conn: psycopg.Connection) -> dict:
     """Rebuilds analytics.company_data_point_coverage for every active
     company x every registry data point. Batched delete-then-reinsert
@@ -695,6 +714,16 @@ def build_coverage(conn: psycopg.Connection) -> dict:
     rebuild. Now any failure rolls back and the previous complete table stays
     in place."""
     with conn.cursor() as cur:
+        # every cohort company is covered whatever its status (founder/Dhairya 2026-10-26: the
+        # cohort is frozen at 1,000; a 'stale' status caused by a shared-accession or
+        # companyfacts gap must not drop a member out of the table)
+        cur.execute(
+            "create temp table cohort_member (company_id bigint primary key) on commit drop"
+        )
+        cur.executemany(
+            "insert into pg_temp.cohort_member values (%s) on conflict do nothing",
+            [(i,) for i in cohort_company_ids()],
+        )
         # Both big inserts are SET-BASED (one grouped scan of canonical_fact /
         # metric_value, left-joined to the company x concept/metric grid).
         # Until 2026-10-18 they used a correlated exists/subquery per grid cell
@@ -720,7 +749,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
                 group by company_id, canonical_concept_id
             ) present
                 on present.company_id = c.id and present.canonical_concept_id = cc.id
-            where c.status = 'active'
+            where (c.status = 'active' or c.id in (select company_id from pg_temp.cohort_member))
             """
         )
 
@@ -784,7 +813,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
                 group by company_id, metric_definition_id
             ) agg
                 on agg.company_id = c.id and agg.metric_definition_id = md.id
-            where c.status = 'active' and md.status = 'active'
+            where (c.status = 'active' or c.id in (select company_id from pg_temp.cohort_member)) and md.status = 'active'
             """
         )
 
@@ -794,7 +823,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             select c.id, 'insider_ownership', exists (
                 select 1 from core.insider_ownership_summary s where s.company_id = c.id
             )
-            from core.company c where c.status = 'active'
+            from core.company c where (c.status = 'active' or c.id in (select company_id from pg_temp.cohort_member))
             """
         )
         cur.execute(
@@ -803,7 +832,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             select c.id, 'institutional_ownership', exists (
                 select 1 from core.institutional_ownership o where o.company_id = c.id
             )
-            from core.company c where c.status = 'active'
+            from core.company c where (c.status = 'active' or c.id in (select company_id from pg_temp.cohort_member))
             """
         )
         cur.execute(
@@ -812,7 +841,7 @@ def build_coverage(conn: psycopg.Connection) -> dict:
             select c.id, 'mutual_fund_ownership', exists (
                 select 1 from core.fund_ownership_summary s where s.company_id = c.id
             )
-            from core.company c where c.status = 'active'
+            from core.company c where (c.status = 'active' or c.id in (select company_id from pg_temp.cohort_member))
             """
         )
 

@@ -1,6 +1,6 @@
 # mind — shared memory for every agent, worker and LLM session
 
-> **Status: BETA. Everything here is optional, never a blocker.** No agent or session is required to search or add. Results are hints: verify against the source before relying on them, and the canonical doc always wins. We will decide after a trial period (hit rate, entries marked wrong, tokens per task) whether any of it becomes a convention.
+> **Status: BETA and on demand. Everything here is optional, never a blocker.** No agent or session is required to search or add. Results are hints: verify against the source before relying on them, and the canonical doc always wins. Mind does not run automatically at session start or stop.
 
 Goal: nobody pays tokens to re-learn something the team already knows. Search returns ~1 line per hit; a full entry is fetched only when needed (an entry is ~100-300 tokens, a doc it replaces is thousands).
 
@@ -34,7 +34,7 @@ Goal: nobody pays tokens to re-learn something the team already knows. Search re
 | `feedback <id> helped|wrong|stale` | usage signal; wrong marks it disputed |
 | `lint` | health check, exit 1 on errors (safe for CI) |
 | `stats` | hit rate, top gaps, top fetched, feedback |
-| `brief` | session-start summary (wired as a SessionStart hook) |
+| `brief` | optional compact summary; run only when memory health or known gaps matter |
 | `ingest-ledger` | seed from `data-team/22-FILING-LESSONS-LEDGER.md` (idempotent) |
 
 Kinds: `rule lesson howto decision gotcha reference`. Evidence: `FILING-CHECKED DATA-INFERRED CODE-CHECKED ASSUMED` (same labels as the data team's constitution). Add `pinned: true` to an entry's frontmatter to show its title in every session brief (keep to ~10).

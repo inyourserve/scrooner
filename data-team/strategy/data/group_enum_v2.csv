@@ -1,0 +1,59 @@
+kind,value,note
+group,corporate,
+group,utility,
+group,energy,
+group,midstream,
+group,managed_care,
+group,insurance_broker,
+group,exchange,
+group,crypto_digital,
+group,bank,
+group,lender_nonbank,
+group,insurer,
+group,reit_equity,
+group,reit_mortgage,
+group,bdc,
+group,asset_manager,
+group,broker_dealer,
+group_t3_reserved,real_estate_operator,no cohort member; reserved so Gate F does not widen the enum
+group_t3_reserved,exploration_miner,no cohort member; reserved so Gate F does not widen the enum
+group_t3_reserved,pool_trust,no cohort member; reserved so Gate F does not widen the enum
+group_t3_reserved,other_trust,no cohort member; reserved so Gate F does not widen the enum
+overlay,pre_revenue,
+overlay,royalty_land,
+overlay,captive_finance,
+overlay,conglomerate_insurer,
+overlay,insurance_operations,
+overlay,managed_care_operations,
+overlay,crypto_holdings,
+overlay,lending_operations (PROPOSED),
+overlay,deposit_taking_operations (PROPOSED),
+excluded_reason,excluded.subsidiary_registrant,
+excluded_reason,excluded.no_10k_yet,
+excluded_reason,excluded.successor_cik_pending,
+excluded_reason,excluded.acquired_or_deregistered,
+excluded_reason,excluded.non_screener,
+excluded_reason,excluded.foreign_private_issuer,
+r4_family_map,corporate_other,corporate | variants energy/utility/midstream by SIC
+r4_family_map,pre_revenue_rd_overlay,corporate | overlay pre_revenue
+r4_family_map,bank_thrift,bank
+r4_family_map,deposit_taker_nonbank_sic,bank | bank_like (AXP SYF SOFI) when deposits+loans+provision on the face; else broker_dealer + overlay deposit_taking_operations
+r4_family_map,nonbank_lender_credit_fintech,lender_nonbank | crypto/fintech 6199 by shape -> crypto_digital or bank
+r4_family_map,broker_dealer_exchange,broker_dealer|exchange | by shape
+r4_family_map,asset_manager_adviser,asset_manager | fund vehicles under 6282 -> bdc or non_screener
+r4_family_map,insurer_underwriter,insurer|managed_care | classified balance sheet + SIC 6324 -> managed_care
+r4_family_map,insurance_agent_broker,insurance_broker | EQH/ACT -> insurer
+r4_family_map,REIT_equity,reit_equity | operating_reit variant
+r4_family_map,REIT_mortgage,reit_mortgage
+r4_family_map,real_estate_operator,corporate | real-estate services/developers are corporate-shaped (CBRE JLL COMP); T3 may need a group if a shape template is justified
+r4_family_map,utility_waste,utility|corporate | waste 4953/4955 -> corporate
+r4_family_map,energy,energy|midstream | SIC 4610/492x by hand read
+r4_family_map,MLP_partnership,"midstream|energy|corporate | legal form is a variant, not a group"
+r4_family_map,BDC_fund,bdc | funds that are not operating cos -> non_screener
+r4_family_map,SPAC_blank_check,excluded.non_screener | trust account assets
+r4_family_map,commodity_crypto_pool_trust,excluded.non_screener | pool/ETF trust
+r4_family_map,trust_holding_other_investor,excluded.non_screener|corporate | by hand read if any enters
+r4_family_map,exploration_stage_miner,corporate | overlay pre_revenue when no revenue line
+r4_family_map,no_revenue_line_other,corporate | overlay pre_revenue
+r4_family_map,nofin_statements (ABS/other),excluded.non_screener | ABS: no statements
+r4_family_map,no_income_statement_other,corporate | hand read

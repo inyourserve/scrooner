@@ -1,5 +1,7 @@
 # CLAUDE.md — Scrooner Project Context
 
+> **Token-efficient start:** read [`AGENTS.md`](AGENTS.md), [`data-team/NOW.md`](data-team/NOW.md), and run `python3 scripts/agent_context.py`. Do not read this full historical file unless the selected task needs product-wide background.
+
 > This file is the entry point for any AI agent (Claude Code, a Claude Agent SDK build, or similar) working in the Scrooner codebase. It synthesizes the canonical product/decision docs in this folder. **If this summary and a source doc ever disagree, the source doc wins** — read the linked doc before making a decision that depends on it.
 
 **`doc/` reorganized 2026-08-18** into topic subfolders (`foundational/`, `requirements/`, `execution-plans/`, `scoping/`, `planning/`, `reference/`, `status/`, plus unchanged `learnings/`, `adr/`, `html/`) — see [`doc/README.md`](doc/README.md) for the full layout. Doc numbers (e.g. "doc 19") are unchanged identities; only their folder changed. Every link in this file and across the repo was updated in the same pass.

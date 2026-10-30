@@ -22,6 +22,7 @@ YEAR_MIN, YEAR_MAX = (
 QUARTER_MIN, QUARTER_MAX = 61, 121  # quarter 91 +/- 30
 FY_MIN_DAYS, FY_MAX_DAYS = YEAR_MIN, YEAR_MAX
 QUARTER_MAX_DAYS = QUARTER_MAX
+MAX_DURATION_DAYS = 400  # longer than a 53-week year plus slack: cumulative / inception-to-date windows are not periods
 TILE_GAP_DAYS = 7  # quarters may start a few days off the previous end
 LATE_START_DAYS = (
     120  # first filing later than window start + this -> history_starts_after_window
@@ -29,6 +30,9 @@ LATE_START_DAYS = (
 LOOKBACK_SLACK_DAYS = 45  # metric lookback vs first stored period (fiscal drift)
 
 # ---- I1/I2 ties.py ----
+LIABILITIES_NCI_TOLERANCE = Decimal(
+    "0.005"
+)  # calculated total liabilities vs assets - equity - NCI
 WRONG_GAP = Decimal(
     "0.25"
 )  # identity gap above 25% of its basis is a wrong component, not rounding
@@ -69,6 +73,7 @@ ROLE_LAYER_CONFLICT = Decimal(
 )  # revenue-like flow: resolved vs base layer differ by > 5%
 
 # ---- I5 period_integrity.py ----
+OLD_COMPARATIVE_DAYS = 800  # a quarter filed >800 days after its end is older than any 10-K's quarterly comparatives
 SUM_REVIEW = Decimal("0.02")  # four quarters vs the year, same filing vintage
 FACE_MAX_PRIORITY = 2  # an approved mapping at priority 1-2 is a face-line tag; priority 3+ are components
 SUM_WRONG = Decimal("0.10")
@@ -78,6 +83,12 @@ MIN_EQUAL_VALUE = Decimal(
 VINTAGE_LATE_FILING_DAYS = 200  # an FY value filed > 200 days after its year end is a later filing (re-presentation)
 
 # ---- I6 source_integrity.py ----
+CROSS_VINTAGE_MAX_DIFF = Decimal(
+    "0.05"
+)  # beyond 5% the gap is a different problem (scale, definition), not a vintage drift
+CROSS_VINTAGE_MIN_DIFF = Decimal(
+    "0.001"
+)  # an input restated by >= 0.1% between filings makes mixed-vintage arithmetic wrong
 PROXY_ROUNDING_MAX = Decimal(
     "0.01"
 )  # a proxy copy rounded to millions/billions differs from the 10-K by <= 1%
@@ -89,13 +100,37 @@ CONFLICT_FILL_MAX_SPREAD = Decimal(
 RECAST_8K_MIN_FACTS = 100  # an 8-K with this many facts carries full statements (a recast), not a cover page
 
 # ---- I7 currency.py ----
+ANNUAL_ONLY_MAX_GAP_DAYS = 650  # public float / employee count: a 10-K-only item may be ~20 months older than the latest 10-Q
 INPUT_MAX_AGE_DAYS = 456  # 15 months
 
 # ---- I8 composition.py ----
+# Debt lines that include finance leases: a balance sheet line 'Long-term debt and finance
+# lease obligations' (BAX 6,055M at 2020-06-30) is a debt component the Mapper registry
+# does not list. Perimeter is a definition question (KR's borrowings-only 15,909M vs 17,633M
+# with leases is a stated perimeter), so a total is wrong against these only when it is
+# below LEASE_TOTAL_TOLERANCE of them (BAX stored 319M = 5%). DATA-INFERRED tag names.
+LEASE_INCLUSIVE_DEBT_TAGS = (
+    "LongTermDebtAndCapitalLeaseObligations",
+    "LongTermDebtAndCapitalLeaseObligationsCurrent",
+    "DebtAndCapitalLeaseObligations",
+)
+DEBT_DIP_MIN_ASSET_SHARE = Decimal(
+    "0.05"
+)  # neighbouring debt below 5% of total assets is immaterial: the dip is real
+DEBT_DIP_RATIO = Decimal(
+    5
+)  # total debt below 1/5 of both neighbouring balance sheets is a missing component
+LEASE_TOTAL_TOLERANCE = Decimal("0.5")
 TOTAL_TOLERANCE = Decimal("0.98")  # stored total may be 2% under a component
 DPS_RATE_TOLERANCE = Decimal(
     "0.02"
 )  # R-RATE-ON-YTD: year value within 2% of the quarterly rate
+Q4_RATE_TOLERANCE = Decimal(
+    "0.01"
+)  # derived Q4 tax rate vs Q4 tax / Q4 pretax: one point
+Q4_EPS_TOLERANCE = Decimal(
+    "0.03"
+)  # derived Q4 EPS vs the net-income / implied-shares recompute: 3%
 DPS_PAID_MAX_RATIO = Decimal(
     "0.6"
 )  # FY DPS x shares / dividends paid above this: a full-year total, not a quarterly rate
@@ -113,6 +148,9 @@ SPLIT_WINDOW_BEFORE = timedelta(days=30)
 SPLIT_WINDOW_AFTER = timedelta(days=150)
 INTEGER_TOLERANCE = Decimal("0.05")
 BASIS_RATIO = Decimal(5)
+MIN_RESTATED_RATIO = Decimal(
+    "1.2"
+)  # a restated comparative proves a split only if the value moved by >= 1.2x
 DUPLICATE_EVENT_DAYS = 400  # same-ratio split rows closer than this are ONE event when the filing-dated share series steps at most once between them
 DUPLICATE_STEP_WINDOW_DAYS = (
     120  # filings reporting a split come up to ~4 months after its effective date
@@ -120,6 +158,11 @@ DUPLICATE_STEP_WINDOW_DAYS = (
 BASIS_CELL_TOLERANCE = Decimal(
     "0.10"
 )  # stored/as-filed against the factor its source filing date implies
+NON_INTEGER_RATIOS = (
+    Decimal("1.25"),
+    Decimal("1.5"),
+    Decimal("2.5"),
+)  # 5-for-4, 3-for-2, 5-for-2 (ODFL 3-for-2 of 2020)
 CLEAN_RATIOS = (
     2,
     3,

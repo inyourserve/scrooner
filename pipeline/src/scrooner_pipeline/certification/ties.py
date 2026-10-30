@@ -17,10 +17,13 @@ cash-flow statement vs the income statement, retained-earnings roll-forward.
 from __future__ import annotations
 
 from decimal import Decimal
+from typing import Any
 
 from scrooner_pipeline.sanity.accounting_identity import IDENTITIES, Identity, evaluate
 
 from .thresholds import (
+    ROUNDING_TOLERANCE,
+    LIABILITIES_NCI_TOLERANCE,
     WRONG_GAP,
     SCALE_RATIO,
     CASH_ROLL_TOLERANCE,
@@ -29,6 +32,8 @@ from .thresholds import (
     CASH_DATE_SLACK_DAYS,
 )
 from .model import (
+    NCI_CLAIM_TAGS,
+    INFO,
     REVIEW,
     WRONG_VALUE,
     CompanyData,
@@ -36,6 +41,14 @@ from .model import (
     finding,
     power_of_ten_signature,
 )
+
+
+def _close(a: Decimal, b: Decimal) -> bool:
+    return a == b or (
+        max(abs(a), abs(b)) != 0
+        and abs(a - b) / max(abs(a), abs(b)) <= ROUNDING_TOLERANCE
+    )
+
 
 # Relative gap (to the identity's basis) beyond which a failed tie is no longer
 # plausible rounding / perimeter noise: a 25% gap on assets = L + E is a wrong
@@ -46,7 +59,7 @@ from .model import (
 # net income 3x above pretax - tax and the tie is legitimately open). Its failure
 # is `wrong_value` only when stored and expected differ by a SCALE (>= 50x either
 # way, or a power-of-ten signature); a smaller gap is `review`.
-SCALE_ONLY_IDENTITIES = frozenset({"net_income"})
+SCALE_ONLY_IDENTITIES = frozenset({"net_income", "gross_profit"})
 
 I1_IDENTITIES = ("balance_sheet", "current_assets_within_total", "cash_within_total")
 I2_IDENTITIES = ("gross_profit", "net_income")
@@ -102,8 +115,13 @@ def _check_identity(
         if result.passed:
             continue
         if identity.name in SCALE_ONLY_IDENTITIES:
+            # data-team/strategy/team/CERTIFY-HELDOUT-VALIDATION: the net income and
+            # gross profit identities were 0/4 right on held-out cells (NCI at MPC and
+            # SPGI, excise taxes in MO's revenue, a REIT layout at DOC): they cannot see
+            # the reconciling items, so a gap that is not a unit-scale error is `info`
+            # (counted, never stored, never blocking).
             severity = (
-                WRONG_VALUE if _scale_apart(result.actual, result.expected) else REVIEW
+                WRONG_VALUE if _scale_apart(result.actual, result.expected) else INFO
             )
         else:
             severity = WRONG_VALUE if (result.rel_gap or 0) > WRONG_GAP else REVIEW
@@ -124,6 +142,84 @@ def _check_identity(
             )
         )
     return findings
+
+
+NCI_TAGS = NCI_CLAIM_TAGS
+
+
+def _liabilities_nci(data: CompanyData) -> list[Finding]:
+    """A calculated total liabilities must equal assets - equity - every claim that is
+    neither liability nor parent equity (noncontrolling interest, REDEEMABLE
+    noncontrolling interest, temporary equity). VLO 2020-12-31 stored 33,814M against
+    32,132M on the balance sheet. The claims are read from the cell's own sources AND
+    from the authoritative facts of the same period (ILMN: the redeemable NCI is not
+    among the cell's sources, so the first version expected 1,845M where the face says
+    1,811M). Two findings, both `wrong_value`:
+      liabilities_nci_added      stored = assets - equity + NCI (the NCI added instead of
+                                 subtracted, SWK 2021: 3.0M on 12,471M), at ANY size
+      liabilities_nci_treatment  stored differs from the right value by more than 0.5%
+    A filed total liabilities is checked by the balance identity instead."""
+    out: list[Finding] = []
+    adj: dict[int, dict[str, Decimal]] = {}
+    for f in data.adjustment_facts:
+        if f.tag in NCI_TAGS:
+            adj.setdefault(f.period_id, {})[f.tag] = f.value
+    for cell in data.display_cells():
+        if cell.base != "total_liabilities":
+            continue
+        srcs = data.source_facts(cell)
+        a = next((s for s in srcs if s.tag == "Assets"), None)
+        e = next((s for s in srcs if s.tag == "StockholdersEquity"), None)
+        if a is None or e is None:
+            continue
+        claims: dict[str, Decimal] = {
+            s.tag: s.value for s in srcs if s.tag in NCI_TAGS and s.value
+        }
+        for tag, value in adj.get(cell.period_id, {}).items():
+            if value:
+                claims.setdefault(tag, value)
+        if not claims:
+            continue
+        n = sum(claims.values(), Decimal(0))
+        expected = a.value - e.value - n
+        if expected <= 0:
+            continue
+        evidence: dict[str, Any] = dict(
+            assets=str(a.value),
+            parent_equity=str(e.value),
+            noncontrolling_interest=str(n),
+            claims={t: str(v) for t, v in claims.items()},
+            note="total liabilities = assets - equity - noncontrolling interests; they are equity",
+        )
+        if _close(cell.value, a.value - e.value + n) and not _close(
+            cell.value, expected
+        ):
+            out.append(
+                finding(
+                    data,
+                    "I1",
+                    WRONG_VALUE,
+                    "liabilities_nci_added",
+                    cell,
+                    other=expected,
+                    source_ids=sorted(s.id for s in srcs),
+                    **evidence,
+                )
+            )
+        elif abs(cell.value - expected) / expected > LIABILITIES_NCI_TOLERANCE:
+            out.append(
+                finding(
+                    data,
+                    "I1",
+                    WRONG_VALUE,
+                    "liabilities_nci_treatment",
+                    cell,
+                    other=expected,
+                    source_ids=sorted(s.id for s in srcs),
+                    **evidence,
+                )
+            )
+    return out
 
 
 def _cash_roll(data: CompanyData, by_period) -> list[Finding]:
@@ -186,6 +282,7 @@ def _cash_roll(data: CompanyData, by_period) -> list[Finding]:
 def check(data: CompanyData) -> list[Finding]:
     by_period = _by_period(data)
     findings: list[Finding] = []
+    findings += _liabilities_nci(data)
     for name in I1_IDENTITIES:
         findings += _check_identity(data, by_period, _identity(name), "I1")
     for name in I2_IDENTITIES:

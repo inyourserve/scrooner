@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0107** (0098-0106 claimed 2026-10-22 below, none written/applied on main yet). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0112** (0101 = company_slot_record, renumbered from the 0110 claim on 2026-10-26 so CI's contiguity check stays green; 0102-0110 claimed, files not on main; 0111 ALREADY APPLIED in production, see its row). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -51,15 +51,21 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0096 | data-engineer (top-1000 B0a) | `company_data_point_coverage.has_value_any_period` (old ever-filled figure kept) | written and committed, NOT applied (apply after scrooner-82's D2) |
 | 0097 | data-engineer (top-1000 P1) | `analytics.certification_finding` + `analytics.company_certification` (certification suite output) | written and committed, NOT applied |
 | 0095 | scrooner-2b | map `...ContinuingOperations` cash-flow tags as fallbacks (investing, financing, CFO) | committed (`e7c1b25`) |
-| 0098 | Period Engineer | per-share `gap_cause` CHECK + `analytics.canonical_fact_retired` | claimed, not written/not applied (file written on a held branch only) |
-| 0099 | Period Engineer | split tables `split_event` + `filing_share_basis` | claimed, not written/not applied |
-| 0100 | Data Engineer (lane 3) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | claimed, not written/not applied |
-| 0101 | Data Engineer | minimal definition registry (`metric_definition_active` view + one-active-per-name unique index) | claimed, not written/not applied |
+| 0098 | Period Engineer | per-share `gap_cause` CHECK + `analytics.canonical_fact_retired` | written, schema-only, NOT applied: branch work/period-engineer/migrations-0098-0099 (file byte-identical to held/ru1-per-share 91c6171; the RU-1 code stays held) |
+| 0099 | Period Engineer | split tables `split_event` + `filing_share_basis` (SB-1, empty) | written, schema-only, NOT applied: branch work/period-engineer/migrations-0098-0099 |
+| 0100 | Data Engineer (lane 1) | `cell_evidence` (append-only), `cell_blank_reason` (keyed by dates), `core.filing_registrant`, `core.company_identity_audit`, rule_run manifest | written on branch work/data-engineer/lane1-reason-store, NOT applied (needs 0098/0099 on the merge target for check_migrations contiguity) |
+| 0101 | scrooner-25 (core engine) | `analytics.company_slot_record`, THE company-wise mapper table (renumbered from 0110, Dhairya 2026-10-26) | written on branch work/scrooner-25/slot-records, NOT applied; Release Manager lands it alone; production apply needs the founder's words in scrooner-4d's session |
+| 0111 | Data Engineer (storage floor) | `storage_object_retired` + `sec_companyfacts_unchanged_fetch` (branch work/data-engineer/storage-floor-prereq 6b1831a) | **ALREADY APPLIED in production** by scrooner-4d on the founder's typed instruction (2026-10-26); cannot land on main until 0102-0110 files exist, so the gap on main is expected and known |
+| 0112 | Data Engineer | minimal definition registry (`metric_definition_active` view + one-active-per-name unique index) (moved from 0101) | claimed, not written/not applied |
 | 0102 | Data Engineer | thin `cell_state` table with run id | claimed, not written/not applied |
 | 0103 | Period Engineer | `core.derived_fact_input` | claimed, not written/not applied |
 | 0104 | (unassigned) | `company_group` + `metric_template` (after design review) | claimed, not written/not applied |
 | 0105 | (unassigned) | output_versioning | claimed, not written/not applied |
 | 0106 | (unassigned) | `slot_observation` (optional) | claimed, not written/not applied |
+| 0107 | Data Engineer (lane 2) | `expanded_ttm_rows_cleanup` | claimed, written on a lane 2 branch, NOT applied |
+| 0108 | Data Engineer (lane 3) | ADS tables (first of two; renumbered from an earlier claim) | claimed, not written/not applied |
+| 0109 | Data Engineer (lane 3) | ADS tables (second of two) | claimed, not written/not applied |
+| 0110 | (released) | formerly claimed by scrooner-25 for company_slot_record; renumbered to 0101 | free for re-claim after 0102-0109 |
 
 ## scrooner-98 queue (lane A)
 

@@ -205,7 +205,7 @@ def build(
     map_path: Path | None = None,
 ):
     graph = L.load_graph()
-    ids, cohort = L.load_cohort()
+    ids, cohort = L.load_cohort(COHORT_FILE or L.SHARDS)
     names = L.read_lines(L.D0_NAMES_FILE)
     removed = set(L.read_lines(L.D0E_REMOVED_FILE))
     keep = set(names) - removed
@@ -213,10 +213,12 @@ def build(
     qsha = script_sha()
     map_path = map_path or L.REASON_MAP_V2_1
     map_ver = {
+        L.REASON_MAP_V2_3.name: "v2.3",
+        L.REASON_MAP_V2_2.name: "v2.2",
         L.REASON_MAP_V2_1.name: "v2.1",
         L.REASON_MAP_V2.name: "v2",
     }.get(Path(map_path).name, "v1")
-    kver = {"v2.1": "proxy@2.1", "v2": "proxy@2"}.get(map_ver, "proxy@1")
+    kver = {"v2.3": "proxy@2.3", "v2.2": "proxy@2.2", "v2.1": "proxy@2.1", "v2": "proxy@2"}.get(map_ver, "proxy@1")
     R = Rows(as_of, ext_sha, qsha)
 
     absent_cells, outside, _present = grid_report(ext, ids, names)
@@ -367,7 +369,7 @@ def build(
         "MEASURED",
         "MEASURED",
         wm=wm,
-        note=f"{len(ids)} companies x {len(names)} data points (cohort file v1)",
+        note=f"{len(ids)} companies x {len(names)} data points (cohort file {COHORT_LABEL})",
     )
     R.add(
         "R",
@@ -968,7 +970,7 @@ def build(
             qfile=qk,
         )
 
-    if map_ver in ("v2", "v2.1"):
+    if map_ver in ("v2", "v2.1", "v2.2", "v2.3"):
         buckets = (
             ("currency_unknown", "metric_only_fallback")
             if map_ver == "v2"
@@ -1320,6 +1322,9 @@ def defects_csv(defects, as_of, ticker, prev_first_seen) -> str:
 
 
 CHAIN_NAME = "CHAIN.md"
+# set by --cohort-file / --cohort-label; RT-1 and every frozen-v1 check keep using shards.csv
+COHORT_FILE: Path | None = None
+COHORT_LABEL = "v1"
 
 
 def _chain_prefix_ok(fp: Path, recorded: str) -> bool:
@@ -1400,7 +1405,7 @@ K2@1 = null gap_reason. Targets are in TARGETS.csv (versioned, never edit histor
 def chain_section(as_of, t0, t_e, D0, D0e, removed, n_abs):
     return (
         f"## {as_of}\n\n| step | cells | valued | pct | note |\n|---|---|---|---|---|\n"
-        f"| D0 | {D0:,} | {t0['valued']:,} | {L.pct(t0['valued'], D0)}% | 986 x 163; absent_from_table {n_abs} |\n"
+        f"| D0 | {D0:,} | {t0['valued']:,} | {L.pct(t0['valued'], D0)}% | {D0 // 163 if D0 % 163 == 0 else '?'} x 163 (cohort {COHORT_LABEL}); absent_from_table {n_abs} |\n"
         f"| minus F-1 | -{D0 - D0e:,} | -{t0['valued'] - t_e['valued']:,} | | {len(removed)} data points (hash {L.name_list_hash(removed)}) |\n"
         f"| D0e | {D0e:,} | {t_e['valued']:,} | {L.pct(t_e['valued'], D0e)}% | economic-line cells (founder F-1 pending) |\n"
         f"| D1 | NOT_COMPUTABLE | | | needs groups v2 and templates v1 (Gate C) |\n\n"
@@ -1419,10 +1424,16 @@ def main(argv=None):
     ap.add_argument("--out-dir", type=Path, default=L.SB_DIR)
     ap.add_argument(
         "--map",
-        choices=("v1", "v2", "v2.1"),
+        choices=("v1", "v2", "v2.1", "v2.2", "v2.3"),
         default="v2.1",
         help="reason-class map: v2.1 (default), v2 (published) or v1 (the record behind the 2026-10-20 scoreboard)",
     )
+    ap.add_argument(
+        "--cohort-file",
+        type=Path,
+        help="company list (company_id column) for the published cohort; default shards.csv (v1)",
+    )
+    ap.add_argument("--cohort-label", default="v1")
     ap.add_argument("--erratum", type=int)
     ap.add_argument("--reason", default="")
     ap.add_argument(
@@ -1431,6 +1442,8 @@ def main(argv=None):
         help="run RT-1 + build in memory, write nothing",
     )
     a = ap.parse_args(argv)
+    global COHORT_FILE, COHORT_LABEL
+    COHORT_FILE, COHORT_LABEL = a.cohort_file, a.cohort_label
 
     rt = rt1_reconcile.run()
     if any(not r["passed"] for r in rt):
@@ -1455,6 +1468,8 @@ def main(argv=None):
         "v1": L.REASON_MAP,
         "v2": L.REASON_MAP_V2,
         "v2.1": L.REASON_MAP_V2_1,
+        "v2.2": L.REASON_MAP_V2_2,
+        "v2.3": L.REASON_MAP_V2_3,
     }[a.map]
     R, defects, absent_cells = build(ext, a.as_of, a.cells, prev, ref, out, map_path)
     bad = validate_rows(R.rows)
@@ -1471,7 +1486,7 @@ def main(argv=None):
                 + f" | ERRATUM r{a.erratum} supersedes {a.as_of}.csv: {a.reason}"
             ).strip(" |")
     fname = f"{a.as_of}.csv" if a.erratum is None else f"{a.as_of}.r{a.erratum}.csv"
-    ids, cohort = L.load_cohort()
+    ids, cohort = L.load_cohort(COHORT_FILE or L.SHARDS)
     ticker = {cid: row["ticker"] for cid, row in cohort.items()}
     prev_first = {}
     if a.prev_defects:
