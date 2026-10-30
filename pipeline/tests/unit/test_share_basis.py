@@ -1119,7 +1119,8 @@ def test_label_shifted_copy_is_dropped_not_read_as_a_restatement():
     res = run(b)
     cell = b.cell(res, "basic_eps_resolved", "2017-01-30", "2017-07-30")
     assert cell.status == sb.SHOWN and cell.value == D("1.83")
-    assert "label-shifted" in cell.note
+    # run 7: a 6M copy in a 10-K is also an unpresented column
+    assert "label-shifted" in cell.note or "does not present" in cell.note
 
 
 def test_two_vintage_restatement_is_still_hidden():
@@ -2627,3 +2628,198 @@ def test_zero_declared_original_beside_cash_paid_gives_way_to_the_later_copy():
     )
     cell = b.cell(run(b), "dividends_per_share_resolved", "2020-04-01", "2020-06-30")
     assert cell.status == sb.SHOWN and cell.value == D("0.1433")
+
+
+# --------------------------------------------------------------------------
+# Run 7 (Verifier run 6): spans agree with their parts, quarter = YTD context,
+# same-quarter declare-and-pay releases
+# --------------------------------------------------------------------------
+def _amt_book(fy_declared: str, fy_paid: str, year: int, decl: list[tuple[str, str]]) -> Book:
+    """AMT: Declared basis (declared 3-month quarters outnumber paid ones),
+    dated declaration facts, and a 10-K whose full-year tags are swapped."""
+    b = Book()
+    for y in (2016, 2017, 2018, 2019):
+        for qs, qe, fd in (("01-01", "03-31", "04-30"), ("04-01", "06-30", "07-30"),
+                           ("07-01", "09-30", "10-30")):  # fmt: skip
+            b.add(DPS_DECL, "1.00", f"{y}-{qs}", f"{y}-{qe}", b.filing(f"Q-{y}-{qs}", f"{y}-{fd}"))
+    q = b.filing(f"AMT-Q-{year}", f"{year}-10-26")
+    for day, v in decl[:3]:
+        b.add(DPS_DECL, v, day, day, q)
+    k = b.filing(f"AMT-K-{year}", f"{year + 1}-02-27", "10-K")
+    b.add(DPS_DECL, decl[3][1], decl[3][0], decl[3][0], k)
+    late = b.filing(f"AMT-K-{year + 2}", f"{year + 3}-02-25", "10-K")
+    b.add(DPS_DECL, fy_declared, f"{year}-01-01", f"{year}-12-31", late)
+    b.add(DPS_PAID, fy_paid, f"{year}-01-01", f"{year}-12-31", late)
+    return b
+
+
+def test_full_year_dividend_takes_the_filed_copy_that_equals_its_declarations():
+    """AMT FY2022 (0001053507-25-000025): Declared FY 4.30 counts three
+    declarations; the four 2022 declarations sum to 5.86, filed as CashPaid."""
+    b = _amt_book("4.30", "5.86", 2022, [("2022-03-10", "1.40"), ("2022-05-18", "1.43"),
+                                          ("2022-09-21", "1.47"), ("2022-12-07", "1.56")])
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-12-31")
+    assert cell.status == sb.SHOWN and cell.value == D("5.86")
+    assert "dated facts" in cell.note
+
+
+def test_full_year_dividend_swapped_tags_amt_2023():
+    """AMT FY2023: Declared 6.31 is the paid sum; declarations 1.56 + 1.57 +
+    1.62 + 1.70 = 6.45, filed as CashPaid."""
+    b = _amt_book("6.31", "6.45", 2023, [("2023-03-08", "1.56"), ("2023-05-24", "1.57"),
+                                          ("2023-09-20", "1.62"), ("2023-12-13", "1.70")])
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2023-01-01", "2023-12-31")
+    assert cell.status == sb.SHOWN and cell.value == D("6.45")
+
+
+def test_full_year_dividend_hidden_when_no_filed_copy_equals_its_parts():
+    b = _amt_book("4.30", "4.30", 2022, [("2022-03-10", "1.40"), ("2022-05-18", "1.43"),
+                                          ("2022-09-21", "1.47"), ("2022-12-07", "1.56")])
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-12-31")
+    assert cell.status == sb.HIDE_DPS_INVALID and cell.value is None
+
+
+def test_full_year_dividend_left_alone_when_declarations_miss_a_quarter():
+    """Three dated declarations cannot check a four-quarter year."""
+    b = _amt_book("4.30", "5.86", 2022, [("2022-03-10", "1.40"), ("2022-05-18", "1.43"),
+                                          ("2022-06-21", "1.47"), ("2022-12-07", "1.56")])
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-12-31")
+    # Q3 has no declaration date: no evidence, the filed basis value stays
+    assert cell.status == sb.SHOWN and cell.value == D("4.30")
+
+
+def test_quarter_carrying_the_ytd_value_is_hidden_logi():
+    """LOGI Q3 FY22 10-Q 0001032975-22-000006: Apr-Dec 0.95 and Oct-Dec 0.95
+    while Jul-Sep was 0.95 (annual dividend paid in September)."""
+    b = Book()
+    q2 = b.filing("0001032975-21-000045", "2021-10-28")
+    q3 = b.filing("0001032975-22-000006", "2022-01-27")
+    b.add(DPS_PAID, "0.95", "2021-07-01", "2021-09-30", q2)
+    b.add(DPS_PAID, "0.95", "2021-04-01", "2021-09-30", q2)
+    b.add(DPS_PAID, "0.95", "2021-04-01", "2021-12-31", q3)
+    b.add(DPS_PAID, "0.95", "2021-10-01", "2021-12-31", q3)
+    res = run(b)
+    assert b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2021-12-31").status == sb.HIDE_QTR_YTD
+    assert b.cell(res, "dividends_per_share_resolved", "2021-07-01", "2021-09-30").value == D("0.95")
+    assert b.cell(res, "dividends_per_share_resolved", "2021-04-01", "2021-12-31").value == D("0.95")
+
+
+def test_quarter_equal_to_ytd_stays_when_earlier_quarters_paid_nothing():
+    """An annual dividend paid in the last quarter of the YTD: Q = YTD is right."""
+    b = Book()
+    q2 = b.filing("A-Q2", "2021-10-28")
+    q3 = b.filing("A-Q3", "2022-01-27")
+    b.add(DPS_PAID, "0", "2021-07-01", "2021-09-30", q2)
+    b.add(DPS_PAID, "0.95", "2021-04-01", "2021-12-31", q3)
+    b.add(DPS_PAID, "0.95", "2021-10-01", "2021-12-31", q3)
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2021-10-01", "2021-12-31")
+    assert cell.status == sb.SHOWN and cell.value == D("0.95")
+
+
+def _together_book(agree: bool) -> Book:
+    """Declared basis; four quarters with both tags (equal unless agree is
+    False); one later quarter filed on CashPaid only."""
+    b = Book()
+    for i, (qs, qe, fd) in enumerate((("2016-01-01", "2016-03-31", "2016-05-01"), ("2016-04-01", "2016-06-30", "2016-08-01"),
+                                      ("2016-07-01", "2016-09-30", "2016-11-01"), ("2017-01-01", "2017-03-31", "2017-05-01"),
+                                      ("2017-04-01", "2017-06-30", "2017-08-01"))):  # fmt: skip
+        f = b.filing(f"T-{i}", fd)
+        b.add(DPS_DECL, "0.50", qs, qe, f)
+        b.add(DPS_PAID, "0.50" if agree or i else "0.48", qs, qe, f)
+    for i, (qs, qe, fd) in enumerate((("2018-01-01", "2018-03-31", "2018-05-01"), ("2018-04-01", "2018-06-30", "2018-08-01"))):
+        b.add(DPS_DECL, "0.50", qs, qe, b.filing(f"T-decl-{i}", fd))  # Declared stays the basis
+    f = b.filing("T-paid-only", "2017-11-01")
+    b.add(DPS_PAID, "0.50", "2017-07-01", "2017-09-30", f)
+    return b
+
+
+def test_off_basis_quarter_released_when_company_declares_and_pays_together():
+    """Verifier run 6: ~25 dividend_basis_pending holds (CMI, NSC, LIN, EXC,
+    BAC ...) where the off-basis value is the same number on both bases."""
+    b = _together_book(agree=True)
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2017-07-01", "2017-09-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0.50")
+    assert "same quarter" in cell.note
+
+
+def test_off_basis_quarter_stays_hidden_when_one_quarter_differs():
+    """HWM Q1 2019 declared 0.08 vs paid 0.06: a real timing difference."""
+    b = _together_book(agree=False)
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2017-07-01", "2017-09-30")
+    assert cell.status == sb.HIDE_DPS_BASIS
+
+
+def test_copy_from_a_10k_that_does_not_present_the_quarter_is_dropped_swk():
+    """SWK Q4 2017 basic EPS 1.88 (two copies) vs -0.72 in the FY2019 10-K
+    0000093556-20-000006, which presents 2019 and 2018 quarters only."""
+    b = Book()
+    k17 = b.filing("0000093556-18-000008", "2018-02-22", "10-K")
+    k18 = b.filing("0000093556-19-000011", "2019-02-26", "10-K")
+    k19 = b.filing("0000093556-20-000006", "2020-02-21", "10-K")
+    b.add(EPS_B, "1.88", "2017-10-01", "2017-12-30", k17)
+    b.add(EPS_B, "1.88", "2017-10-01", "2017-12-30", k18)
+    b.add(EPS_B, "-0.72", "2017-10-01", "2017-12-30", k19)
+    cell = b.cell(run(b), "basic_eps_resolved", "2017-10-01", "2017-12-30")
+    assert cell.status == sb.SHOWN and cell.value == D("1.88")
+    assert "does not present" in cell.note
+
+
+def test_nine_month_copy_in_a_10k_is_dropped_form():
+    """FORM 9M 2017 basic EPS 0.49 vs 0.03 in a 10-K (no 9M column)."""
+    b = Book()
+    q = b.filing("0001039399-17-000078", "2017-11-01")
+    q18 = b.filing("0001039399-18-000085", "2018-10-31")
+    k = b.filing("0001039399-19-000024", "2019-02-26", "10-K")
+    b.add(EPS_B, "0.49", "2017-01-01", "2017-09-30", q)
+    b.add(EPS_B, "0.49", "2017-01-01", "2017-09-30", q18)
+    b.add(EPS_B, "0.03", "2017-01-01", "2017-09-30", k)
+    cell = b.cell(run(b), "basic_eps_resolved", "2017-01-01", "2017-09-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0.49")
+
+
+def test_swapped_quarter_pair_in_one_filing_is_dropped_nwsa():
+    """NWSA FY2016 10-K 0001193125-16-679975 tags Jul-Sep 2014 0.30 and
+    Jul-Sep 2015 0.11: each is the other quarter's consensus."""
+    b = Book()
+    q15 = b.filing("0001193125-14-399701", "2014-11-07")
+    k15 = b.filing("0001193125-15-288946", "2015-08-13", "10-K")
+    q16 = b.filing("0001193125-15-370000", "2015-11-06")
+    k16 = b.filing("0001193125-16-679975", "2016-08-12", "10-K")
+    q17 = b.filing("0001193125-16-760000", "2016-11-08")
+    b.add(EPS_D, "0.11", "2014-07-01", "2014-09-30", q15)
+    b.add(EPS_D, "0.11", "2014-07-01", "2014-09-30", k15)
+    b.add(EPS_D, "0.11", "2014-07-01", "2014-09-30", q16)
+    b.add(EPS_D, "0.30", "2014-07-01", "2014-09-30", k16)  # swapped
+    b.add(EPS_D, "0.30", "2015-07-01", "2015-09-30", q16)
+    b.add(EPS_D, "0.30", "2015-07-01", "2015-09-30", q17)
+    b.add(EPS_D, "0.11", "2015-07-01", "2015-09-30", k16)  # swapped
+    res = run(b)
+    assert b.cell(res, "diluted_eps_resolved", "2014-07-01", "2014-09-30").value == D("0.11")
+    assert b.cell(res, "diluted_eps_resolved", "2015-07-01", "2015-09-30").value == D("0.30")
+
+
+def test_restated_prior_year_quarter_in_the_next_10q_is_still_hidden():
+    """A real restatement often has ONE later copy (the next year's 10-Q
+    comparative): it is presented and not a swap, so the hold stays."""
+    b = Book()
+    q = b.filing("R-Q1-2016", "2016-05-01")
+    q2 = b.filing("R-Q1-2017", "2017-05-01")
+    b.add(EPS_D, "0.40", "2016-01-01", "2016-03-31", q)
+    b.add(EPS_D, "0.33", "2016-01-01", "2016-03-31", q2)
+    b.add(EPS_D, "0.52", "2017-01-01", "2017-03-31", q2)
+    cell = b.cell(run(b), "diluted_eps_resolved", "2016-01-01", "2016-03-31")
+    assert cell.status == sb.HIDE_RESTATED
+
+
+def test_10q_copy_of_a_quarter_two_years_back_is_dropped():
+    """A 10-Q compares with the prior year only; a quarter two years back in
+    it is an unpresented column."""
+    b = Book()
+    q = b.filing("A-Q3-2015", "2015-11-01")
+    q2 = b.filing("A-Q3-2016", "2016-11-01")
+    q3 = b.filing("A-Q3-2017", "2017-11-01")
+    b.add(EPS_D, "0.40", "2015-07-01", "2015-09-30", q)
+    b.add(EPS_D, "0.40", "2015-07-01", "2015-09-30", q2)
+    b.add(EPS_D, "0.61", "2015-07-01", "2015-09-30", q3)
+    cell = b.cell(run(b), "diluted_eps_resolved", "2015-07-01", "2015-09-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0.40")
