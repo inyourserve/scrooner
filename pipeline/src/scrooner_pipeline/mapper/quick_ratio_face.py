@@ -1,6 +1,8 @@
 """What does THIS period's own balance sheet show? (quick_ratio, rule quick_ratio.inventory_evidence@1)
 
-Read from the SEC Financial Statement Data Sets (FSDS, sec.gov/dera/data/financial-statement-data-sets). ``pre.txt``
+Read from the SEC Financial Statement Data Sets (FSDS, sec.gov/dera/data/financial-statement-data-sets), or from the
+same pre/num tables of the Financial Statement and Notes data sets kept in the private bucket ``fsn-notes`` (no SEC
+request; FSN num rows are reduced to face-shaped facts first). ``pre.txt``
 lists the lines the filer PRESENTS on each statement (stmt 'BS' = the balance-sheet face; parenthetical rows excluded);
 ``num.txt`` holds their values per date column (ddate, qtrs = 0 for balance-sheet instants). For one accession the result
 is per DATE COLUMN, so a line that has a value only in the comparative column does not count for the current date:
@@ -23,8 +25,9 @@ import csv
 import io
 import json
 import re
+import subprocess
 import zipfile
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
@@ -74,89 +77,89 @@ def _ddate(s: str) -> date | None:
         return None
 
 
-def balance_sheet_faces(
-    zip_path: Path, accessions: set[str]
+def faces_from_rows(
+    pre_rows: Iterable[dict[str, str]],
+    num_rows: Iterable[dict[str, str]],
+    accessions: set[str],
 ) -> dict[str, AccessionFace]:
     """accession (with dashes) -> AccessionFace for the accessions that have balance-sheet rows in this data set.
+    ``num_rows`` must hold face values only (FSDS num.txt; FSN rows pass ``fsn_face_num``).
 
     Only lines ABOVE the report's ``AssetsCurrent`` row count as current inventory or supplies lines (the registrant's
     own block: co-registrant blocks carry ``coreg`` on their values and are skipped). A WIP line whose value is also
     tagged as a contract asset in the same filing is not inventory (OMC 2017-2019)."""
     adsh_of = {a.replace("-", ""): a for a in accessions}
     groups: dict[tuple[str, str], list[tuple[int, str, str]]] = {}
-    with zipfile.ZipFile(zip_path) as zf:
-        for r in _rows(zf, "pre.txt"):
-            key = r["adsh"].replace("-", "")
-            if (
-                key not in adsh_of
-                or r.get("stmt") != "BS"
-                or r.get("inpth") not in ("0", "", None)
-            ):
-                continue
-            try:
-                line = int(r.get("line") or 0)
-            except ValueError:
-                line = 0
-            groups.setdefault((key, r.get("report", "")), []).append(
-                (line, r.get("tag", ""), r.get("plabel", ""))
+    for r in pre_rows:
+        key = r["adsh"].replace("-", "")
+        if (
+            key not in adsh_of
+            or r.get("stmt") != "BS"
+            or r.get("inpth") not in ("0", "", None)
+        ):
+            continue
+        try:
+            line = int(r.get("line") or 0)
+        except ValueError:
+            line = 0
+        groups.setdefault((key, r.get("report", "")), []).append(
+            (line, r.get("tag", ""), r.get("plabel", ""))
+        )
+    kinds: dict[
+        tuple[str, str], tuple[bool, bool]
+    ] = {}  # (adsh, tag) -> (is_inventory, is_materials)
+    bs_tags: set[tuple[str, str]] = set()
+    classified: set[str] = set()
+    for (key, _report), rows in groups.items():
+        if any(
+            tag == "AssetsCurrent" or _CURRENT_ASSETS_LABEL.search(label)
+            for _, tag, label in rows
+        ) and any(
+            tag == "LiabilitiesCurrent" or _CURRENT_LIABILITIES_LABEL.search(label)
+            for _, tag, label in rows
+        ):
+            classified.add(key)
+        ac_line = min(
+            (ln for ln, tag, _ in rows if tag == "AssetsCurrent"), default=None
+        )
+        for ln, tag, label in rows:
+            bs_tags.add((key, tag))
+            if ac_line is not None and ln >= ac_line:
+                continue  # at or below the current-assets total: not a current line
+            tag_materials = "MaterialsSupplies" in tag and "nventor" not in tag
+            inv = bool(_INVENTORY_LABEL.search(label)) or (
+                not tag_materials and is_inventory_like(tag)
             )
-        kinds: dict[
-            tuple[str, str], tuple[bool, bool]
-        ] = {}  # (adsh, tag) -> (is_inventory, is_materials)
-        bs_tags: set[tuple[str, str]] = set()
-        classified: set[str] = set()
-        for (key, _report), rows in groups.items():
-            if any(
-                tag == "AssetsCurrent" or _CURRENT_ASSETS_LABEL.search(label)
-                for _, tag, label in rows
-            ) and any(
-                tag == "LiabilitiesCurrent" or _CURRENT_LIABILITIES_LABEL.search(label)
-                for _, tag, label in rows
-            ):
-                classified.add(key)
-            ac_line = min(
-                (ln for ln, tag, _ in rows if tag == "AssetsCurrent"), default=None
-            )
-            for ln, tag, label in rows:
-                bs_tags.add((key, tag))
-                if ac_line is not None and ln >= ac_line:
-                    continue  # at or below the current-assets total: not a current line
-                tag_materials = "MaterialsSupplies" in tag and "nventor" not in tag
-                inv = bool(_INVENTORY_LABEL.search(label)) or (
-                    not tag_materials and is_inventory_like(tag)
-                )
-                mat = (not inv) and (
-                    bool(_MATERIALS_LABEL.search(label)) or tag_materials
-                )
-                old = kinds.get((key, tag), (False, False))
-                kinds[(key, tag)] = (old[0] or inv, old[1] or mat)
-        statement: dict[str, set[date]] = {}
-        inv_values: dict[tuple[str, str], dict[date, Decimal]] = {}
-        materials: dict[str, set[date]] = {}
-        contract_asset: dict[tuple[str, date], set[Decimal]] = {}
-        for r in _rows(zf, "num.txt"):
-            key = r["adsh"].replace("-", "")
-            tag = r["tag"]
-            if key not in adsh_of or r.get("qtrs") != "0" or r.get("coreg"):
-                continue
-            d = _ddate(r["ddate"])
-            if d is None:
-                continue
-            try:
-                value = Decimal(r["value"] or "0")
-            except InvalidOperation:
-                continue
-            if tag.startswith("ContractWithCustomerAsset") and value != 0:
-                contract_asset.setdefault((key, d), set()).add(value)
-            if (key, tag) in bs_tags:
-                statement.setdefault(key, set()).add(d)
-            k = kinds.get((key, tag))
-            if k is None or value == 0:
-                continue
-            if k[0]:
-                inv_values.setdefault((key, tag), {})[d] = value
-            if k[1]:
-                materials.setdefault(key, set()).add(d)
+            mat = (not inv) and (bool(_MATERIALS_LABEL.search(label)) or tag_materials)
+            old = kinds.get((key, tag), (False, False))
+            kinds[(key, tag)] = (old[0] or inv, old[1] or mat)
+    statement: dict[str, set[date]] = {}
+    inv_values: dict[tuple[str, str], dict[date, Decimal]] = {}
+    materials: dict[str, set[date]] = {}
+    contract_asset: dict[tuple[str, date], set[Decimal]] = {}
+    for r in num_rows:
+        key = r["adsh"].replace("-", "")
+        tag = r["tag"]
+        if key not in adsh_of or r.get("qtrs") != "0" or r.get("coreg"):
+            continue
+        d = _ddate(r["ddate"])
+        if d is None:
+            continue
+        try:
+            value = Decimal(r["value"] or "0")
+        except InvalidOperation:
+            continue
+        if tag.startswith("ContractWithCustomerAsset") and value != 0:
+            contract_asset.setdefault((key, d), set()).add(value)
+        if (key, tag) in bs_tags:
+            statement.setdefault(key, set()).add(d)
+        k = kinds.get((key, tag))
+        if k is None or value == 0:
+            continue
+        if k[0]:
+            inv_values.setdefault((key, tag), {})[d] = value
+        if k[1]:
+            materials.setdefault(key, set()).add(d)
     inventory: dict[str, set[date]] = {}
     non_wip: dict[str, set[date]] = {}
     for (key, tag), by_date in inv_values.items():
@@ -178,6 +181,46 @@ def balance_sheet_faces(
         )
         for key, dates in statement.items()
     }
+
+
+def balance_sheet_faces(
+    zip_path: Path, accessions: set[str]
+) -> dict[str, AccessionFace]:
+    """Faces from one FSDS quarterly zip (pre.txt + num.txt; num.txt carries face values only)."""
+    with zipfile.ZipFile(zip_path) as zf:
+        return faces_from_rows(_rows(zf, "pre.txt"), _rows(zf, "num.txt"), accessions)
+
+
+def _zst_rows(path: Path) -> Iterator[dict[str, str]]:
+    proc = subprocess.Popen(["zstd", "-dc", str(path)], stdout=subprocess.PIPE)
+    assert proc.stdout is not None
+    fh = io.TextIOWrapper(proc.stdout, encoding="utf-8", errors="replace", newline="")
+    yield from csv.DictReader(fh, delimiter="\t", quoting=csv.QUOTE_NONE)
+    proc.wait()
+
+
+def fsn_face_num(rows: Iterable[dict[str, str]]) -> Iterator[dict[str, str]]:
+    """FSN num.tsv also carries note and dimensional facts: keep the face-shaped ones only (no dimension, the first
+    copy of a fact (iprx 0), no co-registrant), which is what FSDS num.txt holds."""
+    for r in rows:
+        if (
+            r.get("dimn", "0") == "0"
+            and r.get("iprx", "0") == "0"
+            and not r.get("coreg")
+        ):
+            yield r
+
+
+def fsn_balance_sheet_faces(
+    period_dir: Path, accessions: set[str]
+) -> dict[str, AccessionFace]:
+    """Faces from one FSN period folder (bucket fsn-notes: <period>_pre.tsv.zst, <period>_num.tsv.zst)."""
+    name = period_dir.name
+    return faces_from_rows(
+        _zst_rows(period_dir / f"{name}_pre.tsv.zst"),
+        fsn_face_num(_zst_rows(period_dir / f"{name}_num.tsv.zst")),
+        accessions,
+    )
 
 
 def write_jsonl(path: Path, found: dict[str, AccessionFace], source: str) -> None:
