@@ -812,6 +812,18 @@ def test_scale_suspect_only_selects_candidates_it_never_sets_the_unit():
 
 
 @pytest.mark.unit
+def test_one_decimal_millions_input_is_a_scale_candidate_csgp_q4_2023():
+    f = lambda v: _fact(1, v, filed=date(2025, 1, 1))  # noqa: E731
+    # FY 374.7M (printed $M, one decimal) minus 9M 278,225K (printed in thousands)
+    assert rr._scale_suspect([f("374700000"), f("278225000")])
+    assert not rr._scale_suspect([f("374700000"), f("278200000")])  # same precision
+    # the quarter is then shown at the coarsest printed precision: 96.5M
+    plan = _plan_with_scale_pending("96475000", ("A", "B"))
+    rr.resolve_scale(_Cur(), plan, lambda cik, acc, f: {"A": 100_000, "B": 1_000}[acc])
+    assert plan.cells[0].replacement_value == Decimal("96500000")
+
+
+@pytest.mark.unit
 @pytest.mark.parametrize(
     ("header", "scale"),
     [

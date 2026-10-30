@@ -813,13 +813,26 @@ def _scale_unit(v: Decimal) -> int:
     return 1
 
 
+def _trailing_unit(v: Decimal) -> int:
+    """Largest power of ten (1 .. 1e9) dividing v. Trailing zeros only SELECT
+    candidates (see _scale_suspect); they never set the unit."""
+    for e in range(9, 0, -1):
+        if v % 10**e == 0:
+            return 10**e
+    return 1
+
+
 def _scale_suspect(inputs: Sequence[FactRow]) -> bool:
-    """Candidate for the printed-scale check: the inputs LOOK like different
-    reporting scales from their trailing zeros. Trailing zeros prove nothing
+    """Candidate for the printed-precision check: the inputs LOOK like different
+    printed precisions from their trailing zeros. Trailing zeros prove nothing
     ('96.0', '4,274.0', '12,000' printed in thousands; AKTX), so this only
-    selects which quarters to look up on the filing page, never the unit."""
-    scales = [_scale_unit(f.value) for f in inputs]
-    return max(scales) >= 10**6 and max(scales) > min(scales)
+    selects which quarters to look up on the filing page, never the unit.
+    A derived quarter is shown at the COARSEST printed precision among its inputs
+    (resolve_scale), so any input that looks coarser than another, down to one
+    printed decimal in millions (CSGP FY2023 '374.7', unit 100,000, beside a
+    9M printed in thousands), must be looked up, not only whole-million ones."""
+    units = [_trailing_unit(f.value) for f in inputs]
+    return max(units) >= 10**4 and max(units) > min(units)
 
 
 def _round_to(value: Decimal, g: Decimal | int) -> Decimal:
