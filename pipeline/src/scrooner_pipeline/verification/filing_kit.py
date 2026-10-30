@@ -191,6 +191,12 @@ def parse_rpage(page_html: str) -> RPage:
     old pages) is aligned from the right. Hidden '- Definition' rows skipped."""
     title, multiplier, columns = "", 1, []
     spans: list[int] = []
+    # duration headers as grid ranges (start, end, months) and the date cells'
+    # grid start positions: a date cell can span a footnote column (colspan=2),
+    # so a header's colspan counts grid columns, not dates (LNG 25-000107 R2)
+    dur_ranges: list[tuple[int, int, int]] = []
+    date_starts: list[int] = []
+    title_span = 0
     rows: list[Row] = []
     for tr in re.findall(r"<tr.*?</tr>", page_html, re.DOTALL | re.IGNORECASE):
         cells3 = _cells3(tr)
@@ -201,11 +207,16 @@ def parse_rpage(page_html: str) -> RPage:
         if title_row:
             title = cells[0][1]
             multiplier = money_multiplier(" ".join(t for _, t in cells))
+        if title_row and cells3 and cells3[0][0] == "tl":
+            title_span = cells3[0][2]
         if not rows:
+            pos = 0
             for c, t, sp in cells3:
                 d = _DURATION_HDR.match(t)
                 if d:
                     spans += [int(d.group(1))] * sp
+                    dur_ranges.append((pos, pos + sp, int(d.group(1))))
+                pos += sp
         # the second header row of a two-row header has NO title cell (rowspan=2),
         # so its first cell is already a date: keep it
         first_is_title = title_row or cells[0][0] == "tl"
@@ -216,6 +227,13 @@ def parse_rpage(page_html: str) -> RPage:
         ]
         if not rows and tail and all(parse_date(c) for c in tail):
             columns = [parse_date(c) for c in tail]  # type: ignore[misc]
+            # a row without its own title cell sits under the rowspan title
+            pos = 0 if cells3[0][0] == "tl" else title_span
+            date_starts = []
+            for c, t, sp in cells3:
+                if c != "tl" and t and not _FOOT.match(t) and parse_date(t):
+                    date_starts.append(pos)
+                pos += sp
             continue
         label = re.sub(r"\s*\[\d+\]", "", cells[0][1]).strip()
         if not columns or not label or label.startswith("- ") or _POPUP.match(label):
@@ -233,9 +251,15 @@ def parse_rpage(page_html: str) -> RPage:
             pad = len(columns) - len(vals)
             vals, decs = vals + [None] * pad, decs + [None] * pad
         rows.append(Row(label, vals, decs))
-    months: list[int | None] = (
-        list(spans) if len(spans) == len(columns) else [None] * len(columns)
-    )
+    by_pos = [
+        next((m for a, b, m in dur_ranges if a <= st < b), None) for st in date_starts
+    ]
+    if len(spans) == len(columns):
+        months: list[int | None] = list(spans)
+    elif len(by_pos) == len(columns) and all(m is not None for m in by_pos):
+        months = by_pos
+    else:
+        months = [None] * len(columns)
     return RPage(title, multiplier, columns, rows, months)  # type: ignore[arg-type]
 
 

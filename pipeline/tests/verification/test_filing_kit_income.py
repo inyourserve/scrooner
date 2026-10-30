@@ -348,3 +348,25 @@ def test_ambac_fy_in_thousands():
     assert att.values[p.column(date(2022, 12, 31))] == Decimal(
         522380
     ) and p.printed_unit(att, 2) == Decimal(1000)
+
+
+# ---- LNG Q3 2025 10-Q (0000003570-25-000107 R2, real page): the prior-year date
+# cells carry colspan=2 (a footnote column), so each "N Months Ended" header spans 3
+# grid columns over 2 dates. Durations must follow the date cells' grid positions.
+def test_lng_2025_duration_header_spans_footnote_columns():
+    from pathlib import Path
+
+    html = (
+        Path(__file__).parent / "fixtures" / "lng_10q_0000003570-25-000107_R2.html"
+    ).read_text()
+    p = fk.parse_rpage(html)
+    assert p.multiplier == 1_000_000
+    assert p.months == [3, 3, 9, 9]
+    att = next(
+        r
+        for k, r in fk.net_income_lines(p)
+        if r.label == "Net income attributable to Cheniere"
+    )
+    assert att.values[p.column(date(2025, 9, 30), months=9)] == Decimal(3028)
+    assert att.values[p.column(date(2025, 9, 30), months=3)] == Decimal(1049)
+    assert att.values[p.column(date(2024, 9, 30), months=9)] == Decimal(2275)
