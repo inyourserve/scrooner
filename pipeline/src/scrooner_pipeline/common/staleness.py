@@ -61,6 +61,11 @@ from __future__ import annotations
 from collections.abc import Iterable
 from datetime import date, datetime, timedelta
 
+from scrooner_pipeline.common.rule_flags import (
+    RULE_SHARED_ACCESSION_PRIMARY,
+    rule_enabled,
+)
+
 ANNUAL_MAX_GAP_DAYS = 400
 QUARTERLY_MAX_GAP_DAYS = 230
 FUTURE_DATE_GRACE_DAYS = 30  # same buffer as screener/resolve.py
@@ -154,9 +159,17 @@ def latest_filed_period_sql(company_id_expr: str) -> str:
     """A scalar sub-select: the company's latest filed period end (date), for
     embedding in a query that already has the company id. No parameters."""
     forms = ", ".join(f"'{f}'" for f in PERIODIC_FORMS)
+    owner = f"lf.company_id = {company_id_expr}"
+    if rule_enabled(RULE_SHARED_ACCESSION_PRIMARY):
+        # a registrant (primary or co-registrant) of a combined filing counts it
+        owner = (
+            f"(lf.company_id = {company_id_expr} or exists (select 1 from "
+            "core.filing_registrant fr where fr.accession_number = lf.accession_number "
+            f"and fr.company_id = {company_id_expr} and fr.role in ('primary','co_registrant')))"
+        )
     return (
         "(select max(lf.period_of_report) from core.filing lf "
-        f"where lf.company_id = {company_id_expr} and lf.form in ({forms}) "
+        f"where {owner} and lf.form in ({forms}) "
         f"and lf.period_of_report <= current_date + {FUTURE_DATE_GRACE_DAYS})"
     )
 
@@ -180,7 +193,21 @@ def load_latest_filed_periods(
         f"and period_of_report <= %s group by company_id",
         params,
     )
-    return {row[0]: row[1] for row in cur.fetchall()}
+    out = {row[0]: row[1] for row in cur.fetchall()}
+    if rule_enabled(RULE_SHARED_ACCESSION_PRIMARY):
+        reg_where = "r.company_id = any(%s::bigint[]) and " if ids is not None else ""
+        cur.execute(
+            "select r.company_id, max(f.period_of_report) from core.filing_registrant r "
+            "join core.filing f on f.accession_number = r.accession_number "
+            f"where {reg_where}r.role in ('primary','co_registrant') and r.company_id is not null "
+            "and f.form = any(%s) and f.period_of_report is not null "
+            "and f.period_of_report <= %s group by r.company_id",
+            params,
+        )
+        for company_id, latest in cur.fetchall():
+            if company_id not in out or latest > out[company_id]:
+                out[company_id] = latest
+    return out
 
 
 def apply_to_resolved(

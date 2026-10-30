@@ -41,6 +41,10 @@ from scrooner_pipeline.collector.storage import (
     strip_bucket_prefix,
 )
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.common.rule_flags import (
+    RULE_SHARED_ACCESSION_PRIMARY,
+    rule_enabled,
+)
 from scrooner_pipeline.normalizer.identity import FORM_ALLOWLIST
 from scrooner_pipeline.normalizer.units import canonicalize_unit
 
@@ -92,7 +96,22 @@ def _load_filing_lookup(conn: psycopg.Connection, company_id: int) -> dict[str, 
             "select accession_number, id from core.filing where company_id = %s",
             (company_id,),
         )
-        return dict(cur.fetchall())
+        lookup = dict(cur.fetchall())
+        if rule_enabled(RULE_SHARED_ACCESSION_PRIMARY):
+            # entity.shared_accession_primary_filer@1: a combined filing's row may be
+            # owned by a co-registrant (first claimant under the legacy upsert) while
+            # THIS company is its primary; its own companyfacts carry the facts.
+            cur.execute(
+                """
+                select f.accession_number, f.id
+                from core.filing_registrant r
+                join core.filing f on f.accession_number = r.accession_number
+                where r.company_id = %s and r.role = 'primary'
+                """,
+                (company_id,),
+            )
+            lookup.update(dict(cur.fetchall()))
+        return lookup
 
 
 def _load_period_lookup(conn: psycopg.Connection, company_id: int) -> dict[tuple, int]:

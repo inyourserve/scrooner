@@ -25,6 +25,14 @@ from scrooner_pipeline.collector.storage import (
     strip_bucket_prefix,
 )
 from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.rule_flags import (
+    RULE_SHARED_ACCESSION_PRIMARY,
+    rule_enabled,
+)
+from scrooner_pipeline.common.rule_flags import (
+    RULE_SHARED_ACCESSION_PRIMARY,
+    rule_enabled,
+)
 
 logger = structlog.get_logger()
 
@@ -266,6 +274,35 @@ def upsert_listings(
     return len(listings)
 
 
+def _filing_upsert_sql() -> str:
+    """Legacy: the first company to claim an accession keeps it (company_id is never
+    updated). With entity.shared_accession_primary_filer@1 ON, a later insert by the
+    accession's PRIMARY registrant (core.filing_registrant) takes ownership, so the
+    outcome no longer depends on which CIK was normalized first."""
+    owner = ""
+    if rule_enabled(RULE_SHARED_ACCESSION_PRIMARY):
+        owner = """,
+                    company_id       = case when exists (
+                        select 1 from core.filing_registrant r
+                        where r.accession_number = excluded.accession_number
+                          and r.role = 'primary'
+                          and r.company_id = excluded.company_id)
+                      then excluded.company_id else core.filing.company_id end"""
+    return f"""
+            insert into core.filing
+                (company_id, accession_number, form, filing_date, period_of_report,
+                 is_amendment, items, raw_submission_id)
+            values
+                (%(company_id)s, %(accession_number)s, %(form)s, %(filing_date)s, %(period_of_report)s,
+                 %(is_amendment)s, %(items)s, %(raw_submission_id)s)
+            on conflict (accession_number) do update
+                set filing_date      = excluded.filing_date,
+                    period_of_report = excluded.period_of_report,
+                    is_amendment     = excluded.is_amendment,
+                    items            = excluded.items{owner}
+            """
+
+
 def upsert_filings(
     conn: psycopg.Connection,
     company_id: int,
@@ -291,22 +328,7 @@ def upsert_filings(
         for f in filings
     ]
     with conn.cursor() as cur:
-        cur.executemany(
-            """
-            insert into core.filing
-                (company_id, accession_number, form, filing_date, period_of_report,
-                 is_amendment, items, raw_submission_id)
-            values
-                (%(company_id)s, %(accession_number)s, %(form)s, %(filing_date)s, %(period_of_report)s,
-                 %(is_amendment)s, %(items)s, %(raw_submission_id)s)
-            on conflict (accession_number) do update
-                set filing_date      = excluded.filing_date,
-                    period_of_report = excluded.period_of_report,
-                    is_amendment     = excluded.is_amendment,
-                    items            = excluded.items
-            """,
-            rows,
-        )
+        cur.executemany(_filing_upsert_sql(), rows)
     conn.commit()
     return len(rows)
 
