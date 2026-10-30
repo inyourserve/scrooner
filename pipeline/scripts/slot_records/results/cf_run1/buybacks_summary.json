@@ -1,0 +1,18 @@
+{
+ "cells": 46093,
+ "companies": 921,
+ "publishable_companies": 867,
+ "verdicts": {
+  "publishable": 23243,
+  "not_a_face_column": 16582,
+  "perimeter_line_unresolved": 2101,
+  "no_value_this_column": 779,
+  "hold_identity_terms_missing": 768,
+  "hold_no_financing_calc": 752,
+  "restated_copies_disagree": 626,
+  "buyback_combined_with_other_items": 548,
+  "hold_no_statement_cal": 500,
+  "hold_section_gap": 134,
+  "hold_identity_gap": 60
+ }
+}

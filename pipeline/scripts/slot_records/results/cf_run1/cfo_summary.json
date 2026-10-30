@@ -1,0 +1,17 @@
+{
+ "cells": 65760,
+ "companies": 998,
+ "publishable_companies": 996,
+ "verdicts": {
+  "publishable": 34877,
+  "not_a_face_column": 23391,
+  "restated_copies_disagree": 3491,
+  "hold_identity_terms_missing": 1583,
+  "hold_no_statement_cal": 865,
+  "cfo_total_not_printed": 856,
+  "hold_section_gap": 538,
+  "hold_identity_gap": 127,
+  "member_value_missing": 30,
+  "no_operating_line": 2
+ }
+}
