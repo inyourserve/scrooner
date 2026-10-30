@@ -156,7 +156,15 @@ def _load_latest_filing_dates(
         if rule_enabled(RULE_SHARED_ACCESSION_PRIMARY):
             # entity.shared_accession_primary_filer@1: a company is not 'stale' while a
             # filing it is a registrant of (primary OR co-registrant) is recent.
-            cur.execute(_LATEST_FILING_DATES_WITH_REGISTRANTS_SQL, (company_ids, sorted(QUALIFYING_FORMS), company_ids, sorted(QUALIFYING_FORMS)))
+            cur.execute(
+                _LATEST_FILING_DATES_WITH_REGISTRANTS_SQL,
+                (
+                    company_ids,
+                    sorted(QUALIFYING_FORMS),
+                    company_ids,
+                    sorted(QUALIFYING_FORMS),
+                ),
+            )
             return dict(cur.fetchall())
         cur.execute(
             """

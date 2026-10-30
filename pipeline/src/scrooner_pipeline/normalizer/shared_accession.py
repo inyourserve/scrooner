@@ -55,6 +55,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
+from typing import Any
 from dataclasses import dataclass
 
 from scrooner_pipeline.common.rule_flags import (
@@ -69,16 +70,19 @@ PERIODIC_FORMS = frozenset(
 )
 
 
-
 @dataclass(frozen=True)
 class Decision:
     accession_number: str
     registrant_ciks: tuple[str, ...]
     primary_cik: str | None
-    basis: str | None  # agreeing signals e.g. 'header+prefix+payload'; None when quarantined
+    basis: (
+        str | None
+    )  # agreeing signals e.g. 'header+prefix+payload'; None when quarantined
     quarantine_reason: str | None
     carriers: tuple[str, ...]  # registrants whose companyfacts carry the accession
-    header_first_filer: str | None = None  # first FILER block of the SEC header, if read
+    header_first_filer: str | None = (
+        None  # first FILER block of the SEC header, if read
+    )
 
 
 def carrier_conflict(d: Decision) -> bool:
@@ -136,8 +140,13 @@ def decide(
         votes[carriers[0]].append("payload")
     if not carriers and (form is not None and form not in PERIODIC_FORMS):
         return Decision(
-            accession_number, regs, None, None, "non_periodic_without_payload_evidence",
-            carriers, header_first_filer,
+            accession_number,
+            regs,
+            None,
+            None,
+            "non_periodic_without_payload_evidence",
+            carriers,
+            header_first_filer,
         )
     ranked = sorted(votes.items(), key=lambda kv: (-len(kv[1]), kv[0]))
     if len(carriers) > 1 and not ranked:
@@ -150,15 +159,25 @@ def decide(
             carriers,
             header_first_filer,
         )
-    if ranked and len(ranked[0][1]) >= 2 and (
-        len(ranked) == 1 or len(ranked[1][1]) < len(ranked[0][1])
+    if (
+        ranked
+        and len(ranked[0][1]) >= 2
+        and (len(ranked) == 1 or len(ranked[1][1]) < len(ranked[0][1]))
     ):
         cik, signals = ranked[0]
         return Decision(
-            accession_number, regs, cik, "+".join(signals), None, carriers, header_first_filer
+            accession_number,
+            regs,
+            cik,
+            "+".join(signals),
+            None,
+            carriers,
+            header_first_filer,
         )
     reason = "no_primary_evidence" if not ranked else "signals_do_not_agree"
-    return Decision(accession_number, regs, None, None, reason, carriers, header_first_filer)
+    return Decision(
+        accession_number, regs, None, None, reason, carriers, header_first_filer
+    )
 
 
 def plan_decisions(
@@ -287,7 +306,7 @@ def build_plan(
 
 
 def summarize(decisions: Iterable[Decision]) -> dict:
-    out = {"shared_accessions": 0, "primary": 0, "quarantined": 0}
+    out: dict[str, Any] = {"shared_accessions": 0, "primary": 0, "quarantined": 0}
     by_basis: dict[str, int] = defaultdict(int)
     for d in decisions:
         out["shared_accessions"] += 1
