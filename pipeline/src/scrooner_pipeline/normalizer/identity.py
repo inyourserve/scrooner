@@ -29,10 +29,6 @@ from scrooner_pipeline.common.rule_flags import (
     RULE_SHARED_ACCESSION_PRIMARY,
     rule_enabled,
 )
-from scrooner_pipeline.common.rule_flags import (
-    RULE_SHARED_ACCESSION_PRIMARY,
-    rule_enabled,
-)
 
 logger = structlog.get_logger()
 

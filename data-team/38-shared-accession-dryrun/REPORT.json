@@ -1,0 +1,787 @@
+{
+  "generated_at": "2026-10-31T01:13:01",
+  "read_only": true,
+  "population_ciks": 5284,
+  "shared_accessions": 3008,
+  "shared_by_form": {
+    "10-K": 209,
+    "10-K/A": 9,
+    "10-Q": 631,
+    "10-Q/A": 7,
+    "144": 61,
+    "424B5": 1,
+    "8-K": 2032,
+    "8-K/A": 19,
+    "DEF 14A": 23,
+    "DEFA14A": 16
+  },
+  "decisions": {
+    "shared_accessions": 3008,
+    "primary": 476,
+    "quarantined": 2532,
+    "by_basis": {
+      "non_periodic_without_payload_evidence": 2151,
+      "signals_do_not_agree": 322,
+      "prefix+payload": 80,
+      "header+prefix+payload": 370,
+      "header+prefix": 6,
+      "no_primary_evidence": 59,
+      "header+payload": 20
+    }
+  },
+  "headers_fetched": 857,
+  "headers_missing": 453,
+  "shared_in_core_filing": 2998,
+  "filing_rows_that_would_move_owner": 476,
+  "carrier_conflicts": 4,
+  "carrier_conflict_examples": [
+    {
+      "accession": "0000065984-26-000283",
+      "form": "10-Q",
+      "primary": "0000065984",
+      "carriers": [
+        "0000007323"
+      ],
+      "basis": "header+prefix"
+    },
+    {
+      "accession": "0000811156-26-000032",
+      "form": "10-Q",
+      "primary": "0000811156",
+      "carriers": [
+        "0000201533"
+      ],
+      "basis": "header+prefix"
+    },
+    {
+      "accession": "0000827052-26-000059",
+      "form": "10-Q",
+      "primary": "0000827052",
+      "carriers": [
+        "0000092103"
+      ],
+      "basis": "header+prefix"
+    },
+    {
+      "accession": "0001032208-26-000045",
+      "form": "10-Q",
+      "primary": "0001032208",
+      "carriers": [
+        "0000092108"
+      ],
+      "basis": "header+prefix"
+    }
+  ],
+  "filing_registrant_rows_that_would_be_written": {
+    "total": 7368,
+    "quarantined": 6047,
+    "co_registrant": 845,
+    "primary": 476,
+    "with_null_company_id": 0
+  },
+  "companies_gaining": [
+    {
+      "company_id": 694,
+      "name": "ENTERGY CORP /DE/",
+      "status_now": "stale",
+      "accessions_recovered": 66,
+      "forms": {
+        "10-Q": 50,
+        "10-K": 16
+      },
+      "fact_entries_recovered": 31166,
+      "periods_recovered": 587
+    },
+    {
+      "company_id": 1081,
+      "name": "SOUTHERN CO",
+      "status_now": "stale",
+      "accessions_recovered": 68,
+      "forms": {
+        "10-Q": 51,
+        "10-K": 17
+      },
+      "fact_entries_recovered": 27435,
+      "periods_recovered": 442
+    },
+    {
+      "company_id": 3562,
+      "name": "TXNM ENERGY INC",
+      "status_now": "stale",
+      "accessions_recovered": 61,
+      "forms": {
+        "10-Q/A": 1,
+        "10-Q": 45,
+        "10-K": 15
+      },
+      "fact_entries_recovered": 26683,
+      "periods_recovered": 540
+    },
+    {
+      "company_id": 2503,
+      "name": "SEMPRA",
+      "status_now": "stale",
+      "accessions_recovered": 49,
+      "forms": {
+        "10-Q": 37,
+        "10-K": 12
+      },
+      "fact_entries_recovered": 26599,
+      "periods_recovered": 398
+    },
+    {
+      "company_id": 1008,
+      "name": "EVERSOURCE ENERGY",
+      "status_now": "stale",
+      "accessions_recovered": 59,
+      "forms": {
+        "10-Q": 43,
+        "10-K": 15,
+        "10-Q/A": 1
+      },
+      "fact_entries_recovered": 22834,
+      "periods_recovered": 469
+    },
+    {
+      "company_id": 2144,
+      "name": "AMEREN CORP",
+      "status_now": "stale",
+      "accessions_recovered": 54,
+      "forms": {
+        "10-Q": 41,
+        "10-K": 13
+      },
+      "fact_entries_recovered": 21759,
+      "periods_recovered": 381
+    },
+    {
+      "company_id": 1576,
+      "name": "EDISON INTERNATIONAL",
+      "status_now": "stale",
+      "accessions_recovered": 56,
+      "forms": {
+        "10-K": 14,
+        "10-Q": 41,
+        "10-Q/A": 1
+      },
+      "fact_entries_recovered": 20675,
+      "periods_recovered": 426
+    },
+    {
+      "company_id": 5394,
+      "name": "Corteva, Inc.",
+      "status_now": "stale",
+      "accessions_recovered": 29,
+      "forms": {
+        "10-Q": 22,
+        "10-K": 7
+      },
+      "fact_entries_recovered": 14219,
+      "periods_recovered": 252
+    },
+    {
+      "company_id": 1525,
+      "name": "CMS ENERGY CORP",
+      "status_now": "stale",
+      "accessions_recovered": 34,
+      "forms": {
+        "10-Q": 26,
+        "10-K": 8
+      },
+      "fact_entries_recovered": 13532,
+      "periods_recovered": 231
+    }
+  ],
+  "companies_losing_ownership": [
+    {
+      "company_id": 1080,
+      "name": "SOUTHERN CALIFORNIA GAS CO",
+      "filings_losing_ownership": 49,
+      "core_fact_rows_on_those_filings": 543
+    },
+    {
+      "company_id": 142,
+      "name": "ENTERGY ARKANSAS, LLC",
+      "filings_losing_ownership": 66,
+      "core_fact_rows_on_those_filings": 467
+    },
+    {
+      "company_id": 1079,
+      "name": "SOUTHERN CALIFORNIA EDISON Co",
+      "filings_losing_ownership": 56,
+      "core_fact_rows_on_those_filings": 388
+    },
+    {
+      "company_id": 1165,
+      "name": "CONSUMERS ENERGY CO",
+      "filings_losing_ownership": 34,
+      "core_fact_rows_on_those_filings": 374
+    },
+    {
+      "company_id": 439,
+      "name": "CONNECTICUT LIGHT & POWER CO",
+      "filings_losing_ownership": 8,
+      "core_fact_rows_on_those_filings": 0
+    },
+    {
+      "company_id": 211,
+      "name": "NSTAR ELECTRIC CO",
+      "filings_losing_ownership": 51,
+      "core_fact_rows_on_those_filings": 0
+    },
+    {
+      "company_id": 613,
+      "name": "GEORGIA POWER CO",
+      "filings_losing_ownership": 68,
+      "core_fact_rows_on_those_filings": 0
+    },
+    {
+      "company_id": 257,
+      "name": "Ameren Illinois Co",
+      "filings_losing_ownership": 54,
+      "core_fact_rows_on_those_filings": 0
+    },
+    {
+      "company_id": 1044,
+      "name": "PUBLIC SERVICE CO OF NEW MEXICO",
+      "filings_losing_ownership": 61,
+      "core_fact_rows_on_those_filings": 0
+    },
+    {
+      "company_id": 351,
+      "name": "EIDP, Inc.",
+      "filings_losing_ownership": 29,
+      "core_fact_rows_on_those_filings": 0
+    }
+  ],
+  "named_nine": {
+    "ETR": {
+      "company_id": 694,
+      "name": "ENTERGY CORP /DE/",
+      "status_now": [
+        "stale",
+        "no_filing_since:2010-09-03"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-07-31",
+      "accessions_recovered": 66,
+      "forms_recovered": {
+        "10-Q": 50,
+        "10-K": 16
+      },
+      "fact_entries_recovered": 31166,
+      "periods_recovered": 587,
+      "period_end_range": [
+        "2004-12-31",
+        "2026-03-31"
+      ],
+      "shared_accessions_as_registrant": 290,
+      "quarantined_as_registrant": 224
+    },
+    "ES": {
+      "company_id": 1008,
+      "name": "EVERSOURCE ENERGY",
+      "status_now": [
+        "stale",
+        "no_filing_since:2005-03-17"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2025-05-05",
+      "accessions_recovered": 59,
+      "forms_recovered": {
+        "10-Q": 43,
+        "10-K": 15,
+        "10-Q/A": 1
+      },
+      "fact_entries_recovered": 22834,
+      "periods_recovered": 469,
+      "period_end_range": [
+        "2008-12-31",
+        "2025-04-30"
+      ],
+      "shared_accessions_as_registrant": 278,
+      "quarantined_as_registrant": 219
+    },
+    "SO": {
+      "company_id": 1081,
+      "name": "SOUTHERN CO",
+      "status_now": [
+        "stale",
+        "no_filing_since:2009-08-27"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-07-30",
+      "accessions_recovered": 68,
+      "forms_recovered": {
+        "10-Q": 51,
+        "10-K": 17
+      },
+      "fact_entries_recovered": 27435,
+      "periods_recovered": 442,
+      "period_end_range": [
+        "2006-12-31",
+        "2026-03-31"
+      ],
+      "shared_accessions_as_registrant": 289,
+      "quarantined_as_registrant": 221
+    },
+    "CMS": {
+      "company_id": 1525,
+      "name": "CMS ENERGY CORP",
+      "status_now": [
+        "stale",
+        "no_filing_since:2006-06-08"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-10-27",
+      "accessions_recovered": 34,
+      "forms_recovered": {
+        "10-Q": 26,
+        "10-K": 8
+      },
+      "fact_entries_recovered": 13532,
+      "periods_recovered": 231,
+      "period_end_range": [
+        "2015-12-31",
+        "2026-07-13"
+      ],
+      "shared_accessions_as_registrant": 644,
+      "quarantined_as_registrant": 610
+    },
+    "EIX": {
+      "company_id": 1576,
+      "name": "EDISON INTERNATIONAL",
+      "status_now": [
+        "stale",
+        "no_filing_since:2014-07-31"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-10-29",
+      "accessions_recovered": 56,
+      "forms_recovered": {
+        "10-K": 14,
+        "10-Q": 41,
+        "10-Q/A": 1
+      },
+      "fact_entries_recovered": 20675,
+      "periods_recovered": 426,
+      "period_end_range": [
+        "2009-12-31",
+        "2026-10-22"
+      ],
+      "shared_accessions_as_registrant": 236,
+      "quarantined_as_registrant": 180
+    },
+    "AEE": {
+      "company_id": 2144,
+      "name": "AMEREN CORP",
+      "status_now": [
+        "stale",
+        "no_filing_since:2003-08-14"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-08-03",
+      "accessions_recovered": 54,
+      "forms_recovered": {
+        "10-Q": 41,
+        "10-K": 13
+      },
+      "fact_entries_recovered": 21759,
+      "periods_recovered": 381,
+      "period_end_range": [
+        "2010-12-31",
+        "2026-07-30"
+      ],
+      "shared_accessions_as_registrant": 278,
+      "quarantined_as_registrant": 224
+    },
+    "SRE": {
+      "company_id": 2503,
+      "name": "SEMPRA",
+      "status_now": [
+        "stale",
+        "no_filing_since:2012-03-28"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-08-06",
+      "accessions_recovered": 49,
+      "forms_recovered": {
+        "10-Q": 37,
+        "10-K": 12
+      },
+      "fact_entries_recovered": 26599,
+      "periods_recovered": 398,
+      "period_end_range": [
+        "2007-09-11",
+        "2026-05-04"
+      ],
+      "shared_accessions_as_registrant": 135,
+      "quarantined_as_registrant": 86
+    },
+    "TXNM": {
+      "company_id": 3562,
+      "name": "TXNM ENERGY INC",
+      "status_now": [
+        "stale",
+        "no_filing_since:2011-03-30"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-07-31",
+      "accessions_recovered": 61,
+      "forms_recovered": {
+        "10-Q/A": 1,
+        "10-Q": 45,
+        "10-K": 15
+      },
+      "fact_entries_recovered": 26683,
+      "periods_recovered": 540,
+      "period_end_range": [
+        "2005-06-30",
+        "2026-04-24"
+      ],
+      "shared_accessions_as_registrant": 356,
+      "quarantined_as_registrant": 295
+    },
+    "CTVA": {
+      "company_id": 5394,
+      "name": "Corteva, Inc.",
+      "status_now": [
+        "stale",
+        "no_filing_since:2019-05-31"
+      ],
+      "latest_qualifying_filing_via_registrant_link": "2026-07-31",
+      "accessions_recovered": 29,
+      "forms_recovered": {
+        "10-Q": 22,
+        "10-K": 7
+      },
+      "fact_entries_recovered": 14219,
+      "periods_recovered": 252,
+      "period_end_range": [
+        "2016-12-31",
+        "2027-12-31"
+      ],
+      "shared_accessions_as_registrant": 48,
+      "quarantined_as_registrant": 19
+    }
+  },
+  "quarantine_examples": {
+    "non_periodic_without_payload_evidence": [
+      {
+        "accession": "0000005272-24-000098",
+        "form": "144",
+        "registrants": [
+          "0000005272",
+          "0001889539"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000005272-25-000049",
+        "form": "144",
+        "registrants": [
+          "0000005272",
+          "0001889539"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000005272-26-000055",
+        "form": "144",
+        "registrants": [
+          "0000005272",
+          "0001889539"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000007323-23-000003",
+        "form": "8-K",
+        "registrants": [
+          "0000007323",
+          "0000066901",
+          "0000071508",
+          "0001348952",
+          "0001427437"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000007323-24-000003",
+        "form": "8-K",
+        "registrants": [
+          "0000007323",
+          "0000066901",
+          "0000071508",
+          "0001348952",
+          "0001427437"
+        ],
+        "carriers": [],
+        "header": null
+      }
+    ],
+    "signals_do_not_agree": [
+      {
+        "accession": "0000065984-00-000048",
+        "form": "10-K",
+        "registrants": [
+          "0000007323",
+          "0000065984",
+          "0000066901",
+          "0000071508"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000065984-00-000058",
+        "form": "10-Q",
+        "registrants": [
+          "0000007323",
+          "0000065984",
+          "0000066901",
+          "0000071508"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000065984-00-000130",
+        "form": "10-Q",
+        "registrants": [
+          "0000007323",
+          "0000065984",
+          "0000066901",
+          "0000071508"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000065984-00-500011",
+        "form": "10-Q",
+        "registrants": [
+          "0000007323",
+          "0000065984",
+          "0000066901",
+          "0000071508"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000065984-01-000070",
+        "form": "10-K",
+        "registrants": [
+          "0000007323",
+          "0000065984",
+          "0000066901",
+          "0000071508"
+        ],
+        "carriers": [],
+        "header": null
+      }
+    ],
+    "no_primary_evidence": [
+      {
+        "accession": "0000086521-12-000010",
+        "form": "10-K",
+        "registrants": [
+          "0000092108",
+          "0001032208"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000893928-94-000019",
+        "form": "10-K",
+        "registrants": [
+          "0000007323",
+          "0000066901",
+          "0000071508"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000949377-05-000847",
+        "form": "10-Q",
+        "registrants": [
+          "0000023426",
+          "0000072741"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000950123-09-027644",
+        "form": "10-Q",
+        "registrants": [
+          "0000201533",
+          "0000811156"
+        ],
+        "carriers": [],
+        "header": null
+      },
+      {
+        "accession": "0000950123-09-055427",
+        "form": "10-Q",
+        "registrants": [
+          "0000201533",
+          "0000811156"
+        ],
+        "carriers": [],
+        "header": null
+      }
+    ]
+  },
+  "moves_sample": [
+    {
+      "accession": "0000065984-09-000219",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-10-000092",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-10-000216",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-11-000033",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-11-000078",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-11-000124",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-11-000179",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-12-000067",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-12-000104",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-12-000161",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-12-000214",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-13-000050",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-13-000080",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-13-000181",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-13-000220",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-14-000065",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-14-000149",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "prefix+payload"
+    },
+    {
+      "accession": "0000065984-14-000228",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    },
+    {
+      "accession": "0000065984-14-000255",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    },
+    {
+      "accession": "0000065984-15-000102",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    },
+    {
+      "accession": "0000065984-15-000145",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    },
+    {
+      "accession": "0000065984-15-000238",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    },
+    {
+      "accession": "0000065984-15-000319",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    },
+    {
+      "accession": "0000065984-16-000436",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    },
+    {
+      "accession": "0000065984-16-000539",
+      "from_company_id": 142,
+      "to_company_id": 694,
+      "basis": "header+prefix+payload"
+    }
+  ]
+}

@@ -78,6 +78,7 @@ class Decision:
     basis: str | None  # agreeing signals e.g. 'header+prefix+payload'; None when quarantined
     quarantine_reason: str | None
     carriers: tuple[str, ...]  # registrants whose companyfacts carry the accession
+    header_first_filer: str | None = None  # first FILER block of the SEC header, if read
 
 
 def carrier_conflict(d: Decision) -> bool:
@@ -135,7 +136,8 @@ def decide(
         votes[carriers[0]].append("payload")
     if not carriers and (form is not None and form not in PERIODIC_FORMS):
         return Decision(
-            accession_number, regs, None, None, "non_periodic_without_payload_evidence", carriers
+            accession_number, regs, None, None, "non_periodic_without_payload_evidence",
+            carriers, header_first_filer,
         )
     ranked = sorted(votes.items(), key=lambda kv: (-len(kv[1]), kv[0]))
     if len(carriers) > 1 and not ranked:
@@ -146,14 +148,17 @@ def decide(
             None,
             "multiple_companyfacts_payloads_carry_accession",
             carriers,
+            header_first_filer,
         )
     if ranked and len(ranked[0][1]) >= 2 and (
         len(ranked) == 1 or len(ranked[1][1]) < len(ranked[0][1])
     ):
         cik, signals = ranked[0]
-        return Decision(accession_number, regs, cik, "+".join(signals), None, carriers)
+        return Decision(
+            accession_number, regs, cik, "+".join(signals), None, carriers, header_first_filer
+        )
     reason = "no_primary_evidence" if not ranked else "signals_do_not_agree"
-    return Decision(accession_number, regs, None, None, reason, carriers)
+    return Decision(accession_number, regs, None, None, reason, carriers, header_first_filer)
 
 
 def plan_decisions(
@@ -179,13 +184,14 @@ def plan_decisions(
 _UPSERT_REGISTRANT = """
 insert into core.filing_registrant
     (accession_number, registrant_cik, company_id, role, filer_count,
-     quarantine_reason, rule_id)
+     quarantine_reason, header_first_filer_cik, rule_id)
 values (%(accession_number)s, %(registrant_cik)s, %(company_id)s, %(role)s,
-        %(filer_count)s, %(quarantine_reason)s, %(rule_id)s)
+        %(filer_count)s, %(quarantine_reason)s, %(header_first_filer_cik)s, %(rule_id)s)
 on conflict (accession_number, registrant_cik) do update
     set company_id = excluded.company_id, role = excluded.role,
         filer_count = excluded.filer_count,
         quarantine_reason = excluded.quarantine_reason,
+        header_first_filer_cik = excluded.header_first_filer_cik,
         rule_id = excluded.rule_id, determined_at = now()
 """
 
@@ -218,6 +224,7 @@ def registrant_rows(
                     "quarantine_reason": d.quarantine_reason
                     if role == "quarantined"
                     else None,
+                    "header_first_filer_cik": d.header_first_filer,
                     "rule_id": RULE_ID,
                 }
             )
