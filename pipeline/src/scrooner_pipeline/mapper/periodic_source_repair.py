@@ -32,7 +32,9 @@ import psycopg
 from scrooner_pipeline.common.periodic_forms import PERIODIC_FORMS_ALL_ORDERED
 
 CLASS_ALL_NON_PERIODIC = "all_sources_non_periodic"  # no periodic source at all
-CLASS_MIXED = "mixed_sources"  # some periodic, some not (a combined value used a proxy copy)
+CLASS_MIXED = (
+    "mixed_sources"  # some periodic, some not (a combined value used a proxy copy)
+)
 
 FIND_SQL = """
 select cf.id, cf.company_id, cc.name, cf.period_id, p.start_date, p.end_date, cf.value,
@@ -96,7 +98,10 @@ def find_non_periodic_sourced_cells(
     with conn.cursor() as cur:
         cur.execute(
             FIND_SQL,
-            {"company_ids": list(company_ids), "forms": list(PERIODIC_FORMS_ALL_ORDERED)},
+            {
+                "company_ids": list(company_ids),
+                "forms": list(PERIODIC_FORMS_ALL_ORDERED),
+            },
         )
         return [
             SourcedCell(
@@ -145,10 +150,14 @@ def purge_cells(
     if not ids:
         return 0
     if not backup_path.exists():
-        raise FileNotFoundError(f"backup file {backup_path} missing: refusing to delete")
+        raise FileNotFoundError(
+            f"backup file {backup_path} missing: refusing to delete"
+        )
     missing = ids - backup_ids(backup_path)
     if missing:
-        raise ValueError(f"{len(missing)} ids are not in the backup file: refusing to delete")
+        raise ValueError(
+            f"{len(missing)} ids are not in the backup file: refusing to delete"
+        )
     deleted = 0
     ordered = sorted(ids)
     with conn.cursor() as cur:
