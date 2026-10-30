@@ -72,6 +72,10 @@ from datetime import date, timedelta
 import psycopg
 import structlog
 
+from scrooner_pipeline.common.rule_flags import (
+    RULE_SHARED_ACCESSION_PRIMARY,
+    rule_enabled,
+)
 from scrooner_pipeline.common.sec_client import SECClient
 
 logger = structlog.get_logger()
@@ -128,12 +132,32 @@ def _is_common_stock_deregistration(
     return "common stock" in match.group(1).lower()
 
 
+_LATEST_FILING_DATES_WITH_REGISTRANTS_SQL = """
+    select company_id, max(filing_date) from (
+        select company_id, filing_date
+        from core.filing
+        where company_id = any(%s) and form = any(%s) and filing_date is not null
+        union all
+        select r.company_id, f.filing_date
+        from core.filing_registrant r
+        join core.filing f on f.accession_number = r.accession_number
+        where r.company_id = any(%s) and r.role in ('primary', 'co_registrant')
+          and f.form = any(%s) and f.filing_date is not null
+    ) x group by company_id
+"""
+
+
 def _load_latest_filing_dates(
     conn: psycopg.Connection, company_ids: list[int]
 ) -> dict[int, date | None]:
     if not company_ids:
         return {}
     with conn.cursor() as cur:
+        if rule_enabled(RULE_SHARED_ACCESSION_PRIMARY):
+            # entity.shared_accession_primary_filer@1: a company is not 'stale' while a
+            # filing it is a registrant of (primary OR co-registrant) is recent.
+            cur.execute(_LATEST_FILING_DATES_WITH_REGISTRANTS_SQL, (company_ids, sorted(QUALIFYING_FORMS), company_ids, sorted(QUALIFYING_FORMS)))
+            return dict(cur.fetchall())
         cur.execute(
             """
             select company_id, max(filing_date)
