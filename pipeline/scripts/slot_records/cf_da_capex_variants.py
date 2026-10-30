@@ -53,7 +53,8 @@ CAPEX_TAG = re.compile(
     r"PaymentsToAcquireMachineryAndEquipment|PaymentsForProceedsFromProductiveAssets|"
     r"PaymentsToDevelopSoftware|PaymentsForSoftware|PaymentsToAcquireSoftware|"
     r"PaymentsToAcquireIntangibleAssets|PaymentsToAcquireEquipmentOnLease|"
-    r"PaymentsForProceedsFromPropertyPlantAndEquipment")
+    r"PaymentsForProceedsFromPropertyPlantAndEquipment|PaymentsToAcquirePropertySubjectToOrAvailableForOperatingLease|"
+    r"PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets")
 CAPEX_LABEL = re.compile(
     r"capital expenditure|purchases? of (property|premises|plant|equipment|fixed)|"
     r"additions to (property|plant|premises|fixed|equipment)|expenditures? for (property|equipment)|"
@@ -64,10 +65,24 @@ CAPEX_OTHER = re.compile(r"OilAndGas|ExploreAndDevelop|RealEstate|DevelopRealEst
 
 
 def capex_nature(tag, label):
+    if tag == "PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets":
+        return "ppe_with_intangibles"  # one printed line (URI non-rental + intangibles): cannot split without notes
+    if tag == "PaymentsToAcquirePropertySubjectToOrAvailableForOperatingLease":
+        return "leased"  # URI rental fleet
     if re.search(r"IntangibleAssets", tag) or re.search(r"intangible|licen[cs]e|patent|spectrum", label, re.I):
         return "intangible"
-    if "EquipmentOnLease" in tag or re.search(r"leased to others|equipment on (operating )?lease|rental (equipment|fleet)|lease fleet", label, re.I):
+    if re.search(r"direct financing lease|sales.type lease", label, re.I):
+        return "intangible"  # a lessor's lease receivable is an investment, never capex
+    if "EquipmentOnLease" in tag and (re.search(r"previously leased|assumed lease|financing arrangement", label, re.I)
+                                      or label.strip().lower() == "payments to acquire equipment on lease"):
+        return "lease_unclear"  # element misused or label silent: unresolved in BOTH variants
+    if re.search(r"exclud\w* (equipment )?leased", label, re.I):
+        return "ppe"  # CAT: "Capital expenditures - excluding equipment leased to others" is the PP&E line
+    if "EquipmentOnLease" in tag or re.search(r"leased to others|equipment on (operating )?lease|(?<!non-)(?<!non )rental (equipment|fleet)|lease fleet", label, re.I):
         return "leased"
+    if re.search(r"software", label, re.I) and re.search(r"PropertyPlantAndEquipment|ProductiveAssets", tag) \
+            and re.search(r"property|plant|premises|equipment|capital expenditure|building", label, re.I):
+        return "ppe"  # ONE printed line covering PP&E and software: the filer's own total, same in both variants
     if "Software" in tag or re.search(r"software", label, re.I):
         return "software"
     if tag.startswith("PaymentsForProceedsFrom"):
@@ -82,11 +97,18 @@ DA_TAG_EXCLUDE = re.compile(r"AccumulatedDepreciation|RightOfUseAsset|AmortizedC
 DA_EXCLUDED_LABEL = re.compile(
     r"debt|financing|issuance|discount|premium|bond|note|content|film|program|contract|"
     r"customer incentive|right.of.use|operating lease|lease (asset|cost)|stock|share.based|"
-    r"compensation|impairment|deferred (charges|commission|revenue|policy|acquisition)", re.I)
+    r"compensation|impairment|deferred (charges|commission|revenue|policy|acquisition)|"
+    # lines whose face label names a nature outside the D&A definition (ruling: the label
+    # settles it); genuinely open natures (nuclear fuel, major maintenance, dry-docking,
+    # servicing rights, generic "Amortization") still tie out or hold
+    r"above.{0,12}below|below.{0,12}above|(above|below).market|lease incentive|straight.line|"
+    r"deferred (costs|hedge|gain|loss|settlement)|hedg|derivative|step.up|inventory fair value|"
+    r"fair value adjustment|defined benefit|pension|postretirement|non.cash interest|loans? (to|and advances)", re.I)
 DA_EXCLUDED_TAG = re.compile(
     r"AmortizationOfDebtDiscount|DebtIssuanceCost|AmortizationOfFinancingCosts|"
     r"AccretionAmortizationOfDiscountsAndPremiums|Premium|Discount|ShareBased|Impairment|"
-    r"OperatingLease|RightOfUse|DeferredPolicyAcquisition|DeferredSalesCommission|FilmCost|ContentAsset")
+    r"OperatingLease|RightOfUse|DeferredPolicyAcquisition|DeferredSalesCommission|FilmCost|ContentAsset|"
+    r"AboveAndBelowMarketLease|LeaseIncentive|DeferredCharges|DeferredHedge|InventoryStepUp|DefinedBenefit")
 ASSET_DA_TAG = re.compile(
     r"DepreciationDepletionAndAmortization|DepreciationAmortizationAndAccretionNet|"
     r"DepreciationAndAmortization$|^Depreciation$|DepreciationNonproduction|"
@@ -94,7 +116,12 @@ ASSET_DA_TAG = re.compile(
 IS_INTANGIBLE_AMORT = re.compile(r"amorti[sz]ation of (acquisition.related |acquired |purchased |other )?(intangible|developed technology|technology)", re.I)
 
 
-def da_nature(tag, label, custom):
+def da_nature(tag, label, custom, label_ok=True):
+    if not label_ok:
+        # FSN pre gave this line the label of another printed line (AMD FY2024:
+        # AdjustmentForAmortization shown as "Amortization", plabel = the ROU line's):
+        # the label is no evidence; the tag decides, a generic line ties out or holds
+        label = ""
     if DA_EXCLUDED_TAG.search(tag) or DA_EXCLUDED_LABEL.search(label):
         return "excluded"
     if re.search(r"depreciation", label, re.I) and re.search(r"\bother\b", label, re.I):
@@ -146,11 +173,10 @@ for line in gzip.open(prod_path, "rt"):
         prod[(cik, name)][(month_end(e), q)] = Decimal(v)
 
 # choose one filing per (cik, column): original whose period is the column end
+# pass 1 (streaming; holding every filing swaps): the winning filing per column
 best = {}
-filings = {}
 for line in gzip.open(face_path, "rt"):
     f = json.loads(line)
-    filings[f["adsh"]] = f
     cf = [r for r in f["face"] if r["stmt"] == "CF"]
     for col, vals in f["values"].items():
         ddate, q = col.split("|")
@@ -169,8 +195,22 @@ cells = []
 summ = Counter()
 per_company = defaultdict(Counter)
 examples = defaultdict(list)
-for (cik, ddate, q), (_rank, adsh) in sorted(best.items()):
-    f = filings[adsh]
+wanted = defaultdict(list)
+for key, (_rank, adsh) in best.items():
+    wanted[adsh].append(key)
+del best
+
+
+def chosen():
+    """pass 2: stream again, yield only the winning (column, filing) pairs"""
+    for line in gzip.open(face_path, "rt"):
+        f = json.loads(line)
+        for key in wanted.get(f["adsh"], ()):
+            yield key, f
+
+
+for (cik, ddate, q), f in chosen():
+    adsh = f["adsh"]
     vals = f["values"][f"{ddate}|{q}"]
     end = f"{ddate[:4]}-{ddate[4:6]}-{ddate[6:]}"
     # the cash-flow face: the CF report with the operating total, in line order
@@ -213,15 +253,19 @@ for (cik, ddate, q), (_rank, adsh) in sorted(best.items()):
             disc = (disc_inv_i is not None and cont_inv_i is not None and cont_inv_i < k <= disc_inv_i) or bool(re.search(r"discontinued", lab, re.I))
             lines.append({"tag": t, "label": lab, "nature": capex_nature(t, lab), "disc": disc, "value": abs(v), "custom": r["custom"]})
     if lines or other_capex:
-        n_ppe = [x for x in lines if not x["disc"] and x["nature"] == "ppe"]
+        n_ppe = [x for x in lines if not x["disc"] and x["nature"] in ("ppe", "ppe_with_intangibles")]
+        if any(x["nature"] == "ppe_with_intangibles" for x in lines):
+            summ["capex_flag_ppe_line_includes_intangibles"] += 1
+            per_company[f["ticker"]]["capex_ppe_with_intangibles"] += 1
         n_net = [x for x in lines if not x["disc"] and x["nature"] == "net"]
         leased = [x for x in lines if not x["disc"] and x["nature"] == "leased"]
         soft = [x for x in lines if not x["disc"] and x["nature"] == "software"]
-        disc = [x for x in lines if x["disc"] and x["nature"] in ("ppe", "net", "leased", "software")]
+        disc = [x for x in lines if x["disc"] and x["nature"] in ("ppe", "ppe_with_intangibles", "net", "leased", "software")]
         narrow = sum((x["value"] for x in n_ppe), Decimal(0)) if n_ppe else sum((x["value"] for x in n_net), Decimal(0))
         ruling = narrow + sum((x["value"] for x in leased + soft), Decimal(0)) + (sum((x["value"] for x in disc), Decimal(0)) if cfo_total else 0)
         cases = [c for c, on in (("leased", leased), ("software", soft), ("discontinued", disc and cfo_total)) if on]
-        net_sibling = bool(n_ppe and n_net)
+        unclear = [x for x in lines if x["nature"] == "lease_unclear"]
+        net_sibling = bool(n_ppe and n_net) or bool(unclear)
         if not n_ppe and not n_net and not (leased or soft):
             interim, reason = None, ("other_capex_lines_outside_ruling" if other_capex else "no_continuing_capex_line")
         elif net_sibling:
@@ -266,6 +310,9 @@ for (cik, ddate, q), (_rank, adsh) in sorted(best.items()):
     if op_i is None:
         continue
     da = []
+    label_tags = defaultdict(set)
+    for r in rows[:op_i]:
+        label_tags[r["plabel"].strip().lower()].add(r["tag"])
     for r in rows[:op_i]:
         t, lab = r["tag"], r["plabel"]
         if not ((DA_TAG.search(t) and not DA_TAG_EXCLUDE.search(t)) or (r["custom"] and re.search(r"depreciation|amorti[sz]ation|depletion", lab, re.I))):
@@ -277,7 +324,7 @@ for (cik, ddate, q), (_rank, adsh) in sorted(best.items()):
         v = dec(vals[t])
         if v is None or v == 0:
             continue
-        da.append({"tag": t, "label": lab, "nature": da_nature(t, lab, r["custom"]), "value": v, "custom": r["custom"]})
+        da.append({"tag": t, "label": lab, "nature": da_nature(t, lab, r["custom"], len(label_tags[lab.strip().lower()]) == 1), "value": v, "custom": r["custom"]})
     if not da:
         continue
     asset = [x for x in da if x["nature"] == "asset_da"]
