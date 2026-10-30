@@ -24,6 +24,21 @@ Family B  rule `retire.proxy_form_cells@1`
     counted. 8-K sources are out of scope (a recast 8-K can carry complete
     statements, triage family 5 / certification `recast_8k_lineage`).
 
+Family C  rule `retire.derived_per_share_cells@1`
+    Derived (is_derived) EPS facts (basic and diluted, a ratio unit such as
+    usd/shares). A quarter built as FY EPS minus 9M EPS (or 6M minus 3M) is
+    wrong by construction: the share counts differ by period (fix register
+    item 12, "no EPS subtraction"). The Normalizer gate stops new ones; this
+    retires the 10.5k stored cohort cells (97% Q4). A replacement is a filed
+    10-K/10-Q fact of the cell's OWN concept mapping (BasicAndDiluted feeds
+    both). With none, the reason follows Item 302(a): a Q4 of a fiscal year
+    ending on/after 2021-08-09 is not filed separately; any other quarter was
+    filed (10-Q, or the pre-2021 10-K quarterly note), so its blank is a
+    capture gap of ours. A *_resolved cell whose value differs from its
+    source (split re-based) is left for review: the split-rebase family owns
+    the basis. Dividends per share are NOT in scope here (split/dividend
+    family, one dividend basis per company).
+
 Per cell the plan chooses ONE outcome:
     replace_with_filed_fact  an authoritative, non-derived 10-K/10-Q-family
                              fact exists for the same company, period, tag
@@ -80,11 +95,19 @@ from pathlib import Path
 from typing import Any
 
 from scrooner_pipeline.common import rule_flags
-from scrooner_pipeline.common.derivation_policy import PERIODIC_FORMS_DOMESTIC
+from scrooner_pipeline.common.derivation_policy import (
+    ITEM_302A_CUTOFF,
+    PER_SHARE_NOT_CAPTURED_REASON,
+    PER_SHARE_NOT_DERIVED_REASON,
+    PERIODIC_FORMS_DOMESTIC,
+)
 from scrooner_pipeline.mapper import canonical_archive
 
 RULE_RATIO = "retire.derived_ratio_cells@1"
 RULE_PROXY = "retire.proxy_form_cells@1"
+RULE_PER_SHARE = "retire.derived_per_share_cells@1"
+# Canonical EPS concepts of family C (base names; the *_resolved twins follow).
+EPS_CANONICAL = ("basic_eps", "diluted_eps")
 
 # Net income including the noncontrolling interest. The net_income concept is
 # attributable to the parent: these tags are never preferred, and are used only
@@ -134,6 +157,11 @@ REASON_TEXT = {
     ),
     "derived_inputs_disagree": (
         "the filed copies of the year or earlier quarters disagree (restated); not shown"
+    ),
+    "per_share_not_filed_separately": PER_SHARE_NOT_DERIVED_REASON,
+    "per_share_not_captured": PER_SHARE_NOT_CAPTURED_REASON,
+    "per_share_filed_copies_disagree": (
+        "filed copies of this per-share value disagree; not shown until resolved"
     ),
     "proxy_filed_copies_disagree": (
         "10-K/10-Q copies of this figure disagree; not shown until resolved"
@@ -636,6 +664,95 @@ def plan_ratio_chunk(
                     note=f"nonauth_periodic_copies={sum(v for (c, _, p), v in nonauth.items() if c == company and p == pid)}",
                 )
             )
+    _metrics(cur, ids, plan, core, analytics)
+    return plan
+
+
+# ------------------------------------------------------------------ family C
+def per_share_reason(fiscal_period: str | None, period_end: date | None) -> str:
+    """Reason code for a derived EPS cell with no filed copy (Item 302(a) era rule)."""
+    if (
+        fiscal_period == "Q4"
+        and period_end is not None
+        and period_end >= ITEM_302A_CUTOFF
+    ):
+        return "per_share_not_filed_separately"
+    return "per_share_not_captured"
+
+
+def plan_per_share_chunk(
+    cur,
+    ids: list[int],
+    *,
+    uids: list[int],
+    priority_by_name: Mapping[str, Mapping[int, int]],
+    core: str = "core",
+    analytics: str = "analytics",
+) -> Plan:
+    """Family C: derived EPS facts and the cells they feed. ``priority_by_name``:
+    base canonical name -> {mapped concept id: priority}."""
+    plan = Plan("C_per_share_derived", RULE_PER_SHARE)
+    cids = sorted({cid for m in priority_by_name.values() for cid in m})
+    cur.execute(_q(RATIO_FACTS_SQL, core), {"ids": ids, "cids": cids, "uids": uids})
+    facts = [_fact(r) for r in cur.fetchall()]
+    by_id = {f.fact_id: f for f in facts}
+    plan.facts = [f for f in facts if f.is_authoritative]
+    plan.info["derived_per_share_facts_total"] = len(facts)
+    plan.info["derived_per_share_facts_authoritative"] = len(plan.facts)
+    cells = [
+        c
+        for c in _cells_for(cur, ids, facts, core, analytics)
+        if c[3].removesuffix("_resolved") in priority_by_name
+    ]
+    pids = sorted({c[4] for c in cells})
+    copies = _filed_copies(cur, ids, cids, pids, core)
+    for cf_id, company, ccid, cname, pid, pend, value, sources in cells:
+        sources_t = tuple(sources)
+        retired = tuple(s for s in sources_t if s in by_id)
+        base = dict(
+            family=plan.family,
+            rule_id=RULE_PER_SHARE,
+            canonical_fact_id=cf_id,
+            company_id=company,
+            canonical_concept_id=ccid,
+            concept=cname,
+            period_id=pid,
+            period_end=pend,
+            stored_value=Decimal(value),
+            source_fact_ids=sources_t,
+            retired_source_ids=retired,
+        )
+        if len(retired) != len(sources_t):
+            plan.cells.append(
+                CellPlan(**base, action=ACT_REVIEW, note="has other sources")
+            )
+            continue
+        derived = by_id[retired[0]]
+        if cname.endswith("_resolved") and Decimal(value) != derived.value:
+            plan.cells.append(
+                CellPlan(
+                    **base, action=ACT_REVIEW, note="split re-based value: split family"
+                )
+            )
+            continue
+        mapped = priority_by_name[cname.removesuffix("_resolved")]
+        by_prio: dict[int, list[FactRow]] = defaultdict(list)
+        for cid, prio in mapped.items():
+            for f in copies.get((company, cid, pid), []):
+                by_prio[prio].append(f)
+        chosen = _pick_one(by_prio[min(by_prio)]) if by_prio else None
+        if chosen is not None:
+            plan.cells.append(
+                CellPlan(**base, action=ACT_REPLACE, replacement_fact_id=chosen.fact_id,
+                         replacement_value=chosen.value, replacement_form=chosen.form,
+                         replacement_accession=chosen.accession)
+            )  # fmt: skip
+        else:
+            plan.cells.append(
+                CellPlan(**base, action=ACT_REMOVE,
+                         reason_code="per_share_filed_copies_disagree" if by_prio
+                         else per_share_reason(derived.fiscal_period, pend))
+            )  # fmt: skip
     _metrics(cur, ids, plan, core, analytics)
     return plan
 
@@ -1875,7 +1992,7 @@ def run_dry_run(
     conn,
     out_dir: Path,
     *,
-    families: Sequence[str] = ("A", "B"),
+    families: Sequence[str] = ("A", "B"),  # "C": derived EPS (run on its own)
     cohort: set[int] | None = None,
     company_ids: list[int] | None = None,
     chunk: int = 100,
@@ -1903,8 +2020,12 @@ def run_dry_run(
     uids = [r[0] for r in cur.fetchall()]
     cur.execute(_q(MAPPED_CONCEPTS_SQL), {"name": TAX_RATE_CANONICAL})
     mapped = {r[0]: r[1] for r in cur.fetchall()}
+    eps_priority: dict[str, dict[int, int]] = {}
+    for name in EPS_CANONICAL:
+        cur.execute(_q(MAPPED_CONCEPTS_SQL), {"name": name})
+        eps_priority[name] = {r[0]: r[1] for r in cur.fetchall()}
     out_dir.mkdir(parents=True, exist_ok=True)
-    plans: dict[str, list[Plan]] = {"A": [], "B": []}
+    plans: dict[str, list[Plan]] = {"A": [], "B": [], "C": []}
     t0 = time.time()
     for i in range(0, len(company_ids), chunk):
         ids = company_ids[i : i + chunk]
@@ -1914,6 +2035,10 @@ def run_dry_run(
             )
         if "B" in families:
             plans["B"].append(plan_proxy_chunk(cur, ids))
+        if "C" in families:
+            plans["C"].append(
+                plan_per_share_chunk(cur, ids, uids=uids, priority_by_name=eps_priority)
+            )
         log(
             f"companies {min(i + chunk, len(company_ids))}/{len(company_ids)} {time.time() - t0:.0f}s"
         )
@@ -1921,6 +2046,7 @@ def run_dry_run(
     for fam, family_name, rule in (
         ("A", "A_ratio_derived", RULE_RATIO),
         ("B", "B_proxy_form", RULE_PROXY),
+        ("C", "C_per_share_derived", RULE_PER_SHARE),
     ):
         if fam not in families:
             continue
@@ -2118,7 +2244,7 @@ def main(argv: list[str] | None = None) -> int:
         description="READ-ONLY retirement dry-run (writes files only)"
     )
     ap.add_argument("out_dir")
-    ap.add_argument("--family", choices=["A", "B", "both"], default="both")
+    ap.add_argument("--family", choices=["A", "B", "C", "both"], default="both")
     ap.add_argument(
         "--cohort-csv", default=None, help="doc/data-moat/team/top1000/shards.csv"
     )
