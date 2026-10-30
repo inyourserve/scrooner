@@ -118,6 +118,22 @@ jobs:
           # than the server and wrote a setting the server rejects.
           export PATH="$PWD/scripts/ci/pgbin:$PATH"
           bash scripts/verify_backup_restore.sh
+      # Integration tests that need the REAL migrated schema (2026-10-31; first one:
+      # pipeline/tests/unit/test_resolve_stages_scoped_sql.py, proving a --ciks
+      # resolve run equals the population run and that --dry-run writes nothing).
+      # Runs last among the DB steps so a test that rebuilds a schema cannot
+      # disturb the restore check above. The other jobs' pytest runs skip these
+      # (no SCROONER_TEST_DATABASE_URL there); conftest refuses a URL whose
+      # database name lacks "test" or that equals DATABASE_URL.
+      - uses: astral-sh/setup-uv@v6
+      - name: Integration tests against the migrated database
+        env:
+          SCROONER_TEST_DATABASE_URL: postgresql://scrooner_test:scrooner_test@localhost:5432/scrooner_test
+          DATABASE_URL: postgresql://unused:unused@localhost:5432/not_the_test_db
+          SUPABASE_URL: http://localhost
+          SUPABASE_SERVICE_ROLE_KEY: ci-placeholder
+          SEC_USER_AGENT: scrooner-ci ci@example.com
+        run: uv run --project pipeline pytest pipeline/tests -m integration -q
       - name: Check local documentation links
         run: python scripts/check_docs.py
       - name: Check common secret patterns
