@@ -8,6 +8,8 @@ is per DATE COLUMN, so a line that has a value only in the comparative column do
   statement_dates   dates for which any presented balance-sheet line has a value (the statement SHOWS this date)
   inventory_dates   dates where a presented inventory line has a NONZERO value (tag or label)
   materials_dates   dates where a presented "materials and supplies" line (not an inventory-named line) has a value
+  classified        the face presents BOTH a current-assets and a current-liabilities subtotal (tag or label); an
+                    unclassified balance sheet (FTAI 0001590364-24-000003) has no quick ratio
 
 A date that is not in ``statement_dates`` is UNAVAILABLE: the accession's statement does not show it (a later filing
 showing only newer years; no XBRL pages). The caller then hides the cell with a reason; it never guesses.
@@ -37,6 +39,8 @@ _INVENTORY_LABEL = re.compile(r"\binventor(y|ies)\b", re.I)
 # a presented supplies line that is not inventory-named: "Materials and supplies", "Spare parts, supplies, and fuel",
 # "Fuel oil, gas in storage, materials and supplies"
 _MATERIALS_LABEL = re.compile(r"\bsupplies\b|\bspare parts\b", re.I)
+_CURRENT_ASSETS_LABEL = re.compile(r"\btotal current assets\b", re.IGNORECASE)
+_CURRENT_LIABILITIES_LABEL = re.compile(r"\btotal current liabilities\b", re.IGNORECASE)
 csv.field_size_limit(10**8)
 
 
@@ -48,6 +52,7 @@ class AccessionFace:
     # dates where the ONLY inventory value is on InventoryWorkInProcess lines (OMC): excluded for a registrant whose
     # note was read as client billable costs (quick_ratio_evidence.CONTRACT_ASSET_NOTE_READ)
     wip_only_dates: frozenset[date] = field(default_factory=frozenset)
+    classified: bool = True
 
 
 def quarter_of(filed: date) -> tuple[int, int]:
@@ -99,7 +104,16 @@ def balance_sheet_faces(
             tuple[str, str], tuple[bool, bool]
         ] = {}  # (adsh, tag) -> (is_inventory, is_materials)
         bs_tags: set[tuple[str, str]] = set()
+        classified: set[str] = set()
         for (key, _report), rows in groups.items():
+            if any(
+                tag == "AssetsCurrent" or _CURRENT_ASSETS_LABEL.search(label)
+                for _, tag, label in rows
+            ) and any(
+                tag == "LiabilitiesCurrent" or _CURRENT_LIABILITIES_LABEL.search(label)
+                for _, tag, label in rows
+            ):
+                classified.add(key)
             ac_line = min(
                 (ln for ln, tag, _ in rows if tag == "AssetsCurrent"), default=None
             )
@@ -160,6 +174,7 @@ def balance_sheet_faces(
             frozenset(inventory.get(key, ())),
             frozenset(materials.get(key, ())),
             frozenset(inventory.get(key, set()) - non_wip.get(key, set())),
+            key in classified,
         )
         for key, dates in statement.items()
     }
@@ -184,6 +199,7 @@ def write_jsonl(path: Path, found: dict[str, AccessionFace], source: str) -> Non
                         "wip_only_dates": sorted(
                             d.isoformat() for d in face.wip_only_dates
                         ),
+                        "classified": face.classified,
                         "source": source,
                     }
                 )
@@ -204,5 +220,6 @@ def load_jsonl(path: Path) -> dict[str, AccessionFace]:
                     frozenset(
                         date.fromisoformat(d) for d in rec.get("wip_only_dates", [])
                     ),
+                    rec.get("classified", True),
                 )
     return out
