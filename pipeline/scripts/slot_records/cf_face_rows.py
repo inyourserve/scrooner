@@ -54,6 +54,7 @@ with gzip.open(out, "wt") as fo:
                 "stmt": r["stmt"], "report": int(r["report"]), "line": int(r["line"]),
                 "tag": r["tag"], "custom": not r["version"].startswith(STD),
                 "label": r["plabel"], "negating": r["negating"] == "1",
+                "fsn": period_dir.name,  # where this filing's cal/num rows live
             }) + "\n")
             k += 1
         n_rows += k
