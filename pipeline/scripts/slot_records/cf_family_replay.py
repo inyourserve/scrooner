@@ -42,7 +42,7 @@ import gzip
 import json
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -62,10 +62,18 @@ OP_TOTAL, OP_CONT, OP_DISC = ("NetCashProvidedByUsedInOperatingActivities",
 FIN_TOTALS = ("NetCashProvidedByUsedInFinancingActivities", "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations")
 OP_LABEL_RX = re.compile(r"net cash.*(provided|used|from|generated).*operating activities", re.I)
 
-REPURCHASE_RX = re.compile(r"repurchas|buy ?back|treasury|reacquir|retire(ment)? of (common|ordinary|class)", re.I)
-WITHHOLD_RX = re.compile(r"withh[oe]l|net share settle|tax(es)? (paid|payments?|remitted)|employee tax", re.I)
-EXCLUDED_RX = re.compile(r"preferred|noncontrolling|non-controlling|minority|partnership units|\bunits\b|notes|debentures|debt|warrants", re.I)
+REPURCHASE_RX = re.compile(r"repurchas|buy ?back|treasury|reacquir|retire(ment)? of (common|ordinary|class)|purchases? of (common|ordinary|company|capital) (stock|shares)", re.I)
+WITHHOLD_RX = re.compile(r"withh[oe]l|net share settle|tax(es)? (paid|payments?|remitted|liabilit)|employee tax|tax liabilit", re.I)
+EXCLUDED_RX = re.compile(r"preferred|partnership units|\bunits\b|notes|debentures|debt|warrants", re.I)
 COMMON_RX = re.compile(r"common|ordinary|treasury|class [a-c]\b|shares|stock", re.I)
+# Verifier run 1 (VERIFY-CFO-BUYBACKS-RUN1-2026-10-31): direction first.
+INFLOW_RX = re.compile(r"proceeds|issuance|issued|\bsales?\b|\bsold\b|reissu|exercise", re.I)
+OUTFLOW_RX = re.compile(r"repurchas|purchas|buy ?back|acqui|reacquir|retire|payments? for", re.I)
+NET_RX = re.compile(r"sales?\s*\(purchases?\)|purchases?\s*\(sales?\)|\(purchases?\)|purchases?,?\s+net|net of (sales|issuance|proceeds)|\bnet\b.*(sales|purchases)", re.I)
+SUBSIDIARY_RX = re.compile(r"subsidiar|noncontrolling|non-controlling|minority|aspentech|put option", re.I)
+NONCASH_RX = re.compile(r"unsettled|accrued|incurred|not yet paid|non-?cash|accounts payable|commitment", re.I)
+SBC_PLAN_RX = re.compile(r"\bSBC\b|(stock|share)[- ]based|equity (award|compensation|incentive)|(compensation|incentive|benefit|employee|stock|equity) plans?|for (delivery|settlement|distribution)|to satisfy", re.I)
+EXCISE_RX = re.compile(r"excise", re.I)
 BUYBACK_TAGS_COMMON = {"PaymentsForRepurchaseOfCommonStock"}
 BUYBACK_TAGS_EXCLUDED = {"PaymentsRelatedToTaxWithholdingForShareBasedCompensation", "PaymentsForRepurchaseOfPreferredStockAndPreferenceStock",
                          "PaymentsForRepurchaseOfRedeemablePreferredStock", "PaymentsForRepurchaseOfConvertiblePreferredStock",
@@ -77,15 +85,46 @@ def iso(d):
 
 
 def buyback_class(tag, label):
-    if tag in BUYBACK_TAGS_EXCLUDED:
+    """One class per financing face line, by CASH DIRECTION first (Verifier
+    run 1: ADBE, CAT, FICO, REG, SNX, MRSH, UBER summed treasury-sale and
+    option proceeds as repurchases; CVX, KMI kept a net line's sign).
+      inflow     Proceeds* tags and sale/issuance/exercise lines: never a buyback
+      net        a purchases-net-of-sales line: held, never sign-kept
+      perimeter_* a line whose inclusion is a definition call: held with reason
+      common     a repurchase of the company's own common/ordinary shares"""
+    if EXCISE_RX.search(label) or "Excise" in tag:
+        return "perimeter_excise_tax"
+    if tag in BUYBACK_TAGS_EXCLUDED or tag.endswith("Member") or tag.startswith(("IncreaseDecrease", "Noncash")):
         return "excluded"
     hit = REPURCHASE_RX.search(label) or "Repurchase" in tag or "TreasuryStock" in tag
     if not hit:
         return None
+    if NONCASH_RX.search(label):
+        return "excluded"  # unsettled / accrued repurchases: a non-cash disclosure, not a cash line
+    if WITHHOLD_RX.search(label) and not REPURCHASE_RX.search(label):
+        return "excluded"  # tax paid on net share settlement (rulebook S3 2.1, RDDT R8)
+    if tag.startswith("PaymentsForProceedsFrom") or tag == "ProceedsFromRepurchaseOfEquity":
+        return "net"
+    if tag.startswith("Proceeds") or (INFLOW_RX.search(label) and not OUTFLOW_RX.search(label)):
+        return "inflow"
+    if NET_RX.search(label):
+        return "net"
     if WITHHOLD_RX.search(label):
-        return "combined" if REPURCHASE_RX.search(label) and not re.search(r"for (employee )?tax", label, re.I) else "excluded"
-    if EXCLUDED_RX.search(label) and not re.search(r"common|ordinary", label, re.I):
+        # a withholding payment named as a repurchase/treasury acquisition (PGR
+        # "treasury shares for restricted stock tax liabilities") is a
+        # definition call; a line that ALSO counts ordinary repurchases is combined
+        return "combined" if re.search(r"includ|\band\b", label, re.I) else "perimeter_tax_withholding_shares"
+    if SUBSIDIARY_RX.search(label) or "Subsidiar" in tag:
+        return "perimeter_subsidiary_repurchase"
+    if SBC_PLAN_RX.search(label):
+        return "perimeter_sbc_plan_purchase"
+    if re.search(r"preferred", label, re.I):
         return "excluded"
+    if EXCLUDED_RX.search(label):
+        # "Repurchases of shares and warrants" (KMI): common shares mixed with another instrument
+        return "combined" if re.search(r"common|ordinary|\bshares\b", label, re.I) else "excluded"
+    if not (tag.startswith("Payments") or OUTFLOW_RX.search(label)):
+        return "unresolved"
     if tag in BUYBACK_TAGS_COMMON or "CommonStock" in tag:
         return "common"
     return "common" if COMMON_RX.search(label) else "unresolved"
@@ -108,18 +147,21 @@ def load(ciks):
         keep = reports[0] if reports else min(rp for rp, *_ in rows)
         face[adsh] = sorted((ln, t, lab, cu) for rp, ln, t, lab, cu in rows if rp == keep)
     vals = defaultdict(dict)  # adsh -> {(tag, ddate, qtrs): Decimal}
+    durps = defaultdict(dict)  # adsh -> {(ddate, qtrs): durp of the column's section total}
     with gzip.open(num_path, "rt") as fh:
         for line in fh:
             r = json.loads(line)
             if r["adsh"] in face:
                 vals[r["adsh"]].setdefault((r["tag"], r["ddate"], r["qtrs"]), Decimal(r["value"]))
+                if r.get("durp") not in (None, "") and (r["tag"] in (OP_TOTAL, OP_CONT) or CASH_CHANGE_RX.search(r["tag"])):
+                    durps[r["adsh"]].setdefault((r["ddate"], r["qtrs"]), float(r["durp"]))
     arcs = {}
     with gzip.open(cal_path, "rt") as fh:
         for line in fh:
             r = json.loads(line)
             if r["adsh"] in face:
                 arcs[r["adsh"]] = {p: [(c, Decimal(w)) for c, w in kids] for p, kids in r["arcs"].items()}
-    return filings, face, vals, arcs
+    return filings, face, vals, arcs, durps
 
 
 def tie(total, kids, v):
@@ -179,6 +221,8 @@ def read_cell(adsh, ddate, qtrs, arcs, face, vals):
 def verdict_cfo(c, cell):
     if not c["face_column"]:
         return "not_a_face_column", None
+    if c.get("stub"):
+        return "stub_column", None
     b = cell["basis"]
     if b in ("cfo_total_not_printed", "no_operating_line"):
         return b, None
@@ -197,18 +241,28 @@ def verdict_cfo(c, cell):
 
 def verdict_bb(c, cell):
     ms = cell["members"]
-    if not ms or all(m["class"] == "excluded" for m in ms):
+    if not ms or all(m["class"] in ("excluded", "inflow") for m in ms):
         return None, None  # no repurchase line on this face: no cell
     if not c["face_column"]:
         return "not_a_face_column", None
+    if c.get("stub"):
+        return "stub_column", None
+    if not any(m["class"] in ("common", "net", "unresolved", "combined") or m["class"].startswith("perimeter_") for m in ms):
+        return None, None  # only inflow/excluded lines: no repurchase on this face
     if any(m["class"] == "combined" for m in ms):
         return "buyback_combined_with_other_items", None
-    if any(m["class"] == "unresolved" for m in ms):
-        return "perimeter_line_unresolved", None
+    for cls in ("net", "perimeter_subsidiary_repurchase", "perimeter_excise_tax", "perimeter_sbc_plan_purchase",
+                "perimeter_tax_withholding_shares", "unresolved"):
+        if any(m["class"] == cls and m["value"] not in (None, 0) for m in ms):
+            return {"net": "net_treasury_line", "unresolved": "perimeter_line_unresolved"}.get(cls, cls), None
     common_ms = [m for m in ms if m["class"] == "common"]
+    if len(common_ms) > 1 and any(m["custom"] for m in common_ms):
+        return "perimeter_multiple_repurchase_lines", None
     printed = [m for m in common_ms if m["value"] is not None]
     if not printed:
         return "no_value_this_column", None  # the line is printed but this column is blank (a dash)
+    if any(m["value"] < 0 for m in printed):
+        return "sign_unclear", None  # an outflow tag with a negative value: never sign-kept
     if not c["has_cal"]:
         return "hold_no_statement_cal", None
     if not cell["section_by_cal"]:
@@ -227,7 +281,7 @@ all_ciks = sorted({json.loads(line)["cik"] for line in gzip.open(face_path, "rt"
 cells = {"cfo": [], "buybacks": []}
 summary = {"cfo": defaultdict(int), "buybacks": defaultdict(int)}
 for b0 in range(0, len(all_ciks), BATCH):
-    filings, face, vals, all_arcs = load(set(all_ciks[b0:b0 + BATCH]))
+    filings, face, vals, all_arcs, durps = load(set(all_ciks[b0:b0 + BATCH]))
     print(f"  batch {b0 // BATCH + 1}: {len(filings)} filings", flush=True)
     by_cik = defaultdict(list)
     for adsh, m in filings.items():
@@ -240,6 +294,20 @@ for b0 in range(0, len(all_ciks), BATCH):
             cols = {(d, q) for (_t, d, q) in vals[adsh] if d >= SINCE}
             for d, q in sorted(cols):
                 readings[(d, q)].append((adsh, read_cell(adsh, d, q, arcs, face, vals)))
+        # STUB columns (Verifier run 1, Valaris 0000314808-21-000102: a 5-month
+        # fresh-start successor tagged qtrs=2): a column whose duration offset
+        # (FSN durp) is off the company's own usual offset for that number of
+        # quarters by more than 0.1 quarter (~9 days). Costco's 12/12/12/16-week
+        # calendar keeps one stable offset per qtrs, so it is not a stub.
+        usual = defaultdict(Counter)
+        for adsh in adshs:
+            for (d, q), dp in durps[adsh].items():
+                usual[q][round(dp, 1)] += 1
+        for (d, q), rs in readings.items():
+            mode = usual[q].most_common(1)[0][0] if usual[q] else 0.0
+            for a, r in rs:
+                dp = durps[a].get((d, q))
+                r["stub"] = dp is not None and abs(dp - mode) > 0.1
         for (d, q), rs in sorted(readings.items()):
             # the original: earliest filing whose period of report is the column end, else the earliest that prints it
             orig = next(((a, r) for a, r in rs if filings[a]["period"] == d and r["face_column"]), None) or next(((a, r) for a, r in rs if r["face_column"]), rs[0])
@@ -259,7 +327,7 @@ for b0 in range(0, len(all_ciks), BATCH):
                         verdict = "restated_copies_disagree"
                 summary[fam][verdict] += 1
                 cells[fam].append({
-                    "cik": cik, "end": iso(d), "months": q * 3, "accession": a0, "form": filings[a0]["form"],
+                    "cik": cik, "end": iso(d), "months": q * 3, "durp": durps[a0].get((d, q)), "accession": a0, "form": filings[a0]["form"],
                     "verdict": verdict, "value": str(value) if value is not None and verdict == "publishable" else None,
                     "candidate": str(value) if value is not None and verdict != "publishable" else None,
                     "detail": ({k: (str(v) if isinstance(v, Decimal) else v) for k, v in r0[fam].items() if k != "members"}

@@ -43,7 +43,7 @@ with gzip.open(out, "wt") as fo:
             if (r.get("coreg") or "").strip() or (r.get("iprx") or "0") not in ("0", ""):
                 continue
             fo.write(json.dumps({"adsh": r["adsh"], "tag": r["tag"], "ddate": r["ddate"], "qtrs": int(r["qtrs"]),
-                                 "value": r["value"], "dcml": r.get("dcml")}) + "\n")
+                                 "value": r["value"], "dcml": r.get("dcml"), "durp": r.get("durp")}) + "\n")
             k += 1
         n += k
         print(f"  {Path(num).parent.name}: {k} rows", flush=True)
