@@ -36,10 +36,14 @@
 # calculate-expanded-metrics -> calculate-piotroski -> calculate-quality-flags
 # -> calculate-reconciliation -> calculate-tax-reconciliation ->
 # calculate-fcf-growth -> calculate-dividend-streak.
-# resolve-statement-fallbacks is deliberately excluded -- it's always
-# population-wide, set-based SQL (see its own CLI docstring), too heavy to
-# run daily for a handful of companies; that one stays on its existing
-# manual/periodic cadence.
+# resolve-statement-fallbacks and resolve-conflict-fills were excluded until
+# 2026-10-31 because they were population-wide only. That left every
+# *_resolved concept whose sole writer is resolve-conflict-fills
+# (net_income_resolved and 23 more) frozen at the last manual population
+# recompute (2026-10-21): 17 top-1000 companies had their Sep-2026 net_income
+# fact and no net_income_resolved row. Both stages now take --ciks and run
+# here, per company, right after resolve-concept-fallbacks and before
+# calculate (which consumes the *_resolved concepts).
 set -e
 # REPROCESS_PATH_PREFIX is a test seam only (puts a stand-in `uv` ahead of a real one).
 export PATH="${REPROCESS_PATH_PREFIX:+$REPROCESS_PATH_PREFIX:}/opt/homebrew/opt/libxslt/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:$PATH"
@@ -243,7 +247,9 @@ STAGES=(
   normalize:identity normalize:periods normalize:units normalize:facts normalize:dedupe
   normalize:restatements normalize:conflict-latest-filed normalize:derive-interim-quarters
   normalize:derive-q4
-  map:resolve-facts map:resolve-concept-fallbacks map:calculate map:growth map:ttm-returns
+  map:resolve-facts map:resolve-concept-fallbacks
+  map:resolve-statement-fallbacks map:resolve-conflict-fills
+  map:calculate map:growth map:ttm-returns
   map:ttm-margins map:calculate-expanded-metrics map:calculate-piotroski
   map:calculate-quality-flags map:calculate-reconciliation map:calculate-tax-reconciliation
   map:calculate-fcf-growth map:calculate-dividend-streak

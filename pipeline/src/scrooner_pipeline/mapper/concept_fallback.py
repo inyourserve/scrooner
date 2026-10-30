@@ -502,6 +502,11 @@ def resolve_total_debt_components(
     return stats
 
 
+def _scope(company_ids: list[int] | None, column: str = "company_id") -> str:
+    """Per-company mode (2026-10-31, nightly reprocess): None = whole population."""
+    return f" and {column} = any(%(company_ids)s)" if company_ids is not None else ""
+
+
 def resolve_arithmetic_fallback(
     conn: psycopg.Connection,
     resolved_id: int,
@@ -509,6 +514,7 @@ def resolve_arithmetic_fallback(
     minuend_id: int,
     subtrahend_id: int,
     guard_min_value: int | None,
+    company_ids: list[int] | None = None,
 ) -> int:
     """Set-based (not per-company-loop) by design -- this project's own
     established rule against a query-per-row-in-a-loop batch job (see
@@ -538,17 +544,20 @@ def resolve_arithmetic_fallback(
         "primary_id": primary_id,
         "minuend_id": minuend_id,
         "subtrahend_id": subtrahend_id,
+        "company_ids": company_ids,
     }
     guard_clause = ""
     if guard_min_value is not None:
         guard_clause = "and m.value > %(guard_value)s"
         params["guard_value"] = guard_min_value
+    scope = _scope(company_ids)
+    scope_m = _scope(company_ids, "m.company_id")
 
     with conn.cursor() as cur:
         cur.execute(
-            """
+            f"""
             delete from analytics.canonical_fact
-            where canonical_concept_id = %(resolved_id)s
+            where canonical_concept_id = %(resolved_id)s {scope}
               and not exists (
                   select 1 from analytics.concept_parser_result cpr
                   where cpr.company_id = analytics.canonical_fact.company_id
@@ -562,7 +571,7 @@ def resolve_arithmetic_fallback(
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
             select company_id, %(resolved_id)s, period_id, value, source_fact_ids
             from analytics.canonical_fact
-            where canonical_concept_id = %(primary_id)s
+            where canonical_concept_id = %(primary_id)s {scope}
               and not exists (
                   select 1 from analytics.concept_parser_result cpr
                   where cpr.company_id = analytics.canonical_fact.company_id and cpr.canonical_concept_id = %(primary_id)s
@@ -572,7 +581,7 @@ def resolve_arithmetic_fallback(
             from analytics.canonical_fact m
             join analytics.canonical_fact s
                 on s.company_id = m.company_id and s.period_id = m.period_id and s.canonical_concept_id = %(subtrahend_id)s
-            where m.canonical_concept_id = %(minuend_id)s
+            where m.canonical_concept_id = %(minuend_id)s {scope_m}
                 {guard_clause}
                 and not exists (
                     select 1 from analytics.canonical_fact p
@@ -586,7 +595,8 @@ def resolve_arithmetic_fallback(
             params,
         )
         cur.execute(
-            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
+            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s"
+            + scope,
             params,
         )
         count = cur.fetchone()[0]
@@ -594,7 +604,11 @@ def resolve_arithmetic_fallback(
     return count
 
 
-def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
+def resolve_all_arithmetic_fallbacks(
+    conn: psycopg.Connection, company_ids: list[int] | None = None
+) -> dict:
+    """`company_ids` (2026-10-31): per-company mode for the nightly reprocess;
+    `rows_written` then counts only those companies' rows. None = population."""
     stats: dict[str, Any] = {
         "considered": len(ARITHMETIC_FALLBACKS),
         "rows_written": {},
@@ -611,7 +625,7 @@ def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
         minuend_id = _concept_id(conn, minuend_name)
         subtrahend_id = _concept_id(conn, subtrahend_name)
         count = resolve_arithmetic_fallback(
-            conn, resolved_id, primary_id, minuend_id, subtrahend_id, guard
+            conn, resolved_id, primary_id, minuend_id, subtrahend_id, guard, company_ids
         )
         stats["rows_written"][resolved_name] = count
         logger.info(
@@ -641,15 +655,19 @@ def resolve_all_arithmetic_fallbacks(conn: psycopg.Connection) -> dict:
 # larger (or the only one present) is the correct combination rule here --
 # unlike total_debt's two tag groups, which can be genuinely ADDITIVE
 # pieces of one total (see resolve_fallback_for_company's overlap_tag).
-def resolve_depreciation_and_amortization_max(conn: psycopg.Connection) -> int:
+def resolve_depreciation_and_amortization_max(
+    conn: psycopg.Connection, company_ids: list[int] | None = None
+) -> int:
     resolved_id = _concept_id(conn, "depreciation_and_amortization_resolved")
+    params = {"resolved_id": resolved_id, "company_ids": company_ids}
     with conn.cursor() as cur:
         cur.execute(
-            "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
-            {"resolved_id": resolved_id},
+            "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s"
+            + _scope(company_ids),
+            params,
         )
         cur.execute(
-            """
+            f"""
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
             select
                 company_id, %(resolved_id)s, period_id,
@@ -665,16 +683,17 @@ def resolve_depreciation_and_amortization_max(conn: psycopg.Connection) -> int:
                 from core.fact f
                 join core.concept c on c.id = f.concept_id
                 where c.tag in ('DepreciationAndAmortization', 'DepreciationDepletionAndAmortization')
-                    and f.is_authoritative = true
+                    and f.is_authoritative = true {_scope(company_ids, "f.company_id")}
                 group by f.company_id, f.period_id
             ) both_tags
             where p1_value is not null or p2_value is not null
             """,
-            {"resolved_id": resolved_id},
+            params,
         )
         cur.execute(
-            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
-            {"resolved_id": resolved_id},
+            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s"
+            + _scope(company_ids),
+            params,
         )
         count = cur.fetchone()[0]
     conn.commit()
@@ -699,16 +718,20 @@ def resolve_depreciation_and_amortization_max(conn: psycopg.Connection) -> int:
 # period this function left untouched (a genuine dedupe.py conflict on
 # the PP&E tag itself, unrelated to software), so running it after this
 # one is always safe.
-def resolve_capex_with_software(conn: psycopg.Connection) -> int:
+def resolve_capex_with_software(
+    conn: psycopg.Connection, company_ids: list[int] | None = None
+) -> int:
     capex_id = _concept_id(conn, "capex")
     resolved_id = _concept_id(conn, "capex_resolved")
+    params = {"resolved_id": resolved_id, "capex_id": capex_id, "company_ids": company_ids}
     with conn.cursor() as cur:
         cur.execute(
-            "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
-            {"resolved_id": resolved_id},
+            "delete from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s"
+            + _scope(company_ids),
+            params,
         )
         cur.execute(
-            """
+            f"""
             insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids)
             select
                 cf.company_id, %(resolved_id)s, cf.period_id,
@@ -722,13 +745,14 @@ def resolve_capex_with_software(conn: psycopg.Connection) -> int:
                 where c.tag = 'PaymentsToAcquireSoftware' and f.is_authoritative = true
                 group by f.company_id, f.period_id
             ) sw on sw.company_id = cf.company_id and sw.period_id = cf.period_id
-            where cf.canonical_concept_id = %(capex_id)s
+            where cf.canonical_concept_id = %(capex_id)s {_scope(company_ids, "cf.company_id")}
             """,
-            {"resolved_id": resolved_id, "capex_id": capex_id},
+            params,
         )
         cur.execute(
-            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s",
-            {"resolved_id": resolved_id},
+            "select count(*) from analytics.canonical_fact where canonical_concept_id = %(resolved_id)s"
+            + _scope(company_ids),
+            params,
         )
         count = cur.fetchone()[0]
     conn.commit()

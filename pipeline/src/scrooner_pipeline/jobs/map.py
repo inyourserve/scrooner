@@ -190,21 +190,70 @@ def resolve_concept_fallbacks_cmd(
     typer.echo(f"resolve-concept-fallbacks: {stats}")
 
 
+def _company_ids_for_ciks(conn, ciks: str | None) -> list[int] | None:
+    """--ciks -> core.company ids (None when no --ciks: population-wide)."""
+    if not ciks:
+        return None
+    wanted = sorted({c.strip().zfill(10) for c in ciks.split(",") if c.strip()})
+    with conn.cursor() as cur:
+        cur.execute("select id from core.company where cik = any(%s) order by id", (wanted,))
+        ids = [row[0] for row in cur.fetchall()]
+    if len(ids) != len(wanted):
+        typer.echo(f"warning: {len(wanted) - len(ids)} of {len(wanted)} CIKs not in core.company")
+    return ids
+
+
+def _run_resolve_stage(name: str, fn, ciks: str | None, dry_run: bool, statement_timeout: str):
+    """Shared driver for the two formerly population-only resolve stages
+    (2026-10-31). `statement_timeout` is set on the session because the pooler
+    default (2 min) killed these stages population-wide more than once (root
+    CLAUDE.md). `--dry-run` runs the whole stage inside one transaction that
+    is rolled back: the module functions' own commit() calls are neutralised
+    for the connection, so the printed stats are exactly what a live run would
+    write, and nothing is written."""
+    with get_connection() as conn:
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        company_ids = _company_ids_for_ciks(conn, ciks)
+        if ciks and not company_ids:
+            typer.echo(f"{name}: no matching companies -- nothing to do")
+            return
+        if dry_run:
+            conn.commit = lambda: None  # type: ignore[method-assign]
+        try:
+            stats = fn(conn, company_ids)
+        finally:
+            if dry_run:
+                conn.rollback()
+    scope = f"{len(company_ids)} companies" if company_ids is not None else "population"
+    typer.echo(f"{name} ({scope}{', DRY RUN, rolled back' if dry_run else ''}): {stats}")
+
+
 @app.command("resolve-statement-fallbacks")
-def resolve_statement_fallbacks_cmd() -> None:
+def resolve_statement_fallbacks_cmd(
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: whole population)."
+    ),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Run and roll back; write nothing."),
+    statement_timeout: str = typer.Option(
+        "10min", help="Postgres statement_timeout for this session (pooler default is 2min)."
+    ),
+) -> None:
     """Migration 0047 / 2026-09-07: gross_profit_resolved,
     cost_of_revenue_resolved, operating_expenses_resolved -- derives a
     missing Income Statement line from two other already-resolved concepts
-    (e.g. Revenue - Cost of Revenue) when the primary tag is absent. Always
-    population-wide (set-based SQL, no per-CIK scoping -- see
-    concept_fallback.py's resolve_arithmetic_fallback docstring for why a
-    loop-per-company shape was deliberately avoided). Run AFTER
-    resolve-facts, BEFORE seed-statements' consumers render the company
-    page (statements/classify.py's STATEMENT_LINES already points at the
-    *_resolved concepts)."""
-    with get_connection() as conn:
-        stats = resolve_all_arithmetic_fallbacks(conn)
-    typer.echo(f"resolve-statement-fallbacks: {stats}")
+    (e.g. Revenue - Cost of Revenue) when the primary tag is absent.
+    Set-based SQL; population-wide by default, or scoped to --ciks (2026-10-31,
+    so the nightly reprocess can run it for the companies that just filed).
+    Run AFTER resolve-facts, BEFORE seed-statements' consumers render the
+    company page (statements/classify.py's STATEMENT_LINES already points at
+    the *_resolved concepts)."""
+    _run_resolve_stage(
+        "resolve-statement-fallbacks",
+        resolve_all_arithmetic_fallbacks,
+        ciks,
+        dry_run,
+        statement_timeout,
+    )
 
 
 @app.command("resolve-balance-sheet-fallback")
@@ -297,20 +346,29 @@ def resolve_employee_count_fallback_cmd(
 
 
 @app.command("resolve-conflict-fills")
-def resolve_conflict_fills_cmd() -> None:
+def resolve_conflict_fills_cmd(
+    ciks: str = typer.Option(
+        None, help="Comma-separated CIKs to restrict to (default: whole population)."
+    ),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Run and roll back; write nothing."),
+    statement_timeout: str = typer.Option(
+        "10min", help="Postgres statement_timeout for this session (pooler default is 2min)."
+    ),
+) -> None:
     """Migration 0059 / 2026-09-09: fills a statement-table cell that's
     null specifically because dedupe.py correctly flagged 2+ disagreeing
     filings as an unresolved conflict (never guessed at before now),
-    for all 24 statement-table concepts. Purely additive (INSERT ... ON
-    CONFLICT DO NOTHING, never a delete) -- run AFTER resolve-facts and
-    resolve-statement-fallbacks (this fills gaps those leave, and being
-    additive-only it can't be undone by anything that runs after it,
-    only by something that runs after it and re-DELETEs its own resolved
-    concept, which none of the 24 targets' other writers do at this
-    point in the pipeline). Always population-wide, set-based SQL."""
-    with get_connection() as conn:
-        stats = resolve_all_conflict_fills(conn)
-    typer.echo(f"resolve-conflict-fills: {stats}")
+    for all 24 statement-table concepts, and lays down every target's
+    baseline pass-through (the sole writer of net_income_resolved and 18
+    other *_resolved concepts). Purely additive (INSERT ... ON CONFLICT DO
+    NOTHING, never a delete) -- run AFTER resolve-facts and
+    resolve-statement-fallbacks. Population-wide by default, or scoped to
+    --ciks (2026-10-31): the nightly reprocess never ran this stage, so every
+    company that filed after the last manual population recompute (2026-10-21)
+    had a new net_income fact and no net_income_resolved row."""
+    _run_resolve_stage(
+        "resolve-conflict-fills", resolve_all_conflict_fills, ciks, dry_run, statement_timeout
+    )
 
 
 @app.command("seed-definitions")

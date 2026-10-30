@@ -99,7 +99,9 @@ def _classify(raw_value: Decimal) -> tuple[Decimal, int] | None:
 _MERGE_WINDOW_DAYS = 45
 
 
-def detect_stock_splits(conn: psycopg.Connection) -> dict:
+def detect_stock_splits(
+    conn: psycopg.Connection, company_ids: list[int] | None = None
+) -> dict:
     """Set-based (not a per-company loop) -- scans the whole population's
     already-captured raw facts under SPLIT_RATIO_TAGS in one query. Full
     delete-then-reinsert of analytics.company_stock_split each run: this
@@ -113,9 +115,10 @@ def detect_stock_splits(conn: psycopg.Connection) -> dict:
             from core.fact f
             join core.concept c on c.id = f.concept_id
             join core.period p on p.id = f.period_id
-            where c.tag = any(%s) and f.is_authoritative = true and p.period_type = 'instant'
-            """,
-            (list(SPLIT_RATIO_TAGS),),
+            where c.tag = any(%(tags)s) and f.is_authoritative = true and p.period_type = 'instant'
+            """
+            + (" and f.company_id = any(%(company_ids)s)" if company_ids is not None else ""),
+            {"tags": list(SPLIT_RATIO_TAGS), "company_ids": company_ids},
         )
         rows = cur.fetchall()
 
@@ -183,7 +186,15 @@ def detect_stock_splits(conn: psycopg.Connection) -> dict:
 
     stats["detected"] = len(best_by_key)
     with conn.cursor() as cur:
-        cur.execute("delete from analytics.company_stock_split")
+        # Per-company mode (2026-10-31): only those companies' split rows are
+        # replaced; the rest of the table is untouched.
+        if company_ids is not None:
+            cur.execute(
+                "delete from analytics.company_stock_split where company_id = any(%s)",
+                (company_ids,),
+            )
+        else:
+            cur.execute("delete from analytics.company_stock_split")
         if best_by_key:
             cur.executemany(
                 """
@@ -223,7 +234,9 @@ def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
         return row[0] if row else None
 
 
-def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
+def resolve_retroactive_split_adjustments(
+    conn: psycopg.Connection, company_ids: list[int] | None = None
+) -> dict:
     """The explicit product/trust decision this module's own docstring
     named as needing confirmation before building: unlike every other
     write in conflict_resolution.py, this SYNTHESIZES a value that was
@@ -261,6 +274,8 @@ def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
     with conn.cursor() as cur:
         cur.execute(
             "select company_id, effective_date, ratio, source_fact_id from analytics.company_stock_split"
+            + (" where company_id = any(%(company_ids)s)" if company_ids is not None else ""),
+            {"company_ids": company_ids},
         )
         split_rows = cur.fetchall()
     splits_by_company: dict[int, list[tuple]] = {}
@@ -293,8 +308,9 @@ def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
             )
             raw_facts = cur.fetchall()
             cur.execute(
-                "select company_id, period_id from analytics.canonical_fact where canonical_concept_id = %s",
-                (resolved_id,),
+                "select company_id, period_id from analytics.canonical_fact "
+                "where canonical_concept_id = %s and company_id = any(%s)",
+                (resolved_id, company_ids_with_splits),
             )
             already_resolved = {(cid, pid) for cid, pid in cur.fetchall()}
 

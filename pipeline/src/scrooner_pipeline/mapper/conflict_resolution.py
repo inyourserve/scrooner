@@ -121,7 +121,16 @@ def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
         return row[0] if row else None
 
 
-def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tuple]:
+def _company_scope(company_ids: list[int] | None, column: str = "company_id") -> str:
+    """Per-company mode (2026-10-31): the nightly reprocess runs these stages for
+    the handful of companies that filed, so every read and write here can be
+    scoped to `company_ids`. None keeps the population-wide behaviour unchanged."""
+    return f" and {column} = any(%(company_ids)s)" if company_ids is not None else ""
+
+
+def _load_conflict_groups(
+    conn: psycopg.Connection, primary_id: int, company_ids: list[int] | None = None
+) -> list[tuple]:
     """Every (company_id, period_id) where the primary concept's
     highest-priority mapped tag that the company filed for that period has
     2+ disagreeing core.fact values and NONE is authoritative -- the exact
@@ -145,7 +154,10 @@ def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tup
                 from core.fact f
                 join core.filing fl on fl.id = f.filing_id
                 join analytics.concept_mapping cm on cm.concept_id = f.concept_id
-                where cm.canonical_concept_id = %s and cm.confidence != 'rejected'
+                where cm.canonical_concept_id = %(primary_id)s and cm.confidence != 'rejected'
+            """
+            + _company_scope(company_ids, "f.company_id")
+            + """
             )
             select company_id, period_id, array_agg(value order by id), array_agg(id order by id),
                    array_agg(filing_date order by id)
@@ -154,18 +166,19 @@ def _load_conflict_groups(conn: psycopg.Connection, primary_id: int) -> list[tup
             group by company_id, period_id
             having count(distinct value) > 1 and bool_or(is_authoritative) = false
             """,
-            (primary_id,),
+            {"primary_id": primary_id, "company_ids": company_ids},
         )
         return cur.fetchall()
 
 
 def _load_already_resolved(
-    conn: psycopg.Connection, resolved_id: int
+    conn: psycopg.Connection, resolved_id: int, company_ids: list[int] | None = None
 ) -> set[tuple[int, int]]:
     with conn.cursor() as cur:
         cur.execute(
-            "select company_id, period_id from analytics.canonical_fact where canonical_concept_id = %s",
-            (resolved_id,),
+            "select company_id, period_id from analytics.canonical_fact "
+            "where canonical_concept_id = %(resolved_id)s" + _company_scope(company_ids),
+            {"resolved_id": resolved_id, "company_ids": company_ids},
         )
         return {(row[0], row[1]) for row in cur.fetchall()}
 
@@ -213,7 +226,10 @@ def _restatement_fill_value(
 
 
 def resolve_baseline_passthrough(
-    conn: psycopg.Connection, primary_name: str, resolved_name: str
+    conn: psycopg.Connection,
+    primary_name: str,
+    resolved_name: str,
+    company_ids: list[int] | None = None,
 ) -> int:
     """Plain pass-through: copy the primary concept's own canonical_fact
     row into the resolved concept wherever the resolved concept doesn't
@@ -238,9 +254,12 @@ def resolve_baseline_passthrough(
             select company_id, %(resolved_id)s, period_id, value, source_fact_ids
             from analytics.canonical_fact
             where canonical_concept_id = %(primary_id)s
+            """
+            + _company_scope(company_ids)
+            + """
             on conflict (company_id, canonical_concept_id, period_id) do nothing
             """,
-            {"resolved_id": resolved_id, "primary_id": primary_id},
+            {"resolved_id": resolved_id, "primary_id": primary_id, "company_ids": company_ids},
         )
         inserted = cur.rowcount
     conn.commit()
@@ -1125,7 +1144,10 @@ def refresh_stale_fills(
 
 
 def resolve_conflict_fill(
-    conn: psycopg.Connection, primary_name: str, resolved_name: str
+    conn: psycopg.Connection,
+    primary_name: str,
+    resolved_name: str,
+    company_ids: list[int] | None = None,
 ) -> dict:
     """Purely additive: INSERT ... ON CONFLICT DO NOTHING into
     `resolved_name` for every (company, period) that's (a) a genuine
@@ -1141,8 +1163,8 @@ def resolve_conflict_fill(
     if primary_id is None or resolved_id is None:
         return {"primary": primary_name, "skipped": "concept not found"}
 
-    groups = _load_conflict_groups(conn, primary_id)
-    already = _load_already_resolved(conn, resolved_id)
+    groups = _load_conflict_groups(conn, primary_id, company_ids)
+    already = _load_already_resolved(conn, resolved_id, company_ids)
 
     to_insert = []
     unsafe = 0
@@ -1256,7 +1278,10 @@ def _split_safe_fill_value(
 
 
 def resolve_split_like_conflicts(
-    conn: psycopg.Connection, primary_name: str, resolved_name: str
+    conn: psycopg.Connection,
+    primary_name: str,
+    resolved_name: str,
+    company_ids: list[int] | None = None,
 ) -> dict:
     """Same shape as resolve_conflict_fill (reuses its own group-loading
     and already-resolved checks) but with _split_safe_fill_value's wider,
@@ -1268,8 +1293,8 @@ def resolve_split_like_conflicts(
     if primary_id is None or resolved_id is None:
         return {"primary": primary_name, "skipped": "concept not found"}
 
-    groups = _load_conflict_groups(conn, primary_id)
-    already = _load_already_resolved(conn, resolved_id)
+    groups = _load_conflict_groups(conn, primary_id, company_ids)
+    already = _load_already_resolved(conn, resolved_id, company_ids)
 
     to_insert = []
     for company_id, period_id, values, fact_ids, _filing_dates in groups:
@@ -1328,7 +1353,15 @@ _HAS_OWN_POPULATE_STEP = {
 }
 
 
-def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
+def resolve_all_conflict_fills(
+    conn: psycopg.Connection, company_ids: list[int] | None = None
+) -> dict:
+    """`company_ids` (2026-10-31): per-company mode for the nightly reprocess.
+    Every step below is scoped to those companies (reads and writes), so a new
+    filer gets its *_resolved rows the night it files instead of waiting for a
+    population-wide recompute (last one 2026-10-21; 17 top-1000 companies had a
+    Sep-2026 net_income fact and no net_income_resolved row on 2026-10-31).
+    None is the unchanged population-wide run."""
     from scrooner_pipeline.mapper.concept_fallback import (
         resolve_capex_with_software,
         resolve_depreciation_and_amortization_max,
@@ -1342,9 +1375,9 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     # CONFLICT_FILL_TARGETS at all (a standalone concept, not one of the
     # 24 dedupe-conflict-shaped statement lines), so it's simplest run
     # here rather than invented its own CLI step for one concept.
-    per_concept["capex_software"] = {"rows": resolve_capex_with_software(conn)}
+    per_concept["capex_software"] = {"rows": resolve_capex_with_software(conn, company_ids)}
     per_concept["depreciation_and_amortization_max"] = {
-        "rows": resolve_depreciation_and_amortization_max(conn)
+        "rows": resolve_depreciation_and_amortization_max(conn, company_ids)
     }
 
     # Runs BEFORE the main loop, deliberately -- found live 2026-09-15
@@ -1370,9 +1403,9 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
         resolve_retroactive_split_adjustments,
     )
 
-    split_detect_stats = detect_stock_splits(conn)
+    split_detect_stats = detect_stock_splits(conn, company_ids)
     per_concept["stock_splits_detected"] = split_detect_stats
-    retroactive_stats = resolve_retroactive_split_adjustments(conn)
+    retroactive_stats = resolve_retroactive_split_adjustments(conn, company_ids)
     per_concept["stock_splits_retroactive_adjustment"] = retroactive_stats
     totals["retroactive_split_adjustments"] = retroactive_stats.get("adjusted", 0)
 
@@ -1383,13 +1416,13 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
         baseline_count = 0
         if resolved_name not in _HAS_OWN_POPULATE_STEP:
             baseline_count = resolve_baseline_passthrough(
-                conn, primary_name, resolved_name
+                conn, primary_name, resolved_name, company_ids
             )
-        stats = resolve_conflict_fill(conn, primary_name, resolved_name)
+        stats = resolve_conflict_fill(conn, primary_name, resolved_name, company_ids)
         stats["baseline_filled"] = baseline_count
         if primary_name in SPLIT_LIKE_CONCEPTS:
             split_stats = resolve_split_like_conflicts(
-                conn, primary_name, resolved_name
+                conn, primary_name, resolved_name, company_ids
             )
             stats["split_like_filled"] = split_stats["filled"]
             totals["filled"] += split_stats["filled"]
@@ -1397,7 +1430,7 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
         totals["baseline_filled"] += baseline_count
         totals["filled"] += stats.get("filled", 0)
         totals["unsafe_skipped"] += stats.get("unsafe_skipped", 0)
-    oi_arithmetic = resolve_operating_income_arithmetic_fallback(conn)
+    oi_arithmetic = resolve_operating_income_arithmetic_fallback(conn, company_ids)
     per_concept["operating_income_arithmetic"] = oi_arithmetic
     totals["operating_income_arithmetic_filled"] = oi_arithmetic.get("inserted", 0)
 
@@ -1416,7 +1449,9 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
 _OPERATING_INCOME_ARITHMETIC_EXCLUDED_SIC_PREFIXES = ("602", "603", "606")
 
 
-def resolve_operating_income_arithmetic_fallback(conn: psycopg.Connection) -> dict:
+def resolve_operating_income_arithmetic_fallback(
+    conn: psycopg.Connection, company_ids: list[int] | None = None
+) -> dict:
     """Derives operating_income_resolved = Revenue - Operating Expenses -
     Cost of Revenue (the last term only when a company separately reports
     one) for every (company, period) where operating_income is missing
@@ -1466,6 +1501,9 @@ def resolve_operating_income_arithmetic_fallback(conn: psycopg.Connection) -> di
                 on cor.company_id = rev.company_id and cor.period_id = rev.period_id and cor.canonical_concept_id = %(cor_id)s
             join core.company c on c.id = rev.company_id
             where rev.canonical_concept_id = %(revenue_id)s
+            """
+            + _company_scope(company_ids, "rev.company_id")
+            + """
               and not (c.sic_code is not null and left(c.sic_code, 3) = any(%(excluded_sics)s))
               and not exists (
                   select 1 from analytics.canonical_fact existing
@@ -1481,6 +1519,7 @@ def resolve_operating_income_arithmetic_fallback(conn: psycopg.Connection) -> di
                 "excluded_sics": list(
                     _OPERATING_INCOME_ARITHMETIC_EXCLUDED_SIC_PREFIXES
                 ),
+                "company_ids": company_ids,
             },
         )
         inserted = cur.rowcount
