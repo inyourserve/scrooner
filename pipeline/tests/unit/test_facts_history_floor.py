@@ -1,4 +1,4 @@
-"""Facts that end before 2014-01-01 are never stored (founder decision 2026-10-25, doc 38)."""
+"""Facts that end before 2014-01-01 are never stored (founder decision 2026-10-25, floor moved from 2015 to 2014; see common/history_floor.py)."""
 
 from datetime import date
 
@@ -42,7 +42,7 @@ def _row(end, accn="a-1"):
     }
 
 
-def test_pre_2014_facts_are_skipped_and_2014_kept(monkeypatch):
+def test_pre_2014_facts_are_skipped_and_2015_kept(monkeypatch):
     conn = _Conn()
     monkeypatch.setattr(facts, "_get_company_id", lambda c, cik: 1)
     monkeypatch.setattr(facts, "_latest_companyfacts_object", lambda c, cik: (9, "p"))

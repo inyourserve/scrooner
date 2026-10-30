@@ -112,6 +112,42 @@ class SupabaseStorageClient:
         response.raise_for_status()
         return response.content
 
+    @retry(
+        retry=HTTP_RETRY,
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=1, min=1, max=30),
+        reraise=True,
+    )
+    def delete_many(self, object_paths: list[str]) -> None:
+        """Removes objects (Storage bulk delete). ONLY for the reviewed
+        retirement executor (collector/storage_retire.py); the Collector
+        itself stays append-only and never calls this."""
+        if not object_paths:
+            return
+        response = self._client.request(
+            "DELETE", f"/object/{BUCKET}", json={"prefixes": object_paths}
+        )
+        response.raise_for_status()
+
+    @retry(
+        retry=HTTP_RETRY,
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=1, min=1, max=30),
+        reraise=True,
+    )
+    def copy(self, source_path: str, destination_path: str) -> None:
+        """Server-side copy inside the bucket (no bytes through this
+        machine). Used by the retirement executor's rollback."""
+        response = self._client.post(
+            "/object/copy",
+            json={
+                "bucketId": BUCKET,
+                "sourceKey": source_path,
+                "destinationKey": destination_path,
+            },
+        )
+        response.raise_for_status()
+
     def close(self) -> None:
         self._client.close()
 

@@ -33,6 +33,7 @@ from scrooner_pipeline.collector.storage import (
     strip_bucket_prefix,
 )
 from scrooner_pipeline.common.errors import log_error
+from scrooner_pipeline.common.history_floor import is_before_floor
 
 logger = structlog.get_logger()
 
@@ -391,9 +392,12 @@ def normalize_periods_for_cik(
     anchors = build_fye_anchors(distinct_periods, fy_tagged_spans)
     nominal_month_day = _parse_fiscal_year_end(fiscal_year_end)
 
+    # The floor is applied AFTER anchors are built from the full payload:
+    # fiscal-year labels of the retained periods depend on older anchors.
     rows = [
         classify_period(end, start, anchors, nominal_month_day)
         for end, start in distinct_periods
+        if not is_before_floor(_parse_date(end))
     ]
     count = upsert_periods(conn, company_id, rows)
 
