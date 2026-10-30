@@ -22,7 +22,8 @@ Modes (default is `plan`, which writes NOTHING):
             put core.filing_registrant back exactly as backed up, delete the
             current core.fact / analytics.canonical_fact rows of the affected
             companies and re-insert the backed-up rows with their original ids,
-            then re-read and check every digest against the manifest.
+            then restore their analytics.company_stock_split rows and re-read
+            and check every digest against the manifest.
             Out of scope (stated, not hidden): core.period rows a re-normalize
             added stay; other analytics.* tables keyed by company
             (metric_value, period_gap, coverage...) are rebuilt by the normal
@@ -57,6 +58,7 @@ TABLES = {
     "filing_registrant": ("core.filing_registrant", "id"),
     "fact": ("core.fact", "id"),
     "canonical_fact": ("analytics.canonical_fact", "id"),
+    "company_stock_split": ("analytics.company_stock_split", "id"),
 }
 
 
@@ -267,6 +269,11 @@ def before_image(conn, plan: Plan) -> dict[str, list[dict]]:
         "canonical_fact": fetch(
             conn, "analytics.canonical_fact", "company_id = any(%s)", (cids,)
         ),
+        # rollback clears and restores the detected splits of these companies too
+        # (FK source_fact_id -> core.fact), so they must be in the image (review, 2026-10-31)
+        "company_stock_split": fetch(
+            conn, "analytics.company_stock_split", "company_id = any(%s)", (cids,)
+        ),
     }
     return img
 
@@ -349,6 +356,14 @@ def live_digests(conn, manifest: dict) -> dict[str, str]:
                 (manifest["affected_company_ids"],),
             )
         ),
+        "company_stock_split": digest(
+            fetch(
+                conn,
+                "analytics.company_stock_split",
+                "company_id = any(%s)",
+                (manifest["affected_company_ids"],),
+            )
+        ),
     }
 
 
@@ -359,7 +374,7 @@ def check_digests(conn, manifest: dict, what: str) -> None:
         raise SystemExit(
             f"{what}: live rows differ from the before-image for {bad}; refusing"
         )
-    log(f"{what}: all 4 digests match the before-image")
+    log(f"{what}: all {len(live)} digests match the before-image")
 
 
 # ---- apply / rollback --------------------------------------------------------
@@ -406,6 +421,11 @@ def _reinsert(conn, table: str, rows: list[dict]) -> int:
 
 def rollback(conn, backup_dir: Path) -> dict:
     manifest, img = read_backup(backup_dir)
+    missing = sorted(set(TABLES) - set(img))
+    if missing:
+        raise SystemExit(
+            f"before-image lacks {missing}; it predates this driver version -- take a fresh backup"
+        )
     accs = manifest["accessions"]
     cids = manifest["affected_company_ids"]
     fids = manifest["filing_ids"]
@@ -452,6 +472,9 @@ def rollback(conn, backup_dir: Path) -> dict:
         stats["facts_restored"] = _reinsert(conn, "core.fact", img["fact"])
         stats["canonical_facts_restored"] = _reinsert(
             conn, "analytics.canonical_fact", img["canonical_fact"]
+        )
+        stats["stock_splits_restored"] = _reinsert(
+            conn, "analytics.company_stock_split", img["company_stock_split"]
         )
         check_digests(conn, manifest, "post-rollback")
     return stats
