@@ -2820,18 +2820,39 @@ def _dps_quarter_equals_ytd(
                 or not 150 <= (e - s).days <= 380
             ):
                 continue
-            earlier_paid = any(
-                qs is not None
-                and qs >= s - timedelta(days=7)
-                and qe <= f.start_date + timedelta(days=7)
+            if v <= 0:
+                continue
+            # the year-to-date did not grow over the quarter: a filed prior
+            # year-to-date (same start, ending the day before the quarter)
+            # equals it, so the quarter must be zero ...
+            prior = [
+                (ps, pe, {v_ for _f, v_ in copies})
+                for (ps, pe), copies in span_copies.items()
+                if ps is not None
+                and abs((ps - s).days) <= 7
+                and abs((f.start_date - pe).days) <= 7
+                and (pe - ps).days >= 80
+            ]
+            prior = [x for x in prior if x[2] == {c.value}]
+            if not prior:
+                continue
+            # ... unless that prior year-to-date is itself contradicted by its
+            # own filed quarters (V FY2022: every YTD context carries the
+            # quarterly rate 0.375, below its own quarters 0.375 + 0.375)
+            ps, pe, _pv = prior[0]
+            inside = [
+                min(v_ for _f, v_ in copies)
+                for (qs, qe), copies in span_copies.items()
+                if qs is not None
+                and qs >= ps - timedelta(days=7)
+                and qe <= pe + timedelta(days=7)
                 and 80 <= (qe - qs).days <= 100
                 and copies
-                and min(v_ for _f, v_ in copies) > 0
-                for (qs, qe), copies in span_copies.items()
-            )
-            if earlier_paid:
-                bad.add(c.period_id)
-                break
+            ]
+            if sum(inside, Decimal(0)) > c.value + YEAR_SOLVE_TOL:
+                continue
+            bad.add(c.period_id)
+            break
     if not bad:
         return cells
     return [
@@ -2850,6 +2871,15 @@ def _basis_quarter_sum(
     span_copies: Mapping[tuple, list[tuple[SourceFact, Decimal]]],
     basis_tag: str,
 ) -> Decimal | None:
+    chain = _basis_quarter_chain(span, span_copies, basis_tag)
+    return None if chain is None else sum((v for _s, _e, v in chain), Decimal(0))
+
+
+def _basis_quarter_chain(
+    span: tuple,
+    span_copies: Mapping[tuple, list[tuple[SourceFact, Decimal]]],
+    basis_tag: str,
+) -> list[tuple[date, date, Decimal]] | None:
     """Sum of the basis tag's filed 3-month quarters chaining over the span
     (one agreed value per quarter), or None when they do not cover it."""
     start, end = span
@@ -2872,7 +2902,7 @@ def _basis_quarter_sum(
         or any(abs((b[0] - a[1]).days) > 7 for a, b in itertools.pairwise(chain))
     ):
         return None
-    return sum((v for _s, _e, v in chain), Decimal(0))
+    return chain
 
 
 def _basis_dated_sum(
@@ -2896,8 +2926,10 @@ def _basis_dated_sum(
         return None
     n_q = max(1, round(((end - start).days + 1) / 91.3))
     width = ((end - start).days + 1) / n_q
-    covered = {min(n_q - 1, int((d - start).days // width)) for d in by_day}
-    if len(covered) != n_q:
+    covered = [min(n_q - 1, int((d - start).days // width)) for d in by_day]
+    # exactly one dated fact per quarter (BAC 2016 tags five declaration and
+    # announcement dates; two in Q2 make the sum overshoot)
+    if sorted(covered) != list(range(n_q)):
         return None
     return sum((next(iter(v)) for v in by_day.values()), Decimal(0))
 
@@ -2917,6 +2949,7 @@ def _dps_span_agrees_with_parts(
     if basis_tag is None:
         return cells
     out = []
+    weak_spans: set[tuple] = set()
     for c in cells:
         f = c.chosen
         if (
@@ -2948,6 +2981,21 @@ def _dps_span_agrees_with_parts(
             None,
         )
         if match is None:
+            # Weigh the evidence (LFUS FY2023 2.5 in three agreeing 10-K copies
+            # vs a one-copy Q4 0.6): when the span has >= 2 agreeing filings and
+            # some chain quarters only one, the one-copy quarters are the
+            # suspects and the span stays; otherwise the span is hidden.
+            span_filings = {f_.filing_id for f_, v_ in span_copies.get(span, []) if v_ == c.value}
+            weak = []
+            if kind == "quarters" and len(span_filings) >= 2:
+                for qs, qe, _v in _basis_quarter_chain(span, span_copies, basis_tag) or []:
+                    fids = {f_.filing_id for f_, _ in span_copies.get((qs, qe), []) if f_.tag == basis_tag}
+                    if len(fids) == 1:
+                        weak.append((qs, qe))
+            if weak:
+                weak_spans.update(weak)
+                out.append(c)
+                continue
             out.append(
                 CellResult(
                     c.concept, c.period_id, HIDE_DPS_INVALID, None, (), c.chosen,
@@ -2964,7 +3012,20 @@ def _dps_span_agrees_with_parts(
                 f"equals its {basis_tag} {kind} (filed copy on {f0.tag})",
             )
         )
-    return out
+    if not weak_spans:
+        return out
+    return [
+        CellResult(
+            c.concept, c.period_id, HIDE_DPS_INVALID, None, (), c.chosen, c.factor,
+            c.candidates, "one-copy quarter disagrees with its year's agreeing filed totals",
+        )
+        if c.concept == concept
+        and c.status == SHOWN
+        and c.chosen is not None
+        and (c.chosen.start_date, c.chosen.end_date) in weak_spans
+        else c
+        for c in out
+    ]
 
 
 def _agree_tol(

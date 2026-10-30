@@ -2823,3 +2823,50 @@ def test_10q_copy_of_a_quarter_two_years_back_is_dropped():
     b.add(EPS_D, "0.61", "2015-07-01", "2015-09-30", q3)
     cell = b.cell(run(b), "diluted_eps_resolved", "2015-07-01", "2015-09-30")
     assert cell.status == sb.SHOWN and cell.value == D("0.40")
+
+
+def test_quarter_kept_when_the_ytd_contexts_carry_the_quarterly_rate_visa():
+    """V FY2022 (0001403161-23-000031/-000072): every YTD context carries the
+    quarterly rate 0.375; the quarters are right, the YTDs are not."""
+    b = Book()
+    q1 = b.filing("V-Q1", "2022-01-27")
+    q2 = b.filing("V-Q2", "2022-04-27")
+    q3 = b.filing("V-Q3", "2022-07-27")
+    b.add(DPS_DECL, "0.375", "2021-10-01", "2021-12-31", q1)
+    b.add(DPS_DECL, "0.375", "2022-01-01", "2022-03-31", q2)
+    b.add(DPS_DECL, "0.375", "2021-10-01", "2022-03-31", q2)
+    b.add(DPS_DECL, "0.375", "2022-04-01", "2022-06-30", q3)
+    b.add(DPS_DECL, "0.375", "2021-10-01", "2022-06-30", q3)
+    res = run(b)
+    assert b.cell(res, "dividends_per_share_resolved", "2022-04-01", "2022-06-30").value == D("0.375")
+    assert b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2022-06-30").status == sb.HIDE_DPS_INVALID
+
+
+def test_two_dated_facts_in_one_quarter_are_no_evidence_bac():
+    """BAC 2016: five dated declaration/announcement facts (two in Q2); the
+    filed FY 0.25 stays."""
+    b = Book()
+    k = b.filing("BAC-K", "2017-02-23", "10-K")
+    for day, v in (("2016-01-21", "0.05"), ("2016-04-27", "0.05"), ("2016-06-29", "0.075"),
+                   ("2016-07-27", "0.075"), ("2016-10-27", "0.075")):
+        b.add(DPS_DECL, v, day, day, k)
+    b.add(DPS_DECL, "0.25", "2016-01-01", "2016-12-31", k)
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2016-01-01", "2016-12-31")
+    assert cell.status == sb.SHOWN and cell.value == D("0.25")
+
+
+def test_one_copy_quarter_hidden_when_year_totals_agree_lfus():
+    """LFUS FY2023 2.5 in three 10-Ks vs a one-copy Q4 0.6 (0.6+0.6+0.65+0.6 =
+    2.45): the year stays, the one-copy quarter is hidden."""
+    b = Book()
+    qs = (("2023-01-01", "2023-04-01", "0.6"), ("2023-04-02", "2023-07-01", "0.6"),
+          ("2023-07-02", "2023-09-30", "0.65"))
+    for i, (s, e, v) in enumerate(qs):
+        b.add(DPS_PAID, v, s, e, b.filing(f"L-Q{i}", f"2023-{4 + 3 * i:02d}-28"))
+        b.add(DPS_PAID, v, s, e, b.filing(f"L-Q{i}-next", f"2024-{4 + 3 * i:02d}-28"))
+    b.add(DPS_PAID, "0.6", "2023-10-01", "2023-12-30", b.filing("L-24Q", "2024-10-30"))
+    for i, fd in enumerate(("2024-02-20", "2025-02-20", "2026-02-20")):
+        b.add(DPS_PAID, "2.5", "2023-01-01", "2023-12-30", b.filing(f"L-K{i}", fd, "10-K"))
+    res = run(b)
+    assert b.cell(res, "dividends_per_share_resolved", "2023-01-01", "2023-12-30").value == D("2.5")
+    assert b.cell(res, "dividends_per_share_resolved", "2023-10-01", "2023-12-30").status == sb.HIDE_DPS_INVALID
