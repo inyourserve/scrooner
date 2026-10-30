@@ -202,3 +202,27 @@ def test_a_face_without_current_subtotals_is_unclassified(tmp_path):
         '{"accession": "x", "statement_dates": [], "inventory_dates": [], "materials_dates": []}\n'
     )
     assert qf.load_jsonl(old)["x"].classified is True
+
+
+def test_fsn_num_rows_are_reduced_to_face_facts_before_the_shared_reader():
+    # FSN num.tsv carries note and dimensional facts and repeated copies (iprx); FSDS num.txt holds face values only
+    rows = [
+        {"adsh": A1, "tag": "InventoryNet", "ddate": "20241231", "qtrs": "0", "value": "7", "dimn": "0", "iprx": "0", "coreg": ""},
+        {"adsh": A1, "tag": "InventoryNet", "ddate": "20221231", "qtrs": "0", "value": "6", "dimn": "1", "iprx": "0", "coreg": ""},
+        {"adsh": A1, "tag": "InventoryNet", "ddate": "20211231", "qtrs": "0", "value": "5", "dimn": "0", "iprx": "1", "coreg": ""},
+        {"adsh": A1, "tag": "InventoryNet", "ddate": "20201231", "qtrs": "0", "value": "4", "dimn": "0", "iprx": "0", "coreg": "Sub"},
+        {"adsh": A1, "tag": "AssetsCurrent", "ddate": "20241231", "qtrs": "0", "value": "100", "dimn": "0", "iprx": "0", "coreg": ""},
+    ]  # fmt: skip
+    kept = list(qf.fsn_face_num(rows))
+    assert [r["ddate"] for r in kept] == ["20241231", "20241231"]
+    hdr = PRE.strip().split("\t")
+    pre_rows = [dict(zip(hdr, r)) for r in (
+        pre(A1, "BS", "InventoryNet", "Inventories"), pre(A1, "BS", "AssetsCurrent", "Total current assets"),
+        pre(A1, "BS", "LiabilitiesCurrent", "Total current liabilities", line="20"),
+    )]  # fmt: skip
+    got = qf.faces_from_rows(pre_rows, kept, {A1})
+    assert (
+        got[A1].statement_dates == {D1}
+        and got[A1].inventory_dates == {D1}
+        and got[A1].classified
+    )
