@@ -125,6 +125,8 @@ def test_q4_is_derived_exactly_from_complete_discrete_quarters(monkeypatch):
         "incomplete": 0,
         "non_additive_not_derived": 0,
         "demoted_full_year_q4_not_replaced": 0,
+        "held_mixed_vintage": 0,
+        "held_sign_conflict": 0,
     }
     assert conn.fact_rows[0]["period_id"] == 404
     assert conn.fact_rows[0]["value"] == Decimal("45")

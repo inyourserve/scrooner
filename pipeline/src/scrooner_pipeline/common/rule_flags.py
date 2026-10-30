@@ -176,7 +176,8 @@ RULES: dict[str, Rule] = {
             "period.same_vintage_derivation@1",
             "RF-04",
             "period_engineer",
-            "same-vintage Q4 derivation",
+            "same-vintage Q4 derivation (interim: derive_q4 holds a Q4 whose FY and 9M inputs are not one filing basis)",
+            dry_run=True,
         ),
         _r(
             "period.fiscal_label_from_dates@1",
@@ -298,6 +299,7 @@ RULE_PERIODIC_FORM_ONLY = "source.periodic_form_only@1"
 RULE_MATCHING_COPIES = "dedupe.matching_copies@1"
 RULE_SHARED_ACCESSION_PRIMARY = "entity.shared_accession_primary_filer@1"
 RULE_IDENTITY = "identity.cik_name_ticker@1"
+RULE_SAME_VINTAGE_DERIVATION = "period.same_vintage_derivation@1"
 KNOWN_RULES = frozenset(RULES)
 
 

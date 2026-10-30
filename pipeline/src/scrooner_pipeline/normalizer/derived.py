@@ -46,6 +46,17 @@ from scrooner_pipeline.common.derivation_policy import (
     PERIODIC_FORMS_DOMESTIC,
 )
 from scrooner_pipeline.common.errors import log_error, safe_rollback
+from scrooner_pipeline.common.rule_flags import (
+    DRY_RUN as RULE_MODE_DRY_RUN,
+)
+from scrooner_pipeline.common.rule_flags import (
+    ON as RULE_MODE_ON,
+)
+from scrooner_pipeline.common.rule_flags import (
+    RULE_SAME_VINTAGE_DERIVATION,
+    rule_mode,
+)
+from scrooner_pipeline.normalizer import q4_vintage_hold
 
 logger = structlog.get_logger()
 
@@ -370,7 +381,18 @@ def _mistagged_full_year_q4(
     return []
 
 
-def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
+def _load_unit_names(conn: psycopg.Connection) -> dict[int, str]:
+    with conn.cursor() as cur:
+        cur.execute("select id, unit_name from core.unit")
+        return dict(cur.fetchall())
+
+
+def derive_q4_for_company(
+    conn: psycopg.Connection, company_id: int, holds_out: list | None = None
+) -> dict:
+    """`holds_out` (2026-10-31, rule period.same_vintage_derivation@1): when the
+    rule is dry_run or on, every cell the same-vintage hold catches is appended
+    here as a q4_vintage_hold.Hold so the caller can write reasons / report."""
     # A company with a very large fact history needs more than the pooler's 2-min
     # default for its duration scans (CIK 0000707179 timed out every night).
     with conn.cursor() as cur:
@@ -406,6 +428,19 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
     reported_q4 = _load_authoritative_reported_quarters(conn, company_id)
     nine_month_ytd = _load_nine_month_ytd(conn, company_id)
 
+    # Same-vintage hold (interim RF-04). The evaluator reads ALL raw copies of
+    # the cell (authoritative or not) and says whether the FY and 9M/Q1-Q3
+    # inputs come from one filing basis; derive_q4 asks it only for cells it is
+    # about to derive. off: never consulted; dry_run: counted; on: held.
+    vintage_mode = rule_mode(RULE_SAME_VINTAGE_DERIVATION)
+    vintage: dict = {}
+    unit_names: dict[int, str] = {}
+    if vintage_mode in (RULE_MODE_DRY_RUN, RULE_MODE_ON) and groups:
+        vintage = q4_vintage_hold.load_vintage_categories(
+            conn, company_id, {k[0] for k in groups}
+        )
+        unit_names = _load_unit_names(conn)
+
     stats = {
         "candidate_groups": len(groups),
         "derived": 0,
@@ -415,6 +450,8 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
         "incomplete": 0,
         "non_additive_not_derived": 0,
         "demoted_full_year_q4_not_replaced": 0,
+        "held_mixed_vintage": 0,
+        "held_sign_conflict": 0,
     }
     new_periods: list[
         tuple
@@ -491,6 +528,21 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
             stats["incomplete"] += 1
             retire_keys.append((concept_id, unit_id, q4_start, q4_end))
             continue
+
+        if vintage:
+            cand = vintage.get(
+                (concept_id, unit_names.get(unit_id, ""), fy["start_date"])
+            )
+            if q4_vintage_hold.hold_category(cand) is not None:
+                hold = q4_vintage_hold.make_hold(cand, unit_id, q4_start, q4_end)
+                stats[hold.stat_key] += 1
+                if holds_out is not None:
+                    holds_out.append(hold)
+                if vintage_mode == RULE_MODE_ON:
+                    # held: not derived now, and a Q4 derived earlier from these
+                    # mixed inputs is demoted (never deleted) by _retire_derived.
+                    retire_keys.append((concept_id, unit_id, q4_start, q4_end))
+                    continue
 
         q4_key = (concept_id, unit_id, q4_start, q4_end)
         if q4_key in reported_keys:
@@ -585,6 +637,20 @@ def derive_q4_for_company(conn: psycopg.Connection, company_id: int) -> dict:
     return stats
 
 
+def _git_commit() -> str | None:
+    try:
+        import subprocess
+
+        return (
+            subprocess.run(
+                ["git", "rev-parse", "HEAD"], capture_output=True, text=True, timeout=5
+            ).stdout.strip()
+            or None
+        )
+    except Exception:  # noqa: BLE001 -- best effort for the rule_run manifest
+        return None
+
+
 def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
     with conn.cursor() as cur:
         cur.execute(
@@ -604,19 +670,57 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
         "incomplete": 0,
         "non_additive_not_derived": 0,
         "demoted_full_year_q4_not_replaced": 0,
+        "held_mixed_vintage": 0,
+        "held_sign_conflict": 0,
     }
+    # Same-vintage hold bookkeeping: with the rule ON, every held cell gets a
+    # reason row (analytics.cell_blank_reason) under one rule_run; dry_run only
+    # counts and logs. OFF: nothing here runs.
+    vintage_mode = rule_mode(RULE_SAME_VINTAGE_DERIVATION)
+    run_id: str | None = None
+    if vintage_mode == RULE_MODE_ON:
+        from scrooner_pipeline.common.cell_store import start_rule_run
+
+        run_id = start_rule_run(
+            conn,
+            RULE_SAME_VINTAGE_DERIVATION,
+            "apply",
+            "on",
+            sorted(ciks),
+            git_commit=_git_commit(),
+        )
+        conn.commit()
     for cik in sorted(ciks):
         totals["considered"] += 1
         company_id = company_id_by_cik.get(cik)
         if company_id is None:
             totals["no_company"] += 1
             continue
+        holds: list = []
         try:
             # A company with a very large fact history needs more than the pooler's
             # 2-min default for its duration scans (CIK 0000707179 timed out nightly).
             with conn.cursor() as cur:
                 cur.execute("set local statement_timeout = '30min'")
-            stats = derive_q4_for_company(conn, company_id)
+            stats = derive_q4_for_company(conn, company_id, holds_out=holds)
+            if run_id is not None and holds:
+                q4_vintage_hold.write_holds(conn, run_id, company_id, holds)
+                conn.commit()
+            elif holds:
+                logger.info(
+                    "derived.q4.vintage_hold_dry_run",
+                    company_id=company_id,
+                    held=len(holds),
+                    cells=[
+                        (
+                            h.concept_id,
+                            h.q4_start.isoformat(),
+                            h.q4_end.isoformat(),
+                            h.category,
+                        )
+                        for h in holds
+                    ],
+                )
         except Exception as exc:
             totals["errored"] += 1
             log_error(conn, "core.normalizer_error", cik, "derive_q4", exc)
@@ -631,9 +735,16 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
             "incomplete",
             "non_additive_not_derived",
             "demoted_full_year_q4_not_replaced",
+            "held_mixed_vintage",
+            "held_sign_conflict",
         ):
             totals[k] += stats[k]
 
+    if run_id is not None:
+        from scrooner_pipeline.common.cell_store import finish_rule_run
+
+        finish_rule_run(conn, run_id, totals)
+        conn.commit()
     logger.info("derived.q4.done", **totals)
     return totals
 
