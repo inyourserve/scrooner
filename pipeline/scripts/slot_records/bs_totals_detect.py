@@ -176,11 +176,16 @@ for adsh, meta in by_filing.items():
     # section, offset by treasury stock, was summed as a liability). Once the
     # equity block has started (first equity component or equity total) and
     # until the L&E total, a 'liab'-classed line is an equity-section line.
+    # Not applied in a CAPITALIZATION layout (a combined debt+equity total, seg
+    # excluded_cap_total, is printed): there long-term debt is printed inside
+    # the capitalization block next to equity and is a real liability (FE, NI,
+    # EMR, AWK); the guard would drop it (found in the 2026-10-31 regeneration).
+    has_cap_total = any(z["seg"] == "excluded_cap_total" for z in zone_lines)
     in_equity = False
     for z in zone_lines:
         if z["seg"] in ("equity_component", "equity_total", "nci"):
             in_equity = True
-        elif z["seg"] == "liab" and in_equity:
+        elif z["seg"] == "liab" and in_equity and not has_cap_total:
             z["seg"] = "equity_component"
             z["equity_block_guard"] = True
         elif z["seg"] == "excluded_cap_total":
