@@ -1060,7 +1060,8 @@ def _vet_and_promote(
             (cid for cid in prios if tag_of.get(cid) not in NCI_INCLUSIVE_TAGS),
             key=lambda cid: prios[cid],
         )
-        verdict, value, inputs = "none", None, []
+        verdict, inputs = "none", []
+        value: Decimal | None = None
         for cid in ordered:
             v, val, ins = _rederive(groups, company, cid, src.unit, qs, qe)
             if v in ("ok", "ok_original"):
@@ -1071,7 +1072,7 @@ def _vet_and_promote(
             if v == "disagree":
                 verdict = "disagree"
         i = plan.cells.index(c)
-        pending_q = None
+        pending_q: tuple[Decimal, tuple[FactRow, ...]] | None = None
         if verdict == "none":
             # only an NCI-inclusive tag (ProfitLoss) carries the line: usable if the
             # filings' income statements show no NCI line (VRSN, SAIC); face check later
@@ -1081,9 +1082,11 @@ def _vet_and_promote(
             ):
                 v, val, ins = _rederive(groups, company, cid, src.unit, qs, qe)
                 if v in ("ok", "ok_original"):
+                    assert val is not None
                     pending_q = (val, tuple(ins))
                     break
         if verdict == "ok":
+            assert value is not None
             if _scale_suspect(inputs):
                 plan.scale_pending[c.canonical_fact_id] = tuple(inputs)
                 rounded_units += 1
@@ -1359,7 +1362,8 @@ def resolve_scale(cur, plan: Plan, unit_for, core: str = "core") -> dict[str, in
             "input_accessions": ";".join(f.accession or "?" for f in inputs),
             "printed_scales": ";".join(str(x) for x in scales),
         }
-        if any(x is None for x in scales):
+        known = [x for x in scales if x is not None]
+        if len(known) != len(scales):
             plan.cells[i] = replace(
                 c,
                 action=ACT_REMOVE,
@@ -1372,11 +1376,12 @@ def resolve_scale(cur, plan: Plan, unit_for, core: str = "core") -> dict[str, in
             )
             out["hidden"] += 1
             log["outcome"] = "hidden"
-        elif max(scales) == min(scales):
+        elif max(known) == min(known):
             out["exact"] += 1
             log["outcome"] = "exact"
         else:
-            g = max(scales)
+            g = max(known)
+            assert c.replacement_value is not None
             new = _round_to(c.replacement_value, g)
             new = new.to_integral_value() if new == new.to_integral_value() else new
             plan.cells[i] = replace(
@@ -1944,9 +1949,9 @@ def _write_review_files(out_dir: Path, plan: Plan, cohort: set[int] | None) -> N
             w.writerow([fid, True, False])
     if plan.authority_exceptions:
         with (out_dir / f"{tag}_authority_exceptions.csv").open("w", newline="") as fh:
-            w = csv.DictWriter(fh, fieldnames=list(plan.authority_exceptions[0]))
-            w.writeheader()
-            w.writerows(plan.authority_exceptions)
+            dw = csv.DictWriter(fh, fieldnames=list(plan.authority_exceptions[0]))
+            dw.writeheader()
+            dw.writerows(plan.authority_exceptions)
     if plan.scale_log:
         with (out_dir / f"{tag}_scale_check.csv").open("w", newline="") as fh:
             cols = [
@@ -1959,15 +1964,15 @@ def _write_review_files(out_dir: Path, plan: Plan, cohort: set[int] | None) -> N
                 "value_before",
                 "value_after",
             ]
-            w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
-            w.writeheader()
-            w.writerows(plan.scale_log)
+            dw = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
+            dw.writeheader()
+            dw.writerows(plan.scale_log)
     users: dict[int, list[int]] = defaultdict(list)
     for c in plan.cells:
         if c.action == ACT_REPLACE:
-            for fid in c.replacement_source_ids or (c.replacement_fact_id,):
-                if fid is not None:
-                    users[fid].append(c.canonical_fact_id)
+            for src_id in c.replacement_source_ids or (c.replacement_fact_id,):
+                if src_id is not None:
+                    users[src_id].append(c.canonical_fact_id)
     with (out_dir / f"{tag}_promote_facts_before_image.csv").open(
         "w", newline=""
     ) as fh:
