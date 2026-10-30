@@ -1,0 +1,296 @@
+{
+  "canonical_cells_with_non_periodic_source": {
+    "by_class": {
+      "all_sources_non_periodic": 5343,
+      "mixed_sources": 1088
+    },
+    "by_concept_top40": {
+      "basic_eps": 48,
+      "basic_eps_resolved": 227,
+      "capex_resolved": 68,
+      "cash_and_equivalents": 31,
+      "cash_and_equivalents_resolved": 61,
+      "cash_flow_financing": 106,
+      "cash_flow_financing_resolved": 119,
+      "cash_flow_investing": 105,
+      "cash_flow_investing_resolved": 114,
+      "cfo": 129,
+      "cfo_resolved": 141,
+      "comprehensive_income": 40,
+      "cost_of_revenue_resolved": 110,
+      "current_assets_resolved": 85,
+      "current_liabilities_resolved": 89,
+      "depreciation_and_amortization": 46,
+      "depreciation_and_amortization_resolved": 46,
+      "diluted_eps": 47,
+      "diluted_eps_resolved": 234,
+      "dividends_per_share": 40,
+      "dividends_per_share_resolved": 90,
+      "gross_profit": 97,
+      "gross_profit_resolved": 202,
+      "income_before_tax": 112,
+      "income_before_tax_resolved": 161,
+      "income_tax_expense": 123,
+      "income_tax_expense_resolved": 172,
+      "interest_expense_resolved": 74,
+      "net_income": 333,
+      "net_income_resolved": 788,
+      "operating_expenses_resolved": 203,
+      "operating_income": 246,
+      "operating_income_resolved": 296,
+      "ppe_net_resolved": 70,
+      "revenue": 222,
+      "revenue_sanity_resolved": 386,
+      "sbc": 32,
+      "stockholders_equity_resolved": 102,
+      "total_assets_resolved": 145,
+      "total_liabilities_resolved": 134
+    },
+    "by_form": {
+      "8-K": 5551,
+      "8-K/A": 95,
+      "DEF 14A": 774,
+      "DEFR14A": 20
+    },
+    "cells": 6431,
+    "companies": 312
+  },
+  "errors": [
+    {
+      "company_ids": [
+        1016,
+        1017,
+        1021
+      ],
+      "error": "QueryCanceled('canceling statement due to statement timeout')",
+      "stage": "2e-b ban"
+    },
+    {
+      "company_ids": [
+        1059,
+        1063,
+        1064
+      ],
+      "error": "QueryCanceled('canceling statement due to statement timeout')",
+      "stage": "canonical"
+    },
+    {
+      "company_ids": [
+        1059,
+        1063,
+        1064
+      ],
+      "error": "QueryCanceled('canceling statement due to statement timeout')",
+      "stage": "2e-b ban"
+    }
+  ],
+  "evidence_level": "DATA-INFERRED (stored is_authoritative; no filing opened by this script)",
+  "rule_ids": [
+    "source.periodic_form_only@1",
+    "dedupe.matching_copies@1"
+  ],
+  "stage_2e": {
+    "companies_changed_by_class": {
+      "authority_value_changed": 179,
+      "conflict_cleared": 158,
+      "matching_copies_resolved": 652,
+      "non_periodic_demoted_same_value": 507,
+      "other": 21,
+      "periodic_conflict_remains": 196,
+      "value_to_none": 561
+    },
+    "groups_changed_by_class": {
+      "authority_value_changed": 774,
+      "conflict_cleared": 6711,
+      "matching_copies_resolved": 32288,
+      "non_periodic_demoted_same_value": 109153,
+      "other": 145,
+      "periodic_conflict_remains": 18898,
+      "value_to_none": 21078
+    },
+    "non_periodic_forms_by_class": {
+      "authority_value_changed": {
+        "8-K": 322,
+        "8-K/A": 4,
+        "DEF 14A": 448
+      },
+      "conflict_cleared": {
+        "8-K": 6490,
+        "8-K/A": 155,
+        "DEF 14A": 90,
+        "DEFR14A": 5
+      },
+      "non_periodic_demoted_same_value": {
+        "8-K": 106066,
+        "8-K/A": 1667,
+        "DEF 14A": 1879,
+        "DEFM14A": 5,
+        "DEFR14A": 5
+      },
+      "other": {
+        "424B5": 42,
+        "8-K": 5,
+        "8-K/A": 2,
+        "DEF 14A": 91,
+        "DEFR14A": 8
+      },
+      "periodic_conflict_remains": {
+        "8-K": 18631,
+        "8-K/A": 426,
+        "DEF 14A": 13
+      },
+      "value_to_none": {
+        "424B5": 646,
+        "8-K": 7988,
+        "8-K/A": 184,
+        "DEF 14A": 12229,
+        "DEFM14A": 35,
+        "DEFR14A": 67
+      }
+    },
+    "top_concepts_by_class": {
+      "authority_value_changed": {
+        "GrossProfit": 40,
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": 26,
+        "IncomeTaxExpenseBenefit": 30,
+        "NetCashProvidedByUsedInFinancingActivities": 18,
+        "NetCashProvidedByUsedInInvestingActivities": 21,
+        "NetCashProvidedByUsedInOperatingActivities": 25,
+        "NetIncomeLoss": 479,
+        "OperatingIncomeLoss": 84,
+        "RevenueFromContractWithCustomerExcludingAssessedTax": 10,
+        "Revenues": 41
+      },
+      "conflict_cleared": {
+        "AccountsReceivableNetCurrent": 37,
+        "DeferredIncomeTaxLiabilities": 36,
+        "EarningsPerShareBasic": 47,
+        "EarningsPerShareDiluted": 46,
+        "FiniteLivedIntangibleAssetsAmortizationExpenseYearFour": 36,
+        "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest": 40,
+        "IncomeLossFromContinuingOperationsPerBasicShare": 53,
+        "IncomeLossFromContinuingOperationsPerDilutedShare": 48,
+        "NetIncomeLoss": 54,
+        "OtherAssetsNoncurrent": 39,
+        "OtherLiabilitiesNoncurrent": 43,
+        "OtherNonoperatingIncomeExpense": 44,
+        "ProfitLoss": 75,
+        "PropertyPlantAndEquipmentNet": 38,
+        "SalesRevenueNet": 40
+      },
+      "matching_copies_resolved": {
+        "CashAndCashEquivalentsAtCarryingValue": 405,
+        "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents": 420,
+        "ComprehensiveIncomeNetOfTax": 486,
+        "GrossProfit": 490,
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": 462,
+        "NetCashProvidedByUsedInInvestingActivities": 425,
+        "NetCashProvidedByUsedInOperatingActivities": 446,
+        "NetIncomeLoss": 688,
+        "OperatingIncomeLoss": 622,
+        "ProfitLoss": 401,
+        "RevenueFromContractWithCustomerExcludingAssessedTax": 523,
+        "Revenues": 452,
+        "StockholdersEquity": 394,
+        "WeightedAverageNumberOfDilutedSharesOutstanding": 885,
+        "WeightedAverageNumberOfSharesOutstandingBasic": 871
+      },
+      "non_periodic_demoted_same_value": {
+        "CommonStockDividendsPerShareDeclared": 551,
+        "ComprehensiveIncomeNetOfTax": 458,
+        "EarningsPerShareBasic": 1074,
+        "EarningsPerShareDiluted": 1109,
+        "EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate": 427,
+        "IncomeTaxExpenseBenefit": 491,
+        "NetIncomeLoss": 2732,
+        "NetIncomeLossAttributableToNoncontrollingInterest": 453,
+        "OperatingIncomeLoss": 475,
+        "OtherComprehensiveIncomeLossNetOfTax": 413,
+        "ProfitLoss": 795,
+        "Revenues": 438,
+        "UnrecognizedTaxBenefits": 438,
+        "WeightedAverageNumberOfDilutedSharesOutstanding": 631,
+        "WeightedAverageNumberOfSharesOutstandingBasic": 650
+      },
+      "other": {
+        "LitigationSettlementAmountAwardedToOtherParty": 1,
+        "NetFeeAmt": 11,
+        "NrrtvMaxAggtOfferingPric": 9,
+        "PeerGroupTotalShareholderRtnAmt": 48,
+        "ProfitLoss": 3,
+        "SalesCommissionsAndFees": 1,
+        "StockRepurchasedAndRetiredDuringPeriodShares": 1,
+        "TotalShareholderRtnAmt": 48,
+        "TtlFeeAmt": 11,
+        "TtlOfferingAmt": 11,
+        "WeightedAverageNumberDilutedSharesOutstandingAdjustment": 1
+      },
+      "periodic_conflict_remains": {
+        "Assets": 141,
+        "DeferredFederalIncomeTaxExpenseBenefit": 137,
+        "DeferredIncomeTaxExpenseBenefit": 149,
+        "EarningsPerShareBasic": 188,
+        "EarningsPerShareDiluted": 187,
+        "EffectiveIncomeTaxRateContinuingOperations": 130,
+        "EffectiveIncomeTaxRateReconciliationOtherAdjustments": 133,
+        "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest": 143,
+        "IncomeLossFromContinuingOperationsPerBasicShare": 143,
+        "IncomeLossFromContinuingOperationsPerDilutedShare": 145,
+        "OtherAssetsNoncurrent": 133,
+        "OtherNonoperatingIncomeExpense": 151,
+        "PaymentsForProceedsFromOtherInvestingActivities": 155,
+        "ProfitLoss": 221,
+        "SellingGeneralAndAdministrativeExpense": 178
+      },
+      "value_to_none": {
+        "CoSelectedMeasureAmt": 1834,
+        "GrossProfit": 166,
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": 168,
+        "IncomeTaxExpenseBenefit": 225,
+        "NetCashProvidedByUsedInFinancingActivities": 150,
+        "NetCashProvidedByUsedInOperatingActivities": 189,
+        "NetIncomeLoss": 468,
+        "NonPeoNeoAvgCompActuallyPaidAmt": 1952,
+        "NonPeoNeoAvgTotalCompAmt": 1950,
+        "OperatingIncomeLoss": 396,
+        "PeerGroupTotalShareholderRtnAmt": 1880,
+        "PeoActuallyPaidCompAmt": 1236,
+        "PeoTotalCompAmt": 1225,
+        "Revenues": 279,
+        "TotalShareholderRtnAmt": 1905
+      }
+    },
+    "totals": {
+      "companies": 1000,
+      "facts": 18844335,
+      "legacy_writes": 145685,
+      "matching_copy_groups": 32965,
+      "non_periodic_demoted": 22880,
+      "shrunk_group_promoted": 4370,
+      "w3_matching_writes": 209734,
+      "w3_writes": 176843
+    }
+  },
+  "stage_2e_b_ban": {
+    "by_class": {
+      "value_changed": 422,
+      "value_same": 298,
+      "value_to_blank": 11
+    },
+    "by_form_and_class": {
+      "latest_filed_fy_v1|8-K/A|value_changed": 1,
+      "latest_filed_fy_v1|8-K/A|value_same": 1,
+      "latest_filed_fy_v1|8-K|value_changed": 223,
+      "latest_filed_fy_v1|8-K|value_same": 167,
+      "latest_filed_fy_v1|DEF 14A|value_changed": 22,
+      "latest_filed_fy_v1|DEF 14A|value_same": 4,
+      "latest_filed_fy_v1|DEF 14A|value_to_blank": 11,
+      "latest_filed_fy_v1|DEFR14A|value_changed": 5,
+      "latest_filed_quarter_v1|8-K/A|value_changed": 7,
+      "latest_filed_quarter_v1|8-K/A|value_same": 3,
+      "latest_filed_quarter_v1|8-K|value_changed": 164,
+      "latest_filed_quarter_v1|8-K|value_same": 123
+    },
+    "winners_from_now_ineligible_forms": 731
+  }
+}

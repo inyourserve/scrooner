@@ -1,0 +1,126 @@
+fact_id,rule,form,class
+482320,latest_filed_quarter_v1,8-K,value_same
+733799,latest_filed_fy_v1,DEF 14A,value_changed
+733813,latest_filed_fy_v1,DEF 14A,value_changed
+733827,latest_filed_fy_v1,DEF 14A,value_changed
+733840,latest_filed_fy_v1,DEF 14A,value_changed
+733850,latest_filed_fy_v1,DEF 14A,value_changed
+907309,latest_filed_quarter_v1,8-K,value_changed
+907312,latest_filed_quarter_v1,8-K,value_changed
+907315,latest_filed_quarter_v1,8-K,value_changed
+907318,latest_filed_fy_v1,8-K,value_changed
+907870,latest_filed_fy_v1,8-K,value_changed
+910310,latest_filed_fy_v1,8-K,value_changed
+916484,latest_filed_fy_v1,8-K,value_changed
+916491,latest_filed_quarter_v1,8-K,value_changed
+916498,latest_filed_quarter_v1,8-K,value_changed
+916505,latest_filed_quarter_v1,8-K,value_changed
+1014502,latest_filed_fy_v1,8-K,value_same
+1014762,latest_filed_fy_v1,8-K,value_same
+1018298,latest_filed_fy_v1,8-K,value_same
+1018438,latest_filed_fy_v1,8-K,value_same
+1018578,latest_filed_fy_v1,8-K,value_same
+1018774,latest_filed_fy_v1,8-K,value_same
+1018914,latest_filed_fy_v1,DEF 14A,value_changed
+1018934,latest_filed_fy_v1,DEF 14A,value_changed
+1018951,latest_filed_fy_v1,DEF 14A,value_changed
+1018964,latest_filed_fy_v1,DEF 14A,value_changed
+1018974,latest_filed_fy_v1,DEF 14A,value_changed
+1019894,latest_filed_fy_v1,8-K,value_same
+1025481,latest_filed_fy_v1,8-K,value_same
+1100246,latest_filed_fy_v1,DEF 14A,value_same
+1100260,latest_filed_fy_v1,DEF 14A,value_same
+1245851,latest_filed_fy_v1,DEF 14A,value_same
+1245865,latest_filed_fy_v1,DEF 14A,value_same
+1677186,latest_filed_fy_v1,DEF 14A,value_to_blank
+1677200,latest_filed_fy_v1,DEF 14A,value_to_blank
+1677214,latest_filed_fy_v1,DEF 14A,value_to_blank
+1677227,latest_filed_fy_v1,DEF 14A,value_to_blank
+1677237,latest_filed_fy_v1,DEF 14A,value_to_blank
+1736189,latest_filed_fy_v1,8-K,value_same
+8280153,latest_filed_fy_v1,8-K,value_same
+8280957,latest_filed_fy_v1,8-K,value_same
+8281938,latest_filed_fy_v1,8-K,value_same
+8285870,latest_filed_fy_v1,8-K,value_same
+8640619,latest_filed_fy_v1,8-K,value_changed
+8640632,latest_filed_quarter_v1,8-K,value_changed
+8640644,latest_filed_quarter_v1,8-K,value_changed
+8640658,latest_filed_quarter_v1,8-K,value_changed
+8640765,latest_filed_fy_v1,8-K,value_same
+8640794,latest_filed_quarter_v1,8-K,value_same
+8641802,latest_filed_fy_v1,8-K,value_same
+8644302,latest_filed_fy_v1,8-K,value_same
+8653177,latest_filed_fy_v1,8-K,value_same
+8653562,latest_filed_fy_v1,8-K,value_same
+8653947,latest_filed_fy_v1,8-K,value_same
+8654014,latest_filed_fy_v1,8-K,value_same
+8654784,latest_filed_fy_v1,8-K,value_same
+8654806,latest_filed_quarter_v1,8-K,value_same
+8654814,latest_filed_quarter_v1,8-K,value_same
+8655956,latest_filed_fy_v1,8-K,value_changed
+8656091,latest_filed_fy_v1,8-K,value_same
+8687565,latest_filed_fy_v1,8-K,value_same
+1906468,latest_filed_quarter_v1,8-K,value_changed
+1906471,latest_filed_quarter_v1,8-K,value_changed
+1911649,latest_filed_quarter_v1,8-K,value_changed
+1911656,latest_filed_quarter_v1,8-K,value_changed
+2039164,latest_filed_fy_v1,DEFR14A,value_changed
+2039179,latest_filed_fy_v1,DEFR14A,value_changed
+2039194,latest_filed_fy_v1,DEFR14A,value_changed
+2039208,latest_filed_fy_v1,DEFR14A,value_changed
+2039219,latest_filed_fy_v1,DEFR14A,value_changed
+2401522,latest_filed_fy_v1,DEF 14A,value_changed
+2401542,latest_filed_fy_v1,DEF 14A,value_changed
+2401561,latest_filed_fy_v1,DEF 14A,value_changed
+11702931,latest_filed_quarter_v1,8-K,value_changed
+11702954,latest_filed_quarter_v1,8-K,value_changed
+11702972,latest_filed_quarter_v1,8-K,value_changed
+13208389,latest_filed_fy_v1,8-K,value_same
+13209058,latest_filed_fy_v1,8-K,value_same
+13214553,latest_filed_fy_v1,8-K,value_same
+86860198,latest_filed_fy_v1,DEF 14A,value_to_blank
+86860212,latest_filed_fy_v1,DEF 14A,value_to_blank
+86860226,latest_filed_fy_v1,DEF 14A,value_to_blank
+86860239,latest_filed_fy_v1,DEF 14A,value_to_blank
+86860246,latest_filed_fy_v1,DEF 14A,value_to_blank
+203398294,latest_filed_fy_v1,DEF 14A,value_changed
+203398308,latest_filed_fy_v1,DEF 14A,value_changed
+203398321,latest_filed_fy_v1,DEF 14A,value_changed
+203398333,latest_filed_fy_v1,DEF 14A,value_changed
+7468142,latest_filed_fy_v1,8-K,value_changed
+7497262,latest_filed_fy_v1,8-K,value_same
+7505670,latest_filed_fy_v1,8-K,value_changed
+7505686,latest_filed_quarter_v1,8-K,value_changed
+7505737,latest_filed_quarter_v1,8-K,value_changed
+7505764,latest_filed_quarter_v1,8-K,value_changed
+7546182,latest_filed_fy_v1,8-K,value_changed
+12854358,latest_filed_fy_v1,8-K,value_changed
+12873387,latest_filed_fy_v1,8-K,value_changed
+12893777,latest_filed_fy_v1,8-K,value_changed
+12895180,latest_filed_fy_v1,8-K,value_changed
+12896293,latest_filed_fy_v1,8-K,value_changed
+12897688,latest_filed_quarter_v1,8-K,value_same
+12897724,latest_filed_quarter_v1,8-K,value_same
+12898274,latest_filed_quarter_v1,8-K,value_changed
+12898289,latest_filed_quarter_v1,8-K,value_changed
+12898302,latest_filed_quarter_v1,8-K,value_changed
+12914462,latest_filed_fy_v1,8-K,value_changed
+12914468,latest_filed_quarter_v1,8-K,value_changed
+12914475,latest_filed_quarter_v1,8-K,value_changed
+12914482,latest_filed_quarter_v1,8-K,value_changed
+13182717,latest_filed_fy_v1,DEF 14A,value_changed
+13182792,latest_filed_fy_v1,DEF 14A,value_changed
+13182879,latest_filed_fy_v1,DEF 14A,value_changed
+13182999,latest_filed_fy_v1,DEF 14A,value_changed
+13183055,latest_filed_fy_v1,DEF 14A,value_changed
+13615590,latest_filed_fy_v1,8-K,value_changed
+13619040,latest_filed_fy_v1,8-K,value_changed
+13622348,latest_filed_fy_v1,8-K,value_changed
+13674470,latest_filed_fy_v1,8-K,value_changed
+15837451,latest_filed_fy_v1,8-K,value_changed
+15837463,latest_filed_quarter_v1,8-K,value_changed
+15837473,latest_filed_quarter_v1,8-K,value_changed
+15837482,latest_filed_quarter_v1,8-K,value_changed
+15848674,latest_filed_fy_v1,8-K,value_same
+15849384,latest_filed_fy_v1,8-K,value_same
+15850570,latest_filed_fy_v1,8-K,value_changed
