@@ -49,6 +49,7 @@ def load_cal(cal_dir, adsh):
 
 
 _FSN_CAL_CACHE = {}
+FSN_ERA = {}  # adsh -> taxonomy year of the filing's balance-sheet parent (from cal.tsv pversion)
 
 
 def fsn_cal_arcs(cal_tsv_path, adsh, pre_tsv_path=None):
@@ -75,6 +76,7 @@ def fsn_cal_arcs(cal_tsv_path, adsh, pre_tsv_path=None):
         by = defaultdict(lambda: defaultdict(list))  # adsh -> grp -> [(parent, child, weight, custom)]
         for r in csv.DictReader(fh, delimiter="\t"):
             custom = not r.get("cversion", "").startswith(("us-gaap", "srt", "dei", "ifrs"))
+            FSN_ERA.setdefault(r["adsh"], (r.get("pversion") or "").split("/")[-1] or None)
             by[r["adsh"]][r["grp"]].append((r["ptag"], r["ctag"], str(float(r.get("negative") or "1")), custom))
         _FSN_CAL_CACHE[key] = by
     groups = _FSN_CAL_CACHE[key].get(adsh, {})

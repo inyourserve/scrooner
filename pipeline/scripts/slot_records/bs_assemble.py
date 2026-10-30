@@ -11,6 +11,7 @@ flags, face-admission for standard tags.
 usage: bs_assemble.py <bs_eras.json> <bs_cal_dir> <cohort_bs_dims.jsonl.gz> <out.jsonl>
 """
 import gzip
+import os
 import json
 import re
 import sys
@@ -42,12 +43,28 @@ with gzip.open(sys.argv[3], "rt") as f:
 
 out = open(sys.argv[4], "w")
 summary = []
+FSN_QUARTER_OF = {}
+if os.environ.get("FSN_ROOT"):  # adsh -> quarter, from the sub extracts
+    import csv
+    import subprocess
+    import io
+    csv.field_size_limit(10**9)
+    for subf in sorted(Path(os.environ["FSN_ROOT"]).glob("20*/*_sub.tsv.zst")):
+        fh = io.TextIOWrapper(subprocess.Popen(["zstd", "-dc", str(subf)], stdout=subprocess.PIPE).stdout, encoding="utf-8", errors="replace")
+        for r in csv.DictReader(fh, delimiter="\t"):
+            FSN_QUARTER_OF[r["adsh"]] = subf.parent.name
 ARC_WEIGHT = {}  # (adsh, child) -> weight in the statement role (VMI: deferred taxes carry -1)
 
 
 def load_cal(adsh):
     """The boundary filing's statement-role calc arcs (shared loader: _cal.xml -> .xsd -> MetaLinks)."""
     era, arcs = common.load_cal(cal_dir, adsh)
+    if not arcs and os.environ.get("FSN_ROOT"):
+        # no SEC-fetched cal on disk: the Notes data set's cal.tsv for the filing's quarter (zero SEC requests)
+        q = FSN_QUARTER_OF.get(adsh)
+        if q:
+            arcs = common.fsn_cal_arcs(Path(os.environ["FSN_ROOT"]) / q / f"{q}_cal.tsv.zst", adsh)
+            era = common.FSN_ERA.get(adsh) if arcs else None
     for (role, parent), kids in arcs.items():
         if b.BS_ROLE_RX.search(role) and not b.NOTE_ROLE_RX.search(role):
             for c, w, _cu in kids:
