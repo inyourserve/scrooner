@@ -133,7 +133,10 @@ jobs:
           SUPABASE_URL: http://localhost
           SUPABASE_SERVICE_ROLE_KEY: ci-placeholder
           SEC_USER_AGENT: scrooner-ci ci@example.com
-        run: uv run --project pipeline pytest pipeline/tests -m integration -q
+        # test_shared_accession_sql.py rebuilds `core` from a DDL fragment (drop
+        # schema core cascade): it cannot share a database with the migrated schema
+        # these tests need, so it stays opt-in (SCROONER_TEST_DATABASE_URL locally).
+        run: uv run --project pipeline pytest pipeline/tests -m integration -q --ignore=pipeline/tests/unit/test_shared_accession_sql.py
       - name: Check local documentation links
         run: python scripts/check_docs.py
       - name: Check common secret patterns
