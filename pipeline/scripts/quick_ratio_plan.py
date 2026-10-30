@@ -27,7 +27,6 @@ from datetime import date
 from pathlib import Path
 
 import psycopg
-
 from scrooner_pipeline.mapper import quick_ratio_evidence as qe
 from scrooner_pipeline.mapper import quick_ratio_face as qf
 
