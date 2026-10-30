@@ -169,3 +169,36 @@ def test_a_wip_line_that_is_also_a_contract_asset_is_not_inventory(tmp_path):
     assert (
         got[A3].inventory_dates == {D1} and got[A3].wip_only_dates == frozenset()
     )  # finished goods beside it
+
+
+def test_a_face_without_current_subtotals_is_unclassified(tmp_path):
+    # FTAI 0001590364-24-000003 presents Total assets / Total liabilities only; a custom-tagged subtotal counts by label
+    b1, b2, b3 = "0001-25-000011", "0001-25-000012", "0001-25-000013"
+    z = make_zip(
+        tmp_path,
+        [
+            pre(b1, "BS", "Assets", "Total assets"), pre(b1, "BS", "Liabilities", "Total liabilities"),
+            pre(b1, "BS", "InventoryNet", "Inventory"),
+            pre(b2, "BS", "AssetsCurrent", "Total"), pre(b2, "BS", "LiabilitiesCurrent", "Total"),  # EOG labels
+            pre(b3, "BS", "AssetsCurrent", "Total current assets"),
+            pre(b3, "BS", "abc_CurrentLiabilitiesTotal", "Total current liabilities"),
+        ],
+        [num(b, "Assets" if b == b1 else "AssetsCurrent", "20241231", "100") for b in (b1, b2, b3)],
+    )  # fmt: skip
+    got = qf.balance_sheet_faces(z, {b1, b2, b3})
+    assert (got[b1].classified, got[b2].classified, got[b3].classified) == (
+        False,
+        True,
+        True,
+    )
+    f = tmp_path / "face.jsonl"
+    qf.write_jsonl(f, got, "fsds:2024q1")
+    back = qf.load_jsonl(f)
+    assert back[b1].classified is False and back[b2].classified is True
+    old = (
+        tmp_path / "old.jsonl"
+    )  # records written before the field existed read as classified
+    old.write_text(
+        '{"accession": "x", "statement_dates": [], "inventory_dates": [], "materials_dates": []}\n'
+    )
+    assert qf.load_jsonl(old)["x"].classified is True

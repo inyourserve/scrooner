@@ -22,6 +22,8 @@ For a cell with no inventory fact at its date, with CA = current assets of that 
     the statement shows the date and no such line -> the zero stands; the statement does not show the date (a later
     filing with newer columns only, no readable pages) -> NULL ``inventory_statement_unavailable`` (never a guess,
     never decided from the latest statements or from a comparative column: BBIO, SWX, TGTX, IOVA, DVN, GOOG, T ...).
+A balance sheet with no current-assets or no current-liabilities subtotal (unclassified: FTAI 2023-12-31) has no
+quick ratio at all -> NULL ``balance_sheet_unclassified``, whether or not an inventory value exists.
 Every NULL carries its reason; the rule never guesses a value.
 
 ``MATERIALS_AND_SUPPLIES_ARE_INVENTORY`` is a named switch: whether "materials and supplies" lines count as inventory
@@ -30,8 +32,9 @@ is a definition call for the Standardization Lead (CP 2017-03-31, XOM, LNT, WEC)
 
 from __future__ import annotations
 
+from calendar import monthrange
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 from itertools import combinations
 from typing import Any
@@ -44,20 +47,29 @@ MATERIALS_AND_SUPPLIES_ARE_INVENTORY = True
 
 # ONE mapping table from cause to the reason code shown to the reader: changing a code is a one-line edit here.
 # Precedence when several apply (one reason per cell, first wins): materials > not_authoritative > unavailable >
-# presented > review (RECORD-INVENTORY2 section 6).
+# presented > review (RECORD-INVENTORY2 section 6). An unclassified balance sheet comes first: it has no ratio at all.
 HIDE_REASONS = {
+    "unclassified": "incomplete:balance_sheet_unclassified",
     "materials": "incomplete:materials_supplies_line_present",
     "not_authoritative": "incomplete:inventory_fact_not_authoritative",
     "unavailable": "incomplete:inventory_statement_unavailable",
     "presented": "incomplete:inventory_presented_not_extracted",
     "review": "incomplete:inventory_value_under_review",
 }
-PRECEDENCE = ("materials", "not_authoritative", "unavailable", "presented", "review")
+PRECEDENCE = (
+    "unclassified",
+    "materials",
+    "not_authoritative",
+    "unavailable",
+    "presented",
+    "review",
+)
 REASON_MATERIALS = HIDE_REASONS["materials"]
 REASON_NOT_AUTHORITATIVE = HIDE_REASONS["not_authoritative"]
 REASON_UNAVAILABLE = HIDE_REASONS["unavailable"]
 REASON_PRESENTED = HIDE_REASONS["presented"]
 REASON_REVIEW = HIDE_REASONS["review"]
+REASON_UNCLASSIFIED = HIDE_REASONS["unclassified"]
 # Registrants whose WIP line was read in their own policy note as client billable costs (not inventory, all years):
 # {cik: filing and paragraph}. The note-text guard applies only after someone read the note, never on a caption.
 CONTRACT_ASSET_NOTE_READ = {
@@ -157,6 +169,9 @@ class PeriodFace:
 
     inventory_line: bool  # a presented inventory line with a nonzero value
     materials_line: bool  # a presented materials-and-supplies line (not inventory-named) with a value
+    unclassified: bool = (
+        False  # no current-assets or no current-liabilities subtotal on the face
+    )
 
 
 @dataclass(frozen=True)
@@ -207,6 +222,7 @@ def hide_cause(
 ) -> str | None:
     """The cause (key of HIDE_REASONS) that hides the quick ratio of this cell, or None when the value stays.
 
+    An unclassified balance sheet (no current subtotals on the face) hides the cell in every case.
     ``inventory_present``: our canonical data holds an authoritative inventory value for the date, so the formula
     runs; then only the materials-and-supplies rule can hide it. Otherwise (the f67a927 class: a missing inventory
     would be treated as zero) the period's own statement decides, per date column:
@@ -220,6 +236,9 @@ def hide_cause(
     lines = ctx.lines_by_date.get(end, {})
     ca = current_assets if current_assets is not None else lines.get(CURRENT_ASSETS_TAG)
     causes: set[str] = set()
+    face = ctx.face_by_date.get(end)
+    if face is not None and face.unclassified:
+        causes.add("unclassified")
     if _materials_cause(ctx, end, ca):
         causes.add("materials")
     if not inventory_present and not (
@@ -227,7 +246,6 @@ def hide_cause(
     ):
         like = ctx.inventory_like.get(end, {})
         has_member = any(0 < v <= (ca if ca is not None else v) for v in like.values())
-        face = ctx.face_by_date.get(end)
         if end in ctx.nonauthoritative_dates:
             causes.add("not_authoritative")
         elif face is None and end in ctx.face_hide_dates and not has_member:
@@ -292,13 +310,20 @@ def _accession_year(accession: str) -> int:
     return 2000 + yy if yy < 90 else 1900 + yy
 
 
+def _nearest_month_end(d: date) -> date:
+    this_end = date(d.year, d.month, monthrange(d.year, d.month)[1])
+    prev_end = d.replace(day=1) - timedelta(days=1)
+    return this_end if (this_end - d) <= (d - prev_end) else prev_end
+
+
 def _column(d: date, dates: frozenset[date]) -> date | None:
-    """The data-set column for a balance-sheet date. FSDS rounds 52/53-week year-ends to the month end
-    (2020-09-27 appears as 2020-09-30), so a date within 6 days counts."""
+    """The data-set column for a balance-sheet date. FSDS rounds every ddate to the NEAREST month end, so a
+    52/53-week date matches that month end only (2020-09-27 -> 2020-09-30; RAVE 2023-12-24 -> 2023-12-31, 7 days,
+    which a fixed day window missed; MU 2021-09-02 -> 2021-08-31)."""
     if d in dates:
         return d
-    near = [x for x in dates if abs((x - d).days) <= 6]
-    return min(near, key=lambda x: abs((x - d).days)) if near else None
+    rounded = _nearest_month_end(d)
+    return rounded if rounded in dates else None
 
 
 def default_face() -> dict[str, Any]:
@@ -411,7 +436,9 @@ def load_context(
         if wip_excluded and inv_col is not None and inv_col in f.wip_only_dates:
             inv_col = None  # the registrant's own note reads this line as client billable costs
         face_by_date[d] = PeriodFace(
-            inv_col is not None, _column(d, f.materials_dates) is not None
+            inv_col is not None,
+            _column(d, f.materials_dates) is not None,
+            not f.classified,
         )
     return Context(
         None if row is None else row[0],
@@ -520,7 +547,7 @@ def plan_quick_ratio(
                 PlannedCell(cid, cik_of[cid], str(end), label, str(value), None, reason,
                             None if cur_ratio is None else str(cur_ratio), equal,
                             ctx[cid].accession_by_date.get(end),
-                            "hide" if supplies_path or equal else "flag_keep")
+                            "hide" if supplies_path or equal or reason == REASON_UNCLASSIFIED else "flag_keep")
             )  # fmt: skip
     return out
 

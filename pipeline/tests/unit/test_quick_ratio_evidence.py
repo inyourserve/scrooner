@@ -81,6 +81,7 @@ def test_inventory_like_tags_exclude_flows_reserves_noncurrent_lines_and_materia
 
 def test_reason_codes_come_from_one_mapping_table_and_the_precedence_is_the_record_s():
     assert qe.PRECEDENCE == (
+        "unclassified",
         "materials",
         "not_authoritative",
         "unavailable",
@@ -88,6 +89,7 @@ def test_reason_codes_come_from_one_mapping_table_and_the_precedence_is_the_reco
         "review",
     )
     assert qe.HIDE_REASONS == {
+        "unclassified": "incomplete:balance_sheet_unclassified",
         "materials": "incomplete:materials_supplies_line_present",
         "not_authoritative": "incomplete:inventory_fact_not_authoritative",
         "unavailable": "incomplete:inventory_statement_unavailable",
@@ -534,10 +536,11 @@ D0 = date(2025, 6, 30)
 ACC = "0000000001-26-000001"
 
 
-def AF(dates, inventory=(), materials=(), wip=()):
+def AF(dates, inventory=(), materials=(), wip=(), classified=True):
     return AccessionFace(
-        frozenset(dates), frozenset(inventory), frozenset(materials), frozenset(wip)
-    )
+        frozenset(dates), frozenset(inventory), frozenset(materials), frozenset(wip),
+        classified,
+    )  # fmt: skip
 
 
 def load(conn_tables, face, **kw):
@@ -911,3 +914,107 @@ def test_when_the_face_shows_no_inventory_line_the_zero_stands_on_recompute(
     )
     row = _recompute(monkeypatch, ca, cl, inv, context, rule_on=True)
     assert row["value"] == ca / cl and row["is_null_reason"] is None
+
+
+# ---------------------------------------------------------------- Verifier 2 V5 (VERIFY-QUICK-RATIO-5-2026-10-26)
+RAVE_Q2, RAVE_Q3 = date(2023, 12, 24), date(2024, 3, 24)
+
+
+def test_fsds_rounds_to_the_nearest_month_end_even_seven_days_away():
+    # RAVE (0000718332) 10-Qs 0001140361-24-005023 / -023848: the data set shows 2023-12-31 and 2024-03-31 for the
+    # balance sheets of 2023-12-24 and 2024-03-24 (7 days); a fixed 6-day window called the statement unavailable
+    assert qe._column(RAVE_Q2, frozenset({date(2023, 12, 31)})) == date(2023, 12, 31)
+    assert qe._column(RAVE_Q3, frozenset({date(2024, 3, 31)})) == date(2024, 3, 31)
+    assert qe._column(date(2021, 9, 2), frozenset({date(2021, 8, 31)})) == date(
+        2021, 8, 31
+    )  # MU
+    # the rounding is to ONE month end; never to the next nearest column in the set
+    assert qe._column(date(2024, 3, 10), frozenset({date(2024, 3, 31)})) is None
+    assert qe._column(RAVE_Q2, frozenset({date(2023, 9, 30)})) is None
+
+
+def test_rave_readable_statement_with_no_inventory_line_keeps_the_value():
+    acc2, acc3 = "0001140361-24-005023", "0001140361-24-023848"
+    face = {
+        acc2: AF({date(2023, 9, 30), date(2023, 12, 31)}),
+        acc3: AF({date(2023, 9, 30), date(2024, 3, 31)}),
+    }
+    c = load(tables(periodic=[(RAVE_Q2, acc2), (RAVE_Q3, acc3)]), face)
+    assert not c.face_hide_dates
+    assert c.face_by_date == {
+        RAVE_Q2: qe.PeriodFace(False, False),
+        RAVE_Q3: qe.PeriodFace(False, False),
+    }
+    for d in (RAVE_Q2, RAVE_Q3):
+        assert qe.inventory_missing_reason(c, d, NOFOOT["AssetsCurrent"]) is None
+
+
+def test_eog_2015_q1_statement_is_readable_so_the_reason_is_presented_not_unavailable():
+    # EOG 10-Q 0000821189-15-000023: the face shows 2015-03-31 with "Inventories" (current assets 4,793,368 thousand)
+    acc, d = "0000821189-15-000023", date(2015, 3, 31)
+    c = load(
+        tables(periodic=[(d, acc)]),
+        {acc: AF({date(2014, 12, 31), d}, {date(2014, 12, 31), d})},
+    )
+    assert c.face_by_date == {d: qe.PeriodFace(True, False)} and not c.face_hide_dates
+    assert (
+        qe.inventory_missing_reason(c, d, NOFOOT["AssetsCurrent"])
+        == qe.REASON_PRESENTED
+    )
+
+
+def test_an_unclassified_balance_sheet_hides_the_quick_ratio_with_or_without_inventory():
+    # FTAI 10-K FY2023 0001590364-24-000003: Total assets / Total liabilities only, no current subtotals; stored 1.9511
+    acc, d = "0001590364-24-000003", date(2023, 12, 31)
+    c = load(tables(periodic=[(d, acc)]), {acc: AF({d}, {d}, classified=False)})
+    assert c.face_by_date == {d: qe.PeriodFace(True, False, True)}
+    assert (
+        qe.inventory_missing_reason(c, d, NOFOOT["AssetsCurrent"])
+        == qe.REASON_UNCLASSIFIED
+    )
+    assert (
+        qe.materials_supplies_reason(c, d, NOFOOT["AssetsCurrent"])
+        == qe.REASON_UNCLASSIFIED
+    )
+    # it outranks every other cause (materials on the face, a foot that would keep the zero)
+    both = qe.Context(None, {d: NOFOOT}, {}, {}, {d: qe.PeriodFace(True, True, True)})
+    assert qe.hide_cause(both, d, None, inventory_present=False) == "unclassified"
+    foots = M(AssetsCurrent=100, CashAndCashEquivalentsAtCarryingValue=100)
+    assert qe.hide_cause(qe.Context(None, {d: foots}, {}, {}, {d: qe.PeriodFace(False, False, True)}),
+                         d, None, inventory_present=False) == "unclassified"  # fmt: skip
+
+
+def test_calculate_hides_a_computed_quick_ratio_on_an_unclassified_balance_sheet(
+    monkeypatch,
+):
+    ca, *_ = FIXTURES["NKE"]
+    c = qe.Context(
+        None,
+        {END: {"AssetsCurrent": ca}},
+        {},
+        {},
+        {END: qe.PeriodFace(True, False, True)},
+    )
+    row = _run(monkeypatch, "NKE", with_inventory=True, rule_on=True, context=c)
+    assert row["value"] is None and row["is_null_reason"] == qe.REASON_UNCLASSIFIED
+    off = _run(monkeypatch, "NKE", with_inventory=True, rule_on=False, context=c)
+    assert off["value"] is not None  # flag off: nothing changes
+
+
+def test_planner_hides_an_unclassified_cell_even_when_it_differs_from_the_current_ratio():
+    face = {
+        "0000000001-26-000001": AF({END}, {END}, classified=False),  # 2.075 == current
+        "0000000001-25-000003": AF(
+            {D0}, {D0}, classified=False
+        ),  # 2.0 != current 2.5: hidden, not flag_keep
+    }
+    got = qe.plan_quick_ratio(_planner_conn([]), [1, 2], face=face)
+    by = {(p.company_id, p.period_end): (p.reason, p.outcome) for p in got}
+    assert by == {
+        (1, "2026-06-30"): (qe.REASON_UNCLASSIFIED, "hide"),
+        (1, "2025-06-30"): (qe.REASON_UNCLASSIFIED, "hide"),
+        (2, "2026-06-30"): (
+            qe.REASON_UNCLASSIFIED,
+            "hide",
+        ),  # an inventory value exists: hidden all the same
+    }
