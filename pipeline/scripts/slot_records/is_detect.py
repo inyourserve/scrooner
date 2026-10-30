@@ -205,36 +205,39 @@ def net_income_slot(face, all_rows):
 
 
 def main(src, out_dir):
-    rows = defaultdict(list)
-    for p in sorted(glob.glob(f"{src}/*_is_pre.jsonl.gz")):
-        for line in gzip.open(p, "rt"):
-            r = json.loads(line)
-            rows[r["adsh"]].append(r)
-    arcs = defaultdict(lambda: defaultdict(set))
-    for p in sorted(glob.glob(f"{src}/*_cal.jsonl.gz")):
-        for line in gzip.open(p, "rt"):
-            a = json.loads(line)
-            if a["adsh"] in rows:
-                arcs[a["adsh"]][a["p"]].add(a["c"])
+    # one FSN period at a time: a filing's pre and cal rows live in the period that
+    # carries its submission, so memory stays at one period (the all-at-once load
+    # was paged out under machine-wide swap pressure)
     out = Path(out_dir)
     slots = []
     gates = {f: Counter() for f in ("revenue", "operating_income", "net_income")}
-    for adsh, rs in rows.items():
-        rep, face = primary_face(rs)
-        if not face:
-            continue
-        m = rs[0]
-        face_tags = {r["tag"] for r in face}
-        shape = shape_of(face_tags)
-        a = {p: kids & face_tags for p, kids in arcs.get(adsh, {}).items()}
-        base = {"adsh": adsh, "cik": m["cik"], "form": m["form"], "period": iso(m["period"]),
-                "filed": iso(m["filed"]), "fy": m.get("fy"), "fp": m.get("fp"), "report": rep,
-                "shape": shape, "has_cal": bool(arcs.get(adsh))}
-        for fam, slot in (("revenue", revenue_slot(face, a, shape, face_tags)),
-                          ("operating_income", operating_slot(face, shape)),
-                          ("net_income", net_income_slot(face, rs))):
-            gates[fam][slot["gate"]] += 1
-            slots.append({**base, "family": fam, **slot})
+    for p in sorted(glob.glob(f"{src}/*_is_pre.jsonl.gz")):
+        period = Path(p).name.split("_")[0]
+        rows = defaultdict(list)
+        for line in gzip.open(p, "rt"):
+            r = json.loads(line)
+            rows[r["adsh"]].append(r)
+        arcs = defaultdict(lambda: defaultdict(set))
+        for line in gzip.open(f"{src}/{period}_cal.jsonl.gz", "rt"):
+            a = json.loads(line)
+            if a["adsh"] in rows:
+                arcs[a["adsh"]][a["p"]].add(a["c"])
+        for adsh, rs in rows.items():
+            rep, face = primary_face(rs)
+            if not face:
+                continue
+            m = rs[0]
+            face_tags = {r["tag"] for r in face}
+            shape = shape_of(face_tags)
+            a = {pp: kids & face_tags for pp, kids in arcs.get(adsh, {}).items()}
+            base = {"adsh": adsh, "cik": m["cik"], "form": m["form"], "period": iso(m["period"]),
+                    "filed": iso(m["filed"]), "fy": m.get("fy"), "fp": m.get("fp"), "report": rep,
+                    "shape": shape, "has_cal": bool(arcs.get(adsh))}
+            for fam, slot in (("revenue", revenue_slot(face, a, shape, face_tags)),
+                              ("operating_income", operating_slot(face, shape)),
+                              ("net_income", net_income_slot(face, rs))):
+                gates[fam][slot["gate"]] += 1
+                slots.append({**base, "family": fam, **slot})
     with open(out / "is_filing_slots.jsonl", "w") as f:
         for s in slots:
             f.write(json.dumps(s) + "\n")

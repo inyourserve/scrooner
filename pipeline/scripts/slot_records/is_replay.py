@@ -45,6 +45,12 @@ PERIODIC = ["10-K", "10-K/A", "10-KT", "10-Q", "10-Q/A", "10-QT"]
 SINCE = "2015-01-01"
 
 
+def unit_of(v, cap=Decimal(10) ** 11):
+    """printed rounding unit of one value, uncapped up to 1e11 (production can
+    show a later filing's billions; the shared rounding_unit caps at 1e6)."""
+    return rounding_unit([v], cap=cap)
+
+
 def d(s):
     return dt.date.fromisoformat(s)
 
@@ -195,7 +201,9 @@ def main(slots_path, ciks, out_dir):
                             state = "hold_identity_gap"
                 if state is None:
                     copies = [o for o in os_[1:] if o["gate"] in PUBLISHABLE]
-                    bad = [o for o in copies if abs(o["value"] - v) >= max(unit, rounding_unit([o["value"]]))]
+                    # a copy agrees only within HALF of the coarser printed unit (3,903 is not a
+                    # rounding of 3,902.4; PGR FY2023)
+                    bad = [o for o in copies if abs(o["value"] - v) * 2 > max(unit_of(v), unit_of(o["value"]))]
                     cell["copies"] = len(copies)
                     if bad:
                         state = "hide_restated_copies_disagree"
@@ -230,15 +238,26 @@ def main(slots_path, ciks, out_dir):
                     else:
                         diff = abs(sv - Decimal(pv))
                         unit = rounding_unit([sv])
-                        punit = rounding_unit([Decimal(pv)])
+                        punit = unit_of(Decimal(pv))
+                        unit = unit_of(sv)
+                        same_tag_later = (c.get("prod_tag") == c["slot_tag"] and c.get("prod_accession")
+                                          and c.get("prod_accession") != c["accession"])
                         if diff == 0:
                             c["compare"] = "agree"
-                        elif diff < unit:
+                        elif diff * 2 <= unit:
                             c["compare"] = "differs_within_rounding"
                         elif punit > unit and diff * 2 <= punit:
                             # production shows a rounding of the filed number (a later filing
                             # printed in millions/billions): less precise, not a different number
                             c["compare"] = "prod_less_precise"
+                        elif same_tag_later and not c.get("prod_derived"):
+                            # production shows the SAME tag from a later filing with another value:
+                            # a disagreeing copy (restatement, recast or a note figure); founder
+                            # ruling: restated periods whose copies disagree are hidden
+                            c["state"] = "hide_restated_copies_disagree"
+                            c["copies_disagree"] = (c.get("copies_disagree") or []) + [
+                                {"accession": c["prod_accession"], "tag": c["prod_tag"], "value": c["prod_value"], "via": "production_source"}]
+                            c["compare"] = "would_hide"
                         else:
                             c["compare"] = "slot_differs"
                 elif c["state"].startswith("hide"):
