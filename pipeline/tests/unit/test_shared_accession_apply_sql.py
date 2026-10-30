@@ -110,6 +110,11 @@ def seed(conn):
         "insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s, %s, %s, %s, %s)",
         (sub, cc, period, Decimal("71890000000"), [fact]),
     )
+    conn.execute(
+        "insert into analytics.company_stock_split (company_id, effective_date, ratio, raw_value, source_fact_id, source_tag) "
+        "values (%s, '2024-06-01', 10, 10, %s, 'StockholdersEquityNoteStockSplitConversionRatio1')",
+        (sub, fact),
+    )
     return {
         "parent": parent,
         "sub": sub,
@@ -149,6 +154,7 @@ def test_backup_apply_rollback_round_trip(conn, tmp_path, monkeypatch):
         len(img["filing"]) == 1
         and len(img["fact"]) == 1
         and len(img["canonical_fact"]) == 1
+        and len(img["company_stock_split"]) == 1
     )
     manifest = mod.write_backup(tmp_path, plan, img)
     assert set(manifest["tables"]) == {
@@ -156,6 +162,7 @@ def test_backup_apply_rollback_round_trip(conn, tmp_path, monkeypatch):
         "filing_registrant",
         "fact",
         "canonical_fact",
+        "company_stock_split",
     }
 
     # apply refuses with the flag OFF, applies with it ON
@@ -188,6 +195,9 @@ def test_backup_apply_rollback_round_trip(conn, tmp_path, monkeypatch):
     # simulate the follow-on re-normalize: the sub loses the parent's fact, the parent gains one
     conn.execute(
         "delete from analytics.canonical_fact where company_id = %s", (s["sub"],)
+    )
+    conn.execute(
+        "delete from analytics.company_stock_split where company_id = %s", (s["sub"],)
     )
     conn.execute("delete from core.fact where id = %s", (s["fact"],))
     p_period = _one(
@@ -231,6 +241,15 @@ def test_backup_apply_rollback_round_trip(conn, tmp_path, monkeypatch):
             conn, "select count(*) from core.fact where company_id = %s", (s["parent"],)
         )
         == 0
+    )
+    assert stats["stock_splits_restored"] == 1
+    assert (
+        _one(
+            conn,
+            "select source_fact_id from analytics.company_stock_split where company_id = %s",
+            (s["sub"],),
+        )
+        == s["fact"]
     )
     assert mod.live_digests(conn, manifest) == {
         k: v["sha256"] for k, v in manifest["tables"].items()
