@@ -5,7 +5,7 @@ Branch work/engineering/b9-instance-fallback 2c896c0, data-team/44-b9-instance-f
 | Cell | Planned | Face |
 |---|---|---|
 | V Q3 FY2026 OtherNonoperatingIncomeExpense, 3M to 2026-06-30 | 150M | "Investment income (expense) and other" 150 |
-| CAT IntangibleAssetsNetExcludingGoodwill 2026-06-30 | 3,550M | "Other intangible assets - net" 3,550 |
+| JCI (833444) IntangibleAssetsNetExcludingGoodwill 2026-06-30 | 3,550M | "Other intangible assets - net" 3,550 |
 | 1047862 ProceedsFromIssuanceInitialPublicOffering 6M 2026 | 884M | "Issuance of common shares - public offering" 884 |
 | 1109357 NetCashProvidedByUsedInFinancingActivities 6M 2026 | 2,120M | 2,120 |
 | 1967680 PaymentsForRepurchaseOfCommonStock 6M to 2026-07-03 | 434M | (434) |
