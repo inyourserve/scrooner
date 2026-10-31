@@ -1,0 +1,11 @@
+ticker,filings_parsed,face_nondim_facts,exact_match_api,value_differs,custom_tag_not_in_api,stored_face_tag_facts_not_on_face_columns
+AAPL,47,8817,8694,94,29,1118
+AMZN,47,13159,12146,0,1013,451
+AVGO,37,8233,7495,1,737,958
+GOOG,48,9069,8415,0,654,1040
+LLY,47,9453,8959,0,494,804
+META,47,8718,8185,91,442,1174
+MSFT,47,11096,10472,0,624,458
+MU,47,9704,9355,0,349,927
+NVDA,47,9193,8904,0,289,1002
+TSLA,47,11269,9590,0,1679,1046

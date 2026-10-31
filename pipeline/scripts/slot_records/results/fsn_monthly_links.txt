@@ -1,0 +1,12 @@
+2025m10 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2025_10_notes.zip
+2025m11 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2025_11_notes.zip
+2025m12 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2025_12_notes.zip
+2026m01 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_01_notes.zip
+2026m02 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_02_notes.zip
+2026m03 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_03_notes.zip
+2026m04 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_04_notes.zip
+2026m05 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_05_notes.zip
+2026m06 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_06_notes.zip
+2026m07 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_07_notes.zip
+2026m08 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_08_notes.zip
+2026m09 https://www.sec.gov/files/dera/data/financial-statement-notes-data-sets/2026_09_notes.zip

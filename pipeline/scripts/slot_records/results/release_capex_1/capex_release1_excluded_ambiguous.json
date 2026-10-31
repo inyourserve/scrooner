@@ -1,0 +1,182 @@
+[
+ {
+  "cik": 833444,
+  "ticker": "JCI",
+  "end": "2015-12-31",
+  "qtrs": 1,
+  "accession": "0000833444-16-000120",
+  "form": "10-Q",
+  "value": "68000000.0000",
+  "prod_value": "282000000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "value": "68000000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "accession": "0001193125-16-461241",
+  "form": "10-K",
+  "value": "54981000.0000",
+  "prod_value": "52685000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "value": "54981000.0000"
+   },
+   {
+    "tag": "PaymentsToAcquireIntangibleAssets",
+    "label": "Purchases of intangible assets",
+    "nature": "intangible",
+    "value": "13127000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 833444,
+  "ticker": "JCI",
+  "end": "2016-06-30",
+  "qtrs": 3,
+  "accession": "0000833444-16-000197",
+  "form": "10-Q",
+  "value": "209000000.0000",
+  "prod_value": "822000000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "value": "209000000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 1418135,
+  "ticker": "KDP",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "accession": "0001418135-16-000085",
+  "form": "10-Q",
+  "value": "110000000.0000",
+  "prod_value": "33000000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "label": "Purchase of property, plant and equipment",
+    "nature": "ppe",
+    "value": "110000000.0000"
+   },
+   {
+    "tag": "PaymentsToAcquireIntangibleAssets",
+    "label": "Purchase of intangible assets",
+    "nature": "intangible",
+    "value": "1000000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 704532,
+  "ticker": "ONTO",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "accession": "0001564590-18-003134",
+  "form": "10-K",
+  "value": "5204000.0000",
+  "prod_value": "10210000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "label": "Purchases of property, plant and equipment",
+    "nature": "ppe",
+    "value": "5204000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 704532,
+  "ticker": "ONTO",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "accession": "0001564590-19-004083",
+  "form": "10-K",
+  "value": "7486000.0000",
+  "prod_value": "7542000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "label": "Purchases of property, plant and equipment",
+    "nature": "ppe",
+    "value": "7486000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 704532,
+  "ticker": "ONTO",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "accession": "0001564590-19-027480",
+  "form": "10-Q",
+  "value": "8314000.0000",
+  "prod_value": "2654000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "label": "Purchases of property, plant and equipment",
+    "nature": "ppe",
+    "value": "8314000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 1324948,
+  "ticker": "RBC",
+  "end": "2021-03-31",
+  "qtrs": 4,
+  "accession": "0001213900-21-028445",
+  "form": "10-K",
+  "value": "11772000.0000",
+  "prod_value": "11800000",
+  "members": [
+   {
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "label": "Purchase of property, plant and equipment",
+    "nature": "ppe",
+    "value": "11772000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "rounding_only",
+  "reason": "ambiguous_period_match"
+ }
+]

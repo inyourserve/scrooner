@@ -1,0 +1,2763 @@
+{
+ "seed": 20261101,
+ "source": "results/cf_da_capex_v10/cells.jsonl.gz",
+ "strata": {
+  "da_published_prod_differs": {
+   "population": 1722,
+   "drawn": [
+    {
+     "ticker": "FIX",
+     "cik": 1035983,
+     "end": "2022-12-31",
+     "qtrs": 4,
+     "accession": "0001558370-23-001757",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "81347000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "33600000",
+     "lines": [
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of identifiable intangible assets",
+       "nature": "asset_da",
+       "value": "47795000.0000",
+       "custom": false
+      },
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation expense",
+       "nature": "asset_da",
+       "value": "33552000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCosts",
+       "label": "Amortization of debt financing costs",
+       "nature": "excluded",
+       "value": "786000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CME",
+     "cik": 1156375,
+     "end": "2019-12-31",
+     "qtrs": 4,
+     "accession": "0001156375-20-000013",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "473300000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "314700000.0000",
+     "prod_value": "158600000",
+     "lines": [
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of purchased intangibles",
+       "nature": "asset_da",
+       "value": "314700000.0000",
+       "custom": false
+      },
+      {
+       "tag": "DepreciationAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "158600000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "GNRC",
+     "cik": 1474735,
+     "end": "2019-12-31",
+     "qtrs": 4,
+     "accession": "0001437749-20-003516",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "60909000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "28644000.0000",
+     "prod_value": "60767000",
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "32265000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of intangible assets",
+       "nature": "asset_da",
+       "value": "28644000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCostsAndDiscounts",
+       "label": "Amortization of original issue discount and deferred financing costs",
+       "nature": "excluded",
+       "value": "4712000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "JEF",
+     "cik": 96223,
+     "end": "2018-11-30",
+     "qtrs": 4,
+     "accession": "0000096223-19-000009",
+     "form": "10-KT",
+     "family": "d_and_a",
+     "value": "67407000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "120317000",
+     "lines": [
+      {
+       "tag": "DepreciationAndAmortizationOfPropertyEquipmentAndLeaseholdImprovements",
+       "label": "Depreciation and amortization of property, equipment and leasehold improvements",
+       "nature": "asset_da",
+       "value": "105156000.0000",
+       "custom": true
+      },
+      {
+       "tag": "OtherDepreciationAndAmortization",
+       "label": "Other amortization",
+       "nature": "asset_da",
+       "value": "-37749000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "SPG",
+     "cik": 1063761,
+     "end": "2022-09-30",
+     "qtrs": 3,
+     "accession": "0001558370-22-016109",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "955767000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "910190000",
+     "lines": [
+      {
+       "tag": "DepreciationAndAmortizationCashFlows",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "955767000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "OLLI",
+     "cik": 1639300,
+     "end": "2025-07-31",
+     "qtrs": 2,
+     "accession": "0001140361-25-033812",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "26261000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "19273000",
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation and amortization of property and equipment",
+       "nature": "asset_da",
+       "value": "26261000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCosts",
+       "label": "Amortization of debt issuance costs",
+       "nature": "excluded",
+       "value": "26000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "GME",
+     "cik": 1326380,
+     "end": "2015-10-31",
+     "qtrs": 3,
+     "accession": "0001326380-15-000229",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "114500000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "113200000",
+     "lines": [
+      {
+       "tag": "OtherDepreciationAndAmortization",
+       "label": "Depreciation and amortization (including amounts in cost of sales)",
+       "nature": "asset_da",
+       "value": "114500000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CUBE",
+     "cik": 1298675,
+     "end": "2023-09-30",
+     "qtrs": 3,
+     "accession": "0001298675-23-000047",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "153783000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "150672000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortizationCashFlowImpact",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "153783000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "BALL",
+     "cik": 9389,
+     "end": "2024-12-31",
+     "qtrs": 4,
+     "accession": "0001558370-25-001190",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "620000000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "611000000",
+     "lines": [
+      {
+       "tag": "DepreciationAndAmortizationForSegment",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "620000000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "VLY",
+     "cik": 714310,
+     "end": "2023-12-31",
+     "qtrs": 4,
+     "accession": "0000714310-24-000065",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "83205000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "39768000.0000",
+     "prod_value": "43400000",
+     "lines": [
+      {
+       "tag": "DepreciationAmortizationAndAccretionNet",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "43437000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AccretionAmortizationOfDiscountsAndPremiumsInvestmentsAndBorrowings",
+       "label": "Net accretion of discounts and amortization of premium on securities and borrowings",
+       "nature": "excluded",
+       "value": "-2145000.0000",
+       "custom": true
+      },
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of other intangible assets",
+       "nature": "asset_da",
+       "value": "39768000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "IOVA",
+     "cik": 1425205,
+     "end": "2023-06-30",
+     "qtrs": 2,
+     "accession": "0001558370-23-013988",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "7628000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "5695000",
+     "lines": [
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of intangible assets",
+       "nature": "asset_da",
+       "value": "1933000.0000",
+       "custom": false
+      },
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization of property and equipment",
+       "nature": "asset_da",
+       "value": "5695000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AccretionAmortizationOfDiscountsAndPremiumsInvestments",
+       "label": "Accretion of discounts and premiums on investments",
+       "nature": "excluded",
+       "value": "-855000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "HR",
+     "cik": 1360604,
+     "end": "2017-03-31",
+     "qtrs": 1,
+     "accession": "0001360604-17-000035",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "46213000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "47056000",
+     "lines": [
+      {
+       "tag": "DepreciationAmortizationandOther",
+       "label": "Depreciation, amortization and other",
+       "nature": "asset_da",
+       "value": "46213000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "FR",
+     "cik": 921825,
+     "end": "2026-03-31",
+     "qtrs": 1,
+     "accession": "0000921825-26-000054",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "40058000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "50068000",
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "40058000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCosts",
+       "label": "Amortization of Debt Issuance Costs",
+       "nature": "excluded",
+       "value": "1531000.0000",
+       "custom": false
+      },
+      {
+       "tag": "OtherDepreciationAndAmortization",
+       "label": "Other Amortization, Including Equity Based Compensation",
+       "nature": "excluded",
+       "value": "21057000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "RYN",
+     "cik": 52827,
+     "end": "2020-03-31",
+     "qtrs": 1,
+     "accession": "0000052827-20-000117",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "34329000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "69700000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortizationExcludingLargeDispositions",
+       "label": "Depreciation, depletion and amortization",
+       "nature": "asset_da",
+       "value": "34329000.0000",
+       "custom": true
+      },
+      {
+       "tag": "AmortizationOfLossesGainsFromPensionAndPostretirementPlansIncludedInNetPeriodicBenefitCost",
+       "label": "Amortization of losses from pension and postretirement plans",
+       "nature": "excluded",
+       "value": "217000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "CHDN",
+     "cik": 20212,
+     "end": "2016-06-30",
+     "qtrs": 2,
+     "accession": "0000020212-16-000086",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "61400000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "53900000",
+     "lines": [
+      {
+       "tag": "DepreciationAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "53900000.0000",
+       "custom": false
+      },
+      {
+       "tag": "GamingTechnologyandRightsAmortization",
+       "label": "Software development amortization",
+       "nature": "asset_da",
+       "value": "7500000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "MSCI",
+     "cik": 1408198,
+     "end": "2018-09-30",
+     "qtrs": 3,
+     "accession": "0001564590-18-026397",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "65591000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "42556000.0000",
+     "prod_value": "23035000",
+     "lines": [
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization of intangible assets",
+       "nature": "asset_da",
+       "value": "42556000.0000",
+       "custom": false
+      },
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization of property, equipment and leasehold improvements",
+       "nature": "asset_da",
+       "value": "23035000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCosts",
+       "label": "Amortization of debt origination fees",
+       "nature": "excluded",
+       "value": "2730000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "VNO",
+     "cik": 899689,
+     "end": "2019-09-30",
+     "qtrs": 3,
+     "accession": "0000899689-19-000072",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "326390000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "341951000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization (including amortization of deferred financing costs)",
+       "nature": "asset_da",
+       "value": "341951000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfBelowMarketLease",
+       "label": "Amortization of below-market leases, net",
+       "nature": "asset_da",
+       "value": "-15561000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "HALO",
+     "cik": 1159036,
+     "end": "2024-03-31",
+     "qtrs": 1,
+     "accession": "0001159036-24-000037",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "20206000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "17763000.0000",
+     "prod_value": "2443000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "2443000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of intangibles",
+       "nature": "asset_da",
+       "value": "17763000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfDebtDiscountPremium",
+       "label": "Amortization of debt discount",
+       "nature": "excluded",
+       "value": "1830000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AccretionAmortizationOfDiscountsAndPremiumsInvestments",
+       "label": "Amortization of premium on marketable securities, net",
+       "nature": "excluded",
+       "value": "-2365000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "SGI",
+     "cik": 1206264,
+     "end": "2015-12-31",
+     "qtrs": 4,
+     "accession": "0001206264-16-000106",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "71400000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "93900000",
+     "lines": [
+      {
+       "tag": "DepreciationAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "71400000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCosts",
+       "label": "Amortization of deferred financing costs",
+       "nature": "excluded",
+       "value": "20300000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfDebtDiscountPremium",
+       "label": "Non-cash interest expense on 8.0% Sealy Notes",
+       "nature": "excluded",
+       "value": "6300000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "MRNA",
+     "cik": 1682852,
+     "end": "2025-06-30",
+     "qtrs": 2,
+     "accession": "0001682852-25-000044",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "96000000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "94000000",
+     "lines": [
+      {
+       "tag": "OtherDepreciationAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "96000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "InvestmentIncomeNetAmortizationOfDiscountAndPremium",
+       "label": "Amortization/accretion of investments",
+       "nature": "excluded",
+       "value": "-37000000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "da_published_prod_blank": {
+   "population": 7457,
+   "drawn": [
+    {
+     "ticker": "VLY",
+     "cik": 714310,
+     "end": "2019-09-30",
+     "qtrs": 3,
+     "accession": "0000714310-19-000177",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "51504000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "13175000.0000",
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "DepreciationAmortizationAndAccretionNet",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "38329000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AccretionAmortizationOfDiscountsAndPremiumsInvestmentsAndBorrowings",
+       "label": "Net amortization of premiums and accretion of discounts on securities and borrowings",
+       "nature": "excluded",
+       "value": "21584000.0000",
+       "custom": true
+      },
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of other intangible assets",
+       "nature": "asset_da",
+       "value": "13175000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "RBC",
+     "cik": 1324948,
+     "end": "2021-12-31",
+     "qtrs": 3,
+     "accession": "0001213900-22-006497",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "37355000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "37355000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCosts",
+       "label": "Amortization of deferred financing costs",
+       "nature": "excluded",
+       "value": "17600000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CCK",
+     "cik": 1219601,
+     "end": "2025-09-30",
+     "qtrs": 3,
+     "accession": "0001628280-25-047477",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "340000000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "OtherDepreciationAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "340000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "QSR",
+     "cik": 1618756,
+     "end": "2015-03-31",
+     "qtrs": 1,
+     "accession": "0001193125-15-170663",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "50900000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "DepreciationAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "50900000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCostsAndDiscounts",
+       "label": "Amortization of deferred financing costs and debt issuance discount",
+       "nature": "excluded",
+       "value": "7000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "CostOfGoodsSoldAmortization",
+       "label": "Amortization of cost of sales step-up",
+       "nature": "excluded",
+       "value": "4700000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "MAA",
+     "cik": 912595,
+     "end": "2026-06-30",
+     "qtrs": 2,
+     "accession": "0001193125-26-326153",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "324789000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "324789000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfDebtDiscountPremium",
+       "label": "Amortization of debt issuance costs, discounts and premiums",
+       "nature": "excluded",
+       "value": "3535000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "da_2a_tie": {
+   "population": 70,
+   "drawn": [
+    {
+     "ticker": "TRMB",
+     "cik": 864749,
+     "end": "2017-12-31",
+     "qtrs": 4,
+     "accession": "0000864749-18-000010",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "183400000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "148800000.0000",
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation expense",
+       "nature": "asset_da",
+       "value": "34600000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization expense",
+       "nature": "other_amort",
+       "value": "148800000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "WTW",
+     "cik": 1140536,
+     "end": "2025-12-31",
+     "qtrs": 4,
+     "accession": "0001193125-26-069307",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "418000000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "192000000.0000",
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "226000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "CostOfGoodsAndServicesSoldAmortization",
+       "label": "Amortization",
+       "nature": "other_amort",
+       "value": "192000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "MTB",
+     "cik": 36270,
+     "end": "2026-03-31",
+     "qtrs": 1,
+     "accession": "0000036270-26-000034",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "97000000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "9000000.0000",
+     "prod_value": "79000000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization of premises and equipment",
+       "nature": "asset_da",
+       "value": "79000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfMortgageServicingRightsMSRs",
+       "label": "Amortization of capitalized servicing rights",
+       "nature": "other_amort",
+       "value": "9000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfIntangibleAssets",
+       "label": "Amortization of core deposit and other intangible assets",
+       "nature": "asset_da",
+       "value": "9000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "POWL",
+     "cik": 80420,
+     "end": "2015-06-30",
+     "qtrs": 3,
+     "accession": "0001564590-15-006239",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": "10239000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "345000.0000",
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "9894000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization",
+       "nature": "other_amort",
+       "value": "345000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "TER",
+     "cik": 97210,
+     "end": "2024-12-31",
+     "qtrs": 4,
+     "accession": "0000950170-25-023784",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "119741000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "18764000.0000",
+     "prod_value": "119741000",
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "100977000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization",
+       "nature": "other_amort",
+       "value": "18764000.0000",
+       "custom": false
+      },
+      {
+       "tag": "DefinedBenefitPlanAmortizationOfGainsLosses",
+       "label": "Retirement plans actuarial (gains) losses",
+       "nature": "excluded",
+       "value": "-4355000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "AMD",
+     "cik": 2488,
+     "end": "2025-12-31",
+     "qtrs": 4,
+     "accession": "0000002488-26-000018",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": "3004000000.0000",
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "2254000000.0000",
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "OtherDepreciationAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "750000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization",
+       "nature": "other_amort",
+       "value": "2254000000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "da_combined_other": {
+   "population": 3221,
+   "drawn": [
+    {
+     "ticker": "DECK",
+     "cik": 910521,
+     "end": "2018-03-31",
+     "qtrs": 4,
+     "accession": "0000910521-18-000015",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "da_combined_with_other_items",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "DepreciationAmortizationAndAccretionNet",
+       "label": "Depreciation, amortization and accretion",
+       "nature": "combined_other",
+       "value": "48572000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "MTCH",
+     "cik": 891103,
+     "end": "2026-03-31",
+     "qtrs": 1,
+     "accession": "0000891103-26-000073",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "da_combined_with_other_items",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "33767000.0000",
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "14132000.0000",
+       "custom": false
+      },
+      {
+       "tag": "ImpairmentAndAmortizationOfIntangibleAssets",
+       "label": "Impairments and amortization of intangibles",
+       "nature": "combined_other",
+       "value": "33767000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "FNB",
+     "cik": 37808,
+     "end": "2018-03-31",
+     "qtrs": 1,
+     "accession": "0000037808-18-000012",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "da_combined_with_other_items",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "4218000.0000",
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "DepreciationAmortizationAndAccretionNet",
+       "label": "Depreciation, amortization and accretion",
+       "nature": "combined_other",
+       "value": "23676000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "RRC",
+     "cik": 315852,
+     "end": "2016-12-31",
+     "qtrs": 4,
+     "accession": "0001564590-17-002025",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "da_combined_with_other_items",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "567142000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depletion, depreciation and amortization and impairment",
+       "nature": "combined_other",
+       "value": "567142000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "LW",
+     "cik": 1679273,
+     "end": "2019-05-31",
+     "qtrs": 4,
+     "accession": "0001558370-19-006311",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "da_combined_with_other_items",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "162400000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization of intangibles and debt issuance costs",
+       "nature": "combined_other",
+       "value": "162400000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "da_held_unresolved": {
+   "population": 3591,
+   "drawn": [
+    {
+     "ticker": "ADC",
+     "cik": 917251,
+     "end": "2016-12-31",
+     "qtrs": 4,
+     "accession": "0001144204-17-010652",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "perimeter_line_unresolved",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "23407000",
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "15274000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization",
+       "nature": "other_amort",
+       "value": "8133000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCostsAndDiscounts",
+       "label": "Amortization from financing and credit facility costs",
+       "nature": "excluded",
+       "value": "720000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "JKHY",
+     "cik": 779152,
+     "end": "2020-12-31",
+     "qtrs": 2,
+     "accession": "0000779152-21-000009",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "perimeter_line_unresolved",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation",
+       "nature": "asset_da",
+       "value": "26652000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization",
+       "nature": "other_amort",
+       "value": "61164000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CYTK",
+     "cik": 1061983,
+     "end": "2018-06-30",
+     "qtrs": 2,
+     "accession": "0001564590-18-019996",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "perimeter_line_unresolved",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "1291000",
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation of property and equipment",
+       "nature": "asset_da",
+       "value": "1291000.0000",
+       "custom": false
+      },
+      {
+       "tag": "InterestReceivableAndAmortizationOnInvestments",
+       "label": "Interest receivable and amortization on investments",
+       "nature": "other_amort",
+       "value": "-500000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "PNW",
+     "cik": 764622,
+     "end": "2017-09-30",
+     "qtrs": 3,
+     "accession": "0000764622-17-000074",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "perimeter_line_unresolved",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "445707000",
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization including nuclear fuel",
+       "nature": "asset_da",
+       "value": "445707000.0000",
+       "custom": false
+      },
+      {
+       "tag": "IncreaseDecreaseDeferredFuelAndPurchasedPowerAmortization",
+       "label": "Deferred fuel and purchased power amortization",
+       "nature": "other_amort",
+       "value": "-18153000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "COR",
+     "cik": 1140859,
+     "end": "2025-12-31",
+     "qtrs": 1,
+     "accession": "0001140859-26-000006",
+     "form": "10-Q",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "perimeter_line_unresolved",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": "126113000.0000",
+     "prod_value": "260401000",
+     "lines": [
+      {
+       "tag": "Depreciation",
+       "label": "Depreciation, including amounts charged to cost of goods sold",
+       "nature": "asset_da",
+       "value": "135247000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AdjustmentForAmortization",
+       "label": "Amortization, including amounts charged to interest expense",
+       "nature": "other_amort",
+       "value": "129024000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "RVTY",
+     "cik": 31791,
+     "end": "2021-12-31",
+     "qtrs": 4,
+     "accession": "0000031791-22-000003",
+     "form": "10-K",
+     "family": "d_and_a",
+     "value": null,
+     "reason": "perimeter_line_unresolved",
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "DepreciationDepletionAndAmortization",
+       "label": "Depreciation and amortization",
+       "nature": "asset_da",
+       "value": "358004000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfFinancingCostsAndDiscounts",
+       "label": "Amortization of deferred debt issuance costs, interest rate hedge and accretion of discounts",
+       "nature": "excluded",
+       "value": "4962000.0000",
+       "custom": false
+      },
+      {
+       "tag": "AmortizationOfAcquiredInventoryRevaluation",
+       "label": "Amortization of acquired inventory revaluation",
+       "nature": "other_amort",
+       "value": "35201000.0000",
+       "custom": true
+      }
+     ]
+    }
+   ]
+  },
+  "capex_published_prod_differs": {
+   "population": 1458,
+   "drawn": [
+    {
+     "ticker": "VST",
+     "cik": 1692819,
+     "end": "2019-03-31",
+     "qtrs": 1,
+     "accession": "0001692819-19-000008",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "140000000.0000",
+     "variant_ruling": "140000000.0000",
+     "interim": "140000000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "22000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Capital expenditures, including LTSA prepayments",
+       "nature": "ppe",
+       "disc": false,
+       "value": "118000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireProductiveAssets",
+       "label": "Development and growth expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "22000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "IBRX",
+     "cik": 1326110,
+     "end": "2019-12-31",
+     "qtrs": 4,
+     "accession": "0001564590-20-012816",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "4182000.0000",
+     "variant_ruling": "4182000.0000",
+     "interim": "4182000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "4287000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "4182000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "LHX",
+     "cik": 202058,
+     "end": "2015-12-31",
+     "qtrs": 2,
+     "accession": "0001193125-16-449408",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "51000000.0000",
+     "variant_ruling": "51000000.0000",
+     "interim": "51000000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "49000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Additions of property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "51000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "TSLA",
+     "cik": 1318605,
+     "end": "2024-03-31",
+     "qtrs": 1,
+     "accession": "0001628280-24-017503",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "2773000000.0000",
+     "variant_ruling": "2773000000.0000",
+     "interim": "2773000000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "2777000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property and equipment excluding finance leases, net of sales",
+       "nature": "ppe",
+       "disc": false,
+       "value": "2773000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "PFE",
+     "cik": 78003,
+     "end": "2019-12-31",
+     "qtrs": 4,
+     "accession": "0000078003-20-000014",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "2176000000.0000",
+     "variant_ruling": "2176000000.0000",
+     "interim": "2176000000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "2046000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "2176000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireIntangibleAssets",
+       "label": "Acquisitions of intangible assets",
+       "nature": "intangible",
+       "disc": false,
+       "value": "418000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "SAIC",
+     "cik": 1571123,
+     "end": "2016-10-31",
+     "qtrs": 3,
+     "accession": "0001564590-16-030000",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "13000000.0000",
+     "variant_ruling": "13000000.0000",
+     "interim": "13000000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "11000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Expenditures for property, plant, and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "11000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireProductiveAssets",
+       "label": "Asset acquisition",
+       "nature": "ppe",
+       "disc": false,
+       "value": "2000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "ZWS",
+     "cik": 1439288,
+     "end": "2019-03-31",
+     "qtrs": 4,
+     "accession": "0001439288-19-000021",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "44900000.0000",
+     "variant_ruling": "44900000.0000",
+     "interim": "44900000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "42500000",
+     "lines": [
+      {
+       "tag": "PaymentstoAcquirePropertyPlantandEquipmentIncludingDiscontinuedOperations",
+       "label": "Expenditures for property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "44900000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "SSRM",
+     "cik": 921638,
+     "end": "2025-06-30",
+     "qtrs": 2,
+     "accession": "0000921638-25-000161",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "104962000.0000",
+     "variant_ruling": "104962000.0000",
+     "interim": "104962000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "106281000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Additions to mineral properties, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "104962000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "UMBF",
+     "cik": 101382,
+     "end": "2024-06-30",
+     "qtrs": 2,
+     "accession": "0000950170-24-088982",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "8067000.0000",
+     "variant_ruling": "8067000.0000",
+     "interim": "8067000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "5534000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of premises and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "8067000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "DHI",
+     "cik": 882184,
+     "end": "2020-03-31",
+     "qtrs": 2,
+     "accession": "0000882184-20-000099",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "160600000.0000",
+     "variant_ruling": "160600000.0000",
+     "interim": "160600000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "47600000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Expenditures for property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "47600000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireProductiveAssets",
+       "label": "Expenditures related to rental properties",
+       "nature": "ppe",
+       "disc": false,
+       "value": "113000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "AMRX",
+     "cik": 1723128,
+     "end": "2020-09-30",
+     "qtrs": 3,
+     "accession": "0001723128-20-000026",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "31141000.0000",
+     "variant_ruling": "31141000.0000",
+     "interim": "31141000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "26912000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "26912000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipmentDeposits",
+       "label": "Deposits for future acquisition of property, plant, and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "4229000.0000",
+       "custom": true
+      },
+      {
+       "tag": "PaymentsToAcquireIntangibleAssets",
+       "label": "Acquisition of intangible assets",
+       "nature": "intangible",
+       "disc": false,
+       "value": "3250000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CLF",
+     "cik": 764065,
+     "end": "2018-09-30",
+     "qtrs": 3,
+     "accession": "0000764065-18-000139",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "194700000.0000",
+     "variant_ruling": "194700000.0000",
+     "interim": "194700000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "111400000",
+     "lines": [
+      {
+       "tag": "PropertyPlantandEquipmentCashAdditions",
+       "label": "Purchase of property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "111400000.0000",
+       "custom": true
+      },
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Deposits for property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "83300000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "MOG-A",
+     "cik": 67887,
+     "end": "2024-06-30",
+     "qtrs": 3,
+     "accession": "0000067887-24-000061",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "109616000.0000",
+     "variant_ruling": "109616000.0000",
+     "interim": "109616000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "113823000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchase of property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "109616000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "GSAT",
+     "cik": 1366868,
+     "end": "2015-06-30",
+     "qtrs": 2,
+     "accession": "0001366868-15-000065",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "3668000.0000",
+     "variant_ruling": "3668000.0000",
+     "interim": "3668000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "2325000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Property and equipment additions",
+       "nature": "ppe",
+       "disc": false,
+       "value": "3668000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "MPLX",
+     "cik": 1552000,
+     "end": "2015-12-31",
+     "qtrs": 4,
+     "accession": "0001552000-16-000136",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "264000000.0000",
+     "variant_ruling": "264000000.0000",
+     "interim": "264000000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "334000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Additions to property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "264000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CHDN",
+     "cik": 20212,
+     "end": "2018-09-30",
+     "qtrs": 3,
+     "accession": "0000020212-18-000042",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "125500000.0000",
+     "variant_ruling": "125500000.0000",
+     "interim": "125500000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "19900000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Capital maintenance expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "19900000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireProductiveAssets",
+       "label": "Capital project expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "105600000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "BPOP",
+     "cik": 763901,
+     "end": "2018-09-30",
+     "qtrs": 3,
+     "accession": "0001193125-18-322455",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "60135000.0000",
+     "variant_ruling": "60135000.0000",
+     "interim": "60135000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "53144000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Acquisition of premises and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "53144000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForProceedsFromProductiveAssets",
+       "label": "Premises and equipment and other productive assets",
+       "nature": "ppe",
+       "disc": false,
+       "value": "6991000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "GM",
+     "cik": 1467858,
+     "end": "2017-03-31",
+     "qtrs": 1,
+     "accession": "0001467858-17-000070",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "2005000000.0000",
+     "variant_ruling": "2005000000.0000",
+     "interim": "2005000000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "1730000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Expenditures for property",
+       "nature": "ppe",
+       "disc": false,
+       "value": "2005000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "SGI",
+     "cik": 1206264,
+     "end": "2017-09-30",
+     "qtrs": 3,
+     "accession": "0001206264-17-000148",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "43400000.0000",
+     "variant_ruling": "43400000.0000",
+     "interim": "43400000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "43100000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "43400000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CASY",
+     "cik": 726958,
+     "end": "2019-01-31",
+     "qtrs": 3,
+     "accession": "0000726958-19-000012",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "301323000.0000",
+     "variant_ruling": "301323000.0000",
+     "interim": "301323000.0000",
+     "interim_reason": null,
+     "is_intangible_amort": null,
+     "prod_value": "311165000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchase of property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "301323000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "capex_leased": {
+   "population": 303,
+   "drawn": [
+    {
+     "ticker": "OSK",
+     "cik": 775158,
+     "end": "2023-03-31",
+     "qtrs": 1,
+     "accession": "0000950170-23-015169",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "111500000.0000",
+     "variant_ruling": "112700000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "111500000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Additions to property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "111500000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireEquipmentOnLease",
+       "label": "Additions to equipment held for rental",
+       "nature": "leased",
+       "disc": false,
+       "value": "1200000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "URI",
+     "cik": 1067701,
+     "end": "2020-09-30",
+     "qtrs": 3,
+     "accession": "0001067701-20-000046",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "145000000.0000",
+     "variant_ruling": "930000000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "145000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertySubjectToOrAvailableForOperatingLease",
+       "label": "Purchases of rental equipment",
+       "nature": "leased",
+       "disc": false,
+       "value": "785000000.0000",
+       "custom": true
+      },
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of non-rental equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "145000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CAT",
+     "cik": 18230,
+     "end": "2017-06-30",
+     "qtrs": 2,
+     "accession": "0000018230-17-000245",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "371000000.0000",
+     "variant_ruling": "1124000000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "371000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquireProductiveAssets",
+       "label": "Capital expenditures - excluding equipment leased to others",
+       "nature": "ppe",
+       "disc": false,
+       "value": "371000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireEquipmentOnLease",
+       "label": "Expenditures for equipment leased to others",
+       "nature": "leased",
+       "disc": false,
+       "value": "753000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "PCAR",
+     "cik": 75362,
+     "end": "2026-03-31",
+     "qtrs": 1,
+     "accession": "0001193125-26-191499",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "147200000.0000",
+     "variant_ruling": "317900000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "147200000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Payments for property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "147200000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireEquipmentOnLease",
+       "label": "Acquisitions of equipment for operating leases",
+       "nature": "leased",
+       "disc": false,
+       "value": "170700000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "DE",
+     "cik": 315189,
+     "end": "2018-01-31",
+     "qtrs": 1,
+     "accession": "0001558370-18-001362",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "176300000.0000",
+     "variant_ruling": "542000000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "176300000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "176300000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireEquipmentOnLease",
+       "label": "Cost of equipment on operating leases acquired",
+       "nature": "leased",
+       "disc": false,
+       "value": "365700000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "capex_software": {
+   "population": 2669,
+   "drawn": [
+    {
+     "ticker": "MA",
+     "cik": 1141391,
+     "end": "2021-03-31",
+     "qtrs": 1,
+     "accession": "0001141391-21-000091",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "65000000.0000",
+     "variant_ruling": "144000000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "144000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "65000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireSoftware",
+       "label": "Capitalized software",
+       "nature": "software",
+       "disc": false,
+       "value": "79000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "TTD",
+     "cik": 1671933,
+     "end": "2024-09-30",
+     "qtrs": 3,
+     "accession": "0001671933-24-000122",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "78048000.0000",
+     "variant_ruling": "84756000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "78048000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "78048000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToDevelopSoftware",
+       "label": "Capitalized software development costs",
+       "nature": "software",
+       "disc": false,
+       "value": "6708000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "ETSY",
+     "cik": 1370637,
+     "end": "2021-03-31",
+     "qtrs": 1,
+     "accession": "0001370637-21-000024",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "526000.0000",
+     "variant_ruling": "3752000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "526000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "526000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToDevelopSoftware",
+       "label": "Development of internal-use software",
+       "nature": "software",
+       "disc": false,
+       "value": "3226000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "TYL",
+     "cik": 860731,
+     "end": "2020-03-31",
+     "qtrs": 1,
+     "accession": "0000860731-20-000017",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "9349000.0000",
+     "variant_ruling": "10664000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "9349000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Additions to property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "9349000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForSoftware",
+       "label": "Investment in software",
+       "nature": "software",
+       "disc": false,
+       "value": "1315000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "BGC",
+     "cik": 1094831,
+     "end": "2024-09-30",
+     "qtrs": 3,
+     "accession": "0001628280-24-046648",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "23312000.0000",
+     "variant_ruling": "54724000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "23312000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of fixed assets",
+       "nature": "ppe",
+       "disc": false,
+       "value": "23312000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForSoftware",
+       "label": "Capitalization of software development costs",
+       "nature": "software",
+       "disc": false,
+       "value": "31412000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "VEEV",
+     "cik": 1393052,
+     "end": "2020-10-31",
+     "qtrs": 1,
+     "accession": "0001628280-20-017286",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": "3316000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": null,
+     "lines": [
+      {
+       "tag": "PaymentsForSoftware",
+       "label": "Long-term assets",
+       "nature": "software",
+       "disc": false,
+       "value": "3316000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "capex_discontinued": {
+   "population": 3,
+   "drawn": [
+    {
+     "ticker": "EQT",
+     "cik": 33213,
+     "end": "2018-12-31",
+     "qtrs": 4,
+     "accession": "0000033213-19-000006",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "2964924000.0000",
+     "variant_ruling": "3697651000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "2999037000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Capital expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "2964924000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipmentDiscontinuedOperations",
+       "label": "Capital expenditures from discontinued operations",
+       "nature": "ppe",
+       "disc": true,
+       "value": "732727000.0000",
+       "custom": true
+      }
+     ]
+    },
+    {
+     "ticker": "AMD",
+     "cik": 2488,
+     "end": "2025-12-31",
+     "qtrs": 4,
+     "accession": "0000002488-26-000018",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "974000000.0000",
+     "variant_ruling": "1012000000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "974000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "974000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForProceedsFromProductiveAssets",
+       "label": "Payments for (Proceeds from) Productive Assets",
+       "nature": "net",
+       "disc": true,
+       "value": "38000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "NRG",
+     "cik": 1013871,
+     "end": "2018-12-31",
+     "qtrs": 4,
+     "accession": "0001013871-19-000007",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": "388000000.0000",
+     "variant_ruling": "1952000000.0000",
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "388000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Capital expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "388000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForProceedsFromProductiveAssets",
+       "label": "Proceeds from sale of assets, net of cash disposed and sale of discontinued operations, net of fees",
+       "nature": "net",
+       "disc": true,
+       "value": "1564000000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  },
+  "capex_unresolved_both": {
+   "population": 189,
+   "drawn": [
+    {
+     "ticker": "THC",
+     "cik": 70318,
+     "end": "2018-09-30",
+     "qtrs": 3,
+     "accession": "0000070318-18-000039",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "404000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Purchases of property and equipment  continuing operations",
+       "nature": "ppe",
+       "disc": false,
+       "value": "404000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForProceedsFromProductiveAssets",
+       "label": "Other long-term assets",
+       "nature": "net",
+       "disc": false,
+       "value": "5000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "CLH",
+     "cik": 822818,
+     "end": "2018-06-30",
+     "qtrs": 2,
+     "accession": "0000822818-18-000042",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "94139000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Additions to property, plant and equipment",
+       "nature": "ppe",
+       "disc": false,
+       "value": "94139000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForProceedsFromProductiveAssets",
+       "label": "Proceeds from sale and disposal of fixed assets",
+       "nature": "net",
+       "disc": false,
+       "value": "2641000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToAcquireIntangibleAssets",
+       "label": "Additions to intangible assets, including costs to obtain or renew permits",
+       "nature": "intangible",
+       "disc": false,
+       "value": "2106000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "DOW",
+     "cik": 1751788,
+     "end": "2018-12-31",
+     "qtrs": 4,
+     "accession": "0001751788-21-000010",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "2091000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquireMachineryAndEquipment",
+       "label": "Capital expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "2091000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsToExploreAndDevelopOilAndGasProperties",
+       "label": "Investment in gas field developments",
+       "nature": "ppe",
+       "disc": false,
+       "value": "114000000.0000",
+       "custom": false,
+       "og": true
+      },
+      {
+       "tag": "PaymentsToAcquireEquipmentOnLease",
+       "label": "Purchases of previously leased assets",
+       "nature": "lease_unclear",
+       "disc": false,
+       "value": "26000000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "DKS",
+     "cik": 1089063,
+     "end": "2017-01-31",
+     "qtrs": 4,
+     "accession": "0001089063-17-000010",
+     "form": "10-K",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "421920000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Capital expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "421920000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForProceedsFromProductiveAssets",
+       "label": "Deposits and purchases of other assets",
+       "nature": "net",
+       "disc": false,
+       "value": "9635000.0000",
+       "custom": false
+      }
+     ]
+    },
+    {
+     "ticker": "AA",
+     "cik": 1675149,
+     "end": "2017-09-30",
+     "qtrs": 3,
+     "accession": "0001193125-17-322992",
+     "form": "10-Q",
+     "family": "capex",
+     "value": null,
+     "reason": null,
+     "variant_narrow": null,
+     "variant_ruling": null,
+     "interim": null,
+     "interim_reason": "perimeter_line_unresolved",
+     "is_intangible_amort": null,
+     "prod_value": "255000000",
+     "lines": [
+      {
+       "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+       "label": "Capital expenditures",
+       "nature": "ppe",
+       "disc": false,
+       "value": "255000000.0000",
+       "custom": false
+      },
+      {
+       "tag": "PaymentsForProceedsFromProductiveAssets",
+       "label": "Proceeds from the sale of assets and businesses (C)",
+       "nature": "net",
+       "disc": false,
+       "value": "243000000.0000",
+       "custom": false
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

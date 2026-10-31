@@ -1,0 +1,71 @@
+{
+ "_comment": "Value anchors (filing-checked by the Verifier) for the replay: slot lease_inclusive must equal these at the stated instant. GE comes from the 10-K face (the 8-K recast copy 35,114M is the D2 trap). Checked by check_anchors.py against replay30_report.json.",
+ "anchors": [
+  {
+   "ticker": "KO",
+   "period_end": "2018-09-28",
+   "note": "face incl. Loans and notes payable 12,973M",
+   "member_present": "NotesAndLoansPayableCurrent"
+  },
+  {
+   "ticker": "ORCL",
+   "period_end": "2016-11-30",
+   "lease_inclusive": "54327000000"
+  },
+  {
+   "ticker": "GE",
+   "period_end": "2021-12-31",
+   "lease_inclusive": "35185000000"
+  },
+  {
+   "ticker": "MU",
+   "period_end": "2021-09-02",
+   "lease_inclusive": "6776000000"
+  },
+  {
+   "ticker": "MU",
+   "period_end": "2025-08-28",
+   "lease_inclusive": "14577000000"
+  },
+  {
+   "ticker": "ABBV",
+   "period_end": "2022-03-31",
+   "lease_inclusive": "73474000000"
+  },
+  {
+   "ticker": "GOOG",
+   "period_end": "2015-09-30",
+   "lease_inclusive": "5231000000"
+  },
+  {
+   "ticker": "MSFT",
+   "period_end": "2014-12-31",
+   "lease_inclusive": "28308000000"
+  },
+  {
+   "ticker": "AVGO",
+   "period_end": "2019-11-03",
+   "lease_inclusive": "32798000000"
+  },
+  {
+   "ticker": "TSLA",
+   "period_end": "2017-12-31",
+   "lease_inclusive": "10314868000"
+  },
+  {
+   "ticker": "GE",
+   "period_end": "2015-12-31",
+   "verdict": "needs_instance_reader"
+  },
+  {
+   "ticker": "RPAY",
+   "period_end": "2020-03-31",
+   "verdict": "needs_instance_reader"
+  },
+  {
+   "ticker": "ABBV",
+   "period_end": "2015-06-30",
+   "verdict": "not_computable_missing_member"
+  }
+ ]
+}

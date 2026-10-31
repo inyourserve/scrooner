@@ -1,0 +1,272 @@
+{
+ "0000096223": {
+  "gap_instants": 32,
+  "examples": [
+   {
+    "end": "2015-03-31",
+    "accession": "0000096223-15-000012",
+    "total_liabilities": "41308780000",
+    "equity_parent": "10651838000",
+    "gap": "293541000",
+    "tol": "1000"
+   },
+   {
+    "end": "2019-02-28",
+    "accession": "0000096223-19-000022",
+    "total_liabilities": "38858023000",
+    "equity_parent": "9932952000",
+    "gap": "124989000",
+    "tol": "1000"
+   },
+   {
+    "end": "2022-11-30",
+    "accession": "0000096223-23-000009",
+    "total_liabilities": "40630743000",
+    "equity_parent": "10232846000",
+    "gap": "124961000",
+    "tol": "1000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0000912593": {
+  "gap_instants": 32,
+  "examples": [
+   {
+    "end": "2015-09-30",
+    "accession": "0000912593-15-000111",
+    "total_liabilities": "2786653000",
+    "equity_parent": "1162757000",
+    "gap": "89615000",
+    "tol": "1000"
+   },
+   {
+    "end": "2019-09-30",
+    "accession": "0000912593-19-000130",
+    "total_liabilities": "3720983000",
+    "equity_parent": "3499826000",
+    "gap": "92190000",
+    "tol": "1000"
+   },
+   {
+    "end": "2023-09-30",
+    "accession": "0000912593-23-000229",
+    "total_liabilities": "9465000000",
+    "equity_parent": "7739800000",
+    "gap": "304500000",
+    "tol": "100000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0000920148": {
+  "gap_instants": 46,
+  "examples": [
+   {
+    "end": "2015-03-31",
+    "accession": "0000920148-15-000057",
+    "total_liabilities": "9616800000",
+    "equity_parent": "4517600000",
+    "gap": "16200000",
+    "tol": "100000"
+   },
+   {
+    "end": "2020-12-31",
+    "accession": "0000920148-21-000018",
+    "total_liabilities": "10691300000",
+    "equity_parent": "9359700000",
+    "gap": "20700000",
+    "tol": "100000"
+   },
+   {
+    "end": "2026-06-30",
+    "accession": "0000920148-26-000175",
+    "total_liabilities": "9909100000",
+    "equity_parent": "8606800000",
+    "gap": "16400000",
+    "tol": "100000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0001035443": {
+  "gap_instants": 19,
+  "examples": [
+   {
+    "end": "2015-03-31",
+    "accession": "0001035443-15-000054",
+    "total_liabilities": "4608369000",
+    "equity_parent": "3780548000",
+    "gap": "-235141000",
+    "tol": "1000"
+   },
+   {
+    "end": "2017-06-30",
+    "accession": "0001035443-17-000142",
+    "total_liabilities": "5591176000",
+    "equity_parent": "5157164000",
+    "gap": "-74386000",
+    "tol": "1000"
+   },
+   {
+    "end": "2019-09-30",
+    "accession": "0001035443-19-000268",
+    "total_liabilities": "8094534000",
+    "equity_parent": "7790232000",
+    "gap": "-57461000",
+    "tol": "1000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0001075531": {
+  "gap_instants": 10,
+  "examples": [
+   {
+    "end": "2016-09-30",
+    "accession": "0001075531-16-000118",
+    "total_liabilities": "10196710000",
+    "equity_parent": "9802570000",
+    "gap": "34504000",
+    "tol": "1000"
+   },
+   {
+    "end": "2017-12-31",
+    "accession": "0001075531-18-000015",
+    "total_liabilities": "14187702000",
+    "equity_parent": "11260598000",
+    "gap": "2963000",
+    "tol": "1000"
+   },
+   {
+    "end": "2021-06-30",
+    "accession": "0001075531-21-000044",
+    "total_liabilities": "19077000000",
+    "equity_parent": "4799000000",
+    "gap": "5000000",
+    "tol": "1000000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0001176948": {
+  "gap_instants": 30,
+  "examples": [
+   {
+    "end": "2015-03-31",
+    "accession": "0001047469-15-004661",
+    "total_liabilities": "14815137000",
+    "equity_parent": "291641000",
+    "gap": "939094000",
+    "tol": "1000"
+   },
+   {
+    "end": "2022-12-31",
+    "accession": "0001628280-23-005081",
+    "total_liabilities": "17097810000",
+    "equity_parent": "1589239000",
+    "gap": "1106411000",
+    "tol": "1000"
+   },
+   {
+    "end": "2026-06-30",
+    "accession": "0001628280-26-054538",
+    "total_liabilities": "21003486000",
+    "equity_parent": "3968073000",
+    "gap": "25648000",
+    "tol": "1000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0001579091": {
+  "gap_instants": 12,
+  "examples": [
+   {
+    "end": "2023-09-30",
+    "accession": "0001579091-23-000013",
+    "total_liabilities": "762000000",
+    "equity_parent": "3484000000",
+    "gap": "175000000",
+    "tol": "1000000"
+   },
+   {
+    "end": "2025-03-31",
+    "accession": "0001579091-25-000048",
+    "total_liabilities": "928000000",
+    "equity_parent": "3176000000",
+    "gap": "188000000",
+    "tol": "1000000"
+   },
+   {
+    "end": "2026-06-30",
+    "accession": "0001579091-26-000042",
+    "total_liabilities": "988000000",
+    "equity_parent": "2322000000",
+    "gap": "200000000",
+    "tol": "1000000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0001604028": {
+  "gap_instants": 28,
+  "examples": [
+   {
+    "end": "2015-03-31",
+    "accession": "0001193125-16-521419",
+    "total_liabilities": "727102000",
+    "equity_parent": "190163000",
+    "gap": "-304077000",
+    "tol": "1000"
+   },
+   {
+    "end": "2018-09-30",
+    "accession": "0001564590-18-028543",
+    "total_liabilities": "596075000",
+    "equity_parent": "372661000",
+    "gap": "-277295000",
+    "tol": "1000"
+   },
+   {
+    "end": "2021-12-31",
+    "accession": "0001604028-22-000007",
+    "total_liabilities": "1535249000",
+    "equity_parent": "799399000",
+    "gap": "-195519000",
+    "tol": "1000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ },
+ "0001730168": {
+  "gap_instants": 12,
+  "examples": [
+   {
+    "end": "2019-11-03",
+    "accession": "0001730168-19-000144",
+    "total_liabilities": "42523000000",
+    "equity_parent": "24941000000",
+    "gap": "29000000",
+    "tol": "1000000"
+   },
+   {
+    "end": "2021-05-02",
+    "accession": "0001730168-21-000116",
+    "total_liabilities": "51558000000",
+    "equity_parent": "None",
+    "gap": "27000000",
+    "tol": "1000000"
+   },
+   {
+    "end": "2022-07-31",
+    "accession": "0001730168-22-000094",
+    "total_liabilities": "50423000000",
+    "equity_parent": "None",
+    "gap": "27000000",
+    "tol": "1000000"
+   }
+  ],
+  "note": "printed Liabilities total shown; cross-check gap unexplained by any us-gaap equity/NCI/mezzanine tag on the same accession -> Verifier to read whether the printed total is right (likely custom-tagged NCI/mezzanine) or wrong"
+ }
+}

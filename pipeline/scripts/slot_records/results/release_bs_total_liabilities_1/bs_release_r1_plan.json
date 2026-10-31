@@ -1,0 +1,13 @@
+{
+ "rule_id": "slot.bs_total_liabilities@1",
+ "touched_cells": 3533,
+ "touched_companies": 354,
+ "by_state": {
+  "slot_differs": 3441,
+  "slot_fills_blank": 90,
+  "slot_holds_prod_has_value": 2
+ },
+ "kept_verified_right": 6,
+ "before_image_rows": 3443,
+ "cells_without_production_row": 90
+}

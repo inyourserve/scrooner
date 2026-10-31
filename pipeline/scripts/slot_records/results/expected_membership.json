@@ -1,0 +1,95 @@
+{
+ "_comment": "Membership/exclusion fixtures from the Verifier's 30-set rejection. 'tag' may be a list of acceptable alternatives: FSDS shows the era face tags for ORCL (LongTermNotesPayable) and AMD (DebtCurrent) differ from the Verifier's cited tag names for the same printed lines ('Notes payable and other borrowings, non-current' / 'Short-term debt') - flagged back to the Verifier; the ORCL value anchor (54,327M at 2016-11-30) is the decisive check. Periods corrected from the Verifier's accessions: ORCL 0001193125-16-797253 is the 2016-11-30 10-Q; AMAT's combined line is on the face only 2015-07..2016-01.",
+ "KO": [
+  {
+   "tag": [
+    "NotesAndLoansPayableCurrent"
+   ],
+   "expect": "member",
+   "covering": "2018-09"
+  }
+ ],
+ "ORCL": [
+  {
+   "tag": [
+    "LongTermNotesAndLoans",
+    "LongTermNotesPayable"
+   ],
+   "expect": "member",
+   "covering": "2016-11"
+  }
+ ],
+ "AMD": [
+  {
+   "tag": [
+    "LinesOfCreditCurrent",
+    "DebtCurrent"
+   ],
+   "expect": "member",
+   "covering": "2018-06"
+  }
+ ],
+ "AMAT": [
+  {
+   "tag": [
+    "AccountsPayableandAccruedLiabilitiesCurrentandDebtCurrent"
+   ],
+   "expect": "excluded",
+   "covering": "2015-07"
+  }
+ ],
+ "MSFT": [
+  {
+   "tag": [
+    "DepositsReceivedForSecuritiesLoanedAtCarryingValue"
+   ],
+   "expect": "excluded",
+   "covering": "2014-12"
+  }
+ ],
+ "GOOG": [
+  {
+   "tag": [
+    "DepositsReceivedForSecuritiesLoanedAtCarryingValue"
+   ],
+   "expect": "excluded",
+   "covering": "2015-09"
+  }
+ ],
+ "GE": [
+  {
+   "tag": [
+    "ShortTermDebtAssumed"
+   ],
+   "expect": "excluded",
+   "covering": "2018-12"
+  },
+  {
+   "tag": [
+    "LongTermDebtAssumed"
+   ],
+   "expect": "excluded",
+   "covering": "2018-12"
+  }
+ ],
+ "TSLA": [
+  {
+   "tag": [
+    "DueToRelatedPartiesCurrent",
+    "DueToRelatedPartiesNoncurrent"
+   ],
+   "expect": "member",
+   "covering": "2017-12"
+  }
+ ],
+ "AMZN": [
+  {
+   "tag": [
+    "LongTermLeaseLiabilities",
+    "LeaseLiabilityNoncurrent"
+   ],
+   "expect": "excluded",
+   "covering": "2019-12"
+  }
+ ]
+}

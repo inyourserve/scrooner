@@ -1,0 +1,113 @@
+{
+ "anchors": [
+  {
+   "ticker": "WMT",
+   "period_end": "2026-07-31",
+   "expected": "189115000000",
+   "src": "0000104169-26-000154 R4"
+  },
+  {
+   "ticker": "T",
+   "period_end": "2026-06-30",
+   "expected": "299920000000",
+   "src": "0000732717-26-000297 R5"
+  },
+  {
+   "ticker": "VLO",
+   "period_end": "2020-12-31",
+   "expected": "32132000000",
+   "src": "0001035002-21-000051 R2"
+  },
+  {
+   "ticker": "EMR",
+   "period_end": "2024-12-31",
+   "expected": "16231000000",
+   "note": "no printed total: face-sum"
+  },
+  {
+   "ticker": "DIS",
+   "period_end": "2020-03-28",
+   "expected": "102321000000"
+  },
+  {
+   "ticker": "OXY",
+   "period_end": "2018-12-31",
+   "expected": "22524000000"
+  },
+  {
+   "ticker": "AWK",
+   "period_end": "2017-12-31",
+   "expected": "14097000000",
+   "note": "8M redeemable preferred sits inside total long-term debt"
+  },
+  {
+   "ticker": "BRO",
+   "period_end": "2018-12-31",
+   "expected": "3000568000",
+   "kind": "equity_parent",
+   "note": "Verifier correction: 3,000,568K is BROWN & BROWN (CIK 0000079282), mislabelled AJG in the first list. Verifier BS-V1: the instant is 2018-12-31 (FY2018 10-K 0000079282-19-000006); the 2019-01-01 column exists only in the Q1-2019 10-Q as the lease-adoption column"
+  },
+  {
+   "ticker": "BX",
+   "period_end": "2019-06-30",
+   "expected": "6308400000",
+   "kind": "equity_parent",
+   "src": "0001193125-19-216805 R2",
+   "tolerance": "100000",
+   "note": "face quoted in millions to one decimal (6,308.4); fact 6,308,355,000; Verifier BS-V1: value right"
+  },
+  {
+   "ticker": "KKR",
+   "period_end": "2015-06-30",
+   "expected": "5947400000",
+   "kind": "equity_parent",
+   "src": "0001404912-15-000005 R2",
+   "tolerance": "100000",
+   "note": "face quoted in millions to one decimal (5,947.4); fact 5,947,415,000; Verifier BS-V1: value right"
+  },
+  {
+   "ticker": "BRKR",
+   "period_end": "2019-03-31",
+   "expected": "1298700000",
+   "tolerance": "200000",
+   "note": "face does not add up by 0.2M"
+  },
+  {
+   "ticker": "NI",
+   "period_end": "2023-12-31",
+   "expected": "20940900000",
+   "src": "0001111711-24-000011 R6"
+  },
+  {
+   "ticker": "MCK",
+   "period_end": "2015-06-30",
+   "expected": "45556000000"
+  },
+  {
+   "ticker": "TRGP",
+   "period_end": "2021-09-30",
+   "expected": "9823100000",
+   "src": "0001564590-21-054348 R2",
+   "note": "749.7M Series A mezzanine filed only with class-of-stock member"
+  },
+  {
+   "ticker": "DVN",
+   "period_end": "2017-03-31",
+   "expected": "15212000000",
+   "src": "0001564590-17-008268 R4"
+  },
+  {
+   "ticker": "FE",
+   "period_end": "2018-03-31",
+   "expected": "31420000000",
+   "src": "0001031296-18-000031 R5"
+  },
+  {
+   "ticker": "UPS",
+   "period_end": "2017-12-31",
+   "expected": "44373000000",
+   "src": "0001090727-18-000009; Verifier release-1 draw: total L&E 45,403 - total equity 1,030; deferred compensation obligations are an equity-section line",
+   "tolerance": "1000000"
+  }
+ ]
+}
