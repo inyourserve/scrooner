@@ -72,6 +72,9 @@ class FakeConn:
     def rollback(self):
         pass
 
+    def commit(self):
+        pass
+
     def executemany(self, sql, rows):
         self.protected.extend(rows)
 
