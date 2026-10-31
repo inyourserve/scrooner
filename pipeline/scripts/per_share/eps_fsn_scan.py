@@ -1,6 +1,7 @@
 """Find filed 3-month EPS for Family C 'not captured' cells in the FSN num rows (bucket fsn-notes). Read-only.
 
-For each cell: the company's 10-K/10-Q (incl. /A) facts on its concept's tags with qtrs=1 at the cell's end date
+For each cell: the company's 10-K/10-Q (incl. /A) facts on its concept's tags with qtrs = the cell's duration in
+quarters at the cell's end date
 rounded to the nearest month end (FSN ddate rule), no dimension, iprx 0, no co-registrant. Outcome per cell:
   replace_with_fsn_value  every filed copy agrees (|diff| <= 0.005); witness = the earliest-filed copy
   fsn_copies_disagree     filed copies differ (restated): hidden, never chosen
@@ -25,7 +26,7 @@ from pathlib import Path
 
 csv.field_size_limit(1 << 24)
 S = Path(sys.argv[1])
-W = S / "epsfsn2"
+W = S / "epsfsn3"
 W.mkdir(exist_ok=True)
 (W / "nc_cells.json").write_text((S / "epsfsn" / "nc_cells.json").read_text())
 FORMS = {"10-K", "10-K/A", "10-Q", "10-Q/A", "10-KT", "10-KT/A"}
@@ -109,7 +110,7 @@ for period in periods:
         if (
             s is None
             or r["tag"] not in TAGS
-            or r["qtrs"] != "1"
+            or r["qtrs"] not in ("1", "2", "3", "4")
             or r.get("dimn", "0") not in ("0", "1")
             or r.get("iprx", "0") != "0"
             or r.get("coreg")
@@ -126,14 +127,14 @@ for period in periods:
                 seg[d["dimhash"]] = d["segments"]
     for s, r in hits:
         segment = "" if r.get("dimn") == "0" else seg.get(r["dimh"], "?")
-        copies[(s[0], r["tag"], r["ddate"])].append(
+        copies[(s[0], r["tag"], r["ddate"], r["qtrs"])].append(
             (r["value"], r["adsh"], s[1], s[2], segment)
         )
         n += 1
     shutil.rmtree(pdir)
     done.append(period)
     json.dump(
-        {k[0] + "|" + k[1] + "|" + k[2]: v for k, v in copies.items()},
+        {"|".join(k): v for k, v in copies.items()},
         open(W / "copies.json", "w"),
     )
     progress.write_text(json.dumps({"done": done}))
@@ -151,16 +152,63 @@ for v in copies.values():
     for x in v:
         census[x[4] or "(no dimension)"] += 1
 json.dump(census.most_common(), open(W / "axis_census.json", "w"), indent=0)
+
+
+def same(a: str, b: str) -> bool:
+    return abs(Decimal(a) - Decimal(b)) <= Decimal("0.005")
+
+
+def swapped_copies() -> set[tuple[str, str, str, str, str]]:
+    """(cik, tag, ddate, qtrs, accession) of copies proven to be a context swap: filing F reports at date d the value
+    another filing G reports at d', and at d' something other than G's value (News Corp FY2016 10-K
+    0001193125-16-679975 tags FY2016 Q4 and FY2015 Q4 with each other's dates; FY2015 10-K and FY2017 10-K agree
+    with the stored values). A genuine restatement (only one date changes) is never a swap: it stays hidden."""
+    by: dict[tuple[str, str, str], dict[str, dict[str, str]]] = defaultdict(
+        lambda: defaultdict(dict)
+    )
+    for (cik, tag, dd, q), v in copies.items():
+        for x in v:
+            if allowed(x[4]):
+                by[(cik, tag, q)][x[1]][dd] = x[0]
+    out = set()
+    for (cik, tag, q), filings in by.items():
+        for f, fv in filings.items():
+            for g, gv in filings.items():
+                if f == g:
+                    continue
+                for d, fval in fv.items():
+                    for d2, gval in gv.items():
+                        if (
+                            d2 != d
+                            and d2 in fv
+                            and same(fval, gval)
+                            and not same(fv[d2], gval)
+                        ):
+                            out.add((cik, tag, d, q, f))
+                            out.add((cik, tag, d2, q, f))
+    return out
+
+
+SWAPPED = swapped_copies()
 out, stats = [], Counter()
 for c in cells:
     dd = month_end(date.fromisoformat(c["end"])).strftime("%Y%m%d")
     cik = c["cik"].zfill(10)
+    # the cell's own duration in quarters: a 3-month copy never fills a 6-month cell (CIK 1728951 2018-07-01..12-31)
+    q = str(
+        round(
+            (date.fromisoformat(c["end"]) - date.fromisoformat(c["start"])).days / 91.3
+        )
+    )
     # the concept's own tag first (basic / diluted), the combined tag only when the own tag has no copy
     found = []
     for tag in c["tags"]:
-        found = [x for x in copies.get((cik, tag, dd), []) if allowed(x[4])]
+        found = [x for x in copies.get((cik, tag, dd, q), []) if allowed(x[4])]
         if found:
             break
+    dropped = [x for x in found if (cik, tag, dd, q, x[1]) in SWAPPED]
+    drop_ids = [x[1] for x in dropped] if dropped and len(dropped) < len(found) else []
+    found = [x for x in found if x[1] not in drop_ids]
     if not found:
         res = {"outcome": "not_in_fsn"}
     else:
@@ -178,14 +226,16 @@ for c in cells:
                 "tag": tag,
                 "copies": len(found),
                 "axis": segment,
+                "qtrs": q,
+                "swapped_copies_dropped": drop_ids,
             }
     stats[res["outcome"]] += 1
     if res["outcome"] == "not_in_fsn" and any(
-        copies.get((cik, t, dd)) for t in c["tags"]
+        copies.get((cik, t, dd, q)) for t in c["tags"]
     ):
         stats["not_in_fsn_only_rejected_axes"] += 1
         res["rejected_axes"] = sorted(
-            {x[4] for t in c["tags"] for x in copies.get((cik, t, dd), [])}
+            {x[4] for t in c["tags"] for x in copies.get((cik, t, dd, q), [])}
         )
     out.append({**c, **res})
 json.dump(out, open(W / "nc_fsn_outcomes.json", "w"), indent=0)
