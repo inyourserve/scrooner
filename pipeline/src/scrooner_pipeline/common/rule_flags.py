@@ -392,6 +392,34 @@ RULES: dict[str, Rule] = {
             "cashflow",
             "share_buybacks_resolved from the printed common-repurchase line (release_buybacks_1)",
         ),
+        # ---- slot-record release packages (scrooner-15): flags for the capex, D&A,
+        # cash and total-debt packages. Registered default OFF so the flag in each
+        # manifest is a real, checkable rule id (before this, rule_enabled() raised
+        # 'unregistered rule' and the manifests' 'registered OFF' was only a label).
+        _r(
+            "slot.capex@1",
+            "-",
+            "cashflow",
+            "capex_resolved from the printed capital-expenditure line (release_capex_1)",
+        ),
+        _r(
+            "slot.d_and_a@1",
+            "-",
+            "cashflow",
+            "depreciation_and_amortization_resolved from the printed line (release_da_1)",
+        ),
+        _r(
+            "slot.cash_and_equivalents@1",
+            "-",
+            "balance_sheet",
+            "cash_and_equivalents_resolved from the printed balance-sheet line (release_cash_1)",
+        ),
+        _r(
+            "slot.total_debt@1",
+            "-",
+            "balance_sheet",
+            "total_debt_resolved from borrowings plus note finance leases (release_debt_1)",
+        ),
     )
 }
 

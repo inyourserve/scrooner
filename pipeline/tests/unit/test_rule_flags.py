@@ -154,3 +154,19 @@ def test_cash_flow_slot_rules_are_registered_and_off_by_default():
         assert rf.rule_enabled(rule_id, {rf.ENV_ENABLED: rule_id})
     # enabling one never enables the other
     assert not rf.rule_enabled("slot.cf_buybacks@1", {rf.ENV_ENABLED: "slot.cf_cfo@1"})
+
+
+@pytest.mark.unit
+def test_release_package_slot_rules_are_registered_and_off_by_default():
+    ids = (
+        "slot.capex@1",
+        "slot.d_and_a@1",
+        "slot.cash_and_equivalents@1",
+        "slot.total_debt@1",
+    )
+    for rule_id in ids:
+        assert rule_id in rf.RULES
+        assert rf.rule_mode(rule_id, {}) == rf.OFF
+        assert rf.rule_enabled(rule_id, {rf.ENV_ENABLED: rule_id})
+        others = ",".join(i for i in ids if i != rule_id)
+        assert not rf.rule_enabled(rule_id, {rf.ENV_ENABLED: others})
