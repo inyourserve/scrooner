@@ -16,6 +16,11 @@ from scrooner_pipeline.db.connection import get_connection
 app = typer.Typer(help="Family cell files -> analytics.canonical_fact.")
 
 
+@app.callback()
+def _root() -> None:
+    """Keeps `load` a subcommand (a single-command Typer app would swallow it)."""
+
+
 def _fetch(path: str, cache: Path) -> Path:
     """A `fsn-notes/...` path is downloaded (with its manifest.json) into the
     cache through the storage HTTP API, the way proof/fsn.py reads FSN sets."""
