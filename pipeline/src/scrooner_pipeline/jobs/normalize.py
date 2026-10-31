@@ -306,3 +306,42 @@ def demote_coregistrant_facts_cmd(
     typer.echo(f"demote-coregistrant-facts: {stats}")
     for cik, v in sorted(per.items()):
         typer.echo(f"  {cik}: {v}")
+
+
+@app.command("instance-fallback")
+def instance_fallback_cmd(
+    ciks: str = typer.Option(..., help="Comma-separated CIKs."),
+    fsn_root: str = typer.Option(
+        ".cache/fsn",
+        help="Local cache of FSN periods (downloaded from the fsn-notes bucket on first use).",
+    ),
+    report: str = typer.Option(None, help="JSONL report, one row per missing filing."),
+    backup_dir: str = typer.Option(
+        None, help="Before-image directory, required when the rule is ON."
+    ),
+    rollback: str = typer.Option(
+        None, "--rollback", help="Roll back from this before-image directory instead."
+    ),
+) -> None:
+    """B9, rule ingest.instance_fallback@1 (flag OFF by default): facts for a
+    periodic filing the companyfacts API never carried, built from the filing's
+    FSN rows (current columns only) and written through facts.py with a raw
+    lineage row. Off/dry_run plans and reports; ON applies; --rollback restores."""
+    from pathlib import Path
+
+    from scrooner_pipeline.normalizer import instance_fallback as ib
+
+    with get_connection() as conn:
+        if rollback:
+            typer.echo(
+                f"instance-fallback rollback: {ib.rollback_run_dir(conn, Path(rollback))}"
+            )
+            return
+        stats = ib.run(
+            conn,
+            _parse_ciks(ciks) or set(),
+            fsn_root=Path(fsn_root),
+            backup_dir=Path(backup_dir) if backup_dir else None,
+            report_path=Path(report) if report else None,
+        )
+    typer.echo(f"instance-fallback: {stats}")

@@ -190,7 +190,21 @@ def normalize_facts_for_cik(
         return {"cik": cik, "status": "no_companyfacts"}
     raw_object_id, storage_path = cf_row
     payload = _load_json(storage, storage_path)
+    return normalize_payload(conn, company_id, cik, payload, raw_object_id)
 
+
+def normalize_payload(
+    conn: psycopg.Connection,
+    company_id: int,
+    cik: str,
+    payload: dict,
+    raw_object_id: int,
+) -> dict:
+    """The ONE write path for facts: a companyfacts-shaped payload into
+    core.fact with `raw_object_id` as lineage. Called with the SEC companyfacts
+    payload by normalize_facts_for_cik, and by the B9 instance fallback with a
+    payload built from the filing's own XBRL (FSN set or instance) for a
+    periodic filing the companyfacts API never carried (2026-10-31)."""
     filing_by_accn = _load_filing_lookup(conn, company_id)
     period_by_key = _load_period_lookup(conn, company_id)
     unit_by_name = _load_unit_lookup(conn)
