@@ -1543,14 +1543,14 @@ def resolve_cells(
                 # stands in for it
                 original = conv[0][0]
             if not any(x[0] is original for x in conv):
-                post = post_event_copies(conv, events)
-                if post is not None and _all_agree(post, kind):
+                after = post_event_copies(conv, events)
+                if after is not None and _all_agree(after, kind):
                     # Verifier run 6, QXO FY2023 -1.63: the 2023 10-K's basis
                     # is unresolved, but two later 10-Ks filed after every
                     # split event re-present the year on the current basis
-                    conv, original = post, post[0][0]
+                    conv, original = after, after[0][0]
                     note = (note + "; " if note else "") + (
-                        f"original's basis unresolved; {len(post)} copies filed after every split event"
+                        f"original's basis unresolved; {len(after)} copies filed after every split event"
                     )
             if not any(x[0] is original for x in conv):
                 out.append(
@@ -1647,7 +1647,11 @@ def resolve_cells(
                 # Run 7 (NWSA FY2016 10-K 0001193125-16-679975: Jul-Sep 2014
                 # 0.30 and Jul-Sep 2015 0.11, each the OTHER quarter's
                 # consensus): a swapped pair is two label errors.
-                swapped = [x for x in conv if _is_swapped_copy(x[0], pid, by_tag_period, by_filing_tag)]
+                swapped = [
+                    x
+                    for x in conv
+                    if _is_swapped_copy(x[0], pid, by_tag_period, by_filing_tag)
+                ]
                 rest = [x for x in conv if x not in swapped]
                 if swapped and rest and _all_agree(rest, kind):
                     note = (note + "; " if note else "") + (
@@ -1844,8 +1848,8 @@ def resolve_cells(
     out = _one_dividend_basis(
         out, mapped_tags.get("dividends_per_share", []), dps_copies_by_span, paid
     )
-    dps_raw_by_filing: dict[int, list[tuple[date | None, date, Decimal]]] = (
-        defaultdict(list)
+    dps_raw_by_filing: dict[int, list[tuple[date | None, date, Decimal]]] = defaultdict(
+        list
     )
     for f in facts:
         if f.usable_source and f.tag in (
@@ -1875,7 +1879,9 @@ def resolve_cells(
     out = _dps_same_filing_checks(
         out, paid, common_dividend_paid_per_share(facts, share_refs), dps_by_filing
     )
-    return _eps_pair_check(_dps_scale_guard(_dps_scale_guard(out), "shares_outstanding_resolved"))
+    return _eps_pair_check(
+        _dps_scale_guard(_dps_scale_guard(out), "shares_outstanding_resolved")
+    )
 
 
 EPS_PAIR_TOL = Decimal("0.011")  # two half-cent roundings
@@ -1893,8 +1899,11 @@ def _eps_pair_check(cells: list[CellResult]) -> list[CellResult]:
     stays (warrant fair-value gains leave the diluted numerator: GSAT, CG)."""
     by_span: dict[tuple, dict[str, CellResult]] = defaultdict(dict)
     for c in cells:
-        if c.status == SHOWN and c.value is not None and c.chosen is not None and c.concept in (
-            "basic_eps_resolved", "diluted_eps_resolved"
+        if (
+            c.status == SHOWN
+            and c.value is not None
+            and c.chosen is not None
+            and c.concept in ("basic_eps_resolved", "diluted_eps_resolved")
         ):
             by_span[(c.chosen.start_date, c.chosen.end_date)][c.concept] = c
     bad: set[tuple[str, int]] = set()
@@ -1903,8 +1912,17 @@ def _eps_pair_check(cells: list[CellResult]) -> list[CellResult]:
             continue
         bc, dc = pair["basic_eps_resolved"], pair["diluted_eps_resolved"]
         b, d = bc.value, dc.value
-        assert b is not None and d is not None and bc.chosen is not None and dc.chosen is not None
-        scale = b != 0 and d != 0 and (abs(d) > EPS_PAIR_SCALE * abs(b) or abs(b) > EPS_PAIR_SCALE * abs(d))
+        assert (
+            b is not None
+            and d is not None
+            and bc.chosen is not None
+            and dc.chosen is not None
+        )
+        scale = (
+            b != 0
+            and d != 0
+            and (abs(d) > EPS_PAIR_SCALE * abs(b) or abs(b) > EPS_PAIR_SCALE * abs(d))
+        )
         # Verifier run 7.4: a pair the filer PRINTED together can have diluted
         # above basic (a preferred add-back: NTNX 6M FY2024 0.07 / 0.09, ZWS
         # FY2018 0.51 / 0.62), so a sign or order conflict hides only a pair
@@ -1915,8 +1933,17 @@ def _eps_pair_check(cells: list[CellResult]) -> list[CellResult]:
     if not bad:
         return cells
     return [
-        CellResult(c.concept, c.period_id, HIDE_EPS_PAIR, None, (), c.chosen, c.factor, c.candidates,
-                   "basic and diluted EPS contradict each other")
+        CellResult(
+            c.concept,
+            c.period_id,
+            HIDE_EPS_PAIR,
+            None,
+            (),
+            c.chosen,
+            c.factor,
+            c.candidates,
+            "basic and diluted EPS contradict each other",
+        )
         if (c.concept, c.period_id) in bad
         else c
         for c in cells
@@ -2816,7 +2843,13 @@ def post_event_copies(conv: list, events: list[Event]) -> list | None:
     """Copies filed after every non-rejected split event, on the current basis
     (factor 1), from at least two filings; None otherwise. Such a filing has
     seen every share-basis change, so its value needs no conversion."""
-    dates = [d for e in events if e.status != "rejected" for d in (e.hi, e.lo) if d is not None]
+    dates = [
+        d
+        for e in events
+        if e.status != "rejected"
+        for d in (e.hi, e.lo)
+        if d is not None
+    ]
     last = max(dates) if dates else None
     post = [x for x in conv if x[1] == 1 and (last is None or x[0].filing_date > last)]
     if len({x[0].filing_id for x in post}) < 2:
@@ -2836,7 +2869,9 @@ def _is_swapped_copy(f: SourceFact, pid: int, by_tag_period, by_filing_tag) -> b
     for other, vals in by_filing_tag[(f.filing_id, f.tag)].items():
         if other == pid or vals != own:
             continue
-        theirs = {g.value for g in by_tag_period[(f.tag, other)] if g.filing_id != f.filing_id}
+        theirs = {
+            g.value for g in by_tag_period[(f.tag, other)] if g.filing_id != f.filing_id
+        }
         if theirs == {f.value}:
             return True
     return False
@@ -2906,7 +2941,8 @@ def _dps_quarter_equals_ytd(
                 if ps is not None
                 and abs((ps - s).days) <= 7
                 and abs((f.start_date - pe).days) <= 7
-                and (pe - ps).days >= 150  # a real multi-quarter YTD, never Q1 alone (Visa Q2)
+                and (pe - ps).days
+                >= 150  # a real multi-quarter YTD, never Q1 alone (Visa Q2)
             ]
             # LOGI's prior YTD carries two values (0.87 and 0.95): any copy equal
             prior = [x for x in prior if c.value in x[2]]
@@ -2925,6 +2961,7 @@ def _dps_quarter_equals_ytd(
                 and 80 <= (qe - qs).days <= 100
                 and copies
             ]
+            assert c.value is not None
             if sum(inside, Decimal(0)) > c.value + YEAR_SOLVE_TOL:
                 continue
             bad.add(c.period_id)
@@ -2933,8 +2970,15 @@ def _dps_quarter_equals_ytd(
         return cells
     return [
         CellResult(
-            c.concept, c.period_id, HIDE_QTR_YTD, None, (), c.chosen, c.factor,
-            c.candidates, "quarter carries the filing's year-to-date value",
+            c.concept,
+            c.period_id,
+            HIDE_QTR_YTD,
+            None,
+            (),
+            c.chosen,
+            c.factor,
+            c.candidates,
+            "quarter carries the filing's year-to-date value",
         )
         if c.concept == concept and c.period_id in bad
         else c
@@ -3051,7 +3095,11 @@ def _dps_span_agrees_with_parts(
                 (f_, v_)
                 for f_, v_ in sorted(
                     span_copies.get(span, []),
-                    key=lambda x: (x[0].tag != basis_tag, x[0].filing_date, x[0].fact_id),
+                    key=lambda x: (
+                        x[0].tag != basis_tag,
+                        x[0].filing_date,
+                        x[0].fact_id,
+                    ),
                 )
                 if abs(v_ - parts) <= YEAR_SOLVE_TOL
             ),
@@ -3072,11 +3120,19 @@ def _dps_span_agrees_with_parts(
             # carries a quarterly rate (Visa FY 0.375 in three 10-Ks against
             # quarters of 0.375 each); a span ABOVE them has an understated
             # quarter (LFUS one-copy Q4 0.6 against FY 2.5 in three 10-Ks)
-            span_filings = {f_.filing_id for f_, v_ in span_copies.get(span, []) if v_ == c.value}
+            span_filings = {
+                f_.filing_id for f_, v_ in span_copies.get(span, []) if v_ == c.value
+            }
             weak = []
             if not below and len(span_filings) >= 2:
-                for qs, qe, _v in _basis_quarter_chain(span, span_copies, basis_tag) or []:
-                    fids = {f_.filing_id for f_, _ in span_copies.get((qs, qe), []) if f_.tag == basis_tag}
+                for qs, qe, _v in (
+                    _basis_quarter_chain(span, span_copies, basis_tag) or []
+                ):
+                    fids = {
+                        f_.filing_id
+                        for f_, _ in span_copies.get((qs, qe), [])
+                        if f_.tag == basis_tag
+                    }
                     if len(fids) == 1:
                         weak.append((qs, qe))
             if weak:
@@ -3085,8 +3141,14 @@ def _dps_span_agrees_with_parts(
                 continue
             out.append(
                 CellResult(
-                    c.concept, c.period_id, HIDE_DPS_INVALID, None, (), c.chosen,
-                    c.factor, c.candidates,
+                    c.concept,
+                    c.period_id,
+                    HIDE_DPS_INVALID,
+                    None,
+                    (),
+                    c.chosen,
+                    c.factor,
+                    c.candidates,
                     f"does not equal its {basis_tag} {kind} ({parts})",
                 )
             )
@@ -3094,7 +3156,13 @@ def _dps_span_agrees_with_parts(
         f0, v0 = match
         out.append(
             CellResult(
-                c.concept, c.period_id, SHOWN, v0, (f0.fact_id,), f0, c.factor,
+                c.concept,
+                c.period_id,
+                SHOWN,
+                v0,
+                (f0.fact_id,),
+                f0,
+                c.factor,
                 c.candidates,
                 f"equals its {basis_tag} {kind} (filed copy on {f0.tag})",
             )
@@ -3103,8 +3171,15 @@ def _dps_span_agrees_with_parts(
         return out
     return [
         CellResult(
-            c.concept, c.period_id, HIDE_DPS_INVALID, None, (), c.chosen, c.factor,
-            c.candidates, "one-copy quarter disagrees with its year's agreeing filed totals",
+            c.concept,
+            c.period_id,
+            HIDE_DPS_INVALID,
+            None,
+            (),
+            c.chosen,
+            c.factor,
+            c.candidates,
+            "one-copy quarter disagrees with its year's agreeing filed totals",
         )
         if c.concept == concept
         and c.status == SHOWN
@@ -3349,7 +3424,9 @@ def run_split_rebase(
             assert run_id is not None
             if package is not None:
                 why = (
-                    package_mismatches(res, current, package[cid], remove_derived_only=ru1_on)
+                    package_mismatches(
+                        res, current, package[cid], remove_derived_only=ru1_on
+                    )
                     if cid in package
                     else ["company is not in the release package"]
                 )

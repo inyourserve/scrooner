@@ -2634,14 +2634,22 @@ def test_zero_declared_original_beside_cash_paid_gives_way_to_the_later_copy():
 # Run 7 (Verifier run 6): spans agree with their parts, quarter = YTD context,
 # same-quarter declare-and-pay releases
 # --------------------------------------------------------------------------
-def _amt_book(fy_declared: str, fy_paid: str, year: int, decl: list[tuple[str, str]]) -> Book:
+def _amt_book(
+    fy_declared: str, fy_paid: str, year: int, decl: list[tuple[str, str]]
+) -> Book:
     """AMT: Declared basis (declared 3-month quarters outnumber paid ones),
     dated declaration facts, and a 10-K whose full-year tags are swapped."""
     b = Book()
     for y in (2016, 2017, 2018, 2019):
         for qs, qe, fd in (("01-01", "03-31", "04-30"), ("04-01", "06-30", "07-30"),
                            ("07-01", "09-30", "10-30")):  # fmt: skip
-            b.add(DPS_DECL, "1.00", f"{y}-{qs}", f"{y}-{qe}", b.filing(f"Q-{y}-{qs}", f"{y}-{fd}"))
+            b.add(
+                DPS_DECL,
+                "1.00",
+                f"{y}-{qs}",
+                f"{y}-{qe}",
+                b.filing(f"Q-{y}-{qs}", f"{y}-{fd}"),
+            )
     q = b.filing(f"AMT-Q-{year}", f"{year}-10-26")
     for day, v in decl[:3]:
         b.add(DPS_DECL, v, day, day, q)
@@ -2656,8 +2664,17 @@ def _amt_book(fy_declared: str, fy_paid: str, year: int, decl: list[tuple[str, s
 def test_full_year_dividend_takes_the_filed_copy_that_equals_its_declarations():
     """AMT FY2022 (0001053507-25-000025): Declared FY 4.30 counts three
     declarations; the four 2022 declarations sum to 5.86, filed as CashPaid."""
-    b = _amt_book("4.30", "5.86", 2022, [("2022-03-10", "1.40"), ("2022-05-18", "1.43"),
-                                          ("2022-09-21", "1.47"), ("2022-12-07", "1.56")])
+    b = _amt_book(
+        "4.30",
+        "5.86",
+        2022,
+        [
+            ("2022-03-10", "1.40"),
+            ("2022-05-18", "1.43"),
+            ("2022-09-21", "1.47"),
+            ("2022-12-07", "1.56"),
+        ],
+    )
     cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-12-31")
     assert cell.status == sb.SHOWN and cell.value == D("5.86")
     assert "dated facts" in cell.note
@@ -2666,8 +2683,17 @@ def test_full_year_dividend_takes_the_filed_copy_that_equals_its_declarations():
 def test_full_year_dividend_swapped_tags_amt_2023():
     """AMT FY2023: Declared 6.31 is the paid sum; declarations 1.56 + 1.57 +
     1.62 + 1.70 = 6.45, filed as CashPaid."""
-    b = _amt_book("6.31", "6.45", 2023, [("2023-03-08", "1.56"), ("2023-05-24", "1.57"),
-                                          ("2023-09-20", "1.62"), ("2023-12-13", "1.70")])
+    b = _amt_book(
+        "6.31",
+        "6.45",
+        2023,
+        [
+            ("2023-03-08", "1.56"),
+            ("2023-05-24", "1.57"),
+            ("2023-09-20", "1.62"),
+            ("2023-12-13", "1.70"),
+        ],
+    )
     cell = b.cell(run(b), "dividends_per_share_resolved", "2023-01-01", "2023-12-31")
     assert cell.status == sb.SHOWN and cell.value == D("6.45")
 
@@ -2676,16 +2702,34 @@ def test_dated_facts_never_hide_when_no_filed_copy_equals_them():
     """Dated facts can be announcements that shift a dividend between
     quarters (JPM 6M 2018 1.12, run 7.2): they only choose between filed
     copies, so with no matching copy the filed value stays."""
-    b = _amt_book("4.30", "4.30", 2022, [("2022-03-10", "1.40"), ("2022-05-18", "1.43"),
-                                          ("2022-09-21", "1.47"), ("2022-12-07", "1.56")])
+    b = _amt_book(
+        "4.30",
+        "4.30",
+        2022,
+        [
+            ("2022-03-10", "1.40"),
+            ("2022-05-18", "1.43"),
+            ("2022-09-21", "1.47"),
+            ("2022-12-07", "1.56"),
+        ],
+    )
     cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-12-31")
     assert cell.status == sb.SHOWN and cell.value == D("4.30")
 
 
 def test_full_year_dividend_left_alone_when_declarations_miss_a_quarter():
     """Three dated declarations cannot check a four-quarter year."""
-    b = _amt_book("4.30", "5.86", 2022, [("2022-03-10", "1.40"), ("2022-05-18", "1.43"),
-                                          ("2022-06-21", "1.47"), ("2022-12-07", "1.56")])
+    b = _amt_book(
+        "4.30",
+        "5.86",
+        2022,
+        [
+            ("2022-03-10", "1.40"),
+            ("2022-05-18", "1.43"),
+            ("2022-06-21", "1.47"),
+            ("2022-12-07", "1.56"),
+        ],
+    )
     cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-12-31")
     # Q3 has no declaration date: no evidence, the filed basis value stays
     assert cell.status == sb.SHOWN and cell.value == D("4.30")
@@ -2702,9 +2746,16 @@ def test_quarter_carrying_the_ytd_value_is_hidden_logi():
     b.add(DPS_PAID, "0.95", "2021-04-01", "2021-12-31", q3)
     b.add(DPS_PAID, "0.95", "2021-10-01", "2021-12-31", q3)
     res = run(b)
-    assert b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2021-12-31").status == sb.HIDE_QTR_YTD
-    assert b.cell(res, "dividends_per_share_resolved", "2021-07-01", "2021-09-30").value == D("0.95")
-    assert b.cell(res, "dividends_per_share_resolved", "2021-04-01", "2021-12-31").value == D("0.95")
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2021-12-31").status
+        == sb.HIDE_QTR_YTD
+    )
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2021-07-01", "2021-09-30"
+    ).value == D("0.95")
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2021-04-01", "2021-12-31"
+    ).value == D("0.95")
 
 
 def test_quarter_equal_to_ytd_stays_when_earlier_quarters_paid_nothing():
@@ -2729,8 +2780,15 @@ def _together_book(agree: bool) -> Book:
         f = b.filing(f"T-{i}", fd)
         b.add(DPS_DECL, "0.50", qs, qe, f)
         b.add(DPS_PAID, "0.50" if agree or i else "0.48", qs, qe, f)
-    for i, (qs, qe, fd) in enumerate((("2018-01-01", "2018-03-31", "2018-05-01"), ("2018-04-01", "2018-06-30", "2018-08-01"))):
-        b.add(DPS_DECL, "0.50", qs, qe, b.filing(f"T-decl-{i}", fd))  # Declared stays the basis
+    for i, (qs, qe, fd) in enumerate(
+        (
+            ("2018-01-01", "2018-03-31", "2018-05-01"),
+            ("2018-04-01", "2018-06-30", "2018-08-01"),
+        )
+    ):
+        b.add(
+            DPS_DECL, "0.50", qs, qe, b.filing(f"T-decl-{i}", fd)
+        )  # Declared stays the basis
     f = b.filing("T-paid-only", "2017-11-01")
     b.add(DPS_PAID, "0.50", "2017-07-01", "2017-09-30", f)
     return b
@@ -2797,8 +2855,12 @@ def test_swapped_quarter_pair_in_one_filing_is_dropped_nwsa():
     b.add(EPS_D, "0.30", "2015-07-01", "2015-09-30", q17)
     b.add(EPS_D, "0.11", "2015-07-01", "2015-09-30", k16)  # swapped
     res = run(b)
-    assert b.cell(res, "diluted_eps_resolved", "2014-07-01", "2014-09-30").value == D("0.11")
-    assert b.cell(res, "diluted_eps_resolved", "2015-07-01", "2015-09-30").value == D("0.30")
+    assert b.cell(res, "diluted_eps_resolved", "2014-07-01", "2014-09-30").value == D(
+        "0.11"
+    )
+    assert b.cell(res, "diluted_eps_resolved", "2015-07-01", "2015-09-30").value == D(
+        "0.30"
+    )
 
 
 def test_restated_prior_year_quarter_in_the_next_10q_is_still_hidden():
@@ -2841,8 +2903,13 @@ def test_quarter_kept_when_the_ytd_contexts_carry_the_quarterly_rate_visa():
     b.add(DPS_DECL, "0.375", "2022-04-01", "2022-06-30", q3)
     b.add(DPS_DECL, "0.375", "2021-10-01", "2022-06-30", q3)
     res = run(b)
-    assert b.cell(res, "dividends_per_share_resolved", "2022-04-01", "2022-06-30").value == D("0.375")
-    assert b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2022-06-30").status == sb.HIDE_DPS_INVALID
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2022-04-01", "2022-06-30"
+    ).value == D("0.375")
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2022-06-30").status
+        == sb.HIDE_DPS_INVALID
+    )
 
 
 def test_two_dated_facts_in_one_quarter_are_no_evidence_bac():
@@ -2850,8 +2917,13 @@ def test_two_dated_facts_in_one_quarter_are_no_evidence_bac():
     filed FY 0.25 stays."""
     b = Book()
     k = b.filing("BAC-K", "2017-02-23", "10-K")
-    for day, v in (("2016-01-21", "0.05"), ("2016-04-27", "0.05"), ("2016-06-29", "0.075"),
-                   ("2016-07-27", "0.075"), ("2016-10-27", "0.075")):
+    for day, v in (
+        ("2016-01-21", "0.05"),
+        ("2016-04-27", "0.05"),
+        ("2016-06-29", "0.075"),
+        ("2016-07-27", "0.075"),
+        ("2016-10-27", "0.075"),
+    ):
         b.add(DPS_DECL, v, day, day, k)
     b.add(DPS_DECL, "0.25", "2016-01-01", "2016-12-31", k)
     cell = b.cell(run(b), "dividends_per_share_resolved", "2016-01-01", "2016-12-31")
@@ -2862,17 +2934,27 @@ def test_one_copy_quarter_hidden_when_year_totals_agree_lfus():
     """LFUS FY2023 2.5 in three 10-Ks vs a one-copy Q4 0.6 (0.6+0.6+0.65+0.6 =
     2.45): the year stays, the one-copy quarter is hidden."""
     b = Book()
-    qs = (("2023-01-01", "2023-04-01", "0.6"), ("2023-04-02", "2023-07-01", "0.6"),
-          ("2023-07-02", "2023-09-30", "0.65"))
+    qs = (
+        ("2023-01-01", "2023-04-01", "0.6"),
+        ("2023-04-02", "2023-07-01", "0.6"),
+        ("2023-07-02", "2023-09-30", "0.65"),
+    )
     for i, (s, e, v) in enumerate(qs):
         b.add(DPS_PAID, v, s, e, b.filing(f"L-Q{i}", f"2023-{4 + 3 * i:02d}-28"))
         b.add(DPS_PAID, v, s, e, b.filing(f"L-Q{i}-next", f"2024-{4 + 3 * i:02d}-28"))
     b.add(DPS_PAID, "0.6", "2023-10-01", "2023-12-30", b.filing("L-24Q", "2024-10-30"))
     for i, fd in enumerate(("2024-02-20", "2025-02-20", "2026-02-20")):
-        b.add(DPS_PAID, "2.5", "2023-01-01", "2023-12-30", b.filing(f"L-K{i}", fd, "10-K"))
+        b.add(
+            DPS_PAID, "2.5", "2023-01-01", "2023-12-30", b.filing(f"L-K{i}", fd, "10-K")
+        )
     res = run(b)
-    assert b.cell(res, "dividends_per_share_resolved", "2023-01-01", "2023-12-30").value == D("2.5")
-    assert b.cell(res, "dividends_per_share_resolved", "2023-10-01", "2023-12-30").status == sb.HIDE_DPS_INVALID
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2023-01-01", "2023-12-30"
+    ).value == D("2.5")
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2023-10-01", "2023-12-30").status
+        == sb.HIDE_DPS_INVALID
+    )
 
 
 def test_swapped_pair_released_when_the_swapped_copy_is_the_earliest_nwsa():
@@ -2890,29 +2972,57 @@ def test_swapped_pair_released_when_the_swapped_copy_is_the_earliest_nwsa():
     b.add(EPS_D, "0.11", "2015-07-01", "2015-09-30", k16)
     b.add(EPS_D, "0.30", "2015-07-01", "2015-09-30", k17)
     res = run(b)
-    assert b.cell(res, "diluted_eps_resolved", "2014-07-01", "2014-09-30").value == D("0.11")
+    assert b.cell(res, "diluted_eps_resolved", "2014-07-01", "2014-09-30").value == D(
+        "0.11"
+    )
     cell = b.cell(res, "diluted_eps_resolved", "2015-07-01", "2015-09-30")
     assert cell.status == sb.SHOWN and cell.value == D("0.30")
 
 
 def _fact(fid: int, filed: str) -> SourceFact:
-    return SourceFact(fid, EPS_D, "usd/shares", 1, date(2023, 1, 1), date(2023, 12, 31), "duration",
-                      D("-1.63"), fid, date.fromisoformat(filed), "10-K", f"A-{fid}", False, True)
+    return SourceFact(
+        fid,
+        EPS_D,
+        "usd/shares",
+        1,
+        date(2023, 1, 1),
+        date(2023, 12, 31),
+        "duration",
+        D("-1.63"),
+        fid,
+        date.fromisoformat(filed),
+        "10-K",
+        f"A-{fid}",
+        False,
+        True,
+    )
 
 
 def test_post_event_copies_need_two_filings_after_every_live_event():
     """QXO FY2023: the 2024 and 2025 10-Ks, filed after the confirmed 1:8 of
     2024-08-14, re-present the year on the current basis."""
-    ev = sb.Event(1, Fraction(1, 8), date(2024, 5, 1), date(2024, 8, 14), status="confirmed")
-    dead = sb.Event(2, Fraction(5, 4), date(2025, 5, 1), date(2025, 8, 14), status="rejected")
-    conv = [(_fact(1, "2024-03-01"), Fraction(1, 8), D("-0.20")),
-            (_fact(2, "2025-02-20"), Fraction(1), D("-1.63")),
-            (_fact(3, "2026-02-20"), Fraction(1), D("-1.63"))]
+    ev = sb.Event(
+        1, Fraction(1, 8), date(2024, 5, 1), date(2024, 8, 14), status="confirmed"
+    )
+    dead = sb.Event(
+        2, Fraction(5, 4), date(2025, 5, 1), date(2025, 8, 14), status="rejected"
+    )
+    conv = [
+        (_fact(1, "2024-03-01"), Fraction(1, 8), D("-0.20")),
+        (_fact(2, "2025-02-20"), Fraction(1), D("-1.63")),
+        (_fact(3, "2026-02-20"), Fraction(1), D("-1.63")),
+    ]
     post = sb.post_event_copies(conv, [ev, dead])
     assert [x[0].fact_id for x in post] == [2, 3]
-    assert sb.post_event_copies(conv[:2], [ev, dead]) is None  # one later copy never decides
-    pending = sb.Event(3, Fraction(2), date(2025, 9, 1), date(2026, 3, 1), status="review")
-    assert sb.post_event_copies(conv, [ev, pending]) is None  # a live candidate after them
+    assert (
+        sb.post_event_copies(conv[:2], [ev, dead]) is None
+    )  # one later copy never decides
+    pending = sb.Event(
+        3, Fraction(2), date(2025, 9, 1), date(2026, 3, 1), status="review"
+    )
+    assert (
+        sb.post_event_copies(conv, [ev, pending]) is None
+    )  # a live candidate after them
 
 
 def test_logi_prior_ytd_with_two_values_still_hides_the_quarter():
@@ -2947,27 +3057,61 @@ def test_year_below_its_quarters_is_hidden_even_with_many_copies_visa():
     """Visa FY 0.375 in three 10-Ks against four 0.375 quarters: the year
     carries the quarterly rate; it is hidden and the quarters stay."""
     b = Book()
-    for i, (s_, e_) in enumerate((("2021-10-01", "2021-12-31"), ("2022-01-01", "2022-03-31"),
-                                  ("2022-04-01", "2022-06-30"), ("2022-07-01", "2022-09-30"))):
-        b.add(DPS_DECL, "0.375", s_, e_, b.filing(f"VQ{i}", f"2022-{2 + 3 * i:02d}-27" if i < 3 else "2022-11-15", "10-Q" if i < 3 else "10-K"))
+    for i, (s_, e_) in enumerate(
+        (
+            ("2021-10-01", "2021-12-31"),
+            ("2022-01-01", "2022-03-31"),
+            ("2022-04-01", "2022-06-30"),
+            ("2022-07-01", "2022-09-30"),
+        )
+    ):
+        b.add(
+            DPS_DECL,
+            "0.375",
+            s_,
+            e_,
+            b.filing(
+                f"VQ{i}",
+                f"2022-{2 + 3 * i:02d}-27" if i < 3 else "2022-11-15",
+                "10-Q" if i < 3 else "10-K",
+            ),
+        )
     for i, fd in enumerate(("2022-11-16", "2023-11-15", "2024-11-14")):
-        b.add(DPS_DECL, "0.375", "2021-10-01", "2022-09-30", b.filing(f"VK{i}", fd, "10-K"))
+        b.add(
+            DPS_DECL,
+            "0.375",
+            "2021-10-01",
+            "2022-09-30",
+            b.filing(f"VK{i}", fd, "10-K"),
+        )
     res = run(b)
-    assert b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2022-09-30").status == sb.HIDE_DPS_INVALID
-    assert b.cell(res, "dividends_per_share_resolved", "2022-04-01", "2022-06-30").value == D("0.375")
+    assert (
+        b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2022-09-30").status
+        == sb.HIDE_DPS_INVALID
+    )
+    assert b.cell(
+        res, "dividends_per_share_resolved", "2022-04-01", "2022-06-30"
+    ).value == D("0.375")
 
 
 @pytest.mark.parametrize(
     "basic, diluted, same_filing, hidden",
-    [("-0.04", "0.30", False, True),  # NWSA Jul-Sep 2015: two filings mixed
-     ("0.50", "0.55", False, True),
-     ("0.07", "0.09", True, False),  # NTNX 6M FY2024: printed pair, preferred add-back
-     ("0.51", "0.62", True, False),  # ZWS FY2018
-     ("-0.02", "17600000", True, True),  # ASTS: a share count on the EPS tag
-     ("-0.02", "-17600000", True, True),  # a units scale apart, same sign
-     ("0.08", "-0.08", False, False),  # warrant gain removed from diluted (CG, GSAT)
-     ("0.50", "0.49", False, False),
-     ("-0.30", "-0.30", True, False)],
+    [
+        ("-0.04", "0.30", False, True),  # NWSA Jul-Sep 2015: two filings mixed
+        ("0.50", "0.55", False, True),
+        (
+            "0.07",
+            "0.09",
+            True,
+            False,
+        ),  # NTNX 6M FY2024: printed pair, preferred add-back
+        ("0.51", "0.62", True, False),  # ZWS FY2018
+        ("-0.02", "17600000", True, True),  # ASTS: a share count on the EPS tag
+        ("-0.02", "-17600000", True, True),  # a units scale apart, same sign
+        ("0.08", "-0.08", False, False),  # warrant gain removed from diluted (CG, GSAT)
+        ("0.50", "0.49", False, False),
+        ("-0.30", "-0.30", True, False),
+    ],
 )
 def test_basic_and_diluted_eps_pair_check(basic, diluted, same_filing, hidden):
     b = Book()
@@ -2998,14 +3142,22 @@ def _pc(c, old):
 
 def test_release_package_matches_when_nothing_moved():
     res, q1, q2 = _pkg_book()
-    current = {(q1.concept, q1.period_id): (11, D("4.00"), ()), (q2.concept, q2.period_id): (12, D("0.52"), ())}
-    pkg = {(q1.concept, q1.period_id): _pc(q1, D("4.00"))}  # q1 changes 4.00 -> 0.40; q2 is a no-op
+    current = {
+        (q1.concept, q1.period_id): (11, D("4.00"), ()),
+        (q2.concept, q2.period_id): (12, D("0.52"), ()),
+    }
+    pkg = {
+        (q1.concept, q1.period_id): _pc(q1, D("4.00"))
+    }  # q1 changes 4.00 -> 0.40; q2 is a no-op
     assert sb.package_mismatches(res, current, pkg, remove_derived_only=True) == []
 
 
 def test_release_package_refuses_a_cell_production_rewrote():
     res, q1, q2 = _pkg_book()
-    current = {(q1.concept, q1.period_id): (11, D("3.90"), ()), (q2.concept, q2.period_id): (12, D("0.52"), ())}
+    current = {
+        (q1.concept, q1.period_id): (11, D("3.90"), ()),
+        (q2.concept, q2.period_id): (12, D("0.52"), ()),
+    }
     pkg = {(q1.concept, q1.period_id): _pc(q1, D("4.00"))}
     why = sb.package_mismatches(res, current, pkg, remove_derived_only=True)
     assert len(why) == 1 and "production now 3.90" in why[0]
@@ -3013,8 +3165,14 @@ def test_release_package_refuses_a_cell_production_rewrote():
 
 def test_release_package_refuses_a_changed_recompute_and_writes_outside_it():
     res, q1, q2 = _pkg_book()
-    current = {(q1.concept, q1.period_id): (11, D("4.00"), ())}  # q2 would be a new, unpackaged value
+    current = {
+        (q1.concept, q1.period_id): (11, D("4.00"), ())
+    }  # q2 would be a new, unpackaged value
     stale = sb.PackageCell(q1.concept, q1.period_id, D("4.00"), D("0.41"), sb.SHOWN)
-    why = sb.package_mismatches(res, current, {(q1.concept, q1.period_id): stale}, remove_derived_only=True)
+    why = sb.package_mismatches(
+        res, current, {(q1.concept, q1.period_id): stale}, remove_derived_only=True
+    )
     assert any("recomputed" in w for w in why)
-    assert any("outside the package" in w for w in why)  # q2's new 0.52 was not packaged
+    assert any(
+        "outside the package" in w for w in why
+    )  # q2's new 0.52 was not packaged
