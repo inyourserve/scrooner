@@ -183,10 +183,24 @@ for (cik, d), (_r, adsh) in sorted(best.items()):
             r"(FinanceLeaseLiability|CapitalLeaseObligations)(Current|Noncurrent)?|FinanceLeaseLiabilityCurrentAndNoncurrent|"
             r"CapitalLeaseObligationsIncurred?", t) and not t.endswith("Incurred"))
     lease_in_notes = [t for t in lease_in_notes if t not in lease_unread]
+    note_lease_added = None
     if lease_in_notes:
-        # finance leases only in the notes, outside every member: the record's 'lease-inclusive' value
-        # excludes them (MSFT, META, AAPL, GOOG, NVDA): a perimeter question, flagged, not held
-        note_flag = (note_flag + ";" if note_flag else "") + "finance_lease_in_notes_not_in_total:" + ",".join(lease_in_notes)
+        # OPTION (b), founder ruling 2026-11-04 (relayed by Dhairya): finance leases that sit only in the
+        # notes, outside every member, are added to the lease-inclusive total from the SAME accession
+        # (MSFT, META, AAPL, GOOG, NVDA). Total element first, else current + noncurrent; capital-lease
+        # elements (pre-ASC 842) the same way. Borrowings-only is unchanged.
+        def pick(total, cur_, noncur):
+            if total in day:
+                return day[total][0], total
+            parts = [t for t in (cur_, noncur) if t in day]
+            return (sum((day[t][0] for t in parts), Decimal(0)), "+".join(parts)) if parts else (None, None)
+        v, src = pick("FinanceLeaseLiability", "FinanceLeaseLiabilityCurrent", "FinanceLeaseLiabilityNoncurrent")
+        if v is None:
+            v, src = pick("CapitalLeaseObligations", "CapitalLeaseObligationsCurrent", "CapitalLeaseObligationsNoncurrent")
+        if v:
+            lease_incl += v
+            note_lease_added = str(v)
+            note_flag = (note_flag + ";" if note_flag else "") + f"note_finance_lease_added:{src}={v}"
     verdict = None
     if ticker in COMPANY_HOLDS:
         verdict = COMPANY_HOLDS[ticker]
@@ -218,7 +232,8 @@ for (cik, d), (_r, adsh) in sorted(best.items()):
         "slot_borrowings": str(borrowings) if publishable else None,
         "prod_value": str(pv) if pv is not None else None,
         "lease_lines_not_in_record": lease_unread, "missing_members": missing, "missing_custom_members": missing_custom, "face_admission_tie_pending": tie_pending,
-        "note_current_portion_added": str(note_current_added) if note_current_added is not None else None, "note_flag": note_flag})
+        "note_current_portion_added": str(note_current_added) if note_current_added is not None else None,
+        "note_finance_lease_added": note_lease_added, "note_flag": note_flag})
 report["summary"] = dict(report["summary"])
 report["per_company"] = {k: dict(v) for k, v in report["per_company"].items()}
 json.dump(report, open(out_path, "w"), indent=1)
