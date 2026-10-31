@@ -2958,21 +2958,63 @@ def test_year_below_its_quarters_is_hidden_even_with_many_copies_visa():
 
 
 @pytest.mark.parametrize(
-    "basic, diluted, hidden",
-    [("-0.04", "0.30", True),  # NWSA Jul-Sep 2015: a loss with positive diluted
-     ("0.50", "0.55", True),  # dilution never raises EPS
-     ("-0.02", "17600000", True),  # ASTS: a share count on the EPS tag
-     ("-0.02", "-17600000", True),  # a units scale apart, same sign
-     ("0.08", "-0.08", False),  # warrant gain removed from diluted (CG, GSAT)
-     ("0.50", "0.49", False),
-     ("-0.30", "-0.30", False)],
+    "basic, diluted, same_filing, hidden",
+    [("-0.04", "0.30", False, True),  # NWSA Jul-Sep 2015: two filings mixed
+     ("0.50", "0.55", False, True),
+     ("0.07", "0.09", True, False),  # NTNX 6M FY2024: printed pair, preferred add-back
+     ("0.51", "0.62", True, False),  # ZWS FY2018
+     ("-0.02", "17600000", True, True),  # ASTS: a share count on the EPS tag
+     ("-0.02", "-17600000", True, True),  # a units scale apart, same sign
+     ("0.08", "-0.08", False, False),  # warrant gain removed from diluted (CG, GSAT)
+     ("0.50", "0.49", False, False),
+     ("-0.30", "-0.30", True, False)],
 )
-def test_basic_and_diluted_eps_pair_check(basic, diluted, hidden):
+def test_basic_and_diluted_eps_pair_check(basic, diluted, same_filing, hidden):
     b = Book()
     f = b.filing("P-Q3", "2015-11-06")
+    g = f if same_filing else b.filing("P-K", "2016-02-20", "10-K")
     b.add(EPS_B, basic, "2015-07-01", "2015-09-30", f)
-    b.add(EPS_D, diluted, "2015-07-01", "2015-09-30", f)
+    b.add(EPS_D, diluted, "2015-07-01", "2015-09-30", g)
     res = run(b)
     for concept in ("basic_eps_resolved", "diluted_eps_resolved"):
         cell = b.cell(res, concept, "2015-07-01", "2015-09-30")
         assert (cell.status == sb.HIDE_EPS_PAIR) is hidden
+
+
+def _pkg_book():
+    b = Book()
+    f = b.filing("PK-1", "2016-05-01")
+    b.add(EPS_D, "0.40", "2016-01-01", "2016-03-31", f)
+    b.add(EPS_D, "0.52", "2016-04-01", "2016-06-30", b.filing("PK-2", "2016-08-01"))
+    res = run(b)
+    q1 = b.cell(res, "diluted_eps_resolved", "2016-01-01", "2016-03-31")
+    q2 = b.cell(res, "diluted_eps_resolved", "2016-04-01", "2016-06-30")
+    return res, q1, q2
+
+
+def _pc(c, old):
+    return sb.PackageCell(c.concept, c.period_id, old, c.value, c.status)
+
+
+def test_release_package_matches_when_nothing_moved():
+    res, q1, q2 = _pkg_book()
+    current = {(q1.concept, q1.period_id): (11, D("4.00"), ()), (q2.concept, q2.period_id): (12, D("0.52"), ())}
+    pkg = {(q1.concept, q1.period_id): _pc(q1, D("4.00"))}  # q1 changes 4.00 -> 0.40; q2 is a no-op
+    assert sb.package_mismatches(res, current, pkg, remove_derived_only=True) == []
+
+
+def test_release_package_refuses_a_cell_production_rewrote():
+    res, q1, q2 = _pkg_book()
+    current = {(q1.concept, q1.period_id): (11, D("3.90"), ()), (q2.concept, q2.period_id): (12, D("0.52"), ())}
+    pkg = {(q1.concept, q1.period_id): _pc(q1, D("4.00"))}
+    why = sb.package_mismatches(res, current, pkg, remove_derived_only=True)
+    assert len(why) == 1 and "production now 3.90" in why[0]
+
+
+def test_release_package_refuses_a_changed_recompute_and_writes_outside_it():
+    res, q1, q2 = _pkg_book()
+    current = {(q1.concept, q1.period_id): (11, D("4.00"), ())}  # q2 would be a new, unpackaged value
+    stale = sb.PackageCell(q1.concept, q1.period_id, D("4.00"), D("0.41"), sb.SHOWN)
+    why = sb.package_mismatches(res, current, {(q1.concept, q1.period_id): stale}, remove_derived_only=True)
+    assert any("recomputed" in w for w in why)
+    assert any("outside the package" in w for w in why)  # q2's new 0.52 was not packaged

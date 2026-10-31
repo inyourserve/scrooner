@@ -1886,7 +1886,8 @@ def _eps_pair_check(cells: list[CellResult]) -> list[CellResult]:
     """ASC 260: dilution never raises EPS, and with a loss diluted equals
     basic. So for one period, shown basic and diluted EPS cannot be
     (a) basic < 0 < diluted (NWSA Jul-Sep 2015 -0.04 vs 0.30, CDE Q4 2016),
-    (b) 0 < basic < diluted beyond rounding, or (c) a units scale apart
+    (b) 0 < basic < diluted beyond rounding, when (a)/(b) come from two
+    different filings (a filer-printed pair stands), or (c) a units scale apart
     (ASTS diluted 17,600,000: a share count on the EPS tag). Both cells are
     hidden: the pair alone cannot say which is wrong. Basic > 0 > diluted
     stays (warrant fair-value gains leave the diluted numerator: GSAT, CG)."""
@@ -1900,10 +1901,16 @@ def _eps_pair_check(cells: list[CellResult]) -> list[CellResult]:
     for pair in by_span.values():
         if len(pair) != 2:
             continue
-        b, d = pair["basic_eps_resolved"].value, pair["diluted_eps_resolved"].value
-        assert b is not None and d is not None
+        bc, dc = pair["basic_eps_resolved"], pair["diluted_eps_resolved"]
+        b, d = bc.value, dc.value
+        assert b is not None and d is not None and bc.chosen is not None and dc.chosen is not None
         scale = b != 0 and d != 0 and (abs(d) > EPS_PAIR_SCALE * abs(b) or abs(b) > EPS_PAIR_SCALE * abs(d))
-        if (b < 0 < d) or (0 < b and d > b + EPS_PAIR_TOL) or scale:
+        # Verifier run 7.4: a pair the filer PRINTED together can have diluted
+        # above basic (a preferred add-back: NTNX 6M FY2024 0.07 / 0.09, ZWS
+        # FY2018 0.51 / 0.62), so a sign or order conflict hides only a pair
+        # assembled from two different filings (NWSA Jul-Sep 2015)
+        printed = bc.chosen.filing_id == dc.chosen.filing_id
+        if scale or (not printed and ((b < 0 < d) or (0 < b and d > b + EPS_PAIR_TOL))):
             bad.update((c.concept, c.period_id) for c in pair.values())
     if not bad:
         return cells
@@ -3255,16 +3262,70 @@ def all_input_tags(mapped_tags: Mapping[str, list[str]]) -> set[str]:
     return tags
 
 
+@dataclass(frozen=True)
+class PackageCell:
+    """One cell of a release package: what production held and what the
+    pass showed at packaging time."""
+
+    concept: str
+    period_id: int
+    old_value: Decimal | None
+    new_value: Decimal | None
+    status: str
+
+
+def package_mismatches(
+    res: CompanyResult,
+    current: Mapping,
+    pkg: Mapping[tuple[str, int], PackageCell],
+    *,
+    remove_derived_only: bool,
+) -> list[str]:
+    """Why this company's write no longer matches its release package (empty
+    = it matches). Production can rewrite cells after the dry run, and the
+    filings can change the computation, so a release write refuses the
+    company unless (a) every packaged cell still holds the value production
+    held at packaging, (b) the pass recomputes the packaged value and status,
+    and (c) every other cell the write touches is a no-op."""
+    out: list[str] = []
+    by_key = {(c.concept, c.period_id): c for c in res.cells}
+    for key, p in pkg.items():
+        hit = current.get(key)
+        live = hit[1] if hit else None
+        if live != p.old_value:
+            out.append(f"{key}: production now {live}, packaged {p.old_value}")
+        c = by_key.get(key)
+        if c is None or c.status != p.status or c.value != p.new_value:
+            got = None if c is None else (c.status, c.value)
+            out.append(f"{key}: recomputed {got}, packaged {(p.status, p.new_value)}")
+    for c in cells_to_write(res, current):
+        key = (c.concept, c.period_id)
+        hit = current.get(key)
+        if key not in pkg and (hit is None or hit[1] != c.value):
+            out.append(f"{key}: would write {c.value} outside the package")
+    for c in res.cells:
+        key = (c.concept, c.period_id)
+        if c.status == SHOWN or key in pkg or key not in current:
+            continue
+        if c.status == HIDE_NO_FILED_SOURCE and not remove_derived_only:
+            continue
+        out.append(f"{key}: would remove a cell outside the package")
+    return out
+
+
 def run_split_rebase(
     conn,
     company_ids: list[int],
     *,
     environ: Mapping[str, str] | None = None,
     run_id: str | None = None,
+    package: Mapping[int, Mapping[tuple[str, int], PackageCell]] | None = None,
 ) -> dict:
     """Entry point. off: no query, legacy writers stay in charge. dry_run:
     read-only compute, returns results. on: compute and write in one
-    transaction per company (needs migrations 0098 and 0099 applied)."""
+    transaction per company (needs migrations 0098 and 0099 applied). With a
+    release `package`, a company is written only when it still matches its
+    packaged cells (package_mismatches); the others are refused, not forced."""
     mode = rule_flags.rule_mode(RULE_ID, environ)
     if mode == rule_flags.OFF:
         return {"mode": mode, "companies": 0}
@@ -3278,6 +3339,7 @@ def run_split_rebase(
     mapped = load_mapped_tags(conn)
     concept_ids = load_concept_ids(conn, all_input_tags(mapped))
     results = []
+    refused: dict[int, list[str]] = {}
     for cid in company_ids:
         facts = load_company_facts(conn, cid, concept_ids)
         res = compute_company(cid, facts, mapped)
@@ -3285,12 +3347,22 @@ def run_split_rebase(
         results.append((res, current))
         if mode == rule_flags.ON:
             assert run_id is not None
+            if package is not None:
+                why = (
+                    package_mismatches(res, current, package[cid], remove_derived_only=ru1_on)
+                    if cid in package
+                    else ["company is not in the release package"]
+                )
+                if why:
+                    refused[cid] = why[:10]
+                    continue
             write_company(conn, res, current, run_id=run_id, remove_derived_only=ru1_on)
     return {
         "mode": mode,
         "companies": len(results),
         "results": results,
         "ru1_on": ru1_on,
+        "refused": refused,
     }
 
 
