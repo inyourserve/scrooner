@@ -152,6 +152,7 @@ class LoadReport:
     periods_created: int = 0
     facts_materialized: int = 0
     run_id: str | None = None
+    overridden: int = 0
     per_company: list[dict[str, Any]] = field(default_factory=list)
 
     def reject(self, line: int, why: str, **ctx: Any) -> None:
@@ -469,6 +470,61 @@ def to_reason(r: CellRow) -> BlankReason:
 # --------------------------------------------------------------------------
 # the load
 # --------------------------------------------------------------------------
+def apply_defect_overrides(
+    cells: list[CellRow],
+    overrides: list[dict[str, Any]],
+    reason_code: str,
+    rule_id: str,
+) -> int:
+    """Turn the cells named in `overrides` (company_id, data_point_name,
+    period_grain, period_start, period_end, optional why/input_accessions) into
+    defect(period, period_engineer) blanks with `reason_code`: the way a lane's
+    late-found suspect cells (e.g. mixed-vintage derived quarters) are kept out
+    of production without losing the key. Returns the number of cells changed."""
+    want = {
+        (
+            int(o["company_id"]),
+            o["data_point_name"],
+            o["period_grain"],
+            date.fromisoformat(o["period_start"]),
+            date.fromisoformat(o["period_end"]),
+        ): o
+        for o in overrides
+    }
+    n = 0
+    for c in cells:
+        k = (
+            c.key.company_id,
+            c.key.data_point_name,
+            c.key.period_grain,
+            c.key.period_start,
+            c.key.period_end,
+        )
+        o = want.get(k)
+        if o is None:
+            continue
+        c.state, c.value, c.unit, c.derivation = "defect", None, None, None
+        c.reason_code = reason_code
+        c.reason_text = (
+            "Held: "
+            + "; ".join(o.get("why") or [reason_code])
+            + (
+                f" (inputs {', '.join(o['input_accessions'])})"
+                if o.get("input_accessions")
+                else ""
+            )
+        )
+        c.defect_class, c.owner, c.root_cause_class = (
+            "period",
+            "period_engineer",
+            "period",
+        )
+        c.rule_id = rule_id
+        c.input_refs = {**c.input_refs, "override": o}
+        n += 1
+    return n
+
+
 def load(
     conn: psycopg.Connection,
     family: str,
@@ -478,6 +534,8 @@ def load(
     manifest_rule_id: str | None = None,
     git_commit: str | None = None,
     data_points: list[str] | None = None,
+    defect_overrides: list[dict[str, Any]] | None = None,
+    defect_reason: str = "mixed_vintage_inputs",
 ) -> LoadReport:
     """paths: one or more cell files of ONE family (merged; a key in two files is
     a rejection). data_points: the delete scope (default: the manifest's or the
@@ -548,6 +606,10 @@ def load(
     # cells would be blanked for every company by delete-then-insert (the
     # interest_income case). Such points leave the delete scope and their rows
     # are rejected, listed under data_point_has_no_valued_cells.
+    if defect_overrides:
+        rep.overridden = apply_defect_overrides(
+            cells, defect_overrides, defect_reason, f"cells.{family}_override@1"
+        )
     valued_points = {c.key.data_point_name for c in cells if c.state in VALUED}
     empty_points = [n for n in scope_names if n not in valued_points]
     for n in empty_points:

@@ -225,7 +225,10 @@ def test_plan_writes_nothing_apply_writes_and_reload_is_idempotent(conn, tmp_pat
         and plan.valued_written == 1
         and plan.reasons_written == 0
     )
-    assert plan.rejected == {"filed_value_resolves_to_no_fact": 1, "data_point_has_no_valued_cells": 1}
+    assert plan.rejected == {
+        "filed_value_resolves_to_no_fact": 1,
+        "data_point_has_no_valued_cells": 1,
+    }
     assert (
         _one(
             conn,
@@ -277,3 +280,37 @@ def test_plan_writes_nothing_apply_writes_and_reload_is_idempotent(conn, tmp_pat
             )
             == "apply"
         )
+
+
+@pytest.mark.unit
+def test_defect_overrides_turn_named_cells_into_period_defects():
+    c = cl.parse_row(1, _row(state="derived", derivation={"formula": "x"}), POINTS)
+    assert isinstance(c, cl.CellRow)
+    n = cl.apply_defect_overrides(
+        [c],
+        [
+            {
+                "company_id": 1,
+                "data_point_name": "capex_resolved",
+                "period_grain": "Q",
+                "period_start": "2024-01-01",
+                "period_end": "2024-03-31",
+                "why": ["inputs_filed_2plus_years_apart"],
+                "input_accessions": ["a", "b"],
+            }
+        ],
+        "mixed_vintage_inputs",
+        "cells.x_override@1",
+    )
+    assert (
+        n == 1
+        and c.state == "defect"
+        and c.value is None
+        and c.reason_code == "mixed_vintage_inputs"
+    )
+    assert (
+        c.defect_class == "period"
+        and c.owner == "period_engineer"
+        and "a, b" in c.reason_text
+    )
+    cl.to_reason(c)  # passes the contract

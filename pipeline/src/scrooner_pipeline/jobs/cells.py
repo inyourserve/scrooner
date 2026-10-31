@@ -69,6 +69,13 @@ def load_cmd(
     statement_timeout: str = typer.Option(
         "10min", help="Per-statement timeout for this session."
     ),
+    defect_keys: str = typer.Option(
+        None,
+        help="JSONL of cell keys to load as defect blanks instead of their value (a lane's suspect list).",
+    ),
+    defect_reason: str = typer.Option(
+        "mixed_vintage_inputs", help="reason_code for --defect-keys rows."
+    ),
 ) -> None:
     from scrooner_pipeline.normalizer import cell_loader
 
@@ -88,6 +95,14 @@ def load_cmd(
             apply=apply,
             git_commit=git_commit,
             data_points=[s for s in data_points.split(",") if s] or None,
+            defect_overrides=[
+                json.loads(line)
+                for line in Path(defect_keys).read_text().splitlines()
+                if line.strip()
+            ]
+            if defect_keys
+            else None,
+            defect_reason=defect_reason,
         )
     d = rep.as_dict()
     if report:
