@@ -10,7 +10,8 @@ Cells the Verifier found production right are kept (keep-list) and never touched
 Before-image: production's capex_resolved canonical_fact rows for every release-1 cell, with
 ids; rollback SQL generated from it (never executed here). One read-only connection,
 statement_timeout 60s.
-usage: DATABASE_URL=... capex_release_package.py <cells.jsonl.gz> <keep_list.json|-> <out_dir>
+usage: DATABASE_URL=... capex_release_package.py <cells.jsonl.gz> <keep_list.json|-> <out_dir> [<previous release1 cells.jsonl> <label>]
+  with a previous release: writes capex_release1_changed_vs_<label>.jsonl (added / removed / value_changed)
 """
 import gzip
 import hashlib
@@ -26,6 +27,8 @@ import psycopg
 
 RULE = "slot.capex@1"
 cells_path, keep_path, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
+prev_path, prev_label = (sys.argv[4], sys.argv[5]) if len(sys.argv) > 5 else (None, None)
+prev_rows = [json.loads(x) for x in open(prev_path)] if prev_path else []
 out.mkdir(parents=True, exist_ok=True)
 keep = set()
 if keep_path != "-":
@@ -55,7 +58,8 @@ for line in gzip.open(cells_path, "rt"):
     v = Decimal(c["interim"])
     row = {"cik": c["cik"], "ticker": c["ticker"], "end": c["end"], "qtrs": c["qtrs"], "accession": c["accession"],
            "form": c["form"], "value": str(v), "prod_value": c["prod_value"],
-           "members": [{"tag": x["tag"], "label": x["label"], "nature": x["nature"], "value": x["value"]} for x in c["lines"]]}
+           "members": [{"tag": x["tag"], "label": x["label"], "nature": x["nature"], "value": x["value"]} for x in c["lines"]],
+           "skipped_lines": c.get("skipped_lines") or []}
     if key in keep:
         kept.append(row)
         continue
@@ -134,6 +138,22 @@ with open(out / "capex_release1_rollback.sql", "w") as f:
     for b in before:
         f.write(f"update analytics.canonical_fact set value = {b['value_before']} where id = {b['canonical_fact_id']};\n")
     f.write("commit;\n")
+changed = []
+if prev_rows:
+    prev = {(r["cik"], r["end"], r["qtrs"]): r for r in prev_rows}
+    now = {(r["cik"], r["end"], r["qtrs"]): r for r in r1}
+    for k in sorted(set(prev) | set(now)):
+        a, b = prev.get(k), now.get(k)
+        if a and b and a["value"] == b["value"]:
+            continue
+        changed.append({"cik": k[0], "end": k[1], "qtrs": k[2], "ticker": (a or b)["ticker"], "accession": (b or a)["accession"],
+                        "change": "added" if not a else ("removed" if not b else "value_changed"),
+                        "value_before": a and a["value"], "value_now": b and b["value"], "prod_value": (b or a)["prod_value"],
+                        "members_now": b and b["members"], "skipped_lines_now": b and b["skipped_lines"]})
+    with open(out / f"capex_release1_changed_vs_{prev_label}.jsonl", "w") as f:
+        for x in changed:
+            f.write(json.dumps(x, sort_keys=True) + "\n")
+proceeds_beside = [r for r in r1 if any(x["why"] == "proceeds_or_sale" for x in r["skipped_lines"])]
 pkg = {
     "rule_id": RULE,
     "family": "cash flow: capex_resolved (feeds FCF, FCF yield, capex % revenue, FCF per share, buybacks and dividends % FCF)",
@@ -148,6 +168,9 @@ pkg = {
         "rollback": "capex_release1_rollback.sql (generated, run in one transaction by the Release Manager only)",
         "keep_list": f"capex_release_keep_list.json ({len(kept)} cells the Verifier found production right; untouched)",
         "touched_ciks": "release1_touched_ciks.txt",
+        "cells_with_a_skipped_proceeds_or_sale_line": len(proceeds_beside),
+        "changed_vs_previous": (f"capex_release1_changed_vs_{prev_label}.jsonl: " + json.dumps(dict(Counter(x["change"] for x in changed))))
+                               if prev_rows else None,
     },
     "release2": {"cells_file": "capex_release2_fills.jsonl", "sha256": d2, "cells": len(r2),
                  "status": "production blank: not in the Verifier's sampled population; needs its own fill stratum before shipping"},

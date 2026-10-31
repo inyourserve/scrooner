@@ -81,7 +81,7 @@ def capex_nature(tag, label):
         return "lease_unclear"  # element misused or label silent: unresolved in BOTH variants
     if re.search(r"exclud\w* (equipment )?leased", label, re.I):
         return "ppe"  # CAT: "Capital expenditures - excluding equipment leased to others" is the PP&E line
-    if "EquipmentOnLease" in tag or re.search(r"leased to others|equipment on (operating )?lease|(?<!non-)(?<!non )rental (equipment|fleet)|lease fleet", label, re.I):
+    if "EquipmentOnLease" in tag or re.search(r"leased to others|equipment on (operating )?lease|(?<!non-)(?<!non )rental (equipment|fleet)|held for rental|lease fleet", label, re.I):
         return "leased"
     if re.search(r"software", label, re.I) and re.search(r"PropertyPlantAndEquipment|ProductiveAssets", tag) \
             and re.search(r"property|plant|premises|equipment|capital expenditure|building", label, re.I):
@@ -130,6 +130,8 @@ def da_nature(tag, label, custom, label_ok=True):
         # Verifier V10 (GD Q1 2024 211M): finance-lease ROU assets are depreciated like owned
         # assets, so "amortization of intangible and finance lease ROU assets" is D&A
         return "asset_da"
+    if re.search(r"accretion", label, re.I) and re.search(r"depreciation|amorti[sz]ation", label, re.I):
+        return "combined_other"  # Verifier V11 (EVR): any case or word order of "... and accretion"
     if not label_ok:
         # FSN pre gave this line the label of another printed line (AMD FY2024:
         # AdjustmentForAmortization shown as "Amortization", plabel = the ROU line's):
@@ -139,6 +141,8 @@ def da_nature(tag, label, custom, label_ok=True):
             re.search(r"depreciation", label, re.I)
             and re.search(r"(equipment|assets?|property) (on|under|subject to|held for) (operating )?leas|leased to others|rental (equipment|fleet)|lease fleet", label, re.I)):
         return "definition_question"  # Verifier: PCAR lessor-equipment depreciation, FTAI lease incentives
+    if re.search(r"(above|below).market", label, re.I):
+        return "excluded"  # Verifier V11 (VNO): below-market lease amortization is revenue
     if re.search(r"lease intangible|in.place lease|lease.related intangible|rent.related intangible|ground.lease intangible", label, re.I):
         return "lease_intangible"  # sign decides: printed negative = below-market revenue offset (TRNO)
     if re.search(r"^amorti[sz]ation\s*\(includ", label, re.I):
@@ -273,6 +277,7 @@ for (cik, ddate, q), f in chosen():
 
     # ---------------- capex ----------------
     lines = []
+    skipped = []  # lines read and deliberately NOT summed (proceeds/sale, accrual change): Verifier strata
     other_capex = 0
     if op_i is not None and inv_i is not None and inv_i > op_i:
         block = rows[op_i + 1:inv_i + 1]
@@ -281,12 +286,32 @@ for (cik, ddate, q), f in chosen():
             if CAPEX_OTHER.search(t):
                 other_capex += 1 if t in vals and dec(vals[t]) else 0
                 continue
+            if re.search(r"^\s*(proceeds|sales?\b|disposals?\b)|\(purchases?\)\s*sales?|\bsales? (of|and purchases)|proceeds from (the )?(sale|disposal)|divest", lab, re.I) \
+                    and not re.match(r"\s*payments? for \(proceeds", lab, re.I):
+                # Verifier V11 (AXS "Proceeds from the (purchase) sale of other assets, net"); also BURL/LGND
+                # sale proceeds and MCD "Sales and purchases of restaurant businesses". A payments line
+                # "net of disposals" (ACM, RKT) and the "Payments for (Proceeds from)" element (AMD) stay.
+                if t in vals and dec(vals[t]):
+                    skipped.append({"tag": t, "label": lab, "value": str(dec(vals[t])), "why": "proceeds_or_sale"})
+                continue
             if re.search(r"change in|accrued|accrual|increase|decrease", lab, re.I) and not CAPEX_TAG.search(t):
+                if t in vals and dec(vals[t]) and re.search(r"capital|property|equipment", lab, re.I):
+                    skipped.append({"tag": t, "label": lab, "value": str(dec(vals[t])), "why": "accrual_change"})
                 continue  # CHTR "Change in accrued expenses related to capital expenditures"
             if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab)) and not re.search(r"proceeds|sale|disposal|divest|software|site", lab + t, re.I):
                 v = dec(vals.get(t))
                 if v:
                     lines.append({"tag": t, "label": lab, "nature": "ppe", "disc": False, "value": abs(v), "custom": r["custom"], "og": True})
+                continue
+            if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on))\b", lab, re.I) and not re.search(
+                    r"real estate|rental propert|investment|loan|securit|intangible|business|software|acquisition|receivable|financ|note|"
+                    r"debt|restricted|other (long.term |non.?current )?assets|deposit|escrow|contract", lab, re.I) and t in vals \
+                    and not (parents[t] & printed - set(INV_TOTAL)):
+                v = dec(vals[t])
+                if v:
+                    # nature from the same classifier (OSK "Additions to equipment held for rental" stays leased)
+                    lines.append({"tag": t, "label": lab, "nature": capex_nature(t, lab), "disc": bool(re.search(r"discontinued", lab, re.I)),
+                                  "value": abs(v), "custom": r["custom"], "additions_line": True})
                 continue
             is_cap = (CAPEX_TAG.search(t) and not CAPEX_EXCLUDE.search(t)) or (r["custom"] and CAPEX_LABEL.search(lab) and not re.search(r"proceeds|sale of|disposal", lab, re.I))
             if not is_cap or t not in vals:
@@ -323,7 +348,7 @@ for (cik, ddate, q), f in chosen():
         else:
             interim, reason = narrow, None
         pv = prod[(cik, "capex_resolved")].get((end, q))
-        c = dict(cell, family="capex", lines=lines, cases=cases, net_sibling=net_sibling, other_capex_lines=other_capex,
+        c = dict(cell, family="capex", lines=lines, skipped_lines=skipped, cases=cases, net_sibling=net_sibling, other_capex_lines=other_capex,
                  cfo_perimeter="total" if cfo_total else "continuing",
                  variant_narrow=str(narrow) if not net_sibling and (n_ppe or n_net) else None,
                  variant_ruling=str(ruling) if not net_sibling and (n_ppe or n_net or leased or soft) else None,
@@ -409,15 +434,19 @@ for (cik, ddate, q), f in chosen():
         tol = runit([other_sum] + is_amort) if is_amort else None
         tie = is_sum is not None and abs(other_sum - is_sum) <= tol
     defq = [x for x in da if x["nature"] == "definition_question"]
-    label_only = [x for x in da if x["nature"] in ("excluded", "combined_other") and not DA_EXCLUDED_TAG.search(x["tag"]) and not MIXED_TAG.search(x["tag"])]
+    label_only = [x for x in da if x["nature"] in ("excluded", "combined_other") and not DA_EXCLUDED_TAG.search(x["tag"])
+                  and not MIXED_TAG.search(x["tag"]) and x["value"] > 0
+                  and not re.search(r"market|lease intangible|revenue|accretion|financing|debt|discount|premium", x["label"], re.I)]
     has_dep = any(re.search(r"depreciation|depletion", x["label"] + x["tag"], re.I) for x in asset)
     is_tie = None
     if is_da_total is not None and not defq:
         base = narrow_da + (other_sum if other and tie else 0)
-        tol = max(runit([is_da_total]), runit([base]))
-        if abs(base - is_da_total) <= tol:
+        with_lo = base + sum((x["value"] for x in label_only), Decimal(0))
+        # tolerance = the coarser printed unit of the two NONZERO numbers compared (Verifier
+        # V11: runit(0) is the 1M cap, which let EVR and VNO "tie" within a million)
+        if base and abs(base - is_da_total) <= max(runit([is_da_total]), runit([base])):
             is_tie = "asset_lines"
-        elif label_only and abs(base + sum(x["value"] for x in label_only) - is_da_total) <= tol:
+        elif label_only and with_lo and abs(with_lo - is_da_total) <= max(runit([is_da_total]), runit([with_lo])):
             is_tie = "with_label_excluded_lines"  # OMC: the ROU-labelled line is its depreciation
             for x in label_only:
                 x["nature"] = "asset_da"
@@ -459,6 +488,42 @@ for (cik, ddate, q), f in chosen():
         else:
             tol = max(runit([value]), runit([pv]))
             summ["da_published_prod_agrees" if abs(pv - value) <= tol else "da_published_prod_differs"] += 1
+    elif pv is not None:
+        summ["da_hidden_prod_shows_value"] += 1
+
+# company rule (Verifier V11, KEY FY2023): once a company's "net" D&A line is shown below its
+# own intangible amortization in any period, that label is held in EVERY period of the company
+net_labels = defaultdict(set)
+for c in cells:
+    if c["family"] == "d_and_a" and c["reason"] == "da_net_line_below_intangible_amortization":
+        for x in c["lines"]:
+            if x["nature"] == "asset_da" and re.search(r"\bnet\b", x["label"], re.I):
+                net_labels[c["cik"]].add(x["label"].strip().lower())
+for c in cells:
+    if c["family"] == "d_and_a" and c["reason"] is None and net_labels.get(c["cik"]) and any(
+            x["nature"] == "asset_da" and x["label"].strip().lower() in net_labels[c["cik"]] for x in c["lines"]):
+        c["value"], c["reason"] = None, "da_net_line_below_intangible_amortization"
+        c["company_rule"] = "net_line_failed_in_another_period"
+# D&A counters recomputed from the final cells (the company rule changes cells after the pass)
+for k in [k for k in summ if k.startswith("da_")]:
+    del summ[k]
+for t in per_company:
+    for k in [k for k in per_company[t] if k.startswith("da_")]:
+        del per_company[t][k]
+for c in cells:
+    if c["family"] != "d_and_a":
+        continue
+    v = Decimal(c["value"]) if c["value"] is not None else None
+    pv = Decimal(c["prod_value"]) if c["prod_value"] is not None else None
+    key = c["reason"] or ("published_2a_tie" if any(x["nature"] == "other_amort" for x in c["lines"]) else "published")
+    summ["da_cells"] += 1
+    summ[f"da_{key}"] += 1
+    per_company[c["ticker"]][f"da_{key}"] += 1
+    if v is not None:
+        if pv is None:
+            summ["da_published_prod_blank"] += 1
+        else:
+            summ["da_published_prod_agrees" if abs(pv - v) <= max(runit([v]), runit([pv])) else "da_published_prod_differs"] += 1
     elif pv is not None:
         summ["da_hidden_prod_shows_value"] += 1
 

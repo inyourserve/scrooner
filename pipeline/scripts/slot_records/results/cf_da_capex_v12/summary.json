@@ -1,0 +1,3469 @@
+{
+ "summary": {
+  "capex_case_discontinued": 5,
+  "capex_case_leased": 303,
+  "capex_case_software": 2677,
+  "capex_cells": 40418,
+  "capex_differ_prod_blank": 257,
+  "capex_differ_prod_eq_narrow": 2141,
+  "capex_differ_prod_eq_ruling": 373,
+  "capex_differ_prod_other": 207,
+  "capex_flag_ppe_line_includes_intangibles": 20,
+  "capex_interim_no_continuing_capex_line": 491,
+  "capex_interim_other_capex_lines_outside_ruling": 2980,
+  "capex_interim_perimeter_line_unresolved": 3051,
+  "capex_net_sibling_unresolved": 97,
+  "capex_published_prod_agrees": 30236,
+  "capex_published_prod_blank": 2178,
+  "capex_published_prod_differs": 1482,
+  "capex_variants_differ": 2978,
+  "da_cells": 41274,
+  "da_da_combined_with_other_items": 5126,
+  "da_da_definition_question": 237,
+  "da_da_net_line_below_intangible_amortization": 29,
+  "da_hidden_prod_shows_value": 4643,
+  "da_no_da_line": 656,
+  "da_no_depreciation_line_on_cf": 136,
+  "da_perimeter_line_unresolved": 3379,
+  "da_published": 31641,
+  "da_published_2a_tie": 70,
+  "da_published_prod_agrees": 23112,
+  "da_published_prod_blank": 7002,
+  "da_published_prod_differs": 1597
+ },
+ "companies": {
+  "A": {
+   "da_published": 47
+  },
+  "AA": {
+   "da_published": 44
+  },
+  "AAL": {
+   "da_published": 11
+  },
+  "AAOI": {
+   "da_published": 46
+  },
+  "AAON": {
+   "da_published": 46
+  },
+  "AAPL": {
+   "da_published": 46
+  },
+  "ABBV": {
+   "da_published": 46
+  },
+  "ABNB": {
+   "da_published": 22
+  },
+  "ABT": {
+   "da_published": 46
+  },
+  "ACA": {
+   "da_published": 37
+  },
+  "ACGL": {
+   "da_no_depreciation_line_on_cf": 38
+  },
+  "ACI": {
+   "da_no_da_line": 21,
+   "da_published": 18
+  },
+  "ACM": {
+   "da_published": 46
+  },
+  "ACN": {
+   "da_da_combined_with_other_items": 45,
+   "da_perimeter_line_unresolved": 1
+  },
+  "ACT": {
+   "da_no_da_line": 25
+  },
+  "ADBE": {
+   "da_da_combined_with_other_items": 47
+  },
+  "ADC": {
+   "da_perimeter_line_unresolved": 16,
+   "da_published": 30
+  },
+  "ADI": {
+   "da_published": 47
+  },
+  "ADM": {
+   "da_published": 46
+  },
+  "ADP": {
+   "da_da_combined_with_other_items": 46
+  },
+  "ADSK": {
+   "da_da_combined_with_other_items": 47
+  },
+  "AEE": {
+   "da_perimeter_line_unresolved": 44,
+   "da_published": 2
+  },
+  "AEIS": {
+   "da_published": 46
+  },
+  "AES": {
+   "da_published": 39,
+   "da_da_combined_with_other_items": 7
+  },
+  "AFG": {
+   "da_published": 46
+  },
+  "AFL": {
+   "da_no_da_line": 35
+  },
+  "AFRM": {
+   "da_perimeter_line_unresolved": 24,
+   "da_published": 4
+  },
+  "AGCO": {
+   "da_published": 46
+  },
+  "AGNC": {
+   "da_no_da_line": 36,
+   "da_no_depreciation_line_on_cf": 10
+  },
+  "AHR": {
+   "da_published": 10,
+   "da_perimeter_line_unresolved": 30
+  },
+  "AIG": {
+   "da_da_combined_with_other_items": 46
+  },
+  "AIT": {
+   "da_published": 46
+  },
+  "AIZ": {
+   "da_published": 34
+  },
+  "AJG": {
+   "da_published": 46
+  },
+  "AKAM": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "ALAB": {
+   "da_published": 15
+  },
+  "ALB": {
+   "da_published": 46
+  },
+  "ALGM": {
+   "da_published": 28
+  },
+  "ALGN": {
+   "da_published": 46
+  },
+  "ALKS": {
+   "da_published": 46
+  },
+  "ALL": {
+   "da_da_combined_with_other_items": 46
+  },
+  "ALLE": {
+   "da_published": 46
+  },
+  "ALLY": {
+   "da_da_combined_with_other_items": 12,
+   "da_published": 34
+  },
+  "ALNY": {
+   "da_published": 20,
+   "da_da_combined_with_other_items": 26
+  },
+  "ALSN": {
+   "da_published": 46
+  },
+  "ALV": {
+   "da_published": 46
+  },
+  "AM": {
+   "da_no_da_line": 3,
+   "da_published": 30
+  },
+  "AMAT": {
+   "da_published": 47
+  },
+  "AMCR": {
+   "da_da_combined_with_other_items": 33
+  },
+  "AMD": {
+   "capex_discontinued": 1,
+   "da_published": 41,
+   "da_perimeter_line_unresolved": 2,
+   "da_da_combined_with_other_items": 1,
+   "da_published_2a_tie": 1
+  },
+  "AME": {
+   "da_published": 45
+  },
+  "AMG": {
+   "da_da_combined_with_other_items": 46
+  },
+  "AMGN": {
+   "da_published": 16,
+   "da_da_combined_with_other_items": 30
+  },
+  "AMH": {
+   "da_published": 46
+  },
+  "AMKR": {
+   "da_published": 46
+  },
+  "AMP": {
+   "da_da_combined_with_other_items": 46
+  },
+  "AMRX": {
+   "da_no_da_line": 33,
+   "da_perimeter_line_unresolved": 4
+  },
+  "AMRZ": {
+   "da_da_combined_with_other_items": 10
+  },
+  "AMT": {
+   "da_da_combined_with_other_items": 46
+  },
+  "AMZN": {
+   "da_da_combined_with_other_items": 104
+  },
+  "ANET": {
+   "da_published": 18,
+   "da_da_combined_with_other_items": 28
+  },
+  "ANF": {
+   "da_perimeter_line_unresolved": 17,
+   "da_published": 30
+  },
+  "AON": {
+   "da_published": 9,
+   "da_da_combined_with_other_items": 37
+  },
+  "AOS": {
+   "da_published": 46
+  },
+  "APA": {
+   "da_published": 27
+  },
+  "APD": {
+   "da_published": 46
+  },
+  "APG": {
+   "da_perimeter_line_unresolved": 31
+  },
+  "APH": {
+   "da_published": 46
+  },
+  "APO": {
+   "da_published": 13,
+   "da_da_combined_with_other_items": 10
+  },
+  "APP": {
+   "capex_software": 10,
+   "da_published": 27
+  },
+  "APPF": {
+   "capex_software": 46,
+   "da_published": 45,
+   "da_no_da_line": 1
+  },
+  "APTV": {
+   "da_published": 46
+  },
+  "AR": {
+   "da_da_combined_with_other_items": 46
+  },
+  "ARCC": {
+   "da_no_da_line": 20,
+   "da_da_combined_with_other_items": 1
+  },
+  "ARE": {
+   "da_published": 46
+  },
+  "ARMK": {
+   "da_published": 46
+  },
+  "ARW": {
+   "da_published": 46
+  },
+  "ARWR": {
+   "da_published": 14,
+   "da_da_combined_with_other_items": 32
+  },
+  "ASB": {
+   "da_da_combined_with_other_items": 46
+  },
+  "ASTS": {
+   "da_published": 21
+  },
+  "ATI": {
+   "da_published": 46
+  },
+  "ATO": {
+   "da_published": 46
+  },
+  "ATR": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "AUR": {
+   "da_published": 21
+  },
+  "AVAV": {
+   "capex_software": 5,
+   "da_published": 47
+  },
+  "AVGO": {
+   "da_da_combined_with_other_items": 32,
+   "da_published": 6
+  },
+  "AVT": {
+   "da_published": 46
+  },
+  "AVTR": {
+   "da_published": 34
+  },
+  "AVY": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "AWI": {
+   "capex_software": 1,
+   "da_published": 46
+  },
+  "AWK": {
+   "da_published": 46
+  },
+  "AXON": {
+   "da_published": 46
+  },
+  "AXP": {
+   "da_published": 46
+  },
+  "AXS": {
+   "da_da_combined_with_other_items": 46
+  },
+  "AXSM": {
+   "da_published": 46
+  },
+  "AXTA": {
+   "da_published": 46
+  },
+  "AYI": {
+   "da_published": 46
+  },
+  "AZO": {
+   "da_published": 46
+  },
+  "BA": {
+   "da_published": 46
+  },
+  "BAC": {
+   "da_published": 42,
+   "da_da_combined_with_other_items": 4
+  },
+  "BAH": {
+   "da_published": 46
+  },
+  "BALL": {
+   "da_published": 46
+  },
+  "BAM": {
+   "da_published": 15
+  },
+  "BAX": {
+   "da_published": 46
+  },
+  "BBIO": {
+   "da_published": 22,
+   "da_da_combined_with_other_items": 1
+  },
+  "BBY": {
+   "da_published": 47
+  },
+  "BDX": {
+   "capex_software": 6,
+   "da_published": 46
+  },
+  "BE": {
+   "da_perimeter_line_unresolved": 3,
+   "da_published": 35
+  },
+  "BEN": {
+   "da_da_combined_with_other_items": 46
+  },
+  "BF-A": {
+   "capex_software": 27,
+   "da_published": 47
+  },
+  "BG": {
+   "da_published": 16
+  },
+  "BGC": {
+   "capex_software": 46,
+   "da_perimeter_line_unresolved": 46
+  },
+  "BIIB": {
+   "da_published": 37,
+   "da_da_combined_with_other_items": 9
+  },
+  "BIO": {
+   "da_published": 9
+  },
+  "BJ": {
+   "da_da_combined_with_other_items": 38
+  },
+  "BKH": {
+   "da_published": 46
+  },
+  "BKNG": {
+   "da_published": 46
+  },
+  "BKR": {
+   "da_published": 40
+  },
+  "BLCO": {
+   "da_published": 23
+  },
+  "BLDR": {
+   "da_published": 45,
+   "da_perimeter_line_unresolved": 1
+  },
+  "BLK": {
+   "da_published": 13
+  },
+  "BMNR": {
+   "da_published": 18
+  },
+  "BMRN": {
+   "da_published": 34,
+   "da_da_combined_with_other_items": 12
+  },
+  "BMY": {
+   "da_published": 45
+  },
+  "BNY": {
+   "da_published": 46
+  },
+  "BOKF": {
+   "da_published": 46
+  },
+  "BPOP": {
+   "da_da_combined_with_other_items": 46
+  },
+  "BR": {
+   "capex_software": 42,
+   "da_perimeter_line_unresolved": 46
+  },
+  "BRK-A": {
+   "da_published": 46
+  },
+  "BRKR": {
+   "da_published": 46
+  },
+  "BRO": {
+   "da_perimeter_line_unresolved": 4,
+   "da_da_combined_with_other_items": 24,
+   "da_published": 18
+  },
+  "BROS": {
+   "da_published": 25
+  },
+  "BRX": {
+   "da_published": 20,
+   "da_da_combined_with_other_items": 5,
+   "da_perimeter_line_unresolved": 21
+  },
+  "BSX": {
+   "da_published": 28
+  },
+  "BSY": {
+   "capex_software": 4,
+   "da_published": 25,
+   "da_da_combined_with_other_items": 4
+  },
+  "BTSG": {
+   "da_published": 15
+  },
+  "BURL": {
+   "da_published": 47
+  },
+  "BWA": {
+   "da_published": 23
+  },
+  "BWXT": {
+   "da_published": 46
+  },
+  "BX": {
+   "da_no_depreciation_line_on_cf": 42,
+   "da_published": 4
+  },
+  "BXP": {
+   "da_published": 41,
+   "da_perimeter_line_unresolved": 5
+  },
+  "BXSL": {
+   "da_da_combined_with_other_items": 21
+  },
+  "C": {
+   "da_published": 46
+  },
+  "CACC": {
+   "da_published": 46
+  },
+  "CACI": {
+   "da_published": 45
+  },
+  "CAG": {
+   "da_published": 47
+  },
+  "CAH": {
+   "da_published": 46
+  },
+  "CAI": {
+   "da_published": 10
+  },
+  "CAKE": {
+   "da_published": 46
+  },
+  "CARR": {
+   "da_published": 31
+  },
+  "CART": {
+   "da_published": 17
+  },
+  "CASY": {
+   "da_published": 47
+  },
+  "CAT": {
+   "capex_leased": 46,
+   "da_published": 46
+  },
+  "CAVA": {
+   "da_published": 18
+  },
+  "CB": {
+   "da_no_da_line": 8,
+   "da_perimeter_line_unresolved": 3,
+   "da_no_depreciation_line_on_cf": 30,
+   "da_da_combined_with_other_items": 5
+  },
+  "CBC": {
+   "da_da_combined_with_other_items": 2,
+   "da_published": 4
+  },
+  "CBOE": {
+   "da_perimeter_line_unresolved": 6,
+   "da_published": 40
+  },
+  "CBRE": {
+   "da_published": 40,
+   "da_perimeter_line_unresolved": 6
+  },
+  "CBRS": {
+   "da_published": 2,
+   "da_perimeter_line_unresolved": 2
+  },
+  "CBSH": {
+   "da_published": 43,
+   "da_da_combined_with_other_items": 3
+  },
+  "CCI": {
+   "da_da_combined_with_other_items": 46
+  },
+  "CCK": {
+   "da_published": 46
+  },
+  "CCL": {
+   "da_published": 47
+  },
+  "CDE": {
+   "da_perimeter_line_unresolved": 3,
+   "da_published": 71
+  },
+  "CDNS": {
+   "da_published": 46
+  },
+  "CDW": {
+   "da_published": 46
+  },
+  "CEG": {
+   "da_da_combined_with_other_items": 23
+  },
+  "CELH": {
+   "da_published": 17,
+   "da_perimeter_line_unresolved": 27
+  },
+  "CF": {
+   "da_published": 46
+  },
+  "CFG": {
+   "capex_software": 20,
+   "da_da_combined_with_other_items": 46
+  },
+  "CFR": {
+   "da_da_combined_with_other_items": 46
+  },
+  "CG": {
+   "da_published": 42,
+   "da_da_combined_with_other_items": 4
+  },
+  "CGNX": {
+   "da_published": 46
+  },
+  "CHD": {
+   "da_perimeter_line_unresolved": 43
+  },
+  "CHDN": {
+   "da_perimeter_line_unresolved": 6,
+   "da_published": 40
+  },
+  "CHE": {
+   "da_published": 46
+  },
+  "CHRD": {
+   "da_published": 46
+  },
+  "CHRW": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "CHTR": {
+   "capex_net_sibling": 3,
+   "da_published": 46
+  },
+  "CHWY": {
+   "da_perimeter_line_unresolved": 5,
+   "da_published": 30
+  },
+  "CI": {
+   "da_published": 36
+  },
+  "CIEN": {
+   "da_published": 47
+  },
+  "CINF": {
+   "da_published": 31,
+   "da_da_combined_with_other_items": 15
+  },
+  "CL": {
+   "da_published": 46
+  },
+  "CLF": {
+   "da_published": 46
+  },
+  "CLH": {
+   "da_published": 46
+  },
+  "CLS": {
+   "da_published": 17
+  },
+  "CLX": {
+   "da_published": 46
+  },
+  "CMC": {
+   "da_published": 46
+  },
+  "CMCSA": {
+   "da_published": 29,
+   "da_da_combined_with_other_items": 8
+  },
+  "CME": {
+   "da_published": 46
+  },
+  "CMG": {
+   "da_published": 46
+  },
+  "CMI": {
+   "capex_software": 30,
+   "da_published": 46
+  },
+  "CMS": {
+   "da_published": 46
+  },
+  "CNA": {
+   "da_published": 46
+  },
+  "CNC": {
+   "da_published": 46
+  },
+  "CNH": {
+   "da_da_definition_question": 21
+  },
+  "CNM": {
+   "da_published": 26
+  },
+  "CNP": {
+   "da_published": 46
+  },
+  "COF": {
+   "da_published": 46
+  },
+  "COHR": {
+   "da_perimeter_line_unresolved": 30,
+   "da_published": 16
+  },
+  "COIN": {
+   "capex_software": 17,
+   "da_published": 27
+  },
+  "COLB": {
+   "da_da_combined_with_other_items": 46
+  },
+  "COMP": {
+   "da_published": 27
+  },
+  "COO": {
+   "da_published": 44,
+   "da_perimeter_line_unresolved": 2
+  },
+  "COP": {
+   "da_published": 46
+  },
+  "COR": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "CORT": {
+   "da_published": 30,
+   "da_no_da_line": 1,
+   "da_da_combined_with_other_items": 10,
+   "da_perimeter_line_unresolved": 5
+  },
+  "COST": {
+   "da_published": 25,
+   "da_perimeter_line_unresolved": 21
+  },
+  "CPAY": {
+   "da_published": 16,
+   "da_da_combined_with_other_items": 30
+  },
+  "CPB": {
+   "da_published": 47
+  },
+  "CPNG": {
+   "da_published": 27
+  },
+  "CPRT": {
+   "da_published": 6,
+   "da_da_combined_with_other_items": 41
+  },
+  "CPT": {
+   "da_published": 46
+  },
+  "CQP": {
+   "da_published": 46
+  },
+  "CR": {
+   "da_published": 17,
+   "da_da_combined_with_other_items": 2
+  },
+  "CRBG": {
+   "da_da_combined_with_other_items": 21
+  },
+  "CRCL": {
+   "capex_software": 10,
+   "da_published": 10
+  },
+  "CRDO": {
+   "da_published": 24
+  },
+  "CRH": {
+   "da_published": 15,
+   "da_da_combined_with_other_items": 1
+  },
+  "CRL": {
+   "da_published": 46
+  },
+  "CRM": {
+   "da_published": 70
+  },
+  "CROX": {
+   "da_published": 46
+  },
+  "CRS": {
+   "da_published": 46
+  },
+  "CRWD": {
+   "capex_software": 35,
+   "da_published": 30,
+   "da_da_combined_with_other_items": 5
+  },
+  "CRWV": {
+   "da_da_combined_with_other_items": 11
+  },
+  "CSCO": {
+   "da_da_combined_with_other_items": 47
+  },
+  "CSGP": {
+   "da_perimeter_line_unresolved": 7,
+   "da_published": 39
+  },
+  "CSL": {
+   "da_perimeter_line_unresolved": 7,
+   "da_published": 39
+  },
+  "CSX": {
+   "da_published": 46
+  },
+  "CTAS": {
+   "da_published": 14,
+   "da_da_combined_with_other_items": 32
+  },
+  "CTRE": {
+   "da_published": 5,
+   "da_no_da_line": 32,
+   "da_da_definition_question": 9
+  },
+  "CTSH": {
+   "da_published": 46
+  },
+  "CTVA": {
+   "da_published": 22,
+   "da_no_da_line": 1
+  },
+  "CUBE": {
+   "da_published": 46
+  },
+  "CVI": {
+   "da_published": 46
+  },
+  "CVLT": {
+   "da_published": 46
+  },
+  "CVNA": {
+   "da_no_da_line": 42
+  },
+  "CVS": {
+   "da_published": 42
+  },
+  "CVX": {
+   "da_published": 46
+  },
+  "CW": {
+   "da_published": 46
+  },
+  "CWEN": {
+   "da_da_combined_with_other_items": 46
+  },
+  "CWST": {
+   "da_published": 46
+  },
+  "CYTK": {
+   "da_published": 12,
+   "da_perimeter_line_unresolved": 34
+  },
+  "CZR": {
+   "da_published": 32,
+   "da_perimeter_line_unresolved": 6
+  },
+  "D": {
+   "da_published": 46
+  },
+  "DAL": {
+   "da_published": 11
+  },
+  "DAR": {
+   "da_published": 46
+  },
+  "DASH": {
+   "capex_software": 28,
+   "da_published": 28
+  },
+  "DBX": {
+   "da_no_da_line": 39
+  },
+  "DCI": {
+   "da_published": 47
+  },
+  "DD": {
+   "capex_net_sibling": 4,
+   "da_published": 37
+  },
+  "DDOG": {
+   "capex_software": 33,
+   "da_published": 28,
+   "da_da_combined_with_other_items": 5
+  },
+  "DDS": {
+   "da_da_combined_with_other_items": 47
+  },
+  "DE": {
+   "capex_leased": 47,
+   "da_published": 47
+  },
+  "DECK": {
+   "da_da_combined_with_other_items": 46
+  },
+  "DELL": {
+   "capex_software": 14,
+   "da_published": 47
+  },
+  "DG": {
+   "da_published": 47
+  },
+  "DGX": {
+   "da_published": 46
+  },
+  "DHI": {
+   "da_published": 46
+  },
+  "DHR": {
+   "da_perimeter_line_unresolved": 22,
+   "da_published": 24
+  },
+  "DINO": {
+   "da_published": 23
+  },
+  "DIS": {
+   "da_published": 35
+  },
+  "DKNG": {
+   "capex_software": 23,
+   "da_published": 23
+  },
+  "DKS": {
+   "capex_net_sibling": 17,
+   "da_published": 35,
+   "da_da_combined_with_other_items": 12
+  },
+  "DLB": {
+   "da_published": 46
+  },
+  "DLR": {
+   "da_published": 30,
+   "da_perimeter_line_unresolved": 16
+  },
+  "DLTR": {
+   "capex_net_sibling": 2,
+   "da_published": 24,
+   "da_da_combined_with_other_items": 1,
+   "da_no_da_line": 22
+  },
+  "DOC": {
+   "da_published": 43,
+   "da_perimeter_line_unresolved": 3
+  },
+  "DOCN": {
+   "capex_software": 27,
+   "capex_net_sibling": 4,
+   "da_published": 15,
+   "da_da_combined_with_other_items": 12
+  },
+  "DOCS": {
+   "capex_software": 26,
+   "da_published": 17,
+   "da_perimeter_line_unresolved": 2,
+   "da_da_combined_with_other_items": 7
+  },
+  "DOCU": {
+   "da_published": 39
+  },
+  "DOV": {
+   "da_published": 46
+  },
+  "DOW": {
+   "capex_net_sibling": 20,
+   "da_published": 35
+  },
+  "DPZ": {
+   "da_published": 46
+  },
+  "DRI": {
+   "da_published": 46
+  },
+  "DRS": {
+   "da_published": 27
+  },
+  "DT": {
+   "capex_software": 20,
+   "da_published": 22,
+   "da_perimeter_line_unresolved": 12
+  },
+  "DTE": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "DTM": {
+   "da_published": 26
+  },
+  "DUK": {
+   "da_da_combined_with_other_items": 46
+  },
+  "DUOL": {
+   "capex_software": 9,
+   "da_published": 25
+  },
+  "DVA": {
+   "da_published": 46
+  },
+  "DVN": {
+   "da_published": 58,
+   "da_da_combined_with_other_items": 11
+  },
+  "DXCM": {
+   "da_da_combined_with_other_items": 7,
+   "da_published": 39
+  },
+  "DY": {
+   "da_published": 50
+  },
+  "EAT": {
+   "da_published": 46
+  },
+  "EBAY": {
+   "da_published": 46
+  },
+  "ECG": {
+   "da_perimeter_line_unresolved": 2,
+   "da_published": 11
+  },
+  "ECHO": {
+   "capex_software": 32,
+   "da_published": 45,
+   "da_da_combined_with_other_items": 1
+  },
+  "ECL": {
+   "capex_software": 12,
+   "da_perimeter_line_unresolved": 46
+  },
+  "ED": {
+   "da_perimeter_line_unresolved": 42,
+   "da_published": 4
+  },
+  "EFX": {
+   "da_published": 46
+  },
+  "EG": {
+   "da_no_da_line": 46
+  },
+  "EGP": {
+   "da_published": 46
+  },
+  "EHC": {
+   "capex_software": 27,
+   "da_published": 46
+  },
+  "EIX": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "EL": {
+   "da_published": 46
+  },
+  "ELAN": {
+   "capex_software": 17,
+   "da_published": 37
+  },
+  "ELF": {
+   "da_published": 47
+  },
+  "ELS": {
+   "da_published": 46
+  },
+  "ELV": {
+   "da_da_combined_with_other_items": 20,
+   "da_published": 26
+  },
+  "EME": {
+   "da_published": 46
+  },
+  "EMN": {
+   "capex_software": 18,
+   "da_published": 46
+  },
+  "EMR": {
+   "da_published": 46
+  },
+  "ENS": {
+   "da_published": 46
+  },
+  "ENSG": {
+   "da_published": 46
+  },
+  "ENTG": {
+   "da_published": 46
+  },
+  "EOG": {
+   "da_published": 46
+  },
+  "EPAM": {
+   "da_published": 46
+  },
+  "EPD": {
+   "da_da_combined_with_other_items": 46
+  },
+  "EPRT": {
+   "da_da_definition_question": 38
+  },
+  "EQH": {
+   "capex_software": 36,
+   "da_da_combined_with_other_items": 4,
+   "da_published": 32
+  },
+  "EQIX": {
+   "da_published": 42,
+   "da_da_combined_with_other_items": 4
+  },
+  "EQT": {
+   "capex_discontinued": 1,
+   "da_published": 42,
+   "da_da_combined_with_other_items": 4
+  },
+  "ES": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "ESE": {
+   "capex_software": 46,
+   "capex_discontinued": 3,
+   "da_published": 46
+  },
+  "ESI": {
+   "da_published": 42
+  },
+  "ESNT": {
+   "da_published": 46
+  },
+  "ESS": {
+   "da_published": 46
+  },
+  "ESTC": {
+   "capex_software": 4,
+   "da_published": 26,
+   "da_da_combined_with_other_items": 11
+  },
+  "ET": {
+   "da_published": 43,
+   "da_perimeter_line_unresolved": 3
+  },
+  "ETN": {
+   "da_published": 46
+  },
+  "ETR": {
+   "da_published": 38,
+   "da_da_combined_with_other_items": 8
+  },
+  "ETSY": {
+   "capex_software": 46,
+   "da_published": 39,
+   "da_perimeter_line_unresolved": 7
+  },
+  "EVR": {
+   "da_da_combined_with_other_items": 46
+  },
+  "EVRG": {
+   "da_perimeter_line_unresolved": 38
+  },
+  "EW": {
+   "da_published": 46
+  },
+  "EWBC": {
+   "da_da_combined_with_other_items": 46
+  },
+  "EXC": {
+   "da_da_combined_with_other_items": 39,
+   "da_published": 7
+  },
+  "EXE": {
+   "da_published": 46
+  },
+  "EXEL": {
+   "da_published": 46
+  },
+  "EXLS": {
+   "da_published": 46
+  },
+  "EXPD": {
+   "da_published": 69
+  },
+  "EXPE": {
+   "da_published": 42,
+   "da_da_combined_with_other_items": 4
+  },
+  "EXR": {
+   "da_published": 46
+  },
+  "F": {
+   "da_published": 4,
+   "da_perimeter_line_unresolved": 25,
+   "da_da_combined_with_other_items": 3
+  },
+  "FAF": {
+   "da_da_combined_with_other_items": 46
+  },
+  "FANG": {
+   "da_published": 24,
+   "da_da_combined_with_other_items": 22
+  },
+  "FAST": {
+   "da_published": 57
+  },
+  "FCFS": {
+   "da_published": 46
+  },
+  "FCNCA": {
+   "capex_leased": 17,
+   "da_published": 28,
+   "da_da_combined_with_other_items": 18
+  },
+  "FCX": {
+   "da_published": 46
+  },
+  "FDS": {
+   "da_published": 46
+  },
+  "FDX": {
+   "da_published": 46
+  },
+  "FDXF": {
+   "da_published": 3
+  },
+  "FE": {
+   "da_perimeter_line_unresolved": 3,
+   "da_published": 12,
+   "da_da_combined_with_other_items": 31
+  },
+  "FERG": {
+   "da_published": 16
+  },
+  "FFIV": {
+   "da_published": 46
+  },
+  "FHN": {
+   "da_da_combined_with_other_items": 44,
+   "da_published": 2
+  },
+  "FICO": {
+   "capex_software": 10,
+   "da_published": 43,
+   "da_perimeter_line_unresolved": 3
+  },
+  "FIG": {
+   "capex_software": 10,
+   "da_published": 10
+  },
+  "FIS": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "FISV": {
+   "da_da_combined_with_other_items": 46
+  },
+  "FITB": {
+   "capex_leased": 19,
+   "da_da_combined_with_other_items": 46
+  },
+  "FIVE": {
+   "da_published": 47
+  },
+  "FIX": {
+   "da_published": 47
+  },
+  "FLEX": {
+   "da_da_combined_with_other_items": 38,
+   "da_published": 8
+  },
+  "FLR": {
+   "da_published": 46
+  },
+  "FLS": {
+   "da_published": 46
+  },
+  "FLUT": {
+   "capex_software": 15,
+   "da_published": 15
+  },
+  "FN": {
+   "da_published": 46
+  },
+  "FNB": {
+   "da_da_combined_with_other_items": 46
+  },
+  "FNF": {
+   "capex_software": 37,
+   "da_published": 46
+  },
+  "FORM": {
+   "da_da_combined_with_other_items": 14,
+   "da_published": 8,
+   "da_perimeter_line_unresolved": 24
+  },
+  "FOX": {
+   "da_perimeter_line_unresolved": 32,
+   "da_published": 4
+  },
+  "FPS": {
+   "da_published": 8
+  },
+  "FR": {
+   "da_published": 46
+  },
+  "FRHC": {
+   "da_published": 44
+  },
+  "FROG": {
+   "da_published": 29
+  },
+  "FRT": {
+   "da_published": 46
+  },
+  "FSLR": {
+   "da_da_combined_with_other_items": 44,
+   "da_published": 2
+  },
+  "FSS": {
+   "da_published": 38,
+   "da_perimeter_line_unresolved": 8
+  },
+  "FTAI": {
+   "capex_leased": 46,
+   "da_da_definition_question": 46
+  },
+  "FTI": {
+   "da_perimeter_line_unresolved": 24,
+   "da_published": 18
+  },
+  "FTNT": {
+   "da_published": 43,
+   "da_da_combined_with_other_items": 3
+  },
+  "FTV": {
+   "da_perimeter_line_unresolved": 45
+  },
+  "FWONA": {
+   "da_published": 46
+  },
+  "G": {
+   "da_published": 45
+  },
+  "GAP": {
+   "da_da_definition_question": 17,
+   "da_published": 30
+  },
+  "GATX": {
+   "da_published": 46
+  },
+  "GBCI": {
+   "da_published": 7,
+   "da_perimeter_line_unresolved": 34,
+   "da_da_combined_with_other_items": 5
+  },
+  "GD": {
+   "da_published": 46
+  },
+  "GDDY": {
+   "da_published": 44,
+   "da_perimeter_line_unresolved": 2
+  },
+  "GE": {
+   "capex_software": 22,
+   "da_published": 16,
+   "da_da_combined_with_other_items": 30
+  },
+  "GEHC": {
+   "da_published": 19
+  },
+  "GEN": {
+   "da_published": 43,
+   "da_da_combined_with_other_items": 3
+  },
+  "GEV": {
+   "da_da_combined_with_other_items": 15
+  },
+  "GGG": {
+   "da_published": 46
+  },
+  "GH": {
+   "da_published": 37
+  },
+  "GILD": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "GIS": {
+   "da_published": 47
+  },
+  "GKOS": {
+   "da_published": 42,
+   "da_perimeter_line_unresolved": 1,
+   "da_da_combined_with_other_items": 3
+  },
+  "GL": {
+   "da_no_da_line": 11
+  },
+  "GLPI": {
+   "da_published": 46
+  },
+  "GLW": {
+   "da_published": 46
+  },
+  "GLXY": {
+   "da_published": 9
+  },
+  "GM": {
+   "da_da_combined_with_other_items": 10,
+   "da_da_definition_question": 33
+  },
+  "GME": {
+   "da_published": 47
+  },
+  "GMED": {
+   "da_published": 46
+  },
+  "GNRC": {
+   "da_published": 46
+  },
+  "GOOG": {
+   "da_da_combined_with_other_items": 35,
+   "da_published": 11
+  },
+  "GPC": {
+   "da_published": 46
+  },
+  "GPN": {
+   "da_published": 41,
+   "da_perimeter_line_unresolved": 9
+  },
+  "GRMN": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "GS": {
+   "da_published": 46
+  },
+  "GSAT": {
+   "da_da_combined_with_other_items": 46
+  },
+  "GTES": {
+   "da_published": 39
+  },
+  "GTLB": {
+   "da_no_depreciation_line_on_cf": 5,
+   "da_no_da_line": 1,
+   "da_published": 19
+  },
+  "GWRE": {
+   "capex_software": 38,
+   "da_published": 21,
+   "da_da_combined_with_other_items": 26
+  },
+  "GWW": {
+   "da_published": 46
+  },
+  "H": {
+   "da_published": 36,
+   "da_perimeter_line_unresolved": 10
+  },
+  "HAL": {
+   "da_published": 46
+  },
+  "HALO": {
+   "da_published": 36,
+   "da_da_combined_with_other_items": 10
+  },
+  "HAS": {
+   "capex_software": 7,
+   "da_published": 46
+  },
+  "HBAN": {
+   "da_published": 40,
+   "da_da_combined_with_other_items": 6
+  },
+  "HCA": {
+   "da_published": 46
+  },
+  "HD": {
+   "da_published": 47
+  },
+  "HEI": {
+   "da_published": 47
+  },
+  "HIG": {
+   "da_published": 46
+  },
+  "HII": {
+   "da_published": 46
+  },
+  "HIMS": {
+   "capex_software": 23,
+   "da_published": 18,
+   "da_da_combined_with_other_items": 5
+  },
+  "HL": {
+   "da_published": 46
+  },
+  "HLI": {
+   "da_published": 46
+  },
+  "HLT": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "HOMB": {
+   "da_da_combined_with_other_items": 14,
+   "da_published": 1,
+   "da_perimeter_line_unresolved": 31
+  },
+  "HON": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "HOOD": {
+   "capex_software": 26,
+   "da_published": 26
+  },
+  "HPE": {
+   "da_published": 47
+  },
+  "HPQ": {
+   "da_published": 43,
+   "da_da_combined_with_other_items": 4
+  },
+  "HQY": {
+   "capex_software": 47,
+   "da_published": 47
+  },
+  "HR": {
+   "da_da_combined_with_other_items": 15,
+   "da_published": 14,
+   "da_perimeter_line_unresolved": 17
+  },
+  "HRB": {
+   "da_published": 46
+  },
+  "HRL": {
+   "da_published": 35,
+   "da_perimeter_line_unresolved": 12
+  },
+  "HSIC": {
+   "capex_software": 11,
+   "da_published": 46
+  },
+  "HST": {
+   "da_published": 45
+  },
+  "HSY": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "HUBB": {
+   "da_published": 46
+  },
+  "HUBS": {
+   "capex_software": 46,
+   "da_published": 32,
+   "da_da_combined_with_other_items": 14
+  },
+  "HUM": {
+   "da_published": 22,
+   "da_perimeter_line_unresolved": 24
+  },
+  "HUT": {
+   "da_published": 21
+  },
+  "HWC": {
+   "da_perimeter_line_unresolved": 12,
+   "da_published": 34
+  },
+  "HWM": {
+   "da_published": 46
+  },
+  "HXL": {
+   "da_published": 46
+  },
+  "IBKR": {
+   "da_published": 46
+  },
+  "IBM": {
+   "capex_software": 5,
+   "da_published": 46
+  },
+  "IBRX": {
+   "capex_software": 4,
+   "da_published": 46
+  },
+  "ICE": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "IDA": {
+   "da_published": 46
+  },
+  "IDCC": {
+   "da_da_combined_with_other_items": 11,
+   "da_published": 31
+  },
+  "IDXX": {
+   "da_published": 46
+  },
+  "IEX": {
+   "da_published": 46
+  },
+  "IFF": {
+   "da_published": 46
+  },
+  "ILMN": {
+   "da_published": 46
+  },
+  "INCY": {
+   "da_da_combined_with_other_items": 5,
+   "da_published": 41
+  },
+  "INGM": {
+   "da_published": 13
+  },
+  "INGR": {
+   "da_published": 46
+  },
+  "INSM": {
+   "da_published": 42,
+   "da_da_combined_with_other_items": 4
+  },
+  "INSW": {
+   "da_published": 44
+  },
+  "INTC": {
+   "da_published": 46
+  },
+  "INTU": {
+   "capex_software": 12,
+   "da_published": 47
+  },
+  "INVH": {
+   "da_perimeter_line_unresolved": 23,
+   "da_published": 20
+  },
+  "IONQ": {
+   "capex_software": 19,
+   "da_perimeter_line_unresolved": 4,
+   "da_published": 7,
+   "da_da_combined_with_other_items": 11
+  },
+  "IONS": {
+   "da_perimeter_line_unresolved": 15,
+   "da_published": 31
+  },
+  "IOT": {
+   "da_published": 23
+  },
+  "IOVA": {
+   "da_published": 32,
+   "da_da_combined_with_other_items": 14
+  },
+  "IP": {
+   "da_published": 46
+  },
+  "IQV": {
+   "da_published": 35,
+   "da_perimeter_line_unresolved": 11
+  },
+  "IR": {
+   "da_published": 42
+  },
+  "IREN": {
+   "da_published": 10
+  },
+  "IRM": {
+   "da_published": 39,
+   "da_perimeter_line_unresolved": 7
+  },
+  "ISRG": {
+   "da_da_combined_with_other_items": 46
+  },
+  "IT": {
+   "da_published": 43,
+   "da_perimeter_line_unresolved": 3
+  },
+  "ITT": {
+   "da_published": 46
+  },
+  "ITW": {
+   "da_da_combined_with_other_items": 46
+  },
+  "IVZ": {
+   "da_published": 46
+  },
+  "J": {
+   "da_published": 46
+  },
+  "JAZZ": {
+   "da_published": 46
+  },
+  "JBHT": {
+   "da_published": 46
+  },
+  "JBL": {
+   "da_published": 31,
+   "da_da_combined_with_other_items": 15
+  },
+  "JCI": {
+   "da_published": 46
+  },
+  "JEF": {
+   "da_published": 46
+  },
+  "JHX": {
+   "da_published": 5
+  },
+  "JKHY": {
+   "capex_software": 46,
+   "da_perimeter_line_unresolved": 46
+  },
+  "JLL": {
+   "da_published": 31
+  },
+  "JNJ": {
+   "da_published": 46
+  },
+  "JPM": {
+   "da_published": 46
+  },
+  "JXN": {
+   "da_no_da_line": 26
+  },
+  "KDP": {
+   "da_perimeter_line_unresolved": 47,
+   "da_published": 3
+  },
+  "KEX": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "KEY": {
+   "da_da_combined_with_other_items": 17,
+   "da_da_net_line_below_intangible_amortization": 29
+  },
+  "KEYS": {
+   "da_published": 14,
+   "da_perimeter_line_unresolved": 33
+  },
+  "KHC": {
+   "da_perimeter_line_unresolved": 1,
+   "da_published": 45
+  },
+  "KIM": {
+   "da_published": 46
+  },
+  "KKR": {
+   "da_da_combined_with_other_items": 22
+  },
+  "KLAC": {
+   "da_published": 46
+  },
+  "KMB": {
+   "da_published": 46
+  },
+  "KMI": {
+   "da_published": 46
+  },
+  "KMX": {
+   "da_published": 47
+  },
+  "KNSA": {
+   "da_published": 15,
+   "da_da_combined_with_other_items": 22
+  },
+  "KNSL": {
+   "da_published": 11
+  },
+  "KNX": {
+   "da_published": 36,
+   "da_perimeter_line_unresolved": 10
+  },
+  "KO": {
+   "da_published": 46
+  },
+  "KR": {
+   "da_published": 47
+  },
+  "KRYS": {
+   "da_published": 35,
+   "da_da_combined_with_other_items": 5
+  },
+  "KTOS": {
+   "da_published": 46
+  },
+  "KVUE": {
+   "da_published": 19
+  },
+  "KYMR": {
+   "da_published": 28
+  },
+  "L": {
+   "da_published": 11
+  },
+  "LAD": {
+   "da_published": 45
+  },
+  "LAMR": {
+   "da_published": 46
+  },
+  "LB": {
+   "da_da_combined_with_other_items": 9,
+   "da_published": 4
+  },
+  "LDOS": {
+   "da_published": 47
+  },
+  "LEA": {
+   "da_published": 46
+  },
+  "LECO": {
+   "da_published": 46
+  },
+  "LEN": {
+   "da_published": 22,
+   "da_da_combined_with_other_items": 24
+  },
+  "LEVI": {
+   "da_perimeter_line_unresolved": 24,
+   "da_published": 22
+  },
+  "LFUS": {
+   "da_published": 46
+  },
+  "LGND": {
+   "da_published": 25,
+   "da_perimeter_line_unresolved": 14,
+   "da_da_combined_with_other_items": 7
+  },
+  "LH": {
+   "da_published": 46
+  },
+  "LHX": {
+   "da_published": 31,
+   "da_da_combined_with_other_items": 18
+  },
+  "LII": {
+   "da_published": 46
+  },
+  "LIN": {
+   "da_published": 35
+  },
+  "LINE": {
+   "da_published": 14
+  },
+  "LITE": {
+   "da_published": 44,
+   "da_perimeter_line_unresolved": 2
+  },
+  "LKQ": {
+   "da_published": 46
+  },
+  "LLY": {
+   "da_published": 46
+  },
+  "LMT": {
+   "da_published": 46
+  },
+  "LNC": {
+   "da_no_da_line": 46
+  },
+  "LNG": {
+   "da_published": 39,
+   "da_da_combined_with_other_items": 7
+  },
+  "LNT": {
+   "da_perimeter_line_unresolved": 17,
+   "da_published": 29
+  },
+  "LNTH": {
+   "da_published": 4,
+   "da_da_combined_with_other_items": 42
+  },
+  "LOAR": {
+   "da_published": 14
+  },
+  "LOGI": {
+   "da_published": 46
+  },
+  "LOW": {
+   "da_published": 47
+  },
+  "LPLA": {
+   "da_published": 46
+  },
+  "LRCX": {
+   "da_published": 46
+  },
+  "LSCC": {
+   "da_published": 20,
+   "da_no_da_line": 26
+  },
+  "LSTR": {
+   "da_published": 46
+  },
+  "LTH": {
+   "da_published": 25
+  },
+  "LULU": {
+   "da_published": 47
+  },
+  "LUV": {
+   "da_published": 69
+  },
+  "LVS": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "LW": {
+   "da_da_combined_with_other_items": 44
+  },
+  "LYB": {
+   "da_published": 46
+  },
+  "LYFT": {
+   "da_published": 35
+  },
+  "LYV": {
+   "da_perimeter_line_unresolved": 20,
+   "da_published": 21,
+   "da_da_combined_with_other_items": 5
+  },
+  "M": {
+   "capex_software": 47,
+   "da_published": 47
+  },
+  "MA": {
+   "capex_software": 46,
+   "da_perimeter_line_unresolved": 35,
+   "da_published": 11
+  },
+  "MAA": {
+   "da_published": 34
+  },
+  "MAC": {
+   "da_published": 46
+  },
+  "MANH": {
+   "da_published": 46
+  },
+  "MAR": {
+   "da_da_combined_with_other_items": 39,
+   "da_published": 7
+  },
+  "MAS": {
+   "da_perimeter_line_unresolved": 6,
+   "da_published": 5
+  },
+  "MATX": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "MCD": {
+   "da_published": 69
+  },
+  "MCHP": {
+   "da_published": 45,
+   "da_da_combined_with_other_items": 1
+  },
+  "MCK": {
+   "capex_software": 46,
+   "da_perimeter_line_unresolved": 31,
+   "da_published": 15
+  },
+  "MCO": {
+   "da_published": 46
+  },
+  "MCY": {
+   "da_published": 46
+  },
+  "MDB": {
+   "da_published": 26,
+   "da_da_combined_with_other_items": 15
+  },
+  "MDGL": {
+   "da_published": 37,
+   "da_da_combined_with_other_items": 7
+  },
+  "MDLN": {
+   "da_published": 7
+  },
+  "MDLZ": {
+   "da_published": 46
+  },
+  "MDT": {
+   "da_published": 47
+  },
+  "MEDP": {
+   "da_published": 23,
+   "da_perimeter_line_unresolved": 21
+  },
+  "MELI": {
+   "da_published": 46
+  },
+  "MET": {
+   "da_da_combined_with_other_items": 11
+  },
+  "META": {
+   "da_published": 46
+  },
+  "MGM": {
+   "da_published": 46
+  },
+  "MGY": {
+   "da_published": 33
+  },
+  "MHK": {
+   "da_published": 46
+  },
+  "MKC": {
+   "da_published": 46
+  },
+  "MKL": {
+   "da_published": 11
+  },
+  "MKSI": {
+   "da_published": 46
+  },
+  "MKTX": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "MLI": {
+   "da_published": 46
+  },
+  "MLM": {
+   "da_published": 46
+  },
+  "MMM": {
+   "da_published": 46
+  },
+  "MNST": {
+   "da_published": 46
+  },
+  "MO": {
+   "da_published": 46
+  },
+  "MOD": {
+   "da_published": 46
+  },
+  "MOG-A": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "MOH": {
+   "capex_software": 6,
+   "da_published": 46
+  },
+  "MORN": {
+   "da_published": 46
+  },
+  "MOS": {
+   "da_published": 46
+  },
+  "MP": {
+   "da_published": 12,
+   "da_da_combined_with_other_items": 12
+  },
+  "MPC": {
+   "da_published": 46
+  },
+  "MPLX": {
+   "da_published": 46
+  },
+  "MPWR": {
+   "capex_net_sibling": 3,
+   "da_published": 46
+  },
+  "MRK": {
+   "da_published": 23,
+   "da_perimeter_line_unresolved": 23
+  },
+  "MRNA": {
+   "da_published": 6,
+   "da_da_combined_with_other_items": 30
+  },
+  "MRSH": {
+   "da_published": 46
+  },
+  "MRVL": {
+   "da_published": 23,
+   "da_da_combined_with_other_items": 4
+  },
+  "MS": {
+   "da_published": 46
+  },
+  "MSA": {
+   "da_published": 46
+  },
+  "MSCI": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "MSFT": {
+   "da_da_combined_with_other_items": 69
+  },
+  "MSGS": {
+   "da_published": 43,
+   "da_perimeter_line_unresolved": 3
+  },
+  "MSI": {
+   "da_published": 46
+  },
+  "MSM": {
+   "da_published": 36,
+   "da_perimeter_line_unresolved": 10
+  },
+  "MSTR": {
+   "capex_software": 4,
+   "da_published": 46
+  },
+  "MTB": {
+   "da_perimeter_line_unresolved": 45,
+   "da_published_2a_tie": 1
+  },
+  "MTCH": {
+   "da_published": 34,
+   "da_da_combined_with_other_items": 12
+  },
+  "MTD": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "MTDR": {
+   "da_published": 46
+  },
+  "MTG": {
+   "da_published": 35,
+   "da_da_combined_with_other_items": 11
+  },
+  "MTSI": {
+   "capex_software": 1,
+   "da_published": 41,
+   "da_perimeter_line_unresolved": 5
+  },
+  "MTZ": {
+   "da_published": 46
+  },
+  "MU": {
+   "da_published": 46
+  },
+  "MUR": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "MUSA": {
+   "da_perimeter_line_unresolved": 2,
+   "da_published": 44
+  },
+  "MXL": {
+   "da_published": 14,
+   "da_da_combined_with_other_items": 32
+  },
+  "NAVN": {
+   "capex_software": 9,
+   "da_published": 9
+  },
+  "NBIX": {
+   "da_published": 40,
+   "da_da_combined_with_other_items": 6
+  },
+  "NCLH": {
+   "da_published": 46
+  },
+  "NDAQ": {
+   "da_published": 46
+  },
+  "NDSN": {
+   "da_published": 36,
+   "da_perimeter_line_unresolved": 11
+  },
+  "NE": {
+   "da_published": 5,
+   "da_da_combined_with_other_items": 16
+  },
+  "NEE": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "NEM": {
+   "da_published": 46
+  },
+  "NET": {
+   "da_da_combined_with_other_items": 33
+  },
+  "NEU": {
+   "da_published": 46
+  },
+  "NFG": {
+   "da_published": 46
+  },
+  "NFLX": {
+   "da_published": 69
+  },
+  "NI": {
+   "da_published": 46
+  },
+  "NIQ": {
+   "da_published": 10
+  },
+  "NKE": {
+   "da_perimeter_line_unresolved": 20,
+   "da_published": 26
+  },
+  "NLY": {
+   "da_perimeter_line_unresolved": 12,
+   "da_no_da_line": 34
+  },
+  "NNN": {
+   "da_published": 46
+  },
+  "NOC": {
+   "da_published": 46
+  },
+  "NOV": {
+   "da_published": 46
+  },
+  "NOW": {
+   "da_published": 46
+  },
+  "NPO": {
+   "capex_software": 26,
+   "da_perimeter_line_unresolved": 46
+  },
+  "NRG": {
+   "da_da_combined_with_other_items": 27,
+   "da_perimeter_line_unresolved": 17,
+   "da_published": 2
+  },
+  "NSC": {
+   "da_published": 46
+  },
+  "NTAP": {
+   "da_published": 47
+  },
+  "NTNX": {
+   "da_published": 45
+  },
+  "NTRA": {
+   "da_published": 10,
+   "da_da_combined_with_other_items": 38
+  },
+  "NTRS": {
+   "capex_software": 46,
+   "da_da_combined_with_other_items": 46
+  },
+  "NTSK": {
+   "capex_software": 9,
+   "da_da_combined_with_other_items": 9
+  },
+  "NUE": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "NVDA": {
+   "da_published": 47
+  },
+  "NVR": {
+   "da_published": 46
+  },
+  "NVT": {
+   "da_perimeter_line_unresolved": 9,
+   "da_published": 30
+  },
+  "NWSA": {
+   "da_published": 46
+  },
+  "NXPI": {
+   "capex_net_sibling": 6,
+   "da_published": 31,
+   "da_da_combined_with_other_items": 2
+  },
+  "NXT": {
+   "da_published": 20
+  },
+  "NYT": {
+   "da_published": 46
+  },
+  "O": {
+   "da_published": 46
+  },
+  "OC": {
+   "da_published": 46
+  },
+  "ODFL": {
+   "da_published": 22,
+   "da_no_da_line": 24
+  },
+  "OGE": {
+   "da_published": 46
+  },
+  "OHI": {
+   "da_published": 46
+  },
+  "OKE": {
+   "da_published": 46
+  },
+  "OKTA": {
+   "capex_software": 29,
+   "da_da_combined_with_other_items": 37,
+   "da_published": 6
+  },
+  "OLLI": {
+   "da_no_depreciation_line_on_cf": 7,
+   "da_published": 40
+  },
+  "OMC": {
+   "da_published": 46
+  },
+  "OMF": {
+   "da_published": 46
+  },
+  "ON": {
+   "da_published": 46
+  },
+  "ONB": {
+   "da_published": 38,
+   "da_perimeter_line_unresolved": 3,
+   "da_da_combined_with_other_items": 5
+  },
+  "ONTO": {
+   "da_published": 40,
+   "da_da_combined_with_other_items": 6
+  },
+  "ORCL": {
+   "da_published": 47
+  },
+  "ORLY": {
+   "da_published": 46
+  },
+  "OSCR": {
+   "da_da_combined_with_other_items": 18,
+   "da_published": 9
+  },
+  "OSK": {
+   "capex_leased": 40,
+   "da_published": 49
+  },
+  "OTEX": {
+   "da_published": 46
+  },
+  "OTIS": {
+   "da_published": 31
+  },
+  "OVV": {
+   "da_published": 47
+  },
+  "OXY": {
+   "da_published": 46
+  },
+  "P": {
+   "da_published": 47
+  },
+  "PAA": {
+   "da_published": 46
+  },
+  "PACS": {
+   "da_published": 15
+  },
+  "PAG": {
+   "da_published": 46
+  },
+  "PANW": {
+   "da_da_combined_with_other_items": 47
+  },
+  "PATH": {
+   "capex_software": 6,
+   "da_published": 27
+  },
+  "PAYC": {
+   "da_published": 46
+  },
+  "PAYX": {
+   "da_published": 47
+  },
+  "PB": {
+   "da_published": 46
+  },
+  "PBF": {
+   "da_published": 46
+  },
+  "PCAR": {
+   "capex_leased": 46,
+   "da_da_definition_question": 40,
+   "da_da_combined_with_other_items": 6
+  },
+  "PCG": {
+   "da_published": 46
+  },
+  "PCOR": {
+   "capex_software": 26,
+   "da_published": 26
+  },
+  "PCTY": {
+   "capex_software": 45,
+   "da_published": 19,
+   "da_da_combined_with_other_items": 27
+  },
+  "PCVX": {
+   "da_published": 28,
+   "da_da_combined_with_other_items": 2
+  },
+  "PEG": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "PEGA": {
+   "da_published": 45,
+   "da_da_combined_with_other_items": 1
+  },
+  "PEN": {
+   "da_published": 42,
+   "da_da_combined_with_other_items": 2
+  },
+  "PEP": {
+   "da_published": 46
+  },
+  "PFE": {
+   "da_published": 46
+  },
+  "PFG": {
+   "da_published": 22,
+   "da_perimeter_line_unresolved": 4
+  },
+  "PFGC": {
+   "da_published": 46
+  },
+  "PG": {
+   "da_published": 46
+  },
+  "PGR": {
+   "da_published": 31,
+   "da_da_combined_with_other_items": 15
+  },
+  "PH": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "PHM": {
+   "da_published": 46
+  },
+  "PINS": {
+   "da_published": 34,
+   "da_da_combined_with_other_items": 1
+  },
+  "PKG": {
+   "da_da_combined_with_other_items": 4,
+   "da_published": 42
+  },
+  "PLD": {
+   "da_published": 46
+  },
+  "PLNT": {
+   "da_perimeter_line_unresolved": 19,
+   "da_published": 27
+  },
+  "PLTR": {
+   "da_published": 29
+  },
+  "PLXS": {
+   "da_published": 46
+  },
+  "PM": {
+   "da_published": 33,
+   "da_da_combined_with_other_items": 13
+  },
+  "PNC": {
+   "da_published": 31,
+   "da_da_combined_with_other_items": 15
+  },
+  "PNFP": {
+   "da_da_combined_with_other_items": 7
+  },
+  "PNR": {
+   "da_perimeter_line_unresolved": 27,
+   "da_published": 19
+  },
+  "PNW": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "PODD": {
+   "capex_software": 15,
+   "da_published": 46
+  },
+  "POOL": {
+   "da_perimeter_line_unresolved": 45
+  },
+  "POWL": {
+   "da_published_2a_tie": 15,
+   "da_published": 31
+  },
+  "PPC": {
+   "da_published": 46
+  },
+  "PPG": {
+   "da_published": 46
+  },
+  "PPL": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "PR": {
+   "da_published": 39
+  },
+  "PRAX": {
+   "capex_software": 1,
+   "da_published": 28
+  },
+  "PRI": {
+   "da_da_combined_with_other_items": 46
+  },
+  "PRMB": {
+   "da_published": 16
+  },
+  "PRU": {
+   "da_published": 44,
+   "da_perimeter_line_unresolved": 2
+  },
+  "PSA": {
+   "da_published": 46
+  },
+  "PSKY": {
+   "da_published": 8
+  },
+  "PSX": {
+   "da_published": 46
+  },
+  "PTC": {
+   "da_published": 46
+  },
+  "PTGX": {
+   "da_published": 29,
+   "da_da_combined_with_other_items": 16
+  },
+  "PWR": {
+   "da_published": 62
+  },
+  "PYPL": {
+   "da_published": 35,
+   "da_da_combined_with_other_items": 11
+  },
+  "Q": {
+   "da_published": 9
+  },
+  "QCOM": {
+   "da_published": 46
+  },
+  "QLYS": {
+   "capex_software": 5,
+   "da_da_combined_with_other_items": 31,
+   "da_published": 15
+  },
+  "QSR": {
+   "da_published": 46
+  },
+  "QXO": {
+   "capex_software": 15,
+   "da_published": 46
+  },
+  "R": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "RAL": {
+   "da_perimeter_line_unresolved": 10
+  },
+  "RBA": {
+   "da_published": 46
+  },
+  "RBC": {
+   "da_published": 46
+  },
+  "RBLX": {
+   "da_published": 17,
+   "da_da_combined_with_other_items": 10
+  },
+  "RBRK": {
+   "capex_software": 15,
+   "da_published": 15
+  },
+  "RCL": {
+   "da_published": 46
+  },
+  "RDDT": {
+   "da_da_combined_with_other_items": 22
+  },
+  "REG": {
+   "da_da_combined_with_other_items": 23,
+   "da_published": 11
+  },
+  "REGN": {
+   "da_published": 46
+  },
+  "REXR": {
+   "da_published": 26,
+   "da_perimeter_line_unresolved": 20
+  },
+  "RF": {
+   "da_da_combined_with_other_items": 46
+  },
+  "RGA": {
+   "da_no_da_line": 7,
+   "da_published": 23
+  },
+  "RGEN": {
+   "capex_software": 31,
+   "da_published": 46
+  },
+  "RGLD": {
+   "da_published": 50
+  },
+  "RHP": {
+   "da_published": 46
+  },
+  "RIG": {
+   "da_da_combined_with_other_items": 34,
+   "da_published": 14
+  },
+  "RIVN": {
+   "da_published": 25
+  },
+  "RJF": {
+   "da_published": 46
+  },
+  "RKLB": {
+   "da_published": 22
+  },
+  "RKT": {
+   "da_published": 30
+  },
+  "RL": {
+   "da_published": 46
+  },
+  "RLI": {
+   "da_published": 11
+  },
+  "RMBS": {
+   "da_published": 41,
+   "da_da_combined_with_other_items": 2,
+   "da_no_depreciation_line_on_cf": 3
+  },
+  "RMD": {
+   "da_published": 46
+  },
+  "RNG": {
+   "capex_software": 44,
+   "da_da_combined_with_other_items": 4,
+   "da_published": 42
+  },
+  "RNR": {
+   "da_da_combined_with_other_items": 46
+  },
+  "ROIV": {
+   "da_published": 8,
+   "da_da_combined_with_other_items": 8
+  },
+  "ROK": {
+   "da_published": 46
+  },
+  "ROKU": {
+   "da_published": 41
+  },
+  "ROL": {
+   "da_published": 40,
+   "da_da_combined_with_other_items": 6
+  },
+  "ROP": {
+   "capex_software": 39,
+   "da_published": 46
+  },
+  "ROST": {
+   "da_published": 47
+  },
+  "RPM": {
+   "da_perimeter_line_unresolved": 18,
+   "da_published": 28
+  },
+  "RRC": {
+   "da_published": 13,
+   "da_da_combined_with_other_items": 33
+  },
+  "RRX": {
+   "da_published": 24,
+   "da_perimeter_line_unresolved": 22
+  },
+  "RS": {
+   "da_published": 46
+  },
+  "RSG": {
+   "da_da_combined_with_other_items": 46
+  },
+  "RTX": {
+   "da_published": 46
+  },
+  "RVMD": {
+   "da_da_combined_with_other_items": 10,
+   "da_published": 21
+  },
+  "RVTY": {
+   "da_perimeter_line_unresolved": 1,
+   "da_da_combined_with_other_items": 45
+  },
+  "RYAN": {
+   "da_perimeter_line_unresolved": 26
+  },
+  "RYN": {
+   "da_published": 45
+  },
+  "RYTM": {
+   "da_published": 29,
+   "da_da_combined_with_other_items": 11
+  },
+  "S": {
+   "capex_software": 26,
+   "da_published": 11,
+   "da_da_combined_with_other_items": 15
+  },
+  "SAIA": {
+   "da_published": 46
+  },
+  "SAIC": {
+   "da_published": 47
+  },
+  "SAIL": {
+   "capex_software": 10,
+   "da_published": 11
+  },
+  "SANM": {
+   "da_published": 46
+  },
+  "SARO": {
+   "da_published": 13
+  },
+  "SBAC": {
+   "da_da_combined_with_other_items": 46
+  },
+  "SBUX": {
+   "da_published": 46
+  },
+  "SCCO": {
+   "da_published": 69
+  },
+  "SCHW": {
+   "da_published": 46
+  },
+  "SCI": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "SEIC": {
+   "capex_software": 46,
+   "da_published": 3,
+   "da_perimeter_line_unresolved": 13
+  },
+  "SF": {
+   "da_published": 45
+  },
+  "SFD": {
+   "da_published": 18
+  },
+  "SFM": {
+   "da_published": 46
+  },
+  "SGI": {
+   "da_published": 47
+  },
+  "SHOP": {
+   "da_published": 17
+  },
+  "SHW": {
+   "da_published": 31,
+   "da_perimeter_line_unresolved": 15
+  },
+  "SIRI": {
+   "da_published": 46
+  },
+  "SITM": {
+   "da_published": 31
+  },
+  "SJM": {
+   "da_published": 47
+  },
+  "SLAB": {
+   "da_published": 46
+  },
+  "SLB": {
+   "da_published": 45,
+   "da_perimeter_line_unresolved": 1
+  },
+  "SM": {
+   "da_da_combined_with_other_items": 39,
+   "da_published": 7
+  },
+  "SMCI": {
+   "da_published": 43,
+   "da_da_combined_with_other_items": 3
+  },
+  "SMMT": {
+   "da_published": 29
+  },
+  "SMTC": {
+   "da_da_combined_with_other_items": 8,
+   "da_published": 33,
+   "da_no_da_line": 6
+  },
+  "SN": {
+   "capex_software": 5,
+   "da_published": 7
+  },
+  "SNA": {
+   "da_published": 46
+  },
+  "SNAP": {
+   "da_published": 62
+  },
+  "SNDK": {
+   "da_published": 12
+  },
+  "SNEX": {
+   "da_published": 46
+  },
+  "SNOW": {
+   "capex_software": 23,
+   "da_da_combined_with_other_items": 13,
+   "da_published": 16
+  },
+  "SNPS": {
+   "capex_software": 18,
+   "da_published": 47
+  },
+  "SNX": {
+   "da_published": 46
+  },
+  "SO": {
+   "da_perimeter_line_unresolved": 6,
+   "da_published": 40
+  },
+  "SOFI": {
+   "da_published": 25
+  },
+  "SOLS": {
+   "capex_software": 3,
+   "da_perimeter_line_unresolved": 9
+  },
+  "SOLV": {
+   "da_published": 15
+  },
+  "SPG": {
+   "da_published": 46
+  },
+  "SPGI": {
+   "da_published": 46
+  },
+  "SPXC": {
+   "da_published": 46
+  },
+  "SRE": {
+   "da_published": 46
+  },
+  "SSB": {
+   "da_perimeter_line_unresolved": 8,
+   "da_published": 9,
+   "da_no_da_line": 29
+  },
+  "SSD": {
+   "da_published": 46
+  },
+  "SSNC": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "SSRM": {
+   "capex_net_sibling": 5,
+   "da_published": 24
+  },
+  "ST": {
+   "da_published": 46
+  },
+  "STAG": {
+   "da_published": 46
+  },
+  "STE": {
+   "da_published": 35
+  },
+  "STLD": {
+   "da_published": 69
+  },
+  "STRL": {
+   "da_published": 46
+  },
+  "STT": {
+   "da_da_combined_with_other_items": 46
+  },
+  "STX": {
+   "da_published": 46
+  },
+  "STZ": {
+   "da_published": 28,
+   "da_da_combined_with_other_items": 18
+  },
+  "SUI": {
+   "da_published": 14,
+   "da_da_combined_with_other_items": 2,
+   "da_perimeter_line_unresolved": 1
+  },
+  "SUN": {
+   "da_da_combined_with_other_items": 46
+  },
+  "SUNB": {
+   "da_published": 5
+  },
+  "SW": {
+   "da_published": 10
+  },
+  "SWK": {
+   "capex_software": 40,
+   "da_published": 69
+  },
+  "SWKS": {
+   "capex_software": 4,
+   "da_published": 38,
+   "da_da_combined_with_other_items": 5,
+   "da_perimeter_line_unresolved": 3
+  },
+  "SWX": {
+   "da_published": 67
+  },
+  "SXT": {
+   "da_published": 46
+  },
+  "SYF": {
+   "da_published": 46
+  },
+  "SYK": {
+   "da_published": 46
+  },
+  "SYM": {
+   "capex_software": 5,
+   "da_published": 22
+  },
+  "SYRE": {
+   "da_perimeter_line_unresolved": 8,
+   "da_published": 11,
+   "da_da_combined_with_other_items": 19,
+   "da_no_da_line": 8
+  },
+  "SYY": {
+   "da_published": 39,
+   "da_no_da_line": 7
+  },
+  "T": {
+   "da_published": 46
+  },
+  "TAP": {
+   "da_published": 42,
+   "da_perimeter_line_unresolved": 4
+  },
+  "TDG": {
+   "da_published": 46
+  },
+  "TDY": {
+   "da_published": 44,
+   "da_da_combined_with_other_items": 2
+  },
+  "TEAM": {
+   "da_published": 31
+  },
+  "TECH": {
+   "da_published": 50
+  },
+  "TEL": {
+   "da_published": 46
+  },
+  "TER": {
+   "da_perimeter_line_unresolved": 45,
+   "da_published_2a_tie": 1
+  },
+  "TEVA": {
+   "da_published": 49
+  },
+  "TEX": {
+   "da_published": 46
+  },
+  "TFC": {
+   "da_published": 46
+  },
+  "TFX": {
+   "da_published": 46
+  },
+  "TGT": {
+   "da_published": 47
+  },
+  "TGTX": {
+   "da_published": 35,
+   "da_perimeter_line_unresolved": 11
+  },
+  "THC": {
+   "capex_net_sibling": 19,
+   "da_published": 46
+  },
+  "THG": {
+   "da_published": 46
+  },
+  "TJX": {
+   "da_published": 47
+  },
+  "TKO": {
+   "da_da_combined_with_other_items": 17
+  },
+  "TKR": {
+   "da_published": 46
+  },
+  "TLN": {
+   "da_perimeter_line_unresolved": 7,
+   "da_da_combined_with_other_items": 14
+  },
+  "TMO": {
+   "da_published": 46
+  },
+  "TMUS": {
+   "da_published": 66
+  },
+  "TOL": {
+   "da_published": 47
+  },
+  "TOST": {
+   "capex_software": 14,
+   "da_published": 25
+  },
+  "TPG": {
+   "da_published": 10
+  },
+  "TPL": {
+   "da_published": 28
+  },
+  "TPR": {
+   "da_published": 46
+  },
+  "TRGP": {
+   "da_published": 46
+  },
+  "TRMB": {
+   "da_published_2a_tie": 36,
+   "da_published": 10
+  },
+  "TRNO": {
+   "da_published": 35,
+   "da_perimeter_line_unresolved": 11
+  },
+  "TROW": {
+   "da_published": 25,
+   "da_da_combined_with_other_items": 18,
+   "da_perimeter_line_unresolved": 3
+  },
+  "TRU": {
+   "da_published": 46
+  },
+  "TRV": {
+   "da_published": 38,
+   "da_no_da_line": 8
+  },
+  "TSCO": {
+   "da_published": 46
+  },
+  "TSLA": {
+   "da_published": 13,
+   "da_da_combined_with_other_items": 33
+  },
+  "TSN": {
+   "da_published": 35,
+   "da_perimeter_line_unresolved": 11
+  },
+  "TT": {
+   "da_published": 46
+  },
+  "TTAN": {
+   "capex_software": 13,
+   "da_published": 13
+  },
+  "TTC": {
+   "da_published": 36,
+   "da_da_combined_with_other_items": 11
+  },
+  "TTD": {
+   "capex_software": 44,
+   "da_published": 44
+  },
+  "TTEK": {
+   "da_published": 46
+  },
+  "TTMI": {
+   "da_da_combined_with_other_items": 4,
+   "da_published": 42
+  },
+  "TTWO": {
+   "da_da_combined_with_other_items": 44,
+   "da_perimeter_line_unresolved": 2
+  },
+  "TW": {
+   "capex_software": 33,
+   "da_published": 33
+  },
+  "TWLO": {
+   "capex_software": 45,
+   "da_published": 45
+  },
+  "TWST": {
+   "da_published": 36
+  },
+  "TXG": {
+   "da_published": 29,
+   "da_da_combined_with_other_items": 4
+  },
+  "TXN": {
+   "da_published": 46
+  },
+  "TXNM": {
+   "da_published": 46
+  },
+  "TXRH": {
+   "da_published": 46
+  },
+  "TXT": {
+   "da_published": 46
+  },
+  "TYL": {
+   "capex_software": 30,
+   "da_published": 46
+  },
+  "U": {
+   "da_published": 29
+  },
+  "UAL": {
+   "da_published": 11
+  },
+  "UBER": {
+   "da_published": 35
+  },
+  "UBSI": {
+   "da_da_combined_with_other_items": 11
+  },
+  "UDR": {
+   "da_published": 46
+  },
+  "UGI": {
+   "da_published": 44,
+   "da_perimeter_line_unresolved": 2
+  },
+  "UHAL": {
+   "da_published": 16,
+   "da_da_combined_with_other_items": 30
+  },
+  "UHS": {
+   "da_published": 46
+  },
+  "UI": {
+   "da_published": 30,
+   "da_da_combined_with_other_items": 16
+  },
+  "ULS": {
+   "da_published": 15
+  },
+  "ULTA": {
+   "da_published": 47
+  },
+  "UMBF": {
+   "da_da_combined_with_other_items": 46
+  },
+  "UNH": {
+   "da_published": 46
+  },
+  "UNM": {
+   "da_published": 45,
+   "da_perimeter_line_unresolved": 1
+  },
+  "UNP": {
+   "da_published": 46
+  },
+  "UPS": {
+   "da_published": 46
+  },
+  "URBN": {
+   "da_published": 33,
+   "da_perimeter_line_unresolved": 14
+  },
+  "URI": {
+   "capex_leased": 42,
+   "capex_ppe_with_intangibles": 20,
+   "da_no_da_line": 46
+  },
+  "USB": {
+   "da_published": 46
+  },
+  "USFD": {
+   "da_published": 45
+  },
+  "UTHR": {
+   "da_published": 46
+  },
+  "V": {
+   "da_perimeter_line_unresolved": 39,
+   "da_published": 7
+  },
+  "VAL": {
+   "da_published": 31,
+   "da_perimeter_line_unresolved": 16
+  },
+  "VCTR": {
+   "da_published": 39,
+   "da_da_combined_with_other_items": 1
+  },
+  "VEEV": {
+   "capex_software": 58,
+   "da_published": 46,
+   "da_da_combined_with_other_items": 19
+  },
+  "VFC": {
+   "capex_software": 49,
+   "da_published": 44,
+   "da_da_combined_with_other_items": 5
+  },
+  "VG": {
+   "da_published": 11
+  },
+  "VIAV": {
+   "da_da_combined_with_other_items": 31,
+   "da_published": 15
+  },
+  "VICI": {
+   "da_published": 35
+  },
+  "VICR": {
+   "da_published": 46
+  },
+  "VLO": {
+   "da_published": 46
+  },
+  "VLTO": {
+   "da_published": 17
+  },
+  "VLY": {
+   "da_da_combined_with_other_items": 46
+  },
+  "VMC": {
+   "da_da_combined_with_other_items": 46
+  },
+  "VMI": {
+   "da_published": 46
+  },
+  "VMRK": {
+   "da_published": 46
+  },
+  "VNO": {
+   "da_da_combined_with_other_items": 46
+  },
+  "VNOM": {
+   "da_published": 9
+  },
+  "VOYA": {
+   "da_da_combined_with_other_items": 2,
+   "da_no_da_line": 9
+  },
+  "VRNS": {
+   "capex_software": 6,
+   "da_published": 31,
+   "da_da_combined_with_other_items": 15
+  },
+  "VRSK": {
+   "da_published": 63
+  },
+  "VRSN": {
+   "da_da_combined_with_other_items": 15,
+   "da_published": 31
+  },
+  "VRT": {
+   "capex_software": 26,
+   "da_published": 26
+  },
+  "VRTX": {
+   "da_published": 46
+  },
+  "VSAT": {
+   "da_published": 46
+  },
+  "VST": {
+   "da_published": 37
+  },
+  "VSXY": {
+   "da_published": 26
+  },
+  "VTR": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "VTRS": {
+   "da_no_da_line": 2,
+   "da_published": 24
+  },
+  "VZ": {
+   "da_published": 46
+  },
+  "W": {
+   "capex_software": 46,
+   "da_published": 46
+  },
+  "WAB": {
+   "da_published": 46
+  },
+  "WAL": {
+   "da_da_combined_with_other_items": 21,
+   "da_perimeter_line_unresolved": 25
+  },
+  "WAT": {
+   "da_published": 46
+  },
+  "WCC": {
+   "da_published": 45,
+   "da_perimeter_line_unresolved": 1
+  },
+  "WCN": {
+   "da_published": 45
+  },
+  "WDAY": {
+   "da_published": 67
+  },
+  "WDC": {
+   "da_published": 46
+  },
+  "WEC": {
+   "da_published": 46
+  },
+  "WELL": {
+   "da_perimeter_line_unresolved": 45,
+   "da_published": 1
+  },
+  "WES": {
+   "capex_net_sibling": 2,
+   "da_published": 20,
+   "da_da_combined_with_other_items": 26
+  },
+  "WEX": {
+   "da_da_combined_with_other_items": 11,
+   "da_published": 35
+  },
+  "WFC": {
+   "da_da_combined_with_other_items": 46
+  },
+  "WFRD": {
+   "da_published": 46
+  },
+  "WH": {
+   "da_published": 39
+  },
+  "WLK": {
+   "da_published": 46
+  },
+  "WM": {
+   "da_published": 44,
+   "da_da_combined_with_other_items": 2
+  },
+  "WMB": {
+   "capex_net_sibling": 12,
+   "da_published": 46
+  },
+  "WMG": {
+   "da_published": 46,
+   "da_no_da_line": 1
+  },
+  "WMS": {
+   "capex_software": 1,
+   "da_published": 40
+  },
+  "WMT": {
+   "da_published": 47
+  },
+  "WPC": {
+   "capex_software": 4,
+   "da_da_combined_with_other_items": 46
+  },
+  "WRB": {
+   "da_published": 35,
+   "da_da_combined_with_other_items": 11
+  },
+  "WSM": {
+   "da_da_definition_question": 33,
+   "da_published": 14
+  },
+  "WSO": {
+   "da_published": 46
+  },
+  "WST": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "WTFC": {
+   "da_published": 4,
+   "da_da_combined_with_other_items": 42
+  },
+  "WTRG": {
+   "da_published": 46
+  },
+  "WTS": {
+   "da_published": 42,
+   "da_perimeter_line_unresolved": 4
+  },
+  "WTW": {
+   "capex_software": 43,
+   "da_perimeter_line_unresolved": 8,
+   "da_published": 22,
+   "da_no_depreciation_line_on_cf": 1,
+   "da_published_2a_tie": 16
+  },
+  "WULF": {
+   "da_published": 7,
+   "da_perimeter_line_unresolved": 20,
+   "da_da_combined_with_other_items": 20
+  },
+  "WWD": {
+   "da_published": 43
+  },
+  "WY": {
+   "da_published": 46
+  },
+  "WYNN": {
+   "da_published": 46
+  },
+  "XEL": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "XPO": {
+   "da_published": 46
+  },
+  "XYL": {
+   "da_perimeter_line_unresolved": 46
+  },
+  "XYZ": {
+   "da_published": 43,
+   "da_da_combined_with_other_items": 3
+  },
+  "YUM": {
+   "da_published": 45
+  },
+  "YUMC": {
+   "da_published": 47
+  },
+  "Z": {
+   "da_published": 27,
+   "da_perimeter_line_unresolved": 12,
+   "da_da_combined_with_other_items": 7
+  },
+  "ZBH": {
+   "da_published": 46
+  },
+  "ZBRA": {
+   "da_published": 46
+  },
+  "ZETA": {
+   "capex_software": 26,
+   "da_published": 26
+  },
+  "ZION": {
+   "da_published": 54
+  },
+  "ZM": {
+   "da_published": 30,
+   "da_perimeter_line_unresolved": 5
+  },
+  "ZS": {
+   "capex_software": 39,
+   "da_published": 19,
+   "da_da_combined_with_other_items": 20
+  },
+  "ZTS": {
+   "da_published": 46
+  },
+  "ZWS": {
+   "da_published": 50
+  }
+ },
+ "companies_with_case": {
+  "capex_leased": 8,
+  "capex_software": 105,
+  "capex_discontinued": 3,
+  "capex_net_sibling": 12,
+  "da_published_2a_tie": 6,
+  "da_perimeter_line_unresolved": 163,
+  "da_da_combined_with_other_items": 232
+ }
+}
