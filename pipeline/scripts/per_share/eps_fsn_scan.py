@@ -184,6 +184,9 @@ for c in cells:
         copies.get((cik, t, dd)) for t in c["tags"]
     ):
         stats["not_in_fsn_only_rejected_axes"] += 1
+        res["rejected_axes"] = sorted(
+            {x[4] for t in c["tags"] for x in copies.get((cik, t, dd), [])}
+        )
     out.append({**c, **res})
 json.dump(out, open(W / "nc_fsn_outcomes.json", "w"), indent=0)
 print(json.dumps(stats))
