@@ -100,7 +100,31 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
             "input_refs": {"accession": acc, "form": s["form"], "face_report": s["report"], "shape": s["shape"]},
             "stratum": stratum, "prod_value": prod, "prod_cf_id": c.get("prod_cf_id") if c else None,
         })
-    for st in ("prod_blank_reason_only", "prod_has_value_would_hide"):
+    # Q4 (manager 2026-10-31): production's 3-month Q4 = FY - 9M; when the FY column
+    # is not presented, that Q4 has no filed basis either -> would-hide, same reason,
+    # the FY filing's accession as evidence
+    fy_np = {(r["cik"], r["period_end"]): r for r in rows if r["period_grain"] == "FY"}
+    for (cik, s0, e0), c in sorted(oi.items()):
+        # the replay labels these either prod_only_q4_not_a_face_column or, when the end
+        # date is the held 10-K's own period, prod_only_filing_held:<gate>
+        if c["state"] not in ("prod_only_q4_not_a_face_column", "prod_only_filing_held:no_printed_operating_line") \
+                or c.get("prod_value") is None or grain(s0, e0) != "Q":
+            continue
+        if any((cik, s0, e0) == (r["cik"], r["period_start"], r["period_end"]) for r in rows if r["cik"] == cik):
+            continue
+        fy = fy_np.get((cik, e0))
+        if fy is None:
+            continue
+        stats["q4_prod_has_value_would_hide"] += 1
+        rows.append({
+            "cik": cik, "data_point_name": "operating_income", "period_grain": "Q",
+            "period_start": s0, "period_end": e0, "basis": "latest", "state": "not_presented",
+            "rule_id": RULE, "reason_code": "line_not_presented_in_filing",
+            "reason_text": "fourth quarter derived from a full year whose income statement prints no operating income line; not derived",
+            "input_refs": {**fy["input_refs"], "q4_from_fy": [fy["period_start"], fy["period_end"]]},
+            "stratum": "q4_prod_has_value_would_hide", "prod_value": c["prod_value"], "prod_cf_id": c.get("prod_cf_id"),
+        })
+    for st in ("prod_blank_reason_only", "prod_has_value_would_hide", "q4_prod_has_value_would_hide"):
         p = out / f"is_oi_not_presented_{st}.jsonl"
         with open(p, "w") as f:
             for r in rows:
@@ -111,6 +135,7 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
     summary = {"rule_id": RULE, "cells": len(rows), "companies": len(by_co),
                "companies_reason_only": len({r["cik"] for r in rows if r["stratum"] == "prod_blank_reason_only"}),
                "companies_would_hide": len({r["cik"] for r in rows if r["stratum"] == "prod_has_value_would_hide"}),
+               "companies_q4_would_hide": len({r["cik"] for r in rows if r["stratum"] == "q4_prod_has_value_would_hide"}),
                "by_grain": dict(Counter(r["period_grain"] for r in rows)),
                "by_shape": dict(Counter(r["input_refs"]["shape"] for r in rows)),
                "filings_disqualified_operating_like_line": len(disq), **stats}

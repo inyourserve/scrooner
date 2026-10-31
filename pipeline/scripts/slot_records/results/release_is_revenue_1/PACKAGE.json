@@ -77,5 +77,17 @@
   "effect": "every nightly resolver write to a protected cell is skipped and logged in analytics.slot_protected_write_skipped",
   "test": "pipeline/scripts/slot_records/test_slot_guard.sh (throwaway local cluster; 15 checks; 7 fail with the trigger neutered)"
  },
- "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row"
+ "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row",
+ "sibling_holds": {
+  "file": "sibling_holds.jsonl",
+  "cells": 542,
+  "companies": 49,
+  "by_code": {
+   "hold_sibling_custom": 347,
+   "hold_sibling_revenue_no_total": 195
+  },
+  "sha256": "80bb38a4fd115d2480b48d56ca2e8b15074cdb9d6c44bcd7d03ebb78ebcd4847",
+  "status": "production stays; listed for the Verifier (sibling rule, Snap-on)",
+  "not_included": "391 production-only cells whose period falls in a sibling-held filing but that filing prints no column for them (prod_only_filing_held:hold_sibling_*)"
+ }
 }
