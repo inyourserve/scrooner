@@ -251,6 +251,20 @@ def verdict_cfo(c, cell):
     return "publishable", cell["value"]
 
 
+# Founder ruling 2026-11-04: buybacks = cash paid to repurchase the company's
+# own common stock as printed. These lines are EXCLUDED with their reason (the
+# member list carries the class), never summed and no longer a hold; a line
+# that combines a buyback with one of them stays held.
+FOUNDER_EXCLUDED = {
+    "perimeter_tax_withholding_shares",
+    "perimeter_excise_tax",
+    "perimeter_sbc_plan_purchase",
+    "perimeter_option_exercise",
+    "perimeter_subsidiary_repurchase",
+    "perimeter_share_swap",
+}
+
+
 def verdict_bb(c, cell):
     ms = cell["members"]
     if not ms or all(m["class"] in ("excluded", "inflow") for m in ms):
@@ -261,10 +275,13 @@ def verdict_bb(c, cell):
         return "stub_column", None
     if not any(m["class"] in ("common", "net", "unresolved", "combined") or m["class"].startswith("perimeter_") for m in ms):
         return None, None  # only inflow/excluded lines: no repurchase on this face
+    if not any(m["class"] in ("common", "net", "unresolved", "combined") or (m["class"].startswith("perimeter_") and m["class"] not in FOUNDER_EXCLUDED) for m in ms):
+        # every repurchase-like line is excluded by definition (PGR tax-withholding
+        # treasury shares, EMR/AspenTech): no buyback value, reason kept
+        return "excluded_only:" + "+".join(sorted({m["class"] for m in ms if m["class"] in FOUNDER_EXCLUDED})), None
     if any(m["class"] == "combined" for m in ms):
         return "buyback_combined_with_other_items", None
-    for cls in ("net", "perimeter_subsidiary_repurchase", "perimeter_excise_tax", "perimeter_sbc_plan_purchase",
-                "perimeter_tax_withholding_shares", "perimeter_option_exercise", "perimeter_share_swap", "unresolved"):
+    for cls in ("net", "unresolved"):
         if any(m["class"] == cls and m["value"] not in (None, 0) for m in ms):
             return {"net": "net_treasury_line", "unresolved": "perimeter_line_unresolved"}.get(cls, cls), None
     common_ms = [m for m in ms if m["class"] == "common"]

@@ -7,7 +7,7 @@
 {"canonical_concept_id": 267, "canonical_fact_id": 364751418, "company_id": 85, "period_id": 64239, "value_before": "1000000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104140218, "company_id": 108, "period_id": 13210, "value_before": "4500000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104140220, "company_id": 108, "period_id": 13347, "value_before": "4400000000"}
-{"canonical_concept_id": 267, "canonical_fact_id": 104140241, "company_id": 201, "period_id": 139273, "value_before": "215700000"}
+{"canonical_concept_id": 267, "canonical_fact_id": 104140228, "company_id": 145, "period_id": 102179, "value_before": "56300000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104140261, "company_id": 269, "period_id": 24684, "value_before": "340000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104140263, "company_id": 269, "period_id": 24722, "value_before": "501800000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104037062, "company_id": 365, "period_id": 51706, "value_before": "148200000"}
@@ -22,6 +22,9 @@
 {"canonical_concept_id": 267, "canonical_fact_id": 104140373, "company_id": 1025, "period_id": 64645, "value_before": "860000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 358740136, "company_id": 1027, "period_id": 5709855, "value_before": "350000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104140389, "company_id": 1036, "period_id": 82441, "value_before": "74000000"}
+{"canonical_concept_id": 267, "canonical_fact_id": 104140391, "company_id": 1036, "period_id": 82536, "value_before": "55100000"}
+{"canonical_concept_id": 267, "canonical_fact_id": 104078388, "company_id": 1076, "period_id": 143506, "value_before": "32000000"}
+{"canonical_concept_id": 267, "canonical_fact_id": 104078394, "company_id": 1076, "period_id": 143530, "value_before": "70000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104086674, "company_id": 1087, "period_id": 159129, "value_before": "200000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104086594, "company_id": 1087, "period_id": 159240, "value_before": "300000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 161594645, "company_id": 1091, "period_id": 165472, "value_before": "27086000"}
@@ -83,6 +86,8 @@
 {"canonical_concept_id": 267, "canonical_fact_id": 104140916, "company_id": 2286, "period_id": 432827, "value_before": "361200000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104140940, "company_id": 2432, "period_id": 498502, "value_before": "600000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104029241, "company_id": 2540, "period_id": 392134, "value_before": "8100000"}
+{"canonical_concept_id": 267, "canonical_fact_id": 104122427, "company_id": 2787, "period_id": 760211, "value_before": "32000000"}
+{"canonical_concept_id": 267, "canonical_fact_id": 104122431, "company_id": 2787, "period_id": 760228, "value_before": "-13000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104065570, "company_id": 2832, "period_id": 513346, "value_before": "21033000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104065546, "company_id": 2832, "period_id": 513582, "value_before": "84884000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 161594837, "company_id": 2835, "period_id": 514932, "value_before": "-33000000"}
@@ -101,7 +106,6 @@
 {"canonical_concept_id": 267, "canonical_fact_id": 161594894, "company_id": 3545, "period_id": 508042, "value_before": "-19356000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104141168, "company_id": 3600, "period_id": 975782, "value_before": "668000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104141195, "company_id": 3678, "period_id": 861608, "value_before": "200000000"}
-{"canonical_concept_id": 267, "canonical_fact_id": 161594901, "company_id": 3885, "period_id": 834758, "value_before": "23107000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104110680, "company_id": 3918, "period_id": 502061, "value_before": "385400000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104110738, "company_id": 3918, "period_id": 502211, "value_before": "435400000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104110744, "company_id": 3918, "period_id": 502223, "value_before": "435400000"}
@@ -139,5 +143,3 @@
 {"canonical_concept_id": 267, "canonical_fact_id": 104014469, "company_id": 5607, "period_id": 647269, "value_before": "333100000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104014461, "company_id": 5607, "period_id": 647381, "value_before": "201000000"}
 {"canonical_concept_id": 267, "canonical_fact_id": 104014465, "company_id": 5607, "period_id": 647518, "value_before": "52000000"}
-{"canonical_concept_id": 267, "canonical_fact_id": 104141506, "company_id": 5974, "period_id": 783152, "value_before": "247098000"}
-{"canonical_concept_id": 267, "canonical_fact_id": 104141509, "company_id": 5974, "period_id": 783320, "value_before": "425035000"}
