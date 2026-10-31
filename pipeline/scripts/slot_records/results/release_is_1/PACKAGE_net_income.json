@@ -1,0 +1,65 @@
+{
+ "rule_id": "slot.is_net_income@1",
+ "family": "income statement: net_income_resolved",
+ "status": "dry run; flag OFF; nothing written to the database",
+ "release1": {
+  "file": "is_net_income_release1_cells.jsonl",
+  "sha256": "898db6ceae962488e34f5aaf961b83d2c24c257ff37fcb0f714a58d09103a3ff",
+  "cells": 917,
+  "companies": 233,
+  "by_compare": {
+   "slot_differs": 810,
+   "slot_fills_blank": 107
+  },
+  "before_image": {
+   "file": "is_net_income_r1_before_image.jsonl",
+   "rows": 810,
+   "sha256": "5e3e27446415b60a6593e21a24670248386434550f16e3c2892dfe17f1a4bbb8"
+  },
+  "rollback": {
+   "file": "is_net_income_r1_rollback.sql",
+   "sha256": "bf8538d0ac688d0f256d55fd8b435c24cf7e6a12e5cfc58b002c470d59cf2e01",
+   "note": "generated, run in one transaction by the Release Manager only"
+  },
+  "stale_vs_live": 0,
+  "touched_ciks": "is_net_income_r1_touched_ciks.txt"
+ },
+ "precision_stratum": {
+  "file": "is_net_income_precision_cells.jsonl",
+  "sha256": "9e501abbc902c5c0805618fc141824cd19eb5b789b599cc09422e81b84f69f93",
+  "cells": 1046,
+  "companies": 227,
+  "by_compare": {
+   "differs_within_rounding": 56,
+   "prod_less_precise": 990
+  },
+  "status": "not wrong values; ship only if the Verifier and founder want full precision"
+ },
+ "hide_stratum": {
+  "file": "is_net_income_hide_cells.jsonl",
+  "sha256": "8d68327f284758bca135f4385bf8e5bdc20adc7638928cdf4c0d500e1f3a770d",
+  "cells": 2452,
+  "companies": 423,
+  "by_compare": {
+   "would_hide": 2452
+  },
+  "status": "founder ruling (restated copies disagree -> hidden); needs its own Verifier stratum"
+ },
+ "holds_production_stays": {
+  "prod_only_q4_not_a_face_column": 9286,
+  "prod_only_filing_held": 3496,
+  "hold_parent_line_not_standard": 2280,
+  "prod_only_not_a_face_column": 527,
+  "hold_identity_gap": 134,
+  "hold_position_above_tax": 10,
+  "hold_label_noncontrolling": 2,
+  "prod_only_company_no_face_rows": 2
+ },
+ "flag": {
+  "convention": "SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.is_net_income@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image and rollback"
+ },
+ "evidence_per_cell": "accession (original filing), slot_tag, printed label, gate (G1 printed line | G2 NCI identity | G1b ProfitLoss without NCI), copies agreeing; slot records is_<family>_records.jsonl",
+ "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks"
+}

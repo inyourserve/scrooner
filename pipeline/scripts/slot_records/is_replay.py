@@ -131,7 +131,7 @@ def main(slots_path, ciks, out_dir):
         cur.execute(
             """
             select cc.name, p.start_date, p.end_date, cf.value::numeric, cf.id,
-                   sco.tag, sfi.accession_number, sf.is_derived
+                   sco.tag, sfi.accession_number, sf.is_derived, coalesce(array_length(cf.source_fact_ids, 1), 0)
             from analytics.canonical_fact cf
             join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
             join core.period p on p.id = cf.period_id
@@ -145,8 +145,11 @@ def main(slots_path, ciks, out_dir):
         )
         prod = defaultdict(dict)
         rev = {v: k for k, v in PROD.items()}
-        for name, s0, e0, v, cfid, stag, sacc, sder in cur.fetchall():
-            prod[rev[name]][(s0, e0)] = {"value": v, "cf_id": cfid, "tag": stag, "accession": sacc, "derived": sder}
+        for name, s0, e0, v, cfid, stag, sacc, sder, nsrc in cur.fetchall():
+            # a production cell built from several facts is a computation: its first
+            # source's tag is not the cell's tag (operating income = revenue - costs)
+            prod[rev[name]][(s0, e0)] = {"value": v, "cf_id": cfid, "tag": stag if nsrc == 1 else f"computed({nsrc})",
+                                         "accession": sacc, "derived": sder or nsrc > 1, "n_sources": nsrc}
         for fam in FAMILIES:
             obs = defaultdict(list)  # (start, end) -> [observation]
             for adsh, s in slots[cik][fam].items():
@@ -227,7 +230,7 @@ def main(slots_path, ciks, out_dir):
                         st = "prod_only_not_a_face_column"
                     cells[k] = {"cik": cik, "family": fam, "start": s0.isoformat(), "end": e0.isoformat(), "state": st}
                 c = cells[k]
-                c.update(prod_value=str(p["value"]), prod_cf_id=p["cf_id"], prod_tag=p["tag"],
+                c.update(prod_value=str(p["value"]), prod_cf_id=p["cf_id"], prod_tag=p["tag"], prod_n_sources=p["n_sources"],
                          prod_accession=p["accession"], prod_derived=p["derived"])
             for c in cells.values():
                 pv = c.get("prod_value")

@@ -1,0 +1,67 @@
+{
+ "rule_id": "slot.is_revenue@1",
+ "family": "income statement: revenue_sanity_resolved",
+ "status": "dry run; flag OFF; nothing written to the database",
+ "release1": {
+  "file": "is_revenue_release1_cells.jsonl",
+  "sha256": "e1e49edc791077fe430bd7c7d3cd4faf0bcdff2fe1ecd59c28b3c4bfbcc55f90",
+  "cells": 2497,
+  "companies": 183,
+  "by_compare": {
+   "slot_differs": 1783,
+   "slot_fills_blank": 714
+  },
+  "before_image": {
+   "file": "is_revenue_r1_before_image.jsonl",
+   "rows": 1770,
+   "sha256": "57d0a3fb5c5a9cd8eba22196beb7f912927846a9eea47aef83e84bdecbed7b9e"
+  },
+  "rollback": {
+   "file": "is_revenue_r1_rollback.sql",
+   "sha256": "750430a8a08c0032541afd66d211fd75295ca721d8b667655a3ce881c52cbebe",
+   "note": "generated, run in one transaction by the Release Manager only"
+  },
+  "stale_vs_live": 13,
+  "touched_ciks": "is_revenue_r1_touched_ciks.txt"
+ },
+ "precision_stratum": {
+  "file": "is_revenue_precision_cells.jsonl",
+  "sha256": "91ebef014402328777f85a09fd6523fbf3779614b49d943ecda878a6a09c035c",
+  "cells": 844,
+  "companies": 162,
+  "by_compare": {
+   "prod_less_precise": 810,
+   "differs_within_rounding": 34
+  },
+  "status": "not wrong values; ship only if the Verifier and founder want full precision"
+ },
+ "hide_stratum": {
+  "file": "is_revenue_hide_cells.jsonl",
+  "sha256": "5be9608c164bd4c07ee9dfe6069564b67cd51ada6fc1f075f4725fa3fc1b7f0b",
+  "cells": 2508,
+  "companies": 328,
+  "by_compare": {
+   "would_hide": 2508
+  },
+  "status": "founder ruling (restated copies disagree -> hidden); needs its own Verifier stratum"
+ },
+ "holds_production_stays": {
+  "prod_only_filing_held": 13231,
+  "prod_only_q4_not_a_face_column": 7427,
+  "hold_sector_bank": 2969,
+  "hold_perimeter_children": 695,
+  "prod_only_not_a_face_column": 594,
+  "hold_perimeter_label": 155,
+  "hold_sector_bdc": 81,
+  "hold_child_of_other_total": 69,
+  "hold_sector_insurer": 47,
+  "prod_only_company_no_face_rows": 2
+ },
+ "flag": {
+  "convention": "SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.is_revenue@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image and rollback"
+ },
+ "evidence_per_cell": "accession (original filing), slot_tag, printed label, gate (G1 printed line | G2 NCI identity | G1b ProfitLoss without NCI), copies agreeing; slot records is_<family>_records.jsonl",
+ "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks"
+}
