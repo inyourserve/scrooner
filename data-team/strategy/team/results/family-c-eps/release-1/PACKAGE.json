@@ -1,0 +1,12 @@
+{
+ "rule_id": "retire.derived_per_share_cells@1",
+ "also_on": "pershare.never_derive_ttm@1",
+ "train": "per-share-derived-eps-release-1",
+ "confirm_token": "RELEASE-PER-SHARE-C-1",
+ "digest": "de049d472a3b02c5df8ef7e4fb892dc0010ced1b4128d4f60e8917e8cdeee845",
+ "dry_run": "dryrun-v4 (re-cut of v3: 10 canonical_fact ids re-issued, no content change)",
+ "verifier": "verify/eps-family-c-v3-2026-11-02 (15/15) on v3 e19bd607; v4 differs only in canonical_fact ids (changed_cells_vs_v3.csv)",
+ "company_ids_file": "company_ids.txt",
+ "fsn_outcomes_file": "fsn_outcomes_v3.json",
+ "companies_in_scope": 1000
+}
