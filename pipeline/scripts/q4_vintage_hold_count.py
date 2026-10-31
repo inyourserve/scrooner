@@ -80,6 +80,7 @@ def main() -> int:
         "q4_start",
         "q4_end",
         "category",
+        "reason_code",
         "block_reason",
         "fy_value",
         "ytd_value",
@@ -125,6 +126,7 @@ def main() -> int:
                         "q4_start": h.q4_start,
                         "q4_end": h.q4_end,
                         "category": h.category,
+                        "reason_code": h.reason_code,
                         "block_reason": h.block_reason,
                         "fy_value": h.fy_value,
                         "ytd_value": h.ytd_value,
@@ -144,6 +146,7 @@ def main() -> int:
                         "derived": stats["derived"],
                         "held_mixed_vintage": stats["held_mixed_vintage"],
                         "held_sign_conflict": stats["held_sign_conflict"],
+                        "held_quarters_vs_ytd": stats["held_quarters_vs_ytd"],
                         "secs": round(time.time() - t, 1),
                     }
                 )
@@ -157,7 +160,7 @@ def main() -> int:
     # summary
     rows = list(csv.DictReader(done_path.open(newline="")))
     prog_rows = [json.loads(l) for l in progress_path.open()]
-    by_cat = Counter(r["category"] for r in rows)
+    by_cat = Counter(r["reason_code"] for r in rows)
     by_name: Counter = Counter()
     for r in rows:
         for n in (
@@ -174,7 +177,7 @@ def main() -> int:
         "q4_cells_derived_without_hold": sum(p["derived"] for p in prog_rows),
         "cells_held": len(rows),
         "companies_with_a_hold": len(by_company),
-        "by_category": dict(by_cat),
+        "by_reason_code": dict(by_cat),
         "by_canonical_name": dict(by_name.most_common()),
         "top_companies": dict(Counter(by_company).most_common(15)),
         "mapped_statement_cells_held": sum(1 for r in rows if r["canonical_names"]),

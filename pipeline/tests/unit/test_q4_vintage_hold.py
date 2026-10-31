@@ -132,7 +132,7 @@ def harness(monkeypatch):
 def _set_verdict(monkeypatch, cand):
     calls = []
 
-    def fake(_conn, company_id, concept_ids, *, tol=None):
+    def fake(_conn, company_id, concept_ids, *, company_scale=None):
         calls.append((company_id, set(concept_ids)))
         return {(10, "usd", FY_START): cand} if cand else {}
 
@@ -181,6 +181,21 @@ def test_on_holds_the_cell_and_retires_an_earlier_derived_q4(harness, category, 
         {"company_id": 1, "concept_id": 10, "unit_id": 1, "period_id": 404}
     ]
     assert holds[0].reason_code in ("q4_inputs_mixed_vintage", "q4_input_sign_conflict")
+
+
+@pytest.mark.unit
+def test_quarters_vs_ytd_disagreement_gets_its_own_code_and_stat(harness):
+    harness.setenv(rf.ENV_ENABLED, vh.RULE_ID)
+    _set_verdict(harness, _cand(BLOCKED_MIXED, vh.QUARTERS_VS_YTD))
+    conn = _Conn()
+    holds = []
+    stats = derived.derive_q4_for_company(conn, 1, holds_out=holds)
+    assert stats["derived"] == 0
+    assert stats["held_quarters_vs_ytd"] == 1 and stats["held_mixed_vintage"] == 0
+    assert holds[0].reason_code == "quarters_do_not_sum_to_ytd"
+    reasons = vh.blank_reasons(1, holds[0], ["operating_income"])
+    assert reasons[0].reason_code == "quarters_do_not_sum_to_ytd"
+    assert "Q1+Q2+Q3" in reasons[0].reason_text
 
 
 @pytest.mark.unit
@@ -275,3 +290,33 @@ def test_rounding_slack_separates_pm_recast_from_nvda_rounding():
     assert not tol.agree(
         Decimal("500000000"), Decimal("480000000")
     )  # 20M on a round number
+
+
+@pytest.mark.unit
+def test_cell_scale_follows_the_coarsest_copy_but_is_capped_by_magnitude():
+    D = Decimal
+    # AAPL FY2018 interest expense: YTDs to the nearest 100M, quarters in millions -> 8
+    assert (
+        vh.cell_scale(
+            [
+                D("3000000000"),
+                D("2200000000"),
+                D("1400000000"),
+                D("695000000"),
+                D("742000000"),
+                D("780000000"),
+            ],
+            6,
+        )
+        == 8
+    )
+    # PM: everything in millions -> stays at the company scale 6
+    assert vh.cell_scale([D("3429000000"), D("9789000000"), D("13229000000")], 6) == 6
+    # a lone round FY (2,000,000,000) cannot widen past magnitude-1 (= 8)
+    assert vh.cell_scale([D("2000000000"), D("1534000000")], 6) == 8
+    # never below the company scale
+    assert vh.cell_scale([D("12345"), D("67890")], 6) == 6
+    assert vh._tol(8).agree(D("2200000000"), D("2217000000"))  # AAPL: rounding
+    assert not vh._tol(6).agree(
+        D("495000000"), D("497000000")
+    )  # NVDA: 2M on a 1.5M slack

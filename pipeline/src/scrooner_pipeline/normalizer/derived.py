@@ -452,6 +452,7 @@ def derive_q4_for_company(
         "demoted_full_year_q4_not_replaced": 0,
         "held_mixed_vintage": 0,
         "held_sign_conflict": 0,
+        "held_quarters_vs_ytd": 0,
     }
     new_periods: list[
         tuple
@@ -672,6 +673,7 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
         "demoted_full_year_q4_not_replaced": 0,
         "held_mixed_vintage": 0,
         "held_sign_conflict": 0,
+        "held_quarters_vs_ytd": 0,
     }
     # Same-vintage hold bookkeeping: with the rule ON, every held cell gets a
     # reason row (analytics.cell_blank_reason) under one rule_run; dry_run only
@@ -737,6 +739,7 @@ def derive_q4(conn: psycopg.Connection, ciks: set[str]) -> dict:
             "demoted_full_year_q4_not_replaced",
             "held_mixed_vintage",
             "held_sign_conflict",
+            "held_quarters_vs_ytd",
         ):
             totals[k] += stats[k]
 
