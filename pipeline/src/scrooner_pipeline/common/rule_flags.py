@@ -92,6 +92,15 @@ RULES: dict[str, Rule] = {
             "lane1",
             "audited identity fixes (script-applied; the override READ is data-driven, not flag-driven)",
         ),
+        # ---- income-statement slot records: blank-reason write path (package 2)
+        _r(
+            "slot.is_operating_income_not_presented@1",
+            "-",
+            "income_statement",
+            "operating income not printed on the filing's face: blank reason + hide of the derived value "
+            "(mapper/slot_is_not_presented.py)",
+            dry_run=True,
+        ),
         # ---- lane 2: metric-stage guards
         _r(
             "ttm.consecutive_window@1",
