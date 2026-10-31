@@ -1,0 +1,43 @@
+{
+  "companies_scanned": 1000,
+  "C_per_share_derived": {
+    "family": "C_per_share_derived",
+    "rule_id": "retire.derived_per_share_cells@1",
+    "digest": "67f702a2f802eb04184e7fdc0a6e1a93a577e66157a0b1d41217c223366e92a6",
+    "facts_to_demote": 10952,
+    "facts_to_repromote": 0,
+    "facts_to_demote_companies": 931,
+    "metric_values_to_recompute": 25655,
+    "info": {
+      "derived_per_share_facts_total": 10972,
+      "derived_per_share_facts_authoritative": 10952
+    },
+    "all_companies": {
+      "cells": 21894,
+      "companies": 929,
+      "by_action": {
+        "remove_with_reason": 21333,
+        "replace_with_filed_fact": 204,
+        "review_not_retired": 357
+      },
+      "by_concept": {
+        "basic_eps": 5522,
+        "basic_eps_resolved": 5513,
+        "diluted_eps": 5435,
+        "diluted_eps_resolved": 5424
+      },
+      "by_reason": {
+        "-": 561,
+        "per_share_not_captured": 5658,
+        "per_share_not_filed_separately": 15675
+      },
+      "by_replacement_form": {
+        "-": 21690,
+        "10-K": 192,
+        "10-K/A": 6,
+        "10-Q": 6
+      },
+      "replace_gap_vs_filed_value": {}
+    }
+  }
+}
