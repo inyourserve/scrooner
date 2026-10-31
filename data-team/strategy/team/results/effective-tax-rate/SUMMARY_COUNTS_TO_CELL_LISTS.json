@@ -1,0 +1,36 @@
+{
+ "rule": "retire.derived_ratio_cells@1 (Family A, on main), cohort v1.1 dry run 2026-11-03",
+ "cells": 5662,
+ "by_outcome": {
+  "computable_from_printed_lines_same_filing": {
+   "cells": 1422,
+   "companies": 190,
+   "file": "computable_from_printed_lines_same_filing.csv"
+  },
+  "remove_lines_derived": {
+   "cells": 3722,
+   "companies": 620,
+   "file": "remove_lines_derived.csv"
+  },
+  "remove_lines_from_different_filings": {
+   "cells": 51,
+   "companies": 29,
+   "file": "remove_lines_from_different_filings.csv"
+  },
+  "remove_lines_non_periodic": {
+   "cells": 1,
+   "companies": 1,
+   "file": "remove_lines_non_periodic.csv"
+  },
+  "remove_no_printed_lines": {
+   "cells": 459,
+   "companies": 192,
+   "file": "remove_no_printed_lines.csv"
+  },
+  "replace_with_filed_rate": {
+   "cells": 7,
+   "companies": 1,
+   "file": "replace_with_filed_rate.csv"
+  }
+ }
+}
