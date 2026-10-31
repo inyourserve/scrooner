@@ -366,7 +366,10 @@ def select_position(
         # a filer extension: a custom "total revenues" with the standard revenue tag
         # beneath it means the printed total is not the standard line.
         custom = structure.custom_parents.get(chosen.tag, set()) - candidate_tags
-        if custom:
+        # a line that is itself a calc parent is a printed total, whatever a filer
+        # rolls it up into (AMZN cash from operations under a custom cash roll-up,
+        # PG operating income under a custom pre-tax line): never a component
+        if custom and not structure.calc_children.get(chosen.tag):
             return None, "component_only"
     return chosen, None
 

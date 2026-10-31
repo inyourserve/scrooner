@@ -459,3 +459,13 @@ def test_components_sum_allows_sum_of_rounded_children_and_ignores_single_arc_gr
     )
     p2 = pv.prove_cell(shown("net_income_resolved", "112010000000"), s2, "2025q4")
     assert p2.verdict == pv.PROVEN and p2.checks["components_sum"]["status"] == "n/a"
+
+
+@pytest.mark.unit
+def test_a_calc_parent_line_is_a_total_even_under_a_custom_roll_up():
+    s = structure()
+    # operating income has children (gross profit - opex) and sits under a custom pre-tax line
+    s.calc_parents["OperatingIncomeLoss"] = {"pg_IncomeBeforeTaxesCustom"}
+    s.custom_parents["OperatingIncomeLoss"] = {"pg_IncomeBeforeTaxesCustom"}
+    line, why = pv.select_position(s, "operating_income_resolved")
+    assert line is not None and line.tag == "OperatingIncomeLoss"
