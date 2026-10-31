@@ -53,12 +53,12 @@ directly, full rebuild per company. The folder name keeps "v2" only as the proje
 | `value` | decimal **string** or null | required when state in (value, derived, evidenced_zero → "0"); null otherwise. Full precision, no scaling. |
 | `unit` | `USD` `USD/shares` `shares` `pure` | required with a value |
 | `decimals` | int or null | XBRL decimals of the source fact (for the proof's tolerance) |
-| `source_fact_ids` | int[] | core.fact ids behind the value (filed cells: 1+; derived: the inputs) |
+| `source_fact_ids` | int[] | core.fact ids behind the value when the lane has them; **may be `[]`**: the loader resolves them in one bulk join per company from (accession, tag [+ members' tags], period) and rejects a valued filed cell that resolves to nothing (decision scrooner-0f 2026-10-31) |
 | `accession` | text or null | the filing the value was taken from (the carrier filing for a derived cell) |
 | `tag` | text or null | the XBRL tag (filed), or null for derived/composed |
 | `members` | array or null | composition detail: `[{"tag","value","accession","label"}]` (total debt, capex multi-member) |
 | `fsn_set`, `fsn_stmt`, `fsn_line` | text/text/int or null | FSN period (`2026m07`), statement (`IS BS CF`), pre.tsv line number of the face line |
-| `derivation` | object or null | `{"formula":"FY - 9M_YTD","input_fact_ids":[...],"input_accessions":[...],"policy":"same_vintage"}` ; required when state = derived |
+| `derivation` | object or null | required when state = derived: `{"formula":"9M_YTD - 6M_YTD","input_values":["...","..."],"input_accessions":["...","..."],"input_fact_ids":[...] (optional),"policy":"same_vintage"}`. **Q2-Q4 flow cells (cash-flow lines, capex, D&A, CFO, any line whose 10-Q prints only YTD) are emitted as state `derived` = YTD_n − YTD_(n−1), both printed on the face, both accessions in the evidence** (decision scrooner-0f 2026-10-31); when the two YTD inputs are not on one basis or do not reconcile, the Q cell is a blank with `mixed_vintage_inputs` / `quarters_do_not_sum_to_ytd`. The YTD rows themselves are NOT emitted (TP rejected). |
 | `rule_id` | `family.rule@N` | the rule that produced this row (contract pattern) |
 | `rule_run_id` | uuid or null | the `analytics.rule_run` row, when the lane ran under one |
 | `evidence_level` | `FILING-CHECKED` \| `DATA-INFERRED` | per contract |
@@ -74,17 +74,25 @@ directly, full rebuild per company. The folder name keeps "v2" only as the proje
 {"company_id":7,"data_point_name":"operating_income_resolved","period_grain":"Q","period_start":"2014-01-01","period_end":"2014-03-31","basis":"latest","state":"defect","value":null,"rule_id":"ingest.instance_fallback@1","reason_code":"filing_has_no_xbrl","reason_text":"10-Q 0001104659-14-034914 has no XBRL instance (EDGAR isXBRL = 0); the statements exist only as HTML.","defect_class":"ingestion","owner":"data_engineer_l2","root_cause_class":"ingestion","evidence_level":"DATA-INFERRED","input_refs":{"accession":"0001104659-14-034914"}}
 ```
 
+## 2.3 Expected-cell calendar (shared, so every family emits blanks for the same keys)
+A family emits a row for EVERY expected key of its data points, valued or blank. Expected keys per company = the rows of
+`cells/_calendar/<date>/expected_periods.csv` (bucket fsn-notes; also committed here as `expected_periods_2026-10-31.csv.gz`):
+company_id, cik, fiscal_year, fiscal_period (FY/Q1..Q4), period_type (duration/instant), period_start, period_end — every
+core.period of a cohort company with end ≥ 2014-01-01 that carries at least one revenue or net-income value (`is_core`), plus the
+matching instant at each period end. Flow data points use the duration rows; balance-sheet points the instant rows. A key outside
+the calendar is accepted only with exact dates (the loader creates the period) and is listed in the load report.
+
 ## 3. Reason codes (start set; declare any new code in the manifest with one line of meaning)
 `line_not_presented_in_filing` · `line_presented_combined_with_others` · `filing_has_no_xbrl` · `value_in_note_not_on_statement_face` ·
 `restated_copies_disagree` · `shown_differs_from_printed_line` · `quarters_do_not_sum_to_ytd` · `mixed_vintage_inputs` · `sign_conflict` ·
-`no_prior_quarter_end` · `history_before_floor` · `not_in_template` · `derived_value_retired` · `held_pending_verifier`.
+`no_prior_quarter_end` · `history_before_floor` · `not_in_template` · `derived_value_retired` · `not_filed_separately` · `not_captured` · `held_pending_verifier` · `cash_flow_prints_ytd_only` (only when a Q cannot be derived and no other code fits).
 
 ## 4. Family ownership (data_point_name → one lane)
 | family (manifest `family`) | lane | data points |
 |---|---|---|
 | `is_core` | existing IS releases (Ritwik) | revenue_sanity, net_income, operating_income, gross_profit, cost_of_revenue, operating_expenses, income_before_tax, income_tax_expense |
-| `pershare_filed` | scrooner-28 | basic_eps, diluted_eps (filed, split-adjusted), dividends_per_share (filed + derived Q4 by subtraction = state `derived`), shares |
-| `pershare_derived` | scrooner-26 (Family C) | derived EPS quarters (state `derived`), their retirements (`derived_value_retired`), effective-tax-rate inputs; quick ratio = metric, emit INPUTS only |
+| `pershare_filed` | scrooner-28 | basic_eps, diluted_eps (the ONLY EPS file: filed values split-adjusted, PLUS the EPS blanks and the FSN-sourced filed values scrooner-26 hands over as an input file, since one data point has one emitter), dividends_per_share (filed + derived Q4 by subtraction = state `derived`), shares |
+| `pershare_derived` | scrooner-26 (Family C) | produces, as INPUT FILES to other owners (not loaded directly): EPS Q-cell blanks (`derived_value_retired`, `not_filed_separately`, `not_captured`) and the 110 FSN-sourced filed EPS values → scrooner-28's EPS file; quick-ratio inventory hide reasons → the `bs_core` owner's file. Loads its own file only for `effective_tax_rate_reported` if that name exists in analytics.canonical_concept (else it is a metric and not a cell) |
 | `cashflow` | scrooner-28 | cfo, cash_flow_investing, cash_flow_financing, share_buybacks, dividends_paid |
 | `capex_da_cash_debt` | scrooner-15 | capex, d_and_a, cash_and_equivalents, total_debt (+ members) |
 | `interest` | scrooner-26 | interest_expense (incl. 2024 era tags), interest_income |
