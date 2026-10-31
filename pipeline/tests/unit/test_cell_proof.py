@@ -209,11 +209,23 @@ def test_unchecked_cases():
 @pytest.mark.unit
 def test_total_under_a_non_candidate_total_is_component_only_and_equity_keeps_its_definition():
     s = structure()
+    # revenue presented only as a component of a CUSTOM "Total revenues" line
     s.calc_parents["RevenueFromContractWithCustomerExcludingAssessedTax"] = {
+        "abc_TotalRevenues"
+    }
+    s.custom_parents["RevenueFromContractWithCustomerExcludingAssessedTax"] = {
         "abc_TotalRevenues"
     }
     line, why = pv.select_position(s, "revenue_sanity_resolved")
     assert line is None and why == "component_only"
+    # a us-gaap parent outside the listed chain is a higher aggregate, not a component
+    s3 = structure()
+    s3.calc_parents["OperatingIncomeLoss"] = {
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxes"
+    }
+    line3, _ = pv.select_position(s3, "operating_income_resolved")
+    assert line3 is not None and line3.tag == "OperatingIncomeLoss"
+    # equity: StockholdersEquity sits under the total incl. NCI (a candidate): still the expected line
     s2 = structure()
     s2.pre.append(
         PreLine(
