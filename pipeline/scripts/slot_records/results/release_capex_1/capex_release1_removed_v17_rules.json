@@ -1,0 +1,68 @@
+[
+ {
+  "cik": 79879,
+  "ticker": "PPG",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "476000000.0000",
+  "v17_value": null,
+  "prod_value": "430000000",
+  "to": "hold_v17_rule",
+  "reason": "perimeter_line_unresolved"
+ },
+ {
+  "cik": 79879,
+  "ticker": "PPG",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "402000000.0000",
+  "v17_value": null,
+  "prod_value": "380000000",
+  "to": "hold_v17_rule",
+  "reason": "perimeter_line_unresolved"
+ },
+ {
+  "cik": 1603923,
+  "ticker": "WFRD",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "68000000.0000",
+  "v17_value": null,
+  "prod_value": "86000000",
+  "to": "hold_v17_rule",
+  "reason": "perimeter_line_unresolved"
+ },
+ {
+  "cik": 1603923,
+  "ticker": "WFRD",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "111000000.0000",
+  "v17_value": null,
+  "prod_value": "141000000",
+  "to": "hold_v17_rule",
+  "reason": "perimeter_line_unresolved"
+ },
+ {
+  "cik": 1603923,
+  "ticker": "WFRD",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "58000000.0000",
+  "v17_value": null,
+  "prod_value": "59000000",
+  "to": "hold_v17_rule",
+  "reason": "perimeter_line_unresolved"
+ },
+ {
+  "cik": 24741,
+  "ticker": "GLW",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "1611000000.0000",
+  "v17_value": null,
+  "prod_value": "1602000000",
+  "to": "hold_v17_rule",
+  "reason": "perimeter_line_unresolved"
+ }
+]

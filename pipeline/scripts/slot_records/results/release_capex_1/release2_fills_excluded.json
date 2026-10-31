@@ -476,34 +476,6 @@
   "reason": "no_production_period"
  },
  {
-  "accession": "0001534701-21-000074",
-  "cik": 1534701,
-  "end": "2020-12-31",
-  "form": "10-K",
-  "members": [
-   {
-    "label": "Capital expenditures and investments",
-    "nature": "ppe",
-    "tag": "CapitalExpendituresAndInvestments",
-    "value": "2920000000.0000"
-   }
-  ],
-  "prod_value": null,
-  "qtrs": 4,
-  "skipped_lines": [
-   {
-    "label": "Proceeds from asset dispositions",
-    "tag": "ProceedsFromSaleOfProductiveAssets",
-    "value": "51000000.0000",
-    "why": "proceeds_or_sale"
-   }
-  ],
-  "state": "slot_fills_blank",
-  "ticker": "PSX",
-  "value": "2920000000.0000",
-  "reason": "ambiguous_period_match"
- },
- {
   "accession": "0001193125-21-152840",
   "cik": 1000697,
   "end": "2021-03-31",
@@ -1039,34 +1011,6 @@
   "reason": "ambiguous_period_match"
  },
  {
-  "accession": "0001163165-25-000058",
-  "cik": 1163165,
-  "end": "2025-09-30",
-  "form": "10-Q",
-  "members": [
-   {
-    "label": "Capital expenditures and investments",
-    "nature": "ppe",
-    "tag": "PaymentToAcquireProductiveAssetsAndInvestments",
-    "value": "9530000000.0000"
-   }
-  ],
-  "prod_value": null,
-  "qtrs": 3,
-  "skipped_lines": [
-   {
-    "label": "Proceeds from asset dispositions",
-    "tag": "ProceedsFromSaleOfProductiveAssets",
-    "value": "1632000000.0000",
-    "why": "proceeds_or_sale"
-   }
-  ],
-  "state": "slot_fills_blank",
-  "ticker": "COP",
-  "value": "9530000000.0000",
-  "reason": "ambiguous_period_match"
- },
- {
   "accession": "0001558370-25-003476",
   "cik": 866787,
   "end": "2025-01-31",
@@ -1093,34 +1037,6 @@
   "ticker": "AZO",
   "value": "539737000.0000",
   "reason": "no_production_period"
- },
- {
-  "accession": "0001163165-25-000025",
-  "cik": 1163165,
-  "end": "2025-03-31",
-  "form": "10-Q",
-  "members": [
-   {
-    "label": "Capital expenditures and investments",
-    "nature": "ppe",
-    "tag": "PaymentToAcquireProductiveAssetsAndInvestments",
-    "value": "3378000000.0000"
-   }
-  ],
-  "prod_value": null,
-  "qtrs": 1,
-  "skipped_lines": [
-   {
-    "label": "Proceeds from asset dispositions",
-    "tag": "ProceedsFromSaleOfProductiveAssets",
-    "value": "635000000.0000",
-    "why": "proceeds_or_sale"
-   }
-  ],
-  "state": "slot_fills_blank",
-  "ticker": "COP",
-  "value": "3378000000.0000",
-  "reason": "ambiguous_period_match"
  },
  {
   "accession": "0000950170-25-097064",
@@ -1155,34 +1071,6 @@
   "ticker": "DPZ",
   "value": "35231000.0000",
   "reason": "no_production_period"
- },
- {
-  "accession": "0001163165-25-000042",
-  "cik": 1163165,
-  "end": "2025-06-30",
-  "form": "10-Q",
-  "members": [
-   {
-    "label": "Capital expenditures and investments",
-    "nature": "ppe",
-    "tag": "PaymentToAcquireProductiveAssetsAndInvestments",
-    "value": "6664000000.0000"
-   }
-  ],
-  "prod_value": null,
-  "qtrs": 2,
-  "skipped_lines": [
-   {
-    "label": "Proceeds from asset dispositions",
-    "tag": "ProceedsFromSaleOfProductiveAssets",
-    "value": "1341000000.0000",
-    "why": "proceeds_or_sale"
-   }
-  ],
-  "state": "slot_fills_blank",
-  "ticker": "COP",
-  "value": "6664000000.0000",
-  "reason": "ambiguous_period_match"
  },
  {
   "accession": "0000909832-26-000029",

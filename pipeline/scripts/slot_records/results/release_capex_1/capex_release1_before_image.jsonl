@@ -87,7 +87,6 @@
 {"canonical_concept_id": 263, "canonical_fact_id": 326928549, "cik": 23217, "company_id": 295, "end": "2016-02-28", "period_id": 27421, "qtrs": 3, "start": "2015-06-01", "value_before": "171100000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326928557, "cik": 23217, "company_id": 295, "end": "2015-02-22", "period_id": 27518, "qtrs": 3, "start": "2014-05-26", "value_before": "240600000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326928558, "cik": 23217, "company_id": 295, "end": "2015-08-30", "period_id": 27519, "qtrs": 1, "start": "2015-06-01", "value_before": "101600000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 323000682, "cik": 24741, "company_id": 303, "end": "2019-09-30", "period_id": 58386, "qtrs": 3, "start": "2019-01-01", "value_before": "1602000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326928613, "cik": 29644, "company_id": 343, "end": "2025-04-30", "period_id": 50181, "qtrs": 3, "start": "2024-08-01", "value_before": "60300000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326928615, "cik": 29644, "company_id": 343, "end": "2024-10-31", "period_id": 50241, "qtrs": 1, "start": "2024-08-01", "value_before": "25100000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326928616, "cik": 29644, "company_id": 343, "end": "2025-01-31", "period_id": 50254, "qtrs": 2, "start": "2024-08-01", "value_before": "44000000"}
@@ -296,9 +295,7 @@
 {"canonical_concept_id": 263, "canonical_fact_id": 326929301, "cik": 79879, "company_id": 1038, "end": "2024-03-31", "period_id": 84957, "qtrs": 1, "start": "2024-01-01", "value_before": "252000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326929302, "cik": 79879, "company_id": 1038, "end": "2017-03-31", "period_id": 84988, "qtrs": 1, "start": "2017-01-01", "value_before": "63000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326929305, "cik": 79879, "company_id": 1038, "end": "2016-06-30", "period_id": 85010, "qtrs": 2, "start": "2016-01-01", "value_before": "149000000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322864251, "cik": 79879, "company_id": 1038, "end": "2016-12-31", "period_id": 85022, "qtrs": 4, "start": "2016-01-01", "value_before": "380000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326929307, "cik": 79879, "company_id": 1038, "end": "2022-12-31", "period_id": 85059, "qtrs": 4, "start": "2022-01-01", "value_before": "486000000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322864262, "cik": 79879, "company_id": 1038, "end": "2015-12-31", "period_id": 85065, "qtrs": 4, "start": "2015-01-01", "value_before": "430000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326929311, "cik": 79879, "company_id": 1038, "end": "2023-12-31", "period_id": 85090, "qtrs": 4, "start": "2023-01-01", "value_before": "516000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326929313, "cik": 79879, "company_id": 1038, "end": "2016-09-30", "period_id": 85116, "qtrs": 3, "start": "2016-01-01", "value_before": "239000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326929314, "cik": 79879, "company_id": 1038, "end": "2024-09-30", "period_id": 85117, "qtrs": 3, "start": "2024-01-01", "value_before": "513000000"}
@@ -1752,9 +1749,6 @@
 {"canonical_concept_id": 263, "canonical_fact_id": 326933531, "cik": 1596532, "company_id": 3418, "end": "2016-03-31", "period_id": 871037, "qtrs": 1, "start": "2016-01-01", "value_before": "8632000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 323029479, "cik": 1600033, "company_id": 3463, "end": "2019-03-31", "period_id": 791714, "qtrs": 1, "start": "2019-01-01", "value_before": "3400000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326933611, "cik": 1601046, "company_id": 3478, "end": "2023-10-31", "period_id": 796083, "qtrs": 4, "start": "2022-11-01", "value_before": "197000000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 326933663, "cik": 1603923, "company_id": 3513, "end": "2018-06-30", "period_id": 807324, "qtrs": 2, "start": "2018-01-01", "value_before": "86000000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 326933664, "cik": 1603923, "company_id": 3513, "end": "2018-09-30", "period_id": 807420, "qtrs": 3, "start": "2018-01-01", "value_before": "141000000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 326933665, "cik": 1603923, "company_id": 3513, "end": "2019-03-31", "period_id": 807441, "qtrs": 1, "start": "2019-01-01", "value_before": "59000000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 322940550, "cik": 1604028, "company_id": 3520, "end": "2016-12-31", "period_id": 809132, "qtrs": 3, "start": "2016-04-01", "value_before": "36504000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 322940599, "cik": 1604028, "company_id": 3520, "end": "2017-03-31", "period_id": 809251, "qtrs": 4, "start": "2016-04-01", "value_before": "46676000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326933681, "cik": 1604821, "company_id": 3538, "end": "2023-03-31", "period_id": 814027, "qtrs": 1, "start": "2023-01-01", "value_before": "11380000"}
