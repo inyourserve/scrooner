@@ -1,7 +1,7 @@
 """Production's shown D&A, capex and CFO values for the cohort, as INFORMATION
 for the dry-run counts (a verdict never depends on production's value).
 One read-only connection, statement_timeout 60s, chunks of 50 companies.
-usage: DATABASE_URL=... prod_cf_values.py <cohort.csv> <out.jsonl.gz>
+usage: DATABASE_URL=... prod_cf_values.py <cohort.csv> <out.jsonl.gz> [concept,concept...]
 """
 import csv
 import gzip
@@ -11,7 +11,8 @@ import sys
 
 import psycopg
 
-CONCEPTS = ["capex_resolved", "depreciation_and_amortization_resolved", "cfo_resolved", "fcf_resolved"]
+CONCEPTS = sys.argv[3].split(",") if len(sys.argv) > 3 else [
+    "capex_resolved", "depreciation_and_amortization_resolved", "cfo_resolved", "fcf_resolved"]
 ids = [int(r["company_id"]) for r in csv.DictReader(open(sys.argv[1]))]
 conn = psycopg.connect(os.environ["DATABASE_URL"])
 cur = conn.cursor()
