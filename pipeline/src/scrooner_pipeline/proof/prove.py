@@ -388,30 +388,48 @@ def _check_identity_tie(
 def _check_components_sum(
     structure: FilingStructure, line: PreLine, nv: NumValue, tol: Decimal
 ) -> dict[str, Any]:
-    children = structure.calc_children.get(line.tag, [])
-    if not children:
+    """The line's calc children sum to it, evaluated PER CALC GROUP: a statement
+    line can be totalled in several roles (income before tax = operating income
+    + non-operating on the face, and = domestic + foreign in the tax note);
+    merging the groups double-counts. Pass when any complete group ties; fail
+    only when every complete group misses; n/a when no group is complete."""
+    groups = structure.calc_groups.get(line.tag)
+    if not groups and structure.calc_children.get(line.tag):
+        groups = {"all": structure.calc_children[line.tag]}
+    if not groups:
         return {"status": "n/a", "why": "no calculation children for this line"}
-    total = Decimal(0)
-    missing = []
-    for ctag, negative in children:
-        cv = structure.value(ctag, nv.ddate, nv.qtrs)
-        if cv is None:
-            missing.append(ctag)
+    complete: list[dict[str, Any]] = []
+    incomplete = 0
+    for grp, children in groups.items():
+        total = Decimal(0)
+        missing = []
+        for ctag, negative in children:
+            cv = structure.value(ctag, nv.ddate, nv.qtrs)
+            if cv is None:
+                missing.append(ctag)
+                continue
+            total += -cv.value if negative else cv.value
+        if missing:
+            incomplete += 1
             continue
-        total += -cv.value if negative else cv.value
-    if missing:
+        ok = same(total, nv.value, tol)
+        if ok:
+            return {
+                "status": "pass",
+                "group": grp,
+                "children": len(children),
+                "children_sum": str(total),
+                "printed": str(nv.value),
+            }
+        complete.append(
+            {"group": grp, "children": len(children), "children_sum": str(total)}
+        )
+    if not complete:
         return {
             "status": "n/a",
-            "why": f"{len(missing)} of {len(children)} children have no value at this date",
-            "missing": missing[:5],
+            "why": f"{incomplete} calc group(s), none with every child valued at this date",
         }
-    ok = same(total, nv.value, tol)
-    return {
-        "status": "pass" if ok else "fail",
-        "children_sum": str(total),
-        "printed": str(nv.value),
-        "children": len(children),
-    }
+    return {"status": "fail", "printed": str(nv.value), "groups": complete}
 
 
 def prove_cell(

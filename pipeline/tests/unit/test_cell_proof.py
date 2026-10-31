@@ -256,3 +256,57 @@ def test_fsn_ddate_rounds_to_the_nearest_month_end():
     assert fsn_ddate(date(2024, 1, 2)) == date(2023, 12, 31)
     assert fsn_ddate(date(2024, 12, 31)) == date(2024, 12, 31)
     assert fsn_ddate(date(2024, 6, 29)) == date(2024, 6, 30)
+
+
+@pytest.mark.unit
+def test_components_sum_is_checked_per_calc_group_not_across_groups():
+    s = structure()
+    ibt = "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"
+    s.pre.append(
+        PreLine(
+            2,
+            8,
+            "IS",
+            ibt,
+            "us-gaap/2025",
+            "Income before provision for income taxes",
+            False,
+        )
+    )
+    s.calc_groups[ibt]["4"] = [
+        ("OperatingIncomeLoss", False),
+        ("NonoperatingIncomeExpense", False),
+    ]
+    s.calc_groups[ibt]["9"] = [
+        ("IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic", False),
+        ("IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign", False),
+    ]
+    s.calc_children[ibt] = s.calc_groups[ibt]["4"] + s.calc_groups[ibt]["9"]
+    for tag, v in (
+        ("NonoperatingIncomeExpense", "1000000000"),
+        (ibt, "135161000000"),
+        ("IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic", "100000000000"),
+        ("IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign", "35161000000"),
+    ):
+        s.num[(tag, DDATE, 4)].append(
+            NumValue(tag, "us-gaap/2025", DDATE, 4, "USD", Decimal(v), -6)
+        )
+    p = pv.prove_cell(shown("income_before_tax_resolved", "135161000000"), s, "2025q4")
+    assert p.verdict == pv.PROVEN and p.checks["components_sum"]["status"] == "pass"
+    s.num[("NonoperatingIncomeExpense", DDATE, 4)] = [
+        NumValue(
+            "NonoperatingIncomeExpense",
+            "us-gaap/2025",
+            DDATE,
+            4,
+            "USD",
+            Decimal("5000000000"),
+            -6,
+        )
+    ]
+    assert (
+        pv.prove_cell(
+            shown("income_before_tax_resolved", "135161000000"), s, "2025q4"
+        ).verdict
+        == pv.PROVEN
+    )

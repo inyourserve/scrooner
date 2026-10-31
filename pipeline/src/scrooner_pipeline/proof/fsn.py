@@ -110,6 +110,9 @@ class FilingStructure:
     custom_parents: dict[str, set[str]] = field(
         default_factory=lambda: defaultdict(set)
     )  # parents that are filer extensions
+    calc_groups: dict[str, dict[str, list[tuple[str, bool]]]] = field(
+        default_factory=lambda: defaultdict(lambda: defaultdict(list))
+    )  # parent -> cal group (role) -> children: one line can be totalled differently per role
     num: dict[tuple[str, date, int], list[NumValue]] = field(
         default_factory=lambda: defaultdict(list)
     )
@@ -220,6 +223,7 @@ def load_quarter(
         # the same arc appears once per role (statement, parenthetical, note): keep one
         if arc not in s.calc_children[r["ptag"]]:
             s.calc_children[r["ptag"]].append(arc)
+        s.calc_groups[r["ptag"]][r.get("grp", "0")].append(arc)
         s.calc_parents[r["ctag"]].add(r["ptag"])
         if not r.get("pversion", "").startswith(STD_PREFIXES):
             s.custom_parents[r["ctag"]].add(r["ptag"])
