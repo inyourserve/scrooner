@@ -28,7 +28,8 @@ not cells in v1 and are dropped as rows (counted) but feed the quarters:
   hidden), so both YTD inputs are single clusters. A hidden input -> defect
   mixed_vintage; a held input -> defect quarter/q4_input_held; the later YTD
   not presented -> the quarter not presented. A printed 3-month column wins.
-  Cost of revenue is not derived (not in the 2026-11-04 list).
+  Cost of revenue is derived the same way (Dhairya ruling 2026-11-01: an
+  additive flow, same vintage).
 Every key of the shared expected-period calendar (v1.1 section 2.3) gets a
 row: a key no rule reached is defect no_filed_column_for_period.
 States: value; not_presented; defect (holds, by DEFECT below; hides as
@@ -65,7 +66,7 @@ RULE = {f: f"slot.is_{f}@1" for f in FAMILIES}
 GATE_RULE = {"G3b_sum_ties_tagged_total": "slot.is_revenue_tagged_total_sum@1"}
 OWNER_FAMILY = "data_engineer_l1"  # guard_hidden takes the rule family's owner
 Q_RULE = "slot.is_quarter_from_ytd@1"
-Q4_FAMILIES = ("revenue", "operating_income", "net_income", "gross_profit")
+Q4_FAMILIES = ("revenue", "operating_income", "net_income", "gross_profit", "cost_of_revenue")
 FY_DAYS, YTD9_DAYS, Q4_DAYS = (340, 380), (230, 300), (80, 120)  # q4_vintage_dryrun bands
 
 # gate -> (defect_class, owner, meaning declared in the manifest)
@@ -420,8 +421,8 @@ def main(replay_dir, np_root, slots_path, is_fsn, company_ids, calendar, out_dir
         "calendar_keys_skipped_length_not_their_period": sorted(map(list, odd_calendar)), "cohort_ciks_without_company_id": sorted(missing_company),
         "by_data_point": {DATA_POINT[f]: dict(sorted(stats[f].items(), key=lambda x: -x[1])) for f in FAMILIES},
         "notes": [
-            "values are the filing's own printed face line (core.fact of that accession); no cell is derived",
-            "6- and 9-month YTD columns are dropped (v1 grains are FY/Q/I); a 4th quarter never printed as a 3-month column is not emitted",
+            "value cells are the filing's own printed face line (core.fact of that accession)",
+            "6- and 9-month YTD columns are dropped as rows (v1 grains are FY/Q/I) but feed derived quarters: Q2-Q4 not printed as a 3-month column = YTD_n - YTD_(n-1), same fiscal start, same vintage (state derived, rule " + Q_RULE + "), for every data point including cost of revenue",
             "restated periods whose copies disagree are defect/guard_hidden restated_copies_disagree (founder ruling)",
         ],
     }
