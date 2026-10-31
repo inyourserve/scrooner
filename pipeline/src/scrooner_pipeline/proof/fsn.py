@@ -107,6 +107,9 @@ class FilingStructure:
         default_factory=lambda: defaultdict(list)
     )
     calc_parents: dict[str, set[str]] = field(default_factory=lambda: defaultdict(set))
+    custom_parents: dict[str, set[str]] = field(
+        default_factory=lambda: defaultdict(set)
+    )  # parents that are filer extensions
     num: dict[tuple[str, date, int], list[NumValue]] = field(
         default_factory=lambda: defaultdict(list)
     )
@@ -213,10 +216,13 @@ def load_quarter(
         if s is None:
             continue
         # cal.tsv `negative` is the arc weight sign: 1 or -1 (checked on INTC 2023q1, not a 0/1 flag)
-        s.calc_children[r["ptag"]].append(
-            (r["ctag"], r.get("negative", "1").strip() == "-1")
-        )
+        arc = (r["ctag"], r.get("negative", "1").strip() == "-1")
+        # the same arc appears once per role (statement, parenthetical, note): keep one
+        if arc not in s.calc_children[r["ptag"]]:
+            s.calc_children[r["ptag"]].append(arc)
         s.calc_parents[r["ctag"]].add(r["ptag"])
+        if not r.get("pversion", "").startswith(STD_PREFIXES):
+            s.custom_parents[r["ctag"]].add(r["ptag"])
     for r in _zst_rows(d / f"{period}_num.tsv.zst"):
         s = out.get(r["adsh"])
         if (
