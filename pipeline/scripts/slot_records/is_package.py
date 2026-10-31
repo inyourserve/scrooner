@@ -105,8 +105,17 @@ def main(family, cells_path, out_dir):
                     f"where cf.canonical_concept_id = cc.id and cc.name = '{concept}' and cf.company_id = co.id and co.cik = '{c['cik']}' "
                     f"and cf.period_id = p.id and p.period_type = 'duration' and p.start_date = '{c['start']}' and p.end_date = '{c['end']}';\n")
         # conditional: the rollback must also run when migration 0113 is not applied
-        f.write("do $$ begin if to_regclass('analytics.slot_protected_cell') is not null then "
-                f"delete from analytics.slot_protected_cell where rule_id = '{rule}'; end if; end $$;\n")
+        if os.environ.get("IS_PKG_KEYED_PROTECTION"):
+            # an add-on release shares its rule id with an earlier release: drop only ITS keys
+            for c in sorted(r1, key=lambda c: (c["cik"], c["start"], c["end"])):
+                f.write("do $$ begin if to_regclass('analytics.slot_protected_cell') is not null then "
+                        "delete from analytics.slot_protected_cell sp using analytics.canonical_concept cc, core.company co, core.period p "
+                        f"where sp.rule_id = '{rule}' and sp.canonical_concept_id = cc.id and cc.name = '{concept}' "
+                        f"and sp.company_id = co.id and co.cik = '{c['cik']}' and sp.period_id = p.id and p.company_id = co.id "
+                        f"and p.period_type = 'duration' and p.start_date = '{c['start']}' and p.end_date = '{c['end']}'; end if; end $$;\n")
+        else:
+            f.write("do $$ begin if to_regclass('analytics.slot_protected_cell') is not null then "
+                    f"delete from analytics.slot_protected_cell where rule_id = '{rule}'; end if; end $$;\n")
         f.write("commit;\n")
     touched = sorted({c["cik"] for c in r1})
     (out / f"is_{family}_r1_touched_ciks.txt").write_text("\n".join(touched) + "\n")

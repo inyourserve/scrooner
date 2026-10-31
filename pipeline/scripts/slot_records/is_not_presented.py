@@ -18,7 +18,7 @@ Production's current state is carried: prod blank -> reason only (closes a
 reasonless blank); prod has a value -> the value is a derivation the face does
 not support -> would_hide stratum (own Verifier draw).
 Rows are in the analytics.cell_blank_reason shape (migration 0100).
-usage: is_oi_not_presented.py <is_fsn_dir> <is_filing_slots.jsonl> <oi_cells.jsonl> <out_dir> <cells.jsonl>...
+usage: is_not_presented.py [family=operating_income|gross_profit|cost_of_revenue] <is_fsn_dir> <is_filing_slots.jsonl> <oi_cells.jsonl> <out_dir> <cells.jsonl>...
   the trailing cells files (net income, revenue dry runs) supply face columns
 """
 import glob
@@ -30,10 +30,25 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-RULE = "slot.is_operating_income_not_presented@1"
-OPERATING_LIKE = re.compile(
-    r"operating (income|profit|loss|earnings)|income \(loss\) from operations|(income|earnings|profit|loss) from operations|"
-    r"before interest|\bebit\b|operating (\(loss\) )?income", re.I)
+FAMILIES = {
+    # family: (dry-run gate, rule id, "could be this line" label rx, label rx that does not count, reason text, concept)
+    "operating_income": (
+        "no_printed_operating_line", "slot.is_operating_income_not_presented@1",
+        re.compile(r"operating (income|profit|loss|earnings)|income \(loss\) from operations|(income|earnings|profit|loss) from operations|"
+                   r"before interest|\bebit\b|operating (\(loss\) )?income", re.I),
+        re.compile(r"expense|cost|activities|lease", re.I),
+        "the filing's income statement prints no operating income line; not derived", "operating_income_resolved"),
+    "gross_profit": (
+        "no_printed_gross_profit_line", "slot.is_gross_profit_not_presented@1",
+        re.compile(r"\bgross\b", re.I), None,
+        "the filing's income statement prints no gross profit line; not derived", "gross_profit_resolved"),
+    "cost_of_revenue": (
+        "no_printed_cost_line", "slot.is_cost_of_revenue_not_presented@1",
+        re.compile(r"\bcosts? (of|applicable to)\b|\bdirect costs?\b|cost of sales|costs? of (goods|products|services|revenues?|operations)", re.I), None,
+        "the filing's income statement prints no cost of revenue line; not derived", "cost_of_revenue_resolved"),
+}
+FAMILY = "operating_income"
+GATE, RULE, LIKE, LIKE_NOT, REASON_TEXT, CONCEPT = FAMILIES[FAMILY]
 
 
 def grain(start, end):
@@ -46,7 +61,7 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
     nolines = {}
     for line in open(slots_path):
         s = json.loads(line)
-        if s["family"] == "operating_income" and s["gate"] == "no_printed_operating_line":
+        if s["family"] == FAMILY and s["gate"] == GATE:
             nolines[s["adsh"]] = s
     # stricter face check: any operating-like line on the primary face disqualifies
     disq = set()
@@ -59,7 +74,7 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
                     rows[r["adsh"]].append(r)
         for adsh, rs in rows.items():
             rep = nolines[adsh]["report"]
-            if any(r["report"] == rep and (OPERATING_LIKE.search(r["label"]) and not re.search(r"expense|cost|activities|lease", r["label"], re.I))
+            if any(r["report"] == rep and LIKE.search(r["label"]) and not (LIKE_NOT and LIKE_NOT.search(r["label"]))
                    for r in rs):
                 disq.add(adsh)
     oi = {}
@@ -93,10 +108,10 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
         stats[stratum] += 1
         s = nolines[acc]
         rows.append({
-            "cik": cik, "data_point_name": "operating_income", "period_grain": grain(s0, e0),
+            "cik": cik, "data_point_name": FAMILY, "period_grain": grain(s0, e0),
             "period_start": s0, "period_end": e0, "basis": "latest", "state": "not_presented",
             "rule_id": RULE, "reason_code": "line_not_presented_in_filing",
-            "reason_text": "the filing's income statement prints no operating income line; not derived",
+            "reason_text": REASON_TEXT,
             "input_refs": {"accession": acc, "form": s["form"], "face_report": s["report"], "shape": s["shape"]},
             "stratum": stratum, "prod_value": prod, "prod_cf_id": c.get("prod_cf_id") if c else None,
         })
@@ -107,7 +122,7 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
     for (cik, s0, e0), c in sorted(oi.items()):
         # the replay labels these either prod_only_q4_not_a_face_column or, when the end
         # date is the held 10-K's own period, prod_only_filing_held:<gate>
-        if c["state"] not in ("prod_only_q4_not_a_face_column", "prod_only_filing_held:no_printed_operating_line") \
+        if c["state"] not in ("prod_only_q4_not_a_face_column", "prod_only_filing_held:" + GATE) \
                 or c.get("prod_value") is None or grain(s0, e0) != "Q":
             continue
         if any((cik, s0, e0) == (r["cik"], r["period_start"], r["period_end"]) for r in rows if r["cik"] == cik):
@@ -117,15 +132,15 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
             continue
         stats["q4_prod_has_value_would_hide"] += 1
         rows.append({
-            "cik": cik, "data_point_name": "operating_income", "period_grain": "Q",
+            "cik": cik, "data_point_name": FAMILY, "period_grain": "Q",
             "period_start": s0, "period_end": e0, "basis": "latest", "state": "not_presented",
             "rule_id": RULE, "reason_code": "line_not_presented_in_filing",
-            "reason_text": "fourth quarter derived from a full year whose income statement prints no operating income line; not derived",
+            "reason_text": "fourth quarter derived from a full year whose " + REASON_TEXT.split("the filing's ", 1)[1],
             "input_refs": {**fy["input_refs"], "q4_from_fy": [fy["period_start"], fy["period_end"]]},
             "stratum": "q4_prod_has_value_would_hide", "prod_value": c["prod_value"], "prod_cf_id": c.get("prod_cf_id"),
         })
     for st in ("prod_blank_reason_only", "prod_has_value_would_hide", "q4_prod_has_value_would_hide"):
-        p = out / f"is_oi_not_presented_{st}.jsonl"
+        p = out / f"is_{'oi' if FAMILY == 'operating_income' else FAMILY}_not_presented_{st}.jsonl"
         with open(p, "w") as f:
             for r in rows:
                 if r["stratum"] == st:
@@ -144,4 +159,8 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    args = sys.argv[1:]
+    if args and args[0].startswith("family="):
+        FAMILY = args.pop(0).split("=", 1)[1]
+        GATE, RULE, LIKE, LIKE_NOT, REASON_TEXT, CONCEPT = FAMILIES[FAMILY]
+    main(*args)
