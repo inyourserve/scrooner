@@ -17,26 +17,31 @@ app = typer.Typer(help="Family cell files -> analytics.canonical_fact.")
 
 
 def _fetch(path: str, cache: Path) -> Path:
+    """A `fsn-notes/...` path is downloaded (with its manifest.json) into the
+    cache through the storage HTTP API, the way proof/fsn.py reads FSN sets."""
     if not path.startswith("fsn-notes/"):
         return Path(path)
-    from scrooner_pipeline.collector.storage import (
-        SupabaseStorageClient,
-        strip_bucket_prefix,
-    )
+    import os
 
+    import httpx
+
+    base = os.environ["SUPABASE_URL"].rstrip("/") + "/storage/v1/object/"
+    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+    headers = {"Authorization": f"Bearer {key}", "apikey": key}
     target = cache / path
     target.parent.mkdir(parents=True, exist_ok=True)
-    with SupabaseStorageClient() as storage:
-        for name in (Path(path).name, "manifest.json"):
-            obj = str(Path(path).with_name(name))
-            try:
-                (target.parent / name).write_bytes(
-                    storage.download(strip_bucket_prefix(obj))
-                )
-            except Exception as exc:  # noqa: BLE001
-                if name != "manifest.json":
-                    raise
-                typer.echo(f"no manifest.json next to {path}: {exc!r}")
+    for name in (Path(path).name, "manifest.json"):
+        obj = str(Path(path).with_name(name))
+        local = target.parent / name
+        if local.exists():
+            continue
+        resp = httpx.get(base + obj, headers=headers, timeout=900)
+        if resp.status_code != 200:
+            if name == "manifest.json":
+                typer.echo(f"no manifest.json next to {path}: HTTP {resp.status_code}")
+                continue
+            raise FileNotFoundError(f"{obj}: HTTP {resp.status_code}")
+        local.write_bytes(resp.content)
     return target
 
 
