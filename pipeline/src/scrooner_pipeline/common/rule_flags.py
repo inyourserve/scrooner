@@ -87,6 +87,13 @@ RULES: dict[str, Rule] = {
             "combined-filing primary registrant owns the accession (P1)",
         ),
         _r(
+            "entity.shared_accession_demote_coregistrant_facts@1",
+            "-",
+            "engineering",
+            "demote a co-registrant's copies of a combined filing's facts and archive the cells they fed",
+            dry_run=True,
+        ),
+        _r(
             "identity.cik_name_ticker@1",
             "RF-20",
             "lane1",
@@ -384,6 +391,9 @@ RULES: dict[str, Rule] = {
 RULE_PERIODIC_FORM_ONLY = "source.periodic_form_only@1"
 RULE_MATCHING_COPIES = "dedupe.matching_copies@1"
 RULE_SHARED_ACCESSION_PRIMARY = "entity.shared_accession_primary_filer@1"
+RULE_SHARED_ACCESSION_DEMOTE_COREGISTRANT = (
+    "entity.shared_accession_demote_coregistrant_facts@1"
+)
 RULE_IDENTITY = "identity.cik_name_ticker@1"
 KNOWN_RULES = frozenset(RULES)
 
