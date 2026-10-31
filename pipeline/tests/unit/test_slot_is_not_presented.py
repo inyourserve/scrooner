@@ -3,8 +3,8 @@ slot.is_operating_income_not_presented@1. File-only refusals are unit tests;
 apply / stale refusal / restore run on REAL SQL in an isolated test database
 (migration 0098's archive table and 0100's rule_run / cell_blank_reason DDL are
 read from the migrations themselves, foreign keys stripped; the 0113 guard
-table is created inline with 0114's nullable value; one test re-applies
-0113's NOT NULL to prove the 0114 refusal)."""
+table is created inline with 0115's nullable value; one test re-applies
+0113's NOT NULL to prove the 0115 refusal)."""
 
 import hashlib
 import json
@@ -327,7 +327,7 @@ def test_apply_refuses_while_value_is_not_null_as_0113_shipped_it(db, tmp_path):
         "alter table analytics.slot_protected_cell alter column value set not null"
     )
     db.commit()
-    with pytest.raises(np.ReleaseRefused, match="0114"):
+    with pytest.raises(np.ReleaseRefused, match="0115"):
         np.apply(db, pkg, confirm=np.CONFIRM_TOKEN, environ=ON)
     assert (
         db.execute("select count(*) from analytics.canonical_fact").fetchone()[0] == 2

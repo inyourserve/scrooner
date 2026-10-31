@@ -1,4 +1,4 @@
--- 0114 (claim in doc 53 before landing): a protected BLANK. NOT applied;
+-- 0115 (claimed in doc 53 via scrooner-eb; 0114 is scrooner-8a's cell_proof): a protected BLANK. NOT applied;
 -- production applies need the founder's own words.
 --
 -- 0113 made analytics.slot_protected_cell.value NOT NULL (every protected key

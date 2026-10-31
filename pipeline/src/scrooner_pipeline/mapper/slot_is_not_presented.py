@@ -21,7 +21,7 @@ SAFETY CONTRACT (each guard has a test in tests/unit/test_slot_is_not_presented*
     digests) equals the reviewed --digest; every stratum file's own sha256 must
     match PACKAGE.json. All of this is checked BEFORE any DB access;
   * apply refuses when migration 0113 (slot_protected_cell) is absent (without
-    it the next nightly would re-derive the removed values) or 0114 (value
+    it the next nightly would re-derive the removed values) or 0115 (value
     nullable, a protected blank) is not applied;
   * STALE REFUSAL before the first write: an unknown CIK, a would-hide row whose
     canonical_fact id, value or sources differ from the before-image, or a
@@ -352,7 +352,7 @@ def apply(
             )
         if not _blank_protection_allowed(cur):
             raise ReleaseRefused(
-                "migration 0114 (slot_protected_cell.value nullable) is not applied: "
+                "migration 0115 (slot_protected_cell.value nullable) is not applied: "
                 "protected blanks cannot be written"
             )
         planned, summary = plan(cur, pkg)
@@ -523,7 +523,7 @@ def main(argv: list[str] | None = None, environ=None) -> int:
                 f"  guard table (0113): {'present' if guard else 'ABSENT: apply will refuse'}"
             )
             print(
-                f"  protected blanks (0114, value nullable): {'yes' if blanks_ok else 'NO: apply will refuse'}"
+                f"  protected blanks (0115, value nullable): {'yes' if blanks_ok else 'NO: apply will refuse'}"
             )
             for k, v in summary.items():
                 print(f"  {k}: {v}")
