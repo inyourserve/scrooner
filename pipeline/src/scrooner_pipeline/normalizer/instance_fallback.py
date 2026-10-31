@@ -24,7 +24,10 @@ THE RULE
   periods created when missing (the periods stage never saw this filing):
           fiscal_year/fiscal_period from the FSN sub row for the quarter and
           the instant, none for the year-to-date span (the existing convention).
-  lineage one raw.sec_companyfacts row per filing with source_url
+  lineage one raw.sec_companyfacts row per filing (accepted by the chief of staff
+          2026-10-31: the FSN slice lives in the companyfacts raw table because
+          the source is explicit in source_url and core.fact's lineage FK points
+          there; nothing else in raw is a companyfacts payload) with source_url
           fsn://fsn-notes/<period>/<period>_num.tsv.zst#<accession> and the
           sha256 of the payload built from it; every fact's raw_object_id
           points at it, so facts from this path are always identifiable.
