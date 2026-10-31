@@ -1,0 +1,4302 @@
+{
+"0000008670-21-000027": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/8670/000000867021000027/adp-20210630.htm",
+"sha256": "d2536d7ef22e48eb0a92b8133946e2819eafd15eece0dd61076b69f6c0870bba",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000008858-21-000036": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/8858/000000885821000036/avt-20210703x10k.htm",
+"sha256": "565c5e8388de19fe604be087d1ce2a351de689beebfd2dfd66b6a57006df45e6",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000014693-21-000091": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/14693/000001469321000091/bfb-20210430.htm",
+"sha256": "27e5a95210083149543d02b18b9591f8cb58f678ce53e52880808b899a329d85",
+"candidate_tables": 1,
+"phrase": "Quarterly Financial Information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000016732-21-000103": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/16732/000001673221000103/cpb-20210801.htm",
+"sha256": "b8b237d8934434e640db223519edc5da16f748fd2cd196841b69ba95e9450ab5",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000017843-21-000030": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/17843/000001784321000030/crs-20210630.htm",
+"sha256": "a2c0786450d6fff0025ebe1c88427843cf04487a5905527b10becae9a3f30830",
+"candidate_tables": 1,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000019584-21-000003": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/19584/000001958421000003/che-20201231x10k.htm",
+"sha256": "968d138992e0489ea29771a0855d8082770938b2604e7ed706211c2c753807b8",
+"candidate_tables": 2,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000019617-21-000236": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/19617/000001961721000236/jpm-20201231.htm",
+"sha256": "df77933616ed8e069a99c7be5d57c5a4c94f4cbb9767217419012eefc12e9c78",
+"candidate_tables": 2,
+"phrase": "Selected quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000021344-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/21344/000002134421000008/ko-20201231.htm",
+"sha256": "7dc1a6b9b92498814eefcb6ddfa541cbf27147e92f9d2800e4f56fefd23e3503",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000027419-21-000010": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/27419/000002741921000010/tgt-20210130.htm",
+"sha256": "1a8203cfa01854f40e560bdaa09955a5b754433d242e4462e2aecf96df161ef5",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000027904-21-000003": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/27904/000002790421000003/dal-20201231.htm",
+"sha256": "ebcffa2c876c6eee1dd12f66c7ae464f083365c5e6dc14954a6317859b30f4c7",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000029644-21-000029": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/29644/000002964421000029/dci-20210731.htm",
+"sha256": "978ecae52d63c63455feecce7fa3b4729fe513421cf541f20c827e175c9544f9",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000029989-21-000004": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/29989/000002998921000004/omc-20201231.htm",
+"sha256": "c6f2a0d5c333a79069da2ef9bbedddf5116d48aac229b43c59ec799d66fb9707",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000034903-21-000020": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/34903/000003490321000020/frt-20201231.htm",
+"sha256": "df2adeb17fd9d5502233081ef7dafa9be003ad0c37853e98d13473e0e419c91e",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000035527-21-000100": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/35527/000003552721000100/fitb-20201231.htm",
+"sha256": "e66b61d271ffa058328fe574e3a3b968fa8d674879fdf4dafeca3f8ab97f15aa",
+"candidate_tables": 1,
+"phrase": "Quarterly Information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000036966-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/36966/000003696621000012/fhn-20201231.htm",
+"sha256": "19baf2466a4e66dbea13f0ecaa6763f541c4dcaf677021c8d0b296af961b15e6",
+"candidate_tables": 0,
+"phrase": "Quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000039911-21-000021": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/39911/000003991121000021/gps-20210130.htm",
+"sha256": "b9d60576d78eec95033ce37886cda76b30de3a0cedfb8ac8fc05798f86b2c6b5",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000049071-21-000039": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/49071/000004907121000039/hum-20201231.htm",
+"sha256": "35fa69ce46e90a96f6fd59ac26bf9734b16c21d2251f11c5e70355f37e4b7046",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000049196-21-000018": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/49196/000004919621000018/hban-20201231.htm",
+"sha256": "aee968713db4efd7221e616909ddb1d943f2897e1391ea1ec1f8542627fda3e1",
+"candidate_tables": 0,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000051253-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/51253/000005125321000011/iff-20201231.htm",
+"sha256": "f3ee8dfdc8e5f1b473ce630d4836d8203bae0eece0a6735974e7ddb7a2d1cd62",
+"candidate_tables": 2,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000052827-21-000035": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/52827/000005282721000035/ryn-20201231.htm",
+"sha256": "bd004638dec5412c8ef9399ce104d25f16da1d87ade086d6a9e0bbea53f890cd",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000055785-21-000016": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/55785/000005578521000016/kmb-20201231.htm",
+"sha256": "5d54907b065647920843ad149ee822ca20e26c5ecfc53627463b06abc56284a9",
+"candidate_tables": 1,
+"phrase": "Unaudited Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000059478-21-000083": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/59478/000005947821000083/lly-20201231.htm",
+"sha256": "6324541d4596f7421dcc724218ad44cfef6b27c0f55e0ea18f19366aec032cbc",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000059527-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/59527/000005952721000008/leco-20201231x10k.htm",
+"sha256": "78f828035190ef14ee9354194bd16352d2eafc92ad7eb214d426c8681224f79d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000060667-21-000026": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/60667/000006066721000026/low-20210129.htm",
+"sha256": "4e1bb16eaf0221064ddde373fcc7f952bbde74c5ab5313290d1ab244c7280c40",
+"candidate_tables": 3,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000063908-21-000013": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/63908/000006390821000013/mcd-20201231.htm",
+"sha256": "691f5edcd5ae50d677b51535eda1972e1b02ec302e4d42013cbe61ca23aec572",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000064803-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/64803/000006480321000011/cvs-20201231.htm",
+"sha256": "3c01654afc698995c59b08daf7ef6c9cff4a1506a097810e43b778598c87017a",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000070858-21-000023": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/70858/000007085821000023/bac-20201231.htm",
+"sha256": "0a09f7a00b42775eb1fab89889157294c9b5bc848deaa2eba0aacca074710078",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000073124-21-000071": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/73124/000007312421000071/ntrs-20201231.htm",
+"sha256": "9b421c3b9ce728159b7062a7988d94edb6472e65cb2ef69b7070dfffd03f1a62",
+"candidate_tables": 2,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000074208-21-000025": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/74208/000007420821000025/udr-20201231x10k.htm",
+"sha256": "1423a7481c0bf93bad70170df5591805458a3444c4eb5e97041099ac27049526",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000076334-21-000187": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/76334/000007633421000187/ph-20210630.htm",
+"sha256": "16f9f444860fce79ae4a8e7d11bee9edb445341d9938801ac17a0d42d601d0d4",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000077476-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/77476/000007747621000007/pep-20201226.htm",
+"sha256": "e740bdaf752c336e74d2f162c6cd659d56992eb076232875a005c11f38b8d1ca",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000080424-21-000100": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/80424/000008042421000100/pg-20210630.htm",
+"sha256": "f5ba9abe37dddcc0dcb6b1d950cf4ef26cfadc2e0bd38b9e87dd758428de8973",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000080661-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/80661/000008066121000014/pgr-20201231.htm",
+"sha256": "b7cc0113bf4b7e618105d91e502c1e192b83c3b80d32bc9e5a8c1600ecb3d959",
+"candidate_tables": 0,
+"phrase": null
+},
+{
+"type": "EX-13",
+"url": "https://www.sec.gov/Archives/edgar/data/80661/000008066121000014/pgr-20201231_d2.htm",
+"sha256": "6fcf187e1a9136041271d4b8919ade8398cfed53b5c52e6b54edaa87a0f4bb5d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000085961-21-000073": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/85961/000008596121000073/r-20201231.htm",
+"sha256": "617cdf8518ff6a1060b69f3f429d9e1fbddbe7fe0df73b2a919d32eeeed9936d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000088941-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/88941/000008894121000006/smtc-20210131.htm",
+"sha256": "91ad7dee7d944f57cf3ed55d47abf8b1b7f10fff9515d9e7403262e5a555dfa5",
+"candidate_tables": 3,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000091419-21-000048": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/91419/000009141921000048/sjm-20210430.htm",
+"sha256": "c4a2ca1c3711c3957d5548fbbe83a95fcef5c1cf97aa09db007d24f5feee1ea1",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000091576-21-000044": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/91576/000009157621000044/key-20201231.htm",
+"sha256": "75b2172db6a5b77fb98f20b5498f3f74dd853acc2d4ced9c1319ca6f6f2f2f0e",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000092230-21-000032": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/92230/000009223021000032/tfc-20201231.htm",
+"sha256": "87a54e97016f244909579d6af58adbedd07b5aad412a1667169819e1661c6ab0",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000093410-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/93410/000009341021000009/cvx-20201231.htm",
+"sha256": "47d8e25015418a2df4f3445388cabfee8203405f7467c1b966ff2fe28fa6d74a",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000093751-21-000476": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/93751/000009375121000476/stt-20201231.htm",
+"sha256": "d4156c4970e856411ebc43e72b53f5e531aa17f90f6d54dcd3f7903facfa08c9",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000097216-21-000030": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/97216/000009721621000030/tex-20201231.htm",
+"sha256": "89eb66a2aaa07780dc848520defe83c505b5e781a4b2b493bccb838ad69e2c32",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000097745-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/97745/000009774521000011/tmo-20201231.htm",
+"sha256": "d0f015615fa7cf53ff1282c7955a5e098a4450e01edbc62d268f32d53567af9f",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000100517-21-000016": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/100517/000010051721000016/ual-20201231.htm",
+"sha256": "8107e536f6afe1af495792b9843395c7cbf193e0b683fd59650b55dcfaf0bf39",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000103379-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/103379/000010337921000006/vfc-20210403.htm",
+"sha256": "c23353e3055430f2e3ec205177df54aa89d7743f2d4c01c1396a655f9c9d4896",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000104169-21-000033": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/104169/000010416921000033/wmt-20210131.htm",
+"sha256": "a8e78c2a489f792073efcb51a6e9db986b155ce58947f1040cee2e06bee6a9cf",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000105634-21-000044": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/105634/000010563421000044/eme-20201231.htm",
+"sha256": "cad5bc29c5969e8e973123e9a6dfc7d43b174fbc3dce54afb9ba81ad36a1696d",
+"candidate_tables": 0,
+"phrase": "UNAUDITED QUARTERLY"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000106040-21-000040": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/106040/000010604021000040/wdc-20210702.htm",
+"sha256": "b64b4f295a36fe6c8edde909f08e41ba8418e775a142b55b6c0a82167ef0af40",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000107263-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/107263/000010726321000006/wmb-20201231.htm",
+"sha256": "8ca3a305143db66a8cf50f21cad3cddfeb8e609c54a09dc69900e2700d36b466",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000109563-21-000082": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/109563/000010956321000082/ait-20210630.htm",
+"sha256": "26b0b642798459404c909fe5b751479afc1e40d67856779828cc3de06f57590b",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000200406-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/200406/000020040621000008/jnj-20210103.htm",
+"sha256": "046336c75c9ea13a1e460d929f57db760eb343924429df40dc997e855ca4fbf7",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000202058-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/202058/000020205821000008/hrs-20210101.htm",
+"sha256": "2f1e797f72cdc9bd7c4db0c4e03146e88950643b43aa5ae42c8ea062fe6371b2",
+"candidate_tables": 4,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000216228-21-000005": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/216228/000021622821000005/itt-20201231.htm",
+"sha256": "d6583e4d3bd5c92841c38c5fff1e2af543a7465520e943afae4e17ade6c883d8",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000277509-21-000005": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/277509/000027750921000005/fss-20201231.htm",
+"sha256": "37d231417219f07b7be72b6429f80c280f3fcafc0b607483feb043a5fa2db824",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000310158-21-000004": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/310158/000031015821000004/mrk-20201231.htm",
+"sha256": "bb454a0ef5b2929b266183b35941f40c1673e7569f98c6ac3ba590816b615980",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000313616-21-000045": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/313616/000031361621000045/dhr-20201231.htm",
+"sha256": "774424279ee907fb98030ee7b33c91960c34ed53cb97979746bb856a228ec0ba",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000320187-21-000028": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/320187/000032018721000028/nke-20210531.htm",
+"sha256": "a3ecd3ecba43bd2bfef517defe27c2b8d60064576520c9c22b42b8d17433c553",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000352541-21-000022": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/52485/000035254121000022/lnt-20201231.htm",
+"sha256": "4c752d0ff57818b1efc23056633e8be11511c81eeb9115c688f60950efd87c52",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000354950-21-000089": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/354950/000035495021000089/hd-20210131.htm",
+"sha256": "9e9d70f2246bb33bbbfa773b350e1fdb1c10fbe37938bdf856893c6c03a9ad83",
+"candidate_tables": 0,
+"phrase": "Quarterly financial data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000703351-21-000031": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/703351/000070335121000031/eat-20210630.htm",
+"sha256": "d4a26426496d3adffc3212bb19cf56d27aac893faa19ef4466df0529025cce58",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000707549-21-000136": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/707549/000070754921000136/lrcx-20210627.htm",
+"sha256": "00653f6a09c887b827da6418206e677bf042b98db25fa686b695f75173515a62",
+"candidate_tables": 3,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000713676-21-000025": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/713676/000071367621000025/pnc-20201231.htm",
+"sha256": "5eccb81f002227261d40cfc21daf1a8b776e985e502e1df0c0b90a26b9b79966",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000714310-21-000059": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/714310/000071431021000059/vly-20201231.htm",
+"sha256": "fc66e7705a514ddab18dd2009861946938a1e0313403447b929bc66447145ee4",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000723254-21-000021": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/723254/000072325421000021/ctas-20210531.htm",
+"sha256": "5df85b5d553f443fbd2f37b6069ab3f3ccbbd293b8202770a847b40dfc40c6a1",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000723531-21-000035": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/723531/000072353121000035/payx-20210531x10k.htm",
+"sha256": "d89248fffa32df944c53a71c6094293f61f5a78a80f0dc390f0b8b488a83ed79",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000726958-21-000078": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/726958/000072695821000078/casy-20210430.htm",
+"sha256": "6b97db3695a5bf8ed881f807a99bbbda507c14ab6f5f1a922c80fde9938d2db8",
+"candidate_tables": 1,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000731766-21-000013": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/731766/000073176621000013/unh-20201231.htm",
+"sha256": "1557a6af0b8d9788f44b34e586a72e5ee066d17e76ddbdca06836c3e59612b28",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000732712-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/732712/000073271221000012/vz-20201231.htm",
+"sha256": "98053e26652dd2665746e008f230b512a6d71cc9c8ac039dbc07eb5c8706cca5",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000732717-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/732717/000073271721000012/t-20201231.htm",
+"sha256": "5c94209c42950147ca0cb5d7c53bc4049193dfa693cbd69a6681cfd31622607f",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000749251-21-000010": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/749251/000074925121000010/it-20201231.htm",
+"sha256": "bcb50f87e83528e409c0c8806b88303fe10f575df3167a33ffdcc264b21858d7",
+"candidate_tables": 2,
+"phrase": "QUARTERLY FINANCIAL DATA"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000751364-21-000018": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/751364/000075136421000018/nnn-20201231.htm",
+"sha256": "e2c05d33916d8d6e1edb438fdc0a9cfd20f2c0a21758b334b711837d2b983d3d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000759944-21-000034": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/759944/000075994421000034/cfg-20201231.htm",
+"sha256": "a9ce571e635c1986117287b1de8f40d9e09c017ff45a4a261a3815428c46a591",
+"candidate_tables": 1,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000764065-21-000084": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/764065/000076406521000084/clf-20201231.htm",
+"sha256": "309af4909b2fc1565ae31bc24d8de7c96b67af26de0db0c6bb1bf17911684714",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000764478-21-000024": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/764478/000076447821000024/bby-20210130x10k.htm",
+"sha256": "9f22481a1f96c8ef68b92b1cb9e097bd1b0aacc0e7b051afc02462c6207c9422",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000764622-21-000013": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/7286/000076462221000013/pnw-20201231.htm",
+"sha256": "2611e7fc01c06a62c2787fe1be6899e95fc6d3de5d1a775a516470d161373e32",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000779152-21-000073": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/779152/000077915221000073/jkhy-20210630.htm",
+"sha256": "149134aa83096a1f6ffee1191b6f09cc2ad262e70b567c76992a441d45772b43",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000788784-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/81033/000078878421000007/pseg-20201231.htm",
+"sha256": "4815908515a222f78221b5f8a8aa8f8ed46bbb349a11c4dfe3539359279dd9cb",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000790051-21-000080": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/790051/000079005121000080/csl-20201231.htm",
+"sha256": "b248fb803328b4dc716af8727b296ad3a1e6b77090a6f791a86e84c99706225e",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000797468-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/797468/000079746821000009/oxy-20201231.htm",
+"sha256": "bc1a0441fd84f7959a1a817f0902fecae8b1c165f838099b044f1eb309f6e707",
+"candidate_tables": 2,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000798354-21-000004": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/798354/000079835421000004/fisv-20201231.htm",
+"sha256": "681988a6a9dbd01901d390c230b0d460a79b891c0569e1a9edaab8b77803e162",
+"candidate_tables": 1,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000798941-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/798941/000079894121000014/fcnca-20201231.htm",
+"sha256": "27639e0a469beb77dc7e94244d49e351a777296a598bbb38eff769c311f5ecac",
+"candidate_tables": 2,
+"phrase": "quarterly information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000813672-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/813672/000081367221000009/cdns-20210102.htm",
+"sha256": "7016fe8fb7d96e805d4dfcd46ae4eaa5547e7e150e0477f8e29663b434785ea0",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000822818-21-000003": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/822818/000082281821000003/clh-20201231.htm",
+"sha256": "353ce3c81fa200a94edbede6390c49a2216e185a2973d5be65c68ec4b530f46a",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000831259-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/831259/000083125921000009/fcx-20201231.htm",
+"sha256": "0c1c59e92ed657321c2e862b9cf827422d91dc90db98aafa43a2adfecfa161a0",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000849399-21-000010": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/849399/000084939921000010/nlok-20210402.htm",
+"sha256": "d580d0bb96278aa16d2d51c52dacd160528fe1af6771deb8b1a7874d93a61182",
+"candidate_tables": 2,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000858877-21-000013": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/858877/000085887721000013/csco-20210731.htm",
+"sha256": "c34cbde5f4c35c7dd0d7c001a18856743511c50d841eb7d54bd4191d1a311d4b",
+"candidate_tables": 5,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000860731-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/860731/000086073121000014/tyl-20201231.htm",
+"sha256": "5c4ed414a761f6e7ab3da47bbb1d8dbbd59570d289203289acb0b8899cb9765e",
+"candidate_tables": 0,
+"phrase": "QUARTERLY FINANCIAL INFORMATION"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000864749-21-000029": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/864749/000086474921000029/trmb-20210101.htm",
+"sha256": "181db6fb369243b26f421b0d0a99171f439d56cfb5352afe109f3ecb4641d0f9",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000866291-21-000020": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/866291/000086629121000020/algm-20210326.htm",
+"sha256": "e9878ebd62c90463a280c3ccaef9f7ea8c97185b0530afa070871ca3e25ec8fa",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000874716-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/874716/000087471621000008/idxx-20201231.htm",
+"sha256": "b2e0043696e7e8ebfb52bcecb94f510e6253d9b6c9b9da2f5870668ffde336f5",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000875357-21-000013": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/875357/000087535721000013/bokf-20201231.htm",
+"sha256": "ee210cd7e28b6a2c29dbe1cdd4622a6016a3c1dd7eaae3394c3f7936c4243102",
+"candidate_tables": 2,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000880266-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/880266/000088026621000009/agco-20201231.htm",
+"sha256": "3749410f1b27a6a3407c5fa732455031290e3475fcff8a6a90931bf9f2030fc0",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000885725-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/885725/000088572521000008/bsx-20201231.htm",
+"sha256": "e1c4d8438c5796cd92b2ec2ec874169ba9cf126142fdaad7f0a3c9e0eb0ae14d",
+"candidate_tables": 0,
+"phrase": "QUARTERLY RESULTS"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000888491-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/888491/000088849121000006/ohi-20201231x10k.htm",
+"sha256": "114010ca7022c9a27052618997a3512f596d6f81c24d446e22009e65a7da61d6",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000893538-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/893538/000089353821000008/sm-20201231.htm",
+"sha256": "b6da72742b993f406d81cb3534ab703b7f25988041f25dd4837ac0b04c41e505",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000895417-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/895417/000089541721000014/els-20201231.htm",
+"sha256": "41f63c7d268f3288f287f4236338edfc230f18f77c18f08f312104de9e809114",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000896159-21-000003": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/896159/000089615921000003/cb-20201231.htm",
+"sha256": "e4e115b91cf8bb006b6bbaa7581be52f1f53dc8be6359231283b296f8ae511cb",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000896878-21-000233": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/896878/000089687821000233/intu-20210731.htm",
+"sha256": "2515090cd138043b1e2b30f0aa050351eb4d6f826dbfad4f6a1cd15fd65ec330",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000899689-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/899689/000089968921000009/vno-20201231.htm",
+"sha256": "a20f5afab5a312f04a3bdbd422bddb2e6f73f29be606b0df6a4640767567994d",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000906163-21-000017": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/906163/000090616321000017/nvr-20201231.htm",
+"sha256": "251ae83c618bed2030d0d8f61d372ea10e9bc4ea4c8cd4b268f81a24c7102459",
+"candidate_tables": 2,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000906345-21-000010": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/906345/000090634521000010/cpt-20201231.htm",
+"sha256": "a0a41edc5cdb5c180e3a6c3792983876019d172d754a8c8ed158af0b5235d662",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000908255-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/908255/000090825521000008/bwa-20201231.htm",
+"sha256": "090bfdd291e006de54d300ae3814df41fab724cc020c8d31394bce7d900c1ace",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000914208-21-000331": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/914208/000091420821000331/ivz-20201231.htm",
+"sha256": "3cc0d8d14dfd8c4e8fb1415de405b88bb8ce90ac79e02fd78a322f09cbb64f9b",
+"candidate_tables": 2,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000915913-21-000018": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/915913/000091591321000018/alb-20201231.htm",
+"sha256": "ffcee566db4f6148ac561b4303953e0ec1ab0e4b7ce516ef786d31564338b4de",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000916365-21-000052": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/916365/000091636521000052/tsco-20201226.htm",
+"sha256": "9ca56e23028b1f042fbad0fd42d949fb250723a8f825d2faeaa9a9892aec93d8",
+"candidate_tables": 3,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000920148-21-000018": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/920148/000092014821000018/lh-20201231.htm",
+"sha256": "1f14a29039d5555556bf3a7d3f6514bf8a9ae91e9d902f84e767453f2eedf793",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000920371-21-000042": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/920371/000092037121000042/ssd-20201231.htm",
+"sha256": "c5704c7fc174663575b2fdc2b4df512d0e4f46e0090e69cfdfb5be4dbf0b4624",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0000920522-21-000015": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/920522/000092052221000015/ess-20201231.htm",
+"sha256": "0c7f0821dd2e906a2bdd026543aa61d6aba16e322464e430d6fb4e8162f3f529",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000922224-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/55387/000092222421000006/ppl-20201231.htm",
+"sha256": "6617e8c48b0c1a43dd5a4352e85de636874a4bcc2ad832db9f75db3926d21ef8",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000927628-21-000094": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/927628/000092762821000094/cof-20201231.htm",
+"sha256": "61c630cdb1b3961c7c8fa8cf3dd91a6e0dd0b7f6b5b06f87229b37e202fb2e2b",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000935703-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/935703/000093570321000014/dltr-20210130.htm",
+"sha256": "c424807d77549194f43f0ca656796dafe48909af038bd1cc78e3d7c373e3cc83",
+"candidate_tables": 2,
+"phrase": "Quarterly Financial Information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000940944-21-000041": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/940944/000094094421000041/dri-20210530.htm",
+"sha256": "58d61497e98f44eba7747d593a2e914bdbab2c19aaf76829f4fb2904d44dc402",
+"candidate_tables": 3,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000943819-21-000017": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/943819/000094381921000017/c819-20210630x10k.htm",
+"sha256": "25250bd625def715f612ac4b4d72f82fd3ed730a6d0750a63362684e7e6846a3",
+"candidate_tables": 2,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0000950170-21-001852": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1618732/000095017021001852/ntnx-20210731.htm",
+"sha256": "17c27711a64fcc3876eab9e78b4e5ebae2a0a9a18bb9b8fc3cb47e562a809a09",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001001250-21-000127": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1001250/000100125021000127/el-20210630.htm",
+"sha256": "c0de50e7f5b8a0081aad3acdef39254bb09e2d40f0ba75a0bcdaab028ea8b83b",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001002638-21-000029": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1002638/000100263821000029/otex-20210630.htm",
+"sha256": "f15a63a9dee5da7aed1448bd438fb0eee272c20a5b0c5c60dc8c4fcee0f5fe8f",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001004434-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1004434/000100443421000014/amg-20201231.htm",
+"sha256": "806e272d6d95feb2591fd34c7817004f2dbc5241773bfa744e7e80578e5c588d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001004980-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/75488/000100498021000007/pcg-20201231.htm",
+"sha256": "5bab0abfb4f8f4ccd3fc8b71a35703007d701b7b4b0279464359c5fbb2192303",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001013857-21-000032": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1013857/000101385721000032/pega-20201231.htm",
+"sha256": "6c448398909d7ddbcefb4c6a09199877d7005b40dab643298da871fe1a65a732",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001013871-21-000005": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1013871/000101387121000005/nrg-20201231.htm",
+"sha256": "ecb0d062377f38296cc242502b56efbfcb66a0ac28a62bf841cfa32092bbb0ae",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001018840-21-000023": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1018840/000101884021000023/anf-20210130.htm",
+"sha256": "eac6d10a2367a482b1c5d4d4b1b049bb146fc2f8f11c519d9be42062948da664",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001020569-21-000067": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1020569/000102056921000067/irm-20201231.htm",
+"sha256": "8b390f1e6e437aa384e99ca3277b188c66faa5bb180cf7ccfeec6de2fb12a228",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001021635-21-000026": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/74145/000102163521000026/oge-20201231.htm",
+"sha256": "13d48161a66f47630721f904bfa2acdfa96af8890783fd8366bd4cb8a8529c8c",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001023128-21-000022": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1023128/000102312821000022/lad-20201231.htm",
+"sha256": "91ffb6d8a3b9d998f91260fff3bb3ef5db98ef8071a7afc666305a28fe826e9e",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001031296-21-000020": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1031296/000103129621000020/fe-20201231.htm",
+"sha256": "51bffe40ad7c9ddf5aeefeceef1735dc8babb1abd38e3b68a48b5ebf5cbf2dc7",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001032975-21-000017": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1032975/000103297521000017/logi-20210331.htm",
+"sha256": "a14ef1d0e3b86cdc4508dc09413fe5708a50085a86a4835d2570dad516ea5ab9",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001037038-21-000022": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1037038/000103703821000022/rl-20210327.htm",
+"sha256": "48bfe0fa549da2d3f4f8ef0175bda9dd727bbe9df0750d43af80961ae1519029",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001037868-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1037868/000103786821000007/ame-20201231.htm",
+"sha256": "719be6e2e5729e850393f15b1bab84e25bc7eb239600bd0d2d149e0d82074a4a",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001037976-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1037976/000103797621000009/jll-20201231.htm",
+"sha256": "ca347a407638e47d87bcace15b994b4b283cd29eba84faa98077038ed067e134",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001039399-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1039399/000103939921000009/form-20201226.htm",
+"sha256": "1674b6abbb0a4a0fb167580610320e06a56241f1cd084122ca3d9431e28fb334",
+"candidate_tables": 3,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001043277-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1043277/000104327721000009/chrw-20201231.htm",
+"sha256": "18c9274eb75b77ec3310fb45271ca6ae8547c8b772b52fc2b3280b19884c47cb",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001047862-21-000049": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/23632/000104786221000049/ed-20201231.htm",
+"sha256": "df2f11481f7dc79c397c11e5799a6e8e482aa87b8e1949da244581a3d196ada6",
+"candidate_tables": 2,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001050915-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1050915/000105091521000009/pwr-20201231.htm",
+"sha256": "c2aec2623754aad6f2785a70154809ccabe9d7ca6865cbc24e29a7b5455649a4",
+"candidate_tables": 2,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001051470-21-000031": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1051470/000105147021000031/cci-20201231.htm",
+"sha256": "40fb5c2856fce9068a5eb9057a390889d418aa5f6970376b4904184b7cb75044",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001053507-21-000026": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1053507/000105350721000026/amt-20201231.htm",
+"sha256": "0bc7da8897416cb6802bf6b30b12b51750df4b33145848ead0e9ea8420f355e8",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001057877-21-000036": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/49648/000105787721000036/ida-20201231.htm",
+"sha256": "ad0ed3fa6f84968a86bb8d74381c4421774a095bf1b0fa547e8a099314c71da8",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001058290-21-000031": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1058290/000105829021000031/ctsh-20201231.htm",
+"sha256": "0eddac92af5bada2a4c0597a283c88eccb732df2eeb1a715eeebada539257158",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001059556-21-000010": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1059556/000105955621000010/mco-20201231.htm",
+"sha256": "c1839053dc1a94b0ad3cf82ec33efeb8f6a97febea5e5fae18fd3f43acb4eca7",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001060391-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1060391/000106039121000014/rsg-20201231.htm",
+"sha256": "c20421c3f62fa3c438548af0e386168ecd4ecb3736e8d8eed5a58f453063a10e",
+"candidate_tables": 1,
+"phrase": "SELECTED QUARTERLY"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001061219-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1061219/000106121921000009/form10k.htm",
+"sha256": "0634b8746d96a40c801ba51881af56c03d97beeba5d0c159313861689ead9524",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001069157-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1069157/000106915721000009/ewbc-20201231.htm",
+"sha256": "733eebfcf536a1914baa4938acef0b7198494e3c3c6e9d9b78dbb24e70deefda",
+"candidate_tables": 2,
+"phrase": "Quarterly Financial Information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001071739-21-000039": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1071739/000107173921000039/cnc-20201231.htm",
+"sha256": "9e5b73aec5e2df519426b77da8bbf709f7b4b988770bfb05d2c09376396159f2",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001075531-21-000019": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1075531/000107553121000019/bkng-20201231.htm",
+"sha256": "8c3cbd9b15f2d36c59b03e62f15bc1ba0c721c1a5a56f65f304e511f0d5b83cd",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001082554-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1082554/000108255421000008/uthr-20201231.htm",
+"sha256": "0aef82441defc5ccfcbd42be95ed6dba858520da78b954ca3957ad01ad150beb",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001089063-21-000036": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1089063/000108906321000036/dks-20210130.htm",
+"sha256": "79264fc8f802148f157afe47f920208cac1afc868357d335bde7eca2401435fb",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001097149-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1097149/000109714921000007/algn-20201231.htm",
+"sha256": "e523fe177c9605af9ff61bb300f27956fa6640cf07c8914c86c263a455ea418d",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001104506-21-000005": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1104506/000110450621000005/insm-20201231.htm",
+"sha256": "9cb59a4d460d8df8d257e83d7a2f120b87fc35aee1fb3d5428201f0309ea357b",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001104659-21-025742": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/5272/000110465921025742/aig-20201231.htm",
+"sha256": "417407aff6b3944c997d9ce98021a80538dde63639c7ca84bdf6c6f85384ac72",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001104659-21-025751": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1800/000110465921025751/abt-20201231x10k.htm",
+"sha256": "011c8daef1ec06df80d20ae2377d8769be04e0dc950d54f3cf2b7cd3b4cd6e28",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001104659-21-029938": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1109354/000110465921029938/brkr-20201231x10k.htm",
+"sha256": "dfd8f2243a01c2013348856f813a4336643793bc72962afe264864f1537bcf95",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001104659-21-037483": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1818874/000110465921037483/tm211754d1_10k.htm",
+"sha256": "eb5b73b34921be91768b1f48eed65e0935ea631f5550c1690458277273784ef3",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001108524-22-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1108524/000110852422000008/crm-20210131.htm",
+"sha256": "5597d928fddae82a0451ca23e81b733e3111775cea5df290aed6d3e0a6d2d3bf",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001109357-21-000022": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/8192/000110935721000022/exc-20201231.htm",
+"sha256": "416853167c7cd97f35b0e8c2f6577fa7e2c52bf29eee59702cafcd5c9371e67f",
+"candidate_tables": 2,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001110803-21-000015": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1110803/000111080321000015/ilmn-20210103.htm",
+"sha256": "4fb1f66ea099e7a8c9d60aed3473afa53c539eb1acc8cc56f2b3448f3f5dbf10",
+"candidate_tables": 3,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001130310-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/48732/000113031021000009/cnp-20201231.htm",
+"sha256": "a5f67300657911a1a3714d7013831e97bf29ca38df0069f32d6a606a8a273132",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001130464-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1130464/000113046421000007/bkh-20201231.htm",
+"sha256": "8170a259cd2e63ccaf7c95fff617fbc77aac96b4e951df4f4fd65a04dde111cf",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001136893-21-000025": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1136893/000113689321000025/fis-20201231.htm",
+"sha256": "718811c4d6e4a7abcc755ed51f434b9ab9a4dc838ff78a83818109397c40c486",
+"candidate_tables": 0,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001137789-21-000049": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1137789/000113778921000049/stx-20210702.htm",
+"sha256": "fbe854686c8a4f352b49497c52080e2f6ebf1f34628188e05f23aa18c5a7b8d8",
+"candidate_tables": 3,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001140361-21-005623": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/310142/000114036121005623/brhc10020381_10k.htm",
+"sha256": "a46a909b8e7dd75481bb0aad56b12a9a2c3d0c81d62a73bd756ca09366d4671e",
+"candidate_tables": 1,
+"phrase": "Quarterly Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001140361-21-018956": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/67347/000114036121018956/brhc10025013_10k.htm",
+"sha256": "c25ea47e3aa7698090de76dd084ca4ca95eb552370af896decdf3db61cb580ae",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001141391-21-000018": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1141391/000114139121000018/ma-20201231.htm",
+"sha256": "9bc467e1b8fe4f7127a334c074ab4ef3843e0f9cd6fd6aaaf83b125f165263ac",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001145197-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1145197/000114519721000009/podd-20201231.htm",
+"sha256": "6776a013c8df0fa12114bdbea6e7a91599505343a8f38eae246cbc734c3a6bbe",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001164727-21-000027": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1164727/000116472721000027/nem-20201231.htm",
+"sha256": "ac2b7e04999227a8c163e7fd0553bf0126b8791ac34126cba747092695571d4b",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001169561-21-000018": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1169561/000116956121000018/cvlt-20210331.htm",
+"sha256": "68e08b4e69764d770cf3bc4c0b91d0d3b6b5f24527f32d2a68bf371e8962959d",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001170010-21-000053": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1170010/000117001021000053/kmx-20210228.htm",
+"sha256": "d0e161cfead16633312018410604ca4a99f7bc7648cd07bf3c51b003b285e525",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001174922-21-000029": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1174922/000117492221000029/wynn-20201231.htm",
+"sha256": "167694057927123c8845c890ee9ce90238ea8aa4ea952aa8e36bc447727cce67",
+"candidate_tables": 2,
+"phrase": "selected quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001179929-21-000024": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1179929/000117992921000024/moh-20201231.htm",
+"sha256": "5b43a8ef46571fd3af05bce15aaab039e1486e77f4b8e90218d3f056800e0a96",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001185185-21-000371": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1236275/000118518521000371/silversun20201231_10k.htm",
+"sha256": "6959e3c0c315e5d6a437819eadc05953bdeb23412fd5e36ef999af5221663cc4",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001193125-21-041470": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1800667/000119312521041470/d98623d10k.htm",
+"sha256": "f3e961b696ee766b5c778366dbee6892e9a09d038dbc2517bb329332a116adc8",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-048994": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/860730/000119312521048994/d37951d10k.htm",
+"sha256": "07b35ac11ef30505639e96194b0ef4ced01cc8cee4e4c0e57607279924694b44",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001193125-21-049380": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/886982/000119312521049380/d39654d10k.htm",
+"sha256": "551192c840fbeced85e8b3cb3a60b4b58ddde91930b09d868aab3f097501052d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001193125-21-052225": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/853816/000119312521052225/d79942d10k.htm",
+"sha256": "d1301c10891a217fa92de542390d5838568be9f0aa8f9bff1b300a9111e7e319",
+"candidate_tables": 2,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-052547": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/36104/000119312521052547/d14650d10k.htm",
+"sha256": "09d235580a2b5f0a0370389ed5ba8c0d07bf12126e7fe2fc31af8584630bbdb6",
+"candidate_tables": 0,
+"phrase": null
+},
+{
+"type": "EX-13",
+"url": "https://www.sec.gov/Archives/edgar/data/36104/000119312521052547/d14650dex13.htm",
+"sha256": "8a358a073a6ea6d7b952d0526e5fb2349287f1a7720122fdf22801282be386bc",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-054626": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/49938/000119312521054626/d96899d10k.htm",
+"sha256": "8dd118baa6ff1a79be5c7b8ac79f0af02930e85c84a01fb87c956798877d7450",
+"candidate_tables": 0,
+"phrase": "Quarterly financial data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-055734": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1286681/000119312521055734/d326373d10k.htm",
+"sha256": "d0ed8c18f63edcaa9957058e5bb70a030961699ae48fd95a6503fde56cbb4d49",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-060361": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1393818/000119312521060361/d105584d10k.htm",
+"sha256": "f3554d4a48f2fe277fbde7b1ac983002bb60917737d555fcaf14236606beac56",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-060650": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1321655/000119312521060650/d65934d10k.htm",
+"sha256": "734d4bb582666c51ffb852187035f54f2a3765085696e6e8c962473bcb59e4df",
+"candidate_tables": 1,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-063781": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/763901/000119312521063781/d58850d10k.htm",
+"sha256": "b1534da90e0ba30df58125a479e844cd6417a05d22a97db546bd41a16c1f3e7b",
+"candidate_tables": 1,
+"phrase": "Quarterly Financial Data"
+},
+{
+"type": "EX-13.1",
+"url": "https://www.sec.gov/Archives/edgar/data/763901/000119312521063781/d58850dex131.htm",
+"sha256": "ebb6bd6e9484788a37c2d49daafb8efb104b579f99cd241c5456797805406c02",
+"candidate_tables": 1,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-089657": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1773751/000119312521089657/d27413d10k.htm",
+"sha256": "faef66eefc134bbc4ec270071eba4a32fb6cae1863f79053d7c8e6ad23df9fb8",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-100319": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/719955/000119312521100319/d93631d10k.htm",
+"sha256": "dd9a2f2afaf5d3984808a7ec5d871239524c2b99aca205b5e1f0a0fd2e862e16",
+"candidate_tables": 1,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001193125-21-100852": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1819994/000119312521100852/d157321d10k.htm",
+"sha256": "b18f370127d8848a47410806ae21eeb149481222fee12f3eba3c9b2d5a738dcd",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001261333-21-000059": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1261333/000126133321000059/docu-20210131.htm",
+"sha256": "3cdb9f111239c6013b582287e781c0f7631d2b57315b1c229eddaeeb62cc8e6d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001281761-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1281761/000128176121000012/rf-20201231.htm",
+"sha256": "ea45842294f777e450dc943841dc01ece31e6b2f1dd06cd9613e8cdfe7287387",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001289419-21-000039": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1289419/000128941921000039/morn-20201231.htm",
+"sha256": "33e434a8517d82c425c3e6461b727d1d5eceac49797b905366a33042ceb591ac",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001298675-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1298675/000129867521000006/cube-20201231x10k.htm",
+"sha256": "6df352e4ba9422115624c78bfedd95c8884f17b0b2625f0298b490214d51a024",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001302215-21-000027": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1302215/000130221521000027/hli-20210331.htm",
+"sha256": "6d42ff7d5d1eb80943defb96b3f57d64776885858bc59d8fa0f28f4df4c94a7f",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001309108-21-000018": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1309108/000130910821000018/wex-20201231.htm",
+"sha256": "31e336ddd32058ed418250aa875f2775b0ec0b94f56c9aad4a31a415064586cf",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001324404-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1324404/000132440421000008/cf-20201231.htm",
+"sha256": "82a082a3def6bc1ba375171e7c910602d49f612990a5558e539332ad43c261af",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001326160-21-000063": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/17797/000132616021000063/duk-20201231.htm",
+"sha256": "67461b981f6012b8fcf95490bc17a4fcd9dd0ecc36ea55a7605e4460e7d795e4",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001331875-21-000015": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1331875/000133187521000015/fnf-20201231.htm",
+"sha256": "648178e5499e53dd3cdea8d1c44c61ab74408249023830a8e3f25d94aeff20d3",
+"candidate_tables": 2,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001333986-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1333986/000133398621000011/eqh-20201231.htm",
+"sha256": "6416be0f5404c933da2017847d7c508a4e059e118b2ad5f5bc2db63a06446194",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001335258-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1335258/000133525821000009/lyv-20201231.htm",
+"sha256": "e9d1d129cdc9d14483c6912ca1daaa77f6fa9a01e10baf990e90a28a7da250e8",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001336920-21-000010": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1336920/000133692021000010/ldos-20210101.htm",
+"sha256": "1acf247e760d311eef36bc64f1c52d9ed982f7c12a732297c615adb4352fae2e",
+"candidate_tables": 2,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001366868-21-000016": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1366868/000136686821000016/gsat-20201231.htm",
+"sha256": "95d3376433b83438a820b33048c17925831151461928539e3853941af392b7db",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001370637-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1370637/000137063721000012/etsy-20201231.htm",
+"sha256": "91949d3652922f0221eb6b5ff6d05bf6a815497e1ca3cd3867690f506f5af677",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001370946-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1370946/000137094621000011/oc-20201231.htm",
+"sha256": "0b81cccabf38ae1fcee5cc8e6f5a350404e6cf4f80283e2108a8d7fad246650f",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001373715-21-000061": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1373715/000137371521000061/now-20201231.htm",
+"sha256": "8f87b480f3a39475ef3bfed1856e78ab0d961a0e2d109d10ad494bc52bda6699",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001375365-21-000060": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1375365/000137536521000060/smci-20210630.htm",
+"sha256": "08079ef88b4d8defb4ce70980c6505702744012c81f2bb29e65d7c380ac99d23",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001376139-21-000021": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1376139/000137613921000021/cvi-20201231.htm",
+"sha256": "88609dce5e7c25c9ec69464cd2d155117ea0527888d7cf76ad4acf08f18eb6f9",
+"candidate_tables": 2,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001381197-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1381197/000138119721000008/ibkr-20201231x10k.htm",
+"sha256": "629d75a57128adc0a9b935a8c6b4ed2e7b3ac8541ae4ca4ea1e4a3808983d178",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001397187-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1397187/000139718721000009/lulu-20210131.htm",
+"sha256": "ed2b8fa53fb6cfb3b466c09f27c8d8f9618faa33f4d0b3b8491a32107ad5105e",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001397911-21-000029": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1397911/000139791121000029/lpla-20201231.htm",
+"sha256": "dd4dafa0b60359febdcb651ade7692c29690df0efa73bcf169bdfcd46c5442d9",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001408710-21-000034": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1408710/000140871021000034/fn-20210625.htm",
+"sha256": "453787cd3caff9b22d4484d0cf28079f2b18227627e5ed5065bb04eeee3ed0c8",
+"candidate_tables": 2,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001413447-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1413447/000141344721000011/nxpi-20201231.htm",
+"sha256": "cec1b37536044d541172b4cfb99505afcce3a3c3ef9bee818d7c1519b7317bb8",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001423689-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1423689/000142368921000011/agnc-20201231.htm",
+"sha256": "3a1ae49a50bea576255fc993188fef02abbf9ee18a2091dc2802c6a6d35c1509",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001423902-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1414475/000142390221000007/wes-20201231.htm",
+"sha256": "fc9d91f386338ebc2e327d3b7e893d687908244afc226c83391a906e71cd2487",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001428336-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1428336/000142833621000011/hqy-20210131.htm",
+"sha256": "4b2014818faa93b9f2af8599cf607df93697455f0ad3c797e86d61e21e246fc2",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001433195-21-000024": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1433195/000143319521000024/appf-20201231.htm",
+"sha256": "71a1cf9ca5e4df9f65d7e5dad6762f1f4df2371e2e84f050fb382c6983c31aa6",
+"candidate_tables": 0,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001437749-21-003789": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1442145/000143774921003789/vrsk20201120_10k.htm",
+"sha256": "b4594822e611364502533df6db91aa7e91f35be848f47e4aa18e890515b60895",
+"candidate_tables": 0,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001437749-21-004587": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1280452/000143774921004587/mpwr20201231_10k.htm",
+"sha256": "1a75783a8e1fff472d53438808731cacdc9f4fdd2366bdbe27b2c074519459a9",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001437749-21-004835": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1083301/000143774921004835/ikon20201231_10k.htm",
+"sha256": "6c3e46f4cc248b9a8ae25c2c507441ffa1fd53777cf3373d31004d29243861b6",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001441816-21-000051": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1441816/000144181621000051/mdb-20210131.htm",
+"sha256": "1a1e0318f32cac0437cef07d1885447383450f36d3d37f0d3b4c6152fe596757",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001447669-21-000070": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1447669/000144766921000070/twlo-20201231.htm",
+"sha256": "48764c5dccd4c226e615cd8f59a8af2c8916fb70aa93275bcc604215b4a03939",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001451505-21-000020": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1451505/000145150521000020/rig-20201231x10k.htm",
+"sha256": "50c19e3c3bbabe06adc2d9f32206d95fddef33314674a0b2e364de04432b6e15",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001467623-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1467623/000146762321000012/dbx-20201231.htm",
+"sha256": "3bf36028e91bc183266f84dabd82d98b6699535f71d1b6aa1c78cda1643de607",
+"candidate_tables": 1,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001467858-21-000037": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1467858/000146785821000037/gm-20201231.htm",
+"sha256": "9f1a578873569cf0f6a7be8d90d8bf92bc5a450ccf7ecaa86c85f7990d1ae444",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001468174-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1468174/000146817421000011/h-20201231.htm",
+"sha256": "be9b6f66d173af684a54300b3faabcbe91e3ea2f835e559e33f17ac8e2bb0fd7",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001476150-21-000004": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1476150/000147615021000004/trno-20201231.htm",
+"sha256": "a2f00fbdf39f88269ad844358c8f4183b5289c62c19026f411785535c311dee9",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001477333-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1477333/000147733321000009/cloud-20201231.htm",
+"sha256": "18a238d10978a9d0d7277cb9881e4bb0acd17b4c3103f0532b6575feb58d66aa",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001492691-21-000016": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1492691/000149269121000016/knx-20201231.htm",
+"sha256": "12bc62885ec14084be243f29ff184e911cd3437ed4ad781984b8a3da6c4801d7",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001510295-21-000027": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1510295/000151029521000027/mpc-20201231.htm",
+"sha256": "2977bd9bbeccf57f87955d9e225135882773ecaab68ad81213f3a0e71dd5184a",
+"candidate_tables": 0,
+"phrase": "SELECTED QUARTERLY"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001511737-21-000036": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1511737/000151173721000036/ubnt-20210630.htm",
+"sha256": "02344266582606c61edc72468deb1adce8d00f1ee0db5e095cedcb15568e2f6a",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001512673-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1512673/000151267321000008/sq-20201231.htm",
+"sha256": "d545bdab0c3ec507f1ed7ea57fe6c81dc76b2a83fe8f34fdbe31c71442d18dce",
+"candidate_tables": 3,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001520006-21-000056": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1520006/000152000621000056/mtdr-20201231.htm",
+"sha256": "293753364bf47acc539efd39027e87a1a88e374862fd48b648a5de76f55f44bd",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001528396-21-000095": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1528396/000152839621000095/gwre-20210731.htm",
+"sha256": "50b0537c3a321169d4699d8303a8f900d7ae3f7376942fba97109cf7a80afe54",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001534504-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1534504/000153450421000008/pbf-20201231.htm",
+"sha256": "dafe822696f10c595f0891b11d8ced689cd803c639c20ea6a765f521769320c8",
+"candidate_tables": 2,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001535527-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1535527/000153552721000007/crwd-20210131.htm",
+"sha256": "8471e41591a38f1807824ba634cc7396446d5229b275c803197cad5193ca44c0",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001543151-21-000014": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1543151/000154315121000014/uber-20201231.htm",
+"sha256": "cb2e0c3322d632c3b73041599913bf4dde49f9c0ba145ed5594a90fdeda84dd0",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001551182-21-000022": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1551182/000155118221000022/etn-20201231.htm",
+"sha256": "ec4ceeedd22d848143489511121d3be7826745a4d3f75be15ca29979c48c1f5d",
+"candidate_tables": 0,
+"phrase": "selected quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001555280-21-000098": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1555280/000155528021000098/zts-20201231.htm",
+"sha256": "33e908b104ba7752a4ab1808f909f8670d862a35725a1a1674944a1d99d55d04",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-001121": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/9389/000155837021001121/bll-20201231x10k.htm",
+"sha256": "6aeaf69bd11fd682b87581c6854c679da753b5ada1137f2afc5d15756f3a1934",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-001212": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/917251/000155837021001212/adc-20201231x10k.htm",
+"sha256": "a9820a3abb27236d00376b048bfb49139e5abbcbd70aea49767e0fffa5dcf888",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-001299": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1019849/000155837021001299/pag-20201231x10k.htm",
+"sha256": "89221079bcd3288b7daf46d9f098f7fa764f2c7c3a9a2a7065d260d0488a2f7c",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-001348": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/823768/000155837021001348/wm-20201231x10k.htm",
+"sha256": "d8f635203fcba614581bd18f0a3b214cad7681ce143fd12675084864c4c2b670",
+"candidate_tables": 0,
+"phrase": "selected quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-001489": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/51143/000155837021001489/ibm-20201231x10k.htm",
+"sha256": "c54b6fb872ce3f4b39b8384138513eecdd82baf3e033b4726f5ac7c61f937fb3",
+"candidate_tables": 0,
+"phrase": null
+},
+{
+"type": "EX-13",
+"url": "https://www.sec.gov/Archives/edgar/data/51143/000155837021001489/ibm-20201231xex13.htm",
+"sha256": "17a1034c6dbdf944d49a40ef8c3803028078f1c4b318a6446a437c8fc9795566",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-001513": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/927003/000155837021001513/aeis-20201231x10k.htm",
+"sha256": "40f9a10a9dabfb7703e9066d15e1ac26f599ce2eb6dd4f7e0cb996917db80ed6",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-001821": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1730430/000155837021001821/knsa-20201231x10k.htm",
+"sha256": "f2a3f1d35dbb399837c8e25e0902c9944bf31e004ca7b5cfb168b5642ed5640e",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-001873": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1069183/000155837021001873/axon-20201231x10k.htm",
+"sha256": "fc597eb7ac13a80827c880722ec167fcc8612c1eef67f61aa9d353a282faddec",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-001894": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1001838/000155837021001894/scco-20201231x10k.htm",
+"sha256": "062a089fddf004b9a1d1b9250ed5e7222e9d0e3621341a06703249359c6b97a6",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-001907": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1604821/000155837021001907/ntra-20201231x10k.htm",
+"sha256": "8b98671bd55c128867a2cd8e7ba6b852558088398bd51a18568e14be51eeac0c",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-001956": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1040829/000155837021001956/rhp-20201231x10k.htm",
+"sha256": "c8757b923673b76624ee2ca9e03b284544baaa4ed7c5e96691c40655766de90c",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-001976": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/764038/000155837021001976/ssb-20201231x10k.htm",
+"sha256": "7141f870fac605e081920dbd8470f81f6a16950a89704ca77dd30a9537c97ad8",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-002121": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1649904/000155837021002121/rytm-20201231x10k.htm",
+"sha256": "39c3e7433df4d6d2539a5586bc17dbdc9d4dfb828ccede8d08ed72761f81f8ce",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-002149": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1001316/000155837021002149/tgtx-20201231x10k.htm",
+"sha256": "70651f70569eb0365654701146705892d80ea846a67e4d0f74b7ee7576e28cb0",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-002715": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1377121/000155837021002715/ptgx-20201231x10k.htm",
+"sha256": "f273b76456a1551f63d23751d36408baa19e9a03b56a6226b5e1784f62dedc5c",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-008684": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1368622/000155837021008684/avav-20210430x10k.htm",
+"sha256": "4c34360719dad0f1e4dbadec937d04f42d52a235b16b043c0719e7a6f59e67f7",
+"candidate_tables": 1,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001558370-21-009330": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1679273/000155837021009330/lw-20210530x10k.htm",
+"sha256": "28d6d69368e8282b634c355a14eff0294c74390bd89518276385dc2de5e5a9be",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001558370-21-010711": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1591698/000155837021010711/pcty-20210630x10k.htm",
+"sha256": "eb1bc8f04243f68839ac275ea836abd0cafe546201d67d2f79f59e13e2dd987e",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001562401-21-000041": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1562401/000156240121000041/amh-20201231.htm",
+"sha256": "d9801f5d2b59f86fc44a172da9111c1be04706e9163eca7874b28bfbcc79ea13",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001562762-21-000023": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/24741/000156276221000023/glw-20201231x10k.htm",
+"sha256": "3125a88921638ea3649a771d68e7b3fbb3045c67cf174d6543250ffc66fa896b",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001562762-21-000027": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1163165/000156276221000027/cop10k2020.htm",
+"sha256": "4eafd4efecbd1b00c9aef9ede5c3092654d592d5abca1b9ed94941f283ee246d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001562762-21-000058": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1393311/000156276221000058/psa-20201231x10k.htm",
+"sha256": "276e3cb6339a20252f40db4aca512224e70741181967115a3ab399cba497c59f",
+"candidate_tables": 0,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001562762-21-000081": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/78128/000156276221000081/wtrg-20201231x10k.htm",
+"sha256": "c0a610823c5655c1d24cc9c7e815dac96fcf21efab77cc8c34acc05616dc335b",
+"candidate_tables": 2,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-005593": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1520262/000156459021005593/alks-10k_20201231.htm",
+"sha256": "64563c59d0a6d02d9b299e0e2519ed0ba5d7bbbd6f734e2c9fdbe8434dfedb9a",
+"candidate_tables": 2,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-005708": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1021860/000156459021005708/nov-10k_20201231.htm",
+"sha256": "7f8b2082a3bf5027cd328498e5c16046ce4e889123ec772dd0f2ee27062b55c0",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-005867": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1451809/000156459021005867/sitm-10k_20201231.htm",
+"sha256": "896d62ecfdbc335fa938e88f48d8b9890e5786cf7d8328d53f54bbe7088fc71d",
+"candidate_tables": 2,
+"phrase": "quarterly information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-006072": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1668397/000156459021006072/medp-10k_20201231.htm",
+"sha256": "332a9b8c3800654a9a474c6e68c9aa0b5377680711b635ba3567c99dc1373e68",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006239": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1090012/000156459021006239/dvn-10k_20201231.htm",
+"sha256": "1e79ba8610b76d3244ab6c40dfa4fd6217e7b1d429eb5aa6538f0a6ac954d3e6",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006640": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1389170/000156459021006640/trgp-10k_20201231.htm",
+"sha256": "946076a5279ff3d775af905e376a8899d75b006e66fccfa7b7afefbe90a52737",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006666": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/912595/000156459021006666/maa-10k_20201231.htm",
+"sha256": "6955e072a412ab273709533476e870cf4123eb8031083faf321356f8d93d6c31",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006679": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/906107/000156459021006679/eqr-10k_20201231.htm",
+"sha256": "16f2c059f1afb849a3c96fa812ee0dbf588777d411bea453688a7efe2f82d915",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006843": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/704532/000156459021006843/onto-10k_20201226.htm",
+"sha256": "7052a4c185c0993fbebc5c452d38627f1a056477b161c2c63708fbc1bfd6de3d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006861": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/84246/000156459021006861/rli-10k_20201231.htm",
+"sha256": "4a3fc4f34b95719328b5db80df0994f0cbb9358cc4423c4754fb4f847496792c",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006959": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/916076/000156459021006959/mlm-10k_20201231.htm",
+"sha256": "feb90f2401d42800dd4496cb18f2984a6f74fda33cf7aa1ff51c4babbd7a5875",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006960": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/106535/000156459021006960/wy-10k_20201231.htm",
+"sha256": "0d10d02c65b434cd09d54985f5e3e78a3db4aae5fefda38f6682183b3c7fabb8",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-006981": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1278021/000156459021006981/mktx-10k_20201231.htm",
+"sha256": "e450b5a6797ac664ab5572e899d17d96d1c1b9bee50e820e0d2aec81cf981060",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-007045": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1116942/000156459021007045/ttmi-10k_20201228.htm",
+"sha256": "e7237728b263545f57bc69aaa4eacfea5ca63eb2c3c5615d4f1bdedd49e4f0b1",
+"candidate_tables": 3,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-007188": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/36270/000156459021007188/mtb-10k_20201231.htm",
+"sha256": "0f0c7054c68a7fd2c27ffa64a2dde4ce9502b674bb0220661b731a84e6d13b1a",
+"candidate_tables": 2,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-007297": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/7431/000156459021007297/awi-10k_20201231.htm",
+"sha256": "a5601f11e04ee89c04b547fc002030744a5a2fddd2077828f78aaf3d18d22b23",
+"candidate_tables": 0,
+"phrase": "Quarterly Financial Information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-007578": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1140536/000156459021007578/wltw-10k_20201231.htm",
+"sha256": "478cf42728f0576f51322c6b138ea131022c3d1ed31e94b5f0d1ee394286a1d9",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-008056": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/878927/000156459021008056/odfl-10k_20201231.htm",
+"sha256": "b58784d00a2cc1bbd4785a4f74b46336802f2f3ca67f43746732c579f5c5f3a4",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-008676": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1061937/000156459021008676/hst-10k_20201231.htm",
+"sha256": "b4191bb8c61e9575d23441f4ed79039fef94aca2ea449bb0a34d1487c60e9f5e",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-008862": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1402436/000156459021008862/ssnc-10k_20201231.htm",
+"sha256": "1f0b88f93df02b24de422025eaf390476802cfa6c04a7b18126a9af726250d69",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-008969": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1743881/000156459021008969/bbio-10k_20201231.htm",
+"sha256": "f2915b18446d478d49ad9073d72b701a0e10a4894d1c81348e16a87eff15dfca",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-009205": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/789570/000156459021009205/mgm-10k_20201231.htm",
+"sha256": "d9032151fab1a00f60cc9213ad370133760b979dfb5d3a89d4ba764f69316ec3",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-009329": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1331520/000156459021009329/homb-10k_20201231.htm",
+"sha256": "6b865dcc47b5351115554e769c549d8916e5cce83402faeae697ed6460822728",
+"candidate_tables": 2,
+"phrase": "unaudited quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-009467": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1061983/000156459021009467/cytk-10k_20201231.htm",
+"sha256": "de6fc741eb821484ab64bb795eaae62cd9db027592186b2054efa8d7174217fb",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-009500": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1068851/000156459021009500/pb-10k_20201231.htm",
+"sha256": "6b8aff52ff42c84208b7ec22d80e5e19bd3b3a061bff85f6970730d5465e6848",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-009576": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/750577/000156459021009576/hwc-10k_20201231.htm",
+"sha256": "0fa92ccae6242f5cc988f849aa482e5192a7a71d9b8cafd8210f16913d31b830",
+"candidate_tables": 2,
+"phrase": "quarterly financial information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-009664": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/101382/000156459021009664/umbf-10k_20201231.htm",
+"sha256": "b848411a0daf0bd5e457e0be54b09d634716c7752b6f658e3ff70cbc2fadf0b5",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-009754": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1475922/000156459021009754/pri-10k_20201231.htm",
+"sha256": "708ee1e5179943603313c4be5cca44bb0e127f503cf6155bae016dc8a8ac8850",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-009770": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1561550/000156459021009770/ddog-10k_20201231.htm",
+"sha256": "f42982081a127ee88e5f588891b1fba4bb67029c9f333903369322a1a652e508",
+"candidate_tables": 1,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-012240": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1815442/000156459021012240/kymr-10k_20201231.htm",
+"sha256": "5f9c7699df22d4d5ca66732fa3b272786f6230c4ff4a5b65982ef4cddb4f6900",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-014986": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1796209/000156459021014986/apg-10k_20201231.htm",
+"sha256": "951e7a3b918afbe2a1fbc1f60121be8ab3def6211f6c1ac8fbe77336a95bcef4",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-017306": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/912615/000156459021017306/urbn-10k_20210131.htm",
+"sha256": "b7805ef16c6f8455f2445067ce36935131ff8e1577400e9d4324281187ae3d6c",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-030419": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1604028/000156459021030419/wms-10k_20210331.htm",
+"sha256": "23e2d30a114a587546597bf04f1a0d05cf5faa9b84e2876fa399c76660c42ed5",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-030718": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/797721/000156459021030718/vsat-10k_20210331.htm",
+"sha256": "b483432d837049f6ff58e0447cf0fef5c8bae2cd7587c1b8dbc38687cff50458",
+"candidate_tables": 2,
+"phrase": "Quarterly Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-033616": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1341439/000156459021033616/orcl-10k_20210531.htm",
+"sha256": "130e38c007b6180cca23e10ca0710d96c703d195b322760787b9c677d1bf8233",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-033645": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1002047/000156459021033645/ntap-10k_20210430.htm",
+"sha256": "75503693025ce03dde4b87099d00a8b8c27648fc3c8ed737f28ca2e9164dc36b",
+"candidate_tables": 6,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-037031": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1048911/000156459021037031/fdx-10k_20210531.htm",
+"sha256": "e6f37c1d9060e2641c8b1566f6b8f9127d2319e14bde93a78828a01ba5fa2315",
+"candidate_tables": 0,
+"phrase": "quarterly financial information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-037738": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/23217/000156459021037738/cag-10k_20210530.htm",
+"sha256": "4f75e44d6a1321a876ba79506fd16a503d3d90f7460684e285247fc9b1f59380",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-037949": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/110621/000156459021037949/rpm-10k_20210531.htm",
+"sha256": "ad8f3cf2fa7a2be8d5ce45d8dddc7471d17b6b09fdcdde0c2e5ff3be8d2a5914",
+"candidate_tables": 0,
+"phrase": "Unaudited Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564590-21-039151": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/789019/000156459021039151/msft-10k_20210630.htm",
+"sha256": "0d78168453ccdc9953a1beb4fac98de067693c93793deef19f9b04cfe4a6b378",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001564590-21-045434": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1618673/000156459021045434/pfgc-10k_20210703.htm",
+"sha256": "1e181ebf6b82913e9e9468e75fb3337119107d9f22c231ecf6fa494dee08de77",
+"candidate_tables": 3,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001564708-21-000029": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1564708/000156470821000029/nws-20210630.htm",
+"sha256": "32ae6678e0f37b7747bcb6f399954f43e79329e18781f652a88dd5da3da9b450",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001571123-21-000015": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1571123/000157112321000015/saic-20210129.htm",
+"sha256": "c8a52d4d12098c35a2abf5838a337b9d0d96c1d615e81bb9e62b05a6af357217",
+"candidate_tables": 2,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001571996-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1571996/000157199621000007/dell-20210129.htm",
+"sha256": "ee26c6d57242f8bcdfb2bad1c7d1d1ca9ced1ec9574e6caa40e7fb6c5dbe57fa",
+"candidate_tables": 3,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001573516-21-000017": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1573516/000157351621000017/musa-20201231.htm",
+"sha256": "6a407060145b4abda5a4f8445c6665dd0492becbd0f8677f7f230d0dd6af7e31",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001575965-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1575965/000157596521000008/glpi-20201231.htm",
+"sha256": "8e65685ddbbb050ccf7a9f86c3871e5e0e5aff63ce15a881609f25f16199084c",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001576280-21-000031": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1576280/000157628021000031/gh-20201231.htm",
+"sha256": "4ab61923d353e8cfaa8a549e5d49419a0ec3eaba050fcf6b684324ebfea0a671",
+"candidate_tables": 1,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001579241-21-000020": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1579241/000157924121000020/alle-20201231.htm",
+"sha256": "c18ecb0e34d811e490d32ae0b440a86f0fa9676bea0575ec6a8331ace5783028",
+"candidate_tables": 1,
+"phrase": "selected quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001590714-21-000021": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1590714/000159071421000021/esi-20201231.htm",
+"sha256": "3c53b099de447c7a90518990245b3fdbae7df01334c4a1294ca33f94c9f366a2",
+"candidate_tables": 0,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001590895-21-000085": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1590895/000159089521000085/czr-20201231.htm",
+"sha256": "7e3356970d1c17a3712b37e5142b456983d5b08a74d4f4bddbb6c660a3f83be4",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001599298-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1599298/000159929821000011/smmt-20201231.htm",
+"sha256": "933810d4f6cf1a5cc842dd563d4e8ec4e4cb48437a24a10092d523f4898601d8",
+"candidate_tables": 2,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001601712-21-000057": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1601712/000160171221000057/syf-20201231.htm",
+"sha256": "74bda52bd8d080d956e402962e045507bc2733816791f14ccd1694f55aec543f",
+"candidate_tables": 0,
+"phrase": "quarterly information"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001603923-21-000013": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1603923/000160392321000013/wft-20201231.htm",
+"sha256": "f7287e422796f502e43ab15df1e5db260e1c88a009cb4e479d9a301ccd2c9cb9",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001613103-21-000027": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1613103/000161310321000027/mdt-20210430.htm",
+"sha256": "b1d9ba229c843418221b30a70936e09885ecbb23b74732183d8859cc5d507579",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001616707-21-000064": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1616707/000161670721000064/w-20201231.htm",
+"sha256": "4ac8db099f688f96b458e2303fb430cc4cc75bb44fbd3b924d9370da639e44ce",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001617640-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1617640/000161764021000012/z-20201231.htm",
+"sha256": "d2077cef32993b47382401335e08957f8e742e7ca061ad738ce12c678a0e9faf",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001618034-21-000003": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1285785/000161803421000003/mos-20201231.htm",
+"sha256": "1a7505ca0d899e485ea5d94b8f63c412695da5837e357d7a60df65fa8b518b68",
+"candidate_tables": 1,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-001804": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/765880/000162828021001804/peak-20201231.htm",
+"sha256": "7855290f9e412887eaf7dda3cec4b592043cf3d7ea1161428289a4ed474a2f14",
+"candidate_tables": 0,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-002219": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1097864/000162828021002219/on-20201231.htm",
+"sha256": "c6458ceb107b03700ee32c7b9a62ea3f91d4cb53b4d19d5b7e571c8b08434d64",
+"candidate_tables": 0,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-002557": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/943452/000162828021002557/wab-20201231.htm",
+"sha256": "12dd6d173042a9a9e23db82d49631f4eddaec23c5e66f5809a0f78dc638c988e",
+"candidate_tables": 0,
+"phrase": "Quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-002574": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/315293/000162828021002574/aon-20201231.htm",
+"sha256": "65ccf5dadc491832319c3627e41848399217d711630facecad55c4d04f9bd09d",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001628280-21-003336": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1521036/000162828021003336/lnth-20201231.htm",
+"sha256": "4b2f2f9f2f168b9e5515deb2fd5de00ac5e95b351ba88c10be31761a05971128",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001628280-21-003343": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1274494/000162828021003343/fslr-20201231.htm",
+"sha256": "e99fd7d2ae5c1fab36294834234c7b580a906c8c30f9313eceb88a429f7bd264",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-003454": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1699150/000162828021003454/gdi-20201231.htm",
+"sha256": "8be1d0d4c5b53deaef5c4ddeadfae90c9fb525d77bbcdf01c2965db7455a697e",
+"candidate_tables": 2,
+"phrase": "Unaudited Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-003458": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1289490/000162828021003458/exr-20201231.htm",
+"sha256": "293a8b393eab38b4a519a83c8e68d2cf1c8a05b77a5dbe5ed57cfa8472fe6dc2",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001628280-21-003574": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1707925/000162828021003574/lin-20201231.htm",
+"sha256": "9480f50bb9f379f4ed97ffa901bad83c6a0fbcca0cd8bfb7893fa1d791914b10",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-004032": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1792789/000162828021004032/dash-20201231.htm",
+"sha256": "e0b025204b5c04268d0bc2af46ba9bdafa51e31749fc02af00133fcc4b5391f7",
+"candidate_tables": 0,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-005538": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1474432/000162828021005538/pstg-20210131.htm",
+"sha256": "d980ab606f7bb14bf2b52b44811e4e51305352cb5cdf58d3010e7725a4d3c123",
+"candidate_tables": 0,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001628280-21-010627": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/946581/000162828021010627/ttwo-20210331.htm",
+"sha256": "39144a6a6bcc85342de418d83c093fbe86a3e307e31c7bc4198eebe100706a72",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001632970-21-000028": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1632970/000163297021000028/gahr-20201231.htm",
+"sha256": "6a9c5c068c298867a33aee1e198630083a446b7c40566a283b68d686bacf1067",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001636519-21-000010": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1636519/000163651921000010/msgs-20210630.htm",
+"sha256": "3db7d2c656dcbf8fbd4ffb1f0096e15faf16a6fce0bb94dc41e3275a63a7226f",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001640147-21-000073": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1640147/000164014721000073/snow-20210131.htm",
+"sha256": "a34e6f23f96e45ff1a29c372ae4d3844dffd1416667d414e246186e939e130b6",
+"candidate_tables": 1,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001654954-21-006880": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/924805/000165495421006880/frhc_10k.htm",
+"sha256": "3f7a8426e19aa106e6577fd3d4ff5e8a393f1dc7929edcffd4a10e09ecd3ce16",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001656423-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1037540/000165642321000006/bxp-20201231.htm",
+"sha256": "8b053fe6d86fb7f2c1fa51200a9e1108fd6565eb33b46eb5d93b6903e0e7c57e",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001658566-21-000033": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1658566/000165856621000033/cdev-20201231.htm",
+"sha256": "2c09654597d99f263802b6c051521e1248bb202f2f62aff23981cbeb80ee4031",
+"candidate_tables": 0,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001660134-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1660134/000166013421000007/okta-20210131.htm",
+"sha256": "372a1a12063767b55761f88aa320a9a35e15e91bd6c072a243b698579c329b87",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001664703-21-000017": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1664703/000166470321000017/be-20201231.htm",
+"sha256": "9997d4d4ce900576be73eff295ff855c734ff56523826916a7f683f7bdf064c3",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001665918-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1665918/000166591821000008/usfd-20210102.htm",
+"sha256": "5a91f5fc88f411581aa3a04d26d2afa95d938a077deb4cf82a2a7ca1cad749e8",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001666700-21-000005": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1666700/000166670021000005/dd-20201231.htm",
+"sha256": "dcb6e651c0a63b85b802072dac8e390b55da650fdae01a489ea5c5df1d8a0b4e",
+"candidate_tables": 1,
+"phrase": "Selected Quarterly"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001682852-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1682852/000168285221000006/mrna-20201231.htm",
+"sha256": "f83d653e76a479c1fcf14ddf832d14aa6ba12efaaf87fd136f1362acc4d2ddc1",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001687229-21-000005": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1687229/000168722921000005/invh-20201231.htm",
+"sha256": "fa7080dc6be6009f72d0b08bb8d475d87a12b0bfa7e1ab8a6fa5455249b0713e",
+"candidate_tables": 1,
+"phrase": null
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001689548-21-000016": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1689548/000168954821000016/prax-20201231.htm",
+"sha256": "2b4beadd2ec2e257d9fd2e5a708ab0f8c17093391e3a490648cb1b5180a7ea33",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001692819-21-000004": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1692819/000169281921000004/vistra-20201231.htm",
+"sha256": "98dcf5877dd3d88602b7b367738967a52303ccba6df855e36a770e1bd2c60d09",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001701605-21-000026": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1701605/000170160521000026/bkr-20201231.htm",
+"sha256": "e13156dd79b8111720ddd34375eb80ad0decbeaa6b6f74f55069f8eb9feab8a6",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001705696-21-000030": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1705696/000170569621000030/vici-20201231.htm",
+"sha256": "78ec4727d28f81c838cfc603868216de95b74aeef8875885bc4f68278290075b",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001707753-21-000026": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1707753/000170775321000026/estc-20210430.htm",
+"sha256": "d87a2f5e9e5d61bbf4807351a936e1defa3ccdfcc3681d0cbb2ff0c86be68084",
+"candidate_tables": 1,
+"phrase": "quarterly financial results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001711279-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1711279/000171127921000006/krys-20201231.htm",
+"sha256": "c37285048541a64cffa202eb80f5f1815f1b8d5eddd47429b24819fc1c054ba7",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001713683-21-000175": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1713683/000171368321000175/zs-20210731.htm",
+"sha256": "3700d96d137a69a6b633bd81de00cb71d6a4289f9e71e92ce981f53ea783fe9a",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001718512-21-000012": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1718512/000171851221000012/gtes-20210102.htm",
+"sha256": "9c52f090a85b7df57f3d9e05c36fc6cff817d8e11e26c83d49a0a0ea67f0a286",
+"candidate_tables": 2,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001722684-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1722684/000172268421000008/wh-20201231.htm",
+"sha256": "5cbc0466e960c1188331a63aa86742a0d8ab8a71fe92ae162eec7627048b140c",
+"candidate_tables": 0,
+"phrase": "QUARTERLY FINANCIAL DATA"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001723128-21-000013": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1723128/000172312821000013/amrx-20201231.htm",
+"sha256": "50f15dd7c56a9b834862bfbf33ba96dc29ff858d7ac848b383b3c272a931240e",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001739445-21-000017": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1739445/000173944521000017/aca-20201231.htm",
+"sha256": "42d131cc45e86c89dcf60a16475ea0ada13f60d4439097a1434f0d9a80190319",
+"candidate_tables": 0,
+"phrase": "quarterly results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001739940-21-000007": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1739940/000173994021000007/ci-20201231.htm",
+"sha256": "fd3faac2ca99b1fd4ca07dc20fd43cfd672dd098482ba45848b8ce84a87781bb",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001748790-21-000031": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1748790/000174879021000031/amcr-20210630.htm",
+"sha256": "134382f5691d85675b37db51c5c9905035a1e6d5ef76a23814d92db0579768ef",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001759509-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1759509/000175950921000011/lyft-20201231.htm",
+"sha256": "bbc5fd5b71205a79a5bdc8299968d79efc4e7b2627b5b68bb9c304fe24e0767f",
+"candidate_tables": 1,
+"phrase": "Quarterly Results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001766502-21-000008": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1766502/000176650221000008/chwy-20210131.htm",
+"sha256": "e8cb7bbd5ac3d994321c8992b39c717d6291b882354e82ebaba964104d404e27",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001770787-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1770787/000177078721000009/txg-20201231.htm",
+"sha256": "01fb1f44398cb3acd2780950e1ab9104e53d7ae8f2e6f06ad269d635f3032a32",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001773383-21-000054": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1773383/000177338321000054/dt-20210331.htm",
+"sha256": "fba8048dadcc740842d7919f136a15a0ca328bf90ea769028a36485a2904a02a",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001792044-21-000009": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1792044/000179204421000009/vtrs-20201231.htm",
+"sha256": "280e628468a529a11b8a5fef5dfcbf671c1591537f8ec15ec90ea19b11ce247c",
+"candidate_tables": 1,
+"phrase": "Quarterly Financial Data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001801368-21-000011": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1801368/000180136821000011/mp-20201231.htm",
+"sha256": "ad924a9d0c8add0b31fc1f99e5d3c6720ad5a0f13e1780ecd938475f8900d5d0",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+},
+"0001802768-21-000006": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1802768/000180276821000006/rprx-20201231.htm",
+"sha256": "10722bc9f84916a7992761f31fa8cac8327eadaa8913606b17bed1486ed4331c",
+"candidate_tables": 0,
+"phrase": "quarterly operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001810806-21-000052": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1810806/000181080621000052/unity-20201231.htm",
+"sha256": "e0aff69125b98c5e3dda2988f93b8b8a456729bec148de981f281affdbd7e11f",
+"candidate_tables": 0,
+"phrase": "quarterly data"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001829126-21-001412": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/1341766/000182912621001412/celsiusholdings_10k.htm",
+"sha256": "952e365e550af9d37984bc89ad58502dca3fad491d61083964b56ad5fbf89382",
+"candidate_tables": 0,
+"phrase": "quarterly\n    operating results"
+}
+],
+"outcome": "table_or_phrase"
+},
+"0001838862-21-000028": {
+"documents": [
+{
+"type": "10-K",
+"url": "https://www.sec.gov/Archives/edgar/data/12659/000183886221000028/hrb-20210430.htm",
+"sha256": "5ddc41b5a78d983d4e0a2396748f41cc8028b65fe22a0636a6da3ee9ec208cea",
+"candidate_tables": 0,
+"phrase": null
+}
+],
+"outcome": "no_quarterly_table"
+}
+}
