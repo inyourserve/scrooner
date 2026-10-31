@@ -314,6 +314,13 @@ RULES: dict[str, Rule] = {
             "retire proxy-statement (DEF 14A family) facts as authoritative/displayed sources",
             dry_run=True,
         ),
+        _r(
+            "interest_expense.era_tag_fill@1",
+            "B6",
+            "data_engineer",
+            "fill blank interest_expense from InterestExpenseNonoperating (non-banks) / InterestExpenseOperating (banks), 2024+ taxonomy, guarded",
+            dry_run=True,
+        ),
         # ---- visible-reason rules (root fix #3, reasons/ package); all have a real dry-run path
         _r(
             "template.membership@1",

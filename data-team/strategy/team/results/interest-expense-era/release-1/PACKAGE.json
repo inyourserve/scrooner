@@ -1,0 +1,24 @@
+{
+ "rule_id": "interest_expense.era_tag_fill@1",
+ "train": "interest-expense-era-tag-fill-release-1",
+ "confirm_token": "RELEASE-INTEREST-EXPENSE-ERA-1",
+ "digest": "425842384bcd8679bef97ca537f2b0555edd8920e3f5133f15af935dda588437",
+ "cells": 2287,
+ "companies": 312,
+ "rows_to_insert": 4574,
+ "keep_cells": 1681,
+ "keep_by_outcome": {
+  "hold_label_unread": 130,
+  "hold_net_label": 282,
+  "hold_no_overlap": 633,
+  "hold_nonbank_ieo": 268,
+  "hold_not_on_face": 173,
+  "hold_perimeter": 119,
+  "hold_sign": 76
+ },
+ "by_tag": {
+  "InterestExpenseNonoperating": 1990,
+  "InterestExpenseOperating": 297
+ },
+ "before_image": "every key absent in interest_expense and interest_expense_resolved (checked by dry-run)"
+}
