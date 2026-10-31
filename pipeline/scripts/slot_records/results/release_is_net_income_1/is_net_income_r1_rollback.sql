@@ -1,6 +1,7 @@
 -- ROLLBACK for rule slot.is_net_income@1: restore production net_income_resolved from the before-image.
 -- Generated, NOT executed. Run inside one transaction by the Release Manager only.
 begin;
+set local scrooner.slot_writer = 'on';
 update analytics.canonical_fact set value = 73300000, source_fact_ids = array[59117257]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100517068;
 update analytics.canonical_fact set value = 17608000000, source_fact_ids = array[19747967]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100521454;
 update analytics.canonical_fact set value = 22618000000, source_fact_ids = array[19747672]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100521480;
@@ -918,4 +919,5 @@ delete from analytics.canonical_fact cf using analytics.canonical_concept cc, co
 delete from analytics.canonical_fact cf using analytics.canonical_concept cc, core.company co, core.period p where cf.canonical_concept_id = cc.id and cc.name = 'net_income_resolved' and cf.company_id = co.id and co.cik = '0001932393' and cf.period_id = p.id and p.period_type = 'duration' and p.start_date = '2026-04-01' and p.end_date = '2026-06-30';
 delete from analytics.canonical_fact cf using analytics.canonical_concept cc, core.company co, core.period p where cf.canonical_concept_id = cc.id and cc.name = 'net_income_resolved' and cf.company_id = co.id and co.cik = '0001996862' and cf.period_id = p.id and p.period_type = 'duration' and p.start_date = '2026-01-01' and p.end_date = '2026-06-30';
 delete from analytics.canonical_fact cf using analytics.canonical_concept cc, core.company co, core.period p where cf.canonical_concept_id = cc.id and cc.name = 'net_income_resolved' and cf.company_id = co.id and co.cik = '0001996862' and cf.period_id = p.id and p.period_type = 'duration' and p.start_date = '2026-04-01' and p.end_date = '2026-06-30';
+delete from analytics.slot_protected_cell where rule_id = 'slot.is_net_income@1';
 commit;

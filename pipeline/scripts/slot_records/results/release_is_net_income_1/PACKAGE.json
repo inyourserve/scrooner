@@ -18,11 +18,14 @@
   },
   "rollback": {
    "file": "is_net_income_r1_rollback.sql",
-   "sha256": "bf8538d0ac688d0f256d55fd8b435c24cf7e6a12e5cfc58b002c470d59cf2e01",
+   "sha256": "f22ccad0a64ab6bb4fc9a1f4fa26dac00d37b67621af62b657ba7bb273d27d4f",
    "note": "generated, run in one transaction by the Release Manager only"
   },
   "stale_vs_live": 0,
-  "touched_ciks": "is_net_income_r1_touched_ciks.txt"
+  "touched_ciks": "is_net_income_r1_touched_ciks.txt",
+  "verifier_strata": {
+   "plain_face": 917
+  }
  },
  "precision_stratum": {
   "file": "is_net_income_precision_cells.jsonl",
@@ -61,5 +64,18 @@
   "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image and rollback"
  },
  "evidence_per_cell": "accession (original filing), slot_tag, printed label, gate (G1 printed line | G2 NCI identity | G1b ProfitLoss without NCI), copies agreeing; slot records is_<family>_records.jsonl",
- "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks"
+ "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks",
+ "resolver_guard": {
+  "migration": "pipeline/db/migrations/0113_slot_protected_cell.sql (provisional number, NOT applied)",
+  "write_path_contract": "in the SAME transaction as each written cell: set local scrooner.slot_writer = 'on'; insert analytics.slot_protected_cell (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)",
+  "effect": "every nightly resolver write to a protected cell is skipped and logged in analytics.slot_protected_write_skipped",
+  "test": "pipeline/scripts/slot_records/test_slot_guard.sh (throwaway local cluster; 15 checks; 7 fail with the trigger neutered)"
+ },
+ "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row",
+ "verifier": {
+  "verdict": "YES",
+  "draw": "18 of 18 YES",
+  "branch": "verify/income-statement-r1-2026-11-01",
+  "verified_cells_sha256": "898db6ceae962488e34f5aaf961b83d2c24c257ff37fcb0f714a58d09103a3ff"
+ }
 }

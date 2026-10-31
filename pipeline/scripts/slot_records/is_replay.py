@@ -40,7 +40,7 @@ from common import rounding_unit  # noqa: E402
 FAMILIES = ("revenue", "operating_income", "net_income")
 PROD = {"revenue": "revenue_sanity_resolved", "operating_income": "operating_income_resolved",
         "net_income": "net_income_resolved"}
-PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci"}
+PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci", "G3_calc_sum"}
 PERIODIC = ["10-K", "10-K/A", "10-KT", "10-Q", "10-Q/A", "10-QT"]
 SINCE = "2015-01-01"
 
@@ -78,7 +78,10 @@ def is_q4_like(s, e):
     return 80 <= (e - s).days + 1 <= 100
 
 
-def main(slots_path, ciks, out_dir):
+def main(slots_path, ciks, out_dir, families=None):
+    global FAMILIES
+    if families:
+        FAMILIES = tuple(families.split(","))
     if ciks.startswith("@"):
         ciks = [x.strip().zfill(10) for x in open(ciks[1:]) if x.strip()]
     else:
@@ -102,6 +105,9 @@ def main(slots_path, ciks, out_dir):
             for s in slots[cik][fam].values():
                 if s.get("tag") and s["gate"] in PUBLISHABLE:
                     tags.add(s["tag"])
+                if s.get("sum_tags"):
+                    tags.update(s["sum_tags"])
+                    tags.add(s["check_tag"])
                 if s.get("tie"):
                     tags.add(s["tie"]["profit_loss"])
                     tags.update(s["tie"]["nci"])
@@ -161,9 +167,26 @@ def main(slots_path, ciks, out_dir):
                 for (s0, e0) in cols:
                     if not face_column(s["form"], period, s0, e0):
                         continue
+                    gate, value, extra = s["gate"], acc_facts[(s["tag"], s0, e0)], {}
+                    if s.get("sum_tags"):
+                        # G3: the printed lines summed (same accession, same column); every member
+                        # must be present and the filer's own parent fact, when tagged, must tie
+                        vals = [acc_facts.get((t, s0, e0)) for t in s["sum_tags"]]
+                        if any(v is None for v in vals):
+                            gate = "hold_sum_member_missing"
+                            extra["missing"] = [t for t, v in zip(s["sum_tags"], vals) if v is None]
+                        else:
+                            value = sum(vals)
+                            chk = acc_facts.get((s["check_tag"], s0, e0))
+                            extra["members"] = {t: str(v) for t, v in zip(s["sum_tags"], vals)}
+                            if chk is not None:
+                                extra["check_value"] = str(chk)
+                                if abs(chk - value) * 2 > max(unit_of(chk), unit_of(value)):
+                                    gate = "hold_identity_gap"
                     obs[(s0, e0)].append({"adsh": adsh, "filed": s["filed"], "period": period, "form": s["form"],
-                                          "gate": s["gate"], "tag": s.get("tag"), "label": s.get("label"),
-                                          "value": acc_facts[(s["tag"], s0, e0)], "tie": s.get("tie")})
+                                          "gate": gate, "tag": s.get("tag") if not s.get("sum_tags") else "+".join(s["sum_tags"]),
+                                          "label": s.get("label"), "value": value, "tie": s.get("tie"),
+                                          "extra": {**extra, "face_axis": s.get("face_axis", False)}})
                 if s["gate"] in PUBLISHABLE and not any(near(e0, period, 3) and face_column(s["form"], period, s0, e0) for s0, e0 in cols):
                     obs[("held", period, s["form"][:4])].append({"adsh": adsh, "gate": "slot_fact_missing_in_companyfacts", "filed": s["filed"]})
                 if s["gate"] not in PUBLISHABLE:
@@ -185,7 +208,7 @@ def main(slots_path, ciks, out_dir):
                 ref = os_[0]
                 cell = {"cik": cik, "family": fam, "start": s0.isoformat(), "end": e0.isoformat(),
                         "accession": ref["adsh"], "form": ref["form"], "slot_tag": ref["tag"], "label": ref["label"],
-                        "gate": ref["gate"], "original": near(ref["period"], e0, 3)}
+                        "gate": ref["gate"], "original": near(ref["period"], e0, 3), **(ref.get("extra") or {})}
                 v = ref["value"]
                 unit = rounding_unit([v])
                 state = None
@@ -281,4 +304,4 @@ def main(slots_path, ciks, out_dir):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:5])

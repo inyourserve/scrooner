@@ -47,6 +47,10 @@ REV_TOTAL = {
     "RevenuesNetOfInterestExpense",
 }
 REV_ANY = re.compile(r"Revenue|^Sales")
+SIB_TAG_NOT = re.compile(r"Cost|Expense|Deferred|Unearned|Receivable|GainLoss|PerShare|Percent|Tax|Remaining|Allowance|Reserve")
+STRUCTURAL_ROW = re.compile(r"(Abstract|Member|Axis|Domain|Table|LineItems|ExtensibleList|ExtensibleEnumeration)$")
+SIB_LABEL = re.compile(r"\brevenues?\b|\bsales\b", re.I)
+SIB_LABEL_NOT = re.compile(r"cost|expense|marketing|commission|tax|deferred|unearned|per share|%|percent", re.I)
 OTHER_INCOME_TAG = re.compile(r"IncomeLossFromEquityMethod|NonoperatingIncome|OtherIncome|InvestmentIncome|GainLoss|GainsLosses")
 OTHER_INCOME_LABEL = re.compile(r"\bincome\b|\bgains?\b", re.I)
 BANK = {"InterestIncomeExpenseNet", "NoninterestExpense", "NoninterestIncome", "InterestIncomeExpenseAfterProvisionForLoanLoss"}
@@ -110,7 +114,40 @@ def first(face, pred):
     return next(((i, r) for i, r in enumerate(face) if pred(r)), (None, None))
 
 
-def revenue_slot(face, arcs, shape, face_tags):
+def revenue_siblings(face, arcs, root):
+    """Other top-level revenue lines printed on the face (Verifier IS r1, Snap-on
+    Q1 2016: 'Net sales' 834.2M with 'Financial services revenue' 66.3M below it
+    and no total line): a standard or custom revenue line that is not the root,
+    not totalled by it and not above it in the calc tree."""
+    below = descendants(arcs, root)
+    above = {p for p in arcs if root in descendants(arcs, p)}
+    out, seen = [], set()
+    for r in face:
+        t = r["tag"]
+        if t == root or t in below or t in above or t in seen or STRUCTURAL_ROW.search(t) or "[Member]" in r["label"] \
+                or "[Axis]" in r["label"] or "[Domain]" in r["label"]:
+            continue
+        if r["custom"]:
+            ok = SIB_LABEL.search(r["label"]) and not SIB_LABEL_NOT.search(r["label"])
+        else:
+            ok = REV_ANY.search(t) and not SIB_TAG_NOT.search(t)
+        if ok:
+            seen.add(t)
+            out.append(r)
+    return out
+
+
+def calc_parent_of_exactly(full_arcs, members):
+    """A calc parent (printed or not) whose children are exactly `members`, all
+    weight +1: the filer's own statement that these lines add to its revenue."""
+    want = set(members)
+    for p, kids in full_arcs.items():
+        if set(kids) == want and all(float(w) == 1.0 for w in kids.values()):
+            return p
+    return None
+
+
+def revenue_slot(face, arcs, shape, face_tags, full_arcs=None):
     tlines = [(i, r) for i, r in enumerate(face) if r["tag"] in REV_TOTAL and not r["custom"]]
     seen, uniq = set(), []
     for i, r in tlines:
@@ -142,6 +179,17 @@ def revenue_slot(face, arcs, shape, face_tags):
         return {**out, "gate": "hold_perimeter_children", "detail": sorted(k for k in kids if OTHER_INCOME_TAG.search(k))}
     if custom_parents:
         return {**out, "gate": "hold_child_of_other_total", "detail": custom_parents}
+    sibs = revenue_siblings(face, arcs, r["tag"])
+    if sibs:
+        members = [r["tag"]] + [x["tag"] for x in sibs]
+        detail = [{"tag": x["tag"], "label": x["label"], "custom": x["custom"]} for x in sibs]
+        if any(x["custom"] for x in sibs):
+            return {**out, "gate": "hold_sibling_custom", "detail": detail}
+        parent = calc_parent_of_exactly(full_arcs or {}, members)
+        if parent is None:
+            return {**out, "gate": "hold_sibling_revenue_no_total", "detail": detail}
+        # the face prints no total; the filer's calc tree says the printed lines add up
+        return {**out, "gate": "G3_calc_sum", "sum_tags": members, "check_tag": parent, "detail": detail}
     if r["tag"] == "RevenuesNetOfInterestExpense":
         return {**out, "gate": "hold_sector_net_revenue"}
     return {**out, "gate": "G1_printed_total"}
@@ -217,11 +265,11 @@ def main(src, out_dir):
         for line in gzip.open(p, "rt"):
             r = json.loads(line)
             rows[r["adsh"]].append(r)
-        arcs = defaultdict(lambda: defaultdict(set))
+        arcs = defaultdict(lambda: defaultdict(dict))
         for line in gzip.open(f"{src}/{period}_cal.jsonl.gz", "rt"):
             a = json.loads(line)
             if a["adsh"] in rows:
-                arcs[a["adsh"]][a["p"]].add(a["c"])
+                arcs[a["adsh"]][a["p"]][a["c"]] = a["w"]
         for adsh, rs in rows.items():
             rep, face = primary_face(rs)
             if not face:
@@ -229,11 +277,15 @@ def main(src, out_dir):
             m = rs[0]
             face_tags = {r["tag"] for r in face}
             shape = shape_of(face_tags)
-            a = {pp: kids & face_tags for pp, kids in arcs.get(adsh, {}).items()}
+            full = arcs.get(adsh, {})
+            a = {pp: set(kids) & face_tags for pp, kids in full.items()}
             base = {"adsh": adsh, "cik": m["cik"], "form": m["form"], "period": iso(m["period"]),
                     "filed": iso(m["filed"]), "fy": m.get("fy"), "fp": m.get("fp"), "report": rep,
-                    "shape": shape, "has_cal": bool(arcs.get(adsh))}
-            for fam, slot in (("revenue", revenue_slot(face, a, shape, face_tags)),
+                    "shape": shape, "has_cal": bool(arcs.get(adsh)),
+                    # a dimensioned face (Snap-on 2019: ProductOrService axis, the undimensioned
+                    # Revenues fact is the total of the member columns): own Verifier stratum
+                    "face_axis": any(r["tag"].endswith("Axis") for r in face)}
+            for fam, slot in (("revenue", revenue_slot(face, a, shape, face_tags, full)),
                               ("operating_income", operating_slot(face, shape)),
                               ("net_income", net_income_slot(face, rs))):
                 gates[fam][slot["gate"]] += 1
@@ -265,7 +317,8 @@ def main(src, out_dir):
                                      "shape": s["shape"], "filing_from": s["adsh"], "filing_to": s["adsh"],
                                      "period_from": s["period"], "period_to": s["period"], "filings_observed": 1,
                                      "evidence_accession": s["adsh"], "evidence_level": "FILING-STRUCTURE (FSN pre/cal)",
-                                     "source": "is_detect.py", "detail": s.get("detail"), "tie": s.get("tie")})
+                                     "source": "is_detect.py", "detail": s.get("detail"), "tie": s.get("tie"),
+                                     "sum_tags": s.get("sum_tags"), "check_tag": s.get("check_tag")})
                 for e in eras:
                     e.pop("_key")
                     f.write(json.dumps(e) + "\n")
