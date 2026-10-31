@@ -10,7 +10,7 @@
  "verifier": "verify/debt-v3-2026-11-04: 14/14 (borrowings + note finance leases, no double count); v4 = Verifier's two fixes (MSFT operating-lease member dropped; AMZN finance leases from the note)",
  "updates": {
   "cells_file": "debt_release1_updates.jsonl",
-  "sha256": "97f8ffeda4fee367c402d910c04d7ed4318b1911cf76552bfb69f38a37d1f6b3",
+  "sha256": "8f6314999342d82d0330f21fda16c7d61eaf9ebce044c221ad13523aca7de28a",
   "cells": 221,
   "companies": 10,
   "by_difference_class": {
@@ -19,7 +19,8 @@
   "before_image": "debt_release1_updates_before_image.jsonl (221 canonical_fact rows)",
   "rollback": "debt_release1_updates_rollback.sql (generated, never executed)",
   "stale_refusal": "debt_release1_updates_stale_check.sql must return zero rows immediately before the write",
-  "excluded_ambiguous_period_match": 0
+  "excluded_ambiguous_period_match": 0,
+  "precision_notes": "8 cells carry precision_note + precision_accession (lease component from a $0.1B-rounded footnote, \u00b150M; filer's printed figure). Evidence fields only; values, before-image and rollback unchanged (Dhairya option a)."
  },
  "flag": {
   "line": "SCROONER_RULES_ENABLED=slot.total_debt@1",
