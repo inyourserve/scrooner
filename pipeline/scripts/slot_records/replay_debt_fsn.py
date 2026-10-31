@@ -25,6 +25,8 @@ LEASE_TAGS = {"cur": ["FinanceLeaseLiabilityCurrent", "CapitalLeaseObligationsCu
 AGG_TAGS = ["DebtAndCapitalLeaseObligations", "DebtLongtermAndShorttermCombinedAmount"]
 BS_TOTAL = ("Assets", "LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital")
 rec_path, inst_path, prod_path, out_path = sys.argv[1:5]
+# company-level holds decided by the release owner (Dhairya 2026-11-04: AMZN's custom lease elements unread)
+COMPANY_HOLDS = {"AMZN": "debt_lease_member_unverified"}
 
 records = defaultdict(list)
 for line in open(rec_path):
@@ -167,8 +169,30 @@ for (cik, d), (_r, adsh) in sorted(best.items()):
                 unit /= 10
         if abs(sum(vals) - target) > unit:
             tie_pending.append(f"{m['tag']}:gap={sum(vals) - target}")
+    # a lease-liability line printed on the balance sheet that the record does not carry (custom lease
+    # elements, AMZN 'Long-term lease liabilities') leaves the lease-inclusive perimeter unproven
+    member_tags = {m["tag"] for m in rec["members"]}
+    lease_unread = sorted({r["tag"] for r in f["bs"] if r["tag"] in day and r["tag"] not in member_tags
+                           and re.search(r"lease", r["plabel"], re.I) and re.search(r"liabilit|obligation", r["plabel"], re.I)
+                           and not re.search(r"operating", r["plabel"] + r["tag"], re.I) and not r["tag"].startswith("OperatingLease")})
+    # ... or a finance/capital lease fact in the filing (often in the notes) that no member carries and no
+    # combined (debt-and-lease) member can contain (AMZN 2015-2018 capital lease obligations)
+    lease_in_notes = []
+    if not combined_sides:
+        lease_in_notes = sorted(t for t, (v, _a) in day.items() if v and t not in member_tags and re.fullmatch(
+            r"(FinanceLeaseLiability|CapitalLeaseObligations)(Current|Noncurrent)?|FinanceLeaseLiabilityCurrentAndNoncurrent|"
+            r"CapitalLeaseObligationsIncurred?", t) and not t.endswith("Incurred"))
+    lease_in_notes = [t for t in lease_in_notes if t not in lease_unread]
+    if lease_in_notes:
+        # finance leases only in the notes, outside every member: the record's 'lease-inclusive' value
+        # excludes them (MSFT, META, AAPL, GOOG, NVDA): a perimeter question, flagged, not held
+        note_flag = (note_flag + ";" if note_flag else "") + "finance_lease_in_notes_not_in_total:" + ",".join(lease_in_notes)
     verdict = None
-    if not rec.get("coverage_clean", True):
+    if ticker in COMPANY_HOLDS:
+        verdict = COMPANY_HOLDS[ticker]
+    elif lease_unread:
+        verdict = "debt_lease_member_unverified"
+    elif not rec.get("coverage_clean", True):
         verdict = "not_computable_uncovered_candidates"
     elif missing_custom:
         verdict = "custom_member_missing_in_filing"  # FSN carries custom tags: absent means not filed here
@@ -193,7 +217,7 @@ for (cik, d), (_r, adsh) in sorted(best.items()):
         "slot_lease_inclusive": str(lease_incl) if publishable else None,
         "slot_borrowings": str(borrowings) if publishable else None,
         "prod_value": str(pv) if pv is not None else None,
-        "missing_members": missing, "missing_custom_members": missing_custom, "face_admission_tie_pending": tie_pending,
+        "lease_lines_not_in_record": lease_unread, "missing_members": missing, "missing_custom_members": missing_custom, "face_admission_tie_pending": tie_pending,
         "note_current_portion_added": str(note_current_added) if note_current_added is not None else None, "note_flag": note_flag})
 report["summary"] = dict(report["summary"])
 report["per_company"] = {k: dict(v) for k, v in report["per_company"].items()}
