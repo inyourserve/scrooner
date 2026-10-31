@@ -280,10 +280,7 @@ update analytics.canonical_fact set value = 511643000, source_fact_ids = array[4
 update analytics.canonical_fact set value = 491983000, source_fact_ids = array[42578319]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100714084;
 update analytics.canonical_fact set value = 750689000, source_fact_ids = array[42578357]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100714107;
 update analytics.canonical_fact set value = 927283000, source_fact_ids = array[42578376]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100714165;
-update analytics.canonical_fact set value = 86000000, source_fact_ids = array[42700915]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100714955;
 update analytics.canonical_fact set value = 125112000, source_fact_ids = array[42722849]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100714956;
-update analytics.canonical_fact set value = 152000000, source_fact_ids = array[42700916]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100714992;
-update analytics.canonical_fact set value = 136000000, source_fact_ids = array[42700919]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100714998;
 update analytics.canonical_fact set value = 695900000, source_fact_ids = array[43351403]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100718565;
 update analytics.canonical_fact set value = -66300000, source_fact_ids = array[64303916]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100723000;
 update analytics.canonical_fact set value = 298500000, source_fact_ids = array[42112353]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100727943;
@@ -344,8 +341,6 @@ update analytics.canonical_fact set value = 609467000, source_fact_ids = array[2
 update analytics.canonical_fact set value = 377900000, source_fact_ids = array[33850614]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100792355;
 update analytics.canonical_fact set value = 312000000, source_fact_ids = array[33850622]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100792407;
 update analytics.canonical_fact set value = 376800000, source_fact_ids = array[33850607]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100792437;
-update analytics.canonical_fact set value = 2475, source_fact_ids = array[31575725]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100792502;
-update analytics.canonical_fact set value = 2593, source_fact_ids = array[31575727]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100792535;
 update analytics.canonical_fact set value = 733300000, source_fact_ids = array[34013743]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100793451;
 update analytics.canonical_fact set value = 1250509000, source_fact_ids = array[65368642]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100793772;
 update analytics.canonical_fact set value = 1098936000, source_fact_ids = array[65368678]::bigint[], resolved_at = '2026-09-08 20:24:15.656435+00' where id = 100793780;
