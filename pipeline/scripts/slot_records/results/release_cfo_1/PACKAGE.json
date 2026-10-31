@@ -1,0 +1,31 @@
+{
+ "rule_id": "slot.cf_cfo@1",
+ "family": "cash flow: cfo_resolved (printed operating-activities total; continuing line only when the face prints no discontinued operating line)",
+ "verifier": "VERIFY-CFO-BUYBACKS-RUN2 (verify/cfo-buybacks-run2-2026-11-01 95ee78d): CFO YES, 10/10 differences, 5/5 blanks, stub holds kept; run 1: 15/15 differences production wrong",
+ "source_run": "results/cf_run3 (CFO rules identical to run 2; production-blank match fixed to +-10 days with the FSN durp sign)",
+ "release1": {
+  "cells_file": "cfo_release1_cells.jsonl",
+  "sha256": "68772d336d8185f8956db0acee36d658e724fa73252b02f29b9c75ec2d848aec",
+  "cells": 354, "companies": 222,
+  "by_op": {"update": 298, "insert": 56},
+  "before_image": "cfo_release1_before_image.jsonl (298 canonical_fact rows: id, period, value_before)",
+  "apply": "cfo_release1_apply.sql (compare-and-swap per cell: an update runs only where the row still has the packaged id and value; an insert only where no row exists; refused stale cells are listed, never forced)",
+  "rollback": "cfo_release1_rollback.sql (reverts only cells still holding the package value and source fact)",
+  "touched_ciks": "cfo_release1_touched_ciks.txt",
+  "keep_list": "none: no CFO cell was found production-right by the Verifier"
+ },
+ "left_out": {
+  "no_unique_core_fact": "449 (448 of the 504 production-blank cells): the value is on the filing's face (FSN) but core.fact has no fact for that accession/tag; candidates for release 2 once ingestion (board B9) carries them",
+  "production_on_neighbour_period": 2
+ },
+ "flag": {
+  "line": "SCROONER_RULES_ENABLED=slot.cf_cfo@1",
+  "note": "rule id not yet registered in common/rule_flags.py (Release Manager registers it with the write); default OFF"
+ },
+ "preconditions": [
+  "founder's typed approval for the production write (scrooner-4d session)",
+  "resolver guard: the nightly cfo_resolved resolver must not overwrite packaged cells (same guard as total-liabilities release 1)",
+  "re-run the apply right after a fresh dry run; stale cells are refused by design"
+ ],
+ "post_write": "certify rerun on the touched companies; any new finding blocks"
+}

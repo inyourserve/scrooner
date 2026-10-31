@@ -69,7 +69,7 @@ for cid, rs in sorted(by_co.items()):
         (cid, tags, accs),
     ).fetchall()
     prod = conn.execute(
-        """select id, period_id, p.start_date, p.end_date, value from analytics.canonical_fact cf
+        """select cf.id, cf.period_id, p.start_date, p.end_date, cf.value from analytics.canonical_fact cf
            join core.period p on p.id = cf.period_id
            where cf.company_id = %s and cf.canonical_concept_id = %s and p.start_date is not null""",
         (cid, concept_id),

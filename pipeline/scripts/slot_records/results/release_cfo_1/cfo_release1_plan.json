@@ -1,0 +1,24 @@
+{
+ "rule_id": "slot.cf_cfo@1",
+ "cells": 354,
+ "companies": 222,
+ "by_op": {
+  "update": 298,
+  "insert": 56
+ },
+ "by_population": {
+  "differs": 298,
+  "fills_blank": 56
+ },
+ "by_basis": {
+  "printed_total": 293,
+  "continuing_equals_total": 61
+ },
+ "candidates": 805,
+ "left_out": {
+  "no_unique_core_fact": 449,
+  "production_on_neighbour_period": 2
+ },
+ "keep_list_cells": 0,
+ "cells_sha256": "68772d336d8185f8956db0acee36d658e724fa73252b02f29b9c75ec2d848aec"
+}
