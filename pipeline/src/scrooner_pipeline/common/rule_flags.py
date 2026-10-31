@@ -420,6 +420,36 @@ RULES: dict[str, Rule] = {
             "balance_sheet",
             "total_debt_resolved from borrowings plus note finance leases (release_debt_1)",
         ),
+        _r(
+            "slot.bs_total_liabilities@1",
+            "-",
+            "balance_sheet",
+            "total_liabilities_resolved from the printed balance-sheet total (release_bs_total_liabilities_1)",
+        ),
+        _r(
+            "slot.is_net_income@1",
+            "-",
+            "income_statement",
+            "net_income_resolved from the printed income-statement line (release_is_net_income_1 and utilities add-on)",
+        ),
+        _r(
+            "slot.is_operating_income@1",
+            "-",
+            "income_statement",
+            "operating_income_resolved from the printed income-statement line (release_is_operating_income_1)",
+        ),
+        _r(
+            "slot.is_revenue@1",
+            "-",
+            "income_statement",
+            "revenue_resolved from the printed income-statement line (release_is_revenue_1 and utilities add-on)",
+        ),
+        _r(
+            "slot.is_revenue_tagged_total_sum@1",
+            "-",
+            "income_statement",
+            "revenue_resolved where printed revenue lines sum to the filer's tagged total (release_is_revenue_2)",
+        ),
     )
 }
 

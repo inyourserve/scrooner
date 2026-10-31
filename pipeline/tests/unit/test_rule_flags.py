@@ -170,3 +170,25 @@ def test_release_package_slot_rules_are_registered_and_off_by_default():
         assert rf.rule_enabled(rule_id, {rf.ENV_ENABLED: rule_id})
         others = ",".join(i for i in ids if i != rule_id)
         assert not rf.rule_enabled(rule_id, {rf.ENV_ENABLED: others})
+
+
+@pytest.mark.unit
+def test_income_statement_and_balance_sheet_slot_rules_are_registered_and_off_by_default():
+    ids = (
+        "slot.bs_total_liabilities@1",
+        "slot.is_net_income@1",
+        "slot.is_operating_income@1",
+        "slot.is_revenue@1",
+        "slot.is_revenue_tagged_total_sum@1",
+    )
+    for rule_id in ids:
+        assert rule_id in rf.RULES
+        assert rf.rule_mode(rule_id, {}) == rf.OFF
+        assert rf.rule_enabled(rule_id, {rf.ENV_ENABLED: rule_id})
+        others = ",".join(i for i in ids if i != rule_id)
+        assert not rf.rule_enabled(rule_id, {rf.ENV_ENABLED: others})
+    # dry_run is only honoured for rules with a real dry-run path: none of these have one
+    assert (
+        rf.rule_mode("slot.is_revenue@1", {rf.ENV_DRYRUN: "slot.is_revenue@1"})
+        == rf.OFF
+    )
