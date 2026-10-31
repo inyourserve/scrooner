@@ -2,7 +2,8 @@
 
 One quarter of the SEC FSN set is kept in the private bucket `fsn-notes` as
 <period>/<period>_{sub,pre,cal,num,...}.tsv.zst (uploaded by
-scripts/slot_records/fsn_upload.py; periods 2014q1-2023q4 as of 2026-10-31).
+scripts/slot_records/fsn_upload.py): quarterly 2014q1-2025q3, monthly 2025m10 onward
+(59 periods as of 2026-10-31; a full local copy may be given as fsn_root).
 This module loads ONE quarter for a set of accessions and returns, per
 accession, the filing's statement STRUCTURE and VALUES:
 
@@ -43,7 +44,16 @@ STATEMENTS = ("BS", "IS", "CF", "CI", "EQ")
 STD_PREFIXES = ("us-gaap/", "srt/", "dei/", "ifrs/")
 
 
+MONTHLY_FROM = (
+    2025,
+    10,
+)  # the SEC set is monthly from 2025-10: periods are named YYYYmMM
+
+
 def quarter_of(filed: date) -> str:
+    """FSN period name for a filing date: 2014q1..2025q3, then 2025m10, 2025m11, ..."""
+    if (filed.year, filed.month) >= MONTHLY_FROM:
+        return f"{filed.year}m{filed.month:02d}"
     return f"{filed.year}q{(filed.month - 1) // 3 + 1}"
 
 

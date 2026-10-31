@@ -16,6 +16,11 @@ app = typer.Typer(
 )
 
 
+@app.callback()
+def _main() -> None:
+    """scrooner-proof <command>: run."""
+
+
 def _parse_ciks(ciks: str) -> set[str]:
     return {c.strip().zfill(10) for c in ciks.split(",") if c.strip()}
 
