@@ -29,7 +29,7 @@ pre is not in statement order). Then one slot per family:
 
 Era = consecutive filings (by filed date) with the same (gate, tag, label
 class); written in the slot-record shape assemble_family.py uses.
-usage: is_detect.py <is_fsn_dir> <out_dir>
+usage: is_detect.py <is_fsn_dir> <out_dir> [coregistrant_adsh.txt]
   writes <out_dir>/is_filing_slots.jsonl and is_<family>_records.jsonl
 """
 import glob
@@ -60,6 +60,9 @@ PRETAX_RX = re.compile(r"^IncomeLossFromContinuingOperationsBeforeIncomeTaxes")
 TAX = "IncomeTaxExpenseBenefit"
 NCI_RX = re.compile(r"^(NetIncomeLossAttributableTo(Redeemable|Nonredeemable)?NoncontrollingInterest|MinorityInterestInNetIncomeLoss\w*|IncomeLossFromContinuingOperationsAttributableToNoncontrollingEntity|IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToNoncontrollingInterest|NetIncomeLossAttributableToNoncontrollingInterestAndRedeemableNoncontrollingInterest)$")
 NCI_CUSTOM_RX = re.compile(r"NoncontrollingInterest|MinorityInterest")
+SUBSIDIARY_LABEL = re.compile(r"subsidiar", re.I)
+PREFERRED_TAG = re.compile(r"Preferred")
+PREFERRED_LABEL = re.compile(r"\bpreferred\b", re.I)
 REV_PARENT_RX = re.compile(r"Revenue|Sales")
 NOT_REV_PARENT_RX = re.compile(r"Cost|Expense|Profit|Margin|OperatingIncome|IncomeLoss")
 NCI_LABEL = re.compile(r"non-?controlling|minority", re.I)
@@ -87,9 +90,20 @@ def parents_of(arcs, tag):
     return {p for p, kids in arcs.items() if tag in kids}
 
 
-def primary_face(rows):
+EPS_TAGS = {"EarningsPerShareBasic", "EarningsPerShareDiluted", "EarningsPerShareBasicAndDiluted",
+            "IncomeLossFromContinuingOperationsPerBasicShare"}
+
+
+def primary_face(rows, coregistrant=False):
     is_reports = sorted({r["report"] for r in rows if r["stmt"] == "IS"})
-    if is_reports:
+    if is_reports and coregistrant:
+        # a combined filing (FSN sub.aciks non-empty: ETR, SO, ES, ...) prints one income
+        # statement per registrant; the parent's is the one with earnings per share
+        # (wholly-owned subsidiaries report none). Release closure 2026-10-31: the
+        # lowest report was a subsidiary's for ETR 2023 (ProfitLoss 2,362.3M = consolidated)
+        with_eps = [rep for rep in is_reports if any(r["report"] == rep and r["tag"] in EPS_TAGS for r in rows)]
+        rep = with_eps[0] if with_eps else is_reports[0]
+    elif is_reports:
         rep = is_reports[0]
     else:
         ci = sorted({r["report"] for r in rows if r["stmt"] == "CI" and r["tag"] in ("NetIncomeLoss", "ProfitLoss")})
@@ -101,7 +115,12 @@ def primary_face(rows):
 
 
 def shape_of(tags):
-    if tags & BANK:
+    # a bank face: noninterest expense with noninterest income or net interest income,
+    # or interest income after the provision. InterestIncomeExpenseNet ALONE is not a
+    # bank: 158 commercial cohort companies tag "Interest expense, net" with it and
+    # print gross profit (found building the gross-profit family, 2026-10-31)
+    if "InterestIncomeExpenseAfterProvisionForLoanLoss" in tags or (
+            "NoninterestExpense" in tags and tags & {"NoninterestIncome", "InterestIncomeExpenseNet"}):
         return "bank"
     if any(INSURER_RX.search(t) for t in tags):
         return "insurer"
@@ -214,7 +233,36 @@ def operating_slot(face, shape):
     return {**out, "gate": "G1_printed_line"}
 
 
+def available_to_common_bridge(face):
+    """G2b (release closure 2026-10-31, ETR / ES): the face bridges ProfitLoss straight
+    to 'net income attributable to <parent>' tagged NetIncomeLossAvailableToCommon-
+    StockholdersBasic through noncontrolling / SUBSIDIARY-preferred lines only, with no
+    parent preferred dividends before it; then that line is the parent's net income.
+    Returns {tag, tie} or None. The replay checks ProfitLoss - bridge = it."""
+    i_pl, _ = first(face, lambda r: r["tag"] == "ProfitLoss")
+    i_atc, atc = first(face, lambda r: r["tag"] == "NetIncomeLossAvailableToCommonStockholdersBasic")
+    if i_pl is None or atc is None or i_atc < i_pl:
+        return None
+    between = [b for b in face[i_pl + 1:i_atc] if not b["tag"].endswith("Abstract")]
+    ok = all(not b["custom"] and (NCI_CUSTOM_RX.search(b["tag"]) or ("Preferred" in b["tag"] and SUBSIDIARY_LABEL.search(b["label"])))
+             for b in between)
+    if not between or not ok:
+        return None
+    return {"tag": atc["tag"], "line": atc["line"], "label": atc["label"],
+            "tie": {"profit_loss": "ProfitLoss", "nci": [b["tag"] for b in between]}}
+
+
 def net_income_slot(face, all_rows):
+    out = _net_income_slot(face, all_rows)
+    alt = available_to_common_bridge(face)
+    if alt and out["gate"] == "hold_parent_line_not_standard":
+        return {**{k: v for k, v in alt.items()}, "gate": "G2b_available_to_common_bridge"}
+    if alt and out["gate"] in ("G1_printed_line", "G2_nci_identity"):
+        out["alt"] = alt  # used by the replay only when the printed NetIncomeLoss has no undimensioned value
+    return out
+
+
+def _net_income_slot(face, all_rows):
     i_tax, _ = first(face, lambda r: r["tag"] == TAX)
     nci = sorted({r["tag"] for r in all_rows if r["stmt"] in ("IS", "CI") and not r["custom"] and NCI_RX.search(r["tag"])})
     nci_custom = sorted({r["tag"] for r in all_rows if r["stmt"] in ("IS", "CI") and r["custom"] and NCI_CUSTOM_RX.search(r["tag"])
@@ -239,11 +287,20 @@ def net_income_slot(face, all_rows):
         if pl is not None and terms:
             return {**out, "gate": "G1_printed_line", "detail": {"bridge_not_checkable": terms}}
         return {**out, "gate": "G1_printed_line"}
-    _, pl = first(face, lambda r: r["tag"] == "ProfitLoss")
+    i_pl, pl = first(face, lambda r: r["tag"] == "ProfitLoss")
     if pl is not None:
         out = {"tag": "ProfitLoss", "line": pl["line"], "label": pl["label"]}
-        if nci or nci_custom:
-            return {**out, "gate": "hold_parent_line_not_standard", "detail": nci + nci_custom}
+        # ProfitLoss is the parent's only when NOTHING printed below it takes a share away:
+        # any noncontrolling-interest line (ELS OP units, ETR preferred-unit NCI) or ANY
+        # preferred line (Verifier 2026-11-04: PG&E FY2024-25 'Preferred stock dividend
+        # requirement' carries no 'subsidiary' word; a parent-vs-subsidiary label test is
+        # not safe, so every preferred line below disqualifies). Release closure: 14 + 2
+        # landed NI cells published consolidated income
+        below = [b for b in face[i_pl + 1:] if "PerShare" not in b["tag"] and "Comprehensive" not in b["tag"]
+                 and (NCI_CUSTOM_RX.search(b["tag"]) or PREFERRED_TAG.search(b["tag"]) or PREFERRED_LABEL.search(b["label"]))]
+        if nci or nci_custom or below:
+            return {**out, "gate": "hold_parent_line_not_standard",
+                    "detail": nci + nci_custom + [b["tag"] for b in below]}
         return {**out, "gate": "G1b_profit_loss_no_nci"}
     _, cr = first(face, lambda r: r["custom"] and re.search(r"net (income|earnings|loss)", r["label"], re.I)
                  and not NCI_LABEL.search(r["label"]))
@@ -252,13 +309,86 @@ def net_income_slot(face, all_rows):
     return {"gate": "no_printed_net_income_line", "tag": None}
 
 
-def main(src, out_dir):
+COR_TOTAL = {"CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold", "CostOfServices"}
+COR_EXCL_DA = {"CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization",
+               "CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization"}
+COR_LABEL = re.compile(r"\bcosts? of (net )?(sales|revenues?|goods|products|services|merchandise|operations)", re.I)
+EXCL_DA_LABEL = re.compile(r"(exclusive of|excluding|excl\.?|before) (depreciation|d&a)", re.I)
+GP_LABEL = re.compile(r"gross (profit|margin|income|loss)", re.I)
+
+
+def cost_slot(face, arcs, shape, full_arcs):
+    """the single printed cost-of-revenue total (same root / sibling / calc-sum
+    discipline as revenue). A cost line printed EXCLUDING depreciation (BALL)
+    holds for the Standardization Lead: a gross margin built on it is not
+    comparable."""
+    lines, seen = [], set()
+    for r in face:
+        if not r["custom"] and (r["tag"] in COR_TOTAL or r["tag"] in COR_EXCL_DA) and r["tag"] not in seen:
+            seen.add(r["tag"])
+            lines.append(r)
+    if not lines:
+        cr = next((r for r in face if r["custom"] and COR_LABEL.search(r["label"])), None)
+        if cr is not None:
+            return {"gate": "hold_custom_cost_line", "tag": cr["tag"], "label": cr["label"]}
+        return {"gate": "no_printed_cost_line", "tag": None}
+    if shape != "commercial":
+        return {"gate": f"hold_sector_{shape}", "tag": lines[0]["tag"], "label": lines[0]["label"]}
+    under = {r["tag"] for r in lines for s2 in lines if r["tag"] != s2["tag"] and r["tag"] in descendants(arcs, s2["tag"])}
+    roots = [r for r in lines if r["tag"] not in under]
+    others = [x for x in face if x["custom"] and COR_LABEL.search(x["label"]) and x["tag"] not in descendants(arcs, roots[0]["tag"])
+              and not any(x["tag"] in descendants(arcs, rt["tag"]) for rt in roots)
+              and x["tag"] not in {p for p in arcs if roots[0]["tag"] in descendants(arcs, p)}]
+    members = [r["tag"] for r in roots] + [x["tag"] for x in others]
+    r = roots[0]
+    out = {"tag": r["tag"], "line": r["line"], "label": r["label"]}
+    if len(members) > 1:
+        detail = [{"tag": x["tag"], "label": x["label"], "custom": x["custom"]} for x in roots[1:] + others]
+        if others:
+            return {**out, "gate": "hold_sibling_custom", "detail": detail}
+        parent = calc_parent_of_exactly(full_arcs or {}, members)
+        if parent is None:
+            return {**out, "gate": "hold_multiple_roots", "detail": detail}
+        return {**out, "gate": "G3_calc_sum", "sum_tags": members, "check_tag": parent, "detail": detail}
+    if r["tag"] in COR_EXCL_DA or EXCL_DA_LABEL.search(r["label"]):
+        return {**out, "gate": "hold_perimeter_excl_da"}
+    return {**out, "gate": "G1_printed_line"}
+
+
+def gross_profit_slot(face, shape):
+    i, r = first(face, lambda r: r["tag"] == "GrossProfit")
+    if r is None:
+        cr = next((x for x in face if GP_LABEL.search(x["label"])), None)
+        if cr is not None:
+            return {"gate": "hold_custom_gross_line", "tag": cr["tag"], "label": cr["label"]}
+        return {"gate": "no_printed_gross_profit_line", "tag": None}
+    out = {"tag": r["tag"], "line": r["line"], "label": r["label"]}
+    if shape != "commercial":
+        return {**out, "gate": f"hold_sector_{shape}"}
+    if not GP_LABEL.search(r["label"]):
+        return {**out, "gate": "hold_label_not_gross"}
+    return {**out, "gate": "G1_printed_line"}
+
+
+def gross_identity(rev, cost, gp):
+    """revenue - cost = gross profit on the same filing, when all three are
+    single printed lines; the replay holds a cell whose identity does not tie."""
+    ok = (rev["gate"] == "G1_printed_total" and cost["gate"] == "G1_printed_line" and gp["gate"] == "G1_printed_line")
+    if not ok:
+        return
+    t = {"revenue": rev["tag"], "cost": cost["tag"], "gross_profit": gp["tag"]}
+    cost["gate"], cost["tie"] = "G2_gross_identity", t
+    gp["gate"], gp["tie"] = "G2_gross_identity", t
+
+
+def main(src, out_dir, coreg_path=None):
+    coreg = set(open(coreg_path).read().split()) if coreg_path else set()
     # one FSN period at a time: a filing's pre and cal rows live in the period that
     # carries its submission, so memory stays at one period (the all-at-once load
     # was paged out under machine-wide swap pressure)
     out = Path(out_dir)
     slots = []
-    gates = {f: Counter() for f in ("revenue", "operating_income", "net_income")}
+    gates = {f: Counter() for f in ("revenue", "operating_income", "net_income", "cost_of_revenue", "gross_profit")}
     for p in sorted(glob.glob(f"{src}/*_is_pre.jsonl.gz")):
         period = Path(p).name.split("_")[0]
         rows = defaultdict(list)
@@ -271,7 +401,7 @@ def main(src, out_dir):
             if a["adsh"] in rows:
                 arcs[a["adsh"]][a["p"]][a["c"]] = a["w"]
         for adsh, rs in rows.items():
-            rep, face = primary_face(rs)
+            rep, face = primary_face(rs, adsh in coreg)
             if not face:
                 continue
             m = rs[0]
@@ -285,9 +415,14 @@ def main(src, out_dir):
                     # a dimensioned face (Snap-on 2019: ProductOrService axis, the undimensioned
                     # Revenues fact is the total of the member columns): own Verifier stratum
                     "face_axis": any(r["tag"].endswith("Axis") for r in face)}
-            for fam, slot in (("revenue", revenue_slot(face, a, shape, face_tags, full)),
+            rev = revenue_slot(face, a, shape, face_tags, full)
+            cost = cost_slot(face, a, shape, full)
+            gp = gross_profit_slot(face, shape)
+            gross_identity(rev, cost, gp)
+            for fam, slot in (("revenue", rev),
                               ("operating_income", operating_slot(face, shape)),
-                              ("net_income", net_income_slot(face, rs))):
+                              ("net_income", net_income_slot(face, rs)),
+                              ("cost_of_revenue", cost), ("gross_profit", gp)):
                 gates[fam][slot["gate"]] += 1
                 slots.append({**base, "family": fam, **slot})
     with open(out / "is_filing_slots.jsonl", "w") as f:
@@ -327,4 +462,4 @@ def main(src, out_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(*sys.argv[1:4])

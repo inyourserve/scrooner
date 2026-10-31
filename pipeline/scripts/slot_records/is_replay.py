@@ -37,12 +37,18 @@ import psycopg
 sys.path.insert(0, str(Path(__file__).parent))
 from common import rounding_unit  # noqa: E402
 
-FAMILIES = ("revenue", "operating_income", "net_income")
+FAMILIES = ("revenue", "operating_income", "net_income", "cost_of_revenue", "gross_profit")
 PROD = {"revenue": "revenue_sanity_resolved", "operating_income": "operating_income_resolved",
-        "net_income": "net_income_resolved"}
-PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci", "G3_calc_sum"}
+        "net_income": "net_income_resolved", "cost_of_revenue": "cost_of_revenue_resolved",
+        "gross_profit": "gross_profit_resolved"}
+PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci", "G3_calc_sum",
+               "G2_gross_identity", "G2b_available_to_common_bridge"}
 PERIODIC = ["10-K", "10-K/A", "10-KT", "10-Q", "10-Q/A", "10-QT"]
-SINCE = "2015-01-01"
+SINCE = os.environ.get("IS_SINCE", "2015-01-01")
+# IS_REPLAY_PROD=0: full-population mode for the canonical_fact_v2 rebuild
+# (founder 2026-11-04): the filing's cells only, production is not read and no
+# cell is classified against it. The rules that decide a cell are unchanged.
+READ_PROD = os.environ.get("IS_REPLAY_PROD", "1") != "0"
 
 
 def unit_of(v, cap=Decimal(10) ** 11):
@@ -108,16 +114,23 @@ def main(slots_path, ciks, out_dir, families=None):
                 if s.get("sum_tags"):
                     tags.update(s["sum_tags"])
                     tags.add(s["check_tag"])
-                if s.get("tie"):
+                if s.get("alt"):
+                    tags.add(s["alt"]["tag"])
+                    tags.add(s["alt"]["tie"]["profit_loss"])
+                    tags.update(s["alt"]["tie"]["nci"])
+                if s.get("tie") and "nci" in s["tie"]:
                     tags.add(s["tie"]["profit_loss"])
                     tags.update(s["tie"]["nci"])
+                elif s.get("tie"):
+                    tags.update(s["tie"].values())
         facts = defaultdict(dict)  # accession -> {(tag, start, end): value}
+        fact_ids = defaultdict(dict)  # accession -> {(tag, start, end): core.fact id of that value}
         filing_meta = {}
         if tags:
             cur.execute(
                 """
                 select co.tag, p.start_date, p.end_date, f.value::numeric, fi.accession_number,
-                       fi.period_of_report, fi.form
+                       fi.period_of_report, fi.form, f.id
                 from core.fact f
                 join core.concept co on co.id = f.concept_id
                 join core.period p on p.id = f.period_id
@@ -131,8 +144,10 @@ def main(slots_path, ciks, out_dir, families=None):
                 """,
                 (cik, sorted(tags), SINCE, PERIODIC),
             )
-            for tag, s0, e0, v, acc, por, form in cur.fetchall():
-                facts[acc].setdefault((tag, s0, e0), v)
+            for tag, s0, e0, v, acc, por, form, fid in cur.fetchall():
+                if (tag, s0, e0) not in facts[acc]:
+                    facts[acc][(tag, s0, e0)] = v
+                    fact_ids[acc][(tag, s0, e0)] = fid
                 filing_meta[acc] = (por, form)
         cur.execute(
             """
@@ -147,7 +162,7 @@ def main(slots_path, ciks, out_dir, families=None):
             left join core.filing sfi on sfi.id = sf.filing_id
             where c.cik = %s and cc.name = any(%s) and p.period_type = 'duration' and p.end_date >= %s
             """,
-            (cik, list(PROD.values()), SINCE),
+            (cik, list(PROD.values()) if READ_PROD else [], SINCE),
         )
         prod = defaultdict(dict)
         rev = {v: k for k, v in PROD.items()}
@@ -163,11 +178,19 @@ def main(slots_path, ciks, out_dir, families=None):
                 acc_facts = facts.get(adsh, {})
                 # every face column this filing prints: from its own facts for the slot tag
                 cols = {(k[1], k[2]) for k in acc_facts if k[0] == s.get("tag")}
+                if s.get("alt") and not any(face_column(s["form"], period, a0, b0) for a0, b0 in cols):
+                    # the printed NetIncomeLoss carries no undimensioned value (combined utility
+                    # filing: it is the subsidiaries' columns): the parent's line is the G2b bridge
+                    s = {**s, **s["alt"], "gate": "G2b_available_to_common_bridge"}
+                    s.pop("alt", None)
+                    cols = {(k[1], k[2]) for k in acc_facts if k[0] == s.get("tag")}
                 # a non-publishable gate still claims the filing's face columns (from any slot tag fact or none)
                 for (s0, e0) in cols:
                     if not face_column(s["form"], period, s0, e0):
                         continue
                     gate, value, extra = s["gate"], acc_facts[(s["tag"], s0, e0)], {}
+                    extra["source_fact_ids"] = [fact_ids[adsh][(s["tag"], s0, e0)]]
+                    extra["face_line"] = s.get("line")
                     if s.get("sum_tags"):
                         # G3: the printed lines summed (same accession, same column); every member
                         # must be present and the filer's own parent fact, when tagged, must tie
@@ -177,6 +200,7 @@ def main(slots_path, ciks, out_dir, families=None):
                             extra["missing"] = [t for t, v in zip(s["sum_tags"], vals) if v is None]
                         else:
                             value = sum(vals)
+                            extra["source_fact_ids"] = sorted(fact_ids[adsh][(t, s0, e0)] for t in s["sum_tags"])
                             chk = acc_facts.get((s["check_tag"], s0, e0))
                             extra["members"] = {t: str(v) for t, v in zip(s["sum_tags"], vals)}
                             if chk is not None:
@@ -215,16 +239,30 @@ def main(slots_path, ciks, out_dir, families=None):
                 state = None
                 if ref["gate"] not in PUBLISHABLE:
                     state = ref["gate"]
-                elif ref["gate"] == "G2_nci_identity":
+                elif ref["gate"] in ("G2_nci_identity", "G2b_available_to_common_bridge"):
                     t = ref["tie"]
                     af = facts.get(ref["adsh"], {})
                     pl = af.get((t["profit_loss"], s0, e0))
                     nci = [af.get((x, s0, e0)) for x in t["nci"]]
-                    if pl is not None and any(x is not None for x in nci):
+                    if ref["gate"] == "G2b_available_to_common_bridge" and (pl is None or any(x is None for x in nci)):
+                        state = "hold_identity_unverified"  # G2b publishes only with the full bridge tied
+                    elif pl is not None and any(x is not None for x in nci):
                         gap = pl - sum(x for x in nci if x is not None) - v
                         tol = rounding_unit([pl, v] + [x for x in nci if x is not None])
                         cell["identity_gap"] = str(gap)
                         if abs(gap) > tol:
+                            state = "hold_identity_gap"
+                elif ref["gate"] == "G2_gross_identity":
+                    # revenue - cost = gross profit on the reference accession (all printed lines)
+                    t = ref["tie"]
+                    af = facts.get(ref["adsh"], {})
+                    rv, cv, gv = (af.get((t[k], s0, e0)) for k in ("revenue", "cost", "gross_profit"))
+                    if None not in (rv, cv, gv):
+                        gap = rv - cv - gv
+                        cell["identity_gap"] = str(gap)
+                        # one printed unit, as for the balance-sheet and NCI identities: three
+                        # independently rounded lines can miss by one unit (IBM, HRL)
+                        if abs(gap) > max(unit_of(rv), unit_of(cv), unit_of(gv)):
                             state = "hold_identity_gap"
                 if state is None:
                     copies = [o for o in os_[1:] if o["gate"] in PUBLISHABLE]
