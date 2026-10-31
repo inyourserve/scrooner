@@ -79,9 +79,9 @@ for i in range(0, len(ids), 50):
         lambda: defaultdict(list)
     )  # (cid, pid) -> tag -> [(value, accession)]
     meta = {}
-    for cid, tag, pid, start, end, months, value, acc in c.execute(
+    for cid, tag, pid, start, end, months, value, acc, fid in c.execute(
         """select f.company_id, k.tag, f.period_id, p.start_date, p.end_date,
-                  round((p.end_date - p.start_date) / 30.4)::int, f.value, fl.accession_number
+                  round((p.end_date - p.start_date) / 30.4)::int, f.value, fl.accession_number, f.id
            from core.fact f join core.concept k on k.id = f.concept_id join core.period p on p.id = f.period_id
            join core.filing fl on fl.id = f.filing_id
            where f.company_id = any(%s) and k.taxonomy = 'us-gaap' and k.tag = any(%s)
@@ -89,7 +89,7 @@ for i in range(0, len(ids), 50):
              and f.is_authoritative and not f.is_derived and fl.form = any(%s)""",
         (part, list(TAGS), FORMS),
     ):
-        facts[(cid, pid)][tag].append((Decimal(value), acc))
+        facts[(cid, pid)][tag].append((Decimal(value), acc, fid))
         meta[(cid, pid)] = (str(start), str(end), months)
     stored = {
         (r[0], r[1])
@@ -104,7 +104,7 @@ for i in range(0, len(ids), 50):
         for new in ("InterestExpenseOperating", "InterestExpenseNonoperating"):
             if new in by and "InterestExpense" in by:
                 ok = any(
-                    same(a, b) for a, _ in by[new] for b, _ in by["InterestExpense"]
+                    same(a, b) for a, *_ in by[new] for b, *_ in by["InterestExpense"]
                 )
                 key = (cid, new)
                 verdict[key] = (
@@ -123,7 +123,7 @@ for i in range(0, len(ids), 50):
             else:
                 continue
         else:
-            vals = {v for v, _ in by[new]}
+            vals = {v for v, *_ in by[new]}
             v = max(vals)
             if len(vals) > 1 and not all(same(a, v) for a in vals):
                 outcome = "hold_copies_disagree"
@@ -135,7 +135,7 @@ for i in range(0, len(ids), 50):
                 outcome = "hold_no_overlap"
             else:
                 outcome = "fill"
-        v, acc = max(by[new])
+        v, acc, fid = max(by[new])
         stats[outcome] += 1
         cells.append(
             {
@@ -149,6 +149,7 @@ for i in range(0, len(ids), 50):
                 "tag": new,
                 "value": str(v),
                 "accession": acc,
+                "fact_id": fid,
                 "outcome": outcome,
             }
         )
