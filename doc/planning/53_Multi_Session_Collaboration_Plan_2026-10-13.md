@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0112** (0113 is claimed, see its row) (0101 = company_slot_record, renumbered from the 0110 claim on 2026-10-26 so CI's contiguity check stays green; 0102-0110 claimed, files not on main; 0111 ALREADY APPLIED in production, see its row). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0114.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -57,15 +57,15 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0101 | scrooner-25 (core engine) | `analytics.company_slot_record`, THE company-wise mapper table (renumbered from 0110, Dhairya 2026-10-26) | written on branch work/scrooner-25/slot-records, NOT applied; Release Manager lands it alone; production apply needs the founder's words in scrooner-4d's session |
 | 0111 | Data Engineer (storage floor) | `storage_object_retired` + `sec_companyfacts_unchanged_fetch` (branch work/data-engineer/storage-floor-prereq 6b1831a) | **ALREADY APPLIED in production** by scrooner-4d on the founder's typed instruction (2026-10-26); cannot land on main until 0102-0110 files exist, so the gap on main is expected and known |
 | 0112 | Data Engineer | minimal definition registry (`metric_definition_active` view + one-active-per-name unique index) (moved from 0101) | claimed, not written/not applied |
-| 0102 | Data Engineer | thin `cell_state` table with run id | claimed, not written/not applied |
+| 0102 | Data Engineer | thin `cell_state` table with run id | claimed, not written/not applied | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
 | 0103 | Period Engineer | `core.derived_fact_input` | claimed, not written/not applied |
 | 0104 | (unassigned) | `company_group` + `metric_template` (after design review) | claimed, not written/not applied |
 | 0105 | (unassigned) | output_versioning | claimed, not written/not applied |
 | 0106 | (unassigned) | `slot_observation` (optional) | claimed, not written/not applied |
-| 0107 | Data Engineer (lane 2) | `expanded_ttm_rows_cleanup` | claimed, written on a lane 2 branch, NOT applied |
-| 0108 | Data Engineer (lane 3) | ADS tables (first of two; renumbered from an earlier claim) | claimed, not written/not applied |
-| 0109 | Data Engineer (lane 3) | ADS tables (second of two) | claimed, not written/not applied |
-| 0110 | (released) | formerly claimed by scrooner-25 for company_slot_record; renumbered to 0101 | free for re-claim after 0102-0109 |
+| 0107 | Data Engineer (lane 2) | `expanded_ttm_rows_cleanup` | claimed, written on a lane 2 branch, NOT applied | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
+| 0108 | Data Engineer (lane 3) | ADS tables (first of two; renumbered from an earlier claim) | claimed, not written/not applied | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
+| 0109 | Data Engineer (lane 3) | ADS tables (second of two) | claimed, not written/not applied | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
+| 0110 | (released) | formerly claimed by scrooner-25 for company_slot_record; renumbered to 0101 | free for re-claim after 0102-0109 | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
 | 0113 | scrooner-d2 (income statement lane) | `analytics.slot_protected_cell` resolver guard (file `0113_slot_protected_cell.sql` on branch work/income-statement/slot-records 642de0b) | claimed 2026-11-01, written, NOT applied, NOT on main (cannot land while 0102-0110 and 0112 are unwritten gaps); the IS release rollback SQL deletes from this table, so the guard must be applied before any IS write; applying needs the founder's typed words |
 
 ## scrooner-98 queue (lane A)
