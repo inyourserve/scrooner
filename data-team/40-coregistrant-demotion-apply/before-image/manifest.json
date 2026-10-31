@@ -1,0 +1,53 @@
+{
+ "rule_id": "entity.shared_accession_demote_coregistrant_facts@1",
+ "code_commit": "ec6277c",
+ "taken_at": "2026-10-31T15:52:38+00:00",
+ "companies": {
+  "142": {
+   "cik": "0000007323",
+   "facts": 467,
+   "already_demoted": 0,
+   "cells": 164,
+   "filings": [
+    "0000065984-26-000283"
+   ],
+   "sha256": "70fcb975b999d0c719eb8226ae582a23448c07b74e461d8c10803e0f7b9f44b5"
+  },
+  "1079": {
+   "cik": "0000092103",
+   "facts": 387,
+   "already_demoted": 1,
+   "cells": 172,
+   "filings": [
+    "0000827052-26-000059"
+   ],
+   "sha256": "639468e337a94df5d06afd5c703ab6d62e0fc92eac278b384fb1a29884774e7c"
+  },
+  "1080": {
+   "cik": "0000092108",
+   "facts": 543,
+   "already_demoted": 0,
+   "cells": 154,
+   "filings": [
+    "0001032208-26-000045"
+   ],
+   "sha256": "5061c31057f61ede82f0bdeb0d1ab8652fbcdb7b7b9a1d64e748a05ef294a54f"
+  },
+  "1165": {
+   "cik": "0000201533",
+   "facts": 374,
+   "already_demoted": 0,
+   "cells": 110,
+   "filings": [
+    "0000811156-26-000032"
+   ],
+   "sha256": "d85d649b8f9532a17cfbcc995f3258c2ec70379e8b509f81ace8d8746f8c7643"
+  }
+ },
+ "totals": {
+  "facts_to_demote": 1771,
+  "facts_already_demoted": 1,
+  "cells": 600
+ },
+ "plan_digest": "d2a4188b76cb2b3d34effbd03a79554f4a65912b636e64c1d18415eb43bee85f"
+}
