@@ -67,9 +67,9 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0109 | Data Engineer (lane 3) | ADS tables (second of two) | claimed, not written/not applied | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
 | 0110 | (released) | formerly claimed by scrooner-25 for company_slot_record; renumbered to 0101 | free for re-claim after 0102-0109 | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
 | 0113 | scrooner-d2 (income statement lane) | `analytics.slot_protected_cell` resolver guard (file `0113_slot_protected_cell.sql` on branch work/income-statement/slot-records 642de0b) | claimed 2026-11-01, written, NOT applied, NOT on main (cannot land while 0102-0110 and 0112 are unwritten gaps); the IS release rollback SQL deletes from this table, so the guard must be applied before any IS write; applying needs the founder's typed words |
-| 0114 | scrooner-8a | `analytics.cell_proof` | file on main (1062649, 2026-11-04), NOT applied; production apply needs the founder's typed words (0114-0116 go as one schema apply) |
-| 0115 | scrooner-d2 (income statement lane) | `analytics.slot_protected_cell.value` nullable (a protected blank) | file on main (50683b1, 2026-11-04), NOT applied; the OI package 2 write path refuses until it is applied; production apply needs the founder's typed words |
-| 0116 | scrooner-26 (per-share) | `analytics.fact_authority_retired`, before-image of fact authority changes by retirement runs (Families A/B/C) | file on main, NOT applied; production apply needs the founder's typed words |
+| 0114 | scrooner-8a | `analytics.cell_proof` | file on main (1062649, 2026-11-04), **APPLIED in production 2026-11-04 15:45 UTC by Ritwik (scrooner-31), files byte-identical to main (CI run 41215553055)** |
+| 0115 | scrooner-d2 (income statement lane) | `analytics.slot_protected_cell.value` nullable (a protected blank) | file on main (50683b1, 2026-11-04), **APPLIED in production 2026-11-04 15:45 UTC by Ritwik (scrooner-31); the OI package 2 write path no longer refuses on this migration** |
+| 0116 | scrooner-26 (per-share) | `analytics.fact_authority_retired`, before-image of fact authority changes by retirement runs (Families A/B/C) | file on main; **APPLIED in production 2026-11-04 15:45 UTC by Ritwik (scrooner-31), byte-identical to main (CI run 41215553055)** |
 
 ## scrooner-98 queue (lane A)
 
