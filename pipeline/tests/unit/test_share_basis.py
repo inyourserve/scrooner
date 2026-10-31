@@ -2962,6 +2962,7 @@ def test_year_below_its_quarters_is_hidden_even_with_many_copies_visa():
     [("-0.04", "0.30", True),  # NWSA Jul-Sep 2015: a loss with positive diluted
      ("0.50", "0.55", True),  # dilution never raises EPS
      ("-0.02", "17600000", True),  # ASTS: a share count on the EPS tag
+     ("-0.02", "-17600000", True),  # a units scale apart, same sign
      ("0.08", "-0.08", False),  # warrant gain removed from diluted (CG, GSAT)
      ("0.50", "0.49", False),
      ("-0.30", "-0.30", False)],
