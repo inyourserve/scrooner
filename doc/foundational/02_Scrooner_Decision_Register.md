@@ -106,6 +106,8 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
   4. **Buybacks** are cash repurchases of the company's own common stock. They exclude tax-withholding shares, excise tax, employee-plan purchases, option-exercise items, subsidiary buybacks and share swaps.
   5. **Total debt** includes finance leases disclosed in the notes.
 
+- **Founder decision of 2026-11-04: development phase, rebuild instead of patch** (relayed to the release manager by scrooner-0f, the chief of staff, as the founder's decision; the release manager did not hear it directly). Values are rebuilt into a new table, `canonical_fact_v2`, from the FSN filing structure, each cell proven on its own, and the website switches to them by a view. The old table is kept as a fallback. The per-family patch release packages are superseded, and no new patch packages are landed. Packages already on main stay as records and the ones already applied stay applied. The planned work is migration 0117 (`canonical_fact_v2`), a loader and the served view from scrooner-8a, plus full-population cell files from each lane.
+
 ## Rejected or deferred directions
 
 | **Item**                           | **Disposition**   | **Revisit trigger**                                        |
