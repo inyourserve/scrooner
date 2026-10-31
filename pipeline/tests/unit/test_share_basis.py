@@ -2672,11 +2672,14 @@ def test_full_year_dividend_swapped_tags_amt_2023():
     assert cell.status == sb.SHOWN and cell.value == D("6.45")
 
 
-def test_full_year_dividend_hidden_when_no_filed_copy_equals_its_parts():
+def test_dated_facts_never_hide_when_no_filed_copy_equals_them():
+    """Dated facts can be announcements that shift a dividend between
+    quarters (JPM 6M 2018 1.12, run 7.2): they only choose between filed
+    copies, so with no matching copy the filed value stays."""
     b = _amt_book("4.30", "4.30", 2022, [("2022-03-10", "1.40"), ("2022-05-18", "1.43"),
                                           ("2022-09-21", "1.47"), ("2022-12-07", "1.56")])
     cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-12-31")
-    assert cell.status == sb.HIDE_DPS_INVALID and cell.value is None
+    assert cell.status == sb.SHOWN and cell.value == D("4.30")
 
 
 def test_full_year_dividend_left_alone_when_declarations_miss_a_quarter():
@@ -2910,3 +2913,45 @@ def test_post_event_copies_need_two_filings_after_every_live_event():
     assert sb.post_event_copies(conv[:2], [ev, dead]) is None  # one later copy never decides
     pending = sb.Event(3, Fraction(2), date(2025, 9, 1), date(2026, 3, 1), status="review")
     assert sb.post_event_copies(conv, [ev, pending]) is None  # a live candidate after them
+
+
+def test_logi_prior_ytd_with_two_values_still_hides_the_quarter():
+    """LOGI files CHF and USD amounts on the same contexts (0.87 and 0.95);
+    the prior YTD Apr-Sep holds both, the current Apr-Dec too."""
+    b = Book()
+    q2 = b.filing("0001032975-21-000045", "2021-10-28")
+    q3 = b.filing("0001032975-22-000006", "2022-01-27")
+    for v in ("0.95", "0.87"):
+        b.add(DPS_PAID, v, "2021-07-01", "2021-09-30", q2)
+        b.add(DPS_PAID, v, "2021-04-01", "2021-09-30", q2)
+        b.add(DPS_PAID, v, "2021-04-01", "2021-12-31", q3)
+        b.add(DPS_PAID, v, "2021-10-01", "2021-12-31", q3)
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2021-10-01", "2021-12-31")
+    assert cell.status != sb.SHOWN
+
+
+def test_second_quarter_kept_when_prior_period_is_only_q1_visa():
+    """Visa Jan-Mar 2022 0.375 with the 6M context also 0.375: Q1 alone is not
+    a prior year-to-date, so the quarter stays."""
+    b = Book()
+    q1 = b.filing("V-Q1", "2022-01-27")
+    q2 = b.filing("V-Q2", "2022-04-27")
+    b.add(DPS_DECL, "0.375", "2021-10-01", "2021-12-31", q1)
+    b.add(DPS_DECL, "0.375", "2022-01-01", "2022-03-31", q2)
+    b.add(DPS_DECL, "0.375", "2021-10-01", "2022-03-31", q2)
+    cell = b.cell(run(b), "dividends_per_share_resolved", "2022-01-01", "2022-03-31")
+    assert cell.status == sb.SHOWN and cell.value == D("0.375")
+
+
+def test_year_below_its_quarters_is_hidden_even_with_many_copies_visa():
+    """Visa FY 0.375 in three 10-Ks against four 0.375 quarters: the year
+    carries the quarterly rate; it is hidden and the quarters stay."""
+    b = Book()
+    for i, (s_, e_) in enumerate((("2021-10-01", "2021-12-31"), ("2022-01-01", "2022-03-31"),
+                                  ("2022-04-01", "2022-06-30"), ("2022-07-01", "2022-09-30"))):
+        b.add(DPS_DECL, "0.375", s_, e_, b.filing(f"VQ{i}", f"2022-{2 + 3 * i:02d}-27" if i < 3 else "2022-11-15", "10-Q" if i < 3 else "10-K"))
+    for i, fd in enumerate(("2022-11-16", "2023-11-15", "2024-11-14")):
+        b.add(DPS_DECL, "0.375", "2021-10-01", "2022-09-30", b.filing(f"VK{i}", fd, "10-K"))
+    res = run(b)
+    assert b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2022-09-30").status == sb.HIDE_DPS_INVALID
+    assert b.cell(res, "dividends_per_share_resolved", "2022-04-01", "2022-06-30").value == D("0.375")

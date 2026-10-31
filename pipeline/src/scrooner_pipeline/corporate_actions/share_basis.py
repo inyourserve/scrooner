@@ -2859,9 +2859,10 @@ def _dps_quarter_equals_ytd(
                 if ps is not None
                 and abs((ps - s).days) <= 7
                 and abs((f.start_date - pe).days) <= 7
-                and (pe - ps).days >= 80
+                and (pe - ps).days >= 150  # a real multi-quarter YTD, never Q1 alone (Visa Q2)
             ]
-            prior = [x for x in prior if x[2] == {c.value}]
+            # LOGI's prior YTD carries two values (0.87 and 0.95): any copy equal
+            prior = [x for x in prior if c.value in x[2]]
             if not prior:
                 continue
             # ... unless that prior year-to-date is itself contradicted by its
@@ -2997,6 +2998,7 @@ def _dps_span_agrees_with_parts(
         if parts is None or abs(c.value - parts) <= YEAR_SOLVE_TOL:
             out.append(c)
             continue
+        below = c.value < parts
         match = next(
             (
                 (f_, v_)
@@ -3013,9 +3015,19 @@ def _dps_span_agrees_with_parts(
             # vs a one-copy Q4 0.6): when the span has >= 2 agreeing filings and
             # some chain quarters only one, the one-copy quarters are the
             # suspects and the span stays; otherwise the span is hidden.
+            if kind != "quarters":
+                # dated facts only CHOOSE between filed copies (AMT): their
+                # dates can be announcements that shift a dividend between
+                # quarters (JPM 6M 2018), so they never hide a cell
+                out.append(c)
+                continue
+            # direction decides which side is wrong: a span BELOW its quarters
+            # carries a quarterly rate (Visa FY 0.375 in three 10-Ks against
+            # quarters of 0.375 each); a span ABOVE them has an understated
+            # quarter (LFUS one-copy Q4 0.6 against FY 2.5 in three 10-Ks)
             span_filings = {f_.filing_id for f_, v_ in span_copies.get(span, []) if v_ == c.value}
             weak = []
-            if kind == "quarters" and len(span_filings) >= 2:
+            if not below and len(span_filings) >= 2:
                 for qs, qe, _v in _basis_quarter_chain(span, span_copies, basis_tag) or []:
                     fids = {f_.filing_id for f_, _ in span_copies.get((qs, qe), []) if f_.tag == basis_tag}
                     if len(fids) == 1:
