@@ -1,0 +1,13 @@
+[
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2022-03-31",
+  "qtrs": 1,
+  "release_value": "390000.0000",
+  "v16_value": "38379000.0000",
+  "prod_value": "3000000",
+  "to": "hold_v16_rule",
+  "reason": "value_changed"
+ }
+]
