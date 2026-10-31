@@ -50,7 +50,7 @@ for line in gzip.open(cells_path, "rt"):
     if c["value"] is None:
         continue
     v = Decimal(c["value"])
-    row = {"cik": c["cik"], "ticker": c["ticker"], "end": c["end"], "qtrs": 0, "accession": c["accession"], "form": c["form"],
+    row = {"cik": c["cik"], "ticker": c["ticker"], "end": c["end"], "qtrs": c.get("qtrs") or 0, "accession": c["accession"], "form": c["form"],
            "value": str(v), "prod_value": c["prod_value"], "members": c["members"], "cf_ending": c.get("cf_ending"),
            "note_flag": c.get("note_flag")}
     if c["prod_value"] is None:
@@ -59,7 +59,7 @@ for line in gzip.open(cells_path, "rt"):
         p = Decimal(c["prod_value"])
         upd.append(dict(row, state="slot_differs", difference_class="rounding_only" if abs(p - v) <= max(runit(p), runit(v)) else "material"))
 
-want = {(r["cik"], r["end"]) for r in upd}
+want = {(r["cik"], r["end"], r["qtrs"]) for r in upd}  # qtrs 0 = instant; 1-4 = duration (capex, D&A)
 ciks = sorted({r["cik"] for r in upd})
 conn = psycopg.connect(os.environ["DATABASE_URL"])
 cur = conn.cursor()
@@ -69,7 +69,7 @@ before = []
 for i in range(0, len(ciks), 50):
     cur.execute(
         """
-        select cf.id, c.id, c.cik, cf.canonical_concept_id, cf.period_id, p.end_date::text, cf.value::text
+        select cf.id, c.id, c.cik, cf.canonical_concept_id, cf.period_id, p.end_date::text, cf.value::text, p.start_date::text
         from analytics.canonical_fact cf
         join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
         join core.period p on p.id = cf.period_id
@@ -78,17 +78,22 @@ for i in range(0, len(ciks), 50):
         """,
         ([f"{x:010d}" for x in ciks[i:i + 50]], CONCEPT),
     )
-    for fid, company_id, cik, concept_id, period_id, e, val in cur.fetchall():
-        if (int(cik), month_end(e)) in want:
+    for fid, company_id, cik, concept_id, period_id, e, val, s in cur.fetchall():
+        q = 0 if not s else round((date.fromisoformat(e) - date.fromisoformat(s)).days / 91.3)
+        if (int(cik), month_end(e), q) in want:
             before.append({"canonical_fact_id": fid, "company_id": company_id, "cik": int(cik), "canonical_concept_id": concept_id,
-                           "period_id": period_id, "end": e, "value_before": val})
+                           "period_id": period_id, "end": e, "qtrs": q, "value_before": val})
     conn.rollback()
 conn.close()
-dup = Counter((b["cik"], month_end(b["end"])) for b in before)
+dup = Counter((b["cik"], month_end(b["end"]), b["qtrs"]) for b in before)
 amb = {k for k, n in dup.items() if n > 1}
-amb_rows = [r for r in upd if (r["cik"], r["end"]) in amb]
-upd = [r for r in upd if (r["cik"], r["end"]) not in amb]
-before = [b for b in before if (b["cik"], month_end(b["end"])) not in amb]
+amb_rows = [r for r in upd if (r["cik"], r["end"], r["qtrs"]) in amb]
+upd = [r for r in upd if (r["cik"], r["end"], r["qtrs"]) in want and (r["cik"], r["end"], r["qtrs"]) not in amb]
+before = [b for b in before if (b["cik"], month_end(b["end"]), b["qtrs"]) not in amb]
+matched = {(b["cik"], month_end(b["end"]), b["qtrs"]) for b in before}
+nomatch = [r for r in upd if (r["cik"], r["end"], r["qtrs"]) not in matched]
+upd = [r for r in upd if (r["cik"], r["end"], r["qtrs"]) in matched]  # production row not found: excluded, listed
+amb_rows += [dict(r, reason_detail="no_production_row") for r in nomatch]
 assert len(before) == len(upd), (len(before), len(upd))
 
 data = "".join(json.dumps(r, sort_keys=True) + "\n" for r in upd).encode()
