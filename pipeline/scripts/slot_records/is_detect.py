@@ -101,7 +101,12 @@ def primary_face(rows):
 
 
 def shape_of(tags):
-    if tags & BANK:
+    # a bank face: noninterest expense with noninterest income or net interest income,
+    # or interest income after the provision. InterestIncomeExpenseNet ALONE is not a
+    # bank: 158 commercial cohort companies tag "Interest expense, net" with it and
+    # print gross profit (found building the gross-profit family, 2026-10-31)
+    if "InterestIncomeExpenseAfterProvisionForLoanLoss" in tags or (
+            "NoninterestExpense" in tags and tags & {"NoninterestIncome", "InterestIncomeExpenseNet"}):
         return "bank"
     if any(INSURER_RX.search(t) for t in tags):
         return "insurer"
@@ -252,13 +257,85 @@ def net_income_slot(face, all_rows):
     return {"gate": "no_printed_net_income_line", "tag": None}
 
 
+COR_TOTAL = {"CostOfRevenue", "CostOfGoodsAndServicesSold", "CostOfGoodsSold", "CostOfServices"}
+COR_EXCL_DA = {"CostOfGoodsAndServiceExcludingDepreciationDepletionAndAmortization",
+               "CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization"}
+COR_LABEL = re.compile(r"\bcosts? of (net )?(sales|revenues?|goods|products|services|merchandise|operations)", re.I)
+EXCL_DA_LABEL = re.compile(r"(exclusive of|excluding|excl\.?|before) (depreciation|d&a)", re.I)
+GP_LABEL = re.compile(r"gross (profit|margin|income|loss)", re.I)
+
+
+def cost_slot(face, arcs, shape, full_arcs):
+    """the single printed cost-of-revenue total (same root / sibling / calc-sum
+    discipline as revenue). A cost line printed EXCLUDING depreciation (BALL)
+    holds for the Standardization Lead: a gross margin built on it is not
+    comparable."""
+    lines, seen = [], set()
+    for r in face:
+        if not r["custom"] and (r["tag"] in COR_TOTAL or r["tag"] in COR_EXCL_DA) and r["tag"] not in seen:
+            seen.add(r["tag"])
+            lines.append(r)
+    if not lines:
+        cr = next((r for r in face if r["custom"] and COR_LABEL.search(r["label"])), None)
+        if cr is not None:
+            return {"gate": "hold_custom_cost_line", "tag": cr["tag"], "label": cr["label"]}
+        return {"gate": "no_printed_cost_line", "tag": None}
+    if shape != "commercial":
+        return {"gate": f"hold_sector_{shape}", "tag": lines[0]["tag"], "label": lines[0]["label"]}
+    under = {r["tag"] for r in lines for s2 in lines if r["tag"] != s2["tag"] and r["tag"] in descendants(arcs, s2["tag"])}
+    roots = [r for r in lines if r["tag"] not in under]
+    others = [x for x in face if x["custom"] and COR_LABEL.search(x["label"]) and x["tag"] not in descendants(arcs, roots[0]["tag"])
+              and not any(x["tag"] in descendants(arcs, rt["tag"]) for rt in roots)
+              and x["tag"] not in {p for p in arcs if roots[0]["tag"] in descendants(arcs, p)}]
+    members = [r["tag"] for r in roots] + [x["tag"] for x in others]
+    r = roots[0]
+    out = {"tag": r["tag"], "line": r["line"], "label": r["label"]}
+    if len(members) > 1:
+        detail = [{"tag": x["tag"], "label": x["label"], "custom": x["custom"]} for x in roots[1:] + others]
+        if others:
+            return {**out, "gate": "hold_sibling_custom", "detail": detail}
+        parent = calc_parent_of_exactly(full_arcs or {}, members)
+        if parent is None:
+            return {**out, "gate": "hold_multiple_roots", "detail": detail}
+        return {**out, "gate": "G3_calc_sum", "sum_tags": members, "check_tag": parent, "detail": detail}
+    if r["tag"] in COR_EXCL_DA or EXCL_DA_LABEL.search(r["label"]):
+        return {**out, "gate": "hold_perimeter_excl_da"}
+    return {**out, "gate": "G1_printed_line"}
+
+
+def gross_profit_slot(face, shape):
+    i, r = first(face, lambda r: r["tag"] == "GrossProfit")
+    if r is None:
+        cr = next((x for x in face if GP_LABEL.search(x["label"])), None)
+        if cr is not None:
+            return {"gate": "hold_custom_gross_line", "tag": cr["tag"], "label": cr["label"]}
+        return {"gate": "no_printed_gross_profit_line", "tag": None}
+    out = {"tag": r["tag"], "line": r["line"], "label": r["label"]}
+    if shape != "commercial":
+        return {**out, "gate": f"hold_sector_{shape}"}
+    if not GP_LABEL.search(r["label"]):
+        return {**out, "gate": "hold_label_not_gross"}
+    return {**out, "gate": "G1_printed_line"}
+
+
+def gross_identity(rev, cost, gp):
+    """revenue - cost = gross profit on the same filing, when all three are
+    single printed lines; the replay holds a cell whose identity does not tie."""
+    ok = (rev["gate"] == "G1_printed_total" and cost["gate"] == "G1_printed_line" and gp["gate"] == "G1_printed_line")
+    if not ok:
+        return
+    t = {"revenue": rev["tag"], "cost": cost["tag"], "gross_profit": gp["tag"]}
+    cost["gate"], cost["tie"] = "G2_gross_identity", t
+    gp["gate"], gp["tie"] = "G2_gross_identity", t
+
+
 def main(src, out_dir):
     # one FSN period at a time: a filing's pre and cal rows live in the period that
     # carries its submission, so memory stays at one period (the all-at-once load
     # was paged out under machine-wide swap pressure)
     out = Path(out_dir)
     slots = []
-    gates = {f: Counter() for f in ("revenue", "operating_income", "net_income")}
+    gates = {f: Counter() for f in ("revenue", "operating_income", "net_income", "cost_of_revenue", "gross_profit")}
     for p in sorted(glob.glob(f"{src}/*_is_pre.jsonl.gz")):
         period = Path(p).name.split("_")[0]
         rows = defaultdict(list)
@@ -285,9 +362,14 @@ def main(src, out_dir):
                     # a dimensioned face (Snap-on 2019: ProductOrService axis, the undimensioned
                     # Revenues fact is the total of the member columns): own Verifier stratum
                     "face_axis": any(r["tag"].endswith("Axis") for r in face)}
-            for fam, slot in (("revenue", revenue_slot(face, a, shape, face_tags, full)),
+            rev = revenue_slot(face, a, shape, face_tags, full)
+            cost = cost_slot(face, a, shape, full)
+            gp = gross_profit_slot(face, shape)
+            gross_identity(rev, cost, gp)
+            for fam, slot in (("revenue", rev),
                               ("operating_income", operating_slot(face, shape)),
-                              ("net_income", net_income_slot(face, rs))):
+                              ("net_income", net_income_slot(face, rs)),
+                              ("cost_of_revenue", cost), ("gross_profit", gp)):
                 gates[fam][slot["gate"]] += 1
                 slots.append({**base, "family": fam, **slot})
     with open(out / "is_filing_slots.jsonl", "w") as f:
