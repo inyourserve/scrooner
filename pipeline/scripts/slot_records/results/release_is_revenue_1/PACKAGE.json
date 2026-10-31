@@ -1,0 +1,81 @@
+{
+ "rule_id": "slot.is_revenue@1",
+ "family": "income statement: revenue_sanity_resolved",
+ "status": "dry run; flag OFF; nothing written to the database",
+ "release1": {
+  "file": "is_revenue_release1_cells.jsonl",
+  "sha256": "b98f509f139b44abd373891e6b747a9c35ecc3ca3d41404efd70e7eba08cda5c",
+  "cells": 2444,
+  "companies": 175,
+  "by_compare": {
+   "slot_differs": 1750,
+   "slot_fills_blank": 694
+  },
+  "before_image": {
+   "file": "is_revenue_r1_before_image.jsonl",
+   "rows": 1750,
+   "sha256": "e59ee56c5c4e16c3b6db19056daa4dd4579159e4fb697bacda86f58458d2ac60"
+  },
+  "rollback": {
+   "file": "is_revenue_r1_rollback.sql",
+   "sha256": "a63c77f3b514fab2fe4887b0b0c2984c45e4470f5b7eb568997c8f60a81123e7",
+   "note": "generated, run in one transaction by the Release Manager only"
+  },
+  "stale_vs_live": 0,
+  "touched_ciks": "is_revenue_r1_touched_ciks.txt",
+  "verifier_strata": {
+   "plain_face": 1429,
+   "dimensioned_face": 1012,
+   "dimensioned_face+calc_sum": 3
+  }
+ },
+ "precision_stratum": {
+  "file": "is_revenue_precision_cells.jsonl",
+  "sha256": "8a66d4014037fb2564a3cfa579a68f2b66b6354544f36f7fd1f15943041016cf",
+  "cells": 827,
+  "companies": 159,
+  "by_compare": {
+   "prod_less_precise": 793,
+   "differs_within_rounding": 34
+  },
+  "status": "not wrong values; ship only if the Verifier and founder want full precision"
+ },
+ "hide_stratum": {
+  "file": "is_revenue_hide_cells.jsonl",
+  "sha256": "e6bf795bf549297ffd8298ad4def824517ca11bd6ec9ba92b8a8f29a6d093736",
+  "cells": 2439,
+  "companies": 322,
+  "by_compare": {
+   "would_hide": 2439
+  },
+  "status": "founder ruling (restated copies disagree -> hidden); needs its own Verifier stratum"
+ },
+ "holds_production_stays": {
+  "prod_only_filing_held": 13727,
+  "prod_only_q4_not_a_face_column": 7406,
+  "hold_sector_bank": 2969,
+  "prod_only_not_a_face_column": 719,
+  "hold_perimeter_children": 588,
+  "hold_sibling_custom": 347,
+  "hold_sibling_revenue_no_total": 195,
+  "hold_perimeter_label": 155,
+  "hold_sector_bdc": 81,
+  "hold_child_of_other_total": 69,
+  "hold_sector_insurer": 47,
+  "prod_only_company_no_face_rows": 2
+ },
+ "flag": {
+  "convention": "SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.is_revenue@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image and rollback"
+ },
+ "evidence_per_cell": "accession (original filing), slot_tag, printed label, gate (G1 printed line | G2 NCI identity | G1b ProfitLoss without NCI), copies agreeing; slot records is_<family>_records.jsonl",
+ "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks",
+ "resolver_guard": {
+  "migration": "pipeline/db/migrations/0113_slot_protected_cell.sql (provisional number, NOT applied)",
+  "write_path_contract": "in the SAME transaction as each written cell: set local scrooner.slot_writer = 'on'; insert analytics.slot_protected_cell (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)",
+  "effect": "every nightly resolver write to a protected cell is skipped and logged in analytics.slot_protected_write_skipped",
+  "test": "pipeline/scripts/slot_records/test_slot_guard.sh (throwaway local cluster; 15 checks; 7 fail with the trigger neutered)"
+ },
+ "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row"
+}
