@@ -1,0 +1,51 @@
+{
+ "rule_id": "slot.is_revenue_tagged_total_sum@1",
+ "family": "income statement: revenue_sanity_resolved",
+ "status": "dry run; flag OFF; nothing written to the database",
+ "release1": {
+  "file": "is_revenue_release1_cells.jsonl",
+  "sha256": "3b0cc65fdbd055ecf1a06544a8bbbb9195c46d726e6032fb0be9c8098cdb92e2",
+  "cells": 3,
+  "companies": 1,
+  "by_compare": {
+   "slot_differs": 3
+  },
+  "before_image": {
+   "file": "is_revenue_r1_before_image.jsonl",
+   "rows": 3,
+   "sha256": "9c08927f0b403061900067b7d8802f41600f63a96b11174587e4c57eeec34391"
+  },
+  "rollback": {
+   "file": "is_revenue_r1_rollback.sql",
+   "sha256": "411be1bcabf81c1277e04a8461d7bc335693ae777d43a772286777b5b2f857bb",
+   "note": "generated, run in one transaction by the Release Manager only"
+  },
+  "stale_vs_live": 0,
+  "touched_ciks": "is_revenue_r1_touched_ciks.txt",
+  "verifier_strata": {
+   "plain_face": 3
+  }
+ },
+ "flag": {
+  "convention": "SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.is_revenue_tagged_total_sum@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image and rollback"
+ },
+ "evidence_per_cell": "accession (original filing), slot_tag, printed label, gate (G1 printed line | G2 NCI identity | G1b ProfitLoss without NCI), copies agreeing; slot records is_<family>_records.jsonl",
+ "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks",
+ "resolver_guard": {
+  "migration": "pipeline/db/migrations/0113_slot_protected_cell.sql (provisional number, NOT applied)",
+  "write_path_contract": "in the SAME transaction as each written cell: set local scrooner.slot_writer = 'on'; insert analytics.slot_protected_cell (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)",
+  "effect": "every nightly resolver write to a protected cell is skipped and logged in analytics.slot_protected_write_skipped",
+  "test": "pipeline/scripts/slot_records/test_slot_guard.sh (throwaway local cluster; 15 checks; 7 fail with the trigger neutered)"
+ },
+ "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row",
+ "release": "revenue release 2 (separate rule id so its rollback never touches release 1's protections)",
+ "gate": "G3b_sum_ties_tagged_total: printed revenue lines summed (filer's FSN num facts) tie a revenue total the filer tagged in the same filing and column; Snap-on 2018 only",
+ "verifier": {
+  "verdict": "YES",
+  "draw": "3 of 3",
+  "branch": "verify/revenue-release2-sna-2026-11-02"
+ },
+ "source": "sibling_holds_face_sums.jsonl in release_is_revenue_1 (sum_ties_tagged_total)"
+}
