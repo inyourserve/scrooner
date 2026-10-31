@@ -50,7 +50,10 @@ def copy_rows(
     select_cols = [
         "null::bigint as " + c
         if (table, c)
-        in {("core.fact", "supersedes_fact_id"), ("core.filing", "amends_filing_id")}
+        in {
+            ("core.fact", "supersedes_fact_id"),
+            ("core.filing", "amends_filing_id"),
+        }
         else c
         for c in cols
     ]
@@ -186,10 +189,21 @@ def main(backup_dir: Path, log_path: Path) -> int:
             src,
             dst,
             "core.filing",
-            "company_id = any(%s) or accession_number = any(%s)",
-            (company_ids, accs),
+            "company_id = any(%s) or accession_number = any(%s) or id in (select amends_filing_id from core.filing where accession_number = any(%s) and amends_filing_id is not null)",
+            (company_ids, accs, accs),
             fh,
         )
+        # second pass: amends_filing_id of the moved rows, where the amended filing was copied
+        amends = src.execute(
+            "select id, amends_filing_id from core.filing where accession_number = any(%s) and amends_filing_id is not null",
+            (accs,),
+        ).fetchall()
+        with dst.cursor() as cur:
+            cur.executemany(
+                "update core.filing set amends_filing_id = %s where id = %s and exists (select 1 from core.filing where id = %s)",
+                [(a, i, a) for i, a in amends],
+            )
+        log(fh, f"  core.filing: amends_filing_id restored on {len(amends)} moved rows")
         # the rows under test, post-apply state
         copy_rows(
             src,

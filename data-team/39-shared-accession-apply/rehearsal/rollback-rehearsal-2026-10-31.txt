@@ -1,0 +1,23 @@
+16:43:19 rehearsal of before-image /Users/vikash/wt-main-apply/data-team/39-shared-accession-apply/before-image (plan c601ca6212f52840, 499 moves)
+16:43:19 production is read-only in this session; scratch = localhost:5444/scrooner_test
+16:43:19 scratch tables emptied
+16:43:21   core.company: 26 rows copied
+16:43:21   analytics.canonical_concept: 78 rows copied
+16:43:22   core.unit: 1084 rows copied
+16:43:24   core.concept: 1850 rows copied
+16:43:27   raw.collector_runs: 38 rows copied
+16:43:28   raw.sec_companyfacts: 18 rows copied
+16:43:28   raw.sec_submissions: 64 rows copied
+16:43:30   core.period: 3148 rows copied
+16:43:35   core.filing: 8576 rows copied
+16:43:35   core.filing: amends_filing_id restored on 3 moved rows
+16:43:36   core.filing_registrant: 1373 rows copied
+16:45:15   core.fact: 211200 rows copied
+16:45:23   analytics.canonical_fact: 23003 rows copied
+16:45:24   analytics.company_stock_split: 0 rows copied
+16:45:26 scratch post-apply digests vs before-image: differ for ['filing', 'filing_registrant', 'fact', 'canonical_fact'] (expected: filing, fact, canonical_fact at least)
+16:45:27 running: /Users/vikash/wt-main-apply/pipeline/scripts/shared_accession_apply.py rollback --backup-dir /Users/vikash/wt-main-apply/data-team/39-shared-accession-apply/before-image
+16:45:35 post-rollback: all 5 digests match the before-image
+16:45:35 rollback done: {'filings_restored': 499, 'registrant_rows_restored': 0, 'facts_restored': 26497, 'canonical_facts_restored': 5236, 'stock_splits_restored': 0}
+16:45:35 rollback exit code 0
+16:45:35 post-rollback digests equal the before-image for all 5 tables: True
