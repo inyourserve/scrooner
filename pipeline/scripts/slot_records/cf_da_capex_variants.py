@@ -126,6 +126,10 @@ IS_INTANGIBLE_AMORT = re.compile(r"amorti[sz]ation of (acquisition.related |acqu
 
 
 def da_nature(tag, label, custom, label_ok=True):
+    if re.search(r"finance.?lease", tag + " " + label, re.I) and not re.search(r"operating.?lease", tag + " " + label, re.I):
+        # Verifier V10 (GD Q1 2024 211M): finance-lease ROU assets are depreciated like owned
+        # assets, so "amortization of intangible and finance lease ROU assets" is D&A
+        return "asset_da"
     if not label_ok:
         # FSN pre gave this line the label of another printed line (AMD FY2024:
         # AdjustmentForAmortization shown as "Amortization", plabel = the ROU line's):
@@ -421,8 +425,13 @@ for (cik, ddate, q), f in chosen():
             combined = [x for x in da if x["nature"] == "combined_other"]
             narrow_da = sum((x["value"] for x in asset), Decimal(0))
             has_dep = True
+    net_low = [x for x in asset if re.search(r"\bnet\b", x["label"], re.I) and is_sum is not None and x["value"] < is_sum]
     if defq:
         value, reason = None, "da_definition_question"
+    elif net_low:
+        # Verifier V10 (KEY FY2021): a "D&A expense, net" line below the same filing's own
+        # intangible amortization is netted with something else; never published as D&A
+        value, reason = None, "da_net_line_below_intangible_amortization"
     elif combined:
         value, reason = None, "da_combined_with_other_items"
     elif asset and not has_dep and not is_tie:
