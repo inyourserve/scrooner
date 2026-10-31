@@ -1,0 +1,200 @@
+[
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "388578000.0000",
+  "v18_value": null,
+  "prod_value": "672000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "724190000.0000",
+  "v18_value": null,
+  "prod_value": "1574000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "965318000.0000",
+  "v18_value": null,
+  "prod_value": "2878000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "1109965000.0000",
+  "v18_value": null,
+  "prod_value": "4441000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "127143000.0000",
+  "v18_value": null,
+  "prod_value": "631000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "265967000.0000",
+  "v18_value": null,
+  "prod_value": "1304000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "370191000.0000",
+  "v18_value": null,
+  "prod_value": "1542000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "512786000.0000",
+  "v18_value": null,
+  "prod_value": "3052000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "217017000.0000",
+  "v18_value": null,
+  "prod_value": "1565000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "510597000.0000",
+  "v18_value": null,
+  "prod_value": "2966000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "822721000.0000",
+  "v18_value": null,
+  "prod_value": "4687000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "1212536000.0000",
+  "v18_value": null,
+  "prod_value": "5710000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "334235000.0000",
+  "v18_value": null,
+  "prod_value": "239000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "624195000.0000",
+  "v18_value": null,
+  "prod_value": "1863000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "833245000.0000",
+  "v18_value": null,
+  "prod_value": "1230000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "1022996000.0000",
+  "v18_value": null,
+  "prod_value": "1477000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "214236000.0000",
+  "v18_value": null,
+  "prod_value": "576000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "413335000.0000",
+  "v18_value": null,
+  "prod_value": "697000",
+  "to": "hold_v18_rule",
+  "reason": "perimeter_og_property_acquisitions"
+ }
+]

@@ -67,9 +67,20 @@ CAPEX_OG_LABEL = re.compile(r"drilling|completion|(un)?proved (oil|gas|propertie
                             r"development (costs|expenditures)|exploration and development|oil and (natural )?gas propert", re.I)
 
 
+CAPEX_WORD = re.compile(r"capital expenditure|property|plant|equipment|premises|fixed assets", re.I)
+MIXED_JOIN = re.compile(r"(\band\b|&|,)\s*(other )?(investments?|acquisitions?|other (long.term |non.?current )?assets)", re.I)
+
+
+def capex_mixed(label):
+    """one printed line joining capex with investments / acquisitions / other assets cannot be split on the face
+    (Verifier: JEF 'and other assets', PSX 'Capital expenditures and investments'); an 'excluding ...' clause is not a join"""
+    lab = re.sub(r"(exclud|net of)\w*[^,;)]*", "", label, flags=re.I)
+    return bool(CAPEX_WORD.search(lab) and MIXED_JOIN.search(lab))
+
+
 def capex_nature(tag, label):
-    if re.search(r"property|plant|equipment|premises", label, re.I) and re.search(r"(and|&) other (long.term |non.?current )?assets", label, re.I):
-        return "lease_unclear"  # Verifier fills R2 (JEF): PP&E mixed with other assets cannot be split on the face
+    if capex_mixed(label) or re.search(r"\bfor (a )?related part(y|ies)", label, re.I):
+        return "lease_unclear"  # combined / perimeter hold under both readings (JEF, PSX; GLW equipment bought FOR a related party; CVNA purchases FROM one stay)
     if tag == "PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets" or (
             re.search(r"PropertyPlantAndEquipment|ProductiveAssets", tag) and re.search(r"intangible", label, re.I)
             and re.search(r"property|plant|equipment", label, re.I)):
@@ -315,16 +326,22 @@ for (cik, ddate, q), f in chosen():
                 if t in vals and dec(vals[t]) and re.search(r"capital|property|equipment", lab, re.I):
                     skipped.append({"tag": t, "label": lab, "value": str(dec(vals[t])), "why": "accrual_change"})
                 continue  # CHTR "Change in accrued expenses related to capital expenditures"
-            if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab) or re.search(r"property acquisitions|acquisitions? of (oil|gas|proved|unproved|mineral|leasehold)", lab, re.I)) \
+            if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab) or re.search(r"property acquisitions|acquisitions? of (oil|gas|proved|unproved|mineral|leasehold)|acreage", lab, re.I)) \
                     and not re.search(r"proceeds|sale|disposal|divest|software|site", lab + t, re.I):
                 v = dec(vals.get(t))
-                if v and re.search(r"acquisition|acquire", lab, re.I):
+                if v and re.search(r"acquisition|acquire|acreage", lab, re.I):
                     og_acq.append({"tag": t, "label": lab, "value": str(v)})
                     continue  # Verifier fills R2 (FANG "Property acquisitions" 1,193M): founder perimeter question, held
                 if v:
                     lines.append({"tag": t, "label": lab, "nature": "ppe", "disc": False, "value": abs(v), "raw": v, "negating": r["negating"], "custom": r["custom"], "og": True})
                 continue
-            if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on)|expenditures? (for|on)|payments? for (vessels|aircraft|rigs|towers|ships))\b", lab, re.I) and not re.search(
+            if re.match(r"\s*(additions? (to|of)|capital expenditures?|expenditures? (for|on)|payments? for (vessels|aircraft|rigs|towers|ships))\b", lab, re.I) \
+                    and t in vals and dec(vals[t]) and (capex_mixed(lab) or re.search(r"\bfor (a )?related part(y|ies)", lab, re.I)):
+                v = dec(vals[t])
+                lines.append({"tag": t, "label": lab, "nature": "lease_unclear", "disc": False, "value": abs(v), "raw": v,
+                              "negating": r["negating"], "custom": r["custom"], "additions_line": True})
+                continue
+            if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on)|expenditures? (for|on)|payments? for (vessels|aircraft|rigs|towers|ships)|construction in progress)\b", lab, re.I) and not re.search(
                     r"real estate|rental propert|investment|loan|securit|intangible|business|software|acquisition|receivable|financ|note|"
                     r"debt|restricted|other (long.term |non.?current )?assets|deposit|escrow|contract", lab, re.I) and t in vals \
                     and not (parents[t] & printed - set(INV_TOTAL)) \
