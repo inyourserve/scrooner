@@ -2,30 +2,32 @@
  "rule_id": "slot.capex@1",
  "family": "cash flow: capex_resolved (feeds FCF, FCF yield, capex % revenue, FCF per share, buybacks and dividends % FCF)",
  "source_cells": {
-  "file": "results/cf_da_capex_v10/cells.jsonl.gz",
-  "sha256": "6b83790cf34efce80a50b73fdd7cf872e37c8158ae08b1228cf29c5779f729fc"
+  "file": "results/cf_da_capex_v12/cells.jsonl.gz",
+  "sha256": "2cea762b092f1daa33bfd9909a593e2007149f81f0af37c6f4252af245499c84"
  },
  "verifier": "VERIFY-DA-CAPEX-V10-2026-11-01.md (origin/verify/da-capex-v10-2026-11-01 02c61c6): capex YES, 15 of 15 right; production wrong or only rounded in every drawn cell",
  "release1": {
   "cells_file": "capex_release1_cells.jsonl",
-  "sha256": "7dad09013a84c9f4f986e632b6b3af237565354a136d08ef57abaa1426c0538c",
-  "cells": 2115,
-  "companies": 349,
+  "sha256": "33d6720f009b852689886efdf105cbb1c865e564f1f756f95678bf16117fe49f",
+  "cells": 2143,
+  "companies": 347,
   "by_difference_class": {
-   "rounding_only": 667,
-   "material": 1448
+   "rounding_only": 668,
+   "material": 1475
   },
-  "before_image": "capex_release1_before_image.jsonl (2115 canonical_fact rows)",
+  "before_image": "capex_release1_before_image.jsonl (2143 canonical_fact rows)",
   "cells_without_before_image_row": 0,
   "excluded_ambiguous_period_match": "capex_release1_excluded_ambiguous.json (8 cells match two production periods; not written)",
   "rollback": "capex_release1_rollback.sql (generated, run in one transaction by the Release Manager only)",
   "keep_list": "capex_release_keep_list.json (0 cells the Verifier found production right; untouched)",
-  "touched_ciks": "release1_touched_ciks.txt"
+  "touched_ciks": "release1_touched_ciks.txt",
+  "cells_with_a_skipped_proceeds_or_sale_line": 1622,
+  "changed_vs_previous": "capex_release1_changed_vs_ce06af5.jsonl: {\"added\": 78, \"removed\": 50, \"value_changed\": 7}"
  },
  "release2": {
   "cells_file": "capex_release2_fills.jsonl",
-  "sha256": "5d798cd8e4beb992ac7913e4ee57a6973a71f32304bd8af522672e265b390b4e",
-  "cells": 2190,
+  "sha256": "29099b5fb5f851eba2131b846bde92ebc99f7c52ce0287cef545f4ccc2313975",
+  "cells": 2178,
   "status": "production blank: not in the Verifier's sampled population; needs its own fill stratum before shipping"
  },
  "not_in_any_release": "held cells (perimeter_line_unresolved, other_capex_lines_outside_ruling, no_continuing_capex_line): production stays as is until the founder's capex answer and a real-estate ruling",
