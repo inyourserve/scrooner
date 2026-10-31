@@ -258,7 +258,7 @@ for line in gzip.open(face_path, "rt"):
     cf = [r for r in f["face"] if r["stmt"] == "CF"]
     for col, vals in f["values"].items():
         ddate, q = col.split("|")
-        if int(q) not in (1, 2, 3, 4) or ddate < "20150101":
+        if int(q) not in (1, 2, 3, 4) or ddate < "20140101":  # v2 window: every period since 2014 (founder, 2026-11-04)
             continue
         if not any(t in vals for t in OP_TOTAL + INV_TOTAL):
             continue  # not a face column of this filing

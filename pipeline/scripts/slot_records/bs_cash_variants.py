@@ -90,7 +90,7 @@ for line in gzip.open(face_path, "rt"):
     f = json.loads(line)
     for col, vals in f["values"].items():
         ddate, q = col.split("|")
-        if q != "0" or ddate < "20141231" or not any(t in vals for t in BS_TOTAL):
+        if q != "0" or ddate < "20140101" or not any(t in vals for t in BS_TOTAL):  # v2 window: since 2014
             continue
         rank = (ddate == f["period"], not f["form"].endswith("/A"), f["filed"])
         key = (f["cik"], ddate)

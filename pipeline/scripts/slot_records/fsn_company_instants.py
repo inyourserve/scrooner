@@ -2,7 +2,9 @@
 the local FSN extracts, plus their balance-sheet face rows; one JSON object per filing (gzip).
 Zero SEC requests. For slot replays whose members can sit in notes (finance-lease liabilities,
 current maturities inside other current liabilities).
-usage: fsn_company_instants.py <fsn_dir> <cik,cik,...> <out.jsonl.gz>
+usage: fsn_company_instants.py <fsn_dir> <cik,cik,...|@cohort.csv> <out.jsonl.gz> [debt]
+  'debt' keeps only facts whose tag is on that filing's balance-sheet face or is debt/lease/borrowing
+  vocabulary (notes included), to keep a cohort-wide extract small
 """
 import csv
 import glob
@@ -15,7 +17,16 @@ from collections import defaultdict
 from pathlib import Path
 
 csv.field_size_limit(sys.maxsize)
-fsn, ciks, out = Path(sys.argv[1]), {int(x) for x in sys.argv[2].split(",")}, sys.argv[3]
+fsn, out = Path(sys.argv[1]), sys.argv[3]
+if sys.argv[2].startswith("@"):
+    ciks = {int(r["cik"]) for r in csv.DictReader(open(sys.argv[2][1:]))}
+else:
+    ciks = {int(x) for x in sys.argv[2].split(",")}
+DEBT_ONLY = len(sys.argv) > 4 and sys.argv[4] == "debt"
+import re  # noqa: E402
+DEBT_VOCAB = re.compile(r"Debt|Borrow|Loan|Notes|CommercialPaper|Lease|LineOfCredit|Convertible|FinanceObligation|"
+                        r"^Liabilities|^Assets$|LiabilitiesAndStockholdersEquity|LiabilitiesAndPartnersCapital")
+STD = ("us-gaap", "srt", "dei", "ifrs")
 FORMS = {"10-K", "10-Q", "10-K/A", "10-Q/A", "10-KT", "10-QT"}
 
 
@@ -40,15 +51,20 @@ with gzip.open(out, "wt") as fo:
             continue
         for r in rows(table(per, "pre")):
             if r["adsh"] in fil and r["stmt"] == "BS":
-                fil[r["adsh"]]["bs"].append({"report": int(r["report"]), "line": int(r["line"]), "tag": r["tag"], "plabel": r["plabel"]})
+                fil[r["adsh"]]["bs"].append({"report": int(r["report"]), "line": int(r["line"]), "tag": r["tag"], "plabel": r["plabel"],
+                                             "custom": not r["version"].startswith(STD)})
         for r in rows(table(per, "num")):
             f = fil.get(r["adsh"])
             if f is None or r["qtrs"] != "0" or r["uom"] != "USD" or r["dimh"] != "0x00000000" or r["value"] in ("", None):
                 continue
             if (r.get("coreg") or "").strip() or (r.get("iprx") or "0") not in ("0", ""):
                 continue
+            if DEBT_ONLY and not DEBT_VOCAB.search(r["tag"]) and r["tag"] not in f.setdefault("_face", {x["tag"] for x in f["bs"]}):
+                continue
             f["values"][r["ddate"]][r["tag"]] = r["value"]
         for f in fil.values():
+            f.pop("_face", None)
+            f["fsn_period"] = per
             f["bs"].sort(key=lambda x: (x["report"], x["line"]))
             fo.write(json.dumps(f) + "\n")
             n += 1

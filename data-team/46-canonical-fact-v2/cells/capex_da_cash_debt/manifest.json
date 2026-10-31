@@ -1,0 +1,25 @@
+{
+ "family": "capex_da_cash_debt",
+ "rule_id": {
+  "capex": "capex_da_cash_debt.capex_face@21",
+  "d_and_a": "capex_da_cash_debt.d_and_a_face@21",
+  "cash": "capex_da_cash_debt.cash_face@2",
+  "derived": "capex_da_cash_debt.flow_q_by_ytd_subtraction@1"
+ },
+ "git_commit": "b3137b9",
+ "produced_at": "2026-10-31",
+ "rows": 155257,
+ "sha256": "6f53c9456bc17f7c233e78a23460462557bb1fba88195f63614f1f39ff0eaf19",
+ "companies": 985,
+ "data_points": [
+  "capex_resolved",
+  "cash_and_equivalents_resolved",
+  "depreciation_and_amortization_resolved"
+ ],
+ "period_floor": "2014-01-01",
+ "new_reason_codes": {
+  "definition_outside_ruling": "the line falls outside a ruled definition (owner decides)"
+ },
+ "note": "total_debt_resolved is NOT in this file (cohort debt build in progress); data_points lists only what this file carries",
+ "calendar": "data-team/46-canonical-fact-v2/expected_periods_2026-10-31.csv.gz (every expected key gets a row)"
+}
