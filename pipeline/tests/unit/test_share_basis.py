@@ -2955,3 +2955,23 @@ def test_year_below_its_quarters_is_hidden_even_with_many_copies_visa():
     res = run(b)
     assert b.cell(res, "dividends_per_share_resolved", "2021-10-01", "2022-09-30").status == sb.HIDE_DPS_INVALID
     assert b.cell(res, "dividends_per_share_resolved", "2022-04-01", "2022-06-30").value == D("0.375")
+
+
+@pytest.mark.parametrize(
+    "basic, diluted, hidden",
+    [("-0.04", "0.30", True),  # NWSA Jul-Sep 2015: a loss with positive diluted
+     ("0.50", "0.55", True),  # dilution never raises EPS
+     ("-0.02", "17600000", True),  # ASTS: a share count on the EPS tag
+     ("0.08", "-0.08", False),  # warrant gain removed from diluted (CG, GSAT)
+     ("0.50", "0.49", False),
+     ("-0.30", "-0.30", False)],
+)
+def test_basic_and_diluted_eps_pair_check(basic, diluted, hidden):
+    b = Book()
+    f = b.filing("P-Q3", "2015-11-06")
+    b.add(EPS_B, basic, "2015-07-01", "2015-09-30", f)
+    b.add(EPS_D, diluted, "2015-07-01", "2015-09-30", f)
+    res = run(b)
+    for concept in ("basic_eps_resolved", "diluted_eps_resolved"):
+        cell = b.cell(res, concept, "2015-07-01", "2015-09-30")
+        assert (cell.status == sb.HIDE_EPS_PAIR) is hidden

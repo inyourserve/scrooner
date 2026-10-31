@@ -192,6 +192,7 @@ HIDE_ZERO_SHARES = "zero_share_count_filed"
 FY_RATE_TOL = Decimal("0.005")
 HIDE_DPS_INVALID = "dividend_per_share_invalid"
 HIDE_QTR_YTD = "quarter_equals_ytd_context_error"
+HIDE_EPS_PAIR = "eps_basic_diluted_impossible"
 # A DPS value this many times the company's median DPS of the same series
 # (or 1/this) is a units error in its filing (VICI 262,500 for 0.2625 in
 # 10-Q 0001705696-18-000086; SWX 2,480; ROST 255; HL 0.25 vs 0.0025).
@@ -218,6 +219,7 @@ HIDDEN_REASON_TEXT = {
     HIDE_UNITS_SCALE: "filed value looks off by a units scale (thousands or millions)",
     HIDE_ZERO_SHARES: "the filing reports zero shares outstanding",
     HIDE_DPS_INVALID: "dividend per share fails a same-filing check (sign, paid, quarters vs year)",
+    HIDE_EPS_PAIR: "basic and diluted EPS of this period cannot both be right (diluted above a positive basic, positive beside a loss, or a units scale apart)",
     HIDE_QTR_YTD: "the filed quarter equals the year-to-date value of the same filing although an earlier quarter paid a dividend",
 }
 
@@ -1873,7 +1875,45 @@ def resolve_cells(
     out = _dps_same_filing_checks(
         out, paid, common_dividend_paid_per_share(facts, share_refs), dps_by_filing
     )
-    return _dps_scale_guard(_dps_scale_guard(out), "shares_outstanding_resolved")
+    return _eps_pair_check(_dps_scale_guard(_dps_scale_guard(out), "shares_outstanding_resolved"))
+
+
+EPS_PAIR_TOL = Decimal("0.011")  # two half-cent roundings
+EPS_PAIR_SCALE = Decimal(1000)
+
+
+def _eps_pair_check(cells: list[CellResult]) -> list[CellResult]:
+    """ASC 260: dilution never raises EPS, and with a loss diluted equals
+    basic. So for one period, shown basic and diluted EPS cannot be
+    (a) basic < 0 < diluted (NWSA Jul-Sep 2015 -0.04 vs 0.30, CDE Q4 2016),
+    (b) 0 < basic < diluted beyond rounding, or (c) a units scale apart
+    (ASTS diluted 17,600,000: a share count on the EPS tag). Both cells are
+    hidden: the pair alone cannot say which is wrong. Basic > 0 > diluted
+    stays (warrant fair-value gains leave the diluted numerator: GSAT, CG)."""
+    by_span: dict[tuple, dict[str, CellResult]] = defaultdict(dict)
+    for c in cells:
+        if c.status == SHOWN and c.value is not None and c.chosen is not None and c.concept in (
+            "basic_eps_resolved", "diluted_eps_resolved"
+        ):
+            by_span[(c.chosen.start_date, c.chosen.end_date)][c.concept] = c
+    bad: set[tuple[str, int]] = set()
+    for pair in by_span.values():
+        if len(pair) != 2:
+            continue
+        b, d = pair["basic_eps_resolved"].value, pair["diluted_eps_resolved"].value
+        assert b is not None and d is not None
+        scale = b != 0 and d != 0 and (abs(d) > EPS_PAIR_SCALE * abs(b) or abs(b) > EPS_PAIR_SCALE * abs(d))
+        if (b < 0 < d) or (0 < b and d > b + EPS_PAIR_TOL) or scale:
+            bad.update((c.concept, c.period_id) for c in pair.values())
+    if not bad:
+        return cells
+    return [
+        CellResult(c.concept, c.period_id, HIDE_EPS_PAIR, None, (), c.chosen, c.factor, c.candidates,
+                   "basic and diluted EPS contradict each other")
+        if (c.concept, c.period_id) in bad
+        else c
+        for c in cells
+    ]
 
 
 DIVIDENDS_PAID_TAGS = ("PaymentsOfDividendsCommonStock", "PaymentsOfDividends")
