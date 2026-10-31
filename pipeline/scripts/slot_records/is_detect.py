@@ -61,6 +61,8 @@ TAX = "IncomeTaxExpenseBenefit"
 NCI_RX = re.compile(r"^(NetIncomeLossAttributableTo(Redeemable|Nonredeemable)?NoncontrollingInterest|MinorityInterestInNetIncomeLoss\w*|IncomeLossFromContinuingOperationsAttributableToNoncontrollingEntity|IncomeLossFromDiscontinuedOperationsNetOfTaxAttributableToNoncontrollingInterest|NetIncomeLossAttributableToNoncontrollingInterestAndRedeemableNoncontrollingInterest)$")
 NCI_CUSTOM_RX = re.compile(r"NoncontrollingInterest|MinorityInterest")
 SUBSIDIARY_LABEL = re.compile(r"subsidiar", re.I)
+PREFERRED_TAG = re.compile(r"Preferred")
+PREFERRED_LABEL = re.compile(r"\bpreferred\b", re.I)
 REV_PARENT_RX = re.compile(r"Revenue|Sales")
 NOT_REV_PARENT_RX = re.compile(r"Cost|Expense|Profit|Margin|OperatingIncome|IncomeLoss")
 NCI_LABEL = re.compile(r"non-?controlling|minority", re.I)
@@ -289,12 +291,13 @@ def _net_income_slot(face, all_rows):
     if pl is not None:
         out = {"tag": "ProfitLoss", "line": pl["line"], "label": pl["label"]}
         # ProfitLoss is the parent's only when NOTHING printed below it takes a share away:
-        # any noncontrolling-interest line (ELS OP units, ETR preferred-unit NCI) or a
-        # SUBSIDIARY's preferred dividends (PG&E, ETR; NCI in substance). The parent's own
-        # preferred dividends come after parent net income and do not count. Release
-        # closure 2026-10-31: 14 landed NI cells at 3 companies published consolidated income
+        # any noncontrolling-interest line (ELS OP units, ETR preferred-unit NCI) or ANY
+        # preferred line (Verifier 2026-11-04: PG&E FY2024-25 'Preferred stock dividend
+        # requirement' carries no 'subsidiary' word; a parent-vs-subsidiary label test is
+        # not safe, so every preferred line below disqualifies). Release closure: 14 + 2
+        # landed NI cells published consolidated income
         below = [b for b in face[i_pl + 1:] if "PerShare" not in b["tag"] and "Comprehensive" not in b["tag"]
-                 and (NCI_CUSTOM_RX.search(b["tag"]) or ("Preferred" in b["tag"] and SUBSIDIARY_LABEL.search(b["label"])))]
+                 and (NCI_CUSTOM_RX.search(b["tag"]) or PREFERRED_TAG.search(b["tag"]) or PREFERRED_LABEL.search(b["label"]))]
         if nci or nci_custom or below:
             return {**out, "gate": "hold_parent_line_not_standard",
                     "detail": nci + nci_custom + [b["tag"] for b in below]}

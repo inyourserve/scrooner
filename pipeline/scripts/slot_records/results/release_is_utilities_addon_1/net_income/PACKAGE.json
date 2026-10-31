@@ -4,11 +4,11 @@
  "status": "dry run; flag OFF; nothing written to the database",
  "release1": {
   "file": "is_net_income_release1_cells.jsonl",
-  "sha256": "c6a9319f042f988947e0ac7c22edaa9d6f364b918814827e8cdef38d2512975b",
-  "cells": 416,
+  "sha256": "d8471cc03ac7f3955c7f153b8f1821b2816460ee25d2f12c550901ef39cc1173",
+  "cells": 404,
   "companies": 9,
   "by_compare": {
-   "slot_fills_blank": 416
+   "slot_fills_blank": 404
   },
   "before_image": {
    "file": "is_net_income_r1_before_image.jsonl",
@@ -17,13 +17,13 @@
   },
   "rollback": {
    "file": "is_net_income_r1_rollback.sql",
-   "sha256": "72de17304e22cd11617f368e3b239c6e26973936e7ca109004875f90e671a64e",
+   "sha256": "588f506df901ad47d49211446127c59e571f14b92e7b276be68220c80c7c5c99",
    "note": "generated, run in one transaction by the Release Manager only"
   },
   "stale_vs_live": 0,
   "touched_ciks": "is_net_income_r1_touched_ciks.txt",
   "verifier_strata": {
-   "dimensioned_face": 387,
+   "dimensioned_face": 375,
    "plain_face": 29
   }
  },
@@ -61,5 +61,10 @@
   "effect": "every nightly resolver write to a protected cell is skipped and logged in analytics.slot_protected_write_skipped",
   "test": "pipeline/scripts/slot_records/test_slot_guard.sh (throwaway local cluster; 15 checks; 7 fail with the trigger neutered)"
  },
- "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row"
+ "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row",
+ "verifier": {
+  "verdict": "YES",
+  "branch": "verify/utilities-addon-ni-recut-2026-11-04",
+  "recut_2026_11_04": "re-cut (same G1b rule, 2026-11-04): 12 EIX cells removed (preferred line below ProfitLoss); subset of the verified add-on (verify/utilities-addon-ni-recut-2026-11-04)"
+ }
 }
