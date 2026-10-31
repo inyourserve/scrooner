@@ -9,6 +9,8 @@ GITHUB_STEP_SUMMARY-friendly table, and a decision of whether to fail the
 job (when critical/major counts regress against the last passing run's
 baseline -- see find_regressions())."""
 
+from datetime import date
+
 import psycopg
 
 SEVERITY_ORDER = [
@@ -243,6 +245,27 @@ def _major_tolerance(baseline_count: int) -> int:
 
 EVALUATED = ("ok", "minor", "major", "critical")  # rows where both sides had a value
 
+# A coverage loss (our value gone: missing_ours rising) fails the gate like a new major, with the same rotation
+# tolerance. One-time transition: 3c42fe1 made the newest snapshot decide (a NULL newest is missing_ours, no fallback
+# to an older value), which moves these stored evaluated rows to missing_ours as their companies rotate (read-only
+# count 2026-10-31 over analytics.data_sanity_check: 5,288 rows, 3,236 of them majors). The allowance covers exactly
+# that move and expires after two full rotations (750 of ~5,100 companies a night), so it cannot hide a later loss.
+MISSING_OURS_TRANSITION = {
+    "current_ratio": 148, "debt_to_equity": 731, "dividend_yield": 3, "ebitda": 701, "ebitda_margin": 453,
+    "ev_ebitda": 485, "ev_sales": 100, "gross_margin": 679, "institutional_ownership_pct": 18, "net_margin": 498,
+    "operating_margin": 336, "payout_ratio": 458, "peg_ratio": 110, "price_to_book": 1, "price_to_sales": 4,
+    "quick_ratio": 150, "revenue_growth_yoy": 330, "roa": 39, "roe": 41, "trailing_pe": 3,
+}  # fmt: skip
+MISSING_OURS_TRANSITION_UNTIL = date(2026, 11, 14)
+
+
+def _transition(metric: str | None, today: date) -> int:
+    if today > MISSING_OURS_TRANSITION_UNTIL:
+        return 0
+    if metric is None:
+        return sum(MISSING_OURS_TRANSITION.values())
+    return MISSING_OURS_TRANSITION.get(metric, 0)
+
 
 def major_rate(counts: dict[str, int]) -> float | None:
     """Majors among the rows that were actually evaluated (missing_ours / missing_external excluded): the gate counts
@@ -277,7 +300,9 @@ def major_rate_lines(
 
 
 def find_regressions(
-    summary: dict, baseline: dict[str, dict[str, int]] | None
+    summary: dict,
+    baseline: dict[str, dict[str, int]] | None,
+    today: date | None = None,
 ) -> list[str]:
     """Compares current severity counts against the last passing run's
     baseline (analytics.data_sanity_gate_baseline) and returns one line per
@@ -287,10 +312,12 @@ def find_regressions(
     Replaced a fixed "any critical or >10 major" threshold (2026-09-27): the
     existing backlog (~18,000 major rows) meant that gate could never pass,
     so it carried no signal. Fails on: any increase in total criticals, a
-    critical in a metric that had none, or majors rising past the rotation
-    tolerance -- in total or for any single metric."""
+    critical in a metric that had none, or majors or missing_ours (a coverage
+    loss) rising past the rotation tolerance -- in total or for any single
+    metric. missing_ours also gets the one-time 3c42fe1 transition allowance."""
     if baseline is None:
         return []
+    today = today or date.today()
 
     def total(counts: dict[str, dict[str, int]], severity: str) -> int:
         return sum(c.get(severity, 0) for c in counts.values())
@@ -327,6 +354,22 @@ def find_regressions(
                 f"{metric} major: {was} -> {now}"
                 + _rate_text(counts, baseline.get(metric, {}))
             )
+
+    now_missing, was_missing = (
+        total(current, "missing_ours"),
+        total(baseline, "missing_ours"),
+    )
+    if now_missing - was_missing > _major_tolerance(was_missing) + _transition(
+        None, today
+    ):
+        regressions.append(
+            f"missing_ours (all metrics, coverage loss): {was_missing} -> {now_missing}"
+        )
+    for metric, counts in sorted(current.items()):
+        was = baseline.get(metric, {}).get("missing_ours", 0)
+        now = counts.get("missing_ours", 0)
+        if now - was > _major_tolerance(was) + _transition(metric, today):
+            regressions.append(f"{metric} missing_ours (coverage loss): {was} -> {now}")
 
     return regressions
 

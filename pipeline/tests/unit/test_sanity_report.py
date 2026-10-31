@@ -166,3 +166,68 @@ class TestMajorRate:
         assert lines == [
             "roe: major 10 of 100 evaluated (10.0%); baseline 5 of 50 (10.0%)"
         ]
+
+
+@pytest.mark.unit
+class TestMissingOursGate:
+    """A coverage loss (missing_ours rising) fails the gate like a new major; 3c42fe1's move has a one-time,
+    expiring allowance (report.MISSING_OURS_TRANSITION)."""
+
+    AFTER = __import__("datetime").date(2026, 11, 15)
+    DURING = __import__("datetime").date(2026, 11, 1)
+
+    def test_a_coverage_loss_in_one_metric_fails(self):
+        baseline = {"roa": {"missing_ours": 100, "ok": 900}}
+        now = _summary({"roa": {"missing_ours": 126, "ok": 874}})  # +26 > max(25, 5)
+        assert "roa missing_ours (coverage loss): 100 -> 126" in find_regressions(
+            now, baseline, today=self.AFTER
+        )
+        within = _summary({"roa": {"missing_ours": 125, "ok": 875}})
+        assert find_regressions(within, baseline, today=self.AFTER) == []
+
+    def test_a_coverage_loss_in_total_fails(self):
+        # ten small metrics each within their own minimum tolerance (+25), together past the total's (+50)
+        baseline = {f"m{i}": {"missing_ours": 100} for i in range(10)}
+        now = _summary({f"m{i}": {"missing_ours": 125} for i in range(10)})
+        assert find_regressions(now, baseline, today=self.AFTER) == [
+            "missing_ours (all metrics, coverage loss): 1000 -> 1250"
+        ]
+        ok = _summary({f"m{i}": {"missing_ours": 105} for i in range(10)})  # total +50
+        assert find_regressions(ok, baseline, today=self.AFTER) == []
+
+    def test_more_coverage_passes(self):
+        baseline = {"roa": {"missing_ours": 600, "ok": 300}}
+        assert (
+            find_regressions(
+                _summary({"roa": {"missing_ours": 100, "ok": 800}}), baseline
+            )
+            == []
+        )
+
+    def test_the_3c42fe1_move_is_allowed_only_until_the_transition_ends(self):
+        from scrooner_pipeline.sanity import report
+
+        move = report.MISSING_OURS_TRANSITION[
+            "debt_to_equity"
+        ]  # 731 rows move over a rotation
+        baseline = {"debt_to_equity": {"missing_ours": 689, "major": 2000}}
+        now = _summary(
+            {"debt_to_equity": {"missing_ours": 689 + move, "major": 2000 - move}}
+        )
+        assert find_regressions(now, baseline, today=self.DURING) == []
+        assert (
+            find_regressions(now, baseline, today=report.MISSING_OURS_TRANSITION_UNTIL)
+            == []
+        )
+        assert (
+            f"debt_to_equity missing_ours (coverage loss): 689 -> {689 + move}"
+            in find_regressions(now, baseline, today=self.AFTER)
+        )
+        # the allowance never exceeds the measured move: one row more than move + tolerance fails during it too
+        over = _summary({"debt_to_equity": {"missing_ours": 689 + move + 35}})
+        assert find_regressions(over, baseline, today=self.DURING) != []
+
+    def test_the_allowance_is_the_read_only_count_of_rows_that_move(self):
+        from scrooner_pipeline.sanity import report
+
+        assert sum(report.MISSING_OURS_TRANSITION.values()) == 5288
