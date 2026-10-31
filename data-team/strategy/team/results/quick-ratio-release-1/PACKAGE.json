@@ -1,0 +1,18 @@
+{
+ "rule_id": "quick_ratio.inventory_evidence@1",
+ "train": "quick-ratio-inventory-evidence-release-1",
+ "confirm_token": "RELEASE-QUICK-RATIO-1",
+ "digest": "9fcb9954621dca87708db08ded6e06115d3ad17d6d32bd0cfb7acef162fdfd6b",
+ "cells": 2772,
+ "companies": 177,
+ "keep_cells": 32679,
+ "stale_at_build": 0,
+ "before_image_sha256": "1541e5c76134beb853e490523742ed20debba5dcaa9fa609cd457768a0f1fa70",
+ "by_reason": {
+  "incomplete:balance_sheet_unclassified": 7,
+  "incomplete:inventory_fact_not_authoritative": 189,
+  "incomplete:inventory_presented_not_extracted": 68,
+  "incomplete:inventory_value_under_review": 1948,
+  "incomplete:materials_supplies_line_present": 560
+ }
+}
