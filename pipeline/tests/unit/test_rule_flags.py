@@ -144,3 +144,13 @@ def test_chief_ruling_lane2_ids_and_the_unevidenced_zero_mapping():
     with pytest.raises(ValueError, match="unregistered"):
         rf.enabled_rules({rf.ENV_ENABLED: "tsy.unevidenced_zero@1"})
     assert not hasattr(rf.Rule("a.b@1", "-", "x", False, "w"), "dry_run_only")
+
+
+@pytest.mark.unit
+def test_cash_flow_slot_rules_are_registered_and_off_by_default():
+    for rule_id in ("slot.cf_cfo@1", "slot.cf_buybacks@1"):
+        assert rule_id in rf.RULES
+        assert rf.rule_mode(rule_id, {}) == rf.OFF
+        assert rf.rule_enabled(rule_id, {rf.ENV_ENABLED: rule_id})
+    # enabling one never enables the other
+    assert not rf.rule_enabled("slot.cf_buybacks@1", {rf.ENV_ENABLED: "slot.cf_cfo@1"})

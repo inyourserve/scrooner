@@ -354,6 +354,20 @@ RULES: dict[str, Rule] = {
             "lane2",
             "institutional ownership share base (WO-16)",
         ),
+        # ---- cash-flow slot records (scrooner-28): the release package's
+        # compare-and-swap apply is written only when the rule is ON
+        _r(
+            "slot.cf_cfo@1",
+            "-",
+            "cashflow",
+            "cfo_resolved from the printed operating-activities total (release_cfo_1)",
+        ),
+        _r(
+            "slot.cf_buybacks@1",
+            "-",
+            "cashflow",
+            "share_buybacks_resolved from the printed common-repurchase line (release_buybacks_1)",
+        ),
     )
 }
 
