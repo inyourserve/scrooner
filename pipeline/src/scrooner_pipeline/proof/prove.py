@@ -275,9 +275,10 @@ class Shown:
     source_fact_ids: tuple[int, ...]
     is_derived: bool = False
     presentation_scale: int = 6
-    restated_by: tuple[str, Decimal] | None = (
-        None  # (later accession, its value) when a later source disagrees
+    copies_disagree: tuple[tuple[str, str], ...] | None = (
+        None  # periodic copies (accession, value) outside precision
     )
+    copies: int = 0
 
 
 @dataclass
@@ -454,6 +455,8 @@ def _check_components_sum(
     complete: list[dict[str, Any]] = []
     incomplete = 0
     for grp, children in groups.items():
+        if len(children) < 2:
+            continue  # a single arc is a reclassification, not a decomposition
         total = Decimal(0)
         missing = []
         for ctag, negative in children:
@@ -465,7 +468,9 @@ def _check_components_sum(
         if missing:
             incomplete += 1
             continue
-        ok = same(total, nv.value, tol)
+        # a sum of n rounded children can miss the rounded total by n/2 units
+        unit = tol / UNITS_SLACK
+        ok = same(total, nv.value, max(tol, unit * Decimal(len(children)) / 2))
         if ok:
             return {
                 "status": "pass",
@@ -495,16 +500,13 @@ def prove_cell(
     if shown.data_point_name not in EXPECTED:
         p.reason_text = "no single printed line for this data point (composition); proven by its producer"
         return p
-    if shown.restated_by is not None:
-        later_acc, later_value = shown.restated_by
-        p.verdict, p.reason_code = DISAGREE, "restated_copy_shown_with_wrong_lineage"
+    if shown.copies_disagree:
+        p.verdict, p.reason_code = DISAGREE, "restated_copies_disagree"
+        others = "; ".join(f"{v} in {acc}" for acc, v in shown.copies_disagree[:4])
         p.reason_text = (
-            f"production shows {shown.value} from {shown.accession} while the later filing {later_acc} "
-            f"restates it to {later_value}; restated copies that disagree are hidden (founder ruling)"
+            f"production shows {shown.value} ({shown.accession}) but another periodic copy of this cell reads {others}; "
+            "restated copies that disagree are hidden (founder ruling); 'show the latest recast' is a founder decision"
         )
-        p.position_accession = later_acc
-        p.position_value = later_value
-        p.position_source = "fsn_pre_calc"
         return p
     if shown.is_derived:
         return prove_derived(shown, structure, prior_structure, fsn_set)

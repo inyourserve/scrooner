@@ -412,7 +412,7 @@ def test_a_value_from_a_note_is_not_proven_on_the_statement_face():
 
 
 @pytest.mark.unit
-def test_restated_copy_shown_with_wrong_lineage_is_disagree():
+def test_disagreeing_periodic_copies_make_the_cell_disagree_whichever_is_shown():
     q = pv.Shown(
         3,
         "total_assets_resolved",
@@ -425,14 +425,37 @@ def test_restated_copy_shown_with_wrong_lineage_is_disagree():
         (1,),
         False,
         6,
-        restated_by=("0001564590-17-014900", Decimal("193468000000")),
+        copies_disagree=(("0001564590-17-014900", "193468000000"),),
+        copies=2,
     )
     p = pv.prove_cell(q, structure(), "2025q4")
-    assert (
-        p.verdict == pv.DISAGREE
-        and p.reason_code == "restated_copy_shown_with_wrong_lineage"
+    assert p.verdict == pv.DISAGREE and p.reason_code == "restated_copies_disagree"
+    assert "193468000000" in p.reason_text and "founder" in p.reason_text
+
+
+@pytest.mark.unit
+def test_components_sum_allows_sum_of_rounded_children_and_ignores_single_arc_groups():
+    s = structure()
+    kids = [
+        ("A1", "100000000000"),
+        ("A2", "100000000000"),
+        ("A3", "100000000000"),
+        ("A4", "50000000000"),
+        ("A5", "9243000000"),
+    ]
+    s.calc_groups["Assets"]["1"] = [(k, False) for k, _ in kids]
+    s.calc_children["Assets"] = s.calc_groups["Assets"]["1"]
+    for k, val in kids:
+        s.num[(k, DDATE, 0)].append(
+            NumValue(k, "us-gaap/2025", DDATE, 0, "USD", Decimal(val), -6)
+        )
+    p = pv.prove_cell(shown("total_assets_resolved", "359241000000", "I"), s, "2025q4")
+    assert p.checks["components_sum"]["status"] == "pass"
+    s2 = structure()
+    s2.calc_groups["NetIncomeLoss"]["14"] = [("ProfitLoss", False)]
+    s2.calc_children["NetIncomeLoss"] = s2.calc_groups["NetIncomeLoss"]["14"]
+    s2.num[("ProfitLoss", DDATE, 4)].append(
+        NumValue("ProfitLoss", "us-gaap/2025", DDATE, 4, "USD", Decimal("1"), -6)
     )
-    assert (
-        "193468000000" in p.reason_text
-        and p.position_accession == "0001564590-17-014900"
-    )
+    p2 = pv.prove_cell(shown("net_income_resolved", "112010000000"), s2, "2025q4")
+    assert p2.verdict == pv.PROVEN and p2.checks["components_sum"]["status"] == "n/a"
