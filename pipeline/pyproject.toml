@@ -39,6 +39,7 @@ scrooner-yfinance-financials = "scrooner_pipeline.jobs.yfinance_financials:app"
 scrooner-frames-check = "scrooner_pipeline.jobs.frames_check:app"
 scrooner-incidents = "scrooner_pipeline.jobs.incidents:app"
 scrooner-certify = "scrooner_pipeline.jobs.certify:app"
+scrooner-proof = "scrooner_pipeline.jobs.proof:app"
 
 [dependency-groups]
 dev = [
