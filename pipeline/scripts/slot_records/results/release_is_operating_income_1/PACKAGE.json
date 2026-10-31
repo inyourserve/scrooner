@@ -1,0 +1,80 @@
+{
+ "rule_id": "slot.is_operating_income@1",
+ "family": "income statement: operating_income_resolved",
+ "status": "dry run; flag OFF; nothing written to the database",
+ "release1": {
+  "file": "is_operating_income_release1_cells.jsonl",
+  "sha256": "64f05d7083781a6d0a43416f3082ee718315e1d0e56cf9b7cb69705e6a962ee4",
+  "cells": 63,
+  "companies": 37,
+  "by_compare": {
+   "slot_differs": 62,
+   "slot_fills_blank": 1
+  },
+  "before_image": {
+   "file": "is_operating_income_r1_before_image.jsonl",
+   "rows": 62,
+   "sha256": "1f1c157cd6bfdc8e84aae7e5a5fc416702ed22c4143ef1b6212c06ebf8ce790c"
+  },
+  "rollback": {
+   "file": "is_operating_income_r1_rollback.sql",
+   "sha256": "2c6901e4bdf2f9f79370012f3f0ccad08b276781c25963697d30a6da2f2f805c",
+   "note": "generated, run in one transaction by the Release Manager only"
+  },
+  "stale_vs_live": 0,
+  "touched_ciks": "is_operating_income_r1_touched_ciks.txt",
+  "verifier_strata": {
+   "plain_face": 63
+  }
+ },
+ "precision_stratum": {
+  "file": "is_operating_income_precision_cells.jsonl",
+  "sha256": "78a523228ce84ae0c11a117930c2787f920b670474117589ddf7056c82d8758a",
+  "cells": 767,
+  "companies": 179,
+  "by_compare": {
+   "prod_less_precise": 719,
+   "differs_within_rounding": 48
+  },
+  "status": "not wrong values; ship only if the Verifier and founder want full precision"
+ },
+ "hide_stratum": {
+  "file": "is_operating_income_hide_cells.jsonl",
+  "sha256": "d2915ef8200bc756b5cf57e53b7fb25342ae59b68a9b158c22575bdb98944be2",
+  "cells": 4056,
+  "companies": 461,
+  "by_compare": {
+   "would_hide": 4056
+  },
+  "status": "founder ruling (restated copies disagree -> hidden); needs its own Verifier stratum"
+ },
+ "holds_production_stays": {
+  "prod_only_q4_not_a_face_column": 7152,
+  "prod_only_filing_held": 4986,
+  "hold_sector_bank": 3711,
+  "prod_only_not_a_face_column": 517,
+  "hold_label_before_tax": 12,
+  "hold_position_below_pretax": 4
+ },
+ "flag": {
+  "convention": "SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.is_operating_income@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image and rollback"
+ },
+ "evidence_per_cell": "accession (original filing), slot_tag, printed label, gate (G1 printed line | G2 NCI identity | G1b ProfitLoss without NCI), copies agreeing; slot records is_<family>_records.jsonl",
+ "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks",
+ "resolver_guard": {
+  "migration": "pipeline/db/migrations/0113_slot_protected_cell.sql (provisional number, NOT applied)",
+  "write_path_contract": "in the SAME transaction as each written cell: set local scrooner.slot_writer = 'on'; insert analytics.slot_protected_cell (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)",
+  "effect": "every nightly resolver write to a protected cell is skipped and logged in analytics.slot_protected_write_skipped",
+  "test": "pipeline/scripts/slot_records/test_slot_guard.sh (throwaway local cluster; 15 checks; 7 fail with the trigger neutered)"
+ },
+ "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row",
+ "verifier": {
+  "verdict": "YES",
+  "draw": "10 of 10 YES",
+  "branch": "verify/income-statement-r1-2026-11-01",
+  "verified_cells_sha256": "4c93497e9ee4c226e21606b37bf0b797ba9099b0a22bf38172e78b39af90e7b6",
+  "recut": "re-cut 2026-10-31: 16 Q2-2026 fills at 8 companies removed because production now shows the same filed values (resolve lag closed; is_release_check refused the original 79-cell file); the 63 remaining cells are a subset of the verified 79"
+ }
+}

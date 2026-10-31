@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0112** (0101 = company_slot_record, renumbered from the 0110 claim on 2026-10-26 so CI's contiguity check stays green; 0102-0110 claimed, files not on main; 0111 ALREADY APPLIED in production, see its row). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
+**Next free number: 0112** (0113 is claimed, see its row) (0101 = company_slot_record, renumbered from the 0110 claim on 2026-10-26 so CI's contiguity check stays green; 0102-0110 claimed, files not on main; 0111 ALREADY APPLIED in production, see its row). Claim a number here BEFORE writing the file, and never skip one: `scripts/check_migrations.py` requires 0001..N contiguous, and a gap turns CI red for everyone.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -66,6 +66,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0108 | Data Engineer (lane 3) | ADS tables (first of two; renumbered from an earlier claim) | claimed, not written/not applied |
 | 0109 | Data Engineer (lane 3) | ADS tables (second of two) | claimed, not written/not applied |
 | 0110 | (released) | formerly claimed by scrooner-25 for company_slot_record; renumbered to 0101 | free for re-claim after 0102-0109 |
+| 0113 | scrooner-d2 (income statement lane) | `analytics.slot_protected_cell` resolver guard (file `0113_slot_protected_cell.sql` on branch work/income-statement/slot-records 642de0b) | claimed 2026-11-01, written, NOT applied, NOT on main (cannot land while 0102-0110 and 0112 are unwritten gaps); the IS release rollback SQL deletes from this table, so the guard must be applied before any IS write; applying needs the founder's typed words |
 
 ## scrooner-98 queue (lane A)
 
