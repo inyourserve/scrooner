@@ -101,6 +101,8 @@ from scrooner_pipeline.common.derivation_policy import (
     PER_SHARE_NOT_DERIVED_REASON,
     PERIODIC_FORMS_DOMESTIC,
 )
+from scrooner_pipeline.common import cell_store
+from scrooner_pipeline.common.cell_contract import CellKey
 from scrooner_pipeline.mapper import canonical_archive
 
 RULE_RATIO = "retire.derived_ratio_cells@1"
@@ -135,6 +137,9 @@ PROXY_FORMS = frozenset(
 ACT_REPLACE = "replace_with_filed_fact"
 ACT_REMOVE = "remove_with_reason"
 ACT_REVIEW = "review_not_retired"
+# family C only: the filed 3-month value read from the FSN num rows (bucket fsn-notes), no core.fact row; written
+# with empty source_fact_ids and its provenance (FSN period, accession, tag, axis) in analytics.cell_evidence
+ACT_REPLACE_FSN = "replace_with_fsn_value"
 
 REASON_TEXT = {
     "ratio_derived_no_filed_value": (
@@ -235,6 +240,9 @@ class CellPlan:
         int, ...
     ] = ()  # a re-derived quarter: the filed inputs
     note: str = ""
+    period_start: date | None = (
+        None  # family C FSN replacements: the cell key of the evidence row
+    )
 
     @property
     def reason_text(self) -> str | None:
@@ -286,6 +294,12 @@ class Plan:
                     str(c.replacement_value),
                     str(c.stored_value),
                     list(c.source_fact_ids),
+                )
+                # FSN replacements also pin the accession and locator (other families' digests are unchanged)
+                + (
+                    (c.replacement_accession, c.note)
+                    if c.action == ACT_REPLACE_FSN
+                    else ()
                 )
                 for c in self.cells
             ),
@@ -686,11 +700,14 @@ def plan_per_share_chunk(
     *,
     uids: list[int],
     priority_by_name: Mapping[str, Mapping[int, int]],
+    fsn: Mapping[int, Mapping[str, Any]] | None = None,
     core: str = "core",
     analytics: str = "analytics",
 ) -> Plan:
     """Family C: derived EPS facts and the cells they feed. ``priority_by_name``:
-    base canonical name -> {mapped concept id: priority}."""
+    base canonical name -> {mapped concept id: priority}. ``fsn``: canonical_fact id -> the FSN scan outcome of a
+    'not captured' cell (scripts/per_share/eps_fsn_scan.py): replace_with_fsn_value / fsn_copies_disagree, or
+    not_in_fsn with ``rejected_axes`` (a copy exists only on an entity/restatement/class axis: review)."""
     plan = Plan("C_per_share_derived", RULE_PER_SHARE)
     cids = sorted({cid for m in priority_by_name.values() for cid in m})
     cur.execute(_q(RATIO_FACTS_SQL, core), {"ids": ids, "cids": cids, "uids": uids})
@@ -748,11 +765,29 @@ def plan_per_share_chunk(
                          replacement_accession=chosen.accession)
             )  # fmt: skip
         else:
-            plan.cells.append(
-                CellPlan(**base, action=ACT_REMOVE,
-                         reason_code="per_share_filed_copies_disagree" if by_prio
-                         else per_share_reason(derived.fiscal_period, pend))
-            )  # fmt: skip
+            reason = (
+                "per_share_filed_copies_disagree"
+                if by_prio
+                else per_share_reason(derived.fiscal_period, pend)
+            )
+            got = (fsn or {}).get(cf_id) if reason == "per_share_not_captured" else None
+            if got and got["outcome"] == "replace_with_fsn_value":
+                plan.cells.append(
+                    CellPlan(**base, action=ACT_REPLACE_FSN, replacement_value=Decimal(got["value"]),
+                             replacement_form=got["form"], replacement_accession=got["accession"],
+                             period_start=date.fromisoformat(got["start"]),
+                             note=f"fsn-notes:{got['fsn_period']}/num;tag={got['tag']};qtrs=1;"
+                                  f"axis={got.get('axis') or 'none'};copies={got['copies']}")
+                )  # fmt: skip
+                continue
+            if got and got["outcome"] == "fsn_copies_disagree":
+                reason = "per_share_filed_copies_disagree"
+            elif got and got.get("rejected_axes"):
+                plan.cells.append(
+                    CellPlan(**base, action=ACT_REVIEW, note="filed only on a non-quarterly axis (entity/restatement/class)")
+                )  # fmt: skip
+                continue
+            plan.cells.append(CellPlan(**base, action=ACT_REMOVE, reason_code=reason))
     _metrics(cur, ids, plan, core, analytics)
     return plan
 
@@ -1928,6 +1963,37 @@ def apply_plan(
     # 2. cells
     replaces = [c for c in plan.cells if c.action == ACT_REPLACE]
     removes = [c for c in plan.cells if c.action == ACT_REMOVE]
+    fsn_cells = [c for c in plan.cells if c.action == ACT_REPLACE_FSN]
+    if fsn_cells:
+        s = canonical_archive.replace_rows(
+            cur,
+            [
+                canonical_archive.CanonicalRow(
+                    c.company_id, c.canonical_concept_id, c.period_id,
+                    c.replacement_value, (),  # type: ignore[arg-type]
+                )
+                for c in fsn_cells
+            ],
+            reason_code=f"{plan.rule_id}:replace_fsn",
+            run_id=run_id,
+            schema=analytics,
+        )  # fmt: skip
+        stats["cells_replaced"] += s["replaced"]
+        stats["cells_inserted"] += s["inserted"]
+        for c in fsn_cells:
+            assert c.period_end is not None and c.period_start is not None
+            cell_store.append_evidence(
+                cur.connection,
+                cell_store.EvidenceRecord(
+                    key=CellKey(c.company_id, c.concept.removesuffix("_resolved"), "Q", c.period_start, c.period_end),
+                    state_claimed="value", rule_id=plan.rule_id, evidence_kind="detector_audit",
+                    evidence_level="DATA-INFERRED", recorded_by="data_engineer",
+                    accession=c.replacement_accession, locator=c.note, detector_version="1",
+                    source_hash=expected_digest,
+                ),
+                import_key=hashlib.sha256(f"{run_id}|{c.canonical_fact_id}".encode()).hexdigest(),
+            )  # fmt: skip
+        stats["evidence_rows"] = len(fsn_cells)
     if replaces:
         s = canonical_archive.replace_rows(
             cur,
@@ -1983,6 +2049,22 @@ def restore(
 
 
 # ----------------------------------------------------------- dry-run driver
+def load_fsn_outcomes(path: Path) -> dict[int, dict[str, Any]]:
+    """canonical_fact id -> outcome, from eps_fsn_scan.py's nc_fsn_outcomes.json (FSN period from the filed date)."""
+    out: dict[int, dict[str, Any]] = {}
+    for x in json.loads(path.read_text()):
+        if x.get("filed"):
+            filed = date(
+                int(x["filed"][:4]), int(x["filed"][4:6]), int(x["filed"][6:8])
+            )
+            x["fsn_period"] = (
+                f"{filed.year}q{(filed.month - 1) // 3 + 1}" if filed < date(2025, 10, 1)
+                else f"{filed.year}m{filed.month:02d}"
+            )  # fmt: skip
+        out[int(x["canonical_fact_id"])] = x
+    return out
+
+
 def _cohort(path: Path) -> set[int]:
     with path.open() as fh:
         return {int(r["company_id"]) for r in csv.DictReader(fh) if not r["excluded"]}
@@ -2000,6 +2082,7 @@ def run_dry_run(
     log=lambda m: print(m, flush=True),
     face_labels=None,
     scale_for=None,
+    fsn_outcomes: Path | None = None,
 ) -> dict[str, Any]:
     """READ-ONLY. One connection. Writes CSV/JSON files into out_dir only."""
     cur = conn.cursor()
@@ -2024,6 +2107,7 @@ def run_dry_run(
     for name in EPS_CANONICAL:
         cur.execute(_q(MAPPED_CONCEPTS_SQL), {"name": name})
         eps_priority[name] = {r[0]: r[1] for r in cur.fetchall()}
+    fsn = load_fsn_outcomes(fsn_outcomes) if fsn_outcomes else None
     out_dir.mkdir(parents=True, exist_ok=True)
     plans: dict[str, list[Plan]] = {"A": [], "B": [], "C": []}
     t0 = time.time()
@@ -2037,7 +2121,9 @@ def run_dry_run(
             plans["B"].append(plan_proxy_chunk(cur, ids))
         if "C" in families:
             plans["C"].append(
-                plan_per_share_chunk(cur, ids, uids=uids, priority_by_name=eps_priority)
+                plan_per_share_chunk(
+                    cur, ids, uids=uids, priority_by_name=eps_priority, fsn=fsn
+                )
             )
         log(
             f"companies {min(i + chunk, len(company_ids))}/{len(company_ids)} {time.time() - t0:.0f}s"
@@ -2249,6 +2335,12 @@ def main(argv: list[str] | None = None) -> int:
         "--cohort-csv", default=None, help="doc/data-moat/team/top1000/shards.csv"
     )
     ap.add_argument("--ciks", default=None)
+    ap.add_argument(
+        "--fsn-outcomes",
+        type=Path,
+        default=None,
+        help="family C: eps_fsn_scan.py nc_fsn_outcomes.json",
+    )
     ap.add_argument("--chunk", type=int, default=100)
     ap.add_argument("--statement-timeout", default="60s")
     ap.add_argument(
@@ -2284,6 +2376,7 @@ def main(argv: list[str] | None = None) -> int:
             company_ids=ids,
             chunk=args.chunk,
             statement_timeout=args.statement_timeout,
+            fsn_outcomes=args.fsn_outcomes,
             **({} if args.no_face else _face_kwargs()),
         )
     print(json.dumps(summary, indent=2, default=str))
