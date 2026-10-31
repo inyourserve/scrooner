@@ -39,5 +39,5 @@
   "touched_ciks": "release1_fills_touched_ciks.txt",
   "flag": "SCROONER_RULES_ENABLED=slot.total_debt@1; default OFF"
  },
- "amzn_note": "AMZN 46 cells are v4 (after Verifier debt v3 fix: face lease line decomposes 77,297 = 67,220 + 10,077, finance leases from the note); the AMZN v4 values themselves have NOT been sampled by a Verifier yet"
+ "amzn_note": "AMZN 46 cells are v4 (after the Verifier debt v3 fix). Finance leases ADDED = the note total FinanceLeaseLiability (FY2023 12,109M = noncurrent 10,077M + current 2,032M; current sits in accrued expenses), recorded per cell in note_flag. 10,077M is used ONLY to prove the face line decomposes (Long-term lease liabilities 77,297 = operating 67,220 + finance noncurrent 10,077); it is never added on its own. FY2023 total = LTD noncurrent 58,314 + current maturities from the note 8,494 + finance leases 12,109 = 78,917M. AMZN v4 values queued for a Verifier draw (scrooner-bc) before any write."
 }
