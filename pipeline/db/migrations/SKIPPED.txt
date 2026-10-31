@@ -1,0 +1,13 @@
+# Migration numbers that are permanently skipped (decision of scrooner-0f, 2026-11-01).
+# scripts/check_migrations.py accepts exactly these numbers as gaps; any other gap fails CI.
+# Format: NNNN <reason>. Never reuse a number listed here. New work takes the next free number above 0113.
+0102 claimed for a thin cell_state table (branch work/data-engineer/lane2-cell-state-0102); never landed, released
+0103 claimed by an early lane plan, no file was ever written; released
+0104 claimed by an early lane plan, no file was ever written; released
+0105 claimed by an early lane plan, no file was ever written; released
+0106 claimed by an early lane plan, no file was ever written; released
+0107 claimed for expanded_ttm_rows_cleanup (branch work/data-engineer/lane2-ttm-row-cleanup); never applied or landed, released
+0108 claimed for the first ADS census table, never written; released
+0109 claimed for the second ADS census table, never written; released
+0110 formerly claimed for company_slot_record, which was renumbered to 0101; released
+0112 reserved as "next free" when 0111 and 0113 were applied or written out of order; never used, released
