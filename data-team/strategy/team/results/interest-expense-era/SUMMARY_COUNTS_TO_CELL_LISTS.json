@@ -1,79 +1,50 @@
 {
- "rule_draft": "interest_expense era rule (2024+ taxonomy tags), dry run, cohort v1.1, 2026-10-31",
  "cells": 3968,
- "companies": 494,
  "by_outcome": {
   "fill": {
-   "cells": 2287,
-   "companies": 312,
-   "file": "fill.csv",
-   "by_tag": {
-    "InterestExpenseNonoperating|nonbank": 1990,
-    "InterestExpenseOperating|bank": 297
-   }
+   "cells": 2606,
+   "companies": 347,
+   "file": "fill.csv"
   },
   "hold_label_unread": {
    "cells": 130,
    "companies": 130,
-   "file": "hold_label_unread.csv",
-   "by_tag": {
-    "InterestExpenseNonoperating|nonbank": 123,
-    "InterestExpenseOperating|bank": 7
-   }
+   "file": "hold_label_unread.csv"
   },
   "hold_net_label": {
-   "cells": 282,
-   "companies": 42,
-   "file": "hold_net_label.csv",
-   "by_tag": {
-    "InterestExpenseNonoperating|nonbank": 282
-   }
+   "cells": 291,
+   "companies": 43,
+   "file": "hold_net_label.csv"
   },
   "hold_no_overlap": {
-   "cells": 633,
-   "companies": 71,
-   "file": "hold_no_overlap.csv",
-   "by_tag": {
-    "InterestExpenseNonoperating|nonbank": 629,
-    "InterestExpenseOperating|bank": 4
-   }
+   "cells": 305,
+   "companies": 46,
+   "file": "hold_no_overlap.csv"
   },
   "hold_nonbank_ieo": {
    "cells": 268,
    "companies": 37,
-   "file": "hold_nonbank_ieo.csv",
-   "by_tag": {
-    "InterestExpenseOperating|nonbank": 268
-   }
+   "file": "hold_nonbank_ieo.csv"
   },
   "hold_not_on_face": {
    "cells": 173,
    "companies": 30,
-   "file": "hold_not_on_face.csv",
-   "by_tag": {
-    "InterestExpenseNonoperating|nonbank": 173
-   }
+   "file": "hold_not_on_face.csv"
   },
   "hold_perimeter": {
    "cells": 119,
    "companies": 18,
-   "file": "hold_perimeter.csv",
-   "by_tag": {
-    "InterestExpenseNonoperating|nonbank": 110,
-    "InterestExpenseOperating|bank": 9
-   }
+   "file": "hold_perimeter.csv"
   },
   "hold_sign": {
    "cells": 76,
    "companies": 27,
-   "file": "hold_sign.csv",
-   "by_tag": {
-    "InterestExpenseNonoperating|nonbank": 76
-   }
+   "file": "hold_sign.csv"
   }
  },
- "fill_by_months": {
-  "12": 564,
-  "3": 1723
+ "changed_vs_release1_425842": {
+  "added": 328,
+  "removed": 9,
+  "file": "changed_fills_vs_release1_425842.csv"
  }
 }

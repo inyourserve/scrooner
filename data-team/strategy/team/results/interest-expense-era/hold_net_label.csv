@@ -1,283 +1,292 @@
-company_id,cik,bank,period_id,start,end,months,tag,value,accession,fact_id,outcome,label_check,label
-95,0000003453,False,5593,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,6800000,0001104659-26-020944,579238,hold_net_label,net_label,"Interest expense, net"
-95,0000003453,False,5755,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,1600000,0001104659-26-055178,579239,hold_net_label,net_label,"Interest expense, net"
-95,0000003453,False,5803,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,1600000,0001104659-26-090003,579241,hold_net_label,net_label,"Interest expense, net"
-105,0000004281,False,12529,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,49000000,0000004281-24-000026,1083368,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14898,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,1716000000,0000006201-26-000014,1324548,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14923,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,428000000,0000006201-25-000023,1324540,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14939,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,397000000,0000006201-26-000032,1324549,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14942,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,1934000000,0000006201-25-000010,1324538,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14945,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,432000000,0000006201-25-000052,1324547,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14960,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,409000000,0000006201-26-000052,1324551,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14964,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,480000000,0000006201-24-000060,1324536,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,14976,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,486000000,0000006201-24-000048,1324532,hold_net_label,net_label,"Interest expense, net"
-123,0000006201,False,15042,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,433000000,0000006201-25-000038,1324544,hold_net_label,net_label,"Interest expense, net"
-175,0000008858,False,9374,2025-12-28,2026-03-28,3,InterestExpenseNonoperating,63138000,0000008858-26-000042,1575950,hold_net_label,net_label,"Interest and other financing expenses, net"
-175,0000008858,False,9428,2024-12-29,2025-03-29,3,InterestExpenseNonoperating,61115000,0000008858-25-000018,1575943,hold_net_label,net_label,"Interest and other financing expenses, net"
-175,0000008858,False,9477,2024-06-30,2024-09-28,3,InterestExpenseNonoperating,64444000,0000008858-24-000041,1575935,hold_net_label,net_label,"Interest and other financing expenses, net"
-175,0000008858,False,9487,2024-06-30,2025-06-28,12,InterestExpenseNonoperating,246402000,0000008858-25-000028,1575945,hold_net_label,net_label,"Interest and other financing expenses, net"
-175,0000008858,False,9496,2025-06-29,2025-09-27,3,InterestExpenseNonoperating,59762000,0000008858-25-000066,1575946,hold_net_label,net_label,"Interest and other financing expenses, net"
-175,0000008858,False,9526,2024-09-29,2024-12-28,3,InterestExpenseNonoperating,62399000,0000008858-25-000009,1575939,hold_net_label,net_label,"Interest and other financing expenses, net"
-175,0000008858,False,9573,2025-09-28,2025-12-27,3,InterestExpenseNonoperating,61358000,0000008858-26-000025,1575948,hold_net_label,net_label,"Interest and other financing expenses, net"
-175,0000008858,False,9622,2025-06-29,2026-06-27,12,InterestExpenseNonoperating,250715000,0001104659-26-096346,7786416,hold_net_label,net_label,"Interest and other financing expenses, net"
-231,0000016058,False,21780,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,45117000,0000016058-25-000053,1877982,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21793,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,52267000,0001628280-26-026802,1877990,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21797,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,46173000,0000016058-25-000087,1877986,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21798,2025-07-01,2026-06-30,12,InterestExpenseNonoperating,215454000,0001628280-26-054195,1877991,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21819,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,23970000,0000016058-24-000199,1877974,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21832,2025-10-01,2025-12-31,3,InterestExpenseNonoperating,44950000,0001628280-26-003026,1877988,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21876,2023-07-01,2024-06-30,12,InterestExpenseNonoperating,105059000,0000016058-24-000132,1877971,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21890,2024-07-01,2025-06-30,12,InterestExpenseNonoperating,158844000,0001628280-25-038739,1877984,hold_net_label,net_label,"Interest expense and other, net"
-231,0000016058,False,21927,2024-10-01,2024-12-31,3,InterestExpenseNonoperating,44066000,0000016058-25-000032,1877978,hold_net_label,net_label,"Interest expense and other, net"
-249,0000017843,False,22703,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,8700000,0000017843-26-000014,1958696,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22708,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,11500000,0000017843-25-000029,1958692,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22709,2025-07-01,2026-06-30,12,InterestExpenseNonoperating,37800000,0000017843-26-000034,1958697,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22716,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,12000000,0000017843-25-000011,1958688,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22731,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,12400000,0000017843-24-000017,1958680,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22745,2025-10-01,2025-12-31,3,InterestExpenseNonoperating,10200000,0000017843-26-000009,1958694,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22787,2023-07-01,2024-06-30,12,InterestExpenseNonoperating,51000000,0000017843-24-000014,1958677,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22802,2024-07-01,2025-06-30,12,InterestExpenseNonoperating,48400000,0000017843-25-000021,1958690,hold_net_label,net_label,"Interest expense, net"
-249,0000017843,False,22832,2024-10-01,2024-12-31,3,InterestExpenseNonoperating,12200000,0000017843-25-000003,1958684,hold_net_label,net_label,"Interest expense, net"
-269,0000020212,False,24603,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,297700000,0000020212-26-000025,2146036,hold_net_label,net_label,"Interest expense, net"
-269,0000020212,False,24644,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,72000000,0000020212-26-000043,2146037,hold_net_label,net_label,"Interest expense, net"
-269,0000020212,False,24646,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,289800000,0000020212-25-000051,2146026,hold_net_label,net_label,"Interest expense, net"
-269,0000020212,False,24663,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,70000000,0000020212-26-000059,2146039,hold_net_label,net_label,"Interest expense, net"
-269,0000020212,False,24665,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,73100000,0000020212-24-000116,2146024,hold_net_label,net_label,"Interest expense, net"
-269,0000020212,False,24674,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,73500000,0000020212-24-000105,2146020,hold_net_label,net_label,"Interest expense, net"
-327,0000027419,False,28892,2025-05-04,2025-08-02,3,InterestExpenseNonoperating,116000000,0000027419-26-000042,123257625,hold_net_label,net_label,Net interest expense
-327,0000027419,False,28902,2024-05-05,2024-08-03,3,InterestExpenseNonoperating,110000000,0000027419-24-000152,2536043,hold_net_label,net_label,Net interest expense
-327,0000027419,False,28946,2025-02-02,2026-01-31,12,InterestExpenseNonoperating,445000000,0000027419-26-000016,2536057,hold_net_label,net_label,Net interest expense
-327,0000027419,False,28951,2025-08-03,2025-11-01,3,InterestExpenseNonoperating,115000000,0000027419-25-000126,2536056,hold_net_label,net_label,Net interest expense
-327,0000027419,False,28962,2026-02-01,2026-05-02,3,InterestExpenseNonoperating,117000000,0000027419-26-000022,2536058,hold_net_label,net_label,Net interest expense
-327,0000027419,False,28994,2024-08-04,2024-11-02,3,InterestExpenseNonoperating,105000000,0000027419-24-000179,2536047,hold_net_label,net_label,Net interest expense
-327,0000027419,False,29052,2024-02-04,2025-02-01,12,InterestExpenseNonoperating,411000000,0000027419-25-000018,2536049,hold_net_label,net_label,Net interest expense
-327,0000027419,False,29148,2025-02-02,2025-05-03,3,InterestExpenseNonoperating,116000000,0000027419-25-000101,2536051,hold_net_label,net_label,Net interest expense
-327,0000027419,False,3293156,2026-05-03,2026-08-01,3,InterestExpenseNonoperating,98000000,0000027419-26-000042,123257631,hold_net_label,net_label,Net interest expense
-375,0000033213,False,52634,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,454825000,0000033213-25-000011,2800276,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52639,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,438695000,0000033213-26-000018,2800286,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52643,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,109929000,0000033213-25-000049,2800285,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52694,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,105668000,0000033213-25-000033,2800282,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52699,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,55720000,0000033213-24-000032,2800270,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52717,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,96777000,0000033213-26-000030,2800287,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52790,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,117569000,0000033213-25-000023,2800278,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52822,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,158299000,0000033213-24-000047,2800274,hold_net_label,net_label,"Interest expense, net"
-375,0000033213,False,52869,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,75452000,0000033213-26-000043,2800289,hold_net_label,net_label,"Interest expense, net"
-606,0000040211,False,160780,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,94900000,0000040211-25-000045,12553441,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170140,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,40342000,0000040987-25-000196,13690704,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170150,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,40211000,0000040987-25-000144,13690700,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170194,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,37216000,0000040987-25-000070,13690694,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170196,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,21921000,0000040987-24-000178,13690669,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170211,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,163506000,0000040987-26-000003,13690705,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170307,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,96827000,0000040987-25-000026,13690690,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170349,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,43953000,0000040987-26-000017,13690723,hold_net_label,net_label,"Interest expense, net"
-612,0000040987,False,170362,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,27818000,0000040987-24-000210,13690677,hold_net_label,net_label,"Interest expense, net"
-684,0000064040,False,123616,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,79000000,0000064040-25-000167,10220090,hold_net_label,net_label,"Interest expense, net"
-684,0000064040,False,123621,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,297000000,0000064040-26-000013,10220062,hold_net_label,net_label,"Interest expense, net"
-684,0000064040,False,123735,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,96000000,0000064040-26-000024,10220095,hold_net_label,net_label,"Interest expense, net"
-684,0000064040,False,123764,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,77000000,0000064040-25-000147,10220071,hold_net_label,net_label,"Interest expense, net"
-684,0000064040,False,123808,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,287000000,0000064040-26-000013,10220093,hold_net_label,net_label,"Interest expense, net"
-684,0000064040,False,5765394,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,87000000,0000064040-26-000045,331028908,hold_net_label,net_label,"Interest expense, net"
-1144,0000105770,False,92169,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,400000,0000105770-25-000036,7171929,hold_net_label,net_label,"Interest expense, net"
-1144,0000105770,False,92175,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,1900000,0000105770-26-000049,7171948,hold_net_label,net_label,"Interest expense, net"
-1144,0000105770,False,92197,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,2600000,0000105770-26-000099,7171952,hold_net_label,net_label,"Interest expense, net"
-1144,0000105770,False,92211,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,100000,0000105770-25-000065,7171937,hold_net_label,net_label,"Interest expense, net"
-1144,0000105770,False,92266,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,1500000,0000105770-24-000066,7171917,hold_net_label,net_label,"Interest expense, net"
-1144,0000105770,False,92306,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,200000,0000105770-25-000093,7171943,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172566,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,21258000,0000717423-24-000038,15608760,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172640,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,24726000,0001628280-25-049670,15608782,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172656,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,105926000,0000717423-25-000006,15608764,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172663,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,23523000,0000717423-25-000014,15608768,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172685,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,28977000,0001628280-26-031370,15608786,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172698,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,20986000,0000717423-24-000026,15608752,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172715,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,96072000,0001628280-26-011709,15608784,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172794,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,25053000,0000717423-25-000031,15608776,hold_net_label,net_label,"Interest expense, net"
-1296,0000717423,False,172825,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,24917000,0001628280-26-053437,15608790,hold_net_label,net_label,"Interest expense, net"
-1343,0000728535,False,238761,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,16768000,0001437749-26-024397,17384511,hold_net_label,net_label,Net interest expense
-1343,0000728535,False,238788,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,18597000,0001437749-25-013085,17384453,hold_net_label,net_label,Net interest expense
-1343,0000728535,False,238850,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,17871000,0001437749-25-031696,17384502,hold_net_label,net_label,Net interest expense
-1343,0000728535,False,238868,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,21285000,0001437749-25-023379,17384461,hold_net_label,net_label,Net interest expense
-1343,0000728535,False,238986,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,17900000,0001437749-26-013300,17384507,hold_net_label,net_label,Net interest expense
-1388,0000749251,False,309435,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,22266000,0000749251-26-000245,23609658,hold_net_label,net_label,"Interest expense, net"
-1388,0000749251,False,309465,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,13413000,0000749251-25-000028,23609631,hold_net_label,net_label,"Interest expense, net"
-1388,0000749251,False,309476,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,19990000,0000749251-24-000035,23609593,hold_net_label,net_label,"Interest expense, net"
-1388,0000749251,False,309522,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,16279000,0000749251-25-000082,23609644,hold_net_label,net_label,"Interest expense, net"
-1388,0000749251,False,309540,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,11801000,0000749251-25-000046,23609639,hold_net_label,net_label,"Interest expense, net"
-1388,0000749251,False,309625,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,17961000,0000749251-24-000041,23609612,hold_net_label,net_label,"Interest expense, net"
-1388,0000749251,False,309662,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,21048000,0000749251-26-000167,23609654,hold_net_label,net_label,"Interest expense, net"
-1469,0000790051,False,281026,2023-01-01,2023-12-31,12,InterestExpenseNonoperating,75600000,0000790051-25-000077,23676317,hold_net_label,net_label,"Interest expense, net"
-1469,0000790051,False,281069,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,18800000,0000790051-24-000166,23676327,hold_net_label,net_label,"Interest expense, net"
-1469,0000790051,False,281130,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,73300000,0000790051-25-000077,23676353,hold_net_label,net_label,"Interest expense, net"
-1469,0000790051,False,281303,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,18600000,0000790051-24-000198,23676349,hold_net_label,net_label,"Interest expense, net"
-1469,0000790051,False,281341,2022-01-01,2022-12-31,12,InterestExpenseNonoperating,85900000,0000790051-25-000077,23676290,hold_net_label,net_label,"Interest expense, net"
-1538,0000814547,False,235841,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,59877000,0000814547-26-000030,20220586,hold_net_label,net_label,"Interest expense, net"
-1538,0000814547,False,235848,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,32899000,0000814547-25-000022,20220547,hold_net_label,net_label,"Interest expense, net"
-1538,0000814547,False,235925,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,44579000,0000814547-26-000021,20220584,hold_net_label,net_label,"Interest expense, net"
-1538,0000814547,False,235982,2025-10-01,2025-12-31,3,InterestExpenseNonoperating,42006000,0000814547-26-000011,20220553,hold_net_label,net_label,"Interest expense, net"
-1538,0000814547,False,235989,2024-10-01,2025-09-30,12,InterestExpenseNonoperating,133647000,0000814547-25-000030,20220551,hold_net_label,net_label,"Interest expense, net"
-1560,0000821189,False,270781,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,71000000,0000821189-25-000131,23115927,hold_net_label,net_label,"Interest Expense, Net"
-1560,0000821189,False,270809,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,31000000,0000821189-24-000049,23115870,hold_net_label,net_label,"Interest Expense, Net"
-1560,0000821189,False,270848,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,36000000,0000821189-24-000031,23115864,hold_net_label,net_label,"Interest Expense, Net"
-1588,0000831641,False,315810,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,9912000,0000831641-25-000023,26666303,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,315815,2025-09-29,2025-12-28,3,InterestExpenseNonoperating,7128000,0000831641-26-000005,26666370,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,315836,2024-09-30,2024-12-29,3,InterestExpenseNonoperating,7218000,0000831641-25-000005,26666309,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,315866,2025-03-31,2025-06-29,3,InterestExpenseNonoperating,8288000,0000831641-25-000023,26666335,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,315880,2023-10-02,2023-12-31,3,InterestExpenseNonoperating,9577000,0000831641-25-000005,26666281,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,315904,2026-03-30,2026-06-28,3,InterestExpenseNonoperating,7158000,0000831641-26-000017,26666377,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,315955,2025-12-29,2026-03-29,3,InterestExpenseNonoperating,8838000,0000831641-26-000011,26666374,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,315984,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,9883000,0000831641-25-000019,26666299,hold_net_label,net_label,"Interest expense, net"
-1588,0000831641,False,316053,2024-12-30,2025-03-30,3,InterestExpenseNonoperating,8491000,0000831641-25-000019,26666328,hold_net_label,net_label,"Interest expense, net"
-1589,0000832101,False,317195,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,10300000,0000832101-24-000055,26820429,hold_net_label,net_label,Interest expense  net
-1611,0000842162,False,351085,2026-04-05,2026-07-04,3,InterestExpenseNonoperating,24200000,0000842162-26-000068,29617144,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351155,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,100800000,0000842162-26-000011,29617138,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351156,2026-01-01,2026-04-04,3,InterestExpenseNonoperating,25600000,0000842162-26-000038,29617140,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351207,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,106200000,0000842162-25-000010,29617081,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351217,2025-03-30,2025-06-28,3,InterestExpenseNonoperating,25400000,0000842162-25-000060,29617113,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351218,2025-01-01,2025-03-29,3,InterestExpenseNonoperating,25800000,0000842162-25-000042,29617104,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351317,2025-06-29,2025-09-27,3,InterestExpenseNonoperating,24600000,0000842162-25-000076,29617119,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351347,2024-06-30,2024-09-28,3,InterestExpenseNonoperating,26500000,0000842162-24-000062,29617077,hold_net_label,net_label,"Interest expense, net"
-1611,0000842162,False,351389,2024-03-31,2024-06-29,3,InterestExpenseNonoperating,26900000,0000842162-24-000049,29617070,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,237995,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,79100000,0000882835-25-000036,20230530,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,238031,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,259200000,0000882835-25-000008,20230504,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,238119,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,99300000,0000882835-26-000019,20230564,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,238128,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,62900000,0000882835-25-000020,20230524,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,238136,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,111400000,0000882835-26-000036,20230568,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,238145,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,89700000,0000882835-25-000045,20230536,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,238157,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,325000000,0000882835-26-000009,20230562,hold_net_label,net_label,"Interest expense, net"
-1737,0000882835,False,238170,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,67700000,0000882835-24-000044,20230482,hold_net_label,net_label,"Interest expense, net"
-1898,0000916365,False,336975,2024-12-29,2025-03-29,3,InterestExpenseNonoperating,19641000,0000916365-25-000089,29898578,hold_net_label,net_label,"Interest expense, net"
-1898,0000916365,False,337044,2025-12-28,2026-03-28,3,InterestExpenseNonoperating,19108000,0000916365-26-000024,29898620,hold_net_label,net_label,"Interest expense, net"
-1898,0000916365,False,337096,2026-03-29,2026-06-27,3,InterestExpenseNonoperating,17103000,0000916365-26-000059,29898650,hold_net_label,net_label,"Interest expense, net"
-1898,0000916365,False,337157,2024-06-30,2024-09-28,3,InterestExpenseNonoperating,13875000,0000916365-24-000110,29898571,hold_net_label,net_label,"Interest expense, net"
-1898,0000916365,False,337190,2025-06-29,2025-09-27,3,InterestExpenseNonoperating,14667000,0000916365-25-000163,29898618,hold_net_label,net_label,"Interest expense, net"
-1898,0000916365,False,337194,2025-03-30,2025-06-28,3,InterestExpenseNonoperating,17983000,0000916365-25-000150,29898613,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344769,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,108904000,0001558370-25-000803,30509485,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344771,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,134612000,0000917251-26-000013,30509534,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344835,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,35970000,0000917251-26-000047,30509536,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344843,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,28942000,0001558370-24-013452,30509481,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344857,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,32274000,0001558370-25-009887,30509512,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344905,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,26416000,0001558370-24-009974,30509474,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344914,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,35212000,0001104659-25-101233,30509532,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,344922,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,30764000,0001558370-25-005142,30509506,hold_net_label,net_label,"Interest expense, net"
-1903,0000917251,False,345006,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,40278000,0000917251-26-000063,30509541,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926027,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,9846000,0001801368-26-000029,69759908,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926037,2023-07-01,2023-09-30,3,InterestExpenseNonoperating,1396000,0001801368-24-000087,69759873,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926039,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,8566000,0001801368-25-000054,69759906,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926041,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,9703000,0001801368-26-000048,69759910,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926053,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,2857000,0001801368-24-000045,69759879,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926082,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,7615000,0001801368-25-000019,69759895,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926088,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,6646000,0001801368-24-000087,69759887,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926089,2023-04-01,2023-06-30,3,InterestExpenseNonoperating,1392000,0001801368-24-000066,69759869,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926090,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,31481000,0001801368-26-000008,69759907,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926099,2023-01-01,2023-03-31,3,InterestExpenseNonoperating,1359000,0001801368-24-000045,69759866,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926110,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,6745000,0001801368-24-000066,69759883,hold_net_label,net_label,"Interest expense, net"
-2059,0001801368,False,926127,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,5414000,0001801368-25-000028,69759902,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957017,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,118000000,0001868275-25-000073,71893994,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957033,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,253000000,0001868275-26-000067,71894004,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957035,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,142000000,0001868275-24-000054,71893976,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957042,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,283000000,0001868275-26-000104,71894006,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957047,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,134000000,0001868275-25-000092,71894001,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957068,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,146000000,0001868275-25-000044,71893987,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957070,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,506000000,0001868275-25-000023,71893984,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957072,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,147000000,0001868275-24-000069,71893981,hold_net_label,net_label,"Interest expense, net"
-3240,0001868275,False,957083,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,511000000,0001868275-26-000032,71894002,hold_net_label,net_label,"Interest expense, net"
-3385,0001094285,False,436286,2025-12-29,2026-03-29,3,InterestExpenseNonoperating,12300000,0001094285-26-000030,35803783,hold_net_label,net_label,"Interest and debt income (expense), net"
-3385,0001094285,False,436361,2025-06-30,2025-09-28,3,InterestExpenseNonoperating,12600000,0001094285-25-000140,35803780,hold_net_label,net_label,"Interest and debt income (expense), net"
-3385,0001094285,False,436443,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,15800000,0001094285-24-000090,35803712,hold_net_label,net_label,"Interest and debt income (expense), net"
-3385,0001094285,False,436447,2024-07-01,2024-09-29,3,InterestExpenseNonoperating,15700000,0001094285-24-000104,35803742,hold_net_label,net_label,"Interest and debt income (expense), net"
-3385,0001094285,False,436469,2026-03-30,2026-06-28,3,InterestExpenseNonoperating,13600000,0001094285-26-000043,35803786,hold_net_label,net_label,"Interest and debt income (expense), net"
-3385,0001094285,False,436481,2025-03-31,2025-06-29,3,InterestExpenseNonoperating,17600000,0001094285-25-000131,35803775,hold_net_label,net_label,"Interest and debt income (expense), net"
-3385,0001094285,False,436521,2024-12-30,2025-03-30,3,InterestExpenseNonoperating,17300000,0001094285-25-000105,35803762,hold_net_label,net_label,"Interest and debt income (expense), net"
-3607,0001111711,False,376690,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,132800000,0001111711-25-000020,33068618,hold_net_label,net_label,"Interest expense, net"
-3607,0001111711,False,376705,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,517200000,0001111711-25-000008,33068614,hold_net_label,net_label,"Interest expense, net"
-3607,0001111711,False,376711,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,139100000,0001111711-25-000036,33068643,hold_net_label,net_label,"Interest expense, net"
-3607,0001111711,False,376724,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,639000000,0001111711-26-000027,33068650,hold_net_label,net_label,"Interest expense, net"
-3607,0001111711,False,376727,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,191600000,0001111711-26-000045,33068651,hold_net_label,net_label,"Interest expense, net"
-3607,0001111711,False,376758,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,179800000,0001111711-25-000055,33068648,hold_net_label,net_label,"Interest expense, net"
-3607,0001111711,False,376907,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,199200000,0001111711-26-000088,33068655,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,847922,2025-04-26,2025-07-25,3,InterestExpenseNonoperating,176000000,0001613103-25-000161,64887402,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,847927,2025-04-26,2026-04-24,12,InterestExpenseNonoperating,715000000,0001628280-26-044354,64887423,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,847958,2024-04-27,2024-07-26,3,InterestExpenseNonoperating,167000000,0001613103-24-000147,64887372,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,847959,2025-07-26,2025-10-24,3,InterestExpenseNonoperating,181000000,0001628280-25-053988,64887418,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,847968,2024-10-26,2025-01-24,3,InterestExpenseNonoperating,179000000,0001613103-25-000022,64887398,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,848022,2024-07-27,2024-10-25,3,InterestExpenseNonoperating,209000000,0001613103-24-000165,64887394,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,848039,2024-04-27,2025-04-25,12,InterestExpenseNonoperating,729000000,0001613103-25-000091,64887400,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,848092,2025-10-25,2026-01-23,3,InterestExpenseNonoperating,181000000,0001628280-26-011107,64887421,hold_net_label,net_label,"Interest expense, net"
-3639,0001613103,False,3648416,2026-04-25,2026-07-31,3,InterestExpenseNonoperating,186000000,0001628280-26-060473,128033205,hold_net_label,net_label,"Interest expense, net"
-3678,0001616862,False,861470,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,50000000,0001616862-24-000056,65917629,hold_net_label,net_label,"Interest expense, net"
-3678,0001616862,False,861536,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,45000000,0001628280-25-047015,65917653,hold_net_label,net_label,"Interest expense, net"
-3678,0001616862,False,861549,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,44000000,0001616862-25-000022,65917644,hold_net_label,net_label,"Interest expense, net"
-3678,0001616862,False,861556,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,54000000,0001616862-24-000065,65917636,hold_net_label,net_label,"Interest expense, net"
-3678,0001616862,False,861597,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,45000000,0001616862-25-000037,65917650,hold_net_label,net_label,"Interest expense, net"
-3678,0001616862,False,861668,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,38000000,0001628280-26-028698,65917657,hold_net_label,net_label,"Interest expense, net"
-3678,0001616862,False,5951554,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,37000000,0001628280-26-050466,345762256,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482670,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,80000000,0001136893-25-000056,41218824,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482766,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,43000000,0001136893-25-000117,41218796,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482779,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,110000000,0001136893-25-000117,41218828,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482810,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,64000000,0001136893-25-000128,41218800,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482827,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,197000000,0001136893-26-000040,41218863,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482856,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,200000000,0001136893-26-000050,41218880,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482913,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,77000000,0001136893-25-000056,41218784,hold_net_label,net_label,"Interest expense, net"
-3873,0001136893,False,482944,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,90000000,0001136893-25-000128,41218831,hold_net_label,net_label,"Interest expense, net"
-3880,0001967680,False,980023,2025-07-05,2025-10-03,3,InterestExpenseNonoperating,21000000,0001967680-25-000136,72986267,hold_net_label,net_label,"Interest expense, net"
-3880,0001967680,False,980026,2024-06-29,2024-09-27,3,InterestExpenseNonoperating,27000000,0001967680-24-000137,72986258,hold_net_label,net_label,"Interest expense, net"
-3880,0001967680,False,980033,2025-01-01,2025-04-04,3,InterestExpenseNonoperating,27000000,0001967680-25-000067,72986262,hold_net_label,net_label,"Interest expense, net"
-3880,0001967680,False,980034,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,113000000,0001967680-25-000008,72986260,hold_net_label,net_label,"Interest expense, net"
-3880,0001967680,False,980036,2026-01-01,2026-04-03,3,InterestExpenseNonoperating,24000000,0001967680-26-000024,72986269,hold_net_label,net_label,"Interest expense, net"
-3880,0001967680,False,980051,2025-04-05,2025-07-04,3,InterestExpenseNonoperating,28000000,0001967680-25-000125,72986265,hold_net_label,net_label,"Interest expense, net"
-3880,0001967680,False,980059,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,96000000,0001967680-26-000011,72986268,hold_net_label,net_label,"Interest expense, net"
-3966,0001145197,False,518934,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,11000000,0001145197-24-000039,43997589,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,640909,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,134800000,0001206264-25-000058,50212386,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,640944,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,30800000,0001206264-24-000168,50212382,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,640947,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,267900000,0001206264-26-000015,50212424,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,641029,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,72500000,0001206264-25-000168,50212416,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,641073,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,60000000,0001206264-26-000067,50212441,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,641080,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,69900000,0001206264-25-000194,50212422,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,641091,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,59000000,0001206264-26-000113,50212446,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,641100,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,61300000,0001206264-25-000116,50212390,hold_net_label,net_label,"Interest expense, net"
-4297,0001206264,False,641112,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,33400000,0001206264-24-000135,50212374,hold_net_label,net_label,"Interest expense, net"
-4514,0001274494,False,580406,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,5563000,0001274494-26-000170,47606079,hold_net_label,net_label,"Interest expense, net"
-4514,0001274494,False,580506,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,14121000,0001274494-25-000082,47606052,hold_net_label,net_label,"Interest expense, net"
-4514,0001274494,False,580525,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,44131000,0001274494-26-000021,47606054,hold_net_label,net_label,"Interest Expense, net"
-4514,0001274494,False,580544,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,9525000,0001274494-25-000033,47606040,hold_net_label,net_label,"Interest expense, net"
-4514,0001274494,False,580582,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,9765000,0001274494-24-000033,47605990,hold_net_label,net_label,"Interest expense, net"
-4514,0001274494,False,580593,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,38870000,0001274494-25-000010,47606020,hold_net_label,net_label,"Interest Expense, net"
-4514,0001274494,False,580600,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,9008000,0001274494-24-000038,47606016,hold_net_label,net_label,"Interest expense, net"
-4514,0001274494,False,580622,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,7615000,0001274494-26-000109,47606075,hold_net_label,net_label,"Interest expense, net"
-4514,0001274494,False,580661,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,9184000,0001274494-25-000054,47606046,hold_net_label,net_label,"Interest expense, net"
-4619,0001690820,False,883499,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,139000000,0001690820-25-000161,66937137,hold_net_label,net_label,"Interest expense, net"
-4619,0001690820,False,883517,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,99000000,0001690820-26-000035,66937154,hold_net_label,net_label,"Interest expense, net"
-4619,0001690820,False,883522,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,143000000,0001690820-25-000312,66937145,hold_net_label,net_label,"Interest expense, net"
-4619,0001690820,False,883540,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,101000000,0001690820-26-000055,66937158,hold_net_label,net_label,"Interest expense, net"
-4619,0001690820,False,883581,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,125000000,0001690820-25-000353,66937150,hold_net_label,net_label,"Interest expense, net"
-4619,0001690820,False,883608,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,505000000,0001690820-26-000009,66937152,hold_net_label,net_label,"Interest expense, net"
-4637,0001692115,False,795886,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,73769000,0001692115-24-000099,61725605,hold_net_label,net_label,Net interest deductions
-4637,0001692115,False,795897,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,297043000,0001692115-25-000082,61725617,hold_net_label,net_label,Net interest deductions
-4637,0001692115,False,795970,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,71612000,0001692115-25-000141,61725642,hold_net_label,net_label,Net interest deductions
-4637,0001692115,False,795977,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,72281000,0001692115-25-000119,61725620,hold_net_label,net_label,Net interest deductions
-5022,0001722482,False,906967,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,169800000,0001628280-26-007118,68766381,hold_net_label,net_label,"Interest expense, net"
-5022,0001722482,False,906995,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,218800000,0001722482-25-000015,68766365,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545338,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,55300000,0001396009-25-000031,45444519,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545376,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,40200000,0001396009-24-000017,45444493,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545383,2023-07-01,2023-09-30,3,InterestExpenseNonoperating,46600000,0001396009-24-000023,45444465,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545404,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,59700000,0001396009-25-000008,45444509,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545513,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,39100000,0001396009-25-000008,45444470,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545522,2023-04-01,2023-06-30,3,InterestExpenseNonoperating,46700000,0001396009-24-000017,45444460,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545525,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,53900000,0001628280-26-028318,45444522,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545529,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,38400000,0001396009-24-000023,45444501,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,545543,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,59200000,0001396009-25-000021,45444515,hold_net_label,net_label,"Interest expense, net"
-5663,0001396009,False,5932598,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,54700000,0001628280-26-050486,344058308,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772612,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,8300000,0001439288-24-000168,59131094,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772930,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,28600000,0001628280-26-006372,59131114,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772937,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,7700000,0001439288-25-000124,59131108,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772942,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,33100000,0001439288-25-000019,59131098,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772954,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,7100000,0001628280-25-046770,59131112,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772964,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,6200000,0001628280-26-026281,59131116,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772971,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,7300000,0001439288-25-000081,59131102,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,772988,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,8500000,0001439288-24-000125,59131086,hold_net_label,net_label,"Interest expense, net"
-5869,0001439288,False,5745150,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,6100000,0001628280-26-050162,329220289,hold_net_label,net_label,"Interest expense, net"
-5875,0001442145,False,780940,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,42200000,0001437749-25-032073,59653678,hold_net_label,net_label,"Interest expense, net"
-5875,0001442145,False,781018,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,124600000,0001437749-25-005160,59653647,hold_net_label,net_label,"Interest expense, net"
-5875,0001442145,False,781020,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,36300000,0001437749-25-014907,59653651,hold_net_label,net_label,"Interest expense, net"
-5875,0001442145,False,781078,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,170900000,0001437749-26-004452,59653680,hold_net_label,net_label,"Interest expense, net"
-5875,0001442145,False,781083,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,35500000,0001437749-25-023862,59653674,hold_net_label,net_label,"Interest expense, net"
-5875,0001442145,False,781091,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,43200000,0001437749-26-013729,59653682,hold_net_label,net_label,"Interest expense, net"
+company_id,cik,bank,period_id,start,end,months,tag,value,accession,fact_id,outcome,label_check,label,released_from
+95,0000003453,False,5593,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,6800000,0001104659-26-020944,579238,hold_net_label,net_label,"Interest expense, net",
+95,0000003453,False,5755,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,1600000,0001104659-26-055178,579239,hold_net_label,net_label,"Interest expense, net",
+95,0000003453,False,5803,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,1600000,0001104659-26-090003,579241,hold_net_label,net_label,"Interest expense, net",
+105,0000004281,False,12529,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,49000000,0000004281-24-000026,1083368,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14898,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,1716000000,0000006201-26-000014,1324548,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14923,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,428000000,0000006201-25-000023,1324540,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14939,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,397000000,0000006201-26-000032,1324549,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14942,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,1934000000,0000006201-25-000010,1324538,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14945,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,432000000,0000006201-25-000052,1324547,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14960,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,409000000,0000006201-26-000052,1324551,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14964,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,480000000,0000006201-24-000060,1324536,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,14976,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,486000000,0000006201-24-000048,1324532,hold_net_label,net_label,"Interest expense, net",
+123,0000006201,False,15042,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,433000000,0000006201-25-000038,1324544,hold_net_label,net_label,"Interest expense, net",
+175,0000008858,False,9374,2025-12-28,2026-03-28,3,InterestExpenseNonoperating,63138000,0000008858-26-000042,1575950,hold_net_label,net_label,"Interest and other financing expenses, net",
+175,0000008858,False,9428,2024-12-29,2025-03-29,3,InterestExpenseNonoperating,61115000,0000008858-25-000018,1575943,hold_net_label,net_label,"Interest and other financing expenses, net",
+175,0000008858,False,9477,2024-06-30,2024-09-28,3,InterestExpenseNonoperating,64444000,0000008858-24-000041,1575935,hold_net_label,net_label,"Interest and other financing expenses, net",
+175,0000008858,False,9487,2024-06-30,2025-06-28,12,InterestExpenseNonoperating,246402000,0000008858-25-000028,1575945,hold_net_label,net_label,"Interest and other financing expenses, net",
+175,0000008858,False,9496,2025-06-29,2025-09-27,3,InterestExpenseNonoperating,59762000,0000008858-25-000066,1575946,hold_net_label,net_label,"Interest and other financing expenses, net",
+175,0000008858,False,9526,2024-09-29,2024-12-28,3,InterestExpenseNonoperating,62399000,0000008858-25-000009,1575939,hold_net_label,net_label,"Interest and other financing expenses, net",
+175,0000008858,False,9573,2025-09-28,2025-12-27,3,InterestExpenseNonoperating,61358000,0000008858-26-000025,1575948,hold_net_label,net_label,"Interest and other financing expenses, net",
+175,0000008858,False,9622,2025-06-29,2026-06-27,12,InterestExpenseNonoperating,250715000,0001104659-26-096346,7786416,hold_net_label,net_label,"Interest and other financing expenses, net",
+231,0000016058,False,21780,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,45117000,0000016058-25-000053,1877982,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21793,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,52267000,0001628280-26-026802,1877990,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21797,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,46173000,0000016058-25-000087,1877986,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21798,2025-07-01,2026-06-30,12,InterestExpenseNonoperating,215454000,0001628280-26-054195,1877991,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21819,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,23970000,0000016058-24-000199,1877974,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21832,2025-10-01,2025-12-31,3,InterestExpenseNonoperating,44950000,0001628280-26-003026,1877988,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21876,2023-07-01,2024-06-30,12,InterestExpenseNonoperating,105059000,0000016058-24-000132,1877971,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21890,2024-07-01,2025-06-30,12,InterestExpenseNonoperating,158844000,0001628280-25-038739,1877984,hold_net_label,net_label,"Interest expense and other, net",
+231,0000016058,False,21927,2024-10-01,2024-12-31,3,InterestExpenseNonoperating,44066000,0000016058-25-000032,1877978,hold_net_label,net_label,"Interest expense and other, net",
+249,0000017843,False,22703,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,8700000,0000017843-26-000014,1958696,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22708,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,11500000,0000017843-25-000029,1958692,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22709,2025-07-01,2026-06-30,12,InterestExpenseNonoperating,37800000,0000017843-26-000034,1958697,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22716,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,12000000,0000017843-25-000011,1958688,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22731,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,12400000,0000017843-24-000017,1958680,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22745,2025-10-01,2025-12-31,3,InterestExpenseNonoperating,10200000,0000017843-26-000009,1958694,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22787,2023-07-01,2024-06-30,12,InterestExpenseNonoperating,51000000,0000017843-24-000014,1958677,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22802,2024-07-01,2025-06-30,12,InterestExpenseNonoperating,48400000,0000017843-25-000021,1958690,hold_net_label,net_label,"Interest expense, net",
+249,0000017843,False,22832,2024-10-01,2024-12-31,3,InterestExpenseNonoperating,12200000,0000017843-25-000003,1958684,hold_net_label,net_label,"Interest expense, net",
+269,0000020212,False,24603,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,297700000,0000020212-26-000025,2146036,hold_net_label,net_label,"Interest expense, net",
+269,0000020212,False,24644,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,72000000,0000020212-26-000043,2146037,hold_net_label,net_label,"Interest expense, net",
+269,0000020212,False,24646,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,289800000,0000020212-25-000051,2146026,hold_net_label,net_label,"Interest expense, net",
+269,0000020212,False,24663,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,70000000,0000020212-26-000059,2146039,hold_net_label,net_label,"Interest expense, net",
+269,0000020212,False,24665,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,73100000,0000020212-24-000116,2146024,hold_net_label,net_label,"Interest expense, net",
+269,0000020212,False,24674,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,73500000,0000020212-24-000105,2146020,hold_net_label,net_label,"Interest expense, net",
+327,0000027419,False,28892,2025-05-04,2025-08-02,3,InterestExpenseNonoperating,116000000,0000027419-26-000042,123257625,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,28902,2024-05-05,2024-08-03,3,InterestExpenseNonoperating,110000000,0000027419-24-000152,2536043,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,28946,2025-02-02,2026-01-31,12,InterestExpenseNonoperating,445000000,0000027419-26-000016,2536057,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,28951,2025-08-03,2025-11-01,3,InterestExpenseNonoperating,115000000,0000027419-25-000126,2536056,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,28962,2026-02-01,2026-05-02,3,InterestExpenseNonoperating,117000000,0000027419-26-000022,2536058,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,28994,2024-08-04,2024-11-02,3,InterestExpenseNonoperating,105000000,0000027419-24-000179,2536047,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,29052,2024-02-04,2025-02-01,12,InterestExpenseNonoperating,411000000,0000027419-25-000018,2536049,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,29148,2025-02-02,2025-05-03,3,InterestExpenseNonoperating,116000000,0000027419-25-000101,2536051,hold_net_label,net_label,Net interest expense,
+327,0000027419,False,3293156,2026-05-03,2026-08-01,3,InterestExpenseNonoperating,98000000,0000027419-26-000042,123257631,hold_net_label,net_label,Net interest expense,
+375,0000033213,False,52634,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,454825000,0000033213-25-000011,2800276,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52639,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,438695000,0000033213-26-000018,2800286,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52643,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,109929000,0000033213-25-000049,2800285,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52694,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,105668000,0000033213-25-000033,2800282,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52699,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,55720000,0000033213-24-000032,2800270,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52717,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,96777000,0000033213-26-000030,2800287,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52790,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,117569000,0000033213-25-000023,2800278,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52822,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,158299000,0000033213-24-000047,2800274,hold_net_label,net_label,"Interest expense, net",
+375,0000033213,False,52869,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,75452000,0000033213-26-000043,2800289,hold_net_label,net_label,"Interest expense, net",
+606,0000040211,False,160780,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,94900000,0000040211-25-000045,12553441,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170140,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,40342000,0000040987-25-000196,13690704,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170150,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,40211000,0000040987-25-000144,13690700,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170194,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,37216000,0000040987-25-000070,13690694,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170196,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,21921000,0000040987-24-000178,13690669,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170211,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,163506000,0000040987-26-000003,13690705,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170307,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,96827000,0000040987-25-000026,13690690,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170349,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,43953000,0000040987-26-000017,13690723,hold_net_label,net_label,"Interest expense, net",
+612,0000040987,False,170362,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,27818000,0000040987-24-000210,13690677,hold_net_label,net_label,"Interest expense, net",
+684,0000064040,False,123616,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,79000000,0000064040-25-000167,10220090,hold_net_label,net_label,"Interest expense, net",
+684,0000064040,False,123621,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,297000000,0000064040-26-000013,10220062,hold_net_label,net_label,"Interest expense, net",
+684,0000064040,False,123735,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,96000000,0000064040-26-000024,10220095,hold_net_label,net_label,"Interest expense, net",
+684,0000064040,False,123764,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,77000000,0000064040-25-000147,10220071,hold_net_label,net_label,"Interest expense, net",
+684,0000064040,False,123808,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,287000000,0000064040-26-000013,10220093,hold_net_label,net_label,"Interest expense, net",
+684,0000064040,False,5765394,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,87000000,0000064040-26-000045,331028908,hold_net_label,net_label,"Interest expense, net",
+1144,0000105770,False,92169,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,400000,0000105770-25-000036,7171929,hold_net_label,net_label,"Interest expense, net",
+1144,0000105770,False,92175,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,1900000,0000105770-26-000049,7171948,hold_net_label,net_label,"Interest expense, net",
+1144,0000105770,False,92197,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,2600000,0000105770-26-000099,7171952,hold_net_label,net_label,"Interest expense, net",
+1144,0000105770,False,92211,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,100000,0000105770-25-000065,7171937,hold_net_label,net_label,"Interest expense, net",
+1144,0000105770,False,92266,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,1500000,0000105770-24-000066,7171917,hold_net_label,net_label,"Interest expense, net",
+1144,0000105770,False,92306,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,200000,0000105770-25-000093,7171943,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172566,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,21258000,0000717423-24-000038,15608760,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172640,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,24726000,0001628280-25-049670,15608782,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172656,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,105926000,0000717423-25-000006,15608764,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172663,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,23523000,0000717423-25-000014,15608768,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172685,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,28977000,0001628280-26-031370,15608786,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172698,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,20986000,0000717423-24-000026,15608752,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172715,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,96072000,0001628280-26-011709,15608784,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172794,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,25053000,0000717423-25-000031,15608776,hold_net_label,net_label,"Interest expense, net",
+1296,0000717423,False,172825,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,24917000,0001628280-26-053437,15608790,hold_net_label,net_label,"Interest expense, net",
+1343,0000728535,False,238761,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,16768000,0001437749-26-024397,17384511,hold_net_label,net_label,Net interest expense,
+1343,0000728535,False,238788,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,18597000,0001437749-25-013085,17384453,hold_net_label,net_label,Net interest expense,
+1343,0000728535,False,238850,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,17871000,0001437749-25-031696,17384502,hold_net_label,net_label,Net interest expense,
+1343,0000728535,False,238868,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,21285000,0001437749-25-023379,17384461,hold_net_label,net_label,Net interest expense,
+1343,0000728535,False,238986,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,17900000,0001437749-26-013300,17384507,hold_net_label,net_label,Net interest expense,
+1388,0000749251,False,309435,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,22266000,0000749251-26-000245,23609658,hold_net_label,net_label,"Interest expense, net",
+1388,0000749251,False,309465,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,13413000,0000749251-25-000028,23609631,hold_net_label,net_label,"Interest expense, net",
+1388,0000749251,False,309476,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,19990000,0000749251-24-000035,23609593,hold_net_label,net_label,"Interest expense, net",
+1388,0000749251,False,309522,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,16279000,0000749251-25-000082,23609644,hold_net_label,net_label,"Interest expense, net",
+1388,0000749251,False,309540,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,11801000,0000749251-25-000046,23609639,hold_net_label,net_label,"Interest expense, net",
+1388,0000749251,False,309625,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,17961000,0000749251-24-000041,23609612,hold_net_label,net_label,"Interest expense, net",
+1388,0000749251,False,309662,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,21048000,0000749251-26-000167,23609654,hold_net_label,net_label,"Interest expense, net",
+1469,0000790051,False,281026,2023-01-01,2023-12-31,12,InterestExpenseNonoperating,75600000,0000790051-25-000077,23676317,hold_net_label,net_label,"Interest expense, net",
+1469,0000790051,False,281069,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,18800000,0000790051-24-000166,23676327,hold_net_label,net_label,"Interest expense, net",
+1469,0000790051,False,281130,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,73300000,0000790051-25-000077,23676353,hold_net_label,net_label,"Interest expense, net",
+1469,0000790051,False,281303,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,18600000,0000790051-24-000198,23676349,hold_net_label,net_label,"Interest expense, net",
+1469,0000790051,False,281341,2022-01-01,2022-12-31,12,InterestExpenseNonoperating,85900000,0000790051-25-000077,23676290,hold_net_label,net_label,"Interest expense, net",
+1538,0000814547,False,235841,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,59877000,0000814547-26-000030,20220586,hold_net_label,net_label,"Interest expense, net",
+1538,0000814547,False,235848,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,32899000,0000814547-25-000022,20220547,hold_net_label,net_label,"Interest expense, net",
+1538,0000814547,False,235925,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,44579000,0000814547-26-000021,20220584,hold_net_label,net_label,"Interest expense, net",
+1538,0000814547,False,235982,2025-10-01,2025-12-31,3,InterestExpenseNonoperating,42006000,0000814547-26-000011,20220553,hold_net_label,net_label,"Interest expense, net",
+1538,0000814547,False,235989,2024-10-01,2025-09-30,12,InterestExpenseNonoperating,133647000,0000814547-25-000030,20220551,hold_net_label,net_label,"Interest expense, net",
+1560,0000821189,False,270781,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,71000000,0000821189-25-000131,23115927,hold_net_label,net_label,"Interest Expense, Net",
+1560,0000821189,False,270809,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,31000000,0000821189-24-000049,23115870,hold_net_label,net_label,"Interest Expense, Net",
+1560,0000821189,False,270848,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,36000000,0000821189-24-000031,23115864,hold_net_label,net_label,"Interest Expense, Net",
+1588,0000831641,False,315810,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,9912000,0000831641-25-000023,26666303,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,315815,2025-09-29,2025-12-28,3,InterestExpenseNonoperating,7128000,0000831641-26-000005,26666370,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,315836,2024-09-30,2024-12-29,3,InterestExpenseNonoperating,7218000,0000831641-25-000005,26666309,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,315866,2025-03-31,2025-06-29,3,InterestExpenseNonoperating,8288000,0000831641-25-000023,26666335,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,315880,2023-10-02,2023-12-31,3,InterestExpenseNonoperating,9577000,0000831641-25-000005,26666281,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,315904,2026-03-30,2026-06-28,3,InterestExpenseNonoperating,7158000,0000831641-26-000017,26666377,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,315955,2025-12-29,2026-03-29,3,InterestExpenseNonoperating,8838000,0000831641-26-000011,26666374,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,315984,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,9883000,0000831641-25-000019,26666299,hold_net_label,net_label,"Interest expense, net",
+1588,0000831641,False,316053,2024-12-30,2025-03-30,3,InterestExpenseNonoperating,8491000,0000831641-25-000019,26666328,hold_net_label,net_label,"Interest expense, net",
+1589,0000832101,False,317195,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,10300000,0000832101-24-000055,26820429,hold_net_label,net_label,Interest expense  net,
+1611,0000842162,False,351085,2026-04-05,2026-07-04,3,InterestExpenseNonoperating,24200000,0000842162-26-000068,29617144,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351155,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,100800000,0000842162-26-000011,29617138,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351156,2026-01-01,2026-04-04,3,InterestExpenseNonoperating,25600000,0000842162-26-000038,29617140,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351207,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,106200000,0000842162-25-000010,29617081,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351217,2025-03-30,2025-06-28,3,InterestExpenseNonoperating,25400000,0000842162-25-000060,29617113,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351218,2025-01-01,2025-03-29,3,InterestExpenseNonoperating,25800000,0000842162-25-000042,29617104,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351317,2025-06-29,2025-09-27,3,InterestExpenseNonoperating,24600000,0000842162-25-000076,29617119,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351347,2024-06-30,2024-09-28,3,InterestExpenseNonoperating,26500000,0000842162-24-000062,29617077,hold_net_label,net_label,"Interest expense, net",
+1611,0000842162,False,351389,2024-03-31,2024-06-29,3,InterestExpenseNonoperating,26900000,0000842162-24-000049,29617070,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,237995,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,79100000,0000882835-25-000036,20230530,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,238031,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,259200000,0000882835-25-000008,20230504,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,238119,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,99300000,0000882835-26-000019,20230564,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,238128,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,62900000,0000882835-25-000020,20230524,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,238136,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,111400000,0000882835-26-000036,20230568,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,238145,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,89700000,0000882835-25-000045,20230536,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,238157,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,325000000,0000882835-26-000009,20230562,hold_net_label,net_label,"Interest expense, net",
+1737,0000882835,False,238170,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,67700000,0000882835-24-000044,20230482,hold_net_label,net_label,"Interest expense, net",
+1898,0000916365,False,336975,2024-12-29,2025-03-29,3,InterestExpenseNonoperating,19641000,0000916365-25-000089,29898578,hold_net_label,net_label,"Interest expense, net",
+1898,0000916365,False,337044,2025-12-28,2026-03-28,3,InterestExpenseNonoperating,19108000,0000916365-26-000024,29898620,hold_net_label,net_label,"Interest expense, net",
+1898,0000916365,False,337096,2026-03-29,2026-06-27,3,InterestExpenseNonoperating,17103000,0000916365-26-000059,29898650,hold_net_label,net_label,"Interest expense, net",
+1898,0000916365,False,337157,2024-06-30,2024-09-28,3,InterestExpenseNonoperating,13875000,0000916365-24-000110,29898571,hold_net_label,net_label,"Interest expense, net",
+1898,0000916365,False,337190,2025-06-29,2025-09-27,3,InterestExpenseNonoperating,14667000,0000916365-25-000163,29898618,hold_net_label,net_label,"Interest expense, net",
+1898,0000916365,False,337194,2025-03-30,2025-06-28,3,InterestExpenseNonoperating,17983000,0000916365-25-000150,29898613,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344769,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,108904000,0001558370-25-000803,30509485,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344771,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,134612000,0000917251-26-000013,30509534,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344835,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,35970000,0000917251-26-000047,30509536,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344843,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,28942000,0001558370-24-013452,30509481,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344857,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,32274000,0001558370-25-009887,30509512,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344905,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,26416000,0001558370-24-009974,30509474,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344914,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,35212000,0001104659-25-101233,30509532,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,344922,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,30764000,0001558370-25-005142,30509506,hold_net_label,net_label,"Interest expense, net",
+1903,0000917251,False,345006,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,40278000,0000917251-26-000063,30509541,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926027,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,9846000,0001801368-26-000029,69759908,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926037,2023-07-01,2023-09-30,3,InterestExpenseNonoperating,1396000,0001801368-24-000087,69759873,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926039,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,8566000,0001801368-25-000054,69759906,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926041,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,9703000,0001801368-26-000048,69759910,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926053,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,2857000,0001801368-24-000045,69759879,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926082,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,7615000,0001801368-25-000019,69759895,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926088,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,6646000,0001801368-24-000087,69759887,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926089,2023-04-01,2023-06-30,3,InterestExpenseNonoperating,1392000,0001801368-24-000066,69759869,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926090,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,31481000,0001801368-26-000008,69759907,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926099,2023-01-01,2023-03-31,3,InterestExpenseNonoperating,1359000,0001801368-24-000045,69759866,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926110,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,6745000,0001801368-24-000066,69759883,hold_net_label,net_label,"Interest expense, net",
+2059,0001801368,False,926127,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,5414000,0001801368-25-000028,69759902,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957017,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,118000000,0001868275-25-000073,71893994,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957033,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,253000000,0001868275-26-000067,71894004,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957035,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,142000000,0001868275-24-000054,71893976,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957042,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,283000000,0001868275-26-000104,71894006,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957047,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,134000000,0001868275-25-000092,71894001,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957068,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,146000000,0001868275-25-000044,71893987,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957070,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,506000000,0001868275-25-000023,71893984,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957072,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,147000000,0001868275-24-000069,71893981,hold_net_label,net_label,"Interest expense, net",
+3240,0001868275,False,957083,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,511000000,0001868275-26-000032,71894002,hold_net_label,net_label,"Interest expense, net",
+3385,0001094285,False,436286,2025-12-29,2026-03-29,3,InterestExpenseNonoperating,12300000,0001094285-26-000030,35803783,hold_net_label,net_label,"Interest and debt income (expense), net",
+3385,0001094285,False,436361,2025-06-30,2025-09-28,3,InterestExpenseNonoperating,12600000,0001094285-25-000140,35803780,hold_net_label,net_label,"Interest and debt income (expense), net",
+3385,0001094285,False,436443,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,15800000,0001094285-24-000090,35803712,hold_net_label,net_label,"Interest and debt income (expense), net",
+3385,0001094285,False,436447,2024-07-01,2024-09-29,3,InterestExpenseNonoperating,15700000,0001094285-24-000104,35803742,hold_net_label,net_label,"Interest and debt income (expense), net",
+3385,0001094285,False,436469,2026-03-30,2026-06-28,3,InterestExpenseNonoperating,13600000,0001094285-26-000043,35803786,hold_net_label,net_label,"Interest and debt income (expense), net",
+3385,0001094285,False,436481,2025-03-31,2025-06-29,3,InterestExpenseNonoperating,17600000,0001094285-25-000131,35803775,hold_net_label,net_label,"Interest and debt income (expense), net",
+3385,0001094285,False,436521,2024-12-30,2025-03-30,3,InterestExpenseNonoperating,17300000,0001094285-25-000105,35803762,hold_net_label,net_label,"Interest and debt income (expense), net",
+3607,0001111711,False,376690,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,132800000,0001111711-25-000020,33068618,hold_net_label,net_label,"Interest expense, net",
+3607,0001111711,False,376705,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,517200000,0001111711-25-000008,33068614,hold_net_label,net_label,"Interest expense, net",
+3607,0001111711,False,376711,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,139100000,0001111711-25-000036,33068643,hold_net_label,net_label,"Interest expense, net",
+3607,0001111711,False,376724,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,639000000,0001111711-26-000027,33068650,hold_net_label,net_label,"Interest expense, net",
+3607,0001111711,False,376727,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,191600000,0001111711-26-000045,33068651,hold_net_label,net_label,"Interest expense, net",
+3607,0001111711,False,376758,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,179800000,0001111711-25-000055,33068648,hold_net_label,net_label,"Interest expense, net",
+3607,0001111711,False,376907,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,199200000,0001111711-26-000088,33068655,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,847922,2025-04-26,2025-07-25,3,InterestExpenseNonoperating,176000000,0001613103-25-000161,64887402,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,847927,2025-04-26,2026-04-24,12,InterestExpenseNonoperating,715000000,0001628280-26-044354,64887423,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,847958,2024-04-27,2024-07-26,3,InterestExpenseNonoperating,167000000,0001613103-24-000147,64887372,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,847959,2025-07-26,2025-10-24,3,InterestExpenseNonoperating,181000000,0001628280-25-053988,64887418,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,847968,2024-10-26,2025-01-24,3,InterestExpenseNonoperating,179000000,0001613103-25-000022,64887398,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,848022,2024-07-27,2024-10-25,3,InterestExpenseNonoperating,209000000,0001613103-24-000165,64887394,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,848039,2024-04-27,2025-04-25,12,InterestExpenseNonoperating,729000000,0001613103-25-000091,64887400,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,848092,2025-10-25,2026-01-23,3,InterestExpenseNonoperating,181000000,0001628280-26-011107,64887421,hold_net_label,net_label,"Interest expense, net",
+3639,0001613103,False,3648416,2026-04-25,2026-07-31,3,InterestExpenseNonoperating,186000000,0001628280-26-060473,128033205,hold_net_label,net_label,"Interest expense, net",
+3678,0001616862,False,861470,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,50000000,0001616862-24-000056,65917629,hold_net_label,net_label,"Interest expense, net",
+3678,0001616862,False,861536,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,45000000,0001628280-25-047015,65917653,hold_net_label,net_label,"Interest expense, net",
+3678,0001616862,False,861549,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,44000000,0001616862-25-000022,65917644,hold_net_label,net_label,"Interest expense, net",
+3678,0001616862,False,861556,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,54000000,0001616862-24-000065,65917636,hold_net_label,net_label,"Interest expense, net",
+3678,0001616862,False,861597,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,45000000,0001616862-25-000037,65917650,hold_net_label,net_label,"Interest expense, net",
+3678,0001616862,False,861668,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,38000000,0001628280-26-028698,65917657,hold_net_label,net_label,"Interest expense, net",
+3678,0001616862,False,5951554,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,37000000,0001628280-26-050466,345762256,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482670,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,80000000,0001136893-25-000056,41218824,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482766,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,43000000,0001136893-25-000117,41218796,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482779,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,110000000,0001136893-25-000117,41218828,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482810,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,64000000,0001136893-25-000128,41218800,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482827,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,197000000,0001136893-26-000040,41218863,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482856,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,200000000,0001136893-26-000050,41218880,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482913,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,77000000,0001136893-25-000056,41218784,hold_net_label,net_label,"Interest expense, net",
+3873,0001136893,False,482944,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,90000000,0001136893-25-000128,41218831,hold_net_label,net_label,"Interest expense, net",
+3880,0001967680,False,980023,2025-07-05,2025-10-03,3,InterestExpenseNonoperating,21000000,0001967680-25-000136,72986267,hold_net_label,net_label,"Interest expense, net",
+3880,0001967680,False,980026,2024-06-29,2024-09-27,3,InterestExpenseNonoperating,27000000,0001967680-24-000137,72986258,hold_net_label,net_label,"Interest expense, net",
+3880,0001967680,False,980033,2025-01-01,2025-04-04,3,InterestExpenseNonoperating,27000000,0001967680-25-000067,72986262,hold_net_label,net_label,"Interest expense, net",
+3880,0001967680,False,980034,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,113000000,0001967680-25-000008,72986260,hold_net_label,net_label,"Interest expense, net",
+3880,0001967680,False,980036,2026-01-01,2026-04-03,3,InterestExpenseNonoperating,24000000,0001967680-26-000024,72986269,hold_net_label,net_label,"Interest expense, net",
+3880,0001967680,False,980051,2025-04-05,2025-07-04,3,InterestExpenseNonoperating,28000000,0001967680-25-000125,72986265,hold_net_label,net_label,"Interest expense, net",
+3880,0001967680,False,980059,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,96000000,0001967680-26-000011,72986268,hold_net_label,net_label,"Interest expense, net",
+3966,0001145197,False,518934,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,11000000,0001145197-24-000039,43997589,hold_net_label,net_label,"Interest expense, net",
+4294,0001665918,False,871784,2024-12-29,2025-03-29,3,InterestExpenseNonoperating,77000000,0001665918-25-000085,66619369,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871785,2025-12-28,2026-03-28,3,InterestExpenseNonoperating,75000000,0001665918-26-000032,66619378,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871819,2025-06-29,2025-09-27,3,InterestExpenseNonoperating,76000000,0001665918-25-000146,66619376,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871826,2024-03-31,2024-06-29,3,InterestExpenseNonoperating,81000000,0001665918-24-000135,66619361,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871946,2024-12-29,2025-12-27,12,InterestExpenseNonoperating,305000000,0001665918-26-000008,66619377,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871948,2024-06-30,2024-09-28,3,InterestExpenseNonoperating,75000000,0001665918-24-000149,66619365,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871964,2023-12-31,2024-12-28,12,InterestExpenseNonoperating,315000000,0001665918-25-000017,66619367,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871967,2025-03-30,2025-06-28,3,InterestExpenseNonoperating,74000000,0001665918-25-000127,66619373,hold_net_label,net_label,Interest expensenet,
+4294,0001665918,False,871995,2026-03-29,2026-06-27,3,InterestExpenseNonoperating,77000000,0001665918-26-000045,66619380,hold_net_label,net_label,Interest expensenet,
+4297,0001206264,False,640909,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,134800000,0001206264-25-000058,50212386,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,640944,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,30800000,0001206264-24-000168,50212382,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,640947,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,267900000,0001206264-26-000015,50212424,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,641029,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,72500000,0001206264-25-000168,50212416,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,641073,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,60000000,0001206264-26-000067,50212441,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,641080,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,69900000,0001206264-25-000194,50212422,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,641091,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,59000000,0001206264-26-000113,50212446,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,641100,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,61300000,0001206264-25-000116,50212390,hold_net_label,net_label,"Interest expense, net",
+4297,0001206264,False,641112,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,33400000,0001206264-24-000135,50212374,hold_net_label,net_label,"Interest expense, net",
+4514,0001274494,False,580406,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,5563000,0001274494-26-000170,47606079,hold_net_label,net_label,"Interest expense, net",
+4514,0001274494,False,580506,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,14121000,0001274494-25-000082,47606052,hold_net_label,net_label,"Interest expense, net",
+4514,0001274494,False,580525,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,44131000,0001274494-26-000021,47606054,hold_net_label,net_label,"Interest Expense, net",
+4514,0001274494,False,580544,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,9525000,0001274494-25-000033,47606040,hold_net_label,net_label,"Interest expense, net",
+4514,0001274494,False,580582,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,9765000,0001274494-24-000033,47605990,hold_net_label,net_label,"Interest expense, net",
+4514,0001274494,False,580593,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,38870000,0001274494-25-000010,47606020,hold_net_label,net_label,"Interest Expense, net",
+4514,0001274494,False,580600,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,9008000,0001274494-24-000038,47606016,hold_net_label,net_label,"Interest expense, net",
+4514,0001274494,False,580622,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,7615000,0001274494-26-000109,47606075,hold_net_label,net_label,"Interest expense, net",
+4514,0001274494,False,580661,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,9184000,0001274494-25-000054,47606046,hold_net_label,net_label,"Interest expense, net",
+4619,0001690820,False,883499,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,139000000,0001690820-25-000161,66937137,hold_net_label,net_label,"Interest expense, net",
+4619,0001690820,False,883517,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,99000000,0001690820-26-000035,66937154,hold_net_label,net_label,"Interest expense, net",
+4619,0001690820,False,883522,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,143000000,0001690820-25-000312,66937145,hold_net_label,net_label,"Interest expense, net",
+4619,0001690820,False,883540,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,101000000,0001690820-26-000055,66937158,hold_net_label,net_label,"Interest expense, net",
+4619,0001690820,False,883581,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,125000000,0001690820-25-000353,66937150,hold_net_label,net_label,"Interest expense, net",
+4619,0001690820,False,883608,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,505000000,0001690820-26-000009,66937152,hold_net_label,net_label,"Interest expense, net",
+4637,0001692115,False,795886,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,73769000,0001692115-24-000099,61725605,hold_net_label,net_label,Net interest deductions,
+4637,0001692115,False,795897,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,297043000,0001692115-25-000082,61725617,hold_net_label,net_label,Net interest deductions,
+4637,0001692115,False,795970,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,71612000,0001692115-25-000141,61725642,hold_net_label,net_label,Net interest deductions,
+4637,0001692115,False,795977,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,72281000,0001692115-25-000119,61725620,hold_net_label,net_label,Net interest deductions,
+5022,0001722482,False,906967,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,169800000,0001628280-26-007118,68766381,hold_net_label,net_label,"Interest expense, net",
+5022,0001722482,False,906995,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,218800000,0001722482-25-000015,68766365,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545338,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,55300000,0001396009-25-000031,45444519,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545376,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,40200000,0001396009-24-000017,45444493,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545383,2023-07-01,2023-09-30,3,InterestExpenseNonoperating,46600000,0001396009-24-000023,45444465,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545404,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,59700000,0001396009-25-000008,45444509,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545513,2024-01-01,2024-03-31,3,InterestExpenseNonoperating,39100000,0001396009-25-000008,45444470,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545522,2023-04-01,2023-06-30,3,InterestExpenseNonoperating,46700000,0001396009-24-000017,45444460,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545525,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,53900000,0001628280-26-028318,45444522,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545529,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,38400000,0001396009-24-000023,45444501,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,545543,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,59200000,0001396009-25-000021,45444515,hold_net_label,net_label,"Interest expense, net",
+5663,0001396009,False,5932598,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,54700000,0001628280-26-050486,344058308,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772612,2024-07-01,2024-09-30,3,InterestExpenseNonoperating,8300000,0001439288-24-000168,59131094,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772930,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,28600000,0001628280-26-006372,59131114,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772937,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,7700000,0001439288-25-000124,59131108,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772942,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,33100000,0001439288-25-000019,59131098,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772954,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,7100000,0001628280-25-046770,59131112,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772964,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,6200000,0001628280-26-026281,59131116,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772971,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,7300000,0001439288-25-000081,59131102,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,772988,2024-04-01,2024-06-30,3,InterestExpenseNonoperating,8500000,0001439288-24-000125,59131086,hold_net_label,net_label,"Interest expense, net",
+5869,0001439288,False,5745150,2026-04-01,2026-06-30,3,InterestExpenseNonoperating,6100000,0001628280-26-050162,329220289,hold_net_label,net_label,"Interest expense, net",
+5875,0001442145,False,780940,2025-07-01,2025-09-30,3,InterestExpenseNonoperating,42200000,0001437749-25-032073,59653678,hold_net_label,net_label,"Interest expense, net",
+5875,0001442145,False,781018,2024-01-01,2024-12-31,12,InterestExpenseNonoperating,124600000,0001437749-25-005160,59653647,hold_net_label,net_label,"Interest expense, net",
+5875,0001442145,False,781020,2025-01-01,2025-03-31,3,InterestExpenseNonoperating,36300000,0001437749-25-014907,59653651,hold_net_label,net_label,"Interest expense, net",
+5875,0001442145,False,781078,2025-01-01,2025-12-31,12,InterestExpenseNonoperating,170900000,0001437749-26-004452,59653680,hold_net_label,net_label,"Interest expense, net",
+5875,0001442145,False,781083,2025-04-01,2025-06-30,3,InterestExpenseNonoperating,35500000,0001437749-25-023862,59653674,hold_net_label,net_label,"Interest expense, net",
+5875,0001442145,False,781091,2026-01-01,2026-03-31,3,InterestExpenseNonoperating,43200000,0001437749-26-013729,59653682,hold_net_label,net_label,"Interest expense, net",
