@@ -104,7 +104,9 @@ def main(family, cells_path, out_dir):
             f.write("delete from analytics.canonical_fact cf using analytics.canonical_concept cc, core.company co, core.period p "
                     f"where cf.canonical_concept_id = cc.id and cc.name = '{concept}' and cf.company_id = co.id and co.cik = '{c['cik']}' "
                     f"and cf.period_id = p.id and p.period_type = 'duration' and p.start_date = '{c['start']}' and p.end_date = '{c['end']}';\n")
-        f.write(f"delete from analytics.slot_protected_cell where rule_id = '{rule}';\n")
+        # conditional: the rollback must also run when migration 0113 is not applied
+        f.write("do $$ begin if to_regclass('analytics.slot_protected_cell') is not null then "
+                f"delete from analytics.slot_protected_cell where rule_id = '{rule}'; end if; end $$;\n")
         f.write("commit;\n")
     touched = sorted({c["cik"] for c in r1})
     (out / f"is_{family}_r1_touched_ciks.txt").write_text("\n".join(touched) + "\n")
