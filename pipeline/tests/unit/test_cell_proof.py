@@ -374,3 +374,65 @@ def test_derived_q4_is_proven_through_the_two_year_to_date_lines():
     )
     p3 = pv.prove_cell(q4, fy, "2025q4", None)
     assert p3.verdict == pv.UNCHECKED and "prior filing not loaded" in p3.reason_text
+
+
+@pytest.mark.unit
+def test_a_value_from_a_note_is_not_proven_on_the_statement_face():
+    s = structure()
+    # a 3-month net income in a 10-K comes from the quarterly-data note
+    s.num[("NetIncomeLoss", DDATE, 1)].append(
+        NumValue(
+            "NetIncomeLoss", "us-gaap/2025", DDATE, 1, "USD", Decimal("28000000000"), -6
+        )
+    )
+    q = pv.Shown(
+        3,
+        "net_income_resolved",
+        "Q",
+        date(2025, 6, 29),
+        FY_END,
+        Decimal("28000000000"),
+        ("NetIncomeLoss",),
+        ADSH,
+        (1,),
+        False,
+        6,
+    )
+    p = pv.prove_cell(q, s, "2025q4")
+    assert (
+        p.verdict == pv.NOT_PRESENTED
+        and p.reason_code == "value_in_note_not_on_statement_face"
+    )
+    assert p.checks["statement_face"]["status"] == "fail"
+    # the annual column stays PROVEN
+    assert (
+        pv.prove_cell(shown("net_income_resolved", "112010000000"), s, "2025q4").verdict
+        == pv.PROVEN
+    )
+
+
+@pytest.mark.unit
+def test_restated_copy_shown_with_wrong_lineage_is_disagree():
+    q = pv.Shown(
+        3,
+        "total_assets_resolved",
+        "I",
+        FY_END,
+        FY_END,
+        Decimal("193694000000"),
+        ("Assets",),
+        "0001193125-16-662209",
+        (1,),
+        False,
+        6,
+        restated_by=("0001564590-17-014900", Decimal("193468000000")),
+    )
+    p = pv.prove_cell(q, structure(), "2025q4")
+    assert (
+        p.verdict == pv.DISAGREE
+        and p.reason_code == "restated_copy_shown_with_wrong_lineage"
+    )
+    assert (
+        "193468000000" in p.reason_text
+        and p.position_accession == "0001564590-17-014900"
+    )

@@ -34,6 +34,51 @@ def _grain(
     return None
 
 
+PERIODIC_FORMS = (
+    "10-K",
+    "10-K/A",
+    "10-KT",
+    "10-KT/A",
+    "10-Q",
+    "10-Q/A",
+    "10-QT",
+    "10-QT/A",
+)
+
+
+def _periodic_copies(
+    conn: psycopg.Connection, company_id: int, floor: date
+) -> dict[tuple[str, int], list[tuple[str, Decimal]]]:
+    """(base canonical name, period_id) -> every periodic-form copy (accession,
+    value) of the cell in core.fact, authoritative or not: the resolver keeps
+    one, the proof must see them all (restated copies that disagree are hidden,
+    founder ruling)."""
+    out: dict[tuple[str, int], list[tuple[str, Decimal]]] = defaultdict(list)
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select cc.name, f.period_id, fl.accession_number, f.value
+            from core.fact f
+            join core.filing fl on fl.id = f.filing_id
+            join core.period p on p.id = f.period_id
+            join analytics.concept_mapping cm on cm.concept_id = f.concept_id and cm.confidence <> 'rejected'
+            join analytics.canonical_concept cc on cc.id = cm.canonical_concept_id
+            where f.company_id = %s and not f.is_derived and fl.form = any(%s) and p.end_date >= %s
+            """,
+            (company_id, list(PERIODIC_FORMS), floor),
+        )
+        for name, pid, acc, value in cur.fetchall():
+            out[(name, pid)].append((acc, Decimal(value)))
+    return out
+
+
+def _base_name(name: str) -> str:
+    for suffix in ("_sanity_resolved", "_resolved"):
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    return name
+
+
 def load_shown(
     conn: psycopg.Connection, company_id: int, *, floor: date = HISTORY_FLOOR
 ) -> list[Shown]:
@@ -43,7 +88,7 @@ def load_shown(
     with conn.cursor() as cur:
         cur.execute(
             """
-            select cc.name, p.period_type, p.fiscal_period, p.start_date, p.end_date, cf.value, cf.source_fact_ids
+            select cc.name, p.period_type, p.fiscal_period, p.start_date, p.end_date, cf.value, cf.source_fact_ids, p.id
             from analytics.canonical_fact cf
             join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
             join analytics.statement_line sl on sl.canonical_concept_id = cc.id
@@ -69,7 +114,8 @@ def load_shown(
             for fid, tag, acc, fdate, der, fval in cur.fetchall():
                 facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
-    for name, ptype, fp, start, end, value, src in rows:
+    copies_by = _periodic_copies(conn, company_id, floor)
+    for name, ptype, fp, start, end, value, src, period_id in rows:
         if name not in EXPECTED and name != "total_debt_resolved":
             continue
         grain = _grain(ptype, fp, start, end)
@@ -89,6 +135,16 @@ def load_shown(
         ]
         pool = carriers or [(acc, fdate) for _t, acc, fdate, _der, _v in srcs if acc]
         accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
+        from scrooner_pipeline.common.presentation_scale import same_number
+
+        copies = copies_by.get((_base_name(name), period_id), [])
+        disagreeing = sorted(
+            {
+                (acc, str(v))
+                for acc, v in copies
+                if not same_number(v, shown_value, scale)
+            }
+        )
         out.append(
             Shown(
                 company_id=company_id,
@@ -102,6 +158,8 @@ def load_shown(
                 source_fact_ids=tuple(sorted(f for f in (src or []))),
                 is_derived=derived,
                 presentation_scale=scale,
+                copies_disagree=tuple(disagreeing) or None,
+                copies=len(copies),
             )
         )
     return out

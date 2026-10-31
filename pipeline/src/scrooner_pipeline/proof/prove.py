@@ -275,6 +275,9 @@ class Shown:
     source_fact_ids: tuple[int, ...]
     is_derived: bool = False
     presentation_scale: int = 6
+    restated_by: tuple[str, Decimal] | None = (
+        None  # (later accession, its value) when a later source disagrees
+    )
 
 
 @dataclass
@@ -367,6 +370,56 @@ def select_position(
     return chosen, None
 
 
+def on_statement_face(
+    structure: FilingStructure, stmt: str, nv: NumValue
+) -> tuple[bool, str]:
+    """Does the statement print a column for this value? FSN num holds every
+    fact of the filing, notes and MD&A included (the quarterly-data note of a
+    10-K, 3-month cash-flow figures where the statement prints 6 or 9 months).
+    Form-based rule, conservative: a 10-K statement prints annual columns only
+    (qtrs 4); a 10-Q income statement prints the 3-month and the year-to-date
+    columns, its cash-flow statement the year-to-date only; a balance sheet
+    prints the dates at which the filing values total assets."""
+    form = (structure.form or "").upper()
+    if stmt == "BS":
+        dates = {d for (tag, d, q) in structure.num if tag == "Assets" and q == 0}
+        if not dates:
+            dates = {
+                d
+                for (tag, d, q) in structure.num
+                if tag == "LiabilitiesAndStockholdersEquity" and q == 0
+            }
+        if nv.ddate in dates or not dates:
+            return True, "balance sheet date"
+        return False, f"the balance sheet prints no column dated {nv.ddate}"
+    if form.startswith("10-K"):
+        if nv.qtrs == 4:
+            return True, "annual column of a 10-K"
+        return (
+            False,
+            f"a 10-K {stmt} prints annual columns; a {nv.qtrs}-quarter value comes from a note",
+        )
+    if form.startswith("10-Q"):
+        ytd = max(
+            (q for (tag, d, q) in structure.num if tag == nv.tag and d == nv.ddate),
+            default=nv.qtrs,
+        )
+        if stmt == "CF":
+            if nv.qtrs == ytd:
+                return True, "year-to-date column of a 10-Q cash-flow statement"
+            return (
+                False,
+                f"the cash-flow statement prints the {ytd}-quarter year-to-date column, not a {nv.qtrs}-quarter one",
+            )
+        if nv.qtrs in (1, ytd):
+            return True, "3-month or year-to-date column of a 10-Q"
+        return (
+            False,
+            f"a 10-Q {stmt} prints the 3-month and {ytd}-quarter columns, not {nv.qtrs}",
+        )
+    return True, f"form {form}: no column rule"
+
+
 def _check_identity_tie(
     structure: FilingStructure, ddate: date, tol: Decimal
 ) -> dict[str, Any]:
@@ -442,6 +495,17 @@ def prove_cell(
     if shown.data_point_name not in EXPECTED:
         p.reason_text = "no single printed line for this data point (composition); proven by its producer"
         return p
+    if shown.restated_by is not None:
+        later_acc, later_value = shown.restated_by
+        p.verdict, p.reason_code = DISAGREE, "restated_copy_shown_with_wrong_lineage"
+        p.reason_text = (
+            f"production shows {shown.value} from {shown.accession} while the later filing {later_acc} "
+            f"restates it to {later_value}; restated copies that disagree are hidden (founder ruling)"
+        )
+        p.position_accession = later_acc
+        p.position_value = later_value
+        p.position_source = "fsn_pre_calc"
+        return p
     if shown.is_derived:
         return prove_derived(shown, structure, prior_structure, fsn_set)
     if structure is None:
@@ -493,6 +557,12 @@ def prove_cell(
             p.reason_text = f"{line.tag} is presented but carries no value for the column ending {shown.period_end}"
         return p
     p.position_value = nv.value
+    face, why_face = on_statement_face(structure, stmt, nv)
+    p.checks["statement_face"] = {"status": "pass" if face else "fail", "why": why_face}
+    if not face:
+        p.verdict, p.reason_code = NOT_PRESENTED, "value_in_note_not_on_statement_face"
+        p.reason_text = f"{line.tag} = {nv.value} exists in {structure.adsh} but {why_face}; the statement face proves nothing here"
+        return p
     tol = slack(nv.dcml, shown.presentation_scale)
     p.checks["period_length"] = {"status": "pass", "qtrs": qtrs}
     # FSN num carries 'USD' for per-share values too (INTC EPS: uom USD, dcml 2)
