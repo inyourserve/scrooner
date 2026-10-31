@@ -331,7 +331,17 @@ def instance_fallback_cmd(
 
     from scrooner_pipeline.normalizer import instance_fallback as ib
 
-    with get_connection() as conn:
+    import subprocess
+
+    from scrooner_pipeline.collector.storage import SupabaseStorageClient
+
+    git_commit = (
+        subprocess.run(
+            ["git", "rev-parse", "HEAD"], capture_output=True, text=True
+        ).stdout.strip()
+        or None
+    )
+    with get_connection() as conn, SupabaseStorageClient() as storage:
         if rollback:
             typer.echo(
                 f"instance-fallback rollback: {ib.rollback_run_dir(conn, Path(rollback))}"
@@ -343,5 +353,7 @@ def instance_fallback_cmd(
             fsn_root=Path(fsn_root),
             backup_dir=Path(backup_dir) if backup_dir else None,
             report_path=Path(report) if report else None,
+            storage=storage,
+            git_commit=git_commit,
         )
     typer.echo(f"instance-fallback: {stats}")
