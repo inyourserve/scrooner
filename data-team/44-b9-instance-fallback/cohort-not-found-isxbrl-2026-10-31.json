@@ -1,0 +1,3410 @@
+[
+{
+"cik": "0001287750",
+"accession": "0001047469-14-001349",
+"form": "10-K",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-14-034914",
+"form": "10-Q",
+"period_of_report": "2014-03-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-14-056618",
+"form": "10-Q",
+"period_of_report": "2014-06-30",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-14-076197",
+"form": "10-Q",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001047469-15-001240",
+"form": "10-K",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-15-033385",
+"form": "10-Q",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-15-055586",
+"form": "10-Q",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-15-075535",
+"form": "10-Q",
+"period_of_report": "2015-09-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001047469-16-010353",
+"form": "10-K",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-16-117420",
+"form": "10-Q",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-16-136353",
+"form": "10-Q",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001104659-16-153937",
+"form": "10-Q",
+"period_of_report": "2016-09-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001047469-17-000808",
+"form": "10-K",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001628280-17-004707",
+"form": "10-Q",
+"period_of_report": "2017-03-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-17-000012",
+"form": "10-Q",
+"period_of_report": "2017-06-30",
+"fsn_set": "2017q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-17-000017",
+"form": "10-Q",
+"period_of_report": "2017-09-30",
+"fsn_set": "2017q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-18-000007",
+"form": "10-K",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-18-000015",
+"form": "10-Q",
+"period_of_report": "2018-03-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-18-000020",
+"form": "10-Q",
+"period_of_report": "2018-06-30",
+"fsn_set": "2018q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-18-000025",
+"form": "10-Q",
+"period_of_report": "2018-09-30",
+"fsn_set": "2018q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-19-000004",
+"form": "10-K",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-19-000013",
+"form": "10-Q",
+"period_of_report": "2019-03-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-19-000021",
+"form": "10-Q",
+"period_of_report": "2019-06-30",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-19-000029",
+"form": "10-Q",
+"period_of_report": "2019-09-30",
+"fsn_set": "2019q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-20-000008",
+"form": "10-K",
+"period_of_report": "2019-12-31",
+"fsn_set": "2020q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-20-000022",
+"form": "10-Q",
+"period_of_report": "2020-03-31",
+"fsn_set": "2020q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-20-000031",
+"form": "10-Q",
+"period_of_report": "2020-06-30",
+"fsn_set": "2020q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-20-000038",
+"form": "10-Q",
+"period_of_report": "2020-09-30",
+"fsn_set": "2020q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-21-000005",
+"form": "10-K",
+"period_of_report": "2020-12-31",
+"fsn_set": "2021q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-21-000020",
+"form": "10-K/A",
+"period_of_report": "2020-12-31",
+"fsn_set": "2021q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-21-000035",
+"form": "10-Q",
+"period_of_report": "2021-03-31",
+"fsn_set": "2021q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-21-000063",
+"form": "10-Q",
+"period_of_report": "2021-06-30",
+"fsn_set": "2021q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-21-000074",
+"form": "10-Q",
+"period_of_report": "2021-09-30",
+"fsn_set": "2021q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-22-000007",
+"form": "10-K",
+"period_of_report": "2021-12-31",
+"fsn_set": "2022q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-22-000021",
+"form": "10-Q",
+"period_of_report": "2022-03-31",
+"fsn_set": "2022q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001287750",
+"accession": "0001287750-22-000040",
+"form": "10-Q",
+"period_of_report": "2022-06-30",
+"fsn_set": "2022q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001512673",
+"accession": "0001512673-16-000002",
+"form": "10-K",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001652044",
+"accession": "0001193125-16-520367",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001652044",
+"accession": "0001193125-19-028757",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000002488",
+"accession": "0001193125-14-306759",
+"form": "10-Q/A",
+"period_of_report": "2014-03-29",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000002488",
+"accession": "0000002488-15-000080",
+"form": "10-Q/A",
+"period_of_report": "2015-06-27",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003453",
+"accession": "0001558370-18-003161",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003453",
+"accession": "0001558370-19-002865",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-14-000171",
+"form": "10-Q/A",
+"period_of_report": "2014-06-30",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-14-000276",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-14-000289",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-15-000094",
+"form": "10-Q/A",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-15-000152",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-15-000215",
+"form": "10-Q/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-16-000293",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000003570",
+"accession": "0000003570-18-000057",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000004127",
+"accession": "0000004127-14-000006",
+"form": "10-K/A",
+"period_of_report": "2013-09-27",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000004127",
+"accession": "0000004127-15-000004",
+"form": "10-K/A",
+"period_of_report": "2015-02-02",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000004127",
+"accession": "0000004127-16-000042",
+"form": "10-K/A",
+"period_of_report": "2016-02-01",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000004127",
+"accession": "0000004127-17-000007",
+"form": "10-K/A",
+"period_of_report": "2017-01-30",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000004127",
+"accession": "0000004127-18-000004",
+"form": "10-K/A",
+"period_of_report": "2017-09-29",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000004127",
+"accession": "0000004127-19-000005",
+"form": "10-K/A",
+"period_of_report": "2018-09-28",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000005272",
+"accession": "0000005272-15-000009",
+"form": "10-Q",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000005272",
+"accession": "0001193125-17-143255",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000006201",
+"accession": "0001193125-16-656554",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000007431",
+"accession": "0001193125-19-051994",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000007431",
+"accession": "0001564590-19-013953",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000012208",
+"accession": "0001193125-18-134929",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000012927",
+"accession": "0000012927-17-000012",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000014272",
+"accession": "0000014272-14-000165",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000016875",
+"accession": "0001193125-18-108782",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000016875",
+"accession": "0001193125-19-115178",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000021076",
+"accession": "0001206774-16-007290",
+"form": "10-K/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000021344",
+"accession": "0000021344-14-000018",
+"form": "10-Q/A",
+"period_of_report": "2014-03-28",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000024741",
+"accession": "0001193125-14-110407",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000027904",
+"accession": "0001193125-14-172167",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000027904",
+"accession": "0001683168-17-000904",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000029644",
+"accession": "0000029644-19-000044",
+"form": "10-Q/A",
+"period_of_report": "2019-04-30",
+"fsn_set": "2019q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000030625",
+"accession": "0000030625-19-000010",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000031462",
+"accession": "0001104659-14-057866",
+"form": "10-K/A",
+"period_of_report": "2012-12-31",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000033213",
+"accession": "0001104659-14-084656",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000033213",
+"accession": "0001104659-16-119220",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000033213",
+"accession": "0001104659-19-024617",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000035527",
+"accession": "0001193125-16-763678",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000035527",
+"accession": "0001193125-16-763682",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000035527",
+"accession": "0001193125-16-763672",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000036104",
+"accession": "0001193125-15-070975",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000037996",
+"accession": "0000037996-15-000017",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000037996",
+"accession": "0000037996-16-000098",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 1
+},
+{
+"cik": "0000037996",
+"accession": "0000037996-17-000028",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000037996",
+"accession": "0000037996-18-000025",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000039911",
+"accession": "0000039911-14-000154",
+"form": "10-Q/A",
+"period_of_report": "2014-05-03",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000039911",
+"accession": "0000039911-17-000119",
+"form": "10-Q/A",
+"period_of_report": "2017-04-29",
+"fsn_set": "2017q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000040545",
+"accession": "0000040545-15-000068",
+"form": "10-Q/A",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000040987",
+"accession": "0000040987-19-000042",
+"form": "10-K/A",
+"period_of_report": "2019-08-09",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000040987",
+"accession": "0000040987-19-000044",
+"form": "10-Q/A",
+"period_of_report": "2019-08-09",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000042888",
+"accession": "0000042888-18-000014",
+"form": "10-K/A",
+"period_of_report": "2017-12-29",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000046080",
+"accession": "0000046080-15-000074",
+"form": "10-Q",
+"period_of_report": "2015-06-28",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000046080",
+"accession": "0000046080-16-000200",
+"form": "10-Q/A",
+"period_of_report": "2016-06-26",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000047217",
+"accession": "0000047217-17-000043",
+"form": "10-K",
+"period_of_report": "2017-10-31",
+"fsn_set": "2017q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000049071",
+"accession": "0000049071-14-000031",
+"form": "10-K/A",
+"period_of_report": "2012-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000063754",
+"accession": "0001193125-18-029612",
+"form": "10-K/A",
+"period_of_report": "2017-11-30",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000067887",
+"accession": "0000067887-14-000122",
+"form": "10-K/A",
+"period_of_report": "2014-09-27",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000070145",
+"accession": "0000070145-16-000103",
+"form": "10-K/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000072331",
+"accession": "0001564590-16-030244",
+"form": "10-K/A",
+"period_of_report": "2016-10-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000079282",
+"accession": "0000079282-16-000036",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000085535",
+"accession": "0001144204-16-079343",
+"form": "10-Q/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000091388",
+"accession": "0000091388-15-000030",
+"form": "10-K/A",
+"period_of_report": "2014-12-28",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000091388",
+"accession": "0000091388-16-000070",
+"form": "10-K/A",
+"period_of_report": "2016-01-03",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000091576",
+"accession": "0000091576-21-000070",
+"form": "10-Q",
+"period_of_report": "2021-03-31",
+"fsn_set": "2021q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000092230",
+"accession": "0000092230-16-000185",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000092380",
+"accession": "0000092380-15-000030",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000093751",
+"accession": "0000093751-17-000327",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000094845",
+"accession": "0000094845-15-000011",
+"form": "10-K/A",
+"period_of_report": "2014-11-30",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000094845",
+"accession": "0001193125-15-213503",
+"form": "10-K/A",
+"period_of_report": "2014-11-30",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000096021",
+"accession": "0001193125-16-490366",
+"form": "10-K/A",
+"period_of_report": "2015-06-27",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000097745",
+"accession": "0001193125-15-078768",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000101829",
+"accession": "0000101829-19-000009",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000102729",
+"accession": "0001104659-15-050851",
+"form": "10-K/A",
+"period_of_report": "2014-12-27",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000106535",
+"accession": "0000106535-15-000010",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000106535",
+"accession": "0000106535-16-000072",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000108312",
+"accession": "0000108312-14-000021",
+"form": "10-K/A",
+"period_of_report": "2013-09-30",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000315189",
+"accession": "0001558370-18-001449",
+"form": "10-Q/A",
+"period_of_report": "2018-01-28",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000315852",
+"accession": "0001193125-14-244934",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000318154",
+"accession": "0001193125-15-281301",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000318154",
+"accession": "0000318154-20-000019",
+"form": "10-K/A",
+"period_of_report": "2019-12-31",
+"fsn_set": "2020q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000320335",
+"accession": "0000320335-15-000039",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000350894",
+"accession": "0000350894-22-000026",
+"form": "10-Q/A",
+"period_of_report": "2022-03-31",
+"fsn_set": "2022q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000350894",
+"accession": "0000350894-23-000017",
+"form": "10-K/A",
+"period_of_report": "2022-12-31",
+"fsn_set": "2023q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000350894",
+"accession": "0000350894-24-000030",
+"form": "10-K/A",
+"period_of_report": "2023-12-31",
+"fsn_set": "2024q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000714310",
+"accession": "0001214659-15-003515",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000714310",
+"accession": "0000714310-19-000154",
+"form": "10-Q/A",
+"period_of_report": "2019-03-31",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000717423",
+"accession": "0000717423-19-000016",
+"form": "10-K",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000719413",
+"accession": "0001437749-17-008614",
+"form": "10-Q/A",
+"period_of_report": "2017-03-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000720672",
+"accession": "0001564590-15-006872",
+"form": "10-Q",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000723125",
+"accession": "0000723125-16-000220",
+"form": "10-Q/A",
+"period_of_report": "2016-03-03",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000726958",
+"accession": "0000726958-15-000078",
+"form": "10-K/A",
+"period_of_report": "2015-04-30",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000732717",
+"accession": "0000732717-14-000132",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000749251",
+"accession": "0000749251-14-000032",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000749251",
+"accession": "0000749251-15-000028",
+"form": "10-Q/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000749251",
+"accession": "0000930413-17-000905",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000751978",
+"accession": "0001193125-14-223721",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000759944",
+"accession": "0000759944-18-000021",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764065",
+"accession": "0000764065-14-000052",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764065",
+"accession": "0000764065-14-000173",
+"form": "10-Q/A",
+"period_of_report": "2013-03-31",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764065",
+"accession": "0000764065-14-000183",
+"form": "10-Q/A",
+"period_of_report": "2014-03-31",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764065",
+"accession": "0000764065-14-000185",
+"form": "10-Q/A",
+"period_of_report": "2014-03-31",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764065",
+"accession": "0000764065-18-000065",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764180",
+"accession": "0000764180-14-000063",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764180",
+"accession": "0001193125-15-242546",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764180",
+"accession": "0000764180-17-000074",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764180",
+"accession": "0000764180-18-000051",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000764180",
+"accession": "0000764180-19-000049",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000795403",
+"accession": "0001104659-16-139148",
+"form": "10-Q/A",
+"period_of_report": "2016-07-03",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000797721",
+"accession": "0001193125-16-455514",
+"form": "10-Q",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000802481",
+"accession": "0000802481-17-000020",
+"form": "10-K/A",
+"period_of_report": "2016-12-25",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000813672",
+"accession": "0000813672-15-000017",
+"form": "10-K/A",
+"period_of_report": "2015-01-03",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000815097",
+"accession": "0000815097-16-000046",
+"form": "10-Q/A",
+"period_of_report": "2016-08-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000815556",
+"accession": "0000815556-17-000048",
+"form": "10-Q/A",
+"period_of_report": "2017-09-30",
+"fsn_set": "2017q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000824142",
+"accession": "0000824142-14-000030",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000827054",
+"accession": "0000827054-15-000108",
+"form": "10-K/A",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000831259",
+"accession": "0000831259-15-000033",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000842023",
+"accession": "0001437749-17-004973",
+"form": "10-Q/A",
+"period_of_report": "2016-09-30",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000842023",
+"accession": "0001437749-17-004975",
+"form": "10-Q/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000849399",
+"accession": "0001193125-14-280543",
+"form": "10-K/A",
+"period_of_report": "2014-03-28",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000849399",
+"accession": "0001193125-15-274654",
+"form": "10-K/A",
+"period_of_report": "2015-04-03",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000849399",
+"accession": "0001193125-16-664651",
+"form": "10-K/A",
+"period_of_report": "2016-04-01",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000849399",
+"accession": "0001193125-17-235041",
+"form": "10-K/A",
+"period_of_report": "2017-03-31",
+"fsn_set": "2017q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000849399",
+"accession": "0001104659-19-041857",
+"form": "10-K/A",
+"period_of_report": "2019-03-29",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000855658",
+"accession": "0000855658-14-000190",
+"form": "10-K/A",
+"period_of_report": "2013-12-28",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000865752",
+"accession": "0001104659-15-025925",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000865752",
+"accession": "0001104659-17-023427",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000866374",
+"accession": "0001104659-18-041261",
+"form": "10-K/A",
+"period_of_report": "2018-03-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000868857",
+"accession": "0001047469-16-014900",
+"form": "10-K/A",
+"period_of_report": "2015-10-02",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000874015",
+"accession": "0001140361-14-040794",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000874015",
+"accession": "0001140361-16-069460",
+"form": "10-Q/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000874238",
+"accession": "0001171843-16-008985",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000876437",
+"accession": "0000876437-17-000025",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000876437",
+"accession": "0000876437-18-000022",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000877212",
+"accession": "0000877212-16-000012",
+"form": "10-Q/A",
+"period_of_report": "2016-04-02",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000879169",
+"accession": "0001558370-16-004172",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 1
+},
+{
+"cik": "0000879169",
+"accession": "0001104659-17-009266",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000879169",
+"accession": "0001558370-17-001928",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000879169",
+"accession": "0001104659-17-043033",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000882095",
+"accession": "0000882095-19-000008",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000882835",
+"accession": "0000950103-14-002971",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000882835",
+"accession": "0000882835-14-000031",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000885725",
+"accession": "0000885725-17-000008",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000886163",
+"accession": "0001193125-15-412803",
+"form": "10-Q/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000886163",
+"accession": "0000886163-17-000121",
+"form": "10-Q/A",
+"period_of_report": "2017-11-01",
+"fsn_set": "2017q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000887343",
+"accession": "0000887343-14-000011",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000888491",
+"accession": "0001571049-15-003357",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000891103",
+"accession": "0001104659-16-116267",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000893538",
+"accession": "0001104659-14-036588",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000899689",
+"accession": "0000899689-14-000020",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000899689",
+"accession": "0000899689-15-000012",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000899689",
+"accession": "0000899689-16-000051",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000899689",
+"accession": "0000899689-17-000014",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000908255",
+"accession": "0000908255-16-000092",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000909832",
+"accession": "0000909832-15-000012",
+"form": "10-Q/A",
+"period_of_report": "2015-05-10",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000909832",
+"accession": "0000909832-16-000034",
+"form": "10-K/A",
+"period_of_report": "2016-08-28",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000910521",
+"accession": "0000910521-17-000015",
+"form": "10-K/A",
+"period_of_report": "2017-03-31",
+"fsn_set": "2017q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000911177",
+"accession": "0001193125-16-569492",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000912093",
+"accession": "0001104659-14-025621",
+"form": "10-K/A",
+"period_of_report": "2013-06-29",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000912242",
+"accession": "0001047469-15-004226",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000912242",
+"accession": "0001193125-18-143924",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000914475",
+"accession": "0001193125-16-569171",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000916076",
+"accession": "0000950157-14-000784",
+"form": "10-Q/A",
+"period_of_report": "2014-03-31",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000916076",
+"accession": "0000950157-19-000284",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000917273",
+"accession": "0001104659-14-002072",
+"form": "10-Q/A",
+"period_of_report": "2013-06-30",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000920148",
+"accession": "0000920148-15-000099",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000927066",
+"accession": "0001193125-16-565979",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000939767",
+"accession": "0000939767-16-000260",
+"form": "10-Q/A",
+"period_of_report": "2016-04-01",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000939767",
+"accession": "0000939767-17-000126",
+"form": "10-Q/A",
+"period_of_report": "2017-03-31",
+"fsn_set": "2017q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000940944",
+"accession": "0000940944-17-000030",
+"form": "10-K/A",
+"period_of_report": "2017-05-28",
+"fsn_set": "2017q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000943819",
+"accession": "0001193125-17-009237",
+"form": "10-K/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001478242",
+"accession": "0001193125-14-062786",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000946581",
+"accession": "0000899140-14-000678",
+"form": "10-Q/A",
+"period_of_report": "2014-06-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000946581",
+"accession": "0001104659-15-001581",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0000946581",
+"accession": "0001104659-17-034645",
+"form": "10-Q/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001486957",
+"accession": "0001486957-26-000042",
+"form": "10-Q",
+"period_of_report": "2026-06-30",
+"fsn_set": "2026m08",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001001316",
+"accession": "0001654954-17-002229",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001004434",
+"accession": "0001004434-14-000009",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001004434",
+"accession": "0001004434-15-000008",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001004434",
+"accession": "0001004434-16-000038",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 1
+},
+{
+"cik": "0001004434",
+"accession": "0001004434-17-000007",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001004434",
+"accession": "0001004434-18-000009",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001004434",
+"accession": "0001004434-19-000011",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001004980",
+"accession": "0001004980-15-000016",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001004980",
+"accession": "0000950157-19-000501",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001493594",
+"accession": "0001193125-16-800433",
+"form": "10-K/A",
+"period_of_report": "2016-09-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001493594",
+"accession": "0001193125-18-126992",
+"form": "10-K/A",
+"period_of_report": "2017-09-29",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001501585",
+"accession": "0001501585-15-000007",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001013871",
+"accession": "0001013871-14-000006",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001022671",
+"accession": "0001104659-15-044526",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001031296",
+"accession": "0001031296-19-000015",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001520006",
+"accession": "0001520006-15-000187",
+"form": "10-Q/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001521036",
+"accession": "0001193125-16-691781",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001037976",
+"accession": "0001037976-14-000013",
+"form": "10-K/A",
+"period_of_report": "2012-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001038074",
+"accession": "0001047469-19-002853",
+"form": "10-K/A",
+"period_of_report": "2018-12-29",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001833756",
+"accession": "0001628280-21-010529",
+"form": "10-Q",
+"period_of_report": "2021-03-31",
+"fsn_set": "2021q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001043277",
+"accession": "0001043277-15-000014",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001535929",
+"accession": "0001193125-14-172223",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001539838",
+"accession": "0001539838-14-000058",
+"form": "10-Q/A",
+"period_of_report": "2014-03-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001539838",
+"accession": "0001539838-15-000090",
+"form": "10-Q/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001539838",
+"accession": "0001539838-19-000030",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001048477",
+"accession": "0001564590-17-023407",
+"form": "10-Q/A",
+"period_of_report": "2017-06-30",
+"fsn_set": "2017q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001048911",
+"accession": "0001193125-14-057092",
+"form": "10-Q/A",
+"period_of_report": "2013-11-30",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001048911",
+"accession": "0001193125-19-222475",
+"form": "10-K/A",
+"period_of_report": "2019-05-31",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001552033",
+"accession": "0001552033-14-000049",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001056696",
+"accession": "0001564590-16-016712",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001056696",
+"accession": "0001564590-19-008024",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001559720",
+"accession": "0001559720-21-000010",
+"form": "10-K",
+"period_of_report": "2020-12-31",
+"fsn_set": "2021q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001059556",
+"accession": "0001193125-14-073457",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001061983",
+"accession": "0001193125-17-014183",
+"form": "10-Q/A",
+"period_of_report": "2016-09-30",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001562401",
+"accession": "0001104659-15-036333",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001852131",
+"accession": "0001852131-24-000003",
+"form": "10-K/A",
+"period_of_report": "2024-03-31",
+"fsn_set": "2024q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001065088",
+"accession": "0001193125-16-470992",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001065280",
+"accession": "0001065280-19-000079",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001065696",
+"accession": "0001193125-14-103680",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001567683",
+"accession": "0001567683-16-000035",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 1
+},
+{
+"cik": "0001567683",
+"accession": "0001567683-19-000018",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001571283",
+"accession": "0001564590-15-001937",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001571283",
+"accession": "0001564590-15-008842",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001571283",
+"accession": "0001564590-15-008844",
+"form": "10-Q/A",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001571283",
+"accession": "0001564590-15-008847",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001571283",
+"accession": "0001571283-19-000007",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001575515",
+"accession": "0001193125-15-070305",
+"form": "10-K/A",
+"period_of_report": "2014-12-28",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001575515",
+"accession": "0001564590-19-010453",
+"form": "10-Q/A",
+"period_of_report": "2018-09-30",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001575965",
+"accession": "0001575965-18-000012",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001579241",
+"accession": "0001579241-14-000007",
+"form": "10-K",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001579428",
+"accession": "0001558370-16-004365",
+"form": "10-K",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001579428",
+"accession": "0001558370-16-007797",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001865782",
+"accession": "0000950170-24-027316",
+"form": "10-K",
+"period_of_report": "2023-12-31",
+"fsn_set": "2024q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001581280",
+"accession": "0001193125-18-354577",
+"form": "10-K",
+"period_of_report": "2018-09-30",
+"fsn_set": "2018q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001083301",
+"accession": "0001083301-25-000052",
+"form": "10-K/A",
+"period_of_report": "2024-12-31",
+"fsn_set": "2025q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001083301",
+"accession": "0001083301-25-000053",
+"form": "10-Q/A",
+"period_of_report": "2025-03-31",
+"fsn_set": "2025q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001086222",
+"accession": "0001086222-15-000074",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001585689",
+"accession": "0001585689-14-000006",
+"form": "10-K",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001088856",
+"accession": "0001193125-14-378760",
+"form": "10-Q/A",
+"period_of_report": "2014-06-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001590364",
+"accession": "0001590364-15-000003",
+"form": "10-Q",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001590364",
+"accession": "0001590364-16-000016",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001590714",
+"accession": "0001171843-14-001509",
+"form": "10-K",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001090425",
+"accession": "0001564590-19-004180",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001590717",
+"accession": "0001193125-14-308481",
+"form": "10-Q",
+"period_of_report": "2014-06-30",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001590717",
+"accession": "0001193125-16-506716",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 1
+},
+{
+"cik": "0001590717",
+"accession": "0001193125-16-510434",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001590895",
+"accession": "0001047469-16-016439",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001590955",
+"accession": "0001193125-14-208362",
+"form": "10-Q",
+"period_of_report": "2014-03-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001591698",
+"accession": "0001104659-15-065797",
+"form": "10-K/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001880661",
+"accession": "0001880661-22-000008",
+"form": "10-K",
+"period_of_report": "2021-12-31",
+"fsn_set": "2022q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001094285",
+"accession": "0001094285-16-000229",
+"form": "10-K/A",
+"period_of_report": "2016-01-03",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001596532",
+"accession": "0001596532-16-000313",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001596532",
+"accession": "0001596532-16-000312",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001600033",
+"accession": "0001600033-19-000069",
+"form": "10-Q/A",
+"period_of_report": "2019-06-30",
+"fsn_set": "2019q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001600033",
+"accession": "0001600033-19-000068",
+"form": "10-Q/A",
+"period_of_report": "2019-03-31",
+"fsn_set": "2019q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001600033",
+"accession": "0001600033-19-000067",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001600033",
+"accession": "0001600033-19-000070",
+"form": "10-Q/A",
+"period_of_report": "2019-09-30",
+"fsn_set": "2019q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001099590",
+"accession": "0000903423-18-000273",
+"form": "10-Q/A",
+"period_of_report": "2018-03-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001601046",
+"accession": "0001601046-14-000008",
+"form": "10-K",
+"period_of_report": "2014-10-31",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001601046",
+"accession": "0001601046-16-000058",
+"form": "10-K/A",
+"period_of_report": "2015-10-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001104506",
+"accession": "0001104659-15-023905",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001604821",
+"accession": "0001104659-18-019410",
+"form": "10-Q/A",
+"period_of_report": "2017-09-30",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001604821",
+"accession": "0001104659-19-005911",
+"form": "10-Q/A",
+"period_of_report": "2018-03-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001107843",
+"accession": "0001193125-15-008295",
+"form": "10-Q/A",
+"period_of_report": "2014-03-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001107843",
+"accession": "0001193125-15-008309",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001107843",
+"accession": "0001193125-15-008303",
+"form": "10-Q/A",
+"period_of_report": "2014-06-30",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001107843",
+"accession": "0001107843-17-000015",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001109354",
+"accession": "0001104659-16-157326",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001109354",
+"accession": "0001104659-16-157324",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001109354",
+"accession": "0001047469-16-016725",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001609711",
+"accession": "0001609711-16-000086",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001110803",
+"accession": "0001110803-15-000130",
+"form": "10-K/A",
+"period_of_report": "2014-12-28",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001616707",
+"accession": "0001616707-16-000020",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001616707",
+"accession": "0001616707-16-000278",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001616707",
+"accession": "0001616707-16-000280",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001616707",
+"accession": "0001616707-16-000279",
+"form": "10-Q/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001618732",
+"accession": "0001618732-17-000085",
+"form": "10-Q/A",
+"period_of_report": "2017-04-30",
+"fsn_set": "2017q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001944013",
+"accession": "0001193125-23-086014",
+"form": "10-K",
+"period_of_report": "2022-12-31",
+"fsn_set": "2023q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001125376",
+"accession": "0001125376-15-000044",
+"form": "10-Q/A",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001622536",
+"accession": "0001622537-15-000003",
+"form": "10-Q",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 1
+},
+{
+"cik": "0001628171",
+"accession": "0001564590-20-014169",
+"form": "10-K",
+"period_of_report": "2019-12-31",
+"fsn_set": "2020q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001136893",
+"accession": "0001136893-16-000111",
+"form": "10-Q/A",
+"period_of_report": "2016-09-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001137774",
+"accession": "0001193125-14-225681",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001632970",
+"accession": "0001632970-18-000197",
+"form": "10-Q/A",
+"period_of_report": "2018-09-30",
+"fsn_set": "2018q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001138118",
+"accession": "0001193125-14-349197",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001633978",
+"accession": "0001628280-16-021193",
+"form": "10-K/A",
+"period_of_report": "2016-07-02",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001635327",
+"accession": "0001193125-24-076966",
+"form": "10-K",
+"period_of_report": "2023-12-31",
+"fsn_set": "2024q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001140536",
+"accession": "0001193125-14-171278",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001145197",
+"accession": "0001145197-14-000004",
+"form": "10-Q/A",
+"period_of_report": "2013-09-30",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001145197",
+"accession": "0001145197-14-000017",
+"form": "10-Q/A",
+"period_of_report": "2013-09-30",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001145197",
+"accession": "0001145197-19-000005",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001639300",
+"accession": "0001193125-16-651485",
+"form": "10-Q/A",
+"period_of_report": "2016-04-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001157601",
+"accession": "0001104659-16-115609",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001157601",
+"accession": "0001104659-16-157619",
+"form": "10-Q/A",
+"period_of_report": "2016-09-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001157601",
+"accession": "0001193125-19-129437",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001158114",
+"accession": "0001019687-15-001941",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001158114",
+"accession": "0001019687-16-007125",
+"form": "10-Q/A",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001642896",
+"accession": "0001642896-22-000016",
+"form": "10-K",
+"period_of_report": "2022-01-29",
+"fsn_set": "2022q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001159036",
+"accession": "0001159036-15-000082",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001646972",
+"accession": "0001646972-18-000021",
+"form": "10-K/A",
+"period_of_report": "2018-02-24",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0002007855",
+"accession": "0002007855-25-000010",
+"form": "10-K",
+"period_of_report": "2024-12-31",
+"fsn_set": "2025q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001178670",
+"accession": "0001193125-15-006669",
+"form": "10-Q/A",
+"period_of_report": "2014-03-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001206264",
+"accession": "0001193125-14-196985",
+"form": "10-Q/A",
+"period_of_report": "2014-03-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001212545",
+"accession": "0001212545-17-000114",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0002030781",
+"accession": "0002030781-25-000011",
+"form": "10-K",
+"period_of_report": "2025-01-31",
+"fsn_set": "2025q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001671933",
+"accession": "0001193125-17-139585",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001232524",
+"accession": "0001232524-14-000041",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001232524",
+"accession": "0001232524-15-000090",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001232524",
+"accession": "0001232524-16-000255",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001232524",
+"accession": "0001193125-17-136862",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001232524",
+"accession": "0001193125-18-128804",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001232524",
+"accession": "0001193125-19-122354",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001236275",
+"accession": "0001185185-18-001951",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001260221",
+"accession": "0001260221-16-000109",
+"form": "10-K/A",
+"period_of_report": "2016-09-30",
+"fsn_set": "2016q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001262039",
+"accession": "0001174947-18-000697",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001274494",
+"accession": "0001274494-15-000051",
+"form": "10-Q/A",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001274494",
+"accession": "0001274494-15-000053",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001682852",
+"accession": "0001682852-19-000013",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001687229",
+"accession": "0001687229-17-000005",
+"form": "10-K",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001281761",
+"accession": "0001281761-15-000025",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001281761",
+"accession": "0001281761-17-000028",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001692115",
+"accession": "0001193125-17-062419",
+"form": "10-K",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q1",
+"edgar_isXBRL": 1
+},
+{
+"cik": "0001692819",
+"accession": "0001692819-19-000011",
+"form": "10-Q/A",
+"period_of_report": "2019-03-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001692819",
+"accession": "0001193125-19-198164",
+"form": "10-Q/A",
+"period_of_report": "2019-03-31",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001692819",
+"accession": "0001193125-19-198162",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001288469",
+"accession": "0001193125-15-087901",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001288469",
+"accession": "0001193125-16-564154",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001297996",
+"accession": "0001193125-14-080989",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001297996",
+"accession": "0001297996-16-000151",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001705696",
+"accession": "0001705696-18-000018",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001302215",
+"accession": "0001302215-16-000052",
+"form": "10-K/A",
+"period_of_report": "2016-03-31",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001302215",
+"accession": "0001193125-18-177470",
+"form": "10-K/A",
+"period_of_report": "2018-03-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001302215",
+"accession": "0001193125-19-045493",
+"form": "10-K/A",
+"period_of_report": "2018-03-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001309108",
+"accession": "0001309108-19-000043",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001711279",
+"accession": "0001564590-19-007267",
+"form": "10-K",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001321732",
+"accession": "0001321732-18-000086",
+"form": "10-Q/A",
+"period_of_report": "2018-03-31",
+"fsn_set": "2018q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001718512",
+"accession": "0001193125-18-082737",
+"form": "10-K",
+"period_of_report": "2017-12-30",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001324424",
+"accession": "0001193125-16-569280",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001324424",
+"accession": "0001324424-18-000008",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001324424",
+"accession": "0001324424-19-000013",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001720635",
+"accession": "0001720635-19-000013",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001326160",
+"accession": "0001326160-16-000277",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001326380",
+"accession": "0001326380-19-000102",
+"form": "10-Q",
+"period_of_report": "2019-05-04",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001326801",
+"accession": "0001326801-15-000010",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001326801",
+"accession": "0001326801-16-000063",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001331875",
+"accession": "0001193125-14-173397",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001331875",
+"accession": "0001193125-15-162103",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001331875",
+"accession": "0001104659-18-027231",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001335258",
+"accession": "0001335258-14-000085",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001335258",
+"accession": "0001335258-15-000087",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001335258",
+"accession": "0001335258-16-000225",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001335258",
+"accession": "0001335258-17-000108",
+"form": "10-K/A",
+"period_of_report": "2016-12-31",
+"fsn_set": "2017q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001335258",
+"accession": "0001335258-18-000103",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001335258",
+"accession": "0001335258-19-000086",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001564590-19-008333",
+"form": "10-K",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-19-000005",
+"form": "10-Q",
+"period_of_report": "2019-03-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-19-000010",
+"form": "10-Q",
+"period_of_report": "2019-06-30",
+"fsn_set": "2019q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-19-000014",
+"form": "10-Q",
+"period_of_report": "2019-09-30",
+"fsn_set": "2019q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-20-000003",
+"form": "10-K",
+"period_of_report": "2019-12-31",
+"fsn_set": "2020q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-20-000007",
+"form": "10-Q",
+"period_of_report": "2020-03-31",
+"fsn_set": "2020q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-20-000014",
+"form": "10-Q",
+"period_of_report": "2020-06-30",
+"fsn_set": "2020q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-20-000017",
+"form": "10-Q",
+"period_of_report": "2020-09-30",
+"fsn_set": "2020q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-21-000004",
+"form": "10-K",
+"period_of_report": "2020-12-31",
+"fsn_set": "2021q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-21-000007",
+"form": "10-Q",
+"period_of_report": "2021-03-31",
+"fsn_set": "2021q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-21-000012",
+"form": "10-Q",
+"period_of_report": "2021-06-30",
+"fsn_set": "2021q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-21-000014",
+"form": "10-Q",
+"period_of_report": "2021-09-30",
+"fsn_set": "2021q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-22-000006",
+"form": "10-K",
+"period_of_report": "2021-12-31",
+"fsn_set": "2022q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001736035",
+"accession": "0001736035-22-000013",
+"form": "10-Q",
+"period_of_report": "2022-03-31",
+"fsn_set": "2022q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001360604",
+"accession": "0001360604-16-000141",
+"form": "10-Q",
+"period_of_report": "2016-06-30",
+"fsn_set": "2016q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001366868",
+"accession": "0001366868-16-000118",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001370946",
+"accession": "0001370946-15-000076",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001373715",
+"accession": "0001373715-14-000077",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001381197",
+"accession": "0001381197-14-000027",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001773751",
+"accession": "0001140361-21-015205",
+"form": "10-K/A",
+"period_of_report": "2020-12-31",
+"fsn_set": "2021q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001773751",
+"accession": "0001193125-21-162258",
+"form": "10-K/A",
+"period_of_report": "2020-12-31",
+"fsn_set": "2021q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001383650",
+"accession": "0001383650-14-000062",
+"form": "10-Q/A",
+"period_of_report": "2014-06-30",
+"fsn_set": "2014q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001383650",
+"accession": "0001383650-14-000084",
+"form": "10-Q/A",
+"period_of_report": "2014-09-30",
+"fsn_set": "2014q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001383650",
+"accession": "0001383650-15-000036",
+"form": "10-Q/A",
+"period_of_report": "2015-03-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001383650",
+"accession": "0001383650-15-000052",
+"form": "10-Q/A",
+"period_of_report": "2015-06-30",
+"fsn_set": "2015q3",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001383650",
+"accession": "0001383650-15-000074",
+"form": "10-Q/A",
+"period_of_report": "2015-09-30",
+"fsn_set": "2015q4",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001383650",
+"accession": "0001383650-16-000096",
+"form": "10-K/A",
+"period_of_report": "2015-12-31",
+"fsn_set": "2016q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001397187",
+"accession": "0001397187-14-000003",
+"form": "10-Q/A",
+"period_of_report": "2013-05-05",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001415404",
+"accession": "0001047469-14-004362",
+"form": "10-K/A",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001415404",
+"accession": "0001415404-19-000007",
+"form": "10-K/A",
+"period_of_report": "2018-12-31",
+"fsn_set": "2019q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001418135",
+"accession": "0001418135-14-000010",
+"form": "10-Q/A",
+"period_of_report": "2013-06-30",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001418135",
+"accession": "0001047469-18-001872",
+"form": "10-K/A",
+"period_of_report": "2017-12-31",
+"fsn_set": "2018q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001425205",
+"accession": "0001144204-15-023756",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q2",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001448893",
+"accession": "0001047469-14-002063",
+"form": "10-K",
+"period_of_report": "2013-12-31",
+"fsn_set": "2014q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001451505",
+"accession": "0001451505-15-000040",
+"form": "10-K/A",
+"period_of_report": "2014-12-31",
+"fsn_set": "2015q1",
+"edgar_isXBRL": 0
+},
+{
+"cik": "0001467623",
+"accession": "0001467623-19-000013",
+"form": "10-Q/A",
+"period_of_report": "2019-03-31",
+"fsn_set": "2019q2",
+"edgar_isXBRL": 0
+}
+]
