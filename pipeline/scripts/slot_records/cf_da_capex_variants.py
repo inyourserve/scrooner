@@ -68,7 +68,10 @@ CAPEX_OG_LABEL = re.compile(r"drilling|completion|(un)?proved (oil|gas|propertie
 
 
 def capex_nature(tag, label):
-    if tag == "PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets":
+    if tag == "PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets" or (
+            re.search(r"PropertyPlantAndEquipment|ProductiveAssets", tag) and re.search(r"intangible", label, re.I)
+            and re.search(r"property|plant|equipment", label, re.I)):
+        # NVDA "Purchases of property and equipment and intangible assets" on the PP&E element
         return "ppe_with_intangibles"  # one printed line (URI non-rental + intangibles): cannot split without notes
     if tag == "PaymentsToAcquirePropertySubjectToOrAvailableForOperatingLease":
         return "leased"  # URI rental fleet
@@ -86,7 +89,7 @@ def capex_nature(tag, label):
     if re.search(r"software", label, re.I) and re.search(r"PropertyPlantAndEquipment|ProductiveAssets", tag) \
             and re.search(r"property|plant|premises|equipment|capital expenditure|building", label, re.I):
         return "ppe"  # ONE printed line covering PP&E and software: the filer's own total, same in both variants
-    if "Software" in tag or re.search(r"software", label, re.I):
+    if "Software" in tag or re.search(r"software|information technology applications?|\bIT applications?", label, re.I):
         return "software"
     if tag.startswith("PaymentsForProceedsFrom"):
         # the approval: a net line inside the continuing block whose label does not
@@ -139,9 +142,9 @@ def da_nature(tag, label, custom, label_ok=True):
         label = ""
     if re.search(r"lease\b.*incentive|incentive.*\blease", label, re.I) or (
             re.search(r"depreciation", label, re.I)
-            and re.search(r"(equipment|assets?|property) (on|under|subject to|held for) (operating )?leas|leased to others|rental (equipment|fleet)|lease fleet", label, re.I)):
+            and re.search(r"(equipment|assets?|property) (on|under|subject to|held for) (operating )?leas|leased to others|leased assets|rental (equipment|fleet)|lease fleet", label, re.I)):
         return "definition_question"  # Verifier: PCAR lessor-equipment depreciation, FTAI lease incentives
-    if re.search(r"(above|below).market", label, re.I):
+    if re.search(r"(above|below)\W{0,3}(\(?(above|below)\)?\W{0,3})?market|market lease", label, re.I):
         return "excluded"  # Verifier V11 (VNO): below-market lease amortization is revenue
     if re.search(r"lease intangible|in.place lease|lease.related intangible|rent.related intangible|ground.lease intangible", label, re.I):
         return "lease_intangible"  # sign decides: printed negative = below-market revenue offset (TRNO)
@@ -301,7 +304,7 @@ for (cik, ddate, q), f in chosen():
             if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab)) and not re.search(r"proceeds|sale|disposal|divest|software|site", lab + t, re.I):
                 v = dec(vals.get(t))
                 if v:
-                    lines.append({"tag": t, "label": lab, "nature": "ppe", "disc": False, "value": abs(v), "custom": r["custom"], "og": True})
+                    lines.append({"tag": t, "label": lab, "nature": "ppe", "disc": False, "value": abs(v), "raw": v, "negating": r["negating"], "custom": r["custom"], "og": True})
                 continue
             if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on))\b", lab, re.I) and not re.search(
                     r"real estate|rental propert|investment|loan|securit|intangible|business|software|acquisition|receivable|financ|note|"
@@ -311,7 +314,7 @@ for (cik, ddate, q), f in chosen():
                 if v:
                     # nature from the same classifier (OSK "Additions to equipment held for rental" stays leased)
                     lines.append({"tag": t, "label": lab, "nature": capex_nature(t, lab), "disc": bool(re.search(r"discontinued", lab, re.I)),
-                                  "value": abs(v), "custom": r["custom"], "additions_line": True})
+                                  "value": abs(v), "raw": v, "negating": r["negating"], "custom": r["custom"], "additions_line": True})
                 continue
             is_cap = (CAPEX_TAG.search(t) and not CAPEX_EXCLUDE.search(t)) or (r["custom"] and CAPEX_LABEL.search(lab) and not re.search(r"proceeds|sale of|disposal", lab, re.I))
             if not is_cap or t not in vals:
@@ -322,7 +325,48 @@ for (cik, ddate, q), f in chosen():
             if v is None or v == 0:
                 continue
             disc = (disc_inv_i is not None and cont_inv_i is not None and cont_inv_i < k <= disc_inv_i) or bool(re.search(r"discontinued", lab, re.I))
-            lines.append({"tag": t, "label": lab, "nature": capex_nature(t, lab), "disc": disc, "value": abs(v), "custom": r["custom"]})
+            lines.append({"tag": t, "label": lab, "nature": capex_nature(t, lab), "disc": disc, "value": abs(v), "raw": v, "negating": r["negating"], "custom": r["custom"]})
+        # DIRECTION AS PRINTED (Verifier R1, BWA/ON/AXS): a member counts only if it is a cash OUTFLOW
+        # in the filer's own investing section. Printed signs (FSN negating) are trusted only where
+        # that section adds up to the filer's investing total with them (93% of filings); if exactly
+        # one member's flipped sign makes it add up, that member was mis-printed (INTC NAND: the R
+        # page dropped the parentheses); otherwise a standard Payments... element's positive value
+        # is an outflow by its definition and any other member's direction is unresolved (hold).
+        sec = [r for r in block if r["tag"] in vals and dec(vals[r["tag"]]) and not re.search(r"CashProvidedByUsedIn|Abstract", r["tag"])]
+        pres = {}
+        for r in sec:
+            v = dec(vals[r["tag"]])
+            pres.setdefault(r["tag"], -v if r["negating"] else v)
+        tot = dec(vals.get("NetCashProvidedByUsedInInvestingActivities") or vals.get("NetCashProvidedByUsedInInvestingActivitiesContinuingOperations"))
+        sign_basis = None
+        if tot is not None and pres:
+            S = sum(pres.values(), Decimal(0))
+            tol = runit([tot])
+            if abs(S - tot) <= tol:
+                sign_basis = "printed"
+            else:
+                flips = [x["tag"] for x in lines if x["tag"] in pres and abs(S - 2 * pres[x["tag"]] - tot) <= tol]
+                if len(set(flips)) == 1:
+                    pres[flips[0]] = -pres[flips[0]]
+                    sign_basis = "printed_one_member_corrected"
+        kept = []
+        sign_unresolved = False
+        for x in lines:
+            if sign_basis and x["tag"] in pres:
+                outflow = pres[x["tag"]] < 0
+                x["value"] = -pres[x["tag"]] if outflow else pres[x["tag"]]
+            elif x["tag"].startswith("Payments"):
+                outflow = x["raw"] > 0
+            else:
+                outflow, sign_unresolved = None, True
+            x["direction"] = {True: "outflow", False: "inflow", None: "unresolved"}[outflow]
+            if outflow is False:
+                skipped.append({"tag": x["tag"], "label": x["label"], "value": str(x["raw"]), "why": "inflow_as_printed"})
+                continue
+            kept.append(x)
+        lines = kept
+        for x in lines:
+            x["raw"] = str(x["raw"])
     if lines or other_capex:
         n_ppe = [x for x in lines if not x["disc"] and x["nature"] in ("ppe", "ppe_with_intangibles")]
         if any(x["nature"] == "ppe_with_intangibles" for x in lines):
@@ -337,7 +381,9 @@ for (cik, ddate, q), f in chosen():
         cases = [c for c, on in (("leased", leased), ("software", soft), ("discontinued", disc and cfo_total)) if on]
         unclear = [x for x in lines if x["nature"] == "lease_unclear"]
         net_sibling = bool(n_ppe and n_net) or bool(unclear)
-        if other_capex:
+        if sign_unresolved:
+            interim, reason = None, "capex_sign_unresolved"
+        elif other_capex:
             interim, reason = None, "other_capex_lines_outside_ruling"  # MTDR: oil and gas lines beside midstream capex
         elif not n_ppe and not n_net and not (leased or soft):
             interim, reason = None, ("other_capex_lines_outside_ruling" if other_capex else "no_continuing_capex_line")
@@ -348,7 +394,7 @@ for (cik, ddate, q), f in chosen():
         else:
             interim, reason = narrow, None
         pv = prod[(cik, "capex_resolved")].get((end, q))
-        c = dict(cell, family="capex", lines=lines, skipped_lines=skipped, cases=cases, net_sibling=net_sibling, other_capex_lines=other_capex,
+        c = dict(cell, family="capex", lines=lines, skipped_lines=skipped, sign_basis=sign_basis, cases=cases, net_sibling=net_sibling, other_capex_lines=other_capex,
                  cfo_perimeter="total" if cfo_total else "continuing",
                  variant_narrow=str(narrow) if not net_sibling and (n_ppe or n_net) else None,
                  variant_ruling=str(ruling) if not net_sibling and (n_ppe or n_net or leased or soft) else None,
@@ -426,7 +472,8 @@ for (cik, ddate, q), f in chosen():
     # the income statement's printed D&A total, same column (Verifier: OMC 333.2M)
     is_da = [dec(vals.get(r["tag"])) for r in is_rows if r["tag"] in vals and (
         r["tag"] in ("DepreciationAndAmortization", "DepreciationDepletionAndAmortization", "DepreciationAmortizationAndOther")
-        or re.match(r"depreciation(,)? (depletion )?and amortization$", r["plabel"].strip(), re.I))]
+        or (re.match(r"depreciation,? (depletion,? )?(and )?(other )?amorti[sz]ation", r["plabel"].strip(), re.I)
+            and not re.search(r"accretion|impairment|and other\b(?! amorti)", r["plabel"], re.I)))]
     is_da = [x for x in is_da if x]
     is_da_total = is_da[0] if len(set(is_da)) == 1 else None
     tie = None
@@ -471,6 +518,15 @@ for (cik, ddate, q), f in chosen():
         value, reason = None, "no_da_line"
     else:
         value, reason = narrow_da + (other_sum if other else 0), None
+    # INCOME-STATEMENT ANCHOR (Verifier R1: FR, WPC, RSG): when the IS prints a D&A line and the
+    # cash-flow composition is held or partial (a non-debt, non-lease amortization line was dropped),
+    # the IS line is the value. A complete CF composition stays even where the IS differs (ECHO, DDS).
+    dropped = [x for x in da if x["nature"] == "excluded" and not DA_EXCLUDED_TAG.search(x["tag"]) and not re.search(
+        r"debt|financ|discount|premium|market|lease|contract|deferred|commission|content|film|right.of.use|revenue|interest|hedg|derivative|step.up|pension|benefit|loan|equity", x["label"], re.I)]
+    if is_da_total is not None and is_tie is None and not defq and not net_low and (
+            reason in ("da_combined_with_other_items", "perimeter_line_unresolved", "no_depreciation_line_on_cf")
+            or (reason is None and dropped and value != is_da_total)):
+        value, reason, is_tie = is_da_total, None, "is_anchor"
     pv = prod[(cik, "depreciation_and_amortization_resolved")].get((end, q))
     c = dict(cell, family="d_and_a", lines=[{**x, "value": str(x["value"])} for x in da], is_intangible_amort=str(is_sum) if is_sum is not None else None,
              tie_2a=tie, is_da_tie=is_tie, is_da_total=str(is_da_total) if is_da_total is not None else None, value=str(value) if value is not None else None, reason=reason, narrow_asset_da=str(narrow_da),
@@ -515,7 +571,8 @@ for c in cells:
         continue
     v = Decimal(c["value"]) if c["value"] is not None else None
     pv = Decimal(c["prod_value"]) if c["prod_value"] is not None else None
-    key = c["reason"] or ("published_2a_tie" if any(x["nature"] == "other_amort" for x in c["lines"]) else "published")
+    key = c["reason"] or ("published_is_anchor" if c.get("is_da_tie") == "is_anchor"
+                          else "published_2a_tie" if c.get("tie_2a") else "published")
     summ["da_cells"] += 1
     summ[f"da_{key}"] += 1
     per_company[c["ticker"]][f"da_{key}"] += 1
