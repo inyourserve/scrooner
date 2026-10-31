@@ -3,7 +3,7 @@ verdict never depends on production). Read-only, one connection, 60s timeout.
 
 A production row matches a cell when its end date is within +-10 days (52/53-
 week filers: FSN ddate is the month end, the filer's end is e.g. 2024-03-29)
-and its duration is within 20 days of the cell's (qtrs x 91.25 days plus the
+and its duration is within 20 days of the cell's (qtrs x 91.25 days minus the
 FSN duration offset). Verifier run 1 found most exact-date "blanks" had a
 production value a few days away.
 usage: DATABASE_URL=... cf_prod_compare.py <cohort.csv> <run_dir>
@@ -59,7 +59,7 @@ for fam, concept in (("cfo", "cfo_resolved"), ("buybacks", "share_buybacks_resol
             continue
         cid, ticker = coh[r["cik"]]
         end = date.fromisoformat(r["end"])
-        days = round(r["months"] / 3 * 91.25 + (r.get("durp") or 0) * 91.25)
+        days = round(r["months"] / 3 * 91.25 - (r.get("durp") or 0) * 91.25)  # FSN durp = (nominal - actual) / 91.25 (Valaris 5 months: +0.33)
         pv = match(prod[concept][cid], end, days)
         if r["verdict"] != "publishable":
             holds[r["verdict"]] += 1

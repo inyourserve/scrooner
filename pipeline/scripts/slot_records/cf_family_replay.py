@@ -72,6 +72,8 @@ OUTFLOW_RX = re.compile(r"repurchas|purchas|buy ?back|acqui|reacquir|retire|paym
 NET_RX = re.compile(r"sales?\s*\(purchases?\)|purchases?\s*\(sales?\)|\(purchases?\)|purchases?,?\s+net|net of (sales|issuance|proceeds)|\bnet\b.*(sales|purchases)", re.I)
 SUBSIDIARY_RX = re.compile(r"subsidiar|noncontrolling|non-controlling|minority|aspentech|put option", re.I)
 NONCASH_RX = re.compile(r"unsettled|accrued|incurred|not yet paid|non-?cash|accounts payable|commitment", re.I)
+OPTION_RX = re.compile(r"option exercise|options exercised|exercise of (stock )?options|related to (stock )?option", re.I)
+COMBINED_RX = re.compile(r"\band other\b|\bother\b.*\b(repurchas|purchas)|includ", re.I)
 SBC_PLAN_RX = re.compile(r"\bSBC\b|(stock|share)[- ]based|equity (award|compensation|incentive)|(compensation|incentive|benefit|employee|stock|equity) plans?|for (delivery|settlement|distribution)|to satisfy", re.I)
 EXCISE_RX = re.compile(r"excise", re.I)
 BUYBACK_TAGS_COMMON = {"PaymentsForRepurchaseOfCommonStock"}
@@ -94,11 +96,15 @@ def buyback_class(tag, label):
       common     a repurchase of the company's own common/ordinary shares"""
     if EXCISE_RX.search(label) or "Excise" in tag:
         return "perimeter_excise_tax"
-    if tag in BUYBACK_TAGS_EXCLUDED or tag.endswith("Member") or tag.startswith(("IncreaseDecrease", "Noncash")):
+    if tag in BUYBACK_TAGS_EXCLUDED or tag.endswith(("Member", "Axis", "Domain", "Abstract", "Table", "LineItems")) or tag.startswith(("IncreaseDecrease", "Noncash")):
         return "excluded"
     hit = REPURCHASE_RX.search(label) or "Repurchase" in tag or "TreasuryStock" in tag
     if not hit:
         return None
+    if OPTION_RX.search(label):
+        return "perimeter_option_exercise"  # HEI "issued, repurchased and retired related to stock option exercises"
+    if COMBINED_RX.search(label) and not WITHHOLD_RX.search(label):
+        return "combined"  # LDOS "Repurchases of stock and other"
     if NONCASH_RX.search(label):
         return "excluded"  # unsettled / accrued repurchases: a non-cash disclosure, not a cash line
     if WITHHOLD_RX.search(label) and not REPURCHASE_RX.search(label):
@@ -123,8 +129,8 @@ def buyback_class(tag, label):
     if EXCLUDED_RX.search(label):
         # "Repurchases of shares and warrants" (KMI): common shares mixed with another instrument
         return "combined" if re.search(r"common|ordinary|\bshares\b", label, re.I) else "excluded"
-    if not (tag.startswith("Payments") or OUTFLOW_RX.search(label)):
-        return "unresolved"
+    if not OUTFLOW_RX.search(label):
+        return "unresolved"  # the label names no purchase (FIS "Treasury stock activity"): net or withholding unknown
     if tag in BUYBACK_TAGS_COMMON or "CommonStock" in tag:
         return "common"
     return "common" if COMMON_RX.search(label) else "unresolved"
@@ -139,13 +145,13 @@ def load(ciks):
             if r["stmt"] != "CF" or r["cik"] not in ciks:
                 continue
             filings[r["adsh"]] = {k: r[k] for k in ("cik", "form", "period", "filed", "fy", "fp", "fsn")}
-            face[r["adsh"]].append((r["report"], r["line"], r["tag"], r["label"], r["custom"]))
+            face[r["adsh"]].append((r["report"], r["line"], r["tag"], r["label"], r["custom"], r["negating"]))
     for adsh, rows in face.items():
         # the primary cash-flow report: the lowest-numbered report that prints an
         # operating total (a Schedule I parent-only statement comes later)
-        reports = sorted({rp for rp, _l, t, lab, _c in rows if t in (OP_TOTAL, OP_CONT) or OP_LABEL_RX.search(lab)})
+        reports = sorted({rp for rp, _l, t, lab, _c, _n in rows if t in (OP_TOTAL, OP_CONT) or OP_LABEL_RX.search(lab)})
         keep = reports[0] if reports else min(rp for rp, *_ in rows)
-        face[adsh] = sorted((ln, t, lab, cu) for rp, ln, t, lab, cu in rows if rp == keep)
+        face[adsh] = sorted((ln, t, lab, cu, ng) for rp, ln, t, lab, cu, ng in rows if rp == keep)
     vals = defaultdict(dict)  # adsh -> {(tag, ddate, qtrs): Decimal}
     durps = defaultdict(dict)  # adsh -> {(ddate, qtrs): durp of the column's section total}
     with gzip.open(num_path, "rt") as fh:
@@ -177,7 +183,7 @@ def read_cell(adsh, ddate, qtrs, arcs, face, vals):
     """Both families' readings of one face column of one filing."""
     v = {t: vals[adsh][(t, ddate, qtrs)] for (t, d, q) in vals[adsh] if d == ddate and q == qtrs}
     rows = face[adsh]
-    tags = [t for _ln, t, _lab, _cu in rows]
+    tags = [t for _ln, t, _lab, _cu, _ng in rows]
     root_tag = next((p for p in arcs if CASH_CHANGE_RX.search(p) and not any(p == c for kids in arcs.values() for c, _ in kids)), None)
     root_tag = root_tag or next((t for t in tags if CASH_CHANGE_RX.search(t)), None)
     face_col = (root_tag in v) or any(t in v for t in (OP_TOTAL, OP_CONT) + FIN_TOTALS)
@@ -185,12 +191,12 @@ def read_cell(adsh, ddate, qtrs, arcs, face, vals):
     res = {"face_column": face_col, "identity": ident, "identity_gap": str(ident_gap) if ident_gap is not None else None,
            "has_cal": bool(arcs), "root": root_tag}
     # ---- CFO ----
-    custom_op = [t for _ln, t, lab, cu in rows if cu and OP_LABEL_RX.search(lab) and not re.search(r"continuing|discontinued", lab, re.I)]
+    custom_op = [t for _ln, t, lab, cu, _ng in rows if cu and OP_LABEL_RX.search(lab) and not re.search(r"continuing|discontinued", lab, re.I)]
     if OP_TOTAL in tags:
         cfo_tag, cfo_basis = OP_TOTAL, "printed_total"
     elif custom_op:
         cfo_tag, cfo_basis = custom_op[0], "printed_total_custom"
-    elif OP_CONT in tags and not any(t == OP_DISC or (re.search(r"discontinued", lab, re.I) and re.search(r"operating", lab, re.I)) for _ln, t, lab, _cu in rows):
+    elif OP_CONT in tags and not any(t == OP_DISC or (re.search(r"discontinued", lab, re.I) and re.search(r"operating", lab, re.I)) for _ln, t, lab, _cu, _ng in rows):
         cfo_tag, cfo_basis = OP_CONT, "continuing_equals_total"
     elif OP_CONT in tags:
         cfo_tag, cfo_basis = None, "cfo_total_not_printed"
@@ -205,16 +211,19 @@ def read_cell(adsh, ddate, qtrs, arcs, face, vals):
     fin_total = next((t for t in FIN_TOTALS if t in arcs), None)
     fin_kids = {c for c, _ in arcs.get(fin_total, [])} if fin_total else set()
     members = []
-    for _ln, t, lab, cu in rows:
+    negated_outflows = 0
+    for _ln, t, lab, cu, ng in rows:
         if fin_kids and t not in fin_kids:
             continue  # financing section by the filer's own calc tree
+        if ng and t.startswith(("Payments", "Repayments")):
+            negated_outflows += 1
         cls = buyback_class(t, lab)
         if cls:
-            members.append({"tag": t, "label": lab, "class": cls, "custom": cu, "value": v.get(t)})
+            members.append({"tag": t, "label": lab, "class": cls, "custom": cu, "negating": ng, "value": v.get(t)})
     bsec = None
     if fin_total:
         bsec, _g = tie(fin_total, arcs[fin_total], v)
-    res["buybacks"] = {"members": members, "section": bsec, "financing_total": fin_total, "section_by_cal": bool(fin_kids)}
+    res["buybacks"] = {"negated_outflows": negated_outflows, "members": members, "section": bsec, "financing_total": fin_total, "section_by_cal": bool(fin_kids)}
     return res
 
 
@@ -252,12 +261,16 @@ def verdict_bb(c, cell):
     if any(m["class"] == "combined" for m in ms):
         return "buyback_combined_with_other_items", None
     for cls in ("net", "perimeter_subsidiary_repurchase", "perimeter_excise_tax", "perimeter_sbc_plan_purchase",
-                "perimeter_tax_withholding_shares", "unresolved"):
+                "perimeter_tax_withholding_shares", "perimeter_option_exercise", "unresolved"):
         if any(m["class"] == cls and m["value"] not in (None, 0) for m in ms):
             return {"net": "net_treasury_line", "unresolved": "perimeter_line_unresolved"}.get(cls, cls), None
     common_ms = [m for m in ms if m["class"] == "common"]
-    if len(common_ms) > 1 and any(m["custom"] for m in common_ms):
-        return "perimeter_multiple_repurchase_lines", None
+    if len([m for m in common_ms if m["value"] not in (None, 0)]) > 1:
+        return "perimeter_multiple_repurchase_lines", None  # ROST "Treasury stock purchased" + "Repurchase of common stock"
+    # a repurchase printed without parentheses while the other outflow lines
+    # of the section are (AAON Q1 2025): the filer's sign is in doubt
+    if any(not m["negating"] for m in common_ms) and cell["negated_outflows"] >= 2:
+        return "sign_unclear", None
     printed = [m for m in common_ms if m["value"] is not None]
     if not printed:
         return "no_value_this_column", None  # the line is printed but this column is blank (a dash)
