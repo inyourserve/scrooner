@@ -285,6 +285,12 @@ RULES: dict[str, Rule] = {
             dry_run=True,
         ),
         _r(
+            "pershare.never_derive_ttm@1",
+            "-",
+            "data_engineer",
+            "per-share TTM and growth never use a derived or YTD-subtracted quarter; TTM EPS = filed FY at a Q4 anchor",
+        ),
+        _r(
             "retire.derived_per_share_cells@1",
             "-",
             "data_engineer",
