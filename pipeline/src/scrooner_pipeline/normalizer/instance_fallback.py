@@ -56,6 +56,14 @@ import structlog
 
 from scrooner_pipeline.common.rule_flags import ON, RULE_INSTANCE_FALLBACK, rule_mode
 from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
+from scrooner_pipeline.common.cell_contract import CellKey
+from scrooner_pipeline.common.cell_store import (
+    BlankReason,
+    finish_rule_run,
+    replace_rule_reasons,
+    start_rule_run,
+)
+from scrooner_pipeline.collector.storage import strip_bucket_prefix
 from scrooner_pipeline.normalizer.facts import normalize_payload
 from scrooner_pipeline.proof.fsn import (
     FilingStructure,
@@ -71,6 +79,53 @@ PERIODIC = ("10-K", "10-K/A", "10-Q", "10-Q/A")
 MIN_AGE_DAYS = 14
 PER_SHARE_RE = re.compile(r"Per(Basic|Diluted|BasicAndDiluted)?Share|PerUnit")
 BUCKET = "fsn-notes"
+
+# Cells a periodic filing with NO XBRL instance leaves blank: the statement-table
+# data points (conflict-fill targets), instants for balance-sheet points.
+NO_XBRL_REASON = "filing_has_no_xbrl"
+# The frozen eight-state vocabulary has no "source has no machine-readable
+# instance" state; the line IS on the filer's statements, so not_presented
+# would be false. Written as defect(ingestion) until the register names a
+# sub-reason (flagged to the chief of staff 2026-10-31).
+NO_XBRL_STATE = ("defect", "ingestion", "data_engineer_l2", "ingestion")
+NO_XBRL_DATA_POINTS = (
+    "basic_eps_resolved",
+    "capex_resolved",
+    "cash_and_equivalents_resolved",
+    "cash_flow_financing_resolved",
+    "cash_flow_investing_resolved",
+    "cfo_resolved",
+    "cost_of_revenue_resolved",
+    "current_assets_resolved",
+    "current_liabilities_resolved",
+    "diluted_eps_resolved",
+    "dividends_paid_resolved",
+    "dividends_per_share_resolved",
+    "gross_profit_resolved",
+    "income_before_tax_resolved",
+    "income_tax_expense_resolved",
+    "interest_expense_resolved",
+    "net_income_resolved",
+    "operating_expenses_resolved",
+    "operating_income_resolved",
+    "ppe_net_resolved",
+    "revenue_sanity_resolved",
+    "share_buybacks_resolved",
+    "stockholders_equity_resolved",
+    "total_assets_resolved",
+    "total_liabilities_resolved",
+)
+NO_XBRL_INSTANT_POINTS = frozenset(
+    {
+        "cash_and_equivalents_resolved",
+        "current_assets_resolved",
+        "ppe_net_resolved",
+        "total_assets_resolved",
+        "current_liabilities_resolved",
+        "total_liabilities_resolved",
+        "stockholders_equity_resolved",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -96,6 +151,7 @@ class FilingPlan:
     )
     skipped: dict[str, int] = field(default_factory=lambda: defaultdict(int))
     payload: dict[str, Any] = field(default_factory=dict)
+    edgar_isxbrl: bool | None = None  # from the stored submissions JSON
 
     @property
     def by_statement(self) -> dict[str, int]:
@@ -112,7 +168,10 @@ def find_missing(
     min_age_days: int = MIN_AGE_DAYS,
 ) -> list[MissingFiling]:
     """Periodic filings with no facts, older than min_age_days, whose company has
-    a companyfacts payload fetched after the filing (so the API had its chance)."""
+    a companyfacts payload fetched after the filing (so the API had its chance).
+    period_of_report >= HISTORY_FLOOR: a filing's current columns end at its
+    period of report, so FY2013 10-Ks (columns ending 2013-12-31) are out
+    (chief of staff 2026-10-31: keep only fills ending on/after 2014-01-01)."""
     with conn.cursor() as cur:
         cur.execute(
             """
@@ -121,11 +180,12 @@ def find_missing(
             join core.company co on co.id = f.company_id
             where f.company_id = any(%s) and f.form = any(%s) and f.period_of_report is not null
               and f.filing_date <= current_date - %s and f.filing_date >= %s
+              and f.period_of_report >= %s
               and not exists (select 1 from core.fact x where x.filing_id = f.id)
               and (select max(r.fetched_at)::date from raw.sec_companyfacts r where r.cik = co.cik) > f.filing_date
             order by f.company_id, f.filing_date
             """,
-            (company_ids, list(PERIODIC), min_age_days, HISTORY_FLOOR),
+            (company_ids, list(PERIODIC), min_age_days, HISTORY_FLOOR, HISTORY_FLOOR),
         )
         rows = cur.fetchall()
         out = []
@@ -168,6 +228,9 @@ def payload_from_structure(filing: MissingFiling, st: FilingStructure) -> Filing
     for (tag, dd, qtrs), vals in st.num.items():
         if dd != cur_dd:
             plan.skipped["comparative_column"] += len(vals)
+            continue
+        if dd < HISTORY_FLOOR:
+            plan.skipped["column_before_history_floor"] += len(vals)
             continue
         for nv in vals:
             if not nv.version.startswith(("us-gaap/", "dei/", "srt/")):
@@ -253,7 +316,101 @@ def payload_from_structure(filing: MissingFiling, st: FilingStructure) -> Filing
     return plan
 
 
-def plan_filings(filings: list[MissingFiling], fsn_root: Path) -> list[FilingPlan]:
+def load_isxbrl(conn: psycopg.Connection, storage: Any, cik: str) -> dict[str, bool]:
+    """accession -> isXBRL from the company's most recently fetched stored
+    submissions JSON (base file plus its -submissions-NNN pages). No SEC
+    fetch: the Collector already stores every page (raw.sec_submissions)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select storage_path from raw.sec_submissions
+            where cik = %s and http_status = 200
+              and fetched_at = (select max(fetched_at) from raw.sec_submissions
+                                where cik = %s and http_status = 200)
+            order by storage_path
+            """,
+            (cik, cik),
+        )
+        paths = [r[0] for r in cur.fetchall()]
+    out: dict[str, bool] = {}
+    for path in paths:
+        payload = json.loads(storage.download(strip_bucket_prefix(path)))
+        pages = [payload["filings"]["recent"]] if "filings" in payload else [payload]
+        for page in pages:
+            for acc, flag in zip(
+                page.get("accessionNumber", []), page.get("isXBRL", []), strict=False
+            ):
+                out[acc] = bool(flag)
+    return out
+
+
+def no_xbrl_reasons(plan: FilingPlan) -> list[BlankReason]:
+    """One reason per statement data point the filing would have filled:
+    its FY (10-K) or Q (10-Q) column for flows, its period-end instant for
+    balance-sheet points. Keyed by dates, basis latest."""
+    f = plan.filing
+    if plan.edgar_isxbrl is not False:
+        return []
+    if f.form.startswith("10-K"):
+        flow = ("FY", f.fy_start, f.period_of_report) if f.fy_start else None
+    else:
+        flow = (
+            ("Q", f.prev_quarter_end + timedelta(days=1), f.period_of_report)
+            if f.prev_quarter_end
+            else None
+        )
+    state, defect_class, owner, root = NO_XBRL_STATE
+    text = (
+        f"No value can be extracted: {f.form} {f.accession} (period {f.period_of_report}) "
+        "has no XBRL instance document (EDGAR submissions isXBRL = 0), so the statements "
+        "exist only as HTML/text. Not an extraction gap."
+    )
+    refs = {
+        "accession": f.accession,
+        "form": f.form,
+        "edgar_isXBRL": 0,
+        "fsn_set": plan.fsn_set,
+    }
+    out = []
+    for point in NO_XBRL_DATA_POINTS:
+        if point in NO_XBRL_INSTANT_POINTS:
+            key = CellKey(
+                f.company_id,
+                point,
+                "I",
+                f.period_of_report,
+                f.period_of_report,
+                "latest",
+            )
+        elif flow:
+            key = CellKey(f.company_id, point, flow[0], flow[1], flow[2], "latest")
+        else:
+            continue
+        out.append(
+            BlankReason(
+                key=key,
+                state=state,
+                rule_id=RULE_ID,
+                reason_code=NO_XBRL_REASON,
+                defect_class=defect_class,
+                owner=owner,
+                root_cause_class=root,
+                reason_text=text,
+                input_refs=refs,
+            )
+        )
+    return out
+
+
+def plan_filings(
+    filings: list[MissingFiling],
+    fsn_root: Path,
+    isxbrl: dict[str, bool] | None = None,
+) -> list[FilingPlan]:
+    """isxbrl: accession -> EDGAR isXBRL (load_isxbrl); a filing absent from
+    its FSN set is then classified filing_has_no_xbrl (no instance exists),
+    xbrl_filing_not_in_fsn_set (source (b) candidate) or isxbrl_unknown."""
+    isxbrl = isxbrl or {}
     by_q: dict[str, set[str]] = defaultdict(set)
     for f in filings:
         by_q[quarter_of(f.filing_date)].add(f.accession)
@@ -269,11 +426,15 @@ def plan_filings(filings: list[MissingFiling], fsn_root: Path) -> list[FilingPla
         st = structures.get(f.accession)
         if st is None:
             p = FilingPlan(f, quarter_of(f.filing_date), False)
-            p.skipped[
-                "fsn_set_missing"
-                if quarter_of(f.filing_date) in missing_sets
-                else "accession_not_in_fsn_set"
-            ] += 1
+            p.edgar_isxbrl = isxbrl.get(f.accession)
+            if quarter_of(f.filing_date) in missing_sets:
+                p.skipped["fsn_set_missing"] += 1
+            elif p.edgar_isxbrl is False:
+                p.skipped[NO_XBRL_REASON] += 1
+            elif p.edgar_isxbrl is True:
+                p.skipped["xbrl_filing_not_in_fsn_set"] += 1
+            else:
+                p.skipped["isxbrl_unknown"] += 1
             plans.append(p)
             continue
         plans.append(payload_from_structure(f, st))
@@ -374,13 +535,27 @@ def run(
     fsn_root: Path,
     backup_dir: Path | None = None,
     report_path: Path | None = None,
+    storage: Any = None,
+    git_commit: str | None = None,
 ) -> dict[str, Any]:
+    """storage: a SupabaseStorageClient; when given, every fact-less filing is
+    checked against the stored submissions isXBRL flag, and in ON mode the
+    filings without an instance get `filing_has_no_xbrl` reasons through the
+    cell contract (one rule_run, replace scope run+company+rule)."""
     mode = rule_mode(RULE_ID)
     with conn.cursor() as cur:
         cur.execute("select id from core.company where cik = any(%s)", (sorted(ciks),))
         ids = [r[0] for r in cur.fetchall()]
     filings = find_missing(conn, ids)
-    plans = plan_filings(filings, fsn_root)
+    isxbrl: dict[str, bool] = {}
+    if storage is not None:
+        for cik in sorted({f.cik for f in filings}):
+            isxbrl.update(load_isxbrl(conn, storage, cik))
+    plans = plan_filings(filings, fsn_root, isxbrl)
+    reasons_by_company: dict[int, list[BlankReason]] = defaultdict(list)
+    for p in plans:
+        for r in no_xbrl_reasons(p):
+            reasons_by_company[p.filing.company_id].append(r)
     totals: dict[str, Any] = {
         "mode": mode,
         "companies": len(ids),
@@ -389,11 +564,24 @@ def run(
         "facts_planned": sum(len(p.entries) for p in plans),
         "periods_to_create": sum(len(p.periods_to_create) for p in plans),
         "skipped": _merge_counts(p.skipped for p in plans),
+        "no_xbrl_filings": sum(1 for p in plans if p.edgar_isxbrl is False),
+        "no_xbrl_reasons_planned": sum(len(v) for v in reasons_by_company.values()),
+        "no_xbrl_reasons_written": 0,
         "applied": 0,
         "facts_written": 0,
     }
     if mode == ON and backup_dir is None:
         raise ValueError("backup_dir is required when the rule is ON")
+    run_id: str | None = None
+    if mode == ON and reasons_by_company:
+        run_id = start_rule_run(
+            conn, RULE_ID, "apply", "on", sorted(ciks), git_commit=git_commit
+        )
+        for company_id, reasons in sorted(reasons_by_company.items()):
+            totals["no_xbrl_reasons_written"] += replace_rule_reasons(
+                conn, run_id, company_id, RULE_ID, reasons
+            )
+        totals["rule_run_id"] = run_id
     report = report_path.open("a") if report_path else None
     try:
         for p in plans:
@@ -408,6 +596,8 @@ def run(
                 "by_statement": p.by_statement,
                 "periods_to_create": p.periods_to_create,
                 "skipped": dict(p.skipped),
+                "edgar_isxbrl": p.edgar_isxbrl,
+                "no_xbrl_reasons": len(no_xbrl_reasons(p)),
             }
             if mode == ON and p.structure_found and p.entries:
                 try:
@@ -423,6 +613,9 @@ def run(
     finally:
         if report is not None:
             report.close()
+    if run_id is not None:
+        finish_rule_run(conn, run_id, totals)
+        conn.commit()
     logger.info(
         "instance_fallback.done", **{k: v for k, v in totals.items() if k != "skipped"}
     )
