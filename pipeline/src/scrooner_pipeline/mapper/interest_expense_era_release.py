@@ -14,13 +14,18 @@ SAFETY CONTRACT (each guard has a test in tests/unit/test_interest_expense_era_r
     BOTH PACKAGE.json's digest and the reviewed digest argument, checked before any DB access;
   * STALE CELLS REFUSE THE WHOLE RUN before the first write: a stored interest_expense / interest_expense_resolved
     row now exists at the key, or the source fact is gone, demoted, derived or has another value;
-  * one transaction per batch of companies, recorded in analytics.rule_run; restore(run_id) =
-    canonical_archive.restore_run (deletes exactly the keys this run inserted). Evidence rows are append-only.
+  * one transaction per batch of companies, recorded in analytics.rule_run, with scrooner.slot_writer = 'on': the
+    inserted rows, their analytics.slot_protected_cell rows (migration 0113: the nightly resolvers cannot overwrite
+    or delete a protected cell) and the evidence commit together; apply refuses when 0113 is absent;
+  * every held cell (keep_list.jsonl) gets an analytics.cell_blank_reason row, defect / guard_hidden, reason code =
+    its hold code (owner tag_mapper); a held key that has a stored value by now is stale too;
+  * restore(run_id): canonical_archive.restore_run + the run's protection rows and blank reasons deleted, one
+    transaction. Evidence rows are append-only.
+Ritwik's approval conditions (APPROVAL-INTEREST-EXPENSE-ERA-2026-10-31): (2) protection, (3) hold reasons, (4) the
+package (cells.jsonl and keep_list.jsonl digests) is frozen at the Verifier's commit.
 
-CAVEAT stated rather than hidden: the nightly Mapper/conflict-resolution rebuilds canonical_fact from
-concept_mapping, which does not map these tags; until the mapping is approved (approver: Ritwik, scrooner-31) and
-the rebuild honours this rule, a nightly can remove the written rows. The Release Manager switches the rule ON only
-with that wiring; this module registers nothing in any nightly.
+The nightly rebuild does not map these tags; the slot_protected_cell guard keeps the written rows. This module
+registers nothing in any nightly.
 """
 
 from __future__ import annotations
@@ -28,6 +33,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
@@ -43,6 +49,17 @@ CONFIRM_TOKEN = "RELEASE-INTEREST-EXPENSE-ERA-1"
 TRAIN = "interest-expense-era-tag-fill-release-1"
 CONCEPTS = ("interest_expense", "interest_expense_resolved")
 BATCH_COMPANIES = 25
+OWNER = "tag_mapper"
+# hold code -> (root cause class, what the reader is told)
+HOLD_REASONS = {
+    "hold_net_label": ("composition", "Filed only on a net interest line (interest expense net of income); not shown."),
+    "hold_no_overlap": ("evidence_pending", "The 2024 taxonomy tag has no period shared with the earlier tag and no plain face line to prove it is the same total; not shown."),
+    "hold_nonbank_ieo": ("composition", "Only operating interest expense is tagged (a component, not the total); not shown."),
+    "hold_not_on_face": ("composition", "The tagged amount is not on the income statement face; not shown."),
+    "hold_label_unread": ("ingestion", "The filing's statement layout is not in our data set yet; not shown until it is read."),
+    "hold_perimeter": ("composition", "The 2024 taxonomy tag differs from the earlier total in a shared period; not shown."),
+    "hold_sign": ("filer_error", "The tagged amount has the wrong sign for an expense; not shown."),
+}  # fmt: skip
 
 
 class ReleaseRefused(RuntimeError):
@@ -96,6 +113,7 @@ def build(plan_rows: list[dict[str, str]], out_dir: Path) -> dict[str, Any]:
         "by_tag": {t: sum(1 for c in cells if c.tag == t) for t in sorted({c.tag for c in cells})},
         "before_image": "every key absent in interest_expense and interest_expense_resolved (checked by dry-run)",
     }  # fmt: skip
+    manifest["keep_list_sha256"] = file_sha256(out_dir / "keep_list.jsonl")
     (out_dir / "PACKAGE.json").write_text(json.dumps(manifest, indent=1))
     return manifest
 
@@ -119,7 +137,20 @@ def load_package(
     ]
     if len(cells) != manifest["cells"]:
         raise ReleaseRefused("package row count differs from PACKAGE.json")
+    if file_sha256(package_dir / "keep_list.jsonl") != manifest.get("keep_list_sha256"):
+        raise ReleaseRefused("keep_list.jsonl differs from PACKAGE.json")
     return cells
+
+
+def load_holds(package_dir: Path) -> list[dict[str, str]]:
+    holds = [
+        json.loads(line)
+        for line in (package_dir / "keep_list.jsonl").read_text().splitlines()
+    ]
+    unknown = {h["outcome"] for h in holds} - set(HOLD_REASONS)
+    if unknown:
+        raise ReleaseRefused(f"hold codes without a reason: {sorted(unknown)}")
+    return holds
 
 
 def _concept_ids(cur: Any) -> dict[str, int]:
@@ -133,25 +164,33 @@ def _concept_ids(cur: Any) -> dict[str, int]:
     return got
 
 
-def stale_cells(cur: Any, cells: list[Cell]) -> list[str]:
-    """Every cell that is no longer exactly as planned (empty: nothing is stale)."""
+def stale_cells(
+    cur: Any,
+    cells: list[Cell],
+    holds: Sequence[dict[str, str]] = (),
+) -> list[str]:
+    """Every cell that is no longer exactly as planned (empty: nothing is stale): a fill key or a held key that has a
+    stored row now, or a fill's source fact gone / demoted / derived / changed."""
     ids = _concept_ids(cur)
+    keys = {(c.company_id, c.period_id) for c in cells} | {
+        (int(h["company_id"]), int(h["period_id"])) for h in holds
+    }
     cur.execute(
         """select company_id, period_id from analytics.canonical_fact
            where canonical_concept_id = any(%s) and company_id = any(%s) and period_id = any(%s)""",
-        (
-            list(ids.values()),
-            sorted({c.company_id for c in cells}),
-            sorted({c.period_id for c in cells}),
-        ),
-    )
+        (list(ids.values()), sorted({k[0] for k in keys}), sorted({k[1] for k in keys})),
+    )  # fmt: skip
     taken = {(r[0], r[1]) for r in cur.fetchall()}
     cur.execute(
         "select id, value, is_authoritative, is_derived from core.fact where id = any(%s)",
         ([c.fact_id for c in cells],),
     )
     facts = {r[0]: (Decimal(r[1]), bool(r[2]), bool(r[3])) for r in cur.fetchall()}
-    problems = []
+    problems = [
+        f"{h['cik']} {h['end']}: held cell has a stored interest_expense row now"
+        for h in holds
+        if (int(h["company_id"]), int(h["period_id"])) in taken
+    ]
     for c in cells:
         if (c.company_id, c.period_id) in taken:
             problems.append(
@@ -165,10 +204,14 @@ def stale_cells(cur: Any, cells: list[Cell]) -> list[str]:
     return problems
 
 
-def dry_run(conn: Any, cells: list[Cell]) -> dict[str, Any]:
+def dry_run(
+    conn: Any,
+    cells: list[Cell],
+    holds: Sequence[dict[str, str]] = (),
+) -> dict[str, Any]:
     conn.execute("set default_transaction_read_only = on")
     with conn.cursor() as cur:
-        problems = stale_cells(cur, cells)
+        problems = stale_cells(cur, cells, holds)
     return {
         "cells": len(cells),
         "stale": len(problems),
@@ -185,8 +228,14 @@ def apply(
     if confirm != CONFIRM_TOKEN:
         raise ReleaseRefused("confirm token mismatch; nothing applied")
     cells = load_package(package_dir, reviewed_digest)
+    holds = load_holds(package_dir)
     with conn.cursor() as cur:
-        problems = stale_cells(cur, cells)
+        cur.execute("select to_regclass('analytics.slot_protected_cell') is not null")
+        if not cur.fetchone()[0]:
+            raise ReleaseRefused(
+                "migration 0113 (analytics.slot_protected_cell) is not applied; nothing applied"
+            )
+        problems = stale_cells(cur, cells, holds)
         ids = _concept_ids(cur)
     if problems:
         raise ReleaseRefused(
@@ -196,11 +245,12 @@ def apply(
                                before_image_ref=f"keys absent; archive rows 'inserted' of this run; {reviewed_digest}")  # fmt: skip
     conn.commit()
     companies = sorted({c.company_id for c in cells})
-    inserted = 0
+    inserted = protected = reasons = 0
     for i in range(0, len(companies), BATCH_COMPANIES):
         part = set(companies[i : i + BATCH_COMPANIES])
         batch = [c for c in cells if c.company_id in part]
         with conn.transaction(), conn.cursor() as cur:
+            cur.execute("set local scrooner.slot_writer = 'on'")
             rows = [ca.CanonicalRow(c.company_id, ids[name], c.period_id, Decimal(c.value), (c.fact_id,))
                     for c in batch for name in CONCEPTS]  # fmt: skip
             s = ca.replace_rows(
@@ -215,6 +265,13 @@ def apply(
                     f"batch would replace stored rows ({s}); rolled back"
                 )
             inserted += s["inserted"]
+            cur.executemany(
+                """insert into analytics.slot_protected_cell
+                       (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)
+                   values (%s, %s, %s, %s, %s, %s, %s)""",
+                [(r.company_id, r.canonical_concept_id, r.period_id, RULE_ID, r.value, run_id, reviewed_digest) for r in rows],
+            )  # fmt: skip
+            protected += len(rows)
             for c in batch:
                 cs.append_evidence(
                     conn,
@@ -228,13 +285,28 @@ def apply(
                     ),
                     import_key=hashlib.sha256(f"{run_id}|{c.company_id}|{c.period_id}".encode()).hexdigest(),
                 )  # fmt: skip
-    cs.finish_rule_run(
-        conn,
-        run_id,
-        {"inserted": inserted, "cells": len(cells), "digest": reviewed_digest},
-    )
+    for i in range(0, len(holds), 500):
+        with conn.transaction():
+            reasons += cs.write_blank_reasons(conn, run_id, [
+                cs.guard_hidden(
+                    CellKey(int(h["company_id"]), "interest_expense", "FY" if h["months"] == "12" else "Q",
+                            _date(h["start"]), _date(h["end"])),
+                    RULE_ID, h["outcome"], OWNER, root_cause_class=HOLD_REASONS[h["outcome"]][0],
+                    reason_text=HOLD_REASONS[h["outcome"]][1],
+                    input_refs={"tag": h["tag"], "accession": h["accession"], "fact_id": h["fact_id"],
+                                "label": h.get("label", ""), "package_digest": reviewed_digest},
+                )
+                for h in holds[i : i + 500]
+            ])  # fmt: skip
+    stats = {
+        "inserted": inserted,
+        "protected": protected,
+        "hold_reasons": reasons,
+        "cells": len(cells),
+    }
+    cs.finish_rule_run(conn, run_id, {**stats, "digest": reviewed_digest})
     conn.commit()
-    return {"run_id": run_id, "inserted": inserted, "cells": len(cells)}
+    return {"run_id": run_id, **stats}
 
 
 def restore(conn: Any, run_id: str, confirm: str) -> dict[str, Any]:
@@ -250,10 +322,22 @@ def restore(conn: Any, run_id: str, confirm: str) -> dict[str, Any]:
         before_image_ref=f"restore of {run_id}",
     )
     with conn.transaction(), conn.cursor() as cur:
+        cur.execute("set local scrooner.slot_writer = 'on'")
         restored = ca.restore_run(cur, run_id)
-    cs.finish_rule_run(conn, rb, {"restored_archive_rows": restored, "of_run": run_id})
+        cur.execute(
+            "delete from analytics.slot_protected_cell where run_id = %s and rule_id = %s",
+            (run_id, RULE_ID),
+        )
+        unprotected = cur.rowcount
+        reasons = cs.delete_run_blank_reasons(conn, run_id)
+    out = {
+        "restored_archive_rows": restored,
+        "unprotected": unprotected,
+        "hold_reasons_deleted": reasons,
+    }
+    cs.finish_rule_run(conn, rb, {**out, "of_run": run_id})
     conn.commit()
-    return {"rollback_run_id": rb, "restored_archive_rows": restored}
+    return {"rollback_run_id": rb, **out}
 
 
 def _date(s: str):
@@ -293,6 +377,7 @@ def main(argv: list[str] | None = None) -> int:
                 load_package(
                     args.package_dir, args.digest, require_digest=bool(args.digest)
                 ),
+                load_holds(args.package_dir),
             )
         elif args.cmd == "apply":
             out = apply(conn, args.package_dir, args.digest, args.confirm)

@@ -20,5 +20,6 @@
   "InterestExpenseNonoperating": 2305,
   "InterestExpenseOperating": 301
  },
- "before_image": "every key absent in interest_expense and interest_expense_resolved (checked by dry-run)"
+ "before_image": "every key absent in interest_expense and interest_expense_resolved (checked by dry-run)",
+ "keep_list_sha256": "6be8d5fc1d2a4f5c4c1b57643ae36d3284951b2f7f1e9bd1c58c9cb331a5e4a1"
 }
