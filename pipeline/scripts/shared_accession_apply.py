@@ -160,7 +160,7 @@ def build(conn, workdir: Path, threads: int, skip_headers: bool) -> Plan:
             for a, regs in shared.items()
             if next(iter(regs.values())) in sa.PERIODIC_FORMS or a in carriers
         )
-        headers = phase_c(workdir, need)
+        headers = phase_c(workdir, need, {a: sorted(shared[a]) for a in need})
     decisions = sa.plan_decisions(shared, carriers, headers)
     owners: dict[str, tuple[int, int]] = {}
     accs = sorted(shared)

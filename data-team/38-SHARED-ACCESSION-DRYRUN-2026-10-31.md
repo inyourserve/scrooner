@@ -84,3 +84,27 @@ PNM, EIDP) hold zero facts on the moving filings.
 - Apply path needs a founder go, then: write registrant rows, re-own the 476 filings,
   re-run `normalize facts` for the nine (their payloads are already in storage), then
   `update-status`. Verifier draw on the recovered values before anything is served.
+
+## Addendum 02:10 IST: header fetch fixed, ES resolved
+
+The 2025-08 onward combined filings of Eversource (and 16 of CMS's) are submitted by a
+filing agent (accession prefix 0001628280), so the `-index-headers.html` under the
+prefix CIK folder does not exist (404). The same file under ANY registrant's CIK folder
+answers 200 (checked live: `/data/72741/000162828025037369/...`, first FILER block
+0000072741 Eversource, then NSTAR Electric, CL&P, PSNH). `shared_accession_dryrun.phase_c`
+now tries the prefix folder, then each registrant's folder, and retries checkpointed
+misses. Rerun from checkpoints (REPORT.json / moves.jsonl updated in place):
+
+| | before | after |
+|---|---|---|
+| Primaries decided | 476 | 499 (header+payload 20 -> 43) |
+| `core.filing` rows moving | 476 | 499 |
+| ES filings recovered / periods | 59 / 469 | 65 / 509 |
+| CMS filings recovered / periods | 34 / 231 | 50 / 342 |
+| ES latest qualifying shared filing | 2025-05-05 | 2026-08-03 (leaves `stale`) |
+| Header misses | 453 | 430, all pre-2015 accessions (the headers file does not exist for them) |
+| Carrier conflicts / owners losing facts | 4 / 4 | unchanged |
+
+Consequence: the before-image under `39-shared-accession-apply/before-image` (plan digest
+9dcfcdde5c724bae, 476 moves) no longer matches the plan; `apply` refuses it by design.
+The fresh backup taken just before apply replaces it.
