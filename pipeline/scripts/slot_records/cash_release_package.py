@@ -7,7 +7,8 @@ packaged by fills_release_package.py in instant mode). Updates: one production i
 generated rollback, and a STALE REFUSAL: stale_check.sql returns every target row whose current
 value no longer equals its before-image value; the write proceeds only on zero rows.
 One read-only connection, statement_timeout 60s.
-usage: DATABASE_URL=... cash_release_package.py <cells.jsonl.gz> <out_dir>
+usage: DATABASE_URL=... cash_release_package.py <cells.jsonl.gz> <out_dir> [rule_id concept file_prefix verifier_note]
+  (defaults: cash; any balance-sheet instant family with the same cell shape, e.g. total debt)
 """
 import gzip
 import hashlib
@@ -21,9 +22,11 @@ from pathlib import Path
 
 import psycopg
 
-RULE = "slot.cash_and_equivalents@1"
-CONCEPT = "cash_and_equivalents_resolved"
 cells_path, out = sys.argv[1], Path(sys.argv[2])
+RULE = sys.argv[3] if len(sys.argv) > 3 else "slot.cash_and_equivalents@1"
+CONCEPT = sys.argv[4] if len(sys.argv) > 4 else "cash_and_equivalents_resolved"
+PFX = sys.argv[5] if len(sys.argv) > 5 else "cash_release1"
+VERIFIER = sys.argv[6] if len(sys.argv) > 6 else "verify/capex-v18-cash-v1-partial-2026-11-03: cash v1 17/17 (incl. 5 fills, 3 bank ties)"
 out.mkdir(parents=True, exist_ok=True)
 
 
@@ -48,7 +51,8 @@ for line in gzip.open(cells_path, "rt"):
         continue
     v = Decimal(c["value"])
     row = {"cik": c["cik"], "ticker": c["ticker"], "end": c["end"], "qtrs": 0, "accession": c["accession"], "form": c["form"],
-           "value": str(v), "prod_value": c["prod_value"], "members": c["members"], "cf_ending": c["cf_ending"]}
+           "value": str(v), "prod_value": c["prod_value"], "members": c["members"], "cf_ending": c.get("cf_ending"),
+           "note_flag": c.get("note_flag")}
     if c["prod_value"] is None:
         fills.append(dict(row, state="slot_fills_blank"))
     elif Decimal(c["prod_value"]) != v:
@@ -88,39 +92,39 @@ before = [b for b in before if (b["cik"], month_end(b["end"])) not in amb]
 assert len(before) == len(upd), (len(before), len(upd))
 
 data = "".join(json.dumps(r, sort_keys=True) + "\n" for r in upd).encode()
-(out / "cash_release1_updates.jsonl").write_bytes(data)
+(out / f"{PFX}_updates.jsonl").write_bytes(data)
 digest = hashlib.sha256(data).hexdigest()
-(out / "cash_release1_updates.sha256").write_text(f"{digest}  cash_release1_updates.jsonl\n")
+(out / f"{PFX}_updates.sha256").write_text(f"{digest}  {PFX}_updates.jsonl\n")
 fdata = "".join(json.dumps(r, sort_keys=True) + "\n" for r in fills)
-(out / "cash_release1_fill_candidates.jsonl").write_text(fdata)
-json.dump([dict(r, reason="ambiguous_period_match") for r in amb_rows], open(out / "cash_release1_updates_excluded.json", "w"), indent=1)
-with open(out / "cash_release1_updates_before_image.jsonl", "w") as f:
+(out / f"{PFX}_fill_candidates.jsonl").write_text(fdata)
+json.dump([dict(r, reason="ambiguous_period_match") for r in amb_rows], open(out / f"{PFX}_updates_excluded.json", "w"), indent=1)
+with open(out / f"{PFX}_updates_before_image.jsonl", "w") as f:
     for b in before:
         f.write(json.dumps(b, sort_keys=True) + "\n")
-with open(out / "cash_release1_updates_rollback.sql", "w") as f:
+with open(out / f"{PFX}_updates_rollback.sql", "w") as f:
     f.write(f"-- ROLLBACK for {RULE} release 1 updates: restore production {CONCEPT} values. Generated, NOT executed; Release Manager only.\n")
     f.write("begin;\n")
     for b in before:
         f.write(f"update analytics.canonical_fact set value = {b['value_before']} where id = {b['canonical_fact_id']};\n")
     f.write("commit;\n")
-with open(out / "cash_release1_updates_stale_check.sql", "w") as f:
+with open(out / f"{PFX}_updates_stale_check.sql", "w") as f:
     f.write(f"-- STALE REFUSAL for {RULE} release 1 updates: run immediately before the write; proceed only on ZERO rows.\n")
     f.write("-- Any row = a target's production value changed after packaging (or the row is gone); refuse and rebuild.\n")
     f.write("with b(id, value_before) as (values\n")
     f.write(",\n".join(f"  ({b['canonical_fact_id']}, {b['value_before']}::numeric)" for b in before))
     f.write("\n)\nselect b.id, b.value_before, cf.value from b left join analytics.canonical_fact cf on cf.id = b.id\n"
             "where cf.id is null or cf.value <> b.value_before;\n")
-(out / "cash_release1_updates_touched_ciks.txt").write_text("".join(f"{c:010d}\n" for c in sorted({r['cik'] for r in upd})))
+(out / f"{PFX}_updates_touched_ciks.txt").write_text("".join(f"{c:010d}\n" for c in sorted({r['cik'] for r in upd})))
 pkg = {
     "rule_id": RULE, "registered": "OFF",
     "family": f"balance sheet: {CONCEPT}",
     "source_cells": {"file": cells_path, "sha256": hashlib.sha256(open(cells_path, "rb").read()).hexdigest()},
-    "verifier": "verify/capex-v18-cash-v1-partial-2026-11-03: cash v1 17/17 (incl. 5 fills, 3 bank ties)",
-    "updates": {"cells_file": "cash_release1_updates.jsonl", "sha256": digest, "cells": len(upd), "companies": len({r["cik"] for r in upd}),
+    "verifier": VERIFIER,
+    "updates": {"cells_file": f"{PFX}_updates.jsonl", "sha256": digest, "cells": len(upd), "companies": len({r["cik"] for r in upd}),
                 "by_difference_class": dict(Counter(r["difference_class"] for r in upd)),
-                "before_image": f"cash_release1_updates_before_image.jsonl ({len(before)} canonical_fact rows)",
-                "rollback": "cash_release1_updates_rollback.sql (generated, never executed)",
-                "stale_refusal": "cash_release1_updates_stale_check.sql must return zero rows immediately before the write",
+                "before_image": f"{PFX}_updates_before_image.jsonl ({len(before)} canonical_fact rows)",
+                "rollback": f"{PFX}_updates_rollback.sql (generated, never executed)",
+                "stale_refusal": f"{PFX}_updates_stale_check.sql must return zero rows immediately before the write",
                 "excluded_ambiguous_period_match": len(amb_rows)},
     "flag": {"line": f"SCROONER_RULES_ENABLED={RULE}", "default": "OFF",
              "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image"},

@@ -26,11 +26,14 @@ AGG_TAGS = ["DebtAndCapitalLeaseObligations", "DebtLongtermAndShorttermCombinedA
 BS_TOTAL = ("Assets", "LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital")
 rec_path, inst_path, prod_path, out_path = sys.argv[1:5]
 # company-level holds decided by the release owner (Dhairya 2026-11-04: AMZN's custom lease elements unread)
-COMPANY_HOLDS = {"AMZN": "debt_lease_member_unverified"}
+COMPANY_HOLDS = {}  # AMZN released (Verifier debt v3): its custom lease line decomposes; finance leases come from the note
 
 records = defaultdict(list)
 for line in open(rec_path):
     r = json.loads(line)
+    # operating-lease members never enter total debt; drop them from the member list entirely so no rule
+    # can see them (Verifier debt v3: MSFT OperatingLeaseLiabilityNoncurrent, a label trap)
+    r["members"] = [m for m in r["members"] if m["class"] != "operating_lease"]
     records[int(r["cik"])].append(r)
 
 
@@ -175,6 +178,19 @@ for (cik, d), (_r, adsh) in sorted(best.items()):
     lease_unread = sorted({r["tag"] for r in f["bs"] if r["tag"] in day and r["tag"] not in member_tags
                            and re.search(r"lease", r["plabel"], re.I) and re.search(r"liabilit|obligation", r["plabel"], re.I)
                            and not re.search(r"operating", r["plabel"] + r["tag"], re.I) and not r["tag"].startswith("OperatingLease")})
+    # a face lease line that the filer's own facts decompose into operating + finance leases is proven
+    # (AMZN 'Long-term lease liabilities' 77,297 = operating 67,220 + finance 10,077); its finance part
+    # then comes from the note (option b), never from the combined line
+    decomposed = []
+    for t in lease_unread:
+        v = day[t][0]
+        for op, fi in (("OperatingLeaseLiabilityNoncurrent", "FinanceLeaseLiabilityNoncurrent"),
+                       ("OperatingLeaseLiabilityCurrent", "FinanceLeaseLiabilityCurrent"),
+                       ("OperatingLeaseLiability", "FinanceLeaseLiability")):
+            if op in day and fi in day and abs(day[op][0] + day[fi][0] - v) <= 1:
+                decomposed.append(t)
+                break
+    lease_unread = [t for t in lease_unread if t not in decomposed]
     # ... or a finance/capital lease fact in the filing (often in the notes) that no member carries and no
     # combined (debt-and-lease) member can contain (AMZN 2015-2018 capital lease obligations)
     lease_in_notes = []

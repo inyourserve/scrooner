@@ -1,0 +1,35 @@
+-- STALE REFUSAL for slot.total_debt@1 release1_fills: run immediately before the write. The write proceeds only if this returns ZERO rows.
+-- Any row = a target cell gained a production value after packaging; refuse the batch and rebuild.
+select cf.id, cf.company_id, cf.period_id, cf.value from analytics.canonical_fact cf
+where cf.canonical_concept_id = 187 and (cf.company_id, cf.period_id) in (
+  (279, 196863),
+  (279, 196887),
+  (279, 196972),
+  (2733, 473609),
+  (2733, 473805),
+  (5050, 662604),
+  (5050, 662733),
+  (5050, 662708),
+  (5050, 662690),
+  (5050, 662629),
+  (5050, 662642),
+  (5050, 662675),
+  (5050, 662756),
+  (5050, 662611),
+  (5050, 662689),
+  (5050, 662710),
+  (5050, 662725),
+  (5050, 662619),
+  (5050, 662699),
+  (5050, 662753),
+  (5050, 662653),
+  (5050, 662677),
+  (5050, 662719),
+  (5050, 662729),
+  (5050, 662758),
+  (5050, 662776),
+  (5050, 662650),
+  (5050, 662703),
+  (5050, 662684),
+  (5050, 662722)
+);
