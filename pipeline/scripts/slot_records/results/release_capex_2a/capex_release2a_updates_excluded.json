@@ -1,0 +1,205 @@
+[
+ {
+  "cik": 315189,
+  "ticker": "DE",
+  "end": "2015-10-31",
+  "qtrs": 4,
+  "accession": "0001047469-15-009300",
+  "form": null,
+  "value": "2826100000.0000",
+  "prod_value": "694000000",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "694000000.0000"
+   },
+   {
+    "label": "Cost of equipment on operating leases acquired",
+    "nature": "leased",
+    "tag": "PaymentsToAcquireEquipmentOnLease",
+    "value": "2132100000.0000"
+   }
+  ],
+  "cf_ending": null,
+  "note_flag": "classes=leased",
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 315189,
+  "ticker": "DE",
+  "end": "2016-01-31",
+  "qtrs": 1,
+  "accession": "0001558370-16-003529",
+  "form": null,
+  "value": "710400000.0000",
+  "prod_value": "140000000",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "140000000.0000"
+   },
+   {
+    "label": "Cost of equipment on operating leases acquired",
+    "nature": "leased",
+    "tag": "PaymentsToAcquireEquipmentOnLease",
+    "value": "570400000.0000"
+   }
+  ],
+  "cf_ending": null,
+  "note_flag": "classes=leased",
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 315189,
+  "ticker": "DE",
+  "end": "2016-04-30",
+  "qtrs": 2,
+  "accession": "0001558370-16-006167",
+  "form": null,
+  "value": "1436700000.0000",
+  "prod_value": "232600000",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "232600000.0000"
+   },
+   {
+    "label": "Cost of equipment on operating leases acquired",
+    "nature": "leased",
+    "tag": "PaymentsToAcquireEquipmentOnLease",
+    "value": "1204100000.0000"
+   }
+  ],
+  "cf_ending": null,
+  "note_flag": "classes=leased",
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 315189,
+  "ticker": "DE",
+  "end": "2016-07-31",
+  "qtrs": 3,
+  "accession": "0001558370-16-008153",
+  "form": null,
+  "value": "2117600000.0000",
+  "prod_value": "387000000",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "387000000.0000"
+   },
+   {
+    "label": "Cost of equipment on operating leases acquired",
+    "nature": "leased",
+    "tag": "PaymentsToAcquireEquipmentOnLease",
+    "value": "1730600000.0000"
+   }
+  ],
+  "cf_ending": null,
+  "note_flag": "classes=leased",
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 315189,
+  "ticker": "DE",
+  "end": "2016-10-31",
+  "qtrs": 4,
+  "accession": "0001047469-16-017244",
+  "form": null,
+  "value": "2955100000.0000",
+  "prod_value": "644400000",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "644400000.0000"
+   },
+   {
+    "label": "Cost of equipment on operating leases acquired",
+    "nature": "leased",
+    "tag": "PaymentsToAcquireEquipmentOnLease",
+    "value": "2310700000.0000"
+   }
+  ],
+  "cf_ending": null,
+  "note_flag": "classes=leased",
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 1094831,
+  "ticker": "BGC",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "accession": "0001193125-15-284543",
+  "form": null,
+  "value": "21158000.0000",
+  "prod_value": "14210000",
+  "members": [
+   {
+    "label": "Purchases of fixed assets",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "14210000.0000"
+   },
+   {
+    "label": "Capitalization of software development costs",
+    "nature": "software",
+    "tag": "PaymentsForSoftware",
+    "value": "6948000.0000"
+   }
+  ],
+  "cf_ending": null,
+  "note_flag": "classes=software",
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 1094831,
+  "ticker": "BGC",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "accession": "0001193125-15-371318",
+  "form": null,
+  "value": "39286000.0000",
+  "prod_value": "26816000",
+  "members": [
+   {
+    "label": "Purchases of fixed assets",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "26816000.0000"
+   },
+   {
+    "label": "Capitalization of software development costs",
+    "nature": "software",
+    "tag": "PaymentsForSoftware",
+    "value": "12470000.0000"
+   }
+  ],
+  "cf_ending": null,
+  "note_flag": "classes=software",
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ }
+]

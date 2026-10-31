@@ -1,0 +1,176 @@
+[
+ {
+  "accession": "0000103379-22-000013",
+  "cf_ending": null,
+  "cik": 103379,
+  "end": "2022-06-30",
+  "form": null,
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "52657000.0000"
+   },
+   {
+    "label": "Software purchases",
+    "nature": "software",
+    "tag": "PaymentsToAcquireSoftware",
+    "value": "26907000.0000"
+   }
+  ],
+  "note_flag": "classes=software",
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "VFC",
+  "value": "79564000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000103379-25-000023",
+  "cf_ending": null,
+  "cik": 103379,
+  "end": "2025-03-31",
+  "form": null,
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "86274000.0000"
+   },
+   {
+    "label": "Software purchases",
+    "nature": "software",
+    "tag": "PaymentsToAcquireSoftware",
+    "value": "39749000.0000"
+   }
+  ],
+  "note_flag": "classes=software",
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "VFC",
+  "value": "126023000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001104659-26-102213",
+  "cf_ending": null,
+  "cik": 315189,
+  "end": "2026-07-31",
+  "form": null,
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "716000000.0000"
+   },
+   {
+    "label": "Cost of equipment on operating leases acquired",
+    "nature": "leased",
+    "tag": "PaymentsToAcquireEquipmentOnLease",
+    "value": "1933000000.0000"
+   }
+  ],
+  "note_flag": "classes=leased",
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "DE",
+  "value": "2649000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-26-320490",
+  "cf_ending": null,
+  "cik": 775158,
+  "end": "2026-06-30",
+  "form": null,
+  "members": [
+   {
+    "label": "Additions to property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "54800000.0000"
+   },
+   {
+    "label": "Additions to equipment held for rental",
+    "nature": "leased",
+    "tag": "PaymentsToAcquireEquipmentOnLease",
+    "value": "11200000.0000"
+   }
+  ],
+  "note_flag": "classes=leased",
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "OSK",
+  "value": "66000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0000779152-26-000067",
+  "cf_ending": null,
+  "cik": 779152,
+  "end": "2026-06-30",
+  "form": null,
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "67103000.0000"
+   },
+   {
+    "label": "Purchased software",
+    "nature": "software",
+    "tag": "PaymentsToAcquireSoftware",
+    "value": "4108000.0000"
+   },
+   {
+    "label": "Computer software developed",
+    "nature": "software",
+    "tag": "PaymentsToDevelopSoftware",
+    "value": "184243000.0000"
+   }
+  ],
+  "note_flag": "classes=software",
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "JKHY",
+  "value": "255454000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001067701-26-000026",
+  "cf_ending": null,
+  "cik": 1067701,
+  "end": "2026-06-30",
+  "form": null,
+  "members": [
+   {
+    "label": "Payments for purchases of rental equipment",
+    "nature": "leased",
+    "tag": "PaymentsToAcquirePropertySubjectToOrAvailableForOperatingLease",
+    "value": "2720000000.0000"
+   },
+   {
+    "label": "Payments for purchases of non-rental equipment and intangible assets",
+    "nature": "ppe_with_intangibles",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets",
+    "value": "165000000.0000"
+   }
+  ],
+  "note_flag": "classes=leased",
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "URI",
+  "value": "2885000000.0000",
+  "reason": "no_production_period"
+ }
+]
