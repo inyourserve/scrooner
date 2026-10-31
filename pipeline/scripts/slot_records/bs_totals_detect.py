@@ -180,11 +180,12 @@ for adsh, meta in by_filing.items():
     # excluded_cap_total, is printed): there long-term debt is printed inside
     # the capitalization block next to equity and is a real liability (FE, NI,
     # EMR, AWK); the guard would drop it (found in the 2026-10-31 regeneration).
+    LIABILITY_NAMED_RX = re.compile(r"Payable|Liabilit|Obligation|Redemption")
     has_cap_total = any(z["seg"] == "excluded_cap_total" for z in zone_lines)
     in_equity = False
     for z in zone_lines:
-        if z["seg"] in ("equity_component", "equity_total", "nci"):
-            in_equity = True
+        if z["seg"] in ("equity_component", "equity_total", "nci") and not LIABILITY_NAMED_RX.search(z["tag"]):
+            in_equity = True  # a liability-named element (OXY PreferredStockRedemptionAmountPayable) never opens the block
         elif z["seg"] == "liab" and in_equity and not has_cap_total:
             z["seg"] = "equity_component"
             z["equity_block_guard"] = True
