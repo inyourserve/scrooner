@@ -721,10 +721,10 @@ def test_cells_to_remove_leaves_derived_only_cells_to_ru1():
     ) == [502]
 
 
-def test_derived_dps_removed_only_when_every_source_is_derived():
-    """DPS is this lane's: a no_filed_source DPS cell is removed with RU-1 on
-    only when production's value rests on derived facts alone; a cell with a
-    filed source stays (held for the Verifier, 2026-11-03)."""
+def test_derived_dps_is_never_removed_in_release_1():
+    """Verifier 2026-11-04: a derived Q4 DPS equals filed FY minus filed 9M
+    (DPS is additive), so release 1 keeps it, derived or not, until the
+    founder rules; only derived share counts are removed."""
     b = Book()
     k = b.filing("K-1", "2025-02-01", "10-K")
     b.add(DPS_DECL, "0.50", "2024-10-01", "2024-12-31", k, derived=True)
@@ -733,21 +733,158 @@ def test_derived_dps_removed_only_when_every_source_is_derived():
     cell = b.cell(res, "dividends_per_share_resolved", "2024-10-01", "2024-12-31")
     assert cell.status == sb.HIDE_NO_FILED_SOURCE
     current = {key: (601, D("0.50"), (1,))}
+    assert (
+        sb.cells_to_remove(
+            res, current, remove_derived_only=True, derived_keys=frozenset({key})
+        )
+        == []
+    )
+    assert "dividends_per_share_resolved" not in sb.DERIVED_REMOVAL_CONCEPTS
+    assert "shares_outstanding_resolved" in sb.DERIVED_REMOVAL_CONCEPTS
+
+
+class _FakeConn:
+    """Answers the two lookups of load_held_basis_stale (source facts and
+    period ends) and the signal query of load_split_signal_dates."""
+
+    def __init__(self, raw=None, ends=None, signal_rows=None):
+        self.raw, self.ends, self.signal_rows = raw or {}, ends or {}, signal_rows or []
+
+    def execute(self, sql, params=None):
+        rows = (
+            [(k, v, d) for k, (v, d) in self.raw.items()]
+            if "where f.id = any" in sql
+            else list(self.ends.items())
+            if "from core.period where id" in sql
+            else self.signal_rows
+        )
+
+        class _R:
+            def fetchall(self_inner):
+                return rows
+
+        return _R()
+
+
+def _held_book():
+    b = Book()
+    k = b.filing("6-K-1", "2021-11-01", "6-K")  # not a 10-K/10-Q copy
+    b.add(EPS_D, "3.59", "2021-07-01", "2021-09-30", k)
+    res = run(b)
+    key = ("diluted_eps_resolved", b.pid("2021-07-01", "2021-09-30"))
+    return b, res, key
+
+
+def test_held_cell_on_an_old_basis_is_removed_shop():
+    """SHOP Q3 2021: production shows the pre-10:1 value its 6-K filed (3.59);
+    a 2023 40-F re-presents share counts at 10x, after the cell's end."""
+    b, res, key = _held_book()
+    assert (
+        b.cell(res, *key[:1], "2021-07-01", "2021-09-30").status
+        == sb.HIDE_NO_FILED_SOURCE
+    )
+    current = {key: (701, D("3.59"), (55,))}
+    conn = _FakeConn(
+        raw={55: (D("3.59"), date(2021, 11, 1))}, ends={key[1]: date(2021, 9, 30)}
+    )
+    stale = sb.load_held_basis_stale(
+        conn, res, current, frozenset(), [date(2023, 2, 16)]
+    )
+    assert stale == {key}
     assert sb.cells_to_remove(
-        res, current, remove_derived_only=True, derived_keys=frozenset({key})
-    ) == [601]
-    assert (
-        sb.cells_to_remove(
-            res, current, remove_derived_only=True, derived_keys=frozenset()
-        )
-        == []
+        res, current, remove_derived_only=True, stale_keys=stale
+    ) == [701]
+
+
+def test_held_cell_already_rebased_stays_cp():
+    """CP: production 0.325 = filed 1.625 / 5, re-based by the legacy adjuster."""
+    b, res, key = _held_book()
+    current = {key: (702, D("0.718"), (56,))}
+    conn = _FakeConn(
+        raw={56: (D("3.59"), date(2021, 11, 1))}, ends={key[1]: date(2021, 9, 30)}
     )
     assert (
-        sb.cells_to_remove(
-            res, current, remove_derived_only=False, derived_keys=frozenset({key})
-        )
-        == []
+        sb.load_held_basis_stale(conn, res, current, frozenset(), [date(2023, 2, 16)])
+        == frozenset()
     )
+
+
+def test_held_cell_with_no_later_signal_stays():
+    b, res, key = _held_book()
+    current = {key: (703, D("3.59"), (57,))}
+    conn = _FakeConn(
+        raw={57: (D("3.59"), date(2021, 11, 1))}, ends={key[1]: date(2021, 9, 30)}
+    )
+    assert (
+        sb.load_held_basis_stale(conn, res, current, frozenset(), [date(2020, 1, 1)])
+        == frozenset()
+    )
+    assert sb.load_held_basis_stale(conn, res, current, frozenset(), []) == frozenset()
+
+
+def test_split_signal_from_a_re_presented_weighted_share_count_shop():
+    rows = [
+        (
+            "WeightedAverageNumberOfSharesOutstandingBasic",
+            date(2021, 1, 1),
+            date(2021, 12, 31),
+            D("124658891"),
+            date(2022, 2, 16),
+        ),
+        (
+            "WeightedAverageNumberOfSharesOutstandingBasic",
+            date(2021, 1, 1),
+            date(2021, 12, 31),
+            D("1246588910"),
+            date(2023, 2, 16),
+        ),
+        (
+            "EntityCommonStockSharesOutstanding",
+            None,
+            date(2022, 2, 1),
+            D("125000000"),
+            date(2022, 2, 16),
+        ),
+        (
+            "EntityCommonStockSharesOutstanding",
+            None,
+            date(2022, 5, 1),
+            D("126000000"),
+            date(2022, 5, 5),
+        ),
+    ]
+    assert sb.load_split_signal_dates(_FakeConn(signal_rows=rows), 1) == [
+        date(2023, 2, 16)
+    ]
+
+
+def test_split_signal_from_a_cover_share_step_and_not_from_an_offering():
+    rows = [
+        (
+            "EntityCommonStockSharesOutstanding",
+            None,
+            date(2024, 2, 1),
+            D("100000000"),
+            date(2024, 2, 20),
+        ),
+        (
+            "EntityCommonStockSharesOutstanding",
+            None,
+            date(2024, 5, 1),
+            D("130000000"),
+            date(2024, 5, 5),
+        ),  # offering
+        (
+            "EntityCommonStockSharesOutstanding",
+            None,
+            date(2024, 8, 1),
+            D("1300000000"),
+            date(2024, 8, 6),
+        ),  # 10:1
+    ]
+    assert sb.load_split_signal_dates(_FakeConn(signal_rows=rows), 1) == [
+        date(2024, 8, 6)
+    ]
 
 
 def test_event_hash_is_stable_and_tracks_the_event_set():
@@ -3203,3 +3340,114 @@ def test_release_package_refuses_a_changed_recompute_and_writes_outside_it():
     assert any(
         "outside the package" in w for w in why
     )  # q2's new 0.52 was not packaged
+
+
+def test_held_cell_from_a_source_filed_after_the_split_stays_cp():
+    """CP: the held 2017 value comes from a filing made after the 2021 5:1
+    split, so it is already on the current basis even though it equals its
+    source's raw value."""
+    b, res, key = _held_book()
+    current = {key: (704, D("0.325"), (58,))}
+    conn = _FakeConn(
+        raw={58: (D("0.325"), date(2023, 2, 20))}, ends={key[1]: date(2021, 9, 30)}
+    )
+    # split signal after the cell's end, source filed after the split
+    assert (
+        sb.load_held_basis_stale(conn, res, current, frozenset(), [date(2022, 1, 15)])
+        == frozenset()
+    )
+
+
+def test_one_split_re_presented_by_many_filings_is_one_signal_cp():
+    W = "WeightedAverageNumberOfSharesOutstandingBasic"
+    rows = [
+        (W, date(2020, 1, 1), date(2020, 6, 30), D("136100000"), date(2020, 7, 22)),
+        (W, date(2020, 1, 1), date(2020, 6, 30), D("680800000"), date(2021, 7, 29)),
+        (W, date(2019, 1, 1), date(2019, 12, 31), D("138800000"), date(2020, 2, 20)),
+        (W, date(2019, 1, 1), date(2019, 12, 31), D("693800000"), date(2022, 2, 23)),
+        (W, date(2021, 1, 1), date(2021, 3, 31), D("133300000"), date(2021, 4, 22)),
+        (W, date(2021, 1, 1), date(2021, 3, 31), D("666500000"), date(2022, 4, 28)),
+        (W, date(2024, 1, 1), date(2024, 3, 31), D("900000000"), date(2024, 4, 22)),
+        (
+            W,
+            date(2024, 1, 1),
+            date(2024, 3, 31),
+            D("1800000000"),
+            date(2025, 4, 28),
+        ),  # a second split
+    ]
+    assert sb.load_split_signal_dates(_FakeConn(signal_rows=rows), 1) == [
+        date(2021, 7, 29),
+        date(2025, 4, 28),
+    ]
+
+
+def test_zero_dividend_is_never_stale_wmt():
+    b, res, key = _held_book()
+    current = {key: (705, D("0"), (59,))}
+    conn = _FakeConn(
+        raw={59: (D("0"), date(2017, 3, 31))}, ends={key[1]: date(2017, 1, 31)}
+    )
+    assert (
+        sb.load_held_basis_stale(conn, res, current, frozenset(), [date(2024, 3, 15)])
+        == frozenset()
+    )
+
+
+def _derived_dps_book():
+    b = Book()
+    k = b.filing("K-1", "2025-02-01", "10-K")
+    b.add(DPS_DECL, "0.50", "2024-10-01", "2024-12-31", k, derived=True)
+    res = run(b)
+    return res, ("dividends_per_share_resolved", b.pid("2024-10-01", "2024-12-31"))
+
+
+def test_derived_q4_dps_on_one_basis_is_kept():
+    """Founder 2026-11-04: Q4 DPS = filed FY - filed 9M is allowed."""
+    res, key = _derived_dps_book()
+    current = {key: (801, D("0.50"), (81, 82))}
+    conn = _FakeConn(
+        raw={81: (D("2.00"), date(2025, 2, 1)), 82: (D("1.50"), date(2024, 11, 1))},
+        ends={key[1]: date(2024, 12, 31)},
+    )
+    assert (
+        sb.load_held_basis_stale(conn, res, current, frozenset({key}), [])
+        == frozenset()
+    )
+    assert (
+        sb.load_held_basis_stale(
+            conn, res, current, frozenset({key}), [date(2023, 1, 1)]
+        )
+        == frozenset()
+    )
+
+
+def test_derived_q4_dps_from_inputs_across_a_split_is_removed():
+    res, key = _derived_dps_book()
+    current = {key: (802, D("0.50"), (83, 84))}
+    conn = _FakeConn(
+        raw={83: (D("2.00"), date(2025, 2, 1)), 84: (D("1.50"), date(2024, 11, 1))},
+        ends={key[1]: date(2024, 12, 31)},
+    )
+    assert sb.load_held_basis_stale(
+        conn, res, current, frozenset({key}), [date(2024, 12, 15)]
+    ) == {key}
+
+
+def test_derived_q4_dps_unadjusted_before_a_later_split_is_removed():
+    res, key = _derived_dps_book()
+    current = {key: (803, D("0.50"), (85, 86))}
+    conn = _FakeConn(
+        raw={85: (D("2.00"), date(2025, 2, 1)), 86: (D("1.50"), date(2024, 11, 1))},
+        ends={key[1]: date(2024, 12, 31)},
+    )
+    assert sb.load_held_basis_stale(
+        conn, res, current, frozenset({key}), [date(2025, 6, 1)]
+    ) == {key}
+    current = {key: (804, D("0.25"), (85, 86))}  # re-based by a 2:1, kept
+    assert (
+        sb.load_held_basis_stale(
+            conn, res, current, frozenset({key}), [date(2025, 6, 1)]
+        )
+        == frozenset()
+    )

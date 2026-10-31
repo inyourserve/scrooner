@@ -3333,9 +3333,10 @@ def load_current_cells(
 # counts, and only when every source fact behind production's value is itself
 # derived. A production value with a FILED source is never removed on this
 # reason (421 EPS cells: CAD units, split-ratio facts; held for the Verifier).
-DERIVED_REMOVAL_CONCEPTS = frozenset(
-    {"dividends_per_share_resolved", "shares_outstanding_resolved"}
-)
+# Founder ruling 2026-11-04: a Q4 DPS = filed FY - filed 9M is ALLOWED when
+# both are on the same basis, so derived DPS is kept (load_held_basis_stale
+# removes the ones whose inputs are not on one basis).
+DERIVED_REMOVAL_CONCEPTS = frozenset({"shares_outstanding_resolved"})
 
 
 def load_derived_only_cells(conn, company_id: int) -> frozenset[tuple[str, int]]:
@@ -3353,9 +3354,172 @@ def load_derived_only_cells(conn, company_id: int) -> frozenset[tuple[str, int]]
             where f.id = any(cf.source_fact_ids) and not f.is_derived
           )
         """,
-        (company_id, sorted(DERIVED_REMOVAL_CONCEPTS)),
+        (company_id, list(TARGETS)),
     ).fetchall()
     return frozenset((n, pid) for n, pid in rows)
+
+
+SPLIT_SIGNAL_RATIOS = (2, 3, 4, 5, 8, 10, 15, 20, 25, 30, 50, 100)
+SPLIT_SIGNAL_REL_TOL = Decimal("0.03")
+SPLIT_SIGNAL_MAX_GAP_DAYS = 200
+WEIGHTED_SHARE_TAGS = (
+    "WeightedAverageNumberOfSharesOutstandingBasic",
+    "WeightedAverageNumberOfDilutedSharesOutstanding",
+)
+
+
+def _clean_ratio(r: Decimal) -> bool:
+    return any(
+        abs(r - k) <= SPLIT_SIGNAL_REL_TOL * k
+        or abs(r - Decimal(1) / k) <= SPLIT_SIGNAL_REL_TOL / k
+        for k in SPLIT_SIGNAL_RATIOS
+    )
+
+
+def load_split_signal_dates(conn, company_id: int) -> list[date]:
+    """Filing dates where the company's OWN filings, of any form (40-F, 20-F
+    and 6-K included, which the pass itself does not read), show a share
+    basis change: the cover-page share count stepping by a clean split ratio
+    between filings at most 200 days apart, or a weighted-average share count
+    of one period re-presented at a clean ratio by a later filing (SHOP FY2021
+    124,658,891 in the 2022 40-F, 1,246,588,910 in the 2023 40-F: 10:1)."""
+    rows = conn.execute(
+        """
+        select co.tag, p.start_date, p.end_date, f.value, fi.filing_date
+        from core.fact f
+        join core.concept co on co.id = f.concept_id
+        join core.period p on p.id = f.period_id
+        join core.filing fi on fi.id = f.filing_id
+        where f.company_id = %s and f.value > 0 and not f.is_derived
+          and co.tag = any(%s)
+        order by fi.filing_date
+        """,
+        (company_id, ["EntityCommonStockSharesOutstanding", *WEIGHTED_SHARE_TAGS]),
+    ).fetchall()
+    cover: dict[date, Decimal] = {}
+    copies: dict[tuple, list[tuple[date, Decimal]]] = defaultdict(list)
+    for tag, start, end, v, filed in rows:
+        if tag == "EntityCommonStockSharesOutstanding":
+            cover[filed] = max(cover.get(filed, Decimal(0)), v)
+        else:
+            copies[(tag, start, end)].append((filed, v))
+    # each signal says the basis changed inside a window (earlier filing,
+    # later filing]; one split re-presented by many later filings (CP 5:1 of
+    # 2021: windows ending 2021-07-29, 2021-10-20, 2022-02-23, 2022-04-28) is
+    # ONE signal, the earliest window end; a window that already contains a
+    # signal is explained by it (APH's three separate 2:1 splits stay three)
+    windows: list[tuple[date, date]] = []
+    seq = sorted(cover.items())
+    for (d0, a), (d1, b) in itertools.pairwise(seq):
+        if (d1 - d0).days <= SPLIT_SIGNAL_MAX_GAP_DAYS and _clean_ratio(b / a):
+            windows.append((d0, d1))
+    for vals in copies.values():
+        first_d, first_v = vals[0]
+        for d, v in vals[1:]:
+            if d > first_d and _clean_ratio(v / first_v):
+                windows.append((first_d, d))
+                break
+    out: list[date] = []
+    for lo, hi in sorted(windows, key=lambda w: (w[1], w[0])):
+        if not any(lo < x <= hi for x in out):
+            out.append(hi)
+    return sorted(out)
+
+
+def load_held_basis_stale(
+    conn,
+    res: CompanyResult,
+    current: Mapping,
+    derived_keys: frozenset,
+    signal_dates: list[date],
+) -> frozenset[tuple[str, int]]:
+    """Held cells (no 10-K/10-Q copy, production's value has a FILED source)
+    whose production value still sits on an OLD share basis: a split signal
+    (load_split_signal_dates, or a non-rejected event of the pass) falls
+    after the cell's period end, and production's value equals its source
+    fact's raw filed value, so nobody re-based it. Verifier 2026-11-04: SHOP
+    pre-2022 cells kept a pre-10:1 value; CP's held cells were already
+    re-based (production 0.325 = filed 1.625 / 5) and stay."""
+    dates = list(signal_dates) + [
+        d
+        for e in res.events
+        if e.status != "rejected"
+        for d in (
+            e.hi or (max(x.anchor for x in e.disclosures) if e.disclosures else None),
+        )
+        if d is not None
+    ]
+    if not dates:
+        return frozenset()
+    held = [
+        c
+        for c in res.cells
+        if c.status == HIDE_NO_FILED_SOURCE
+        and (c.concept, c.period_id) in current
+        and (
+            (c.concept, c.period_id) not in derived_keys
+            or c.concept == "dividends_per_share_resolved"
+        )
+    ]
+    if not held:
+        return frozenset()
+    keys = {(c.concept, c.period_id) for c in held}
+    src_ids = sorted({i for k in keys for i in current[k][2]})
+    raw: dict[int, tuple[Decimal, date]] = {}
+    if src_ids:
+        raw = {
+            fid: (v, filed)
+            for fid, v, filed in conn.execute(
+                """
+                select f.id, f.value, fi.filing_date
+                from core.fact f join core.filing fi on fi.id = f.filing_id
+                where f.id = any(%s)
+                """,
+                (src_ids,),
+            ).fetchall()
+        }
+    pids = sorted({c.period_id for c in held})
+    ends: dict[int, date] = dict(
+        conn.execute(
+            "select id, end_date from core.period where id = any(%s)", (pids,)
+        ).fetchall()
+    )
+    out = set()
+    for k in keys:
+        end = ends.get(k[1])
+        if end is None:
+            continue
+        prod = current[k][1]
+        if prod == 0 and k[0] != "shares_outstanding_resolved":
+            continue  # a zero per-share value is the same on every basis (WMT, IBKR DPS 0)
+        later = [d for d in dates if d > end]
+        if k in derived_keys:
+            # founder 2026-11-04: a Q4 DPS = filed FY - filed 9M is ALLOWED when
+            # both are on the same basis. Not the same basis: the inputs were
+            # filed on opposite sides of a split, or the unadjusted difference
+            # predates a split after the quarter
+            src = [raw[i] for i in current[k][2] if i in raw]
+            if len(src) < 2:
+                continue
+            filed = [f for _v, f in src]
+            straddles = any(min(filed) < d <= max(filed) for d in dates)
+            unadjusted = any(
+                a[0] - b[0] == prod for a in src for b in src if a is not b
+            ) and any(max(filed) < d for d in later)
+            if straddles or unadjusted:
+                out.add(k)
+            continue
+        # stale only when production equals a source filed BEFORE a split that
+        # falls after the cell: a source filed after it is already re-based
+        # (CP's held 2017 cells come from post-2021 filings)
+        if any(
+            raw[i][0] == prod and raw[i][1] < d
+            for i in current[k][2]
+            if i in raw
+            for d in later
+        ):
+            out.add(k)
+    return frozenset(out)
 
 
 def all_input_tags(mapped_tags: Mapping[str, list[str]]) -> set[str]:
@@ -3387,6 +3551,7 @@ def package_mismatches(
     *,
     remove_derived_only: bool,
     derived_keys: frozenset | None = None,
+    stale_keys: frozenset | None = None,
 ) -> list[str]:
     """Why this company's write no longer matches its release package (empty
     = it matches). Production can rewrite cells after the dry run, and the
@@ -3414,8 +3579,10 @@ def package_mismatches(
         key = (c.concept, c.period_id)
         if c.status == SHOWN or key in pkg or key not in current:
             continue
-        if c.status == HIDE_NO_FILED_SOURCE and _keeps_derived(
-            c, remove_derived_only, derived_keys
+        if (
+            c.status == HIDE_NO_FILED_SOURCE
+            and key not in (stale_keys or frozenset())
+            and _keeps_derived(c, remove_derived_only, derived_keys)
         ):
             continue
         out.append(f"{key}: would remove a cell outside the package")
@@ -3457,6 +3624,9 @@ def run_split_rebase(
         if mode == rule_flags.ON:
             assert run_id is not None
             derived = load_derived_only_cells(conn, cid) if ru1_on else frozenset()
+            stale = load_held_basis_stale(
+                conn, res, current, derived, load_split_signal_dates(conn, cid)
+            )
             if package is not None:
                 why = (
                     package_mismatches(
@@ -3465,6 +3635,7 @@ def run_split_rebase(
                         package[cid],
                         remove_derived_only=ru1_on,
                         derived_keys=derived,
+                        stale_keys=stale,
                     )
                     if cid in package
                     else ["company is not in the release package"]
@@ -3479,6 +3650,7 @@ def run_split_rebase(
                 run_id=run_id,
                 remove_derived_only=ru1_on,
                 derived_keys=derived,
+                stale_keys=stale,
             )
     return {
         "mode": mode,
@@ -3527,6 +3699,7 @@ def cells_to_remove(
     *,
     remove_derived_only: bool,
     derived_keys: frozenset | None = None,
+    stale_keys: frozenset | None = None,
 ) -> list[int]:
     """canonical_fact ids this pass hides. A current cell the pass never
     evaluated (no mapped fact at all) is not ours and stays."""
@@ -3534,8 +3707,10 @@ def cells_to_remove(
     for c in res.cells:
         if c.status == SHOWN:
             continue
-        if c.status == HIDE_NO_FILED_SOURCE and _keeps_derived(
-            c, remove_derived_only, derived_keys
+        if (
+            c.status == HIDE_NO_FILED_SOURCE
+            and (c.concept, c.period_id) not in (stale_keys or frozenset())
+            and _keeps_derived(c, remove_derived_only, derived_keys)
         ):
             continue
         hit = current.get((c.concept, c.period_id))
@@ -3552,6 +3727,7 @@ def write_company(
     run_id: str,
     remove_derived_only: bool,
     derived_keys: frozenset | None = None,
+    stale_keys: frozenset | None = None,
 ) -> dict:
     """Archive-then-replace in ONE transaction for one company: split_event
     and filing_share_basis rebuilt, every shown cell written, every current
@@ -3641,6 +3817,7 @@ def write_company(
             current,
             remove_derived_only=remove_derived_only,
             derived_keys=derived_keys,
+            stale_keys=stale_keys,
         )
         stats["removed"] = ca.archive_and_remove(
             cur,
