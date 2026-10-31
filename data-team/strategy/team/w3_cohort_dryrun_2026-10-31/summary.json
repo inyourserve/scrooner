@@ -1,21 +1,21 @@
 {
   "canonical_cells_with_non_periodic_source": {
     "by_class": {
-      "all_sources_non_periodic": 5343,
-      "mixed_sources": 1088
+      "all_sources_non_periodic": 5392,
+      "mixed_sources": 1116
     },
     "by_concept_top40": {
       "basic_eps": 48,
-      "basic_eps_resolved": 227,
+      "basic_eps_resolved": 234,
       "capex_resolved": 68,
       "cash_and_equivalents": 31,
       "cash_and_equivalents_resolved": 61,
       "cash_flow_financing": 106,
       "cash_flow_financing_resolved": 119,
-      "cash_flow_investing": 105,
-      "cash_flow_investing_resolved": 114,
-      "cfo": 129,
-      "cfo_resolved": 141,
+      "cash_flow_investing": 108,
+      "cash_flow_investing_resolved": 117,
+      "cfo": 132,
+      "cfo_resolved": 143,
       "comprehensive_income": 40,
       "cost_of_revenue_resolved": 110,
       "current_assets_resolved": 85,
@@ -23,67 +23,39 @@
       "depreciation_and_amortization": 46,
       "depreciation_and_amortization_resolved": 46,
       "diluted_eps": 47,
-      "diluted_eps_resolved": 234,
-      "dividends_per_share": 40,
-      "dividends_per_share_resolved": 90,
+      "diluted_eps_resolved": 241,
+      "dividends_per_share": 41,
+      "dividends_per_share_resolved": 91,
       "gross_profit": 97,
-      "gross_profit_resolved": 202,
-      "income_before_tax": 112,
-      "income_before_tax_resolved": 161,
-      "income_tax_expense": 123,
-      "income_tax_expense_resolved": 172,
-      "interest_expense_resolved": 74,
-      "net_income": 333,
-      "net_income_resolved": 788,
+      "gross_profit_resolved": 203,
+      "income_before_tax": 117,
+      "income_before_tax_resolved": 167,
+      "income_tax_expense": 129,
+      "income_tax_expense_resolved": 178,
+      "interest_expense_resolved": 76,
+      "net_income": 325,
+      "net_income_resolved": 796,
       "operating_expenses_resolved": 203,
       "operating_income": 246,
       "operating_income_resolved": 296,
-      "ppe_net_resolved": 70,
-      "revenue": 222,
-      "revenue_sanity_resolved": 386,
+      "ppe_net_resolved": 71,
+      "revenue": 226,
+      "revenue_sanity_resolved": 392,
       "sbc": 32,
-      "stockholders_equity_resolved": 102,
-      "total_assets_resolved": 145,
-      "total_liabilities_resolved": 134
+      "stockholders_equity_resolved": 105,
+      "total_assets_resolved": 150,
+      "total_liabilities_resolved": 138
     },
     "by_form": {
-      "8-K": 5551,
+      "8-K": 5633,
       "8-K/A": 95,
       "DEF 14A": 774,
-      "DEFR14A": 20
+      "DEFR14A": 15
     },
-    "cells": 6431,
-    "companies": 312
+    "cells": 6508,
+    "companies": 316
   },
-  "errors": [
-    {
-      "company_ids": [
-        1016,
-        1017,
-        1021
-      ],
-      "error": "QueryCanceled('canceling statement due to statement timeout')",
-      "stage": "2e-b ban"
-    },
-    {
-      "company_ids": [
-        1059,
-        1063,
-        1064
-      ],
-      "error": "QueryCanceled('canceling statement due to statement timeout')",
-      "stage": "canonical"
-    },
-    {
-      "company_ids": [
-        1059,
-        1063,
-        1064
-      ],
-      "error": "QueryCanceled('canceling statement due to statement timeout')",
-      "stage": "2e-b ban"
-    }
-  ],
+  "errors": [],
   "evidence_level": "DATA-INFERRED (stored is_authoritative; no filing opened by this script)",
   "rule_ids": [
     "source.periodic_form_only@1",
@@ -91,41 +63,41 @@
   ],
   "stage_2e": {
     "companies_changed_by_class": {
-      "authority_value_changed": 179,
-      "conflict_cleared": 158,
+      "authority_value_changed": 185,
+      "conflict_cleared": 157,
       "matching_copies_resolved": 652,
-      "non_periodic_demoted_same_value": 507,
+      "non_periodic_demoted_same_value": 508,
       "other": 21,
       "periodic_conflict_remains": 196,
-      "value_to_none": 561
+      "value_to_none": 562
     },
     "groups_changed_by_class": {
-      "authority_value_changed": 774,
-      "conflict_cleared": 6711,
+      "authority_value_changed": 804,
+      "conflict_cleared": 6676,
       "matching_copies_resolved": 32288,
-      "non_periodic_demoted_same_value": 109153,
+      "non_periodic_demoted_same_value": 109168,
       "other": 145,
-      "periodic_conflict_remains": 18898,
-      "value_to_none": 21078
+      "periodic_conflict_remains": 18821,
+      "value_to_none": 21145
     },
     "non_periodic_forms_by_class": {
       "authority_value_changed": {
-        "8-K": 322,
+        "8-K": 342,
         "8-K/A": 4,
-        "DEF 14A": 448
+        "DEF 14A": 453,
+        "DEFR14A": 5
       },
       "conflict_cleared": {
-        "8-K": 6490,
+        "8-K": 6470,
         "8-K/A": 155,
-        "DEF 14A": 90,
-        "DEFR14A": 5
+        "DEF 14A": 75
       },
       "non_periodic_demoted_same_value": {
         "8-K": 106066,
         "8-K/A": 1667,
-        "DEF 14A": 1879,
+        "DEF 14A": 1894,
         "DEFM14A": 5,
-        "DEFR14A": 5
+        "DEFR14A": 10
       },
       "other": {
         "424B5": 42,
@@ -135,31 +107,31 @@
         "DEFR14A": 8
       },
       "periodic_conflict_remains": {
-        "8-K": 18631,
+        "8-K": 18554,
         "8-K/A": 426,
         "DEF 14A": 13
       },
       "value_to_none": {
         "424B5": 646,
-        "8-K": 7988,
+        "8-K": 8065,
         "8-K/A": 184,
-        "DEF 14A": 12229,
+        "DEF 14A": 12224,
         "DEFM14A": 35,
-        "DEFR14A": 67
+        "DEFR14A": 62
       }
     },
     "top_concepts_by_class": {
       "authority_value_changed": {
-        "GrossProfit": 40,
-        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": 26,
-        "IncomeTaxExpenseBenefit": 30,
+        "GrossProfit": 44,
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": 28,
+        "IncomeTaxExpenseBenefit": 32,
         "NetCashProvidedByUsedInFinancingActivities": 18,
         "NetCashProvidedByUsedInInvestingActivities": 21,
         "NetCashProvidedByUsedInOperatingActivities": 25,
-        "NetIncomeLoss": 479,
-        "OperatingIncomeLoss": 84,
-        "RevenueFromContractWithCustomerExcludingAssessedTax": 10,
-        "Revenues": 41
+        "NetIncomeLoss": 489,
+        "OperatingIncomeLoss": 89,
+        "RevenueFromContractWithCustomerExcludingAssessedTax": 12,
+        "Revenues": 46
       },
       "conflict_cleared": {
         "AccountsReceivableNetCurrent": 37,
@@ -170,7 +142,7 @@
         "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest": 40,
         "IncomeLossFromContinuingOperationsPerBasicShare": 53,
         "IncomeLossFromContinuingOperationsPerDilutedShare": 48,
-        "NetIncomeLoss": 54,
+        "NetIncomeLoss": 39,
         "OtherAssetsNoncurrent": 39,
         "OtherLiabilitiesNoncurrent": 43,
         "OtherNonoperatingIncomeExpense": 44,
@@ -202,7 +174,7 @@
         "EarningsPerShareDiluted": 1109,
         "EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate": 427,
         "IncomeTaxExpenseBenefit": 491,
-        "NetIncomeLoss": 2732,
+        "NetIncomeLoss": 2747,
         "NetIncomeLossAttributableToNoncontrollingInterest": 453,
         "OperatingIncomeLoss": 475,
         "OtherComprehensiveIncomeLossNetOfTax": 413,
@@ -244,53 +216,53 @@
       },
       "value_to_none": {
         "CoSelectedMeasureAmt": 1834,
-        "GrossProfit": 166,
-        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": 168,
-        "IncomeTaxExpenseBenefit": 225,
-        "NetCashProvidedByUsedInFinancingActivities": 150,
-        "NetCashProvidedByUsedInOperatingActivities": 189,
-        "NetIncomeLoss": 468,
+        "GrossProfit": 174,
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": 177,
+        "IncomeTaxExpenseBenefit": 237,
+        "NetCashProvidedByUsedInFinancingActivities": 154,
+        "NetCashProvidedByUsedInOperatingActivities": 193,
+        "NetIncomeLoss": 462,
         "NonPeoNeoAvgCompActuallyPaidAmt": 1952,
         "NonPeoNeoAvgTotalCompAmt": 1950,
-        "OperatingIncomeLoss": 396,
+        "OperatingIncomeLoss": 413,
         "PeerGroupTotalShareholderRtnAmt": 1880,
         "PeoActuallyPaidCompAmt": 1236,
         "PeoTotalCompAmt": 1225,
-        "Revenues": 279,
+        "Revenues": 290,
         "TotalShareholderRtnAmt": 1905
       }
     },
     "totals": {
       "companies": 1000,
-      "facts": 18844335,
-      "legacy_writes": 145685,
+      "facts": 18845753,
+      "legacy_writes": 148912,
       "matching_copy_groups": 32965,
-      "non_periodic_demoted": 22880,
-      "shrunk_group_promoted": 4370,
-      "w3_matching_writes": 209734,
-      "w3_writes": 176843
+      "non_periodic_demoted": 22913,
+      "shrunk_group_promoted": 4363,
+      "w3_matching_writes": 212927,
+      "w3_writes": 180036
     }
   },
   "stage_2e_b_ban": {
     "by_class": {
-      "value_changed": 422,
-      "value_same": 298,
-      "value_to_blank": 11
+      "value_changed": 440,
+      "value_same": 311,
+      "value_to_blank": 25
     },
     "by_form_and_class": {
       "latest_filed_fy_v1|8-K/A|value_changed": 1,
       "latest_filed_fy_v1|8-K/A|value_same": 1,
-      "latest_filed_fy_v1|8-K|value_changed": 223,
-      "latest_filed_fy_v1|8-K|value_same": 167,
-      "latest_filed_fy_v1|DEF 14A|value_changed": 22,
+      "latest_filed_fy_v1|8-K|value_changed": 251,
+      "latest_filed_fy_v1|8-K|value_same": 177,
+      "latest_filed_fy_v1|DEF 14A|value_changed": 13,
       "latest_filed_fy_v1|DEF 14A|value_same": 4,
-      "latest_filed_fy_v1|DEF 14A|value_to_blank": 11,
-      "latest_filed_fy_v1|DEFR14A|value_changed": 5,
+      "latest_filed_fy_v1|DEF 14A|value_to_blank": 20,
+      "latest_filed_fy_v1|DEFR14A|value_to_blank": 5,
       "latest_filed_quarter_v1|8-K/A|value_changed": 7,
       "latest_filed_quarter_v1|8-K/A|value_same": 3,
-      "latest_filed_quarter_v1|8-K|value_changed": 164,
-      "latest_filed_quarter_v1|8-K|value_same": 123
+      "latest_filed_quarter_v1|8-K|value_changed": 168,
+      "latest_filed_quarter_v1|8-K|value_same": 126
     },
-    "winners_from_now_ineligible_forms": 731
+    "winners_from_now_ineligible_forms": 776
   }
 }

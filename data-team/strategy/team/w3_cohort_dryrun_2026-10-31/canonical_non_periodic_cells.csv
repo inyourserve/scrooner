@@ -12,11 +12,11 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 308545279,4,cost_of_revenue_resolved,2014-01-01,2014-03-31,5978000000,8-K,482320,1,mixed_sources
 101586393,4,current_assets_resolved,2015-06-30,2015-06-30,124712000000,8-K,468407,4,mixed_sources
 102141347,4,current_liabilities_resolved,2015-06-30,2015-06-30,49858000000,8-K,487056,5,mixed_sources
-359262558,4,gross_profit,2014-01-01,2014-03-31,14425000000,8-K,482320,0,all_sources_non_periodic
+361987003,4,gross_profit,2014-01-01,2014-03-31,14425000000,8-K,482320,0,all_sources_non_periodic
 308292949,4,gross_profit_resolved,2014-01-01,2014-03-31,14425000000,8-K,482320,0,all_sources_non_periodic
 309377072,4,gross_profit_resolved,2014-04-01,2014-06-30,15749000000,8-K,482327,0,all_sources_non_periodic
 308748653,4,operating_expenses_resolved,2014-01-01,2014-03-31,7451000000,8-K,482320,1,mixed_sources
-359262748,4,operating_income,2015-04-01,2015-06-30,-2053000000,8-K,489733,0,all_sources_non_periodic
+361987108,4,operating_income,2015-04-01,2015-06-30,-2053000000,8-K,489733,0,all_sources_non_periodic
 99551060,4,operating_income_resolved,2015-04-01,2015-06-30,-2053000000,8-K,489733,0,all_sources_non_periodic
 98947998,4,revenue_sanity_resolved,2014-01-01,2014-03-31,20403000000,8-K,496406,0,all_sources_non_periodic
 98948019,4,revenue_sanity_resolved,2014-04-01,2014-06-30,23382000000,8-K,496413,0,all_sources_non_periodic
@@ -94,16 +94,16 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 102315651,89,total_liabilities_resolved,2015-09-30,2015-09-30,9953400000,8-K,913362,4,mixed_sources
 102315652,89,total_liabilities_resolved,2016-09-30,2016-09-30,10841900000,8-K,913369,5,mixed_sources
 326928282,101,capex_resolved,2015-01-01,2015-12-31,6853000000,8-K,1022748,0,all_sources_non_periodic
-281516433,101,cash_flow_financing,2015-10-01,2015-12-31,6027156000,8-K,243275619,0,all_sources_non_periodic
-281516379,101,cash_flow_financing,2015-01-01,2015-12-31,6423000000,8-K,1018298,0,all_sources_non_periodic
-296521317,101,cash_flow_financing_resolved,2015-10-01,2015-12-31,6027156000,8-K,243275619,0,all_sources_non_periodic
+361695542,101,cash_flow_financing,2015-10-01,2015-12-31,6027156000,8-K,243275619,0,all_sources_non_periodic
+361695490,101,cash_flow_financing,2015-01-01,2015-12-31,6423000000,8-K,1018298,0,all_sources_non_periodic
 296521288,101,cash_flow_financing_resolved,2015-01-01,2015-12-31,6423000000,8-K,1018298,0,all_sources_non_periodic
-281516057,101,cash_flow_investing,2015-10-01,2015-12-31,-6455412000,8-K,243276226,0,all_sources_non_periodic
-281515974,101,cash_flow_investing,2015-01-01,2015-12-31,-6984000000,8-K,1018438,0,all_sources_non_periodic
+296521317,101,cash_flow_financing_resolved,2015-10-01,2015-12-31,6027156000,8-K,243275619,0,all_sources_non_periodic
+361695200,101,cash_flow_investing,2015-01-01,2015-12-31,-6984000000,8-K,1018438,0,all_sources_non_periodic
+361695307,101,cash_flow_investing,2015-10-01,2015-12-31,-6455412000,8-K,243276226,0,all_sources_non_periodic
 296156995,101,cash_flow_investing_resolved,2015-01-01,2015-12-31,-6984000000,8-K,1018438,0,all_sources_non_periodic
 296157024,101,cash_flow_investing_resolved,2015-10-01,2015-12-31,-6455412000,8-K,243276226,0,all_sources_non_periodic
-281514573,101,cfo,2015-10-01,2015-12-31,-208423000,8-K,182209543,0,all_sources_non_periodic
-281514475,101,cfo,2015-01-01,2015-12-31,-483000000,8-K,1018578,0,all_sources_non_periodic
+361694185,101,cfo,2015-01-01,2015-12-31,-483000000,8-K,1018578,0,all_sources_non_periodic
+361694230,101,cfo,2015-10-01,2015-12-31,-208423000,8-K,182209543,0,all_sources_non_periodic
 160602688,101,cfo_resolved,2015-01-01,2015-12-31,-483000000,8-K,1018578,0,all_sources_non_periodic
 216418269,101,cfo_resolved,2015-10-01,2015-12-31,-208423000,8-K,182209543,0,all_sources_non_periodic
 309367458,101,cost_of_revenue_resolved,2015-01-01,2015-12-31,-15000000,8-K,1009170,0,all_sources_non_periodic
@@ -111,41 +111,36 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 102141382,101,current_liabilities_resolved,2016-12-31,2016-12-31,1076669000,8-K,1017513,5,mixed_sources
 308333611,101,gross_profit_resolved,2015-01-01,2015-12-31,272000000,8-K,1009170;1025126,0,all_sources_non_periodic
 308345573,101,gross_profit_resolved,2016-01-01,2016-12-31,700000000,8-K,1025127,1,mixed_sources
-281513581,101,income_before_tax,2015-01-01,2015-12-31,-1097000000,8-K,1014502,0,all_sources_non_periodic
-281513696,101,income_before_tax,2015-10-01,2015-12-31,-312364000,8-K,243276080,0,all_sources_non_periodic
+361693843,101,income_before_tax,2015-10-01,2015-12-31,-312364000,8-K,243276080,0,all_sources_non_periodic
+361693794,101,income_before_tax,2015-01-01,2015-12-31,-1097000000,8-K,1014502,0,all_sources_non_periodic
 293069828,101,income_before_tax_resolved,2015-10-01,2015-12-31,-312364000,8-K,243276080,0,all_sources_non_periodic
 157902565,101,income_before_tax_resolved,2015-01-01,2015-12-31,-1097000000,8-K,1014502,0,all_sources_non_periodic
-281513251,101,income_tax_expense,2015-10-01,2015-12-31,-102000,8-K,243276622,0,all_sources_non_periodic
-281513161,101,income_tax_expense,2015-01-01,2015-12-31,0,8-K,1014762,0,all_sources_non_periodic
-293370917,101,income_tax_expense_resolved,2015-10-01,2015-12-31,-102000,8-K,243276622,0,all_sources_non_periodic
+361693633,101,income_tax_expense,2015-10-01,2015-12-31,-102000,8-K,243276622,0,all_sources_non_periodic
+361693587,101,income_tax_expense,2015-01-01,2015-12-31,0,8-K,1014762,0,all_sources_non_periodic
 293370889,101,income_tax_expense_resolved,2015-01-01,2015-12-31,0,8-K,1014762,0,all_sources_non_periodic
+293370917,101,income_tax_expense_resolved,2015-10-01,2015-12-31,-102000,8-K,243276622,0,all_sources_non_periodic
 99908715,101,interest_expense_resolved,2015-01-01,2015-12-31,322000000,8-K,1016333,0,all_sources_non_periodic
-281509999,101,net_income,2015-01-01,2015-12-31,-975000000,8-K,1018774,0,all_sources_non_periodic
-281510103,101,net_income,2021-10-01,2021-12-31,-545000000,DEF 14A,182209945,0,all_sources_non_periodic
-281509865,101,net_income,2021-01-01,2021-12-31,-1565000000,DEF 14A,1018914,0,all_sources_non_periodic
-281510127,101,net_income,2022-10-01,2022-12-31,5144000000,DEF 14A,182209950,0,all_sources_non_periodic
-281510003,101,net_income,2022-01-01,2022-12-31,2635000000,DEF 14A,1018934,0,all_sources_non_periodic
-281509938,101,net_income,2023-01-01,2023-12-31,12059000000,DEF 14A,1018951,0,all_sources_non_periodic
-281510129,101,net_income,2023-10-01,2023-12-31,3555000000,DEF 14A,182209949,0,all_sources_non_periodic
-281510132,101,net_income,2024-10-01,2024-12-31,2217000000,DEF 14A,182210187,0,all_sources_non_periodic
-281510004,101,net_income,2024-01-01,2024-12-31,4492000000,DEF 14A,1018964,0,all_sources_non_periodic
-281509894,101,net_income,2025-01-01,2025-12-31,6794000000,DEF 14A,1018974,0,all_sources_non_periodic
-281510130,101,net_income,2025-10-01,2025-12-31,3766000000,DEF 14A,182210189,0,all_sources_non_periodic
+361692428,101,net_income,2015-01-01,2015-12-31,-975000000,8-K,1018774,0,all_sources_non_periodic
+361692454,101,net_income,2021-10-01,2021-12-31,-545000000,DEF 14A,182209945,0,all_sources_non_periodic
+361692455,101,net_income,2022-10-01,2022-12-31,5144000000,DEF 14A,182209950,0,all_sources_non_periodic
+361692456,101,net_income,2023-10-01,2023-12-31,3555000000,DEF 14A,182209949,0,all_sources_non_periodic
+361692458,101,net_income,2024-10-01,2024-12-31,2217000000,DEF 14A,182210187,0,all_sources_non_periodic
+361692457,101,net_income,2025-10-01,2025-12-31,3766000000,DEF 14A,182210189,0,all_sources_non_periodic
 158607345,101,net_income_resolved,2015-01-01,2015-12-31,-975000000,8-K,1018774,0,all_sources_non_periodic
 308792710,101,operating_expenses_resolved,2015-01-01,2015-12-31,721000000,8-K,1009170;1019894;1025126,0,all_sources_non_periodic
 308819696,101,operating_expenses_resolved,2016-01-01,2016-12-31,730000000,8-K,1025127,2,mixed_sources
-281509628,101,operating_income,2015-01-01,2015-12-31,-449000000,8-K,1019894,0,all_sources_non_periodic
+361692342,101,operating_income,2015-01-01,2015-12-31,-449000000,8-K,1019894,0,all_sources_non_periodic
 117471123,101,operating_income_resolved,2015-01-01,2015-12-31,-463000000,8-K,1019742;1025126,0,all_sources_non_periodic
 101759199,101,ppe_net_resolved,2016-12-31,2016-12-31,20635000000,8-K,1024305,0,all_sources_non_periodic
-281509288,101,revenue,2015-01-01,2015-12-31,257000000,8-K,1025126,0,all_sources_non_periodic
-281509302,101,revenue,2016-01-01,2016-12-31,1282000000,8-K,1025127,0,all_sources_non_periodic
+361692258,101,revenue,2015-01-01,2015-12-31,257000000,8-K,1025126,0,all_sources_non_periodic
+361692262,101,revenue,2016-01-01,2016-12-31,1282000000,8-K,1025127,0,all_sources_non_periodic
 98948096,101,revenue_sanity_resolved,2015-01-01,2015-12-31,257000000,8-K,1025126,0,all_sources_non_periodic
 178914011,101,shares_outstanding_resolved,2016-12-31,2016-12-31,237960000,8-K,1008409,5,mixed_sources
 160235120,101,stockholders_equity_resolved,2016-12-31,2016-12-31,838396000,8-K,1026555,7,mixed_sources
 101968861,101,total_assets_resolved,2016-12-31,2016-12-31,23702737000,8-K,1007239,5,mixed_sources
 208197667,101,total_liabilities_resolved,2016-12-31,2016-12-31,22864341000,8-K,1007239;1026555,12,mixed_sources
-281470561,107,net_income,2022-01-01,2022-03-31,87823000,DEF 14A,182224503,0,all_sources_non_periodic
 281470638,107,net_income,2021-04-01,2022-03-31,1124362000,DEF 14A,1100246,0,all_sources_non_periodic
+281470561,107,net_income,2022-01-01,2022-03-31,87823000,DEF 14A,182224503,0,all_sources_non_periodic
 281470633,107,net_income,2022-04-01,2023-03-31,924472000,DEF 14A,1100260,0,all_sources_non_periodic
 214359980,107,net_income_resolved,2022-01-01,2022-03-31,87823000,DEF 14A,182224503,0,all_sources_non_periodic
 100896812,107,net_income_resolved,2021-04-01,2022-03-31,1124362000,DEF 14A,1100246,0,all_sources_non_periodic
@@ -156,8 +151,8 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 281478050,116,net_income,2022-01-01,2022-12-31,1407200000,DEF 14A,1245865,0,all_sources_non_periodic
 214357301,116,net_income_resolved,2021-10-01,2021-12-31,316500000,DEF 14A,182248469,0,all_sources_non_periodic
 158607366,116,net_income_resolved,2021-01-01,2021-12-31,981000000,DEF 14A,1245851,0,all_sources_non_periodic
-100896842,116,net_income_resolved,2022-01-01,2022-12-31,1407200000,DEF 14A,1245865,0,all_sources_non_periodic
 214357304,116,net_income_resolved,2022-10-01,2022-12-31,289200000,DEF 14A,183453071,0,all_sources_non_periodic
+100896842,116,net_income_resolved,2022-01-01,2022-12-31,1407200000,DEF 14A,1245865,0,all_sources_non_periodic
 120557821,183,basic_eps_resolved,2015-01-01,2015-12-31,1.02,8-K,8235194,3,mixed_sources
 120557817,183,basic_eps_resolved,2016-04-01,2016-06-30,1.08,8-K,8235255,2,mixed_sources
 120557824,183,basic_eps_resolved,2016-07-01,2016-09-30,0.09,8-K,8235266,2,mixed_sources
@@ -208,12 +203,12 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 120551205,193,basic_eps_resolved,2019-01-01,2019-03-31,0.67,8-K,8635510,3,mixed_sources
 120551206,193,basic_eps_resolved,2019-04-01,2019-06-30,0.61,8-K,8635533,3,mixed_sources
 326928379,193,capex_resolved,2018-01-01,2018-12-31,659000000,8-K,8671523,0,all_sources_non_periodic
-281658568,193,cash_flow_financing,2015-01-01,2015-12-31,-481000000,8-K,8653177,0,all_sources_non_periodic
+361707402,193,cash_flow_financing,2015-01-01,2015-12-31,-481000000,8-K,8653177,0,all_sources_non_periodic
 161279072,193,cash_flow_financing_resolved,2015-01-01,2015-12-31,-481000000,8-K,8653177,0,all_sources_non_periodic
-281658387,193,cash_flow_investing,2018-01-01,2018-12-31,-916000000,8-K,8653562,0,all_sources_non_periodic
+361707342,193,cash_flow_investing,2018-01-01,2018-12-31,-916000000,8-K,8653562,0,all_sources_non_periodic
 160933682,193,cash_flow_investing_resolved,2018-01-01,2018-12-31,-916000000,8-K,8653562,0,all_sources_non_periodic
-281656759,193,cfo,2015-01-01,2015-12-31,1771000000,8-K,8653947,0,all_sources_non_periodic
-281656891,193,cfo,2018-01-01,2018-12-31,2017000000,8-K,8654014,0,all_sources_non_periodic
+361706803,193,cfo,2015-01-01,2015-12-31,1771000000,8-K,8653947,0,all_sources_non_periodic
+361706782,193,cfo,2018-01-01,2018-12-31,2017000000,8-K,8654014,0,all_sources_non_periodic
 160602771,193,cfo_resolved,2015-01-01,2015-12-31,1771000000,8-K,8653947,0,all_sources_non_periodic
 102900305,193,cfo_resolved,2018-01-01,2018-12-31,2017000000,8-K,8654222,0,all_sources_non_periodic
 308556148,193,cost_of_revenue_resolved,2015-01-01,2015-12-31,5777000000,8-K,8640619,1,mixed_sources
@@ -223,12 +218,12 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 101194085,193,diluted_eps_resolved,2019-04-01,2019-06-30,0.6,8-K,8635941,3,mixed_sources
 120701267,193,dividends_per_share_resolved,2016-01-01,2016-12-31,0.505,8-K,8621009,3,mixed_sources
 120701268,193,dividends_per_share_resolved,2020-07-01,2020-07-31,0.245,8-K,8621525,1,mixed_sources
-281652554,193,gross_profit,2015-01-01,2015-12-31,4191000000,8-K,8640619,0,all_sources_non_periodic
-281652525,193,gross_profit,2016-01-01,2016-03-31,966000000,8-K,8640632,0,all_sources_non_periodic
-281652621,193,gross_profit,2016-04-01,2016-06-30,973000000,8-K,8640644,0,all_sources_non_periodic
-281652588,193,gross_profit,2016-07-01,2016-09-30,1073000000,8-K,8640658,0,all_sources_non_periodic
-281652641,193,gross_profit,2018-01-01,2018-12-31,4759000000,8-K,8640765,0,all_sources_non_periodic
-281652582,193,gross_profit,2019-04-01,2019-06-30,1153000000,8-K,8640794,0,all_sources_non_periodic
+361705102,193,gross_profit,2015-01-01,2015-12-31,4191000000,8-K,8640619,0,all_sources_non_periodic
+361705065,193,gross_profit,2016-01-01,2016-03-31,966000000,8-K,8640632,0,all_sources_non_periodic
+361705050,193,gross_profit,2016-04-01,2016-06-30,973000000,8-K,8640644,0,all_sources_non_periodic
+361705082,193,gross_profit,2016-07-01,2016-09-30,1073000000,8-K,8640658,0,all_sources_non_periodic
+361705093,193,gross_profit,2018-01-01,2018-12-31,4759000000,8-K,8640765,0,all_sources_non_periodic
+361705130,193,gross_profit,2019-04-01,2019-06-30,1153000000,8-K,8640794,0,all_sources_non_periodic
 308238471,193,gross_profit_resolved,2015-01-01,2015-12-31,4191000000,8-K,8640619,0,all_sources_non_periodic
 308238458,193,gross_profit_resolved,2016-01-01,2016-03-31,966000000,8-K,8640632,0,all_sources_non_periodic
 308238505,193,gross_profit_resolved,2016-04-01,2016-06-30,973000000,8-K,8640644,0,all_sources_non_periodic
@@ -236,13 +231,13 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 309377156,193,gross_profit_resolved,2016-10-01,2016-12-31,1104000000,8-K,8640671,0,all_sources_non_periodic
 308238519,193,gross_profit_resolved,2018-01-01,2018-12-31,4759000000,8-K,8640765,0,all_sources_non_periodic
 308238488,193,gross_profit_resolved,2019-04-01,2019-06-30,1153000000,8-K,8640794,0,all_sources_non_periodic
-281656068,193,income_before_tax,2018-01-01,2018-12-31,1617000000,8-K,8641802,0,all_sources_non_periodic
+361706461,193,income_before_tax,2018-01-01,2018-12-31,1617000000,8-K,8641802,0,all_sources_non_periodic
 100205127,193,income_before_tax_resolved,2018-01-01,2018-12-31,1617000000,8-K,8641802,0,all_sources_non_periodic
-281655769,193,income_tax_expense,2018-01-01,2018-12-31,65000000,8-K,8644302,0,all_sources_non_periodic
+361706327,193,income_tax_expense,2018-01-01,2018-12-31,65000000,8-K,8644302,0,all_sources_non_periodic
 100506485,193,income_tax_expense_resolved,2018-01-01,2018-12-31,65000000,8-K,8644302,0,all_sources_non_periodic
-281653065,193,net_income,2018-01-01,2018-12-31,1546000000,8-K,8654784,0,all_sources_non_periodic
-281652939,193,net_income,2019-01-01,2019-03-31,342000000,8-K,8654806,0,all_sources_non_periodic
-281653000,193,net_income,2019-04-01,2019-06-30,313000000,8-K,8654814,0,all_sources_non_periodic
+361705324,193,net_income,2018-01-01,2018-12-31,1546000000,8-K,8654784,0,all_sources_non_periodic
+361705269,193,net_income,2019-01-01,2019-03-31,342000000,8-K,8654806,0,all_sources_non_periodic
+361705294,193,net_income,2019-04-01,2019-06-30,313000000,8-K,8654814,0,all_sources_non_periodic
 308766465,193,operating_expenses_resolved,2015-10-01,2015-12-31,770000000,8-K,182417313,1,mixed_sources
 308820625,193,operating_expenses_resolved,2015-01-01,2015-12-31,3618000000,8-K,8640619;8655956,0,all_sources_non_periodic
 308820623,193,operating_expenses_resolved,2016-01-01,2016-03-31,778000000,8-K,8640632,1,mixed_sources
@@ -250,13 +245,13 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 308820630,193,operating_expenses_resolved,2016-07-01,2016-09-30,887000000,8-K,8640658,1,mixed_sources
 308820631,193,operating_expenses_resolved,2018-01-01,2018-12-31,3175000000,8-K,8640765;8656091,0,all_sources_non_periodic
 308820629,193,operating_expenses_resolved,2019-04-01,2019-06-30,803000000,8-K,8640794,1,mixed_sources
-281652792,193,operating_income,2015-10-01,2015-12-31,302000000,8-K,182417313,0,all_sources_non_periodic
-281652750,193,operating_income,2015-01-01,2015-12-31,573000000,8-K,8655956,0,all_sources_non_periodic
-281652826,193,operating_income,2018-01-01,2018-12-31,1584000000,8-K,8656091,0,all_sources_non_periodic
+361705195,193,operating_income,2015-10-01,2015-12-31,302000000,8-K,182417313,0,all_sources_non_periodic
+361705168,193,operating_income,2015-01-01,2015-12-31,573000000,8-K,8655956,0,all_sources_non_periodic
+361705215,193,operating_income,2018-01-01,2018-12-31,1584000000,8-K,8656091,0,all_sources_non_periodic
 213240534,193,operating_income_resolved,2015-10-01,2015-12-31,302000000,8-K,182417313,0,all_sources_non_periodic
 157368476,193,operating_income_resolved,2015-01-01,2015-12-31,573000000,8-K,8655956,0,all_sources_non_periodic
 99673941,193,operating_income_resolved,2018-01-01,2018-12-31,1584000000,8-K,8656091,0,all_sources_non_periodic
-281652449,193,revenue,2018-01-01,2018-12-31,11099000000,8-K,8687565,0,all_sources_non_periodic
+361704962,193,revenue,2018-01-01,2018-12-31,11099000000,8-K,8687565,0,all_sources_non_periodic
 99357791,193,revenue_sanity_resolved,2019-01-01,2019-03-31,2638000000,8-K,8687594,0,all_sources_non_periodic
 99357792,193,revenue_sanity_resolved,2019-04-01,2019-06-30,2834000000,8-K,8687628,0,all_sources_non_periodic
 101969020,195,total_assets_resolved,2014-09-30,2014-09-30,12447000000,8-K,1638660,5,mixed_sources
@@ -297,8 +292,8 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 120551281,251,basic_eps_resolved,2015-01-01,2015-03-31,2.06,8-K,11693865,2,mixed_sources
 120551282,251,basic_eps_resolved,2015-04-01,2015-06-30,1.33,8-K,11693871,2,mixed_sources
 120557891,251,basic_eps_resolved,2015-07-01,2015-09-30,0.95,8-K,11693878,2,mixed_sources
-178921432,251,basic_eps_resolved,2015-10-01,2015-12-31,-0.16,8-K,11693886,1,mixed_sources
 178921337,251,basic_eps_resolved,2015-01-01,2015-12-31,4.23,8-K,11693882,2,mixed_sources
+178921432,251,basic_eps_resolved,2015-10-01,2015-12-31,-0.16,8-K,11693886,1,mixed_sources
 308548123,251,cost_of_revenue_resolved,2014-01-01,2014-03-31,10114000000,8-K,11702931,1,mixed_sources
 308548121,251,cost_of_revenue_resolved,2014-04-01,2014-06-30,10886000000,8-K,11702954,1,mixed_sources
 308556237,251,cost_of_revenue_resolved,2014-07-01,2014-09-30,10354000000,8-K,11702972,1,mixed_sources
@@ -351,78 +346,73 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 101969108,251,total_assets_resolved,2015-12-31,2015-12-31,78497000000,8-K,11679205,6,mixed_sources
 102315774,251,total_liabilities_resolved,2014-12-31,2014-12-31,67855000000,8-K,11724392,5,mixed_sources
 102315772,251,total_liabilities_resolved,2015-12-31,2015-12-31,63612000000,8-K,11724405,5,mixed_sources
-281767128,261,net_income,2021-10-01,2021-12-31,-193656450,DEFR14A,182599531,0,all_sources_non_periodic
-281767231,261,net_income,2021-01-01,2021-12-31,268550,DEFR14A,2039164,0,all_sources_non_periodic
-281767174,261,net_income,2022-01-01,2022-12-31,249624,DEFR14A,2039179,0,all_sources_non_periodic
-281767131,261,net_income,2022-10-01,2022-12-31,-187248376,DEFR14A,182599522,0,all_sources_non_periodic
-281767209,261,net_income,2023-01-01,2023-12-31,272509,DEFR14A,2039194,0,all_sources_non_periodic
-281767134,261,net_income,2023-10-01,2023-12-31,-182183491,DEFR14A,182599530,0,all_sources_non_periodic
-281767125,261,net_income,2024-10-01,2024-12-31,-211378001,DEFR14A,182599526,0,all_sources_non_periodic
-281767185,261,net_income,2024-01-01,2024-12-31,301999,DEFR14A,2039208,0,all_sources_non_periodic
-281767130,261,net_income,2025-10-01,2025-12-31,-188221762,DEFR14A,182598893,0,all_sources_non_periodic
-281767170,261,net_income,2025-01-01,2025-12-31,265238,DEFR14A,2039219,0,all_sources_non_periodic
-214528187,261,net_income_resolved,2021-10-01,2021-12-31,-193656450,DEFR14A,182599531,0,all_sources_non_periodic
+361717548,261,net_income,2021-10-01,2021-12-31,-193656450,DEFR14A,182599531,0,all_sources_non_periodic
+361717551,261,net_income,2022-10-01,2022-12-31,-187248376,DEFR14A,182599522,0,all_sources_non_periodic
+361717553,261,net_income,2023-10-01,2023-12-31,-182183491,DEFR14A,182599530,0,all_sources_non_periodic
+361717546,261,net_income,2024-10-01,2024-12-31,-211378001,DEFR14A,182599526,0,all_sources_non_periodic
+361717550,261,net_income,2025-10-01,2025-12-31,-188221762,DEFR14A,182598893,0,all_sources_non_periodic
 214528290,261,net_income_resolved,2021-01-01,2021-12-31,268550,DEFR14A,2039164,0,all_sources_non_periodic
+214528187,261,net_income_resolved,2021-10-01,2021-12-31,-193656450,DEFR14A,182599531,0,all_sources_non_periodic
 214528233,261,net_income_resolved,2022-01-01,2022-12-31,249624,DEFR14A,2039179,0,all_sources_non_periodic
 214528190,261,net_income_resolved,2022-10-01,2022-12-31,-187248376,DEFR14A,182599522,0,all_sources_non_periodic
 214528193,261,net_income_resolved,2023-10-01,2023-12-31,-182183491,DEFR14A,182599530,0,all_sources_non_periodic
 214528268,261,net_income_resolved,2023-01-01,2023-12-31,272509,DEFR14A,2039194,0,all_sources_non_periodic
-214528184,261,net_income_resolved,2024-10-01,2024-12-31,-211378001,DEFR14A,182599526,0,all_sources_non_periodic
 214528244,261,net_income_resolved,2024-01-01,2024-12-31,301999,DEFR14A,2039208,0,all_sources_non_periodic
+214528184,261,net_income_resolved,2024-10-01,2024-12-31,-211378001,DEFR14A,182599526,0,all_sources_non_periodic
 214528229,261,net_income_resolved,2025-01-01,2025-12-31,265238,DEFR14A,2039219,0,all_sources_non_periodic
 214528189,261,net_income_resolved,2025-10-01,2025-12-31,-188221762,DEFR14A,182598893,0,all_sources_non_periodic
-359081132,269,comprehensive_income,2020-01-01,2020-03-31,-23400000,8-K,2126530,0,all_sources_non_periodic
-359081172,269,comprehensive_income,2020-04-01,2020-06-30,-118800000,8-K,2126531,0,all_sources_non_periodic
-359081182,269,comprehensive_income,2020-07-01,2020-09-30,43200000,8-K,2126532,0,all_sources_non_periodic
-359081136,269,comprehensive_income,2020-10-01,2020-12-31,17100000,8-K,2126538,0,all_sources_non_periodic
-359081133,269,comprehensive_income,2021-01-01,2021-03-31,36100000,8-K,2126539,0,all_sources_non_periodic
-359081130,269,comprehensive_income,2021-04-01,2021-06-30,108300000,8-K,2126540,0,all_sources_non_periodic
-359081181,269,comprehensive_income,2021-07-01,2021-09-30,61400000,8-K,2126541,0,all_sources_non_periodic
-359081144,269,comprehensive_income,2021-10-01,2021-12-31,43300000,8-K,2126546,0,all_sources_non_periodic
-359078872,269,depreciation_and_amortization,2020-10-01,2020-12-31,26400000,8-K,2128322,0,all_sources_non_periodic
-359078903,269,depreciation_and_amortization,2021-10-01,2021-12-31,25300000,8-K,2128340,0,all_sources_non_periodic
+361724368,269,comprehensive_income,2020-01-01,2020-03-31,-23400000,8-K,2126530,0,all_sources_non_periodic
+361724408,269,comprehensive_income,2020-04-01,2020-06-30,-118800000,8-K,2126531,0,all_sources_non_periodic
+361724418,269,comprehensive_income,2020-07-01,2020-09-30,43200000,8-K,2126532,0,all_sources_non_periodic
+361724372,269,comprehensive_income,2020-10-01,2020-12-31,17100000,8-K,2126538,0,all_sources_non_periodic
+361724369,269,comprehensive_income,2021-01-01,2021-03-31,36100000,8-K,2126539,0,all_sources_non_periodic
+361724366,269,comprehensive_income,2021-04-01,2021-06-30,108300000,8-K,2126540,0,all_sources_non_periodic
+361724417,269,comprehensive_income,2021-07-01,2021-09-30,61400000,8-K,2126541,0,all_sources_non_periodic
+361724380,269,comprehensive_income,2021-10-01,2021-12-31,43300000,8-K,2126546,0,all_sources_non_periodic
+361722533,269,depreciation_and_amortization,2020-10-01,2020-12-31,26400000,8-K,2128322,0,all_sources_non_periodic
+361722545,269,depreciation_and_amortization,2021-10-01,2021-12-31,25300000,8-K,2128340,0,all_sources_non_periodic
 323106047,269,depreciation_and_amortization_resolved,2020-10-01,2020-12-31,26400000,8-K,2128322,0,all_sources_non_periodic
 323106011,269,depreciation_and_amortization_resolved,2021-10-01,2021-12-31,25300000,8-K,2128340,0,all_sources_non_periodic
-359080161,269,income_tax_expense,2020-10-01,2020-12-31,300000,8-K,2132930,0,all_sources_non_periodic
-359080173,269,income_tax_expense,2021-10-01,2021-12-31,10400000,8-K,2132948,0,all_sources_non_periodic
+361723397,269,income_tax_expense,2020-10-01,2020-12-31,300000,8-K,2132930,0,all_sources_non_periodic
+361723409,269,income_tax_expense,2021-10-01,2021-12-31,10400000,8-K,2132948,0,all_sources_non_periodic
 100245507,269,income_tax_expense_resolved,2020-10-01,2020-12-31,300000,8-K,2132930,0,all_sources_non_periodic
 100245469,269,income_tax_expense_resolved,2021-10-01,2021-12-31,10400000,8-K,2132948,0,all_sources_non_periodic
-359079884,269,operating_expenses,2020-10-01,2020-12-31,255500000,8-K,2138039,0,all_sources_non_periodic
-359079894,269,operating_expenses,2021-10-01,2021-12-31,330100000,8-K,2138057,0,all_sources_non_periodic
+361723120,269,operating_expenses,2020-10-01,2020-12-31,255500000,8-K,2138039,0,all_sources_non_periodic
+361723130,269,operating_expenses,2021-10-01,2021-12-31,330100000,8-K,2138057,0,all_sources_non_periodic
 308676986,269,operating_expenses_resolved,2020-10-01,2020-12-31,255500000,8-K,2138039,0,all_sources_non_periodic
 308676995,269,operating_expenses_resolved,2021-10-01,2021-12-31,330100000,8-K,2138057,0,all_sources_non_periodic
-359079591,269,operating_income,2021-10-01,2021-12-31,34700000,8-K,2138305,0,all_sources_non_periodic
+361722836,269,operating_income,2021-10-01,2021-12-31,34700000,8-K,2138305,0,all_sources_non_periodic
 99422691,269,operating_income_resolved,2021-10-01,2021-12-31,34700000,8-K,2138305,0,all_sources_non_periodic
-359079389,269,revenue,2021-10-01,2021-12-31,364800000,8-K,2143191,0,all_sources_non_periodic
+361722752,269,revenue,2021-10-01,2021-12-31,364800000,8-K,2143191,0,all_sources_non_periodic
 99074125,269,revenue_sanity_resolved,2021-10-01,2021-12-31,364800000,8-K,2143191,0,all_sources_non_periodic
-359078753,269,sbc,2020-10-01,2020-12-31,6400000,8-K,2143777,0,all_sources_non_periodic
-359078729,269,sbc,2021-04-01,2021-06-30,7100000,8-K,2143783,0,all_sources_non_periodic
-359078842,269,sbc,2021-07-01,2021-09-30,7800000,8-K,2143786,0,all_sources_non_periodic
-359078626,269,sbc,2021-10-01,2021-12-31,7400000,8-K,2143791,0,all_sources_non_periodic
-359081077,269,sga_expense,2020-10-01,2020-12-31,29500000,8-K,2143577,0,all_sources_non_periodic
-359081087,269,sga_expense,2021-10-01,2021-12-31,38800000,8-K,2143595,0,all_sources_non_periodic
+361722491,269,sbc,2020-10-01,2020-12-31,6400000,8-K,2143777,0,all_sources_non_periodic
+361722483,269,sbc,2021-04-01,2021-06-30,7100000,8-K,2143783,0,all_sources_non_periodic
+361722522,269,sbc,2021-07-01,2021-09-30,7800000,8-K,2143786,0,all_sources_non_periodic
+361722454,269,sbc,2021-10-01,2021-12-31,7400000,8-K,2143791,0,all_sources_non_periodic
+361724313,269,sga_expense,2020-10-01,2020-12-31,29500000,8-K,2143577,0,all_sources_non_periodic
+361724323,269,sga_expense,2021-10-01,2021-12-31,38800000,8-K,2143595,0,all_sources_non_periodic
 120551303,275,basic_eps_resolved,2014-04-01,2014-06-30,1.32,8-K,2181943,1,mixed_sources
-359083018,275,net_income,2025-07-01,2026-06-30,601000000,DEF 14A,203398339,0,all_sources_non_periodic
-359083012,275,net_income,2026-04-01,2026-06-30,177000000,DEF 14A,207827861,0,all_sources_non_periodic
-231428824,275,net_income_resolved,2025-07-01,2026-06-30,601000000,DEF 14A,203398339,0,all_sources_non_periodic
+361729389,275,net_income,2026-04-01,2026-06-30,177000000,DEF 14A,207827861,0,all_sources_non_periodic
+361729399,275,net_income,2025-07-01,2026-06-30,601000000,DEF 14A,203398339,0,all_sources_non_periodic
 231428823,275,net_income_resolved,2026-04-01,2026-06-30,177000000,DEF 14A,207827861,0,all_sources_non_periodic
+231428824,275,net_income_resolved,2025-07-01,2026-06-30,601000000,DEF 14A,203398339,0,all_sources_non_periodic
 101969143,275,total_assets_resolved,2014-06-30,2014-06-30,4258000000,8-K,2176570,7,mixed_sources
-359091979,279,cash_flow_investing,2016-10-01,2016-12-31,329000000,8-K,243468631,0,all_sources_non_periodic
-359092105,279,cash_flow_investing,2016-01-01,2016-12-31,-1004000000,8-K,13208389,0,all_sources_non_periodic
+361737646,279,cash_flow_investing,2016-10-01,2016-12-31,329000000,8-K,243468631,0,all_sources_non_periodic
+361737703,279,cash_flow_investing,2016-01-01,2016-12-31,-1004000000,8-K,13208389,0,all_sources_non_periodic
 296167094,279,cash_flow_investing_resolved,2016-10-01,2016-12-31,329000000,8-K,243468631,0,all_sources_non_periodic
 160933808,279,cash_flow_investing_resolved,2016-01-01,2016-12-31,-1004000000,8-K,13208389,0,all_sources_non_periodic
-359091235,279,cfo,2016-10-01,2016-12-31,2069000000,8-K,182663013,0,all_sources_non_periodic
-359091354,279,cfo,2016-01-01,2016-12-31,8792000000,8-K,13209058,0,all_sources_non_periodic
+361737294,279,cfo,2016-10-01,2016-12-31,2069000000,8-K,182663013,0,all_sources_non_periodic
+361737351,279,cfo,2016-01-01,2016-12-31,8792000000,8-K,13209058,0,all_sources_non_periodic
 102900505,279,cfo_resolved,2016-01-01,2016-12-31,8792000000,8-K,13209058,0,all_sources_non_periodic
 216600001,279,cfo_resolved,2016-10-01,2016-12-31,2069000000,8-K,182663013,0,all_sources_non_periodic
 159300971,279,current_assets_resolved,2018-12-31,2018-12-31,24930000000,8-K,13138516,3,mixed_sources
 102141477,279,current_liabilities_resolved,2014-12-31,2014-12-31,32374000000,8-K,13198110,5,mixed_sources
 102141475,279,current_liabilities_resolved,2015-12-31,2015-12-31,26929000000,8-K,13198161,5,mixed_sources
 102141478,279,current_liabilities_resolved,2018-12-31,2018-12-31,28782000000,8-K,13198272,3,mixed_sources
-308766645,279,operating_expenses_resolved,2016-01-01,2016-12-31,16741000000,8-K,13214553,1,mixed_sources
 308739561,279,operating_expenses_resolved,2016-10-01,2016-12-31,4229000000,8-K,182662423,1,mixed_sources
-359089453,279,operating_income,2016-01-01,2016-12-31,8657000000,8-K,13214553,0,all_sources_non_periodic
-359089324,279,operating_income,2016-10-01,2016-12-31,1386000000,8-K,182662423,0,all_sources_non_periodic
+308766645,279,operating_expenses_resolved,2016-01-01,2016-12-31,16741000000,8-K,13214553,1,mixed_sources
+361735882,279,operating_income,2016-10-01,2016-12-31,1386000000,8-K,182662423,0,all_sources_non_periodic
+361735999,279,operating_income,2016-01-01,2016-12-31,8657000000,8-K,13214553,0,all_sources_non_periodic
 213373255,279,operating_income_resolved,2016-10-01,2016-12-31,1386000000,8-K,182662423,0,all_sources_non_periodic
 99674247,279,operating_income_resolved,2016-01-01,2016-12-31,8657000000,8-K,13214553,0,all_sources_non_periodic
 98950926,279,revenue_sanity_resolved,2016-01-01,2016-12-31,41863000000,8-K,13251860,0,all_sources_non_periodic
@@ -431,24 +421,24 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 101969149,279,total_assets_resolved,2015-12-31,2015-12-31,89996000000,8-K,13137842,5,mixed_sources
 208098631,279,total_liabilities_resolved,2014-12-31,2014-12-31,61944000000,8-K,13137809,7,mixed_sources
 208204048,279,total_liabilities_resolved,2015-12-31,2015-12-31,64652000000,8-K,13137842,7,mixed_sources
-281707594,295,net_income,2023-02-27,2023-05-28,37100000,DEF 14A,182712956,0,all_sources_non_periodic
 281707687,295,net_income,2022-05-30,2023-05-28,683200000,DEF 14A,2401522,0,all_sources_non_periodic
-281707702,295,net_income,2023-05-29,2024-05-26,347700000,DEF 14A,2401542,0,all_sources_non_periodic
+281707594,295,net_income,2023-02-27,2023-05-28,37100000,DEF 14A,182712956,0,all_sources_non_periodic
 281707598,295,net_income,2024-02-26,2024-05-26,-566800000,DEF 14A,182712957,0,all_sources_non_periodic
-281707593,295,net_income,2025-02-24,2025-05-25,256100000,DEF 14A,182712958,0,all_sources_non_periodic
+281707702,295,net_income,2023-05-29,2024-05-26,347700000,DEF 14A,2401542,0,all_sources_non_periodic
 281707721,295,net_income,2024-05-27,2025-05-25,1152500000,DEF 14A,2401561,0,all_sources_non_periodic
+281707593,295,net_income,2025-02-24,2025-05-25,256100000,DEF 14A,182712958,0,all_sources_non_periodic
 120551417,301,basic_eps_resolved,2015-01-01,2015-12-31,1.94,8-K,14464889,2,mixed_sources
 101586551,301,current_assets_resolved,2014-12-31,2014-12-31,1578900000,8-K,14447514,5,mixed_sources
 102141487,301,current_liabilities_resolved,2014-12-31,2014-12-31,2325300000,8-K,14510052,5,mixed_sources
 101194285,301,diluted_eps_resolved,2015-01-01,2015-12-31,1.93,8-K,14465803,2,mixed_sources
 101969197,301,total_assets_resolved,2014-12-31,2014-12-31,13996300000,8-K,14447090,5,mixed_sources
-360498535,301,total_debt_resolved,2014-12-31,2014-12-31,3095200000,8-K,14512550,0,all_sources_non_periodic
-360498544,301,total_debt_resolved,2016-03-31,2016-03-31,2973400000,8-K,14512608,0,all_sources_non_periodic
+363790072,301,total_debt_resolved,2014-12-31,2014-12-31,3095200000,8-K,14512550,0,all_sources_non_periodic
+363790081,301,total_debt_resolved,2016-03-31,2016-03-31,2973400000,8-K,14512608,0,all_sources_non_periodic
 102315812,301,total_liabilities_resolved,2014-12-31,2014-12-31,6110200000,8-K,14508318,5,mixed_sources
 120551505,361,basic_eps_resolved,2017-01-01,2017-12-31,5.21,8-K,7446956,3,mixed_sources
 326928670,361,capex_resolved,2017-01-01,2017-12-31,787400000,8-K,7528165,0,all_sources_non_periodic
 159132708,361,cash_and_equivalents_resolved,2018-12-31,2018-12-31,63900000,8-K,7419259,0,all_sources_non_periodic
-304643134,361,cash_flow_investing,2017-01-01,2017-12-31,-1727000000,8-K,7497262,0,all_sources_non_periodic
+361763653,361,cash_flow_investing,2017-01-01,2017-12-31,-1727000000,8-K,7497262,0,all_sources_non_periodic
 160933918,361,cash_flow_investing_resolved,2017-01-01,2017-12-31,-1727000000,8-K,7497262,0,all_sources_non_periodic
 309368187,361,cost_of_revenue_resolved,2017-01-01,2017-12-31,6414600000,8-K,7430383,0,all_sources_non_periodic
 309368181,361,cost_of_revenue_resolved,2018-01-01,2018-03-31,1639300000,8-K,7430422,0,all_sources_non_periodic
@@ -463,7 +453,7 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 100205583,361,income_before_tax_resolved,2018-04-01,2018-06-30,407900000,8-K,7465265,0,all_sources_non_periodic
 100205567,361,income_before_tax_resolved,2018-07-01,2018-09-30,427200000,8-K,7465308,0,all_sources_non_periodic
 100205569,361,income_before_tax_resolved,2018-10-01,2018-12-31,485500000,8-K,7465339,0,all_sources_non_periodic
-304641322,361,income_tax_expense,2017-01-01,2017-12-31,189800000,8-K,7468142,0,all_sources_non_periodic
+361763016,361,income_tax_expense,2017-01-01,2017-12-31,189800000,8-K,7468142,0,all_sources_non_periodic
 158212184,361,income_tax_expense_resolved,2017-01-01,2017-12-31,189800000,8-K,7468142,0,all_sources_non_periodic
 158212183,361,income_tax_expense_resolved,2018-01-01,2018-03-31,58200000,8-K,7468183,0,all_sources_non_periodic
 158212186,361,income_tax_expense_resolved,2018-04-01,2018-06-30,80500000,8-K,7468222,0,all_sources_non_periodic
@@ -472,17 +462,17 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 99909138,361,interest_expense_resolved,2017-01-01,2017-12-31,272200000,8-K,7477692,0,all_sources_non_periodic
 100897249,361,net_income_resolved,2017-01-01,2017-12-31,1518600000,8-K,7537870,0,all_sources_non_periodic
 308763850,361,operating_expenses_resolved,2017-01-01,2017-12-31,3369200000,8-K,7430383;7505670;7546182,0,all_sources_non_periodic
-304638832,361,operating_income,2017-01-01,2017-12-31,1747300000,8-K,7505670,0,all_sources_non_periodic
-304638793,361,operating_income,2018-01-01,2018-03-31,303100000,8-K,7505686,0,all_sources_non_periodic
-304638937,361,operating_income,2018-04-01,2018-06-30,444600000,8-K,7505737,0,all_sources_non_periodic
-304638742,361,operating_income,2018-07-01,2018-09-30,461100000,8-K,7505764,0,all_sources_non_periodic
+361762169,361,operating_income,2017-01-01,2017-12-31,1747300000,8-K,7505670,0,all_sources_non_periodic
+361762158,361,operating_income,2018-01-01,2018-03-31,303100000,8-K,7505686,0,all_sources_non_periodic
+361762202,361,operating_income,2018-04-01,2018-06-30,444600000,8-K,7505737,0,all_sources_non_periodic
+361762139,361,operating_income,2018-07-01,2018-09-30,461100000,8-K,7505764,0,all_sources_non_periodic
 157368783,361,operating_income_resolved,2017-01-01,2017-12-31,1747300000,8-K,7505670,0,all_sources_non_periodic
 157368782,361,operating_income_resolved,2018-01-01,2018-03-31,303100000,8-K,7505686,0,all_sources_non_periodic
 99674608,361,operating_income_resolved,2018-04-01,2018-06-30,444600000,8-K,7505737,0,all_sources_non_periodic
 99674592,361,operating_income_resolved,2018-07-01,2018-09-30,461100000,8-K,7505764,0,all_sources_non_periodic
 99674594,361,operating_income_resolved,2018-10-01,2018-12-31,519500000,8-K,7505821,0,all_sources_non_periodic
 159470634,361,ppe_net_resolved,2018-12-31,2018-12-31,3087100000,8-K,7540051,0,all_sources_non_periodic
-304638599,361,revenue,2017-01-01,2017-12-31,11531100000,8-K,7546182,0,all_sources_non_periodic
+361762086,361,revenue,2017-01-01,2017-12-31,11531100000,8-K,7546182,0,all_sources_non_periodic
 157040967,361,revenue_sanity_resolved,2018-01-01,2018-03-31,2865300000,8-K,7546194,0,all_sources_non_periodic
 157040972,361,revenue_sanity_resolved,2018-04-01,2018-06-30,3086500000,8-K,7546270,0,all_sources_non_periodic
 157040961,361,revenue_sanity_resolved,2018-07-01,2018-09-30,3126500000,8-K,7546336,0,all_sources_non_periodic
@@ -605,24 +595,24 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 346465210,612,revenue,2017-10-01,2017-12-31,2294717000,8-K,183133082,0,all_sources_non_periodic
 346465168,612,revenue,2017-01-01,2017-12-31,14396442000,8-K,13674470,0,all_sources_non_periodic
 207059300,612,revenue_sanity_resolved,2017-10-01,2017-12-31,2294717000,8-K,183133082,0,all_sources_non_periodic
-281922648,622,net_income,2021-01-01,2021-12-31,428700000,DEF 14A,14965415,0,all_sources_non_periodic
-281922630,622,net_income,2022-01-01,2022-12-31,203500000,DEF 14A,14965515,0,all_sources_non_periodic
-281922682,622,net_income,2023-01-01,2023-12-31,-1489300000,DEF 14A,14965609,0,all_sources_non_periodic
+361769476,622,net_income,2021-01-01,2021-12-31,428700000,DEF 14A,14965415,0,all_sources_non_periodic
+361769461,622,net_income,2022-01-01,2022-12-31,203500000,DEF 14A,14965515,0,all_sources_non_periodic
+361769497,622,net_income,2023-01-01,2023-12-31,-1489300000,DEF 14A,14965609,0,all_sources_non_periodic
 100835795,622,net_income_resolved,2021-01-01,2021-12-31,428700000,DEF 14A,14965415,0,all_sources_non_periodic
 100835778,622,net_income_resolved,2022-01-01,2022-12-31,203500000,DEF 14A,14965515,0,all_sources_non_periodic
 100835828,622,net_income_resolved,2023-01-01,2023-12-31,-1489300000,DEF 14A,14965609,0,all_sources_non_periodic
 326928898,628,capex_resolved,2015-01-01,2015-12-31,356810000,8-K,15857688,0,all_sources_non_periodic
-281931528,628,cash_flow_financing,2015-10-05,2015-12-31,-509626000,8-K,243502315,0,all_sources_non_periodic
-281931419,628,cash_flow_financing,2015-01-01,2015-12-31,-797017000,8-K,15848674,0,all_sources_non_periodic
+361794471,628,cash_flow_financing,2015-10-05,2015-12-31,-509626000,8-K,243502315,0,all_sources_non_periodic
+361794458,628,cash_flow_financing,2015-01-01,2015-12-31,-797017000,8-K,15848674,0,all_sources_non_periodic
 296548696,628,cash_flow_financing_resolved,2015-10-05,2015-12-31,-509626000,8-K,243502315,0,all_sources_non_periodic
 161279377,628,cash_flow_financing_resolved,2015-01-01,2015-12-31,-797017000,8-K,15848674,0,all_sources_non_periodic
-281930407,628,cfo,2015-01-01,2015-12-31,1256311000,8-K,15849384,0,all_sources_non_periodic
+361794011,628,cfo,2015-01-01,2015-12-31,1256311000,8-K,15849384,0,all_sources_non_periodic
 102900909,628,cfo_resolved,2015-01-01,2015-12-31,1256311000,8-K,15849384,0,all_sources_non_periodic
 308544289,628,cost_of_revenue_resolved,2015-01-01,2015-12-31,4000071000,8-K,15837451,1,mixed_sources
-281927811,628,gross_profit,2015-01-01,2015-12-31,3386555000,8-K,15837451,0,all_sources_non_periodic
-281927724,628,gross_profit,2016-01-01,2016-04-03,820288000,8-K,15837463,0,all_sources_non_periodic
-281927720,628,gross_profit,2016-04-04,2016-07-03,750310000,8-K,15837473,0,all_sources_non_periodic
-281927723,628,gross_profit,2016-07-04,2016-10-02,853760000,8-K,15837482,0,all_sources_non_periodic
+361792873,628,gross_profit,2015-01-01,2015-12-31,3386555000,8-K,15837451,0,all_sources_non_periodic
+361792830,628,gross_profit,2016-01-01,2016-04-03,820288000,8-K,15837463,0,all_sources_non_periodic
+361792827,628,gross_profit,2016-04-04,2016-07-03,750310000,8-K,15837473,0,all_sources_non_periodic
+361792829,628,gross_profit,2016-07-04,2016-10-02,853760000,8-K,15837482,0,all_sources_non_periodic
 308250693,628,gross_profit_resolved,2015-01-01,2015-12-31,3386555000,8-K,15837451,0,all_sources_non_periodic
 308250641,628,gross_profit_resolved,2016-01-01,2016-04-03,820288000,8-K,15837463,0,all_sources_non_periodic
 308250637,628,gross_profit_resolved,2016-04-04,2016-07-03,750310000,8-K,15837473,0,all_sources_non_periodic
@@ -633,8 +623,8 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 308741570,628,operating_expenses_resolved,2016-01-01,2016-04-03,480779000,8-K,15837463,1,mixed_sources
 308768740,628,operating_expenses_resolved,2016-04-04,2016-07-03,487548000,8-K,15837473,1,mixed_sources
 308795816,628,operating_expenses_resolved,2016-07-04,2016-10-02,479736000,8-K,15837482,1,mixed_sources
-281927937,628,operating_income,2015-01-01,2015-12-31,1075764000,8-K,15850570,0,all_sources_non_periodic
-281927950,628,operating_income,2015-10-05,2015-12-31,381084000,8-K,183214805,0,all_sources_non_periodic
+361792959,628,operating_income,2015-01-01,2015-12-31,1075764000,8-K,15850570,0,all_sources_non_periodic
+361792972,628,operating_income,2015-10-05,2015-12-31,381084000,8-K,183214805,0,all_sources_non_periodic
 99674987,628,operating_income_resolved,2015-01-01,2015-12-31,1075764000,8-K,15850570,0,all_sources_non_periodic
 213310448,628,operating_income_resolved,2015-10-05,2015-12-31,381084000,8-K,183214805,0,all_sources_non_periodic
 282117338,629,cash_flow_financing,2013-11-01,2014-10-31,-6571000000,8-K,16007612,0,all_sources_non_periodic
@@ -707,27 +697,27 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 159132750,647,cash_and_equivalents_resolved,2023-12-31,2023-12-31,179684000,8-K,4619288,0,all_sources_non_periodic
 101416910,647,cash_and_equivalents_resolved,2024-12-31,2024-12-31,323107000,8-K,4619785,0,all_sources_non_periodic
 309368580,647,cost_of_revenue_resolved,2022-01-01,2022-12-31,392297000,8-K,4626143,0,all_sources_non_periodic
-359130773,647,depreciation_and_amortization,2024-01-01,2024-12-31,113854000,8-K,4632210,0,all_sources_non_periodic
+361797242,647,depreciation_and_amortization,2024-01-01,2024-12-31,113854000,8-K,4632210,0,all_sources_non_periodic
 323115197,647,depreciation_and_amortization_resolved,2024-01-01,2024-12-31,113854000,8-K,4632210,0,all_sources_non_periodic
-359136470,647,dividends_per_share,2025-02-05,2025-02-05,0.2725,8-K,4620892,0,all_sources_non_periodic
+361799201,647,dividends_per_share,2025-02-05,2025-02-05,0.2725,8-K,4620892,0,all_sources_non_periodic
 120583679,647,dividends_per_share_resolved,2025-02-05,2025-02-05,0.2725,8-K,4620892,0,all_sources_non_periodic
 308321036,647,gross_profit_resolved,2022-01-01,2022-12-31,183609000,8-K,4626143;4717795,0,all_sources_non_periodic
-359133540,647,income_before_tax,2022-01-01,2022-12-31,104416000,8-K,4641301,0,all_sources_non_periodic
-359133708,647,income_before_tax,2022-10-01,2022-12-31,8213000,8-K,243354904,0,all_sources_non_periodic
+361798365,647,income_before_tax,2022-01-01,2022-12-31,104416000,8-K,4641301,0,all_sources_non_periodic
+361798423,647,income_before_tax,2022-10-01,2022-12-31,8213000,8-K,243354904,0,all_sources_non_periodic
 293099722,647,income_before_tax_resolved,2022-10-01,2022-12-31,8213000,8-K,243354904,0,all_sources_non_periodic
 157903255,647,income_before_tax_resolved,2022-01-01,2022-12-31,104416000,8-K,4641301,0,all_sources_non_periodic
-359133286,647,income_tax_expense,2022-01-01,2022-12-31,3112000,8-K,4646419,0,all_sources_non_periodic
-359133467,647,income_tax_expense,2022-10-01,2022-12-31,-4945000,8-K,243354939,0,all_sources_non_periodic
+361798286,647,income_tax_expense,2022-01-01,2022-12-31,3112000,8-K,4646419,0,all_sources_non_periodic
+361798344,647,income_tax_expense,2022-10-01,2022-12-31,-4945000,8-K,243354939,0,all_sources_non_periodic
 293402002,647,income_tax_expense_resolved,2022-10-01,2022-12-31,-4945000,8-K,243354939,0,all_sources_non_periodic
 158212503,647,income_tax_expense_resolved,2022-01-01,2022-12-31,3112000,8-K,4646419,0,all_sources_non_periodic
 308764072,647,operating_expenses_resolved,2022-01-01,2022-12-31,48208000,8-K,4626143;4680676;4717795,0,all_sources_non_periodic
-359131040,647,operating_income,2022-10-01,2022-12-31,13712000,8-K,185336151,0,all_sources_non_periodic
-359130979,647,operating_income,2022-01-01,2022-12-31,135401000,8-K,4680676,0,all_sources_non_periodic
+361797499,647,operating_income,2022-10-01,2022-12-31,13712000,8-K,185336151,0,all_sources_non_periodic
+361797438,647,operating_income,2022-01-01,2022-12-31,135401000,8-K,4680676,0,all_sources_non_periodic
 157368971,647,operating_income_resolved,2022-01-01,2022-12-31,135401000,8-K,4680676,0,all_sources_non_periodic
 213414892,647,operating_income_resolved,2022-10-01,2022-12-31,13712000,8-K,185336151,0,all_sources_non_periodic
 101759434,647,ppe_net_resolved,2023-12-31,2023-12-31,25839000,8-K,4713905,0,all_sources_non_periodic
-359130889,647,revenue,2022-01-01,2022-12-31,575906000,8-K,4717795,0,all_sources_non_periodic
-359130958,647,revenue,2022-10-01,2022-12-31,-86796000,8-K,185335430,0,all_sources_non_periodic
+361797358,647,revenue,2022-01-01,2022-12-31,575906000,8-K,4717795,0,all_sources_non_periodic
+361797417,647,revenue,2022-10-01,2022-12-31,-86796000,8-K,185335430,0,all_sources_non_periodic
 157041151,647,revenue_sanity_resolved,2022-01-01,2022-12-31,575906000,8-K,4717795,0,all_sources_non_periodic
 207201681,647,revenue_sanity_resolved,2022-10-01,2022-12-31,-86796000,8-K,185335430,0,all_sources_non_periodic
 308548397,654,cost_of_revenue_resolved,2022-01-01,2022-12-31,11428000000,8-K,5605490;5681912,0,all_sources_non_periodic
@@ -761,11 +751,11 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 308311352,666,gross_profit_resolved,2017-01-01,2017-03-31,3557200000,8-K,7401366;7476172,0,all_sources_non_periodic
 308311343,666,gross_profit_resolved,2017-04-01,2017-06-30,3540000000,8-K,7476214,1,mixed_sources
 308311334,666,gross_profit_resolved,2017-07-01,2017-09-30,3394900000,8-K,7476271,1,mixed_sources
-282044058,666,income_before_tax,2016-01-01,2016-12-31,3276300000,8-K,7419435,0,all_sources_non_periodic
-282044145,666,income_before_tax,2016-10-01,2016-12-31,794300000,8-K,243581271,0,all_sources_non_periodic
+361812061,666,income_before_tax,2016-01-01,2016-12-31,3276300000,8-K,7419435,0,all_sources_non_periodic
+361812087,666,income_before_tax,2016-10-01,2016-12-31,794300000,8-K,243581271,0,all_sources_non_periodic
 100206041,666,income_before_tax_resolved,2016-01-01,2016-12-31,3276300000,8-K,7419435,0,all_sources_non_periodic
 157903301,666,income_before_tax_resolved,2017-10-01,2017-12-31,397000000,8-K,7420118,0,all_sources_non_periodic
-282043835,666,income_tax_expense,2016-01-01,2016-12-31,551400000,8-K,7421827,0,all_sources_non_periodic
+361812002,666,income_tax_expense,2016-01-01,2016-12-31,551400000,8-K,7421827,0,all_sources_non_periodic
 158212557,666,income_tax_expense_resolved,2016-01-01,2016-12-31,551400000,8-K,7421827,0,all_sources_non_periodic
 100507406,666,income_tax_expense_resolved,2017-01-01,2017-03-31,170300000,8-K,7421850,0,all_sources_non_periodic
 100507402,666,income_tax_expense_resolved,2017-04-01,2017-06-30,244300000,8-K,7421892,0,all_sources_non_periodic
@@ -780,10 +770,10 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 117463583,666,operating_income_resolved,2017-07-01,2017-09-30,716700000,8-K,7442900;7476271,1,mixed_sources
 117472726,666,operating_income_resolved,2017-10-01,2017-12-31,727600000,8-K,7442931;7476312,1,mixed_sources
 101759444,666,ppe_net_resolved,2017-12-31,2017-12-31,7885100000,8-K,7469941,0,all_sources_non_periodic
-282042149,666,revenue,2016-01-01,2016-12-31,18312800000,8-K,7476143,0,all_sources_non_periodic
-282042196,666,revenue,2017-01-01,2017-03-31,4514900000,8-K,7476172,0,all_sources_non_periodic
-282042159,666,revenue,2017-04-01,2017-06-30,5091600000,8-K,7476214,0,all_sources_non_periodic
-282042130,666,revenue,2017-07-01,2017-09-30,4961000000,8-K,7476271,0,all_sources_non_periodic
+361811313,666,revenue,2016-01-01,2016-12-31,18312800000,8-K,7476143,0,all_sources_non_periodic
+361811343,666,revenue,2017-01-01,2017-03-31,4514900000,8-K,7476172,0,all_sources_non_periodic
+361811322,666,revenue,2017-04-01,2017-06-30,5091600000,8-K,7476214,0,all_sources_non_periodic
+361811301,666,revenue,2017-07-01,2017-09-30,4961000000,8-K,7476271,0,all_sources_non_periodic
 157041183,666,revenue_sanity_resolved,2016-01-01,2016-12-31,18312800000,8-K,7476143,0,all_sources_non_periodic
 157041184,666,revenue_sanity_resolved,2017-01-01,2017-03-31,4514900000,8-K,7476172,0,all_sources_non_periodic
 99358311,666,revenue_sanity_resolved,2017-04-01,2017-06-30,5091600000,8-K,7476214,0,all_sources_non_periodic
@@ -813,12 +803,12 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 214637775,683,net_income_resolved,2022-10-01,2022-12-31,1903000000,DEF 14A,185485344,0,all_sources_non_periodic
 100897701,683,net_income_resolved,2023-01-01,2023-12-31,8469000000,DEF 14A,9954349,0,all_sources_non_periodic
 214637660,683,net_income_resolved,2023-10-01,2023-12-31,2040000000,DEF 14A,185485346,0,all_sources_non_periodic
-359144968,684,cash_flow_financing,2014-10-01,2014-12-31,-61000000,8-K,138684119,0,all_sources_non_periodic
+361828910,684,cash_flow_financing,2014-10-01,2014-12-31,-61000000,8-K,138684119,0,all_sources_non_periodic
 275455897,684,cash_flow_financing_resolved,2014-01-01,2014-06-30,-352000000,8-K,10150893,0,all_sources_non_periodic
 275097166,684,cash_flow_financing_resolved,2014-10-01,2014-12-31,-61000000,8-K,138684119,0,all_sources_non_periodic
-359144611,684,cash_flow_investing,2014-10-01,2014-12-31,-30000000,8-K,77327844,0,all_sources_non_periodic
+361828822,684,cash_flow_investing,2014-10-01,2014-12-31,-30000000,8-K,77327844,0,all_sources_non_periodic
 274752799,684,cash_flow_investing_resolved,2014-10-01,2014-12-31,-30000000,8-K,77327844,0,all_sources_non_periodic
-359142869,684,cfo,2014-10-01,2014-12-31,389000000,8-K,138685453,0,all_sources_non_periodic
+361828414,684,cfo,2014-10-01,2014-12-31,389000000,8-K,138685453,0,all_sources_non_periodic
 151856483,684,cfo_resolved,2014-10-01,2014-12-31,389000000,8-K,138685453,0,all_sources_non_periodic
 309368848,684,cost_of_revenue_resolved,2014-04-01,2014-06-30,407000000,8-K,10091648,0,all_sources_non_periodic
 309368844,684,cost_of_revenue_resolved,2014-01-01,2014-06-30,803000000,8-K,10091642,0,all_sources_non_periodic
@@ -923,11 +913,11 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 100897778,702,net_income_resolved,2024-01-28,2025-01-25,235000000,DEF 14A,12328772,0,all_sources_non_periodic
 100897777,702,net_income_resolved,2025-01-26,2026-01-31,281000000,DEF 14A,12328843,0,all_sources_non_periodic
 214642274,702,net_income_resolved,2025-10-26,2026-01-31,16104000,DEF 14A,185538968,0,all_sources_non_periodic
-282171468,713,net_income,2021-01-01,2021-12-31,1476000000,DEF 14A,14078884,0,all_sources_non_periodic
-282171491,713,net_income,2022-01-01,2022-12-31,1001000000,DEF 14A,14078886,0,all_sources_non_periodic
-282171438,713,net_income,2023-01-01,2023-12-31,1311000000,DEF 14A,14078888,0,all_sources_non_periodic
-282171463,713,net_income,2024-01-01,2024-12-31,4064000000,DEF 14A,14078890,0,all_sources_non_periodic
-282171448,713,net_income,2025-01-01,2025-12-31,2367000000,DEF 14A,14078892,0,all_sources_non_periodic
+361830257,713,net_income,2021-01-01,2021-12-31,1476000000,DEF 14A,14078884,0,all_sources_non_periodic
+361830277,713,net_income,2022-01-01,2022-12-31,1001000000,DEF 14A,14078886,0,all_sources_non_periodic
+361830234,713,net_income,2023-01-01,2023-12-31,1311000000,DEF 14A,14078888,0,all_sources_non_periodic
+361830254,713,net_income,2024-01-01,2024-12-31,4064000000,DEF 14A,14078890,0,all_sources_non_periodic
+361830242,713,net_income,2025-01-01,2025-12-31,2367000000,DEF 14A,14078892,0,all_sources_non_periodic
 100578095,713,net_income_resolved,2021-01-01,2021-12-31,1476000000,DEF 14A,14078884,0,all_sources_non_periodic
 100578118,713,net_income_resolved,2022-01-01,2022-12-31,1001000000,DEF 14A,14078886,0,all_sources_non_periodic
 100578065,713,net_income_resolved,2023-01-01,2023-12-31,1311000000,DEF 14A,14078888,0,all_sources_non_periodic
@@ -941,15 +931,15 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 102537087,716,stockholders_equity_resolved,2015-12-31,2015-12-31,256205000000,8-K,14595999;14596003,10,mixed_sources
 101969780,716,total_assets_resolved,2014-12-31,2014-12-31,2104534000000,8-K,14434242;14434249;14434251,5,mixed_sources
 101969775,716,total_assets_resolved,2015-12-31,2015-12-31,2144316000000,8-K,14434271;14434276,5,mixed_sources
-359150456,1010,cash_and_equivalents,2014-12-31,2014-12-31,238791000000,8-K,16106930,0,all_sources_non_periodic
-359150392,1010,cash_and_equivalents,2015-12-31,2015-12-31,239520000000,8-K,16106932,0,all_sources_non_periodic
+361820883,1010,cash_and_equivalents,2014-12-31,2014-12-31,238791000000,8-K,16106930,0,all_sources_non_periodic
+361820857,1010,cash_and_equivalents,2015-12-31,2015-12-31,239520000000,8-K,16106932,0,all_sources_non_periodic
 101249291,1010,cash_and_equivalents_resolved,2014-12-31,2014-12-31,238791000000,8-K,16106930,0,all_sources_non_periodic
 101249265,1010,cash_and_equivalents_resolved,2015-12-31,2015-12-31,239520000000,8-K,16106932,0,all_sources_non_periodic
 275455915,1010,cash_flow_financing_resolved,2015-01-01,2015-12-31,90871000000,8-K,16213540,0,all_sources_non_periodic
 275090279,1010,cash_flow_investing_resolved,2015-01-01,2015-12-31,-106046000000,8-K,16214221,0,all_sources_non_periodic
 102901227,1010,cfo_resolved,2015-01-01,2015-12-31,15904000000,8-K,16214977,0,all_sources_non_periodic
 98957506,1010,revenue_sanity_resolved,2015-01-01,2015-12-31,49277000000,8-K,16181690,0,all_sources_non_periodic
-360498580,1010,total_debt_resolved,2015-12-31,2015-12-31,97528000000,8-K,16287783,0,all_sources_non_periodic
+363790117,1010,total_debt_resolved,2015-12-31,2015-12-31,97528000000,8-K,16287783,0,all_sources_non_periodic
 282235033,1025,net_income,2021-07-01,2022-06-30,1316000000,DEF 14A,125501302,0,all_sources_non_periodic
 282234957,1025,net_income,2022-07-01,2023-06-30,2084000000,DEF 14A,125501305,0,all_sources_non_periodic
 282235014,1025,net_income,2023-07-01,2024-06-30,2845000000,DEF 14A,125501307,0,all_sources_non_periodic
@@ -1112,6 +1102,93 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 98958854,1057,revenue_sanity_resolved,2015-04-01,2015-06-30,6710000000,8-K,9136215,0,all_sources_non_periodic
 98958882,1057,revenue_sanity_resolved,2015-07-01,2015-09-30,6798000000,8-K,9136253,0,all_sources_non_periodic
 98958847,1057,revenue_sanity_resolved,2015-10-01,2015-12-31,6678000000,8-K,9136283,0,all_sources_non_periodic
+120552118,1082,basic_eps_resolved,2014-01-01,2014-12-31,2.76,8-K,12578944,2,mixed_sources
+361856254,1082,cash_flow_investing,2014-10-01,2014-12-31,-527000000,8-K,243481124,0,all_sources_non_periodic
+361856288,1082,cash_flow_investing,2014-01-01,2014-12-31,-4015000000,8-K,12622928,0,all_sources_non_periodic
+296227663,1082,cash_flow_investing_resolved,2014-10-01,2014-12-31,-527000000,8-K,243481124,0,all_sources_non_periodic
+160934615,1082,cash_flow_investing_resolved,2014-01-01,2014-12-31,-4015000000,8-K,12622928,0,all_sources_non_periodic
+361855767,1082,cfo,2014-01-01,2014-12-31,3210000000,8-K,12624075,0,all_sources_non_periodic
+361855787,1082,cfo,2014-10-01,2014-12-31,1706000000,8-K,185838258,0,all_sources_non_periodic
+216418938,1082,cfo_resolved,2014-10-01,2014-12-31,1706000000,8-K,185838258,0,all_sources_non_periodic
+102901529,1082,cfo_resolved,2014-01-01,2014-12-31,3210000000,8-K,12624075,0,all_sources_non_periodic
+101194882,1082,diluted_eps_resolved,2014-01-01,2014-12-31,2.72,8-K,12579450,2,mixed_sources
+361855647,1082,income_before_tax,2014-10-01,2014-12-31,880000000,8-K,243481488,0,all_sources_non_periodic
+361855632,1082,income_before_tax,2014-01-01,2014-12-31,3127000000,8-K,12590996,0,all_sources_non_periodic
+361855537,1082,income_before_tax,2021-01-01,2021-12-31,7381000000,8-K,12591184,0,all_sources_non_periodic
+361855653,1082,income_before_tax,2021-10-01,2021-12-31,1357000000,8-K,243482356,0,all_sources_non_periodic
+100206633,1082,income_before_tax_resolved,2014-01-01,2014-12-31,3127000000,8-K,12590996,0,all_sources_non_periodic
+293132044,1082,income_before_tax_resolved,2014-10-01,2014-12-31,880000000,8-K,243481488,0,all_sources_non_periodic
+100206628,1082,income_before_tax_resolved,2021-01-01,2021-12-31,7381000000,8-K,12591184,0,all_sources_non_periodic
+293132051,1082,income_before_tax_resolved,2021-10-01,2021-12-31,1357000000,8-K,243482356,0,all_sources_non_periodic
+361855495,1082,income_tax_expense,2014-01-01,2014-12-31,921000000,8-K,12591634,0,all_sources_non_periodic
+361855516,1082,income_tax_expense,2021-10-01,2021-12-31,219000000,8-K,243482371,0,all_sources_non_periodic
+361855425,1082,income_tax_expense,2021-01-01,2021-12-31,1408000000,8-K,12591836,0,all_sources_non_periodic
+158213075,1082,income_tax_expense_resolved,2014-01-01,2014-12-31,921000000,8-K,12591634,0,all_sources_non_periodic
+293434434,1082,income_tax_expense_resolved,2021-10-01,2021-12-31,219000000,8-K,243482371,0,all_sources_non_periodic
+100508095,1082,income_tax_expense_resolved,2021-01-01,2021-12-31,1408000000,8-K,12591836,0,all_sources_non_periodic
+99909794,1082,interest_expense_resolved,2023-01-01,2023-12-31,9928000000,8-K,12600852,0,all_sources_non_periodic
+100898152,1082,net_income_resolved,2014-01-01,2014-12-31,2206000000,8-K,12691354,0,all_sources_non_periodic
+101759594,1082,ppe_net_resolved,2022-12-31,2022-12-31,3527000000,8-K,12692873,0,all_sources_non_periodic
+98959710,1082,revenue_sanity_resolved,2014-01-01,2014-12-31,6142000000,8-K,12597056,0,all_sources_non_periodic
+102537255,1082,stockholders_equity_resolved,2014-12-31,2014-12-31,24426000000,8-K,12705519,10,mixed_sources
+101970059,1082,total_assets_resolved,2014-12-31,2014-12-31,186814000000,8-K,12548211,6,mixed_sources
+120552133,1087,basic_eps_resolved,2013-12-29,2014-03-29,1.04,8-K,13425615,4,mixed_sources
+120552134,1087,basic_eps_resolved,2014-03-30,2014-06-28,1.38,8-K,13425693,4,mixed_sources
+120552138,1087,basic_eps_resolved,2014-06-29,2014-09-27,1.51,8-K,13425727,4,mixed_sources
+120558437,1087,basic_eps_resolved,2014-09-28,2015-01-03,0.94,8-K,13425795,2,mixed_sources
+101194896,1087,diluted_eps_resolved,2013-12-29,2014-03-29,1.02,8-K,13427260,4,mixed_sources
+101194897,1087,diluted_eps_resolved,2014-03-30,2014-06-28,1.36,8-K,13427306,4,mixed_sources
+101194902,1087,diluted_eps_resolved,2014-06-29,2014-09-27,1.47,8-K,13427329,4,mixed_sources
+118022979,1087,diluted_eps_resolved,2014-09-28,2015-01-03,0.91,8-K,13427355,2,mixed_sources
+178914013,1087,shares_outstanding_resolved,2015-01-03,2015-01-03,157125450,8-K,13405661,4,mixed_sources
+101970068,1087,total_assets_resolved,2015-01-03,2015-01-03,15849100000,8-K,13397343,6,mixed_sources
+208178218,1087,total_liabilities_resolved,2015-01-03,2015-01-03,9502800000,8-K,13397343,8,mixed_sources
+120552142,1088,basic_eps_resolved,2016-01-01,2016-12-31,5.03,8-K,13654519,3,mixed_sources
+120552144,1088,basic_eps_resolved,2018-01-01,2018-12-31,6.48,8-K,13654742,3,mixed_sources
+101194905,1088,diluted_eps_resolved,2016-01-01,2016-12-31,4.97,8-K,13655941,3,mixed_sources
+101194907,1088,diluted_eps_resolved,2018-01-01,2018-12-31,6.4,8-K,13656121,3,mixed_sources
+100206675,1088,income_before_tax_resolved,2016-01-01,2016-12-31,2204000000,8-K,13690184,0,all_sources_non_periodic
+361868777,1088,income_tax_expense,2016-10-01,2016-12-31,-159000000,8-K,243585692,0,all_sources_non_periodic
+361868854,1088,income_tax_expense,2016-01-01,2016-12-31,67000000,8-K,13691354,0,all_sources_non_periodic
+158213094,1088,income_tax_expense_resolved,2016-01-01,2016-12-31,67000000,8-K,13691354,0,all_sources_non_periodic
+293436227,1088,income_tax_expense_resolved,2016-10-01,2016-12-31,-159000000,8-K,243585692,0,all_sources_non_periodic
+361867702,1088,net_income,2016-10-01,2016-12-31,588000000,8-K,185854547,0,all_sources_non_periodic
+361867869,1088,net_income,2016-01-01,2016-12-31,2138000000,8-K,13722690,0,all_sources_non_periodic
+100898182,1088,net_income_resolved,2016-01-01,2016-12-31,2138000000,8-K,13722690,0,all_sources_non_periodic
+214701209,1088,net_income_resolved,2016-10-01,2016-12-31,588000000,8-K,185854547,0,all_sources_non_periodic
+100898177,1088,net_income_resolved,2021-01-01,2021-12-31,2693086657,DEF 14A,13723209,0,all_sources_non_periodic
+100898185,1088,net_income_resolved,2022-01-01,2022-12-31,2774105680,DEF 14A,13723296,0,all_sources_non_periodic
+100898186,1088,net_income_resolved,2023-01-01,2023-12-31,1943630434,DEF 14A,13723374,0,all_sources_non_periodic
+100898180,1088,net_income_resolved,2024-01-01,2024-12-31,2686875520,DEF 14A,13723442,0,all_sources_non_periodic
+100898175,1088,net_income_resolved,2025-01-01,2025-12-31,2945159408,DEF 14A,13723506,0,all_sources_non_periodic
+361867326,1088,revenue,2016-10-01,2016-12-31,2614000000,8-K,185854554,0,all_sources_non_periodic
+361867467,1088,revenue,2016-01-01,2016-12-31,10291000000,8-K,13774256,0,all_sources_non_periodic
+207028967,1088,revenue_sanity_resolved,2016-10-01,2016-12-31,2614000000,8-K,185854554,0,all_sources_non_periodic
+102537266,1088,stockholders_equity_resolved,2017-12-31,2017-12-31,22317000000,8-K,13778932;13779732,15,mixed_sources
+102537263,1088,stockholders_equity_resolved,2018-12-31,2018-12-31,24790000000,8-K,13779000;13779744,15,mixed_sources
+101970070,1088,total_assets_resolved,2017-12-31,2017-12-31,238425000000,8-K,13594434,5,mixed_sources
+101970069,1088,total_assets_resolved,2018-12-31,2018-12-31,244626000000,8-K,13594447,5,mixed_sources
+102316215,1088,total_liabilities_resolved,2017-12-31,2017-12-31,216108000000,8-K,13712573,5,mixed_sources
+102316214,1088,total_liabilities_resolved,2018-12-31,2018-12-31,219836000000,8-K,13712627,5,mixed_sources
+320086902,1096,cash_flow_investing,2017-01-01,2017-12-31,-54634000,8-K,14957639,0,all_sources_non_periodic
+160934660,1096,cash_flow_investing_resolved,2017-01-01,2017-12-31,-54634000,8-K,14957639,0,all_sources_non_periodic
+320086405,1096,cfo,2017-01-01,2017-12-31,788294000,8-K,14958362,0,all_sources_non_periodic
+320087482,1096,dividends_per_share,2021-11-30,2021-11-30,0.3,8-K,14872747,0,all_sources_non_periodic
+120594842,1096,dividends_per_share_resolved,2021-11-30,2021-11-30,0.3,8-K,14872747,0,all_sources_non_periodic
+308349179,1096,gross_profit_resolved,2017-01-01,2017-12-31,4767954000,8-K,15012985,1,mixed_sources
+320086283,1096,income_before_tax,2017-01-01,2017-12-31,606502000,8-K,14926864,0,all_sources_non_periodic
+157903787,1096,income_before_tax_resolved,2017-01-01,2017-12-31,606502000,8-K,14926864,0,all_sources_non_periodic
+320086188,1096,income_tax_expense,2017-01-01,2017-12-31,642286000,8-K,14934189,0,all_sources_non_periodic
+158213131,1096,income_tax_expense_resolved,2017-01-01,2017-12-31,642286000,8-K,14934189,0,all_sources_non_periodic
+99909833,1096,interest_expense_resolved,2017-01-01,2017-12-31,101202000,8-K,14946927,0,all_sources_non_periodic
+320085386,1096,revenue,2017-10-01,2017-12-31,-248252000,8-K,185878516,0,all_sources_non_periodic
+320085334,1096,revenue,2017-01-01,2017-12-31,5048906000,8-K,15012985,0,all_sources_non_periodic
+363344901,1096,revenue_sanity_resolved,2017-10-01,2017-12-31,-248252000,8-K,185878516,0,all_sources_non_periodic
+363344861,1096,revenue_sanity_resolved,2017-01-01,2017-12-31,5048906000,8-K,15012985,0,all_sources_non_periodic
+363344935,1096,revenue_sanity_resolved,2018-12-01,2019-11-30,5358656000,8-K,15013141,0,all_sources_non_periodic
+363344875,1096,revenue_sanity_resolved,2019-12-01,2020-11-30,6955930000,8-K,15013252,0,all_sources_non_periodic
+101970108,1096,total_assets_resolved,2021-11-30,2021-11-30,60404110000,8-K,14863012,4,mixed_sources
+102316222,1096,total_liabilities_resolved,2021-11-30,2021-11-30,49674070000,8-K,14952115,4,mixed_sources
 214409073,1100,net_income_resolved,2023-10-02,2023-12-31,32349000,DEF 14A,185889963,0,all_sources_non_periodic
 100898244,1100,net_income_resolved,2023-01-01,2023-12-31,357572000,DEF 14A,15398430,0,all_sources_non_periodic
 100898242,1100,net_income_resolved,2024-01-01,2024-12-31,70162000,DEF 14A,15398501,0,all_sources_non_periodic
@@ -1119,40 +1196,40 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 326929534,1103,capex_resolved,2017-01-01,2017-12-31,31700000,8-K,15926708,0,all_sources_non_periodic
 159132869,1103,cash_and_equivalents_resolved,2014-12-31,2014-12-31,392600000,8-K,15862950,0,all_sources_non_periodic
 101417182,1103,cash_and_equivalents_resolved,2017-12-31,2017-12-31,571600000,8-K,15863015,0,all_sources_non_periodic
-282465607,1103,cash_flow_financing,2014-01-01,2014-12-31,-415900000,8-K,15908041,0,all_sources_non_periodic
-282465566,1103,cash_flow_financing,2014-10-01,2014-12-31,-154300000,8-K,243698291,0,all_sources_non_periodic
-296590873,1103,cash_flow_financing_resolved,2014-10-01,2014-12-31,-154300000,8-K,243698291,0,all_sources_non_periodic
+361897320,1103,cash_flow_financing,2014-01-01,2014-12-31,-415900000,8-K,15908041,0,all_sources_non_periodic
+361897261,1103,cash_flow_financing,2014-10-01,2014-12-31,-154300000,8-K,243698291,0,all_sources_non_periodic
 161279794,1103,cash_flow_financing_resolved,2014-01-01,2014-12-31,-415900000,8-K,15908041,0,all_sources_non_periodic
-282465016,1103,cfo,2014-01-01,2014-12-31,429900000,8-K,15909152,0,all_sources_non_periodic
-282464976,1103,cfo,2014-10-01,2014-12-31,313300000,8-K,185899105,0,all_sources_non_periodic
+296590873,1103,cash_flow_financing_resolved,2014-10-01,2014-12-31,-154300000,8-K,243698291,0,all_sources_non_periodic
+361896852,1103,cfo,2014-10-01,2014-12-31,313300000,8-K,185899105,0,all_sources_non_periodic
+361896911,1103,cfo,2014-01-01,2014-12-31,429900000,8-K,15909152,0,all_sources_non_periodic
 216739959,1103,cfo_resolved,2014-10-01,2014-12-31,313300000,8-K,185899105,0,all_sources_non_periodic
 102901608,1103,cfo_resolved,2014-01-01,2014-12-31,429900000,8-K,15909152,0,all_sources_non_periodic
 308553085,1103,cost_of_revenue_resolved,2014-01-01,2014-12-31,4432500000,8-K,15888866;15940162,0,all_sources_non_periodic
 308557148,1103,cost_of_revenue_resolved,2017-01-01,2017-12-31,3026400000,8-K,15888950,1,mixed_sources
 308544984,1103,cost_of_revenue_resolved,2017-10-01,2017-12-31,338600000,8-K,185899140;185899146,0,all_sources_non_periodic
 101587084,1103,current_assets_resolved,2015-12-31,2015-12-31,3144200000,8-K,15861802,5,mixed_sources
-282463498,1103,gross_profit,2014-10-01,2014-12-31,-63000000,8-K,185899155,0,all_sources_non_periodic
-282463537,1103,gross_profit,2014-01-01,2014-12-31,1051500000,8-K,15888866,0,all_sources_non_periodic
-282463447,1103,gross_profit,2017-01-01,2017-12-31,767300000,8-K,15888950,0,all_sources_non_periodic
-282463539,1103,gross_profit,2017-10-01,2017-12-31,155300000,8-K,185899146,0,all_sources_non_periodic
+361895817,1103,gross_profit,2014-10-01,2014-12-31,-63000000,8-K,185899155,0,all_sources_non_periodic
+361895848,1103,gross_profit,2014-01-01,2014-12-31,1051500000,8-K,15888866,0,all_sources_non_periodic
+361895786,1103,gross_profit,2017-01-01,2017-12-31,767300000,8-K,15888950,0,all_sources_non_periodic
+361895850,1103,gross_profit,2017-10-01,2017-12-31,155300000,8-K,185899146,0,all_sources_non_periodic
 308282263,1103,gross_profit_resolved,2014-10-01,2014-12-31,-63000000,8-K,185899155,0,all_sources_non_periodic
 308282302,1103,gross_profit_resolved,2014-01-01,2014-12-31,1051500000,8-K,15888866,0,all_sources_non_periodic
 308282304,1103,gross_profit_resolved,2017-10-01,2017-12-31,155300000,8-K,185899146,0,all_sources_non_periodic
 308282212,1103,gross_profit_resolved,2017-01-01,2017-12-31,767300000,8-K,15888950,0,all_sources_non_periodic
-282464814,1103,income_before_tax,2014-01-01,2014-12-31,278600000,8-K,15890525,0,all_sources_non_periodic
-282464776,1103,income_before_tax,2014-10-01,2014-12-31,20800000,8-K,243698244,0,all_sources_non_periodic
-282464816,1103,income_before_tax,2017-10-01,2017-12-31,76800000,8-K,243698040,0,all_sources_non_periodic
-282464740,1103,income_before_tax,2017-01-01,2017-12-31,163400000,8-K,15890610,0,all_sources_non_periodic
+361896767,1103,income_before_tax,2014-01-01,2014-12-31,278600000,8-K,15890525,0,all_sources_non_periodic
+361896711,1103,income_before_tax,2014-10-01,2014-12-31,20800000,8-K,243698244,0,all_sources_non_periodic
+361896770,1103,income_before_tax,2017-10-01,2017-12-31,76800000,8-K,243698040,0,all_sources_non_periodic
+361896725,1103,income_before_tax,2017-01-01,2017-12-31,163400000,8-K,15890610,0,all_sources_non_periodic
 293128173,1103,income_before_tax_resolved,2014-10-01,2014-12-31,20800000,8-K,243698244,0,all_sources_non_periodic
 100206761,1103,income_before_tax_resolved,2014-01-01,2014-12-31,278600000,8-K,15890525,0,all_sources_non_periodic
 293128213,1103,income_before_tax_resolved,2017-10-01,2017-12-31,76800000,8-K,243698040,0,all_sources_non_periodic
 157903811,1103,income_before_tax_resolved,2017-01-01,2017-12-31,163400000,8-K,15890610,0,all_sources_non_periodic
-282464677,1103,income_tax_expense,2014-10-01,2014-12-31,-52600000,8-K,243698285,0,all_sources_non_periodic
-282464717,1103,income_tax_expense,2014-01-01,2014-12-31,26600000,8-K,15893418,0,all_sources_non_periodic
-282464640,1103,income_tax_expense,2017-01-01,2017-12-31,52400000,8-K,15893583,0,all_sources_non_periodic
-282464719,1103,income_tax_expense,2017-10-01,2017-12-31,57500000,8-K,243698267,0,all_sources_non_periodic
-158213178,1103,income_tax_expense_resolved,2014-01-01,2014-12-31,26600000,8-K,15893418,0,all_sources_non_periodic
+361896692,1103,income_tax_expense,2014-01-01,2014-12-31,26600000,8-K,15893418,0,all_sources_non_periodic
+361896635,1103,income_tax_expense,2014-10-01,2014-12-31,-52600000,8-K,243698285,0,all_sources_non_periodic
+361896652,1103,income_tax_expense,2017-01-01,2017-12-31,52400000,8-K,15893583,0,all_sources_non_periodic
+361896697,1103,income_tax_expense,2017-10-01,2017-12-31,57500000,8-K,243698267,0,all_sources_non_periodic
 293430439,1103,income_tax_expense_resolved,2014-10-01,2014-12-31,-52600000,8-K,243698285,0,all_sources_non_periodic
+158213178,1103,income_tax_expense_resolved,2014-01-01,2014-12-31,26600000,8-K,15893418,0,all_sources_non_periodic
 100508204,1103,income_tax_expense_resolved,2017-01-01,2017-12-31,52400000,8-K,15893583,0,all_sources_non_periodic
 293430481,1103,income_tax_expense_resolved,2017-10-01,2017-12-31,57500000,8-K,243698267,0,all_sources_non_periodic
 99909900,1103,interest_expense_resolved,2014-01-01,2014-12-31,122700000,8-K,15899147,0,all_sources_non_periodic
@@ -1161,19 +1238,19 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 308800698,1103,operating_expenses_resolved,2014-01-01,2014-12-31,651500000,8-K,15888866;15910995,0,all_sources_non_periodic
 308827861,1103,operating_expenses_resolved,2017-01-01,2017-12-31,539100000,8-K,15888950;15911082,0,all_sources_non_periodic
 308746647,1103,operating_expenses_resolved,2017-10-01,2017-12-31,66000000,8-K,185899146;185899157,0,all_sources_non_periodic
-282463616,1103,operating_income,2014-10-01,2014-12-31,47300000,8-K,185899166,0,all_sources_non_periodic
-282463655,1103,operating_income,2014-01-01,2014-12-31,400000000,8-K,15910995,0,all_sources_non_periodic
-282463657,1103,operating_income,2017-10-01,2017-12-31,89300000,8-K,185899157,0,all_sources_non_periodic
-282463565,1103,operating_income,2017-01-01,2017-12-31,228200000,8-K,15911082,0,all_sources_non_periodic
-213488232,1103,operating_income_resolved,2014-10-01,2014-12-31,47300000,8-K,185899166,0,all_sources_non_periodic
+361895898,1103,operating_income,2014-10-01,2014-12-31,47300000,8-K,185899166,0,all_sources_non_periodic
+361895930,1103,operating_income,2014-01-01,2014-12-31,400000000,8-K,15910995,0,all_sources_non_periodic
+361895932,1103,operating_income,2017-10-01,2017-12-31,89300000,8-K,185899157,0,all_sources_non_periodic
+361895867,1103,operating_income,2017-01-01,2017-12-31,228200000,8-K,15911082,0,all_sources_non_periodic
 99676376,1103,operating_income_resolved,2014-01-01,2014-12-31,400000000,8-K,15910995,0,all_sources_non_periodic
+213488232,1103,operating_income_resolved,2014-10-01,2014-12-31,47300000,8-K,185899166,0,all_sources_non_periodic
 157369518,1103,operating_income_resolved,2017-01-01,2017-12-31,228200000,8-K,15911082,0,all_sources_non_periodic
 213488273,1103,operating_income_resolved,2017-10-01,2017-12-31,89300000,8-K,185899157,0,all_sources_non_periodic
 159470720,1103,ppe_net_resolved,2015-12-31,2015-12-31,371900000,8-K,15933250,0,all_sources_non_periodic
 101759616,1103,ppe_net_resolved,2018-12-31,2018-12-31,317300000,8-K,15933386,0,all_sources_non_periodic
-282463380,1103,revenue,2014-10-01,2014-12-31,-35500000,8-K,185899145,0,all_sources_non_periodic
-282463418,1103,revenue,2014-01-01,2014-12-31,5484000000,8-K,15940162,0,all_sources_non_periodic
-282463420,1103,revenue,2017-10-01,2017-12-31,493900000,8-K,185899140,0,all_sources_non_periodic
+361895733,1103,revenue,2014-10-01,2014-12-31,-35500000,8-K,185899145,0,all_sources_non_periodic
+361895766,1103,revenue,2014-01-01,2014-12-31,5484000000,8-K,15940162,0,all_sources_non_periodic
+361895768,1103,revenue,2017-10-01,2017-12-31,493900000,8-K,185899140,0,all_sources_non_periodic
 157041544,1103,revenue_sanity_resolved,2014-01-01,2014-12-31,5484000000,8-K,15940162,0,all_sources_non_periodic
 207083494,1103,revenue_sanity_resolved,2014-10-01,2014-12-31,-35500000,8-K,185899145,0,all_sources_non_periodic
 98960508,1103,revenue_sanity_resolved,2017-01-01,2017-12-31,3793700000,8-K,15939214,0,all_sources_non_periodic
@@ -1230,14 +1307,14 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 308286039,1123,gross_profit_resolved,2018-04-01,2018-06-30,1819000000,8-K,3898563,0,all_sources_non_periodic
 308286065,1123,gross_profit_resolved,2018-07-01,2018-09-30,1586000000,8-K,3898569,0,all_sources_non_periodic
 309377640,1123,gross_profit_resolved,2018-10-01,2018-12-31,2041000000,8-K,3898613,0,all_sources_non_periodic
-346591483,1123,income_before_tax,2017-10-01,2017-12-31,-3536000000,8-K,243521220,0,all_sources_non_periodic
 346591545,1123,income_before_tax,2017-01-01,2017-12-31,2522000000,8-K,3900773,0,all_sources_non_periodic
-157903896,1123,income_before_tax_resolved,2017-01-01,2017-12-31,2522000000,8-K,3900773,0,all_sources_non_periodic
+346591483,1123,income_before_tax,2017-10-01,2017-12-31,-3536000000,8-K,243521220,0,all_sources_non_periodic
 293135340,1123,income_before_tax_resolved,2017-10-01,2017-12-31,-3536000000,8-K,243521220,0,all_sources_non_periodic
-346591440,1123,income_tax_expense,2017-01-01,2017-12-31,1054000000,8-K,3907461,0,all_sources_non_periodic
+157903896,1123,income_before_tax_resolved,2017-01-01,2017-12-31,2522000000,8-K,3900773,0,all_sources_non_periodic
 346591381,1123,income_tax_expense,2017-10-01,2017-12-31,-570000000,8-K,243521134,0,all_sources_non_periodic
-158213261,1123,income_tax_expense_resolved,2017-01-01,2017-12-31,1054000000,8-K,3907461,0,all_sources_non_periodic
+346591440,1123,income_tax_expense,2017-01-01,2017-12-31,1054000000,8-K,3907461,0,all_sources_non_periodic
 293437813,1123,income_tax_expense_resolved,2017-10-01,2017-12-31,-570000000,8-K,243521134,0,all_sources_non_periodic
+158213261,1123,income_tax_expense_resolved,2017-01-01,2017-12-31,1054000000,8-K,3907461,0,all_sources_non_periodic
 99909942,1123,interest_expense_resolved,2017-01-01,2017-12-31,922000000,8-K,3916454,0,all_sources_non_periodic
 308801361,1123,operating_expenses_resolved,2017-10-01,2017-12-31,10924000000,8-K,185953159,2,mixed_sources
 308801370,1123,operating_expenses_resolved,2017-01-01,2017-12-31,-4303000000,8-K,3939464;3980115,1,mixed_sources
@@ -1258,11 +1335,11 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 157041572,1123,revenue_sanity_resolved,2018-10-01,2018-12-31,10121000000,8-K,3980167,0,all_sources_non_periodic
 101970170,1123,total_assets_resolved,2019-12-31,2019-12-31,139716000000,8-K,3843837,5,mixed_sources
 102316243,1123,total_liabilities_resolved,2019-12-31,2019-12-31,95390000000,8-K,3922258,4,mixed_sources
-359195359,1131,net_income,2024-04-01,2025-03-29,-189720000,DEF 14A,5209601,0,all_sources_non_periodic
+361909212,1131,net_income,2024-04-01,2025-03-29,-189720000,DEF 14A,5209601,0,all_sources_non_periodic
 100898326,1131,net_income_resolved,2021-04-04,2022-04-02,1386940000,DEF 14A,5209432,0,all_sources_non_periodic
 214509575,1131,net_income_resolved,2022-01-02,2022-04-02,80841000,DEF 14A,185976895,0,all_sources_non_periodic
-214509552,1131,net_income_resolved,2023-01-01,2023-04-01,-214886000,DEF 14A,185976105,0,all_sources_non_periodic
 100898325,1131,net_income_resolved,2022-04-03,2023-04-01,118590000,DEF 14A,5209494,0,all_sources_non_periodic
+214509552,1131,net_income_resolved,2023-01-01,2023-04-01,-214886000,DEF 14A,185976105,0,all_sources_non_periodic
 158608018,1131,net_income_resolved,2023-04-02,2024-03-30,-968880000,DEF 14A,5209541,0,all_sources_non_periodic
 214509553,1131,net_income_resolved,2023-12-31,2024-03-30,-418306000,DEF 14A,185976106,0,all_sources_non_periodic
 100809836,1131,net_income_resolved,2024-04-01,2025-03-29,-189720000,DEF 14A,5209601,0,all_sources_non_periodic
@@ -1270,8 +1347,8 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 102142008,1145,current_liabilities_resolved,2015-07-03,2015-07-03,3242000000,8-K,7284504,5,mixed_sources
 101970239,1145,total_assets_resolved,2015-07-03,2015-07-03,15181000000,8-K,7228802,5,mixed_sources
 102316275,1145,total_liabilities_resolved,2015-07-03,2015-07-03,5962000000,8-K,7283335,5,mixed_sources
-304587646,1150,cash_flow_financing,2014-10-01,2014-12-31,55000000,8-K,243776334,0,all_sources_non_periodic
 304587550,1150,cash_flow_financing,2014-01-01,2014-12-31,7582000000,8-K,8087518,0,all_sources_non_periodic
+304587646,1150,cash_flow_financing,2014-10-01,2014-12-31,55000000,8-K,243776334,0,all_sources_non_periodic
 304587555,1150,cash_flow_financing,2015-01-01,2015-12-31,451000000,8-K,8087541,0,all_sources_non_periodic
 304587628,1150,cash_flow_financing,2015-10-01,2015-12-31,-55000000,8-K,243776339,0,all_sources_non_periodic
 103833728,1150,cash_flow_financing_resolved,2014-01-01,2014-12-31,7582000000,8-K,8087518,0,all_sources_non_periodic
@@ -1298,16 +1375,16 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 120598039,1150,dividends_per_share_resolved,2022-02-01,2022-02-01,0.425,8-K,8029987,0,all_sources_non_periodic
 304585757,1150,operating_income,2015-10-01,2015-12-31,-748000000,8-K,186028368,0,all_sources_non_periodic
 304585684,1150,operating_income,2015-01-01,2015-12-31,227000000,8-K,8091937,0,all_sources_non_periodic
-304585747,1150,operating_income,2017-01-01,2017-12-31,927000000,8-K,8091997,0,all_sources_non_periodic
 304585779,1150,operating_income,2017-10-01,2017-12-31,-155000000,8-K,186028365,0,all_sources_non_periodic
+304585747,1150,operating_income,2017-01-01,2017-12-31,927000000,8-K,8091997,0,all_sources_non_periodic
 213359883,1150,operating_income_resolved,2015-10-01,2015-12-31,-748000000,8-K,186028368,0,all_sources_non_periodic
 99676832,1150,operating_income_resolved,2015-01-01,2015-12-31,227000000,8-K,8091937,0,all_sources_non_periodic
 213359905,1150,operating_income_resolved,2017-10-01,2017-12-31,-155000000,8-K,186028365,0,all_sources_non_periodic
 99676822,1150,operating_income_resolved,2017-01-01,2017-12-31,927000000,8-K,8091997,0,all_sources_non_periodic
-360044875,1150,revenue_sanity_resolved,2014-01-01,2014-12-31,7637000000,8-K,8132979,0,all_sources_non_periodic
-360044878,1150,revenue_sanity_resolved,2015-01-01,2015-12-31,7360000000,8-K,8133073,0,all_sources_non_periodic
-360044844,1150,revenue_sanity_resolved,2017-01-01,2017-12-31,8031000000,8-K,8133192,0,all_sources_non_periodic
-360044812,1150,revenue_sanity_resolved,2019-01-01,2019-12-31,8201000000,8-K,8133371,0,all_sources_non_periodic
+363335842,1150,revenue_sanity_resolved,2014-01-01,2014-12-31,7637000000,8-K,8132979,0,all_sources_non_periodic
+363335845,1150,revenue_sanity_resolved,2015-01-01,2015-12-31,7360000000,8-K,8133073,0,all_sources_non_periodic
+363335811,1150,revenue_sanity_resolved,2017-01-01,2017-12-31,8031000000,8-K,8133192,0,all_sources_non_periodic
+363335779,1150,revenue_sanity_resolved,2019-01-01,2019-12-31,8201000000,8-K,8133371,0,all_sources_non_periodic
 101970256,1150,total_assets_resolved,2014-12-31,2014-12-31,50563000000,8-K,8023451,5,mixed_sources
 208043201,1150,total_liabilities_resolved,2014-12-31,2014-12-31,53181000000,8-K,8023451,7,mixed_sources
 100898471,1158,net_income_resolved,2021-01-31,2022-01-29,3282815000,DEF 14A,9401752,0,all_sources_non_periodic
@@ -1581,16 +1658,16 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 100898898,1308,net_income_resolved,2025-01-01,2025-12-31,321700000,DEF 14A,17345231,0,all_sources_non_periodic
 102537647,1308,stockholders_equity_resolved,2020-12-31,2020-12-31,1713785000,8-K,17386069,7,mixed_sources
 214585549,1310,net_income_resolved,2024-10-28,2025-02-02,410467000,DEF 14A,184132575,0,all_sources_non_periodic
-360054954,1313,revenue_sanity_resolved,2014-01-01,2014-12-31,2249685000,8-K,18114839,0,all_sources_non_periodic
-360054949,1313,revenue_sanity_resolved,2015-01-01,2015-03-31,574001000,8-K,18114890,0,all_sources_non_periodic
-360054974,1313,revenue_sanity_resolved,2015-04-01,2015-06-30,607849000,8-K,18114914,0,all_sources_non_periodic
-360054962,1313,revenue_sanity_resolved,2015-07-01,2015-09-30,601371000,8-K,18114930,0,all_sources_non_periodic
-360054938,1313,revenue_sanity_resolved,2015-10-01,2015-12-31,593771000,8-K,18115002,0,all_sources_non_periodic
-360054956,1313,revenue_sanity_resolved,2015-01-01,2015-12-31,2376993000,8-K,18114968,0,all_sources_non_periodic
-360054950,1313,revenue_sanity_resolved,2016-01-01,2016-03-31,634085000,8-K,18115015,0,all_sources_non_periodic
-360054978,1313,revenue_sanity_resolved,2016-04-01,2016-06-30,669407000,8-K,18115057,0,all_sources_non_periodic
-360054948,1313,revenue_sanity_resolved,2016-07-01,2016-09-30,661369000,8-K,18115100,0,all_sources_non_periodic
-360054952,1313,revenue_sanity_resolved,2016-10-01,2016-12-31,677509000,8-K,18115152,0,all_sources_non_periodic
+363345937,1313,revenue_sanity_resolved,2014-01-01,2014-12-31,2249685000,8-K,18114839,0,all_sources_non_periodic
+363345932,1313,revenue_sanity_resolved,2015-01-01,2015-03-31,574001000,8-K,18114890,0,all_sources_non_periodic
+363345957,1313,revenue_sanity_resolved,2015-04-01,2015-06-30,607849000,8-K,18114914,0,all_sources_non_periodic
+363345945,1313,revenue_sanity_resolved,2015-07-01,2015-09-30,601371000,8-K,18114930,0,all_sources_non_periodic
+363345921,1313,revenue_sanity_resolved,2015-10-01,2015-12-31,593771000,8-K,18115002,0,all_sources_non_periodic
+363345939,1313,revenue_sanity_resolved,2015-01-01,2015-12-31,2376993000,8-K,18114968,0,all_sources_non_periodic
+363345933,1313,revenue_sanity_resolved,2016-01-01,2016-03-31,634085000,8-K,18115015,0,all_sources_non_periodic
+363345961,1313,revenue_sanity_resolved,2016-04-01,2016-06-30,669407000,8-K,18115057,0,all_sources_non_periodic
+363345931,1313,revenue_sanity_resolved,2016-07-01,2016-09-30,661369000,8-K,18115100,0,all_sources_non_periodic
+363345935,1313,revenue_sanity_resolved,2016-10-01,2016-12-31,677509000,8-K,18115152,0,all_sources_non_periodic
 326930117,1321,capex_resolved,2013-08-30,2014-08-28,3107000000,8-K,14738971,0,all_sources_non_periodic
 275456100,1321,cash_flow_financing_resolved,2013-08-30,2014-08-28,-1499000000,8-K,14717433,0,all_sources_non_periodic
 275090425,1321,cash_flow_investing_resolved,2013-08-30,2014-08-28,-2902000000,8-K,14718036,0,all_sources_non_periodic
@@ -2648,11 +2725,11 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 99681491,2368,operating_income_resolved,2016-04-01,2016-06-30,135200000,8-K,38770516,0,all_sources_non_periodic
 99681492,2368,operating_income_resolved,2016-07-01,2016-09-30,258000000,8-K,38770547,0,all_sources_non_periodic
 99681497,2368,operating_income_resolved,2016-10-01,2016-12-31,81300000,8-K,38770565,0,all_sources_non_periodic
-360048195,2368,revenue_sanity_resolved,2015-01-01,2015-12-31,2196900000,8-K,38812734,0,all_sources_non_periodic
-360048179,2368,revenue_sanity_resolved,2016-01-01,2016-03-31,433100000,8-K,38812782,0,all_sources_non_periodic
-360048183,2368,revenue_sanity_resolved,2016-04-01,2016-06-30,551400000,8-K,38812797,0,all_sources_non_periodic
-360048186,2368,revenue_sanity_resolved,2016-07-01,2016-09-30,743900000,8-K,38812845,0,all_sources_non_periodic
-360048199,2368,revenue_sanity_resolved,2016-10-01,2016-12-31,530800000,8-K,38812883,0,all_sources_non_periodic
+363339162,2368,revenue_sanity_resolved,2015-01-01,2015-12-31,2196900000,8-K,38812734,0,all_sources_non_periodic
+363339146,2368,revenue_sanity_resolved,2016-01-01,2016-03-31,433100000,8-K,38812782,0,all_sources_non_periodic
+363339150,2368,revenue_sanity_resolved,2016-04-01,2016-06-30,551400000,8-K,38812797,0,all_sources_non_periodic
+363339153,2368,revenue_sanity_resolved,2016-07-01,2016-09-30,743900000,8-K,38812845,0,all_sources_non_periodic
+363339166,2368,revenue_sanity_resolved,2016-10-01,2016-12-31,530800000,8-K,38812883,0,all_sources_non_periodic
 101972689,2368,total_assets_resolved,2015-12-31,2015-12-31,9597400000,8-K,38722480,6,mixed_sources
 362221476,2371,cash_flow_financing,2014-01-01,2014-03-31,-105000000,8-K,38931451,0,all_sources_non_periodic
 103539159,2371,cash_flow_financing_resolved,2014-01-01,2014-03-31,-105000000,8-K,38931451,0,all_sources_non_periodic
@@ -3073,7 +3150,7 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 208350438,2870,stockholders_equity_resolved,2014-12-31,2014-12-31,6077080000,8-K,61312024,1,mixed_sources
 208299637,2870,stockholders_equity_resolved,2015-12-31,2015-12-31,5262737000,8-K,61273875;61273882;61312037;61312062,8,mixed_sources
 159679513,2870,total_assets_resolved,2015-12-31,2015-12-31,8841819000,8-K,61273875;61273882,4,mixed_sources
-360498482,2870,total_debt_resolved,2014-12-31,2014-12-31,408826000,8-K,61321599,0,all_sources_non_periodic
+363790019,2870,total_debt_resolved,2014-12-31,2014-12-31,408826000,8-K,61321599,0,all_sources_non_periodic
 160017628,2870,total_liabilities_resolved,2014-12-31,2014-12-31,2764920000,8-K,61312024,0,all_sources_non_periodic
 102317962,2870,total_liabilities_resolved,2015-12-31,2015-12-31,3579082000,8-K,61312037;61312062,4,mixed_sources
 214582433,2904,net_income_resolved,2021-10-01,2021-12-31,92936000,DEF 14A,186160917,0,all_sources_non_periodic
@@ -3846,11 +3923,11 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 306284090,3459,revenue,2015-01-01,2015-03-31,16255000000,8-K,38302478,0,all_sources_non_periodic
 306284097,3459,revenue,2015-04-01,2015-06-30,14225000000,8-K,38302494,0,all_sources_non_periodic
 306284051,3459,revenue,2015-07-01,2015-09-30,15864000000,8-K,38302544,0,all_sources_non_periodic
-360053735,3459,revenue_sanity_resolved,2014-01-01,2014-03-31,17085000000,8-K,38302337,0,all_sources_non_periodic
-360053793,3459,revenue_sanity_resolved,2014-04-01,2014-06-30,18266000000,8-K,38302377,0,all_sources_non_periodic
-360053760,3459,revenue_sanity_resolved,2014-07-01,2014-09-30,18846000000,8-K,38302412,0,all_sources_non_periodic
-360053762,3459,revenue_sanity_resolved,2014-10-01,2014-12-31,19119000000,8-K,38302449,0,all_sources_non_periodic
-360053783,3459,revenue_sanity_resolved,2016-07-01,2016-09-30,15833000000,8-K,38302638,0,all_sources_non_periodic
+363344710,3459,revenue_sanity_resolved,2014-01-01,2014-03-31,17085000000,8-K,38302337,0,all_sources_non_periodic
+363344768,3459,revenue_sanity_resolved,2014-04-01,2014-06-30,18266000000,8-K,38302377,0,all_sources_non_periodic
+363344735,3459,revenue_sanity_resolved,2014-07-01,2014-09-30,18846000000,8-K,38302412,0,all_sources_non_periodic
+363344737,3459,revenue_sanity_resolved,2014-10-01,2014-12-31,19119000000,8-K,38302449,0,all_sources_non_periodic
+363344758,3459,revenue_sanity_resolved,2016-07-01,2016-09-30,15833000000,8-K,38302638,0,all_sources_non_periodic
 102540546,3459,stockholders_equity_resolved,2014-12-31,2014-12-31,72560000000,8-K,38309633;38309663;38309667,11,mixed_sources
 102540550,3459,stockholders_equity_resolved,2015-12-31,2015-12-31,68419000000,8-K,38309722;38309750,11,mixed_sources
 102540548,3459,stockholders_equity_resolved,2016-12-31,2016-12-31,67309000000,8-K,38308697;38309795,12,mixed_sources
@@ -5094,16 +5171,16 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 308237723,4744,gross_profit_resolved,2016-01-01,2016-12-31,2932000000,8-K,63911002,0,all_sources_non_periodic
 308766312,4744,operating_expenses_resolved,2016-07-01,2016-09-30,590000000,8-K,63910998,1,mixed_sources
 308793478,4744,operating_expenses_resolved,2016-01-01,2016-12-31,2475000000,8-K,63911002,1,mixed_sources
-360051808,4744,revenue_sanity_resolved,2016-01-01,2016-03-31,3361000000,8-K,63931059,0,all_sources_non_periodic
-360051812,4744,revenue_sanity_resolved,2016-04-01,2016-06-30,3210000000,8-K,63931061,0,all_sources_non_periodic
-360051814,4744,revenue_sanity_resolved,2016-07-01,2016-09-30,3073000000,8-K,63931063,0,all_sources_non_periodic
-360051809,4744,revenue_sanity_resolved,2016-01-01,2016-12-31,13082000000,8-K,63931065,0,all_sources_non_periodic
-360051811,4744,revenue_sanity_resolved,2016-10-01,2016-12-31,3438000000,8-K,63931067,0,all_sources_non_periodic
-360051813,4744,revenue_sanity_resolved,2017-01-01,2017-03-31,3064000000,8-K,63931068,0,all_sources_non_periodic
-360051815,4744,revenue_sanity_resolved,2017-04-01,2017-06-30,3015000000,8-K,63931074,0,all_sources_non_periodic
-360051819,4744,revenue_sanity_resolved,2017-07-01,2017-09-30,5301000000,8-K,63931089,0,all_sources_non_periodic
-360051820,4744,revenue_sanity_resolved,2017-01-01,2017-12-31,17179000000,8-K,63931091,0,all_sources_non_periodic
-360051807,4744,revenue_sanity_resolved,2017-10-01,2017-12-31,5799000000,8-K,63931092,0,all_sources_non_periodic
+363342779,4744,revenue_sanity_resolved,2016-01-01,2016-03-31,3361000000,8-K,63931059,0,all_sources_non_periodic
+363342783,4744,revenue_sanity_resolved,2016-04-01,2016-06-30,3210000000,8-K,63931061,0,all_sources_non_periodic
+363342785,4744,revenue_sanity_resolved,2016-07-01,2016-09-30,3073000000,8-K,63931063,0,all_sources_non_periodic
+363342780,4744,revenue_sanity_resolved,2016-01-01,2016-12-31,13082000000,8-K,63931065,0,all_sources_non_periodic
+363342782,4744,revenue_sanity_resolved,2016-10-01,2016-12-31,3438000000,8-K,63931067,0,all_sources_non_periodic
+363342784,4744,revenue_sanity_resolved,2017-01-01,2017-03-31,3064000000,8-K,63931068,0,all_sources_non_periodic
+363342786,4744,revenue_sanity_resolved,2017-04-01,2017-06-30,3015000000,8-K,63931074,0,all_sources_non_periodic
+363342790,4744,revenue_sanity_resolved,2017-07-01,2017-09-30,5301000000,8-K,63931089,0,all_sources_non_periodic
+363342791,4744,revenue_sanity_resolved,2017-01-01,2017-12-31,17179000000,8-K,63931091,0,all_sources_non_periodic
+363342778,4744,revenue_sanity_resolved,2017-10-01,2017-12-31,5799000000,8-K,63931092,0,all_sources_non_periodic
 160237823,4744,stockholders_equity_resolved,2017-12-31,2017-12-31,38410000000,8-K,63934042,9,mixed_sources
 101974909,4744,total_assets_resolved,2017-12-31,2017-12-31,56500000000,8-K,63896080,4,mixed_sources
 208091826,4744,total_liabilities_resolved,2017-12-31,2017-12-31,18090000000,8-K,63896080;63934042,13,mixed_sources
@@ -5994,8 +6071,8 @@ canonical_fact_id,company_id,concept,period_start,period_end,value,bad_forms,bad
 362512088,5389,net_income,2021-04-01,2021-06-30,38011000,8-K,50927992,0,all_sources_non_periodic
 158616678,5389,net_income_resolved,2021-01-01,2021-12-31,66659000,DEF 14A,50928011,0,all_sources_non_periodic
 214606244,5389,net_income_resolved,2021-10-01,2021-12-31,8684000,DEF 14A,186716120,0,all_sources_non_periodic
-360061300,5389,revenue_sanity_resolved,2021-04-01,2021-06-30,188615000,8-K,50957006,0,all_sources_non_periodic
-360061283,5389,revenue_sanity_resolved,2021-01-01,2021-06-30,380108000,8-K,50957001,0,all_sources_non_periodic
+363352285,5389,revenue_sanity_resolved,2021-04-01,2021-06-30,188615000,8-K,50957006,0,all_sources_non_periodic
+363352268,5389,revenue_sanity_resolved,2021-01-01,2021-06-30,380108000,8-K,50957001,0,all_sources_non_periodic
 306352412,5393,cash_flow_financing,2014-01-01,2014-12-31,-214857000,8-K,51081724,0,all_sources_non_periodic
 306352434,5393,cash_flow_financing,2014-10-01,2014-12-31,-73875000,8-K,247117749,0,all_sources_non_periodic
 296329035,5393,cash_flow_financing_resolved,2014-10-01,2014-12-31,-73875000,8-K,247117749,0,all_sources_non_periodic
