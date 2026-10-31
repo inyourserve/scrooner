@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0117.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
+**Next free number: 0118.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -70,6 +70,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0114 | scrooner-8a | `analytics.cell_proof` | file on main (1062649, 2026-11-04), **APPLIED in production 2026-11-04 15:45 UTC by Ritwik (scrooner-31), files byte-identical to main (CI run 41215553055)** |
 | 0115 | scrooner-d2 (income statement lane) | `analytics.slot_protected_cell.value` nullable (a protected blank) | file on main (50683b1, 2026-11-04), **APPLIED in production 2026-11-04 15:45 UTC by Ritwik (scrooner-31); the OI package 2 write path no longer refuses on this migration** |
 | 0116 | scrooner-26 (per-share) | `analytics.fact_authority_retired`, before-image of fact authority changes by retirement runs (Families A/B/C) | file on main; **APPLIED in production 2026-11-04 15:45 UTC by Ritwik (scrooner-31), byte-identical to main (CI run 41215553055)** |
+| 0117 | scrooner-8a (engineering) | `analytics.canonical_fact` + nullable `rule_run_id`, `family` (provenance of every valued cell, cell-loader design line 2, approved by scrooner-0f 2026-10-31) | file on work/engineering/canonical-fact-v2; NOT applied; handed to scrooner-eb |
 
 ## scrooner-98 queue (lane A)
 
