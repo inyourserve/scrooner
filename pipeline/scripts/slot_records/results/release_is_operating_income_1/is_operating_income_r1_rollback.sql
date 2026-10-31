@@ -65,5 +65,5 @@ update analytics.canonical_fact set value = 65215000, source_fact_ids = array[39
 update analytics.canonical_fact set value = -66538000, source_fact_ids = array[66412986,66407684,66398672]::bigint[], resolved_at = '2026-09-13 10:03:58.783017+00' where id = 117477351;
 update analytics.canonical_fact set value = 301884000, source_fact_ids = array[34839135,34820587,34776541]::bigint[], resolved_at = '2026-09-29 05:05:51.728986+00' where id = 162034485;
 delete from analytics.canonical_fact cf using analytics.canonical_concept cc, core.company co, core.period p where cf.canonical_concept_id = cc.id and cc.name = 'operating_income_resolved' and cf.company_id = co.id and co.cik = '0002041610' and cf.period_id = p.id and p.period_type = 'duration' and p.start_date = '2025-01-01' and p.end_date = '2025-06-30';
-delete from analytics.slot_protected_cell where rule_id = 'slot.is_operating_income@1';
+do $$ begin if to_regclass('analytics.slot_protected_cell') is not null then delete from analytics.slot_protected_cell where rule_id = 'slot.is_operating_income@1'; end if; end $$;
 commit;

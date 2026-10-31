@@ -18,8 +18,8 @@
   },
   "rollback": {
    "file": "is_net_income_r1_rollback.sql",
-   "sha256": "f22ccad0a64ab6bb4fc9a1f4fa26dac00d37b67621af62b657ba7bb273d27d4f",
-   "note": "generated, run in one transaction by the Release Manager only"
+   "sha256": "5e91cc8c8d428743424b104d327f9def36b787787f7f23fb79054d7d3112c85a",
+   "note": "generated, run in one transaction by the Release Manager only; protection delete is conditional on migration 0113 (runs with or without it)"
   },
   "stale_vs_live": 0,
   "touched_ciks": "is_net_income_r1_touched_ciks.txt",
