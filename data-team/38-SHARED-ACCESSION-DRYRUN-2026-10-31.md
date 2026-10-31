@@ -108,3 +108,18 @@ misses. Rerun from checkpoints (REPORT.json / moves.jsonl updated in place):
 Consequence: the before-image under `39-shared-accession-apply/before-image` (plan digest
 9dcfcdde5c724bae, 476 moves) no longer matches the plan; `apply` refuses it by design.
 The fresh backup taken just before apply replaces it.
+
+
+## Correction 2026-10-31 (post-apply, found by Ritwik)
+
+The "Who would LOSE data" section said the four subsidiaries' rows "are dropped from the
+subsidiary on re-normalization". That was wrong: `normalizer/facts.py` upserts and never
+deletes, so after the apply Entergy Arkansas (467), Southern California Edison (388),
+SoCalGas (543) and Consumers Energy (374) still hold 1,772 authoritative core.fact rows
+from the moved combined 10-Qs, and 600 analytics.canonical_fact cells built from them still
+show the parent's consolidated figures under the subsidiary's CIK. Fix: rule
+`entity.shared_accession_demote_coregistrant_facts@1` (`normalizer/shared_accession_cleanup.py`,
+CLI `scrooner-normalize demote-coregistrant-facts`): demote those facts (never delete), archive
+the 600 cells to canonical_fact_retired with a reason row per cell, before-image per company,
+rollback restores all three. Dry run on the four CIKs: 1,771 facts to demote (1 already
+demoted), 600 cells. Flag OFF until the founder's words.

@@ -268,3 +268,41 @@ def golden() -> None:
 
 if __name__ == "__main__":
     app()
+
+
+@app.command("demote-coregistrant-facts")
+def demote_coregistrant_facts_cmd(
+    ciks: str = typer.Option(
+        ..., help="Comma-separated CIKs of the co-registrants to clean."
+    ),
+    backup_dir: str = typer.Option(
+        None, help="Before-image directory, required when the rule is ON."
+    ),
+    rollback: str = typer.Option(
+        None, "--rollback", help="Restore from this before-image directory instead."
+    ),
+) -> None:
+    """Rule entity.shared_accession_demote_coregistrant_facts@1 (flag OFF by default):
+    a co-registrant's authoritative copies of a combined filing that the
+    shared-accession rule moved to its primary are demoted (never deleted) and
+    the canonical cells they fed are archived with a reason. Off/dry_run plans
+    only; ON applies with a before-image per company; --rollback restores."""
+    from pathlib import Path
+
+    from scrooner_pipeline.normalizer import shared_accession_cleanup as sc
+
+    with get_connection() as conn:
+        if rollback:
+            typer.echo(
+                f"demote-coregistrant-facts rollback: {sc.rollback_run_dir(conn, Path(rollback))}"
+            )
+            return
+        stats = sc.run(
+            conn,
+            _parse_ciks(ciks) or set(),
+            backup_dir=Path(backup_dir) if backup_dir else None,
+        )
+    per = stats.pop("per_company")
+    typer.echo(f"demote-coregistrant-facts: {stats}")
+    for cik, v in sorted(per.items()):
+        typer.echo(f"  {cik}: {v}")
