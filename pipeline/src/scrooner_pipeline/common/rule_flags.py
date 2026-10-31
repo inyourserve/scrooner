@@ -383,6 +383,12 @@ RULES: dict[str, Rule] = {
             "-",
             "data_engineer",
             "retire stored derived EPS facts (quarters by subtraction) and their cells",
+        ),
+        _r(
+            "ingest.instance_fallback@1",
+            "-",
+            "engineering",
+            "B9: facts for a periodic filing the companyfacts API never carried, from the FSN set (or the instance), through facts.py",
             dry_run=True,
         ),
         _r(
@@ -474,6 +480,7 @@ RULE_SHARED_ACCESSION_DEMOTE_COREGISTRANT = (
     "entity.shared_accession_demote_coregistrant_facts@1"
 )
 RULE_IDENTITY = "identity.cik_name_ticker@1"
+RULE_INSTANCE_FALLBACK = "ingest.instance_fallback@1"
 KNOWN_RULES = frozenset(RULES)
 
 

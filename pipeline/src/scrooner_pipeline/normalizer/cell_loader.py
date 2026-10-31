@@ -1,0 +1,723 @@
+"""The one loader of family cell files into analytics.canonical_fact
+(data-team/46-canonical-fact-v2/CELL-FORMAT-v1.md).
+
+A family file (JSONL, gzip) carries one row per displayed cell: a value with its
+provenance, or a blank with its reason from the frozen eight-state contract.
+Per company, in one transaction: bind every row to a core.period (exact dates
+win; else fiscal_year + fiscal_period + period_type with the end within
+BIND_DAYS of the FSN month-end), resolve source facts in one bulk join
+(accession + tag + period), write the facts an FSN-only value needs through
+facts.normalize_payload with an fsn:// lineage row, delete the family's data
+points for the company, insert the valued cells, and replace the blank
+reasons under one analytics.rule_run (scope run + company + rule). Plan mode
+does all of it and rolls back. Idempotent: the same file twice gives the same
+rows. There is no before-image and no rollback: re-load the family file.
+"""
+
+from __future__ import annotations
+
+import gzip
+import hashlib
+import json
+from collections import Counter, defaultdict
+from dataclasses import dataclass, field
+from datetime import date
+from decimal import Decimal, InvalidOperation
+from pathlib import Path
+from typing import Any
+
+import psycopg
+import structlog
+
+from scrooner_pipeline.common.cell_contract import (
+    BLANK_STATES,
+    EVIDENCE_LEVELS,
+    STATES,
+    CellKey,
+    parse_rule_id,
+    validate_defect,
+)
+from scrooner_pipeline.common.cell_store import (
+    BlankReason,
+    finish_rule_run,
+    replace_rule_reasons,
+    start_rule_run,
+)
+from scrooner_pipeline.common.history_floor import HISTORY_FLOOR
+from scrooner_pipeline.normalizer.facts import normalize_payload
+
+logger = structlog.get_logger()
+
+GRAINS = ("FY", "Q", "I")
+UNITS = {"USD": "usd", "USD/shares": "usd/shares", "shares": "shares", "pure": "pure"}
+VALUED = frozenset({"value", "derived", "evidenced_zero"})
+BIND_DAYS = 10
+BUCKET = "fsn-notes"
+CHUNK = 5000
+
+# Spec section 4: one data point, one family. A data point absent here is
+# unowned: loaded with a warning in the report, never silently.
+OWNERSHIP: dict[str, str] = {}
+for _fam, _points in {
+    "is_core": (
+        "revenue_sanity",
+        "net_income",
+        "operating_income",
+        "gross_profit",
+        "cost_of_revenue",
+        "operating_expenses",
+        "income_before_tax",
+        "income_tax_expense",
+    ),
+    "pershare_filed": (
+        "basic_eps",
+        "diluted_eps",
+        "dividends_per_share",
+        "shares_outstanding",
+    ),
+    "pershare_derived": ("effective_tax_rate_reported",),
+    "cashflow": (
+        "cfo",
+        "cash_flow_investing",
+        "cash_flow_financing",
+        "share_buybacks",
+        "dividends_paid",
+    ),
+    "capex_da_cash_debt": (
+        "capex",
+        "depreciation_amortization",
+        "cash_and_equivalents",
+        "total_debt",
+    ),
+    "interest": ("interest_expense", "interest_income"),
+    "bs_core": (
+        "total_assets",
+        "total_liabilities",
+        "current_assets",
+        "current_liabilities",
+        "stockholders_equity",
+        "ppe_net",
+        "inventory",
+    ),
+}.items():
+    for _p in _points:
+        OWNERSHIP[_p] = _fam
+        OWNERSHIP[f"{_p}_resolved"] = _fam
+
+
+@dataclass
+class CellRow:
+    line: int
+    key: CellKey
+    state: str
+    value: Decimal | None
+    unit: str | None
+    decimals: int | None
+    source_fact_ids: list[int]
+    accession: str | None
+    tag: str | None
+    members: list[dict[str, Any]] | None
+    fsn_set: str | None
+    derivation: dict[str, Any] | None
+    rule_id: str
+    evidence_level: str
+    reason_code: str | None
+    reason_text: str | None
+    defect_class: str | None
+    owner: str | None
+    root_cause_class: str | None
+    input_refs: dict[str, Any]
+    fiscal_year: int | None
+    fiscal_period: str | None
+    period_type: str | None
+    fsn_end: date | None
+    exact_dates: bool
+    period_id: int | None = None
+
+
+@dataclass
+class LoadReport:
+    family: str
+    mode: str
+    files: list[str]
+    sha256: dict[str, str]
+    rows: int = 0
+    rejected: Counter = field(default_factory=Counter)
+    reject_samples: list[dict[str, Any]] = field(default_factory=list)
+    unowned_points: set[str] = field(default_factory=set)
+    companies: int = 0
+    valued_written: int = 0
+    reasons_written: int = 0
+    deleted: int = 0
+    periods_created: int = 0
+    facts_materialized: int = 0
+    run_id: str | None = None
+    per_company: list[dict[str, Any]] = field(default_factory=list)
+
+    def reject(self, line: int, why: str, **ctx: Any) -> None:
+        self.rejected[why] += 1
+        if len(self.reject_samples) < 200:
+            self.reject_samples.append({"line": line, "why": why, **ctx})
+
+    def as_dict(self) -> dict[str, Any]:
+        d = {
+            k: v
+            for k, v in self.__dict__.items()
+            if k not in ("rejected", "unowned_points")
+        }
+        d["rejected"] = dict(self.rejected)
+        d["unowned_points"] = sorted(self.unowned_points)
+        return d
+
+
+# --------------------------------------------------------------------------
+# reading and validating
+# --------------------------------------------------------------------------
+def _d(v: Any) -> date | None:
+    return date.fromisoformat(v) if v else None
+
+
+def read_file(path: Path) -> tuple[list[dict[str, Any]], str]:
+    raw = path.read_bytes()
+    sha = hashlib.sha256(raw).hexdigest()
+    text = gzip.decompress(raw) if path.suffix == ".gz" else raw
+    rows = [json.loads(line) for line in text.decode().splitlines() if line.strip()]
+    return rows, sha
+
+
+def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow | str:
+    """A CellRow, or the rejection reason (spec section 5)."""
+    name = r.get("data_point_name")
+    if name not in known_points:
+        return "unknown_data_point_name"
+    grain = r.get("period_grain")
+    if grain not in GRAINS:
+        return "grain_not_FY_Q_I"
+    state = r.get("state")
+    if state not in STATES:
+        return "state_outside_contract"
+    try:
+        start, end = _d(r.get("period_start")), _d(r.get("period_end"))
+        fsn_end = _d(r.get("fsn_end"))
+    except ValueError:
+        return "bad_date"
+    exact = start is not None and end is not None
+    if not exact and not (
+        r.get("fiscal_year")
+        and r.get("fiscal_period")
+        and r.get("period_type")
+        and fsn_end
+    ):
+        return "no_period_key"
+    ptype = r.get("period_type") or ("instant" if grain == "I" else "duration")
+    if (grain == "I") != (ptype == "instant"):
+        return "grain_period_type_mismatch"
+    if exact and grain == "I" and start != end:
+        return "instant_with_span"
+    key_end = end or fsn_end
+    if key_end < HISTORY_FLOOR:
+        return "period_before_history_floor"
+    value = r.get("value")
+    if state in VALUED:
+        if value is None:
+            return "valued_state_without_value"
+        try:
+            value = Decimal(str(value))
+        except InvalidOperation:
+            return "value_not_decimal"
+        if r.get("unit") not in UNITS:
+            return "unit_missing_or_unknown"
+        if state == "derived" and not r.get("derivation"):
+            return "derived_without_derivation"
+        if (
+            state == "value"
+            and not r.get("source_fact_ids")
+            and not (r.get("accession") and r.get("tag"))
+        ):
+            return "filed_value_without_lineage"
+    else:
+        if value is not None:
+            return "blank_state_with_value"
+        if not r.get("reason_code"):
+            return "blank_without_reason_code"
+    try:
+        parse_rule_id(r.get("rule_id") or "")
+    except ValueError:
+        return "bad_rule_id"
+    if r.get("evidence_level") not in EVIDENCE_LEVELS:
+        return "bad_evidence_level"
+    try:
+        validate_defect(
+            state, r.get("defect_class"), r.get("owner"), r.get("root_cause_class")
+        )
+    except ValueError:
+        return "defect_fields_inconsistent"
+    try:
+        key = CellKey(
+            int(r["company_id"]),
+            name,
+            grain,
+            start or fsn_end,
+            end or fsn_end,
+            r.get("basis") or "latest",
+        )
+    except (KeyError, ValueError, TypeError):
+        return "bad_key"
+    return CellRow(
+        line=line,
+        key=key,
+        state=state,
+        value=value if state in VALUED else None,
+        unit=r.get("unit"),
+        decimals=r.get("decimals"),
+        source_fact_ids=[int(x) for x in (r.get("source_fact_ids") or [])],
+        accession=r.get("accession"),
+        tag=r.get("tag"),
+        members=r.get("members"),
+        fsn_set=r.get("fsn_set"),
+        derivation=r.get("derivation"),
+        rule_id=r["rule_id"],
+        evidence_level=r["evidence_level"],
+        reason_code=r.get("reason_code"),
+        reason_text=r.get("reason_text"),
+        defect_class=r.get("defect_class"),
+        owner=r.get("owner"),
+        root_cause_class=r.get("root_cause_class"),
+        input_refs=r.get("input_refs") or {},
+        fiscal_year=r.get("fiscal_year"),
+        fiscal_period=r.get("fiscal_period"),
+        period_type=ptype,
+        fsn_end=fsn_end,
+        exact_dates=exact,
+    )
+
+
+# --------------------------------------------------------------------------
+# binding and resolving, per company
+# --------------------------------------------------------------------------
+def bind_periods(
+    conn: psycopg.Connection, company_id: int, rows: list[CellRow], *, create: bool
+) -> tuple[list[CellRow], list[tuple[CellRow, str]], int]:
+    """Set period_id on every row it can; return (bound, [(row, why)], periods_created)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id, start_date, end_date, period_type, fiscal_year, fiscal_period from core.period where company_id = %s",
+            (company_id,),
+        )
+        periods = cur.fetchall()
+    exact = {(s, e, t): pid for pid, s, e, t, _fy, _fp in periods}
+    by_label: dict[tuple, list[tuple[int, date]]] = defaultdict(list)
+    for pid, _s, e, t, fy, fp in periods:
+        by_label[(fy, fp, t)].append((pid, e))
+    bound, bad, created = [], [], 0
+    for r in rows:
+        pid = None
+        if r.exact_dates:
+            pid = exact.get((r.key.period_start, r.key.period_end, r.period_type))
+        if pid is None and r.fiscal_year and r.fiscal_period and r.fsn_end:
+            cands = [
+                (abs((e - r.fsn_end).days), p)
+                for p, e in by_label.get(
+                    (r.fiscal_year, r.fiscal_period, r.period_type), []
+                )
+                if abs((e - r.fsn_end).days) <= BIND_DAYS
+            ]
+            if cands:
+                pid = min(cands)[1]
+        if pid is None and r.exact_dates and create:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    insert into core.period (company_id, start_date, end_date, period_type, fiscal_year, fiscal_period)
+                    values (%s, %s, %s, %s, %s, %s)
+                    on conflict (company_id, start_date, end_date, period_type) do update set fiscal_year = core.period.fiscal_year
+                    returning id
+                    """,
+                    (
+                        company_id,
+                        r.key.period_start,
+                        r.key.period_end,
+                        r.period_type,
+                        r.fiscal_year,
+                        r.fiscal_period,
+                    ),
+                )
+                pid = cur.fetchone()[0]
+            exact[(r.key.period_start, r.key.period_end, r.period_type)] = pid
+            created += 1
+        if pid is None:
+            bad.append((r, "period_unresolvable"))
+            continue
+        r.period_id = pid
+        bound.append(r)
+    return bound, bad, created
+
+
+def resolve_facts(
+    conn: psycopg.Connection, company_id: int, rows: list[CellRow]
+) -> dict[tuple[str, str, int], list[int]]:
+    """(accession, tag, period_id) -> core.fact ids, authoritative first, one query per company."""
+    accs = {r.accession for r in rows if r.accession}
+    tags = {r.tag for r in rows if r.tag}
+    for r in rows:
+        for m in r.members or []:
+            if m.get("accession"):
+                accs.add(m["accession"])
+            if m.get("tag"):
+                tags.add(m["tag"])
+    if not accs or not tags:
+        return {}
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select fl.accession_number, co.tag, f.period_id, f.id, f.is_authoritative
+            from core.fact f
+            join core.filing fl on fl.id = f.filing_id
+            join core.concept co on co.id = f.concept_id
+            where f.company_id = %s and fl.accession_number = any(%s) and co.tag = any(%s)
+            order by f.is_authoritative desc, f.id
+            """,
+            (company_id, sorted(accs), sorted(tags)),
+        )
+        out: dict[tuple[str, str, int], list[int]] = defaultdict(list)
+        for acc, tag, pid, fid, _auth in cur.fetchall():
+            out[(acc, tag, pid)].append(fid)
+    return out
+
+
+def materialize_fsn_fact(
+    conn: psycopg.Connection, company_id: int, cik: str, r: CellRow, period_row: tuple
+) -> list[int]:
+    """A filed value that exists only in the FSN set (no core.fact): write the
+    fact through facts.normalize_payload with an fsn:// lineage row, exactly
+    like the B9 instance fallback, and return its fact id(s)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select form, filing_date from core.filing where company_id = %s and accession_number = %s",
+            (company_id, r.accession),
+        )
+        fl = cur.fetchone()
+    if fl is None:
+        return []
+    start, end, _ptype, fy, fp = period_row
+    taxonomy, _, tag = (r.tag or "").rpartition(":")
+    taxonomy = taxonomy or "us-gaap"
+    entry = {
+        "start": None if r.key.period_grain == "I" else start.isoformat(),
+        "end": end.isoformat(),
+        "val": r.value,
+        "accn": r.accession,
+        "fy": fy or end.year,
+        "fp": fp or ("FY" if r.key.period_grain == "FY" else "Q"),
+        "form": fl[0],
+        "filed": fl[1].isoformat(),
+    }
+    payload = {"cik": cik, "facts": {taxonomy: {tag: {"units": {r.unit: [entry]}}}}}
+    pj = json.dumps(payload, default=str, sort_keys=True)
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            insert into raw.sec_companyfacts (cik, source_url, sha256, storage_path, http_status, fetched_at)
+            values (%s, %s, %s, %s, 200, now()) returning id
+            """,
+            (
+                cik,
+                f"fsn://{BUCKET}/{r.fsn_set}/{r.fsn_set}_num.tsv.zst#{r.accession}",
+                hashlib.sha256(pj.encode()).hexdigest(),
+                f"{BUCKET}/{r.fsn_set}/{r.fsn_set}_num.tsv.zst",
+            ),
+        )
+        raw_id = cur.fetchone()[0]
+    normalize_payload(conn, company_id, cik, payload, raw_id)
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id from core.fact where company_id = %s and period_id = %s and raw_object_id = %s",
+            (company_id, r.period_id, raw_id),
+        )
+        return [x[0] for x in cur.fetchall()]
+
+
+def _has_provenance_columns(conn: psycopg.Connection) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(
+            "select count(*) from information_schema.columns where table_schema = 'analytics' "
+            "and table_name = 'canonical_fact' and column_name in ('rule_run_id', 'family')"
+        )
+        return cur.fetchone()[0] == 2
+
+
+def to_reason(r: CellRow) -> BlankReason:
+    return BlankReason(
+        key=r.key,
+        state=r.state,
+        rule_id=r.rule_id,
+        reason_code=r.reason_code or "",
+        defect_class=r.defect_class,
+        owner=r.owner,
+        root_cause_class=r.root_cause_class,
+        reason_text=r.reason_text,
+        input_refs={
+            **r.input_refs,
+            "accession": r.accession,
+            "tag": r.tag,
+            "fsn_set": r.fsn_set,
+        },
+        source_fact_ids=tuple(r.source_fact_ids),
+    )
+
+
+# --------------------------------------------------------------------------
+# the load
+# --------------------------------------------------------------------------
+def load(
+    conn: psycopg.Connection,
+    family: str,
+    paths: list[Path],
+    *,
+    apply: bool,
+    manifest_rule_id: str | None = None,
+    git_commit: str | None = None,
+    data_points: list[str] | None = None,
+) -> LoadReport:
+    """paths: one or more cell files of ONE family (merged; a key in two files is
+    a rejection). data_points: the delete scope (default: the manifest's or the
+    file's data points). apply=False plans inside a transaction and rolls back."""
+    mode = "apply" if apply else "dry_run"
+    rep = LoadReport(family, mode, [str(p) for p in paths], {})
+    raw_rows: list[tuple[int, dict[str, Any]]] = []
+    manifest: dict[str, Any] = {}
+    for p in paths:
+        m = p.with_name("manifest.json")
+        if m.exists() and not manifest:
+            manifest = json.loads(m.read_text())
+        rows, sha = read_file(p)
+        rep.sha256[str(p)] = sha
+        raw_rows.extend((i + 1, r) for i, r in enumerate(rows))
+    rep.rows = len(raw_rows)
+    rule_id = manifest_rule_id or manifest.get("rule_id") or f"cells.{family}@1"
+    parse_rule_id(rule_id)
+    with conn.cursor() as cur:
+        cur.execute("select id, name from analytics.canonical_concept")
+        concept_ids = {name: cid for cid, name in cur.fetchall()}
+    cells: list[CellRow] = []
+    seen: set[tuple] = set()
+    for line, r in raw_rows:
+        parsed = parse_row(line, r, set(concept_ids))
+        if isinstance(parsed, str):
+            rep.reject(line, parsed, data_point_name=r.get("data_point_name"))
+            continue
+        owner = OWNERSHIP.get(parsed.key.data_point_name)
+        if owner is None:
+            rep.unowned_points.add(parsed.key.data_point_name)
+        elif owner != family:
+            rep.reject(
+                line,
+                "key_owned_by_another_family",
+                data_point_name=parsed.key.data_point_name,
+                owner=owner,
+            )
+            continue
+        k = (
+            parsed.key.company_id,
+            parsed.key.data_point_name,
+            parsed.key.period_grain,
+            parsed.key.period_start,
+            parsed.key.period_end,
+            parsed.key.basis,
+        )
+        if k in seen:
+            rep.reject(
+                line, "duplicate_key", data_point_name=parsed.key.data_point_name
+            )
+            continue
+        seen.add(k)
+        cells.append(parsed)
+    scope_names = (
+        data_points
+        or manifest.get("data_points")
+        or sorted({c.key.data_point_name for c in cells})
+    )
+    # Guard (scrooner-0f 2026-11-01): a data point whose file carries ZERO valued
+    # cells would be blanked for every company by delete-then-insert (the
+    # interest_income case). Such points leave the delete scope and their rows
+    # are rejected, listed under data_point_has_no_valued_cells.
+    valued_points = {c.key.data_point_name for c in cells if c.state in VALUED}
+    empty_points = [n for n in scope_names if n not in valued_points]
+    for n in empty_points:
+        rep.reject(0, "data_point_has_no_valued_cells", data_point_name=n)
+    scope_names = [n for n in scope_names if n in valued_points]
+    cells = [c for c in cells if c.key.data_point_name in valued_points]
+    scope_ids = [concept_ids[n] for n in scope_names if n in concept_ids]
+    by_company: dict[int, list[CellRow]] = defaultdict(list)
+    for c in cells:
+        by_company[c.key.company_id].append(c)
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id, cik from core.company where id = any(%s)", (sorted(by_company),)
+        )
+        ciks = dict(cur.fetchall())
+    for cid in sorted(by_company):
+        if cid not in ciks:
+            for c in by_company[cid]:
+                rep.reject(c.line, "unknown_company", company_id=cid)
+            del by_company[cid]
+    prov = _has_provenance_columns(conn)
+    run_id = start_rule_run(
+        conn,
+        rule_id,
+        mode,
+        "on" if apply else "off",
+        sorted(ciks.values()),
+        git_commit=git_commit,
+        before_image_ref=",".join(rep.sha256.values())[:200],
+    )
+    rep.run_id = run_id
+    for cid in sorted(by_company):
+        rows = by_company[cid]
+        try:
+            _load_company(
+                conn,
+                cid,
+                rows,
+                ciks[cid],
+                family,
+                run_id,
+                scope_ids,
+                concept_ids,
+                prov,
+                apply,
+                rep,
+            )
+        except _PlanRollback:
+            pass
+    return _finish(conn, run_id, rep, apply)
+
+
+def _load_company(
+    conn: psycopg.Connection,
+    cid: int,
+    rows: list[CellRow],
+    cik: str,
+    family: str,
+    run_id: str,
+    scope_ids: list[int],
+    concept_ids: dict[str, int],
+    prov: bool,
+    apply: bool,
+    rep: LoadReport,
+) -> None:
+    """One company in one transaction; plan mode raises _PlanRollback at the end so it rolls back."""
+    if True:
+        with conn.transaction():
+            bound, bad, created = bind_periods(conn, cid, rows, create=True)
+            for r, why in bad:
+                rep.reject(
+                    r.line, why, company_id=cid, data_point_name=r.key.data_point_name
+                )
+            rep.periods_created += created
+            facts = resolve_facts(conn, cid, bound)
+            with conn.cursor() as cur:
+                cur.execute(
+                    "select id, start_date, end_date, period_type, fiscal_year, fiscal_period from core.period where id = any(%s)",
+                    ([r.period_id for r in bound],),
+                )
+                prow = {x[0]: x[1:] for x in cur.fetchall()}
+            valued: list[CellRow] = []
+            reasons_by_rule: dict[str, list[BlankReason]] = defaultdict(list)
+            for r in bound:
+                if r.state in BLANK_STATES:
+                    reasons_by_rule[r.rule_id].append(to_reason(r))
+                    continue
+                if not r.source_fact_ids and r.state == "value":
+                    ids = list(facts.get((r.accession, r.tag, r.period_id), []))
+                    for m in r.members or []:
+                        ids += facts.get(
+                            (
+                                m.get("accession") or r.accession,
+                                m.get("tag"),
+                                r.period_id,
+                            ),
+                            [],
+                        )
+                    if not ids and r.fsn_set and r.accession and r.tag:
+                        ids = materialize_fsn_fact(conn, cid, cik, r, prow[r.period_id])
+                        rep.facts_materialized += len(ids)
+                    if not ids:
+                        rep.reject(
+                            r.line,
+                            "filed_value_resolves_to_no_fact",
+                            company_id=cid,
+                            data_point_name=r.key.data_point_name,
+                            accession=r.accession,
+                            tag=r.tag,
+                        )
+                        continue
+                    r.source_fact_ids = sorted(set(ids))
+                valued.append(r)
+            with conn.cursor() as cur:
+                cur.execute(
+                    "delete from analytics.canonical_fact where company_id = %s and canonical_concept_id = any(%s)",
+                    (cid, scope_ids),
+                )
+                rep.deleted += cur.rowcount
+                payload = [
+                    {
+                        "company_id": cid,
+                        "canonical_concept_id": concept_ids[r.key.data_point_name],
+                        "period_id": r.period_id,
+                        "value": r.value,
+                        "source_fact_ids": r.source_fact_ids,
+                        "run_id": run_id,
+                        "family": family,
+                    }
+                    for r in valued
+                ]
+                sql = (
+                    "insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids"
+                    + (
+                        ", rule_run_id, family) values (%(company_id)s, %(canonical_concept_id)s, %(period_id)s, %(value)s, %(source_fact_ids)s, %(run_id)s::uuid, %(family)s)"
+                        if prov
+                        else ") values (%(company_id)s, %(canonical_concept_id)s, %(period_id)s, %(value)s, %(source_fact_ids)s)"
+                    )
+                )
+                for i in range(0, len(payload), CHUNK):
+                    cur.executemany(sql, payload[i : i + CHUNK])
+            rep.valued_written += len(valued)
+            n_reasons = 0
+            for rid, reasons in reasons_by_rule.items():
+                n_reasons += replace_rule_reasons(conn, run_id, cid, rid, reasons)
+            rep.reasons_written += n_reasons
+            rep.companies += 1
+            rep.per_company.append(
+                {
+                    "company_id": cid,
+                    "cik": cik,
+                    "valued": len(valued),
+                    "reasons": n_reasons,
+                    "unbound": len(bad),
+                    "periods_created": created,
+                }
+            )
+            if not apply:
+                raise _PlanRollback
+
+
+class _PlanRollback(Exception):
+    """Raised inside the per-company transaction in plan mode so it rolls back."""
+
+
+def _finish(
+    conn: psycopg.Connection, run_id: str, rep: LoadReport, apply: bool
+) -> LoadReport:
+    stats = {
+        k: v
+        for k, v in rep.as_dict().items()
+        if k not in ("per_company", "reject_samples")
+    }
+    finish_rule_run(conn, run_id, stats)
+    conn.commit()
+    logger.info(
+        "cell_loader.done",
+        **{k: v for k, v in stats.items() if k not in ("sha256", "files")},
+    )
+    return rep
