@@ -1,0 +1,26 @@
+{
+ "rule_id": "slot.is_operating_income_not_presented@1",
+ "cells": 13544,
+ "companies": 253,
+ "companies_reason_only": 216,
+ "companies_would_hide": 97,
+ "by_grain": {
+  "Q": 6840,
+  "TP": 4525,
+  "FY": 2179
+ },
+ "by_shape": {
+  "commercial": 6904,
+  "bank": 3889,
+  "insurer": 2691,
+  "bdc": 60
+ },
+ "filings_disqualified_operating_like_line": 513,
+ "prod_blank_reason_only": 10631,
+ "skipped_another_filing_prints_the_line": 106,
+ "skipped_hide_stratum": 3,
+ "prod_has_value_would_hide": 2913,
+ "skipped_operating_like_line_on_face": 639,
+ "prod_blank_reason_only_sha256": "ed4c3d5c7351d1a0d5bcac94629a2b703ee3032d9867c68487682a3c5dc34087",
+ "prod_has_value_would_hide_sha256": "bb7be5e4d07619a686b3ebb19f6935063f3b920693453f5791752ed0c421ccd5"
+}
