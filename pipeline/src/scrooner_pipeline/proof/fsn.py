@@ -50,6 +50,18 @@ MONTHLY_FROM = (
 )  # the SEC set is monthly from 2025-10: periods are named YYYYmMM
 
 
+def fsn_ddate(d: date) -> date:
+    """FSN/FSDS `ddate` is the period end rounded to the nearest month end
+    (SEC readme): 2025-09-27 -> 2025-09-30, 2024-01-02 -> 2023-12-31."""
+    import calendar
+
+    if d.day <= 15:
+        first = d.replace(day=1)
+        prev = first.fromordinal(first.toordinal() - 1)
+        return prev
+    return d.replace(day=calendar.monthrange(d.year, d.month)[1])
+
+
 def quarter_of(filed: date) -> str:
     """FSN period name for a filing date: 2014q1..2025q3, then 2025m10, 2025m11, ..."""
     if (filed.year, filed.month) >= MONTHLY_FROM:
@@ -152,11 +164,11 @@ def ensure_quarter(
             headers=headers,
             timeout=900,
         ) as resp:
-            if resp.status_code == 404:
+            if resp.status_code != 200:
+                # 404 (absent) or 400 (a period the SEC has not published yet): not in the bucket
                 raise FileNotFoundError(
-                    f"{BUCKET}/{period}/{name} is not in the bucket"
+                    f"{BUCKET}/{period}/{name}: HTTP {resp.status_code}"
                 )
-            resp.raise_for_status()
             with tmp.open("wb") as fh:
                 for chunk in resp.iter_bytes():
                     fh.write(chunk)
@@ -200,7 +212,10 @@ def load_quarter(
         s = out.get(r["adsh"])
         if s is None:
             continue
-        s.calc_children[r["ptag"]].append((r["ctag"], r.get("negative", "0") == "1"))
+        # cal.tsv `negative` is the arc weight sign: 1 or -1 (checked on INTC 2023q1, not a 0/1 flag)
+        s.calc_children[r["ptag"]].append(
+            (r["ctag"], r.get("negative", "1").strip() == "-1")
+        )
         s.calc_parents[r["ctag"]].add(r["ptag"])
     for r in _zst_rows(d / f"{period}_num.tsv.zst"):
         s = out.get(r["adsh"])

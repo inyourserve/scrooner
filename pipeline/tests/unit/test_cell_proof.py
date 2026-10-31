@@ -9,6 +9,7 @@ from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine
 
 ADSH = "0000320193-25-000073"
 FY_END = date(2025, 9, 27)
+DDATE = date(2025, 9, 30)  # FSN rounds period ends to the month end
 
 
 def structure():
@@ -68,16 +69,16 @@ def structure():
         ("LiabilitiesAndStockholdersEquity", 0): "359241000000",
     }
     for (tag, q), v in vals.items():
-        s.num[(tag, FY_END, q)].append(
-            NumValue(tag, "us-gaap/2025", FY_END, q, "USD", Decimal(v), -6)
+        s.num[(tag, DDATE, q)].append(
+            NumValue(tag, "us-gaap/2025", DDATE, q, "USD", Decimal(v), -6)
         )
-    s.num[("EarningsPerShareDiluted", FY_END, 4)].append(
+    s.num[("EarningsPerShareDiluted", DDATE, 4)].append(
         NumValue(
             "EarningsPerShareDiluted",
             "us-gaap/2025",
-            FY_END,
+            DDATE,
             4,
-            "USD/shares",
+            "USD",
             Decimal("7.46"),
             2,
         )
@@ -158,11 +159,11 @@ def test_missing_line_is_not_presented_and_wrong_duration_disagrees():
 @pytest.mark.unit
 def test_identity_failure_blocks_proof_even_when_values_match():
     s = structure()
-    s.num[("LiabilitiesAndStockholdersEquity", FY_END, 0)] = [
+    s.num[("LiabilitiesAndStockholdersEquity", DDATE, 0)] = [
         NumValue(
             "LiabilitiesAndStockholdersEquity",
             "us-gaap/2025",
-            FY_END,
+            DDATE,
             0,
             "USD",
             Decimal("300000000000"),
@@ -182,7 +183,7 @@ def test_per_share_uses_usd_per_share_and_dcml_precision():
         structure(),
         "2025q4",
     )
-    assert p.verdict == pv.PROVEN and p.checks["unit_scale"]["uom"] == "USD/shares"
+    assert p.verdict == pv.PROVEN and p.checks["unit_scale"]["uom"] == "USD"
     p2 = pv.prove_cell(shown("diluted_eps_resolved", "7.50"), structure(), "2025q4")
     assert p2.verdict == pv.DISAGREE  # 0.04 apart on a 2-decimal figure (slack 0.015)
 
@@ -206,23 +207,40 @@ def test_unchecked_cases():
 
 
 @pytest.mark.unit
-def test_total_concept_presented_only_as_a_component_disagrees():
+def test_total_under_a_non_candidate_total_is_component_only_and_equity_keeps_its_definition():
     s = structure()
-    # revenue appears only as a component of a custom total: a "Total revenues" custom line
-    s.pre = [p for p in s.pre if p.tag != "GrossProfit"]
-    s.calc_children["abc_TotalRevenues"] = [
-        ("RevenueFromContractWithCustomerExcludingAssessedTax", False),
-        ("Revenues", False),
-    ]
     s.calc_parents["RevenueFromContractWithCustomerExcludingAssessedTax"] = {
-        "abc_TotalRevenues",
-        "GrossProfit",
+        "abc_TotalRevenues"
     }
-    s.pre.append(
-        PreLine(2, 0, "IS", "Revenues", "us-gaap/2025", "Total net sales", False)
-    )
-    s.calc_parents["Revenues"] = {"abc_TotalRevenues"}
     line, why = pv.select_position(s, "revenue_sanity_resolved")
-    assert (
-        line is not None and line.tag == "Revenues"
-    )  # the candidate that is not a component of another candidate
+    assert line is None and why == "component_only"
+    s2 = structure()
+    s2.pre.append(
+        PreLine(
+            4,
+            6,
+            "BS",
+            "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+            "us-gaap/2025",
+            "Total equity",
+            False,
+        )
+    )
+    s2.calc_children[
+        "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+    ] = [("StockholdersEquity", False), ("MinorityInterest", False)]
+    s2.calc_parents["StockholdersEquity"] = {
+        "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"
+    }
+    line2, _ = pv.select_position(s2, "stockholders_equity_resolved")
+    assert line2 is not None and line2.tag == "StockholdersEquity"
+
+
+@pytest.mark.unit
+def test_fsn_ddate_rounds_to_the_nearest_month_end():
+    from scrooner_pipeline.proof.fsn import fsn_ddate
+
+    assert fsn_ddate(date(2025, 9, 27)) == date(2025, 9, 30)
+    assert fsn_ddate(date(2024, 1, 2)) == date(2023, 12, 31)
+    assert fsn_ddate(date(2024, 12, 31)) == date(2024, 12, 31)
+    assert fsn_ddate(date(2024, 6, 29)) == date(2024, 6, 30)

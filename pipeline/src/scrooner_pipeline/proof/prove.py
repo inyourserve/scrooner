@@ -32,7 +32,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
-from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine
+from scrooner_pipeline.proof.fsn import FilingStructure, NumValue, PreLine, fsn_ddate
 
 RULE_ID = "proof.cell_proof@1"
 DETECTOR_VERSION = "cell_proof_v1_2026-10-31"
@@ -162,6 +162,100 @@ EXPECTED: dict[str, tuple[str, tuple[str, ...], bool]] = {
     "share_buybacks_resolved": ("CF", ("PaymentsForRepurchaseOfCommonStock",), False),
 }
 PER_SHARE = {"diluted_eps_resolved"}
+
+# A printed total is itself a component of the next subtotal up (gross profit
+# sits under operating income, liabilities under liabilities-and-equity), so
+# "component" must mean: a calc child of something OTHER than the standard
+# parents of that line. Anything else (a custom total, another aggregation)
+# makes the chosen line a component of a line we do not recognise.
+STANDARD_PARENTS: dict[str, frozenset[str]] = {
+    "revenue_sanity_resolved": frozenset(
+        {
+            "Revenues",
+            "GrossProfit",
+            "OperatingIncomeLoss",
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
+            "CostsAndExpenses",
+        }
+    ),
+    "gross_profit_resolved": frozenset(
+        {
+            "OperatingIncomeLoss",
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
+        }
+    ),
+    "operating_expenses_resolved": frozenset(
+        {
+            "OperatingIncomeLoss",
+            "CostsAndExpenses",
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
+        }
+    ),
+    "operating_income_resolved": frozenset(
+        {
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+            "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
+            "NetIncomeLoss",
+            "ProfitLoss",
+        }
+    ),
+    "income_before_tax_resolved": frozenset(
+        {
+            "NetIncomeLoss",
+            "ProfitLoss",
+            "IncomeLossFromContinuingOperations",
+            "IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest",
+        }
+    ),
+    "net_income_resolved": frozenset(
+        {
+            "ProfitLoss",
+            "NetIncomeLossAvailableToCommonStockholdersBasic",
+            "ComprehensiveIncomeNetOfTax",
+            "ComprehensiveIncomeNetOfTaxIncludingPortionAttributableToNoncontrollingInterest",
+            "NetIncomeLoss",
+        }
+    ),
+    "current_assets_resolved": frozenset({"Assets"}),
+    "total_assets_resolved": frozenset(),
+    "current_liabilities_resolved": frozenset(
+        {"Liabilities", "LiabilitiesAndStockholdersEquity"}
+    ),
+    "total_liabilities_resolved": frozenset({"LiabilitiesAndStockholdersEquity"}),
+    "stockholders_equity_resolved": frozenset(
+        {
+            "LiabilitiesAndStockholdersEquity",
+            "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+        }
+    ),
+    "cfo_resolved": frozenset(
+        {
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseExcludingExchangeRateEffect",
+            "CashAndCashEquivalentsPeriodIncreaseDecrease",
+            "NetCashProvidedByUsedInOperatingActivities",
+        }
+    ),
+    "cash_flow_investing_resolved": frozenset(
+        {
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseExcludingExchangeRateEffect",
+            "CashAndCashEquivalentsPeriodIncreaseDecrease",
+            "NetCashProvidedByUsedInInvestingActivities",
+        }
+    ),
+    "cash_flow_financing_resolved": frozenset(
+        {
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+            "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseExcludingExchangeRateEffect",
+            "CashAndCashEquivalentsPeriodIncreaseDecrease",
+            "NetCashProvidedByUsedInFinancingActivities",
+        }
+    ),
+}
 # total_debt_resolved is a composition (several lines), proven by the slot-record
 # producer, not by a single printed line: UNCHECKED here until that producer lands.
 
@@ -248,31 +342,25 @@ def select_position(
     structure: FilingStructure, data_point: str
 ) -> tuple[PreLine | None, str | None]:
     """The line the structure selects for the data point on its expected
-    statement, and why no line when None: 'not_presented' or 'component_only'."""
+    statement: the highest-priority candidate tag that is presented. For a
+    total-type data point the line must be a printed total or subtotal, i.e.
+    not a calculation child of a line OUTSIDE the candidate set (a candidate
+    may be a child of another candidate: StockholdersEquity sits under the
+    total including NCI). Returns (None, 'not_presented' | 'component_only')."""
     stmt, tags, must_be_total = EXPECTED[data_point]
     lines = structure.lines_on(stmt)
     candidates = [p for p in lines if p.tag in tags and not p.custom]
     if not candidates:
         return None, "not_presented"
     candidate_tags = {p.tag for p in candidates}
-
-    def is_component_of_candidate(p: PreLine) -> bool:
-        return bool(structure.calc_parents.get(p.tag, set()) & candidate_tags)
-
-    totals = [
-        p
-        for p in candidates
-        if structure.calc_children.get(p.tag) and not is_component_of_candidate(p)
-    ]
-    pool = (
-        totals
-        or [p for p in candidates if not is_component_of_candidate(p)]
-        or candidates
-    )
-    if must_be_total and all(is_component_of_candidate(p) for p in candidates):
-        return None, "component_only"
-    pool.sort(key=lambda p: (tags.index(p.tag), p.report, p.line))
-    return pool[0], None
+    candidates.sort(key=lambda p: (tags.index(p.tag), p.report, p.line))
+    chosen = candidates[0]
+    if must_be_total:
+        allowed = STANDARD_PARENTS.get(data_point, frozenset()) | candidate_tags
+        unexpected_parents = structure.calc_parents.get(chosen.tag, set()) - allowed
+        if unexpected_parents:
+            return None, "component_only"
+    return chosen, None
 
 
 def _check_identity_tie(
@@ -358,13 +446,14 @@ def prove_cell(
     if qtrs is None:
         p.reason_text = f"grain {shown.period_grain} has no FSN duration"
         return p
-    nv = structure.value(line.tag, shown.period_end, qtrs, "USD")
+    ddate = fsn_ddate(shown.period_end)
+    nv = structure.value(line.tag, ddate, qtrs, "USD")
     if nv is None:
         # the line exists but not for this column: a different duration or date
         alt = [
             v
             for (t, d, q), vs in structure.num.items()
-            if t == line.tag and d == shown.period_end
+            if t == line.tag and d == ddate
             for v in vs
         ]
         if alt:
@@ -382,9 +471,9 @@ def prove_cell(
     p.position_value = nv.value
     tol = slack(nv.dcml, shown.presentation_scale)
     p.checks["period_length"] = {"status": "pass", "qtrs": qtrs}
-    want_uom = "USD/" if shown.data_point_name in PER_SHARE else "USD"
-    uom_ok = nv.uom.upper().startswith(want_uom) and (
-        want_uom != "USD" or "/" not in nv.uom
+    # FSN num carries 'USD' for per-share values too (INTC EPS: uom USD, dcml 2)
+    uom_ok = nv.uom.upper().startswith("USD") and (
+        shown.data_point_name in PER_SHARE or "/" not in nv.uom
     )
     mag_ok = (
         shown.value == 0
@@ -397,7 +486,7 @@ def prove_cell(
         "dcml": nv.dcml,
     }
     if stmt == "BS":
-        p.checks["identity_tie"] = _check_identity_tie(structure, shown.period_end, tol)
+        p.checks["identity_tie"] = _check_identity_tie(structure, ddate, tol)
     else:
         p.checks["identity_tie"] = {"status": "n/a"}
     p.checks["components_sum"] = _check_components_sum(structure, line, nv, tol)
