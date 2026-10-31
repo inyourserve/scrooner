@@ -99,6 +99,13 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
 
 - **yfinance sector/industry: promoted from dev-tool-only to a stored, production-facing reference field (decided 2026-09-06, explicit founder direction, supersedes `doc/planning/y-finance.md`'s original recommendation).** The original doc recommended yfinance for dev-time prototyping and offline cross-checks only, never stored or shown to a user, citing Yahoo's own personal-use-only terms with no commercial tier to license around (unlike FMP). That recommendation is superseded for this one use: `core.company.y_sector`/`y_industry` (migration `0044`, `company_master/yfinance_industry.py`) are now real, persisted columns, backfilled for the full active population and usable in production features (starting with peer comparison) — kept strictly separate from `core.company.sector`/`sector_reason` (the SIC-derived taxonomy), never merged. The founder made this call knowingly, after the tradeoff was surfaced directly (Yahoo ToS risk vs. peer-comparison quality) — this is a deliberate risk acceptance, not an oversight. Revisit if Yahoo's terms enforcement changes, or before any B2B/API redistribution of this field.
 
+- **Founder data decisions of 2026-11-04** (relayed to the release manager by scrooner-0f, the chief of staff, as the founder's decisions; the release manager did not hear them directly). They bind the top-1000 data programme:
+  1. **SEC request budget:** no cap. The 4 requests per second limit and the sec.gov-only rule stay.
+  2. **Q4 dividends per share** may be derived as the filed full-year value minus the filed nine-month value on the same share basis. Never-derive still applies to EPS.
+  3. **Capex** includes leased fleets, capitalized software, the discontinued-operations block, turnarounds, REIT tenant improvements and construction in progress. It excludes oil and gas property and acreage acquisitions.
+  4. **Buybacks** are cash repurchases of the company's own common stock. They exclude tax-withholding shares, excise tax, employee-plan purchases, option-exercise items, subsidiary buybacks and share swaps.
+  5. **Total debt** includes finance leases disclosed in the notes.
+
 ## Rejected or deferred directions
 
 | **Item**                           | **Disposition**   | **Revisit trigger**                                        |
