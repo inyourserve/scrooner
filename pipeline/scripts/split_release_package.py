@@ -1,21 +1,26 @@
 """Package split re-base release 1 (split.event_basis@1 with pershare.never_derive@1)
 from a cohort dry-run cells file (split_rebase_cohort_dryrun.py). No database:
-the dry run already recorded production's value (old_value) beside the pass's
-value (new_value) for every cell.
+the dry run recorded production's value (old_value) beside the pass's value
+(new_value) for every cell; the read-only inputs below come from
+split_release_derived_keys.py, which calls the write's own functions.
 
 The package is every cell the phase-1 write would CHANGE (share_basis.
 cells_to_write / cells_to_remove): a shown value that differs from production
 or fills a blank, and a hidden cell whose production row would be removed.
-`other_changed` cells are not written in phase 1 and stay out. Each row
-carries the release marker column `release`. scripts/split_release_apply.py
-replays the pass with this package; a company that no longer matches its
-packaged cells is refused (share_basis.package_mismatches). Rollback:
-canonical_archive.restore_run(<run_id>) restores every row the write archived.
-Derived-only removals follow share_basis.DERIVED_REMOVAL_CONCEPTS: EPS
-derived cells are Family C's and never packaged here; a dividends-per-share or
-share-count no_filed_source cell is packaged only when its production value
-rests on derived facts alone (--derived-keys, from split_release_derived_keys.py).
-usage: split_release_package.py <dryrun_cells.csv.gz> [...] --derived-keys <keys.csv> -o <out_dir>
+`other_changed` cells are not written in phase 1 and stay out. A
+no_filed_source cell production still holds goes to exactly one bucket:
+  held_basis_stale  its value sits on an old share basis (--stale-keys):
+                    removed (share_basis.load_held_basis_stale)
+  derived share count (--derived-keys): removed
+  derived DPS       kept (founder 2026-11-04: FY - 9M on one basis is allowed);
+                    one whose inputs are not on one basis is stale (above)
+  derived EPS       Family C's (retire.derived_per_share_cells@1)
+  anything else     production has a FILED source: held, kept
+Each row carries the release marker column `release`.
+scripts/split_release_apply.py replays the pass with this package; a company
+that no longer matches its packaged cells is refused. Rollback:
+canonical_archive.restore_run(<run_id>).
+usage: split_release_package.py <dryrun_cells.csv.gz> --derived-keys <d.csv> --stale-keys <s.csv> -o <out_dir>
 """
 
 from __future__ import annotations
@@ -40,36 +45,64 @@ WRITTEN_CLASSES = {
 }
 
 
-def main(argv: list[str]) -> int:
-    out = Path(argv[argv.index("-o") + 1])
-    keys_path = argv[argv.index("--derived-keys") + 1]
-    sources = argv[: min(argv.index("-o"), argv.index("--derived-keys"))]
-    with open(keys_path) as fh:
-        derived = {
+def _keys(path: str) -> set[tuple[int, str, int]]:
+    with open(path) as fh:
+        return {
             (int(r["company_id"]), r["concept"], int(r["period_id"]))
             for r in csv.DictReader(fh)
         }
-    left_out: Counter = Counter()
+
+
+def _bucket(r: dict, derived: set, stale: set) -> str:
+    """remove | stratum | family_c | held for a no_filed_source cell."""
+    key = (int(r["company_id"]), r["concept"], int(r["period_id"]))
+    if key in stale:
+        return "remove"
+    if key not in derived:
+        return "held"
+    if r["concept"] == "dividends_per_share_resolved":
+        return "kept"
+    if r["concept"] in sb.DERIVED_REMOVAL_CONCEPTS:
+        return "remove"
+    return "family_c"
+
+
+def main(argv: list[str]) -> int:
+    out = Path(argv[argv.index("-o") + 1])
+    derived = _keys(argv[argv.index("--derived-keys") + 1])
+    stale = _keys(argv[argv.index("--stale-keys") + 1])
+    sources = argv[
+        : min(argv.index(a) for a in ("-o", "--derived-keys", "--stale-keys"))
+    ]
     out.mkdir(parents=True, exist_ok=True)
-    rows = []
+    rows: list[dict] = []
+    left_out: Counter = Counter()
     for src in sources:
         with gzip.open(src, "rt") as fh:
             for r in csv.DictReader(fh):
                 shown = r["status"] == "shown"
+                status = r["status"]
                 if shown and r["class"] in WRITTEN_CLASSES:
                     op = "write"
                 elif not shown and r["old_value"] not in ("", None):
                     op = "remove"
-                    if r["status"] == sb.HIDE_NO_FILED_SOURCE:
-                        key = (int(r["company_id"]), r["concept"], int(r["period_id"]))
-                        if r["concept"] not in sb.DERIVED_REMOVAL_CONCEPTS:
+                    if status == sb.HIDE_NO_FILED_SOURCE:
+                        b = _bucket(r, derived, stale)
+                        if b == "kept":
+                            left_out["derived_dps_kept_founder_ruling"] += 1
+                            continue
+                        if b == "family_c":
                             left_out["derived_eps_owned_by_family_c"] += 1
                             continue
-                        if key not in derived:
-                            left_out[
-                                "no_filed_source_but_production_has_a_filed_source"
-                            ] += 1
+                        if b == "held":
+                            left_out["held_production_has_a_filed_source"] += 1
                             continue
+                        if (
+                            int(r["company_id"]),
+                            r["concept"],
+                            int(r["period_id"]),
+                        ) in stale:
+                            status = "held_basis_stale"
                 else:
                     continue
                 rows.append(
@@ -84,7 +117,9 @@ def main(argv: list[str]) -> int:
                         "end": r["end"],
                         "old_value": r["old_value"] or None,
                         "new_value": r["new_value"] or None,
+                        # the pass's own status: the stale guard compares it on replay
                         "status": r["status"],
+                        "reason": status,
                         "class": r["class"],
                         "chosen_accession": r.get("chosen_accession") or None,
                         "note": r.get("note") or "",
@@ -94,7 +129,7 @@ def main(argv: list[str]) -> int:
     body = "".join(json.dumps(r, sort_keys=True) + "\n" for r in rows)
     with gzip.open(
         out / f"{RELEASE}_cells.jsonl.gz", "wt"
-    ) as fo:  # digest is over the uncompressed rows
+    ) as fo:  # digest over the rows
         fo.write(body)
     digest = hashlib.sha256(body.encode()).hexdigest()
     (out / f"{RELEASE}_cells.sha256").write_text(f"{digest}  {RELEASE}_cells.jsonl\n")
@@ -110,7 +145,7 @@ def main(argv: list[str]) -> int:
         "by_op": dict(Counter(r["op"] for r in rows)),
         "by_class": dict(
             Counter(
-                r["class"] if r["op"] == "write" else "remove:" + r["status"]
+                r["class"] if r["op"] == "write" else "remove:" + r["reason"]
                 for r in rows
             ).most_common()
         ),
