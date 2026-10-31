@@ -21,9 +21,72 @@ from pathlib import Path
 import psycopg
 
 
+def check_reasons(d, pkg):
+    """blank-reason package (OI package 2): digests, reason-only cells still blank,
+    would-hide rows unchanged since the before-image."""
+    refused = []
+    rows = {}
+    for st, meta in pkg["strata"].items():
+        p = d / meta["file"]
+        if hashlib.sha256(p.read_bytes()).hexdigest() != meta["sha256"]:
+            print(f"REFUSED: {meta['file']} digest moved")
+            return 1
+        rows[st] = [json.loads(line) for line in open(p)]
+    before = {b["canonical_fact_id"]: b for b in map(json.loads, open(d / pkg["before_image"]["file"]))}
+    conn = psycopg.connect(os.environ["DATABASE_URL"], connect_timeout=20)
+    conn.read_only = True
+    cur = conn.cursor()
+    cur.execute("set statement_timeout = '60s'")
+    ids = sorted(before)
+    live = {}
+    for i in range(0, len(ids), 500):
+        cur.execute("select id, value::text, source_fact_ids from analytics.canonical_fact where id = any(%s)", (ids[i:i + 500],))
+        live.update({r[0]: (r[1], r[2]) for r in cur.fetchall()})
+    for st, rs in rows.items():
+        if st == "prod_blank_reason_only":
+            continue
+        for r in rs:
+            b, lv = before.get(r["prod_cf_id"]), live.get(r["prod_cf_id"])
+            if b is None or lv is None:
+                refused.append((r, "production row gone or not in the before-image"))
+            elif lv[0] != b["value_before"] or list(lv[1] or []) != list(b["source_fact_ids_before"] or []):
+                refused.append((r, f"production row changed: {lv[0]} vs {b['value_before']}"))
+    concept = pkg["family"].split(": ", 1)[1]
+    by_cik = {}
+    for r in rows.get("prod_blank_reason_only", []):
+        by_cik.setdefault(r["cik"], []).append(r)
+    for cik, rs in sorted(by_cik.items()):
+        cur.execute(
+            """
+            select p.start_date::text, p.end_date::text, cf.value::text from analytics.canonical_fact cf
+            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
+            join core.company co on co.id = cf.company_id
+            join core.period p on p.id = cf.period_id
+            where cc.name = %s and co.cik = %s and p.period_type = 'duration'
+            """,
+            (concept, cik),
+        )
+        have = {(s0, e0): v for s0, e0, v in cur.fetchall()}
+        for r in rs:
+            if (r["period_start"], r["period_end"]) in have:
+                refused.append((r, f"reason-only cell now has a production value {have[(r['period_start'], r['period_end'])]}"))
+    conn.close()
+    n = sum(len(v) for v in rows.values())
+    print(f"{pkg['rule_id']}: cells {n} ({', '.join(f'{k} {len(v)}' for k, v in rows.items())})")
+    if refused:
+        print(f"REFUSED: {len(refused)} stale cells at {len({r['cik'] for r, _ in refused})} companies; re-cut from a fresh dry run")
+        for r, why in refused[:20]:
+            print(f"  {r['cik']} {r['period_start']}..{r['period_end']}: {why}")
+        return 1
+    print("OK: no stale cell; release may proceed to the flag-gated write")
+    return 0
+
+
 def main(pkg_dir):
     d = Path(pkg_dir)
     pkg = json.load(open(d / "PACKAGE.json"))
+    if pkg.get("kind") == "blank_reasons":
+        return check_reasons(d, pkg)
     r1 = pkg["release1"]
     concept = pkg["family"].split(": ", 1)[1]
     refused = []

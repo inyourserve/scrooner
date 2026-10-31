@@ -25,5 +25,6 @@
  "q4_prod_has_value_would_hide": 400,
  "prod_blank_reason_only_sha256": "ed4c3d5c7351d1a0d5bcac94629a2b703ee3032d9867c68487682a3c5dc34087",
  "prod_has_value_would_hide_sha256": "bb7be5e4d07619a686b3ebb19f6935063f3b920693453f5791752ed0c421ccd5",
- "q4_prod_has_value_would_hide_sha256": "e8eac38ca985ffa1896e0ffff64819360b50b8d1e734c0fefe7dddadb8775a48"
+ "q4_prod_has_value_would_hide_sha256": "e8eac38ca985ffa1896e0ffff64819360b50b8d1e734c0fefe7dddadb8775a48",
+ "recut_2026_10_31": "2 reason-only cells of CIK 0000015615 (2025-01-01..09-30, 2025-07-01..09-30) removed: a later filing 0000015615-26-000125 (after the FSN months extracted) prints OperatingIncomeLoss for them; refused by is_release_check"
 }
