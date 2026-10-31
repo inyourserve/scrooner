@@ -8,21 +8,30 @@
  "verifier": "VERIFY-DA-CAPEX-V10-2026-11-01.md (origin/verify/da-capex-v10-2026-11-01 02c61c6): capex YES, 15 of 15 right; production wrong or only rounded in every drawn cell",
  "release1": {
   "cells_file": "capex_release1_cells.jsonl",
-  "sha256": "7430a3f827a06513f242f85687291eb9ed95e87f0941b0fa80779199d8ad14cb",
-  "cells": 2116,
-  "companies": 346,
+  "sha256": "1ddcf89798627799c02aac5912b5d9e9fa657c4746fb025d6ad58bd5ce4f20da",
+  "cells": 2110,
+  "companies": 345,
   "by_difference_class": {
    "rounding_only": 684,
    "material": 1432
   },
-  "before_image": "capex_release1_before_image.jsonl (2116 canonical_fact rows)",
+  "before_image": "capex_release1_before_image.jsonl (2110 canonical_fact rows)",
   "cells_without_before_image_row": 0,
   "excluded_ambiguous_period_match": "capex_release1_excluded_ambiguous.json (8 cells match two production periods; not written)",
   "rollback": "capex_release1_rollback.sql (generated, run in one transaction by the Release Manager only)",
-  "keep_list": "capex_release_keep_list.json (0 cells the Verifier found production right; untouched)",
+  "keep_list": "capex_release_keep_list.json (6 cells where production equals the filer's own total; untouched)",
   "touched_ciks": "release1_touched_ciks.txt",
   "cells_with_a_skipped_proceeds_or_sale_line": 1607,
-  "changed_vs_previous": "capex_release1_changed_vs_924c056.jsonl: {\"removed\": 54, \"added\": 27, \"value_changed\": 7}"
+  "changed_vs_previous": "capex_release1_changed_vs_924c056.jsonl: {\"removed\": 54, \"added\": 27, \"value_changed\": 7}",
+  "removals": [
+   {
+    "label": "supplemental_total",
+    "removed": 6,
+    "to_keep_list": 6,
+    "to_hold": 0,
+    "rule": "a filer-printed capex total below the investing section differs from the release value (filer's total is the anchor)"
+   }
+  ]
  },
  "release2": {
   "cells_file": "capex_release2_fills.jsonl",
