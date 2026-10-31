@@ -310,3 +310,67 @@ def test_components_sum_is_checked_per_calc_group_not_across_groups():
         ).verdict
         == pv.PROVEN
     )
+
+
+def _q3_structure():
+    s = FilingStructure(
+        "0000320193-25-000073",
+        "0000320193",
+        "10-Q",
+        date(2025, 8, 1),
+        date(2025, 6, 28),
+    )
+    s.pre.append(
+        PreLine(2, 6, "IS", "NetIncomeLoss", "us-gaap/2025", "Net income", False)
+    )
+    d = date(2025, 6, 30)  # FSN month end of 2025-06-28
+    s.num[("NetIncomeLoss", d, 3)].append(
+        NumValue(
+            "NetIncomeLoss", "us-gaap/2025", d, 3, "USD", Decimal("84000000000"), -6
+        )
+    )
+    return s
+
+
+@pytest.mark.unit
+def test_derived_q4_is_proven_through_the_two_year_to_date_lines():
+    fy = structure()  # NetIncomeLoss FY = 112,010M at 2025-09-30
+    q4 = pv.Shown(
+        3,
+        "net_income_resolved",
+        "Q",
+        date(2025, 6, 29),
+        FY_END,
+        Decimal("28010000000"),
+        ("NetIncomeLoss",),
+        ADSH,
+        (9,),
+        True,
+        6,
+    )
+    p = pv.prove_cell(q4, fy, "2025q4", _q3_structure())
+    assert (
+        p.verdict == pv.PROVEN
+        and p.position_source == "derived_inputs"
+        and p.position_value == Decimal("28010000000")
+    )
+    wrong = pv.Shown(
+        3,
+        "net_income_resolved",
+        "Q",
+        date(2025, 6, 29),
+        FY_END,
+        Decimal("26000000000"),
+        ("NetIncomeLoss",),
+        ADSH,
+        (9,),
+        True,
+        6,
+    )
+    p2 = pv.prove_cell(wrong, fy, "2025q4", _q3_structure())
+    assert (
+        p2.verdict == pv.DISAGREE
+        and p2.reason_code == "derived_quarter_differs_from_inputs"
+    )
+    p3 = pv.prove_cell(q4, fy, "2025q4", None)
+    assert p3.verdict == pv.UNCHECKED and "prior filing not loaded" in p3.reason_text

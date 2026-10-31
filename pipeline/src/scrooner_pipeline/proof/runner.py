@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter, defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -118,13 +118,49 @@ def prove_company(
     for a in accs:
         if a in fdates:
             by_quarter[quarter_of(fdates[a])].add(a)
+    # derived quarters need the PRIOR quarter's filing too (its year-to-date line)
+    prior_for: dict[tuple[str, date], str] = {}
+    if any(s.is_derived and s.period_grain == "Q" for s in shown):
+        with conn.cursor() as cur:
+            cur.execute(
+                "select accession_number, period_of_report, filing_date from core.filing "
+                "where company_id = %s and form in ('10-K', '10-Q', '10-K/A', '10-Q/A') and period_of_report is not null",
+                (company_id,),
+            )
+            periodic = cur.fetchall()
+        for s in shown:
+            if not (s.is_derived and s.period_grain == "Q"):
+                continue
+            prior_end = s.period_start - timedelta(days=1)
+            best = None
+            for acc, por, fdate in periodic:
+                if acc == s.accession or abs((por - prior_end).days) > 10:
+                    continue
+                if (
+                    best is None
+                    or (abs((por - prior_end).days), -fdate.toordinal()) < best[0]
+                ):
+                    best = (
+                        (abs((por - prior_end).days), -fdate.toordinal()),
+                        acc,
+                        fdate,
+                    )
+            if best is not None:
+                prior_for[(s.accession, s.period_start)] = best[1]
+                fdates[best[1]] = best[2]
+                by_quarter[quarter_of(best[2])].add(best[1])
     structures = cache.get_many(by_quarter)
     proofs: list[Proof] = []
     for acc, cells in groups.items():
         structure = structures.get(acc) if acc else None
         q = quarter_of(fdates[acc]) if acc in fdates else None
         for s in cells:
-            p = prove_cell(s, structure, q)
+            prior = (
+                structures.get(prior_for.get((acc, s.period_start), ""))
+                if s.is_derived
+                else None
+            )
+            p = prove_cell(s, structure, q, prior)
             if structure is None and acc and q in cache.missing_quarters:
                 p.reason_text = f"FSN quarter {q} is not in the fsn-notes bucket yet"
             proofs.append(p)

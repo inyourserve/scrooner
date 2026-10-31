@@ -28,7 +28,7 @@ the components sum and the printed-page sample, never two numeric feeds.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
 
@@ -433,15 +433,17 @@ def _check_components_sum(
 
 
 def prove_cell(
-    shown: Shown, structure: FilingStructure | None, fsn_set: str | None
+    shown: Shown,
+    structure: FilingStructure | None,
+    fsn_set: str | None,
+    prior_structure: FilingStructure | None = None,
 ) -> Proof:
     p = Proof(shown=shown, verdict=UNCHECKED, fsn_set=fsn_set)
     if shown.data_point_name not in EXPECTED:
         p.reason_text = "no single printed line for this data point (composition); proven by its producer"
         return p
     if shown.is_derived:
-        p.reason_text = "derived cell (Q4 / TTM): no printed line; proven through its inputs (not in v1)"
-        return p
+        return prove_derived(shown, structure, prior_structure, fsn_set)
     if structure is None:
         p.reason_text = "no FSN structure for the shown accession (quarter not in bucket, or filing absent from the set)"
         return p
@@ -527,4 +529,119 @@ def prove_cell(
     else:
         p.reason_code = "check_failed:" + ",".join(failed)
         p.reason_text = f"value matches the printed line but {', '.join(failed)} failed"
+    return p
+
+
+# ---- derived cells (Q4 and interim quarters built by subtraction) --------------
+
+
+def prove_derived(
+    shown: Shown,
+    structure: FilingStructure | None,
+    prior_structure: FilingStructure | None,
+    fsn_set: str | None,
+) -> Proof:
+    """A derived quarter has no printed line. It is PROVEN when its two
+    inputs are printed lines of the filings they come from and the arithmetic
+    reproduces the shown value at the filer's precision:
+        Q_n = YTD_n (the derived fact's own filing: the 10-K for Q4, the 10-Q
+              for an interim quarter) - YTD_(n-1) (the prior quarter's filing;
+              Q1 counts as YTD_1)
+    where each YTD is the structure-selected line's value at that period end
+    with the matching duration (qtrs). A missing prior filing or YTD leaves
+    the cell UNCHECKED with that reason; a mismatch is DISAGREE (the
+    same-vintage hold's territory: a recast FY against an original 9M)."""
+    p = Proof(shown=shown, verdict=UNCHECKED, fsn_set=fsn_set)
+    if shown.data_point_name not in EXPECTED:
+        p.reason_text = "no single printed line for this data point (composition); proven by its producer"
+        return p
+    if shown.period_grain != "Q":
+        p.reason_text = f"derived {shown.period_grain} cell: only derived quarters are proven through inputs"
+        return p
+    if structure is None:
+        p.reason_text = "no FSN structure for the derived fact's filing (quarter not in bucket, or filing absent)"
+        return p
+    stmt, _tags, _must = EXPECTED[shown.data_point_name]
+    line, why = select_position(structure, shown.data_point_name)
+    p.fsn_stmt = stmt
+    p.position_accession = structure.adsh
+    if line is None:
+        if why == "not_presented":
+            p.verdict, p.reason_code = NOT_PRESENTED, "line_not_presented_on_statement"
+            p.reason_text = (
+                f"the filing presents no {shown.data_point_name} line on its {stmt}"
+            )
+        else:
+            p.verdict, p.reason_code = DISAGREE, "only_a_component_line_presented"
+            p.reason_text = "the standard line sits under a filer-extension total"
+        return p
+    p.position_tag, p.fsn_line, p.fsn_label = line.tag, line.line, line.label
+    p.position_source = "derived_inputs"
+    p.position_is_expected_line = True
+    end_dd = fsn_ddate(shown.period_end)
+    ytd_n = None
+    for n in (4, 3, 2):
+        ytd_n = structure.value(line.tag, end_dd, n, "USD")
+        if ytd_n is not None:
+            break
+    if ytd_n is None:
+        p.verdict, p.reason_code = NOT_PRESENTED, "no_year_to_date_value_in_own_filing"
+        p.reason_text = f"{line.tag} has no year-to-date value ending {shown.period_end} in {structure.adsh}"
+        return p
+    prior_end = shown.period_start - timedelta(days=1)
+    prior_dd = fsn_ddate(prior_end)
+    sources = [s for s in (prior_structure, structure) if s is not None]
+    ytd_prev = None
+    for s in sources:
+        ytd_prev = s.value(line.tag, prior_dd, ytd_n.qtrs - 1, "USD")
+        if ytd_prev is not None:
+            prev_adsh = s.adsh
+            break
+    if ytd_prev is None:
+        p.reason_text = (
+            f"no {ytd_n.qtrs - 1}-quarter year-to-date value of {line.tag} ending {prior_end} "
+            f"in the prior quarter's filing{'' if prior_structure else ' (prior filing not loaded)'}"
+        )
+        return p
+    q = ytd_n.value - ytd_prev.value
+    tol = slack(ytd_n.dcml, shown.presentation_scale)
+    p.position_value = q
+    p.checks["period_length"] = {
+        "status": "pass",
+        "ytd_qtrs": ytd_n.qtrs,
+        "prior_qtrs": ytd_prev.qtrs,
+    }
+    uom_ok = ytd_n.uom.upper().startswith("USD") and ytd_prev.uom.upper().startswith(
+        "USD"
+    )
+    mag_ok = (
+        shown.value == 0
+        or q == 0
+        or (Decimal("0.5") <= abs(shown.value / q) <= Decimal("2"))
+    )
+    p.checks["unit_scale"] = {
+        "status": "pass" if (uom_ok and mag_ok) else "fail",
+        "uom": ytd_n.uom,
+        "dcml": ytd_n.dcml,
+    }
+    p.checks["identity_tie"] = {"status": "n/a"}
+    p.checks["components_sum"] = {
+        "status": "n/a",
+        "why": "derived by subtraction of two printed year-to-date lines",
+        "inputs": {
+            "ytd": str(ytd_n.value),
+            "ytd_accession": structure.adsh,
+            "prior": str(ytd_prev.value),
+            "prior_accession": prev_adsh,
+        },
+    }
+    if same(shown.value, q, tol) and p.checks["unit_scale"]["status"] == "pass":
+        p.verdict = PROVEN
+        return p
+    p.verdict = DISAGREE
+    p.reason_code = "derived_quarter_differs_from_inputs"
+    p.reason_text = (
+        f"production shows {shown.value}; the printed {line.tag} year-to-date {ytd_n.value} ({structure.adsh}) "
+        f"minus the prior year-to-date {ytd_prev.value} ({prev_adsh}) gives {q} (slack {tol})"
+    )
     return p
