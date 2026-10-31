@@ -19,7 +19,11 @@ from pathlib import Path
 
 csv.field_size_limit(1 << 24)
 S, IN, OUT = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
-NET = re.compile(r"\bnet\b|income", re.I)
+NET = re.compile(
+    r"net\b|income", re.I
+)  # "INTEREST EXPENSENET" (no word break) is net too
+# a released no_overlap cell needs the plain line itself: (total) interest expense, nothing broader
+PLAIN = re.compile(r"^\s*(total\s+)?interest\s+expenses?\s*$", re.I)
 GROSS_OK = re.compile(
     r"net of (the )?(amounts?|portion|interest) ?(capitali[sz]ed|capitali)|net of (amounts? )?capitali[sz]ed",
     re.I,
@@ -41,7 +45,9 @@ def rows(path: Path):
 
 
 cells = list(csv.DictReader(open(IN)))
-fills = [c for c in cells if c["outcome"] == "fill"]
+# no_overlap holds are label-checked too: a gross interest-expense line on the filer's own income statement IS the
+# fact, so the face proves the perimeter where no shared InterestExpense period can (Dhairya 2026-11-02, verified rule)
+fills = [c for c in cells if c["outcome"] in ("fill", "hold_no_overlap")]
 need = defaultdict(set)  # period -> accessions
 acc_filed = {}
 conn_rows = None
@@ -100,6 +106,11 @@ for x in fills:
 for x in cells:
     x.setdefault("label_check", "")
     x.setdefault("label", "")
+    x.setdefault("released_from", "")
+    if x["outcome"] == "hold_no_overlap":
+        if x["label_check"] == "gross_label" and PLAIN.match(x["label"]):
+            x["outcome"], x["released_from"] = "fill", "hold_no_overlap"
+        continue
     if x["outcome"] == "fill" and x["label_check"] == "net_label":
         x["outcome"] = "hold_net_label"
     elif x["outcome"] == "fill" and x["label_check"] in (
