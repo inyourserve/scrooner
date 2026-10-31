@@ -134,8 +134,14 @@ def test_hung_shard_is_killed_at_the_stage_cap_and_later_stages_still_run(tmp_pa
         'run_sharded prog hang || echo "STAGE-FAILED hang"\n'
         'run_sharded prog after || echo "STAGE-FAILED after"\n'
     )
-    env = {**os.environ, "PATH": f"{tmp_path}:{os.environ['PATH']}", "FAKE_LOG": str(log)}
-    out = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=40)
+    env = {
+        **os.environ,
+        "PATH": f"{tmp_path}:{os.environ['PATH']}",
+        "FAKE_LOG": str(log),
+    }
+    out = subprocess.run(
+        ["bash", "-c", script], capture_output=True, text=True, env=env, timeout=40
+    )
     assert "STAGE-FAILED hang" in out.stdout
     assert "STAGE-FAILED after" not in out.stdout
     assert "exceeded 3s" in out.stderr
@@ -178,38 +184,61 @@ def _run_script(tmp_path, cwd, script_path, **env_extra):
         **env_extra,
     }
     out = subprocess.run(
-        ["bash", script_path], cwd=cwd, capture_output=True, text=True, env=env, timeout=120
+        ["bash", script_path],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=120,
     )
     return out, log.read_text().splitlines()
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("cwd,path", [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)])
-def test_full_run_without_budget_pressure_runs_all_23_stages_and_exits_zero(tmp_path, cwd, path):
+@pytest.mark.parametrize(
+    "cwd,path",
+    [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)],
+)
+def test_full_run_without_budget_pressure_runs_all_24_stages_and_exits_zero(
+    tmp_path, cwd, path
+):
     out, calls = _run_script(tmp_path, cwd, path)
     assert out.returncode == 0, (out.stdout, out.stderr)
-    stages_run = [c.split()[2] for c in calls if c.startswith("RUN scrooner-") and "update-status" not in c]
-    assert len(stages_run) == 23
+    stages_run = [
+        c.split()[2]
+        for c in calls
+        if c.startswith("RUN scrooner-") and "update-status" not in c
+    ]
+    assert len(stages_run) == 24  # map:split-rebase added 2026-10-24 (SB-8)
     assert stages_run[-1] == "build-tag-library"
-    assert out.stdout.count("took ") == 23  # one "took Ns" line per stage
+    assert out.stdout.count("took ") == 24  # one "took Ns" line per stage
     assert "budget exhausted" not in out.stderr
 
 
 @pytest.mark.unit
-@pytest.mark.parametrize("cwd,path", [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)])
-def test_budget_exhaustion_skips_remaining_stages_names_them_once_and_exits_nonzero(tmp_path, cwd, path):
+@pytest.mark.parametrize(
+    "cwd,path",
+    [(REPO_ROOT, "pipeline/" + SCRIPT_REL), (REPO_ROOT / "pipeline", SCRIPT_REL)],
+)
+def test_budget_exhaustion_skips_remaining_stages_names_them_once_and_exits_nonzero(
+    tmp_path, cwd, path
+):
     out, calls = _run_script(
         tmp_path, cwd, path, REPROCESS_BUDGET_SECS="2", FAKE_STAGE_SLEEP="1.2"
     )
     assert out.returncode != 0
     assert out.stderr.count("budget exhausted") == 1
     line = next(l for l in out.stderr.splitlines() if "budget exhausted" in l)
-    ran = {c.split()[2] for c in calls if "scrooner-normalize" in c or "scrooner-map" in c}
+    ran = {
+        c.split()[2] for c in calls if "scrooner-normalize" in c or "scrooner-map" in c
+    }
     skipped_names = line.split("skipped: ")[1].split()
     assert skipped_names and skipped_names[-1] == "map:build-tag-library"
-    assert not ({s.split(":")[1] for s in skipped_names} & ran)  # skipped means never run
+    assert not (
+        {s.split(":")[1] for s in skipped_names} & ran
+    )  # skipped means never run
     # a "took" line for every stage: ran + skipped = all 23
-    assert out.stdout.count("took ") == 23
+    assert out.stdout.count("took ") == 24
     assert "FAILED stages" in out.stderr and "budget-skipped" in out.stderr
 
 
@@ -226,8 +255,11 @@ def test_a_failed_stage_does_not_hide_and_later_stages_still_run(tmp_path):
 @pytest.mark.unit
 def test_tag_library_is_killed_at_its_cap_and_reported(tmp_path):
     out, _ = _run_script(
-        tmp_path, REPO_ROOT, "pipeline/" + SCRIPT_REL,
-        FAKE_TAG_HANG="1", TAG_LIBRARY_TIMEOUT_SECS="2",
+        tmp_path,
+        REPO_ROOT,
+        "pipeline/" + SCRIPT_REL,
+        FAKE_TAG_HANG="1",
+        TAG_LIBRARY_TIMEOUT_SECS="2",
     )
     assert out.returncode == 1
     assert "exceeded 2s" in out.stderr

@@ -1,0 +1,36 @@
+{
+ "release": "split_release_1",
+ "rules": {"split.event_basis@1": "registered (dry-run path), default OFF", "pershare.never_derive@1": "registered, default OFF; required with the split rule (rule_flags.per_share_pair_enabled)"},
+ "verifier": "verify/split-run7-4-2026-11-03 PASSED; its one change (filer-printed EPS pairs stand) is in run 7.5",
+ "source": "cohort dry-run 7.5 (1,000/1,000), doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_run7_5.csv.gz",
+ "branch": "work/cashflow/split-release, cut from origin/main (the held RU-1 commit and the 0098/0099 migration commit are NOT carried; main's RU-1 policy, archive and deriver gate are used)",
+ "cells_file": "split_release_1_cells.jsonl.gz (`release` marker column; sha256 over the uncompressed rows)",
+ "sha256": "d683faced4ba3553ad9bf837413e1653c88be1e96691921fd18bfcfc59d9a092",
+ "cells": 27567, "companies": 892,
+ "writes": {"total": 16631, "new_value": 5537, "share_count_rebased": 4662, "was_unadjusted": 2930, "rounding_only": 2086, "was_double_divided": 1416},
+ "removals_of_production_values": {
+  "total": 10936,
+  "no_filed_source, DPS and share counts only, production value rests on derived facts alone": 4179,
+  "dividend_basis_pending": 3021, "restated_between_filings": 1584,
+  "basis_review / company_invariant / basis_conflict": 1505,
+  "dividend_per_share_invalid": 376, "units_scale_suspect": 179, "zero_share_count_filed": 69,
+  "eps_basic_diluted_impossible": 18, "quarter_equals_ytd_context_error": 5
+ },
+ "ownership_with_family_c": {
+  "rule": "derived EPS cells belong to Family C (retire.derived_per_share_cells@1); this release never removes them (share_basis.DERIVED_REMOVAL_CONCEPTS, enforced in the write path)",
+  "overlap_dropped": 10819, "family_c_only": 10737, "derived_eps_left_out_of_this_package": 11240,
+  "agreed_with": "scrooner-26, Dhairya, 2026-11-03"
+ },
+ "held_not_removed": {
+  "cells": 857, "file": "held_filed_source_cells.csv",
+  "why": "the split pass finds no 10-K/10-Q copy, but production's value has a FILED source (421 EPS: 234 CAD, 82 with a split-ratio fact; 436 DPS/shares). Removing a filed value needs a Verifier-checked reason; most look like 40-F/20-F/6-K filers (IMO, CP, NXPI, CNH, SHOP)",
+  "verifier_draw": "verifier_draw_held_seed20261103.json (5 cells, one per company, every concept)"
+ },
+ "not_written_phase_1": "other_changed keeps production's value (WRITE_PHASE = 1)",
+ "apply": "pipeline/scripts/split_release_apply.py <this dir> --run-id <id>: Release Manager only; refuses unless both rules are ON, the digest matches and a run id is given; per company it refuses (never forces) when production or the recomputation no longer matches",
+ "rollback": "canonical_archive.restore_run(<run_id>)",
+ "writer_exclusivity": "with the pair ON, conflict fills, the dedup majority resolver and the retroactive split adjuster skip the four share-basis concepts (SB-6)",
+ "open_items": ["SB-7 metric consumers (price_metrics/ttm/dividend_streak reading the current-basis twins) are not on main: they ride with the period-engineer RU-1 consumer work, not this release"],
+ "preconditions": ["founder's typed approval in scrooner-4d", "migrations 0098/0099 applied (they are)", "re-cut right before the write if production moved"],
+ "post_write": "certify rerun on the 892 companies; any new finding blocks"
+}
