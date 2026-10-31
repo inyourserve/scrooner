@@ -1,0 +1,10 @@
+{
+ "fsn-notes/derived/per-share/2026-10-31/quick_ratio_plan_v7.json.gz": {
+  "sha256": "401aee962facad0782588f306e55dd730ae6b78dc91a523b6079a7d4582bb0d4",
+  "bytes": 90191
+ },
+ "fsn-notes/derived/per-share/2026-10-31/qr_face_v7.jsonl.gz": {
+  "sha256": "03e67075a5debbbbfd9f9599f8eb54745e52e2d80790c846a76adcd52302c132",
+  "bytes": 380561
+ }
+}

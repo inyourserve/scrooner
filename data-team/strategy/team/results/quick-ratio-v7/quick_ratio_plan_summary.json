@@ -1,0 +1,17 @@
+{
+ "companies": 1000,
+ "accessions_with_face": 44411,
+ "sec_requests": 0,
+ "accessions_wanted": 44556,
+ "accessions_read": 44411,
+ "accessions_period_missing": 350,
+ "cells": 2772,
+ "companies_touched": 177,
+ "by_reason_outcome": {
+  "incomplete:balance_sheet_unclassified|hide": 7,
+  "incomplete:inventory_fact_not_authoritative|hide": 189,
+  "incomplete:inventory_presented_not_extracted|hide": 68,
+  "incomplete:inventory_value_under_review|hide": 1948,
+  "incomplete:materials_supplies_line_present|hide": 560
+ }
+}
