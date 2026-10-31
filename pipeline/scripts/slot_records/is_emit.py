@@ -28,6 +28,13 @@ not cells in v1 and are dropped as rows (counted) but feed the quarters:
   hidden), so both YTD inputs are single clusters. A hidden input -> defect
   mixed_vintage; a held input -> defect quarter/q4_input_held; the later YTD
   not presented -> the quarter not presented. A printed 3-month column wins.
+  Vintage guard (Dhairya ruling 2026-11-01, after 77f5846a held 7 negative
+  derived revenue quarters): the quarter is defect mixed_vintage when its two
+  YTD inputs were filed 2+ accession-years apart (a later filing's comparative
+  column), or when the later YTD is smaller than the earlier one for revenue
+  or cost of revenue (the columns are on different perimeters, e.g. a 10-K
+  recast for discontinued operations). The perimeter check holds that
+  quarter for every data point, since they share the filings.
   Cost of revenue is derived the same way (Dhairya ruling 2026-11-01: an
   additive flow, same vintage).
 Every key of the shared expected-period calendar (v1.1 section 2.3) gets a
@@ -110,6 +117,10 @@ DEFECT = {
                       "the fourth quarter is not derived because its full-year or nine-month input is held"),
     "quarter_input_held": ("resolver", "data_engineer_l1",
                            "the quarter is not derived because one of its year-to-date inputs is held"),
+    "mixed_vintage": ("guard_hidden", OWNER_FAMILY,
+                      "the quarter is not derived: its year-to-date inputs are not on one vintage or perimeter "
+                      "(a later filing restated an input, the inputs were filed 2+ years apart, or the later "
+                      "year-to-date column is smaller than the earlier one for revenue or cost of revenue)"),
     "no_filed_column_for_period": ("period", "period_engineer",
                                    "no filing of the company prints this period as a column and it cannot be derived "
                                    "from two year-to-date columns of the same fiscal year"),
@@ -213,15 +224,42 @@ def ytd_n(s0, e0):
     return None
 
 
-def derive_quarters(cid_of, fam, cells, reasons, fsn_of, slots):
-    """Quarter n (2..4) the filer did not print as a 3-month column:
-    YTD_n - YTD_(n-1) of the same fiscal year (same start date). Keyed
-    (cik, q_start, q_end); value None = not derivable (counted)."""
+NONNEGATIVE_FAMILIES = ("revenue", "cost_of_revenue")
+CROSS_VINTAGE_YEARS = 2
+
+
+def _cell_chain(cells):
     chain = defaultdict(dict)  # (cik, fy_start) -> {n: ("cell"|"reason", row)}
     for c in cells:
         n = ytd_n(c["start"], c["end"])
         if n:
             chain[(c["cik"], c["start"])].setdefault(n, ("cell", c))
+    return chain
+
+
+def perimeter_breaks(cells_by_fam):
+    """(cik, fy_start, ytd_end) where a nonnegative line's YTD_n < YTD_(n-1)."""
+    bad = set()
+    for fam in NONNEGATIVE_FAMILIES:
+        for (cik, s0), by_n in _cell_chain(cells_by_fam[fam]).items():
+            for n in (2, 3, 4):
+                cur, prev = by_n.get(n), by_n.get(n - 1)
+                if (cur and prev and cur[1]["state"] == prev[1]["state"] == "slot_value"
+                        and Decimal(cur[1]["slot_value"]) < Decimal(prev[1]["slot_value"])):
+                    bad.add((cik, s0, cur[1]["end"]))
+    return bad
+
+
+def _acc_year(accession):
+    return int(accession[11:13])
+
+
+def derive_quarters(cid_of, fam, cells, reasons, fsn_of, slots, broken=frozenset()):
+    """Quarter n (2..4) the filer did not print as a 3-month column:
+    YTD_n - YTD_(n-1) of the same fiscal year (same start date). Keyed
+    (cik, q_start, q_end); value None = not derivable (counted). broken =
+    perimeter_breaks(): those quarters are held for every family."""
+    chain = _cell_chain(cells)
     for r in reasons:
         n = ytd_n(r["period_start"], r["period_end"])
         if n:
@@ -266,7 +304,16 @@ def derive_quarters(cid_of, fam, cells, reasons, fsn_of, slots):
                     f"ytd{n - 1}": {"start": s0, "end": pe, "accession": prev["accession"], "state": prev["state"],
                                     "gate": prev.get("gate")}}
             states = (cur["state"], prev["state"])
-            if states == ("slot_value", "slot_value"):
+            cross = abs(_acc_year(cur["accession"]) - _acc_year(prev["accession"])) >= CROSS_VINTAGE_YEARS
+            if states == ("slot_value", "slot_value") and (cross or (cik, s0, e0) in broken):
+                r.update(state="defect", value=None, reason_code="mixed_vintage",
+                         reason_text=("The quarter is not derived: its year-to-date inputs were filed two or more "
+                                      "years apart." if cross else
+                                      "The quarter is not derived: the later year-to-date column is smaller than "
+                                      "the earlier one, so the two columns are on different perimeters."),
+                         defect_class="guard_hidden", owner=OWNER_FAMILY, root_cause_class="resolver")
+                refs["vintage_guard"] = "inputs_filed_2plus_years_apart" if cross else "ytd_decreases_on_nonnegative_line"
+            elif states == ("slot_value", "slot_value"):
                 v = Decimal(cur["slot_value"]) - Decimal(prev["slot_value"])
                 ids = sorted((cur.get("source_fact_ids") or []) + (prev.get("source_fact_ids") or []))
                 r.update(state="derived", value=str(v), unit="USD", source_fact_ids=ids, reason_code=None,
@@ -335,6 +382,7 @@ def main(replay_dir, np_root, slots_path, is_fsn, company_ids, calendar, out_dir
             if a in accs:
                 fsn_of.setdefault(a, per)
     rows, stats, codes = [], defaultdict(Counter), {}
+    broken = perimeter_breaks(cells)
     cal = load_calendar(calendar)
     odd_calendar = set()  # calendar keys whose length does not match their fiscal period
     missing_company = set()
@@ -363,7 +411,7 @@ def main(replay_dir, np_root, slots_path, is_fsn, company_ids, calendar, out_dir
                 got[key] = (from_cell(cid, fam, x, g, fsn_of, slot) if kind == "cell"
                             else from_reason(cid, fam, x, g, fsn_of, slot))
         if fam in Q4_FAMILIES:
-            for key, r in derive_quarters(cid_of, fam, cells[fam], reasons, fsn_of, slots).items():
+            for key, r in derive_quarters(cid_of, fam, cells[fam], reasons, fsn_of, slots, broken).items():
                 if r is None:
                     stats[fam][f"quarter_not_derivable:{key[0]}:Q{key[3]}"] += 1
                     continue
