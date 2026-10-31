@@ -113,7 +113,6 @@ def apply(
         raise ReleaseRefused(
             f"stale: re-built plan digest {plan.digest()} != reviewed {reviewed_digest}; nothing applied"
         )
-    conn.rollback()  # end the planning transaction; the write is one fresh transaction
     with conn.transaction(), conn.cursor() as cur:
         run_id = cs.start_rule_run(conn, rr.RULE_PER_SHARE, "apply", "on", [], train=TRAIN,
                                    before_image_ref=f"canonical_fact_retired + fact_authority_retired run; {reviewed_digest}")  # fmt: skip
@@ -133,6 +132,7 @@ def apply(
         )  # fmt: skip
         stats["protected"] = len(fsn_cells)
         cs.finish_rule_run(conn, run_id, {**stats, "digest": reviewed_digest})
+    conn.commit()
     touched = sorted({c.company_id for c in plan.cells if c.action != rr.ACT_REVIEW})
     (package_dir / f"touched_company_ids_{run_id}.txt").write_text(
         "".join(f"{i}\n" for i in touched)
@@ -154,6 +154,7 @@ def restore(conn: Any, run_id: str, confirm: str) -> dict[str, Any]:
         )
         out["unprotected"] = cur.rowcount
         cs.finish_rule_run(conn, rb, {**out, "of_run": run_id})
+    conn.commit()
     return {"rollback_run_id": rb, **out}
 
 
