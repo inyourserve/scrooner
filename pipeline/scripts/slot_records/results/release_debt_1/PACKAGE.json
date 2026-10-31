@@ -3,8 +3,9 @@
  "registered": "OFF",
  "family": "balance sheet: total_debt_resolved",
  "source_cells": {
-  "file": "/private/tmp/claude-501/-Users-vikash-scrooner/f67eac78-47bc-4752-92cf-f5a984e5c189/scratchpad/debt_pilot_v4_cells.jsonl.gz",
-  "sha256": "61ee0faa2ff4c7d0a2e2f7d29494865f200ddcecf8dc5b291fa5768e35b95e50"
+  "file": "results/release_debt_1/debt_v4_source_cells.jsonl.gz",
+  "sha256": "61ee0faa2ff4c7d0a2e2f7d29494865f200ddcecf8dc5b291fa5768e35b95e50",
+  "built_from": "results/debt_fsn_pilot_v1/report_v4.json (replay_debt_fsn.py v4)"
  },
  "verifier": "verify/debt-v3-2026-11-04: 14/14 (borrowings + note finance leases, no double count); v4 = Verifier's two fixes (MSFT operating-lease member dropped; AMZN finance leases from the note)",
  "updates": {
@@ -37,5 +38,6 @@
   "rollback": "release1_fills_rollback.sql (delete the inserted rows; generated, never executed)",
   "touched_ciks": "release1_fills_touched_ciks.txt",
   "flag": "SCROONER_RULES_ENABLED=slot.total_debt@1; default OFF"
- }
+ },
+ "amzn_note": "AMZN 46 cells are v4 (after Verifier debt v3 fix: face lease line decomposes 77,297 = 67,220 + 10,077, finance leases from the note); the AMZN v4 values themselves have NOT been sampled by a Verifier yet"
 }
