@@ -280,7 +280,8 @@ RULES: dict[str, Rule] = {
             "split.event_basis@1",
             "RF-22",
             "period_engineer",
-            "split event basis (WO-22)",
+            "split re-base pass: per-share and share counts on one basis by source filing date (WO-22, corporate_actions/share_basis.py)",
+            dry_run=True,
         ),
         _r(
             "stale.non_ttm_latest_period@1",
@@ -455,6 +456,25 @@ def rule_enabled(rule_id: str, environ: Mapping[str, str] | None = None) -> bool
 
 def rule_dry_run(rule_id: str, environ: Mapping[str, str] | None = None) -> bool:
     return rule_mode(rule_id, environ) == DRY_RUN
+
+
+SPLIT_BASIS_RULE = "split.event_basis@1"
+PER_SHARE_NEVER_DERIVE_RULE = "pershare.never_derive@1"
+
+
+def per_share_pair_enabled(environ: Mapping[str, str] | None = None) -> bool:
+    """True when BOTH split.event_basis@1 and pershare.never_derive@1 are on,
+    False when neither is. Exactly one on raises: a half-shipped pair would
+    re-base values while derived per-share cells (or the legacy writers)
+    still use the old basis."""
+    split_on = rule_enabled(SPLIT_BASIS_RULE, environ)
+    ru1_on = rule_enabled(PER_SHARE_NEVER_DERIVE_RULE, environ)
+    if split_on != ru1_on:
+        raise ValueError(
+            f"{SPLIT_BASIS_RULE} and {PER_SHARE_NEVER_DERIVE_RULE} ship together: "
+            "enable both or neither"
+        )
+    return split_on
 
 
 def parse_dispatch(text: str | None) -> tuple[frozenset[str], frozenset[str]]:

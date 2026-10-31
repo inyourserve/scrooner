@@ -115,6 +115,28 @@ CONFLICT_FILL_TARGETS: list[tuple[str, str]] = [
 ]
 
 
+# SB-6 (single writer): with the split re-base / RU-1 release pair ON these
+# resolved concepts are written ONLY by corporate_actions/share_basis.py; the
+# conflict-fill and split-like passes and the retroactive split adjuster skip
+# them. OFF (default) = legacy, unchanged.
+SHARE_BASIS_OWNED = frozenset(
+    {
+        "diluted_eps_resolved",
+        "basic_eps_resolved",
+        "dividends_per_share_resolved",
+        "shares_outstanding_resolved",
+    }
+)
+
+
+def active_conflict_fill_targets(environ=None) -> list[tuple[str, str]]:
+    from scrooner_pipeline.common import rule_flags
+
+    if rule_flags.per_share_pair_enabled(environ):
+        return [t for t in CONFLICT_FILL_TARGETS if t[1] not in SHARE_BASIS_OWNED]
+    return list(CONFLICT_FILL_TARGETS)
+
+
 def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
     with conn.cursor() as cur:
         cur.execute(
@@ -1390,7 +1412,7 @@ def resolve_all_conflict_fills(conn: psycopg.Connection) -> dict:
     per_concept["stock_splits_retroactive_adjustment"] = retroactive_stats
     totals["retroactive_split_adjustments"] = retroactive_stats.get("adjusted", 0)
 
-    for primary_name, resolved_name in CONFLICT_FILL_TARGETS:
+    for primary_name, resolved_name in active_conflict_fill_targets():
         # refresh_stale_fills is deliberately NOT called here: it is an
         # explicit, dry-run-first function whose proposals need review
         # before any write (data-team/28, 2026-10-18).
