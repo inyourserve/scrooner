@@ -151,3 +151,29 @@ def test_get_company_404s_and_caches_the_miss_on_a_real_db_miss(monkeypatch):
     # The not-found result is itself cached -- a persistently bad ticker
     # shouldn't re-query Postgres on every request.
     assert cached_writes == [("zzznotreal", None)]
+
+
+def test_duplicate_columns_collapse_when_equal_and_blank_with_reason_when_different():
+    from company_page import collapse_duplicate_columns
+
+    periods = [
+        {"fiscal_year": 2021, "fiscal_period": "FY", "period_end": "2021-12-31"},
+        {"fiscal_year": 2021, "fiscal_period": "FY", "period_end": "2022-01-02"},
+        {"fiscal_year": 2022, "fiscal_period": "FY", "period_end": "2022-12-31"},
+    ]
+    lines = [
+        {"label": "Revenue", "values": ["2800000000", "2800100000", "3840000000"]},
+        {"label": "Net Income", "values": ["-38200000", "184600000", "130900000"]},
+        {"label": "Capex", "values": [None, "50000000", "60000000"]},
+    ]
+    out = collapse_duplicate_columns(periods, lines)
+    assert [p["period_end"] for p in out["periods"]] == ["2022-01-02", "2022-12-31"]
+    rev, ni, capex = out["lines"]
+    assert rev["values"] == ["2800000000", "3840000000"] and "reasons" not in rev
+    assert ni["values"] == [None, "130900000"] and ni["reasons"][0].startswith(
+        "Two filed versions"
+    )
+    assert "-38200000 vs 184600000" in ni["reasons"][0] and ni["reasons"][1] is None
+    assert capex["values"] == ["50000000", "60000000"] and "reasons" not in capex
+    single = collapse_duplicate_columns(periods[2:], [{"label": "x", "values": ["1"]}])
+    assert single["periods"] == periods[2:]

@@ -37,6 +37,8 @@ are left as stored.
 """
 
 from collections import defaultdict
+from datetime import date
+from decimal import Decimal, InvalidOperation
 
 import psycopg
 
@@ -576,7 +578,99 @@ def _assemble_statement(rows: list[dict], statement: str, frequency: str) -> dic
         }
         for _, line in sorted(line_map.items(), key=lambda kv: kv[0])
     ]
-    return {"periods": periods, "lines": lines}
+    return collapse_duplicate_columns(periods, lines)
+
+
+# Duplicate-column guard (2026-10-31, the UI half of rule
+# period.duplicate_column_merge@1). One accounting column can exist as two
+# core.period rows with the same fiscal year/period whose end dates differ by
+# a few days (ATI FY 2021 on Dec 31, 2021 and Jan 2, 2022; MSFT Q1 FY2017
+# revenue 20,453M vs the 21,928M ASC 606 recast under a one-day-different
+# context). Keyed by period_end they rendered as two columns with the same
+# label. Columns with the same (fiscal_year, fiscal_period) whose ends are
+# within 7 days collapse into one: a line keeps its value only when every copy
+# agrees within the filer's rounding; when copies differ the cell is blank with
+# a reason, never an arbitrary winner (founder ruling). Same rule as
+# apps/app/lib/company/db.ts::collapseDuplicateColumns.
+DUPLICATE_COLUMN_MAX_GAP_DAYS = 7
+
+
+def _trailing_zero_exponent(value: Decimal) -> int:
+    if value == 0:
+        return 0
+    exp = value.normalize().as_tuple().exponent
+    return max(0, min(6, exp)) if isinstance(exp, int) else 0
+
+
+def same_number_within_precision(a: str, b: str) -> bool:
+    try:
+        x, y = Decimal(a), Decimal(b)
+    except (InvalidOperation, TypeError):
+        return a == b
+    if x == y:
+        return True
+    scale = max(_trailing_zero_exponent(x), _trailing_zero_exponent(y))
+    slack = max(
+        Decimal("1.5") * Decimal(10) ** scale, Decimal("0.0005") * max(abs(x), abs(y))
+    )
+    return abs(x - y) <= slack
+
+
+def collapse_duplicate_columns(periods: list[dict], lines: list[dict]) -> dict:
+    groups: list[list[int]] = []
+    assigned: set[int] = set()
+    for i, p in enumerate(periods):
+        if i in assigned:
+            continue
+        members = [i]
+        for j, q in enumerate(periods):
+            if j == i or j in assigned:
+                continue
+            gap = abs(
+                (
+                    date.fromisoformat(q["period_end"])
+                    - date.fromisoformat(p["period_end"])
+                ).days
+            )
+            if (
+                q["fiscal_year"] == p["fiscal_year"]
+                and q["fiscal_period"] == p["fiscal_period"]
+                and gap <= DUPLICATE_COLUMN_MAX_GAP_DAYS
+            ):
+                members.append(j)
+        assigned.update(members)
+        groups.append(members)
+    if all(len(g) == 1 for g in groups):
+        return {"periods": periods, "lines": lines}
+
+    def filled(i: int) -> int:
+        return sum(1 for line in lines if line["values"][i] is not None)
+
+    kept = [max(g, key=lambda i: (filled(i), -i)) for g in groups]
+    out_periods = [periods[i] for i in kept]
+    out_lines = []
+    for line in lines:
+        values: list[str | None] = []
+        reasons: list[str | None] = []
+        for g in groups:
+            present = [line["values"][i] for i in g if line["values"][i] is not None]
+            if not present:
+                values.append(None)
+                reasons.append(None)
+            elif all(same_number_within_precision(v, present[0]) for v in present):
+                values.append(present[0])
+                reasons.append(None)
+            else:
+                values.append(None)
+                ends = " and ".join(periods[i]["period_end"] for i in g)
+                reasons.append(
+                    f"Two filed versions of this period differ ({' vs '.join(present)}; contexts ending {ends}); neither is shown."
+                )
+        row = {"label": line["label"], "values": values}
+        if any(r is not None for r in reasons):
+            row["reasons"] = reasons
+        out_lines.append(row)
+    return {"periods": out_periods, "lines": out_lines}
 
 
 def suppress_bank_metrics(metrics: list[dict], is_bank: bool) -> list[dict]:
