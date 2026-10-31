@@ -579,6 +579,8 @@ def load(
         before_image_ref=",".join(rep.sha256.values())[:200],
     )
     rep.run_id = run_id
+    conn.commit()  # the manifest row stands alone; every company below is its own transaction
+    done = 0
     for cid in sorted(by_company):
         rows = by_company[cid]
         try:
@@ -597,6 +599,21 @@ def load(
             )
         except _PlanRollback:
             pass
+        else:
+            if apply:
+                conn.commit()
+        done += 1
+        if done % 25 == 0 or done == len(by_company):
+            logger.info(
+                "cell_loader.progress",
+                family=family,
+                mode=mode,
+                companies=done,
+                of=len(by_company),
+                valued=rep.valued_written,
+                reasons=rep.reasons_written,
+                rejected=sum(rep.rejected.values()),
+            )
     return _finish(conn, run_id, rep, apply)
 
 
