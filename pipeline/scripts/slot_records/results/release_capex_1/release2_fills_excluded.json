@@ -2662,39 +2662,5 @@
   "ticker": "KR",
   "value": "2437000000.0000",
   "reason": "no_production_period"
- },
- {
-  "accession": "0001628280-26-059830",
-  "cik": 1441816,
-  "end": "2026-07-31",
-  "form": "10-Q",
-  "members": [
-   {
-    "label": "Purchases of property, equipment and other assets",
-    "nature": "ppe",
-    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
-    "value": "4791000.0000"
-   }
-  ],
-  "prod_value": null,
-  "qtrs": 2,
-  "skipped_lines": [
-   {
-    "label": "Proceeds from maturities of marketable securities",
-    "tag": "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities",
-    "value": "621800000.0000",
-    "why": "proceeds_or_sale"
-   },
-   {
-    "label": "Proceeds from non-marketable securities",
-    "tag": "ProceedsFromNonMarketableSecurities",
-    "value": "10718000.0000",
-    "why": "proceeds_or_sale"
-   }
-  ],
-  "state": "slot_fills_blank",
-  "ticker": "MDB",
-  "value": "4791000.0000",
-  "reason": "no_production_period"
  }
 ]

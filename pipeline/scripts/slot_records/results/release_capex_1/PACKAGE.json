@@ -35,9 +35,10 @@
  },
  "release2": {
   "cells_file": "capex_release2_fills.jsonl",
-  "sha256": "34ea561c346c8f6d43736b37af47c91729af853ae27b3b52b14161385fde4a97",
-  "cells": 2228,
-  "status": "production blank: not in the Verifier's sampled population; needs its own fill stratum before shipping"
+  "sha256": "b2cf5983220213b14c654b3200dbb693a41ce6d9916d45aac9ace487b4d43c2a",
+  "cells": 1956,
+  "source": "results/cf_da_capex_v16/cells.jsonl.gz",
+  "status": "production-blank candidates; the insert package is release2_fills (needs the Verifier fill redraw)"
  },
  "not_in_any_release": "held cells (perimeter_line_unresolved, other_capex_lines_outside_ruling, no_continuing_capex_line): production stays as is until the founder's capex answer and a real-estate ruling",
  "flag": {
@@ -49,12 +50,12 @@
  "evidence_per_cell": "accession, face members (tag, label, nature, value) from the FSN pre/num rows of that filing; same accession by construction",
  "release2_fills": {
   "cells_file": "release2_fills_cells.jsonl",
-  "sha256": "ac7b760d110422a9e60e3b450157390a6bcbbb0c0ceea03ba86d1131e8157c61",
-  "cells": 2136,
-  "companies": 109,
+  "sha256": "70311774e4eff614b1ed1e3b66d1d1b8a5ffa94d0660be1130027ecb70a58b38",
+  "cells": 1865,
+  "companies": 100,
   "kind": "insert into blank production cells (fills)",
   "source": "results/release_capex_1/capex_release2_fills.jsonl",
-  "excluded": "release2_fills_excluded.json: {\"no_production_period\": 52, \"ambiguous_period_match\": 32, \"production_no_longer_blank\": 8}",
+  "excluded": "release2_fills_excluded.json: {\"no_production_period\": 51, \"ambiguous_period_match\": 32, \"production_no_longer_blank\": 8}",
   "stale_refusal": "release2_fills_stale_check.sql must return zero rows immediately before the write",
   "rollback": "release2_fills_rollback.sql (delete the inserted rows; generated, never executed)",
   "touched_ciks": "release2_fills_touched_ciks.txt",

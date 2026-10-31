@@ -68,6 +68,8 @@ CAPEX_OG_LABEL = re.compile(r"drilling|completion|(un)?proved (oil|gas|propertie
 
 
 def capex_nature(tag, label):
+    if re.search(r"property|plant|equipment|premises", label, re.I) and re.search(r"(and|&) other (long.term |non.?current )?assets", label, re.I):
+        return "lease_unclear"  # Verifier fills R2 (JEF): PP&E mixed with other assets cannot be split on the face
     if tag == "PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets" or (
             re.search(r"PropertyPlantAndEquipment|ProductiveAssets", tag) and re.search(r"intangible", label, re.I)
             and re.search(r"property|plant|equipment", label, re.I)):
@@ -84,7 +86,7 @@ def capex_nature(tag, label):
         return "lease_unclear"  # element misused or label silent: unresolved in BOTH variants
     if re.search(r"exclud\w* (equipment )?leased", label, re.I):
         return "ppe"  # CAT: "Capital expenditures - excluding equipment leased to others" is the PP&E line
-    if "EquipmentOnLease" in tag or re.search(r"leased to others|equipment on (operating )?lease|(?<!non-)(?<!non )rental (equipment|fleet)|held for rental|lease fleet", label, re.I):
+    if "EquipmentOnLease" in tag or re.search(r"leased to others|equipment on (operating )?lease|(?<!non-)(?<!non )rental (equipment|fleet)|held for rental|(assets|equipment) (under|on) operating leases?|lease fleet", label, re.I):
         return "leased"
     if re.search(r"software", label, re.I) and re.search(r"PropertyPlantAndEquipment|ProductiveAssets", tag) \
             and re.search(r"property|plant|premises|equipment|capital expenditure|building", label, re.I):
@@ -291,6 +293,8 @@ for (cik, ddate, q), f in chosen():
     # ---------------- capex ----------------
     lines = []
     skipped = []  # lines read and deliberately NOT summed (proceeds/sale, accrual change): Verifier strata
+    og_acq = []  # oil and gas property acquisition lines: perimeter question, the cell holds
+    maint = []  # capitalized turnaround / major-maintenance lines: definition question, the cell holds
     other_capex = 0
     if op_i is not None and inv_i is not None and inv_i > op_i:
         block = rows[op_i + 1:inv_i + 1]
@@ -311,16 +315,28 @@ for (cik, ddate, q), f in chosen():
                 if t in vals and dec(vals[t]) and re.search(r"capital|property|equipment", lab, re.I):
                     skipped.append({"tag": t, "label": lab, "value": str(dec(vals[t])), "why": "accrual_change"})
                 continue  # CHTR "Change in accrued expenses related to capital expenditures"
-            if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab)) and not re.search(r"proceeds|sale|disposal|divest|software|site", lab + t, re.I):
+            if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab) or re.search(r"property acquisitions|acquisitions? of (oil|gas|proved|unproved|mineral|leasehold)", lab, re.I)) \
+                    and not re.search(r"proceeds|sale|disposal|divest|software|site", lab + t, re.I):
                 v = dec(vals.get(t))
+                if v and re.search(r"acquisition|acquire", lab, re.I):
+                    og_acq.append({"tag": t, "label": lab, "value": str(v)})
+                    continue  # Verifier fills R2 (FANG "Property acquisitions" 1,193M): founder perimeter question, held
                 if v:
                     lines.append({"tag": t, "label": lab, "nature": "ppe", "disc": False, "value": abs(v), "raw": v, "negating": r["negating"], "custom": r["custom"], "og": True})
                 continue
-            if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on))\b", lab, re.I) and not re.search(
+            if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on)|expenditures? (for|on)|payments? for (vessels|aircraft|rigs|towers|ships))\b", lab, re.I) and not re.search(
                     r"real estate|rental propert|investment|loan|securit|intangible|business|software|acquisition|receivable|financ|note|"
                     r"debt|restricted|other (long.term |non.?current )?assets|deposit|escrow|contract", lab, re.I) and t in vals \
-                    and not (parents[t] & printed - set(INV_TOTAL)):
+                    and not (parents[t] & printed - set(INV_TOTAL)) \
+                    and not (re.search(r"held for sale", lab, re.I) and not re.search(r"property|plant|equipment", lab, re.I)):
+                # KNX "Expenditures on assets held for sale" is not PP&E; INTC "Additions to held for sale NAND
+                # property, plant, and equipment" names PP&E and stays (Verifier-confirmed)
                 v = dec(vals[t])
+                if v and re.search(r"turnaround|major (repairs|maintenance)|catalyst|dry.?dock", lab, re.I):
+                    maint.append({"tag": t, "label": lab, "value": str(v)})
+                    continue  # capitalized major maintenance (PBF turnaround 379.1M): definition question, held
+                if v and re.search(r"asset purchase|acquisition", lab, re.I):
+                    continue  # PBF "Expenditure for PBFX Plains Asset Purchase": an acquisition, not capex
                 if v:
                     # nature from the same classifier (OSK "Additions to equipment held for rental" stays leased)
                     lines.append({"tag": t, "label": lab, "nature": capex_nature(t, lab), "disc": bool(re.search(r"discontinued", lab, re.I)),
@@ -377,7 +393,7 @@ for (cik, ddate, q), f in chosen():
         lines = kept
         for x in lines:
             x["raw"] = str(x["raw"])
-    if lines or other_capex:
+    if lines or other_capex or og_acq or maint:
         n_ppe = [x for x in lines if not x["disc"] and x["nature"] in ("ppe", "ppe_with_intangibles")]
         if any(x["nature"] == "ppe_with_intangibles" for x in lines):
             summ["capex_flag_ppe_line_includes_intangibles"] += 1
@@ -393,18 +409,22 @@ for (cik, ddate, q), f in chosen():
         net_sibling = bool(n_ppe and n_net) or bool(unclear)
         if sign_unresolved:
             interim, reason = None, "capex_sign_unresolved"
+        elif og_acq:
+            interim, reason = None, "perimeter_og_property_acquisitions"
+        elif maint:
+            interim, reason = None, "perimeter_turnaround_major_maintenance"
         elif other_capex:
             interim, reason = None, "other_capex_lines_outside_ruling"  # MTDR: oil and gas lines beside midstream capex
+        elif net_sibling:
+            interim, reason = None, "perimeter_line_unresolved"  # before no-line: JEF's mixed line is the reason
         elif not n_ppe and not n_net and not (leased or soft):
             interim, reason = None, ("other_capex_lines_outside_ruling" if other_capex else "no_continuing_capex_line")
-        elif net_sibling:
-            interim, reason = None, "perimeter_line_unresolved"
         elif cases:
             interim, reason = None, "perimeter_line_unresolved"
         else:
             interim, reason = narrow, None
         pv = prod[(cik, "capex_resolved")].get((end, q))
-        c = dict(cell, family="capex", lines=lines, skipped_lines=skipped, sign_basis=sign_basis, cases=cases, net_sibling=net_sibling, other_capex_lines=other_capex,
+        c = dict(cell, family="capex", lines=lines, skipped_lines=skipped, og_property_acquisitions=og_acq, maintenance_lines=maint, sign_basis=sign_basis, cases=cases, net_sibling=net_sibling, other_capex_lines=other_capex,
                  cfo_perimeter="total" if cfo_total else "continuing",
                  variant_narrow=str(narrow) if not net_sibling and (n_ppe or n_net) else None,
                  variant_ruling=str(ruling) if not net_sibling and (n_ppe or n_net or leased or soft) else None,
