@@ -2870,3 +2870,43 @@ def test_one_copy_quarter_hidden_when_year_totals_agree_lfus():
     res = run(b)
     assert b.cell(res, "dividends_per_share_resolved", "2023-01-01", "2023-12-30").value == D("2.5")
     assert b.cell(res, "dividends_per_share_resolved", "2023-10-01", "2023-12-30").status == sb.HIDE_DPS_INVALID
+
+
+def test_swapped_pair_released_when_the_swapped_copy_is_the_earliest_nwsa():
+    """NWSA Jul-Sep 2015 has two copies: 0.11 in the FY2016 10-K (swapped,
+    the earliest) and 0.30 in the FY2017 10-K; Jul-Sep 2014 is 0.11 in two
+    other filings and 0.30 in that same FY2016 10-K."""
+    b = Book()
+    q15 = b.filing("0001193125-14-399701", "2014-11-07")
+    k15 = b.filing("0001193125-15-288946", "2015-08-13", "10-K")
+    k16 = b.filing("0001193125-16-679975", "2016-08-12", "10-K")
+    k17 = b.filing("0001193125-17-257248", "2017-08-11", "10-K")
+    b.add(EPS_D, "0.11", "2014-07-01", "2014-09-30", q15)
+    b.add(EPS_D, "0.11", "2014-07-01", "2014-09-30", k15)
+    b.add(EPS_D, "0.30", "2014-07-01", "2014-09-30", k16)
+    b.add(EPS_D, "0.11", "2015-07-01", "2015-09-30", k16)
+    b.add(EPS_D, "0.30", "2015-07-01", "2015-09-30", k17)
+    res = run(b)
+    assert b.cell(res, "diluted_eps_resolved", "2014-07-01", "2014-09-30").value == D("0.11")
+    cell = b.cell(res, "diluted_eps_resolved", "2015-07-01", "2015-09-30")
+    assert cell.status == sb.SHOWN and cell.value == D("0.30")
+
+
+def _fact(fid: int, filed: str) -> SourceFact:
+    return SourceFact(fid, EPS_D, "usd/shares", 1, date(2023, 1, 1), date(2023, 12, 31), "duration",
+                      D("-1.63"), fid, date.fromisoformat(filed), "10-K", f"A-{fid}", False, True)
+
+
+def test_post_event_copies_need_two_filings_after_every_live_event():
+    """QXO FY2023: the 2024 and 2025 10-Ks, filed after the confirmed 1:8 of
+    2024-08-14, re-present the year on the current basis."""
+    ev = sb.Event(1, Fraction(1, 8), date(2024, 5, 1), date(2024, 8, 14), status="confirmed")
+    dead = sb.Event(2, Fraction(5, 4), date(2025, 5, 1), date(2025, 8, 14), status="rejected")
+    conv = [(_fact(1, "2024-03-01"), Fraction(1, 8), D("-0.20")),
+            (_fact(2, "2025-02-20"), Fraction(1), D("-1.63")),
+            (_fact(3, "2026-02-20"), Fraction(1), D("-1.63"))]
+    post = sb.post_event_copies(conv, [ev, dead])
+    assert [x[0].fact_id for x in post] == [2, 3]
+    assert sb.post_event_copies(conv[:2], [ev, dead]) is None  # one later copy never decides
+    pending = sb.Event(3, Fraction(2), date(2025, 9, 1), date(2026, 3, 1), status="review")
+    assert sb.post_event_copies(conv, [ev, pending]) is None  # a live candidate after them

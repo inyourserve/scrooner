@@ -1541,6 +1541,16 @@ def resolve_cells(
                 # stands in for it
                 original = conv[0][0]
             if not any(x[0] is original for x in conv):
+                post = post_event_copies(conv, events)
+                if post is not None and _all_agree(post, kind):
+                    # Verifier run 6, QXO FY2023 -1.63: the 2023 10-K's basis
+                    # is unresolved, but two later 10-Ks filed after every
+                    # split event re-present the year on the current basis
+                    conv, original = post, post[0][0]
+                    note = (note + "; " if note else "") + (
+                        f"original's basis unresolved; {len(post)} copies filed after every split event"
+                    )
+            if not any(x[0] is original for x in conv):
                 out.append(
                     CellResult(
                         concept,
@@ -1635,19 +1645,7 @@ def resolve_cells(
                 # Run 7 (NWSA FY2016 10-K 0001193125-16-679975: Jul-Sep 2014
                 # 0.30 and Jul-Sep 2015 0.11, each the OTHER quarter's
                 # consensus): a swapped pair is two label errors.
-                swapped = [
-                    x
-                    for x in conv
-                    if x[0] is not original
-                    and (own := consensus.get((x[0].tag, pid))) is not None
-                    and own != x[0].value
-                    and any(
-                        consensus.get((x[0].tag, other)) == x[0].value
-                        and own in vals
-                        for other, vals in by_filing_tag[(x[0].filing_id, x[0].tag)].items()
-                        if other != pid
-                    )
-                ]
+                swapped = [x for x in conv if _is_swapped_copy(x[0], pid, by_tag_period, by_filing_tag)]
                 rest = [x for x in conv if x not in swapped]
                 if swapped and rest and _all_agree(rest, kind):
                     note = (note + "; " if note else "") + (
@@ -2765,6 +2763,36 @@ def declares_and_pays_together(
             return False
         n += 1
     return n >= TOGETHER_MIN_QUARTERS
+
+
+def post_event_copies(conv: list, events: list[Event]) -> list | None:
+    """Copies filed after every non-rejected split event, on the current basis
+    (factor 1), from at least two filings; None otherwise. Such a filing has
+    seen every share-basis change, so its value needs no conversion."""
+    dates = [d for e in events if e.status != "rejected" for d in (e.hi, e.lo) if d is not None]
+    last = max(dates) if dates else None
+    post = [x for x in conv if x[1] == 1 and (last is None or x[0].filing_date > last)]
+    if len({x[0].filing_id for x in post}) < 2:
+        return None
+    return sorted(post, key=lambda x: (x[0].filing_date, x[0].fact_id))
+
+
+def _is_swapped_copy(f: SourceFact, pid: int, by_tag_period, by_filing_tag) -> bool:
+    """Two periods' values exchanged inside ONE filing (NWSA FY2016 10-K
+    0001193125-16-679975: Jul-Sep 2014 0.30, Jul-Sep 2015 0.11). Evidence both
+    ways from the OTHER filings: this copy equals the other period's value
+    there, and this filing's copy of the other period equals this period's
+    value there."""
+    own = {g.value for g in by_tag_period[(f.tag, pid)] if g.filing_id != f.filing_id}
+    if len(own) != 1 or f.value in own:
+        return False
+    for other, vals in by_filing_tag[(f.filing_id, f.tag)].items():
+        if other == pid or vals != own:
+            continue
+        theirs = {g.value for g in by_tag_period[(f.tag, other)] if g.filing_id != f.filing_id}
+        if theirs == {f.value}:
+            return True
+    return False
 
 
 NOT_PRESENTED_10K_DAYS = 760
