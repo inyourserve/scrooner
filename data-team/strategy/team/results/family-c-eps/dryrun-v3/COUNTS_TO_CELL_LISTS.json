@@ -1,0 +1,38 @@
+{
+ "remove_per_share_filed_copies_disagree": {
+  "cells": 2,
+  "file": "remove_per_share_filed_copies_disagree.csv"
+ },
+ "remove_per_share_not_captured": {
+  "cells": 5440,
+  "file": "bucket tarball member remove_per_share_not_captured.csv"
+ },
+ "remove_per_share_not_filed_separately": {
+  "cells": 15675,
+  "file": "bucket tarball member remove_per_share_not_filed_separately.csv"
+ },
+ "replace_with_filed_fact": {
+  "cells": 204,
+  "file": "replace_with_filed_fact.csv"
+ },
+ "replace_with_fsn_value": {
+  "cells": 110,
+  "file": "replace_with_fsn_value.csv"
+ },
+ "review_axis_only": {
+  "cells": 106,
+  "file": "review_axis_only.csv"
+ },
+ "review_other_sources": {
+  "cells": 334,
+  "file": "review_other_sources.csv"
+ },
+ "review_split_rebased": {
+  "cells": 23,
+  "file": "review_split_rebased.csv"
+ },
+ "changed_vs_v2_d5f21dae": {
+  "cells": 15,
+  "file": "changed_cells_vs_v2.csv"
+ }
+}
