@@ -244,8 +244,12 @@ def phase_c(
     if ckpt.exists():
         for line in ckpt.open():
             rec = json.loads(line)
-            if rec["header_first_filer"] is None and rec.get("error"):
-                continue  # retry misses (404 under the prefix folder, transient errors)
+            if (
+                rec["header_first_filer"] is None
+                and rec.get("error")
+                and rec["error"] != "http_404"
+            ):
+                continue  # retry transient misses; a 404 under EVERY folder is final (pre-2015 filings)
             done[rec["accession_number"]] = rec["header_first_filer"]
         log(f"C: resumed {len(done)} headers")
     todo = [a for a in accessions if a not in done]
