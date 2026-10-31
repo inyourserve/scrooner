@@ -494,7 +494,14 @@ def load(
         rep.sha256[str(p)] = sha
         raw_rows.extend((i + 1, r) for i, r in enumerate(rows))
     rep.rows = len(raw_rows)
-    rule_id = manifest_rule_id or manifest.get("rule_id") or f"cells.{family}@1"
+    # the load's own rule id: the manifest's when it is ONE rule id; a family whose
+    # manifest lists several rule ids (one per data point) is run under cells.<family>@1
+    m_rule = manifest.get("rule_id")
+    rule_id = (
+        manifest_rule_id
+        or (m_rule if isinstance(m_rule, str) else None)
+        or f"cells.{family}@1"
+    )
     parse_rule_id(rule_id)
     with conn.cursor() as cur:
         cur.execute("select id, name from analytics.canonical_concept")
