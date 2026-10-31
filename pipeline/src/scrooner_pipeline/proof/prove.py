@@ -69,9 +69,9 @@ EXPECTED: dict[str, tuple[str, tuple[str, ...], bool]] = {
     "gross_profit_resolved": ("IS", ("GrossProfit",), True),
     "operating_expenses_resolved": (
         "IS",
-        ("OperatingExpenses", "CostsAndExpenses"),
+        ("OperatingExpenses",),
         True,
-    ),
+    ),  # CostsAndExpenses includes cost of revenue
     "operating_income_resolved": ("IS", ("OperatingIncomeLoss",), True),
     "interest_expense_resolved": (
         "IS",
@@ -356,9 +356,13 @@ def select_position(
     candidates.sort(key=lambda p: (tags.index(p.tag), p.report, p.line))
     chosen = candidates[0]
     if must_be_total:
-        allowed = STANDARD_PARENTS.get(data_point, frozenset()) | candidate_tags
-        unexpected_parents = structure.calc_parents.get(chosen.tag, set()) - allowed
-        if unexpected_parents:
+        # A us-gaap parent of a us-gaap total is a higher aggregate by construction
+        # (gross profit under operating income, operating income under the many
+        # income-before-tax variants). A line is a COMPONENT only when its parent is
+        # a filer extension: a custom "total revenues" with the standard revenue tag
+        # beneath it means the printed total is not the standard line.
+        custom = structure.custom_parents.get(chosen.tag, set()) - candidate_tags
+        if custom:
             return None, "component_only"
     return chosen, None
 
