@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0114.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
+**Next free number: 0115.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -67,6 +67,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0109 | Data Engineer (lane 3) | ADS tables (second of two) | claimed, not written/not applied | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
 | 0110 | (released) | formerly claimed by scrooner-25 for company_slot_record; renumbered to 0101 | free for re-claim after 0102-0109 | **RELEASED 2026-11-01: permanently skipped (pipeline/db/migrations/SKIPPED.txt)** |
 | 0113 | scrooner-d2 (income statement lane) | `analytics.slot_protected_cell` resolver guard (file `0113_slot_protected_cell.sql` on branch work/income-statement/slot-records 642de0b) | claimed 2026-11-01, written, NOT applied, NOT on main (cannot land while 0102-0110 and 0112 are unwritten gaps); the IS release rollback SQL deletes from this table, so the guard must be applied before any IS write; applying needs the founder's typed words |
+| 0114 | scrooner-8a (engineering) | `analytics.cell_proof` (one proof row per displayed cell: shown value + tag, structure-selected position value + tag/line, face sample, checks, verdict PROVEN/DISAGREE/NOT_PRESENTED/UNCHECKED; file `0114_cell_proof.sql` on branch work/engineering/cell-proof) | claimed 2026-10-31, written, NOT applied; applying needs the founder's typed words; the table is evidence, not serving: the page reads it only behind proof.serve_proven_only@1 (OFF) |
 
 ## scrooner-98 queue (lane A)
 
