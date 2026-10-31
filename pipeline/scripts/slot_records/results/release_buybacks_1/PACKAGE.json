@@ -1,0 +1,23 @@
+{
+ "rule_id": "slot.cf_buybacks@1",
+ "family": "cash flow: share_buybacks_resolved (the single printed repurchase-of-common-stock line, outflow, gross)",
+ "verifier": "verify/buybacks-run3-2026-11-01: 15/15 differences, 5/5 blanks, the 6 run-2 misses held; run 4 adds the CCL share-swap hold, run 5 holds any face that PRINTS two repurchase lines (ROST Q1 FY2021, found while packaging)",
+ "source_run": "results/cf_run5",
+ "release1": {
+  "cells_file": "buybacks_release1_cells.jsonl",
+  "sha256": "9076cc57949deb0ea8d87d52bc923b4e12d8ecdd5a12b9611eaf2c271be00504",
+  "cells": 469, "companies": 92,
+  "by_op": {"update": 143, "insert": 326},
+  "before_image": "buybacks_release1_before_image.jsonl (143 canonical_fact rows)",
+  "apply": "buybacks_release1_apply.sql (compare-and-swap per cell; stale cells refused and listed)",
+  "rollback": "buybacks_release1_rollback.sql (reverts only cells still holding the package value and source fact)",
+  "touched_ciks": "buybacks_release1_touched_ciks.txt",
+  "keep_list": "none"
+ },
+ "fills_rule": "a fill only when production has no row of the same length (+-20 days) ending within 31 days (DPZ 24-week label)",
+ "left_out": {"no_single_standard_source_line": 218, "no_unique_core_fact": 93, "production_on_neighbour_period": 3},
+ "held_not_packaged": "perimeter classes pending the founder (combined, net treasury, tax-withholding shares, SBC plan, excise tax, option exercise, multiple lines, subsidiary, share swap, sign unclear): see cf_run5/prod_compare.json",
+ "flag": {"line": "SCROONER_RULES_ENABLED=slot.cf_buybacks@1", "registered": "common/rule_flags.py on main 3da988d, default OFF"},
+ "preconditions": ["founder's typed approval in scrooner-4d", "migration 0113 resolver guard applied so the nightly resolver cannot overwrite packaged cells", "apply right after a fresh package; stale cells refused by design"],
+ "post_write": "certify rerun on the touched companies; any new finding blocks"
+}

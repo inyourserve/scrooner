@@ -268,8 +268,11 @@ def verdict_bb(c, cell):
         if any(m["class"] == cls and m["value"] not in (None, 0) for m in ms):
             return {"net": "net_treasury_line", "unresolved": "perimeter_line_unresolved"}.get(cls, cls), None
     common_ms = [m for m in ms if m["class"] == "common"]
-    if len([m for m in common_ms if m["value"] not in (None, 0)]) > 1:
-        return "perimeter_multiple_repurchase_lines", None  # ROST "Treasury stock purchased" + "Repurchase of common stock"
+    if len(common_ms) > 1:
+        # two repurchase lines PRINTED, whatever this column's values (ROST Q1
+        # FY2021: "Treasury stock purchased" 47.4M beside a zero "Repurchase of
+        # common stock"): which one is the program buyback is a definition call
+        return "perimeter_multiple_repurchase_lines", None
     # a repurchase printed without parentheses while the other outflow lines
     # of the section are (AAON Q1 2025): the filer's sign is in doubt
     if any(not m["negating"] for m in common_ms) and cell["negated_outflows"] >= 2:
