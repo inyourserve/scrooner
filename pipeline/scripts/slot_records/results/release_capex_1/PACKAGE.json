@@ -8,14 +8,14 @@
  "verifier": "VERIFY-DA-CAPEX-V10-2026-11-01.md (origin/verify/da-capex-v10-2026-11-01 02c61c6): capex YES, 15 of 15 right; production wrong or only rounded in every drawn cell",
  "release1": {
   "cells_file": "capex_release1_cells.jsonl",
-  "sha256": "82f2da532e8d71fafa1ef611dbd7d36660f4194349c8fa29a70649dae72e74d6",
-  "cells": 1903,
-  "companies": 330,
+  "sha256": "d2a31e4543d17e652cd91bd7aa9e5be7f1c2415b10465b2977a9a8c3fc1e2694",
+  "cells": 1475,
+  "companies": 299,
   "by_difference_class": {
    "rounding_only": 684,
    "material": 1432
   },
-  "before_image": "capex_release1_before_image.jsonl (1903 canonical_fact rows)",
+  "before_image": "capex_release1_before_image.jsonl (1475 canonical_fact rows)",
   "cells_without_before_image_row": 0,
   "excluded_ambiguous_period_match": "capex_release1_excluded_ambiguous.json (8 cells match two production periods; not written)",
   "rollback": "capex_release1_rollback.sql (generated, run in one transaction by the Release Manager only)",
@@ -57,6 +57,13 @@
     "removed": 96,
     "to_keep_list": 0,
     "to_hold": 96,
+    "rule": "a filer-printed capex total below the investing section differs from the release value (filer's total is the anchor)"
+   },
+   {
+    "label": "multi_member",
+    "removed": 428,
+    "to_keep_list": 0,
+    "to_hold": 428,
     "rule": "a filer-printed capex total below the investing section differs from the release value (filer's total is the anchor)"
    }
   ]
