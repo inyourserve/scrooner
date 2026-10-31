@@ -132,6 +132,8 @@ def da_nature(tag, label, custom, label_ok=True):
     # an element named "...Excluding<X>" names what it leaves OUT: X never excludes the line
     # (LSCC DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts = D&A)
     tag = re.sub(r"Excluding.*$", "", tag)
+    if re.search(r"operating\w*finance|finance\w*operating|operating and finance|finance and operating", tag + " " + label, re.I):
+        return "combined_other"  # OperatingAndFinanceLeaseRightOfUseAssetAmortization mixes operating-lease ROU in
     if re.search(r"finance.?lease", tag + " " + label, re.I) and not re.search(r"operating.?lease", tag + " " + label, re.I):
         # Verifier V10 (GD Q1 2024 211M): finance-lease ROU assets are depreciated like owned
         # assets, so "amortization of intangible and finance lease ROU assets" is D&A
@@ -438,7 +440,11 @@ for (cik, ddate, q), f in chosen():
         label_tags[r["plabel"].strip().lower()].add(r["tag"])
     for r in rows[:op_i]:
         t, lab = r["tag"], r["plabel"]
-        if not ((DA_TAG.search(t) and not DA_TAG_EXCLUDE.search(t)) or (r["custom"] and re.search(r"depreciation|amorti[sz]ation|depletion", lab, re.I))):
+        # candidate by element, or by the printed label of an operating-adjustment line whatever its
+        # element (Verifier V13: OLLI tags its D&A line with the accumulated-depreciation roll-forward element)
+        if not ((DA_TAG.search(t) and not DA_TAG_EXCLUDE.search(t))
+                or (r["custom"] and re.search(r"depreciation|amorti[sz]ation|depletion", lab, re.I))
+                or re.match(r"\s*(depreciation|amorti[sz]ation|depletion)", lab, re.I)):
             continue
         if t not in vals or t in seen_da:
             continue  # a fact printed on two face rows counts once (Verifier: ANF FY2020)
@@ -473,8 +479,9 @@ for (cik, ddate, q), f in chosen():
     narrow_da = sum((x["value"] for x in asset), Decimal(0))
     other_sum = sum((x["value"] for x in other), Decimal(0))
     # the income statement's printed D&A total, same column (Verifier: OMC 333.2M)
-    is_da = [dec(vals.get(r["tag"])) for r in is_rows if r["tag"] in vals and (
-        r["tag"] in ("DepreciationAndAmortization", "DepreciationDepletionAndAmortization", "DepreciationAmortizationAndOther")
+    is_da = [dec(vals.get(r["tag"])) for r in is_rows if r["tag"] in vals
+             and not re.search(r"accretion|impairment|and other\b(?! amorti)", r["plabel"], re.I) and (
+        r["tag"] in ("DepreciationAndAmortization", "DepreciationDepletionAndAmortization")
         or (re.match(r"depreciation,? (depletion,? )?(and )?(other )?amorti[sz]ation", r["plabel"].strip(), re.I)
             and not re.search(r"accretion|impairment|and other\b(?! amorti)", r["plabel"], re.I)))]
     is_da = [x for x in is_da if x]
