@@ -69,7 +69,10 @@ def main(argv: list[str]) -> int:
                 )
     rows.sort(key=lambda r: (r["company_id"], r["concept"], r["period_id"]))
     body = "".join(json.dumps(r, sort_keys=True) + "\n" for r in rows)
-    (out / f"{RELEASE}_cells.jsonl").write_text(body)
+    with gzip.open(
+        out / f"{RELEASE}_cells.jsonl.gz", "wt"
+    ) as fo:  # digest is over the uncompressed rows
+        fo.write(body)
     digest = hashlib.sha256(body.encode()).hexdigest()
     (out / f"{RELEASE}_cells.sha256").write_text(f"{digest}  {RELEASE}_cells.jsonl\n")
     (out / f"{RELEASE}_companies.txt").write_text(

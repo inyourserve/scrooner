@@ -1,0 +1,28 @@
+{
+ "release": "split_release_1",
+ "rules": {"split.event_basis@1": "registered, default OFF", "pershare.never_derive@1": "registered, default OFF; REQUIRED with the split rule (share_basis.run_split_rebase raises otherwise)"},
+ "verifier": "verify/split-run7-4-2026-11-03 PASSED; run 7.5 applies its one change (filer-printed basic/diluted pairs stand)",
+ "source": "cohort dry-run run 7.5 (1,000/1,000 companies, code 87071b3), doc copy at doc/data-moat/team/backups/split_rebase_dryrun_cohort1000_run7_5.csv.gz",
+ "cells_file": "split_release_1_cells.jsonl.gz (release marker column `release` = split_release_1; sha256 over the uncompressed rows)",
+ "sha256": "023253a77811963409dfa7e54b3e0e59c118ac611dec5804fd4766b307d7084a",
+ "cells": 39243, "companies": 984, "periods_2015_plus": 36253,
+ "writes": {"total": 16631, "new_value": 5537, "share_count_rebased": 4662, "was_unadjusted": 2930, "rounding_only": 2086, "was_double_divided": 1416},
+ "removals_of_production_values": {
+  "total": 22612,
+  "no_filed_source (RU-1: a per-share value derived, never filed)": 15855,
+  "dividend_basis_pending (off the company's one dividend basis)": 3021,
+  "restated_between_filings (founder ruling: copies disagree -> hidden)": 1584,
+  "basis_review / company_invariant / basis_conflict": 1505,
+  "dividend_per_share_invalid": 376,
+  "units_scale_suspect": 179,
+  "zero_share_count_filed": 69,
+  "eps_basic_diluted_impossible": 18,
+  "quarter_equals_ytd_context_error": 5
+ },
+ "not_written_phase_1": "other_changed cells keep production's value (share_basis.WRITE_PHASE = 1)",
+ "apply": "pipeline/scripts/split_release_apply.py <this dir> --run-id <id>: Release Manager only; refuses unless both rules are ON, the digest matches and a run id is given; per company, refuses (never forces) when production or the recomputation no longer matches the packaged cells",
+ "rollback": "canonical_archive.restore_run(<run_id>) restores every archived/inserted row of the write; split_event and filing_share_basis are rebuilt per company by the write",
+ "preconditions": ["founder's typed approval in scrooner-4d", "migrations 0098 and 0099 applied (they are)", "a fresh dry run right before the write if production moved; refused companies are re-packaged"],
+ "decision_for_the_approver": "15,855 removals are RU-1 (derived per-share values with no filed source): switching this release on removes them from the site. Shown as a separate line so it can be approved knowingly.",
+ "post_write": "certify rerun on the 984 companies; any new finding blocks"
+}

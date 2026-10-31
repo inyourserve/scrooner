@@ -13,6 +13,7 @@ usage: split_release_apply.py <package_dir> --run-id <id> [--companies 1,2,...]
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import sys
@@ -30,7 +31,8 @@ RELEASE = "split_release_1"
 
 
 def load_package(pkg_dir: Path) -> dict[int, dict[tuple[str, int], sb.PackageCell]]:
-    body = (pkg_dir / f"{RELEASE}_cells.jsonl").read_bytes()
+    with gzip.open(pkg_dir / f"{RELEASE}_cells.jsonl.gz", "rb") as fh:
+        body = fh.read()
     want = (pkg_dir / f"{RELEASE}_cells.sha256").read_text().split()[0]
     if hashlib.sha256(body).hexdigest() != want:
         raise SystemExit("refusing: package digest does not match its .sha256 file")
