@@ -1,0 +1,80 @@
+[
+ {
+  "cik": 1646972,
+  "ticker": "ACI",
+  "end": "2016-02-29",
+  "qtrs": 4,
+  "accession": "0001646972-18-000017",
+  "release_value": "960000000.0000",
+  "filer_supplemental_total": "911700000.0000",
+  "label": "Total payments for capital investments, excluding lease buyouts",
+  "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+  "prod_value": "911700000",
+  "to": "keep_list"
+ },
+ {
+  "cik": 1646972,
+  "ticker": "ACI",
+  "end": "2018-02-28",
+  "qtrs": 4,
+  "accession": "0001646972-18-000017",
+  "release_value": "1547000000.0000",
+  "filer_supplemental_total": "1520500000.0000",
+  "label": "Total payments for capital investments, excluding lease buyouts",
+  "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+  "prod_value": "1520500000",
+  "to": "keep_list"
+ },
+ {
+  "cik": 1646972,
+  "ticker": "ACI",
+  "end": "2017-02-28",
+  "qtrs": 4,
+  "accession": "0001646972-19-000036",
+  "release_value": "1414900000.0000",
+  "filer_supplemental_total": "1375500000.0000",
+  "label": "Total payments for capital investments, excluding lease buyouts",
+  "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+  "prod_value": "1375500000",
+  "to": "keep_list"
+ },
+ {
+  "cik": 1646972,
+  "ticker": "ACI",
+  "end": "2019-02-28",
+  "qtrs": 4,
+  "accession": "0001646972-19-000036",
+  "release_value": "1362600000.0000",
+  "filer_supplemental_total": "1343700000.0000",
+  "label": "Total payments for capital investments, excluding lease buyouts",
+  "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+  "prod_value": "1343700000",
+  "to": "keep_list"
+ },
+ {
+  "cik": 1646972,
+  "ticker": "ACI",
+  "end": "2020-02-29",
+  "qtrs": 4,
+  "accession": "0001646972-20-000022",
+  "release_value": "1475100000.0000",
+  "filer_supplemental_total": "1467400000.0000",
+  "label": "Total payments for capital investments, excluding lease buyouts",
+  "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+  "prod_value": "1467400000",
+  "to": "keep_list"
+ },
+ {
+  "cik": 1646972,
+  "ticker": "ACI",
+  "end": "2021-02-28",
+  "qtrs": 4,
+  "accession": "0001646972-21-000026",
+  "release_value": "1630200000.0000",
+  "filer_supplemental_total": "1643200000.0000",
+  "label": "Total payments for capital investments, excluding lease buyouts",
+  "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+  "prod_value": "1643200000",
+  "to": "keep_list"
+ }
+]

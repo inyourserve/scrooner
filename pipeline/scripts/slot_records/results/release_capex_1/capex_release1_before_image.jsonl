@@ -1879,12 +1879,6 @@
 {"canonical_concept_id": 263, "canonical_fact_id": 322942865, "cik": 1633978, "company_id": 3898, "end": "2019-09-28", "period_id": 838534, "qtrs": 1, "start": "2019-06-30", "value_before": "21700000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 322942867, "cik": 1633978, "company_id": 3898, "end": "2018-12-29", "period_id": 838540, "qtrs": 2, "start": "2018-07-01", "value_before": "53900000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326934027, "cik": 1637459, "company_id": 3940, "end": "2017-12-30", "period_id": 852316, "qtrs": 4, "start": "2017-01-01", "value_before": "1194000000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322999683, "cik": 1646972, "company_id": 4067, "end": "2018-02-24", "period_id": 797306, "qtrs": 4, "start": "2017-02-26", "value_before": "1520500000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322999624, "cik": 1646972, "company_id": 4067, "end": "2019-02-23", "period_id": 797315, "qtrs": 4, "start": "2018-02-25", "value_before": "1343700000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322999668, "cik": 1646972, "company_id": 4067, "end": "2020-02-29", "period_id": 797404, "qtrs": 4, "start": "2019-02-24", "value_before": "1467400000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322999669, "cik": 1646972, "company_id": 4067, "end": "2021-02-27", "period_id": 797405, "qtrs": 4, "start": "2020-03-01", "value_before": "1643200000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322999681, "cik": 1646972, "company_id": 4067, "end": "2017-02-25", "period_id": 797432, "qtrs": 4, "start": "2016-02-28", "value_before": "1375500000"}
-{"canonical_concept_id": 263, "canonical_fact_id": 322999622, "cik": 1646972, "company_id": 4067, "end": "2016-02-27", "period_id": 797440, "qtrs": 4, "start": "2015-03-01", "value_before": "911700000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326934170, "cik": 1649094, "company_id": 4086, "end": "2022-12-31", "period_id": 804412, "qtrs": 4, "start": "2022-01-01", "value_before": "5841000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326934203, "cik": 1650372, "company_id": 4115, "end": "2023-06-30", "period_id": 813944, "qtrs": 4, "start": "2022-07-01", "value_before": "25812000"}
 {"canonical_concept_id": 263, "canonical_fact_id": 326934204, "cik": 1650372, "company_id": 4115, "end": "2024-06-30", "period_id": 813979, "qtrs": 4, "start": "2023-07-01", "value_before": "33112000"}

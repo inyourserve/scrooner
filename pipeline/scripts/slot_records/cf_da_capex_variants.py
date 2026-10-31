@@ -129,6 +129,9 @@ IS_INTANGIBLE_AMORT = re.compile(r"amorti[sz]ation of (acquisition.related |acqu
 
 
 def da_nature(tag, label, custom, label_ok=True):
+    # an element named "...Excluding<X>" names what it leaves OUT: X never excludes the line
+    # (LSCC DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts = D&A)
+    tag = re.sub(r"Excluding.*$", "", tag)
     if re.search(r"finance.?lease", tag + " " + label, re.I) and not re.search(r"operating.?lease", tag + " " + label, re.I):
         # Verifier V10 (GD Q1 2024 211M): finance-lease ROU assets are depreciated like owned
         # assets, so "amortization of intangible and finance lease ROU assets" is D&A
