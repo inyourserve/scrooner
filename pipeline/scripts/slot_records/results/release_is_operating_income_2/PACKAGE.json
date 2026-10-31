@@ -1,0 +1,49 @@
+{
+ "rule_id": "slot.is_operating_income_not_presented@1",
+ "kind": "blank_reasons",
+ "family": "income statement: operating_income_resolved",
+ "status": "dry run; flag OFF; nothing written to the database",
+ "verifier": {
+  "verdict": "YES",
+  "draw": "10/10 reason-only, 10/10 would-hide (verify/oi-not-presented-2026-11-01); re-cut -2 reason-only cells (CIK 15615)"
+ },
+ "strata": {
+  "prod_blank_reason_only": {
+   "file": "is_oi_not_presented_prod_blank_reason_only.jsonl",
+   "sha256": "ec8366a8be1dbec43110033a874fb5120db42bbbc32d333397823d90cec401d4",
+   "cells": 10629,
+   "companies": 216
+  },
+  "prod_has_value_would_hide": {
+   "file": "is_oi_not_presented_prod_has_value_would_hide.jsonl",
+   "sha256": "bb7be5e4d07619a686b3ebb19f6935063f3b920693453f5791752ed0c421ccd5",
+   "cells": 2913,
+   "companies": 97
+  },
+  "q4_prod_has_value_would_hide": {
+   "file": "is_oi_not_presented_q4_prod_has_value_would_hide.jsonl",
+   "sha256": "e8eac38ca985ffa1896e0ffff64819360b50b8d1e734c0fefe7dddadb8775a48",
+   "cells": 400,
+   "companies": 72
+  }
+ },
+ "cells": 13942,
+ "companies": 253,
+ "before_image": {
+  "file": "is_oi_not_presented_before_image.jsonl",
+  "rows": 3313,
+  "sha256": "4b8f2096f2de7a32cf1848e87c02e24929c414d557fdfe7a588f796a6af9f512",
+  "expected_rows": 3313
+ },
+ "rollback": {
+  "file": "is_oi_not_presented_rollback.sql",
+  "sha256": "5dd5d992beefee1a5e6679b7c0971f0cdc03ef96bfce6d3a4970bc0ac340edc4",
+  "note": "re-inserts hidden rows (new ids, same key/value/sources); runs with or without migration 0113"
+ },
+ "write_contract": "per cell one analytics.cell_blank_reason row (state not_presented, reason line_not_presented_in_filing, input_refs with the accession). Would-hide strata also: archive the canonical_fact row to canonical_fact_retired, delete it under set local scrooner.slot_writer = 'on', and (once 0113 exists) insert a slot_protected_cell row for the key (value column = the hidden production value, for audit) so no nightly resolver re-derives it",
+ "stale_cell_refusal": "is_release_check.py <this dir>: refuses if any stratum digest moved, a reason-only cell now has a production row, or a would-hide row's value/sources differ from the before-image",
+ "flag": {
+  "line": "SCROONER_RULES_ENABLED=slot.is_operating_income_not_presented@1",
+  "default": "OFF"
+ }
+}
