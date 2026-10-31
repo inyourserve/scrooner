@@ -54,11 +54,11 @@ def load_shown(
         )
         rows = cur.fetchall()
         fact_ids = sorted({f for r in rows for f in (r[6] or [])})
-        facts: dict[int, tuple[str, str | None, date | None, bool]] = {}
+        facts: dict[int, tuple[str, str | None, date | None, bool, Decimal]] = {}
         for i in range(0, len(fact_ids), 5000):
             cur.execute(
                 """
-                select f.id, c.tag, fl.accession_number, fl.filing_date, f.is_derived
+                select f.id, c.tag, fl.accession_number, fl.filing_date, f.is_derived, f.value
                 from core.fact f
                 join core.concept c on c.id = f.concept_id
                 left join core.filing fl on fl.id = f.filing_id
@@ -66,8 +66,8 @@ def load_shown(
                 """,
                 (fact_ids[i : i + 5000],),
             )
-            for fid, tag, acc, fdate, der in cur.fetchall():
-                facts[fid] = (tag, acc, fdate, bool(der))
+            for fid, tag, acc, fdate, der, fval in cur.fetchall():
+                facts[fid] = (tag, acc, fdate, bool(der), Decimal(fval))
     out: list[Shown] = []
     for name, ptype, fp, start, end, value, src in rows:
         if name not in EXPECTED and name != "total_debt_resolved":
@@ -76,13 +76,19 @@ def load_shown(
         if grain is None:
             continue
         srcs = [facts[f] for f in (src or []) if f in facts]
-        tags = tuple(sorted({t for t, _a, _d, _der in srcs if t}))
-        derived = any(der for _t, _a, _d, der in srcs)
-        by_filing: dict[str, date] = {}
-        for _t, acc, fdate, _der in srcs:
-            if acc and (acc not in by_filing or (fdate and fdate > by_filing[acc])):
-                by_filing[acc] = fdate or date.min
-        accession = max(by_filing, key=lambda a: by_filing[a]) if by_filing else None
+        tags = tuple(sorted({t for t, _a, _d, _der, _v in srcs if t}))
+        derived = any(der for _t, _a, _d, der, _v in srcs)
+        # The proof compares the value against the filing it CAME FROM: among the
+        # source facts, prefer those whose value equals the canonical value (a
+        # later filing's recast comparative must not be the reference for an
+        # as-filed value: MSFT FY2016 total assets 193,694M as filed vs 193,468M
+        # recast in the FY2017 10-K), then the latest-filed of those.
+        shown_value = Decimal(value)
+        carriers = [
+            (acc, fdate) for _t, acc, fdate, _der, v in srcs if acc and v == shown_value
+        ]
+        pool = carriers or [(acc, fdate) for _t, acc, fdate, _der, _v in srcs if acc]
+        accession = max(pool, key=lambda af: af[1] or date.min)[0] if pool else None
         out.append(
             Shown(
                 company_id=company_id,
