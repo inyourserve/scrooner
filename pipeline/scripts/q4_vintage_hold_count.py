@@ -27,7 +27,7 @@ import psycopg
 from scrooner_pipeline.common import rule_flags as rf
 from scrooner_pipeline.normalizer import derived, q4_vintage_hold as vh
 
-SHARDS = Path(__file__).resolve().parents[3] / "doc/data-moat/team/top1000/shards.csv"
+SHARDS = Path(__file__).resolve().parents[2] / "doc/data-moat/team/top1000/shards.csv"
 
 
 def log(msg: str) -> None:

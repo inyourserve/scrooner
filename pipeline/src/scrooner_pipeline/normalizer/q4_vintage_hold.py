@@ -19,10 +19,16 @@ Flag modes (common.rule_flags, env SCROONER_RULES_ENABLED / _DRYRUN):
            and for the statement-fallback concepts derived from them.
 
 Tolerance: core.fact stores no XBRL `decimals`, so the evaluator needs a stated
-rounding tolerance. HOLD_TOLERANCE treats values within 0.05% as the same
-number (thousands vs millions presentations of one figure); anything wider
-counts as a different vintage. PM's 3,412 vs 3,429 (0.5%) is caught; this is
-an interim choice, recorded here, not a measured one.
+rounding tolerance. A scale-free tolerance cannot work: NVIDIA's rounding gaps
+(a 9M YTD of 327 vs Q1+Q2+Q3 of 326, both in millions; or 630,587,000 in one
+10-K vs 631,000,000 in the next after a switch to millions) are 0.3% to 4.8%
+of the line, while PM's real recast (3,412 vs 3,429) is 0.5%. Checked on 10
+NVDA/AAPL/AMD holds, 2026-10-31: all 10 were rounding, 0 were recasts. So the
+slack is ABSOLUTE and per company: 1.5 units of the company's own presentation
+scale (the median trailing-zero exponent of its FY duration facts, capped at
+millions). A sum of three rounded quarters can differ from the rounded total by
+at most 1.5 units; a difference above that is a different number. PM: 17M gap
+vs 1.5M slack -> held. NVDA: 1M gap vs 1.5M slack -> derived.
 """
 
 from __future__ import annotations
@@ -50,7 +56,49 @@ from scrooner_pipeline.normalizer.q4_vintage_dryrun import (
 logger = structlog.get_logger()
 
 RULE_ID = RULE_SAME_VINTAGE_DERIVATION
+# Relative part only; the absolute part is set per company by rounding_tolerance_for().
 HOLD_TOLERANCE = Tolerance(rel=Decimal("0.0005"), abs_tol=Decimal("0"))
+ROUNDING_UNITS_SLACK = Decimal("1.5")
+MAX_SCALE_EXPONENT = 6  # millions: no filer presents USD coarser than that
+
+
+def presentation_scale(values: Iterable[Decimal]) -> int:
+    """Median exponent of the trailing zeros of the values (0 for 1,234;
+    3 for 1,234,000; 6 for 1,234,000,000), clamped to [0, MAX_SCALE_EXPONENT].
+    A round number (500,000,000) has more trailing zeros than the filer's
+    precision, which is why the median over many values is used, not the max."""
+    exps: list[int] = []
+    for v in values:
+        if v == 0:
+            continue
+        e = v.normalize().as_tuple().exponent
+        if isinstance(e, int):
+            exps.append(max(0, min(MAX_SCALE_EXPONENT, e)))
+    if not exps:
+        return 0
+    exps.sort()
+    return exps[len(exps) // 2]
+
+
+def rounding_tolerance_for(conn: psycopg.Connection, company_id: int) -> Tolerance:
+    """HOLD_TOLERANCE with abs_tol = ROUNDING_UNITS_SLACK * 10**(presentation
+    scale of the company's authoritative FY duration USD facts)."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            select f.value from core.fact f
+            join core.period p on p.id = f.period_id
+            join core.unit u on u.id = f.unit_id
+            where f.company_id = %s and p.period_type = 'duration' and p.fiscal_period = 'FY'
+              and f.is_authoritative and not f.is_derived and u.unit_name = 'usd'
+            """,
+            (company_id,),
+        )
+        scale = presentation_scale(Decimal(r[0]) for r in cur.fetchall())
+    return Tolerance(
+        rel=HOLD_TOLERANCE.rel, abs_tol=ROUNDING_UNITS_SLACK * (Decimal(10) ** scale)
+    )
+
 
 # evaluator category -> (stat key in derive_q4, reason_code)
 HOLD_CODES: dict[str, tuple[str, str]] = {
@@ -74,6 +122,7 @@ class Hold:
     fy_value: Decimal | None = None
     ytd_value: Decimal | None = None
     alternatives: tuple[dict, ...] = field(default_factory=tuple)
+    tolerance: dict | None = None
 
     @property
     def stat_key(self) -> str:
@@ -98,13 +147,15 @@ def load_vintage_categories(
     company_id: int,
     concept_ids: Collection[int],
     *,
-    tol: Tolerance = HOLD_TOLERANCE,
+    tol: Tolerance | None = None,
 ) -> dict[tuple[int, str, date], Q4Candidate]:
     """(concept_id, unit_name, fiscal_year_start) -> evaluator verdict for one
     company. Read-only; every concept is evaluated as additive because
     derive_q4 applies its own non-additive gate before asking."""
     if not concept_ids:
         return {}
+    if tol is None:
+        tol = rounding_tolerance_for(conn, company_id)
     out: dict[tuple[int, str, date], Q4Candidate] = {}
     for cand in load_candidates(
         conn,
@@ -136,6 +187,7 @@ def make_hold(
         fy_value=candidate.fy_value,
         ytd_value=candidate.ytd_value,
         alternatives=tuple(candidate.alternatives),
+        tolerance=dict(candidate.tolerance or {}),
     )
 
 
@@ -209,10 +261,7 @@ def blank_reasons(
         "fy_accessions": list(hold.fy_accessions),
         "ytd_accessions": list(hold.ytd_accessions),
         "alternatives": list(hold.alternatives),
-        "tolerance": {
-            "rel": str(HOLD_TOLERANCE.rel),
-            "abs": str(HOLD_TOLERANCE.abs_tol),
-        },
+        "tolerance": dict(hold.tolerance or {}),
     }
     points: list[str] = []
     for n in names:

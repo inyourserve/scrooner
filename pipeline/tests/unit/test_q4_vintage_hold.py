@@ -132,7 +132,7 @@ def harness(monkeypatch):
 def _set_verdict(monkeypatch, cand):
     calls = []
 
-    def fake(_conn, company_id, concept_ids, *, tol=vh.HOLD_TOLERANCE):
+    def fake(_conn, company_id, concept_ids, *, tol=None):
         calls.append((company_id, set(concept_ids)))
         return {(10, "usd", FY_START): cand} if cand else {}
 
@@ -239,3 +239,39 @@ def test_blank_reasons_cover_the_concept_and_its_dependents():
     assert r.rule_id == vh.RULE_ID and r.reason_code == "q4_inputs_mixed_vintage"
     assert set(r.source_fact_ids) == {1, 2, 3, 4}
     assert "13229" in r.reason_text and "0000001413329-26-000012" in r.reason_text
+
+
+@pytest.mark.unit
+def test_presentation_scale_is_the_median_trailing_zero_exponent_capped_at_millions():
+    D = Decimal
+    assert (
+        vh.presentation_scale(
+            [D("630587000"), D("631000000"), D("2599000000"), D("500000000")]
+        )
+        == 6
+    )
+    assert (
+        vh.presentation_scale([D("630587000"), D("1899874000"), D("2599477000")]) == 3
+    )
+    assert vh.presentation_scale([D("12345"), D("678")]) == 0
+    assert vh.presentation_scale([D("0"), D("1000000000000")]) == 6  # capped
+    assert vh.presentation_scale([]) == 0
+
+
+@pytest.mark.unit
+def test_rounding_slack_separates_pm_recast_from_nvda_rounding():
+    tol = vh.Tolerance(
+        rel=vh.HOLD_TOLERANCE.rel, abs_tol=vh.ROUNDING_UNITS_SLACK * Decimal(10) ** 6
+    )
+    assert not tol.agree(
+        Decimal("3412000000"), Decimal("3429000000")
+    )  # PM recast, 17M apart
+    assert tol.agree(
+        Decimal("327000000"), Decimal("326000000")
+    )  # sum of rounded quarters
+    assert tol.agree(
+        Decimal("630587000"), Decimal("631000000")
+    )  # thousands -> millions
+    assert not tol.agree(
+        Decimal("500000000"), Decimal("480000000")
+    )  # 20M on a round number
