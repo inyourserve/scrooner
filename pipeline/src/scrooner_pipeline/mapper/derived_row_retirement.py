@@ -777,7 +777,9 @@ def plan_per_share_chunk(
                              replacement_form=got["form"], replacement_accession=got["accession"],
                              period_start=date.fromisoformat(got["start"]),
                              note=f"fsn-notes:{got['fsn_period']}/num;tag={got['tag']};qtrs=1;"
-                                  f"axis={got.get('axis') or 'none'};copies={got['copies']}")
+                                  f"axis={got.get('axis') or 'none'};copies={got['copies']}"
+                                  + (f";face={got['face_check']['accession']}:{got['face_check']['report']}"
+                                     if got.get("face_check") else ""))
                 )  # fmt: skip
                 continue
             if got and got["outcome"] == "fsn_copies_disagree":
