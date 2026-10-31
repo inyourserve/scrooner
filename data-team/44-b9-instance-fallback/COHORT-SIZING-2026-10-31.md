@@ -29,3 +29,15 @@ Skip counters over all 549: comparative_column 32,898 · custom_taxonomy 4,131 �
 
 Condition 1 (facts.py refactor, flag OFF): `facts-refactor-equivalence-2026-10-31.txt`, 20 cohort companies, old vs new core.fact rows byte-identical.
 Condition 2: CI run 41215739169 (603b181) ran tests/unit/test_instance_fallback.py 2/2 against the migrated Postgres service.
+
+## Revision 2 (same day, branch 9ace4dd): period floor + isXBRL classification built in
+`instance-fallback --ciks <986>` again, flag OFF, nothing written. Per-filing report `cohort-dryrun-v2-2026-10-31.jsonl.gz`.
+
+| measure | v1 | v2 |
+|---|---|---|
+| fact-less 10-K/10-Q filings (now also period_of_report ≥ 2014-01-01) | 549 | 431 |
+| fillable from FSN | 123 (113 cos) | **53 filings at 50 companies, 8,103 facts, 123 new periods** (2015: 1, 2020-2025: 10, 2026: 42) |
+| `filing_has_no_xbrl` (stored submissions isXBRL = 0) | — | 371 filings → 8,735 `filing_has_no_xbrl` blank reasons planned (25 statement data points × FY/Q or I per filing), written only when the flag is ON |
+| `xbrl_filing_not_in_fsn_set` (source (b) candidates) | 7 | 7 |
+
+Apply/rollback for the release manager: `SCROONER_RULES_ENABLED=ingest.instance_fallback@1 scrooner-normalize instance-fallback --ciks <cohort> --fsn-root <local fsn> --backup-dir <dir> --report <jsonl>` writes facts through facts.py with a `raw.sec_companyfacts` lineage row (source_url `fsn://fsn-notes/<set>/<set>_num.tsv.zst#<accession>`), one before-image JSON per filing in `--backup-dir`, and the no-XBRL reasons under one `analytics.rule_run`. `--rollback <backup-dir>` deletes exactly the written facts and created periods (CI test `tests/unit/test_instance_fallback.py` round-trips this on the migrated schema). Needs the founder's words in Ritwik's session.
