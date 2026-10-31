@@ -45,6 +45,7 @@ writer applies, so they cannot drift from what it writes.
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import hashlib
 import json
 import sys
@@ -76,7 +77,7 @@ class ReleaseRefused(RuntimeError):
 @dataclass(frozen=True)
 class Cell:
     cik: str
-    start: date | None  # None for an instant
+    start: date | None  # None for an instant, or a duration known by qtrs only
     end: date
     op: str
     new_value: Decimal | None  # None for a hide
@@ -85,6 +86,11 @@ class Cell:
     expected_cf_id: int | None = None
     source_tags: tuple[str, ...] = ()
     detail: str = ""  # gate / reading, carried into the evidence locator
+    qtrs: int | None = None  # duration length when the package has no start date
+    expected_period_id: int | None = None  # the package's own core.period id
+    source_fact_ids_given: tuple[int, ...] | None = (
+        None  # lineage recorded by the package
+    )
 
     def __post_init__(self) -> None:
         if self.op not in OPS:
@@ -114,6 +120,10 @@ class Spec:
     hide_reason: str = ""
     hide_owner: str = ""
     hide_root_cause: str | None = None
+    # Packages that key cells on FSN's nominal month-end dates (debt, cash,
+    # capex, D&A) bind each update to its before-image row, which carries the
+    # real canonical_fact id and core.period id.
+    before_image: str | None = None
 
 
 @dataclass(frozen=True)
@@ -190,6 +200,92 @@ def adapt_bs_total_liabilities(d: dict) -> Cell | None:
         expected_before=None if op == "insert" else _d(d["production"]),
         accession=d["accession"],
         detail=f"reading={d.get('reading')} rule={d.get('rule')} identity={d.get('identity')}",
+    )
+
+
+MEMBER_OPS = {"slot_differs": "update", "slot_fills_blank": "insert"}
+
+
+def adapt_members(d: dict) -> Cell | None:
+    """Cash-flow and balance-sheet slot packages (debt, cash, capex, D&A):
+    state, value vs prod_value, qtrs (0 = instant), members as dicts with a
+    tag or as [tag, nature, side] lists; fills carry period_start/period_id."""
+    op = MEMBER_OPS.get(d.get("state", ""))
+    if op is None:
+        raise ReleaseRefused(
+            f"cell with state {d.get('state')!r} is not a release cell: {d.get('cik')} {d.get('end')}"
+        )
+    qtrs = int(d["qtrs"])
+    start = _date(d.get("period_start")) if qtrs else None
+    tags = tuple(
+        sorted(
+            {m["tag"] if isinstance(m, dict) else m[0] for m in d.get("members") or []}
+        )
+    )
+    note = d.get("difference_class") or d.get("da_class") or d.get("classes")
+    return Cell(
+        cik=_cik(d["cik"]),
+        start=start,
+        end=date.fromisoformat(d["end"]),
+        op=op,
+        new_value=_d(d["value"]),
+        expected_before=_d(d["prod_value"]) if op == "update" else None,
+        accession=d["accession"],
+        source_tags=tags,
+        detail=f"class={note}",
+        qtrs=None if start or not qtrs else qtrs,
+        expected_period_id=d.get("period_id"),
+    )
+
+
+def adapt_cf_cas(d: dict) -> Cell | None:
+    """CFO / buybacks packages (compare-and-swap format): op, the packaged
+    canonical_fact id, period id, expected_before and the one source fact."""
+    op = d.get("op")
+    if op not in ("update", "insert"):
+        raise ReleaseRefused(
+            f"cell with op {op!r} is not a release cell: {d.get('cik')} {d.get('end')}"
+        )
+    return Cell(
+        cik=_cik(d["cik"]),
+        start=_date(d["start"]),
+        end=date.fromisoformat(d["end"]),
+        op=op,
+        new_value=_d(d["slot_value"]),
+        expected_before=_d(d["expected_before"]) if op == "update" else None,
+        accession=d["accession"],
+        expected_cf_id=d.get("canonical_fact_id") if op == "update" else None,
+        expected_period_id=d["period_id"],
+        source_fact_ids_given=(int(d["source_fact_id"]),),
+        source_tags=(d["tag"],),
+        detail=f"basis={d.get('basis')}",
+    )
+
+
+def _member_spec(
+    name: str,
+    rule_id: str,
+    package: str,
+    section: str,
+    concept: str,
+    data_point: str,
+    confirm: str,
+    instant: bool,
+    before_image: str | None = None,
+    adapt: Callable[[dict], Cell | None] = adapt_members,
+) -> Spec:
+    return Spec(
+        name=name,
+        rule_id=rule_id,
+        package=package,
+        concept=concept,
+        data_point=data_point,
+        confirm=confirm,
+        instant=instant,
+        cells_file=lambda m: m[section]["cells_file"],
+        package_sha=lambda m: m[section]["sha256"],
+        adapt=adapt,
+        before_image=before_image,
     )
 
 
@@ -280,6 +376,130 @@ SPECS: dict[str, Spec] = {
 }
 
 
+SPECS.update(
+    (s.name, s)
+    for s in (
+        _member_spec(
+            "debt_updates_1",
+            "slot.total_debt@1",
+            "release_debt_1",
+            "updates",
+            "total_debt_resolved",
+            "total_debt",
+            "RELEASE-DEBT-1-UPDATES",
+            True,
+            before_image="debt_release1_updates_before_image.jsonl",
+        ),
+        _member_spec(
+            "debt_fills_1",
+            "slot.total_debt@1",
+            "release_debt_1",
+            "release1_fills",
+            "total_debt_resolved",
+            "total_debt",
+            "RELEASE-DEBT-1-FILLS",
+            True,
+        ),
+        _member_spec(
+            "cash_updates_1",
+            "slot.cash_and_equivalents@1",
+            "release_cash_1",
+            "updates",
+            "cash_and_equivalents_resolved",
+            "cash_and_equivalents",
+            "RELEASE-CASH-1-UPDATES",
+            True,
+            before_image="cash_release1_updates_before_image.jsonl",
+        ),
+        _member_spec(
+            "cash_fills_1",
+            "slot.cash_and_equivalents@1",
+            "release_cash_1",
+            "release1_fills",
+            "cash_and_equivalents_resolved",
+            "cash_and_equivalents",
+            "RELEASE-CASH-1-FILLS",
+            True,
+        ),
+        _member_spec(
+            "capex_1",
+            "slot.capex@1",
+            "release_capex_1",
+            "release1",
+            "capex_resolved",
+            "capex",
+            "RELEASE-CAPEX-1",
+            False,
+            before_image="capex_release1_before_image.jsonl",
+        ),
+        _member_spec(
+            "capex_2a_updates",
+            "slot.capex@1",
+            "release_capex_2a",
+            "updates",
+            "capex_resolved",
+            "capex",
+            "RELEASE-CAPEX-2A-UPDATES",
+            False,
+            before_image="capex_release2a_updates_before_image.jsonl",
+        ),
+        _member_spec(
+            "capex_2a_fills",
+            "slot.capex@1",
+            "release_capex_2a",
+            "release2a_fills",
+            "capex_resolved",
+            "capex",
+            "RELEASE-CAPEX-2A-FILLS",
+            False,
+        ),
+        _member_spec(
+            "da_1",
+            "slot.d_and_a@1",
+            "release_da_1",
+            "release1",
+            "depreciation_and_amortization_resolved",
+            "depreciation_and_amortization",
+            "RELEASE-DA-1",
+            False,
+            before_image="da_release1_before_image.jsonl",
+        ),
+        _member_spec(
+            "da_1b",
+            "slot.d_and_a@1",
+            "release_da_1",
+            "release1b",
+            "depreciation_and_amortization_resolved",
+            "depreciation_and_amortization",
+            "RELEASE-DA-1B",
+            False,
+        ),
+        _member_spec(
+            "cfo_1",
+            "slot.cf_cfo@1",
+            "release_cfo_1",
+            "release1",
+            "cfo_resolved",
+            "cfo",
+            "RELEASE-CFO-1",
+            False,
+            adapt=adapt_cf_cas,
+        ),
+        _member_spec(
+            "buybacks_1",
+            "slot.cf_buybacks@1",
+            "release_buybacks_1",
+            "release1",
+            "share_buybacks_resolved",
+            "share_buybacks",
+            "RELEASE-BUYBACKS-1",
+            False,
+            adapt=adapt_cf_cas,
+        ),
+    )
+)
+
+
 def get_spec(name: str) -> Spec:
     if name not in SPECS:
         raise ReleaseRefused(f"unknown package {name!r}; registered: {sorted(SPECS)}")
@@ -312,17 +532,72 @@ def load_package(
             c = spec.adapt(json.loads(line))
             if c is not None:
                 cells.append(c)
-    if spec.instant != all(c.start is None for c in cells):
+    if spec.instant != all(c.start is None and not c.qtrs for c in cells) or (
+        not spec.instant and any(c.start is None and not c.qtrs for c in cells)
+    ):
         raise ReleaseRefused(
             f"{spec.name}: period shape does not match the spec (instant={spec.instant})"
         )
     if any(c.op == "hide" for c in cells) and not spec.hide_reason:
         raise ReleaseRefused(f"{spec.name}: hide cells but no hide reason registered")
-    keys = [(c.cik, c.start, c.end) for c in cells]
+    keys = [(c.cik, c.start, c.qtrs, c.end) for c in cells]
     if len(set(keys)) != len(keys):
         dup = [k for k, n in Counter(keys).items() if n > 1]
         raise ReleaseRefused(f"duplicate cell keys in the package: {dup[:5]}")
+    if spec.before_image:
+        cells = bind_before_image(cells, pdir / spec.before_image)
     return Package(spec, tuple(cells), actual)
+
+
+BIND_DAYS = 10
+
+
+def bind_before_image(cells: list[Cell], path: Path) -> list[Cell]:
+    """Give every update its before-image row: same CIK, same length (qtrs),
+    same production value, the nearest end date within BIND_DAYS. Each cell
+    binds exactly one row and each row exactly one cell, or the load refuses."""
+    rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    by_cik: dict[str, list[int]] = defaultdict(list)
+    for j, r in enumerate(rows):
+        by_cik[_cik(r["cik"])].append(j)
+    used: set[int] = set()
+    out: list[Cell] = []
+    for c in cells:
+        if c.op == "insert":
+            out.append(c)
+            continue
+        cands = []
+        for j in by_cik.get(c.cik, []):
+            r = rows[j]
+            days = abs((date.fromisoformat(r["end"]) - c.end).days)
+            if (
+                days <= BIND_DAYS
+                and Decimal(r["value_before"]) == c.expected_before
+                and (c.qtrs is None or r.get("qtrs", c.qtrs) == c.qtrs)
+            ):
+                cands.append((days, j))
+        cands.sort()
+        if not cands or (len(cands) > 1 and cands[0][0] == cands[1][0]):
+            raise ReleaseRefused(
+                f"{c.cik} {c.end}: {len(cands)} before-image rows match (need 1)"
+            )
+        j = cands[0][1]
+        if j in used:
+            raise ReleaseRefused(f"{c.cik} {c.end}: before-image row bound twice")
+        used.add(j)
+        out.append(
+            dataclasses.replace(
+                c,
+                expected_cf_id=rows[j]["canonical_fact_id"],
+                expected_period_id=rows[j]["period_id"],
+            )
+        )
+    n_upd = sum(1 for c in cells if c.op != "insert")
+    if len(used) != n_upd or len(rows) != n_upd:
+        raise ReleaseRefused(
+            f"before-image has {len(rows)} rows for {n_upd} update cells"
+        )
+    return out
 
 
 # ------------------------------------------------------------------ plan
@@ -331,6 +606,8 @@ class Planned:
     cell: Cell
     company_id: int
     period_id: int
+    period_start: date  # from core.period (equals the end for an instant)
+    period_end: date  # from core.period (the package may carry a nominal month-end)
     live_cf_id: int | None
     source_fact_ids: tuple[int, ...] = ()
     already_applied: bool = False
@@ -343,10 +620,10 @@ class Plan:
     summary: dict[str, Any] = field(default_factory=dict)
 
 
-def grain(c: Cell) -> str:
-    if c.start is None:
+def grain(start: date, end: date) -> str:
+    if start == end:
         return "I"
-    months = round(((c.end - c.start).days + 1) / 30.4)
+    months = round(((end - start).days + 1) / 30.4)
     return {3: "Q", 12: "FY"}.get(months, "TP")
 
 
@@ -369,34 +646,49 @@ def plan(cur, pkg: Package) -> Plan:
         raise ReleaseRefused(f"STALE: unknown CIKs {unknown[:5]}")
     cur.execute(
         """
-        select u.i, count(p.id), min(p.id)
-        from unnest(%(co)s::bigint[], %(s)s::date[], %(e)s::date[]) with ordinality as u(co, s, e, i)
+        select u.i, count(p.id), min(p.id), min(p.start_date), min(p.end_date)
+        from unnest(%(co)s::bigint[], %(s)s::date[], %(q)s::int[], %(e)s::date[], %(pid)s::bigint[])
+             with ordinality as u(co, s, q, e, pid, i)
         left join core.period p
-          on p.company_id = u.co and p.end_date = u.e
-         and p.period_type = %(pt)s
-         and (%(pt)s = 'instant' or p.start_date = u.s)
+          on p.company_id = u.co and p.period_type = %(pt)s
+         and case
+               when u.pid is not null then
+                    p.id = u.pid and abs(p.end_date - u.e) <= %(days)s
+                    and (u.q is null or round(((p.end_date - p.start_date) + 1) / 91.3) = u.q)
+               else p.end_date = u.e
+                    and (%(pt)s = 'instant'
+                         or p.start_date = u.s
+                         or (u.s is null and round(((p.end_date - p.start_date) + 1) / 91.3) = u.q))
+             end
         group by u.i
         """,
         {
+            "pid": [c.expected_period_id for c in cells],
+            "days": BIND_DAYS,
             "co": [company[c.cik] for c in cells],
-            "s": [c.start or c.end for c in cells],
+            "s": [c.start for c in cells],
+            "q": [c.qtrs for c in cells],
             "e": [c.end for c in cells],
             "pt": "instant" if spec.instant else "duration",
         },
     )
-    period: dict[int, int] = {}
+    period: dict[int, tuple[int, date, date]] = {}
     stale: list[str] = []
-    for i, n, pid in cur.fetchall():
+    for i, n, pid, pstart, pend in cur.fetchall():
         c = cells[i - 1]
         if n != 1:
-            stale.append(f"{c.cik} {c.start}..{c.end}: {n} matching periods (need 1)")
+            stale.append(
+                f"{c.cik} {c.start or f'qtrs={c.qtrs}'}..{c.end}: {n} matching periods (need 1)"
+            )
         else:
-            period[i - 1] = pid
+            period[i - 1] = (pid, pstart, pend)
     if stale:
         raise ReleaseRefused(
             f"STALE: {len(stale)} cells; re-cut the package. First: {stale[:5]}"
         )
-    pids = [period[i] for i in range(len(cells))]
+    pids = [period[i][0] for i in range(len(cells))]
+    starts = [period[i][1] for i in range(len(cells))]
+    ends = [period[i][2] for i in range(len(cells))]
     cos = [company[c.cik] for c in cells]
     cur.execute(
         """
@@ -411,6 +703,9 @@ def plan(cur, pkg: Package) -> Plan:
     )
     live = {(r[0], r[1]): r[2:] for r in cur.fetchall()}
     sources = _lineage(cur, cells, cos, pids)
+    for i, c in enumerate(cells):
+        if c.source_fact_ids_given is not None:
+            sources[i] = c.source_fact_ids_given
     planned: list[Planned] = []
     for i, c in enumerate(cells):
         cf_id, value, prot_rule, prot_value, protected = live[(cos[i], pids[i])]
@@ -424,7 +719,18 @@ def plan(cur, pkg: Package) -> Plan:
             and value == target
         )
         if done:
-            planned.append(Planned(c, cos[i], pids[i], cf_id, sources.get(i, ()), True))
+            planned.append(
+                Planned(
+                    c,
+                    cos[i],
+                    pids[i],
+                    starts[i],
+                    ends[i],
+                    cf_id,
+                    sources.get(i, ()),
+                    True,
+                )
+            )
             continue
         if protected:
             stale.append(f"{tag}: key already protected by {prot_rule} at {prot_value}")
@@ -436,11 +742,17 @@ def plan(cur, pkg: Package) -> Plan:
             stale.append(
                 f"{tag}: production is {value}, package expected {c.expected_before}"
             )
+        elif c.expected_period_id is not None and pids[i] != c.expected_period_id:
+            stale.append(
+                f"{tag}: period id {pids[i]}, package recorded {c.expected_period_id}"
+            )
         elif c.expected_cf_id is not None and cf_id != c.expected_cf_id:
             stale.append(
                 f"{tag}: production row id {cf_id}, package expected {c.expected_cf_id}"
             )
-        planned.append(Planned(c, cos[i], pids[i], cf_id, sources.get(i, ())))
+        planned.append(
+            Planned(c, cos[i], pids[i], starts[i], ends[i], cf_id, sources.get(i, ()))
+        )
     if stale:
         raise ReleaseRefused(
             f"STALE: {len(stale)} cells drifted since the package was cut; re-cut it. First: {stale[:5]}"
@@ -532,8 +844,13 @@ values (%s, %s, %s, %s, %s, 'latest', %s, %s, 'detector_audit', %s, %s, %s, 'DAT
 
 
 def _key(spec: Spec, p: Planned) -> CellKey:
-    c = p.cell
-    return CellKey(p.company_id, spec.data_point, grain(c), c.start or c.end, c.end)
+    return CellKey(
+        p.company_id,
+        spec.data_point,
+        grain(p.period_start, p.period_end),
+        p.period_start,
+        p.period_end,
+    )
 
 
 def apply_company(
@@ -603,9 +920,9 @@ def apply_company(
                     (
                         p.company_id,
                         spec.data_point,
-                        grain(p.cell),
-                        p.cell.start or p.cell.end,
-                        p.cell.end,
+                        grain(p.period_start, p.period_end),
+                        p.period_start,
+                        p.period_end,
                         "defect" if p.cell.op == "hide" else "value",
                         spec.rule_id,
                         p.cell.accession,

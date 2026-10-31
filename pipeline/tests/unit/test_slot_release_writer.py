@@ -90,13 +90,10 @@ def test_duplicate_keys_and_non_release_rows_are_refused(tmp_path):
 
 
 def test_grain():
-    def c(s, e):
-        return w.Cell(CIK_A, s, e, "insert", Decimal(1), None, ACC_A)
-
-    assert w.grain(c(date(2025, 1, 1), date(2025, 12, 31))) == "FY"
-    assert w.grain(c(date(2025, 10, 1), date(2025, 12, 31))) == "Q"
-    assert w.grain(c(date(2025, 1, 1), date(2025, 6, 30))) == "TP"
-    assert w.grain(c(None, date(2025, 12, 31))) == "I"
+    assert w.grain(date(2025, 1, 1), date(2025, 12, 31)) == "FY"
+    assert w.grain(date(2025, 10, 1), date(2025, 12, 31)) == "Q"
+    assert w.grain(date(2025, 1, 1), date(2025, 6, 30)) == "TP"
+    assert w.grain(date(2025, 12, 31), date(2025, 12, 31)) == "I"
 
 
 class _NoDb:
