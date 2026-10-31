@@ -326,10 +326,10 @@ for (cik, ddate, q), f in chosen():
                 if t in vals and dec(vals[t]) and re.search(r"capital|property|equipment", lab, re.I):
                     skipped.append({"tag": t, "label": lab, "value": str(dec(vals[t])), "why": "accrual_change"})
                 continue  # CHTR "Change in accrued expenses related to capital expenditures"
-            if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab) or re.search(r"property acquisitions|acquisitions? of (oil|gas|proved|unproved|mineral|leasehold)", lab, re.I)) \
+            if (CAPEX_OG.search(t) or CAPEX_OG_LABEL.search(lab) or re.search(r"property acquisitions|acquisitions? of (oil|gas|proved|unproved|mineral|leasehold)|acreage", lab, re.I)) \
                     and not re.search(r"proceeds|sale|disposal|divest|software|site", lab + t, re.I):
                 v = dec(vals.get(t))
-                if v and re.search(r"acquisition|acquire", lab, re.I):
+                if v and re.search(r"acquisition|acquire|acreage", lab, re.I):
                     og_acq.append({"tag": t, "label": lab, "value": str(v)})
                     continue  # Verifier fills R2 (FANG "Property acquisitions" 1,193M): founder perimeter question, held
                 if v:
@@ -341,7 +341,7 @@ for (cik, ddate, q), f in chosen():
                 lines.append({"tag": t, "label": lab, "nature": "lease_unclear", "disc": False, "value": abs(v), "raw": v,
                               "negating": r["negating"], "custom": r["custom"], "additions_line": True})
                 continue
-            if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on)|expenditures? (for|on)|payments? for (vessels|aircraft|rigs|towers|ships))\b", lab, re.I) and not re.search(
+            if re.match(r"\s*(additions? (to|of)|capital expenditures? (for|on)|expenditures? (for|on)|payments? for (vessels|aircraft|rigs|towers|ships)|construction in progress)\b", lab, re.I) and not re.search(
                     r"real estate|rental propert|investment|loan|securit|intangible|business|software|acquisition|receivable|financ|note|"
                     r"debt|restricted|other (long.term |non.?current )?assets|deposit|escrow|contract", lab, re.I) and t in vals \
                     and not (parents[t] & printed - set(INV_TOTAL)) \
