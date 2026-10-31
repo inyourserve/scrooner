@@ -1,0 +1,17 @@
+{
+ "run_id": "4d7b48ee-6693-4aec-85ed-13f9cf87e8dd",
+ "rule_id": "slot.is_operating_income_not_presented@1",
+ "batches_committed": 11,
+ "plan": {
+  "concept_id": 249,
+  "cells": 13942,
+  "reasons": 13942,
+  "hides": 3313,
+  "companies": 253,
+  "reason_only_without_period_row": 0
+ },
+ "reasons": 13942,
+ "removed": 3313,
+ "protected": 13942
+}
+touched ciks (certify rerun): 253
