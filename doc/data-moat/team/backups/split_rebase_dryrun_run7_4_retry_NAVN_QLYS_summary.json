@@ -1,0 +1,264 @@
+{
+ "companies_ok": 2,
+ "companies_failed": [],
+ "cells_by_class_all_periods": {
+  "hidden:basis_review": 15,
+  "unchanged": 262,
+  "was_unadjusted": 6,
+  "hidden:no_filed_source": 14,
+  "rounding_only": 2,
+  "was_double_divided": 2,
+  "share_count_rebased": 2,
+  "hidden:restated_between_filings": 1
+ },
+ "cells_by_class_periods_ending_2015_plus": {
+  "hidden:basis_review": 15,
+  "unchanged": 240,
+  "was_unadjusted": 6,
+  "hidden:no_filed_source": 14,
+  "rounding_only": 2,
+  "was_double_divided": 2,
+  "share_count_rebased": 2,
+  "hidden:restated_between_filings": 1
+ },
+ "events_by_status": {
+  "review": 2,
+  "pending": 1
+ },
+ "confirmed_events_by_kinds": {},
+ "invariant_companies": [],
+ "top20_per_share_one_per_company": [
+  {
+   "magnitude": "3.003003003003003003003003003",
+   "ticker": "NAVN",
+   "concept": "diluted_eps_resolved",
+   "period_end": "2025-07-31",
+   "old": "-6.456456456456456456456456456",
+   "new": "-2.15",
+   "accession": "0001628280-26-061416",
+   "factor": "1",
+   "class": "was_unadjusted"
+  },
+  {
+   "magnitude": "2.065217391304347826086956522",
+   "ticker": "QLYS",
+   "concept": "diluted_eps_resolved",
+   "period_end": "2017-09-30",
+   "old": "0.46",
+   "new": "0.95",
+   "accession": "0001107843-18-000012",
+   "factor": "1",
+   "class": "was_double_divided"
+  }
+ ],
+ "top20_shares_one_per_company": [
+  {
+   "magnitude": "1.008367159182790921058789799",
+   "ticker": "QLYS",
+   "concept": "shares_outstanding_resolved",
+   "period_end": "2018-09-30",
+   "old": "39015034",
+   "new": "39341479",
+   "accession": "0001107843-18-000012",
+   "factor": "1",
+   "class": "share_count_rebased"
+  }
+ ],
+ "top20_changes": [
+  {
+   "magnitude": "3.003003003003003003003003003",
+   "ticker": "NAVN",
+   "concept": "diluted_eps_resolved",
+   "period_end": "2025-07-31",
+   "old": "-6.456456456456456456456456456",
+   "new": "-2.15",
+   "accession": "0001628280-26-061416",
+   "factor": "1",
+   "class": "was_unadjusted"
+  },
+  {
+   "magnitude": "3.003003003003003003003003003",
+   "ticker": "NAVN",
+   "concept": "basic_eps_resolved",
+   "period_end": "2025-07-31",
+   "old": "-6.456456456456456456456456456",
+   "new": "-2.15",
+   "accession": "0001628280-26-061416",
+   "factor": "1",
+   "class": "was_unadjusted"
+  },
+  {
+   "magnitude": "3.003003003003003003003003003",
+   "ticker": "NAVN",
+   "concept": "diluted_eps_resolved",
+   "period_end": "2025-04-30",
+   "old": "-3.993993993993993993993993994",
+   "new": "-1.33",
+   "accession": "0001628280-26-042552",
+   "factor": "1",
+   "class": "was_unadjusted"
+  },
+  {
+   "magnitude": "3.003003003003003003003003003",
+   "ticker": "NAVN",
+   "concept": "basic_eps_resolved",
+   "period_end": "2025-04-30",
+   "old": "-3.993993993993993993993993994",
+   "new": "-1.33",
+   "accession": "0001628280-26-042552",
+   "factor": "1",
+   "class": "was_unadjusted"
+  },
+  {
+   "magnitude": "3.003003003003003003003003002",
+   "ticker": "NAVN",
+   "concept": "diluted_eps_resolved",
+   "period_end": "2025-07-31",
+   "old": "-2.492492492492492492492492492",
+   "new": "-0.83",
+   "accession": "0001628280-26-061416",
+   "factor": "1",
+   "class": "was_unadjusted"
+  },
+  {
+   "magnitude": "3.003003003003003003003003002",
+   "ticker": "NAVN",
+   "concept": "basic_eps_resolved",
+   "period_end": "2025-07-31",
+   "old": "-2.492492492492492492492492492",
+   "new": "-0.83",
+   "accession": "0001628280-26-061416",
+   "factor": "1",
+   "class": "was_unadjusted"
+  },
+  {
+   "magnitude": "2.065217391304347826086956522",
+   "ticker": "QLYS",
+   "concept": "diluted_eps_resolved",
+   "period_end": "2017-09-30",
+   "old": "0.46",
+   "new": "0.95",
+   "accession": "0001107843-18-000012",
+   "factor": "1",
+   "class": "was_double_divided"
+  },
+  {
+   "magnitude": "2.020000000000000000000000000",
+   "ticker": "QLYS",
+   "concept": "basic_eps_resolved",
+   "period_end": "2017-09-30",
+   "old": "0.5",
+   "new": "1.01",
+   "accession": "0001107843-18-000012",
+   "factor": "1",
+   "class": "was_double_divided"
+  },
+  {
+   "magnitude": "1.008367159182790921058789799",
+   "ticker": "QLYS",
+   "concept": "shares_outstanding_resolved",
+   "period_end": "2018-09-30",
+   "old": "39015034",
+   "new": "39341479",
+   "accession": "0001107843-18-000012",
+   "factor": "1",
+   "class": "share_count_rebased"
+  },
+  {
+   "magnitude": "1.003363780228924060401946593",
+   "ticker": "QLYS",
+   "concept": "shares_outstanding_resolved",
+   "period_end": "2019-12-31",
+   "old": "39015034",
+   "new": "39146272",
+   "accession": "0001437749-21-003648",
+   "factor": "1",
+   "class": "share_count_rebased"
+  }
+ ],
+ "splits_in_table_and_detected": [],
+ "splits_detected_only_from_filings": [],
+ "splits_in_table_not_confirmed": [
+  {
+   "ticker": "NAVN",
+   "company_id": 3976,
+   "split_table": [
+    [
+     "2025-09-18",
+     "0.333"
+    ]
+   ],
+   "confirmed": []
+  }
+ ],
+ "per_company": {
+  "NAVN": {
+   "company_id": 3976,
+   "events": [
+    {
+     "ratio": "2",
+     "status": "review",
+     "basis_date": "2026-04-02",
+     "kinds": [
+      "share_step"
+     ],
+     "pairs": 0,
+     "steps": 1,
+     "disclosures": 0,
+     "note": "one evidence kind only"
+    },
+    {
+     "ratio": "5/2",
+     "status": "review",
+     "basis_date": "2026-06-11",
+     "kinds": [
+      "share_step"
+     ],
+     "pairs": 0,
+     "steps": 1,
+     "disclosures": 0,
+     "note": "one evidence kind only"
+    },
+    {
+     "ratio": "1/3",
+     "status": "pending",
+     "basis_date": "2025-09-18",
+     "kinds": [
+      "ratio_fact"
+     ],
+     "pairs": 0,
+     "steps": 0,
+     "disclosures": 2,
+     "note": "every held filing post-dates it"
+    }
+   ],
+   "classes": {
+    "hidden:basis_review": 15,
+    "unchanged": 6,
+    "was_unadjusted": 6,
+    "hidden:no_filed_source": 4
+   },
+   "invariant_violations": 0,
+   "basis_status": {
+    "review": 2,
+    "consistent": 2
+   }
+  },
+  "QLYS": {
+   "company_id": 3545,
+   "events": [],
+   "classes": {
+    "unchanged": 256,
+    "rounding_only": 2,
+    "was_double_divided": 2,
+    "hidden:no_filed_source": 10,
+    "share_count_rebased": 2,
+    "hidden:restated_between_filings": 1
+   },
+   "invariant_violations": 0,
+   "basis_status": {
+    "consistent": 51
+   }
+  }
+ }
+}
