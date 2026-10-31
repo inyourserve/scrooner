@@ -39,16 +39,15 @@ for k, c in sorted(new.items()):
     if any(re.search(r"tenant improvement|construction in progress", x["label"], re.I) for x in c["lines"]):
         classes.append("ti_cip")
     if c.get("exclusion_note"):
-        # acquisition lines excluded (founder: oil and gas property/acreage acquisitions are not capex); the
-        # same exclusion also caught non-O&G acquisition lines (REIT/other property acquisitions): flagged
-        og = any(re.search(r"oil|gas|acreage|proved|unproved|mineral|leasehold|drilling", x["label"] + x["tag"], re.I)
-                 for x in c.get("og_property_acquisitions") or [])
-        classes.append("acquisition_exclusion_og" if og else "acquisition_exclusion_non_og")
+        # acquisition lines are not capex (founder ruling for O&G property/acreage; Dhairya 2026-11-04: the same
+        # rule for every acquisition line, as in the release-1 removals RYAN/LNTH/QXO)
+        classes.append("acquisition_exclusion")
     rows.append({"cik": c["cik"], "ticker": c["ticker"], "end": c["end"], "qtrs": c["qtrs"], "accession": c["accession"],
                  "value": c["interim"], "previous": (p["interim"] if p else None), "previous_reason": (p["interim_reason"] if p else "no_cell"),
                  "classes": classes or ["other_changed"], "prod_value": c["prod_value"],
                  "members": [{"tag": x["tag"], "label": x["label"], "nature": x["nature"], "value": x["value"]} for x in c["lines"]],
-                 "og_property_acquisitions_excluded": c.get("og_property_acquisitions") or []})
+                 "exclusion_note": "acquisitions_excluded" if c.get("exclusion_note") else None,
+                 "acquisition_lines_excluded": c.get("og_property_acquisitions") or []})
 data = "".join(json.dumps(r, sort_keys=True) + "\n" for r in rows).encode()
 (out / "capex_release2a_cells.jsonl").write_bytes(data)
 by = Counter(cl for r in rows for cl in r["classes"])

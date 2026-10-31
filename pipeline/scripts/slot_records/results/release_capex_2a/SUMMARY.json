@@ -1,13 +1,12 @@
 {
  "cells": 3203,
  "companies": 130,
- "sha256": "cec5f565beac4b8fa5a7411a6c8b82cd548a21af059af1e8b320558b73b82c68",
+ "sha256": "7d88867e70d1061df2d93ea5e3af9688be8baf46551de57800760578facc8797",
  "by_class": {
   "discontinued": 5,
   "software": 2573,
   "leased": 301,
-  "acquisition_exclusion_og": 256,
-  "acquisition_exclusion_non_og": 15,
+  "acquisition_exclusion": 271,
   "turnaround": 64,
   "ti_cip": 11
  },
@@ -133,26 +132,23 @@
    "PCAR",
    "URI"
   ],
-  "acquisition_exclusion_og": [
+  "acquisition_exclusion": [
    "APA",
    "AR",
    "ATO",
    "CHRD",
    "EXE",
    "FANG",
+   "HUT",
+   "MCK",
    "MGY",
    "MTDR",
    "MUR",
    "PR",
    "RRC",
    "SM",
+   "TRNO",
    "VLO"
-  ],
-  "acquisition_exclusion_non_og": [
-   "EXE",
-   "HUT",
-   "MCK",
-   "TRNO"
   ],
   "turnaround": [
    "PBF",
