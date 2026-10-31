@@ -32,7 +32,10 @@ from pathlib import Path
 
 import psycopg
 
-from scrooner_pipeline.collector.storage import SupabaseStorageClient, strip_bucket_prefix
+from scrooner_pipeline.collector.storage import (
+    SupabaseStorageClient,
+    strip_bucket_prefix,
+)
 from scrooner_pipeline.common.sec_client import SECClient
 from scrooner_pipeline.company_master.status import QUALIFYING_FORMS
 from scrooner_pipeline.normalizer import shared_accession as sa
@@ -40,8 +43,15 @@ from scrooner_pipeline.normalizer.identity import _parse_filings_block
 
 HEADER_CIK_RE = re.compile(r"FILER:.*?CENTRAL INDEX KEY:\s*(\d{10})", re.S)
 NAMED = {  # the nine cohort companies with NO financial data (task, 2026-10-31)
-    694: "ETR", 1008: "ES", 1081: "SO", 1525: "CMS", 1576: "EIX",
-    2144: "AEE", 2503: "SRE", 3562: "TXNM", 5394: "CTVA",
+    694: "ETR",
+    1008: "ES",
+    1081: "SO",
+    1525: "CMS",
+    1576: "EIX",
+    2144: "AEE",
+    2503: "SRE",
+    3562: "TXNM",
+    5394: "CTVA",
 }
 
 
@@ -105,13 +115,17 @@ def phase_a(conn, workdir: Path, threads: int) -> dict[str, list[dict]]:
         with SupabaseStorageClient() as storage:
             for p in plist:
                 payload = _download_json(storage, p)
-                block = payload["filings"]["recent"] if "filings" in payload else payload
+                block = (
+                    payload["filings"]["recent"] if "filings" in payload else payload
+                )
                 for f in _parse_filings_block(block):
                     filings.append(
                         {
                             "accession_number": f["accession_number"],
                             "form": f["form"],
-                            "filing_date": f["filing_date"].isoformat() if f["filing_date"] else None,
+                            "filing_date": f["filing_date"].isoformat()
+                            if f["filing_date"]
+                            else None,
                             "period_of_report": f["period_of_report"].isoformat()
                             if f["period_of_report"]
                             else None,
@@ -141,7 +155,9 @@ def phase_a(conn, workdir: Path, threads: int) -> dict[str, list[dict]]:
 # ---- phase B: carriers -------------------------------------------------------
 
 
-def phase_b(conn, workdir: Path, wanted_by_cik: dict[str, set[str]], threads: int) -> dict:
+def phase_b(
+    conn, workdir: Path, wanted_by_cik: dict[str, set[str]], threads: int
+) -> dict:
     """cik -> {accession: {"entries": n, "periods": [[fy, fp, end], ...]}}"""
     ckpt = workdir / "B_carriers.jsonl"
     done: dict[str, dict] = {}
@@ -181,9 +197,13 @@ def phase_b(conn, workdir: Path, wanted_by_cik: dict[str, set[str]], threads: in
                             entries[accn] += 1
                             periods[accn].add((e.get("fy"), e.get("fp"), e.get("end")))
         for accn in entries:
-            carried[accn] = {"entries": entries[accn], "periods": sorted(
-                [list(p) for p in periods[accn]], key=lambda x: (str(x[2]), str(x[0]), str(x[1]))
-            )}
+            carried[accn] = {
+                "entries": entries[accn],
+                "periods": sorted(
+                    [list(p) for p in periods[accn]],
+                    key=lambda x: (str(x[2]), str(x[0]), str(x[1])),
+                ),
+            }
         return cik, carried, "ok"
 
     with ckpt.open("a") as out, ThreadPoolExecutor(threads) as ex:
@@ -206,12 +226,26 @@ def phase_b(conn, workdir: Path, wanted_by_cik: dict[str, set[str]], threads: in
 # ---- phase C: headers --------------------------------------------------------
 
 
-def phase_c(workdir: Path, accessions: list[str]) -> dict[str, str | None]:
+def phase_c(
+    workdir: Path,
+    accessions: list[str],
+    registrants: dict[str, list[str]] | None = None,
+) -> dict[str, str | None]:
+    """First FILER CIK of each accession's SEC header. The -index-headers.html
+    lives in every REGISTRANT's CIK folder, not necessarily the accession
+    prefix's: since 2025-08 Eversource's combined filings are submitted by a
+    filing agent (prefix 0001628280) and the prefix folder 404s while
+    /data/72741/... answers (checked live 2026-10-31). So: prefix folder first,
+    then each registrant's folder. A checkpointed miss with an error is
+    re-fetched; a header read without a FILER block is final."""
+    registrants = registrants or {}
     ckpt = workdir / "C_headers.jsonl"
     done: dict[str, str | None] = {}
     if ckpt.exists():
         for line in ckpt.open():
             rec = json.loads(line)
+            if rec["header_first_filer"] is None and rec.get("error"):
+                continue  # retry misses (404 under the prefix folder, transient errors)
             done[rec["accession_number"]] = rec["header_first_filer"]
         log(f"C: resumed {len(done)} headers")
     todo = [a for a in accessions if a not in done]
@@ -220,21 +254,30 @@ def phase_c(workdir: Path, accessions: list[str]) -> dict[str, str | None]:
         for i, acc in enumerate(todo, 1):
             prefix = acc.split("-", 1)[0]
             nodash = acc.replace("-", "")
-            url = f"https://www.sec.gov/Archives/edgar/data/{int(prefix)}/{nodash}/{acc}-index-headers.html"
+            folders = [int(prefix)] + [
+                int(c) for c in registrants.get(acc, []) if int(c) != int(prefix)
+            ]
             first = None
             err = None
-            try:
-                resp = sec.get(url)
+            for folder in folders:
+                url = f"https://www.sec.gov/Archives/edgar/data/{folder}/{nodash}/{acc}-index-headers.html"
+                try:
+                    resp = sec.get(url)
+                except Exception as exc:  # noqa: BLE001
+                    err = repr(exc)[:120]
+                    continue
                 if resp.status_code == 200:
                     m = HEADER_CIK_RE.search(resp.text)
                     first = m.group(1) if m else None
-                else:
-                    err = f"http_{resp.status_code}"
-            except Exception as exc:  # noqa: BLE001
-                err = repr(exc)[:120]
+                    err = None
+                    break
+                err = f"http_{resp.status_code}"
             done[acc] = first
             out.write(
-                json.dumps({"accession_number": acc, "header_first_filer": first, "error": err}) + "\n"
+                json.dumps(
+                    {"accession_number": acc, "header_first_filer": first, "error": err}
+                )
+                + "\n"
             )
             if i % 100 == 0:
                 out.flush()
@@ -259,7 +302,9 @@ def main() -> int:
     conn.read_only = True  # belt and braces: the session refuses writes
     log("connected (read-only session)")
 
-    companies = q(conn, "select id, cik, company_name, status, status_reason from core.company")
+    companies = q(
+        conn, "select id, cik, company_name, status, status_reason from core.company"
+    )
     id_by_cik = {cik: cid for cid, cik, *_ in companies}
     name_by_id = {cid: name for cid, _c, name, *_ in companies}
     status_by_id = {cid: (st, reason) for cid, _c, _n, st, reason in companies}
@@ -281,10 +326,11 @@ def main() -> int:
     headers: dict[str, str | None] = {}
     if not args.skip_headers:
         need = sorted(
-            a for a, regs in shared.items()
+            a
+            for a, regs in shared.items()
             if next(iter(regs.values())) in sa.PERIODIC_FORMS or a in carriers
         )
-        headers = phase_c(workdir, need)
+        headers = phase_c(workdir, need, {a: sorted(shared[a]) for a in need})
 
     decisions = sa.plan_decisions(shared, carriers, headers)
     summary = sa.summarize(decisions)
@@ -299,17 +345,29 @@ def main() -> int:
             (part,),
         ):
             owner[acc] = (fid, cid)
-    log(f"owner rows: {len(owner)} of {len(shared)} shared accessions exist in core.filing")
+    log(
+        f"owner rows: {len(owner)} of {len(shared)} shared accessions exist in core.filing"
+    )
 
     form_by_acc = {a: next(iter(r.values())) for a, r in shared.items()}
     date_by_acc: dict[str, str | None] = {}
     for cik, fl in filings_by_cik.items():
         for f in fl:
-            if f["accession_number"] in shared and f["accession_number"] not in date_by_acc:
+            if (
+                f["accession_number"] in shared
+                and f["accession_number"] not in date_by_acc
+            ):
                 date_by_acc[f["accession_number"]] = f["filing_date"]
 
     moves = []  # accessions whose core.filing.company_id would change
-    gain: dict[int, dict] = defaultdict(lambda: {"accessions": 0, "entries": 0, "periods": set(), "forms": defaultdict(int)})
+    gain: dict[int, dict] = defaultdict(
+        lambda: {
+            "accessions": 0,
+            "entries": 0,
+            "periods": set(),
+            "forms": defaultdict(int),
+        }
+    )
     conflicts = []
     for d in decisions:
         if d.primary_cik is None:
@@ -330,7 +388,9 @@ def main() -> int:
             if carried:
                 g["entries"] += carried["entries"]
                 g["periods"].update(tuple(p) for p in carried["periods"])
-    log(f"accessions that would move owner: {len(moves)}; carrier conflicts: {len(conflicts)}")
+    log(
+        f"accessions that would move owner: {len(moves)}; carrier conflicts: {len(conflicts)}"
+    )
 
     # what the current owner could LOSE: its core.fact rows on moving filings
     lose: dict[int, int] = defaultdict(int)
@@ -346,7 +406,9 @@ def main() -> int:
                 timeout="10min",
             )[0]
             lose[cur_cid] += n
-    log(f"owners with core.fact rows on moving filings: {sum(1 for v in lose.values() if v)}")
+    log(
+        f"owners with core.fact rows on moving filings: {sum(1 for v in lose.values() if v)}"
+    )
 
     reg_rows = sa.registrant_rows(decisions, id_by_cik)
     roles = defaultdict(int)
@@ -358,7 +420,10 @@ def main() -> int:
     def latest_via_link(cid: int) -> str | None:
         best = None
         for d in decisions:
-            if d.primary_cik is None or form_by_acc[d.accession_number] not in QUALIFYING_FORMS:
+            if (
+                d.primary_cik is None
+                or form_by_acc[d.accession_number] not in QUALIFYING_FORMS
+            ):
                 continue
             if cid in {id_by_cik.get(c) for c in d.registrant_ciks}:
                 fd = date_by_acc.get(d.accession_number)
@@ -378,14 +443,22 @@ def main() -> int:
             "forms_recovered": dict(g["forms"]) if g else {},
             "fact_entries_recovered": g["entries"] if g else 0,
             "periods_recovered": len(g["periods"]) if g else 0,
-            "period_end_range": [min(p[2] for p in g["periods"] if p[2]), max(p[2] for p in g["periods"] if p[2])]
-            if g and any(p[2] for p in g["periods"]) else None,
+            "period_end_range": [
+                min(p[2] for p in g["periods"] if p[2]),
+                max(p[2] for p in g["periods"] if p[2]),
+            ]
+            if g and any(p[2] for p in g["periods"])
+            else None,
             "shared_accessions_as_registrant": sum(
-                1 for d in decisions if cid in {id_by_cik.get(c) for c in d.registrant_ciks}
+                1
+                for d in decisions
+                if cid in {id_by_cik.get(c) for c in d.registrant_ciks}
             ),
             "quarantined_as_registrant": sum(
-                1 for d in decisions
-                if d.primary_cik is None and cid in {id_by_cik.get(c) for c in d.registrant_ciks}
+                1
+                for d in decisions
+                if d.primary_cik is None
+                and cid in {id_by_cik.get(c) for c in d.registrant_ciks}
             ),
         }
 
@@ -420,9 +493,13 @@ def main() -> int:
     for d in decisions:
         if d.primary_cik is None and len(quarantine_examples[d.quarantine_reason]) < 5:
             quarantine_examples[d.quarantine_reason].append(
-                {"accession": d.accession_number, "form": form_by_acc[d.accession_number],
-                 "registrants": list(d.registrant_ciks), "carriers": list(d.carriers),
-                 "header": headers.get(d.accession_number)}
+                {
+                    "accession": d.accession_number,
+                    "form": form_by_acc[d.accession_number],
+                    "registrants": list(d.registrant_ciks),
+                    "carriers": list(d.carriers),
+                    "header": headers.get(d.accession_number),
+                }
             )
 
     report = {
@@ -430,7 +507,17 @@ def main() -> int:
         "read_only": True,
         "population_ciks": len(filings_by_cik),
         "shared_accessions": len(shared),
-        "shared_by_form": dict(sorted(defaultdict(int, {f: sum(1 for a in shared if form_by_acc[a] == f) for f in set(form_by_acc.values())}).items())),
+        "shared_by_form": dict(
+            sorted(
+                defaultdict(
+                    int,
+                    {
+                        f: sum(1 for a in shared if form_by_acc[a] == f)
+                        for f in set(form_by_acc.values())
+                    },
+                ).items()
+            )
+        ),
         "decisions": summary,
         "headers_fetched": len(headers),
         "headers_missing": sum(1 for v in headers.values() if v is None),
@@ -438,23 +525,36 @@ def main() -> int:
         "filing_rows_that_would_move_owner": len(moves),
         "carrier_conflicts": len(conflicts),
         "carrier_conflict_examples": [
-            {"accession": d.accession_number, "form": form_by_acc[d.accession_number],
-             "primary": d.primary_cik, "carriers": list(d.carriers), "basis": d.basis}
+            {
+                "accession": d.accession_number,
+                "form": form_by_acc[d.accession_number],
+                "primary": d.primary_cik,
+                "carriers": list(d.carriers),
+                "basis": d.basis,
+            }
             for d in conflicts[:10]
         ],
-        "filing_registrant_rows_that_would_be_written": {"total": len(reg_rows), **roles,
-                                                        "with_null_company_id": unmapped},
+        "filing_registrant_rows_that_would_be_written": {
+            "total": len(reg_rows),
+            **roles,
+            "with_null_company_id": unmapped,
+        },
         "companies_gaining": gain_report,
         "companies_losing_ownership": lose_report,
         "named_nine": named_report,
         "quarantine_examples": dict(quarantine_examples),
         "moves_sample": [
-            {"accession": a, "from_company_id": c, "to_company_id": p, "basis": b} for a, _f, c, p, b in moves[:25]
+            {"accession": a, "from_company_id": c, "to_company_id": p, "basis": b}
+            for a, _f, c, p, b in moves[:25]
         ],
     }
     (workdir / "REPORT.json").write_text(json.dumps(report, indent=2, default=str))
     (workdir / "moves.jsonl").write_text(
-        "".join(json.dumps({"accession": a, "filing_id": f, "from": c, "to": p, "basis": b}) + "\n" for a, f, c, p, b in moves)
+        "".join(
+            json.dumps({"accession": a, "filing_id": f, "from": c, "to": p, "basis": b})
+            + "\n"
+            for a, f, c, p, b in moves
+        )
     )
     log(f"REPORT written: {workdir / 'REPORT.json'}")
     conn.close()

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T01:13:01",
+  "generated_at": "2026-10-31T02:07:21",
   "read_only": true,
   "population_ciks": 5284,
   "shared_accessions": 3008,
@@ -17,22 +17,22 @@
   },
   "decisions": {
     "shared_accessions": 3008,
-    "primary": 476,
-    "quarantined": 2532,
+    "primary": 499,
+    "quarantined": 2509,
     "by_basis": {
       "non_periodic_without_payload_evidence": 2151,
-      "signals_do_not_agree": 322,
+      "signals_do_not_agree": 299,
       "prefix+payload": 80,
       "header+prefix+payload": 370,
       "header+prefix": 6,
       "no_primary_evidence": 59,
-      "header+payload": 20
+      "header+payload": 43
     }
   },
   "headers_fetched": 857,
-  "headers_missing": 453,
+  "headers_missing": 430,
   "shared_in_core_filing": 2998,
-  "filing_rows_that_would_move_owner": 476,
+  "filing_rows_that_would_move_owner": 499,
   "carrier_conflicts": 4,
   "carrier_conflict_examples": [
     {
@@ -74,9 +74,9 @@
   ],
   "filing_registrant_rows_that_would_be_written": {
     "total": 7368,
-    "quarantined": 6047,
-    "co_registrant": 845,
-    "primary": 476,
+    "quarantined": 5995,
+    "co_registrant": 874,
+    "primary": 499,
     "with_null_company_id": 0
   },
   "companies_gaining": [
@@ -133,14 +133,14 @@
       "company_id": 1008,
       "name": "EVERSOURCE ENERGY",
       "status_now": "stale",
-      "accessions_recovered": 59,
+      "accessions_recovered": 65,
       "forms": {
-        "10-Q": 43,
-        "10-K": 15,
+        "10-Q": 48,
+        "10-K": 16,
         "10-Q/A": 1
       },
-      "fact_entries_recovered": 22834,
-      "periods_recovered": 469
+      "fact_entries_recovered": 25218,
+      "periods_recovered": 509
     },
     {
       "company_id": 2144,
@@ -168,6 +168,18 @@
       "periods_recovered": 426
     },
     {
+      "company_id": 1525,
+      "name": "CMS ENERGY CORP",
+      "status_now": "stale",
+      "accessions_recovered": 50,
+      "forms": {
+        "10-Q": 38,
+        "10-K": 12
+      },
+      "fact_entries_recovered": 19401,
+      "periods_recovered": 342
+    },
+    {
       "company_id": 5394,
       "name": "Corteva, Inc.",
       "status_now": "stale",
@@ -180,16 +192,15 @@
       "periods_recovered": 252
     },
     {
-      "company_id": 1525,
-      "name": "CMS ENERGY CORP",
-      "status_now": "stale",
-      "accessions_recovered": 34,
+      "company_id": 3710,
+      "name": "Restaurant Brands International Inc.",
+      "status_now": "active",
+      "accessions_recovered": 1,
       "forms": {
-        "10-Q": 26,
-        "10-K": 8
+        "DEF 14A": 1
       },
-      "fact_entries_recovered": 13532,
-      "periods_recovered": 231
+      "fact_entries_recovered": 38,
+      "periods_recovered": 5
     }
   ],
   "companies_losing_ownership": [
@@ -214,7 +225,7 @@
     {
       "company_id": 1165,
       "name": "CONSUMERS ENERGY CO",
-      "filings_losing_ownership": 34,
+      "filings_losing_ownership": 50,
       "core_fact_rows_on_those_filings": 374
     },
     {
@@ -226,7 +237,7 @@
     {
       "company_id": 211,
       "name": "NSTAR ELECTRIC CO",
-      "filings_losing_ownership": 51,
+      "filings_losing_ownership": 57,
       "core_fact_rows_on_those_filings": 0
     },
     {
@@ -245,6 +256,12 @@
       "company_id": 1044,
       "name": "PUBLIC SERVICE CO OF NEW MEXICO",
       "filings_losing_ownership": 61,
+      "core_fact_rows_on_those_filings": 0
+    },
+    {
+      "company_id": 3706,
+      "name": "Restaurant Brands International Limited Partnership",
+      "filings_losing_ownership": 1,
       "core_fact_rows_on_those_filings": 0
     },
     {
@@ -284,21 +301,21 @@
         "stale",
         "no_filing_since:2005-03-17"
       ],
-      "latest_qualifying_filing_via_registrant_link": "2025-05-05",
-      "accessions_recovered": 59,
+      "latest_qualifying_filing_via_registrant_link": "2026-08-03",
+      "accessions_recovered": 65,
       "forms_recovered": {
-        "10-Q": 43,
-        "10-K": 15,
+        "10-Q": 48,
+        "10-K": 16,
         "10-Q/A": 1
       },
-      "fact_entries_recovered": 22834,
-      "periods_recovered": 469,
+      "fact_entries_recovered": 25218,
+      "periods_recovered": 509,
       "period_end_range": [
         "2008-12-31",
-        "2025-04-30"
+        "2026-07-31"
       ],
       "shared_accessions_as_registrant": 278,
-      "quarantined_as_registrant": 219
+      "quarantined_as_registrant": 213
     },
     "SO": {
       "company_id": 1081,
@@ -330,19 +347,19 @@
         "no_filing_since:2006-06-08"
       ],
       "latest_qualifying_filing_via_registrant_link": "2026-10-27",
-      "accessions_recovered": 34,
+      "accessions_recovered": 50,
       "forms_recovered": {
-        "10-Q": 26,
-        "10-K": 8
+        "10-Q": 38,
+        "10-K": 12
       },
-      "fact_entries_recovered": 13532,
-      "periods_recovered": 231,
+      "fact_entries_recovered": 19401,
+      "periods_recovered": 342,
       "period_end_range": [
-        "2015-12-31",
+        "2011-12-31",
         "2026-07-13"
       ],
       "shared_accessions_as_registrant": 644,
-      "quarantined_as_registrant": 610
+      "quarantined_as_registrant": 594
     },
     "EIX": {
       "company_id": 1576,
