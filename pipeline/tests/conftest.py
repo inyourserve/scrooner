@@ -13,7 +13,8 @@ from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 from urllib.parse import urlparse
-from uuid import UUID
+from collections.abc import Iterator
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -21,7 +22,9 @@ import pytest
 # Production settings are currently instantiated at module-import time. Use
 # explicit, unreachable values so importing pure helpers cannot read a local
 # .env or accidentally acquire live credentials during the offline suite.
-os.environ["DATABASE_URL"] = "postgresql://scrooner_test:unused@127.0.0.1:9/scrooner_test"
+os.environ["DATABASE_URL"] = (
+    "postgresql://scrooner_test:unused@127.0.0.1:9/scrooner_test"
+)
 os.environ["SUPABASE_URL"] = "https://scrooner-test.invalid"
 os.environ["SUPABASE_SERVICE_ROLE_KEY"] = "test-only-not-a-secret"
 os.environ["SEC_USER_AGENT"] = "Scrooner test suite test@example.invalid"
@@ -161,8 +164,15 @@ def companyfacts_payload() -> dict:
 
 
 @pytest.fixture
-def isolated_database_url() -> str:
-    """Return an opt-in test DB URL, refusing ambiguous/production targets."""
+def isolated_database_url() -> Iterator[str]:
+    """Yield a throwaway COPY of the configured test database, refusing ambiguous/production targets.
+
+    Several DB tests drop and recreate the real `core` / `analytics` schemas. On one shared
+    database that wrecked the migrated schema for every test that ran after them, and the
+    tests that need it skipped silently (found 2026-11-03: three shared-accession tests
+    were skipped in CI behind test_expected_period_sql). Each test now gets its own copy
+    (create database ... template <configured db>), dropped afterwards.
+    """
     url = os.getenv("SCROONER_TEST_DATABASE_URL")
     if not url:
         pytest.skip("SCROONER_TEST_DATABASE_URL is not configured")
@@ -175,4 +185,25 @@ def isolated_database_url() -> str:
     production_url = os.getenv("DATABASE_URL")
     if production_url and url == production_url:
         pytest.fail("test database URL must not equal DATABASE_URL")
-    return url
+
+    import psycopg
+    from psycopg import sql
+
+    clone = f"{database_name}_{uuid4().hex[:10]}"
+    admin_url = parsed._replace(path="/postgres").geturl()
+    clone_url = parsed._replace(path=f"/{clone}").geturl()
+    with psycopg.connect(admin_url, autocommit=True) as admin:
+        admin.execute(
+            sql.SQL("create database {} template {}").format(
+                sql.Identifier(clone), sql.Identifier(database_name)
+            )
+        )
+    try:
+        yield clone_url
+    finally:
+        with psycopg.connect(admin_url, autocommit=True) as admin:
+            admin.execute(
+                sql.SQL("drop database if exists {} with (force)").format(
+                    sql.Identifier(clone)
+                )
+            )
