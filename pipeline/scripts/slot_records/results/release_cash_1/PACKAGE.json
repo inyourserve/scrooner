@@ -1,0 +1,42 @@
+{
+ "rule_id": "slot.cash_and_equivalents@1",
+ "registered": "OFF",
+ "family": "balance sheet: cash_and_equivalents_resolved",
+ "source_cells": {
+  "file": "results/cash_v1/cells.jsonl.gz",
+  "sha256": "7b9837cc48f9d93a2d7489b5372e80ea753fa6ec42934012f4553c460476a745"
+ },
+ "verifier": "verify/capex-v18-cash-v1-partial-2026-11-03: cash v1 17/17 (incl. 5 fills, 3 bank ties)",
+ "updates": {
+  "cells_file": "cash_release1_updates.jsonl",
+  "sha256": "3a336d02dd397c50fc058498374cb730ffca1fd5f986eb91f142cf469c3351ad",
+  "cells": 1495,
+  "companies": 363,
+  "by_difference_class": {
+   "material": 1162,
+   "rounding_only": 333
+  },
+  "before_image": "cash_release1_updates_before_image.jsonl (1495 canonical_fact rows)",
+  "rollback": "cash_release1_updates_rollback.sql (generated, never executed)",
+  "stale_refusal": "cash_release1_updates_stale_check.sql must return zero rows immediately before the write",
+  "excluded_ambiguous_period_match": 1
+ },
+ "flag": {
+  "line": "SCROONER_RULES_ENABLED=slot.cash_and_equivalents@1",
+  "default": "OFF",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image"
+ },
+ "release1_fills": {
+  "cells_file": "release1_fills_cells.jsonl",
+  "sha256": "fbfc1f2c59037674414a110498e2507a401d21fadd7f72f7e59646b5c0e0b835",
+  "cells": 537,
+  "companies": 58,
+  "kind": "insert into blank production cells (fills)",
+  "source": "results/release_cash_1/cash_release1_fill_candidates.jsonl",
+  "excluded": "release1_fills_excluded.json: {\"production_no_longer_blank\": 508, \"ambiguous_period_match\": 314, \"no_production_period\": 43}",
+  "stale_refusal": "release1_fills_stale_check.sql must return zero rows immediately before the write",
+  "rollback": "release1_fills_rollback.sql (delete the inserted rows; generated, never executed)",
+  "touched_ciks": "release1_fills_touched_ciks.txt",
+  "flag": "SCROONER_RULES_ENABLED=slot.cash_and_equivalents@1; default OFF"
+ }
+}

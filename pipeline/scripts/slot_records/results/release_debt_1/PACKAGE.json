@@ -1,0 +1,41 @@
+{
+ "rule_id": "slot.total_debt@1",
+ "registered": "OFF",
+ "family": "balance sheet: total_debt_resolved",
+ "source_cells": {
+  "file": "/private/tmp/claude-501/-Users-vikash-scrooner/f67eac78-47bc-4752-92cf-f5a984e5c189/scratchpad/debt_pilot_v4_cells.jsonl.gz",
+  "sha256": "61ee0faa2ff4c7d0a2e2f7d29494865f200ddcecf8dc5b291fa5768e35b95e50"
+ },
+ "verifier": "verify/debt-v3-2026-11-04: 14/14 (borrowings + note finance leases, no double count); v4 = Verifier's two fixes (MSFT operating-lease member dropped; AMZN finance leases from the note)",
+ "updates": {
+  "cells_file": "debt_release1_updates.jsonl",
+  "sha256": "97f8ffeda4fee367c402d910c04d7ed4318b1911cf76552bfb69f38a37d1f6b3",
+  "cells": 221,
+  "companies": 10,
+  "by_difference_class": {
+   "material": 221
+  },
+  "before_image": "debt_release1_updates_before_image.jsonl (221 canonical_fact rows)",
+  "rollback": "debt_release1_updates_rollback.sql (generated, never executed)",
+  "stale_refusal": "debt_release1_updates_stale_check.sql must return zero rows immediately before the write",
+  "excluded_ambiguous_period_match": 0
+ },
+ "flag": {
+  "line": "SCROONER_RULES_ENABLED=slot.total_debt@1",
+  "default": "OFF",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image"
+ },
+ "release1_fills": {
+  "cells_file": "release1_fills_cells.jsonl",
+  "sha256": "96d2bd7a1adbb35e62035e858fa3da9c1f8b10a5ea35e26e8cf1e42b13af90fb",
+  "cells": 30,
+  "companies": 3,
+  "kind": "insert into blank production cells (fills)",
+  "source": "results/release_debt_1/debt_release1_fill_candidates.jsonl",
+  "excluded": "release1_fills_excluded.json: {\"ambiguous_period_match\": 6}",
+  "stale_refusal": "release1_fills_stale_check.sql must return zero rows immediately before the write",
+  "rollback": "release1_fills_rollback.sql (delete the inserted rows; generated, never executed)",
+  "touched_ciks": "release1_fills_touched_ciks.txt",
+  "flag": "SCROONER_RULES_ENABLED=slot.total_debt@1; default OFF"
+ }
+}

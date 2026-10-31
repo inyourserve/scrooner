@@ -54,7 +54,7 @@ CAPEX_TAG = re.compile(
     r"PaymentsToDevelopSoftware|PaymentsForSoftware|PaymentsToAcquireSoftware|"
     r"PaymentsToAcquireIntangibleAssets|PaymentsToAcquireEquipmentOnLease|"
     r"PaymentsForProceedsFromPropertyPlantAndEquipment|PaymentsToAcquirePropertySubjectToOrAvailableForOperatingLease|"
-    r"PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets")
+    r"PaymentsToAcquirePropertyPlantAndEquipmentAndIntangibleAssets|PaymentsForTenantImprovements")
 CAPEX_LABEL = re.compile(
     r"capital expenditure|purchases? of (property|premises|plant|equipment|fixed)|"
     r"additions to (property|plant|premises|fixed|equipment)|expenditures? for (property|equipment)|"
@@ -69,6 +69,15 @@ CAPEX_OG_LABEL = re.compile(r"drilling|completion|(un)?proved (oil|gas|propertie
 
 CAPEX_WORD = re.compile(r"capital expenditure|property|plant|equipment|premises|fixed assets", re.I)
 MIXED_JOIN = re.compile(r"(\band\b|&|,)\s*(other )?(investments?|acquisitions?|other (long.term |non.?current )?assets)", re.I)
+
+
+# a counted capex member's LABEL must name a PP&E-type asset (Verifier v18: BAM "Other assets" 127M is not capex)
+ASSET_NAMED = re.compile(
+    r"propert|plant|equipment|premises|capital|construction|building|land\b|vessel|aircraft|fleet|\brigs?\b|tower|software|"
+    r"leas|rental|drilling|completion|\bwells?\b|gathering|water|facilit|infrastructure|network|fixed asset|instrument|tooling|"
+    r"\bstores?\b|restaurant|productive asset|capex|field service|midstream|pipeline|terminal|\bmines?\b|mineral|furniture|"
+    r"computer|technology|improvement|development|machinery|vehicle|truck|railcar|satellite|data center|\boil\b|\bgas\b|"
+    r"containers|revenue equipment|operating assets|renewals and replacements|turnaround|maintenance|catalyst|dry.?dock", re.I)
 
 
 def capex_mixed(label):
@@ -350,8 +359,11 @@ for (cik, ddate, q), f in chosen():
                 # property, plant, and equipment" names PP&E and stays (Verifier-confirmed)
                 v = dec(vals[t])
                 if v and re.search(r"turnaround|major (repairs|maintenance)|catalyst|dry.?dock", lab, re.I):
+                    # FOUNDER RULING 2026-11-04 (relayed by Dhairya): capitalized turnarounds / major maintenance are capex
                     maint.append({"tag": t, "label": lab, "value": str(v)})
-                    continue  # capitalized major maintenance (PBF turnaround 379.1M): definition question, held
+                    lines.append({"tag": t, "label": lab, "nature": "ppe", "disc": False, "value": abs(v), "raw": v,
+                                  "negating": r["negating"], "custom": r["custom"], "additions_line": True, "maintenance": True})
+                    continue
                 if v and re.search(r"asset purchase|acquisition", lab, re.I):
                     continue  # PBF "Expenditure for PBFX Plains Asset Purchase": an acquisition, not capex
                 if v:
@@ -410,7 +422,7 @@ for (cik, ddate, q), f in chosen():
         lines = kept
         for x in lines:
             x["raw"] = str(x["raw"])
-    if lines or other_capex or og_acq or maint:
+    if lines or other_capex or og_acq:
         n_ppe = [x for x in lines if not x["disc"] and x["nature"] in ("ppe", "ppe_with_intangibles")]
         if any(x["nature"] == "ppe_with_intangibles" for x in lines):
             summ["capex_flag_ppe_line_includes_intangibles"] += 1
@@ -424,28 +436,31 @@ for (cik, ddate, q), f in chosen():
         cases = [c for c, on in (("leased", leased), ("software", soft), ("discontinued", disc and cfo_total)) if on]
         unclear = [x for x in lines if x["nature"] == "lease_unclear"]
         net_sibling = bool(n_ppe and n_net) or bool(unclear)
+        unnamed = [x for x in lines if x["nature"] in ("ppe", "ppe_with_intangibles", "net", "leased", "software")
+                   and not ASSET_NAMED.search(x["label"])]
+        # FOUNDER RULINGS 2026-11-04 (relayed by Dhairya): leased fleet, capitalized software, the
+        # discontinued-operations block (same perimeter as the CFO), turnarounds/major maintenance, tenant
+        # improvements and construction in progress ARE capex; oil and gas property and acreage
+        # acquisitions are NOT (acquisitions): excluded with a recorded reason, never a hold.
+        exclusion_note = "og_property_acquisitions_excluded" if og_acq else None
         if sign_unresolved:
             interim, reason = None, "capex_sign_unresolved"
-        elif og_acq:
-            interim, reason = None, "perimeter_og_property_acquisitions"
-        elif maint:
-            interim, reason = None, "perimeter_turnaround_major_maintenance"
+        elif unnamed:
+            interim, reason = None, "capex_line_names_no_asset"  # never published on a member that names no asset
         elif other_capex:
             interim, reason = None, "other_capex_lines_outside_ruling"  # MTDR: oil and gas lines beside midstream capex
         elif net_sibling:
             interim, reason = None, "perimeter_line_unresolved"  # before no-line: JEF's mixed line is the reason
         elif not n_ppe and not n_net and not (leased or soft):
             interim, reason = None, ("other_capex_lines_outside_ruling" if other_capex else "no_continuing_capex_line")
-        elif cases:
-            interim, reason = None, "perimeter_line_unresolved"
         else:
-            interim, reason = narrow, None
+            interim, reason = ruling, None  # the ruled perimeter (narrow + leased + software + discontinued block)
         pv = prod[(cik, "capex_resolved")].get((end, q))
         c = dict(cell, family="capex", lines=lines, skipped_lines=skipped, og_property_acquisitions=og_acq, maintenance_lines=maint, sign_basis=sign_basis, cases=cases, net_sibling=net_sibling, other_capex_lines=other_capex,
                  cfo_perimeter="total" if cfo_total else "continuing",
                  variant_narrow=str(narrow) if not net_sibling and (n_ppe or n_net) else None,
                  variant_ruling=str(ruling) if not net_sibling and (n_ppe or n_net or leased or soft) else None,
-                 interim=str(interim) if interim is not None else None, interim_reason=reason,
+                 interim=str(interim) if interim is not None else None, interim_reason=reason, exclusion_note=exclusion_note,
                  prod_value=str(pv) if pv is not None else None)
         cells.append(c)
         summ["capex_cells"] += 1

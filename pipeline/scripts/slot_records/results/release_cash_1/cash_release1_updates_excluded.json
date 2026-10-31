@@ -1,0 +1,33 @@
+[
+ {
+  "cik": 874761,
+  "ticker": "AES",
+  "end": "2014-12-31",
+  "qtrs": 0,
+  "accession": "0000874761-15-000009",
+  "form": "10-K",
+  "value": "1539000000.0000",
+  "prod_value": "1449000000",
+  "members": [
+   {
+    "tag": "CashAndCashEquivalentsAtCarryingValue",
+    "label": "Cash and cash equivalents",
+    "nature": "pure",
+    "value": "1539000000.0000"
+   },
+   {
+    "tag": "RestrictedCashAndCashEquivalentsAtCarryingValue",
+    "label": "Restricted cash",
+    "nature": "restricted",
+    "value": "283000000.0000"
+   }
+  ],
+  "cf_ending": [
+   "CashAndCashEquivalentsAtCarryingValue",
+   "1539000000.0000"
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ }
+]
