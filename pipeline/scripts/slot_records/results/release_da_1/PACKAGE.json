@@ -1,0 +1,55 @@
+{
+ "rule_id": "slot.d_and_a@1",
+ "family": "cash flow: depreciation_and_amortization_resolved (feeds EBITDA, EBITDA margin, net debt/EBITDA, EV/EBITDA, debt/EBITDA)",
+ "source_cells": {
+  "file": "results/cf_da_capex_v15/cells.jsonl.gz",
+  "sha256": "16f9b33fe03e9a9fc6048df135b5955c2cc77a29526199e1db1c638ac39d0b61"
+ },
+ "selection": "release 1 = da_class in {is_anchor, single_line_ties_is, single_line_clean} AND production differs; the classes that passed every Verifier round (IS anchors 5/5 in V14; single-line differences)",
+ "release1": {
+  "cells_file": "da_release1_cells.jsonl",
+  "sha256": "ee20098b37a2c4927bb4a087028a5c7374cf94d83bc7766942e37c63a5924ccb",
+  "cells": 586,
+  "companies": 89,
+  "by_class": {
+   "is_anchor": 159,
+   "single_line_clean": 386,
+   "single_line_ties_is": 41
+  },
+  "by_difference_class": {
+   "material": 515,
+   "rounding_only": 71
+  },
+  "before_image": "da_release1_before_image.jsonl (586 canonical_fact rows)",
+  "excluded_ambiguous_period_match": 2,
+  "rollback": "da_release1_rollback.sql (generated, run in one transaction by the Release Manager only)",
+  "touched_ciks": "release1_touched_ciks.txt"
+ },
+ "release1_class_fills": {
+  "cells_file": "da_release1_class_fills.jsonl",
+  "sha256": "d607a7d40e556a365839b3bb86721dc3ae41ca604c797739336c3388dec9d840",
+  "cells": 4117,
+  "by_class": {
+   "single_line_clean": 3055,
+   "single_line_ties_is": 851,
+   "is_anchor": 211
+  },
+  "status": "production blank, same classes; needs a fill stratum before shipping"
+ },
+ "release2": {
+  "cells_file": "da_release2_cells.jsonl",
+  "sha256": "5924726ec6a5b49d23abbb363fb61752a7f1f702d0f2312f8bee0ee02a9c8844",
+  "cells": 5080,
+  "by_class": {
+   "multi_member": 5030,
+   "multi_member_ties_is": 50
+  },
+  "status": "multi-member compositions (and their fills): held for their own Verifier rounds"
+ },
+ "flag": {
+  "convention": "SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.d_and_a@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence and before-image"
+ },
+ "post_write": "certify rerun on release1_touched_ciks.txt; EBITDA-family metrics recompute for the touched companies; any new finding blocks"
+}

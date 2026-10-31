@@ -134,10 +134,15 @@ def da_nature(tag, label, custom, label_ok=True):
     tag = re.sub(r"Excluding.*$", "", tag)
     if re.search(r"operating\w*finance|finance\w*operating|operating and finance|finance and operating", tag + " " + label, re.I):
         return "combined_other"  # OperatingAndFinanceLeaseRightOfUseAssetAmortization mixes operating-lease ROU in
-    if re.search(r"finance.?lease", tag + " " + label, re.I) and not re.search(r"operating.?lease", tag + " " + label, re.I):
+    if re.search(r"finance", label, re.I) and re.search(r"lease|right.of.use", label, re.I) and not re.search(r"operating", label, re.I):
         # Verifier V10 (GD Q1 2024 211M): finance-lease ROU assets are depreciated like owned
         # assets, so "amortization of intangible and finance lease ROU assets" is D&A
         return "asset_da"
+    if re.search(r"^amorti[sz]ation\s*\(includ", label, re.I):
+        return "combined_other"  # IRM: netted against its tagged parenthetical financing part below
+    if re.search(r"premium|discount|securit|investment|debt|loan|notes?\b|issuance|financing", label, re.I) and not re.search(
+            r"depreciation|depletion|intangible|software", label, re.I):
+        return "excluded"  # Verifier V14 (RVMD, PTGX): securities/debt accretion is an excluded item, not a combined D&A line
     if re.search(r"accretion", label, re.I) and re.search(r"depreciation|amorti[sz]ation", label, re.I):
         return "combined_other"  # Verifier V11 (EVR): any case or word order of "... and accretion"
     if not label_ok:
@@ -149,7 +154,7 @@ def da_nature(tag, label, custom, label_ok=True):
             re.search(r"depreciation", label, re.I)
             and re.search(r"(equipment|assets?|property) (on|under|subject to|held for) (operating )?leas|leased to others|leased assets|rental (equipment|fleet)|lease fleet", label, re.I)):
         return "definition_question"  # Verifier: PCAR lessor-equipment depreciation, FTAI lease incentives
-    if re.search(r"(above|below)\W{0,3}(\(?(above|below)\)?\W{0,3})?market|market lease", label, re.I):
+    if re.search(r"(above|below)\W{0,3}(\(?(above|below)\)?\W{0,3})?market|market lease|(un)?favou?rable lease", label, re.I):
         return "excluded"  # Verifier V11 (VNO): below-market lease amortization is revenue
     if re.search(r"lease intangible|in.place lease|lease.related intangible|rent.related intangible|ground.lease intangible", label, re.I):
         return "lease_intangible"  # sign decides: printed negative = below-market revenue offset (TRNO)
@@ -491,9 +496,10 @@ for (cik, ddate, q), f in chosen():
         tol = runit([other_sum] + is_amort) if is_amort else None
         tie = is_sum is not None and abs(other_sum - is_sum) <= tol
     defq = [x for x in da if x["nature"] == "definition_question"]
-    label_only = [x for x in da if x["nature"] in ("excluded", "combined_other") and not DA_EXCLUDED_TAG.search(x["tag"])
-                  and not MIXED_TAG.search(x["tag"]) and x["value"] > 0
-                  and not re.search(r"market|lease intangible|revenue|accretion|financing|debt|discount|premium", x["label"], re.I)]
+    label_only = [x for x in da if x["nature"] in ("excluded", "combined_other") and x["value"] > 0
+                  and not re.search(r"market|lease (incentive|intangible)|favou?rable|revenue|accretion|financing|debt|discount|premium|"
+                                    r"issuance|contract|advance|commission|content|film|stock|compensation|impairment|securit|investment|loan|"
+                                    r"deferred|pension|benefit|hedg|derivative|step.up|interest|equity", x["label"], re.I)]
     has_dep = any(re.search(r"depreciation|depletion", x["label"] + x["tag"], re.I) for x in asset)
     is_tie = None
     if is_da_total is not None and not defq:
@@ -503,14 +509,35 @@ for (cik, ddate, q), f in chosen():
         # V11: runit(0) is the 1M cap, which let EVR and VNO "tie" within a million)
         if base and abs(base - is_da_total) <= max(runit([is_da_total]), runit([base])):
             is_tie = "asset_lines"
-        elif label_only and with_lo and abs(with_lo - is_da_total) <= max(runit([is_da_total]), runit([with_lo])):
-            is_tie = "with_label_excluded_lines"  # OMC: the ROU-labelled line is its depreciation
-            for x in label_only:
+        elif other and not tie and abs(base + other_sum - is_da_total) <= max(runit([is_da_total]), runit([base + other_sum])):
+            is_tie = "asset_and_generic_amortization"  # Verifier V14 (LYV): the IS D&A equals both lines
+            for x in other:
                 x["nature"] = "asset_da"
             asset = [x for x in da if x["nature"] == "asset_da"]
-            combined = [x for x in da if x["nature"] == "combined_other"]
             narrow_da = sum((x["value"] for x in asset), Decimal(0))
-            has_dep = True
+            other, other_sum, tie = [], Decimal(0), None
+        elif label_only:
+            # an exact tie of the asset lines plus a subset (<= 3) of label-clean dropped lines to the
+            # IS printed D&A (OMC ROU-labelled depreciation; LYV generic "Amortization" on an
+            # impairment-named element: 225,770 + 224,206 = 449,976)
+            from itertools import combinations
+            hit = None
+            for n in range(1, min(3, len(label_only)) + 1):
+                for combo in combinations(label_only, n):
+                    sm = base + sum((x["value"] for x in combo), Decimal(0))
+                    if abs(sm - is_da_total) <= max(runit([is_da_total]), runit([sm])):
+                        hit = combo
+                        break
+                if hit:
+                    break
+            if hit:
+                is_tie = "with_label_excluded_lines"
+                for x in hit:
+                    x["nature"] = "asset_da"
+                asset = [x for x in da if x["nature"] == "asset_da"]
+                combined = [x for x in da if x["nature"] == "combined_other"]
+                narrow_da = sum((x["value"] for x in asset), Decimal(0))
+                has_dep = True
     net_low = [x for x in asset if re.search(r"\bnet\b", x["label"], re.I) and is_sum is not None and x["value"] < is_sum]
     if defq:
         value, reason = None, "da_definition_question"
@@ -537,8 +564,25 @@ for (cik, ddate, q), f in chosen():
             reason in ("da_combined_with_other_items", "perimeter_line_unresolved", "no_depreciation_line_on_cf")
             or (reason is None and dropped and value != is_da_total)):
         value, reason, is_tie = is_da_total, None, "is_anchor"
+    # release class (Dhairya 2026-11-02: release 1 = only classes that passed every Verifier round)
+    hard_dropped = lambda x: DA_EXCLUDED_TAG.search(x["tag"]) or re.search(  # noqa: E731
+        r"debt|financ|discount|premium|issuance|securit|investment|loan|notes?\b", x["label"], re.I)
+    n_members = len([x for x in da if x["nature"] == "asset_da"])
+    soft_dropped = [x for x in da if x["nature"] != "asset_da" and not hard_dropped(x)]
+    if value is None:
+        da_class = None
+    elif is_tie == "is_anchor":
+        da_class = "is_anchor"
+    elif n_members == 1 and is_tie:
+        da_class = "single_line_ties_is"
+    elif n_members == 1 and is_da_total is None and not soft_dropped:
+        da_class = "single_line_clean"
+    elif is_tie:
+        da_class = "multi_member_ties_is"
+    else:
+        da_class = "multi_member"
     pv = prod[(cik, "depreciation_and_amortization_resolved")].get((end, q))
-    c = dict(cell, family="d_and_a", lines=[{**x, "value": str(x["value"])} for x in da], is_intangible_amort=str(is_sum) if is_sum is not None else None,
+    c = dict(cell, family="d_and_a", da_class=da_class, lines=[{**x, "value": str(x["value"])} for x in da], is_intangible_amort=str(is_sum) if is_sum is not None else None,
              tie_2a=tie, is_da_tie=is_tie, is_da_total=str(is_da_total) if is_da_total is not None else None, value=str(value) if value is not None else None, reason=reason, narrow_asset_da=str(narrow_da),
              prod_value=str(pv) if pv is not None else None)
     cells.append(c)
@@ -568,7 +612,7 @@ for c in cells:
 for c in cells:
     if c["family"] == "d_and_a" and c["reason"] is None and net_labels.get(c["cik"]) and any(
             x["nature"] == "asset_da" and x["label"].strip().lower() in net_labels[c["cik"]] for x in c["lines"]):
-        c["value"], c["reason"] = None, "da_net_line_below_intangible_amortization"
+        c["value"], c["reason"], c["da_class"] = None, "da_net_line_below_intangible_amortization", None
         c["company_rule"] = "net_line_failed_in_another_period"
 # D&A counters recomputed from the final cells (the company rule changes cells after the pass)
 for k in [k for k in summ if k.startswith("da_")]:

@@ -1,0 +1,48 @@
+[
+ {
+  "cik": 833444,
+  "ticker": "JCI",
+  "end": "2015-12-31",
+  "qtrs": 1,
+  "accession": "0000833444-16-000120",
+  "form": "10-Q",
+  "value": "83000000.0000",
+  "prod_value": "226000000",
+  "da_class": "single_line_clean",
+  "is_da_total": null,
+  "members": [
+   {
+    "tag": "DepreciationDepletionAndAmortization",
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "value": "83000000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "cik": 833444,
+  "ticker": "JCI",
+  "end": "2016-06-30",
+  "qtrs": 3,
+  "accession": "0000833444-16-000197",
+  "form": "10-Q",
+  "value": "250000000.0000",
+  "prod_value": "680000000",
+  "da_class": "single_line_clean",
+  "is_da_total": null,
+  "members": [
+   {
+    "tag": "DepreciationDepletionAndAmortization",
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "value": "250000000.0000"
+   }
+  ],
+  "state": "slot_differs",
+  "difference_class": "material",
+  "reason": "ambiguous_period_match"
+ }
+]
