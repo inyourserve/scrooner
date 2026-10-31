@@ -253,7 +253,7 @@ def apply_company(
                 else 0
             )
         written = replace_rule_reasons(conn, run_id, plan.company_id, RULE_ID, reasons)
-    out = plan.stats()
+    out: dict[str, Any] = dict(plan.stats())
     out.update(
         {
             "cells_archived": archived,
@@ -334,7 +334,7 @@ def run(
             )
             conn.rollback()
             continue
-        st = plan.stats()
+        st: dict[str, Any] = dict(plan.stats())
         st["filings_owned_by"] = sorted({cik2 for _cid, cik2 in plan.filings.values()})
         totals["per_company"][cik] = st
         for k in (
