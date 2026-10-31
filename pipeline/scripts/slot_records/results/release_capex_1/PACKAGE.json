@@ -46,5 +46,18 @@
   "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence and before-image, not a new write path"
  },
  "post_write": "certify rerun on release1_touched_ciks.txt; FCF and dependent metrics recompute for the touched companies; any new finding blocks",
- "evidence_per_cell": "accession, face members (tag, label, nature, value) from the FSN pre/num rows of that filing; same accession by construction"
+ "evidence_per_cell": "accession, face members (tag, label, nature, value) from the FSN pre/num rows of that filing; same accession by construction",
+ "release2_fills": {
+  "cells_file": "release2_fills_cells.jsonl",
+  "sha256": "ac7b760d110422a9e60e3b450157390a6bcbbb0c0ceea03ba86d1131e8157c61",
+  "cells": 2136,
+  "companies": 109,
+  "kind": "insert into blank production cells (fills)",
+  "source": "results/release_capex_1/capex_release2_fills.jsonl",
+  "excluded": "release2_fills_excluded.json: {\"no_production_period\": 52, \"ambiguous_period_match\": 32, \"production_no_longer_blank\": 8}",
+  "stale_refusal": "release2_fills_stale_check.sql must return zero rows immediately before the write",
+  "rollback": "release2_fills_rollback.sql (delete the inserted rows; generated, never executed)",
+  "touched_ciks": "release2_fills_touched_ciks.txt",
+  "flag": "SCROONER_RULES_ENABLED=slot.capex@1; default OFF"
+ }
 }

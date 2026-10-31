@@ -51,5 +51,18 @@
   "line": "SCROONER_RULES_ENABLED=slot.d_and_a@1",
   "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence and before-image"
  },
- "post_write": "certify rerun on release1_touched_ciks.txt; EBITDA-family metrics recompute for the touched companies; any new finding blocks"
+ "post_write": "certify rerun on release1_touched_ciks.txt; EBITDA-family metrics recompute for the touched companies; any new finding blocks",
+ "release1b": {
+  "cells_file": "release1b_cells.jsonl",
+  "sha256": "5d0e2e8df34932a83921a391701c0aa99094c188c7171c019113a427aa7b480f",
+  "cells": 4040,
+  "companies": 355,
+  "kind": "insert into blank production cells (fills)",
+  "source": "results/release_da_1/da_release1_class_fills.jsonl",
+  "excluded": "release1b_excluded.json: {\"no_production_period\": 37, \"ambiguous_period_match\": 32, \"production_no_longer_blank\": 8}",
+  "stale_refusal": "release1b_stale_check.sql must return zero rows immediately before the write",
+  "rollback": "release1b_rollback.sql (delete the inserted rows; generated, never executed)",
+  "touched_ciks": "release1b_touched_ciks.txt",
+  "flag": "SCROONER_RULES_ENABLED=slot.d_and_a@1; default OFF"
+ }
 }

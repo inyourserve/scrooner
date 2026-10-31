@@ -1,0 +1,2700 @@
+[
+ {
+  "accession": "0000909832-15-000003",
+  "cik": 909832,
+  "end": "2015-01-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "1167000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of short-term investments",
+    "tag": "ProceedsFromSaleAndMaturityOfMarketableSecurities",
+    "value": "637000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "COST",
+  "value": "1167000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-15-143380",
+  "cik": 91440,
+  "end": "2015-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "18100000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "SNA",
+  "value": "18100000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001104659-15-066444",
+  "cik": 56873,
+  "end": "2015-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments for property and equipment, including payments for lease buyouts",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "1696000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "24000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "KR",
+  "value": "1696000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000821189-16-000089",
+  "cik": 821189,
+  "end": "2016-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to Oil and Gas Properties",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireOilAndGasPropertyAndEquipment",
+    "value": "1781547000.0000"
+   },
+   {
+    "label": "Additions to Other Property, Plant and Equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireOtherPropertyPlantAndEquipment",
+    "value": "60343000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from Sales of Assets",
+    "tag": "ProceedsFromSaleOfOilAndGasPropertyAndEquipment",
+    "value": "457665000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "EOG",
+  "value": "1841890000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000092122-16-000213",
+  "cik": 92122,
+  "end": "2016-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Property additions",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "5252000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "SO",
+  "value": "5252000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-17-160261",
+  "cik": 1000697,
+  "end": "2017-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, equipment and software capitalization",
+    "nature": "ppe",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "17711000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "750997000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WAT",
+  "value": "17711000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000821189-18-000012",
+  "cik": 821189,
+  "end": "2017-12-31",
+  "form": "10-K",
+  "members": [
+   {
+    "label": "Additions to Oil and Gas Properties",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireOilAndGasPropertyAndEquipment",
+    "value": "3950918000.0000"
+   },
+   {
+    "label": "Additions to Other Property, Plant and Equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireOtherPropertyPlantAndEquipment",
+    "value": "173324000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from Sales of Assets",
+    "tag": "ProceedsFromSaleOfOilAndGasPropertyAndEquipment",
+    "value": "226768000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "EOG",
+  "value": "4124242000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001628280-18-014300",
+  "cik": 1698990,
+  "end": "2018-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to oil and natural gas properties",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireOilAndGasPropertyAndEquipment",
+    "value": "37100000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds withdrawn from Trust Account",
+    "tag": "ProceedsfromWithdrawalFromTrustAccount",
+    "value": "656078000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "MGY",
+  "value": "37100000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001698990-19-000006",
+  "cik": 1698990,
+  "end": "2018-12-31",
+  "form": "10-K",
+  "members": [
+   {
+    "label": "Additions to oil and gas properties",
+    "nature": "ppe",
+    "tag": "PaymentsToExploreAndDevelopOilAndGasProperties",
+    "value": "141619000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds withdrawn from trust account",
+    "tag": "ProceedsfromWithdrawalFromTrustAccount",
+    "value": "656078000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "MGY",
+  "value": "141619000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-19-137001",
+  "cik": 1000697,
+  "end": "2019-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, equipment and software capitalization",
+    "nature": "ppe",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "25666000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "486437000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WAT",
+  "value": "25666000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000077476-19-000070",
+  "cik": 77476,
+  "end": "2019-05-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital spending",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "1167000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sales of property, plant and equipment",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "42000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Divestitures",
+    "tag": "ProceedsFromDivestitureOfBusinessesAndInterestsInAffiliates",
+    "value": "270000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "PEP",
+  "value": "1167000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001646972-19-000054",
+  "cik": 1646972,
+  "end": "2019-05-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments for property, equipment and intangibles, including payments for lease buyouts",
+    "nature": "ppe_with_intangibles",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "362100000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "73400000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "ACI",
+  "value": "362100000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001564590-20-004822",
+  "cik": 106535,
+  "end": "2019-12-31",
+  "form": "10-K",
+  "members": [
+   {
+    "label": "Capital expenditures for property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalExpendituresOfPropertyPlantAndEquipment",
+    "value": "327000000.0000"
+   },
+   {
+    "label": "Capital expenditures for timberlands reforestation",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "57000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from note receivable held by variable interest entities (Note 8)",
+    "tag": "ProceedsFromCollectionOfNotesReceivable",
+    "value": "253000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sale of nonstrategic assets",
+    "tag": "ProceedsFromSaleOfNonstrategicAssets",
+    "value": "6000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sale of nonstrategic timberlands (Notes 4 and 8)",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "297000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WY",
+  "value": "384000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-20-076091",
+  "cik": 866787,
+  "end": "2020-01-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "190563000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of marketable debt securities",
+    "tag": "ProceedsFromSaleAndMaturityOfMarketableSecurities",
+    "value": "70812000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from disposal of capital assets and other, net",
+    "tag": "PaymentsForProceedsFromCapitalAssetsAndOthers",
+    "value": "1185000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "AZO",
+  "value": "190563000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-20-125370",
+  "cik": 1000697,
+  "end": "2020-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, equipment and software capitalization",
+    "nature": "ppe",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "51130000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "1139000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WAT",
+  "value": "51130000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001558370-20-011232",
+  "cik": 56873,
+  "end": "2020-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments for property and equipment, including payments for lease buyouts",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "1343000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "40000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "KR",
+  "value": "1343000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001534701-21-000074",
+  "cik": 1534701,
+  "end": "2020-12-31",
+  "form": "10-K",
+  "members": [
+   {
+    "label": "Capital expenditures and investments",
+    "nature": "ppe",
+    "tag": "CapitalExpendituresAndInvestments",
+    "value": "2920000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from asset dispositions",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "51000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "PSX",
+  "value": "2920000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-21-152840",
+  "cik": 1000697,
+  "end": "2021-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, equipment and software capitalization",
+    "nature": "ppe",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "39503000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "3139000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WAT",
+  "value": "39503000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-22-141543",
+  "cik": 1000697,
+  "end": "2022-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, equipment and software capitalization",
+    "nature": "ppe",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "27751000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of equity investment",
+    "tag": "ProceedsFromSaleOfEquityMethodInvestments",
+    "value": "6785000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Maturities and sales of investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "54074000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WAT",
+  "value": "27751000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001880661-22-000013",
+  "cik": 1880661,
+  "end": "2022-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of fixed assets",
+    "nature": "net",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "1252000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "TPG",
+  "value": "1252000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001880661-22-000023",
+  "cik": 1880661,
+  "end": "2022-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of fixed assets",
+    "nature": "net",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "2145000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "TPG",
+  "value": "2145000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-22-071314",
+  "cik": 1324948,
+  "end": "2022-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "23076000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "510000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "23076000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001880661-22-000031",
+  "cik": 1880661,
+  "end": "2022-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of fixed assets",
+    "nature": "net",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "2329000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "TPG",
+  "value": "2329000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-23-009822",
+  "cik": 1324948,
+  "end": "2022-12-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "29577000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "518000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "29577000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001880661-23-000017",
+  "cik": 1880661,
+  "end": "2022-12-31",
+  "form": "10-K",
+  "members": [
+   {
+    "label": "Purchases of fixed assets",
+    "nature": "net",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "2449000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "TPG",
+  "value": "2449000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-23-138998",
+  "cik": 1000697,
+  "end": "2023-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, equipment and software capitalization",
+    "nature": "ppe",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "34390000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "877000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WAT",
+  "value": "34390000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-23-063656",
+  "cik": 1324948,
+  "end": "2023-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "6700000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "200000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "6700000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-23-085332",
+  "cik": 1324948,
+  "end": "2023-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "14200000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "400000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "14200000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-24-011662",
+  "cik": 1324948,
+  "end": "2023-12-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "23700000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "300000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "23700000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001558370-24-004176",
+  "cik": 1964789,
+  "end": "2021-06-30",
+  "form": "10-KT",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireMachineryAndEquipment",
+    "value": "34000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "HUT",
+  "value": "34000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001628280-24-006622",
+  "cik": 1895262,
+  "end": "2021-12-31",
+  "form": "10-K",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "154411000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from disposal of assets, net",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "307324000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "NE",
+  "value": "154411000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-24-132558",
+  "cik": 1000697,
+  "end": "2024-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, equipment and software capitalization",
+    "nature": "ppe",
+    "tag": "PaymentsForProceedsFromProductiveAssets",
+    "value": "28655000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "898000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "WAT",
+  "value": "28655000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000077476-24-000042",
+  "cik": 77476,
+  "end": "2024-05-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital spending",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "1701000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sales of property, plant and equipment",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "127000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Other divestitures, sales of investments in noncontrolled affiliates and other assets",
+    "tag": "OtherDivestituresSalesOfInvestmentsInNoncontrolledAffiliatesAndOtherAssets",
+    "value": "135000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "PEP",
+  "value": "1701000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001646972-24-000165",
+  "cik": 1646972,
+  "end": "2024-05-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments for property, equipment and intangibles, including lease buyouts",
+    "nature": "ppe_with_intangibles",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "543000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "3800000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "ACI",
+  "value": "543000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000916540-24-000024",
+  "cik": 916540,
+  "end": "2024-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireCapitalAssets",
+    "value": "191728000.0000"
+   },
+   {
+    "label": "Payments related to routes and other intangibles",
+    "nature": "intangible",
+    "tag": "PaymentsToAcquireIntangibleAssets",
+    "value": "7000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Gross proceeds from disposal of property, plant and equipment and other assets",
+    "tag": "GrossProceedsFromDisposalOfPropertyPlantAndEquipmentAndOtherAssets",
+    "value": "5058000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from insurance settlement",
+    "tag": "ProceedsFromInsuranceSettlementInvestingActivities",
+    "value": "5942000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "DAR",
+  "value": "191728000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-24-064682",
+  "cik": 1324948,
+  "end": "2024-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "9000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "9000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-24-093524",
+  "cik": 1324948,
+  "end": "2024-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "25200000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "25200000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001163165-25-000058",
+  "cik": 1163165,
+  "end": "2025-09-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures and investments",
+    "nature": "ppe",
+    "tag": "PaymentToAcquireProductiveAssetsAndInvestments",
+    "value": "9530000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from asset dispositions",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "1632000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "COP",
+  "value": "9530000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001558370-25-003476",
+  "cik": 866787,
+  "end": "2025-01-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "539737000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of marketable debt securities",
+    "tag": "ProceedsFromSaleAndMaturityOfMarketableSecurities",
+    "value": "30100000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "AZO",
+  "value": "539737000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001163165-25-000025",
+  "cik": 1163165,
+  "end": "2025-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures and investments",
+    "nature": "ppe",
+    "tag": "PaymentToAcquireProductiveAssetsAndInvestments",
+    "value": "3378000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from asset dispositions",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "635000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "COP",
+  "value": "3378000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000950170-25-097064",
+  "cik": 1286681,
+  "end": "2025-05-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "35231000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sale of investments",
+    "tag": "ProceedsFromSaleOfLongtermInvestments",
+    "value": "44085000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sale of assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "8458000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "DPZ",
+  "value": "35231000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001163165-25-000042",
+  "cik": 1163165,
+  "end": "2025-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures and investments",
+    "nature": "ppe",
+    "tag": "PaymentToAcquireProductiveAssetsAndInvestments",
+    "value": "6664000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from asset dispositions",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "1341000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "COP",
+  "value": "6664000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000909832-26-000029",
+  "cik": 909832,
+  "end": "2026-01-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "2815000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "COST",
+  "value": "2815000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000024545-26-000036",
+  "cik": 24545,
+  "end": "2026-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "231700000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sales of property, plant, equipment and other assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "1100000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "TAP",
+  "value": "231700000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000721371-26-000018",
+  "cik": 721371,
+  "end": "2026-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "385000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from disposal of property and equipment",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "31000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "CAH",
+  "value": "385000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001057877-26-000098",
+  "cik": 1057877,
+  "end": "2026-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant and equipment, net",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "371527000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from Sale of Other Productive Assets",
+    "tag": "ProceedsFromSaleOfOtherProductiveAssets",
+    "value": "47364000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from Sale of Intangible Assets",
+    "tag": "ProceedsFromSaleOfIntangibleAssets",
+    "value": "32138000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "IDA",
+  "value": "371527000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000831001-26-000019",
+  "cik": 831001,
+  "end": "2026-03-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures on premises and equipment and capitalized software",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "1415000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from divestitures",
+    "tag": "ProceedsFromDivestitureOfBusinesses",
+    "value": "233000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales and securitizations of loans",
+    "tag": "ProceedsFromSaleOfLoansAndLeasesHeldForInvestment",
+    "value": "1473000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales of investments",
+    "tag": "ProceedsFromSaleOfAvailableForSaleSecuritiesDebt",
+    "value": "38384000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from maturities of investments",
+    "tag": "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities",
+    "value": "48787000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from maturities of investments",
+    "tag": "ProceedsFromMaturitiesPrepaymentsAndCallsOfHeldToMaturitySecurities",
+    "value": "11928000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales of premises and equipment and repossessed assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "3000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "C",
+  "value": "1415000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000092122-26-000054",
+  "cik": 92122,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Property additions",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "6639000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "SO",
+  "value": "6639000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000827052-26-000059",
+  "cik": 827052,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "3385000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of nuclear decommissioning trust investments",
+    "tag": "ProceedsFromDecommissioningFund",
+    "value": "3666000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sale of a subsidiary, net of cash transferred",
+    "tag": "ProceedsFromDivestitureOfBusinesses",
+    "value": "15000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "EIX",
+  "value": "3385000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001057877-26-000129",
+  "cik": 1057877,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant and equipment, net",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "808035000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from Sale of Other Productive Assets",
+    "tag": "ProceedsFromSaleOfOtherProductiveAssets",
+    "value": "105309000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from Sale of Intangible Assets",
+    "tag": "ProceedsFromSaleOfIntangibleAssets",
+    "value": "32138000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "IDA",
+  "value": "808035000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001109357-26-000080",
+  "cik": 1109357,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "4558000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "EXC",
+  "value": "4558000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001967680-26-000044",
+  "cik": 1967680,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments for additions to property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "24000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "VLTO",
+  "value": "24000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000065984-26-000283",
+  "cik": 65984,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments to Acquire Property, Plant, and Equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "5030819000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from Decommissioning Trust Fund Assets",
+    "tag": "ProceedsFromDecommissioningFund",
+    "value": "1548167000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "ETR",
+  "value": "5030819000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000352541-26-000043",
+  "cik": 352541,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Utility business construction and acquisition expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "913000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "LNT",
+  "value": "913000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001108426-26-000048",
+  "cik": 1108426,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to utility plant and non-utility plant",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "577560000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sales of investment securities",
+    "tag": "ProceedsFromSaleAndMaturityOfMarketableSecurities",
+    "value": "329672000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "TXNM",
+  "value": "577560000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-26-327487",
+  "cik": 715957,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Plant construction and other property additions (including nuclear fuel)",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipmentIncludingNuclearFuel",
+    "value": "5799000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sales of securities",
+    "tag": "ProceedsFromSaleAndMaturityOfMarketableSecurities",
+    "value": "2308000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "D",
+  "value": "5799000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000037996-26-000156",
+  "cik": 37996,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital spending",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "4758000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sales and maturities of marketable securities and other investments",
+    "tag": "ProceedsFromSaleAndMaturityOfMarketableSecurities",
+    "value": "5432000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "F",
+  "value": "4758000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0000753308-26-000060",
+  "cik": 753308,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures of FPL",
+    "nature": "ppe",
+    "tag": "CapitalExpendituresOfFPL",
+    "value": "5780000000.0000"
+   },
+   {
+    "label": "Other capital expenditures",
+    "nature": "ppe",
+    "tag": "ProceedsPaymentsFromOtherCapitalExpenditures",
+    "value": "8000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sale of independent power and other investments of NEER",
+    "tag": "ProceedsfromSaleofIndependentPowerInvestments",
+    "value": "448000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sale or maturity of securities in special use funds",
+    "tag": "ProceedsFromDecommissioningFund",
+    "value": "3252000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "NEE",
+  "value": "5788000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001031296-26-000123",
+  "cik": 1031296,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital investments",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "2600000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sales of investment securities held in trusts",
+    "tag": "ProceedsFromSaleOfAvailableForSaleSecuritiesDebt",
+    "value": "33000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "FE",
+  "value": "2600000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001130310-26-000041",
+  "cik": 1130310,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "2568000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "CNP",
+  "value": "2568000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-26-321077",
+  "cik": 860730,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchase of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "2350000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sales of hospitals and health care entities",
+    "tag": "ProceedsFromDivestitureOfBusinesses",
+    "value": "21000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "HCA",
+  "value": "2350000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001751788-26-000147",
+  "cik": 1751788,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireMachineryAndEquipment",
+    "value": "1135000000.0000"
+   },
+   {
+    "label": "Cash flow hedging related to capital expenditures",
+    "nature": "ppe",
+    "tag": "CashFlowHedgingRelatedToCapitalExpenditures",
+    "value": "6000000.0000"
+   },
+   {
+    "label": "Investment in gas field developments",
+    "nature": "ppe",
+    "tag": "PaymentsToExploreAndDevelopOilAndGasProperties",
+    "value": "48000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from incentives related to capital expenditures",
+    "tag": "ProceedsFromIncentivesRelatedToCapitalExpenditures",
+    "value": "49000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales of property, businesses and consolidated companies, net of cash divested",
+    "tag": "ProceedsFromSalesOfBusinessAffiliateAndProductiveAssets",
+    "value": "58000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales and maturities of investments",
+    "tag": "ProceedsFromSaleAndMaturityOfOtherInvestments",
+    "value": "524000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "DOW",
+  "value": "1189000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000040533-26-000032",
+  "cik": 40533,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "437000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "GD",
+  "value": "437000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000049071-26-000050",
+  "cik": 49071,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of property and equipment, net",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "253000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of business, net",
+    "tag": "ProceedsFromDivestitureOfBusinessesNetOfCashDivested",
+    "value": "40000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from maturities of investment securities",
+    "tag": "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities",
+    "value": "1561000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales of investment securities",
+    "tag": "ProceedsFromSaleOfAvailableForSaleSecuritiesDebt",
+    "value": "1050000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "HUM",
+  "value": "253000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000833444-26-000087",
+  "cik": 833444,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "243000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Divestitures of businesses, net of cash divested",
+    "tag": "ProceedsFromDivestitureOfBusinessesNetOfCashDivested",
+    "value": "331000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "JCI",
+  "value": "243000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001021635-26-000025",
+  "cik": 1021635,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures (less allowance for equity funds used during construction)",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "488600000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "OGE",
+  "value": "488600000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001058290-26-000031",
+  "cik": 1058290,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "175000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from maturity or sale of other investments",
+    "tag": "ProceedsFromSaleAndMaturityOfOtherInvestments",
+    "value": "51000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "CTSH",
+  "value": "175000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001403161-26-000104",
+  "cik": 1403161,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of property, equipment and technology",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "1178000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from maturities and sales of investment securities",
+    "tag": "ProceedsFromSaleAndMaturityOfAvailableForSaleSecurities",
+    "value": "1280000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "V",
+  "value": "1178000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001437749-26-024749",
+  "cik": 1442145,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "68100000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "VRSK",
+  "value": "68100000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001628280-26-050134",
+  "cik": 1800,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Acquisitions of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "896000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sales (purchases) of other investment securities, net",
+    "tag": "PaymentsForProceedsFromInvestments",
+    "value": "187000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "ABT",
+  "value": "896000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001628280-26-050179",
+  "cik": 1103982,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "654000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from divestitures",
+    "tag": "ProceedsFromSaleOfEquityMethodInvestmentsAndDivestitureOfBusinessesNetOfCashDivested",
+    "value": "1000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from derivative settlements",
+    "tag": "ProceedsFromDerivativeInstrumentInvestingActivities",
+    "value": "179000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from investments",
+    "tag": "PaymentsForProceedsFromInvestments",
+    "value": "-25000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales of property, plant and equipment and other",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "3000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "MDLZ",
+  "value": "654000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001628280-26-050466",
+  "cik": 1616862,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchase of property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "98000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds received on loans to customers",
+    "tag": "ProceedsFromSaleAndCollectionOfFinanceReceivables",
+    "value": "5000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "AXTA",
+  "value": "98000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001628280-26-050486",
+  "cik": 1396009,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of property, plant & equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "370400000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of property, plant & equipment",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "18100000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sale of businesses",
+    "tag": "ProceedsFromDivestitureOfBusinesses",
+    "value": "572100000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "VMC",
+  "value": "370400000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001628280-26-050540",
+  "cik": 1996862,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments made for capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "779000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from investments",
+    "tag": "ProceedsFromSaleAndMaturityOfMarketableSecurities",
+    "value": "1275000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from disposal of business and property, plant and equipment",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "14000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "BG",
+  "value": "779000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001783180-26-000032",
+  "cik": 1783180,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "211000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "CARR",
+  "value": "211000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001326160-26-000040",
+  "cik": 1326160,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "8240000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sales and maturities of debt and equity securities",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "10206000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from the sale of Piedmont's Tennessee business",
+    "tag": "ProceedsFromDivestitureOfInterestInSubsidiariesAndAffiliates",
+    "value": "2501000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "DUK",
+  "value": "8240000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000046619-26-000020",
+  "cik": 46619,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "54104000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from Life Insurance Policy",
+    "tag": "ProceedsFromLifeInsurancePolicies",
+    "value": "22654000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "HEI",
+  "value": "54104000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000047217-26-000051",
+  "cik": 47217,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Investment in property, plant, equipment and purchased intangibles",
+    "nature": "ppe_with_intangibles",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "590000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "skipped_lines": [
+   {
+    "label": "Maturities and sales of available-for-sale securities and other investments",
+    "tag": "ProceedsFromSaleMaturityAndCollectionsOfInvestments",
+    "value": "32000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from business divestitures, net",
+    "tag": "ProceedsFromDivestitureOfBusinesses",
+    "value": "26000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "HPQ",
+  "value": "590000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000088941-26-000034",
+  "cik": 88941,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchase of property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "15663000.0000"
+   },
+   {
+    "label": "Purchase of intangibles",
+    "nature": "intangible",
+    "tag": "PaymentsToAcquireIntangibleAssets",
+    "value": "5986000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sales of property, plant and equipment",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "46000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sale of investments",
+    "tag": "ProceedsFromSaleOfLongtermInvestments",
+    "value": "100000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "SMTC",
+  "value": "15663000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000091419-26-000080",
+  "cik": 91419,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant, and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "88400000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from disposal of property, plant, and equipment",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "300000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "SJM",
+  "value": "88400000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000831001-26-000045",
+  "cik": 831001,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures on premises and equipment and capitalized software",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "2966000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from divestitures",
+    "tag": "ProceedsFromDivestitureOfBusinesses",
+    "value": "377000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales and securitizations of loans",
+    "tag": "ProceedsFromSaleOfLoansAndLeasesHeldForInvestment",
+    "value": "4094000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales of investments",
+    "tag": "ProceedsFromSaleOfAvailableForSaleSecuritiesDebt",
+    "value": "60306000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from maturities of investments",
+    "tag": "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities",
+    "value": "100903000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from maturities of investments",
+    "tag": "ProceedsFromMaturitiesPrepaymentsAndCallsOfHeldToMaturitySecurities",
+    "value": "23143000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from sales of premises and equipment and repossessed assets",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "43000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "C",
+  "value": "2966000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000922224-26-000044",
+  "cik": 922224,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Expenditures for property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "2339000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "PPL",
+  "value": "2339000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001032208-26-000045",
+  "cik": 1032208,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Expenditures for property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "4687000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sales of nuclear decommissioning and other trust assets",
+    "tag": "ProceedsFromDecommissioningFund",
+    "value": "679000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "SRE",
+  "value": "4687000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001047862-26-000142",
+  "cik": 1047862,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Non-utility capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsNonUtilityConstructionExpenditures",
+    "value": "1000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of equity interest in Mountain Valley Pipeline, LLC",
+    "tag": "ProceedsFromDivestitureOfInterestInJointVenture",
+    "value": "358000000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "ED",
+  "value": "1000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001104659-26-101932",
+  "cik": 29534,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "758450000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sales of property and equipment",
+    "tag": "ProceedsFromSaleOfProductiveAssets",
+    "value": "4168000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "DG",
+  "value": "758450000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-26-371311",
+  "cik": 1579298,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Cash paid for property and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "532384000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Net (removal costs) proceeds from sale of property and equipment and assets held for sale",
+    "tag": "NetRemovalCostsPaymentsForProceedsFromSaleOfPropertyAndEquipmentAndAssetsHeldForSale",
+    "value": "204000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "BURL",
+  "value": "532384000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001423902-26-000093",
+  "cik": 1423902,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsForCapitalImprovements",
+    "value": "506065000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "WES",
+  "value": "506065000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001711269-26-000100",
+  "cik": 1711269,
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Additions to property, plant and equipment",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "1811800000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Sale of securities - trusts",
+    "tag": "ProceedsFromDecommissioningFund",
+    "value": "58500000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from nonrefundable contributions in aid of construction",
+    "tag": "ProceedsFromContributionInAidOfConstruction",
+    "value": "130000000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from investment in corporate-owned life insurance",
+    "tag": "ProceedsFromLifeInsurancePolicies",
+    "value": "54500000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "EVRG",
+  "value": "1811800000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001878848-26-000052",
+  "cik": 1878848,
+  "end": "2026-06-30",
+  "form": "10-K",
+  "members": [
+   {
+    "label": "Payments for property, plant and equipment, net of computer hardware",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "2998006000.0000"
+   },
+   {
+    "label": "Payments for intangible assets",
+    "nature": "intangible",
+    "tag": "PaymentsToAcquireIntangibleAssets",
+    "value": "107573000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from disposal of property, plant and equipment",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "23782000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "IREN",
+  "value": "2998006000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001104659-26-104755",
+  "cik": 1639300,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Capital expenditures",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "68783000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from sale of property and equipment",
+    "tag": "ProceedsFromSaleOfPropertyPlantAndEquipment",
+    "value": "466000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "OLLI",
+  "value": "68783000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001104659-26-108926",
+  "cik": 56873,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Payments for property and equipment, including payments for lease buyouts",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquireProductiveAssets",
+    "value": "2437000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [],
+  "state": "slot_fills_blank",
+  "ticker": "KR",
+  "value": "2437000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001628280-26-059830",
+  "cik": 1441816,
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "members": [
+   {
+    "label": "Purchases of property, equipment and other assets",
+    "nature": "ppe",
+    "tag": "PaymentsToAcquirePropertyPlantAndEquipment",
+    "value": "4791000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "skipped_lines": [
+   {
+    "label": "Proceeds from maturities of marketable securities",
+    "tag": "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities",
+    "value": "621800000.0000",
+    "why": "proceeds_or_sale"
+   },
+   {
+    "label": "Proceeds from non-marketable securities",
+    "tag": "ProceedsFromNonMarketableSecurities",
+    "value": "10718000.0000",
+    "why": "proceeds_or_sale"
+   }
+  ],
+  "state": "slot_fills_blank",
+  "ticker": "MDB",
+  "value": "4791000.0000",
+  "reason": "no_production_period"
+ }
+]

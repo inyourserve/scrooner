@@ -1,0 +1,1978 @@
+[
+ {
+  "accession": "0000909832-15-000003",
+  "cik": 909832,
+  "da_class": "single_line_clean",
+  "end": "2015-01-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "514000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "COST",
+  "value": "514000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000078003-15-000034",
+  "cik": 78003,
+  "da_class": "single_line_clean",
+  "end": "2015-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationIncludingDiscontinuedOperationDepreciationandAmortization",
+    "value": "2461000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "PFE",
+  "value": "2461000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001104659-15-066444",
+  "cik": 56873,
+  "da_class": "single_line_ties_is",
+  "end": "2015-07-31",
+  "form": "10-Q",
+  "is_da_total": "1097000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1097000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "KR",
+  "value": "1097000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-16-484938",
+  "cik": 1094831,
+  "da_class": "single_line_clean",
+  "end": "2015-12-31",
+  "form": "10-K",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Fixed asset depreciation and intangible asset amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "81997000.0000"
+   },
+   {
+    "label": "Employee loan amortization and reserves on employee loans",
+    "nature": "excluded",
+    "tag": "EmployeeLoanAmortizationAndReserveOnEmployeeLoans",
+    "value": "86708000.0000"
+   },
+   {
+    "label": "Accretion of discount on convertible notes",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "5835000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "BGC",
+  "value": "81997000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-16-585702",
+  "cik": 1109357,
+  "da_class": "is_anchor",
+  "end": "2016-03-31",
+  "form": "10-Q",
+  "is_da_total": "685000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, depletion and accretion, including nuclear fuel and energy contract amortization",
+    "nature": "combined_other",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "1063000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "EXC",
+  "value": "685000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001047469-18-000394",
+  "cik": 1385157,
+  "da_class": "single_line_clean",
+  "end": "2017-12-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "168000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "TEL",
+  "value": "168000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001637459-18-000015",
+  "cik": 1637459,
+  "da_class": "single_line_clean",
+  "end": "2017-12-31",
+  "form": "10-K",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1036000000.0000"
+   },
+   {
+    "label": "Amortization of postretirement benefit plans prior service costs/(credits)",
+    "nature": "excluded",
+    "tag": "DefinedBenefitPlanAmortizationOfPriorServiceCostCredit",
+    "value": "-328000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "KHC",
+  "value": "1036000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001558370-18-001580",
+  "cik": 1368622,
+  "da_class": "single_line_clean",
+  "end": "2018-01-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "5605000.0000"
+   },
+   {
+    "label": "Amortization of held-to-maturity investments",
+    "nature": "excluded",
+    "tag": "AccretionAmortizationOfDiscountsAndPremiumsInvestments",
+    "value": "1250000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "AVAV",
+  "value": "5605000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001705696-18-000015",
+  "cik": 1705696,
+  "da_class": "single_line_clean",
+  "end": "2017-12-31",
+  "form": "10-K",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation",
+    "nature": "asset_da",
+    "tag": "Depreciation",
+    "value": "751000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs and original issue discount",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "156000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "VICI",
+  "value": "751000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001705696-18-000025",
+  "cik": 1705696,
+  "da_class": "single_line_clean",
+  "end": "2018-03-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation",
+    "nature": "asset_da",
+    "tag": "Depreciation",
+    "value": "906000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs and original issue discount",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "1494000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "VICI",
+  "value": "906000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000802481-18-000071",
+  "cik": 802481,
+  "da_class": "single_line_clean",
+  "end": "2018-09-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "211450000.0000"
+   },
+   {
+    "label": "Amortization of premium related to Senior Notes",
+    "nature": "excluded",
+    "tag": "AmortizationOfDebtDiscountPremium",
+    "value": "-501000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "PPC",
+  "value": "211450000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001004980-19-000008",
+  "cik": 1004980,
+  "da_class": "single_line_ties_is",
+  "end": "2019-03-31",
+  "form": "10-Q",
+  "is_da_total": "797000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and decommissioning",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationDecommissioning",
+    "value": "797000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "PCG",
+  "value": "797000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000077476-19-000070",
+  "cik": 77476,
+  "da_class": "single_line_clean",
+  "end": "2019-05-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1056000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "PEP",
+  "value": "1056000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001646972-19-000054",
+  "cik": 1646972,
+  "da_class": "single_line_clean",
+  "end": "2019-05-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingAmortizationOfDebtIssuanceCosts",
+    "value": "515900000.0000"
+   },
+   {
+    "label": "Operating lease right-of-use assets amortization",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortization",
+    "value": "162700000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "ACI",
+  "value": "515900000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001004980-19-000028",
+  "cik": 1004980,
+  "da_class": "single_line_ties_is",
+  "end": "2019-06-30",
+  "form": "10-Q",
+  "is_da_total": "1593000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and decommissioning",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationDecommissioning",
+    "value": "1593000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "PCG",
+  "value": "1593000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001004980-19-000046",
+  "cik": 1004980,
+  "da_class": "single_line_ties_is",
+  "end": "2019-09-30",
+  "form": "10-Q",
+  "is_da_total": "2433000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and decommissioning",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationDecommissioning",
+    "value": "2433000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "PCG",
+  "value": "2433000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001193125-20-076091",
+  "cik": 866787,
+  "da_class": "single_line_clean",
+  "end": "2020-01-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization of property and equipment and intangibles",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "180420000.0000"
+   },
+   {
+    "label": "Amortization of debt origination fees",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "4216000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "AZO",
+  "value": "180420000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001564590-20-018358",
+  "cik": 1034670,
+  "da_class": "single_line_clean",
+  "end": "2020-03-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "88800000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "ALV",
+  "value": "88800000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001628280-20-006690",
+  "cik": 765880,
+  "da_class": "single_line_ties_is",
+  "end": "2020-03-31",
+  "form": "10-Q",
+  "is_da_total": "189276000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization of real estate, in-place lease and other intangibles",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "189276000.0000"
+   },
+   {
+    "label": "Amortization of deferred compensation",
+    "nature": "excluded",
+    "tag": "ShareBasedCompensation",
+    "value": "4832000.0000"
+   },
+   {
+    "label": "Amortization of deferred financing costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "2582000.0000"
+   },
+   {
+    "label": "Amortization of nonrefundable entrance fees and above/below market lease intangibles",
+    "nature": "excluded",
+    "tag": "AmortizationOfNonrefundableEntranceFeesAndAboveBelowMarketLeaseIntangibles",
+    "value": "-15943000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "DOC",
+  "value": "189276000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001466258-20-000190",
+  "cik": 1466258,
+  "da_class": "single_line_clean",
+  "end": "2020-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "149200000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "TT",
+  "value": "149200000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001000228-20-000055",
+  "cik": 1000228,
+  "da_class": "single_line_clean",
+  "end": "2020-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "96095000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "HSIC",
+  "value": "96095000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001558370-20-011232",
+  "cik": 56873,
+  "da_class": "single_line_ties_is",
+  "end": "2020-07-31",
+  "form": "10-Q",
+  "is_da_total": "1442000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1442000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "KR",
+  "value": "1442000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000100885-20-000304",
+  "cik": 100885,
+  "da_class": "single_line_clean",
+  "end": "2020-09-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation",
+    "nature": "asset_da",
+    "tag": "Depreciation",
+    "value": "1653000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "UNP",
+  "value": "1653000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001437749-20-022010",
+  "cik": 855658,
+  "da_class": "single_line_clean",
+  "end": "2020-09-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts",
+    "value": "19263000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs and discount",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "300000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "LSCC",
+  "value": "19263000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001437749-21-004238",
+  "cik": 855658,
+  "da_class": "single_line_clean",
+  "end": "2020-12-31",
+  "form": "10-K",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts",
+    "value": "25140000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "5960000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs and discount",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "400000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "LSCC",
+  "value": "25140000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001437749-21-025092",
+  "cik": 855658,
+  "da_class": "single_line_clean",
+  "end": "2021-09-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts",
+    "value": "17839000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "4926000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs and discount",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "274000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "LSCC",
+  "value": "17839000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001213900-22-006497",
+  "cik": 1324948,
+  "da_class": "single_line_clean",
+  "end": "2021-12-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "Depreciation",
+    "value": "37355000.0000"
+   },
+   {
+    "label": "Amortization of deferred financing costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCosts",
+    "value": "17600000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "RBC",
+  "value": "37355000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001868275-22-000044",
+  "cik": 1868275,
+  "da_class": "is_anchor",
+  "end": "2022-03-31",
+  "form": "10-Q",
+  "is_da_total": "280000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and accretion, including nuclear fuel and energy contract amortization",
+    "nature": "combined_other",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "602000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "CEG",
+  "value": "280000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001109357-22-000092",
+  "cik": 1109357,
+  "da_class": "is_anchor",
+  "end": "2022-06-30",
+  "form": "10-Q",
+  "is_da_total": "1647000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and accretion, including nuclear fuel and energy contract amortization",
+    "nature": "combined_other",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "1854000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "EXC",
+  "value": "1647000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001109357-22-000113",
+  "cik": 1109357,
+  "da_class": "is_anchor",
+  "end": "2022-09-30",
+  "form": "10-Q",
+  "is_da_total": "2472000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and accretion, including nuclear fuel and energy contract amortization",
+    "nature": "combined_other",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "2679000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "EXC",
+  "value": "2472000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001437749-22-025369",
+  "cik": 855658,
+  "da_class": "single_line_clean",
+  "end": "2022-09-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts",
+    "value": "21498000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "4995000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "LSCC",
+  "value": "21498000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001437749-23-003778",
+  "cik": 855658,
+  "da_class": "single_line_clean",
+  "end": "2022-12-31",
+  "form": "10-K",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts",
+    "value": "29323000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "6512000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "LSCC",
+  "value": "29323000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001868275-23-000014",
+  "cik": 1868275,
+  "da_class": "is_anchor",
+  "end": "2022-12-31",
+  "form": "10-K",
+  "is_da_total": "1091000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and accretion, including nuclear fuel and energy contract amortization",
+    "nature": "combined_other",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "2427000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "CEG",
+  "value": "1091000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000073124-23-000159",
+  "cik": 73124,
+  "da_class": "single_line_clean",
+  "end": "2023-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Amortization and Accretion of Securities and Unearned Income, net",
+    "nature": "excluded",
+    "tag": "AccretionAmortizationOfDiscountsAndPremiumsInvestments",
+    "value": "4300000.0000"
+   },
+   {
+    "label": "Depreciation and Amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "308100000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "NTRS",
+  "value": "308100000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001558370-24-004176",
+  "cik": 1964789,
+  "da_class": "single_line_ties_is",
+  "end": "2021-06-30",
+  "form": "10-KT",
+  "is_da_total": "391000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "391000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "106000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "HUT",
+  "value": "391000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000077476-24-000042",
+  "cik": 77476,
+  "da_class": "single_line_clean",
+  "end": "2024-05-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1379000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "PEP",
+  "value": "1379000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001437749-24-023930",
+  "cik": 855658,
+  "da_class": "single_line_clean",
+  "end": "2024-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts",
+    "value": "18385000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "3812000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "LSCC",
+  "value": "18385000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0001646972-24-000165",
+  "cik": 1646972,
+  "da_class": "single_line_clean",
+  "end": "2024-05-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "552000000.0000"
+   },
+   {
+    "label": "Deferred financing costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfDebtIssuanceCostsAndWriteOffOfDeferredDebtIssuanceCost",
+    "value": "4900000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "ACI",
+  "value": "552000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001558370-25-003476",
+  "cik": 866787,
+  "da_class": "single_line_clean",
+  "end": "2025-01-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization of property and equipment",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "271091000.0000"
+   },
+   {
+    "label": "Amortization of debt origination fees",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "6061000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "AZO",
+  "value": "271091000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001781335-25-000021",
+  "cik": 1781335,
+  "da_class": "single_line_clean",
+  "end": "2025-03-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "42000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "OTIS",
+  "value": "42000000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000950170-25-097064",
+  "cik": 1286681,
+  "da_class": "single_line_clean",
+  "end": "2025-05-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "40713000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "2419000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "DPZ",
+  "value": "40713000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001437749-25-024620",
+  "cik": 855658,
+  "da_class": "single_line_clean",
+  "end": "2025-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingRightOfUseAssetAndFinanceCosts",
+    "value": "17539000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "3840000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "LSCC",
+  "value": "17539000.0000",
+  "reason": "ambiguous_period_match"
+ },
+ {
+  "accession": "0000721371-26-000018",
+  "cik": 721371,
+  "da_class": "single_line_clean",
+  "end": "2026-03-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "715000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "CAH",
+  "value": "715000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-26-194215",
+  "cik": 751364,
+  "da_class": "single_line_ties_is",
+  "end": "2026-03-31",
+  "form": "10-Q",
+  "is_da_total": "70797000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "70797000.0000"
+   },
+   {
+    "label": "Amortization of notes payable discount",
+    "nature": "excluded",
+    "tag": "AmortizationOfDebtDiscountPremium",
+    "value": "967000.0000"
+   },
+   {
+    "label": "Amortization of debt costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCosts",
+    "value": "1752000.0000"
+   },
+   {
+    "label": "Amortization of interest rate hedges",
+    "nature": "excluded",
+    "tag": "AmortizationOfDeferredHedgeGains",
+    "value": "75000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "NNN",
+  "value": "70797000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000831001-26-000019",
+  "cik": 831001,
+  "da_class": "single_line_clean",
+  "end": "2026-03-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "1115000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 1,
+  "state": "slot_fills_blank",
+  "ticker": "C",
+  "value": "1115000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001109357-26-000080",
+  "cik": 1109357,
+  "da_class": "is_anchor",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "1920000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization, and accretion",
+    "nature": "combined_other",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "1921000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "EXC",
+  "value": "1920000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001584207-26-000031",
+  "cik": 1584207,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "150000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "OMF",
+  "value": "150000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000034903-26-000042",
+  "cik": 34903,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "199840000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "AdjustmentDepreciationAndAmortization",
+    "value": "199840000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "FRT",
+  "value": "199840000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000352541-26-000043",
+  "cik": 352541,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "442000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "442000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "LNT",
+  "value": "442000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001104659-26-089296",
+  "cik": 1297996,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "1006617000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "1006617000.0000"
+   },
+   {
+    "label": "Amortization of share-based compensation",
+    "nature": "excluded",
+    "tag": "AmortizationDeferredStockBasedCompensation",
+    "value": "54281000.0000"
+   },
+   {
+    "label": "Straight-lined rents and amortization of above and below market leases",
+    "nature": "excluded",
+    "tag": "StraightLinedRentsAmortizationOfBelowMarketLeaseAndAboveMarketLease",
+    "value": "-46542000.0000"
+   },
+   {
+    "label": "Amortization of deferred financing costs and debt discount / premium",
+    "nature": "excluded",
+    "tag": "AmortizationOfDeferredFinancingCosts",
+    "value": "16310000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "DLR",
+  "value": "1006617000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000037996-26-000156",
+  "cik": 37996,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and tooling amortization",
+    "nature": "asset_da",
+    "tag": "Depreciation",
+    "value": "3748000000.0000"
+   },
+   {
+    "label": "Other amortization",
+    "nature": "excluded",
+    "tag": "InvestmentIncomeNetAmortizationOfDiscountAndPremium",
+    "value": "-891000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "F",
+  "value": "3748000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0000074208-26-000073",
+  "cik": 74208,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "328174000.0000"
+   },
+   {
+    "label": "Amortization of share-based compensation",
+    "nature": "excluded",
+    "tag": "ShareBasedCompensation",
+    "value": "16430000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "UDR",
+  "value": "328174000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000879169-26-000056",
+  "cik": 879169,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "50278000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "INCY",
+  "value": "50278000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001130310-26-000041",
+  "cik": 1130310,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "868000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "868000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "CNP",
+  "value": "868000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-26-320490",
+  "cik": 775158,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "122800000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "OSK",
+  "value": "122800000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001193125-26-321077",
+  "cik": 860730,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "1874000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1874000000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs and discounts",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "23000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "HCA",
+  "value": "1874000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001751788-26-000147",
+  "cik": 1751788,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1383000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "DOW",
+  "value": "1383000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000049071-26-000050",
+  "cik": 49071,
+  "da_class": "is_anchor",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "322000000.0000",
+  "members": [
+   {
+    "label": "Depreciation",
+    "nature": "asset_da",
+    "tag": "Depreciation",
+    "value": "363000000.0000"
+   },
+   {
+    "label": "Amortization",
+    "nature": "other_amort",
+    "tag": "AdjustmentForAmortization",
+    "value": "19000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "HUM",
+  "value": "322000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000833444-26-000087",
+  "cik": 833444,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "495000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "JCI",
+  "value": "495000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001021635-26-000025",
+  "cik": 1021635,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "274500000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "274500000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "OGE",
+  "value": "274500000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001058290-26-000031",
+  "cik": 1058290,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "284000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization expense",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "284000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "CTSH",
+  "value": "284000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001193125-26-323746",
+  "cik": 1045609,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "1421024000.0000",
+  "members": [
+   {
+    "label": "Straight-lined rents and amortization of above and below market leases",
+    "nature": "excluded",
+    "tag": "StraightLineRentsAndAmortizationOfAboveAndBelowMarketLeases",
+    "value": "-326901000.0000"
+   },
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "1421024000.0000"
+   },
+   {
+    "label": "Amortization of debt discounts and debt issuance costs, net",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "41859000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "PLD",
+  "value": "1421024000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001628280-26-050179",
+  "cik": 1103982,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "693000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "MDLZ",
+  "value": "693000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001628280-26-050466",
+  "cik": 1616862,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "152000000.0000"
+   },
+   {
+    "label": "Amortization of deferred financing costs and original issue discount",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "4000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "AXTA",
+  "value": "152000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001628280-26-050540",
+  "cik": 1996862,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation, depletion and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "494000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "BG",
+  "value": "494000000.0000",
+  "reason": "production_no_longer_blank"
+ },
+ {
+  "accession": "0001193125-26-330021",
+  "cik": 910606,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "215225000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "215225000.0000"
+   },
+   {
+    "label": "Amortization of deferred financing costs and debt premiums",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "8033000.0000"
+   },
+   {
+    "label": "Amortization of above and below market lease intangibles, net",
+    "nature": "excluded",
+    "tag": "AmortizationOfAboveAndBelowMarketLeases",
+    "value": "-9964000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "REG",
+  "value": "215225000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001326160-26-000040",
+  "cik": 1326160,
+  "da_class": "is_anchor",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "3389000000.0000",
+  "members": [
+   {
+    "label": "Depreciation, amortization and accretion (including amortization of nuclear fuel)",
+    "nature": "combined_other",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "3702000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "DUK",
+  "value": "3389000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000046619-26-000020",
+  "cik": 46619,
+  "da_class": "single_line_clean",
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "166385000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "HEI",
+  "value": "166385000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000088941-26-000034",
+  "cik": 88941,
+  "da_class": "single_line_clean",
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "18915000.0000"
+   },
+   {
+    "label": "Amortization of right-of-use assets",
+    "nature": "excluded",
+    "tag": "OperatingLeaseRightOfUseAssetAmortizationExpense",
+    "value": "3168000.0000"
+   },
+   {
+    "label": "Accretion of deferred financing costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCostsAndDiscounts",
+    "value": "2144000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "SMTC",
+  "value": "18915000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000052827-26-000099",
+  "cik": 52827,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation, depletion and amortization from continuing operations",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortizationExcludingLargeDispositionsContinuingOperations",
+    "value": "126656000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "RYN",
+  "value": "126656000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0000831001-26-000045",
+  "cik": 831001,
+  "da_class": "single_line_clean",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAmortizationAndAccretionNet",
+    "value": "2262000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "C",
+  "value": "2262000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001032208-26-000045",
+  "cik": 1032208,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-Q",
+  "is_da_total": "1233000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationAndAmortization",
+    "value": "1233000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "SRE",
+  "value": "1233000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001104659-26-101932",
+  "cik": 29534,
+  "da_class": "single_line_clean",
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "548310000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "DG",
+  "value": "548310000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001104659-26-102213",
+  "cik": 315189,
+  "da_class": "single_line_clean",
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "is_da_total": null,
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1787000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 3,
+  "state": "slot_fills_blank",
+  "ticker": "DE",
+  "value": "1787000000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001193125-26-371311",
+  "cik": 1579298,
+  "da_class": "single_line_ties_is",
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "is_da_total": "218630000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "218630000.0000"
+   },
+   {
+    "label": "Amortization of deferred financing costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCosts",
+    "value": "1285000.0000"
+   },
+   {
+    "label": "Accretion of long term debt instruments",
+    "nature": "excluded",
+    "tag": "AccretionAmortizationOfDiscountsAndPremiumsInvestments",
+    "value": "1015000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "BURL",
+  "value": "218630000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001878848-26-000052",
+  "cik": 1878848,
+  "da_class": "single_line_ties_is",
+  "end": "2026-06-30",
+  "form": "10-K",
+  "is_da_total": "417729000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "417729000.0000"
+   },
+   {
+    "label": "Amortization of debt issuance costs",
+    "nature": "excluded",
+    "tag": "AmortizationOfFinancingCosts",
+    "value": "9408000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 4,
+  "state": "slot_fills_blank",
+  "ticker": "IREN",
+  "value": "417729000.0000",
+  "reason": "no_production_period"
+ },
+ {
+  "accession": "0001104659-26-108926",
+  "cik": 56873,
+  "da_class": "single_line_ties_is",
+  "end": "2026-07-31",
+  "form": "10-Q",
+  "is_da_total": "1726000000.0000",
+  "members": [
+   {
+    "label": "Depreciation and amortization",
+    "nature": "asset_da",
+    "tag": "DepreciationDepletionAndAmortization",
+    "value": "1726000000.0000"
+   }
+  ],
+  "prod_value": null,
+  "qtrs": 2,
+  "state": "slot_fills_blank",
+  "ticker": "KR",
+  "value": "1726000000.0000",
+  "reason": "no_production_period"
+ }
+]
