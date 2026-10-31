@@ -1,0 +1,24 @@
+{
+ "rule_id": "slot.cf_buybacks@1",
+ "cells": 469,
+ "companies": 92,
+ "by_op": {
+  "update": 143,
+  "insert": 326
+ },
+ "by_population": {
+  "differs": 143,
+  "fills_blank": 326
+ },
+ "by_basis": {
+  "common_repurchase_line": 469
+ },
+ "candidates": 783,
+ "left_out": {
+  "no_single_standard_source_line": 218,
+  "no_unique_core_fact": 93,
+  "production_on_neighbour_period": 3
+ },
+ "keep_list_cells": 0,
+ "cells_sha256": "9076cc57949deb0ea8d87d52bc923b4e12d8ecdd5a12b9611eaf2c271be00504"
+}

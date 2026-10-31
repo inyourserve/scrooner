@@ -72,6 +72,7 @@ OUTFLOW_RX = re.compile(r"repurchas|purchas|buy ?back|acqui|reacquir|retire|paym
 NET_RX = re.compile(r"sales?\s*\(purchases?\)|purchases?\s*\(sales?\)|\(purchases?\)|purchases?,?\s+net|net of (sales|issuance|proceeds)|\bnet\b.*(sales|purchases)", re.I)
 SUBSIDIARY_RX = re.compile(r"subsidiar|noncontrolling|non-controlling|minority|aspentech|put option", re.I)
 NONCASH_RX = re.compile(r"unsettled|accrued|incurred|not yet paid|non-?cash|accounts payable|commitment", re.I)
+SWAP_RX = re.compile(r"\bswap\b|exchange program|exchanged for", re.I)
 OPTION_RX = re.compile(r"option exercise|options exercised|exercise of (stock )?options|related to (stock )?option", re.I)
 COMBINED_RX = re.compile(r"\band other\b|\bother\b.*\b(repurchas|purchas)|includ", re.I)
 SBC_PLAN_RX = re.compile(r"\bSBC\b|(stock|share)[- ]based|equity (award|compensation|incentive)|(compensation|incentive|benefit|employee|stock|equity) plans?|for (delivery|settlement|distribution)|to satisfy", re.I)
@@ -101,6 +102,8 @@ def buyback_class(tag, label):
     hit = REPURCHASE_RX.search(label) or "Repurchase" in tag or "TreasuryStock" in tag
     if not hit:
         return None
+    if SWAP_RX.search(label):
+        return "perimeter_share_swap"  # CCL FY2022 "Purchase of treasury stock under the Stock Swap Program"
     if OPTION_RX.search(label):
         return "perimeter_option_exercise"  # HEI "issued, repurchased and retired related to stock option exercises"
     if COMBINED_RX.search(label) and not WITHHOLD_RX.search(label):
@@ -261,12 +264,15 @@ def verdict_bb(c, cell):
     if any(m["class"] == "combined" for m in ms):
         return "buyback_combined_with_other_items", None
     for cls in ("net", "perimeter_subsidiary_repurchase", "perimeter_excise_tax", "perimeter_sbc_plan_purchase",
-                "perimeter_tax_withholding_shares", "perimeter_option_exercise", "unresolved"):
+                "perimeter_tax_withholding_shares", "perimeter_option_exercise", "perimeter_share_swap", "unresolved"):
         if any(m["class"] == cls and m["value"] not in (None, 0) for m in ms):
             return {"net": "net_treasury_line", "unresolved": "perimeter_line_unresolved"}.get(cls, cls), None
     common_ms = [m for m in ms if m["class"] == "common"]
-    if len([m for m in common_ms if m["value"] not in (None, 0)]) > 1:
-        return "perimeter_multiple_repurchase_lines", None  # ROST "Treasury stock purchased" + "Repurchase of common stock"
+    if len(common_ms) > 1:
+        # two repurchase lines PRINTED, whatever this column's values (ROST Q1
+        # FY2021: "Treasury stock purchased" 47.4M beside a zero "Repurchase of
+        # common stock"): which one is the program buyback is a definition call
+        return "perimeter_multiple_repurchase_lines", None
     # a repurchase printed without parentheses while the other outflow lines
     # of the section are (AAON Q1 2025): the filer's sign is in doubt
     if any(not m["negating"] for m in common_ms) and cell["negated_outflows"] >= 2:
