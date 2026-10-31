@@ -185,7 +185,8 @@ def main(slots_path, ciks, out_dir, families=None):
                                     gate = "hold_identity_gap"
                     obs[(s0, e0)].append({"adsh": adsh, "filed": s["filed"], "period": period, "form": s["form"],
                                           "gate": gate, "tag": s.get("tag") if not s.get("sum_tags") else "+".join(s["sum_tags"]),
-                                          "label": s.get("label"), "value": value, "tie": s.get("tie"),
+                                          "label": s.get("label") if not s.get("sum_tags") else "Total revenues (sum of printed lines: " + s.get("label", "") + " + siblings)",
+                                          "value": value, "tie": s.get("tie"),
                                           "extra": {**extra, "face_axis": s.get("face_axis", False)}})
                 if s["gate"] in PUBLISHABLE and not any(near(e0, period, 3) and face_column(s["form"], period, s0, e0) for s0, e0 in cols):
                     obs[("held", period, s["form"][:4])].append({"adsh": adsh, "gate": "slot_fact_missing_in_companyfacts", "filed": s["filed"]})

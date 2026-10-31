@@ -89,5 +89,32 @@
   "sha256": "80bb38a4fd115d2480b48d56ca2e8b15074cdb9d6c44bcd7d03ebb78ebcd4847",
   "status": "production stays; listed for the Verifier (sibling rule, Snap-on)",
   "not_included": "391 production-only cells whose period falls in a sibling-held filing but that filing prints no column for them (prod_only_filing_held:hold_sibling_*)"
+ },
+ "verifier": {
+  "verdict": "YES",
+  "draw": "23 of 23",
+  "branch": "verify/revenue-v2-2026-11-01",
+  "verified_cells_sha256": "b98f509f139b44abd373891e6b747a9c35ecc3ca3d41404efd70e7eba08cda5c"
+ },
+ "display_label_notes": {
+  "rule": "G3_calc_sum cells carry the ROOT line's label in 'label'; the value is the sum of the printed lines. Display label for these cells: 'Total revenues (sum of printed lines)'.",
+  "cells": [
+   [
+    "0001111711",
+    "2017-01-01",
+    "2017-12-31"
+   ],
+   [
+    "0001111711",
+    "2018-01-01",
+    "2018-12-31"
+   ],
+   [
+    "0001111711",
+    "2019-01-01",
+    "2019-12-31"
+   ]
+  ],
+  "note": "NiSource: label 'Customer revenues' is cosmetic; cells file left byte-identical to the verified digest"
  }
 }
