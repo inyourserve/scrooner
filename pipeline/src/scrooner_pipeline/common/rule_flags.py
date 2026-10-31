@@ -200,6 +200,13 @@ RULES: dict[str, Rule] = {
             "same-vintage Q4 derivation",
         ),
         _r(
+            "period.duplicate_column_merge@1",
+            "-",
+            "period_engineer",
+            "one statement column per fiscal period: merge equal copies, hide differing ones",
+            dry_run=True,
+        ),
+        _r(
             "period.fiscal_label_from_dates@1",
             "RF-05",
             "period_engineer",
@@ -362,6 +369,7 @@ RULE_PERIODIC_FORM_ONLY = "source.periodic_form_only@1"
 RULE_MATCHING_COPIES = "dedupe.matching_copies@1"
 RULE_SHARED_ACCESSION_PRIMARY = "entity.shared_accession_primary_filer@1"
 RULE_IDENTITY = "identity.cik_name_ticker@1"
+RULE_DUPLICATE_COLUMN_MERGE = "period.duplicate_column_merge@1"
 KNOWN_RULES = frozenset(RULES)
 
 

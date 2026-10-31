@@ -230,6 +230,11 @@ export interface StatementPeriod {
 export interface StatementLineRow {
   label: string;
   values: (string | null)[];
+  // Why a cell is blank although a filing carries a value for it (one entry per
+  // period, null when the cell is simply absent). Added 2026-10-31 for the
+  // duplicate-column guard below; the pipeline's own reasons
+  // (analytics.cell_blank_reason) can feed the same slot later.
+  reasons?: (string | null)[];
 }
 
 export interface Statement {
@@ -278,12 +283,92 @@ export async function getStatement(companyId: number, statement: string, frequen
   }
 
   const periods = [...periodMap.entries()].sort((a, b) => a[1].period_end.localeCompare(b[1].period_end));
-  return {
-    periods: periods.map(([, p]) => p),
-    lines: [...lineMap.entries()]
-      .sort((a, b) => a[0] - b[0])
-      .map(([, l]) => ({ label: l.label, values: periods.map(([key]) => l.values.get(key) ?? null) })),
-  };
+  const lines = [...lineMap.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([, l]) => ({ label: l.label, values: periods.map(([key]) => l.values.get(key) ?? null) }));
+  return collapseDuplicateColumns(periods.map(([, p]) => p), lines);
+}
+
+// Duplicate-column guard (2026-10-31). One accounting column can exist as two
+// core.period rows with the same fiscal year/period whose end dates differ by a
+// few days (a stray context, or a recast under a one-day-different context:
+// MSFT Q1 FY2017 revenue 20,453M on 2016-07-01.. vs 21,928M on 2016-07-02..).
+// Keyed by end_date, those rendered as two columns with the same label. Rule,
+// matching pipeline/normalizer/duplicate_columns.py: columns with the same
+// (fiscal_year, fiscal_period) whose ends are within 7 days collapse into one;
+// a line whose values agree within the filer's rounding keeps the value; a line
+// whose values DIFFER is blanked with a reason -- never an arbitrary winner.
+export const DUPLICATE_COLUMN_MAX_GAP_DAYS = 7;
+
+function trailingZeroExponent(n: number): number {
+  if (!Number.isFinite(n) || n === 0) return 0;
+  let e = 0;
+  let v = Math.abs(n);
+  while (e < 6 && v >= 10 && Math.round(v) % 10 === 0) {
+    v /= 10;
+    e += 1;
+  }
+  return e;
+}
+
+export function sameNumberWithinPrecision(a: string, b: string): boolean {
+  const x = Number(a);
+  const y = Number(b);
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return a === b;
+  if (x === y) return true;
+  // slack: 1.5 units of the coarser presentation scale of the two values, or 0.05%
+  const scale = Math.max(trailingZeroExponent(x), trailingZeroExponent(y));
+  const slack = Math.max(1.5 * 10 ** scale, 0.0005 * Math.max(Math.abs(x), Math.abs(y)));
+  return Math.abs(x - y) <= slack;
+}
+
+function daysBetween(a: string, b: string): number {
+  return Math.abs((Date.parse(a) - Date.parse(b)) / 86_400_000);
+}
+
+export function collapseDuplicateColumns(periods: StatementPeriod[], lines: StatementLineRow[]): Statement {
+  const groups: number[][] = [];
+  const assigned = new Set<number>();
+  periods.forEach((p, i) => {
+    if (assigned.has(i)) return;
+    const members = [i];
+    periods.forEach((q, j) => {
+      if (j === i || assigned.has(j)) return;
+      if (q.fiscal_year === p.fiscal_year && q.fiscal_period === p.fiscal_period && daysBetween(q.period_end, p.period_end) <= DUPLICATE_COLUMN_MAX_GAP_DAYS) members.push(j);
+    });
+    members.forEach((m) => assigned.add(m));
+    groups.push(members);
+  });
+  if (groups.every((g) => g.length === 1)) return { periods, lines };
+
+  const keptIndexByGroup = groups.map((g) => {
+    const filled = (i: number) => lines.reduce((n, l) => n + (l.values[i] !== null ? 1 : 0), 0);
+    return g.reduce((best, i) => (filled(i) > filled(best) ? i : best), g[0]);
+  });
+  const outPeriods = keptIndexByGroup.map((i) => periods[i]);
+  const outLines = lines.map((l) => {
+    const values: (string | null)[] = [];
+    const reasons: (string | null)[] = [];
+    groups.forEach((g) => {
+      const present = g.map((i) => l.values[i]).filter((v): v is string => v !== null);
+      if (present.length === 0) {
+        values.push(null);
+        reasons.push(null);
+        return;
+      }
+      const agree = present.every((v) => sameNumberWithinPrecision(v, present[0]));
+      if (agree) {
+        values.push(present[0]);
+        reasons.push(null);
+      } else {
+        values.push(null);
+        const ends = g.map((i) => periods[i].period_end).join(" and ");
+        reasons.push(`Two filed versions of this period differ (${present.join(" vs ")}; contexts ending ${ends}); neither is shown.`);
+      }
+    });
+    return reasons.some((r) => r !== null) ? { label: l.label, values, reasons } : { label: l.label, values };
+  });
+  return { periods: outPeriods, lines: outLines };
 }
 
 // Trailing N fiscal-year values for one metric, most-recent-first --

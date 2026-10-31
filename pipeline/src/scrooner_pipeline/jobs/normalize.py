@@ -268,3 +268,43 @@ def golden() -> None:
 
 if __name__ == "__main__":
     app()
+
+
+@app.command("merge-duplicate-columns")
+def merge_duplicate_columns_cmd(
+    ciks: str = typer.Option(None, help="Comma-separated CIKs (default: golden set)."),
+    backup_dir: str = typer.Option(
+        None, help="Before-image directory, required when the rule is ON."
+    ),
+    report: str = typer.Option(
+        None, help="JSONL of every planned cell action (dry run and apply)."
+    ),
+    rollback: str = typer.Option(
+        None, "--rollback", help="Restore from this before-image directory instead."
+    ),
+) -> None:
+    """Rule period.duplicate_column_merge@1 (flag OFF by default): one statement
+    column per fiscal period. Two core.period rows for the same fiscal
+    year/period whose ends and lengths are within 7 days are one column: equal
+    copies are merged onto the row with more facts, differing copies are hidden
+    with a reason (founder ruling 2026-10-31). Nothing is deleted. With the rule
+    off or dry_run this only plans and reports; ON applies with a before-image
+    per company; --rollback restores from one."""
+    from pathlib import Path
+
+    from scrooner_pipeline.normalizer import duplicate_columns as dc
+
+    with get_connection() as conn:
+        if rollback:
+            typer.echo(
+                f"merge-duplicate-columns rollback: {dc.rollback_run(conn, Path(rollback))}"
+            )
+            return
+        target = _parse_ciks(ciks) or _load_golden_ciks()
+        stats = dc.run(
+            conn,
+            target,
+            backup_dir=Path(backup_dir) if backup_dir else None,
+            report_path=Path(report) if report else None,
+        )
+    typer.echo(f"merge-duplicate-columns: {stats}")
