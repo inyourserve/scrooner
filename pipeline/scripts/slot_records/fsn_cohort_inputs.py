@@ -61,13 +61,13 @@ with gzip.open(out / "cohort_pre_rows.jsonl.gz", "wt") as fp, gzip.open(out / "c
             npre += 1
         seen = set()
         cand = [r for r in rd(qd / f"{q}_num.tsv.zst")
-                if r["dimh"] != NO_DIM and r["qtrs"] == "0" and MEZZ_RX.search(r["tag"])]
+                if r["dimh"] != NO_DIM and r["qtrs"] == "0" and MEZZ_RX.search(r["tag"]) and r["version"].startswith("us-gaap")]  # a custom element (TRGP TemporaryEquityDiscountOnShares) is a note line, not a face carrying amount
         segs = dim_segments(q, {r["dimh"] for r in cand}) if cand else {}
         for r in cand:
             # class-of-stock members only (as the FSDS dims extract did): a mezzanine-named tag on a
             # fair-value-hierarchy or other axis (AWK MandatorilyRedeemablePreferredStockFairValueDisclosure)
             # is a disclosure, not a balance-sheet mezzanine line
-            if "StatementClassOfStockAxis" in segs.get(r["dimh"], ""):
+            if "ClassOfStock=" in segs.get(r["dimh"], ""):
                 s = sub.get(r["adsh"])
                 k = (s["cik"] if s else None, r["tag"], r["ddate"])
                 if s and k not in seen:

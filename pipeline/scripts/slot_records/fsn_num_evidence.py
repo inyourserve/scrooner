@@ -98,6 +98,8 @@ with open(out, "w") as fo:
                 if len(sg) != 1 or "=" not in sg[0]:
                     continue
                 dims = sg[0]
+                if dims.startswith("ClassOfStock="):
+                    dims = "StatementClassOfStockAxis=" + dims.split("=", 1)[1]  # FSN drops the namespace and 'Axis' suffix
             fo.write(json.dumps({"cik": None, "adsh": r["adsh"], "tag": r["tag"], "period_type": "instant",
                                  "end": f"{d[:4]}-{d[4:6]}-{d[6:]}", "value": r["value"], "unit": "USD",
                                  "decimals": None, "dims": dims,
