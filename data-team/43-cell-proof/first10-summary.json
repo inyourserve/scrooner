@@ -1,32 +1,33 @@
 {
-  "run": "2026-10-31 v2 (component rule = custom parent only; arcs once per role; opex candidates fixed), 59 FSN periods, floor 2015-01-01",
+  "run": "2026-10-31 v4: per-group components sum, component-only = custom parent, derived quarters proven through year-to-date inputs; 59 FSN periods; floor 2015-01-01",
   "cells": 12143,
   "verdicts": {
-    "PROVEN": 8196,
-    "NOT_PRESENTED": 805,
-    "UNCHECKED": 2847,
-    "DISAGREE": 295
+    "PROVEN": 10548,
+    "NOT_PRESENTED": 943,
+    "UNCHECKED": 528,
+    "DISAGREE": 124
   },
   "reasons": {
-    "line_not_presented_on_statement": 707,
-    "check_failed:components_sum": 198,
+    "line_not_presented_on_statement": 841,
+    "derived_quarter_differs_from_inputs": 13,
     "shown_differs_from_printed_line": 16,
-    "only_a_component_line_presented": 76,
+    "only_a_component_line_presented": 86,
+    "check_failed:components_sum": 4,
     "period_length_mismatch": 5,
-    "no_value_for_this_column": 98
+    "no_value_for_this_column": 98,
+    "no_year_to_date_value_in_own_filing": 4
   },
   "per_company": {
     "AAPL": {
       "cells": 1261,
       "verdicts": {
-        "PROVEN": 853,
-        "UNCHECKED": 325,
-        "DISAGREE": 21,
-        "NOT_PRESENTED": 62
+        "PROVEN": 1134,
+        "UNCHECKED": 51,
+        "NOT_PRESENTED": 71,
+        "DISAGREE": 5
       },
       "reasons": {
-        "check_failed:components_sum": 16,
-        "line_not_presented_on_statement": 43,
+        "line_not_presented_on_statement": 52,
         "shown_differs_from_printed_line": 2,
         "no_value_for_this_column": 19,
         "period_length_mismatch": 3
@@ -35,30 +36,30 @@
     "MSFT": {
       "cells": 1295,
       "verdicts": {
-        "PROVEN": 984,
-        "UNCHECKED": 207,
-        "NOT_PRESENTED": 90,
-        "DISAGREE": 14
+        "PROVEN": 1125,
+        "NOT_PRESENTED": 107,
+        "UNCHECKED": 59,
+        "DISAGREE": 4
       },
       "reasons": {
-        "line_not_presented_on_statement": 89,
-        "check_failed:components_sum": 11,
+        "line_not_presented_on_statement": 106,
         "shown_differs_from_printed_line": 3,
-        "no_value_for_this_column": 1
+        "no_value_for_this_column": 1,
+        "derived_quarter_differs_from_inputs": 1
       }
     },
     "NVDA": {
       "cells": 1270,
       "verdicts": {
-        "PROVEN": 937,
-        "UNCHECKED": 291,
-        "DISAGREE": 15,
-        "NOT_PRESENTED": 27
+        "PROVEN": 1190,
+        "UNCHECKED": 50,
+        "NOT_PRESENTED": 27,
+        "DISAGREE": 3
       },
       "reasons": {
-        "check_failed:components_sum": 13,
         "no_value_for_this_column": 24,
         "period_length_mismatch": 1,
+        "derived_quarter_differs_from_inputs": 1,
         "shown_differs_from_printed_line": 1,
         "line_not_presented_on_statement": 3
       }
@@ -66,29 +67,29 @@
     "GOOGL": {
       "cells": 1198,
       "verdicts": {
-        "PROVEN": 703,
-        "UNCHECKED": 320,
-        "NOT_PRESENTED": 152,
-        "DISAGREE": 23
+        "PROVEN": 946,
+        "NOT_PRESENTED": 187,
+        "UNCHECKED": 64,
+        "DISAGREE": 1
       },
       "reasons": {
-        "line_not_presented_on_statement": 130,
-        "check_failed:components_sum": 23,
-        "no_value_for_this_column": 22
+        "line_not_presented_on_statement": 161,
+        "no_value_for_this_column": 22,
+        "no_year_to_date_value_in_own_filing": 4,
+        "derived_quarter_differs_from_inputs": 1
       }
     },
     "AMZN": {
       "cells": 1149,
       "verdicts": {
-        "PROVEN": 720,
-        "NOT_PRESENTED": 174,
-        "DISAGREE": 96,
-        "UNCHECKED": 159
+        "PROVEN": 864,
+        "NOT_PRESENTED": 196,
+        "UNCHECKED": 48,
+        "DISAGREE": 41
       },
       "reasons": {
-        "line_not_presented_on_statement": 144,
-        "check_failed:components_sum": 62,
-        "only_a_component_line_presented": 33,
+        "line_not_presented_on_statement": 166,
+        "only_a_component_line_presented": 40,
         "no_value_for_this_column": 30,
         "shown_differs_from_printed_line": 1
       }
@@ -96,72 +97,72 @@
     "META": {
       "cells": 1131,
       "verdicts": {
-        "PROVEN": 728,
-        "NOT_PRESENTED": 108,
-        "DISAGREE": 22,
-        "UNCHECKED": 273
+        "PROVEN": 964,
+        "NOT_PRESENTED": 130,
+        "UNCHECKED": 30,
+        "DISAGREE": 7
       },
       "reasons": {
-        "line_not_presented_on_statement": 108,
-        "check_failed:components_sum": 20,
+        "line_not_presented_on_statement": 130,
+        "derived_quarter_differs_from_inputs": 4,
+        "check_failed:components_sum": 1,
         "shown_differs_from_printed_line": 2
       }
     },
     "JNJ": {
       "cells": 1089,
       "verdicts": {
-        "PROVEN": 808,
-        "UNCHECKED": 265,
-        "DISAGREE": 12,
+        "PROVEN": 1028,
+        "UNCHECKED": 55,
+        "DISAGREE": 2,
         "NOT_PRESENTED": 4
       },
       "reasons": {
         "period_length_mismatch": 1,
-        "check_failed:components_sum": 11,
         "no_value_for_this_column": 2,
+        "derived_quarter_differs_from_inputs": 1,
         "line_not_presented_on_statement": 2
       }
     },
     "PG": {
       "cells": 1213,
       "verdicts": {
-        "PROVEN": 750,
-        "UNCHECKED": 323,
-        "NOT_PRESENTED": 93,
-        "DISAGREE": 47
+        "PROVEN": 999,
+        "NOT_PRESENTED": 110,
+        "DISAGREE": 49,
+        "UNCHECKED": 55
       },
       "reasons": {
-        "line_not_presented_on_statement": 93,
-        "only_a_component_line_presented": 43,
-        "check_failed:components_sum": 4
+        "line_not_presented_on_statement": 110,
+        "only_a_component_line_presented": 46,
+        "check_failed:components_sum": 3
       }
     },
     "KO": {
       "cells": 1241,
       "verdicts": {
-        "PROVEN": 792,
-        "NOT_PRESENTED": 90,
-        "UNCHECKED": 342,
-        "DISAGREE": 17
+        "PROVEN": 1060,
+        "NOT_PRESENTED": 101,
+        "UNCHECKED": 69,
+        "DISAGREE": 11
       },
       "reasons": {
-        "line_not_presented_on_statement": 90,
-        "check_failed:components_sum": 11,
+        "line_not_presented_on_statement": 101,
+        "derived_quarter_differs_from_inputs": 5,
         "shown_differs_from_printed_line": 6
       }
     },
     "HD": {
       "cells": 1296,
       "verdicts": {
-        "PROVEN": 921,
-        "UNCHECKED": 342,
-        "DISAGREE": 28,
-        "NOT_PRESENTED": 5
+        "PROVEN": 1238,
+        "UNCHECKED": 47,
+        "DISAGREE": 1,
+        "NOT_PRESENTED": 10
       },
       "reasons": {
-        "check_failed:components_sum": 27,
         "shown_differs_from_printed_line": 1,
-        "line_not_presented_on_statement": 5
+        "line_not_presented_on_statement": 10
       }
     }
   }
