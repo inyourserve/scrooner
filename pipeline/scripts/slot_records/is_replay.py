@@ -37,10 +37,12 @@ import psycopg
 sys.path.insert(0, str(Path(__file__).parent))
 from common import rounding_unit  # noqa: E402
 
-FAMILIES = ("revenue", "operating_income", "net_income")
+FAMILIES = ("revenue", "operating_income", "net_income", "cost_of_revenue", "gross_profit")
 PROD = {"revenue": "revenue_sanity_resolved", "operating_income": "operating_income_resolved",
-        "net_income": "net_income_resolved"}
-PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci", "G3_calc_sum"}
+        "net_income": "net_income_resolved", "cost_of_revenue": "cost_of_revenue_resolved",
+        "gross_profit": "gross_profit_resolved"}
+PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci", "G3_calc_sum",
+               "G2_gross_identity"}
 PERIODIC = ["10-K", "10-K/A", "10-KT", "10-Q", "10-Q/A", "10-QT"]
 SINCE = "2015-01-01"
 
@@ -108,9 +110,11 @@ def main(slots_path, ciks, out_dir, families=None):
                 if s.get("sum_tags"):
                     tags.update(s["sum_tags"])
                     tags.add(s["check_tag"])
-                if s.get("tie"):
+                if s.get("tie") and "nci" in s["tie"]:
                     tags.add(s["tie"]["profit_loss"])
                     tags.update(s["tie"]["nci"])
+                elif s.get("tie"):
+                    tags.update(s["tie"].values())
         facts = defaultdict(dict)  # accession -> {(tag, start, end): value}
         filing_meta = {}
         if tags:
@@ -225,6 +229,18 @@ def main(slots_path, ciks, out_dir, families=None):
                         tol = rounding_unit([pl, v] + [x for x in nci if x is not None])
                         cell["identity_gap"] = str(gap)
                         if abs(gap) > tol:
+                            state = "hold_identity_gap"
+                elif ref["gate"] == "G2_gross_identity":
+                    # revenue - cost = gross profit on the reference accession (all printed lines)
+                    t = ref["tie"]
+                    af = facts.get(ref["adsh"], {})
+                    rv, cv, gv = (af.get((t[k], s0, e0)) for k in ("revenue", "cost", "gross_profit"))
+                    if None not in (rv, cv, gv):
+                        gap = rv - cv - gv
+                        cell["identity_gap"] = str(gap)
+                        # one printed unit, as for the balance-sheet and NCI identities: three
+                        # independently rounded lines can miss by one unit (IBM, HRL)
+                        if abs(gap) > max(unit_of(rv), unit_of(cv), unit_of(gv)):
                             state = "hold_identity_gap"
                 if state is None:
                     copies = [o for o in os_[1:] if o["gate"] in PUBLISHABLE]

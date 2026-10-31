@@ -7,7 +7,7 @@ Strata files (is_oi_not_presented.py): reason-only (production blank), would-hid
 The before-image re-reads production's CURRENT canonical_fact rows of every
 would-hide cell by id; the rollback restores them (writer bypass, migration
 0113 aware) and deletes this rule's cell_blank_reason rows.
-usage: DATABASE_URL=... is_reason_package.py <package_dir> <verifier_note>
+usage: DATABASE_URL=... is_reason_package.py [family=gross_profit|cost_of_revenue] <package_dir> <verifier_note>
 """
 import hashlib
 import json
@@ -19,6 +19,7 @@ import psycopg
 
 RULE = "slot.is_operating_income_not_presented@1"
 CONCEPT = "operating_income_resolved"
+PREFIX = "is_oi_not_presented"
 STRATA = ("prod_blank_reason_only", "prod_has_value_would_hide", "q4_prod_has_value_would_hide")
 
 
@@ -30,7 +31,7 @@ def main(pkg_dir, verifier_note):
     d = Path(pkg_dir)
     files, hide = {}, []
     for st in STRATA:
-        p = d / f"is_oi_not_presented_{st}.jsonl"
+        p = d / f"{PREFIX}_{st}.jsonl"
         rows = [json.loads(line) for line in open(p)]
         files[st] = {"file": p.name, "sha256": sha(p), "cells": len(rows), "companies": len({r["cik"] for r in rows})}
         if st != "prod_blank_reason_only":
@@ -57,11 +58,11 @@ def main(pkg_dir, verifier_note):
             before.append(dict(zip(("canonical_fact_id", "company_id", "cik", "canonical_concept_id", "period_id", "start", "end",
                                     "value_before", "source_fact_ids_before", "resolved_at_before"), row)))
     conn.close()
-    bi = d / "is_oi_not_presented_before_image.jsonl"
+    bi = d / f"{PREFIX}_before_image.jsonl"
     with open(bi, "w") as f:
         for b in sorted(before, key=lambda b: b["canonical_fact_id"]):
             f.write(json.dumps(b, sort_keys=True) + "\n")
-    rb = d / "is_oi_not_presented_rollback.sql"
+    rb = d / f"{PREFIX}_rollback.sql"
     with open(rb, "w") as f:
         f.write(f"-- ROLLBACK for rule {RULE}: re-insert the hidden {CONCEPT} rows from the before-image and drop this rule's blank reasons.\n")
         f.write("-- Generated, NOT executed. Run inside one transaction by the Release Manager only.\n")
@@ -98,4 +99,9 @@ def main(pkg_dir, verifier_note):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    # optional: family=<gross_profit|cost_of_revenue> (default operating income)
+    args = sys.argv[1:]
+    if args and args[0].startswith("family="):
+        fam = args.pop(0).split("=", 1)[1]
+        RULE, CONCEPT, PREFIX = f"slot.is_{fam}_not_presented@1", f"{fam}_resolved", f"is_{fam}_not_presented"
+    main(args[0], args[1])
