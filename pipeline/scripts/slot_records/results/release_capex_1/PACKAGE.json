@@ -8,14 +8,14 @@
  "verifier": "VERIFY-DA-CAPEX-V10-2026-11-01.md (origin/verify/da-capex-v10-2026-11-01 02c61c6): capex YES, 15 of 15 right; production wrong or only rounded in every drawn cell",
  "release1": {
   "cells_file": "capex_release1_cells.jsonl",
-  "sha256": "248674c9ad5387d07ad9aa3c82e347fabe0f58f8ae8fdb6536ad13b0a86f2913",
-  "cells": 1999,
-  "companies": 337,
+  "sha256": "82f2da532e8d71fafa1ef611dbd7d36660f4194349c8fa29a70649dae72e74d6",
+  "cells": 1903,
+  "companies": 330,
   "by_difference_class": {
    "rounding_only": 684,
    "material": 1432
   },
-  "before_image": "capex_release1_before_image.jsonl (1999 canonical_fact rows)",
+  "before_image": "capex_release1_before_image.jsonl (1903 canonical_fact rows)",
   "cells_without_before_image_row": 0,
   "excluded_ambiguous_period_match": "capex_release1_excluded_ambiguous.json (8 cells match two production periods; not written)",
   "rollback": "capex_release1_rollback.sql (generated, run in one transaction by the Release Manager only)",
@@ -51,14 +51,21 @@
     "to_keep_list": 0,
     "to_hold": 18,
     "rule": "a filer-printed capex total below the investing section differs from the release value (filer's total is the anchor)"
+   },
+   {
+    "label": "v19_rules",
+    "removed": 96,
+    "to_keep_list": 0,
+    "to_hold": 96,
+    "rule": "a filer-printed capex total below the investing section differs from the release value (filer's total is the anchor)"
    }
   ]
  },
  "release2": {
   "cells_file": "capex_release2_fills.jsonl",
-  "sha256": "e1b0f9b362486d6f162fe8a318f6490e86efe675ff9f31b3382f41e8257840a8",
-  "cells": 1840,
-  "source": "results/cf_da_capex_v18/cells.jsonl.gz",
+  "sha256": "f55c94a493150701cee776e5c304ba8c9eeb2408512a65c43f436be30b5a265b",
+  "cells": 1784,
+  "source": "results/cf_da_capex_v19/cells.jsonl.gz",
   "status": "production-blank candidates; the insert package is release2_fills (needs the Verifier fill redraw)",
   "changed_value_cells": "capex_release2_changed_value.json (left release 1 when v16 changed its value; verify before shipping)"
  },
@@ -72,9 +79,9 @@
  "evidence_per_cell": "accession, face members (tag, label, nature, value) from the FSN pre/num rows of that filing; same accession by construction",
  "release2_fills": {
   "cells_file": "release2_fills_cells.jsonl",
-  "sha256": "829a63c41ed3e65859a72a80304af4a07d12613893856d4e1cb0465a564d4977",
-  "cells": 1753,
-  "companies": 97,
+  "sha256": "ed7ead0cfecfd73d4e2251cc3a0704c67b97ca0ad7d787e22c57a9746aff3566",
+  "cells": 1697,
+  "companies": 92,
   "kind": "insert into blank production cells (fills)",
   "source": "results/release_capex_1/capex_release2_fills.jsonl",
   "excluded": "release2_fills_excluded.json: {\"no_production_period\": 51, \"ambiguous_period_match\": 28, \"production_no_longer_blank\": 8}",

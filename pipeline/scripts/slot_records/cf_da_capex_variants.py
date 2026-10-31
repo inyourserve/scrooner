@@ -71,6 +71,15 @@ CAPEX_WORD = re.compile(r"capital expenditure|property|plant|equipment|premises|
 MIXED_JOIN = re.compile(r"(\band\b|&|,)\s*(other )?(investments?|acquisitions?|other (long.term |non.?current )?assets)", re.I)
 
 
+# a counted capex member's LABEL must name a PP&E-type asset (Verifier v18: BAM "Other assets" 127M is not capex)
+ASSET_NAMED = re.compile(
+    r"propert|plant|equipment|premises|capital|construction|building|land\b|vessel|aircraft|fleet|\brigs?\b|tower|software|"
+    r"leas|rental|drilling|completion|\bwells?\b|gathering|water|facilit|infrastructure|network|fixed asset|instrument|tooling|"
+    r"\bstores?\b|restaurant|productive asset|capex|field service|midstream|pipeline|terminal|\bmines?\b|mineral|furniture|"
+    r"computer|technology|improvement|development|machinery|vehicle|truck|railcar|satellite|data center|\boil\b|\bgas\b|"
+    r"containers|revenue equipment|operating assets|renewals and replacements", re.I)
+
+
 def capex_mixed(label):
     """one printed line joining capex with investments / acquisitions / other assets cannot be split on the face
     (Verifier: JEF 'and other assets', PSX 'Capital expenditures and investments'); an 'excluding ...' clause is not a join"""
@@ -424,8 +433,12 @@ for (cik, ddate, q), f in chosen():
         cases = [c for c, on in (("leased", leased), ("software", soft), ("discontinued", disc and cfo_total)) if on]
         unclear = [x for x in lines if x["nature"] == "lease_unclear"]
         net_sibling = bool(n_ppe and n_net) or bool(unclear)
+        unnamed = [x for x in lines if x["nature"] in ("ppe", "ppe_with_intangibles", "net", "leased", "software")
+                   and not ASSET_NAMED.search(x["label"])]
         if sign_unresolved:
             interim, reason = None, "capex_sign_unresolved"
+        elif unnamed:
+            interim, reason = None, "capex_line_names_no_asset"  # never published on a member that names no asset
         elif og_acq:
             interim, reason = None, "perimeter_og_property_acquisitions"
         elif maint:

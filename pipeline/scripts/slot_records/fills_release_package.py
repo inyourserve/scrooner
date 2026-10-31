@@ -45,15 +45,16 @@ existing = set()  # (company_id, period_id) already carrying the concept
 for i in range(0, len(ciks), 50):
     cur.execute(
         """
-        select c.cik, c.id, p.id, p.start_date::text, p.end_date::text
+        select c.cik, c.id, p.id, p.start_date::text, p.end_date::text, p.period_type
         from core.period p join core.company c on c.id = p.company_id
-        where c.cik = any(%s) and p.period_type = 'duration' and p.end_date >= '2015-01-01'
+        where c.cik = any(%s) and p.period_type in ('duration', 'instant') and p.end_date >= '2014-12-01'
         """,
         ([f"{x:010d}" for x in ciks[i:i + 50]],),
     )
-    for cik, company_id, pid, s, e in cur.fetchall():
-        q = round((date.fromisoformat(e) - date.fromisoformat(s)).days / 91.3)
-        if q in (1, 2, 3, 4):
+    for cik, company_id, pid, s, e, ptype in cur.fetchall():
+        # instants (balance-sheet cells, qtrs 0) key on the month-end column alone
+        q = 0 if ptype == "instant" else round((date.fromisoformat(e) - date.fromisoformat(s)).days / 91.3)
+        if q in (0, 1, 2, 3, 4):
             periods[(int(cik), month_end(e), q)].append((pid, company_id, s, e))
     cur.execute(
         """
