@@ -4,37 +4,37 @@
  "status": "dry run; flag OFF; nothing written to the database",
  "release1": {
   "file": "is_net_income_release1_cells.jsonl",
-  "sha256": "898db6ceae962488e34f5aaf961b83d2c24c257ff37fcb0f714a58d09103a3ff",
-  "cells": 917,
-  "companies": 233,
+  "sha256": "ceae27555e43b7465afc672c7845c892b47fce0220fb948b50ada7be2fac08ac",
+  "cells": 903,
+  "companies": 231,
   "by_compare": {
-   "slot_differs": 810,
-   "slot_fills_blank": 107
+   "slot_differs": 806,
+   "slot_fills_blank": 97
   },
   "before_image": {
    "file": "is_net_income_r1_before_image.jsonl",
-   "rows": 810,
-   "sha256": "5e3e27446415b60a6593e21a24670248386434550f16e3c2892dfe17f1a4bbb8"
+   "rows": 806,
+   "sha256": "b09bd79656303207de2493764a9f47d2af9223327dab4df42f87818525d55adb"
   },
   "rollback": {
    "file": "is_net_income_r1_rollback.sql",
-   "sha256": "5e91cc8c8d428743424b104d327f9def36b787787f7f23fb79054d7d3112c85a",
-   "note": "generated, run in one transaction by the Release Manager only; protection delete is conditional on migration 0113 (runs with or without it)"
+   "sha256": "880fffd3e76f2746d266b5ed13c469999ec77b97ecb33e37f6447b23b59f74a3",
+   "note": "generated, run in one transaction by the Release Manager only"
   },
   "stale_vs_live": 0,
   "touched_ciks": "is_net_income_r1_touched_ciks.txt",
   "verifier_strata": {
-   "plain_face": 917
+   "plain_face": 903
   }
  },
  "precision_stratum": {
   "file": "is_net_income_precision_cells.jsonl",
-  "sha256": "9e501abbc902c5c0805618fc141824cd19eb5b789b599cc09422e81b84f69f93",
-  "cells": 1046,
-  "companies": 227,
+  "sha256": "903dd4aa6c9a6f8b354a2bb04f8afa0c9e16a74c8b38858087249472df50dd25",
+  "cells": 1045,
+  "companies": 226,
   "by_compare": {
    "differs_within_rounding": 56,
-   "prod_less_precise": 990
+   "prod_less_precise": 989
   },
   "status": "not wrong values; ship only if the Verifier and founder want full precision"
  },
@@ -51,7 +51,7 @@
  "holds_production_stays": {
   "prod_only_q4_not_a_face_column": 9286,
   "prod_only_filing_held": 3496,
-  "hold_parent_line_not_standard": 2280,
+  "hold_parent_line_not_standard": 2448,
   "prod_only_not_a_face_column": 527,
   "hold_identity_gap": 134,
   "hold_position_above_tax": 10,
@@ -76,6 +76,7 @@
   "verdict": "YES",
   "draw": "18 of 18 YES",
   "branch": "verify/income-statement-r1-2026-11-01",
-  "verified_cells_sha256": "898db6ceae962488e34f5aaf961b83d2c24c257ff37fcb0f714a58d09103a3ff"
+  "verified_cells_sha256": "898db6ceae962488e34f5aaf961b83d2c24c257ff37fcb0f714a58d09103a3ff",
+  "recut_2026_10_31": "14 cells at 3 companies (CIK 895417, 1004980, 1415404) removed: gate G1b took ProfitLoss as parent net income while the face prints an NCI or subsidiary-preferred line below it (consolidated, not attributable); found in release closure (ETR). Remaining cells are a subset of the verified set."
  }
 }

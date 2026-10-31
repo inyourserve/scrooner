@@ -42,7 +42,7 @@ PROD = {"revenue": "revenue_sanity_resolved", "operating_income": "operating_inc
         "net_income": "net_income_resolved", "cost_of_revenue": "cost_of_revenue_resolved",
         "gross_profit": "gross_profit_resolved"}
 PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci", "G3_calc_sum",
-               "G2_gross_identity"}
+               "G2_gross_identity", "G2b_available_to_common_bridge"}
 PERIODIC = ["10-K", "10-K/A", "10-KT", "10-Q", "10-Q/A", "10-QT"]
 SINCE = "2015-01-01"
 
@@ -110,6 +110,10 @@ def main(slots_path, ciks, out_dir, families=None):
                 if s.get("sum_tags"):
                     tags.update(s["sum_tags"])
                     tags.add(s["check_tag"])
+                if s.get("alt"):
+                    tags.add(s["alt"]["tag"])
+                    tags.add(s["alt"]["tie"]["profit_loss"])
+                    tags.update(s["alt"]["tie"]["nci"])
                 if s.get("tie") and "nci" in s["tie"]:
                     tags.add(s["tie"]["profit_loss"])
                     tags.update(s["tie"]["nci"])
@@ -167,6 +171,12 @@ def main(slots_path, ciks, out_dir, families=None):
                 acc_facts = facts.get(adsh, {})
                 # every face column this filing prints: from its own facts for the slot tag
                 cols = {(k[1], k[2]) for k in acc_facts if k[0] == s.get("tag")}
+                if s.get("alt") and not any(face_column(s["form"], period, a0, b0) for a0, b0 in cols):
+                    # the printed NetIncomeLoss carries no undimensioned value (combined utility
+                    # filing: it is the subsidiaries' columns): the parent's line is the G2b bridge
+                    s = {**s, **s["alt"], "gate": "G2b_available_to_common_bridge"}
+                    s.pop("alt", None)
+                    cols = {(k[1], k[2]) for k in acc_facts if k[0] == s.get("tag")}
                 # a non-publishable gate still claims the filing's face columns (from any slot tag fact or none)
                 for (s0, e0) in cols:
                     if not face_column(s["form"], period, s0, e0):
@@ -219,12 +229,14 @@ def main(slots_path, ciks, out_dir, families=None):
                 state = None
                 if ref["gate"] not in PUBLISHABLE:
                     state = ref["gate"]
-                elif ref["gate"] == "G2_nci_identity":
+                elif ref["gate"] in ("G2_nci_identity", "G2b_available_to_common_bridge"):
                     t = ref["tie"]
                     af = facts.get(ref["adsh"], {})
                     pl = af.get((t["profit_loss"], s0, e0))
                     nci = [af.get((x, s0, e0)) for x in t["nci"]]
-                    if pl is not None and any(x is not None for x in nci):
+                    if ref["gate"] == "G2b_available_to_common_bridge" and (pl is None or any(x is None for x in nci)):
+                        state = "hold_identity_unverified"  # G2b publishes only with the full bridge tied
+                    elif pl is not None and any(x is not None for x in nci):
                         gap = pl - sum(x for x in nci if x is not None) - v
                         tol = rounding_unit([pl, v] + [x for x in nci if x is not None])
                         cell["identity_gap"] = str(gap)

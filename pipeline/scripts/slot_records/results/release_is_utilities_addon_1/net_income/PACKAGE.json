@@ -1,0 +1,65 @@
+{
+ "rule_id": "slot.is_net_income@1",
+ "family": "income statement: net_income_resolved",
+ "status": "dry run; flag OFF; nothing written to the database",
+ "release1": {
+  "file": "is_net_income_release1_cells.jsonl",
+  "sha256": "c6a9319f042f988947e0ac7c22edaa9d6f364b918814827e8cdef38d2512975b",
+  "cells": 416,
+  "companies": 9,
+  "by_compare": {
+   "slot_fills_blank": 416
+  },
+  "before_image": {
+   "file": "is_net_income_r1_before_image.jsonl",
+   "rows": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rollback": {
+   "file": "is_net_income_r1_rollback.sql",
+   "sha256": "72de17304e22cd11617f368e3b239c6e26973936e7ca109004875f90e671a64e",
+   "note": "generated, run in one transaction by the Release Manager only"
+  },
+  "stale_vs_live": 0,
+  "touched_ciks": "is_net_income_r1_touched_ciks.txt",
+  "verifier_strata": {
+   "dimensioned_face": 387,
+   "plain_face": 29
+  }
+ },
+ "precision_stratum": {
+  "file": "is_net_income_precision_cells.jsonl",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "cells": 0,
+  "companies": 0,
+  "by_compare": {},
+  "status": "not wrong values; ship only if the Verifier and founder want full precision"
+ },
+ "hide_stratum": {
+  "file": "is_net_income_hide_cells.jsonl",
+  "sha256": "4e2f3f8bece75ba589401f5b4f7b6d6405dd58eee9161c607a77190496a06e09",
+  "cells": 1,
+  "companies": 1,
+  "by_compare": {
+   "would_hide": 1
+  },
+  "status": "founder ruling (restated copies disagree -> hidden); needs its own Verifier stratum"
+ },
+ "holds_production_stays": {
+  "hold_parent_line_not_standard": 5
+ },
+ "flag": {
+  "convention": "SCROONER_RULES_ENABLED (comma list) with SCROONER_RULES_DRYRUN; default OFF",
+  "line": "SCROONER_RULES_ENABLED=slot.is_net_income@1",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image and rollback"
+ },
+ "evidence_per_cell": "accession (original filing), slot_tag, printed label, gate (G1 printed line | G2 NCI identity | G1b ProfitLoss without NCI), copies agreeing; slot records is_<family>_records.jsonl",
+ "post_write": "re-derive production Q4 cells (FY - 9M) for touched companies; certify rerun on touched_ciks",
+ "resolver_guard": {
+  "migration": "pipeline/db/migrations/0113_slot_protected_cell.sql (provisional number, NOT applied)",
+  "write_path_contract": "in the SAME transaction as each written cell: set local scrooner.slot_writer = 'on'; insert analytics.slot_protected_cell (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)",
+  "effect": "every nightly resolver write to a protected cell is skipped and logged in analytics.slot_protected_write_skipped",
+  "test": "pipeline/scripts/slot_records/test_slot_guard.sh (throwaway local cluster; 15 checks; 7 fail with the trigger neutered)"
+ },
+ "stale_cell_refusal": "run is_release_check.py on this directory immediately before the write: it refuses (exit 1) if the cells digest moved, any replaced row's value/sources differ from the before-image, or any fill cell already has a production row"
+}
