@@ -101,9 +101,16 @@ def _filing_dates(conn: psycopg.Connection, accessions: list[str]) -> dict[str, 
 
 
 def prove_company(
-    conn: psycopg.Connection, company_id: int, cache: StructureCache
+    conn: psycopg.Connection,
+    company_id: int,
+    cache: StructureCache,
+    floor: date | None = None,
 ) -> list[Proof]:
-    shown = load_shown(conn, company_id)
+    shown = (
+        load_shown(conn, company_id, floor=floor)
+        if floor
+        else load_shown(conn, company_id)
+    )
     groups = group_by_accession(shown)
     accs = [a for a in groups if a]
     fdates = _filing_dates(conn, accs)
@@ -149,6 +156,7 @@ def run(
     fsn_root: Path,
     report_path: Path | None = None,
     write: bool = False,
+    floor: date | None = None,
 ) -> dict[str, Any]:
     with conn.cursor() as cur:
         cur.execute(
@@ -172,7 +180,7 @@ def run(
                 continue
             totals["companies"] += 1
             try:
-                proofs = prove_company(conn, company_id, cache)
+                proofs = prove_company(conn, company_id, cache, floor)
                 if write and proofs:
                     write_proofs(conn, proofs)
             except Exception as exc:  # noqa: BLE001

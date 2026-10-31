@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 
 import typer
@@ -33,6 +34,10 @@ def run_cmd(
         help="Upsert into analytics.cell_proof (needs migration 0114 applied).",
     ),
     statement_timeout: str = typer.Option("10min"),
+    floor: str = typer.Option(
+        None,
+        help="Only cells with period_end >= this date (YYYY-MM-DD); default 2015-01-01.",
+    ),
 ) -> None:
     """Dry run by default (report only). --write stores the proofs; the website
     reads them only behind proof.serve_proven_only@1 (OFF)."""
@@ -44,6 +49,7 @@ def run_cmd(
             fsn_root=Path(fsn_root),
             report_path=Path(report) if report else None,
             write=write,
+            floor=date.fromisoformat(floor) if floor else None,
         )
     per_company = totals.pop("per_company")
     typer.echo(f"cell-proof: {json.dumps(totals, default=str)}")
