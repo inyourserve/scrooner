@@ -108,6 +108,16 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
 
 - **Founder decision of 2026-11-04: development phase, rebuild instead of patch (corrected the same day)** (relayed to the release manager by scrooner-0f, the chief of staff, as the founder's decision and correction; the release manager did not hear them directly). The hybrid build replaces the old mapping and its values in `canonical_fact` for the 1,000 companies. Values are rebuilt from the FSN filing structure and each cell is proven on its own. **There is no old-table fallback and no switch view.** An earlier version of this entry described a new `canonical_fact_v2` table, the old table kept as a fallback and a view that switches between them; the founder corrected that. The per-family patch release packages are superseded, and no new patch packages are landed. Packages already on main stay as records and the ones already applied stay applied.
 
+
+- **Founder decision of 2026-11-01: company-wise FSN statement store** (approved by the founder to scrooner-ca, the chief of staff, and relayed to the release approver; the approver did not hear it directly). Design: `data-team/strategy/FSN-STORE-DESIGN-2026-11-01.md`. It is how the rebuild-instead-of-patch decision above is carried out:
+  1. Every 10-K/10-Q since 2014 in the FSN set is loaded into a new `fsn` schema (migration 0118). The load is per company and runs in one transaction per company. Each print is a separate vintage row, and nothing is overwritten or marked current.
+  2. Lines map to canonical concepts by standard tag, then by calculation position for custom tags. A label may demote a line but never promote it. A combined line is never mapped as a single concept.
+  3. The winner for a cell is the latest accepted print whose column passes every filing check. If the latest print fails a check, the cell is blank with a reason. It never falls back to an older vintage.
+  4. A quarter with no printed 3-month column is derived only when its inputs share an accounting basis (no restatement break between them plus a re-print witness). Otherwise it is a reasoned blank. EPS and instants are never derived.
+  5. `analytics.canonical_fact` stays the serving table, with no view and no fallback. A company is written only when all seven completion conditions in design §5 hold. Migration 0119 then makes `fsn_cells` that company's only writer, so the nightly job can no longer overwrite it.
+  6. This retires each lane's own whole-cohort FSN pass and quarter derivation, `materialize_fsn_fact`, `unrestated_single_value` and migration 0101 (left unapplied).
+  7. Production steps need three separate founder authorizations, typed in the release approver's session: (1) migrations 0117/0118/0119; (2) the MSFT and HD pilot; (3) the 1,000-company cohort.
+
 ## Rejected or deferred directions
 
 | **Item**                           | **Disposition**   | **Revisit trigger**                                        |
