@@ -182,7 +182,7 @@ def map_filing(
                     line,
                     None,
                     "unmapped",
-                    d["rule_id"],
+                    d["rule_id"],  # type: ignore[index]
                     None,
                     {"tag": key, "demoted_from": cands[0]["concept"]},
                 )

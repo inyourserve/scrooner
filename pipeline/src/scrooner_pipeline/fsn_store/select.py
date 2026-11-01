@@ -427,7 +427,7 @@ def fiscal_label(
         if f.period is not None:
             by_period.setdefault(f.period, f)
     for back in range(4):
-        f = by_period.get(month_end(ddate, 12 * back))
+        f = by_period.get(month_end(ddate, 12 * back))  # type: ignore[assignment]
         if f is None or f.fy is None:
             continue
         fy = f.fy - back

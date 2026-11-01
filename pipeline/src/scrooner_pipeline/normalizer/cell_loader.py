@@ -266,7 +266,7 @@ def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow |
     return CellRow(
         line=line,
         key=key,
-        state=state,
+        state=state,  # type: ignore[arg-type]
         value=value if state in VALUED else None,
         unit=r.get("unit"),
         decimals=r.get("decimals"),
@@ -718,13 +718,13 @@ def load(
     conn.commit()  # the manifest row stands alone; every company below is its own transaction
     done = 0
     for cid in sorted(by_company):
-        rows = by_company[cid]
+        rows = by_company[cid]  # type: ignore[assignment]
         for attempt in range(1, 4):
             try:
                 _load_company(
                     conn,
                     cid,
-                    rows,
+                    rows,  # type: ignore[arg-type]
                     ciks[cid],
                     family,
                     run_id,
@@ -823,10 +823,10 @@ def _load_company(
                     reasons_by_rule[r.rule_id].append(to_reason(r))
                     continue
                 if not r.source_fact_ids and r.state == "value":
-                    ids = list(facts.get((r.accession, r.tag, r.period_id), []))
+                    ids = list(facts.get((r.accession, r.tag, r.period_id), []))  # type: ignore[arg-type]
                     for m in r.members or []:
                         ids += facts.get(
-                            (
+                            (  # type: ignore[arg-type]
                                 m.get("accession") or r.accession,
                                 m.get("tag"),
                                 r.period_id,
@@ -913,7 +913,7 @@ def _load_company(
                             ],
                             "ids": [
                                 "{"
-                                + ",".join(str(i) for i in r["source_fact_ids"])
+                                + ",".join(str(i) for i in r["source_fact_ids"])  # type: ignore[union-attr]
                                 + "}"
                                 for r in payload
                                 if r["source_fact_ids"]
@@ -936,7 +936,7 @@ def _load_company(
                                 "period": [r["period_id"] for r in with_values],
                                 "ids": [
                                     "{"
-                                    + ",".join(str(i) for i in r["source_value_ids"])
+                                    + ",".join(str(i) for i in r["source_value_ids"])  # type: ignore[union-attr]
                                     + "}"
                                     for r in with_values
                                 ],

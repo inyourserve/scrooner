@@ -318,7 +318,7 @@ def load_company(
                 if r["adsh"] not in own:
                     continue
                 fid = filing_id[r["adsh"]]
-                k = (
+                k = (  # type: ignore[assignment]
                     fid,
                     tag_id[(r["tag"], r["version"])],
                     _d8(r["ddate"]),

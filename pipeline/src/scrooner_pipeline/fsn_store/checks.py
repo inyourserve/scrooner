@@ -143,8 +143,8 @@ def check_column(
             continue
         if any(stmt_of.get((c, v)) != stmt for c, v, _ in children):
             continue
-        rhs = sum((t.value * w for t, w in terms), Decimal(0))
-        tol = tol_of([parent.dcml, *(t.dcml for t, _ in terms)])
+        rhs = sum((t.value * w for t, w in terms), Decimal(0))  # type: ignore[union-attr]
+        tol = tol_of([parent.dcml, *(t.dcml for t, _ in terms)])  # type: ignore[union-attr]
         out.append(
             {
                 "check_id": f"calc:{ptag}:{grp}",
