@@ -154,6 +154,7 @@ class LoadReport:
     facts_materialized: int = 0
     run_id: str | None = None
     overridden: int = 0
+    lineage_defects: int = 0
     per_company: list[dict[str, Any]] = field(default_factory=list)
 
     def reject(self, line: int, why: str, **ctx: Any) -> None:
@@ -231,12 +232,6 @@ def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow |
             return "unit_missing_or_unknown"
         if state == "derived" and not r.get("derivation"):
             return "derived_without_derivation"
-        if (
-            state == "value"
-            and not r.get("source_fact_ids")
-            and not (r.get("accession") and r.get("tag"))
-        ):
-            return "filed_value_without_lineage"
     else:
         if value is not None:
             return "blank_state_with_value"
@@ -446,6 +441,33 @@ def _has_provenance_columns(conn: psycopg.Connection) -> bool:
             "and table_name = 'canonical_fact' and column_name in ('rule_run_id', 'family')"
         )
         return cur.fetchone()[0] == 2
+
+
+LINEAGE_REASON = "value_lineage_unresolved"
+
+
+def demote_to_lineage_defect(r: CellRow, why: str) -> None:
+    """A filed value whose source cannot be tied to a core.fact (no accession/tag,
+    or nothing resolves) is never published: the key stays, as a defect
+    (ingestion, data_engineer_l2) carrying the unpublished value in input_refs,
+    so the cell is an explained blank, not a reasonless one."""
+    r.input_refs = {
+        **r.input_refs,
+        "unpublished_value": str(r.value),
+        "why": why,
+        "accession": r.accession,
+        "tag": r.tag,
+    }
+    r.state, r.value, r.unit, r.derivation = "defect", None, None, None
+    r.reason_code = LINEAGE_REASON
+    r.reason_text = (
+        f"Value not shown: its source could not be tied to a stored fact ({why})."
+    )
+    r.defect_class, r.owner, r.root_cause_class = (
+        "ingestion",
+        "data_engineer_l2",
+        "ingestion",
+    )
 
 
 def to_reason(r: CellRow) -> BlankReason:
@@ -755,6 +777,16 @@ def _load_company(
             valued: list[CellRow] = []
             reasons_by_rule: dict[str, list[BlankReason]] = defaultdict(list)
             for r in bound:
+                if (
+                    r.state == "value"
+                    and not r.source_fact_ids
+                    and not r.tag
+                    and not r.members
+                ):
+                    demote_to_lineage_defect(
+                        r, "no accession/tag and no fact ids in the cell file"
+                    )
+                    rep.lineage_defects += 1
                 if r.state in BLANK_STATES:
                     reasons_by_rule[r.rule_id].append(to_reason(r))
                     continue
@@ -773,14 +805,12 @@ def _load_company(
                         ids = materialize_fsn_fact(conn, cid, cik, r, prow[r.period_id])
                         rep.facts_materialized += len(ids)
                     if not ids:
-                        rep.reject(
-                            r.line,
-                            "filed_value_resolves_to_no_fact",
-                            company_id=cid,
-                            data_point_name=r.key.data_point_name,
-                            accession=r.accession,
-                            tag=r.tag,
+                        demote_to_lineage_defect(
+                            r,
+                            f"no core.fact for {r.tag} in {r.accession} at this period",
                         )
+                        rep.lineage_defects += 1
+                        reasons_by_rule[r.rule_id].append(to_reason(r))
                         continue
                     r.source_fact_ids = sorted(set(ids))
                 valued.append(r)

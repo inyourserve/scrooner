@@ -52,7 +52,6 @@ def test_parse_row_accepts_a_valued_cell_and_names_every_rejection():
         "valued_state_without_value": _row(value=None),
         "unit_missing_or_unknown": _row(unit="millions"),
         "derived_without_derivation": _row(state="derived"),
-        "filed_value_without_lineage": _row(accession=None, tag=None),
         "blank_state_with_value": _row(state="not_presented", reason_code="x"),
         "blank_without_reason_code": _row(state="not_presented", value=None),
         "bad_rule_id": _row(rule_id="capex"),
@@ -223,12 +222,12 @@ def test_plan_writes_nothing_apply_writes_and_reload_is_idempotent(conn, tmp_pat
     assert (
         plan.mode == "dry_run"
         and plan.valued_written == 1
-        and plan.reasons_written == 0
+        and plan.reasons_written == 1
     )
-    assert plan.rejected == {
-        "filed_value_resolves_to_no_fact": 1,
-        "data_point_has_no_valued_cells": 1,
-    }
+    assert plan.rejected == {"data_point_has_no_valued_cells": 1}
+    assert (
+        plan.lineage_defects == 1
+    )  # the NoSuchTag value is kept as an explained blank
     assert (
         _one(
             conn,
@@ -253,7 +252,7 @@ def test_plan_writes_nothing_apply_writes_and_reload_is_idempotent(conn, tmp_pat
         rep = cl.load(conn, "capex_da_cash_debt", [path], apply=True)
         assert (
             rep.valued_written == 1
-            and rep.reasons_written == 0
+            and rep.reasons_written == 1
             and rep.deleted == (0 if _ == 0 else 1)
         )
         got = conn.execute(
