@@ -735,6 +735,10 @@ def _load_company(
     """One company in one transaction; plan mode raises _PlanRollback at the end so it rolls back."""
     if True:
         with conn.transaction():
+            # the 0113 guard (trg_slot_protected_cell_guard, live) silently skips any
+            # canonical_fact write on a protected cell unless the session is the slot
+            # writer; the cell loader IS the authorised writer of its family's cells
+            conn.execute("set local scrooner.slot_writer = 'on'")
             bound, bad, created = bind_periods(conn, cid, rows, create=True)
             for r, why in bad:
                 rep.reject(
