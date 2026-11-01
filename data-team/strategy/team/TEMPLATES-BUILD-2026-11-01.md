@@ -265,3 +265,4 @@ uv run --project pipeline scrooner-map seed-sector-templates --templates data-te
   | Seeder | validator ignores the registry |
 
 - **Lint:** ruff format clean, required lint clean, mypy clean on the changed modules, docs links pass.
+- **CI run 41317933298 on `311fa5e9`: green.** Pipeline 2,296 passed, 0 failed (the seed and template DB tests ran, none skipped); backend 92; migrations, docs and frontend pass. The only failure is the advisory npm audit, which is non-blocking and also fails on main.
