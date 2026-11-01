@@ -29,17 +29,31 @@ def _predecessors(spec: str) -> dict[str, str]:
 
 
 def _db_predecessors(conn) -> dict[str, str]:
-    """core.company_predecessor (migration 0121): predecessor cik -> the owning company's cik."""
+    """predecessor cik -> company cik from core.company_history_source (migration 0121), for load."""
+    alias, _ = _db_history(conn)
+    return {p: v[0][0] for p, v in alias.items()}
+
+
+def _db_history(conn) -> tuple[dict, dict]:
+    """core.company_history_source -> (alias: predecessor cik -> [(company cik, from, to)],
+    exclude: company cik -> [(from, to)]), dates as YYYYMMDD (FSN sub.period form)."""
+    alias: dict[str, list[tuple[str, str, str]]] = {}
+    exclude: dict[str, list[tuple[str, str]]] = {}
     if (
-        conn.execute("select to_regclass('core.company_predecessor')").fetchone()[0]
+        conn.execute("select to_regclass('core.company_history_source')").fetchone()[0]
         is None
     ):
-        return {}
-    return dict(
-        conn.execute(
-            "select p.predecessor_cik, c.cik from core.company_predecessor p join core.company c on c.id = p.company_id"
-        ).fetchall()
-    )
+        return alias, exclude
+    rows = conn.execute(
+        """select h.source_cik, c.cik, h.relation, to_char(h.valid_from, 'YYYYMMDD'), to_char(h.valid_to, 'YYYYMMDD')
+           from core.company_history_source h join core.company c on c.id = h.company_id"""
+    ).fetchall()
+    for src, cik, rel, f, t in rows:
+        if rel == "predecessor":
+            alias.setdefault(src, []).append((cik, f, t))
+        else:
+            exclude.setdefault(src, []).append((f, t))
+    return alias, exclude
 
 
 def _cohort(shards_file: Path) -> list[str]:
@@ -80,16 +94,16 @@ def shard_cmd(
         shards_file
     )
     with get_connection() as conn:
-        preds = {**_db_predecessors(conn), **_predecessors(predecessor)}
+        alias, exclude = _db_history(conn)
         rows = conn.execute(
-            "select cik, id from core.company where cik = any(%s)",
-            (cik_list + list(preds.values()),),
+            "select cik, id from core.company where cik = any(%s)", (cik_list,)
         ).fetchall()
+    for pred, succ in _predecessors(
+        predecessor
+    ).items():  # flag: whole history, no window
+        alias.setdefault(pred, []).append((succ, "00000000", "99999999"))
     ids = dict(rows)
     targets = {c: ids.get(c) for c in cik_list}
-    for pred, succ in preds.items():
-        if succ in targets:  # only predecessors of companies being sharded
-            targets[pred] = ids.get(succ)
     commit = (
         subprocess.run(
             ["git", "rev-parse", "HEAD"], capture_output=True, text=True
@@ -103,6 +117,8 @@ def shard_cmd(
         Path(cache),
         floor_gb=floor_gb,
         shard_commit=commit,
+        alias=alias,
+        exclude=exclude,
     )
     typer.echo(f"fsn shard: {json.dumps(res)}")
 

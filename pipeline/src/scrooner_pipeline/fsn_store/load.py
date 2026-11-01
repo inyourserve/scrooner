@@ -196,11 +196,7 @@ def load_company(
             dim_id = {h: i for i, h in cur.fetchall()}
             # --- filings: delete this company's own, insert all (others only if absent) ---
             subs = {r["adsh"]: r for r in data["sub"]}
-            # this directory's filings only: a predecessor and its successor share a company_id
-            cur.execute(
-                "delete from fsn.filing where company_id = %s and cik = %s",
-                (company_id, cik),
-            )
+            cur.execute("delete from fsn.filing where company_id = %s", (company_id,))
             counts["filings_deleted"] = cur.rowcount
             sub_ciks = {r["cik"].zfill(10) for r in subs.values()}
             cur.execute(
@@ -213,9 +209,16 @@ def load_company(
                 ),
             )
             cid_of = dict(cur.fetchall())
+            # a company directory holds its whole history (fsn_store.shard writes predecessor
+            # registrants' filings into it, core.company_history_source): a filer CIK outside the
+            # company master is this company's predecessor
             for pred in sub_ciks:
-                if pred not in cid_of and predecessors.get(pred) in cid_of:
-                    cid_of[pred] = cid_of[predecessors[pred]]
+                if pred not in cid_of:
+                    cid_of[pred] = (
+                        cid_of.get(predecessors.get(pred, ""), company_id)
+                        if pred in predecessors
+                        else company_id
+                    )
             cur.executemany(
                 """
                 insert into fsn.filing (accession, company_id, cik, form, period, fy, fp, fye, filed, accepted,
