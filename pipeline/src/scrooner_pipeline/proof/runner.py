@@ -173,9 +173,8 @@ def write_proofs(conn: psycopg.Connection, proofs: list[Proof]) -> int:
         r = p.row()
         r["checks"] = json.dumps(r["checks"], default=_json_default)
         rows.append(r)
-    with conn.cursor() as cur:
+    with conn.transaction(), conn.cursor() as cur:
         cur.executemany(_UPSERT, rows)
-    conn.commit()
     return len(rows)
 
 
@@ -194,6 +193,11 @@ def run(
     write: bool = False,
     floor: date | None = None,
 ) -> dict[str, Any]:
+    # reads run in autocommit: one transaction across companies and FSN downloads held
+    # AccessShareLocks on canonical_fact for 19 min and blocked a migration ALTER (2026-11-01)
+    conn.commit()
+    conn.autocommit = True
+    conn.execute("set idle_in_transaction_session_timeout = '2min'")
     with conn.cursor() as cur:
         cur.execute(
             "select cik, id from core.company where cik = any(%s)", (sorted(ciks),)

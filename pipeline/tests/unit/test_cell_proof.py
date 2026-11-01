@@ -469,3 +469,24 @@ def test_a_calc_parent_line_is_a_total_even_under_a_custom_roll_up():
     s.custom_parents["OperatingIncomeLoss"] = {"pg_IncomeBeforeTaxesCustom"}
     line, why = pv.select_position(s, "operating_income_resolved")
     assert line is not None and line.tag == "OperatingIncomeLoss"
+
+
+@pytest.mark.integration
+def test_run_holds_no_transaction_open_between_reads(isolated_database_url, tmp_path):
+    # a dry run held one transaction (AccessShareLocks on canonical_fact) for 19 minutes and
+    # blocked a migration ALTER (run 41306300261, 2026-11-01): reads must run in autocommit
+    import psycopg
+    from psycopg.pq import TransactionStatus
+
+    from scrooner_pipeline.proof import runner
+
+    with psycopg.connect(isolated_database_url) as conn:
+        conn.execute("select 1")  # the caller's own open transaction
+        totals = runner.run(conn, {"0000000001"}, fsn_root=tmp_path)
+        assert totals["companies"] == 0
+        assert conn.autocommit
+        assert conn.info.transaction_status == TransactionStatus.IDLE
+        assert (
+            conn.execute("show idle_in_transaction_session_timeout").fetchone()[0]
+            == "2min"
+        )
