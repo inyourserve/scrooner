@@ -65,6 +65,10 @@ Fixtures: 11 companies, 14 FSN sets, 1.2 MB (`pipeline/tests/fixtures/fsn_compan
 
 Full suite locally: 2,160 passed, 120 skipped (DB tests run in CI against Postgres 16). ruff, mypy, compileall, check_docs and check_secrets are clean.
 
+CI run 41317042767 (2c8f3ac):
+- Green: Python tests (with Postgres 16), migrations/docs/secrets, frontend build.
+- Red: the advisory job's `npm audit`. A critical advisory against `next` 16.0–16.4 (GHSA-2464-fhr4-w9xw) appeared between main's green run 41316648185 and this one. Main pins the same `next` 16.4.0, so main's next run fails the same step. This change does not touch the frontend; the fix is a `next` bump (16.4.3) by the frontend owner.
+
 ## 5. Bug found by the gate (fixed)
 
 CFG's FY2017 10-K (0000759944-18-000016) tags `CommonStockDividendsPerShareDeclared` = 0.18 on a **12-month** context; it is really the Q4 declared amount. `CashPaid` FY = 0.64 sits beside it. The first version chose the tag per key, so it subtracted the CashPaid 9M (0.46) from the Declared FY (0.18) and got **−0.28**. Fix: both inputs come from one tag series, and a negative Q4 is hidden. Result: 0.64 − 0.46 = 0.18, the Verifier's value.
