@@ -40,8 +40,6 @@ from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
-face_path, prod_path, out_dir = sys.argv[1], sys.argv[2], Path(sys.argv[3])
-out_dir.mkdir(parents=True, exist_ok=True)
 
 OP_TOTAL = ("NetCashProvidedByUsedInOperatingActivities", "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations")
 INV_TOTAL = ("NetCashProvidedByUsedInInvestingActivities", "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations")
@@ -243,58 +241,26 @@ def month_end(d):
 
 
 # production, keyed (cik, concept, rounded month end, quarters)
+
+# module state the per-column evaluation writes (counters for the cohort summary; production is information only)
 prod = defaultdict(dict)
-for line in gzip.open(prod_path, "rt"):
-    cik, name, s, e, v = json.loads(line)
-    q = round((date.fromisoformat(e) - date.fromisoformat(s)).days / 91.3)
-    if q in (1, 2, 3, 4):
-        prod[(cik, name)][(month_end(e), q)] = Decimal(v)
-
-# choose one filing per (cik, column): original whose period is the column end
-# pass 1 (streaming; holding every filing swaps): the winning filing per column
-best = {}
-for line in gzip.open(face_path, "rt"):
-    f = json.loads(line)
-    cf = [r for r in f["face"] if r["stmt"] == "CF"]
-    for col, vals in f["values"].items():
-        ddate, q = col.split("|")
-        if int(q) not in (1, 2, 3, 4) or ddate < "20140101":  # v2 window: every period since 2014 (founder, 2026-11-04)
-            continue
-        if not any(t in vals for t in OP_TOTAL + INV_TOTAL):
-            continue  # not a face column of this filing
-        if not cf:
-            continue
-        rank = (ddate == f["period"], not f["form"].endswith("/A"), f["filed"])
-        key = (f["cik"], ddate, int(q))
-        if key not in best or rank > best[key][0]:
-            best[key] = (rank, f["adsh"])
-
-cells = []
 summ = Counter()
 per_company = defaultdict(Counter)
 examples = defaultdict(list)
-wanted = defaultdict(list)
-for key, (_rank, adsh) in best.items():
-    wanted[adsh].append(key)
-del best
 
 
-def chosen():
-    """pass 2: stream again, yield only the winning (column, filing) pairs"""
-    for line in gzip.open(face_path, "rt"):
-        f = json.loads(line)
-        for key in wanted.get(f["adsh"], ()):
-            yield key, f
-
-
-for (cik, ddate, q), f in chosen():
+def evaluate(cik, ddate, q, f):
+    """One (filing, column) -> the capex cell and the D&A cell the lane emits for it. The logic is the
+    module-level loop body of e79ff33, moved unchanged so the FSN store detector (fsn_store/detectors.py)
+    can run it on a single filing."""
+    out = []
     adsh = f["adsh"]
     vals = f["values"][f"{ddate}|{q}"]
     end = f"{ddate[:4]}-{ddate[4:6]}-{ddate[6:]}"
     # the cash-flow face: the CF report with the operating total, in line order
     cf_reports = Counter(r["report"] for r in f["face"] if r["stmt"] == "CF" and r["tag"] in OP_TOTAL + INV_TOTAL)
     if not cf_reports:
-        continue
+        return out
     rep = cf_reports.most_common(1)[0][0]
     rows = [r for r in f["face"] if r["stmt"] == "CF" and r["report"] == rep]
     is_rows = [r for r in f["face"] if r["stmt"] == "IS"]
@@ -462,7 +428,7 @@ for (cik, ddate, q), f in chosen():
                  variant_ruling=str(ruling) if not net_sibling and (n_ppe or n_net or leased or soft) else None,
                  interim=str(interim) if interim is not None else None, interim_reason=reason, exclusion_note=exclusion_note,
                  prod_value=str(pv) if pv is not None else None)
-        cells.append(c)
+        out.append(c)
         summ["capex_cells"] += 1
         for cs in cases:
             summ[f"capex_case_{cs}"] += 1
@@ -489,7 +455,7 @@ for (cik, ddate, q), f in chosen():
 
     # ---------------- D&A ----------------
     if op_i is None:
-        continue
+        return out
     da = []
     seen_da = set()
     label_tags = defaultdict(set)
@@ -526,7 +492,7 @@ for (cik, ddate, q), f in chosen():
                 lab = lab + f" [net of parenthetical financing {fin[0]}]"
         da.append({"tag": t, "label": lab, "nature": nat, "value": v, "custom": r["custom"]})
     if not da:
-        continue
+        return out
     asset = [x for x in da if x["nature"] == "asset_da"]
     other = [x for x in da if x["nature"] == "other_amort"]
     combined = [x for x in da if x["nature"] == "combined_other"]
@@ -637,7 +603,7 @@ for (cik, ddate, q), f in chosen():
     c = dict(cell, family="d_and_a", da_class=da_class, lines=[{**x, "value": str(x["value"])} for x in da], is_intangible_amort=str(is_sum) if is_sum is not None else None,
              tie_2a=tie, is_da_tie=is_tie, is_da_total=str(is_da_total) if is_da_total is not None else None, value=str(value) if value is not None else None, reason=reason, narrow_asset_da=str(narrow_da),
              prod_value=str(pv) if pv is not None else None)
-    cells.append(c)
+    out.append(c)
     summ["da_cells"] += 1
     key = reason or ("published_2a_tie" if other else "published")
     summ[f"da_{key}"] += 1
@@ -652,53 +618,106 @@ for (cik, ddate, q), f in chosen():
             summ["da_published_prod_agrees" if abs(pv - value) <= tol else "da_published_prod_differs"] += 1
     elif pv is not None:
         summ["da_hidden_prod_shows_value"] += 1
+    return out
 
-# company rule (Verifier V11, KEY FY2023): once a company's "net" D&A line is shown below its
-# own intangible amortization in any period, that label is held in EVERY period of the company
-net_labels = defaultdict(set)
-for c in cells:
-    if c["family"] == "d_and_a" and c["reason"] == "da_net_line_below_intangible_amortization":
-        for x in c["lines"]:
-            if x["nature"] == "asset_da" and re.search(r"\bnet\b", x["label"], re.I):
-                net_labels[c["cik"]].add(x["label"].strip().lower())
-for c in cells:
-    if c["family"] == "d_and_a" and c["reason"] is None and net_labels.get(c["cik"]) and any(
-            x["nature"] == "asset_da" and x["label"].strip().lower() in net_labels[c["cik"]] for x in c["lines"]):
-        c["value"], c["reason"], c["da_class"] = None, "da_net_line_below_intangible_amortization", None
-        c["company_rule"] = "net_line_failed_in_another_period"
-# D&A counters recomputed from the final cells (the company rule changes cells after the pass)
-for k in [k for k in summ if k.startswith("da_")]:
-    del summ[k]
-for t in per_company:
-    for k in [k for k in per_company[t] if k.startswith("da_")]:
-        del per_company[t][k]
-for c in cells:
-    if c["family"] != "d_and_a":
-        continue
-    v = Decimal(c["value"]) if c["value"] is not None else None
-    pv = Decimal(c["prod_value"]) if c["prod_value"] is not None else None
-    key = c["reason"] or ("published_is_anchor" if c.get("is_da_tie") == "is_anchor"
-                          else "published_2a_tie" if c.get("tie_2a") else "published")
-    summ["da_cells"] += 1
-    summ[f"da_{key}"] += 1
-    per_company[c["ticker"]][f"da_{key}"] += 1
-    if v is not None:
-        if pv is None:
-            summ["da_published_prod_blank"] += 1
-        else:
-            summ["da_published_prod_agrees" if abs(pv - v) <= max(runit([v]), runit([pv])) else "da_published_prod_differs"] += 1
-    elif pv is not None:
-        summ["da_hidden_prod_shows_value"] += 1
 
-with gzip.open(out_dir / "cells.jsonl.gz", "wt") as fo:
+def main(argv):
+    face_path, prod_path, out_dir = argv[1], argv[2], Path(argv[3])
+    out_dir.mkdir(parents=True, exist_ok=True)
+    # production, keyed (cik, concept, rounded month end, quarters)
+    for line in gzip.open(prod_path, "rt"):
+        cik, name, s, e, v = json.loads(line)
+        q = round((date.fromisoformat(e) - date.fromisoformat(s)).days / 91.3)
+        if q in (1, 2, 3, 4):
+            prod[(cik, name)][(month_end(e), q)] = Decimal(v)
+
+
+    # pass 1 (streaming; holding every filing swaps): the winning filing per column
+    best = {}
+    for line in gzip.open(face_path, "rt"):
+        f = json.loads(line)
+        cf = [r for r in f["face"] if r["stmt"] == "CF"]
+        for col, vals in f["values"].items():
+            ddate, q = col.split("|")
+            if int(q) not in (1, 2, 3, 4) or ddate < "20140101":  # v2 window: every period since 2014 (founder, 2026-11-04)
+                continue
+            if not any(t in vals for t in OP_TOTAL + INV_TOTAL):
+                continue  # not a face column of this filing
+            if not cf:
+                continue
+            rank = (ddate == f["period"], not f["form"].endswith("/A"), f["filed"])
+            key = (f["cik"], ddate, int(q))
+            if key not in best or rank > best[key][0]:
+                best[key] = (rank, f["adsh"])
+
+    cells = []
+    wanted = defaultdict(list)
+    for key, (_rank, adsh) in best.items():
+        wanted[adsh].append(key)
+    del best
+
+    def chosen():
+        """pass 2: stream again, yield only the winning (column, filing) pairs"""
+        for line in gzip.open(face_path, "rt"):
+            f = json.loads(line)
+            for key in wanted.get(f["adsh"], ()):
+                yield key, f
+
+
+    for (cik, ddate, q), f in chosen():
+        cells.extend(evaluate(cik, ddate, q, f))
+
+    # company rule (Verifier V11, KEY FY2023): once a company's "net" D&A line is shown below its
+    # own intangible amortization in any period, that label is held in EVERY period of the company
+    net_labels = defaultdict(set)
     for c in cells:
-        fo.write(json.dumps(c, default=str) + "\n")
-json.dump({"summary": dict(sorted(summ.items())),
-           "companies": {k: dict(v) for k, v in sorted(per_company.items())},
-           "companies_with_case": {k: sum(1 for v in per_company.values() if v.get(k)) for k in
-                                   ("capex_leased", "capex_software", "capex_discontinued", "capex_net_sibling",
-                                    "da_published_2a_tie", "da_perimeter_line_unresolved", "da_da_combined_with_other_items")}},
-          open(out_dir / "summary.json", "w"), indent=1, default=str)
-with gzip.open(out_dir / "examples.json.gz", "wt") as fo:
-    json.dump(examples, fo, default=str)
-print(json.dumps(dict(sorted(summ.items())), indent=1))
+        if c["family"] == "d_and_a" and c["reason"] == "da_net_line_below_intangible_amortization":
+            for x in c["lines"]:
+                if x["nature"] == "asset_da" and re.search(r"\bnet\b", x["label"], re.I):
+                    net_labels[c["cik"]].add(x["label"].strip().lower())
+    for c in cells:
+        if c["family"] == "d_and_a" and c["reason"] is None and net_labels.get(c["cik"]) and any(
+                x["nature"] == "asset_da" and x["label"].strip().lower() in net_labels[c["cik"]] for x in c["lines"]):
+            c["value"], c["reason"], c["da_class"] = None, "da_net_line_below_intangible_amortization", None
+            c["company_rule"] = "net_line_failed_in_another_period"
+    # D&A counters recomputed from the final cells (the company rule changes cells after the pass)
+    for k in [k for k in summ if k.startswith("da_")]:
+        del summ[k]
+    for t in per_company:
+        for k in [k for k in per_company[t] if k.startswith("da_")]:
+            del per_company[t][k]
+    for c in cells:
+        if c["family"] != "d_and_a":
+            continue
+        v = Decimal(c["value"]) if c["value"] is not None else None
+        pv = Decimal(c["prod_value"]) if c["prod_value"] is not None else None
+        key = c["reason"] or ("published_is_anchor" if c.get("is_da_tie") == "is_anchor"
+                              else "published_2a_tie" if c.get("tie_2a") else "published")
+        summ["da_cells"] += 1
+        summ[f"da_{key}"] += 1
+        per_company[c["ticker"]][f"da_{key}"] += 1
+        if v is not None:
+            if pv is None:
+                summ["da_published_prod_blank"] += 1
+            else:
+                summ["da_published_prod_agrees" if abs(pv - v) <= max(runit([v]), runit([pv])) else "da_published_prod_differs"] += 1
+        elif pv is not None:
+            summ["da_hidden_prod_shows_value"] += 1
+
+    with gzip.open(out_dir / "cells.jsonl.gz", "wt") as fo:
+        for c in cells:
+            fo.write(json.dumps(c, default=str) + "\n")
+    json.dump({"summary": dict(sorted(summ.items())),
+               "companies": {k: dict(v) for k, v in sorted(per_company.items())},
+               "companies_with_case": {k: sum(1 for v in per_company.values() if v.get(k)) for k in
+                                       ("capex_leased", "capex_software", "capex_discontinued", "capex_net_sibling",
+                                        "da_published_2a_tie", "da_perimeter_line_unresolved", "da_da_combined_with_other_items")}},
+              open(out_dir / "summary.json", "w"), indent=1, default=str)
+    with gzip.open(out_dir / "examples.json.gz", "wt") as fo:
+        json.dump(examples, fo, default=str)
+    print(json.dumps(dict(sorted(summ.items())), indent=1))
+
+
+
+if __name__ == "__main__":
+    main(sys.argv)
