@@ -1,0 +1,149 @@
+name: Cell files load stage (called)
+
+# One family of pipeline-cells-load.yml: plan on every shard, then apply on every shard.
+# Not dispatched on its own (workflow_call only); the caller holds the heavy-db-jobs queue.
+on:
+  workflow_call:
+    inputs:
+      code_ref:
+        type: string
+        required: true
+      family:
+        type: string
+        required: true
+      file:
+        type: string
+        required: true
+      shards:
+        type: string
+        required: true
+      apply:
+        type: boolean
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  ids:
+    name: Shard ids
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      list: ${{ steps.ids.outputs.list }}
+    steps:
+      - id: ids
+        env:
+          SHARDS: ${{ inputs.shards }}
+        run: echo "list=$(python3 -c "import json, os; print(json.dumps(list(range(int(os.environ['SHARDS'])))))")" >> "$GITHUB_OUTPUT"
+
+  plan:
+    name: plan ${{ matrix.shard }}/${{ inputs.shards }}
+    needs: ids
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: true
+      max-parallel: 40
+      matrix:
+        shard: ${{ fromJSON(needs.ids.outputs.list) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      FAMILY: ${{ inputs.family }}
+      CELL_FILE: ${{ inputs.file }}
+      SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked dependencies
+        run: uv sync --project pipeline --locked
+      - name: Plan (every write rolled back)
+        run: |
+          set -u
+          mkdir -p out
+          echo "code: $(git rev-parse HEAD)"
+          # a plan writes nothing, so a dropped connection is simply retried
+          for attempt in 1 2 3; do
+            if timeout 100m uv run --project pipeline scrooner-cells load "$CELL_FILE" \
+                --family "$FAMILY" --plan --shard "$SHARD" --report "out/plan-${{ matrix.shard }}.json"; then
+              exit 0
+            fi
+            echo "::warning::plan $SHARD attempt $attempt failed"
+            sleep 30
+          done
+          exit 1
+      - name: Attach plan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.family }}-plan-${{ matrix.shard }}
+          path: out/
+          if-no-files-found: ignore
+
+  apply:
+    name: apply ${{ matrix.shard }}/${{ inputs.shards }}
+    needs: [ids, plan]
+    if: inputs.apply
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      max-parallel: 40
+      matrix:
+        shard: ${{ fromJSON(needs.ids.outputs.list) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      FAMILY: ${{ inputs.family }}
+      CELL_FILE: ${{ inputs.file }}
+      SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked dependencies
+        run: uv sync --project pipeline --locked
+      - name: Apply (resumes past companies already loaded from this file)
+        run: |
+          set -u
+          mkdir -p out
+          echo "code: $(git rev-parse HEAD)"
+          # every company commits on its own and --skip-loaded skips the committed ones,
+          # so a retry after a dropped connection resumes instead of redoing the shard
+          for attempt in 1 2 3; do
+            if timeout 220m uv run --project pipeline scrooner-cells load "$CELL_FILE" \
+                --family "$FAMILY" --apply --skip-loaded --shard "$SHARD" \
+                --report "out/apply-${{ matrix.shard }}-$attempt.json"; then
+              exit 0
+            fi
+            echo "::warning::apply $SHARD attempt $attempt failed"
+            sleep 30
+          done
+          exit 1
+      - name: Attach apply report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.family }}-apply-${{ matrix.shard }}
+          path: out/
+          if-no-files-found: ignore

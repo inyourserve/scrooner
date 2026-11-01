@@ -3,7 +3,7 @@ id: ci-pg-dump-pg-restore-must-match-the-postgres-service-versio
 title: CI pg_dump/pg_restore must match the postgres service version
 kind: gotcha
 tags: ci, postgres, backup
-paths: scripts/ci/pgbin, .github/workflows/ci.yml, scripts/verify_backup_restore.sh
+paths: .github/workflows/ci.yml, scripts/verify_backup_restore.sh, scripts/ci/pgbin
 evidence: CODE-CHECKED
 status: active
 created: 2026-10-22

@@ -1,0 +1,203 @@
+name: Cell proof over loaded families (scrooner-proof)
+
+# Manual only. Runs `scrooner-proof run` (proof v5, analytics.cell_proof semantics, migration 0114)
+# over every company that has cells of the given loaded families, MSFT and HD first, then the
+# rest in shards. DEFAULT IS A DRY RUN: one JSONL report row per cell, attached as artifacts,
+# nothing written. `write: true` upserts analytics.cell_proof and needs the founder's typed words.
+# The summary job prints proof % per family and attaches the DISAGREE cell list.
+# Each shard downloads the FSN quarters it needs from fsn-notes (sub+pre+cal+num, ~1.7 GB in all).
+on:
+  workflow_dispatch:
+    inputs:
+      code_ref:
+        description: "Git ref holding the proof engine"
+        default: "work/engineering/cell-proof"
+      families:
+        description: "Loaded families whose companies are proved (space separated)"
+        default: "capex_da_cash_debt is_core"
+      shards:
+        description: "Parallel shards for the cohort after the pilot, 1..20 (1 DB connection each)"
+        default: "10"
+      write:
+        description: "Upsert analytics.cell_proof (default false = report only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: heavy-db-jobs
+  cancel-in-progress: false
+
+env:
+  PILOT_CIKS: "0000789019,0000354950" # MSFT, HD
+
+jobs:
+  companies:
+    name: Companies with cells of the families
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      shards: ${{ steps.c.outputs.shards }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      FAMILIES: ${{ inputs.families }}
+      SHARDS: ${{ inputs.shards }}
+    steps:
+      - id: c
+        run: |
+          set -eu
+          case "$SHARDS" in ''|*[!0-9]*) echo "::error::shards must be a number"; exit 1;; esac
+          if [ "$SHARDS" -lt 1 ] || [ "$SHARDS" -gt 20 ]; then echo "::error::shards must be 1..20"; exit 1; fi
+          fams=$(printf "'%s'," $FAMILIES | sed 's/,$//')
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -tAc "set statement_timeout = '120s'; select distinct c.cik from analytics.canonical_fact cf join core.company c on c.id = cf.company_id where cf.family in ($fams) order by 1" \
+            | grep -E '^[0-9]{10}$' > ciks.txt
+          echo "companies: $(wc -l < ciks.txt)"
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import json, os
+          pilot = set(os.environ["PILOT_CIKS"].split(","))
+          ciks = [c for c in open("ciks.txt").read().split() if c not in pilot]
+          n = int(os.environ["SHARDS"])
+          print("shards=" + json.dumps([{"i": i, "ciks": ",".join(ciks[i::n])} for i in range(n) if ciks[i::n]]))
+          EOF
+
+  pilot:
+    name: proof MSFT and HD
+    needs: companies
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      WRITE: ${{ inputs.write }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Prove
+        run: |
+          set -u
+          mkdir -p out
+          echo "code: $(git rev-parse HEAD)"
+          w=""; if [ "$WRITE" = "true" ]; then w="--write"; fi
+          timeout 110m uv run --project pipeline scrooner-proof run --ciks "$PILOT_CIKS" \
+            --report out/proof-pilot.jsonl $w
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: proof-pilot
+          path: out/
+          if-no-files-found: ignore
+
+  cohort:
+    name: proof shard ${{ matrix.shard.i }}
+    needs: [companies, pilot]
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: ${{ fromJSON(needs.companies.outputs.shards) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      WRITE: ${{ inputs.write }}
+      CIKS: ${{ matrix.shard.ciks }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Prove
+        run: |
+          set -u
+          mkdir -p out
+          echo "code: $(git rev-parse HEAD)"
+          w=""; if [ "$WRITE" = "true" ]; then w="--write"; fi
+          timeout 290m uv run --project pipeline scrooner-proof run --ciks "$CIKS" \
+            --report "out/proof-${{ matrix.shard.i }}.jsonl" $w
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: proof-shard-${{ matrix.shard.i }}
+          path: out/
+          if-no-files-found: ignore
+
+  summary:
+    name: Proof % per family and DISAGREE list
+    needs: [pilot, cohort]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: proof-*
+          path: reports
+          merge-multiple: true
+      - name: Summarize
+        run: |
+          python3 - <<'EOF'
+          import collections, glob, json, os
+          family = {
+              "revenue_sanity_resolved": "is_core", "net_income_resolved": "is_core",
+              "operating_income_resolved": "is_core", "gross_profit_resolved": "is_core",
+              "cost_of_revenue_resolved": "is_core", "capex_resolved": "capex_da_cash_debt",
+              "depreciation_and_amortization_resolved": "capex_da_cash_debt",
+              "cash_and_equivalents_resolved": "capex_da_cash_debt",
+          }
+          v = collections.defaultdict(collections.Counter)
+          pilot = collections.defaultdict(collections.Counter)
+          disagree = []
+          for path in sorted(glob.glob("reports/*.jsonl")):
+              for line in open(path):
+                  r = json.loads(line)
+                  f = family.get(r.get("data_point_name"))
+                  if f is None:
+                      continue
+                  v[f][r["verdict"]] += 1
+                  if "pilot" in path:
+                      pilot[f][r["verdict"]] += 1
+                  if r["verdict"] == "DISAGREE":
+                      disagree.append(r)
+          out = ["| family | cells | PROVEN | % | DISAGREE | NOT_PRESENTED | UNCHECKED |", "|---|---|---|---|---|---|---|"]
+          for name, c in (("all", v), ("pilot MSFT+HD", pilot)):
+              for f, k in sorted(c.items()):
+                  n = sum(k.values())
+                  out.append(f"| {f} ({name}) | {n} | {k['PROVEN']} | {100 * k['PROVEN'] / n:.1f} | {k['DISAGREE']} | {k['NOT_PRESENTED']} | {k['UNCHECKED']} |")
+          reasons = collections.Counter((r["data_point_name"], r.get("reason_code")) for r in disagree)
+          out += ["", "DISAGREE by data point and reason:", *[f"- {a} / {b}: {n}" for (a, b), n in reasons.most_common()]]
+          text = "\n".join(out)
+          print(text)
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a").write(text + "\n")
+          os.makedirs("summary", exist_ok=True)
+          with open("summary/disagree.jsonl", "w") as fh:
+              for r in disagree:
+                  fh.write(json.dumps(r) + "\n")
+          json.dump({f: dict(k) for f, k in v.items()}, open("summary/verdicts.json", "w"), indent=1)
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: summary-disagree
+          path: summary/
