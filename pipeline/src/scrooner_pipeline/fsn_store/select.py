@@ -29,7 +29,7 @@ Value, accession and source_value_ids of a cell always come from the same fsn.va
 from __future__ import annotations
 
 import calendar
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from decimal import Decimal
@@ -95,6 +95,7 @@ class Filing:
     period: date | None
     fy: int | None
     fp: str | None
+    fye: str | None = None  # sub.fye MMDD of the fiscal year end
 
 
 @dataclass(frozen=True)
@@ -420,11 +421,36 @@ def _ytd_difference(
 # --- fiscal labels and cell rows ------------------------------------------------------------
 
 
+def _fye_month(fye: str) -> int | None:
+    """sub.fye MMDD -> the month-end month FSN rounds the year end to (day <= 15: previous month)."""
+    if len(fye) != 4 or not fye.isdigit():
+        return None
+    month, day = int(fye[:2]), int(fye[2:])
+    if not 1 <= month <= 12:
+        return None
+    return (month - 2) % 12 + 1 if day <= 15 else month
+
+
 def fiscal_label(
     ddate: date, qtrs: int, filings: Iterable[Filing]
 ) -> tuple[int | None, str | None]:
-    """(fiscal_year, fiscal_period) of a key from the sub row of the filing whose own period is
-    that date, else the same quarter one to three years later (comparative columns)."""
+    """(fiscal_year, fiscal_period) of a key. With the company's fiscal year end (sub.fye), the
+    fiscal year is the year of the year-end month-end that closes the period and the quarter is
+    counted back from it, the core.period convention (WMT's year ending 2015-01-31 is 2015; FSN's
+    sub.fy calls it 2014). Without fye: the sub row of the filing whose own period is that date,
+    else the same quarter one to three years later (comparative columns)."""
+    filings = list(filings)
+    fyes = Counter(f.fye for f in filings if f.fye).most_common(1)
+    m = _fye_month(fyes[0][0]) if fyes else None
+    if m is not None:
+        ahead = (m - ddate.month) % 12
+        if ahead % 3 == 0:
+            fy, q = month_end(ddate, ahead).year, 4 - ahead // 3
+            if qtrs == 4:
+                return fy, "FY"
+            if qtrs == 1:
+                return fy, f"Q{q}"
+            return fy, ("FY" if q == 4 else f"Q{q}")
     by_period: dict[date, Filing] = {}
     for f in sorted(filings, key=lambda f: f.accepted):
         if f.period is not None:
@@ -492,7 +518,7 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
     """Filings, per-concept prints and member values of one stored company (five indexed reads)."""
     with conn.cursor() as cur:
         cur.execute(
-            "select id, accession, accepted, form, period, fy, fp from fsn.filing where company_id = %s",
+            "select id, accession, accepted, form, period, fy, fp, fye from fsn.filing where company_id = %s",
             (company_id,),
         )
         filings = {r[0]: Filing(*r) for r in cur.fetchall()}
@@ -610,6 +636,8 @@ def build(
 
 
 NEVER_DERIVED_UNITS = ("USD/shares", "shares", "pure")
+# FSN (like FSDS) files per-share values with uom "USD", not "USD/shares": filter prints by this
+FSN_UOM = {"USD/shares": "USD"}
 
 
 def select_company(
@@ -628,7 +656,7 @@ def select_company(
             prints,
             data["filings"],
             members=data["members"],
-            unit=unit,
+            unit=FSN_UOM.get(unit, unit),
             derive=unit not in NEVER_DERIVED_UNITS and "eps" not in concept,
             residual_guard="revenue" in concept,
         )

@@ -196,3 +196,33 @@ def test_ge_member_duplicate_alone_rejects_a_note_quarter():
     )
     q4 = _cells(data, "revenue_sanity_resolved")[(date(2016, 12, 31), 1)]
     assert q4.rule_id != sel.RULE_NOTE_Q and q4.value != Decimal("2649") * M
+
+
+@pytest.mark.unit
+def test_fiscal_label_follows_the_year_end_not_fsn_sub_fy():
+    # WMT: FSN sub.fy calls the year ending 2015-01-31 fiscal 2014; core.period calls it 2015
+    def f(i, period, fy, fp, fye):
+        return sel.Filing(i, f"a{i}", datetime(2015, 3, i), "10-K", period, fy, fp, fye)
+
+    wmt = [f(1, date(2015, 1, 31), 2014, "FY", "0131")]
+    assert sel.fiscal_label(date(2015, 1, 31), 4, wmt) == (2015, "FY")
+    assert sel.fiscal_label(date(2015, 1, 31), 1, wmt) == (2015, "Q4")
+    assert sel.fiscal_label(date(2014, 10, 31), 1, wmt) == (2015, "Q3")
+    assert sel.fiscal_label(date(2014, 4, 30), 1, wmt) == (2015, "Q1")
+    assert sel.fiscal_label(date(2014, 7, 31), 0, wmt) == (2015, "Q2")
+    # HD ends near Feb 1 (fye 0201 rounds to January), JNJ near Jan 3 (rounds to December)
+    hd = [f(1, date(2015, 1, 31), 2014, "FY", "0201")]
+    assert sel.fiscal_label(date(2015, 1, 31), 4, hd) == (2015, "FY")
+    jnj = [f(1, date(2015, 12, 31), 2015, "FY", "0103")]
+    assert sel.fiscal_label(date(2015, 12, 31), 4, jnj) == (2015, "FY")
+    assert sel.fiscal_label(date(2015, 6, 30), 1, jnj) == (2015, "Q2")
+
+
+@pytest.mark.unit
+def test_eps_prints_filed_as_usd_are_selected_and_never_derived():
+    # FSN files EarningsPerShareBasic with uom "USD"; filtering by "USD/shares" dropped every print
+    f = {1: sel.Filing(1, "a1", datetime(2025, 5, 1), "10-Q", date(2025, 3, 31), 2025, "Q1")}
+    p = sel.Print(1, 1, "EarningsPerShareBasic", date(2025, 3, 31), 1, "USD", Decimal("1.23"), 2, "IS", True)
+    cells = sel.select_concept("basic_eps_resolved", [p], f, unit=sel.FSN_UOM["USD/shares"], derive=False)
+    assert [(c.state, c.value) for c in cells] == [("value", Decimal("1.23"))]
+    assert sel.to_row(cells[0], 1, f, unit="USD/shares")["unit"] == "USD/shares"

@@ -234,12 +234,14 @@ def report_company(
             prints,
             data["filings"],
             members=data["members"],
-            unit=unit,
+            unit=sel.FSN_UOM.get(unit, unit),
             derive=unit == "USD",
             residual_guard="revenue" in concept,
         )
         cells.extend(sel.to_row(c, company_id, data["filings"], unit=unit) for c in cs)
-        s = sel._Series([p for p in prints if p.uom == unit], data["filings"])
+        s = sel._Series(
+            [p for p in prints if p.uom == sel.FSN_UOM.get(unit, unit)], data["filings"]
+        )
         if s.breaks:
             breaks[concept] = sorted(data["filings"][f].accession for f in s.breaks)
     lib = library(conn, company_id)
