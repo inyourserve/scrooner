@@ -80,6 +80,10 @@ def load_cmd(
         None,
         help="i/n: load only companies with company_id %% n == i (run n loaders in parallel).",
     ),
+    skip_loaded: bool = typer.Option(
+        False,
+        help="Apply only: skip companies already loaded from this same file by an earlier apply run.",
+    ),
 ) -> None:
     from scrooner_pipeline.normalizer import cell_loader
 
@@ -96,7 +100,13 @@ def load_cmd(
 
         from scrooner_pipeline.common.config import settings
 
-        c = psycopg.connect(settings.database_url, connect_timeout=30)
+        import os
+
+        # SCROONER_LOAD_DATABASE_URL: a direct (non-pooler) connection for parallel loads (founder: use the 90)
+        c = psycopg.connect(
+            os.environ.get("SCROONER_LOAD_DATABASE_URL") or settings.database_url,
+            connect_timeout=30,
+        )
         c.execute(f"set statement_timeout = '{statement_timeout}'")
         c.commit()
         return c
@@ -120,6 +130,7 @@ def load_cmd(
             defect_reason=defect_reason,
             connect=connect,
             shard=tuple(int(x) for x in shard.split("/")) if shard else None,  # type: ignore[arg-type]
+            skip_loaded=skip_loaded,
         )
     d = rep.as_dict()
     if report:

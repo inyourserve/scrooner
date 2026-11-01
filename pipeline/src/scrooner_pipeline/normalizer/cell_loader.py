@@ -155,6 +155,7 @@ class LoadReport:
     run_id: str | None = None
     overridden: int = 0
     lineage_defects: int = 0
+    skipped_loaded: int = 0
     per_company: list[dict[str, Any]] = field(default_factory=list)
 
     def reject(self, line: int, why: str, **ctx: Any) -> None:
@@ -561,6 +562,7 @@ def load(
     defect_reason: str = "mixed_vintage_inputs",
     connect: Callable[[], psycopg.Connection] | None = None,
     shard: tuple[int, int] | None = None,
+    skip_loaded: bool = False,
 ) -> LoadReport:
     """paths: one or more cell files of ONE family (merged; a key in two files is
     a rejection). data_points: the delete scope (default: the manifest's or the
@@ -674,6 +676,19 @@ def load(
                 rep.reject(c.line, "unknown_company", company_id=cid)
             del by_company[cid]
     prov = _has_provenance_columns(conn)
+    done_companies: set[int] = set()
+    if skip_loaded and apply and _has_provenance_columns(conn):
+        # companies already loaded from this very file (sha) by an earlier apply run: skip them
+        with conn.cursor() as cur:
+            cur.execute(
+                "select distinct cf.company_id from analytics.canonical_fact cf join analytics.rule_run r on r.run_id = cf.rule_run_id "
+                "where cf.family = %s and r.mode = 'apply' and r.before_image_ref = %s and cf.company_id = any(%s)",
+                (family, ",".join(rep.sha256.values())[:200], sorted(by_company)),
+            )
+            done_companies = {r[0] for r in cur.fetchall()}
+        for cid in done_companies:
+            by_company.pop(cid, None)
+        rep.skipped_loaded = len(done_companies)
     run_id = start_rule_run(
         conn,
         rule_id,
@@ -832,16 +847,57 @@ def _load_company(
                     }
                     for r in valued
                 ]
-                sql = (
-                    "insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids"
-                    + (
-                        ", rule_run_id, family) values (%(company_id)s, %(canonical_concept_id)s, %(period_id)s, %(value)s, %(source_fact_ids)s, %(run_id)s::uuid, %(family)s)"
-                        if prov
-                        else ") values (%(company_id)s, %(canonical_concept_id)s, %(period_id)s, %(value)s, %(source_fact_ids)s)"
+                if payload:
+                    # one statement per company (unnest of parallel arrays): executemany
+                    # cost one round trip per row over the remote pooler
+                    cols = {
+                        "company_id": [r["company_id"] for r in payload],
+                        "canonical_concept_id": [
+                            r["canonical_concept_id"] for r in payload
+                        ],
+                        "period_id": [r["period_id"] for r in payload],
+                        "value": [r["value"] for r in payload],
+                        "run_id": [r["run_id"] for r in payload],
+                        "family": [r["family"] for r in payload],
+                    }
+                    extra_cols = ", rule_run_id, family" if prov else ""
+                    extra_sel = ", v.run_id::uuid, v.family" if prov else ""
+                    cur.execute(
+                        f"""
+                        insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids{extra_cols})
+                        select v.company_id, v.canonical_concept_id, v.period_id, v.value, '{{}}'::bigint[]{extra_sel}
+                        from unnest(%(company_id)s::bigint[], %(canonical_concept_id)s::bigint[], %(period_id)s::bigint[],
+                                    %(value)s::numeric[], %(run_id)s::text[], %(family)s::text[])
+                             as v(company_id, canonical_concept_id, period_id, value, run_id, family)
+                        """,
+                        cols,
                     )
-                )
-                for i in range(0, len(payload), CHUNK):
-                    cur.executemany(sql, payload[i : i + CHUNK])
+                    # source_fact_ids are ragged arrays: one update statement with unnest of (period, concept, ids-as-text)
+                    cur.execute(
+                        """
+                        update analytics.canonical_fact cf set source_fact_ids = u.ids::bigint[]
+                        from unnest(%(concept)s::bigint[], %(period)s::bigint[], %(ids)s::text[]) as u(concept, period, ids)
+                        where cf.company_id = %(cid)s and cf.canonical_concept_id = u.concept and cf.period_id = u.period
+                        """,
+                        {
+                            "cid": cid,
+                            "concept": [
+                                r["canonical_concept_id"]
+                                for r in payload
+                                if r["source_fact_ids"]
+                            ],
+                            "period": [
+                                r["period_id"] for r in payload if r["source_fact_ids"]
+                            ],
+                            "ids": [
+                                "{"
+                                + ",".join(str(i) for i in r["source_fact_ids"])
+                                + "}"
+                                for r in payload
+                                if r["source_fact_ids"]
+                            ],
+                        },
+                    )
             rep.valued_written += len(valued)
             n_reasons = 0
             for rid, reasons in reasons_by_rule.items():
