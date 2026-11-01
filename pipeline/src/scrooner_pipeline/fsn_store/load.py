@@ -334,7 +334,7 @@ def load_company(
                 seen_vals.add(vk)
                 val_rows.append(
                     (
-                        *k,
+                        *vk,
                         cid_of.get(subs[r["adsh"]]["cik"].zfill(10)),
                         _num(r.get("value")),
                         r.get("footnote") or None,
