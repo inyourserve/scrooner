@@ -310,7 +310,10 @@ describe("ScreenerClient", () => {
     const resultsHeading = screen.getByRole("heading", { name: "Query results" });
     const builderDisclosure = screen.getByRole("button", { name: /Exact filters/ });
     expect(resultsHeading.compareDocumentPosition(builderDisclosure) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
-    expect(resultsHeading).toHaveFocus();
+    // Focus moves in a passive effect after the success render; on a loaded CI
+    // runner findByRole can resolve before that effect has flushed (runs
+    // 41196981284, 41310044821), so wait for it rather than asserting at once.
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Query results" })).toHaveFocus());
 
     fireEvent.click(screen.getByText("View structured screen logic"));
     expect(screen.getByText(/"metric_name": "roe"/)).toBeInTheDocument();

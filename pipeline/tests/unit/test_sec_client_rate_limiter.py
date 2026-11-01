@@ -34,11 +34,17 @@ class TestRateLimiterSingleProcess:
     def test_second_call_within_window_sleeps_the_remainder(self, tmp_path):
         # 5 req/s -> 0.2s minimum spacing.
         limiter = _RateLimiter(max_per_second=5.0, lock_path=tmp_path / "rl.lock")
-        limiter.wait()
+        # Measure from BEFORE the first call. The limiter stamps the lock file
+        # inside wait(), so a clock read taken after the first wait() returns
+        # can land arbitrarily late (a preempted CI runner measured 0.11s,
+        # run 41238979522) and shrink the apparent sleep. The first stamp is
+        # never earlier than `started`, so the second call cannot return
+        # before started + 0.2s: a true lower bound, independent of jitter.
         started = time.monotonic()
         limiter.wait()
+        limiter.wait()
         elapsed = time.monotonic() - started
-        assert elapsed >= 0.15  # allow scheduler slack, but must be close to 0.2s
+        assert elapsed >= 0.2 - 1e-3
 
     def test_call_after_the_window_has_passed_does_not_sleep(self, tmp_path):
         limiter = _RateLimiter(max_per_second=20.0, lock_path=tmp_path / "rl.lock")  # 0.05s window
@@ -57,10 +63,12 @@ class TestRateLimiterSingleProcess:
         assert time.monotonic() - started < CI_JITTER_TOLERANCE_SECONDS
 
 
-def _worker_call_wait_and_record(lock_path_str: str, max_per_second: float, out_queue) -> None:
+def _worker_call_wait_and_record(lock_path_str: str, max_per_second: float, out_queue, barrier) -> None:
     limiter = _RateLimiter(max_per_second=max_per_second, lock_path=Path(lock_path_str))
+    barrier.wait(timeout=30)
+    before = time.monotonic()
     limiter.wait()
-    out_queue.put(time.monotonic())
+    out_queue.put((before, time.monotonic()))
 
 
 @pytest.mark.unit
@@ -76,19 +84,27 @@ class TestRateLimiterCrossProcess:
         max_per_second = 5.0  # 0.2s minimum spacing
         ctx = multiprocessing.get_context("spawn")
         q = ctx.Queue()
+        # Both workers block on the barrier until both have booted, so they
+        # call wait() at the same moment rather than one spawn-boot apart.
+        barrier = ctx.Barrier(2)
 
-        p1 = ctx.Process(target=_worker_call_wait_and_record, args=(str(lock_path), max_per_second, q))
-        p2 = ctx.Process(target=_worker_call_wait_and_record, args=(str(lock_path), max_per_second, q))
+        args = (str(lock_path), max_per_second, q, barrier)
+        p1 = ctx.Process(target=_worker_call_wait_and_record, args=args)
+        p2 = ctx.Process(target=_worker_call_wait_and_record, args=args)
 
-        start = time.monotonic()
         p1.start()
         p2.start()
-        p1.join(timeout=5)
-        p2.join(timeout=5)
+        results = [q.get(timeout=30), q.get(timeout=30)]
+        p1.join(timeout=30)
+        p2.join(timeout=30)
 
-        results = sorted([q.get(timeout=1), q.get(timeout=1)])
-        # Whichever process ran second must have been delayed relative to
-        # the first -- if the two processes paced independently (the old
-        # bug), both could complete near-simultaneously instead.
-        assert results[1] - results[0] >= 0.15
-        assert time.monotonic() - start < 5
+        # The first process to stamp the lock file did so no earlier than its
+        # own `before`; the other cannot return until 0.2s after that stamp.
+        # So the last return is >= the earliest start + 0.2s whatever the
+        # scheduler does (the old after-to-after gap broke at 0.09s on a
+        # preempted runner, run 41202752853). If the processes paced
+        # independently (the old bug), both would return right after the
+        # barrier released them and this would fail.
+        earliest_start = min(before for before, _ in results)
+        last_return = max(after for _, after in results)
+        assert last_return - earliest_start >= 0.2 - 1e-3
