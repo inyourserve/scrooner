@@ -15,7 +15,7 @@ SHARDS_CSV = Path("doc/data-moat/team/top1000/shards.csv")
 
 @app.callback()
 def _root() -> None:
-    """Subcommands: shard."""
+    """Subcommands: shard, load, seed-rules."""
 
 
 def _cohort(shards_file: Path) -> list[str]:
@@ -72,6 +72,56 @@ def shard_cmd(
         shard_commit=commit,
     )
     typer.echo(f"fsn shard: {json.dumps(res)}")
+
+
+@app.command("load")
+def load_cmd(
+    companies: str = typer.Option(
+        "companies", help="Root of companies/<cik>/ directories."
+    ),
+    ciks: str = typer.Option(
+        "", help="Comma-separated CIKs (default: every directory under the root)."
+    ),
+    force: bool = typer.Option(
+        False, help="Reload even when (input_sha256, loader_commit) already match."
+    ),
+    report: str = typer.Option(None, help="Write the run summary JSON here."),
+) -> None:
+    """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import load
+
+    with get_connection() as conn:
+        res = load.run(
+            conn,
+            Path(companies),
+            [c for c in ciks.split(",") if c] or None,
+            force=force,
+        )
+    if report:
+        Path(report).write_text(json.dumps(res, indent=1, default=str))
+    typer.echo(f"fsn load: {json.dumps(res, default=str)}")
+
+
+@app.command("seed-rules")
+def seed_rules_cmd(
+    files: list[str] = typer.Argument(
+        ..., help="concept_rules/<lane>.jsonl files (FORMATS-v1 §2)."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply/--plan", help="Write fsn.concept_rule (default: validate only)."
+    ),
+) -> None:
+    """Validate and load concept_rule seeds; the whole file is refused on the first error."""
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import rules
+
+    with get_connection() as conn:
+        for f in files:
+            res = rules.seed(conn, Path(f), apply=apply)
+            typer.echo(
+                f"seed-rules {f} [{'apply' if apply else 'plan'}]: {json.dumps(res, default=str)}"
+            )
 
 
 if __name__ == "__main__":
