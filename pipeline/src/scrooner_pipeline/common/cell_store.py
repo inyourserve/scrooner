@@ -165,6 +165,40 @@ insert into analytics.cell_blank_reason
     (run_id, company_id, data_point_name, period_grain, period_start, period_end, basis,
      state, defect_class, owner, root_cause_class, rule_id, reason_code, reason_text,
      input_refs, source_fact_ids)
+select r.run_id::uuid, r.company_id, r.data_point_name, r.period_grain, r.period_start, r.period_end, r.basis,
+       r.state, r.defect_class, r.owner, r.root_cause_class, r.rule_id, r.reason_code, r.reason_text,
+       r.input_refs::jsonb, r.source_fact_ids
+from unnest(%(run_id)s::text[], %(company_id)s::bigint[], %(data_point_name)s::text[], %(period_grain)s::text[],
+            %(period_start)s::date[], %(period_end)s::date[], %(basis)s::text[], %(state)s::text[],
+            %(defect_class)s::text[], %(owner)s::text[], %(root_cause_class)s::text[], %(rule_id)s::text[],
+            %(reason_code)s::text[], %(reason_text)s::text[], %(input_refs)s::text[], %(source_fact_ids)s::bigint[][])
+     as r(run_id, company_id, data_point_name, period_grain, period_start, period_end, basis, state,
+          defect_class, owner, root_cause_class, rule_id, reason_code, reason_text, input_refs, source_fact_ids)
+on conflict (run_id, company_id, data_point_name, period_grain, period_start, period_end, basis)
+do update set
+    state = excluded.state, defect_class = excluded.defect_class, owner = excluded.owner,
+    root_cause_class = excluded.root_cause_class, rule_id = excluded.rule_id,
+    reason_code = excluded.reason_code, reason_text = excluded.reason_text,
+    input_refs = excluded.input_refs, source_fact_ids = excluded.source_fact_ids
+"""
+
+
+_INSERT_REASON_PLAIN = (
+    _INSERT_REASON.replace(
+        "r.input_refs::jsonb, r.source_fact_ids\nfrom unnest(",
+        "r.input_refs::jsonb, '{}'::bigint[]\nfrom unnest(",
+    )
+    .replace(", %(source_fact_ids)s::bigint[][])", ")")
+    .replace(
+        "reason_code, reason_text, input_refs, source_fact_ids)\non conflict",
+        "reason_code, reason_text, input_refs)\non conflict",
+    )
+)
+_INSERT_REASON_ROW = """
+insert into analytics.cell_blank_reason
+    (run_id, company_id, data_point_name, period_grain, period_start, period_end, basis,
+     state, defect_class, owner, root_cause_class, rule_id, reason_code, reason_text,
+     input_refs, source_fact_ids)
 values
     (%(run_id)s::uuid, %(company_id)s, %(data_point_name)s, %(period_grain)s,
      %(period_start)s, %(period_end)s, %(basis)s, %(state)s, %(defect_class)s, %(owner)s,
@@ -217,8 +251,46 @@ def write_blank_reasons(
 
 
 def _flush_reasons(conn: psycopg.Connection, batch: list[dict[str, Any]]) -> int:
+    """One statement per chunk (unnest), not one round trip per row: over the remote
+    pooler executemany cost ~80 ms a row and made a company load take 20 s (2026-11-01).
+    source_fact_ids arrays are ragged, so they go one row at a time only when non-empty."""
+    cols = (
+        "run_id",
+        "company_id",
+        "data_point_name",
+        "period_grain",
+        "period_start",
+        "period_end",
+        "basis",
+        "state",
+        "defect_class",
+        "owner",
+        "root_cause_class",
+        "rule_id",
+        "reason_code",
+        "reason_text",
+        "input_refs",
+    )
+    # the same key twice in one chunk (a retried row) must not reach one statement twice: last wins
+    key = (
+        "run_id",
+        "company_id",
+        "data_point_name",
+        "period_grain",
+        "period_start",
+        "period_end",
+        "basis",
+    )
+    batch = list({tuple(str(b[k]) for k in key): b for b in batch}.values())
     with conn.cursor() as cur:
-        cur.executemany(_INSERT_REASON, batch)
+        plain = [b for b in batch if not b["source_fact_ids"]]
+        if plain:
+            params = {c: [b[c] for b in plain] for c in cols}
+            params["source_fact_ids"] = [[] for _ in plain]
+            cur.execute(_INSERT_REASON_PLAIN, params)
+        ragged = [b for b in batch if b["source_fact_ids"]]
+        if ragged:
+            cur.executemany(_INSERT_REASON_ROW, ragged)
     return len(batch)
 
 
