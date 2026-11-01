@@ -33,6 +33,29 @@ def tsv(path):
     p.wait()
 
 
+def sub_record(r):
+    """the filing fields an IS face row carries, from one FSN sub row."""
+    return {"cik": r["cik"].zfill(10), "form": r["form"], "period": r["period"],
+            "filed": r["filed"], "fy": r.get("fy", ""), "fp": r.get("fp", "")}
+
+
+def pre_record(r, s):
+    """one IS/CI face row from an FSN pre row of a kept filing, else None."""
+    if r["stmt"] not in STMTS or r["inpth"] != "0":
+        return None
+    custom = r["version"] == r["adsh"] or not r["version"].startswith(STD)
+    return {**s, "adsh": r["adsh"], "stmt": r["stmt"], "report": int(r["report"]),
+            "line": int(r["line"]), "tag": r["tag"], "custom": custom,
+            "label": r["plabel"], "negating": r["negating"] == "1"}
+
+
+def cal_record(r):
+    return {"adsh": r["adsh"], "grp": r["grp"], "arc": r["arc"],
+            "w": r.get("negative") or "1", "p": r["ptag"], "c": r["ctag"],
+            "c_custom": r["cversion"] == r["adsh"] or not r["cversion"].startswith(STD),
+            "p_custom": r["pversion"] == r["adsh"] or not r["pversion"].startswith(STD)}
+
+
 def main(root, period, ciks, out_dir):
     if ciks.startswith("@"):
         ciks = {line.strip().zfill(10) for line in open(ciks[1:]) if line.strip()}
@@ -42,28 +65,22 @@ def main(root, period, ciks, out_dir):
     subs = {}
     for r in tsv(d / f"{period}_sub.tsv.zst"):
         if r["cik"].zfill(10) in ciks and r["form"] in FORMS:
-            subs[r["adsh"]] = {"cik": r["cik"].zfill(10), "form": r["form"], "period": r["period"],
-                               "filed": r["filed"], "fy": r.get("fy", ""), "fp": r.get("fp", "")}
+            subs[r["adsh"]] = sub_record(r)
     out = Path(out_dir)
     n_pre = n_cal = 0
     with gzip.open(out / f"{period}_is_pre.jsonl.gz", "wt") as o:
         for r in tsv(d / f"{period}_pre.tsv.zst"):
             s = subs.get(r["adsh"])
-            if s is None or r["stmt"] not in STMTS or r["inpth"] != "0":
+            row = pre_record(r, s) if s is not None else None
+            if row is None:
                 continue
-            custom = r["version"] == r["adsh"] or not r["version"].startswith(STD)
-            o.write(json.dumps({**s, "adsh": r["adsh"], "stmt": r["stmt"], "report": int(r["report"]),
-                                "line": int(r["line"]), "tag": r["tag"], "custom": custom,
-                                "label": r["plabel"], "negating": r["negating"] == "1"}) + "\n")
+            o.write(json.dumps(row) + "\n")
             n_pre += 1
     with gzip.open(out / f"{period}_cal.jsonl.gz", "wt") as o:
         for r in tsv(d / f"{period}_cal.tsv.zst"):
             if r["adsh"] not in subs:
                 continue
-            o.write(json.dumps({"adsh": r["adsh"], "grp": r["grp"], "arc": r["arc"],
-                                "w": r.get("negative") or "1", "p": r["ptag"], "c": r["ctag"],
-                                "c_custom": r["cversion"] == r["adsh"] or not r["cversion"].startswith(STD),
-                                "p_custom": r["pversion"] == r["adsh"] or not r["pversion"].startswith(STD)}) + "\n")
+            o.write(json.dumps(cal_record(r)) + "\n")
             n_cal += 1
     print(f"{period}: filings {len(subs)} is_rows {n_pre} cal_arcs {n_cal}")
 
