@@ -58,6 +58,8 @@ create table if not exists fsn.dim (
     segments  text,
     segt      boolean
 );
+insert into fsn.dim (id, dimh, segments, segt) overriding system value
+    values (0, '0x00000000', '', false) on conflict (dimh) do nothing;   -- the no-dimension row is always id 0
 
 create table if not exists fsn.line (
     id         bigint generated always as identity primary key,
@@ -94,7 +96,7 @@ create table if not exists fsn.value (
     unique (filing_id, tag_id, ddate, qtrs, uom, dim_id, iprx, coreg)
 );
 create index if not exists idx_fsn_value_series on fsn.value (company_id, tag_id, ddate, qtrs)
-    include (value, filing_id) where dim_id = 1;             -- the no-dimension row is inserted first (id 1) by the loader
+    include (value, filing_id) where dim_id = 0;             -- non-dimensional series only
 create index if not exists idx_fsn_value_filing on fsn.value (filing_id);
 
 create table if not exists fsn.calc_arc (
