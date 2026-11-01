@@ -92,11 +92,20 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
         arcs = cur.fetchall()
     stmt_of: dict[tuple[str, str], str] = {}
     line_of: dict[tuple[str, str], int] = {}
+    on: dict[str, set[str]] = defaultdict(
+        set
+    )  # statement -> tags on it (a tag may sit on two)
     for stmt, line, tag, version, inpth in lines:
         if inpth:
             continue
         stmt_of.setdefault((tag, version), stmt)
         line_of.setdefault((tag, version), line)
+        on[stmt].add(tag)
+    flat: dict[tuple[str, date, int], Print] = {}
+    for tag, version, ddate, qtrs, value, dcml in values:
+        flat.setdefault(
+            (tag, ddate, qtrs), Print(tag, version, Decimal(value), dcml, None)
+        )
     by_col: dict[tuple[str, date, int], dict[tuple[str, str], Print]] = defaultdict(
         dict
     )
@@ -110,7 +119,13 @@ def load_filing(conn: psycopg.Connection, filing_id: int) -> dict[str, Any]:
     groups: dict[tuple[str, str, int], list[tuple[str, str, int]]] = defaultdict(list)
     for grp, _arc, ptag, pver, ctag, cver, w in arcs:
         groups[(ptag, pver, grp)].append((ctag, cver, w))
-    return {"stmt_of": stmt_of, "columns": by_col, "groups": groups}
+    return {
+        "stmt_of": stmt_of,
+        "columns": by_col,
+        "groups": groups,
+        "on": on,
+        "values": flat,
+    }
 
 
 def check_column(
@@ -200,6 +215,121 @@ def check_column(
     return out
 
 
+# NI incl. NCI - NCI = NI attributable to the parent (IS column)
+NI_TOTAL, NI_NCI, NI_PARENT = (
+    "ProfitLoss",
+    "NetIncomeLossAttributableToNoncontrollingInterest",
+    "NetIncomeLoss",
+)
+NI_TAGS = (NI_TOTAL, NI_PARENT)
+CF_CASH_TOTAL = "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"
+BS_CASH = (
+    "CashAndCashEquivalentsAtCarryingValue",
+    "CashCashEquivalentsAndShortTermInvestments",
+    "Cash",
+)
+BS_RESTRICTED = (
+    "RestrictedCash",
+    "RestrictedCashCurrent",
+    "RestrictedCashNoncurrent",
+    "RestrictedCashAndCashEquivalentsAtCarryingValue",
+    "RestrictedCashAndCashEquivalentsNoncurrent",
+    "RestrictedCashAndInvestmentsCurrent",
+)
+
+
+def _row(
+    check_id: str, lhs: Print, rhs_terms: list[Print], detail: dict
+) -> dict[str, Any]:
+    rhs = sum((p.value for p in rhs_terms), Decimal(0))
+    tol = tol_of([lhs.dcml, *(p.dcml for p in rhs_terms)])
+    return {
+        "check_id": check_id,
+        "ok": abs(lhs.value - rhs) <= tol,
+        "lhs": lhs.value,
+        "rhs": rhs,
+        "tol": tol,
+        "detail": detail,
+    }
+
+
+def check_ties(
+    on: dict[str, set[str]], values: dict[tuple[str, date, int], Print]
+) -> list[tuple[str, date, int, dict[str, Any]]]:
+    """Ties across lines and statements of ONE filing (design §5), as (stmt, ddate, qtrs, check):
+    IS: ProfitLoss - NCI = NetIncomeLoss when all three sit on the IS;
+    CF: the net income line the CF starts from equals the same-named IS line;
+    CF: closing cash incl. restricted = BS cash + the restricted-cash lines the BS prints
+    (decided only when the BS prints restricted cash or the CF total is cash alone)."""
+    out: list[tuple[str, date, int, dict[str, Any]]] = []
+    cols = {(d, q) for (_t, d, q) in values}
+    for ddate, qtrs in sorted(cols):
+
+        def v(tag: str, stmt: str) -> Print | None:
+            return values.get((tag, ddate, qtrs)) if tag in on.get(stmt, ()) else None
+
+        if qtrs > 0:
+            total, nci, parent = v(NI_TOTAL, "IS"), v(NI_NCI, "IS"), v(NI_PARENT, "IS")
+            if total and nci and parent:
+                nci_neg = Print(nci.tag, nci.version, -nci.value, nci.dcml, None)
+                out.append(
+                    (
+                        "IS",
+                        ddate,
+                        qtrs,
+                        _row(
+                            "is_ni_total_minus_nci_eq_parent",
+                            parent,
+                            [total, nci_neg],
+                            {},
+                        ),
+                    )
+                )
+            for tag in NI_TAGS:
+                cf = v(tag, "CF")
+                if cf is None:
+                    continue
+                is_ = [p for t in NI_TAGS if (p := v(t, "IS")) is not None]
+                if is_:
+                    best = min(is_, key=lambda p: abs(p.value - cf.value))
+                    out.append(
+                        (
+                            "CF",
+                            ddate,
+                            qtrs,
+                            _row(
+                                "cross_cf_ni_eq_is_ni",
+                                cf,
+                                [best],
+                                {"cf_tag": tag, "is_tag": best.tag},
+                            ),
+                        )
+                    )
+                break
+        else:
+            cf_total = v(CF_CASH_TOTAL, "CF")
+            cash = next((p for t in BS_CASH if (p := v(t, "BS")) is not None), None)
+            if cf_total is None or cash is None:
+                continue
+            restricted = [p for t in BS_RESTRICTED if (p := v(t, "BS")) is not None]
+            if not restricted and cf_total.value != cash.value:
+                continue  # restricted cash held in another BS line: not decidable here
+            out.append(
+                (
+                    "CF",
+                    ddate,
+                    qtrs,
+                    _row(
+                        "cross_cf_closing_cash_eq_bs_cash",
+                        cf_total,
+                        [cash, *restricted],
+                        {"bs_tags": [cash.tag, *(p.tag for p in restricted)]},
+                    ),
+                )
+            )
+    return out
+
+
 def check_filing(
     conn: psycopg.Connection, filing_id: int, *, write: bool = True
 ) -> dict[str, int]:
@@ -222,6 +352,21 @@ def check_filing(
                     c["detail"],
                 )
             )
+    for stmt, ddate, qtrs, c in check_ties(data["on"], data["values"]):
+        rows.append(
+            (
+                filing_id,
+                stmt,
+                ddate,
+                qtrs,
+                c["check_id"],
+                c["ok"],
+                c["lhs"],
+                c["rhs"],
+                c["tol"],
+                c["detail"],
+            )
+        )
     counts = {
         "checks": len(rows),
         "failed": sum(1 for r in rows if not r[5]),
