@@ -90,3 +90,12 @@ EXPECTED=pipeline/scripts/slot_records/results/bs_port_gate_2026-11-01/expected_
 ```
 
 Next in this session: the capex/D&A/debt detectors (`CAPEX-DA-DEBT-PORT-2026-11-01.md`).
+
+## 6. Follow-up (second review note, 2026-11-01)
+
+- **Fixed: the sibling double count.** When the finance-lease TOTAL (`FinanceLeaseLiability` / `CapitalLeaseObligations`) is itself a face member, the note adds nothing. Before, face 45 + note current 5 added the 45 again. Test: `test_note_lease_not_added_when_the_total_is_a_face_member` (145, not 190), which fails without the fix. The gate on the 29 companies is unchanged (858 pinned, 0 unexpected): none of them has this pattern.
+- **Not done (optional), each changes Verifier-passed outputs and needs a draw first:**
+  - Making a `face_vs_note_aggregate` mismatch non-publishable. Today it is a flag on publishable cells (HD 2015/2017/2018 in report_v4, 290M–1,559M).
+  - The era lookup's first-match in a boundary month (`covering_record` matches by month). A tie-break on exact dates would move records at era boundaries.
+
+  I can do both once you want them; the gate will show every affected cell.
