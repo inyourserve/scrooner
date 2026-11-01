@@ -134,6 +134,8 @@ class CellRow:
     fsn_end: date | None
     exact_dates: bool
     period_id: int | None = None
+    # fsn.value ids behind the value (FSN store, migration 0118); lineage on their own
+    source_value_ids: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -269,6 +271,7 @@ def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow |
         unit=r.get("unit"),
         decimals=r.get("decimals"),
         source_fact_ids=[int(x) for x in (r.get("source_fact_ids") or [])],
+        source_value_ids=[int(x) for x in (r.get("source_value_ids") or [])],
         accession=r.get("accession"),
         tag=r.get("tag"),
         members=r.get("members"),
@@ -433,6 +436,15 @@ def materialize_fsn_fact(
             (company_id, r.period_id, raw_id),
         )
         return [x[0] for x in cur.fetchall()]
+
+
+def _has_source_value_ids(conn: psycopg.Connection) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(
+            "select count(*) from information_schema.columns where table_schema = 'analytics' "
+            "and table_name = 'canonical_fact' and column_name = 'source_value_ids'"
+        )
+        return cur.fetchone()[0] == 1
 
 
 def _has_provenance_columns(conn: psycopg.Connection) -> bool:
@@ -676,6 +688,10 @@ def load(
                 rep.reject(c.line, "unknown_company", company_id=cid)
             del by_company[cid]
     prov = _has_provenance_columns(conn)
+    if any(c.source_value_ids for c in cells) and not _has_source_value_ids(conn):
+        raise RuntimeError(
+            "cells carry source_value_ids but analytics.canonical_fact has no such column (migration 0118)"
+        )
     done_companies: set[int] = set()
     if skip_loaded and apply and _has_provenance_columns(conn):
         # companies already loaded from this very file (sha) by an earlier apply run: skip them
@@ -795,6 +811,7 @@ def _load_company(
                 if (
                     r.state == "value"
                     and not r.source_fact_ids
+                    and not r.source_value_ids
                     and not r.tag
                     and not r.members
                 ):
@@ -816,6 +833,10 @@ def _load_company(
                             ),
                             [],
                         )
+                    if not ids and r.source_value_ids:
+                        # an FSN-store cell: fsn.value ids are its lineage; core.fact ids only where they resolve
+                        valued.append(r)
+                        continue
                     if not ids and r.fsn_set and r.accession and r.tag:
                         ids = materialize_fsn_fact(conn, cid, cik, r, prow[r.period_id])
                         rep.facts_materialized += len(ids)
@@ -842,6 +863,7 @@ def _load_company(
                         "period_id": r.period_id,
                         "value": r.value,
                         "source_fact_ids": r.source_fact_ids,
+                        "source_value_ids": r.source_value_ids,
                         "run_id": run_id,
                         "family": family,
                     }
@@ -898,6 +920,28 @@ def _load_company(
                             ],
                         },
                     )
+                    with_values = [r for r in payload if r["source_value_ids"]]
+                    if with_values:
+                        cur.execute(
+                            """
+                            update analytics.canonical_fact cf set source_value_ids = u.ids::bigint[]
+                            from unnest(%(concept)s::bigint[], %(period)s::bigint[], %(ids)s::text[]) as u(concept, period, ids)
+                            where cf.company_id = %(cid)s and cf.canonical_concept_id = u.concept and cf.period_id = u.period
+                            """,
+                            {
+                                "cid": cid,
+                                "concept": [
+                                    r["canonical_concept_id"] for r in with_values
+                                ],
+                                "period": [r["period_id"] for r in with_values],
+                                "ids": [
+                                    "{"
+                                    + ",".join(str(i) for i in r["source_value_ids"])
+                                    + "}"
+                                    for r in with_values
+                                ],
+                            },
+                        )
             rep.valued_written += len(valued)
             n_reasons = 0
             for rid, reasons in reasons_by_rule.items():

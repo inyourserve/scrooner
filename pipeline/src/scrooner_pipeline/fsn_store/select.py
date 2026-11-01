@@ -33,7 +33,8 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 import psycopg
 
@@ -59,7 +60,12 @@ ANCHOR_TAGS = {
     ),
 }
 # column lengths (qtrs) a form prints on its statement face
-FACE_QTRS = {"10-K": {0, 4}, "10-K/A": {0, 4}, "10-Q": {0, 1, 2, 3}, "10-Q/A": {0, 1, 2, 3}}
+FACE_QTRS = {
+    "10-K": {0, 4},
+    "10-K/A": {0, 4},
+    "10-Q": {0, 1, 2, 3},
+    "10-Q/A": {0, 1, 2, 3},
+}
 
 # blank reason -> (defect_class, owner) of the cell contract
 REASONS = {
@@ -202,13 +208,15 @@ def select_concept(
 ) -> list[Cell]:
     """Cells of one concept for one company. `prints` are every non-dimensional value of the
     concept's mapped lines (face and note columns); `members` maps (filing_id, tag, ddate, qtrs)
-    to the dimensional values of that tag in that filing (the double-context guard)."""
+    to the dimensional and co-registrant values of that tag in that filing (the double-context guard)."""
     prints = [p for p in prints if p.uom == unit]
     members = members or {}
     s = _Series(prints, filings)
     cells: dict[tuple[date, int], Cell] = {}
     winners: dict[tuple[date, int], Print] = {}
-    held: dict[tuple[date, int], str] = {}  # keys whose latest copy is unusable, with the reason
+    held: dict[
+        tuple[date, int], str
+    ] = {}  # keys whose latest copy is unusable, with the reason
     for key in sorted(s.by_key):
         ps = s.latest_first(key)
         top = ps[0]
@@ -251,7 +259,9 @@ def select_concept(
                 continue
             cell = _note_quarter(concept, ddate, n, w, notes, winners, members)
             if cell is None:
-                cell = _ytd_difference(concept, ddate, n, w, s, winners, held, residual_guard)
+                cell = _ytd_difference(
+                    concept, ddate, n, w, s, winners, held, residual_guard
+                )
             cells[(ddate, 1)] = cell
     return [cells[k] for k in sorted(cells)]
 
@@ -279,9 +289,7 @@ def _blank(
 def _note_quarters(prints: list[Print]) -> dict[tuple[int, str, date], Print]:
     """Non-face 3-month prints by (filing, tag, ddate): the quarterly-data note of a filing."""
     return {
-        (p.filing_id, p.tag, p.ddate): p
-        for p in prints
-        if p.qtrs == 1 and not p.face
+        (p.filing_id, p.tag, p.ddate): p for p in prints if p.qtrs == 1 and not p.face
     }
 
 
@@ -301,7 +309,9 @@ def _note_quarter(
     if q.value in members.get((q.filing_id, q.tag, ddate, 1), set()):
         return None  # an undimensioned copy of a member's figure (GE double context)
     if n == 4:
-        four = [notes.get((w.filing_id, w.tag, month_end(ddate, -3 * i))) for i in range(4)]
+        four = [
+            notes.get((w.filing_id, w.tag, month_end(ddate, -3 * i))) for i in range(4)
+        ]
         if all(four):
             total = sum((p.value for p in four), Decimal(0))  # type: ignore[union-attr]
             tol = tol_of([w.dcml, *(p.dcml for p in four)])  # type: ignore[union-attr]
@@ -337,14 +347,22 @@ def _ytd_difference(
     prev = winners.get(prev_key)
     if prev is None:
         return _blank(
-            concept, key, held.get(prev_key, "no_prior_quarter_end"), w, {"needs": str(prev_key)}
+            concept,
+            key,
+            held.get(prev_key, "no_prior_quarter_end"),
+            w,
+            {"needs": str(prev_key)},
         )
     first = s.same_basis(prev.filing_id, w.filing_id)
     pair = (prev, w) if first is None else None
     if pair is None:
         for b in s.latest_first((ddate, n)):
             for a in s.latest_first(prev_key):
-                if a.checks_ok and b.checks_ok and s.same_basis(a.filing_id, b.filing_id) is None:
+                if (
+                    a.checks_ok
+                    and b.checks_ok
+                    and s.same_basis(a.filing_id, b.filing_id) is None
+                ):
                     pair = (a, b)
                     break
             if pair:
@@ -356,7 +374,10 @@ def _ytd_difference(
             first or "mixed_vintage_inputs",
             w,
             {
-                "inputs": [s.filings[prev.filing_id].accession, s.filings[w.filing_id].accession],
+                "inputs": [
+                    s.filings[prev.filing_id].accession,
+                    s.filings[w.filing_id].accession,
+                ],
                 "breaks": sorted(s.filings[f].accession for f in s.breaks),
             },
         )
@@ -383,7 +404,10 @@ def _ytd_difference(
         derivation={
             "formula": f"YTD{n} - YTD{n - 1}",
             "input_values": [str(b.value), str(a.value)],
-            "input_accessions": [s.filings[b.filing_id].accession, s.filings[a.filing_id].accession],
+            "input_accessions": [
+                s.filings[b.filing_id].accession,
+                s.filings[a.filing_id].accession,
+            ],
             "policy": "same_basis",
             "winning_pair": pair == (prev, w),
         },
@@ -393,7 +417,9 @@ def _ytd_difference(
 # --- fiscal labels and cell rows ------------------------------------------------------------
 
 
-def fiscal_label(ddate: date, qtrs: int, filings: Iterable[Filing]) -> tuple[int | None, str | None]:
+def fiscal_label(
+    ddate: date, qtrs: int, filings: Iterable[Filing]
+) -> tuple[int | None, str | None]:
     """(fiscal_year, fiscal_period) of a key from the sub row of the filing whose own period is
     that date, else the same quarter one to three years later (comparative columns)."""
     by_period: dict[date, Filing] = {}
@@ -431,7 +457,9 @@ def to_row(
         "fsn_end": cell.ddate.isoformat(),
         "basis": "latest",
         "state": cell.state,
-        "value": str(cell.value) if cell.value is not None else None,
+        "value": format(cell.value.normalize(), "f")
+        if cell.value is not None
+        else None,
         "unit": unit if cell.value is not None else None,
         "source_fact_ids": [],
         "source_value_ids": cell.source_value_ids,
@@ -490,18 +518,13 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
             """,
             (company_id, anchors),
         )
-        anchor_cols = {(f, s, d, q) for f, s, d, q in cur.fetchall() if q in (0, 1, 2, 3, 4)}
-        anchor_cols = {
-            (f, s, d, q)
-            for f, s, d, q in anchor_cols
-            if s in ANCHOR_TAGS and _form_prints(filings[f].form, q)
-        }
+        anchor_cols = face_columns(filings, cur.fetchall())
         tag_ids = sorted({r[2] for r in mapped})
         cur.execute(
             """
-            select id, filing_id, tag_id, ddate, qtrs, uom, value, dcml, dim_id
+            select id, filing_id, tag_id, ddate, qtrs, uom, value, dcml, dim_id, coreg
             from fsn.value
-            where company_id = %s and tag_id = any(%s) and iprx = 0 and coreg = '' and value is not null
+            where company_id = %s and tag_id = any(%s) and iprx = 0 and value is not null
             """,
             (company_id, tag_ids),
         )
@@ -518,9 +541,25 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
     return build(filings, mapped, anchor_cols, values, failed)
 
 
+def face_columns(
+    filings: dict[int, Filing], anchor_prints: Iterable[tuple[int, str, date, int]]
+) -> set[tuple[int, str, date, int]]:
+    """Face columns (filing, stmt, ddate, qtrs): an anchor total is printed there, on a statement
+    the store selects from, with a column length the form prints on its face."""
+    return {
+        (f, s, d, q)
+        for f, s, d, q in anchor_prints
+        if s in ANCHOR_TAGS
+        and q in (0, 1, 2, 3, 4)
+        and _form_prints(filings[f].form, q)
+    }
+
+
 def _form_prints(form: str, qtrs: int) -> bool:
     allowed = FACE_QTRS.get(form)
-    return allowed is None or qtrs in allowed  # transition reports (10-KT, 10-QT): any length
+    return (
+        allowed is None or qtrs in allowed
+    )  # transition reports (10-KT, 10-QT): any length
 
 
 def build(
@@ -536,9 +575,11 @@ def build(
         lines[(filing_id, tag_id)].append((stmt, tag, concept))
     prints: dict[str, dict[int, Print]] = defaultdict(dict)
     members: dict[tuple[int, str, date, int], set[Decimal]] = defaultdict(set)
-    for vid, filing_id, tag_id, ddate, qtrs, uom, value, dcml, dim_id in values:
+    for vid, filing_id, tag_id, ddate, qtrs, uom, value, dcml, dim_id, coreg in values:
         for stmt, tag, concept in lines.get((filing_id, tag_id), []):
-            if dim_id != 0:
+            # a member value: dimensional, or a co-registrant/legal-entity copy (FSN puts
+            # LegalEntityAxis members in coreg, not in dimh: GE's SubsidiariesGecc)
+            if dim_id != 0 or coreg:
                 members[(filing_id, tag, ddate, qtrs)].add(Decimal(value))
                 continue
             col = (filing_id, stmt, ddate, qtrs)

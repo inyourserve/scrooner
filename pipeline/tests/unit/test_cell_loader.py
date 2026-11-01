@@ -313,3 +313,29 @@ def test_defect_overrides_turn_named_cells_into_period_defects():
         and "a, b" in c.reason_text
     )
     cl.to_reason(c)  # passes the contract
+
+
+@pytest.mark.integration
+def test_fsn_store_cell_keeps_source_value_ids_as_its_lineage(conn, tmp_path):
+    # FSN-STORE-DESIGN §6: a cell from fsn_select carries fsn.value ids; with no core.fact for
+    # its tag it still loads valued (not demoted to value_lineage_unresolved)
+    cid, pid, _fact, ccid, _cash_id = _seed(conn)
+    row = _row(
+        company_id=cid,
+        period_start=None,
+        period_end=None,
+        fiscal_year=2024,
+        fiscal_period="Q1",
+        period_type="duration",
+        fsn_end="2024-03-31",
+        tag="NoSuchTag",
+        source_value_ids=[7001, 7002],
+    )
+    rep = cl.load(conn, "capex_da_cash_debt", [_write(tmp_path, [row])], apply=True)
+    assert rep.valued_written == 1 and rep.lineage_defects == 0
+    got = conn.execute(
+        "select value, source_fact_ids, source_value_ids from analytics.canonical_fact "
+        "where company_id = %s and canonical_concept_id = %s and period_id = %s",
+        (cid, ccid, pid),
+    ).fetchone()
+    assert got == (Decimal("100"), [], [7001, 7002])
