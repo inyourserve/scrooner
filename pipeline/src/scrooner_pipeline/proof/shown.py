@@ -11,7 +11,7 @@ structure (proof/fsn.py), so a and b are tied to the same document.
 from __future__ import annotations
 
 from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
 import psycopg
@@ -57,7 +57,8 @@ def _periodic_copies(
     with conn.cursor() as cur:
         cur.execute(
             """
-            select cc.name, f.period_id, fl.accession_number, f.value
+            select cc.name, f.period_id, fl.accession_number, f.value, p.period_type, p.end_date,
+                   fl.period_of_report
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             join core.period p on p.id = f.period_id
@@ -67,7 +68,17 @@ def _periodic_copies(
             """,
             (company_id, list(PERIODIC_FORMS), floor),
         )
-        for name, pid, acc, value in cur.fetchall():
+        for name, pid, acc, value, ptype, end, por in cur.fetchall():
+            # an instant copy counts only where the filing's balance sheet can print it (its own
+            # date or the prior year end): older instants are cash-flow/equity opening balances,
+            # and a filer that misdates one (HD 0000354950-19-000010 files the 2016-01-31 cash
+            # at 2015-01-31) must not make a shown cell "restated copies disagree"
+            if (
+                ptype == "instant"
+                and por is not None
+                and end < por - timedelta(days=375)
+            ):
+                continue
             out[(name, pid)].append((acc, Decimal(value)))
     return out
 
@@ -123,7 +134,11 @@ def load_shown(
             continue
         srcs = [facts[f] for f in (src or []) if f in facts]
         tags = tuple(sorted({t for t, _a, _d, _der, _v in srcs if t}))
-        derived = any(der for _t, _a, _d, der, _v in srcs)
+        # derived: a source fact is derived, or (cell loader cells) a quarter whose value equals
+        # none of its source facts was computed from them (FY - 9M, YTD differences)
+        derived = any(der for _t, _a, _d, der, _v in srcs) or (
+            grain == "Q" and bool(srcs) and all(v != Decimal(value) for *_r, v in srcs)
+        )
         # The proof compares the value against the filing it CAME FROM: among the
         # source facts, prefer those whose value equals the canonical value (a
         # later filing's recast comparative must not be the reference for an

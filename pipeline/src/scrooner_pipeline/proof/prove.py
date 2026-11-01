@@ -138,6 +138,16 @@ EXPECTED: dict[str, tuple[str, tuple[str, ...], bool]] = {
         ),
         False,
     ),
+    "depreciation_and_amortization_resolved": (
+        "CF",
+        (
+            "DepreciationDepletionAndAmortization",
+            "DepreciationAmortizationAndAccretionNet",
+            "DepreciationAndAmortization",
+            "Depreciation",
+        ),
+        False,
+    ),
     "cash_flow_investing_resolved": (
         "CF",
         (
