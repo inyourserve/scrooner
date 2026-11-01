@@ -1,0 +1,36 @@
+"""fsn_store.pilot: sector templates (SECTOR-TEMPLATES-2026-11-01 §1-2) and calendar-key matching."""
+
+from __future__ import annotations
+
+import gzip
+from datetime import date
+
+import pytest
+from scrooner_pipeline.fsn_store import pilot
+
+
+@pytest.mark.unit
+def test_sector_by_sic_and_template_outs():
+    assert [pilot.sector_of(s) for s in ("6021", "6331", "6798", "4911", "7372", None)] == [
+        "bank", "insurer", "equity_reit", "utility", "general", "general",
+    ]
+    bank = pilot.template("bank")
+    assert "gross_profit_resolved" not in bank and "operating_income_resolved" not in bank
+    assert "net_income_resolved" in bank and "total_assets_resolved" in bank
+    assert pilot.template("general") == list(pilot.GENERAL)
+
+
+@pytest.mark.unit
+def test_calendar_keys_and_match_within_ten_days(tmp_path):
+    cal = tmp_path / "cal.csv.gz"
+    with gzip.open(cal, "wt") as fh:
+        fh.write("company_id,cik,fiscal_year,fiscal_period,period_type,period_start,period_end\n")
+        fh.write("7,0000000007,2015,Q1,duration,2015-01-01,2015-04-03\n")
+        fh.write("7,0000000007,2015,Q1,instant,2015-04-03,2015-04-03\n")
+        fh.write("7,0000000007,2014,FY,duration,2014-01-01,2014-12-31\n")  # before the floor
+        fh.write("8,0000000008,2015,FY,duration,2015-01-01,2015-12-31\n")
+    assert pilot.calendar_keys(cal, 7, "revenue_sanity_resolved") == [("Q", date(2015, 4, 3))]
+    assert pilot.calendar_keys(cal, 7, "total_assets_resolved") == [("I", date(2015, 4, 3))]
+    rows = [{"period_grain": "Q", "fsn_end": "2015-03-31", "id": 1}, {"period_grain": "FY", "fsn_end": "2015-03-31", "id": 2}]
+    assert pilot._match(rows, "Q", date(2015, 4, 3))["id"] == 1  # KO-style 52-53 week end
+    assert pilot._match(rows, "Q", date(2015, 6, 30)) is None

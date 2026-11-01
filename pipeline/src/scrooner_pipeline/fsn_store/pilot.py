@@ -1,0 +1,375 @@
+"""Pilot report over the FSN store (design §7 step 5, gate G2; THE-PLAN §0 north star).
+
+For each pilot company: the cells fsn_select produces, the sector template coverage over the
+expected-period calendar (data-team/46-canonical-fact-v2/expected_periods_*.csv.gz), the metric
+library (company × data point × era -> line, tag, label, calc parent, rule, evidence accession),
+the company profile and the design §5 done-criteria counts that the store alone can answer.
+Every template key that is neither valued nor reasoned is a gap with a cause class.
+
+Templates follow data-team/strategy/SECTOR-TEMPLATES-2026-11-01.md §1-2 (a PROPOSAL: SIC proposes,
+the statements decide), restricted to statement data points (metrics recompute from them).
+"""
+
+from __future__ import annotations
+
+import csv
+import gzip
+from collections import Counter, defaultdict
+from datetime import date
+from pathlib import Path
+from typing import Any
+
+import psycopg
+
+from scrooner_pipeline.fsn_store import select as sel
+
+FLOOR = date(2015, 1, 1)  # serving window (invariant I11)
+
+INSTANT = {
+    "total_assets_resolved",
+    "total_liabilities_resolved",
+    "stockholders_equity_resolved",
+    "cash_and_equivalents_resolved",
+    "total_debt_resolved",
+    "current_assets_resolved",
+    "current_liabilities_resolved",
+}
+GENERAL = (
+    "revenue_sanity_resolved",
+    "cost_of_revenue_resolved",
+    "gross_profit_resolved",
+    "operating_income_resolved",
+    "income_before_tax_resolved",
+    "income_tax_expense_resolved",
+    "net_income_resolved",
+    "basic_eps_resolved",
+    "diluted_eps_resolved",
+    "interest_expense_resolved",
+    "total_assets_resolved",
+    "total_liabilities_resolved",
+    "stockholders_equity_resolved",
+    "current_assets_resolved",
+    "current_liabilities_resolved",
+    "cash_and_equivalents_resolved",
+    "total_debt_resolved",
+    "cfo_resolved",
+    "capex_resolved",
+    "depreciation_and_amortization_resolved",
+    "dividends_paid_resolved",
+    "share_buybacks_resolved",
+)
+# sector -> data points OUT of the template (doc §2: OUT by evidence or by definition)
+OUT = {
+    "general": set(),
+    "bank": {
+        "cost_of_revenue_resolved",
+        "gross_profit_resolved",
+        "operating_income_resolved",
+        "current_assets_resolved",
+        "current_liabilities_resolved",
+        "capex_resolved",
+    },
+    "insurer": {
+        "cost_of_revenue_resolved",
+        "gross_profit_resolved",
+        "current_assets_resolved",
+        "current_liabilities_resolved",
+        "capex_resolved",
+    },
+    "equity_reit": {
+        "gross_profit_resolved",
+        "current_assets_resolved",
+        "current_liabilities_resolved",
+        "capex_resolved",
+    },
+    "utility": {"gross_profit_resolved"},
+}
+# IN only for a company that prints the line (doc §2 COND); a COND gap names that
+COND = {
+    "general": {"cost_of_revenue_resolved", "gross_profit_resolved"},
+    "bank": {"depreciation_and_amortization_resolved"},
+    "insurer": {"operating_income_resolved"},
+    "equity_reit": {"cost_of_revenue_resolved"},
+    "utility": {"cost_of_revenue_resolved"},
+}
+# sector rows whose definition is pending (doc §2 REP); never valued from the general line
+DEFINITION_PENDING = {"bank": {"revenue_sanity_resolved"}}
+
+
+def sector_of(sic: str | None) -> str:
+    """doc §1: SIC proposes (the statements decide; the profile shows the SIC used)."""
+    s = int(sic) if sic and sic.isdigit() else 0
+    if s in (6021, 6022):
+        return "bank"
+    if s in (6311, 6321, 6331, 6351, 6361, 6399):
+        return "insurer"
+    if s == 6798:
+        return "equity_reit"
+    if s in (4911, 4922, 4923, 4924, 4931, 4932, 4941):
+        return "utility"
+    return "general"
+
+
+def template(sector: str) -> list[str]:
+    return [c for c in GENERAL if c not in OUT[sector]]
+
+
+def calendar_keys(path: Path, company_id: int, concept: str) -> list[tuple[str, date]]:
+    """(grain, period_end) keys of one data point: FY/Q durations or instants, end >= FLOOR."""
+    want = "instant" if concept in INSTANT else "duration"
+    keys: set[tuple[str, date]] = set()
+    with gzip.open(path, "rt") as fh:
+        for r in csv.DictReader(fh):
+            if int(r["company_id"]) != company_id or r["period_type"] != want:
+                continue
+            end = date.fromisoformat(r["period_end"])
+            if end < FLOOR:
+                continue
+            grain = (
+                "I"
+                if want == "instant"
+                else ("FY" if r["fiscal_period"] == "FY" else "Q")
+            )
+            keys.add((grain, end))
+    return sorted(keys)
+
+
+def _match(rows: list[dict[str, Any]], grain: str, end: date) -> dict[str, Any] | None:
+    best = None
+    for r in rows:
+        if r["period_grain"] != grain:
+            continue
+        gap = abs((date.fromisoformat(r["fsn_end"]) - end).days)
+        if gap <= 10 and (best is None or gap < best[0]):
+            best = (gap, r)
+    return best[1] if best else None
+
+
+def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
+    """Company × data point × era: runs of filings (in period order) whose line for the data
+    point has the same status, tag and label. Evidence = first and last accession of the run."""
+    rows = conn.execute(
+        """
+        select cc.name, lm.status, lm.rule_id, l.stmt, l.report, l.line, t.tag, t.custom, l.plabel,
+               f.accession, f.period, f.form,
+               (select string_agg(distinct p.tag || case when a.weight < 0 then '(-)' else '' end, ',')
+                  from fsn.calc_arc a join fsn.tag p on p.id = a.parent_tag_id
+                 where a.filing_id = f.id and a.child_tag_id = l.tag_id) as calc_parent
+        from fsn.line_map lm
+        join fsn.line l using (filing_id, report, line)
+        join fsn.tag t on t.id = l.tag_id
+        join fsn.filing f on f.id = lm.filing_id
+        left join analytics.canonical_concept cc on cc.id = lm.canonical_concept_id
+        where f.company_id = %s and lm.status in ('mapped', 'combined', 'excluded') and cc.name is not null
+        order by cc.name, f.period, f.accepted, l.report, l.line
+        """,
+        (company_id,),
+    ).fetchall()
+    eras: list[dict[str, Any]] = []
+    for (
+        name,
+        status,
+        rule_id,
+        stmt,
+        report,
+        line,
+        tag,
+        custom,
+        plabel,
+        acc,
+        period,
+        form,
+        parent,
+    ) in rows:
+        last = eras[-1] if eras else None
+        sig = (name, status, tag, plabel)
+        if last and last["_sig"] == sig:
+            last["era_to"] = period
+            last["evidence_last"] = acc
+            last["filings"] += 1
+            continue
+        eras.append(
+            {
+                "_sig": sig,
+                "data_point": name,
+                "status": status,
+                "stmt": stmt,
+                "line": line,
+                "tag": tag,
+                "custom": custom,
+                "plabel": plabel,
+                "calc_parent": parent,
+                "rule_id": rule_id,
+                "era_from": period,
+                "era_to": period,
+                "evidence_first": acc,
+                "evidence_last": acc,
+                "filings": 1,
+            }
+        )
+    for e in eras:
+        e.pop("_sig")
+    return eras
+
+
+def report_company(
+    conn: psycopg.Connection,
+    company_id: int,
+    calendar: Path,
+    rule_concepts: set[str],
+) -> dict[str, Any]:
+    cik, name, sic = conn.execute(
+        "select cik, company_name, sic_code from core.company where id = %s",
+        (company_id,),
+    ).fetchone()
+    sector = sector_of(sic)
+    tmpl = template(sector)
+    data = sel.load_company(conn, company_id)
+    cells: list[dict[str, Any]] = []
+    breaks: dict[str, list[str]] = {}
+    for concept, prints in sorted(data["prints"].items()):
+        unit = "USD/shares" if "eps" in concept else "USD"
+        cs = sel.select_concept(
+            concept,
+            prints,
+            data["filings"],
+            members=data["members"],
+            unit=unit,
+            derive=unit == "USD",
+            residual_guard="revenue" in concept,
+        )
+        cells.extend(sel.to_row(c, company_id, data["filings"], unit=unit) for c in cs)
+        s = sel._Series([p for p in prints if p.uom == unit], data["filings"])
+        if s.breaks:
+            breaks[concept] = sorted(data["filings"][f].accession for f in s.breaks)
+    lib = library(conn, company_id)
+    mapped_points = {
+        e["data_point"]
+        for e in lib
+        if e["status"] in ("mapped", "combined", "excluded")
+    }
+    by_point: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for r in cells:
+        by_point[r["data_point_name"]].append(r)
+
+    keys = valued = reasoned = 0
+    gaps: list[dict[str, Any]] = []
+    per_point: dict[str, dict[str, int]] = {}
+    for concept in tmpl:
+        k: Counter[str] = Counter()
+        for grain, end in calendar_keys(calendar, company_id, concept):
+            keys += 1
+            k["keys"] += 1
+            row = _match(by_point.get(concept, []), grain, end)
+            if row and row["state"] in ("value", "derived"):
+                valued += 1
+                k["valued"] += 1
+                continue
+            if row:
+                reasoned += 1
+                k["reasoned"] += 1
+                continue
+            if concept in DEFINITION_PENDING.get(sector, set()):
+                cause = "sector_row_definition_pending"
+            elif concept not in rule_concepts:
+                cause = "no_concept_rule"
+            elif concept not in mapped_points:
+                cause = "no_mapped_line" + ("_cond" if concept in COND[sector] else "")
+            elif grain == "Q" and concept not in INSTANT:
+                cause = "quarter_not_printed_or_derivable"
+            else:
+                cause = "no_face_print_for_period"
+            k[cause] += 1
+            gaps.append(
+                {
+                    "data_point": concept,
+                    "grain": grain,
+                    "period_end": end.isoformat(),
+                    "cause": cause,
+                }
+            )
+        per_point[concept] = dict(k)
+
+    filings = data["filings"].values()
+    latest = max(filings, key=lambda f: f.accepted) if filings else None
+    combined = conn.execute(
+        """
+        select distinct t.tag, l.plabel from fsn.line_map lm join fsn.line l using (filing_id, report, line)
+        join fsn.tag t on t.id = l.tag_id join fsn.filing f on f.id = lm.filing_id
+        where f.company_id = %s and lm.status = 'combined'
+        """,
+        (company_id,),
+    ).fetchall()
+    coreg = conn.execute(
+        "select distinct unnest(aciks) from fsn.filing where company_id = %s",
+        (company_id,),
+    ).fetchall()
+    fye = conn.execute(
+        "select fye from fsn.filing where company_id = %s order by accepted desc limit 1",
+        (company_id,),
+    ).fetchone()
+    load_row = conn.execute(
+        "select input_sha256, row_counts from fsn.company_load where company_id = %s",
+        (company_id,),
+    ).fetchone()
+    lib_points = [c for c in tmpl if c in mapped_points]
+    states = Counter(r["state"] for r in cells)
+    return {
+        "company_id": company_id,
+        "cik": cik,
+        "name": name,
+        "profile": {
+            "sic": sic,
+            "sector_template": sector,
+            "template_points": len(tmpl),
+            "fye": fye[0] if fye else None,
+            "co_registrants": sorted(c[0] for c in coreg if c[0]),
+            "filings_stored": len(data["filings"]),
+            "latest_filing": latest.accession if latest else None,
+            "restatement_breaks": {k: len(v) for k, v in breaks.items()},
+            "restatement_break_accessions": breaks,
+            "combined_lines": [{"tag": t, "label": lbl} for t, lbl in combined],
+        },
+        "template_coverage": {
+            "keys": keys,
+            "valued": valued,
+            "reasoned": reasoned,
+            "gaps": len(gaps),
+            "valued_pct": round(100 * valued / keys, 1) if keys else None,
+            "valued_or_reasoned_pct": round(100 * (valued + reasoned) / keys, 1)
+            if keys
+            else None,
+            "per_data_point": per_point,
+        },
+        "library": {
+            "template_points": len(tmpl),
+            "with_line": len(lib_points),
+            "completeness_pct": round(100 * len(lib_points) / len(tmpl), 1)
+            if tmpl
+            else None,
+            "missing": [c for c in tmpl if c not in mapped_points],
+            "eras": len(lib),
+        },
+        "done_criteria": {
+            "1_store_loaded": bool(load_row),
+            "1_row_counts": load_row[1] if load_row else None,
+            "3_served_from_passing_columns": sum(
+                1 for r in cells if r["state"] in ("value", "derived")
+            ),
+            "3_blanked_latest_copy_fails_identity": sum(
+                1 for r in cells if r.get("reason_code") == "latest_copy_fails_identity"
+            ),
+            "4_reasonless_template_keys": len(gaps),
+            "5_derived_without_same_basis": sum(
+                1
+                for r in cells
+                if r["state"] == "derived"
+                and (r.get("derivation") or {}).get("policy") != "same_basis"
+            ),
+            "6_proof_disagree": "after the write: cell_proof runs on written cells",
+        },
+        "cell_states": dict(states),
+        "_cells": cells,
+        "_gaps": gaps,
+        "_library": lib,
+    }

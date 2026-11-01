@@ -1,0 +1,139 @@
+name: FSN store pilot (dry run)
+
+# Manual only. Design §7 step 5 / gate G2 for the pilot companies (Dhairya 2026-11-01: MSFT HD AAPL
+# JPM TRV PLD NEE XOM JNJ WMT). DRY RUN: the whole store pipeline (shard -> load -> seed rules -> map ->
+# checks -> select) runs in a scratch Postgres 16 inside this job, built from every migration. Production
+# is only READ (reference rows, before-image, filings list) and the cell write is PLANNED with
+# `scrooner-cells load --plan` (every write rolled back; one analytics.rule_run audit row per family).
+# Output artifact: per-company report (template coverage, library completeness, profile, §5 counts),
+# summary.md, library.csv, gaps.csv, cell files per family, plan reports, before-image.
+on:
+  workflow_dispatch:
+    inputs:
+      code_ref:
+        description: "Git ref holding the store and pilot code"
+        default: "main"
+      ciks:
+        description: "Pilot CIKs (comma separated)"
+        default: "0000789019,0000354950,0000320193,0000019617,0000086312,0001045609,0000753308,0002115436,0000200406,0000104169"
+      plan:
+        description: "Plan the cell write against production (rolled back)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: heavy-db-jobs
+  cancel-in-progress: false
+
+jobs:
+  pilot:
+    name: Pilot dry run
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: scrooner_test
+          POSTGRES_PASSWORD: scrooner_test
+          POSTGRES_DB: scrooner_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U scrooner_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      PROD_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SCRATCH_URL: postgresql://scrooner_test:scrooner_test@localhost:5432/scrooner_test
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      CIKS: ${{ inputs.ciks }}
+      PLAN: ${{ inputs.plan }}
+    steps:
+      - name: Refuse the nightly window (18:00-21:30 UTC)
+        run: |
+          now=$(date -u +%H%M)
+          if [ "$now" -ge 1800 ] && [ "$now" -lt 2130 ]; then echo "::error::inside the nightly window"; exit 1; fi
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Scratch database (Supabase-owned objects, then every migration)
+        run: |
+          set -euo pipefail
+          echo "code: $(git rev-parse HEAD)"
+          psql "$SCRATCH_URL" -q --set ON_ERROR_STOP=1 --file scripts/ci/bootstrap_supabase.sql
+          for m in pipeline/db/migrations/*.sql; do psql "$SCRATCH_URL" -q --set ON_ERROR_STOP=1 --file "$m"; done
+      - name: Copy reference rows from production (read-only)
+        run: |
+          set -euo pipefail
+          list=$(printf "'%s'," $(echo "$CIKS" | tr ',' ' ') | sed 's/,$//')
+          psql "$PROD_DATABASE_URL" -v ON_ERROR_STOP=1 -c "\copy (select name, statement, combination_mode, description from analytics.canonical_concept) to 'concepts.csv' csv"
+          psql "$PROD_DATABASE_URL" -v ON_ERROR_STOP=1 -c "\copy (select id, cik, company_name, fiscal_year_end, sic_code from core.company where cik in ($list)) to 'companies.csv' csv"
+          psql "$SCRATCH_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          create temp table c (name text, statement text, combination_mode text, description text);
+          \copy c from 'concepts.csv' csv
+          insert into analytics.canonical_concept (name, statement, combination_mode, description)
+            select name, statement, combination_mode, description from c on conflict (name) do nothing;
+          create temp table co (id bigint, cik text, company_name text, fiscal_year_end text, sic_code text);
+          \copy co from 'companies.csv' csv
+          insert into core.company (id, cik, company_name, fiscal_year_end, sic_code) overriding system value
+            select id, cik, company_name, fiscal_year_end, sic_code from co;
+          SQL
+          echo "companies: $(wc -l < companies.csv), concepts: $(wc -l < concepts.csv)"
+      - name: Shard the pilot companies from the fsn-notes bucket
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: uv run --project pipeline scrooner-fsn shard --ciks "$CIKS" --out companies --cache .cache/fsn-shard --floor-gb 3
+      - name: Load the store (scratch)
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: |
+          mkdir -p pilot-out
+          uv run --project pipeline scrooner-fsn load --companies companies --report pilot-out/load.json
+      - name: Seed concept rules (scratch)
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: uv run --project pipeline scrooner-fsn seed-rules data-team/47-fsn-store/concept_rules/is.jsonl data-team/47-fsn-store/concept_rules/bs.jsonl data-team/47-fsn-store/concept_rules/cf.jsonl data-team/47-fsn-store/concept_rules/per_share.jsonl --apply
+      - name: Map, check, select, report (scratch)
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out pilot-out
+      - name: Production side, read-only (before-image, filings not in the store)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: uv run --project pipeline scrooner-fsn pilot-prod --pilot-out pilot-out
+      - name: Plan the cell write per family (rolled back)
+        if: inputs.plan
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          set -u
+          for d in pilot-out/cells/*/; do
+            fam=$(basename "$d")
+            if [ "$fam" = "unowned" ]; then echo "skip unowned data points: $(zcat "$d/cells.jsonl.gz" | wc -l) rows"; continue; fi
+            uv run --project pipeline scrooner-cells load "$d/cells.jsonl.gz" --family "$fam" --plan \
+              --report "pilot-out/plan-$fam.json" || echo "::warning::plan $fam failed"
+          done
+      - name: Summary
+        if: always()
+        run: |
+          [ -f pilot-out/summary.md ] && cat pilot-out/summary.md >> "$GITHUB_STEP_SUMMARY"
+          for f in companies/*/manifest.json; do cp "$f" "pilot-out/manifest-$(basename "$(dirname "$f")").json"; done 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fsn-pilot
+          path: pilot-out/
+          if-no-files-found: ignore
