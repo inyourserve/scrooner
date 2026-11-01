@@ -61,25 +61,21 @@ GENERAL = (
 # sector -> data points OUT of the template (doc §2: OUT by evidence or by definition)
 OUT = {
     "general": set(),
+    # approval §8 (Ritwik 2026-11-01): A and C OUTs approved; B (current assets/liabilities for
+    # banks, insurers, REITs) stays IN until the company step removes it per company
     "bank": {
         "cost_of_revenue_resolved",
         "gross_profit_resolved",
         "operating_income_resolved",
-        "current_assets_resolved",
-        "current_liabilities_resolved",
         "capex_resolved",
     },
     "insurer": {
         "cost_of_revenue_resolved",
         "gross_profit_resolved",
-        "current_assets_resolved",
-        "current_liabilities_resolved",
         "capex_resolved",
     },
     "equity_reit": {
         "gross_profit_resolved",
-        "current_assets_resolved",
-        "current_liabilities_resolved",
         "capex_resolved",
     },
     "utility": {"gross_profit_resolved"},
@@ -96,6 +92,11 @@ COND = {
 # Dhairya 2026-11-01: bank revenue = the bank's printed total net revenue line (JPM "Total net
 # revenue" = NII + noninterest revenue), so no sector row is definition-pending in the pilot
 DEFINITION_PENDING: dict[str, set[str]] = {}
+
+
+# not G2-eligible until the BS lane's port gate can fail (Ritwik/Dhairya 2026-11-01): balance-sheet
+# cells (bs.jsonl from b0ac12d) and debt; reported apart, with the bs rule ids serving them
+NOT_G2_ELIGIBLE = INSTANT | {"total_debt_resolved"}
 
 
 def sector_of(sic: str | None) -> str:
@@ -336,6 +337,24 @@ def report_company(
         (company_id,),
     ).fetchone()
     lib_points = [c for c in tmpl if c in mapped_points]
+    valued_points = {
+        r["data_point_name"] for r in cells if r["state"] in ("value", "derived")
+    }
+    bs_rules_serving = sorted(
+        {
+            e["rule_id"]
+            for e in lib
+            if e["status"] == "mapped"
+            and e["rule_id"]
+            and e["rule_id"].startswith("bs.")
+            and e["data_point"] in valued_points
+        }
+    )
+    eligible: Counter[str] = Counter()
+    for concept, counts in per_point.items():
+        tag = "not_g2_eligible" if concept in NOT_G2_ELIGIBLE else "g2_eligible"
+        eligible[tag + "_keys"] += counts.get("keys", 0)
+        eligible[tag + "_valued"] += counts.get("valued", 0)
     states = Counter(r["state"] for r in cells)
     return {
         "company_id": company_id,
@@ -363,6 +382,9 @@ def report_company(
             if keys
             else None,
             "per_data_point": per_point,
+            "g2_eligibility": dict(eligible),
+            "not_g2_eligible_points": sorted(c for c in tmpl if c in NOT_G2_ELIGIBLE),
+            "bs_rule_ids_serving_cells": bs_rules_serving,
         },
         "library": {
             "template_points": len(tmpl),

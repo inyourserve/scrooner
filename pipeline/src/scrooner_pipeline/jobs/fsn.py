@@ -239,14 +239,17 @@ def pilot_cmd(
                 w.writerows(rows)
     (root / "report.json").write_text(json.dumps(reports, indent=1, default=str))
     lines = [
-        "| company | template | keys | valued % | valued or reasoned % | gaps | library % | missing data points (library) |",
-        "|---|---|---|---|---|---|---|---|",
+        "| company | template | keys | valued % | valued or reasoned % | gaps | library % | G2-eligible valued/keys | not G2-eligible (BS, debt) valued/keys | bs rule ids serving cells | missing data points (library) |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in reports:
         t, lib = r["template_coverage"], r["library"]
         lines.append(
             f"| {r['name']} ({r['cik']}) | {r['profile']['sector_template']} | {t['keys']} | {t['valued_pct']} | "
-            f"{t['valued_or_reasoned_pct']} | {t['gaps']} | {lib['completeness_pct']} | {', '.join(x.replace('_resolved', '') for x in lib['missing'])} |"
+            f"{t['valued_or_reasoned_pct']} | {t['gaps']} | {lib['completeness_pct']} | "
+            f"{t['g2_eligibility'].get('g2_eligible_valued', 0)}/{t['g2_eligibility'].get('g2_eligible_keys', 0)} | "
+            f"{t['g2_eligibility'].get('not_g2_eligible_valued', 0)}/{t['g2_eligibility'].get('not_g2_eligible_keys', 0)} | "
+            f"{', '.join(t['bs_rule_ids_serving_cells'])} | {', '.join(x.replace('_resolved', '') for x in lib['missing'])} |"
         )
     causes: dict[str, int] = {}
     for g in gap_rows:
