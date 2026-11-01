@@ -58,7 +58,7 @@ for line in gzip.open(inst_path, "rt"):
         continue
     filings[f["adsh"]] = f
     for d, vals in f["values"].items():
-        if d < "20150101" or not any(t in vals for t in BS_TOTAL):
+        if d < "20140101" or not any(t in vals for t in BS_TOTAL):  # v2 window: since 2014
             continue
         rank = (d == f["period"], not f["form"].endswith("/A"), f["filed"])
         if (f["cik"], d) not in best or rank > best[(f["cik"], d)][0]:
