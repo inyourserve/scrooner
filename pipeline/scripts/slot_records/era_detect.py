@@ -5,6 +5,9 @@ filing by its ordered debt-family face tags, collapses consecutive identical
 fingerprints into eras per company, and emits the era table plus the list of
 BOUNDARY accessions (first filing of each era) whose _cal.xml must be fetched.
 usage: era_detect.py <bs_pre_rows.jsonl> <eras_out.json> <boundaries_out.txt>
+       era_detect.py --company <dir|parent|@list> <eras_out.json> <boundaries_out.txt>
+  --company reads FSN store company directories: the face rows debt_fsn_inputs.py wrote,
+  built per company by fsn_company_bs (instants -> debt_fsn_inputs.face_rows).
 """
 import json
 import re
@@ -31,56 +34,90 @@ def iso(d: str) -> str:
     return f"{d[:4]}-{d[4:6]}-{d[6:]}" if d and len(d) == 8 and d.isdigit() else d
 
 
-by_filing: dict[str, dict] = {}
-lines = defaultdict(list)
-for line in open(sys.argv[1]):
-    r = json.loads(line)
-    by_filing[r["adsh"]] = {
-        "cik": r["cik"], "form": r["form"], "period": iso(r["period"]), "filed": iso(r["filed"]),
-    }
-    if (DEBT_RX.search(r["tag"]) or LABEL_RX.search(r.get("label") or "")) and not EXCLUDE_RX.search(r["tag"]):
-        lines[r["adsh"]].append(
-            (r["report"], r["line"], r["tag"], r["custom"], r.get("label") or "")
-        )
-
-companies = defaultdict(list)
-for adsh, meta in by_filing.items():
-    cands = sorted(lines.get(adsh, []))
-    fp_tags = tuple(t for _, _, t, _, _ in cands)
-    candidates = [
-        {"tag": t, "custom": cu, "label": lb} for _, _, t, cu, lb in cands
-    ]
-    companies[meta["cik"]].append(
-        (meta["filed"], meta["period"], adsh, meta["form"], fp_tags, candidates)
-    )
-
-eras_out = {}
-boundaries = []
-for cik, filings in companies.items():
-    filings.sort()  # by filed date
-    eras = []
-    for filed, period, adsh, form, fp, candidates in filings:
-        if eras and eras[-1]["fp"] == list(fp):
-            eras[-1]["last"] = adsh
-            eras[-1]["period_to"] = period
-            eras[-1]["n"] += 1
-        else:
-            eras.append(
-                {"fp": list(fp), "first": adsh, "last": adsh, "form": form,
-                 "period_from": period, "period_to": period, "filed_from": filed, "n": 1,
-                 "candidates": candidates}
+def collect(pre_rows):
+    """(by_filing, candidate lines) from bs_pre_rows-shaped dicts, in row order."""
+    by_filing: dict[str, dict] = {}
+    lines = defaultdict(list)
+    for r in pre_rows:
+        by_filing[r["adsh"]] = {
+            "cik": r["cik"], "form": r["form"], "period": iso(r["period"]), "filed": iso(r["filed"]),
+        }
+        if (DEBT_RX.search(r["tag"]) or LABEL_RX.search(r.get("label") or "")) and not EXCLUDE_RX.search(r["tag"]):
+            lines[r["adsh"]].append(
+                (r["report"], r["line"], r["tag"], r["custom"], r.get("label") or "")
             )
-            boundaries.append((cik, adsh))
-    eras_out[cik] = eras
-with open(sys.argv[2], "w") as f:
-    json.dump(eras_out, f, indent=1)
-with open(sys.argv[3], "w") as f:
-    for cik, adsh in boundaries:
-        f.write(f"{int(cik)} {adsh}\n")
-print(
-    f"companies {len(eras_out)}  filings {len(by_filing)}  "
-    f"eras {sum(len(v) for v in eras_out.values())}  boundary_cal_fetches {len(boundaries)}"
-)
-for cik in sorted(eras_out):
-    e = eras_out[cik]
-    print(f"  {cik}: {len(e)} eras over {sum(x['n'] for x in e)} filings")
+    return by_filing, lines
+
+
+def fingerprint_filings(by_filing, lines, companies):
+    for adsh, meta in by_filing.items():
+        cands = sorted(lines.get(adsh, []))
+        fp_tags = tuple(t for _, _, t, _, _ in cands)
+        candidates = [
+            {"tag": t, "custom": cu, "label": lb} for _, _, t, cu, lb in cands
+        ]
+        companies[meta["cik"]].append(
+            (meta["filed"], meta["period"], adsh, meta["form"], fp_tags, candidates)
+        )
+    return companies
+
+
+def build_eras(companies):
+    eras_out = {}
+    boundaries = []
+    for cik, filings in companies.items():
+        filings.sort()  # by filed date
+        eras = []
+        for filed, period, adsh, form, fp, candidates in filings:
+            if eras and eras[-1]["fp"] == list(fp):
+                eras[-1]["last"] = adsh
+                eras[-1]["period_to"] = period
+                eras[-1]["n"] += 1
+            else:
+                eras.append(
+                    {"fp": list(fp), "first": adsh, "last": adsh, "form": form,
+                     "period_from": period, "period_to": period, "filed_from": filed, "n": 1,
+                     "candidates": candidates}
+                )
+                boundaries.append((cik, adsh))
+        eras_out[cik] = eras
+    return eras_out, boundaries
+
+
+def write_outputs(eras_out, boundaries, n_filings, eras_path, boundaries_path):
+    with open(eras_path, "w") as f:
+        json.dump(eras_out, f, indent=1)
+    with open(boundaries_path, "w") as f:
+        for cik, adsh in boundaries:
+            f.write(f"{int(cik)} {adsh}\n")
+    print(
+        f"companies {len(eras_out)}  filings {n_filings}  "
+        f"eras {sum(len(v) for v in eras_out.values())}  boundary_cal_fetches {len(boundaries)}"
+    )
+    for cik in sorted(eras_out):
+        e = eras_out[cik]
+        print(f"  {cik}: {len(e)} eras over {sum(x['n'] for x in e)} filings")
+
+
+def main(argv):
+    if argv[1] == "--company":
+        from pathlib import Path
+        sys.path.insert(0, str(Path(__file__).parent))  # -I drops the script directory
+        import fsn_company_bs as fc
+        companies, n = defaultdict(list), 0
+        for d in fc.company_dir_list(argv[2]):
+            # the debt lane's face rows came from the instants extract (debt_fsn_inputs), not FSDS pre
+            by_filing, lines = collect(fc.debt_face_rows(fc.instants(d, debt_only=True)))
+            fingerprint_filings(by_filing, lines, companies)
+            n += len(by_filing)
+        eras_out, boundaries = build_eras(companies)
+        write_outputs(eras_out, boundaries, n, argv[3], argv[4])
+        return
+    by_filing, lines = collect(json.loads(line) for line in open(argv[1]))
+    companies = fingerprint_filings(by_filing, lines, defaultdict(list))
+    eras_out, boundaries = build_eras(companies)
+    write_outputs(eras_out, boundaries, len(by_filing), argv[2], argv[3])
+
+
+if __name__ == "__main__":
+    main(sys.argv)

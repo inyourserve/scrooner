@@ -30,6 +30,7 @@ pre is not in statement order). Then one slot per family:
 Era = consecutive filings (by filed date) with the same (gate, tag, label
 class); written in the slot-record shape assemble_family.py uses.
 usage: is_detect.py <is_fsn_dir> <out_dir> [coregistrant_adsh.txt]
+       is_detect.py --company <company_dir|@list_of_dirs> <out_dir> [coregistrant_adsh.txt]
   writes <out_dir>/is_filing_slots.jsonl and is_<family>_records.jsonl
 """
 import glob
@@ -39,6 +40,8 @@ import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))  # fsn_company / fsn_is_pre under -I
 
 REV_TOTAL = {
     "Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax",
@@ -381,14 +384,48 @@ def gross_identity(rev, cost, gp):
     gp["gate"], gp["tie"] = "G2_gross_identity", t
 
 
+FAMS = ("revenue", "operating_income", "net_income", "cost_of_revenue", "gross_profit")
+
+
+def detect_filing(adsh, rs, full, coregistrant=False):
+    """The five slots of one filing from its IS/CI face rows `rs` (fsn_is_pre
+    row shape) and its calc arcs `full` ({parent: {child: weight}})."""
+    rep, face = primary_face(rs, coregistrant)
+    if not face:
+        return []
+    m = rs[0]
+    face_tags = {r["tag"] for r in face}
+    shape = shape_of(face_tags)
+    a = {pp: set(kids) & face_tags for pp, kids in full.items()}
+    base = {"adsh": adsh, "cik": m["cik"], "form": m["form"], "period": iso(m["period"]),
+            "filed": iso(m["filed"]), "fy": m.get("fy"), "fp": m.get("fp"), "report": rep,
+            "shape": shape, "has_cal": bool(full),
+            # a dimensioned face (Snap-on 2019: ProductOrService axis, the undimensioned
+            # Revenues fact is the total of the member columns): own Verifier stratum
+            "face_axis": any(r["tag"].endswith("Axis") for r in face)}
+    rev = revenue_slot(face, a, shape, face_tags, full)
+    cost = cost_slot(face, a, shape, full)
+    gp = gross_profit_slot(face, shape)
+    gross_identity(rev, cost, gp)
+    return [{**base, "family": fam, **slot} for fam, slot in
+            (("revenue", rev), ("operating_income", operating_slot(face, shape)),
+             ("net_income", net_income_slot(face, rs)), ("cost_of_revenue", cost), ("gross_profit", gp))]
+
+
+def detect_filings(rows, arcs, coreg):
+    """rows {adsh: [face rows]}, arcs {adsh: {parent: {child: w}}} -> slots."""
+    out = []
+    for adsh, rs in rows.items():
+        out += detect_filing(adsh, rs, arcs.get(adsh, {}), adsh in coreg)
+    return out
+
+
 def main(src, out_dir, coreg_path=None):
     coreg = set(open(coreg_path).read().split()) if coreg_path else set()
     # one FSN period at a time: a filing's pre and cal rows live in the period that
     # carries its submission, so memory stays at one period (the all-at-once load
     # was paged out under machine-wide swap pressure)
-    out = Path(out_dir)
     slots = []
-    gates = {f: Counter() for f in ("revenue", "operating_income", "net_income", "cost_of_revenue", "gross_profit")}
     for p in sorted(glob.glob(f"{src}/*_is_pre.jsonl.gz")):
         period = Path(p).name.split("_")[0]
         rows = defaultdict(list)
@@ -400,31 +437,29 @@ def main(src, out_dir, coreg_path=None):
             a = json.loads(line)
             if a["adsh"] in rows:
                 arcs[a["adsh"]][a["p"]][a["c"]] = a["w"]
-        for adsh, rs in rows.items():
-            rep, face = primary_face(rs, adsh in coreg)
-            if not face:
-                continue
-            m = rs[0]
-            face_tags = {r["tag"] for r in face}
-            shape = shape_of(face_tags)
-            full = arcs.get(adsh, {})
-            a = {pp: set(kids) & face_tags for pp, kids in full.items()}
-            base = {"adsh": adsh, "cik": m["cik"], "form": m["form"], "period": iso(m["period"]),
-                    "filed": iso(m["filed"]), "fy": m.get("fy"), "fp": m.get("fp"), "report": rep,
-                    "shape": shape, "has_cal": bool(arcs.get(adsh)),
-                    # a dimensioned face (Snap-on 2019: ProductOrService axis, the undimensioned
-                    # Revenues fact is the total of the member columns): own Verifier stratum
-                    "face_axis": any(r["tag"].endswith("Axis") for r in face)}
-            rev = revenue_slot(face, a, shape, face_tags, full)
-            cost = cost_slot(face, a, shape, full)
-            gp = gross_profit_slot(face, shape)
-            gross_identity(rev, cost, gp)
-            for fam, slot in (("revenue", rev),
-                              ("operating_income", operating_slot(face, shape)),
-                              ("net_income", net_income_slot(face, rs)),
-                              ("cost_of_revenue", cost), ("gross_profit", gp)):
-                gates[fam][slot["gate"]] += 1
-                slots.append({**base, "family": fam, **slot})
+        slots += detect_filings(rows, arcs, coreg)
+    write_outputs(slots, out_dir)
+
+
+def main_company(company_dirs, out_dir, coreg_path=None):
+    """Company-wise FSN store input (FSN-STORE-DESIGN 2026-11-01 section 2): one
+    directory per company (fsn_company.read_is_inputs). Co-registrant filings come
+    from the coregistrant file when given, else from FSN sub.aciks."""
+    from fsn_company import company_dir_list, read_is_inputs
+    coreg = set(open(coreg_path).read().split()) if coreg_path else None
+    slots = []
+    for d in company_dir_list(company_dirs):
+        rows, arcs, aciks = read_is_inputs(d)
+        slots += detect_filings(rows, arcs, coreg if coreg is not None else aciks)
+    write_outputs(slots, out_dir)
+
+
+def write_outputs(slots, out_dir):
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    gates = {f: Counter() for f in FAMS}
+    for s in slots:
+        gates[s["family"]][s["gate"]] += 1
     with open(out / "is_filing_slots.jsonl", "w") as f:
         for s in slots:
             f.write(json.dumps(s) + "\n")
@@ -462,4 +497,7 @@ def main(src, out_dir, coreg_path=None):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    if sys.argv[1:2] == ["--company"]:
+        main_company(*sys.argv[2:5])
+    else:
+        main(*sys.argv[1:4])

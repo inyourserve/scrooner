@@ -1,0 +1,130 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0000797468-16-000023	2	20	BS	0	AccountsPayableCurrent	us-gaap/2015	terseLabel	Accounts payable	0
+0000797468-16-000023	2	5	BS	0	AccountsReceivableNetCurrent	us-gaap/2015	terseLabel	Trade receivables, net	0
+0000797468-16-000023	2	21	BS	0	AccruedLiabilitiesCurrent	us-gaap/2015	terseLabel	Accrued liabilities	0
+0000797468-16-000023	3	1	BS	1	AccumulatedDepreciationDepletionAndAmortizationPropertyPlantAndEquipment	us-gaap/2015	negatedLabel	Accumulated depreciation, depletion and amortization	1
+0000797468-16-000023	2	16	BS	0	Assets	us-gaap/2015	totalLabel	TOTAL ASSETS	0
+0000797468-16-000023	2	1	BS	0	AssetsAbstract	us-gaap/2015	terseLabel	ASSETS	0
+0000797468-16-000023	2	9	BS	0	AssetsCurrent	us-gaap/2015	totalLabel	Total current assets	0
+0000797468-16-000023	2	2	BS	0	AssetsCurrentAbstract	us-gaap/2015	terseLabel	CURRENT ASSETS	0
+0000797468-16-000023	7	33	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	periodStartLabel	Cash and cash equivalents-beginning of period	0
+0000797468-16-000023	7	34	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	periodEndLabel	Cash and cash equivalents-end of period	0
+0000797468-16-000023	2	3	BS	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	terseLabel	Cash and cash equivalents	0
+0000797468-16-000023	7	32	CF	0	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	totalLabel	Decrease in cash and cash equivalents	0
+0000797468-16-000023	4	30	IS	0	CommonStockDividendsPerShareDeclared	us-gaap/2015	terseLabel	DIVIDENDS PER COMMON SHARE (in dollars per share)	0
+0000797468-16-000023	3	2	BS	1	CommonStockSharesOutstanding	us-gaap/2015	terseLabel	Common stock, outstanding shares	0
+0000797468-16-000023	2	30	BS	0	CommonStockValue	us-gaap/2015	terseLabel	Common stock, at par value (891,624,588 shares at March 31, 2016 and 891,360,091 shares issued at December 31, 2015)	0
+0000797468-16-000023	4	10	IS	0	DepreciationDepletionAndAmortization	us-gaap/2015	label	Depreciation, depletion and amortization	0
+0000797468-16-000023	7	5	CF	0	DepreciationDepletionAndAmortization	us-gaap/2015	terseLabel	Depreciation, depletion and amortization of assets	0
+0000797468-16-000023	4	15	IS	0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments	us-gaap/2015	totalLabel	Loss before income taxes and other items	0
+0000797468-16-000023	4	16	IS	0	IncomeTaxExpenseBenefit	us-gaap/2015	negatedLabel	Benefit (provision) for domestic and foreign income taxes	1
+0000797468-16-000023	2	37	BS	0	LiabilitiesAndStockholdersEquity	us-gaap/2015	totalLabel	TOTAL LIABILITIES AND STOCKHOLDERS' EQUITY	0
+0000797468-16-000023	2	17	BS	0	LiabilitiesAndStockholdersEquityAbstract	us-gaap/2015	terseLabel	LIABILITIES AND STOCKHOLDERS' EQUITY	0
+0000797468-16-000023	2	23	BS	0	LiabilitiesCurrent	us-gaap/2015	totalLabel	Total current liabilities	0
+0000797468-16-000023	2	18	BS	0	LiabilitiesCurrentAbstract	us-gaap/2015	terseLabel	CURRENT LIABILITIES	0
+0000797468-16-000023	7	30	CF	0	NetCashProvidedByUsedInFinancingActivitiesContinuingOperations	us-gaap/2015	verboseLabel	Financing cash flow from continuing operations	0
+0000797468-16-000023	7	21	CF	0	NetCashProvidedByUsedInInvestingActivitiesContinuingOperations	us-gaap/2015	totalLabel	Investing cash flow from continuing operations	0
+0000797468-16-000023	7	12	CF	0	NetCashProvidedByUsedInOperatingActivitiesContinuingOperations	us-gaap/2015	totalLabel	Operating cash flow from continuing operations	0
+0000797468-16-000023	4	21	IS	0	NetIncomeLoss	us-gaap/2015	totalLabel	NET INCOME (LOSS)	0
+0000797468-16-000023	5	1	CI	0	NetIncomeLoss	us-gaap/2015	terseLabel	Net income (loss)	0
+0000797468-16-000023	7	16	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	negatedLabel	Capital expenditures	1
+0000797468-16-000023	2	14	BS	0	PropertyPlantAndEquipmentNet	us-gaap/2015	terseLabel	Property, plant and equipment, net of accumulated depreciation, depletion and amortization of $40,138 at March 31, 2016 and $39,419 at December 31, 2015	0
+0000797468-16-000023	2	33	BS	0	RetainedEarningsAccumulatedDeficit	us-gaap/2015	terseLabel	Retained earnings	0
+0000797468-16-000023	4	5	IS	0	Revenues	us-gaap/2015	totalLabel	TOTAL REVENUES AND OTHER INCOME	0
+0000797468-16-000023	2	35	BS	0	StockholdersEquity	us-gaap/2015	totalLabel	Total equity attributable to common stock	0
+0000797468-16-000023	4	4	IS	0	GainLossOnSaleOfOilAndGasProperty	us-gaap/2015	verboseLabel	Gain (loss) on sale of assets, net	0
+0000797468-16-000023	7	8	CF	0	GainLossOnSaleOfOilAndGasProperty	us-gaap/2015	negatedLabel	Gain on sale of assets, net	1
+0000797468-16-000023	2	34	BS	0	AccumulatedOtherComprehensiveIncomeLossNetOfTax	us-gaap/2015	terseLabel	Accumulated other comprehensive loss	0
+0000797468-16-000023	2	32	BS	0	AdditionalPaidInCapitalCommonStock	us-gaap/2015	terseLabel	Additional paid-in capital	0
+0000797468-16-000023	7	3	CF	0	AdjustmentsNoncashItemsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2015	terseLabel	Adjustments to reconcile net income (loss) to net cash provided by operating activities:	0
+0000797468-16-000023	5	9	CI	0	ComprehensiveIncomeNetOfTax	us-gaap/2015	totalLabel	Comprehensive income (loss)	0
+0000797468-16-000023	4	25	IS	0	EarningsPerShareBasic	us-gaap/2015	totalLabel	BASIC EARNINGS (LOSS) PER COMMON SHARE (in dollars per share)	0
+0000797468-16-000023	4	29	IS	0	EarningsPerShareDiluted	us-gaap/2015	totalLabel	DILUTED EARNINGS (LOSS) PER COMMON SHARE (in dollars per share)	0
+0000797468-16-000023	2	6	BS	0	InventoryNet	us-gaap/2015	terseLabel	Inventories	0
+0000797468-16-000023	7	31	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	totalLabel	Net cash provided (used) by financing activities	0
+0000797468-16-000023	7	23	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2015	terseLabel	CASH FLOW FROM FINANCING ACTIVITIES	0
+0000797468-16-000023	7	22	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	totalLabel	Net cash used by investing activities	0
+0000797468-16-000023	7	15	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2015	terseLabel	CASH FLOW FROM INVESTING ACTIVITIES	0
+0000797468-16-000023	7	14	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	totalLabel	Net cash provided by operating activities	0
+0000797468-16-000023	7	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2015	terseLabel	CASH FLOW FROM OPERATING ACTIVITIES	0
+0000797468-16-000023	2	8	BS	0	OtherAssetsCurrent	us-gaap/2015	terseLabel	Other current assets	0
+0000797468-16-000023	5	8	CI	0	OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent	us-gaap/2015	totalLabel	Other comprehensive income, net of tax	0
+0000797468-16-000023	5	7	CI	0	OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIOnDerivativesNetOfTax	us-gaap/2015	negatedLabel	Reclassification to income of realized loss on derivatives	1
+0000797468-16-000023	6	3	CI	1	OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIOnDerivativesTax	us-gaap/2015	terseLabel	Reclassification to income of realized loss on derivatives, tax	0
+0000797468-16-000023	5	5	CI	0	OtherComprehensiveIncomeUnrealizedGainLossOnDerivativesArisingDuringPeriodNetOfTax	us-gaap/2015	terseLabel	Unrealized losses on derivatives	0
+0000797468-16-000023	6	1	CI	1	OtherComprehensiveIncomeUnrealizedGainLossOnDerivativesArisingDuringPeriodTax	us-gaap/2015	terseLabel	Unrealized losses on derivatives, tax	0
+0000797468-16-000023	2	27	BS	0	OtherLiabilitiesNoncurrent	us-gaap/2015	terseLabel	Other	0
+0000797468-16-000023	7	27	CF	0	ProceedsFromIssuanceOfCommonStock	us-gaap/2015	terseLabel	Proceeds from issuance of common stock	0
+0000797468-16-000023	7	25	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	terseLabel	Proceeds from long-term debt	0
+0000797468-16-000023	4	2	IS	0	SalesRevenueNet	us-gaap/2015	terseLabel	Net sales	0
+0000797468-16-000023	3	3	BS	1	TreasuryStockShares	us-gaap/2015	terseLabel	Treasury stock, shares	0
+0000797468-16-000023	2	31	BS	0	TreasuryStockValue	us-gaap/2015	terseLabel	Treasury stock (127,784,706 shares at March 31, 2016 and 127,681,335 shares at December 31, 2015)	0
+0000797468-16-000023	2	24	BS	0	LongTermDebtNoncurrent	us-gaap/2015	terseLabel	LONG-TERM DEBT, NET	0
+0000797468-16-000023	4	8	IS	0	OperatingExpenses	us-gaap/2015	terseLabel	Selling, general and administrative and other operating expenses	0
+0000797468-16-000023	7	20	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	negatedLabel	Equity investments and other, net	1
+0000797468-16-000023	7	2	CF	0	ProfitLoss	us-gaap/2015	terseLabel	Net Income (loss)	0
+0000797468-16-000023	4	20	IS	0	ProfitLoss	us-gaap/2015	totalLabel	Net income (loss)	0
+0000797468-16-000023	7	26	CF	0	RepaymentsOfLongTermDebt	us-gaap/2015	negatedLabel	Payment of long-term debt	1
+0000797468-16-000023	2	36	BS	0	StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest	us-gaap/2015	totalLabel	Total stockholders' equity	0
+0000797468-16-000023	7	11	CF	0	IncreaseDecreaseInOtherOperatingCapitalNet	us-gaap/2015	negatedLabel	Other operating, net	1
+0000797468-16-000023	7	29	CF	0	PaymentsOfDividendsCommonStock	us-gaap/2015	negatedLabel	Cash dividends paid	1
+0000797468-16-000023	2	7	BS	0	AssetsOfDisposalGroupIncludingDiscontinuedOperationCurrent	us-gaap/2015	terseLabel	Assets held for sale	0
+0000797468-16-000023	7	13	CF	0	CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations	us-gaap/2015	terseLabel	Operating cash flow from discontinued operations	0
+0000797468-16-000023	7	6	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	terseLabel	Deferred income tax provision (benefit)	0
+0000797468-16-000023	2	26	BS	0	DeferredTaxLiabilitiesNoncurrent	us-gaap/2015	terseLabel	Deferred domestic and foreign income taxes	0
+0000797468-16-000023	4	18	IS	0	IncomeLossFromContinuingOperationsIncludingPortionAttributableToNoncontrollingInterest	us-gaap/2015	totalLabel	Loss from continuing operations	0
+0000797468-16-000023	4	23	IS	0	IncomeLossFromContinuingOperationsPerBasicShare	us-gaap/2015	terseLabel	Loss from continuing operations (in dollars per share)	0
+0000797468-16-000023	4	27	IS	0	IncomeLossFromContinuingOperationsPerDilutedShare	us-gaap/2015	terseLabel	Income (loss) from continuing operations (in dollars per share)	0
+0000797468-16-000023	4	19	IS	0	IncomeLossFromDiscontinuedOperationsNetOfTax	us-gaap/2015	verboseLabel	Discontinued operations (net)	0
+0000797468-16-000023	7	4	CF	0	IncomeLossFromDiscontinuedOperationsNetOfTax	us-gaap/2015	negatedLabel	Income from discontinued operations	1
+0000797468-16-000023	4	17	IS	0	IncomeLossFromEquityMethodInvestments	us-gaap/2015	terseLabel	Income from equity investments	0
+0000797468-16-000023	2	19	BS	0	LongTermDebtCurrent	us-gaap/2015	verboseLabel	Current maturities of long-term debt	0
+0000797468-16-000023	4	9	IS	0	TaxesExcludingIncomeAndExciseTaxes	us-gaap/2015	terseLabel	Taxes other than on income	0
+0000797468-16-000023	7	7	CF	0	OtherNoncashExpense	us-gaap/2015	terseLabel	Other noncash charges to income	0
+0000797468-16-000023	7	28	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	negatedLabel	Purchases of treasury stock	1
+0000797468-16-000023	4	22	IS	0	EarningsPerShareBasicAbstract	us-gaap/2015	terseLabel	BASIC EARNINGS (LOSS) PER COMMON SHARE	0
+0000797468-16-000023	4	26	IS	0	EarningsPerShareDilutedAbstract	us-gaap/2015	terseLabel	DILUTED EARNINGS (LOSS) PER COMMON SHARE	0
+0000797468-16-000023	4	24	IS	0	IncomeLossFromDiscontinuedOperationsNetOfTaxPerBasicShare	us-gaap/2015	terseLabel	Discontinued operations, net (in dollars per share)	0
+0000797468-16-000023	4	28	IS	0	IncomeLossFromDiscontinuedOperationsNetOfTaxPerDilutedShare	us-gaap/2015	terseLabel	Discontinued operations, net (in dollars per share)	0
+0000797468-16-000023	2	4	BS	0	RestrictedCashAndCashEquivalents	us-gaap/2015	verboseLabel	Restricted cash	0
+0000797468-16-000023	4	13	IS	0	InterestAndDebtExpense	us-gaap/2015	terseLabel	Interest and debt expense, net	0
+0000797468-16-000023	7	10	CF	0	IncreaseDecreaseInOperatingCapital	us-gaap/2015	negatedLabel	Changes in operating assets and liabilities, net	1
+0000797468-16-000023	2	13	BS	0	LongTermInvestments	us-gaap/2015	positiveLabel	Total investments	0
+0000797468-16-000023	6	2	CI	1	OtherComprehensiveIncomeDefinedBenefitPlansNetUnamortizedGainLossArisingDuringPeriodTax	us-gaap/2015	terseLabel	Pension and postretirement gains, tax	0
+0000797468-16-000023	5	2	CI	0	OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParentAbstract	us-gaap/2015	verboseLabel	Other comprehensive (loss) income items:	0
+0000797468-16-000023	2	29	BS	0	StockholdersEquityIncludingPortionAttributableToNoncontrollingInterestAbstract	us-gaap/2015	terseLabel	STOCKHOLDERS' EQUITY	0
+0000797468-16-000023	5	3	CI	0	OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationGainLossArisingDuringPeriodNetOfTax	us-gaap/2015	terseLabel	Foreign currency translation gains (losses)	0
+0000797468-16-000023	7	9	CF	0	AssetImpairmentCharges	us-gaap/2015	label	Asset impairments	0
+0000797468-16-000023	5	6	CI	0	OtherComprehensiveIncomeDefinedBenefitPlansNetUnamortizedGainLossArisingDuringPeriodNetOfTax	us-gaap/2015	terseLabel	Pension and postretirement gain	0
+0000797468-16-000023	2	11	BS	0	EquityMethodInvestments	us-gaap/2015	terseLabel	Investments in unconsolidated entities	0
+0000797468-16-000023	2	28	BS	0	DeferredCreditsAndOtherLiabilitiesNoncurrent	us-gaap/2015	totalLabel	Total deferred credits and other liabilities	0
+0000797468-16-000023	2	22	BS	0	LiabilitiesOfDisposalGroupIncludingDiscontinuedOperation	us-gaap/2015	terseLabel	Liabilities of assets held for sale	0
+0000797468-16-000023	1	12	CP	0	DocumentFiscalYearFocus	dei/2014	label	Document Fiscal Year Focus	0
+0000797468-16-000023	1	4	CP	0	DocumentPeriodEndDate	dei/2014	label	Document Period End Date	0
+0000797468-16-000023	1	6	CP	0	CurrentFiscalYearEndDate	dei/2014	label	Current Fiscal Year End Date	0
+0000797468-16-000023	7	24	CF	0	IncreaseDecreaseInRestrictedCashAndInvestments	us-gaap/2015	label	Change in restricted cash	0
+0000797468-16-000023	2	25	BS	0	DeferredCreditsAndOtherLiabilitiesAbstract	us-gaap/2015	terseLabel	DEFERRED CREDITS AND OTHER LIABILITIES	0
+0000797468-16-000023	4	12	IS	0	ExplorationExpense	us-gaap/2015	terseLabel	Exploration expense	0
+0000797468-16-000023	1	5	CP	0	AmendmentFlag	dei/2014	label	Amendment Flag	0
+0000797468-16-000023	5	4	CI	0	AvailableForSaleSecuritiesGrossUnrealizedLoss	us-gaap/2015	negatedLabel	Unrealized gain on available for sale investment	1
+0000797468-16-000023	2	12	BS	0	AvailableForSaleSecuritiesNoncurrent	us-gaap/2015	verboseLabel	Available for sale investment	0
+0000797468-16-000023	4	7	IS	0	CostOfGoodsSoldExcludingDepreciationDepletionAndAmortization	us-gaap/2015	terseLabel	Cost of sales (excludes depreciation, depletion, and amortization)	0
+0000797468-16-000023	1	13	CP	0	DocumentFiscalPeriodFocus	dei/2014	label	Document Fiscal Period Focus	0
+0000797468-16-000023	1	3	CP	0	DocumentType	dei/2014	label	Document Type	0
+0000797468-16-000023	1	2	CP	0	EntityCentralIndexKey	dei/2014	label	Entity Central Index Key	0
+0000797468-16-000023	1	11	CP	0	EntityCommonStockSharesOutstanding	dei/2014	label	Entity Common Stock, Shares Outstanding	0
+0000797468-16-000023	1	9	CP	0	EntityCurrentReportingStatus	dei/2014	label	Entity Current Reporting Status	0
+0000797468-16-000023	1	10	CP	0	EntityFilerCategory	dei/2014	label	Entity Filer Category	0
+0000797468-16-000023	1	1	CP	0	EntityRegistrantName	dei/2014	label	Entity Registrant Name	0
+0000797468-16-000023	1	8	CP	0	EntityVoluntaryFilers	dei/2014	label	Entity Voluntary Filers	0
+0000797468-16-000023	1	7	CP	0	EntityWellKnownSeasonedIssuer	dei/2014	label	Entity Well-known Seasoned Issuer	0
+0000797468-16-000023	2	10	BS	0	InvestmentsInAffiliatesSubsidiariesAssociatesAndJointVenturesAbstract	us-gaap/2015	label	Investments	0
+0000797468-16-000023	4	6	IS	0	CostsAndOtherDeductionsAbstract	0000797468-16-000023	terseLabel	COSTS AND OTHER DEDUCTIONS	0
+0000797468-16-000023	4	1	IS	0	RevenuesAndOtherIncomeAbstract	0000797468-16-000023	terseLabel	REVENUES AND OTHER INCOME	0
+0000797468-16-000023	4	14	IS	0	CostsAndOtherDeductions	0000797468-16-000023	totalLabel	TOTAL COSTS AND OTHER DEDUCTIONS	0
+0000797468-16-000023	7	17	CF	0	IncreaseDecreaseInCapitalAccrual	0000797468-16-000023	verboseLabel	Change in capital accrual	0
+0000797468-16-000023	4	3	IS	0	InterestDividendsAndOtherIncome	0000797468-16-000023	terseLabel	Interest, dividends and other income	0
+0000797468-16-000023	2	15	BS	0	LongTermReceivablesAndOtherNoncurrentAssetsNet	0000797468-16-000023	terseLabel	LONG-TERM RECEIVABLES AND OTHER ASSETS, NET	0
+0000797468-16-000023	4	11	IS	0	PretaxAssetImpairmentAndRelatedItems	0000797468-16-000023	terseLabel	Asset impairments and related items	0
+0000797468-16-000023	7	18	CF	0	ProceedsFromDivestitureOfBusinessesAndSaleOfPropertyPlantAndEquipmentNet	0000797468-16-000023	terseLabel	Proceeds from sale of assets and equity investments, net	0
+0000797468-16-000023	7	19	CF	0	PurchaseOfAssetsNet	0000797468-16-000023	negatedLabel	Purchase of assets, net	1

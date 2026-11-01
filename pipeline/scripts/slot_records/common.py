@@ -51,7 +51,7 @@ def load_cal(cal_dir, adsh):
 _FSN_CAL_CACHE = {}
 
 
-def fsn_cal_arcs(cal_tsv_path, adsh, pre_tsv_path=None):
+def fsn_cal_arcs(cal_tsv_path, adsh, pre_tsv_path=None, face_tags=None):
     """Arcs for one filing from the FSN data set's cal.tsv, in the same shape
     as load_cal: {(role, parent): [(child, weight, child_is_custom)]}. cal.tsv
     has no role URIs, only a group number, so the STATEMENT of a group is
@@ -62,7 +62,12 @@ def fsn_cal_arcs(cal_tsv_path, adsh, pre_tsv_path=None):
       CF = the group with NetCashProvidedByUsedInOperatingActivities as parent;
       other groups keep 'grp<n>' (treated as note roles by the statement
       filters). 'negative' is the weight (1 / -1); custom = version column not
-      us-gaap/srt/dei/ifrs. pre_tsv_path is accepted for a future refinement."""
+      us-gaap/srt/dei/ifrs. pre_tsv_path is accepted for a future refinement.
+    face_tags (opt-in, the BS port 2026-11-01): the tags printed on the filing's
+    balance-sheet face. Among the BS candidates the group with the most arcs whose
+    parent AND child are both face lines wins (then size): OXY 0000797468-16-000023
+    has a larger L&E group (grp2, cash-flow arcs inside) beside its face group (grp6).
+    Without face_tags the choice is the unchanged largest-group rule."""
     import csv
     import io
     import subprocess
@@ -84,11 +89,12 @@ def fsn_cal_arcs(cal_tsv_path, adsh, pre_tsv_path=None):
         parents = {p for p, _c, _w, _cu in arcs}
         if parents & {"LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital"} or (
                 "Assets" in parents and parents & {"Liabilities", "LiabilitiesCurrent", "StockholdersEquity"}):
-            bs_candidates.append((len(arcs), g))
+            on_face = sum(1 for p, c, _w, _cu in arcs if p in face_tags and c in face_tags) if face_tags else 0
+            bs_candidates.append((on_face, len(arcs), g))
         if "NetCashProvidedByUsedInOperatingActivities" in parents or "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations" in parents:
             if cf_group is None or len(arcs) > len(groups[cf_group]):
                 cf_group = g
-    bs_group = max(bs_candidates)[1] if bs_candidates else None
+    bs_group = max(bs_candidates)[-1] if bs_candidates else None
     out = defaultdict(list)
     for g, arcs in groups.items():
         role = "BS#grp" + g if g == bs_group else ("CashFlow#grp" + g if g == cf_group else "grp" + g)
