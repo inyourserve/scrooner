@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -508,3 +509,27 @@ def test_load_company_is_atomic_idempotent_and_keeps_every_print(conn, tmp_path)
         == 1
     )
     conn.rollback()
+
+
+@pytest.mark.integration
+def test_seed_apply_writes_every_rule_including_demote_patterns(conn, tmp_path):
+    # the v1.1 tag_pattern column was in the insert but not in the parameters (pilot run 41311864687)
+    conn.execute(
+        "insert into analytics.canonical_concept (name, statement, combination_mode) "
+        "values ('revenue_sanity_resolved', 'income_statement', 'first_match') on conflict (name) do nothing"
+    )
+    conn.commit()
+    base = {"canonical_concept": "revenue_sanity_resolved", "stmt": "IS", "position": None, "components": None,
+            "priority": 10, "era_from": None, "era_to": None, "rule_id": "is.revenue_total@1",
+            "source_commit": "abc1234", "evidence": "test"}
+    rows = [
+        {**base, "match_kind": "std_tag", "tag": "us-gaap:Revenues", "tag_pattern": None},
+        {**base, "match_kind": "demote", "tag": None, "tag_pattern": "^[0-9-]+:.*Interest.*$", "priority": 20,
+         "rule_id": "is.revenue_demote@1"},
+    ]
+    p = tmp_path / "is.jsonl"
+    p.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    res = rules.seed(conn, p, apply=True)
+    assert res["written"] == 2 and res["errors"] == []
+    got = conn.execute("select match_kind, tag, tag_pattern from fsn.concept_rule order by priority").fetchall()
+    assert got == [("std_tag", "us-gaap:Revenues", None), ("demote", None, "^[0-9-]+:.*Interest.*$")]
