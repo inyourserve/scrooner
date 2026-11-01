@@ -65,7 +65,7 @@ Rule order:
 4. **Era boundaries**: from `era_detect.py`, unchanged.
 
 **Regression gate**: with identical inputs, the ported detectors reproduce the lanes' last emitted cells exactly:
-- is_core 281,761 rows, sha 77f5846a
+- is_core 281,881 rows, sha256 2f98b025 (gz 77979019), emitter b9f3c4f (vintage guard on derived quarters; the file loaded 2026-11-01, run 41297432544). It replaces the 281,761-row 77f5846a build.
 - capex_da_cash_debt 155,257 rows, sha 6f53c945
 - CFO run 7: 37,121 publishable cells
 
