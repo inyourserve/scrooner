@@ -24,8 +24,10 @@ on:
 permissions:
   contents: read
 
+# Its own queue: on production it holds at most 2 connections (reads and a rolled-back plan), so it
+# need not wait behind a heavy job; the store work runs in the job's scratch database.
 concurrency:
-  group: heavy-db-jobs
+  group: fsn-pilot
   cancel-in-progress: false
 
 jobs:
