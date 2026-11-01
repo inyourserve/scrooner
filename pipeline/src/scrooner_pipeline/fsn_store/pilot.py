@@ -236,6 +236,7 @@ def report_company(
     company_id: int,
     calendar: Path,
     rule_concepts: set[str],
+    period_rules: Path | None = None,
 ) -> dict[str, Any]:
     cik, name, sic = conn.execute(
         "select cik, company_name, sic_code from core.company where id = %s",
@@ -256,6 +257,12 @@ def report_company(
             unit=sel.FSN_UOM.get(unit, unit),
             derive=unit == "USD",
             residual_guard="revenue" in concept,
+        )
+        cs = sel.apply_period_rules(
+            concept,
+            cs,
+            sel.load_period_rules(period_rules, company_id),
+            instant=concept in INSTANT,
         )
         cells.extend(sel.to_row(c, company_id, data["filings"], unit=unit) for c in cs)
         s = sel._Series(

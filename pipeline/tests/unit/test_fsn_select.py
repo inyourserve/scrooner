@@ -226,3 +226,23 @@ def test_eps_prints_filed_as_usd_are_selected_and_never_derived():
     cells = sel.select_concept("basic_eps_resolved", [p], f, unit=sel.FSN_UOM["USD/shares"], derive=False)
     assert [(c.state, c.value) for c in cells] == [("value", Decimal("1.23"))]
     assert sel.to_row(cells[0], 1, f, unit="USD/shares")["unit"] == "USD/shares"
+
+
+@pytest.mark.unit
+def test_period_rules_split_basis_and_unfiled_instant():
+    split = [{"kind": "basis_split", "date": "2025-08-06", "reason_code": "predecessor_successor_split", "note": "PSKY"}]
+    cells = [
+        sel.Cell("revenue_sanity_resolved", date(2025, 12, 31), 4, "value", Decimal(10)),  # FY2025 spans it
+        sel.Cell("revenue_sanity_resolved", date(2025, 9, 30), 1, "derived", Decimal(3)),  # Q3 2025 spans it
+        sel.Cell("revenue_sanity_resolved", date(2025, 6, 30), 1, "value", Decimal(2)),  # before: kept
+        sel.Cell("revenue_sanity_resolved", date(2025, 12, 31), 1, "value", Decimal(4)),  # Q4 after: kept
+    ]
+    out = {(c.ddate, c.qtrs): c for c in sel.apply_period_rules("revenue_sanity_resolved", cells, split, instant=False)}
+    assert out[(date(2025, 12, 31), 4)].reason_code == "predecessor_successor_split"
+    assert out[(date(2025, 9, 30), 1)].reason_code == "predecessor_successor_split"
+    assert out[(date(2025, 6, 30), 1)].state == "value" and out[(date(2025, 12, 31), 1)].state == "value"
+    unfiled = [{"kind": "unfiled_instant", "date": "2021-09-30", "reason_code": "balance_sheet_not_filed", "note": "AHR"}]
+    got = sel.apply_period_rules("total_assets_resolved", [], unfiled, instant=True)
+    assert [(c.ddate, c.qtrs, c.reason_code) for c in got] == [(date(2021, 9, 30), 0, "balance_sheet_not_filed")]
+    row = sel.to_row(got[0], 3885, {})
+    assert row["defect_class"] == "filer_error" and row["reason_text"]

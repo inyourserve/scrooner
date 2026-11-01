@@ -195,6 +195,10 @@ def pilot_cmd(
         "data-team/46-canonical-fact-v2/expected_periods_2026-10-31.csv.gz",
         help="Expected-period calendar (CELL-FORMAT §2.3).",
     ),
+    period_rules: str = typer.Option(
+        "data-team/47-fsn-store/period_rules.csv",
+        help="Basis splits and unfiled instants (company period rules).",
+    ),
 ) -> None:
     """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
     Writes fsn.line_map and fsn.filing_check of that database; run it on a scratch copy for a dry run."""
@@ -222,7 +226,9 @@ def pilot_cmd(
             m = mapping.map_company(conn, cid, rules)
             c = checks.check_company(conn, cid)
             conn.commit()
-            rep = pilot.report_company(conn, cid, Path(calendar), rule_concepts)
+            rep = pilot.report_company(
+                conn, cid, Path(calendar), rule_concepts, Path(period_rules)
+            )
             rep["mapping"], rep["checks"] = m, c
             rep["accessions"] = [
                 r[0]

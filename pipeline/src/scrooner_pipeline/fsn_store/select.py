@@ -30,10 +30,11 @@ from __future__ import annotations
 
 import calendar
 from collections import Counter, defaultdict
-from dataclasses import dataclass, field
-from datetime import date, datetime
-from decimal import Decimal
 from collections.abc import Iterable
+from dataclasses import dataclass, field
+from datetime import date, datetime, timedelta
+from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
 import psycopg
@@ -75,6 +76,8 @@ REASONS = {
     "no_basis_witness": ("period", "period_engineer"),
     "no_prior_quarter_end": ("period", "period_engineer"),
     "derived_quarter_fails_residual_guard": ("period", "period_engineer"),
+    "predecessor_successor_split": ("period", "period_engineer"),
+    "balance_sheet_not_filed": ("filer_error", "data_engineer_l2"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -83,7 +86,74 @@ REASON_TEXT = {
     "no_basis_witness": "The later filing re-prints no earlier period of this line, so the two year-to-date values cannot be shown to be on one basis.",
     "no_prior_quarter_end": "The prior year-to-date value needed to compute this quarter is not printed.",
     "derived_quarter_fails_residual_guard": "The computed quarter is negative or larger than its year-to-date total.",
+    "predecessor_successor_split": "The period spans the change from predecessor to successor accounting, so its two parts are on different bases and are not added together.",
+    "balance_sheet_not_filed": "No balance sheet was filed for this date.",
 }
+
+RULE_PERIOD = "fsn.select_period_rule@1"
+
+
+def load_period_rules(path: str | Path | None, company_id: int) -> list[dict[str, str]]:
+    """data-team/47-fsn-store/period_rules.csv rows of one company (basis_split, unfiled_instant)."""
+    import csv
+
+    if not path or not Path(path).exists():
+        return []
+    return [r for r in csv.DictReader(open(path)) if int(r["company_id"]) == company_id]
+
+
+def apply_period_rules(
+    concept: str, cells: list[Cell], rules: list[dict[str, str]], instant: bool
+) -> list[Cell]:
+    """basis_split: a duration cell whose period spans the split date (start < date <= end) is a
+    blank, never a sum of the two sides. unfiled_instant: the instant at that date is a reasoned
+    blank (added when no cell exists, replacing one if a stray print exists)."""
+    if not rules:
+        return cells
+    out = []
+    for c in cells:
+        start = (
+            month_end(c.ddate, -3 * c.qtrs) + timedelta(days=1) if c.qtrs else c.ddate
+        )
+        hit = next(
+            (
+                r
+                for r in rules
+                if r["kind"] == "basis_split"
+                and c.qtrs > 0
+                and start < date.fromisoformat(r["date"]) <= c.ddate
+            ),
+            None,
+        )
+        out.append(
+            _blank(
+                concept,
+                (c.ddate, c.qtrs),
+                hit["reason_code"],
+                None,
+                {"rule": hit["note"]},
+                RULE_PERIOD,
+            )
+            if hit
+            else c
+        )
+    if instant:
+        for r in rules:
+            if r["kind"] != "unfiled_instant":
+                continue
+            d = month_end(date.fromisoformat(r["date"]), 0)
+            out = [c for c in out if not (c.qtrs == 0 and c.ddate == d)]
+            out.append(
+                _blank(
+                    concept,
+                    (d, 0),
+                    r["reason_code"],
+                    None,
+                    {"rule": r["note"]},
+                    RULE_PERIOD,
+                )
+            )
+    return sorted(out, key=lambda c: (c.ddate, c.qtrs))
 
 
 @dataclass(frozen=True)
@@ -644,6 +714,7 @@ def select_company(
     conn: psycopg.Connection,
     company_id: int,
     units: dict[str, str] | None = None,
+    period_rules: str | Path | None = None,
 ) -> list[dict[str, Any]]:
     """Every mapped concept of one company as CELL-FORMAT rows. units: concept -> unit (default USD)."""
     data = load_company(conn, company_id)
@@ -659,6 +730,12 @@ def select_company(
             unit=FSN_UOM.get(unit, unit),
             derive=unit not in NEVER_DERIVED_UNITS and "eps" not in concept,
             residual_guard="revenue" in concept,
+        )
+        cells = apply_period_rules(
+            concept,
+            cells,
+            load_period_rules(period_rules, company_id),
+            instant=bool(prints) and all(p.qtrs == 0 for p in prints),
         )
         rows.extend(to_row(c, company_id, data["filings"], unit=unit) for c in cells)
     return rows
