@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+from collections.abc import Callable
 from typing import Any
 
 import psycopg
@@ -536,6 +537,7 @@ def load(
     data_points: list[str] | None = None,
     defect_overrides: list[dict[str, Any]] | None = None,
     defect_reason: str = "mixed_vintage_inputs",
+    connect: Callable[[], psycopg.Connection] | None = None,
 ) -> LoadReport:
     """paths: one or more cell files of ONE family (merged; a key in two files is
     a rejection). data_points: the delete scope (default: the manifest's or the
@@ -645,25 +647,44 @@ def load(
     done = 0
     for cid in sorted(by_company):
         rows = by_company[cid]
-        try:
-            _load_company(
-                conn,
-                cid,
-                rows,
-                ciks[cid],
-                family,
-                run_id,
-                scope_ids,
-                concept_ids,
-                prov,
-                apply,
-                rep,
-            )
-        except _PlanRollback:
-            pass
-        else:
-            if apply:
-                conn.commit()
+        for attempt in range(1, 4):
+            try:
+                _load_company(
+                    conn,
+                    cid,
+                    rows,
+                    ciks[cid],
+                    family,
+                    run_id,
+                    scope_ids,
+                    concept_ids,
+                    prov,
+                    apply,
+                    rep,
+                )
+            except _PlanRollback:
+                break
+            except psycopg.OperationalError as exc:
+                # a dropped pooler/SSL connection mid-run: the company's transaction is
+                # gone, so reconnect and redo THIS company (idempotent), up to 3 times
+                logger.warning(
+                    "cell_loader.reconnect",
+                    company_id=cid,
+                    attempt=attempt,
+                    error=repr(exc)[:160],
+                )
+                if connect is None or attempt == 3:
+                    raise
+                try:
+                    conn.close()
+                except Exception:  # noqa: BLE001
+                    pass
+                conn = connect()
+                prov = _has_provenance_columns(conn)
+            else:
+                if apply:
+                    conn.commit()
+                break
         done += 1
         if done % 25 == 0 or done == len(by_company):
             logger.info(

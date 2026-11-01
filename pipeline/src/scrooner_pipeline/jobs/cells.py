@@ -86,6 +86,17 @@ def load_cmd(
         or None
     )
     paths = [_fetch(f, Path(cache)) for f in files]
+
+    def connect():
+        import psycopg
+
+        from scrooner_pipeline.common.config import settings
+
+        c = psycopg.connect(settings.database_url, connect_timeout=30)
+        c.execute(f"set statement_timeout = '{statement_timeout}'")
+        c.commit()
+        return c
+
     with get_connection() as conn:
         conn.execute(f"set statement_timeout = '{statement_timeout}'")
         rep = cell_loader.load(
@@ -103,6 +114,7 @@ def load_cmd(
             if defect_keys
             else None,
             defect_reason=defect_reason,
+            connect=connect,
         )
     d = rep.as_dict()
     if report:
