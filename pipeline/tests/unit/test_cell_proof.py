@@ -351,7 +351,8 @@ def test_derived_q4_is_proven_through_the_two_year_to_date_lines():
     p = pv.prove_cell(q4, fy, "2025q4", _q3_structure())
     assert (
         p.verdict == pv.PROVEN
-        and p.position_source == "derived_inputs"
+        and p.position_source == "fsn_pre_calc"
+        and p.checks["derivation"]["source"] == "derived_inputs"
         and p.position_value == Decimal("28010000000")
     )
     wrong = pv.Shown(
@@ -490,3 +491,19 @@ def test_run_holds_no_transaction_open_between_reads(isolated_database_url, tmp_
             conn.execute("show idle_in_transaction_session_timeout").fetchone()[0]
             == "2min"
         )
+
+
+@pytest.mark.unit
+def test_every_position_source_the_engine_sets_is_allowed_by_migration_0114():
+    # a value outside the 0114 check made every company with a derived quarter fail on --write
+    # (run 41317227891: 'derived_inputs'); the dry run never touches the table
+    import re
+    from pathlib import Path
+
+    import scrooner_pipeline.proof.prove as prove_mod
+
+    src = Path(prove_mod.__file__).read_text()
+    set_values = set(re.findall(r'position_source = "([a-z_]+)"', src))
+    mig = Path(__file__).resolve().parents[2] / "db" / "migrations" / "0114_cell_proof.sql"
+    allowed = set(re.findall(r"'([a-z_]+)'", re.search(r"position_source text check \(position_source in \(([^)]*)\)", mig.read_text()).group(1)))
+    assert set_values and set_values <= allowed, set_values - allowed

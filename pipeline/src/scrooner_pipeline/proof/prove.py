@@ -661,7 +661,10 @@ def prove_derived(
             p.reason_text = "the standard line sits under a filer-extension total"
         return p
     p.position_tag, p.fsn_line, p.fsn_label = line.tag, line.line, line.label
-    p.position_source = "derived_inputs"
+    # 0114 allows slot_record / fsn_pre_calc / face_total: the inputs' line is located through the
+    # filing's pre/calc structure; the derivation itself is recorded in checks["derivation"]
+    p.position_source = "fsn_pre_calc"
+    p.checks["derivation"] = {"status": "n/a", "source": "derived_inputs"}
     p.position_is_expected_line = True
     end_dd = fsn_ddate(shown.period_end)
     ytd_n = None
