@@ -135,9 +135,10 @@ create table if not exists fsn.concept_rule (
     seeded_at             timestamptz not null default now(),
     check (match_kind <> 'calc_position' or position is not null),
     check (match_kind <> 'combined' or components is not null),
-    check (match_kind = 'calc_position' or tag is not null),
-    unique (canonical_concept_id, stmt, match_kind, coalesce(tag, ''), priority)
+    check (match_kind = 'calc_position' or tag is not null)
 );
+create unique index if not exists uq_fsn_concept_rule
+    on fsn.concept_rule (canonical_concept_id, stmt, match_kind, coalesce(tag, ''), priority);
 
 create table if not exists fsn.line_map (
     filing_id             bigint not null references fsn.filing (id) on delete cascade,
