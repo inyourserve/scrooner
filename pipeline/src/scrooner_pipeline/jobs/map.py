@@ -671,6 +671,66 @@ def snapshot_coverage_cmd() -> None:
     typer.echo(f"snapshot-coverage groups: {group_stats}")
 
 
+@app.command("seed-sector-templates")
+def seed_sector_templates_cmd(
+    templates: Path = typer.Option(
+        Path("data-team/strategy/SECTOR-TEMPLATES-2026-11-01.md"),
+        help="Templates file (sector defaults plus company overrides).",
+    ),
+    cohort: Path = typer.Option(
+        Path("doc/data-moat/team/top1000/shards.csv"),
+        help="Cohort file with company_id, cik, sic; excluded rows are skipped.",
+    ),
+    plan_out: Path = typer.Option(
+        Path("pipeline/scripts/results/sector_templates_plan.csv"),
+        help="Where the dry-run plan CSV is written.",
+    ),
+    validate_db: bool = typer.Option(
+        False, help="Also check data-point names and company ids against the database (read-only)."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply", help="Write analytics.company_data_point_template. Needs the founder's words."
+    ),
+    confirm_version: str = typer.Option(
+        "", help="With --apply: must equal the file's template_version."
+    ),
+) -> None:
+    """Doc 02 ruling 2026-11-01: seed each cohort company's sector template (migration
+    0120). Dry run by default: builds the plan from files only and writes a CSV."""
+    from scrooner_pipeline.mapper import sector_templates as st
+
+    for path in (templates, cohort):
+        if not path.exists():
+            typer.echo(f"ERROR file not found: {path}", err=True)
+            raise typer.Exit(2)
+    try:
+        parsed = st.parse_templates(templates.read_text(encoding="utf-8"))
+        rows = st.build_plan(parsed, st.load_cohort(cohort))
+    except st.TemplateError as exc:
+        for problem in exc.problems:
+            typer.echo(f"ERROR {problem}", err=True)
+        raise typer.Exit(2) from exc
+    st.write_plan_csv(rows, plan_out)
+    typer.echo(f"seed-sector-templates plan: {json.dumps(st.summarize(rows))} -> {plan_out}")
+    if not (validate_db or apply):
+        return
+    if apply and confirm_version != parsed.template_version:
+        typer.echo(
+            f"ERROR --apply needs --confirm-version {parsed.template_version}", err=True
+        )
+        raise typer.Exit(2)
+    with get_connection() as conn:
+        try:
+            st.validate_against_db(conn, rows)
+        except st.TemplateError as exc:
+            for problem in exc.problems:
+                typer.echo(f"ERROR {problem}", err=True)
+            raise typer.Exit(2) from exc
+        typer.echo("seed-sector-templates: data points and company ids valid")
+        if apply:
+            typer.echo(f"seed-sector-templates applied: {st.write_plan(conn, rows)}")
+
+
 @app.command()
 def errors(
     stage: str = typer.Option(
