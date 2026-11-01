@@ -535,7 +535,8 @@ with open(OUT / "lanes_not_extracted.md", "w") as f:
             "so regex rules and exclude/negative rules are listed here, with function-body logic, sign handling and era rules.\n\n"
             "| file:line | rule | why not a seed row |\n|---|---|---|\n")
     for loc, item, why in sorted(NOT, key=lambda x: (x[0].split(":")[0], int(x[0].split(":")[1]))):
-        f.write(f"| {loc} | {item.replace('|', '\\|')} | {why.replace('|', '\\|')} |\n")
+        # `](` would read as a Markdown link to scripts/check_docs.py (ERA_RX `[/-](\\d{4})`): escape the paren
+        f.write(f"| {loc} | {item.replace('|', '\\|').replace('](', ']\\(')} | {why.replace('|', '\\|').replace('](', ']\\(')} |\n")
 
 counts = Counter((lane, r["canonical_concept"], r["stmt"], r["match_kind"]) for lane, rows in ROWS.items() for r in rows)
 for k, v in sorted(counts.items()):
