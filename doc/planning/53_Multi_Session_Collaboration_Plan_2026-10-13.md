@@ -41,7 +41,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 
 ### Migration claims
 
-**Next free number: 0121.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
+**Next free number: 0122.** 0102-0110 and 0112 are permanently skipped (decision of scrooner-0f, 2026-11-01): they are listed with a reason in `pipeline/db/migrations/SKIPPED.txt`, `scripts/check_migrations.py` accepts exactly those gaps, and any other gap still fails CI. Claims on those numbers are released: anyone writing that work takes the next free number above 0113. 0111 (applied in production) and 0113 (NOT applied) are now files on main. Claim a number here BEFORE writing the file.
 
 | Number | Owner | Purpose | State |
 |---|---|---|---|
@@ -74,6 +74,7 @@ Weakest sector in the top 1,000: Financials (71.4%), then Real Estate (77.3%). B
 | 0118 | scrooner-8a (engineering) | company-wise FSN statement store, first migration (data-team/strategy/FSN-STORE-DESIGN-2026-11-01.md) | file on main; **APPLIED in production 2026-11-01 13:01 UTC by scrooner-87 on the founder's typed go-ahead in that session; post-check PASS (11 fsn tables, source_value_ids not null default '{}', owner guard inert with 0 owners, canonical_fact 13,890,751 rows unchanged); log and rollback SQL in data-team/42-release-applies-2026-11-01/** |
 | 0119 | scrooner-8a (engineering) | company-wise FSN statement store, second migration (same design) | file on main; **APPLIED in production 2026-11-01 13:01 UTC by scrooner-87 on the founder's typed go-ahead in that session; post-check PASS (11 fsn tables, source_value_ids not null default '{}', owner guard inert with 0 owners, canonical_fact 13,890,751 rows unchanged); log and rollback SQL in data-team/42-release-applies-2026-11-01/** |
 | 0120 | data engineer (sector templates, work/data-engineer/sector-templates) | `analytics.company_data_point_template` (company_id, data_point, in_template, reason, effective_from + template, source, template_version): per-company sector template, doc 02 ruling 2026-11-01; coverage = valued / template cells | file on main (7e44f83); **APPLIED in production 2026-11-01 14:37:33 UTC by scrooner-87 on the founder's typed go-ahead in that session; post-check PASS (9 columns, 0 rows); log in data-team/42-release-applies-2026-11-01/** |
+| 0121 | scrooner-87 (engineering) | `core.company_predecessor` (predecessor CIK -> company owning its history; XOM 0000034088 -> 0002115436), read by the FSN store shard/load | claimed and written 2026-11-01 on work/engineering/fsn-pilot; apply on the founder's typed go-ahead for the XOM history link (scrooner-87) |
 
 ## scrooner-98 queue (lane A)
 

@@ -28,6 +28,20 @@ def _predecessors(spec: str) -> dict[str, str]:
     return out
 
 
+def _db_predecessors(conn) -> dict[str, str]:
+    """core.company_predecessor (migration 0121): predecessor cik -> the owning company's cik."""
+    if (
+        conn.execute("select to_regclass('core.company_predecessor')").fetchone()[0]
+        is None
+    ):
+        return {}
+    return dict(
+        conn.execute(
+            "select p.predecessor_cik, c.cik from core.company_predecessor p join core.company c on c.id = p.company_id"
+        ).fetchall()
+    )
+
+
 def _cohort(shards_file: Path) -> list[str]:
     for cand in (shards_file, Path(__file__).resolve().parents[4] / shards_file):
         if cand.exists():
@@ -66,14 +80,16 @@ def shard_cmd(
         shards_file
     )
     with get_connection() as conn:
+        preds = {**_db_predecessors(conn), **_predecessors(predecessor)}
         rows = conn.execute(
             "select cik, id from core.company where cik = any(%s)",
-            (cik_list + list(_predecessors(predecessor).values()),),
+            (cik_list + list(preds.values()),),
         ).fetchall()
     ids = dict(rows)
     targets = {c: ids.get(c) for c in cik_list}
-    for pred, succ in _predecessors(predecessor).items():
-        targets[pred] = ids.get(succ)
+    for pred, succ in preds.items():
+        if succ in targets:  # only predecessors of companies being sharded
+            targets[pred] = ids.get(succ)
     commit = (
         subprocess.run(
             ["git", "rev-parse", "HEAD"], capture_output=True, text=True
@@ -118,7 +134,7 @@ def load_cmd(
             Path(companies),
             [c for c in ciks.split(",") if c] or None,
             force=force,
-            predecessors=_predecessors(predecessor),
+            predecessors={**_db_predecessors(conn), **_predecessors(predecessor)},
         )
     if report:
         Path(report).write_text(json.dumps(res, indent=1, default=str))
