@@ -29,11 +29,12 @@ Value, accession and source_value_ids of a cell always come from the same fsn.va
 from __future__ import annotations
 
 import calendar
-from collections import defaultdict
-from dataclasses import dataclass, field
-from datetime import date, datetime
-from decimal import Decimal
+from collections import Counter, defaultdict
 from collections.abc import Iterable
+from dataclasses import dataclass, field
+from datetime import date, datetime, timedelta
+from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
 import psycopg
@@ -75,6 +76,8 @@ REASONS = {
     "no_basis_witness": ("period", "period_engineer"),
     "no_prior_quarter_end": ("period", "period_engineer"),
     "derived_quarter_fails_residual_guard": ("period", "period_engineer"),
+    "predecessor_successor_split": ("period", "period_engineer"),
+    "balance_sheet_not_filed": ("filer_error", "data_engineer_l2"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -83,7 +86,75 @@ REASON_TEXT = {
     "no_basis_witness": "The later filing re-prints no earlier period of this line, so the two year-to-date values cannot be shown to be on one basis.",
     "no_prior_quarter_end": "The prior year-to-date value needed to compute this quarter is not printed.",
     "derived_quarter_fails_residual_guard": "The computed quarter is negative or larger than its year-to-date total.",
+    "predecessor_successor_split": "The period spans the change from predecessor to successor accounting, so its two parts are on different bases and are not added together.",
+    "balance_sheet_not_filed": "No balance sheet was filed for this date.",
+    "not_filed_separately": "The company reports this figure only for the full year; the fourth quarter is not printed and is never computed.",
 }
+
+RULE_PERIOD = "fsn.select_period_rule@1"
+
+
+def load_period_rules(path: str | Path | None, company_id: int) -> list[dict[str, str]]:
+    """data-team/47-fsn-store/period_rules.csv rows of one company (basis_split, unfiled_instant)."""
+    import csv
+
+    if not path or not Path(path).exists():
+        return []
+    return [r for r in csv.DictReader(open(path)) if int(r["company_id"]) == company_id]
+
+
+def apply_period_rules(
+    concept: str, cells: list[Cell], rules: list[dict[str, str]], instant: bool
+) -> list[Cell]:
+    """basis_split: a duration cell whose period spans the split date (start < date <= end) is a
+    blank, never a sum of the two sides. unfiled_instant: the instant at that date is a reasoned
+    blank (added when no cell exists, replacing one if a stray print exists)."""
+    if not rules:
+        return cells
+    out = []
+    for c in cells:
+        start = (
+            month_end(c.ddate, -3 * c.qtrs) + timedelta(days=1) if c.qtrs else c.ddate
+        )
+        hit = next(
+            (
+                r
+                for r in rules
+                if r["kind"] == "basis_split"
+                and c.qtrs > 0
+                and start < date.fromisoformat(r["date"]) <= c.ddate
+            ),
+            None,
+        )
+        out.append(
+            _blank(
+                concept,
+                (c.ddate, c.qtrs),
+                hit["reason_code"],
+                None,
+                {"rule": hit["note"]},
+                RULE_PERIOD,
+            )
+            if hit
+            else c
+        )
+    if instant:
+        for r in rules:
+            if r["kind"] != "unfiled_instant":
+                continue
+            d = month_end(date.fromisoformat(r["date"]), 0)
+            out = [c for c in out if not (c.qtrs == 0 and c.ddate == d)]
+            out.append(
+                _blank(
+                    concept,
+                    (d, 0),
+                    r["reason_code"],
+                    None,
+                    {"rule": r["note"]},
+                    RULE_PERIOD,
+                )
+            )
+    return sorted(out, key=lambda c: (c.ddate, c.qtrs))
 
 
 @dataclass(frozen=True)
@@ -95,6 +166,7 @@ class Filing:
     period: date | None
     fy: int | None
     fp: str | None
+    fye: str | None = None  # sub.fye MMDD of the fiscal year end
 
 
 @dataclass(frozen=True)
@@ -252,6 +324,20 @@ def select_concept(
                 RULE_PRINTED,
                 input_refs={"copies": len(ps)},
             )
+    if not derive:
+        # a never-derived concept (EPS, per-share): Q4 is not printed separately and is not computed
+        for (ddate, n), w in sorted(winners.items()):
+            if n == 4 and (ddate, 1) not in cells:
+                cells[(ddate, 1)] = Cell(
+                    concept,
+                    ddate,
+                    1,
+                    "not_presented",
+                    filing_id=w.filing_id,
+                    rule_id=RULE_BLANK,
+                    reason_code="not_filed_separately",
+                    input_refs={"fy_value_id": w.value_id},
+                )
     if derive:
         notes = _note_quarters(prints)
         for (ddate, n), w in sorted(winners.items()):
@@ -420,11 +506,36 @@ def _ytd_difference(
 # --- fiscal labels and cell rows ------------------------------------------------------------
 
 
+def _fye_month(fye: str) -> int | None:
+    """sub.fye MMDD -> the month-end month FSN rounds the year end to (day <= 15: previous month)."""
+    if len(fye) != 4 or not fye.isdigit():
+        return None
+    month, day = int(fye[:2]), int(fye[2:])
+    if not 1 <= month <= 12:
+        return None
+    return (month - 2) % 12 + 1 if day <= 15 else month
+
+
 def fiscal_label(
     ddate: date, qtrs: int, filings: Iterable[Filing]
 ) -> tuple[int | None, str | None]:
-    """(fiscal_year, fiscal_period) of a key from the sub row of the filing whose own period is
-    that date, else the same quarter one to three years later (comparative columns)."""
+    """(fiscal_year, fiscal_period) of a key. With the company's fiscal year end (sub.fye), the
+    fiscal year is the year of the year-end month-end that closes the period and the quarter is
+    counted back from it, the core.period convention (WMT's year ending 2015-01-31 is 2015; FSN's
+    sub.fy calls it 2014). Without fye: the sub row of the filing whose own period is that date,
+    else the same quarter one to three years later (comparative columns)."""
+    filings = list(filings)
+    fyes = Counter(f.fye for f in filings if f.fye).most_common(1)
+    m = _fye_month(fyes[0][0]) if fyes else None
+    if m is not None:
+        ahead = (m - ddate.month) % 12
+        if ahead % 3 == 0:
+            fy, q = month_end(ddate, ahead).year, 4 - ahead // 3
+            if qtrs == 4:
+                return fy, "FY"
+            if qtrs == 1:
+                return fy, f"Q{q}"
+            return fy, ("FY" if q == 4 else f"Q{q}")
     by_period: dict[date, Filing] = {}
     for f in sorted(filings, key=lambda f: f.accepted):
         if f.period is not None:
@@ -473,6 +584,11 @@ def to_row(
         "evidence_level": "DATA-INFERRED",
         "input_refs": cell.input_refs,
     }
+    if cell.state == "not_presented":
+        row.update(
+            reason_code=cell.reason_code,
+            reason_text=REASON_TEXT[cell.reason_code or ""],
+        )
     if cell.state == "defect":
         cls, owner = REASONS[cell.reason_code or ""]
         row.update(
@@ -492,7 +608,7 @@ def load_company(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
     """Filings, per-concept prints and member values of one stored company (five indexed reads)."""
     with conn.cursor() as cur:
         cur.execute(
-            "select id, accession, accepted, form, period, fy, fp from fsn.filing where company_id = %s",
+            "select id, accession, accepted, form, period, fy, fp, fye from fsn.filing where company_id = %s",
             (company_id,),
         )
         filings = {r[0]: Filing(*r) for r in cur.fetchall()}
@@ -610,12 +726,15 @@ def build(
 
 
 NEVER_DERIVED_UNITS = ("USD/shares", "shares", "pure")
+# FSN (like FSDS) files per-share values with uom "USD", not "USD/shares": filter prints by this
+FSN_UOM = {"USD/shares": "USD"}
 
 
 def select_company(
     conn: psycopg.Connection,
     company_id: int,
     units: dict[str, str] | None = None,
+    period_rules: str | Path | None = None,
 ) -> list[dict[str, Any]]:
     """Every mapped concept of one company as CELL-FORMAT rows. units: concept -> unit (default USD)."""
     data = load_company(conn, company_id)
@@ -628,9 +747,15 @@ def select_company(
             prints,
             data["filings"],
             members=data["members"],
-            unit=unit,
+            unit=FSN_UOM.get(unit, unit),
             derive=unit not in NEVER_DERIVED_UNITS and "eps" not in concept,
             residual_guard="revenue" in concept,
+        )
+        cells = apply_period_rules(
+            concept,
+            cells,
+            load_period_rules(period_rules, company_id),
+            instant=bool(prints) and all(p.qtrs == 0 for p in prints),
         )
         rows.extend(to_row(c, company_id, data["filings"], unit=unit) for c in cells)
     return rows

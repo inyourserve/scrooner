@@ -1,0 +1,31 @@
+{
+ "cells": 49443,
+ "companies": 921,
+ "publishable_companies": 866,
+ "verdicts": {
+  "publishable": 23989,
+  "not_a_face_column": 17936,
+  "buyback_combined_with_other_items": 1201,
+  "no_value_this_column": 902,
+  "hold_identity_terms_missing": 898,
+  "hold_no_financing_calc": 810,
+  "perimeter_line_unresolved": 804,
+  "hold_no_statement_cal": 568,
+  "restated_copies_disagree": 479,
+  "net_treasury_line": 388,
+  "perimeter_multiple_repurchase_lines": 354,
+  "sign_unclear": 188,
+  "excluded_only:perimeter_option_exercise": 167,
+  "excluded_only:perimeter_tax_withholding_shares": 160,
+  "excluded_only:perimeter_excise_tax": 148,
+  "excluded_only:perimeter_sbc_plan_purchase": 137,
+  "hold_section_gap": 133,
+  "excluded_only:perimeter_subsidiary_repurchase": 75,
+  "hold_identity_gap": 59,
+  "stub_column": 24,
+  "excluded_only:perimeter_share_swap": 11,
+  "excluded_only:perimeter_option_exercise+perimeter_sbc_plan_purchase": 6,
+  "excluded_only:perimeter_excise_tax+perimeter_tax_withholding_shares": 5,
+  "excluded_only:perimeter_option_exercise+perimeter_subsidiary_repurchase": 1
+ }
+}

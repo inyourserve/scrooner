@@ -1,0 +1,3 @@
+company_id,kind,date,reason_code,note,evidence
+4474,basis_split,2025-08-06,predecessor_successor_split,"Paramount Skydance pushdown accounting: predecessor to 2025-08-06, successor after; a duration spanning the date mixes two bases and is never summed (Dhairya/Ritwik 2026-11-01)",8-K12B 0001193125-25-175046
+3885,unfiled_instant,2021-09-30,balance_sheet_not_filed,"American Healthcare REIT: no balance sheet was filed for 2021-09-30 (REIT III last 10-Q Q2 2021; AHR basis from FY2021); the Q3 2021 income statement returns through the Q3 2022 10-Q reprint (Ritwik, filing-checked)",10-K 0001632970-22-000020

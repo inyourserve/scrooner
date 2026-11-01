@@ -1,0 +1,36 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0001193125-15-288946	7	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2014	terseLabel	Adjustments to reconcile net (loss) income to cash provided by operating activities:	0
+0001193125-15-288946	7	33	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2014	periodStartLabel	Cash and cash equivalents, beginning of period	0
+0001193125-15-288946	7	35	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2014	periodEndLabel	Cash and cash equivalents, end of period	0
+0001193125-15-288946	7	4	CF	0	DepreciationAndAmortization	us-gaap/2014	terseLabel	Depreciation and amortization	0
+0001193125-15-288946	7	12	CF	0	IncreaseDecreaseInInventories	us-gaap/2014	negatedLabel	Inventories, net	1
+0001193125-15-288946	7	8	CF	0	OtherOperatingActivitiesCashFlowStatement	us-gaap/2014	terseLabel	Other, net	0
+0001193125-15-288946	7	28	CF	0	PaymentsOfDividends	us-gaap/2014	negatedLabel	Dividends paid	1
+0001193125-15-288946	7	17	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2014	negatedLabel	Capital expenditures	1
+0001193125-15-288946	7	31	CF	0	NetCashProvidedByUsedInFinancingActivitiesContinuingOperations	us-gaap/2014	totalLabel	Net cash (used in) provided by financing activities	0
+0001193125-15-288946	7	24	CF	0	NetCashProvidedByUsedInFinancingActivitiesContinuingOperationsAbstract	us-gaap/2014	terseLabel	Financing activities:	0
+0001193125-15-288946	7	23	CF	0	NetCashProvidedByUsedInInvestingActivitiesContinuingOperations	us-gaap/2014	totalLabel	Net cash used in investing activities	0
+0001193125-15-288946	7	16	CF	0	NetCashProvidedByUsedInInvestingActivitiesContinuingOperationsAbstract	us-gaap/2014	terseLabel	Investing activities:	0
+0001193125-15-288946	7	15	CF	0	NetCashProvidedByUsedInOperatingActivitiesContinuingOperations	us-gaap/2014	totalLabel	Net cash provided by operating activities	0
+0001193125-15-288946	7	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesContinuingOperationsAbstract	us-gaap/2014	terseLabel	Operating activities:	0
+0001193125-15-288946	7	2	CF	0	ProfitLoss	us-gaap/2014	terseLabel	Net (loss) income	0
+0001193125-15-288946	7	7	CF	0	AssetImpairmentCharges	us-gaap/2014	verboseLabel	Impairment charges, net of tax	0
+0001193125-15-288946	7	10	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2014	terseLabel	Change in operating assets and liabilities, net of acquisitions:	0
+0001193125-15-288946	7	22	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2014	negatedLabel	Other	1
+0001193125-15-288946	7	29	CF	0	PaymentsToMinorityShareholders	us-gaap/2014	negatedLabel	Purchase of subsidiary shares from noncontrolling interest	1
+0001193125-15-288946	7	30	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2014	terseLabel	Other, net	0
+0001193125-15-288946	7	18	CF	0	PaymentsToAcquireBusinessesNetOfCashAcquired	us-gaap/2014	negatedLabel	Acquisitions, net of cash acquired	1
+0001193125-15-288946	7	34	CF	0	EffectOfExchangeRateOnCashAndCashEquivalents	us-gaap/2014	terseLabel	Exchange movement on opening cash balance	0
+0001193125-15-288946	7	5	CF	0	IncomeLossFromEquityMethodInvestments	us-gaap/2014	negatedLabel	Equity earnings of affiliates	1
+0001193125-15-288946	7	26	CF	0	RepaymentsOfLongTermDebtAndCapitalSecurities	us-gaap/2014	negatedLabel	Repayment of borrowings	1
+0001193125-15-288946	7	20	CF	0	PaymentsToAcquireOtherInvestments	us-gaap/2014	negatedLabel	Other investments	1
+0001193125-15-288946	7	32	CF	0	CashAndCashEquivalentsPeriodIncreaseDecreaseExcludingExchangeRateEffect	us-gaap/2014	totalLabel	Net (decrease) increase in cash and cash equivalents	0
+0001193125-15-288946	7	6	CF	0	EquityMethodInvestmentDividendsOrDistributions	us-gaap/2014	terseLabel	Cash distributions received from affiliates	0
+0001193125-15-288946	7	13	CF	0	IncreaseDecreaseInAccountsPayableAndOtherOperatingLiabilities	us-gaap/2014	terseLabel	Accounts payable and other liabilities	0
+0001193125-15-288946	7	11	CF	0	IncreaseDecreaseInAccountsReceivableAndOtherOperatingAssets	us-gaap/2014	negatedLabel	Receivables and other assets	1
+0001193125-15-288946	7	9	CF	0	IncreaseDecreaseInIncomeTaxes	us-gaap/2014	terseLabel	Deferred income taxes and taxes payable	0
+0001193125-15-288946	7	14	CF	0	IncreaseDecreaseInPensionAndPostretirementObligations	us-gaap/2014	terseLabel	Pension and postretirement benefit plans	0
+0001193125-15-288946	7	27	CF	0	PaymentsForRepurchaseOfEquity	us-gaap/2014	negatedLabel	Repurchase of shares	1
+0001193125-15-288946	7	19	CF	0	PaymentsToAcquireEquityMethodAndOtherInvestments	0001193125-15-288946	negatedLabel	Investments in equity affiliates and other	1
+0001193125-15-288946	7	25	CF	0	ProceedsFromContributionsFromPaymentsOfDistributionsToAffiliates	0001193125-15-288946	verboseLabel	Net transfers from 21st Century Fox and affiliates	0
+0001193125-15-288946	7	21	CF	0	ProceedsFromInvestmentSalesAndFromDivestitureOfBusiness	0001193125-15-288946	terseLabel	Proceeds from dispositions	0

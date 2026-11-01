@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -508,3 +509,68 @@ def test_load_company_is_atomic_idempotent_and_keeps_every_print(conn, tmp_path)
         == 1
     )
     conn.rollback()
+
+
+@pytest.mark.integration
+def test_seed_apply_writes_every_rule_including_demote_patterns(conn, tmp_path):
+    # the v1.1 tag_pattern column was in the insert but not in the parameters (pilot run 41311864687)
+    conn.execute(
+        "insert into analytics.canonical_concept (name, statement, combination_mode) "
+        "values ('revenue_sanity_resolved', 'income_statement', 'first_match') on conflict (name) do nothing"
+    )
+    conn.commit()
+    base = {"canonical_concept": "revenue_sanity_resolved", "stmt": "IS", "position": None, "components": None,
+            "priority": 10, "era_from": None, "era_to": None, "rule_id": "is.revenue_total@1",
+            "source_commit": "abc1234", "evidence": "test"}
+    rows = [
+        {**base, "match_kind": "std_tag", "tag": "us-gaap:Revenues", "tag_pattern": None},
+        {**base, "match_kind": "demote", "tag": None, "tag_pattern": "^[0-9-]+:.*Interest.*$", "priority": 20,
+         "rule_id": "is.revenue_demote@1"},
+    ]
+    p = tmp_path / "is.jsonl"
+    p.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    res = rules.seed(conn, p, apply=True)
+    assert res["written"] == 2 and res["errors"] == []
+    got = conn.execute("select match_kind, tag, tag_pattern from fsn.concept_rule order by priority").fetchall()
+    assert got == [("std_tag", "us-gaap:Revenues", None), ("demote", None, "^[0-9-]+:.*Interest.*$")]
+
+
+@pytest.mark.integration
+def test_predecessor_filings_load_under_the_successor_company(conn, tmp_path):
+    # XOM: history filed as 0000034088, the company master holds only the successor 0002115436
+    succ = _one(
+        conn,
+        "insert into core.company (cik, company_name) values ('0002115436', 'SUCCESSOR TEST') returning id",
+    )
+    conn.commit()
+    d = _company_dir(tmp_path, cik="0000034088")
+    with pytest.raises(LookupError):
+        load.load_company(conn, d, loader_commit="c1")
+    conn.rollback()
+    r = load.load_company(
+        conn, d, loader_commit="c1", predecessors={"0000034088": "0002115436"}
+    )
+    conn.commit()
+    assert r["filings"] == 1
+    assert conn.execute("select company_id, cik from fsn.filing").fetchall() == [(succ, "0000034088")]
+    assert conn.execute("select count(distinct company_id) from fsn.value").fetchone()[0] == 1
+    assert conn.execute("select company_id from fsn.value limit 1").fetchone()[0] == succ
+
+
+@pytest.mark.unit
+def test_owners_follow_history_windows_and_exclusions():
+    # core.company_history_source: Dow Chemical serves Dow Inc to 2018-12-31 and DowDuPont to 2017-06-30;
+    # Johnson Controls' own CIK holds Tyco's filings to 2016-06-30 (excluded)
+    targets = {"0001751788", "0001666700", "0000833444"}
+    alias = {"0000029915": [("0001751788", "20140101", "20181231"), ("0001666700", "20140101", "20170630")]}
+    exclude = {"0000833444": [("20140101", "20160630")]}
+
+    def own(cik, period, aciks=""):
+        return shard.owners_of({"cik": cik.lstrip("0"), "period": period, "aciks": aciks}, targets, alias, exclude)
+
+    assert own("0000029915", "20161231") == ["0001666700", "0001751788"]  # both windows
+    assert own("0000029915", "20180930") == ["0001751788"]  # DowDuPont's window closed
+    assert own("0000029915", "20190331") == []  # after both
+    assert own("0000833444", "20160331") == []  # Tyco under JCI's CIK: wrong entity
+    assert own("0000833444", "20160930") == ["0000833444"]  # JCI's own history from the merger
+    assert own("0001751788", "20190331", aciks="29915") == ["0001751788"]  # co-filing, once

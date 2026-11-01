@@ -3396,6 +3396,13 @@ def load_split_signal_dates(conn, company_id: int) -> list[date]:
         """,
         (company_id, ["EntityCommonStockSharesOutstanding", *WEIGHTED_SHARE_TAGS]),
     ).fetchall()
+    return split_signal_dates_from_rows(rows)
+
+
+def split_signal_dates_from_rows(rows: Iterable[tuple]) -> list[date]:
+    """load_split_signal_dates' rule on rows (tag, start, end, value, filing_date)
+    ordered by filing date, value > 0, filed (not derived). Pure, so the FSN-store
+    per-share reader (fsn_company_pershare.py) applies the same rule to FSN rows."""
     cover: dict[date, Decimal] = {}
     copies: dict[tuple, list[tuple[date, Decimal]]] = defaultdict(list)
     for tag, start, end, v, filed in rows:

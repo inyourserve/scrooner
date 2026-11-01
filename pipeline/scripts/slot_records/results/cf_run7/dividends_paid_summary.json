@@ -1,0 +1,29 @@
+{
+ "cells": 50815,
+ "companies": 789,
+ "publishable_companies": 698,
+ "verdicts": {
+  "publishable": 24610,
+  "not_a_face_column": 17398,
+  "excluded_only:perimeter_nci": 2306,
+  "hold_identity_terms_missing": 1045,
+  "hold_no_financing_calc": 823,
+  "dividends_combined_with_other_items": 791,
+  "perimeter_line_unresolved": 640,
+  "hold_no_statement_cal": 632,
+  "perimeter_partnership_distribution": 572,
+  "excluded_only:perimeter_preferred": 533,
+  "restated_copies_disagree": 435,
+  "no_value_this_column": 373,
+  "sign_unclear": 177,
+  "hold_section_gap": 157,
+  "excluded_only:perimeter_nci+perimeter_preferred": 151,
+  "hold_identity_gap": 76,
+  "excluded_only:perimeter_dividend_equivalents": 32,
+  "stub_column": 26,
+  "net_dividend_line": 23,
+  "excluded_only:perimeter_dividend_equivalents+perimeter_nci": 5,
+  "excluded_only:perimeter_dividend_equivalents+perimeter_preferred": 5,
+  "excluded_only:perimeter_dividend_equivalents+perimeter_nci+perimeter_preferred": 5
+ }
+}

@@ -1,0 +1,3 @@
+APPLIED 0120_company_data_point_template sha 5d1b6c5d07244870 attempt 1 at 14:37:33 UTC
+columns 9 (expect 9), rows 0 (expect 0), pk/check/fk constraints 7, index valid (True,)
+POST-CHECK PASS

@@ -1,0 +1,10 @@
+{
+ "cik": "0000032604",
+ "fsn_sets": [
+  "2024q4"
+ ],
+ "accessions": [
+  "0000032604-24-000041"
+ ],
+ "source": "sec.gov FSN data sets via fsn_sec_fixture.py"
+}

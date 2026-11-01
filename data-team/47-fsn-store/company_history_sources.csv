@@ -1,0 +1,41 @@
+company_id,source_cik,relation,source_name,valid_from,valid_to,reason,evidence,klass,filings
+9,0001288776,predecessor,Google Inc,2014-01-01,2015-06-30,history filed under predecessor CIK (class A),8-K12B 0001193125-15-336577,A,6
+1595,0000833444,exclude,"own CIK, wrong entity",2014-01-01,2016-06-30,wrong_entity_history: Tyco International filings (legal acquirer) before the Sept 2016 merger,10-K 0000833444-16-000216; 15-12B 0001104659-16-146817,C,
+1595,0000053669,predecessor,Johnson Controls Inc,2014-01-01,2016-06-30,history filed under predecessor CIK (class C),10-K 0000833444-16-000216; 15-12B 0001104659-16-146817,C,10
+2198,0000097517,predecessor,Texas Pacific Land Trust,2014-01-01,2020-09-30,history filed under predecessor CIK (class A),15-12B 0001213900-21-004045,A,27
+2683,0001058057,predecessor,Marvell Technology Group Ltd,2014-01-01,2021-01-30,history filed under predecessor CIK (class A),8-K12B 0001193125-21-122938,A,28
+2801,0000006769,predecessor,Apache Corp,2014-01-01,2020-12-31,history filed under predecessor CIK (class A),8-K12B 0001193125-21-063695,A,28
+3117,0001411494,predecessor,Apollo Global Management (old),2014-01-01,2021-12-31,history filed under predecessor CIK (class A),8-K12B 0001193125-22-000274,A,32
+3240,0001168165,predecessor,Exelon Generation,2014-01-01,2021-09-30,history filed under predecessor CIK (class A),XBRL 0001868275-23-000014,A,31
+3406,0001772757,predecessor,DraftKings (old),2014-01-01,2021-12-31,history filed under predecessor CIK (class A),8-K12B 0001104659-22-056134,A,11
+3496,0001458891,predecessor,Noble Corp (Cayman),2014-01-01,2022-06-30,history filed under predecessor CIK (class A),8-K12B 0001193125-22-254859,A,35
+3600,0000048039,predecessor,HollyFrontier,2014-01-01,2021-12-31,history filed under predecessor CIK (class A),8-K12B 0001193125-22-074381,A,32
+3885,0001632970,exclude,"own CIK, wrong entity",2014-01-01,2021-09-30,wrong_entity_history: Griffin-American Healthcare REIT IV filings (legal acquirer) before the Oct 2021 merger,10-K 0001632970-22-000020,C,
+3885,0001566912,predecessor,Griffin-American Healthcare REIT III,2014-01-01,2021-06-30,history filed under predecessor CIK (class C),10-K 0001632970-22-000020,C,30
+4016,0001144519,predecessor,Bunge Ltd,2014-01-01,2023-09-30,history filed under predecessor CIK (class A),8-K12G3 0001104659-23-113123,A,39
+4114,0001832433,predecessor,Ferguson plc,2014-01-01,2024-04-30,history filed under predecessor CIK (class A),8-K12B 0001193125-24-190512,A,8
+4123,0001364742,predecessor,BlackRock (old),2014-01-01,2024-06-30,history filed under predecessor CIK (class A),8-K12B 0001193125-24-229601,A,42
+4294,0001561951,predecessor,"US Foods, Inc.",2014-01-01,2016-04-02,history filed under predecessor CIK (class A),structure (parent IPO 2016),A,9
+4316,0000029915,predecessor,Dow Chemical Co,2014-01-01,2017-06-30,history filed under predecessor CIK (class B),10-K 0001666700-18-000009,B,14
+4474,0002041610,exclude,"own CIK, wrong entity",2014-01-01,2025-06-30,wrong_entity_history: Skydance filings before the Aug 2025 merger (Paramount Global is the reported history),8-K12B 0001193125-25-175046,B,
+4474,0000813828,predecessor,Paramount Global,2014-01-01,2025-06-30,history filed under predecessor CIK (class B),8-K12B 0001193125-25-175046; 10-K 0002041610-26-000011,B,44
+4637,0000092416,predecessor,Southwest Gas Corp,2014-01-01,2016-09-30,history filed under predecessor CIK (class A),8-K12B 0001193125-17-000274,A,11
+4786,0001602065,predecessor,Viper Energy Partners LP,2014-01-01,2025-06-30,history filed under predecessor CIK (class A),8-K12B 0001193125-25-183036,A,45
+4841,0001707925,exclude,"own CIK, wrong entity",2014-01-01,2018-09-30,wrong_entity_history: Linde plc shell filings before the Oct 2018 merger (Praxair is the reported history),8-K12B 0001193125-18-317160,B,
+4841,0000884905,predecessor,Praxair,2014-01-01,2018-09-30,history filed under predecessor CIK (class B),8-K12B 0001193125-18-317160; XBRL 0001628280-19-003050,B,14
+4903,0000054507,predecessor,Westar Energy,2014-01-01,2018-05-08,history filed under predecessor CIK (class B),8-K12B 0001193125-18-182964; XBRL 0001711269-19-000013,B,17
+4929,0001318220,exclude,"own CIK, wrong entity",2014-01-01,2016-03-31,wrong_entity_history: Progressive Waste Solutions filings (legal acquirer) before the June 2016 merger,15-12B 0001144204-16-109485,C,
+4929,0001057058,predecessor,Waste Connections (old),2014-01-01,2016-03-31,history filed under predecessor CIK (class C),15-12B 0001144204-16-109485,C,9
+4938,0001115055,predecessor,Pinnacle Financial (old),2014-01-01,2025-09-30,history filed under predecessor CIK (class B),8-K12B 0001140361-26-000050; 10-K 0002082866-26-000018,B,47
+5116,0001441634,predecessor,Avago Technologies,2014-01-01,2015-11-01,history filed under predecessor CIK (class A),8-K12B 0001193125-16-446865,A,8
+5116,0001649338,predecessor,Broadcom Ltd,2015-11-02,2018-02-04,history filed under predecessor CIK (class A),S-4 0001193125-17-376663; 15-12B 0001193125-18-118504,A,9
+5228,0000701221,predecessor,Cigna Corp (now Cigna Holding Co),2014-01-01,2018-09-30,history filed under predecessor CIK (class A),8-K12B 0001140361-18-045479,A,19
+5261,0001001039,predecessor,Walt Disney Co (now TWDC Enterprises 18),2014-01-01,2018-12-29,history filed under predecessor CIK (class A),8-K12B 0000950157-19-000301,A,20
+5347,0000029915,predecessor,Dow Chemical Co,2014-01-01,2018-12-31,history filed under predecessor CIK (class A),XBRL 0001751788-20-000007,A,20
+5351,0000034088,predecessor,Exxon Mobil Corp,2014-01-01,2026-03-31,history filed under predecessor CIK (class A),8-K12B 0001193125-26-291990,A,49
+5394,0000030554,predecessor,EIDP (old DuPont),2014-01-01,2018-12-31,history filed under predecessor CIK (class A),XBRL 0001755672-20-000006,A,20
+5421,0000815065,predecessor,STERIS Corp,2014-01-01,2015-09-30,history filed under predecessor CIK (class A),15-12B 0001193125-15-378050,A,7
+5421,0001624899,predecessor,STERIS plc (UK),2015-10-01,2018-12-31,history filed under predecessor CIK (class A),S-4 0001193125-18-318953; 15-12B 0001193125-19-100748,A,13
+5691,0001792044,exclude,"own CIK, wrong entity",2014-01-01,2020-09-30,"wrong_entity_history: Upjohn carve-out filings before the Nov 2020 merger (Mylan is the reported history); flagged by the screen, not opened",XBRL 0001792044-21-000009,B,
+5691,0001623613,predecessor,Mylan N.V.,2014-01-01,2020-09-30,history filed under predecessor CIK (class B),XBRL 0001792044-21-000009,B,19
+5693,0001157806,predecessor,Encana Corp,2014-01-01,2019-09-30,history filed under predecessor CIK (class A),8-K12B 0001193125-20-014164,A,12

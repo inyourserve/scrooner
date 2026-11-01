@@ -121,14 +121,20 @@ def load_company(
     loader_commit: str | None = None,
     run_id: str | None = None,
     force: bool = False,
+    predecessors: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Load one companies/<cik>/ directory. Returns the row counts written (or {"skipped": True})."""
+    """Load one companies/<cik>/ directory. Returns the row counts written (or {"skipped": True}).
+    predecessors: predecessor cik -> successor cik (a registrant reorganised into a new holding
+    company: XOM 0000034088 -> 0002115436); its filings load under the successor's company."""
+    predecessors = predecessors or {}
     loader_commit = loader_commit or _git_commit()
     data = read(company_dir)
     m = data["manifest"]
     cik = m["cik"]
     with conn.cursor() as cur:
-        cur.execute("select id from core.company where cik = %s", (cik,))
+        cur.execute(
+            "select id from core.company where cik = %s", (predecessors.get(cik, cik),)
+        )
         row = cur.fetchone()
     if row is None:
         raise LookupError(f"no core.company for cik {cik}")
@@ -192,11 +198,27 @@ def load_company(
             subs = {r["adsh"]: r for r in data["sub"]}
             cur.execute("delete from fsn.filing where company_id = %s", (company_id,))
             counts["filings_deleted"] = cur.rowcount
+            sub_ciks = {r["cik"].zfill(10) for r in subs.values()}
             cur.execute(
                 "select cik, id from core.company where cik = any(%s)",
-                (sorted({r["cik"].zfill(10) for r in subs.values()}),),
+                (
+                    sorted(
+                        sub_ciks
+                        | {predecessors[c] for c in sub_ciks if c in predecessors}
+                    ),
+                ),
             )
             cid_of = dict(cur.fetchall())
+            # a company directory holds its whole history (fsn_store.shard writes predecessor
+            # registrants' filings into it, core.company_history_source): a filer CIK outside the
+            # company master is this company's predecessor
+            for pred in sub_ciks:
+                if pred not in cid_of:
+                    cid_of[pred] = (
+                        cid_of.get(predecessors.get(pred, ""), company_id)
+                        if pred in predecessors
+                        else company_id
+                    )
             cur.executemany(
                 """
                 insert into fsn.filing (accession, company_id, cik, form, period, fy, fp, fye, filed, accepted,
@@ -416,6 +438,7 @@ def run(
     *,
     force: bool = False,
     git_commit: str | None = None,
+    predecessors: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Load every (or the named) company directories; one rule_run for the batch."""
     loader_commit = git_commit or _git_commit()
@@ -442,7 +465,12 @@ def run(
     for d in dirs:
         try:
             r = load_company(
-                conn, d, loader_commit=loader_commit, run_id=run_id, force=force
+                conn,
+                d,
+                loader_commit=loader_commit,
+                run_id=run_id,
+                force=force,
+                predecessors=predecessors,
             )
             conn.commit()
         except Exception as exc:  # noqa: BLE001
