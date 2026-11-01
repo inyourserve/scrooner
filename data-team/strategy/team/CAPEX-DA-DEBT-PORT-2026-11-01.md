@@ -1,48 +1,60 @@
-# Capex, D&A and debt lane on the FSN store: status and plan (2026-11-01)
+# Capex, D&A and debt lane on the FSN store: detectors (2026-11-01)
 
-For Dhairya. Owner of the lane from now on: this session (request relayed by the HD pilot proof session, 2026-11-01). Branch `work/capex-da-debt/fsn-detectors` (on top of `work/balance-sheet/fsn-store`). Pattern: `data-team/strategy/team/BS-PORT-2026-11-01.md`. Lane handoff: `data-team/strategy/handoff/CAPEX-DA-CASH-DEBT-2026-11-01.md`.
+For Dhairya. Lane owner: this session (handed over by the HD pilot proof session, 2026-11-01). Branch `work/capex-da-debt/fsn-detectors`; it merges `main` and `work/balance-sheet/fsn-port-fixes`. Lane handoff: `data-team/strategy/handoff/CAPEX-DA-CASH-DEBT-2026-11-01.md`. Nothing writes to a shared database.
 
-**Status: started. One decision is needed from you (section 3) before the bulk of the port.** Nothing writes to the database.
+**Status: capex and D&A are done and pushed (f17217a9). Debt is still waiting on the decision in section 4.**
 
-## 1. What the pilot is missing (run 41312996998, `gaps.csv`)
+## 1. What changed
 
-| data point | `no_mapped_line` keys | why |
+| file | change |
+|---|---|
+| `pipeline/scripts/slot_records/cf_da_capex_variants.py` | The Verifier-passed version (e79ff33, the one behind file 6f53c945), first imported verbatim (666f7b63). Its per-(filing, column) loop body is now `evaluate(cik, ddate, q, f)`, and the module-level work moved into `main()`. **No rule changed:** the cohort run on 29 companies (59 FSN sets) gives byte-identical cells, summary and examples to the verbatim file. `main` had an older copy (3346020). |
+| `pipeline/src/scrooner_pipeline/fsn_store/detectors.py` (new) | `capex_da_detector`, a FORMATS-v1.1 detector. It runs the lane's own `evaluate` on every cash-flow face column of ONE filing and applies `emit_capex_da_cash`'s release rule: capex = an interim value with exactly one member; D&A = class `is_anchor` / `single_line_ties_is` / `single_line_clean`. Section 2 has the per-filing rule. |
+| `fsn_store/mapping.py`, `jobs/fsn.py` | `map_company(..., detectors=)`. The `pilot` command passes `detectors.DEFAULT`. |
+| `concept_rules/bs.jsonl` | The `current_liabilities_resolved` anchor I added earlier is **removed**. `main` now seeds the same row in `bs_current.jsonl`, and the two rows collided on `uq_fsn_concept_rule`; with both, seeding would have failed in the pilot. |
+| `capex_da_store_gate.py` (new) | The regression gate through the real store path (section 3). |
+
+## 2. The per-filing rule (your two Verifier findings)
+
+`select` takes one mapped line per concept and reads it in every column of the filing. So:
+
+- A line is **mapped** only if every face column of the filing that prints a candidate publishes through that same line, AND the store's raw print equals the lane's value in each column (the lane reads signs as presented).
+- Otherwise the filing is **held** for that concept. Every capex/D&A line the seeds mapped is returned `unmapped` (rule `cf.capex_da_held@1`) with the lane's reasons, so no rival value reaches select. That removes the pilot's `conflicting_values_in_filing` cells, e.g. JPM's several D&A lines in one 10-K. A test loads that JPM 10-K: the seeds map ≥2 D&A lines, the detector maps exactly 1.
+- **Per filing, not per company.** AWK's Q1 2015 10-Q publishes one D&A column and holds the other, so that filing holds (test). The lane's company-wide "net line" rule (KEY) is the one cross-filing rule; the detector applies it within the filing only.
+- **MSFT** "Depreciation, amortization, and other" → `da_combined_with_other_items` → the line is returned `combined` (test).
+- **HD: a decision for you.** Before FY2025, HD's cash-flow statement prints ONE D&A line (e.g. FY2019 2,296M). Its income statement prints a different "Depreciation and amortization" (1,989M), which excludes D&A inside cost of sales. The lane's release classes publish a single CF line only when there is no IS D&A total or the two tie, so **the Verifier-passed file holds all 63 HD D&A cells**, and the detector reproduces that (test). Publishing HD's CF line widens the release scope, so it needs a Verifier draw of the class "one CF line, IS total smaller". I have not changed it.
+
+## 3. Gate: the store path vs the lane's Verifier-passed file
+
+A local scratch Postgres 16 built from every migration; the gate refuses any other database. It loads the 10 pilot companies' real company directories (MSFT HD AAPL JPM TRV PLD NEE XOM JNJ WMT, sharded by `fsn_store.shard` from the SEC FSN sets) with `fsn_store.load`, seeds the committed `concept_rules`, then runs `map_company` + `select_company` twice. Each capex/D&A key (FY / Q, not derived) is compared with `cells/capex_da_cash_debt` 6f53c945. Evidence: `results/capex_da_store_gate_2026-11-01/store_gate.json`.
+
+| class | seeds only | with detectors |
 |---|---|---|
-| total_debt_resolved | 419 | the debt calc_position rows anchor on `current_liabilities_resolved`, which no rule mapped; and the slot (`borrowing`, `finance_lease`, `combined`) is decided by `build_debt_slots.classify` plus the record's calc/face/lease guards, not by the seed |
-| capex_resolved | 350 | slots `ppe` / `leased` / `software` exist only inside `cf_da_capex_variants.capex_nature` + the investing-block position |
-| depreciation_and_amortization_resolved | 349 (+57 `no_mapped_line_cond`) | slot `asset_da` exists only inside `da_nature` + the operating-block position |
+| same value as the lane | 0 | **290** (all of the lane's published keys) |
+| lane has a value, store blank | 224 | **0** |
+| `conflicting_values_in_filing` | 170 | **0** |
+| value differs from the lane | 12 | **0** |
+| store publishes where the lane holds the same filing | 2 | **0** |
+| a later vintage publishes where the lane held the original filing | 27 | 5 |
+| store print where the lane's derived quarter is held or different (later vintage; PLD Q 2014-09-30) | 39 | 1 |
+| store print equals the lane's derived quarter | 10 | 27 |
+| store key before the lane window (2011–2013 comparatives) | 14 | 29 |
+| key the lane file does not have (PLD Q 2026-06-30, newer than the file) | 0 | 1 |
+| both blank | 178 | 269 |
 
-## 2. Done on this branch
+Verdict: **PASS** (0 keys published against the lane, 0 conflicts). The 6 later-vintage keys are JPM Q 2014-03-31, AAPL capex FY2016 / FY2017 / Q 2017-12-31, PLD D&A FY2014 and PLD Q 2014-09-30. The store takes the latest accepted filing (design §4), and the lane's own single-line rule passes on that later filing, while the lane held the original. **Worth a Verifier look before the pilot publishes them.**
 
-- **Anchor seed:** `current_liabilities_resolved` = `us-gaap:LiabilitiesCurrent` (std_tag, priority 10), rule `bs.anchor_current_liabilities@1`. It is exported, not typed: the tag comes from the debt lane's `PARENTS`, the concept from the mapper's approved `CONCEPT_MAPPINGS`. With it, the `child_of current_liabilities_resolved` debt and liabilities slots can fire. `bs.jsonl` is now 17 rows; the exporter-equality test passes.
+## 4. Debt: still waiting on your decision
 
-## 3. Decision needed: how total debt reaches a cell
+Total debt is a sum of members (+ note finance leases). `select` cannot sum lines, so no line-level detector can produce it. The seeds' debt slots fire only for custom tags (`map_filing` rule 2), and those lines are not mapped as rivals today. So the 419 `no_mapped_line` debt keys stay blank, with no wrong values.
 
-`fsn_store.select` takes the one mapped line per concept and calls two different values in one filing a defect (`conflicting_values_in_filing`). Capex and D&A fit that today, because the lane publishes single-member cells only and holds multi-member ones (`held_pending_verifier`, handoff point 4). **Total debt does not fit:** it is almost always a sum (current + noncurrent members, plus note finance leases by your option b). Two ways to do it:
+- **(A) Recommended:** emit total-debt cells from `replay_debt_fsn --company`, reviewed and gated on `work/balance-sheet/fsn-port-fixes`, as a family file the pilot loads.
+- **(B):** a summing path in `select.py` (scrooner-8a's engine).
 
-- **(A) Recommended: debt cells from the lane's own replay.** `replay_debt_fsn.py --company` already reads one store company directory. Gate C showed it equals the Verifier-passed report_v4 (442/460; the 18 are the "securities loaned" holds). It would emit a `capex_da_cash_debt` total_debt family file (grain I, calendar instants), loaded by `cell_loader` like the other families; select then skips `total_debt_resolved`. The detector only marks member lines (evidence: slot, class), status `excluded` with reason `summed_by_debt_family`, so select never sees them as rival values.
-- **(B) Teach select to sum.** A `composed` concept list in `select.py` that sums the mapped members of one column (weights, completeness, note leases). This changes scrooner-8a's selection engine and needs its own gate; it would also have to re-implement the replay's note and lease rules.
+I'll build (A) as soon as you say so.
 
-I will build (A) unless you say (B).
+## 5. Rerun
 
-## 4. Plan once decided (capex and D&A first: they need no decision)
-
-1. **Detector module** `pipeline/src/scrooner_pipeline/fsn_store/detectors/cf_capex_da.py`. It reads one filing from `fsn.line` / `fsn.tag` / `fsn.calc_arc` / `fsn.value`, and its classifiers are the lane's `capex_nature`, `da_nature` and block rules, moved out of `cf_da_capex_variants.py` into an importable module. The script imports them back, so there is one copy of each rule. It returns FORMATS-v1.1 overrides `(report, line, concept_id | None, status, rule_id, evidence)`:
-   - one counted member line → `mapped`
-   - several → the lane's hold
-   - combined lines → `combined`
-2. **Your Verifier findings, honoured explicitly:**
-   - The D&A multi-line hold is decided **per filing** (HD prints one D&A line before FY2025, so those filings map). A test pins HD.
-   - MSFT "Depreciation, amortization, and other" stays `combined` (`da_nature` → `combined_other`). A test pins MSFT.
-3. **Debt member detector** (`detectors/debt.py`): `build_debt_slots.classify` + the `assemble_fsn` record guards, per section 3.
-4. **`jobs/fsn.py`**: `map_company` passes `detectors=[...]` (today it passes none).
-5. **Regression gate** against the lane's last Verifier-passed output, `cells/capex_da_cash_debt/2026-11-04/cells.jsonl.gz` (155,257 rows, sha 6f53c945, committed on `work/cash-flow/da-capex`). Its inputs are cohort FSN extracts in the `fsn-notes` bucket, so the gate is a GitHub Actions workflow (it has the bucket credentials; read-only, no database writes, outside the nightly window). It does three things:
-   - shard the cohort;
-   - run the lane script in cohort mode (old vs ported, byte-identical, as in the BS gate);
-   - run the store path (load → map with detectors → select) and compare each capex/D&A cell with the reference file.
-6. Report the per-key result here, with every difference classified, as in the BS port.
-
-## 5. Known risks
-
-- `cf_da_capex_variants` decides on VALUES, not just lines: IS tie-out for generic amortization, sign tests for lease intangibles, discontinued-block CFO choice. A line-level mapping cannot carry those decisions, so the detector must read `fsn.value` for the filing's face columns, and a hold must stay a hold. The gate is what proves this.
-- Window: the lane file starts 2014; the store does too. No difference expected there.
+```bash
+SCRATCH_DATABASE_URL=postgresql://<local scratch> pipeline/.venv/bin/python pipeline/scripts/slot_records/capex_da_store_gate.py <cells.jsonl.gz of 6f53c945> <out_dir> <companies>/<cik10> ...
+```
