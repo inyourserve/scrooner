@@ -1,7 +1,6 @@
-"""Replay income-statement slot records against companyfacts and production
-(dry run, read-only, one connection). The verdict comes from the FILING,
-never from production: production's value is carried only to list the
-differences.
+"""Replay income-statement slot records against companyfacts (dry run,
+read-only, one connection). The verdict comes from the FILING; production
+(analytics.canonical_fact) is not read (FSN-STORE-DESIGN 2026-11-01).
 
 Per filing the slot (is_detect.py) names the printed line's tag. A value is a
 FACE COLUMN of that filing only when its duration is one the form prints
@@ -19,7 +18,7 @@ the rounding unit make the cell `hide_restated_copies_disagree` (founder
 ruling: restated periods whose copies disagree are hidden). Net income G2:
 ProfitLoss - NCI lines = NetIncomeLoss on the reference accession within the
 filer's rounding unit, else `hold_identity_gap`. A cell never comes from a
-subtraction: production's derived Q4 cells are listed, not replaced.
+subtraction (quarter derivation is fsn_select.py's, design section 4).
 
 usage: DATABASE_URL=... is_replay.py <is_filing_slots.jsonl> <cik-list|@file> <out_dir>
   writes <out_dir>/is_<family>_cells.jsonl and is_replay_summary.json
@@ -38,17 +37,13 @@ sys.path.insert(0, str(Path(__file__).parent))
 from common import rounding_unit  # noqa: E402
 
 FAMILIES = ("revenue", "operating_income", "net_income", "cost_of_revenue", "gross_profit")
-PROD = {"revenue": "revenue_sanity_resolved", "operating_income": "operating_income_resolved",
-        "net_income": "net_income_resolved", "cost_of_revenue": "cost_of_revenue_resolved",
-        "gross_profit": "gross_profit_resolved"}
 PUBLISHABLE = {"G1_printed_total", "G1_printed_line", "G2_nci_identity", "G1b_profit_loss_no_nci", "G3_calc_sum",
                "G2_gross_identity", "G2b_available_to_common_bridge"}
 PERIODIC = ["10-K", "10-K/A", "10-KT", "10-Q", "10-Q/A", "10-QT"]
 SINCE = os.environ.get("IS_SINCE", "2015-01-01")
-# IS_REPLAY_PROD=0: full-population mode for the canonical_fact_v2 rebuild
-# (founder 2026-11-04): the filing's cells only, production is not read and no
-# cell is classified against it. The rules that decide a cell are unchanged.
-READ_PROD = os.environ.get("IS_REPLAY_PROD", "1") != "0"
+# Production is never read (FSN-STORE-DESIGN 2026-11-01, Dhairya: drop is_replay's
+# production reads): the filing's cells only, none classified against
+# analytics.canonical_fact. Output is what IS_REPLAY_PROD=0 wrote.
 
 
 def unit_of(v, cap=Decimal(10) ** 11):
@@ -78,10 +73,6 @@ def face_column(form, period, s, e):
         return 350 <= days <= 380 and any(near(e, year_back(period, n)) for n in (0, 1, 2))
     return any(lo <= days <= hi for lo, hi in ((80, 100), (170, 190), (260, 285))) and \
         any(near(e, year_back(period, n)) for n in (0, 1))
-
-
-def is_q4_like(s, e):
-    return 80 <= (e - s).days + 1 <= 100
 
 
 def main(slots_path, ciks, out_dir, families=None):
@@ -149,28 +140,6 @@ def main(slots_path, ciks, out_dir, families=None):
                     facts[acc][(tag, s0, e0)] = v
                     fact_ids[acc][(tag, s0, e0)] = fid
                 filing_meta[acc] = (por, form)
-        cur.execute(
-            """
-            select cc.name, p.start_date, p.end_date, cf.value::numeric, cf.id,
-                   sco.tag, sfi.accession_number, sf.is_derived, coalesce(array_length(cf.source_fact_ids, 1), 0)
-            from analytics.canonical_fact cf
-            join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
-            join core.period p on p.id = cf.period_id
-            join core.company c on c.id = cf.company_id
-            left join core.fact sf on sf.id = cf.source_fact_ids[1]
-            left join core.concept sco on sco.id = sf.concept_id
-            left join core.filing sfi on sfi.id = sf.filing_id
-            where c.cik = %s and cc.name = any(%s) and p.period_type = 'duration' and p.end_date >= %s
-            """,
-            (cik, list(PROD.values()) if READ_PROD else [], SINCE),
-        )
-        prod = defaultdict(dict)
-        rev = {v: k for k, v in PROD.items()}
-        for name, s0, e0, v, cfid, stag, sacc, sder, nsrc in cur.fetchall():
-            # a production cell built from several facts is a computation: its first
-            # source's tag is not the cell's tag (operating income = revenue - costs)
-            prod[rev[name]][(s0, e0)] = {"value": v, "cf_id": cfid, "tag": stag if nsrc == 1 else f"computed({nsrc})",
-                                         "accession": sacc, "derived": sder or nsrc > 1, "n_sources": nsrc}
         for fam in FAMILIES:
             obs = defaultdict(list)  # (start, end) -> [observation]
             for adsh, s in slots[cik][fam].items():
@@ -219,11 +188,6 @@ def main(slots_path, ciks, out_dir, families=None):
                     for back in (0, 1):
                         e0 = year_back(period, back)
                         obs[("held", e0, s["form"][:4])].append({"adsh": adsh, "gate": s["gate"], "filed": s["filed"]})
-            held_ends = defaultdict(set)
-            for k, v in obs.items():
-                if k[0] == "held":
-                    for o in v:
-                        held_ends[k[1]].add(o["gate"])
             cells = {}
             for key, os_ in obs.items():
                 if key[0] == "held":
@@ -235,7 +199,6 @@ def main(slots_path, ciks, out_dir, families=None):
                         "accession": ref["adsh"], "form": ref["form"], "slot_tag": ref["tag"], "label": ref["label"],
                         "gate": ref["gate"], "original": near(ref["period"], e0, 3), **(ref.get("extra") or {})}
                 v = ref["value"]
-                unit = rounding_unit([v])
                 state = None
                 if ref["gate"] not in PUBLISHABLE:
                     state = ref["gate"]
@@ -278,57 +241,13 @@ def main(slots_path, ciks, out_dir, families=None):
                 cell["slot_value"] = str(v) if state in ("slot_value", "hold_identity_gap") or state.startswith("hide") else None
                 cell["state"] = state
                 cells[(s0, e0)] = cell
-            for k, p in prod[fam].items():
-                if k not in cells:
-                    s0, e0 = k
-                    if e0 in held_ends or any(near(e0, h, 3) for h in held_ends):
-                        g = sorted(next(v for h, v in held_ends.items() if near(e0, h, 3)))
-                        st = "prod_only_filing_held:" + g[0]
-                    elif is_q4_like(s0, e0):
-                        st = "prod_only_q4_not_a_face_column"
-                    elif not slots[cik][fam]:
-                        st = "prod_only_company_no_face_rows"
-                    else:
-                        st = "prod_only_not_a_face_column"
-                    cells[k] = {"cik": cik, "family": fam, "start": s0.isoformat(), "end": e0.isoformat(), "state": st}
-                c = cells[k]
-                c.update(prod_value=str(p["value"]), prod_cf_id=p["cf_id"], prod_tag=p["tag"], prod_n_sources=p["n_sources"],
-                         prod_accession=p["accession"], prod_derived=p["derived"])
             for c in cells.values():
-                pv = c.get("prod_value")
                 if c["state"] == "slot_value":
-                    sv = Decimal(c["slot_value"])
-                    if pv is None:
-                        c["compare"] = "slot_fills_blank"
-                    else:
-                        diff = abs(sv - Decimal(pv))
-                        unit = rounding_unit([sv])
-                        punit = unit_of(Decimal(pv))
-                        unit = unit_of(sv)
-                        same_tag_later = (c.get("prod_tag") == c["slot_tag"] and c.get("prod_accession")
-                                          and c.get("prod_accession") != c["accession"])
-                        if diff == 0:
-                            c["compare"] = "agree"
-                        elif diff * 2 <= unit:
-                            c["compare"] = "differs_within_rounding"
-                        elif punit > unit and diff * 2 <= punit:
-                            # production shows a rounding of the filed number (a later filing
-                            # printed in millions/billions): less precise, not a different number
-                            c["compare"] = "prod_less_precise"
-                        elif same_tag_later and not c.get("prod_derived"):
-                            # production shows the SAME tag from a later filing with another value:
-                            # a disagreeing copy (restatement, recast or a note figure); founder
-                            # ruling: restated periods whose copies disagree are hidden
-                            c["state"] = "hide_restated_copies_disagree"
-                            c["copies_disagree"] = (c.get("copies_disagree") or []) + [
-                                {"accession": c["prod_accession"], "tag": c["prod_tag"], "value": c["prod_value"], "via": "production_source"}]
-                            c["compare"] = "would_hide"
-                        else:
-                            c["compare"] = "slot_differs"
+                    c["compare"] = "slot_fills_blank"
                 elif c["state"].startswith("hide"):
-                    c["compare"] = "would_hide" if pv is not None else "hidden_already_blank"
+                    c["compare"] = "hidden_already_blank"
                 else:
-                    c["compare"] = "prod_kept" if pv is not None else "both_blank"
+                    c["compare"] = "both_blank"
                 summary[fam][c["state"] + " | " + c["compare"]] += 1
                 fh[fam].write(json.dumps(c) + "\n")
         if n % 50 == 0:

@@ -18,7 +18,7 @@ Production's current state is carried: prod blank -> reason only (closes a
 reasonless blank); prod has a value -> the value is a derivation the face does
 not support -> would_hide stratum (own Verifier draw).
 Rows are in the analytics.cell_blank_reason shape (migration 0100).
-usage: is_not_presented.py [family=operating_income|gross_profit|cost_of_revenue] <is_fsn_dir> <is_filing_slots.jsonl> <oi_cells.jsonl> <out_dir> <cells.jsonl>...
+usage: is_not_presented.py [family=operating_income|gross_profit|cost_of_revenue] <is_fsn_dir|--company=<dir|@list>> <is_filing_slots.jsonl> <oi_cells.jsonl> <out_dir> <cells.jsonl>...
   the trailing cells files (net income, revenue dry runs) supply face columns
 """
 import glob
@@ -29,6 +29,8 @@ import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))  # fsn_company / fsn_is_pre under -I
 
 FAMILIES = {
     # family: (dry-run gate, rule id, "could be this line" label rx, label rx that does not count, reason text, concept)
@@ -57,14 +59,27 @@ def grain(start, end):
     return "FY" if days >= 350 else ("Q" if days <= 100 else "TP")
 
 
-def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
-    nolines = {}
-    for line in open(slots_path):
-        s = json.loads(line)
-        if s["family"] == FAMILY and s["gate"] == GATE:
-            nolines[s["adsh"]] = s
-    # stricter face check: any operating-like line on the primary face disqualifies
-    disq = set()
+def disqualified(nolines, rows):
+    """stricter face check: any operating-like line on the primary face disqualifies."""
+    out = set()
+    for adsh, rs in rows.items():
+        if adsh not in nolines:
+            continue
+        rep = nolines[adsh]["report"]
+        if any(r["report"] == rep and LIKE.search(r["label"]) and not (LIKE_NOT and LIKE_NOT.search(r["label"]))
+               for r in rs):
+            out.add(adsh)
+    return out
+
+
+def face_row_batches(fsn_dir, nolines):
+    """{adsh: face rows} per FSN period (cohort is_fsn dir), or per company for
+    --company=<company_dir|parent|@list> (the FSN store, fsn_company.py)."""
+    if fsn_dir.startswith("--company="):
+        from fsn_company import company_dir_list, read_is_inputs
+        for d in company_dir_list(fsn_dir.split("=", 1)[1]):
+            yield read_is_inputs(d)[0]
+        return
     for p in sorted(glob.glob(f"{fsn_dir}/*_is_pre.jsonl.gz")):
         rows = defaultdict(list)
         for line in gzip.open(p, "rt"):
@@ -72,11 +87,18 @@ def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
                 r = json.loads(line)
                 if r["adsh"] in nolines:
                     rows[r["adsh"]].append(r)
-        for adsh, rs in rows.items():
-            rep = nolines[adsh]["report"]
-            if any(r["report"] == rep and LIKE.search(r["label"]) and not (LIKE_NOT and LIKE_NOT.search(r["label"]))
-                   for r in rs):
-                disq.add(adsh)
+        yield rows
+
+
+def main(fsn_dir, slots_path, oi_cells_path, out_dir, *col_files):
+    nolines = {}
+    for line in open(slots_path):
+        s = json.loads(line)
+        if s["family"] == FAMILY and s["gate"] == GATE:
+            nolines[s["adsh"]] = s
+    disq = set()
+    for rows in face_row_batches(fsn_dir, nolines):
+        disq |= disqualified(nolines, rows)
     oi = {}
     for line in open(oi_cells_path):
         c = json.loads(line)

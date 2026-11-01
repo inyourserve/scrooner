@@ -7,6 +7,9 @@ StockholdersEquity, the including-NCI total, mezzanine lines), so the
 assembler can apply the printed-total-first rule. Eras collapse on the zone's
 ordered tag list; boundaries get a cal fetch for member partitioning.
 usage: bs_totals_detect.py <cohort_pre_rows.jsonl.gz> <cik,...> <eras_out.json> <boundaries_out.txt>
+       bs_totals_detect.py --company <dir|parent|@list> <eras_out.json> <boundaries_out.txt>
+  --company reads FSN store company directories (FORMATS-v1 section 1) through
+  fsn_company_bs.bs_pre_rows: the same rows the cohort extract held, one company at a time.
 """
 import gzip
 import json
@@ -22,19 +25,27 @@ ANCHORS = {
     "lse_total": {"LiabilitiesAndStockholdersEquity"},
 }
 
-ciks = set(sys.argv[2].split(","))
-by_filing = {}
-rows = defaultdict(list)
-with gzip.open(sys.argv[1], "rt") as f:
-    for line in f:
-        r = json.loads(line)
-        if r["cik"] not in ciks or r.get("stmt") != "BS":
+
+
+def collect(pre_rows, ciks=None):
+    """(by_filing, rows) from cohort_pre_rows-shaped dicts, in row order."""
+    by_filing = {}
+    rows = defaultdict(list)
+    for r in pre_rows:
+        if (ciks is not None and r["cik"] not in ciks) or r.get("stmt") != "BS":
             continue
         by_filing[r["adsh"]] = {
             "cik": r["cik"], "form": r["form"],
             "period": r["period"], "filed": r["filed"],
         }
         rows[r["adsh"]].append((r["report"], r["line"], r["tag"], r["custom"], r["label"]))
+    return by_filing, rows
+
+
+def cohort_rows(path):
+    with gzip.open(path, "rt") as f:
+        for line in f:
+            yield json.loads(line)
 
 
 def iso(d):
@@ -128,9 +139,15 @@ def classify_line(tag, label):
     return "liab"
 
 
-companies = defaultdict(list)
-for adsh, meta in by_filing.items():
-    ordered = sorted(rows[adsh])
+def detect_filings(by_filing, rows, companies):
+    """Per filing: zone lines, skeleton, anchors and the fingerprint; appended to companies[cik]."""
+    for adsh, meta in by_filing.items():
+        companies[meta["cik"]].append(detect_filing(adsh, meta, rows[adsh]))
+    return companies
+
+
+def detect_filing(adsh, meta, filing_rows):
+    ordered = sorted(filing_rows)
     tags = [t for _, _, t, _, _ in ordered]
     zone_start = tags.index("Assets") + 1 if "Assets" in tags else 0
     zone = ordered[zone_start:]
@@ -195,37 +212,62 @@ for adsh, meta in by_filing.items():
         "printedL" if anchors["liabilities_total"] else "noL",
         "nci" if anchors["nci"] else "no_nci",
     )
-    companies[meta["cik"]].append(
-        (iso(meta["filed"]), iso(meta["period"]), adsh, meta["form"], fp, anchors, zone_lines, skeleton)
-    )
+    return (iso(meta["filed"]), iso(meta["period"]), adsh, meta["form"], fp, anchors, zone_lines, skeleton)
 
-eras_out = {}
-boundaries = []
-for cik, filings in companies.items():
-    filings.sort()
-    eras = []
-    for filed, period, adsh, form, fp, anchors, zone_lines, skeleton in filings:
-        if eras and eras[-1]["fp"] == list(fp):
-            eras[-1]["last"] = adsh
-            eras[-1]["period_to"] = period
-            eras[-1]["n"] += 1
-        else:
-            eras.append(
-                {"fp": list(fp), "first": adsh, "last": adsh, "form": form,
-                 "period_from": period, "period_to": period, "filed_from": filed,
-                 "n": 1, "anchors": anchors, "zone_lines": zone_lines, "skeleton": skeleton}
-            )
-            boundaries.append((cik, adsh))
-    eras_out[cik] = eras
-json.dump(eras_out, open(sys.argv[3], "w"))
-with open(sys.argv[4], "w") as f:
-    for cik, adsh in boundaries:
-        f.write(f"{int(cik)} {adsh}\n")
-print(
-    f"companies {len(eras_out)}  filings {len(by_filing)}  "
-    f"eras {sum(len(v) for v in eras_out.values())}  boundaries {len(boundaries)}"
-)
-for cik in sorted(eras_out):
-    es = eras_out[cik]
-    printed = sum(1 for e in es if e["anchors"]["liabilities_total"])
-    print(f"  {cik}: {len(es)} eras, printed-Liabilities-total in {printed}")
+
+def build_eras(companies):
+    eras_out = {}
+    boundaries = []
+    for cik, filings in companies.items():
+        filings.sort()
+        eras = []
+        for filed, period, adsh, form, fp, anchors, zone_lines, skeleton in filings:
+            if eras and eras[-1]["fp"] == list(fp):
+                eras[-1]["last"] = adsh
+                eras[-1]["period_to"] = period
+                eras[-1]["n"] += 1
+            else:
+                eras.append(
+                    {"fp": list(fp), "first": adsh, "last": adsh, "form": form,
+                     "period_from": period, "period_to": period, "filed_from": filed,
+                     "n": 1, "anchors": anchors, "zone_lines": zone_lines, "skeleton": skeleton}
+                )
+                boundaries.append((cik, adsh))
+        eras_out[cik] = eras
+    return eras_out, boundaries
+
+
+def write_outputs(eras_out, boundaries, n_filings, eras_path, boundaries_path):
+    json.dump(eras_out, open(eras_path, "w"))
+    with open(boundaries_path, "w") as f:
+        for cik, adsh in boundaries:
+            f.write(f"{int(cik)} {adsh}\n")
+    print(
+        f"companies {len(eras_out)}  filings {n_filings}  "
+        f"eras {sum(len(v) for v in eras_out.values())}  boundaries {len(boundaries)}"
+    )
+    for cik in sorted(eras_out):
+        es = eras_out[cik]
+        printed = sum(1 for e in es if e["anchors"]["liabilities_total"])
+        print(f"  {cik}: {len(es)} eras, printed-Liabilities-total in {printed}")
+
+
+def main(argv):
+    if argv[1] == "--company":
+        import fsn_company_bs as fc
+        companies, n = defaultdict(list), 0
+        for d in fc.company_dir_list(argv[2]):
+            by_filing, rows = collect(fc.bs_pre_rows(d))
+            detect_filings(by_filing, rows, companies)
+            n += len(by_filing)
+        eras_out, boundaries = build_eras(companies)
+        write_outputs(eras_out, boundaries, n, argv[3], argv[4])
+        return
+    by_filing, rows = collect(cohort_rows(argv[1]), set(argv[2].split(",")))
+    companies = detect_filings(by_filing, rows, defaultdict(list))
+    eras_out, boundaries = build_eras(companies)
+    write_outputs(eras_out, boundaries, len(by_filing), argv[3], argv[4])
+
+
+if __name__ == "__main__":
+    main(sys.argv)
