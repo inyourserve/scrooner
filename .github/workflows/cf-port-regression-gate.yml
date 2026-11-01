@@ -1,0 +1,124 @@
+name: Cash-flow port regression gate vs run 7 (cf-port-gate)
+
+# Manual only. Read-only: reads the fsn-notes bucket, writes NOTHING to the database or the bucket.
+# Gate B of data-team/strategy/team/CF-PERSHARE-PORT-2026-11-01.md. Over the whole bucket (the
+# cohort-filtered FSN extracts, 2014q1 onward) it runs the cash-flow lane two ways on the same rows:
+#   cohort   cf_face_rows -> cf_num_rows -> cf_cal_rows -> cf_family_replay (the run 7 pipeline; num and
+#            cal are streamed one period at a time so the runner's disk holds one period's num file)
+#   company  fsn_store.shard -> companies/<cik10>/ -> cf_family_replay --company (the FSN-store port)
+# and fails unless (1) both modes give identical cells for CFO, buybacks and dividends paid, and (2) the
+# verdict counts equal run 7 (results/cf_run7/*_summary.json: CFO 37,121 / buybacks 23,989 / dividends
+# 24,610 publishable). If run 7's own cell files were uploaded to the bucket, `run7_cells` names their
+# folder and (3) the company-mode cells must equal them cell for cell.
+# Runs outside the nightly window (18:00-21:30 UTC); zero database connections.
+on:
+  workflow_dispatch:
+    inputs:
+      code_ref:
+        description: "Git ref holding the port"
+        default: "work/cashflow/fsn-store-port"
+      run7_cells:
+        description: "Optional fsn-notes folder with run 7's {cfo,buybacks,dividends_paid}_cells.jsonl.gz (empty = skip the per-cell check)"
+        default: ""
+      periods:
+        description: "Comma-separated FSN sets (empty = every set in the bucket)"
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cf-port-gate
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      RUN7_CELLS: ${{ inputs.run7_cells }}
+      PERIODS: ${{ inputs.periods }}
+      S: pipeline/scripts/slot_records
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+      - name: Tools
+        run: |
+          sudo apt-get install -y zstd
+          uv sync --project pipeline --locked
+      - name: Outside the nightly window
+        run: |
+          h=$(date -u +%H%M)
+          if [ "$h" -ge 1800 ] && [ "$h" -le 2130 ]; then echo "::error::inside the 18:00-21:30 UTC nightly window"; exit 1; fi
+      - name: Cohort and periods
+        run: |
+          set -eu
+          python3 -c "import csv; ciks=sorted({r['cik'].zfill(10) for r in csv.DictReader(open('doc/data-moat/team/top1000/shards.csv')) if not r.get('excluded')}); open('cohort.csv','w').write('cik\n'+''.join(str(int(c))+'\n' for c in ciks)); open('ciks.txt','w').write(','.join(ciks))"
+          if [ -n "$PERIODS" ]; then echo "$PERIODS" | tr ',' '\n' > periods.txt
+          else uv run --project pipeline python -c "from scrooner_pipeline.fsn_store.shard import list_periods; print('\n'.join(list_periods()))" > periods.txt; fi
+          echo "companies $(tr ',' '\n' < ciks.txt | wc -l), periods $(wc -l < periods.txt)"
+      - name: Cohort mode (run 7 pipeline)
+        run: |
+          set -euo pipefail
+          get() { curl -sSf -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+                    -o "$3" "$SUPABASE_URL/storage/v1/object/fsn-notes/$1/$1_$2.tsv.zst"; }
+          mkdir -p heads one gate
+          while read -r p; do mkdir -p heads/$p; get $p sub heads/$p/${p}_sub.tsv.zst; get $p pre heads/$p/${p}_pre.tsv.zst; done < periods.txt
+          python3 -I $S/cf_face_rows.py heads cohort.csv gate/face.jsonl.gz CF,IS | tail -1
+          : > gate/num.jsonl.gz; : > gate/cal.jsonl.gz
+          while read -r p; do
+            rm -rf one && mkdir -p one/$p
+            get $p num one/$p/${p}_num.tsv.zst; get $p cal one/$p/${p}_cal.tsv.zst
+            python3 -I $S/cf_num_rows.py one gate/face.jsonl.gz part_num.jsonl.gz > /dev/null
+            python3 -I $S/cf_cal_rows.py one gate/face.jsonl.gz part_cal.jsonl.gz > /dev/null
+            cat part_num.jsonl.gz >> gate/num.jsonl.gz; cat part_cal.jsonl.gz >> gate/cal.jsonl.gz   # gzip members concatenate
+            echo "$p done, free $(df -h . | tail -1 | awk '{print $4}')"
+          done < periods.txt
+          rm -rf one heads
+          python3 -I $S/cf_family_replay.py gate/face.jsonl.gz gate/num.jsonl.gz gate/cal.jsonl.gz out_cohort
+      - name: Company mode (FSN-store port)
+        run: |
+          set -euo pipefail
+          uv run --project pipeline python -c "
+          import sys; from pathlib import Path
+          from scrooner_pipeline.fsn_store import shard
+          ciks = open('ciks.txt').read().split(',')
+          periods = open('periods.txt').read().split()
+          res = shard.run(Path('companies'), {c: None for c in ciks}, periods, Path('.cache/fsn-shard'), floor_gb=2.0, shard_commit=None)
+          print(res)
+          sys.exit(0 if res['complete'] else 'shard incomplete (disk floor?): ' + str(res.get('stopped_before')))
+          " | tail -2
+          python3 -I $S/cf_family_replay.py --company companies out_company
+      - name: Gate
+        run: |
+          set -eu
+          rc=0
+          python3 -I $S/cf_port_gate.py out_cohort out_company --summaries $S/results/cf_run7 --report gate_report.json || rc=1
+          if [ -n "$RUN7_CELLS" ]; then
+            mkdir -p run7
+            for f in cfo buybacks dividends_paid; do
+              curl -sSf -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+                -o run7/${f}_cells.jsonl.gz "$SUPABASE_URL/storage/v1/object/fsn-notes/$RUN7_CELLS/${f}_cells.jsonl.gz"
+            done
+            python3 -I $S/cf_port_gate.py run7 out_company --report gate_report_vs_run7_cells.json || rc=1
+          fi
+          exit $rc
+      - name: Per-share reader over the cohort (report only)
+        if: always()
+        run: |
+          [ -d companies ] && uv run --project pipeline python -I $S/fsn_company_pershare.py companies pershare_cells.jsonl || true
+          [ -f pershare_cells.jsonl ] && python3 -c "import json,collections; c=collections.Counter((r['concept'],r['verdict']) for r in map(json.loads,open('pershare_cells.jsonl'))); [print(*k,v) for k,v in sorted(c.items())]" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cf-port-gate
+          path: |
+            gate_report*.json
+            out_cohort/*_summary.json
+            out_company/
+            pershare_cells.jsonl
+          if-no-files-found: ignore
