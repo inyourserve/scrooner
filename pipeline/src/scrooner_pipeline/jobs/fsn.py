@@ -15,7 +15,7 @@ SHARDS_CSV = Path("doc/data-moat/team/top1000/shards.csv")
 
 @app.callback()
 def _root() -> None:
-    """Subcommands: shard, load, seed-rules."""
+    """Subcommands: shard, load, seed-rules, pilot, pilot-prod."""
 
 
 def _cohort(shards_file: Path) -> list[str]:
@@ -122,6 +122,176 @@ def seed_rules_cmd(
             typer.echo(
                 f"seed-rules {f} [{'apply' if apply else 'plan'}]: {json.dumps(res, default=str)}"
             )
+
+
+def _ids(conn, ciks: str) -> dict[str, int]:
+    cik_list = [c.strip().zfill(10) for c in ciks.split(",") if c.strip()]
+    return dict(
+        conn.execute(
+            "select cik, id from core.company where cik = any(%s)", (cik_list,)
+        ).fetchall()
+    )
+
+
+@app.command("pilot")
+def pilot_cmd(
+    ciks: str = typer.Option(..., help="Comma-separated pilot CIKs (already loaded)."),
+    out: str = typer.Option("pilot-out", help="Output directory."),
+    calendar: str = typer.Option(
+        "data-team/46-canonical-fact-v2/expected_periods_2026-10-31.csv.gz",
+        help="Expected-period calendar (CELL-FORMAT §2.3).",
+    ),
+) -> None:
+    """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
+    Writes fsn.line_map and fsn.filing_check of that database; run it on a scratch copy for a dry run."""
+    import gzip
+
+    from scrooner_pipeline.db.connection import get_connection
+    from scrooner_pipeline.fsn_store import checks, mapping, pilot
+    from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
+
+    root = Path(out)
+    root.mkdir(parents=True, exist_ok=True)
+    reports: list[dict] = []
+    families: dict[str, list[dict]] = {}
+    library_rows: list[dict] = []
+    gap_rows: list[dict] = []
+    with get_connection() as conn:
+        rules = mapping.load_rules(conn)
+        rule_concepts = {
+            r[0]
+            for r in conn.execute(
+                "select distinct cc.name from fsn.concept_rule r join analytics.canonical_concept cc on cc.id = r.canonical_concept_id"
+            ).fetchall()
+        }
+        for cik, cid in sorted(_ids(conn, ciks).items()):
+            m = mapping.map_company(conn, cid, rules)
+            c = checks.check_company(conn, cid)
+            conn.commit()
+            rep = pilot.report_company(conn, cid, Path(calendar), rule_concepts)
+            rep["mapping"], rep["checks"] = m, c
+            rep["accessions"] = [
+                r[0]
+                for r in conn.execute(
+                    "select accession from fsn.filing where company_id = %s order by accepted",
+                    (cid,),
+                ).fetchall()
+            ]
+            for r in rep.pop("_cells"):
+                if r["fsn_end"] < "2014-01-01":
+                    continue  # comparatives before the history floor (CELL-FORMAT §2)
+                fam = OWNERSHIP.get(r["data_point_name"], "unowned")
+                families.setdefault(fam, []).append(r)
+            for g in rep.pop("_gaps"):
+                gap_rows.append({"cik": cik, "company_id": cid, **g})
+            for e in rep.pop("_library"):
+                library_rows.append({"cik": cik, "company_id": cid, **e})
+            reports.append(rep)
+            typer.echo(
+                f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
+                f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
+                f"library {rep['library']['completeness_pct']}%, gaps {rep['template_coverage']['gaps']}"
+            )
+    for fam, rows in families.items():
+        d = root / "cells" / fam
+        d.mkdir(parents=True, exist_ok=True)
+        with gzip.open(d / "cells.jsonl.gz", "wt") as fh:
+            for r in rows:
+                fh.write(json.dumps(r, default=str) + "\n")
+        (d / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "family": fam,
+                    "rule_id": "fsn.select@1",
+                    "rows": len(rows),
+                    "data_points": sorted({r["data_point_name"] for r in rows}),
+                    "period_floor": "2014-01-01",
+                }
+            )
+        )
+    for name, rows in (("library", library_rows), ("gaps", gap_rows)):
+        if rows:
+            with (root / f"{name}.csv").open("w", newline="") as fh:
+                w = csv.DictWriter(fh, fieldnames=list(rows[0]))
+                w.writeheader()
+                w.writerows(rows)
+    (root / "report.json").write_text(json.dumps(reports, indent=1, default=str))
+    lines = [
+        "| company | template | keys | valued % | valued or reasoned % | gaps | library % | missing data points (library) |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for r in reports:
+        t, lib = r["template_coverage"], r["library"]
+        lines.append(
+            f"| {r['name']} ({r['cik']}) | {r['profile']['sector_template']} | {t['keys']} | {t['valued_pct']} | "
+            f"{t['valued_or_reasoned_pct']} | {t['gaps']} | {lib['completeness_pct']} | {', '.join(x.replace('_resolved', '') for x in lib['missing'])} |"
+        )
+    causes: dict[str, int] = {}
+    for g in gap_rows:
+        causes[g["cause"]] = causes.get(g["cause"], 0) + 1
+    lines += [
+        "",
+        "Gap causes (template keys):",
+        *[f"- {k}: {v}" for k, v in sorted(causes.items(), key=lambda x: -x[1])],
+    ]
+    (root / "summary.md").write_text("\n".join(lines) + "\n")
+    typer.echo("\n".join(lines))
+
+
+@app.command("pilot-prod")
+def pilot_prod_cmd(
+    pilot_out: str = typer.Option("pilot-out", help="The `pilot` output directory."),
+) -> None:
+    """Production side of the pilot dry run, READ-ONLY: before-image of the pilot companies'
+    canonical_fact and reasons, filings missing from the store, then `scrooner-cells load --plan`
+    (rolled back) per family file. Writes nothing to production values."""
+    import gzip
+
+    from scrooner_pipeline.db.connection import get_connection
+
+    root = Path(pilot_out)
+    reports = json.loads((root / "report.json").read_text())
+    ids = [r["company_id"] for r in reports]
+    with get_connection() as conn:
+        conn.execute("set statement_timeout = '10min'")
+        for table, cols in (
+            ("analytics.canonical_fact", "*"),
+            ("analytics.cell_blank_reason", "*"),
+        ):
+            path = root / "before_image" / f"{table.split('.')[1]}.csv.gz"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with (
+                gzip.open(path, "wb") as fh,
+                conn.cursor().copy(
+                    f"copy (select {cols} from {table} where company_id = any(%s) order by 1) to stdout with csv header",
+                    (ids,),
+                ) as cp,
+            ):
+                for chunk in cp:
+                    fh.write(bytes(chunk))
+        missing = {}
+        for r in reports:
+            have = set(r["accessions"])
+            rows = conn.execute(
+                """
+                select accession_number, form, period_of_report from core.filing
+                where company_id = %s and form in ('10-K', '10-Q', '10-K/A', '10-Q/A')
+                  and period_of_report >= '2014-01-01'
+                order by period_of_report
+                """,
+                (r["company_id"],),
+            ).fetchall()
+            missing[r["cik"]] = [
+                {"accession": a, "form": f, "period": str(p)}
+                for a, f, p in rows
+                if a not in have
+            ]
+        conn.rollback()
+    (root / "missing_filings.json").write_text(json.dumps(missing, indent=1))
+    typer.echo(
+        "filings in core.filing but not in the store: "
+        + json.dumps({k: len(v) for k, v in missing.items()})
+    )
 
 
 if __name__ == "__main__":

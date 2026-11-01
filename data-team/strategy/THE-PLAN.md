@@ -2,6 +2,14 @@
 
 Owner: Dhairya. Status: APPROVED by the founder in the main session, 2026-10-24 ("yes all plan is approved"). Section 7's four decisions (approver policy, Q4 earnings figures, notes data sets, push permission) were not answered individually by that message and stay open until he answers them. Everything else in `data-team/strategy/` and `doc/data-moat/` is detail or history; if it conflicts with this page, this page wins. Running log of results: `doc/data-moat/team/PLAN.md`.
 
+## 0. North star (founder, 2026-11-01)
+Founder direction, typed in Dhairya's session (scrooner-df) and relayed to Ritwik 2026-11-01: "we will achieve coverage if we have full understanding of the company, full understanding of FSN and tags, and then a full-fledged tag–company–metric library." Coverage is the result; the library is the asset.
+1. **Company profile:** sector and template, fiscal year, co-registrants, restatement history, combined lines, own labels.
+2. **Tag knowledge:** `fsn.tag`, the tag cards (`data-team/tags/cards/`), the mind.
+3. **The library:** every company × metric × era → line, tag, label, calc position, evidence accession; served from `fsn.line_map` + `fsn.concept_rule` (design: `data-team/strategy/FSN-STORE-DESIGN-2026-11-01.md`).
+
+**Library completeness per company** is a gate criterion at G2 (pilot) and G3 (cohort), alongside 100% of the sector template and a clean Verifier draw.
+
 ## 1. The bet
 For the top 1,000 US companies (cohort v1.1, 2015 to date), every cell on a company page is either **a correct value that traces to a filing** or **a visible, evidenced reason**. We prove it one company at a time, then in batches of 10. We never claim "100% correct"; we claim "checked against the filing, error rate published".
 
