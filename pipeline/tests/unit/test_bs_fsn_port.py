@@ -117,22 +117,25 @@ def _write(path, cols, rows):
     path.write_text("\t".join(cols) + "\n" + "".join("\t".join(str(r.get(c, "")) for c in cols) + "\n" for r in rows))
 
 
-def _synthetic(tmp_path, filings):
+DEFAULT_MEMBERS = [{"tag": "LongTermDebtNoncurrent", "class": "borrowing", "side": "noncurrent", "custom": False},
+                   {"tag": "FinanceLeaseLiabilityNoncurrent", "class": "finance_lease", "side": "noncurrent", "custom": False}]
+
+
+def _synthetic(tmp_path, filings, face=None, members=None):
     """filings: [(adsh, form, period, accepted, {ddate: {tag: value}})] for CIK 1"""
+    face = face or FACE
     d = tmp_path / "0000000001"
     d.mkdir()
     (d / "manifest.json").write_text('{"cik": "0000000001"}')
     _write(d / "sub.tsv", SUB, [{"fsn_set": "2020q1", "adsh": a, "cik": "1", "form": f, "period": p, "filed": acc[:8], "accepted": acc}
                                 for a, f, p, acc, _ in filings])
     _write(d / "pre.tsv", PRE, [{"adsh": a, "report": 2, "line": i + 1, "stmt": "BS", "inpth": 0, "tag": t, "version": "us-gaap/2020",
-                                 "prole": "terseLabel", "plabel": lab, "negating": 0} for a, *_ in filings for i, (t, lab) in enumerate(FACE)])
+                                 "prole": "terseLabel", "plabel": lab, "negating": 0} for a, *_ in filings for i, (t, lab) in enumerate(face)])
     _write(d / "num.tsv", NUM, [{"adsh": a, "tag": t, "version": "us-gaap/2020", "ddate": dd, "qtrs": 0, "uom": "USD", "dimh": "0x00000000",
                                  "iprx": 0, "value": v} for a, _f, _p, _acc, vals in filings for dd, tv in vals.items() for t, v in tv.items()])
     (tmp_path / "records.jsonl").write_text(json.dumps({
         "company": "SYN", "cik": "1", "filing_from": filings[0][0], "period_from": "2014-01-01", "period_to": "2030-12-31",
-        "coverage_clean": True, "members": [
-            {"tag": "LongTermDebtNoncurrent", "class": "borrowing", "side": "noncurrent", "custom": False},
-            {"tag": "FinanceLeaseLiabilityNoncurrent", "class": "finance_lease", "side": "noncurrent", "custom": False}]}) + "\n")
+        "coverage_clean": True, "members": members or DEFAULT_MEMBERS}) + "\n")
     run("replay_debt_fsn.py", "--company", d, tmp_path / "records.jsonl", tmp_path / "replay.json")
     return {c["period_end"]: c for c in json.loads((tmp_path / "replay.json").read_text())["cells"]}
 
@@ -213,3 +216,20 @@ def test_gate_fails_closed(tmp_path):
     (bad_dir / "pin.json").write_text(json.dumps(obs))  # a generic class can never be pinned
     pinned = _compare(bad_dir, w, "--expected", bad_dir / "pin.json")
     assert pinned.returncode == 1 and "REFUSED PIN" in pinned.stdout
+
+
+
+def test_note_lease_not_added_when_the_total_is_a_face_member(tmp_path):
+    """review 2026-11-01 (sibling case): the face member is the TOTAL FinanceLeaseLiability 45; the note prints the
+    current part 5. Total debt = 100 + 45 = 145; nothing is added from the note (never 190)."""
+    vals = {"Assets": 1000, "LiabilitiesAndStockholdersEquity": 1000, "LongTermDebtNoncurrent": 100, "LongTermDebt": 100,
+            "FinanceLeaseLiability": 45, "FinanceLeaseLiabilityCurrent": 5}
+    face = [("Assets", "Total assets"), ("LongTermDebtNoncurrent", "Long-term debt"),
+            ("FinanceLeaseLiability", "Finance lease liabilities"), ("LiabilitiesAndStockholdersEquity", "Total")]
+    members = [{"tag": "LongTermDebtNoncurrent", "class": "borrowing", "side": "noncurrent", "custom": False},
+               {"tag": "FinanceLeaseLiability", "class": "finance_lease", "side": "noncurrent", "custom": False}]
+    cells = _synthetic(tmp_path, [("0000000001-20-000001", "10-K", "20191231", "20200220120000", {"20191231": vals})], face, members)
+    c = cells["2019-12-31"]
+    assert c["verdict"] == "publishable", c
+    assert c["slot_lease_inclusive"] == "145"
+    assert not c["note_finance_lease_added"]

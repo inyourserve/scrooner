@@ -253,6 +253,10 @@ def replay(records, best, filings, prod, prod_n):
             # FinanceLeaseLiabilityNoncurrent 40 beside a note total FinanceLeaseLiability 55 adds 15, never 55).
             def pick(total, cur_, noncur):
                 on_face = sum((day[t][0] for t in (cur_, noncur) if t in member_tags and t in day), Decimal(0))
+                if total in member_tags:
+                    # the TOTAL is itself a face member (review 2026-11-01: face FinanceLeaseLiability 45 + note
+                    # current 5 must not add 45 again): the member already carries every finance lease
+                    return Decimal(0), f"{total}(face member)"
                 if total in day:
                     face_src = "+".join(t for t in (cur_, noncur) if t in member_tags and t in day)
                     return day[total][0] - on_face, total + (f"-{face_src}" if face_src else "")
