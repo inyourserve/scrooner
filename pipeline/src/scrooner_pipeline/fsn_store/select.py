@@ -310,11 +310,14 @@ def _note_quarter(
         return None  # an undimensioned copy of a member's figure (GE double context)
     if n == 4:
         four = [
-            notes.get((w.filing_id, w.tag, month_end(ddate, -3 * i))) for i in range(4)
+            p
+            for i in range(4)
+            if (p := notes.get((w.filing_id, w.tag, month_end(ddate, -3 * i))))
+            is not None
         ]
-        if all(four):
-            total = sum((p.value for p in four), Decimal(0))  # type: ignore[union-attr]
-            tol = tol_of([w.dcml, *(p.dcml for p in four)])  # type: ignore[union-attr]
+        if len(four) == 4:
+            total = sum((p.value for p in four), Decimal(0))
+            tol = tol_of([w.dcml, *(p.dcml for p in four)])
             if abs(total - w.value) > tol:
                 return None  # the note quarters miss the year: not this line's quarters
     return Cell(
@@ -427,15 +430,15 @@ def fiscal_label(
         if f.period is not None:
             by_period.setdefault(f.period, f)
     for back in range(4):
-        f = by_period.get(month_end(ddate, 12 * back))  # type: ignore[assignment]
-        if f is None or f.fy is None:
+        match = by_period.get(month_end(ddate, 12 * back))
+        if match is None or match.fy is None:
             continue
-        fy = f.fy - back
+        fy = match.fy - back
         if qtrs == 4:
             return fy, "FY"
         if qtrs == 1:
-            return fy, (f.fp if f.fp in ("Q1", "Q2", "Q3") else "Q4")
-        return fy, (f.fp if f.fp in ("Q1", "Q2", "Q3") else "FY")
+            return fy, (match.fp if match.fp in ("Q1", "Q2", "Q3") else "Q4")
+        return fy, (match.fp if match.fp in ("Q1", "Q2", "Q3") else "FY")
     return None, None
 
 

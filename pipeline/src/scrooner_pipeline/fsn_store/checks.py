@@ -138,13 +138,13 @@ def check_column(
         parent = col.get((ptag, pver))
         if parent is None or len(children) < 2:
             continue
-        terms = [(col.get((c, v)), w) for c, v, w in children]
-        if any(t is None for t, _ in terms):
+        terms = [(t, w) for c, v, w in children if (t := col.get((c, v))) is not None]
+        if len(terms) < len(children):
             continue
         if any(stmt_of.get((c, v)) != stmt for c, v, _ in children):
             continue
-        rhs = sum((t.value * w for t, w in terms), Decimal(0))  # type: ignore[union-attr]
-        tol = tol_of([parent.dcml, *(t.dcml for t, _ in terms)])  # type: ignore[union-attr]
+        rhs = sum((t.value * w for t, w in terms), Decimal(0))
+        tol = tol_of([parent.dcml, *(t.dcml for t, _ in terms)])
         out.append(
             {
                 "check_id": f"calc:{ptag}:{grp}",

@@ -318,7 +318,7 @@ def load_company(
                 if r["adsh"] not in own:
                     continue
                 fid = filing_id[r["adsh"]]
-                k = (  # type: ignore[assignment]
+                vk = (
                     fid,
                     tag_id[(r["tag"], r["version"])],
                     _d8(r["ddate"]),
@@ -328,10 +328,10 @@ def load_company(
                     _int(r.get("iprx"), 0),
                     r.get("coreg") or "",
                 )
-                if k in seen_vals:
+                if vk in seen_vals:
                     counts["num_duplicate_key"] += 1
                     continue
-                seen_vals.add(k)
+                seen_vals.add(vk)
                 val_rows.append(
                     (
                         *k,

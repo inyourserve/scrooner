@@ -200,7 +200,7 @@ def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow |
     if grain not in GRAINS:
         return "grain_not_FY_Q_I"
     state = r.get("state")
-    if state not in STATES:
+    if not isinstance(state, str) or state not in STATES:
         return "state_outside_contract"
     try:
         start, end = _d(r.get("period_start")), _d(r.get("period_end"))
@@ -266,7 +266,7 @@ def parse_row(line: int, r: dict[str, Any], known_points: set[str]) -> CellRow |
     return CellRow(
         line=line,
         key=key,
-        state=state,  # type: ignore[arg-type]
+        state=state,
         value=value if state in VALUED else None,
         unit=r.get("unit"),
         decimals=r.get("decimals"),
@@ -718,13 +718,13 @@ def load(
     conn.commit()  # the manifest row stands alone; every company below is its own transaction
     done = 0
     for cid in sorted(by_company):
-        rows = by_company[cid]  # type: ignore[assignment]
+        company_rows = by_company[cid]
         for attempt in range(1, 4):
             try:
                 _load_company(
                     conn,
                     cid,
-                    rows,  # type: ignore[arg-type]
+                    company_rows,
                     ciks[cid],
                     family,
                     run_id,
@@ -823,16 +823,13 @@ def _load_company(
                     reasons_by_rule[r.rule_id].append(to_reason(r))
                     continue
                 if not r.source_fact_ids and r.state == "value":
-                    ids = list(facts.get((r.accession, r.tag, r.period_id), []))  # type: ignore[arg-type]
+                    ids: list[int] = []
+                    if r.accession and r.tag and r.period_id is not None:
+                        ids += facts.get((r.accession, r.tag, r.period_id), [])
                     for m in r.members or []:
-                        ids += facts.get(
-                            (  # type: ignore[arg-type]
-                                m.get("accession") or r.accession,
-                                m.get("tag"),
-                                r.period_id,
-                            ),
-                            [],
-                        )
+                        m_acc, m_tag = m.get("accession") or r.accession, m.get("tag")
+                        if m_acc and m_tag and r.period_id is not None:
+                            ids += facts.get((m_acc, m_tag, r.period_id), [])
                     if not ids and r.source_value_ids:
                         # an FSN-store cell: fsn.value ids are its lineage; core.fact ids only where they resolve
                         valued.append(r)
@@ -856,7 +853,7 @@ def _load_company(
                     (cid, scope_ids),
                 )
                 rep.deleted += cur.rowcount
-                payload = [
+                payload: list[dict[str, Any]] = [
                     {
                         "company_id": cid,
                         "canonical_concept_id": concept_ids[r.key.data_point_name],
@@ -913,7 +910,7 @@ def _load_company(
                             ],
                             "ids": [
                                 "{"
-                                + ",".join(str(i) for i in r["source_fact_ids"])  # type: ignore[union-attr]
+                                + ",".join(str(i) for i in r["source_fact_ids"])
                                 + "}"
                                 for r in payload
                                 if r["source_fact_ids"]
@@ -936,7 +933,7 @@ def _load_company(
                                 "period": [r["period_id"] for r in with_values],
                                 "ids": [
                                     "{"
-                                    + ",".join(str(i) for i in r["source_value_ids"])  # type: ignore[union-attr]
+                                    + ",".join(str(i) for i in r["source_value_ids"])
                                     + "}"
                                     for r in with_values
                                 ],

@@ -173,8 +173,8 @@ def map_filing(
             continue
         key = f"{_prefix(version)}:{tag}" if not custom else f"{version}:{tag}"
         cands = [r for r in rules["by_tag"].get((stmt, key), []) if _in_era(r, period)]
-        if cands and _demoted(rules, stmt, key, cands[0]["concept"], period):
-            d = _demoted(rules, stmt, key, cands[0]["concept"], period)
+        d = _demoted(rules, stmt, key, cands[0]["concept"], period) if cands else None
+        if d is not None:
             out.append(
                 (
                     filing_id,
@@ -182,7 +182,7 @@ def map_filing(
                     line,
                     None,
                     "unmapped",
-                    d["rule_id"],  # type: ignore[index]
+                    d["rule_id"],
                     None,
                     {"tag": key, "demoted_from": cands[0]["concept"]},
                 )
