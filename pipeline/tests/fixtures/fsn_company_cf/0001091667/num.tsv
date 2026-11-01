@@ -1,0 +1,666 @@
+adsh	tag	version	ddate	qtrs	uom	dimh	iprx	value	footnote	footlen	dimn	coreg	durp	datp	dcml
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0x00000000	0	7000000.0000		0	0		0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0x00000000	0	21000000.0000		0	0		0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0x00000000	0	3000000.0000		0	0		0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0x00000000	0	5000000.0000		0	0		0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	1000000.0000		0	1	ParentCompany	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	3000000.0000		0	1	ParentCompany	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0xd8b51cad2aba1071923573682deb5007	0	5000000.0000		0	1	Subsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	6000000.0000		0	1	CharterOperatingAndSubsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	16000000.0000		0	1	CharterOperatingAndSubsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	5000000.0000		0	1	CharterOperatingAndSubsidiaries	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20121231	0	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20131231	0	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20141231	0	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	20151231	0	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.0	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0x00000000	0	14000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0x00000000	0	-18000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0x00000000	0	2000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-1000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	3000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-3000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	5000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-5000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	10000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-16000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	5000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20121231	0	shares	0x64aab115e615b3ad72099cbe43ef2567	0	101176247.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20131231	0	shares	0x64aab115e615b3ad72099cbe43ef2567	0	106144075.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20141231	0	shares	0x64aab115e615b3ad72099cbe43ef2567	0	111999687.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20151231	0	shares	0x64aab115e615b3ad72099cbe43ef2567	0	112438828.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20121231	0	shares	0x6df06486a1a89a35bb0fea17ed08fc42	0	0.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20131231	0	shares	0x6df06486a1a89a35bb0fea17ed08fc42	0	0.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20141231	0	shares	0x6df06486a1a89a35bb0fea17ed08fc42	0	0.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	CommonStockSharesOutstanding	us-gaap/2015	20151231	0	shares	0x6df06486a1a89a35bb0fea17ed08fc42	0	0.0000		0	1		0.0	0.0	32767
+0001091667-16-000396	EarningsPerShareBasicAndDiluted	us-gaap/2015	20131231	4	USD	0x00000000	0	-1.6500		0	0		0.01095891	0.0	2
+0001091667-16-000396	EarningsPerShareBasicAndDiluted	us-gaap/2015	20140331	1	USD	0x00000000	0	-0.3500		0	0		0.024658024	0.0	2
+0001091667-16-000396	EarningsPerShareBasicAndDiluted	us-gaap/2015	20140630	1	USD	0x00000000	0	-0.4200		0	0		0.013698995	0.0	2
+0001091667-16-000396	EarningsPerShareBasicAndDiluted	us-gaap/2015	20140930	1	USD	0x00000000	0	-0.4900		0	0		0.0027400255	0.0	2
+0001091667-16-000396	EarningsPerShareBasicAndDiluted	us-gaap/2015	20141231	1	USD	0x00000000	0	-0.4400		0	0		0.0027400255	0.0	2
+0001091667-16-000396	EarningsPerShareBasicAndDiluted	us-gaap/2015	20141231	4	USD	0x00000000	0	-1.7000		0	0		0.01095891	0.0	2
+0001091667-16-000396	EarningsPerShareBasicAndDiluted	us-gaap/2015	20151231	4	USD	0x00000000	0	-2.4300		0	0		0.01095891	0.0	2
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0x00000000	0	-10000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0x00000000	0	51000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0x00000000	0	-5000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	3000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	4000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	1000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	2000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	1000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-14000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	49000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-10000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0x00000000	0	1825000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0x00000000	0	2221000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0x00000000	0	1840000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1825000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	2221000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1840000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0x00000000	0	43000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0x00000000	0	37000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0x00000000	0	28000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	27000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	25000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	16000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	16000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	12000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	12000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	EarningsPerShareBasic	us-gaap/2015	20150331	1	USD	0x00000000	0	-0.7300		0	0		0.024658024	0.0	2
+0001091667-16-000396	EarningsPerShareBasic	us-gaap/2015	20150630	1	USD	0x00000000	0	-1.0900		0	0		0.013698995	0.0	2
+0001091667-16-000396	EarningsPerShareBasic	us-gaap/2015	20150930	1	USD	0x00000000	0	0.4800		0	0		0.0027400255	0.0	2
+0001091667-16-000396	EarningsPerShareBasic	us-gaap/2015	20151231	1	USD	0x00000000	0	-1.0900		0	0		0.0027400255	0.0	2
+0001091667-16-000396	EarningsPerShareDiluted	us-gaap/2015	20150331	1	USD	0x00000000	0	-0.7300		0	0		0.024658024	0.0	2
+0001091667-16-000396	EarningsPerShareDiluted	us-gaap/2015	20150630	1	USD	0x00000000	0	-1.0900		0	0		0.013698995	0.0	2
+0001091667-16-000396	EarningsPerShareDiluted	us-gaap/2015	20150930	1	USD	0x00000000	0	0.4800		0	0		0.0027400255	0.0	2
+0001091667-16-000396	EarningsPerShareDiluted	us-gaap/2015	20151231	1	USD	0x00000000	0	-1.0900		0	0		0.0027400255	0.0	2
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0x00000000	0	-123000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20141231	4	USD	0x00000000	0	0.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0x00000000	0	-128000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-65000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-123000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	-2000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0x6cb4f11f94a1f3b3f4a3da25c9bd495b	0	0.0000		0	1	CCOHSafariandCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20141231	4	USD	0x6cb4f11f94a1f3b3f4a3da25c9bd495b	0	0.0000		0	1	CCOHSafariandCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0x6cb4f11f94a1f3b3f4a3da25c9bd495b	0	-5000000.0000		0	1	CCOHSafariandCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-58000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-3000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0x00000000	0	114000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0x00000000	0	158000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0x00000000	0	319000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-3000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	41000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	68000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	41000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-23000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	18000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	265000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	76000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	91000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	17000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	8000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-8000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0x00000000	0	0.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0x00000000	0	9000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0x00000000	0	3000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-1000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	1000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-2000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	8000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	5000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0x00000000	0	299000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0x00000000	0	6927000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0x00000000	0	14675000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	89000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	104000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-8000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	529000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	583000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-226000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	-1009000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	290000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	937000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	1015000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-367000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-6000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	3610000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	18859000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-325000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-843000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-1422000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	3550000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-3459000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0x00000000	0	-2443000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0x00000000	0	-9304000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0x00000000	0	-17032000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-89000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-101000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	6000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-527000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-575000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	231000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	1009000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	-290000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	-937000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-392000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	1032000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	669000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	-3598000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	-18667000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-2444000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-2259000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-1848000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-3513000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	3514000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0x00000000	0	2158000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0x00000000	0	2359000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0x00000000	0	2359000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-1000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-1000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	3000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-13000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-5000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-623000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-665000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-663000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	-12000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	-192000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	2779000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	3086000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	3275000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-37000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-55000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0x00000000	0	-82000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0x00000000	0	-65000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0x00000000	0	-89000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	2000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-7000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-82000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-67000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-82000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	OtherNoncashIncomeExpense	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x00000000	0	6782000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x00000000	0	8806000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x00000000	0	26045000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	2000000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	2700000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	3500000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	21790000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	4782000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1823000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1555000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	3483000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0x00000000	0	-2000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0x00000000	0	3000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0x00000000	0	0.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	7000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-2000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-4000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2015	20150331	1	shares	0x00000000	0	111655617.0000		0	0		0.024658024	0.0	32767
+0001091667-16-000396	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2015	20150630	1	shares	0x00000000	0	111783504.0000		0	0		0.013698995	0.0	32767
+0001091667-16-000396	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2015	20150930	1	shares	0x00000000	0	113339885.0000		0	0		0.0027400255	0.0	32767
+0001091667-16-000396	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2015	20151231	1	shares	0x00000000	0	112106255.0000		0	0		0.0027400255	0.0	32767
+0001091667-16-000396	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2015	20150331	1	shares	0x00000000	0	111655617.0000		0	0		0.024658024	0.0	32767
+0001091667-16-000396	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2015	20150630	1	shares	0x00000000	0	111783504.0000		0	0		0.013698995	0.0	32767
+0001091667-16-000396	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2015	20150930	1	shares	0x00000000	0	111928113.0000		0	0		0.0027400255	0.0	32767
+0001091667-16-000396	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2015	20151231	1	shares	0x00000000	0	112106255.0000		0	0		0.0027400255	0.0	32767
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20131231	4	USD	0x00000000	0	0.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0x00000000	0	7111000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0x00000000	0	15153000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	3598000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	18667000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	3513000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	IncreaseDecreaseInRestrictedCash	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-3514000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0x00000000	0	18000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0x00000000	0	16000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0x00000000	0	67000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-1000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	5000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	55000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	19000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	11000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	12000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0x00000000	0	50000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0x00000000	0	6000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0x00000000	0	36000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	25000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	24000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	2000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	12000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	25000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	4000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsOfDebtIssuanceCosts	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0x00000000	0	-169000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20140331	1	USD	0x00000000	0	-37000000.0000		0	0		0.024658024	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20140630	1	USD	0x00000000	0	-45000000.0000		0	0		0.013698995	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20140930	1	USD	0x00000000	0	-53000000.0000		0	0		0.0027400255	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	1	USD	0x00000000	0	-48000000.0000		0	0		0.0027400255	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0x00000000	0	-183000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20150331	1	USD	0x00000000	0	-81000000.0000		0	0		0.024658024	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20150630	1	USD	0x00000000	0	-122000000.0000		0	0		0.013698995	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20150930	1	USD	0x00000000	0	54000000.0000		0	0		0.0027400255	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	1	USD	0x00000000	0	-122000000.0000		0	0		0.0027400255	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0x00000000	0	-271000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0x03b6dd82aa1f7fd74401d4b34f93b482	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0x03b6dd82aa1f7fd74401d4b34f93b482	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0x03b6dd82aa1f7fd74401d4b34f93b482	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0x2961a7af18009dffc06d7ec01a5d011c	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0x2961a7af18009dffc06d7ec01a5d011c	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0x2961a7af18009dffc06d7ec01a5d011c	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0x2bea873ec009ac34c4d14deb5c0cc4f0	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0x2bea873ec009ac34c4d14deb5c0cc4f0	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0x2bea873ec009ac34c4d14deb5c0cc4f0	0	0.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0xaff49d53012fa8fe16e4b169dde56fd7	0	-169000000.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0xaff49d53012fa8fe16e4b169dde56fd7	0	-183000000.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0xaff49d53012fa8fe16e4b169dde56fd7	0	-271000000.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-183000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-183000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	-271000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-107000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-4000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	-167000000.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	-443000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	-680000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	-734000000.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	-114000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	18000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	308000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	-30000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	-476000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	678000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	741000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1119000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-45000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProfitLoss	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	-50000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x00000000	0	6520000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x00000000	0	1980000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x00000000	0	11326000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	955000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	350000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	2598000000.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	3500000000.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	5565000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1630000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1745000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	RepaymentsOfLongTermDebt	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	3483000000.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0x00000000	0	112000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0x00000000	0	233000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0x00000000	0	-65000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	105000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	223000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	149000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0xa135eec1c8fda8d1b6714e8e59eb6cce	0	-36000000.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	7000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	10000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-214000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	20131231	4	USD	0xf447a14f7a3f3539d667ffef56cd431f	0	-101000000.0000		0	1		0.01095891	0.0	-6
+0001091667-16-000396	InterestPaidNet	us-gaap/2015	20131231	4	USD	0x00000000	0	763000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	InterestPaidNet	us-gaap/2015	20141231	4	USD	0x00000000	0	850000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	InterestPaidNet	us-gaap/2015	20151231	4	USD	0x00000000	0	1046000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0x00000000	0	15000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0x00000000	0	19000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0x00000000	0	38000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	15000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	19000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	38000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0x00000000	0	1854000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0x00000000	0	2102000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0x00000000	0	2125000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	1854000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	2102000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	2125000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DepreciationAmortizationAndAccretionNet	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0x00000000	0	11000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0x00000000	0	-7000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0x00000000	0	-4000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	11000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-7000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-4000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0x00000000	0	676000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0x00000000	0	-11000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20151231	4	USD	0x00000000	0	0.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	676000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-11000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	EntityCommonStockSharesOutstanding	dei/2014	20151231	0	shares	0x00000000	0	112438828.0000		0	0		0.0	0.0	32767
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0x00000000	0	104000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0x00000000	0	123000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20151231	4	USD	0x00000000	0	30000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	104000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	123000000.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	0.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ProceedsFromOtherEquity	us-gaap/2015	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0x00000000	0	-76000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0x00000000	0	-33000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0x00000000	0	-28000000.0000		0	0		0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0x0f65d727279e3cc7fa5c9a0ac55926a7	0	0.0000		0	1	ParentCompany	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0xd8b51cad2aba1071923573682deb5007	0	0.0000		0	1	Subsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0xc145efdacc4eb09ec342ad9d3cbbcd93	0	0.0000		0	1	ConsolidationEliminations	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0x37f5c5777f08437d4c8c5de5e26628cb	0	0.0000		0	1	CcoHoldings	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0x5c3afde27f56d8099564f2fc36574335	0	0.0000		0	1	SafariEscrowEntities	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-76000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-33000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0xdf0cc6d1c697d75273ef85a337bf9e1b	0	-28000000.0000		0	1	CharterOperatingAndSubsidiaries	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20131231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20141231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6
+0001091667-16-000396	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	20151231	4	USD	0xee8545bd67056c411737915f39a800b0	0	0.0000		0	1	UnrestrictedSubisidiaryCCOSafari	0.01095891	0.0	-6

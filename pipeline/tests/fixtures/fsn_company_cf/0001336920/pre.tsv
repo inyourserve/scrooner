@@ -1,0 +1,41 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0001336920-21-000010	8	12	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2020	terseLabel	Change in assets and liabilities, net of effects of acquisitions and dispositions:	0
+0001336920-21-000010	8	36	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2020	terseLabel	Other	0
+0001336920-21-000010	8	14	CF	0	IncreaseDecreaseInOtherOperatingAssets	us-gaap/2020	negatedTerseLabel	Other current assets and other long-term assets	1
+0001336920-21-000010	8	39	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2020	periodStartLabel	Cash, cash equivalents and restricted cash at beginning of year	0
+0001336920-21-000010	8	40	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2020	periodEndLabel	Cash, cash equivalents and restricted cash at end of year	0
+0001336920-21-000010	8	30	CF	0	PaymentsOfDebtIssuanceCosts	us-gaap/2020	negatedTerseLabel	Payments for debt issuance and modification costs	1
+0001336920-21-000010	8	21	CF	0	PaymentsToAcquireProductiveAssets	us-gaap/2020	negatedLabel	Payments for property, equipment and software	1
+0001336920-21-000010	8	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesContinuingOperationsAbstract	us-gaap/2020	terseLabel	Cash flows from operations:	0
+0001336920-21-000010	8	18	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2020	totalLabel	Net cash provided by operating activities	0
+0001336920-21-000010	8	23	CF	0	ProceedsFromSaleOfPropertyPlantAndEquipment	us-gaap/2020	terseLabel	Net proceeds from sale of assets	0
+0001336920-21-000010	8	8	CF	0	AssetImpairmentCharges	us-gaap/2020	verboseLabel	Asset impairment charges	0
+0001336920-21-000010	8	38	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect	us-gaap/2020	totalLabel	Net (decrease) increase in cash, cash equivalents and restricted cash	0
+0001336920-21-000010	8	17	CF	0	IncreaseDecreaseInIncomeTaxes	us-gaap/2020	terseLabel	Income taxes receivable/payable	0
+0001336920-21-000010	8	2	CF	0	ProfitLoss	us-gaap/2020	netLabel	Net income	0
+0001336920-21-000010	8	9	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2020	terseLabel	Deferred income taxes	0
+0001336920-21-000010	8	20	CF	0	PaymentsToAcquireBusinessesNetOfCashAcquired	us-gaap/2020	negatedTerseLabel	Acquisitions of businesses, net of cash acquired	1
+0001336920-21-000010	8	6	CF	0	ShareBasedCompensation	us-gaap/2020	terseLabel	Stock-based compensation	0
+0001336920-21-000010	8	32	CF	0	PaymentsForRepurchaseOfEquity	us-gaap/2020	negatedLabel	Repurchases of stock and other	1
+0001336920-21-000010	8	11	CF	0	OtherNoncashIncomeExpense	us-gaap/2020	negatedLabel	Other	1
+0001336920-21-000010	8	25	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2020	negatedTerseLabel	Other	1
+0001336920-21-000010	8	26	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2020	totalLabel	Net cash (used in) provided by investing activities	0
+0001336920-21-000010	8	24	CF	0	ProceedsFromCollectionOfNotesReceivable	us-gaap/2020	terseLabel	Collections on promissory notes	0
+0001336920-21-000010	8	29	CF	0	RepaymentsOfLongTermDebt	us-gaap/2020	negatedLabel	Payments of long-term debt	1
+0001336920-21-000010	8	10	CF	0	ProvisionForDoubtfulAccounts	us-gaap/2020	terseLabel	Bad debt expense	0
+0001336920-21-000010	8	13	CF	0	IncreaseDecreaseInReceivables	us-gaap/2020	negatedLabel	Receivables	1
+0001336920-21-000010	8	27	CF	0	NetCashProvidedByUsedInFinancingActivitiesContinuingOperationsAbstract	us-gaap/2020	terseLabel	Cash flows from financing activities:	0
+0001336920-21-000010	8	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2020	terseLabel	Adjustments to reconcile net income to net cash provided by operations:	0
+0001336920-21-000010	8	4	CF	0	GainLossOnSaleOfBusiness	us-gaap/2020	negatedTerseLabel	Gain on sale of businesses	1
+0001336920-21-000010	8	28	CF	0	ProceedsFromIssuanceOfDebt	us-gaap/2020	terseLabel	Proceeds from debt issuance	0
+0001336920-21-000010	8	37	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2020	totalLabel	Net cash provided by (used in) financing activities	0
+0001336920-21-000010	8	16	CF	0	IncreaseDecreaseInEmployeeRelatedLiabilities	us-gaap/2020	terseLabel	Accrued payroll and employee benefits	0
+0001336920-21-000010	8	5	CF	0	DepreciationDepletionAndAmortization	us-gaap/2020	terseLabel	Depreciation and amortization	0
+0001336920-21-000010	8	33	CF	0	ProceedsFromIssuanceOrSaleOfEquity	us-gaap/2020	terseLabel	Proceeds from issuances of stock	0
+0001336920-21-000010	8	7	CF	0	GainsLossesOnExtinguishmentOfDebt	us-gaap/2020	negatedTerseLabel	Loss on debt extinguishment	1
+0001336920-21-000010	8	19	CF	0	NetCashProvidedByUsedInInvestingActivitiesContinuingOperationsAbstract	us-gaap/2020	terseLabel	Cash flows from investing activities:	0
+0001336920-21-000010	8	22	CF	0	ProceedsFromDivestitureOfBusinessesNetOfCashDivested	us-gaap/2020	terseLabel	Proceeds from disposition of businesses	0
+0001336920-21-000010	8	31	CF	0	PaymentsOfOrdinaryDividends	us-gaap/2020	negatedLabel	Dividend payments	1
+0001336920-21-000010	8	35	CF	0	SaleLeasebackTransactionGrossProceedsFinancingActivities	us-gaap/2020	terseLabel	Proceeds from real estate financing transaction	0
+0001336920-21-000010	8	15	CF	0	IncreaseDecreaseInAccountsPayableAndAccruedLiabilitiesAndOtherNoncurrentLiabilities	0001336920-21-000010	terseLabel	Accounts payable and accrued liabilities and other long-term liabilities	0
+0001336920-21-000010	8	34	CF	0	PaymentOfTaxIndemnificationLiability	0001336920-21-000010	negatedTerseLabel	Payment of tax indemnification liability	1
