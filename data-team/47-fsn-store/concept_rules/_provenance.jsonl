@@ -16,6 +16,7 @@
 {"rule_id": "bs.debt_finance_lease_member@2", "source_file": "pipeline/scripts/slot_records/build_debt_slots.py", "source_symbol": "classify() -> 'finance_lease' + PARENTS", "extraction": "import", "bare_tag": null}
 {"rule_id": "bs.debt_combined_member@1", "source_file": "pipeline/scripts/slot_records/build_debt_slots.py", "source_symbol": "classify() -> 'combined' + PARENTS", "extraction": "import", "bare_tag": null}
 {"rule_id": "bs.debt_combined_member@2", "source_file": "pipeline/scripts/slot_records/build_debt_slots.py", "source_symbol": "classify() -> 'combined' + PARENTS", "extraction": "import", "bare_tag": null}
+{"rule_id": "bs.anchor_current_liabilities@1", "source_file": "pipeline/scripts/slot_records/build_debt_slots.py", "source_symbol": "PARENTS (debt member parents) + mapper CONCEPT_MAPPINGS", "extraction": "import", "bare_tag": "LiabilitiesCurrent"}
 {"rule_id": "cf.capex_block_member@1", "source_file": "pipeline/scripts/slot_records/cf_da_capex_variants.py", "source_symbol": "capex_nature + block rows[op_i+1:inv_i+1]", "extraction": "ast", "bare_tag": null}
 {"rule_id": "cf.capex_block_member@2", "source_file": "pipeline/scripts/slot_records/cf_da_capex_variants.py", "source_symbol": "capex_nature + block rows[op_i+1:inv_i+1]", "extraction": "ast", "bare_tag": null}
 {"rule_id": "cf.capex_block_member@3", "source_file": "pipeline/scripts/slot_records/cf_da_capex_variants.py", "source_symbol": "capex_nature + block rows[op_i+1:inv_i+1]", "extraction": "ast", "bare_tag": null}

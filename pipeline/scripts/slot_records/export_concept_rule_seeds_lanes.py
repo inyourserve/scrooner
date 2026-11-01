@@ -359,6 +359,18 @@ for fn_name, item, why in (
     skip(rdf, rdf.func(fn_name).lineno, item, why)
 skip(afs, afs.func("assemble").lineno, "Verifier V5 (WSO): a member whose calc descendants (any role) include an OperatingLease line -> excluded_mixed_lease",
      "operating leases stay combined (founder 2026-11-01): calc-descendant test per filing, detector hook; the standard taxonomy has no element that mixes borrowings or finance leases with operating leases (us_gaap_2025_elements.csv: 0), so only custom lines reach it")
+# ANCHORS of the debt slots: a calc_position row can only fire once its anchor concept is mapped on the
+# same statement. The debt member PARENTS (imported) that have a canonical concept get a std_tag row,
+# the concept named by the mapper's own approved mapping (pilot run 41312996998: current_liabilities_resolved
+# had no rule, so no debt member under LiabilitiesCurrent could map).
+have_std = {(r["canonical_concept"], r["tag"]) for r in ROWS["bs"] if r["match_kind"] == "std_tag"}
+for i, p in enumerate(bdm.consts["PARENTS"][3]):
+    concept = concept_of_tag(p)
+    if concept and (concept, tagref(p)) not in have_std and concept != ALIAS["liabilities_total"]:
+        add("bs", f"anchor_{concept.removesuffix('_resolved')}", concept, "BS", "std_tag", 10, bdm,
+            "PARENTS (debt member parents) + mapper CONCEPT_MAPPINGS", "import", tag=p)
+        ROWS["bs"][-1]["evidence"] = ("anchor of the total_debt / total_liabilities calc slots; the tag is the taxonomy total "
+                                      "the lane's PARENTS name, its concept the mapper's approved mapping")
 skip_regexes(era, ["DEBT_RX", "LABEL_RX", "EXCLUDE_RX"], {"LABEL_RX": "label regex (debt candidate by printed label)"})
 skip_regexes(bdm, ["EXCLUDE_RX", "AGG_PARENT_RX", "DEBT_RX", "BS_ROLE_RX", "NOTE_ROLE_RX", "FINANCE_LEASE_RX", "OPERATING_LEASE_RX", "BORROWING_RX", "ERA_RX"],
              {"BS_ROLE_RX": "calc-role selector, not a concept rule", "NOTE_ROLE_RX": "calc-role rejector, not a concept rule",
