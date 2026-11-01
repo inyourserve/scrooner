@@ -1,0 +1,935 @@
+family,ticker,cik,start,end,filed_value,accession,slot_tag,printed_label,gate,identity_gap,production_value,compare
+revenue,ETR,0000065984,2016-01-01,2016-12-31,10845645000,0000065984-19-000082,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2017-01-01,2017-09-30,8450636000,0000065984-18-000229,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2017-01-01,2017-12-31,11074481000,0000065984-19-000082,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2017-07-01,2017-09-30,3243628000,0000065984-18-000229,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2018-01-01,2018-03-31,2723881000,0000065984-19-000179,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2018-01-01,2018-06-30,5392650000,0000065984-19-000257,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2018-01-01,2018-09-30,8496970000,0000065984-18-000229,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2018-01-01,2018-12-31,11009452000,0000065984-19-000082,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2018-04-01,2018-06-30,2668770000,0000065984-19-000257,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2018-07-01,2018-09-30,3104319000,0000065984-18-000229,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2019-01-01,2019-03-31,2609584000,0000065984-19-000179,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2019-01-01,2019-06-30,5275792000,0000065984-19-000257,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2019-01-01,2019-09-30,8416367000,0000065984-19-000316,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2019-01-01,2019-12-31,10878673000,0000065984-20-000069,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2019-04-01,2019-06-30,2666209000,0000065984-19-000257,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2019-07-01,2019-09-30,3140575000,0000065984-19-000316,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2020-01-01,2020-03-31,2427179000,0000065984-20-000154,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2020-01-01,2020-06-30,4839967000,0000065984-20-000222,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2020-01-01,2020-09-30,7743534000,0000065984-20-000283,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2020-01-01,2020-12-31,10113636000,0000065984-21-000096,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2020-04-01,2020-06-30,2412788000,0000065984-20-000222,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2020-07-01,2020-09-30,2903568000,0000065984-20-000283,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2021-01-01,2021-03-31,2844838000,0000065984-21-000182,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2021-01-01,2021-06-30,5666907000,0000065984-21-000236,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2021-01-01,2021-09-30,9020440000,0000065984-21-000291,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2021-01-01,2021-12-31,11742896000,0000065984-22-000017,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2021-04-01,2021-06-30,2822070000,0000065984-21-000236,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2021-07-01,2021-09-30,3353532000,0000065984-21-000291,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2022-01-01,2022-03-31,2877925000,0000065984-22-000064,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2022-01-01,2022-06-30,6273122000,0000065984-22-000129,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2022-01-01,2022-09-30,10491737000,0000065984-22-000185,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2022-01-01,2022-12-31,13764237000,0000065984-23-000014,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2022-04-01,2022-06-30,3395196000,0000065984-22-000129,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2022-07-01,2022-09-30,4218615000,0000065984-22-000185,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2023-01-01,2023-03-31,2981059000,0000065984-23-000040,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2023-01-01,2023-06-30,5827085000,0000065984-23-000073,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2023-01-01,2023-09-30,9422607000,0000065984-23-000094,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2023-01-01,2023-12-31,12147412000,0000065984-24-000012,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2023-04-01,2023-06-30,2846026000,0000065984-23-000073,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2023-07-01,2023-09-30,3595522000,0000065984-23-000094,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2024-01-01,2024-03-31,2794628000,0000065984-24-000049,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2024-01-01,2024-06-30,5748248000,0000065984-24-000095,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2024-01-01,2024-09-30,9137348000,0000065984-24-000112,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2024-01-01,2024-12-31,11879653000,0000065984-25-000012,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2024-04-01,2024-06-30,2953620000,0000065984-24-000095,RevenueFromContractWithCustomerExcludingAssessedTax,"Revenue from Contract with Customer, Excluding Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2024-07-01,2024-09-30,3389100000,0000065984-24-000112,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2025-01-01,2025-03-31,2846874000,0000065984-25-000046,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2025-01-01,2025-06-30,6175723000,0000065984-25-000087,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2025-01-01,2025-09-30,9987742000,0000065984-25-000132,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2025-01-01,2025-12-31,12946686000,0000065984-26-000174,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2025-04-01,2025-06-30,3328849000,0000065984-25-000087,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2025-07-01,2025-09-30,3812019000,0000065984-25-000132,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ETR,0000065984,2026-01-01,2026-03-31,3187626000,0000065984-26-000222,Revenues,Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2015-01-01,2015-03-31,2513431000,0000072741-15-000027,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2015-01-01,2015-06-30,4330491000,0000072741-15-000043,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2015-01-01,2015-09-30,6263597000,0000072741-15-000055,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2015-01-01,2015-12-31,7954827000,0000072741-16-000063,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2015-04-01,2015-06-30,1817061000,0000072741-15-000043,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2015-07-01,2015-09-30,1933105000,0000072741-15-000055,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2016-01-01,2016-03-31,2055635000,0000072741-16-000075,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2016-01-01,2016-06-30,3822819000,0000072741-16-000098,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2016-01-01,2016-09-30,5862525000,0000072741-16-000107,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2016-01-01,2016-12-31,7639129000,0000072741-17-000007,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2016-04-01,2016-06-30,1767184000,0000072741-16-000098,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2016-07-01,2016-09-30,2039706000,0000072741-16-000107,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2017-01-01,2017-03-31,2105135000,0000072741-17-000021,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2017-01-01,2017-06-30,3867946000,0000072741-17-000030,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2017-01-01,2017-09-30,5856458000,0000072741-17-000045,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2017-01-01,2017-12-31,7751952000,0000072741-18-000028,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2017-04-01,2017-06-30,1762811000,0000072741-17-000030,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2017-07-01,2017-09-30,1988512000,0000072741-17-000045,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2018-01-01,2018-03-31,2287962000,0000072741-18-000042,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2018-01-01,2018-06-30,4141818000,0000072741-18-000053,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2018-01-01,2018-09-30,6413243000,0000072741-18-000060,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2018-01-01,2018-12-31,8448201000,0000072741-19-000017,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2018-04-01,2018-06-30,1853856000,0000072741-18-000053,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2018-07-01,2018-09-30,2271425000,0000072741-18-000060,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2019-01-01,2019-03-31,2415792000,0000072741-19-000026,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2019-01-01,2019-06-30,4300287000,0000072741-19-000034,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2019-01-01,2019-09-30,6476084000,0000072741-19-000042,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2019-01-01,2019-12-31,8526470000,0000072741-20-000008,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2019-04-01,2019-06-30,1884495000,0000072741-19-000034,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2019-07-01,2019-09-30,2175797000,0000072741-19-000042,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2020-01-01,2020-03-31,2373726000,0000072741-20-000013,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2020-01-01,2020-06-30,4326854000,0000072741-20-000020,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2020-01-01,2020-09-30,6670497000,0000072741-20-000024,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2020-01-01,2020-12-31,8904430000,0000072741-21-000005,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2020-04-01,2020-06-30,1953128000,0000072741-20-000020,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2020-07-01,2020-09-30,2343642000,0000072741-20-000024,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2021-01-01,2021-03-31,2825840000,0000072741-21-000010,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2021-01-01,2021-06-30,4948378000,0000072741-21-000019,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2021-01-01,2021-09-30,7381172000,0000072741-21-000025,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2021-01-01,2021-12-31,9863085000,0000072741-22-000015,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2021-04-01,2021-06-30,2122538000,0000072741-21-000019,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2021-07-01,2021-09-30,2432794000,0000072741-21-000025,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2022-01-01,2022-03-31,3471310000,0000072741-22-000019,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2022-01-01,2022-06-30,6043951000,0000072741-22-000026,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2022-01-01,2022-09-30,9259596000,0000072741-22-000030,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2022-01-01,2022-12-31,12289336000,0000072741-23-000004,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2022-04-01,2022-06-30,2572641000,0000072741-22-000026,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2022-07-01,2022-09-30,3215645000,0000072741-22-000030,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2023-01-01,2023-03-31,3795643000,0000072741-23-000008,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2023-01-01,2023-06-30,6424985000,0000072741-23-000016,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2023-01-01,2023-09-30,9216467000,0000072741-23-000020,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2023-01-01,2023-12-31,11910705000,0000072741-24-000005,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2023-04-01,2023-06-30,2629342000,0000072741-23-000016,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2023-07-01,2023-09-30,2791482000,0000072741-23-000020,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2024-01-01,2024-03-31,3332575000,0000072741-24-000010,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2024-01-01,2024-06-30,5866097000,0000072741-24-000018,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2024-01-01,2024-09-30,8929321000,0000072741-24-000023,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2024-01-01,2024-12-31,11900809000,0000072741-25-000007,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2024-04-01,2024-06-30,2533522000,0000072741-24-000018,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2024-07-01,2024-09-30,3063224000,0000072741-24-000023,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2025-01-01,2025-03-31,4118355000,0000072741-25-000011,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2025-01-01,2025-06-30,6956423000,0001628280-25-037369,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2025-01-01,2025-09-30,10177048000,0001628280-25-050033,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2025-01-01,2025-12-31,13547244000,0001628280-26-008461,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2025-04-01,2025-06-30,2838068000,0001628280-25-037369,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2025-07-01,2025-09-30,3220625000,0001628280-25-050033,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2026-01-01,2026-03-31,4504363000,0001628280-26-032278,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2026-01-01,2026-06-30,7407552000,0001628280-26-051906,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,ES,0000072741,2026-04-01,2026-06-30,2903189000,0001628280-26-051906,Revenues,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2015-01-01,2015-03-31,4183000000,0000092122-15-000031,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2015-01-01,2015-06-30,8520000000,0000092122-15-000066,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2015-01-01,2015-09-30,13921000000,0000092122-15-000107,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2015-01-01,2015-12-31,17489000000,0000092122-16-000126,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2015-04-01,2015-06-30,4337000000,0000092122-15-000066,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2015-07-01,2015-09-30,5401000000,0000092122-15-000107,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2016-01-01,2016-06-30,8451000000,0000092122-16-000179,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2016-01-01,2016-09-30,14715000000,0000092122-16-000213,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2016-01-01,2016-12-31,19896000000,0000092122-17-000007,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2016-04-01,2016-06-30,4459000000,0000092122-16-000179,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2016-07-01,2016-09-30,6264000000,0000092122-16-000213,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2017-01-01,2017-03-31,5771000000,0000092122-17-000024,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2017-01-01,2017-06-30,11202000000,0000092122-17-000065,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2017-01-01,2017-09-30,17403000000,0000092122-17-000076,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2017-01-01,2017-12-31,23031000000,0000092122-18-000012,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2017-04-01,2017-06-30,5430000000,0000092122-17-000065,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2017-07-01,2017-09-30,6201000000,0000092122-17-000076,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2018-01-01,2018-03-31,6372000000,0000092122-18-000027,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2018-01-01,2018-06-30,11999000000,0000092122-18-000050,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2018-01-01,2018-09-30,18158000000,0000092122-18-000062,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2018-01-01,2018-12-31,23495000000,0000092122-19-000006,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2018-04-01,2018-06-30,5627000000,0000092122-18-000050,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2018-07-01,2018-09-30,6159000000,0000092122-18-000062,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2019-01-01,2019-03-31,5412000000,0000092122-19-000016,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2019-01-01,2019-06-30,10510000000,0000092122-19-000037,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2019-01-01,2019-09-30,16505000000,0000092122-19-000053,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2019-01-01,2019-12-31,21419000000,0000092122-20-000017,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2019-04-01,2019-06-30,5098000000,0000092122-19-000037,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2019-07-01,2019-09-30,5995000000,0000092122-19-000053,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2020-01-01,2020-03-31,5018000000,0000092122-20-000042,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2020-01-01,2020-06-30,9638000000,0000092122-20-000057,Revenues,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2020-01-01,2020-09-30,15258000000,0000092122-20-000085,Revenues,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2020-01-01,2020-12-31,20375000000,0000092122-21-000006,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2020-04-01,2020-06-30,4620000000,0000092122-20-000057,Revenues,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2020-07-01,2020-09-30,5620000000,0000092122-20-000085,Revenues,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2021-01-01,2021-03-31,5910000000,0000092122-21-000037,Revenues,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2021-01-01,2021-06-30,11108000000,0000092122-21-000064,Revenues,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2021-01-01,2021-12-31,23113000000,0000092122-22-000003,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2021-04-01,2021-06-30,5198000000,0000092122-21-000064,Revenues,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2022-01-01,2022-03-31,6648000000,0000092122-22-000014,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2022-01-01,2022-06-30,13854000000,0000092122-22-000039,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2022-01-01,2022-09-30,22232000000,0000092122-22-000064,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2022-01-01,2022-12-31,29279000000,0000092122-23-000012,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2022-04-01,2022-06-30,7206000000,0000092122-22-000039,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2022-07-01,2022-09-30,8378000000,0000092122-22-000064,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2023-01-01,2023-03-31,6480000000,0000092122-23-000028,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2023-01-01,2023-06-30,12228000000,0000092122-23-000070,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2023-01-01,2023-09-30,19208000000,0000092122-23-000101,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2023-01-01,2023-12-31,25253000000,0000092122-24-000009,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2023-04-01,2023-06-30,5748000000,0000092122-23-000070,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2023-07-01,2023-09-30,6980000000,0000092122-23-000101,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2024-01-01,2024-03-31,6646000000,0000092122-24-000042,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2024-01-01,2024-06-30,13109000000,0000092122-24-000075,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2024-01-01,2024-09-30,20383000000,0000092122-24-000089,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2024-01-01,2024-12-31,26724000000,0000092122-25-000018,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2024-04-01,2024-06-30,6463000000,0000092122-24-000075,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2024-07-01,2024-09-30,7274000000,0000092122-24-000089,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2025-01-01,2025-03-31,7775000000,0000092122-25-000042,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2025-01-01,2025-06-30,14748000000,0000092122-25-000076,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2025-01-01,2025-09-30,22572000000,0000092122-25-000084,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2025-01-01,2025-12-31,29553000000,0000092122-26-000006,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2025-04-01,2025-06-30,6973000000,0000092122-25-000076,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2025-07-01,2025-09-30,7823000000,0000092122-25-000084,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,SO,0000092122,2026-01-01,2026-03-31,8397000000,0000092122-26-000034,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2015-01-01,2015-03-31,2111000000,0001104659-15-029577,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2015-01-01,2015-06-30,3461000000,0001104659-15-052761,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2015-01-01,2015-09-30,4947000000,0001104659-15-073939,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2015-01-01,2015-12-31,6456000000,0001104659-16-095725,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2015-04-01,2015-06-30,1350000000,0001104659-15-052761,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2015-07-01,2015-09-30,1486000000,0001104659-15-073939,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2016-01-01,2016-03-31,1801000000,0001104659-16-114973,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2016-01-01,2016-06-30,3172000000,0001104659-16-134878,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2016-01-01,2016-09-30,4759000000,0001104659-16-152440,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2016-01-01,2016-12-31,6399000000,0001104659-17-006823,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2016-04-01,2016-06-30,1371000000,0001104659-16-134878,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2016-07-01,2016-09-30,1587000000,0001104659-16-152440,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2017-01-01,2017-03-31,1829000000,0001104659-17-028195,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2017-01-01,2017-06-30,3278000000,0001104659-17-047609,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2017-01-01,2017-09-30,4805000000,0001104659-17-063902,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2017-01-01,2017-12-31,6583000000,0001104659-18-009493,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2017-04-01,2017-06-30,1449000000,0001104659-17-047609,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2017-07-01,2017-09-30,1527000000,0001104659-17-063902,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2018-01-01,2018-03-31,1953000000,0001104659-18-026997,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2018-01-01,2018-06-30,3445000000,0000811156-18-000003,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2018-01-01,2018-09-30,5044000000,0000811156-18-000005,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2018-01-01,2018-12-31,6873000000,0000811156-19-000003,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2018-04-01,2018-06-30,1492000000,0000811156-18-000003,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2018-07-01,2018-09-30,1599000000,0000811156-18-000005,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2019-01-01,2019-03-31,2059000000,0000811156-19-000007,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2019-01-01,2019-06-30,3504000000,0000811156-19-000010,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2019-01-01,2019-09-30,5050000000,0000811156-19-000015,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2019-04-01,2019-06-30,1445000000,0000811156-19-000010,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2019-07-01,2019-09-30,1546000000,0000811156-19-000015,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2020-01-01,2020-03-31,1864000000,0000811156-20-000007,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2021-01-01,2021-06-30,3571000000,0000811156-21-000054,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2021-01-01,2021-09-30,5296000000,0000811156-21-000077,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2021-01-01,2021-12-31,7329000000,0000811156-22-000048,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2021-04-01,2021-06-30,1558000000,0000811156-21-000054,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2021-07-01,2021-09-30,1725000000,0000811156-21-000077,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2022-01-01,2022-03-31,2374000000,0000811156-22-000074,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2022-01-01,2022-06-30,4294000000,0000811156-22-000113,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2022-01-01,2022-09-30,6318000000,0000811156-22-000119,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2022-01-01,2022-12-31,8596000000,0000811156-23-000014,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2022-04-01,2022-06-30,1920000000,0000811156-22-000113,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2022-07-01,2022-09-30,2024000000,0000811156-22-000119,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2023-01-01,2023-03-31,2284000000,0000811156-23-000038,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2023-01-01,2023-06-30,3839000000,0000811156-23-000066,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2023-01-01,2023-09-30,5512000000,0000811156-23-000072,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2023-01-01,2023-12-31,7462000000,0000811156-24-000044,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2023-04-01,2023-06-30,1555000000,0000811156-23-000066,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2023-07-01,2023-09-30,1673000000,0000811156-23-000072,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2024-01-01,2024-03-31,2176000000,0000811156-24-000084,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2024-01-01,2024-06-30,3783000000,0000811156-24-000110,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2024-01-01,2024-09-30,5526000000,0000811156-24-000114,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2024-01-01,2024-12-31,7515000000,0000811156-25-000036,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2024-04-01,2024-06-30,1607000000,0000811156-24-000110,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2024-07-01,2024-09-30,1743000000,0000811156-24-000114,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2025-01-01,2025-03-31,2447000000,0000811156-25-000047,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2025-01-01,2025-06-30,4285000000,0000811156-25-000071,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2025-01-01,2025-09-30,6306000000,0000811156-25-000077,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2025-01-01,2025-12-31,8539000000,0000811156-26-000004,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2025-04-01,2025-06-30,1838000000,0000811156-25-000071,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2025-07-01,2025-09-30,2021000000,0000811156-25-000077,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2026-01-01,2026-03-31,2730000000,0000811156-26-000024,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2026-01-01,2026-06-30,4559000000,0000811156-26-000028,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,CMS,0000811156,2026-04-01,2026-06-30,1829000000,0000811156-26-000028,Revenues,Operating Revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2015-01-01,2015-03-31,2512000000,0000827052-15-000115,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2015-01-01,2015-06-30,5420000000,0000827052-15-000144,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2015-01-01,2015-09-30,9183000000,0000827052-15-000180,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2015-01-01,2015-12-31,11524000000,0000827052-16-000222,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2015-04-01,2015-06-30,2908000000,0000827052-15-000144,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2015-07-01,2015-09-30,3763000000,0000827052-15-000180,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2016-01-01,2016-03-31,2440000000,0000827052-16-000321,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2016-01-01,2016-06-30,5218000000,0000827052-16-000363,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2016-01-01,2016-09-30,8985000000,0000827052-16-000398,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2016-01-01,2016-12-31,11869000000,0000827052-17-000033,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2016-04-01,2016-06-30,2777000000,0000827052-16-000363,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2016-07-01,2016-09-30,3767000000,0000827052-16-000398,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2017-01-01,2017-03-31,2463000000,0000827052-17-000128,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2017-01-01,2017-06-30,5428000000,0000827052-17-000163,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2017-01-01,2017-09-30,9100000000,0000827052-17-000196,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2017-01-01,2017-12-31,12320000000,0000827052-18-000046,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2017-04-01,2017-06-30,2965000000,0000827052-17-000163,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2017-07-01,2017-09-30,3672000000,0000827052-17-000196,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2018-01-01,2018-03-31,2564000000,0000827052-18-000115,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2018-01-01,2018-06-30,5379000000,0000827052-18-000136,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2018-01-01,2018-09-30,9648000000,0000827052-18-000151,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2018-01-01,2018-12-31,12657000000,0000827052-19-000034,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2018-04-01,2018-06-30,2815000000,0000827052-18-000136,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2018-07-01,2018-09-30,4269000000,0000827052-18-000151,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2019-01-01,2019-03-31,2824000000,0000827052-19-000108,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2019-01-01,2019-06-30,5636000000,0000827052-19-000135,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2019-01-01,2019-09-30,9377000000,0000827052-19-000166,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2019-01-01,2019-12-31,12347000000,0000827052-20-000026,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2019-04-01,2019-06-30,2812000000,0000827052-19-000135,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2019-07-01,2019-09-30,3741000000,0000827052-19-000166,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2020-01-01,2020-03-31,2790000000,0000827052-20-000091,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2020-01-01,2020-06-30,5777000000,0000827052-20-000111,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2020-01-01,2020-09-30,10421000000,0000827052-20-000134,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2020-01-01,2020-12-31,13578000000,0000827052-21-000019,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2020-04-01,2020-06-30,2987000000,0000827052-20-000111,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2020-07-01,2020-09-30,4644000000,0000827052-20-000134,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2021-01-01,2021-03-31,2960000000,0000827052-21-000033,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2021-01-01,2021-06-30,6275000000,0000827052-21-000051,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2021-01-01,2021-09-30,11574000000,0000827052-21-000063,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2021-01-01,2021-12-31,14905000000,0000827052-22-000006,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2021-04-01,2021-06-30,3315000000,0000827052-21-000051,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2021-07-01,2021-09-30,5299000000,0000827052-21-000063,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2022-01-01,2022-03-31,3968000000,0000827052-22-000031,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2022-01-01,2022-06-30,7976000000,0000827052-22-000053,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2022-01-01,2022-09-30,13204000000,0000827052-22-000076,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2022-01-01,2022-12-31,17220000000,0000827052-23-000010,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2022-04-01,2022-06-30,4008000000,0000827052-22-000053,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2022-07-01,2022-09-30,5228000000,0000827052-22-000076,Revenues,Total operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2023-01-01,2023-03-31,3966000000,0000827052-23-000037,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2023-01-01,2023-06-30,7930000000,0000827052-23-000065,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2023-01-01,2023-09-30,12632000000,0000827052-23-000084,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2023-01-01,2023-12-31,16338000000,0000827052-24-000013,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2023-04-01,2023-06-30,3964000000,0000827052-23-000065,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2023-07-01,2023-09-30,4702000000,0000827052-23-000084,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2024-01-01,2024-03-31,4078000000,0000827052-24-000035,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2024-01-01,2024-06-30,8414000000,0000827052-24-000055,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2024-01-01,2024-09-30,13615000000,0000827052-24-000075,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2024-01-01,2024-12-31,17599000000,0000827052-25-000022,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2024-04-01,2024-06-30,4336000000,0000827052-24-000055,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2024-07-01,2024-09-30,5201000000,0000827052-24-000075,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2025-01-01,2025-03-31,3811000000,0000827052-25-000043,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2025-01-01,2025-06-30,8354000000,0000827052-25-000074,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2025-01-01,2025-09-30,14104000000,0000827052-25-000100,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2025-01-01,2025-12-31,19317000000,0000827052-26-000012,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2025-04-01,2025-06-30,4543000000,0000827052-25-000074,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2025-07-01,2025-09-30,5750000000,0000827052-25-000100,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,EIX,0000827052,2026-01-01,2026-03-31,4103000000,0000827052-26-000042,Revenues,Operating revenue,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2015-01-01,2015-03-31,1556000000,0001002910-15-000119,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2015-01-01,2015-06-30,2957000000,0001002910-15-000128,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2015-01-01,2015-09-30,4790000000,0001002910-15-000140,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2015-01-01,2015-12-31,6098000000,0001002910-16-000205,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2015-04-01,2015-06-30,1401000000,0001002910-15-000128,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2015-07-01,2015-09-30,1833000000,0001002910-15-000140,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2016-01-01,2016-03-31,1434000000,0001002910-16-000258,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2016-01-01,2016-06-30,2861000000,0001002910-16-000276,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2016-01-01,2016-09-30,4720000000,0001002910-16-000289,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2016-01-01,2016-12-31,6076000000,0001002910-17-000054,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2016-04-01,2016-06-30,1427000000,0001002910-16-000276,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2016-07-01,2016-09-30,1859000000,0001002910-16-000289,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2017-01-01,2017-06-30,3052000000,0001002910-17-000103,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2017-01-01,2017-09-30,4775000000,0001002910-17-000108,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2017-07-01,2017-09-30,1723000000,0001002910-17-000108,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2018-01-01,2018-03-31,1585000000,0001002910-18-000119,Revenues,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2018-01-01,2018-06-30,3148000000,0001002910-18-000135,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2018-01-01,2018-09-30,4872000000,0001002910-18-000140,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2018-01-01,2018-12-31,6291000000,0001002910-19-000094,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2018-04-01,2018-06-30,1563000000,0001002910-18-000135,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2018-07-01,2018-09-30,1724000000,0001002910-18-000140,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2019-01-01,2019-03-31,1556000000,0001002910-19-000139,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2019-01-01,2019-06-30,2935000000,0001002910-19-000144,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2019-01-01,2019-09-30,4594000000,0001002910-19-000148,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2019-01-01,2019-12-31,5910000000,0001002910-20-000077,RevenueFromContractWithCustomerIncludingAssessedTax,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2019-04-01,2019-06-30,1379000000,0001002910-19-000144,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2019-07-01,2019-09-30,1659000000,0001002910-19-000148,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2020-01-01,2020-03-31,1440000000,0001002910-20-000115,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2020-01-01,2020-06-30,2838000000,0001002910-20-000128,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2020-01-01,2020-09-30,4466000000,0001002910-20-000138,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2020-01-01,2020-12-31,5794000000,0001002910-21-000065,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2020-04-01,2020-06-30,1398000000,0001002910-20-000128,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2020-07-01,2020-09-30,1628000000,0001002910-20-000138,RevenueFromContractWithCustomerIncludingAssessedTax,"Revenue from Contract with Customer, Including Assessed Tax",G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2021-01-01,2021-03-31,1566000000,0001002910-21-000094,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2021-01-01,2021-06-30,3038000000,0001002910-21-000103,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2021-01-01,2021-09-30,4849000000,0001002910-21-000113,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2021-01-01,2021-12-31,6394000000,0001002910-22-000038,RevenueFromContractWithCustomerIncludingAssessedTax,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2021-04-01,2021-06-30,1472000000,0001002910-21-000103,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2021-07-01,2021-09-30,1811000000,0001002910-21-000113,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2022-01-01,2022-03-31,1879000000,0001002910-22-000061,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2022-01-01,2022-06-30,3605000000,0001002910-22-000072,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2022-01-01,2022-09-30,5911000000,0001002910-22-000087,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2022-01-01,2022-12-31,7957000000,0001002910-23-000053,RevenueFromContractWithCustomerIncludingAssessedTax,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2022-04-01,2022-06-30,1726000000,0001002910-22-000072,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2022-07-01,2022-09-30,2306000000,0001002910-22-000087,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2023-01-01,2023-03-31,2062000000,0001002910-23-000090,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2023-01-01,2023-06-30,3822000000,0001002910-23-000102,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2023-01-01,2023-09-30,5882000000,0001002910-23-000112,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2023-01-01,2023-12-31,7500000000,0001002910-24-000056,RevenueFromContractWithCustomerIncludingAssessedTax,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2023-04-01,2023-06-30,1760000000,0001002910-23-000102,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2023-07-01,2023-09-30,2060000000,0001002910-23-000112,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2024-01-01,2024-03-31,1816000000,0001002910-24-000090,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2024-01-01,2024-06-30,3509000000,0001002910-24-000101,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2024-01-01,2024-09-30,5682000000,0001002910-24-000111,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2024-01-01,2024-12-31,7623000000,0001002910-25-000055,RevenueFromContractWithCustomerIncludingAssessedTax,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2024-04-01,2024-06-30,1693000000,0001002910-24-000101,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2024-07-01,2024-09-30,2173000000,0001002910-24-000111,RevenueFromContractWithCustomerIncludingAssessedTax,Total operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2025-01-01,2025-03-31,2097000000,0001002910-25-000098,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2025-01-01,2025-06-30,4318000000,0001002910-25-000112,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2025-01-01,2025-09-30,7017000000,0001002910-25-000129,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2025-01-01,2025-12-31,8799000000,0001002910-26-000009,RevenueFromContractWithCustomerIncludingAssessedTax,Operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2025-04-01,2025-06-30,2221000000,0001002910-25-000112,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2025-07-01,2025-09-30,2699000000,0001002910-25-000129,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2026-01-01,2026-03-31,2176000000,0001002910-26-000015,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2026-01-01,2026-06-30,4268000000,0001002910-26-000023,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,AEE,0001002910,2026-04-01,2026-06-30,2092000000,0001002910-26-000023,RevenueFromContractWithCustomerIncludingAssessedTax,Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2019-01-01,2019-03-31,2898000000,0000086521-19-000035,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2019-01-01,2019-06-30,5128000000,0001032208-19-000016,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2019-01-01,2019-09-30,7886000000,0001032208-19-000035,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2019-01-01,2019-12-31,10829000000,0001032208-20-000006,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2019-04-01,2019-06-30,2230000000,0001032208-19-000016,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2019-07-01,2019-09-30,2758000000,0001032208-19-000035,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2020-01-01,2020-03-31,3029000000,0001032208-20-000022,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2020-01-01,2020-06-30,5555000000,0001032208-20-000039,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2020-01-01,2020-09-30,8199000000,0001032208-20-000047,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2020-01-01,2020-12-31,11370000000,0001032208-21-000007,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2020-04-01,2020-06-30,2526000000,0001032208-20-000039,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2020-07-01,2020-09-30,2644000000,0001032208-20-000047,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2021-01-01,2021-03-31,3259000000,0001032208-21-000016,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2021-01-01,2021-06-30,6000000000,0001032208-21-000032,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2021-01-01,2021-09-30,9013000000,0001032208-21-000047,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2021-01-01,2021-12-31,12857000000,0001032208-22-000007,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2021-04-01,2021-06-30,2741000000,0001032208-21-000032,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2021-07-01,2021-09-30,3013000000,0001032208-21-000047,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2022-01-01,2022-03-31,3820000000,0001032208-22-000023,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2022-01-01,2022-06-30,7367000000,0001032208-22-000038,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2022-01-01,2022-09-30,10984000000,0001032208-22-000052,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2022-01-01,2022-12-31,14439000000,0001032208-23-000008,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2022-04-01,2022-06-30,3547000000,0001032208-22-000038,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2022-07-01,2022-09-30,3617000000,0001032208-22-000052,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2023-01-01,2023-03-31,6560000000,0001032208-23-000027,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2023-01-01,2023-06-30,9895000000,0001032208-23-000043,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2023-01-01,2023-09-30,13229000000,0001032208-23-000057,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2023-01-01,2023-12-31,16720000000,0001032208-24-000007,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2023-04-01,2023-06-30,3335000000,0001032208-23-000043,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2023-07-01,2023-09-30,3334000000,0001032208-23-000057,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2024-01-01,2024-03-31,3640000000,0001032208-24-000015,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2024-01-01,2024-06-30,6651000000,0001032208-24-000026,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2024-01-01,2024-09-30,9427000000,0001032208-24-000046,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2024-01-01,2024-12-31,13185000000,0001032208-25-000012,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2024-04-01,2024-06-30,3011000000,0001032208-24-000026,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2024-07-01,2024-09-30,2776000000,0001032208-24-000046,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2025-01-01,2025-03-31,3802000000,0001032208-25-000027,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2025-01-01,2025-06-30,6802000000,0001032208-25-000048,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2025-01-01,2025-09-30,9953000000,0001032208-25-000065,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2025-01-01,2025-12-31,13702000000,0001032208-26-000010,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2025-04-01,2025-06-30,3000000000,0001032208-25-000048,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2025-07-01,2025-09-30,3151000000,0001032208-25-000065,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,SRE,0001032208,2026-01-01,2026-03-31,3655000000,0001032208-26-000030,RegulatedAndUnregulatedOperatingRevenue,Total revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2017-01-01,2017-12-31,1445003000,0001108426-20-000014,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2018-01-01,2018-12-31,1436613000,0001108426-20-000014,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2019-01-01,2019-03-31,349645000,0001108426-20-000043,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2019-01-01,2019-06-30,679872000,0001108426-20-000060,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2019-01-01,2019-09-30,1113458000,0001108426-20-000067,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2019-01-01,2019-12-31,1457603000,0001108426-20-000014,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2019-04-01,2019-06-30,330228000,0001108426-20-000060,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2019-07-01,2019-09-30,433586000,0001108426-20-000067,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2020-01-01,2020-03-31,333622000,0001108426-20-000043,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2020-01-01,2020-06-30,691271000,0001108426-20-000060,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2020-01-01,2020-09-30,1163736000,0001108426-20-000067,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2020-01-01,2020-12-31,1523012000,0001108426-21-000010,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2020-04-01,2020-06-30,357649000,0001108426-20-000060,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2020-07-01,2020-09-30,472465000,0001108426-20-000067,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2021-01-01,2021-03-31,364707000,0001108426-21-000023,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2021-01-01,2021-06-30,791247000,0001108426-21-000045,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2021-01-01,2021-09-30,1345798000,0001108426-21-000055,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2021-01-01,2021-12-31,1779873000,0001108426-22-000010,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2021-04-01,2021-06-30,426540000,0001108426-21-000045,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2021-07-01,2021-09-30,554551000,0001108426-21-000055,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2022-01-01,2022-03-31,444118000,0001108426-22-000027,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2022-01-01,2022-06-30,943848000,0001108426-22-000052,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2022-01-01,2022-09-30,1673736000,0001108426-22-000065,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2022-01-01,2022-12-31,2249555000,0001108426-23-000006,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2022-04-01,2022-06-30,499730000,0001108426-22-000052,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2022-07-01,2022-09-30,729888000,0001108426-22-000065,Revenues,Total electric operating revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2023-01-01,2023-03-31,544077000,0001108426-23-000024,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2023-01-01,2023-06-30,1021233000,0001108426-23-000048,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2023-01-01,2023-09-30,1527084000,0001108426-23-000057,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2023-01-01,2023-12-31,1939198000,0001108426-24-000008,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2023-04-01,2023-06-30,477156000,0001108426-23-000048,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2023-07-01,2023-09-30,505851000,0001108426-23-000057,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2024-01-01,2024-03-31,436877000,0001108426-24-000041,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2024-01-01,2024-06-30,924979000,0001108426-24-000068,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2024-01-01,2024-09-30,1494235000,0001108426-24-000096,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2024-01-01,2024-12-31,1971199000,0001108426-25-000014,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2024-04-01,2024-06-30,488102000,0001108426-24-000068,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2024-07-01,2024-09-30,569256000,0001108426-24-000096,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2025-01-01,2025-03-31,482792000,0001108426-25-000033,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2025-01-01,2025-06-30,985212000,0001108426-25-000082,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2025-01-01,2025-09-30,1632374000,0001108426-25-000109,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2025-01-01,2025-12-31,2165606000,0001108426-26-000006,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2025-04-01,2025-06-30,502420000,0001108426-25-000082,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2025-07-01,2025-09-30,647162000,0001108426-25-000109,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,TXNM,0001108426,2026-01-01,2026-03-31,504982000,0001108426-26-000026,Revenues,Electric Operating Revenues,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2018-01-01,2018-06-30,9525000000,0001755672-19-000014,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2018-01-01,2018-09-30,11472000000,0001755672-19-000028,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2018-01-01,2018-12-31,14287000000,0001755672-20-000006,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2018-04-01,2018-06-30,5731000000,0001755672-19-000014,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2018-07-01,2018-09-30,1947000000,0001755672-19-000028,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2019-01-01,2019-06-30,8952000000,0001755672-19-000014,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2019-01-01,2019-09-30,10863000000,0001755672-19-000028,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2019-01-01,2019-12-31,13846000000,0001755672-20-000006,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2019-04-01,2019-06-30,5556000000,0001755672-19-000014,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2019-07-01,2019-09-30,1911000000,0001755672-19-000028,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2020-01-01,2020-03-31,3956000000,0001755672-20-000014,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2020-01-01,2020-06-30,9147000000,0001755672-20-000021,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2020-01-01,2020-09-30,11010000000,0001755672-20-000026,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2020-01-01,2020-12-31,14217000000,0001755672-21-000008,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2020-04-01,2020-06-30,5191000000,0001755672-20-000021,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2020-07-01,2020-09-30,1863000000,0001755672-20-000026,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2021-01-01,2021-03-31,4178000000,0001755672-21-000012,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2021-01-01,2021-06-30,9805000000,0001755672-21-000022,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2021-01-01,2021-09-30,12176000000,0001755672-21-000027,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2021-01-01,2021-12-31,15655000000,0001755672-22-000005,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2021-04-01,2021-06-30,5627000000,0001755672-21-000022,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2021-07-01,2021-09-30,2371000000,0001755672-21-000027,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2022-01-01,2022-03-31,4601000000,0001755672-22-000011,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2022-01-01,2022-06-30,10853000000,0001755672-22-000020,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2022-01-01,2022-09-30,13630000000,0001755672-22-000026,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2022-01-01,2022-12-31,17455000000,0001755672-23-000005,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2022-04-01,2022-06-30,6252000000,0001755672-22-000020,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2022-07-01,2022-09-30,2777000000,0001755672-22-000026,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2023-01-01,2023-03-31,4884000000,0001755672-23-000011,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2023-01-01,2023-06-30,10929000000,0001755672-23-000018,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2023-01-01,2023-09-30,13519000000,0001755672-23-000025,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2023-01-01,2023-12-31,17226000000,0001755672-24-000004,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2023-04-01,2023-06-30,6045000000,0001755672-23-000018,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2023-07-01,2023-09-30,2590000000,0001755672-23-000025,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2024-01-01,2024-03-31,4492000000,0001755672-24-000013,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2024-01-01,2024-06-30,10604000000,0001755672-24-000019,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2024-01-01,2024-09-30,12930000000,0001755672-24-000024,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2024-01-01,2024-12-31,16908000000,0001755672-25-000005,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2024-04-01,2024-06-30,6112000000,0001755672-24-000019,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2024-07-01,2024-09-30,2326000000,0001755672-24-000024,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2025-01-01,2025-03-31,4417000000,0001755672-25-000011,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2025-01-01,2025-06-30,10873000000,0001755672-25-000017,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2025-01-01,2025-09-30,13491000000,0001755672-25-000022,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2025-01-01,2025-12-31,17401000000,0001755672-26-000004,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2025-04-01,2025-06-30,6456000000,0001755672-25-000017,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2025-07-01,2025-09-30,2618000000,0001755672-25-000022,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2026-01-01,2026-03-31,4905000000,0001755672-26-000010,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2026-01-01,2026-06-30,11284000000,0001755672-26-000025,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+revenue,CTVA,0001755672,2026-04-01,2026-06-30,6379000000,0001755672-26-000025,Revenues,Net Sales,G1_printed_total,,,slot_fills_blank
+net_income,ETR,0000065984,2015-01-01,2015-03-31,298050000,0000065984-15-000145,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2015-01-01,2015-06-30,446892000,0000065984-15-000238,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2015-01-01,2015-09-30,-276135000,0000065984-15-000319,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2015-01-01,2015-12-31,-176562000,0000065984-16-000436,NetIncomeLoss,NET INCOME,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2015-04-01,2015-06-30,148843000,0000065984-15-000238,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2015-07-01,2015-09-30,-723027000,0000065984-15-000319,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2016-01-01,2016-03-31,229966000,0000065984-16-000539,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2016-01-01,2016-06-30,797280000,0000065984-16-000623,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2016-01-01,2016-09-30,1185449000,0000065984-16-000716,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2016-01-01,2016-12-31,-583618000,0000065984-17-000067,NetIncomeLoss,NET INCOME,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2016-04-01,2016-06-30,567314000,0000065984-16-000623,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2016-07-01,2016-09-30,388170000,0000065984-16-000716,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2017-01-01,2017-03-31,82605000,0000065984-17-000114,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2017-01-01,2017-06-30,492528000,0000065984-17-000173,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2017-01-01,2017-09-30,890726000,0000065984-17-000216,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2017-01-01,2017-12-31,411612000,0000065984-18-000072,NetIncomeLoss,NET INCOME,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2017-04-01,2017-06-30,409922000,0000065984-17-000173,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2017-07-01,2017-09-30,398198000,0000065984-17-000216,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2018-01-01,2018-03-31,132761000,0000065984-18-000132,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2018-01-01,2018-06-30,378181000,0000065984-18-000192,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2018-01-01,2018-12-31,848661000,0000065984-20-000069,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ETR,0000065984,2018-04-01,2018-06-30,245421000,0000065984-18-000192,NetIncomeLoss,EARNINGS APPLICABLE TO COMMON STOCK,G1_printed_line,,,slot_fills_blank
+net_income,ETR,0000065984,2019-01-01,2019-12-31,1241226000,0000065984-20-000069,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ETR,0000065984,2020-01-01,2020-12-31,1388334000,0000065984-21-000096,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ETR,0000065984,2021-01-01,2021-12-31,1118492000,0000065984-22-000017,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ETR,0000065984,2022-01-01,2022-12-31,1103166000,0000065984-23-000014,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ETR,0000065984,2023-01-01,2023-12-31,2356536000,0000065984-24-000012,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic, Total",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2015-01-01,2015-03-31,255133000,0000072741-15-000027,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2015-01-01,2015-06-30,464520000,0000072741-15-000043,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2015-01-01,2015-09-30,702319000,0000072741-15-000055,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2015-01-01,2015-12-31,886004000,0000072741-16-000063,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2015-04-01,2015-06-30,209387000,0000072741-15-000043,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2015-07-01,2015-09-30,237799000,0000072741-15-000055,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2016-01-01,2016-03-31,246033000,0000072741-16-000075,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2016-01-01,2016-06-30,451562000,0000072741-16-000098,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2016-01-01,2016-09-30,718762000,0000072741-16-000107,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2016-01-01,2016-12-31,949821000,0000072741-17-000007,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2016-04-01,2016-06-30,205529000,0000072741-16-000098,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2016-07-01,2016-09-30,267199000,0000072741-16-000107,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2017-01-01,2017-03-31,261338000,0000072741-17-000021,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2017-01-01,2017-06-30,493966000,0000072741-17-000030,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2017-01-01,2017-09-30,756216000,0000072741-17-000045,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2017-01-01,2017-12-31,995515000,0000072741-18-000028,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2017-04-01,2017-06-30,232629000,0000072741-17-000030,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2017-07-01,2017-09-30,262250000,0000072741-17-000045,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2018-01-01,2018-03-31,271426000,0000072741-18-000042,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2018-01-01,2018-06-30,516072000,0000072741-18-000053,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2018-01-01,2018-09-30,807332000,0000072741-18-000060,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2018-01-01,2018-12-31,1040519000,0000072741-19-000017,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2018-04-01,2018-06-30,244647000,0000072741-18-000053,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2018-07-01,2018-09-30,291260000,0000072741-18-000060,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2019-01-01,2019-03-31,310558000,0000072741-19-000026,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2019-01-01,2019-06-30,343891000,0000072741-19-000034,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2019-01-01,2019-09-30,664655000,0000072741-19-000042,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2019-01-01,2019-12-31,916572000,0000072741-20-000008,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2019-04-01,2019-06-30,33334000,0000072741-19-000034,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2019-07-01,2019-09-30,320764000,0000072741-19-000042,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2020-01-01,2020-03-31,336633000,0000072741-20-000013,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2020-01-01,2020-06-30,590743000,0000072741-20-000020,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2020-01-01,2020-09-30,938883000,0000072741-20-000024,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2020-04-01,2020-06-30,254112000,0000072741-20-000020,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2020-07-01,2020-09-30,348140000,0000072741-20-000024,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2021-01-01,2021-03-31,368023000,0000072741-21-000010,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2021-01-01,2021-06-30,634422000,0000072741-21-000019,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2021-01-01,2021-09-30,919468000,0000072741-21-000025,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2021-04-01,2021-06-30,266400000,0000072741-21-000019,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2021-07-01,2021-09-30,285046000,0000072741-21-000025,NetIncomeLoss,Net Income,G1_printed_line,,,slot_fills_blank
+net_income,ES,0000072741,2022-01-01,2022-12-31,1404875000,0000072741-23-000004,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2023-01-01,2023-03-31,491159000,0000072741-23-000008,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2023-01-01,2023-06-30,506581000,0000072741-23-000016,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2023-01-01,2023-09-30,846245000,0000072741-23-000020,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2023-01-01,2023-12-31,-442240000,0000072741-24-000005,NetIncomeLossAvailableToCommonStockholdersBasic,Net (Loss)/Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2023-04-01,2023-06-30,15422000,0000072741-23-000016,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2023-07-01,2023-09-30,339663000,0000072741-23-000020,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2024-01-01,2024-03-31,521848000,0000072741-24-000010,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2024-01-01,2024-06-30,857190000,0000072741-24-000018,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2024-01-01,2024-09-30,739133000,0000072741-24-000023,NetIncomeLossAvailableToCommonStockholdersBasic,Net (Loss)/Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2024-01-01,2024-12-31,811653000,0000072741-25-000007,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income/(Loss) Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2024-04-01,2024-06-30,335341000,0000072741-24-000018,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2024-07-01,2024-09-30,-118057000,0000072741-24-000023,NetIncomeLossAvailableToCommonStockholdersBasic,Net (Loss)/Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2025-01-01,2025-03-31,550788000,0000072741-25-000011,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2025-01-01,2025-06-30,903517000,0001628280-25-037369,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2025-01-01,2025-09-30,1271066000,0001628280-25-050033,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income/(Loss) Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2025-01-01,2025-12-31,1692372000,0001628280-26-008461,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income/(Loss) Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2025-04-01,2025-06-30,352728000,0001628280-25-037369,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2025-07-01,2025-09-30,367549000,0001628280-25-050033,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income/(Loss) Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2026-01-01,2026-03-31,606841000,0001628280-26-032278,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2026-01-01,2026-06-30,660522000,0001628280-26-051906,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,ES,0000072741,2026-04-01,2026-06-30,53680000,0001628280-26-051906,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2015-01-01,2015-12-31,2367000000,0000092122-17-000007,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income Attributable to Southern Company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2016-01-01,2016-12-31,2448000000,0000092122-17-000007,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income Attributable to Southern Company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2017-01-01,2017-03-31,658000000,0000092122-17-000024,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income Attributable to Southern Company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2017-01-01,2017-06-30,-723000000,0000092122-17-000065,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2017-01-01,2017-09-30,347000000,0000092122-17-000076,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2017-01-01,2017-12-31,842000000,0000092122-18-000012,NetIncomeLossAvailableToCommonStockholdersBasic,Net income after dividends on preferred and preference stock,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2017-04-01,2017-06-30,-1381000000,0000092122-17-000065,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2017-07-01,2017-09-30,1069000000,0000092122-17-000076,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2018-01-01,2018-03-31,938000000,0000092122-18-000027,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2018-01-01,2018-06-30,784000000,0000092122-18-000050,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2018-01-01,2018-09-30,1948000000,0000092122-18-000062,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2018-01-01,2018-12-31,2226000000,0000092122-19-000006,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2018-04-01,2018-06-30,-154000000,0000092122-18-000050,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2018-07-01,2018-09-30,1164000000,0000092122-18-000062,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2019-01-01,2019-03-31,2084000000,0000092122-19-000016,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2019-01-01,2019-06-30,2982000000,0000092122-19-000037,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2019-01-01,2019-09-30,4298000000,0000092122-19-000053,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2019-01-01,2019-12-31,4739000000,0000092122-20-000017,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2019-04-01,2019-06-30,899000000,0000092122-19-000037,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2019-07-01,2019-09-30,1316000000,0000092122-19-000053,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2020-01-01,2020-03-31,868000000,0000092122-20-000042,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income (Loss),G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2020-01-01,2020-06-30,1480000000,0000092122-20-000057,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2020-01-01,2020-09-30,2732000000,0000092122-20-000085,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2020-01-01,2020-12-31,3119000000,0000092122-21-000006,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2020-04-01,2020-06-30,612000000,0000092122-20-000057,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2020-07-01,2020-09-30,1251000000,0000092122-20-000085,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2021-01-01,2021-03-31,1135000000,0000092122-21-000037,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2021-01-01,2021-06-30,1508000000,0000092122-21-000064,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2021-01-01,2021-09-30,2608000000,0000092122-21-000092,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2021-01-01,2021-12-31,2393000000,0000092122-22-000003,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2021-04-01,2021-06-30,372000000,0000092122-21-000064,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2021-07-01,2021-09-30,1101000000,0000092122-21-000092,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2022-01-01,2022-03-31,1032000000,0000092122-22-000014,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2022-01-01,2022-06-30,2139000000,0000092122-22-000039,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2022-01-01,2022-09-30,3611000000,0000092122-22-000064,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2022-01-01,2022-12-31,3524000000,0000092122-23-000012,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2022-04-01,2022-06-30,1107000000,0000092122-22-000039,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2022-07-01,2022-09-30,1472000000,0000092122-22-000064,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2023-01-01,2023-03-31,862000000,0000092122-23-000028,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2023-01-01,2023-06-30,1700000000,0000092122-23-000070,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2023-01-01,2023-09-30,3121000000,0000092122-23-000101,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2023-01-01,2023-12-31,3976000000,0000092122-24-000009,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2023-04-01,2023-06-30,838000000,0000092122-23-000070,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2023-07-01,2023-09-30,1422000000,0000092122-23-000101,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2024-01-01,2024-03-31,1129000000,0000092122-24-000042,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2024-01-01,2024-06-30,2332000000,0000092122-24-000075,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2024-01-01,2024-09-30,3867000000,0000092122-24-000089,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated net income attributable to company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2024-01-01,2024-12-31,4401000000,0000092122-25-000018,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated Net Income,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2024-04-01,2024-06-30,1203000000,0000092122-24-000075,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2024-07-01,2024-09-30,1535000000,0000092122-24-000089,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated net income attributable to company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2025-01-01,2025-03-31,1334000000,0000092122-25-000042,NetIncomeLossAvailableToCommonStockholdersBasic,Consolidated net income attributable to company,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SO,0000092122,2025-01-01,2025-06-30,2214000000,0000092122-25-000076,NetIncomeLoss,Consolidated Net Income Attributable to Southern Company,G2_nci_identity,0,,slot_fills_blank
+net_income,SO,0000092122,2025-01-01,2025-09-30,3925000000,0000092122-25-000084,NetIncomeLoss,Consolidated Net Income Attributable to Southern Company,G2_nci_identity,0,,slot_fills_blank
+net_income,SO,0000092122,2025-01-01,2025-12-31,4341000000,0000092122-26-000006,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,SO,0000092122,2025-04-01,2025-06-30,880000000,0000092122-25-000076,NetIncomeLoss,Consolidated Net Income Attributable to Southern Company,G2_nci_identity,0,,slot_fills_blank
+net_income,SO,0000092122,2025-07-01,2025-09-30,1711000000,0000092122-25-000084,NetIncomeLoss,Consolidated Net Income Attributable to Southern Company,G2_nci_identity,0,,slot_fills_blank
+net_income,SO,0000092122,2026-01-01,2026-03-31,1356000000,0000092122-26-000034,NetIncomeLoss,Consolidated Net Income Attributable to Southern Company,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2015-01-01,2015-03-31,202000000,0001104659-15-029577,ProfitLoss,Net Income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,CMS,0000811156,2015-01-01,2015-06-30,269000000,0001104659-15-052761,NetIncomeLoss,Net Income (Loss) Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2015-01-01,2015-09-30,417000000,0001104659-15-073939,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2015-01-01,2015-12-31,523000000,0001104659-16-095725,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2015-04-01,2015-06-30,67000000,0001104659-15-052761,NetIncomeLoss,Net Income (Loss) Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2015-07-01,2015-09-30,148000000,0001104659-15-073939,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2016-01-01,2016-03-31,164000000,0001104659-16-114973,ProfitLoss,Net Income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,CMS,0000811156,2016-01-01,2016-06-30,288000000,0001104659-16-134878,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2016-01-01,2016-09-30,474000000,0001104659-16-152440,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2016-01-01,2016-12-31,551000000,0001104659-17-006823,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2016-04-01,2016-06-30,124000000,0001104659-16-134878,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2016-07-01,2016-09-30,186000000,0001104659-16-152440,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2017-01-01,2017-03-31,199000000,0001104659-17-028195,ProfitLoss,Net Income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,CMS,0000811156,2017-01-01,2017-06-30,291000000,0001104659-17-047609,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2017-01-01,2017-09-30,463000000,0001104659-17-063902,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2017-01-01,2017-12-31,460000000,0001104659-18-009493,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2017-04-01,2017-06-30,92000000,0001104659-17-047609,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2017-07-01,2017-09-30,172000000,0001104659-17-063902,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2018-01-01,2018-03-31,241000000,0001104659-18-026997,ProfitLoss,Net Income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,CMS,0000811156,2018-01-01,2018-06-30,380000000,0000811156-18-000003,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2018-01-01,2018-09-30,549000000,0000811156-18-000005,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2018-01-01,2018-12-31,657000000,0000811156-19-000003,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2018-04-01,2018-06-30,139000000,0000811156-18-000003,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2018-07-01,2018-09-30,169000000,0000811156-18-000005,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2019-01-01,2019-03-31,213000000,0000811156-19-000007,ProfitLoss,Net Income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,CMS,0000811156,2019-01-01,2019-06-30,306000000,0000811156-19-000010,NetIncomeLoss,Net Income Available to Common Stockholders,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2019-01-01,2019-09-30,513000000,0000811156-19-000015,NetIncomeLoss,Net Income Available to Common Stockholders,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2019-01-01,2019-12-31,680000000,0000811156-20-000004,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2019-04-01,2019-06-30,93000000,0000811156-19-000010,NetIncomeLoss,Net Income Available to Common Stockholders,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2019-07-01,2019-09-30,207000000,0000811156-19-000015,NetIncomeLoss,Net Income Available to Common Stockholders,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2020-01-01,2020-03-31,243000000,0000811156-20-000007,ProfitLoss,Net Income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,CMS,0000811156,2020-01-01,2020-06-30,379000000,0000811156-20-000012,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2020-01-01,2020-09-30,597000000,0000811156-20-000017,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2020-01-01,2020-12-31,755000000,0000811156-21-000016,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2020-04-01,2020-06-30,136000000,0000811156-20-000012,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2020-07-01,2020-09-30,218000000,0000811156-20-000017,NetIncomeLoss,Net Income Available to Common Stockholders,G1_printed_line,,,slot_fills_blank
+net_income,CMS,0000811156,2021-01-01,2021-03-31,349000000,0000811156-21-000030,NetIncomeLoss,Net Income Available to Common Stockholders,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2021-01-01,2021-06-30,525000000,0000811156-21-000054,NetIncomeLoss,Net Income Available to Common Stockholders,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2021-01-01,2021-09-30,714000000,0000811156-21-000077,NetIncomeLoss,Net Income attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2021-01-01,2021-12-31,1353000000,0000811156-22-000048,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2021-04-01,2021-06-30,176000000,0000811156-21-000054,NetIncomeLoss,Net Income Available to Common Stockholders,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2021-07-01,2021-09-30,189000000,0000811156-21-000077,NetIncomeLoss,Net Income attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2022-01-01,2022-03-31,353000000,0000811156-22-000074,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2022-01-01,2022-06-30,501000000,0000811156-22-000113,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2022-01-01,2022-09-30,666000000,0000811156-22-000119,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2022-01-01,2022-12-31,837000000,0000811156-23-000014,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2022-04-01,2022-06-30,148000000,0000811156-22-000113,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2022-07-01,2022-09-30,165000000,0000811156-22-000119,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2023-01-01,2023-03-31,204000000,0000811156-23-000038,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2023-01-01,2023-06-30,402000000,0000811156-23-000066,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2023-01-01,2023-09-30,578000000,0000811156-23-000072,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2023-01-01,2023-12-31,887000000,0000811156-24-000044,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2023-04-01,2023-06-30,198000000,0000811156-23-000066,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2023-07-01,2023-09-30,176000000,0000811156-23-000072,NetIncomeLoss,Net Income Attributable to CMS Energy,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2024-01-01,2024-03-31,287000000,0000811156-24-000084,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2024-01-01,2024-06-30,485000000,0000811156-24-000110,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2024-01-01,2024-09-30,738000000,0000811156-24-000114,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2024-01-01,2024-12-31,1003000000,0000811156-25-000036,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2024-04-01,2024-06-30,198000000,0000811156-24-000110,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2024-07-01,2024-09-30,253000000,0000811156-24-000114,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2025-01-01,2025-03-31,304000000,0000811156-25-000047,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2025-01-01,2025-06-30,505000000,0000811156-25-000071,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2025-01-01,2025-09-30,782000000,0000811156-25-000077,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2025-01-01,2025-12-31,1071000000,0000811156-26-000004,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2025-04-01,2025-06-30,201000000,0000811156-25-000071,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2025-07-01,2025-09-30,277000000,0000811156-25-000077,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2026-01-01,2026-03-31,340000000,0000811156-26-000024,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2026-01-01,2026-06-30,460000000,0000811156-26-000028,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,CMS,0000811156,2026-04-01,2026-06-30,120000000,0000811156-26-000028,NetIncomeLoss,Net Income,G2_nci_identity,0,,slot_fills_blank
+net_income,EIX,0000827052,2015-01-01,2015-03-31,299000000,0000827052-15-000115,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2015-01-01,2015-06-30,678000000,0000827052-15-000144,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2015-01-01,2015-09-30,1099000000,0000827052-15-000180,NetIncomeLoss,Net income attributable to common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2015-04-01,2015-06-30,379000000,0000827052-15-000144,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2015-07-01,2015-09-30,421000000,0000827052-15-000180,NetIncomeLoss,Net income attributable to common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2016-04-01,2016-06-30,276000000,0000827052-16-000363,NetIncomeLoss,Net income attributable to common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2017-01-01,2017-03-31,362000000,0000827052-17-000128,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2017-01-01,2017-06-30,640000000,0000827052-17-000163,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2017-01-01,2017-09-30,1110000000,0000827052-17-000196,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2017-04-01,2017-06-30,278000000,0000827052-17-000163,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2017-07-01,2017-09-30,470000000,0000827052-17-000196,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2018-01-01,2018-03-31,218000000,0000827052-18-000115,NetIncomeLoss,Net income available for common stock,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2018-01-01,2018-06-30,494000000,0000827052-18-000136,NetIncomeLoss,Net income available for common stock,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2018-01-01,2018-09-30,1007000000,0000827052-18-000151,NetIncomeLoss,Net income available for common stock,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2018-04-01,2018-06-30,276000000,0000827052-18-000136,NetIncomeLoss,Net income available for common stock,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2018-07-01,2018-09-30,513000000,0000827052-18-000151,NetIncomeLoss,Net income available for common stock,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2019-01-01,2019-03-31,278000000,0000827052-19-000108,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2019-01-01,2019-06-30,670000000,0000827052-19-000135,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2019-01-01,2019-09-30,1141000000,0000827052-19-000166,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2019-04-01,2019-06-30,392000000,0000827052-19-000135,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2019-07-01,2019-09-30,471000000,0000827052-19-000166,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2020-01-01,2020-03-31,183000000,0000827052-20-000091,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2020-01-01,2020-06-30,501000000,0000827052-20-000111,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2020-01-01,2020-09-30,213000000,0000827052-20-000134,NetIncomeLoss,Net (loss) income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2020-04-01,2020-06-30,318000000,0000827052-20-000111,NetIncomeLoss,Net income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2020-07-01,2020-09-30,-288000000,0000827052-20-000134,NetIncomeLoss,Net (loss) income attributable to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2021-01-01,2021-12-31,925000000,0000827052-22-000006,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2022-01-01,2022-03-31,136000000,0000827052-22-000031,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2022-01-01,2022-06-30,428000000,0000827052-22-000053,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2022-01-01,2022-09-30,354000000,0000827052-22-000076,ProfitLoss,Net (loss) income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2022-01-01,2022-12-31,824000000,0000827052-23-000010,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2022-04-01,2022-06-30,292000000,0000827052-22-000053,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2022-07-01,2022-09-30,-74000000,0000827052-22-000076,ProfitLoss,Net (loss) income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2023-01-01,2023-03-31,365000000,0000827052-23-000037,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2023-01-01,2023-06-30,774000000,0000827052-23-000065,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2023-01-01,2023-09-30,986000000,0000827052-23-000084,ProfitLoss,Net income (loss),G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2023-04-01,2023-06-30,409000000,0000827052-23-000065,ProfitLoss,Net income,G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2023-07-01,2023-09-30,212000000,0000827052-23-000084,ProfitLoss,Net income (loss),G1b_profit_loss_no_nci,,,slot_fills_blank
+net_income,EIX,0000827052,2025-01-01,2025-03-31,1436000000,0000827052-25-000043,NetIncomeLoss,Net income (loss),G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2025-01-01,2025-06-30,1779000000,0000827052-25-000074,NetIncomeLoss,Net income available to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2025-01-01,2025-09-30,2611000000,0000827052-25-000100,NetIncomeLoss,Net income available to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2025-01-01,2025-12-31,4459000000,0000827052-26-000012,NetIncomeLoss,Net income available to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2025-04-01,2025-06-30,343000000,0000827052-25-000074,NetIncomeLoss,Net income available to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2025-07-01,2025-09-30,832000000,0000827052-25-000100,NetIncomeLoss,Net income available to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,EIX,0000827052,2026-01-01,2026-03-31,531000000,0000827052-26-000042,NetIncomeLoss,Net income available to Edison International common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2015-01-01,2015-03-31,108000000,0001002910-15-000119,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2015-01-01,2015-06-30,258000000,0001002910-15-000128,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2015-01-01,2015-09-30,601000000,0001002910-15-000140,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2015-01-01,2015-12-31,630000000,0001002910-16-000205,NetIncomeLoss,Net income (loss) attributable to Ameren Corporation,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2015-04-01,2015-06-30,150000000,0001002910-15-000128,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2015-07-01,2015-09-30,343000000,0001002910-15-000140,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2016-01-01,2016-03-31,105000000,0001002910-16-000258,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2016-01-01,2016-06-30,252000000,0001002910-16-000276,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2016-01-01,2016-09-30,621000000,0001002910-16-000289,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2016-01-01,2016-12-31,653000000,0001002910-17-000054,NetIncomeLoss,Net income attributable to Ameren common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2016-04-01,2016-06-30,147000000,0001002910-16-000276,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2016-07-01,2016-09-30,369000000,0001002910-16-000289,NetIncomeLoss,Net Income (Loss),G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2017-01-01,2017-03-31,102000000,0001002910-17-000091,NetIncomeLoss,Net Income Attributable to Ameren Common Shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2017-01-01,2017-06-30,295000000,0001002910-17-000103,NetIncomeLoss,Net Income Attributable to Ameren Common Shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2017-01-01,2017-09-30,583000000,0001002910-17-000108,NetIncomeLoss,Net Income Attributable to Ameren Common Shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2017-01-01,2017-12-31,523000000,0001002910-18-000069,NetIncomeLoss,Net income attributable to Ameren common shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2017-04-01,2017-06-30,193000000,0001002910-17-000103,NetIncomeLoss,Net Income Attributable to Ameren Common Shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2017-07-01,2017-09-30,288000000,0001002910-17-000108,NetIncomeLoss,Net Income Attributable to Ameren Common Shareholders,G1_printed_line,,,slot_fills_blank
+net_income,AEE,0001002910,2018-01-01,2018-03-31,151000000,0001002910-19-000139,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2018-01-01,2018-06-30,390000000,0001002910-18-000135,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2018-01-01,2018-09-30,747000000,0001002910-18-000140,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2018-01-01,2018-12-31,815000000,0001002910-19-000094,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2018-04-01,2018-06-30,239000000,0001002910-18-000135,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2018-07-01,2018-09-30,357000000,0001002910-18-000140,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2019-01-01,2019-03-31,191000000,0001002910-19-000139,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2019-01-01,2019-06-30,370000000,0001002910-19-000144,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2019-01-01,2019-09-30,734000000,0001002910-19-000148,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to Ameren common shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2019-01-01,2019-12-31,828000000,0001002910-20-000077,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2019-04-01,2019-06-30,179000000,0001002910-19-000144,NetIncomeLossAvailableToCommonStockholdersBasic,"Net Income (Loss) Available to Common Stockholders, Basic",G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2019-07-01,2019-09-30,364000000,0001002910-19-000148,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to Ameren common shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2020-01-01,2020-03-31,146000000,0001002910-20-000115,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to Ameren common shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2020-01-01,2020-06-30,389000000,0001002910-20-000128,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to Ameren common shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2020-01-01,2020-09-30,756000000,0001002910-20-000138,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to Ameren common shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2020-01-01,2020-12-31,871000000,0001002910-21-000065,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2020-04-01,2020-06-30,243000000,0001002910-20-000128,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to Ameren common shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2020-07-01,2020-09-30,367000000,0001002910-20-000138,NetIncomeLossAvailableToCommonStockholdersBasic,Net income attributable to Ameren common shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2021-01-01,2021-03-31,233000000,0001002910-21-000094,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2021-01-01,2021-06-30,440000000,0001002910-21-000103,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2021-01-01,2021-09-30,865000000,0001002910-21-000113,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2021-01-01,2021-12-31,990000000,0001002910-22-000038,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2021-04-01,2021-06-30,207000000,0001002910-21-000103,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2021-07-01,2021-09-30,425000000,0001002910-21-000113,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2022-01-01,2022-03-31,252000000,0001002910-22-000061,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2022-01-01,2022-06-30,459000000,0001002910-22-000072,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2022-01-01,2022-09-30,911000000,0001002910-22-000087,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2022-01-01,2022-12-31,1074000000,0001002910-23-000053,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2022-04-01,2022-06-30,207000000,0001002910-22-000072,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2022-07-01,2022-09-30,452000000,0001002910-22-000087,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2023-01-01,2023-03-31,264000000,0001002910-23-000090,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2023-01-01,2023-06-30,501000000,0001002910-23-000102,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2023-01-01,2023-09-30,994000000,0001002910-23-000112,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2023-01-01,2023-12-31,1152000000,0001002910-24-000056,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2023-04-01,2023-06-30,237000000,0001002910-23-000102,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2023-07-01,2023-09-30,493000000,0001002910-23-000112,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2024-01-01,2024-03-31,261000000,0001002910-24-000090,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2024-01-01,2024-06-30,519000000,0001002910-24-000101,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2024-01-01,2024-09-30,975000000,0001002910-24-000111,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2024-01-01,2024-12-31,1182000000,0001002910-25-000055,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2024-04-01,2024-06-30,258000000,0001002910-24-000101,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2024-07-01,2024-09-30,456000000,0001002910-24-000111,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,AEE,0001002910,2025-01-01,2025-12-31,1456000000,0001002910-26-000009,NetIncomeLossAvailableToCommonStockholdersBasic,Net Income Attributable to Ameren Common Shareholders,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,SRE,0001032208,2015-01-01,2015-03-31,437000000,0000086521-15-000024,NetIncomeLoss,Earnings,G2_nci_identity,0,,slot_fills_blank
+net_income,SRE,0001032208,2015-01-01,2015-06-30,732000000,0000086521-15-000046,NetIncomeLoss,Earnings,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2015-01-01,2015-09-30,980000000,0000086521-15-000067,NetIncomeLoss,Earnings (losses),G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2015-01-01,2015-12-31,1349000000,0000086521-16-000091,NetIncomeLoss,Earnings,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2015-04-01,2015-06-30,295000000,0000086521-15-000046,NetIncomeLoss,Earnings,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2015-07-01,2015-09-30,248000000,0000086521-15-000067,NetIncomeLoss,Earnings (losses),G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2016-01-01,2016-09-30,991000000,0000086521-16-000145,NetIncomeLoss,Earnings,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2016-01-01,2016-12-31,1370000000,0000086521-17-000017,NetIncomeLoss,Net income/Earnings,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2016-04-01,2016-06-30,16000000,0000086521-16-000123,NetIncomeLoss,Earnings (losses),G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2016-07-01,2016-09-30,622000000,0000086521-16-000145,NetIncomeLoss,Earnings,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2017-01-01,2017-03-31,441000000,0000086521-17-000033,NetIncomeLoss,Earnings,G2_nci_identity,0,,slot_fills_blank
+net_income,SRE,0001032208,2017-01-01,2017-06-30,700000000,0000086521-17-000058,NetIncomeLoss,Earnings / Net Income,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2017-01-01,2017-09-30,757000000,0000086521-17-000081,NetIncomeLoss,Earnings / Net Income,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2017-01-01,2017-12-31,256000000,0000086521-18-000019,NetIncomeLoss,Net income/Earnings,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2017-04-01,2017-06-30,259000000,0000086521-17-000058,NetIncomeLoss,Earnings / Net Income,G1_printed_line,,,slot_fills_blank
+net_income,SRE,0001032208,2017-07-01,2017-09-30,57000000,0000086521-17-000081,NetIncomeLoss,Earnings / Net Income,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2015-01-01,2015-03-31,14340000,0001108426-15-000046,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2015-01-01,2015-06-30,46013000,0001108426-15-000097,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2015-01-01,2015-09-30,107058000,0001108426-15-000116,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2015-01-01,2015-12-31,15640000,0001108426-16-000165,NetIncomeLoss,Net Earnings Attributable to Company,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2015-04-01,2015-06-30,31673000,0001108426-15-000097,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2015-07-01,2015-09-30,61045000,0001108426-15-000116,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2016-01-01,2016-03-31,10546000,0001108426-16-000181,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2016-01-01,2016-06-30,37622000,0001108426-16-000193,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2016-01-01,2016-09-30,92040000,0001108426-16-000210,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2016-01-01,2016-12-31,116849000,0001108426-17-000006,NetIncomeLoss,Net Earnings Attributable to Company,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2016-04-01,2016-06-30,27076000,0001108426-16-000193,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2016-07-01,2016-09-30,54418000,0001108426-16-000210,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2017-01-01,2017-03-31,22862000,0001108426-17-000015,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2017-01-01,2017-06-30,60417000,0001108426-17-000035,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2017-01-01,2017-09-30,134156000,0001108426-17-000048,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2017-01-01,2017-12-31,79874000,0001108426-18-000011,NetIncomeLoss,Net Earnings Attributable to Company,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2017-04-01,2017-06-30,37555000,0001108426-17-000035,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2017-07-01,2017-09-30,73739000,0001108426-17-000048,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2018-01-01,2018-03-31,14990000,0001108426-18-000025,NetIncomeLoss,Net Earnings Attributable to PNMR,G1_printed_line,,,slot_fills_blank
+net_income,TXNM,0001108426,2018-01-01,2018-12-31,85642000,0001108426-19-000020,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to PNMR,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2024-01-01,2024-06-30,95239000,0001108426-24-000068,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Available for PNM Common Stock,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2024-01-01,2024-09-30,226441000,0001108426-24-000096,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to TXNM,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2024-04-01,2024-06-30,48049000,0001108426-24-000068,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Available for PNM Common Stock,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2024-07-01,2024-09-30,131202000,0001108426-24-000096,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to TXNM,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2025-01-01,2025-03-31,8923000,0001108426-25-000033,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to TXNM,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2025-01-01,2025-06-30,30499000,0001108426-25-000082,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to TXNM,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2025-01-01,2025-09-30,161209000,0001108426-25-000109,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to TXNM,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2025-04-01,2025-06-30,21576000,0001108426-25-000082,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to TXNM,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2025-07-01,2025-09-30,130710000,0001108426-25-000109,NetIncomeLossAvailableToCommonStockholdersBasic,Net Earnings Attributable to TXNM,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,TXNM,0001108426,2026-01-01,2026-03-31,3737000,0001108426-26-000026,NetIncomeLossAvailableToCommonStockholdersBasic,Net earnings (losses) available for common stock,G2b_available_to_common_bridge,0,,slot_fills_blank
+net_income,CTVA,0001755672,2018-01-01,2018-06-30,587000000,0001755672-19-000014,NetIncomeLoss,Net (loss) income attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2018-01-01,2018-09-30,-4534000000,0001755672-19-000028,NetIncomeLoss,Net loss attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2018-01-01,2018-12-31,-5065000000,0001755672-20-000006,NetIncomeLoss,Net (loss) income attributable to Company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2018-04-01,2018-06-30,694000000,0001755672-19-000014,NetIncomeLoss,Net (loss) income attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2018-07-01,2018-09-30,-5121000000,0001755672-19-000028,NetIncomeLoss,Net loss attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2019-01-01,2019-06-30,-444000000,0001755672-19-000014,NetIncomeLoss,Net (loss) income attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2019-01-01,2019-09-30,-938000000,0001755672-19-000028,NetIncomeLoss,Net loss attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2019-01-01,2019-12-31,-959000000,0001755672-20-000006,NetIncomeLoss,Net (loss) income attributable to Company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2019-04-01,2019-06-30,-608000000,0001755672-19-000014,NetIncomeLoss,Net (loss) income attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2019-07-01,2019-09-30,-494000000,0001755672-19-000028,NetIncomeLoss,Net loss attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2020-01-01,2020-03-31,272000000,0001755672-20-000014,NetIncomeLoss,Net income attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2020-01-01,2020-06-30,1032000000,0001755672-20-000021,NetIncomeLoss,Net income (loss) attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2020-01-01,2020-09-30,640000000,0001755672-20-000026,NetIncomeLoss,Net (loss) income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2020-01-01,2020-12-31,681000000,0001755672-21-000008,NetIncomeLoss,Net (loss) income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2020-04-01,2020-06-30,760000000,0001755672-20-000021,NetIncomeLoss,Net income (loss) attributable to company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2020-07-01,2020-09-30,-392000000,0001755672-20-000026,NetIncomeLoss,Net (loss) income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2021-01-01,2021-03-31,600000000,0001755672-21-000012,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2021-01-01,2021-06-30,1570000000,0001755672-21-000022,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2021-01-01,2021-09-30,1600000000,0001755672-21-000027,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2021-01-01,2021-12-31,1759000000,0001755672-22-000005,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2021-04-01,2021-06-30,970000000,0001755672-21-000022,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2021-07-01,2021-09-30,30000000,0001755672-21-000027,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2022-01-01,2022-03-31,564000000,0001755672-22-000011,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2022-01-01,2022-06-30,1533000000,0001755672-22-000020,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2022-01-01,2022-09-30,1202000000,0001755672-22-000026,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2022-01-01,2022-12-31,1147000000,0001755672-23-000005,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,,,slot_fills_blank
+net_income,CTVA,0001755672,2022-04-01,2022-06-30,969000000,0001755672-22-000020,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2022-07-01,2022-09-30,-331000000,0001755672-22-000026,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2023-01-01,2023-03-31,595000000,0001755672-23-000011,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2023-01-01,2023-06-30,1309000000,0001755672-23-000018,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2023-01-01,2023-09-30,988000000,0001755672-23-000025,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2023-01-01,2023-12-31,735000000,0001755672-24-000004,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2023-04-01,2023-06-30,714000000,0001755672-23-000018,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2023-07-01,2023-09-30,-321000000,0001755672-23-000025,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2024-01-01,2024-03-31,419000000,0001755672-24-000013,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2024-01-01,2024-06-30,1472000000,0001755672-24-000019,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2024-01-01,2024-09-30,948000000,0001755672-24-000024,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2024-01-01,2024-12-31,907000000,0001755672-25-000005,NetIncomeLoss,"Net Income (Loss) Attributable to the Company, Total",G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2024-04-01,2024-06-30,1053000000,0001755672-24-000019,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2024-07-01,2024-09-30,-524000000,0001755672-24-000024,NetIncomeLoss,Net income attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2025-01-01,2025-03-31,652000000,0001755672-25-000011,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2025-01-01,2025-06-30,1966000000,0001755672-25-000017,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2025-01-01,2025-09-30,1646000000,0001755672-25-000022,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2025-01-01,2025-12-31,1094000000,0001755672-26-000004,NetIncomeLoss,Net Income (Loss) attributable to Company,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2025-04-01,2025-06-30,1314000000,0001755672-25-000017,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2025-07-01,2025-09-30,-320000000,0001755672-25-000022,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2026-01-01,2026-03-31,720000000,0001755672-26-000010,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2026-01-01,2026-06-30,1881000000,0001755672-26-000025,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank
+net_income,CTVA,0001755672,2026-04-01,2026-06-30,1161000000,0001755672-26-000025,NetIncomeLoss,Net income (loss) attributable to Corteva,G2_nci_identity,0,,slot_fills_blank

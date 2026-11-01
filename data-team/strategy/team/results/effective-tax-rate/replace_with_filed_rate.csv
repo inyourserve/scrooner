@@ -1,0 +1,8 @@
+family,rule_id,canonical_fact_id,company_id,canonical_concept_id,concept,period_id,period_end,stored_value,source_fact_ids,retired_source_ids,action,reason_code,replacement_fact_id,replacement_value,replacement_form,replacement_accession,replacement_was_authoritative,replacement_source_ids,note,period_start,reason_text
+A_ratio_derived,retire.derived_ratio_cells@1,285659618,2572,148,effective_tax_rate_reported,404715,2022-09-30,0.008,75253223,75253223,replace_with_filed_fact,,33763696,0.2,10-Q,0001037646-22-000031,,,,,
+A_ratio_derived,retire.derived_ratio_cells@1,285659640,2572,148,effective_tax_rate_reported,404765,2020-09-30,0.015,75253221,75253221,replace_with_filed_fact,,33763538,0.214,10-Q,0001037646-20-000030,,,,,
+A_ratio_derived,retire.derived_ratio_cells@1,285659657,2572,148,effective_tax_rate_reported,404802,2025-09-30,0.001,75253226,75253226,replace_with_filed_fact,,33763894,0.192,10-Q,0001037646-25-000058,,,,,
+A_ratio_derived,retire.derived_ratio_cells@1,285659670,2572,148,effective_tax_rate_reported,404819,2018-06-30,-0.004,75253218,75253218,replace_with_filed_fact,,33763441,0.224,10-Q,0001037646-18-000026,,,,,
+A_ratio_derived,retire.derived_ratio_cells@1,285659703,2572,148,effective_tax_rate_reported,404857,2024-09-30,0.016,75253225,75253225,replace_with_filed_fact,,33763847,0.183,10-Q,0001037646-24-000034,,,,,
+A_ratio_derived,retire.derived_ratio_cells@1,285659728,2572,148,effective_tax_rate_reported,404886,2021-09-30,-0.007,75253222,75253222,replace_with_filed_fact,,33763612,0.177,10-Q,0001037646-21-000050,,,,,
+A_ratio_derived,retire.derived_ratio_cells@1,285659730,2572,148,effective_tax_rate_reported,404888,2023-09-30,0.006,75253224,75253224,replace_with_filed_fact,,33763760,0.197,10-Q,0001037646-23-000035,,,,,

@@ -162,6 +162,67 @@ def resolve_facts_cmd(
     typer.echo(f"resolve-facts: {stats}")
 
 
+@app.command("split-rebase")
+def split_rebase_cmd(
+    ciks: str = typer.Option(
+        ..., help="Comma-separated CIKs (always explicit: cohort / recent filers)."
+    ),
+    statement_timeout: str = typer.Option("120s", help="Per-statement cap."),
+) -> None:
+    """WO-22 SB-8: re-base per-share values and share counts onto the current
+    share basis by source filing date (corporate_actions/share_basis.py).
+    Rule split.event_basis@1: off (default) = no query, no write; dry_run =
+    compute and print counts only; on = write through the archive (needs
+    pershare.never_derive@1 on too, migrations 0098/0099 applied). Runs after
+    resolve-facts and before conflict fills and the metric stages. Prints the
+    run id: `scrooner-map split-rebase-restore --run-id <id>` undoes it."""
+    import os
+    import time
+
+    from scrooner_pipeline.common import rule_flags
+    from scrooner_pipeline.corporate_actions import share_basis
+
+    mode = rule_flags.rule_mode(share_basis.RULE_ID)
+    if mode == rule_flags.OFF:
+        typer.echo("split-rebase: rule split.event_basis@1 is off; nothing done")
+        return
+    target = sorted({c.strip().zfill(10) for c in ciks.split(",") if c.strip()})
+    run_id = (
+        f"split-rebase-{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}-{os.getpid()}"
+    )
+    with get_connection() as conn:
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        ids = [
+            r[0]
+            for r in conn.execute(
+                "select id from core.company where cik = any(%s) order by id", (target,)
+            ).fetchall()
+        ]
+        conn.commit()
+        out = share_basis.run_split_rebase(conn, ids, run_id=run_id)
+    counts: dict[str, int] = {}
+    for res, _current in out.get("results", []):
+        for c in res.cells:
+            counts[c.status] = counts.get(c.status, 0) + 1
+    typer.echo(
+        f"split-rebase: mode={out['mode']} run_id={run_id if mode == rule_flags.ON else '-'} "
+        f"companies={out['companies']} cells={counts}"
+    )
+
+
+@app.command("split-rebase-restore")
+def split_rebase_restore_cmd(
+    run_id: str = typer.Option(..., help="Run id printed by split-rebase."),
+) -> None:
+    """Undo one split-rebase run from analytics.canonical_fact_retired."""
+    from scrooner_pipeline.mapper import canonical_archive
+
+    with get_connection() as conn:
+        with conn.transaction():
+            n = canonical_archive.restore_run(conn.cursor(), run_id)
+    typer.echo(f"split-rebase-restore: {run_id} restored {n} archive rows")
+
+
 @app.command("resolve-concept-fallbacks")
 def resolve_concept_fallbacks_cmd(
     ciks: str = typer.Option(

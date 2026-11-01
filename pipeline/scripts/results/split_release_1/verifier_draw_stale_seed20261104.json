@@ -1,0 +1,32 @@
+[
+ {
+  "company_id": "5306",
+  "ticker": "AMCR",
+  "concept": "basic_eps_resolved",
+  "period_id": "903966"
+ },
+ {
+  "company_id": "3398",
+  "ticker": "SHOP",
+  "concept": "diluted_eps_resolved",
+  "period_id": "865720"
+ },
+ {
+  "company_id": "4938",
+  "ticker": "PNFP",
+  "concept": "dividends_per_share_resolved",
+  "period_id": "1000754"
+ },
+ {
+  "company_id": "647",
+  "ticker": "RYN",
+  "concept": "dividends_per_share_resolved",
+  "period_id": "67725"
+ },
+ {
+  "company_id": "3455",
+  "ticker": "SMMT",
+  "concept": "shares_outstanding_resolved",
+  "period_id": "882820"
+ }
+]

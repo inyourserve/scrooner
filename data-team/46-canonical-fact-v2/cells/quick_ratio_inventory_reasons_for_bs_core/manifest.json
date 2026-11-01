@@ -1,0 +1,26 @@
+{
+ "family": "pershare_derived (reasons file for the bs_core owner: inventory keys)",
+ "rule_id": "quick_ratio.inventory_evidence@1",
+ "produced_at": "2026-10-31T16:28:40+00:00",
+ "rows": 2205,
+ "sha256": "0f4a76fc8b46be94a67d4edde2424b54c7e05c645e539ec59f16e85142ca11aa",
+ "companies": 156,
+ "data_points": [
+  "inventory"
+ ],
+ "counts": {
+  "inventory_fact_not_authoritative": 189,
+  "inventory_value_under_review": 1948,
+  "inventory_presented_not_extracted": 68
+ },
+ "not_included": {
+  "incomplete:materials_supplies_line_present": 560,
+  "incomplete:balance_sheet_unclassified": 7,
+  "why": "materials-line and unclassified-balance-sheet hides apply where inventory may have a value: they are metric-level and the metric layer's own rule quick_ratio.inventory_evidence@1 (with the face file qr_face_v7) reproduces them at recompute"
+ },
+ "new_reason_codes": {
+  "inventory_value_under_review": "The balance sheet shows an inventory line whose value is built from the filing's own sub-lines and is not published yet; quick ratio not shown.",
+  "inventory_fact_not_authoritative": "Inventory exists only as non-authoritative copies for this date; not shown, so the quick ratio is not shown.",
+  "inventory_presented_not_extracted": "The balance sheet shows an inventory line we have not extracted; the quick ratio is not shown."
+ }
+}

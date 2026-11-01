@@ -1,0 +1,632 @@
+{"company_id": 142, "cik": "0000007323", "run_id": "93daea3a-f7ec-4e7c-a87d-31dcffb2b898", "rule_id": "entity.shared_accession_demote_coregistrant_facts@1", "taken_at": "2026-10-31T21:31:11", "facts": 467, "cells": 164}
+{"kind": "fact", "id": 6457768, "is_authoritative": true}
+{"kind": "fact", "id": 6457803, "is_authoritative": true}
+{"kind": "fact", "id": 6457805, "is_authoritative": true}
+{"kind": "fact", "id": 6457807, "is_authoritative": true}
+{"kind": "fact", "id": 6457809, "is_authoritative": true}
+{"kind": "fact", "id": 6457811, "is_authoritative": true}
+{"kind": "fact", "id": 6457812, "is_authoritative": true}
+{"kind": "fact", "id": 6457815, "is_authoritative": true}
+{"kind": "fact", "id": 6457838, "is_authoritative": true}
+{"kind": "fact", "id": 6457841, "is_authoritative": true}
+{"kind": "fact", "id": 6457843, "is_authoritative": true}
+{"kind": "fact", "id": 6457845, "is_authoritative": true}
+{"kind": "fact", "id": 6457847, "is_authoritative": true}
+{"kind": "fact", "id": 6457849, "is_authoritative": true}
+{"kind": "fact", "id": 6457851, "is_authoritative": true}
+{"kind": "fact", "id": 6457853, "is_authoritative": true}
+{"kind": "fact", "id": 6457877, "is_authoritative": true}
+{"kind": "fact", "id": 6457879, "is_authoritative": true}
+{"kind": "fact", "id": 6457880, "is_authoritative": true}
+{"kind": "fact", "id": 6457882, "is_authoritative": true}
+{"kind": "fact", "id": 6457884, "is_authoritative": true}
+{"kind": "fact", "id": 6457885, "is_authoritative": true}
+{"kind": "fact", "id": 6457886, "is_authoritative": true}
+{"kind": "fact", "id": 6457887, "is_authoritative": true}
+{"kind": "fact", "id": 6457888, "is_authoritative": true}
+{"kind": "fact", "id": 6457912, "is_authoritative": true}
+{"kind": "fact", "id": 6457914, "is_authoritative": true}
+{"kind": "fact", "id": 6457916, "is_authoritative": true}
+{"kind": "fact", "id": 6457918, "is_authoritative": true}
+{"kind": "fact", "id": 6457930, "is_authoritative": true}
+{"kind": "fact", "id": 6457931, "is_authoritative": true}
+{"kind": "fact", "id": 6457932, "is_authoritative": true}
+{"kind": "fact", "id": 6457933, "is_authoritative": true}
+{"kind": "fact", "id": 6457934, "is_authoritative": true}
+{"kind": "fact", "id": 6457935, "is_authoritative": true}
+{"kind": "fact", "id": 6457963, "is_authoritative": true}
+{"kind": "fact", "id": 6457965, "is_authoritative": true}
+{"kind": "fact", "id": 6457967, "is_authoritative": true}
+{"kind": "fact", "id": 6457969, "is_authoritative": true}
+{"kind": "fact", "id": 6457970, "is_authoritative": true}
+{"kind": "fact", "id": 6457971, "is_authoritative": true}
+{"kind": "fact", "id": 6457972, "is_authoritative": true}
+{"kind": "fact", "id": 6457973, "is_authoritative": true}
+{"kind": "fact", "id": 6458007, "is_authoritative": true}
+{"kind": "fact", "id": 6458008, "is_authoritative": true}
+{"kind": "fact", "id": 6458009, "is_authoritative": true}
+{"kind": "fact", "id": 6458010, "is_authoritative": true}
+{"kind": "fact", "id": 6458011, "is_authoritative": true}
+{"kind": "fact", "id": 6458012, "is_authoritative": true}
+{"kind": "fact", "id": 6458013, "is_authoritative": true}
+{"kind": "fact", "id": 6458014, "is_authoritative": true}
+{"kind": "fact", "id": 6458015, "is_authoritative": true}
+{"kind": "fact", "id": 6458016, "is_authoritative": true}
+{"kind": "fact", "id": 6458047, "is_authoritative": true}
+{"kind": "fact", "id": 6458049, "is_authoritative": true}
+{"kind": "fact", "id": 6458051, "is_authoritative": true}
+{"kind": "fact", "id": 6458053, "is_authoritative": true}
+{"kind": "fact", "id": 6458054, "is_authoritative": true}
+{"kind": "fact", "id": 6458055, "is_authoritative": true}
+{"kind": "fact", "id": 6458056, "is_authoritative": true}
+{"kind": "fact", "id": 6458058, "is_authoritative": true}
+{"kind": "fact", "id": 6458059, "is_authoritative": true}
+{"kind": "fact", "id": 6458085, "is_authoritative": true}
+{"kind": "fact", "id": 6458088, "is_authoritative": true}
+{"kind": "fact", "id": 6458089, "is_authoritative": true}
+{"kind": "fact", "id": 6458091, "is_authoritative": true}
+{"kind": "fact", "id": 6458094, "is_authoritative": true}
+{"kind": "fact", "id": 6458096, "is_authoritative": true}
+{"kind": "fact", "id": 6458097, "is_authoritative": true}
+{"kind": "fact", "id": 6458099, "is_authoritative": true}
+{"kind": "fact", "id": 6458126, "is_authoritative": true}
+{"kind": "fact", "id": 6458127, "is_authoritative": true}
+{"kind": "fact", "id": 6458128, "is_authoritative": true}
+{"kind": "fact", "id": 6458129, "is_authoritative": true}
+{"kind": "fact", "id": 6458130, "is_authoritative": true}
+{"kind": "fact", "id": 6458132, "is_authoritative": true}
+{"kind": "fact", "id": 6458134, "is_authoritative": true}
+{"kind": "fact", "id": 6458136, "is_authoritative": true}
+{"kind": "fact", "id": 6458138, "is_authoritative": true}
+{"kind": "fact", "id": 6458170, "is_authoritative": true}
+{"kind": "fact", "id": 6458171, "is_authoritative": true}
+{"kind": "fact", "id": 6458172, "is_authoritative": true}
+{"kind": "fact", "id": 6458173, "is_authoritative": true}
+{"kind": "fact", "id": 6458174, "is_authoritative": true}
+{"kind": "fact", "id": 6458175, "is_authoritative": true}
+{"kind": "fact", "id": 6458176, "is_authoritative": true}
+{"kind": "fact", "id": 6458177, "is_authoritative": true}
+{"kind": "fact", "id": 6458178, "is_authoritative": true}
+{"kind": "fact", "id": 6458179, "is_authoritative": true}
+{"kind": "fact", "id": 6458215, "is_authoritative": true}
+{"kind": "fact", "id": 6458216, "is_authoritative": true}
+{"kind": "fact", "id": 6458217, "is_authoritative": true}
+{"kind": "fact", "id": 6458218, "is_authoritative": true}
+{"kind": "fact", "id": 6458219, "is_authoritative": true}
+{"kind": "fact", "id": 6458220, "is_authoritative": true}
+{"kind": "fact", "id": 6458221, "is_authoritative": true}
+{"kind": "fact", "id": 6458222, "is_authoritative": true}
+{"kind": "fact", "id": 6458253, "is_authoritative": true}
+{"kind": "fact", "id": 6458254, "is_authoritative": true}
+{"kind": "fact", "id": 6458255, "is_authoritative": true}
+{"kind": "fact", "id": 6458256, "is_authoritative": true}
+{"kind": "fact", "id": 6458257, "is_authoritative": true}
+{"kind": "fact", "id": 6458258, "is_authoritative": true}
+{"kind": "fact", "id": 6458259, "is_authoritative": true}
+{"kind": "fact", "id": 6458260, "is_authoritative": true}
+{"kind": "fact", "id": 6458261, "is_authoritative": true}
+{"kind": "fact", "id": 6458262, "is_authoritative": true}
+{"kind": "fact", "id": 6458291, "is_authoritative": true}
+{"kind": "fact", "id": 6458293, "is_authoritative": true}
+{"kind": "fact", "id": 6458295, "is_authoritative": true}
+{"kind": "fact", "id": 6458298, "is_authoritative": true}
+{"kind": "fact", "id": 6458299, "is_authoritative": true}
+{"kind": "fact", "id": 6458301, "is_authoritative": true}
+{"kind": "fact", "id": 6458303, "is_authoritative": true}
+{"kind": "fact", "id": 6458305, "is_authoritative": true}
+{"kind": "fact", "id": 6458329, "is_authoritative": true}
+{"kind": "fact", "id": 6458331, "is_authoritative": true}
+{"kind": "fact", "id": 6458333, "is_authoritative": true}
+{"kind": "fact", "id": 6458336, "is_authoritative": true}
+{"kind": "fact", "id": 6458338, "is_authoritative": true}
+{"kind": "fact", "id": 6458340, "is_authoritative": true}
+{"kind": "fact", "id": 6458341, "is_authoritative": true}
+{"kind": "fact", "id": 6458344, "is_authoritative": true}
+{"kind": "fact", "id": 6458371, "is_authoritative": true}
+{"kind": "fact", "id": 6458372, "is_authoritative": true}
+{"kind": "fact", "id": 6458373, "is_authoritative": true}
+{"kind": "fact", "id": 6458374, "is_authoritative": true}
+{"kind": "fact", "id": 6458376, "is_authoritative": true}
+{"kind": "fact", "id": 6458377, "is_authoritative": true}
+{"kind": "fact", "id": 6458379, "is_authoritative": true}
+{"kind": "fact", "id": 6458381, "is_authoritative": true}
+{"kind": "fact", "id": 6458413, "is_authoritative": true}
+{"kind": "fact", "id": 6458414, "is_authoritative": true}
+{"kind": "fact", "id": 6458442, "is_authoritative": true}
+{"kind": "fact", "id": 6458443, "is_authoritative": true}
+{"kind": "fact", "id": 6458444, "is_authoritative": true}
+{"kind": "fact", "id": 6458445, "is_authoritative": true}
+{"kind": "fact", "id": 6458446, "is_authoritative": true}
+{"kind": "fact", "id": 6458447, "is_authoritative": true}
+{"kind": "fact", "id": 6458448, "is_authoritative": true}
+{"kind": "fact", "id": 6458450, "is_authoritative": true}
+{"kind": "fact", "id": 6458452, "is_authoritative": true}
+{"kind": "fact", "id": 6458460, "is_authoritative": true}
+{"kind": "fact", "id": 6458462, "is_authoritative": true}
+{"kind": "fact", "id": 6458465, "is_authoritative": true}
+{"kind": "fact", "id": 6458466, "is_authoritative": true}
+{"kind": "fact", "id": 6458468, "is_authoritative": true}
+{"kind": "fact", "id": 6458469, "is_authoritative": true}
+{"kind": "fact", "id": 6458470, "is_authoritative": true}
+{"kind": "fact", "id": 6458471, "is_authoritative": true}
+{"kind": "fact", "id": 6458472, "is_authoritative": true}
+{"kind": "fact", "id": 6458510, "is_authoritative": true}
+{"kind": "fact", "id": 6458511, "is_authoritative": true}
+{"kind": "fact", "id": 6458512, "is_authoritative": true}
+{"kind": "fact", "id": 6458513, "is_authoritative": true}
+{"kind": "fact", "id": 6458514, "is_authoritative": true}
+{"kind": "fact", "id": 6458522, "is_authoritative": true}
+{"kind": "fact", "id": 6458530, "is_authoritative": true}
+{"kind": "fact", "id": 6458533, "is_authoritative": true}
+{"kind": "fact", "id": 6458534, "is_authoritative": true}
+{"kind": "fact", "id": 6458535, "is_authoritative": true}
+{"kind": "fact", "id": 6458537, "is_authoritative": true}
+{"kind": "fact", "id": 6458538, "is_authoritative": true}
+{"kind": "fact", "id": 6458541, "is_authoritative": true}
+{"kind": "fact", "id": 6458542, "is_authoritative": true}
+{"kind": "fact", "id": 6458543, "is_authoritative": true}
+{"kind": "fact", "id": 6458587, "is_authoritative": true}
+{"kind": "fact", "id": 6458591, "is_authoritative": true}
+{"kind": "fact", "id": 6458592, "is_authoritative": true}
+{"kind": "fact", "id": 6458593, "is_authoritative": true}
+{"kind": "fact", "id": 6458594, "is_authoritative": true}
+{"kind": "fact", "id": 6458595, "is_authoritative": true}
+{"kind": "fact", "id": 6458596, "is_authoritative": true}
+{"kind": "fact", "id": 6458620, "is_authoritative": true}
+{"kind": "fact", "id": 6458621, "is_authoritative": true}
+{"kind": "fact", "id": 6458622, "is_authoritative": true}
+{"kind": "fact", "id": 6458623, "is_authoritative": true}
+{"kind": "fact", "id": 6458658, "is_authoritative": true}
+{"kind": "fact", "id": 6458659, "is_authoritative": true}
+{"kind": "fact", "id": 6458660, "is_authoritative": true}
+{"kind": "fact", "id": 6458661, "is_authoritative": true}
+{"kind": "fact", "id": 6458672, "is_authoritative": true}
+{"kind": "fact", "id": 6458673, "is_authoritative": true}
+{"kind": "fact", "id": 6458675, "is_authoritative": true}
+{"kind": "fact", "id": 6458677, "is_authoritative": true}
+{"kind": "fact", "id": 6458694, "is_authoritative": true}
+{"kind": "fact", "id": 6458695, "is_authoritative": true}
+{"kind": "fact", "id": 6458696, "is_authoritative": true}
+{"kind": "fact", "id": 6458697, "is_authoritative": true}
+{"kind": "fact", "id": 6458698, "is_authoritative": true}
+{"kind": "fact", "id": 6458699, "is_authoritative": true}
+{"kind": "fact", "id": 6458700, "is_authoritative": true}
+{"kind": "fact", "id": 6458701, "is_authoritative": true}
+{"kind": "fact", "id": 6458736, "is_authoritative": true}
+{"kind": "fact", "id": 6458738, "is_authoritative": true}
+{"kind": "fact", "id": 6458740, "is_authoritative": true}
+{"kind": "fact", "id": 6458742, "is_authoritative": true}
+{"kind": "fact", "id": 6458744, "is_authoritative": true}
+{"kind": "fact", "id": 6458745, "is_authoritative": true}
+{"kind": "fact", "id": 6458777, "is_authoritative": true}
+{"kind": "fact", "id": 6458780, "is_authoritative": true}
+{"kind": "fact", "id": 6458781, "is_authoritative": true}
+{"kind": "fact", "id": 6458784, "is_authoritative": true}
+{"kind": "fact", "id": 6458786, "is_authoritative": true}
+{"kind": "fact", "id": 6458788, "is_authoritative": true}
+{"kind": "fact", "id": 6458790, "is_authoritative": true}
+{"kind": "fact", "id": 6458815, "is_authoritative": true}
+{"kind": "fact", "id": 6458817, "is_authoritative": true}
+{"kind": "fact", "id": 6458818, "is_authoritative": true}
+{"kind": "fact", "id": 6458820, "is_authoritative": true}
+{"kind": "fact", "id": 6458822, "is_authoritative": true}
+{"kind": "fact", "id": 6458824, "is_authoritative": true}
+{"kind": "fact", "id": 6458826, "is_authoritative": true}
+{"kind": "fact", "id": 6458828, "is_authoritative": true}
+{"kind": "fact", "id": 6458849, "is_authoritative": true}
+{"kind": "fact", "id": 6458850, "is_authoritative": true}
+{"kind": "fact", "id": 6458851, "is_authoritative": true}
+{"kind": "fact", "id": 6458852, "is_authoritative": true}
+{"kind": "fact", "id": 6458853, "is_authoritative": true}
+{"kind": "fact", "id": 6458854, "is_authoritative": true}
+{"kind": "fact", "id": 6458855, "is_authoritative": true}
+{"kind": "fact", "id": 6458858, "is_authoritative": true}
+{"kind": "fact", "id": 6458885, "is_authoritative": true}
+{"kind": "fact", "id": 6458886, "is_authoritative": true}
+{"kind": "fact", "id": 6458887, "is_authoritative": true}
+{"kind": "fact", "id": 6458888, "is_authoritative": true}
+{"kind": "fact", "id": 6458889, "is_authoritative": true}
+{"kind": "fact", "id": 6458890, "is_authoritative": true}
+{"kind": "fact", "id": 6458891, "is_authoritative": true}
+{"kind": "fact", "id": 6458924, "is_authoritative": true}
+{"kind": "fact", "id": 6458926, "is_authoritative": true}
+{"kind": "fact", "id": 6458928, "is_authoritative": true}
+{"kind": "fact", "id": 6458930, "is_authoritative": true}
+{"kind": "fact", "id": 6458931, "is_authoritative": true}
+{"kind": "fact", "id": 6458932, "is_authoritative": true}
+{"kind": "fact", "id": 6458933, "is_authoritative": true}
+{"kind": "fact", "id": 6458934, "is_authoritative": true}
+{"kind": "fact", "id": 6458962, "is_authoritative": true}
+{"kind": "fact", "id": 6458964, "is_authoritative": true}
+{"kind": "fact", "id": 6458965, "is_authoritative": true}
+{"kind": "fact", "id": 6458966, "is_authoritative": true}
+{"kind": "fact", "id": 6458967, "is_authoritative": true}
+{"kind": "fact", "id": 6458968, "is_authoritative": true}
+{"kind": "fact", "id": 6458969, "is_authoritative": true}
+{"kind": "fact", "id": 6458970, "is_authoritative": true}
+{"kind": "fact", "id": 6458971, "is_authoritative": true}
+{"kind": "fact", "id": 6459000, "is_authoritative": true}
+{"kind": "fact", "id": 6459002, "is_authoritative": true}
+{"kind": "fact", "id": 6459004, "is_authoritative": true}
+{"kind": "fact", "id": 6459006, "is_authoritative": true}
+{"kind": "fact", "id": 6459008, "is_authoritative": true}
+{"kind": "fact", "id": 6459010, "is_authoritative": true}
+{"kind": "fact", "id": 6459012, "is_authoritative": true}
+{"kind": "fact", "id": 6459014, "is_authoritative": true}
+{"kind": "fact", "id": 6459033, "is_authoritative": true}
+{"kind": "fact", "id": 6459034, "is_authoritative": true}
+{"kind": "fact", "id": 6459036, "is_authoritative": true}
+{"kind": "fact", "id": 6459038, "is_authoritative": true}
+{"kind": "fact", "id": 6459040, "is_authoritative": true}
+{"kind": "fact", "id": 6459042, "is_authoritative": true}
+{"kind": "fact", "id": 6459044, "is_authoritative": true}
+{"kind": "fact", "id": 6459046, "is_authoritative": true}
+{"kind": "fact", "id": 6459048, "is_authoritative": true}
+{"kind": "fact", "id": 6459050, "is_authoritative": true}
+{"kind": "fact", "id": 6459083, "is_authoritative": true}
+{"kind": "fact", "id": 6459084, "is_authoritative": true}
+{"kind": "fact", "id": 6459086, "is_authoritative": true}
+{"kind": "fact", "id": 6459088, "is_authoritative": true}
+{"kind": "fact", "id": 6459090, "is_authoritative": true}
+{"kind": "fact", "id": 6459106, "is_authoritative": true}
+{"kind": "fact", "id": 6459108, "is_authoritative": true}
+{"kind": "fact", "id": 6459110, "is_authoritative": true}
+{"kind": "fact", "id": 6459112, "is_authoritative": true}
+{"kind": "fact", "id": 6459134, "is_authoritative": true}
+{"kind": "fact", "id": 6459136, "is_authoritative": true}
+{"kind": "fact", "id": 6459138, "is_authoritative": true}
+{"kind": "fact", "id": 6459140, "is_authoritative": true}
+{"kind": "fact", "id": 6459142, "is_authoritative": true}
+{"kind": "fact", "id": 6459143, "is_authoritative": true}
+{"kind": "fact", "id": 6459146, "is_authoritative": true}
+{"kind": "fact", "id": 6459147, "is_authoritative": true}
+{"kind": "fact", "id": 6459149, "is_authoritative": true}
+{"kind": "fact", "id": 6459180, "is_authoritative": true}
+{"kind": "fact", "id": 6459182, "is_authoritative": true}
+{"kind": "fact", "id": 6459185, "is_authoritative": true}
+{"kind": "fact", "id": 6459187, "is_authoritative": true}
+{"kind": "fact", "id": 6459188, "is_authoritative": true}
+{"kind": "fact", "id": 6459190, "is_authoritative": true}
+{"kind": "fact", "id": 6459192, "is_authoritative": true}
+{"kind": "fact", "id": 6459195, "is_authoritative": true}
+{"kind": "fact", "id": 6459228, "is_authoritative": true}
+{"kind": "fact", "id": 6459230, "is_authoritative": true}
+{"kind": "fact", "id": 6459232, "is_authoritative": true}
+{"kind": "fact", "id": 6459234, "is_authoritative": true}
+{"kind": "fact", "id": 6459235, "is_authoritative": true}
+{"kind": "fact", "id": 6459237, "is_authoritative": true}
+{"kind": "fact", "id": 6459238, "is_authoritative": true}
+{"kind": "fact", "id": 6459239, "is_authoritative": true}
+{"kind": "fact", "id": 6459240, "is_authoritative": true}
+{"kind": "fact", "id": 6459241, "is_authoritative": true}
+{"kind": "fact", "id": 6459276, "is_authoritative": true}
+{"kind": "fact", "id": 6459278, "is_authoritative": true}
+{"kind": "fact", "id": 6459280, "is_authoritative": true}
+{"kind": "fact", "id": 6459283, "is_authoritative": true}
+{"kind": "fact", "id": 6459284, "is_authoritative": true}
+{"kind": "fact", "id": 6459286, "is_authoritative": true}
+{"kind": "fact", "id": 6459288, "is_authoritative": true}
+{"kind": "fact", "id": 6459290, "is_authoritative": true}
+{"kind": "fact", "id": 6459319, "is_authoritative": true}
+{"kind": "fact", "id": 6459322, "is_authoritative": true}
+{"kind": "fact", "id": 6459324, "is_authoritative": true}
+{"kind": "fact", "id": 6459326, "is_authoritative": true}
+{"kind": "fact", "id": 6459328, "is_authoritative": true}
+{"kind": "fact", "id": 6459330, "is_authoritative": true}
+{"kind": "fact", "id": 6459332, "is_authoritative": true}
+{"kind": "fact", "id": 6459364, "is_authoritative": true}
+{"kind": "fact", "id": 6459365, "is_authoritative": true}
+{"kind": "fact", "id": 6459366, "is_authoritative": true}
+{"kind": "fact", "id": 6459369, "is_authoritative": true}
+{"kind": "fact", "id": 6459371, "is_authoritative": true}
+{"kind": "fact", "id": 6459373, "is_authoritative": true}
+{"kind": "fact", "id": 6459409, "is_authoritative": true}
+{"kind": "fact", "id": 6459426, "is_authoritative": true}
+{"kind": "fact", "id": 6459437, "is_authoritative": true}
+{"kind": "fact", "id": 6459438, "is_authoritative": true}
+{"kind": "fact", "id": 6459461, "is_authoritative": true}
+{"kind": "fact", "id": 6459474, "is_authoritative": true}
+{"kind": "fact", "id": 6459476, "is_authoritative": true}
+{"kind": "fact", "id": 6459478, "is_authoritative": true}
+{"kind": "fact", "id": 6459480, "is_authoritative": true}
+{"kind": "fact", "id": 6459482, "is_authoritative": true}
+{"kind": "fact", "id": 6459485, "is_authoritative": true}
+{"kind": "fact", "id": 6459503, "is_authoritative": true}
+{"kind": "fact", "id": 6459505, "is_authoritative": true}
+{"kind": "fact", "id": 6459506, "is_authoritative": true}
+{"kind": "fact", "id": 6459508, "is_authoritative": true}
+{"kind": "fact", "id": 6459527, "is_authoritative": true}
+{"kind": "fact", "id": 6459530, "is_authoritative": true}
+{"kind": "fact", "id": 6459532, "is_authoritative": true}
+{"kind": "fact", "id": 6459534, "is_authoritative": true}
+{"kind": "fact", "id": 6459536, "is_authoritative": true}
+{"kind": "fact", "id": 6459537, "is_authoritative": true}
+{"kind": "fact", "id": 6459538, "is_authoritative": true}
+{"kind": "fact", "id": 6459539, "is_authoritative": true}
+{"kind": "fact", "id": 6459557, "is_authoritative": true}
+{"kind": "fact", "id": 6459559, "is_authoritative": true}
+{"kind": "fact", "id": 6459560, "is_authoritative": true}
+{"kind": "fact", "id": 6459562, "is_authoritative": true}
+{"kind": "fact", "id": 6459566, "is_authoritative": true}
+{"kind": "fact", "id": 6459568, "is_authoritative": true}
+{"kind": "fact", "id": 6459577, "is_authoritative": true}
+{"kind": "fact", "id": 6459578, "is_authoritative": true}
+{"kind": "fact", "id": 6459581, "is_authoritative": true}
+{"kind": "fact", "id": 6459583, "is_authoritative": true}
+{"kind": "fact", "id": 6459586, "is_authoritative": true}
+{"kind": "fact", "id": 6459587, "is_authoritative": true}
+{"kind": "fact", "id": 6459588, "is_authoritative": true}
+{"kind": "fact", "id": 6459589, "is_authoritative": true}
+{"kind": "fact", "id": 6459606, "is_authoritative": true}
+{"kind": "fact", "id": 6459608, "is_authoritative": true}
+{"kind": "fact", "id": 6459610, "is_authoritative": true}
+{"kind": "fact", "id": 6459628, "is_authoritative": true}
+{"kind": "fact", "id": 6459630, "is_authoritative": true}
+{"kind": "fact", "id": 6459632, "is_authoritative": true}
+{"kind": "fact", "id": 6459634, "is_authoritative": true}
+{"kind": "fact", "id": 6459635, "is_authoritative": true}
+{"kind": "fact", "id": 6459636, "is_authoritative": true}
+{"kind": "fact", "id": 6459643, "is_authoritative": true}
+{"kind": "fact", "id": 6459645, "is_authoritative": true}
+{"kind": "fact", "id": 6459647, "is_authoritative": true}
+{"kind": "fact", "id": 6459649, "is_authoritative": true}
+{"kind": "fact", "id": 6459650, "is_authoritative": true}
+{"kind": "fact", "id": 6459652, "is_authoritative": true}
+{"kind": "fact", "id": 6459654, "is_authoritative": true}
+{"kind": "fact", "id": 6459656, "is_authoritative": true}
+{"kind": "fact", "id": 6459673, "is_authoritative": true}
+{"kind": "fact", "id": 6459674, "is_authoritative": true}
+{"kind": "fact", "id": 6459675, "is_authoritative": true}
+{"kind": "fact", "id": 6459677, "is_authoritative": true}
+{"kind": "fact", "id": 6459679, "is_authoritative": true}
+{"kind": "fact", "id": 6459681, "is_authoritative": true}
+{"kind": "fact", "id": 6459683, "is_authoritative": true}
+{"kind": "fact", "id": 6459693, "is_authoritative": true}
+{"kind": "fact", "id": 6459695, "is_authoritative": true}
+{"kind": "fact", "id": 6459697, "is_authoritative": true}
+{"kind": "fact", "id": 6459699, "is_authoritative": true}
+{"kind": "fact", "id": 6459702, "is_authoritative": true}
+{"kind": "fact", "id": 6459703, "is_authoritative": true}
+{"kind": "fact", "id": 6459705, "is_authoritative": true}
+{"kind": "fact", "id": 6459713, "is_authoritative": true}
+{"kind": "fact", "id": 6459715, "is_authoritative": true}
+{"kind": "fact", "id": 6459717, "is_authoritative": true}
+{"kind": "fact", "id": 6459719, "is_authoritative": true}
+{"kind": "fact", "id": 6459721, "is_authoritative": true}
+{"kind": "fact", "id": 6459723, "is_authoritative": true}
+{"kind": "fact", "id": 6459728, "is_authoritative": true}
+{"kind": "fact", "id": 6459729, "is_authoritative": true}
+{"kind": "fact", "id": 6459737, "is_authoritative": true}
+{"kind": "fact", "id": 6459739, "is_authoritative": true}
+{"kind": "fact", "id": 6459741, "is_authoritative": true}
+{"kind": "fact", "id": 6459753, "is_authoritative": true}
+{"kind": "fact", "id": 6459755, "is_authoritative": true}
+{"kind": "fact", "id": 6459757, "is_authoritative": true}
+{"kind": "fact", "id": 6459759, "is_authoritative": true}
+{"kind": "fact", "id": 6459761, "is_authoritative": true}
+{"kind": "fact", "id": 6459763, "is_authoritative": true}
+{"kind": "fact", "id": 6459764, "is_authoritative": true}
+{"kind": "fact", "id": 6459766, "is_authoritative": true}
+{"kind": "fact", "id": 6459790, "is_authoritative": true}
+{"kind": "fact", "id": 6459792, "is_authoritative": true}
+{"kind": "fact", "id": 6459795, "is_authoritative": true}
+{"kind": "fact", "id": 6459797, "is_authoritative": true}
+{"kind": "fact", "id": 6459798, "is_authoritative": true}
+{"kind": "fact", "id": 6459817, "is_authoritative": true}
+{"kind": "fact", "id": 6459818, "is_authoritative": true}
+{"kind": "fact", "id": 6459820, "is_authoritative": true}
+{"kind": "fact", "id": 6459822, "is_authoritative": true}
+{"kind": "fact", "id": 6459837, "is_authoritative": true}
+{"kind": "fact", "id": 6459839, "is_authoritative": true}
+{"kind": "fact", "id": 6459841, "is_authoritative": true}
+{"kind": "fact", "id": 6459844, "is_authoritative": true}
+{"kind": "fact", "id": 6459845, "is_authoritative": true}
+{"kind": "fact", "id": 6459847, "is_authoritative": true}
+{"kind": "fact", "id": 6459849, "is_authoritative": true}
+{"kind": "fact", "id": 6459852, "is_authoritative": true}
+{"kind": "fact", "id": 6459854, "is_authoritative": true}
+{"kind": "fact", "id": 6459856, "is_authoritative": true}
+{"kind": "fact", "id": 6459858, "is_authoritative": true}
+{"kind": "fact", "id": 6459885, "is_authoritative": true}
+{"kind": "fact", "id": 6459887, "is_authoritative": true}
+{"kind": "fact", "id": 6459890, "is_authoritative": true}
+{"kind": "fact", "id": 6459893, "is_authoritative": true}
+{"kind": "fact", "id": 6459896, "is_authoritative": true}
+{"kind": "fact", "id": 6459901, "is_authoritative": true}
+{"kind": "fact", "id": 6459918, "is_authoritative": true}
+{"kind": "fact", "id": 6459920, "is_authoritative": true}
+{"kind": "fact", "id": 6459921, "is_authoritative": true}
+{"kind": "fact", "id": 6459923, "is_authoritative": true}
+{"kind": "fact", "id": 6459925, "is_authoritative": true}
+{"kind": "fact", "id": 6459926, "is_authoritative": true}
+{"kind": "fact", "id": 6459928, "is_authoritative": true}
+{"kind": "fact", "id": 6459931, "is_authoritative": true}
+{"kind": "fact", "id": 6459932, "is_authoritative": true}
+{"kind": "fact", "id": 6459943, "is_authoritative": true}
+{"kind": "fact", "id": 6459962, "is_authoritative": true}
+{"kind": "fact", "id": 6459964, "is_authoritative": true}
+{"kind": "fact", "id": 6459966, "is_authoritative": true}
+{"kind": "fact", "id": 6459969, "is_authoritative": true}
+{"kind": "fact", "id": 6459971, "is_authoritative": true}
+{"kind": "fact", "id": 6459973, "is_authoritative": true}
+{"kind": "fact", "id": 6459975, "is_authoritative": true}
+{"kind": "fact", "id": 6459976, "is_authoritative": true}
+{"kind": "fact", "id": 6459979, "is_authoritative": true}
+{"kind": "fact", "id": 6459990, "is_authoritative": true}
+{"kind": "fact", "id": 6459992, "is_authoritative": true}
+{"kind": "fact", "id": 6459994, "is_authoritative": true}
+{"kind": "fact", "id": 6459996, "is_authoritative": true}
+{"kind": "fact", "id": 6459998, "is_authoritative": true}
+{"kind": "fact", "id": 6460000, "is_authoritative": true}
+{"kind": "fact", "id": 6460002, "is_authoritative": true}
+{"kind": "fact", "id": 6460008, "is_authoritative": true}
+{"kind": "fact", "id": 6460010, "is_authoritative": true}
+{"kind": "fact", "id": 6460012, "is_authoritative": true}
+{"kind": "fact", "id": 6460016, "is_authoritative": true}
+{"kind": "fact", "id": 6460018, "is_authoritative": true}
+{"kind": "fact", "id": 6460019, "is_authoritative": true}
+{"kind": "fact", "id": 6460034, "is_authoritative": true}
+{"kind": "cell", "id": 77409822, "canonical_concept_id": 219, "name": "revenue_sanity_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "3328849000", "source_fact_ids": [6459766], "resolved_at": "2026-09-08T08:57:49.772582+00:00"}
+{"kind": "cell", "id": 77409823, "canonical_concept_id": 219, "name": "revenue_sanity_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "6175723000", "source_fact_ids": [6459764], "resolved_at": "2026-09-08T08:57:49.772582+00:00"}
+{"kind": "cell", "id": 77409824, "canonical_concept_id": 219, "name": "revenue_sanity_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "6711264000", "source_fact_ids": [6459790], "resolved_at": "2026-09-08T08:57:49.772582+00:00"}
+{"kind": "cell", "id": 77409825, "canonical_concept_id": 219, "name": "revenue_sanity_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "3523638000", "source_fact_ids": [6459792], "resolved_at": "2026-09-08T08:57:49.772582+00:00"}
+{"kind": "cell", "id": 99631276, "canonical_concept_id": 249, "name": "operating_income_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "837425000", "source_fact_ids": [6459112], "resolved_at": "2026-09-08T20:18:08.288885+00:00"}
+{"kind": "cell", "id": 99631277, "canonical_concept_id": 249, "name": "operating_income_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1537529000", "source_fact_ids": [6459110], "resolved_at": "2026-09-08T20:18:08.288885+00:00"}
+{"kind": "cell", "id": 99631278, "canonical_concept_id": 249, "name": "operating_income_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1422311000", "source_fact_ids": [6459134], "resolved_at": "2026-09-08T20:18:08.288885+00:00"}
+{"kind": "cell", "id": 99631279, "canonical_concept_id": 249, "name": "operating_income_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "850089000", "source_fact_ids": [6459136], "resolved_at": "2026-09-08T20:18:08.288885+00:00"}
+{"kind": "cell", "id": 99875591, "canonical_concept_id": 250, "name": "interest_expense_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "343067000", "source_fact_ids": [6458850], "resolved_at": "2026-09-08T20:19:42.169347+00:00"}
+{"kind": "cell", "id": 99875592, "canonical_concept_id": 250, "name": "interest_expense_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "691451000", "source_fact_ids": [6458849], "resolved_at": "2026-09-08T20:19:42.169347+00:00"}
+{"kind": "cell", "id": 99875593, "canonical_concept_id": 250, "name": "interest_expense_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "833030000", "source_fact_ids": [6458851], "resolved_at": "2026-09-08T20:19:42.169347+00:00"}
+{"kind": "cell", "id": 99875594, "canonical_concept_id": 250, "name": "interest_expense_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "433114000", "source_fact_ids": [6458852], "resolved_at": "2026-09-08T20:19:42.169347+00:00"}
+{"kind": "cell", "id": 100160780, "canonical_concept_id": 251, "name": "income_before_tax_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "610353000", "source_fact_ids": [6458672], "resolved_at": "2026-09-08T20:20:58.878134+00:00"}
+{"kind": "cell", "id": 100160781, "canonical_concept_id": 251, "name": "income_before_tax_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1072816000", "source_fact_ids": [6458661], "resolved_at": "2026-09-08T20:20:58.878134+00:00"}
+{"kind": "cell", "id": 100160782, "canonical_concept_id": 251, "name": "income_before_tax_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1098093000", "source_fact_ids": [6458673], "resolved_at": "2026-09-08T20:20:58.878134+00:00"}
+{"kind": "cell", "id": 100160783, "canonical_concept_id": 251, "name": "income_before_tax_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "619498000", "source_fact_ids": [6458675], "resolved_at": "2026-09-08T20:20:58.878134+00:00"}
+{"kind": "cell", "id": 100461730, "canonical_concept_id": 252, "name": "income_tax_expense_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "138399000", "source_fact_ids": [6458694], "resolved_at": "2026-09-08T20:22:42.744745+00:00"}
+{"kind": "cell", "id": 100461731, "canonical_concept_id": 252, "name": "income_tax_expense_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "238440000", "source_fact_ids": [6458677], "resolved_at": "2026-09-08T20:22:42.744745+00:00"}
+{"kind": "cell", "id": 100461732, "canonical_concept_id": 252, "name": "income_tax_expense_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "219468000", "source_fact_ids": [6458695], "resolved_at": "2026-09-08T20:22:42.744745+00:00"}
+{"kind": "cell", "id": 100461733, "canonical_concept_id": 252, "name": "income_tax_expense_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "131678000", "source_fact_ids": [6458696], "resolved_at": "2026-09-08T20:22:42.744745+00:00"}
+{"kind": "cell", "id": 100838831, "canonical_concept_id": 253, "name": "net_income_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "878625000", "source_fact_ids": [6459643], "resolved_at": "2026-09-08T20:24:15.656435+00:00"}
+{"kind": "cell", "id": 100838832, "canonical_concept_id": 253, "name": "net_income_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "487820000", "source_fact_ids": [6459645], "resolved_at": "2026-09-08T20:24:15.656435+00:00"}
+{"kind": "cell", "id": 100838833, "canonical_concept_id": 253, "name": "net_income_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "471954000", "source_fact_ids": [6459635], "resolved_at": "2026-09-08T20:24:15.656435+00:00"}
+{"kind": "cell", "id": 100838834, "canonical_concept_id": 253, "name": "net_income_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "834376000", "source_fact_ids": [6459634], "resolved_at": "2026-09-08T20:24:15.656435+00:00"}
+{"kind": "cell", "id": 100838835, "canonical_concept_id": 253, "name": "net_income_resolved", "period_id": 100622, "period_type": "duration", "fiscal_period": "Q1", "start_date": "2025-01-01", "end_date": "2025-03-31", "value": "362422000", "source_fact_ids": [6459632], "resolved_at": "2026-09-08T20:24:15.656435+00:00"}
+{"kind": "cell", "id": 100839178, "canonical_concept_id": 253, "name": "net_income_resolved", "period_id": 100624, "period_type": "duration", "fiscal_period": "Q1", "start_date": "2026-01-01", "end_date": "2026-03-31", "value": "390805000", "source_fact_ids": [6459636], "resolved_at": "2026-09-08T20:24:15.656435+00:00"}
+{"kind": "cell", "id": 101150081, "canonical_concept_id": 254, "name": "diluted_eps_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "1.05", "source_fact_ids": [6458510], "resolved_at": "2026-09-08T20:26:32.528834+00:00"}
+{"kind": "cell", "id": 101150082, "canonical_concept_id": 254, "name": "diluted_eps_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1.87", "source_fact_ids": [6458472], "resolved_at": "2026-09-08T20:26:32.528834+00:00"}
+{"kind": "cell", "id": 101150083, "canonical_concept_id": 254, "name": "diluted_eps_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1.87", "source_fact_ids": [6458511], "resolved_at": "2026-09-08T20:26:32.528834+00:00"}
+{"kind": "cell", "id": 101150084, "canonical_concept_id": 254, "name": "diluted_eps_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "1.03", "source_fact_ids": [6458512], "resolved_at": "2026-09-08T20:26:32.528834+00:00"}
+{"kind": "cell", "id": 101383930, "canonical_concept_id": 255, "name": "cash_and_equivalents_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "3854045000", "source_fact_ids": [6458059], "resolved_at": "2026-09-08T20:28:21.176878+00:00"}
+{"kind": "cell", "id": 101383931, "canonical_concept_id": 255, "name": "cash_and_equivalents_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "1928916000", "source_fact_ids": [6458058], "resolved_at": "2026-09-08T20:28:21.176878+00:00"}
+{"kind": "cell", "id": 101383932, "canonical_concept_id": 255, "name": "cash_and_equivalents_resolved", "period_id": 100620, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2025-06-30", "end_date": "2025-06-30", "value": "1175631000", "source_fact_ids": [6458091], "resolved_at": "2026-09-08T20:28:21.176878+00:00"}
+{"kind": "cell", "id": 101383933, "canonical_concept_id": 255, "name": "cash_and_equivalents_resolved", "period_id": 100615, "period_type": "instant", "fiscal_period": "Q4", "start_date": "2024-12-31", "end_date": "2024-12-31", "value": "859703000", "source_fact_ids": [6458089], "resolved_at": "2026-09-08T20:28:21.176878+00:00"}
+{"kind": "cell", "id": 101561003, "canonical_concept_id": 256, "name": "current_assets_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "8204201000", "source_fact_ids": [6457970], "resolved_at": "2026-09-08T20:30:25.340668+00:00"}
+{"kind": "cell", "id": 101561004, "canonical_concept_id": 256, "name": "current_assets_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "5806851000", "source_fact_ids": [6457969], "resolved_at": "2026-09-08T20:30:25.340668+00:00"}
+{"kind": "cell", "id": 101733957, "canonical_concept_id": 257, "name": "ppe_net_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "479919000", "source_fact_ids": [6459649], "resolved_at": "2026-09-08T20:31:36.248847+00:00"}
+{"kind": "cell", "id": 101733958, "canonical_concept_id": 257, "name": "ppe_net_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "481590000", "source_fact_ids": [6459647], "resolved_at": "2026-09-08T20:31:36.248847+00:00"}
+{"kind": "cell", "id": 101937735, "canonical_concept_id": 258, "name": "total_assets_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "79002618000", "source_fact_ids": [6457967], "resolved_at": "2026-09-08T20:32:42.368238+00:00"}
+{"kind": "cell", "id": 101937736, "canonical_concept_id": 258, "name": "total_assets_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "71890730000", "source_fact_ids": [6457965], "resolved_at": "2026-09-08T20:32:42.368238+00:00"}
+{"kind": "cell", "id": 102115905, "canonical_concept_id": 259, "name": "current_liabilities_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "8998591000", "source_fact_ids": [6458931], "resolved_at": "2026-09-08T20:33:43.442864+00:00"}
+{"kind": "cell", "id": 102115906, "canonical_concept_id": 259, "name": "current_liabilities_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "7822968000", "source_fact_ids": [6458930], "resolved_at": "2026-09-08T20:33:43.442864+00:00"}
+{"kind": "cell", "id": 102503983, "canonical_concept_id": 261, "name": "stockholders_equity_resolved", "period_id": 100615, "period_type": "instant", "fiscal_period": "Q4", "start_date": "2024-12-31", "end_date": "2024-12-31", "value": "15184984000", "source_fact_ids": [6459839], "resolved_at": "2026-09-08T20:35:28.533847+00:00"}
+{"kind": "cell", "id": 102503984, "canonical_concept_id": 261, "name": "stockholders_equity_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "18229120000", "source_fact_ids": [6459837], "resolved_at": "2026-09-08T20:35:28.533847+00:00"}
+{"kind": "cell", "id": 102503985, "canonical_concept_id": 261, "name": "stockholders_equity_resolved", "period_id": 100619, "period_type": "instant", "fiscal_period": "Q1", "start_date": "2025-03-31", "end_date": "2025-03-31", "value": "15282400000", "source_fact_ids": [6459841], "resolved_at": "2026-09-08T20:35:28.533847+00:00"}
+{"kind": "cell", "id": 102503986, "canonical_concept_id": 261, "name": "stockholders_equity_resolved", "period_id": 100620, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2025-06-30", "end_date": "2025-06-30", "value": "16308940000", "source_fact_ids": [6459844], "resolved_at": "2026-09-08T20:35:28.533847+00:00"}
+{"kind": "cell", "id": 102503987, "canonical_concept_id": 261, "name": "stockholders_equity_resolved", "period_id": 100623, "period_type": "instant", "fiscal_period": "Q1", "start_date": "2026-03-31", "end_date": "2026-03-31", "value": "17438143000", "source_fact_ids": [6459847], "resolved_at": "2026-09-08T20:35:28.533847+00:00"}
+{"kind": "cell", "id": 102503988, "canonical_concept_id": 261, "name": "stockholders_equity_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "16923076000", "source_fact_ids": [6459822], "resolved_at": "2026-09-08T20:35:28.533847+00:00"}
+{"kind": "cell", "id": 102846642, "canonical_concept_id": 262, "name": "cfo_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1797790000", "source_fact_ids": [6459044], "resolved_at": "2026-09-08T20:36:45.806782+00:00"}
+{"kind": "cell", "id": 102846643, "canonical_concept_id": 262, "name": "cfo_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "2721753000", "source_fact_ids": [6459046], "resolved_at": "2026-09-08T20:36:45.806782+00:00"}
+{"kind": "cell", "id": 103455517, "canonical_concept_id": 264, "name": "cash_flow_investing_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "-3740829000", "source_fact_ids": [6459040], "resolved_at": "2026-09-08T20:40:12.228848+00:00"}
+{"kind": "cell", "id": 103455518, "canonical_concept_id": 264, "name": "cash_flow_investing_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "-5092946000", "source_fact_ids": [6459042], "resolved_at": "2026-09-08T20:40:12.228848+00:00"}
+{"kind": "cell", "id": 103783805, "canonical_concept_id": 265, "name": "cash_flow_financing_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "2258967000", "source_fact_ids": [6459036], "resolved_at": "2026-09-08T20:41:39.870967+00:00"}
+{"kind": "cell", "id": 103783806, "canonical_concept_id": 265, "name": "cash_flow_financing_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "4296322000", "source_fact_ids": [6459038], "resolved_at": "2026-09-08T20:41:39.870967+00:00"}
+{"kind": "cell", "id": 103960413, "canonical_concept_id": 266, "name": "dividends_paid_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "516716000", "source_fact_ids": [6459371], "resolved_at": "2026-09-08T20:43:06.072382+00:00"}
+{"kind": "cell", "id": 103960414, "canonical_concept_id": 266, "name": "dividends_paid_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "585899000", "source_fact_ids": [6459373], "resolved_at": "2026-09-08T20:43:06.072382+00:00"}
+{"kind": "cell", "id": 120515479, "canonical_concept_id": 291, "name": "basic_eps_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "1.07", "source_fact_ids": [6458469], "resolved_at": "2026-09-15T03:49:36.990080+00:00"}
+{"kind": "cell", "id": 120515480, "canonical_concept_id": 291, "name": "basic_eps_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1.91", "source_fact_ids": [6458468], "resolved_at": "2026-09-15T03:49:36.990080+00:00"}
+{"kind": "cell", "id": 120515481, "canonical_concept_id": 291, "name": "basic_eps_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1.9", "source_fact_ids": [6458470], "resolved_at": "2026-09-15T03:49:36.990080+00:00"}
+{"kind": "cell", "id": 120515482, "canonical_concept_id": 291, "name": "basic_eps_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "1.05", "source_fact_ids": [6458471], "resolved_at": "2026-09-15T03:49:36.990080+00:00"}
+{"kind": "cell", "id": 120683833, "canonical_concept_id": 292, "name": "dividends_per_share_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "0.6", "source_fact_ids": [6458129], "resolved_at": "2026-09-15T03:52:41.149849+00:00"}
+{"kind": "cell", "id": 120683834, "canonical_concept_id": 292, "name": "dividends_per_share_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1.2", "source_fact_ids": [6458128], "resolved_at": "2026-09-15T03:52:41.149849+00:00"}
+{"kind": "cell", "id": 120683835, "canonical_concept_id": 292, "name": "dividends_per_share_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1.28", "source_fact_ids": [6458130], "resolved_at": "2026-09-15T03:52:41.149849+00:00"}
+{"kind": "cell", "id": 120683836, "canonical_concept_id": 292, "name": "dividends_per_share_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "0.64", "source_fact_ids": [6458132], "resolved_at": "2026-09-15T03:52:41.149849+00:00"}
+{"kind": "cell", "id": 178814872, "canonical_concept_id": 350, "name": "shares_outstanding_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "466631498", "source_fact_ids": [6457768], "resolved_at": "2026-10-02T19:08:21.804635+00:00"}
+{"kind": "cell", "id": 208082460, "canonical_concept_id": 260, "name": "total_liabilities_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "55187064000", "source_fact_ids": [6457965, 6459822, 6459926], "resolved_at": "2026-10-04T21:42:02.535685+00:00"}
+{"kind": "cell", "id": 208240908, "canonical_concept_id": 260, "name": "total_liabilities_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "60992908000", "source_fact_ids": [6457967, 6459837, 6459928], "resolved_at": "2026-10-04T21:42:02.535685+00:00"}
+{"kind": "cell", "id": 322987364, "canonical_concept_id": 263, "name": "capex_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "3668326000", "source_fact_ids": [6459461], "resolved_at": "2026-10-20T00:52:17.906109+00:00"}
+{"kind": "cell", "id": 322987365, "canonical_concept_id": 263, "name": "capex_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "5030819000", "source_fact_ids": [6459474], "resolved_at": "2026-10-20T00:52:17.906109+00:00"}
+{"kind": "cell", "id": 323101711, "canonical_concept_id": 290, "name": "depreciation_and_amortization_resolved", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1206649000", "source_fact_ids": [6458445], "resolved_at": "2026-10-20T00:53:29.568262+00:00"}
+{"kind": "cell", "id": 323101712, "canonical_concept_id": 290, "name": "depreciation_and_amortization_resolved", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "607702000", "source_fact_ids": [6458446], "resolved_at": "2026-10-20T00:53:29.568262+00:00"}
+{"kind": "cell", "id": 323101713, "canonical_concept_id": 290, "name": "depreciation_and_amortization_resolved", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "579152000", "source_fact_ids": [6458444], "resolved_at": "2026-10-20T00:53:29.568262+00:00"}
+{"kind": "cell", "id": 323101714, "canonical_concept_id": 290, "name": "depreciation_and_amortization_resolved", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1148024000", "source_fact_ids": [6458443], "resolved_at": "2026-10-20T00:53:29.568262+00:00"}
+{"kind": "cell", "id": 364985466, "canonical_concept_id": 73, "name": "depreciation_and_amortization", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "579152000", "source_fact_ids": [6458444], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985467, "canonical_concept_id": 73, "name": "depreciation_and_amortization", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1148024000", "source_fact_ids": [6458443], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985468, "canonical_concept_id": 73, "name": "depreciation_and_amortization", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1206649000", "source_fact_ids": [6458445], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985469, "canonical_concept_id": 73, "name": "depreciation_and_amortization", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "607702000", "source_fact_ids": [6458446], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985470, "canonical_concept_id": 78, "name": "accounts_payable", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "2716222000", "source_fact_ids": [6457809], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985471, "canonical_concept_id": 78, "name": "accounts_payable", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "2565546000", "source_fact_ids": [6457807], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985472, "canonical_concept_id": 116, "name": "goodwill", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "367582000", "source_fact_ids": [6458620], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985473, "canonical_concept_id": 116, "name": "goodwill", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "367582000", "source_fact_ids": [6458596], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985474, "canonical_concept_id": 1, "name": "revenue", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "3328849000", "source_fact_ids": [6459766], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985475, "canonical_concept_id": 1, "name": "revenue", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "6175723000", "source_fact_ids": [6459764], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985476, "canonical_concept_id": 1, "name": "revenue", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "6711264000", "source_fact_ids": [6459790], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985477, "canonical_concept_id": 1, "name": "revenue", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "3523638000", "source_fact_ids": [6459792], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985478, "canonical_concept_id": 3, "name": "operating_income", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "837425000", "source_fact_ids": [6459112], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985479, "canonical_concept_id": 3, "name": "operating_income", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1537529000", "source_fact_ids": [6459110], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985480, "canonical_concept_id": 3, "name": "operating_income", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1422311000", "source_fact_ids": [6459134], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985481, "canonical_concept_id": 3, "name": "operating_income", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "850089000", "source_fact_ids": [6459136], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985482, "canonical_concept_id": 4, "name": "net_income", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "878625000", "source_fact_ids": [6459643], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985483, "canonical_concept_id": 4, "name": "net_income", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "487820000", "source_fact_ids": [6459645], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985484, "canonical_concept_id": 4, "name": "net_income", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "471954000", "source_fact_ids": [6459635], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985485, "canonical_concept_id": 4, "name": "net_income", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "834376000", "source_fact_ids": [6459634], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985486, "canonical_concept_id": 4, "name": "net_income", "period_id": 100622, "period_type": "duration", "fiscal_period": "Q1", "start_date": "2025-01-01", "end_date": "2025-03-31", "value": "362422000", "source_fact_ids": [6459632], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985487, "canonical_concept_id": 4, "name": "net_income", "period_id": 100624, "period_type": "duration", "fiscal_period": "Q1", "start_date": "2026-01-01", "end_date": "2026-03-31", "value": "390805000", "source_fact_ids": [6459636], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985488, "canonical_concept_id": 5, "name": "stockholders_equity", "period_id": 100615, "period_type": "instant", "fiscal_period": "Q4", "start_date": "2024-12-31", "end_date": "2024-12-31", "value": "15184984000", "source_fact_ids": [6459839], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985489, "canonical_concept_id": 5, "name": "stockholders_equity", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "18229120000", "source_fact_ids": [6459837], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985490, "canonical_concept_id": 5, "name": "stockholders_equity", "period_id": 100619, "period_type": "instant", "fiscal_period": "Q1", "start_date": "2025-03-31", "end_date": "2025-03-31", "value": "15282400000", "source_fact_ids": [6459841], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985491, "canonical_concept_id": 5, "name": "stockholders_equity", "period_id": 100620, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2025-06-30", "end_date": "2025-06-30", "value": "16308940000", "source_fact_ids": [6459844], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985492, "canonical_concept_id": 5, "name": "stockholders_equity", "period_id": 100623, "period_type": "instant", "fiscal_period": "Q1", "start_date": "2026-03-31", "end_date": "2026-03-31", "value": "17438143000", "source_fact_ids": [6459847], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985493, "canonical_concept_id": 5, "name": "stockholders_equity", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "16923076000", "source_fact_ids": [6459822], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985494, "canonical_concept_id": 117, "name": "basic_eps", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "1.07", "source_fact_ids": [6458469], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985495, "canonical_concept_id": 117, "name": "basic_eps", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1.91", "source_fact_ids": [6458468], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985496, "canonical_concept_id": 117, "name": "basic_eps", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1.9", "source_fact_ids": [6458470], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985497, "canonical_concept_id": 117, "name": "basic_eps", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "1.05", "source_fact_ids": [6458471], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985498, "canonical_concept_id": 120, "name": "cf_ap_change", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "-53439000", "source_fact_ids": [6458699], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985499, "canonical_concept_id": 120, "name": "cf_ap_change", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "134118000", "source_fact_ids": [6458700], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985500, "canonical_concept_id": 6, "name": "cash_and_equivalents", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "3854045000", "source_fact_ids": [6458059], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985501, "canonical_concept_id": 6, "name": "cash_and_equivalents", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "1928916000", "source_fact_ids": [6458058], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985502, "canonical_concept_id": 6, "name": "cash_and_equivalents", "period_id": 100620, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2025-06-30", "end_date": "2025-06-30", "value": "1175631000", "source_fact_ids": [6458091], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985503, "canonical_concept_id": 6, "name": "cash_and_equivalents", "period_id": 100615, "period_type": "instant", "fiscal_period": "Q4", "start_date": "2024-12-31", "end_date": "2024-12-31", "value": "859703000", "source_fact_ids": [6458089], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985504, "canonical_concept_id": 7, "name": "total_debt", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "34627322000", "source_fact_ids": [6458965, 6459820], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985505, "canonical_concept_id": 7, "name": "total_debt", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "30934935000", "source_fact_ids": [6458964, 6459818], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985506, "canonical_concept_id": 8, "name": "current_assets", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "8204201000", "source_fact_ids": [6457970], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985507, "canonical_concept_id": 8, "name": "current_assets", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "5806851000", "source_fact_ids": [6457969], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985508, "canonical_concept_id": 9, "name": "current_liabilities", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "8998591000", "source_fact_ids": [6458931], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985509, "canonical_concept_id": 9, "name": "current_liabilities", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "7822968000", "source_fact_ids": [6458930], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985510, "canonical_concept_id": 10, "name": "interest_expense", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "343067000", "source_fact_ids": [6458850], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985511, "canonical_concept_id": 10, "name": "interest_expense", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "691451000", "source_fact_ids": [6458849], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985512, "canonical_concept_id": 10, "name": "interest_expense", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "833030000", "source_fact_ids": [6458851], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985513, "canonical_concept_id": 10, "name": "interest_expense", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "433114000", "source_fact_ids": [6458852], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985514, "canonical_concept_id": 11, "name": "income_tax_expense", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "138399000", "source_fact_ids": [6458694], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985515, "canonical_concept_id": 11, "name": "income_tax_expense", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "238440000", "source_fact_ids": [6458677], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985516, "canonical_concept_id": 11, "name": "income_tax_expense", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "219468000", "source_fact_ids": [6458695], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985517, "canonical_concept_id": 11, "name": "income_tax_expense", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "131678000", "source_fact_ids": [6458696], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985518, "canonical_concept_id": 12, "name": "income_before_tax", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "610353000", "source_fact_ids": [6458672], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985519, "canonical_concept_id": 12, "name": "income_before_tax", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1072816000", "source_fact_ids": [6458661], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985520, "canonical_concept_id": 12, "name": "income_before_tax", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1098093000", "source_fact_ids": [6458673], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985521, "canonical_concept_id": 12, "name": "income_before_tax", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "619498000", "source_fact_ids": [6458675], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985522, "canonical_concept_id": 13, "name": "cfo", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1797790000", "source_fact_ids": [6459044], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985523, "canonical_concept_id": 13, "name": "cfo", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "2721753000", "source_fact_ids": [6459046], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985524, "canonical_concept_id": 14, "name": "capex", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "3668326000", "source_fact_ids": [6459461], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985525, "canonical_concept_id": 14, "name": "capex", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "5030819000", "source_fact_ids": [6459474], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985526, "canonical_concept_id": 15, "name": "diluted_eps", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "1.05", "source_fact_ids": [6458510], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985527, "canonical_concept_id": 15, "name": "diluted_eps", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1.87", "source_fact_ids": [6458472], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985528, "canonical_concept_id": 15, "name": "diluted_eps", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1.87", "source_fact_ids": [6458511], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985529, "canonical_concept_id": 15, "name": "diluted_eps", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "1.03", "source_fact_ids": [6458512], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985530, "canonical_concept_id": 54, "name": "total_assets", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "79002618000", "source_fact_ids": [6457967], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985531, "canonical_concept_id": 54, "name": "total_assets", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "71890730000", "source_fact_ids": [6457965], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985532, "canonical_concept_id": 56, "name": "ppe_net", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "479919000", "source_fact_ids": [6459649], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985533, "canonical_concept_id": 56, "name": "ppe_net", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "481590000", "source_fact_ids": [6459647], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985534, "canonical_concept_id": 57, "name": "cash_flow_investing", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "-3740829000", "source_fact_ids": [6459040], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985535, "canonical_concept_id": 57, "name": "cash_flow_investing", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "-5092946000", "source_fact_ids": [6459042], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985536, "canonical_concept_id": 58, "name": "cash_flow_financing", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "2258967000", "source_fact_ids": [6459036], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985537, "canonical_concept_id": 58, "name": "cash_flow_financing", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "4296322000", "source_fact_ids": [6459038], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985538, "canonical_concept_id": 59, "name": "dividends_paid", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "516716000", "source_fact_ids": [6459371], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985539, "canonical_concept_id": 59, "name": "dividends_paid", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "585899000", "source_fact_ids": [6459373], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985540, "canonical_concept_id": 16, "name": "shares_outstanding", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "466631498", "source_fact_ids": [6457768], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985541, "canonical_concept_id": 17, "name": "dividends_per_share", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "0.6", "source_fact_ids": [6458129], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985542, "canonical_concept_id": 17, "name": "dividends_per_share", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "1.2", "source_fact_ids": [6458128], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985543, "canonical_concept_id": 17, "name": "dividends_per_share", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "1.28", "source_fact_ids": [6458130], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985544, "canonical_concept_id": 17, "name": "dividends_per_share", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "0.64", "source_fact_ids": [6458132], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985545, "canonical_concept_id": 186, "name": "total_debt_split", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "33057826000", "source_fact_ids": [6458967, 6458971], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985546, "canonical_concept_id": 186, "name": "total_debt_split", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "30277161000", "source_fact_ids": [6458966, 6458970], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985547, "canonical_concept_id": 146, "name": "comprehensive_income", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "463328000", "source_fact_ids": [6458176], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985548, "canonical_concept_id": 146, "name": "comprehensive_income", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "820359000", "source_fact_ids": [6458175], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985549, "canonical_concept_id": 146, "name": "comprehensive_income", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "869439000", "source_fact_ids": [6458177], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985550, "canonical_concept_id": 146, "name": "comprehensive_income", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "480612000", "source_fact_ids": [6458178], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985551, "canonical_concept_id": 247, "name": "other_income_expense_net", "period_id": 100617, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2025-04-01", "end_date": "2025-06-30", "value": "95002000", "source_fact_ids": [6459088], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985552, "canonical_concept_id": 247, "name": "other_income_expense_net", "period_id": 100618, "period_type": "duration", "fiscal_period": null, "start_date": "2025-01-01", "end_date": "2025-06-30", "value": "187152000", "source_fact_ids": [6459086], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985553, "canonical_concept_id": 247, "name": "other_income_expense_net", "period_id": 100613, "period_type": "duration", "fiscal_period": null, "start_date": "2026-01-01", "end_date": "2026-06-30", "value": "465775000", "source_fact_ids": [6459090], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 364985554, "canonical_concept_id": 247, "name": "other_income_expense_net", "period_id": 100614, "period_type": "duration", "fiscal_period": "Q2", "start_date": "2026-04-01", "end_date": "2026-06-30", "value": "179662000", "source_fact_ids": [6459106], "resolved_at": "2026-10-31T06:43:53.007837+00:00"}
+{"kind": "cell", "id": 365005832, "canonical_concept_id": 187, "name": "total_debt_resolved", "period_id": 100616, "period_type": "instant", "fiscal_period": "Q2", "start_date": "2026-06-30", "end_date": "2026-06-30", "value": "34627322000", "source_fact_ids": [6458965, 6459820], "resolved_at": "2026-10-31T06:44:37.092942+00:00"}
+{"kind": "cell", "id": 365005833, "canonical_concept_id": 187, "name": "total_debt_resolved", "period_id": 100625, "period_type": "instant", "fiscal_period": "FY", "start_date": "2025-12-31", "end_date": "2025-12-31", "value": "30934935000", "source_fact_ids": [6458964, 6459818], "resolved_at": "2026-10-31T06:44:37.092942+00:00"}

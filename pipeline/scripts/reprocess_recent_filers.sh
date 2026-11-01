@@ -238,12 +238,15 @@ FAILED_STAGES=""
 # are skipped, named in ONE line, and the script exits non-zero. Stage caps are
 # unchanged. The workflow step has timeout-minutes: 150 above this.
 BUDGET_SECS="${REPROCESS_BUDGET_SECS:-7000}"
+# map:split-rebase (WO-22 SB-8, 2026-10-24): a no-op that issues no query
+# while rule split.event_basis@1 is off (the default); with the release pair
+# on it re-bases per-share values for these CIKs before the metric stages.
 TAG_LIBRARY_TIMEOUT_SECS="${TAG_LIBRARY_TIMEOUT_SECS:-1200}"
 STAGES=(
   normalize:identity normalize:periods normalize:units normalize:facts normalize:dedupe
   normalize:restatements normalize:conflict-latest-filed normalize:derive-interim-quarters
   normalize:derive-q4
-  map:resolve-facts map:resolve-concept-fallbacks map:calculate map:growth map:ttm-returns
+  map:resolve-facts map:split-rebase map:resolve-concept-fallbacks map:calculate map:growth map:ttm-returns
   map:ttm-margins map:calculate-expanded-metrics map:calculate-piotroski
   map:calculate-quality-flags map:calculate-reconciliation map:calculate-tax-reconciliation
   map:calculate-fcf-growth map:calculate-dividend-streak

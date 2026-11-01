@@ -3,7 +3,7 @@ id: shared-agent-memory-lives-in-mind-search-it-before-reading-d
 title: Shared agent memory lives in mind/, search it before reading docs
 kind: howto
 tags: mind, tokens, agents, memory
-paths: mind/mind.py, mind/README.md
+paths: mind/README.md, mind/mind.py
 evidence: CODE-CHECKED
 status: active
 created: 2026-10-21

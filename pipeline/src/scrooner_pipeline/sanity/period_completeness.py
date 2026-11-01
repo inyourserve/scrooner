@@ -49,7 +49,14 @@ import structlog
 import typer
 
 from scrooner_pipeline.common.config import settings
+from scrooner_pipeline.common.derivation_policy import (
+    PER_SHARE_BASE_CONCEPTS,
+    PER_SHARE_GAP_CAUSE,
+    q4_per_share_filed_separately_required,
+)
+from scrooner_pipeline.common.rule_flags import rule_enabled
 from scrooner_pipeline.common.sec_client import SECClient
+from scrooner_pipeline.mapper.ttm import RULE_PER_SHARE_TTM
 from scrooner_pipeline.db.connection import run_write_with_reconnect
 
 logger = structlog.get_logger()
@@ -163,7 +170,21 @@ CAUSES: dict[str, tuple[str, str]] = {
         "data_limit",
         "Periods missing: no XBRL fact for this line in the filing",
     ),
+    # 2026-10-22 (WO-2 RU-1, migration 0098): per-share values are never
+    # derived (common/derivation_policy.py). A Q4 EPS/DPS with the FY filed
+    # but no filed 3-month fact, or a Q2/Q3 filed only as YTD, is not a
+    # pipeline bug (it used to be filed as q4_not_derived / pipeline_bug and
+    # inflated the bug count). Not legitimate_absence either: "not in XBRL"
+    # is not "not in the filing", and the earnings release prints it.
+    PER_SHARE_GAP_CAUSE: (
+        "data_limit",
+        "Periods missing: per-share value not filed separately (not derived)",
+    ),
 }
+
+# Base concepts whose missing derived periods are a policy outcome, not a
+# derivation gap (shared with normalizer/derived.py and the Mapper).
+PER_SHARE_CHECK_BASES = PER_SHARE_BASE_CONCEPTS
 
 # Found live 2026-10-10 (data_limit ticket deep dive): "no_mapped_tag" was
 # filed as data_limit but a sample showed most of it is either ours to fix
@@ -248,19 +269,32 @@ def classify(
     base_concept: str = "",
     has_candidate_tag: bool = False,
     line_item_filed: bool | None = None,
+    per_share_cause_enabled: bool = True,
+    period_end: date | None = None,
 ) -> str:
     """The single cause for one missing (company, concept, period) cell.
     `base_concept` (the CHECK_CONCEPTS base name, e.g. "total_assets")
     gates whether conflict_split classification is even attempted --
     see SPLIT_AWARE_BASE_CONCEPTS. Defaults to "" (never split-aware)
     so any other caller that doesn't pass it keeps the safe, conservative
-    behavior rather than silently becoming split-aware by omission."""
+    behavior rather than silently becoming split-aware by omission.
+
+    For a per-share base concept (PER_SHARE_CHECK_BASES) the two "not
+    derived" outcomes become PER_SHARE_GAP_CAUSE: derivation is refused by
+    policy, so the gap is that the filer reports no separate value.
+    `per_share_cause_enabled` is False only while migration 0098 (which adds
+    the value to period_gap's CHECK constraint) is not applied; the old
+    labels are then kept so the nightly write cannot fail."""
+    per_share = per_share_cause_enabled and base_concept in PER_SHARE_CHECK_BASES
+    # NA-1 split: a Q4 of a fiscal year ending before 2021-08-09 had to be
+    # filed in the 10-K (Item 302(a)), so its blank stays our capture gap.
+    q4_per_share = per_share and not q4_per_share_filed_separately_required(period_end)
     if not filing_has_facts:
         # 2026-10-10: a Q4 whose full year IS present (e.g. XBRL arrived
         # only via a 10-K/A -- Valvoline FY2022) is a derivation gap, not
         # a missing filing: the data is in hand.
         if period_kind == "Q4" and fy_present:
-            return "q4_not_derived"
+            return PER_SHARE_GAP_CAUSE if q4_per_share else "q4_not_derived"
         # Confirmed against SEC when checked; otherwise a later processed
         # filing means the payload was normalized and simply lacked it.
         if sec_feed_has_filing is True:
@@ -282,9 +316,9 @@ def classify(
             return "conflict_split"
         return "conflict_material"
     if period_kind == "Q4" and fy_present:
-        return "q4_not_derived"
+        return PER_SHARE_GAP_CAUSE if q4_per_share else "q4_not_derived"
     if period_kind == "Q" and ytd_facts:
-        return "quarter_not_derived"
+        return PER_SHARE_GAP_CAUSE if per_share else "quarter_not_derived"
     if has_candidate_tag:
         return "unmapped_candidate_tag"
     if line_item_filed is False:
@@ -421,7 +455,26 @@ def _build_expected_filings(cur, company_ids: list[int] | None) -> None:
     )
 
 
-def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
+def _per_share_cause_allowed(cur) -> bool:
+    """True once migration 0098 is applied: period_gap's gap_cause CHECK
+    constraint accepts PER_SHARE_GAP_CAUSE. One catalog lookup per run."""
+    cur.execute(
+        """
+        select pg_get_constraintdef(c.oid)
+        from pg_constraint c
+        join pg_class t on t.oid = c.conrelid
+        join pg_namespace n on n.oid = t.relnamespace
+        where n.nspname = 'analytics' and t.relname = 'period_gap'
+          and c.conname = 'period_gap_gap_cause_check'
+        """
+    )
+    row = cur.fetchone()
+    return row is not None and PER_SHARE_GAP_CAUSE in row[0]
+
+
+def _check_concept(
+    cur, concept: str, shape: str, base: str, *, per_share_cause_enabled: bool = True
+) -> dict:
     cur.execute(
         "select id from analytics.canonical_concept where name = %s", (concept,)
     )
@@ -582,6 +635,8 @@ def _check_concept(cur, concept: str, shape: str, base: str) -> dict:
             base_concept=base,
             has_candidate_tag=bool(has_candidate),
             line_item_filed=line_filed,
+            per_share_cause_enabled=per_share_cause_enabled,
+            period_end=por,
         )
         detail = {"filing_id": filing_id}
         if in_feed is not None:
@@ -730,11 +785,26 @@ def run(conn: psycopg.Connection, ciks: set[str] | None = None) -> dict:
                 "select id from core.company where cik = any(%s)", (sorted(ciks),)
             )
             company_ids = [r[0] for r in cur.fetchall()]
+        # the per-share gap cause is part of rule pershare.never_derive_ttm@1 (OFF: legacy causes)
+        per_share_cause_enabled = rule_enabled(
+            RULE_PER_SHARE_TTM
+        ) and _per_share_cause_allowed(cur)
+        if not per_share_cause_enabled:
+            logger.warning(
+                "period_completeness.per_share_cause_disabled",
+                reason="migration 0098 not applied; old q4/quarter labels kept",
+            )
         _build_expected_filings(cur, company_ids)
         feed = _verify_against_sec_feed(cur)
         results = []
         for concept, (shape, base) in CHECK_CONCEPTS.items():
-            result = _check_concept(cur, concept, shape, base)
+            result = _check_concept(
+                cur,
+                concept,
+                shape,
+                base,
+                per_share_cause_enabled=per_share_cause_enabled,
+            )
             logger.info(
                 "period_completeness.concept_done",
                 concept=concept,

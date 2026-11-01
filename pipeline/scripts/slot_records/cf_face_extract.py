@@ -8,7 +8,9 @@ coreg) for a tag printed on those faces, same accession by construction.
 cal.tsv arcs between two printed face tags are kept (grp, parent, child,
 weight) so a printed child is never summed beside its printed parent.
 One JSON object per filing, gzip.
-usage: cf_face_extract.py <fsn_dir> <cohort.csv> <out.jsonl.gz>
+usage: cf_face_extract.py <fsn_dir> <cohort.csv> <out.jsonl.gz> [STMTS] [instant]
+  STMTS: comma list of statements (default CF,IS); 'instant' keeps qtrs = 0 values (balance sheet)
+  instead of durations. fsn_dir may hold <period>_<table>.tsv.zst flat or in <period>/ subfolders.
 """
 import csv
 import glob
@@ -22,6 +24,13 @@ from pathlib import Path
 
 csv.field_size_limit(sys.maxsize)
 fsn, cohort_csv, out_path = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+STMTS = set((sys.argv[4] if len(sys.argv) > 4 else "CF,IS").split(","))
+INSTANT = len(sys.argv) > 5 and sys.argv[5] == "instant"
+
+
+def table(per, name):
+    flat = fsn / f"{per}_{name}.tsv.zst"
+    return flat if flat.exists() else fsn / per / f"{per}_{name}.tsv.zst"
 cohort = {int(r["cik"]): r["ticker"] for r in csv.DictReader(open(cohort_csv))}
 FORMS = {"10-K", "10-Q", "10-K/A", "10-Q/A", "10-KT", "10-QT"}
 NO_DIM = "0x00000000"
@@ -35,7 +44,7 @@ def rows(path):
 
 n_fil = 0
 with gzip.open(out_path, "wt") as fo:
-    for sub_path in sorted(glob.glob(str(fsn / "*_sub.tsv.zst"))):
+    for sub_path in sorted(glob.glob(str(fsn / "*_sub.tsv.zst")) + glob.glob(str(fsn / "*" / "*_sub.tsv.zst"))):
         per = Path(sub_path).name.split("_")[0]
         filings = {}
         for r in rows(sub_path):
@@ -44,22 +53,24 @@ with gzip.open(out_path, "wt") as fo:
                                       "form": r["form"], "period": r["period"], "fy": r["fy"], "fp": r["fp"],
                                       "filed": r["filed"], "fsn_period": per, "face": [], "values": defaultdict(dict)}
         wanted = defaultdict(set)
-        for r in rows(fsn / f"{per}_pre.tsv.zst"):
+        for r in rows(table(per, "pre")):
             f = filings.get(r["adsh"])
-            if f is None or r["stmt"] not in ("CF", "IS"):
+            if f is None or r["stmt"] not in STMTS:
                 continue
             f["face"].append({"stmt": r["stmt"], "report": int(r["report"]), "line": int(r["line"]), "tag": r["tag"],
                               "plabel": r["plabel"], "negating": r["negating"] == "1",
                               "custom": not r["version"].startswith(STD), "inpth": r["inpth"] == "1"})
             wanted[r["adsh"]].add(r["tag"])
-        for r in rows(fsn / f"{per}_num.tsv.zst"):
+        for r in rows(table(per, "num")):
             w = wanted.get(r["adsh"])
-            if not w or r["tag"] not in w or r["qtrs"] in ("0", "") or r["uom"] != "USD" or r["dimh"] != NO_DIM:
+            if not w or r["tag"] not in w or r["uom"] != "USD" or r["dimh"] != NO_DIM:
+                continue
+            if (r["qtrs"] != "0") if INSTANT else (r["qtrs"] in ("0", "")):
                 continue
             if (r.get("coreg") or "").strip() or (r.get("iprx") or "0") not in ("0", "") or r["value"] in ("", None):
                 continue
             filings[r["adsh"]]["values"][f"{r['ddate']}|{r['qtrs']}"][r["tag"]] = r["value"]
-        for r in rows(fsn / f"{per}_cal.tsv.zst"):
+        for r in rows(table(per, "cal")):
             w = wanted.get(r["adsh"])
             if w and r["ptag"] in w and r["ctag"] in w:
                 filings[r["adsh"]].setdefault("cal", []).append(

@@ -1,0 +1,1428 @@
+[
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "2926000.0000",
+  "v19_value": null,
+  "prod_value": "1991000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "89000000.0000",
+  "v19_value": null,
+  "prod_value": "71000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Property and equipment",
+   "Timberlands reforestation"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "698000000.0000",
+  "v19_value": null,
+  "prod_value": "458000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2015-03-31",
+  "qtrs": 4,
+  "release_value": "156135000.0000",
+  "v19_value": null,
+  "prod_value": "6663000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "6585000.0000",
+  "v19_value": null,
+  "prod_value": "4714000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "197000000.0000",
+  "v19_value": null,
+  "prod_value": "170000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Property and equipment",
+   "Timberlands reforestation"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2015-06-30",
+  "qtrs": 1,
+  "release_value": "35377000.0000",
+  "v19_value": null,
+  "prod_value": "1766000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "1228000000.0000",
+  "v19_value": null,
+  "prod_value": "828000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "12572000.0000",
+  "v19_value": null,
+  "prod_value": "7281000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "309000000.0000",
+  "v19_value": null,
+  "prod_value": "276000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Property and equipment",
+   "Timberlands reforestation"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "1695000000.0000",
+  "v19_value": null,
+  "prod_value": "1186000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2015-09-30",
+  "qtrs": 2,
+  "release_value": "66535000.0000",
+  "v19_value": null,
+  "prod_value": "2981000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2015-12-31",
+  "qtrs": 3,
+  "release_value": "87384000.0000",
+  "v19_value": null,
+  "prod_value": "5961000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "17667000.0000",
+  "v19_value": null,
+  "prod_value": "11268000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "58100000.0000",
+  "v19_value": null,
+  "prod_value": "58000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Additions of long-lived assets"
+  ]
+ },
+ {
+  "cik": 36966,
+  "ticker": "FHN",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "39947000.0000",
+  "v19_value": null,
+  "prod_value": "43514000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "2291000000.0000",
+  "v19_value": null,
+  "prod_value": "1618000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "6400000.0000",
+  "v19_value": null,
+  "prod_value": "6000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Additions of long-lived assets"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "3410000.0000",
+  "v19_value": null,
+  "prod_value": "2303000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "477000000.0000",
+  "v19_value": null,
+  "prod_value": "316000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2016-03-31",
+  "qtrs": 4,
+  "release_value": "104951000.0000",
+  "v19_value": null,
+  "prod_value": "7100000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "7361000.0000",
+  "v19_value": null,
+  "prod_value": "5146000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "22600000.0000",
+  "v19_value": null,
+  "prod_value": "22000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Additions of long-lived assets"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "935000000.0000",
+  "v19_value": null,
+  "prod_value": "610000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2016-06-30",
+  "qtrs": 1,
+  "release_value": "19259000.0000",
+  "v19_value": null,
+  "prod_value": "765000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "36700000.0000",
+  "v19_value": null,
+  "prod_value": "36000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Additions of long-lived assets"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "13539000.0000",
+  "v19_value": null,
+  "prod_value": "8545000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2016-09-30",
+  "qtrs": 2,
+  "release_value": "39878000.0000",
+  "v19_value": null,
+  "prod_value": "3232000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "1386000000.0000",
+  "v19_value": null,
+  "prod_value": "912000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 1571123,
+  "ticker": "SAIC",
+  "end": "2016-10-31",
+  "qtrs": 3,
+  "release_value": "13000000.0000",
+  "v19_value": null,
+  "prod_value": "11000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Expenditures for property, plant, and equipment",
+   "Asset acquisition"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "19728000.0000",
+  "v19_value": null,
+  "prod_value": "10927000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2016-12-31",
+  "qtrs": 3,
+  "release_value": "61935000.0000",
+  "v19_value": null,
+  "prod_value": "9597000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "1996000000.0000",
+  "v19_value": null,
+  "prod_value": "1278000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Deferred turnaround and catalyst costs"
+  ]
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "70600000.0000",
+  "v19_value": null,
+  "prod_value": "71000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Additions of long-lived assets"
+  ]
+ },
+ {
+  "cik": 1571123,
+  "ticker": "SAIC",
+  "end": "2017-01-31",
+  "qtrs": 4,
+  "release_value": "17000000.0000",
+  "v19_value": null,
+  "prod_value": "15000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Expenditures for property, plant, and equipment",
+   "Asset acquisition"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "5989000.0000",
+  "v19_value": null,
+  "prod_value": "4543000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2017-03-31",
+  "qtrs": 4,
+  "release_value": "85528000.0000",
+  "v19_value": null,
+  "prod_value": "10200000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "10174000.0000",
+  "v19_value": null,
+  "prod_value": "8390000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2017-06-30",
+  "qtrs": 1,
+  "release_value": "24063000.0000",
+  "v19_value": null,
+  "prod_value": "2000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "13116000.0000",
+  "v19_value": null,
+  "prod_value": "10494000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2017-09-30",
+  "qtrs": 2,
+  "release_value": "85863000.0000",
+  "v19_value": null,
+  "prod_value": "3800000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "17212000.0000",
+  "v19_value": null,
+  "prod_value": "12252000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2017-12-31",
+  "qtrs": 3,
+  "release_value": "153796000.0000",
+  "v19_value": null,
+  "prod_value": "5400000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "277000000.0000",
+  "v19_value": null,
+  "prod_value": "205000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Renewals and replacements",
+   "Return on investment"
+  ]
+ },
+ {
+  "cik": 36966,
+  "ticker": "FHN",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "53046000.0000",
+  "v19_value": null,
+  "prod_value": "287642000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "8800000.0000",
+  "v19_value": null,
+  "prod_value": "4102000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "1134000000.0000",
+  "v19_value": null,
+  "prod_value": "86000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Acquisitions",
+   "Renewals and replacements",
+   "Return on investment"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2018-03-31",
+  "qtrs": 4,
+  "release_value": "213900000.0000",
+  "v19_value": null,
+  "prod_value": "206800000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "17299000.0000",
+  "v19_value": null,
+  "prod_value": "11406000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "1220000000.0000",
+  "v19_value": null,
+  "prod_value": "143000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Acquisitions",
+   "Renewals and replacements",
+   "Return on investment"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2018-06-30",
+  "qtrs": 1,
+  "release_value": "91000000.0000",
+  "v19_value": null,
+  "prod_value": "1600000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "27355000.0000",
+  "v19_value": null,
+  "prod_value": "18267000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 1633978,
+  "ticker": "LITE",
+  "end": "2018-09-30",
+  "qtrs": 1,
+  "release_value": "30300000.0000",
+  "v19_value": null,
+  "prod_value": "29600000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Payments for acquisition of property, plant and eq",
+   "Payment for asset acquisition"
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "1345000000.0000",
+  "v19_value": null,
+  "prod_value": "214000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Acquisitions",
+   "Renewals and replacements",
+   "Return on investment"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2018-09-30",
+  "qtrs": 2,
+  "release_value": "170300000.0000",
+  "v19_value": null,
+  "prod_value": "8900000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "35525000.0000",
+  "v19_value": null,
+  "prod_value": "24462000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2018-12-31",
+  "qtrs": 3,
+  "release_value": "201600000.0000",
+  "v19_value": null,
+  "prod_value": "188800000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1633978,
+  "ticker": "LITE",
+  "end": "2018-12-31",
+  "qtrs": 2,
+  "release_value": "54600000.0000",
+  "v19_value": null,
+  "prod_value": "53900000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Payments for acquisition of property, plant and eq",
+   "Payment for asset acquisition"
+  ]
+ },
+ {
+  "cik": 783325,
+  "ticker": "WEC",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "2177100000.0000",
+  "v19_value": null,
+  "prod_value": "2417100000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Acquisition of Coyote Ridge"
+  ]
+ },
+ {
+  "cik": 36966,
+  "ticker": "FHN",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "47986000.0000",
+  "v19_value": null,
+  "prod_value": "38000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases"
+  ]
+ },
+ {
+  "cik": 1038074,
+  "ticker": "SLAB",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "4288000.0000",
+  "v19_value": null,
+  "prod_value": "3874000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of property and equipment",
+   "Purchases of other assets"
+  ]
+ },
+ {
+  "cik": 1633978,
+  "ticker": "LITE",
+  "end": "2019-03-31",
+  "qtrs": 3,
+  "release_value": "81800000.0000",
+  "v19_value": null,
+  "prod_value": "80500000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Payments for acquisition of property, plant and eq",
+   "Payment for asset acquisition"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2019-03-31",
+  "qtrs": 4,
+  "release_value": "247500000.0000",
+  "v19_value": null,
+  "prod_value": "228900000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2019-06-30",
+  "qtrs": 1,
+  "release_value": "26500000.0000",
+  "v19_value": null,
+  "prod_value": "23900000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1633978,
+  "ticker": "LITE",
+  "end": "2019-06-30",
+  "qtrs": 4,
+  "release_value": "167300000.0000",
+  "v19_value": null,
+  "prod_value": "166000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Payments for acquisition of property, plant and eq",
+   "Payment for asset acquisition"
+  ]
+ },
+ {
+  "cik": 1633978,
+  "ticker": "LITE",
+  "end": "2019-09-30",
+  "qtrs": 1,
+  "release_value": "22700000.0000",
+  "v19_value": null,
+  "prod_value": "21700000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Payments for acquisition of property, plant and eq",
+   "Payment for asset acquisition"
+  ]
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "end": "2019-09-30",
+  "qtrs": 2,
+  "release_value": "55200000.0000",
+  "v19_value": null,
+  "prod_value": "41600000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Investments in other assets",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 36966,
+  "ticker": "FHN",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "49159000.0000",
+  "v19_value": null,
+  "prod_value": "49000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases"
+  ]
+ },
+ {
+  "cik": 875357,
+  "ticker": "BOKF",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "119785000.0000",
+  "v19_value": null,
+  "prod_value": "40295000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of assets"
+  ]
+ },
+ {
+  "cik": 875357,
+  "ticker": "BOKF",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "416815000.0000",
+  "v19_value": null,
+  "prod_value": "82684000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of assets"
+  ]
+ },
+ {
+  "cik": 875357,
+  "ticker": "BOKF",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "1007240000.0000",
+  "v19_value": null,
+  "prod_value": "116800000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchases of assets"
+  ]
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "80000000.0000",
+  "v19_value": null,
+  "prod_value": "84000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Additions of long-lived assets"
+  ]
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "21000000.0000",
+  "v19_value": null,
+  "prod_value": "24000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Additions of long-lived assets"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "13094000.0000",
+  "v19_value": null,
+  "prod_value": "5236000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Asset acquisitions",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "15832000.0000",
+  "v19_value": null,
+  "prod_value": "5236000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Asset acquisitions",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "349587000.0000",
+  "v19_value": null,
+  "prod_value": "343158000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Asset acquisitions",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "8090000.0000",
+  "v19_value": null,
+  "prod_value": "100000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Asset acquisitions",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "352939000.0000",
+  "v19_value": null,
+  "prod_value": "343158000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Asset acquisitions",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 920148,
+  "ticker": "LH",
+  "end": "2022-06-30",
+  "qtrs": 2,
+  "release_value": "260500000.0000",
+  "v19_value": null,
+  "prod_value": "247400000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Cash payments for laboratory-related assets"
+  ]
+ },
+ {
+  "cik": 1236275,
+  "ticker": "QXO",
+  "end": "2022-06-30",
+  "qtrs": 2,
+  "release_value": "180549.0000",
+  "v19_value": null,
+  "prod_value": "30549",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchase of property and equipment",
+   "Acquisition of assets"
+  ]
+ },
+ {
+  "cik": 920148,
+  "ticker": "LH",
+  "end": "2022-09-30",
+  "qtrs": 3,
+  "release_value": "364000000.0000",
+  "v19_value": null,
+  "prod_value": "330200000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Cash payments for laboratory-related assets"
+  ]
+ },
+ {
+  "cik": 1236275,
+  "ticker": "QXO",
+  "end": "2022-09-30",
+  "qtrs": 3,
+  "release_value": "188741.0000",
+  "v19_value": null,
+  "prod_value": "38741",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchase of property and equipment",
+   "Acquisition of assets"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "17734000.0000",
+  "v19_value": null,
+  "prod_value": "5236000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Asset acquisitions",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "22757000.0000",
+  "v19_value": null,
+  "prod_value": "7714000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Asset acquisitions",
+   "Capital expenditures"
+  ]
+ },
+ {
+  "cik": 1236275,
+  "ticker": "QXO",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "188742.0000",
+  "v19_value": null,
+  "prod_value": "38742",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Purchase of property and equipment",
+   "Acquisition of assets"
+  ]
+ },
+ {
+  "cik": 1521036,
+  "ticker": "LNTH",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "278347000.0000",
+  "v19_value": null,
+  "prod_value": "260000000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Acquisition of assets"
+  ]
+ },
+ {
+  "cik": 920148,
+  "ticker": "LH",
+  "end": "2023-03-31",
+  "qtrs": 1,
+  "release_value": "93900000.0000",
+  "v19_value": null,
+  "prod_value": "78200000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Cash payments for laboratory-related assets"
+  ]
+ },
+ {
+  "cik": 1521036,
+  "ticker": "LNTH",
+  "end": "2023-03-31",
+  "qtrs": 1,
+  "release_value": "44513000.0000",
+  "v19_value": null,
+  "prod_value": "35345000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Acquisition of assets, net"
+  ]
+ },
+ {
+  "cik": 1521036,
+  "ticker": "LNTH",
+  "end": "2023-06-30",
+  "qtrs": 2,
+  "release_value": "65210000.0000",
+  "v19_value": null,
+  "prod_value": "45345000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Acquisition of assets, net"
+  ]
+ },
+ {
+  "cik": 1521036,
+  "ticker": "LNTH",
+  "end": "2023-09-30",
+  "qtrs": 3,
+  "release_value": "79831000.0000",
+  "v19_value": null,
+  "prod_value": "45345000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Acquisition of assets, net"
+  ]
+ },
+ {
+  "cik": 1521036,
+  "ticker": "LNTH",
+  "end": "2023-12-31",
+  "qtrs": 4,
+  "release_value": "91900000.0000",
+  "v19_value": null,
+  "prod_value": "45345000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Acquisition of assets"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2025-09-30",
+  "qtrs": 3,
+  "release_value": "53692000.0000",
+  "v19_value": null,
+  "prod_value": "3014000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Asset acquisitions"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2025-03-31",
+  "qtrs": 1,
+  "release_value": "17394000.0000",
+  "v19_value": null,
+  "prod_value": "664000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Asset acquisitions"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2025-06-30",
+  "qtrs": 2,
+  "release_value": "37210000.0000",
+  "v19_value": null,
+  "prod_value": "664000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Asset acquisitions"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2025-12-31",
+  "qtrs": 4,
+  "release_value": "70967000.0000",
+  "v19_value": null,
+  "prod_value": "3014000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Asset acquisitions"
+  ]
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "end": "2026-06-30",
+  "qtrs": 2,
+  "release_value": "31988000.0000",
+  "v19_value": null,
+  "prod_value": "1556000",
+  "to": "hold_v19_rule",
+  "reason": "capex_line_names_no_asset",
+  "labels": [
+   "Capital expenditures",
+   "Asset acquisitions"
+  ]
+ }
+]

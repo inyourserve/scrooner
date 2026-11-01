@@ -1,0 +1,30 @@
+{
+ "family": "pershare_derived (input file for pershare_filed)",
+ "rule_id": "pershare.derived_eps_retired@1",
+ "git_commit": "17e5264",
+ "produced_at": "2026-10-31T16:30:14+00:00",
+ "rows": 19680,
+ "sha256": "f29880551b2c02f3ef096baa1fb2e5d0e42bd40b2565fb7683ae00b3b484e669",
+ "companies": 964,
+ "data_points": [
+  "basic_eps_resolved",
+  "diluted_eps_resolved"
+ ],
+ "period_floor": "2014-01-01",
+ "calendar": "expected_periods_2026-10-31.csv.gz",
+ "new_reason_codes": {
+  "per_share_not_filed_separately": "no separate Q4 per-share figure is printed (FY on/after 2021-08-09 or Item 302(a) relief)",
+  "per_share_not_captured": "the filing prints the per-share figure but it is not in our XBRL data; never derived"
+ },
+ "counts": {
+  "basic_eps_resolved|defect|held_pending_verifier": 215,
+  "basic_eps_resolved|defect|per_share_not_captured": 5950,
+  "basic_eps_resolved|not_presented|per_share_not_filed_separately": 4452,
+  "basic_eps_resolved|value|value": 13,
+  "diluted_eps_resolved|defect|held_pending_verifier": 187,
+  "diluted_eps_resolved|defect|per_share_not_captured": 4398,
+  "diluted_eps_resolved|not_presented|per_share_not_filed_separately": 4454,
+  "diluted_eps_resolved|value|value": 11,
+  "filed_fact_left_to_28": 69200
+ }
+}

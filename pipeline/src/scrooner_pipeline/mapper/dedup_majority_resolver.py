@@ -57,6 +57,18 @@ SAFE_CONCEPTS: list[tuple[str, str]] = [
     ("dividends_per_share", "dividends_per_share_resolved"),
 ]
 
+
+def active_safe_concepts(environ=None) -> list[tuple[str, str]]:
+    """SB-6: with the split re-base / RU-1 pair ON, the per-share and share
+    count concepts belong to corporate_actions/share_basis.py alone."""
+    from scrooner_pipeline.common import rule_flags
+    from scrooner_pipeline.mapper.conflict_resolution import SHARE_BASIS_OWNED
+
+    if rule_flags.per_share_pair_enabled(environ):
+        return [t for t in SAFE_CONCEPTS if t[1] not in SHARE_BASIS_OWNED]
+    return list(SAFE_CONCEPTS)
+
+
 _TOLERANCE = Decimal(
     "0.005"
 )  # 0.5% relative -- trivial rounding variants count as one vote
@@ -374,7 +386,7 @@ def resolve_majority_vote_for_concept(
 
 def resolve_all_safe_concepts(conn: psycopg.Connection) -> dict:
     results = {}
-    for concept_name, resolved_name in SAFE_CONCEPTS:
+    for concept_name, resolved_name in active_safe_concepts():
         results[concept_name] = resolve_majority_vote_for_concept(
             conn, concept_name, resolved_name
         )

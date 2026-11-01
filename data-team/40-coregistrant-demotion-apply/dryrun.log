@@ -1,0 +1,24 @@
+(142, '0000007323', 'ENTERGY ARKANSAS, LLC', 'EAI')
+(694, '0000065984', 'ENTERGY CORP /DE/', None)
+(1008, '0000072741', 'EVERSOURCE ENERGY', None)
+(1079, '0000092103', 'SOUTHERN CALIFORNIA EDISON Co', None)
+(1080, '0000092108', 'SOUTHERN CALIFORNIA GAS CO', None)
+(1081, '0000092122', 'SOUTHERN CO', None)
+(1165, '0000201533', 'CONSUMERS ENERGY CO', 'CMS-PB')
+(1525, '0000811156', 'CMS ENERGY CORP', None)
+(1576, '0000827052', 'EDISON INTERNATIONAL', None)
+(2144, '0001002910', 'AMEREN CORP', None)
+(2503, '0001032208', 'SEMPRA', None)
+(3562, '0001108426', 'TXNM ENERGY INC', None)
+(3710, '0001618756', 'Restaurant Brands International Inc.', 'QSR')
+(5394, '0001755672', 'Corteva, Inc.', None)
+2026-10-31 21:19:57 [info     ] shared_accession_cleanup.done  cells_to_archive=600 companies=14 errored=0 facts_already_demoted=1 facts_to_demote=1771 filings=4 mode=off
+TOTALS {"mode": "off", "companies": 14, "facts_to_demote": 1771, "facts_already_demoted": 1, "filings": 4, "cells_to_archive": 600, "errored": 0}
+  0000007323 {'facts_to_demote': 467, 'facts_already_demoted': 0, 'filings': 1, 'cells_to_archive': 164, 'filings_owned_by': ['0000065984']}
+  0000092103 {'facts_to_demote': 387, 'facts_already_demoted': 1, 'filings': 1, 'cells_to_archive': 172, 'filings_owned_by': ['0000827052']}
+  0000092108 {'facts_to_demote': 543, 'facts_already_demoted': 0, 'filings': 1, 'cells_to_archive': 154, 'filings_owned_by': ['0001032208']}
+  0000201533 {'facts_to_demote': 374, 'facts_already_demoted': 0, 'filings': 1, 'cells_to_archive': 110, 'filings_owned_by': ['0000811156']}
+142 0000007323 facts 467 already 0 filings 1 owners ['0000065984'] cells 164 concepts [('net_income_resolved', 6), ('stockholders_equity_resolved', 6), ('net_income', 6), ('stockholders_equity', 6), ('revenue_sanity_resolved', 4), ('operating_income_resolved', 4), ('interest_expense_resolved', 4), ('income_before_tax_resolved', 4)]
+1079 0000092103 facts 387 already 1 filings 1 owners ['0000827052'] cells 172 concepts [('stockholders_equity_resolved', 6), ('stockholders_equity', 6), ('share_buybacks_resolved', 5), ('share_buybacks', 5), ('revenue_sanity_resolved', 4), ('operating_income_resolved', 4), ('income_before_tax_resolved', 4), ('income_tax_expense_resolved', 4)]
+1080 0000092108 facts 543 already 0 filings 1 owners ['0001032208'] cells 154 concepts [('stockholders_equity_resolved', 6), ('stockholders_equity', 6), ('revenue_sanity_resolved', 4), ('income_before_tax_resolved', 4), ('income_tax_expense_resolved', 4), ('net_income_resolved', 4), ('diluted_eps_resolved', 4), ('share_buybacks_resolved', 4)]
+1165 0000201533 facts 374 already 0 filings 1 owners ['0000811156'] cells 110 concepts [('stockholders_equity_resolved', 6), ('stockholders_equity', 6), ('revenue_sanity_resolved', 4), ('depreciation_and_amortization_resolved', 4), ('cash_and_equivalents_resolved', 4), ('operating_income_resolved', 4), ('depreciation_and_amortization', 4), ('revenue', 4)]

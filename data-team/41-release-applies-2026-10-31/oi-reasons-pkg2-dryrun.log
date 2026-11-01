@@ -1,0 +1,9 @@
+rule slot.is_operating_income_not_presented@1 mode=off digest=fd4d733058280d4a0e10ec723abaac3f6180f3d350456e72e767e6b7a7419be0 DRY RUN, nothing written
+  guard table (0113): present
+  protected blanks (0115, value nullable): yes
+  concept_id: 249
+  cells: 13942
+  reasons: 13942
+  hides: 3313
+  companies: 253
+  reason_only_without_period_row: 0

@@ -1314,3 +1314,265 @@ def test_whole_dollar_page_with_six_trailing_zeros_is_a_millions_rounding():
     assert face.printed_unit("0000000001", "A", _fx("1893000000")) == Decimal(
         10**6
     )  # ABNB FY input
+
+
+# ------------------------------------------------------------------ family C (derived EPS), unit
+BASIC, DILUTED, BOTH = 11, 12, 13  # EarningsPerShareBasic / Diluted / BasicAndDiluted
+CC_B, CC_D, CC_BR = 117, 15, 291  # basic_eps, diluted_eps, basic_eps_resolved
+
+
+def _eps(
+    fid,
+    concept,
+    period,
+    value,
+    *,
+    derived=False,
+    fp="Q4",
+    end=date(2025, 12, 31),
+    filed=date(2026, 2, 1),
+):
+    return (fid, 1, period, concept, "T", "usd/shares", fp, None, end, Decimal(value), True, derived,
+            "10-K", f"acc{fid}", filed)  # fmt: skip
+
+
+class _FakeCur:
+    """Answers the family C queries by their SQL text."""
+
+    def __init__(self, derived, cells, filed):
+        self.derived, self.cells, self.filed, self.rows = derived, cells, filed, []
+
+    def execute(self, sql, params=None):
+        if "f.is_derived\n  and f.concept_id" in sql:
+            self.rows = [r for r in self.derived if r[3] in params["cids"]]
+        elif (
+            "from analytics.concept_mapping cm" in sql
+            and "select distinct cc.id" in sql
+        ):
+            self.rows = [(CC_B,), (CC_D,), (CC_BR,)]
+        elif "cf.source_fact_ids && %(fids)s" in sql and "canonical_fact cf" in sql:
+            self.rows = [c for c in self.cells if set(c[7]) & set(params["fids"])]
+        elif "not f.is_derived\n  and fl.form" in sql:
+            self.rows = [
+                r
+                for r in self.filed
+                if r[3] in params["cids"] and r[2] in params["pids"]
+            ]
+        elif "metric_value mv" in sql:
+            self.rows = []
+        else:
+            raise AssertionError(sql)
+
+    def fetchall(self):
+        return self.rows
+
+
+PRIORITY = {"basic_eps": {BASIC: 1, BOTH: 2}, "diluted_eps": {DILUTED: 1, BOTH: 2}}
+
+
+def _plan_c(derived, cells, filed):
+    return rr.plan_per_share_chunk(
+        _FakeCur(derived, cells, filed), [1], uids=[9], priority_by_name=PRIORITY
+    )
+
+
+@pytest.mark.unit
+def test_family_c_rule_is_registered_default_off_and_reasons_have_text():
+    assert (
+        rr.RULE_PER_SHARE in rf.RULES and rf.rule_mode(rr.RULE_PER_SHARE, {}) == rf.OFF
+    )
+    for code in (
+        "per_share_not_filed_separately",
+        "per_share_not_captured",
+        "per_share_filed_copies_disagree",
+    ):
+        assert rr.REASON_TEXT[code]
+
+
+@pytest.mark.unit
+def test_per_share_reason_follows_item_302a():
+    # FY ending on/after 2021-08-09: Q4 EPS is not filed separately; before it the 10-K quarterly note filed it
+    assert (
+        rr.per_share_reason("Q4", date(2021, 12, 31))
+        == "per_share_not_filed_separately"
+    )
+    assert (
+        rr.per_share_reason("Q4", date(2021, 8, 9)) == "per_share_not_filed_separately"
+    )
+    assert rr.per_share_reason("Q4", date(2020, 12, 31)) == "per_share_not_captured"
+    assert (
+        rr.per_share_reason("Q2", date(2025, 6, 30)) == "per_share_not_captured"
+    )  # every 10-Q files Q2
+    assert rr.per_share_reason(None, date(2025, 6, 30)) == "per_share_not_captured"
+
+
+@pytest.mark.unit
+def test_family_c_replaces_from_the_cells_own_mapping_and_removes_with_the_era_reason():
+    derived = [
+        _eps(
+            100, BOTH, 1, "1.10", derived=True
+        ),  # FY 4.40 - 9M 3.30: one fact feeds basic AND diluted
+        _eps(110, BASIC, 2, "0.95", derived=True, end=date(2019, 12, 31)),
+        _eps(120, BASIC, 3, "0.50", derived=True),
+        _eps(130, BASIC, 4, "0.70", derived=True),
+    ]
+    cells = [
+        (1000, 1, CC_B, "basic_eps", 1, date(2025, 12, 31), Decimal("1.10"), [100]),
+        (1001, 1, CC_D, "diluted_eps", 1, date(2025, 12, 31), Decimal("1.10"), [100]),
+        (1002, 1, CC_B, "basic_eps", 2, date(2019, 12, 31), Decimal("0.95"), [110]),
+        (
+            1003,
+            1,
+            CC_BR,
+            "basic_eps_resolved",
+            3,
+            date(2025, 12, 31),
+            Decimal("0.25"),
+            [120],
+        ),  # 2:1 re-based
+        (1004, 1, CC_B, "basic_eps", 4, date(2025, 12, 31), Decimal("0.70"), [130]),
+        (
+            1005,
+            1,
+            999,
+            "dividends_per_share",
+            1,
+            date(2025, 12, 31),
+            Decimal("1.10"),
+            [100],
+        ),  # not family C
+    ]
+    filed = [
+        _eps(200, BASIC, 1, "1.12"),  # a filed discrete basic Q4 (10-K quarterly note)
+        _eps(210, DILUTED, 9, "9"),  # another period: never a candidate
+        _eps(230, BASIC, 4, "0.71", filed=date(2026, 2, 1)),
+        _eps(231, BASIC, 4, "0.69", filed=date(2026, 3, 1)),  # copies disagree
+    ]
+    plan = _plan_c(derived, cells, filed)
+    by = {
+        c.canonical_fact_id: (c.action, c.reason_code, c.replacement_fact_id)
+        for c in plan.cells
+    }
+    assert by == {
+        1000: (rr.ACT_REPLACE, None, 200),
+        1001: (
+            rr.ACT_REMOVE,
+            "per_share_not_filed_separately",
+            None,
+        ),  # basic's copy never fills diluted
+        1002: (
+            rr.ACT_REMOVE,
+            "per_share_not_captured",
+            None,
+        ),  # FY2019: the 10-K had to file Q4
+        1003: (rr.ACT_REVIEW, None, None),
+        1004: (rr.ACT_REMOVE, "per_share_filed_copies_disagree", None),
+    }
+    assert sorted(f.fact_id for f in plan.facts) == [100, 110, 120, 130]
+    assert plan.family == "C_per_share_derived" and plan.rule_id == rr.RULE_PER_SHARE
+
+
+@pytest.mark.unit
+def test_family_c_leaves_a_cell_with_other_sources_for_review():
+    derived = [_eps(100, BASIC, 1, "1.10", derived=True)]
+    cells = [
+        (1000, 1, CC_B, "basic_eps", 1, date(2025, 12, 31), Decimal("1.10"), [100, 101])
+    ]
+    plan = _plan_c(derived, cells, [])
+    assert [(c.action, c.note) for c in plan.cells] == [
+        (rr.ACT_REVIEW, "has other sources")
+    ]
+
+
+@pytest.mark.unit
+def test_family_c_uses_the_fsn_filed_value_for_a_not_captured_cell_and_never_an_entity_axis():
+    derived = [
+        _eps(110, BASIC, 2, "0.95", derived=True, end=date(2019, 12, 31)),
+        _eps(111, BASIC, 5, "0.40", derived=True, end=date(2019, 12, 31)),
+        _eps(112, BASIC, 6, "0.30", derived=True, end=date(2019, 12, 31)),
+        _eps(113, BASIC, 7, "0.20", derived=True, end=date(2019, 12, 31)),
+    ]
+    cells = [
+        (1002, 1, CC_B, "basic_eps", 2, date(2019, 12, 31), Decimal("0.95"), [110]),
+        (1005, 1, CC_B, "basic_eps", 5, date(2019, 12, 31), Decimal("0.40"), [111]),
+        (1006, 1, CC_B, "basic_eps", 6, date(2019, 12, 31), Decimal("0.30"), [112]),
+        (1007, 1, CC_B, "basic_eps", 7, date(2019, 12, 31), Decimal("0.20"), [113]),
+    ]
+    fsn = {  # UNH-shape quarterly-axis copy; restated copies; Host-Hotels-shape entity axis only; nothing
+        1002: {"outcome": "replace_with_fsn_value", "value": "0.9700", "accession": "0000731766-20-000006",
+               "form": "10-K", "start": "2019-10-01", "tag": "EarningsPerShareBasic", "copies": 1,
+               "axis": "Quarterlyfinancialdata=QuarterlyFinancialDataUnaudited;", "fsn_period": "2020q1"},
+        1005: {"outcome": "fsn_copies_disagree", "values": ["0.40", "0.44"]},
+        1006: {"outcome": "not_in_fsn", "rejected_axes": ["ConsolidatedEntities=ParentCompany;"]},
+        1007: {"outcome": "not_in_fsn"},
+    }  # fmt: skip
+    plan = rr.plan_per_share_chunk(
+        _FakeCur(derived, cells, []), [1], uids=[9], priority_by_name=PRIORITY, fsn=fsn
+    )
+    by = {c.canonical_fact_id: c for c in plan.cells}
+    r = by[1002]
+    assert (r.action, r.replacement_value, r.replacement_accession, r.period_start) == (
+        rr.ACT_REPLACE_FSN, Decimal("0.9700"), "0000731766-20-000006", date(2019, 10, 1)
+    )  # fmt: skip
+    assert r.note.startswith(
+        "fsn-notes:2020q1/num;tag=EarningsPerShareBasic;qtrs=1;axis=Quarterlyfinancialdata"
+    )
+    assert (by[1005].action, by[1005].reason_code) == (
+        rr.ACT_REMOVE,
+        "per_share_filed_copies_disagree",
+    )
+    assert by[1006].action == rr.ACT_REVIEW
+    assert (by[1007].action, by[1007].reason_code) == (
+        rr.ACT_REMOVE,
+        "per_share_not_captured",
+    )
+    # a Q4 not filed separately (FY on/after 2021-08-09) never takes an FSN value
+    late = [_eps(120, BASIC, 3, "0.5", derived=True, end=date(2025, 12, 31))]
+    late_cells = [
+        (1008, 1, CC_B, "basic_eps", 3, date(2025, 12, 31), Decimal("0.5"), [120])
+    ]
+    p2 = rr.plan_per_share_chunk(_FakeCur(late, late_cells, []), [1], uids=[9], priority_by_name=PRIORITY,
+                                 fsn={1008: fsn[1002]})  # fmt: skip
+    assert [c.action for c in p2.cells] == [rr.ACT_REMOVE]
+
+
+@pytest.mark.unit
+def test_the_digest_pins_the_fsn_accession_and_leaves_other_families_unchanged():
+    import hashlib
+    import json as _json
+
+    def cell(action, **kw):
+        return rr.CellPlan(family="x", rule_id=rr.RULE_PER_SHARE, canonical_fact_id=1, company_id=1,
+                           canonical_concept_id=CC_B, concept="basic_eps", period_id=1, period_end=date(2019, 12, 31),
+                           stored_value=Decimal("1"), source_fact_ids=(5,), retired_source_ids=(5,), action=action,
+                           **kw)  # fmt: skip
+
+    plain = rr.Plan("A_ratio_derived", rr.RULE_RATIO, cells=[cell(rr.ACT_REPLACE, replacement_fact_id=9,
+                                                                   replacement_value=Decimal("2"))])  # fmt: skip
+    old_payload = {"rule": rr.RULE_RATIO, "facts": [], "promote": [], "supersede": [],
+                   "cells": [(1, rr.ACT_REPLACE, [], None, 9, "2", "1", [5])]}  # fmt: skip
+    assert (
+        plain.digest()
+        == hashlib.sha256(
+            _json.dumps(old_payload, sort_keys=True, default=str).encode()
+        ).hexdigest()
+    )
+    a = rr.Plan("C", rr.RULE_PER_SHARE, cells=[cell(rr.ACT_REPLACE_FSN, replacement_value=Decimal("2"),
+                                                     replacement_accession="acc-1", note="loc")])  # fmt: skip
+    b = rr.Plan("C", rr.RULE_PER_SHARE, cells=[cell(rr.ACT_REPLACE_FSN, replacement_value=Decimal("2"),
+                                                     replacement_accession="acc-2", note="loc")])  # fmt: skip
+    assert a.digest() != b.digest()
+
+
+@pytest.mark.unit
+def test_fsn_outcomes_loader_names_the_fsn_period_of_the_filing(tmp_path):
+    f = tmp_path / "o.json"
+    f.write_text('[{"canonical_fact_id": 7, "outcome": "replace_with_fsn_value", "filed": "20200210"},'
+                 ' {"canonical_fact_id": 8, "outcome": "replace_with_fsn_value", "filed": "20251103"},'
+                 ' {"canonical_fact_id": 9, "outcome": "not_in_fsn"}]')  # fmt: skip
+    got = rr.load_fsn_outcomes(f)
+    assert (got[7]["fsn_period"], got[8]["fsn_period"], "fsn_period" in got[9]) == (
+        "2020q1",
+        "2025m11",
+        False,
+    )

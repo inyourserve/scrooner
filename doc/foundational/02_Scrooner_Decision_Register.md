@@ -99,6 +99,34 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
 
 - **yfinance sector/industry: promoted from dev-tool-only to a stored, production-facing reference field (decided 2026-09-06, explicit founder direction, supersedes `doc/planning/y-finance.md`'s original recommendation).** The original doc recommended yfinance for dev-time prototyping and offline cross-checks only, never stored or shown to a user, citing Yahoo's own personal-use-only terms with no commercial tier to license around (unlike FMP). That recommendation is superseded for this one use: `core.company.y_sector`/`y_industry` (migration `0044`, `company_master/yfinance_industry.py`) are now real, persisted columns, backfilled for the full active population and usable in production features (starting with peer comparison) — kept strictly separate from `core.company.sector`/`sector_reason` (the SIC-derived taxonomy), never merged. The founder made this call knowingly, after the tradeoff was surfaced directly (Yahoo ToS risk vs. peer-comparison quality) — this is a deliberate risk acceptance, not an oversight. Revisit if Yahoo's terms enforcement changes, or before any B2B/API redistribution of this field.
 
+- **Founder data decisions of 2026-11-04** (relayed to the release manager by scrooner-0f, the chief of staff, as the founder's decisions; the release manager did not hear them directly). They bind the top-1000 data programme:
+  1. **SEC request budget:** no cap. The 4 requests per second limit and the sec.gov-only rule stay.
+  2. **Q4 dividends per share** may be derived as the filed full-year value minus the filed nine-month value on the same share basis. Never-derive still applies to EPS.
+  3. **Capex** includes leased fleets, capitalized software, the discontinued-operations block, turnarounds, REIT tenant improvements and construction in progress. It excludes oil and gas property and acreage acquisitions.
+  4. **Buybacks** are cash repurchases of the company's own common stock. They exclude tax-withholding shares, excise tax, employee-plan purchases, option-exercise items, subsidiary buybacks and share swaps.
+  5. **Total debt** includes finance leases disclosed in the notes.
+
+- **Founder decision of 2026-11-04: development phase, rebuild instead of patch (corrected the same day)** (relayed to the release manager by scrooner-0f, the chief of staff, as the founder's decision and correction; the release manager did not hear them directly). The hybrid build replaces the old mapping and its values in `canonical_fact` for the 1,000 companies. Values are rebuilt from the FSN filing structure and each cell is proven on its own. **There is no old-table fallback and no switch view.** An earlier version of this entry described a new `canonical_fact_v2` table, the old table kept as a fallback and a view that switches between them; the founder corrected that. The per-family patch release packages are superseded, and no new patch packages are landed. Packages already on main stay as records and the ones already applied stay applied.
+
+
+- **Founder decision of 2026-11-01: company-wise FSN statement store** (approved by the founder to scrooner-ca, the chief of staff, and relayed to the release approver; the approver did not hear it directly). Design: `data-team/strategy/FSN-STORE-DESIGN-2026-11-01.md`. It is how the rebuild-instead-of-patch decision above is carried out:
+  1. Every 10-K/10-Q since 2014 in the FSN set is loaded into a new `fsn` schema (migration 0118). The load is per company and runs in one transaction per company. Each print is a separate vintage row, and nothing is overwritten or marked current.
+  2. Lines map to canonical concepts by standard tag, then by calculation position for custom tags. A label may demote a line but never promote it. A combined line is never mapped as a single concept.
+  3. The winner for a cell is the latest accepted print whose column passes every filing check. If the latest print fails a check, the cell is blank with a reason. It never falls back to an older vintage.
+  4. A quarter with no printed 3-month column is derived only when its inputs share an accounting basis (no restatement break between them plus a re-print witness). Otherwise it is a reasoned blank. EPS and instants are never derived.
+  5. `analytics.canonical_fact` stays the serving table, with no view and no fallback. A company is written only when all seven completion conditions in design §5 hold. Migration 0119 then makes `fsn_cells` that company's only writer, so the nightly job can no longer overwrite it.
+  6. This retires each lane's own whole-cohort FSN pass and quarter derivation, `materialize_fsn_fact`, `unrestated_single_value` and migration 0101 (left unapplied).
+  7. Production steps need three separate founder authorizations, typed in the release approver's session: (1) migrations 0117/0118/0119; (2) the MSFT and HD pilot; (3) the 1,000-company cohort.
+
+
+- **Founder ruling of 2026-11-01: sector templates and 100% coverage** (typed by the founder in scrooner-ca, the chief of staff's session, and relayed to the release approver; the approver did not hear it directly). In the founder's words: "I don't want blank cells. If a sector's companies don't report a field, set different templates sector-wise, but keep 100% coverage." It amends the company-wise FSN statement store entry above:
+  1. A field is shown for a company only if its sector template includes that field, and every displayed cell has a value.
+  2. Coverage is valued cells ÷ template cells, with a target of 100%. This replaces the 95% bar in gates G2 (MSFT and HD at 100% of their template) and G3 (the top 100 at 100%).
+  3. A line the company prints combined with others (for example D&A inside another line) is shown as the company's own combined line in its template, never as a blank, and never mapped as a single concept.
+  4. Periods before a company's first filing or IPO are outside its window and are not cells.
+  5. Any other blank is a defect to fix: derive it under SAME_BASIS, release it after the Verifier, or capture it from the filing. A blank is never a resting state.
+  6. The target does not loosen any correctness rule: never fabricate a value, never fall back to an older vintage, never derive EPS or instants, and pass every filing check. Until a defect is fixed, the cell stays blank with its reason and the company does not pass the gate.
+
 ## Rejected or deferred directions
 
 | **Item**                           | **Disposition**   | **Revisit trigger**                                        |

@@ -1,0 +1,9663 @@
+[
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "170000000.0000",
+  "prod_value": "125000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "125000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "45000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "6591000.0000",
+  "prod_value": "5640000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures, net of reimbursements",
+    "ppe",
+    "5640000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "951000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "2121000000.0000",
+  "prod_value": "404000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1717000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "404000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1308547,
+  "ticker": "DLB",
+  "end": "2015-03-31",
+  "qtrs": 2,
+  "release_value": "78491000.0000",
+  "prod_value": "78488000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "78491000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "6416000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 922224,
+  "ticker": "PPL",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "942000000.0000",
+  "prod_value": "833000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property, plant and equipment",
+    "ppe",
+    "942000000.0000"
+   ],
+   [
+    "Expenditures for intangible assets",
+    "intangible",
+    "20000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "96800000.0000",
+  "prod_value": "34400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "62400000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "34400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2015-03-31",
+  "qtrs": 1,
+  "release_value": "46574000.0000",
+  "prod_value": "3783000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Furniture, Computer Hardware and Leasehold Impro",
+    "ppe",
+    "3783000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "42791000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "706000000.0000",
+  "prod_value": "654000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "706000000.0000"
+   ],
+   [
+    "Increase in collaboration intangible assets",
+    "intangible",
+    "247000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "12476000.0000",
+  "prod_value": "10750000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures, net of reimbursements",
+    "ppe",
+    "10750000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "1726000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "321000000.0000",
+  "prod_value": "219000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "220000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "101000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1308547,
+  "ticker": "DLB",
+  "end": "2015-06-30",
+  "qtrs": 3,
+  "release_value": "119787000.0000",
+  "prod_value": "119769000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "119787000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "22716000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "3566000000.0000",
+  "prod_value": "417000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "3149000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "417000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "100722000.0000",
+  "prod_value": "201661000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "100722000.0000"
+   ],
+   [
+    "Purchase of intangibles",
+    "intangible",
+    "50607000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "80692000.0000",
+  "prod_value": "5214000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Furniture, Computer Hardware and Leasehold Impro",
+    "ppe",
+    "5214000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "75478000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2015-06-30",
+  "qtrs": 2,
+  "release_value": "168800000.0000",
+  "prod_value": "64800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "104000000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "64800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1108524,
+  "ticker": "CRM",
+  "end": "2015-07-31",
+  "qtrs": 2,
+  "release_value": "561346000.0000",
+  "prod_value": "135970000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of 50 Fremont land and building",
+    "ppe",
+    "425376000.0000"
+   ],
+   [
+    "Capital expenditures",
+    "ppe",
+    "135970000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 23217,
+  "ticker": "CAG",
+  "end": "2015-08-31",
+  "qtrs": 1,
+  "release_value": "108000000.0000",
+  "prod_value": "101600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "108000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "10400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "472000000.0000",
+  "prod_value": "293000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "297000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "175000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "4759000000.0000",
+  "prod_value": "530000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "4229000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "530000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "42391000.0000",
+  "prod_value": "39594000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "42391000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "11114000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "99519000.0000",
+  "prod_value": "9977000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Furniture, Computer Hardware and Leasehold Impro",
+    "ppe",
+    "9977000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "89542000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "381689000.0000",
+  "prod_value": "356094000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "334951000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "46738000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "257729000.0000",
+  "prod_value": "342429000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "257729000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "63277000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "304600000.0000",
+  "prod_value": "118600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "186000000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "118600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2015-09-30",
+  "qtrs": 3,
+  "release_value": "15807000.0000",
+  "prod_value": "13699000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures, net of reimbursements",
+    "ppe",
+    "13699000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "2108000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1108524,
+  "ticker": "CRM",
+  "end": "2015-10-31",
+  "qtrs": 3,
+  "release_value": "641387000.0000",
+  "prod_value": "216011000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of 50 Fremont land and building",
+    "ppe",
+    "425376000.0000"
+   ],
+   [
+    "Capital expenditures",
+    "ppe",
+    "216011000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1308547,
+  "ticker": "DLB",
+  "end": "2015-09-30",
+  "qtrs": 4,
+  "release_value": "157552000.0000",
+  "prod_value": "157526000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "157552000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "37416000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 23217,
+  "ticker": "CAG",
+  "end": "2015-11-30",
+  "qtrs": 2,
+  "release_value": "176700000.0000",
+  "prod_value": "110400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "176700000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "10400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "6415000000.0000",
+  "prod_value": "1107000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "5308000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "1107000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "663000000.0000",
+  "prod_value": "383000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "388000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "275000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "19102000.0000",
+  "prod_value": "16149000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures, net of reimbursements",
+    "ppe",
+    "16149000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "2953000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "1954500000.0000",
+  "prod_value": "1813900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1813900000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "140600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "265378000.0000",
+  "prod_value": "169419000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of Fixed Assets",
+    "ppe",
+    "169419000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "95959000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "368405000.0000",
+  "prod_value": "178000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "368405000.0000"
+   ],
+   [
+    "Purchase of intangibles",
+    "intangible",
+    "60346000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1334036,
+  "ticker": "CROX",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "12826000.0000",
+  "prod_value": "18486000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Cash paid for purchases of property and equipment",
+    "ppe",
+    "12826000.0000"
+   ],
+   [
+    "Cash paid for intangible assets",
+    "intangible",
+    "5660000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "434100000.0000",
+  "prod_value": "167700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "266400000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "167700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "497214000.0000",
+  "prod_value": "698437000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "432715000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "64499000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1110803,
+  "ticker": "ILMN",
+  "end": "2015-12-31",
+  "qtrs": 4,
+  "release_value": "142847000.0000",
+  "prod_value": "143000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "142847000.0000"
+   ],
+   [
+    "Cash paid for intangible assets",
+    "intangible",
+    "400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1108524,
+  "ticker": "CRM",
+  "end": "2016-01-31",
+  "qtrs": 4,
+  "release_value": "709852000.0000",
+  "prod_value": "284476000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of 50 Fremont land and building",
+    "ppe",
+    "425376000.0000"
+   ],
+   [
+    "Capital expenditures",
+    "ppe",
+    "284476000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 23217,
+  "ticker": "CAG",
+  "end": "2016-02-29",
+  "qtrs": 3,
+  "release_value": "279700000.0000",
+  "prod_value": "171100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "279700000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "10400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "627000.0000",
+  "prod_value": "265000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures, net of reimbursements",
+    "ppe",
+    "265000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "362000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "167000000.0000",
+  "prod_value": "89000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "94000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "73000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "15212000.0000",
+  "prod_value": "14251000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "15212000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "1714000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "2376000000.0000",
+  "prod_value": "1627000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "749000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "1627000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1178670,
+  "ticker": "ALNY",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "11816000.0000",
+  "prod_value": "2759000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "2759000.0000"
+   ],
+   [
+    "Deposit for manufacturing facility",
+    "ppe",
+    "9057000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "96222000.0000",
+  "prod_value": "96000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "96222000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "14365000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1596532,
+  "ticker": "ANET",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "7962000.0000",
+  "prod_value": "8632000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "7962000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "670000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "73000000.0000",
+  "prod_value": "57000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "57000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "16000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "2427000.0000",
+  "prod_value": "1470000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "1470000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "957000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "101779000.0000",
+  "prod_value": "87119000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "74370000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "27409000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2016-03-31",
+  "qtrs": 1,
+  "release_value": "112700000.0000",
+  "prod_value": "27600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "85100000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "27600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 910521,
+  "ticker": "DECK",
+  "end": "2016-03-31",
+  "qtrs": 4,
+  "release_value": "65356000.0000",
+  "prod_value": "66186000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "65356000.0000"
+   ],
+   [
+    "Purchases of tangible, intangible, and other assets, net",
+    "intangible",
+    "4700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 23217,
+  "ticker": "CAG",
+  "end": "2016-05-31",
+  "qtrs": 4,
+  "release_value": "429800000.0000",
+  "prod_value": "277500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "429800000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "10400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1032975,
+  "ticker": "LOGI",
+  "end": "2016-06-30",
+  "qtrs": 1,
+  "release_value": "7420000.0000",
+  "prod_value": "8135000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "7420000.0000"
+   ],
+   [
+    "Purchase of other intangible asset",
+    "intangible",
+    "715000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 911177,
+  "ticker": "CWST",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "23498000.0000",
+  "prod_value": "23460000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Acquisition related additions to property, plant and equipme",
+    "ppe",
+    "38000.0000"
+   ],
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "23460000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "302000000.0000",
+  "prod_value": "162000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "161000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "141000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2015-06-30",
+  "qtrs": 1,
+  "release_value": "1445000000.0000",
+  "prod_value": "13000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1432000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "13000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2016-06-30",
+  "qtrs": 1,
+  "release_value": "500000000.0000",
+  "prod_value": "11000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "489000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "11000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "2876000000.0000",
+  "prod_value": "1638000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1238000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "1638000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2016-06-30",
+  "qtrs": 1,
+  "release_value": "364100000.0000",
+  "prod_value": "352500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "352500000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "11600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "781300000.0000",
+  "prod_value": "744300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "744300000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "37000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "4974000.0000",
+  "prod_value": "3784000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "3784000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "1190000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "179893000.0000",
+  "prod_value": "25000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "179893000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "31434000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "174000000.0000",
+  "prod_value": "140000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "140000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "34000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "33393000.0000",
+  "prod_value": "31294000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "33393000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "3321000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1300514,
+  "ticker": "LVS",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "706146000.0000",
+  "prod_value": "706000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "706146000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "47315000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "209929000.0000",
+  "prod_value": "197948000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "162381000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "47548000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1596532,
+  "ticker": "ANET",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "12042000.0000",
+  "prod_value": "12739000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "12042000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "697000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "231000000.0000",
+  "prod_value": "73700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "157300000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "73700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "622000000.0000",
+  "prod_value": "442000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "622000000.0000"
+   ],
+   [
+    "Purchases of emission allowances",
+    "intangible",
+    "27000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1232524,
+  "ticker": "JAZZ",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "4173000.0000",
+  "prod_value": "6028000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "4173000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "150000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "303000000.0000",
+  "prod_value": "260000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "260000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "43000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2015-09-30",
+  "qtrs": 1,
+  "release_value": "1193000000.0000",
+  "prod_value": "113000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1080000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "113000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2016-09-30",
+  "qtrs": 1,
+  "release_value": "424000000.0000",
+  "prod_value": "3000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "421000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "3000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "3300000000.0000",
+  "prod_value": "1641000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1659000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "1641000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "405000000.0000",
+  "prod_value": "222000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "218000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "187000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1596532,
+  "ticker": "ANET",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "15787000.0000",
+  "prod_value": "16484000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "15787000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "697000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 911177,
+  "ticker": "CWST",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "37473000.0000",
+  "prod_value": "37435000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Acquisition related additions to property, plant and equipme",
+    "ppe",
+    "38000.0000"
+   ],
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "37435000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "898000000.0000",
+  "prod_value": "659000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "898000000.0000"
+   ],
+   [
+    "Purchases of emission allowances",
+    "intangible",
+    "32000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1300514,
+  "ticker": "LVS",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "1103240000.0000",
+  "prod_value": "1103000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1103240000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "47315000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "9765000.0000",
+  "prod_value": "8177000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "8177000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "1588000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "345323000.0000",
+  "prod_value": "333501000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "288175000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "57148000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1110803,
+  "ticker": "ILMN",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "178353000.0000",
+  "prod_value": "178000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "178353000.0000"
+   ],
+   [
+    "Cash paid for intangible assets",
+    "intangible",
+    "11490000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1232524,
+  "ticker": "JAZZ",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "6555000.0000",
+  "prod_value": "8410000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "6555000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "150000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "290560000.0000",
+  "prod_value": "44000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "290560000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "38608000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "663000.0000",
+  "prod_value": "591000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "591000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "72000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1604028,
+  "ticker": "WMS",
+  "end": "2016-12-31",
+  "qtrs": 3,
+  "release_value": "40620000.0000",
+  "prod_value": "36504000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "36504000.0000"
+   ],
+   [
+    "Purchases of property, plant and equipment through financing",
+    "ppe",
+    "4116000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1110803,
+  "ticker": "ILMN",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "259891000.0000",
+  "prod_value": "260000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "259891000.0000"
+   ],
+   [
+    "Cash paid for intangible assets",
+    "intangible",
+    "11490000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "3971000000.0000",
+  "prod_value": "849000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2330000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "1641000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "510000000.0000",
+  "prod_value": "451000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "451000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "59000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "64785000.0000",
+  "prod_value": "62663000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "62663000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "2122000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "519000000.0000",
+  "prod_value": "293000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "293000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "226000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "54700000.0000",
+  "prod_value": "30900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "30900000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "23800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "1244000000.0000",
+  "prod_value": "544000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1244000000.0000"
+   ],
+   [
+    "Purchases of emission allowances, net of proceeds",
+    "intangible",
+    "1000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1232524,
+  "ticker": "JAZZ",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "7832000.0000",
+  "prod_value": "9687000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "150000000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "7832000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "1930600000.0000",
+  "prod_value": "1821100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1821100000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "109500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "453912000.0000",
+  "prod_value": "454360000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "379067000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "74845000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1334036,
+  "ticker": "CROX",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "13233000.0000",
+  "prod_value": "22194000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Cash paid for purchases of property and equipment",
+    "ppe",
+    "13233000.0000"
+   ],
+   [
+    "Cash paid for intangible assets",
+    "intangible",
+    "8961000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "2895000.0000",
+  "prod_value": "1988000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "1988000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "907000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "37500000.0000",
+  "prod_value": "10200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "10200000.0000"
+   ],
+   [
+    "Payments to Acquire Productive Assets",
+    "ppe",
+    "27300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "75000000.0000",
+  "prod_value": "52000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "52000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "23000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "268000000.0000",
+  "prod_value": "236000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "268000000.0000"
+   ],
+   [
+    "Purchases of emission allowances",
+    "intangible",
+    "9000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "80000000.0000",
+  "prod_value": "64000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "64000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "16000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "767000000.0000",
+  "prod_value": "20000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "747000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "20000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 911177,
+  "ticker": "CWST",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "8692000.0000",
+  "prod_value": "8634000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Acquisition related additions to property, plant and equipme",
+    "ppe",
+    "58000.0000"
+   ],
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "8634000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "225324000.0000",
+  "prod_value": "222717000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "204457000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "20867000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "430800000.0000",
+  "prod_value": "427700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "427700000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "3100000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "21561000.0000",
+  "prod_value": "21384000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "21384000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "177000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "129500000.0000",
+  "prod_value": "43100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "86400000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "43100000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "423000.0000",
+  "prod_value": "397000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "397000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "26000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1334036,
+  "ticker": "CROX",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "3243000.0000",
+  "prod_value": "5410000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Cash paid for purchases of property and equipment",
+    "ppe",
+    "3243000.0000"
+   ],
+   [
+    "Cash paid for intangible assets",
+    "intangible",
+    "2167000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1604028,
+  "ticker": "WMS",
+  "end": "2017-03-31",
+  "qtrs": 4,
+  "release_value": "51296000.0000",
+  "prod_value": "46676000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "46676000.0000"
+   ],
+   [
+    "Purchase of property, plant and equipment through financing",
+    "ppe",
+    "4620000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "64000000.0000",
+  "prod_value": "17900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "17900000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "46100000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "162000000.0000",
+  "prod_value": "126000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "126000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "36000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "143000000.0000",
+  "prod_value": "111000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "111000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "32000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "1501000000.0000",
+  "prod_value": "33000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1468000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "33000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2017-06-30",
+  "qtrs": 1,
+  "release_value": "734000000.0000",
+  "prod_value": "13000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "721000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "13000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "49350000.0000",
+  "prod_value": "48239000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "48239000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "1111000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "370672000.0000",
+  "prod_value": "417399000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "328929000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "41743000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2017-06-30",
+  "qtrs": 1,
+  "release_value": "383700000.0000",
+  "prod_value": "368700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "368700000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "15000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "814500000.0000",
+  "prod_value": "796400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "796400000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "18100000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "246400000.0000",
+  "prod_value": "73800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "172600000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "73800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2016-06-30",
+  "qtrs": 2,
+  "release_value": "38000.0000",
+  "prod_value": "24000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "24000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "14000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "18957000.0000",
+  "prod_value": "18583000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "18583000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "374000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "27000000.0000",
+  "prod_value": "99000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "27000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "22000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1418135,
+  "ticker": "KDP",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "85000000.0000",
+  "prod_value": "45000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "85000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "5000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "259000000.0000",
+  "prod_value": "213000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "213000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "46000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "89100000.0000",
+  "prod_value": "26700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "26700000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "62400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2017-09-30",
+  "qtrs": 1,
+  "release_value": "741000000.0000",
+  "prod_value": "6000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "735000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "6000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "2242000000.0000",
+  "prod_value": "39000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2203000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "39000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2017-09-30",
+  "qtrs": 1,
+  "release_value": "437700000.0000",
+  "prod_value": "416900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "416900000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "20800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "1252200000.0000",
+  "prod_value": "1213300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1213300000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "38900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "760000000.0000",
+  "prod_value": "172000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "760000000.0000"
+   ],
+   [
+    "Purchases of emission allowances",
+    "intangible",
+    "47000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "208000000.0000",
+  "prod_value": "155000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Renewals and replacements",
+    "ppe",
+    "155000000.0000"
+   ],
+   [
+    "Redevelopment and acquisition-related investments",
+    "ppe",
+    "53000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "71890000.0000",
+  "prod_value": "70849000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "70849000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "1041000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "365500000.0000",
+  "prod_value": "109800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "255700000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "109800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2016-09-30",
+  "qtrs": 3,
+  "release_value": "2958000000.0000",
+  "prod_value": "2877000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2877000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "81000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "51000000.0000",
+  "prod_value": "139000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "51000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "29000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1334036,
+  "ticker": "CROX",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "6553000.0000",
+  "prod_value": "14263000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Cash paid for purchases of property and equipment",
+    "ppe",
+    "6553000.0000"
+   ],
+   [
+    "Cash paid for intangible assets",
+    "intangible",
+    "7710000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "118775000.0000",
+  "prod_value": "118369000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "118369000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "406000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "597830000.0000",
+  "prod_value": "634587000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "517270000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "80560000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "2014000000.0000",
+  "prod_value": "1556000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2014000000.0000"
+   ],
+   [
+    "Increase in collaboration intangible assets",
+    "intangible",
+    "380000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "419000000.0000",
+  "prod_value": "358000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "358000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "61000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "2805000000.0000",
+  "prod_value": "44000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2759000000.0000"
+   ],
+   [
+    "Acquisitions of property, equipment and businesses",
+    "ppe",
+    "46000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "1930700000.0000",
+  "prod_value": "1853700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1853700000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "77000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "98122000.0000",
+  "prod_value": "97070000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of Fixed Assets",
+    "ppe",
+    "97070000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "1052000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "119000000.0000",
+  "prod_value": "439000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "119000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "50000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1552275,
+  "ticker": "SUN",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "103000000.0000",
+  "prod_value": "177000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "103000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "39000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "493000000.0000",
+  "prod_value": "156000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "337000000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "156000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "116900000.0000",
+  "prod_value": "33300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "33300000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "83600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "820261000.0000",
+  "prod_value": "872958000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "699445000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "120816000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2017-12-31",
+  "qtrs": 4,
+  "release_value": "173941000.0000",
+  "prod_value": "173535000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "173535000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "406000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "34000000.0000",
+  "prod_value": "7500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "7500000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "26500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1418135,
+  "ticker": "KDP",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "41000000.0000",
+  "prod_value": "20000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "41000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "3000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "81000000.0000",
+  "prod_value": "61000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "61000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "20000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "838000000.0000",
+  "prod_value": "6000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "832000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "6000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "358000000.0000",
+  "prod_value": "155000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "358000000.0000"
+   ],
+   [
+    "Purchases of emission allowances",
+    "intangible",
+    "17000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "220754000.0000",
+  "prod_value": "235688000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "183422000.0000"
+   ],
+   [
+    "Expenditures for midstream and other property and equipment",
+    "ppe",
+    "37332000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2017-03-31",
+  "qtrs": 1,
+  "release_value": "792000000.0000",
+  "prod_value": "754000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "754000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "38000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "804000000.0000",
+  "prod_value": "776000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "776000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "28000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "60000000.0000",
+  "prod_value": "39000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "39000000.0000"
+   ],
+   [
+    "Solar development expenditures",
+    "ppe",
+    "21000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "2037000.0000",
+  "prod_value": "1911000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "1911000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "126000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "576500000.0000",
+  "prod_value": "552800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "552800000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "23700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "87100000.0000",
+  "prod_value": "26700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "60400000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "26700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 764065,
+  "ticker": "CLF",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "114400000.0000",
+  "prod_value": "42100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "42100000.0000"
+   ],
+   [
+    "Deposits for property, plant and equipment",
+    "ppe",
+    "72300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "178000000.0000",
+  "prod_value": "144000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "144000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "34000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "72400000.0000",
+  "prod_value": "13700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "13700000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "58700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2018-06-30",
+  "qtrs": 1,
+  "release_value": "612000000.0000",
+  "prod_value": "10000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "602000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "10000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "1269000000.0000",
+  "prod_value": "16000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1253000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "16000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "1998000.0000",
+  "prod_value": "14000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures",
+    "ppe",
+    "14000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "1984000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2018-06-30",
+  "qtrs": 1,
+  "release_value": "622900000.0000",
+  "prod_value": "611300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "611300000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "11600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "1199400000.0000",
+  "prod_value": "1164100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1164100000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "35300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "691000000.0000",
+  "prod_value": "282000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "691000000.0000"
+   ],
+   [
+    "Purchases of emission allowances",
+    "intangible",
+    "22000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 352541,
+  "ticker": "LNT",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "733300000.0000",
+  "prod_value": "699600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Utility business construction and acquisition expenditures",
+    "ppe",
+    "699600000.0000"
+   ],
+   [
+    "Other construction and acquisition expenditures",
+    "ppe",
+    "33700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "1617000000.0000",
+  "prod_value": "1549000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1549000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "68000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "1632000000.0000",
+  "prod_value": "1586000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1586000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "46000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "501155000.0000",
+  "prod_value": "468665000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "421595000.0000"
+   ],
+   [
+    "Expenditures for midstream and other property and equipment",
+    "ppe",
+    "79560000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "179800000.0000",
+  "prod_value": "53700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "126100000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "53700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2017-06-30",
+  "qtrs": 2,
+  "release_value": "159000000.0000",
+  "prod_value": "63000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "63000000.0000"
+   ],
+   [
+    "Solar development expenditures",
+    "ppe",
+    "96000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "174000000.0000",
+  "prod_value": "153000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "153000000.0000"
+   ],
+   [
+    "Solar development expenditures",
+    "ppe",
+    "21000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "129245000.0000",
+  "prod_value": "128925000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "128925000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "320000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1418135,
+  "ticker": "KDP",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "79000000.0000",
+  "prod_value": "44000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "79000000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "5000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 764065,
+  "ticker": "CLF",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "194700000.0000",
+  "prod_value": "111400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "111400000.0000"
+   ],
+   [
+    "Deposits for property, plant and equipment",
+    "ppe",
+    "83300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "283000000.0000",
+  "prod_value": "238000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "238000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "45000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "125500000.0000",
+  "prod_value": "19900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "19900000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "105600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2018-09-30",
+  "qtrs": 1,
+  "release_value": "744000000.0000",
+  "prod_value": "703800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "703800000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "40200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "1943400000.0000",
+  "prod_value": "1867900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1867900000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "75500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "1228795000.0000",
+  "prod_value": "1232881000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "1106556000.0000"
+   ],
+   [
+    "Expenditures for midstream and other property and equipment",
+    "ppe",
+    "122239000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "318900000.0000",
+  "prod_value": "115200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "203700000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "115200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "2640000000.0000",
+  "prod_value": "2558000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2558000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "82000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2017-09-30",
+  "qtrs": 3,
+  "release_value": "215000000.0000",
+  "prod_value": "86000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "86000000.0000"
+   ],
+   [
+    "Solar development expenditures",
+    "ppe",
+    "129000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "237000000.0000",
+  "prod_value": "209000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "209000000.0000"
+   ],
+   [
+    "Solar development expenditures",
+    "ppe",
+    "28000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 352541,
+  "ticker": "LNT",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "1128000000.0000",
+  "prod_value": "1080200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Utility business construction and acquisition expenditures",
+    "ppe",
+    "1080200000.0000"
+   ],
+   [
+    "Other construction and acquisition expenditures",
+    "ppe",
+    "47800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "135548000.0000",
+  "prod_value": "135215000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "135215000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "333000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2018-09-30",
+  "qtrs": 1,
+  "release_value": "617000000.0000",
+  "prod_value": "19000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "598000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "19000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "1886000000.0000",
+  "prod_value": "35000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1851000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "35000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "345000000.0000",
+  "prod_value": "343000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "345000000.0000"
+   ],
+   [
+    "Purchases of emission allowances",
+    "intangible",
+    "30000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1664703,
+  "ticker": "BE",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "4333000.0000",
+  "prod_value": "24616000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "4333000.0000"
+   ],
+   [
+    "Payments for acquisition of intangible assets",
+    "intangible",
+    "2762000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2018-09-30",
+  "qtrs": 4,
+  "release_value": "138300000.0000",
+  "prod_value": "68100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "68100000.0000"
+   ],
+   [
+    "Expenditures related to multi-family rental properties",
+    "ppe",
+    "70200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2018-12-31",
+  "qtrs": 1,
+  "release_value": "31600000.0000",
+  "prod_value": "20200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "20200000.0000"
+   ],
+   [
+    "Expenditures related to multi-family rental properties",
+    "ppe",
+    "11400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "1902000000.0000",
+  "prod_value": "1467000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1902000000.0000"
+   ],
+   [
+    "Increase in collaboration intangible assets",
+    "intangible",
+    "400000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 764065,
+  "ticker": "CLF",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "296100000.0000",
+  "prod_value": "296000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "208600000.0000"
+   ],
+   [
+    "Deposits for property, plant and equipment",
+    "ppe",
+    "87500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2016-12-31",
+  "qtrs": 4,
+  "release_value": "3917000000.0000",
+  "prod_value": "3804000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "3804000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "113000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "427000000.0000",
+  "prod_value": "368000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "368000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "59000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "105227000.0000",
+  "prod_value": "102664000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of Fixed Assets",
+    "ppe",
+    "102664000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "2563000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "2506000000.0000",
+  "prod_value": "55000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2451000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "55000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "2843400000.0000",
+  "prod_value": "2741700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2741700000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "101700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 352541,
+  "ticker": "LNT",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "1633900000.0000",
+  "prod_value": "1634000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Utility construction and acquisition expenditures",
+    "ppe",
+    "1568300000.0000"
+   ],
+   [
+    "Other construction and acquisition expenditures",
+    "ppe",
+    "65600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "439000000.0000",
+  "prod_value": "162700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "276300000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "162700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "149400000.0000",
+  "prod_value": "29600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "29600000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "119800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 78003,
+  "ticker": "PFE",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "2042000000.0000",
+  "prod_value": "1984000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "2042000000.0000"
+   ],
+   [
+    "Acquisitions of intangible assets",
+    "intangible",
+    "154000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 763901,
+  "ticker": "BPOP",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "89734000.0000",
+  "prod_value": "80549000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Acquisition of premises and equipment",
+    "ppe",
+    "80549000.0000"
+   ],
+   [
+    "Premises and equipment and other productive assets",
+    "ppe",
+    "9185000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "1523586000.0000",
+  "prod_value": "1504659000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "1357802000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "165784000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "150042000.0000",
+  "prod_value": "148946000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "148946000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "1096000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1664703,
+  "ticker": "BE",
+  "end": "2018-12-31",
+  "qtrs": 4,
+  "release_value": "14659000.0000",
+  "prod_value": "45205000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "14659000.0000"
+   ],
+   [
+    "Payments for acquisition of intangible assets",
+    "intangible",
+    "3256000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "28100000.0000",
+  "prod_value": "13900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "13900000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "14200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "59000000.0000",
+  "prod_value": "41000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "41000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "18000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2019-03-31",
+  "qtrs": 2,
+  "release_value": "98100000.0000",
+  "prod_value": "69800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "69800000.0000"
+   ],
+   [
+    "Expenditures related to multi-family rental properties",
+    "ppe",
+    "28300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "16005000.0000",
+  "prod_value": "7677000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "7677000.0000"
+   ],
+   [
+    "Additions to water handling and treatment systems",
+    "ppe",
+    "8328000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "559000000.0000",
+  "prod_value": "10000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "548000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "11000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 352541,
+  "ticker": "LNT",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "406100000.0000",
+  "prod_value": "374000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Utility business construction and acquisition expenditures",
+    "ppe",
+    "374000000.0000"
+   ],
+   [
+    "Other construction and acquisition expenditures",
+    "ppe",
+    "32100000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "19906000.0000",
+  "prod_value": "19455000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of Fixed Assets",
+    "ppe",
+    "19455000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "451000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "216435000.0000",
+  "prod_value": "227850000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "182288000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "33340000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "807000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "1164000000.0000",
+  "prod_value": "1139000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1139000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "25000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "140000000.0000",
+  "prod_value": "22000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including LTSA prepayments",
+    "ppe",
+    "118000000.0000"
+   ],
+   [
+    "Development and growth expenditures",
+    "ppe",
+    "22000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2018-03-31",
+  "qtrs": 1,
+  "release_value": "451000000.0000",
+  "prod_value": "423000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "423000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "28000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "539000000.0000",
+  "prod_value": "442000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "514000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "25000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "101500000.0000",
+  "prod_value": "37800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "63700000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "37800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "524300000.0000",
+  "prod_value": "515300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "515300000.0000"
+   ],
+   [
+    "Purchases of restaurant businesses",
+    "ppe",
+    "9000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1679049,
+  "ticker": "INSW",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "3170000.0000",
+  "prod_value": "2962000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for vessels and vessel improvements",
+    "ppe",
+    "2962000.0000"
+   ],
+   [
+    "Expenditures for other property",
+    "ppe",
+    "208000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1664703,
+  "ticker": "BE",
+  "end": "2019-03-31",
+  "qtrs": 1,
+  "release_value": "8543000.0000",
+  "prod_value": "11946000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "8543000.0000"
+   ],
+   [
+    "Payments for acquisition of intangible assets",
+    "intangible",
+    "848000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2018-06-30",
+  "qtrs": 2,
+  "release_value": "914000000.0000",
+  "prod_value": "868000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "868000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "46000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "830000000.0000",
+  "prod_value": "678000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "830000000.0000"
+   ],
+   [
+    "Increase in collaboration intangible assets",
+    "intangible",
+    "169000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "143000000.0000",
+  "prod_value": "112000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "112000000.0000"
+   ],
+   [
+    "Capital expenditures for timberlands reforestation",
+    "ppe",
+    "31000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318605,
+  "ticker": "TSLA",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "529609000.0000",
+  "prod_value": "530000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment excluding finance leases",
+    "ppe",
+    "529609000.0000"
+   ],
+   [
+    "Purchase of intangible assets",
+    "intangible",
+    "5333000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "58800000.0000",
+  "prod_value": "26200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "26200000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "32600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2019-06-30",
+  "qtrs": 3,
+  "release_value": "161600000.0000",
+  "prod_value": "105300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "105300000.0000"
+   ],
+   [
+    "Expenditures related to multi-family rental properties",
+    "ppe",
+    "56300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "141190000.0000",
+  "prod_value": "89206000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "89206000.0000"
+   ],
+   [
+    "Additions to water handling and treatment systems",
+    "ppe",
+    "51984000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "145114000.0000",
+  "prod_value": "144037000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of Fixed Assets",
+    "ppe",
+    "144037000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "1077000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "416227000.0000",
+  "prod_value": "437488000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "349915000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "64106000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "2206000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "283000000.0000",
+  "prod_value": "36000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including LTSA prepayments",
+    "ppe",
+    "247000000.0000"
+   ],
+   [
+    "Development and growth expenditures",
+    "ppe",
+    "36000000.0000"
+   ],
+   [
+    "Purchases of environmental allowances",
+    "intangible",
+    "138000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2019-06-30",
+  "qtrs": 1,
+  "release_value": "982600000.0000",
+  "prod_value": "597800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "597800000.0000"
+   ],
+   [
+    "Purchases of restaurant and other businesses",
+    "ppe",
+    "384800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "1506900000.0000",
+  "prod_value": "1113100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1113100000.0000"
+   ],
+   [
+    "Purchases of restaurant and other businesses",
+    "ppe",
+    "393800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1145197,
+  "ticker": "PODD",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "91949000.0000",
+  "prod_value": "91900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, equipment",
+    "ppe",
+    "91949000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "4965000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2019-06-30",
+  "qtrs": 1,
+  "release_value": "507000000.0000",
+  "prod_value": "13000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "494000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "13000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "1019000000.0000",
+  "prod_value": "23000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "996000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "23000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1664703,
+  "ticker": "BE",
+  "end": "2019-06-30",
+  "qtrs": 2,
+  "release_value": "18882000.0000",
+  "prod_value": "23619000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "18882000.0000"
+   ],
+   [
+    "Payments for acquisition of intangible assets",
+    "intangible",
+    "970000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "1359000000.0000",
+  "prod_value": "1122000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1359000000.0000"
+   ],
+   [
+    "Increase in collaboration intangible assets",
+    "intangible",
+    "259000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2018-09-30",
+  "qtrs": 3,
+  "release_value": "1527000000.0000",
+  "prod_value": "1445000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1445000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "82000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318220,
+  "ticker": "WCN",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "465209000.0000",
+  "prod_value": "433526000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "433526000.0000"
+   ],
+   [
+    "Capital expenditure for purchase of greenfield landfill site",
+    "ppe",
+    "31683000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "91000000.0000",
+  "prod_value": "37700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "37700000.0000"
+   ],
+   [
+    "Capital project expenditures",
+    "ppe",
+    "53300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "262065000.0000",
+  "prod_value": "170921000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "170921000.0000"
+   ],
+   [
+    "Additions to water handling and treatment systems",
+    "ppe",
+    "91144000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "660720000.0000",
+  "prod_value": "706954000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "536017000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "120792000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "3911000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2019-09-30",
+  "qtrs": 1,
+  "release_value": "589700000.0000",
+  "prod_value": "548700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "548700000.0000"
+   ],
+   [
+    "Purchases of restaurant and other businesses",
+    "ppe",
+    "41000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "2096600000.0000",
+  "prod_value": "1661800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1661800000.0000"
+   ],
+   [
+    "Purchases of restaurant and other businesses",
+    "ppe",
+    "434800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "163825000.0000",
+  "prod_value": "160579000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of Fixed Assets",
+    "ppe",
+    "160579000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "3246000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "441000000.0000",
+  "prod_value": "93000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including LTSA prepayments",
+    "ppe",
+    "348000000.0000"
+   ],
+   [
+    "Development and growth expenditures",
+    "ppe",
+    "93000000.0000"
+   ],
+   [
+    "Purchases of environmental allowances",
+    "intangible",
+    "169000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1145197,
+  "ticker": "PODD",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "114585000.0000",
+  "prod_value": "114600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "114585000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "6390000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2019-09-30",
+  "qtrs": 1,
+  "release_value": "541000000.0000",
+  "prod_value": "536000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "536000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "5000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "1560000000.0000",
+  "prod_value": "1532000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1532000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "28000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1664703,
+  "ticker": "BE",
+  "end": "2019-09-30",
+  "qtrs": 3,
+  "release_value": "23474000.0000",
+  "prod_value": "39690000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "23474000.0000"
+   ],
+   [
+    "Payments for acquisition of intangible assets",
+    "intangible",
+    "1478000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2019-09-30",
+  "qtrs": 4,
+  "release_value": "224100000.0000",
+  "prod_value": "127200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "127200000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "96900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2019-12-31",
+  "qtrs": 1,
+  "release_value": "81200000.0000",
+  "prod_value": "21600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "21600000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "59600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "2256000000.0000",
+  "prod_value": "1868000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2256000000.0000"
+   ],
+   [
+    "Increase in collaboration intangible assets",
+    "intangible",
+    "351000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1300514,
+  "ticker": "LVS",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "1216000000.0000",
+  "prod_value": "1018000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1216000000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "53000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "391990000.0000",
+  "prod_value": "267383000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "267383000.0000"
+   ],
+   [
+    "Additions to water handling systems",
+    "ppe",
+    "124607000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318220,
+  "ticker": "WCN",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "666089000.0000",
+  "prod_value": "634406000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "634406000.0000"
+   ],
+   [
+    "Capital expenditure for purchase of greenfield landfill site",
+    "ppe",
+    "31683000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "207362000.0000",
+  "prod_value": "194569000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of Fixed Assets",
+    "ppe",
+    "194569000.0000"
+   ],
+   [
+    "Development of Oil and Natural Gas Properties",
+    "ppe",
+    "12793000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "1941000000.0000",
+  "prod_value": "31000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1910000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "31000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1373715,
+  "ticker": "NOW",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "264892000.0000",
+  "prod_value": "265000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "264892000.0000"
+   ],
+   [
+    "Purchases of other intangibles",
+    "intangible",
+    "72689000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 920371,
+  "ticker": "SSD",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "32699000.0000",
+  "prod_value": "40176000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "32699000.0000"
+   ],
+   [
+    "Payments to Acquire Intangible Assets",
+    "intangible",
+    "4827000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "2934600000.0000",
+  "prod_value": "2393700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2393700000.0000"
+   ],
+   [
+    "Purchases of restaurant and other businesses",
+    "ppe",
+    "540900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 78003,
+  "ticker": "PFE",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "2176000000.0000",
+  "prod_value": "2046000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "2176000000.0000"
+   ],
+   [
+    "Acquisitions of intangible assets",
+    "intangible",
+    "418000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "520000000.0000",
+  "prod_value": "713000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including LTSA prepayments",
+    "ppe",
+    "520000000.0000"
+   ],
+   [
+    "Purchases of environmental allowances",
+    "intangible",
+    "322000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "925897000.0000",
+  "prod_value": "946025000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "730161000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "192035000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "3701000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 51253,
+  "ticker": "IFF",
+  "end": "2019-12-31",
+  "qtrs": 4,
+  "release_value": "235978000.0000",
+  "prod_value": "236000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "235978000.0000"
+   ],
+   [
+    "Additions to intangible assets",
+    "intangible",
+    "6070000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2020-03-31",
+  "qtrs": 2,
+  "release_value": "160600000.0000",
+  "prod_value": "47600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "47600000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "113000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "67983000.0000",
+  "prod_value": "54659000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "54659000.0000"
+   ],
+   [
+    "Additions to water handling systems",
+    "ppe",
+    "13324000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "248220000.0000",
+  "prod_value": "278595000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "173994000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "73439000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "787000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "400000000.0000",
+  "prod_value": "395000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "395000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "5000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 78003,
+  "ticker": "PFE",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "463000000.0000",
+  "prod_value": "449000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "463000000.0000"
+   ],
+   [
+    "Acquisitions of intangible assets",
+    "intangible",
+    "32000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "412000000.0000",
+  "prod_value": "325000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "412000000.0000"
+   ],
+   [
+    "Increase in collaboration intangible assets",
+    "intangible",
+    "78000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "429000000.0000",
+  "prod_value": "425000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "425000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "4000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2020-03-31",
+  "qtrs": 1,
+  "release_value": "125900000.0000",
+  "prod_value": "40200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "85700000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "40200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1373715,
+  "ticker": "NOW",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "193671000.0000",
+  "prod_value": "194000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "193671000.0000"
+   ],
+   [
+    "Purchases of intangibles",
+    "intangible",
+    "6500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "123414000.0000",
+  "prod_value": "103937000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "103937000.0000"
+   ],
+   [
+    "Additions to water handling systems",
+    "ppe",
+    "19477000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "459817000.0000",
+  "prod_value": "474554000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "335098000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "123338000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "1381000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2020-06-30",
+  "qtrs": 3,
+  "release_value": "220400000.0000",
+  "prod_value": "66800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "66800000.0000"
+   ],
+   [
+    "Payments to Acquire Other Property, Plant, and Equipment",
+    "ppe",
+    "153600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "218500000.0000",
+  "prod_value": "59200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "159300000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "59200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2020-06-30",
+  "qtrs": 1,
+  "release_value": "308000000.0000",
+  "prod_value": "307000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "307000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "1000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "737000000.0000",
+  "prod_value": "732000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "732000000.0000"
+   ],
+   [
+    "Acquisitions of property and equipment",
+    "ppe",
+    "5000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 78003,
+  "ticker": "PFE",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "942000000.0000",
+  "prod_value": "906000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "942000000.0000"
+   ],
+   [
+    "Acquisitions of intangible assets",
+    "intangible",
+    "33000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318220,
+  "ticker": "WCN",
+  "end": "2020-06-30",
+  "qtrs": 2,
+  "release_value": "285161000.0000",
+  "prod_value": "268711000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "268711000.0000"
+   ],
+   [
+    "Capital expenditure for undeveloped landfill property",
+    "ppe",
+    "16450000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 78003,
+  "ticker": "PFE",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "1467000000.0000",
+  "prod_value": "1413000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "1467000000.0000"
+   ],
+   [
+    "Acquisitions of intangible assets",
+    "intangible",
+    "38000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2020-09-30",
+  "qtrs": 4,
+  "release_value": "286800000.0000",
+  "prod_value": "96500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "96500000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "190300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 908255,
+  "ticker": "BWA",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "280000000.0000",
+  "prod_value": "262000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including tooling outlays",
+    "ppe",
+    "262000000.0000"
+   ],
+   [
+    "Capital expenditures for damage to property, plant and equip",
+    "ppe",
+    "18000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1145197,
+  "ticker": "PODD",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "88500000.0000",
+  "prod_value": "78200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "88500000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "8300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1373715,
+  "ticker": "NOW",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "285327000.0000",
+  "prod_value": "285000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "285327000.0000"
+   ],
+   [
+    "Purchases of intangibles",
+    "intangible",
+    "6500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "665729000.0000",
+  "prod_value": "636161000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Oil and natural gas properties capital expenditures",
+    "ppe",
+    "465991000.0000"
+   ],
+   [
+    "Midstream capital expenditures",
+    "ppe",
+    "197942000.0000"
+   ],
+   [
+    "Expenditures for other property and equipment",
+    "ppe",
+    "1796000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "165265000.0000",
+  "prod_value": "137978000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "137978000.0000"
+   ],
+   [
+    "Additions to water handling systems",
+    "ppe",
+    "27287000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318220,
+  "ticker": "WCN",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "487503000.0000",
+  "prod_value": "420694000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "420694000.0000"
+   ],
+   [
+    "Capital expenditure for undeveloped landfill property",
+    "ppe",
+    "66809000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "312600000.0000",
+  "prod_value": "89800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "222800000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "89800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2020-09-30",
+  "qtrs": 3,
+  "release_value": "31141000.0000",
+  "prod_value": "26912000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "26912000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "4229000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "3250000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 50863,
+  "ticker": "INTC",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "14453000000.0000",
+  "prod_value": "14259000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "14259000000.0000"
+   ],
+   [
+    "Additions to held for sale NAND property, plant, and equipme",
+    "ppe",
+    "194000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2020-12-31",
+  "qtrs": 1,
+  "release_value": "102500000.0000",
+  "prod_value": "16300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "16300000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "86200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1373715,
+  "ticker": "NOW",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "419327000.0000",
+  "prod_value": "419000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "419327000.0000"
+   ],
+   [
+    "Purchases of intangibles",
+    "intangible",
+    "13190000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "84940000.0000",
+  "prod_value": "85000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "84940000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "23577000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "196724000.0000",
+  "prod_value": "157931000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "157931000.0000"
+   ],
+   [
+    "Additions to water handling systems",
+    "ppe",
+    "38793000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318220,
+  "ticker": "WCN",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "664561000.0000",
+  "prod_value": "597053000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "597053000.0000"
+   ],
+   [
+    "Capital expenditure for undeveloped landfill property",
+    "ppe",
+    "67508000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 908255,
+  "ticker": "BWA",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "461000000.0000",
+  "prod_value": "441000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including tooling outlays",
+    "ppe",
+    "441000000.0000"
+   ],
+   [
+    "Capital expenditures for damage to property, plant and equip",
+    "ppe",
+    "20000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 78003,
+  "ticker": "PFE",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "2252000000.0000",
+  "prod_value": "2226000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "2252000000.0000"
+   ],
+   [
+    "Acquisitions of intangible assets",
+    "intangible",
+    "539000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1099590,
+  "ticker": "MELI",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "247048000.0000",
+  "prod_value": "247000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "93000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "247048000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2020-12-31",
+  "qtrs": 4,
+  "release_value": "61836000.0000",
+  "prod_value": "56445000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "56445000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "4350000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "5391000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 769397,
+  "ticker": "ADSK",
+  "end": "2021-01-31",
+  "qtrs": 4,
+  "release_value": "91100000.0000",
+  "prod_value": "91000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of developed technologies",
+    "intangible",
+    "4800000.0000"
+   ],
+   [
+    "Capital expenditures",
+    "ppe",
+    "91100000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 50863,
+  "ticker": "INTC",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "4388000000.0000",
+  "prod_value": "3972000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "3972000000.0000"
+   ],
+   [
+    "Additions to held for sale NAND property, plant, and equipme",
+    "ppe",
+    "416000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 769397,
+  "ticker": "ADSK",
+  "end": "2021-04-30",
+  "qtrs": 1,
+  "release_value": "20300000.0000",
+  "prod_value": "20000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "20300000.0000"
+   ],
+   [
+    "Purchases of developed technologies",
+    "intangible",
+    "900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2021-03-31",
+  "qtrs": 2,
+  "release_value": "204400000.0000",
+  "prod_value": "30500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "30500000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "173900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 908255,
+  "ticker": "BWA",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "197000000.0000",
+  "prod_value": "195000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including tooling outlays",
+    "ppe",
+    "195000000.0000"
+   ],
+   [
+    "Capital expenditures for damage to property, plant and equip",
+    "ppe",
+    "2000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1408710,
+  "ticker": "FN",
+  "end": "2021-03-31",
+  "qtrs": 3,
+  "release_value": "29061000.0000",
+  "prod_value": "33269000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "29061000.0000"
+   ],
+   [
+    "Purchase of intangibles",
+    "intangible",
+    "1961000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "28389000.0000",
+  "prod_value": "15059000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "15059000.0000"
+   ],
+   [
+    "Additions to water handling systems",
+    "ppe",
+    "13330000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1099590,
+  "ticker": "MELI",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "112672000.0000",
+  "prod_value": "113000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "7805000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "112672000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "110000000.0000",
+  "prod_value": "25800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "82600000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "27400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "1044000.0000",
+  "prod_value": "606000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures",
+    "ppe",
+    "606000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "438000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "11485000.0000",
+  "prod_value": "12000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "11485000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "4485000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2021-03-31",
+  "qtrs": 1,
+  "release_value": "12693000.0000",
+  "prod_value": "11776000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "11776000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "917000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1835632,
+  "ticker": "MRVL",
+  "end": "2021-04-30",
+  "qtrs": 1,
+  "release_value": "21444000.0000",
+  "prod_value": "21400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of technology licenses",
+    "intangible",
+    "3443000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "21444000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 50863,
+  "ticker": "INTC",
+  "end": "2021-06-30",
+  "qtrs": 2,
+  "release_value": "8256000000.0000",
+  "prod_value": "7574000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "7574000000.0000"
+   ],
+   [
+    "Additions to held for sale NAND property, plant, and equipme",
+    "ppe",
+    "682000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 769397,
+  "ticker": "ADSK",
+  "end": "2021-07-31",
+  "qtrs": 2,
+  "release_value": "36100000.0000",
+  "prod_value": "36000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "36100000.0000"
+   ],
+   [
+    "Purchases of developed technologies",
+    "intangible",
+    "7700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2021-06-30",
+  "qtrs": 3,
+  "release_value": "219900000.0000",
+  "prod_value": "46000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "46000000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "173900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 908255,
+  "ticker": "BWA",
+  "end": "2021-06-30",
+  "qtrs": 2,
+  "release_value": "344000000.0000",
+  "prod_value": "342000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including tooling outlays",
+    "ppe",
+    "342000000.0000"
+   ],
+   [
+    "Capital expenditures for damage to property, plant and equip",
+    "ppe",
+    "2000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1408710,
+  "ticker": "FN",
+  "end": "2021-06-30",
+  "qtrs": 4,
+  "release_value": "42532000.0000",
+  "prod_value": "46060000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "42532000.0000"
+   ],
+   [
+    "Purchase of intangibles",
+    "intangible",
+    "1952000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "end": "2021-06-30",
+  "qtrs": 2,
+  "release_value": "74365000.0000",
+  "prod_value": "51658000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to gathering systems and facilities",
+    "ppe",
+    "51658000.0000"
+   ],
+   [
+    "Additions to water handling systems",
+    "ppe",
+    "22707000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1099590,
+  "ticker": "MELI",
+  "end": "2021-06-30",
+  "qtrs": 2,
+  "release_value": "262780000.0000",
+  "prod_value": "263000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "19543000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "262780000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2021-06-30",
+  "qtrs": 2,
+  "release_value": "205200000.0000",
+  "prod_value": "50400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "150500000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "54700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2021-06-30",
+  "qtrs": 2,
+  "release_value": "24137000.0000",
+  "prod_value": "25000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "24137000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "10407000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2021-06-30",
+  "qtrs": 2,
+  "release_value": "21252000.0000",
+  "prod_value": "19585000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "19585000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "1667000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1835632,
+  "ticker": "MRVL",
+  "end": "2021-07-31",
+  "qtrs": 2,
+  "release_value": "53679000.0000",
+  "prod_value": "53600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of technology licenses",
+    "intangible",
+    "6640000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "53679000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 50863,
+  "ticker": "INTC",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "12697000000.0000",
+  "prod_value": "11579000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "11579000000.0000"
+   ],
+   [
+    "Additions to held for sale NAND property, plant, and equipme",
+    "ppe",
+    "1118000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 769397,
+  "ticker": "ADSK",
+  "end": "2021-10-31",
+  "qtrs": 3,
+  "release_value": "49500000.0000",
+  "prod_value": "50000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "49500000.0000"
+   ],
+   [
+    "Purchases of developed technologies",
+    "intangible",
+    "9600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "end": "2021-09-30",
+  "qtrs": 4,
+  "release_value": "267400000.0000",
+  "prod_value": "93500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Expenditures for property and equipment",
+    "ppe",
+    "93500000.0000"
+   ],
+   [
+    "Expenditures related to rental properties",
+    "ppe",
+    "173900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 908255,
+  "ticker": "BWA",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "496000000.0000",
+  "prod_value": "494000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including tooling outlays",
+    "ppe",
+    "494000000.0000"
+   ],
+   [
+    "Capital expenditures for damage to property, plant and equip",
+    "ppe",
+    "2000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1408710,
+  "ticker": "FN",
+  "end": "2021-09-30",
+  "qtrs": 1,
+  "release_value": "34616000.0000",
+  "prod_value": "32522000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "34616000.0000"
+   ],
+   [
+    "Purchase of intangibles",
+    "intangible",
+    "321000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1099590,
+  "ticker": "MELI",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "424646000.0000",
+  "prod_value": "425000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "29211000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "424646000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "331800000.0000",
+  "prod_value": "94400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "222900000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "108900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "45441000.0000",
+  "prod_value": "45000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "45441000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "24309000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "32885000.0000",
+  "prod_value": "30230000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "30230000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "2655000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1835632,
+  "ticker": "MRVL",
+  "end": "2021-10-31",
+  "qtrs": 3,
+  "release_value": "130483000.0000",
+  "prod_value": "130400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of technology licenses",
+    "intangible",
+    "9371000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "130483000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1874178,
+  "ticker": "RIVN",
+  "end": "2021-09-30",
+  "qtrs": 3,
+  "release_value": "1335000000.0000",
+  "prod_value": "1338000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expendituresproperty, plant, and equipment",
+    "ppe",
+    "1335000000.0000"
+   ],
+   [
+    "Capital expendituresintangible assets",
+    "intangible",
+    "4000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 50863,
+  "ticker": "INTC",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "20329000000.0000",
+  "prod_value": "18733000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "18733000000.0000"
+   ],
+   [
+    "Additions to held for sale NAND property, plant, and equipme",
+    "ppe",
+    "1596000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 908255,
+  "ticker": "BWA",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "668000000.0000",
+  "prod_value": "514000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures, including tooling outlays",
+    "ppe",
+    "666000000.0000"
+   ],
+   [
+    "Capital expenditures for damage to property, plant and equip",
+    "ppe",
+    "2000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1280452,
+  "ticker": "MPWR",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "94445000.0000",
+  "prod_value": "94420000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "94445000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "793000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1046102,
+  "ticker": "RBA",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "9816000.0000",
+  "prod_value": "9800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Property, plant and equipment additions",
+    "ppe",
+    "9816000.0000"
+   ],
+   [
+    "Intangible asset additions",
+    "intangible",
+    "33671000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1099590,
+  "ticker": "MELI",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "572929000.0000",
+  "prod_value": "573000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "36567000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "572929000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "73305000.0000",
+  "prod_value": "74000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "73305000.0000"
+   ],
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "31094000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2021-12-31",
+  "qtrs": 4,
+  "release_value": "50939000.0000",
+  "prod_value": "47728000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "47728000.0000"
+   ],
+   [
+    "Acquisition of product rights and licenses",
+    "intangible",
+    "1700000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "3211000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1835632,
+  "ticker": "MRVL",
+  "end": "2022-01-31",
+  "qtrs": 4,
+  "release_value": "169324000.0000",
+  "prod_value": "169200000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of technology licenses",
+    "intangible",
+    "17797000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "169324000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1046102,
+  "ticker": "RBA",
+  "end": "2022-03-31",
+  "qtrs": 1,
+  "release_value": "2002000.0000",
+  "prod_value": "2000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Property, plant and equipment additions",
+    "ppe",
+    "2002000.0000"
+   ],
+   [
+    "Intangible asset additions",
+    "intangible",
+    "7762000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2022-03-31",
+  "qtrs": 1,
+  "release_value": "92800000.0000",
+  "prod_value": "36400000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "56400000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "36400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "end": "2022-03-31",
+  "qtrs": 1,
+  "release_value": "2421000.0000",
+  "prod_value": "2406000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital project expenditures",
+    "ppe",
+    "2406000.0000"
+   ],
+   [
+    "Capital maintenance expenditures",
+    "ppe",
+    "15000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2022-03-31",
+  "qtrs": 1,
+  "release_value": "12681000.0000",
+  "prod_value": "10793000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "10793000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "1888000.0000"
+   ],
+   [
+    "Acquisition of business",
+    "intangible",
+    "84714000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2022-06-30",
+  "qtrs": 2,
+  "release_value": "197900000.0000",
+  "prod_value": "77300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "120600000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "77300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 797721,
+  "ticker": "VSAT",
+  "end": "2022-06-30",
+  "qtrs": 1,
+  "release_value": "246854000.0000",
+  "prod_value": "270857000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, equipment and satellites",
+    "ppe",
+    "246854000.0000"
+   ],
+   [
+    "Cash paid for patents, licenses and other assets",
+    "intangible",
+    "24003000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1046102,
+  "ticker": "RBA",
+  "end": "2022-06-30",
+  "qtrs": 2,
+  "release_value": "4522000.0000",
+  "prod_value": "4500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Property, plant and equipment additions",
+    "ppe",
+    "4522000.0000"
+   ],
+   [
+    "Intangible asset additions",
+    "intangible",
+    "15730000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2022-06-30",
+  "qtrs": 2,
+  "release_value": "19797000.0000",
+  "prod_value": "15842000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "15842000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "3955000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "10000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2022-09-30",
+  "qtrs": 3,
+  "release_value": "316700000.0000",
+  "prod_value": "124500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "192200000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "124500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 797721,
+  "ticker": "VSAT",
+  "end": "2022-09-30",
+  "qtrs": 2,
+  "release_value": "508068000.0000",
+  "prod_value": "554813000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, equipment and satellites",
+    "ppe",
+    "508068000.0000"
+   ],
+   [
+    "Cash paid for patents, licenses and other assets",
+    "intangible",
+    "46745000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1309108,
+  "ticker": "WEX",
+  "end": "2022-09-30",
+  "qtrs": 3,
+  "release_value": "75476000.0000",
+  "prod_value": "75500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, equipment and capitalized software",
+    "ppe",
+    "75476000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "3338000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1046102,
+  "ticker": "RBA",
+  "end": "2022-09-30",
+  "qtrs": 3,
+  "release_value": "26279000.0000",
+  "prod_value": "26300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Property, plant and equipment additions",
+    "ppe",
+    "26279000.0000"
+   ],
+   [
+    "Intangible asset additions",
+    "intangible",
+    "28225000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2022-09-30",
+  "qtrs": 3,
+  "release_value": "37329000.0000",
+  "prod_value": "34941000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "34941000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "2388000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "41800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 50863,
+  "ticker": "INTC",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "25050000000.0000",
+  "prod_value": "24844000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to property, plant and equipment",
+    "ppe",
+    "24844000000.0000"
+   ],
+   [
+    "Additions to held for sale NAND property, plant, and equipme",
+    "ppe",
+    "206000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 783325,
+  "ticker": "WEC",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "2314900000.0000",
+  "prod_value": "2696900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2314900000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "19200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1590955,
+  "ticker": "PAYC",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "132678000.0000",
+  "prod_value": "132700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "4120000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "132678000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "446200000.0000",
+  "prod_value": "187900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "258300000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "187900000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1309108,
+  "ticker": "WEX",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "112875000.0000",
+  "prod_value": "112900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, equipment and capitalized software",
+    "ppe",
+    "112875000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "3338000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1046102,
+  "ticker": "RBA",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "31972000.0000",
+  "prod_value": "32000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Property, plant and equipment additions",
+    "ppe",
+    "31972000.0000"
+   ],
+   [
+    "Intangible asset additions",
+    "intangible",
+    "39965000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2022-12-31",
+  "qtrs": 4,
+  "release_value": "48795000.0000",
+  "prod_value": "46407000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "46407000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "41800000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "2388000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2023-03-31",
+  "qtrs": 1,
+  "release_value": "129500000.0000",
+  "prod_value": "46700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "82800000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "46700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1097864,
+  "ticker": "ON",
+  "end": "2023-03-31",
+  "qtrs": 1,
+  "release_value": "338200000.0000",
+  "prod_value": "321500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchase of property, plant and equipment",
+    "ppe",
+    "321500000.0000"
+   ],
+   [
+    "Deposits utilized (made) for purchase of property, plant and",
+    "ppe",
+    "16700000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2023-03-31",
+  "qtrs": 1,
+  "release_value": "11399000.0000",
+  "prod_value": "9688000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "9688000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "338000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "1711000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2023-06-30",
+  "qtrs": 2,
+  "release_value": "312300000.0000",
+  "prod_value": "144000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "168300000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "144000000.0000"
+   ],
+   [
+    "Acquisition of intellectual property rights",
+    "intangible",
+    "73300000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1650372,
+  "ticker": "TEAM",
+  "end": "2023-06-30",
+  "qtrs": 4,
+  "release_value": "25652000.0000",
+  "prod_value": "25812000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "160000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "25652000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2023-06-30",
+  "qtrs": 2,
+  "release_value": "22533000.0000",
+  "prod_value": "21691000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "21691000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "1488000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "842000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2023-09-30",
+  "qtrs": 3,
+  "release_value": "461100000.0000",
+  "prod_value": "228300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "232800000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "228300000.0000"
+   ],
+   [
+    "Acquisition of intellectual property rights",
+    "intangible",
+    "86400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2023-09-30",
+  "qtrs": 3,
+  "release_value": "35009000.0000",
+  "prod_value": "33351000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "33351000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "2488000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "1658000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2023-12-31",
+  "qtrs": 4,
+  "release_value": "602800000.0000",
+  "prod_value": "291100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "311700000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "291100000.0000"
+   ],
+   [
+    "Acquisition of intellectual property rights",
+    "intangible",
+    "86400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1590955,
+  "ticker": "PAYC",
+  "end": "2023-12-31",
+  "qtrs": 4,
+  "release_value": "192587000.0000",
+  "prod_value": "192600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "4244000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "192587000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2023-12-31",
+  "qtrs": 4,
+  "release_value": "46801000.0000",
+  "prod_value": "43216000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "43216000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "22388000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "3585000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2024-03-31",
+  "qtrs": 1,
+  "release_value": "137100000.0000",
+  "prod_value": "55100000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "82000000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "55100000.0000"
+   ],
+   [
+    "Acquisition of intellectual property rights",
+    "intangible",
+    "12500000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2024-03-31",
+  "qtrs": 1,
+  "release_value": "10060000.0000",
+  "prod_value": "9198000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "9198000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "9700000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "862000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2024-03-31",
+  "qtrs": 1,
+  "release_value": "766000000.0000",
+  "prod_value": "714000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "714000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "52000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1650372,
+  "ticker": "TEAM",
+  "end": "2024-06-30",
+  "qtrs": 4,
+  "release_value": "32577000.0000",
+  "prod_value": "33112000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of intangible assets",
+    "intangible",
+    "535000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "32577000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2024-06-30",
+  "qtrs": 2,
+  "release_value": "1533000000.0000",
+  "prod_value": "1437000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1437000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "96000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2024-06-30",
+  "qtrs": 2,
+  "release_value": "255000000.0000",
+  "prod_value": "107800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "147200000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "107800000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2024-06-30",
+  "qtrs": 2,
+  "release_value": "20764000.0000",
+  "prod_value": "19824000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "19824000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "10450000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "940000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 883241,
+  "ticker": "SNPS",
+  "end": "2024-10-31",
+  "qtrs": 4,
+  "release_value": "123161000.0000",
+  "prod_value": "139500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment, net",
+    "ppe",
+    "123161000.0000"
+   ],
+   [
+    "Acquisitions, net of cash acquired",
+    "intangible",
+    "156947000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2024-09-30",
+  "qtrs": 3,
+  "release_value": "340700000.0000",
+  "prod_value": "152300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "188400000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "152300000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "119600000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2024-09-30",
+  "qtrs": 3,
+  "release_value": "2330000000.0000",
+  "prod_value": "2173000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2173000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "157000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2024-09-30",
+  "qtrs": 3,
+  "release_value": "37876000.0000",
+  "prod_value": "36769000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "36769000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "14050000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "1107000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2025-09-30",
+  "qtrs": 3,
+  "release_value": "2021000000.0000",
+  "prod_value": "1911000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1911000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "110000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1050446,
+  "ticker": "MSTR",
+  "end": "2025-09-30",
+  "qtrs": 3,
+  "release_value": "34628000.0000",
+  "prod_value": "7628000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of digital assets",
+    "intangible",
+    "19382948000.0000"
+   ],
+   [
+    "Advance deposits on purchases of property and equipment",
+    "ppe",
+    "27000000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "7628000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2025-09-30",
+  "qtrs": 3,
+  "release_value": "375900000.0000",
+  "prod_value": "149700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "226200000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "149700000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "42400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2025-09-30",
+  "qtrs": 3,
+  "release_value": "55674000.0000",
+  "prod_value": "48290000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "48290000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "12514000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "7384000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1050446,
+  "ticker": "MSTR",
+  "end": "2024-12-31",
+  "qtrs": 4,
+  "release_value": "13478000.0000",
+  "prod_value": "2978000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of digital assets",
+    "intangible",
+    "22072759000.0000"
+   ],
+   [
+    "Advance deposits on purchases of property and equipment",
+    "ppe",
+    "10500000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "2978000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2024-12-31",
+  "qtrs": 4,
+  "release_value": "444100000.0000",
+  "prod_value": "203800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "240300000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "203800000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "153000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2024-12-31",
+  "qtrs": 4,
+  "release_value": "60340000.0000",
+  "prod_value": "51924000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "51924000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "14650000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "8416000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2024-12-31",
+  "qtrs": 4,
+  "release_value": "3143000000.0000",
+  "prod_value": "2940000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2940000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "203000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2025-03-31",
+  "qtrs": 1,
+  "release_value": "104300000.0000",
+  "prod_value": "44600000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "59700000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "44600000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "2400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1050446,
+  "ticker": "MSTR",
+  "end": "2025-03-31",
+  "qtrs": 1,
+  "release_value": "8737000.0000",
+  "prod_value": "2737000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of digital assets",
+    "intangible",
+    "7661663000.0000"
+   ],
+   [
+    "Advance deposits on purchases of property and equipment",
+    "ppe",
+    "6000000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "2737000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1232524,
+  "ticker": "JAZZ",
+  "end": "2025-03-31",
+  "qtrs": 1,
+  "release_value": "13881000.0000",
+  "prod_value": "13900000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "25000000.0000"
+   ],
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "13881000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2025-03-31",
+  "qtrs": 1,
+  "release_value": "14122000.0000",
+  "prod_value": "13162000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "13162000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "4200000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "960000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2025-03-31",
+  "qtrs": 1,
+  "release_value": "715000000.0000",
+  "prod_value": "685000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "685000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "30000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1050446,
+  "ticker": "MSTR",
+  "end": "2025-06-30",
+  "qtrs": 2,
+  "release_value": "26831000.0000",
+  "prod_value": "4831000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of digital assets",
+    "intangible",
+    "14430868000.0000"
+   ],
+   [
+    "Advance deposits on purchases of property and equipment",
+    "ppe",
+    "22000000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "4831000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2025-06-30",
+  "qtrs": 2,
+  "release_value": "1415000000.0000",
+  "prod_value": "1347000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "1347000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "68000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2025-06-30",
+  "qtrs": 2,
+  "release_value": "234900000.0000",
+  "prod_value": "94700000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "140200000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "94700000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "32400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1232524,
+  "ticker": "JAZZ",
+  "end": "2025-06-30",
+  "qtrs": 2,
+  "release_value": "26848000.0000",
+  "prod_value": "26800000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "26848000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "25000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1493594,
+  "ticker": "MTSI",
+  "end": "2025-06-30",
+  "qtrs": 3,
+  "release_value": "51082000.0000",
+  "prod_value": "22332000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "22332000.0000"
+   ],
+   [
+    "Purchase of property under financing arrangement",
+    "ppe",
+    "28750000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2025-06-30",
+  "qtrs": 2,
+  "release_value": "40624000.0000",
+  "prod_value": "35992000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "35992000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "5100000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "4632000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2025-12-31",
+  "qtrs": 4,
+  "release_value": "2676000000.0000",
+  "prod_value": "2479000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "2479000000.0000"
+   ],
+   [
+    "Cash flow hedging related to capital expenditures",
+    "ppe",
+    "40000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "157000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1050446,
+  "ticker": "MSTR",
+  "end": "2025-12-31",
+  "qtrs": 4,
+  "release_value": "45212000.0000",
+  "prod_value": "8212000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Advance deposits on purchases of property and equipment",
+    "ppe",
+    "37000000.0000"
+   ],
+   [
+    "Purchases of property and equipment",
+    "ppe",
+    "8212000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318220,
+  "ticker": "WCN",
+  "end": "2025-12-31",
+  "qtrs": 4,
+  "release_value": "1194366000.0000",
+  "prod_value": "1179228000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "1179228000.0000"
+   ],
+   [
+    "Capital expenditures for undeveloped landfill property",
+    "ppe",
+    "15138000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2025-12-31",
+  "qtrs": 4,
+  "release_value": "525000000.0000",
+  "prod_value": "224500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "300500000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "224500000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "52400000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2025-12-31",
+  "qtrs": 4,
+  "release_value": "98843000.0000",
+  "prod_value": "70063000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "70063000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "15514000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant, and equi",
+    "ppe",
+    "28780000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "end": "2026-03-31",
+  "qtrs": 1,
+  "release_value": "524000000.0000",
+  "prod_value": "503000000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures",
+    "ppe",
+    "503000000.0000"
+   ],
+   [
+    "Investment in gas field developments",
+    "ppe",
+    "21000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2026-03-31",
+  "qtrs": 1,
+  "release_value": "113500000.0000",
+  "prod_value": "36300000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "77200000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "36300000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "39000000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2026-03-31",
+  "qtrs": 1,
+  "release_value": "13860000.0000",
+  "prod_value": "8175000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "8175000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "7850000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "5685000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1318220,
+  "ticker": "WCN",
+  "end": "2026-06-30",
+  "qtrs": 2,
+  "release_value": "649998000.0000",
+  "prod_value": "598949000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Capital expenditures for property and equipment",
+    "ppe",
+    "598949000.0000"
+   ],
+   [
+    "Capital expenditures for undeveloped land",
+    "ppe",
+    "51049000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "end": "2026-06-30",
+  "qtrs": 2,
+  "release_value": "253100000.0000",
+  "prod_value": "90500000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Additions to instruments",
+    "ppe",
+    "162600000.0000"
+   ],
+   [
+    "Additions to other property, plant and equipment",
+    "ppe",
+    "90500000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "101200000.0000"
+   ]
+  ]
+ },
+ {
+  "cik": 1723128,
+  "ticker": "AMRX",
+  "end": "2026-06-30",
+  "qtrs": 2,
+  "release_value": "59452000.0000",
+  "prod_value": "38872000",
+  "to": "hold_multi_member_release2",
+  "reason": "multi_member_cell",
+  "members": [
+   [
+    "Purchases of property, plant and equipment",
+    "ppe",
+    "38872000.0000"
+   ],
+   [
+    "Acquisition of intangible assets",
+    "intangible",
+    "85000000.0000"
+   ],
+   [
+    "Deposits for future acquisition of property, plant and equip",
+    "ppe",
+    "20580000.0000"
+   ]
+  ]
+ }
+]

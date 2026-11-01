@@ -268,3 +268,92 @@ def golden() -> None:
 
 if __name__ == "__main__":
     app()
+
+
+@app.command("demote-coregistrant-facts")
+def demote_coregistrant_facts_cmd(
+    ciks: str = typer.Option(
+        ..., help="Comma-separated CIKs of the co-registrants to clean."
+    ),
+    backup_dir: str = typer.Option(
+        None, help="Before-image directory, required when the rule is ON."
+    ),
+    rollback: str = typer.Option(
+        None, "--rollback", help="Restore from this before-image directory instead."
+    ),
+) -> None:
+    """Rule entity.shared_accession_demote_coregistrant_facts@1 (flag OFF by default):
+    a co-registrant's authoritative copies of a combined filing that the
+    shared-accession rule moved to its primary are demoted (never deleted) and
+    the canonical cells they fed are archived with a reason. Off/dry_run plans
+    only; ON applies with a before-image per company; --rollback restores."""
+    from pathlib import Path
+
+    from scrooner_pipeline.normalizer import shared_accession_cleanup as sc
+
+    with get_connection() as conn:
+        if rollback:
+            typer.echo(
+                f"demote-coregistrant-facts rollback: {sc.rollback_run_dir(conn, Path(rollback))}"
+            )
+            return
+        stats = sc.run(
+            conn,
+            _parse_ciks(ciks) or set(),
+            backup_dir=Path(backup_dir) if backup_dir else None,
+        )
+    per = stats.pop("per_company")
+    typer.echo(f"demote-coregistrant-facts: {stats}")
+    for cik, v in sorted(per.items()):
+        typer.echo(f"  {cik}: {v}")
+
+
+@app.command("instance-fallback")
+def instance_fallback_cmd(
+    ciks: str = typer.Option(..., help="Comma-separated CIKs."),
+    fsn_root: str = typer.Option(
+        ".cache/fsn",
+        help="Local cache of FSN periods (downloaded from the fsn-notes bucket on first use).",
+    ),
+    report: str = typer.Option(None, help="JSONL report, one row per missing filing."),
+    backup_dir: str = typer.Option(
+        None, help="Before-image directory, required when the rule is ON."
+    ),
+    rollback: str = typer.Option(
+        None, "--rollback", help="Roll back from this before-image directory instead."
+    ),
+) -> None:
+    """B9, rule ingest.instance_fallback@1 (flag OFF by default): facts for a
+    periodic filing the companyfacts API never carried, built from the filing's
+    FSN rows (current columns only) and written through facts.py with a raw
+    lineage row. Off/dry_run plans and reports; ON applies; --rollback restores."""
+    from pathlib import Path
+
+    from scrooner_pipeline.normalizer import instance_fallback as ib
+
+    import subprocess
+
+    from scrooner_pipeline.collector.storage import SupabaseStorageClient
+
+    git_commit = (
+        subprocess.run(
+            ["git", "rev-parse", "HEAD"], capture_output=True, text=True
+        ).stdout.strip()
+        or None
+    )
+    with get_connection() as conn, SupabaseStorageClient() as storage:
+        if rollback:
+            typer.echo(
+                f"instance-fallback rollback: {ib.rollback_run_dir(conn, Path(rollback))}"
+            )
+            return
+        stats = ib.run(
+            conn,
+            _parse_ciks(ciks) or set(),
+            fsn_root=Path(fsn_root),
+            backup_dir=Path(backup_dir) if backup_dir else None,
+            report_path=Path(report) if report else None,
+            storage=storage,
+            git_commit=git_commit,
+        )
+    typer.echo(f"instance-fallback: {stats}")

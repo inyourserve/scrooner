@@ -223,6 +223,14 @@ def _concept_id(conn: psycopg.Connection, name: str) -> int | None:
         return row[0] if row else None
 
 
+def retroactive_adjustment_active(environ=None) -> bool:
+    """SB-6: OFF once the split re-base / RU-1 pair is ON (share_basis.py is
+    then the only writer of these resolved concepts)."""
+    from scrooner_pipeline.common import rule_flags
+
+    return not rule_flags.per_share_pair_enabled(environ)
+
+
 def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
     """The explicit product/trust decision this module's own docstring
     named as needing confirmation before building: unlike every other
@@ -258,6 +266,15 @@ def resolve_retroactive_split_adjustments(conn: psycopg.Connection) -> dict:
     resolved. Handles a company with MULTIPLE splits over time correctly:
     a period predating two later splits gets divided by the PRODUCT of
     both ratios, not just the nearer one."""
+    if not retroactive_adjustment_active():
+        logger.info(
+            "stock_splits.retroactive_adjustment_skipped", reason="share_basis owns"
+        )
+        return {
+            "concepts": len(RETROACTIVE_ADJUSTMENT_CONCEPTS),
+            "adjusted": 0,
+            "skipped": True,
+        }
     with conn.cursor() as cur:
         cur.execute(
             "select company_id, effective_date, ratio, source_fact_id from analytics.company_stock_split"

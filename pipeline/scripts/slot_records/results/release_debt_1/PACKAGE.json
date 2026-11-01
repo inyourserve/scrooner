@@ -1,0 +1,44 @@
+{
+ "rule_id": "slot.total_debt@1",
+ "registered": "OFF",
+ "family": "balance sheet: total_debt_resolved",
+ "source_cells": {
+  "file": "results/release_debt_1/debt_v4_source_cells.jsonl.gz",
+  "sha256": "61ee0faa2ff4c7d0a2e2f7d29494865f200ddcecf8dc5b291fa5768e35b95e50",
+  "built_from": "results/debt_fsn_pilot_v1/report_v4.json (replay_debt_fsn.py v4)"
+ },
+ "verifier": "verify/debt-v3-2026-11-04: 14/14 (borrowings + note finance leases, no double count); v4 = Verifier's two fixes (MSFT operating-lease member dropped; AMZN finance leases from the note)",
+ "updates": {
+  "cells_file": "debt_release1_updates.jsonl",
+  "sha256": "8f6314999342d82d0330f21fda16c7d61eaf9ebce044c221ad13523aca7de28a",
+  "cells": 221,
+  "companies": 10,
+  "by_difference_class": {
+   "material": 221
+  },
+  "before_image": "debt_release1_updates_before_image.jsonl (221 canonical_fact rows)",
+  "rollback": "debt_release1_updates_rollback.sql (generated, never executed)",
+  "stale_refusal": "debt_release1_updates_stale_check.sql must return zero rows immediately before the write",
+  "excluded_ambiguous_period_match": 0,
+  "precision_notes": "8 cells carry precision_note + precision_accession (lease component from a $0.1B-rounded footnote, \u00b150M; filer's printed figure). Evidence fields only; values, before-image and rollback unchanged (Dhairya option a)."
+ },
+ "flag": {
+  "line": "SCROONER_RULES_ENABLED=slot.total_debt@1",
+  "default": "OFF",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image"
+ },
+ "release1_fills": {
+  "cells_file": "release1_fills_cells.jsonl",
+  "sha256": "96d2bd7a1adbb35e62035e858fa3da9c1f8b10a5ea35e26e8cf1e42b13af90fb",
+  "cells": 30,
+  "companies": 3,
+  "kind": "insert into blank production cells (fills)",
+  "source": "results/release_debt_1/debt_release1_fill_candidates.jsonl",
+  "excluded": "release1_fills_excluded.json: {\"ambiguous_period_match\": 6}",
+  "stale_refusal": "release1_fills_stale_check.sql must return zero rows immediately before the write",
+  "rollback": "release1_fills_rollback.sql (delete the inserted rows; generated, never executed)",
+  "touched_ciks": "release1_fills_touched_ciks.txt",
+  "flag": "SCROONER_RULES_ENABLED=slot.total_debt@1; default OFF"
+ },
+ "amzn_note": "AMZN 46 cells are v4 (after the Verifier debt v3 fix). Finance leases ADDED = the note total FinanceLeaseLiability (FY2023 12,109M = noncurrent 10,077M + current 2,032M; current sits in accrued expenses), recorded per cell in note_flag. 10,077M is used ONLY to prove the face line decomposes (Long-term lease liabilities 77,297 = operating 67,220 + finance noncurrent 10,077); it is never added on its own. FY2023 total = LTD noncurrent 58,314 + current maturities from the note 8,494 + finance leases 12,109 = 78,917M. AMZN v4 values queued for a Verifier draw (scrooner-bc) before any write."
+}

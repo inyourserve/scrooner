@@ -1,0 +1,42 @@
+{
+ "rule_id": "slot.capex@1",
+ "registered": "OFF",
+ "family": "balance sheet: capex_resolved",
+ "source_cells": {
+  "file": "results/release_capex_2a/capex_release2a_source_cells.jsonl.gz",
+  "sha256": "e9f6949896f437df55309698b82dd984d148c5eccd579ab67b97d55a133bd3fe"
+ },
+ "verifier": "verify/capex-release2a-2026-11-04: 18/18 (founder rulings 2026-11-04)",
+ "updates": {
+  "cells_file": "capex_release2a_updates.jsonl",
+  "sha256": "5532910f43305fba455780640f94484ce16c8274be43bdffebbacdad4bc6255e",
+  "cells": 2367,
+  "companies": 107,
+  "by_difference_class": {
+   "material": 2346,
+   "rounding_only": 21
+  },
+  "before_image": "capex_release2a_updates_before_image.jsonl (2367 canonical_fact rows)",
+  "rollback": "capex_release2a_updates_rollback.sql (generated, never executed)",
+  "stale_refusal": "capex_release2a_updates_stale_check.sql must return zero rows immediately before the write",
+  "excluded_ambiguous_period_match": 7
+ },
+ "flag": {
+  "line": "SCROONER_RULES_ENABLED=slot.capex@1",
+  "default": "OFF",
+  "note": "the write goes through the existing flag / cell_store contract; this package supplies cells, evidence, before-image"
+ },
+ "release2a_fills": {
+  "cells_file": "release2a_fills_cells.jsonl",
+  "sha256": "b890372981f91bc3d1c473c47feb9ae8b681458eebbbea11ce6d6cf022366382",
+  "cells": 441,
+  "companies": 30,
+  "kind": "insert into blank production cells (fills)",
+  "source": "results/release_capex_2a/capex_release2a_fill_candidates.jsonl",
+  "excluded": "release2a_fills_excluded.json: {\"ambiguous_period_match\": 2, \"no_production_period\": 3, \"production_no_longer_blank\": 1}",
+  "stale_refusal": "release2a_fills_stale_check.sql must return zero rows immediately before the write",
+  "rollback": "release2a_fills_rollback.sql (delete the inserted rows; generated, never executed)",
+  "touched_ciks": "release2a_fills_touched_ciks.txt",
+  "flag": "SCROONER_RULES_ENABLED=slot.capex@1; default OFF"
+ }
+}

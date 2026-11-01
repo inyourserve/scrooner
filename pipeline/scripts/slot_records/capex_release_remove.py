@@ -7,7 +7,16 @@ usage: capex_release_remove.py <package_dir> <removals.json> <label>
 import hashlib
 import json
 import sys
+from datetime import date, timedelta
 from pathlib import Path
+
+
+def month_end(d):
+    """same rounding as the cells (FSN ddate = the date rounded to the NEAREST month end)"""
+    y, m, dd = int(d[:4]), int(d[5:7]), int(d[8:10])
+    if dd < 15:
+        return (date(y, m, 1) - timedelta(days=1)).isoformat()
+    return (date(y + (m == 12), m % 12 + 1, 1) - timedelta(days=1)).isoformat()
 
 d, removals, label = Path(sys.argv[1]), json.load(open(sys.argv[2])), sys.argv[3]
 key = lambda x: (x["cik"], x["end"], x["qtrs"])  # noqa: E731
@@ -16,9 +25,7 @@ cells_in = [json.loads(x) for x in open(d / "capex_release1_cells.jsonl")]
 cells = [c for c in cells_in if key(c) not in drop]
 assert len(cells_in) - len(cells) == len(drop), "a removal is not in the release"
 data = "".join(json.dumps(c, sort_keys=True) + "\n" for c in cells).encode()
-(d / "capex_release1_cells.jsonl").write_bytes(data)
 digest = hashlib.sha256(data).hexdigest()
-(d / "capex_release1_cells.sha256").write_text(f"{digest}  capex_release1_cells.jsonl\n")
 keep_ids = {(c["cik"], c["end"], c["qtrs"]) for c in cells}
 before_in = [json.loads(x) for x in open(d / "capex_release1_before_image.jsonl")]
 dropped_cells = [c for c in cells_in if key(c) in drop]
@@ -26,10 +33,15 @@ dropped_cells = [c for c in cells_in if key(c) in drop]
 drop_fact = set()
 for c in dropped_cells:
     for b in before_in:
-        if b["cik"] == c["cik"] and b["value_before"] == str(c["prod_value"]) and b["end"][:7] == c["end"][:7] and b["qtrs"] == c["qtrs"]:
+        if b["cik"] == c["cik"] and b["value_before"] == str(c["prod_value"]) and month_end(b["end"]) == c["end"] and b["qtrs"] == c["qtrs"]:
             drop_fact.add(b["canonical_fact_id"])
 before = [b for b in before_in if b["canonical_fact_id"] not in drop_fact]
 assert len(before_in) - len(before) == len(drop) and len(before) == len(cells), (len(before_in), len(before), len(cells))
+idx = {key(c): c for c in cells_in}
+assert all(idx[key(c)]["value"] == c["value"] for c in cells)
+# every check passed: only now write
+(d / "capex_release1_cells.jsonl").write_bytes(data)
+(d / "capex_release1_cells.sha256").write_text(f"{digest}  capex_release1_cells.jsonl\n")
 with open(d / "capex_release1_before_image.jsonl", "w") as f:
     for b in before:
         f.write(json.dumps(b, sort_keys=True) + "\n")

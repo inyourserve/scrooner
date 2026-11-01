@@ -1,0 +1,3221 @@
+{
+ "summary": {
+  "cash_bank_cash_definition": 1707,
+  "cash_cash_combined_with_investments": 286,
+  "cash_cash_flow_anchor_differs": 22,
+  "cash_cash_includes_restricted": 1918,
+  "cash_hidden_prod_shows_value": 4250,
+  "cash_no_cash_line": 572,
+  "cash_published": 36718,
+  "cash_published_bank_tie": 190,
+  "cash_published_prod_agrees": 34343,
+  "cash_published_prod_blank": 1402,
+  "cash_published_prod_differs": 1163,
+  "cash_two_cash_lines": 229
+ },
+ "companies": {
+  "A": {
+   "published": 47
+  },
+  "AA": {
+   "published": 41
+  },
+  "AAL": {
+   "published": 47
+  },
+  "AAOI": {
+   "published": 47
+  },
+  "AAON": {
+   "published": 47
+  },
+  "AAPL": {
+   "published": 47
+  },
+  "ABBV": {
+   "published": 47
+  },
+  "ABNB": {
+   "published": 23
+  },
+  "ABT": {
+   "published": 47
+  },
+  "ACA": {
+   "published": 34
+  },
+  "ACGL": {
+   "published": 47
+  },
+  "ACI": {
+   "published": 35
+  },
+  "ACM": {
+   "two_cash_lines": 47
+  },
+  "ACN": {
+   "published": 46
+  },
+  "ACT": {
+   "published": 21
+  },
+  "ADBE": {
+   "published": 47
+  },
+  "ADC": {
+   "published": 47
+  },
+  "ADI": {
+   "published": 47
+  },
+  "ADM": {
+   "published": 47
+  },
+  "ADP": {
+   "published": 47
+  },
+  "ADSK": {
+   "published": 47
+  },
+  "AEE": {
+   "published": 47
+  },
+  "AEIS": {
+   "published": 47
+  },
+  "AES": {
+   "published": 47
+  },
+  "AFG": {
+   "published": 47
+  },
+  "AFL": {
+   "published": 47
+  },
+  "AFRM": {
+   "published": 24
+  },
+  "AGCO": {
+   "published": 40,
+   "cash_includes_restricted": 7
+  },
+  "AGNC": {
+   "published": 47
+  },
+  "AHR": {
+   "published": 43
+  },
+  "AIG": {
+   "published": 47
+  },
+  "AIT": {
+   "published": 47
+  },
+  "AIZ": {
+   "published": 45,
+   "cash_includes_restricted": 2
+  },
+  "AJG": {
+   "published": 33,
+   "cash_includes_restricted": 14
+  },
+  "AKAM": {
+   "published": 47
+  },
+  "ALAB": {
+   "published": 11
+  },
+  "ALB": {
+   "published": 41,
+   "cash_includes_restricted": 6
+  },
+  "ALGM": {
+   "published": 25
+  },
+  "ALGN": {
+   "published": 47
+  },
+  "ALKS": {
+   "published": 47
+  },
+  "ALL": {
+   "published": 47
+  },
+  "ALLE": {
+   "published": 45,
+   "cash_includes_restricted": 2
+  },
+  "ALLY": {
+   "bank_cash_definition": 47
+  },
+  "ALNY": {
+   "published": 47
+  },
+  "ALSN": {
+   "published": 47
+  },
+  "ALV": {
+   "published": 47
+  },
+  "AM": {
+   "published": 20,
+   "no_cash_line": 19
+  },
+  "AMAT": {
+   "published": 47
+  },
+  "AMCR": {
+   "published": 31
+  },
+  "AMD": {
+   "published": 47
+  },
+  "AME": {
+   "published": 47
+  },
+  "AMG": {
+   "published": 47
+  },
+  "AMGN": {
+   "published": 47
+  },
+  "AMH": {
+   "published": 47
+  },
+  "AMKR": {
+   "published": 47
+  },
+  "AMP": {
+   "published": 8,
+   "no_cash_line": 39
+  },
+  "AMRX": {
+   "no_cash_line": 2,
+   "published": 33
+  },
+  "AMRZ": {
+   "published": 6
+  },
+  "AMT": {
+   "published": 47
+  },
+  "AMZN": {
+   "published": 47
+  },
+  "ANET": {
+   "published": 47
+  },
+  "ANF": {
+   "published": 47
+  },
+  "AON": {
+   "published": 47
+  },
+  "AOS": {
+   "published": 47
+  },
+  "APA": {
+   "published": 22,
+   "no_cash_line": 5
+  },
+  "APD": {
+   "published": 47
+  },
+  "APG": {
+   "published": 29,
+   "no_cash_line": 1
+  },
+  "APH": {
+   "published": 47
+  },
+  "APO": {
+   "published": 7,
+   "no_cash_line": 12
+  },
+  "APP": {
+   "published": 23
+  },
+  "APPF": {
+   "published": 46
+  },
+  "APTV": {
+   "published": 47
+  },
+  "AR": {
+   "published": 15,
+   "no_cash_line": 32
+  },
+  "ARCC": {
+   "published": 17
+  },
+  "ARE": {
+   "published": 46
+  },
+  "ARES": {
+   "no_cash_line": 46,
+   "published": 1
+  },
+  "ARMK": {
+   "published": 47
+  },
+  "ARW": {
+   "published": 42,
+   "cash_includes_restricted": 5
+  },
+  "ARWR": {
+   "published": 31,
+   "cash_includes_restricted": 16
+  },
+  "ASB": {
+   "published_bank_tie": 16,
+   "bank_cash_definition": 26,
+   "no_cash_line": 5
+  },
+  "ASTS": {
+   "published": 28
+  },
+  "ATI": {
+   "published": 47
+  },
+  "ATO": {
+   "published": 47
+  },
+  "ATR": {
+   "published": 47
+  },
+  "AUR": {
+   "published": 23
+  },
+  "AVAV": {
+   "published": 47
+  },
+  "AVGO": {
+   "published": 34
+  },
+  "AVT": {
+   "published": 47
+  },
+  "AVTR": {
+   "published": 30
+  },
+  "AVY": {
+   "published": 47
+  },
+  "AWI": {
+   "published": 47
+  },
+  "AWK": {
+   "published": 47
+  },
+  "AXON": {
+   "published": 47
+  },
+  "AXP": {
+   "bank_cash_definition": 47
+  },
+  "AXS": {
+   "published": 47
+  },
+  "AXSM": {
+   "published": 43
+  },
+  "AXTA": {
+   "published": 47
+  },
+  "AYI": {
+   "published": 46
+  },
+  "AZO": {
+   "published": 46
+  },
+  "BA": {
+   "published": 47
+  },
+  "BAC": {
+   "bank_cash_definition": 47
+  },
+  "BAH": {
+   "published": 47
+  },
+  "BALL": {
+   "published": 47
+  },
+  "BAM": {
+   "published": 8
+  },
+  "BAX": {
+   "published": 47
+  },
+  "BBIO": {
+   "published": 29
+  },
+  "BBY": {
+   "published": 47
+  },
+  "BDX": {
+   "published": 47
+  },
+  "BE": {
+   "published": 35
+  },
+  "BEN": {
+   "published": 29,
+   "no_cash_line": 18
+  },
+  "BF-A": {
+   "published": 47
+  },
+  "BG": {
+   "published": 16
+  },
+  "BGC": {
+   "published": 47
+  },
+  "BIIB": {
+   "published": 21,
+   "cash_includes_restricted": 26
+  },
+  "BIO": {
+   "published": 47
+  },
+  "BJ": {
+   "published": 37
+  },
+  "BKH": {
+   "published": 47
+  },
+  "BKNG": {
+   "published": 47
+  },
+  "BKR": {
+   "no_cash_line": 1,
+   "published": 3,
+   "cash_includes_restricted": 34
+  },
+  "BLCO": {
+   "published": 19
+  },
+  "BLDR": {
+   "published": 47
+  },
+  "BLK": {
+   "published": 9
+  },
+  "BMNR": {
+   "published": 21,
+   "cash_includes_restricted": 2
+  },
+  "BMRN": {
+   "published": 47
+  },
+  "BMY": {
+   "published": 47
+  },
+  "BNY": {
+   "no_cash_line": 25,
+   "bank_cash_definition": 22
+  },
+  "BOKF": {
+   "bank_cash_definition": 31,
+   "published_bank_tie": 16
+  },
+  "BPOP": {
+   "bank_cash_definition": 47
+  },
+  "BR": {
+   "published": 47
+  },
+  "BRK-A": {
+   "published": 13,
+   "no_cash_line": 34
+  },
+  "BRKR": {
+   "published": 47
+  },
+  "BRO": {
+   "published": 47
+  },
+  "BROS": {
+   "published": 21
+  },
+  "BRX": {
+   "published": 47
+  },
+  "BSX": {
+   "published": 47
+  },
+  "BSY": {
+   "published": 25
+  },
+  "BTSG": {
+   "published": 11
+  },
+  "BURL": {
+   "published": 47
+  },
+  "BWA": {
+   "published": 30,
+   "cash_includes_restricted": 17
+  },
+  "BWXT": {
+   "published": 47
+  },
+  "BX": {
+   "published": 47
+  },
+  "BXP": {
+   "published": 47
+  },
+  "BXSL": {
+   "published": 15,
+   "cash_includes_restricted": 2
+  },
+  "C": {
+   "bank_cash_definition": 18,
+   "no_cash_line": 29
+  },
+  "CACC": {
+   "published": 47
+  },
+  "CACI": {
+   "published": 47
+  },
+  "CAG": {
+   "published": 47
+  },
+  "CAH": {
+   "published": 47
+  },
+  "CAI": {
+   "cash_includes_restricted": 6
+  },
+  "CAKE": {
+   "published": 47
+  },
+  "CARR": {
+   "published": 27
+  },
+  "CART": {
+   "published": 13
+  },
+  "CASY": {
+   "published": 47
+  },
+  "CAT": {
+   "cash_combined_with_investments": 27,
+   "published": 20
+  },
+  "CAVA": {
+   "published": 14
+  },
+  "CB": {
+   "published": 35,
+   "cash_includes_restricted": 12
+  },
+  "CBC": {
+   "bank_cash_definition": 4
+  },
+  "CBOE": {
+   "published": 47
+  },
+  "CBRE": {
+   "published": 47
+  },
+  "CBRS": {
+   "published": 3
+  },
+  "CBSH": {
+   "bank_cash_definition": 44,
+   "published_bank_tie": 3
+  },
+  "CCI": {
+   "published": 47
+  },
+  "CCK": {
+   "published": 47
+  },
+  "CCL": {
+   "published": 47
+  },
+  "CDE": {
+   "published": 47
+  },
+  "CDNS": {
+   "published": 47
+  },
+  "CDW": {
+   "published": 47
+  },
+  "CEG": {
+   "published": 19
+  },
+  "CELH": {
+   "published": 41
+  },
+  "CF": {
+   "published": 21,
+   "cash_includes_restricted": 26
+  },
+  "CFG": {
+   "bank_cash_definition": 47
+  },
+  "CFR": {
+   "bank_cash_definition": 47
+  },
+  "CG": {
+   "two_cash_lines": 47
+  },
+  "CGNX": {
+   "published": 47
+  },
+  "CHD": {
+   "published": 47
+  },
+  "CHDN": {
+   "published": 47
+  },
+  "CHE": {
+   "published": 47
+  },
+  "CHRD": {
+   "published": 48
+  },
+  "CHRW": {
+   "published": 47
+  },
+  "CHTR": {
+   "published": 47
+  },
+  "CHWY": {
+   "published": 31
+  },
+  "CI": {
+   "published": 32
+  },
+  "CIEN": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "CINF": {
+   "published": 47
+  },
+  "CL": {
+   "published": 47
+  },
+  "CLF": {
+   "published": 47
+  },
+  "CLH": {
+   "published": 19,
+   "cash_includes_restricted": 28
+  },
+  "CLS": {
+   "published": 8
+  },
+  "CLX": {
+   "published": 47
+  },
+  "CMC": {
+   "published": 46
+  },
+  "CMCSA": {
+   "published": 47
+  },
+  "CME": {
+   "published": 47
+  },
+  "CMG": {
+   "published": 47
+  },
+  "CMI": {
+   "published": 39,
+   "cash_includes_restricted": 8
+  },
+  "CMS": {
+   "published": 47
+  },
+  "CNA": {
+   "published": 47
+  },
+  "CNC": {
+   "two_cash_lines": 1,
+   "published": 46
+  },
+  "CNH": {
+   "published": 17
+  },
+  "CNM": {
+   "published": 22
+  },
+  "CNP": {
+   "published": 46,
+   "no_cash_line": 1
+  },
+  "COF": {
+   "bank_cash_definition": 47
+  },
+  "COHR": {
+   "published": 39,
+   "cash_includes_restricted": 8
+  },
+  "COIN": {
+   "published": 23
+  },
+  "COLB": {
+   "bank_cash_definition": 47
+  },
+  "COMP": {
+   "published": 23
+  },
+  "COO": {
+   "published": 47
+  },
+  "COP": {
+   "published": 47
+  },
+  "COR": {
+   "published": 40,
+   "cash_includes_restricted": 7
+  },
+  "CORT": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "COST": {
+   "published": 46
+  },
+  "CPAY": {
+   "published": 47
+  },
+  "CPB": {
+   "published": 47
+  },
+  "CPNG": {
+   "published": 23
+  },
+  "CPRT": {
+   "published": 22,
+   "cash_includes_restricted": 25
+  },
+  "CPT": {
+   "published": 46
+  },
+  "CQP": {
+   "published": 47
+  },
+  "CR": {
+   "published": 15
+  },
+  "CRBG": {
+   "published": 17,
+   "no_cash_line": 1
+  },
+  "CRCL": {
+   "published": 6
+  },
+  "CRDO": {
+   "published": 20
+  },
+  "CRH": {
+   "published": 15
+  },
+  "CRL": {
+   "published": 47
+  },
+  "CRM": {
+   "published": 47
+  },
+  "CROX": {
+   "published": 47
+  },
+  "CRS": {
+   "published": 47
+  },
+  "CRWD": {
+   "published": 27,
+   "cash_includes_restricted": 4
+  },
+  "CRWV": {
+   "published": 7
+  },
+  "CSCO": {
+   "published": 47
+  },
+  "CSGP": {
+   "published": 27,
+   "cash_includes_restricted": 20
+  },
+  "CSL": {
+   "published": 47
+  },
+  "CSX": {
+   "published": 24,
+   "cash_includes_restricted": 23
+  },
+  "CTAS": {
+   "published": 46
+  },
+  "CTRE": {
+   "published": 47
+  },
+  "CTSH": {
+   "published": 47
+  },
+  "CTVA": {
+   "published": 32,
+   "no_cash_line": 1
+  },
+  "CUBE": {
+   "published": 47
+  },
+  "CVI": {
+   "published": 47
+  },
+  "CVLT": {
+   "published": 47
+  },
+  "CVNA": {
+   "published": 38
+  },
+  "CVS": {
+   "published": 47
+  },
+  "CVX": {
+   "published": 47
+  },
+  "CW": {
+   "published": 36,
+   "cash_includes_restricted": 11
+  },
+  "CWEN": {
+   "published": 47
+  },
+  "CWST": {
+   "published": 42,
+   "cash_includes_restricted": 5
+  },
+  "CYTK": {
+   "published": 47
+  },
+  "CZR": {
+   "published": 46
+  },
+  "D": {
+   "published": 47
+  },
+  "DAL": {
+   "published": 47
+  },
+  "DAR": {
+   "published": 47
+  },
+  "DASH": {
+   "published": 24
+  },
+  "DBX": {
+   "published": 28,
+   "cash_includes_restricted": 7
+  },
+  "DCI": {
+   "published": 47
+  },
+  "DD": {
+   "cash_includes_restricted": 9,
+   "published": 29
+  },
+  "DDOG": {
+   "published": 29
+  },
+  "DDS": {
+   "published": 47
+  },
+  "DE": {
+   "published": 47
+  },
+  "DECK": {
+   "published": 45,
+   "cash_includes_restricted": 2
+  },
+  "DELL": {
+   "published": 43
+  },
+  "DG": {
+   "published": 47
+  },
+  "DGX": {
+   "published": 47
+  },
+  "DHI": {
+   "published": 47
+  },
+  "DHR": {
+   "published": 24,
+   "cash_includes_restricted": 23
+  },
+  "DINO": {
+   "published": 19
+  },
+  "DIS": {
+   "published": 31
+  },
+  "DKNG": {
+   "published": 19
+  },
+  "DKS": {
+   "published": 47
+  },
+  "DLB": {
+   "published": 47
+  },
+  "DLR": {
+   "published": 47
+  },
+  "DLTR": {
+   "published": 47
+  },
+  "DOC": {
+   "published": 47
+  },
+  "DOCN": {
+   "published": 23
+  },
+  "DOCS": {
+   "published": 22
+  },
+  "DOCU": {
+   "published": 35
+  },
+  "DOV": {
+   "published": 28,
+   "cash_includes_restricted": 19
+  },
+  "DOW": {
+   "cash_includes_restricted": 14,
+   "published": 17
+  },
+  "DPZ": {
+   "published": 47
+  },
+  "DRI": {
+   "published": 46
+  },
+  "DRS": {
+   "published": 23
+  },
+  "DT": {
+   "published": 30
+  },
+  "DTE": {
+   "published": 47
+  },
+  "DTM": {
+   "published": 21,
+   "no_cash_line": 2
+  },
+  "DUK": {
+   "published": 45,
+   "no_cash_line": 2
+  },
+  "DUOL": {
+   "published": 22
+  },
+  "DVA": {
+   "published": 47
+  },
+  "DVN": {
+   "published": 24,
+   "cash_includes_restricted": 23
+  },
+  "DXCM": {
+   "published": 47
+  },
+  "DY": {
+   "published": 46
+  },
+  "EAT": {
+   "published": 47
+  },
+  "EBAY": {
+   "published": 47
+  },
+  "ECG": {
+   "published": 1,
+   "cash_includes_restricted": 8
+  },
+  "ECHO": {
+   "published": 47
+  },
+  "ECL": {
+   "published": 47
+  },
+  "ED": {
+   "cash_combined_with_investments": 47
+  },
+  "EFX": {
+   "published": 47
+  },
+  "EG": {
+   "published": 47
+  },
+  "EGP": {
+   "published": 45,
+   "cash_includes_restricted": 2
+  },
+  "EHC": {
+   "published": 47
+  },
+  "EIX": {
+   "two_cash_lines": 1,
+   "published": 46
+  },
+  "EL": {
+   "published": 15,
+   "cash_includes_restricted": 32
+  },
+  "ELAN": {
+   "published": 33
+  },
+  "ELF": {
+   "published": 38,
+   "cash_includes_restricted": 3
+  },
+  "ELS": {
+   "published": 13,
+   "cash_includes_restricted": 34
+  },
+  "ELV": {
+   "published": 47
+  },
+  "EME": {
+   "published": 47
+  },
+  "EMN": {
+   "published": 34,
+   "cash_includes_restricted": 13
+  },
+  "EMR": {
+   "published": 29,
+   "cash_includes_restricted": 18
+  },
+  "ENS": {
+   "published": 47
+  },
+  "ENSG": {
+   "published": 47
+  },
+  "ENTG": {
+   "published": 45,
+   "cash_includes_restricted": 2
+  },
+  "EOG": {
+   "published": 47
+  },
+  "EPAM": {
+   "published": 47
+  },
+  "EPD": {
+   "published": 47
+  },
+  "EPRT": {
+   "published": 34
+  },
+  "EQH": {
+   "published": 36,
+   "no_cash_line": 2
+  },
+  "EQIX": {
+   "published": 47
+  },
+  "EQT": {
+   "published": 47
+  },
+  "ERIE": {
+   "published": 17,
+   "cash_includes_restricted": 30
+  },
+  "ES": {
+   "published": 41,
+   "two_cash_lines": 6
+  },
+  "ESE": {
+   "published": 47
+  },
+  "ESI": {
+   "published": 47
+  },
+  "ESNT": {
+   "published": 47
+  },
+  "ESS": {
+   "cash_includes_restricted": 47
+  },
+  "ESTC": {
+   "published": 33
+  },
+  "ET": {
+   "published": 34,
+   "cash_includes_restricted": 11,
+   "no_cash_line": 2
+  },
+  "ETN": {
+   "published": 46,
+   "no_cash_line": 1
+  },
+  "ETR": {
+   "two_cash_lines": 47
+  },
+  "ETSY": {
+   "published": 47
+  },
+  "EVR": {
+   "published": 47
+  },
+  "EVRG": {
+   "published": 34
+  },
+  "EW": {
+   "published": 47
+  },
+  "EWBC": {
+   "published": 8,
+   "bank_cash_definition": 39
+  },
+  "EXC": {
+   "two_cash_lines": 2,
+   "published": 45
+  },
+  "EXE": {
+   "published": 48
+  },
+  "EXEL": {
+   "published": 47
+  },
+  "EXLS": {
+   "published": 47
+  },
+  "EXPD": {
+   "published": 47
+  },
+  "EXPE": {
+   "published": 47
+  },
+  "EXR": {
+   "published": 47
+  },
+  "F": {
+   "published": 47
+  },
+  "FAF": {
+   "published": 47
+  },
+  "FANG": {
+   "published": 47
+  },
+  "FAST": {
+   "published": 47
+  },
+  "FCFS": {
+   "published": 47
+  },
+  "FCNCA": {
+   "published_bank_tie": 21,
+   "bank_cash_definition": 26
+  },
+  "FCX": {
+   "published": 47
+  },
+  "FDS": {
+   "published": 46
+  },
+  "FDX": {
+   "published": 46
+  },
+  "FDXF": {
+   "published": 2
+  },
+  "FE": {
+   "published": 47
+  },
+  "FERG": {
+   "published": 10
+  },
+  "FFIV": {
+   "published": 47
+  },
+  "FHN": {
+   "bank_cash_definition": 47
+  },
+  "FICO": {
+   "published": 47
+  },
+  "FIG": {
+   "published": 6
+  },
+  "FIS": {
+   "published": 47
+  },
+  "FISV": {
+   "published": 47
+  },
+  "FITB": {
+   "bank_cash_definition": 47
+  },
+  "FIVE": {
+   "published": 41,
+   "cash_includes_restricted": 6
+  },
+  "FIX": {
+   "published": 47
+  },
+  "FLEX": {
+   "published": 47
+  },
+  "FLR": {
+   "published": 47
+  },
+  "FLS": {
+   "published": 27,
+   "cash_includes_restricted": 20
+  },
+  "FLUT": {
+   "published": 11
+  },
+  "FN": {
+   "published": 47
+  },
+  "FNB": {
+   "bank_cash_definition": 44,
+   "published": 3
+  },
+  "FNF": {
+   "no_cash_line": 47
+  },
+  "FORM": {
+   "published": 47
+  },
+  "FOX": {
+   "published": 2,
+   "cash_includes_restricted": 30
+  },
+  "FPS": {
+   "no_cash_line": 1,
+   "published": 3
+  },
+  "FR": {
+   "published": 47
+  },
+  "FRHC": {
+   "published": 39,
+   "cash_flow_anchor_differs": 8
+  },
+  "FROG": {
+   "published": 25
+  },
+  "FRT": {
+   "published": 47
+  },
+  "FSLR": {
+   "published": 47
+  },
+  "FSS": {
+   "published": 46,
+   "two_cash_lines": 1
+  },
+  "FTAI": {
+   "published": 47
+  },
+  "FTI": {
+   "published": 35,
+   "cash_includes_restricted": 5
+  },
+  "FTNT": {
+   "published": 47
+  },
+  "FTV": {
+   "published": 43
+  },
+  "FWONA": {
+   "published": 47
+  },
+  "G": {
+   "published": 47
+  },
+  "GAP": {
+   "published": 47
+  },
+  "GATX": {
+   "published": 47
+  },
+  "GBCI": {
+   "bank_cash_definition": 47
+  },
+  "GD": {
+   "published": 47
+  },
+  "GDDY": {
+   "published": 19,
+   "cash_includes_restricted": 27
+  },
+  "GE": {
+   "published": 13,
+   "cash_includes_restricted": 34
+  },
+  "GEHC": {
+   "cash_includes_restricted": 15
+  },
+  "GEN": {
+   "published": 42,
+   "cash_includes_restricted": 5
+  },
+  "GEV": {
+   "cash_includes_restricted": 11
+  },
+  "GGG": {
+   "published": 47
+  },
+  "GH": {
+   "published": 30,
+   "cash_includes_restricted": 3
+  },
+  "GILD": {
+   "published": 23,
+   "cash_includes_restricted": 24
+  },
+  "GIS": {
+   "published": 47
+  },
+  "GKOS": {
+   "published": 43,
+   "cash_includes_restricted": 3
+  },
+  "GL": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "GLPI": {
+   "published": 23,
+   "cash_includes_restricted": 24
+  },
+  "GLW": {
+   "published": 21,
+   "cash_includes_restricted": 26
+  },
+  "GLXY": {
+   "published": 7
+  },
+  "GM": {
+   "published": 47
+  },
+  "GME": {
+   "published": 47
+  },
+  "GMED": {
+   "published": 20,
+   "cash_includes_restricted": 27
+  },
+  "GNRC": {
+   "published": 47
+  },
+  "GOOG": {
+   "published": 45
+  },
+  "GPC": {
+   "published": 23,
+   "cash_includes_restricted": 24
+  },
+  "GPN": {
+   "published": 47
+  },
+  "GRMN": {
+   "published": 47
+  },
+  "GS": {
+   "bank_cash_definition": 11,
+   "published": 36
+  },
+  "GSAT": {
+   "published": 47
+  },
+  "GTES": {
+   "published": 35
+  },
+  "GTLB": {
+   "published": 21
+  },
+  "GWRE": {
+   "published": 42,
+   "cash_includes_restricted": 5
+  },
+  "GWW": {
+   "published": 47
+  },
+  "H": {
+   "published": 47
+  },
+  "HAL": {
+   "published": 24,
+   "cash_includes_restricted": 23
+  },
+  "HALO": {
+   "published": 47
+  },
+  "HAS": {
+   "published": 21,
+   "cash_includes_restricted": 26
+  },
+  "HBAN": {
+   "bank_cash_definition": 47
+  },
+  "HCA": {
+   "published": 47
+  },
+  "HD": {
+   "published": 47
+  },
+  "HEI": {
+   "published": 44,
+   "cash_includes_restricted": 3
+  },
+  "HIG": {
+   "published": 47
+  },
+  "HII": {
+   "published": 36,
+   "cash_includes_restricted": 11
+  },
+  "HIMS": {
+   "no_cash_line": 1,
+   "published": 28
+  },
+  "HL": {
+   "published": 47
+  },
+  "HLI": {
+   "published": 44,
+   "no_cash_line": 1
+  },
+  "HLT": {
+   "published": 47
+  },
+  "HOMB": {
+   "bank_cash_definition": 47
+  },
+  "HON": {
+   "published": 47
+  },
+  "HOOD": {
+   "published": 22
+  },
+  "HPE": {
+   "published": 44
+  },
+  "HPQ": {
+   "published": 32,
+   "cash_includes_restricted": 15
+  },
+  "HQY": {
+   "published": 47
+  },
+  "HR": {
+   "published": 47
+  },
+  "HRB": {
+   "published": 47
+  },
+  "HRL": {
+   "published": 47
+  },
+  "HSIC": {
+   "published": 34,
+   "cash_includes_restricted": 13
+  },
+  "HST": {
+   "published": 47
+  },
+  "HSY": {
+   "published": 19,
+   "cash_includes_restricted": 28
+  },
+  "HUBB": {
+   "published": 47
+  },
+  "HUBS": {
+   "published": 47
+  },
+  "HUM": {
+   "published": 47
+  },
+  "HUT": {
+   "published": 15
+  },
+  "HWC": {
+   "bank_cash_definition": 47
+  },
+  "HWM": {
+   "published": 47
+  },
+  "HXL": {
+   "published": 47
+  },
+  "IBKR": {
+   "published": 47
+  },
+  "IBM": {
+   "published": 47
+  },
+  "IBRX": {
+   "published": 46
+  },
+  "ICE": {
+   "published": 46,
+   "cash_flow_anchor_differs": 1
+  },
+  "IDA": {
+   "published": 46
+  },
+  "IDCC": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "IDXX": {
+   "published": 47
+  },
+  "IEX": {
+   "published": 47
+  },
+  "IFF": {
+   "published": 40,
+   "cash_includes_restricted": 7
+  },
+  "ILMN": {
+   "published": 17,
+   "cash_includes_restricted": 30
+  },
+  "INCY": {
+   "published": 47
+  },
+  "INGM": {
+   "published": 9,
+   "no_cash_line": 1
+  },
+  "INGR": {
+   "published": 47
+  },
+  "INSM": {
+   "published": 47
+  },
+  "INSW": {
+   "published": 44
+  },
+  "INTC": {
+   "published": 31,
+   "cash_includes_restricted": 16
+  },
+  "INTU": {
+   "published": 47
+  },
+  "INVH": {
+   "published": 39
+  },
+  "IONQ": {
+   "published": 24
+  },
+  "IONS": {
+   "published": 47
+  },
+  "IOT": {
+   "published": 19
+  },
+  "IOVA": {
+   "published": 45
+  },
+  "IP": {
+   "cash_combined_with_investments": 47
+  },
+  "IQV": {
+   "published": 47
+  },
+  "IR": {
+   "published": 39
+  },
+  "IREN": {
+   "published": 6
+  },
+  "IRM": {
+   "published": 38,
+   "cash_includes_restricted": 9
+  },
+  "ISRG": {
+   "published": 47
+  },
+  "IT": {
+   "published": 47
+  },
+  "ITT": {
+   "published": 47
+  },
+  "ITW": {
+   "published": 47
+  },
+  "IVZ": {
+   "two_cash_lines": 40,
+   "published": 7
+  },
+  "J": {
+   "published": 47
+  },
+  "JAZZ": {
+   "published": 47
+  },
+  "JBHT": {
+   "published": 47
+  },
+  "JBL": {
+   "published": 46
+  },
+  "JCI": {
+   "published": 47
+  },
+  "JEF": {
+   "published": 47
+  },
+  "JHX": {
+   "published": 3
+  },
+  "JKHY": {
+   "published": 42,
+   "cash_includes_restricted": 5
+  },
+  "JLL": {
+   "published": 47
+  },
+  "JNJ": {
+   "published": 47
+  },
+  "JPM": {
+   "bank_cash_definition": 47
+  },
+  "JXN": {
+   "published": 21,
+   "no_cash_line": 1
+  },
+  "KDP": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "KEX": {
+   "published": 47
+  },
+  "KEY": {
+   "bank_cash_definition": 47
+  },
+  "KEYS": {
+   "published": 47
+  },
+  "KHC": {
+   "published": 46
+  },
+  "KIM": {
+   "published": 27,
+   "cash_includes_restricted": 20
+  },
+  "KKR": {
+   "two_cash_lines": 25,
+   "no_cash_line": 21
+  },
+  "KLAC": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "KMB": {
+   "published": 47
+  },
+  "KMI": {
+   "published": 47
+  },
+  "KMX": {
+   "published": 47
+  },
+  "KNSA": {
+   "published": 34
+  },
+  "KNSL": {
+   "published": 30,
+   "cash_includes_restricted": 11
+  },
+  "KNX": {
+   "published": 47
+  },
+  "KO": {
+   "published": 47
+  },
+  "KR": {
+   "cash_combined_with_investments": 47
+  },
+  "KRYS": {
+   "published": 37
+  },
+  "KTOS": {
+   "published": 47
+  },
+  "KVUE": {
+   "published": 15
+  },
+  "KYMR": {
+   "published": 25
+  },
+  "L": {
+   "published": 47
+  },
+  "LAD": {
+   "published": 28,
+   "cash_includes_restricted": 19
+  },
+  "LAMR": {
+   "published": 47
+  },
+  "LB": {
+   "published": 10
+  },
+  "LDOS": {
+   "published": 47
+  },
+  "LEA": {
+   "published": 47
+  },
+  "LECO": {
+   "published": 47
+  },
+  "LEN": {
+   "published": 24,
+   "no_cash_line": 22
+  },
+  "LEVI": {
+   "published": 46
+  },
+  "LFUS": {
+   "published": 47
+  },
+  "LGND": {
+   "published": 47
+  },
+  "LH": {
+   "published": 41,
+   "no_cash_line": 6
+  },
+  "LHX": {
+   "published": 47
+  },
+  "LII": {
+   "published": 47
+  },
+  "LIN": {
+   "published": 34
+  },
+  "LINE": {
+   "published": 4,
+   "cash_includes_restricted": 6
+  },
+  "LITE": {
+   "published": 45
+  },
+  "LKQ": {
+   "published": 36,
+   "cash_includes_restricted": 10,
+   "no_cash_line": 1
+  },
+  "LLY": {
+   "published": 47
+  },
+  "LMT": {
+   "published": 47
+  },
+  "LNC": {
+   "published": 13,
+   "cash_includes_restricted": 34
+  },
+  "LNG": {
+   "published": 47
+  },
+  "LNT": {
+   "published": 47
+  },
+  "LNTH": {
+   "published": 46
+  },
+  "LOAR": {
+   "published": 11
+  },
+  "LOGI": {
+   "published": 47
+  },
+  "LOW": {
+   "published": 47
+  },
+  "LPLA": {
+   "published": 47
+  },
+  "LRCX": {
+   "published": 47
+  },
+  "LSCC": {
+   "published": 47
+  },
+  "LSTR": {
+   "published": 47
+  },
+  "LTH": {
+   "published": 21
+  },
+  "LULU": {
+   "published": 17,
+   "cash_includes_restricted": 30
+  },
+  "LUV": {
+   "published": 47
+  },
+  "LVS": {
+   "published": 47
+  },
+  "LW": {
+   "published": 40
+  },
+  "LYB": {
+   "published": 47
+  },
+  "LYFT": {
+   "published": 31
+  },
+  "LYV": {
+   "published": 47
+  },
+  "M": {
+   "published": 47
+  },
+  "MA": {
+   "published": 47
+  },
+  "MAA": {
+   "published": 30
+  },
+  "MAC": {
+   "published": 47
+  },
+  "MANH": {
+   "published": 47
+  },
+  "MAR": {
+   "published": 47
+  },
+  "MAS": {
+   "cash_combined_with_investments": 47
+  },
+  "MATX": {
+   "published": 47
+  },
+  "MCD": {
+   "published": 47
+  },
+  "MCHP": {
+   "published": 47
+  },
+  "MCK": {
+   "published": 47
+  },
+  "MCO": {
+   "published": 47
+  },
+  "MCY": {
+   "published": 47
+  },
+  "MDB": {
+   "published": 37
+  },
+  "MDGL": {
+   "published": 47
+  },
+  "MDLN": {
+   "published": 4
+  },
+  "MDLZ": {
+   "published": 47
+  },
+  "MDT": {
+   "published": 47
+  },
+  "MEDP": {
+   "published": 41
+  },
+  "MELI": {
+   "published": 47
+  },
+  "MET": {
+   "published": 47
+  },
+  "META": {
+   "published": 47
+  },
+  "MGM": {
+   "published": 47
+  },
+  "MGY": {
+   "published": 37,
+   "no_cash_line": 1
+  },
+  "MHK": {
+   "published": 47
+  },
+  "MKC": {
+   "published": 46
+  },
+  "MKL": {
+   "published": 47
+  },
+  "MKSI": {
+   "published": 13,
+   "cash_includes_restricted": 34
+  },
+  "MKTX": {
+   "published": 47
+  },
+  "MLI": {
+   "published": 47
+  },
+  "MLM": {
+   "published": 47
+  },
+  "MMM": {
+   "published": 10,
+   "cash_includes_restricted": 37
+  },
+  "MNST": {
+   "published": 44
+  },
+  "MO": {
+   "published": 47
+  },
+  "MOD": {
+   "published": 47
+  },
+  "MOG-A": {
+   "published": 47
+  },
+  "MOH": {
+   "published": 47
+  },
+  "MORN": {
+   "published": 27,
+   "cash_includes_restricted": 20
+  },
+  "MOS": {
+   "published": 47
+  },
+  "MP": {
+   "published": 27
+  },
+  "MPC": {
+   "published": 47
+  },
+  "MPLX": {
+   "published": 47
+  },
+  "MPWR": {
+   "published": 47
+  },
+  "MRK": {
+   "published": 47
+  },
+  "MRNA": {
+   "published": 32
+  },
+  "MRSH": {
+   "published": 43,
+   "two_cash_lines": 4
+  },
+  "MRVL": {
+   "published": 23
+  },
+  "MS": {
+   "published_bank_tie": 12,
+   "bank_cash_definition": 9,
+   "published": 26
+  },
+  "MSA": {
+   "published": 47
+  },
+  "MSCI": {
+   "published": 33,
+   "cash_includes_restricted": 14
+  },
+  "MSFT": {
+   "published": 47
+  },
+  "MSGS": {
+   "published": 45
+  },
+  "MSI": {
+   "published": 47
+  },
+  "MSM": {
+   "published": 46
+  },
+  "MSTR": {
+   "published": 47
+  },
+  "MTB": {
+   "bank_cash_definition": 47
+  },
+  "MTCH": {
+   "published": 47
+  },
+  "MTD": {
+   "published": 40,
+   "cash_includes_restricted": 7
+  },
+  "MTDR": {
+   "published": 47
+  },
+  "MTG": {
+   "published": 47
+  },
+  "MTSI": {
+   "published": 47
+  },
+  "MTZ": {
+   "published": 47
+  },
+  "MU": {
+   "published": 46
+  },
+  "MUR": {
+   "published": 47
+  },
+  "MUSA": {
+   "published": 47
+  },
+  "MXL": {
+   "published": 47
+  },
+  "NAVN": {
+   "published": 5
+  },
+  "NBIX": {
+   "published": 47
+  },
+  "NCLH": {
+   "published": 47
+  },
+  "NDAQ": {
+   "published": 47
+  },
+  "NDSN": {
+   "published": 47
+  },
+  "NE": {
+   "published": 18
+  },
+  "NEE": {
+   "published": 47
+  },
+  "NEM": {
+   "published": 47
+  },
+  "NET": {
+   "published": 29
+  },
+  "NEU": {
+   "published": 47
+  },
+  "NFG": {
+   "cash_combined_with_investments": 47
+  },
+  "NFLX": {
+   "published": 47
+  },
+  "NI": {
+   "published": 47
+  },
+  "NIQ": {
+   "published": 6
+  },
+  "NKE": {
+   "published": 46
+  },
+  "NLY": {
+   "no_cash_line": 47
+  },
+  "NNN": {
+   "published": 47
+  },
+  "NOC": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "NOV": {
+   "published": 47
+  },
+  "NOW": {
+   "published": 47
+  },
+  "NPO": {
+   "published": 47
+  },
+  "NRG": {
+   "published": 47
+  },
+  "NSC": {
+   "published": 47
+  },
+  "NTAP": {
+   "published": 47
+  },
+  "NTNX": {
+   "published": 41
+  },
+  "NTRA": {
+   "published": 32,
+   "cash_includes_restricted": 14
+  },
+  "NTRS": {
+   "bank_cash_definition": 47
+  },
+  "NTSK": {
+   "published": 5
+  },
+  "NUE": {
+   "published": 47
+  },
+  "NVDA": {
+   "published": 47
+  },
+  "NVR": {
+   "published": 15,
+   "no_cash_line": 32
+  },
+  "NVT": {
+   "published": 14,
+   "cash_includes_restricted": 22
+  },
+  "NWSA": {
+   "published": 47
+  },
+  "NXPI": {
+   "published": 29
+  },
+  "NXT": {
+   "published": 16
+  },
+  "NYT": {
+   "published": 47
+  },
+  "O": {
+   "published": 47
+  },
+  "OC": {
+   "published": 47
+  },
+  "ODFL": {
+   "published": 47
+  },
+  "OGE": {
+   "published": 46,
+   "no_cash_line": 1
+  },
+  "OHI": {
+   "published": 47
+  },
+  "OKE": {
+   "published": 47
+  },
+  "OKTA": {
+   "published": 39
+  },
+  "OLLI": {
+   "published": 47
+  },
+  "OMC": {
+   "published": 29,
+   "cash_includes_restricted": 18
+  },
+  "OMF": {
+   "published": 47
+  },
+  "ON": {
+   "published": 47
+  },
+  "ONB": {
+   "bank_cash_definition": 47
+  },
+  "ONTO": {
+   "published": 47
+  },
+  "ORCL": {
+   "published": 47
+  },
+  "ORI": {
+   "published": 47
+  },
+  "ORLY": {
+   "published": 47
+  },
+  "OSCR": {
+   "published": 23
+  },
+  "OSK": {
+   "published": 47
+  },
+  "OTEX": {
+   "published": 47
+  },
+  "OTIS": {
+   "published": 27
+  },
+  "OVV": {
+   "published": 28
+  },
+  "OXY": {
+   "published": 47
+  },
+  "P": {
+   "published": 45
+  },
+  "PAA": {
+   "published": 47
+  },
+  "PACS": {
+   "published": 11
+  },
+  "PAG": {
+   "published": 47
+  },
+  "PANW": {
+   "published": 47
+  },
+  "PATH": {
+   "published": 23
+  },
+  "PAYC": {
+   "published": 47
+  },
+  "PAYX": {
+   "published": 47
+  },
+  "PB": {
+   "published_bank_tie": 15,
+   "bank_cash_definition": 32
+  },
+  "PBF": {
+   "published": 47
+  },
+  "PCAR": {
+   "published": 19,
+   "no_cash_line": 28
+  },
+  "PCG": {
+   "published": 47
+  },
+  "PCOR": {
+   "published": 22
+  },
+  "PCTY": {
+   "published": 47
+  },
+  "PCVX": {
+   "published": 26
+  },
+  "PEG": {
+   "published": 46
+  },
+  "PEGA": {
+   "published": 45,
+   "cash_includes_restricted": 2
+  },
+  "PEN": {
+   "published": 44
+  },
+  "PEP": {
+   "published": 47
+  },
+  "PFE": {
+   "published": 47
+  },
+  "PFG": {
+   "published": 47
+  },
+  "PFGC": {
+   "published": 45
+  },
+  "PG": {
+   "published": 20,
+   "cash_includes_restricted": 27
+  },
+  "PGR": {
+   "published": 47
+  },
+  "PH": {
+   "published": 47
+  },
+  "PHM": {
+   "published": 47
+  },
+  "PINS": {
+   "published": 31
+  },
+  "PKG": {
+   "published": 47
+  },
+  "PLD": {
+   "published": 47
+  },
+  "PLNT": {
+   "no_cash_line": 2,
+   "published": 45
+  },
+  "PLTR": {
+   "published": 25
+  },
+  "PLXS": {
+   "published": 47
+  },
+  "PM": {
+   "published": 47
+  },
+  "PNC": {
+   "bank_cash_definition": 47
+  },
+  "PNFP": {
+   "bank_cash_definition": 4
+  },
+  "PNR": {
+   "published": 40,
+   "cash_includes_restricted": 7
+  },
+  "PNW": {
+   "published": 47
+  },
+  "PODD": {
+   "published": 28,
+   "cash_includes_restricted": 19
+  },
+  "POOL": {
+   "published": 20,
+   "cash_includes_restricted": 27
+  },
+  "POWL": {
+   "published": 47
+  },
+  "PPC": {
+   "published": 47
+  },
+  "PPG": {
+   "published": 47
+  },
+  "PPL": {
+   "published": 47
+  },
+  "PR": {
+   "published": 43
+  },
+  "PRAX": {
+   "published": 25
+  },
+  "PRI": {
+   "published": 47
+  },
+  "PRMB": {
+   "no_cash_line": 1,
+   "cash_includes_restricted": 8
+  },
+  "PRU": {
+   "published": 47
+  },
+  "PSA": {
+   "published": 47
+  },
+  "PSKY": {
+   "published": 5,
+   "no_cash_line": 2
+  },
+  "PSX": {
+   "published": 47
+  },
+  "PTC": {
+   "published": 47
+  },
+  "PTGX": {
+   "published": 42
+  },
+  "PWR": {
+   "published": 47
+  },
+  "PYPL": {
+   "published": 46
+  },
+  "Q": {
+   "published": 5
+  },
+  "QCOM": {
+   "published": 47
+  },
+  "QLYS": {
+   "published": 47
+  },
+  "QSR": {
+   "published": 20,
+   "cash_includes_restricted": 27
+  },
+  "QXO": {
+   "published": 47
+  },
+  "R": {
+   "published": 47
+  },
+  "RAL": {
+   "published": 6
+  },
+  "RBA": {
+   "published": 44
+  },
+  "RBC": {
+   "published": 44,
+   "no_cash_line": 2,
+   "cash_includes_restricted": 3
+  },
+  "RBLX": {
+   "published": 23
+  },
+  "RBRK": {
+   "published": 11
+  },
+  "RCL": {
+   "published": 47
+  },
+  "RDDT": {
+   "published": 11
+  },
+  "REG": {
+   "published": 1,
+   "cash_includes_restricted": 30
+  },
+  "REGN": {
+   "published": 47
+  },
+  "REXR": {
+   "published": 47
+  },
+  "RF": {
+   "published_bank_tie": 26,
+   "bank_cash_definition": 21
+  },
+  "RGA": {
+   "published": 47
+  },
+  "RGEN": {
+   "published": 47
+  },
+  "RGLD": {
+   "published": 47
+  },
+  "RHP": {
+   "cash_includes_restricted": 47
+  },
+  "RIG": {
+   "published": 47
+  },
+  "RIVN": {
+   "published": 21
+  },
+  "RJF": {
+   "published": 47
+  },
+  "RKLB": {
+   "published": 24
+  },
+  "RKT": {
+   "published": 26
+  },
+  "RL": {
+   "published": 47
+  },
+  "RLI": {
+   "published": 47
+  },
+  "RMBS": {
+   "published": 47
+  },
+  "RMD": {
+   "published": 47
+  },
+  "RNG": {
+   "published": 40,
+   "cash_includes_restricted": 7
+  },
+  "RNR": {
+   "published": 47
+  },
+  "ROIV": {
+   "published": 22
+  },
+  "ROK": {
+   "published": 43,
+   "cash_includes_restricted": 4
+  },
+  "ROKU": {
+   "published": 37
+  },
+  "ROL": {
+   "published": 47
+  },
+  "ROP": {
+   "published": 47
+  },
+  "ROST": {
+   "published": 47
+  },
+  "RPM": {
+   "published": 46
+  },
+  "RPRX": {
+   "published": 26
+  },
+  "RRC": {
+   "published": 47
+  },
+  "RRX": {
+   "published": 33,
+   "cash_includes_restricted": 14
+  },
+  "RS": {
+   "published": 47
+  },
+  "RSG": {
+   "published": 47
+  },
+  "RTX": {
+   "published": 47
+  },
+  "RVMD": {
+   "published": 27
+  },
+  "RVTY": {
+   "published": 47
+  },
+  "RYAN": {
+   "published": 10,
+   "cash_flow_anchor_differs": 12
+  },
+  "RYN": {
+   "published": 47
+  },
+  "RYTM": {
+   "published": 37
+  },
+  "S": {
+   "published": 22
+  },
+  "SAIA": {
+   "published": 47
+  },
+  "SAIC": {
+   "published": 47
+  },
+  "SAIL": {
+   "published": 7
+  },
+  "SANM": {
+   "published": 47
+  },
+  "SARO": {
+   "published": 9
+  },
+  "SBAC": {
+   "published": 47
+  },
+  "SBUX": {
+   "published": 31,
+   "no_cash_line": 1,
+   "cash_includes_restricted": 15
+  },
+  "SCCO": {
+   "published": 47
+  },
+  "SCHW": {
+   "published": 47
+  },
+  "SCI": {
+   "published": 47
+  },
+  "SEIC": {
+   "published": 43,
+   "cash_includes_restricted": 4
+  },
+  "SF": {
+   "published": 47
+  },
+  "SFD": {
+   "no_cash_line": 2,
+   "published": 6,
+   "cash_includes_restricted": 8
+  },
+  "SFM": {
+   "published": 47
+  },
+  "SGI": {
+   "published": 46,
+   "cash_flow_anchor_differs": 1
+  },
+  "SHOP": {
+   "published": 8
+  },
+  "SHW": {
+   "published": 47
+  },
+  "SIRI": {
+   "published": 47
+  },
+  "SITM": {
+   "cash_includes_restricted": 28
+  },
+  "SJM": {
+   "published": 19,
+   "cash_includes_restricted": 28
+  },
+  "SLAB": {
+   "published": 47
+  },
+  "SLB": {
+   "published": 47
+  },
+  "SM": {
+   "published": 47
+  },
+  "SMCI": {
+   "published": 44
+  },
+  "SMMT": {
+   "published": 25
+  },
+  "SMTC": {
+   "published": 47
+  },
+  "SN": {
+   "published": 4
+  },
+  "SNA": {
+   "published": 47
+  },
+  "SNAP": {
+   "published": 39
+  },
+  "SNDK": {
+   "published": 8
+  },
+  "SNEX": {
+   "published": 47
+  },
+  "SNOW": {
+   "published": 25
+  },
+  "SNPS": {
+   "published": 47
+  },
+  "SNX": {
+   "published": 45,
+   "cash_includes_restricted": 1
+  },
+  "SO": {
+   "published": 44,
+   "no_cash_line": 3
+  },
+  "SOFI": {
+   "published": 24
+  },
+  "SOLS": {
+   "published": 5
+  },
+  "SOLV": {
+   "published": 11
+  },
+  "SPG": {
+   "published": 47
+  },
+  "SPGI": {
+   "published": 47
+  },
+  "SPXC": {
+   "published": 47
+  },
+  "SRE": {
+   "published": 47
+  },
+  "SSB": {
+   "published_bank_tie": 15,
+   "bank_cash_definition": 32
+  },
+  "SSD": {
+   "published": 47
+  },
+  "SSNC": {
+   "published": 47
+  },
+  "SSRM": {
+   "published": 24
+  },
+  "ST": {
+   "published": 47
+  },
+  "STAG": {
+   "published": 47
+  },
+  "STE": {
+   "published": 26,
+   "cash_includes_restricted": 5
+  },
+  "STLD": {
+   "published": 47
+  },
+  "STRL": {
+   "published": 47
+  },
+  "STT": {
+   "bank_cash_definition": 47
+  },
+  "STX": {
+   "published": 47
+  },
+  "STZ": {
+   "published": 46
+  },
+  "SUI": {
+   "published": 20,
+   "cash_includes_restricted": 27
+  },
+  "SUN": {
+   "published": 30,
+   "cash_includes_restricted": 17
+  },
+  "SUNB": {
+   "published": 4,
+   "no_cash_line": 1
+  },
+  "SW": {
+   "published": 10,
+   "cash_includes_restricted": 1
+  },
+  "SWK": {
+   "published": 47
+  },
+  "SWKS": {
+   "published": 47
+  },
+  "SWX": {
+   "published": 39,
+   "no_cash_line": 1
+  },
+  "SXT": {
+   "published": 47
+  },
+  "SYF": {
+   "published": 47
+  },
+  "SYK": {
+   "published": 47
+  },
+  "SYM": {
+   "published": 22,
+   "no_cash_line": 1
+  },
+  "SYRE": {
+   "published": 42
+  },
+  "SYY": {
+   "published": 47
+  },
+  "T": {
+   "published": 47
+  },
+  "TAP": {
+   "published": 47
+  },
+  "TDG": {
+   "published": 38,
+   "cash_includes_restricted": 9
+  },
+  "TDY": {
+   "published": 47
+  },
+  "TEAM": {
+   "published": 17
+  },
+  "TECH": {
+   "published": 47
+  },
+  "TEL": {
+   "published": 47
+  },
+  "TER": {
+   "published": 47
+  },
+  "TEVA": {
+   "published": 36
+  },
+  "TEX": {
+   "published": 47
+  },
+  "TFC": {
+   "published_bank_tie": 22,
+   "bank_cash_definition": 25
+  },
+  "TFX": {
+   "published": 47
+  },
+  "TGT": {
+   "cash_combined_with_investments": 10,
+   "published": 37
+  },
+  "TGTX": {
+   "published": 47
+  },
+  "THC": {
+   "published": 47
+  },
+  "THG": {
+   "published": 45,
+   "cash_includes_restricted": 2
+  },
+  "TJX": {
+   "published": 47
+  },
+  "TKO": {
+   "published": 13
+  },
+  "TKR": {
+   "published": 47
+  },
+  "TLN": {
+   "published": 18
+  },
+  "TMO": {
+   "published": 47
+  },
+  "TMUS": {
+   "published": 47
+  },
+  "TOL": {
+   "published": 47
+  },
+  "TOST": {
+   "published": 21
+  },
+  "TPG": {
+   "published": 19
+  },
+  "TPL": {
+   "published": 24
+  },
+  "TPR": {
+   "published": 47
+  },
+  "TRGP": {
+   "published": 47
+  },
+  "TRMB": {
+   "published": 47
+  },
+  "TRNO": {
+   "published": 47
+  },
+  "TROW": {
+   "published": 47
+  },
+  "TRU": {
+   "published": 47
+  },
+  "TRV": {
+   "published": 40,
+   "cash_includes_restricted": 7
+  },
+  "TSCO": {
+   "published": 47
+  },
+  "TSLA": {
+   "published": 47
+  },
+  "TSN": {
+   "published": 47
+  },
+  "TT": {
+   "published": 33,
+   "cash_includes_restricted": 14
+  },
+  "TTAN": {
+   "published": 9
+  },
+  "TTC": {
+   "published": 19,
+   "cash_includes_restricted": 28
+  },
+  "TTD": {
+   "published": 41
+  },
+  "TTEK": {
+   "published": 47
+  },
+  "TTMI": {
+   "published": 47
+  },
+  "TTWO": {
+   "published": 47
+  },
+  "TW": {
+   "published": 31
+  },
+  "TWLO": {
+   "published": 42
+  },
+  "TWST": {
+   "published": 32
+  },
+  "TXG": {
+   "published": 29
+  },
+  "TXN": {
+   "published": 47
+  },
+  "TXNM": {
+   "published": 36,
+   "cash_includes_restricted": 11
+  },
+  "TXRH": {
+   "published": 47
+  },
+  "TXT": {
+   "published": 15,
+   "no_cash_line": 32
+  },
+  "TYL": {
+   "published": 47
+  },
+  "U": {
+   "published": 25
+  },
+  "UAL": {
+   "published": 47
+  },
+  "UBER": {
+   "published": 31
+  },
+  "UBSI": {
+   "published_bank_tie": 10,
+   "bank_cash_definition": 37
+  },
+  "UDR": {
+   "published": 47
+  },
+  "UGI": {
+   "published": 47
+  },
+  "UHAL": {
+   "published": 47
+  },
+  "UHS": {
+   "published": 47
+  },
+  "UI": {
+   "published": 47
+  },
+  "ULS": {
+   "published": 11
+  },
+  "ULTA": {
+   "published": 47
+  },
+  "UMBF": {
+   "bank_cash_definition": 47
+  },
+  "UNH": {
+   "published": 47
+  },
+  "UNM": {
+   "published": 47
+  },
+  "UNP": {
+   "published": 47
+  },
+  "UPS": {
+   "published": 47
+  },
+  "URBN": {
+   "published": 47
+  },
+  "URI": {
+   "published": 47
+  },
+  "USB": {
+   "bank_cash_definition": 47
+  },
+  "USFD": {
+   "published": 42
+  },
+  "UTHR": {
+   "published": 47
+  },
+  "V": {
+   "published": 47
+  },
+  "VAL": {
+   "published": 48
+  },
+  "VCTR": {
+   "published": 36
+  },
+  "VEEV": {
+   "published": 47
+  },
+  "VFC": {
+   "published": 47
+  },
+  "VG": {
+   "published": 7
+  },
+  "VIAV": {
+   "published": 47
+  },
+  "VICI": {
+   "no_cash_line": 4,
+   "published": 33
+  },
+  "VICR": {
+   "published": 47
+  },
+  "VLO": {
+   "cash_combined_with_investments": 14,
+   "published": 33
+  },
+  "VLTO": {
+   "published": 12,
+   "no_cash_line": 2
+  },
+  "VLY": {
+   "published_bank_tie": 17,
+   "bank_cash_definition": 30
+  },
+  "VMC": {
+   "published": 47
+  },
+  "VMI": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  },
+  "VMRK": {
+   "published": 45
+  },
+  "VNO": {
+   "published": 47
+  },
+  "VNOM": {
+   "published": 5
+  },
+  "VOYA": {
+   "two_cash_lines": 8,
+   "published": 22,
+   "no_cash_line": 17
+  },
+  "VRNS": {
+   "published": 47
+  },
+  "VRSK": {
+   "published": 47
+  },
+  "VRSN": {
+   "published": 47
+  },
+  "VRT": {
+   "published": 33,
+   "no_cash_line": 1
+  },
+  "VRTX": {
+   "published": 47
+  },
+  "VSAT": {
+   "published": 47
+  },
+  "VST": {
+   "published": 39
+  },
+  "VSXY": {
+   "published": 25
+  },
+  "VTR": {
+   "published": 47
+  },
+  "VTRS": {
+   "no_cash_line": 4,
+   "published": 23
+  },
+  "VZ": {
+   "published": 47
+  },
+  "W": {
+   "published": 33,
+   "cash_includes_restricted": 14
+  },
+  "WAB": {
+   "published": 31,
+   "cash_includes_restricted": 16
+  },
+  "WAL": {
+   "bank_cash_definition": 30,
+   "published_bank_tie": 17
+  },
+  "WAT": {
+   "published": 47
+  },
+  "WCC": {
+   "published": 29,
+   "cash_includes_restricted": 18
+  },
+  "WCN": {
+   "published": 43
+  },
+  "WDAY": {
+   "published": 47
+  },
+  "WDC": {
+   "published": 47
+  },
+  "WEC": {
+   "published": 47
+  },
+  "WELL": {
+   "published": 46,
+   "no_cash_line": 1
+  },
+  "WES": {
+   "published": 47
+  },
+  "WEX": {
+   "published": 47
+  },
+  "WFC": {
+   "bank_cash_definition": 47
+  },
+  "WFRD": {
+   "published": 47
+  },
+  "WH": {
+   "published": 34,
+   "no_cash_line": 2
+  },
+  "WLK": {
+   "published": 47
+  },
+  "WM": {
+   "published": 47
+  },
+  "WMB": {
+   "published": 36,
+   "cash_includes_restricted": 11
+  },
+  "WMG": {
+   "published": 47
+  },
+  "WMS": {
+   "published": 47
+  },
+  "WMT": {
+   "published": 47
+  },
+  "WPC": {
+   "published": 47
+  },
+  "WRB": {
+   "published": 47
+  },
+  "WSM": {
+   "published": 47
+  },
+  "WSO": {
+   "published": 47
+  },
+  "WST": {
+   "published": 47
+  },
+  "WTFC": {
+   "bank_cash_definition": 47
+  },
+  "WTRG": {
+   "published": 43,
+   "cash_includes_restricted": 4
+  },
+  "WTS": {
+   "published": 47
+  },
+  "WTW": {
+   "published": 47
+  },
+  "WULF": {
+   "published": 47
+  },
+  "WWD": {
+   "published": 28,
+   "cash_includes_restricted": 19
+  },
+  "WY": {
+   "published": 47
+  },
+  "WYNN": {
+   "published": 47
+  },
+  "XEL": {
+   "published": 42,
+   "cash_includes_restricted": 5
+  },
+  "XPO": {
+   "published": 47
+  },
+  "XYL": {
+   "published": 47
+  },
+  "XYZ": {
+   "published": 43
+  },
+  "YUM": {
+   "published": 45,
+   "no_cash_line": 2
+  },
+  "YUMC": {
+   "published": 38,
+   "cash_includes_restricted": 3
+  },
+  "Z": {
+   "published": 47
+  },
+  "ZBH": {
+   "published": 47
+  },
+  "ZBRA": {
+   "published": 47
+  },
+  "ZETA": {
+   "published": 22
+  },
+  "ZION": {
+   "bank_cash_definition": 47
+  },
+  "ZM": {
+   "published": 31
+  },
+  "ZS": {
+   "published": 35
+  },
+  "ZTS": {
+   "published": 39,
+   "cash_includes_restricted": 8
+  },
+  "ZWS": {
+   "published": 46,
+   "cash_includes_restricted": 1
+  }
+ }
+}

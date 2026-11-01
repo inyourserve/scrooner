@@ -21,6 +21,30 @@ jobs:
   python:
     name: Python tests and correctness lint
     runs-on: ubuntu-latest
+    # A real Postgres for the DB-backed tests (added 2026-11-03). Before this, every
+    # test that needs SCROONER_TEST_DATABASE_URL was skipped in CI (107 of them), so
+    # no SQL path had ever run here. Never mark a failing DB test as skipped to get green.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: scrooner_test
+          POSTGRES_PASSWORD: scrooner_test
+          POSTGRES_DB: scrooner_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U scrooner_test -d scrooner_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: scrooner_test
+      PGPASSWORD: scrooner_test
+      PGDATABASE: scrooner_test
+      SCROONER_TEST_DATABASE_URL: postgresql://scrooner_test:scrooner_test@localhost:5432/scrooner_test
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -36,8 +60,15 @@ jobs:
         run: uv sync --project pipeline --locked --dev
       - name: Install locked backend dependencies
         run: uv sync --project apps/backend --locked --dev
+      - name: Prepare the test database (Supabase-owned objects, then every migration)
+        run: |
+          set -euo pipefail
+          psql --set ON_ERROR_STOP=1 --file scripts/ci/bootstrap_supabase.sql
+          for migration in pipeline/db/migrations/*.sql; do
+            psql --set ON_ERROR_STOP=1 --file "$migration"
+          done
       - name: Pipeline tests
-        run: uv run --project pipeline pytest pipeline/tests
+        run: uv run --project pipeline pytest pipeline/tests -rs
       - name: Backend tests
         working-directory: apps/backend
         run: uv run pytest tests

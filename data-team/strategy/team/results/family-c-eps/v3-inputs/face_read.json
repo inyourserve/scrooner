@@ -1,0 +1,442 @@
+[
+ {
+  "canonical_fact_id": 100944030,
+  "company_id": 5580,
+  "cik": "0001780312",
+  "concept": "diluted_eps_resolved",
+  "period_id": 921027,
+  "start": "2020-07-01",
+  "end": "2020-09-30",
+  "fp": "Q3",
+  "stored": "0",
+  "tags": [
+   "EarningsPerShareDiluted",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-0.4300",
+   "-0.0100"
+  ],
+  "accession": "0001213900-20-036663",
+  "face": [
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Weighted average shares outstanding, basic and diluted",
+    "value": "7007989"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Weighted average shares outstanding, basic and diluted",
+    "value": "7005591"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Basic and diluted net loss per common share",
+    "value": "-0.01"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Basic and diluted net loss per common share",
+    "value": "-0.04"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 100944038,
+  "company_id": 5580,
+  "cik": "0001780312",
+  "concept": "diluted_eps_resolved",
+  "period_id": 921080,
+  "start": "2020-04-01",
+  "end": "2020-06-30",
+  "fp": "Q2",
+  "stored": "0",
+  "tags": [
+   "EarningsPerShareDiluted",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-1.1000",
+   "-0.0100"
+  ],
+  "accession": "0001213900-20-021916",
+  "face": [
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Weighted average shares outstanding, basic and diluted",
+    "value": "7005122"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Basic and diluted net loss per common share",
+    "value": "-0.01"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 182492551,
+  "company_id": 3354,
+  "cik": "0001091667",
+  "concept": "diluted_eps_resolved",
+  "period_id": 424492,
+  "start": "2015-10-01",
+  "end": "2015-12-31",
+  "fp": "Q4",
+  "stored": "-1.10",
+  "tags": [
+   "EarningsPerShareDiluted",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-1.2100",
+   "-1.0900"
+  ],
+  "accession": "0001091667-16-000396",
+  "face": [
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Earnings per common share, diluted (in dollars per share)",
+    "value": "-1.09"
+   },
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Weighted average common shares outstanding, diluted (in shares)",
+    "value": "112106255"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 252084228,
+  "company_id": 3354,
+  "cik": "0001091667",
+  "concept": "basic_eps_resolved",
+  "period_id": 424492,
+  "start": "2015-10-01",
+  "end": "2015-12-31",
+  "fp": "Q4",
+  "stored": "-1.10",
+  "tags": [
+   "EarningsPerShareBasic",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-1.2100",
+   "-1.0900"
+  ],
+  "accession": "0001091667-16-000396",
+  "face": [
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Earnings per common share, basic (in dollars per share)",
+    "value": "-1.09"
+   },
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Weighted average common shares outstanding, basic (in shares)",
+    "value": "112106255"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 252210674,
+  "company_id": 3000,
+  "cik": "0001564708",
+  "concept": "basic_eps_resolved",
+  "period_id": 728537,
+  "start": "2015-04-01",
+  "end": "2015-06-30",
+  "fp": "Q4",
+  "stored": "-0.65",
+  "tags": [
+   "EarningsPerShareBasic",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-0.6500",
+   "-0.0100"
+  ],
+  "accession": "0001193125-15-288946",
+  "face": [
+   {
+    "report": "Quarterly Data - Schedule of Quarterly Financial Information (Detail)",
+    "label": "Income (loss) available to News Corporation stockholders per share - basic",
+    "value": "-0.65"
+   },
+   {
+    "report": "Quarterly Data - Schedule of Quarterly Financial Information (Detail)",
+    "label": "Income (loss) available to News Corporation stockholders per share - basic",
+    "value": "-0.26"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 286113509,
+  "company_id": 3354,
+  "cik": "0001091667",
+  "concept": "basic_eps",
+  "period_id": 424482,
+  "start": "2015-07-01",
+  "end": "2015-09-30",
+  "fp": "Q3",
+  "stored": "0.49",
+  "tags": [
+   "EarningsPerShareBasic",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 4,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "0.4800",
+   "0.5400"
+  ],
+  "accession": "0001091667-15-000263",
+  "face": []
+ },
+ {
+  "canonical_fact_id": 286113518,
+  "company_id": 3354,
+  "cik": "0001091667",
+  "concept": "basic_eps",
+  "period_id": 424492,
+  "start": "2015-10-01",
+  "end": "2015-12-31",
+  "fp": "Q4",
+  "stored": "-1.10",
+  "tags": [
+   "EarningsPerShareBasic",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-1.2100",
+   "-1.0900"
+  ],
+  "accession": "0001091667-16-000396",
+  "face": [
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Earnings per common share, basic (in dollars per share)",
+    "value": "-1.09"
+   },
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Weighted average common shares outstanding, basic (in shares)",
+    "value": "112106255"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 286114560,
+  "company_id": 3354,
+  "cik": "0001091667",
+  "concept": "diluted_eps",
+  "period_id": 424482,
+  "start": "2015-07-01",
+  "end": "2015-09-30",
+  "fp": "Q3",
+  "stored": "0.49",
+  "tags": [
+   "EarningsPerShareDiluted",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 4,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "0.4800",
+   "0.5300"
+  ],
+  "accession": "0001091667-15-000263",
+  "face": []
+ },
+ {
+  "canonical_fact_id": 286114569,
+  "company_id": 3354,
+  "cik": "0001091667",
+  "concept": "diluted_eps",
+  "period_id": 424492,
+  "start": "2015-10-01",
+  "end": "2015-12-31",
+  "fp": "Q4",
+  "stored": "-1.10",
+  "tags": [
+   "EarningsPerShareDiluted",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-1.2100",
+   "-1.0900"
+  ],
+  "accession": "0001091667-16-000396",
+  "face": [
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Earnings per common share, diluted (in dollars per share)",
+    "value": "-1.09"
+   },
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Weighted average common shares outstanding, diluted (in shares)",
+    "value": "112106255"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 288781823,
+  "company_id": 3028,
+  "cik": "0001567683",
+  "concept": "basic_eps",
+  "period_id": 739360,
+  "start": "2014-10-01",
+  "end": "2014-12-31",
+  "fp": "Q4",
+  "stored": "-0.03",
+  "tags": [
+   "EarningsPerShareBasic",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "0.0100",
+   "0.0200"
+  ],
+  "accession": "0001567683-15-000003",
+  "face": [
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Net Income/(Loss) per Weighted Average Common Share - Basic (in dollars per share)",
+    "value": "0.02"
+   },
+   {
+    "report": "Unaudited Quarterly Financial Data (Details)",
+    "label": "Weighted average number of common shares outstanding - basic (in shares)",
+    "value": "35"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 289057368,
+  "company_id": 3000,
+  "cik": "0001564708",
+  "concept": "basic_eps",
+  "period_id": 728537,
+  "start": "2015-04-01",
+  "end": "2015-06-30",
+  "fp": "Q4",
+  "stored": "-0.65",
+  "tags": [
+   "EarningsPerShareBasic",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-0.6500",
+   "-0.0100"
+  ],
+  "accession": "0001193125-15-288946",
+  "face": [
+   {
+    "report": "Quarterly Data - Schedule of Quarterly Financial Information (Detail)",
+    "label": "Income (loss) available to News Corporation stockholders per share - basic",
+    "value": "-0.65"
+   },
+   {
+    "report": "Quarterly Data - Schedule of Quarterly Financial Information (Detail)",
+    "label": "Income (loss) available to News Corporation stockholders per share - basic",
+    "value": "-0.26"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 290420595,
+  "company_id": 5580,
+  "cik": "0001780312",
+  "concept": "diluted_eps",
+  "period_id": 921027,
+  "start": "2020-07-01",
+  "end": "2020-09-30",
+  "fp": "Q3",
+  "stored": "0",
+  "tags": [
+   "EarningsPerShareDiluted",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-0.4300",
+   "-0.0100"
+  ],
+  "accession": "0001213900-20-036663",
+  "face": [
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Weighted average shares outstanding, basic and diluted",
+    "value": "7007989"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Weighted average shares outstanding, basic and diluted",
+    "value": "7005591"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Basic and diluted net loss per common share",
+    "value": "-0.01"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Basic and diluted net loss per common share",
+    "value": "-0.04"
+   }
+  ]
+ },
+ {
+  "canonical_fact_id": 290420604,
+  "company_id": 5580,
+  "cik": "0001780312",
+  "concept": "diluted_eps",
+  "period_id": 921080,
+  "start": "2020-04-01",
+  "end": "2020-06-30",
+  "fp": "Q2",
+  "stored": "0",
+  "tags": [
+   "EarningsPerShareDiluted",
+   "EarningsPerShareBasicAndDiluted"
+  ],
+  "nonauth_copies": 2,
+  "outcome": "fsn_copies_disagree",
+  "values": [
+   "-1.1000",
+   "-0.0100"
+  ],
+  "accession": "0001213900-20-021916",
+  "face": [
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Weighted average shares outstanding, basic and diluted",
+    "value": "7005122"
+   },
+   {
+    "report": "Condensed Statement of Operations (Unaudited)",
+    "label": "Basic and diluted net loss per common share",
+    "value": "-0.01"
+   }
+  ]
+ }
+]

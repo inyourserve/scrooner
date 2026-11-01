@@ -1,0 +1,21 @@
+{
+  "rule_id": "retire.derived_per_share_cells@1",
+  "plan_digest": "e19bd60716f2d1ae22fa5c88dde61145703034efe449ec9fc9b006a06602f55e",
+  "enable_with": "SCROONER_RULES_ENABLED=retire.derived_per_share_cells@1 (dispatch input rules='on:retire.derived_per_share_cells@1')",
+  "steps": [
+    "1 apply_plan(cur, plan, run_id, expected_digest=<plan_digest>) in ONE reviewed transaction; archive tables must exist (migration 0098 + fact_authority_retired migration)",
+    "2 Normalizer re-run for the affected companies",
+    "3 Stage 2e dedupe re-run",
+    "4 Verifier sample + scrooner-certify re-run",
+    "5 on failure: restore(cur, run_id) (cells from canonical_fact_retired, facts from fact_authority_retired)"
+  ],
+  "counts": {
+    "facts_to_demote": 10952,
+    "facts_to_promote": 0,
+    "facts_to_supersede": 0,
+    "cells_replace": 204,
+    "cells_remove": 21117,
+    "cells_review_not_retired": 463,
+    "metric_values_to_recompute": 25655
+  }
+}

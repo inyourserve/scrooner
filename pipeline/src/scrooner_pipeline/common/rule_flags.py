@@ -87,10 +87,26 @@ RULES: dict[str, Rule] = {
             "combined-filing primary registrant owns the accession (P1)",
         ),
         _r(
+            "entity.shared_accession_demote_coregistrant_facts@1",
+            "-",
+            "engineering",
+            "demote a co-registrant's copies of a combined filing's facts and archive the cells they fed",
+            dry_run=True,
+        ),
+        _r(
             "identity.cik_name_ticker@1",
             "RF-20",
             "lane1",
             "audited identity fixes (script-applied; the override READ is data-driven, not flag-driven)",
+        ),
+        # ---- income-statement slot records: blank-reason write path (package 2)
+        _r(
+            "slot.is_operating_income_not_presented@1",
+            "-",
+            "income_statement",
+            "operating income not printed on the filing's face: blank reason + hide of the derived value "
+            "(mapper/slot_is_not_presented.py)",
+            dry_run=True,
         ),
         # ---- lane 2: metric-stage guards
         _r(
@@ -264,7 +280,8 @@ RULES: dict[str, Rule] = {
             "split.event_basis@1",
             "RF-22",
             "period_engineer",
-            "split event basis (WO-22)",
+            "split re-base pass: per-share and share counts on one basis by source filing date (WO-22, corporate_actions/share_basis.py)",
+            dry_run=True,
         ),
         _r(
             "stale.non_ttm_latest_period@1",
@@ -303,6 +320,13 @@ RULES: dict[str, Rule] = {
             "-",
             "data_engineer",
             "retire proxy-statement (DEF 14A family) facts as authoritative/displayed sources",
+            dry_run=True,
+        ),
+        _r(
+            "interest_expense.era_tag_fill@1",
+            "B6",
+            "data_engineer",
+            "fill blank interest_expense from InterestExpenseNonoperating (non-banks) / InterestExpenseOperating (banks), 2024+ taxonomy, guarded",
             dry_run=True,
         ),
         # ---- visible-reason rules (root fix #3, reasons/ package); all have a real dry-run path
@@ -349,6 +373,32 @@ RULES: dict[str, Rule] = {
             dry_run=True,
         ),
         _r(
+            "pershare.never_derive_ttm@1",
+            "-",
+            "data_engineer",
+            "per-share TTM and growth never use a derived or YTD-subtracted quarter; TTM EPS = filed FY at a Q4 anchor",
+        ),
+        _r(
+            "retire.derived_per_share_cells@1",
+            "-",
+            "data_engineer",
+            "retire stored derived EPS facts (quarters by subtraction) and their cells",
+        ),
+        _r(
+            "ingest.instance_fallback@1",
+            "-",
+            "engineering",
+            "B9: facts for a periodic filing the companyfacts API never carried, from the FSN set (or the instance), through facts.py",
+            dry_run=True,
+        ),
+        _r(
+            "ingest.instance_fallback@1",
+            "-",
+            "engineering",
+            "B9: facts for a periodic filing the companyfacts API never carried, from the FSN set (or the instance), through facts.py",
+            dry_run=True,
+        ),
+        _r(
             "ownership.institutional_share_base@1",
             "RF-47",
             "lane2",
@@ -368,6 +418,64 @@ RULES: dict[str, Rule] = {
             "cashflow",
             "share_buybacks_resolved from the printed common-repurchase line (release_buybacks_1)",
         ),
+        # ---- slot-record release packages (scrooner-15): flags for the capex, D&A,
+        # cash and total-debt packages. Registered default OFF so the flag in each
+        # manifest is a real, checkable rule id (before this, rule_enabled() raised
+        # 'unregistered rule' and the manifests' 'registered OFF' was only a label).
+        _r(
+            "slot.capex@1",
+            "-",
+            "cashflow",
+            "capex_resolved from the printed capital-expenditure line (release_capex_1)",
+        ),
+        _r(
+            "slot.d_and_a@1",
+            "-",
+            "cashflow",
+            "depreciation_and_amortization_resolved from the printed line (release_da_1)",
+        ),
+        _r(
+            "slot.cash_and_equivalents@1",
+            "-",
+            "balance_sheet",
+            "cash_and_equivalents_resolved from the printed balance-sheet line (release_cash_1)",
+        ),
+        _r(
+            "slot.total_debt@1",
+            "-",
+            "balance_sheet",
+            "total_debt_resolved from borrowings plus note finance leases (release_debt_1)",
+        ),
+        _r(
+            "slot.bs_total_liabilities@1",
+            "-",
+            "balance_sheet",
+            "total_liabilities_resolved from the printed balance-sheet total (release_bs_total_liabilities_1)",
+        ),
+        _r(
+            "slot.is_net_income@1",
+            "-",
+            "income_statement",
+            "net_income_resolved from the printed income-statement line (release_is_net_income_1 and utilities add-on)",
+        ),
+        _r(
+            "slot.is_operating_income@1",
+            "-",
+            "income_statement",
+            "operating_income_resolved from the printed income-statement line (release_is_operating_income_1)",
+        ),
+        _r(
+            "slot.is_revenue@1",
+            "-",
+            "income_statement",
+            "revenue_resolved from the printed income-statement line (release_is_revenue_1 and utilities add-on)",
+        ),
+        _r(
+            "slot.is_revenue_tagged_total_sum@1",
+            "-",
+            "income_statement",
+            "revenue_resolved where printed revenue lines sum to the filer's tagged total (release_is_revenue_2)",
+        ),
     )
 }
 
@@ -375,7 +483,11 @@ RULES: dict[str, Rule] = {
 RULE_PERIODIC_FORM_ONLY = "source.periodic_form_only@1"
 RULE_MATCHING_COPIES = "dedupe.matching_copies@1"
 RULE_SHARED_ACCESSION_PRIMARY = "entity.shared_accession_primary_filer@1"
+RULE_SHARED_ACCESSION_DEMOTE_COREGISTRANT = (
+    "entity.shared_accession_demote_coregistrant_facts@1"
+)
 RULE_IDENTITY = "identity.cik_name_ticker@1"
+RULE_INSTANCE_FALLBACK = "ingest.instance_fallback@1"
 KNOWN_RULES = frozenset(RULES)
 
 
@@ -429,6 +541,25 @@ def rule_enabled(rule_id: str, environ: Mapping[str, str] | None = None) -> bool
 
 def rule_dry_run(rule_id: str, environ: Mapping[str, str] | None = None) -> bool:
     return rule_mode(rule_id, environ) == DRY_RUN
+
+
+SPLIT_BASIS_RULE = "split.event_basis@1"
+PER_SHARE_NEVER_DERIVE_RULE = "pershare.never_derive@1"
+
+
+def per_share_pair_enabled(environ: Mapping[str, str] | None = None) -> bool:
+    """True when BOTH split.event_basis@1 and pershare.never_derive@1 are on,
+    False when neither is. Exactly one on raises: a half-shipped pair would
+    re-base values while derived per-share cells (or the legacy writers)
+    still use the old basis."""
+    split_on = rule_enabled(SPLIT_BASIS_RULE, environ)
+    ru1_on = rule_enabled(PER_SHARE_NEVER_DERIVE_RULE, environ)
+    if split_on != ru1_on:
+        raise ValueError(
+            f"{SPLIT_BASIS_RULE} and {PER_SHARE_NEVER_DERIVE_RULE} ship together: "
+            "enable both or neither"
+        )
+    return split_on
 
 
 def parse_dispatch(text: str | None) -> tuple[frozenset[str], frozenset[str]]:

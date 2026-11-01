@@ -102,6 +102,8 @@ class FilingStructure:
     form: str
     filed: date | None
     period: date | None
+    fy: int | None = None
+    fp: str | None = None
     pre: list[PreLine] = field(default_factory=list)
     calc_children: dict[str, list[tuple[str, bool]]] = field(
         default_factory=lambda: defaultdict(list)
@@ -196,6 +198,8 @@ def load_quarter(
                 r["form"],
                 _d8(r.get("filed", "")),
                 _d8(r.get("period", "")),
+                int(r["fy"]) if r.get("fy", "").isdigit() else None,
+                r.get("fp") or None,
             )
     if not out:
         return out

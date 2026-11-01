@@ -1,0 +1,10 @@
+{
+ "rule_id": "retire.derived_ratio_cells@1",
+ "train": "derived-tax-rate-release-1",
+ "confirm_token": "RELEASE-TAX-RATE-A-1",
+ "digest": "d8ee2b36d8c09622cdcd6fef35f8a6fd5388b6431c4d223330532fe896528cac",
+ "dry_run": "../family_a_dryrun_summary.json (cohort v1.1, 2026-11-03)",
+ "cell_lists": "../SUMMARY_COUNTS_TO_CELL_LISTS.json",
+ "company_ids_file": "company_ids.txt",
+ "companies_in_scope": 1000
+}

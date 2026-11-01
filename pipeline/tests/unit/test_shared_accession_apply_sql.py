@@ -266,3 +266,18 @@ def test_rollback_refuses_a_tampered_backup(conn, tmp_path):
     path.write_text(path.read_text().replace("71890000000", "71890000001"))
     with pytest.raises(SystemExit):
         mod.read_backup(tmp_path)
+
+
+@pytest.mark.unit
+def test_digest_is_independent_of_the_session_timezone():
+    from datetime import datetime, timedelta, timezone
+
+    mod = _load_apply_module()
+    utc = datetime(2026, 8, 20, 19, 41, 30, tzinfo=timezone.utc)
+    kolkata = utc.astimezone(timezone(timedelta(hours=5, minutes=30)))
+    assert mod.digest([{"id": 1, "created_at": utc}]) == mod.digest(
+        [{"id": 1, "created_at": kolkata}]
+    )
+    assert mod.digest([{"id": 1, "created_at": utc}]) != mod.digest(
+        [{"id": 1, "created_at": utc + timedelta(seconds=1)}]
+    )

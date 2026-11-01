@@ -1,0 +1,8 @@
+APPLIED 0114_cell_proof sha f065f696161afd9e attempt 1 at 15:45:00 UTC
+APPLIED 0115_slot_protected_cell_value_nullable sha 2501eb60863c8f30 attempt 1 at 15:45:02 UTC
+APPLIED 0116_fact_authority_retired sha b8a944316a6671fe attempt 1 at 15:45:04 UTC
+tables now: ['cell_proof', 'fact_authority_retired']
+slot_protected_cell.value nullable: YES
+indexes: ['cell_proof_company_id_data_point_name_period_grain_period_s_key', 'cell_proof_pkey', 'fact_authority_retired_pkey', 'idx_cell_proof_accession', 'idx_cell_proof_company', 'idx_cell_proof_verdict', 'idx_fact_authority_retired_fact', 'idx_fact_authority_retired_run']
+cell_proof check constraints: 22
+guard trigger: [('trg_slot_protected_cell_guard', 'O')]

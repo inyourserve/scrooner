@@ -41,7 +41,7 @@ import os
 import sys
 import time
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 
@@ -69,7 +69,13 @@ def log(msg: str) -> None:
 def _json_default(o):
     if isinstance(o, Decimal):
         return str(o)
-    if isinstance(o, (date, datetime)):
+    if isinstance(o, datetime):
+        # digests must not depend on the session timezone (rehearsal 2026-10-31:
+        # the same instant rendered +05:30 on one session and +00:00 on another)
+        if o.tzinfo is not None:
+            o = o.astimezone(timezone.utc)
+        return o.isoformat()
+    if isinstance(o, date):
         return o.isoformat()
     raise TypeError(type(o))
 
@@ -503,6 +509,7 @@ def main() -> int:
 
     conn = psycopg.connect(os.environ["DATABASE_URL"], connect_timeout=30)
     conn.execute(f"set statement_timeout = '{args.statement_timeout}'")
+    conn.execute("set timezone = 'UTC'")  # digests compare timestamps as UTC strings
     conn.commit()
     try:
         if args.mode == "rollback":

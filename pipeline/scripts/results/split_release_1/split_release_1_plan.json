@@ -1,0 +1,44 @@
+{
+ "release": "split_release_1",
+ "rules": [
+  "split.event_basis@1",
+  "pershare.never_derive@1"
+ ],
+ "cells": 23423,
+ "companies": 832,
+ "cells_sha256": "10cfa5fcbb5283682521cd267b044427664dc7c7fae2a5bee6ebfce9f7f9e778",
+ "by_op": {
+  "write": 16631,
+  "remove": 6792
+ },
+ "by_class": {
+  "new_value": 5537,
+  "share_count_rebased": 4662,
+  "remove:dividend_basis_pending": 3021,
+  "was_unadjusted": 2930,
+  "rounding_only": 2086,
+  "remove:restated_between_filings": 1584,
+  "was_double_divided": 1416,
+  "remove:basis_review": 679,
+  "remove:basis_review_company_invariant": 546,
+  "remove:dividend_per_share_invalid": 376,
+  "remove:basis_conflict": 280,
+  "remove:units_scale_suspect": 179,
+  "remove:zero_share_count_filed": 69,
+  "remove:held_basis_stale": 35,
+  "remove:eps_basic_diluted_impossible": 18,
+  "remove:quarter_equals_ytd_context_error": 5
+ },
+ "by_concept": {
+  "shares_outstanding_resolved": 7041,
+  "dividends_per_share_resolved": 6055,
+  "basic_eps_resolved": 5181,
+  "diluted_eps_resolved": 5146
+ },
+ "periods_2015_plus": 21096,
+ "left_out": {
+  "derived_eps_owned_by_family_c": 10493,
+  "derived_dps_kept_founder_ruling": 4179,
+  "held_production_has_a_filed_source": 1148
+ }
+}

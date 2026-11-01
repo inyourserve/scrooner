@@ -1,0 +1,52 @@
+{
+ "cfo": {
+  "vs_production": {
+   "publishable_agree": 34020,
+   "publishable_prod_blank": 504,
+   "publishable_differ": 301,
+   "held_prod_has_value": 7388,
+   "held_prod_blank": 156
+  },
+  "held_by_reason": {
+   "restated_copies_disagree": 3479,
+   "hold_identity_terms_missing": 1580,
+   "hold_no_statement_cal": 863,
+   "cfo_total_not_printed": 855,
+   "hold_section_gap": 534,
+   "hold_identity_gap": 127,
+   "stub_column": 75,
+   "member_value_missing": 30,
+   "no_operating_line": 1
+  }
+ },
+ "buybacks": {
+  "vs_production": {
+   "publishable_agree": 21243,
+   "publishable_prod_blank": 609,
+   "publishable_differ": 174,
+   "held_prod_has_value": 5403,
+   "held_prod_blank": 2022
+  },
+  "held_by_reason": {
+   "buyback_combined_with_other_items": 1144,
+   "no_value_this_column": 852,
+   "perimeter_line_unresolved": 723,
+   "hold_identity_terms_missing": 714,
+   "hold_no_financing_calc": 668,
+   "hold_no_statement_cal": 523,
+   "restated_copies_disagree": 422,
+   "net_treasury_line": 362,
+   "perimeter_tax_withholding_shares": 342,
+   "perimeter_multiple_repurchase_lines": 317,
+   "perimeter_sbc_plan_purchase": 294,
+   "perimeter_excise_tax": 276,
+   "perimeter_option_exercise": 253,
+   "perimeter_subsidiary_repurchase": 171,
+   "sign_unclear": 156,
+   "hold_section_gap": 124,
+   "hold_identity_gap": 55,
+   "stub_column": 21,
+   "perimeter_share_swap": 8
+  }
+ }
+}

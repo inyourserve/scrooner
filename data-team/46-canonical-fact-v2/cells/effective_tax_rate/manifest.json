@@ -1,0 +1,25 @@
+{
+ "family": "pershare_derived",
+ "rule_id": "tax.rate_printed_only@1",
+ "git_commit": "17e5264",
+ "produced_at": "2026-10-31T16:30:13+00:00",
+ "rows": 55333,
+ "sha256": "5f453f06120f042899a9659e7473106444f43e2340325c8e51984787fb75e110",
+ "companies": 985,
+ "data_points": [
+  "effective_tax_rate_reported"
+ ],
+ "period_floor": "2014-01-01",
+ "calendar": "expected_periods_2026-10-31.csv.gz",
+ "new_reason_codes": {
+  "no_mapped_tag_filed": "none of the tags mapped to this line is filed for this period (vocabulary or not presented; not proven)",
+  "rate_not_printed_for_period": "the filer prints no effective tax rate for this quarter; a rate is never derived",
+  "derived_value_retired": "the stored value was derived by subtraction, which is invalid for this concept; retired"
+ },
+ "counts": {
+  "effective_tax_rate_reported|defect|no_mapped_tag_filed": 19960,
+  "effective_tax_rate_reported|not_presented|derived_value_retired": 5635,
+  "effective_tax_rate_reported|not_presented|rate_not_printed_for_period": 6268,
+  "effective_tax_rate_reported|value|value": 23470
+ }
+}

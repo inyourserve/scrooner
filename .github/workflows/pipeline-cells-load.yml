@@ -1,0 +1,103 @@
+name: Cell files load (scrooner-cells)
+
+# Manual only. Loads lane cell files (data-team/46-canonical-fact-v2/CELL-FORMAT-v1.md) into
+# analytics.canonical_fact with `scrooner-cells load`, sharded by company_id % shards.
+#
+# Each family runs as one stage (cells-load-stage.yml): every shard PLANS first (all writes
+# rolled back); the apply matrix starts only when every plan shard succeeded. Apply runs with
+# --skip-loaded: a company already loaded from the same file sha by an earlier apply run is
+# skipped, and each company is its own committed transaction, so rerunning this workflow
+# resumes where a dead run stopped. The optional second family starts only after the first
+# family's apply succeeded.
+#
+# A production write: dispatch with apply=true only on the founder's typed authorization.
+# Connections: one per shard (the loader closes its first connection before the company loop),
+# shards <= 40 (founder 2026-11-01: at most 40 DB connections). Joins heavy-db-jobs so it never
+# runs beside the nightly refresh or another heavy job.
+on:
+  workflow_dispatch:
+    inputs:
+      code_ref:
+        description: "Git ref holding the loader (scrooner-cells is not on main yet)"
+        default: "work/engineering/canonical-fact-v2"
+      family:
+        description: "First family (spec section 4), e.g. capex_da_cash_debt"
+        required: true
+      file:
+        description: "Its cell file, e.g. fsn-notes/cells/capex_da_cash_debt/2026-11-04/cells.jsonl.gz"
+        required: true
+      then_family:
+        description: "Optional second family, loaded after the first one's apply succeeded"
+        default: ""
+      then_file:
+        description: "Its cell file"
+        default: ""
+      shards:
+        description: "Parallel loaders (1 connection each), 1..40"
+        default: "20"
+      apply:
+        description: "Apply after a clean plan (default false = plan only, nothing written)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# One queue for every heavy database workflow (see pipeline-tag-library.yml for the history).
+# GitHub keeps ONE pending run per group: check `gh run list` before dispatching a manual run.
+concurrency:
+  group: heavy-db-jobs
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    name: Validate inputs and connection headroom
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SHARDS: ${{ inputs.shards }}
+      THEN_FAMILY: ${{ inputs.then_family }}
+      THEN_FILE: ${{ inputs.then_file }}
+    steps:
+      - name: Check shards, second family and live client connections
+        run: |
+          set -eu
+          case "$SHARDS" in ''|*[!0-9]*) echo "::error::shards must be a number"; exit 1;; esac
+          if [ "$SHARDS" -lt 1 ] || [ "$SHARDS" -gt 40 ]; then
+            echo "::error::shards must be 1..40 (budget: at most 40 DB connections)"; exit 1
+          fi
+          if [ -n "$THEN_FAMILY" ] && [ -z "$THEN_FILE" ]; then
+            echo "::error::then_family needs then_file"; exit 1
+          fi
+          # max_connections is 90; leave room for the platform, the pooler and other sessions
+          used=$(psql "$DATABASE_URL" -tAc "select count(*) from pg_stat_activity where backend_type = 'client backend'")
+          echo "client backends now: $used; this run adds up to $SHARDS"
+          if [ $((used + SHARDS)) -gt 80 ]; then
+            echo "::error::$used client backends + $SHARDS shards would exceed 80 of max_connections 90"; exit 1
+          fi
+
+  first:
+    name: ${{ inputs.family }}
+    needs: preflight
+    uses: ./.github/workflows/cells-load-stage.yml
+    with:
+      code_ref: ${{ inputs.code_ref }}
+      family: ${{ inputs.family }}
+      file: ${{ inputs.file }}
+      shards: ${{ inputs.shards }}
+      apply: ${{ inputs.apply }}
+    secrets: inherit
+
+  then:
+    name: ${{ inputs.then_family }}
+    needs: first
+    if: inputs.then_family != ''
+    uses: ./.github/workflows/cells-load-stage.yml
+    with:
+      code_ref: ${{ inputs.code_ref }}
+      family: ${{ inputs.then_family }}
+      file: ${{ inputs.then_file }}
+      shards: ${{ inputs.shards }}
+      apply: ${{ inputs.apply }}
+    secrets: inherit
