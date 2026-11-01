@@ -15,9 +15,7 @@ usage (CLI): scrooner-fsn shard --out companies --ciks ... [--periods 2014q1,...
 
 from __future__ import annotations
 
-import csv
 import hashlib
-import io
 import json
 import os
 import shutil
@@ -117,21 +115,11 @@ class Writer:
             d = self.out / cik
             d.mkdir(parents=True, exist_ok=True)
             f = d / f"{table}.tsv.zst"
-            text = io.StringIO()
-            w = csv.writer(
-                text,
-                delimiter="\t",
-                quoting=csv.QUOTE_NONE,
-                quotechar="",
-                escapechar="\\",
-                lineterminator="\n",
-            )
-            if not f.exists():
-                w.writerow(self.headers[table])
-            w.writerows(rows)
+            lines = [] if f.exists() else ["\t".join(self.headers[table])]
+            lines.extend("\t".join(r) for r in rows)
             frame = subprocess.run(
                 ["zstd", "-q", "-c", "-3"],
-                input=text.getvalue().encode(),
+                input=("\n".join(lines) + "\n").encode(),
                 capture_output=True,
                 check=True,
             ).stdout
@@ -271,21 +259,13 @@ def finalize(
                 continue
             seen.add(k)
             rows.append(list(r.values()))
-        text = io.StringIO()
-        w = csv.writer(
-            text,
-            delimiter="\t",
-            quoting=csv.QUOTE_NONE,
-            quotechar="",
-            escapechar="\\",
-            lineterminator="\n",
+        body = (
+            "\n".join(["\t".join(header or []), *("\t".join(r) for r in rows)]) + "\n"
         )
-        w.writerow(header or [])
-        w.writerows(rows)
         f.write_bytes(
             subprocess.run(
                 ["zstd", "-q", "-c", "-3"],
-                input=text.getvalue().encode(),
+                input=body.encode(),
                 capture_output=True,
                 check=True,
             ).stdout
