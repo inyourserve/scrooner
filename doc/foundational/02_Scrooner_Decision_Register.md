@@ -126,6 +126,10 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
   4. Periods before a company's first filing or IPO are outside its window and are not cells.
   5. Any other blank is a defect to fix: derive it under SAME_BASIS, release it after the Verifier, or capture it from the filing. A blank is never a resting state.
   6. The target does not loosen any correctness rule: never fabricate a value, never fall back to an older vintage, never derive EPS or instants, and pass every filing check. Until a defect is fixed, the cell stays blank with its reason and the company does not pass the gate.
+- **Founder ruling of 2026-11-01: BDC revenue and earnings** (the founder typed "yes" in scrooner-df, Dhairya's session, and Dhairya relayed it to the release approver; the approver did not hear it directly). For business development companies (ARCC, BXSL; the `bdc` template, `data-team/strategy/SECTOR-TEMPLATES-2026-11-01.md` §8):
+  1. Revenue = total investment income as printed (interest, dividend and fee income).
+  2. The earnings line = net investment income (NII) as printed.
+  3. Both are face lines taken as printed, never derived.
 
 ## Rejected or deferred directions
 

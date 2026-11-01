@@ -115,7 +115,7 @@ Status: **APPROVED WITH CORRECTIONS**, under the all-agent approver policy (appr
    - REP: total investment income replaces revenue.
    - IN: net investment income, NAV per share, total debt / D/E (asset coverage), NII per share.
    - OUT by definition: COR/GP, inventory, R&D, current ratio family, EBITDA family, capex/FCF family.
-   - The NII definition stays `definition_pending` until the open accountant item (doc 50 v1) is decided; it is a novel definition, so it goes to the founder.
+   - **Ruled by the founder 2026-11-01** (doc 02): revenue = total investment income as printed (interest, dividend and fee income); the earnings line = net investment income as printed. The seeder file marks both as ruled, not `definition_pending`.
 5. **Correction, CBC.** CBC is Central Bancompany, Inc. (CIK 0002065601), a bank holding company with no SIC in our master. Assign it to `bank` by company assignment. Delete it from §1's list of tag false positives.
 6. **Cohort:** v1.1, 1,000 companies (`data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv`), not shards.csv's 986. Redo §1's sum check with ARCC, BXSL and CBC moved.
 7. **Lender (n=7) and mortgage REIT (n=2):** the inherited OUT marks are approved as defaults only. The FSN company step decides per company.
