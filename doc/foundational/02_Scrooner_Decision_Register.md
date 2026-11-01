@@ -118,6 +118,15 @@ Pure-EDGAR metrics are computable as soon as Mapper/Metrics (Part 3) lands. Pric
   6. This retires each lane's own whole-cohort FSN pass and quarter derivation, `materialize_fsn_fact`, `unrestated_single_value` and migration 0101 (left unapplied).
   7. Production steps need three separate founder authorizations, typed in the release approver's session: (1) migrations 0117/0118/0119; (2) the MSFT and HD pilot; (3) the 1,000-company cohort.
 
+
+- **Founder ruling of 2026-11-01: sector templates and 100% coverage** (typed by the founder in scrooner-ca, the chief of staff's session, and relayed to the release approver; the approver did not hear it directly). In the founder's words: "I don't want blank cells. If a sector's companies don't report a field, set different templates sector-wise, but keep 100% coverage." It amends the company-wise FSN statement store entry above:
+  1. A field is shown for a company only if its sector template includes that field, and every displayed cell has a value.
+  2. Coverage is valued cells ÷ template cells, with a target of 100%. This replaces the 95% bar in gates G2 (MSFT and HD at 100% of their template) and G3 (the top 100 at 100%).
+  3. A line the company prints combined with others (for example D&A inside another line) is shown as the company's own combined line in its template, never as a blank, and never mapped as a single concept.
+  4. Periods before a company's first filing or IPO are outside its window and are not cells.
+  5. Any other blank is a defect to fix: derive it under SAME_BASIS, release it after the Verifier, or capture it from the filing. A blank is never a resting state.
+  6. The target does not loosen any correctness rule: never fabricate a value, never fall back to an older vintage, never derive EPS or instants, and pass every filing check. Until a defect is fixed, the cell stays blank with its reason and the company does not pass the gate.
+
 ## Rejected or deferred directions
 
 | **Item**                           | **Disposition**   | **Revisit trigger**                                        |
