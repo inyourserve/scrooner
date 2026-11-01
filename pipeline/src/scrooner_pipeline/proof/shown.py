@@ -102,11 +102,13 @@ def load_shown(
             select cc.name, p.period_type, p.fiscal_period, p.start_date, p.end_date, cf.value, cf.source_fact_ids, p.id
             from analytics.canonical_fact cf
             join analytics.canonical_concept cc on cc.id = cf.canonical_concept_id
-            join analytics.statement_line sl on sl.canonical_concept_id = cc.id
             join core.period p on p.id = cf.period_id
             where cf.company_id = %s and p.end_date >= %s and p.fiscal_period is not null
+              and cc.name = any(%s)
             """,
-            (company_id, floor),
+            # the proof's own concepts: joining analytics.statement_line dropped every concept
+            # without a statement row (D&A) and repeated a concept with two rows
+            (company_id, floor, sorted({*EXPECTED, "total_debt_resolved"})),
         )
         rows = cur.fetchall()
         fact_ids = sorted({f for r in rows for f in (r[6] or [])})
