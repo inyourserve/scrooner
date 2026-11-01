@@ -1,0 +1,9 @@
+APPLIED 0118_fsn_store.sql sha 372ea2445618c145 attempt 1 at 13:01:24 UTC
+APPLIED 0119_company_value_owner.sql sha 3ce4eba6ab580c11 attempt 1 at 13:01:26 UTC
+fsn tables (11): ['calc_arc', 'company_load', 'concept_rule', 'dim', 'filing', 'filing_check', 'line', 'line_map', 'report', 'tag', 'value']
+fsn.dim id 0: [(0, '0x00000000')]
+canonical_fact.source_value_ids: [('ARRAY', 'NO', "'{}'::bigint[]")]
+triggers: [('trg_company_value_owner_guard', 'O'), ('trg_slot_protected_cell_guard', 'O')]
+company_value_owner rows (expect 0, guard inert): 0
+canonical_fact rows before/after: 13890751/13890751; non-empty source_value_ids (expect 0): 0
+POST-CHECK PASS
