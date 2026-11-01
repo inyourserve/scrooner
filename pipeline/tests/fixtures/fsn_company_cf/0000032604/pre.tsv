@@ -1,0 +1,55 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0000032604-24-000041	10	5	CF	0	StatementLineItems	us-gaap/2024	terseLabel	Statement [Line Items]	0
+0000032604-24-000041	10	1	CF	0	StatementTable	us-gaap/2024	terseLabel	Statement [Table]	0
+0000032604-24-000041	10	9	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2024	verboseLabel	Adjustments to reconcile net earnings to net cash provided by operating activities:	0
+0000032604-24-000041	10	12	CF	0	AmortizationOfAcquisitionCosts	us-gaap/2024	terseLabel	Amortization of acquisition-related inventory step-up	0
+0000032604-24-000041	10	46	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2024	periodStartLabel	Beginning cash and equivalents	0
+0000032604-24-000041	10	47	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2024	periodEndLabel	Ending cash and equivalents	0
+0000032604-24-000041	10	45	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect	us-gaap/2024	totalLabel	Increase (Decrease) in cash and equivalents	0
+0000032604-24-000041	10	30	CF	0	CashProvidedByUsedInInvestingActivitiesDiscontinuedOperations	us-gaap/2024	terseLabel	Cash from discontinued operations	0
+0000032604-24-000041	10	20	CF	0	CashProvidedByUsedInOperatingActivitiesDiscontinuedOperations	us-gaap/2024	terseLabel	Cash from discontinued operations	0
+0000032604-24-000041	10	10	CF	0	DepreciationDepletionAndAmortization	us-gaap/2024	terseLabel	Depreciation and amortization	0
+0000032604-24-000041	10	8	CF	0	DiscontinuedOperationIncomeLossFromDiscontinuedOperationDuringPhaseOutPeriodNetOfTax	us-gaap/2024	negatedTerseLabel	Earnings from discontinued operations, net of tax	1
+0000032604-24-000041	10	44	CF	0	EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2024	terseLabel	Effect of exchange rate changes on cash and equivalents	0
+0000032604-24-000041	10	52	CF	0	IncreaseDecreaseInAccountsPayable	us-gaap/2024	terseLabel	Accounts payable	0
+0000032604-24-000041	10	53	CF	0	IncreaseDecreaseInAccruedLiabilities	us-gaap/2024	terseLabel	Accrued expenses	0
+0000032604-24-000041	10	50	CF	0	IncreaseDecreaseInInventories	us-gaap/2024	negatedTerseLabel	Inventories	1
+0000032604-24-000041	10	54	CF	0	IncreaseDecreaseInOperatingCapital	us-gaap/2024	negatedTotalLabel	Changes in operating working capital	1
+0000032604-24-000041	10	17	CF	0	IncreaseDecreaseInOperatingCapital	us-gaap/2024	negatedLabel	Changes in operating working capital	1
+0000032604-24-000041	10	48	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2024	terseLabel	Changes in operating working capital	0
+0000032604-24-000041	10	51	CF	0	IncreaseDecreaseInOtherCurrentAssets	us-gaap/2024	negatedLabel	Other current assets	1
+0000032604-24-000041	10	49	CF	0	IncreaseDecreaseInReceivables	us-gaap/2024	negatedLabel	Receivables	1
+0000032604-24-000041	10	43	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2024	totalLabel	Cash provided by (used in) financing activities	0
+0000032604-24-000041	10	32	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2024	terseLabel	Financing activities	0
+0000032604-24-000041	10	31	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2024	totalLabel	Cash provided by (used in) investing activities	0
+0000032604-24-000041	10	22	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2024	terseLabel	Investing activities	0
+0000032604-24-000041	10	29	CF	0	NetCashProvidedByUsedInInvestingActivitiesContinuingOperations	us-gaap/2024	totalLabel	Cash from continuing operations	0
+0000032604-24-000041	10	21	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2024	totalLabel	Cash provided by operating activities	0
+0000032604-24-000041	10	6	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2024	terseLabel	Operating activities	0
+0000032604-24-000041	10	19	CF	0	NetCashProvidedByUsedInOperatingActivitiesContinuingOperations	us-gaap/2024	totalLabel	Cash from continuing operations	0
+0000032604-24-000041	10	18	CF	0	OtherOperatingActivitiesCashFlowStatement	us-gaap/2024	terseLabel	Other, net	0
+0000032604-24-000041	10	28	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2024	negatedLabel	Other, net	1
+0000032604-24-000041	10	39	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2024	negatedLabel	Purchases of common stock	1
+0000032604-24-000041	10	38	CF	0	PaymentsOfDividendsCommonStock	us-gaap/2024	negatedLabel	Dividends paid	1
+0000032604-24-000041	10	24	CF	0	PaymentsToAcquireBusinessesNetOfCashAcquired	us-gaap/2024	negatedLabel	Purchases of businesses, net of cash and equivalents acquired	1
+0000032604-24-000041	10	23	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2024	negatedLabel	Capital expenditures	1
+0000032604-24-000041	10	14	CF	0	PensionContributions	us-gaap/2024	negatedTerseLabel	Pension funding	1
+0000032604-24-000041	10	13	CF	0	PensionExpenseReversalOfExpenseNoncash	us-gaap/2024	terseLabel	Pension expense (income)	0
+0000032604-24-000041	10	27	CF	0	ProceedsFromCollectionOfNotesReceivable	us-gaap/2024	terseLabel	Proceeds from related party note receivable	0
+0000032604-24-000041	10	25	CF	0	ProceedsFromDivestitureOfBusinesses	us-gaap/2024	verboseLabel	Divestitures of businesses	0
+0000032604-24-000041	10	36	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2024	terseLabel	Proceeds from long-term debt	0
+0000032604-24-000041	10	42	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2024	verboseLabel	Other, net	0
+0000032604-24-000041	10	33	CF	0	ProceedsFromRepaymentsOfShortTermDebtMaturingInThreeMonthsOrLess	us-gaap/2024	terseLabel	Net increase (decrease) in short-term borrowings	0
+0000032604-24-000041	10	34	CF	0	ProceedsFromShortTermDebtMaturingInMoreThanThreeMonths	us-gaap/2024	terseLabel	Proceeds from short-term borrowings greater than three months	0
+0000032604-24-000041	10	7	CF	0	ProfitLoss	us-gaap/2024	terseLabel	Net earnings	0
+0000032604-24-000041	10	3	CF	0	RelatedPartyDomain	us-gaap/2024	terseLabel	Related and Nonrelated Parties [Domain]	0
+0000032604-24-000041	10	4	CF	0	RelatedPartyMember	us-gaap/2024	terseLabel	Related Party	0
+0000032604-24-000041	10	2	CF	0	RelatedPartyTransactionsByRelatedPartyAxis	us-gaap/2024	terseLabel	Related and Nonrelated Parties [Axis]	0
+0000032604-24-000041	10	37	CF	0	RepaymentsOfLongTermDebt	us-gaap/2024	negatedLabel	Payments of long-term debt	1
+0000032604-24-000041	10	41	CF	0	RepaymentsOfNotesPayable	us-gaap/2024	negatedTerseLabel	Payment of related party note payable	1
+0000032604-24-000041	10	35	CF	0	RepaymentsOfShortTermDebtMaturingInMoreThanThreeMonths	us-gaap/2024	negatedTerseLabel	Payments of short-term borrowings greater than three months	1
+0000032604-24-000041	10	11	CF	0	ShareBasedCompensation	us-gaap/2024	terseLabel	Stock compensation	0
+0000032604-24-000041	10	15	CF	0	GainFromPeriodicDistributionFromRetainedSubordinatedInterest	0000032604-24-000041	negatedTerseLabel	Gain on subordinated interest	1
+0000032604-24-000041	10	16	CF	0	IncomeLossOnEquityMethodInvestmentNoteReceivable	0000032604-24-000041	negatedLabel	Loss on Copeland note receivable	1
+0000032604-24-000041	10	40	CF	0	PaymentsForRepurchaseOfCommonStockBySubsidiary	0000032604-24-000041	negatedTerseLabel	AspenTech purchases of common stock	1
+0000032604-24-000041	10	26	CF	0	ProceedsFromSubordinatedInterest	0000032604-24-000041	terseLabel	Proceeds from subordinated interest	0

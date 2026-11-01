@@ -1,0 +1,86 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0001021635-19-000015	5	9	CF	0	DeferredIncomeTaxesAndTaxCredits	us-gaap/2018	terseLabel	Deferred income taxes and investment tax credits, net	0
+0001021635-19-000015	5	20	CF	0	IncreaseDecreaseInIncomeTaxesReceivable	us-gaap/2018	negatedTerseLabel	Income taxes receivable	1
+0001021635-19-000015	5	21	CF	0	IncreaseDecreaseInInventories	us-gaap/2018	negatedTerseLabel	Fuel, materials and supplies inventories	1
+0001021635-19-000015	5	18	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2018	terseLabel	Change in certain current assets and liabilities:	0
+0001021635-19-000015	5	23	CF	0	IncreaseDecreaseInOtherCurrentAssets	us-gaap/2018	negatedTerseLabel	Other current assets	1
+0001021635-19-000015	5	25	CF	0	IncreaseDecreaseInOtherCurrentLiabilities	us-gaap/2018	terseLabel	Other current liabilities	0
+0001021635-19-000015	5	16	CF	0	IncreaseDecreaseInOtherNoncurrentAssets	us-gaap/2018	negatedTerseLabel	Other assets	1
+0001021635-19-000015	5	17	CF	0	IncreaseDecreaseInOtherNoncurrentLiabilities	us-gaap/2018	terseLabel	Other liabilities	0
+0001021635-19-000015	5	14	CF	0	IncreaseDecreaseInOtherRegulatoryAssets	us-gaap/2018	terseLabel	Regulatory assets	0
+0001021635-19-000015	5	8	CF	0	DepreciationAmortizationAndAccretionNet	us-gaap/2018	terseLabel	Depreciation and amortization	0
+0001021635-19-000015	5	15	CF	0	IncreaseDecreaseInRegulatoryLiabilities	us-gaap/2018	terseLabel	Regulatory liabilities	0
+0001021635-19-000015	5	10	CF	0	IncomeLossFromEquityMethodInvestments	us-gaap/2018	negatedTerseLabel	Equity in earnings of unconsolidated affiliates	1
+0001021635-19-000015	5	29	CF	0	InvestmentsInAndAdvancesToAffiliatesAtFairValuePeriodIncreaseDecrease	us-gaap/2018	terseLabel	Investment in unconsolidated affiliates	0
+0001021635-19-000015	5	24	CF	0	IncreaseDecreaseInAccountsPayable	us-gaap/2018	terseLabel	Accounts payable	0
+0001021635-19-000015	5	19	CF	0	IncreaseDecreaseInAccountsReceivable	us-gaap/2018	negatedTerseLabel	Accounts receivable and accrued unbilled revenues, net	1
+0001021635-19-000015	5	40	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2018	totalLabel	Net cash (used in) provided from financing activities	0
+0001021635-19-000015	5	33	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2018	terseLabel	CASH FLOWS FROM FINANCING ACTIVITIES	0
+0001021635-19-000015	5	32	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2018	totalLabel	Net cash used in investing activities	0
+0001021635-19-000015	5	27	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2018	terseLabel	CASH FLOWS FROM INVESTING ACTIVITIES	0
+0001021635-19-000015	5	26	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2018	totalLabel	Net cash provided from operating activities	0
+0001021635-19-000015	5	5	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2018	terseLabel	CASH FLOWS FROM OPERATING ACTIVITIES	0
+0001021635-19-000015	5	22	CF	0	IncreaseDecreaseInDeferredFuelCosts	us-gaap/2018	negatedTerseLabel	Fuel recoveries	1
+0001021635-19-000015	5	30	CF	0	ProceedsFromEquityMethodInvestmentDividendsOrDistributionsReturnOfCapital	us-gaap/2018	terseLabel	Return of capital - unconsolidated affiliates	0
+0001021635-19-000015	5	38	CF	0	ProceedsFromIssuanceOfCommonStock	us-gaap/2018	terseLabel	Expense of common stock	0
+0001021635-19-000015	5	35	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2018	terseLabel	Proceeds from long-term debt	0
+0001021635-19-000015	5	37	CF	0	PaymentsOfDividendsCommonStock	us-gaap/2018	negatedLabel	Dividends paid on common stock	1
+0001021635-19-000015	5	39	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2018	terseLabel	Other	0
+0001021635-19-000015	5	34	CF	0	ProceedsFromRepaymentsOfShortTermDebt	us-gaap/2018	terseLabel	(Decrease) increase in short-term debt	0
+0001021635-19-000015	5	3	CF	0	ScenarioUnspecifiedDomain	us-gaap/2018	terseLabel	Scenario, Unspecified [Domain]	0
+0001021635-19-000015	5	4	CF	0	StatementLineItems	us-gaap/2018	terseLabel	Statement [Line Items]	0
+0001021635-19-000015	5	2	CF	0	StatementScenarioAxis	us-gaap/2018	terseLabel	Statement, Scenario [Axis]	0
+0001021635-19-000015	5	1	CF	0	StatementTable	us-gaap/2018	terseLabel	Statement [Table]	0
+0001021635-19-000015	5	28	CF	0	PaymentsToAcquireProductiveAssets	us-gaap/2018	negatedLabel	Capital expenditures (less allowance for equity funds used during construction)	1
+0001021635-19-000015	5	42	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2018	periodStartLabel	CASH AND CASH EQUIVALENTS AT BEGINNING OF PERIOD	0
+0001021635-19-000015	5	43	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2018	periodEndLabel	CASH AND CASH EQUIVALENTS AT END OF PERIOD	0
+0001021635-19-000015	5	41	CF	0	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2018	totalLabel	NET CHANGE IN CASH AND CASH EQUIVALENTS	0
+0001021635-19-000015	5	12	CF	0	PublicUtilitiesAllowanceForFundsUsedDuringConstructionCapitalizedCostOfEquity	us-gaap/2018	negatedLabel	Allowance for equity funds used during construction	1
+0001021635-19-000015	5	7	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2018	terseLabel	Adjustments to reconcile net income to net cash provided from operating activities:	0
+0001021635-19-000015	5	31	CF	0	ProceedsFromSaleOfProductiveAssets	us-gaap/2018	terseLabel	Proceeds from sale of assets	0
+0001021635-19-000015	5	6	CF	0	ProfitLoss	us-gaap/2018	terseLabel	Net income	0
+0001021635-19-000015	5	36	CF	0	RepaymentsOfLongTermDebt	us-gaap/2018	negatedTerseLabel	Payment of long-term debt	1
+0001021635-19-000015	5	13	CF	0	ShareBasedCompensation	us-gaap/2018	terseLabel	Stock-based compensation expense	0
+0001021635-19-000015	5	11	CF	0	Increasedecreaseindistributionsfromunconsolidatedaffiliates	0001021635-19-000015	terseLabel	Distributions from unconsolidated affiliates	0
+0001021635-18-000104	5	9	CF	0	DeferredIncomeTaxesAndTaxCredits	us-gaap/2018	terseLabel	Deferred income taxes and investment tax credits, net	0
+0001021635-18-000104	5	20	CF	0	IncreaseDecreaseInInventories	us-gaap/2018	negatedTerseLabel	Fuel, materials and supplies inventories	1
+0001021635-18-000104	5	18	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2018	terseLabel	Change in certain current assets and liabilities:	0
+0001021635-18-000104	5	22	CF	0	IncreaseDecreaseInOtherCurrentAssets	us-gaap/2018	negatedTerseLabel	Other current assets	1
+0001021635-18-000104	5	24	CF	0	IncreaseDecreaseInOtherCurrentLiabilities	us-gaap/2018	terseLabel	Other current liabilities	0
+0001021635-18-000104	5	16	CF	0	IncreaseDecreaseInOtherNoncurrentAssets	us-gaap/2018	terseLabel	Other assets	0
+0001021635-18-000104	5	17	CF	0	IncreaseDecreaseInOtherNoncurrentLiabilities	us-gaap/2018	terseLabel	Other liabilities	0
+0001021635-18-000104	5	14	CF	0	IncreaseDecreaseInOtherRegulatoryAssets	us-gaap/2018	negatedTerseLabel	Regulatory assets	1
+0001021635-18-000104	5	8	CF	0	DepreciationAmortizationAndAccretionNet	us-gaap/2018	terseLabel	Depreciation and amortization	0
+0001021635-18-000104	5	15	CF	0	IncreaseDecreaseInRegulatoryLiabilities	us-gaap/2018	terseLabel	Regulatory liabilities	0
+0001021635-18-000104	5	10	CF	0	IncomeLossFromEquityMethodInvestments	us-gaap/2018	negatedLabel	Equity in earnings of unconsolidated affiliates	1
+0001021635-18-000104	5	28	CF	0	InvestmentsInAndAdvancesToAffiliatesAtFairValuePeriodIncreaseDecrease	us-gaap/2018	terseLabel	Investment in unconsolidated affiliates	0
+0001021635-18-000104	5	23	CF	0	IncreaseDecreaseInAccountsPayable	us-gaap/2018	terseLabel	Accounts payable	0
+0001021635-18-000104	5	19	CF	0	IncreaseDecreaseInAccountsReceivable	us-gaap/2018	negatedTerseLabel	Accounts receivable and accrued unbilled revenues, net	1
+0001021635-18-000104	5	39	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2018	totalLabel	Net cash (used in) provided from financing activities	0
+0001021635-18-000104	5	32	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2018	terseLabel	CASH FLOWS FROM FINANCING ACTIVITIES	0
+0001021635-18-000104	5	31	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2018	totalLabel	Net cash used in investing activities	0
+0001021635-18-000104	5	26	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2018	terseLabel	CASH FLOWS FROM INVESTING ACTIVITIES	0
+0001021635-18-000104	5	25	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2018	totalLabel	Net cash provided from operating activities	0
+0001021635-18-000104	5	5	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2018	terseLabel	CASH FLOWS FROM OPERATING ACTIVITIES	0
+0001021635-18-000104	5	21	CF	0	IncreaseDecreaseInDeferredFuelCosts	us-gaap/2018	negatedTerseLabel	Fuel recoveries	1
+0001021635-18-000104	5	29	CF	0	ProceedsFromEquityMethodInvestmentDividendsOrDistributionsReturnOfCapital	us-gaap/2018	terseLabel	Return of capital - unconsolidated affiliates	0
+0001021635-18-000104	5	37	CF	0	ProceedsFromIssuanceOfCommonStock	us-gaap/2018	terseLabel	Issuance (expense) of common stock	0
+0001021635-18-000104	5	34	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2018	terseLabel	Proceeds from long-term debt	0
+0001021635-18-000104	5	36	CF	0	PaymentsOfDividendsCommonStock	us-gaap/2018	negatedLabel	Other	1
+0001021635-18-000104	5	38	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2018	terseLabel	Other	0
+0001021635-18-000104	5	33	CF	0	ProceedsFromRepaymentsOfShortTermDebt	us-gaap/2018	terseLabel	Payment of long-term debt	0
+0001021635-18-000104	5	3	CF	0	ScenarioUnspecifiedDomain	us-gaap/2018	terseLabel	Scenario, Unspecified [Domain]	0
+0001021635-18-000104	5	4	CF	0	StatementLineItems	us-gaap/2018	terseLabel	Statement [Line Items]	0
+0001021635-18-000104	5	2	CF	0	StatementScenarioAxis	us-gaap/2018	terseLabel	Statement, Scenario [Axis]	0
+0001021635-18-000104	5	1	CF	0	StatementTable	us-gaap/2018	terseLabel	Statement [Table]	0
+0001021635-18-000104	5	27	CF	0	PaymentsToAcquireProductiveAssets	us-gaap/2018	negatedLabel	Capital expenditures (less allowance for equity funds used during construction)	1
+0001021635-18-000104	5	41	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2018	periodStartLabel	CASH AND CASH EQUIVALENTS AT BEGINNING OF PERIOD	0
+0001021635-18-000104	5	42	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2018	periodEndLabel	CASH AND CASH EQUIVALENTS AT END OF PERIOD	0
+0001021635-18-000104	5	40	CF	0	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2018	totalLabel	NET CHANGE IN CASH AND CASH EQUIVALENTS	0
+0001021635-18-000104	5	12	CF	0	PublicUtilitiesAllowanceForFundsUsedDuringConstructionCapitalizedCostOfEquity	us-gaap/2018	negatedLabel	Allowance for equity funds used during construction	1
+0001021635-18-000104	5	7	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2018	terseLabel	Adjustments to reconcile net income to net cash provided from operating activities:	0
+0001021635-18-000104	5	30	CF	0	ProceedsFromSaleOfProductiveAssets	us-gaap/2018	terseLabel	Proceeds from sale of assets	0
+0001021635-18-000104	5	6	CF	0	ProfitLoss	us-gaap/2018	terseLabel	Net income	0
+0001021635-18-000104	5	35	CF	0	RepaymentsOfLongTermDebt	us-gaap/2018	negatedTerseLabel	Issuance (expense) of common stock	1
+0001021635-18-000104	5	13	CF	0	ShareBasedCompensation	us-gaap/2018	terseLabel	Stock-based compensation expense	0
+0001021635-18-000104	5	11	CF	0	Increasedecreaseindistributionsfromunconsolidatedaffiliates	0001021635-18-000104	terseLabel	Distributions from unconsolidated affiliates	0

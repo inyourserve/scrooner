@@ -1,0 +1,10 @@
+{
+ "cells": 57,
+ "companies": 10,
+ "publishable_companies": 9,
+ "verdicts": {
+  "publishable": 27,
+  "not_a_face_column": 25,
+  "dividends_combined_with_other_items": 5
+ }
+}

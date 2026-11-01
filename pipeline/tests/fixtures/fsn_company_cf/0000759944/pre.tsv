@@ -1,0 +1,122 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0000759944-18-000016	8	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2017	terseLabel	Adjustments to reconcile net income to net cash provided by operating activities:	0
+0000759944-18-000016	8	14	CF	0	AllocatedShareBasedCompensationExpense	us-gaap/2017	terseLabel	Share-based compensation	0
+0000759944-18-000016	8	17	CF	0	AvailableForSaleSecuritiesGrossRealizedGainLossNet	us-gaap/2017	negatedLabel	Marketable equity securities available for sale	1
+0000759944-18-000016	8	57	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2017	periodStartLabel	Cash and cash equivalents at beginning of period	0
+0000759944-18-000016	8	58	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2017	periodEndLabel	Cash and cash equivalents at end of period	0
+0000759944-18-000016	8	56	CF	0	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2017	totalLabel	(Decrease) increase in cash and cash equivalents	0
+0000759944-18-000016	8	13	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2017	terseLabel	Deferred income taxes	0
+0000759944-18-000016	8	10	CF	0	DepreciationAmortizationAndAccretionNet	us-gaap/2017	terseLabel	Depreciation, amortization and accretion	0
+0000759944-18-000016	8	18	CF	0	GainLossOnDispositionOfAssets	us-gaap/2017	negatedTerseLabel	Premises and equipment	1
+0000759944-18-000016	8	15	CF	0	GainLossOnInvestmentsExcludingOtherThanTemporaryImpairmentsAbstract	us-gaap/2017	terseLabel	Net gain on sales of:	0
+0000759944-18-000016	8	16	CF	0	GainLossOnSaleOfDebtInvestments	us-gaap/2017	negatedTerseLabel	Debt securities	1
+0000759944-18-000016	8	20	CF	0	GainLossOnSaleOfOtherLoansAndLeases	us-gaap/2017	negatedTerseLabel	Other loans held for sale	1
+0000759944-18-000016	8	19	CF	0	GainsLossesOnExtinguishmentOfDebt	us-gaap/2017	negatedTerseLabel	Extinguishment of debt	1
+0000759944-18-000016	8	61	CF	0	IncomeTaxesPaid	us-gaap/2017	terseLabel	Income taxes paid	0
+0000759944-18-000016	8	66	CF	0	IncreaseDecreaseInBrokerageReceivables	us-gaap/2017	terseLabel	Due from broker for securities sold but not settled	0
+0000759944-18-000016	8	45	CF	0	IncreaseDecreaseInDeposits	us-gaap/2017	terseLabel	Net increase in deposits	0
+0000759944-18-000016	8	46	CF	0	IncreaseDecreaseInFederalFundsPurchasedAndSecuritiesSoldUnderAgreementsToRepurchaseNet	us-gaap/2017	terseLabel	Net (decrease) increase in federal funds purchased and securities sold under agreements to repurchase	0
+0000759944-18-000016	8	21	CF	0	IncreaseDecreaseInOtherOperatingAssets	us-gaap/2017	negatedTerseLabel	Increase in other assets	1
+0000759944-18-000016	8	22	CF	0	IncreaseDecreaseInOtherOperatingLiabilities	us-gaap/2017	terseLabel	Decrease in other liabilities	0
+0000759944-18-000016	8	60	CF	0	InterestPaid	us-gaap/2017	terseLabel	Interest paid	0
+0000759944-18-000016	8	11	CF	0	MortgageServicingRightsMSRImpairmentRecovery	us-gaap/2017	terseLabel	Mortgage servicing rights valuation recovery	0
+0000759944-18-000016	8	55	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2017	totalLabel	Net cash provided by financing activities	0
+0000759944-18-000016	8	44	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2017	terseLabel	FINANCING ACTIVITIES	0
+0000759944-18-000016	8	43	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2017	totalLabel	Net cash used in investing activities	0
+0000759944-18-000016	8	24	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2017	terseLabel	INVESTING ACTIVITIES	0
+0000759944-18-000016	8	23	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2017	totalLabel	Net cash provided by operating activities	0
+0000759944-18-000016	8	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2017	terseLabel	OPERATING ACTIVITIES	0
+0000759944-18-000016	8	62	CF	0	OtherNoncashInvestingAndFinancingItemsAbstract	us-gaap/2017	terseLabel	Non-cash items:	0
+0000759944-18-000016	8	12	CF	0	OtherThanTemporaryImpairmentLossesInvestmentsPortionRecognizedInEarningsNet	us-gaap/2017	terseLabel	Securities impairment	0
+0000759944-18-000016	8	5	CF	0	PaymentsForOriginationOfMortgageLoansHeldForSale	us-gaap/2017	negatedTerseLabel	Originations of mortgage loans held for sale	1
+0000759944-18-000016	8	38	CF	0	PaymentsForProceedsFromLifeInsurancePolicies	us-gaap/2017	negatedTerseLabel	Net increase in bank-owned life insurance	1
+0000759944-18-000016	8	37	CF	0	PaymentsForProceedsFromLoansAndLeases	us-gaap/2017	negatedTerseLabel	Net increase in loans and leases	1
+0000759944-18-000016	8	39	CF	0	PaymentsForProceedsFromProductiveAssetsAbstract	us-gaap/2017	terseLabel	Premises and equipment:	0
+0000759944-18-000016	8	50	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2017	negatedLabel	Treasury stock purchased	1
+0000759944-18-000016	8	42	CF	0	PaymentsForSoftware	us-gaap/2017	negatedTerseLabel	Capitalization of software	1
+0000759944-18-000016	8	53	CF	0	PaymentsOfDividendsPreferredStockAndPreferenceStock	us-gaap/2017	negatedTerseLabel	Dividends declared and paid to preferred stockholders	1
+0000759944-18-000016	8	52	CF	0	PaymentsOfOrdinaryDividends	us-gaap/2017	negatedTerseLabel	Dividends declared and paid to common stockholders	1
+0000759944-18-000016	8	54	CF	0	PaymentsRelatedToTaxWithholdingForShareBasedCompensation	us-gaap/2017	negatedTerseLabel	Payments Related to Tax Withholding for Share-based Compensation	1
+0000759944-18-000016	8	25	CF	0	PaymentsToAcquireAvailableForSaleSecurities	us-gaap/2017	negatedTerseLabel	Purchases of securities available for sale	1
+0000759944-18-000016	8	28	CF	0	PaymentsToAcquireHeldToMaturitySecurities	us-gaap/2017	negatedTerseLabel	Purchases of securities held to maturity	1
+0000759944-18-000016	8	36	CF	0	PaymentsToAcquireMortgageServicingRightsMSR	us-gaap/2017	negatedTerseLabel	Purchases of mortgage servicing rights	1
+0000759944-18-000016	8	33	CF	0	PaymentsToAcquireOtherInvestments	us-gaap/2017	negatedTerseLabel	Purchases of other investment securities, at cost	1
+0000759944-18-000016	8	40	CF	0	PaymentsToAcquireProductiveAssets	us-gaap/2017	negatedTerseLabel	Purchases	1
+0000759944-18-000016	8	7	CF	0	PaymentsToPurchaseOtherLoansHeldForSale	us-gaap/2017	negatedTerseLabel	Purchases of commercial loans held for sale	1
+0000759944-18-000016	8	48	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2017	terseLabel	Proceeds from issuance of long-term borrowed funds	0
+0000759944-18-000016	8	51	CF	0	ProceedsFromIssuanceOfPrivatePlacement	us-gaap/2017	terseLabel	Net proceeds from issuance of preferred stock	0
+0000759944-18-000016	8	26	CF	0	ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities	us-gaap/2017	terseLabel	Proceeds from maturities and paydowns of securities available for sale	0
+0000759944-18-000016	8	29	CF	0	ProceedsFromMaturitiesPrepaymentsAndCallsOfHeldToMaturitySecurities	us-gaap/2017	terseLabel	Proceeds from maturities and paydowns of securities held to maturity	0
+0000759944-18-000016	8	35	CF	0	ProceedsFromPaymentsForInInterestBearingDepositsInBanks	us-gaap/2017	terseLabel	Net decrease (increase) in interest-bearing deposits in banks	0
+0000759944-18-000016	8	47	CF	0	ProceedsFromRepaymentsOfShortTermDebt	us-gaap/2017	terseLabel	Net decrease in other short-term borrowed funds	0
+0000759944-18-000016	8	27	CF	0	ProceedsFromSaleOfAvailableForSaleSecurities	us-gaap/2017	terseLabel	Proceeds from sales of securities available for sale	0
+0000759944-18-000016	8	30	CF	0	ProceedsFromSaleOfHeldToMaturitySecurities	us-gaap/2017	terseLabel	Proceeds from sales of securities held to maturity	0
+0000759944-18-000016	8	6	CF	0	ProceedsFromSaleOfMortgageLoansHeldForSale	us-gaap/2017	terseLabel	Proceeds from sales of mortgage loans held for sale	0
+0000759944-18-000016	8	34	CF	0	ProceedsFromSaleOfOtherInvestments	us-gaap/2017	terseLabel	Proceeds from sales of other investment securities, at cost	0
+0000759944-18-000016	8	8	CF	0	ProceedsFromSaleOfOtherLoansHeldForSale	us-gaap/2017	terseLabel	Proceeds from sales of commercial loans held for sale	0
+0000759944-18-000016	8	41	CF	0	ProceedsFromSaleOfProductiveAssets	us-gaap/2017	terseLabel	Proceeds from sales	0
+0000759944-18-000016	8	2	CF	0	ProfitLoss	us-gaap/2017	terseLabel	Net income	0
+0000759944-18-000016	8	4	CF	0	ProvisionForLoanAndLeaseLosses	us-gaap/2017	terseLabel	Provision for credit losses	0
+0000759944-18-000016	8	49	CF	0	RepaymentsOfLongTermDebt	us-gaap/2017	negatedTerseLabel	Repayments of long-term borrowed funds	1
+0000759944-18-000016	8	65	CF	0	StockIssuedDuringPeriodValueEmployeeStockPurchasePlan	us-gaap/2017	verboseLabel	Stock purchased for Employee Stock Purchase Plan	0
+0000759944-18-000016	8	64	CF	0	StockIssuedDuringPeriodValueShareBasedCompensation	us-gaap/2017	terseLabel	Stock purchased for share-based compensation plans	0
+0000759944-18-000016	8	59	CF	0	SupplementalCashFlowInformationAbstract	us-gaap/2017	terseLabel	Supplemental disclosures:	0
+0000759944-18-000016	8	63	CF	0	TransferToInvestments	us-gaap/2017	terseLabel	Loans securitized and transferred to securities available for sale	0
+0000759944-18-000016	8	9	CF	0	AmortizationofGainLossofTerminatedCashFlowHedges	0000759944-18-000016	terseLabel	Amortization of terminated cash flow hedges, net	0
+0000759944-18-000016	8	31	CF	0	PaymentsToAcquireOtherInvestmentSecuritiesFairValue	0000759944-18-000016	negatedTerseLabel	Purchases of other investment securities, at fair value	1
+0000759944-18-000016	8	32	CF	0	ProceedsFromSaleOfOtherInvestmentSecuritiesFairValue	0000759944-18-000016	terseLabel	Proceeds from sales of other investment securities, at fair value	0
+0000759944-18-000016	8	67	CF	0	SharebasedCompensationIncomeTaxesWithheld	0000759944-18-000016	terseLabel	Income tax withholding on stock purchased for share based compensation	0
+0000759944-17-000073	8	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2017	terseLabel	Adjustments to reconcile net income to net cash provided by operating activities:	0
+0000759944-17-000073	8	14	CF	0	AllocatedShareBasedCompensationExpense	us-gaap/2017	terseLabel	Share-based compensation	0
+0000759944-17-000073	8	53	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2017	periodStartLabel	Cash and cash equivalents at beginning of period	0
+0000759944-17-000073	8	54	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2017	periodEndLabel	Cash and cash equivalents at end of period	0
+0000759944-17-000073	8	52	CF	0	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2017	totalLabel	Decrease in cash and cash equivalents	0
+0000759944-17-000073	8	13	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2017	terseLabel	Deferred income taxes	0
+0000759944-17-000073	8	10	CF	0	DepreciationAmortizationAndAccretionNet	us-gaap/2017	terseLabel	Depreciation, amortization and accretion	0
+0000759944-17-000073	8	18	CF	0	GainLossOnDispositionOfAssets	us-gaap/2017	negatedLabel	Premises and equipment	1
+0000759944-17-000073	8	15	CF	0	GainLossOnInvestmentsExcludingOtherThanTemporaryImpairmentsAbstract	us-gaap/2017	terseLabel	Net gain on sales of:	0
+0000759944-17-000073	8	16	CF	0	GainLossOnSaleOfDebtInvestments	us-gaap/2017	negatedLabel	Debt securities	1
+0000759944-17-000073	8	17	CF	0	GainLossOnSaleOfOtherInvestments	us-gaap/2017	negatedLabel	Other investment securities	1
+0000759944-17-000073	8	42	CF	0	IncreaseDecreaseInDeposits	us-gaap/2017	terseLabel	Net increase in deposits	0
+0000759944-17-000073	8	43	CF	0	IncreaseDecreaseInFederalFundsPurchasedAndSecuritiesSoldUnderAgreementsToRepurchaseNet	us-gaap/2017	terseLabel	Net (decrease) increase in federal funds purchased and securities sold under agreements to repurchase	0
+0000759944-17-000073	8	19	CF	0	IncreaseDecreaseInOtherOperatingAssets	us-gaap/2017	negatedTerseLabel	Increase in other assets	1
+0000759944-17-000073	8	20	CF	0	IncreaseDecreaseInOtherOperatingLiabilities	us-gaap/2017	terseLabel	(Decrease) increase in other liabilities	0
+0000759944-17-000073	8	11	CF	0	MortgageServicingRightsMSRImpairmentRecovery	us-gaap/2017	terseLabel	Mortgage servicing rights valuation (recovery) charge-off	0
+0000759944-17-000073	8	51	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2017	totalLabel	Net cash provided by financing activities	0
+0000759944-17-000073	8	41	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2017	terseLabel	FINANCING ACTIVITIES	0
+0000759944-17-000073	8	40	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2017	totalLabel	Net cash used in investing activities	0
+0000759944-17-000073	8	22	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2017	terseLabel	INVESTING ACTIVITIES	0
+0000759944-17-000073	8	21	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2017	totalLabel	Net cash provided by operating activities	0
+0000759944-17-000073	8	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2017	terseLabel	OPERATING ACTIVITIES	0
+0000759944-17-000073	8	12	CF	0	OtherThanTemporaryImpairmentLossesInvestmentsPortionRecognizedInEarningsNet	us-gaap/2017	terseLabel	Securities impairment	0
+0000759944-17-000073	8	5	CF	0	PaymentsForOriginationOfMortgageLoansHeldForSale	us-gaap/2017	negatedTerseLabel	Originations of mortgage loans held for sale	1
+0000759944-17-000073	8	35	CF	0	PaymentsForProceedsFromLifeInsurancePolicies	us-gaap/2017	negatedTerseLabel	Net increase in bank-owned life insurance	1
+0000759944-17-000073	8	34	CF	0	PaymentsForProceedsFromLoansAndLeases	us-gaap/2017	negatedTerseLabel	Net increase in loans and leases	1
+0000759944-17-000073	8	36	CF	0	PaymentsForProceedsFromProductiveAssetsAbstract	us-gaap/2017	terseLabel	Premises and equipment:	0
+0000759944-17-000073	8	47	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2017	negatedTerseLabel	Treasury stock purchased	1
+0000759944-17-000073	8	39	CF	0	PaymentsForSoftware	us-gaap/2017	negatedTerseLabel	Capitalization of software	1
+0000759944-17-000073	8	49	CF	0	PaymentsOfDividendsPreferredStockAndPreferenceStock	us-gaap/2017	negatedLabel	Dividends declared and paid to preferred stockholders	1
+0000759944-17-000073	8	48	CF	0	PaymentsOfOrdinaryDividends	us-gaap/2017	negatedTerseLabel	Dividends declared and paid to common stockholders	1
+0000759944-17-000073	8	50	CF	0	PaymentsRelatedToTaxWithholdingForShareBasedCompensation	us-gaap/2017	negatedTerseLabel	Payments of employee tax withholding for share-based compensation	1
+0000759944-17-000073	8	24	CF	0	PaymentsToAcquireAvailableForSaleSecurities	us-gaap/2017	negatedTerseLabel	Purchases of securities available for sale	1
+0000759944-17-000073	8	27	CF	0	PaymentsToAcquireHeldToMaturitySecurities	us-gaap/2017	negatedTerseLabel	Purchases of securities held to maturity	1
+0000759944-17-000073	8	31	CF	0	PaymentsToAcquireOtherInvestments	us-gaap/2017	negatedTerseLabel	Purchases of other investment securities, at cost	1
+0000759944-17-000073	8	37	CF	0	PaymentsToAcquireProductiveAssets	us-gaap/2017	negatedTerseLabel	Purchases	1
+0000759944-17-000073	8	7	CF	0	PaymentsToPurchaseOtherLoansHeldForSale	us-gaap/2017	negatedTerseLabel	Purchases of commercial loans held for sale	1
+0000759944-17-000073	8	45	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2017	terseLabel	Proceeds from issuance of long-term borrowed funds	0
+0000759944-17-000073	8	25	CF	0	ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities	us-gaap/2017	terseLabel	Proceeds from maturities and paydowns of securities available for sale	0
+0000759944-17-000073	8	28	CF	0	ProceedsFromMaturitiesPrepaymentsAndCallsOfHeldToMaturitySecurities	us-gaap/2017	terseLabel	Proceeds from maturities and paydowns of securities held to maturity	0
+0000759944-17-000073	8	33	CF	0	ProceedsFromPaymentsForInInterestBearingDepositsInBanks	us-gaap/2017	terseLabel	Net decrease (increase) in interest-bearing deposits in banks	0
+0000759944-17-000073	8	44	CF	0	ProceedsFromRepaymentsOfShortTermDebt	us-gaap/2017	terseLabel	Net decrease in other short-term borrowed funds	0
+0000759944-17-000073	8	23	CF	0	ProceedsFromSaleAndMaturityOfTradingSecuritiesHeldforinvestmentAbstract	us-gaap/2017	terseLabel	Investment securities:	0
+0000759944-17-000073	8	26	CF	0	ProceedsFromSaleOfAvailableForSaleSecurities	us-gaap/2017	terseLabel	Proceeds from sales of securities available for sale	0
+0000759944-17-000073	8	6	CF	0	ProceedsFromSaleOfMortgageLoansHeldForSale	us-gaap/2017	terseLabel	Proceeds from sales of mortgage loans held for sale	0
+0000759944-17-000073	8	32	CF	0	ProceedsFromSaleOfOtherInvestments	us-gaap/2017	terseLabel	Proceeds from sales of other investment securities, at cost	0
+0000759944-17-000073	8	8	CF	0	ProceedsFromSaleOfOtherLoansHeldForSale	us-gaap/2017	terseLabel	Proceeds from sales of commercial loans held for sale	0
+0000759944-17-000073	8	38	CF	0	ProceedsFromSaleOfProductiveAssets	us-gaap/2017	terseLabel	Proceeds from sales	0
+0000759944-17-000073	8	2	CF	0	ProfitLoss	us-gaap/2017	terseLabel	Net income	0
+0000759944-17-000073	8	4	CF	0	ProvisionForLoanAndLeaseLosses	us-gaap/2017	terseLabel	Provision for credit losses	0
+0000759944-17-000073	8	46	CF	0	RepaymentsOfLongTermDebt	us-gaap/2017	negatedTerseLabel	Repayments of long-term borrowed funds	1
+0000759944-17-000073	8	9	CF	0	AmortizationofGainLossofTerminatedCashFlowHedges	0000759944-17-000073	terseLabel	Amortization of terminated cash flow hedges, net	0
+0000759944-17-000073	8	29	CF	0	PaymentsToAcquireOtherInvestmentSecuritiesFairValue	0000759944-17-000073	negatedTerseLabel	Purchases of other investment securities, at fair value	1
+0000759944-17-000073	8	30	CF	0	ProceedsFromSaleOfOtherInvestmentSecuritiesFairValue	0000759944-17-000073	terseLabel	Proceeds from sales of other investment securities, at fair value	0

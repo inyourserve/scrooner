@@ -37,6 +37,11 @@ Buybacks (production `share_buybacks`: repurchases of common stock):
 Memory stays flat: companies are replayed in batches (BATCH CIKs per pass
 over the inputs) and the calc arcs come pre-extracted (cf_cal_rows.py).
 usage: cf_family_replay.py <cf_face_rows.jsonl.gz> <cf_num_rows.jsonl.gz> <cf_cal_rows.jsonl.gz> <out_dir>
+       cf_family_replay.py --company <companies/<cik10>|parent|@list> <out_dir>
+Company mode (FSN store port, 2026-11-01): fsn_company_cf.read_cf_inputs reads ONE company directory
+(FORMATS-v1) into exactly the shapes load() builds from the three cohort files, and replay_company runs
+the same rules; the regression gate (data-team/strategy/team/CF-PERSHARE-PORT-2026-11-01.md) compares the
+two modes cell by cell. The rules below are unchanged from run 7 (work/cashflow/v2-emit 2e061bc).
 """
 import gzip
 import json
@@ -50,10 +55,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import common  # noqa: E402
 
-face_path, num_path, cal_path, out_dir = sys.argv[1], sys.argv[2], sys.argv[3], Path(sys.argv[4])
 BATCH = 100
-out_dir.mkdir(parents=True, exist_ok=True)
-SINCE = "20150101"
+SINCE = "20140101"  # v2 full population: every period since 2014 (founder data window)
 
 CASH_CHANGE_RX = re.compile(r"^(CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents|CashAndCashEquivalents|Cash)PeriodIncreaseDecrease")
 OP_TOTAL, OP_CONT, OP_DISC = ("NetCashProvidedByUsedInOperatingActivities",
@@ -85,6 +88,51 @@ BUYBACK_TAGS_EXCLUDED = {"PaymentsRelatedToTaxWithholdingForShareBasedCompensati
 
 def iso(d):
     return f"{d[:4]}-{d[4:6]}-{d[6:]}"
+
+
+DIV_HIT_RX = re.compile(r"dividend|distribution", re.I)
+DIV_PREFERRED_RX = re.compile(r"preferred|preference", re.I)
+DIV_NCI_RX = re.compile(r"noncontrolling|non-controlling|minority|subsidiar", re.I)
+DIV_EQUIV_RX = re.compile(r"equivalent", re.I)
+DIV_PARTNER_RX = re.compile(r"unitholder|unit holder|limited partner|general partner|partners'?\b|\bunits\b|incentive distribution", re.I)
+DIV_COMMON_RX = re.compile(r"common|ordinary|shareholder|stockholder|share ?owner", re.I)
+DIV_COMMON_TAGS = {"PaymentsOfDividendsCommonStock", "PaymentsOfDividends", "PaymentsOfOrdinaryDividends"}
+
+
+def dividend_class(tag, label):
+    """Dividends paid = cash paid as dividends to the company's common holders
+    as printed (by analogy with the founder's buyback ruling 2026-11-04).
+    Excluded with a reason: preferred dividends, distributions to
+    noncontrolling interests, dividend equivalents on share awards. Held:
+    a line combining common with an excluded item, partnership-unit
+    distributions (a definition call), a net line, an unnamed distribution."""
+    if tag.endswith(("Member", "Axis", "Domain", "Abstract", "Table", "LineItems")) or tag.startswith(("IncreaseDecrease", "Noncash", "Proceeds")):
+        return None
+    if not (DIV_HIT_RX.search(label) or "Dividend" in tag or "Distribution" in tag):
+        return None
+    if tag.startswith("EquityMethodInvestment") or re.search(r"received|from (unconsolidated|equity|affiliat)|of equity investment", label, re.I):
+        return None  # an inflow from investees, not a dividend the company pays
+    if NONCASH_RX.search(label) or re.search(r"declared|payable", label, re.I) and not re.search(r"paid|payment", label, re.I):
+        return "excluded_noncash"
+    pref, nci = DIV_PREFERRED_RX.search(label) or "Preferred" in tag, DIV_NCI_RX.search(label) or "Minority" in tag or "Noncontrolling" in tag
+    common_named = DIV_COMMON_RX.search(label) is not None
+    if (pref or nci) and common_named and re.search(r"\band\b|includ|&", label, re.I):
+        return "combined"
+    if pref:
+        return "perimeter_preferred"
+    if nci:
+        return "perimeter_nci"
+    if DIV_EQUIV_RX.search(label) and not re.search(r"dividends? and (dividend )?equivalents?|dividends?,? including", label, re.I):
+        # a standalone equivalents line (EPD); AAPL's "dividends and dividend
+        # equivalents" IS its common dividend line (equivalents on unvested shares)
+        return "perimeter_dividend_equivalents"
+    if DIV_PARTNER_RX.search(label):
+        return "perimeter_partnership_distribution"
+    if NET_RX.search(label) or re.search(r"net of", label, re.I):
+        return "net"
+    if re.search(r"dividend", label, re.I) or tag in DIV_COMMON_TAGS:
+        return "common"
+    return "common" if common_named else "unresolved"
 
 
 def buyback_class(tag, label):
@@ -139,8 +187,17 @@ def buyback_class(tag, label):
     return "common" if COMMON_RX.search(label) else "unresolved"
 
 
-def load(ciks):
-    """face rows, values and cash-flow arcs of one batch of companies."""
+def primary_face(face):
+    """in place: keep the primary cash-flow report of each filing, the lowest-numbered report that
+    prints an operating total (a Schedule I parent-only statement comes later)."""
+    for adsh, rows in face.items():
+        reports = sorted({rp for rp, _l, t, lab, _c, _n in rows if t in (OP_TOTAL, OP_CONT) or OP_LABEL_RX.search(lab)})
+        keep = reports[0] if reports else min(rp for rp, *_ in rows)
+        face[adsh] = sorted((ln, t, lab, cu, ng) for rp, ln, t, lab, cu, ng in rows if rp == keep)
+
+
+def load(face_path, num_path, cal_path, ciks):
+    """face rows, values and cash-flow arcs of one batch of companies (cohort files)."""
     filings, face = {}, defaultdict(list)
     with gzip.open(face_path, "rt") as fh:
         for line in fh:
@@ -149,12 +206,7 @@ def load(ciks):
                 continue
             filings[r["adsh"]] = {k: r[k] for k in ("cik", "form", "period", "filed", "fy", "fp", "fsn")}
             face[r["adsh"]].append((r["report"], r["line"], r["tag"], r["label"], r["custom"], r["negating"]))
-    for adsh, rows in face.items():
-        # the primary cash-flow report: the lowest-numbered report that prints an
-        # operating total (a Schedule I parent-only statement comes later)
-        reports = sorted({rp for rp, _l, t, lab, _c, _n in rows if t in (OP_TOTAL, OP_CONT) or OP_LABEL_RX.search(lab)})
-        keep = reports[0] if reports else min(rp for rp, *_ in rows)
-        face[adsh] = sorted((ln, t, lab, cu, ng) for rp, ln, t, lab, cu, ng in rows if rp == keep)
+    primary_face(face)
     vals = defaultdict(dict)  # adsh -> {(tag, ddate, qtrs): Decimal}
     durps = defaultdict(dict)  # adsh -> {(ddate, qtrs): durp of the column's section total}
     with gzip.open(num_path, "rt") as fh:
@@ -214,6 +266,7 @@ def read_cell(adsh, ddate, qtrs, arcs, face, vals):
     fin_total = next((t for t in FIN_TOTALS if t in arcs), None)
     fin_kids = {c for c, _ in arcs.get(fin_total, [])} if fin_total else set()
     members = []
+    div_members = []
     negated_outflows = 0
     for _ln, t, lab, cu, ng in rows:
         if fin_kids and t not in fin_kids:
@@ -223,10 +276,14 @@ def read_cell(adsh, ddate, qtrs, arcs, face, vals):
         cls = buyback_class(t, lab)
         if cls:
             members.append({"tag": t, "label": lab, "class": cls, "custom": cu, "negating": ng, "value": v.get(t)})
+        dcls = dividend_class(t, lab)
+        if dcls:
+            div_members.append({"tag": t, "label": lab, "class": dcls, "custom": cu, "negating": ng, "value": v.get(t)})
     bsec = None
     if fin_total:
         bsec, _g = tie(fin_total, arcs[fin_total], v)
     res["buybacks"] = {"negated_outflows": negated_outflows, "members": members, "section": bsec, "financing_total": fin_total, "section_by_cal": bool(fin_kids)}
+    res["dividends_paid"] = {"negated_outflows": negated_outflows, "members": div_members, "section": bsec, "financing_total": fin_total, "section_by_cal": bool(fin_kids)}
     return res
 
 
@@ -312,70 +369,141 @@ def verdict_bb(c, cell):
     return "publishable", sum((m["value"] for m in printed), Decimal(0))
 
 
+DIV_EXCLUDED = {"excluded_noncash", "perimeter_preferred", "perimeter_nci", "perimeter_dividend_equivalents"}
+
+
+def verdict_div(c, cell):
+    """Dividends paid: the SUM of the printed common dividend lines (a regular
+    and a special dividend are both paid to common holders), outflow only;
+    the same face-column, stub, identity and section gates as buybacks."""
+    ms = cell["members"]
+    if not ms or all(m["class"] in DIV_EXCLUDED for m in ms):
+        return (None, None) if not ms or all(m["class"] == "excluded_noncash" for m in ms) else (
+            "excluded_only:" + "+".join(sorted({m["class"] for m in ms if m["class"] != "excluded_noncash"})), None)
+    if not c["face_column"]:
+        return "not_a_face_column", None
+    if c.get("stub"):
+        return "stub_column", None
+    if any(m["class"] == "combined" for m in ms):
+        return "dividends_combined_with_other_items", None
+    for cls in ("net", "unresolved", "perimeter_partnership_distribution"):
+        if any(m["class"] == cls and m["value"] not in (None, 0) for m in ms):
+            return {"net": "net_dividend_line", "unresolved": "perimeter_line_unresolved"}.get(cls, cls), None
+    common_ms = [m for m in ms if m["class"] == "common"]
+    if any(not m["negating"] for m in common_ms) and cell["negated_outflows"] >= 2:
+        return "sign_unclear", None
+    printed = [m for m in common_ms if m["value"] is not None]
+    if not printed:
+        return "no_value_this_column", None
+    if any(m["value"] < 0 for m in printed):
+        return "sign_unclear", None
+    if not c["has_cal"]:
+        return "hold_no_statement_cal", None
+    if not cell["section_by_cal"]:
+        return "hold_no_financing_calc", None
+    if c["identity"] is None:
+        return "hold_identity_terms_missing", None
+    if not c["identity"]:
+        return "hold_identity_gap", None
+    if cell["section"] is False:
+        return "hold_section_gap", None
+    return "publishable", sum((m["value"] for m in printed), Decimal(0))
+
+
 # ---------- replay ----------
-all_ciks = sorted({json.loads(line)["cik"] for line in gzip.open(face_path, "rt")})
-cells = {"cfo": [], "buybacks": []}
-summary = {"cfo": defaultdict(int), "buybacks": defaultdict(int)}
-for b0 in range(0, len(all_ciks), BATCH):
-    filings, face, vals, all_arcs, durps = load(set(all_ciks[b0:b0 + BATCH]))
-    print(f"  batch {b0 // BATCH + 1}: {len(filings)} filings", flush=True)
+FAMILIES = ("cfo", "buybacks", "dividends_paid")
+
+
+def replay_company(cik, filings, face, vals, all_arcs, durps, cells, summary):
+    """append one company's cells to cells[fam] and count verdicts in summary[fam]."""
+    adshs = sorted((a for a in filings if filings[a]["cik"] == cik), key=lambda a: (filings[a]["filed"], a))
+    readings = defaultdict(list)  # (ddate, qtrs) -> [(adsh, reading)]
+    for adsh in adshs:
+        arcs = all_arcs.get(adsh, {})
+        cols = {(d, q) for (_t, d, q) in vals[adsh] if d >= SINCE}
+        for d, q in sorted(cols):
+            readings[(d, q)].append((adsh, read_cell(adsh, d, q, arcs, face, vals)))
+    # STUB columns (Verifier run 1, Valaris 0000314808-21-000102: a 5-month
+    # fresh-start successor tagged qtrs=2): a column whose duration offset
+    # (FSN durp) is off the company's own usual offset for that number of
+    # quarters by more than 0.1 quarter (~9 days). Costco's 12/12/12/16-week
+    # calendar keeps one stable offset per qtrs, so it is not a stub.
+    usual = defaultdict(Counter)
+    for adsh in adshs:
+        for (d, q), dp in durps[adsh].items():
+            usual[q][round(dp, 1)] += 1
+    for (d, q), rs in readings.items():
+        mode = usual[q].most_common(1)[0][0] if usual[q] else 0.0
+        for a, r in rs:
+            dp = durps[a].get((d, q))
+            r["stub"] = dp is not None and abs(dp - mode) > 0.1
+    for (d, q), rs in sorted(readings.items()):
+        # the original: earliest filing whose period of report is the column end, else the earliest that prints it
+        orig = next(((a, r) for a, r in rs if filings[a]["period"] == d and r["face_column"]), None) or next(((a, r) for a, r in rs if r["face_column"]), rs[0])
+        a0, r0 = orig
+        later = [(a, r) for a, r in rs if a != a0 and r["face_column"] and filings[a]["filed"] >= filings[a0]["filed"]]
+        for fam, vf in (("cfo", verdict_cfo), ("buybacks", verdict_bb), ("dividends_paid", verdict_div)):
+            verdict, value = vf(r0, r0[fam])
+            if verdict is None:
+                continue
+            disagree = []
+            if verdict == "publishable":
+                for a, r in later:
+                    vv, val = vf(r, r[fam])
+                    if vv == "publishable" and abs(val - value) > common.rounding_unit([val, value]):
+                        disagree.append({"accession": a, "value": str(val)})
+                if disagree:
+                    verdict = "restated_copies_disagree"
+            summary[fam][verdict] += 1
+            cells[fam].append({
+                "cik": cik, "end": iso(d), "months": q * 3, "durp": durps[a0].get((d, q)), "accession": a0, "form": filings[a0]["form"],
+                "verdict": verdict, "value": str(value) if value is not None and verdict == "publishable" else None,
+                "candidate": str(value) if value is not None and verdict != "publishable" else None,
+                "detail": ({k: (str(v) if isinstance(v, Decimal) else v) for k, v in r0[fam].items() if k != "members"}
+                           | ({"members": [{**m, "value": str(m["value"]) if m["value"] is not None else None} for m in r0[fam]["members"]]} if fam in ("buybacks", "dividends_paid") else {})),
+                "identity_gap": r0["identity_gap"], "later_disagree": disagree, "later_copies": len(later),
+            })
+
+def replay_batch(filings, face, vals, all_arcs, durps, cells, summary):
     by_cik = defaultdict(list)
     for adsh, m in filings.items():
         by_cik[m["cik"]].append(adsh)
     for cik in sorted(by_cik):
-        adshs = sorted(by_cik[cik], key=lambda a: (filings[a]["filed"], a))
-        readings = defaultdict(list)  # (ddate, qtrs) -> [(adsh, reading)]
-        for adsh in adshs:
-            arcs = all_arcs.get(adsh, {})
-            cols = {(d, q) for (_t, d, q) in vals[adsh] if d >= SINCE}
-            for d, q in sorted(cols):
-                readings[(d, q)].append((adsh, read_cell(adsh, d, q, arcs, face, vals)))
-        # STUB columns (Verifier run 1, Valaris 0000314808-21-000102: a 5-month
-        # fresh-start successor tagged qtrs=2): a column whose duration offset
-        # (FSN durp) is off the company's own usual offset for that number of
-        # quarters by more than 0.1 quarter (~9 days). Costco's 12/12/12/16-week
-        # calendar keeps one stable offset per qtrs, so it is not a stub.
-        usual = defaultdict(Counter)
-        for adsh in adshs:
-            for (d, q), dp in durps[adsh].items():
-                usual[q][round(dp, 1)] += 1
-        for (d, q), rs in readings.items():
-            mode = usual[q].most_common(1)[0][0] if usual[q] else 0.0
-            for a, r in rs:
-                dp = durps[a].get((d, q))
-                r["stub"] = dp is not None and abs(dp - mode) > 0.1
-        for (d, q), rs in sorted(readings.items()):
-            # the original: earliest filing whose period of report is the column end, else the earliest that prints it
-            orig = next(((a, r) for a, r in rs if filings[a]["period"] == d and r["face_column"]), None) or next(((a, r) for a, r in rs if r["face_column"]), rs[0])
-            a0, r0 = orig
-            later = [(a, r) for a, r in rs if a != a0 and r["face_column"] and filings[a]["filed"] >= filings[a0]["filed"]]
-            for fam, vf in (("cfo", verdict_cfo), ("buybacks", verdict_bb)):
-                verdict, value = vf(r0, r0[fam])
-                if verdict is None:
-                    continue
-                disagree = []
-                if verdict == "publishable":
-                    for a, r in later:
-                        vv, val = vf(r, r[fam])
-                        if vv == "publishable" and abs(val - value) > common.rounding_unit([val, value]):
-                            disagree.append({"accession": a, "value": str(val)})
-                    if disagree:
-                        verdict = "restated_copies_disagree"
-                summary[fam][verdict] += 1
-                cells[fam].append({
-                    "cik": cik, "end": iso(d), "months": q * 3, "durp": durps[a0].get((d, q)), "accession": a0, "form": filings[a0]["form"],
-                    "verdict": verdict, "value": str(value) if value is not None and verdict == "publishable" else None,
-                    "candidate": str(value) if value is not None and verdict != "publishable" else None,
-                    "detail": ({k: (str(v) if isinstance(v, Decimal) else v) for k, v in r0[fam].items() if k != "members"}
-                               | ({"members": [{**m, "value": str(m["value"]) if m["value"] is not None else None} for m in r0[fam]["members"]]} if fam == "buybacks" else {})),
-                    "identity_gap": r0["identity_gap"], "later_disagree": disagree, "later_copies": len(later),
-                })
-for fam in cells:
-    with gzip.open(out_dir / f"{fam}_cells.jsonl.gz", "wt") as fo:
-        for c in cells[fam]:
-            fo.write(json.dumps(c) + "\n")
-    s = dict(sorted(summary[fam].items(), key=lambda kv: -kv[1]))
-    json.dump({"cells": len(cells[fam]), "companies": len({c["cik"] for c in cells[fam]}),
-               "publishable_companies": len({c["cik"] for c in cells[fam] if c["verdict"] == "publishable"}), "verdicts": s},
-              open(out_dir / f"{fam}_summary.json", "w"), indent=1)
-    print(fam, len(cells[fam]), json.dumps(s))
+        replay_company(cik, {a: filings[a] for a in by_cik[cik]}, face, vals, all_arcs, durps, cells, summary)
+
+
+def write_outputs(out_dir, cells, summary):
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for fam in cells:
+        with gzip.open(out_dir / f"{fam}_cells.jsonl.gz", "wt") as fo:
+            for c in cells[fam]:
+                fo.write(json.dumps(c) + "\n")
+        s = dict(sorted(summary[fam].items(), key=lambda kv: -kv[1]))
+        json.dump({"cells": len(cells[fam]), "companies": len({c["cik"] for c in cells[fam]}),
+                   "publishable_companies": len({c["cik"] for c in cells[fam] if c["verdict"] == "publishable"}), "verdicts": s},
+                  open(out_dir / f"{fam}_summary.json", "w"), indent=1)
+        print(fam, len(cells[fam]), json.dumps(s))
+
+
+def main(argv):
+    cells = {f: [] for f in FAMILIES}
+    summary = {f: defaultdict(int) for f in FAMILIES}
+    if argv[0] == "--company":
+        from fsn_company import company_dir_list
+        from fsn_company_cf import read_cf_inputs
+        out_dir = Path(argv[2])
+        for d in company_dir_list(argv[1]):
+            filings, face, vals, all_arcs, durps = read_cf_inputs(d)
+            replay_batch(filings, face, vals, all_arcs, durps, cells, summary)
+    else:
+        face_path, num_path, cal_path, out_dir = argv[0], argv[1], argv[2], Path(argv[3])
+        all_ciks = sorted({json.loads(line)["cik"] for line in gzip.open(face_path, "rt")})
+        for b0 in range(0, len(all_ciks), BATCH):
+            filings, face, vals, all_arcs, durps = load(face_path, num_path, cal_path, set(all_ciks[b0:b0 + BATCH]))
+            print(f"  batch {b0 // BATCH + 1}: {len(filings)} filings", flush=True)
+            replay_batch(filings, face, vals, all_arcs, durps, cells, summary)
+    write_outputs(out_dir, cells, summary)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
