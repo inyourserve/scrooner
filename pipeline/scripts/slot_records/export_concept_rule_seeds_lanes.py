@@ -328,6 +328,37 @@ for i, p in enumerate(bdm.consts["PARENTS"][3]):
         continue
     add("bs", "debt_member_parent", TD, "BS", "calc_position", 20 + i, bdm, "PARENTS + classify() default", "import",
         position={"slot": borrow_slot, "anchor_concept": anchor, "relation": "child_of", "sign": 1})
+# founder ruling 2026-11-01 (BS port brief): total debt includes finance leases (face or note), a combined
+# debt+finance-lease line is part of total debt, operating leases stay combined (never in total debt).
+# classify() names the slots; a finance_lease or combined member is a total_debt member exactly like a
+# borrowing (replay_debt_fsn sums every non-operating member into the lease-inclusive total).
+DEBT_LEASE_EVIDENCE = ("founder 2026-11-01 (BS port): debt includes note finance leases, a combined debt+finance-lease "
+                       "line is total debt, operating leases stay combined; replay_debt_fsn report_v4 = Verifier debt v3 "
+                       "14/14 + VERIFY-DEBT-RELEASE1-AMZN 3/3")
+cls_returns = [c for _l, _t, c in if_returns(bdm.func("classify"))]
+for k, slot in enumerate(s for s in ("finance_lease", "combined") if s in cls_returns):
+    for i, p in enumerate(bdm.consts["PARENTS"][3]):
+        anchor = ALIAS["liabilities_total"] if p in bsd.consts["ANCHORS"][1]["liabilities_total"] else concept_of_tag(p)
+        if not anchor:
+            continue  # listed once above for the borrowing slot
+        add("bs", f"debt_{slot}_member", TD, "BS", "calc_position", 30 + 10 * k + i, bdm, f"classify() -> {slot!r} + PARENTS", "import",
+            position={"slot": slot, "anchor_concept": anchor, "relation": "child_of", "sign": 1})
+        ROWS["bs"][-1]["evidence"] = DEBT_LEASE_EVIDENCE
+assert "operating_lease" in cls_returns
+skip(bdm, bdm.func("classify").lineno, "classify() -> 'operating_lease': never a total_debt member (replay_debt_fsn.load_records drops the member)",
+     "an exclusion; FORMATS-v1 calc_position has no negative slot. Founder 2026-11-01: operating leases stay combined")
+rdf = Mod(HERE / "replay_debt_fsn.py")
+afs = Mod(HERE / "assemble_fsn.py")
+for fn_name, item, why in (
+        ("replay", "note-only finance lease (FinanceLeaseLiability / CapitalLeaseObligations total, else current + noncurrent, same accession) added to total debt (option b)",
+         "a NOTE fact, not a statement line: detector hook (replay_debt_fsn), founder 2026-11-01 keeps it in total debt"),
+        ("replay", "face lease line decomposed by the filer's own operating + finance facts (AMZN): proven, its finance part read from the note",
+         "value-tie rule at replay time: detector hook"),
+        ("replay", "face lease liability line not carried by the record (custom lease element) -> debt_lease_member_unverified",
+         "label + tag regex at replay time: detector hook")):
+    skip(rdf, rdf.func(fn_name).lineno, item, why)
+skip(afs, afs.func("assemble").lineno, "Verifier V5 (WSO): a member whose calc descendants (any role) include an OperatingLease line -> excluded_mixed_lease",
+     "operating leases stay combined (founder 2026-11-01): calc-descendant test per filing, detector hook; the standard taxonomy has no element that mixes borrowings or finance leases with operating leases (us_gaap_2025_elements.csv: 0), so only custom lines reach it")
 skip_regexes(era, ["DEBT_RX", "LABEL_RX", "EXCLUDE_RX"], {"LABEL_RX": "label regex (debt candidate by printed label)"})
 skip_regexes(bdm, ["EXCLUDE_RX", "AGG_PARENT_RX", "DEBT_RX", "BS_ROLE_RX", "NOTE_ROLE_RX", "FINANCE_LEASE_RX", "OPERATING_LEASE_RX", "BORROWING_RX", "ERA_RX"],
              {"BS_ROLE_RX": "calc-role selector, not a concept rule", "NOTE_ROLE_RX": "calc-role rejector, not a concept rule",
@@ -336,7 +367,7 @@ for i, (rx, reason) in enumerate(bds.EXCLUDE_CLASSES):
     skip(bdm, bdm.consts["EXCLUDE_CLASSES"][2], f"EXCLUDE_CLASSES[{i}] /{rx.pattern}/ -> {reason}",
          "exclude rule by regex" + ("; it IS the combined AP+accrued line, but as a regex with no component concepts" if "combined" in reason else ""))
 _, ct, ln, _o = bdm.consts["COMBINED_TAGS"]
-skip(bdm, ln, f"COMBINED_TAGS {sorted(ct)}", "combined borrowings+lease line, but the components (borrowings, finance lease) have no analytics.canonical_concept names; also founder 2026-11-04 puts note finance leases inside total debt, so a Standardization call is needed before seeding it as combined for total_debt_resolved")
+skip(bdm, ln, f"COMBINED_TAGS {sorted(ct)}", "classify() -> 'combined': seeded as the total_debt `combined` calc slot above (founder 2026-11-01: a combined debt+finance-lease line is part of total debt), not as a FORMATS-v1 `combined` row, which would blank it")
 _, dm, ln, _o = bdm.consts["DEFINITIONAL_MAYBE"]
 skip(bdm, ln, f"DEFINITIONAL_MAYBE {sorted(dm)}", "combined only WITH evidence (own calc children or a same-date lease fact): conditional, and a slot member not a whole-concept std_tag")
 fn = bdm.func("classify")

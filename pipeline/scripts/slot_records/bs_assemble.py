@@ -9,6 +9,8 @@ reach the API). The accounting identity is the replay's cross-check, never a
 source. Inherits: statement-role-only cal reads, note-role rejection, custom
 flags, face-admission for standard tags.
 usage: bs_assemble.py <bs_eras.json> <bs_cal_dir> <cohort_bs_dims.jsonl.gz> <out.jsonl>
+       bs_assemble.py --company <dir|parent|@list> <bs_eras.json> <out.jsonl>
+  --company: calc arcs (FSN cal) and dimensional mezzanine rows from FSN store company directories.
 """
 import gzip
 import json
@@ -29,25 +31,60 @@ MEZZ_RX = re.compile(r"TemporaryEquity|RedeemableNoncontrolling|RedeemablePrefer
 NOISE_RX = re.compile(r"CommitmentsAndContingencies")
 TICKER = json.loads('{"0000354190":"AJG","0001410636":"AWK","0001109354":"BRKR","0001393818":"BX","0001744489":"DIS","0001090012":"DVN","0000032604":"EMR","0001276187":"ET","0001031296":"FE","0000040545":"GE","0001404912":"KKR","0000927653":"MCK","0001111711":"NI","0000797468":"OXY","0000732717":"T","0001389170":"TRGP","0001035002":"VLO","0000104169":"WMT","0000079282":"BRO"}')
 
-eras = json.load(open(sys.argv[1]))
-cal_dir = Path(sys.argv[2])
-
 # dimensioned mezzanine facts per (cik): dates where class-of-stock mezz lines exist
 dim_mezz = defaultdict(set)
-with gzip.open(sys.argv[3], "rt") as f:
-    for line in f:
-        r = json.loads(line)
+
+
+def add_dim_rows(rows):
+    for r in rows:
         if MEZZ_RX.search(r["tag"]):
             dim_mezz[r["cik"]].add((r["tag"], r["ddate"]))
 
-out = open(sys.argv[4], "w")
+
+if sys.argv[1] == "--company":
+    # bs_assemble.py --company <dir|parent|@list> <bs_eras.json> <out.jsonl>
+    # The boundary filing's statement-role arcs come from the company's FSN cal table
+    # (common.fsn_cal_arcs, the reader assemble_fsn.py uses) instead of a downloaded
+    # _cal.xml; the taxonomy era is the filing's us-gaap version year (pre.version).
+    import fsn_company_bs as fc
+    eras = json.load(open(sys.argv[3]))
+    _FSN = {}  # adsh -> (cal path, taxonomy era)
+    for d in fc.company_dir_list(sys.argv[2]):
+        subs = fc.own_subs(d)
+        years, face = defaultdict(set), defaultdict(set)
+        for r in fc.table(d, "pre"):
+            if r["adsh"] in subs and r["version"].startswith("us-gaap/"):
+                years[r["adsh"]].add(r["version"].split("/", 1)[1][:4])
+            if r["adsh"] in subs and r["stmt"] == "BS":
+                face[r["adsh"]].add(r["tag"])
+        for a in subs:
+            _FSN[a] = (fc.cal_path(d), max(years[a]) if years.get(a) else None, frozenset(face.get(a, ())))
+        add_dim_rows(fc.bs_dim_rows(d, subs))
+
+    def raw_cal(adsh):
+        if adsh not in _FSN:
+            return None, {}
+        path, era, face_tags = _FSN[adsh]
+        # the BS group is the one whose arcs sit on this filing's own face (common.fsn_cal_arcs face_tags)
+        arcs = common.fsn_cal_arcs(path, adsh, face_tags=face_tags)
+        return (era, arcs) if arcs else (None, {})
+    out = open(sys.argv[4], "w")
+else:
+    eras = json.load(open(sys.argv[1]))
+    cal_dir = Path(sys.argv[2])
+    with gzip.open(sys.argv[3], "rt") as f:
+        add_dim_rows(json.loads(line) for line in f)
+
+    def raw_cal(adsh):
+        return common.load_cal(cal_dir, adsh)
+    out = open(sys.argv[4], "w")
 summary = []
 ARC_WEIGHT = {}  # (adsh, child) -> weight in the statement role (VMI: deferred taxes carry -1)
 
 
 def load_cal(adsh):
     """The boundary filing's statement-role calc arcs (shared loader: _cal.xml -> .xsd -> MetaLinks)."""
-    era, arcs = common.load_cal(cal_dir, adsh)
+    era, arcs = raw_cal(adsh)
     for (role, parent), kids in arcs.items():
         if b.BS_ROLE_RX.search(role) and not b.NOTE_ROLE_RX.search(role):
             for c, w, _cu in kids:
