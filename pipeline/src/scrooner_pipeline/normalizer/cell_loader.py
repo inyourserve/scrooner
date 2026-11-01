@@ -376,10 +376,10 @@ def resolve_facts(
             from core.fact f
             join core.filing fl on fl.id = f.filing_id
             join core.concept co on co.id = f.concept_id
-            where f.company_id = %s and fl.accession_number = any(%s) and co.tag = any(%s)
+            where f.company_id = %s and fl.company_id = %s and fl.accession_number = any(%s) and co.tag = any(%s)
             order by f.is_authoritative desc, f.id
             """,
-            (company_id, sorted(accs), sorted(tags)),
+            (company_id, company_id, sorted(accs), sorted(tags)),
         )
         out: dict[tuple[str, str, int], list[int]] = defaultdict(list)
         for acc, tag, pid, fid, _auth in cur.fetchall():
@@ -538,6 +538,7 @@ def load(
     defect_overrides: list[dict[str, Any]] | None = None,
     defect_reason: str = "mixed_vintage_inputs",
     connect: Callable[[], psycopg.Connection] | None = None,
+    shard: tuple[int, int] | None = None,
 ) -> LoadReport:
     """paths: one or more cell files of ONE family (merged; a key in two files is
     a rejection). data_points: the delete scope (default: the manifest's or the
@@ -622,6 +623,24 @@ def load(
     by_company: dict[int, list[CellRow]] = defaultdict(list)
     for c in cells:
         by_company[c.key.company_id].append(c)
+    if shard is not None:
+        # shard i of n by company_id: n loaders on one file in parallel, disjoint companies,
+        # each under its own rule_run (stats carry the shard)
+        i, n = shard
+        by_company = defaultdict(
+            list, {cid: r for cid, r in by_company.items() if cid % n == i}
+        )
+        rep.files = [f"{f} [shard {i}/{n}]" for f in rep.files]
+    if connect is not None:
+        # parsing a 280k-row file takes minutes; the connection opened before it has
+        # gone stale through the pooler twice (SSL "Operation timed out"), so the
+        # database work starts on a fresh one
+        try:
+            conn.close()
+        except Exception:  # noqa: BLE001
+            pass
+        conn = connect()
+        prov = _has_provenance_columns(conn)
     with conn.cursor() as cur:
         cur.execute(
             "select id, cik from core.company where id = any(%s)", (sorted(by_company),)

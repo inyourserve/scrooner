@@ -76,6 +76,10 @@ def load_cmd(
     defect_reason: str = typer.Option(
         "mixed_vintage_inputs", help="reason_code for --defect-keys rows."
     ),
+    shard: str = typer.Option(
+        None,
+        help="i/n: load only companies with company_id %% n == i (run n loaders in parallel).",
+    ),
 ) -> None:
     from scrooner_pipeline.normalizer import cell_loader
 
@@ -115,6 +119,7 @@ def load_cmd(
             else None,
             defect_reason=defect_reason,
             connect=connect,
+            shard=tuple(int(x) for x in shard.split("/")) if shard else None,  # type: ignore[arg-type]
         )
     d = rep.as_dict()
     if report:
