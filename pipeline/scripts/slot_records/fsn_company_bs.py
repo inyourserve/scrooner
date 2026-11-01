@@ -79,7 +79,7 @@ def instants(d, debt_only=False, subs=None):
     """fsn_company_instants.py's per-filing objects for this company, in filing (sub) order."""
     subs = own_subs(d) if subs is None else subs
     fil = {a: {"adsh": a, "cik": int(s["cik"]), "form": s["form"], "period": s["period"], "filed": s["filed"],
-               "bs": [], "values": defaultdict(dict), "fsn_period": s["fsn_set"]} for a, s in subs.items()}
+               "accepted": s.get("accepted") or "", "bs": [], "values": defaultdict(dict), "fsn_period": s["fsn_set"]} for a, s in subs.items()}
     for r in table(d, "pre"):
         if r["adsh"] in fil and r["stmt"] == "BS":
             fil[r["adsh"]]["bs"].append({"report": int(r["report"]), "line": int(r["line"]), "tag": r["tag"],
