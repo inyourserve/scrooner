@@ -24,7 +24,9 @@ class _FakeCursor:
 
     def execute(self, sql, params=()):
         s = sql.strip()
-        if "count(*) from core.company" in s:
+        if "to_regclass" in s:  # template table (0120) absent in these legacy-mode tests
+            self._last_result = ("scalar", False)
+        elif "count(*) from core.company" in s:
             self._last_result = ("scalar", self._total_active)
         elif (
             "gap_reason" in s
