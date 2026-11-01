@@ -383,6 +383,12 @@ RULES: dict[str, Rule] = {
             "-",
             "data_engineer",
             "retire stored derived EPS facts (quarters by subtraction) and their cells",
+        ),
+        _r(
+            "ingest.instance_fallback@1",
+            "-",
+            "engineering",
+            "B9: facts for a periodic filing the companyfacts API never carried, from the FSN set (or the instance), through facts.py",
             dry_run=True,
         ),
         _r(
