@@ -18,6 +18,10 @@ on:
       shards:
         description: "Parallel shards for the cohort after the pilot, 1..20 (1 DB connection each)"
         default: "10"
+      pilot_only:
+        description: "Prove MSFT and HD only (skip the cohort shards)"
+        type: boolean
+        default: false
       write:
         description: "Upsert analytics.cell_proof (default false = report only)"
         type: boolean
@@ -103,6 +107,7 @@ jobs:
   cohort:
     name: proof shard ${{ matrix.shard.i }}
     needs: [companies, pilot]
+    if: ${{ !inputs.pilot_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
