@@ -288,7 +288,10 @@ def map_filing(
 
 
 def map_company(
-    conn: psycopg.Connection, company_id: int, rules: dict[str, Any] | None = None
+    conn: psycopg.Connection,
+    company_id: int,
+    rules: dict[str, Any] | None = None,
+    detectors: list[Detector] | None = None,
 ) -> dict[str, int]:
     rules = rules or load_rules(conn)
     with conn.cursor() as cur:
@@ -299,7 +302,7 @@ def map_company(
         ids = [r[0] for r in cur.fetchall()]
     tot: dict[str, int] = defaultdict(int)
     for fid in ids:
-        for k, v in map_filing(conn, fid, rules).items():
+        for k, v in map_filing(conn, fid, rules, detectors=detectors).items():
             tot[k] += v
     tot["filings"] = len(ids)
     return dict(tot)
