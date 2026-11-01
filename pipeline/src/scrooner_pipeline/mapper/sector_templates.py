@@ -407,8 +407,9 @@ def write_plan_csv(rows: list[TemplateRow], path: Path) -> None:
 
 
 def validate_against_db(conn: psycopg.Connection, rows: list[TemplateRow]) -> None:
-    """Every data point must be a canonical concept or an active metric, and every
-    company id must exist with the cohort's CIK. Read-only, two indexed queries."""
+    """Every data point must be a canonical concept, an active metric or a row of
+    analytics.data_point_registry (the coverage catalog, which also holds the
+    ownership items), and every company id must exist. Read-only, indexed queries."""
     names = sorted({r.data_point for r in rows})
     ids = sorted({r.company_id for r in rows})
     with conn.cursor() as cur:
@@ -419,6 +420,8 @@ def validate_against_db(conn: psycopg.Connection, rows: list[TemplateRow]) -> No
             where not exists (select 1 from analytics.canonical_concept c where c.name = n)
               and not exists (select 1 from analytics.metric_definition d
                               where d.metric_name = n and d.status = 'active')
+              and not exists (select 1 from analytics.data_point_registry r
+                              where r.data_point_name = n)
             """,
             (names,),
         )
@@ -428,7 +431,7 @@ def validate_against_db(conn: psycopg.Connection, rows: list[TemplateRow]) -> No
     problems = []
     if unknown:
         problems.append(
-            f"data points unknown to canonical_concept/metric_definition: {unknown}"
+            f"data points unknown to canonical_concept/metric_definition/data_point_registry: {unknown}"
         )
     if missing:
         problems.append(f"company ids not in core.company: {missing[:20]}")

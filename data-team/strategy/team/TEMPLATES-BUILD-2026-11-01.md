@@ -1,6 +1,6 @@
 # Sector-template layer build: report to Dhairya (2026-11-01)
 
-**Status: BUILT on branch `work/data-engineer/sector-templates`, rebased on main `e4f776d`, not applied.** Nothing has been written to any database.
+**Status: the layer is on main (`7e44f83`). The seeder input from the APPROVED templates is on `work/data-engineer/sector-templates-seed` for Ritwik's check (section 8). 0120 is not applied.** Nothing has been written to any database.
 
 ## In one paragraph
 The founder's 2026-11-01 ruling (doc 02, "sector templates and 100% coverage") says a field is a cell for a company only if that company's sector template includes it, and that coverage = valued ÷ template cells. This branch adds:
@@ -158,3 +158,110 @@ effective_from: 2026-11-01
 - **Migrations, documentation, and secrets:** pass. The 0120 clean replay passes in CI.
 - **Next.js frontend:** pass.
 - **Advisory job (non-blocking):** it flagged one unformatted file, my new CLI command in `jobs/map.py`. The follow-up commit formats it, and `ruff format --check` is now clean across `pipeline/src` and `apps/backend`. The advisory npm audit failure (1 critical) is on main as well and has nothing to do with this branch.
+
+## 8. Seeder input from the approved templates (2026-11-01, branch `work/data-engineer/sector-templates-seed`)
+
+**What Ritwik checks before 0120 is applied.** Source: `SECTOR-TEMPLATES-2026-11-01.md` §1–3 with the §8 corrections (approval `485e38d`), plus the founder's BDC ruling of 2026-11-01. The ruling was relayed to this session by the HD pilot session; this session did not hear it directly, and doc 02 should record it.
+
+### Files
+| File | What it is |
+|---|---|
+| `data-team/strategy/SECTOR-TEMPLATES-SEED-2026-11-01.md` | **The seeder input**: the four tables, 9 templates × 163 data points, plus 12 company assignments and 17 company overrides. Generated; do not hand-edit. |
+| `data-team/strategy/data/cohort_v1_1_sic_2026-11-01.csv` | Cohort v1.1 (1,000 companies, same order) with SEC SIC from `group_assignment_v2.csv`. It agrees with `shards.csv` on all 991 shared SICs; ARCC, BXSL and CBC have none. |
+| `data-team/strategy/tools/build_sector_template_seed.py` | **The generator: the file to review.** Every rule cites its § of the approval. |
+| `pipeline/tests/unit/test_sector_template_seed.py` | Checks that the committed seed equals the generator output, the seeder dry run on the cohort, the §8 points, and a real-SQL load of all 163,000 rows under 0120. |
+
+**Command** (dry run; `--apply --confirm-version tv1-2026.11.01-approved` only after the founder's words and 0120):
+
+```bash
+uv run --project pipeline scrooner-map seed-sector-templates --templates data-team/strategy/SECTOR-TEMPLATES-SEED-2026-11-01.md --cohort data-team/strategy/data/cohort_v1_1_sic_2026-11-01.csv
+```
+
+**Dry-run result:** 1,000 companies, 163,000 rows: **156,070 template cells** and **6,930 excluded**, with 17 overrides.
+
+**§8.6 sum check (it reproduces §1 exactly, with the three companies moved):**
+
+| Template | Companies |
+|---|---|
+| general | 769 (712 + 60 pharma − ARCC, BXSL, CBC) |
+| bank | 42 (41 + CBC) |
+| bdc | 2 |
+| lender | 7 |
+| broker_am | 37 |
+| insurer | 39 |
+| reit_equity | 51 |
+| reit_mortgage | 2 |
+| utility | 51 |
+
+### How §8 was applied
+1. **Taxonomy (§8.1):**
+   - SIC ranges: utility 4911/4922–4924/4931/4932/4941; bank 6021/6022/6035/6036; lender 6141/6162/6199; broker_am 6200/6211/6282; insurer 6311/6321/6331/6351/6361/6399; reit_equity 6798.
+   - Every other SIC is general.
+   - Company assignments: the 7 crypto names (6199) → general; NLY and AGNC → reit_mortgage; ARCC and BXSL → bdc; CBC → bank.
+2. **Category A OUTs (§8.1):** the 9 probed lines per §3's matrix, mapped onto catalog names. For example, "COR / GP / margin trend / Piotroski" covers cost_of_revenue(_resolved), gross_profit(_resolved), gross_margin, margin_expanding_3yr and piotroski_f_score. Where a sector loses only GP (broker_am, reit_equity, utility), COR stays IN.
+3. **Category C, OUT by definition (§8.2):**
+   - Banks, lenders and insurers: EBITDA family, capex/FCF family, ROIC and interest coverage.
+   - Banks only: D/E and operating income/margin.
+   - Plus the matrix's other "by definition" cells: equity REIT capex/FCF, and mortgage REIT operating income, EBITDA, ROIC and capex/FCF.
+   - Lender and mortgage REIT carry the inherited bank-like marks as defaults only (§8.7).
+4. **Dependent metrics:** a metric that *requires* an OUT input is OUT too, using `metric_dependency_graph.csv` (§6 category A says "+ dependent metrics"). Optional inputs (`alt`, `alt_derive`, `ttm_optional`, and quick ratio's inventory) do not propagate. What it added:
+   - `dividends_pct_fcf` and `share_repurchases_pct_fcf` wherever FCF is OUT;
+   - **`payables_days` for insurer, mortgage REIT and bdc** (it needs cost_of_revenue);
+   - **`interest_coverage_ratio` for mortgage REIT** (it needs operating income).
+5. **Category B stays IN (§8.3):** current assets/liabilities, current and quick ratio, and working capital are IN for every template except bdc.
+6. **BDC (§8.4 plus the founder ruling):**
+   - OUT by definition: COR/GP, inventory, R&D, the current ratio family, the EBITDA family and the capex/FCF family.
+   - `revenue` and `bdc_total_investment_income` are IN and marked **RULED**: revenue = total investment income as printed.
+   - `net_income` is IN and marked **RULED**: the BDC earnings line = NII as printed.
+   - Total debt and D/E are IN. Nothing in bdc says pending.
+7. **REP cells stay IN with a reason, so they remain visible defects until defined:** bank and lender revenue (B7, accountant), and mortgage REIT revenue (interest income) and D/E (recourse leverage).
+8. **Company overrides (§3):** 19 line instances, written as 17 rows because JPM's two AR lines and BNY's two AR lines each become one row:
+   - JPM, BAC, BNY, BOKF: AR;
+   - MTB: COR;
+   - BPOP, C, STT: opex;
+   - RYN, LINE, SUI, WY: inventory; WY also gross_profit;
+   - BRK-A: inventory and COR;
+   - SNEX: inventory;
+   - HOOD: R&D.
+   All are `in_template = yes` with a reason.
+
+### Points for Ritwik's check (preparer's choices, not stated in the approval)
+1. **`bdc_total_investment_income` is OUT for the 8 non-BDC templates**, with the reason "BDC-only sector row". Left IN, it would be 998 guaranteed blank defects; the concept also fires falsely at 15 insurers (§1).
+2. **Evidence accessions are missing from the 17 overrides.** §8.2 wants the accession as the reason. This container has no database, so each reason names the probe (`company_filing_line_evidence`) and says the FSN company step attaches the accession. **Decide whether that is enough to apply, or whether accessions are needed first.**
+3. **The §6 category C row also lists SG&A and net cash for banks, insurers and lenders; §8.2's text does not.** I followed §8.2, so those stay IN. Bank SG&A ("OUT candidate, 0% valued") stays IN as a candidate.
+4. **Overrides restore only the named line.** For example, WY's gross_profit is IN but its gross_margin stays OUT, and JPM's AR is IN but debtor_days stays OUT.
+5. **Not seedable yet:** the new sector rows (bank NII, deposits, loans, efficiency ratio; insurer premiums earned, loss ratio; REIT rental revenue, NOI; BDC NAV per share and NII per share). They are not in the 163-item catalog, so `--validate-db` would reject them. They join a later `template_version` once the concepts exist.
+6. **Seven catalog items are IN everywhere by default,** which matches the proposal's 163 × 1,000 denominator:
+   - two revenue-resolver inputs (`collaborative_arrangement_revenue`, `net_lease_revenue`);
+   - `net_interest_income`, whose registry definition collides with bank NII (§7.6);
+   - the three ownership items;
+   - the reconciliation-gap diagnostics.
+   They will read as blank defects for most companies. **Say if any is not a displayed field.**
+
+### Fixes to the template layer found while doing this (included on this branch)
+1. **Ownership data points:** `insider_ownership`, `institutional_ownership` and `mutual_fund_ownership` are registry items of type `ownership`, neither a concept nor a metric.
+   - `--validate-db` now accepts any `analytics.data_point_registry` name. Before this fix it would have rejected all three.
+   - Template-mode coverage now counts their values from `company_data_point_coverage`. Before, they counted as never valued.
+2. **The catalog is the 163 coverage-cell names.** The dependency graph also has `price`, an input node rather than a cell; a test caught it.
+
+### Evidence
+- **Template and coverage tests:** 48 of 48 pass, 8 of them on real Postgres 16 (CI-style replay of every migration). One of them loads all 163,000 seed rows under 0120's reason constraint.
+- **Full pipeline suite:** 2,294 passed. 2 failed, the known `zstd`-binary environment failures in `test_fsn_store.py`, which pass in CI.
+- **Mutation check:** 12 of 12 caught. Each one was applied and the files regenerated:
+
+  | Area | Mutation |
+  |---|---|
+  | Assignment | CBC not assigned to bank |
+  | Assignment | BDC companies not assigned |
+  | Assignment | crypto names left in lender |
+  | Template | category B made OUT for banks |
+  | Template | category C dropped for banks |
+  | Template | BDC current ratio family kept IN |
+  | Template | BDC ruling reverted to pending |
+  | Template | one override dropped |
+  | Dependents | no dependent propagation |
+  | Dependents | optional inventory edge ignored |
+  | Coverage | snapshot ignores ownership values |
+  | Seeder | validator ignores the registry |
+
+- **Lint:** ruff format clean, required lint clean, mypy clean on the changed modules, docs links pass.

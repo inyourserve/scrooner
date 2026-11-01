@@ -359,3 +359,36 @@ def test_cohort_without_sic_reads_sic_from_core_company(db, tmp_path):
     p.write_text(f"company_id,cik\n{ids[1]},0000000099\n")
     with pytest.raises(st.TemplateError, match="!= core.company"):
         st.fill_sic_from_db(db, st.load_cohort(p))
+
+
+@pytest.mark.integration
+def test_ownership_data_point_counts_from_company_data_point_coverage(db, tmp_path):
+    """insider_ownership is neither a concept nor a metric (coverage_matrix registers it as
+    'ownership'): the seeder must accept it and the cell score must read its value from
+    company_data_point_coverage, not count it as never valued."""
+    from scrooner_pipeline.mapper.coverage_snapshot import compute_snapshot
+
+    ids = _seed_db(db)
+    db.execute(
+        "insert into analytics.data_point_registry (data_point_name, data_point_type)"
+        " values ('insider_ownership', 'ownership')"
+    )
+    db.execute(
+        "insert into analytics.company_data_point_coverage (company_id, data_point_name, has_value)"
+        " values (%s, 'insider_ownership', true), (%s, 'insider_ownership', false)",
+        (ids[1], ids[2]),
+    )
+    text = TEMPLATES.replace(
+        "| corporate | inventory | yes | |",
+        "| corporate | inventory | yes | |\n| corporate | insider_ownership | yes | |",
+    )
+    rows = st.build_plan(st.parse_templates(text), _db_cohort(tmp_path, ids))
+    st.validate_against_db(db, rows)
+    st.write_plan(db, rows)
+    snap = compute_snapshot(db, date(2026, 11, 2))
+    score = [
+        r for r in snap["rows"] if r["item_name"] == "template_cell_coverage_score"
+    ][0]
+    # cells: revenue x4 (1 valued, metric) + inventory x1 (1) + insider_ownership x2 (1)
+    assert (score["companies_covered"], score["total_active_companies"]) == (3, 7)
+    assert not any(r["item_name"] == "insider_ownership" for r in snap["rows"])

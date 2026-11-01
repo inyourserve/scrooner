@@ -279,7 +279,13 @@ TEMPLATE_COVERAGE_SQL = """
                join analytics.metric_definition md on md.id = mv.metric_definition_id
                where mv.company_id = c.company_id and md.metric_name = c.data_point
                  and md.status = 'active' and mv.value is not null
-           )) as metric_valued
+           )) as metric_valued,
+           count(*) filter (where exists (
+               select 1
+               from analytics.company_data_point_coverage cv
+               where cv.company_id = c.company_id and cv.data_point_name = c.data_point
+                 and cv.has_value
+           )) as registry_valued
     from cells c
     group by c.data_point
 """
@@ -288,49 +294,67 @@ PRODUCER_NAMES_SQL = """
     select 'concept' as kind, name from analytics.canonical_concept
     union all
     select 'metric', metric_name from analytics.metric_definition where status = 'active'
+    union all
+    select 'registry', data_point_name from analytics.data_point_registry
 """
 
 
 def _load_template_coverage(
     conn: psycopg.Connection, as_of: date
-) -> dict[str, tuple[int, int, int]] | None:
+) -> dict[str, tuple[int, int, int, int]] | None:
     """data_point -> (template cells, cells valued as a concept, cells valued as a
-    metric). None when the template table does not exist yet (0120 not applied)."""
+    metric, cells valued in company_data_point_coverage). The last one serves data
+    points that are neither a concept nor a metric (the ownership items of
+    coverage_matrix.build_registry). None when the template table does not exist yet
+    (0120 not applied)."""
     with conn.cursor() as cur:
         cur.execute(TEMPLATE_PRESENT_SQL, (TEMPLATE_TABLE,))
         row = cur.fetchone()
         if not row or not row[0]:
             return None
         cur.execute(TEMPLATE_COVERAGE_SQL, {"as_of": as_of})
-        return {dp: (int(n), int(cv), int(mv)) for dp, n, cv, mv in cur.fetchall()}
+        return {
+            dp: (int(n), int(cv), int(mv), int(rv))
+            for dp, n, cv, mv, rv in cur.fetchall()
+        }
 
 
-def _load_producer_names(conn: psycopg.Connection) -> tuple[set[str], set[str]]:
+def _load_producer_names(
+    conn: psycopg.Connection,
+) -> tuple[set[str], set[str], set[str]]:
     with conn.cursor() as cur:
         cur.execute(PRODUCER_NAMES_SQL)
         pairs = cur.fetchall()
     return (
         {name for kind, name in pairs if kind == "concept"},
         {name for kind, name in pairs if kind == "metric"},
+        {name for kind, name in pairs if kind == "registry"},
     )
 
 
 def _template_rows(
-    template: dict[str, tuple[int, int, int]],
+    template: dict[str, tuple[int, int, int, int]],
     concepts: set[str],
     metrics: set[str],
+    registry: set[str],
     as_of: date,
 ) -> tuple[list[dict[str, Any]], int, int]:
     """Concept/metric rows over template cells, plus (valued cells, template cells)."""
     rows: list[dict[str, Any]] = []
     valued_cells = 0
     template_cells = 0
-    for dp, (cells, concept_valued, metric_valued) in sorted(template.items()):
+    for dp, (cells, concept_valued, metric_valued, registry_valued) in sorted(
+        template.items()
+    ):
         template_cells += cells
         if dp in metrics:
             valued_cells += metric_valued
         elif dp in concepts:
             valued_cells += concept_valued
+        elif dp in registry:
+            # e.g. insider_ownership: no concept/metric row type exists for it in
+            # coverage_snapshot, so it counts only toward the cell score.
+            valued_cells += registry_valued
         else:
             logger.warning(
                 "coverage_snapshot.template_data_point_without_producer",
@@ -371,9 +395,9 @@ def compute_snapshot(conn: psycopg.Connection, as_of: date | None = None) -> dic
     rows: list[dict[str, Any]] = []
     if template_mode:
         assert template is not None
-        concepts, metrics = _load_producer_names(conn)
+        concepts, metrics, registry = _load_producer_names(conn)
         rows, template_cells_valued, template_cells_total = _template_rows(
-            template, concepts, metrics, as_of
+            template, concepts, metrics, registry, as_of
         )
         concept_coverage: dict[str, int] = {}
         metric_coverage: dict[str, tuple[int, int]] = {}
