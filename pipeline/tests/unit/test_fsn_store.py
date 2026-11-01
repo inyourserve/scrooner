@@ -533,3 +533,25 @@ def test_seed_apply_writes_every_rule_including_demote_patterns(conn, tmp_path):
     assert res["written"] == 2 and res["errors"] == []
     got = conn.execute("select match_kind, tag, tag_pattern from fsn.concept_rule order by priority").fetchall()
     assert got == [("std_tag", "us-gaap:Revenues", None), ("demote", None, "^[0-9-]+:.*Interest.*$")]
+
+
+@pytest.mark.integration
+def test_predecessor_filings_load_under_the_successor_company(conn, tmp_path):
+    # XOM: history filed as 0000034088, the company master holds only the successor 0002115436
+    succ = _one(
+        conn,
+        "insert into core.company (cik, company_name) values ('0002115436', 'SUCCESSOR TEST') returning id",
+    )
+    conn.commit()
+    d = _company_dir(tmp_path, cik="0000034088")
+    with pytest.raises(LookupError):
+        load.load_company(conn, d, loader_commit="c1")
+    conn.rollback()
+    r = load.load_company(
+        conn, d, loader_commit="c1", predecessors={"0000034088": "0002115436"}
+    )
+    conn.commit()
+    assert r["filings"] == 1
+    assert conn.execute("select company_id, cik from fsn.filing").fetchall() == [(succ, "0000034088")]
+    assert conn.execute("select count(distinct company_id) from fsn.value").fetchone()[0] == 1
+    assert conn.execute("select company_id from fsn.value limit 1").fetchone()[0] == succ

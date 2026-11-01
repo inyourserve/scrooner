@@ -18,6 +18,16 @@ def _root() -> None:
     """Subcommands: shard, load, seed-rules, pilot, pilot-prod."""
 
 
+def _predecessors(spec: str) -> dict[str, str]:
+    """'pred=succ,pred=succ' -> {predecessor cik: successor cik} (a registrant reorganised into a
+    new holding company keeps its history under the successor's company)."""
+    out: dict[str, str] = {}
+    for pair in (p for p in spec.split(",") if p.strip()):
+        pred, succ = pair.split("=")
+        out[pred.strip().zfill(10)] = succ.strip().zfill(10)
+    return out
+
+
 def _cohort(shards_file: Path) -> list[str]:
     for cand in (shards_file, Path(__file__).resolve().parents[4] / shards_file):
         if cand.exists():
@@ -43,6 +53,10 @@ def shard_cmd(
         4.0, help="Stop cleanly when free disk falls below this."
     ),
     shards_file: Path = typer.Option(SHARDS_CSV),
+    predecessor: str = typer.Option(
+        "",
+        help="pred=succ CIK pairs: also shard the predecessor, under the successor's company.",
+    ),
 ) -> None:
     """Bucket period extracts -> company directories (FORMATS-v1 §1). Read-only on the bucket and the DB."""
     from scrooner_pipeline.db.connection import get_connection
@@ -53,10 +67,13 @@ def shard_cmd(
     )
     with get_connection() as conn:
         rows = conn.execute(
-            "select cik, id from core.company where cik = any(%s)", (cik_list,)
+            "select cik, id from core.company where cik = any(%s)",
+            (cik_list + list(_predecessors(predecessor).values()),),
         ).fetchall()
     ids = dict(rows)
     targets = {c: ids.get(c) for c in cik_list}
+    for pred, succ in _predecessors(predecessor).items():
+        targets[pred] = ids.get(succ)
     commit = (
         subprocess.run(
             ["git", "rev-parse", "HEAD"], capture_output=True, text=True
@@ -86,6 +103,10 @@ def load_cmd(
         False, help="Reload even when (input_sha256, loader_commit) already match."
     ),
     report: str = typer.Option(None, help="Write the run summary JSON here."),
+    predecessor: str = typer.Option(
+        "",
+        help="pred=succ CIK pairs: load the predecessor's filings under the successor.",
+    ),
 ) -> None:
     """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
     from scrooner_pipeline.db.connection import get_connection
@@ -97,6 +118,7 @@ def load_cmd(
             Path(companies),
             [c for c in ciks.split(",") if c] or None,
             force=force,
+            predecessors=_predecessors(predecessor),
         )
     if report:
         Path(report).write_text(json.dumps(res, indent=1, default=str))

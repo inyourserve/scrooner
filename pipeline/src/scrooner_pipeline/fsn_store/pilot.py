@@ -93,7 +93,9 @@ COND = {
     "utility": {"cost_of_revenue_resolved"},
 }
 # sector rows whose definition is pending (doc §2 REP); never valued from the general line
-DEFINITION_PENDING = {"bank": {"revenue_sanity_resolved"}}
+# Dhairya 2026-11-01: bank revenue = the bank's printed total net revenue line (JPM "Total net
+# revenue" = NII + noninterest revenue), so no sector row is definition-pending in the pilot
+DEFINITION_PENDING: dict[str, set[str]] = {}
 
 
 def sector_of(sic: str | None) -> str:
@@ -112,6 +114,22 @@ def sector_of(sic: str | None) -> str:
 
 def template(sector: str) -> list[str]:
     return [c for c in GENERAL if c not in OUT[sector]]
+
+
+def store_keys(filings: list[sel.Filing], concept: str) -> list[tuple[str, date]]:
+    """Expected keys from the stored filings themselves, for a company the calendar barely knows
+    (XOM: its 2015-2025 history is under predecessor CIK 0000034088, not in core.period)."""
+    keys: set[tuple[str, date]] = set()
+    for f in filings:
+        if f.period is None or f.period < FLOOR:
+            continue
+        if concept in INSTANT:
+            keys.add(("I", f.period))
+            continue
+        keys.add(("Q", f.period))
+        if f.form.startswith("10-K"):
+            keys.add(("FY", f.period))
+    return sorted(keys)
 
 
 def calendar_keys(path: Path, company_id: int, concept: str) -> list[tuple[str, date]]:
@@ -259,7 +277,10 @@ def report_company(
     per_point: dict[str, dict[str, int]] = {}
     for concept in tmpl:
         k: Counter[str] = Counter()
-        for grain, end in calendar_keys(calendar, company_id, concept):
+        expected = calendar_keys(calendar, company_id, concept)
+        if len(expected) < 8:
+            expected = store_keys(list(data["filings"].values()), concept)
+        for grain, end in expected:
             keys += 1
             k["keys"] += 1
             row = _match(by_point.get(concept, []), grain, end)

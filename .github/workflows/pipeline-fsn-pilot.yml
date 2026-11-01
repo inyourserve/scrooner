@@ -16,6 +16,9 @@ on:
       ciks:
         description: "Pilot CIKs (comma separated)"
         default: "0000789019,0000354950,0000320193,0000019617,0000086312,0001045609,0000753308,0002115436,0000200406,0000104169"
+      predecessors:
+        description: "pred=succ CIK pairs (history of a reorganised registrant under its successor)"
+        default: "0000034088=0002115436"
       plan:
         description: "Plan the cell write against production (rolled back)"
         type: boolean
@@ -54,6 +57,7 @@ jobs:
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
       CIKS: ${{ inputs.ciks }}
+      PREDECESSORS: ${{ inputs.predecessors }}
       PLAN: ${{ inputs.plan }}
     steps:
       - name: Refuse the nightly window (18:00-21:30 UTC)
@@ -97,17 +101,17 @@ jobs:
       - name: Shard the pilot companies from the fsn-notes bucket
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}
-        run: uv run --project pipeline scrooner-fsn shard --ciks "$CIKS" --out companies --cache .cache/fsn-shard --floor-gb 3
+        run: uv run --project pipeline scrooner-fsn shard --ciks "$CIKS" --out companies --cache .cache/fsn-shard --floor-gb 3 --predecessor "$PREDECESSORS"
       - name: Load the store (scratch)
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}
         run: |
           mkdir -p pilot-out
-          uv run --project pipeline scrooner-fsn load --companies companies --report pilot-out/load.json
+          uv run --project pipeline scrooner-fsn load --companies companies --report pilot-out/load.json --predecessor "$PREDECESSORS"
       - name: Seed concept rules (scratch)
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}
-        run: uv run --project pipeline scrooner-fsn seed-rules data-team/47-fsn-store/concept_rules/is.jsonl data-team/47-fsn-store/concept_rules/bs.jsonl data-team/47-fsn-store/concept_rules/cf.jsonl data-team/47-fsn-store/concept_rules/per_share.jsonl --apply
+        run: uv run --project pipeline scrooner-fsn seed-rules data-team/47-fsn-store/concept_rules/is.jsonl data-team/47-fsn-store/concept_rules/bs.jsonl data-team/47-fsn-store/concept_rules/cf.jsonl data-team/47-fsn-store/concept_rules/per_share.jsonl data-team/47-fsn-store/concept_rules/is_pretax_tax_interest.jsonl --apply
       - name: Map, check, select, report (scratch)
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}
