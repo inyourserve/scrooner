@@ -1,4 +1,4 @@
-# FSN store: the company directory and the concept_rule seed (formats v1, 2026-11-01)
+# FSN store: the company directory and the concept_rule seed (formats v1.1, 2026-11-01)
 
 Owner: scrooner-8a. Implements data-team/strategy/FSN-STORE-DESIGN-2026-11-01.md §2 (shard) and §3 rule 1 (seed).
 Both formats are inputs to code; a change is a version bump here, never a silent edit.
@@ -43,11 +43,14 @@ refuses the whole file on the first error (listed). Exported from the Verifier-p
 |---|---|---|
 | `canonical_concept` | text | an `analytics.canonical_concept.name` (`revenue_sanity_resolved`, ...) |
 | `stmt` | `BS` `IS` `CF` | the statement the line must be on |
-| `match_kind` | `std_tag` \| `calc_position` \| `combined` | design §3 rules 1-3 |
-| `tag` | `us-gaap:Revenues` (prefix:tag, version-agnostic) or null | required for std_tag and combined; null for calc_position |
+| `match_kind` | `std_tag` \| `calc_position` \| `combined` \| `demote` | design §3 rules 1-3; **`demote` (v1.1)** withdraws a std_tag match for `canonical_concept` on lines whose `tag` equals, or whose `prefix:tag` matches the regex `tag_pattern` (a hold: sector shape, perimeter label, sibling rule). A demoted line is `unmapped` with the demote rule's rule_id. |
+| `tag` | `us-gaap:Revenues` (prefix:tag, version-agnostic) or null | required for std_tag and combined; null for calc_position; tag or `tag_pattern` for demote |
+| `tag_pattern` | regex on `prefix:tag` or null | **v1.1**, demote rules only (also matches custom tags, whose prefix is the accession) |
 | `position` | object or null | required for calc_position: `{"slot":"<detector slot name>","anchor_concept":"<concept the slot is relative to>","relation":"child_of"\|"sibling_after"\|"parent_of","sign":1\|-1}` |
 | `components` | [concept, ...] or null | required for combined: the concepts the line combines (never mapped as one) |
 | `priority` | int | lower wins when several rules match one line; unique per (canonical_concept, stmt, match_kind, tag) |
+
+**Detector hook (v1.1).** Rules the seed cannot express (158 listed in IS-PORT-REGRESSION-2026-11-01.md) stay in the ported lane detector: `mapping.map_filing(..., detectors=[...])` runs the seed lookup first, then each detector `(conn, filing_id, seed_decisions) -> overriding decisions (report, line, concept_id|None, status, rule_id, evidence)`; a detector may demote or re-map a line it owns, never promote a line by label alone. The shard keeps transition reports too (10-KT, 10-QT and their amendments).
 | `era_from`, `era_to` | ISO date or null | rule valid for filings with `period` in [era_from, era_to); from `era_detect.py`, unchanged |
 | `rule_id` | `family.rule@N` | the lane rule the seed comes from (contract pattern) |
 | `source_commit` | git sha | the lane code the rule was exported from |

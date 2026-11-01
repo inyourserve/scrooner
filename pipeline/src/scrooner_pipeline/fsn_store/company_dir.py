@@ -14,7 +14,9 @@ csv.field_size_limit(1 << 24)
 TABLES = ("sub", "pre", "num", "cal", "ren", "tag", "dim")
 NO_DIM = "0x00000000"
 STATEMENT_STMTS = frozenset({"BS", "IS", "CF", "CI", "EQ", "CP", "UN"})
-PERIODIC_FORMS = frozenset({"10-K", "10-K/A", "10-Q", "10-Q/A"})
+PERIODIC_FORMS = frozenset(
+    {"10-K", "10-K/A", "10-KT", "10-KT/A", "10-Q", "10-Q/A", "10-QT", "10-QT/A"}
+)
 
 
 def zst_rows(path: Path) -> Iterator[dict[str, str]]:

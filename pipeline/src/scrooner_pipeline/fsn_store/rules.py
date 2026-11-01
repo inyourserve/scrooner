@@ -12,7 +12,7 @@ import psycopg
 from scrooner_pipeline.common.cell_contract import parse_rule_id
 
 STMTS = ("BS", "IS", "CF")
-KINDS = ("std_tag", "calc_position", "combined")
+KINDS = ("std_tag", "calc_position", "combined", "demote")
 RELATIONS = ("child_of", "sibling_after", "parent_of")
 
 
@@ -31,6 +31,15 @@ def validate(rows: list[dict[str, Any]], concept_ids: dict[str, int]) -> list[st
         tag = r.get("tag")
         if k in ("std_tag", "combined") and not (isinstance(tag, str) and ":" in tag):
             errors.append(f"line {i}: {k} needs tag as prefix:tag")
+        if k == "demote" and not (tag or r.get("tag_pattern")):
+            errors.append(f"line {i}: demote needs tag or tag_pattern")
+        if r.get("tag_pattern"):
+            import re as _re
+
+            try:
+                _re.compile(r["tag_pattern"])
+            except _re.error:
+                errors.append(f"line {i}: tag_pattern is not a valid regex")
         if k == "calc_position":
             pos = r.get("position") or {}
             if (
@@ -94,9 +103,9 @@ def seed(conn: psycopg.Connection, path: Path, *, apply: bool) -> dict[str, Any]
             )
             cur.executemany(
                 """
-                insert into fsn.concept_rule (canonical_concept_id, stmt, match_kind, tag, position, components,
+                insert into fsn.concept_rule (canonical_concept_id, stmt, match_kind, tag, tag_pattern, position, components,
                                               priority, era_from, era_to, rule_id, source_commit, evidence)
-                values (%s, %s, %s, %s, %s::jsonb, %s, %s, %s, %s, %s, %s, %s)
+                values (%s, %s, %s, %s, %s, %s::jsonb, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 [
                     (
