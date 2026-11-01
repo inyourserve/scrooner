@@ -153,4 +153,8 @@ effective_from: 2026-11-01
 4. The next nightly `snapshot-coverage` reports valued ÷ template cells. G2/G3 read `template_cell_coverage_score`.
 
 ## 7. CI on the rebased branch
-The run for the head commit of `work/data-engineer/sector-templates` is listed under that branch in Actions (CI workflow); its result is in the latest commit message thread below.
+**Run 41312244846, on `b1ed2f9`, rebased on main `e4f776d`: green.**
+- **Python tests and correctness lint:** pass. Pipeline 2,281 passed, 0 failed, including all 23 new template tests and the 6 on real Postgres 16. Backend 92 passed.
+- **Migrations, documentation, and secrets:** pass. The 0120 clean replay passes in CI.
+- **Next.js frontend:** pass.
+- **Advisory job (non-blocking):** it flagged one unformatted file, my new CLI command in `jobs/map.py`. The follow-up commit formats it, and `ruff format --check` is now clean across `pipeline/src` and `apps/backend`. The advisory npm audit failure (1 critical) is on main as well and has nothing to do with this branch.

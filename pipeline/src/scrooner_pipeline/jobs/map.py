@@ -686,10 +686,13 @@ def seed_sector_templates_cmd(
         help="Where the dry-run plan CSV is written.",
     ),
     validate_db: bool = typer.Option(
-        False, help="Also check data-point names and company ids against the database (read-only)."
+        False,
+        help="Also check data-point names and company ids against the database (read-only).",
     ),
     apply: bool = typer.Option(
-        False, "--apply", help="Write analytics.company_data_point_template. Needs the founder's words."
+        False,
+        "--apply",
+        help="Write analytics.company_data_point_template. Needs the founder's words.",
     ),
     confirm_version: str = typer.Option(
         "", help="With --apply: must equal the file's template_version."
@@ -716,7 +719,9 @@ def seed_sector_templates_cmd(
             typer.echo(f"ERROR {problem}", err=True)
         raise typer.Exit(2) from exc
     st.write_plan_csv(rows, plan_out)
-    typer.echo(f"seed-sector-templates plan: {json.dumps(st.summarize(rows))} -> {plan_out}")
+    typer.echo(
+        f"seed-sector-templates plan: {json.dumps(st.summarize(rows))} -> {plan_out}"
+    )
     if not (validate_db or apply):
         return
     if apply and confirm_version != parsed.template_version:
