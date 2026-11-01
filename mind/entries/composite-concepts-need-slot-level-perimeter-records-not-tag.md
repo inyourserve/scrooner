@@ -3,7 +3,7 @@ id: composite-concepts-need-slot-level-perimeter-records-not-tag
 title: Composite concepts need slot-level perimeter records, not tag lists (D&A, capex, debt, interest)
 kind: lesson
 tags: standardization, perimeter, d&a, capex, total_debt, finance_lease, interest
-paths: data-team/strategy/team/R3-standardization-model.md, pipeline/src/scrooner_pipeline/mapper/concept_fallback.py, pipeline/src/scrooner_pipeline/mapper/definitions.py
+paths: pipeline/src/scrooner_pipeline/mapper/concept_fallback.py, pipeline/src/scrooner_pipeline/mapper/definitions.py, data-team/strategy/team/R3-standardization-model.md
 evidence: FILING-CHECKED
 status: active
 source: R3 standardization model 2026-10-21

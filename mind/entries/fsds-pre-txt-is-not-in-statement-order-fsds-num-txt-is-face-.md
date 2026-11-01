@@ -3,7 +3,7 @@ id: fsds-pre-txt-is-not-in-statement-order-fsds-num-txt-is-face-
 title: FSDS pre.txt is not in statement order; FSDS num.txt is face-statement facts only
 kind: gotcha
 tags: fsds, poc, structure, d_and_a
-paths: data-team/strategy/team/R7-verifier-poc-filing-check.md, data-team/strategy/tools/structural_concepts_poc.py
+paths: data-team/strategy/tools/structural_concepts_poc.py, data-team/strategy/team/R7-verifier-poc-filing-check.md
 evidence: FILING-CHECKED
 status: active
 source: R7 verifier 2026-10-21
