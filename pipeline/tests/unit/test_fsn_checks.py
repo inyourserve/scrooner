@@ -75,3 +75,26 @@ def test_cash_change_identity_adds_fx_for_the_pre_2018_change_tag():
     }
     c = {x["check_id"]: x for x in checks.check_column("CF", col, {}, {})}["cf_parts_eq_change"]
     assert c["ok"] and c["detail"]["fx_included"]
+
+
+@pytest.mark.unit
+def test_cash_change_identity_accepts_either_fx_layout_but_not_neither():
+    def col(change):
+        return {
+            (t, "v"): checks.Print(t, "v", Decimal(v), -6, None)
+            for t, v in (
+                ("NetCashProvidedByUsedInOperatingActivities", "100"),
+                ("NetCashProvidedByUsedInInvestingActivities", "-60"),
+                ("NetCashProvidedByUsedInFinancingActivities", "-30"),
+                ("EffectOfExchangeRateOnCashAndCashEquivalents", "-4"),
+                ("CashAndCashEquivalentsPeriodIncreaseDecrease", change),
+            )
+        }
+
+    def chk(change):
+        return {x["check_id"]: x for x in checks.check_column("CF", col(change), {}, {})}["cf_parts_eq_change"]
+
+    hd = chk("10")  # HD: the change line is printed before the FX line
+    assert hd["ok"] and not hd["detail"]["fx_included"]
+    assert chk("6")["ok"] and chk("6")["detail"]["fx_included"]  # MSFT layout
+    assert not chk("8")["ok"]  # ties neither way: still a failure

@@ -180,20 +180,21 @@ def check_column(
         change = [p for (t, _v), p in col.items() if t in CF_CHANGE_TAGS]
         if len(parts) == 3 and change:
             fx = [p for (t, _v), p in col.items() if t in CF_FX]
-            # every change tag except the explicit "...ExcludingExchangeRateEffect" includes the FX
-            # line (the pre-2018 CashAndCashEquivalentsPeriodIncreaseDecrease does too: MSFT held
-            # its whole cash-flow statement as failing before this)
-            with_fx = bool(fx) and "Excluding" not in change[0].tag
-            rhs = sum((p.value for p in parts), Decimal(0)) + (
-                fx[0].value if with_fx else Decimal(0)
+            # Whether the change line includes the FX line is the filer's layout, not the tag's name:
+            # the pre-2018 CashAndCashEquivalentsPeriodIncreaseDecrease is used both ways (MSFT
+            # includes FX, HD prints the change before FX). The column ties if it ties either way;
+            # the "Excluding" tag never includes FX. The detail records which form tied.
+            base = sum((p.value for p in parts), Decimal(0))
+            tol_no = tol_of([change[0].dcml, *(p.dcml for p in parts)])
+            forms = [("without_fx", base, tol_no)]
+            if fx and "Excluding" not in change[0].tag:
+                forms.insert(
+                    0, ("with_fx", base + fx[0].value, tol_no + tol_of([fx[0].dcml]))
+                )
+            form, rhs, tol = next(
+                (f for f in forms if abs(change[0].value - f[1]) <= f[2]), forms[0]
             )
-            tol = tol_of(
-                [
-                    change[0].dcml,
-                    *(p.dcml for p in parts),
-                    *([fx[0].dcml] if with_fx else []),
-                ]
-            )
+            with_fx = form == "with_fx"
             out.append(
                 {
                     "check_id": "cf_parts_eq_change",
