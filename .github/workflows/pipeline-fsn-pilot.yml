@@ -111,7 +111,7 @@ jobs:
       - name: Seed concept rules (scratch)
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}
-        run: uv run --project pipeline scrooner-fsn seed-rules data-team/47-fsn-store/concept_rules/is.jsonl data-team/47-fsn-store/concept_rules/bs.jsonl data-team/47-fsn-store/concept_rules/cf.jsonl data-team/47-fsn-store/concept_rules/per_share.jsonl data-team/47-fsn-store/concept_rules/is_pretax_tax_interest.jsonl --apply
+        run: uv run --project pipeline scrooner-fsn seed-rules data-team/47-fsn-store/concept_rules/is.jsonl data-team/47-fsn-store/concept_rules/bs.jsonl data-team/47-fsn-store/concept_rules/cf.jsonl data-team/47-fsn-store/concept_rules/per_share.jsonl data-team/47-fsn-store/concept_rules/is_pretax_tax_interest.jsonl data-team/47-fsn-store/concept_rules/bs_current.jsonl --apply
       - name: Map, check, select, report (scratch)
         env:
           DATABASE_URL: ${{ env.SCRATCH_URL }}

@@ -246,3 +246,19 @@ def test_period_rules_split_basis_and_unfiled_instant():
     assert [(c.ddate, c.qtrs, c.reason_code) for c in got] == [(date(2021, 9, 30), 0, "balance_sheet_not_filed")]
     row = sel.to_row(got[0], 3885, {})
     assert row["defect_class"] == "filer_error" and row["reason_text"]
+
+
+@pytest.mark.unit
+def test_eps_q4_is_a_reasoned_blank_never_a_derived_value():
+    f = {
+        1: sel.Filing(1, "a1", datetime(2025, 10, 30), "10-Q", date(2025, 9, 30), 2025, "Q3"),
+        2: sel.Filing(2, "a2", datetime(2026, 2, 1), "10-K", date(2025, 12, 31), 2025, "FY"),
+    }
+    ps = [
+        sel.Print(1, 1, "EarningsPerShareBasic", date(2025, 9, 30), 3, "USD", Decimal("4.10"), 2, "IS", True),
+        sel.Print(2, 2, "EarningsPerShareBasic", date(2025, 12, 31), 4, "USD", Decimal("5.60"), 2, "IS", True),
+    ]
+    q4 = {(c.ddate, c.qtrs): c for c in sel.select_concept("basic_eps_resolved", ps, f, derive=False)}[(date(2025, 12, 31), 1)]
+    assert (q4.state, q4.value, q4.reason_code) == ("not_presented", None, "not_filed_separately")
+    row = sel.to_row(q4, 1, f, unit="USD/shares")
+    assert row["state"] == "not_presented" and row["reason_text"] and "defect_class" not in row

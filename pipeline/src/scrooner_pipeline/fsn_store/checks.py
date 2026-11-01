@@ -180,10 +180,20 @@ def check_column(
         change = [p for (t, _v), p in col.items() if t in CF_CHANGE_TAGS]
         if len(parts) == 3 and change:
             fx = [p for (t, _v), p in col.items() if t in CF_FX]
+            # every change tag except the explicit "...ExcludingExchangeRateEffect" includes the FX
+            # line (the pre-2018 CashAndCashEquivalentsPeriodIncreaseDecrease does too: MSFT held
+            # its whole cash-flow statement as failing before this)
+            with_fx = bool(fx) and "Excluding" not in change[0].tag
             rhs = sum((p.value for p in parts), Decimal(0)) + (
-                fx[0].value if fx and "Including" in change[0].tag else Decimal(0)
+                fx[0].value if with_fx else Decimal(0)
             )
-            tol = tol_of([change[0].dcml, *(p.dcml for p in parts)])
+            tol = tol_of(
+                [
+                    change[0].dcml,
+                    *(p.dcml for p in parts),
+                    *([fx[0].dcml] if with_fx else []),
+                ]
+            )
             out.append(
                 {
                     "check_id": "cf_parts_eq_change",
@@ -193,7 +203,7 @@ def check_column(
                     "tol": tol,
                     "detail": {
                         "change_tag": change[0].tag,
-                        "fx_included": bool(fx) and "Including" in change[0].tag,
+                        "fx_included": with_fx,
                     },
                 }
             )

@@ -56,3 +56,22 @@ def test_closing_cash_not_decided_when_restricted_cash_sits_in_another_bs_line()
     on = {"CF": {checks.CF_CASH_TOTAL}, "BS": {"CashAndCashEquivalentsAtCarryingValue"}}
     rows = [(checks.CF_CASH_TOTAL, BSD, "120000000"), ("CashAndCashEquivalentsAtCarryingValue", BSD, "100000000")]
     assert "cross_cf_closing_cash_eq_bs_cash" not in _ties(on, rows)
+
+
+@pytest.mark.unit
+def test_cash_change_identity_adds_fx_for_the_pre_2018_change_tag():
+    def pr(tag, v):
+        return checks.Print(tag, "us-gaap/2016", Decimal(v), -6, None)
+
+    col = {
+        (t, "us-gaap/2016"): pr(t, v)
+        for t, v in (
+            ("NetCashProvidedByUsedInOperatingActivities", "100"),
+            ("NetCashProvidedByUsedInInvestingActivities", "-60"),
+            ("NetCashProvidedByUsedInFinancingActivities", "-30"),
+            ("EffectOfExchangeRateOnCashAndCashEquivalents", "-4"),
+            ("CashAndCashEquivalentsPeriodIncreaseDecrease", "6"),
+        )
+    }
+    c = {x["check_id"]: x for x in checks.check_column("CF", col, {}, {})}["cf_parts_eq_change"]
+    assert c["ok"] and c["detail"]["fx_included"]

@@ -88,6 +88,7 @@ REASON_TEXT = {
     "derived_quarter_fails_residual_guard": "The computed quarter is negative or larger than its year-to-date total.",
     "predecessor_successor_split": "The period spans the change from predecessor to successor accounting, so its two parts are on different bases and are not added together.",
     "balance_sheet_not_filed": "No balance sheet was filed for this date.",
+    "not_filed_separately": "The company reports this figure only for the full year; the fourth quarter is not printed and is never computed.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
@@ -323,6 +324,20 @@ def select_concept(
                 RULE_PRINTED,
                 input_refs={"copies": len(ps)},
             )
+    if not derive:
+        # a never-derived concept (EPS, per-share): Q4 is not printed separately and is not computed
+        for (ddate, n), w in sorted(winners.items()):
+            if n == 4 and (ddate, 1) not in cells:
+                cells[(ddate, 1)] = Cell(
+                    concept,
+                    ddate,
+                    1,
+                    "not_presented",
+                    filing_id=w.filing_id,
+                    rule_id=RULE_BLANK,
+                    reason_code="not_filed_separately",
+                    input_refs={"fy_value_id": w.value_id},
+                )
     if derive:
         notes = _note_quarters(prints)
         for (ddate, n), w in sorted(winners.items()):
@@ -569,6 +584,11 @@ def to_row(
         "evidence_level": "DATA-INFERRED",
         "input_refs": cell.input_refs,
     }
+    if cell.state == "not_presented":
+        row.update(
+            reason_code=cell.reason_code,
+            reason_text=REASON_TEXT[cell.reason_code or ""],
+        )
     if cell.state == "defect":
         cls, owner = REASONS[cell.reason_code or ""]
         row.update(
