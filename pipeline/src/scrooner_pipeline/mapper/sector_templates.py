@@ -274,6 +274,43 @@ def load_cohort(path: Path) -> list[CohortCompany]:
     return out
 
 
+def cohort_has_sic(path: Path) -> bool:
+    with path.open(newline="") as fh:
+        return "sic" in (csv.DictReader(fh).fieldnames or [])
+
+
+def fill_sic_from_db(
+    conn: psycopg.Connection, cohort: list[CohortCompany]
+) -> list[CohortCompany]:
+    """For a cohort file without a sic column (e.g. cohort_v1_1_proposal_2026-10-24.csv):
+    read core.company.sic_code by id, one indexed read. A cik that disagrees with
+    core.company is an error, never silently trusted."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "select id, cik, sic_code from core.company where id = any(%s)",
+            ([c.company_id for c in cohort],),
+        )
+        found = {int(i): (cik, sic) for i, cik, sic in cur.fetchall()}
+    problems = []
+    out = []
+    for c in cohort:
+        if c.company_id not in found:
+            problems.append(f"company id {c.company_id} not in core.company")
+            continue
+        cik, sic = found[c.company_id]
+        if _cik(cik) != c.cik:
+            problems.append(
+                f"company id {c.company_id}: cohort cik {c.cik} != core.company {cik}"
+            )
+        sic_s = (sic or "").strip()
+        out.append(
+            CohortCompany(c.company_id, c.cik, int(sic_s) if sic_s.isdigit() else None)
+        )
+    if problems:
+        raise TemplateError(problems)
+    return out
+
+
 def resolve_template(t: Templates, c: CohortCompany) -> str | None:
     if c.cik in t.company_assignment:
         return t.company_assignment[c.cik][0]

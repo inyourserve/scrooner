@@ -342,3 +342,20 @@ class TestDatabase:
         rows = st.build_plan(st.parse_templates(text), _db_cohort(tmp_path, ids))
         with pytest.raises(st.TemplateError, match="net_interest_margin"):
             st.validate_against_db(db, rows)
+
+
+@pytest.mark.integration
+def test_cohort_without_sic_reads_sic_from_core_company(db, tmp_path):
+    ids = _seed_db(db)
+    db.execute("update core.company set sic_code = '6022' where id = %s", (ids[1],))
+    db.execute("update core.company set sic_code = null where id = %s", (ids[2],))
+    p = tmp_path / "cohort.csv"
+    p.write_text(
+        "company_id,cik,ticker\n" + "".join(f"{ids[n]},{n:010d},T{n}\n" for n in (1, 2))
+    )
+    assert st.cohort_has_sic(p) is False
+    filled = {c.company_id: c.sic for c in st.fill_sic_from_db(db, st.load_cohort(p))}
+    assert filled == {ids[1]: 6022, ids[2]: None}
+    p.write_text(f"company_id,cik\n{ids[1]},0000000099\n")
+    with pytest.raises(st.TemplateError, match="!= core.company"):
+        st.fill_sic_from_db(db, st.load_cohort(p))

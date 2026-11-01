@@ -705,7 +705,12 @@ def seed_sector_templates_cmd(
             raise typer.Exit(2)
     try:
         parsed = st.parse_templates(templates.read_text(encoding="utf-8"))
-        rows = st.build_plan(parsed, st.load_cohort(cohort))
+        companies = st.load_cohort(cohort)
+        if not st.cohort_has_sic(cohort):
+            # e.g. data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv: one read
+            with get_connection() as conn:
+                companies = st.fill_sic_from_db(conn, companies)
+        rows = st.build_plan(parsed, companies)
     except st.TemplateError as exc:
         for problem in exc.problems:
             typer.echo(f"ERROR {problem}", err=True)
