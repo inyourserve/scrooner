@@ -335,5 +335,53 @@ def pilot_prod_cmd(
     )
 
 
+@app.command("extract-sec")
+def extract_sec_cmd(
+    ciks: str = typer.Option(
+        "",
+        help="CIKs to extract (default: every predecessor in core.company_predecessor).",
+    ),
+    sets: str = typer.Option(
+        "", help="Comma-separated FSN sets (default: every set in the bucket)."
+    ),
+    work: str = typer.Option(".cache/fsn-extract", help="Scratch directory."),
+    apply: bool = typer.Option(
+        False,
+        "--apply/--plan",
+        help="Upload to fsn-notes/predecessors/ (default: extract only).",
+    ),
+) -> None:
+    """SEC FSN sets -> the extra CIKs' rows, byte for byte, into fsn-notes/predecessors/<set>/.
+    One request per set to sec.gov with the declared User-Agent; run sets sequentially."""
+    import time
+
+    from scrooner_pipeline.common.config import settings
+    from scrooner_pipeline.fsn_store import extract_sec, shard
+
+    cik_set = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()}
+    if not cik_set:
+        from scrooner_pipeline.db.connection import get_connection
+
+        with get_connection() as conn:
+            cik_set = set(_db_predecessors(conn))
+    if not cik_set:
+        raise typer.BadParameter(
+            "no CIKs: pass --ciks or fill core.company_predecessor"
+        )
+    set_list = [s for s in sets.split(",") if s] or shard.list_periods()
+    total: dict[str, int] = {}
+    for s_ in set_list:
+        t0 = time.time()
+        counts = extract_sec.run_set(
+            s_, cik_set, Path(work), settings.sec_user_agent, apply=apply
+        )
+        for k, v in counts.items():
+            total[k] = total.get(k, 0) + v
+        typer.echo(f"extract-sec {s_}: {json.dumps(counts)} in {time.time() - t0:.0f}s")
+    typer.echo(
+        f"extract-sec total [{'apply' if apply else 'plan'}] {sorted(cik_set)}: {json.dumps(total)}"
+    )
+
+
 if __name__ == "__main__":
     app()

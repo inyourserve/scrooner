@@ -52,28 +52,32 @@ def _storage() -> tuple[str, dict[str, str]]:
     return base, {"Authorization": f"Bearer {key}", "apikey": key}
 
 
-def list_periods() -> list[str]:
+# predecessor registrants' rows (fsn_store.extract_sec): same layout under this folder
+PREDECESSOR_PREFIX = "predecessors/"
+
+
+def list_periods(prefix: str = "") -> list[str]:
     base, h = _storage()
     r = httpx.post(
         f"{base}/object/list/{BUCKET}",
         headers=h,
-        json={"prefix": "", "limit": 500},
+        json={"prefix": prefix, "limit": 500},
         timeout=60,
     )
     r.raise_for_status()
     return sorted(x["name"] for x in r.json() if x["name"][:4].isdigit())
 
 
-def download(period: str, table: str, cache: Path) -> Path:
+def download(period: str, table: str, cache: Path, prefix: str = "") -> Path:
     base, h = _storage()
-    target = cache / period / f"{period}_{table}.tsv.zst"
+    target = cache / prefix / period / f"{period}_{table}.tsv.zst"
     if target.exists():
         return target
     target.parent.mkdir(parents=True, exist_ok=True)
     tmp = target.with_suffix(".part")
     with httpx.stream(
         "GET",
-        f"{base}/object/{BUCKET}/{period}/{period}_{table}.tsv.zst",
+        f"{base}/object/{BUCKET}/{prefix}{period}/{period}_{table}.tsv.zst",
         headers=h,
         timeout=900,
     ) as resp:
@@ -130,11 +134,11 @@ class Writer:
 
 
 def shard_period(
-    period: str, targets: set[str], cache: Path, writer: Writer
+    period: str, targets: set[str], cache: Path, writer: Writer, prefix: str = ""
 ) -> dict[str, int]:
     """One period: filter the seven tables to the targets' filings and append."""
     stats: dict[str, int] = defaultdict(int)
-    paths = {t: download(period, t, cache) for t in TABLES}
+    paths = {t: download(period, t, cache, prefix) for t in TABLES}
     # sub: which filings, and whose
     owners: dict[str, list[str]] = {}
     sub_header: list[str] | None = None
@@ -232,7 +236,7 @@ def shard_period(
             writer.add(c, "dim", header, list(r.values()))
         stats["dim"] += 1
     writer.flush()
-    shutil.rmtree(cache / period, ignore_errors=True)
+    shutil.rmtree(cache / prefix / period, ignore_errors=True)
     return stats
 
 
@@ -324,6 +328,7 @@ def run(
         else {"done": [], "stats": {}}
     )
     writer = Writer(out)
+    extra = set(list_periods(PREDECESSOR_PREFIX))
     for p in periods:
         if p in prog["done"]:
             continue
@@ -335,6 +340,9 @@ def run(
             break
         t0 = time.time()
         stats = shard_period(p, set(targets), cache, writer)
+        if p in extra:  # predecessor registrants' filings for this set
+            more = shard_period(p, set(targets), cache, writer, PREDECESSOR_PREFIX)
+            stats = {**stats, **{f"predecessor_{k}": v for k, v in more.items()}}
         prog["done"].append(p)
         prog["stats"][p] = {**stats, "seconds": round(time.time() - t0, 1)}
         prog_path.write_text(json.dumps(prog, indent=1))
