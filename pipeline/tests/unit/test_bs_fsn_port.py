@@ -103,3 +103,113 @@ def test_bs_seeds_are_the_exporter_output(tmp_path):
         return [{k: v for k, v in json.loads(x).items() if k != "source_commit"} for x in path.read_text().splitlines() if x.strip()]
 
     assert rows(tmp_path / "concept_rules" / "bs.jsonl") == rows(SEEDS)
+
+
+# ---------------------------------------------------------------- review 2026-11-01 (BS-PORT-FIXES-2026-11-01.md)
+SUB = ["fsn_set", "adsh", "cik", "form", "period", "filed", "accepted", "aciks"]
+PRE = ["adsh", "report", "line", "stmt", "inpth", "tag", "version", "prole", "plabel", "negating"]
+NUM = ["adsh", "tag", "version", "ddate", "qtrs", "uom", "dimh", "iprx", "value", "footnote", "footlen", "dimn", "coreg", "durp", "datp", "dcml"]
+FACE = [("Assets", "Total assets"), ("LongTermDebtNoncurrent", "Long-term debt"),
+        ("FinanceLeaseLiabilityNoncurrent", "Finance lease liabilities"), ("LiabilitiesAndStockholdersEquity", "Total")]
+
+
+def _write(path, cols, rows):
+    path.write_text("\t".join(cols) + "\n" + "".join("\t".join(str(r.get(c, "")) for c in cols) + "\n" for r in rows))
+
+
+def _synthetic(tmp_path, filings):
+    """filings: [(adsh, form, period, accepted, {ddate: {tag: value}})] for CIK 1"""
+    d = tmp_path / "0000000001"
+    d.mkdir()
+    (d / "manifest.json").write_text('{"cik": "0000000001"}')
+    _write(d / "sub.tsv", SUB, [{"fsn_set": "2020q1", "adsh": a, "cik": "1", "form": f, "period": p, "filed": acc[:8], "accepted": acc}
+                                for a, f, p, acc, _ in filings])
+    _write(d / "pre.tsv", PRE, [{"adsh": a, "report": 2, "line": i + 1, "stmt": "BS", "inpth": 0, "tag": t, "version": "us-gaap/2020",
+                                 "prole": "terseLabel", "plabel": lab, "negating": 0} for a, *_ in filings for i, (t, lab) in enumerate(FACE)])
+    _write(d / "num.tsv", NUM, [{"adsh": a, "tag": t, "version": "us-gaap/2020", "ddate": dd, "qtrs": 0, "uom": "USD", "dimh": "0x00000000",
+                                 "iprx": 0, "value": v} for a, _f, _p, _acc, vals in filings for dd, tv in vals.items() for t, v in tv.items()])
+    (tmp_path / "records.jsonl").write_text(json.dumps({
+        "company": "SYN", "cik": "1", "filing_from": filings[0][0], "period_from": "2014-01-01", "period_to": "2030-12-31",
+        "coverage_clean": True, "members": [
+            {"tag": "LongTermDebtNoncurrent", "class": "borrowing", "side": "noncurrent", "custom": False},
+            {"tag": "FinanceLeaseLiabilityNoncurrent", "class": "finance_lease", "side": "noncurrent", "custom": False}]}) + "\n")
+    run("replay_debt_fsn.py", "--company", d, tmp_path / "records.jsonl", tmp_path / "replay.json")
+    return {c["period_end"]: c for c in json.loads((tmp_path / "replay.json").read_text())["cells"]}
+
+
+def test_note_finance_lease_total_is_not_added_twice(tmp_path):
+    """face: borrowings 100 + finance lease (noncurrent) 40; note: FinanceLeaseLiability 55 = current 15 + noncurrent 40.
+    Total debt = 155 (the note adds only the 15 no member carries), never 195."""
+    vals = {"Assets": 1000, "LiabilitiesAndStockholdersEquity": 1000, "LongTermDebtNoncurrent": 100, "LongTermDebt": 100,
+            "FinanceLeaseLiabilityNoncurrent": 40, "FinanceLeaseLiability": 55, "FinanceLeaseLiabilityCurrent": 15}
+    cells = _synthetic(tmp_path, [("0000000001-20-000001", "10-K", "20191231", "20200220120000", {"20191231": vals})])
+    c = cells["2019-12-31"]
+    assert c["verdict"] == "publishable", c
+    assert c["slot_lease_inclusive"] == "155"
+    assert c["note_finance_lease_added"] == "15"
+
+
+def test_latest_accepted_print_wins_and_cells_start_2015(tmp_path):
+    # LongTermDebt (note) = the noncurrent line: no current portion, so the replay's current-maturities check passes
+    base = {"Assets": 1000, "LiabilitiesAndStockholdersEquity": 1000, "LongTermDebtNoncurrent": 100, "LongTermDebt": 100,
+            "FinanceLeaseLiabilityNoncurrent": 0}
+    restated = dict(base, LongTermDebtNoncurrent=120, LongTermDebt=120)
+    cells = _synthetic(tmp_path, [
+        ("0000000001-15-000001", "10-K", "20141231", "20150220120000", {"20141231": base, "20131231": base}),
+        ("0000000001-16-000001", "10-K", "20151231", "20160220120000", {"20151231": base, "20141231": restated}),
+        ("0000000001-16-000002", "10-Q", "20160331", "20160505120000", {"20160331": base, "20151231": restated})])
+    assert sorted(cells) == ["2015-12-31", "2016-03-31"]  # 2013/2014 instants are values, never cells (I11)
+    assert cells["2015-12-31"]["accession"] == "0000000001-16-000002"  # the later-accepted 10-Q comparative wins
+    assert cells["2015-12-31"]["slot_lease_inclusive"] == "120"
+
+
+def _gate_work(tmp_path, value="155"):
+    import gzip as _gz
+    w = tmp_path / "work"
+    for side in ("old", "new", "company"):
+        (w / side / "debt").mkdir(parents=True)
+    with _gz.open(w / "instants.jsonl.gz", "wt") as f:
+        f.write(json.dumps({"adsh": "A1", "cik": 1, "form": "10-K", "period": "20191231", "filed": "20200220",
+                            "accepted": "20200220120000", "values": {}, "bs": []}) + "\n")
+    cell = {"ticker": "SYN", "cik": 1, "period_end": "2019-12-31", "accession": "A1", "verdict": "publishable",
+            "slot_lease_inclusive": value, "slot_borrowings": "100", "members": [], "record_filing_from": "A1"}
+    for side in ("old", "new"):
+        for f in ("bs_eras.json", "debt_eras.json"):
+            (w / side / f).write_text("{}")
+        for f in ("bs_boundaries.txt", "debt_boundaries.txt", "bs_records.jsonl", "debt/bs_pre_rows.jsonl",
+                  "debt/lease_facts.csv", "debt_records.jsonl"):
+            (w / side / f).write_text("")
+        (w / side / "debt/adsh_period.json").write_text("{}")
+    for p in ("old/debt_replay.json", "new/debt_replay.json", "new/debt_replay_first_filed.json"):
+        (w / p).write_text(json.dumps({"cells": [dict(cell, slot_lease_inclusive="155")]}))
+    for f in ("bs_eras.json", "debt_eras.json"):
+        (w / "company" / f).write_text("{}")
+    for f in ("bs_boundaries.txt", "debt_boundaries.txt", "bs_records.jsonl", "debt_records.jsonl"):
+        (w / "company" / f).write_text("")
+    (w / "company/debt_replay.json").write_text(json.dumps({"cells": [cell]}))
+    (tmp_path / "v4.json").write_text(json.dumps({"cells": [dict(cell, slot_lease_inclusive="155", verdict="prod_blank")]}))
+    (tmp_path / "v3.jsonl").write_text("")
+    return w
+
+
+def _compare(tmp_path, w, *extra):
+    return subprocess.run([sys.executable, "-I", str(S / "bs_port_compare.py"), str(w), str(tmp_path / "v4.json"),
+                           str(tmp_path / "v3.jsonl"), *map(str, extra)], capture_output=True, text=True)
+
+
+def test_gate_fails_closed(tmp_path):
+    """review 2026-11-01: the gate could not fail. Identical outputs pass; one changed value fails, strict or pinned."""
+    ok = _compare(tmp_path, _gate_work(tmp_path))
+    assert ok.returncode == 0, ok.stdout + ok.stderr
+    bad_dir = tmp_path / "b"
+    bad_dir.mkdir()
+    (bad_dir / "v4.json").write_text((tmp_path / "v4.json").read_text())
+    (bad_dir / "v3.jsonl").write_text("")
+    w = _gate_work(bad_dir, value="195")  # the double-counted total of the synthetic lease case
+    strict = _compare(bad_dir, w)
+    assert strict.returncode == 1 and "FAIL" in strict.stdout
+    obs = json.loads((w / "observed_diffs.json").read_text())
+    assert obs and all(d["class"] == "value_differs" for d in obs)
+    (bad_dir / "pin.json").write_text(json.dumps(obs))  # a generic class can never be pinned
+    pinned = _compare(bad_dir, w, "--expected", bad_dir / "pin.json")
+    assert pinned.returncode == 1 and "REFUSED PIN" in pinned.stdout
