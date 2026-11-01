@@ -67,8 +67,13 @@ def _rows(zf: zipfile.ZipFile, table: str) -> Iterator[list[bytes]]:
             yield line.rstrip(b"\r\n").split(b"\t")
 
 
-def filter_set(zf: zipfile.ZipFile, ciks: set[str]) -> dict[str, list[list[bytes]]]:
-    """table -> [header, rows...] for the CIKs' filings (cik values compared without leading zeros)."""
+def filter_set(
+    zf: zipfile.ZipFile, ciks: set[str], *, registrant_only: bool = True
+) -> dict[str, list[list[bytes]]]:
+    """table -> [header, rows...] for the CIKs' filings (cik values compared without leading zeros).
+    registrant_only (default): only filings whose registrant (sub.cik) is one of the CIKs. A
+    predecessor that still co-files with its successor (Southwest Gas Corp, Dow Chemical) appears in
+    the successor's filings via aciks; those are already in the cohort extract and must not repeat."""
     want = {c.lstrip("0").encode() for c in ciks}
     out: dict[str, list[list[bytes]]] = {}
     it = _rows(zf, "sub")
@@ -79,7 +84,8 @@ def filter_set(zf: zipfile.ZipFile, ciks: set[str]) -> dict[str, list[list[bytes
     adshs: set[bytes] = set()
     for r in it:
         mine = r[i_cik].lstrip(b"0") in want or (
-            i_aciks is not None
+            not registrant_only
+            and i_aciks is not None
             and any(a.lstrip(b"0") in want for a in r[i_aciks].split())
         )
         if mine:

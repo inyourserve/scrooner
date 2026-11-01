@@ -42,9 +42,10 @@ def test_filter_keeps_only_the_ciks_filings_and_what_they_reference():
             "dim": ["dimhash\tsegments\tsegt", "0xabc\tSeg=A;\t0", "0xdef\tSeg=B;\t0"],
         }
     )
+    assert [r[0] for r in ex.filter_set(zf, {"0000034088"}, registrant_only=False)["sub"][1:]] == [b"A1", b"C1"]
     out = ex.filter_set(zf, {"0000034088"})
-    assert [r[0] for r in out["sub"][1:]] == [b"A1", b"C1"]  # registrant and co-registrant
-    assert len(out["pre"]) == 2 and len(out["ren"]) == 2 and len(out["cal"]) == 2
+    assert [r[0] for r in out["sub"][1:]] == [b"A1"]  # registrant only: C1 is the successor's co-filing
+    assert len(out["pre"]) == 2 and len(out["ren"]) == 2 and len(out["cal"]) == 2  # header + A1
     assert [r[-1] for r in out["num"][1:]] == [b"339247000000.0000", b"1.0000"]  # byte-exact values
     assert {r[0] for r in out["tag"][1:]} == {b"Revenues", b"ProfitLoss"}
     assert [r[0] for r in out["dim"][1:]] == [b"0xabc"]
