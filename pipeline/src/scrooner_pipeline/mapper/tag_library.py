@@ -354,13 +354,20 @@ def _reconnect(
         try:
             return connect()
         except psycopg.OperationalError:
-            logger.warning("tag_library.reconnect_failed", stage=stage, chunk=chunk, attempt=attempt)
+            logger.warning(
+                "tag_library.reconnect_failed",
+                stage=stage,
+                chunk=chunk,
+                attempt=attempt,
+            )
             if attempt == len(RECONNECT_BACKOFF_SECONDS) + 1:
                 raise
     raise AssertionError("unreachable")
 
 
-def _run_chunked(conn, ids, table, insert_sql, stage, reconnect=_reconnect) -> psycopg.Connection:
+def _run_chunked(
+    conn, ids, table, insert_sql, stage, reconnect=_reconnect
+) -> psycopg.Connection:
     for n, chunk in enumerate(_chunks(ids), 1):
         for attempt in range(1, RECONNECT_ATTEMPTS + 1):
             try:
@@ -380,8 +387,12 @@ def _run_chunked(conn, ids, table, insert_sql, stage, reconnect=_reconnect) -> p
             except psycopg.OperationalError:
                 if attempt == RECONNECT_ATTEMPTS:
                     raise
-                logger.warning("tag_library.reconnect", stage=stage, chunk=n, attempt=attempt)
-                with contextlib.suppress(Exception):  # the old connection is already broken
+                logger.warning(
+                    "tag_library.reconnect", stage=stage, chunk=n, attempt=attempt
+                )
+                with contextlib.suppress(
+                    Exception
+                ):  # the old connection is already broken
                     conn.close()
                 conn = reconnect(stage, n)
         logger.info(
@@ -419,7 +430,9 @@ def build_leads(
                 "excluded": list(EXCLUDED_VERDICTS),
             },
         )
-        cur.execute("select distinct canonical_concept_id from lead_candidates order by 1")
+        cur.execute(
+            "select distinct canonical_concept_id from lead_candidates order by 1"
+        )
         concepts = [r[0] for r in cur.fetchall()]
         logger.info(
             "tag_library.leads_candidates",

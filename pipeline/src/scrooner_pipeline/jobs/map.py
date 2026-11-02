@@ -997,7 +997,10 @@ def build_tag_library_cmd(
     target_stages = {s.strip() for s in stages.split(",")} if stages else None
     with get_connection() as conn:
         stats = build_tag_library(
-            conn, target_ciks, target_stages, leads_budget_seconds=leads_budget_minutes * 60
+            conn,
+            target_ciks,
+            target_stages,
+            leads_budget_seconds=leads_budget_minutes * 60,
         )
     typer.echo(f"tag-library: {stats}")
 

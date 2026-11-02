@@ -90,7 +90,9 @@ def test_slow_concept_times_out_and_keeps_its_old_leads_while_others_are_replace
 
 @pytest.mark.integration
 def test_exhausted_budget_stops_scoring_and_keeps_unreached_leads(conn):
-    stats = tag_library.build_leads(conn, budget_seconds=0, clock=iter([0, 1, 2, 3, 4, 5]).__next__)
+    stats = tag_library.build_leads(
+        conn, budget_seconds=0, clock=iter([0, 1, 2, 3, 4, 5]).__next__
+    )
 
     assert stats["scored"] == 0
     assert stats["not_reached"] == 2
@@ -100,7 +102,13 @@ def test_exhausted_budget_stops_scoring_and_keeps_unreached_leads(conn):
 @pytest.mark.unit
 def test_reconnect_retries_a_failed_connect_with_backoff():
     sleeps: list[float] = []
-    attempts = iter([psycopg.OperationalError("connection failed"), psycopg.OperationalError("again"), "conn"])
+    attempts = iter(
+        [
+            psycopg.OperationalError("connection failed"),
+            psycopg.OperationalError("again"),
+            "conn",
+        ]
+    )
 
     def connect():
         result = next(attempts)
@@ -108,7 +116,10 @@ def test_reconnect_retries_a_failed_connect_with_backoff():
             raise result
         return result
 
-    assert tag_library._reconnect("company_tags", 34, connect=connect, sleep=sleeps.append) == "conn"
+    assert (
+        tag_library._reconnect("company_tags", 34, connect=connect, sleep=sleeps.append)
+        == "conn"
+    )
     assert sleeps == list(tag_library.RECONNECT_BACKOFF_SECONDS[:2])
 
 

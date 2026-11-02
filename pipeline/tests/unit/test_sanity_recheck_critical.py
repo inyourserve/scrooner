@@ -14,7 +14,9 @@ from scrooner_pipeline.sanity.yfinance_check import critical_finding_company_ids
 
 
 @pytest.mark.integration
-def test_selects_each_company_with_a_critical_yfinance_finding_once(isolated_database_url):
+def test_selects_each_company_with_a_critical_yfinance_finding_once(
+    isolated_database_url,
+):
     with psycopg.connect(isolated_database_url) as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -41,10 +43,14 @@ def test_selects_each_company_with_a_critical_yfinance_finding_once(isolated_dat
 @pytest.mark.unit
 def test_command_rechecks_exactly_the_critical_companies(monkeypatch):
     calls = []
-    monkeypatch.setattr(sanity_job, "get_connection", lambda: contextlib.nullcontext("conn"))
+    monkeypatch.setattr(
+        sanity_job, "get_connection", lambda: contextlib.nullcontext("conn")
+    )
     monkeypatch.setattr(sanity_job, "critical_finding_company_ids", lambda conn: [7, 9])
     monkeypatch.setattr(
-        sanity_job, "run_sanity_checks", lambda conn, ids: calls.append((conn, ids)) or {"considered": len(ids)}
+        sanity_job,
+        "run_sanity_checks",
+        lambda conn, ids: calls.append((conn, ids)) or {"considered": len(ids)},
     )
 
     result = CliRunner().invoke(sanity_job.app, ["recheck-critical"])
