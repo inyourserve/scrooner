@@ -1,0 +1,8 @@
+Applied by the founder (run from scrooner-87's staged files), 2026-11-02 17:18:53 UTC (22:48:53 IST). Exit 0.
+APPLIED 0121_company_history_source sha 37888233c67b68c3 + 40 rows at 17:18:53 UTC
+rows 40 by relation {'predecessor': 34, 'exclude': 6}; overlap trigger enabled ('O',); XOM [('0000034088', datetime.date(2026, 3, 31))]; overlap refused True
+POST-CHECK (0121) PASS
+POST-CHECK (periods): 1214 created across 32 companies (1,737 supplied; existing rows won on conflict)
+Independent read after the apply (scrooner-87): company_history_source predecessor 34 / exclude 6; core.period for XOM (5351) end >= 2015-01-01: 107.
+Rollback: delete from core.period where id in (created_period_ids.txt); drop table core.company_history_source; drop function core.company_history_source_no_overlap();
+Before-images: core_period_<company_id>.csv (each company's core.period rows before the insert).

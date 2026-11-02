@@ -1,0 +1,229 @@
+name: FSN store cohort dry run
+
+# Manual only. The pilot (pipeline-fsn-pilot.yml) at cohort scale: v1.1, 1,000 companies, sharded. Each shard
+# builds the store in its OWN scratch Postgres 16 (every migration), copies reference rows from production
+# (canonical concepts, the shard's companies and their company_history_source rows: READ only), then shard ->
+# load -> seed rules -> map -> checks -> select -> report. NO production writes and no production plan step
+# (the plan's rolled-back writes would add a connection per shard; coverage, library and gaps need none).
+# The aggregate job prints the cohort table, the top-100 table and the top gap classes with example cells.
+on:
+  workflow_dispatch:
+    inputs:
+      code_ref:
+        description: "Git ref holding the store and pilot code"
+        default: "main"
+      shards:
+        description: "Shards (each one scratch DB; production reads are a few short queries)"
+        default: "25"
+      limit:
+        description: "Only the first N cohort companies (rank order); empty = all 1,000"
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fsn-cohort
+  cancel-in-progress: false
+
+env:
+  COHORT_CSV: data-team/strategy/data/cohort_v1_1_proposal_2026-10-24.csv
+
+jobs:
+  plan:
+    name: Shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      shards: ${{ steps.s.outputs.shards }}
+    env:
+      SHARDS: ${{ inputs.shards }}
+      LIMIT: ${{ inputs.limit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - id: s
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import csv, json, os
+          rows = list(csv.DictReader(open(os.environ["COHORT_CSV"])))
+          if os.environ["LIMIT"]:
+              rows = rows[: int(os.environ["LIMIT"])]
+          ciks = [r["cik"].zfill(10) for r in rows]
+          n = max(1, min(int(os.environ["SHARDS"]), len(ciks)))
+          print("shards=" + json.dumps([{"i": i, "ciks": ",".join(ciks[i::n])} for i in range(n)]))
+          EOF
+
+  shard:
+    name: cohort shard ${{ matrix.shard.i }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 25
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: scrooner_test
+          POSTGRES_PASSWORD: scrooner_test
+          POSTGRES_DB: scrooner_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U scrooner_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      PROD_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SCRATCH_URL: postgresql://scrooner_test:scrooner_test@localhost:5432/scrooner_test
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      CIKS: ${{ matrix.shard.ciks }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Scratch database (Supabase-owned objects, then every migration)
+        run: |
+          set -euo pipefail
+          psql "$SCRATCH_URL" -q --set ON_ERROR_STOP=1 --file scripts/ci/bootstrap_supabase.sql
+          for m in pipeline/db/migrations/*.sql; do psql "$SCRATCH_URL" -q --set ON_ERROR_STOP=1 --file "$m"; done
+      - name: Copy reference rows from production (read-only)
+        run: |
+          set -euo pipefail
+          list=$(printf "'%s'," $(echo "$CIKS" | tr ',' ' ') | sed 's/,$//')
+          psql "$PROD_DATABASE_URL" -v ON_ERROR_STOP=1 -c "\copy (select name, statement, combination_mode, description from analytics.canonical_concept) to 'concepts.csv' csv"
+          psql "$PROD_DATABASE_URL" -v ON_ERROR_STOP=1 -c "\copy (select id, cik, company_name, fiscal_year_end, sic_code from core.company where cik in ($list)) to 'companies.csv' csv"
+          psql "$PROD_DATABASE_URL" -v ON_ERROR_STOP=1 -c "\copy (select h.company_id, h.source_cik, h.relation, h.source_name, h.valid_from, h.valid_to, h.reason, h.evidence from core.company_history_source h join core.company c on c.id = h.company_id where c.cik in ($list)) to 'history.csv' csv"
+          psql "$SCRATCH_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          create temp table c (name text, statement text, combination_mode text, description text);
+          \copy c from 'concepts.csv' csv
+          insert into analytics.canonical_concept (name, statement, combination_mode, description)
+            select name, statement, combination_mode, description from c on conflict (name) do nothing;
+          create temp table co (id bigint, cik text, company_name text, fiscal_year_end text, sic_code text);
+          \copy co from 'companies.csv' csv
+          insert into core.company (id, cik, company_name, fiscal_year_end, sic_code) overriding system value
+            select id, cik, company_name, fiscal_year_end, sic_code from co;
+          create temp table h (company_id bigint, source_cik text, relation text, source_name text, valid_from date, valid_to date, reason text, evidence text);
+          \copy h from 'history.csv' csv
+          insert into core.company_history_source (company_id, source_cik, relation, source_name, valid_from, valid_to, reason, evidence)
+            select company_id, source_cik, relation, source_name, valid_from, valid_to, reason, evidence from h;
+          SQL
+          echo "companies: $(wc -l < companies.csv), history rows: $(wc -l < history.csv)"
+      - name: Shard from the fsn-notes bucket
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: uv run --project pipeline scrooner-fsn shard --ciks "$CIKS" --out companies --cache .cache/fsn-shard --floor-gb 3
+      - name: Load the store (scratch)
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: |
+          mkdir -p out
+          uv run --project pipeline scrooner-fsn load --companies companies --report out/load.json
+      - name: Seed concept rules (scratch)
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: uv run --project pipeline scrooner-fsn seed-rules $(ls data-team/47-fsn-store/concept_rules/*.jsonl | grep -v _provenance) --apply
+      - name: Map, check, select, report (scratch)
+        env:
+          DATABASE_URL: ${{ env.SCRATCH_URL }}
+        run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cohort-shard-${{ matrix.shard.i }}
+          path: |
+            out/report.json
+            out/gaps.csv
+            out/library.csv
+            out/load.json
+          if-no-files-found: ignore
+
+  aggregate:
+    name: Cohort table, top 100, top gap classes
+    needs: shard
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.code_ref }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cohort-shard-*
+          path: shards
+      - name: Aggregate
+        run: |
+          python3 - <<'EOF'
+          import csv, glob, json, os, collections
+          rank = {int(r["company_id"]): i for i, r in enumerate(csv.DictReader(open(os.environ["COHORT_CSV"])))}
+          reports, gaps = [], []
+          for d in sorted(glob.glob("shards/*")):
+              if os.path.exists(f"{d}/report.json"):
+                  reports += json.load(open(f"{d}/report.json"))
+              if os.path.exists(f"{d}/gaps.csv"):
+                  gaps += list(csv.DictReader(open(f"{d}/gaps.csv")))
+          def agg(rs):
+              k = sum(r["template_coverage"]["keys"] for r in rs)
+              v = sum(r["template_coverage"]["valued"] for r in rs)
+              rr = sum(r["template_coverage"]["reasoned"] for r in rs)
+              g2k = sum(r["template_coverage"].get("g2_eligibility", {}).get("g2_eligible_keys", 0) for r in rs)
+              g2v = sum(r["template_coverage"].get("g2_eligibility", {}).get("g2_eligible_valued", 0) for r in rs)
+              lt = sum(r["library"]["template_points"] for r in rs)
+              lw = sum(r["library"]["with_line"] for r in rs)
+              pct = lambda a, b: f"{100 * a / b:.1f}" if b else "-"
+              return f"| {len(rs)} | {k} | {pct(v, k)} | {pct(v + rr, k)} | {pct(g2v, g2k)} | {pct(lw, lt)} |"
+          top100 = [r for r in reports if rank.get(r["company_id"], 9999) < 100]
+          by_sector = collections.defaultdict(list)
+          for r in reports:
+              by_sector[r["profile"]["sector_template"]].append(r)
+          out = ["| scope | companies | template keys | valued % | valued or reasoned % | G2-eligible valued % | library % |", "|---|---|---|---|---|---|---|",
+                 "| cohort " + agg(reports), "| top 100 " + agg(top100)]
+          out += ["| sector " + s + " " + agg(rs) for s, rs in sorted(by_sector.items())]
+          top100_ids = {r["company_id"] for r in top100}
+          cls = collections.defaultdict(lambda: {"keys": 0, "top100": 0, "companies": set(), "examples": []})
+          for g in gaps:
+              k = (g["cause"], g["data_point"].replace("_resolved", ""))
+              c = cls[k]
+              c["keys"] += 1
+              c["companies"].add(g["cik"])
+              if int(g["company_id"]) in top100_ids:
+                  c["top100"] += 1
+              if len(c["examples"]) < 3:
+                  c["examples"].append(f"{g['cik']} {g['grain']} {g['period_end']}")
+          out += ["", "Top 15 gap classes (cause, data point):", "| cause | data point | keys | top-100 keys | companies | examples |", "|---|---|---|---|---|---|"]
+          for (cause, dp), c in sorted(cls.items(), key=lambda x: -x[1]["keys"])[:15]:
+              out.append(f"| {cause} | {dp} | {c['keys']} | {c['top100']} | {len(c['companies'])} | {'; '.join(c['examples'])} |")
+          causes = collections.Counter(g["cause"] for g in gaps)
+          out += ["", "Gap causes: " + ", ".join(f"{k} {v}" for k, v in causes.most_common())]
+          missing = sorted(set(rank) - {r["company_id"] for r in reports})
+          out += [f"Companies without a report: {len(missing)}"]
+          text = "\n".join(out)
+          print(text)
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a").write(text + "\n")
+          os.makedirs("cohort", exist_ok=True)
+          open("cohort/summary.md", "w").write(text + "\n")
+          json.dump([{k: v for k, v in r.items() if not k.startswith("_")} for r in reports], open("cohort/reports.json", "w"))
+          with open("cohort/gaps.csv", "w", newline="") as fh:
+              if gaps:
+                  w = csv.DictWriter(fh, fieldnames=list(gaps[0])); w.writeheader(); w.writerows(gaps)
+          open("cohort/missing_companies.txt", "w").write("\n".join(map(str, missing)))
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fsn-cohort
+          path: cohort/
