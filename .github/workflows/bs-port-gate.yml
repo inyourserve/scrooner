@@ -46,7 +46,8 @@ jobs:
           python-version: "3.12"
       - run: uv sync --project pipeline --locked
       - name: Boundary calculation linkbases (cache; immutable SEC files)
-        uses: actions/cache@v4
+        id: calcache
+        uses: actions/cache/restore@v4
         with:
           path: gate-work/cal
           key: bs-port-gate-cal-v1
@@ -72,6 +73,21 @@ jobs:
             out/new/debt_replay.json out/new/debt_replay_first_filed.json > outputs.sha256) || true
           echo "gate exit code: $rc"
           exit "$rc"
+      - name: Save the linkbase cache (also after a red gate)
+        if: always() && steps.calcache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: gate-work/cal
+          key: bs-port-gate-cal-v1
+      - name: Upload inputs (small) for debugging
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bs-port-gate-inputs
+          if-no-files-found: warn
+          path: |
+            gate-work/periods
+            gate-work/companies
       - name: Upload outputs
         if: always()
         uses: actions/upload-artifact@v4
@@ -81,7 +97,4 @@ jobs:
           path: |
             gate-work/gate_summary.txt
             gate-work/outputs.sha256
-            gate-work/out/observed_diffs.json
-            gate-work/out/gate_report.json
-            gate-work/out/company
-            gate-work/out/new
+            gate-work/out
