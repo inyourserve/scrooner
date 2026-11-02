@@ -126,7 +126,8 @@ jobs:
           mkdir -p out
           uv run --project pipeline scrooner-fsn load --companies companies --report out/load.json
       - name: Map (fsn.line_map), checks (fsn.filing_check), select, report (production fsn.* writes)
-        run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out
+        # note-sourced values stay out of the production write until the Verifier draw passes
+        run: uv run --project pipeline scrooner-fsn pilot --ciks "$CIKS" --out out --note-sourced ""
       - name: Before-image of canonical_fact and reasons (read)
         if: inputs.stage == 'select_write'
         run: uv run --project pipeline scrooner-fsn pilot-prod --pilot-out out

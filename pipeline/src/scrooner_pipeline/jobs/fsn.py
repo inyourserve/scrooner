@@ -200,8 +200,12 @@ def pilot_cmd(
         help="Basis splits and unfiled instants (company period rules).",
     ),
     company_outs: str = typer.Option(
-        "data-team/47-fsn-store/template_company_outs.csv",
-        help="Company-level template OUTs with evidence (line not printed).",
+        "data-team/47-fsn-store/template_company_outs_approval_2026-11-03.csv",
+        help="Company-level template OUTs with the approver's verdicts (line not printed).",
+    ),
+    note_sourced: str = typer.Option(
+        "data-team/47-fsn-store/template_company_outs_approval_2026-11-03.csv",
+        help="Approved company x data point pairs served from a note fact; '' disables (production write).",
     ),
 ) -> None:
     """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
@@ -240,6 +244,7 @@ def pilot_cmd(
                     rule_concepts,
                     Path(period_rules),
                     Path(company_outs),
+                    Path(note_sourced) if note_sourced else None,
                 )
                 rep["mapping"], rep["checks"] = m, c
                 rep["accessions"] = [
