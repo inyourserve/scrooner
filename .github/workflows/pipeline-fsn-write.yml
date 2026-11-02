@@ -33,8 +33,10 @@ on:
 permissions:
   contents: read
 
+# Own queue: it must not wait behind (or block) a running manual proof run; the headroom
+# preflight keeps the two inside the connection budget.
 concurrency:
-  group: manual-db-jobs
+  group: fsn-write
   cancel-in-progress: false
 
 env:
