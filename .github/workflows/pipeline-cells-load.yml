@@ -43,10 +43,12 @@ on:
 permissions:
   contents: read
 
-# One queue for every heavy database workflow (see pipeline-tag-library.yml for the history).
-# GitHub keeps ONE pending run per group: check `gh run list` before dispatching a manual run.
+
+# Own queue (not heavy-db-jobs): a multi-hour manual run there made GitHub replace the pending nightly
+# refresh with the sanity cron (refresh 41334234889 cancelled, 2026-11-01). The preflight checks
+# connection headroom instead; do not dispatch beside the nightly refresh (root CLAUDE.md).
 concurrency:
-  group: heavy-db-jobs
+  group: manual-db-jobs
   cancel-in-progress: false
 
 jobs:
