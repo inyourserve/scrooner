@@ -133,6 +133,13 @@ def store_keys(filings: list[sel.Filing], concept: str) -> list[tuple[str, date]
     return sorted(keys)
 
 
+def _company_outs(path: Path | None) -> list[dict[str, str]]:
+    if not path or not path.exists():
+        return []
+    with path.open() as fh:
+        return list(csv.DictReader(fh))
+
+
 def calendar_keys(path: Path, company_id: int, concept: str) -> list[tuple[str, date]]:
     """(grain, period_end) keys of one data point: FY/Q durations or instants, end >= FLOOR."""
     want = "instant" if concept in INSTANT else "duration"
@@ -237,6 +244,7 @@ def report_company(
     calendar: Path,
     rule_concepts: set[str],
     period_rules: Path | None = None,
+    company_outs: Path | None = None,
 ) -> dict[str, Any]:
     cik, name, sic = conn.execute(
         "select cik, company_name, sic_code from core.company where id = %s",
@@ -287,7 +295,14 @@ def report_company(
     # mapped, combined or excluded in any stored filing) is OUT of that company's template, with that
     # reason; it leaves the denominator and is listed, never silently dropped
     cond_out = [c for c in tmpl if c in COND[sector] and c not in mapped_points]
-    tmpl = [c for c in tmpl if c not in cond_out]
+    # company-level OUT from evidence that the statements print no such line
+    # (data-team/47-fsn-store/template_company_outs.csv: no operating-income line, net interest only)
+    company_out = {
+        r["data_point"]: r["reason"]
+        for r in _company_outs(company_outs)
+        if int(r["company_id"]) == company_id and r["data_point"] in tmpl
+    }
+    tmpl = [c for c in tmpl if c not in cond_out and c not in company_out]
     for concept in tmpl:
         k: Counter[str] = Counter()
         expected = calendar_keys(calendar, company_id, concept)
@@ -377,6 +392,7 @@ def report_company(
             "sector_template": sector,
             "template_points": len(tmpl),
             "template_out_cond_not_printed": cond_out,
+            "template_out_by_company_evidence": company_out,
             "fye": fye[0] if fye else None,
             "co_registrants": sorted(c[0] for c in coreg if c[0]),
             "filings_stored": len(data["filings"]),
