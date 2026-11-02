@@ -43,6 +43,19 @@ from scrooner_pipeline.fsn_store.checks import tol_of
 
 RULE_PRINTED = "fsn.select_printed@1"
 RULE_NOTE_Q = "fsn.select_note_quarter@1"
+RULE_NOTE_VALUE = "fsn.select_note_value@1"
+
+# concepts that may be served from a NOTE fact (no face line) for approved company x concept pairs only
+# (template_company_outs_approval: REJECT_NOTE_SOURCED_VALUE), tags in preference order
+NOTE_TAGS = {
+    "interest_expense_resolved": (
+        "InterestExpense",
+        "InterestExpenseNonoperating",
+        "InterestExpenseOperating",
+        "InterestAndDebtExpense",
+    ),
+    "operating_income_resolved": ("OperatingIncomeLoss",),
+}
 RULE_YTD_DIFF = "fsn.select_ytd_difference@1"
 RULE_BLANK = "fsn.select_blank@1"
 
@@ -78,6 +91,8 @@ REASONS = {
     "derived_quarter_fails_residual_guard": ("period", "period_engineer"),
     "predecessor_successor_split": ("period", "period_engineer"),
     "balance_sheet_not_filed": ("filer_error", "data_engineer_l2"),
+    "note_values_disagree": ("composition", "standardization_lead"),
+    "note_value_not_positive": ("evidence_pending", "verifier"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -89,6 +104,8 @@ REASON_TEXT = {
     "predecessor_successor_split": "The period spans the change from predecessor to successor accounting, so its two parts are on different bases and are not added together.",
     "balance_sheet_not_filed": "No balance sheet was filed for this date.",
     "not_filed_separately": "The company reports this figure only for the full year; the fourth quarter is not printed and is never computed.",
+    "note_values_disagree": "The notes print two different gross figures for this period (different perimeters), so neither is shown.",
+    "note_value_not_positive": "The note prints zero or a negative figure, which is not a gross amount for this line.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
@@ -759,3 +776,105 @@ def select_company(
         )
         rows.extend(to_row(c, company_id, data["filings"], unit=unit) for c in cells)
     return rows
+
+
+# --- note-sourced values (approved company x concept pairs) ------------------------------------
+
+
+@dataclass(frozen=True)
+class NoteFact:
+    value_id: int
+    filing_id: int
+    tag: str
+    ddate: date
+    qtrs: int
+    value: Decimal
+    dcml: int | None
+
+
+def select_note_values(
+    concept: str,
+    facts: list[NoteFact],
+    filings: dict[int, Filing],
+    taken: set[tuple[date, int]],
+) -> list[Cell]:
+    """Cells from non-dimensional NOTE facts for keys (FY/Q) that have no face cell. The latest
+    filing printing the key wins; within it the first tag in NOTE_TAGS order. Two tags with
+    different values in that filing (two perimeters: International Paper) or a value <= 0 hold
+    the key with a reason. Every cell is marked source=note for its own Verifier stratum."""
+    order = {t: i for i, t in enumerate(NOTE_TAGS.get(concept, ()))}
+    by_key: dict[tuple[date, int], list[NoteFact]] = defaultdict(list)
+    for f in facts:
+        if f.qtrs in (1, 4) and f.tag in order and (f.ddate, f.qtrs) not in taken:
+            by_key[(f.ddate, f.qtrs)].append(f)
+    out: list[Cell] = []
+    for key, fs in sorted(by_key.items()):
+        latest = max(fs, key=lambda f: (filings[f.filing_id].accepted, f.filing_id))
+        mine = sorted(
+            (f for f in fs if f.filing_id == latest.filing_id),
+            key=lambda f: order[f.tag],
+        )
+        top = mine[0]
+        refs = {"source": "note", "tag": top.tag, "tags": sorted({f.tag for f in mine})}
+        if any(abs(f.value - top.value) > tol_of([f.dcml, top.dcml]) for f in mine):
+            out.append(
+                Cell(
+                    concept,
+                    key[0],
+                    key[1],
+                    "defect",
+                    filing_id=top.filing_id,
+                    rule_id=RULE_NOTE_VALUE,
+                    reason_code="note_values_disagree",
+                    input_refs={**refs, "values": sorted({str(f.value) for f in mine})},
+                )
+            )
+            continue
+        if top.value <= 0:
+            out.append(
+                Cell(
+                    concept,
+                    key[0],
+                    key[1],
+                    "defect",
+                    filing_id=top.filing_id,
+                    rule_id=RULE_NOTE_VALUE,
+                    reason_code="note_value_not_positive",
+                    input_refs={**refs, "value": str(top.value)},
+                )
+            )
+            continue
+        out.append(
+            Cell(
+                concept,
+                key[0],
+                key[1],
+                "value",
+                top.value,
+                top.filing_id,
+                top.tag,
+                [top.value_id],
+                RULE_NOTE_VALUE,
+                input_refs=refs,
+            )
+        )
+    return out
+
+
+def load_note_values(
+    conn: psycopg.Connection, company_id: int, concept: str
+) -> list[NoteFact]:
+    """Non-dimensional USD facts of the concept's NOTE_TAGS for one stored company (one read)."""
+    tags = list(NOTE_TAGS.get(concept, ()))
+    if not tags:
+        return []
+    rows = conn.execute(
+        """
+        select v.id, v.filing_id, t.tag, v.ddate, v.qtrs, v.value, v.dcml
+        from fsn.value v join fsn.tag t on t.id = v.tag_id and not t.custom
+        where v.company_id = %s and v.dim_id = 0 and v.iprx = 0 and v.coreg = ''
+          and v.uom = 'USD' and v.value is not null and v.qtrs in (1, 4) and t.tag = any(%s)
+        """,
+        (company_id, tags),
+    ).fetchall()
+    return [NoteFact(r[0], r[1], r[2], r[3], r[4], Decimal(r[5]), r[6]) for r in rows]

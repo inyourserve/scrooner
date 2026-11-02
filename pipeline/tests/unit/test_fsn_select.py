@@ -262,3 +262,34 @@ def test_eps_q4_is_a_reasoned_blank_never_a_derived_value():
     assert (q4.state, q4.value, q4.reason_code) == ("not_presented", None, "not_filed_separately")
     row = sel.to_row(q4, 1, f, unit="USD/shares")
     assert row["state"] == "not_presented" and row["reason_text"] and "defect_class" not in row
+
+
+@pytest.mark.unit
+def test_note_values_fill_only_missing_keys_with_guards():
+    f = {
+        1: sel.Filing(1, "a1", datetime(2024, 2, 1), "10-K", date(2023, 12, 31), 2023, "FY"),
+        2: sel.Filing(2, "a2", datetime(2025, 2, 1), "10-K", date(2024, 12, 31), 2024, "FY"),
+    }
+
+    def n(vid, fid, tag, d, q, v):
+        return sel.NoteFact(vid, fid, tag, d, q, Decimal(v), -6)
+
+    d23, d24 = date(2023, 12, 31), date(2024, 12, 31)
+    facts = [
+        n(1, 1, "InterestExpense", d23, 4, "1968000000"),          # FY2023 printed in its 10-K
+        n(2, 2, "InterestExpense", d23, 4, "1968000000"),          # reprinted later: latest wins
+        n(3, 2, "InterestExpenseNonoperating", d24, 4, "2935000000"),  # only the lower-priority tag
+        n(4, 2, "InterestExpense", date(2024, 6, 30), 1, "0"),     # capitalised: zero is held
+        n(5, 2, "InterestExpense", date(2024, 9, 30), 1, "107000000"),
+        n(6, 2, "InterestExpenseOperating", date(2024, 9, 30), 1, "55000000"),  # two perimeters (IP)
+        n(7, 2, "InterestExpense", date(2024, 3, 31), 1, "500000000"),  # face cell exists: skipped
+    ]
+    cells = {(c.ddate, c.qtrs): c for c in sel.select_note_values(
+        "interest_expense_resolved", facts, f, taken={(date(2024, 3, 31), 1)})}
+    assert cells[(d23, 4)].value == Decimal("1968000000") and cells[(d23, 4)].source_value_ids == [2]
+    assert cells[(d23, 4)].rule_id == sel.RULE_NOTE_VALUE and cells[(d23, 4)].input_refs["source"] == "note"
+    assert cells[(d24, 4)].tag == "InterestExpenseNonoperating"
+    assert cells[(date(2024, 6, 30), 1)].reason_code == "note_value_not_positive"
+    assert cells[(date(2024, 9, 30), 1)].reason_code == "note_values_disagree"
+    assert (date(2024, 3, 31), 1) not in cells
+    assert sel.to_row(cells[(date(2024, 9, 30), 1)], 1, f)["defect_class"] == "composition"
