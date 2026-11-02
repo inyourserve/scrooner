@@ -231,6 +231,42 @@ def library(conn: psycopg.Connection, company_id: int) -> list[dict[str, Any]]:
     return eras
 
 
+ABSENT_LINE_CONCEPTS = ("share_buybacks_resolved", "dividends_paid_resolved")
+
+
+def cf_line_classes(
+    conn: psycopg.Connection, company_id: int
+) -> dict[str, dict[int, list[str]]]:
+    """concept -> filing_id -> the run 7 lane classes of that filing's cash-flow lines (tag and label only; the
+    lane's buyback_class / dividend_class, imported). A buyback line counts only when the lane's repurchase test
+    hits it, so abstract and unrelated rows are never 'excluded lines'."""
+    from scrooner_pipeline.fsn_store.cf_detector import _lane  # noqa: PLC0415
+
+    lane = _lane()
+    rows = conn.execute(
+        """select l.filing_id, t.tag, coalesce(l.plabel, '') from fsn.line l join fsn.tag t on t.id = l.tag_id
+           join fsn.filing f on f.id = l.filing_id
+           where f.company_id = %s and l.stmt = 'CF' and not l.inpth""",
+        (company_id,),
+    ).fetchall()
+    out: dict[str, dict[int, list[str]]] = {
+        c: defaultdict(list) for c in ABSENT_LINE_CONCEPTS
+    }
+    for fid, tag, label in rows:
+        d = lane.dividend_class(tag, label)
+        if d:
+            out["dividends_paid_resolved"][fid].append(d)
+        if (
+            lane.REPURCHASE_RX.search(label)
+            or "Repurchase" in tag
+            or "TreasuryStock" in tag
+        ):
+            b = lane.buyback_class(tag, label)
+            if b:
+                out["share_buybacks_resolved"][fid].append(b)
+    return out
+
+
 def report_company(
     conn: psycopg.Connection,
     company_id: int,
@@ -270,6 +306,7 @@ def report_company(
         )
         if s.breaks:
             breaks[concept] = sorted(data["filings"][f].accession for f in s.breaks)
+    line_classes = cf_line_classes(conn, company_id)
     lib = library(conn, company_id)
     mapped_points = {
         e["data_point"]
@@ -292,6 +329,14 @@ def report_company(
             keys += 1
             k["keys"] += 1
             row = _match(by_point.get(concept, []), grain, end)
+            if row is None and concept in line_classes and grain in ("FY", "Q"):
+                c = sel.absent_line_cell(
+                    concept, grain, end, data, line_classes[concept]
+                )
+                if c is not None:
+                    row = sel.to_row(c, company_id, data["filings"])
+                    cells.append(row)
+                    by_point[concept].append(row)
             if row and row["state"] in ("value", "derived"):
                 valued += 1
                 k["valued"] += 1

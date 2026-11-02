@@ -376,4 +376,13 @@ def capex_da_detector(
     return out
 
 
-DEFAULT = [capex_da_detector]
+def _cf_family_detector(
+    conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
+) -> list[tuple]:
+    from scrooner_pipeline.fsn_store.cf_detector import cf_family_detector  # noqa: PLC0415
+
+    return cf_family_detector(conn, filing_id, decisions)
+
+
+# capex / D&A, then buybacks / dividends paid (cf_detector.py, run 7 lane rules)
+DEFAULT = [capex_da_detector, _cf_family_detector]

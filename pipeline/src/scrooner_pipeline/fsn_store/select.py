@@ -78,6 +78,8 @@ REASONS = {
     "derived_quarter_fails_residual_guard": ("period", "period_engineer"),
     "predecessor_successor_split": ("period", "period_engineer"),
     "balance_sheet_not_filed": ("filer_error", "data_engineer_l2"),
+    "perimeter_line_unresolved": ("perimeter", "tag_mapper"),
+    "perimeter_partnership_distribution": ("perimeter", "standardization_lead"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -89,6 +91,11 @@ REASON_TEXT = {
     "predecessor_successor_split": "The period spans the change from predecessor to successor accounting, so its two parts are on different bases and are not added together.",
     "balance_sheet_not_filed": "No balance sheet was filed for this date.",
     "not_filed_separately": "The company reports this figure only for the full year; the fourth quarter is not printed and is never computed.",
+    "line_not_presented_in_filing": "The filing's cash flow statement prints no line for this item for this period.",
+    "only_excluded_lines_presented": "The filing's cash flow statement prints only lines that are not this item for this period (for example shares withheld for taxes, or dividends to preferred or noncontrolling holders).",
+    "line_presented_combined_with_others": "The filing prints this item only inside a line that combines it with other items, so it is not shown on its own.",
+    "perimeter_line_unresolved": "The filing prints a net or unlabelled line for this item, so whether it is this item alone cannot be told from the statement.",
+    "perimeter_partnership_distribution": "The filing prints distributions to partnership unitholders; whether they count as dividends paid is a definition still under review.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
@@ -349,6 +356,16 @@ def select_concept(
                     concept, ddate, n, w, s, winners, held, residual_guard
                 )
             cells[(ddate, 1)] = cell
+        # A quarter whose own year-to-date input (6M / 9M / FY) is held gets that input's reason. Before, it got no
+        # cell at all and surfaced as an unexplained gap (cohort dry run 41515845455: Nucor's FY and YTD columns held
+        # for the FX identity left every Q2-Q4 key empty). A reason only: no value is computed.
+        for (ddate, n), why in sorted(held.items()):
+            if n < 2 or (ddate, 1) in cells:
+                continue
+            top = s.latest_first((ddate, n))[0]
+            cells[(ddate, 1)] = _blank(
+                concept, (ddate, 1), why, top, {"ytd_qtrs": n, "ytd_input_held": why}
+            )
     return [cells[k] for k in sorted(cells)]
 
 
@@ -718,11 +735,83 @@ def build(
                     col not in failed,
                 ),
             )
+    mapped_filings: dict[str, set[int]] = defaultdict(set)
+    for filing_id, _stmt, _tag_id, _tag, concept in mapped:
+        mapped_filings[concept].add(filing_id)
     return {
         "filings": filings,
         "prints": {c: list(ps.values()) for c, ps in prints.items()},
         "members": dict(members),
+        "face_cols": anchor_cols,
+        "mapped_filings": dict(mapped_filings),
     }
+
+
+RULE_ABSENT = "fsn.absent_line@1"
+
+
+def absent_line_cell(
+    concept: str,
+    grain: str,
+    end: date,
+    data: dict[str, Any],
+    line_classes: dict[int, list[str]],
+) -> Cell | None:
+    """An evidenced blank for a cash-flow key with no cell, or None (the key stays a gap).
+
+    The filings that print the statement's cash-flow face column ending at `end` (FY: the annual column; Q: any
+    duration column, a 10-Q prints year-to-date) are the evidence. When none of them maps a line to the concept,
+    `line_classes[filing_id]` (the lane's classes of that filing's cash-flow lines for this concept, from the line
+    tag and label only, never from values) decides:
+      no family line at all             not_presented  line_not_presented_in_filing
+      only lines the lane excludes      not_presented  only_excluded_lines_presented (tax withholding, NCI, ...)
+      a combined line                   not_presented  line_presented_combined_with_others
+      partnership-unit distributions    defect         perimeter_partnership_distribution (a definition call)
+      a net / unresolved line           defect         perimeter_line_unresolved
+      a common line (any tag)           None: a line exists but is not mapped, so nothing is claimed
+    """
+    cols = [
+        (f, d, q)
+        for (f, st, d, q) in data["face_cols"]
+        if st == "CF"
+        and abs((d - end).days) <= 10
+        and (q == 4 if grain == "FY" else q >= 1)
+    ]
+    if not cols:
+        return None
+    fids = sorted(
+        {f for f, _d, _q in cols}, key=lambda f: (data["filings"][f].accepted, f)
+    )
+    if set(fids) & data["mapped_filings"].get(concept, set()):
+        return None
+    classes = sorted({c for f in fids for c in line_classes.get(f, [])})
+    if "common" in classes:
+        return None
+    if not classes:
+        state, reason = "not_presented", "line_not_presented_in_filing"
+    elif "perimeter_partnership_distribution" in classes:
+        state, reason = "defect", "perimeter_partnership_distribution"
+    elif any(c in ("net", "unresolved") for c in classes):
+        state, reason = "defect", "perimeter_line_unresolved"
+    elif "combined" in classes:
+        state, reason = "not_presented", "line_presented_combined_with_others"
+    else:
+        state, reason = "not_presented", "only_excluded_lines_presented"
+    latest = fids[-1]
+    ddate = next(d for f, d, _q in cols if f == latest)
+    return Cell(
+        concept,
+        ddate,
+        4 if grain == "FY" else 1,
+        state,
+        filing_id=latest,
+        rule_id=RULE_ABSENT,
+        reason_code=reason,
+        input_refs={
+            "accessions": [data["filings"][f].accession for f in fids],
+            "line_classes": classes,
+        },
+    )
 
 
 NEVER_DERIVED_UNITS = ("USD/shares", "shares", "pure")
