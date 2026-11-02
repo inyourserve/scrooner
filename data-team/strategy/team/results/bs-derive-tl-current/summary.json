@@ -1,0 +1,2679 @@
+{
+ "cohort_run": 41515845455,
+ "companies_measured": 380,
+ "gap_keys_no_mapped_line": {
+  "total_liabilities_resolved": 9407,
+  "current_assets_resolved": 7575,
+  "current_liabilities_resolved": 7575
+ },
+ "freed_or_reasoned_by_change": {
+  "current_assets_resolved|unclassified_reason": 7104,
+  "current_liabilities_resolved|unclassified_reason": 7104,
+  "total_liabilities_resolved|calc_route": 4742,
+  "total_liabilities_resolved|calc_route_blank_child": 4102,
+  "total_liabilities_resolved|identity_route": 65
+ },
+ "freed_or_reasoned_by_sector": {
+  "current_assets_resolved|bank": 1772,
+  "current_assets_resolved|equity_reit": 1852,
+  "current_assets_resolved|general": 1819,
+  "current_assets_resolved|insurer": 1661,
+  "current_liabilities_resolved|bank": 1772,
+  "current_liabilities_resolved|equity_reit": 1852,
+  "current_liabilities_resolved|general": 1819,
+  "current_liabilities_resolved|insurer": 1661,
+  "total_liabilities_resolved|equity_reit": 137,
+  "total_liabilities_resolved|general": 7517,
+  "total_liabilities_resolved|utility": 1255
+ },
+ "not_derived_latest_copy_columns": {
+  "calc_children_do_not_tie_le": 196,
+  "identity_temporary_equity_not_valued": 5,
+  "calc_children_lack_liability_or_equity": 5,
+  "calc_child_unclassified:CapitalizationLongtermDebtAndEquity:excluded_cap_total": 2,
+  "no_printed_le_total": 2,
+  "calc_child_unclassified:DeferredTaxAssetsLiabilitiesNet:excluded_nonliability_debit_balance": 4,
+  "printed_total_liabilities": 4
+ },
+ "remaining_by_cause": {
+  "total_liabilities_resolved|face_column_exists_not_derived": {
+   "0000051434": 2,
+   "0001022079": 1,
+   "0001692115": 9,
+   "0000088941": 2,
+   "0000089089": 2,
+   "0000100493": 6,
+   "0000732717": 1,
+   "0001004980": 8,
+   "0001090727": 3,
+   "0000732712": 3,
+   "0000936340": 2,
+   "0001166691": 8,
+   "0001564708": 14,
+   "0001967680": 1,
+   "0000002488": 3,
+   "0000703351": 2,
+   "0001402057": 2,
+   "0000842023": 4,
+   "0001034670": 4,
+   "0001169561": 3,
+   "0000097745": 5,
+   "0000885725": 11,
+   "0001048286": 34,
+   "0001324424": 6,
+   "0000030625": 1,
+   "0000063908": 9,
+   "0000105016": 2,
+   "0000874761": 2,
+   "0000922224": 15,
+   "0000065984": 3,
+   "0001047862": 2,
+   "0001065696": 5,
+   "0001841666": 4,
+   "0000008818": 1,
+   "0000100517": 2,
+   "0000775158": 4,
+   "0000893538": 1,
+   "0001645590": 1,
+   "0000040987": 1,
+   "0001057877": 1,
+   "0001177702": 1,
+   "0001646972": 9,
+   "0001996862": 4,
+   "0000048465": 11,
+   "0000797468": 1,
+   "0001166003": 3,
+   "0001326160": 1,
+   "0001130464": 1,
+   "0001389170": 25,
+   "0000010795": 9,
+   "0000764622": 2,
+   "0000815097": 2,
+   "0001551182": 2,
+   "0001751788": 3,
+   "0000721371": 1,
+   "0000882095": 6,
+   "0001276187": 12,
+   "0000092380": 3,
+   "0001285785": 2,
+   "0000079282": 2,
+   "0000815556": 1,
+   "0000865752": 3,
+   "0001711269": 17,
+   "0001744489": 1,
+   "0000051253": 2,
+   "0001637207": 1
+  },
+  "current_assets_resolved|face_column_exists_not_derived": {
+   "0000074208": 11,
+   "0000093751": 2,
+   "0000879101": 7,
+   "0000895417": 4,
+   "0001601712": 6,
+   "0000037808": 3,
+   "0000896159": 14,
+   "0000947484": 3,
+   "0001042046": 4,
+   "0000007789": 13,
+   "0001068851": 8,
+   "0001858681": 3,
+   "0000036966": 4,
+   "0000092230": 1,
+   "0000895421": 3,
+   "0001094831": 2,
+   "0001212545": 8,
+   "0000064996": 1,
+   "0001758730": 1,
+   "0001404912": 2,
+   "0001535929": 1,
+   "0001687229": 1,
+   "0000886982": 4,
+   "0000944695": 3,
+   "0001043219": 5,
+   "0000713676": 7,
+   "0000874766": 1,
+   "0000920522": 3,
+   "0001728951": 1,
+   "0000005272": 11,
+   "0000072971": 11,
+   "0000074260": 15,
+   "0000038777": 8,
+   "0000763901": 4,
+   "0000912595": 1,
+   "0000912593": 11,
+   "0001562401": 1,
+   "0000831001": 1,
+   "0001045609": 8,
+   "0000899051": 9,
+   "0000049600": 1,
+   "0000022356": 1,
+   "0001287750": 2,
+   "0000766704": 9,
+   "0000906345": 1,
+   "0001669162": 1,
+   "0000910606": 1,
+   "0001137774": 3,
+   "0000004962": 7,
+   "0000035527": 1,
+   "0001113169": 4,
+   "0001632970": 2,
+   "0001067983": 8,
+   "0001267238": 1,
+   "0001475922": 2,
+   "0001393818": 8,
+   "0000004457": 12,
+   "0000049196": 3,
+   "0000765880": 1,
+   "0001070750": 4,
+   "0000714310": 3,
+   "0000914208": 3,
+   "0000822416": 1,
+   "0001880661": 1
+  },
+  "current_liabilities_resolved|face_column_exists_not_derived": {
+   "0000074208": 11,
+   "0000093751": 2,
+   "0000879101": 7,
+   "0000895417": 4,
+   "0001601712": 6,
+   "0000037808": 3,
+   "0000896159": 14,
+   "0000947484": 3,
+   "0001042046": 4,
+   "0000007789": 13,
+   "0001068851": 8,
+   "0001858681": 3,
+   "0000036966": 4,
+   "0000092230": 1,
+   "0000895421": 3,
+   "0001094831": 2,
+   "0001212545": 8,
+   "0000064996": 1,
+   "0001758730": 1,
+   "0001404912": 2,
+   "0001535929": 1,
+   "0001687229": 1,
+   "0000886982": 4,
+   "0000944695": 3,
+   "0001043219": 5,
+   "0000713676": 7,
+   "0000874766": 1,
+   "0000920522": 3,
+   "0001728951": 1,
+   "0000005272": 11,
+   "0000072971": 11,
+   "0000074260": 15,
+   "0000038777": 8,
+   "0000763901": 4,
+   "0000912595": 1,
+   "0000912593": 11,
+   "0001562401": 1,
+   "0000831001": 1,
+   "0001045609": 8,
+   "0000899051": 9,
+   "0000049600": 1,
+   "0000022356": 1,
+   "0001287750": 2,
+   "0000766704": 9,
+   "0000906345": 1,
+   "0001669162": 1,
+   "0000910606": 1,
+   "0001137774": 3,
+   "0000004962": 7,
+   "0000035527": 1,
+   "0001113169": 4,
+   "0001632970": 2,
+   "0001067983": 8,
+   "0001267238": 1,
+   "0001475922": 2,
+   "0001393818": 8,
+   "0000004457": 12,
+   "0000049196": 3,
+   "0000765880": 1,
+   "0001070750": 4,
+   "0000714310": 3,
+   "0000914208": 3,
+   "0000822416": 1,
+   "0001880661": 1
+  },
+  "current_assets_resolved|no_stored_filing_prints_the_date": {
+   "0000093751": 1,
+   "0000895417": 1,
+   "0001570827": 7,
+   "0001822993": 4,
+   "0000896159": 1,
+   "0001858681": 4,
+   "0000073124": 1,
+   "0000092230": 1,
+   "0000707179": 1,
+   "0000740260": 1,
+   "0001096343": 1,
+   "0001575965": 1,
+   "0001758730": 5,
+   "0001805284": 5,
+   "0001820953": 5,
+   "0000913144": 1,
+   "0001404912": 1,
+   "0001687229": 5,
+   "0000096223": 1,
+   "0000759944": 1,
+   "0000944695": 1,
+   "0002012383": 4,
+   "0000874766": 1,
+   "0001581068": 1,
+   "0001728951": 5,
+   "0000072971": 1,
+   "0001333986": 1,
+   "0001479094": 1,
+   "0000039263": 1,
+   "0000912595": 4,
+   "0000912593": 1,
+   "0001302215": 1,
+   "0001823529": 4,
+   "0001126328": 1,
+   "0001393311": 1,
+   "0000885550": 1,
+   "0000049600": 1,
+   "0000101382": 1,
+   "0000917251": 1,
+   "0000920760": 1,
+   "0001567094": 9,
+   "0000020286": 1,
+   "0000084246": 1,
+   "0001287750": 4,
+   "0001889539": 3,
+   "0000766704": 1,
+   "0001669162": 5,
+   "0002082866": 42,
+   "0000910606": 15,
+   "0000004962": 1,
+   "0001736035": 4,
+   "0001113169": 1,
+   "0001214816": 1,
+   "0001472787": 1,
+   "0001632970": 2,
+   "0001571283": 1,
+   "0001360604": 1,
+   "0000049196": 1,
+   "0000086312": 1,
+   "0001025378": 1,
+   "0001397911": 1,
+   "0000822416": 1,
+   "0001035443": 2,
+   "0001880661": 4
+  },
+  "current_liabilities_resolved|no_stored_filing_prints_the_date": {
+   "0000093751": 1,
+   "0000895417": 1,
+   "0001570827": 7,
+   "0001822993": 4,
+   "0000896159": 1,
+   "0001858681": 4,
+   "0000073124": 1,
+   "0000092230": 1,
+   "0000707179": 1,
+   "0000740260": 1,
+   "0001096343": 1,
+   "0001575965": 1,
+   "0001758730": 5,
+   "0001805284": 5,
+   "0001820953": 5,
+   "0000913144": 1,
+   "0001404912": 1,
+   "0001687229": 5,
+   "0000096223": 1,
+   "0000759944": 1,
+   "0000944695": 1,
+   "0002012383": 4,
+   "0000874766": 1,
+   "0001581068": 1,
+   "0001728951": 5,
+   "0000072971": 1,
+   "0001333986": 1,
+   "0001479094": 1,
+   "0000039263": 1,
+   "0000912595": 4,
+   "0000912593": 1,
+   "0001302215": 1,
+   "0001823529": 4,
+   "0001126328": 1,
+   "0001393311": 1,
+   "0000885550": 1,
+   "0000049600": 1,
+   "0000101382": 1,
+   "0000917251": 1,
+   "0000920760": 1,
+   "0001567094": 9,
+   "0000020286": 1,
+   "0000084246": 1,
+   "0001287750": 4,
+   "0001889539": 3,
+   "0000766704": 1,
+   "0001669162": 5,
+   "0002082866": 42,
+   "0000910606": 15,
+   "0000004962": 1,
+   "0001736035": 4,
+   "0001113169": 1,
+   "0001214816": 1,
+   "0001472787": 1,
+   "0001632970": 2,
+   "0001571283": 1,
+   "0001360604": 1,
+   "0000049196": 1,
+   "0000086312": 1,
+   "0001025378": 1,
+   "0001397911": 1,
+   "0000822416": 1,
+   "0001035443": 2,
+   "0001880661": 4
+  },
+  "total_liabilities_resolved|no_stored_filing_prints_the_date": {
+   "0000313616": 1,
+   "0000822818": 1,
+   "0001022079": 1,
+   "0001692115": 6,
+   "0000007431": 1,
+   "0000089089": 1,
+   "0000732717": 1,
+   "0001116942": 1,
+   "0002041610": 39,
+   "0000029989": 1,
+   "0000062709": 1,
+   "0000091388": 5,
+   "0000732712": 1,
+   "0001101302": 1,
+   "0001166691": 1,
+   "0001967680": 3,
+   "0001035002": 1,
+   "0001410636": 1,
+   "0000027904": 1,
+   "0000049826": 1,
+   "0000703351": 1,
+   "0000813672": 1,
+   "0000860730": 1,
+   "0001034670": 1,
+   "0001169561": 1,
+   "0000029905": 1,
+   "0000030625": 1,
+   "0001065696": 1,
+   "0001283699": 1,
+   "0000100517": 1,
+   "0000775158": 1,
+   "0000910521": 1,
+   "0001645590": 3,
+   "0000040987": 1,
+   "0000072903": 1,
+   "0001057877": 1,
+   "0001177702": 1,
+   "0000320187": 1,
+   "0001646972": 6,
+   "0001996862": 4,
+   "0000110621": 1,
+   "0000723254": 1,
+   "0001111711": 1,
+   "0001121788": 1,
+   "0000021344": 1,
+   "0001166003": 1,
+   "0001609711": 1,
+   "0001833756": 5,
+   "0001594805": 11,
+   "0001754301": 5,
+   "0001751788": 9,
+   "0000042888": 1,
+   "0000089800": 1,
+   "0000853816": 1,
+   "0000866787": 3,
+   "0000790051": 1,
+   "0001039684": 1,
+   "0000092380": 1,
+   "0001048911": 2,
+   "0000059478": 1,
+   "0000079282": 1,
+   "0000773840": 1,
+   "0000815556": 1,
+   "0001659166": 5,
+   "0001711269": 5,
+   "0001744489": 8,
+   "0001219601": 1,
+   "0001467373": 1
+  }
+ },
+ "per_company": {
+  "0000001800": {
+   "name": "ABBOTT LABORATORIES",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 24,
+   "total_liabilities_resolved|calc_route": 21
+  },
+  "0000002488": {
+   "name": "ADVANCED MICRO DEVICES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 16,
+   "total_liabilities_resolved|calc_route_blank_child": 27
+  },
+  "0000003453": {
+   "name": "Matson, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000004457": {
+   "name": "U-Haul Holding Co /NV/",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 34,
+   "current_liabilities_resolved|unclassified_reason": 34
+  },
+  "0000004962": {
+   "name": "AMERICAN EXPRESS CO",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 39,
+   "current_liabilities_resolved|unclassified_reason": 39
+  },
+  "0000004977": {
+   "name": "AFLAC INC",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000005272": {
+   "name": "AMERICAN INTERNATIONAL GROUP, INC.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 35,
+   "current_liabilities_resolved|unclassified_reason": 35
+  },
+  "0000005513": {
+   "name": "Unum Group",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000006201": {
+   "name": "American Airlines Group Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 9,
+   "total_liabilities_resolved|calc_route_blank_child": 37
+  },
+  "0000006281": {
+   "name": "ANALOG DEVICES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 43,
+   "total_liabilities_resolved|calc_route_blank_child": 4
+  },
+  "0000007084": {
+   "name": "Archer-Daniels-Midland Co",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 41,
+   "total_liabilities_resolved|calc_route_blank_child": 5
+  },
+  "0000007431": {
+   "name": "ARMSTRONG WORLD INDUSTRIES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000007536": {
+   "name": "ARROW ELECTRONICS, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 33,
+   "total_liabilities_resolved|calc_route_blank_child": 13
+  },
+  "0000007789": {
+   "name": "ASSOCIATED BANC-CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 33,
+   "current_liabilities_resolved|unclassified_reason": 33
+  },
+  "0000008818": {
+   "name": "Avery Dennison Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 27,
+   "total_liabilities_resolved|calc_route_blank_child": 19
+  },
+  "0000010795": {
+   "name": "BECTON DICKINSON & CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 37
+  },
+  "0000011544": {
+   "name": "BERKLEY W R CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000019617": {
+   "name": "JPMORGAN CHASE & CO",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000020286": {
+   "name": "CINCINNATI FINANCIAL CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000021175": {
+   "name": "CNA FINANCIAL CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000021344": {
+   "name": "COCA COLA CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000022356": {
+   "name": "COMMERCE BANCSHARES INC /MO/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000027419": {
+   "name": "TARGET CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 47
+  },
+  "0000027904": {
+   "name": "DELTA AIR LINES, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 3,
+   "total_liabilities_resolved|calc_route_blank_child": 43
+  },
+  "0000028917": {
+   "name": "DILLARD'S, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 7,
+   "total_liabilities_resolved|calc_route_blank_child": 40
+  },
+  "0000029905": {
+   "name": "DOVER Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44,
+   "total_liabilities_resolved|calc_route_blank_child": 2
+  },
+  "0000029989": {
+   "name": "OMNICOM GROUP INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 19,
+   "total_liabilities_resolved|calc_route": 27
+  },
+  "0000030625": {
+   "name": "FLOWSERVE CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 17,
+   "total_liabilities_resolved|calc_route_blank_child": 28
+  },
+  "0000032604": {
+   "name": "EMERSON ELECTRIC CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000034903": {
+   "name": "FEDERAL REALTY INVESTMENT TRUST",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000035527": {
+   "name": "FIFTH THIRD BANCORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000036104": {
+   "name": "US BANCORP \\DE\\",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000036270": {
+   "name": "M&T BANK CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000036966": {
+   "name": "FIRST HORIZON CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 42,
+   "current_liabilities_resolved|unclassified_reason": 42
+  },
+  "0000037808": {
+   "name": "FNB CORP/PA/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000038777": {
+   "name": "FRANKLIN TEMPLETON INC",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 38,
+   "current_liabilities_resolved|unclassified_reason": 38
+  },
+  "0000039263": {
+   "name": "CULLEN/FROST BANKERS, INC.",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000039911": {
+   "name": "GAP INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 47
+  },
+  "0000040211": {
+   "name": "GATX CORP",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000040533": {
+   "name": "GENERAL DYNAMICS CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 22,
+   "total_liabilities_resolved|calc_route_blank_child": 23
+  },
+  "0000040729": {
+   "name": "Ally Financial Inc.",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000040987": {
+   "name": "GENUINE PARTS CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 45
+  },
+  "0000042888": {
+   "name": "GRACO INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 41,
+   "total_liabilities_resolved|calc_route_blank_child": 5
+  },
+  "0000047217": {
+   "name": "HP INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 30,
+   "total_liabilities_resolved|calc_route_blank_child": 16
+  },
+  "0000048465": {
+   "name": "HORMEL FOODS CORP /DE/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 32,
+   "total_liabilities_resolved|calc_route_blank_child": 4
+  },
+  "0000049196": {
+   "name": "HUNTINGTON BANCSHARES INC /MD/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000049600": {
+   "name": "EASTGROUP PROPERTIES INC",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000049826": {
+   "name": "ILLINOIS TOOL WORKS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000050863": {
+   "name": "INTEL CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 24,
+   "total_liabilities_resolved|calc_route_blank_child": 22
+  },
+  "0000051253": {
+   "name": "INTERNATIONAL FLAVORS & FRAGRANCES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 1,
+   "total_liabilities_resolved|calc_route_blank_child": 43
+  },
+  "0000051434": {
+   "name": "INTERNATIONAL PAPER CO /NEW/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 41,
+   "total_liabilities_resolved|calc_route_blank_child": 3
+  },
+  "0000052827": {
+   "name": "RAYONIER INC",
+   "sector": "equity_reit",
+   "total_liabilities_resolved|calc_route_blank_child": 43,
+   "total_liabilities_resolved|calc_route": 2
+  },
+  "0000052988": {
+   "name": "JACOBS SOLUTIONS INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 43,
+   "total_liabilities_resolved|calc_route": 3
+  },
+  "0000055785": {
+   "name": "KIMBERLY CLARK CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000056047": {
+   "name": "KIRBY CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 41,
+   "total_liabilities_resolved|calc_route_blank_child": 4,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0000059478": {
+   "name": "ELI LILLY & Co",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 15,
+   "total_liabilities_resolved|calc_route_blank_child": 31
+  },
+  "0000059558": {
+   "name": "LINCOLN NATIONAL CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000060086": {
+   "name": "LOEWS CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000062709": {
+   "name": "MARSH & MCLENNAN COMPANIES, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 2,
+   "total_liabilities_resolved|calc_route": 44
+  },
+  "0000063908": {
+   "name": "MCDONALDS CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 37
+  },
+  "0000064996": {
+   "name": "MERCURY GENERAL CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000065984": {
+   "name": "ENTERGY CORP /DE/",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 39,
+   "total_liabilities_resolved|calc_route_blank_child": 4
+  },
+  "0000068505": {
+   "name": "Motorola Solutions, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 45,
+   "total_liabilities_resolved|calc_route_blank_child": 1
+  },
+  "0000070145": {
+   "name": "NATIONAL FUEL GAS CO",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000070858": {
+   "name": "BANK OF AMERICA CORP /DE/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000071691": {
+   "name": "NEW YORK TIMES CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000072331": {
+   "name": "NORDSON CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 47
+  },
+  "0000072741": {
+   "name": "EVERSOURCE ENERGY",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 13,
+   "total_liabilities_resolved|calc_route_blank_child": 33
+  },
+  "0000072903": {
+   "name": "XCEL ENERGY INC",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 3,
+   "total_liabilities_resolved|calc_route_blank_child": 43
+  },
+  "0000072971": {
+   "name": "WELLS FARGO & COMPANY/MN",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 35,
+   "current_liabilities_resolved|unclassified_reason": 35
+  },
+  "0000073124": {
+   "name": "NORTHERN TRUST CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000074208": {
+   "name": "UDR, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 34,
+   "current_liabilities_resolved|unclassified_reason": 34
+  },
+  "0000074260": {
+   "name": "OLD REPUBLIC INTERNATIONAL CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 31,
+   "current_liabilities_resolved|unclassified_reason": 31
+  },
+  "0000075677": {
+   "name": "PACKAGING CORP OF AMERICA",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 6,
+   "total_liabilities_resolved|calc_route_blank_child": 39,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0000078128": {
+   "name": "Essential Utilities, Inc.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000079282": {
+   "name": "BROWN & BROWN, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 42,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000080661": {
+   "name": "PROGRESSIVE CORP/OH/",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000082811": {
+   "name": "REGAL REXNORD CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 40,
+   "total_liabilities_resolved|calc_route": 7
+  },
+  "0000084246": {
+   "name": "RLI CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000086312": {
+   "name": "TRAVELERS COMPANIES, INC.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000088205": {
+   "name": "SPX Technologies, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 2,
+   "total_liabilities_resolved|calc_route_blank_child": 44
+  },
+  "0000088941": {
+   "name": "SEMTECH CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 22,
+   "total_liabilities_resolved|identity_route": 1,
+   "total_liabilities_resolved|calc_route_blank_child": 21
+  },
+  "0000089089": {
+   "name": "SERVICE CORP INTERNATIONAL",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 27,
+   "total_liabilities_resolved|calc_route_blank_child": 17
+  },
+  "0000089800": {
+   "name": "SHERWIN WILLIAMS CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 41,
+   "total_liabilities_resolved|calc_route_blank_child": 5
+  },
+  "0000091388": {
+   "name": "SMITHFIELD FOODS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 15
+  },
+  "0000091576": {
+   "name": "KEYCORP /NEW/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000092230": {
+   "name": "TRUIST FINANCIAL CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000092380": {
+   "name": "SOUTHWEST AIRLINES CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 43
+  },
+  "0000093556": {
+   "name": "STANLEY BLACK & DECKER, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 22,
+   "total_liabilities_resolved|calc_route_blank_child": 25
+  },
+  "0000093751": {
+   "name": "STATE STREET CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 44,
+   "current_liabilities_resolved|unclassified_reason": 44
+  },
+  "0000096021": {
+   "name": "SYSCO CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 18,
+   "total_liabilities_resolved|calc_route": 28
+  },
+  "0000096223": {
+   "name": "Jefferies Financial Group Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000097745": {
+   "name": "THERMO FISHER SCIENTIFIC INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 39,
+   "total_liabilities_resolved|calc_route_blank_child": 2
+  },
+  "0000098362": {
+   "name": "TIMKEN CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000100493": {
+   "name": "TYSON FOODS, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 36,
+   "total_liabilities_resolved|calc_route_blank_child": 4
+  },
+  "0000100517": {
+   "name": "United Airlines Holdings, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 3,
+   "total_liabilities_resolved|calc_route_blank_child": 41
+  },
+  "0000101382": {
+   "name": "UMB FINANCIAL CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000104169": {
+   "name": "Walmart Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46,
+   "total_liabilities_resolved|calc_route": 1
+  },
+  "0000105016": {
+   "name": "WATSCO INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 16,
+   "total_liabilities_resolved|identity_route": 1,
+   "total_liabilities_resolved|calc_route": 27
+  },
+  "0000107263": {
+   "name": "WILLIAMS COMPANIES, INC.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0000109198": {
+   "name": "TJX COMPANIES INC /DE/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 43,
+   "total_liabilities_resolved|calc_route": 4
+  },
+  "0000109380": {
+   "name": "ZIONS BANCORPORATION, NATIONAL ASSOCIATION /UT/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000110621": {
+   "name": "RPM INTERNATIONAL INC/DE/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 2,
+   "total_liabilities_resolved|calc_route_blank_child": 42,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000215466": {
+   "name": "Coeur Mining, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000277135": {
+   "name": "W.W. GRAINGER, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000310142": {
+   "name": "SENSIENT TECHNOLOGIES CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000310158": {
+   "name": "Merck & Co., Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000313616": {
+   "name": "DANAHER CORP /DE/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000315189": {
+   "name": "DEERE & CO",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 49,
+   "current_liabilities_resolved|unclassified_reason": 49
+  },
+  "0000316709": {
+   "name": "SCHWAB CHARLES CORP",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000318154": {
+   "name": "AMGEN INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0000320187": {
+   "name": "NIKE, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 37,
+   "total_liabilities_resolved|calc_route": 9
+  },
+  "0000320335": {
+   "name": "GLOBE LIFE INC.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000352541": {
+   "name": "ALLIANT ENERGY CORP",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 4,
+   "total_liabilities_resolved|calc_route_blank_child": 41
+  },
+  "0000352915": {
+   "name": "UNIVERSAL HEALTH SERVICES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 36,
+   "total_liabilities_resolved|calc_route_blank_child": 9,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0000703351": {
+   "name": "BRINKER INTERNATIONAL, INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 34,
+   "total_liabilities_resolved|calc_route": 10
+  },
+  "0000707179": {
+   "name": "OLD NATIONAL BANCORP /IN/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000713676": {
+   "name": "PNC FINANCIAL SERVICES GROUP, INC.",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 39,
+   "current_liabilities_resolved|unclassified_reason": 39
+  },
+  "0000714310": {
+   "name": "VALLEY NATIONAL BANCORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000720005": {
+   "name": "RAYMOND JAMES FINANCIAL INC",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000720672": {
+   "name": "STIFEL FINANCIAL CORP",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000721371": {
+   "name": "CARDINAL HEALTH INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44
+  },
+  "0000723254": {
+   "name": "CINTAS CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000726728": {
+   "name": "REALTY INCOME CORP",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000729986": {
+   "name": "UNITED BANKSHARES INC/WV",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000731802": {
+   "name": "ATMOS ENERGY CORP",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 38,
+   "total_liabilities_resolved|calc_route_blank_child": 8
+  },
+  "0000732712": {
+   "name": "VERIZON COMMUNICATIONS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 8,
+   "total_liabilities_resolved|calc_route_blank_child": 35
+  },
+  "0000732717": {
+   "name": "AT&T INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 45
+  },
+  "0000737758": {
+   "name": "TORO CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 43,
+   "total_liabilities_resolved|calc_route_blank_child": 4
+  },
+  "0000740260": {
+   "name": "Ventas, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000745732": {
+   "name": "ROSS STORES, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 1,
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0000746515": {
+   "name": "EXPEDITORS INTERNATIONAL OF WASHINGTON INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 18,
+   "total_liabilities_resolved|calc_route_blank_child": 26,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000750577": {
+   "name": "HANCOCK WHITNEY CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000751364": {
+   "name": "NNN REIT, INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000759944": {
+   "name": "CITIZENS FINANCIAL GROUP INC/RI",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000763901": {
+   "name": "POPULAR, INC.",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 42,
+   "current_liabilities_resolved|unclassified_reason": 42
+  },
+  "0000764038": {
+   "name": "SouthState Bank Corp",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000764478": {
+   "name": "BEST BUY CO INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 37,
+   "total_liabilities_resolved|calc_route": 10
+  },
+  "0000764622": {
+   "name": "PINNACLE WEST CAPITAL CORP",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 44
+  },
+  "0000765880": {
+   "name": "HEALTHPEAK PROPERTIES, INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000766704": {
+   "name": "WELLTOWER INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 37,
+   "current_liabilities_resolved|unclassified_reason": 37
+  },
+  "0000769397": {
+   "name": "Autodesk, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 10,
+   "total_liabilities_resolved|calc_route": 37
+  },
+  "0000773840": {
+   "name": "HONEYWELL INTERNATIONAL INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000775158": {
+   "name": "OSHKOSH CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 39,
+   "total_liabilities_resolved|calc_route": 1,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000783325": {
+   "name": "WEC ENERGY GROUP, INC.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 34,
+   "total_liabilities_resolved|calc_route_blank_child": 12
+  },
+  "0000788784": {
+   "name": "PUBLIC SERVICE ENTERPRISE GROUP INC",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 37,
+   "total_liabilities_resolved|calc_route": 8,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0000790051": {
+   "name": "CARLISLE COMPANIES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000794170": {
+   "name": "Toll Brothers, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 47,
+   "current_liabilities_resolved|unclassified_reason": 47
+  },
+  "0000794367": {
+   "name": "Macy's, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 47
+  },
+  "0000795403": {
+   "name": "WATTS WATER TECHNOLOGIES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000797468": {
+   "name": "OCCIDENTAL PETROLEUM CORP /DE/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 45
+  },
+  "0000798941": {
+   "name": "FIRST CITIZENS BANCSHARES INC /DE/",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000811156": {
+   "name": "CMS ENERGY CORP",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 13,
+   "total_liabilities_resolved|calc_route_blank_child": 33
+  },
+  "0000813672": {
+   "name": "CADENCE DESIGN SYSTEMS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 7,
+   "total_liabilities_resolved|calc_route": 40
+  },
+  "0000815097": {
+   "name": "Carnival Corp Ltd.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 45
+  },
+  "0000815556": {
+   "name": "FASTENAL CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 30,
+   "total_liabilities_resolved|calc_route_blank_child": 15
+  },
+  "0000820027": {
+   "name": "AMERIPRISE FINANCIAL INC",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000821189": {
+   "name": "EOG RESOURCES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 39,
+   "total_liabilities_resolved|calc_route": 7
+  },
+  "0000822416": {
+   "name": "PULTEGROUP INC/MI/",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000822818": {
+   "name": "CLEAN HARBORS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0000824142": {
+   "name": "AAON, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 45,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0000827054": {
+   "name": "MICROCHIP TECHNOLOGY INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 1,
+   "total_liabilities_resolved|calc_route": 45
+  },
+  "0000831001": {
+   "name": "CITIGROUP INC",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000831641": {
+   "name": "TETRA TECH INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 38,
+   "total_liabilities_resolved|calc_route": 8
+  },
+  "0000842023": {
+   "name": "BIO-TECHNE Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 35,
+   "total_liabilities_resolved|calc_route_blank_child": 5,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000842162": {
+   "name": "LEAR CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000853816": {
+   "name": "LANDSTAR SYSTEM INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000860730": {
+   "name": "HCA Healthcare, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 43,
+   "total_liabilities_resolved|calc_route_blank_child": 1,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000865752": {
+   "name": "Monster Beverage Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 37,
+   "total_liabilities_resolved|calc_route_blank_child": 5,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0000866787": {
+   "name": "AUTOZONE INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 10,
+   "total_liabilities_resolved|calc_route": 20,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000868671": {
+   "name": "GLACIER BANCORP, INC.",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000874761": {
+   "name": "AES CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 17,
+   "total_liabilities_resolved|calc_route": 27
+  },
+  "0000874766": {
+   "name": "HARTFORD INSURANCE GROUP, INC.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000875357": {
+   "name": "BOK FINANCIAL CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000876437": {
+   "name": "MGIC INVESTMENT CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000879101": {
+   "name": "KIMCO REALTY CORP",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 39,
+   "current_liabilities_resolved|unclassified_reason": 39
+  },
+  "0000879407": {
+   "name": "ARROWHEAD PHARMACEUTICALS, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0000882095": {
+   "name": "GILEAD SCIENCES, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 35,
+   "total_liabilities_resolved|calc_route": 5
+  },
+  "0000882184": {
+   "name": "HORTON D R INC /DE/",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000885550": {
+   "name": "CREDIT ACCEPTANCE CORP",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000885725": {
+   "name": "BOSTON SCIENTIFIC CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 8,
+   "total_liabilities_resolved|calc_route_blank_child": 27
+  },
+  "0000886982": {
+   "name": "GOLDMAN SACHS GROUP INC",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 42,
+   "current_liabilities_resolved|unclassified_reason": 42
+  },
+  "0000887343": {
+   "name": "COLUMBIA BANKING SYSTEM, INC.",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000888491": {
+   "name": "OMEGA HEALTHCARE INVESTORS INC",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000891103": {
+   "name": "Match Group, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 2,
+   "total_liabilities_resolved|calc_route_blank_child": 44
+  },
+  "0000893538": {
+   "name": "SM Energy Co",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 36,
+   "total_liabilities_resolved|calc_route_blank_child": 9
+  },
+  "0000895417": {
+   "name": "EQUITY LIFESTYLE PROPERTIES INC",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 42,
+   "current_liabilities_resolved|unclassified_reason": 42
+  },
+  "0000895421": {
+   "name": "MORGAN STANLEY",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000896159": {
+   "name": "Chubb Ltd",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 32,
+   "current_liabilities_resolved|unclassified_reason": 32
+  },
+  "0000896622": {
+   "name": "APTARGROUP, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000897723": {
+   "name": "SANMINA CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0000898173": {
+   "name": "O REILLY AUTOMOTIVE INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0000898174": {
+   "name": "REINSURANCE GROUP OF AMERICA INC",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000899051": {
+   "name": "ALLSTATE CORP",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 37,
+   "current_liabilities_resolved|unclassified_reason": 37
+  },
+  "0000899689": {
+   "name": "VORNADO REALTY TRUST",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000906107": {
+   "name": "VIVMARK RESIDENTIAL",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000906163": {
+   "name": "NVR INC",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000906345": {
+   "name": "CAMDEN PROPERTY TRUST",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0000910521": {
+   "name": "DECKERS OUTDOOR CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0000910606": {
+   "name": "REGENCY CENTERS CORP",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 29,
+   "current_liabilities_resolved|unclassified_reason": 29
+  },
+  "0000911177": {
+   "name": "CASELLA WASTE SYSTEMS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 5,
+   "total_liabilities_resolved|calc_route_blank_child": 41
+  },
+  "0000912242": {
+   "name": "MACERICH CO",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000912593": {
+   "name": "SUN COMMUNITIES INC",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 35,
+   "current_liabilities_resolved|unclassified_reason": 35
+  },
+  "0000912595": {
+   "name": "MID AMERICA APARTMENT COMMUNITIES INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 28,
+   "current_liabilities_resolved|unclassified_reason": 28
+  },
+  "0000913144": {
+   "name": "RENAISSANCERE HOLDINGS LTD",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000913760": {
+   "name": "StoneX Group Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000914208": {
+   "name": "Invesco Ltd.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000915913": {
+   "name": "ALBEMARLE CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 3,
+   "total_liabilities_resolved|calc_route_blank_child": 43
+  },
+  "0000917251": {
+   "name": "AGREE REALTY CORP",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000920522": {
+   "name": "ESSEX PROPERTY TRUST, INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000920760": {
+   "name": "LENNAR CORP /NEW/",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000921825": {
+   "name": "FIRST INDUSTRIAL REALTY TRUST INC",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000922224": {
+   "name": "PPL Corp",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 30
+  },
+  "0000927628": {
+   "name": "CAPITAL ONE FINANCIAL CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0000927653": {
+   "name": "MCKESSON CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 33,
+   "total_liabilities_resolved|calc_route_blank_child": 13
+  },
+  "0000936340": {
+   "name": "DTE ENERGY CO",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 43
+  },
+  "0000944695": {
+   "name": "HANOVER INSURANCE GROUP, INC.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0000947484": {
+   "name": "ARCH CAPITAL GROUP LTD.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0001001250": {
+   "name": "ESTEE LAUDER COMPANIES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 21,
+   "total_liabilities_resolved|calc_route_blank_child": 25
+  },
+  "0001001838": {
+   "name": "SOUTHERN COPPER CORP/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 43,
+   "total_liabilities_resolved|identity_route": 3
+  },
+  "0001002638": {
+   "name": "OPEN TEXT CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0001002910": {
+   "name": "AMEREN CORP",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 36,
+   "total_liabilities_resolved|calc_route": 10
+  },
+  "0001004434": {
+   "name": "AFFILIATED MANAGERS GROUP, INC.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001004980": {
+   "name": "PG&E Corp",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 33,
+   "total_liabilities_resolved|calc_route_blank_child": 5
+  },
+  "0001015328": {
+   "name": "WINTRUST FINANCIAL CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001018724": {
+   "name": "AMAZON COM INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001018840": {
+   "name": "ABERCROMBIE & FITCH CO /DE/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 47
+  },
+  "0001020569": {
+   "name": "IRON MOUNTAIN INC",
+   "sector": "equity_reit",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001022079": {
+   "name": "QUEST DIAGNOSTICS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 12,
+   "total_liabilities_resolved|calc_route_blank_child": 33
+  },
+  "0001024478": {
+   "name": "ROCKWELL AUTOMATION, INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 12,
+   "total_liabilities_resolved|calc_route_blank_child": 34
+  },
+  "0001025378": {
+   "name": "W. P. Carey Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001032208": {
+   "name": "SEMPRA",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 7,
+   "total_liabilities_resolved|calc_route_blank_child": 39
+  },
+  "0001034054": {
+   "name": "SBA COMMUNICATIONS CORP",
+   "sector": "equity_reit",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0001034670": {
+   "name": "AUTOLIV INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 35,
+   "total_liabilities_resolved|calc_route_blank_child": 6,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001035002": {
+   "name": "VALERO ENERGY CORP/TX",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 45,
+   "total_liabilities_resolved|calc_route": 1
+  },
+  "0001035443": {
+   "name": "ALEXANDRIA REAL ESTATE EQUITIES, INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001037540": {
+   "name": "BXP, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001039684": {
+   "name": "ONEOK INC /NEW/",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 38,
+   "total_liabilities_resolved|calc_route": 8
+  },
+  "0001040829": {
+   "name": "Ryman Hospitality Properties, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001042046": {
+   "name": "AMERICAN FINANCIAL GROUP INC",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 42,
+   "current_liabilities_resolved|unclassified_reason": 42
+  },
+  "0001043219": {
+   "name": "ANNALY CAPITAL MANAGEMENT INC",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 41,
+   "current_liabilities_resolved|unclassified_reason": 41
+  },
+  "0001045609": {
+   "name": "Prologis, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 37,
+   "current_liabilities_resolved|unclassified_reason": 37
+  },
+  "0001047862": {
+   "name": "CONSOLIDATED EDISON INC",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 24,
+   "total_liabilities_resolved|calc_route_blank_child": 19
+  },
+  "0001048286": {
+   "name": "MARRIOTT INTERNATIONAL INC /MD/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 12
+  },
+  "0001048695": {
+   "name": "F5, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001048911": {
+   "name": "FEDEX CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 7,
+   "total_liabilities_resolved|calc_route_blank_child": 37,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001056696": {
+   "name": "MANHATTAN ASSOCIATES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 36,
+   "total_liabilities_resolved|calc_route_blank_child": 8,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001057877": {
+   "name": "IDACORP INC",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 33,
+   "total_liabilities_resolved|calc_route_blank_child": 10
+  },
+  "0001060391": {
+   "name": "REPUBLIC SERVICES, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001061219": {
+   "name": "ENTERPRISE PRODUCTS PARTNERS L.P.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 40,
+   "total_liabilities_resolved|identity_route": 1,
+   "total_liabilities_resolved|calc_route_blank_child": 5
+  },
+  "0001063761": {
+   "name": "SIMON PROPERTY GROUP INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001065696": {
+   "name": "LKQ CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 39,
+   "total_liabilities_resolved|calc_route_blank_child": 2
+  },
+  "0001067983": {
+   "name": "BERKSHIRE HATHAWAY INC",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 38,
+   "current_liabilities_resolved|unclassified_reason": 38
+  },
+  "0001068851": {
+   "name": "PROSPERITY BANCSHARES INC",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 38,
+   "current_liabilities_resolved|unclassified_reason": 38
+  },
+  "0001069157": {
+   "name": "EAST WEST BANCORP INC",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001070423": {
+   "name": "PLAINS ALL AMERICAN PIPELINE LP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 6,
+   "total_liabilities_resolved|calc_route_blank_child": 40
+  },
+  "0001070750": {
+   "name": "HOST HOTELS & RESORTS, INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 42,
+   "current_liabilities_resolved|unclassified_reason": 42
+  },
+  "0001089063": {
+   "name": "DICK'S SPORTING GOODS, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 47
+  },
+  "0001090012": {
+   "name": "DEVON ENERGY CORP/DE",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 36,
+   "total_liabilities_resolved|calc_route_blank_child": 8,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001090727": {
+   "name": "UNITED PARCEL SERVICE INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 42,
+   "total_liabilities_resolved|calc_route_blank_child": 1
+  },
+  "0001091667": {
+   "name": "CHARTER COMMUNICATIONS, INC. /MO/",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 45,
+   "total_liabilities_resolved|calc_route_blank_child": 1
+  },
+  "0001094831": {
+   "name": "BGC Group, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 44,
+   "current_liabilities_resolved|unclassified_reason": 44
+  },
+  "0001095073": {
+   "name": "EVEREST GROUP, LTD.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001096343": {
+   "name": "MARKEL GROUP INC.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001099219": {
+   "name": "METLIFE INC",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001101302": {
+   "name": "ENTEGRIS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 1,
+   "total_liabilities_resolved|calc_route": 45
+  },
+  "0001110803": {
+   "name": "ILLUMINA, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 38,
+   "total_liabilities_resolved|calc_route_blank_child": 8
+  },
+  "0001111711": {
+   "name": "NISOURCE INC.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0001113169": {
+   "name": "PRICE T ROWE GROUP INC",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 42,
+   "current_liabilities_resolved|unclassified_reason": 42
+  },
+  "0001116942": {
+   "name": "TTM TECHNOLOGIES INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 6,
+   "total_liabilities_resolved|calc_route_blank_child": 38,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001121788": {
+   "name": "GARMIN LTD",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 43,
+   "total_liabilities_resolved|calc_route_blank_child": 1,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001124198": {
+   "name": "FLUOR CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 12,
+   "total_liabilities_resolved|calc_route_blank_child": 34
+  },
+  "0001126328": {
+   "name": "PRINCIPAL FINANCIAL GROUP INC",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001130310": {
+   "name": "CENTERPOINT ENERGY INC",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 24,
+   "total_liabilities_resolved|calc_route_blank_child": 21
+  },
+  "0001130464": {
+   "name": "BLACK HILLS CORP /SD/",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 44,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0001137774": {
+   "name": "PRUDENTIAL FINANCIAL INC",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0001140859": {
+   "name": "Cencora, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 17,
+   "total_liabilities_resolved|calc_route_blank_child": 29
+  },
+  "0001166003": {
+   "name": "XPO, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 4,
+   "total_liabilities_resolved|calc_route": 39
+  },
+  "0001166691": {
+   "name": "COMCAST CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 38
+  },
+  "0001169561": {
+   "name": "COMMVAULT SYSTEMS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 43
+  },
+  "0001175454": {
+   "name": "CORPAY, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 3,
+   "total_liabilities_resolved|calc_route_blank_child": 43
+  },
+  "0001176948": {
+   "name": "Ares Management Corp",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001177702": {
+   "name": "SAIA INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 19,
+   "total_liabilities_resolved|calc_route": 24,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001212545": {
+   "name": "WESTERN ALLIANCE BANCORPORATION",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 38,
+   "current_liabilities_resolved|unclassified_reason": 38
+  },
+  "0001214816": {
+   "name": "AXIS CAPITAL HOLDINGS LTD",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001219601": {
+   "name": "CROWN HOLDINGS, INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 36,
+   "total_liabilities_resolved|calc_route": 10
+  },
+  "0001232524": {
+   "name": "Jazz Pharmaceuticals plc",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001267238": {
+   "name": "ASSURANT, INC.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001276187": {
+   "name": "Energy Transfer LP",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 31,
+   "total_liabilities_resolved|calc_route": 3
+  },
+  "0001278021": {
+   "name": "MARKETAXESS HOLDINGS INC",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001281761": {
+   "name": "REGIONS FINANCIAL CORP",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001283699": {
+   "name": "T-Mobile US, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001285785": {
+   "name": "MOSAIC CO",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 44
+  },
+  "0001287750": {
+   "name": "ARES CAPITAL CORP",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 15,
+   "current_liabilities_resolved|unclassified_reason": 15
+  },
+  "0001289490": {
+   "name": "Extra Space Storage Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001297996": {
+   "name": "DIGITAL REALTY TRUST, INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001298675": {
+   "name": "CubeSmart",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001302215": {
+   "name": "HOULIHAN LOKEY, INC.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001324404": {
+   "name": "CF Industries Holdings, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 41,
+   "total_liabilities_resolved|calc_route_blank_child": 5
+  },
+  "0001324424": {
+   "name": "Expedia Group, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 39,
+   "total_liabilities_resolved|calc_route": 1
+  },
+  "0001326160": {
+   "name": "Duke Energy CORP",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 44
+  },
+  "0001331520": {
+   "name": "HOME BANCSHARES INC",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001331875": {
+   "name": "Fidelity National Financial, Inc.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001333986": {
+   "name": "Equitable Holdings, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 38,
+   "current_liabilities_resolved|unclassified_reason": 38
+  },
+  "0001335258": {
+   "name": "Live Nation Entertainment, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 12,
+   "total_liabilities_resolved|calc_route": 34
+  },
+  "0001341439": {
+   "name": "ORACLE CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 27,
+   "total_liabilities_resolved|calc_route": 18,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001360604": {
+   "name": "Healthcare Realty Trust Inc",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001361113": {
+   "name": "VARONIS SYSTEMS INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 46
+  },
+  "0001368622": {
+   "name": "AeroVironment Inc",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 19,
+   "total_liabilities_resolved|calc_route_blank_child": 34,
+   "total_liabilities_resolved|identity_route": 1
+  },
+  "0001376139": {
+   "name": "CVR ENERGY INC",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001381197": {
+   "name": "Interactive Brokers Group, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001389170": {
+   "name": "Targa Resources Corp.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 11,
+   "total_liabilities_resolved|calc_route": 8,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001390777": {
+   "name": "Bank of New York Mellon Corp",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001393311": {
+   "name": "Public Storage",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001393818": {
+   "name": "Blackstone Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 38,
+   "current_liabilities_resolved|unclassified_reason": 38
+  },
+  "0001397911": {
+   "name": "LPL Financial Holdings Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001402057": {
+   "name": "CDW Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 30,
+   "total_liabilities_resolved|calc_route": 14
+  },
+  "0001404912": {
+   "name": "KKR & Co. Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 43,
+   "current_liabilities_resolved|unclassified_reason": 43
+  },
+  "0001410636": {
+   "name": "American Water Works Company, Inc.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 46
+  },
+  "0001423689": {
+   "name": "AGNC Investment Corp.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001448893": {
+   "name": "Essent Group Ltd.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001451505": {
+   "name": "Transocean Ltd.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 39,
+   "total_liabilities_resolved|calc_route_blank_child": 5,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001467373": {
+   "name": "Accenture plc",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 22,
+   "total_liabilities_resolved|calc_route_blank_child": 24
+  },
+  "0001472787": {
+   "name": "First American Financial Corp",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001475922": {
+   "name": "Primerica, Inc.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 44,
+   "current_liabilities_resolved|unclassified_reason": 44
+  },
+  "0001476150": {
+   "name": "Terreno Realty Corp",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001479094": {
+   "name": "STAG Industrial, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001489393": {
+   "name": "LyondellBasell Industries N.V.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 35,
+   "total_liabilities_resolved|calc_route": 11
+  },
+  "0001520006": {
+   "name": "Matador Resources Co",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 43,
+   "total_liabilities_resolved|calc_route": 3
+  },
+  "0001527166": {
+   "name": "Carlyle Group Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001535929": {
+   "name": "Voya Financial, Inc.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001551152": {
+   "name": "AbbVie Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 5,
+   "total_liabilities_resolved|calc_route_blank_child": 41
+  },
+  "0001551182": {
+   "name": "Eaton Corp plc",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 42,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001562401": {
+   "name": "American Homes 4 Rent",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001564708": {
+   "name": "NEWS CORP",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 24,
+   "total_liabilities_resolved|calc_route": 8
+  },
+  "0001567094": {
+   "name": "CNH Industrial N.V.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 17,
+   "current_liabilities_resolved|unclassified_reason": 17
+  },
+  "0001570827": {
+   "name": "Victory Capital Holdings, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 36,
+   "current_liabilities_resolved|unclassified_reason": 36
+  },
+  "0001571123": {
+   "name": "Science Applications International Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 31,
+   "total_liabilities_resolved|calc_route": 16
+  },
+  "0001571283": {
+   "name": "Rexford Industrial Realty, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001575965": {
+   "name": "Gaming & Leisure Properties, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001579298": {
+   "name": "Burlington Stores, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 44,
+   "total_liabilities_resolved|identity_route": 2
+  },
+  "0001581068": {
+   "name": "Brixmor Property Group Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001584207": {
+   "name": "OneMain Holdings, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 45,
+   "current_liabilities_resolved|unclassified_reason": 45
+  },
+  "0001584509": {
+   "name": "Aramark",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 23,
+   "total_liabilities_resolved|calc_route_blank_child": 24
+  },
+  "0001590717": {
+   "name": "CareTrust REIT, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 46,
+   "current_liabilities_resolved|unclassified_reason": 46
+  },
+  "0001594805": {
+   "name": "SHOPIFY INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 8
+  },
+  "0001601712": {
+   "name": "Synchrony Financial",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 40,
+   "current_liabilities_resolved|unclassified_reason": 40
+  },
+  "0001609711": {
+   "name": "GoDaddy Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 45
+  },
+  "0001632970": {
+   "name": "American Healthcare REIT, Inc.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 40,
+   "current_liabilities_resolved|unclassified_reason": 40
+  },
+  "0001637207": {
+   "name": "Planet Fitness, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 44
+  },
+  "0001645590": {
+   "name": "Hewlett Packard Enterprise Co",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 41,
+   "total_liabilities_resolved|calc_route": 2
+  },
+  "0001646972": {
+   "name": "Albertsons Companies, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 17
+  },
+  "0001659166": {
+   "name": "Fortive Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 25,
+   "total_liabilities_resolved|calc_route_blank_child": 17
+  },
+  "0001669162": {
+   "name": "Kinsale Capital Group, Inc.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 41,
+   "current_liabilities_resolved|unclassified_reason": 41
+  },
+  "0001687229": {
+   "name": "Invitation Homes Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 38,
+   "current_liabilities_resolved|unclassified_reason": 38
+  },
+  "0001692115": {
+   "name": "Southwest Gas Holdings, Inc.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route": 23,
+   "total_liabilities_resolved|calc_route_blank_child": 8
+  },
+  "0001711269": {
+   "name": "Evergy, Inc.",
+   "sector": "utility",
+   "total_liabilities_resolved|calc_route_blank_child": 16
+  },
+  "0001728951": {
+   "name": "ESSENTIAL PROPERTIES REALTY TRUST, INC.",
+   "sector": "equity_reit",
+   "current_assets_resolved|unclassified_reason": 34,
+   "current_liabilities_resolved|unclassified_reason": 34
+  },
+  "0001736035": {
+   "name": "Blackstone Secured Lending Fund",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 17,
+   "current_liabilities_resolved|unclassified_reason": 17
+  },
+  "0001744489": {
+   "name": "Walt Disney Co",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 30
+  },
+  "0001751788": {
+   "name": "DOW INC.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 24,
+   "total_liabilities_resolved|identity_route": 3
+  },
+  "0001754301": {
+   "name": "Fox Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 31,
+   "total_liabilities_resolved|calc_route": 1
+  },
+  "0001758730": {
+   "name": "Tradeweb Markets Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 30,
+   "current_liabilities_resolved|unclassified_reason": 30
+  },
+  "0001805284": {
+   "name": "Rocket Companies, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 26,
+   "current_liabilities_resolved|unclassified_reason": 26
+  },
+  "0001820953": {
+   "name": "Affirm Holdings, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 24,
+   "current_liabilities_resolved|unclassified_reason": 24
+  },
+  "0001822993": {
+   "name": "Jackson Financial Inc.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 22,
+   "current_liabilities_resolved|unclassified_reason": 22
+  },
+  "0001823529": {
+   "name": "Enact Holdings, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 21,
+   "current_liabilities_resolved|unclassified_reason": 21
+  },
+  "0001833756": {
+   "name": "Leonardo DRS, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 10,
+   "total_liabilities_resolved|calc_route_blank_child": 13
+  },
+  "0001841666": {
+   "name": "APA Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 23
+  },
+  "0001858681": {
+   "name": "Apollo Global Management, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 16,
+   "current_liabilities_resolved|unclassified_reason": 16
+  },
+  "0001880661": {
+   "name": "TPG Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 18,
+   "current_liabilities_resolved|unclassified_reason": 18
+  },
+  "0001889539": {
+   "name": "Corebridge Financial, Inc.",
+   "sector": "insurer",
+   "current_assets_resolved|unclassified_reason": 18,
+   "current_liabilities_resolved|unclassified_reason": 18
+  },
+  "0001937926": {
+   "name": "Brookfield Asset Management Ltd.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 7,
+   "current_liabilities_resolved|unclassified_reason": 7
+  },
+  "0001967680": {
+   "name": "Veralto Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 12
+  },
+  "0001996862": {
+   "name": "Bunge Global SA",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route": 12
+  },
+  "0002012383": {
+   "name": "BlackRock, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 9,
+   "current_liabilities_resolved|unclassified_reason": 9
+  },
+  "0002041610": {
+   "name": "Paramount Skydance Corp",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 7
+  },
+  "0002065601": {
+   "name": "Central Bancompany, Inc.",
+   "sector": "general",
+   "current_assets_resolved|unclassified_reason": 3,
+   "current_liabilities_resolved|unclassified_reason": 3
+  },
+  "0002082247": {
+   "name": "FedEx Freight Holding Company, Inc.",
+   "sector": "general",
+   "total_liabilities_resolved|calc_route_blank_child": 1
+  },
+  "0002082866": {
+   "name": "Pinnacle Financial Partners, Inc.",
+   "sector": "bank",
+   "current_assets_resolved|unclassified_reason": 4,
+   "current_liabilities_resolved|unclassified_reason": 4
+  }
+ }
+}

@@ -77,3 +77,14 @@ def test_unclassified_balance_sheet():
     assert not bd.unclassified(NEE_FACE)  # prints Total current liabilities
     custom_current = bank + [{"tag": "TotalCurrentAssetsX", "label": "Total current assets", "custom": True}]
     assert not bd.unclassified(custom_current)
+
+
+def test_current_total_in_another_statement_blocks_the_unclassified_reason():
+    """Planet Fitness 10-Q 0001193125-15-310710: the registrant shell's balance sheet (stmt BS) has no current items,
+    but the operating predecessor's classified balance sheet in the same filing (stmt UN) prints AssetsCurrent."""
+    shell = [{"tag": t, "label": t, "custom": False} for t in ("Assets", "CommitmentsAndContingencies", "CommonStockValue",
+                                                               "StockholdersEquity", "LiabilitiesAndStockholdersEquity")]
+    assert bd.unclassified(shell)
+    assert bd.current_reason(shell, current_in_filing=True) is None
+    assert bd.current_reason(shell, current_in_filing=False) == bd.REASON
+    assert bd.current_reason(NEE_FACE, current_in_filing=False) is None
