@@ -164,6 +164,14 @@ def unclassified(face: list[dict]) -> bool:
     )
 
 
+def current_reason(face: list[dict], current_in_filing: bool) -> str | None:
+    """REASON when the balance sheet is unclassified and no statement of the same filing prints a current total;
+    else None (the miss is counted, never reasoned)"""
+    if not unclassified(face):
+        return None
+    return None if current_in_filing else REASON
+
+
 def load(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
     with conn.cursor() as cur:
         cur.execute(
@@ -204,12 +212,23 @@ def load(conn: psycopg.Connection, company_id: int) -> dict[str, Any]:
             (company_id,),
         )
         failed = set(cur.fetchall())
+        # a current total printed in ANY statement of the filing (e.g. Planet Fitness 2015: the registrant shell's
+        # balance sheet is stmt BS, the operating predecessor's classified one is filed as stmt UN) means the
+        # company does classify: never reason it away as unclassified
+        cur.execute(
+            """select distinct l.filing_id from fsn.line l join fsn.tag t on t.id = l.tag_id
+               join fsn.filing f on f.id = l.filing_id
+               where f.company_id = %s and not l.inpth and t.tag in ('AssetsCurrent', 'LiabilitiesCurrent')""",
+            (company_id,),
+        )
+        current_elsewhere = {r[0] for r in cur.fetchall()}
     return {
         "filings": filings,
         "face": face,
         "groups": groups,
         "vals": vals,
         "failed": failed,
+        "current_elsewhere": current_elsewhere,
     }
 
 
@@ -287,7 +306,9 @@ def rows(
                         },
                     )
                 )
-        if unclassified(face):
+        if unclassified(face) and fid in d["current_elsewhere"]:
+            misses["current_total_in_another_statement"] += 1
+        if current_reason(face, fid in d["current_elsewhere"]):
             for concept in (CA, CL):
                 if (concept, dd) not in have:
                     out.append(
