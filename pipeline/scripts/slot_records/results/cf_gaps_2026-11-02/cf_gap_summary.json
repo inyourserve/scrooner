@@ -1,0 +1,584 @@
+{
+ "fsn_sets_scanned": 59,
+ "keys": 39552,
+ "by_class": [
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_mapped_line",
+   "class": "no_line_on_face",
+   "keys": 10280,
+   "companies": 254
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "only_excluded_lines",
+   "keys": 7329,
+   "companies": 513
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_mapped_line",
+   "class": "only_excluded_lines",
+   "keys": 3670,
+   "companies": 101
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "common_line_seed_tag",
+   "keys": 3240,
+   "companies": 414
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "common_line_seed_tag",
+   "keys": 2656,
+   "companies": 340
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "no_line_on_face",
+   "keys": 2237,
+   "companies": 135
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_mapped_line",
+   "class": "only_excluded_lines",
+   "keys": 1147,
+   "companies": 56
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "only_excluded_lines",
+   "keys": 1145,
+   "companies": 312
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "no_filing_in_fsn",
+   "keys": 824,
+   "companies": 426
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_mapped_line",
+   "class": "no_filing_in_fsn",
+   "keys": 771,
+   "companies": 167
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "held_lines_only",
+   "keys": 738,
+   "companies": 84
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_mapped_line",
+   "class": "held_lines_only",
+   "keys": 656,
+   "companies": 35
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_mapped_line",
+   "class": "common_line_unseeded_tag",
+   "keys": 544,
+   "companies": 19
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "no_filing_in_fsn",
+   "keys": 494,
+   "companies": 316
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "only_excluded_lines",
+   "keys": 489,
+   "companies": 61
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "held_lines_only",
+   "keys": 413,
+   "companies": 46
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "common_line_unseeded_tag",
+   "keys": 406,
+   "companies": 63
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "no_line_on_face",
+   "keys": 400,
+   "companies": 87
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_mapped_line",
+   "class": "held_lines_only",
+   "keys": 378,
+   "companies": 21
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "common_line_unseeded_tag",
+   "keys": 334,
+   "companies": 47
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_mapped_line",
+   "class": "no_filing_in_fsn",
+   "keys": 298,
+   "companies": 61
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "common_line_seed_tag",
+   "keys": 178,
+   "companies": 89
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "no_filing_in_fsn",
+   "keys": 168,
+   "companies": 99
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_mapped_line",
+   "class": "common_line_unseeded_tag",
+   "keys": 161,
+   "companies": 11
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "held_lines_only",
+   "keys": 145,
+   "companies": 42
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "only_excluded_lines",
+   "keys": 105,
+   "companies": 37
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "common_line_unseeded_tag",
+   "keys": 94,
+   "companies": 29
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "held_lines_only",
+   "keys": 75,
+   "companies": 25
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "no_filing_in_fsn",
+   "keys": 60,
+   "companies": 40
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "common_line_unseeded_tag",
+   "keys": 59,
+   "companies": 17
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "common_line_seed_tag",
+   "keys": 42,
+   "companies": 18
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "no_cash_flow_face",
+   "keys": 7,
+   "companies": 7
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_mapped_line",
+   "class": "no_cash_flow_face",
+   "keys": 3,
+   "companies": 2
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "quarter_not_printed_or_derivable",
+   "class": "no_cash_flow_face",
+   "keys": 3,
+   "companies": 3
+  },
+  {
+   "data_point": "share_buybacks_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "no_cash_flow_face",
+   "keys": 2,
+   "companies": 2
+  },
+  {
+   "data_point": "dividends_paid_resolved",
+   "cause": "no_face_print_for_period",
+   "class": "no_cash_flow_face",
+   "keys": 1,
+   "companies": 1
+  }
+ ],
+ "unseeded_common_tags": {
+  "share_buybacks_resolved": [
+   [
+    "PaymentsForRepurchaseOfEquity",
+    500
+   ],
+   [
+    "NetPaymentsForRepurchaseOfCommonStock",
+    57
+   ],
+   [
+    "PaymentsForRepurchaseOfOtherEquity",
+    52
+   ],
+   [
+    "PaymentsForPurchasesOfTreasuryStock",
+    34
+   ],
+   [
+    "PaymentsforRepurchaseofCommonStockintheOpenMarket",
+    31
+   ],
+   [
+    "PaymentsForRepurchaseOfCommonStockShareRepurchaseProgram",
+    29
+   ],
+   [
+    "PaymentForPurchaseOfTreasuryStockUnderShareRepurchasePlan",
+    21
+   ],
+   [
+    "PaymentsForRepurchaseOfShares",
+    20
+   ],
+   [
+    "Paymentsforreturnedtoauthorizedbutunissuedcommonstock",
+    17
+   ],
+   [
+    "PaymentsForRepurchaseOfTreasuryStock",
+    17
+   ],
+   [
+    "RepurchaseOfCommonStockNotSettled",
+    16
+   ],
+   [
+    "PurchasesOfCommonStockAndForwardContracts",
+    15
+   ],
+   [
+    "PaymentsForRepurchaseOfCommonStockOpenMarket",
+    14
+   ],
+   [
+    "PaymentsForRepurchaseOfCommonStockForOtherThanShareBasedCompensationPlans",
+    13
+   ],
+   [
+    "TreasuryStockSettlementAndExchangeOfConvertibleNoteHedgeAndWarrantAgreements",
+    13
+   ],
+   [
+    "VestingOfSharesSubjectToRepurchase",
+    12
+   ],
+   [
+    "Paymentsforrepurchaseofcommonstockfortaxwithholding",
+    11
+   ],
+   [
+    "PaymentsForRepurchaseOfCommonStockInTheOpenMarket",
+    11
+   ],
+   [
+    "PaymentsforRepurchaseofCommonStockShareRepurchaseProgram",
+    11
+   ],
+   [
+    "FairValueOfStockIssuedForConvertibleNote",
+    11
+   ],
+   [
+    "RepurchaseOfCommonStock",
+    10
+   ],
+   [
+    "PaymentsOfStockRepurchaseCosts",
+    10
+   ],
+   [
+    "RepurchaseOfEarlyExercisedStockOptions",
+    8
+   ],
+   [
+    "RepurchaseOfSharesAndOptionsFromManagement",
+    8
+   ],
+   [
+    "PaymentsForRepurchaseOfCommonStockRetirementPlan",
+    8
+   ],
+   [
+    "PaymentForStockRepurchaseAndRetirement",
+    8
+   ],
+   [
+    "PaymentsToAcquireAvailableForSaleSecuritiesDebt",
+    8
+   ],
+   [
+    "NetSettlementOfVestedCommonUnitsAndRepurchaseOfCommonAndPartnershipUnits",
+    8
+   ],
+   [
+    "StockIssued1",
+    7
+   ],
+   [
+    "PaymentsForRepurchaseOfRegisteredStock",
+    7
+   ],
+   [
+    "PaymentForRepurchaseOfEarlyExercisedStockOptions",
+    7
+   ],
+   [
+    "PaymentsToAcquireUSTreasuryBillsAndAvailableForSaleSecuritiesDebt",
+    7
+   ],
+   [
+    "PaymentsForRepurchaseOfCommonStockAndWarrants",
+    6
+   ],
+   [
+    "PaymentsForRepurchaseOfWarrants",
+    6
+   ],
+   [
+    "TreasuryStockValueAcquiredCostMethod",
+    6
+   ],
+   [
+    "PaymentsToAcquireTreasuryStock",
+    6
+   ],
+   [
+    "TreasuryStockUsedForAcquisitionOfBusiness",
+    6
+   ],
+   [
+    "PaymentsforRepurchaseofCommonStockandStockOptions",
+    5
+   ],
+   [
+    "PaymentsForShareRepurchaseCosts",
+    4
+   ],
+   [
+    "PaymentsForRepurchaseOfEarlyExercisedStockOptionsAndRestrictedCommonStock",
+    4
+   ]
+  ],
+  "dividends_paid_resolved": [
+   [
+    "PaymentsOfCapitalDistribution",
+    163
+   ],
+   [
+    "PaymentsOfOrdinaryDividendsCommonStockAndDividendEquivalents",
+    58
+   ],
+   [
+    "PaymentsOfDividendsCommonStockAndEquityAwardHolders",
+    44
+   ],
+   [
+    "DividendsPayableCurrentAndNoncurrent",
+    33
+   ],
+   [
+    "PaymentsOfDividendsToParentCompany",
+    33
+   ],
+   [
+    "PaymentOfDividendsToShareholders",
+    30
+   ],
+   [
+    "CashDistributionsToStockholders",
+    24
+   ],
+   [
+    "StockIssuedDuringPeriodValueStockDividend",
+    14
+   ],
+   [
+    "PaymentsOfDividendsAndDividendEquivalents",
+    14
+   ],
+   [
+    "DividendsNonVotingCommonStockCash",
+    14
+   ],
+   [
+    "DividendsToFromParent",
+    13
+   ],
+   [
+    "StockIssuedDuringPeriodValueDividendReinvestmentPlan",
+    12
+   ],
+   [
+    "PaymentsRelatedToTaxWithholdingForSharesAndDividend",
+    10
+   ],
+   [
+    "CashDividendsPaidToParentCompany",
+    10
+   ],
+   [
+    "PaymentsOfOrdinaryDividendsCommonStockAndShareBasedPaymentArrangement",
+    10
+   ],
+   [
+    "PaymentsOfDistributionsToAffiliates",
+    9
+   ],
+   [
+    "EmployeeStockOptionPlanSpecialDividendCompensation",
+    6
+   ],
+   [
+    "PaymentOfDeferredConsiderationInFormOfDividendToFormerShareholders",
+    6
+   ],
+   [
+    "CommonStockIssuedEmployeeStockTrust",
+    6
+   ],
+   [
+    "DeemedDividendRelatedToBeneficialConversionFeature",
+    6
+   ],
+   [
+    "NoteReceivableIssuedToFinanceEarlyExerciseOfCommonStockNetOfDividendProceeds",
+    6
+   ],
+   [
+    "NetRepaymentOfNoteReceivableWithDividendProceeds",
+    6
+   ],
+   [
+    "PaymentsForProceedsFromOtherInvestingActivities",
+    6
+   ],
+   [
+    "DividendsOrSubcoDistributionsPaid",
+    5
+   ],
+   [
+    "DividendsCommonStockCash",
+    4
+   ],
+   [
+    "PaymentsOfDividendsAndDividendEquivalentsOnCommonStockAndRestrictedStockUnits",
+    4
+   ],
+   [
+    "PaymentsOfDividendsCash",
+    4
+   ],
+   [
+    "AdjustmentForGainLossOnMarketableSecuritiesDividendInterestHeldInTrustAccount",
+    4
+   ],
+   [
+    "DividendfromAdientspinoff",
+    4
+   ],
+   [
+    "DividendsPaidInKindNoncash",
+    3
+   ],
+   [
+    "PaymentsOfDividendsAndEquivalents",
+    3
+   ],
+   [
+    "NonoperatingIncomeExpense",
+    3
+   ],
+   [
+    "InterestAndDividendIncomeSecuritiesTradingOrMeasuredAtFairValue",
+    3
+   ],
+   [
+    "DividendsToParent",
+    3
+   ],
+   [
+    "NotesAssumed1",
+    3
+   ],
+   [
+    "DividendIncomeEquitySecuritiesOperating",
+    2
+   ],
+   [
+    "OtherInterestAndDividendIncome",
+    2
+   ],
+   [
+    "DividendsCommonStockStock",
+    2
+   ],
+   [
+    "Dividends",
+    2
+   ],
+   [
+    "CommonStockIssuedForDividendReinvestmentPlan",
+    2
+   ]
+  ]
+ }
+}
