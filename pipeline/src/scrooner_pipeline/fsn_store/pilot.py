@@ -283,6 +283,11 @@ def report_company(
     keys = valued = reasoned = 0
     gaps: list[dict[str, Any]] = []
     per_point: dict[str, dict[str, int]] = {}
+    # SECTOR-TEMPLATES §4 step 2: a COND data point the company's statements do not print (no line
+    # mapped, combined or excluded in any stored filing) is OUT of that company's template, with that
+    # reason; it leaves the denominator and is listed, never silently dropped
+    cond_out = [c for c in tmpl if c in COND[sector] and c not in mapped_points]
+    tmpl = [c for c in tmpl if c not in cond_out]
     for concept in tmpl:
         k: Counter[str] = Counter()
         expected = calendar_keys(calendar, company_id, concept)
@@ -371,6 +376,7 @@ def report_company(
             "sic": sic,
             "sector_template": sector,
             "template_points": len(tmpl),
+            "template_out_cond_not_printed": cond_out,
             "fye": fye[0] if fye else None,
             "co_registrants": sorted(c[0] for c in coreg if c[0]),
             "filings_stored": len(data["filings"]),
