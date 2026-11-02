@@ -40,8 +40,21 @@ def test_calc_route_expands_the_capitalization_subtotal():
 def test_calc_route_refuses_when_children_do_not_tie_or_a_child_is_blank():
     off = dict(NEE_COL, LiabilitiesCurrent=(D("12000000000"), 9))
     assert bd.derive_tl(NEE_FACE, NEE_ARCS, off)[1] == "calc_children_do_not_tie_le"
+    # a blank child counts as zero only when the valued children still tie to L&E: here they do not
     blank = {k: v for k, v in NEE_COL.items() if k != "LiabilitiesNoncurrent"}
-    assert bd.derive_tl(NEE_FACE, NEE_ARCS, blank)[1] == "calc_child_not_valued:LiabilitiesNoncurrent"
+    assert bd.derive_tl(NEE_FACE, NEE_ARCS, blank)[1] == "calc_children_do_not_tie_le"
+
+
+def test_blank_child_is_zero_only_when_the_tie_proves_it():
+    arcs = dict(NEE_ARCS)
+    arcs["LiabilitiesAndStockholdersEquity"] = arcs["LiabilitiesAndStockholdersEquity"] + [("OperatingLeaseLiabilityNoncurrent", 1)]
+    (value, _ids), _rule, inputs = bd.derive_tl(NEE_FACE, arcs, NEE_COL)  # the lease line is printed blank
+    assert value == D("80096000000")
+    assert sorted(inputs["blank_children"]) == ["CommitmentsAndContingencies", "OperatingLeaseLiabilityNoncurrent"]
+    valued_commitments = dict(NEE_COL, CommitmentsAndContingencies=(D("5"), 99))
+    assert bd.derive_tl(NEE_FACE, NEE_ARCS, valued_commitments)[1] == "calc_child_noise_valued:CommitmentsAndContingencies"
+    zero_commitments = dict(NEE_COL, CommitmentsAndContingencies=(D("0"), 99))
+    assert bd.derive_tl(NEE_FACE, NEE_ARCS, zero_commitments)[0][0] == D("80096000000")
 
 
 def test_printed_total_liabilities_is_never_derived():

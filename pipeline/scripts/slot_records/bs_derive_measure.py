@@ -8,7 +8,7 @@ usage: SCRATCH_DATABASE_URL=... bs_derive_measure.py <reports.json> <calendar.cs
 import json
 import os
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 import psycopg
