@@ -254,11 +254,12 @@ def pilot_cmd(
                 conn.rollback()
                 failed.append({"cik": cik, "company_id": cid, "error": repr(exc)[:300]})
                 typer.echo(f"pilot {cik}: FAILED {repr(exc)[:200]}")
-            typer.echo(
-                f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
-                f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
-                f"library {rep['library']['completeness_pct']}%, gaps {rep['template_coverage']['gaps']}"
-            )
+            else:  # only a company that succeeded has a report to print
+                typer.echo(
+                    f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
+                    f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
+                    f"library {rep['library']['completeness_pct']}%, gaps {rep['template_coverage']['gaps']}"
+                )
     for fam, rows in families.items():
         d = root / "cells" / fam
         d.mkdir(parents=True, exist_ok=True)
