@@ -321,3 +321,24 @@ def test_sole_debt_interest_counts_only_when_it_is_the_filings_only_interest_lin
     assert cells[d3].reason_code == "sole_debt_label_not_interest"
     # without the PENDING rule Debt is never a gross figure
     assert sel.select_note_values("interest_expense_resolved", facts, f, taken=set()) == []
+
+
+@pytest.mark.unit
+def test_note_path_never_takes_operating_income_and_holds_negative_interest():
+    f = {1: sel.Filing(1, "0001744489-25-000155", datetime(2025, 11, 13), "10-K", date(2025, 9, 30), 2025, "FY")}
+    d = date(2025, 9, 30)
+    # MOG-A pattern: a non-dimensional OperatingIncomeLoss equal to the sum of segment members, off the face
+    oi = [sel.NoteFact(1, 1, "OperatingIncomeLoss", d, 4, Decimal("538000000"), -6)]
+    assert sel.select_note_values("operating_income_resolved", oi, f, taken=set()) == []
+    neg = [sel.NoteFact(2, 1, "InterestExpense", d, 4, Decimal("-1812000000"), -6)]
+    held = sel.select_note_values("interest_expense_resolved", neg, f, taken=set())
+    assert [c.reason_code for c in held] == ["sign_inconsistent"]
+    # DIS FY2025 cleared at +1,812M, only while the stored value is the pinned one
+    pin = {("0001744489-25-000155", d, 4): (Decimal("-1812000000"), Decimal("1812000000"))}
+    ok = sel.select_note_values("interest_expense_resolved", neg, f, taken=set(), cleared=pin)
+    assert [(c.state, c.value) for c in ok] == [("value", Decimal("1812000000"))]
+    moved = [sel.NoteFact(2, 1, "InterestExpense", d, 4, Decimal("-1900000000"), -6)]
+    assert sel.select_note_values("interest_expense_resolved", moved, f, taken=set(), cleared=pin)[0].reason_code == "sign_inconsistent"
+    debt = [sel.NoteFact(3, 1, "InterestExpenseDebt", d, 4, Decimal("378000000"), -6)]
+    c = sel.select_note_values("interest_expense_resolved", debt, f, taken=set(), sole_debt=True, label_verified=True)[0]
+    assert c.input_refs["label_unverified"] is False

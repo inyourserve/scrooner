@@ -54,8 +54,9 @@ NOTE_TAGS = {
         "InterestExpenseOperating",
         "InterestAndDebtExpense",
     ),
-    "operating_income_resolved": ("OperatingIncomeLoss",),
 }
+# Operating income is NEVER note-sourced (Verifier draw 2026-11-03: a non-dimensional OperatingIncomeLoss
+# outside the IS face was a segment-profit total at MOG-A, SHW, SWK and a parent measure at EHC)
 # Ritwik 2026-11-03 (PENDING_SOLE_DEBT_INTEREST_RULE rows): InterestExpenseDebt counts as gross for a
 # filing only when it is the ONLY interest-expense tag that filing prints and, where it has a face
 # label, the label reads as interest expense (the PGR/CVX pattern of the interest card)
@@ -111,6 +112,7 @@ REASONS = {
     "note_values_disagree": ("composition", "standardization_lead"),
     "note_value_not_positive": ("evidence_pending", "verifier"),
     "sole_debt_label_not_interest": ("composition", "standardization_lead"),
+    "sign_inconsistent": ("filer_error", "verifier"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -125,6 +127,7 @@ REASON_TEXT = {
     "note_values_disagree": "The notes print two different gross figures for this period (different perimeters), so neither is shown.",
     "note_value_not_positive": "The note prints zero or a negative figure, which is not a gross amount for this line.",
     "sole_debt_label_not_interest": "The only interest line the filing prints is not labelled as interest expense, so it is not taken as the total.",
+    "sign_inconsistent": "The filing stores this expense with a negative sign; it is shown only after the sign is checked against the printed page.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
@@ -819,6 +822,8 @@ def select_note_values(
     taken: set[tuple[date, int]],
     *,
     sole_debt: bool = False,
+    label_verified: bool = False,
+    cleared: dict[tuple[str, date, int], tuple[Decimal, Decimal]] | None = None,
 ) -> list[Cell]:
     """Cells from non-dimensional NOTE facts for keys (FY/Q) that have no face cell. The latest
     filing printing the key wins; within it the first tag in NOTE_TAGS order. Two tags with
@@ -853,7 +858,9 @@ def select_note_values(
         }
         if top.tag == SOLE_DEBT_TAG:
             refs.update(
-                sole_debt=True, label=top.label, label_unverified=top.label is None
+                sole_debt=True,
+                label=top.label,
+                label_unverified=top.label is None and not label_verified,
             )
             if top.label is not None and "interest" not in top.label.lower():
                 out.append(
@@ -883,7 +890,42 @@ def select_note_values(
                 )
             )
             continue
-        if top.value <= 0:
+        acc = filings[top.filing_id].accession
+        pin = (cleared or {}).get((acc, key[0], key[1]))
+        if (
+            pin is not None and top.value == pin[0]
+        ):  # a Verifier-cleared key, stored value pinned
+            refs.update(cleared_from=str(top.value))
+            out.append(
+                Cell(
+                    concept,
+                    key[0],
+                    key[1],
+                    "value",
+                    pin[1],
+                    top.filing_id,
+                    top.tag,
+                    [top.value_id],
+                    RULE_NOTE_VALUE,
+                    input_refs=refs,
+                )
+            )
+            continue
+        if top.value < 0:
+            out.append(
+                Cell(
+                    concept,
+                    key[0],
+                    key[1],
+                    "defect",
+                    filing_id=top.filing_id,
+                    rule_id=RULE_NOTE_VALUE,
+                    reason_code="sign_inconsistent",
+                    input_refs={**refs, "value": str(top.value)},
+                )
+            )
+            continue
+        if top.value == 0:
             out.append(
                 Cell(
                     concept,

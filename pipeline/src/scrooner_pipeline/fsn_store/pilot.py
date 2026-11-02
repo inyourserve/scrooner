@@ -16,6 +16,7 @@ import csv
 import gzip
 from collections import Counter, defaultdict
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -246,6 +247,7 @@ def report_company(
     period_rules: Path | None = None,
     company_outs: Path | None = None,
     note_sourced: Path | None = None,
+    cleared_keys: Path | None = None,
 ) -> dict[str, Any]:
     cik, name, sic = conn.execute(
         "select cik, company_name, sic_code from core.company where id = %s",
@@ -281,12 +283,24 @@ def report_company(
             breaks[concept] = sorted(data["filings"][f].accession for f in s.breaks)
     # approved company x concept pairs served from a NOTE fact where the face prints no line
     # (approval CSV: REJECT_NOTE_SOURCED_VALUE); keys that already have a face cell are kept
-    note_pairs = {
-        r["data_point"]: r.get("approver_verdict") == "PENDING_SOLE_DEBT_INTEREST_RULE"
-        for r in _company_outs(note_sourced)
+    # sole-debt: pending rows, and rows the Verifier passed as gross (label verified)
+    note_pairs: dict[str, tuple[bool, bool]] = {}
+    for r in _company_outs(note_sourced):
+        if int(r["company_id"]) != company_id or r.get("approver_verdict") not in (
+            "REJECT_NOTE_SOURCED_VALUE",
+            "PENDING_SOLE_DEBT_INTEREST_RULE",
+        ):
+            continue
+        passed = "PASS_AS_GROSS" in (r.get("approver_evidence") or "")
+        pending = r.get("approver_verdict") == "PENDING_SOLE_DEBT_INTEREST_RULE"
+        note_pairs[r["data_point"]] = (pending or passed, passed)
+    cleared = {
+        (r["accession"], date.fromisoformat(r["ddate"]), int(r["qtrs"])): (
+            Decimal(r["stored_value"]),
+            Decimal(r["cleared_value"]),
+        )
+        for r in _company_outs(cleared_keys)
         if int(r["company_id"]) == company_id
-        and r.get("approver_verdict")
-        in ("REJECT_NOTE_SOURCED_VALUE", "PENDING_SOLE_DEBT_INTEREST_RULE")
     }
     note_cells = 0
     for concept in sorted(note_pairs):
@@ -298,13 +312,15 @@ def report_company(
             for r in cells
             if r["data_point_name"] == concept
         }
-        sole = note_pairs[concept]
+        sole, verified = note_pairs[concept]
         got = sel.select_note_values(
             concept,
             sel.load_note_values(conn, company_id, concept, sole_debt=sole),
             data["filings"],
             taken,
             sole_debt=sole,
+            label_verified=verified,
+            cleared=cleared,
         )
         note_cells += sum(1 for c in got if c.state == "value")
         cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)

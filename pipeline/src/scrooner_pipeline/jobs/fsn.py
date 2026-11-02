@@ -205,7 +205,11 @@ def pilot_cmd(
     ),
     note_sourced: str = typer.Option(
         "data-team/47-fsn-store/template_company_outs_approval_2026-11-03.csv",
-        help="Approved company x data point pairs served from a note fact; '' disables (production write).",
+        help="Approved company x data point pairs served from a note fact; '' disables.",
+    ),
+    cleared_keys: str = typer.Option(
+        "data-team/47-fsn-store/note_cleared_keys.csv",
+        help="Verifier-cleared note keys (stored value pinned) for signs held otherwise.",
     ),
 ) -> None:
     """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
@@ -245,6 +249,7 @@ def pilot_cmd(
                     Path(period_rules),
                     Path(company_outs),
                     Path(note_sourced) if note_sourced else None,
+                    Path(cleared_keys) if cleared_keys else None,
                 )
                 rep["mapping"], rep["checks"] = m, c
                 rep["accessions"] = [

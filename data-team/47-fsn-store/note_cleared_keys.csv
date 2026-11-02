@@ -1,0 +1,2 @@
+company_id,data_point,accession,ddate,qtrs,stored_value,cleared_value,cleared_by,evidence
+5261,interest_expense_resolved,0001744489-25-000155,2025-09-30,4,-1812000000,1812000000,Verifier draw 2026-11-03 seed 20261103 (Ritwik),"DIS 10-K FY2025 prints ""Interest expense $(1,812)""; the fact is stored negative; correct gross value +1,812M (template_company_outs_approval_2026-11-03.md)"
