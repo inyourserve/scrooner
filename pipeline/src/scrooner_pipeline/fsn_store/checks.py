@@ -39,6 +39,14 @@ CF_PARTS = (
 CF_FX = (
     "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
     "EffectOfExchangeRateOnCashAndCashEquivalents",
+    # the TOTAL effect on cash under its other standard names (cohort dry run 41515845455: 231 + 80 + 9
+    # companies print these, so every cash-flow column of theirs failed cf_parts_eq_change and every
+    # CFO / buyback / dividend value in it was held; Nucor FY2024: parts -2,813 + FX -16 = change -2,829).
+    # Never the discontinued-operations COMPONENT tags (…DisposalGroupIncludingDiscontinuedOperations,
+    # …DiscontinuedOperations): a component is not the total, so they stay out.
+    "EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsIncludingDisposalGroupAndDiscontinuedOperations",
+    "EffectOfExchangeRateOnCashAndCashEquivalentsContinuingOperations",
+    "EffectOfExchangeRateOnCash",
 )
 IS_GP = ("is_gross_profit", "GrossProfit", "Revenues", "CostOfRevenue")
 
