@@ -214,6 +214,7 @@ def pilot_cmd(
     families: dict[str, list[dict]] = {}
     library_rows: list[dict] = []
     gap_rows: list[dict] = []
+    failed: list[dict] = []
     with get_connection() as conn:
         rules = mapping.load_rules(conn)
         rule_concepts = {
@@ -223,31 +224,36 @@ def pilot_cmd(
             ).fetchall()
         }
         for cik, cid in sorted(_ids(conn, ciks).items()):
-            # the ported lane detectors (capex / D&A: one line per concept per filing, or held)
-            m = mapping.map_company(conn, cid, rules, detectors=detectors.DEFAULT)
-            c = checks.check_company(conn, cid)
-            conn.commit()
-            rep = pilot.report_company(
-                conn, cid, Path(calendar), rule_concepts, Path(period_rules)
-            )
-            rep["mapping"], rep["checks"] = m, c
-            rep["accessions"] = [
-                r[0]
-                for r in conn.execute(
-                    "select accession from fsn.filing where company_id = %s order by accepted",
-                    (cid,),
-                ).fetchall()
-            ]
-            for r in rep.pop("_cells"):
-                if r["fsn_end"] < "2014-01-01":
-                    continue  # comparatives before the history floor (CELL-FORMAT §2)
-                fam = OWNERSHIP.get(r["data_point_name"], "unowned")
-                families.setdefault(fam, []).append(r)
-            for g in rep.pop("_gaps"):
-                gap_rows.append({"cik": cik, "company_id": cid, **g})
-            for e in rep.pop("_library"):
-                library_rows.append({"cik": cik, "company_id": cid, **e})
-            reports.append(rep)
+            try:
+                # the ported lane detectors (capex / D&A: one line per concept per filing, or held)
+                m = mapping.map_company(conn, cid, rules, detectors=detectors.DEFAULT)
+                c = checks.check_company(conn, cid)
+                conn.commit()
+                rep = pilot.report_company(
+                    conn, cid, Path(calendar), rule_concepts, Path(period_rules)
+                )
+                rep["mapping"], rep["checks"] = m, c
+                rep["accessions"] = [
+                    r[0]
+                    for r in conn.execute(
+                        "select accession from fsn.filing where company_id = %s order by accepted",
+                        (cid,),
+                    ).fetchall()
+                ]
+                for r in rep.pop("_cells"):
+                    if r["fsn_end"] < "2014-01-01":
+                        continue  # comparatives before the history floor (CELL-FORMAT §2)
+                    fam = OWNERSHIP.get(r["data_point_name"], "unowned")
+                    families.setdefault(fam, []).append(r)
+                for g in rep.pop("_gaps"):
+                    gap_rows.append({"cik": cik, "company_id": cid, **g})
+                for e in rep.pop("_library"):
+                    library_rows.append({"cik": cik, "company_id": cid, **e})
+                reports.append(rep)
+            except Exception as exc:  # noqa: BLE001  one company must not stop the shard
+                conn.rollback()
+                failed.append({"cik": cik, "company_id": cid, "error": repr(exc)[:300]})
+                typer.echo(f"pilot {cik}: FAILED {repr(exc)[:200]}")
             typer.echo(
                 f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
                 f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
@@ -277,6 +283,7 @@ def pilot_cmd(
                 w.writeheader()
                 w.writerows(rows)
     (root / "report.json").write_text(json.dumps(reports, indent=1, default=str))
+    (root / "failed.json").write_text(json.dumps(failed, indent=1))
     lines = [
         "| company | template | keys | valued % | valued or reasoned % | gaps | library % | G2-eligible valued/keys | not G2-eligible (BS, debt) valued/keys | bs rule ids serving cells | missing data points (library) |",
         "|---|---|---|---|---|---|---|---|---|---|---|",

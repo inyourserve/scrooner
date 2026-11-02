@@ -98,3 +98,10 @@ def test_cash_change_identity_accepts_either_fx_layout_but_not_neither():
     assert hd["ok"] and not hd["detail"]["fx_included"]
     assert chk("60")["ok"] and chk("60")["detail"]["fx_included"]  # MSFT layout
     assert not chk("80")["ok"]  # ties neither way: still a failure
+
+
+@pytest.mark.unit
+def test_tolerance_treats_the_inf_decimals_sentinel_as_exact():
+    # FSN dcml sentinel for decimals="INF": a tolerance of 5e-32769 overflows Postgres numeric
+    assert checks.tol_of([32767, -6]) == Decimal(500000)
+    assert checks.tol_of([None]) == Decimal("0.5")
