@@ -1,0 +1,1342 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0001326801-19-000009	61	4		0	US	country/2017	terseLabel	UNITED STATES	0
+0001326801-19-000009	34	14		0	US	country/2017	terseLabel	UNITED STATES	0
+0001326801-19-000009	36	16		0	US	country/2017	terseLabel	UNITED STATES	0
+0001326801-19-000009	47	16		0	OperatingLeasesRentExpenseNet	us-gaap/2018	terseLabel	Operating lease expense	0
+0001326801-19-000009	60	16		0	OperatingLossCarryforwards	us-gaap/2018	terseLabel	Operating loss carryforwards	0
+0001326801-19-000009	45	6		0	OtherAccruedLiabilitiesCurrent	us-gaap/2018	terseLabel	Other current liabilities	0
+0001326801-19-000009	7	5	CF	0	OtherAssetsMember	us-gaap/2018	terseLabel	Other Assets	0
+0001326801-19-000009	56	8		0	DeferredFederalIncomeTaxExpenseBenefit	us-gaap/2018	terseLabel	Federal	0
+0001326801-19-000009	2	11	BS	0	OtherAssetsNoncurrent	us-gaap/2018	terseLabel	Other assets	0
+0001326801-19-000009	56	10		0	DeferredForeignIncomeTaxExpenseBenefit	us-gaap/2018	terseLabel	Foreign	0
+0001326801-19-000009	7	12	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2018	terseLabel	Deferred income taxes	0
+0001326801-19-000009	56	7		0	DeferredIncomeTaxExpenseBenefitContinuingOperationsAbstract	us-gaap/2018	terseLabel	Deferred:	0
+0001326801-19-000009	58	15		0	DeferredIncomeTaxLiabilities	us-gaap/2018	negatedTotalLabel	Total deferred tax liabilities	1
+0001326801-19-000009	45	10		0	DeferredIncomeTaxLiabilitiesNet	us-gaap/2018	terseLabel	Deferred tax liabilities	0
+0001326801-19-000009	56	9		0	DeferredStateAndLocalIncomeTaxExpenseBenefit	us-gaap/2018	terseLabel	State	0
+0001326801-19-000009	58	8		0	DeferredTaxAssetsGross	us-gaap/2018	totalLabel	Total deferred tax assets	0
+0001326801-19-000009	58	16		0	DeferredTaxAssetsLiabilitiesNet	us-gaap/2018	totalLabel	Net deferred tax assets	0
+0001326801-19-000009	58	10		0	DeferredTaxAssetsNet	us-gaap/2018	totalLabel	Deferred tax assets, net of valuation allowance	0
+0001326801-19-000009	58	3		0	DeferredTaxAssetsOperatingLossCarryforwards	us-gaap/2018	terseLabel	Net operating loss carryforward	0
+0001326801-19-000009	58	7		0	DeferredTaxAssetsOther	us-gaap/2018	terseLabel	Other	0
+0001326801-19-000009	5	3	CI	0	OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax	us-gaap/2018	terseLabel	Change in foreign currency translation adjustment, net of tax	0
+0001326801-19-000009	5	2	CI	0	OtherComprehensiveIncomeLossNetOfTaxPeriodIncreaseDecreaseAbstract	us-gaap/2018	terseLabel	Other comprehensive income (loss):	0
+0001326801-19-000009	6	25	EQ	0	OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent	us-gaap/2018	terseLabel	Other comprehensive income (loss)	0
+0001326801-19-000009	58	4		0	DeferredTaxAssetsTaxCreditCarryforwards	us-gaap/2018	terseLabel	Tax credit carryforward	0
+0001326801-19-000009	58	5		0	DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost	us-gaap/2018	terseLabel	Share-based compensation	0
+0001326801-19-000009	58	6		0	DeferredTaxAssetsTaxDeferredExpenseReservesAndAccrualsAccruedLiabilities	us-gaap/2018	terseLabel	Accrued expenses and other liabilities	0
+0001326801-19-000009	58	9		0	DeferredTaxAssetsValuationAllowance	us-gaap/2018	negatedTerseLabel	Less: valuation allowance	1
+0001326801-19-000009	60	15		0	DeferredTaxAssetsValuationAllowance	us-gaap/2018	verboseLabel	Valuation allowance, deferred tax assets	0
+0001326801-19-000009	58	13		0	DeferredTaxLiabilitiesGoodwillAndIntangibleAssetsIntangibleAssets	us-gaap/2018	negatedTerseLabel	Purchased intangible assets	1
+0001326801-19-000009	58	12		0	DeferredTaxLiabilitiesPropertyPlantAndEquipment	us-gaap/2018	negatedTerseLabel	Depreciation and amortization	1
+0001326801-19-000009	58	14		0	DeferredTaxLiabilitiesUndistributedForeignEarnings	us-gaap/2018	negatedTerseLabel	Deferred taxes on foreign income	1
+0001326801-19-000009	60	7		0	InternalRevenueServiceIRSMember	us-gaap/2018	terseLabel	Internal Revenue Service (IRS)	0
+0001326801-19-000009	36	7		0	AccountingStandardsUpdate201602Member	us-gaap/2018	terseLabel	Accounting Standards Update 2016-02	0
+0001326801-19-000009	11	1		0	FairValueDisclosuresTextBlock	us-gaap/2018	terseLabel	Fair Value Measurement	0
+0001326801-19-000009	40	16		0	FairValueInputsLevel1Member	us-gaap/2018	terseLabel	Quoted Prices in Active Markets for Identical Assets (Level 1)	0
+0001326801-19-000009	40	17		0	FairValueInputsLevel2Member	us-gaap/2018	terseLabel	Significant Other Observable Inputs (Level 2)	0
+0001326801-19-000009	40	18		0	FairValueInputsLevel3Member	us-gaap/2018	terseLabel	Significant Unobservable Inputs (Level 3)	0
+0001326801-19-000009	45	2		0	EmployeeRelatedLiabilitiesCurrent	us-gaap/2018	terseLabel	Accrued compensation and benefits	0
+0001326801-19-000009	47	18		0	ContractualObligation	us-gaap/2018	terseLabel	Non-cancelable contractual commitment	0
+0001326801-19-000009	2	15	BS	0	AccountsPayableCurrent	us-gaap/2018	terseLabel	Accounts payable	0
+0001326801-19-000009	47	20		0	LossContingencyNewClaimsFiledNumber	us-gaap/2018	terseLabel	Number of class actions filed	0
+0001326801-19-000009	46	7		0	LineOfCredit	us-gaap/2018	terseLabel	Line of credit facility, amount outstanding	0
+0001326801-19-000009	22	2		0	ContractWithCustomerAssetAndLiabilityTableTextBlock	us-gaap/2018	terseLabel	Deferred Revenue and Deposits	0
+0001326801-19-000009	46	6		0	LineOfCreditFacilityMaximumBorrowingCapacity	us-gaap/2018	terseLabel	Line of credit facility, maximum borrowing capacity	0
+0001326801-19-000009	37	3		0	ClassOfStockDomain	us-gaap/2018	terseLabel	Class of Stock [Domain]	0
+0001326801-19-000009	3	3	BS	1	ClassOfStockDomain	us-gaap/2018	terseLabel	Class of Stock [Domain]	0
+0001326801-19-000009	48	3		0	ClassOfStockDomain	us-gaap/2018	terseLabel	Class of Stock [Domain]	0
+0001326801-19-000009	1	3	CP	0	ClassOfStockDomain	us-gaap/2018	terseLabel	Class of Stock [Domain]	0
+0001326801-19-000009	51	3		0	ClassOfStockDomain	us-gaap/2018	terseLabel	Class of Stock [Domain]	0
+0001326801-19-000009	48	6		0	ClassOfStockLineItems	us-gaap/2018	terseLabel	Class of Stock	0
+0001326801-19-000009	34	19		0	DisaggregationOfRevenueLineItems	us-gaap/2018	terseLabel	Disaggregation of Revenue [Line Items]	0
+0001326801-19-000009	34	1		0	DisaggregationOfRevenueTable	us-gaap/2018	terseLabel	Disaggregation of Revenue [Table]	0
+0001326801-19-000009	22	1		0	DisaggregationOfRevenueTableTextBlock	us-gaap/2018	terseLabel	Disaggregation of Revenue	0
+0001326801-19-000009	40	15		0	FairValueMeasurementsFairValueHierarchyDomain	us-gaap/2018	terseLabel	Fair Value, Measurements, Fair Value Hierarchy [Domain]	0
+0001326801-19-000009	7	14	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2018	terseLabel	Changes in assets and liabilities:	0
+0001326801-19-000009	7	19	CF	0	IncreaseDecreaseInOtherAccountsPayable	us-gaap/2018	terseLabel	Partners payable	0
+0001326801-19-000009	7	22	CF	0	IncreaseDecreaseInOtherNoncurrentLiabilities	us-gaap/2018	terseLabel	Other liabilities	0
+0001326801-19-000009	7	17	CF	0	IncreaseDecreaseInOtherOperatingAssets	us-gaap/2018	negatedLabel	Other assets	1
+0001326801-19-000009	34	12		0	AsiaPacificMember	srt/2018	terseLabel	Asia-Pacific	0
+0001326801-19-000009	53	7		0	EmployeeServiceShareBasedCompensationNonvestedAwardsTotalCompensationCostNotYetRecognized	us-gaap/2018	verboseLabel	Future period share-based compensation expense	0
+0001326801-19-000009	53	8		0	EmployeeServiceShareBasedCompensationNonvestedAwardsTotalCompensationCostNotYetRecognizedPeriodForRecognition1	us-gaap/2018	verboseLabel	Future period share-based compensation expense period of recognition (in years)	0
+0001326801-19-000009	51	7		0	EmployeeStockOptionMember	us-gaap/2018	verboseLabel	Employee Stock Option	0
+0001326801-19-000009	37	8		0	EmployeeStockOptionMember	us-gaap/2018	terseLabel	Employee Stock Option	0
+0001326801-19-000009	36	32		0	ForeignCurrencyTransactionGainLossBeforeTax	us-gaap/2018	negatedLabel	Foreign currency exchange losses, net	1
+0001326801-19-000009	54	3		0	ForeignCurrencyTransactionGainLossBeforeTax	us-gaap/2018	terseLabel	Foreign currency exchange losses, net	0
+0001326801-19-000009	21	14		0	ForeignCurrencyTransactionsAndTranslationsPolicyTextBlock	us-gaap/2018	terseLabel	Foreign Currency	0
+0001326801-19-000009	54	1		0	InvestmentIncomeInterest	us-gaap/2018	terseLabel	Interest income	0
+0001326801-19-000009	7	16	CF	0	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2018	negatedLabel	Prepaid expenses and other current assets	1
+0001326801-19-000009	2	16	BS	0	AccountsPayableOtherCurrent	us-gaap/2018	terseLabel	Partners payable	0
+0001326801-19-000009	2	5	BS	0	AccountsReceivableNetCurrent	us-gaap/2018	terseLabel	Accounts receivable, net of allowances of $229 and $189 as of December 31, 2018 and 2017, respectively	0
+0001326801-19-000009	41	14		0	Depreciation	us-gaap/2018	verboseLabel	Depreciation expense	0
+0001326801-19-000009	7	10	CF	0	DepreciationDepletionAndAmortization	us-gaap/2018	terseLabel	Depreciation and amortization	0
+0001326801-19-000009	35	1		0	ContractWithCustomerLiability	us-gaap/2018	terseLabel	Deferred revenue	0
+0001326801-19-000009	2	18	BS	0	ContractWithCustomerLiabilityCurrent	us-gaap/2018	terseLabel	Deferred revenue and deposits	0
+0001326801-19-000009	2	12	BS	0	Assets	us-gaap/2018	totalLabel	Total assets	0
+0001326801-19-000009	2	1	BS	0	AssetsAbstract	us-gaap/2018	terseLabel	Assets	0
+0001326801-19-000009	2	7	BS	0	AssetsCurrent	us-gaap/2018	totalLabel	Total current assets	0
+0001326801-19-000009	2	2	BS	0	AssetsCurrentAbstract	us-gaap/2018	terseLabel	Current assets:	0
+0001326801-19-000009	3	7	BS	1	AssetsCurrentAbstract	us-gaap/2018	terseLabel	Current assets:	0
+0001326801-19-000009	26	1		0	PropertyPlantAndEquipmentTextBlock	us-gaap/2018	terseLabel	Property and Equipment	0
+0001326801-19-000009	41	3		0	PropertyPlantAndEquipmentTypeDomain	us-gaap/2018	terseLabel	Property, Plant and Equipment, Type [Domain]	0
+0001326801-19-000009	36	18		0	PropertyPlantAndEquipmentTypeDomain	us-gaap/2018	terseLabel	Property, Plant and Equipment, Type [Domain]	0
+0001326801-19-000009	36	29		0	PropertyPlantAndEquipmentUsefulLife	us-gaap/2018	terseLabel	Useful life of property and equipment	0
+0001326801-19-000009	6	9	EQ	0	IncreaseDecreaseInStockholdersEquityRollForward	us-gaap/2018	terseLabel	Increase (Decrease) in Stockholders' Equity [Roll Forward]	0
+0001326801-19-000009	55	1		0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic	us-gaap/2018	terseLabel	Domestic	0
+0001326801-19-000009	55	3		0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest	us-gaap/2018	totalLabel	Income before provision for income taxes	0
+0001326801-19-000009	4	18	IS	0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest	us-gaap/2018	totalLabel	Income before provision for income taxes	0
+0001326801-19-000009	55	2		0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign	us-gaap/2018	terseLabel	Foreign	0
+0001326801-19-000009	21	7		0	FairValueOfFinancialInstrumentsPolicy	us-gaap/2018	terseLabel	Fair Value of Financial Instruments	0
+0001326801-19-000009	4	29	IS	0	IncomeStatementCompensationItemsAbstract	us-gaap/2018	terseLabel	Share-based compensation expense included in costs and expenses:	0
+0001326801-19-000009	4	2	IS	0	IncomeStatementLocationAxis	us-gaap/2018	terseLabel	Income Statement Location [Axis]	0
+0001326801-19-000009	4	3	IS	0	IncomeStatementLocationDomain	us-gaap/2018	terseLabel	Income Statement Location [Domain]	0
+0001326801-19-000009	60	5		0	IncomeTaxAuthorityAxis	us-gaap/2018	terseLabel	Income Tax Authority [Axis]	0
+0001326801-19-000009	60	6		0	IncomeTaxAuthorityDomain	us-gaap/2018	terseLabel	Income Tax Authority [Domain]	0
+0001326801-19-000009	19	1		0	IncomeTaxDisclosureTextBlock	us-gaap/2018	terseLabel	Income Taxes	0
+0001326801-19-000009	7	50	CF	0	IncomeTaxesPaidNet	us-gaap/2018	terseLabel	Income taxes, net	0
+0001326801-19-000009	60	23		0	IncomeTaxExaminationEstimateOfPossibleLoss	us-gaap/2018	terseLabel	Income tax examination, estimate of possible additional tax liability	0
+0001326801-19-000009	60	20		0	IncomeTaxExaminationPenaltiesAndInterestAccrued	us-gaap/2018	terseLabel	Unrecognized tax benefits, interest and penalties accrued	0
+0001326801-19-000009	56	12		0	IncomeTaxExpenseBenefit	us-gaap/2018	totalLabel	Provision for income taxes	0
+0001326801-19-000009	4	19	IS	0	IncomeTaxExpenseBenefit	us-gaap/2018	terseLabel	Provision for income taxes	0
+0001326801-19-000009	56	1		0	IncomeTaxExpenseBenefitContinuingOperationsAbstract	us-gaap/2018	terseLabel	Income Tax Expense (Benefit), Continuing Operations [Abstract]	0
+0001326801-19-000009	2	22	BS	0	CommitmentsAndContingencies	us-gaap/2018	terseLabel	Commitments and contingencies	0
+0001326801-19-000009	16	1		0	CommitmentsAndContingenciesDisclosureTextBlock	us-gaap/2018	terseLabel	Commitments and Contingencies	0
+0001326801-19-000009	21	11		0	CommitmentsAndContingenciesPolicyTextBlock	us-gaap/2018	terseLabel	Loss Contingencies	0
+0001326801-19-000009	43	7		0	PatentsMember	us-gaap/2018	terseLabel	Acquired patents	0
+0001326801-19-000009	21	4		0	IncomeTaxPolicyTextBlock	us-gaap/2018	terseLabel	Income Taxes	0
+0001326801-19-000009	36	22		0	RangeAxis	srt/2018	terseLabel	Range [Axis]	0
+0001326801-19-000009	47	2		0	RangeAxis	srt/2018	terseLabel	Range [Axis]	0
+0001326801-19-000009	60	9		0	RangeAxis	srt/2018	terseLabel	Range [Axis]	0
+0001326801-19-000009	60	10		0	RangeMember	srt/2018	terseLabel	Range [Domain]	0
+0001326801-19-000009	47	3		0	RangeMember	srt/2018	terseLabel	Range [Domain]	0
+0001326801-19-000009	36	23		0	RangeMember	srt/2018	terseLabel	Range [Domain]	0
+0001326801-19-000009	37	4		0	CommonClassAMember	us-gaap/2018	verboseLabel	Class A Common Stock	0
+0001326801-19-000009	3	4	BS	1	CommonClassAMember	us-gaap/2018	verboseLabel	Class A Common Stock	0
+0001326801-19-000009	48	4		0	CommonClassAMember	us-gaap/2018	terseLabel	Class A Common Stock	0
+0001326801-19-000009	1	4	CP	0	CommonClassAMember	us-gaap/2018	verboseLabel	Class A Common Stock	0
+0001326801-19-000009	51	4		0	CommonClassAMember	us-gaap/2018	terseLabel	Class A Common Stock	0
+0001326801-19-000009	1	5	CP	0	CommonClassBMember	us-gaap/2018	verboseLabel	Class B Common Stock	0
+0001326801-19-000009	48	5		0	CommonClassBMember	us-gaap/2018	terseLabel	Class B Common Stock	0
+0001326801-19-000009	3	5	BS	1	CommonClassBMember	us-gaap/2018	verboseLabel	Class B Common Stock	0
+0001326801-19-000009	37	5		0	CommonClassBMember	us-gaap/2018	terseLabel	Class B Common Stock	0
+0001326801-19-000009	50	11		0	CommonStockCapitalSharesReservedForFutureIssuance	us-gaap/2018	terseLabel	2012 equity incentive plan shares reserved for future issuance (in shares)	0
+0001326801-19-000009	37	31		0	IncrementalCommonSharesAttributableToShareBasedPaymentArrangements	us-gaap/2018	terseLabel	Share based payment arrangements (in shares)	0
+0001326801-19-000009	24	2		0	InvestmentsClassifiedByContractualMaturityDateTableTextBlock	us-gaap/2018	terseLabel	Marketable Securities by Contractual Maturities	0
+0001326801-19-000009	40	22		0	AssetsFairValueDisclosure	us-gaap/2018	totalLabel	Total cash equivalents and marketable securities	0
+0001326801-19-000009	1	1	CP	0	EntitiesTable	dei/2018	terseLabel	Entities [Table]	0
+0001326801-19-000009	1	17	CP	0	EntityCentralIndexKey	dei/2018	terseLabel	Entity Central Index Key	0
+0001326801-19-000009	1	20	CP	0	EntityCommonStockSharesOutstanding	dei/2018	terseLabel	Entity Common Stock, Shares Outstanding	0
+0001326801-19-000009	1	24	CP	0	EntityCurrentReportingStatus	dei/2018	terseLabel	Entity Current Reporting Status	0
+0001326801-19-000009	6	4	EQ	0	CommonStockMember	us-gaap/2018	terseLabel	Class A and Class B Common Stock	0
+0001326801-19-000009	48	8		0	CommonStockParOrStatedValuePerShare	us-gaap/2018	terseLabel	Common stock, par value (in dollars per share)	0
+0001326801-19-000009	3	10	BS	1	CommonStockParOrStatedValuePerShare	us-gaap/2018	terseLabel	Common stock, par value (in dollars per share)	0
+0001326801-19-000009	3	11	BS	1	CommonStockSharesAuthorized	us-gaap/2018	terseLabel	Common stock, shares authorized (in shares)	0
+0001326801-19-000009	48	7		0	CommonStockSharesAuthorized	us-gaap/2018	terseLabel	Common stock, shares authorized (in shares)	0
+0001326801-19-000009	48	10		0	CommonStockSharesIssued	us-gaap/2018	verboseLabel	Common stock, shares, issued (in shares)	0
+0001326801-19-000009	3	12	BS	1	CommonStockSharesIssued	us-gaap/2018	verboseLabel	Common stock, shares, issued (in shares)	0
+0001326801-19-000009	3	13	BS	1	CommonStockSharesOutstanding	us-gaap/2018	terseLabel	Common stock, shares, outstanding (in shares)	0
+0001326801-19-000009	6	10	EQ	0	CommonStockSharesOutstanding	us-gaap/2018	periodStartLabel	Common stock, shares outstanding beginning (in shares)	0
+0001326801-19-000009	6	27	EQ	0	CommonStockSharesOutstanding	us-gaap/2018	periodEndLabel	Common stock, shares outstanding ending (in shares)	0
+0001326801-19-000009	48	11		0	CommonStockSharesOutstanding	us-gaap/2018	terseLabel	Common stock, shares, outstanding (in shares)	0
+0001326801-19-000009	2	24	BS	0	CommonStockValue	us-gaap/2018	terseLabel	Common stock, $0.000006 par value; 5,000 million Class A shares authorized, 2,385 million and 2,397 million shares issued and outstanding, as of December 31, 2018 and December 31, 2017, respectively; 4,141 million Class B shares authorized, 469 million and 509 million shares issued and outstanding, as of December 31, 2018 and December 31, 2017, respectively.	0
+0001326801-19-000009	47	5		0	MaximumMember	srt/2018	verboseLabel	Maximum	0
+0001326801-19-000009	36	25		0	MaximumMember	srt/2018	verboseLabel	Maximum	0
+0001326801-19-000009	60	12		0	MaximumMember	srt/2018	verboseLabel	Maximum	0
+0001326801-19-000009	45	1		0	AccruedLiabilitiesAndOtherLiabilitiesAbstract	us-gaap/2018	terseLabel	Accrued Liabilities and Other Current Liabilities [Abstract]	0
+0001326801-19-000009	45	7		0	AccruedLiabilitiesCurrent	us-gaap/2018	totalLabel	Accrued expenses and other current liabilities	0
+0001326801-19-000009	2	17	BS	0	AccruedLiabilitiesCurrent	us-gaap/2018	terseLabel	Accrued expenses and other current liabilities	0
+0001326801-19-000009	2	6	BS	0	PrepaidExpenseAndOtherAssetsCurrent	us-gaap/2018	terseLabel	Prepaid expenses and other current assets	0
+0001326801-19-000009	7	4	CF	0	PrepaidExpensesAndOtherCurrentAssetsMember	us-gaap/2018	terseLabel	Prepaid Expenses and Other Current Assets	0
+0001326801-19-000009	7	18	CF	0	IncreaseDecreaseInAccountsPayable	us-gaap/2018	terseLabel	Accounts payable	0
+0001326801-19-000009	7	15	CF	0	IncreaseDecreaseInAccountsReceivable	us-gaap/2018	negatedLabel	Accounts receivable	1
+0001326801-19-000009	7	20	CF	0	IncreaseDecreaseInAccruedLiabilities	us-gaap/2018	terseLabel	Accrued expenses and other current liabilities	0
+0001326801-19-000009	32	2		0	ScheduleOfComponentsOfIncomeTaxExpenseBenefitTableTextBlock	us-gaap/2018	terseLabel	Schedule of Provision for Income Taxes	0
+0001326801-19-000009	58	2		0	ComponentsOfDeferredTaxAssetsAbstract	us-gaap/2018	terseLabel	Deferred tax assets:	0
+0001326801-19-000009	58	1		0	ComponentsOfDeferredTaxAssetsAndLiabilitiesAbstract	us-gaap/2018	terseLabel	Components of Deferred Tax Assets and Liabilities [Abstract]	0
+0001326801-19-000009	58	11		0	ComponentsOfDeferredTaxLiabilitiesAbstract	us-gaap/2018	terseLabel	Deferred tax liabilities:	0
+0001326801-19-000009	5	5	CI	0	ComprehensiveIncomeNetOfTax	us-gaap/2018	totalLabel	Comprehensive income	0
+0001326801-19-000009	41	4		0	LandMember	us-gaap/2018	terseLabel	Land	0
+0001326801-19-000009	7	38	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2018	totalLabel	Net cash used in financing activities	0
+0001326801-19-000009	7	32	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2018	terseLabel	Cash flows from financing activities	0
+0001326801-19-000009	7	31	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2018	totalLabel	Net cash used in investing activities	0
+0001326801-19-000009	7	24	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2018	terseLabel	Cash flows from investing activities	0
+0001326801-19-000009	7	23	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2018	totalLabel	Net cash provided by operating activities	0
+0001326801-19-000009	7	7	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2018	terseLabel	Cash flows from operating activities	0
+0001326801-19-000009	1	19	CP	0	EntityFilerCategory	dei/2018	terseLabel	Entity Filer Category	0
+0001326801-19-000009	1	6	CP	0	EntityInformationLineItems	dei/2018	terseLabel	Entity Information	0
+0001326801-19-000009	1	21	CP	0	EntityPublicFloat	dei/2018	terseLabel	Entity Public Float	0
+0001326801-19-000009	1	16	CP	0	EntityRegistrantName	dei/2018	terseLabel	Entity Registrant Name	0
+0001326801-19-000009	21	12		0	BusinessCombinationsPolicy	us-gaap/2018	terseLabel	Business Combinations	0
+0001326801-19-000009	4	20	IS	0	NetIncomeLoss	us-gaap/2018	totalLabel	Net income	0
+0001326801-19-000009	7	8	CF	0	NetIncomeLoss	us-gaap/2018	terseLabel	Net income	0
+0001326801-19-000009	6	26	EQ	0	NetIncomeLoss	us-gaap/2018	terseLabel	Net income	0
+0001326801-19-000009	37	13		0	NetIncomeLoss	us-gaap/2018	terseLabel	Net income	0
+0001326801-19-000009	5	1	CI	0	NetIncomeLoss	us-gaap/2018	verboseLabel	Net income	0
+0001326801-19-000009	37	15		0	NetIncomeLossAvailableToCommonStockholdersBasic	us-gaap/2018	totalLabel	Net income attributable to Class A and Class B common stockholders	0
+0001326801-19-000009	37	23		0	NetIncomeLossAvailableToCommonStockholdersBasic	us-gaap/2018	terseLabel	Net income attributable to common stockholders	0
+0001326801-19-000009	4	22	IS	0	NetIncomeLossAvailableToCommonStockholdersBasic	us-gaap/2018	totalLabel	Net income attributable to Class A and Class B common stockholders	0
+0001326801-19-000009	37	12		0	NetIncomeLossAvailableToCommonStockholdersBasicAbstract	us-gaap/2018	terseLabel	Numerator	0
+0001326801-19-000009	37	27		0	NetIncomeLossAvailableToCommonStockholdersDiluted	us-gaap/2018	totalLabel	Net income attributable to common stockholders for diluted EPS	0
+0001326801-19-000009	37	22		0	NetIncomeLossAvailableToCommonStockholdersDilutedAbstract	us-gaap/2018	terseLabel	Numerator	0
+0001326801-19-000009	7	21	CF	0	IncreaseDecreaseInContractWithCustomerLiability	us-gaap/2018	terseLabel	Deferred revenue and deposits	0
+0001326801-19-000009	61	3		0	SegmentGeographicalDomain	srt/2018	terseLabel	Geographical [Domain]	0
+0001326801-19-000009	34	9		0	SegmentGeographicalDomain	srt/2018	terseLabel	Geographical [Domain]	0
+0001326801-19-000009	36	15		0	SegmentGeographicalDomain	srt/2018	terseLabel	Geographical [Domain]	0
+0001326801-19-000009	41	7		0	ComputerEquipmentMember	us-gaap/2018	terseLabel	Network equipment	0
+0001326801-19-000009	36	9		0	ConcentrationRiskBenchmarkDomain	us-gaap/2018	terseLabel	Concentration Risk Benchmark [Domain]	0
+0001326801-19-000009	34	3		0	ConcentrationRiskBenchmarkDomain	us-gaap/2018	terseLabel	Concentration Risk Benchmark [Domain]	0
+0001326801-19-000009	34	2		0	ConcentrationRiskByBenchmarkAxis	us-gaap/2018	terseLabel	Concentration Risk Benchmark [Axis]	0
+0001326801-19-000009	36	8		0	ConcentrationRiskByBenchmarkAxis	us-gaap/2018	terseLabel	Concentration Risk Benchmark [Axis]	0
+0001326801-19-000009	36	11		0	ConcentrationRiskByTypeAxis	us-gaap/2018	terseLabel	Concentration Risk Type [Axis]	0
+0001326801-19-000009	34	5		0	ConcentrationRiskByTypeAxis	us-gaap/2018	terseLabel	Concentration Risk Type [Axis]	0
+0001326801-19-000009	21	15		0	ConcentrationRiskCreditRisk	us-gaap/2018	terseLabel	Credit Risk and Concentration	0
+0001326801-19-000009	36	33		0	ConcentrationRiskPercentage1	us-gaap/2018	terseLabel	Concentration risk percentage	0
+0001326801-19-000009	34	21		0	ConcentrationRiskPercentage1	us-gaap/2018	terseLabel	Concentration risk percentage	0
+0001326801-19-000009	34	6		0	ConcentrationRiskTypeDomain	us-gaap/2018	terseLabel	Concentration Risk Type [Domain]	0
+0001326801-19-000009	36	12		0	ConcentrationRiskTypeDomain	us-gaap/2018	terseLabel	Concentration Risk Type [Domain]	0
+0001326801-19-000009	1	23	CP	0	EntityVoluntaryFilers	dei/2018	terseLabel	Entity Voluntary Filers	0
+0001326801-19-000009	1	22	CP	0	EntityWellKnownSeasonedIssuer	dei/2018	terseLabel	Well-known Seasoned Issuer	0
+0001326801-19-000009	41	12		0	AccumulatedDepreciationDepletionAndAmortizationPropertyPlantAndEquipment	us-gaap/2018	negatedLabel	Less: Accumulated depreciation	1
+0001326801-19-000009	7	30	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2018	negatedLabel	Other investing activities, net	1
+0001326801-19-000009	7	35	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2018	negatedTerseLabel	Repurchases of Class A common stock	1
+0001326801-19-000009	47	4		0	MinimumMember	srt/2018	verboseLabel	Minimum	0
+0001326801-19-000009	36	24		0	MinimumMember	srt/2018	verboseLabel	Minimum	0
+0001326801-19-000009	60	11		0	MinimumMember	srt/2018	verboseLabel	Minimum	0
+0001326801-19-000009	41	6		0	LeaseholdImprovementsMember	us-gaap/2018	terseLabel	Leasehold improvements	0
+0001326801-19-000009	47	7		0	LeasesAbstract	us-gaap/2018	terseLabel	Leases [Abstract]	0
+0001326801-19-000009	15	1		0	LongTermDebtTextBlock	us-gaap/2018	terseLabel	Long-term Debt	0
+0001326801-19-000009	46	2		0	LongtermDebtTypeAxis	us-gaap/2018	terseLabel	Long-term Debt, Type [Axis]	0
+0001326801-19-000009	46	3		0	LongtermDebtTypeDomain	us-gaap/2018	terseLabel	Long-term Debt, Type [Domain]	0
+0001326801-19-000009	38	19		0	AvailableForSaleDebtSecuritiesAccumulatedGrossUnrealizedLossBeforeTax	us-gaap/2018	negatedTerseLabel	Gross unrealized loss on marketable securities	1
+0001326801-19-000009	6	3	EQ	0	EquityComponentDomain	us-gaap/2018	terseLabel	Equity Component [Domain]	0
+0001326801-19-000009	36	31		0	AccumulatedOtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentNetOfTax	us-gaap/2018	negatedLabel	Cumulative translation loss, net of tax	1
+0001326801-19-000009	2	26	BS	0	AccumulatedOtherComprehensiveIncomeLossNetOfTax	us-gaap/2018	terseLabel	Accumulated other comprehensive loss	0
+0001326801-19-000009	6	6	EQ	0	AccumulatedOtherComprehensiveIncomeMember	us-gaap/2018	terseLabel	Accumulated Other Comprehensive Loss	0
+0001326801-19-000009	43	11		0	AcquiredFiniteLivedIntangibleAssetsWeightedAverageUsefulLife	us-gaap/2018	verboseLabel	Weighted-Average Remaining Useful Lives (in years)	0
+0001326801-19-000009	47	19		0	LongtermPurchaseCommitmentPeriod	us-gaap/2018	terseLabel	Contractual obligation, period	0
+0001326801-19-000009	41	9		0	ConstructionInProgressMember	us-gaap/2018	terseLabel	Construction in progress	0
+0001326801-19-000009	21	10		0	LesseeLeasesPolicyTextBlock	us-gaap/2018	terseLabel	Lease Obligations	0
+0001326801-19-000009	38	10		0	MoneyMarketFundsMember	us-gaap/2018	terseLabel	Money market funds	0
+0001326801-19-000009	40	9		0	MoneyMarketFundsMember	us-gaap/2018	terseLabel	Money market funds	0
+0001326801-19-000009	2	9	BS	0	IntangibleAssetsNetExcludingGoodwill	us-gaap/2018	terseLabel	Intangible assets, net	0
+0001326801-19-000009	7	28	CF	0	ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities	us-gaap/2018	terseLabel	Maturities of marketable securities	0
+0001326801-19-000009	60	21		0	UnrecognizedTaxBenefits	us-gaap/2018	terseLabel	Unrecognized tax benefits	0
+0001326801-19-000009	59	2		0	UnrecognizedTaxBenefits	us-gaap/2018	periodStartLabel	Gross unrecognized tax benefits-beginning of period	0
+0001326801-19-000009	59	7		0	UnrecognizedTaxBenefits	us-gaap/2018	periodEndLabel	Gross unrecognized tax benefits-end of period	0
+0001326801-19-000009	59	4		0	UnrecognizedTaxBenefitsDecreasesResultingFromPriorPeriodTaxPositions	us-gaap/2018	negatedTerseLabel	Decreases related to prior year tax positions	1
+0001326801-19-000009	59	6		0	UnrecognizedTaxBenefitsDecreasesResultingFromSettlementsWithTaxingAuthorities	us-gaap/2018	negatedTerseLabel	Decreases related to settlements of prior year tax positions	1
+0001326801-19-000009	59	5		0	UnrecognizedTaxBenefitsIncreasesResultingFromCurrentPeriodTaxPositions	us-gaap/2018	terseLabel	Increases related to current year tax positions	0
+0001326801-19-000009	59	3		0	UnrecognizedTaxBenefitsIncreasesResultingFromPriorPeriodTaxPositions	us-gaap/2018	terseLabel	Increases related to prior year tax positions	0
+0001326801-19-000009	36	10		0	SalesRevenueServicesNetMember	us-gaap/2018	terseLabel	Sales revenue	0
+0001326801-19-000009	34	4		0	SalesRevenueServicesNetMember	us-gaap/2018	verboseLabel	Total Revenue	0
+0001326801-19-000009	21	17		0	NewAccountingPronouncementsPolicyPolicyTextBlock	us-gaap/2018	terseLabel	Recent Accounting Pronouncements Adopted and Not Yet Adopted	0
+0001326801-19-000009	7	33	CF	0	PaymentsRelatedToTaxWithholdingForShareBasedCompensation	us-gaap/2018	negatedLabel	Taxes paid related to net share settlement of equity awards	1
+0001326801-19-000009	39	2		0	AvailableForSaleSecuritiesDebtMaturitiesAfterOneThroughFiveYearsFairValue	us-gaap/2018	terseLabel	Due after one year to five years	0
+0001326801-19-000009	41	15		0	CapitalLeasedAssetsGross	us-gaap/2018	terseLabel	Assets acquired under capital lease agreements	0
+0001326801-19-000009	7	37	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2018	terseLabel	Other financing activities, net	0
+0001326801-19-000009	2	25	BS	0	AdditionalPaidInCapital	us-gaap/2018	terseLabel	Additional paid-in capital	0
+0001326801-19-000009	6	5	EQ	0	AdditionalPaidInCapitalMember	us-gaap/2018	terseLabel	Additional Paid-In Capital	0
+0001326801-19-000009	36	4		0	ScenarioForecastMember	us-gaap/2018	terseLabel	Scenario, Forecast	0
+0001326801-19-000009	7	36	CF	0	ProceedsFromRepaymentsOfBankOverdrafts	us-gaap/2018	terseLabel	Net change in overdraft in cash pooling entities	0
+0001326801-19-000009	36	3		0	ScenarioUnspecifiedDomain	us-gaap/2018	terseLabel	Scenario, Unspecified [Domain]	0
+0001326801-19-000009	39	1		0	AvailableForSaleSecuritiesDebtMaturitiesWithinOneYearFairValue	us-gaap/2018	terseLabel	Due in one year	0
+0001326801-19-000009	2	4	BS	0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2018	terseLabel	Marketable securities	0
+0001326801-19-000009	38	17		0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2018	terseLabel	Marketable securities	0
+0001326801-19-000009	40	21		0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2018	terseLabel	Marketable securities	0
+0001326801-19-000009	39	3		0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2018	totalLabel	Total	0
+0001326801-19-000009	7	27	CF	0	ProceedsFromSaleOfAvailableForSaleSecuritiesDebt	us-gaap/2018	terseLabel	Sales of marketable securities	0
+0001326801-19-000009	60	8		0	StateAndLocalJurisdictionMember	us-gaap/2018	terseLabel	State and Local Jurisdiction	0
+0001326801-19-000009	1	2	CP	0	StatementClassOfStockAxis	us-gaap/2018	terseLabel	Class of Stock [Axis]	0
+0001326801-19-000009	51	2		0	StatementClassOfStockAxis	us-gaap/2018	terseLabel	Class of Stock [Axis]	0
+0001326801-19-000009	48	2		0	StatementClassOfStockAxis	us-gaap/2018	terseLabel	Class of Stock [Axis]	0
+0001326801-19-000009	3	2	BS	1	StatementClassOfStockAxis	us-gaap/2018	terseLabel	Class of Stock [Axis]	0
+0001326801-19-000009	37	2		0	StatementClassOfStockAxis	us-gaap/2018	terseLabel	Class of Stock [Axis]	0
+0001326801-19-000009	6	2	EQ	0	StatementEquityComponentsAxis	us-gaap/2018	terseLabel	Equity Components [Axis]	0
+0001326801-19-000009	61	2		0	StatementGeographicalAxis	srt/2018	terseLabel	Geographical [Axis]	0
+0001326801-19-000009	36	14		0	StatementGeographicalAxis	srt/2018	terseLabel	Geographical [Axis]	0
+0001326801-19-000009	34	8		0	StatementGeographicalAxis	srt/2018	terseLabel	Geographical [Axis]	0
+0001326801-19-000009	4	8	IS	0	StatementLineItems	us-gaap/2018	terseLabel	Statement	0
+0001326801-19-000009	3	6	BS	1	StatementLineItems	us-gaap/2018	terseLabel	Statement	0
+0001326801-19-000009	6	8	EQ	0	StatementLineItems	us-gaap/2018	terseLabel	Statement	0
+0001326801-19-000009	7	6	CF	0	StatementLineItems	us-gaap/2018	terseLabel	Statement	0
+0001326801-19-000009	36	2		0	StatementScenarioAxis	us-gaap/2018	terseLabel	Scenario [Axis]	0
+0001326801-19-000009	3	1	BS	1	StatementTable	us-gaap/2018	terseLabel	Statement [Table]	0
+0001326801-19-000009	4	1	IS	0	StatementTable	us-gaap/2018	terseLabel	Statement [Table]	0
+0001326801-19-000009	7	1	CF	0	StatementTable	us-gaap/2018	terseLabel	Statement [Table]	0
+0001326801-19-000009	6	1	EQ	0	StatementTable	us-gaap/2018	terseLabel	Statement [Table]	0
+0001326801-19-000009	36	5		0	AdjustmentsForNewAccountingPronouncementsAxis	us-gaap/2018	terseLabel	Adjustments for New Accounting Pronouncements [Axis]	0
+0001326801-19-000009	6	21	EQ	0	AdjustmentsRelatedToTaxWithholdingForShareBasedCompensation	us-gaap/2018	negatedLabel	Shares withheld related to net share settlement, value	1
+0001326801-19-000009	7	26	CF	0	PaymentsToAcquireMarketableSecurities	us-gaap/2018	negatedLabel	Purchases of marketable securities	1
+0001326801-19-000009	7	25	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2018	negatedLabel	Purchases of property and equipment, net	1
+0001326801-19-000009	41	16		0	CapitalLeasesLesseeBalanceSheetAssetsByMajorClassAccumulatedDeprecation	us-gaap/2018	terseLabel	Accumulated depreciation of property and equipment acquired under capital leases	0
+0001326801-19-000009	38	16		0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2018	terseLabel	Cash and cash equivalents	0
+0001326801-19-000009	7	44	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2018	terseLabel	Cash and cash equivalents	0
+0001326801-19-000009	2	3	BS	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2018	terseLabel	Cash and cash equivalents	0
+0001326801-19-000009	40	7		0	CashAndCashEquivalentsAxis	us-gaap/2018	terseLabel	Cash and Cash Equivalents [Axis]	0
+0001326801-19-000009	38	7		0	CashAndCashEquivalentsAxis	us-gaap/2018	terseLabel	Cash and Cash Equivalents [Axis]	0
+0001326801-19-000009	40	20		0	CashAndCashEquivalentsFairValueDisclosure	us-gaap/2018	terseLabel	Cash equivalents	0
+0001326801-19-000009	10	1		0	CashCashEquivalentsAndShortTermInvestmentsTextBlock	us-gaap/2018	terseLabel	Cash and Cash Equivalents, and Marketable Securities	0
+0001326801-19-000009	7	41	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2018	periodStartLabel	Cash, cash equivalents, and restricted cash at beginning of the period	0
+0001326801-19-000009	7	42	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2018	periodEndLabel	Cash, cash equivalents, and restricted cash at end of the period	0
+0001326801-19-000009	7	46	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2018	totalLabel	Total cash, cash equivalents, and restricted cash	0
+0001326801-19-000009	7	40	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect	us-gaap/2018	totalLabel	Net increase (decrease) in cash, cash equivalents, and restricted cash	0
+0001326801-19-000009	7	43	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffectAbstract	us-gaap/2018	terseLabel	Reconciliation of cash, cash equivalents, and restricted cash to the consolidated balance sheets	0
+0001326801-19-000009	7	51	CF	0	CashFlowNoncashInvestingAndFinancingActivitiesDisclosureAbstract	us-gaap/2018	terseLabel	Non-cash investing and financing activities:	0
+0001326801-19-000009	38	9		0	CashMember	us-gaap/2018	terseLabel	Cash	0
+0001326801-19-000009	36	35		0	ProvisionForDoubtfulAccounts	us-gaap/2018	terseLabel	Bad debt expense	0
+0001326801-19-000009	6	22	EQ	0	AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue	us-gaap/2018	terseLabel	Share-based compensation, related to employee share-based awards	0
+0001326801-19-000009	7	9	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2018	terseLabel	Adjustments to reconcile net income to net cash provided by operating activities:	0
+0001326801-19-000009	53	4		0	RestrictedStockUnitsRSUMember	us-gaap/2018	terseLabel	Restricted Stock Units (RSUs)	0
+0001326801-19-000009	52	4		0	RestrictedStockUnitsRSUMember	us-gaap/2018	terseLabel	Restricted Stock Units (RSUs)	0
+0001326801-19-000009	37	9		0	RestrictedStockUnitsRSUMember	us-gaap/2018	terseLabel	Restricted Stock Units (RSUs)	0
+0001326801-19-000009	34	11		0	EuropeMember	srt/2018	terseLabel	Europe	0
+0001326801-19-000009	2	21	BS	0	Liabilities	us-gaap/2018	totalLabel	Total liabilities	0
+0001326801-19-000009	2	29	BS	0	LiabilitiesAndStockholdersEquity	us-gaap/2018	totalLabel	Total liabilities and stockholders' equity	0
+0001326801-19-000009	2	13	BS	0	LiabilitiesAndStockholdersEquityAbstract	us-gaap/2018	terseLabel	Liabilities and stockholders' equity	0
+0001326801-19-000009	2	19	BS	0	LiabilitiesCurrent	us-gaap/2018	totalLabel	Total current liabilities	0
+0001326801-19-000009	2	14	BS	0	LiabilitiesCurrentAbstract	us-gaap/2018	terseLabel	Current liabilities:	0
+0001326801-19-000009	23	1		0	ScheduleOfEarningsPerShareBasicAndDilutedTableTextBlock	us-gaap/2018	terseLabel	Numerators and Denominators of Basic and Diluted EPS Computations for Common Stock	0
+0001326801-19-000009	37	1		0	ScheduleOfEarningsPerShareBasicByCommonClassTable	us-gaap/2018	terseLabel	Schedule of Earnings Per Share, Basic, by Common Class, Including Two Class Method [Table]	0
+0001326801-19-000009	32	3		0	ScheduleOfEffectiveIncomeTaxRateReconciliationTableTextBlock	us-gaap/2018	terseLabel	Reconciliation of U.S. Federal Statutory Income Tax Rate to Effective Tax Rate	0
+0001326801-19-000009	41	17		0	InterestCostsCapitalized	us-gaap/2018	terseLabel	Interest costs capitalized	0
+0001326801-19-000009	54	2		0	InterestExpense	us-gaap/2018	negatedTerseLabel	Interest expense	1
+0001326801-19-000009	34	15		0	ProductOrServiceAxis	srt/2018	terseLabel	Product and Service [Axis]	0
+0001326801-19-000009	34	16		0	ProductsAndServicesDomain	srt/2018	terseLabel	Product and Service [Domain]	0
+0001326801-19-000009	4	14	IS	0	GeneralAndAdministrativeExpense	us-gaap/2018	terseLabel	General and administrative	0
+0001326801-19-000009	4	7	IS	0	GeneralAndAdministrativeExpenseMember	us-gaap/2018	terseLabel	General and administrative	0
+0001326801-19-000009	37	6		0	AwardTypeAxis	us-gaap/2018	terseLabel	Award Type [Axis]	0
+0001326801-19-000009	52	2		0	AwardTypeAxis	us-gaap/2018	terseLabel	Award Type [Axis]	0
+0001326801-19-000009	53	2		0	AwardTypeAxis	us-gaap/2018	terseLabel	Award Type [Axis]	0
+0001326801-19-000009	51	5		0	AwardTypeAxis	us-gaap/2018	terseLabel	Award Type [Axis]	0
+0001326801-19-000009	40	2		0	FinancialInstrumentAxis	us-gaap/2018	terseLabel	Financial Instrument [Axis]	0
+0001326801-19-000009	38	2		0	FinancialInstrumentAxis	us-gaap/2018	terseLabel	Financial Instrument [Axis]	0
+0001326801-19-000009	21	5		0	AdvertisingCostPolicyExpensedAdvertisingCost	us-gaap/2018	terseLabel	Advertising Expense	0
+0001326801-19-000009	36	28		0	AdvertisingExpense	us-gaap/2018	terseLabel	Advertising expense	0
+0001326801-19-000009	34	17		0	AdvertisingMember	us-gaap/2018	terseLabel	Advertising	0
+0001326801-19-000009	36	17		0	PropertyPlantAndEquipmentByTypeAxis	us-gaap/2018	terseLabel	Property, Plant and Equipment, Type [Axis]	0
+0001326801-19-000009	41	2		0	PropertyPlantAndEquipmentByTypeAxis	us-gaap/2018	terseLabel	Property, Plant and Equipment, Type [Axis]	0
+0001326801-19-000009	12	1		0	PropertyPlantAndEquipmentDisclosureTextBlock	us-gaap/2018	terseLabel	Property and Equipment	0
+0001326801-19-000009	41	11		0	PropertyPlantAndEquipmentGross	us-gaap/2018	terseLabel	Property and equipment, gross	0
+0001326801-19-000009	41	10		0	PropertyPlantAndEquipmentLineItems	us-gaap/2018	verboseLabel	Property, Plant and Equipment	0
+0001326801-19-000009	36	26		0	PropertyPlantAndEquipmentLineItems	us-gaap/2018	terseLabel	Summary of Accounting Policies	0
+0001326801-19-000009	41	13		0	PropertyPlantAndEquipmentNet	us-gaap/2018	totalLabel	Property and equipment, net	0
+0001326801-19-000009	2	8	BS	0	PropertyPlantAndEquipmentNet	us-gaap/2018	verboseLabel	Property and equipment, net	0
+0001326801-19-000009	61	7		0	PropertyPlantAndEquipmentNet	us-gaap/2018	terseLabel	Property and equipment, net	0
+0001326801-19-000009	52	10		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeitedInPeriod	us-gaap/2018	negatedLabel	Forfeited (in shares)	1
+0001326801-19-000009	52	16		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeituresWeightedAverageGrantDateFairValue	us-gaap/2018	terseLabel	Forfeited (in dollars per share)	0
+0001326801-19-000009	52	8		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriod	us-gaap/2018	terseLabel	Granted (in shares)	0
+0001326801-19-000009	52	14		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriodWeightedAverageGrantDateFairValue	us-gaap/2018	terseLabel	Granted (in dollars per share)	0
+0001326801-19-000009	52	11		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedNumber	us-gaap/2018	periodEndLabel	Unvested at end of period (in shares)	0
+0001326801-19-000009	52	7		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedNumber	us-gaap/2018	periodStartLabel	Unvested at beginning of period (in shares)	0
+0001326801-19-000009	52	17		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedWeightedAverageGrantDateFairValue	us-gaap/2018	periodEndLabel	Unvested at end of period (in dollars per share)	0
+0001326801-19-000009	52	13		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedWeightedAverageGrantDateFairValue	us-gaap/2018	periodStartLabel	Unvested at beginning of period (in dollars per share)	0
+0001326801-19-000009	52	9		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriod	us-gaap/2018	negatedLabel	Vested (in shares)	1
+0001326801-19-000009	53	6		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodTotalFairValue	us-gaap/2018	terseLabel	Fair value of vested RSUs	0
+0001326801-19-000009	52	15		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodWeightedAverageGrantDateFairValue	us-gaap/2018	terseLabel	Vested (in dollars per share)	0
+0001326801-19-000009	7	2	CF	0	BalanceSheetLocationAxis	us-gaap/2018	terseLabel	Balance Sheet Location [Axis]	0
+0001326801-19-000009	7	3	CF	0	BalanceSheetLocationDomain	us-gaap/2018	terseLabel	Balance Sheet Location [Domain]	0
+0001326801-19-000009	1	14	CP	0	DocumentFiscalPeriodFocus	dei/2018	terseLabel	Document Fiscal Period Focus	0
+0001326801-19-000009	40	12		0	BankTimeDepositsMember	us-gaap/2018	verboseLabel	Certificate of deposits and time deposits	0
+0001326801-19-000009	38	13		0	BankTimeDepositsMember	us-gaap/2018	terseLabel	Certificate of deposits and time deposits	0
+0001326801-19-000009	50	6		0	PlanNameAxis	us-gaap/2018	terseLabel	Plan Name [Axis]	0
+0001326801-19-000009	50	7		0	PlanNameDomain	us-gaap/2018	terseLabel	Plan Name [Domain]	0
+0001326801-19-000009	4	30	IS	0	AllocatedShareBasedCompensationExpense	us-gaap/2018	positiveLabel	Share-based compensation expense	0
+0001326801-19-000009	50	9		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2018	verboseLabel	Share-based Compensation Arrangement by Share-based Payment Award	0
+0001326801-19-000009	51	8		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2018	terseLabel	Share-based Compensation Arrangement by Share-based Payment Award [Line Items]	0
+0001326801-19-000009	52	5		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2018	terseLabel	Share-based Compensation Arrangement by Share-based Payment Award [Line Items]	0
+0001326801-19-000009	53	5		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2018	verboseLabel	Share-based Compensation Arrangement by Share-based Payment Award	0
+0001326801-19-000009	50	13		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardNumberOfAdditionalSharesAuthorized	us-gaap/2018	terseLabel	Shares reserved for issuance (in shares)	0
+0001326801-19-000009	21	9		0	PropertyPlantAndEquipmentPolicyTextBlock	us-gaap/2018	terseLabel	Property and Equipment	0
+0001326801-19-000009	38	14		0	CorporateDebtSecuritiesMember	us-gaap/2018	verboseLabel	Corporate debt securities	0
+0001326801-19-000009	38	6		0	CorporateDebtSecuritiesMember	us-gaap/2018	verboseLabel	Corporate debt securities	0
+0001326801-19-000009	40	13		0	CorporateDebtSecuritiesMember	us-gaap/2018	terseLabel	Corporate debt securities	0
+0001326801-19-000009	40	6		0	CorporateDebtSecuritiesMember	us-gaap/2018	terseLabel	Corporate debt securities	0
+0001326801-19-000009	7	49	CF	0	InterestPaidNet	us-gaap/2018	terseLabel	Interest	0
+0001326801-19-000009	21	16		0	SegmentReportingPolicyPolicyTextBlock	us-gaap/2018	terseLabel	Segments	0
+0001326801-19-000009	4	13	IS	0	SellingAndMarketingExpense	us-gaap/2018	terseLabel	Marketing and sales	0
+0001326801-19-000009	4	6	IS	0	SellingAndMarketingExpenseMember	us-gaap/2018	terseLabel	Marketing and sales	0
+0001326801-19-000009	36	13		0	GeographicConcentrationRiskMember	us-gaap/2018	terseLabel	Geographic concentration risk	0
+0001326801-19-000009	34	7		0	GeographicConcentrationRiskMember	us-gaap/2018	terseLabel	Geographic concentration risk	0
+0001326801-19-000009	2	10	BS	0	Goodwill	us-gaap/2018	terseLabel	Goodwill	0
+0001326801-19-000009	42	2		0	Goodwill	us-gaap/2018	periodStartLabel	Goodwill beginning	0
+0001326801-19-000009	42	5		0	Goodwill	us-gaap/2018	periodEndLabel	Goodwill ending	0
+0001326801-19-000009	42	3		0	GoodwillAcquiredDuringPeriod	us-gaap/2018	terseLabel	Goodwill acquired	0
+0001326801-19-000009	13	1		0	GoodwillAndIntangibleAssetsDisclosureTextBlock	us-gaap/2018	terseLabel	Goodwill and Intangible Assets	0
+0001326801-19-000009	1	13	CP	0	DocumentFiscalYearFocus	dei/2018	terseLabel	Document Fiscal Year Focus	0
+0001326801-19-000009	1	12	CP	0	DocumentPeriodEndDate	dei/2018	terseLabel	Document Period End Date	0
+0001326801-19-000009	1	7	CP	0	DocumentType	dei/2018	terseLabel	Document Type	0
+0001326801-19-000009	21	1		0	BasisOfAccountingPolicyPolicyTextBlock	us-gaap/2018	terseLabel	Basis of Presentation	0
+0001326801-19-000009	8	1		0	BasisOfPresentationAndSignificantAccountingPoliciesTextBlock	us-gaap/2018	terseLabel	Summary of Significant Accounting Policies	0
+0001326801-19-000009	51	24		0	SharebasedCompensationArrangementBySharebasedPaymentAwardOptionsExercisableIntrinsicValue1	us-gaap/2018	terseLabel	Stock options exercisable as of period end	0
+0001326801-19-000009	51	13		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisableNumber	us-gaap/2018	terseLabel	Stock options exercisable as of period end (in shares)	0
+0001326801-19-000009	3	8	BS	1	AllowanceForDoubtfulAccountsReceivableCurrent	us-gaap/2018	terseLabel	Accounts receivable, allowances for doubtful accounts	0
+0001326801-19-000009	4	17	IS	0	NonoperatingIncomeExpense	us-gaap/2018	terseLabel	Interest and other income (expense), net	0
+0001326801-19-000009	54	5		0	NonoperatingIncomeExpense	us-gaap/2018	totalLabel	Interest and other income (expense), net	0
+0001326801-19-000009	61	5		0	NonUsMember	us-gaap/2018	terseLabel	Rest of the world	0
+0001326801-19-000009	37	28		0	WeightedAverageNumberDilutedSharesOutstandingAdjustmentAbstract	us-gaap/2018	terseLabel	Denominator	0
+0001326801-19-000009	37	33		0	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2018	totalLabel	Number of shares used for diluted EPS computation (in shares)	0
+0001326801-19-000009	4	28	IS	0	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2018	terseLabel	Diluted (in shares)	0
+0001326801-19-000009	37	18		0	WeightedAverageNumberOfSharesCommonStockSubjectToRepurchaseOrCancellation	us-gaap/2018	terseLabel	Less: Shares subject to repurchase (in shares)	0
+0001326801-19-000009	37	19		0	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2018	totalLabel	Number of shares used for basic EPS computation (in shares)	0
+0001326801-19-000009	37	29		0	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2018	terseLabel	Number of shares used for basic EPS computation (in shares)	0
+0001326801-19-000009	4	27	IS	0	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2018	verboseLabel	Basic (in shares)	0
+0001326801-19-000009	37	16		0	WeightedAverageNumberOfSharesOutstandingBasicAbstract	us-gaap/2018	terseLabel	Denominator	0
+0001326801-19-000009	4	26	IS	0	WeightedAverageNumberOfSharesOutstandingDilutedDisclosureItemsAbstract	us-gaap/2018	terseLabel	Weighted average shares used to compute earnings per share attributable to Class A and Class B common stockholders:	0
+0001326801-19-000009	2	28	BS	0	StockholdersEquity	us-gaap/2018	totalLabel	Total stockholders' equity	0
+0001326801-19-000009	6	11	EQ	0	StockholdersEquity	us-gaap/2018	periodStartLabel	Total stockholders' equity, beginning	0
+0001326801-19-000009	6	28	EQ	0	StockholdersEquity	us-gaap/2018	periodEndLabel	Total stockholders' equity, ending	0
+0001326801-19-000009	3	9	BS	1	StockholdersEquityAbstract	us-gaap/2018	terseLabel	Stockholders' equity:	0
+0001326801-19-000009	2	23	BS	0	StockholdersEquityAbstract	us-gaap/2018	terseLabel	Stockholders' equity:	0
+0001326801-19-000009	42	4		0	GoodwillForeignCurrencyTranslationGainLoss	us-gaap/2018	terseLabel	Effect of currency translation adjustment	0
+0001326801-19-000009	36	30		0	GoodwillImpairmentLoss	us-gaap/2018	verboseLabel	Goodwill impairment	0
+0001326801-19-000009	42	1		0	GoodwillRollForward	us-gaap/2018	terseLabel	Goodwill [Roll Forward]	0
+0001326801-19-000009	37	14		0	UndistributedEarningsLossAllocatedToParticipatingSecuritiesBasic	us-gaap/2018	verboseLabel	Less: Net income attributable to participating securities	0
+0001326801-19-000009	4	21	IS	0	UndistributedEarningsLossAllocatedToParticipatingSecuritiesBasic	us-gaap/2018	terseLabel	Less: Net income attributable to participating securities	0
+0001326801-19-000009	43	13		0	FiniteLivedIntangibleAssetsAccumulatedAmortization	us-gaap/2018	negatedTerseLabel	Accumulated Amortization	1
+0001326801-19-000009	44	7		0	FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive	us-gaap/2018	terseLabel	Thereafter	0
+0001326801-19-000009	44	2		0	FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths	us-gaap/2018	terseLabel	2019	0
+0001326801-19-000009	44	6		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearFive	us-gaap/2018	terseLabel	2023	0
+0001326801-19-000009	44	5		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearFour	us-gaap/2018	terseLabel	2022	0
+0001326801-19-000009	44	4		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearThree	us-gaap/2018	terseLabel	2021	0
+0001326801-19-000009	44	3		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo	us-gaap/2018	terseLabel	2020	0
+0001326801-19-000009	43	3		0	FiniteLivedIntangibleAssetsByMajorClassAxis	us-gaap/2018	terseLabel	Finite-Lived Intangible Assets by Major Class [Axis]	0
+0001326801-19-000009	44	1		0	FiniteLivedIntangibleAssetsFutureAmortizationExpenseCurrentAndFiveSucceedingFiscalYearsAbstract	us-gaap/2018	terseLabel	Finite-Lived Intangible Assets, Amortization Expense, Maturity Schedule [Abstract]	0
+0001326801-19-000009	43	12		0	FiniteLivedIntangibleAssetsGross	us-gaap/2018	terseLabel	Gross Carrying Amount	0
+0001326801-19-000009	43	10		0	FiniteLivedIntangibleAssetsLineItems	us-gaap/2018	terseLabel	Finite-Lived Intangible Assets [Line Items]	0
+0001326801-19-000009	43	4		0	FiniteLivedIntangibleAssetsMajorClassNameDomain	us-gaap/2018	terseLabel	Finite-Lived Intangible Assets, Major Class Name [Domain]	0
+0001326801-19-000009	44	8		0	FiniteLivedIntangibleAssetsNet	us-gaap/2018	totalLabel	Net Carrying Amount	0
+0001326801-19-000009	43	14		0	FiniteLivedIntangibleAssetsNet	us-gaap/2018	totalLabel	Net Carrying Amount	0
+0001326801-19-000009	1	8	CP	0	AmendmentFlag	dei/2018	terseLabel	Amendment Flag	0
+0001326801-19-000009	43	1		0	AmortizationOfIntangibleAssets	us-gaap/2018	terseLabel	Amortization expense	0
+0001326801-19-000009	36	37		0	NumberOfOperatingSegments	us-gaap/2018	terseLabel	Number of operating segments	0
+0001326801-19-000009	36	36		0	NumberOfReportableSegments	us-gaap/2018	terseLabel	Number of reporting segments	0
+0001326801-19-000009	4	23	IS	0	EarningsPerShareAbstract	us-gaap/2018	terseLabel	Earnings per share attributable to Class A and Class B common stockholders:	0
+0001326801-19-000009	37	20		0	EarningsPerShareBasic	us-gaap/2018	verboseLabel	Basic EPS (in dollars per share)	0
+0001326801-19-000009	4	24	IS	0	EarningsPerShareBasic	us-gaap/2018	terseLabel	Basic (in dollars per share)	0
+0001326801-19-000009	37	11		0	EarningsPerShareBasicAbstract	us-gaap/2018	terseLabel	Basic EPS:	0
+0001326801-19-000009	37	10		0	EarningsPerShareBasicLineItems	us-gaap/2018	terseLabel	Earnings Per Share, Basic, by Common Class, Including Two Class Method	0
+0001326801-19-000009	37	34		0	EarningsPerShareDiluted	us-gaap/2018	verboseLabel	Diluted EPS (in dollars per share)	0
+0001326801-19-000009	4	25	IS	0	EarningsPerShareDiluted	us-gaap/2018	terseLabel	Diluted (in dollars per share)	0
+0001326801-19-000009	37	21		0	EarningsPerShareDilutedAbstract	us-gaap/2018	terseLabel	Diluted EPS:	0
+0001326801-19-000009	9	1		0	EarningsPerShareTextBlock	us-gaap/2018	terseLabel	Earnings per Share	0
+0001326801-19-000009	41	5		0	BuildingMember	us-gaap/2018	terseLabel	Buildings	0
+0001326801-19-000009	36	20		0	BuildingMember	us-gaap/2018	terseLabel	Buildings	0
+0001326801-19-000009	36	34		0	RevenueFromContractWithCustomerExcludingAssessedTax	us-gaap/2018	terseLabel	Revenue	0
+0001326801-19-000009	34	20		0	RevenueFromContractWithCustomerExcludingAssessedTax	us-gaap/2018	terseLabel	Revenue	0
+0001326801-19-000009	4	9	IS	0	RevenueFromContractWithCustomerExcludingAssessedTax	us-gaap/2018	terseLabel	Revenue	0
+0001326801-19-000009	21	3		0	RevenueFromContractWithCustomerPolicyTextBlock	us-gaap/2018	terseLabel	Revenue Recognition	0
+0001326801-19-000009	27	3		0	ScheduleofFiniteLivedIntangibleAssetsFutureAmortizationExpenseTableTextBlock	us-gaap/2018	terseLabel	Estimated Amortization Expense for Unamortized Acquired Intangible Assets	0
+0001326801-19-000009	43	2		0	ScheduleOfFiniteLivedIntangibleAssetsTable	us-gaap/2018	terseLabel	Schedule of Finite-Lived Intangible Assets [Table]	0
+0001326801-19-000009	27	2		0	ScheduleOfFiniteLivedIntangibleAssetsTableTextBlock	us-gaap/2018	terseLabel	Schedule of Finite-Lived Intangible Assets	0
+0001326801-19-000009	57	10		0	EffectiveIncomeTaxRateContinuingOperations	us-gaap/2018	totalLabel	Effective tax rate	0
+0001326801-19-000009	57	1		0	EffectiveIncomeTaxRateContinuingOperationsTaxRateReconciliationAbstract	us-gaap/2018	terseLabel	Effective Income Tax Rate, Continuing Operations, Tax Rate Reconciliation [Abstract]	0
+0001326801-19-000009	57	2		0	EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate	us-gaap/2018	terseLabel	U.S. federal statutory income tax rate	0
+0001326801-19-000009	60	14		0	EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate	us-gaap/2018	terseLabel	U.S. federal statutory income tax rate	0
+0001326801-19-000009	57	7		0	EffectiveIncomeTaxRateReconciliationForeignIncomeTaxRateDifferential	us-gaap/2018	negatedTerseLabel	Effect of non-U.S. operations	1
+0001326801-19-000009	4	11	IS	0	CostOfRevenue	us-gaap/2018	terseLabel	Cost of revenue	0
+0001326801-19-000009	4	4	IS	0	CostOfSalesMember	us-gaap/2018	terseLabel	Cost of revenue	0
+0001326801-19-000009	29	1		0	ScheduleOfFutureMinimumRentalPaymentsForOperatingLeasesTableTextBlock	us-gaap/2018	terseLabel	Schedule of Future Minimum Lease Payments for Operating Leases	0
+0001326801-19-000009	27	1		0	ScheduleOfGoodwillTextBlock	us-gaap/2018	terseLabel	Changes in Carrying Amount of Goodwill	0
+0001326801-19-000009	57	5		0	EffectiveIncomeTaxRateReconciliationNondeductibleExpenseShareBasedCompensationCost	us-gaap/2018	terseLabel	Share-based compensation	0
+0001326801-19-000009	57	9		0	EffectiveIncomeTaxRateReconciliationOtherAdjustments	us-gaap/2018	terseLabel	Other	0
+0001326801-19-000009	57	3		0	EffectiveIncomeTaxRateReconciliationStateAndLocalIncomeTaxes	us-gaap/2018	terseLabel	State income taxes, net of federal benefit	0
+0001326801-19-000009	57	4		0	EffectiveIncomeTaxRateReconciliationTaxCreditsResearch	us-gaap/2018	negatedTerseLabel	Research tax credits	1
+0001326801-19-000009	59	1		0	ReconciliationOfUnrecognizedTaxBenefitsExcludingAmountsPertainingToExaminedTaxReturnsRollForward	us-gaap/2018	terseLabel	Reconciliation of Unrecognized Tax Benefits	0
+0001326801-19-000009	2	27	BS	0	RetainedEarningsAccumulatedDeficit	us-gaap/2018	terseLabel	Retained earnings	0
+0001326801-19-000009	4	15	IS	0	CostsAndExpenses	us-gaap/2018	totalLabel	Total costs and expenses	0
+0001326801-19-000009	4	10	IS	0	CostsAndExpensesAbstract	us-gaap/2018	terseLabel	Costs and expenses:	0
+0001326801-19-000009	7	47	CF	0	SupplementalCashFlowInformationAbstract	us-gaap/2018	terseLabel	Supplemental cash flow data	0
+0001326801-19-000009	40	19		0	FairValueAssetsAndLiabilitiesMeasuredOnRecurringAndNonrecurringBasisLineItems	us-gaap/2018	terseLabel	Fair Value, Assets and Liabilities Measured on Recurring and Nonrecurring Basis	0
+0001326801-19-000009	40	1		0	FairValueAssetsAndLiabilitiesMeasuredOnRecurringAndNonrecurringBasisTable	us-gaap/2018	terseLabel	Fair Value Measurements, Recurring and Nonrecurring [Table]	0
+0001326801-19-000009	7	39	CF	0	EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2018	terseLabel	Effect of exchange rate changes on cash, cash equivalents, and restricted cash	0
+0001326801-19-000009	38	3		0	TransfersAndServicingOfFinancialInstrumentsTypesOfFinancialInstrumentsDomain	us-gaap/2018	terseLabel	Financial Instruments [Domain]	0
+0001326801-19-000009	40	3		0	TransfersAndServicingOfFinancialInstrumentsTypesOfFinancialInstrumentsDomain	us-gaap/2018	terseLabel	Financial Instruments [Domain]	0
+0001326801-19-000009	51	20		0	SharebasedCompensationArrangementBySharebasedPaymentAwardOptionsOutstandingWeightedAverageRemainingContractualTerm2	us-gaap/2018	terseLabel	Balance at period end	0
+0001326801-19-000009	50	5		0	SubsequentEventMember	us-gaap/2018	terseLabel	Subsequent Event	0
+0001326801-19-000009	50	3		0	SubsequentEventTypeAxis	us-gaap/2018	terseLabel	Subsequent Event Type [Axis]	0
+0001326801-19-000009	50	4		0	SubsequentEventTypeDomain	us-gaap/2018	terseLabel	Subsequent Event Type [Domain]	0
+0001326801-19-000009	6	7	EQ	0	RetainedEarningsMember	us-gaap/2018	terseLabel	Retained Earnings	0
+0001326801-19-000009	24	1		0	ScheduleOfCashCashEquivalentsAndShortTermInvestmentsTableTextBlock	us-gaap/2018	terseLabel	Cash, Cash Equivalents and Marketable Securities	0
+0001326801-19-000009	20	1		0	SegmentReportingDisclosureTextBlock	us-gaap/2018	terseLabel	Geographical Information	0
+0001326801-19-000009	61	6		0	RevenuesFromExternalCustomersAndLongLivedAssetsLineItems	us-gaap/2018	verboseLabel	Long-Lived Assets, by Geographical Area	0
+0001326801-19-000009	46	4		0	RevolvingCreditFacilityMember	us-gaap/2018	terseLabel	Revolving Credit Facility	0
+0001326801-19-000009	51	6		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2018	terseLabel	Equity Type [Domain]	0
+0001326801-19-000009	52	3		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2018	terseLabel	Equity Type [Domain]	0
+0001326801-19-000009	53	3		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2018	terseLabel	Equity Type [Domain]	0
+0001326801-19-000009	37	7		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2018	terseLabel	Equity Type [Domain]	0
+0001326801-19-000009	51	16		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsExercisesInPeriodWeightedAverageExercisePrice	us-gaap/2018	terseLabel	Stock options exercised (in dollars per share)	0
+0001326801-19-000009	40	14		0	FairValueByFairValueHierarchyLevelAxis	us-gaap/2018	terseLabel	Fair Value Hierarchy and NAV [Axis]	0
+0001326801-19-000009	6	12	EQ	0	CumulativeEffectOfNewAccountingPrincipleInPeriodOfAdoption	us-gaap/2018	terseLabel	Impact of the adoption of new accounting pronouncement	0
+0001326801-19-000009	56	3		0	CurrentFederalTaxExpenseBenefit	us-gaap/2018	terseLabel	Federal	0
+0001326801-19-000009	4	16	IS	0	OperatingIncomeLoss	us-gaap/2018	totalLabel	Income from operations	0
+0001326801-19-000009	32	1		0	ScheduleOfIncomeBeforeIncomeTaxDomesticAndForeignTableTextBlock	us-gaap/2018	terseLabel	Components of Income Before Provision for Income Taxes	0
+0001326801-19-000009	60	22		0	UnrecognizedTaxBenefitsThatWouldImpactEffectiveTaxRate	us-gaap/2018	terseLabel	Unrecognized tax benefits that would impact effective tax rate	0
+0001326801-19-000009	33	1		0	ScheduleOfRevenuesFromExternalCustomersAndLongLivedAssetsByGeographicalAreasTableTextBlock	us-gaap/2018	terseLabel	Revenue and Property and Equipment by Geographic Area	0
+0001326801-19-000009	61	1		0	ScheduleOfRevenuesFromExternalCustomersAndLongLivedAssetsTable	us-gaap/2018	terseLabel	Schedule of Revenues from External Customers and Long-Lived Assets [Table]	0
+0001326801-19-000009	6	15	EQ	0	StockIssuedDuringPeriodValueStockOptionsExercised	us-gaap/2018	terseLabel	Issuance of common stock for cash upon exercise of stock options, value	0
+0001326801-19-000009	49	2		0	StockRepurchasedAndRetiredDuringPeriodShares	us-gaap/2018	terseLabel	Shares repurchased (in shares)	0
+0001326801-19-000009	49	3		0	StockRepurchasedAndRetiredDuringPeriodValue	us-gaap/2018	terseLabel	Shares repurchased	0
+0001326801-19-000009	6	23	EQ	0	StockRepurchasedDuringPeriodShares	us-gaap/2018	negatedTerseLabel	Share repurchases, shares	1
+0001326801-19-000009	6	24	EQ	0	StockRepurchasedDuringPeriodValue	us-gaap/2018	negatedTerseLabel	Share repurchases, value	1
+0001326801-19-000009	49	1		0	StockRepurchaseProgramAuthorizedAmount1	us-gaap/2018	verboseLabel	Share repurchase program, authorized amount	0
+0001326801-19-000009	31	1		0	ScheduleOfOtherNonoperatingIncomeExpenseTableTextBlock	us-gaap/2018	terseLabel	Schedule of Interest and Other Income, Net	0
+0001326801-19-000009	1	18	CP	0	CurrentFiscalYearEndDate	dei/2018	terseLabel	Current Fiscal Year End Date	0
+0001326801-19-000009	56	5		0	CurrentForeignTaxExpenseBenefit	us-gaap/2018	terseLabel	Foreign	0
+0001326801-19-000009	56	6		0	CurrentIncomeTaxExpenseBenefit	us-gaap/2018	totalLabel	Total current tax expense	0
+0001326801-19-000009	56	2		0	CurrentIncomeTaxExpenseBenefitContinuingOperationsAbstract	us-gaap/2018	terseLabel	Current:	0
+0001326801-19-000009	36	39		0	OperatingLeaseLiability	us-gaap/2018	terseLabel	Lease liability	0
+0001326801-19-000009	36	38		0	OperatingLeaseRightOfUseAsset	us-gaap/2018	terseLabel	Lease asset	0
+0001326801-19-000009	47	15		0	OperatingLeasesFutureMinimumPaymentsDue	us-gaap/2018	totalLabel	Total minimum lease payments	0
+0001326801-19-000009	47	8		0	OperatingLeasesFutureMinimumPaymentsDueAbstract	us-gaap/2018	terseLabel	Operating Leases	0
+0001326801-19-000009	47	9		0	OperatingLeasesFutureMinimumPaymentsDueCurrent	us-gaap/2018	terseLabel	2019	0
+0001326801-19-000009	47	13		0	OperatingLeasesFutureMinimumPaymentsDueInFiveYears	us-gaap/2018	terseLabel	2023	0
+0001326801-19-000009	47	12		0	OperatingLeasesFutureMinimumPaymentsDueInFourYears	us-gaap/2018	terseLabel	2022	0
+0001326801-19-000009	47	11		0	OperatingLeasesFutureMinimumPaymentsDueInThreeYears	us-gaap/2018	terseLabel	2021	0
+0001326801-19-000009	47	10		0	OperatingLeasesFutureMinimumPaymentsDueInTwoYears	us-gaap/2018	terseLabel	2020	0
+0001326801-19-000009	47	14		0	OperatingLeasesFutureMinimumPaymentsDueThereafter	us-gaap/2018	terseLabel	Thereafter	0
+0001326801-19-000009	17	1		0	ShareholdersEquityAndShareBasedPaymentsTextBlock	us-gaap/2018	terseLabel	Stockholders' Equity	0
+0001326801-19-000009	51	25		0	SharePrice	us-gaap/2018	verboseLabel	Share price (in dollars per share)	0
+0001326801-19-000009	6	20	EQ	0	SharesPaidForTaxWithholdingForShareBasedCompensation	us-gaap/2018	negatedTerseLabel	Shares withheld related to net share settlement, shares	1
+0001326801-19-000009	56	4		0	CurrentStateAndLocalTaxExpenseBenefit	us-gaap/2018	terseLabel	State	0
+0001326801-19-000009	49	4		0	StockRepurchaseProgramRemainingAuthorizedRepurchaseAmount1	us-gaap/2018	terseLabel	Shares available for repurchase	0
+0001326801-19-000009	36	1		0	ScheduleOfPropertyPlantAndEquipmentTable	us-gaap/2018	terseLabel	Schedule of Property, Plant and Equipment [Table]	0
+0001326801-19-000009	41	1		0	ScheduleOfPropertyPlantAndEquipmentTable	us-gaap/2018	terseLabel	Schedule of Property, Plant and Equipment [Table]	0
+0001326801-19-000009	51	18		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisableWeightedAverageExercisePrice	us-gaap/2018	terseLabel	Stock options exercisable as of period end (in dollars per share)	0
+0001326801-19-000009	51	21		0	SharebasedCompensationArrangementBySharebasedPaymentAwardOptionsExercisableWeightedAverageRemainingContractualTerm1	us-gaap/2018	terseLabel	Stock options exercisable as of period end	0
+0001326801-19-000009	51	28		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriodTotalIntrinsicValue	us-gaap/2018	terseLabel	Aggregate intrinsic value of the options exercised	0
+0001326801-19-000009	51	27		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsForfeituresAndExpirationsInPeriod	us-gaap/2018	terseLabel	Options forfeited or canceled (in shares)	0
+0001326801-19-000009	51	26		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriodGross	us-gaap/2018	terseLabel	Options granted (in shares)	0
+0001326801-19-000009	51	23		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingIntrinsicValue	us-gaap/2018	periodEndLabel	Balance at period end	0
+0001326801-19-000009	51	12		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingNumber	us-gaap/2018	periodEndLabel	Ending balance (in shares)	0
+0001326801-19-000009	51	10		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingNumber	us-gaap/2018	periodStartLabel	Beginning balance (in shares)	0
+0001326801-19-000009	51	9		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingRollForward	us-gaap/2018	terseLabel	Number of Shares	0
+0001326801-19-000009	51	17		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePrice	us-gaap/2018	periodEndLabel	Ending Balance (in dollars per share)	0
+0001326801-19-000009	51	15		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePrice	us-gaap/2018	periodStartLabel	Beginning Balance (in dollars per share)	0
+0001326801-19-000009	51	14		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePriceRollforward	us-gaap/2018	terseLabel	Weighted Average Exercise Price	0
+0001326801-19-000009	32	4		0	ScheduleOfDeferredTaxAssetsAndLiabilitiesTableTextBlock	us-gaap/2018	terseLabel	Schedule of Deferred Tax Assets and Liabilities	0
+0001326801-19-000009	48	1		0	ScheduleOfStockByClassTable	us-gaap/2018	terseLabel	Schedule of Stock by Class [Table]	0
+0001326801-19-000009	46	5		0	DebtInstrumentLineItems	us-gaap/2018	terseLabel	Debt Instrument	0
+0001326801-19-000009	32	5		0	ScheduleOfUnrecognizedTaxBenefitsRollForwardTableTextBlock	us-gaap/2018	terseLabel	Schedule of Gross Unrecognized Tax Benefits Roll Forward	0
+0001326801-19-000009	21	2		0	UseOfEstimates	us-gaap/2018	terseLabel	Use of Estimates	0
+0001326801-19-000009	38	5		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2018	verboseLabel	U.S. government agency securities	0
+0001326801-19-000009	38	12		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2018	verboseLabel	U.S. government agency securities	0
+0001326801-19-000009	40	11		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2018	terseLabel	U.S. government agency securities	0
+0001326801-19-000009	40	5		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2018	terseLabel	U.S. government agency securities	0
+0001326801-19-000009	6	16	EQ	0	StockIssuedDuringPeriodSharesAcquisitions	us-gaap/2018	terseLabel	Issuance of common stock related to acquisitions, shares	0
+0001326801-19-000009	21	8		0	TradeAndOtherAccountsReceivablePolicy	us-gaap/2018	terseLabel	Accounts Receivable and Allowances	0
+0001326801-19-000009	43	8		0	TradeNamesMember	us-gaap/2018	terseLabel	Trade names	0
+0001326801-19-000009	4	12	IS	0	ResearchAndDevelopmentExpense	us-gaap/2018	terseLabel	Research and development	0
+0001326801-19-000009	4	5	IS	0	ResearchAndDevelopmentExpenseMember	us-gaap/2018	terseLabel	Research and development	0
+0001326801-19-000009	28	1		0	ScheduleOfAccruedLiabilitiesTableTextBlock	us-gaap/2018	terseLabel	Accrued Expenses and Other Current Liabilities	0
+0001326801-19-000009	51	11		0	StockIssuedDuringPeriodSharesStockOptionsExercised	us-gaap/2018	negatedLabel	Stock options exercised (in shares)	1
+0001326801-19-000009	6	14	EQ	0	StockIssuedDuringPeriodSharesStockOptionsExercised	us-gaap/2018	terseLabel	Issuance of common stock for cash upon exercise of stock options, shares	0
+0001326801-19-000009	6	17	EQ	0	StockIssuedDuringPeriodValueAcquisitions	us-gaap/2018	terseLabel	Issuance of common stock related to acquisitions, value	0
+0001326801-19-000009	36	6		0	TypeOfAdoptionMember	us-gaap/2018	terseLabel	Type of Adoption [Domain]	0
+0001326801-19-000009	51	1		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2018	terseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-19-000009	52	1		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2018	terseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-19-000009	53	1		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2018	verboseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-19-000009	50	2		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2018	verboseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-19-000009	30	2		0	ScheduleOfShareBasedCompensationRestrictedStockUnitsAwardActivityTableTextBlock	us-gaap/2018	terseLabel	Restricted Stock Units Award Activity	0
+0001326801-19-000009	30	1		0	ScheduleOfShareBasedCompensationStockOptionsActivityTableTextBlock	us-gaap/2018	terseLabel	Stock Option Activity under Stock Plans	0
+0001326801-19-000009	46	1		0	DebtInstrumentTable	us-gaap/2018	terseLabel	Schedule of Long-term Debt Instruments [Table]	0
+0001326801-19-000009	1	15	CP	0	TradingSymbol	dei/2018	terseLabel	Trading Symbol	0
+0001326801-19-000009	38	20		0	DebtSecuritiesAvailableForSaleContinuousUnrealizedLossPosition12MonthsOrLongerAccumulatedLoss	us-gaap/2018	negatedLabel	Gross unrealized loss on securities in continuous loss position for 12 months or longer	1
+0001326801-19-000009	7	45	CF	0	RestrictedCashAndCashEquivalents	us-gaap/2018	terseLabel	Restricted cash	0
+0001326801-19-000009	38	8		0	RestrictedCashAndCashEquivalentsCashAndCashEquivalentsMember	us-gaap/2018	terseLabel	Cash and Cash Equivalents [Domain]	0
+0001326801-19-000009	40	8		0	RestrictedCashAndCashEquivalentsCashAndCashEquivalentsMember	us-gaap/2018	terseLabel	Cash and Cash Equivalents [Domain]	0
+0001326801-19-000009	25	1		0	ScheduleOfFairValueAssetsAndLiabilitiesMeasuredOnRecurringBasisTableTextBlock	us-gaap/2018	terseLabel	Assets and Liabilities Measured at Fair Value on Recurring Basis	0
+0001326801-19-000009	7	11	CF	0	ShareBasedCompensation	us-gaap/2018	verboseLabel	Share-based compensation	0
+0001326801-19-000009	50	1		0	ShareBasedCompensationAbstract	us-gaap/2018	terseLabel	Share-based Compensation [Abstract]	0
+0001326801-19-000009	60	17		0	TaxCreditCarryforwardAmount	us-gaap/2018	terseLabel	Tax credit carryforward	0
+0001326801-19-000009	45	5		0	TaxesPayableCurrent	us-gaap/2018	terseLabel	Accrued taxes	0
+0001326801-19-000009	60	2		0	TaxPeriodAxis	us-gaap/2018	terseLabel	Tax Period [Axis]	0
+0001326801-19-000009	60	3		0	TaxPeriodDomain	us-gaap/2018	terseLabel	Tax Period [Domain]	0
+0001326801-19-000009	40	10		0	USGovernmentDebtSecuritiesMember	us-gaap/2018	terseLabel	U.S. government securities	0
+0001326801-19-000009	40	4		0	USGovernmentDebtSecuritiesMember	us-gaap/2018	terseLabel	U.S. government securities	0
+0001326801-19-000009	38	11		0	USGovernmentDebtSecuritiesMember	us-gaap/2018	verboseLabel	U.S. government securities	0
+0001326801-19-000009	38	4		0	USGovernmentDebtSecuritiesMember	us-gaap/2018	verboseLabel	U.S. government securities	0
+0001326801-19-000009	43	9		0	OtherIntangibleAssetsMember	us-gaap/2018	verboseLabel	Other	0
+0001326801-19-000009	45	8		0	OtherLiabilitiesAbstract	us-gaap/2018	terseLabel	Other Liabilities [Abstract]	0
+0001326801-19-000009	45	12		0	OtherLiabilitiesNoncurrent	us-gaap/2018	totalLabel	Other liabilities	0
+0001326801-19-000009	2	20	BS	0	OtherLiabilitiesNoncurrent	us-gaap/2018	terseLabel	Other liabilities	0
+0001326801-19-000009	28	2		0	OtherLiabilitiesTableTextBlock	us-gaap/2018	terseLabel	Other Liabilities	0
+0001326801-19-000009	7	13	CF	0	OtherNoncashIncomeExpense	us-gaap/2018	negatedTerseLabel	Other	1
+0001326801-19-000009	18	1		0	OtherNonoperatingIncomeAndExpenseTextBlock	us-gaap/2018	terseLabel	Interest and other income (expense), net	0
+0001326801-19-000009	54	4		0	OtherNonoperatingIncomeExpense	us-gaap/2018	verboseLabel	Other	0
+0001326801-19-000009	45	11		0	OtherSundryLiabilitiesNoncurrent	us-gaap/2018	terseLabel	Other liabilities	0
+0001326801-19-000009	43	6		0	TechnologyBasedIntangibleAssetsMember	us-gaap/2018	verboseLabel	Acquired technology	0
+0001326801-19-000009	36	19		0	TechnologyEquipmentMember	us-gaap/2018	terseLabel	Network equipment	0
+0001326801-19-000009	1	9	CP	0	EntityEmergingGrowthCompany	dei/2018	terseLabel	Entity Emerging Growth Company	0
+0001326801-19-000009	1	11	CP	0	EntityShellCompany	dei/2018	terseLabel	Entity Shell Company	0
+0001326801-19-000009	1	10	CP	0	EntitySmallBusiness	dei/2018	terseLabel	Entity Small Business	0
+0001326801-19-000009	14	1		0	AccountsPayableAccruedLiabilitiesandOtherLiabilitiesDisclosureCurrentandNoncurrentTextBlock	0001326801-19-000009	terseLabel	Liabilities	0
+0001326801-19-000009	43	5		0	AcquiredusersMember	0001326801-19-000009	terseLabel	Acquired users	0
+0001326801-19-000009	21	6		0	CashAndCashEquivalentsAndMarketableSecuritiesPolicyTextBlock	0001326801-19-000009	terseLabel	Cash and Cash Equivalents, and Marketable Securities, and Restricted Cash	0
+0001326801-19-000009	38	18		0	CashCashEquivalentsAndMarketableSecuritiesAtCarryingValue	0001326801-19-000009	totalLabel	Total cash and cash equivalents, and marketable securities	0
+0001326801-19-000009	38	15		0	CashCashEquivalentsAndMarketableSecuritiesLineItems	0001326801-19-000009	terseLabel	Cash, Cash Equivalents and Marketable Securities	0
+0001326801-19-000009	7	48	CF	0	CashPaidDuringPeriodForAbstract	0001326801-19-000009	terseLabel	Cash paid during the period for:	0
+0001326801-19-000009	7	54	CF	0	ChangeinUnsettledRepurchasesofCommonStock	0001326801-19-000009	terseLabel	Change in unsettled repurchases of Class A common stock	0
+0001326801-19-000009	47	6		0	CommitmentsAndContingenciesDisclosureLineItems	0001326801-19-000009	terseLabel	Commitments and Contingencies Disclosure	0
+0001326801-19-000009	47	1		0	CommitmentsAndContingenciesDisclosureTable	0001326801-19-000009	terseLabel	Commitments and Contingencies Disclosure [Table]	0
+0001326801-19-000009	48	9		0	CommonStockNumberOfVotesByClass	0001326801-19-000009	terseLabel	Common stock, number of votes by class	0
+0001326801-19-000009	41	8		0	ComputerSoftwareOfficeEquipmentAndOtherMember	0001326801-19-000009	terseLabel	Computer software, office equipment and other	0
+0001326801-19-000009	36	21		0	ComputerSoftwareOfficeEquipmentAndOtherMember	0001326801-19-000009	terseLabel	Computer software, office equipment and other	0
+0001326801-19-000009	47	17		0	ContractualObligationAbstract	0001326801-19-000009	terseLabel	Other contractual commitments	0
+0001326801-19-000009	35	2		0	ContractWithCustomerDepositsUnusedBalances	0001326801-19-000009	terseLabel	Deposits	0
+0001326801-19-000009	35	3		0	ContractWithCustomerLiabilityandUnusedDeposits	0001326801-19-000009	totalLabel	Total deferred revenue and deposits	0
+0001326801-19-000009	57	8		0	EffectiveIncomeTaxRateReconciliationTaxCutsandJobsActof2017Percent	0001326801-19-000009	terseLabel	Effect of U.S. tax law change	0
+0001326801-19-000009	57	6		0	EffectiveTaxRateReconciliationShareBasedCompensationExcessTaxBenefitPercent	0001326801-19-000009	negatedTerseLabel	Excess tax benefits related to share-based compensation	1
+0001326801-19-000009	60	19		0	EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardChangeInOwnershipPercentageOverPeriod	0001326801-19-000009	terseLabel	Change in ownership percentage over period	0
+0001326801-19-000009	60	18		0	EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardCumulativeStockOwnershipChangeThreshhold	0001326801-19-000009	terseLabel	Cumulative stock ownership change threshold	0
+0001326801-19-000009	60	13		0	IncomeTaxDisclosureLineItems	0001326801-19-000009	terseLabel	Income Tax Disclosure	0
+0001326801-19-000009	60	1		0	IncomeTaxDisclosureTable	0001326801-19-000009	terseLabel	Income Tax Disclosure [Table]	0
+0001326801-19-000009	45	9		0	IncomeTaxesPayableNoncurrent	0001326801-19-000009	terseLabel	Income tax payable	0
+0001326801-19-000009	7	52	CF	0	IncreaseDecreaseinPrepaidsandLiabilitiesRelatedtoPropertyandEquipmentAdditions	0001326801-19-000009	terseLabel	Net change in prepaids and liabilities related to property and equipment additions	0
+0001326801-19-000009	37	30		0	IncrementalCommonSharesAttributableToConversionOfCommonStock	0001326801-19-000009	terseLabel	Conversion of Class B to Class A common stock (in shares)	0
+0001326801-19-000009	37	32		0	IncrementalCommonSharesAttributableToSharesSubjectToRepurchase	0001326801-19-000009	terseLabel	Shares subject to repurchase and other (in shares)	0
+0001326801-19-000009	21	13		0	LongLivedAssetsIncludingGoodwillAndIntangiblePolicyTextBlock	0001326801-19-000009	terseLabel	Long-Lived Assets, Including Goodwill and Other Acquired Intangible Assets	0
+0001326801-19-000009	6	13	EQ	0	NewAccountingPronouncementOrTaxCutsAndJobsActOf2017EffectOfAdoption	0001326801-19-000009	terseLabel	Impact of the adoption of new accounting pronouncements	0
+0001326801-19-000009	45	4		0	NotionalCashPoolOverdraftBalance	0001326801-19-000009	terseLabel	Overdraft in cash pooling entities	0
+0001326801-19-000009	5	4	CI	0	OtherComprehensiveIncomeLossAvailableforsaleSecuritiesAdjustmentandOtherNetofTax	0001326801-19-000009	terseLabel	Change in unrealized gain/loss on available-for-sale investments and other, net of tax	0
+0001326801-19-000009	34	18		0	PaymentsandOtherFeesMember	0001326801-19-000009	terseLabel	Payments and other fees	0
+0001326801-19-000009	7	29	CF	0	PaymentsToAcquireBusinessesNetOfCashAcquiredAndPurchasesOfIntangibleAndOtherAssets	0001326801-19-000009	negatedLabel	Acquisitions of businesses, net of cash acquired, and purchases of intangible assets	1
+0001326801-19-000009	45	3		0	PropertyandEquipmentAccruedLiabilities	0001326801-19-000009	terseLabel	Accrued property and equipment	0
+0001326801-19-000009	22	3		0	PropertyPlantAndEqiupmentUsefulLifeTableTextBlock	0001326801-19-000009	verboseLabel	Estimated Useful Lives of Property and Equipment	0
+0001326801-19-000009	37	25		0	ReallocationOfNetIncomeAsResultOfConversionOfClassBToClassAShares	0001326801-19-000009	terseLabel	Reallocation of net income as a result of conversion of Class B to Class A common stock	0
+0001326801-19-000009	37	24		0	ReallocationOfNetIncomeAttributableToParticipatingSecurities	0001326801-19-000009	terseLabel	Reallocation of net income attributable to participating securities	0
+0001326801-19-000009	37	26		0	ReallocationOfNetIncomeToClassBCommonStock	0001326801-19-000009	terseLabel	Reallocation of net income to Class B common stock	0
+0001326801-19-000009	7	34	CF	0	RepaymentsOfCapitalLeaseAndOtherFinancingObligations	0001326801-19-000009	negatedTerseLabel	Principal payments on capital lease and other financing obligations	1
+0001326801-19-000009	34	13		0	RestOfWorldMember	0001326801-19-000009	verboseLabel	Rest Of World	0
+0001326801-19-000009	36	27		0	RevenueRemainingPerformanceObligationAmountPayablePercentage	0001326801-19-000009	terseLabel	Percentage of balance payable	0
+0001326801-19-000009	38	1		0	ScheduleOfCashCashEquivalentsAndMarketableSecuritiesTable	0001326801-19-000009	terseLabel	Schedule of Cash, Cash Equivalents and Marketable Securities [Table]	0
+0001326801-19-000009	7	53	CF	0	SettlementOfContingentConsiderationLiability	0001326801-19-000009	terseLabel	Settlement of acquisition-related contingent consideration liability	0
+0001326801-19-000009	52	6		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsRollforwardAbstract	0001326801-19-000009	terseLabel	Number of Shares	0
+0001326801-19-000009	52	12		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsWeightedAverageGrantDateFairValueAbstract	0001326801-19-000009	terseLabel	Weighted Average Grant Date Fair Value	0
+0001326801-19-000009	51	22		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsAggregateIntrinsicValueAbstract	0001326801-19-000009	terseLabel	Aggregate Intrinsic Value	0
+0001326801-19-000009	51	19		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsWeightedAverageRemainingContractualTermAbstract	0001326801-19-000009	terseLabel	Weighted Average Remaining Contractual Term	0
+0001326801-19-000009	50	10		0	ShareBasedEmployeeCompensationPlansNumber	0001326801-19-000009	terseLabel	Share-based employee compensation plans, number	0
+0001326801-19-000009	50	12		0	SharesReservedForIssuanceIncreasePercentage	0001326801-19-000009	terseLabel	Shares reserved for issuance increase percentage	0
+0001326801-19-000009	6	18	EQ	0	StockIssuedDuringPeriodSharesRestrictedStockUnitBeforeTaxSettlement	0001326801-19-000009	terseLabel	Issuance of common stock for settlement of RSUs, shares	0
+0001326801-19-000009	6	19	EQ	0	StockIssuedDuringPeriodValueRestrictedStockUnitBeforeTaxSettlement	0001326801-19-000009	terseLabel	Issuance of common stock for settlement of RSUs. value	0
+0001326801-19-000009	50	8		0	StockOptionPlanTwentyTwelveMember	0001326801-19-000009	terseLabel	2012 Plan	0
+0001326801-19-000009	60	4		0	TaxYears2011Through2013Member	0001326801-19-000009	terseLabel	Tax Years 2011 Through 2013	0
+0001326801-19-000009	56	11		0	TotalDeferredIncomeTaxExpenseBenefit	0001326801-19-000009	totalLabel	Total deferred tax expense/(benefits)	0
+0001326801-19-000009	34	10		0	USCanadaMember	0001326801-19-000009	terseLabel	US & Canada	0
+0001326801-19-000009	37	17		0	WeightedAverageSharesOutstanding	0001326801-19-000009	terseLabel	Weighted average shares outstanding (in shares)	0
+0001326801-20-000013	38	12		0	US	country/2017	terseLabel	United States	0
+0001326801-20-000013	69	4		0	US	country/2017	terseLabel	United States	0
+0001326801-20-000013	37	13		0	US	country/2017	terseLabel	United States	0
+0001326801-20-000013	2	17	BS	0	AccountsPayableCurrent	us-gaap/2019	terseLabel	Accounts payable	0
+0001326801-20-000013	2	5	BS	0	AccountsReceivableNetCurrent	us-gaap/2019	terseLabel	Accounts receivable, net of allowances of $206 and $229 as of December 31, 2019 and December 31, 2018, respectively	0
+0001326801-20-000013	2	30	BS	0	AccumulatedOtherComprehensiveIncomeLossNetOfTax	us-gaap/2019	terseLabel	Accumulated other comprehensive loss	0
+0001326801-20-000013	2	29	BS	0	AdditionalPaidInCapital	us-gaap/2019	terseLabel	Additional paid-in capital	0
+0001326801-20-000013	7	9	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2019	terseLabel	Adjustments to reconcile net income to net cash provided by operating activities:	0
+0001326801-20-000013	2	14	BS	0	Assets	us-gaap/2019	totalLabel	Total assets	0
+0001326801-20-000013	2	1	BS	0	AssetsAbstract	us-gaap/2019	terseLabel	Assets	0
+0001326801-20-000013	2	7	BS	0	AssetsCurrent	us-gaap/2019	totalLabel	Total current assets	0
+0001326801-20-000013	3	7	BS	1	AssetsCurrentAbstract	us-gaap/2019	terseLabel	Current assets:	0
+0001326801-20-000013	2	2	BS	0	AssetsCurrentAbstract	us-gaap/2019	terseLabel	Current assets:	0
+0001326801-20-000013	23	1		0	BasisOfAccountingPolicyPolicyTextBlock	us-gaap/2019	terseLabel	Basis of Presentation	0
+0001326801-20-000013	2	3	BS	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2019	terseLabel	Cash and cash equivalents	0
+0001326801-20-000013	7	44	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2019	terseLabel	Cash and cash equivalents	0
+0001326801-20-000013	41	16		0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2019	terseLabel	Cash and cash equivalents	0
+0001326801-20-000013	18	1		0	CommitmentsAndContingenciesDisclosureTextBlock	us-gaap/2019	terseLabel	Commitments and Contingencies	0
+0001326801-20-000013	56	10		0	CommonStockSharesIssued	us-gaap/2019	verboseLabel	Common stock, shares, issued (in shares)	0
+0001326801-20-000013	3	12	BS	1	CommonStockSharesIssued	us-gaap/2019	verboseLabel	Common stock, shares, issued (in shares)	0
+0001326801-20-000013	3	13	BS	1	CommonStockSharesOutstanding	us-gaap/2019	terseLabel	Common stock, shares, outstanding (in shares)	0
+0001326801-20-000013	56	11		0	CommonStockSharesOutstanding	us-gaap/2019	terseLabel	Common stock, shares, outstanding (in shares)	0
+0001326801-20-000013	6	26	EQ	0	CommonStockSharesOutstanding	us-gaap/2019	periodEndLabel	Common stock, shares outstanding ending (in shares)	0
+0001326801-20-000013	6	10	EQ	0	CommonStockSharesOutstanding	us-gaap/2019	periodStartLabel	Common stock, shares outstanding beginning (in shares)	0
+0001326801-20-000013	2	28	BS	0	CommonStockValue	us-gaap/2019	terseLabel	Common stock, $0.000006 par value; 5,000 million Class A shares authorized, 2,407 million and 2,385 million shares issued and outstanding, as of December 31, 2019 and December 31, 2018, respectively; 4,141 million Class B shares authorized, 445 million and 469 million shares issued and outstanding, as of December 31, 2019 and December 31, 2018, respectively.	0
+0001326801-20-000013	45	8		0	ComputerEquipmentMember	us-gaap/2019	terseLabel	Network equipment	0
+0001326801-20-000013	45	16		0	ComputerEquipmentMember	us-gaap/2019	terseLabel	Network equipment	0
+0001326801-20-000013	4	11	IS	0	CostOfRevenue	us-gaap/2019	terseLabel	Cost of revenue	0
+0001326801-20-000013	4	15	IS	0	CostsAndExpenses	us-gaap/2019	totalLabel	Total costs and expenses	0
+0001326801-20-000013	45	29		0	Depreciation	us-gaap/2019	verboseLabel	Depreciation expense	0
+0001326801-20-000013	23	19		0	EarningsPerSharePolicyTextBlock	us-gaap/2019	terseLabel	Earnings Per Share	0
+0001326801-20-000013	23	15		0	ForeignCurrencyTransactionsAndTranslationsPolicyTextBlock	us-gaap/2019	terseLabel	Foreign Currency	0
+0001326801-20-000013	4	14	IS	0	GeneralAndAdministrativeExpense	us-gaap/2019	terseLabel	General and administrative	0
+0001326801-20-000013	4	18	IS	0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest	us-gaap/2019	totalLabel	Income before provision for income taxes	0
+0001326801-20-000013	63	3		0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest	us-gaap/2019	totalLabel	Income before provision for income taxes	0
+0001326801-20-000013	4	2	IS	0	IncomeStatementLocationAxis	us-gaap/2019	terseLabel	Income Statement Location [Axis]	0
+0001326801-20-000013	4	3	IS	0	IncomeStatementLocationDomain	us-gaap/2019	terseLabel	Income Statement Location [Domain]	0
+0001326801-20-000013	67	30		0	IncomeTaxExpenseBenefit	us-gaap/2019	terseLabel	Provision for income taxes	0
+0001326801-20-000013	64	12		0	IncomeTaxExpenseBenefit	us-gaap/2019	totalLabel	Provision for income taxes	0
+0001326801-20-000013	4	19	IS	0	IncomeTaxExpenseBenefit	us-gaap/2019	terseLabel	Provision for income taxes	0
+0001326801-20-000013	23	5		0	IncomeTaxPolicyTextBlock	us-gaap/2019	terseLabel	Income Taxes	0
+0001326801-20-000013	7	15	CF	0	IncreaseDecreaseInAccountsReceivable	us-gaap/2019	negatedLabel	Accounts receivable	1
+0001326801-20-000013	7	16	CF	0	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2019	negatedLabel	Prepaid expenses and other current assets	1
+0001326801-20-000013	2	25	BS	0	Liabilities	us-gaap/2019	totalLabel	Total liabilities	0
+0001326801-20-000013	2	33	BS	0	LiabilitiesAndStockholdersEquity	us-gaap/2019	totalLabel	Total liabilities and stockholders' equity	0
+0001326801-20-000013	2	15	BS	0	LiabilitiesAndStockholdersEquityAbstract	us-gaap/2019	terseLabel	Liabilities and stockholders' equity	0
+0001326801-20-000013	2	22	BS	0	LiabilitiesCurrent	us-gaap/2019	totalLabel	Total current liabilities	0
+0001326801-20-000013	2	16	BS	0	LiabilitiesCurrentAbstract	us-gaap/2019	terseLabel	Current liabilities:	0
+0001326801-20-000013	7	38	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2019	totalLabel	Net cash used in financing activities	0
+0001326801-20-000013	7	32	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2019	terseLabel	Cash flows from financing activities	0
+0001326801-20-000013	7	31	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2019	totalLabel	Net cash used in investing activities	0
+0001326801-20-000013	7	24	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2019	terseLabel	Cash flows from investing activities	0
+0001326801-20-000013	7	23	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2019	totalLabel	Net cash provided by operating activities	0
+0001326801-20-000013	7	7	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2019	terseLabel	Cash flows from operating activities	0
+0001326801-20-000013	7	8	CF	0	NetIncomeLoss	us-gaap/2019	terseLabel	Net income	0
+0001326801-20-000013	6	25	EQ	0	NetIncomeLoss	us-gaap/2019	terseLabel	Net income	0
+0001326801-20-000013	4	20	IS	0	NetIncomeLoss	us-gaap/2019	totalLabel	Net income	0
+0001326801-20-000013	5	1	CI	0	NetIncomeLoss	us-gaap/2019	verboseLabel	Net income	0
+0001326801-20-000013	40	9		0	NetIncomeLoss	us-gaap/2019	terseLabel	Net income	0
+0001326801-20-000013	23	18		0	NewAccountingPronouncementsPolicyPolicyTextBlock	us-gaap/2019	terseLabel	Recent Accounting Pronouncements Adopted and Not Yet Adopted	0
+0001326801-20-000013	7	25	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2019	negatedLabel	Purchases of property and equipment, net	1
+0001326801-20-000013	2	6	BS	0	PrepaidExpenseAndOtherAssetsCurrent	us-gaap/2019	terseLabel	Prepaid expenses and other current assets	0
+0001326801-20-000013	37	14		0	PropertyPlantAndEquipmentByTypeAxis	us-gaap/2019	terseLabel	Property, Plant and Equipment, Type [Axis]	0
+0001326801-20-000013	45	11		0	PropertyPlantAndEquipmentByTypeAxis	us-gaap/2019	terseLabel	Property, Plant and Equipment, Type [Axis]	0
+0001326801-20-000013	45	28		0	PropertyPlantAndEquipmentNet	us-gaap/2019	totalLabel	Property and equipment, net	0
+0001326801-20-000013	2	9	BS	0	PropertyPlantAndEquipmentNet	us-gaap/2019	verboseLabel	Property and equipment, net	0
+0001326801-20-000013	23	10		0	PropertyPlantAndEquipmentPolicyTextBlock	us-gaap/2019	terseLabel	Property and Equipment	0
+0001326801-20-000013	45	12		0	PropertyPlantAndEquipmentTypeDomain	us-gaap/2019	terseLabel	Property, Plant and Equipment, Type [Domain]	0
+0001326801-20-000013	37	15		0	PropertyPlantAndEquipmentTypeDomain	us-gaap/2019	terseLabel	Property, Plant and Equipment, Type [Domain]	0
+0001326801-20-000013	37	20		0	RangeAxis	srt/2019	terseLabel	Statistical Measurement [Axis]	0
+0001326801-20-000013	48	2		0	RangeAxis	srt/2019	terseLabel	Statistical Measurement [Axis]	0
+0001326801-20-000013	67	17		0	RangeAxis	srt/2019	terseLabel	Statistical Measurement [Axis]	0
+0001326801-20-000013	67	18		0	RangeMember	srt/2019	terseLabel	Statistical Measurement [Domain]	0
+0001326801-20-000013	48	3		0	RangeMember	srt/2019	terseLabel	Statistical Measurement [Domain]	0
+0001326801-20-000013	37	21		0	RangeMember	srt/2019	terseLabel	Statistical Measurement [Domain]	0
+0001326801-20-000013	2	31	BS	0	RetainedEarningsAccumulatedDeficit	us-gaap/2019	terseLabel	Retained earnings	0
+0001326801-20-000013	3	6	BS	1	StatementLineItems	us-gaap/2019	terseLabel	Statement	0
+0001326801-20-000013	4	8	IS	0	StatementLineItems	us-gaap/2019	terseLabel	Statement	0
+0001326801-20-000013	7	6	CF	0	StatementLineItems	us-gaap/2019	terseLabel	Statement	0
+0001326801-20-000013	6	8	EQ	0	StatementLineItems	us-gaap/2019	terseLabel	Statement	0
+0001326801-20-000013	7	1	CF	0	StatementTable	us-gaap/2019	terseLabel	Statement [Table]	0
+0001326801-20-000013	4	1	IS	0	StatementTable	us-gaap/2019	terseLabel	Statement [Table]	0
+0001326801-20-000013	6	1	EQ	0	StatementTable	us-gaap/2019	terseLabel	Statement [Table]	0
+0001326801-20-000013	3	1	BS	1	StatementTable	us-gaap/2019	terseLabel	Statement [Table]	0
+0001326801-20-000013	2	32	BS	0	StockholdersEquity	us-gaap/2019	totalLabel	Total stockholders' equity	0
+0001326801-20-000013	6	27	EQ	0	StockholdersEquity	us-gaap/2019	periodEndLabel	Total stockholders' equity, ending	0
+0001326801-20-000013	6	11	EQ	0	StockholdersEquity	us-gaap/2019	periodStartLabel	Total stockholders' equity, beginning	0
+0001326801-20-000013	3	9	BS	1	StockholdersEquityAbstract	us-gaap/2019	terseLabel	Stockholders' equity:	0
+0001326801-20-000013	2	27	BS	0	StockholdersEquityAbstract	us-gaap/2019	terseLabel	Stockholders' equity:	0
+0001326801-20-000013	23	2		0	UseOfEstimates	us-gaap/2019	terseLabel	Use of Estimates	0
+0001326801-20-000013	53	16		0	AccruedLiabilitiesCurrent	us-gaap/2019	totalLabel	Accrued expenses and other current liabilities	0
+0001326801-20-000013	2	20	BS	0	AccruedLiabilitiesCurrent	us-gaap/2019	terseLabel	Accrued expenses and other current liabilities	0
+0001326801-20-000013	51	11		0	AcquiredFiniteLivedIntangibleAssetsWeightedAverageUsefulLife	us-gaap/2019	verboseLabel	Weighted-Average Remaining Useful Lives (in years)	0
+0001326801-20-000013	6	5	EQ	0	AdditionalPaidInCapitalMember	us-gaap/2019	terseLabel	Additional Paid-In Capital	0
+0001326801-20-000013	8	1		0	BasisOfPresentationAndSignificantAccountingPoliciesTextBlock	us-gaap/2019	terseLabel	Summary of Significant Accounting Policies	0
+0001326801-20-000013	56	3		0	ClassOfStockDomain	us-gaap/2019	terseLabel	Class of Stock [Domain]	0
+0001326801-20-000013	59	3		0	ClassOfStockDomain	us-gaap/2019	terseLabel	Class of Stock [Domain]	0
+0001326801-20-000013	1	3	CP	0	ClassOfStockDomain	us-gaap/2019	terseLabel	Class of Stock [Domain]	0
+0001326801-20-000013	40	3		0	ClassOfStockDomain	us-gaap/2019	terseLabel	Class of Stock [Domain]	0
+0001326801-20-000013	3	3	BS	1	ClassOfStockDomain	us-gaap/2019	terseLabel	Class of Stock [Domain]	0
+0001326801-20-000013	2	26	BS	0	CommitmentsAndContingencies	us-gaap/2019	terseLabel	Commitments and contingencies	0
+0001326801-20-000013	23	12		0	CommitmentsAndContingenciesPolicyTextBlock	us-gaap/2019	terseLabel	Loss Contingencies	0
+0001326801-20-000013	6	4	EQ	0	CommonStockMember	us-gaap/2019	terseLabel	Class A and Class B Common Stock	0
+0001326801-20-000013	3	10	BS	1	CommonStockParOrStatedValuePerShare	us-gaap/2019	terseLabel	Common stock, par value (in dollars per share)	0
+0001326801-20-000013	56	8		0	CommonStockParOrStatedValuePerShare	us-gaap/2019	terseLabel	Common stock, par value (in dollars per share)	0
+0001326801-20-000013	56	7		0	CommonStockSharesAuthorized	us-gaap/2019	terseLabel	Common stock, shares authorized (in shares)	0
+0001326801-20-000013	3	11	BS	1	CommonStockSharesAuthorized	us-gaap/2019	terseLabel	Common stock, shares authorized (in shares)	0
+0001326801-20-000013	23	16		0	ConcentrationRiskCreditRisk	us-gaap/2019	terseLabel	Credit Risk and Concentration	0
+0001326801-20-000013	66	11		0	DeferredTaxAssetsNet	us-gaap/2019	totalLabel	Deferred tax assets, net of valuation allowance	0
+0001326801-20-000013	67	21		0	EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate	us-gaap/2019	verboseLabel	U.S. federal statutory income tax rate (in percentage)	0
+0001326801-20-000013	65	2		0	EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate	us-gaap/2019	terseLabel	U.S. federal statutory income tax rate	0
+0001326801-20-000013	65	3		0	EffectiveIncomeTaxRateReconciliationStateAndLocalIncomeTaxes	us-gaap/2019	terseLabel	State income taxes, net of federal benefit	0
+0001326801-20-000013	6	3	EQ	0	EquityComponentDomain	us-gaap/2019	terseLabel	Equity Component [Domain]	0
+0001326801-20-000013	23	8		0	FairValueOfFinancialInstrumentsPolicy	us-gaap/2019	terseLabel	Fair Value of Financial Instruments	0
+0001326801-20-000013	51	13		0	FiniteLivedIntangibleAssetsAccumulatedAmortization	us-gaap/2019	negatedTerseLabel	Accumulated Amortization	1
+0001326801-20-000013	51	3		0	FiniteLivedIntangibleAssetsByMajorClassAxis	us-gaap/2019	terseLabel	Finite-Lived Intangible Assets by Major Class [Axis]	0
+0001326801-20-000013	51	4		0	FiniteLivedIntangibleAssetsMajorClassNameDomain	us-gaap/2019	terseLabel	Finite-Lived Intangible Assets, Major Class Name [Domain]	0
+0001326801-20-000013	21	1		0	IncomeTaxDisclosureTextBlock	us-gaap/2019	terseLabel	Income Taxes	0
+0001326801-20-000013	7	48	CF	0	IncomeTaxesPaidNet	us-gaap/2019	terseLabel	Cash paid for income taxes, net	0
+0001326801-20-000013	7	14	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2019	terseLabel	Changes in assets and liabilities:	0
+0001326801-20-000013	62	2		0	InterestExpense	us-gaap/2019	negatedTerseLabel	Interest expense	1
+0001326801-20-000013	37	23		0	MaximumMember	srt/2019	verboseLabel	Maximum	0
+0001326801-20-000013	48	5		0	MaximumMember	srt/2019	terseLabel	Maximum	0
+0001326801-20-000013	67	19		0	MaximumMember	srt/2019	verboseLabel	Maximum	0
+0001326801-20-000013	48	4		0	MinimumMember	srt/2019	terseLabel	Minimum	0
+0001326801-20-000013	37	22		0	MinimumMember	srt/2019	verboseLabel	Minimum	0
+0001326801-20-000013	4	16	IS	0	OperatingIncomeLoss	us-gaap/2019	totalLabel	Income from operations	0
+0001326801-20-000013	67	23		0	OperatingLossCarryforwards	us-gaap/2019	terseLabel	Operating loss carryforwards	0
+0001326801-20-000013	51	7		0	PatentsMember	us-gaap/2019	terseLabel	Acquired patents	0
+0001326801-20-000013	7	34	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2019	negatedTerseLabel	Repurchases of Class A common stock	1
+0001326801-20-000013	4	12	IS	0	ResearchAndDevelopmentExpense	us-gaap/2019	terseLabel	Research and development	0
+0001326801-20-000013	6	7	EQ	0	RetainedEarningsMember	us-gaap/2019	terseLabel	Retained Earnings	0
+0001326801-20-000013	32	1		0	ScheduleOfAccruedLiabilitiesTableTextBlock	us-gaap/2019	terseLabel	Schedule of Accrued Expenses and Other Current Liabilities	0
+0001326801-20-000013	35	4		0	ScheduleOfDeferredTaxAssetsAndLiabilitiesTableTextBlock	us-gaap/2019	terseLabel	Schedule of Deferred Tax Assets and Liabilities	0
+0001326801-20-000013	35	1		0	ScheduleOfIncomeBeforeIncomeTaxDomesticAndForeignTableTextBlock	us-gaap/2019	terseLabel	Schedule of Components of Income Before Provision for Income Taxes	0
+0001326801-20-000013	7	11	CF	0	ShareBasedCompensation	us-gaap/2019	verboseLabel	Share-based compensation	0
+0001326801-20-000013	40	2		0	StatementClassOfStockAxis	us-gaap/2019	terseLabel	Class of Stock [Axis]	0
+0001326801-20-000013	3	2	BS	1	StatementClassOfStockAxis	us-gaap/2019	terseLabel	Class of Stock [Axis]	0
+0001326801-20-000013	1	2	CP	0	StatementClassOfStockAxis	us-gaap/2019	terseLabel	Class of Stock [Axis]	0
+0001326801-20-000013	56	2		0	StatementClassOfStockAxis	us-gaap/2019	terseLabel	Class of Stock [Axis]	0
+0001326801-20-000013	59	2		0	StatementClassOfStockAxis	us-gaap/2019	terseLabel	Class of Stock [Axis]	0
+0001326801-20-000013	6	2	EQ	0	StatementEquityComponentsAxis	us-gaap/2019	terseLabel	Equity Components [Axis]	0
+0001326801-20-000013	6	15	EQ	0	StockIssuedDuringPeriodSharesStockOptionsExercised	us-gaap/2019	terseLabel	Issuance of common stock for cash upon exercise of stock options, shares	0
+0001326801-20-000013	59	11		0	StockIssuedDuringPeriodSharesStockOptionsExercised	us-gaap/2019	negatedLabel	Stock options exercised (in shares)	1
+0001326801-20-000013	6	16	EQ	0	StockIssuedDuringPeriodValueStockOptionsExercised	us-gaap/2019	terseLabel	Issuance of common stock for cash upon exercise of stock options, value	0
+0001326801-20-000013	53	4		0	SubsequentEventMember	us-gaap/2019	terseLabel	Subsequent Event	0
+0001326801-20-000013	58	8		0	SubsequentEventMember	us-gaap/2019	terseLabel	Subsequent Event	0
+0001326801-20-000013	55	4		0	SubsequentEventMember	us-gaap/2019	terseLabel	Subsequent Event	0
+0001326801-20-000013	57	4		0	SubsequentEventMember	us-gaap/2019	terseLabel	Subsequent Event	0
+0001326801-20-000013	57	2		0	SubsequentEventTypeAxis	us-gaap/2019	terseLabel	Subsequent Event Type [Axis]	0
+0001326801-20-000013	55	2		0	SubsequentEventTypeAxis	us-gaap/2019	terseLabel	Subsequent Event Type [Axis]	0
+0001326801-20-000013	58	6		0	SubsequentEventTypeAxis	us-gaap/2019	terseLabel	Subsequent Event Type [Axis]	0
+0001326801-20-000013	53	2		0	SubsequentEventTypeAxis	us-gaap/2019	terseLabel	Subsequent Event Type [Axis]	0
+0001326801-20-000013	53	3		0	SubsequentEventTypeDomain	us-gaap/2019	terseLabel	Subsequent Event Type [Domain]	0
+0001326801-20-000013	58	7		0	SubsequentEventTypeDomain	us-gaap/2019	terseLabel	Subsequent Event Type [Domain]	0
+0001326801-20-000013	55	3		0	SubsequentEventTypeDomain	us-gaap/2019	terseLabel	Subsequent Event Type [Domain]	0
+0001326801-20-000013	57	3		0	SubsequentEventTypeDomain	us-gaap/2019	terseLabel	Subsequent Event Type [Domain]	0
+0001326801-20-000013	7	47	CF	0	SupplementalCashFlowInformationAbstract	us-gaap/2019	terseLabel	Supplemental cash flow data	0
+0001326801-20-000013	23	9		0	TradeAndOtherAccountsReceivablePolicy	us-gaap/2019	terseLabel	Accounts Receivable and Allowances	0
+0001326801-20-000013	4	28	IS	0	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2019	terseLabel	Diluted (in shares)	0
+0001326801-20-000013	40	29		0	WeightedAverageNumberOfDilutedSharesOutstanding	us-gaap/2019	totalLabel	Number of shares used for diluted EPS computation (in shares)	0
+0001326801-20-000013	45	26		0	AccumulatedDepreciationDepletionAndAmortizationPropertyPlantAndEquipment	us-gaap/2019	negatedLabel	Less: Accumulated depreciation	1
+0001326801-20-000013	3	8	BS	1	AllowanceForDoubtfulAccountsReceivableCurrent	us-gaap/2019	negatedLabel	Accounts receivable, allowances for doubtful accounts	1
+0001326801-20-000013	51	1		0	AmortizationOfIntangibleAssets	us-gaap/2019	terseLabel	Amortization expense	0
+0001326801-20-000013	7	49	CF	0	CashFlowNoncashInvestingAndFinancingActivitiesDisclosureAbstract	us-gaap/2019	terseLabel	Non-cash investing activities:	0
+0001326801-20-000013	64	3		0	CurrentFederalTaxExpenseBenefit	us-gaap/2019	terseLabel	Federal	0
+0001326801-20-000013	64	4		0	CurrentStateAndLocalTaxExpenseBenefit	us-gaap/2019	terseLabel	State	0
+0001326801-20-000013	53	19		0	DeferredIncomeTaxLiabilitiesNet	us-gaap/2019	terseLabel	Deferred tax liabilities	0
+0001326801-20-000013	65	11		0	EffectiveIncomeTaxRateContinuingOperations	us-gaap/2019	totalLabel	Effective tax rate	0
+0001326801-20-000013	65	10		0	EffectiveIncomeTaxRateReconciliationOtherAdjustments	us-gaap/2019	terseLabel	Other	0
+0001326801-20-000013	12	1		0	FairValueDisclosuresTextBlock	us-gaap/2019	terseLabel	Fair Value Measurement	0
+0001326801-20-000013	47	2		0	LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths	us-gaap/2019	terseLabel	2020	0
+0001326801-20-000013	45	22		0	PropertyPlantAndEquipmentGross	us-gaap/2019	terseLabel	Property and equipment, gross	0
+0001326801-20-000013	35	3		0	ScheduleOfEffectiveIncomeTaxRateReconciliationTableTextBlock	us-gaap/2019	terseLabel	Schedule of Reconciliation of U.S. Federal Statutory Income Tax Rate to Effective Tax Rate	0
+0001326801-20-000013	22	1		0	SegmentReportingDisclosureTextBlock	us-gaap/2019	terseLabel	Geographical Information	0
+0001326801-20-000013	23	6		0	AdvertisingCostsPolicyTextBlock	us-gaap/2019	terseLabel	Advertising Expense	0
+0001326801-20-000013	37	25		0	AdvertisingExpense	us-gaap/2019	terseLabel	Advertising expense	0
+0001326801-20-000013	41	7		0	CashAndCashEquivalentsAxis	us-gaap/2019	terseLabel	Cash and Cash Equivalents [Axis]	0
+0001326801-20-000013	44	7		0	CashAndCashEquivalentsAxis	us-gaap/2019	terseLabel	Cash and Cash Equivalents [Axis]	0
+0001326801-20-000013	58	15		0	CommonStockCapitalSharesReservedForFutureIssuance	us-gaap/2019	terseLabel	2012 equity incentive plan shares reserved for future issuance (in shares)	0
+0001326801-20-000013	4	10	IS	0	CostsAndExpensesAbstract	us-gaap/2019	terseLabel	Costs and expenses:	0
+0001326801-20-000013	41	2		0	FinancialInstrumentAxis	us-gaap/2019	terseLabel	Financial Instrument [Axis]	0
+0001326801-20-000013	44	2		0	FinancialInstrumentAxis	us-gaap/2019	terseLabel	Financial Instrument [Axis]	0
+0001326801-20-000013	51	12		0	FiniteLivedIntangibleAssetsGross	us-gaap/2019	terseLabel	Gross Carrying Amount	0
+0001326801-20-000013	51	14		0	FiniteLivedIntangibleAssetsNet	us-gaap/2019	totalLabel	Total	0
+0001326801-20-000013	52	8		0	FiniteLivedIntangibleAssetsNet	us-gaap/2019	totalLabel	Total	0
+0001326801-20-000013	62	4		0	OtherNonoperatingIncomeExpense	us-gaap/2019	verboseLabel	Other	0
+0001326801-20-000013	58	9		0	PlanNameAxis	us-gaap/2019	terseLabel	Plan Name [Axis]	0
+0001326801-20-000013	58	10		0	PlanNameDomain	us-gaap/2019	terseLabel	Plan Name [Domain]	0
+0001326801-20-000013	44	8		0	RestrictedCashAndCashEquivalentsCashAndCashEquivalentsMember	us-gaap/2019	terseLabel	Cash and Cash Equivalents [Domain]	0
+0001326801-20-000013	41	8		0	RestrictedCashAndCashEquivalentsCashAndCashEquivalentsMember	us-gaap/2019	terseLabel	Cash and Cash Equivalents [Domain]	0
+0001326801-20-000013	23	17		0	SegmentReportingPolicyPolicyTextBlock	us-gaap/2019	terseLabel	Segments	0
+0001326801-20-000013	59	22		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsForfeituresAndExpirationsInPeriod	us-gaap/2019	terseLabel	Options forfeited or canceled (in shares)	0
+0001326801-20-000013	59	10		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingNumber	us-gaap/2019	periodStartLabel	Beginning balance (in shares)	0
+0001326801-20-000013	59	12		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingNumber	us-gaap/2019	periodEndLabel	Ending balance (in shares)	0
+0001326801-20-000013	59	9		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingRollForward	us-gaap/2019	terseLabel	Number of Shares	0
+0001326801-20-000013	59	14		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePrice	us-gaap/2019	periodStartLabel	Beginning Balance (in dollars per share)	0
+0001326801-20-000013	59	16		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePrice	us-gaap/2019	periodEndLabel	Ending Balance (in dollars per share)	0
+0001326801-20-000013	59	13		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePriceRollforward	us-gaap/2019	terseLabel	Weighted-Average Exercise Price	0
+0001326801-20-000013	59	15		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsExercisesInPeriodWeightedAverageExercisePrice	us-gaap/2019	terseLabel	Stock options exercised (in dollars per share)	0
+0001326801-20-000013	44	3		0	TransfersAndServicingOfFinancialInstrumentsTypesOfFinancialInstrumentsDomain	us-gaap/2019	terseLabel	Financial Instruments [Domain]	0
+0001326801-20-000013	41	3		0	TransfersAndServicingOfFinancialInstrumentsTypesOfFinancialInstrumentsDomain	us-gaap/2019	terseLabel	Financial Instruments [Domain]	0
+0001326801-20-000013	59	5		0	AwardTypeAxis	us-gaap/2019	terseLabel	Award Type [Axis]	0
+0001326801-20-000013	61	2		0	AwardTypeAxis	us-gaap/2019	terseLabel	Award Type [Axis]	0
+0001326801-20-000013	60	2		0	AwardTypeAxis	us-gaap/2019	terseLabel	Award Type [Axis]	0
+0001326801-20-000013	58	3		0	AwardTypeAxis	us-gaap/2019	terseLabel	Award Type [Axis]	0
+0001326801-20-000013	45	14		0	BuildingMember	us-gaap/2019	terseLabel	Buildings	0
+0001326801-20-000013	45	6		0	BuildingMember	us-gaap/2019	terseLabel	Buildings	0
+0001326801-20-000013	37	17		0	BuildingMember	us-gaap/2019	terseLabel	Buildings	0
+0001326801-20-000013	23	13		0	BusinessCombinationsPolicy	us-gaap/2019	terseLabel	Business Combinations	0
+0001326801-20-000013	7	51	CF	0	CapitalExpendituresIncurredButNotYetPaid	us-gaap/2019	terseLabel	Property and equipment in accounts payable and accrued liabilities	0
+0001326801-20-000013	66	12		0	ComponentsOfDeferredTaxLiabilitiesAbstract	us-gaap/2019	terseLabel	Deferred tax liabilities:	0
+0001326801-20-000013	45	10		0	ConstructionInProgressMember	us-gaap/2019	terseLabel	Construction in progress	0
+0001326801-20-000013	45	19		0	ConstructionInProgressMember	us-gaap/2019	terseLabel	Construction in progress	0
+0001326801-20-000013	64	6		0	CurrentIncomeTaxExpenseBenefit	us-gaap/2019	totalLabel	Total current tax expense	0
+0001326801-20-000013	64	2		0	CurrentIncomeTaxExpenseBenefitContinuingOperationsAbstract	us-gaap/2019	terseLabel	Current:	0
+0001326801-20-000013	64	8		0	DeferredFederalIncomeTaxExpenseBenefit	us-gaap/2019	terseLabel	Federal	0
+0001326801-20-000013	64	7		0	DeferredIncomeTaxExpenseBenefitContinuingOperationsAbstract	us-gaap/2019	terseLabel	Deferred:	0
+0001326801-20-000013	64	9		0	DeferredStateAndLocalIncomeTaxExpenseBenefit	us-gaap/2019	terseLabel	State	0
+0001326801-20-000013	66	9		0	DeferredTaxAssetsGross	us-gaap/2019	totalLabel	Total deferred tax assets	0
+0001326801-20-000013	66	3		0	DeferredTaxAssetsOperatingLossCarryforwards	us-gaap/2019	terseLabel	Net operating loss carryforward	0
+0001326801-20-000013	66	10		0	DeferredTaxAssetsValuationAllowance	us-gaap/2019	negatedTerseLabel	Less: valuation allowance	1
+0001326801-20-000013	67	22		0	DeferredTaxAssetsValuationAllowance	us-gaap/2019	verboseLabel	Valuation allowance, deferred tax assets	0
+0001326801-20-000013	40	16		0	EarningsPerShareBasic	us-gaap/2019	verboseLabel	Basic EPS (in dollars per share)	0
+0001326801-20-000013	4	24	IS	0	EarningsPerShareBasic	us-gaap/2019	terseLabel	Basic (in dollars per share)	0
+0001326801-20-000013	61	8		0	EmployeeServiceShareBasedCompensationNonvestedAwardsTotalCompensationCostNotYetRecognizedPeriodForRecognition1	us-gaap/2019	verboseLabel	Future period share-based compensation expense period of recognition (in years)	0
+0001326801-20-000013	44	14		0	FairValueByFairValueHierarchyLevelAxis	us-gaap/2019	terseLabel	Fair Value Hierarchy and NAV [Axis]	0
+0001326801-20-000013	44	16		0	FairValueInputsLevel1Member	us-gaap/2019	terseLabel	Quoted Prices in Active Markets for Identical Assets (Level 1)	0
+0001326801-20-000013	44	17		0	FairValueInputsLevel2Member	us-gaap/2019	terseLabel	Significant Other Observable Inputs (Level 2)	0
+0001326801-20-000013	44	18		0	FairValueInputsLevel3Member	us-gaap/2019	terseLabel	Significant Unobservable Inputs (Level 3)	0
+0001326801-20-000013	44	15		0	FairValueMeasurementsFairValueHierarchyDomain	us-gaap/2019	terseLabel	Fair Value, Measurements, Fair Value Hierarchy [Domain]	0
+0001326801-20-000013	52	7		0	FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive	us-gaap/2019	terseLabel	Thereafter	0
+0001326801-20-000013	52	6		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearFive	us-gaap/2019	terseLabel	2024	0
+0001326801-20-000013	52	5		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearFour	us-gaap/2019	terseLabel	2023	0
+0001326801-20-000013	52	4		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearThree	us-gaap/2019	terseLabel	2022	0
+0001326801-20-000013	52	3		0	FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo	us-gaap/2019	terseLabel	2021	0
+0001326801-20-000013	50	5		0	Goodwill	us-gaap/2019	periodEndLabel	Goodwill ending	0
+0001326801-20-000013	50	2		0	Goodwill	us-gaap/2019	periodStartLabel	Goodwill beginning	0
+0001326801-20-000013	2	12	BS	0	Goodwill	us-gaap/2019	terseLabel	Goodwill	0
+0001326801-20-000013	45	13		0	LandMember	us-gaap/2019	terseLabel	Land	0
+0001326801-20-000013	45	5		0	LandMember	us-gaap/2019	terseLabel	Land	0
+0001326801-20-000013	45	15		0	LeaseholdImprovementsMember	us-gaap/2019	terseLabel	Leasehold improvements	0
+0001326801-20-000013	45	7		0	LeaseholdImprovementsMember	us-gaap/2019	terseLabel	Leasehold improvements	0
+0001326801-20-000013	4	17	IS	0	NonoperatingIncomeExpense	us-gaap/2019	terseLabel	Interest and other income, net	0
+0001326801-20-000013	62	5		0	NonoperatingIncomeExpense	us-gaap/2019	totalLabel	Interest and other income, net	0
+0001326801-20-000013	48	7		0	OperatingLeasesRentExpenseNet	us-gaap/2019	terseLabel	Operating lease expense	0
+0001326801-20-000013	2	13	BS	0	OtherAssetsNoncurrent	us-gaap/2019	terseLabel	Other assets	0
+0001326801-20-000013	51	9		0	OtherIntangibleAssetsMember	us-gaap/2019	verboseLabel	Other	0
+0001326801-20-000013	13	1		0	PropertyPlantAndEquipmentDisclosureTextBlock	us-gaap/2019	terseLabel	Property and Equipment	0
+0001326801-20-000013	29	1		0	PropertyPlantAndEquipmentTextBlock	us-gaap/2019	terseLabel	Schedule of Property and Equipment	0
+0001326801-20-000013	37	26		0	PropertyPlantAndEquipmentUsefulLife	us-gaap/2019	terseLabel	Useful life of property and equipment	0
+0001326801-20-000013	35	2		0	ScheduleOfComponentsOfIncomeTaxExpenseBenefitTableTextBlock	us-gaap/2019	terseLabel	Schedule of Provision for Income Taxes	0
+0001326801-20-000013	31	3		0	ScheduleofFiniteLivedIntangibleAssetsFutureAmortizationExpenseTableTextBlock	us-gaap/2019	terseLabel	Schedule of Estimated Amortization Expense for Unamortized Acquired Intangible Assets	0
+0001326801-20-000013	31	2		0	ScheduleOfFiniteLivedIntangibleAssetsTableTextBlock	us-gaap/2019	terseLabel	Schedule of Finite-Lived Intangible Assets	0
+0001326801-20-000013	31	1		0	ScheduleOfGoodwillTextBlock	us-gaap/2019	terseLabel	Schedule of Changes in Carrying Amount of Goodwill	0
+0001326801-20-000013	33	1		0	ScheduleOfShareBasedCompensationStockOptionsActivityTableTextBlock	us-gaap/2019	terseLabel	Schedule of Stock Option Activity under Stock Plans	0
+0001326801-20-000013	37	12		0	SegmentGeographicalDomain	srt/2019	terseLabel	Geographical [Domain]	0
+0001326801-20-000013	69	3		0	SegmentGeographicalDomain	srt/2019	terseLabel	Geographical [Domain]	0
+0001326801-20-000013	38	7		0	SegmentGeographicalDomain	srt/2019	terseLabel	Geographical [Domain]	0
+0001326801-20-000013	59	21		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriodGross	us-gaap/2019	terseLabel	Options granted (in shares)	0
+0001326801-20-000013	59	20		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingIntrinsicValue	us-gaap/2019	periodEndLabel	Balance at period end	0
+0001326801-20-000013	59	18		0	SharebasedCompensationArrangementBySharebasedPaymentAwardOptionsOutstandingWeightedAverageRemainingContractualTerm2	us-gaap/2019	terseLabel	Balance at period end	0
+0001326801-20-000013	59	6		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2019	terseLabel	Award Type [Domain]	0
+0001326801-20-000013	60	3		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2019	terseLabel	Award Type [Domain]	0
+0001326801-20-000013	61	3		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2019	terseLabel	Award Type [Domain]	0
+0001326801-20-000013	58	4		0	ShareBasedCompensationArrangementsByShareBasedPaymentAwardAwardTypeAndPlanNameDomain	us-gaap/2019	terseLabel	Award Type [Domain]	0
+0001326801-20-000013	37	11		0	StatementGeographicalAxis	srt/2019	terseLabel	Geographical [Axis]	0
+0001326801-20-000013	38	6		0	StatementGeographicalAxis	srt/2019	terseLabel	Geographical [Axis]	0
+0001326801-20-000013	69	2		0	StatementGeographicalAxis	srt/2019	terseLabel	Geographical [Axis]	0
+0001326801-20-000013	4	27	IS	0	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2019	verboseLabel	Basic (in shares)	0
+0001326801-20-000013	40	15		0	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2019	totalLabel	Number of shares used for basic EPS computation (in shares)	0
+0001326801-20-000013	40	25		0	WeightedAverageNumberOfSharesOutstandingBasic	us-gaap/2019	terseLabel	Number of shares used for basic EPS computation (in shares)	0
+0001326801-20-000013	7	20	CF	0	IncreaseDecreaseInAccruedLiabilities	us-gaap/2019	terseLabel	Accrued expenses and other current liabilities	0
+0001326801-20-000013	53	15		0	OtherAccruedLiabilitiesCurrent	us-gaap/2019	terseLabel	Other current liabilities	0
+0001326801-20-000013	37	6		0	ConcentrationRiskBenchmarkDomain	us-gaap/2019	terseLabel	Concentration Risk Benchmark [Domain]	0
+0001326801-20-000013	37	5		0	ConcentrationRiskByBenchmarkAxis	us-gaap/2019	terseLabel	Concentration Risk Benchmark [Axis]	0
+0001326801-20-000013	37	8		0	ConcentrationRiskByTypeAxis	us-gaap/2019	terseLabel	Concentration Risk Type [Axis]	0
+0001326801-20-000013	37	32		0	ConcentrationRiskPercentage1	us-gaap/2019	terseLabel	Concentration risk percentage (in percentage)	0
+0001326801-20-000013	37	9		0	ConcentrationRiskTypeDomain	us-gaap/2019	terseLabel	Concentration Risk Type [Domain]	0
+0001326801-20-000013	54	5		0	DebtInstrumentLineItems	us-gaap/2019	terseLabel	Debt Instrument	0
+0001326801-20-000013	54	1		0	DebtInstrumentTable	us-gaap/2019	terseLabel	Schedule of Long-term Debt Instruments [Table]	0
+0001326801-20-000013	51	10		0	FiniteLivedIntangibleAssetsLineItems	us-gaap/2019	terseLabel	Finite-Lived Intangible Assets [Line Items]	0
+0001326801-20-000013	54	2		0	LongtermDebtTypeAxis	us-gaap/2019	terseLabel	Long-term Debt, Type [Axis]	0
+0001326801-20-000013	54	3		0	LongtermDebtTypeDomain	us-gaap/2019	terseLabel	Long-term Debt, Type [Domain]	0
+0001326801-20-000013	38	2		0	ProductOrServiceAxis	srt/2019	terseLabel	Product and Service [Axis]	0
+0001326801-20-000013	38	3		0	ProductsAndServicesDomain	srt/2019	terseLabel	Product and Service [Domain]	0
+0001326801-20-000013	51	2		0	ScheduleOfFiniteLivedIntangibleAssetsTable	us-gaap/2019	terseLabel	Schedule of Finite-Lived Intangible Assets [Table]	0
+0001326801-20-000013	58	2		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2019	verboseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-20-000013	61	1		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2019	verboseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-20-000013	60	1		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2019	terseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-20-000013	59	1		0	ScheduleOfShareBasedCompensationArrangementsByShareBasedPaymentAwardTable	us-gaap/2019	terseLabel	Schedule of Share-based Compensation Arrangements by Share-based Payment Award [Table]	0
+0001326801-20-000013	60	9		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriod	us-gaap/2019	negatedLabel	Vested (in shares)	1
+0001326801-20-000013	61	6		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodTotalFairValue	us-gaap/2019	terseLabel	Fair value of vested RSUs	0
+0001326801-20-000013	61	5		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2019	verboseLabel	Share-based Compensation Arrangement by Share-based Payment Award	0
+0001326801-20-000013	60	5		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2019	terseLabel	Share-based Compensation Arrangement by Share-based Payment Award [Line Items]	0
+0001326801-20-000013	58	12		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2019	verboseLabel	Share-based Compensation Arrangement by Share-based Payment Award	0
+0001326801-20-000013	59	8		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardLineItems	us-gaap/2019	terseLabel	Share-based Compensation Arrangement by Share-based Payment Award [Line Items]	0
+0001326801-20-000013	6	12	EQ	0	StockIssuedDuringPeriodSharesAcquisitions	us-gaap/2019	terseLabel	Issuance of common stock related to acquisitions, shares	0
+0001326801-20-000013	6	13	EQ	0	StockIssuedDuringPeriodValueAcquisitions	us-gaap/2019	terseLabel	Issuance of common stock related to acquisitions, value	0
+0001326801-20-000013	5	5	CI	0	ComprehensiveIncomeNetOfTax	us-gaap/2019	totalLabel	Comprehensive income	0
+0001326801-20-000013	17	1		0	LongTermDebtTextBlock	us-gaap/2019	terseLabel	Long-term Debt	0
+0001326801-20-000013	60	10		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeitedInPeriod	us-gaap/2019	negatedLabel	Forfeited (in shares)	1
+0001326801-20-000013	57	7		0	StockRepurchasedAndRetiredDuringPeriodShares	us-gaap/2019	terseLabel	Shares repurchased (in shares)	0
+0001326801-20-000013	57	8		0	StockRepurchasedAndRetiredDuringPeriodValue	us-gaap/2019	terseLabel	Shares repurchased	0
+0001326801-20-000013	6	24	EQ	0	OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent	us-gaap/2019	terseLabel	Other comprehensive income (loss)	0
+0001326801-20-000013	53	13		0	TaxesPayableCurrent	us-gaap/2019	terseLabel	Accrued taxes	0
+0001326801-20-000013	66	17		0	DeferredTaxAssetsLiabilitiesNet	us-gaap/2019	totalLabel	Net deferred tax assets	0
+0001326801-20-000013	63	1		0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesDomestic	us-gaap/2019	terseLabel	Domestic	0
+0001326801-20-000013	26	1		0	ScheduleOfEarningsPerShareBasicAndDilutedTableTextBlock	us-gaap/2019	terseLabel	Schedule of Numerators and Denominators of Basic and Diluted EPS Computations for Common Stock	0
+0001326801-20-000013	7	12	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2019	terseLabel	Deferred income taxes	0
+0001326801-20-000013	66	13		0	DeferredTaxLiabilitiesPropertyPlantAndEquipment	us-gaap/2019	negatedTerseLabel	Depreciation and amortization	1
+0001326801-20-000013	7	10	CF	0	DepreciationDepletionAndAmortization	us-gaap/2019	terseLabel	Depreciation and amortization	0
+0001326801-20-000013	62	1		0	InvestmentIncomeInterest	us-gaap/2019	terseLabel	Interest income	0
+0001326801-20-000013	4	22	IS	0	NetIncomeLossAvailableToCommonStockholdersBasic	us-gaap/2019	totalLabel	Net income attributable to Class A and Class B common stockholders	0
+0001326801-20-000013	40	11		0	NetIncomeLossAvailableToCommonStockholdersBasic	us-gaap/2019	verboseLabel	Net income attributable to common stockholders	0
+0001326801-20-000013	40	19		0	NetIncomeLossAvailableToCommonStockholdersBasic	us-gaap/2019	verboseLabel	Net income attributable to common stockholders	0
+0001326801-20-000013	4	13	IS	0	SellingAndMarketingExpense	us-gaap/2019	terseLabel	Marketing and sales	0
+0001326801-20-000013	59	23		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriodTotalIntrinsicValue	us-gaap/2019	terseLabel	Aggregate intrinsic value of the options exercised	0
+0001326801-20-000013	19	1		0	ShareholdersEquityAndShareBasedPaymentsTextBlock	us-gaap/2019	terseLabel	Stockholders' Equity	0
+0001326801-20-000013	6	22	EQ	0	StockRepurchasedDuringPeriodShares	us-gaap/2019	negatedTerseLabel	Share repurchases, shares	1
+0001326801-20-000013	6	23	EQ	0	StockRepurchasedDuringPeriodValue	us-gaap/2019	negatedTerseLabel	Share repurchases, value	1
+0001326801-20-000013	6	6	EQ	0	AccumulatedOtherComprehensiveIncomeMember	us-gaap/2019	terseLabel	Accumulated Other Comprehensive Loss	0
+0001326801-20-000013	66	8		0	DeferredTaxAssetsOther	us-gaap/2019	terseLabel	Other	0
+0001326801-20-000013	25	1		0	DisaggregationOfRevenueTableTextBlock	us-gaap/2019	terseLabel	Schedule of Disaggregation of Revenue	0
+0001326801-20-000013	4	23	IS	0	EarningsPerShareAbstract	us-gaap/2019	terseLabel	Earnings per share attributable to Class A and Class B common stockholders:	0
+0001326801-20-000013	40	7		0	EarningsPerShareBasicAbstract	us-gaap/2019	terseLabel	Basic EPS:	0
+0001326801-20-000013	40	30		0	EarningsPerShareDiluted	us-gaap/2019	verboseLabel	Diluted EPS (in dollars per share)	0
+0001326801-20-000013	4	25	IS	0	EarningsPerShareDiluted	us-gaap/2019	terseLabel	Diluted (in dollars per share)	0
+0001326801-20-000013	40	17		0	EarningsPerShareDilutedAbstract	us-gaap/2019	terseLabel	Diluted EPS:	0
+0001326801-20-000013	10	1		0	EarningsPerShareTextBlock	us-gaap/2019	terseLabel	Earnings per Share	0
+0001326801-20-000013	61	7		0	EmployeeServiceShareBasedCompensationNonvestedAwardsTotalCompensationCostNotYetRecognized	us-gaap/2019	verboseLabel	Future period share-based compensation expense	0
+0001326801-20-000013	47	24		0	FinanceLeaseLiabilityNoncurrent	us-gaap/2019	terseLabel	Lease liabilities, non-current	0
+0001326801-20-000013	7	18	CF	0	IncreaseDecreaseInAccountsPayableTrade	us-gaap/2019	terseLabel	Accounts payable	0
+0001326801-20-000013	40	23		0	NetIncomeLossAvailableToCommonStockholdersDiluted	us-gaap/2019	terseLabel	Net income attributable to common stockholders for diluted EPS	0
+0001326801-20-000013	5	2	CI	0	OtherComprehensiveIncomeLossNetOfTaxPeriodIncreaseDecreaseAbstract	us-gaap/2019	terseLabel	Other comprehensive income (loss):	0
+0001326801-20-000013	61	4		0	RestrictedStockUnitsRSUMember	us-gaap/2019	terseLabel	Restricted Stock Units (RSUs)	0
+0001326801-20-000013	60	4		0	RestrictedStockUnitsRSUMember	us-gaap/2019	terseLabel	Restricted Stock Units (RSUs)	0
+0001326801-20-000013	58	5		0	RestrictedStockUnitsRSUMember	us-gaap/2019	terseLabel	Restricted Stock Units (RSUs)	0
+0001326801-20-000013	30	3		0	LesseeOperatingLeaseLiabilityMaturityTableTextBlock	us-gaap/2019	terseLabel	Schedule of Maturities of Operating Lease Liabilities	0
+0001326801-20-000013	7	27	CF	0	ProceedsFromSaleOfAvailableForSaleSecuritiesDebt	us-gaap/2019	terseLabel	Sales of marketable securities	0
+0001326801-20-000013	43	2		0	AvailableForSaleSecuritiesDebtMaturitiesAfterOneThroughFiveYearsFairValue	us-gaap/2019	terseLabel	Due after one year to five years	0
+0001326801-20-000013	43	1		0	AvailableForSaleSecuritiesDebtMaturitiesWithinOneYearFairValue	us-gaap/2019	terseLabel	Due in one year	0
+0001326801-20-000013	7	46	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2019	terseLabel	Total cash, cash equivalents, and restricted cash	0
+0001326801-20-000013	7	41	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2019	periodStartLabel	Cash, cash equivalents, and restricted cash at beginning of the period	0
+0001326801-20-000013	7	42	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2019	periodEndLabel	Cash, cash equivalents, and restricted cash at end of the period	0
+0001326801-20-000013	41	6		0	CorporateDebtSecuritiesMember	us-gaap/2019	verboseLabel	Corporate debt securities	0
+0001326801-20-000013	41	14		0	CorporateDebtSecuritiesMember	us-gaap/2019	verboseLabel	Corporate debt securities	0
+0001326801-20-000013	44	6		0	CorporateDebtSecuritiesMember	us-gaap/2019	terseLabel	Corporate debt securities	0
+0001326801-20-000013	44	13		0	CorporateDebtSecuritiesMember	us-gaap/2019	terseLabel	Corporate debt securities	0
+0001326801-20-000013	27	2		0	InvestmentsClassifiedByContractualMaturityDateTableTextBlock	us-gaap/2019	terseLabel	Schedule of Marketable Securities by Contractual Maturities	0
+0001326801-20-000013	54	6		0	LineOfCreditFacilityMaximumBorrowingCapacity	us-gaap/2019	terseLabel	Line of credit facility, maximum borrowing capacity	0
+0001326801-20-000013	7	28	CF	0	ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities	us-gaap/2019	terseLabel	Maturities of marketable securities	0
+0001326801-20-000013	7	45	CF	0	RestrictedCashAndCashEquivalents	us-gaap/2019	terseLabel	Restricted cash	0
+0001326801-20-000013	37	30		0	AccumulatedOtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentNetOfTax	us-gaap/2019	terseLabel	Cumulative translation loss, net of tax	0
+0001326801-20-000013	7	21	CF	0	IncreaseDecreaseInContractWithCustomerLiability	us-gaap/2019	terseLabel	Deferred revenue and deposits	0
+0001326801-20-000013	7	17	CF	0	IncreaseDecreaseInOtherOperatingAssets	us-gaap/2019	negatedLabel	Other assets	1
+0001326801-20-000013	5	3	CI	0	OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax	us-gaap/2019	terseLabel	Change in foreign currency translation adjustment, net of tax	0
+0001326801-20-000013	2	11	BS	0	IntangibleAssetsNetExcludingGoodwill	us-gaap/2019	terseLabel	Intangible assets, net	0
+0001326801-20-000013	37	2		0	AdjustmentsForNewAccountingPronouncementsAxis	us-gaap/2019	terseLabel	Adjustments for New Accounting Pronouncements [Axis]	0
+0001326801-20-000013	7	30	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2019	negatedLabel	Other investing activities, net	1
+0001326801-20-000013	37	3		0	TypeOfAdoptionMember	us-gaap/2019	terseLabel	Type of Adoption [Domain]	0
+0001326801-20-000013	4	30	IS	0	AllocatedShareBasedCompensationExpense	us-gaap/2019	positiveLabel	Share-based compensation expense	0
+0001326801-20-000013	9	1		0	RevenueFromContractWithCustomerTextBlock	us-gaap/2019	verboseLabel	Revenue	0
+0001326801-20-000013	7	2	CF	0	BalanceSheetLocationAxis	us-gaap/2019	terseLabel	Balance Sheet Location [Axis]	0
+0001326801-20-000013	7	3	CF	0	BalanceSheetLocationDomain	us-gaap/2019	terseLabel	Balance Sheet Location [Domain]	0
+0001326801-20-000013	65	7		0	EffectiveIncomeTaxRateReconciliationForeignIncomeTaxRateDifferential	us-gaap/2019	negatedTerseLabel	Effect of non-U.S. operations	1
+0001326801-20-000013	2	18	BS	0	AccountsPayableTradeCurrent	us-gaap/2019	terseLabel	Partners payable	0
+0001326801-20-000013	1	4	CP	0	CommonClassAMember	us-gaap/2019	verboseLabel	Class A	0
+0001326801-20-000013	59	4		0	CommonClassAMember	us-gaap/2019	terseLabel	Class A Common Stock	0
+0001326801-20-000013	56	4		0	CommonClassAMember	us-gaap/2019	terseLabel	Class A Common Stock	0
+0001326801-20-000013	40	4		0	CommonClassAMember	us-gaap/2019	verboseLabel	Class A	0
+0001326801-20-000013	3	4	BS	1	CommonClassAMember	us-gaap/2019	verboseLabel	Class A	0
+0001326801-20-000013	66	6		0	DeferredTaxAssetsTaxDeferredExpenseReservesAndAccrualsAccruedLiabilities	us-gaap/2019	terseLabel	Accrued expenses and other liabilities	0
+0001326801-20-000013	53	11		0	EmployeeRelatedLiabilitiesCurrent	us-gaap/2019	terseLabel	Accrued compensation and benefits	0
+0001326801-20-000013	14	1		0	LesseeOperatingLeasesTextBlock	us-gaap/2019	terseLabel	Leases	0
+0001326801-20-000013	40	8		0	NetIncomeLossAvailableToCommonStockholdersBasicAbstract	us-gaap/2019	terseLabel	Numerator	0
+0001326801-20-000013	66	16		0	DeferredIncomeTaxLiabilities	us-gaap/2019	negatedTotalLabel	Total deferred tax liabilities	1
+0001326801-20-000013	45	30		0	InterestCostsCapitalized	us-gaap/2019	terseLabel	Interest costs capitalized	0
+0001326801-20-000013	53	21		0	OtherLiabilitiesNoncurrent	us-gaap/2019	totalLabel	Other liabilities	0
+0001326801-20-000013	2	24	BS	0	OtherLiabilitiesNoncurrent	us-gaap/2019	terseLabel	Other liabilities	0
+0001326801-20-000013	33	2		0	ScheduleOfShareBasedCompensationRestrictedStockUnitsAwardActivityTableTextBlock	us-gaap/2019	terseLabel	Schedule of Restricted Stock Units Award Activity	0
+0001326801-20-000013	60	16		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeituresWeightedAverageGrantDateFairValue	us-gaap/2019	terseLabel	Forfeited (in dollars per share)	0
+0001326801-20-000013	60	8		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriod	us-gaap/2019	terseLabel	Granted (in shares)	0
+0001326801-20-000013	60	14		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriodWeightedAverageGrantDateFairValue	us-gaap/2019	terseLabel	Granted (in dollars per share)	0
+0001326801-20-000013	60	11		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedNumber	us-gaap/2019	periodEndLabel	Unvested at end of period (in shares)	0
+0001326801-20-000013	60	7		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedNumber	us-gaap/2019	periodStartLabel	Unvested at beginning of period (in shares)	0
+0001326801-20-000013	60	17		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedWeightedAverageGrantDateFairValue	us-gaap/2019	periodEndLabel	Unvested at end of period (in dollars per share)	0
+0001326801-20-000013	60	13		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedWeightedAverageGrantDateFairValue	us-gaap/2019	periodStartLabel	Unvested at beginning of period (in dollars per share)	0
+0001326801-20-000013	60	15		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodWeightedAverageGrantDateFairValue	us-gaap/2019	terseLabel	Vested (in dollars per share)	0
+0001326801-20-000013	7	37	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2019	terseLabel	Other financing activities, net	0
+0001326801-20-000013	7	36	CF	0	ProceedsFromRepaymentsOfBankOverdrafts	us-gaap/2019	terseLabel	Net change in overdraft in cash pooling entities	0
+0001326801-20-000013	54	7		0	LineOfCredit	us-gaap/2019	terseLabel	Line of credit facility, amount outstanding	0
+0001326801-20-000013	38	9		0	EuropeMember	srt/2019	verboseLabel	Europe	0
+0001326801-20-000013	62	3		0	ForeignCurrencyTransactionGainLossBeforeTax	us-gaap/2019	terseLabel	Foreign currency exchange losses, net	0
+0001326801-20-000013	37	31		0	ForeignCurrencyTransactionGainLossBeforeTax	us-gaap/2019	terseLabel	Foreign currency exchange losses, net	0
+0001326801-20-000013	40	27		0	IncrementalCommonSharesAttributableToShareBasedPaymentArrangements	us-gaap/2019	terseLabel	Share based payment arrangements (in shares)	0
+0001326801-20-000013	23	4		0	ResearchDevelopmentAndComputerSoftwarePolicyTextBlock	us-gaap/2019	terseLabel	Software Development Costs	0
+0001326801-20-000013	51	8		0	TradeNamesMember	us-gaap/2019	terseLabel	Trade names	0
+0001326801-20-000013	23	11		0	LesseeLeasesPolicyTextBlock	us-gaap/2019	terseLabel	Lease Obligations	0
+0001326801-20-000013	35	5		0	ScheduleOfUnrecognizedTaxBenefitsRollForwardTableTextBlock	us-gaap/2019	terseLabel	Schedule of Gross Unrecognized Tax Benefits Roll Forward	0
+0001326801-20-000013	40	28		0	WeightedAverageNumberOfSharesCommonStockSubjectToRepurchaseOrCancellation	us-gaap/2019	verboseLabel	Shares subject to repurchase (in shares)	0
+0001326801-20-000013	40	14		0	WeightedAverageNumberOfSharesCommonStockSubjectToRepurchaseOrCancellation	us-gaap/2019	negatedTerseLabel	Less: Shares subject to repurchase (in shares)	1
+0001326801-20-000013	37	4		0	AccountingStandardsUpdate201602Member	us-gaap/2019	terseLabel	Accounting Standards Update 2016-02	0
+0001326801-20-000013	6	20	EQ	0	AdjustmentsRelatedToTaxWithholdingForShareBasedCompensation	us-gaap/2019	negatedLabel	Shares withheld related to net share settlement, value	1
+0001326801-20-000013	6	21	EQ	0	AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue	us-gaap/2019	terseLabel	Share-based compensation, related to employee share-based awards	0
+0001326801-20-000013	38	4		0	AdvertisingMember	us-gaap/2019	terseLabel	Advertising	0
+0001326801-20-000013	38	10		0	AsiaPacificMember	srt/2019	verboseLabel	Asia-Pacific	0
+0001326801-20-000013	44	22		0	AssetsFairValueDisclosure	us-gaap/2019	totalLabel	Total cash equivalents and marketable securities	0
+0001326801-20-000013	42	1		0	AvailableForSaleDebtSecuritiesAccumulatedGrossUnrealizedGainBeforeTax	us-gaap/2019	terseLabel	Gross unrealized gains on marketable securities	0
+0001326801-20-000013	42	2		0	AvailableForSaleDebtSecuritiesAccumulatedGrossUnrealizedLossBeforeTax	us-gaap/2019	negatedLabel	Gross unrealized losses on marketable securities	1
+0001326801-20-000013	41	17		0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2019	terseLabel	Marketable securities	0
+0001326801-20-000013	43	3		0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2019	totalLabel	Total	0
+0001326801-20-000013	44	21		0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2019	terseLabel	Marketable securities	0
+0001326801-20-000013	2	4	BS	0	AvailableForSaleSecuritiesDebtSecuritiesCurrent	us-gaap/2019	terseLabel	Marketable securities	0
+0001326801-20-000013	44	12		0	BankTimeDepositsMember	us-gaap/2019	verboseLabel	Certificate of deposits and time deposits	0
+0001326801-20-000013	41	13		0	BankTimeDepositsMember	us-gaap/2019	terseLabel	Certificate of deposits and time deposits	0
+0001326801-20-000013	44	20		0	CashAndCashEquivalentsFairValueDisclosure	us-gaap/2019	terseLabel	Cash equivalents	0
+0001326801-20-000013	11	1		0	CashCashEquivalentsAndShortTermInvestmentsTextBlock	us-gaap/2019	terseLabel	Cash and Cash Equivalents and Marketable Securities	0
+0001326801-20-000013	7	40	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect	us-gaap/2019	totalLabel	Net increase (decrease) in cash, cash equivalents, and restricted cash	0
+0001326801-20-000013	7	43	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffectAbstract	us-gaap/2019	terseLabel	Reconciliation of cash, cash equivalents, and restricted cash to the consolidated balance sheets	0
+0001326801-20-000013	41	9		0	CashMember	us-gaap/2019	terseLabel	Cash	0
+0001326801-20-000013	56	6		0	ClassOfStockLineItems	us-gaap/2019	terseLabel	Class of Stock	0
+0001326801-20-000013	57	5		0	ClassOfStockLineItems	us-gaap/2019	terseLabel	Class of Stock	0
+0001326801-20-000013	3	5	BS	1	CommonClassBMember	us-gaap/2019	verboseLabel	Class B Common Stock	0
+0001326801-20-000013	40	5		0	CommonClassBMember	us-gaap/2019	terseLabel	Class B	0
+0001326801-20-000013	56	5		0	CommonClassBMember	us-gaap/2019	terseLabel	Class B	0
+0001326801-20-000013	1	5	CP	0	CommonClassBMember	us-gaap/2019	verboseLabel	Class B Common Stock	0
+0001326801-20-000013	66	2		0	ComponentsOfDeferredTaxAssetsAbstract	us-gaap/2019	terseLabel	Deferred tax assets:	0
+0001326801-20-000013	66	1		0	ComponentsOfDeferredTaxAssetsAndLiabilitiesAbstract	us-gaap/2019	terseLabel	Components of Deferred Tax Assets and Liabilities [Abstract]	0
+0001326801-20-000013	55	10		0	ContractualObligation	us-gaap/2019	terseLabel	Non-cancelable contractual commitment	0
+0001326801-20-000013	25	2		0	ContractWithCustomerAssetAndLiabilityTableTextBlock	us-gaap/2019	terseLabel	Schedule of Deferred Revenue and Deposits	0
+0001326801-20-000013	39	1		0	ContractWithCustomerLiability	us-gaap/2019	terseLabel	Deferred revenue	0
+0001326801-20-000013	2	21	BS	0	ContractWithCustomerLiabilityCurrent	us-gaap/2019	terseLabel	Deferred revenue and deposits	0
+0001326801-20-000013	4	4	IS	0	CostOfSalesMember	us-gaap/2019	terseLabel	Cost of revenue	0
+0001326801-20-000013	64	5		0	CurrentForeignTaxExpenseBenefit	us-gaap/2019	terseLabel	Foreign	0
+0001326801-20-000013	42	3		0	DebtSecuritiesAvailableForSaleContinuousUnrealizedLossPosition12MonthsOrLongerAccumulatedLoss	us-gaap/2019	negatedLabel	Gross unrealized losses in continuous loss position for 12 months or longer	1
+0001326801-20-000013	64	10		0	DeferredForeignIncomeTaxExpenseBenefit	us-gaap/2019	terseLabel	Foreign	0
+0001326801-20-000013	66	4		0	DeferredTaxAssetsTaxCreditCarryforwards	us-gaap/2019	terseLabel	Tax credit carryforward	0
+0001326801-20-000013	66	5		0	DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost	us-gaap/2019	terseLabel	Share-based compensation	0
+0001326801-20-000013	66	15		0	DeferredTaxLiabilitiesGoodwillAndIntangibleAssetsIntangibleAssets	us-gaap/2019	negatedTerseLabel	Purchased intangible assets	1
+0001326801-20-000013	66	14		0	DeferredTaxLiabilitiesLeasingArrangements	us-gaap/2019	negatedTerseLabel	Right-of-use assets	1
+0001326801-20-000013	38	13		0	DisaggregationOfRevenueLineItems	us-gaap/2019	terseLabel	Disaggregation of Revenue [Line Items]	0
+0001326801-20-000013	38	1		0	DisaggregationOfRevenueTable	us-gaap/2019	terseLabel	Disaggregation of Revenue [Table]	0
+0001326801-20-000013	40	6		0	EarningsPerShareBasicLineItems	us-gaap/2019	terseLabel	Earnings Per Share, Basic, by Common Class, Including Two Class Method	0
+0001326801-20-000013	65	1		0	EffectiveIncomeTaxRateContinuingOperationsTaxRateReconciliationAbstract	us-gaap/2019	terseLabel	Effective Income Tax Rate, Continuing Operations, Tax Rate Reconciliation [Abstract]	0
+0001326801-20-000013	65	5		0	EffectiveIncomeTaxRateReconciliationNondeductibleExpenseShareBasedCompensationCost	us-gaap/2019	terseLabel	Share-based compensation	0
+0001326801-20-000013	65	4		0	EffectiveIncomeTaxRateReconciliationTaxCreditsResearch	us-gaap/2019	negatedTerseLabel	Research tax credits	1
+0001326801-20-000013	65	8		0	EffectiveIncomeTaxRateReconciliationTaxCutsAndJobsActOf2017Percent	us-gaap/2019	terseLabel	Effect of U.S. tax law change	0
+0001326801-20-000013	7	39	CF	0	EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2019	terseLabel	Effect of exchange rate changes on cash, cash equivalents, and restricted cash	0
+0001326801-20-000013	59	7		0	EmployeeStockOptionMember	us-gaap/2019	verboseLabel	Employee Stock Option	0
+0001326801-20-000013	44	19		0	FairValueAssetsAndLiabilitiesMeasuredOnRecurringAndNonrecurringBasisLineItems	us-gaap/2019	terseLabel	Fair Value, Assets and Liabilities Measured on Recurring and Nonrecurring Basis	0
+0001326801-20-000013	44	1		0	FairValueAssetsAndLiabilitiesMeasuredOnRecurringAndNonrecurringBasisTable	us-gaap/2019	terseLabel	Fair Value, Recurring and Nonrecurring [Table]	0
+0001326801-20-000013	46	3		0	FinanceLeaseInterestExpense	us-gaap/2019	terseLabel	Interest	0
+0001326801-20-000013	49	3		0	FinanceLeaseInterestPaymentOnLiability	us-gaap/2019	terseLabel	Operating cash flows from finance leases	0
+0001326801-20-000013	47	13		0	FinanceLeaseLiabilitiesPaymentsDueAbstract	us-gaap/2019	terseLabel	Finance Leases	0
+0001326801-20-000013	47	22		0	FinanceLeaseLiability	us-gaap/2019	terseLabel	Present value of lease liabilities	0
+0001326801-20-000013	47	23		0	FinanceLeaseLiabilityCurrent	us-gaap/2019	terseLabel	Lease liabilities, current	0
+0001326801-20-000013	30	2		0	FinanceLeaseLiabilityMaturityTableTextBlock	us-gaap/2019	terseLabel	Schedule of Maturities of Finance Lease Liabilities	0
+0001326801-20-000013	47	20		0	FinanceLeaseLiabilityPaymentsDue	us-gaap/2019	totalLabel	Total undiscounted cash flows	0
+0001326801-20-000013	47	19		0	FinanceLeaseLiabilityPaymentsDueAfterYearFive	us-gaap/2019	terseLabel	Thereafter	0
+0001326801-20-000013	47	14		0	FinanceLeaseLiabilityPaymentsDueNextTwelveMonths	us-gaap/2019	terseLabel	2020	0
+0001326801-20-000013	47	18		0	FinanceLeaseLiabilityPaymentsDueYearFive	us-gaap/2019	terseLabel	2024	0
+0001326801-20-000013	47	17		0	FinanceLeaseLiabilityPaymentsDueYearFour	us-gaap/2019	terseLabel	2023	0
+0001326801-20-000013	47	16		0	FinanceLeaseLiabilityPaymentsDueYearThree	us-gaap/2019	terseLabel	2022	0
+0001326801-20-000013	47	15		0	FinanceLeaseLiabilityPaymentsDueYearTwo	us-gaap/2019	terseLabel	2021	0
+0001326801-20-000013	47	21		0	FinanceLeaseLiabilityUndiscountedExcessAmount	us-gaap/2019	negatedTerseLabel	Less: Imputed interest	1
+0001326801-20-000013	49	4		0	FinanceLeasePrincipalPayments	us-gaap/2019	terseLabel	Financing cash flows from finance leases	0
+0001326801-20-000013	7	35	CF	0	FinanceLeasePrincipalPayments	us-gaap/2019	negatedLabel	Principal payments on finance leases	1
+0001326801-20-000013	37	29		0	FinanceLeaseRightOfUseAsset	us-gaap/2019	terseLabel	Pre-existing finance lease ROU assets	0
+0001326801-20-000013	46	2		0	FinanceLeaseRightOfUseAssetAmortization	us-gaap/2019	terseLabel	Amortization of right-of-use assets	0
+0001326801-20-000013	46	12		0	FinanceLeaseWeightedAverageDiscountRatePercent	us-gaap/2019	terseLabel	Finance leases (in percentage)	0
+0001326801-20-000013	46	9		0	FinanceLeaseWeightedAverageRemainingLeaseTerm1	us-gaap/2019	terseLabel	Finance leases	0
+0001326801-20-000013	52	2		0	FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths	us-gaap/2019	terseLabel	2020	0
+0001326801-20-000013	52	1		0	FiniteLivedIntangibleAssetsFutureAmortizationExpenseCurrentAndFiveSucceedingFiscalYearsAbstract	us-gaap/2019	terseLabel	Finite-Lived Intangible Assets, Amortization Expense, Maturity Schedule [Abstract]	0
+0001326801-20-000013	4	7	IS	0	GeneralAndAdministrativeExpenseMember	us-gaap/2019	terseLabel	General and administrative	0
+0001326801-20-000013	37	10		0	GeographicConcentrationRiskMember	us-gaap/2019	terseLabel	Geographic concentration risk	0
+0001326801-20-000013	50	3		0	GoodwillAcquiredDuringPeriod	us-gaap/2019	terseLabel	Goodwill acquired	0
+0001326801-20-000013	15	1		0	GoodwillAndIntangibleAssetsDisclosureTextBlock	us-gaap/2019	terseLabel	Goodwill and Intangible Assets	0
+0001326801-20-000013	50	4		0	GoodwillForeignCurrencyTranslationGainLoss	us-gaap/2019	terseLabel	Effect of currency translation adjustment	0
+0001326801-20-000013	50	1		0	GoodwillRollForward	us-gaap/2019	terseLabel	Goodwill [Roll Forward]	0
+0001326801-20-000013	63	2		0	IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign	us-gaap/2019	terseLabel	Foreign	0
+0001326801-20-000013	4	29	IS	0	IncomeStatementCompensationItemsAbstract	us-gaap/2019	terseLabel	Share-based compensation expense included in costs and expenses:	0
+0001326801-20-000013	67	13		0	IncomeTaxAuthorityAxis	us-gaap/2019	terseLabel	Income Tax Authority [Axis]	0
+0001326801-20-000013	67	14		0	IncomeTaxAuthorityDomain	us-gaap/2019	terseLabel	Income Tax Authority [Domain]	0
+0001326801-20-000013	67	2		0	IncomeTaxAuthorityNameAxis	us-gaap/2019	terseLabel	Income Tax Authority, Name [Axis]	0
+0001326801-20-000013	67	3		0	IncomeTaxAuthorityNameDomain	us-gaap/2019	terseLabel	Income Tax Authority [Domain]	0
+0001326801-20-000013	67	32		0	IncomeTaxExaminationEstimateOfPossibleLoss	us-gaap/2019	terseLabel	Income tax examination, estimate of possible additional tax liability	0
+0001326801-20-000013	67	27		0	IncomeTaxExaminationPenaltiesAndInterestAccrued	us-gaap/2019	terseLabel	Unrecognized tax benefits, interest and penalties accrued	0
+0001326801-20-000013	64	1		0	IncomeTaxExpenseBenefitContinuingOperationsAbstract	us-gaap/2019	terseLabel	Income Tax Expense (Benefit), Continuing Operations [Abstract]	0
+0001326801-20-000013	7	19	CF	0	IncreaseDecreaseInOtherAccountsPayable	us-gaap/2019	terseLabel	Partners payable	0
+0001326801-20-000013	7	22	CF	0	IncreaseDecreaseInOtherNoncurrentLiabilities	us-gaap/2019	terseLabel	Other liabilities	0
+0001326801-20-000013	6	9	EQ	0	IncreaseDecreaseInStockholdersEquityRollForward	us-gaap/2019	terseLabel	Increase (Decrease) in Stockholders' Equity [Roll Forward]	0
+0001326801-20-000013	67	4		0	InternalRevenueServiceIRSMember	us-gaap/2019	terseLabel	Internal Revenue Service (IRS)	0
+0001326801-20-000013	67	15		0	InternalRevenueServiceIRSMember	us-gaap/2019	terseLabel	Internal Revenue Service (IRS)	0
+0001326801-20-000013	46	6		0	LeaseCost	us-gaap/2019	totalLabel	Total lease cost	0
+0001326801-20-000013	46	1		0	LeaseCostAbstract	us-gaap/2019	terseLabel	Finance lease cost	0
+0001326801-20-000013	30	1		0	LeaseCostTableTextBlock	us-gaap/2019	terseLabel	Schedule of Components of Lease Costs	0
+0001326801-20-000013	14	2		0	LesseeFinanceLeasesTextBlock	us-gaap/2019	terseLabel	Leases	0
+0001326801-20-000013	48	6		0	LesseeLeaseDescriptionLineItems	us-gaap/2019	terseLabel	Lessee, Lease, Description [Line Items]	0
+0001326801-20-000013	48	1		0	LesseeLeaseDescriptionTable	us-gaap/2019	terseLabel	Lessee, Lease, Description [Table]	0
+0001326801-20-000013	47	8		0	LesseeOperatingLeaseLiabilityPaymentsDue	us-gaap/2019	totalLabel	Total undiscounted cash flows	0
+0001326801-20-000013	47	7		0	LesseeOperatingLeaseLiabilityPaymentsDueAfterYearFive	us-gaap/2019	terseLabel	Thereafter	0
+0001326801-20-000013	47	6		0	LesseeOperatingLeaseLiabilityPaymentsDueYearFive	us-gaap/2019	terseLabel	2024	0
+0001326801-20-000013	47	5		0	LesseeOperatingLeaseLiabilityPaymentsDueYearFour	us-gaap/2019	terseLabel	2023	0
+0001326801-20-000013	47	4		0	LesseeOperatingLeaseLiabilityPaymentsDueYearThree	us-gaap/2019	terseLabel	2022	0
+0001326801-20-000013	47	3		0	LesseeOperatingLeaseLiabilityPaymentsDueYearTwo	us-gaap/2019	terseLabel	2021	0
+0001326801-20-000013	47	9		0	LesseeOperatingLeaseLiabilityUndiscountedExcessAmount	us-gaap/2019	negatedTerseLabel	Less: Imputed interest	1
+0001326801-20-000013	53	5		0	LitigationCaseAxis	srt/2019	terseLabel	Litigation Case [Axis]	0
+0001326801-20-000013	67	6		0	LitigationCaseAxis	srt/2019	terseLabel	Litigation Case [Axis]	0
+0001326801-20-000013	55	5		0	LitigationCaseAxis	srt/2019	terseLabel	Litigation Case [Axis]	0
+0001326801-20-000013	55	6		0	LitigationCaseTypeDomain	srt/2019	terseLabel	Litigation Case [Domain]	0
+0001326801-20-000013	67	7		0	LitigationCaseTypeDomain	srt/2019	terseLabel	Litigation Case [Domain]	0
+0001326801-20-000013	53	6		0	LitigationCaseTypeDomain	srt/2019	terseLabel	Litigation Case [Domain]	0
+0001326801-20-000013	36	1		0	LongLivedAssetsByGeographicAreasTableTextBlock	us-gaap/2019	terseLabel	Schedule of Revenue and Property and Equipment by Geographic Area	0
+0001326801-20-000013	55	11		0	LongtermPurchaseCommitmentPeriod	us-gaap/2019	terseLabel	Contractual obligation, period	0
+0001326801-20-000013	53	9		0	LossContingenciesLineItems	us-gaap/2019	terseLabel	Loss Contingencies [Line Items]	0
+0001326801-20-000013	53	1		0	LossContingenciesTable	us-gaap/2019	terseLabel	Loss Contingencies [Table]	0
+0001326801-20-000013	53	10		0	LossContingencyAccrualAtCarryingValue	us-gaap/2019	verboseLabel	Accrued legal settlements for FTC and BIPA	0
+0001326801-20-000013	55	13		0	LossContingencyAccrualAtCarryingValue	us-gaap/2019	terseLabel	Accrued FTC and other settlements	0
+0001326801-20-000013	55	12		0	LossContingencyNewClaimsFiledNumber	us-gaap/2019	terseLabel	Number of class actions filed	0
+0001326801-20-000013	44	9		0	MoneyMarketFundsMember	us-gaap/2019	terseLabel	Money market funds	0
+0001326801-20-000013	41	10		0	MoneyMarketFundsMember	us-gaap/2019	terseLabel	Money market funds	0
+0001326801-20-000013	40	18		0	NetIncomeLossAvailableToCommonStockholdersDilutedAbstract	us-gaap/2019	terseLabel	Numerator	0
+0001326801-20-000013	69	7		0	NoncurrentAssets	us-gaap/2019	terseLabel	Long-lived assets	0
+0001326801-20-000013	69	5		0	NonUsMember	us-gaap/2019	terseLabel	Rest of the world	0
+0001326801-20-000013	37	34		0	NumberOfOperatingSegments	us-gaap/2019	terseLabel	Number of operating segments	0
+0001326801-20-000013	37	33		0	NumberOfReportableSegments	us-gaap/2019	terseLabel	Number of reporting segments	0
+0001326801-20-000013	46	4		0	OperatingLeaseCost	us-gaap/2019	terseLabel	Operating lease cost	0
+0001326801-20-000013	47	1		0	OperatingLeaseLiabilitiesPaymentsDueAbstract	us-gaap/2019	terseLabel	Operating Leases	0
+0001326801-20-000013	47	10		0	OperatingLeaseLiability	us-gaap/2019	verboseLabel	Present value of lease liabilities	0
+0001326801-20-000013	47	11		0	OperatingLeaseLiabilityCurrent	us-gaap/2019	terseLabel	Lease liabilities, current	0
+0001326801-20-000013	2	19	BS	0	OperatingLeaseLiabilityCurrent	us-gaap/2019	verboseLabel	Operating lease liabilities, current	0
+0001326801-20-000013	2	23	BS	0	OperatingLeaseLiabilityNoncurrent	us-gaap/2019	verboseLabel	Operating lease liabilities, non-current	0
+0001326801-20-000013	47	12		0	OperatingLeaseLiabilityNoncurrent	us-gaap/2019	terseLabel	Lease liabilities, non-current	0
+0001326801-20-000013	49	2		0	OperatingLeasePayments	us-gaap/2019	terseLabel	Operating cash flows from operating leases	0
+0001326801-20-000013	2	10	BS	0	OperatingLeaseRightOfUseAsset	us-gaap/2019	terseLabel	Operating lease right-of-use assets, net	0
+0001326801-20-000013	46	11		0	OperatingLeaseWeightedAverageDiscountRatePercent	us-gaap/2019	terseLabel	Operating leases (in percentage)	0
+0001326801-20-000013	46	8		0	OperatingLeaseWeightedAverageRemainingLeaseTerm1	us-gaap/2019	terseLabel	Operating leases	0
+0001326801-20-000013	7	5	CF	0	OtherAssetsMember	us-gaap/2019	terseLabel	Other Assets	0
+0001326801-20-000013	53	17		0	OtherLiabilitiesAbstract	us-gaap/2019	terseLabel	Other Liabilities [Abstract]	0
+0001326801-20-000013	32	2		0	OtherLiabilitiesTableTextBlock	us-gaap/2019	terseLabel	Schedule of Other Liabilities	0
+0001326801-20-000013	7	13	CF	0	OtherNoncashIncomeExpense	us-gaap/2019	negatedTerseLabel	Other	1
+0001326801-20-000013	20	1		0	OtherNonoperatingIncomeAndExpenseTextBlock	us-gaap/2019	terseLabel	Interest and other income, net	0
+0001326801-20-000013	53	20		0	OtherSundryLiabilitiesNoncurrent	us-gaap/2019	terseLabel	Other liabilities	0
+0001326801-20-000013	67	31		0	PaymentsForOtherTaxes	us-gaap/2019	terseLabel	Payments for other taxes	0
+0001326801-20-000013	7	33	CF	0	PaymentsRelatedToTaxWithholdingForShareBasedCompensation	us-gaap/2019	negatedLabel	Taxes paid related to net share settlement of equity awards	1
+0001326801-20-000013	7	26	CF	0	PaymentsToAcquireMarketableSecurities	us-gaap/2019	negatedLabel	Purchases of marketable securities	1
+0001326801-20-000013	7	4	CF	0	PrepaidExpensesAndOtherCurrentAssetsMember	us-gaap/2019	terseLabel	Prepaid Expenses and Other Current Assets	0
+0001326801-20-000013	37	24		0	PropertyPlantAndEquipmentLineItems	us-gaap/2019	terseLabel	Summary of Accounting Policies	0
+0001326801-20-000013	45	21		0	PropertyPlantAndEquipmentLineItems	us-gaap/2019	verboseLabel	Property, Plant and Equipment	0
+0001326801-20-000013	68	1		0	ReconciliationOfUnrecognizedTaxBenefitsExcludingAmountsPertainingToExaminedTaxReturnsRollForward	us-gaap/2019	terseLabel	Reconciliation of Unrecognized Tax Benefits	0
+0001326801-20-000013	4	5	IS	0	ResearchAndDevelopmentExpenseMember	us-gaap/2019	terseLabel	Research and development	0
+0001326801-20-000013	4	9	IS	0	RevenueFromContractWithCustomerExcludingAssessedTax	us-gaap/2019	terseLabel	Revenue	0
+0001326801-20-000013	38	14		0	RevenueFromContractWithCustomerExcludingAssessedTax	us-gaap/2019	terseLabel	Revenue	0
+0001326801-20-000013	37	7		0	RevenueFromContractWithCustomerMember	us-gaap/2019	terseLabel	Revenue from contract with customer benchmark	0
+0001326801-20-000013	23	3		0	RevenueFromContractWithCustomerPolicyTextBlock	us-gaap/2019	terseLabel	Revenue Recognition	0
+0001326801-20-000013	69	6		0	RevenuesFromExternalCustomersAndLongLivedAssetsLineItems	us-gaap/2019	verboseLabel	Long-Lived Assets, by Geographical Area	0
+0001326801-20-000013	54	4		0	RevolvingCreditFacilityMember	us-gaap/2019	terseLabel	Revolving Credit Facility	0
+0001326801-20-000013	27	1		0	ScheduleOfCashCashEquivalentsAndShortTermInvestmentsTableTextBlock	us-gaap/2019	terseLabel	Schedule of Cash, Cash Equivalents and Marketable Securities	0
+0001326801-20-000013	40	1		0	ScheduleOfEarningsPerShareBasicByCommonClassTable	us-gaap/2019	terseLabel	Schedule of Earnings Per Share, Basic, by Common Class, Including Two Class Method [Table]	0
+0001326801-20-000013	28	1		0	ScheduleOfFairValueAssetsAndLiabilitiesMeasuredOnRecurringBasisTableTextBlock	us-gaap/2019	terseLabel	Schedule of Assets and Liabilities Measured at Fair Value on Recurring Basis	0
+0001326801-20-000013	34	1		0	ScheduleOfOtherNonoperatingIncomeExpenseTableTextBlock	us-gaap/2019	terseLabel	Schedule of Interest and Other Income, Net	0
+0001326801-20-000013	37	1		0	ScheduleOfPropertyPlantAndEquipmentTable	us-gaap/2019	terseLabel	Schedule of Property, Plant and Equipment [Table]	0
+0001326801-20-000013	45	1		0	ScheduleOfPropertyPlantAndEquipmentTable	us-gaap/2019	terseLabel	Schedule of Property, Plant and Equipment [Table]	0
+0001326801-20-000013	69	1		0	ScheduleOfRevenuesFromExternalCustomersAndLongLivedAssetsTable	us-gaap/2019	terseLabel	Schedule of Revenues from External Customers and Long-Lived Assets [Table]	0
+0001326801-20-000013	56	1		0	ScheduleOfStockByClassTable	us-gaap/2019	terseLabel	Schedule of Stock by Class [Table]	0
+0001326801-20-000013	57	1		0	ScheduleOfStockByClassTable	us-gaap/2019	terseLabel	Schedule of Stock by Class [Table]	0
+0001326801-20-000013	4	6	IS	0	SellingAndMarketingExpenseMember	us-gaap/2019	terseLabel	Marketing and sales	0
+0001326801-20-000013	38	5		0	ServiceOtherMember	us-gaap/2019	terseLabel	Other revenue	0
+0001326801-20-000013	58	1		0	ShareBasedCompensationAbstract	us-gaap/2019	terseLabel	Share-based Payment Arrangement, Noncash Expense [Abstract]	0
+0001326801-20-000013	58	14		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardAwardVestingPeriod1	us-gaap/2019	terseLabel	Share-based compensation arrangement by share-based payment award, award vesting period	0
+0001326801-20-000013	58	17		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardNumberOfAdditionalSharesAuthorized	us-gaap/2019	terseLabel	Shares reserved for issuance (in shares)	0
+0001326801-20-000013	6	19	EQ	0	SharesPaidForTaxWithholdingForShareBasedCompensation	us-gaap/2019	negatedTerseLabel	Shares withheld related to net share settlement, shares	1
+0001326801-20-000013	67	5		0	StateAndLocalJurisdictionMember	us-gaap/2019	terseLabel	State and Local Jurisdiction	0
+0001326801-20-000013	67	16		0	StateAndLocalJurisdictionMember	us-gaap/2019	terseLabel	State and Local Jurisdiction	0
+0001326801-20-000013	57	6		0	StockRepurchaseProgramAuthorizedAmount1	us-gaap/2019	verboseLabel	Share repurchase program, authorized amount	0
+0001326801-20-000013	57	9		0	StockRepurchaseProgramRemainingAuthorizedRepurchaseAmount1	us-gaap/2019	terseLabel	Shares available for repurchase	0
+0001326801-20-000013	67	24		0	TaxCreditCarryforwardAmount	us-gaap/2019	terseLabel	Tax credit carryforward	0
+0001326801-20-000013	67	9		0	TaxPeriodAxis	us-gaap/2019	terseLabel	Tax Period [Axis]	0
+0001326801-20-000013	67	10		0	TaxPeriodDomain	us-gaap/2019	terseLabel	Tax Period [Domain]	0
+0001326801-20-000013	67	11		0	TaxYear2010Member	us-gaap/2019	terseLabel	Tax Year 2010	0
+0001326801-20-000013	51	6		0	TechnologyBasedIntangibleAssetsMember	us-gaap/2019	verboseLabel	Acquired technology	0
+0001326801-20-000013	37	16		0	TechnologyEquipmentMember	us-gaap/2019	terseLabel	Network equipment	0
+0001326801-20-000013	4	21	IS	0	UndistributedEarningsLossAllocatedToParticipatingSecuritiesBasic	us-gaap/2019	negatedTerseLabel	Less: Net income attributable to participating securities	1
+0001326801-20-000013	40	10		0	UndistributedEarningsLossAllocatedToParticipatingSecuritiesBasic	us-gaap/2019	negatedLabel	Less: Net income attributable to participating securities	1
+0001326801-20-000013	68	2		0	UnrecognizedTaxBenefits	us-gaap/2019	periodStartLabel	Gross unrecognized tax benefits - beginning of period	0
+0001326801-20-000013	68	7		0	UnrecognizedTaxBenefits	us-gaap/2019	periodEndLabel	Gross unrecognized tax benefits - end of period	0
+0001326801-20-000013	67	28		0	UnrecognizedTaxBenefits	us-gaap/2019	terseLabel	Unrecognized tax benefits	0
+0001326801-20-000013	68	4		0	UnrecognizedTaxBenefitsDecreasesResultingFromPriorPeriodTaxPositions	us-gaap/2019	negatedTerseLabel	Decreases related to prior year tax positions	1
+0001326801-20-000013	68	6		0	UnrecognizedTaxBenefitsDecreasesResultingFromSettlementsWithTaxingAuthorities	us-gaap/2019	negatedTerseLabel	Decreases related to settlements of prior year tax positions	1
+0001326801-20-000013	68	5		0	UnrecognizedTaxBenefitsIncreasesResultingFromCurrentPeriodTaxPositions	us-gaap/2019	terseLabel	Increases related to current year tax positions	0
+0001326801-20-000013	68	3		0	UnrecognizedTaxBenefitsIncreasesResultingFromPriorPeriodTaxPositions	us-gaap/2019	terseLabel	Increases related to prior year tax positions	0
+0001326801-20-000013	67	29		0	UnrecognizedTaxBenefitsThatWouldImpactEffectiveTaxRate	us-gaap/2019	terseLabel	Unrecognized tax benefits that would impact effective tax rate	0
+0001326801-20-000013	44	5		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2019	terseLabel	U.S. government agency securities	0
+0001326801-20-000013	44	11		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2019	terseLabel	U.S. government agency securities	0
+0001326801-20-000013	41	12		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2019	verboseLabel	U.S. government agency securities	0
+0001326801-20-000013	41	5		0	USGovernmentAgenciesDebtSecuritiesMember	us-gaap/2019	verboseLabel	U.S. government agency securities	0
+0001326801-20-000013	41	11		0	USGovernmentDebtSecuritiesMember	us-gaap/2019	verboseLabel	U.S. government securities	0
+0001326801-20-000013	41	4		0	USGovernmentDebtSecuritiesMember	us-gaap/2019	verboseLabel	U.S. government securities	0
+0001326801-20-000013	44	4		0	USGovernmentDebtSecuritiesMember	us-gaap/2019	terseLabel	U.S. government securities	0
+0001326801-20-000013	44	10		0	USGovernmentDebtSecuritiesMember	us-gaap/2019	terseLabel	U.S. government securities	0
+0001326801-20-000013	46	5		0	VariableLeaseCost	us-gaap/2019	terseLabel	Variable lease cost and other, net	0
+0001326801-20-000013	40	24		0	WeightedAverageNumberDilutedSharesOutstandingAdjustmentAbstract	us-gaap/2019	terseLabel	Denominator	0
+0001326801-20-000013	40	12		0	WeightedAverageNumberOfSharesOutstandingBasicAbstract	us-gaap/2019	terseLabel	Denominator	0
+0001326801-20-000013	4	26	IS	0	WeightedAverageNumberOfSharesOutstandingDilutedDisclosureItemsAbstract	us-gaap/2019	terseLabel	Weighted-average shares used to compute earnings per share attributable to Class A and Class B common stockholders:	0
+0001326801-20-000013	1	35	CP	0	AmendmentFlag	dei/2019	terseLabel	Amendment Flag	0
+0001326801-20-000013	1	19	CP	0	CityAreaCode	dei/2019	terseLabel	City Area Code	0
+0001326801-20-000013	1	39	CP	0	CurrentFiscalYearEndDate	dei/2019	terseLabel	Current Fiscal Year End Date	0
+0001326801-20-000013	1	8	CP	0	DocumentAnnualReport	dei/2019	terseLabel	Document Annual Report	0
+0001326801-20-000013	1	37	CP	0	DocumentFiscalPeriodFocus	dei/2019	terseLabel	Document Fiscal Period Focus	0
+0001326801-20-000013	1	36	CP	0	DocumentFiscalYearFocus	dei/2019	terseLabel	Document Fiscal Year Focus	0
+0001326801-20-000013	1	9	CP	0	DocumentPeriodEndDate	dei/2019	terseLabel	Document Period End Date	0
+0001326801-20-000013	1	34	CP	0	DocumentsIncorporatedByReferenceTextBlock	dei/2019	terseLabel	Documents Incorporated by Reference	0
+0001326801-20-000013	1	10	CP	0	DocumentTransitionReport	dei/2019	terseLabel	Document Transition Report	0
+0001326801-20-000013	1	7	CP	0	DocumentType	dei/2019	terseLabel	Document Type	0
+0001326801-20-000013	1	1	CP	0	EntitiesTable	dei/2019	terseLabel	Entities [Table]	0
+0001326801-20-000013	1	15	CP	0	EntityAddressAddressLine1	dei/2019	terseLabel	Entity Address, Address Line One	0
+0001326801-20-000013	1	16	CP	0	EntityAddressCityOrTown	dei/2019	terseLabel	Entity Address, City or Town	0
+0001326801-20-000013	1	18	CP	0	EntityAddressPostalZipCode	dei/2019	terseLabel	Entity Address, Postal Zip Code	0
+0001326801-20-000013	1	17	CP	0	EntityAddressStateOrProvince	dei/2019	terseLabel	Entity Address, State or Province	0
+0001326801-20-000013	1	38	CP	0	EntityCentralIndexKey	dei/2019	terseLabel	Entity Central Index Key	0
+0001326801-20-000013	1	33	CP	0	EntityCommonStockSharesOutstanding	dei/2019	terseLabel	Entity Common Stock, Shares Outstanding	0
+0001326801-20-000013	1	26	CP	0	EntityCurrentReportingStatus	dei/2019	terseLabel	Entity Current Reporting Status	0
+0001326801-20-000013	1	30	CP	0	EntityEmergingGrowthCompany	dei/2019	terseLabel	Entity Emerging Growth Company	0
+0001326801-20-000013	1	11	CP	0	EntityFileNumber	dei/2019	terseLabel	Entity File Number	0
+0001326801-20-000013	1	28	CP	0	EntityFilerCategory	dei/2019	terseLabel	Entity Filer Category	0
+0001326801-20-000013	1	13	CP	0	EntityIncorporationStateCountryCode	dei/2019	terseLabel	Entity Incorporation, State or Country Code	0
+0001326801-20-000013	1	6	CP	0	EntityInformationLineItems	dei/2019	terseLabel	Entity Information	0
+0001326801-20-000013	1	27	CP	0	EntityInteractiveDataCurrent	dei/2019	terseLabel	Entity Interactive Data Current	0
+0001326801-20-000013	1	32	CP	0	EntityPublicFloat	dei/2019	terseLabel	Entity Public Float	0
+0001326801-20-000013	1	12	CP	0	EntityRegistrantName	dei/2019	terseLabel	Entity Registrant Name	0
+0001326801-20-000013	1	31	CP	0	EntityShellCompany	dei/2019	terseLabel	Entity Shell Company	0
+0001326801-20-000013	1	29	CP	0	EntitySmallBusiness	dei/2019	terseLabel	Entity Small Business	0
+0001326801-20-000013	1	14	CP	0	EntityTaxIdentificationNumber	dei/2019	terseLabel	Entity Tax Identification Number	0
+0001326801-20-000013	1	25	CP	0	EntityVoluntaryFilers	dei/2019	terseLabel	Entity Voluntary Filers	0
+0001326801-20-000013	1	24	CP	0	EntityWellKnownSeasonedIssuer	dei/2019	terseLabel	Well-known Seasoned Issuer	0
+0001326801-20-000013	1	20	CP	0	LocalPhoneNumber	dei/2019	terseLabel	Local Phone Number	0
+0001326801-20-000013	1	21	CP	0	Security12bTitle	dei/2019	terseLabel	Title of 12(b) Security	0
+0001326801-20-000013	1	23	CP	0	SecurityExchangeName	dei/2019	terseLabel	Security Exchange Name	0
+0001326801-20-000013	1	22	CP	0	TradingSymbol	dei/2019	terseLabel	Trading Symbol	0
+0001326801-20-000013	16	1		0	AccountsPayableAccruedLiabilitiesandOtherLiabilitiesDisclosureCurrentandNoncurrentTextBlock	0001326801-20-000013	terseLabel	Liabilities	0
+0001326801-20-000013	51	5		0	AcquiredusersMember	0001326801-20-000013	terseLabel	Acquired users	0
+0001326801-20-000013	67	8		0	AlteraCorpVCommissionerMember	0001326801-20-000013	terseLabel	Altera Corp V Commissioner	0
+0001326801-20-000013	23	7		0	CashAndCashEquivalentsAndMarketableSecuritiesPolicyTextBlock	0001326801-20-000013	terseLabel	Cash and Cash Equivalents, Marketable Securities, and Restricted Cash	0
+0001326801-20-000013	41	18		0	CashCashEquivalentsAndMarketableSecuritiesAtCarryingValue	0001326801-20-000013	totalLabel	Total cash and cash equivalents and marketable securities	0
+0001326801-20-000013	41	15		0	CashCashEquivalentsAndMarketableSecuritiesLineItems	0001326801-20-000013	terseLabel	Cash, Cash Equivalents and Marketable Securities	0
+0001326801-20-000013	49	1		0	CashFlowLesseeAbstract	0001326801-20-000013	terseLabel	Cash paid for amounts included in the measurement of lease liabilities:	0
+0001326801-20-000013	55	9		0	CommitmentsAndContingenciesDisclosureLineItems	0001326801-20-000013	terseLabel	Commitments and Contingencies Disclosure	0
+0001326801-20-000013	55	1		0	CommitmentsAndContingenciesDisclosureTable	0001326801-20-000013	terseLabel	Commitments and Contingencies Disclosure [Table]	0
+0001326801-20-000013	56	9		0	CommonStockNumberOfVotesByClass	0001326801-20-000013	terseLabel	Common stock, number of votes by class	0
+0001326801-20-000013	45	17		0	ComputerSoftwareOfficeEquipmentAndOtherMember	0001326801-20-000013	terseLabel	Computer software, office equipment and other	0
+0001326801-20-000013	45	9		0	ComputerSoftwareOfficeEquipmentAndOtherMember	0001326801-20-000013	terseLabel	Computer software, office equipment and other	0
+0001326801-20-000013	37	18		0	ComputerSoftwareOfficeEquipmentAndOtherMember	0001326801-20-000013	terseLabel	Computer software, office equipment and other	0
+0001326801-20-000013	39	2		0	ContractWithCustomerDepositsUnusedBalances	0001326801-20-000013	terseLabel	Deposits	0
+0001326801-20-000013	39	3		0	ContractWithCustomerLiabilityAndUnusedDeposits	0001326801-20-000013	totalLabel	Total deferred revenue and deposits	0
+0001326801-20-000013	66	7		0	DeferredTaxAssetsLeaseLiabilities	0001326801-20-000013	terseLabel	Lease liabilities	0
+0001326801-20-000013	65	9		0	EffectiveTaxRateReconciliationNonDeductibleFederalTradeCommissionSettlementAccrualPercent	0001326801-20-000013	terseLabel	Non-deductible FTC settlement accrual	0
+0001326801-20-000013	65	6		0	EffectiveTaxRateReconciliationShareBasedCompensationExcessTaxBenefitPercent	0001326801-20-000013	negatedTerseLabel	Excess tax benefits related to share-based compensation	1
+0001326801-20-000013	67	26		0	EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardChangeInOwnershipPercentageOverPeriod	0001326801-20-000013	terseLabel	Change in ownership percentage over period	0
+0001326801-20-000013	67	25		0	EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardCumulativeStockOwnershipChangeThreshhold	0001326801-20-000013	terseLabel	Cumulative stock ownership change threshold (in percentage)	0
+0001326801-20-000013	49	7		0	FinanceLeaseLiabilityInExchangeForRightOfUseAssetObtained	0001326801-20-000013	terseLabel	Finance leases	0
+0001326801-20-000013	45	23		0	FinanceLeaseRightofUseAssetbeforeAccumulatedAmortization	0001326801-20-000013	terseLabel	Finance Lease, Right-of-Use Asset, before Accumulated Amortization	0
+0001326801-20-000013	45	18		0	FinanceLeaseRightOfUseAssetMember	0001326801-20-000013	terseLabel	Finance lease right-of-use assets	0
+0001326801-20-000013	45	4		0	FinanceLeaseRightOfUseAssetMember	0001326801-20-000013	terseLabel	Finance lease right-of-use assets	0
+0001326801-20-000013	37	19		0	FinanceLeaseRightOfUseAssetMember	0001326801-20-000013	terseLabel	Finance lease right-of-use assets	0
+0001326801-20-000013	53	8		0	IllinoisBiometricInformationPrivacyActMember	0001326801-20-000013	terseLabel	Illinois Biometric Information Privacy Act	0
+0001326801-20-000013	55	8		0	IllinoisBiometricInformationPrivacyActMember	0001326801-20-000013	terseLabel	Illinois Biometric Information Privacy Act	0
+0001326801-20-000013	67	20		0	IncomeTaxDisclosureLineItems	0001326801-20-000013	terseLabel	Income Tax Disclosure	0
+0001326801-20-000013	67	1		0	IncomeTaxDisclosureTable	0001326801-20-000013	terseLabel	Income Tax Disclosure [Table]	0
+0001326801-20-000013	53	18		0	IncomeTaxesPayableNoncurrent	0001326801-20-000013	terseLabel	Income tax payable	0
+0001326801-20-000013	7	50	CF	0	IncreaseDecreaseInPrepaidsAndLiabilitiesRelatedToPropertyAndEquipmentAdditions	0001326801-20-000013	terseLabel	Net change in prepaids and liabilities related to property and equipment	0
+0001326801-20-000013	40	26		0	IncrementalCommonSharesAttributableToConversionOfCommonStock	0001326801-20-000013	terseLabel	Conversion of Class B to Class A common stock (in shares)	0
+0001326801-20-000013	48	9		0	LesseeFinanceLeaseLeaseNotYetCommencedAmount	0001326801-20-000013	terseLabel	Finance lease not yet commenced	0
+0001326801-20-000013	48	10		0	LesseeLeaseLeaseNotYetCommencedTermOfContract	0001326801-20-000013	terseLabel	Lease not yet commenced, term	0
+0001326801-20-000013	48	8		0	LesseeOperatingLeaseLeaseNotYetCommencedAmount	0001326801-20-000013	terseLabel	Operating lease not yet commenced	0
+0001326801-20-000013	46	10		0	LesseeWeightedAverageDiscountRateAbstract	0001326801-20-000013	terseLabel	Weighted-average discount rate	0
+0001326801-20-000013	46	7		0	LesseeWeightedAverageRemainingLeaseTermAbstract	0001326801-20-000013	terseLabel	Weighted-average remaining lease term	0
+0001326801-20-000013	23	14		0	LongLivedAssetsIncludingGoodwillAndIntangiblePolicyTextBlock	0001326801-20-000013	terseLabel	Long-lived Assets Including Goodwill and Other Acquired Intangibles Assets	0
+0001326801-20-000013	45	2		0	LongLivedTangibleAssetAxis	0001326801-20-000013	terseLabel	Long-Lived Tangible Asset [Axis]	0
+0001326801-20-000013	45	3		0	LongLivedTangibleAssetAxisDomain	0001326801-20-000013	terseLabel	Long-Lived Tangible Asset [Axis] [Domain]	0
+0001326801-20-000013	45	20		0	NetworkEquipmentMember	0001326801-20-000013	terseLabel	Network equipment	0
+0001326801-20-000013	6	14	EQ	0	NewAccountingPronouncementOrTaxCutsAndJobsActOf2017EffectOfAdoption	0001326801-20-000013	terseLabel	Impact of the adoption of new accounting pronouncements	0
+0001326801-20-000013	53	14		0	NotionalCashPoolOverdraftBalance	0001326801-20-000013	terseLabel	Overdraft in cash pooling entities	0
+0001326801-20-000013	37	28		0	OperatingAndFinanceLeaseLiability	0001326801-20-000013	terseLabel	ROU corresponding liabilities	0
+0001326801-20-000013	37	27		0	OperatingAndFinanceLeaseRightOfUseAsset	0001326801-20-000013	terseLabel	ROU assets	0
+0001326801-20-000013	49	6		0	OperatingLeaseLiabilityInExchangeForRightOfUseAssetObtained	0001326801-20-000013	terseLabel	Operating leases	0
+0001326801-20-000013	5	4	CI	0	OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentAndOtherNetofTax	0001326801-20-000013	terseLabel	Change in unrealized gain/loss on available-for-sale investments and other, net of tax	0
+0001326801-20-000013	7	29	CF	0	PaymentsToAcquireBusinessesNetOfCashAcquiredAndPurchasesOfIntangibleAndOtherAssets	0001326801-20-000013	negatedLabel	Acquisitions of businesses, net of cash acquired, and purchases of intangible assets	1
+0001326801-20-000013	53	12		0	PropertyAndEquipmentAccruedLiabilities	0001326801-20-000013	terseLabel	Accrued property and equipment	0
+0001326801-20-000013	45	25		0	PropertyPlantAndEquipmentAndFinanceLeaseRightofUseAssetAccumulatedDepreciationAndAmortization	0001326801-20-000013	negatedLabel	Less: Accumulated depreciation	1
+0001326801-20-000013	45	27		0	PropertyPlantAndEquipmentAndFinanceLeaseRightofUseAssetAfterAccumulatedDepreciationAndAmortization	0001326801-20-000013	verboseLabel	Property and equipment, net	0
+0001326801-20-000013	2	8	BS	0	PropertyPlantAndEquipmentAndFinanceLeaseRightofUseAssetAfterAccumulatedDepreciationAndAmortization	0001326801-20-000013	terseLabel	Property and equipment, net	0
+0001326801-20-000013	45	24		0	PropertyPlantAndEquipmentAndFinanceLeaseRightofUseAssetBeforeAccumulatedDepreciationAndAmortization	0001326801-20-000013	totalLabel	Property, plant, and equipment and finance lease right-of-use asset, gross	0
+0001326801-20-000013	24	1		0	PropertyPlantandEquipmentUsefulLifeTableTextBlock	0001326801-20-000013	verboseLabel	Estimated Useful Lives of Property and Equipment	0
+0001326801-20-000013	40	21		0	ReallocationOfNetIncomeAsResultOfConversionOfClassBToClassAShares	0001326801-20-000013	terseLabel	Reallocation of net income as a result of conversion of Class B to Class A common stock	0
+0001326801-20-000013	40	20		0	ReallocationOfNetIncomeAttributableToParticipatingSecurities	0001326801-20-000013	terseLabel	Reallocation of net income attributable to participating securities	0
+0001326801-20-000013	40	22		0	ReallocationOfNetIncomeToClassBCommonStock	0001326801-20-000013	terseLabel	Reallocation of net income to Class B common stock	0
+0001326801-20-000013	38	11		0	RestOfWorldMember	0001326801-20-000013	verboseLabel	Rest of World	0
+0001326801-20-000013	49	5		0	RightOfUseAssetObtainedInExchangeForLeaseLiabilityAbstract	0001326801-20-000013	terseLabel	Lease liabilities arising from obtaining right-of-use assets:	0
+0001326801-20-000013	41	1		0	ScheduleOfCashCashEquivalentsAndMarketableSecuritiesTable	0001326801-20-000013	terseLabel	Schedule of Cash, Cash Equivalents and Marketable Securities [Table]	0
+0001326801-20-000013	60	6		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsRollforwardAbstract	0001326801-20-000013	terseLabel	Number of Shares	0
+0001326801-20-000013	60	12		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsWeightedAverageGrantDateFairValueAbstract	0001326801-20-000013	terseLabel	Weighted-Average Grant Date Fair Value	0
+0001326801-20-000013	59	19		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsAggregateIntrinsicValueAbstract	0001326801-20-000013	terseLabel	Aggregate Intrinsic Value	0
+0001326801-20-000013	59	17		0	ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsWeightedAverageRemainingContractualTermAbstract	0001326801-20-000013	terseLabel	Weighted-Average Remaining Contractual Term	0
+0001326801-20-000013	58	13		0	ShareBasedEmployeeCompensationPlansNumber	0001326801-20-000013	terseLabel	Share-based employee compensation plans, number	0
+0001326801-20-000013	58	16		0	SharesReservedForIssuanceIncreasePercentage	0001326801-20-000013	terseLabel	Shares reserved for issuance increase (in percentage)	0
+0001326801-20-000013	6	17	EQ	0	StockIssuedDuringPeriodSharesRestrictedStockUnitBeforeTaxSettlement	0001326801-20-000013	terseLabel	Issuance of common stock for settlement of RSUs, shares	0
+0001326801-20-000013	6	18	EQ	0	StockIssuedDuringPeriodValueRestrictedStockUnitBeforeTaxSettlement	0001326801-20-000013	terseLabel	Issuance of common stock for settlement of RSUs. value	0
+0001326801-20-000013	58	11		0	StockOptionPlanTwentyTwelveMember	0001326801-20-000013	terseLabel	2012 Plan	0
+0001326801-20-000013	57	10		0	StockRepurchaseProgramIncreaseInAuthorizedAmount	0001326801-20-000013	terseLabel	Stock repurchase program, increase in authorized amount	0
+0001326801-20-000013	67	12		0	TaxYears2011Through2013Member	0001326801-20-000013	terseLabel	Tax Years 2011 Through 2013	0
+0001326801-20-000013	64	11		0	TotalDeferredIncomeTaxExpenseBenefit	0001326801-20-000013	totalLabel	Total deferred tax (benefits)/expense	0
+0001326801-20-000013	55	7		0	UnitedStatesFederalTradeCommissionInquiryMember	0001326801-20-000013	terseLabel	United States Federal Trade Commission Inquiry	0
+0001326801-20-000013	53	7		0	UnitedStatesFederalTradeCommissionInquiryMember	0001326801-20-000013	terseLabel	United States Federal Trade Commission Inquiry	0
+0001326801-20-000013	38	8		0	USCanadaMember	0001326801-20-000013	verboseLabel	US & Canada	0
+0001326801-20-000013	40	13		0	WeightedAverageSharesOutstanding	0001326801-20-000013	terseLabel	Weighted-average shares outstanding (in shares)	0

@@ -193,10 +193,21 @@ def detect_filing(adsh, meta, filing_rows):
     # section, offset by treasury stock, was summed as a liability). Once the
     # equity block has started (first equity component or equity total) and
     # until the L&E total, a 'liab'-classed line is an equity-section line.
+    # EXCEPTION (Verifier debt-port draw 2026-11-01, NI/FE/AWK 7 of 7 false holds): at a
+    # capitalization-format filer (equity, long-term debt, 'Total capitalization', then current
+    # liabilities) the debt line prints after common equity and INSIDE the filer's own
+    # capitalization subtotal (equity + debt = Total capitalization). A debt-reading line before a
+    # capitalization total that follows it is a liability, never an equity-section line. A non-debt
+    # liability line there, and every line in a layout with no capitalization total (UPS, BX, OXY),
+    # stays guarded.
+    LEASE_DEBT_RX = re.compile(r"CapitalLease|FinanceLease")
+    cap_total_after = [any(w["seg"] == "excluded_cap_total" for w in zone_lines[i + 1:]) for i in range(len(zone_lines))]
     in_equity = False
-    for z in zone_lines:
+    for i, z in enumerate(zone_lines):
         if z["seg"] in ("equity_component", "equity_total", "nci"):
             in_equity = True
+        elif z["seg"] == "liab" and in_equity and cap_total_after[i] and (DEBT_LIKE_RX.search(z["tag"]) or LEASE_DEBT_RX.search(z["tag"])):
+            pass  # debt inside the capitalization block
         elif z["seg"] == "liab" and in_equity:
             z["seg"] = "equity_component"
             z["equity_block_guard"] = True

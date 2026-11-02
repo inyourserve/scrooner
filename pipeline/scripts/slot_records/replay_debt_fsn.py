@@ -75,6 +75,61 @@ import os  # noqa: E402
 ABLATE_FIRST_FILED = os.environ.get("REPLAY_DEBT_ABLATE") == "first_filed"  # cells from 2015-01-01 (invariant I11, data-team/34); values are stored from 2014
 
 
+LEASE_COMPONENT = {"FinanceLeaseLiabilityNoncurrent": ("FinanceLeaseLiability", "FinanceLeaseLiabilityCurrent"),
+                   "CapitalLeaseObligationsNoncurrent": ("CapitalLeaseObligations", "CapitalLeaseObligationsCurrent")}
+NOTE_DEBT_TAGS = ("LongTermDebt", "LongTermDebtCurrent", "LongTermDebtNoncurrent")
+
+
+def drop_misdated_lease_components(values, d):
+    """Debt Verifier trap META 2018-12-31 (0001326801-20-000013 R47): the FY2019 10-K prints 'Lease liabilities,
+    non-current' 418 in the Dec. 31, 2018 context, but 473 = 55 + 418 is the 2019 total. A noncurrent lease
+    component at instant d is a filer context error, never a 2018 liability, when the same filing prints the
+    lease total and current portion at ANOTHER instant d2 with total - current equal to this value to the unit,
+    the component is absent at d2, and neither total nor current is printed at d. Returns {tag} to ignore."""
+    drop = set()
+    for comp, (total, cur) in LEASE_COMPONENT.items():
+        x = values.get(d, {}).get(comp)
+        if x in (None, "0", "0.0000") or total in values.get(d, {}) or cur in values.get(d, {}):
+            continue
+        for d2, v2 in values.items():
+            if d2 != d and comp not in v2 and total in v2 and cur in v2 and Decimal(v2[total]) - Decimal(v2[cur]) == Decimal(x):
+                drop.add(comp)
+    return drop
+
+
+def fill_lease_from_earlier_copy(cik, d, adsh, day, rec, filings):
+    """Debt Verifier traps NVDA 2017-01-29 and META 2025-12-31 (Ritwik items 3 and 6). The latest accepted print
+    decides every value; but a latest copy that does not repeat a finance/capital lease figure (NVDA's FY2018
+    10-K folds the 6 noncurrent capital lease into other liabilities; META's later 10-Q has no lease note) cannot
+    be read as 'no lease'. When the debt lines of the latest copy and of the latest EARLIER-accepted copy that
+    prints the lease figures are EQUAL (the record's debt members tag by tag, absent = absent, and the note LongTermDebt where both print it), the two copies print the same debt and only the lease detail differs: lease tags the latest copy
+    lacks are taken from that earlier copy. Debt lines that differ -> nothing is filled (the caller then holds
+    with latest_copy_lacks_note_finance_lease). Returns the tags filled, with their source accession."""
+    cands = sorted((a for a in NOTE_LEASE.get((cik, d), set()) - {adsh} if ACCEPTED_OF.get(a, "") < ACCEPTED_OF.get(adsh, "")),
+                   key=lambda a: ACCEPTED_OF[a], reverse=True)
+    missing_any = [t for t in NOTE_LEASE_TAGS if t not in day]
+    if not cands or not missing_any:
+        return None
+    src = cands[0]
+    sv = {t: Decimal(v) for t, v in filings[src]["values"][d].items()}
+    members = {m["tag"] for m in rec["members"] if m["class"] not in ("operating_lease", "finance_lease")}
+    if any((day[t][0] if t in day else None) != sv.get(t) for t in members):
+        return None
+    # the note's LongTermDebt is compared only where both copies print it (a later copy may drop the note line)
+    if any(t in day and t in sv and day[t][0] != sv[t] for t in NOTE_DEBT_TAGS):
+        return None
+    # a missing TOTAL is filled only when the latest copy prints nothing of that lease family: a latest copy that
+    # prints current + noncurrent has the present value, and an earlier copy's total may be the GROSS minimum
+    # payments (AMZN 2016: CapitalLeaseObligations 9,406 gross vs 4,000 + 5,080 present value; Verifier R51)
+    fam = lambda t: "FinanceLease" if t.startswith("FinanceLease") else "CapitalLease"
+    present = {fam(t) for t in NOTE_LEASE_TAGS if t in day}
+    filled = {t: sv[t] for t in missing_any if t in sv and sv[t] not in (0,)
+              and (t.endswith(("Current", "Noncurrent")) or fam(t) not in present)}
+    for t, v in filled.items():
+        day[t] = (v, True)
+    return (src, sorted(filled)) if filled else None
+
+
 def select_cells(filing_iter, records):
     """one filing per (cik, instant): the LATEST ACCEPTED filing that prints the instant on its balance-sheet
     face (FSN-STORE-DESIGN section 4: winner = latest accepted; an older vintage is never preferred).
@@ -118,7 +173,8 @@ def replay(records, best, filings, prod, prod_n):
         f = filings[adsh]
         period_end = f"{d[:4]}-{d[4:6]}-{d[6:]}"
         ticker = records[cik][0]["company"]
-        day = {t: (Decimal(v), True) for t, v in f["values"][d].items()}
+        ignore = drop_misdated_lease_components(f["values"], d)
+        day = {t: (Decimal(v), True) for t, v in f["values"][d].items() if t not in ignore}
         # the record covering the chosen filing's own period: that filing's face is the one the members name
         # (a later comparative column is printed under the later era's tags)
         own = f"{f['period'][:4]}-{f['period'][4:6]}-{f['period'][6:]}"
@@ -131,6 +187,7 @@ def replay(records, best, filings, prod, prod_n):
             report["cells"].append({"ticker": ticker, "cik": cik, "period_end": period_end, "accession": adsh, "verdict": verdict,
                                     "slot_lease_inclusive": None, "prod_value": str(pv) if pv is not None else None})
             continue
+        filled_from = fill_lease_from_earlier_copy(cik, d, adsh, day, rec, filings)
         # ---- value logic: replay30.py, unchanged ----
         lease_incl = Decimal(0)
         missing, missing_custom = [], []
@@ -157,6 +214,8 @@ def replay(records, best, filings, prod, prod_n):
                     break
         borrowings = lease_incl - lease_content
         note_current_added, current_unverified, note_flag = None, False, None
+        if filled_from:
+            note_flag = f"lease_tags_from_earlier_copy:{filled_from[0]}:{'+'.join(filled_from[1])}"
         has_current_side = any(m["side"] == "current" and m["class"] != "operating_lease" for m in rec["members"])
         ltd_note = day.get("LongTermDebt")
         noncur_ltd = sum((day[m["tag"]][0] for m in rec["members"]
