@@ -3,10 +3,14 @@
 On a SCRATCH Postgres built from every migration (refuses any other database): load FSN-store company directories
 with fsn_store.load, seed the committed concept_rules, then map + select each company twice, seeds only and
 seeds + fsn_store.detectors.DEFAULT, and compare every capex / D&A key with the lane's Verifier-passed family file
-(capex_da_cash_debt 6f53c945). Writes <out>/store_gate.json; exits 1 when the detectors publish a key the lane
-holds, or publish a value different from the lane's, or leave a conflicting-values defect.
+(capex_da_cash_debt 6f53c945). Writes <out>/store_gate.json and <out>/store_gate_keys.csv (EVERY non-matching key with
+its class, for the Verifier). Exits 1 when the detectors publish a key the lane holds, a value different from the
+lane's, leave a conflicting-values defect, or publish a key without Verifier evidence (a later vintage than the lane's
+filing, a quarter the lane derives differently, a key the lane file does not have; gate_classes.FAIL_CLASSES). A key the
+Verifier has cleared is named in the CSV that GATE_CLEARED_KEYS points to (columns cik,concept,grain,fsn_end).
 usage: SCRATCH_DATABASE_URL=postgresql://... capex_da_store_gate.py <ref_cells.jsonl.gz> <out_dir> <company_dir>...
 """
+import csv
 import gzip
 import json
 import os
@@ -18,6 +22,7 @@ from pathlib import Path
 import psycopg
 
 from scrooner_pipeline.fsn_store import detectors, load, mapping, rules, select
+from scrooner_pipeline.fsn_store.gate_classes import FAIL_CLASSES, INFO_CLASSES, classify, verdict
 
 REPO = Path(__file__).resolve().parents[3]
 CONCEPTS = ("capex_resolved", "depreciation_and_amortization_resolved")
@@ -27,7 +32,7 @@ ref_path, out_dir, dirs = sys.argv[1], Path(sys.argv[2]), sys.argv[3:]
 out_dir.mkdir(parents=True, exist_ok=True)
 conn = psycopg.connect(os.environ["SCRATCH_DATABASE_URL"])
 db = conn.execute("select current_database(), inet_server_addr()").fetchone()
-if not (db[0].startswith(("scrooner_test", "scratch")) and db[1] in (None, "127.0.0.1", "::1")):
+if not (db[0].startswith(("scrooner_test", "scratch")) and (db[1] is None or str(db[1]) in ("127.0.0.1", "::1"))):
     sys.exit(f"refused: {db} is not a local scratch database")
 
 # canonical concepts the seeds name (production seeds them from the mapper; a migration-only database lacks some)
@@ -93,54 +98,49 @@ def run(dets):
     return rows
 
 
-def num(x):
-    return None if x in (None, "") else Decimal(str(x))
-
-
 report = {}
 for mode, dets in (("seeds_only", None), ("detectors", detectors.DEFAULT)):
     got = run(dets)
     cls = Counter()
     per = defaultdict(Counter)
     bad = []
+    all_rows = []
     for k in sorted(set(ref) | set(got), key=lambda x: tuple(map(str, x))):
         a, b = ref.get(k), got.get(k)
-        av = num(a["value"]) if a and a["state"] == "value" else None
-        bv = num(b["value"]) if b and b["state"] == "value" else None
-        if b and b["state"] == "defect" and b.get("reason_code") == "conflicting_values_in_filing":
-            c = "store_conflicting_values_in_filing"
-        elif av is not None and bv is not None:
-            c = "same_value" if av == bv else "value_differs"
-        elif av is not None:
-            c = "lane_value_store_blank"
-        elif bv is not None and a and b.get("accession") != a.get("accession"):
-            # the store's latest accepted filing (design section 4) is a later vintage than the one the lane held;
-            # the line comes from the lane's own single-member decision on that later filing
-            c = "later_vintage_publishes_where_lane_held_the_original"
-        elif bv is not None:
-            if a:
-                c = "store_value_lane_held"
-            elif k[3] < "2014-01-01":
-                c = "store_key_before_lane_window"
-            elif k in ref_derived:
-                d = ref_derived[k]
-                c = ("store_print_equals_lane_derived_quarter" if d["state"] in ("value", "derived") and num(d["value"]) == bv
-                     else "store_print_where_lane_derives_differently")
-            else:
-                c = "store_value_key_not_in_lane"
-        else:
-            c = "both_blank"
+        c = classify(k, a, b, ref_derived.get(k))
         cls[c] += 1
         per[(k[0], k[1].split("_")[0])][c] += 1
-        if c not in ("same_value", "both_blank") and len(bad) < 1000:
+        if c not in ("same_value", "both_blank"):
             ld = ref_derived.get(k)
-            bad.append({"key": k, "class": c, "lane": a and {f: a.get(f) for f in ("state", "value", "reason_code", "accession", "tag")},
-                        "lane_derived": ld and {f: ld.get(f) for f in ("state", "value", "reason_code", "derivation")},
-                        "store": b and {f: b.get(f) for f in ("state", "value", "reason_code", "accession", "rule_id", "tag")}})
-    report[mode] = {"classes": dict(cls), "per_company": {f"{c}:{fam}": dict(v) for (c, fam), v in sorted(per.items())}, "examples": bad}
+            row = {"key": k, "class": c, "lane": a and {f: a.get(f) for f in ("state", "value", "reason_code", "accession", "tag", "period_end")},
+                   "lane_derived": ld and {f: ld.get(f) for f in ("state", "value", "reason_code", "derivation")},
+                   "store": b and {f: b.get(f) for f in ("state", "value", "reason_code", "accession", "rule_id", "tag")}}
+            all_rows.append(row)
+            if len(bad) < 1000:
+                bad.append(row)
+    report[mode] = {"_rows": all_rows, "classes": dict(cls), "per_company": {f"{c}:{fam}": dict(v) for (c, fam), v in sorted(per.items())}, "examples": bad}
     print(f"== {mode}: {dict(sorted(cls.items()))}")
+cleared = set()
+if os.environ.get("GATE_CLEARED_KEYS"):
+    cleared = {(r["cik"].zfill(10), r["concept"], r["grain"], r["fsn_end"]) for r in csv.DictReader(open(os.environ["GATE_CLEARED_KEYS"]))}
+rows = report["detectors"]["_rows"]
+with open(out_dir / "store_gate_keys.csv", "w", newline="") as fh:
+    w = csv.writer(fh)
+    w.writerow(["mode", "class", "fails_gate", "cleared_by_verifier", "cik", "concept", "grain", "fsn_end", "why",
+                "lane_state", "lane_value", "lane_reason", "lane_accession", "lane_period_end", "lane_tag",
+                "lane_derived_state", "lane_derived_value", "lane_derived_reason",
+                "store_state", "store_value", "store_reason", "store_accession", "store_rule", "store_tag"])
+    for mode in ("detectors", "seeds_only"):
+        for r in report[mode]["_rows"]:
+            la, ld, st = r["lane"] or {}, r["lane_derived"] or {}, r["store"] or {}
+            fails = r["class"] in FAIL_CLASSES
+            w.writerow([mode, r["class"], fails, tuple(r["key"]) in cleared, *r["key"], FAIL_CLASSES.get(r["class"]) or INFO_CLASSES.get(r["class"], ""),
+                        la.get("state"), la.get("value"), la.get("reason_code"), la.get("accession"), la.get("period_end"), la.get("tag"),
+                        ld.get("state"), ld.get("value"), ld.get("reason_code"),
+                        st.get("state"), st.get("value"), st.get("reason_code"), st.get("accession"), st.get("rule_id"), st.get("tag")])
+for mode in report:
+    report[mode].pop("_rows")
 json.dump(report, open(out_dir / "store_gate.json", "w"), indent=1, default=str)
-d = report["detectors"]["classes"]
-fail = d.get("store_value_lane_held", 0) + d.get("value_differs", 0) + d.get("store_conflicting_values_in_filing", 0)
-print("verdict:", "FAIL" if fail else "PASS", f"({fail} keys published against the lane or conflicting)")
-sys.exit(1 if fail else 0)
+v, per = verdict(rows, cleared)
+print("verdict:", v, f"({sum(per.values())} keys fail: {dict(sorted(per.items()))})")
+sys.exit(1 if v == "FAIL" else 0)

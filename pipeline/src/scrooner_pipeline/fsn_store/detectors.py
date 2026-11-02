@@ -19,6 +19,7 @@ and other") is returned `combined`.
 
 from __future__ import annotations
 
+import re
 import sys
 from collections import defaultdict
 from decimal import Decimal
@@ -41,6 +42,13 @@ RULE = {
     "is_anchor": "cf.da_is_anchor@1",
     "held": "cf.capex_da_held@1",
 }
+NET_REASON = "da_net_line_below_intangible_amortization"  # the lane's Verifier V10 reason (KEY FY2021)
+NET_CARRIED = "da_net_line_failed_in_another_filing"  # the lane's company rule (Verifier V11, KEY FY2023)
+_NET = re.compile(r"\bnet\b", re.I)
+
+
+def _norm(label: str) -> str:
+    return label.strip().lower()
 
 
 def _lane():
@@ -72,9 +80,15 @@ def face_columns(f: dict[str, Any]) -> list[tuple[str, int]]:
     return sorted(out)
 
 
-def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
+def decide(
+    f: dict[str, Any], net_labels: frozenset[str] | set[str] = frozenset()
+) -> dict[str, dict[str, Any]]:
     """{concept: {"status": "mapped"|"held", "tag": tag|None, "stmt": "CF"|"IS", "columns": [...], "reasons": [...]}}
-    for the concepts the lane evaluates on this filing. Pure: no database."""
+    for the concepts the lane evaluates on this filing. Pure: no database.
+
+    `net_labels`: the lowercased "net" D&A labels that failed the lane's V10 check in ANOTHER filing of the company
+    (company_net_labels). The lane's company rule (V11, KEY FY2023) holds such a label in every period, so a column
+    whose asset D&A line carries one is held here (reason NET_CARRIED), exactly as the lane does."""
     lane = _lane()
     per: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for ddate, q in face_columns(f):
@@ -101,7 +115,20 @@ def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
                     )
                     per[CAPEX].append({"col": col, "pub": False, "reason": reason})
             else:
-                if c["value"] is not None and c.get("da_class") in DA_EMIT:
+                carried = c["value"] is not None and any(
+                    x["nature"] == "asset_da" and _norm(x["label"]) in net_labels
+                    for x in c["lines"]
+                )
+                if carried:
+                    per[DA].append(
+                        {
+                            "col": col,
+                            "pub": False,
+                            "reason": NET_CARRIED,
+                            "combined": [],
+                        }
+                    )
+                elif c["value"] is not None and c.get("da_class") in DA_EMIT:
                     if c["da_class"] == "is_anchor":
                         total = _dec(c.get("is_da_total"))
                         tags = [
@@ -123,6 +150,13 @@ def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
                             "value": _dec(c["value"]),
                             "raw": _dec(vals.get(tag)) if tag else None,
                             "reason": None if tag else "is_anchor_line_not_unique",
+                            "labels": sorted(
+                                {
+                                    _norm(x["label"])
+                                    for x in c["lines"]
+                                    if x["nature"] == "asset_da"
+                                }
+                            ),
                         }
                     )
                 else:
@@ -132,6 +166,16 @@ def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
                             "col": col,
                             "pub": False,
                             "reason": reason,
+                            "net_failed": sorted(
+                                {
+                                    _norm(x["label"])
+                                    for x in c["lines"]
+                                    if x["nature"] == "asset_da"
+                                    and _NET.search(x["label"])
+                                }
+                            )
+                            if reason == NET_REASON
+                            else [],
                             "combined": [
                                 x["tag"]
                                 for x in c["lines"]
@@ -160,6 +204,7 @@ def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
                 if classes == ["is_anchor"]
                 else RULE[concept],
                 "da_class": classes,
+                "labels": sorted({lb for x in cols for lb in x.get("labels", [])}),
             }
         else:
             reasons = sorted({x["reason"] for x in held if x.get("reason")})
@@ -173,6 +218,9 @@ def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
                 "columns": [x["col"] for x in cols],
                 "reasons": reasons,
                 "combined": sorted({t for x in held for t in x.get("combined", [])}),
+                "net_failed": sorted(
+                    {lb for x in held for lb in x.get("net_failed", [])}
+                ),
             }
     return out
 
@@ -246,6 +294,29 @@ def filing_object(conn: psycopg.Connection, filing_id: int) -> dict[str, Any] | 
     }
 
 
+def company_net_labels(conn: psycopg.Connection, filing_id: int) -> set[str]:
+    """The lane's company rule (Verifier V11, KEY FY2023), carried across filings: the lowercased "net" D&A labels
+    that fail the V10 check (`da_net_line_below_intangible_amortization`) in ANY OTHER periodic filing of the same
+    registrant. Only filings that print a cash-flow line labelled "net" are evaluated (SQL pre-screen), so a company
+    without such a line costs one query. The lane applies the rule over its best filing per column; this reads every
+    filing of the registrant, which can only hold MORE cells than the lane, never publish a value it holds."""
+    with conn.cursor() as cur:
+        cur.execute(
+            """select o.id from fsn.filing f join fsn.filing o on o.cik = f.cik and o.id <> f.id
+               where f.id = %s and exists (
+                   select 1 from fsn.line l where l.filing_id = o.id and l.stmt = 'CF'
+                     and coalesce(l.plabel, '') ~* '\\ynet\\y')""",
+            (filing_id,),
+        )
+        others = [r[0] for r in cur.fetchall()]
+    out: set[str] = set()
+    for oid in others:
+        of = filing_object(conn, oid)
+        if of is not None:
+            out.update(decide(of).get(DA, {}).get("net_failed", []))
+    return out
+
+
 def capex_da_detector(
     conn: psycopg.Connection, filing_id: int, decisions: list[tuple]
 ) -> list[tuple]:
@@ -268,6 +339,11 @@ def capex_da_detector(
                     seeded[name].append((d[1], d[2]))
     out = []
     decided = decide(f)
+    if any(_NET.search(lb) for lb in decided.get(DA, {}).get("labels", [])):
+        # a published "net" D&A line: the lane holds it when the same label failed V10 in another period (V11)
+        net_labels = company_net_labels(conn, filing_id)
+        if net_labels:
+            decided = decide(f, net_labels)
     for concept in cid:
         if concept not in decided and seeded[concept]:
             # no cash-flow face column in the lane's window (a filing whose columns all end before 2014): the lane
