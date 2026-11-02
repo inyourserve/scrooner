@@ -51,6 +51,59 @@ def test_single_da_line_maps_once_per_filing():
     assert j[DA]["status"] == "mapped" and j[DA]["tag"] == "DepreciationAmortizationAndAccretionNet"
 
 
+def _flip_sign(monkeypatch, family, keys):
+    """make the lane read a value with the opposite sign to the store's raw print for `family`"""
+    lane = detectors._lane()
+    real = lane.evaluate
+
+    def evaluate(*a, **k):
+        cells = real(*a, **k)
+        for c in cells:
+            if c["family"] == family:
+                for key in keys:
+                    if c.get(key) is not None:
+                        c[key] = str(-detectors._dec(c[key]))
+        return cells
+
+    monkeypatch.setattr(lane, "evaluate", evaluate)
+
+
+def test_raw_print_equal_to_the_lane_value_maps(monkeypatch):
+    """control for the sign tests: untouched, the store's raw print equals the lane's value and the line maps"""
+    d = detectors.decide(_filings()[("WMT", "20240131")])
+    assert d[DA]["status"] == "mapped" and d[CAPEX]["status"] == "mapped"
+
+
+def test_capex_print_with_the_opposite_sign_to_the_lane_value_holds(monkeypatch):
+    """the lane reads signs as presented; a lane value of opposite sign to the store's raw print must hold the whole
+    filing (store_print_differs_from_lane_value) instead of mapping a line whose stored value select would publish"""
+    _flip_sign(monkeypatch, "capex", ("interim",))
+    d = detectors.decide(_filings()[("WMT", "20240131")])
+    assert d[CAPEX]["status"] == "held" and d[CAPEX]["tag"] is None
+    assert "store_print_differs_from_lane_value" in d[CAPEX]["reasons"]
+    assert d[DA]["status"] == "mapped"  # only the family whose print differs is held
+
+
+def test_da_print_with_the_opposite_sign_to_the_lane_value_holds(monkeypatch):
+    _flip_sign(monkeypatch, "d_and_a", ("value",))
+    d = detectors.decide(_filings()[("WMT", "20240131")])
+    assert d[DA]["status"] == "held" and "store_print_differs_from_lane_value" in d[DA]["reasons"]
+    assert d[CAPEX]["status"] == "mapped"
+
+
+def test_net_da_label_failed_in_another_filing_is_held_here_too():
+    """Verifier V11 (KEY FY2023): once a company's "net" D&A label fails V10 in one filing, the lane holds that label
+    in every period. decide() takes the labels that failed elsewhere and holds the column that carries one."""
+    f = _filings()[("WMT", "20240131")]
+    base = detectors.decide(f)[DA]
+    assert base["status"] == "mapped" and base["labels"]
+    carried = detectors.decide(f, set(base["labels"]))[DA]
+    assert carried["status"] == "held" and carried["tag"] is None
+    assert carried["reasons"] == [detectors.NET_CARRIED]
+    other = detectors.decide(f, {"a label this filing does not print"})[DA]
+    assert other["status"] == "mapped"  # a different label is not touched
+
+
 def _one(conn, sql, params=()):
     return conn.execute(sql, params).fetchone()[0]
 
