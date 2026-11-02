@@ -1,0 +1,87 @@
+name: Balance-sheet FSN port gate
+
+# Manual only, READ ONLY: no database access, no bucket writes. Builds the gate's inputs from the fsn-notes
+# bucket (build_gate_inputs.py: per-period extracts filtered to the 29 cohort companies, plus the
+# fsn_store.shard company directories), fetches the boundary _cal.xml files from sec.gov (4 req/s, cached),
+# and runs pipeline/scripts/slot_records/bs_port_gate.sh with the pinned expected_diffs.json.
+# FAILS CLOSED: the job is red on any difference that is not pinned and on any pinned difference that no
+# longer occurs (bs_port_compare.py exits 1). The outputs are uploaded either way, to re-pin from.
+on:
+  workflow_dispatch:
+    inputs:
+      old_rev:
+        description: "Git rev of the old lane code for Gate A (default is the script's own)"
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bs-port-gate
+  cancel-in-progress: false
+
+env:
+  GATE_DIR: pipeline/scripts/slot_records/results/bs_port_gate_2026-11-01
+
+jobs:
+  gate:
+    name: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      OLD_REV: ${{ inputs.old_rev }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Gate A reads the old lane code from git history
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --project pipeline --locked
+      - name: Boundary calculation linkbases (cache; immutable SEC files)
+        uses: actions/cache@v4
+        with:
+          path: gate-work/cal
+          key: bs-port-gate-cal-v1
+      - name: Build inputs from the fsn-notes bucket
+        run: |
+          set -euo pipefail
+          mkdir -p gate-work/cal
+          uv run --project pipeline python pipeline/scripts/slot_records/build_gate_inputs.py \
+            "$GATE_DIR/cohort.csv" gate-work/periods gate-work/companies gate-work/cache
+          du -sh gate-work/periods gate-work/companies
+      - name: Run the gate (exit 1 on any unpinned or vanished difference)
+        run: |
+          set -euo pipefail
+          export PY="$PWD/pipeline/.venv/bin/python"
+          export EXPECTED="$PWD/$GATE_DIR/expected_diffs.json"
+          set +e
+          bash pipeline/scripts/slot_records/bs_port_gate.sh gate-work/periods gate-work/companies \
+            "$GATE_DIR/cohort.csv" gate-work/out gate-work/cal ${OLD_REV:+"$OLD_REV"} 2>&1 | tee gate-work/gate_summary.txt
+          rc=${PIPESTATUS[0]}
+          set -e
+          (cd gate-work && sha256sum out/company/bs_eras.json out/company/debt_eras.json out/company/debt_replay.json \
+            out/company/bs_records.jsonl out/company/debt_records.jsonl out/new/bs_eras.json out/new/debt_eras.json \
+            out/new/debt_replay.json out/new/debt_replay_first_filed.json > outputs.sha256) || true
+          echo "gate exit code: $rc"
+          exit "$rc"
+      - name: Upload outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bs-port-gate-outputs
+          if-no-files-found: warn
+          path: |
+            gate-work/gate_summary.txt
+            gate-work/outputs.sha256
+            gate-work/out/observed_diffs.json
+            gate-work/out/gate_report.json
+            gate-work/out/company
+            gate-work/out/new
