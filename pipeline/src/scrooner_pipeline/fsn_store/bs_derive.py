@@ -248,13 +248,11 @@ def rows(
         if f is None or not d["face"].get(fid):
             continue
         face_tags = {x["tag"] for x in d["face"][fid]}
-        anchored = any(t in col for t in ("Assets", *LE_TAGS) if t in face_tags)
-        valued = sum(1 for t in face_tags if t in col)
-        if (
-            anchored
-            and valued * 2 >= len([t for t in face_tags if not t.endswith("Abstract")])
-            and (fid, dd) not in d["failed"]
-        ):
+        # a FACE column: the balance sheet's own closing total is valued at the date (L&E prints on the face, not
+        # in segment notes; Assets only when the face has no L&E line). Segment-split faces (homebuilders,
+        # conglomerates) carry most lines per member, so a "most lines valued" test would wrongly reject them.
+        closing = [t for t in LE_TAGS if t in face_tags] or ["Assets"]
+        if any(t in col for t in closing) and (fid, dd) not in d["failed"]:
             by_col[dd].append((f.accepted, fid))
     out, misses = [], defaultdict(int)
     for dd, cands in by_col.items():
