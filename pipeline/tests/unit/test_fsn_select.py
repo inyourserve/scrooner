@@ -279,7 +279,7 @@ def test_note_values_fill_only_missing_keys_with_guards():
         n(1, 1, "InterestExpense", d23, 4, "1968000000"),          # FY2023 printed in its 10-K
         n(2, 2, "InterestExpense", d23, 4, "1968000000"),          # reprinted later: latest wins
         n(3, 2, "InterestExpenseNonoperating", d24, 4, "2935000000"),  # only the lower-priority tag
-        n(4, 2, "InterestExpense", date(2024, 6, 30), 1, "0"),     # capitalised: zero is held
+        n(4, 2, "InterestExpense", date(2024, 6, 30), 1, "0"),     # capitalised (TOL): a printed zero is served
         n(5, 2, "InterestExpense", date(2024, 9, 30), 1, "107000000"),
         n(6, 2, "InterestExpenseOperating", date(2024, 9, 30), 1, "55000000"),  # two perimeters (IP)
         n(7, 2, "InterestExpense", date(2024, 3, 31), 1, "500000000"),  # face cell exists: skipped
@@ -289,7 +289,7 @@ def test_note_values_fill_only_missing_keys_with_guards():
     assert cells[(d23, 4)].value == Decimal("1968000000") and cells[(d23, 4)].source_value_ids == [2]
     assert cells[(d23, 4)].rule_id == sel.RULE_NOTE_VALUE and cells[(d23, 4)].input_refs["source"] == "note"
     assert cells[(d24, 4)].tag == "InterestExpenseNonoperating"
-    assert cells[(date(2024, 6, 30), 1)].reason_code == "note_value_not_positive"
+    assert (cells[(date(2024, 6, 30), 1)].state, cells[(date(2024, 6, 30), 1)].value) == ("value", Decimal(0))  # printed zero
     assert cells[(date(2024, 9, 30), 1)].reason_code == "note_values_disagree"
     assert (date(2024, 3, 31), 1) not in cells
     assert sel.to_row(cells[(date(2024, 9, 30), 1)], 1, f)["defect_class"] == "composition"

@@ -925,20 +925,8 @@ def select_note_values(
                 )
             )
             continue
-        if top.value == 0:
-            out.append(
-                Cell(
-                    concept,
-                    key[0],
-                    key[1],
-                    "defect",
-                    filing_id=top.filing_id,
-                    rule_id=RULE_NOTE_VALUE,
-                    reason_code="note_value_not_positive",
-                    input_refs={**refs, "value": str(top.value)},
-                )
-            )
-            continue
+        # a printed zero is the filer's value (Toll Brothers FY2015-2019: interest fully capitalised);
+        # served as note-sourced like any other gross figure (Ritwik 2026-11-03)
         out.append(
             Cell(
                 concept,
