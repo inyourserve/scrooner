@@ -199,6 +199,10 @@ def pilot_cmd(
         "data-team/47-fsn-store/period_rules.csv",
         help="Basis splits and unfiled instants (company period rules).",
     ),
+    company_outs: str = typer.Option(
+        "data-team/47-fsn-store/template_company_outs.csv",
+        help="Company-level template OUTs with evidence (line not printed).",
+    ),
 ) -> None:
     """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
     Writes fsn.line_map and fsn.filing_check of that database; run it on a scratch copy for a dry run."""
@@ -230,7 +234,12 @@ def pilot_cmd(
                 c = checks.check_company(conn, cid)
                 conn.commit()
                 rep = pilot.report_company(
-                    conn, cid, Path(calendar), rule_concepts, Path(period_rules)
+                    conn,
+                    cid,
+                    Path(calendar),
+                    rule_concepts,
+                    Path(period_rules),
+                    Path(company_outs),
                 )
                 rep["mapping"], rep["checks"] = m, c
                 rep["accessions"] = [
