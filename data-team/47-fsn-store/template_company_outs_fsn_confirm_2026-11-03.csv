@@ -1,0 +1,99 @@
+company_id,cik,ticker,data_point,verdict,confirmed,tag,accession,ddate,qtrs,value,on_face,last_fsn_year,note
+612,0000040987,GPC,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000040987-19-000015,20181231,4,1430505000.0000,False,2018,
+646,0000051434,IP,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000051434-16-000042,20151231,4,2361000000.0000,False,2015,
+705,0000067887,MOG-A,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001628280-25-054103,20250930,4,449606000.0000,False,2025,
+1025,0000076334,PH,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0000076334-26-000105,20260630,4,5068000000.0000,False,2026,
+1038,0000079879,PPG,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000079879-24-000040,20231231,4,2675000000.0000,False,2023,
+1059,0000087347,SLB,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000950170-24-006884,20231231,4,6523000000.0000,False,2023,
+1068,0000089800,SHW,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000089800-24-000033,20231231,4,4161700000.0000,False,2023,
+1072,0000091142,AOS,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0000091142-26-000008,20251231,4,728600000.0000,False,2025,
+1087,0000093556,SWK,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000093556-22-000004,20201231,4,2176000000.0000,False,2020,last FSN annual ddate year 2020 vs out_effective_after 2021-01-02;
+1158,0000109198,TJX,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0001628280-19-003834,20190131,4,4763227000.0000,False,2019,
+1196,0000315189,DE,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001558370-24-016169,20241031,4,9039000000.0000,False,2024,
+1313,0000720672,SF,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0000950170-25-027702,20241231,4,928444000.0000,False,2024,
+1436,0000773840,HON,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0000773840-26-000013,20251231,4,8127000000.0000,False,2025,
+1454,0000785161,EHC,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000785161-23-000012,20221231,4,539500000.0000,False,2022,
+1555,0000820318,COHR,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0000820318-24-000016,20240630,4,96121000.0000,False,2024,
+1611,0000842162,LEA,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0000842162-26-000011,20251231,4,777300000.0000,False,2025,
+1675,0000866706,ESE,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001104659-25-117276,20250930,4,170355000.0000,False,2025,
+1863,0000910606,REG,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001193125-26-051668,20251231,4,1123441000.0000,False,2025,
+1874,0000912593,SUI,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0000912593-18-000049,20171231,4,550945000.0000,False,2017,
+1886,0000913760,SNEX,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0000913760-24-000187,20240930,4,-64700000.0000,False,2024,
+1917,0000920760,LEN,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0001628280-21-000722,20201130,4,3482206000.0000,False,2020,
+2432,0001024478,ROK,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001024478-25-000116,20250930,4,1703000000.0000,False,2025,
+2440,0001025378,WPC,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0001025378-16-000062,20151231,4,209879000.0000,False,2015,
+3980,0001156039,ELV,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001156039-26-000013,20251231,4,7199000000.0000,False,2025,
+2852,0001551182,ETN,operating_income_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:OperatingIncomeLoss,0001551182-20-000050,20191231,4,3675000000.0000,False,2019,
+3024,0001567094,CNH,operating_income_resolved,APPROVE_OUT_FROM,not_confirmed,,,,,,,,no 10-K/10-Q of this CIK in FSN prints the concept non-dimensionally (cik not in FSN 10-K set for that period: 40-F/20-F filer or predecessor not in the sampled filer list)
+5261,0001744489,DIS,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001744489-25-000155,20250930,4,17551000000.0000,False,2025,
+2801,0001841666,APA,operating_income_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:OperatingIncomeLoss,0001841666-26-000015,20251231,4,3087000000.0000,False,2025,
+3463,0001600033,ELF,interest_expense_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:InterestAndDebtExpense,0001600033-20-000036,20200331,4,6308000.0000,False,2020,
+5830,0001433195,APPF,interest_expense_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:InterestExpense,0001433195-18-000011,20151231,4,800000.0000,False,2015,
+2378,0001022079,DGX,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001022079-24-000041,20231231,4,163000000.0000,False,2023,
+1725,0000880266,AGCO,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0000880266-24-000013,20231231,4,68800000.0000,False,2023,
+5761,0001413329,PM,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001628280-26-005939,20251231,4,1587000000.0000,False,2025,
+193,0000010456,BAX,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001628280-26-007733,20251231,4,290000000.0000,False,2025,
+8,0001512673,XYZ,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001628280-22-003825,20211231,4,58100000.0000,False,2021,
+329,0000027904,DAL,interest_expense_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:InterestExpense,0000027904-18-000006,20171231,4,396000000.0000,False,2017,
+1413,0000764180,MO,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000764180-26-000017,20251231,4,1177000000.0000,False,2025,
+1427,0000769397,ADSK,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0000769397-26-000015,20260131,4,80000000.0000,False,2026,
+4067,0001646972,ACI,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001646972-26-000032,20260228,4,454600000.0000,False,2026,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+4,0000789019,MSFT,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001193125-26-323660,20260630,4,3051000000.0000,False,2026,
+1699,0000875045,BIIB,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0000875045-26-000013,20251231,4,267500000.0000,False,2025,
+1483,0000794170,TOL,interest_expense_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:InterestExpense,0000794170-19-000067,20191031,4,0.0000,False,2019,"gross InterestExpense last printed FY2019 (value 0.0000); InterestExpenseDebt printed through 20221031 (0000794170-22-000049, 0.0000), which matches out_effective_after; gross family ends earlier"
+3332,0001876042,CRCL,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001876042-26-000062,20251231,4,1226000.0000,False,2025,
+666,0000059478,LLY,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000059478-26-000013,20251231,4,895000000.0000,False,2025,
+629,0000047217,HPQ,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001047469-15-009251,20151031,4,567000000.0000,False,2015,
+3895,0001633917,PYPL,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001633917-26-000024,20251231,4,441000000.0000,False,2025,
+3083,0001571996,DELL,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001571996-26-000008,20260131,4,1560000000.0000,False,2026,
+5228,0001739940,CI,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001739940-26-000006,20251231,4,1400000000.0000,False,2025,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+643,0000050863,INTC,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000050863-26-000011,20251231,4,1091000000.0000,False,2025,
+1030,0000078003,PFE,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0000078003-26-000026,20251231,4,2671000000.0000,False,2025,
+3,0000320193,AAPL,interest_expense_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:InterestExpense,0000320193-23-000106,20230930,4,3933000000.0000,False,2023,
+5069,0001327811,WDAY,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001327811-26-000014,20260131,4,114000000.0000,False,2026,
+5396,0001361113,VRNS,interest_expense_resolved,APPROVE_OUT_FROM,debt_only,us-gaap:InterestExpense,0001193125-15-054287,20121231,4,86000.0000,False,2012,"gross InterestExpense last printed FY2012 (value 86000.0000); InterestExpenseDebt printed through 20211231 (0001628280-22-002017, 3168000.0000), which matches out_effective_after; gross family ends earlier"
+9,0001652044,GOOG,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001652044-26-000018,20251231,4,736000000.0000,False,2025,
+3582,0001109354,BRKR,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001193125-26-082523,20251231,4,60300000.0000,False,2025,
+5969,0001474432,P,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001474432-26-000027,20260131,4,3375000.0000,False,2026,
+1182,0000310158,MRK,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000310158-26-000063,20251231,4,1357000000.0000,False,2025,
+3176,0001579428,AXSM,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001193125-26-064267,20251231,4,-15928000.0000,False,2025,
+215,0000014272,BMY,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000014272-26-000004,20251231,4,1891000000.0000,False,2025,
+3459,0001099219,MET,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestAndDebtExpense,0001099219-26-000013,20251231,4,1061000000.0000,False,2025,
+1263,0000707549,LRCX,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000707549-26-000037,20260630,4,156884000.0000,False,2026,
+1550,0000818686,TEVA,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001193125-26-034532,20251231,4,916000000.0000,False,2025,
+628,0000047111,HSY,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001628280-26-008586,20251231,4,224806000.0000,False,2025,
+243,0000016918,STZ,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000016918-26-000011,20260228,4,361600000.0000,False,2026,
+5448,0001368622,AVAV,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001104659-26-078906,20260430,4,24197000.0000,False,2026,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+5494,0001766502,CHWY,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001766502-26-000034,20260131,4,4600000.0000,False,2026,
+5261,0001744489,DIS,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001744489-25-000155,20250930,4,-1812000000.0000,False,2025,
+4385,0001232524,JAZZ,interest_expense_resolved,APPROVE_OUT_FROM,debt_only,us-gaap:InterestExpenseDebt,0001232524-24-000015,20231231,4,32800000.0000,False,2023,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+2491,0001031308,BSY,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001628280-23-005568,20221231,4,35056000.0000,False,2022,
+5511,0001769628,CRWV,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001769628-26-000104,20251231,4,1148000000.0000,False,2025,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+3057,0001069258,KTOS,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001069258-26-000013,20251231,4,9600000.0000,False,2025,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+4947,0001319161,WMG,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001319161-25-000034,20250930,4,177000000.0000,False,2025,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+4972,0001321732,PEN,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001321732-26-000007,20251231,4,1311000.0000,False,2025,
+2511,0001032975,LOGI,interest_expense_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:InterestExpense,0001032975-16-000083,20160331,4,0.0000,False,2016,
+4425,0002035989,AMRZ,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0002035989-26-000017,20251231,4,461000000.0000,False,2025,
+2848,0001551152,ABBV,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001551152-26-000008,20251231,4,2893000000.0000,False,2025,
+4220,0001177394,SNX,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001628280-26-003598,20251130,4,356608000.0000,False,2025,
+3675,0001616707,W,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001616707-26-000027,20251231,4,165000000.0000,False,2025,
+3238,0001868159,LINE,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001868159-26-000012,20251231,4,256000000.0000,False,2025,
+5686,0001398659,G,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestAndDebtExpense,0001398659-26-000004,20251231,4,73516000.0000,False,2025,
+5606,0001783180,CARR,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001783180-26-000008,20251231,4,458000000.0000,False,2025,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+5563,0001383312,BR,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001628280-26-052243,20260630,4,111800000.0000,False,2026,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+1981,0000940944,DRI,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0000940944-26-000025,20260531,4,126500000.0000,False,2026,
+3398,0001594805,SHOP,interest_expense_resolved,APPROVE_OUT_FROM,not_confirmed,,,,,,,,no 10-K/10-Q of this CIK in FSN prints the concept non-dimensionally (cik not in FSN 10-K set for that period: 40-F/20-F filer or predecessor not in the sampled filer list)
+4066,0002005951,SW,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001628280-26-012555,20251231,4,840000000.0000,False,2025,
+1677,0000866787,AZO,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001104659-25-102611,20250831,4,490025000.0000,False,2025,
+3913,0001635327,FLUT,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001635327-26-000005,20251231,4,576000000.0000,False,2025,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+607,0000040533,GD,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0000040533-24-000007,20231231,4,399000000.0000,False,2023,
+2641,0001041061,YUM,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001041061-26-000084,20251231,4,544000000.0000,False,2025,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+295,0000023217,CAG,interest_expense_resolved,APPROVE_OUT_FROM,confirmed,us-gaap:InterestExpense,0001628280-16-017613,20160531,4,297800000.0000,False,2016,
+646,0000051434,IP,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0000051434-26-000055,20251231,4,551000000.0000,False,2025,
+1379,0000745732,ROST,interest_expense_resolved,APPROVE_OUT_FROM,debt_only,us-gaap:InterestExpenseDebt,0000745732-20-000016,20200131,4,13139000.0000,False,2020,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+1675,0000866706,ESE,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001104659-25-117276,20250930,4,17502000.0000,False,2025,
+3652,0001116132,TPR,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,debt_only,us-gaap:InterestExpenseDebt,0001116132-26-000018,20260630,4,119300000.0000,False,2026,ONLY InterestExpenseDebt; only InterestExpenseDebt (component) found as the annual figure
+1013,0000073309,NUE,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0001193125-26-071575,20251231,4,170000000.0000,False,2025,
+1158,0000109198,TJX,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpense,0000109198-26-000008,20260131,4,79000000.0000,False,2026,
+3955,0001144215,AYI,interest_expense_resolved,REJECT_NOTE_SOURCED_VALUE,confirmed,us-gaap:InterestExpenseNonoperating,0001144215-25-000082,20250831,4,42500000.0000,False,2025,
+241,0000016875,CP,interest_expense_resolved,APPROVE_OUT_FROM,not_confirmed,,,,,,,,no 10-K/10-Q of this CIK in FSN prints the concept non-dimensionally (cik not in FSN 10-K set for that period: 40-F/20-F filer or predecessor not in the sampled filer list)
