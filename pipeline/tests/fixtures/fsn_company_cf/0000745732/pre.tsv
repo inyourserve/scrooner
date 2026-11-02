@@ -1,0 +1,36 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0000745732-20-000016	7	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2019	terseLabel	Adjustments to reconcile net earnings to net cash provided by operating activities:	0
+0000745732-20-000016	7	11	CF	0	IncreaseDecreaseInAccountsPayable	us-gaap/2019	terseLabel	Accounts payable	0
+0000745732-20-000016	7	28	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2019	totalLabel	Net cash used in financing activities	0
+0000745732-20-000016	7	22	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2019	terseLabel	Cash Flows From Financing Activities	0
+0000745732-20-000016	7	21	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2019	totalLabel	Net cash used in investing activities	0
+0000745732-20-000016	7	17	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2019	terseLabel	Cash Flows From Investing Activities	0
+0000745732-20-000016	7	16	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2019	totalLabel	Net cash provided by operating activities	0
+0000745732-20-000016	7	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2019	terseLabel	Cash Flows From Operating Activities	0
+0000745732-20-000016	7	2	CF	0	NetIncomeLoss	us-gaap/2019	terseLabel	Net earnings	0
+0000745732-20-000016	7	18	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2019	negatedLabel	Additions to property and equipment	1
+0000745732-20-000016	7	19	CF	0	ProceedsFromSaleOfPropertyPlantAndEquipment	us-gaap/2019	terseLabel	Proceeds from sale of property and equipment	0
+0000745732-20-000016	7	35	CF	0	IncomeTaxesPaidNet	us-gaap/2019	terseLabel	Income taxes paid	0
+0000745732-20-000016	7	34	CF	0	InterestPaidNet	us-gaap/2019	terseLabel	Interest paid	0
+0000745732-20-000016	7	26	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2019	negatedTerseLabel	Repurchase of common stock	1
+0000745732-20-000016	7	5	CF	0	ShareBasedCompensation	us-gaap/2019	terseLabel	Stock-based compensation	0
+0000745732-20-000016	7	33	CF	0	SupplementalCashFlowInformationAbstract	us-gaap/2019	terseLabel	Supplemental Cash Flow Disclosures	0
+0000745732-20-000016	7	9	CF	0	IncreaseDecreaseInInventories	us-gaap/2019	negatedLabel	Merchandise inventory	1
+0000745732-20-000016	7	12	CF	0	IncreaseDecreaseInOtherOperatingLiabilities	us-gaap/2019	terseLabel	Other current liabilities	0
+0000745732-20-000016	7	6	CF	0	GainLossOnDispositionOfAssets1	us-gaap/2019	negatedTerseLabel	Gain on sale of assets	1
+0000745732-20-000016	7	13	CF	0	IncreaseDecreaseInAccruedTaxesPayable	us-gaap/2019	terseLabel	Income taxes	0
+0000745732-20-000016	7	7	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2019	terseLabel	Deferred income taxes	0
+0000745732-20-000016	7	4	CF	0	DepreciationDepletionAndAmortization	us-gaap/2019	terseLabel	Depreciation and amortization	0
+0000745732-20-000016	7	23	CF	0	RepaymentsOfLongTermDebt	us-gaap/2019	negatedTerseLabel	Payment of long-term debt	1
+0000745732-20-000016	7	8	CF	0	IncreaseDecreaseInOperatingAssetsAbstract	us-gaap/2019	terseLabel	Change in assets and liabilities:	0
+0000745732-20-000016	7	27	CF	0	PaymentsOfDividendsCommonStock	us-gaap/2019	negatedLabel	Dividends paid	1
+0000745732-20-000016	7	31	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2019	periodStartLabel	Beginning of year	0
+0000745732-20-000016	7	32	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2019	periodEndLabel	End of year	0
+0000745732-20-000016	7	10	CF	0	IncreaseDecreaseInOtherOperatingAssets	us-gaap/2019	negatedLabel	Other current assets	1
+0000745732-20-000016	7	30	CF	0	CashAndCashEquivalentsAtCarryingValueAbstract	us-gaap/2019	terseLabel	Cash and cash equivalents, and restricted cash and cash equivalents:	0
+0000745732-20-000016	7	29	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect	us-gaap/2019	totalLabel	Net (decrease) increase in cash, cash equivalents, and restricted cash and cash equivalents	0
+0000745732-20-000016	7	15	CF	0	IncreaseDecreaseInOtherNoncurrentAssetsAndLiabilitiesNet	us-gaap/2019	negatedLabel	Other long-term, net	1
+0000745732-20-000016	7	25	CF	0	PaymentsForRepurchaseOfOtherEquity	us-gaap/2019	negatedLabel	Treasury stock purchased	1
+0000745732-20-000016	7	24	CF	0	ProceedsFromIssuanceOfSharesUnderIncentiveAndShareBasedCompensationPlansIncludingStockOptions	us-gaap/2019	terseLabel	Issuance of common stock related to stock plans	0
+0000745732-20-000016	7	20	CF	0	ProceedsFromSaleMaturityAndCollectionsOfInvestments	us-gaap/2019	terseLabel	Proceeds from investments	0
+0000745732-20-000016	7	14	CF	0	IncreaseDecreaseInOperatingLeaseRightOfUseAssets	0000745732-20-000016	negatedLabel	Operating lease assets and liabilities, net	1

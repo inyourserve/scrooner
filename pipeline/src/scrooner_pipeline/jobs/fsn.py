@@ -18,6 +18,44 @@ def _root() -> None:
     """Subcommands: shard, load, seed-rules, pilot, pilot-prod."""
 
 
+def _predecessors(spec: str) -> dict[str, str]:
+    """'pred=succ,pred=succ' -> {predecessor cik: successor cik} (a registrant reorganised into a
+    new holding company keeps its history under the successor's company)."""
+    out: dict[str, str] = {}
+    for pair in (p for p in spec.split(",") if p.strip()):
+        pred, succ = pair.split("=")
+        out[pred.strip().zfill(10)] = succ.strip().zfill(10)
+    return out
+
+
+def _db_predecessors(conn) -> dict[str, str]:
+    """predecessor cik -> company cik from core.company_history_source (migration 0121), for load."""
+    alias, _ = _db_history(conn)
+    return {p: v[0][0] for p, v in alias.items()}
+
+
+def _db_history(conn) -> tuple[dict, dict]:
+    """core.company_history_source -> (alias: predecessor cik -> [(company cik, from, to)],
+    exclude: company cik -> [(from, to)]), dates as YYYYMMDD (FSN sub.period form)."""
+    alias: dict[str, list[tuple[str, str, str]]] = {}
+    exclude: dict[str, list[tuple[str, str]]] = {}
+    if (
+        conn.execute("select to_regclass('core.company_history_source')").fetchone()[0]
+        is None
+    ):
+        return alias, exclude
+    rows = conn.execute(
+        """select h.source_cik, c.cik, h.relation, to_char(h.valid_from, 'YYYYMMDD'), to_char(h.valid_to, 'YYYYMMDD')
+           from core.company_history_source h join core.company c on c.id = h.company_id"""
+    ).fetchall()
+    for src, cik, rel, f, t in rows:
+        if rel == "predecessor":
+            alias.setdefault(src, []).append((cik, f, t))
+        else:
+            exclude.setdefault(src, []).append((f, t))
+    return alias, exclude
+
+
 def _cohort(shards_file: Path) -> list[str]:
     for cand in (shards_file, Path(__file__).resolve().parents[4] / shards_file):
         if cand.exists():
@@ -43,6 +81,10 @@ def shard_cmd(
         4.0, help="Stop cleanly when free disk falls below this."
     ),
     shards_file: Path = typer.Option(SHARDS_CSV),
+    predecessor: str = typer.Option(
+        "",
+        help="pred=succ CIK pairs: also shard the predecessor, under the successor's company.",
+    ),
 ) -> None:
     """Bucket period extracts -> company directories (FORMATS-v1 §1). Read-only on the bucket and the DB."""
     from scrooner_pipeline.db.connection import get_connection
@@ -52,9 +94,14 @@ def shard_cmd(
         shards_file
     )
     with get_connection() as conn:
+        alias, exclude = _db_history(conn)
         rows = conn.execute(
             "select cik, id from core.company where cik = any(%s)", (cik_list,)
         ).fetchall()
+    for pred, succ in _predecessors(
+        predecessor
+    ).items():  # flag: whole history, no window
+        alias.setdefault(pred, []).append((succ, "00000000", "99999999"))
     ids = dict(rows)
     targets = {c: ids.get(c) for c in cik_list}
     commit = (
@@ -70,6 +117,8 @@ def shard_cmd(
         Path(cache),
         floor_gb=floor_gb,
         shard_commit=commit,
+        alias=alias,
+        exclude=exclude,
     )
     typer.echo(f"fsn shard: {json.dumps(res)}")
 
@@ -86,6 +135,10 @@ def load_cmd(
         False, help="Reload even when (input_sha256, loader_commit) already match."
     ),
     report: str = typer.Option(None, help="Write the run summary JSON here."),
+    predecessor: str = typer.Option(
+        "",
+        help="pred=succ CIK pairs: load the predecessor's filings under the successor.",
+    ),
 ) -> None:
     """Company directories -> schema fsn, one transaction per company (design §2). Writes fsn.* only."""
     from scrooner_pipeline.db.connection import get_connection
@@ -97,6 +150,7 @@ def load_cmd(
             Path(companies),
             [c for c in ciks.split(",") if c] or None,
             force=force,
+            predecessors={**_db_predecessors(conn), **_predecessors(predecessor)},
         )
     if report:
         Path(report).write_text(json.dumps(res, indent=1, default=str))
@@ -141,6 +195,10 @@ def pilot_cmd(
         "data-team/46-canonical-fact-v2/expected_periods_2026-10-31.csv.gz",
         help="Expected-period calendar (CELL-FORMAT §2.3).",
     ),
+    period_rules: str = typer.Option(
+        "data-team/47-fsn-store/period_rules.csv",
+        help="Basis splits and unfiled instants (company period rules).",
+    ),
 ) -> None:
     """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
     Writes fsn.line_map and fsn.filing_check of that database; run it on a scratch copy for a dry run."""
@@ -168,7 +226,9 @@ def pilot_cmd(
             m = mapping.map_company(conn, cid, rules)
             c = checks.check_company(conn, cid)
             conn.commit()
-            rep = pilot.report_company(conn, cid, Path(calendar), rule_concepts)
+            rep = pilot.report_company(
+                conn, cid, Path(calendar), rule_concepts, Path(period_rules)
+            )
             rep["mapping"], rep["checks"] = m, c
             rep["accessions"] = [
                 r[0]
@@ -217,14 +277,17 @@ def pilot_cmd(
                 w.writerows(rows)
     (root / "report.json").write_text(json.dumps(reports, indent=1, default=str))
     lines = [
-        "| company | template | keys | valued % | valued or reasoned % | gaps | library % | missing data points (library) |",
-        "|---|---|---|---|---|---|---|---|",
+        "| company | template | keys | valued % | valued or reasoned % | gaps | library % | G2-eligible valued/keys | not G2-eligible (BS, debt) valued/keys | bs rule ids serving cells | missing data points (library) |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in reports:
         t, lib = r["template_coverage"], r["library"]
         lines.append(
             f"| {r['name']} ({r['cik']}) | {r['profile']['sector_template']} | {t['keys']} | {t['valued_pct']} | "
-            f"{t['valued_or_reasoned_pct']} | {t['gaps']} | {lib['completeness_pct']} | {', '.join(x.replace('_resolved', '') for x in lib['missing'])} |"
+            f"{t['valued_or_reasoned_pct']} | {t['gaps']} | {lib['completeness_pct']} | "
+            f"{t['g2_eligibility'].get('g2_eligible_valued', 0)}/{t['g2_eligibility'].get('g2_eligible_keys', 0)} | "
+            f"{t['g2_eligibility'].get('not_g2_eligible_valued', 0)}/{t['g2_eligibility'].get('not_g2_eligible_keys', 0)} | "
+            f"{', '.join(t['bs_rule_ids_serving_cells'])} | {', '.join(x.replace('_resolved', '') for x in lib['missing'])} |"
         )
     causes: dict[str, int] = {}
     for g in gap_rows:
@@ -291,6 +354,54 @@ def pilot_prod_cmd(
     typer.echo(
         "filings in core.filing but not in the store: "
         + json.dumps({k: len(v) for k, v in missing.items()})
+    )
+
+
+@app.command("extract-sec")
+def extract_sec_cmd(
+    ciks: str = typer.Option(
+        "",
+        help="CIKs to extract (default: every predecessor in core.company_predecessor).",
+    ),
+    sets: str = typer.Option(
+        "", help="Comma-separated FSN sets (default: every set in the bucket)."
+    ),
+    work: str = typer.Option(".cache/fsn-extract", help="Scratch directory."),
+    apply: bool = typer.Option(
+        False,
+        "--apply/--plan",
+        help="Upload to fsn-notes/predecessors/ (default: extract only).",
+    ),
+) -> None:
+    """SEC FSN sets -> the extra CIKs' rows, byte for byte, into fsn-notes/predecessors/<set>/.
+    One request per set to sec.gov with the declared User-Agent; run sets sequentially."""
+    import time
+
+    from scrooner_pipeline.common.config import settings
+    from scrooner_pipeline.fsn_store import extract_sec, shard
+
+    cik_set = {c.strip().zfill(10) for c in ciks.split(",") if c.strip()}
+    if not cik_set:
+        from scrooner_pipeline.db.connection import get_connection
+
+        with get_connection() as conn:
+            cik_set = set(_db_predecessors(conn))
+    if not cik_set:
+        raise typer.BadParameter(
+            "no CIKs: pass --ciks or fill core.company_predecessor"
+        )
+    set_list = [s for s in sets.split(",") if s] or shard.list_periods()
+    total: dict[str, int] = {}
+    for s_ in set_list:
+        t0 = time.time()
+        counts = extract_sec.run_set(
+            s_, cik_set, Path(work), settings.sec_user_agent, apply=apply
+        )
+        for k, v in counts.items():
+            total[k] = total.get(k, 0) + v
+        typer.echo(f"extract-sec {s_}: {json.dumps(counts)} in {time.time() - t0:.0f}s")
+    typer.echo(
+        f"extract-sec total [{'apply' if apply else 'plan'}] {sorted(cik_set)}: {json.dumps(total)}"
     )
 
 

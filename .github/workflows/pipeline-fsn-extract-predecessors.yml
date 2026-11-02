@@ -1,0 +1,81 @@
+name: FSN extract for predecessor CIKs (SEC -> fsn-notes/predecessors)
+
+# Manual only. The fsn-notes period extracts were cut to cohort CIKs, so a predecessor registrant's
+# history (Exxon Mobil Corp 0000034088) is missing. Each job downloads SEC Financial Statement and Notes
+# zips (sec.gov only, declared User-Agent, one request per set, sets run one after another) and keeps
+# the given CIKs' filings byte for byte. `apply: true` uploads them to fsn-notes/predecessors/<set>/
+# (founder's typed go-ahead in scrooner-87, 2026-11-01); the cohort extracts are not touched.
+# At most 4 jobs at once: never more than 4 SEC requests in flight. No database writes.
+on:
+  workflow_dispatch:
+    inputs:
+      ciks:
+        description: "Predecessor CIKs, comma separated"
+        default: "0000034088"
+      sets:
+        description: "FSN sets, comma separated (empty = every set in the bucket)"
+        default: ""
+      apply:
+        description: "Upload to fsn-notes/predecessors/ (default false = extract and report only)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fsn-extract-predecessors
+  cancel-in-progress: false
+
+jobs:
+  sets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      chunks: ${{ steps.c.outputs.chunks }}
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SETS: ${{ inputs.sets }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --project pipeline --locked
+      - id: c
+        env:
+          DATABASE_URL: postgresql://unused@127.0.0.1:9/unused
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: |
+          if [ -z "$SETS" ]; then
+            SETS=$(uv run --project pipeline python -c "from scrooner_pipeline.fsn_store.shard import list_periods; print(','.join(list_periods()))")
+          fi
+          echo "chunks=$(python3 -c "import json,sys; s=sys.argv[1].split(','); print(json.dumps([','.join(s[i::4]) for i in range(4) if s[i::4]]))" "$SETS")" >> "$GITHUB_OUTPUT"
+
+  extract:
+    needs: sets
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        chunk: ${{ fromJSON(needs.sets.outputs.chunks) }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+      CIKS: ${{ inputs.ciks }}
+      CHUNK: ${{ matrix.chunk }}
+      APPLY: ${{ inputs.apply }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: |
+          sudo apt-get install -y zstd
+          uv sync --project pipeline --locked
+      - name: Extract
+        run: |
+          set -eu
+          mode="--plan"; if [ "$APPLY" = "true" ]; then mode="--apply"; fi
+          uv run --project pipeline scrooner-fsn extract-sec --ciks "$CIKS" --sets "$CHUNK" $mode

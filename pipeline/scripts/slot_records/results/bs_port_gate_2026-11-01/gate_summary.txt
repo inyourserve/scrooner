@@ -1,58 +1,21 @@
-== A: old vs ported code, cohort mode (byte-identical)
+== A: old vs ported code, cohort mode
   identical  bs_eras.json
   identical  bs_boundaries.txt
+  identical  bs_records.jsonl
   identical  debt/bs_pre_rows.jsonl
   identical  debt/adsh_period.json
   identical  debt/lease_facts.csv
   identical  debt_eras.json
   identical  debt_boundaries.txt
   identical  debt_records.jsonl
-  identical  debt_replay.json
-== company mode on <scratch>/companies
-companies 29  filings 1464  eras 498  boundaries 498
-companies 29  filings 1464  eras 214  boundary_cal_fetches 214
-total records: 161 missing: 0 coverage_dirty: 13
-total: 498 holds: 0
+  debt_replay A1 (old vs ported, first-filed selection): 1428 -> 1317 cells, 135 differ {'cell_before_2015_window': 109, 'covered_by_the_filing_s_own_period_record': 1, 'members_differ_same_value': 1, 'old_cell_was_not_a_face_column': 2, 'note_finance_lease_overlap_removed': 13, 'note_fields_differ_same_value': 9}
+  debt_replay A2 (first-filed vs latest-accepted selection): 1317 -> 1317 cells, 358 differ {'latest_accepted_print_restated': 32, 'latest_accepted_print_same_value': 268, 'latest_accepted_print_verdict_differs': 44, 'latest_accepted_print_same_total_borrowings_split_differs': 9, 'latest_accepted_print_note_lease_differs': 3, 'latest_accepted_print_covering_record_differs': 2}
 == B: company mode vs cohort mode (ported code, same filings)
-  identical  bs_eras.json: cohort 498, company 498
-  identical  debt_eras.json: cohort 214, company 214
-  identical  bs_boundaries.txt: cohort 499, company 499
-  identical  debt_boundaries.txt: cohort 215, company 215
-  identical  debt_records.jsonl: cohort 161, company 161
-  identical  debt_replay cells (verdict prod_* = publishable, prod_value dropped): cohort 1428, company 1428
+  1 differences {'bs_record_xml_cal_vs_fsn_cal': 1}
 == C: debt replay, company mode, vs the Verifier-passed report_v4.json
-  v4 cells 460 (438 publishable); port reproduces the publishable value at 420
-  identical: 442
-  verdict_differs: 18
-  port cells outside report_v4's keys (pilot companies): {'publishable': 32, 'not_computable_uncovered_candidates': 4, 'no_covering_record': 1}
-    AAPL: {'same': 46}
-    AMZN: {'same': 46}
-    GOOG: {'diff': 6, 'same': 38}
-    HD: {'same': 47}
-    JNJ: {'same': 46}
-    KO: {'same': 46}
-    META: {'same': 46}
-    MSFT: {'diff': 12, 'same': 34}
-    NVDA: {'same': 47}
-    PG: {'same': 46}
+  v4 cells 460; identical 228; differences 232 {'covering_record_differs_same_value': 103, 'latest_accepted_print_restated': 13, 'latest_accepted_print_same_value': 73, 'latest_accepted_print_verdict_differs': 18, 'held_securities_loaned_candidate': 13, 'latest_accepted_print_same_total_borrowings_split_differs': 4, 'latest_accepted_print_note_lease_differs': 4, 'note_finance_lease_overlap_removed': 4}
 == D: bs_assemble company mode vs the Verifier-passed bs_records_v3.jsonl
-     22 AWK   equity_block_guard_reclassed_a_v3_member
-     17 FE    equity_block_guard_reclassed_a_v3_member
-     31 NI    equity_block_guard_reclassed_a_v3_member
-      2 BX    era_span_only
-      1 OXY   era_span_only
-      1 TRGP  era_span_only
-      1 ET    member_list_other
-      1 DVN   other:cal_source
-      2 OXY   other:equity_parent_tag
-      1 OXY   other:equity_parent_tag,filings_observed
-      1 AWK   same_era_starts_earlier_in_fsn
-      1 BRO   same_era_starts_earlier_in_fsn
-      2 BX    same_era_starts_earlier_in_fsn
-      1 EMR   same_era_starts_earlier_in_fsn
-      1 FE    same_era_starts_earlier_in_fsn
-      2 KKR   same_era_starts_earlier_in_fsn
-      1 T     same_era_starts_earlier_in_fsn
-      1 VLO   same_era_starts_earlier_in_fsn
-  v3 records 338; fields_absent_in_reference (not compared) 328, record_differs 79, record_identical 249, record_missing_in_port 10, taxonomy_era_differs (information) 1; port records not in v3 43
-report: <scratch>/gate/gate_report.json
+  v3 records 338; identical 249; differences 132 {'same_era_starts_earlier_in_fsn': 10, 'equity_parent_tag_none_vs_default': 3, 'era_span_only': 4, 'equity_block_guard_reclassed_a_v3_member': 69, 'fsn_cal_has_no_bs_group_borrowed': 1, 'fsn_face_has_extra_liability_line': 1, 'equity_block_guard_reclassed_a_v3_member+era_span': 1, 'same_era_starts_earlier_in_fsn_port_side': 5, 'record_before_v3_window': 29, 'record_split_by_equity_block_guard': 6, 'era_split_inside_a_v3_era': 3}
+== verdict
+  858 differences; pinned in <scratch>/is/pipeline/scripts/slot_records/results/bs_port_gate_2026-11-01/expected_diffs.json: 858; unexpected 0; pinned but not seen 0
+  -> PASS (every difference is pinned and explained)

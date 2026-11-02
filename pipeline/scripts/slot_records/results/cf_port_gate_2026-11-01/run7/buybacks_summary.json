@@ -1,0 +1,11 @@
+{
+ "cells": 51,
+ "companies": 9,
+ "publishable_companies": 7,
+ "verdicts": {
+  "not_a_face_column": 25,
+  "publishable": 20,
+  "perimeter_multiple_repurchase_lines": 3,
+  "buyback_combined_with_other_items": 3
+ }
+}

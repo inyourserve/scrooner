@@ -1,0 +1,9 @@
+{
+ "cells": 67,
+ "companies": 11,
+ "publishable_companies": 11,
+ "verdicts": {
+  "publishable": 34,
+  "not_a_face_column": 33
+ }
+}

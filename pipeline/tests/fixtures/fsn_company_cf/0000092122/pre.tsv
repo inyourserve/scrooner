@@ -1,0 +1,66 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0000092122-25-000018	6	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2024	verboseLabel	Adjustments to reconcile consolidated net income to net cash provided from operating activities 	0
+0000092122-25-000018	6	9	CF	0	AssetRetirementObligationCashPaidToSettle	us-gaap/2024	negatedTerseLabel	Settlement of asset retirement obligations	1
+0000092122-25-000018	6	54	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseExcludingExchangeRateEffect	us-gaap/2024	totalLabel	Net Change in Cash, Cash Equivalents, and Restricted Cash	0
+0000092122-25-000018	6	5	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2024	verboseLabel	Deferred income taxes	0
+0000092122-25-000018	6	4	CF	0	DepreciationAmortizationAndAccretionNet	us-gaap/2024	verboseLabel	Depreciation and amortization, total	0
+0000092122-25-000018	6	24	CF	0	IncreaseDecreaseInAccountsPayable	us-gaap/2024	verboseLabel	-Accounts payable	0
+0000092122-25-000018	6	20	CF	0	IncreaseDecreaseInFossilFuelInventories	us-gaap/2024	negatedTerseLabel	-Fossil fuel for generation	1
+0000092122-25-000018	6	21	CF	0	IncreaseDecreaseInMaterialsAndSupplies	us-gaap/2024	negatedTerseLabel	-Materials and supplies	1
+0000092122-25-000018	6	17	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2024	verboseLabel	Changes in certain current assets and liabilities 	0
+0000092122-25-000018	6	23	CF	0	IncreaseDecreaseInOtherOperatingAssets	us-gaap/2024	negatedLabel	-Other current assets	1
+0000092122-25-000018	6	27	CF	0	IncreaseDecreaseInOtherOperatingLiabilities	us-gaap/2024	verboseLabel	-Other current liabilities	0
+0000092122-25-000018	6	26	CF	0	IncreaseDecreaseInOverEnergyRecovery	us-gaap/2024	negatedTerseLabel	-Natural gas cost over recovery	1
+0000092122-25-000018	6	18	CF	0	IncreaseDecreaseInReceivables	us-gaap/2024	negatedLabel	-Receivables	1
+0000092122-25-000018	6	6	CF	0	InvestmentTaxCredit	us-gaap/2024	terseLabel	Utilization of federal tax credit carryforward	0
+0000092122-25-000018	6	29	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2024	verboseLabel	Investing Activities:	0
+0000092122-25-000018	6	28	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2024	totalLabel	Net cash provided from operating activities	0
+0000092122-25-000018	6	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2024	verboseLabel	Operating Activities:	0
+0000092122-25-000018	6	16	CF	0	OtherNoncashIncomeExpense	us-gaap/2024	negatedLabel	Other, net	1
+0000092122-25-000018	6	34	CF	0	PaymentsForRemovalCosts	us-gaap/2024	negatedLabel	Cost of removal, net of salvage	1
+0000092122-25-000018	6	30	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2024	negatedLabel	Property additions	1
+0000092122-25-000018	6	31	CF	0	PaymentsToInvestInDecommissioningFund	us-gaap/2024	negatedLabel	Nuclear decommissioning trust fund purchases	1
+0000092122-25-000018	6	8	CF	0	PensionAndOtherPostretirementBenefitExpense	us-gaap/2024	verboseLabel	Pension, postretirement, and other employee benefits	0
+0000092122-25-000018	6	32	CF	0	ProceedsFromDecommissioningFund	us-gaap/2024	verboseLabel	Nuclear decommissioning trust fund sales	0
+0000092122-25-000018	6	33	CF	0	ProceedsFromDivestitureOfBusinessesNetOfCashDivested	us-gaap/2024	terseLabel	Proceeds from dispositions	0
+0000092122-25-000018	6	2	CF	0	ProfitLoss	us-gaap/2024	verboseLabel	Consolidated net income	0
+0000092122-25-000018	6	7	CF	0	PublicUtilitiesAllowanceForFundsUsedDuringConstructionCapitalizedCostOfEquity	us-gaap/2024	negatedLabel	Allowance for equity funds used during construction	1
+0000092122-25-000018	6	11	CF	0	StockOptionPlanExpense	us-gaap/2024	terseLabel	Stock based compensation expense	0
+0000092122-25-000018	6	35	CF	0	ChangeInConstructionPayables	0000092122-25-000018	terseLabel	Change in construction payables, net	0
+0000092122-25-000018	6	12	CF	0	EstimatedLossOnPlantVogtleUnits3And4NonCashAdjusted	0000092122-25-000018	terseLabel	Estimated loss on Plant Vogtle Units 3 and 4	0
+0000092122-25-000018	6	25	CF	0	IncreaseDecreaseInCustomerRefunds	0000092122-25-000018	terseLabel	-Customer refunds	0
+0000092122-25-000018	6	22	CF	0	IncreaseDecreaseInNaturalGasCostUnderRecoveryCurrentPortion	0000092122-25-000018	negatedTerseLabel	-Natural gas cost under recovery	1
+0000092122-25-000018	6	19	CF	0	IncreaseDecreaseRetailFuelCostUnderRecoveryShortTerm	0000092122-25-000018	terseLabel	-Retail fuel cost under recovery	0
+0000092122-25-000018	6	14	CF	0	NaturalGasCostUnderRecoveryLongTerm	0000092122-25-000018	negatedTerseLabel	Natural gas cost under recovery  long-term	1
+0000092122-25-000018	6	13	CF	0	RetailFuelCostUnderRecoveryLongTerm	0000092122-25-000018	negatedTerseLabel	Retail fuel cost under recovery  long-term	1
+0000092122-25-000018	6	15	CF	0	StormDamageCostRecoveryNoncurrent	0000092122-25-000018	negatedLabel	Storm damage cost recovery  long-term	1
+0000092122-25-000018	6	10	CF	0	StormDamageProvisionAndReliabilityReserveProvision	0000092122-25-000018	terseLabel	Storm damage and reliability reserve accruals	0
+0000092122-25-000018	6	61	CF	0	CapitalExpendituresIncurredButNotYetPaid	us-gaap/2024	terseLabel	Accrued property additions at year-end	0
+0000092122-25-000018	6	55	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2024	periodStartLabel	Cash, Cash Equivalents, and Restricted Cash at Beginning of Year	0
+0000092122-25-000018	6	56	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2024	periodEndLabel	Cash, Cash Equivalents, and Restricted Cash at End of Year	0
+0000092122-25-000018	6	59	CF	0	IncomeTaxesPaidNet	us-gaap/2024	terseLabel	Income taxes, net (excludes credit transfers)	0
+0000092122-25-000018	7	1	CF	1	InterestPaidCapitalized	us-gaap/2024	verboseLabel	Net cash paid for capitalized interest	0
+0000092122-25-000018	6	58	CF	0	InterestPaidNet	us-gaap/2024	verboseLabel	Interest, net of amounts capitalized	0
+0000092122-25-000018	6	53	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2024	totalLabel	Net cash provided from (used for) financing activities	0
+0000092122-25-000018	6	39	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2024	verboseLabel	Financing Activities:	0
+0000092122-25-000018	6	38	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2024	totalLabel	Net cash used for investing activities	0
+0000092122-25-000018	6	60	CF	0	NoncashInvestingAndFinancingItemsAbstract	us-gaap/2024	terseLabel	Noncash transactions 	0
+0000092122-25-000018	6	37	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2024	negatedLabel	Other investing activities	1
+0000092122-25-000018	6	49	CF	0	PaymentsForRepurchaseOfPreferredStockAndPreferenceStock	us-gaap/2024	negatedTerseLabel	Preferred stock	1
+0000092122-25-000018	6	51	CF	0	PaymentsOfDividendsCommonStock	us-gaap/2024	negatedLabel	Payment of common stock dividends	1
+0000092122-25-000018	6	50	CF	0	PaymentsToMinorityShareholders	us-gaap/2024	negatedTerseLabel	Distributions to noncontrolling interests	1
+0000092122-25-000018	6	45	CF	0	ProceedsFromIssuanceOfCommonStock	us-gaap/2024	verboseLabel	Common stock	0
+0000092122-25-000018	6	43	CF	0	ProceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet	us-gaap/2024	verboseLabel	Long-term debt	0
+0000092122-25-000018	6	41	CF	0	ProceedsFromNotesPayable	us-gaap/2024	verboseLabel	Increase (decrease) in notes payable, net	0
+0000092122-25-000018	6	44	CF	0	ProceedsFromOtherShortTermDebt	us-gaap/2024	terseLabel	Short-term borrowings	0
+0000092122-25-000018	6	52	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2024	verboseLabel	Other financing activities	0
+0000092122-25-000018	6	47	CF	0	RepaymentsOfLongTermDebtAndCapitalSecurities	us-gaap/2024	negatedLabel	Long-term debt	1
+0000092122-25-000018	6	40	CF	0	RepaymentsOfNotesPayable	us-gaap/2024	negatedTerseLabel	Increase (decrease) in notes payable, net	1
+0000092122-25-000018	6	48	CF	0	RepaymentsOfOtherShortTermDebt	us-gaap/2024	negatedTerseLabel	Short-term borrowings	1
+0000092122-25-000018	6	64	CF	0	StockIssued1	us-gaap/2024	terseLabel	Issuance of common stock under dividend reinvestment plan	0
+0000092122-25-000018	6	57	CF	0	SupplementalCashFlowInformationAbstract	us-gaap/2024	terseLabel	Supplemental Cash Flow Information:	0
+0000092122-25-000018	6	63	CF	0	NoncashOrPartNoncashTransactionContributionsFromNoncontrollingInterests	0000092122-25-000018	terseLabel	Contributions from noncontrolling interests	0
+0000092122-25-000018	6	62	CF	0	NoncashTransactionLongTermServiceAgreementCreditsUtilized	0000092122-25-000018	terseLabel	LTSA credits utilized from the sale of spare parts	0
+0000092122-25-000018	6	36	CF	0	PrepaidLongTermServiceAgreement	0000092122-25-000018	negatedTerseLabel	Payments pursuant to LTSAs	1
+0000092122-25-000018	6	42	CF	0	ProceedsAbstract	0000092122-25-000018	verboseLabel	Proceeds 	0
+0000092122-25-000018	6	46	CF	0	RedemptionsAbstract	0000092122-25-000018	verboseLabel	Redemptions and repurchases 	0

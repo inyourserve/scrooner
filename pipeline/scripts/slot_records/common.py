@@ -220,7 +220,11 @@ class SecClient:
     def get(self, url):
         if not url.startswith("https://www.sec.gov/"):
             raise ValueError("sec.gov only: " + url)
-        if shutil.disk_usage("/private/tmp").free < self.min_free:
+        # the dev Mac's scratch volume when present, else this machine's temp dir (Linux runners, cloud sessions)
+        import os
+        import tempfile
+        floor_path = "/private/tmp" if os.path.isdir("/private/tmp") else tempfile.gettempdir()
+        if shutil.disk_usage(floor_path).free < self.min_free:
             raise SystemExit(f"free disk below floor after {self.requests} requests; stopping")
         wait = 0.26 - (time.monotonic() - self._last)
         if wait > 0:

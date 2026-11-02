@@ -1,0 +1,50 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0001123360-23-000009	7	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2022	terseLabel	Adjustments to reconcile net income to net cash provided by operating activities:	0
+0001123360-23-000009	7	5	CF	0	AmortizationOfIntangibleAssets	us-gaap/2022	netLabel	Amortization of acquired intangibles	0
+0001123360-23-000009	7	12	CF	0	BusinessExitCosts1	us-gaap/2022	terseLabel	Facilities exit charges	0
+0001123360-23-000009	7	6	CF	0	CapitalizedContractCostAmortization	us-gaap/2022	terseLabel	Amortization of capitalized contract costs	0
+0001123360-23-000009	7	48	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2022	periodStartLabel	Cash, cash equivalents and restricted cash, beginning of the period	0
+0001123360-23-000009	7	49	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2022	periodEndLabel	Cash, cash equivalents and restricted cash, end of the period	0
+0001123360-23-000009	7	47	CF	0	CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect	us-gaap/2022	totalLabel	Increase in cash, cash equivalents and restricted cash	0
+0001123360-23-000009	7	27	CF	0	CashDivestedFromDeconsolidation	us-gaap/2022	negatedTerseLabel	Effect on cash from sale of business	1
+0001123360-23-000009	7	4	CF	0	Depreciation	us-gaap/2022	terseLabel	Depreciation and amortization of property and equipment	0
+0001123360-23-000009	7	46	CF	0	EffectOfExchangeRateOnCashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents	us-gaap/2022	terseLabel	Effect of exchange rate changes on cash, cash equivalents and restricted cash	0
+0001123360-23-000009	7	13	CF	0	EquityMethodInvestmentDividendsOrDistributions	us-gaap/2022	terseLabel	Distributions received on investments	0
+0001123360-23-000009	7	15	CF	0	GainLossOnSaleOfBusiness	us-gaap/2022	negatedTerseLabel	Loss on business dispositions	1
+0001123360-23-000009	7	14	CF	0	GoodwillImpairmentLoss	us-gaap/2022	terseLabel	Impairment of goodwill	0
+0001123360-23-000009	7	11	CF	0	IncomeLossFromEquityMethodInvestments	us-gaap/2022	negatedTerseLabel	Equity in income of equity method investments, net of tax	1
+0001123360-23-000009	7	21	CF	0	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2022	terseLabel	Accounts payable and other liabilities	0
+0001123360-23-000009	7	18	CF	0	IncreaseDecreaseInAccountsReceivable	us-gaap/2022	negatedLabel	Accounts receivable	1
+0001123360-23-000009	7	17	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2022	terseLabel	Changes in operating assets and liabilities, net of the effects of business combinations:	0
+0001123360-23-000009	7	20	CF	0	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2022	negatedLabel	Prepaid expenses and other assets	1
+0001123360-23-000009	7	45	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2022	totalLabel	Net cash used in financing activities	0
+0001123360-23-000009	7	31	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2022	terseLabel	Cash flows from financing activities:	0
+0001123360-23-000009	7	30	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2022	totalLabel	Net cash used in investing activities	0
+0001123360-23-000009	7	23	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2022	terseLabel	Cash flows from investing activities:	0
+0001123360-23-000009	7	22	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2022	totalLabel	Net cash provided by operating activities	0
+0001123360-23-000009	7	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2022	terseLabel	Cash flows from operating activities:	0
+0001123360-23-000009	7	16	CF	0	OtherNoncashIncomeExpense	us-gaap/2022	negatedLabel	Other, net	1
+0001123360-23-000009	7	41	CF	0	PaymentForContingentConsiderationLiabilityFinancingActivities	us-gaap/2022	negatedTerseLabel	Payment of contingent consideration in business combination	1
+0001123360-23-000009	7	42	CF	0	PaymentsForDerivativeInstrumentFinancingActivities	us-gaap/2022	negatedTerseLabel	Purchase of capped calls related to issuance of convertible notes	1
+0001123360-23-000009	7	29	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2022	negatedLabel	Other, net	1
+0001123360-23-000009	7	36	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2022	negatedLabel	Repurchases of common stock	1
+0001123360-23-000009	7	35	CF	0	PaymentsOfDebtIssuanceCosts	us-gaap/2022	negatedTerseLabel	Payments of debt issuance costs	1
+0001123360-23-000009	7	43	CF	0	PaymentsOfDividendsCommonStock	us-gaap/2022	negatedLabel	Dividends paid	1
+0001123360-23-000009	7	24	CF	0	PaymentsToAcquireBusinessesNetOfCashAcquired	us-gaap/2022	negatedLabel	Business combinations and other acquisitions, net of cash acquired	1
+0001123360-23-000009	7	26	CF	0	PaymentsToAcquireProductiveAssets	us-gaap/2022	negatedLabel	Capital expenditures	1
+0001123360-23-000009	7	39	CF	0	PaymentsToMinorityShareholders	us-gaap/2022	negatedLabel	Distributions to noncontrolling interests	1
+0001123360-23-000009	7	33	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2022	terseLabel	Proceeds from long-term debt	0
+0001123360-23-000009	7	37	CF	0	ProceedsFromIssuanceOfSharesUnderIncentiveAndShareBasedCompensationPlansIncludingStockOptions	us-gaap/2022	terseLabel	Proceeds from stock issued under share-based compensation plans	0
+0001123360-23-000009	7	40	CF	0	ProceedsFromMinorityShareholders	us-gaap/2022	terseLabel	Contributions from noncontrolling interests	0
+0001123360-23-000009	7	32	CF	0	ProceedsFromRepaymentsOfLinesOfCredit	us-gaap/2022	terseLabel	Net borrowings from (repayments of) settlement lines of credit	0
+0001123360-23-000009	7	28	CF	0	ProceedsFromSaleMaturityAndCollectionsOfInvestments	us-gaap/2022	terseLabel	Proceeds from sale of investments	0
+0001123360-23-000009	7	2	CF	0	ProfitLoss	us-gaap/2022	terseLabel	Net income	0
+0001123360-23-000009	7	34	CF	0	RepaymentsOfLongTermDebt	us-gaap/2022	negatedTerseLabel	Repayments of long-term debt	1
+0001123360-23-000009	7	7	CF	0	ShareBasedCompensation	us-gaap/2022	terseLabel	Share-based compensation expense	0
+0001123360-23-000009	7	19	CF	0	IncreaseDecreaseInSettlementProcessingAssetsAndObligationsNet	0001123360-23-000009	negatedLabel	Settlement processing assets and obligations, net	1
+0001123360-23-000009	7	9	CF	0	NoncashLeaseExpense	0001123360-23-000009	terseLabel	Noncash lease expense	0
+0001123360-23-000009	7	10	CF	0	OtherNoncashDeferredIncomeTaxExpense	0001123360-23-000009	verboseLabel	Deferred income taxes	0
+0001123360-23-000009	7	44	CF	0	PaymentsForPurchaseOfSubsidiarySharesFromNoncontrollingInterest	0001123360-23-000009	negatedTerseLabel	Purchase of subsidiary shares from noncontrolling interest	1
+0001123360-23-000009	7	38	CF	0	PaymentsForRepurchaseOfCommonStockForShareBasedCompensationPlans	0001123360-23-000009	negatedTerseLabel	Common stock repurchased - share-based compensation plans	1
+0001123360-23-000009	7	8	CF	0	ProvisionForOperatingLossesAndDoubtfulAccounts	0001123360-23-000009	verboseLabel	Provision for operating losses and bad debts	0
+0001123360-23-000009	7	25	CF	0	RestrictedCashAcquiredFromAcquisition	0001123360-23-000009	terseLabel	Restricted cash from business combinations	0

@@ -45,7 +45,7 @@ with gzip.open(out, "wt") as fo:
     for sub in sorted(glob.glob(str(fsn / "*_sub.tsv.zst")) + glob.glob(str(fsn / "*" / "*_sub.tsv.zst"))):
         per = Path(sub).name.split("_")[0]
         fil = {r["adsh"]: {"adsh": r["adsh"], "cik": int(r["cik"]), "form": r["form"], "period": r["period"], "filed": r["filed"],
-                           "bs": [], "values": defaultdict(dict)}
+                           "accepted": r.get("accepted") or "", "bs": [], "values": defaultdict(dict)}
                for r in rows(sub) if r["form"] in FORMS and int(r["cik"]) in ciks}
         if not fil:
             continue

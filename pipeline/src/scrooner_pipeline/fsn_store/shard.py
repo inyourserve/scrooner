@@ -52,28 +52,32 @@ def _storage() -> tuple[str, dict[str, str]]:
     return base, {"Authorization": f"Bearer {key}", "apikey": key}
 
 
-def list_periods() -> list[str]:
+# predecessor registrants' rows (fsn_store.extract_sec): same layout under this folder
+PREDECESSOR_PREFIX = "predecessors/"
+
+
+def list_periods(prefix: str = "") -> list[str]:
     base, h = _storage()
     r = httpx.post(
         f"{base}/object/list/{BUCKET}",
         headers=h,
-        json={"prefix": "", "limit": 500},
+        json={"prefix": prefix, "limit": 500},
         timeout=60,
     )
     r.raise_for_status()
     return sorted(x["name"] for x in r.json() if x["name"][:4].isdigit())
 
 
-def download(period: str, table: str, cache: Path) -> Path:
+def download(period: str, table: str, cache: Path, prefix: str = "") -> Path:
     base, h = _storage()
-    target = cache / period / f"{period}_{table}.tsv.zst"
+    target = cache / prefix / period / f"{period}_{table}.tsv.zst"
     if target.exists():
         return target
     target.parent.mkdir(parents=True, exist_ok=True)
     tmp = target.with_suffix(".part")
     with httpx.stream(
         "GET",
-        f"{base}/object/{BUCKET}/{period}/{period}_{table}.tsv.zst",
+        f"{base}/object/{BUCKET}/{prefix}{period}/{period}_{table}.tsv.zst",
         headers=h,
         timeout=900,
     ) as resp:
@@ -129,12 +133,48 @@ class Writer:
         self.n = 0
 
 
+Window = tuple[str, str]  # (valid_from, valid_to) as YYYYMMDD, inclusive
+
+
+def _within(period: str, windows: list[Window]) -> bool:
+    return any(f <= period <= t for f, t in windows)
+
+
+def owners_of(
+    row: dict[str, str],
+    targets: set[str],
+    alias: dict[str, list[tuple[str, str, str]]],
+    exclude: dict[str, list[Window]],
+) -> list[str]:
+    """The target companies (by cik) a sub row belongs to: its registrant/co-registrants that are
+    targets, minus excluded windows of their own CIK (wrong-entity history), plus the successor of a
+    predecessor CIK whose window holds the filing's period (core.company_history_source)."""
+    period = (row.get("period") or "").strip()
+    ciks = {row["cik"].zfill(10)} | {
+        c.zfill(10) for c in (row.get("aciks") or "").split() if c
+    }
+    mine = {c for c in ciks & targets if not _within(period, exclude.get(c, []))}
+    for c in ciks:
+        for succ, f, t in alias.get(c, []):
+            if succ in targets and f <= period <= t:
+                mine.add(succ)
+    return sorted(mine)
+
+
 def shard_period(
-    period: str, targets: set[str], cache: Path, writer: Writer
+    period: str,
+    targets: set[str],
+    cache: Path,
+    writer: Writer,
+    prefix: str = "",
+    alias: dict[str, list[tuple[str, str, str]]] | None = None,
+    exclude: dict[str, list[Window]] | None = None,
 ) -> dict[str, int]:
-    """One period: filter the seven tables to the targets' filings and append."""
+    """One period: filter the seven tables to the targets' filings and append. alias: predecessor
+    cik -> [(successor cik, from, to)]; exclude: cik -> [(from, to)] of its own wrong-entity filings."""
+    alias, exclude = alias or {}, exclude or {}
     stats: dict[str, int] = defaultdict(int)
-    paths = {t: download(period, t, cache) for t in TABLES}
+    paths = {t: download(period, t, cache, prefix) for t in TABLES}
     # sub: which filings, and whose
     owners: dict[str, list[str]] = {}
     sub_header: list[str] | None = None
@@ -143,10 +183,7 @@ def shard_period(
             sub_header = ["fsn_set", *r.keys()]
         if r.get("form") not in PERIODIC_FORMS:
             continue
-        ciks = {r["cik"].zfill(10)} | {
-            c.zfill(10) for c in (r.get("aciks") or "").split() if c
-        }
-        mine = sorted(ciks & targets)
+        mine = owners_of(r, targets, alias, exclude)
         if not mine:
             continue
         owners[r["adsh"]] = mine
@@ -232,7 +269,7 @@ def shard_period(
             writer.add(c, "dim", header, list(r.values()))
         stats["dim"] += 1
     writer.flush()
-    shutil.rmtree(cache / period, ignore_errors=True)
+    shutil.rmtree(cache / prefix / period, ignore_errors=True)
     return stats
 
 
@@ -312,8 +349,11 @@ def run(
     *,
     floor_gb: float = FLOOR_GB,
     shard_commit: str | None = None,
+    alias: dict[str, list[tuple[str, str, str]]] | None = None,
+    exclude: dict[str, list[Window]] | None = None,
 ) -> dict[str, Any]:
-    """targets: cik -> company_id. Resumable: progress.json lists finished periods."""
+    """targets: cik -> company_id. Resumable: progress.json lists finished periods.
+    alias/exclude: the company history sources (shard_period)."""
     out.mkdir(parents=True, exist_ok=True)
     cache.mkdir(parents=True, exist_ok=True)
     periods = periods or list_periods()
@@ -324,6 +364,7 @@ def run(
         else {"done": [], "stats": {}}
     )
     writer = Writer(out)
+    extra = set(list_periods(PREDECESSOR_PREFIX))
     for p in periods:
         if p in prog["done"]:
             continue
@@ -334,7 +375,12 @@ def run(
             prog["stopped_before"] = p
             break
         t0 = time.time()
-        stats = shard_period(p, set(targets), cache, writer)
+        stats = shard_period(p, set(targets), cache, writer, "", alias, exclude)
+        if p in extra:  # predecessor registrants' filings for this set
+            more = shard_period(
+                p, set(targets), cache, writer, PREDECESSOR_PREFIX, alias, exclude
+            )
+            stats = {**stats, **{f"predecessor_{k}": v for k, v in more.items()}}
         prog["done"].append(p)
         prog["stats"][p] = {**stats, "seconds": round(time.time() - t0, 1)}
         prog_path.write_text(json.dumps(prog, indent=1))

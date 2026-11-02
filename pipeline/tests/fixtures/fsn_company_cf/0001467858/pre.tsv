@@ -1,0 +1,41 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0001467858-16-000317	6	37	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	periodStartLabel	Cash and cash equivalents at beginning of period	0
+0001467858-16-000317	6	38	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	periodEndLabel	Cash and cash equivalents at end of period	0
+0001467858-16-000317	6	36	CF	0	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	totalLabel	Net decrease in cash and cash equivalents	0
+0001467858-16-000317	6	34	CF	0	NetCashProvidedByUsedInFinancingActivitiesContinuingOperations	us-gaap/2015	totalLabel	Net cash provided by financing activities	0
+0001467858-16-000317	6	27	CF	0	NetCashProvidedByUsedInFinancingActivitiesContinuingOperationsAbstract	us-gaap/2015	terseLabel	Cash flows from financing activities	0
+0001467858-16-000317	6	26	CF	0	NetCashProvidedByUsedInInvestingActivitiesContinuingOperations	us-gaap/2015	totalLabel	Net cash used in investing activities	0
+0001467858-16-000317	6	12	CF	0	NetCashProvidedByUsedInInvestingActivitiesContinuingOperationsAbstract	us-gaap/2015	terseLabel	Cash flows from investing activities	0
+0001467858-16-000317	6	11	CF	0	NetCashProvidedByUsedInOperatingActivitiesContinuingOperations	us-gaap/2015	totalLabel	Net cash provided by (used in) operating activities	0
+0001467858-16-000317	6	32	CF	0	PaymentsOfDividends	us-gaap/2015	negatedTerseLabel	Dividends paid	1
+0001467858-16-000317	6	13	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	negatedLabel	Expenditures for property	1
+0001467858-16-000317	6	5	CF	0	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	terseLabel	Amortization of discount and issuance costs on debt issues	0
+0001467858-16-000317	6	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2015	terseLabel	Cash Flows from Operating Activities	0
+0001467858-16-000317	6	14	CF	0	PaymentsToAcquireAvailableForSaleSecurities	us-gaap/2015	negatedLabel	Available-for-sale marketable securities, acquisitions	1
+0001467858-16-000317	6	33	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	terseLabel	Other financing activities	0
+0001467858-16-000317	6	16	CF	0	ProceedsFromSaleAndMaturityOfAvailableForSaleSecurities	us-gaap/2015	terseLabel	Available-for-sale marketable securities, liquidations	0
+0001467858-16-000317	6	25	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	negatedTerseLabel	Other investing activities	1
+0001467858-16-000317	6	2	CF	0	ProfitLoss	us-gaap/2015	terseLabel	Net income	0
+0001467858-16-000317	6	10	CF	0	IncreaseDecreaseInOtherOperatingCapitalNet	us-gaap/2015	negatedTerseLabel	Change in other operating assets and liabilities	1
+0001467858-16-000317	6	9	CF	0	DeferredIncomeTaxesAndTaxCredits	us-gaap/2015	terseLabel	Provision for deferred taxes	0
+0001467858-16-000317	6	35	CF	0	EffectOfExchangeRateOnCashAndCashEquivalents	us-gaap/2015	verboseLabel	Effect of exchange rate changes on cash and cash equivalents	0
+0001467858-16-000317	6	28	CF	0	ProceedsFromRepaymentsOfShortTermDebtMaturingInThreeMonthsOrLess	us-gaap/2015	terseLabel	Net increase in short-term debt	0
+0001467858-16-000317	6	39	CF	0	SupplementalCashFlowInformationAbstract	us-gaap/2015	terseLabel	Significant Non-cash Investing Activity	0
+0001467858-16-000317	6	31	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	negatedTerseLabel	Payments to purchase common stock	1
+0001467858-16-000317	6	6	CF	0	IncomeLossFromEquityMethodInvestmentsNetOfDividendsOrDistributions	us-gaap/2015	negatedLabel	Undistributed earnings of nonconsolidated affiliates, net	1
+0001467858-16-000317	6	18	CF	0	PaymentsToAcquireBusinessesNetOfCashAcquired	us-gaap/2015	negatedLabel	Acquisition of companies/investments, net of cash acquired	1
+0001467858-16-000317	6	40	CF	0	CapitalExpendituresIncurredButNotYetPaid	us-gaap/2015	terseLabel	Non-cash property additions	0
+0001467858-16-000317	6	8	CF	0	PensionAndOtherPostretirementBenefitExpense	us-gaap/2015	terseLabel	Pension and OPEB (income) expense, net	0
+0001467858-16-000317	6	7	CF	0	PensionAndOtherPostretirementBenefitContributions	us-gaap/2015	negatedTerseLabel	Pension contributions and OPEB payments	1
+0001467858-16-000317	6	17	CF	0	ProceedsFromSaleOfTradingSecuritiesHeldforinvestment	us-gaap/2015	terseLabel	Trading marketable securities, liquidations	0
+0001467858-16-000317	6	21	CF	0	PaymentsToAcquireFinanceReceivables	us-gaap/2015	negatedTerseLabel	Purchases of finance receivables	1
+0001467858-16-000317	6	22	CF	0	ProceedsFromCollectionOfFinanceReceivables	us-gaap/2015	terseLabel	Principal collections and recoveries on finance receivables	0
+0001467858-16-000317	6	15	CF	0	PaymentsToAcquireTradingSecuritiesHeldforinvestment	us-gaap/2015	negatedLabel	Trading marketable securities, acquisitions	1
+0001467858-16-000317	6	30	CF	0	RepaymentsOfDebtMaturingInMoreThanThreeMonths	us-gaap/2015	negatedTerseLabel	Payments on debt (original maturities greater than three months)	1
+0001467858-16-000317	6	23	CF	0	PaymentsToAcquireLeasesHeldForInvestment	us-gaap/2015	negatedTerseLabel	Purchases of leased vehicles, net	1
+0001467858-16-000317	6	29	CF	0	ProceedsFromDebtMaturingInMoreThanThreeMonths	us-gaap/2015	terseLabel	Proceeds from issuance of debt (original maturities greater than three months)	0
+0001467858-16-000317	6	24	CF	0	ProceedsFromLeasesHeldForInvestment	us-gaap/2015	terseLabel	Proceeds from termination of leased vehicles	0
+0001467858-16-000317	6	20	CF	0	DecreaseInRestrictedCashAndMarketableSecurities	0001467858-16-000317	terseLabel	Decrease in restricted cash and marketable securities	0
+0001467858-16-000317	6	3	CF	0	Depreciationamortizationandimpairmentcharges	0001467858-16-000317	terseLabel	Depreciation, amortization and impairment charges	0
+0001467858-16-000317	6	4	CF	0	ForeignCurrencyRemeasurementandTransactionGainsLosses	0001467858-16-000317	negatedTerseLabel	Foreign Currency Remeasurement and Transaction Losses	1
+0001467858-16-000317	6	19	CF	0	IncreaseInRestrictedCashAndMarketableSecurities	0001467858-16-000317	negatedTerseLabel	Increase in restricted cash and marketable securities	1

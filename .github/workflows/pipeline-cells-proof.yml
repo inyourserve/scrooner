@@ -18,6 +18,10 @@ on:
       shards:
         description: "Parallel shards for the cohort after the pilot, 1..20 (1 DB connection each)"
         default: "10"
+      skip_proved:
+        description: "Resume: skip companies that already have analytics.cell_proof rows"
+        type: boolean
+        default: false
       pilot_only:
         description: "Prove MSFT and HD only (skip the cohort shards)"
         type: boolean
@@ -48,14 +52,17 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       FAMILIES: ${{ inputs.families }}
       SHARDS: ${{ inputs.shards }}
+      SKIP_PROVED: ${{ inputs.skip_proved }}
     steps:
       - id: c
         run: |
           set -eu
           case "$SHARDS" in ''|*[!0-9]*) echo "::error::shards must be a number"; exit 1;; esac
-          if [ "$SHARDS" -lt 1 ] || [ "$SHARDS" -gt 20 ]; then echo "::error::shards must be 1..20"; exit 1; fi
+          if [ "$SHARDS" -lt 1 ] || [ "$SHARDS" -gt 30 ]; then echo "::error::shards must be 1..30 (1 DB connection each; budget 40)"; exit 1; fi
           fams=$(printf "'%s'," $FAMILIES | sed 's/,$//')
-          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -tAc "set statement_timeout = '120s'; select distinct c.cik from analytics.canonical_fact cf join core.company c on c.id = cf.company_id where cf.family in ($fams) order by 1" \
+          skip=""
+          if [ "$SKIP_PROVED" = "true" ]; then skip="and c.id not in (select distinct company_id from analytics.cell_proof)"; fi
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -tAc "set statement_timeout = '120s'; select distinct c.cik from analytics.canonical_fact cf join core.company c on c.id = cf.company_id where cf.family in ($fams) $skip order by 1" \
             | grep -E '^[0-9]{10}$' > ciks.txt
           echo "companies: $(wc -l < ciks.txt)"
           python3 - <<'EOF' >> "$GITHUB_OUTPUT"

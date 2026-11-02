@@ -62,17 +62,43 @@ def load_prod(prod_path):
     return prod, prod_n
 
 
+# filings that print a finance/capital lease liability for an instant (face or note), per (cik, instant):
+# a latest copy without one, where an earlier copy has one, is incomplete for the lease-inclusive total
+NOTE_LEASE_TAGS = ("FinanceLeaseLiability", "FinanceLeaseLiabilityCurrent", "FinanceLeaseLiabilityNoncurrent",
+                   "CapitalLeaseObligations", "CapitalLeaseObligationsCurrent", "CapitalLeaseObligationsNoncurrent")
+NOTE_LEASE = defaultdict(set)
+ACCEPTED_OF = {}  # adsh -> (accepted, filed, adsh), the selection order
+CELL_FROM = "20150101"
+# REPLAY_DEBT_ABLATE=first_filed: the gate's ablation run that isolates the selection change from the other fixes;
+# never set in production runs (the pilot/cohort paths do not read it)
+import os  # noqa: E402
+ABLATE_FIRST_FILED = os.environ.get("REPLAY_DEBT_ABLATE") == "first_filed"  # cells from 2015-01-01 (invariant I11, data-team/34); values are stored from 2014
+
+
 def select_cells(filing_iter, records):
-    """one filing per (cik, instant): the original whose period is the instant, non-amendment, latest filed"""
+    """one filing per (cik, instant): the LATEST ACCEPTED filing that prints the instant on its balance-sheet
+    face (FSN-STORE-DESIGN section 4: winner = latest accepted; an older vintage is never preferred).
+    accepted = sub.accepted (FSN); filings without it fall back to filed, then accession, for a total order."""
     best, filings = {}, {}
+    NOTE_LEASE.clear()
+    ACCEPTED_OF.clear()
     for f in filing_iter:
         if f["cik"] not in records:
             continue
         filings[f["adsh"]] = f
+        ACCEPTED_OF[f["adsh"]] = (f.get("accepted") or "", f["filed"], f["adsh"])
+        # a FACE column only (design section 4): the balance sheet's own closing total is valued at the date.
+        # Assets alone is not enough: a later 10-K's segment note prints total assets for earlier years.
+        face_tags = {r["tag"] for r in f["bs"]}
+        closing = [t for t in ("LiabilitiesAndStockholdersEquity", "LiabilitiesAndPartnersCapital") if t in face_tags] or ["Assets"]
         for d, vals in f["values"].items():
-            if d < "20140101" or not any(t in vals for t in BS_TOTAL):  # v2 window: since 2014
+            if any(vals.get(t) not in (None, "0", "0.0000") for t in NOTE_LEASE_TAGS):
+                NOTE_LEASE[(f["cik"], d)].add(f["adsh"])
+            if d < CELL_FROM or not any(t in vals for t in closing):
                 continue
-            rank = (d == f["period"], not f["form"].endswith("/A"), f["filed"])
+            rank = (f.get("accepted") or "", f["filed"], f["adsh"])
+            if ABLATE_FIRST_FILED:  # regression-gate ablation only (bs_port_gate.sh): the pre-review selection
+                rank = (d == f["period"], not f["form"].endswith("/A"), f["filed"])
             if (f["cik"], d) not in best or rank > best[(f["cik"], d)][0]:
                 best[(f["cik"], d)] = (rank, f["adsh"])
     return best, filings
@@ -93,7 +119,10 @@ def replay(records, best, filings, prod, prod_n):
         period_end = f"{d[:4]}-{d[4:6]}-{d[6:]}"
         ticker = records[cik][0]["company"]
         day = {t: (Decimal(v), True) for t, v in f["values"][d].items()}
-        rec = covering_record(records, cik, period_end)
+        # the record covering the chosen filing's own period: that filing's face is the one the members name
+        # (a later comparative column is printed under the later era's tags)
+        own = f"{f['period'][:4]}-{f['period'][4:6]}-{f['period'][6:]}"
+        rec = covering_record(records, cik, own)
         pv = (prod.get((cik, period_end)) if prod_n.get((cik, period_end)) == 1 else None) if prod is not None else None
         if rec is None:
             verdict = "no_covering_record"
@@ -214,20 +243,31 @@ def replay(records, best, filings, prod, prod_n):
                 r"CapitalLeaseObligationsIncurred?", t) and not t.endswith("Incurred"))
         lease_in_notes = [t for t in lease_in_notes if t not in lease_unread]
         note_lease_added = None
+        note_lease_negative = None
         if lease_in_notes:
             # OPTION (b), founder ruling 2026-11-04 (relayed by Dhairya): finance leases that sit only in the
             # notes, outside every member, are added to the lease-inclusive total from the SAME accession
             # (MSFT, META, AAPL, GOOG, NVDA). Total element first, else current + noncurrent; capital-lease
             # elements (pre-ASC 842) the same way. Borrowings-only is unchanged.
+            # Only the part NO member already carries is added (review 2026-11-01: a face member
+            # FinanceLeaseLiabilityNoncurrent 40 beside a note total FinanceLeaseLiability 55 adds 15, never 55).
             def pick(total, cur_, noncur):
+                on_face = sum((day[t][0] for t in (cur_, noncur) if t in member_tags and t in day), Decimal(0))
+                if total in member_tags:
+                    # the TOTAL is itself a face member (review 2026-11-01: face FinanceLeaseLiability 45 + note
+                    # current 5 must not add 45 again): the member already carries every finance lease
+                    return Decimal(0), f"{total}(face member)"
                 if total in day:
-                    return day[total][0], total
-                parts = [t for t in (cur_, noncur) if t in day]
+                    face_src = "+".join(t for t in (cur_, noncur) if t in member_tags and t in day)
+                    return day[total][0] - on_face, total + (f"-{face_src}" if face_src else "")
+                parts = [t for t in (cur_, noncur) if t in day and t not in member_tags]
                 return (sum((day[t][0] for t in parts), Decimal(0)), "+".join(parts)) if parts else (None, None)
             v, src = pick("FinanceLeaseLiability", "FinanceLeaseLiabilityCurrent", "FinanceLeaseLiabilityNoncurrent")
             if v is None:
                 v, src = pick("CapitalLeaseObligations", "CapitalLeaseObligationsCurrent", "CapitalLeaseObligationsNoncurrent")
-            if v:
+            if v is not None and v < -1:
+                note_lease_negative = f"{src}={v}"  # the note total is below the face lease members: never subtract
+            elif v and v > 1:
                 lease_incl += v
                 note_lease_added = str(v)
                 note_flag = (note_flag + ";" if note_flag else "") + f"note_finance_lease_added:{src}={v}"
@@ -236,6 +276,14 @@ def replay(records, best, filings, prod, prod_n):
             verdict = COMPANY_HOLDS[ticker]
         elif lease_unread:
             verdict = "debt_lease_member_unverified"
+        elif note_lease_negative:
+            verdict = "note_finance_lease_below_face_members"
+        elif (not any(t in day for t in NOTE_LEASE_TAGS) and not combined_sides
+              and any(ACCEPTED_OF.get(a, "") < ACCEPTED_OF.get(adsh, "") for a in NOTE_LEASE.get((cik, d), set()) - {adsh})):
+            # design section 4: the latest copy decides and is never replaced by an older one; a latest copy that
+            # lacks the finance-lease figure an EARLIER-accepted copy of the same date prints cannot give the
+            # lease-inclusive total (AAPL 2025-09-30: the 2026 10-Q comparative has no lease note, 1,230M)
+            verdict = "latest_copy_lacks_note_finance_lease"
         elif not rec.get("coverage_clean", True):
             verdict = "not_computable_uncovered_candidates"
         elif missing_custom:
@@ -264,7 +312,8 @@ def replay(records, best, filings, prod, prod_n):
             "prod_value": str(pv) if pv is not None else None,
             "lease_lines_not_in_record": lease_unread, "missing_members": missing, "missing_custom_members": missing_custom, "face_admission_tie_pending": tie_pending,
             "note_current_portion_added": str(note_current_added) if note_current_added is not None else None,
-            "note_finance_lease_added": note_lease_added, "note_flag": note_flag})
+            "note_finance_lease_added": note_lease_added, "note_flag": note_flag,
+            "note_finance_lease_negative": note_lease_negative})
     report["summary"] = dict(report["summary"])
     report["per_company"] = {k: dict(v) for k, v in report["per_company"].items()}
     return report

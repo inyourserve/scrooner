@@ -1,0 +1,34 @@
+adsh	report	line	stmt	inpth	tag	version	prole	plabel	negating
+0001091667-16-000396	7	3	CF	0	AdjustmentsToReconcileNetIncomeLossToCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2015	terseLabel	Adjustments to reconcile net loss to net cash flows from operating activities:	0
+0001091667-16-000396	7	31	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	periodStartLabel	CASH AND CASH EQUIVALENTS, beginning of period	0
+0001091667-16-000396	7	32	CF	0	CashAndCashEquivalentsAtCarryingValue	us-gaap/2015	periodEndLabel	CASH AND CASH EQUIVALENTS, end of period	0
+0001091667-16-000396	7	30	CF	0	CashAndCashEquivalentsPeriodIncreaseDecrease	us-gaap/2015	totalLabel	NET INCREASE (DECREASE) IN CASH AND CASH EQUIVALENTS	0
+0001091667-16-000396	7	11	CF	0	IncreaseDecreaseInAccountsReceivable	us-gaap/2015	negatedLabel	Accounts receivable	1
+0001091667-16-000396	7	16	CF	0	PaymentsToAcquirePropertyPlantAndEquipment	us-gaap/2015	negatedLabel	Purchases of property, plant and equipment	1
+0001091667-16-000396	7	5	CF	0	AmortizationOfFinancingCostsAndDiscounts	us-gaap/2015	terseLabel	Noncash interest expense	0
+0001091667-16-000396	7	6	CF	0	GainsLossesOnExtinguishmentOfDebt	us-gaap/2015	negatedLabel	Loss on extinguishment of debt	1
+0001091667-16-000396	7	13	CF	0	IncreaseDecreaseInAccountsPayableAndAccruedLiabilities	us-gaap/2015	terseLabel	Accounts payable, accrued liabilities and other	0
+0001091667-16-000396	7	10	CF	0	IncreaseDecreaseInOperatingCapitalAbstract	us-gaap/2015	verboseLabel	Changes in operating assets and liabilities, net of effects from acquisitions and dispositions:	0
+0001091667-16-000396	7	12	CF	0	IncreaseDecreaseInPrepaidDeferredExpenseAndOtherAssets	us-gaap/2015	negatedLabel	Prepaid expenses and other assets	1
+0001091667-16-000396	7	29	CF	0	NetCashProvidedByUsedInFinancingActivities	us-gaap/2015	totalLabel	Net cash flows from financing activities	0
+0001091667-16-000396	7	22	CF	0	NetCashProvidedByUsedInFinancingActivitiesAbstract	us-gaap/2015	verboseLabel	CASH FLOWS FROM FINANCING ACTIVITIES [Abstract]	0
+0001091667-16-000396	7	21	CF	0	NetCashProvidedByUsedInInvestingActivities	us-gaap/2015	totalLabel	Net cash flows from investing activities	0
+0001091667-16-000396	7	15	CF	0	NetCashProvidedByUsedInInvestingActivitiesAbstract	us-gaap/2015	terseLabel	CASH FLOWS FROM INVESTING ACTIVITIES [Abstract]	0
+0001091667-16-000396	7	14	CF	0	NetCashProvidedByUsedInOperatingActivities	us-gaap/2015	totalLabel	Net cash flows from operating activities	0
+0001091667-16-000396	7	1	CF	0	NetCashProvidedByUsedInOperatingActivitiesAbstract	us-gaap/2015	verboseLabel	CASH FLOWS FROM OPERATING ACTIVITIES [Abstract]	0
+0001091667-16-000396	7	9	CF	0	OtherNoncashIncomeExpense	us-gaap/2015	negatedLabel	Other, net	1
+0001091667-16-000396	7	23	CF	0	ProceedsFromIssuanceOfLongTermDebt	us-gaap/2015	terseLabel	Borrowings of long-term debt	0
+0001091667-16-000396	7	28	CF	0	ProceedsFromPaymentsForOtherFinancingActivities	us-gaap/2015	terseLabel	Other, net	0
+0001091667-16-000396	7	19	CF	0	IncreaseDecreaseInRestrictedCash	us-gaap/2015	negatedTerseLabel	Change in restricted cash and cash equivalents	1
+0001091667-16-000396	7	20	CF	0	PaymentsForProceedsFromOtherInvestingActivities	us-gaap/2015	negatedLabel	Other, net	1
+0001091667-16-000396	7	25	CF	0	PaymentsOfDebtIssuanceCosts	us-gaap/2015	negatedLabel	Payments for debt issuance costs	1
+0001091667-16-000396	7	2	CF	0	ProfitLoss	us-gaap/2015	terseLabel	Net loss	0
+0001091667-16-000396	7	24	CF	0	RepaymentsOfLongTermDebt	us-gaap/2015	negatedLabel	Repayments of long-term debt	1
+0001091667-16-000396	7	8	CF	0	DeferredIncomeTaxExpenseBenefit	us-gaap/2015	terseLabel	Deferred income taxes	0
+0001091667-16-000396	7	33	CF	0	InterestPaidNet	us-gaap/2015	terseLabel	Cash Paid for Interest	0
+0001091667-16-000396	7	26	CF	0	PaymentsForRepurchaseOfCommonStock	us-gaap/2015	negatedLabel	Purchase of treasury stock	1
+0001091667-16-000396	7	4	CF	0	DepreciationAmortizationAndAccretionNet	us-gaap/2015	terseLabel	Depreciation and amortization	0
+0001091667-16-000396	7	7	CF	0	DerivativeInstrumentsNotDesignatedAsHedgingInstrumentsGainLossNet	us-gaap/2015	negatedTerseLabel	(Gain) loss on derivative instruments, net	1
+0001091667-16-000396	7	18	CF	0	PaymentsForProceedsFromProductiveAssets	us-gaap/2015	negatedLabel	Sales (purchases) of cable systems, net	1
+0001091667-16-000396	7	27	CF	0	ProceedsFromOtherEquity	us-gaap/2015	terseLabel	Proceeds from exercise of options and warrants	0
+0001091667-16-000396	7	17	CF	0	ChangesInAccruedExpensesRelatedToCapitalExpenditures	0001091667-16-000396	negatedLabel	Change in accrued expenses related to capital expenditures	1

@@ -113,6 +113,7 @@ def seed(conn: psycopg.Connection, path: Path, *, apply: bool) -> dict[str, Any]
                         r["stmt"],
                         r["match_kind"],
                         r.get("tag"),
+                        r.get("tag_pattern"),
                         json.dumps(r["position"]) if r.get("position") else None,
                         r.get("components"),
                         r["priority"],
