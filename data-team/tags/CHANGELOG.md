@@ -36,3 +36,8 @@ Every Tag Expert run adds an entry: what was added, what was CORRECTED (and what
   - Found: `interest_expense` blanks recent periods for IEN filers (CL, AVY FILING-CHECKED; 1,542 companies DATA-INFERRED). The residue face test classified 527 cells as combined or broader lines (AP 244, AR 174, amortization 109), 66 D&A composition cases, 185 other-income component lines, and 11 dividend fills.
   - Calibration: 15 of 15 R-files matched FSDS (tag and label); FSDS cumulative 43/43; edgartools cumulative 3 agree / 9 disagree.
   - Process slip: the first FASB request sent a User-Agent containing the user's email address instead of SEC_USER_AGENT. Routine change: read SEC_USER_AGENT from `pipeline/.env` before the first request to any host, and never type a UA by hand.
+
+## 2026-11-02 (FSN expert, first session)
+- New per-tag cards: EffectOfExchangeRate…IncludingDisposalGroupAndDiscontinuedOperations, CommercialPaper, SalesRevenueGoodsNet, the pretax pair, NetCashProvidedByUsedInOperatingActivitiesContinuingOperations, PaymentsToAcquirePropertyPlantAndEquipment, InterestExpenseNonoperating, FinanceLeaseLiability. INDEX rows added; 3 MSFT quirks.
+- Evidence: the FSN extracts (all 76 sets, top-100 + TRV/PLD/XOM-34088) and the MSFT dossier data-team/fsn/companies/MSFT.md.
+- Process slip, repeated: the sec.gov requests this session used a User-Agent with the user's email address, not SEC_USER_AGENT (the secret is not available in a cloud session without pipeline/.env). The rule stands: SEC_USER_AGENT only. Sessions without it must ask before the first request.
