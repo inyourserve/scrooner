@@ -3,7 +3,7 @@ id: sec-financial-statement-and-notes-data-set-fsn-cal-tsv-repro
 title: SEC Financial Statement and Notes data set (FSN): cal.tsv reproduces filers' calc linkbases exactly, 'negative' is the weight, ~11% of periodic filings (Workiva/Toppan, schema-embedded calc) have no cal rows; a quarter is ~430 MB and cohort extracts of all tables are ~22% of the zip
 kind: lesson
 evidence: CODE-CHECKED
-status: active
+status: disputed
 created: 2026-10-25
 verified: 2026-10-25
 ---
