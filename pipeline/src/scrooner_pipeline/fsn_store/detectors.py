@@ -143,12 +143,14 @@ def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
                     )
     out: dict[str, dict[str, Any]] = {}
     for concept, cols in per.items():
-        tags = {(x["stmt"], x["tag"]) for x in cols if x["pub"]}
+        tag_set = {(x["stmt"], x["tag"]) for x in cols if x["pub"]}
         held = [x for x in cols if not x["pub"]]
         sign = [x["col"] for x in cols if x["pub"] and x["raw"] != x["value"]]
-        if not held and len(tags) == 1 and not sign:
-            stmt, tag = next(iter(tags))
-            classes = sorted({x.get("da_class") for x in cols if x.get("da_class")})
+        if not held and len(tag_set) == 1 and not sign:
+            stmt, tag = next(iter(tag_set))
+            classes: list[str] = sorted(
+                {str(x["da_class"]) for x in cols if x.get("da_class")}
+            )
             out[concept] = {
                 "status": "mapped",
                 "tag": tag,
@@ -161,7 +163,7 @@ def decide(f: dict[str, Any]) -> dict[str, dict[str, Any]]:
             }
         else:
             reasons = sorted({x["reason"] for x in held if x.get("reason")})
-            if len(tags) > 1:
+            if len(tag_set) > 1:
                 reasons.append("different_line_per_column")
             if sign:
                 reasons.append("store_print_differs_from_lane_value")
