@@ -56,6 +56,23 @@ NOTE_TAGS = {
     ),
     "operating_income_resolved": ("OperatingIncomeLoss",),
 }
+# Ritwik 2026-11-03 (PENDING_SOLE_DEBT_INTEREST_RULE rows): InterestExpenseDebt counts as gross for a
+# filing only when it is the ONLY interest-expense tag that filing prints and, where it has a face
+# label, the label reads as interest expense (the PGR/CVX pattern of the interest card)
+SOLE_DEBT_TAG = "InterestExpenseDebt"
+INTEREST_FAMILY = (
+    "InterestExpense",
+    "InterestExpenseNonoperating",
+    "InterestExpenseOperating",
+    "InterestAndDebtExpense",
+    "InterestExpenseDebt",
+    "InterestExpenseOther",
+    "InterestExpenseBorrowings",
+    "InterestExpenseDeposits",
+    "InterestExpenseRelatedParty",
+    "InterestExpenseShortTermBorrowings",
+    "InterestExpenseLongTermDebt",
+)
 RULE_YTD_DIFF = "fsn.select_ytd_difference@1"
 RULE_BLANK = "fsn.select_blank@1"
 
@@ -93,6 +110,7 @@ REASONS = {
     "balance_sheet_not_filed": ("filer_error", "data_engineer_l2"),
     "note_values_disagree": ("composition", "standardization_lead"),
     "note_value_not_positive": ("evidence_pending", "verifier"),
+    "sole_debt_label_not_interest": ("composition", "standardization_lead"),
 }
 REASON_TEXT = {
     "latest_copy_fails_identity": "The latest filing that prints this value fails an arithmetic check of its statement column; an older copy is not used instead.",
@@ -106,6 +124,7 @@ REASON_TEXT = {
     "not_filed_separately": "The company reports this figure only for the full year; the fourth quarter is not printed and is never computed.",
     "note_values_disagree": "The notes print two different gross figures for this period (different perimeters), so neither is shown.",
     "note_value_not_positive": "The note prints zero or a negative figure, which is not a gross amount for this line.",
+    "sole_debt_label_not_interest": "The only interest line the filing prints is not labelled as interest expense, so it is not taken as the total.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
@@ -790,6 +809,7 @@ class NoteFact:
     qtrs: int
     value: Decimal
     dcml: int | None
+    label: str | None = None  # the face plabel when the tag sits on a statement line
 
 
 def select_note_values(
@@ -797,15 +817,26 @@ def select_note_values(
     facts: list[NoteFact],
     filings: dict[int, Filing],
     taken: set[tuple[date, int]],
+    *,
+    sole_debt: bool = False,
 ) -> list[Cell]:
     """Cells from non-dimensional NOTE facts for keys (FY/Q) that have no face cell. The latest
     filing printing the key wins; within it the first tag in NOTE_TAGS order. Two tags with
     different values in that filing (two perimeters: International Paper) or a value <= 0 hold
     the key with a reason. Every cell is marked source=note for its own Verifier stratum."""
     order = {t: i for i, t in enumerate(NOTE_TAGS.get(concept, ()))}
+    # interest-family tags each filing prints (any date): the sole-debt test is per filing
+    family: dict[int, set[str]] = defaultdict(set)
+    for f in facts:
+        family[f.filing_id].add(f.tag)
+    sole = sole_debt and concept == "interest_expense_resolved"
+    if sole:
+        order = {**order, SOLE_DEBT_TAG: len(order)}
     by_key: dict[tuple[date, int], list[NoteFact]] = defaultdict(list)
     for f in facts:
         if f.qtrs in (1, 4) and f.tag in order and (f.ddate, f.qtrs) not in taken:
+            if f.tag == SOLE_DEBT_TAG and family[f.filing_id] != {SOLE_DEBT_TAG}:
+                continue  # Debt is a component wherever another interest tag is printed
             by_key[(f.ddate, f.qtrs)].append(f)
     out: list[Cell] = []
     for key, fs in sorted(by_key.items()):
@@ -815,7 +846,29 @@ def select_note_values(
             key=lambda f: order[f.tag],
         )
         top = mine[0]
-        refs = {"source": "note", "tag": top.tag, "tags": sorted({f.tag for f in mine})}
+        refs: dict[str, Any] = {
+            "source": "note",
+            "tag": top.tag,
+            "tags": sorted({f.tag for f in mine}),
+        }
+        if top.tag == SOLE_DEBT_TAG:
+            refs.update(
+                sole_debt=True, label=top.label, label_unverified=top.label is None
+            )
+            if top.label is not None and "interest" not in top.label.lower():
+                out.append(
+                    Cell(
+                        concept,
+                        key[0],
+                        key[1],
+                        "defect",
+                        filing_id=top.filing_id,
+                        rule_id=RULE_NOTE_VALUE,
+                        reason_code="sole_debt_label_not_interest",
+                        input_refs=refs,
+                    )
+                )
+                continue
         if any(abs(f.value - top.value) > tol_of([f.dcml, top.dcml]) for f in mine):
             out.append(
                 Cell(
@@ -862,19 +915,26 @@ def select_note_values(
 
 
 def load_note_values(
-    conn: psycopg.Connection, company_id: int, concept: str
+    conn: psycopg.Connection, company_id: int, concept: str, *, sole_debt: bool = False
 ) -> list[NoteFact]:
-    """Non-dimensional USD facts of the concept's NOTE_TAGS for one stored company (one read)."""
+    """Non-dimensional USD facts of the concept's NOTE_TAGS for one stored company (one read);
+    with sole_debt, every interest-family tag and the face label where the tag is on a line."""
     tags = list(NOTE_TAGS.get(concept, ()))
+    if sole_debt and concept == "interest_expense_resolved":
+        tags = list(INTEREST_FAMILY)
     if not tags:
         return []
     rows = conn.execute(
         """
-        select v.id, v.filing_id, t.tag, v.ddate, v.qtrs, v.value, v.dcml
+        select v.id, v.filing_id, t.tag, v.ddate, v.qtrs, v.value, v.dcml,
+               (select l.plabel from fsn.line l where l.filing_id = v.filing_id and l.tag_id = v.tag_id
+                 order by l.report, l.line limit 1)
         from fsn.value v join fsn.tag t on t.id = v.tag_id and not t.custom
         where v.company_id = %s and v.dim_id = 0 and v.iprx = 0 and v.coreg = ''
-          and v.uom = 'USD' and v.value is not null and v.qtrs in (1, 4) and t.tag = any(%s)
+          and v.uom = 'USD' and v.value is not null and t.tag = any(%s)
         """,
         (company_id, tags),
     ).fetchall()
-    return [NoteFact(r[0], r[1], r[2], r[3], r[4], Decimal(r[5]), r[6]) for r in rows]
+    return [
+        NoteFact(r[0], r[1], r[2], r[3], r[4], Decimal(r[5]), r[6], r[7]) for r in rows
+    ]

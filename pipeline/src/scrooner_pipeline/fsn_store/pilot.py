@@ -282,10 +282,11 @@ def report_company(
     # approved company x concept pairs served from a NOTE fact where the face prints no line
     # (approval CSV: REJECT_NOTE_SOURCED_VALUE); keys that already have a face cell are kept
     note_pairs = {
-        r["data_point"]
+        r["data_point"]: r.get("approver_verdict") == "PENDING_SOLE_DEBT_INTEREST_RULE"
         for r in _company_outs(note_sourced)
         if int(r["company_id"]) == company_id
-        and r.get("approver_verdict") == "REJECT_NOTE_SOURCED_VALUE"
+        and r.get("approver_verdict")
+        in ("REJECT_NOTE_SOURCED_VALUE", "PENDING_SOLE_DEBT_INTEREST_RULE")
     }
     note_cells = 0
     for concept in sorted(note_pairs):
@@ -297,11 +298,13 @@ def report_company(
             for r in cells
             if r["data_point_name"] == concept
         }
+        sole = note_pairs[concept]
         got = sel.select_note_values(
             concept,
-            sel.load_note_values(conn, company_id, concept),
+            sel.load_note_values(conn, company_id, concept, sole_debt=sole),
             data["filings"],
             taken,
+            sole_debt=sole,
         )
         note_cells += sum(1 for c in got if c.state == "value")
         cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)

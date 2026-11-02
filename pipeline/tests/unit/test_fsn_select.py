@@ -293,3 +293,31 @@ def test_note_values_fill_only_missing_keys_with_guards():
     assert cells[(date(2024, 9, 30), 1)].reason_code == "note_values_disagree"
     assert (date(2024, 3, 31), 1) not in cells
     assert sel.to_row(cells[(date(2024, 9, 30), 1)], 1, f)["defect_class"] == "composition"
+
+
+@pytest.mark.unit
+def test_sole_debt_interest_counts_only_when_it_is_the_filings_only_interest_line():
+    f = {
+        1: sel.Filing(1, "a1", datetime(2025, 2, 1), "10-K", date(2024, 12, 31), 2024, "FY"),
+        2: sel.Filing(2, "a2", datetime(2025, 3, 1), "10-K", date(2024, 9, 30), 2024, "FY"),
+        3: sel.Filing(3, "a3", datetime(2025, 4, 1), "10-K", date(2023, 12, 31), 2023, "FY"),
+    }
+
+    def n(vid, fid, tag, d, v, label=None):
+        return sel.NoteFact(vid, fid, tag, d, 4, Decimal(v), -6, label)
+
+    d1, d2, d3 = date(2024, 12, 31), date(2024, 9, 30), date(2023, 12, 31)
+    facts = [
+        n(1, 1, "InterestExpenseDebt", d1, "378000000"),                 # PGR/CVX pattern: only line
+        n(2, 2, "InterestExpenseDebt", d2, "111000000"),                 # beside another interest tag:
+        n(3, 2, "InterestExpenseOther", d2, "9000000"),                  #   a component, never taken
+        n(4, 3, "InterestExpenseDebt", d3, "50000000", "Debt issuance costs"),  # face label not interest
+    ]
+    cells = {c.ddate: c for c in sel.select_note_values(
+        "interest_expense_resolved", facts, f, taken=set(), sole_debt=True)}
+    assert cells[d1].value == Decimal("378000000") and cells[d1].input_refs["sole_debt"]
+    assert cells[d1].input_refs["label_unverified"] is True
+    assert d2 not in cells
+    assert cells[d3].reason_code == "sole_debt_label_not_interest"
+    # without the PENDING rule Debt is never a gross figure
+    assert sel.select_note_values("interest_expense_resolved", facts, f, taken=set()) == []
