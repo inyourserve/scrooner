@@ -205,7 +205,7 @@ def pilot_cmd(
     import gzip
 
     from scrooner_pipeline.db.connection import get_connection
-    from scrooner_pipeline.fsn_store import checks, mapping, pilot
+    from scrooner_pipeline.fsn_store import checks, detectors, mapping, pilot
     from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
 
     root = Path(out)
@@ -223,7 +223,8 @@ def pilot_cmd(
             ).fetchall()
         }
         for cik, cid in sorted(_ids(conn, ciks).items()):
-            m = mapping.map_company(conn, cid, rules)
+            # the ported lane detectors (capex / D&A: one line per concept per filing, or held)
+            m = mapping.map_company(conn, cid, rules, detectors=detectors.DEFAULT)
             c = checks.check_company(conn, cid)
             conn.commit()
             rep = pilot.report_company(

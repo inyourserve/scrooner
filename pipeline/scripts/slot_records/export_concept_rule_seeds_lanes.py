@@ -359,6 +359,8 @@ for fn_name, item, why in (
     skip(rdf, rdf.func(fn_name).lineno, item, why)
 skip(afs, afs.func("assemble").lineno, "Verifier V5 (WSO): a member whose calc descendants (any role) include an OperatingLease line -> excluded_mixed_lease",
      "operating leases stay combined (founder 2026-11-01): calc-descendant test per filing, detector hook; the standard taxonomy has no element that mixes borrowings or finance leases with operating leases (us_gaap_2025_elements.csv: 0), so only custom lines reach it")
+# The anchors of the debt slots (current_liabilities_resolved = us-gaap:LiabilitiesCurrent) are seeded in
+# concept_rules/bs_current.jsonl (main); a second row here would collide with it on uq_fsn_concept_rule.
 skip_regexes(era, ["DEBT_RX", "LABEL_RX", "EXCLUDE_RX"], {"LABEL_RX": "label regex (debt candidate by printed label)"})
 skip_regexes(bdm, ["EXCLUDE_RX", "AGG_PARENT_RX", "DEBT_RX", "BS_ROLE_RX", "NOTE_ROLE_RX", "FINANCE_LEASE_RX", "OPERATING_LEASE_RX", "BORROWING_RX", "ERA_RX"],
              {"BS_ROLE_RX": "calc-role selector, not a concept rule", "NOTE_ROLE_RX": "calc-role rejector, not a concept rule",
