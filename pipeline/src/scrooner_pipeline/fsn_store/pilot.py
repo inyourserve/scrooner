@@ -21,6 +21,7 @@ from typing import Any
 
 import psycopg
 
+from scrooner_pipeline.fsn_store import bs_derive
 from scrooner_pipeline.fsn_store import select as sel
 
 FLOOR = date(2015, 1, 1)  # serving window (invariant I11)
@@ -270,6 +271,11 @@ def report_company(
         )
         if s.breaks:
             breaks[concept] = sorted(data["filings"][f].accession for f in s.breaks)
+    # balance-sheet cells the face does not print as one line, from the same accession (fsn_store.bs_derive):
+    # total liabilities by the filing's calc tree / L&E identity, current items of an unclassified balance sheet
+    have = {(r["data_point_name"], date.fromisoformat(r["fsn_end"])) for r in cells}
+    derived_rows, _misses = bs_derive.rows(conn, company_id, have)
+    cells.extend(derived_rows)
     lib = library(conn, company_id)
     mapped_points = {
         e["data_point"]

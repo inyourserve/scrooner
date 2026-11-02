@@ -89,6 +89,7 @@ REASON_TEXT = {
     "predecessor_successor_split": "The period spans the change from predecessor to successor accounting, so its two parts are on different bases and are not added together.",
     "balance_sheet_not_filed": "No balance sheet was filed for this date.",
     "not_filed_separately": "The company reports this figure only for the full year; the fourth quarter is not printed and is never computed.",
+    "unclassified_balance_sheet": "The balance sheet is not split into current and non-current sections, so no current total is printed.",
 }
 
 RULE_PERIOD = "fsn.select_period_rule@1"
