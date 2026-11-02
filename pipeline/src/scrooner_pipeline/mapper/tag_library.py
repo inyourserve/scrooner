@@ -21,6 +21,10 @@ a Supabase pooler drop mid-build costs one chunk, not the run (same
 pattern as security_type.py / yfinance_industry.py). Everything is set-
 based SQL -- no per-row Python loop over core.fact (76M rows)."""
 
+import contextlib
+import time
+from collections.abc import Callable
+
 import psycopg
 import structlog
 from psycopg.types.json import Jsonb
@@ -30,6 +34,24 @@ from scrooner_pipeline.common.config import settings
 logger = structlog.get_logger()
 
 CHUNK_SIZE = 150
+
+# Every statement in this module runs under a timeout (2026-11-02). The weekly
+# run hit the 3h job limit twice (runs 40251015742, 41375022141): lineage
+# finished, then the leads stage ran for 2h09m with statement_timeout=0 and no
+# log line until GitHub killed the job. A stuck statement now fails fast with
+# a named stage instead of eating the whole job.
+CHUNK_STATEMENT_TIMEOUT = "20min"
+LIBRARY_STATEMENT_TIMEOUT = "30min"
+LEAD_CANDIDATES_TIMEOUT = "15min"
+LEAD_CONCEPT_TIMEOUT = "5min"
+LOCK_TIMEOUT = "2min"
+# Wall-clock budget for scoring leads. Concepts not reached keep their
+# previous leads (each concept is replaced on its own), and are logged.
+LEAD_BUDGET_SECONDS = 40 * 60
+# A pooler "connection failed" mid-build (run 40048907814, company_tags chunk
+# 34 of 35) previously got one immediate reconnect; retry with backoff.
+RECONNECT_ATTEMPTS = 4
+RECONNECT_BACKOFF_SECONDS = (5, 15, 45)
 
 _COMPANY_SEC_TAG_SQL = """
 insert into analytics.company_sec_tag
@@ -286,6 +308,12 @@ insert into analytics.concept_gap_lead
 select canonical_concept_id, concept_id, miss_f, rnk, pairs, round(agree_rate, 3)
 from ranked where rnk <= %(per_concept)s
 """
+# Leads for concepts that no longer have any candidate (nothing left to score).
+_LEAD_PRUNE_SQL = """
+delete from analytics.concept_gap_lead gl
+where not exists (
+    select 1 from lead_candidates c where c.canonical_concept_id = gl.canonical_concept_id)
+"""
 
 
 def _chunks(ids: list[int], size: int = CHUNK_SIZE) -> list[list[int]]:
@@ -307,23 +335,55 @@ def _company_ids(conn: psycopg.Connection, ciks: set[str] | None) -> list[int]:
         return [r[0] for r in cur.fetchall()]
 
 
-def _run_chunked(conn, ids, table, insert_sql, stage) -> psycopg.Connection:
+def _set_timeouts(cur, statement_timeout: str) -> None:
+    cur.execute(f"set statement_timeout = '{statement_timeout}'")
+    cur.execute(f"set lock_timeout = '{LOCK_TIMEOUT}'")
+
+
+def _reconnect(
+    stage: str,
+    chunk: int,
+    connect: Callable[[], psycopg.Connection] | None = None,
+    sleep: Callable[[float], None] = time.sleep,
+) -> psycopg.Connection:
+    """Open a fresh connection, retrying a failed connect with backoff."""
+    connect = connect or (lambda: psycopg.connect(settings.database_url))
+    for attempt, delay in enumerate((0, *RECONNECT_BACKOFF_SECONDS), 1):
+        if delay:
+            sleep(delay)
+        try:
+            return connect()
+        except psycopg.OperationalError:
+            logger.warning("tag_library.reconnect_failed", stage=stage, chunk=chunk, attempt=attempt)
+            if attempt == len(RECONNECT_BACKOFF_SECONDS) + 1:
+                raise
+    raise AssertionError("unreachable")
+
+
+def _run_chunked(conn, ids, table, insert_sql, stage, reconnect=_reconnect) -> psycopg.Connection:
     for n, chunk in enumerate(_chunks(ids), 1):
-        for attempt in (1, 2):
+        for attempt in range(1, RECONNECT_ATTEMPTS + 1):
             try:
                 with conn.cursor() as cur:
-                    cur.execute("set statement_timeout = 0")
+                    _set_timeouts(cur, CHUNK_STATEMENT_TIMEOUT)
                     cur.execute(
                         f"delete from {table} where company_id = any(%s)", (chunk,)
                     )
                     cur.execute(insert_sql, {"ids": chunk})
                 conn.commit()
                 break
+            except (psycopg.errors.QueryCanceled, psycopg.errors.LockNotAvailable):
+                # Timeouts are OperationalErrors too, but a chunk that timed
+                # out once will time out again: fail loudly, naming the stage.
+                logger.error("tag_library.chunk_timeout", stage=stage, chunk=n)
+                raise
             except psycopg.OperationalError:
-                if attempt == 2:
+                if attempt == RECONNECT_ATTEMPTS:
                     raise
-                logger.warning("tag_library.reconnect", stage=stage, chunk=n)
-                conn = psycopg.connect(settings.database_url)
+                logger.warning("tag_library.reconnect", stage=stage, chunk=n, attempt=attempt)
+                with contextlib.suppress(Exception):  # the old connection is already broken
+                    conn.close()
+                conn = reconnect(stage, n)
         logger.info(
             "tag_library.chunk_done",
             stage=stage,
@@ -333,10 +393,105 @@ def _run_chunked(conn, ids, table, insert_sql, stage) -> psycopg.Connection:
     return conn
 
 
+def build_leads(
+    conn: psycopg.Connection,
+    budget_seconds: float = LEAD_BUDGET_SECONDS,
+    concept_timeout: str = LEAD_CONCEPT_TIMEOUT,
+    clock: Callable[[], float] = time.monotonic,
+) -> dict:
+    """Rebuild analytics.concept_gap_lead one concept at a time.
+
+    Each concept is replaced inside its own savepoint under its own statement
+    timeout, so a slow concept is skipped (keeping its previous leads) instead
+    of hanging the job, and every concept logs a line. Scoring stops at
+    `budget_seconds`; concepts not reached also keep their previous leads.
+    One transaction overall: the candidate temp table lives until commit."""
+    started = clock()
+    logger.info("tag_library.stage_start", stage="leads")
+    scored = timed_out = 0
+    with conn.cursor() as cur:
+        _set_timeouts(cur, LEAD_CANDIDATES_TIMEOUT)
+        cur.execute(
+            _LEAD_CANDIDATES_SQL,
+            {
+                "min_companies": LEAD_MIN_COMPANIES,
+                "candidates": LEAD_CANDIDATES_PER_CONCEPT,
+                "excluded": list(EXCLUDED_VERDICTS),
+            },
+        )
+        cur.execute("select distinct canonical_concept_id from lead_candidates order by 1")
+        concepts = [r[0] for r in cur.fetchall()]
+        logger.info(
+            "tag_library.leads_candidates",
+            concepts=len(concepts),
+            seconds=round(clock() - started, 1),
+        )
+        cur.execute(_LEAD_PRUNE_SQL)
+        for n, concept in enumerate(concepts, 1):
+            if clock() - started > budget_seconds:
+                logger.warning(
+                    "tag_library.leads_budget_exhausted",
+                    scored=scored,
+                    not_reached=len(concepts) - n + 1,
+                    budget_seconds=budget_seconds,
+                )
+                break
+            concept_started = clock()
+            try:
+                with conn.transaction():
+                    cur.execute(f"set local statement_timeout = '{concept_timeout}'")
+                    cur.execute(
+                        "delete from analytics.concept_gap_lead where canonical_concept_id = %s",
+                        (concept,),
+                    )
+                    cur.execute(
+                        _LEAD_SCORE_SQL,
+                        {
+                            "concept": concept,
+                            "evidence_days": LEAD_EVIDENCE_DAYS,
+                            "tolerance": LEAD_AGREE_TOLERANCE,
+                            "min_pairs": LEAD_MIN_PAIRS,
+                            "min_agree": LEAD_MIN_AGREE_RATE,
+                            "per_concept": LEADS_PER_CONCEPT,
+                        },
+                    )
+                    leads = cur.rowcount
+            except psycopg.errors.QueryCanceled:
+                timed_out += 1
+                logger.warning(
+                    "tag_library.leads_concept_timeout",
+                    n=n,
+                    of=len(concepts),
+                    canonical_concept_id=concept,
+                    timeout=concept_timeout,
+                )
+                continue
+            scored += 1
+            logger.info(
+                "tag_library.leads_concept",
+                n=n,
+                of=len(concepts),
+                canonical_concept_id=concept,
+                leads=leads,
+                seconds=round(clock() - concept_started, 1),
+            )
+    conn.commit()
+    stats = {
+        "concepts": len(concepts),
+        "scored": scored,
+        "timed_out": timed_out,
+        "not_reached": len(concepts) - scored - timed_out,
+        "seconds": round(clock() - started, 1),
+    }
+    logger.info("tag_library.leads_done", **stats)
+    return stats
+
+
 def build_tag_library(
     conn: psycopg.Connection,
     ciks: set[str] | None = None,
     stages: set[str] | None = None,
+    leads_budget_seconds: float = LEAD_BUDGET_SECONDS,
 ) -> dict:
     """stages: subset of {"company_tags", "library", "lineage", "leads"};
     default all, in that order (library and lineage read company_sec_tag;
@@ -346,47 +501,27 @@ def build_tag_library(
     stages = stages or {"company_tags", "library", "lineage", "leads"}
     ids = _company_ids(conn, ciks)
     if "company_tags" in stages:
+        logger.info("tag_library.stage_start", stage="company_tags")
         conn = _run_chunked(
             conn, ids, "analytics.company_sec_tag", _COMPANY_SEC_TAG_SQL, "company_tags"
         )
     if "library" in stages:
+        logger.info("tag_library.stage_start", stage="library")
         with conn.cursor() as cur:
-            cur.execute("set statement_timeout = 0")
+            _set_timeouts(cur, LIBRARY_STATEMENT_TIMEOUT)
             cur.execute(_SYNC_VERDICTS_SQL)
             cur.execute(_PRUNE_VERDICTS_SQL)
             cur.execute("delete from analytics.sec_tag_library")
             cur.execute(_LIBRARY_SQL)
         conn.commit()
     if "lineage" in stages:
+        logger.info("tag_library.stage_start", stage="lineage")
         conn = _run_chunked(
             conn, ids, "analytics.company_concept_lineage", _LINEAGE_SQL, "lineage"
         )
+    lead_stats = None
     if "leads" in stages:
-        with conn.cursor() as cur:
-            cur.execute("set statement_timeout = 0")
-            cur.execute("delete from analytics.concept_gap_lead")
-            cur.execute(
-                _LEAD_CANDIDATES_SQL,
-                {
-                    "min_companies": LEAD_MIN_COMPANIES,
-                    "candidates": LEAD_CANDIDATES_PER_CONCEPT,
-                    "excluded": list(EXCLUDED_VERDICTS),
-                },
-            )
-            cur.execute("select distinct canonical_concept_id from lead_candidates")
-            for (concept,) in cur.fetchall():
-                cur.execute(
-                    _LEAD_SCORE_SQL,
-                    {
-                        "concept": concept,
-                        "evidence_days": LEAD_EVIDENCE_DAYS,
-                        "tolerance": LEAD_AGREE_TOLERANCE,
-                        "min_pairs": LEAD_MIN_PAIRS,
-                        "min_agree": LEAD_MIN_AGREE_RATE,
-                        "per_concept": LEADS_PER_CONCEPT,
-                    },
-                )
-        conn.commit()
+        lead_stats = build_leads(conn, budget_seconds=leads_budget_seconds)
     with conn.cursor() as cur:
         cur.execute(
             """select (select count(*) from analytics.company_sec_tag),
@@ -400,6 +535,8 @@ def build_tag_library(
         "sec_tag_library_rows": tags,
         "lineage_rows": lineage,
     }
+    if lead_stats is not None:
+        stats["leads"] = lead_stats
     logger.info("tag_library.done", **stats)
     return stats
 
