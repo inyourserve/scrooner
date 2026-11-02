@@ -53,9 +53,14 @@ rule_concepts = {r[0] for r in conn.execute(
     "select distinct cc.name from fsn.concept_rule r join analytics.canonical_concept cc on cc.id = r.canonical_concept_id")}
 
 real_rows = bs_derive.rows
+# resumable: one JSON line per finished company (a container restart loses nothing finished)
+progress_path = out_dir / "progress.jsonl"
+done = {json.loads(x)["cik"] for x in open(progress_path)} if progress_path.exists() else set()
 summary, per_company, examples, misses_total = Counter(), {}, [], Counter()
 for d in dirs:
     cik = json.loads((Path(d) / "manifest.json").read_text())["cik"].zfill(10)
+    if cik in done:
+        continue
     prof = profile.get(cik, {})
     row = conn.execute("select id from core.company where cik = %s", (cik,)).fetchone()
     cid = row[0] if row else conn.execute(
@@ -68,6 +73,7 @@ for d in dirs:
     checks.check_company(conn, cid)
     conn.commit()
     gaps = {}
+    company_misses = Counter()
     for mode in ("before", "after"):
         captured = []
 
@@ -85,8 +91,9 @@ for d in dirs:
         if mode == "after" and captured:
             out, miss = captured[0]
             misses_total.update(miss)
+            company_misses = Counter(miss)
             for r in out:
-                if len(examples) < 3000:
+                if True:
                     examples.append({"cik": cik, "sector": prof.get("sector_template"), **{k: r.get(k) for k in (
                         "data_point_name", "period_grain", "fsn_end", "state", "value", "accession", "rule_id", "reason_code", "derivation")}})
     bs_derive.rows = real_rows
@@ -96,6 +103,10 @@ for d in dirs:
             freed[(k[0], cause)] += 1
     per_company[cik] = {"sector": prof.get("sector_template"), "before": Counter(k[0] for k in gaps["before"]),
                         "after": Counter(k[0] for k in gaps["after"]), "freed": {f"{a}|{b}": n for (a, b), n in freed.items()}}
+    company_rows = [e for e in examples if e["cik"] == cik]
+    with open(progress_path, "a") as fo:
+        fo.write(json.dumps({"cik": cik, **per_company[cik], "freed_keys": [[a, b, n] for (a, b), n in freed.items()],
+                             "misses": dict(company_misses), "rows": company_rows}, default=str) + "\n")
     for (dp, cause), n in freed.items():
         summary[(dp, cause, prof.get("sector_template"))] += n
     conn.execute("delete from fsn.filing where company_id = %s", (cid,))
