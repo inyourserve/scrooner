@@ -94,15 +94,19 @@ def derive_tl(
             leaves.append((c, w))
         parts: dict[str, list] = defaultdict(list)
         total = Decimal(0)
+        blank: list[str] = []
         for c, w in leaves:
             seg = classify(c, label.get(c, ""))
             v = col.get(c)
             if v is None:
-                if (
-                    seg == "excluded_total_or_noise"
-                ):  # CommitmentsAndContingencies: printed blank
+                # a line printed blank in this column carries no fact: it counts as zero ONLY if the valued children
+                # still tie to the printed L&E below (the BS lane's rule, Verifier BS-V2 fix 3)
+                blank.append(c)
+                continue
+            if seg == "excluded_total_or_noise":
+                if v[0] == 0:  # CommitmentsAndContingencies printed as a dash / 0
                     continue
-                return None, f"calc_child_not_valued:{c}", {}
+                return None, f"calc_child_noise_valued:{c}", {}
             if seg in ("equity_total", "equity_component", "nci"):
                 parts["equity"].append((c, w, v))
             elif seg == "mezz":
@@ -120,6 +124,7 @@ def derive_tl(
         inputs = {
             "le": [le, str(col[le][0])],
             **{k: [[c, w, str(v[0])] for c, w, v in xs] for k, xs in parts.items()},
+            "blank_children": blank,
         }
         ids = [col[le][1]] + [v[1] for xs in parts.values() for _c, _w, v in xs]
         return (value, ids), RULE_CALC, inputs
