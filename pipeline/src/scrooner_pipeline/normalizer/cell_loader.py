@@ -162,6 +162,7 @@ class LoadReport:
     lineage_defects: int = 0
     skipped_loaded: int = 0
     headroom_waits: int = 0
+    protected: int = 0
     per_company: list[dict[str, Any]] = field(default_factory=list)
 
     def reject(self, line: int, why: str, **ctx: Any) -> None:
@@ -470,6 +471,62 @@ def wait_for_headroom(
     )
 
 
+def protect_cells(
+    conn: psycopg.Connection,
+    cid: int,
+    scope_ids: list[int],
+    valued: list[CellRow],
+    blanks: list[CellRow],
+    concept_ids: dict[str, int],
+    run_id: str,
+    package_sha: str,
+) -> int:
+    """Inside the company's transaction: the family's keys of this company are protected (0113) exactly
+    where this load wrote them. Valued keys carry their value; a blank key is protected only where the
+    0113 value column accepts null (a migration), else it is left to the reason store."""
+    nullable = (
+        conn.execute(
+            "select is_nullable from information_schema.columns where table_schema = 'analytics' "
+            "and table_name = 'slot_protected_cell' and column_name = 'value'"
+        ).fetchone()
+        or ("NO",)
+    )[0] == "YES"
+    keys: dict[tuple[int, int], tuple[str, Decimal | None]] = {}
+    if nullable:
+        for b in blanks:
+            if b.period_id is not None:
+                keys[(concept_ids[b.key.data_point_name], b.period_id)] = (
+                    b.rule_id,
+                    None,
+                )
+    for r in valued:
+        keys[(concept_ids[r.key.data_point_name], r.period_id)] = (r.rule_id, r.value)  # type: ignore[index]
+    with conn.cursor() as cur:
+        cur.execute(
+            "delete from analytics.slot_protected_cell where company_id = %s and canonical_concept_id = any(%s)",
+            (cid, scope_ids),
+        )
+        if keys:
+            cur.execute(
+                """
+                insert into analytics.slot_protected_cell
+                    (company_id, canonical_concept_id, period_id, rule_id, value, run_id, package_sha256)
+                select %s, u.c, u.p, u.r, u.v, %s, %s
+                from unnest(%s::bigint[], %s::bigint[], %s::text[], %s::numeric[]) as u(c, p, r, v)
+                """,
+                (
+                    cid,
+                    run_id,
+                    package_sha,
+                    [k[0] for k in keys],
+                    [k[1] for k in keys],
+                    [v[0] for v in keys.values()],
+                    [v[1] for v in keys.values()],
+                ),
+            )
+    return len(keys)
+
+
 def _has_source_value_ids(conn: psycopg.Connection) -> bool:
     with conn.cursor() as cur:
         cur.execute(
@@ -609,11 +666,14 @@ def load(
     skip_loaded: bool = False,
     max_backends: int | None = None,
     sleep: Callable[[float], None] = time.sleep,
+    protect: bool = False,
 ) -> LoadReport:
     """paths: one or more cell files of ONE family (merged; a key in two files is
     a rejection). data_points: the delete scope (default: the manifest's or the
     file's data points). apply=False plans inside a transaction and rolls back.
-    max_backends: before each company, wait while more client backends than this are open."""
+    max_backends: before each company, wait while more client backends than this are open.
+    protect: record every written key in analytics.slot_protected_cell (0113) so the nightly refresh
+    cannot overwrite it; the family's other keys of the company lose their protection."""
     mode = "apply" if apply else "dry_run"
     rep = LoadReport(family, mode, [str(p) for p in paths], {})
     raw_rows: list[tuple[int, dict[str, Any]]] = []
@@ -770,6 +830,8 @@ def load(
                     prov,
                     apply,
                     rep,
+                    protect=protect,
+                    package_sha=",".join(rep.sha256.values())[:200],
                 )
             except _PlanRollback:
                 break
@@ -821,6 +883,9 @@ def _load_company(
     prov: bool,
     apply: bool,
     rep: LoadReport,
+    *,
+    protect: bool = False,
+    package_sha: str = "",
 ) -> None:
     """One company in one transaction; plan mode raises _PlanRollback at the end so it rolls back."""
     if True:
@@ -981,6 +1046,18 @@ def _load_company(
             for rid, reasons in reasons_by_rule.items():
                 n_reasons += replace_rule_reasons(conn, run_id, cid, rid, reasons)
             rep.reasons_written += n_reasons
+            if protect:
+                blanks = [r for r in bound if r.state in BLANK_STATES]
+                rep.protected += protect_cells(
+                    conn,
+                    cid,
+                    scope_ids,
+                    valued,
+                    blanks,
+                    concept_ids,
+                    run_id,
+                    package_sha,
+                )
             rep.companies += 1
             rep.per_company.append(
                 {
@@ -1020,6 +1097,12 @@ def _finish(
 BEFORE_IMAGE_TABLES = (
     ("analytics.canonical_fact", "canonical_fact.csv.gz", "canonical_concept_id"),
     ("analytics.cell_blank_reason", "cell_blank_reason.csv.gz", "data_point_name"),
+    # protection rows (0113): a restored key is protected exactly as before the write
+    (
+        "analytics.slot_protected_cell",
+        "slot_protected_cell.csv.gz",
+        "canonical_concept_id",
+    ),
 )
 
 
@@ -1032,8 +1115,8 @@ def restore(
     apply: bool,
 ) -> dict[str, Any]:
     """Put a before-image (CSV with header, as `copy ... to stdout with csv header` wrote it) back for the
-    named companies and data points: per company, in one transaction, delete the current canonical_fact and
-    cell_blank_reason rows in scope and insert the before-image rows with their original ids. Rows outside the
+    named companies and data points: per company, in one transaction, delete the current canonical_fact,
+    cell_blank_reason and slot_protected_cell rows in scope and insert the before-image rows (original ids). Rows outside the
     data points are not touched; core.period rows a load created stay (harmless, unreferenced). Plan mode rolls
     back each company."""
     import gzip
@@ -1081,8 +1164,13 @@ def restore(
                             (cid, scope),
                         )
                         counts[f"{table}.deleted"] = cur.rowcount
+                        overriding = (
+                            ""
+                            if table == "analytics.slot_protected_cell"
+                            else " overriding system value"
+                        )
                         cur.execute(
-                            f"insert into {table} ({collist}) overriding system value "
+                            f"insert into {table} ({collist}){overriding} "
                             f"select {collist} from {tmp} where company_id = %s and {key} = any(%s)",
                             (cid, scope),
                         )

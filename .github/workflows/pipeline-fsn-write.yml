@@ -9,6 +9,8 @@ name: FSN store production write (cohort)
 #                       cell_blank_reason (uploaded BEFORE the write) -> done gate (design §5 criteria 1-5 per
 #                       company) -> `scrooner-cells load --apply` for the passed data points of the companies
 #                       that passed; a company that fails keeps its current rows (design §7.6)
+#                       Every written key is protected (analytics.slot_protected_cell, 0113), so the nightly
+#                       mapper, conflict fill and derivation cannot overwrite it; other families keep refreshing.
 #   stage restore:      put the before-image of restore_run back for restore_company_ids (criterion 6: a
 #                       company with a served cell_proof DISAGREE after the write is restored)
 # Concept rules are seeded once (seed job) from data-team/47-fsn-store/concept_rules. Debt, balance-sheet,
@@ -193,7 +195,7 @@ jobs:
           EOF
             if [ "$(zcat "out/write/$fam/cells.jsonl.gz" | wc -l)" -eq 0 ]; then continue; fi
             uv run --project pipeline scrooner-cells load "out/write/$fam/cells.jsonl.gz" --family "$fam" --apply \
-              --max-backends "$MAX_BACKENDS" --statement-timeout 10min \
+              --max-backends "$MAX_BACKENDS" --statement-timeout 10min --protect \
               --report "out/write-$fam.json" || echo "::warning::cell write $fam failed"
           done
       - uses: actions/upload-artifact@v4

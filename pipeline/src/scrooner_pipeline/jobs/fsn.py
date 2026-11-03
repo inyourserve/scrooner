@@ -348,6 +348,7 @@ def pilot_prod_cmd(
         for table, cols in (
             ("analytics.canonical_fact", "*"),
             ("analytics.cell_blank_reason", "*"),
+            ("analytics.slot_protected_cell", "*"),
         ):
             path = root / "before_image" / f"{table.split('.')[1]}.csv.gz"
             path.parent.mkdir(parents=True, exist_ok=True)

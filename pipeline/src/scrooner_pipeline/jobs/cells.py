@@ -88,6 +88,10 @@ def load_cmd(
         None,
         help="Before each company, wait while more client backends than this are open.",
     ),
+    protect: bool = typer.Option(
+        False,
+        help="Protect every written key (analytics.slot_protected_cell) from the nightly refresh.",
+    ),
 ) -> None:
     from scrooner_pipeline.normalizer import cell_loader
 
@@ -136,6 +140,7 @@ def load_cmd(
             shard=tuple(int(x) for x in shard.split("/")) if shard else None,  # type: ignore[arg-type]
             skip_loaded=skip_loaded,
             max_backends=max_backends,
+            protect=protect,
         )
     d = rep.as_dict()
     if report:
