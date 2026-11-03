@@ -505,3 +505,35 @@ def report_company(
         "_gaps": gaps,
         "_library": lib,
     }
+
+
+def done_gate(
+    reports: list[dict[str, Any]],
+    gaps: list[dict[str, str]],
+    missing_filings: dict[str, list[Any]],
+    data_points: set[str],
+) -> dict[int, list[str]]:
+    """Design §5 done criteria 1-5 per company, for the data points a write switches: {company_id: failed
+    criteria}; an empty list means the company may switch. Criterion 3 holds by construction (select serves
+    only passing columns; a failing latest copy is a reasoned blank). Criterion 6 (zero served cell_proof
+    DISAGREE) needs the written cells: checked after the write, and a failing company is restored from its
+    before-image (`scrooner-cells restore`), so it keeps its earlier rows (§7.6)."""
+    reasonless: Counter[str] = Counter(
+        str(g["company_id"]) for g in gaps if g["data_point"] in data_points
+    )
+    out: dict[int, list[str]] = {}
+    for r in reports:
+        crit = r["done_criteria"]
+        failed = []
+        if not crit.get("1_store_loaded"):
+            failed.append("1_store_not_loaded")
+        if missing_filings.get(r["cik"]):
+            failed.append(f"2_filings_not_stored:{len(missing_filings[r['cik']])}")
+        if reasonless[str(r["company_id"])]:
+            failed.append(f"4_reasonless_keys:{reasonless[str(r['company_id'])]}")
+        if crit.get("5_derived_without_same_basis"):
+            failed.append(
+                f"5_derived_without_same_basis:{crit['5_derived_without_same_basis']}"
+            )
+        out[r["company_id"]] = failed
+    return out

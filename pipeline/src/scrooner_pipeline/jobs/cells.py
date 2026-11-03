@@ -84,6 +84,10 @@ def load_cmd(
         False,
         help="Apply only: skip companies already loaded from this same file by an earlier apply run.",
     ),
+    max_backends: int = typer.Option(
+        None,
+        help="Before each company, wait while more client backends than this are open.",
+    ),
 ) -> None:
     from scrooner_pipeline.normalizer import cell_loader
 
@@ -131,6 +135,7 @@ def load_cmd(
             connect=connect,
             shard=tuple(int(x) for x in shard.split("/")) if shard else None,  # type: ignore[arg-type]
             skip_loaded=skip_loaded,
+            max_backends=max_backends,
         )
     d = rep.as_dict()
     if report:
@@ -145,6 +150,41 @@ def load_cmd(
         typer.echo(
             "rejects (first 10): " + json.dumps(rep.reject_samples[:10], default=str)
         )
+
+
+@app.command("restore")
+def restore_cmd(
+    before_image: str = typer.Option(
+        ...,
+        help="Directory with canonical_fact.csv.gz and cell_blank_reason.csv.gz (pilot-prod).",
+    ),
+    company_ids: str = typer.Option(
+        ..., help="Comma-separated company ids to put back."
+    ),
+    data_points: str = typer.Option(
+        ..., help="Comma-separated data points the write touched."
+    ),
+    apply: bool = typer.Option(
+        False, "--apply/--plan", help="Write (default: plan, rolled back)."
+    ),
+    statement_timeout: str = typer.Option(
+        "10min", help="Per-statement timeout for this session."
+    ),
+) -> None:
+    """Rollback of a cell write, per company: the before-image rows replace the current rows in scope."""
+    from scrooner_pipeline.normalizer import cell_loader
+
+    with get_connection() as conn:
+        conn.execute(f"set statement_timeout = '{statement_timeout}'")
+        conn.commit()
+        rep = cell_loader.restore(
+            conn,
+            Path(before_image),
+            [int(x) for x in company_ids.split(",") if x],
+            [s for s in data_points.split(",") if s],
+            apply=apply,
+        )
+    typer.echo(f"cells restore [{rep['mode']}]: {json.dumps(rep['companies'])}")
 
 
 if __name__ == "__main__":

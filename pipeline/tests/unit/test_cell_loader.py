@@ -339,3 +339,100 @@ def test_fsn_store_cell_keeps_source_value_ids_as_its_lineage(conn, tmp_path):
         (cid, ccid, pid),
     ).fetchone()
     assert got == (Decimal("100"), [], [7001, 7002])
+
+
+class _Backends:
+    """A connection whose client-backend count follows a script."""
+
+    def __init__(self, counts):
+        self.counts = list(counts)
+
+    def execute(self, sql, *a):
+        n = self.counts.pop(0)
+        return type("R", (), {"fetchone": lambda self: (n,)})()
+
+    def commit(self):
+        pass
+
+
+@pytest.mark.unit
+def test_headroom_waits_while_backends_exceed_the_budget_then_fails_closed(monkeypatch):
+    slept = []
+    assert cl.wait_for_headroom(_Backends([64, 61, 60]), 60, slept.append) == 2
+    assert slept == [cl.HEADROOM_SLEEP_S] * 2
+    assert cl.wait_for_headroom(_Backends([10]), 60, slept.append) == 0
+    monkeypatch.setattr(cl, "HEADROOM_MAX_WAITS", 3)
+    with pytest.raises(RuntimeError):
+        cl.wait_for_headroom(_Backends([99] * 5), 60, lambda s: None)
+
+
+def _before_image(conn, cid, out):
+    out.mkdir()
+    for table, fname, _ in cl.BEFORE_IMAGE_TABLES:
+        with (
+            gzip.open(out / fname, "wb") as fh,
+            conn.cursor().copy(
+                f"copy (select * from {table} where company_id = %s order by 1) to stdout with csv header",
+                (cid,),
+            ) as cp,
+        ):
+            for chunk in cp:
+                fh.write(bytes(chunk))
+    conn.commit()
+
+
+@pytest.mark.integration
+def test_restore_puts_the_before_image_back_for_the_written_data_points(conn, tmp_path):
+    cid, pid, fact, ccid, cash_id = _seed(conn)
+    snap = "select canonical_concept_id, period_id, value, id from analytics.canonical_fact where company_id = %s order by 1"
+    before = conn.execute(snap, (cid,)).fetchall()
+    _before_image(conn, cid, tmp_path / "before")
+    path = _write(
+        tmp_path,
+        [
+            _row(
+                company_id=cid,
+                period_start=None,
+                period_end=None,
+                fiscal_year=2024,
+                fiscal_period="Q1",
+                period_type="duration",
+                fsn_end="2024-03-31",
+            ),
+            _row(
+                company_id=cid,
+                data_point_name="cash_and_equivalents_resolved",
+                period_grain="I",
+                period_type="instant",
+                period_start="2024-04-02",
+                period_end="2024-04-02",
+                state="not_presented",
+                value=None,
+                unit=None,
+                accession=None,
+                tag=None,
+                reason_code="line_not_presented_in_filing",
+                reason_text="not on the balance sheet",
+                rule_id="slot.cash_and_equivalents@1",
+                evidence_level="DATA-INFERRED",
+            ),
+        ],
+    )
+    cl.load(conn, "capex_da_cash_debt", [path], apply=True)
+    after_load = conn.execute(snap, (cid,)).fetchall()
+    assert after_load != before
+    points = ["capex_resolved", "cash_and_equivalents_resolved"]
+    plan = cl.restore(conn, tmp_path / "before", [cid], points, apply=False)
+    assert plan["mode"] == "dry_run"
+    assert conn.execute(snap, (cid,)).fetchall() == after_load
+    rep = cl.restore(conn, tmp_path / "before", [cid], points, apply=True)
+    assert rep["companies"][cid]["analytics.canonical_fact.restored"] == len(before)
+    assert conn.execute(snap, (cid,)).fetchall() == before
+    assert (
+        _one(
+            conn,
+            "select count(*) from analytics.cell_blank_reason where company_id = %s",
+            (cid,),
+        )
+        == 0
+    )
