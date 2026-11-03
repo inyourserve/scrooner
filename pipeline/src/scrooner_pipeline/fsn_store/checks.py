@@ -52,10 +52,18 @@ class Print:
     line: int | None
 
 
+# FSN writes decimals="INF" (exact) as a sentinel; |dcml| beyond this is exact (no rounding) and
+# would otherwise make a tolerance numeric cannot store (cohort run 41490624081: 17 shards failed)
+DCML_EXACT = 20
+
+
 def tol_of(dcmls: Iterable[int | None]) -> Decimal:
     t = Decimal(0)
     for d in dcmls:
-        t += Decimal(5) * (Decimal(10) ** (-(d if d is not None else 0) - 1))
+        d = 0 if d is None else d
+        if abs(d) > DCML_EXACT:
+            continue  # an exact print adds no rounding slack
+        t += Decimal(5) * (Decimal(10) ** (-d - 1))
     return t
 
 

@@ -14,6 +14,7 @@ Plus the concept_rule seeds: valid FORMATS-v1 rows that carry the founder's debt
 import json
 import subprocess
 import sys
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -233,3 +234,134 @@ def test_note_lease_not_added_when_the_total_is_a_face_member(tmp_path):
     assert c["verdict"] == "publishable", c
     assert c["slot_lease_inclusive"] == "145"
     assert not c["note_finance_lease_added"]
+
+
+# ---------------------------------------------------------------- equity-block guard (Verifier debt-port draw 2026-11-01)
+def _detect_face(tmp_path, face):
+    """One synthetic 10-K whose balance-sheet face is `face` [(tag, label)]; returns the era's (skeleton, guarded tags)."""
+    d = tmp_path / "0000000002"
+    d.mkdir()
+    (d / "manifest.json").write_text('{"cik": "0000000002"}')
+    _write(d / "sub.tsv", SUB, [{"fsn_set": "2020q1", "adsh": "0000000002-20-000001", "cik": "2", "form": "10-K", "period": "20191231",
+                                 "filed": "20200220", "accepted": "20200220120000"}])
+    _write(d / "pre.tsv", PRE, [{"adsh": "0000000002-20-000001", "report": 2, "line": i + 1, "stmt": "BS", "inpth": 0, "tag": t,
+                                 "version": "us-gaap/2020", "prole": "terseLabel", "plabel": lab, "negating": 0}
+                                for i, (t, lab) in enumerate(face)])
+    run("bs_totals_detect.py", "--company", d, tmp_path / "eras.json", tmp_path / "b.txt")
+    era = json.loads((tmp_path / "eras.json").read_text())["0000000002"][0]
+    return era["skeleton"], {z["tag"] for z in era["zone_lines"] if z.get("equity_block_guard")}
+
+
+CAP_FACE = [("Assets", "Total assets"), ("CommonStockValue", "Common stock"), ("RetainedEarningsAccumulatedDeficit", "Retained earnings"),
+            ("StockholdersEquity", "Total common equity"), ("LongTermDebtNoncurrent", "Long-term debt"),
+            ("CapitalizationLongtermDebtAndEquity", "Total Capitalization"), ("LiabilitiesCurrent", "Total current liabilities"),
+            ("OtherLiabilitiesNoncurrent", "Other"), ("LiabilitiesAndStockholdersEquity", "Total")]
+
+
+@pytest.mark.parametrize("debt_tag", ["LongTermDebtNoncurrent", "LongTermDebtAndCapitalLeaseObligations",
+                                      "LongTermDebtIncludesRedeemablePreferredStockAtRedemptionValue"])
+def test_guard_keeps_long_term_debt_inside_total_capitalization_a_liability(tmp_path, debt_tag):
+    """NI/FE/AWK (Verifier 7 of 7 false holds): equity, then long-term debt, then 'Total Capitalization'. Equity + debt =
+    Total capitalization, so the debt line is a liability; the old guard turned it into an equity component."""
+    face = [(debt_tag if t == "LongTermDebtNoncurrent" else t, lab) for t, lab in CAP_FACE]
+    skeleton, guarded = _detect_face(tmp_path, face)
+    assert debt_tag in skeleton
+    assert debt_tag not in guarded
+
+
+def test_guard_still_catches_a_non_debt_liability_inside_the_equity_block(tmp_path):
+    """UPS 2017: 'Deferred compensation obligations' printed between equity rows, no capitalization total."""
+    face = [("Assets", "Total assets"), ("LiabilitiesCurrent", "Total current liabilities"), ("CommonStockValue", "Common stock"),
+            ("DeferredCompensationLiabilityClassifiedNoncurrent", "Deferred compensation obligations"),
+            ("TreasuryStockValue", "Treasury stock"), ("StockholdersEquity", "Total equity"),
+            ("LiabilitiesAndStockholdersEquity", "Total")]
+    skeleton, guarded = _detect_face(tmp_path, face)
+    assert guarded == {"DeferredCompensationLiabilityClassifiedNoncurrent"}
+    assert "DeferredCompensationLiabilityClassifiedNoncurrent" not in skeleton
+
+
+def test_guard_still_holds_a_debt_line_when_there_is_no_capitalization_total(tmp_path):
+    """BX/OXY-style records stay as before: a debt-looking line after equity with no filer capitalization subtotal is guarded."""
+    face = [t for t in CAP_FACE if t[0] != "CapitalizationLongtermDebtAndEquity"]
+    skeleton, guarded = _detect_face(tmp_path, face)
+    assert "LongTermDebtNoncurrent" in guarded and "LongTermDebtNoncurrent" not in skeleton
+
+
+def test_guard_still_catches_a_non_debt_liability_before_the_capitalization_total(tmp_path):
+    face = [(("DeferredCompensationLiabilityClassifiedNoncurrent", "Deferred compensation") if t == "LongTermDebtNoncurrent" else (t, lab))
+            for t, lab in CAP_FACE]
+    skeleton, guarded = _detect_face(tmp_path, face)
+    assert guarded == {"DeferredCompensationLiabilityClassifiedNoncurrent"}
+
+
+def test_guard_keeps_capital_lease_lines_inside_total_capitalization_a_liability(tmp_path):
+    face = [("CapitalLeaseObligationsNoncurrent" if t == "LongTermDebtNoncurrent" else t, lab) for t, lab in CAP_FACE]
+    skeleton, guarded = _detect_face(tmp_path, face)
+    assert "CapitalLeaseObligationsNoncurrent" in skeleton and not guarded
+
+
+# ---------------------------------------------------------------- debt Verifier traps (VERIFY-DEBT-PORT-2026-11-01.md)
+# Fixtures: two real filings per company cut from the SEC FSN data sets (tests/fixtures/fsn_company_bs_traps).
+TRAPS = ROOT / "pipeline" / "tests" / "fixtures" / "fsn_company_bs_traps"
+
+
+def _trap_cells(tmp_path, cik):
+    (tmp_path / "cohort.csv").write_text(f"cik,ticker\n{int(cik)},X\n")
+    d = TRAPS / cik
+    run("era_detect.py", "--company", d, tmp_path / "eras.json", tmp_path / "boundaries.txt")
+    run("assemble_fsn.py", "--company", d, tmp_path / "eras.json", tmp_path / "cohort.csv", tmp_path / "records.jsonl")
+    run("replay_debt_fsn.py", "--company", d, tmp_path / "records.jsonl", tmp_path / "replay.json")
+    return {c["period_end"]: c for c in json.loads((tmp_path / "replay.json").read_text())["cells"]}
+
+
+def test_trap_meta_2018_filer_context_error_is_not_a_liability(tmp_path):
+    """FY2019 10-K R47 prints non-current lease 418 in the Dec. 31, 2018 context (473 = 55 + 418 is the 2019 total).
+    META had no debt and no finance lease at 2018-12-31: the value is 0, never 418. 2019 keeps 473."""
+    cells = _trap_cells(tmp_path, "0001326801")
+    assert cells["2018-12-31"]["verdict"] == "publishable"
+    assert Decimal(cells["2018-12-31"]["slot_lease_inclusive"]) == 0
+    assert Decimal(cells["2019-12-31"]["slot_lease_inclusive"]) == 473_000_000
+
+
+def test_trap_nvda_2017_01_29_latest_copy_drops_a_lease_line_the_total_does_not_fall(tmp_path):
+    """FY2018 10-K no longer prints the 6 noncurrent capital lease; its debt lines equal the FY2017 10-K's.
+    796 + 1,983 + 4 + 6 = 2,789 (a reader of the latest copy alone gives 2,783, wrong by 6)."""
+    c = _trap_cells(tmp_path, "0001045810")["2017-01-31"]
+    assert c["verdict"] == "publishable"
+    assert Decimal(c["slot_lease_inclusive"]) == 2_789_000_000
+    assert c["accession"] == "0001045810-18-000010"  # the latest print still decides the debt values
+
+
+def test_trap_amzn_2016_capital_lease_is_present_value_never_the_gross_9406(tmp_path):
+    """CapitalLeaseObligations 9,406 (FY2016 10-K) is gross minimum payments; present value is 4,000 + 5,080.
+    7,694 + 1,056 + 9,080 = 17,830 (v4's 18,156 added the gross)."""
+    c = _trap_cells(tmp_path, "0001018724")["2016-12-31"]
+    assert c["verdict"] == "publishable"
+    assert Decimal(c["slot_lease_inclusive"]) == 17_830_000_000
+    assert Decimal(c["note_finance_lease_added"]) == 9_080_000_000
+
+
+def test_trap_goog_2024_finance_leases_are_in_total_debt(tmp_path):
+    """10,883 + 999 + finance leases 1,677 = 13,559 (v4's 11,882 missed the 1,677)."""
+    c = _trap_cells(tmp_path, "0001652044")["2024-12-31"]
+    assert c["verdict"] == "publishable"
+    assert Decimal(c["slot_lease_inclusive"]) == 13_559_000_000
+    assert Decimal(c["note_finance_lease_added"]) == 1_677_000_000
+
+
+def test_latest_copy_without_lease_note_is_filled_from_the_earlier_copy_only_when_the_debt_lines_are_equal(tmp_path):
+    """META 2025-12-31 pattern: the later 10-Q prints the debt line but no lease note. Equal debt lines -> the 10-K's lease
+    is added; a debt line that differs between the copies -> the hold stays (the latest print cannot be completed)."""
+    lease = {"FinanceLeaseLiability": 50, "FinanceLeaseLiabilityNoncurrent": 40, "FinanceLeaseLiabilityCurrent": 10}
+    first = {"Assets": 1000, "LiabilitiesAndStockholdersEquity": 1000, "LongTermDebtNoncurrent": 100, "LongTermDebt": 100, **lease}
+    later = {"Assets": 1000, "LiabilitiesAndStockholdersEquity": 1000, "LongTermDebtNoncurrent": 100, "LongTermDebt": 100}
+    k = ("0000000001-20-000001", "10-K", "20191231", "20200220120000", {"20191231": first})
+    q = ("0000000001-20-000009", "10-Q", "20200331", "20200505120000", {"20200331": later, "20191231": later})
+    (tmp_path / "a").mkdir()
+    same = _synthetic(tmp_path / "a", [k, q])
+    assert same["2019-12-31"]["verdict"] == "publishable" and same["2019-12-31"]["slot_lease_inclusive"] == "150"
+    other = dict(later, LongTermDebtNoncurrent=90, LongTermDebt=90)
+    q2 = ("0000000001-20-000009", "10-Q", "20200331", "20200505120000", {"20200331": other, "20191231": other})
+    (tmp_path / "b").mkdir()
+    held = _synthetic(tmp_path / "b", [k, q2])
+    assert held["2019-12-31"]["verdict"] == "latest_copy_lacks_note_finance_lease"

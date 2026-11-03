@@ -1,0 +1,8 @@
+{
+ "cik": "0001018724",
+ "fixture_of": [
+  "0001018724-17-000011",
+  "0001018724-18-000005"
+ ],
+ "source": "sec.gov FSN data sets via fsn_sec_fixture.py, cut by fsn_company_fixture.py (debt Verifier traps 2026-11-01)"
+}

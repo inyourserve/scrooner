@@ -262,3 +262,83 @@ def test_eps_q4_is_a_reasoned_blank_never_a_derived_value():
     assert (q4.state, q4.value, q4.reason_code) == ("not_presented", None, "not_filed_separately")
     row = sel.to_row(q4, 1, f, unit="USD/shares")
     assert row["state"] == "not_presented" and row["reason_text"] and "defect_class" not in row
+
+
+@pytest.mark.unit
+def test_note_values_fill_only_missing_keys_with_guards():
+    f = {
+        1: sel.Filing(1, "a1", datetime(2024, 2, 1), "10-K", date(2023, 12, 31), 2023, "FY"),
+        2: sel.Filing(2, "a2", datetime(2025, 2, 1), "10-K", date(2024, 12, 31), 2024, "FY"),
+    }
+
+    def n(vid, fid, tag, d, q, v):
+        return sel.NoteFact(vid, fid, tag, d, q, Decimal(v), -6)
+
+    d23, d24 = date(2023, 12, 31), date(2024, 12, 31)
+    facts = [
+        n(1, 1, "InterestExpense", d23, 4, "1968000000"),          # FY2023 printed in its 10-K
+        n(2, 2, "InterestExpense", d23, 4, "1968000000"),          # reprinted later: latest wins
+        n(3, 2, "InterestExpenseNonoperating", d24, 4, "2935000000"),  # only the lower-priority tag
+        n(4, 2, "InterestExpense", date(2024, 6, 30), 1, "0"),     # capitalised (TOL): a printed zero is served
+        n(5, 2, "InterestExpense", date(2024, 9, 30), 1, "107000000"),
+        n(6, 2, "InterestExpenseOperating", date(2024, 9, 30), 1, "55000000"),  # two perimeters (IP)
+        n(7, 2, "InterestExpense", date(2024, 3, 31), 1, "500000000"),  # face cell exists: skipped
+    ]
+    cells = {(c.ddate, c.qtrs): c for c in sel.select_note_values(
+        "interest_expense_resolved", facts, f, taken={(date(2024, 3, 31), 1)})}
+    assert cells[(d23, 4)].value == Decimal("1968000000") and cells[(d23, 4)].source_value_ids == [2]
+    assert cells[(d23, 4)].rule_id == sel.RULE_NOTE_VALUE and cells[(d23, 4)].input_refs["source"] == "note"
+    assert cells[(d24, 4)].tag == "InterestExpenseNonoperating"
+    assert (cells[(date(2024, 6, 30), 1)].state, cells[(date(2024, 6, 30), 1)].value) == ("value", Decimal(0))  # printed zero
+    assert cells[(date(2024, 9, 30), 1)].reason_code == "note_values_disagree"
+    assert (date(2024, 3, 31), 1) not in cells
+    assert sel.to_row(cells[(date(2024, 9, 30), 1)], 1, f)["defect_class"] == "composition"
+
+
+@pytest.mark.unit
+def test_sole_debt_interest_counts_only_when_it_is_the_filings_only_interest_line():
+    f = {
+        1: sel.Filing(1, "a1", datetime(2025, 2, 1), "10-K", date(2024, 12, 31), 2024, "FY"),
+        2: sel.Filing(2, "a2", datetime(2025, 3, 1), "10-K", date(2024, 9, 30), 2024, "FY"),
+        3: sel.Filing(3, "a3", datetime(2025, 4, 1), "10-K", date(2023, 12, 31), 2023, "FY"),
+    }
+
+    def n(vid, fid, tag, d, v, label=None):
+        return sel.NoteFact(vid, fid, tag, d, 4, Decimal(v), -6, label)
+
+    d1, d2, d3 = date(2024, 12, 31), date(2024, 9, 30), date(2023, 12, 31)
+    facts = [
+        n(1, 1, "InterestExpenseDebt", d1, "378000000"),                 # PGR/CVX pattern: only line
+        n(2, 2, "InterestExpenseDebt", d2, "111000000"),                 # beside another interest tag:
+        n(3, 2, "InterestExpenseOther", d2, "9000000"),                  #   a component, never taken
+        n(4, 3, "InterestExpenseDebt", d3, "50000000", "Debt issuance costs"),  # face label not interest
+    ]
+    cells = {c.ddate: c for c in sel.select_note_values(
+        "interest_expense_resolved", facts, f, taken=set(), sole_debt=True)}
+    assert cells[d1].value == Decimal("378000000") and cells[d1].input_refs["sole_debt"]
+    assert cells[d1].input_refs["label_unverified"] is True
+    assert d2 not in cells
+    assert cells[d3].reason_code == "sole_debt_label_not_interest"
+    # without the PENDING rule Debt is never a gross figure
+    assert sel.select_note_values("interest_expense_resolved", facts, f, taken=set()) == []
+
+
+@pytest.mark.unit
+def test_note_path_never_takes_operating_income_and_holds_negative_interest():
+    f = {1: sel.Filing(1, "0001744489-25-000155", datetime(2025, 11, 13), "10-K", date(2025, 9, 30), 2025, "FY")}
+    d = date(2025, 9, 30)
+    # MOG-A pattern: a non-dimensional OperatingIncomeLoss equal to the sum of segment members, off the face
+    oi = [sel.NoteFact(1, 1, "OperatingIncomeLoss", d, 4, Decimal("538000000"), -6)]
+    assert sel.select_note_values("operating_income_resolved", oi, f, taken=set()) == []
+    neg = [sel.NoteFact(2, 1, "InterestExpense", d, 4, Decimal("-1812000000"), -6)]
+    held = sel.select_note_values("interest_expense_resolved", neg, f, taken=set())
+    assert [c.reason_code for c in held] == ["sign_inconsistent"]
+    # DIS FY2025 cleared at +1,812M, only while the stored value is the pinned one
+    pin = {("0001744489-25-000155", d, 4): (Decimal("-1812000000"), Decimal("1812000000"))}
+    ok = sel.select_note_values("interest_expense_resolved", neg, f, taken=set(), cleared=pin)
+    assert [(c.state, c.value) for c in ok] == [("value", Decimal("1812000000"))]
+    moved = [sel.NoteFact(2, 1, "InterestExpense", d, 4, Decimal("-1900000000"), -6)]
+    assert sel.select_note_values("interest_expense_resolved", moved, f, taken=set(), cleared=pin)[0].reason_code == "sign_inconsistent"
+    debt = [sel.NoteFact(3, 1, "InterestExpenseDebt", d, 4, Decimal("378000000"), -6)]
+    c = sel.select_note_values("interest_expense_resolved", debt, f, taken=set(), sole_debt=True, label_verified=True)[0]
+    assert c.input_refs["label_unverified"] is False

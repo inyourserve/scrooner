@@ -1,0 +1,252 @@
+[
+ {
+  "ticker": "DVN",
+  "period": "2017-12-31",
+  "expected": "6864000000",
+  "got": "6864000000.0000",
+  "verdict": "publishable",
+  "source": "V1 DVN 2017 rule 3: 115+6,749 (0001564590-19-003382 R4)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "AAPL",
+  "period": "2015-09-30",
+  "expected": "64328000000",
+  "got": "64328000000.0000",
+  "verdict": "publishable",
+  "source": "V1 AAPL 2015-09-26: 8,499+2,500+53,329 (0001628280-16-020309 R5)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "EMR",
+  "period": "2015-09-30",
+  "expected": "6841000000",
+  "got": "6841000000.0000",
+  "verdict": "publishable",
+  "source": "V1 EMR: 2,552+4,289 (0000032604-16-000105 R5)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "KKR",
+  "period": "2015-12-31",
+  "expected": "18714597000",
+  "got": "18714597000.0000",
+  "verdict": "publishable",
+  "source": "V1 KKR $K 18,714,597 (0001404912-17-000005 R2)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "AMZN",
+  "period": "2016-12-31",
+  "expected": "17830000000",
+  "got": "17830000000.0000",
+  "verdict": "publishable",
+  "source": "V1/V3 AMZN: 7,694+1,056+4,000+5,080 (0001018724-18-000005)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "AJG",
+  "period": "2015-12-31",
+  "expected": "2316700000.0",
+  "got": "2453700000.0000",
+  "verdict": "publishable",
+  "source": "V1 AJG 245+2,071.7 (0001193125-17-038619 R4)",
+  "note": "2,453.7 if premium financing counts",
+  "result": "ALT_READING (premium financing excluded; the other row passes)"
+ },
+ {
+  "ticker": "AJG",
+  "period": "2015-12-31",
+  "expected": "2453700000.0",
+  "got": "2453700000.0000",
+  "verdict": "publishable",
+  "source": "V1 AJG with premium financing 137",
+  "note": "alternative reading",
+  "result": "PASS"
+ },
+ {
+  "ticker": "BRKR",
+  "period": "2015-12-31",
+  "expected": "265800000.0",
+  "got": "265800000.0000",
+  "verdict": "publishable",
+  "source": "V1 BRKR 0.6+265.2 (0001047469-17-001114 R2)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "HD",
+  "period": "2016-01-31",
+  "expected": "21216000000",
+  "got": "21216000000.0000",
+  "verdict": "publishable",
+  "source": "V1 HD 350+77+20,789 (0000354950-17-000005 R2)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "META",
+  "period": "2025-12-31",
+  "expected": "59928000000",
+  "got": "59928000000.0000",
+  "verdict": "publishable",
+  "source": "V2 META 58,744+1,184 (10-K 0001628280-26-003942 R61)",
+  "note": "only if 10-Q debt lines equal (Ritwik 6)",
+  "result": "PASS"
+ },
+ {
+  "ticker": "META",
+  "period": "2022-12-31",
+  "expected": "10613000000",
+  "got": "10610000000.0000",
+  "verdict": "publishable",
+  "source": "V2 META 9,923+690 (0001326801-24-000012 R3,R64)",
+  "note": "CONTESTED: 690 is the 2023-12-31 value in FSN; 2022 value 687 (0001326801-23-000013)",
+  "result": "WRONG"
+ },
+ {
+  "ticker": "NI",
+  "period": "2024-12-31",
+  "expected": "13960300000.0",
+  "got": "13960300000.0000",
+  "verdict": "publishable",
+  "source": "V2 NI 604.6+1,281.2+12,074.5 (0001111711-26-000027 R6)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "DIS",
+  "period": "2025-09-30",
+  "expected": "42026000000",
+  "got": null,
+  "verdict": "no cell",
+  "source": "V2 DIS 6,711+35,315 (0001744489-26-000057 R4)",
+  "note": "",
+  "result": "MISSING"
+ },
+ {
+  "ticker": "MSFT",
+  "period": "2015-06-30",
+  "expected": "35292000000",
+  "got": null,
+  "verdict": "not_computable_uncovered_candidates",
+  "source": "V2 MSFT 4,985+2,499+27,808 (0001193125-16-662209 R5)",
+  "note": "",
+  "result": "HELD"
+ },
+ {
+  "ticker": "META",
+  "period": "2018-12-31",
+  "expected": "0",
+  "got": "0",
+  "verdict": "publishable",
+  "source": "V3 META (0001326801-19-000009 R2; FY2019 R47 filer context error)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "MSFT",
+  "period": "2017-06-30",
+  "expected": "88732000000",
+  "got": "88732000000.0000",
+  "verdict": "publishable",
+  "source": "V3 MSFT 9,072+1,049+76,073+2,538 (0001564590-18-019062 R4,R103)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "GOOG",
+  "period": "2024-12-31",
+  "expected": "13559000000",
+  "got": "13559000000.0000",
+  "verdict": "publishable",
+  "source": "V3 GOOG 10,883+999+1,677 (0001652044-26-000018 R3,R67,R61)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "NVDA",
+  "period": "2017-01-31",
+  "expected": "2789000000",
+  "got": "2789000000.0000",
+  "verdict": "publishable",
+  "source": "V3 NVDA 2017-01-29: 796+1,983+6+4 (0001045810-17-000027 R4,R50)",
+  "note": "cell key is the month-end",
+  "result": "PASS"
+ },
+ {
+  "ticker": "WMT",
+  "period": "2021-01-31",
+  "expected": "48871000000",
+  "got": "48871000000.0000",
+  "verdict": "publishable",
+  "source": "V4 (0000104169-21-000033 R4)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "WMT",
+  "period": "2023-01-31",
+  "expected": "44622000000",
+  "got": "44622000000.0000",
+  "verdict": "publishable",
+  "source": "V4 (0000104169-23-000020 R5)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "WMT",
+  "period": "2024-01-31",
+  "expected": "46891000000",
+  "got": "46891000000.0000",
+  "verdict": "publishable",
+  "source": "V4 (0000104169-24-000056 R5)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "WMT",
+  "period": "2026-01-31",
+  "expected": "51523000000",
+  "got": "51523000000.0000",
+  "verdict": "publishable",
+  "source": "V4 (0000104169-26-000055 R5)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "NVDA",
+  "period": "2016-01-31",
+  "expected": "1427000000",
+  "got": "1427000000.0000",
+  "verdict": "publishable",
+  "source": "V4 NVDA 1,413+0+10+4 (0001045810-16-000205 R4)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "NVDA",
+  "period": "2017-04-30",
+  "expected": "2208000000",
+  "got": "2208000000.0000",
+  "verdict": "publishable",
+  "source": "V4 (0001045810-17-000075 R4,R40)",
+  "note": "",
+  "result": "PASS"
+ },
+ {
+  "ticker": "NVDA",
+  "period": "2017-07-31",
+  "expected": "2076000000",
+  "got": "2076000000.0000",
+  "verdict": "publishable",
+  "source": "V4 (0001045810-17-000123 R4,R40)",
+  "note": "",
+  "result": "PASS"
+ }
+]

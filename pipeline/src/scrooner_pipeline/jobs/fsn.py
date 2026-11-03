@@ -199,13 +199,25 @@ def pilot_cmd(
         "data-team/47-fsn-store/period_rules.csv",
         help="Basis splits and unfiled instants (company period rules).",
     ),
+    company_outs: str = typer.Option(
+        "data-team/47-fsn-store/template_company_outs_approval_2026-11-03.csv",
+        help="Company-level template OUTs with the approver's verdicts (line not printed).",
+    ),
+    note_sourced: str = typer.Option(
+        "data-team/47-fsn-store/template_company_outs_approval_2026-11-03.csv",
+        help="Approved company x data point pairs served from a note fact; '' disables.",
+    ),
+    cleared_keys: str = typer.Option(
+        "data-team/47-fsn-store/note_cleared_keys.csv",
+        help="Verifier-cleared note keys (stored value pinned) for signs held otherwise.",
+    ),
 ) -> None:
     """Map, check, select and report the pilot companies on the store's database (design §7 step 5).
     Writes fsn.line_map and fsn.filing_check of that database; run it on a scratch copy for a dry run."""
     import gzip
 
     from scrooner_pipeline.db.connection import get_connection
-    from scrooner_pipeline.fsn_store import checks, mapping, pilot
+    from scrooner_pipeline.fsn_store import checks, detectors, mapping, pilot
     from scrooner_pipeline.normalizer.cell_loader import OWNERSHIP
 
     root = Path(out)
@@ -214,6 +226,7 @@ def pilot_cmd(
     families: dict[str, list[dict]] = {}
     library_rows: list[dict] = []
     gap_rows: list[dict] = []
+    failed: list[dict] = []
     with get_connection() as conn:
         rules = mapping.load_rules(conn)
         rule_concepts = {
@@ -223,35 +236,49 @@ def pilot_cmd(
             ).fetchall()
         }
         for cik, cid in sorted(_ids(conn, ciks).items()):
-            m = mapping.map_company(conn, cid, rules)
-            c = checks.check_company(conn, cid)
-            conn.commit()
-            rep = pilot.report_company(
-                conn, cid, Path(calendar), rule_concepts, Path(period_rules)
-            )
-            rep["mapping"], rep["checks"] = m, c
-            rep["accessions"] = [
-                r[0]
-                for r in conn.execute(
-                    "select accession from fsn.filing where company_id = %s order by accepted",
-                    (cid,),
-                ).fetchall()
-            ]
-            for r in rep.pop("_cells"):
-                if r["fsn_end"] < "2014-01-01":
-                    continue  # comparatives before the history floor (CELL-FORMAT §2)
-                fam = OWNERSHIP.get(r["data_point_name"], "unowned")
-                families.setdefault(fam, []).append(r)
-            for g in rep.pop("_gaps"):
-                gap_rows.append({"cik": cik, "company_id": cid, **g})
-            for e in rep.pop("_library"):
-                library_rows.append({"cik": cik, "company_id": cid, **e})
-            reports.append(rep)
-            typer.echo(
-                f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
-                f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
-                f"library {rep['library']['completeness_pct']}%, gaps {rep['template_coverage']['gaps']}"
-            )
+            try:
+                # the ported lane detectors (capex / D&A: one line per concept per filing, or held)
+                m = mapping.map_company(conn, cid, rules, detectors=detectors.DEFAULT)
+                c = checks.check_company(conn, cid)
+                conn.commit()
+                rep = pilot.report_company(
+                    conn,
+                    cid,
+                    Path(calendar),
+                    rule_concepts,
+                    Path(period_rules),
+                    Path(company_outs),
+                    Path(note_sourced) if note_sourced else None,
+                    Path(cleared_keys) if cleared_keys else None,
+                )
+                rep["mapping"], rep["checks"] = m, c
+                rep["accessions"] = [
+                    r[0]
+                    for r in conn.execute(
+                        "select accession from fsn.filing where company_id = %s order by accepted",
+                        (cid,),
+                    ).fetchall()
+                ]
+                for r in rep.pop("_cells"):
+                    if r["fsn_end"] < "2014-01-01":
+                        continue  # comparatives before the history floor (CELL-FORMAT §2)
+                    fam = OWNERSHIP.get(r["data_point_name"], "unowned")
+                    families.setdefault(fam, []).append(r)
+                for g in rep.pop("_gaps"):
+                    gap_rows.append({"cik": cik, "company_id": cid, **g})
+                for e in rep.pop("_library"):
+                    library_rows.append({"cik": cik, "company_id": cid, **e})
+                reports.append(rep)
+            except Exception as exc:  # noqa: BLE001  one company must not stop the shard
+                conn.rollback()
+                failed.append({"cik": cik, "company_id": cid, "error": repr(exc)[:300]})
+                typer.echo(f"pilot {cik}: FAILED {repr(exc)[:200]}")
+            else:  # only a company that succeeded has a report to print
+                typer.echo(
+                    f"pilot {cik}: template {rep['template_coverage']['valued_pct']}% valued, "
+                    f"{rep['template_coverage']['valued_or_reasoned_pct']}% valued or reasoned, "
+                    f"library {rep['library']['completeness_pct']}%, gaps {rep['template_coverage']['gaps']}"
+                )
     for fam, rows in families.items():
         d = root / "cells" / fam
         d.mkdir(parents=True, exist_ok=True)
@@ -276,6 +303,7 @@ def pilot_cmd(
                 w.writeheader()
                 w.writerows(rows)
     (root / "report.json").write_text(json.dumps(reports, indent=1, default=str))
+    (root / "failed.json").write_text(json.dumps(failed, indent=1))
     lines = [
         "| company | template | keys | valued % | valued or reasoned % | gaps | library % | G2-eligible valued/keys | not G2-eligible (BS, debt) valued/keys | bs rule ids serving cells | missing data points (library) |",
         "|---|---|---|---|---|---|---|---|---|---|---|",

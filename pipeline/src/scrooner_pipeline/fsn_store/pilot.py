@@ -16,6 +16,7 @@ import csv
 import gzip
 from collections import Counter, defaultdict
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -133,6 +134,13 @@ def store_keys(filings: list[sel.Filing], concept: str) -> list[tuple[str, date]
     return sorted(keys)
 
 
+def _company_outs(path: Path | None) -> list[dict[str, str]]:
+    if not path or not path.exists():
+        return []
+    with path.open() as fh:
+        return list(csv.DictReader(fh))
+
+
 def calendar_keys(path: Path, company_id: int, concept: str) -> list[tuple[str, date]]:
     """(grain, period_end) keys of one data point: FY/Q durations or instants, end >= FLOOR."""
     want = "instant" if concept in INSTANT else "duration"
@@ -237,6 +245,9 @@ def report_company(
     calendar: Path,
     rule_concepts: set[str],
     period_rules: Path | None = None,
+    company_outs: Path | None = None,
+    note_sourced: Path | None = None,
+    cleared_keys: Path | None = None,
 ) -> dict[str, Any]:
     cik, name, sic = conn.execute(
         "select cik, company_name, sic_code from core.company where id = %s",
@@ -270,6 +281,49 @@ def report_company(
         )
         if s.breaks:
             breaks[concept] = sorted(data["filings"][f].accession for f in s.breaks)
+    # approved company x concept pairs served from a NOTE fact where the face prints no line
+    # (approval CSV: REJECT_NOTE_SOURCED_VALUE); keys that already have a face cell are kept
+    # sole-debt: pending rows, and rows the Verifier passed as gross (label verified)
+    note_pairs: dict[str, tuple[bool, bool]] = {}
+    for r in _company_outs(note_sourced):
+        if int(r["company_id"]) != company_id or r.get("approver_verdict") not in (
+            "REJECT_NOTE_SOURCED_VALUE",
+            "PENDING_SOLE_DEBT_INTEREST_RULE",
+        ):
+            continue
+        passed = "PASS_AS_GROSS" in (r.get("approver_evidence") or "")
+        pending = r.get("approver_verdict") == "PENDING_SOLE_DEBT_INTEREST_RULE"
+        note_pairs[r["data_point"]] = (pending or passed, passed)
+    cleared = {
+        (r["accession"], date.fromisoformat(r["ddate"]), int(r["qtrs"])): (
+            Decimal(r["stored_value"]),
+            Decimal(r["cleared_value"]),
+        )
+        for r in _company_outs(cleared_keys)
+        if int(r["company_id"]) == company_id
+    }
+    note_cells = 0
+    for concept in sorted(note_pairs):
+        taken = {
+            (
+                date.fromisoformat(r["fsn_end"]),
+                {"FY": 4, "Q": 1, "I": 0}[r["period_grain"]],
+            )
+            for r in cells
+            if r["data_point_name"] == concept
+        }
+        sole, verified = note_pairs[concept]
+        got = sel.select_note_values(
+            concept,
+            sel.load_note_values(conn, company_id, concept, sole_debt=sole),
+            data["filings"],
+            taken,
+            sole_debt=sole,
+            label_verified=verified,
+            cleared=cleared,
+        )
+        note_cells += sum(1 for c in got if c.state == "value")
+        cells.extend(sel.to_row(c, company_id, data["filings"]) for c in got)
     lib = library(conn, company_id)
     mapped_points = {
         e["data_point"]
@@ -283,11 +337,32 @@ def report_company(
     keys = valued = reasoned = 0
     gaps: list[dict[str, Any]] = []
     per_point: dict[str, dict[str, int]] = {}
+    # SECTOR-TEMPLATES §4 step 2: a COND data point the company's statements do not print (no line
+    # mapped, combined or excluded in any stored filing) is OUT of that company's template, with that
+    # reason; it leaves the denominator and is listed, never silently dropped
+    cond_out = [c for c in tmpl if c in COND[sector] and c not in mapped_points]
+    # company-level OUT from evidence that the statements print no such line
+    # (data-team/47-fsn-store/template_company_outs.csv: no operating-income line, net interest only)
+    # approval CSV: APPROVE_OUT -> out; APPROVE_OUT_FROM -> keys after out_effective_after are out;
+    # REJECT_NOTE_SOURCED_VALUE -> stays IN (served from the note); a file without verdicts = all OUT
+    company_out: dict[str, str] = {}
+    out_after: dict[str, date] = {}
+    for r in _company_outs(company_outs):
+        if int(r["company_id"]) != company_id or r["data_point"] not in tmpl:
+            continue
+        verdict = r.get("approver_verdict") or "APPROVE_OUT"
+        if verdict == "APPROVE_OUT":
+            company_out[r["data_point"]] = r["reason"]
+        elif verdict == "APPROVE_OUT_FROM" and r.get("out_effective_after"):
+            out_after[r["data_point"]] = date.fromisoformat(r["out_effective_after"])
+    tmpl = [c for c in tmpl if c not in cond_out and c not in company_out]
     for concept in tmpl:
         k: Counter[str] = Counter()
         expected = calendar_keys(calendar, company_id, concept)
         if len(expected) < 8:
             expected = store_keys(list(data["filings"].values()), concept)
+        if concept in out_after:  # the line stopped being printed: later keys are out
+            expected = [(g, e) for g, e in expected if e <= out_after[concept]]
         for grain, end in expected:
             keys += 1
             k["keys"] += 1
@@ -371,6 +446,11 @@ def report_company(
             "sic": sic,
             "sector_template": sector,
             "template_points": len(tmpl),
+            "template_out_cond_not_printed": cond_out,
+            "template_out_by_company_evidence": company_out,
+            "template_out_after": {k: v.isoformat() for k, v in out_after.items()},
+            "note_sourced_points": sorted(note_pairs),
+            "note_sourced_cells": note_cells,
             "fye": fye[0] if fye else None,
             "co_registrants": sorted(c[0] for c in coreg if c[0]),
             "filings_stored": len(data["filings"]),
