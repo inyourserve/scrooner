@@ -482,8 +482,8 @@ def protect_cells(
     package_sha: str,
 ) -> int:
     """Inside the company's transaction: the family's keys of this company are protected (0113) exactly
-    where this load wrote them. Valued keys carry their value; a blank key is protected only where the
-    0113 value column accepts null (a migration), else it is left to the reason store."""
+    where this load wrote them. Valued keys carry their value; a reasoned blank is protected with value
+    null (0115: "null = a protected blank"); on a schema without 0115 blanks stay unprotected."""
     nullable = (
         conn.execute(
             "select is_nullable from information_schema.columns where table_schema = 'analytics' "

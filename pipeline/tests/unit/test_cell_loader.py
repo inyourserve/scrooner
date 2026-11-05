@@ -463,15 +463,57 @@ def test_protected_write_survives_a_non_slot_writer_update_which_is_logged(
                 fiscal_period="Q1",
                 period_type="duration",
                 fsn_end="2024-03-31",
-            )
+            ),
+            # a reasoned blank: protected with value null (0115)
+            _row(
+                company_id=cid,
+                data_point_name="capex_resolved",
+                period_grain="Q",
+                period_start="2023-10-01",
+                period_end="2023-12-31",
+                fiscal_year=2023,
+                fiscal_period="Q4",
+                state="not_presented",
+                value=None,
+                unit=None,
+                accession=None,
+                tag=None,
+                reason_code="line_not_presented_in_filing",
+                reason_text="not in the cash flow statement",
+                rule_id="slot.capex@1",
+                evidence_level="DATA-INFERRED",
+            ),
         ],
     )
     rep = cl.load(conn, "capex_da_cash_debt", [path], apply=True, protect=True)
-    assert rep.protected == 1
-    assert conn.execute(
-        "select period_id, value, run_id from analytics.slot_protected_cell where company_id = %s and canonical_concept_id = %s",
+    assert rep.protected == 2
+    got = conn.execute(
+        "select p.end_date, s.value, s.run_id from analytics.slot_protected_cell s join core.period p on p.id = s.period_id where s.company_id = %s and s.canonical_concept_id = %s order by 1",
         (cid, ccid),
-    ).fetchall() == [(pid, Decimal("100"), rep.run_id)]
+    ).fetchall()
+    assert got == [
+        (date(2023, 12, 31), None, rep.run_id),
+        (date(2024, 4, 2), Decimal("100"), rep.run_id),
+    ]
+    # the nightly cannot insert an old value under the protected blank
+    blank_pid = _one(
+        conn,
+        "select id from core.period where company_id = %s and end_date = '2023-12-31'",
+        (cid,),
+    )
+    conn.execute(
+        "insert into analytics.canonical_fact (company_id, canonical_concept_id, period_id, value, source_fact_ids) values (%s, %s, %s, 7, '{}')",
+        (cid, ccid, blank_pid),
+    )
+    conn.commit()
+    assert (
+        _one(
+            conn,
+            "select count(*) from analytics.canonical_fact where company_id = %s and period_id = %s",
+            (cid, blank_pid),
+        )
+        == 0
+    )
     # the nightly mapper is not the slot writer: its update is skipped and logged
     conn.execute(
         "update analytics.canonical_fact set value = 555 where company_id = %s and canonical_concept_id = %s",
@@ -487,9 +529,9 @@ def test_protected_write_survives_a_non_slot_writer_update_which_is_logged(
         == 100
     )
     assert conn.execute(
-        "select operation, attempted_value from analytics.slot_protected_write_skipped where company_id = %s and canonical_concept_id = %s",
+        "select operation, attempted_value from analytics.slot_protected_write_skipped where company_id = %s and canonical_concept_id = %s order by id",
         (cid, ccid),
-    ).fetchall() == [("UPDATE", Decimal("555"))]
+    ).fetchall() == [("INSERT", Decimal("7")), ("UPDATE", Decimal("555"))]
     # an unprotected family key of the same company still refreshes (cash was not written here)
     conn.execute(
         "update analytics.canonical_fact set value = 1000 where company_id = %s and canonical_concept_id = %s",
