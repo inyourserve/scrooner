@@ -223,24 +223,61 @@ def _row_counts(stats: dict) -> dict[str, float]:
     }
 
 
-def row_count_anomalies(runs: tuple[RunRecord, ...]) -> list[str]:
-    """Compare the latest two successful runs with identical job/scope."""
+def _drop_explained_by_unchanged(stats: dict) -> bool:
+    """True when every considered item was either stored or skipped as
+    byte-identical to what is already stored, with no errors.
+
+    The companyfacts collector skips a company whose payload is unchanged
+    (dedupe, since 2026-10-31). Re-collecting the same companies a second time
+    then legitimately stores 0: run 311 (2026-11-02) re-indexed the same SEC day
+    as run 308 (2026-10-30 again: 0 new, 2,318 already known), so its 1,051
+    companies were all unchanged, and `stored` read 214 -> 0."""
+    considered = stats.get("considered")
+    unchanged = stats.get("unchanged_skipped")
+    if not isinstance(considered, Number) or not isinstance(unchanged, Number):
+        return False
+    stored = stats.get("stored", 0)
+    errors = stats.get("errors", 0)
+    return errors == 0 and stored + unchanged == considered
+
+
+def row_count_anomalies(
+    runs: tuple[RunRecord, ...], now: datetime | None = None
+) -> list[str]:
+    """Compare the latest two successful runs with identical job/scope.
+
+    With `now`, only a pair whose newer run started in the last 24 hours is
+    compared: an old pair otherwise re-alerts on every snapshot until it scrolls
+    out of the recent-runs window (the 2026-11-02 pair failed the nightly
+    refresh on 11-02, 11-03, 11-04 and 11-05)."""
     grouped: dict[tuple[str | None, str | None], list[RunRecord]] = {}
     for run in runs:
         if run.status == "succeeded":
             grouped.setdefault((run.job, run.params_key), []).append(run)
 
+    cutoff = now - timedelta(hours=24) if now is not None else None
     alerts: list[str] = []
     for (job, params_key), matching in grouped.items():
         matching.sort(key=lambda run: run.started_at, reverse=True)
         if len(matching) < 2:
             continue
         current, previous = matching[:2]
+        if cutoff is not None:
+            started = (
+                current.started_at
+                if current.started_at.tzinfo
+                else current.started_at.replace(tzinfo=timezone.utc)
+            )
+            if started < cutoff:
+                continue
         current_counts = _row_counts(current.stats)
         previous_counts = _row_counts(previous.stats)
+        explained = _drop_explained_by_unchanged(current.stats)
         for key in sorted(current_counts.keys() & previous_counts.keys()):
             before, after = previous_counts[key], current_counts[key]
             if before <= 0:
+                continue
+            if key == "stored" and explained and after < before:
                 continue
             ratio = after / before
             if ratio < 0.5 or ratio > 2:
@@ -304,7 +341,7 @@ def evaluate_alerts(snapshot: OperationalSnapshot) -> list[str]:
         if run.status == "running" and heartbeat < stale_heartbeat_cutoff:
             alerts.append(f"stuck_run:{run.id}:{run.job or 'unknown'}")
 
-    alerts.extend(row_count_anomalies(snapshot.recent_runs))
+    alerts.extend(row_count_anomalies(snapshot.recent_runs, now=now))
     return alerts
 
 
