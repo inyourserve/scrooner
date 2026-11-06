@@ -130,3 +130,98 @@ def test_reconnect_gives_up_after_every_backoff():
 
     with pytest.raises(psycopg.OperationalError):
         tag_library._reconnect("lineage", 1, connect=connect, sleep=lambda _: None)
+
+
+class _FakeCursor:
+    def __init__(self, conn):
+        self.conn = conn
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def execute(self, sql, params=None):
+        if self.conn.failures and sql.startswith("delete"):
+            raise self.conn.failures.pop(0)
+
+
+class _FakeConn:
+    """A connection whose chunk delete raises the queued errors in order."""
+
+    def __init__(self, name, failures=()):
+        self.name = name
+        self.failures = list(failures)
+        self.commits = 0
+        self.closed = False
+
+    def cursor(self):
+        return _FakeCursor(self)
+
+    def commit(self):
+        self.commits += 1
+
+    def close(self):
+        self.closed = True
+
+
+def _reconnects(*conns):
+    calls = []
+    pool = list(conns)
+
+    def reconnect(stage, chunk):
+        calls.append((stage, chunk))
+        return pool.pop(0)
+
+    return reconnect, calls
+
+
+@pytest.mark.unit
+def test_run_chunked_reconnects_after_a_dropped_connection_and_finishes_the_chunk():
+    first = _FakeConn("first", [psycopg.OperationalError("connection failed")])
+    second = _FakeConn("second")
+    reconnect, calls = _reconnects(second)
+
+    result = tag_library._run_chunked(
+        first, [1, 2], "t", "insert", "lineage", reconnect=reconnect
+    )
+
+    assert result is second
+    assert calls == [("lineage", 1)]
+    assert first.closed and first.commits == 0
+    assert second.commits == 1
+
+
+@pytest.mark.unit
+def test_run_chunked_gives_up_after_reconnect_attempts():
+    dropped = [psycopg.OperationalError("connection failed")]
+    conns = [
+        _FakeConn(f"c{i}", list(dropped)) for i in range(tag_library.RECONNECT_ATTEMPTS)
+    ]
+    reconnect, calls = _reconnects(*conns[1:])
+
+    with pytest.raises(psycopg.OperationalError):
+        tag_library._run_chunked(
+            conns[0], [1], "t", "insert", "company_tags", reconnect=reconnect
+        )
+
+    # One try per attempt: the first on the original connection, the rest after reconnects.
+    assert len(calls) == tag_library.RECONNECT_ATTEMPTS - 1
+    assert all(c.commits == 0 for c in conns)
+
+
+@pytest.mark.unit
+def test_run_chunked_does_not_retry_a_statement_timeout():
+    conn = _FakeConn(
+        "only",
+        [psycopg.errors.QueryCanceled("canceling statement due to statement timeout")],
+    )
+    reconnect, calls = _reconnects()
+
+    with pytest.raises(psycopg.errors.QueryCanceled):
+        tag_library._run_chunked(
+            conn, [1], "t", "insert", "lineage", reconnect=reconnect
+        )
+
+    assert calls == []

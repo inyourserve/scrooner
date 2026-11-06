@@ -209,9 +209,15 @@ def test_a_drop_with_errors_or_unaccounted_items_still_alerts() -> None:
     vanished = run(312, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
                    stats={"considered": 1051, "stored": 0, "unchanged_skipped": 0, "errors": 0})
 
+    # Every item accounted for as unchanged, but the run also had errors: the
+    # errors == 0 guard must keep this alerting.
+    accounted_but_errored = run(313, started_at=NOW - timedelta(hours=1), **COMPANYFACTS,
+                                stats={"considered": 1051, "stored": 0, "unchanged_skipped": 1051, "errors": 5})
+
     expected = [f"row_count_anomaly:companyfacts:{COMPANYFACTS['params_key']}:stored:214->0"]
     assert row_count_anomalies((broken, previous), now=NOW) == expected
     assert row_count_anomalies((vanished, previous), now=NOW) == expected
+    assert row_count_anomalies((accounted_but_errored, previous), now=NOW) == expected
 
 
 def test_a_pair_whose_newer_run_is_over_a_day_old_does_not_re_alert() -> None:
